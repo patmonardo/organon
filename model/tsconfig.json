@@ -1,0 +1,43 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "composite": true,
+    "outDir": "./dist",
+    "rootDir": "./src"
+  },
+  "include": [
+    "src/index.ts",
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "src/form/button/**/*",
+    "src/form/card/**/*", 
+    "src/form/d3/**/*",
+    "src/form/dashboard/**/*",
+    "src/form/data/**/*",
+    "src/form/entity/**/*",
+    "src/form/font/**/*",
+    "src/form/image/**/*",
+    "src/form/lib/**/*",
+    "src/form/link/**/*",
+    "src/form/list/**/*",
+    "src/form/modality/**/*",
+    "src/form/morph/**/*",
+    "src/form/property/**/*",
+    "src/form/relation/**/*",
+    "src/schema/**/*",
+    "src/form/search/**/*",
+    "src/form/style/**/*",
+    "src/form/table/**/*",
+    "src/form/text/**/*",
+    "src/form/theme/**/*",
+    "src/controller/**/*",
+    "src/model/**/*",
+    "src/view/**/*"
+  ],
+  "references": [
+    { "path": "../core" },
+    { "path": "../logic" }
+  ]
+}

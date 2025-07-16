@@ -1,0 +1,23 @@
+{
+  "name": "@organon/model",
+  "version": "0.1.0",
+  "description": "Organon Model - Speculative Ideas and UserLand Interface",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "test:ui": "vitest --ui",
+    "lint": "echo 'Linting not configured yet'",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@organon/core": "workspace:*",
+    "@organon/logic": "workspace:*",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.17",
+    "vitest": "^3.1.3"
+  }
+}

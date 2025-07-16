@@ -1,0 +1,40 @@
+{
+  "name": "organon",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Organon - Research Assistant Platform with Complete Dialectical Architecture",
+  "workspaces": [
+    "core",
+    "task", 
+    "logic",
+    "model"
+  ],
+  "scripts": {
+    "build": "pnpm run --recursive build",
+    "test": "pnpm run --recursive test",
+    "lint": "pnpm run --recursive lint",
+    "dev": "pnpm run --parallel --recursive dev",
+    "core:build": "pnpm --filter=@organon/core build",
+    "core:test": "pnpm --filter=@organon/core test",
+    "core:dev": "pnpm --filter=@organon/core dev",
+    "task:build": "pnpm --filter=neovm-taskd build",
+    "task:test": "pnpm --filter=neovm-taskd test",
+    "task:dev": "pnpm --filter=neovm-taskd start:dev",
+    "task:start": "pnpm --filter=neovm-taskd start",
+    "logic:build": "pnpm --filter=@organon/logic build",
+    "logic:test": "pnpm --filter=@organon/logic test",
+    "logic:dev": "pnpm --filter=@organon/logic dev",
+    "model:build": "pnpm --filter=@organon/model build",
+    "model:test": "pnpm --filter=@organon/model test",
+    "model:dev": "pnpm --filter=@organon/model dev",
+    "model:start": "pnpm --filter=@organon/app start"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.17",
+    "typescript": "^5.7.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  }
+}

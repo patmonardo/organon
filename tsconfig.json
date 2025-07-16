@@ -1,0 +1,43 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "incremental": true,
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "paths": {
+      "@organon/core": ["./core/src"],
+      "@organon/core/*": ["./core/src/*"],
+      "@organon/task": ["./task/src"],
+      "@organon/task/*": ["./task/src/*"],
+      "@organon/logic": ["./logic/src"],
+      "@organon/logic/*": ["./logic/src/*"],
+      "@organon/model": ["model/src"],
+      "@organon/model/*": ["model/src/*"]
+    }
+  },
+  "references": [
+    { "path": "./core" },
+    { "path": "./task" },
+    { "path": "./logic" },
+    { "path": "./model" }
+  ],
+  "exclude": [
+    "node_modules",
+    "**/dist",
+    "**/build",
+    "**/*.test.ts",
+    "**/*.spec.ts"
+  ]
+}
