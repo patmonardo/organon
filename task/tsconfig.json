@@ -1,18 +1,20 @@
 {
+  "extends": "../tsconfig.json",
   "compilerOptions": {
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
+    "incremental": true,
     "composite": true,
-    "target": "es2020",
+    "target": "esnext",
     "sourceMap": true,
     "outDir": "./dist",
+    "rootDir": "./src",
     "baseUrl": "./",
-    "incremental": true,
     "skipLibCheck": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
@@ -21,9 +23,5 @@
   "exclude": [
     "node_modules",
     "dist",
-    "src/test",
-    "src/form",
-    "src/__tests__",
-    "src/__mocks__"
   ],
 }

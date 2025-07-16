@@ -19,15 +19,15 @@ A monorepo containing the complete Organon research assistant platform with dial
 - The self-determining concept that unifies inference and reasoning
 - Where absolute idea manifests in computational form
 
-### **APP** - Realization (Die Verwirklichung)
-- **`app/`** - @organon/app - Speculative ideas and UserLand interface
+### **MODEL** - Realization (Die Verwirklichung)
+- **`model/`** - @organon/model - Speculative ideas and UserLand interface
 - The culmination where absolute spirit becomes objective and practical
 - Contains FORM as the transcendental beginning
 
 ## The Dialectical Movement
 
 ```
-APP (Speculative Ideas) → LOGIC (Pure Concept) → TASK (Mediating Essence) → CORE (Ultimate Execution)
+MODEL (Speculative Ideas) → LOGIC (Pure Concept) → TASK (Mediating Essence) → CORE (Ultimate Execution)
                                                                               ↑
                                      [Return as realized knowledge] ←←←←←←←←←←←
 ```
@@ -129,6 +129,6 @@ Organon implements **The Science of Logic** as a research assistant platform:
 - **Being** (CORE) - Pure computational substrate
 - **Essence** (TASK) - Mediating orchestration processes  
 - **Concept** (LOGIC) - Self-determining reasoning engine
-- **Idea** (APP) - Realized interface where speculative ideas manifest
+- **Idea** (MODEL) - Realized interface where speculative ideas manifest
 
 The platform enables the complete dialectical movement from speculative conception in UserLand to ultimate execution in the computational kernel, with each iteration reaching higher levels of systematic knowledge.

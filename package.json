@@ -5,7 +5,7 @@
   "description": "Organon - Research Assistant Platform with Complete Dialectical Architecture",
   "workspaces": [
     "core",
-    "task", 
+    "task",
     "logic",
     "model"
   ],
@@ -17,17 +17,19 @@
     "core:build": "pnpm --filter=@organon/core build",
     "core:test": "pnpm --filter=@organon/core test",
     "core:dev": "pnpm --filter=@organon/core dev",
-    "task:build": "pnpm --filter=neovm-taskd build",
-    "task:test": "pnpm --filter=neovm-taskd test",
-    "task:dev": "pnpm --filter=neovm-taskd start:dev",
-    "task:start": "pnpm --filter=neovm-taskd start",
+    "core:start": "pnpm --filter=@organon/core start",
+    "task:build": "pnpm --filter=@organon/task build",
+    "task:test": "pnpm --filter=@organon/task test",
+    "task:dev": "pnpm --filter=@organon/task dev",
+    "task:start": "pnpm --filter=@organon/task start",
     "logic:build": "pnpm --filter=@organon/logic build",
     "logic:test": "pnpm --filter=@organon/logic test",
     "logic:dev": "pnpm --filter=@organon/logic dev",
+    "logic:start": "pnpm --filter=@organon/logic start",
     "model:build": "pnpm --filter=@organon/model build",
     "model:test": "pnpm --filter=@organon/model test",
     "model:dev": "pnpm --filter=@organon/model dev",
-    "model:start": "pnpm --filter=@organon/app start"
+    "model:start": "pnpm --filter=@organon/model start"
   },
   "devDependencies": {
     "@types/node": "^22.15.17",

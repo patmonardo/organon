@@ -1,8 +1,8 @@
 packages:
   - "core"
   - "task"
-  - "logic" 
-  - "app"
+  - "logic"
+  - "model"
 
 onlyBuiltDependencies:
   - "@nestjs/core"

@@ -1,7 +1,7 @@
 {
   "name": "@organon/model",
   "version": "0.1.0",
-  "description": "Organon Model - Speculative Ideas and UserLand Interface",
+  "description": "Organon Model Package",
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
@@ -14,7 +14,7 @@
   "dependencies": {
     "@organon/core": "workspace:*",
     "@organon/logic": "workspace:*",
-    "express": "^4.18.2"
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@types/express": "^4.17.17",

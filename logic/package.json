@@ -1,7 +1,7 @@
 {
   "name": "@organon/logic",
   "version": "0.1.0",
-  "description": "Organon Logic - Pure Reasoning and Inference Engine",
+  "description": "Organon Logic Package",
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",

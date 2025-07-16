@@ -1,6 +1,6 @@
 /**
  * BEC-Graph Adapter
- * 
+ *
  * Integrates the Being-Essence-Concept (BEC) system with NeoGraph
  * to support transformations between transcendental and ordinary forms.
  */
@@ -11,32 +11,32 @@ import { NeoNode, createNeoNode } from '@/neo/entity';
 import { Property } from '@/neo/property';
 
 // Import BEC components
-import { createSyllogismSystem, Syllogism, SyllogismType, SyllogismOfNecessity } from './src/concept/syllogism';
-import { JudgmentType } from './src/concept/judgment';
+import { createSyllogismSystem, Syllogism, SyllogismType, SyllogismOfNecessity } from './concept/syllogism';
+import { JudgmentType } from './concept/judgment';
 import { BECStructure, MVCStructure } from './bec-mvc-adapter';
 import BECMVCAdapter from './bec-mvc-adapter';
 
 /**
  * BEC Graph Adapter
- * 
+ *
  * Adapter for storing and retrieving BEC and MVC structures in Neo4j.
- * This connects the philosophical BEC structure to the practical MVC 
+ * This connects the philosophical BEC structure to the practical MVC
  * architecture in the graph database, enabling bidirectional queries.
  */
 export class BECGraphAdapter {
   private graph: NeoGraph;
   private syllogismSystem = createSyllogismSystem();
-  
+
   // Track node representations of BEC elements
   private syllogismNodes: Map<string, string> = new Map(); // syllogismId -> nodeId
-  
+
   constructor(neoProtocol: NeoProtocol, graphSpaceId: string = "bec-graph") {
     this.graph = new NeoGraph(neoProtocol, graphSpaceId);
   }
-  
+
   /**
    * Convert a BEC structure to Neo4j nodes and relationships
-   * 
+   *
    * @param bec BEC structure
    * @returns Neo4j representation with nodes and relationships
    */
@@ -66,7 +66,7 @@ export class BECGraphAdapter {
         quality: bec.being.quality
       }
     });
-    
+
     const essenceNode = createNeoNode({
       id: bec.essence.id,
       type: 'Essence',
@@ -89,7 +89,7 @@ export class BECGraphAdapter {
         appearance: bec.essence.appearance
       }
     });
-    
+
     const conceptNode = createNeoNode({
       id: bec.concept.id,
       type: 'Concept',
@@ -113,7 +113,7 @@ export class BECGraphAdapter {
         individual: bec.concept.individual
       }
     });
-    
+
     // Create BEC Structure node that ties them together
     const becStructureNode = createNeoNode({
       id: `bec:${bec.being.id}:${bec.essence.id}:${bec.concept.id}`,
@@ -137,7 +137,7 @@ export class BECGraphAdapter {
         timestamp: Date.now()
       }
     });
-    
+
     // Define relationships
     const relationships = [
       {
@@ -171,11 +171,11 @@ export class BECGraphAdapter {
         properties: { as: 'moment' }
       }
     ];
-    
+
     // Convert to MVC and add those nodes too
     const mvc = BECMVCAdapter.becToMvc(bec);
     const mvcGraph = this.mvcToGraph(mvc);
-    
+
     // Create relationship between BEC and MVC
     const becToMvcRelationship = {
       from: becStructureNode.id,
@@ -186,16 +186,16 @@ export class BECGraphAdapter {
         timestamp: Date.now()
       }
     };
-    
+
     return {
       nodes: [beingNode, essenceNode, conceptNode, becStructureNode, ...mvcGraph.nodes],
       relationships: [...relationships, ...mvcGraph.relationships, becToMvcRelationship]
     };
   }
-  
+
   /**
    * Convert an MVC structure to Neo4j nodes and relationships
-   * 
+   *
    * @param mvc MVC structure
    * @returns Neo4j representation with nodes and relationships
    */
@@ -226,7 +226,7 @@ export class BECGraphAdapter {
         ...mvc.model.properties
       }
     });
-    
+
     const viewNode = createNeoNode({
       id: mvc.view.id,
       type: 'View',
@@ -250,7 +250,7 @@ export class BECGraphAdapter {
         template: mvc.view.template
       }
     });
-    
+
     const controllerNode = createNeoNode({
       id: mvc.controller.id,
       type: 'Controller',
@@ -273,7 +273,7 @@ export class BECGraphAdapter {
         actions: mvc.controller.actions
       }
     });
-    
+
     // Create MVC Structure node that ties them together
     const mvcStructureNode = createNeoNode({
       id: `mvc:${mvc.model.id}:${mvc.view.id}:${mvc.controller.id}`,
@@ -297,7 +297,7 @@ export class BECGraphAdapter {
         timestamp: Date.now()
       }
     });
-    
+
     // Define relationships
     const relationships = [
       {
@@ -337,11 +337,11 @@ export class BECGraphAdapter {
         properties: {}
       }
     ];
-    
+
     // If this is a direct MVC to BEC conversion, add that relationship
     const bec = BECMVCAdapter.mvcToBec(mvc);
     const becGraph = this.becToGraph(bec);
-    
+
     // Create relationship between MVC and BEC
     const mvcToBecRelationship = {
       from: mvcStructureNode.id,
@@ -352,59 +352,59 @@ export class BECGraphAdapter {
         timestamp: Date.now()
       }
     };
-    
+
     return {
       nodes: [modelNode, viewNode, controllerNode, mvcStructureNode, ...becGraph.nodes],
       relationships: [...relationships, ...becGraph.relationships, mvcToBecRelationship]
     };
   }
-  
+
   /**
    * Generate Cypher queries to store the BEC and MVC structures
-   * 
+   *
    * @param bec BEC structure
    * @returns Cypher queries as string
    */
   generateBECCypher(bec: BECStructure): string {
     const graph = this.becToGraph(bec);
-    
+
     // Create Cypher for nodes
     const nodeQueries = graph.nodes.map(node => {
       const props = Object.entries(node.properties || {})
         .filter(([k, v]) => v !== undefined)
         .map(([k, v]) => `${k}: ${JSON.stringify(v)}`)
         .join(', ');
-        
+
       return `
       CREATE (${node.id.replace(/[^a-zA-Z0-9]/g, '_')}:${node.type} {
         id: '${node.id}',
         ${props}
       })`;
     }).join('\n');
-    
+
     // Create Cypher for relationships
     const relQueries = graph.relationships.map(rel => {
       const props = Object.entries(rel.properties || {})
         .filter(([k, v]) => v !== undefined)
         .map(([k, v]) => `${k}: ${JSON.stringify(v)}`)
         .join(', ');
-        
+
       return `
       MATCH (a), (b)
       WHERE a.id = '${rel.from}' AND b.id = '${rel.to}'
       CREATE (a)-[r:${rel.type} {${props}}]->(b)`;
     }).join('\n');
-    
+
     return `// BEC Structure Cypher
     ${nodeQueries}
-    
+
     // Relationships
     ${relQueries}`;
   }
-  
+
   /**
    * Generate query to find BEC structures in Neo4j
-   * 
+   *
    * @returns Cypher query to find BEC structures
    */
   findBECStructuresQuery(): string {
@@ -417,10 +417,10 @@ export class BECGraphAdapter {
     ORDER BY bec.timestamp DESC
     LIMIT 100`;
   }
-  
+
   /**
    * Generate query to find dashboard structures
-   * 
+   *
    * @returns Cypher query to find dashboard structures
    */
   findDashboardsQuery(): string {
@@ -432,10 +432,10 @@ export class BECGraphAdapter {
     RETURN d, s, c
     ORDER BY d.timestamp DESC`;
   }
-  
+
   /**
    * Generate query to find the relationship between BEC and MVC
-   * 
+   *
    * @returns Cypher query for BEC-MVC relationship
    */
   findBECMVCRelationshipsQuery(): string {
@@ -445,10 +445,10 @@ export class BECGraphAdapter {
           (mvc)-[t2:TRANSPILES_TO]->(bec)
     RETURN bec, mvc, t, t2`;
   }
-  
+
   /**
    * Add a syllogism to the graph
-   * 
+   *
    * @param syllogism The syllogism to add to the graph
    * @returns The ID of the created node
    */
@@ -479,13 +479,13 @@ export class BECGraphAdapter {
         created: Date.now()
       }
     });
-    
+
     // Track the node representation
     this.syllogismNodes.set(syllogism.id, nodeId);
-    
+
     // Create nodes for each term and connect them
     this.createTermNodes(syllogism, nodeId);
-    
+
     // If this syllogism emerges from another, create the connection
     if (syllogism.emergesFrom && this.syllogismNodes.has(syllogism.emergesFrom)) {
       const sourceNodeId = this.syllogismNodes.get(syllogism.emergesFrom)!;
@@ -499,10 +499,10 @@ export class BECGraphAdapter {
         }
       });
     }
-    
+
     return nodeId;
   }
-  
+
   /**
    * Create nodes for the terms in a syllogism and connect them
    */
@@ -518,7 +518,7 @@ export class BECGraphAdapter {
         concept: syllogism.premissMajor.termMajor.concept
       }
     });
-    
+
     const minorTermNodeId = this.graph.createNode({
       type: 'term:minor',
       properties: {
@@ -529,7 +529,7 @@ export class BECGraphAdapter {
         concept: syllogism.premissMinor.termMinor.concept
       }
     });
-    
+
     const middleTermNodeId = this.graph.createNode({
       type: 'term:middle',
       properties: {
@@ -540,7 +540,7 @@ export class BECGraphAdapter {
         concept: syllogism.middleTerm.concept
       }
     });
-    
+
     // Connect terms to syllogism
     this.graph.createEdge({
       source: syllogismNodeId,
@@ -548,14 +548,14 @@ export class BECGraphAdapter {
       type: 'has-term',
       properties: { role: 'major' }
     });
-    
+
     this.graph.createEdge({
       source: syllogismNodeId,
       target: minorTermNodeId,
       type: 'has-term',
       properties: { role: 'minor' }
     });
-    
+
     this.graph.createEdge({
       source: syllogismNodeId,
       target: middleTermNodeId,
@@ -563,7 +563,7 @@ export class BECGraphAdapter {
       properties: { role: 'middle' }
     });
   }
-  
+
   /**
    * Generate a dialectical progression starting from an initial syllogism
    * and add the entire progression to the graph
@@ -572,25 +572,25 @@ export class BECGraphAdapter {
     const progression = [initialSyllogism];
     let current = initialSyllogism;
     const nodeIds = [];
-    
+
     // First add the initial syllogism
     nodeIds.push(this.addSyllogism(initialSyllogism));
-    
+
     // Develop through all forms
     while (current && current.pointsTowards && current.pointsTowards !== 'objectivity') {
       const next = this.syllogismSystem.developSyllogism(current);
       if (!next) break;
-      
+
       progression.push(next);
       current = next;
-      
+
       // Add the next syllogism to the graph
       nodeIds.push(this.addSyllogism(next));
     }
-    
+
     return nodeIds;
   }
-  
+
   /**
    * Transform a syllogism from transcendental to ordinary form
    * This maps the BEC structure to an MVC representation
@@ -600,15 +600,15 @@ export class BECGraphAdapter {
     if (!nodeId) {
       throw new Error(`Syllogism not found in graph: ${syllogismId}`);
     }
-    
+
     const node = this.graph.getNode(nodeId);
     if (!node) {
       throw new Error(`Node not found: ${nodeId}`);
     }
-    
+
     // Extract syllogism properties
     const { type, subtype, majorPremiss, minorPremiss, conclusion, necessity, bec } = node.properties;
-    
+
     // Transform to ordinary form (MVC structure)
     return createNeoNode({
       id: `ordinary:${syllogismId}`,
@@ -649,14 +649,14 @@ export class BECGraphAdapter {
       metadata: node.metadata
     });
   }
-  
+
   /**
    * Transform a syllogism from ordinary to transcendental form
    * This reconstructs the BEC structure from an MVC representation
    */
   transformToTranscendentalForm(ordinaryNode: NeoNode): Syllogism {
     const [_, type, subtype] = ordinaryNode.type.split(':');
-    
+
     // Extract model properties
     const {
       majorPremiss,
@@ -664,15 +664,15 @@ export class BECGraphAdapter {
       conclusion,
       necessityLevel
     } = ordinaryNode.data.model;
-    
+
     // Parse the premises and conclusion to extract terms
     const majorTerms = this.parseLogicalStatement(majorPremiss);
     const minorTerms = this.parseLogicalStatement(minorPremiss);
     const conclusionTerms = this.parseLogicalStatement(conclusion);
-    
+
     // Recreate a syllogism based on the type
     let syllogism: Syllogism;
-    
+
     if (type === 'existence') {
       if (subtype === 'first-figure') {
         syllogism = this.syllogismSystem.createSyllogism(
@@ -740,10 +740,10 @@ export class BECGraphAdapter {
         );
       }
     }
-    
+
     return syllogism;
   }
-  
+
   /**
    * Parse a logical statement into subject and predicate
    */
@@ -754,7 +754,7 @@ export class BECGraphAdapter {
       predicate: parts[1]?.trim() || ''
     };
   }
-  
+
   /**
    * Get a human-readable necessity indicator
    */
@@ -765,21 +765,21 @@ export class BECGraphAdapter {
     if (necessity >= 0.3) return 'Low';
     return 'Minimal';
   }
-  
+
   /**
    * Get a syllogism from the graph by its ID
    */
   getSyllogism(syllogismId: string): Syllogism | null {
     const nodeId = this.syllogismNodes.get(syllogismId);
     if (!nodeId) return null;
-    
+
     const node = this.graph.getNode(nodeId);
     if (!node) return null;
-    
+
     // Convert node back to syllogism
     return this.nodeToSyllogism(node);
   }
-  
+
   /**
    * Convert a graph node to a syllogism
    */
@@ -794,7 +794,7 @@ export class BECGraphAdapter {
       necessity,
       bec
     } = node.properties;
-    
+
     // For simplicity, we'll use the system to recreate the syllogism
     // and then update its properties
     const syllogism = this.transformToTranscendentalForm(createNeoNode({
@@ -815,24 +815,24 @@ export class BECGraphAdapter {
       },
       metadata: node.metadata
     }));
-    
+
     return syllogism;
   }
-  
+
   /**
    * Find syllogisms in the graph by type and subtype
    */
   findSyllogisms(type?: SyllogismType, subtype?: string): Syllogism[] {
     const typePattern = type ? `syllogism:${type}` : 'syllogism';
     const fullPattern = subtype ? `${typePattern}:${subtype}` : typePattern;
-    
+
     const nodes = this.graph.findNodes({
       type: fullPattern
     });
-    
+
     return nodes.map(node => this.nodeToSyllogism(node));
   }
-  
+
   /**
    * Create a connected dialectical graph from a concept
    */
@@ -841,16 +841,16 @@ export class BECGraphAdapter {
     const singularTerm = concept;
     const speciesTerm = `Type of ${concept}`;
     const genusTerm = `Category of ${concept}`;
-    
+
     const categoricalSyllogism = this.syllogismSystem.createSyllogism(
       'necessity',
       'categorical',
       [singularTerm, speciesTerm, genusTerm]
     );
-    
+
     // Add the progression to the graph
     const nodeIds = this.addDialecticalProgression(categoricalSyllogism);
-    
+
     // Create a central concept node
     const conceptNodeId = this.graph.createNode({
       type: 'concept:universal',
@@ -866,7 +866,7 @@ export class BECGraphAdapter {
         created: Date.now()
       }
     });
-    
+
     // Connect the concept to each syllogism
     for (const nodeId of nodeIds) {
       this.graph.createEdge({
@@ -878,25 +878,25 @@ export class BECGraphAdapter {
         }
       });
     }
-    
+
     return conceptNodeId;
   }
-  
+
   /**
    * Transform between modalities using syllogisms
    */
   transformModality(
-    sourceNodeId: string, 
+    sourceNodeId: string,
     modality: 'possibility' | 'actuality' | 'necessity'
   ): string {
     const sourceNode = this.graph.getNode(sourceNodeId);
     if (!sourceNode) {
       throw new Error(`Node not found: ${sourceNodeId}`);
     }
-    
+
     let syllogismType: SyllogismType;
     let syllogismSubtype: string;
-    
+
     // Map modality to appropriate syllogism form
     switch (modality) {
       case 'possibility':
@@ -912,16 +912,16 @@ export class BECGraphAdapter {
         syllogismSubtype = 'disjunctive';
         break;
     }
-    
+
     // Create appropriate syllogism based on node properties
     let syllogism: Syllogism;
-    
+
     if (modality === 'necessity') {
       // For necessity, create a disjunctive syllogism
       const subject = sourceNode.properties.name || 'Subject';
       const options = ['Option A', 'Option B', 'Option C'];
       const actualOption = 'Option A';
-      
+
       syllogism = this.syllogismSystem.createSyllogism(
         'necessity',
         'disjunctive',
@@ -933,7 +933,7 @@ export class BECGraphAdapter {
       const subject2 = 'Similar Subject';
       const commonAttr = 'Common Nature';
       const inferredAttr = 'Inferred Property';
-      
+
       syllogism = this.syllogismSystem.createSyllogism(
         'reflection',
         'analogy',
@@ -944,17 +944,17 @@ export class BECGraphAdapter {
       const singular = sourceNode.properties.name || 'Subject';
       const particular = 'Class';
       const universal = 'Category';
-      
+
       syllogism = this.syllogismSystem.createSyllogism(
         'existence',
         'first-figure',
         [singular, particular, universal]
       );
     }
-    
+
     // Add the syllogism to the graph
     const syllogismNodeId = this.addSyllogism(syllogism);
-    
+
     // Connect the source node to the syllogism
     this.graph.createEdge({
       source: sourceNodeId,
@@ -965,7 +965,7 @@ export class BECGraphAdapter {
         transformationType: 'dialectical'
       }
     });
-    
+
     return syllogismNodeId;
   }
 }

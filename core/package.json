@@ -1,9 +1,7 @@
 {
 	"name": "@organon/core",
 	"version": "0.1.0",
-	"description": "Neo Graph Processing Core Library",
-	"main": "dist/index.js",
-	"types": "dist/index.d.ts",
+	"description": "Organon Graph Data Science Core Library",
 	"scripts": {
 		"build": "tsc",
 		"dev": "tsc --watch",

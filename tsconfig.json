@@ -23,8 +23,8 @@
       "@organon/task/*": ["./task/src/*"],
       "@organon/logic": ["./logic/src"],
       "@organon/logic/*": ["./logic/src/*"],
-      "@organon/model": ["model/src"],
-      "@organon/model/*": ["model/src/*"]
+      "@organon/model": ["./model/src"],
+      "@organon/model/*": ["./model/src/*"]
     }
   },
   "references": [

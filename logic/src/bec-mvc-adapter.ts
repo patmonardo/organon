@@ -1,15 +1,15 @@
 import { NeoNode, createNeoNode } from '@/neo/entity';
-import { Being } from './src/being/being.cypher';
+import { Being } from './being/being.cypher';
 import { Concept } from './src/concept/concept.cypher';
 import { Essence } from './src/essence/essence.cypher';
 
 /**
  * BEC-MVC Adapter
- * 
+ *
  * A bidirectional transpilation system between Being-Essence-Concept (BEC)
  * and Model-View-Controller (MVC) patterns. This implements an isomorphic
  * mapping between Hegelian dialectical structures and software architecture.
- * 
+ *
  * Core mappings:
  * - Being → Model (immediate reality, data structures)
  * - Essence → View (appearance, representation)
@@ -57,7 +57,7 @@ export interface MVCStructure {
   view: {
     id: string;
     name: string;
-    template?: string; 
+    template?: string;
     components?: any[];
   };
   controller: {
@@ -75,7 +75,7 @@ export interface DashboardDefinition {
   id: string;
   name: string;
   description?: string;
-  
+
   // Structure
   structure: {
     layout: 'grid' | 'flex' | 'flow';
@@ -91,10 +91,10 @@ export interface DashboardDefinition {
       content?: DashboardComponent[];
     }[];
   };
-  
+
   // Components
   components: DashboardComponent[];
-  
+
   // Data sources
   dataSources: {
     id: string;
@@ -103,7 +103,7 @@ export interface DashboardDefinition {
     source: string;
     mapping?: Record<string, string>;
   }[];
-  
+
   // Theme
   theme?: {
     colors: Record<string, string>;
@@ -120,15 +120,15 @@ export interface DashboardComponent {
   type: 'chart' | 'table' | 'card' | 'form' | 'list' | 'text' | 'custom';
   name: string;
   dataSource?: string;
-  
+
   // Specific properties
   properties: {
     [key: string]: any;
   };
-  
+
   // MVC structure linked to the component
   mvc?: MVCStructure;
-  
+
   // BEC structure linked to the component
   bec?: BECStructure;
 }
@@ -139,7 +139,7 @@ export interface DashboardComponent {
 
 /**
  * Transform BEC to MVC
- * 
+ *
  * Maps Being-Essence-Concept to Model-View-Controller
  * following Hegel's dialectical method
  */
@@ -148,12 +148,12 @@ export function becToMvc(bec: BECStructure): MVCStructure {
   const beingId = bec.being.id;
   const essenceId = bec.essence.id;
   const conceptId = bec.concept.id;
-  
+
   // Derive names from identifiers
   const modelName = beingId.split(':').pop() || 'Model';
   const viewName = essenceId.split(':').pop() || 'View';
   const controllerName = conceptId.split(':').pop() || 'Controller';
-  
+
   // Create MVC structure
   const mvc: MVCStructure = {
     model: {
@@ -176,7 +176,7 @@ export function becToMvc(bec: BECStructure): MVCStructure {
       actions: []
     }
   };
-  
+
   // Model properties based on Being qualities
   if (bec.being.immediate) {
     mvc.model.properties = {
@@ -186,7 +186,7 @@ export function becToMvc(bec: BECStructure): MVCStructure {
       generatesTableSchema: true
     };
   }
-  
+
   // View components based on Essence appearance
   if (bec.essence.appearance) {
     mvc.view.components = [{
@@ -195,7 +195,7 @@ export function becToMvc(bec: BECStructure): MVCStructure {
       reflective: bec.essence.reflective,
       mediated: bec.essence.mediated
     }];
-    
+
     // Add template based on reflective/mediated properties
     if (bec.essence.reflective) {
       mvc.view.template = `<${mvc.view.name} data={model} onChange={handleChange} />`;
@@ -205,16 +205,16 @@ export function becToMvc(bec: BECStructure): MVCStructure {
       mvc.view.template = `<${mvc.view.name} />`;
     }
   }
-  
+
   // Controller actions based on Concept universality
   if (bec.concept.universal) {
     mvc.controller.actions = [
-      'get', 
-      'create', 
-      'update', 
+      'get',
+      'create',
+      'update',
       'delete'
     ];
-    
+
     mvc.controller.handlers = {
       handleGet: `async (id) => get${mvc.model.name}(id)`,
       handleCreate: `async (data) => create${mvc.model.name}(data)`,
@@ -222,7 +222,7 @@ export function becToMvc(bec: BECStructure): MVCStructure {
       handleDelete: `async (id) => delete${mvc.model.name}(id)`
     };
   }
-  
+
   return mvc;
 }
 
@@ -232,7 +232,7 @@ export function becToMvc(bec: BECStructure): MVCStructure {
 
 /**
  * Transform MVC to BEC
- * 
+ *
  * Maps Model-View-Controller to Being-Essence-Concept
  * following the inverse of Hegel's dialectical method
  */
@@ -241,12 +241,12 @@ export function mvcToBec(mvc: MVCStructure): BECStructure {
   const modelId = mvc.model.id;
   const viewId = mvc.view.id;
   const controllerId = mvc.controller.id;
-  
+
   // Determine qualities from names
   const modelQuality = determineQualityFromName(mvc.model.name);
   const viewAppearance = determineAppearanceFromName(mvc.view.name);
   const conceptUniversal = determineUniversalFromName(mvc.controller.name);
-  
+
   // Create BEC structure
   const bec: BECStructure = {
     being: {
@@ -268,7 +268,7 @@ export function mvcToBec(mvc: MVCStructure): BECStructure {
       individual: mvc.controller.id
     }
   };
-  
+
   return bec;
 }
 
@@ -278,7 +278,7 @@ export function mvcToBec(mvc: MVCStructure): BECStructure {
 
 /**
  * Generate Dashboard from BEC Structure
- * 
+ *
  * Creates a dashboard definition based on a BEC structure,
  * using the reciprocating transpilation to MVC
  */
@@ -299,15 +299,15 @@ export function generateDashboardFromBec(
     components: [],
     dataSources: []
   };
-  
+
   // Add sections and components based on BEC structures
   becStructures.forEach((bec, index) => {
     // Convert BEC to MVC
     const mvc = becToMvc(bec);
-    
+
     // Determine component type based on BEC characteristics
     let componentType: 'chart' | 'table' | 'card' | 'form' | 'list' | 'text' | 'custom' = 'card';
-    
+
     if (bec.being.quality?.includes('collection')) {
       componentType = 'table';
     } else if (bec.essence.appearance?.includes('chart') || bec.essence.appearance?.includes('graph')) {
@@ -319,7 +319,7 @@ export function generateDashboardFromBec(
     } else if (bec.essence.mediated === false && bec.essence.reflective === false) {
       componentType = 'text';
     }
-    
+
     // Create component
     const component: DashboardComponent = {
       id: `component:${bec.being.id}`,
@@ -330,7 +330,7 @@ export function generateDashboardFromBec(
       mvc,
       bec
     };
-    
+
     // Customize properties based on component type
     switch (componentType) {
       case 'chart':
@@ -341,7 +341,7 @@ export function generateDashboardFromBec(
           yAxis: 'value'
         };
         break;
-        
+
       case 'table':
         component.properties = {
           columns: ['id', 'name', 'description'],
@@ -349,7 +349,7 @@ export function generateDashboardFromBec(
           sorting: true
         };
         break;
-        
+
       case 'form':
         component.properties = {
           fields: [
@@ -359,7 +359,7 @@ export function generateDashboardFromBec(
           submitAction: mvc.controller.handlers?.handleCreate
         };
         break;
-        
+
       case 'card':
         component.properties = {
           title: mvc.view.name,
@@ -368,10 +368,10 @@ export function generateDashboardFromBec(
         };
         break;
     }
-    
+
     // Add to dashboard components
     dashboard.components.push(component);
-    
+
     // Create data source
     dashboard.dataSources.push({
       id: `datasource:${bec.being.id}`,
@@ -379,7 +379,7 @@ export function generateDashboardFromBec(
       type: 'api',
       source: `/api/${mvc.model.name.toLowerCase()}`
     });
-    
+
     // Create section (arrange in grid)
     dashboard.structure.sections.push({
       id: `section:${bec.being.id}`,
@@ -393,13 +393,13 @@ export function generateDashboardFromBec(
       content: [component.id]
     });
   });
-  
+
   return dashboard;
 }
 
 /**
  * Generate Dashboard from MVC Structure
- * 
+ *
  * Creates a dashboard definition based on MVC structures,
  * using the reciprocating transpilation to BEC
  */
@@ -410,7 +410,7 @@ export function generateDashboardFromMvc(
 ): DashboardDefinition {
   // First convert MVC to BEC
   const becStructures = mvcStructures.map(mvc => mvcToBec(mvc));
-  
+
   // Then generate dashboard from BEC
   return generateDashboardFromBec(name, description, becStructures);
 }
@@ -421,7 +421,7 @@ export function generateDashboardFromMvc(
 
 /**
  * Generate Component Code from Dashboard Component
- * 
+ *
  * Creates the actual code for a dashboard component
  * based on its MVC and BEC definitions
  */
@@ -429,18 +429,18 @@ export function generateComponentCode(component: DashboardComponent): string {
   if (!component.mvc) {
     throw new Error('Component missing MVC structure');
   }
-  
+
   const { model, view, controller } = component.mvc;
-  
+
   // Choose template based on component type
   switch (component.type) {
-    case 'chart': 
+    case 'chart':
       return generateChartComponent(component);
-    case 'table': 
+    case 'table':
       return generateTableComponent(component);
-    case 'form': 
+    case 'form':
       return generateFormComponent(component);
-    case 'card': 
+    case 'card':
       return generateCardComponent(component);
     case 'list':
       return generateListComponent(component);
@@ -455,7 +455,7 @@ export function generateComponentCode(component: DashboardComponent): string {
 function generateChartComponent(component: DashboardComponent): string {
   const { mvc, properties } = component;
   const chartType = properties.chartType || 'bar';
-  
+
   return `import { FC, useEffect, useState } from 'react';
 import { ${capitalizeFirstLetter(chartType)}Chart } from '@/form/chart/${chartType.toLowerCase()}-chart';
 
@@ -464,13 +464,13 @@ interface ${mvc!.view.name}Props {
   title?: string;
 }
 
-const ${mvc!.view.name}: FC<${mvc!.view.name}Props> = ({ 
-  dataSource, 
+const ${mvc!.view.name}: FC<${mvc!.view.name}Props> = ({
+  dataSource,
   title = '${properties.title || mvc!.view.name}'
 }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  
+
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
@@ -484,18 +484,18 @@ const ${mvc!.view.name}: FC<${mvc!.view.name}Props> = ({
         setLoading(false);
       }
     }
-    
+
     fetchData();
   }, [dataSource]);
-  
+
   return (
     <div className="chart-container">
       <h3 className="chart-title">{title}</h3>
       {loading ? (
         <div className="loading">Loading chart data...</div>
       ) : (
-        <${capitalizeFirstLetter(chartType)}Chart 
-          data={data} 
+        <${capitalizeFirstLetter(chartType)}Chart
+          data={data}
           xAxisKey="${properties.xAxis || 'category'}"
           yAxisKey="${properties.yAxis || 'value'}"
         />
@@ -513,7 +513,7 @@ export default ${mvc!.view.name};`;
 function generateTableComponent(component: DashboardComponent): string {
   const { mvc, properties } = component;
   const columns = properties.columns || ['id', 'name', 'description'];
-  
+
   return `import { FC, useEffect, useState } from 'react';
 import { Table } from '@/form/table/table';
 
@@ -522,17 +522,17 @@ interface ${mvc!.view.name}Props {
   title?: string;
 }
 
-const ${mvc!.view.name}: FC<${mvc!.view.name}Props> = ({ 
-  dataSource, 
-  title = '${properties.title || mvc!.view.name}' 
+const ${mvc!.view.name}: FC<${mvc!.view.name}Props> = ({
+  dataSource,
+  title = '${properties.title || mvc!.view.name}'
 }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  
+
   const columns = [
     ${columns.map(col => `{ key: '${col}', header: '${capitalizeFirstLetter(col)}' }`).join(',\n    ')}
   ];
-  
+
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
@@ -546,18 +546,18 @@ const ${mvc!.view.name}: FC<${mvc!.view.name}Props> = ({
         setLoading(false);
       }
     }
-    
+
     fetchData();
   }, [dataSource]);
-  
+
   return (
     <div className="table-container">
       <h3 className="table-title">{title}</h3>
       {loading ? (
         <div className="loading">Loading data...</div>
       ) : (
-        <Table 
-          data={data} 
+        <Table
+          data={data}
           columns={columns}
           pagination=${properties.pagination || true}
           sorting=${properties.sorting || true}
@@ -579,7 +579,7 @@ function generateFormComponent(component: DashboardComponent): string {
     { name: 'name', type: 'text', label: 'Name' },
     { name: 'description', type: 'textarea', label: 'Description' }
   ];
-  
+
   return `import { FC, useState } from 'react';
 import { Form, Field, Button } from '@/form/form';
 
@@ -589,27 +589,27 @@ interface ${mvc!.view.name}Props {
   title?: string;
 }
 
-const ${mvc!.view.name}: FC<${mvc!.view.name}Props> = ({ 
-  onSubmit, 
-  initialData = {}, 
-  title = '${properties.title || mvc!.view.name}' 
+const ${mvc!.view.name}: FC<${mvc!.view.name}Props> = ({
+  onSubmit,
+  initialData = {},
+  title = '${properties.title || mvc!.view.name}'
 }) => {
   const [formData, setFormData] = useState(initialData);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
+
   const handleChange = (field: string, value: any) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
     }));
   };
-  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
-    
+
     try {
       await onSubmit(formData);
     } catch (err) {
@@ -618,12 +618,12 @@ const ${mvc!.view.name}: FC<${mvc!.view.name}Props> = ({
       setLoading(false);
     }
   };
-  
+
   return (
     <div className="form-container">
       <h3 className="form-title">{title}</h3>
       {error && <div className="error">{error}</div>}
-      
+
       <Form onSubmit={handleSubmit}>
         ${fields.map(field => `<Field
           type="${field.type}"
@@ -633,7 +633,7 @@ const ${mvc!.view.name}: FC<${mvc!.view.name}Props> = ({
           onChange={value => handleChange('${field.name}', value)}
           required={${field.required || false}}
         />`).join('\n        ')}
-        
+
         <Button type="submit" disabled={loading}>
           {loading ? 'Submitting...' : 'Submit'}
         </Button>
@@ -650,7 +650,7 @@ export default ${mvc!.view.name};`;
  */
 function generateCardComponent(component: DashboardComponent): string {
   const { mvc, properties } = component;
-  
+
   return `import { FC } from 'react';
 import { Card } from '@/form/card/card';
 
@@ -661,7 +661,7 @@ interface ${mvc!.view.name}Props {
   footer?: React.ReactNode;
 }
 
-const ${mvc!.view.name}: FC<${mvc!.view.name}Props> = ({ 
+const ${mvc!.view.name}: FC<${mvc!.view.name}Props> = ({
   title = '${properties.title || mvc!.view.name}',
   subtitle = '${properties.subtitle || ''}',
   content = '${properties.content || 'Content goes here'}',
@@ -689,7 +689,7 @@ export default ${mvc!.view.name};`;
  */
 function generateListComponent(component: DashboardComponent): string {
   const { mvc, properties } = component;
-  
+
   return `import { FC, useEffect, useState } from 'react';
 import { List, ListItem } from '@/form/list/list';
 
@@ -699,14 +699,14 @@ interface ${mvc!.view.name}Props {
   renderItem?: (item: any) => React.ReactNode;
 }
 
-const ${mvc!.view.name}: FC<${mvc!.view.name}Props> = ({ 
-  dataSource, 
+const ${mvc!.view.name}: FC<${mvc!.view.name}Props> = ({
+  dataSource,
   title = '${properties.title || mvc!.view.name}',
   renderItem
 }) => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
-  
+
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
@@ -720,17 +720,17 @@ const ${mvc!.view.name}: FC<${mvc!.view.name}Props> = ({
         setLoading(false);
       }
     }
-    
+
     fetchData();
   }, [dataSource]);
-  
+
   const defaultRenderItem = (item: any) => (
     <div className="list-item-content">
       <h4>{item.name || item.title}</h4>
       {item.description && <p>{item.description}</p>}
     </div>
   );
-  
+
   return (
     <div className="list-container">
       <h3 className="list-title">{title}</h3>
@@ -757,7 +757,7 @@ export default ${mvc!.view.name};`;
  */
 function generateDefaultComponent(component: DashboardComponent): string {
   const { mvc } = component;
-  
+
   return `import { FC } from 'react';
 
 interface ${mvc!.view.name}Props {
@@ -765,7 +765,7 @@ interface ${mvc!.view.name}Props {
   children?: React.ReactNode;
 }
 
-const ${mvc!.view.name}: FC<${mvc!.view.name}Props> = ({ 
+const ${mvc!.view.name}: FC<${mvc!.view.name}Props> = ({
   title = '${component.name}',
   children
 }) => {
@@ -798,13 +798,13 @@ function capitalizeFirstLetter(str: string): string {
  */
 function determineQualityFromName(name: string): string {
   name = name.toLowerCase();
-  
+
   if (name.includes('user')) return 'identity';
   if (name.includes('product')) return 'entity';
   if (name.includes('order')) return 'transaction';
   if (name.includes('setting')) return 'configuration';
   if (name.includes('list') || name.includes('collection')) return 'collection';
-  
+
   return 'entity';
 }
 
@@ -813,14 +813,14 @@ function determineQualityFromName(name: string): string {
  */
 function determineAppearanceFromName(name: string): string {
   name = name.toLowerCase();
-  
+
   if (name.includes('chart') || name.includes('graph')) return 'visualization';
   if (name.includes('table')) return 'tabular';
   if (name.includes('form')) return 'input';
   if (name.includes('card')) return 'card';
   if (name.includes('list')) return 'list';
   if (name.includes('detail')) return 'detail';
-  
+
   return 'component';
 }
 
@@ -829,13 +829,13 @@ function determineAppearanceFromName(name: string): string {
  */
 function determineUniversalFromName(name: string): string {
   name = name.toLowerCase();
-  
+
   if (name.includes('user')) return 'identity-management';
   if (name.includes('product')) return 'product-management';
   if (name.includes('order')) return 'order-processing';
   if (name.includes('setting')) return 'configuration';
   if (name.includes('auth')) return 'authentication';
-  
+
   return 'entity-management';
 }
 
