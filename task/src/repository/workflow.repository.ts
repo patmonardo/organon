@@ -1,26 +1,26 @@
-import { WorkflowDefinition } from '../../schema/definition';
+import { Workflow } from '../schema/workflow';
 
 /**
  * WorkflowRepository - In-memory and pluggable base for Workflow persistence.
  * Replace with a Neo4j/Cypher adapter as needed.
  */
 export class WorkflowRepository {
-  private workflows: Map<string, WorkflowDefinition> = new Map();
+  private workflows: Map<string, Workflow> = new Map();
 
   async saveWorkflow(
-    workflow: WorkflowDefinition,
-  ): Promise<WorkflowDefinition> {
+    workflow: Workflow,
+  ): Promise<Workflow> {
     this.workflows.set(workflow.id, workflow);
     return workflow;
   }
 
-  async getWorkflowById(id: string): Promise<WorkflowDefinition | undefined> {
+  async getWorkflowById(id: string): Promise<Workflow | undefined> {
     return this.workflows.get(id);
   }
 
   async findWorkflows(
-    query?: Partial<WorkflowDefinition>,
-  ): Promise<WorkflowDefinition[]> {
+    query?: Partial<Workflow>,
+  ): Promise<Workflow[]> {
     return Array.from(this.workflows.values()).filter((workflow) => {
       if (!query) return true;
       return Object.entries(query).every(

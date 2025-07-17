@@ -1,13 +1,13 @@
-import { AgentDefinition } from '../../schema/definition';
+import { Agent } from '../schema/agent';
 
 /**
  * AgentRepository - In-memory and pluggable base for Agent persistence.
  * Replace with a Neo4j/Cypher adapter as needed.
  */
 export class AgentRepository {
-  private agents: Map<string, AgentDefinition> = new Map();
+  private agents: Map<string, Agent> = new Map();
 
-  async saveAgent(agent: AgentDefinition): Promise<AgentDefinition> {
+  async saveAgent(agent: Agent): Promise<Agent> {
     this.agents.set(agent.id, agent);
     return agent;
   }

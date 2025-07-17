@@ -99,17 +99,17 @@ pnpm logic:dev
 #### App Interface (Realization)
 
 ```bash
-# Build app interface
-pnpm app:build
+# Build model interface
+pnpm model:build
 
-# Run app tests
-pnpm app:test
+# Run model tests
+pnpm model:test
 
 # Watch mode for development
-pnpm app:dev
+pnpm model:dev
 
-# Start app interface
-pnpm app:start
+# Start model interface
+pnpm model:start
 ```
 
 ### Scripts
@@ -120,7 +120,7 @@ pnpm app:start
 - `pnpm core:*` - Core kernel (Being) commands
 - `pnpm task:*` - Task orchestration (Essence) commands  
 - `pnpm logic:*` - Logic engine (Concept) commands
-- `pnpm app:*` - App interface (Realization) commands
+- `pnpm model:*` - Model interface (Realization) commands
 
 ## Philosophy
 
