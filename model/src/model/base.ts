@@ -1,56 +1,26 @@
-//@/mvc/model/base.ts
-import { z } from 'zod'
-import type { Base, BaseState, BaseShape } from '@/form/data/schema/base'
+// model/src/model/form.ts
+import { z } from 'zod';
+import type { FormShape, FormState } from '@/logic/schema/morph';
 
-export abstract class BaseModel<T extends BaseShape> {
-  constructor(
-    protected readonly schema: z.ZodType<T>,
-    protected readonly shape: T
-  ) {}
+export class FormModel <FormShape> {
+  constructor(schema: z.ZodType<FormShape>, shape: FormShape) {
+    super(schema, shape);
+  }
 
-  // TypeScript property accessors
-  get state(): BaseState {
+  // Access form-specific state
+  get formState(): FormState {
     return this.shape.state;
   }
 
-  get value(): Base {
-    return this.shape.base;
+  // Validate the form shape
+  validateForm(): FormShape {
+    return this.validate();
   }
 
-  get fullShape(): BaseShape {
-    return this.shape;
+  // Transform form shape (e.g., for workflow steps)
+  mapForm(fn: (shape: FormShape) => FormShape): FormShape {
+    return this.map(fn);
   }
 
-  // Simplified validation - returns new shape with basic validation status
-  validate(): T {
-    const result = this.schema.safeParse(this.shape);
-
-    if (!result.success) {
-      // Return new shape with simple validation status
-      return {
-        ...this.shape,
-        state: {
-          ...this.shape.state,
-          // No complex error formatting for now
-          validation: { _form: ["Validation failed"] },
-          message: "Validation failed"
-        }
-      };
-    }
-
-    // Return shape with cleared validation
-    return {
-      ...this.shape,
-      state: {
-        ...this.shape.state,
-        validation: {},
-        message: undefined
-      }
-    };
-  }
-
-  // Transform to new shape
-  map<U extends BaseShape>(fn: (shape: T) => U): U {
-    return fn(this.shape);
-  }
+  // Add more form-specific logic as needed
 }

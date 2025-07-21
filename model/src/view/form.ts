@@ -1,25 +1,16 @@
-//@/ui/view/form.ts
-import { ReactNode } from "react";
-import type { OperationResult } from "@/form/data/schema/base";
-import type {
-  FormShape,
-  FormMode,
-  FormContent,
-  FormHandler,
-} from "@/form/schema/shape";
-import { Form } from "@/form/form/form";
-
+// model/src/view/form.ts
 export class FormView<T extends FormShape> {
   constructor(protected readonly form?: Form<T>) {}
 
   /**
-   * Display a form with the given mode and handler
+   * Display a form in a generic (server/API) context.
+   * Returns a string or a simple object for API responses.
    */
   public async display(
     mode: FormMode,
-    content: FormContent = "jsx",
+    content: FormContent = "json",
     handler: FormHandler
-  ): Promise<OperationResult<ReactNode | string>> {
+  ): Promise<OperationResult<string | object>> {
     if (!this.form) {
       return {
         status: "error",
@@ -27,19 +18,19 @@ export class FormView<T extends FormShape> {
         message: "No form available for display",
       };
     }
-
     try {
-      const rendered = await this.form.render(mode, content, handler);
+      // Server-side rendering or API serialization
+      const rendered = await this.form.serialize(mode, content, handler);
       return {
         status: "success",
         data: rendered,
-        message: "Form rendered successfully",
+        message: "Form serialized successfully",
       };
     } catch (error) {
       return {
         status: "error",
         data: null,
-        message: `Form render error: ${error}`,
+        message: `Form serialization error: ${error}`,
       };
     }
   }
