@@ -17,21 +17,24 @@
     "sourceMap": true,
     "baseUrl": ".",
     "paths": {
-      "@organon/core": ["./core/src"],
-      "@organon/core/*": ["./core/src/*"],
-      "@organon/task": ["./task/src"],
-      "@organon/task/*": ["./task/src/*"],
-      "@organon/logic": ["./logic/src"],
-      "@organon/logic/*": ["./logic/src/*"],
-      "@organon/model": ["./model/src"],
-      "@organon/model/*": ["./model/src/*"]
+      "@organon/reality": ["reality/src/index.ts"],
+      "@organon/reality/*": ["reality/src/*"],
+      "@organon/core": ["core/src/index.ts"],
+      "@organon/core/*": ["core/src/*"],
+      "@organon/task": ["task/src/index.ts"],
+      "@organon/task/*": ["task/src/*"],
+      "@organon/logic": ["logic/src/index.ts"],
+      "@organon/logic/*": ["logic/src/*"],
+      "@organon/model": ["model/src/index.ts"],
+      "@organon/model/*": ["model/src/*"]
     }
   },
   "references": [
-    { "path": "./core" },
-    { "path": "./task" },
-    { "path": "./logic" },
-    { "path": "./model" }
+    { "path": "reality" },
+    { "path": "core" },
+    { "path": "task" },
+    { "path": "logic" },
+    { "path": "model" }
   ],
   "exclude": [
     "node_modules",

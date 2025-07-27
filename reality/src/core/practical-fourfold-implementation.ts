@@ -5,7 +5,7 @@
  * as permanent fold in the REALITY architecture.
  */
 
-import { ORGANON_FOURFOLD_SYSTEM, MAGIC_NUMBER_108 } from './fourfold-dialectical-system';
+import { ORGANON_FOURFOLD_SYSTEM, MAGIC_NUMBER_108 } from './fourfold-dialectical-system.js';
 
 // ============================================================================
 // ORGANON DIALECTICAL CYCLE

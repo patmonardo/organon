@@ -1,7 +1,7 @@
 {
-  "name": "organon-reality",
+  "name": "@organon/reality",
   "version": "0.1.0",
-  "description": "Reality Package - Core Reality Processing and Dialectical Principles",
+  "description": "Organon Reality Package",
   "main": "index.ts",
   "type": "module",
   "scripts": {
