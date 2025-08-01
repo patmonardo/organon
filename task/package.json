@@ -4,11 +4,10 @@
   "description": "Organon Task Package",
   "scripts": {
     "build": "nest build",
-    "dev": "nest start --watch",
+    "dev": "tsc --watch",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "vitest run",
     "test:watch": "vitest",

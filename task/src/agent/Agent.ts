@@ -40,10 +40,17 @@ interface AgentType {
 }
 
 /**
- * Agent - MCP Infrastructure Manager (Hidden Layer)
+ * Agent - Middle Moment of the Third Moment (Dialectical Integrator)
+ * ------------------------------------------------------------------
+ * In the dialectical architecture, Agent is the Middle Moment of the Third Moment (TAW),
+ * integrating and mediating between the Projects/Views of Model/Forms and the execution
+ * of Workflows and Tasks.
  *
- * Agents operate BEHIND THE SCENES, hidden from Purusha's direct view.
- * They manage the MCP Server infrastructure that powers the system.
+ * - Agents operate BEHIND THE SCENES, hidden from Purusha's direct view.
+ * - They consume and operationalize Projects/Views of Models and Forms, acting as the
+ *   locus of agential capability and orchestration.
+ * - Agent in itself sublates (integrates and transcends) both Workflows and Tasks,
+ *   serving as the living, operational center of the system.
  *
  * Key responsibilities:
  * - Manage MCP Servers (Google MCP Database Toolbox style)
@@ -51,6 +58,11 @@ interface AgentType {
  * - TopicMap Construction (dialectical work)
  * - Property Reification (ontological classes)
  * - Hidden complex operations
+ *
+ * Dialectical Position:
+ * - Agent is the integrative, mediating, and operational moment that unites the
+ *   outputs of Model/Forms (Projects/Views) with the execution of Workflows and Tasks.
+ * - It is the agential center that enables the system to act, adapt, and evolve.
  */
 @Injectable()
 export class Agent {

@@ -5,15 +5,23 @@ import {
 } from '../schema/workflow.js';
 
 /**
- * Workflow - Controller/Monitor Implementation
+ * Workflow - The Third Moment: Concept/Agential Orchestrator
+ * ----------------------------------------------------------
+ * In the dialectical architecture, Workflow is not just a program or monitor,
+ * but the third moment (Concept/Agential) that unites and orchestrates the entire process.
  *
- * In TAW architecture:
  * - Workflow = Pure Program Code + Monitoring System
  * - Presents organized view (Sattva) to consciousness (Purusha)
  * - Monitors and coordinates Tasks and Agents
  * - Code that executes and observes itself
  *
- * Essence: This IS the program - executable code with built-in monitoring
+ * Relationship to Controller and Morphism:
+ * - Workflow should access the Model only via the Controller (not directly)
+ * - It is the "return to Morphism"—the living process that unites and executes morphism pipelines
+ * - Morphism is the third moment within the first moment (Model), while Workflow is the third moment of the whole (Concept/Agential)
+ * - Workflow invokes and orchestrates Morph Pipelines as part of its execution
+ *
+ * Essence: This IS the program—the living, agential, self-monitoring process that unites logic, model, and morphism into a single operational flow.
  */
 @Injectable()
 export class Workflow {

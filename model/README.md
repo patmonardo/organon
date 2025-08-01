@@ -42,3 +42,47 @@ The `@/model` package implements the Model-View-Controller (MVC) pattern as exec
 ---
 
 This README serves as the system instruction and architectural guide for the `@/model` package. Update as the package evolves.
+
+# ORGANON Model, View, Controller, Task, Agent, Workflow: Dialectical Root Schema
+
+## Overview
+This package encodes the root dialectical architecture of ORGANON, capturing the generative movement from pure logic (the Form Engine) into living, agential process. The schemas here are not mere data structures—they are the abstract, recursive mediators that energize and control the logic engine, enabling both principled structure and dynamic process.
+
+## Dialectical Structure
+The system is organized as a 3×3×3 (3³) generative cube, with each layer decomposed into triadic dyads:
+
+- **BEC (Being–Essence–Concept)**: The logical ground (Form, Entity, Context, Property, Morphism, Relation)
+- **MVC (Model–View–Controller)**: The operationalization of logic (State, Structure, Representation, Perspective, Action, Rule)
+- **TAW (Task–Agent–Workflow)**: The synthesis into process (Goal, Operation, Identity, Capability, Sequence, Transition)
+
+Each component is defined as a synthesis of two poles (a dyad), forming a living unity:
+
+- **Model = State : Structure**
+- **View = Representation : Perspective**
+- **Controller = Action : Rule**
+- **Task = Goal : Operation**
+- **Agent = Identity : Capability**
+- **Workflow = Sequence : Transition**
+
+## Dialectical Movement: Wheel Within a Wheel
+The architecture encodes a two-fold movement:
+
+1. **Absolute Dialectic**: The recursive descent from universal principle (logic) into concrete, agential process. Each schema is a moment in this descent, mediating between abstraction and actualization.
+2. **Appearance/Transaction**: The return movement, where process and agency feed back into the logic engine, generating new forms, rules, and possibilities. This is the dynamic, event-driven flow that makes the system living and generative.
+
+## Inferences and Relations
+- **Each dyad is a control/flow network**: It mediates between two poles, enabling both analytic clarity (distinction) and generative synthesis (unity).
+- **The system is both principled and dynamic**: The logic engine provides the ground; the schemas here energize and direct it.
+- **Recursive traversal**: Each schema supports further decomposition, enabling deep, flexible modeling and process orchestration.
+- **Event-driven, OOFP design**: The architecture is not static OOP, but a functional, event-driven network—"a wheel within a wheel"—where every component can mediate, react, and synthesize.
+
+## Purpose
+This root schema is not an application framework, but the abstract control/flow network that wraps and energizes the Form Engine. It is the minimal, generative core needed to build living, dialectical systems in ORGANON.
+
+---
+
+> "The system must be both principled and dynamic: grounded in Being, but always returning through mediation and process to new beginnings." (Hegel, paraphrased)
+
+---
+
+For further details, see the philosophical notes in each schema file and the main ORGANON documentation.

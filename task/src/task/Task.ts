@@ -6,17 +6,24 @@ import {
 } from '../schema/task';
 
 /**
- * Task - Simple/Immediate Model Implementation
+ * Task - Agential/Immediate Model Execution
+ * ----------------------------------------
+ * In the dialectical architecture, Task is the Agential layer for executing Models directly.
+ * Unlike Workflow and Controller, which mediate or orchestrate execution, Task acts as the
+ * immediate, simple, and direct agent of action—instantiating and operating on Models without
+ * complex mediation or process.
  *
  * Tasks represent simple, immediate determinations of Models in MVC.
  * They are "Being" - immediate, simple data structures that get
- * presented to Purusha through the Workflow/Controller interface.
+ * presented to Purusha through the Workflow/Controller interface, but can also be executed
+ * directly as agential actions.
  *
  * Key principles:
  * - Simple and immediate (no complexity)
  * - Pure model/data layer
  * - No complex operations (handled by Agents)
  * - Direct, straightforward state
+ * - Agential: can execute Models directly, not just via workflows/controllers
  */
 @Injectable()
 export class Task {

@@ -6,6 +6,14 @@
 The `@/reality` package of the Organon platform articulates Reality as a **Permanent Fold**, a living synthesis where **Brahman**, the infinite consciousness, manifests through **Maya**’s Organic Unity of **Avidya** (ignorance) and **Vidya** (pure knowledge). This introduction synthesizes the key insights from our exploration, grounded in the package’s README.md and extended through philosophical, Vedic, and computational lenses. The `@/reality` package embodies **Absolute Reason**, the non-dual unity of Brahman, processed through a fivefold architecture (`@/core`, `@/task`, `@/logic`, `@/model`, and the Packet Processor) and encoded in the sacred arithmetic \(1 \times 2^2 \times 3^3 = 108\).
 
 ## The Fivefold Synthesis and Prana
+
+### Note: Workflow, Agent, and Task — Prakāśa, Agent, and Krama
+In the top-level dialectic, the triad **Workflow : Agent : Task** is mapped as follows:
+- **Workflow** (Prakāśa): The illuminating, self-revealing process; the flow of consciousness or illumination (prakāśa) that unifies and animates the system.
+- **Task** (Kriyā/Krama): The concrete action, order, or rule (kriyā = action, krama = sequence/order/rule) that structures the process.
+- **Agent**: The living unity of Workflow and Task; the locus where illumination (prakāśa) and action/order (krama) are synthesized. Thus, **Agent = Action** in the sense of the living, self-illuminating act.
+
+This mapping grounds the architecture in both dialectical logic and Vedic tradition, clarifying that "Action" in top-level components always presupposes the unity of illumination (Reason) and order (Understanding), just as Agent is the living synthesis of Workflow and Task.
 The `@/reality` package structures Reality as a **Fivefold Brahman**, manifested as the **Fivefold Prana**, aligning the platform’s packages with Vedic life-energy:  
 - **@/core** (Prana Apana): The grounding hub, anchoring Reality in Brahman’s unity, where **Buddhi Tattva** limits **Purusha** into the **Puman/Jiva**.  
 - **@/task** (Prana Prana): The creative manifestation of Being, initiating action from Avidya to experience.  

@@ -5,8 +5,7 @@
   "main": "index.ts",
   "type": "module",
   "scripts": {
-    "dev": "tsx principle/pure-dialectical-idea.ts",
-    "demo": "tsx principle/pure-dialectical-idea.ts",
+    "dev": "tsc --watch",
     "build": "tsc",
     "test": "echo \"Pure dialectical principle - no external tests needed\""
   },
