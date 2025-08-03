@@ -16,10 +16,10 @@
  * computational agency through the addition of Kriya (transformative action).
  */
 
-import { DialecticalBridge, DialecticalAnalyzer } from './model/src/dialectical-bridge';
-import { TaskFactory } from './task/src/schema/task';
-import { AgentFactory } from './task/src/schema/agent';
-import { WorkflowFactory } from './task/src/schema/workflow';
+import { DialecticalBridge, DialecticalAnalyzer } from '../../model/doc/dialectical-bridge.js';
+import { TaskFactory } from '../../task/src/schema/task.js';
+import { AgentFactory } from '../../task/src/schema/agent.js';
+import { WorkflowFactory } from '../../task/src/schema/workflow.js';
 
 // Simulate some input from @organon/logic (Being)
 const logicalBeing = {

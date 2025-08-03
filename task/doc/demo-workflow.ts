@@ -1,4 +1,4 @@
-import { Workflow } from './Workflow.js';
+import { Workflow } from '../src/workflow/Workflow.js';
 
 /**
  * Demo: Workflow as Pure Program with Monitoring
