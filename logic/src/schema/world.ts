@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { BaseSchema } from '../being/schema/base';
+import { BaseSchema } from './base';
 
 /**
  * World Schema - The First Moment of Essence

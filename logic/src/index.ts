@@ -2,3 +2,4 @@
 export * from './being/quality/being/being';
 export * from './being/quantity/quantity/quantity';
 export * from './being/quantity/quantum/number';
+export * as processor from './processor/index.js';

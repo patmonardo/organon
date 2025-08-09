@@ -30,7 +30,7 @@ export const DisplayShapeSchema = z.object({
     mode: z.enum(["view", "edit", "create"]).optional(),
 
     // Other component-specific props
-    [z.string().optional()]: z.any(),
+    //[z.string().optional()]: z.any(),
   }),
 
   // Metadata

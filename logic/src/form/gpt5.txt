@@ -1,0 +1,31 @@
+OK lets document what is going on with @organon/logic.
+Lets focus on a succinct README.md file that we can
+later expand into an Introduction.md.
+These should be seen as System and User level LLM Prompt Instructions.
+so here in Form, these are top-level wrappers of things we define using Zod
+in logic/schema.
+"Everything is a Form"...we actually dont enforce that schematically ...
+but not everything takes a Form prefix.
+Only the schemas that implement the Form "theory" itself ,
+that belong to "form theory" take the Form prefix and these
+are really just in schema/{schema.ts,shape.ts}
+and those are the main files and then there are the
+Six Pillars of the Form Theory.
+Form:Entity;Context:Property;Morph:Relation
+
+in @logic/schema those take Form prefixes.
+hmm we dont have a Form schema, it is called schema.ts
+we should rename that and define the FormSchema there...
+OK I did rename @logic/schema/schema.ts to schema/form.ts
+I suppose we do export a Form type from Zod schema/form
+but we dont normally do that.
+We want to define a Form Class in @logic/form
+but it seems we can do that in TS without a name clash.
+OK so this is the prompt for logic/form.
+I think we should start with logic/schema.
+I have cleaned up the naming schema in logic/schema.
+well where do we start? 
+
+So there are six engines but actually I designed this to have 
+7 engines and we are adding the Logic Process Engine currently.
+That is the Goal engine.

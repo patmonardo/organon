@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { FormLayoutSchema, FormShapeSchema } from './shape';
+import { FormShapeSchema } from './shape';
 
 // Add support for confirmation dialogs and HeroIcons
 export const ButtonVariantSchema = z.enum(['primary', 'secondary', 'ghost', 'danger']);
@@ -24,32 +24,32 @@ export const ButtonShapeSchema = FormShapeSchema.extend ({
 
 export type ButtonShape = z.infer<typeof ButtonShapeSchema>;
 
-export function defineButton(config: Partial<ButtonShape>): ButtonShape {
-  const shape: ButtonShape = {
-    fields: [],
-    layout: {
-    variant: config.variant || 'primary',
-    label: config.label || 'Button',
-    size: config.size,
-    icon: config.icon,
-    iconSource: config.iconSource,
-    href: config.href,
-    onClick: config.onClick,
-    disabled: config.disabled ?? false,
-    // Add the missing fields
-    confirmMessage: config.confirmMessage,
-    refreshAfterAction: config.refreshAfterAction ?? false,
-    srOnly: config.srOnly ?? false,
-    customClass: config.customClass
-    },
-    state: {
-      status: 'idle',
-      message: '',
-      errors: {},
-    },
-    actions: [],
-    type: 'button',
-  };
+// export function defineButton(config: Partial<ButtonShape>): ButtonShape {
+//   const shape: ButtonShape = {
+//     fields: [],
+//     layout: {
+//     variant: config.variant || 'primary',
+//     label: config.label || 'Button',
+//     size: config.size,
+//     icon: config.icon,
+//     iconSource: config.iconSource,
+//     href: config.href,
+//     onClick: config.onClick,
+//     disabled: config.disabled ?? false,
+//     // Add the missing fields
+//     confirmMessage: config.confirmMessage,
+//     refreshAfterAction: config.refreshAfterAction ?? false,
+//     srOnly: config.srOnly ?? false,
+//     customClass: config.customClass
+//     },
+//     state: {
+//       status: 'idle',
+//       message: '',
+//       errors: {},
+//     },
+//     actions: [],
+//     type: 'button',
+//   };
 
-  return shape;
-}
+//   return shape;
+// }

@@ -1,5 +1,5 @@
-import { Button } from '@/form/button/button';
-import { ButtonShape } from '@/form/schema/button';
+import { Button } from './button';
+import { ButtonShape } from '@organon/logic/schema/button';
 
 export interface ActionButtonProps extends Partial<ButtonShape> {
   action: string;
@@ -43,7 +43,7 @@ export function ActionButtonForm(props: ActionButtonProps) {
       });
       setContent(rendered);
     }
-    
+
     renderButton();
   }, [button, props]);
 

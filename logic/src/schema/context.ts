@@ -1,41 +1,41 @@
-//@/core/being/schema/context.ts
+//@/core/being/schema/FormContext.ts
 import { z } from 'zod';
 import { BaseSchema } from './base';
-import { EntityRefSchema } from './entity';
+import { FormEntityRefSchema } from './entity';
 
 /**
- * Context Schema - The Third Moment of Being
+ * FormContext Schema - The Third Moment of Being
  *
- * In Hegelian terms, Context represents the Synthesis (Concept) that unites
+ * In Hegelian terms, FormContext represents the Synthesis (Concept) that unites
  * Entity (Thesis/Being) and Relation (Antithesis/Essence) in a concrete Universal.
  *
  * It embodies the dialectical movement where individual entities and their connections
  * are brought together in a meaningful totality.
  */
 
-// Context types representing different modes of conceptual organization
-export const CoreContextTypes = [
+// FormContext types representing different modes of conceptual organization
+export const CoreFormContextTypes = [
   'collection',    // Simple gathering - immediate unity
   'organization',  // Structured arrangement - mediated unity
   'project',       // Purposive structure - teleological unity
   'domain',        // Knowledge boundary - categorical unity
   'category',      // Classification system - logical unity
-  'session',       // Temporal context - processual unity
-  'view',          // Perspective context - phenomenological unity
-  'workflow',      // Process context - operational unity
-  'scenario',      // Hypothetical context - modal unity
-  'generic'        // Universal context - abstract unity
+  'session',       // Temporal FormContext - processual unity
+  'view',          // Perspective FormContext - phenomenological unity
+  'workflow',      // Process FormContext - operational unity
+  'scenario',      // Hypothetical FormContext - modal unity
+  'generic'        // Universal FormContext - abstract unity
 ] as const;
 
-// The core context schema - represents the concrete universal
-export const ContextSchema = BaseSchema.extend({
-  // Universal moment - what makes it this particular context
+// The core FormContext schema - represents the concrete universal
+export const FormContextSchema = BaseSchema.extend({
+  // Universal moment - what makes it this particular FormContext
   name: z.string(),
   type: z.string(),
   description: z.string().optional(),
 
   // Particular moment - the specific content it contains
-  entities: z.array(EntityRefSchema).default([]),
+  entities: z.array(FormEntityRefSchema).default([]),
   relations: z.array(z.string()).default([]), // IDs of relations
 
   // Individual moment - the unique properties that differentiate it
@@ -58,13 +58,13 @@ export const ContextSchema = BaseSchema.extend({
   domain: z.string().optional(),
 });
 
-export type Context = z.infer<typeof ContextSchema>;
+export type FormContext = z.infer<typeof FormContextSchema>;
 
 /**
  * Calculate graph density from entity and relation counts
  *
- * Represents the ratio of actual to possible relations in the context.
- * This is a quantitative measure of the context's completeness.
+ * Represents the ratio of actual to possible relations in the FormContext.
+ * This is a quantitative measure of the FormContext's completeness.
  */
 export function calculateDensity(entityCount: number, relationCount: number): number | undefined {
   if (entityCount <= 1) return entityCount === 0 ? undefined : 1.0;
@@ -75,21 +75,21 @@ export function calculateDensity(entityCount: number, relationCount: number): nu
 }
 
 /**
- * Create a new context - the generative moment
+ * Create a new FormContext - the generative moment
  */
-export function createContext(params: {
+export function createFormContext(params: {
   name: string;
   type: string;
   description?: string;
-  entities?: z.infer<typeof EntityRefSchema>[];
+  entities?: z.infer<typeof FormEntityRefSchema>[];
   relations?: string[];
   properties?: Record<string, any>;
   validFrom?: Date;
   validTo?: Date;
   valid?: boolean;
-  scope?: z.infer<typeof ContextSchema.shape.scope>;
+  scope?: z.infer<typeof FormContextSchema.shape.scope>;
   domain?: string;
-}): Context {
+}): FormContext {
   const now = new Date();
   const entities = params.entities || [];
   const relations = params.relations || [];
@@ -118,28 +118,28 @@ export function createContext(params: {
 }
 
 /**
- * Helper to determine if a context is active at a specific time
+ * Helper to determine if a FormContext is active at a specific time
  *
- * Represents the temporal determination of the context's actuality.
+ * Represents the temporal determination of the FormContext's actuality.
  */
-export function isContextActiveAt(
-  context: Context,
+export function isFormContextActiveAt(
+  FormContext: FormContext,
   date?: Date | null,
   timeProvider = (): Date => new Date()
 ): boolean {
-  // If context is not valid, it's not active regardless of time
-  if (!context.valid) return false;
+  // If FormContext is not valid, it's not active regardless of time
+  if (!FormContext.valid) return false;
 
   // If no date specified, use current time
   const checkDate = date || timeProvider();
 
   // Check validFrom if specified
-  if (context.validFrom && checkDate < context.validFrom) {
+  if (FormContext.validFrom && checkDate < FormContext.validFrom) {
     return false;
   }
 
   // Check validTo if specified
-  if (context.validTo && checkDate > context.validTo) {
+  if (FormContext.validTo && checkDate > FormContext.validTo) {
     return false;
   }
 
@@ -147,15 +147,15 @@ export function isContextActiveAt(
 }
 
 /**
- * Helper to add entities to a context - the augmentation moment
+ * Helper to add entities to a FormContext - the augmentation moment
  */
-export function addEntitiesToContext(
-  context: Context,
-  entities: z.infer<typeof EntityRefSchema>[]
-): Context {
+export function addEntitiesToFormContext(
+  FormContext: FormContext,
+  entities: z.infer<typeof FormEntityRefSchema>[]
+): FormContext {
   // Filter out duplicates
   const existingEntityMap = new Map(
-    context.entities.map(e => [`${e.entity}:${e.id}`, e])
+    FormContext.entities.map(e => [`${e.entity}:${e.id}`, e])
   );
 
   const newEntities = entities.filter(e =>
@@ -163,46 +163,46 @@ export function addEntitiesToContext(
   );
 
   if (newEntities.length === 0) {
-    return context;
+    return FormContext;
   }
 
-  const updatedEntities = [...context.entities, ...newEntities];
+  const updatedEntities = [...FormContext.entities, ...newEntities];
 
   return {
-    ...context,
+    ...FormContext,
     entities: updatedEntities,
     metrics: {
       entityCount: updatedEntities.length,
-      relationCount: context.relations.length,
-      density: calculateDensity(updatedEntities.length, context.relations.length)
+      relationCount: FormContext.relations.length,
+      density: calculateDensity(updatedEntities.length, FormContext.relations.length)
     },
     updatedAt: new Date()
   };
 }
 
 /**
- * Helper to add relations to a context - the connection moment
+ * Helper to add relations to a FormContext - the connection moment
  */
-export function addRelationsToContext(
-  context: Context,
+export function addRelationsToFormContext(
+  FormContext: FormContext,
   relationIds: string[]
-): Context {
+): FormContext {
   // Filter out duplicates
-  const newRelations = relationIds.filter(id => !context.relations.includes(id));
+  const newRelations = relationIds.filter(id => !FormContext.relations.includes(id));
 
   if (newRelations.length === 0) {
-    return context;
+    return FormContext;
   }
 
-  const updatedRelations = [...context.relations, ...newRelations];
+  const updatedRelations = [...FormContext.relations, ...newRelations];
 
   return {
-    ...context,
+    ...FormContext,
     relations: updatedRelations,
     metrics: {
-      entityCount: context.entities.length,
+      entityCount: FormContext.entities.length,
       relationCount: updatedRelations.length,
-      density: calculateDensity(context.entities.length, updatedRelations.length)
+      density: calculateDensity(FormContext.entities.length, updatedRelations.length)
     },
     updatedAt: new Date()
   };

@@ -99,7 +99,6 @@ export const EssenceSchema = z.object({
   logical_priority: z.number().min(2).max(10).default(5), // Essence mediates Being and Concept
   complexity_level: z.enum(['simple', 'complex', 'organic']).default('complex'),
   version: z.string().optional(),
-  context: z.record(z.string(), z.any()).optional(),
 });
 
 // Factory for creating Essence instances with dialectical mediation

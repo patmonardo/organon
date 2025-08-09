@@ -1,58 +1,52 @@
-import { z } from 'zod';
-import { BaseSchema } from './base';
+import { z } from "zod";
+import { BaseSchema } from "./base";
+import { FormEntityRefSchema } from "./entity";
+import { FormEntityRef } from "./entity";
 
 /**
- * Relation Schema
+ * FormRelation Schema
  *
- * Core schema for entity relations in the membership system.
+ * Core schema for Form entity relations in the membership system.
  * This schema represents the "Essence" aspect of our conceptual triad.
  */
-
-// Entity reference schema - the basic identifier for an entity
-export const EntityRefSchema = z.object({
-  entity: z.string(),
-  id: z.string()
-});
-
-export type EntityRef = z.infer<typeof EntityRefSchema>;
 
 // Common relation types
 export const CoreRelationTypes = [
   // Structural relations
-  'contains',     // Whole-part relation
-  'instance_of',  // Type-instance relation
-  'extends',      // Extension relation
-  'implements',   // Implementation relation
+  "contains", // Whole-part relation
+  "instance_of", // Type-instance relation
+  "extends", // Extension relation
+  "implements", // Implementation relation
 
   // Associative relations
-  'references',   // Simple reference
-  'associates',   // General association
-  'depends_on',   // Dependency relation
-  'equivalent_to', // Equivalence relation
+  "references", // Simple reference
+  "associates", // General association
+  "depends_on", // Dependency relation
+  "equivalent_to", // Equivalence relation
 
   // Ownership relations
-  'owned_by',     // Ownership relation
-  'created_by',   // Creation relation
+  "owned_by", // Ownership relation
+  "created_by", // Creation relation
 
   // Generic relation
-  'related_to'    // Generic relation
+  "related_to", // Generic relation
 ] as const;
 
 // Relation direction types
 export const RelationDirectionTypes = [
-  'directed',      // One-way relation: source → target
-  'bidirectional'  // Two-way relation: source ↔ target
+  "directed", // One-way relation: source → target
+  "bidirectional", // Two-way relation: source ↔ target
 ] as const;
 
 // The core relation schema
-export const RelationSchema = BaseSchema.extend({
+export const FormRelationSchema = BaseSchema.extend({
   // Connection endpoints
-  source: EntityRefSchema,
-  target: EntityRefSchema,
+  source: FormEntityRefSchema,
+  target: FormEntityRefSchema,
 
   // Relation characteristics
   type: z.string(),
-  direction: z.enum(RelationDirectionTypes).default('directed'),
+  direction: z.enum(RelationDirectionTypes).default("directed"),
 
   // Metadata
   properties: z.record(z.any()).optional(),
@@ -63,25 +57,25 @@ export const RelationSchema = BaseSchema.extend({
   validTo: z.date().optional(),
 
   // Relation strength (0-1)
-  strength: z.number().min(0).max(1).default(1)
+  strength: z.number().min(0).max(1).default(1),
 });
 
-export type Relation = z.infer<typeof RelationSchema>;
+export type FormRelation = z.infer<typeof FormRelationSchema>;
 
 /**
  * Create a relation between entities
  */
-export function createRelation(params: {
-  source: EntityRef;
-  target: EntityRef;
+export function createFormRelation(params: {
+  source: FormEntityRef;
+  target: FormEntityRef;
   type: string;
-  direction?: z.infer<typeof RelationSchema.shape.direction>;
+  direction?: z.infer<typeof FormRelationSchema.shape.direction>;
   properties?: Record<string, any>;
   validFrom?: Date;
   validTo?: Date;
   strength?: number;
   valid?: boolean;
-}): Relation {
+}): FormRelation {
   const id = crypto.randomUUID();
   const now = new Date();
 
@@ -90,24 +84,26 @@ export function createRelation(params: {
     source: params.source,
     target: params.target,
     type: params.type,
-    direction: params.direction || 'directed',
+    direction: params.direction || "directed",
     properties: params.properties || {},
     valid: params.valid ?? true,
     validFrom: params.validFrom || now,
     validTo: params.validTo,
     strength: params.strength ?? 1,
     createdAt: now,
-    updatedAt: now
+    updatedAt: now,
   };
 }
 
 /**
  * Create a bidirectional relation between entities
  */
-export function createBidirectionalRelation(params: Omit<Parameters<typeof createRelation>[0], 'direction'>): Relation {
-  return createRelation({
+export function createBidirectionalRelation(
+  params: Omit<Parameters<typeof createFormRelation>[0], "direction">
+): FormRelation {
+  return createFormRelation({
     ...params,
-    direction: 'bidirectional'
+    direction: "bidirectional",
   });
 }
 
@@ -116,9 +112,9 @@ export const getCurrentTime = () => new Date();
 
 /**
  * Helper to determine if a relation is active at a specific time
-*/
-  export function isRelationActiveAt(
-  relation: Relation,
+ */
+export function isRelationActiveAt(
+  relation: FormRelation,
   date: Date | null = null,
   timeProvider = getCurrentTime
 ): boolean {
@@ -136,7 +132,7 @@ export const getCurrentTime = () => new Date();
 /**
  * Helper to format an entity key (for indexing)
  */
-export function formatEntityKey(ref: EntityRef): string {
+export function formatEntityKey(ref: FormEntityRef): string {
   return `${ref.entity}:${ref.id}`;
 }
 
@@ -152,23 +148,23 @@ export function linkToRelation(link: {
   metadata?: Record<string, any>;
   established?: Date;
   expires?: Date;
-}): Relation {
-  return createRelation({
+}): FormRelation {
+  return createFormRelation({
     source: { entity: link.sourceEntity, id: link.sourceId },
     target: { entity: link.targetEntity, id: link.targetId },
     type: link.relation,
     properties: link.metadata,
     validFrom: link.established,
-    validTo: link.expires
+    validTo: link.expires,
   });
 }
 
 /**
  * Helper to invert a relation (swap source and target)
  */
-export function invertRelation(relation: Relation): Relation {
+export function invertRelation(relation: FormRelation): FormRelation {
   // Can't invert a bidirectional relation (it's already bidirectional)
-  if (relation.direction === 'bidirectional') {
+  if (relation.direction === "bidirectional") {
     return relation;
   }
 
@@ -177,14 +173,17 @@ export function invertRelation(relation: Relation): Relation {
     id: crypto.randomUUID(), // Create a new ID for the inverted relation
     source: relation.target,
     target: relation.source,
-    updatedAt: new Date()
+    updatedAt: new Date(),
   };
 }
 
 /**
  * Helper to check if two relations connect the same entities
  */
-export function relationsConnectSameEntities(a: Relation, b: Relation): boolean {
+export function relationsConnectSameEntities(
+  a: FormRelation,
+  b: FormRelation
+): boolean {
   const sameDirection =
     a.source.entity === b.source.entity &&
     a.source.id === b.source.id &&

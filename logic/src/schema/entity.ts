@@ -1,21 +1,21 @@
-//@/core/being/schema/entity.ts
+//@organon/logic/schema/FormEntity.ts
 import { z } from 'zod';
 import { BaseSchema } from './base';
 
 /**
- * Entity Schema
+ * FormEntity Schema
  *
  * Core schema for entities in the membership system.
  * This schema represents the "Being" aspect of our conceptual triad.
  */
 
-// Basic entity reference schema
-export const EntityRefSchema = z.object({
+// Basic FormEntity reference schema
+export const FormEntityRefSchema = z.object({
   entity: z.string(),
   id: z.string()
 });
 
-export type EntityRef = z.infer<typeof EntityRefSchema>;
+export type FormEntityRef = z.infer<typeof FormEntityRefSchema>;
 
 // Namespaces represent categories of entities
 export const CoreNamespaces = [
@@ -27,28 +27,28 @@ export const CoreNamespaces = [
   'meta'        // Metadata entities
 ] as const;
 
-// Core system entity types
-export const SystemEntityTypes = [
-  'system.Entity',       // Base entity definition
-  'system.EntityType',   // Entity type definition
+// Core system FormEntity types
+export const SystemFormEntityTypes = [
+  'system.FormEntity',       // Base FormEntity definition
+  'system.FormEntityType',   // FormEntity type definition
   'system.Relation',     // Relation definition
   'system.Context',      // Context definition
   'system.Registry'      // Registry definition
 ] as const;
 
-// Entity status values
-export const EntityStatusValues = [
-  'active',     // Entity is active and usable
-  'archived',   // Entity is archived but retrievable
-  'deleted',    // Entity is soft-deleted
-  'draft',      // Entity is in draft mode
-  'template'    // Entity is a template
+// FormEntity status values
+export const FormEntityStatusValues = [
+  'active',     // FormEntity is active and usable
+  'archived',   // FormEntity is archived but retrievable
+  'deleted',    // FormEntity is soft-deleted
+  'draft',      // FormEntity is in draft mode
+  'template'    // FormEntity is a template
 ] as const;
 
-// The core entity schema
-export const EntitySchema = BaseSchema.extend({
-  // Core identity
-  type: z.string(),  // The entity type
+// The core FormEntity schema
+export const FormEntitySchema = BaseSchema.extend({
+  // Core idFormEntity
+  type: z.string(),  // The FormEntity type
   name: z.string(),  // Display name
 
   // Optional description
@@ -58,23 +58,23 @@ export const EntitySchema = BaseSchema.extend({
   properties: z.record(z.any()).optional(),
 
   // System metadata
-  status: z.enum(EntityStatusValues).default('active'),
+  status: z.enum(FormEntityStatusValues).default('active'),
   version: z.number().int().default(1)
 });
 
-export type Entity = z.infer<typeof EntitySchema>;
+export type FormEntity = z.infer<typeof FormEntitySchema>;
 
 /**
- * Helper function to create a new entity
+ * Helper function to create a new FormEntity
  */
-export function createEntity(params: {
+export function createFormEntity(params: {
   type: string;
   id?: string;
   name?: string;
   description?: string;
   properties?: Record<string, any>;
-  status?: z.infer<typeof EntitySchema.shape.status>;
-}): Entity {
+  status?: z.infer<typeof FormEntitySchema.shape.status>;
+}): FormEntity {
   const id = params.id || crypto.randomUUID();
   const now = new Date();
 
@@ -92,24 +92,24 @@ export function createEntity(params: {
 }
 
 // Update this function to use 'status' instead of 'valid'
-export function updateEntity(
-  entity: Entity,
+export function updateFormEntity(
+  FormEntity: FormEntity,
   updates: {
     name?: string;
     description?: string;
     properties?: Record<string, any>;
-    status?: z.infer<typeof EntitySchema.shape.status>;
+    status?: z.infer<typeof FormEntitySchema.shape.status>;
     version?: number;
   }
-): Entity {
+): FormEntity {
   return {
-    ...entity,
+    ...FormEntity,
     ...(updates.name !== undefined ? { name: updates.name } : {}),
     ...(updates.description !== undefined ? { description: updates.description } : {}),
     ...(updates.status !== undefined ? { status: updates.status } : {}),
     ...(updates.version !== undefined ? { version: updates.version } : {}),
     properties: {
-      ...entity.properties,
+      ...FormEntity.properties,
       ...(updates.properties || {})
     },
     updatedAt: new Date()
@@ -117,42 +117,42 @@ export function updateEntity(
 }
 
 /**
- * Helper function to create an entity reference
+ * Helper function to create an FormEntity reference
  */
-export function createEntityRef(entity: Entity): EntityRef {
+export function createFormEntityRef(FormEntity: FormEntity): FormEntityRef {
   return {
-    entity: entity.type,
-    id: entity.id
+    entity: FormEntity.type,
+    id: FormEntity.id
   };
 }
 
 /**
- * Helper function to format an entity key
+ * Helper function to format an FormEntity key
  */
-export function formatEntityKey(entityOrRef: Entity | EntityRef): string {
-  const type = 'type' in entityOrRef ? entityOrRef.type : entityOrRef.entity;
-  const id = entityOrRef.id;
+export function formatFormEntityKey(FormEntityOrRef: FormEntity | FormEntityRef): string {
+  const type = 'type' in FormEntityOrRef ? FormEntityOrRef.type : FormEntityOrRef.entity;
+  const id = FormEntityOrRef.id;
   return `${type}:${id}`;
 }
 
 /**
- * Helper function to parse an entity key
+ * Helper function to parse an FormEntity key
  */
-export function parseEntityKey(key: string): EntityRef {
+export function parseFormEntityKey(key: string): FormEntityRef {
   const [entity, id] = key.split(':');
   return { entity, id };
 }
 
 /**
- * Helper function to check if an entity is a system entity
+ * Helper function to check if an FormEntity is a system FormEntity
  */
-export function isSystemEntity(entity: Entity): boolean {
-  return entity.type.startsWith('system.');
+export function isSystemFormEntity(FormEntity: FormEntity): boolean {
+  return FormEntity.type.startsWith('system.');
 }
 
 /**
- * Helper function to check if an entity is protected
+ * Helper function to check if an FormEntity is protected
  */
-export function isProtectedEntity(entity: Entity): boolean {
-  return Boolean(entity.properties?.protected);
+export function isProtectedFormEntity(FormEntity: FormEntity): boolean {
+  return Boolean(FormEntity.properties?.protected);
 }

@@ -1,7 +1,6 @@
 //@/form/schema/font.ts
 import { z } from 'zod'
 import { FormShapeSchema } from './shape'
-import type { NextFontWithVariable } from 'next/dist/compiled/@next/font'
 
 // Next.js font configuration schema
 export const NextFontConfigSchema = z.object({
@@ -23,5 +22,4 @@ export const FontShapeSchema = FormShapeSchema.extend({
 })
 
 export type NextFontConfig = z.infer<typeof NextFontConfigSchema>
-export type FontInstance = NextFontWithVariable
 export type FontShape = z.infer<typeof FontShapeSchema>

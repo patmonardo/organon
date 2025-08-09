@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { FormShapeSchema, type FormShape } from './shape'
+import { FormShapeSchema } from './shape'
 
 export const ImageSizeSchema = z.object({
   width: z.number().or(z.enum(['auto', 'full'])),

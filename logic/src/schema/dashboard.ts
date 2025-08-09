@@ -109,7 +109,7 @@ export type DashboardShape = z.infer<typeof DashboardShapeSchema>;
 /**
  * Default dashboard configuration
  */
-export const DEFAULT_DASHBOARD: DashboardShape = {
+export const DEFAULT_DASHBOARD: Partial<DashboardShape> = {
   type: 'dashboard',
   fields: [], // Empty fields array since dashboards don't have input fields
   state: {

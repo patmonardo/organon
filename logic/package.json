@@ -11,7 +11,8 @@
     "lint": "echo 'Linting not configured yet'"
   },
   "dependencies": {
-    "@organon/core": "workspace:*"
+    "@organon/core": "workspace:*",
+    "zod": "3.24.2"
   },
   "devDependencies": {
     "vitest": "^3.1.3"

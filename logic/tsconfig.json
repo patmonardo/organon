@@ -24,8 +24,8 @@
     /* Modules */ /* Specify what module code is generated. */
     "rootDir": "./src", /* Specify the root folder within your source files. */
     "outDir": "./dist", /* Specify an output folder for all emitted files. */
-    "moduleResolution": "nodenext", /* Specify how TypeScript looks up a file from a given module specifier. */
-    "module": "nodenext", /* Specify what module code is generated. */
+    "moduleResolution": "NodeNext", /* Specify how TypeScript looks up a file from a given module specifier. */
+    "module": "NodeNext", /* Specify what module code is generated. */
     // "baseUrl": "./",                                  /* Specify the base directory to resolve non-relative module names. */
     "paths": {
       "@/*": [
@@ -109,6 +109,18 @@
     // "skipLibCheck": true /* Skip type checking all .d.ts files. */
   },
   "include": [
-    "src/**/*"
+    "src/processor/**/*.ts",
+  "src/form/entity/entity.ts",
+  "src/form/context/context.ts",
+  "src/form/property/property.ts",
+  "src/form/relation/relation.ts",
+  "src/form/morph/morph.ts",
+  "src/form/triad/FormTriad.ts",
+    "src/schema/*.ts"
   ],
+  "exclude": [
+    "src/**/*.tsx",
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx",
+  ]
 }

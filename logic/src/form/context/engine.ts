@@ -328,7 +328,7 @@ export class ContextEngine {
       ? { id: info.id, name: info.name, isActive: info.isActive }
       : undefined;
   }
-  
+
   // --- Getters (Keep as is or simplify if Sandarbha instances aren't stored) ---
   getContextInfo(
     contextId: string
