@@ -2,7 +2,7 @@
   "name": "organon",
   "version": "0.1.0",
   "private": true,
-  "description": "Organon - Research Assistant Platform with Complete Dialectical Architecture",
+  "description": "Organon Graph Data Science- Research Assistant Platform",
   "workspaces": [
     "reality",
     "core",
@@ -12,10 +12,12 @@
   ],
   "scripts": {
     "build": "pnpm run --recursive build",
+    "b": "pnpm run --recursive build",
+    "clean": "rm -rf node_modules && pnpm run --recursive clean",
+    "dev": "pnpm run --parallel --recursive dev",
+    "d": "pnpm run --parallel --recursive dev",
     "test": "pnpm run --recursive test",
     "lint": "pnpm run --recursive lint",
-    "dev": "pnpm run --parallel --recursive dev",
-    "clean": "pnpm run --recursive clean",
     "reality:build": "pnpm --filter=@organon/reality build",
     "reality:test": "pnpm --filter=@organon/reality test",
     "reality:dev": "pnpm --filter=@organon/reality dev",
@@ -24,10 +26,6 @@
     "core:test": "pnpm --filter=@organon/core test",
     "core:dev": "pnpm --filter=@organon/core dev",
     "core:start": "pnpm --filter=@organon/core start",
-    "task:build": "pnpm --filter=@organon/task build",
-    "task:test": "pnpm --filter=@organon/task test",
-    "task:dev": "pnpm --filter=@organon/task dev",
-    "task:start": "pnpm --filter=@organon/task start",
     "logic:build": "pnpm --filter=@organon/logic build",
     "logic:test": "pnpm --filter=@organon/logic test",
     "logic:dev": "pnpm --filter=@organon/logic dev",
@@ -35,7 +33,11 @@
     "model:build": "pnpm --filter=@organon/model build",
     "model:test": "pnpm --filter=@organon/model test",
     "model:dev": "pnpm --filter=@organon/model dev",
-    "model:start": "pnpm --filter=@organon/model start"
+    "model:start": "pnpm --filter=@organon/model start",
+    "task:build": "pnpm --filter=@organon/task build",
+    "task:test": "pnpm --filter=@organon/task test",
+    "task:dev": "pnpm --filter=@organon/task dev",
+    "task:start": "pnpm --filter=@organon/task start"
   },
   "devDependencies": {
     "@types/node": "^22.15.17",

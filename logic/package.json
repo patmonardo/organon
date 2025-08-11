@@ -1,19 +1,27 @@
 {
   "name": "@organon/logic",
   "version": "0.1.0",
-  "description": "Organon Logic Package",
+  "description": "Organon Graph Data Science Logic Library",
   "scripts": {
     "build": "tsc",
+    "b": "tsc",
+    "clean": "rm -rf dist node_modules",
     "dev": "tsc --watch",
+    "d": "tsc --watch",
     "test": "vitest",
     "test:watch": "vitest --watch",
     "test:ui": "vitest --ui",
     "lint": "echo 'Linting not configured yet'"
   },
   "dependencies": {
-    "@organon/core": "workspace:*"
+    "@types/node": "^22.15.17",
+    "@types/papaparse": "^5.3.16",
+    "apache-arrow": "^20.0.0",
+    "js-yaml": "^4.1.0",
+    "papaparse": "^5.5.3"
   },
   "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
     "vitest": "^3.1.3"
   }
 }

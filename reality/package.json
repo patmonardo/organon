@@ -1,40 +1,22 @@
 {
   "name": "@organon/reality",
   "version": "0.1.0",
-  "description": "Organon Reality Package",
-  "main": "index.ts",
-  "type": "module",
+  "description": "Organon Graph Data Science Reality Library",
   "scripts": {
-    "dev": "tsc --watch",
     "build": "tsc",
-    "test": "echo \"Pure dialectical principle - no external tests needed\""
+    "b": "tsc",
+    "clean": "rm -rf dist node_modules",
+    "dev": "tsc --watch",
+    "d": "tsc --watch",
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "test:ui": "vitest --ui",
+    "lint": "echo 'Linting not configured yet'"
   },
-  "keywords": [
-    "dialectical",
-    "hegel",
-    "kant",
-    "philosophy",
-    "pure-principle",
-    "alpha-omega",
-    "idea",
-    "concept"
-  ],
   "dependencies": {
-    "typescript": "^5.0.0",
-    "tsx": "^4.0.0"
+    "@types/node": "^22.15.17"
   },
   "devDependencies": {
-    "@types/node": "^20.0.0"
-  },
-  "philosophy": {
-    "foundation": "Kant-Hegel dialectical logic",
-    "method": "Start from pure IDEA, let it develop its own CONCEPT",
-    "goal": "Demonstrate that serious philosophy is the most practical engineering",
-    "pattern": "Alpha (pure IDEA) → Development → Omega (integration)"
-  },
-  "architecture": {
-    "sacred_number": "108 = 1 × 27 × 4",
-    "structure": "Unity × Trinity³ × Projection",
-    "principle": "IDEA projects into CONCEPT through fourfold mechanism"
+    "vitest": "^3.1.3"
   }
 }

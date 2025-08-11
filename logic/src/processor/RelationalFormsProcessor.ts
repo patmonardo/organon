@@ -6,12 +6,12 @@
  * FUNDAMENTAL ARCHITECTURAL REVELATION:
  * ===================================
  * Our Form Processor presupposes the complete BEC (Being-Essence-Concept) architecture!
- * 
+ *
  * THE PRINCIPLE/LAW DYAD STRUCTURE:
  * Container/Contained = Principle/Law = Being/Essence
- * 
+ *
  * Form:Entity      = Being/Principle : Essence/Law
- * Context:Property = Being/Principle : Essence/Law  
+ * Context:Property = Being/Principle : Essence/Law
  * Morph:Relation   = Being/Principle : Essence/Law
  *
  * EPR (Entity-Property-Relation) = HEGELIAN QUANTITATIVE ESSENCE OF EMPIRICAL APPEARANCES
@@ -53,7 +53,7 @@
  */
 
 // Import existing schema definitions from logic package
-import { FormDefinitionSchema } from "../schema/schema";
+import { FormDefinitionSchema } from "../schema/form";
 import { FormEntityDefinitionSchema } from "../schema/entity";
 import { FormRelationDefinitionSchema } from "../schema/relation";
 import { FormShapeRepository } from "../repository/form";
