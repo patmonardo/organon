@@ -1,98 +1,132 @@
+import { z } from "zod";
+import {
+  EntitySchema,
+  type Entity,
+  EntityCore,
+  EntityState,
+  createEntity as createEntityDoc,
+  updateEntity as updateEntityDoc,
+  createEntityRef,
+  type EntityRef,
+  formatEntityKey,
+} from "../../schema/entity";
+
 export type FormEntityId = string;
 
-/**
- * Represents a basic entity in the system.
- * Primarily a data container. Actions are handled by EntityEngine via verbs.
- */
 export class FormEntity {
-  public id: FormEntityId;
-  public type: string;
-  public properties: Record<string, any>; // General purpose properties/data
-  public metadata: Record<string, any>;
-  public contextId?: string; // Optional context association
+  private doc: Entity;
 
-  // Static entity registry - This will be managed by the EntityEngine
-  private static entities: Map<string, FormEntity> = new Map(); // Keep for findOrCreate placeholder
-
-  /**
-   * Basic constructor for creating an entity instance.
-   * Does not automatically register or persist.
-   */
-  constructor(config: {
-    id: FormEntityId; // ID is now mandatory for the constructor
-    type: string;
-    properties?: Record<string, any>;
-    metadata?: Record<string, any>;
-    contextId?: string;
-  }) {
-    this.id = config.id;
-    this.type = config.type;
-    this.properties = config.properties || {};
-    this.metadata = {
-        ...(config.metadata || {}),
-        // Ensure created/updated are managed by the engine during actual creation/update
-    };
-    this.contextId = config.contextId;
+  private constructor(doc: Entity) {
+    this.doc = doc;
   }
 
-  /**
-   * Get serialized representation of the entity.
-   */
-  toJSON() {
-    return {
-      id: this.id,
-      type: this.type,
-      properties: this.properties,
-      contextId: this.contextId,
-      metadata: this.metadata,
-    };
+  // Factory: create from params (uses schema defaults/validation)
+  static create(input: {
+    type: z.input<typeof EntityCore.shape.type>;
+    id?: string;
+    name?: z.input<typeof EntityCore.shape.name>;
+    description?: z.input<typeof EntityCore.shape.description>;
+    state?: z.input<typeof EntityState>;
+    version?: string;
+    ext?: Record<string, unknown>;
+  }): FormEntity {
+    const doc = createEntityDoc(input as any);
+    return new FormEntity(doc);
   }
 
-  // --- Placeholder Static Methods (To be replaced by Engine logic) ---
-
-  /**
-   * @deprecated Use EntityService.getEntity or direct engine access.
-   * Placeholder for retrieving an entity instance. Managed by EntityEngine.
-   */
-  static getEntity(id: string): FormEntity | undefined {
-    // In a real scenario, the Engine would manage this map.
-    // This is just to satisfy the findOrCreate placeholder for now.
-    return FormEntity.entities.get(id);
+  // Factory: wrap an existing schema doc (or input parsed to one)
+  static from(input: z.input<typeof EntitySchema> | Entity): FormEntity {
+    const doc = EntitySchema.parse(input as any);
+    return new FormEntity(doc);
   }
 
-   /**
-    * @deprecated Use EntityService.createEntity or direct engine action.
-    * Placeholder for adding an entity instance. Managed by EntityEngine.
-    */
-   static _registerEntity(entity: FormEntity): void {
-       // In a real scenario, the Engine would manage this map.
-       FormEntity.entities.set(entity.id, entity);
-       // The engine would also set created/updated metadata here.
-       if (!entity.metadata.created) entity.metadata.created = Date.now();
-       entity.metadata.updated = Date.now();
-   }
+  // Access underlying schema doc
+  toSchema(): Entity {
+    return this.doc;
+  }
+  toJSON(): Entity {
+    return this.doc;
+  }
 
-  /**
-   * Placeholder implementation for findOrCreate needed by other services/engines.
-   * In a real system, this logic might live in the EntityEngine or be more complex.
-   * It currently relies on the static map which is discouraged.
-   */
-  static findOrCreate(config: { id: string; type: string; }): FormEntity {
-    let entity = FormEntity.getEntity(config.id);
-    if (!entity) {
-        console.warn(`FormEntity.findOrCreate: Creating entity '${config.id}' via placeholder.`);
-        entity = new FormEntity({
-            id: config.id,
-            type: config.type,
-            metadata: { created: Date.now() } // Add basic metadata
-        });
-        // Register it in the placeholder map
-        FormEntity._registerEntity(entity);
+  // Convenience getters
+  get id(): string {
+    return this.doc.shape.core.id;
+  }
+  get type(): string {
+    return this.doc.shape.core.type as string;
+  }
+  get name(): string | undefined {
+    return this.doc.shape.core.name;
+  }
+  get description(): string | undefined {
+    return this.doc.shape.core.description;
+  }
+  get createdAt(): string {
+    return this.doc.shape.core.createdAt;
+  }
+  get updatedAt(): string {
+    return this.doc.shape.core.updatedAt;
+  }
+  get status(): z.infer<typeof EntityState.shape.status> {
+    return this.doc.shape.state.status;
+  }
+  get tags(): string[] {
+    return [...this.doc.shape.state.tags];
+  }
+  get meta(): Record<string, unknown> {
+    return this.doc.shape.state.meta;
+  }
+  get revision(): number {
+    return this.doc.revision;
+  }
+  get version(): string | undefined {
+    return this.doc.version;
+  }
+  get key(): string {
+    return formatEntityKey(this.toRef());
+  }
+
+  toRef(): EntityRef {
+    return createEntityRef(this.doc);
+  }
+
+  // Mutators (schema-safe via update helper)
+  setName(name?: string): this {
+    this.doc = updateEntityDoc(this.doc, { core: { name } });
+    return this;
+  }
+
+  setDescription(description?: string): this {
+    this.doc = updateEntityDoc(this.doc, { core: { description } });
+    return this;
+  }
+
+  setStatus(status: z.input<typeof EntityState.shape.status>): this {
+    this.doc = updateEntityDoc(this.doc, { state: { status } });
+    return this;
+  }
+
+  addTag(tag: string): this {
+    if (!this.doc.shape.state.tags.includes(tag)) {
+      this.doc = updateEntityDoc(this.doc, {
+        state: { tags: [...this.doc.shape.state.tags, tag] },
+      });
     }
-    return entity;
+    return this;
   }
 
-}
+  removeTag(tag: string): this {
+    if (this.doc.shape.state.tags.includes(tag)) {
+      const next = this.doc.shape.state.tags.filter((t) => t !== tag);
+      this.doc = updateEntityDoc(this.doc, { state: { tags: next } });
+    }
+    return this;
+  }
 
-// Remove the old createFormEntity function
-// export function createFormEntity(...) { ... }
+  patchMeta(patch: Record<string, unknown>): this {
+    this.doc = updateEntityDoc(this.doc, {
+      state: { meta: { ...this.doc.shape.state.meta, ...patch } } as any,
+    });
+    return this;
+  }
+}

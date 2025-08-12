@@ -1,318 +1,241 @@
-import { FormRelation } from "@/form/relation/relation";
-import { FormEntity } from "@/form/entity/entity";
-import { Morph } from "./core";
-import { FormExecutionContext, Sandarbha } from "../../../../model/src/schema/context"; // Need context types
-import { contextEngine } from "../context/engine"; // To get context instances
+import type { Command, Event, EventBus } from "../triad/types";
+import { InMemoryEventBus } from "../triad/bus";
+import { startTrace, childSpan } from "../triad/trace";
 
-// --- Define Morph Engine Verb Subtypes (Tokens) ---
-export const MorphEngineVerbs = {
-  // Verbs the MorphEngine listens for
-  REQUEST_EXECUTION: "morphEngine:requestExecution",
-  REGISTER_DEFINITION: "morphEngine:registerDefinition", // Verb to register a morph programmatically
+import type { Repository, Concurrency } from "../../repository/repo";
+import {
+  type Morph as MorphDoc,
+  MorphSchema,
+  createMorph,
+  updateMorph,
+} from "../../schema/morph";
 
-  // Verbs the MorphEngine emits
-  EXECUTION_STARTED: "morphEngine:executionStarted",
-  EXECUTION_COMPLETED: "morphEngine:executionCompleted",
-  EXECUTION_FAILED: "morphEngine:executionFailed",
-  DEFINITION_REGISTERED: "morphEngine:definitionRegistered",
-  DEFINITION_REGISTRATION_FAILED: "morphEngine:definitionRegistrationFailed",
-  // Verbs emitted for orchestration (directed at other engines)
-  REQUEST_CONTEXT_CREATION: "contextEngine:requestCreation",
-  REQUEST_CONTEXT_EXECUTION: "contextEngine:requestExecution",
+import { FormMorph } from "./morph";
+import type { MorphTransformer, MorphOptions } from "./core";
+
+// Typed command union for exhaustiveness + safety (schema-level definitions)
+export type MorphCreateCmd = {
+  kind: "morph.create";
+  payload: Parameters<typeof createMorph>[0];
+  meta?: Record<string, unknown>;
 };
-// --- End Verb Definitions ---
-
-// Placeholder for getting a system entity to be the source of engine verbs
-const getEngineSourceEntity = (): FormEntity => {
-  // Assuming FormEntity.findOrCreate exists or is added
-  return FormEntity.findOrCreate({
-    id: "system:morphEngine",
-    type: "System::MorphEngine",
-  });
+export type MorphUpdateCmd = {
+  kind: "morph.update";
+  payload: {
+    id: string;
+    patch: Parameters<typeof updateMorph>[1];
+    expectedRevision?: Concurrency["expectedRevision"];
+  };
+  meta?: Record<string, unknown>;
 };
+export type MorphDeleteCmd = {
+  kind: "morph.delete";
+  payload: { id: string };
+  meta?: Record<string, unknown>;
+};
+export type MorphGetCmd = {
+  kind: "morph.get";
+  payload: { id: string };
+  meta?: Record<string, unknown>;
+};
+
+// Runtime registry commands (engine-local, not persisted)
+export type MorphDefineRuntimeCmd = {
+  kind: "morph.defineRuntime";
+  payload: {
+    name: string;
+    transformer: MorphTransformer<any, any>;
+    options?: Partial<MorphOptions>;
+  };
+  meta?: Record<string, unknown>;
+};
+export type MorphComposeRuntimeCmd = {
+  kind: "morph.composeRuntime";
+  payload: { name: string; steps: string[]; composedName?: string };
+  meta?: Record<string, unknown>;
+};
+export type MorphExecuteCmd = {
+  kind: "morph.execute";
+  payload: { name: string; input: unknown; context?: any };
+  meta?: Record<string, unknown>;
+};
+
+export type MorphCommand =
+  | MorphCreateCmd
+  | MorphUpdateCmd
+  | MorphDeleteCmd
+  | MorphGetCmd
+  | MorphDefineRuntimeCmd
+  | MorphComposeRuntimeCmd
+  | MorphExecuteCmd;
 
 /**
- * MorphEngine - Manages the registration and execution of FormMorph instances.
+ * MorphEngine — manages schema Morph docs and a local runtime registry of FormMorphs.
+ * Command-in, Event-out. Trace + scope meta via emit(). Execution uses engine-local registry.
  */
 export class MorphEngine {
-  private engineEntity: FormEntity;
-  private morphDefinitions: Map<string, FormMorph<any, any>> = new Map(); // Store registered morphs by name/ID
-  private verbSubscription: { unsubscribe: () => void } | null = null;
-  // TODO: Add tracking for active long-running executions if needed
+  private readonly runtime = new Map<string, FormMorph<any, any>>();
 
-  constructor(engineId: string = "morph-engine:default") {
-    this.engineEntity = FormEntity.findOrCreate({
-      id: engineId,
-      type: "System::MorphEngine",
-    });
-    console.log(`MorphEngine (${this.engineEntity.id}) initialized.`);
+  constructor(
+    private readonly repo: Repository<MorphDoc>,
+    private readonly bus: EventBus = new InMemoryEventBus(),
+    private readonly scope: string = "form"
+  ) {}
+
+  get eventBus(): EventBus {
+    return this.bus;
   }
 
-  /**
-   * Start listening for relevant verbs using FormRelation.subscribeToVerbs.
-   */
-  start(): void {
-    if (this.verbSubscription) {
-      console.warn(
-        `MorphEngine (${this.engineEntity.id}) is already listening.`
-      );
-      return;
-    }
-    console.log(
-      `MorphEngine (${this.engineEntity.id}) starting to listen for relation verbs...`
+  // Standardized emit with trace + scope
+  private emit(
+    base: Record<string, unknown>,
+    kind: Event["kind"],
+    payload: Event["payload"],
+    extraMeta?: Record<string, unknown>
+  ): Event {
+    const meta = childSpan(base as any, {
+      action: kind,
+      scope: this.scope,
+      ...(extraMeta ?? {}),
+    });
+    const evt: Event = { kind, payload, meta };
+    this.bus.publish(evt);
+    return evt;
+  }
+
+  // Runtime registry helpers
+  private defineRuntime(
+    name: string,
+    transformer: MorphTransformer<any, any>,
+    options?: Partial<MorphOptions>
+  ) {
+    const fm = FormMorph.define(name, transformer, options ?? {});
+    this.runtime.set(name, fm);
+    return fm;
+  }
+
+  private composeRuntime(
+    steps: string[],
+    composedName?: string
+  ): FormMorph<any, any> {
+    if (steps.length === 0) throw new Error("composeRuntime: steps required");
+    const seq = steps.map((n) => {
+      const m = this.runtime.get(n);
+      if (!m) throw new Error(`runtime morph not found: ${n}`);
+      return m;
+    });
+    let acc = seq[0];
+    for (let i = 1; i < seq.length; i++)
+      acc = FormMorph.compose(acc, seq[i], composedName);
+    if (composedName) this.runtime.set(composedName, acc);
+    return acc;
+  }
+
+  async handle(cmd: MorphCommand | Command): Promise<Event[]> {
+    const base = startTrace(
+      "MorphEngine",
+      (cmd as any).meta?.correlationId as string | undefined,
+      (cmd as any).meta
     );
 
-    this.verbSubscription = FormRelation.subscribeToVerbs((relationVerb) => {
-      if (relationVerb.type === "event" || relationVerb.type === "message") {
-        // Route based on subtype
-        switch (relationVerb.subtype) {
-          case MorphEngineVerbs.REQUEST_EXECUTION:
-            this.handleExecutionRequest(relationVerb);
-            break;
-          case MorphEngineVerbs.REGISTER_DEFINITION:
-            this.handleRegisterDefinition(relationVerb);
-            break;
-          // Add cases for other verbs this engine should handle
-          // e.g., listening for context creation confirmations if needed for complex workflows
-          default:
-            // console.debug(`MorphEngine ignoring verb: ${relationVerb.subtype}`);
-            break;
+    switch (cmd.kind) {
+      // Schema-backed definitions
+      case "morph.create": {
+        const doc = createMorph(cmd.payload as any);
+        const created = await this.repo.create(MorphSchema.parse(doc));
+        const evt = this.emit(base, "morph.created", {
+          id: created.shape.core.id,
+          type: created.shape.core.type,
+          name: created.shape.core.name,
+        });
+        return [evt];
+      }
+
+      case "morph.update": {
+        const { id, patch, expectedRevision } =
+          cmd.payload as MorphUpdateCmd["payload"];
+        const current = await this.repo.get(id);
+        if (!current) throw new Error(`morph not found: ${id}`);
+        const next = updateMorph(current, patch as any);
+        const saved = await this.repo.update(
+          id,
+          () => MorphSchema.parse(next),
+          expectedRevision !== undefined ? { expectedRevision } : undefined
+        );
+        const evt = this.emit(base, "morph.updated", {
+          id: saved.shape.core.id,
+          revision: saved.revision,
+        });
+        return [evt];
+      }
+
+      case "morph.delete": {
+        const { id } = cmd.payload as MorphDeleteCmd["payload"];
+        const ok = await this.repo.delete(id);
+        const evt = this.emit(base, "morph.deleted", { id, ok: !!ok });
+        return [evt];
+      }
+
+      case "morph.get": {
+        const { id } = cmd.payload as MorphGetCmd["payload"];
+        const doc = await this.repo.get(id);
+        const evt = this.emit(base, "morph.got", { id, morph: doc ?? null });
+        return [evt];
+      }
+
+      // Runtime registry
+      case "morph.defineRuntime": {
+        const { name, transformer, options } =
+          cmd.payload as MorphDefineRuntimeCmd["payload"];
+        this.defineRuntime(name, transformer, options);
+        const evt = this.emit(base, "morph.runtime.defined", { name });
+        return [evt];
+      }
+
+      case "morph.composeRuntime": {
+        const { name, steps, composedName } =
+          cmd.payload as MorphComposeRuntimeCmd["payload"];
+        const composed = this.composeRuntime(steps, composedName ?? name);
+        const evt = this.emit(base, "morph.runtime.composed", {
+          name: composedName ?? name,
+          steps,
+          cost: composed.options.cost,
+        });
+        return [evt];
+      }
+
+      case "morph.execute": {
+        const { name, input, context } =
+          cmd.payload as MorphExecuteCmd["payload"];
+        const fm = this.runtime.get(name);
+        if (!fm) throw new Error(`runtime morph not found: ${name}`);
+
+        const started = this.emit(base, "morph.execution.started", { name });
+        try {
+          const output = fm.run(input as any, context);
+          const completed = this.emit(base, "morph.execution.completed", {
+            name,
+            result: output,
+          });
+          return [started, completed];
+        } catch (err) {
+          const failed = this.emit(base, "morph.execution.failed", {
+            name,
+            reason: err instanceof Error ? err.message : String(err),
+          });
+          return [started, failed];
         }
       }
-    });
-  }
 
-  /**
-   * Stop listening for verbs.
-   */
-  stop(): void {
-    if (this.verbSubscription) {
-      console.log(`MorphEngine (${this.engineEntity.id}) stopping listening.`);
-      this.verbSubscription.unsubscribe();
-      this.verbSubscription = null;
+      default:
+        throw new Error(`unsupported command: ${(cmd as Command).kind}`);
     }
   }
 
-  /**
-   * Register a FormMorph definition directly with the engine.
-   * Prefer using the REGISTER_DEFINITION verb for consistency.
-   */
-  registerMorphDirectly(morph: FormMorph<any, any>): boolean {
-    if (!morph.name) {
-      console.error("MorphEngine: Cannot register morph without a name.");
-      return false;
-    }
-    if (this.morphDefinitions.has(morph.name)) {
-      console.warn(
-        `MorphEngine: Overwriting existing morph definition for '${morph.name}'.`
-      );
-    }
-    this.morphDefinitions.set(morph.name, morph);
-    console.log(
-      `MorphEngine: Morph definition '${morph.name}' registered directly.`
-    );
-    return true;
-  }
-
-  /**
-   * Handle requests to register a morph definition via verb.
-   */
-  private handleRegisterDefinition(verb: FormRelation): void {
-    const {
-      name,
-      definition /* Assuming definition contains necessary info */,
-    } = verb.content || {};
-    const originatingVerbId = verb.id;
-
-    if (!name || !definition) {
-      console.error(
-        `MorphEngine: Missing name or definition in ${verb.subtype} request.`
-      );
-      this.emitVerb(MorphEngineVerbs.DEFINITION_REGISTRATION_FAILED, {
-        originalVerbId: originatingVerbId,
-        reason: "Missing name or definition",
-      });
-      return;
-    }
-
-    try {
-      // TODO: Reconstruct the FormMorph instance from the definition payload
-      // This is complex and depends heavily on how morphs are serialized/defined.
-      // For now, let's assume a simple case where definition IS the morph instance
-      // or we have a factory. Using a placeholder:
-      const morphInstance = this.reconstructMorph(name, definition); // Placeholder
-
-      if (this.morphDefinitions.has(name)) {
-        console.warn(
-          `MorphEngine: Overwriting existing morph definition for '${name}' via verb.`
-        );
-      }
-      this.morphDefinitions.set(name, morphInstance);
-      console.log(
-        `MorphEngine: Morph definition '${name}' registered via verb.`
-      );
-
-      this.emitVerb(MorphEngineVerbs.DEFINITION_REGISTERED, {
-        name: name,
-        originalVerbId: originatingVerbId,
-      });
-    } catch (error) {
-      console.error(
-        `MorphEngine: Failed to register morph definition '${name}':`,
-        error
-      );
-      this.emitVerb(MorphEngineVerbs.DEFINITION_REGISTRATION_FAILED, {
-        name: name,
-        originalVerbId: originatingVerbId,
-        reason: error instanceof Error ? error.message : String(error),
-      });
-    }
-  }
-
-  // Placeholder for morph reconstruction - needs actual implementation
-  private reconstructMorph(name: string, definition: any): Morph<any, any> {
-    console.warn(
-      `MorphEngine: reconstructMorph is a placeholder. Assuming definition is usable.`
-    );
-    // In reality, this would involve checking definition type, calling constructors, etc.
-    // Example: if (definition.type === 'SimpleMorph') return new SimpleMorph(...)
-    if (typeof definition?.apply === "function" && definition.name === name) {
-      return definition as FormMorph<any, any>; // Simplistic assumption
-    }
-    throw new Error(
-      `Cannot reconstruct morph '${name}' from provided definition.`
-    );
-  }
-
-  /**
-   * Handle requests to execute a morph.
-   */
-  private async handleExecutionRequest(verb: FormRelation): Promise<void> {
-    console.log(`MorphEngine handling verb: ${verb.subtype} (ID: ${verb.id})`);
-    const {
-      morphName,
-      inputData,
-      contextId, // ID of an *existing* context to use
-      // contextOptions, // TODO: Handle creating a context if needed
-    } = verb.content || {};
-    const originatingVerbId = verb.id;
-
-    if (!morphName) {
-      console.error(
-        `MorphEngine: Missing morphName in ${verb.subtype} request.`
-      );
-      this.emitVerb(MorphEngineVerbs.EXECUTION_FAILED, {
-        originalVerbId: originatingVerbId,
-        reason: "Missing morphName",
-      });
-      return;
-    }
-
-    const morph = this.morphDefinitions.get(morphName);
-    if (!morph) {
-      console.error(`MorphEngine: Morph definition '${morphName}' not found.`);
-      this.emitVerb(MorphEngineVerbs.EXECUTION_FAILED, {
-        morphName: morphName,
-        originalVerbId: originatingVerbId,
-        reason: `Morph definition '${morphName}' not found`,
-      });
-      return;
-    }
-
-    let executionContext: FormExecutionContext | null = null;
-    try {
-      // --- Get Execution Context ---
-      // Simple case: Use provided contextId
-      if (contextId) {
-        // We need access to the actual Sandarbha instance, potentially via ContextEngine
-        const sandarbhaInstance = contextEngine.getContextInstance(contextId); // Assumes direct access or getter
-        if (!sandarbhaInstance) {
-          throw new Error(
-            `Execution context with ID '${contextId}' not found.`
-          );
-        }
-        // TODO: Adapt Sandarbha instance to FormExecutionContext interface if necessary
-        executionContext = sandarbhaInstance as unknown as FormExecutionContext; // Needs proper mapping/adapter
-      } else {
-        // TODO: Implement context creation if contextOptions are provided
-        // This would involve emitting REQUEST_CONTEXT_CREATION and waiting for the response (complex)
-        // For now, throw error or use a default temporary context
-        console.warn(
-          `MorphEngine: No contextId provided for morph '${morphName}'. Using default/temporary context (Not Implemented).`
-        );
-        // executionContext = createDefaultExecutionContext(); // Placeholder
-        throw new Error(
-          "Context creation from options not yet implemented in MorphEngine."
-        );
-      }
-
-      // --- Emit Started Verb ---
-      this.emitVerb(MorphEngineVerbs.EXECUTION_STARTED, {
-        morphName: morphName,
-        contextId: executionContext?.id, // Use the actual context ID
-        originalVerbId: originatingVerbId,
-      });
-
-      // --- Execute Morph ---
-      // Note: Morph execution might be synchronous or asynchronous depending on the morph itself
-      const outputData = await Promise.resolve(
-        morph.apply(inputData, executionContext)
-      ); // Wrap in Promise.resolve for consistency
-
-      // --- Emit Completed Verb ---
-      this.emitVerb(MorphEngineVerbs.EXECUTION_COMPLETED, {
-        morphName: morphName,
-        contextId: executionContext?.id,
-        originalVerbId: originatingVerbId,
-        result: outputData, // Include the result
-      });
-    } catch (error) {
-      console.error(
-        `MorphEngine: Failed to execute morph '${morphName}':`,
-        error
-      );
-      this.emitVerb(MorphEngineVerbs.EXECUTION_FAILED, {
-        morphName: morphName,
-        contextId: executionContext?.id || contextId, // Report context ID if available
-        originalVerbId: originatingVerbId,
-        reason: error instanceof Error ? error.message : String(error),
-        inputData: inputData, // Optionally include input data for debugging
-      });
-    }
-  }
-
-  /**
-   * Helper to emit verbs from this engine.
-   */
-  private emitVerb(
-    subtype: string,
-    content: Record<string, any>,
-    target?: FormEntity
-  ): void {
-    const metadata: Record<string, any> = {};
-    // Add correlation ID if available
-    if (content.originalVerbId) {
-      metadata.correlationId = content.originalVerbId;
-    }
-    // Add context ID if relevant and available
-    if (content.contextId) {
-      metadata.contextId = content.contextId;
-    }
-
-    if (target) {
-      FormRelation.send(this.engineEntity, target, subtype, content, metadata);
-    } else {
-      FormRelation.emit(this.engineEntity, subtype, content, metadata);
-    }
-  }
-
-  /**
-   * Get a registered morph definition (for internal use or debugging).
-   */
-  getMorphDefinition(name: string): FormMorph<any, any> | undefined {
-    return this.morphDefinitions.get(name);
+  // Schema helpers
+  private async mustGet(id: string): Promise<MorphDoc> {
+    const doc = await this.repo.get(id);
+    if (!doc) throw new Error(`morph not found: ${id}`);
+    return doc;
   }
 }
-
-// Instantiate the engine (singleton or managed)
-export const morphEngine = new MorphEngine();

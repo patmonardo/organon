@@ -1,4 +1,4 @@
-import { FormShape } from "../../../../../model/src/schema/shape";
+import { FormShape } from "@organon/logic/schema";
 import { Morph } from "./types";
 import { createMorph } from "./morph";
 

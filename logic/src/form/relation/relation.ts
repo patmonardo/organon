@@ -1,251 +1,135 @@
-import { FormEntity } from "@/form/entity/entity";
-import { Sandarbha } from "@/form/context/context";
+import { z } from "zod";
+import {
+  RelationSchema,
+  type Relation,
+  RelationCore,
+  RelationState,
+  RelationDirection,
+  createRelation as createRelationDoc,
+  updateRelation as updateRelationDoc,
+} from "../../schema/relation";
+import { EntityRef } from "../../schema/entity";
 
-export type RelationId = string;
-// Define a type for the verb listener callback
-type VerbListenerCallback = (relation: Relation) => void;
+export class FormRelation {
+  private doc: Relation;
 
-export class Relation<T = any> {
-  private static relations: Map<string, Relation> = new Map();
-  private static verbListeners: VerbListenerCallback[] = [];
+  private constructor(doc: Relation) {
+    this.doc = doc;
+  }
 
-  public id: RelationId;
-  public type: string; // e.g., 'relation', 'event', 'message'
-  public source: FormEntity;
-  public target?: FormEntity;
-  public subtype?: string; // The specific "verb" name or relation type
-  public content?: T;
-  public metadata?: Record<string, any>;
-  public timestamp?: number;
-
-  /**
-   * Create a new relation instance
-   */
-  constructor(config: {
+  // Factory: create from params (schema defaults/validation applied)
+  static create(input: {
+    type: z.input<typeof RelationCore.shape.type>;
+    kind: z.input<typeof RelationCore.shape.kind>;
+    source: z.input<typeof EntityRef>;
+    target: z.input<typeof EntityRef>;
     id?: string;
-    type: string;
-    source: FormEntity;
-    target?: FormEntity;
-    subtype?: string;
-    content?: T;
-    metadata?: Record<string, any>;
-  }) {
-    this.id =
-      config.id ||
-      `${config.type}:${Date.now()}:${Math.random().toString(36).substring(2, 9)}`; // Prefix ID with type
-    this.type = config.type;
-    this.source = config.source;
-    this.target = config.target;
-    this.subtype = config.subtype;
-    this.content = config.content;
-    this.metadata = config.metadata || { created: Date.now() };
-    // Ensure timestamp aligns with metadata.created if available
-    this.timestamp = typeof this.metadata.created === 'number' ? this.metadata.created : Date.now();
+    direction?: z.input<typeof RelationDirection>;
+    name?: z.input<typeof RelationCore.shape.name>;
+    description?: z.input<typeof RelationCore.shape.description>;
+    state?: z.input<typeof RelationState>;
+    version?: string;
+    ext?: Record<string, unknown>;
+  }): FormRelation {
+    const doc = createRelationDoc(input as any);
+    return new FormRelation(doc);
   }
 
-  /**
-   * Subscribe to notifications when new 'event' or 'message' relations (verbs) are created.
-   * @param callback The function to call with the new verb relation.
-   * @returns An object with an `unsubscribe` method.
-   */
-  static subscribeToVerbs(callback: VerbListenerCallback): { unsubscribe: () => void } {
-    this.verbListeners.push(callback);
-    return {
-      unsubscribe: () => {
-        this.verbListeners = this.verbListeners.filter(listener => listener !== callback);
-      }
-    };
+  // Factory: wrap an existing schema doc (or input parsed to one)
+  static from(input: z.input<typeof RelationSchema> | Relation): FormRelation {
+    const doc = RelationSchema.parse(input as any);
+    return new FormRelation(doc);
   }
 
-  /**
-   * Notifies registered listeners about a newly created verb ('event' or 'message').
-   * Simplified: Ignores potential errors in listeners.
-   */
-  private static notifyVerbListeners(relation: Relation): void {
-    // Only notify for 'event' and 'message' types
-    if (relation.type === 'event' || relation.type === 'message') {
-      // console.debug(`Notifying ${this.verbListeners.length} listeners about verb: ${relation.subtype} (ID: ${relation.id})`);
-      this.verbListeners.forEach(listener => listener(relation));
+  // Access underlying schema doc
+  toSchema(): Relation {
+    return this.doc;
+  }
+  toJSON(): Relation {
+    return this.doc;
+  }
+
+  // Core getters
+  get id(): string { return this.doc.shape.core.id; }
+  get type(): string { return this.doc.shape.core.type as string; }
+  get kind(): string { return this.doc.shape.core.kind as string; }
+  get name(): string | undefined { return this.doc.shape.core.name; }
+  get description(): string | undefined { return this.doc.shape.core.description; }
+  get createdAt(): string { return this.doc.shape.core.createdAt; }
+  get updatedAt(): string { return this.doc.shape.core.updatedAt; }
+
+  // State/endpoints getters
+  get status(): z.infer<typeof RelationState.shape.status> { return this.doc.shape.state.status; }
+  get tags(): string[] { return [...this.doc.shape.state.tags]; }
+  get meta(): Record<string, unknown> { return this.doc.shape.state.meta; }
+  get strength(): number { return this.doc.shape.state.strength; }
+
+  get source(): z.infer<typeof EntityRef> { return this.doc.shape.source; }
+  get target(): z.infer<typeof EntityRef> { return this.doc.shape.target; }
+  get direction(): z.infer<typeof RelationDirection> { return this.doc.shape.direction; }
+
+  get revision(): number { return this.doc.revision; }
+  get version(): string | undefined { return this.doc.version; }
+
+  // Mutators (schema-safe via update helper)
+  setName(name?: string): this {
+    this.doc = updateRelationDoc(this.doc, { core: { name } });
+    return this;
+  }
+  setDescription(description?: string): this {
+    this.doc = updateRelationDoc(this.doc, { core: { description } });
+    return this;
+  }
+  setKind(kind: z.input<typeof RelationCore.shape.kind>): this {
+    this.doc = updateRelationDoc(this.doc, { core: { kind } });
+    return this;
+  }
+  setStatus(status: z.input<typeof RelationState.shape.status>): this {
+    this.doc = updateRelationDoc(this.doc, { state: { status } });
+    return this;
+  }
+  addTag(tag: string): this {
+    if (!this.doc.shape.state.tags.includes(tag)) {
+      this.doc = updateRelationDoc(this.doc, { state: { tags: [...this.doc.shape.state.tags, tag] } });
     }
+    return this;
   }
-
-  /**
-   * Create a persistent relation from configuration.
-   * This does NOT notify verb listeners by default.
-   */
-  static createRelation(config: {
-    sourceId: string;
-    targetId?: string;
-    type: string; // The persistent relation type (e.g., 'dependency', 'composition')
-    content?: any;
-    contextId?: string;
-    subtype?: string; // Optional subtype for the persistent relation (defaults to type)
-    metadata?: Record<string, any>;
-  }): string {
-    const sourceEntity = FormEntity.getEntity(config.sourceId);
-    if (!sourceEntity) {
-      console.error(`Source entity ${config.sourceId} not found for createRelation.`);
-      throw new Error(`Source entity ${config.sourceId} not found`);
+  removeTag(tag: string): this {
+    if (this.doc.shape.state.tags.includes(tag)) {
+      const next = this.doc.shape.state.tags.filter(t => t !== tag);
+      this.doc = updateRelationDoc(this.doc, { state: { tags: next } });
     }
-    const targetEntity = config.targetId ? FormEntity.getEntity(config.targetId) : undefined;
-    if (config.targetId && !targetEntity) {
-       console.warn(`Target entity ${config.targetId} not found for createRelation.`);
-    }
-
-    const relation = new Relation({
-        // id generated by constructor with 'relation:' prefix
-        type: 'relation', // Explicitly set type to 'relation'
-        source: sourceEntity,
-        target: targetEntity,
-        subtype: config.subtype || config.type, // Use subtype, fallback to type
-        content: config.content,
-        metadata: {
-            ...(config.metadata || {}),
-            created: Date.now(),
-            contextId: config.contextId
-        }
-    });
-
-    Relation.relations.set(relation.id, relation);
-
-    if (config.contextId) {
-        const context = Sandarbha.getSandarbha(config.contextId);
-        context?.sambandhaPañjīkaraṇa(relation.id);
-    }
-
-    return relation.id;
+    return this;
+  }
+  patchMeta(patch: Record<string, unknown>): this {
+    this.doc = updateRelationDoc(this.doc, { state: { meta: { ...this.doc.shape.state.meta, ...patch } } as any });
+    return this;
+  }
+  setStrength(strength: number): this {
+    this.doc = updateRelationDoc(this.doc, { state: { strength } });
+    return this;
   }
 
-  /**
-   * Get a relation by ID
-   */
-  static getRelation(id: string): Relation | undefined {
-    return Relation.relations.get(id);
+  setSource(ref: z.input<typeof EntityRef>): this {
+    this.doc = updateRelationDoc(this.doc, { source: EntityRef.parse(ref) });
+    return this;
+  }
+  setTarget(ref: z.input<typeof EntityRef>): this {
+    this.doc = updateRelationDoc(this.doc, { target: EntityRef.parse(ref) });
+    return this;
+  }
+  setEndpoints(source: z.input<typeof EntityRef>, target: z.input<typeof EntityRef>): this {
+    this.doc = updateRelationDoc(this.doc, { source: EntityRef.parse(source), target: EntityRef.parse(target) });
+    return this;
+  }
+  setDirection(direction: z.input<typeof RelationDirection>): this {
+    this.doc = updateRelationDoc(this.doc, { direction });
+    return this;
   }
 
-  /**
-   * Update a relation with new properties
-   */
-  static updateRelation(id: string, updates: Partial<Relation>): boolean {
-    const relation = Relation.relations.get(id);
-    if (!relation) return false;
-
-    // Create updated relation object
-    const updatedRelationData = {
-      ...relation,
-      ...updates,
-      metadata: {
-        ...(relation.metadata || {}),
-        ...(updates.metadata || {}),
-        updated: Date.now(),
-      },
-      timestamp: Date.now(), // Update timestamp on update
-    };
-    // Re-create instance to ensure consistency (optional, could just update map)
-    const updatedRelation = new Relation(updatedRelationData);
-
-    Relation.relations.set(id, updatedRelation);
-    // Note: We are NOT notifying listeners on updates in this design.
-    return true;
-  }
-
-  /**
-   * Emit an event verb.
-   * Notifies listeners after creation.
-   */
-  static emit(
-    source: FormEntity,
-    verbSubtype: string, // The specific verb name
-    content: Record<string, any>,
-    metadata?: Record<string, any>
-  ): string {
-    const event = new Relation({
-        // id generated by constructor with 'event:' prefix
-        type: "event",
-        source: source,
-        subtype: verbSubtype,
-        content: content,
-        metadata: metadata // Constructor handles created timestamp
-    });
-
-    this.relations.set(event.id, event);
-    // --- Notify listeners about the new verb ---
-    this.notifyVerbListeners(event);
-    // --- End Notify ---
-    return event.id;
-  }
-
-  /**
-   * Send a message verb to a specific target.
-   * Notifies listeners after creation.
-   */
-  static send(
-    source: FormEntity,
-    target: FormEntity,
-    verbSubtype: string, // The specific verb name
-    content: Record<string, any>,
-    metadata?: Record<string, any>
-  ): string {
-     const message = new Relation({
-        // id generated by constructor with 'message:' prefix
-        type: "message",
-        source: source,
-        target: target,
-        subtype: verbSubtype,
-        content: content,
-        metadata: metadata // Constructor handles created timestamp
-    });
-
-    this.relations.set(message.id, message);
-    // --- Notify listeners about the new verb ---
-    this.notifyVerbListeners(message);
-    // --- End Notify ---
-    return message.id;
-  }
-
-  /**
-   * Broadcast a message verb to multiple targets.
-   */
-  static broadcast(
-    source: FormEntity,
-    targets: FormEntity[],
-    verbSubtype: string,
-    content: Record<string, any>,
-    metadata?: Record<string, any>
-  ): string[] {
-    const messageIds: string[] = [];
-    for (const target of targets) {
-      const messageId = this.send(source, target, verbSubtype, content, metadata);
-      messageIds.push(messageId);
-    }
-    return messageIds;
-  }
-
-  /**
-   * Query relations (including verbs) by various criteria.
-   */
-  static query(filter: {
-    type?: 'relation' | 'event' | 'message';
-    sourceId?: string;
-    targetId?: string;
-    subtype?: string;
-    since?: number;
-  }): Relation[] {
-    return Array.from(this.relations.values()).filter((relation) => {
-      if (filter.type && relation.type !== filter.type) return false;
-      if (filter.sourceId && relation.source.id !== filter.sourceId) return false;
-      if (filter.targetId && relation.target?.id !== filter.targetId) return false;
-      if (filter.subtype && relation.subtype !== filter.subtype) return false;
-      if (filter.since && (!relation.timestamp || relation.timestamp <= filter.since)) return false;
-      return true;
-    });
-  }
-
-  /**
-   * Remove a relation by ID
-   */
-  static remove(relationId: string): boolean {
-    // Note: Not notifying listeners on removal in this design.
-    return this.relations.delete(relationId);
+  invert(): this {
+    if (this.doc.shape.direction === "bidirectional") return this;
+    this.doc = updateRelationDoc(this.doc, { source: this.doc.shape.target, target: this.doc.shape.source });
+    return this;
   }
 }

@@ -1,353 +1,336 @@
-import { v4 as uuidv4 } from "uuid";
-import { FormEntity } from "../entity/entity";
-import { FormRelation, FormRelationId } from "../relation/relation";
+import type { Command, Event, EventBus } from "../triad/types";
+import { InMemoryEventBus } from "../triad/bus";
+import { startTrace, childSpan } from "../triad/trace";
 
-// --- Verb Definitions (Keep as is) ---
-export const ContextEngineVerbs = {
-  // ... requests ...
-  REQUEST_CREATE: "contextEngine:requestCreation",
-  REQUEST_ACTIVATION: "contextEngine:requestActivation",
-  REQUEST_DEACTIVATION: "contextEngine:requestDeactivation",
-  REQUEST_UPDATE: "contextEngine:requestUpdate", // Stub
-  REQUEST_DELETION: "contextEngine:requestDeletion", // Stub
-  REQUEST_ENTITY_REGISTRATION: "contextEngine:requestEntityRegistration", // Stub
-  REQUEST_RELATION_REGISTRATION: "contextEngine:requestRelationRegistration", // Stub
-  REQUEST_EXECUTION: "contextEngine:requestExecution", // Stub
+import type { Repository, Concurrency } from "../../repository/repo";
+import {
+  type Context,
+  ContextSchema,
+  createContext,
+  updateContext,
+} from "../../schema/context";
+import { EntityRef } from "../../schema/entity";
 
-  // ... responses ...
-  CONTEXT_CREATED: "contextEngine:created",
-  CONTEXT_ACTIVATED: "contextEngine:activated",
-  CONTEXT_DEACTIVATED: "contextEngine:deactivated",
-  CONTEXT_UPDATED: "contextEngine:updated", // Stub
-  CONTEXT_DELETED: "contextEngine:deleted", // Stub
-  ENTITY_REGISTERED: "contextEngine:entityRegistered", // Stub
-  RELATION_REGISTERED: "contextEngine:relationRegistered", // Stub
-  EXECUTION_COMPLETED: "contextEngine:executionCompleted", // Stub
-  EXECUTION_FAILED: "contextEngine:executionFailed", // Stub
-  OPERATION_FAILED: "contextEngine:operationFailed",
+// Typed command union for exhaustiveness + safety
+export type ContextCreateCmd = {
+  kind: "context.create";
+  payload: Parameters<typeof createContext>[0];
+  meta?: Record<string, unknown>;
 };
-// --- End Verb Definitions ---
+export type ContextUpdateCmd = {
+  kind: "context.update";
+  payload: {
+    id: string;
+    patch: Parameters<typeof updateContext>[1];
+    expectedRevision?: Concurrency["expectedRevision"];
+  };
+  meta?: Record<string, unknown>;
+};
+export type ContextDeleteCmd = {
+  kind: "context.delete";
+  payload: { id: string };
+  meta?: Record<string, unknown>;
+};
+export type ContextGetCmd = {
+  kind: "context.get";
+  payload: { id: string };
+  meta?: Record<string, unknown>;
+};
 
+// Membership: entities
+export type ContextAddEntityCmd = {
+  kind: "context.addEntity";
+  payload: { id: string; ref: unknown }; // validated with EntityRef.parse
+  meta?: Record<string, unknown>;
+};
+export type ContextAddEntitiesCmd = {
+  kind: "context.addEntities";
+  payload: { id: string; refs: unknown[] };
+  meta?: Record<string, unknown>;
+};
+export type ContextRemoveEntityCmd = {
+  kind: "context.removeEntity";
+  payload: { id: string; ref: unknown };
+  meta?: Record<string, unknown>;
+};
+export type ContextClearEntitiesCmd = {
+  kind: "context.clearEntities";
+  payload: { id: string };
+  meta?: Record<string, unknown>;
+};
+
+// Membership: relations (by id string)
+export type ContextAddRelationCmd = {
+  kind: "context.addRelation";
+  payload: { id: string; relationId: string };
+  meta?: Record<string, unknown>;
+};
+export type ContextAddRelationsCmd = {
+  kind: "context.addRelations";
+  payload: { id: string; relationIds: string[] };
+  meta?: Record<string, unknown>;
+};
+export type ContextRemoveRelationCmd = {
+  kind: "context.removeRelation";
+  payload: { id: string; relationId: string };
+  meta?: Record<string, unknown>;
+};
+export type ContextClearRelationsCmd = {
+  kind: "context.clearRelations";
+  payload: { id: string };
+  meta?: Record<string, unknown>;
+};
+
+export type ContextCommand =
+  | ContextCreateCmd
+  | ContextUpdateCmd
+  | ContextDeleteCmd
+  | ContextGetCmd
+  | ContextAddEntityCmd
+  | ContextAddEntitiesCmd
+  | ContextRemoveEntityCmd
+  | ContextClearEntitiesCmd
+  | ContextAddRelationCmd
+  | ContextAddRelationsCmd
+  | ContextRemoveRelationCmd
+  | ContextClearRelationsCmd;
+
+/**
+ * ContextEngine — repo-backed CRUD engine for Context docs.
+ * Command-in, Event-out. Trace+scope meta via emit(). Idempotent membership ops.
+ */
 export class ContextEngine {
-  private engineEntity: FormEntity;
-  // Store basic context info, not necessarily full instances yet
-  private contexts: Map<
-    string,
-    {
-      id: string;
-      name?: string;
-      parentId?: string;
-      formId?: string;
-      isActive: boolean;
-    }
-  > = new Map();
-  private activeContextId: string | null = null;
-  private verbSubscription: { unsubscribe: () => void } | null = null;
+  constructor(
+    private readonly repo: Repository<Context>,
+    private readonly bus: EventBus = new InMemoryEventBus(),
+    private readonly scope: string = "form"
+  ) {}
 
-  constructor(engineId: string = "context-engine:default") {
-    this.engineEntity = FormEntity.findOrCreate({
-      id: engineId,
-      type: "System::ContextEngine",
-    });
-    console.log(`ContextEngine (${this.engineEntity.id}) initialized.`);
+  get eventBus(): EventBus {
+    return this.bus;
   }
 
-  start(): void {
-    if (this.verbSubscription) {
-      console.warn(
-        `ContextEngine (${this.engineEntity.id}) is already listening.`
-      );
-      return;
-    }
-    console.log(
-      `ContextEngine (${this.engineEntity.id}) starting to listen...`
+  // Standardized emit with trace + scope
+  private emit(
+    base: Record<string, unknown>,
+    kind: Event["kind"],
+    payload: Event["payload"],
+    extraMeta?: Record<string, unknown>
+  ): Event {
+    const meta = childSpan(base as any, {
+      action: kind,
+      scope: this.scope,
+      ...(extraMeta ?? {}),
+    });
+    const evt: Event = { kind, payload, meta };
+    this.bus.publish(evt);
+    return evt;
+  }
+
+  async handle(cmd: ContextCommand | Command): Promise<Event[]> {
+    const base = startTrace(
+      "ContextEngine",
+      (cmd as any).meta?.correlationId as string | undefined,
+      (cmd as any).meta
     );
 
-    this.verbSubscription = FormRelation.subscribeToVerbs((relationVerb) => {
-      if (relationVerb.subtype?.startsWith("contextEngine:")) {
-        console.log(`ContextEngine received verb: ${relationVerb.subtype}`); // Log received verb
-        switch (relationVerb.subtype) {
-          case ContextEngineVerbs.REQUEST_CREATE:
-            this.handleCreateContext(relationVerb);
-            break;
-          case ContextEngineVerbs.REQUEST_ACTIVATION:
-            this.handleActivateContext(relationVerb);
-            break;
-          case ContextEngineVerbs.REQUEST_DEACTIVATION:
-            this.handleDeactivateContext(relationVerb);
-            break;
-          // --- Stubbed Handlers ---
-          case ContextEngineVerbs.REQUEST_UPDATE:
-          case ContextEngineVerbs.REQUEST_DELETION:
-          case ContextEngineVerbs.REQUEST_ENTITY_REGISTRATION:
-          case ContextEngineVerbs.REQUEST_RELATION_REGISTRATION:
-          case ContextEngineVerbs.REQUEST_EXECUTION:
-            this.handleStubbedRequest(relationVerb);
-            break;
-          default:
-            console.debug(
-              `ContextEngine ignoring verb: ${relationVerb.subtype}`
-            );
-            break;
-        }
-      }
-    });
-  }
-
-  stop(): void {
-    if (this.verbSubscription) {
-      console.log(
-        `ContextEngine (${this.engineEntity.id}) stopping listening.`
-      );
-      this.verbSubscription.unsubscribe();
-      this.verbSubscription = null;
-    }
-  }
-
-  // --- Simplified Context Handling Methods ---
-
-  private handleCreateContext(verb: FormRelation): void {
-    const {
-      id,
-      name,
-      type, // We ignore type for now
-      parentId,
-      metadata, // We ignore metadata for now
-      autoActivate,
-      formId,
-      // Ignore execution-specific fields
-    } = verb.content || {};
-    const originatingVerbId = verb.id;
-
-    try {
-      const contextId = id || `ctx:${uuidv4()}`;
-      if (this.contexts.has(contextId)) {
-        throw new Error(`Context with ID ${contextId} already exists.`);
+    switch (cmd.kind) {
+      case "context.create": {
+        const doc = createContext(cmd.payload as any);
+        const created = await this.repo.create(ContextSchema.parse(doc));
+        const evt = this.emit(base, "context.created", {
+          id: created.shape.core.id,
+          type: created.shape.core.type,
+        });
+        return [evt];
       }
 
-      // Store basic info in memory
-      const contextInfo = {
-        id: contextId,
-        name: name || `Context-${contextId}`,
-        parentId,
-        formId,
-        isActive: false, // Will be set by activation
-      };
-      this.contexts.set(contextId, contextInfo);
-      console.log(
-        `ContextEngine: Context info stored: ${contextId} (Name: ${contextInfo.name})`
-      );
-
-      // Emit CREATED verb
-      this.emitVerb(
-        ContextEngineVerbs.CONTEXT_CREATED,
-        {
-          originalVerbId: originatingVerbId,
-          context: contextInfo, // Send basic info
-        },
-        originatingVerbId,
-        contextId
-      );
-
-      // Trigger activation if requested
-      if (autoActivate) {
-        console.log(`ContextEngine: Auto-activating context ${contextId}`);
-        this.emitVerb(
-          ContextEngineVerbs.REQUEST_ACTIVATION,
-          { contextId },
-          undefined, // No correlation needed for internal trigger? Or use originatingVerbId?
-          contextId
+      case "context.update": {
+        const { id, patch, expectedRevision } = cmd.payload;
+        const current = await this.repo.get(id);
+        if (!current) throw new Error(`context not found: ${id}`);
+        const next = updateContext(current, patch as any);
+        const saved = await this.repo.update(
+          id,
+          () => ContextSchema.parse(next),
+          expectedRevision !== undefined ? { expectedRevision } : undefined
         );
-      }
-    } catch (error) {
-      this.emitOperationFailed(
-        originatingVerbId,
-        error,
-        verb.metadata?.contextId
-      );
-    }
-  }
-
-  private handleActivateContext(verb: FormRelation): void {
-    const { contextId } = verb.content || {};
-    const originatingVerbId = verb.id;
-
-    const contextInfo = this.contexts.get(contextId);
-    if (!contextInfo) {
-      this.emitOperationFailed(
-        originatingVerbId,
-        `Context ${contextId} not found for activation`,
-        contextId
-      );
-      return;
-    }
-
-    try {
-      // Deactivate current active context if different
-      if (this.activeContextId && this.activeContextId !== contextId) {
-        const currentActiveInfo = this.contexts.get(this.activeContextId);
-        if (currentActiveInfo) {
-          currentActiveInfo.isActive = false; // Update state
-          console.log(
-            `ContextEngine: Deactivating previous context ${this.activeContextId}`
-          );
-          this.emitVerb(
-            ContextEngineVerbs.CONTEXT_DEACTIVATED,
-            {
-              contextId: this.activeContextId,
-              reason: "New context activated",
-            },
-            undefined, // No correlation needed for this side effect
-            this.activeContextId
-          );
-        }
+        const evt = this.emit(base, "context.updated", {
+          id: saved.shape.core.id,
+          revision: saved.revision,
+        });
+        return [evt];
       }
 
-      // Activate the new context
-      contextInfo.isActive = true; // Update state
-      this.activeContextId = contextId;
-
-      console.log(`ContextEngine: Context activated: ${contextId}`);
-      this.emitVerb(
-        ContextEngineVerbs.CONTEXT_ACTIVATED,
-        { originalVerbId: originatingVerbId, contextId: contextId },
-        originatingVerbId,
-        contextId
-      );
-    } catch (error) {
-      this.emitOperationFailed(originatingVerbId, error, contextId);
-    }
-  }
-
-  private handleDeactivateContext(verb: FormRelation): void {
-    const { contextId, options } = verb.content || {}; // Ignore options for now
-    const originatingVerbId = verb.id;
-
-    const contextInfo = this.contexts.get(contextId);
-    if (!contextInfo) {
-      this.emitOperationFailed(
-        originatingVerbId,
-        `Context ${contextId} not found for deactivation`,
-        contextId
-      );
-      return;
-    }
-
-    try {
-      contextInfo.isActive = false; // Update state
-
-      if (this.activeContextId === contextId) {
-        this.activeContextId = null;
-        // Activation of parent is ignored for now
+      case "context.delete": {
+        const { id } = cmd.payload;
+        const ok = await this.repo.delete(id);
+        const evt = this.emit(base, "context.deleted", { id, ok: !!ok });
+        return [evt];
       }
 
-      console.log(`ContextEngine: Context deactivated: ${contextId}`);
-      this.emitVerb(
-        ContextEngineVerbs.CONTEXT_DEACTIVATED,
-        { originalVerbId: originatingVerbId, contextId: contextId },
-        originatingVerbId,
-        contextId
-      );
-    } catch (error) {
-      this.emitOperationFailed(originatingVerbId, error, contextId);
-    }
-  }
-
-  // --- Stub Handler for Unimplemented Requests ---
-  private handleStubbedRequest(verb: FormRelation): void {
-    const { contextId } = verb.content || {};
-    const originatingVerbId = verb.id;
-    console.warn(
-      `ContextEngine: Received request for unimplemented verb ${verb.subtype}. Emitting generic failure.`
-    );
-    this.emitOperationFailed(
-      originatingVerbId,
-      `Operation ${verb.subtype} not implemented`,
-      contextId
-    );
-
-    // OR, emit a generic success if that's less disruptive?
-    // const successVerb = verb.subtype.replace('request', '').toLowerCase(); // e.g., contextEngine:updated
-    // this.emitVerb(successVerb, { originalVerbId: originatingVerbId, status: 'stubbed_success' }, originatingVerbId, contextId);
-  }
-
-  // --- Helper Methods (Keep as is) ---
-
-  private emitVerb(
-    subtype: string,
-    content: Record<string, any>,
-    correlationId?: FormRelationId,
-    contextId?: string,
-    target?: FormEntity
-  ): void {
-    const metadata: Record<string, any> = {};
-    if (contextId) metadata.contextId = contextId;
-    if (correlationId) metadata.correlationId = correlationId;
-    metadata.engineId = this.engineEntity.id;
-
-    // Use emit for broadcast, send for direct target
-    if (target) {
-      FormRelation.send(this.engineEntity, target, subtype, content, metadata);
-    } else {
-      FormRelation.emit(this.engineEntity, subtype, content, metadata);
-    }
-  }
-
-  private emitOperationFailed(
-    originatingVerbId: FormRelationId,
-    error: any,
-    contextId?: string,
-    details: Record<string, any> = {}
-  ): void {
-    const reason = error instanceof Error ? error.message : String(error);
-    console.error(
-      `ContextEngine: Operation failed (correlation: ${originatingVerbId}):`,
-      reason,
-      details
-    );
-    this.emitVerb(
-      ContextEngineVerbs.OPERATION_FAILED,
-      {
-        originalVerbId: originatingVerbId,
-        reason: reason,
-        contextId: contextId,
-        ...details,
-      },
-      originatingVerbId,
-      contextId
-    );
-  }
-
-  getContextInstance(contextId: string): any | undefined {
-    console.warn(
-      `ContextEngine.getContextInstance is a placeholder, returning basic info for ${contextId}`
-    );
-    const info = this.contexts.get(contextId);
-    // Return a minimal object that might satisfy FormExecutionContext for simple morphs
-    return info
-      ? { id: info.id, name: info.name, isActive: info.isActive }
-      : undefined;
-  }
-  
-  // --- Getters (Keep as is or simplify if Sandarbha instances aren't stored) ---
-  getContextInfo(
-    contextId: string
-  ):
-    | {
-        id: string;
-        name?: string;
-        parentId?: string;
-        formId?: string;
-        isActive: boolean;
+      case "context.get": {
+        const { id } = cmd.payload;
+        const doc = await this.repo.get(id);
+        const evt = this.emit(base, "context.got", {
+          id,
+          context: doc ?? null,
+        });
+        return [evt];
       }
-    | undefined {
-    return this.contexts.get(contextId);
+
+      // Entities
+      case "context.addEntity": {
+        const { id, ref } = cmd.payload;
+        const current = await this.mustGet(id);
+        const parsed = EntityRef.parse(ref);
+        const exists = new Set(
+          current.shape.entities.map((e) => `${e.type}:${e.id}`)
+        );
+        const next = exists.has(`${parsed.type}:${parsed.id}`)
+          ? current
+          : updateContext(current, {
+              entities: [...current.shape.entities, parsed],
+            } as any);
+        const saved = await this.repo.update(id, () =>
+          ContextSchema.parse(next)
+        );
+        const evt = this.emit(base, "context.entity.added", {
+          id,
+          entity: parsed,
+        });
+        return [evt];
+      }
+
+      case "context.addEntities": {
+        const { id, refs } = cmd.payload;
+        const current = await this.mustGet(id);
+        const exists = new Set(
+          current.shape.entities.map((e) => `${e.type}:${e.id}`)
+        );
+        const toAdd = (refs ?? [])
+          .map((r) => EntityRef.parse(r))
+          .filter((r) => !exists.has(`${r.type}:${r.id}`));
+        const next =
+          toAdd.length === 0
+            ? current
+            : updateContext(current, {
+                entities: [...current.shape.entities, ...toAdd],
+              } as any);
+        await this.repo.update(id, () => ContextSchema.parse(next));
+        const evt = this.emit(base, "context.entities.added", {
+          id,
+          count: toAdd.length,
+        });
+        return [evt];
+      }
+
+      case "context.removeEntity": {
+        const { id, ref } = cmd.payload;
+        const current = await this.mustGet(id);
+        const parsed = EntityRef.parse(ref);
+        const nextList = current.shape.entities.filter(
+          (e) => !(e.id === parsed.id && e.type === parsed.type)
+        );
+        const next =
+          nextList.length === current.shape.entities.length
+            ? current
+            : updateContext(current, { entities: nextList } as any);
+        await this.repo.update(id, () => ContextSchema.parse(next));
+        const evt = this.emit(base, "context.entity.removed", {
+          id,
+          entity: parsed,
+        });
+        return [evt];
+      }
+
+      case "context.clearEntities": {
+        const { id } = cmd.payload;
+        const current = await this.mustGet(id);
+        const next =
+          current.shape.entities.length === 0
+            ? current
+            : updateContext(current, { entities: [] } as any);
+        await this.repo.update(id, () => ContextSchema.parse(next));
+        const evt = this.emit(base, "context.entities.cleared", { id });
+        return [evt];
+      }
+
+      // Relations by id
+      case "context.addRelation": {
+        const { id, relationId } = cmd.payload;
+        const current = await this.mustGet(id);
+        const set = new Set(current.shape.relations);
+        const next = set.has(relationId)
+          ? current
+          : updateContext(current, {
+              relations: [...current.shape.relations, relationId],
+            } as any);
+        await this.repo.update(id, () => ContextSchema.parse(next));
+        const evt = this.emit(base, "context.relation.added", {
+          id,
+          relationId,
+        });
+        return [evt];
+      }
+
+      case "context.addRelations": {
+        const { id, relationIds } = cmd.payload;
+        const current = await this.mustGet(id);
+        const set = new Set(current.shape.relations);
+        const toAdd = (relationIds ?? []).filter((rid) => !set.has(rid));
+        const next =
+          toAdd.length === 0
+            ? current
+            : updateContext(current, {
+                relations: [...current.shape.relations, ...toAdd],
+              } as any);
+        await this.repo.update(id, () => ContextSchema.parse(next));
+        const evt = this.emit(base, "context.relations.added", {
+          id,
+          count: toAdd.length,
+        });
+        return [evt];
+      }
+
+      case "context.removeRelation": {
+        const { id, relationId } = cmd.payload;
+        const current = await this.mustGet(id);
+        const nextList = current.shape.relations.filter(
+          (r) => r !== relationId
+        );
+        const next =
+          nextList.length === current.shape.relations.length
+            ? current
+            : updateContext(current, { relations: nextList } as any);
+        await this.repo.update(id, () => ContextSchema.parse(next));
+        const evt = this.emit(base, "context.relation.removed", {
+          id,
+          relationId,
+        });
+        return [evt];
+      }
+
+      case "context.clearRelations": {
+        const { id } = cmd.payload;
+        const current = await this.mustGet(id);
+        const next =
+          current.shape.relations.length === 0
+            ? current
+            : updateContext(current, { relations: [] } as any);
+        await this.repo.update(id, () => ContextSchema.parse(next));
+        const evt = this.emit(base, "context.relations.cleared", { id });
+        return [evt];
+      }
+
+      default:
+        throw new Error(`unsupported command: ${(cmd as Command).kind}`);
+    }
   }
 
-  getActiveContextId(): string | null {
-    return this.activeContextId;
+  private async mustGet(id: string): Promise<Context> {
+    const doc = await this.repo.get(id);
+    if (!doc) throw new Error(`context not found: ${id}`);
+    return doc;
   }
 }
-
-// Instantiate the engine (Keep as is)
-export const contextEngine = new ContextEngine();

@@ -108,6 +108,6 @@
   },
   "include": [
     "./src/index.ts",
-     //"src/**/*"
+    "./src/schema/**/*.ts"
   ],
 }

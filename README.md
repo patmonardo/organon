@@ -1,10 +1,10 @@
-# ORGANON - The Science of Kriya Platform
+# ORGANON - The Science of Action Platform
 
-A computational embodiment of **Kriya-Jnana** (the Science of Kriya) implementing the complete **BEC-MVC-TAW dialectical cube** as a research assistant platform for transformative knowledge work.
+A computational embodiment of **Action–Knowledge** (the Science of Action) implementing the complete **BEC-MVC-TAW dialectical cube** as a research assistant platform for transformative knowledge work.
 
 ## The Dialectical Cube Architecture - 3³ Generic Specification
 
-ORGANON is founded on a **3×3×3 dialectical cube** representing the **complete Logic of Experience** through **Kriya Yoga**:
+ORGANON is founded on a **3×3×3 dialectical cube** representing the **complete Logic of Experience** through a practical, action‑driven discipline:
 
 ### **BEC Layer - Pure Noumenal Logic** (`logic/`)
 - **Being** (Form-Entity) - Pure presence and foundational substrate
@@ -12,28 +12,28 @@ ORGANON is founded on a **3×3×3 dialectical cube** representing the **complete
 - **Concept** (Morphism-Relation) - Universal intelligence and synthetic power
 
 ### **MVC Layer - Active Logic of Experience** (`model/`)
-- **Model** (State-Structure) - Being made dharmic through Kriya transformation
-- **View** (Representation-Perspective) - Essence made experiential through Kriya manifestation
-- **Controller** (Action-Rule) - Concept made practical through Kriya synthesis
+- **Model** (State-Structure) - Being made principled through action‑driven transformation
+- **View** (Representation-Perspective) - Essence made experiential through action‑led manifestation
+- **Controller** (Action-Rule) - Concept made practical through action‑led synthesis
 
 ### **TAW Layer - Absolute Practical Synthesis** (`task/`)
 - **Task** (Goal-Method) - The absolute dialectic uniting Being→Model
 - **Agent** (Capacity-Awareness) - The absolute dialectic uniting Essence→View  
 - **Workflow** (Process-Coordination) - The absolute dialectic uniting Concept→Controller
 
-## The Science of Kriya Movement
+## The Science of Action Movement
 
 ```
 BEC (Pure Noumenal Logic)
-    ↓ Kriya Transformation ↓
+    ↓ Action Transformation ↓
 MVC (Active Logic of Experience)  
     ↓ Absolute Dialectical Unity ↓
 TAW (Complete Practical Synthesis)
-    ↓ Kriya-Jnana Realization ↓
-COMPUTATIONAL MAHATMAN SYSTEM
+    ↓ Action–Knowledge Realization ↓
+COMPUTATIONAL INTELLIGENCE SYSTEM
 ```
 
-**Core Insight**: **MVC** is **BEC** but as **"being that is no more"** - the **same logical structure** transformed through **Kriya** into **experiential actuality**. **TAW** is the **Absolute Dialectic** that reveals **BEC** and **MVC** as **one movement**.
+**Core Insight**: **MVC** is **BEC** but as **"being that is no more"** — the **same logical structure** transformed through **action** into **experiential actuality**. **TAW** is the **Absolute Dialectic** that reveals **BEC** and **MVC** as **one movement**.
 
 ## Package Architecture
 
@@ -53,7 +53,7 @@ model/src/schema/
 ├── view.ts       # Essence + Kriya = Experiential manifestation
 └── controller.ts # Concept + Kriya = Practical synthesis
 ```
-**Transformation**: BEC made experiential through **Kriya** - same logic, different **wheel/process**
+**Transformation**: BEC made experiential through **action** — same logic, different **wheel/process**
 
 ### **@organon/task** - TAW Layer (Absolute Synthesis)
 ```bash
@@ -71,14 +71,14 @@ core/src/
 ├── execution/    # Kriya execution engine
 └── synthesis/    # Dialectical synthesis operations
 ```
-**Realization**: The **computational substrate** where **Kriya-Jnana** becomes **actual system operations**
+**Realization**: The **computational substrate** where **Action–Knowledge** becomes **actual system operations**
 
 ## Development
 
 ### Prerequisites
 - Node.js 18+
 - pnpm 8+
-- Understanding of **Hegelian dialectics** and **Kriya Yoga** principles
+- Understanding of **Hegelian dialectics** and action‑oriented system design principles
 
 ### Setup
 ```bash
@@ -108,7 +108,7 @@ pnpm logic:dev
 
 #### MVC Layer - Logic of Experience (`@organon/model`)
 ```bash
-# Build Kriya-transformed schemas
+# Build action-transformed schemas
 pnpm model:build
 
 # Test experiential transformations
@@ -144,39 +144,39 @@ pnpm core:build
 # Test dialectical execution
 pnpm core:test
 
-# Develop Kriya execution substrate
+# Develop action execution substrate
 pnpm core:dev
 ```
 
 ### Complete System Scripts
 - `pnpm build` - Build entire dialectical cube
-- `pnpm test` - Test complete Kriya-Jnana system
+- `pnpm test` - Test complete Action–Knowledge system
 - `pnpm dev` - Develop full BEC-MVC-TAW architecture
-- `pnpm kriya:*` - Kriya transformation operations
+- `pnpm action:*` - Action transformation operations
 - `pnpm dialectic:*` - Dialectical synthesis operations
 
-## Philosophy - The Science of Kriya
+## Philosophy - The Science of Action
 
-ORGANON implements **Kriya-Jnana** - the **Science of Kriya** - as a computational platform:
+ORGANON implements **Action–Knowledge** — the **Science of Action** — as a computational platform:
 
 ### **The Fourfold Reality Breakdown**
-- **PRAJNA** (Pure Unconditioned) - Transcendental Principle of Being
-- **DHARMA** (Impure Unconditioned) - Transcendental Law of Doing  
-- **JNANA** (Pure Conditioned) - Immanent discriminative knowledge
-- **KRIYA** (Impure Conditioned) - Immanent transformative action
+- **Pure Insight (Pure Unconditioned)** - Transcendental principle of being
+- **Principle/Law (Impure Unconditioned)** - Transcendental law of doing  
+- **Knowledge (Pure Conditioned)** - Immanent discriminative knowledge
+- **Action (Impure Conditioned)** - Immanent transformative action
 
-### **The Dialectical Eye of Buddhi**
-The platform embodies **Buddhi** as the **Copula** that sees both:
-- **Sattva** (What IS) - Pure presence without presupposition
-- **Sattva:Tamas** (What IS NOT) - Self-positing through presupposition of prior state
+### **The Dialectical Eye of Reason**
+The platform embodies **Reason** as the **copula** that sees both:
+- **What IS** - Pure presence without presupposition
+- **What IS NOT** - Self‑positing through presupposition of a prior state
 
-### **The Complete Kriya-Jnana Architecture**
+### **The Complete Action–Knowledge Architecture**
 ```
 Pure Logic (BEC) ←→ Active Logic (MVC) ←→ Absolute Synthesis (TAW)
          ↕                    ↕                        ↕
    Noumenal Realm    ←→  Experiential Realm  ←→   Practical Realm
          ↕                    ↕                        ↕
-    PRAJNA:DHARMA    ←→    KRIYA:JNANA     ←→    Computational Mahatman
+    Insight:Principle  ←→    Action:Knowledge  ←→    Computational Agent
 ```
 
 ## The Revolutionary Achievement
@@ -184,22 +184,22 @@ Pure Logic (BEC) ←→ Active Logic (MVC) ←→ Absolute Synthesis (TAW)
 ORGANON represents the **first computational embodiment** of:
 
 1. **Hegel's Complete Logic** as **living dialectical system**
-2. **Kriya Yoga** as **computational transformation science**  
-3. **Vedic Organon** as **practical reasoning platform**
-4. **Science of Kriya** as **systematic knowledge of transformation**
+2. An action discipline as **computational transformation science**  
+3. A practical **Organon** as a **reasoning platform**
+4. **Science of Action** as **systematic knowledge of transformation**
 
 ### **Core Innovation**: 
-**MVC is BEC** - the **same logical structure** made **experiential** through **Kriya transformation**. **TAW** is the **Absolute Dialectic** that reveals this **identity-in-difference** as **one systematic movement**.
+**MVC is BEC** — the **same logical structure** made **experiential** through **action‑driven transformation**. **TAW** is the **Absolute Dialectic** that reveals this **identity‑in‑difference** as **one systematic movement**.
 
 ### **Practical Result**:
-A **research assistant platform** that **thinks dialectically**, **transforms through Kriya**, and **operates as computational Mahatman** - enabling **systematic advancement** from **speculative ideas** to **realized knowledge** through **complete dialectical processing**.
+A **research assistant platform** that **thinks dialectically**, **transforms through action**, and **operates as a computational agent** — enabling **systematic advancement** from **speculative ideas** to **realized knowledge** through **complete dialectical processing**.
 
 ## Contributing
 
 Contributions should demonstrate understanding of:
 - **Hegelian dialectical method**
-- **Kriya Yoga transformation principles**  
-- **BEC-MVC-TAW systematic unity**
+- **Action‑oriented transformation principles**  
+- **BEC‑MVC‑TAW systematic unity**
 - **Computational embodiment** of **philosophical structures**
 
 ## License
@@ -208,6 +208,6 @@ This project embodies **universal philosophical principles** and is available un
 
 ---
 
-**"The Absolute Concept as Kriya Upadhi - the conditioning substrate that enables all transformation"**
+**"The Absolute Concept as an action‑conditioning substrate — the substrate that enables transformation"**
 
-*ORGANON: Where pure logic becomes living system through the Science of Kriya*
+*ORGANON: Where pure logic becomes living system through the Science of Action*

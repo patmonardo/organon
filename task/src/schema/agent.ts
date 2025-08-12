@@ -28,7 +28,9 @@ export const CapacitySchema = z.object({
   resources: z.record(z.string(), z.any()).optional(), // Materials, connections, etc.
   constraints: z.array(z.string()).optional(), // Limitations on the agent's capacity
   // Dialectical structure
-  potentialLevel: z.enum(['reactive', 'deliberative', 'intuitive', 'absolute']).default('reactive'),
+  potentialLevel: z
+    .enum(['reactive', 'deliberative', 'intuitive', 'absolute'])
+    .default('reactive'),
   actualizationProgress: z.number().min(0).max(1).default(0),
 });
 
@@ -40,32 +42,47 @@ export const AwarenessSchema = z.object({
   filters: z.record(z.string(), z.any()).optional(), // How the agent filters information
   history: z.array(z.record(z.string(), z.any())).optional(), // Past experiences
   // Consciousness levels
-  consciousnessLevel: z.enum(['surface', 'depth', 'integral', 'non-dual']).default('surface'),
+  consciousnessLevel: z
+    .enum(['surface', 'depth', 'integral', 'non-dual'])
+    .default('surface'),
   selfAwareness: z.boolean().default(false),
   // Dialectical movement
-  reflectionCapacity: z.enum(['none', 'basic', 'dialectical', 'absolute']).default('basic'),
+  reflectionCapacity: z
+    .enum(['none', 'basic', 'dialectical', 'absolute'])
+    .default('basic'),
 });
 
 // Agent: The synthesis of Capacity and Awareness
-export const AgentSchema = z.object({
-  id: z.string(),
-  capacity: CapacitySchema,
-  awareness: AwarenessSchema,
-  // State management
-  status: z.enum(['idle', 'active', 'learning', 'reflecting', 'transcendent']).default('idle'),
-  energy: z.number().min(0).max(1).default(1), // Available energy for action
-  // Dialectical context
-  dialecticalContext: z.object({
-    stage: z.enum(['being', 'essence', 'concept', 'absolute-idea']),
-    autonomyLevel: z.enum(['reactive', 'deliberative', 'dialectical', 'absolute']),
-    learningEnabled: z.boolean().default(true),
-  }).optional(),
-  // Temporal dimension
-  createdAt: z.date().default(() => new Date()),
-  lastActive: z.date().default(() => new Date()),
-  // Metadata
-  metadata: z.record(z.string(), z.any()).optional(),
-}).catchall(z.any());
+export const AgentSchema = z
+  .object({
+    id: z.string(),
+    capacity: CapacitySchema,
+    awareness: AwarenessSchema,
+    // State management
+    status: z
+      .enum(['idle', 'active', 'learning', 'reflecting', 'transcendent'])
+      .default('idle'),
+    energy: z.number().min(0).max(1).default(1), // Available energy for action
+    // Dialectical context
+    dialecticalContext: z
+      .object({
+        stage: z.enum(['being', 'essence', 'concept', 'absolute-idea']),
+        autonomyLevel: z.enum([
+          'reactive',
+          'deliberative',
+          'dialectical',
+          'absolute',
+        ]),
+        learningEnabled: z.boolean().default(true),
+      })
+      .optional(),
+    // Temporal dimension
+    createdAt: z.date().default(() => new Date()),
+    lastActive: z.date().default(() => new Date()),
+    // Metadata
+    metadata: z.record(z.string(), z.any()).optional(),
+  })
+  .catchall(z.any());
 
 export type Capacity = z.infer<typeof CapacitySchema>;
 export type Awareness = z.infer<typeof AwarenessSchema>;
@@ -75,7 +92,6 @@ export type Agent = z.infer<typeof AgentSchema>;
  * Agent Factory: Creates agents with dialectical consciousness levels
  */
 export class AgentFactory {
-
   /**
    * Create a Being-level agent (reactive, immediate responses)
    */
@@ -117,7 +133,7 @@ export class AgentFactory {
   public static createEssenceAgent(
     name: string,
     skills: string[],
-    reflectionCapacity: 'basic' | 'dialectical' = 'basic'
+    reflectionCapacity: 'basic' | 'dialectical' = 'basic',
   ): Agent {
     const now = new Date();
 
@@ -153,10 +169,7 @@ export class AgentFactory {
   /**
    * Create a Concept-level agent (intuitive, self-determining)
    */
-  public static createConceptAgent(
-    name: string,
-    skills: string[]
-  ): Agent {
+  public static createConceptAgent(name: string, skills: string[]): Agent {
     const now = new Date();
 
     return {
@@ -169,7 +182,7 @@ export class AgentFactory {
           'universalize',
           'particularize',
           'individualize',
-          'synthesize-dialectically'
+          'synthesize-dialectically',
         ]),
         potentialLevel: 'intuitive',
         actualizationProgress: 0.9,
@@ -199,7 +212,7 @@ export class AgentFactory {
    */
   public static createAbsoluteAgent(
     name: string,
-    systemContext: Record<string, any>
+    systemContext: Record<string, any>,
   ): Agent {
     const now = new Date();
 
@@ -221,7 +234,11 @@ export class AgentFactory {
       awareness: {
         id: `awareness-${Date.now()}`,
         viewpoint: 'absolute',
-        context: { level: 'absolute-idea', mode: 'transcendent', systemContext },
+        context: {
+          level: 'absolute-idea',
+          mode: 'transcendent',
+          systemContext,
+        },
         consciousnessLevel: 'non-dual',
         selfAwareness: true,
         reflectionCapacity: 'absolute',

@@ -1,187 +1,213 @@
-import { FormRelation, FormRelationId } from "./relation"; // Keep for types if needed
-import { FormEntity, FormEntityId } from "@/form/entity/entity";
-import { v4 as uuidv4 } from 'uuid';
+import type { Command, Event, EventBus } from "../triad/types";
+import { InMemoryEventBus } from "../triad/bus";
+import { startTrace, childSpan } from "../triad/trace";
 
-// --- Verb Definitions (Keep as is) ---
-export const RelationEngineVerbs = {
-    REQUEST_CREATE: 'relationEngine:requestCreation',
-    REQUEST_UPDATE: 'relationEngine:requestUpdate',
-    REQUEST_DELETION: 'relationEngine:requestDeletion',
-    REQUEST_GET: 'relationEngine:requestGet',
-    REQUEST_FIND: 'relationEngine:requestFind',
-    CREATED: 'relationEngine:created',
-    UPDATED: 'relationEngine:updated',
-    DELETED: 'relationEngine:deleted',
-    GET_RESULT: 'relationEngine:getResult',
-    FIND_RESULT: 'relationEngine:findResult',
-    REQUEST_GET_RELATED: 'relationEngine:requestGetRelated',
-    REQUEST_CHECK_RELATED: 'relationEngine:requestCheckRelated',
-    GET_RELATED_RESULT: 'relationEngine:getRelatedResult',
-    CHECK_RELATED_RESULT: 'relationEngine:checkRelatedResult',
-    OPERATION_FAILED: 'relationEngine:operationFailed',
+import type { Repository, Concurrency } from "../../repository/repo";
+import {
+  type Relation,
+  RelationSchema,
+  createRelation,
+  updateRelation,
+  RelationDirection,
+} from "../../schema/relation";
+import { EntityRef } from "../../schema/entity";
+
+// Typed command union for exhaustiveness + safety
+export type RelationCreateCmd = {
+  kind: "relation.create";
+  payload: Parameters<typeof createRelation>[0];
+  meta?: Record<string, unknown>;
 };
-// --- End Verb Definitions ---
+export type RelationUpdateCmd = {
+  kind: "relation.update";
+  payload: {
+    id: string;
+    patch: Parameters<typeof updateRelation>[1];
+    expectedRevision?: Concurrency["expectedRevision"];
+  };
+  meta?: Record<string, unknown>;
+};
+export type RelationDeleteCmd = {
+  kind: "relation.delete";
+  payload: { id: string };
+  meta?: Record<string, unknown>;
+};
+export type RelationGetCmd = {
+  kind: "relation.get";
+  payload: { id: string };
+  meta?: Record<string, unknown>;
+};
 
-// Define the structure for storing relation data in the engine
-interface StoredRelationData {
-    id: FormRelationId;
-    sourceId: FormEntityId;
-    targetId: FormEntityId;
-    type: string;
-    content?: any;
-    metadata?: Record<string, any>;
-    contextId?: string;
-}
+// Endpoint/direction ops
+export type RelationSetEndpointsCmd = {
+  kind: "relation.setEndpoints";
+  payload: { id: string; source: unknown; target: unknown }; // validated via EntityRef.parse
+  meta?: Record<string, unknown>;
+};
+export type RelationSetDirectionCmd = {
+  kind: "relation.setDirection";
+  payload: { id: string; direction: unknown }; // validated via RelationDirection.parse
+  meta?: Record<string, unknown>;
+};
+export type RelationInvertCmd = {
+  kind: "relation.invert";
+  payload: { id: string };
+  meta?: Record<string, unknown>;
+};
 
+export type RelationCommand =
+  | RelationCreateCmd
+  | RelationUpdateCmd
+  | RelationDeleteCmd
+  | RelationGetCmd
+  | RelationSetEndpointsCmd
+  | RelationSetDirectionCmd
+  | RelationInvertCmd;
+
+/**
+ * RelationEngine — repo-backed CRUD + topology ops for Relation docs.
+ * Command-in, Event-out. Trace + scope meta via emit().
+ */
 export class RelationEngine {
-    private engineEntity: FormEntity;
-    // Store raw relation data instead of FormRelation instances
-    private relations: Map<FormRelationId, StoredRelationData> = new Map();
-    private verbSubscription: { unsubscribe: () => void } | null = null;
+  constructor(
+    private readonly repo: Repository<Relation>,
+    private readonly bus: EventBus = new InMemoryEventBus(),
+    private readonly scope: string = "form"
+  ) {}
 
-    constructor(engineId: string = 'relation-engine:default') {
-        this.engineEntity = FormEntity.findOrCreate({ id: engineId, type: 'System::RelationEngine' });
-        console.log(`RelationEngine (${this.engineEntity.id}) initialized.`);
-    }
+  get eventBus(): EventBus {
+    return this.bus;
+  }
 
-    start(): void {
-        if (this.verbSubscription) {
-            console.warn(`RelationEngine (${this.engineEntity.id}) is already listening.`);
-            return;
-        }
-        console.log(`RelationEngine (${this.engineEntity.id}) starting to listen...`);
+  // Standardized emit with trace + scope
+  private emit(
+    base: Record<string, unknown>,
+    kind: Event["kind"],
+    payload: Event["payload"],
+    extraMeta?: Record<string, unknown>
+  ): Event {
+    const meta = childSpan(base as any, {
+      action: kind,
+      scope: this.scope,
+      ...(extraMeta ?? {}),
+    });
+    const evt: Event = { kind, payload, meta };
+    this.bus.publish(evt);
+    return evt;
+  }
 
-        this.verbSubscription = FormRelation.subscribeToVerbs((relationVerb) => {
-            if (relationVerb.subtype?.startsWith('relationEngine:')) {
-                 console.log(`RelationEngine received verb: ${relationVerb.subtype}`); // Log received verb
-                switch (relationVerb.subtype) {
-                    case RelationEngineVerbs.REQUEST_CREATE:
-                        this.handleRelationCreationRequest(relationVerb);
-                        break;
-                    // --- Stubbed Handlers ---
-                    case RelationEngineVerbs.REQUEST_UPDATE:
-                    case RelationEngineVerbs.REQUEST_DELETION:
-                    case RelationEngineVerbs.REQUEST_GET:
-                    case RelationEngineVerbs.REQUEST_FIND:
-                    case RelationEngineVerbs.REQUEST_GET_RELATED:
-                    case RelationEngineVerbs.REQUEST_CHECK_RELATED:
-                        this.handleStubbedRequest(relationVerb);
-                        break;
-                    default:
-                        console.debug(`RelationEngine ignoring verb: ${relationVerb.subtype}`);
-                        break;
-                }
-            }
+  async handle(cmd: RelationCommand | Command): Promise<Event[]> {
+    const base = startTrace(
+      "RelationEngine",
+      (cmd as any).meta?.correlationId as string | undefined,
+      (cmd as any).meta
+    );
+
+    switch (cmd.kind) {
+      case "relation.create": {
+        const doc = createRelation(cmd.payload as any);
+        const created = await this.repo.create(RelationSchema.parse(doc));
+        const evt = this.emit(base, "relation.created", {
+          id: created.shape.core.id,
+          type: created.shape.core.type,
+          kind: created.shape.core.kind,
+          direction: created.shape.direction,
         });
-    }
+        return [evt];
+      }
 
-    stop(): void {
-        if (this.verbSubscription) {
-            console.log(`RelationEngine (${this.engineEntity.id}) stopping listening.`);
-            this.verbSubscription.unsubscribe();
-            this.verbSubscription = null;
+      case "relation.update": {
+        const { id, patch, expectedRevision } = cmd.payload;
+        const current = await this.mustGet(id);
+        const next = updateRelation(current, patch as any);
+        const saved = await this.repo.update(
+          id,
+          () => RelationSchema.parse(next),
+          expectedRevision !== undefined ? { expectedRevision } : undefined
+        );
+        const evt = this.emit(base, "relation.updated", {
+          id: saved.shape.core.id,
+          revision: saved.revision,
+        });
+        return [evt];
+      }
+
+      case "relation.delete": {
+        const { id } = cmd.payload;
+        const ok = await this.repo.delete(id);
+        const evt = this.emit(base, "relation.deleted", { id, ok: !!ok });
+        return [evt];
+      }
+
+      case "relation.get": {
+        const { id } = cmd.payload;
+        const doc = await this.repo.get(id);
+        const evt = this.emit(base, "relation.got", {
+          id,
+          relation: doc ?? null,
+        });
+        return [evt];
+      }
+
+      case "relation.setEndpoints": {
+        const { id, source, target } = cmd.payload;
+        const current = await this.mustGet(id);
+        const src = EntityRef.parse(source);
+        const tgt = EntityRef.parse(target);
+        const next = updateRelation(current, { source: src, target: tgt });
+        await this.repo.update(id, () => RelationSchema.parse(next));
+        const evt = this.emit(base, "relation.endpoints.set", {
+          id,
+          source: src,
+          target: tgt,
+        });
+        return [evt];
+      }
+
+      case "relation.setDirection": {
+        const { id, direction } = cmd.payload;
+        const current = await this.mustGet(id);
+        const dir = RelationDirection.parse(direction);
+        const next = updateRelation(current, { direction: dir });
+        await this.repo.update(id, () => RelationSchema.parse(next));
+        const evt = this.emit(base, "relation.direction.set", {
+          id,
+          direction: dir,
+        });
+        return [evt];
+      }
+
+      case "relation.invert": {
+        const { id } = cmd.payload;
+        const current = await this.mustGet(id);
+        if (current.shape.direction === "bidirectional") {
+          const evt = this.emit(base, "relation.inverted", {
+            id,
+            noop: true,
+            direction: "bidirectional",
+          });
+          return [evt];
         }
+        const next = updateRelation(current, {
+          source: current.shape.target,
+          target: current.shape.source,
+        });
+        await this.repo.update(id, () => RelationSchema.parse(next));
+        const evt = this.emit(base, "relation.inverted", {
+          id,
+          direction: "directed",
+        });
+        return [evt];
+      }
+
+      default:
+        throw new Error(`unsupported command: ${(cmd as Command).kind}`);
     }
+  }
 
-    // --- Simplified Relation Creation ---
-
-    private handleRelationCreationRequest(verb: FormRelation): void {
-        // Extract data directly from verb content
-        const { sourceId, targetId, type, content, contextId, id: requestedId } = verb.content || {};
-        const originatingVerbId = verb.id;
-
-        if (!sourceId || !targetId || !type) {
-            this.emitOperationFailed(originatingVerbId, "Missing sourceId, targetId, or type", verb.metadata?.contextId);
-            return;
-        }
-
-        try {
-            const relationId = requestedId || `rel:${uuidv4()}`;
-            if (this.relations.has(relationId)) {
-                 throw new Error(`Relation with ID ${relationId} already exists.`);
-            }
-
-            // Create the raw data object to store
-            const relationData: StoredRelationData = {
-                id: relationId,
-                sourceId,
-                targetId,
-                type,
-                content: content || {},
-                metadata: {
-                    ...(verb.metadata || {}), // Include verb metadata
-                    created: Date.now(),
-                    updated: Date.now(),
-                    // contextId is already in the main object if provided
-                },
-                contextId: contextId,
-            };
-
-            // Store the raw data
-            this.relations.set(relationId, relationData);
-
-            console.log(`RelationEngine: Relation data stored: ${relationId} (${sourceId} -> ${targetId}, Type: ${type})`);
-
-            // Emit success verb with the stored data object
-            this.emitVerb(RelationEngineVerbs.CREATED, {
-                originalVerbId: originatingVerbId,
-                relation: relationData, // Send the raw data back
-            }, originatingVerbId, contextId);
-
-        } catch (error) {
-            this.emitOperationFailed(originatingVerbId, error, verb.metadata?.contextId);
-        }
-    }
-
-    // --- Stub Handler for Unimplemented Requests ---
-    private handleStubbedRequest(verb: FormRelation): void {
-        const originatingVerbId = verb.id;
-        console.warn(`RelationEngine: Received request for unimplemented verb ${verb.subtype}. Emitting generic failure.`);
-        this.emitOperationFailed(originatingVerbId, `Operation ${verb.subtype} not implemented`, verb.metadata?.contextId);
-    }
-
-
-    // --- Helper Methods (Keep as is) ---
-
-    private emitVerb(
-        subtype: string,
-        content: Record<string, any>,
-        correlationId?: FormRelationId,
-        contextId?: string,
-        target?: FormEntity
-    ): void {
-        const metadata: Record<string, any> = {};
-        if (contextId) metadata.contextId = contextId;
-        if (correlationId) metadata.correlationId = correlationId;
-        metadata.engineId = this.engineEntity.id;
-
-        if (target) {
-            FormRelation.send(this.engineEntity, target, subtype, content, metadata);
-        } else {
-            FormRelation.emit(this.engineEntity, subtype, content, metadata);
-        }
-    }
-
-    private emitOperationFailed(
-        originatingVerbId: FormRelationId,
-        error: any,
-        contextId?: string,
-        relationId?: FormRelationId
-    ): void {
-        const reason = error instanceof Error ? error.message : String(error);
-        console.error(`RelationEngine: Operation failed (correlation: ${originatingVerbId}):`, reason);
-        this.emitVerb(RelationEngineVerbs.OPERATION_FAILED, {
-            originalVerbId: originatingVerbId,
-            reason: reason,
-            relationId: relationId,
-        }, originatingVerbId, contextId);
-    }
-
-     // Optional: Getter for the raw data (for debugging/internal use)
-    getRelationData(relationId: FormRelationId): StoredRelationData | undefined {
-        return this.relations.get(relationId);
-    }
+  private async mustGet(id: string): Promise<Relation> {
+    const doc = await this.repo.get(id);
+    if (!doc) throw new Error(`relation not found: ${id}`);
+    return doc;
+  }
 }
-
-// Instantiate the engine
-export const relationEngine = new RelationEngine();

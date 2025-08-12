@@ -1,157 +1,184 @@
 import { z } from "zod";
-import { FormContextSchema } from "./context";
+import { randomUUID } from "node:crypto";
+import {
+  BaseSchema,
+  BaseState,
+  BaseCore,
+  Type,
+  Id,
+  Label,
+  touch,
+} from "./base";
 
-/**
- * Implementation schema - defines how a morph is implemented at runtime
- */
-export const ImplementationSchema = z.object({
-  module: z.string().optional(),
-  class: z.string().optional(),
-  factory: z.string().optional(),
+// Core/state
+export const MorphCore = BaseCore.extend({
+  type: Type, // schema/category, e.g., "system.Morph"
+  inputType: Label.default("FormShape"),
+  outputType: Label.default("FormShape"),
+  transformFn: z.string().optional(), // runtime entry (e.g., "@pkg/mod#symbol")
 });
+export type MorphCore = z.infer<typeof MorphCore>;
 
-export type Implementation = z.infer<typeof ImplementationSchema>;
-
-/**
- * Base configuration for all morphs
- */
-export const FormMorphSchema = z.object({
-  // Basic information
-  id: z.string(),
-  name: z.string(),
-  description: z.string().optional(),
-
-  // Type information
-  inputType: z.string().default("FormShape"),
-  outputType: z.string().default("FormShape"),
-
-  // Transform function reference
-  transformFn: z.string().optional(),
-
-  // Additional configuration
-  config: z.record(z.any()).optional(),
-
-  // Composition structure
-  composition: z
-    .object({
-      type: z.enum(["single", "composite", "pipeline"]).default("single"),
-      compositionType: z
-      .enum(["sequential", "parallel", "conditional"])
-      .optional(),
-      morphs: z.array(z.string()).optional(),
-    })
-    .optional(),
-
-  // Metadata
-  meta: z.record(z.any()).optional(),
-
-  // Runtime implementation details (directly in base schema)
-  implementation: ImplementationSchema.optional(),
+export const MorphState = BaseState.extend({
+  optimized: z.boolean().optional(), // optional runtime hint
 });
+export type MorphState = z.infer<typeof MorphState>;
 
-/**
- * Pipeline of morphs
- */
-export const FormMorphPipelineSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  description: z.string().optional(),
-  morphs: z.array(z.string()), // Array of morph IDs
-  inputType: z.string().default("FormShape"),
-  outputType: z.string().default("FormShape"),
-  config: z.record(z.any()).optional(),
-  meta: z.record(z.any()).optional(),
-  // Add optimization flag to the base schema
-  optimized: z.boolean().optional(),
+// Composition (optional, first pass)
+export const MorphComposition = z
+  .object({
+    kind: z.enum(["single", "pipeline", "composite"]).default("single"),
+    mode: z.enum(["sequential", "parallel"]).optional(),
+    steps: z.array(Id).default([]), // references to other Morph ids
+  })
+  .default({ kind: "single", steps: [] });
+export type MorphComposition = z.infer<typeof MorphComposition>;
+
+// Shape: core/state + composition + config/meta
+export const MorphShape = z.object({
+  core: MorphCore,
+  state: MorphState,
+  composition: MorphComposition,
+  config: z.record(z.unknown()).default({}),
+  meta: z.record(z.unknown()).default({}),
 });
+export type MorphShape = z.infer<typeof MorphShape>;
 
-/**
- * Result of applying a morph
- */
-export const FormMorphResultSchema = z.object({
-  success: z.boolean(),
-  outputType: z.string(),
-  output: z.any(),
-  morphId: z.string(),
-  context: FormContextSchema,
-  meta: z.record(z.any()).optional(),
-  error: z
-    .object({
-      message: z.string(),
-      code: z.string().optional(),
-      details: z.any().optional(),
-    })
-    .optional(),
+// Schema
+export const MorphSchema = BaseSchema.extend({
+  shape: MorphShape,
 });
+export type Morph = z.infer<typeof MorphSchema>;
 
-/**
- * Utility function to create a morph definition with correct types
- *
- * @param config The morph configuration
- * @returns A validated FormMorphDef object
- */
-export function defineMorph(config: {
-  // Required fields
-  id: string;
-  transformFn: string;
-
-  // Common optional fields
+// Create/update
+export function createMorph(input: {
+  id?: string;
+  type: z.input<typeof Type>;
   name?: string;
   description?: string;
-  inputType?: string;
-  outputType?: string;
-  config?: Record<string, any>;
-  meta?: Record<string, any>;
 
-  // Composition (for complex morphs)
-  composition?: {
-    type: "single" | "composite" | "pipeline";
-    compositionType?: "sequential" | "parallel" | "conditional";
-    morphs?: string[];
-  };
+  inputType?: z.input<typeof Label>;
+  outputType?: z.input<typeof Label>;
+  transformFn?: string;
 
-  // Implementation details (for runtime resolution)
-  implementation?: {
-    module?: string;
-    class?: string;
-    factory?: string;
-  };
-}): FormMorph {
-  // Parse and validate with the schema
-  return FormMorphSchema.parse({
-    ...config,
-    inputType: config.inputType || "FormShape",
-    outputType: config.outputType || "FormShape",
+  composition?: z.input<typeof MorphComposition>;
+  config?: Record<string, unknown>;
+  meta?: Record<string, unknown>;
+
+  state?: z.input<typeof MorphState>;
+  version?: string;
+  ext?: Record<string, unknown>;
+}): Morph {
+  const core = MorphCore.parse({
+    id: input.id ?? randomUUID(),
+    type: input.type,
+    name: input.name,
+    description: input.description,
+    inputType: input.inputType ?? "FormShape",
+    outputType: input.outputType ?? "FormShape",
+    transformFn: input.transformFn,
+  });
+  const state = MorphState.parse(input.state ?? {});
+  const composition = MorphComposition.parse(input.composition ?? {});
+  return MorphSchema.parse({
+    shape: {
+      core,
+      state,
+      composition,
+      config: input.config ?? {},
+      meta: input.meta ?? {},
+    },
+    revision: 0,
+    version: input.version,
+    ext: input.ext ?? {},
   });
 }
 
-/**
- * Utility function to create a pipeline definition
- *
- * @param id The pipeline ID
- * @param morphIds The IDs of morphs in the pipeline
- * @param options Additional pipeline options
- * @returns A validated MorphPipelineDef object
- */
+export function updateMorph(
+  current: Morph,
+  patch: Partial<{
+    core: Partial<z.input<typeof MorphCore>>;
+    state: Partial<z.input<typeof MorphState>>;
+    composition: z.input<typeof MorphComposition>;
+    config: Record<string, unknown>;
+    meta: Record<string, unknown>;
+    version: string;
+    ext: Record<string, unknown>;
+  }>
+): Morph {
+  const core = MorphCore.parse(
+    touch({ ...current.shape.core, ...(patch.core ?? {}) })
+  );
+  const state = MorphState.parse({
+    ...current.shape.state,
+    ...(patch.state ?? {}),
+  });
+  const composition =
+    patch.composition !== undefined
+      ? MorphComposition.parse(patch.composition)
+      : current.shape.composition;
+
+  return MorphSchema.parse({
+    ...current,
+    shape: {
+      core,
+      state,
+      composition,
+      config: patch.config ?? current.shape.config,
+      meta: patch.meta ?? current.shape.meta,
+    },
+    revision: current.revision + 1,
+    version: patch.version ?? current.version,
+    ext: { ...current.ext, ...(patch.ext ?? {}) },
+  });
+}
+
+// Ergonomics
+export function defineMorph(config: {
+  id?: string;
+  type: z.input<typeof Type>;
+  name?: string;
+  description?: string;
+  transformFn?: string;
+  inputType?: z.input<typeof Label>;
+  outputType?: z.input<typeof Label>;
+  config?: Record<string, unknown>;
+  meta?: Record<string, unknown>;
+}): Morph {
+  return createMorph({
+    ...config,
+    composition: { kind: "single", steps: [] },
+  });
+}
+
 export function defineMorphPipeline(
   id: string,
   name: string,
-  morphIds: string[],
-  options: {
+  stepIds: z.input<typeof Id>[],
+  options?: {
+    type?: z.input<typeof Type>;
     description?: string;
-    inputType?: string;
-    outputType?: string;
-    config?: Record<string, any>;
-    meta?: Record<string, any>;
-    optimized?: boolean; // Add this line
-  } = {}
-): FormMorphPipeline {
-  return FormMorphPipelineSchema.parse({
+    inputType?: z.input<typeof Label>;
+    outputType?: z.input<typeof Label>;
+    transformFn?: string;
+    config?: Record<string, unknown>;
+    meta?: Record<string, unknown>;
+    version?: string;
+    ext?: Record<string, unknown>;
+  }
+): Morph {
+  return createMorph({
     id,
-    morphs: morphIds,
-    ...options,
+    type: options?.type ?? ("system.Morph" as z.input<typeof Type>),
+    name,
+    description: options?.description,
+    inputType: options?.inputType ?? "FormShape",
+    outputType: options?.outputType ?? "FormShape",
+    transformFn: options?.transformFn,
+    composition: { kind: "pipeline", mode: "sequential", steps: stepIds },
+    config: options?.config,
+    meta: options?.meta,
+    version: options?.version,
+    ext: options?.ext,
   });
 }
-
-export type FormMorph = z.infer<typeof FormMorphSchema>;
-export type FormMorphPipeline = z.infer<typeof FormMorphPipelineSchema>;

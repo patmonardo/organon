@@ -1,163 +1,141 @@
-import { number, z } from "zod";
+import { z } from "zod";
+import { randomUUID } from "node:crypto";
+import { BaseSchema, BaseState, BaseCore, Type, Id, touch } from "./base";
+import { EntityRef } from "./entity";
 
-/**
- * FormPropertyType - Defines the fundamental types of properties
- *
- * Properties are contextual determinations of what entities ARE
- * within a bounded context.
- */
-export const FormPropertyTypeSchema = z.enum([
-  "intrinsic", // Essential qualities that define what the entity is
-  "extrinsic", // Accidental qualities that describe but don't define
-  "relational", // Qualities that emerge from relations to other entities
-  "indexical", // Qualities that depend on position/context
-  "dispositional", // Qualities that manifest under certain conditions
-]);
+// Value typing (optional hint for engines)
+export const ValueType = z.enum(["string", "number", "boolean", "date", "object", "array"]);
+export type ValueType = z.infer<typeof ValueType>;
 
-/**
- * FormPropertyDefinitionType - Defines types of scripts that determine properties
- *
- * These describe HOW properties manifest, not what they are.
- */
-export const FormPropertyDefinitionTypeSchema = z.enum([
-  "validator", // Validates data against constraints
-  "calculator", // Computes a value based on other properties
-  "predicate", // Tests a condition about properties
-  "reducer", // Aggregates multiple properties into one
-]);
-
-/**
- * FormPropertyDefinition - A script that determines a property
- *well
- * FormPropertyDefinitions are mechanisms by which properties manifest -
- * they implement the realization of properties within contexts.
- */
-export const FormPropertyDefinitionSchema = z.object({
-  // Identity
-  id: z.string(),
-  name: z.string(),
-  description: z.string().optional(),
-
-  // Classification
-  scriptType: FormPropertyDefinitionTypeSchema,
-
-  // Execution
-  contextId: z.string(),
-  code: z.any(), // The script function
-
-  // FormProperty this script computes
-  propertyId: z.string(),
-
-  // Input/Output
-  input: z.record(z.any()).optional(),
-  output: z.record(z.any()).optional(),
-
-  // Dependencies
-  dependencies: z.array(z.string()).optional(),
-
-  // Connection to Form
-  formId: z.string().optional(),
-  entityId: z.string().optional(),
-  relationId: z.string().optional(),
-
-  // Execution options
-  caching: z
-    .object({
-      enabled: z.boolean().default(false),
-      ttl: z.number().optional(),
-    })
-    .optional(),
-
-  // Metadata
-  createdAt: z
-    .number()
-    .optional()
-    .default(() => Date.now())
-    .optional(),
-  updatedAt: z
-    .number()
-    .optional()
-    .default(() => Date.now())
-    .optional(),
+// Core/state
+export const PropertyCore = BaseCore.extend({
+  type: Type,          // schema/category, e.g., "system.Property"
+  key: z.string(),     // property key (required)
 });
+export type PropertyCore = z.infer<typeof PropertyCore>;
 
-/**
- * FormProperty - A contextual determination of what an entity is
- *
- * Properties operate as the Essential Being of Thingness - they
- * represent what an entity IS within a specific context.
- */
-export const FormPropertySchema = z.object({
-  // Identity
-  id: z.string(),
-  name: z.string(),
-  description: z.string().optional(),
+export const PropertyState = BaseState;
+export type PropertyState = z.infer<typeof PropertyState>;
 
-  // Classification
-  propertyType: FormPropertyTypeSchema,
+// Shape: core/state + bindings and value
+export const PropertyShape = z.object({
+  core: PropertyCore,
+  state: PropertyState,
 
-  // Reference to a FormPropertyDefinition
-  definitionId: z.string().optional(),
+  // Context membership
+  contextId: Id,
 
-  // Context dependency - Properties MUST have a context
-  contextId: z.string(),
+  // Binding to a subject (first pass: either entity or relation)
+  entity: EntityRef.optional(),
+  relationId: Id.optional(),
 
-  // Entity/Relation binding
-  entityId: z.string().optional(),
-  relationId: z.string().optional(),
-
-  // Value determination (multiple ways to define value)
-  staticValue: z.any().optional(), // Direct static value
-  derivedFrom: z.string().optional(), // Derived from another property
-  scriptId: z.string().optional(), // Determined by script
-
-  // Qualitative characteristics
-  qualitative: z
-    .object({
-      essential: z.boolean().optional(), // Is this an essential quality?
-      observable: z.boolean().optional(), // Can this be directly observed?
-      mutable: z.boolean().optional(), // Can this change?
-      inherent: z.boolean().optional(), // Is this inherent to the entity?
-    })
-    .optional(),
-
-  // Quantitative characteristics
-  quantitative: z
-    .object({
-      dataType: z
-        .enum(["string", "number", "boolean", "date", "object", "array"])
-        .optional(),
-      unit: z.string().optional(), // Unit of measurement
-      precision: z.number().optional(), // Precision for numeric values
-      range: z
-        .object({
-          // Valid range
-          min: z.any().optional(),
-          max: z.any().optional(),
-        })
-        .optional(),
-    })
-    .optional(),
-
-  // Metadata
-  createdAt: z
-    .number()
-    .optional()
-    .default(() => Date.now())
-    .optional(),
-  updatedAt: z
-    .number()
-    .optional()
-    .default(() => Date.now())
-    .optional(),
-  createdBy: z.string().optional(),
+  // Value and typing
+  value: z.unknown().optional(),
+  valueType: ValueType.optional(),
 });
+export type PropertyShape = z.infer<typeof PropertyShape>;
 
-export type FormPropertyType = z.infer<typeof FormPropertyTypeSchema>;
-export type FormPropertyDefinitionType = z.infer<
-  typeof FormPropertyDefinitionTypeSchema
->;
-export type FormPropertyDefinition = z.infer<
-  typeof FormPropertyDefinitionSchema
->;
-export type FormProperty = z.infer<typeof FormPropertySchema>;
+// Schema
+export const PropertySchema = BaseSchema.extend({
+  shape: PropertyShape,
+});
+export type Property = z.infer<typeof PropertySchema>;
+
+// Create/update
+export function createProperty(input: {
+  id?: string;
+  type: z.input<typeof Type>;
+  key: string;
+
+  contextId: z.input<typeof Id>;
+  entity?: z.input<typeof EntityRef>;
+  relationId?: z.input<typeof Id>;
+
+  name?: string;
+  description?: string;
+
+  state?: z.input<typeof PropertyState>;
+  value?: unknown;
+  valueType?: z.input<typeof ValueType>;
+  ext?: Record<string, unknown>;
+  version?: string;
+}): Property {
+  const core = PropertyCore.parse({
+    id: input.id ?? randomUUID(),
+    type: input.type,
+    key: input.key,
+    name: input.name,
+    description: input.description,
+  });
+  const state = PropertyState.parse(input.state ?? {});
+  return PropertySchema.parse({
+    shape: {
+      core,
+      state,
+      contextId: input.contextId,
+      entity: input.entity ? EntityRef.parse(input.entity) : undefined,
+      relationId: input.relationId,
+      value: input.value,
+      valueType: input.valueType,
+    },
+    revision: 0,
+    version: input.version,
+    ext: input.ext ?? {},
+  });
+}
+
+export function updateProperty(
+  current: Property,
+  patch: Partial<{
+    core: Partial<z.input<typeof PropertyCore>>;
+    state: Partial<z.input<typeof PropertyState>>;
+    contextId: z.input<typeof Id>;
+    entity: z.input<typeof EntityRef> | null;     // null to clear
+    relationId: z.input<typeof Id> | null;        // null to clear
+    value: unknown;                                // explicit undefined should clear
+    valueType: z.input<typeof ValueType>;         // explicit undefined should clear
+    version: string;
+    ext: Record<string, unknown>;
+  }>,
+): Property {
+  const core = PropertyCore.parse(touch({ ...current.shape.core, ...(patch.core ?? {}) }));
+  const state = PropertyState.parse({ ...current.shape.state, ...(patch.state ?? {}) });
+
+  const nextEntity =
+    patch.entity === null ? undefined :
+    patch.entity !== undefined ? EntityRef.parse(patch.entity) :
+    current.shape.entity;
+
+  const nextRelationId =
+    patch.relationId === null ? undefined :
+    patch.relationId !== undefined ? patch.relationId :
+    current.shape.relationId;
+
+  // honor explicit undefined to clear
+  const nextValue = ("value" in patch) ? patch.value : current.shape.value;
+  const nextValueType = ("valueType" in patch) ? patch.valueType : current.shape.valueType;
+
+  return PropertySchema.parse({
+    ...current,
+    shape: {
+      core,
+      state,
+      contextId: patch.contextId ?? current.shape.contextId,
+      entity: nextEntity,
+      relationId: nextRelationId,
+      value: nextValue,
+      valueType: nextValueType,
+    },
+    revision: current.revision + 1,
+    version: patch.version ?? current.version,
+    ext: { ...current.ext, ...(patch.ext ?? {}) },
+  });
+}
+
+// Ergonomics
+export function bindPropertyToEntity(p: Property, entity: z.input<typeof EntityRef>): Property {
+  return updateProperty(p, { entity, relationId: null });
+}
+export function bindPropertyToRelation(p: Property, relationId: z.input<typeof Id>): Property {
+  return updateProperty(p, { entity: null, relationId });
+}

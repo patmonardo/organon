@@ -419,3 +419,5 @@ export type FormLayout = z.infer<typeof FormLayoutSchema>;
 export type FormState = z.infer<typeof FormStateSchema>;
 export type FormMeta = z.infer<typeof FormMetaSchema>;
 export type FormShape = z.infer<typeof FormShapeSchema>;
+export type ShapeData = z.infer<typeof FormDataSchema>;
+export type ShapeState = z.infer<typeof FormStateSchema>;

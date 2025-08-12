@@ -1,5 +1,3 @@
-// Add to existing types
-
 /**
  * Basic morph transformation function signature
  */
@@ -8,7 +6,7 @@ export type MorphTransformer<T, U> = (input: T, context?: any) => U;
 /**
  * Post-processing function for composed morphs
  */
-export type PostProcessor<T> = (result: T, context?: any) => T;
+export type PostProcessor<U, V = U> = (output: U, context?: any) => V;
 
 /**
  * Options for morph configuration

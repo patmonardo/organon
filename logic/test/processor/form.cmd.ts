@@ -1,5 +1,5 @@
 import { Neo4jConnection } from "../connection";
-import { FormShapeRepository } from "../../src/repository/form";
+import { FormShapeRepository } from "../../src/repository/shape";
 import {
   FormShape,
   FormField,

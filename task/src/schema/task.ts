@@ -1,15 +1,15 @@
 /**
  * Task Schema: Goal–Method (Active Being in Motion)
  * =================================================
- * 
- * In the TAW dialectical system, Task represents the transformation of 
+ *
+ * In the TAW dialectical system, Task represents the transformation of
  * Being into active, goal-directed motion:
- * 
+ *
  *   - Goal: The telos or intended end-state (Active Being as destination)
  *   - Method: The means or approach for achieving the goal (Active Being as process)
- * 
+ *
  * Task = Goal : Method
- * 
+ *
  * Philosophical Note:
  * Task is Being in motion - not static existence but purposeful becoming.
  * It represents the first movement of Being toward agency and transformation.
@@ -27,23 +27,32 @@ export const GoalSchema = z.object({
   target: z.record(z.string(), z.any()), // The desired end-state
   form: z.string(), // The ontological type or form of the goal
   criteria: z.array(z.string()).optional(), // Success criteria
-  priority: z.enum(['low', 'medium', 'high', 'absolute']).optional().default('medium'),
+  priority: z
+    .enum(['low', 'medium', 'high', 'absolute'])
+    .optional()
+    .default('medium'),
   deadline: z.date().optional(),
   // Dialectical metadata
-  dialecticalStage: z.enum(['immediate', 'mediated', 'absolute']).default('immediate'),
+  dialecticalStage: z
+    .enum(['immediate', 'mediated', 'absolute'])
+    .default('immediate'),
 });
 
-// Method: The means or approach for achieving the goal (Active Being as process)  
+// Method: The means or approach for achieving the goal (Active Being as process)
 export const MethodSchema = z.object({
   id: z.string(),
   name: z.string(),
   approach: z.enum(['sequential', 'parallel', 'dialectical', 'organic']),
-  steps: z.array(z.object({
-    id: z.string(),
-    action: z.string(),
-    dependencies: z.array(z.string()).optional(),
-    resources: z.record(z.string(), z.any()).optional(),
-  })).optional(),
+  steps: z
+    .array(
+      z.object({
+        id: z.string(),
+        action: z.string(),
+        dependencies: z.array(z.string()).optional(),
+        resources: z.record(z.string(), z.any()).optional(),
+      }),
+    )
+    .optional(),
   constraints: z.array(z.string()).optional(),
   resources: z.record(z.string(), z.any()).optional(),
   // Ontological structure
@@ -53,25 +62,31 @@ export const MethodSchema = z.object({
 });
 
 // Task: The synthesis of Goal and Method
-export const TaskSchema = z.object({
-  id: z.string(),
-  goal: GoalSchema,
-  method: MethodSchema,
-  // State management
-  status: z.enum(['pending', 'active', 'suspended', 'completed', 'failed']).default('pending'),
-  progress: z.number().min(0).max(1).default(0),
-  // Dialectical context
-  dialecticalContext: z.object({
-    stage: z.enum(['being', 'essence', 'concept', 'absolute-idea']),
-    contradictions: z.array(z.string()).optional(),
-    syntheses: z.array(z.string()).optional(),
-  }).optional(),
-  // Temporal dimension
-  createdAt: z.date().default(() => new Date()),
-  updatedAt: z.date().default(() => new Date()),
-  // Metadata
-  metadata: z.record(z.string(), z.any()).optional(),
-}).catchall(z.any());
+export const TaskSchema = z
+  .object({
+    id: z.string(),
+    goal: GoalSchema,
+    method: MethodSchema,
+    // State management
+    status: z
+      .enum(['pending', 'active', 'suspended', 'completed', 'failed'])
+      .default('pending'),
+    progress: z.number().min(0).max(1).default(0),
+    // Dialectical context
+    dialecticalContext: z
+      .object({
+        stage: z.enum(['being', 'essence', 'concept', 'absolute-idea']),
+        contradictions: z.array(z.string()).optional(),
+        syntheses: z.array(z.string()).optional(),
+      })
+      .optional(),
+    // Temporal dimension
+    createdAt: z.date().default(() => new Date()),
+    updatedAt: z.date().default(() => new Date()),
+    // Metadata
+    metadata: z.record(z.string(), z.any()).optional(),
+  })
+  .catchall(z.any());
 
 export type Goal = z.infer<typeof GoalSchema>;
 export type Method = z.infer<typeof MethodSchema>;
@@ -81,13 +96,12 @@ export type Task = z.infer<typeof TaskSchema>;
  * Task Factory: Creates tasks with dialectical awareness
  */
 export class TaskFactory {
-  
   /**
    * Create a Being-level task (immediate, simple goals)
    */
   public static createBeingTask(goal: string, method: string): Task {
     const now = new Date();
-    
+
     return {
       id: `being-task-${Date.now()}`,
       goal: {
@@ -114,17 +128,17 @@ export class TaskFactory {
       updatedAt: now,
     };
   }
-  
+
   /**
    * Create an Essence-level task (mediated, reflective goals)
    */
   public static createEssenceTask(
-    goal: string, 
+    goal: string,
     method: string,
-    mediation: Record<string, any>
+    mediation: Record<string, any>,
   ): Task {
     const now = new Date();
-    
+
     return {
       id: `essence-task-${Date.now()}`,
       goal: {
@@ -153,17 +167,17 @@ export class TaskFactory {
       updatedAt: now,
     };
   }
-  
+
   /**
    * Create a Concept-level task (self-determining, active goals)
    */
   public static createConceptTask(
     goal: string,
-    method: string, 
-    concept: Record<string, any>
+    method: string,
+    concept: Record<string, any>,
   ): Task {
     const now = new Date();
-    
+
     return {
       id: `concept-task-${Date.now()}`,
       goal: {
@@ -187,7 +201,7 @@ export class TaskFactory {
             action: 'abstract-to-universal',
           },
           {
-            id: 'particularize', 
+            id: 'particularize',
             action: 'determine-particular',
             dependencies: ['universalize'],
           },
@@ -208,22 +222,22 @@ export class TaskFactory {
       updatedAt: now,
     };
   }
-  
+
   /**
    * Create an Absolute Idea task (complete self-aware system)
    */
   public static createAbsoluteIdeaTask(
     goal: string,
-    systemContext: Record<string, any>
+    systemContext: Record<string, any>,
   ): Task {
     const now = new Date();
-    
+
     return {
       id: `absolute-idea-task-${Date.now()}`,
       goal: {
         id: `goal-${Date.now()}`,
         name: goal,
-        target: { 
+        target: {
           absoluteIdeaState: 'self-aware-system',
           systemContext,
           isAbsolute: true,
@@ -231,7 +245,7 @@ export class TaskFactory {
         form: 'absolute-idea-form',
         criteria: [
           'complete-self-knowledge',
-          'systematic-totality', 
+          'systematic-totality',
           'free-self-determination',
           'absolute-objectivity',
         ],

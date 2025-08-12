@@ -23,66 +23,99 @@ import { z } from 'zod';
 export const ProcessSchema = z.object({
   id: z.string(),
   name: z.string(),
-  steps: z.array(z.object({
-    id: z.string(),
-    name: z.string(),
-    type: z.enum(['task', 'decision', 'transformation', 'synthesis']),
-    dependencies: z.array(z.string()).optional(),
-    duration: z.number().optional(), // Expected duration in milliseconds
-    resources: z.record(z.string(), z.any()).optional(),
-    // Dialectical structure
-    dialecticalRole: z.enum(['thesis', 'antithesis', 'synthesis']).default('thesis'),
-  })),
+  steps: z.array(
+    z.object({
+      id: z.string(),
+      name: z.string(),
+      type: z.enum(['task', 'decision', 'transformation', 'synthesis']),
+      dependencies: z.array(z.string()).optional(),
+      duration: z.number().optional(), // Expected duration in milliseconds
+      resources: z.record(z.string(), z.any()).optional(),
+      // Dialectical structure
+      dialecticalRole: z
+        .enum(['thesis', 'antithesis', 'synthesis'])
+        .default('thesis'),
+    }),
+  ),
   // Process characteristics
-  approach: z.enum(['linear', 'parallel', 'dialectical', 'organic']).default('linear'),
-  adaptability: z.enum(['fixed', 'flexible', 'self-organizing', 'transcendent']).default('fixed'),
+  approach: z
+    .enum(['linear', 'parallel', 'dialectical', 'organic'])
+    .default('linear'),
+  adaptability: z
+    .enum(['fixed', 'flexible', 'self-organizing', 'transcendent'])
+    .default('fixed'),
 });
 
 // Coordination: The organizational principle that governs the process (Active Concept as systematic unity)
 export const CoordinationSchema = z.object({
   id: z.string(),
   name: z.string(),
-  rules: z.array(z.object({
-    id: z.string(),
-    condition: z.string(),
-    action: z.string(),
-    priority: z.number().default(1),
-  })),
+  rules: z.array(
+    z.object({
+      id: z.string(),
+      condition: z.string(),
+      action: z.string(),
+      priority: z.number().default(1),
+    }),
+  ),
   // Coordination mechanisms
-  synchronization: z.enum(['loose', 'tight', 'dialectical', 'organic']).default('loose'),
-  conflictResolution: z.enum(['hierarchy', 'consensus', 'dialectical', 'transcendent']).default('hierarchy'),
+  synchronization: z
+    .enum(['loose', 'tight', 'dialectical', 'organic'])
+    .default('loose'),
+  conflictResolution: z
+    .enum(['hierarchy', 'consensus', 'dialectical', 'transcendent'])
+    .default('hierarchy'),
   // Systematic structure
-  organizationalPrinciple: z.enum(['centralized', 'distributed', 'dialectical', 'absolute']).default('centralized'),
-  emergenceLevel: z.enum(['none', 'basic', 'complex', 'transcendent']).default('none'),
+  organizationalPrinciple: z
+    .enum(['centralized', 'distributed', 'dialectical', 'absolute'])
+    .default('centralized'),
+  emergenceLevel: z
+    .enum(['none', 'basic', 'complex', 'transcendent'])
+    .default('none'),
 });
 
 // Workflow: The synthesis of Process and Coordination
-export const WorkflowSchema = z.object({
-  id: z.string(),
-  process: ProcessSchema,
-  coordination: CoordinationSchema,
-  // State management
-  status: z.enum(['initialized', 'running', 'paused', 'completed', 'failed', 'transcended']).default('initialized'),
-  progress: z.number().min(0).max(1).default(0),
-  // Dialectical context
-  dialecticalContext: z.object({
-    stage: z.enum(['being', 'essence', 'concept', 'absolute-idea']),
-    systemicLevel: z.enum(['simple', 'complex', 'dialectical', 'absolute']),
-    emergentProperties: z.array(z.string()).optional(),
-  }).optional(),
-  // Performance metrics
-  metrics: z.object({
-    efficiency: z.number().min(0).max(1).optional(),
-    coherence: z.number().min(0).max(1).optional(),
-    adaptability: z.number().min(0).max(1).optional(),
-    emergence: z.number().min(0).max(1).optional(),
-  }).optional(),
-  // Temporal dimension
-  startedAt: z.date().optional(),
-  completedAt: z.date().optional(),
-  // Metadata
-  metadata: z.record(z.string(), z.any()).optional(),
-}).catchall(z.any());
+export const WorkflowSchema = z
+  .object({
+    id: z.string(),
+    process: ProcessSchema,
+    coordination: CoordinationSchema,
+    // State management
+    status: z
+      .enum([
+        'initialized',
+        'running',
+        'paused',
+        'completed',
+        'failed',
+        'transcended',
+      ])
+      .default('initialized'),
+    progress: z.number().min(0).max(1).default(0),
+    // Dialectical context
+    dialecticalContext: z
+      .object({
+        stage: z.enum(['being', 'essence', 'concept', 'absolute-idea']),
+        systemicLevel: z.enum(['simple', 'complex', 'dialectical', 'absolute']),
+        emergentProperties: z.array(z.string()).optional(),
+      })
+      .optional(),
+    // Performance metrics
+    metrics: z
+      .object({
+        efficiency: z.number().min(0).max(1).optional(),
+        coherence: z.number().min(0).max(1).optional(),
+        adaptability: z.number().min(0).max(1).optional(),
+        emergence: z.number().min(0).max(1).optional(),
+      })
+      .optional(),
+    // Temporal dimension
+    startedAt: z.date().optional(),
+    completedAt: z.date().optional(),
+    // Metadata
+    metadata: z.record(z.string(), z.any()).optional(),
+  })
+  .catchall(z.any());
 
 export type Process = z.infer<typeof ProcessSchema>;
 export type Coordination = z.infer<typeof CoordinationSchema>;
@@ -92,7 +125,6 @@ export type Workflow = z.infer<typeof WorkflowSchema>;
  * Workflow Factory: Creates workflows with dialectical organization principles
  */
 export class WorkflowFactory {
-
   /**
    * Create a Being-level workflow (linear, simple coordination)
    */
@@ -114,12 +146,14 @@ export class WorkflowFactory {
       coordination: {
         id: `coordination-${Date.now()}`,
         name: `${name}-coordination`,
-        rules: [{
-          id: 'sequential-rule',
-          condition: 'previous-step-completed',
-          action: 'start-next-step',
-          priority: 1,
-        }],
+        rules: [
+          {
+            id: 'sequential-rule',
+            condition: 'previous-step-completed',
+            action: 'start-next-step',
+            priority: 1,
+          },
+        ],
         synchronization: 'tight',
         conflictResolution: 'hierarchy',
         organizationalPrinciple: 'centralized',
@@ -139,7 +173,7 @@ export class WorkflowFactory {
    */
   public static createEssenceWorkflow(
     name: string,
-    processes: Array<{ name: string; steps: string[] }>
+    processes: Array<{ name: string; steps: string[] }>,
   ): Workflow {
     const allSteps = processes.flatMap((proc, procIndex) =>
       proc.steps.map((step, stepIndex) => {
@@ -154,7 +188,7 @@ export class WorkflowFactory {
           type: 'transformation' as const,
           dialecticalRole: role,
         };
-      })
+      }),
     );
 
     return {
@@ -203,7 +237,7 @@ export class WorkflowFactory {
    */
   public static createConceptWorkflow(
     name: string,
-    conceptStructure: Record<string, any>
+    conceptStructure: Record<string, any>,
   ): Workflow {
     return {
       id: `concept-workflow-${Date.now()}`,
@@ -280,6 +314,10 @@ export class WorkflowFactory {
         adaptability: 0.9,
         emergence: 0.8,
       },
+      // Attach concept structure to metadata so it participates in the schema and avoids unused param warnings
+      metadata: {
+        conceptStructure,
+      },
     };
   }
 
@@ -288,7 +326,7 @@ export class WorkflowFactory {
    */
   public static createAbsoluteWorkflow(
     name: string,
-    systemContext: Record<string, any>
+    systemContext: Record<string, any>,
   ): Workflow {
     return {
       id: `absolute-workflow-${Date.now()}`,
@@ -353,6 +391,10 @@ export class WorkflowFactory {
         coherence: 1.0,
         adaptability: 1.0,
         emergence: 1.0,
+      },
+      // Preserve provided system context on the workflow for downstream processors/inspection
+      metadata: {
+        systemContext,
       },
     };
   }

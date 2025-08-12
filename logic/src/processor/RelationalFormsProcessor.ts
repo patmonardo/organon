@@ -56,7 +56,7 @@
 import { FormDefinitionSchema } from "../schema/form";
 import { FormEntityDefinitionSchema } from "../schema/entity";
 import { FormRelationDefinitionSchema } from "../schema/relation";
-import { FormShapeRepository } from "../repository/form";
+import { FormShapeRepository } from "../repository/shape";
 import { EntityShapeRepository } from "../repository/entity";
 import { RelationShapeRepository } from "../repository/relation";
 import { z } from "zod";

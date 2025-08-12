@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const FormPathCriteriaSchema = z.object({
+export const PathCriteriaSchema = z.object({
   sourceId: z.string(),
   targetId: z.string(),
   type: z.string().optional(),
@@ -13,12 +13,12 @@ export const FormPathCriteriaSchema = z.object({
   minWidth: z.number().optional(),
 });
 
-export type FormRelationPathCriteria = z.infer<typeof FormPathCriteriaSchema>;
+export type FormRelationPathCriteria = z.infer<typeof PathCriteriaSchema>;
 
 /**
- * FormPathStep - A single step in a knowledge path
+ * PathStep - A single step in a knowledge path
  */
-export const FormPathStepSchema = z.object({
+export const PathStepSchema = z.object({
   id: z.string(),
   name: z.string(),
   description: z.string().optional(),
@@ -29,20 +29,20 @@ export const FormPathStepSchema = z.object({
   metadata: z.record(z.any()).optional(),
 });
 
-export type FormPathStep = z.infer<typeof FormPathStepSchema>;
+export type PathStep = z.infer<typeof PathStepSchema>;
 
 /**
- * FormPath - A directed sequence through forms
+ * Path - A directed sequence through forms
  */
-export const FormPathSchema = z.object({
+export const PathSchema = z.object({
   id: z.string(),
   name: z.string(),
   description: z.string().optional(),
-  steps: z.array(FormPathStepSchema),
+  steps: z.array(PathStepSchema),
   circular: z.boolean().optional().default(false),
   metadata: z.record(z.any()).optional(),
   created: z.date().default(() => new Date()),
   updated: z.date().default(() => new Date()),
 });
 
-export type FormPath = z.infer<typeof FormPathSchema>;
+export type Path = z.infer<typeof PathSchema>;

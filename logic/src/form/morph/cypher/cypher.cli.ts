@@ -1,8 +1,8 @@
 import readline from 'readline';
 import chalk from 'chalk';
 import { Command } from 'commander';
-import { CypherPipeline } from '../../form/morph/cypher/pipeline';
-import { FormShape } from '../../form/schema/form';
+import { CypherPipeline } from '../../shape/morph/cypher/pipeline';
+import { FormShape } from '../../shape/schema/form';
 import { executeQuery, connectToNeo4j } from '../neo4j/client';
 
 /**
@@ -68,7 +68,7 @@ async function enterCypherMode(options: any) {
   rl.prompt();
   rl.on('line', async (line) => {
     const input = line.trim();
-    
+
     // Handle exit
     if (input === 'exit' || input === 'quit') {
       if (dbConnection) {
@@ -88,7 +88,7 @@ async function enterCypherMode(options: any) {
       // Handle special commands
       if (input.startsWith('.') || input === 'help') {
         await handleSpecialCommand(input, { rl, activeGraph, dbConnection });
-      } 
+      }
       // Process as Cypher query
       else {
         if (dbConnection) {
@@ -116,15 +116,15 @@ async function enterCypherMode(options: any) {
  */
 async function handleSpecialCommand(input: string, context: any) {
   const { rl, activeGraph, dbConnection } = context;
-  
+
   // Remove leading dot if present
   const command = input.startsWith('.') ? input.substring(1) : input;
-  
+
   switch (command) {
     case 'help':
       displayHelp();
       break;
-      
+
     case 'load':
       rl.question(chalk.yellow('Enter path to form file: '), async (path) => {
         try {
@@ -139,7 +139,7 @@ async function handleSpecialCommand(input: string, context: any) {
         }
       });
       break;
-      
+
     case 'connect':
       rl.question(chalk.yellow('Enter Neo4j connection URL: '), async (url) => {
         try {
@@ -153,7 +153,7 @@ async function handleSpecialCommand(input: string, context: any) {
         }
       });
       break;
-      
+
     case 'generate':
       if (activeGraph) {
         await generateQueriesFromForm(activeGraph);
@@ -161,11 +161,11 @@ async function handleSpecialCommand(input: string, context: any) {
         console.log(chalk.yellow('No active form loaded. Use ".load" to load a form.'));
       }
       break;
-      
+
     case 'info':
       displayInfo(activeGraph, dbConnection);
       break;
-      
+
     default:
       console.log(chalk.yellow(`Unknown command: ${command}`));
       displayHelp();
@@ -193,7 +193,7 @@ function displayHelp() {
  */
 function displayInfo(activeGraph: any, dbConnection: any) {
   console.log(chalk.cyan('\nCurrent State:'));
-  
+
   if (activeGraph) {
     console.log(chalk.white(`Active Form: ${activeGraph.name || activeGraph.id}`));
     console.log(chalk.white(`  Fields: ${activeGraph.fields?.length || 0}`));
@@ -202,7 +202,7 @@ function displayInfo(activeGraph: any, dbConnection: any) {
   } else {
     console.log(chalk.yellow('No active form loaded'));
   }
-  
+
   if (dbConnection) {
     console.log(chalk.white(`Connected to database: ${dbConnection.url}`));
   } else {
@@ -217,9 +217,9 @@ async function generateQueriesFromForm(form: FormShape) {
   try {
     const pipeline = new CypherPipeline();
     const result = pipeline.generateCypher(form);
-    
+
     console.log(chalk.green(`\nGenerated ${result.queries.length} queries:`));
-    
+
     result.queries.forEach((query, index) => {
       console.log(chalk.cyan(`\n-- Query ${index + 1}: ${query.name} --`));
       console.log(chalk.white(query.cypher));
@@ -237,17 +237,17 @@ async function processQueryGeneration(input: string, activeGraph: any) {
     console.log(chalk.yellow('No active form loaded. Use ".load" to load a form.'));
     return;
   }
-  
+
   // Determine what type of query to generate
   const queryType = determineQueryType(input.toLowerCase());
-  
+
   try {
     const pipeline = new CypherPipeline();
     const result = pipeline.generateCypherWithConfig(activeGraph, {
       queryTypes: [queryType],
       customCypher: input
     });
-    
+
     if (result.queries && result.queries.length > 0) {
       const query = result.queries[result.queries.length - 1];
       console.log(chalk.cyan(`\n-- Generated ${queryType} query --`));
@@ -269,7 +269,7 @@ function determineQueryType(input: string): string {
   if (input.includes('update') || input.includes('set')) return 'UPDATE';
   if (input.includes('delete') || input.includes('remove')) return 'DELETE';
   if (input.includes('merge')) return 'MERGE';
-  
+
   // Default to MATCH
   return 'MATCH';
 }
@@ -282,9 +282,9 @@ function displayResults(results: any) {
     console.log(chalk.green('Query executed successfully. No results returned.'));
     return;
   }
-  
+
   console.log(chalk.green(`\nResults (${results.records.length} records):`));
-  
+
   // Display as table if possible
   if (results.records.length > 0) {
     const keys = results.records[0].keys;
@@ -296,7 +296,7 @@ function displayResults(results: any) {
       });
       return row;
     });
-    
+
     console.table(rows);
   }
 }

@@ -1,58 +1,71 @@
-//@/core/being/schema/base.ts
-import { z } from 'zod';
+import { z } from "zod";
 
-//------------------------------------------------
-// QUALITATIVE LOGIC: Laws of Immediate Consciousness
-//------------------------------------------------
+// Primitives
+export const Id = z.string().min(1, "id required");
+export type Id = z.infer<typeof Id>;
 
-// Identity Quality - Pure "thisness" (haecceitas)
-export const IdentityQualitySchema = z.object({
-  id: z.string().uuid(),  // Universal identifier
-}).strict();
+export const Label = z.string().min(1, "label required");
+export type Label = z.infer<typeof Label>;
 
-// Temporal Quality - Being in becoming
-export const TemporalQualitySchema = z.object({
-  createdAt: z.date(),  // Coming into being
-  updatedAt: z.date(),  // Becoming something else
-}).strict();
+export const Type = z.string().min(1, "type required");
+export type Type = z.infer<typeof Type>;
 
-// Existential Quality - Mode of being
-export const ExistentialQualitySchema = z.object({
-  status: z.enum(['active', 'archived', 'deleted']).default('active'),
-}).strict();
+export const IsoDateTime = z.string().datetime();
+export type IsoDateTime = z.infer<typeof IsoDateTime>;
 
-// Base Schema - The unity of fundamental qualities
-// (First moment of Qualitative Syllogism)
-export const BaseSchema = IdentityQualitySchema.merge(TemporalQualitySchema).strict();
+// Timestamps
+export const Timestamps = z.object({
+  createdAt: IsoDateTime.default(() => new Date().toISOString()),
+  updatedAt: IsoDateTime.default(() => new Date().toISOString()),
+});
+export type Timestamps = z.infer<typeof Timestamps>;
 
-// Base State Schema - The mode of being
-// (Second moment of Qualitative Syllogism)
-export const BaseStateSchema = ExistentialQualitySchema.extend({
-  // Truth quality - conformity to its concept
-  validation: z.record(z.array(z.string())).optional(),
+// Helpers
+export function stamp<T extends { createdAt?: string; updatedAt?: string }>(
+  x: T
+): T & Timestamps {
+  const now = new Date().toISOString();
+  return {
+    createdAt: x.createdAt ?? now,
+    updatedAt: x.updatedAt ?? now,
+    ...x,
+  } as T & Timestamps;
+}
+export function touch<T extends { updatedAt?: string }>(x: T): T {
+  return { ...x, updatedAt: new Date().toISOString() };
+}
 
-  // Communicative quality - how it presents itself
-  message: z.string().optional()
-}).strict();
+// BaseCore (id + optional name/description + timestamps)
+export const BaseCore = z.object({
+  id: Id,
+  type: Type,
+  name: Label.optional(),
+  description: z.string().optional(),
+  createdAt: IsoDateTime.default(() => new Date().toISOString()),
+  updatedAt: IsoDateTime.default(() => new Date().toISOString()),
+});
+export type BaseCore = z.infer<typeof BaseCore>;
 
-// Base Shape - The complete concrete quality
-// (Third moment of Qualitative Syllogism - synthesis)
-export const BaseShapeSchema = z.object({
-  base: BaseSchema,      // Thesis (static being)
-  state: BaseStateSchema // Antithesis (dynamic being)
-  // The Shape itself is the synthesis
-}).strict();
+// BaseState (common state)
+export const BaseState = z.object({
+  status: z.enum(["active", "archived", "deleted"]).default("active"),
+  tags: z.array(Label).default([]),
+  meta: z.record(z.unknown()).default({}),
+});
+export type BaseState = z.infer<typeof BaseState>;
 
-// Export Types
+// BaseShape (Core + State)
+export const BaseShape = z.object({
+  core: BaseCore,
+  state: BaseState,
+});
+export type BaseShape = z.infer<typeof BaseShape>;
+
+// BaseSchema (Shape + meta header)
+export const BaseSchema = z.object({
+  shape: BaseShape,
+  revision: z.number().int().nonnegative().default(0),
+  version: z.string().optional(),
+  ext: z.record(z.unknown()).default({}),
+});
 export type Base = z.infer<typeof BaseSchema>;
-export type BaseState = z.infer<typeof BaseStateSchema>;
-export type BaseShape = z.infer<typeof BaseShapeSchema>;
-
-//------------------------------------------------
-// OPERATIONAL OUTCOMES: Results of Qualitative Logic
-//------------------------------------------------
-
-// Operation result - The outcome of qualitative transformation
-export type OperationResult<T> =
-  | { data: T; status: "success"; message: string; }
-  | { data: null; status: "error"; message: string; errors?: Record<string, string[]>; };

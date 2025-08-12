@@ -4,7 +4,7 @@
  */
 
 import { Neo4jConnection } from "../connection";
-import { FormShapeRepository } from "../repository/form";
+import { FormShapeRepository } from "../repository/shape";
 import { EntityShapeRepository } from "../repository/entity";
 import { RelationShapeRepository } from "../repository/relation";
 import { RelationalFormsProcessor } from "./RelationalFormsProcessor";

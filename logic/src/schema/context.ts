@@ -1,209 +1,119 @@
-//@/core/being/schema/context.ts
-import { z } from 'zod';
-import { BaseSchema } from './base';
-import { EntityRefSchema } from './entity';
+import { z } from "zod";
+import { randomUUID } from "crypto";
+import { BaseSchema, BaseState, BaseCore, Type, Id, touch } from "./base";
+import { EntityRef } from "./entity";
 
-/**
- * Context Schema - The Third Moment of Being
- *
- * In Hegelian terms, Context represents the Synthesis (Concept) that unites
- * Entity (Thesis/Being) and Relation (Antithesis/Essence) in a concrete Universal.
- *
- * It embodies the dialectical movement where individual entities and their connections
- * are brought together in a meaningful totality.
- */
-
-// Context types representing different modes of conceptual organization
-export const CoreContextTypes = [
-  'collection',    // Simple gathering - immediate unity
-  'organization',  // Structured arrangement - mediated unity
-  'project',       // Purposive structure - teleological unity
-  'domain',        // Knowledge boundary - categorical unity
-  'category',      // Classification system - logical unity
-  'session',       // Temporal context - processual unity
-  'view',          // Perspective context - phenomenological unity
-  'workflow',      // Process context - operational unity
-  'scenario',      // Hypothetical context - modal unity
-  'generic'        // Universal context - abstract unity
-] as const;
-
-// The core context schema - represents the concrete universal
-export const ContextSchema = BaseSchema.extend({
-  // Universal moment - what makes it this particular context
-  name: z.string(),
-  type: z.string(),
-  description: z.string().optional(),
-
-  // Particular moment - the specific content it contains
-  entities: z.array(EntityRefSchema).default([]),
-  relations: z.array(z.string()).default([]), // IDs of relations
-
-  // Individual moment - the unique properties that differentiate it
-  properties: z.record(z.any()).optional(),
-
-  // Quantitative determination - metrics of its internal structure
-  metrics: z.object({
-    entityCount: z.number().int().nonnegative(),
-    relationCount: z.number().int().nonnegative(),
-    density: z.number().min(0).max(1).optional() // Network density as a measure of completeness
-  }).optional(),
-
-  // Modal determination - its possibility and actuality
-  valid: z.boolean().default(true),
-  validFrom: z.date().optional(),
-  validTo: z.date().optional(),
-
-  // Scope determination - its boundaries
-  scope: z.enum(['global', 'domain', 'local']).default('local'),
-  domain: z.string().optional(),
+// Core/state
+export const ContextCore = BaseCore.extend({
+  type: Type,
 });
+export type ContextCore = z.infer<typeof ContextCore>;
 
+export const ContextState = BaseState;
+export type ContextState = z.infer<typeof ContextState>;
+
+// Shape: core/state + memberships
+export const ContextShape = z.object({
+  core: ContextCore,
+  state: ContextState,
+  entities: z.array(EntityRef).default([]),
+  relations: z.array(Id).default([]), // relation ids (first pass)
+});
+export type ContextShape = z.infer<typeof ContextShape>;
+
+// Schema
+export const ContextSchema = BaseSchema.extend({
+  shape: ContextShape,
+});
 export type Context = z.infer<typeof ContextSchema>;
 
-/**
- * Calculate graph density from entity and relation counts
- *
- * Represents the ratio of actual to possible relations in the context.
- * This is a quantitative measure of the context's completeness.
- */
-export function calculateDensity(entityCount: number, relationCount: number): number | undefined {
-  if (entityCount <= 1) return entityCount === 0 ? undefined : 1.0;
-
-  // Maximum possible relations in a directed graph = n(n-1)
-  const maxRelations = entityCount * (entityCount - 1);
-  return maxRelations > 0 ? relationCount / maxRelations : 0;
-}
-
-/**
- * Create a new context - the generative moment
- */
-export function createContext(params: {
-  name: string;
-  type: string;
+// Create/update
+export function createContext(input: {
+  id?: string;
+  type: z.input<typeof Type>;
+  name?: string;
   description?: string;
-  entities?: z.infer<typeof EntityRefSchema>[];
-  relations?: string[];
-  properties?: Record<string, any>;
-  validFrom?: Date;
-  validTo?: Date;
-  valid?: boolean;
-  scope?: z.infer<typeof ContextSchema.shape.scope>;
-  domain?: string;
+  state?: z.input<typeof ContextState>;
+  entities?: z.input<typeof EntityRef>[];
+  relations?: z.input<typeof Id>[];
+  ext?: Record<string, unknown>;
+  version?: string;
 }): Context {
-  const now = new Date();
-  const entities = params.entities || [];
-  const relations = params.relations || [];
-
-  return {
-    id: crypto.randomUUID(),
-    name: params.name,
-    type: params.type,
-    description: params.description,
-    entities: entities,
-    relations: relations,
-    properties: params.properties || {},
-    metrics: {
-      entityCount: entities.length,
-      relationCount: relations.length,
-      density: calculateDensity(entities.length, relations.length)
+  const core = ContextCore.parse({
+    id: input.id ?? randomUUID(),
+    type: input.type,
+    name: input.name,
+    description: input.description,
+  });
+  const state = ContextState.parse(input.state ?? {});
+  return ContextSchema.parse({
+    shape: {
+      core,
+      state,
+      entities: input.entities ?? [],
+      relations: input.relations ?? [],
     },
-    valid: params.valid ?? true,
-    validFrom: params.validFrom,
-    validTo: params.validTo,
-    scope: params.scope || 'local',
-    domain: params.domain,
-    createdAt: now,
-    updatedAt: now
-  };
+    revision: 0,
+    version: input.version,
+    ext: input.ext ?? {},
+  });
 }
 
-/**
- * Helper to determine if a context is active at a specific time
- *
- * Represents the temporal determination of the context's actuality.
- */
-export function isContextActiveAt(
-  context: Context,
-  date?: Date | null,
-  timeProvider = (): Date => new Date()
-): boolean {
-  // If context is not valid, it's not active regardless of time
-  if (!context.valid) return false;
+export function updateContext(
+  current: Context,
+  patch: Partial<{
+    core: Partial<z.input<typeof ContextCore>>;
+    state: Partial<z.input<typeof ContextState>>;
+    entities: z.input<typeof EntityRef>[];
+    relations: z.input<typeof Id>[];
+    version: string;
+    ext: Record<string, unknown>;
+  }>
+): Context {
+  const core = ContextCore.parse(
+    touch({ ...current.shape.core, ...(patch.core ?? {}) })
+  );
+  const state = ContextState.parse({
+    ...current.shape.state,
+    ...(patch.state ?? {}),
+  });
+  const entities =
+    patch.entities !== undefined
+      ? z.array(EntityRef).parse(patch.entities)
+      : current.shape.entities;
+  const relations =
+    patch.relations !== undefined
+      ? z.array(Id).parse(patch.relations)
+      : current.shape.relations;
 
-  // If no date specified, use current time
-  const checkDate = date || timeProvider();
-
-  // Check validFrom if specified
-  if (context.validFrom && checkDate < context.validFrom) {
-    return false;
-  }
-
-  // Check validTo if specified
-  if (context.validTo && checkDate > context.validTo) {
-    return false;
-  }
-
-  return true;
+  return ContextSchema.parse({
+    ...current,
+    shape: { core, state, entities, relations },
+    revision: current.revision + 1,
+    version: patch.version ?? current.version,
+    ext: { ...current.ext, ...(patch.ext ?? {}) },
+  });
 }
 
-/**
- * Helper to add entities to a context - the augmentation moment
- */
+// Ergonomics
 export function addEntitiesToContext(
-  context: Context,
-  entities: z.infer<typeof EntityRefSchema>[]
+  ctx: Context,
+  entities: z.input<typeof EntityRef>[]
 ): Context {
-  // Filter out duplicates
-  const existingEntityMap = new Map(
-    context.entities.map(e => [`${e.entity}:${e.id}`, e])
+  const exists = new Set(ctx.shape.entities.map((e) => `${e.type}:${e.id}`));
+  const toAdd = (entities ?? []).filter(
+    (e) => !exists.has(`${e.type}:${e.id}`)
   );
-
-  const newEntities = entities.filter(e =>
-    !existingEntityMap.has(`${e.entity}:${e.id}`)
-  );
-
-  if (newEntities.length === 0) {
-    return context;
-  }
-
-  const updatedEntities = [...context.entities, ...newEntities];
-
-  return {
-    ...context,
-    entities: updatedEntities,
-    metrics: {
-      entityCount: updatedEntities.length,
-      relationCount: context.relations.length,
-      density: calculateDensity(updatedEntities.length, context.relations.length)
-    },
-    updatedAt: new Date()
-  };
+  if (toAdd.length === 0) return ctx;
+  return updateContext(ctx, { entities: [...ctx.shape.entities, ...toAdd] });
 }
 
-/**
- * Helper to add relations to a context - the connection moment
- */
 export function addRelationsToContext(
-  context: Context,
-  relationIds: string[]
+  ctx: Context,
+  relationIds: z.input<typeof Id>[]
 ): Context {
-  // Filter out duplicates
-  const newRelations = relationIds.filter(id => !context.relations.includes(id));
-
-  if (newRelations.length === 0) {
-    return context;
-  }
-
-  const updatedRelations = [...context.relations, ...newRelations];
-
-  return {
-    ...context,
-    relations: updatedRelations,
-    metrics: {
-      entityCount: context.entities.length,
-      relationCount: updatedRelations.length,
-      density: calculateDensity(context.entities.length, updatedRelations.length)
-    },
-    updatedAt: new Date()
-  };
+  const exists = new Set(ctx.shape.relations);
+  const toAdd = (relationIds ?? []).filter((id) => !exists.has(id));
+  if (toAdd.length === 0) return ctx;
+  return updateContext(ctx, { relations: [...ctx.shape.relations, ...toAdd] });
 }
