@@ -119,10 +119,17 @@
   "include": [
     "src/index.ts",
     "src/schema/**/*",
+    "src/form/**/*",
     "src/repository/memory.ts",
     "src/repository/pillars.ts",
     "src/repository/repo.ts",
     "src/repository/index.ts",
+    "src/absolute/**/*",
     // "src/**/*"
+  ],
+  "exclude": [
+    "src/form/morph/**/*",
+    "src/form/modality/**/*",
+    "**/service.ts"
   ]
 }

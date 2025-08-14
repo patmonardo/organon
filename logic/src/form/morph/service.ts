@@ -1,87 +1,125 @@
-import { FormRelation } from "@/form/relation/relation";
-import { FormEntity } from "@/form/entity/entity";
-import { MorphEngineVerbs } from "@/form/morph/engine";
+import type { Event, EventBus } from '../triad/message';
+import { InMemoryEventBus } from '../triad/bus';
+import type { Repository } from '../../repository/repo';
+import {
+  MorphSchema,
+  type Morph,
+  createMorph,
+  updateMorph,
+} from '../../schema/morph';
 
-// Placeholder for getting a system entity to be the source of service verbs
-const getServiceSourceEntity = (): FormEntity => {
-  // Assuming FormEntity.findOrCreate exists or is added
-  return FormEntity.findOrCreate({
-    id: "system:morphService",
-    type: "System::Service",
-  });
-};
+export type MorphId = string;
 
-/**
- * MorphService - API layer for morph operations.
- * Translates requests into verbs emitted for MorphEngine.
- */
 export class MorphService {
-  /**
-   * Request the execution of a registered morph.
-   * Emits 'morphEngine:requestExecution'.
-   */
-  static requestExecution(
-    morphName: string,
-    inputData: any, // Input data for the morph
-    options?: {
-      contextId?: string; // ID of an existing context to use for execution
-      // contextOptions?: any; // TODO: Define options if requesting context creation
-      // priority?: number; // Future: execution priority
-    },
-    requestMetadata?: Record<string, any> // Metadata for the request verb itself
-  ): void {
-    // Returns void, action is asynchronous via verb
-    const serviceEntity = getServiceSourceEntity();
-    const verbContent = {
-      morphName,
-      inputData,
-      contextId: options?.contextId,
-      // contextOptions: options?.contextOptions, // Pass if implemented
-    };
-    const verbMetadata = { ...(requestMetadata || {}) };
-    // Add contextId to metadata if provided, for potential routing/filtering
-    if (options?.contextId) {
-      verbMetadata.contextId = options.contextId;
+  private readonly bus: EventBus;
+  private readonly mem = new Map<string, Morph>();
+
+  constructor(private readonly repo?: Repository<Morph>, bus?: EventBus) {
+    this.bus = bus ?? new InMemoryEventBus();
+  }
+
+  // Event API
+  on(kind: string, handler: (e: Event) => void) {
+    return this.bus.subscribe(kind, handler);
+  }
+
+  // Reads
+  async get(id: MorphId): Promise<Morph | undefined> {
+    if (this.repo) {
+      const doc = await this.repo.get(id);
+      return doc ? MorphSchema.parse(doc) : undefined;
     }
-
-    FormRelation.emit(
-      serviceEntity,
-      MorphEngineVerbs.REQUEST_EXECUTION,
-      verbContent,
-      verbMetadata
-    );
+    const doc = this.mem.get(id);
+    return doc ? MorphSchema.parse(doc) : undefined;
   }
 
-  /**
-   * Request the registration of a morph definition.
-   * Emits 'morphEngine:registerDefinition'.
-   * Note: The 'definition' payload structure needs to be defined based on
-   * how morphs are serialized or represented (e.g., JSON, code string).
-   */
-  static registerDefinition(
-    name: string,
-    definition: any, // The serializable representation of the morph
-    requestMetadata?: Record<string, any>
-  ): void {
-    const serviceEntity = getServiceSourceEntity();
-    const verbContent = {
-      name,
-      definition, // The engine needs to know how to reconstruct the morph from this
+  // SDK verbs
+
+  async create(input: { type: string; name?: string }) {
+    const doc = MorphSchema.parse(createMorph(input as any));
+    await this.persist(doc);
+    this.bus.publish({
+      kind: 'morph.created',
+      payload: {
+        id: doc.shape.core.id,
+        type: doc.shape.core.type,
+        name: doc.shape.core.name ?? null,
+      },
+    });
+    return doc.shape.core.id as MorphId;
+  }
+
+  async delete(id: MorphId) {
+    const existed = await this.remove(id);
+    this.bus.publish({ kind: 'morph.deleted', payload: { id, ok: existed } });
+  }
+
+  async describe(id: MorphId) {
+    const doc = await this.mustGet(id);
+    const info = {
+      id,
+      type: doc.shape.core.type,
+      name: doc.shape.core.name ?? null,
+      state: doc.shape.state,
     };
-    const verbMetadata = { ...(requestMetadata || {}) };
-
-    FormRelation.emit(
-      serviceEntity,
-      MorphEngineVerbs.REGISTER_DEFINITION,
-      verbContent,
-      verbMetadata
-    );
+    this.bus.publish({ kind: 'morph.described', payload: info });
+    return info;
   }
 
-  // Add other methods as needed, e.g., requestMorphStatus, cancelMorphExecution, etc.
-  // These would also emit corresponding verbs for the MorphEngine.
-}
+  async setCore(id: MorphId, core: { name?: string; type?: string }) {
+    const curr = await this.mustGet(id);
+    const next = MorphSchema.parse(updateMorph(curr, { core } as any));
+    await this.persist(next);
+    this.bus.publish({
+      kind: 'morph.core.set',
+      payload: {
+        id,
+        name: next.shape.core.name ?? null,
+        type: next.shape.core.type,
+      },
+    });
+  }
 
-// Optional: Export individual functions if desired for easier use
-export const requestMorphExecution = MorphService.requestExecution;
-export const registerMorphDefinition = MorphService.registerDefinition;
+  async setState(id: MorphId, state: Record<string, unknown>) {
+    const curr = await this.mustGet(id);
+    const next = MorphSchema.parse(updateMorph(curr, { state } as any));
+    await this.persist(next);
+    this.bus.publish({ kind: 'morph.state.set', payload: { id } });
+  }
+
+  async patchState(id: MorphId, patch: Record<string, unknown>) {
+    const curr = await this.mustGet(id);
+    const next = MorphSchema.parse(updateMorph(curr, { state: patch } as any));
+    await this.persist(next);
+    this.bus.publish({ kind: 'morph.state.patched', payload: { id } });
+  }
+
+  // Internals
+
+  private async mustGet(id: string): Promise<Morph> {
+    const found = await this.get(id);
+    if (!found) throw new Error(`Morph not found: ${id}`);
+    return found;
+  }
+
+  private async persist(doc: Morph): Promise<void> {
+    const id = doc.shape.core.id;
+    if (this.repo) {
+      const existing = await this.repo.get(id);
+      if (existing) await this.repo.update(id, () => doc);
+      else await this.repo.create(doc);
+    } else {
+      this.mem.set(id, doc);
+    }
+  }
+
+  private async remove(id: string): Promise<boolean> {
+    if (this.repo) {
+      const existing = await this.repo.get(id);
+      if (!existing) return false;
+      await this.repo.delete(id);
+      return true;
+    }
+    return this.mem.delete(id);
+  }
+}

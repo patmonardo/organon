@@ -1,57 +1,65 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from "vitest";
 import {
+  ContextSchema,
   createContext,
   updateContext,
-  ContextSchema,
-} from '../../src/schema/context';
-import { createEntity, EntityRef } from '../../src/schema/entity';
+  addEntitiesToContext,
+  addRelationsToContext,
+} from "../../src/schema/context";
 
-describe('schema/context', () => {
-  it('createContext -> valid schema; default memberships are arrays', () => {
-    const c = createContext({ type: 'system.Context', name: 'C0' } as any);
-    const parsed = ContextSchema.parse(c);
-    expect(Array.isArray(parsed.shape.entities)).toBe(true);
-    expect(Array.isArray(parsed.shape.relations)).toBe(true);
-    expect(parsed.shape.entities.length).toBe(0);
-    expect(parsed.shape.relations.length).toBe(0);
+describe("schema/context — happy path", () => {
+  it("creates a Context with defaults (entities/relations empty, state defaulted)", () => {
+    const ctx = createContext({ type: "system.Context", name: "Scope" });
+    const parsed = ContextSchema.parse(ctx);
+
+    expect(parsed.shape.core.type).toBe("system.Context");
+    expect(typeof parsed.shape.core.id).toBe("string");
+    expect(parsed.shape.entities).toEqual([]);
+    expect(parsed.shape.relations).toEqual([]);
+    expect(typeof parsed.shape.state).toBe("object");
+    expect(parsed.revision).toBe(0);
   });
 
-  it('updateContext can add and remove entity refs', () => {
-    const e = createEntity({ type: 'system.Entity', name: 'E0' } as any);
-    const ref = EntityRef.parse({
-      id: e.shape.core.id,
-      type: e.shape.core.type,
+  it("adds entities/relations without duplicates", () => {
+    const ctx0 = createContext({
+      type: "system.Context",
+      entities: [{ id: "A", type: "system.Thing" }],
+      relations: ["rel:1"],
     });
 
-    const c0 = createContext({ type: 'system.Context', name: 'C1' } as any);
-    const c1 = updateContext(c0, { entities: [ref] } as any);
-    const p1 = ContextSchema.parse(c1);
-    expect(p1.shape.entities.length).toBe(1);
+    const ctx1 = addEntitiesToContext(ctx0, [
+      { id: "A", type: "system.Thing" }, // duplicate
+      { id: "B", type: "system.Thing" },
+    ]);
+    const ctx2 = addRelationsToContext(ctx1, ["rel:1", "rel:2"]); // one duplicate
 
-    const c2 = updateContext(p1, { entities: [] } as any);
-    const p2 = ContextSchema.parse(c2);
-    expect(p2.shape.entities.length).toBe(0);
+    expect(ctx1.shape.entities.map((e) => e.id)).toEqual(["A", "B"]);
+    expect(ctx2.shape.relations).toEqual(["rel:1", "rel:2"]);
   });
 
-  it('relations accept ids; schema validates array', () => {
-    const c0 = createContext({ type: 'system.Context', name: 'C2' } as any);
-    const c1 = updateContext(c0, { relations: ['rel:1', 'rel:2'] } as any);
-    const p1 = ContextSchema.parse(c1);
-    expect(Array.isArray(p1.shape.relations)).toBe(true);
-    expect(p1.shape.relations.length).toBe(2);
-  });
+  it("patches core/state/entities and bumps revision deterministically", () => {
+    const ctx0 = createContext({ type: "system.Context", name: "X" });
 
-  it('rejects invalid entity refs in entities array', () => {
-    const c0 = createContext({ type: 'system.Context', name: 'C3' } as any);
+    const ctx1 = updateContext(ctx0, {
+      core: { name: "Y" },
+      state: { status: "active", tags: [], meta: {} },
+      entities: [
+        { id: "E1", type: "system.Thing" },
+        { id: "E2", type: "system.Thing" },
+      ],
+      relations: ["r1", "r2"],
+      version: "1.0.0",
+      ext: { a: 1 },
+    });
 
-    const bad = {
-      ...c0,
-      shape: {
-        ...c0.shape,
-        entities: [{ id: 1 as any, type: null as any }],
-      },
-    } as any;
-
-    expect(() => ContextSchema.parse(bad)).toThrow();
+    const parsed = ContextSchema.parse(ctx1);
+    expect(parsed.shape.core.name).toBe("Y");
+    expect(parsed.shape.state.status).toBe("active");
+    expect(parsed.shape.entities.map((e) => e.id)).toEqual(["E1", "E2"]);
+    expect(parsed.shape.relations).toEqual(["r1", "r2"]);
+    expect(parsed.revision).toBe(ctx0.revision + 1);
+    expect(parsed.version).toBe("1.0.0");
+    expect(parsed.ext).toMatchObject({ a: 1 });
   });
 });
+

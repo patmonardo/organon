@@ -1,229 +1,130 @@
-import { FormRelation } from "@/form/relation/relation";
-import { FormEntity, FormEntityId } from "./entity"; // Import base class and ID type
-// Import the verbs correctly from the engine file
-import { EntityEngineVerbs } from "./engine"; // Assuming this is the exported constant name in engine.ts
+import type { Event, EventBus } from '../triad/message';
+import { InMemoryEventBus } from '../triad/bus';
+import type { Repository } from '../../repository/repo';
+import {
+  EntitySchema,
+  type Entity,
+  createEntity,
+  updateEntity,
+} from '../../schema/entity';
 
-// Placeholder for getting a system entity to be the source of service verbs
-const getServiceSourceEntity = (): FormEntity => {
-    // Assuming FormEntity.findOrCreate exists or is added
-    return FormEntity.findOrCreate({ id: 'system:entityService', type: 'System::Service' });
-};
+export type EntityId = string;
 
-/**
- * EntityService - API layer for FormEntity operations.
- * Translates requests into verbs emitted for EntityEngine.
- */
 export class EntityService {
+  private readonly bus: EventBus;
+  private readonly mem = new Map<string, Entity>();
 
-  /**
-   * Request the creation of a new entity via EntityEngine.
-   * Emits 'entityEngine:requestCreation'.
-   */
-  static createEntity(
-    type: string,
-    options?: {
-      id?: FormEntityId;
-      properties?: Record<string, any>;
-      metadata?: Record<string, any>;
-      contextId?: string;
-    },
-    requestMetadata?: Record<string, any>
-  ): void {
-    const serviceEntity = getServiceSourceEntity();
-    const verbContent = {
-      id: options?.id,
-      type: type,
-      properties: options?.properties,
-      metadata: options?.metadata,
-      contextId: options?.contextId,
-    };
-    const verbMetadata = { ...(requestMetadata || {}) };
-    if (options?.contextId) {
-        verbMetadata.contextId = options.contextId;
+  constructor(private readonly repo?: Repository<Entity>, bus?: EventBus) {
+    this.bus = bus ?? new InMemoryEventBus();
+  }
+
+  // Event API
+  on(kind: string, handler: (e: Event) => void) {
+    return this.bus.subscribe(kind, handler);
+  }
+
+  // Reads
+  async get(id: EntityId): Promise<Entity | undefined> {
+    if (this.repo) {
+      const doc = await this.repo.get(id);
+      return doc ? EntitySchema.parse(doc) : undefined;
     }
-
-    FormRelation.emit(
-        serviceEntity,
-        EntityEngineVerbs.REQUEST_CREATE, // Use imported verb
-        verbContent,
-        verbMetadata
-    );
+    const doc = this.mem.get(id);
+    return doc ? EntitySchema.parse(doc) : undefined;
   }
 
-  /**
-   * Request updating an existing entity via EntityEngine.
-   * Emits 'entityEngine:requestUpdate'.
-   */
-  static updateEntity(
-    entityId: FormEntityId,
-    updates: {
-      type?: string;
-      properties?: Record<string, any>;
-      metadata?: Record<string, any>;
-      contextId?: string | null;
-    },
-    options?: {
-        mergeProperties?: boolean;
-        mergeMetadata?: boolean;
-    },
-    requestMetadata?: Record<string, any>
-  ): void {
-    const serviceEntity = getServiceSourceEntity();
-    const verbContent = {
-      entityId,
-      updates,
-      options,
+  // SDK conveniences (unified verbs)
+
+  async create(input: { type: string; name?: string }) {
+    const doc = EntitySchema.parse(createEntity(input as any));
+    await this.persist(doc);
+    this.bus.publish({
+      kind: 'entity.created',
+      payload: {
+        id: doc.shape.core.id,
+        type: doc.shape.core.type,
+        name: doc.shape.core.name ?? null,
+      },
+    });
+    return doc.shape.core.id as EntityId;
+  }
+
+  async delete(id: EntityId) {
+    const existed = await this.remove(id);
+    this.bus.publish({ kind: 'entity.deleted', payload: { id, ok: existed } });
+  }
+
+  async describe(id: EntityId) {
+    const doc = await this.mustGet(id);
+    const info = {
+      id,
+      type: doc.shape.core.type,
+      name: doc.shape.core.name ?? null,
+      state: doc.shape.state,
     };
-    const verbMetadata = { ...(requestMetadata || {}) };
-     if (updates.contextId !== undefined) {
-        verbMetadata.contextId = updates.contextId;
-    } else if (requestMetadata?.contextId) {
-         verbMetadata.contextId = requestMetadata.contextId;
-     }
-
-    FormRelation.emit(
-        serviceEntity,
-        EntityEngineVerbs.REQUEST_UPDATE, // Use imported verb
-        verbContent,
-        verbMetadata
-    );
+    this.bus.publish({ kind: 'entity.described', payload: info });
+    return info;
   }
 
-  /**
-   * Request deletion of an entity via EntityEngine.
-   * Emits 'entityEngine:requestDeletion'.
-   */
-  static deleteEntity(
-    entityId: FormEntityId,
-    options?: {
-        force?: boolean;
-        deleteRelations?: boolean;
-    },
-    requestMetadata?: Record<string, any>
-  ): void {
-    const serviceEntity = getServiceSourceEntity();
-    const verbContent = { entityId, options };
-    const verbMetadata = { ...(requestMetadata || {}) };
-    if (requestMetadata?.contextId) {
-         verbMetadata.contextId = requestMetadata.contextId;
-     }
-
-    FormRelation.emit(
-        serviceEntity,
-        EntityEngineVerbs.REQUEST_DELETION, // Use imported verb
-        verbContent,
-        verbMetadata
-    );
+  async setCore(id: EntityId, core: { name?: string; type?: string }) {
+    const curr = await this.mustGet(id);
+    const next = EntitySchema.parse(updateEntity(curr, { core } as any));
+    await this.persist(next);
+    this.bus.publish({
+      kind: 'entity.core.set',
+      payload: {
+        id,
+        name: next.shape.core.name ?? null,
+        type: next.shape.core.type,
+      },
+    });
   }
 
-  /**
-   * Request getting a single entity by its ID via EntityEngine.
-   * Emits 'entityEngine:requestGet'.
-   */
-  static getEntity(
-    entityId: FormEntityId,
-    requestMetadata?: Record<string, any>
-  ): void {
-    const serviceEntity = getServiceSourceEntity();
-    const verbContent = { entityId };
-    const verbMetadata = { ...(requestMetadata || {}) };
-     if (requestMetadata?.contextId) {
-         verbMetadata.contextId = requestMetadata.contextId;
-     }
-
-    FormRelation.emit(
-        serviceEntity,
-        EntityEngineVerbs.REQUEST_GET, // Use imported verb
-        verbContent,
-        verbMetadata
-    );
+  async setState(id: EntityId, state: Record<string, unknown>) {
+    const curr = await this.mustGet(id);
+    const next = EntitySchema.parse(updateEntity(curr, { state } as any));
+    await this.persist(next);
+    this.bus.publish({ kind: 'entity.state.set', payload: { id } });
   }
 
-  /**
-   * Request finding entities based on criteria via EntityEngine.
-   * Emits 'entityEngine:requestFind'.
-   */
-  static findEntities(
-    query: {
-      type?: string;
-      contextId?: string;
-      properties?: Record<string, any>;
-      metadata?: Record<string, any>;
-    },
-    options?: {
-        limit?: number;
-        offset?: number;
-        sortBy?: string;
-        sortDirection?: 'asc' | 'desc';
-    },
-    requestMetadata?: Record<string, any>
-  ): void {
-    const serviceEntity = getServiceSourceEntity();
-    const verbContent = { query, options };
-    const verbMetadata = { ...(requestMetadata || {}) };
-     if (query.contextId) {
-         verbMetadata.contextId = query.contextId;
-     } else if (requestMetadata?.contextId) {
-         verbMetadata.contextId = requestMetadata.contextId;
-     }
-
-    FormRelation.emit(
-        serviceEntity,
-        EntityEngineVerbs.REQUEST_FIND, // Use imported verb
-        verbContent,
-        verbMetadata
+  async patchState(id: EntityId, patch: Record<string, unknown>) {
+    const curr = await this.mustGet(id);
+    const next = EntitySchema.parse(
+      updateEntity(curr, { state: patch } as any),
     );
+    await this.persist(next);
+    this.bus.publish({ kind: 'entity.state.patched', payload: { id } });
   }
 
-   /**
-    * Request adding an entity to a specific context via EntityEngine.
-    * Emits 'entityEngine:requestAddToContext'.
-    */
-   static addEntityToContext(
-    entityId: FormEntityId,
-    contextId: string,
-    requestMetadata?: Record<string, any>
-  ): void {
-    const serviceEntity = getServiceSourceEntity();
-    const verbContent = { entityId, contextId };
-    const verbMetadata = { ...(requestMetadata || {}), contextId };
+  // Internals
 
-    FormRelation.emit(
-        serviceEntity,
-        EntityEngineVerbs.REQUEST_ADD_TO_CONTEXT, // Use imported verb
-        verbContent,
-        verbMetadata
-    );
+  private async mustGet(id: string): Promise<Entity> {
+    const found = await this.get(id);
+    if (!found) throw new Error(`Entity not found: ${id}`);
+    return found;
   }
 
-   /**
-    * Request removing an entity from a specific context via EntityEngine.
-    * Emits 'entityEngine:requestRemoveFromContext'.
-    */
-   static removeEntityFromContext(
-    entityId: FormEntityId,
-    contextId: string,
-    requestMetadata?: Record<string, any>
-  ): void {
-    const serviceEntity = getServiceSourceEntity();
-    const verbContent = { entityId, contextId };
-    const verbMetadata = { ...(requestMetadata || {}), contextId };
-
-    FormRelation.emit(
-        serviceEntity,
-        EntityEngineVerbs.REQUEST_REMOVE_FROM_CONTEXT, // Use imported verb
-        verbContent,
-        verbMetadata
-    );
+  private async persist(doc: Entity): Promise<void> {
+    const id = doc.shape.core.id;
+    if (this.repo) {
+      const existing = await this.repo.get(id);
+      if (existing) {
+        await this.repo.update(id, () => doc);
+      } else {
+        await this.repo.create(doc);
+      }
+    } else {
+      this.mem.set(id, doc);
+    }
   }
 
+  private async remove(id: string): Promise<boolean> {
+    if (this.repo) {
+      const existing = await this.repo.get(id);
+      if (!existing) return false;
+      await this.repo.delete(id);
+      return true;
+    }
+    return this.mem.delete(id);
+  }
 }
-
-// Optional: Export individual functions if desired
-export const createEntity = EntityService.createEntity;
-export const updateEntity = EntityService.updateEntity;
-export const deleteEntity = EntityService.deleteEntity;
-export const getEntity = EntityService.getEntity;
-export const findEntities = EntityService.findEntities;
-export const addEntityToContext = EntityService.addEntityToContext;
-export const removeEntityFromContext = EntityService.removeEntityFromContext;

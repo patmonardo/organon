@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { FormEntity } from "../../src/form/entity";
 
-describe("FormEntity (wrapper)", () => {
+describe("FormEntity (Principle of Entity in Forms)", () => {
   it("creates with defaults and exposes core fields", () => {
     const e = FormEntity.create({ type: "system.Entity", name: "A" });
     expect(e.id).toBeTruthy();

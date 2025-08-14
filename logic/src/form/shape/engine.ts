@@ -1,57 +1,58 @@
-import type { Command, Event, EventBus } from '../triad/types';
+import type { Command, Event } from '../triad/message';
+import type { EventBus } from '../triad/bus';
 import { InMemoryEventBus } from '../triad/bus';
 import { startTrace, childSpan } from '../triad/trace';
-import { FormShape } from './shape';
-import type { FormData, FormState } from '../../schema/shape';
 import type { Repository } from '../../repository/repo';
+import { ShapeSchema, type Shape } from '../../schema/shape';
+import { FormShape } from './shape';
 
-type ShapeDoc = {
-  shape: {
-    core: { id: string; type: string };
-    definition?: { id: string; name: string };
-    data?: unknown;
-    state?: unknown;
-  };
-  revision?: number;
-};
-type SerializeShape = (s: FormShape) => ShapeDoc;
-type DeserializeShape = (d: ShapeDoc) => FormShape;
+type BaseState = Shape['shape']['state'];
+type Signature = NonNullable<Shape['shape']['signature']>;
+type Facets = Shape['shape']['facets'];
 
-// Typed command union for exhaustiveness + safety
-type ShapeInstantiateCmd = {
-  kind: 'shape.instantiate';
-  payload: {
-    id?: string;
-    definitionId: string;
-    definitionName: string;
-    data?: FormData;
-    state?: FormState;
-  };
+type ShapeCreateCmd = {
+  kind: 'shape.create';
+  payload: Parameters<typeof FormShape.create>[0];
   meta?: Record<string, unknown>;
 };
-type ShapeDestroyCmd = {
-  kind: 'shape.destroy';
+type ShapeDeleteCmd = {
+  kind: 'shape.delete';
   payload: { id: string };
   meta?: Record<string, unknown>;
 };
-type ShapeSetDataCmd = {
-  kind: 'shape.setData';
-  payload: { id: string; data?: FormData };
+type ShapeSetCoreCmd = {
+  kind: 'shape.setCore';
+  payload: { id: string; name?: string; type?: string };
   meta?: Record<string, unknown>;
 };
-type ShapeMergeDataCmd = {
-  kind: 'shape.mergeData';
-  payload: { id: string; patch: Partial<FormData> };
+type ShapeSetSignatureCmd = {
+  kind: 'shape.setSignature';
+  payload: { id: string; signature?: Signature };
+  meta?: Record<string, unknown>;
+};
+type ShapeMergeSignatureCmd = {
+  kind: 'shape.mergeSignature';
+  payload: { id: string; patch: Record<string, unknown> };
+  meta?: Record<string, unknown>;
+};
+type ShapeSetFacetsCmd = {
+  kind: 'shape.setFacets';
+  payload: { id: string; facets: Facets };
+  meta?: Record<string, unknown>;
+};
+type ShapeMergeFacetsCmd = {
+  kind: 'shape.mergeFacets';
+  payload: { id: string; patch: Record<string, unknown> };
   meta?: Record<string, unknown>;
 };
 type ShapeSetStateCmd = {
   kind: 'shape.setState';
-  payload: { id: string; state: FormState };
+  payload: { id: string; state: BaseState };
   meta?: Record<string, unknown>;
 };
 type ShapePatchStateCmd = {
   kind: 'shape.patchState';
-  payload: { id: string; patch: Partial<FormState> };
+  payload: { id: string; patch: Partial<BaseState> };
   meta?: Record<string, unknown>;
 };
 type ShapeDescribeCmd = {
@@ -61,92 +62,54 @@ type ShapeDescribeCmd = {
 };
 
 export type ShapeCommand =
-  | ShapeInstantiateCmd
-  | ShapeDestroyCmd
-  | ShapeSetDataCmd
-  | ShapeMergeDataCmd
+  | ShapeCreateCmd
+  | ShapeDeleteCmd
+  | ShapeSetCoreCmd
+  | ShapeSetSignatureCmd
+  | ShapeMergeSignatureCmd
+  | ShapeSetFacetsCmd
+  | ShapeMergeFacetsCmd
   | ShapeSetStateCmd
   | ShapePatchStateCmd
   | ShapeDescribeCmd;
 
-/**
- * ShapeEngine — runtime manager for FormShape instances (Principle of Form).
- * Command-in, Event-out. In-memory store, optional repo persistence.
- */
 export class ShapeEngine {
   private readonly shapes = new Map<string, FormShape>();
-  private readonly serialize: SerializeShape;
-  private readonly deserialize: DeserializeShape;
 
   constructor(
-    private readonly repo?: Repository<any>,
+    private readonly repo?: Repository<Shape>,
     private readonly bus: EventBus = new InMemoryEventBus(),
-    private readonly scope: string = 'form',
-    options?: {
-      serialize?: SerializeShape;
-      deserialize?: DeserializeShape;
-    },
-  ) {
-    this.serialize =
-      options?.serialize ??
-      ((s) =>
-        ({
-          shape: {
-            core: { id: s.id, type: 'form.Shape' },
-            definition: { id: s.definitionId, name: s.definitionName },
-            data: s.data,
-            state: s.state,
-          },
-        } as ShapeDoc));
-    this.deserialize =
-      options?.deserialize ??
-      ((d) => {
-        const shape = (d as any).shape ?? d;
-        const core = shape.core ?? {};
-        const def = shape.definition ?? {};
-        return FormShape.create({
-          id: core.id,
-          definitionId: def.id,
-          definitionName: def.name,
-          data: shape.data,
-          state: shape.state,
-        });
-      });
-  }
+    private readonly scope: string = 'shape',
+  ) {}
 
   get eventBus(): EventBus {
     return this.bus;
-  }
-
-  // Optional: hydrate from repo into memory
-  async load(id: string): Promise<FormShape | undefined> {
-    if (!this.repo) return this.shapes.get(id);
-    const doc = await this.repo.get(id);
-    if (!doc) return undefined;
-    const s = this.deserialize(doc as any);
-    this.shapes.set(id, s);
-    return s;
   }
 
   getShape(id: string): FormShape | undefined {
     return this.shapes.get(id);
   }
 
-  // Standardized emit with trace + scope
-  private emit(
-    base: Record<string, any>,
-    kind: Event['kind'],
-    payload: Event['payload'],
-    extraMeta?: Record<string, unknown>,
-  ): Event {
-    const meta = childSpan(base as any, {
-      action: kind,
-      scope: this.scope,
-      ...(extraMeta ?? {}),
-    });
+  private emit(base: any, kind: Event['kind'], payload: Event['payload']) {
+    const meta = childSpan(base, { action: kind, scope: this.scope });
     const evt: Event = { kind, payload, meta };
     this.bus.publish(evt);
     return evt;
+  }
+
+  private mustGet(id: string): FormShape {
+    const s = this.getShape(id);
+    if (!s) throw new Error(`Shape not found: ${id}`);
+    return s;
+  }
+
+  private async persist(s: FormShape) {
+    if (!this.repo) return;
+    const id = s.id;
+    const doc = ShapeSchema.parse(s.toSchema());
+    const current = await this.repo.get(id);
+    if (current) await this.repo.update(id, () => doc);
+    else await this.repo.create(doc);
   }
 
   async handle(cmd: ShapeCommand | Command): Promise<Event[]> {
@@ -157,102 +120,117 @@ export class ShapeEngine {
     );
 
     switch (cmd.kind) {
-      case 'shape.instantiate': {
-        const { id, definitionId, definitionName, data, state } = cmd.payload;
-        const shape = FormShape.create({
-          id,
-          definitionId,
-          definitionName,
-          data,
-          state,
-        });
+      case 'shape.create': {
+        const { payload } = cmd as ShapeCreateCmd;
+        const shape = FormShape.create(payload);
         this.shapes.set(shape.id, shape);
         await this.persist(shape);
-        const evt = this.emit(base, 'shape.instantiated', {
-          id: shape.id,
-          definitionId: shape.definitionId,
-          definitionName: shape.definitionName,
-        });
-        return [evt];
+        return [
+          this.emit(base, 'shape.created', {
+            id: shape.id,
+            type: shape.type,
+            name: shape.name ?? null,
+          }),
+        ];
       }
 
-      case 'shape.destroy': {
-        const { id } = cmd.payload;
+      case 'shape.delete': {
+        const { id } = (cmd as ShapeDeleteCmd).payload;
         const existed = this.shapes.delete(id);
         if (this.repo) await this.repo.delete(id);
-        const evt = this.emit(base, 'shape.destroyed', { id, ok: existed });
-        return [evt];
+        return [this.emit(base, 'shape.deleted', { id, ok: existed })];
       }
 
-      case 'shape.setData': {
-        const { id, data } = cmd.payload;
+      case 'shape.setCore': {
+        const { id, name, type } = (cmd as ShapeSetCoreCmd).payload;
         const s = this.mustGet(id);
-        s.setData(data);
+        if (name !== undefined) s.setName(name);
+        if (type !== undefined) s.setType(type);
         await this.persist(s);
-        const evt = this.emit(base, 'shape.data.set', { id });
-        return [evt];
+        return [
+          this.emit(base, 'shape.core.set', {
+            id,
+            name: s.name ?? null,
+            type: s.type,
+          }),
+        ];
       }
 
-      case 'shape.mergeData': {
-        const { id, patch } = cmd.payload;
+      case 'shape.setSignature': {
+        const { id, signature } = (cmd as ShapeSetSignatureCmd).payload;
         const s = this.mustGet(id);
-        s.mergeData(patch);
+        s.setSignature(signature);
         await this.persist(s);
-        const evt = this.emit(base, 'shape.data.merged', { id });
-        return [evt];
+        return [this.emit(base, 'shape.signature.set', { id })];
+      }
+
+      case 'shape.mergeSignature': {
+        const { id, patch } = (cmd as ShapeMergeSignatureCmd).payload;
+        const s = this.mustGet(id);
+        s.patchSignature(patch);
+        await this.persist(s);
+        return [this.emit(base, 'shape.signature.merged', { id })];
+      }
+
+      case 'shape.setFacets': {
+        const { id, facets } = (cmd as ShapeSetFacetsCmd).payload;
+        const s = this.mustGet(id);
+        s.setFacets(facets);
+        await this.persist(s);
+        return [this.emit(base, 'shape.facets.set', { id })];
+      }
+
+      case 'shape.mergeFacets': {
+        const { id, patch } = (cmd as ShapeMergeFacetsCmd).payload;
+        const s = this.mustGet(id);
+        s.mergeFacets(patch);
+        await this.persist(s);
+        return [this.emit(base, 'shape.facets.merged', { id })];
       }
 
       case 'shape.setState': {
-        const { id, state } = cmd.payload;
+        const { id, state } = (cmd as ShapeSetStateCmd).payload;
         const s = this.mustGet(id);
         s.setState(state);
         await this.persist(s);
-        const evt = this.emit(base, 'shape.state.set', {
-          id,
-          status: s.state.status,
-        });
-        return [evt];
+        return [
+          this.emit(base, 'shape.state.set', { id, status: s.state.status }),
+        ];
       }
 
       case 'shape.patchState': {
-        const { id, patch } = cmd.payload;
+        const { id, patch } = (cmd as ShapePatchStateCmd).payload;
         const s = this.mustGet(id);
         s.patchState(patch);
         await this.persist(s);
-        const evt = this.emit(base, 'shape.state.patched', {
-          id,
-          status: s.state.status,
-        });
-        return [evt];
+        return [
+          this.emit(base, 'shape.state.patched', {
+            id,
+            status: s.state.status,
+          }),
+        ];
       }
 
       case 'shape.describe': {
-        const { id } = cmd.payload;
+        const { id } = (cmd as ShapeDescribeCmd).payload;
         const s = this.mustGet(id);
-        const evt = this.emit(base, 'shape.described', s.getInfo());
-        return [evt];
+        const doc = s.toSchema();
+        return [
+          this.emit(base, 'shape.described', {
+            id,
+            type: s.type,
+            name: s.name ?? null,
+            state: doc.shape.state,
+            signatureKeys: Object.keys(
+              (doc.shape.signature ?? {}) as Record<string, unknown>,
+            ),
+            facetsKeys: Object.keys(doc.shape.facets ?? {}),
+          }),
+        ];
       }
 
       default:
         throw new Error(`unsupported command: ${(cmd as Command).kind}`);
-    }
-  }
-
-  private mustGet(id: string): FormShape {
-    const s = this.shapes.get(id);
-    if (!s) throw new Error(`shape not found: ${id}`);
-    return s;
-  }
-
-  private async persist(s: FormShape): Promise<void> {
-    if (!this.repo) return;
-    const id = s.id;
-    const current = await this.repo.get(id);
-    const doc = this.serialize(s);
-    if (current) {
-      await this.repo.update(id, () => doc);
-    } else {
-      await this.repo.create(doc as any);
     }
   }
 }

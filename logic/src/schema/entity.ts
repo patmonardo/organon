@@ -1,13 +1,6 @@
-import { z } from "zod";
-import { randomUUID } from "node:crypto";
-import {
-  BaseSchema,
-  BaseState,
-  BaseCore,
-  Type,
-  Id,
-  touch,
-} from "./base";
+import { z } from 'zod';
+import { randomUUID } from 'node:crypto';
+import { BaseSchema, BaseState, BaseCore, Type, Id, touch } from './base';
 
 // Ref = type + id
 export const EntityRef = z.object({
@@ -75,10 +68,10 @@ export function updateEntity(
     state: Partial<z.input<typeof EntityState>>;
     version: string;
     ext: Record<string, unknown>;
-  }>
+  }>,
 ): Entity {
   const core = EntityCore.parse(
-    touch({ ...current.shape.core, ...(patch.core ?? {}) })
+    touch({ ...current.shape.core, ...(patch.core ?? {}) }),
   );
   const state = EntityState.parse({
     ...current.shape.state,
@@ -95,7 +88,7 @@ export function updateEntity(
 
 // Ergonomics
 export function createEntityRef(
-  e: z.input<typeof EntitySchema> | Entity | EntityRef
+  e: z.input<typeof EntitySchema> | Entity | EntityRef,
 ): EntityRef {
   if (isEntityRef(e)) return e;
   const ent = EntitySchema.parse(e as any);
@@ -106,11 +99,14 @@ export type EntityKey = string;
 
 export function formatEntityKey(x: Entity | EntityRef): EntityKey {
   const ref =
-    "shape" in (x as any) ? createEntityRef(x as Entity) : (x as EntityRef);
+    'shape' in (x as any) ? createEntityRef(x as Entity) : (x as EntityRef);
   return `${ref.type}:${ref.id}`;
 }
 
 export function parseEntityKey(key: string): EntityRef {
-  const [type, id] = key.split(":");
+  // Split at the last colon to allow types that contain ":" (e.g., "System::Engine")
+  const idx = key.lastIndexOf(':');
+  const type = key.slice(0, idx);
+  const id = key.slice(idx + 1);
   return EntityRef.parse({ type, id });
 }

@@ -1,77 +1,87 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from "vitest";
 import {
+  PropertySchema,
   createProperty,
   updateProperty,
-  PropertySchema,
-} from '../../src/schema/property';
-import { createEntity, EntityRef } from '../../src/schema/entity';
+  bindPropertyToEntity,
+  bindPropertyToRelation,
+} from "../../src/schema/property";
 
-describe('schema/property', () => {
-  it('creates with required contextId; key present; value updates validate', () => {
-    const p0 = createProperty({
-      type: 'system.Property',
-      key: 'p0',
-      contextId: 'ctx:1',
-    } as any);
-    const parsed0 = PropertySchema.parse(p0);
-    const core = (parsed0 as any).shape?.core ?? (parsed0 as any).core ?? {};
-    expect(core.key).toBe('p0');
-    const ctxId =
-      (parsed0 as any).shape?.contextId ?? (parsed0 as any).contextId;
-    expect(ctxId).toBe('ctx:1');
-
-    // Include contextId in updates to satisfy schema if updateProperty is non-merge
-    const p1 = updateProperty(parsed0, {
-      contextId: ctxId,
-      value: 42,
-      valueType: 'number',
-    } as any);
-    const parsed1 = PropertySchema.parse(p1);
-    expect((parsed1 as any).shape?.value ?? (parsed1 as any).value).toBe(42);
-    expect(
-      (parsed1 as any).shape?.valueType ?? (parsed1 as any).valueType,
-    ).toBe('number');
-  });
-
-  it('binds to entity via EntityRef and clears relationId', () => {
-    const e = createEntity({ type: 'system.Entity', name: 'E0' } as any);
-    const ref = EntityRef.parse({
-      id: e.shape.core.id,
-      type: e.shape.core.type,
+describe("schema/property — happy path", () => {
+  it("creates a Property bound to an entity with defaults", () => {
+    const p = createProperty({
+      type: "system.Property",
+      key: "color",
+      contextId: "ctx:1",
+      entity: { id: "E1", type: "system.Thing" },
+      // state omitted -> defaulted
     });
 
-    const p0 = createProperty({
-      type: 'system.Property',
-      key: 'p1',
-      contextId: 'ctx:1',
-    } as any);
-    const parsed0 = PropertySchema.parse(p0);
-    const ctxId =
-      (parsed0 as any).shape?.contextId ?? (parsed0 as any).contextId;
-
-    const p1 = updateProperty(parsed0, {
-      contextId: ctxId,
-      entity: ref,
-      relationId: null,
-    } as any);
-    const parsed = PropertySchema.parse(p1);
-    expect(
-      (parsed as any).shape?.entity ?? (parsed as any).entity,
-    ).toBeTruthy();
-
-    const p2 = updateProperty(parsed, {
-      contextId: ctxId,
-      entity: null,
-      relationId: null,
-    } as any);
-    const parsed2 = PropertySchema.parse(p2);
-    const entityVal = (parsed2 as any).shape?.entity ?? (parsed2 as any).entity;
-    expect(entityVal == null).toBe(true); // accept null or undefined
+    const parsed = PropertySchema.parse(p);
+    expect(parsed.shape.core.type).toBe("system.Property");
+    expect(parsed.shape.core.key).toBe("color");
+    expect(parsed.shape.contextId).toBe("ctx:1");
+    expect(parsed.shape.entity?.id).toBe("E1");
+    expect(parsed.shape.relationId).toBeUndefined();
+    expect(parsed.revision).toBe(0);
+    expect(parsed.ext).toEqual({});
   });
 
-  it('rejects missing contextId (helper enforces required field)', () => {
-    expect(() =>
-      createProperty({ type: 'system.Property', key: 'p2' } as any),
-    ).toThrow();
+  it("updates value/valueType, core/state, contextId and bumps revision", () => {
+    const p0 = createProperty({
+      type: "system.Property",
+      key: "size",
+      contextId: "ctx:1",
+      entity: { id: "E2", type: "system.Thing" },
+    });
+
+    const p1 = updateProperty(p0, {
+      value: 42,
+      valueType: "number",
+      core: { name: "Size" },
+      state: { status: "active", tags: [], meta: {} },
+      contextId: "ctx:2",
+      version: "1.0.0",
+      ext: { a: 1 },
+    });
+
+    expect(p1.shape.value).toBe(42);
+    expect(p1.shape.valueType).toBe("number");
+    expect(p1.shape.core.name).toBe("Size");
+    expect(p1.shape.state.status).toBe("active");
+    expect(p1.shape.contextId).toBe("ctx:2");
+    expect(p1.revision).toBe(p0.revision + 1);
+    expect(p1.version).toBe("1.0.0");
+    expect(p1.ext).toMatchObject({ a: 1 });
+
+    // Clear value and valueType via explicit undefined
+    const p2 = updateProperty(p1, { value: undefined, valueType: undefined });
+    expect(p2.shape.value).toBeUndefined();
+    expect(p2.shape.valueType).toBeUndefined();
+  });
+
+  it("switches binding between entity and relation via helpers (exclusive)", () => {
+    const p0 = createProperty({
+      type: "system.Property",
+      key: "weight",
+      contextId: "ctx:9",
+      entity: { id: "E3", type: "system.Thing" },
+    });
+
+    // Bind to relation (clears entity)
+    const p1 = bindPropertyToRelation(p0, "rel:1");
+    expect(p1.shape.relationId).toBe("rel:1");
+    expect(p1.shape.entity).toBeUndefined();
+    expect(p1.revision).toBe(p0.revision + 1);
+
+    // Bind back to entity (clears relation)
+    const p2 = bindPropertyToEntity(p1, { id: "E4", type: "system.Thing" });
+    expect(p2.shape.entity?.id).toBe("E4");
+    expect(p2.shape.relationId).toBeUndefined();
+    expect(p2.revision).toBe(p1.revision + 1);
+
+    // Schema validates final doc
+    expect(() => PropertySchema.parse(p2)).not.toThrow();
   });
 });
+

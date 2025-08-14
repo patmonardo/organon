@@ -1,74 +1,51 @@
-import { describe, it, expect } from 'vitest';
-import { randomUUID } from 'node:crypto';
+import { describe, it, expect } from "vitest";
 import {
+  FormSchema,
   createForm,
   updateForm,
   getFormShape,
   setFormShape,
-  FormSchema,
-} from '../../src/schema/form';
+} from "../../src/schema/form";
 
-describe('schema/form', () => {
-  const makeFormShape = (over: Partial<any> = {}) => ({
-    core: { id: randomUUID(), type: 'form.Shape' },
-    definition: { id: 'def:1', name: 'Demo' },
-    state: {},
-    data: { a: 1 },
-    ...over,
+describe("schema/form — principle of Form (happy path)", () => {
+  it("creates a Form with sane defaults", () => {
+    const f = createForm({ type: "system.Form", name: "F" });
+    const parsed = FormSchema.parse(f);
+
+    expect(parsed.shape.core.type).toBe("system.Form");
+    expect(parsed.shape.core.name).toBe("F");
+    expect(parsed.shape.core.id.startsWith("form:")).toBe(true);
+    expect(parsed.shape.fields).toEqual([]);
+    expect(typeof parsed.shape.state).toBe("object");
+    expect(getFormShape(parsed as any)).toBeUndefined();
+    expect(parsed.revision).toBe(0);
   });
 
-  it('createForm -> valid schema: core/state defaults; embeds FormShape', () => {
-    const formShape = makeFormShape();
-    const doc = createForm({
-      type: 'system.Form',
-      name: 'F0',
-      form: formShape,
-    } as any);
+  it("updates state/fields/embedded form and sanitizes invalid status", () => {
+    const f0 = createForm({ type: "system.Form", name: "F0" });
 
-    const parsed = FormSchema.parse(doc);
-    expect(parsed.shape.core.id).toBeTruthy();
-    expect(parsed.shape.core.type).toBe('system.Form');
-    expect(parsed.shape.state.status).toBe('active');
-    expect(getFormShape(parsed)).toBeDefined();
-  });
+    const f1 = updateForm(f0, {
+      // 'idle' is not a valid BaseState status; sanitizeState normalizes to "active"
+      state: { status: "idle" as any, tags: ["a", 1 as any, "b"], meta: { note: "ok" } },
+      fields: [1, 2],
+      form: { layout: "grid", cols: 2 } as any,
+    });
 
-  it('updateForm preserves id and increments revision; set/get form shape round-trips', () => {
-    const formShape = makeFormShape();
-    const base = FormSchema.parse(
-      createForm({ type: 'system.Form', name: 'F1', form: formShape } as any),
-    );
+    const p1 = FormSchema.parse(f1);
+    // status normalized to default "active"
+    expect((p1.shape.state as any).status).toBe("active");
+    expect((p1.shape.state as any).tags).toEqual(["a", "b"]);
+    expect((p1.shape.state as any).meta.note).toBe("ok");
 
-    const id0 = base.shape.core.id;
-    const rev0 = base.revision;
+    expect(p1.shape.fields).toEqual([1, 2]);
+    expect(getFormShape(p1 as any)).toEqual({ layout: "grid", cols: 2 });
+    expect(p1.revision).toBe(f0.revision + 1);
 
-    // mutate embedded FormShape data
-    const nextShape = { ...getFormShape(base), data: { a: 2 } } as any;
-    const doc1 = updateForm(base, { form: nextShape });
-    const p1 = FormSchema.parse(doc1);
-
-    expect(p1.shape.core.id).toBe(id0);
-    expect(p1.revision).toBeGreaterThan(rev0);
-    expect((getFormShape(p1) as any).data).toEqual({ a: 2 });
-
-    // use ergonomics helpers
-    const p2 = setFormShape(p1, { ...nextShape, data: { a: 3 } } as any);
-    const parsed2 = FormSchema.parse(p2);
-    expect((getFormShape(parsed2) as any).data).toEqual({ a: 3 });
-  });
-
-  it('accepts state patch via updateForm and keeps other fields', () => {
-    const doc0 = createForm({
-      type: 'system.Form',
-      name: 'F2',
-      form: makeFormShape(),
-      state: { status: 'idle', tags: ['x'] },
-    } as any);
-    const p0 = FormSchema.parse(doc0);
-
-    const p1 = FormSchema.parse(
-      updateForm(p0, { state: { status: 'active' } }),
-    );
-    expect(p1.shape.state.status).toBe('active');
-    expect(Array.isArray(p1.shape.state.tags)).toBe(true);
+    // setFormShape helper bumps revision and replaces embed deterministically
+    const f2 = setFormShape(p1, { layout: "stack", gap: 8 });
+    const p2 = FormSchema.parse(f2);
+    expect(getFormShape(p2 as any)).toEqual({ layout: "stack", gap: 8 });
+    expect(p2.revision).toBe(p1.revision + 1);
   });
 });
+

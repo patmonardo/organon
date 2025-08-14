@@ -7,7 +7,7 @@ import {
   FormAction,
   FormLayout,
   FormShape,
-} from "@organon/logic/schema/shape";
+} from "@organon/model/schema/shape";
 import { FormShapeSchema } from "@/form/schema/shape";
 import { ManagedTransaction, Session } from "neo4j-driver"; // Removed unused Transaction import
 import neo4j, { Integer } from "neo4j-driver";

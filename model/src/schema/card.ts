@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { FormActionSchema, FormSectionSchema, FormShapeSchema } from "../../../logic/src/schema/shape";
+import { FormActionSchema, FormSectionSchema, FormShapeSchema } from "./shape";
 
 // Schema for card layouts (without statistical properties)
 export const CardLayoutSchema = z.object({

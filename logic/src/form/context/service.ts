@@ -1,253 +1,127 @@
-import { FormRelation } from "@/form/relation/relation";
-import { FormEntity } from "@/form/entity/entity";
-import { NiṣpādanaPariṇāma, KriyāPrakāra } from "@/form/schema/context"; // Import types needed for payloads
-import { ContextEngineVerbs } from "./engine"; 
+import type { Event, EventBus } from '../triad/message';
+import { InMemoryEventBus } from '../triad/bus';
+import type { Repository } from '../../repository/repo';
+import {
+  ContextSchema,
+  type Context,
+  createContext,
+  updateContext,
+} from '../../schema/context';
 
-// Placeholder for getting a system entity to be the source of service verbs
-const getServiceSourceEntity = (): FormEntity => {
-    // Assuming FormEntity.findOrCreate exists or is added
-    return FormEntity.findOrCreate({ id: 'system:contextService', type: 'System::Service' });
-};
+export type ContextId = string;
 
-/**
- * ContextService - API layer for context operations.
- * Translates requests into verbs emitted for ContextEngine.
- */
 export class ContextService {
+  private readonly bus: EventBus;
+  private readonly mem = new Map<string, Context>();
 
-  /**
-   * Request the creation of a new context.
-   * Emits 'contextEngine:requestCreation'.
-   */
-  static createContext(
-    name: string,
-    options?: {
-      id?: string;
-      type?: string; // e.g., 'standard', 'execution', 'brahmatma'
-      parentId?: string;
-      metadata?: Record<string, any>;
-      autoActivate?: boolean;
-      isExecution?: boolean; // Specific flag for execution context type
-      initialMode?: NiṣpādanaPariṇāma; // For execution contexts
-      formId?: string; // Optional associated form
-    },
-    requestMetadata?: Record<string, any> // Metadata for the request verb itself
-  ): void {
-    const serviceEntity = getServiceSourceEntity();
-    const verbContent = {
-      id: options?.id,
-      name: name,
-      type: options?.type,
-      parentId: options?.parentId,
-      metadata: options?.metadata,
-      autoActivate: options?.autoActivate,
-      isExecution: options?.isExecution ?? (options?.type === 'execution' || options?.type === 'brahmatma'),
-      initialMode: options?.initialMode,
-      formId: options?.formId,
+  constructor(private readonly repo?: Repository<Context>, bus?: EventBus) {
+    this.bus = bus ?? new InMemoryEventBus();
+  }
+
+  // Event API
+  on(kind: string, handler: (e: Event) => void) {
+    return this.bus.subscribe(kind, handler);
+  }
+
+  // Reads
+  async get(id: ContextId): Promise<Context | undefined> {
+    if (this.repo) {
+      const doc = await this.repo.get(id);
+      return doc ? ContextSchema.parse(doc) : undefined;
+    }
+    const doc = this.mem.get(id);
+    return doc ? ContextSchema.parse(doc) : undefined;
+  }
+
+  // SDK verbs
+
+  async create(input: { type: string; name?: string }) {
+    const doc = ContextSchema.parse(createContext(input as any));
+    await this.persist(doc);
+    this.bus.publish({
+      kind: 'context.created',
+      payload: {
+        id: doc.shape.core.id,
+        type: doc.shape.core.type,
+        name: doc.shape.core.name ?? null,
+      },
+    });
+    return doc.shape.core.id as ContextId;
+  }
+
+  async delete(id: ContextId) {
+    const existed = await this.remove(id);
+    this.bus.publish({ kind: 'context.deleted', payload: { id, ok: existed } });
+  }
+
+  async describe(id: ContextId) {
+    const doc = await this.mustGet(id);
+    const info = {
+      id,
+      type: doc.shape.core.type,
+      name: doc.shape.core.name ?? null,
+      state: doc.shape.state,
     };
-    const verbMetadata = { ...(requestMetadata || {}) };
+    this.bus.publish({ kind: 'context.described', payload: info });
+    return info;
+  }
 
-    FormRelation.emit(
-        serviceEntity,
-        ContextEngineVerbs.REQUEST_CREATE,
-        verbContent,
-        verbMetadata
+  async setCore(id: ContextId, core: { name?: string; type?: string }) {
+    const curr = await this.mustGet(id);
+    const next = ContextSchema.parse(updateContext(curr, { core } as any));
+    await this.persist(next);
+    this.bus.publish({
+      kind: 'context.core.set',
+      payload: {
+        id,
+        name: next.shape.core.name ?? null,
+        type: next.shape.core.type,
+      },
+    });
+  }
+
+  async setState(id: ContextId, state: Record<string, unknown>) {
+    const curr = await this.mustGet(id);
+    const next = ContextSchema.parse(updateContext(curr, { state } as any));
+    await this.persist(next);
+    this.bus.publish({ kind: 'context.state.set', payload: { id } });
+  }
+
+  async patchState(id: ContextId, patch: Record<string, unknown>) {
+    const curr = await this.mustGet(id);
+    const next = ContextSchema.parse(
+      updateContext(curr, { state: patch } as any),
     );
+    await this.persist(next);
+    this.bus.publish({ kind: 'context.state.patched', payload: { id } });
   }
 
-  /**
-   * Request activation of a context.
-   * Emits 'contextEngine:requestActivation'.
-   */
-  static activateContext(
-    contextId: string,
-    options?: {
-      activateChildren?: boolean;
-      recursive?: boolean;
-      silent?: boolean;
-    },
-    requestMetadata?: Record<string, any>
-  ): void {
-    const serviceEntity = getServiceSourceEntity();
-    const verbContent = { contextId, options };
-    const verbMetadata = { ...(requestMetadata || {}), contextId }; // Add contextId to metadata
+  // Internals
 
-    FormRelation.emit(
-        serviceEntity,
-        ContextEngineVerbs.REQUEST_ACTIVATION,
-        verbContent,
-        verbMetadata
-    );
+  private async mustGet(id: string): Promise<Context> {
+    const found = await this.get(id);
+    if (!found) throw new Error(`Context not found: ${id}`);
+    return found;
   }
 
-  /**
-   * Request deactivation of a context.
-   * Emits 'contextEngine:requestDeactivation'.
-   */
-  static deactivateContext(
-    contextId: string,
-    options?: {
-      deactivateChildren?: boolean;
-      recursive?: boolean;
-      silent?: boolean;
-      activateParent?: boolean;
-    },
-    requestMetadata?: Record<string, any>
-  ): void {
-    const serviceEntity = getServiceSourceEntity();
-    const verbContent = { contextId, options };
-    const verbMetadata = { ...(requestMetadata || {}), contextId };
-
-    FormRelation.emit(
-        serviceEntity,
-        ContextEngineVerbs.REQUEST_DEACTIVATION,
-        verbContent,
-        verbMetadata
-    );
+  private async persist(doc: Context): Promise<void> {
+    const id = doc.shape.core.id;
+    if (this.repo) {
+      const existing = await this.repo.get(id);
+      if (existing) await this.repo.update(id, () => doc);
+      else await this.repo.create(doc);
+    } else {
+      this.mem.set(id, doc);
+    }
   }
 
-  /**
-   * Request updating a context's properties.
-   * Emits 'contextEngine:requestUpdate'.
-   */
-  static updateContext(
-    contextId: string,
-    updates: { // Use English names for update payload
-      name?: string;
-      metadata?: Record<string, any>;
-      // Add other updatable properties as needed
-    },
-    requestMetadata?: Record<string, any>
-  ): void {
-    const serviceEntity = getServiceSourceEntity();
-    // Map English names to Sanskrit names if needed by the engine/context implementation
-    // Or adjust the engine handler to accept English names
-    const verbContent = { contextId, data: updates }; // Pass updates directly
-    const verbMetadata = { ...(requestMetadata || {}), contextId };
-
-    FormRelation.emit(
-        serviceEntity,
-        ContextEngineVerbs.REQUEST_UPDATE,
-        verbContent,
-        verbMetadata
-    );
+  private async remove(id: string): Promise<boolean> {
+    if (this.repo) {
+      const existing = await this.repo.get(id);
+      if (!existing) return false;
+      await this.repo.delete(id);
+      return true;
+    }
+    return this.mem.delete(id);
   }
-
-  /**
-   * Request deletion of a context.
-   * Emits 'contextEngine:requestDeletion'.
-   */
-  static deleteContext(
-    contextId: string,
-    requestMetadata?: Record<string, any>
-  ): void {
-    const serviceEntity = getServiceSourceEntity();
-    const verbContent = { contextId };
-    const verbMetadata = { ...(requestMetadata || {}), contextId };
-
-    FormRelation.emit(
-        serviceEntity,
-        ContextEngineVerbs.REQUEST_DELETION,
-        verbContent,
-        verbMetadata
-    );
-  }
-
-  /**
-   * Request registration of an entity within a context.
-   * Emits 'contextEngine:requestEntityRegistration'.
-   */
-  static registerEntity(
-    contextId: string,
-    entityId: string,
-    requestMetadata?: Record<string, any>
-  ): void {
-    const serviceEntity = getServiceSourceEntity();
-    const verbContent = { contextId, entityId };
-    const verbMetadata = { ...(requestMetadata || {}), contextId };
-
-    FormRelation.emit(
-        serviceEntity,
-        ContextEngineVerbs.REQUEST_ENTITY_REGISTRATION,
-        verbContent,
-        verbMetadata
-    );
-  }
-
-  /**
-   * Request registration of a relation within a context.
-   * Emits 'contextEngine:requestRelationRegistration'.
-   */
-  static registerRelation(
-    contextId: string,
-    relationId: string,
-    requestMetadata?: Record<string, any>
-  ): void {
-    const serviceEntity = getServiceSourceEntity();
-    const verbContent = { contextId, relationId };
-    const verbMetadata = { ...(requestMetadata || {}), contextId };
-
-    FormRelation.emit(
-        serviceEntity,
-        ContextEngineVerbs.REQUEST_RELATION_REGISTRATION,
-        verbContent,
-        verbMetadata
-    );
-  }
-
-  /**
-   * Request execution of a task within a specific context and mode.
-   * Emits 'contextEngine:requestExecution'.
-   */
-  static executeInContext(
-    contextId: string,
-    mode: NiṣpādanaPariṇāma, // e.g., 'guṇātmaka', 'saṅkhyātmaka', 'māyātmaka'
-    operation: KriyāPrakāra, // e.g., 'anumāna', 'gaṇana', 'vyāvartana'
-    task: any, // The actual function or data needed for the operation
-    requestMetadata?: Record<string, any>
-  ): void {
-    const serviceEntity = getServiceSourceEntity();
-    const verbContent = {
-      contextId,
-      mode,
-      operation,
-      task, // The engine handler will need to interpret this based on the operation
-    };
-    const verbMetadata = { ...(requestMetadata || {}), contextId };
-
-    FormRelation.emit(
-        serviceEntity,
-        ContextEngineVerbs.REQUEST_EXECUTION,
-        verbContent,
-        verbMetadata
-    );
-  }
-
-  // --- Convenience methods for specific execution modes ---
-
-  static executeQualitative(contextId: string, operation: KriyāPrakāra, task: any, requestMetadata?: Record<string, any>): void {
-    this.executeInContext(contextId, 'guṇātmaka', operation, task, requestMetadata);
-  }
-
-  static executeQuantitative(contextId: string, operation: KriyāPrakāra, task: any, requestMetadata?: Record<string, any>): void {
-    this.executeInContext(contextId, 'saṅkhyātmaka', operation, task, requestMetadata);
-  }
-
-  static executeMeasuremental(contextId: string, operation: KriyāPrakāra, task: any, requestMetadata?: Record<string, any>): void {
-    this.executeInContext(contextId, 'māyātmaka', operation, task, requestMetadata);
-  }
-
 }
-
-// Optional: Export individual functions if desired for easier use
-export const createContext = ContextService.createContext;
-export const activateContext = ContextService.activateContext;
-export const deactivateContext = ContextService.deactivateContext;
-export const updateContext = ContextService.updateContext;
-export const deleteContext = ContextService.deleteContext;
-export const registerEntity = ContextService.registerEntity;
-export const registerRelation = ContextService.registerRelation;
-export const executeInContext = ContextService.executeInContext;
-export const executeQualitative = ContextService.executeQualitative;
-export const executeQuantitative = ContextService.executeQuantitative;
-export const executeMeasuremental = ContextService.executeMeasuremental;

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { FormLayoutSchema, FormShapeSchema } from '../../../logic/src/schema/shape';
+import { FormLayoutSchema, FormShapeSchema } from './shape';
 
 // Link types
 export const LinkTypeSchema = z.enum([

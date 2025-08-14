@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { FormLayoutSchema, FormShapeSchema } from '../../../logic/src/schema/shape';
+import { FormLayoutSchema, FormShapeSchema } from './shape';
 import { LinkShapeSchema } from './link';
 
 // List item schema

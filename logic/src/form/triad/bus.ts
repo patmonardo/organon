@@ -1,4 +1,5 @@
-import type { Event, EventBus } from "../form/shape/types";
+import type { Event, EventBus } from './message';
+export type { Event, EventBus } from './message';
 
 export class InMemoryEventBus implements EventBus {
   private handlers = new Map<string, Set<(e: Event) => void>>();

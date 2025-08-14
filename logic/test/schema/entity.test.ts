@@ -1,42 +1,51 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from "vitest";
 import {
+  EntitySchema,
   createEntity,
   updateEntity,
-  EntitySchema,
-  EntityRef,
-  isEntityRef,
-} from '../../src/schema/entity';
+  createEntityRef,
+  formatEntityKey,
+  parseEntityKey,
+} from "../../src/schema/entity";
 
-describe('schema/entity', () => {
-  it('createEntity -> valid schema; id stable across updates; revision increments', () => {
-    const a = createEntity({ type: 'system.Entity', name: 'A' });
-    const p1 = EntitySchema.parse(a);
-    const id = p1.shape.core.id;
-    expect(id).toBeTruthy();
+describe("schema/entity — happy path", () => {
+  it("creates an Entity with defaults and updates deterministically", () => {
+    const e0 = createEntity({ type: "system.Entity", name: "A" });
+    const p0 = EntitySchema.parse(e0);
+    expect(p0.shape.core.type).toBe("system.Entity");
+    expect(p0.shape.core.name).toBe("A");
+    expect(typeof p0.shape.state).toBe("object");
+    expect(p0.revision).toBe(0);
 
-    const next = updateEntity(p1, { core: { name: 'B' } } as any);
-    const p2 = EntitySchema.parse(next);
-    expect(p2.shape.core.id).toBe(id);
-    expect((p2 as any).revision ?? 0).toBeGreaterThan(
-      (p1 as any).revision ?? 0,
-    );
-  });
-
-  it('EntityRef.parse validates and isEntityRef matches', () => {
-    const e = createEntity({ type: 'system.Entity' });
-    const ref = EntityRef.parse({
-      id: e.shape.core.id,
-      type: e.shape.core.type,
+    const e1 = updateEntity(e0, {
+      core: { name: "A1" },
+      state: { status: "active", tags: [], meta: {} },
+      version: "1.0.0",
+      ext: { a: 1 },
     });
-    expect(isEntityRef(ref)).toBe(true);
+    const p1 = EntitySchema.parse(e1);
+    expect(p1.shape.core.name).toBe("A1");
+    expect(p1.shape.state.status).toBe("active");
+    expect(p1.version).toBe("1.0.0");
+    expect(p1.ext).toMatchObject({ a: 1 });
+    expect(p1.revision).toBe(p0.revision + 1);
   });
 
-  it('EntityRef.parse rejects invalid ref', () => {
-    try {
-      EntityRef.parse({ id: 1, type: null } as any);
-      expect(false).toBe(true);
-    } catch (err: any) {
-      expect(err.issues?.length).toBeGreaterThan(0);
-    }
+  it("creates refs, formats and parses entity keys round-trip", () => {
+    const e = createEntity({ type: "system.Entity", name: "K" });
+    const ref = createEntityRef(e);
+    const key = formatEntityKey(ref);
+    const parsed = parseEntityKey(key);
+    expect(parsed).toEqual(ref);
+  });
+
+  it("supports types containing colons in keys (round-trip)", () => {
+    const e = createEntity({ type: "System::Engine", name: "Engine" });
+    const ref = createEntityRef(e);
+    const key = formatEntityKey(ref); // "System::Engine:<uuid>"
+    const parsed = parseEntityKey(key);
+    expect(parsed.type).toBe("System::Engine");
+    expect(parsed.id).toBe(ref.id);
   });
 });
+

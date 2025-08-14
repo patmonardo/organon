@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { FormLayoutSchema, FormShapeSchema } from '../../../logic/src/schema/shape';
+import { FormLayoutSchema, FormShapeSchema } from './shape';
 
 // Add support for confirmation dialogs and HeroIcons
 export const ButtonVariantSchema = z.enum(['primary', 'secondary', 'ghost', 'danger']);

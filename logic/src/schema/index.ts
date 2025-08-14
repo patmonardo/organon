@@ -1,20 +1,21 @@
+// Being (Form theory, canon)
 export * from "./base";
-
-// Theory-bearing (Form* only here)
 export * from "./form";
-export * from "./shape";
 
-// Pillars (descriptive names)
+// Essence (six pillars)
+export * from "./shape";
 export * from "./entity";
 export * from "./context";
 export * from "./property";
 export * from "./morph";
 export * from "./relation";
-export * from "./triad";
-export * from "./path";
 
-// Specials / conceptual signposts (optional)
-// export * from "./being";
-// export * from "./essence";
-// export * from "./concept";
-// export * from ".s/world";
+// Bridge (Form + Matter → Content)
+export * from "./content";
+
+// Concept (truth of reflection; UPS + logic hooks)
+export * from "./concept";
+export * from "./judgment";
+export * from "./syllogism";
+
+// Note: matter.ts exists as a compatibility alias to content; not re-exported here on purpose.

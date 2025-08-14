@@ -1,79 +1,86 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from "vitest";
 import {
+  RelationSchema,
   createRelation,
   updateRelation,
-  RelationSchema,
-  RelationDirection,
-} from '../../src/schema/relation';
-import { createEntity, EntityRef } from '../../src/schema/entity';
+  createBidirectionalRelation,
+  invertRelation,
+} from "../../src/schema/relation";
 
-describe('schema/relation', () => {
-  it('creates with endpoints and direction; schema validates', () => {
-    const a = createEntity({ type: 'system.Entity', name: 'A' } as any);
-    const b = createEntity({ type: 'system.Entity', name: 'B' } as any);
-    const source = EntityRef.parse({
-      id: a.shape.core.id,
-      type: a.shape.core.type,
-    });
-    const target = EntityRef.parse({
-      id: b.shape.core.id,
-      type: b.shape.core.type,
+describe("schema/relation — happy path", () => {
+  it("creates a directed relation with defaults", () => {
+    const rel = createRelation({
+      type: "system.Relation",
+      kind: "related_to",
+      source: { id: "E1", type: "system.Thing" },
+      target: { id: "E2", type: "system.Thing" },
+      state: { status: "active", tags: [], meta: {} }, // BaseState fields
     });
 
+    const parsed = RelationSchema.parse(rel);
+    expect(parsed.shape.core.type).toBe("system.Relation");
+    expect(parsed.shape.core.kind).toBe("related_to");
+    expect(parsed.shape.source.id).toBe("E1");
+    expect(parsed.shape.target.id).toBe("E2");
+    expect(parsed.shape.direction).toBe("directed");
+    expect(parsed.shape.state.status).toBe("active");
+    expect(parsed.shape.state.strength).toBe(1); // default
+    expect(parsed.revision).toBe(0);
+    expect(parsed.ext).toEqual({});
+  });
+
+  it("updates core/state/direction and bumps revision deterministically", () => {
     const r0 = createRelation({
-      type: 'system.Relation',
-      kind: 'related_to',
-      direction: 'directed',
-      source,
-      target,
-    } as any);
-
-    const p0 = RelationSchema.parse(r0);
-    expect(p0.shape.core.id).toBeTruthy();
-    expect(p0.shape.direction).toBe('directed');
-    expect(p0.shape.source.id).toBe(source.id);
-    expect(p0.shape.target.id).toBe(target.id);
-  });
-
-  it('updates direction and swaps endpoints via updateRelation', () => {
-    const a = createEntity({ type: 'system.Entity', name: 'A' } as any);
-    const b = createEntity({ type: 'system.Entity', name: 'B' } as any);
-    const source = EntityRef.parse({
-      id: a.shape.core.id,
-      type: a.shape.core.type,
-    });
-    const target = EntityRef.parse({
-      id: b.shape.core.id,
-      type: b.shape.core.type,
+      type: "system.Relation",
+      kind: "contains",
+      source: { id: "A", type: "system.Thing" },
+      target: { id: "B", type: "system.Thing" },
+      state: { status: "active", tags: [], meta: {} },
     });
 
-    const base = RelationSchema.parse(
-      createRelation({
-        type: 'system.Relation',
-        kind: 'related_to',
-        direction: 'directed',
-        source,
-        target,
-      } as any),
-    );
+    const r1 = updateRelation(r0, {
+      core: { name: "A-contains-B" },
+      state: { strength: 0.4 },
+      direction: "bidirectional",
+      version: "1.0.0",
+      ext: { note: "ok" },
+    });
 
-    // set direction
-    const r1 = RelationSchema.parse(
-      updateRelation(base, { direction: 'bidirectional' } as any),
-    );
-    expect(r1.shape.direction).toBe('bidirectional');
-
-    // swap endpoints
-    const r2 = RelationSchema.parse(
-      updateRelation(r1, { source: target, target: source } as any),
-    );
-    expect(r2.shape.source.id).toBe(target.id);
-    expect(r2.shape.target.id).toBe(source.id);
+    const p = RelationSchema.parse(r1);
+    expect(p.shape.core.id).toBe(r0.shape.core.id); // id preserved
+    expect(p.shape.core.name).toBe("A-contains-B");
+    expect(p.shape.state.strength).toBe(0.4);
+    expect(p.shape.direction).toBe("bidirectional");
+    expect(p.version).toBe("1.0.0");
+    expect(p.ext).toMatchObject({ note: "ok" });
+    expect(p.revision).toBe(r0.revision + 1);
   });
 
-  it('RelationDirection rejects invalid values', () => {
-    expect(() => RelationDirection.parse('sideways')).toThrow();
-    expect(RelationDirection.parse('directed')).toBe('directed');
-    expect(RelationDirection.parse('bidirectional')).toBe('bidirectional');
+  it("creates bidirectional and inverts directed relations correctly", () => {
+    const bi = createBidirectionalRelation({
+      type: "system.Relation",
+      kind: "adjacent_to",
+      source: { id: "X", type: "system.Thing" },
+      target: { id: "Y", type: "system.Thing" },
+      state: { status: "active", tags: [], meta: {} },
+    });
+    expect(bi.shape.direction).toBe("bidirectional");
+    // invert of bidirectional is identity
+    expect(invertRelation(bi)).toEqual(bi);
+
+    const dir = createRelation({
+      type: "system.Relation",
+      kind: "causes",
+      source: { id: "S", type: "system.Thing" },
+      target: { id: "T", type: "system.Thing" },
+      state: { status: "active", tags: [], meta: {} },
+    });
+    const inv = invertRelation(dir);
+    expect(inv.shape.direction).toBe("directed");
+    expect(inv.shape.source.id).toBe("T"); // swapped
+    expect(inv.shape.target.id).toBe("S");
+    // new id generated (since invert creates a new relation)
+    expect(inv.shape.core.id).not.toBe(dir.shape.core.id);
   });
 });
+

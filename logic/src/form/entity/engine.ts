@@ -1,129 +1,282 @@
-import type { Command, Event, EventBus } from "../triad/types";
-import { InMemoryEventBus } from "../triad/bus";
-import { startTrace, childSpan } from "../triad/trace";
-import type { Repository, Concurrency } from "../../repository/repo";
+import type { Command, Event, EventBus } from '../triad/message';
+import { InMemoryEventBus } from '../triad/bus';
+import { startTrace, childSpan } from '../triad/trace';
+import type { Repository, Concurrency } from '../../repository/repo';
 import {
   type Entity,
   EntitySchema,
   createEntity,
   updateEntity,
-} from "../../schema/entity";
+} from '../../schema/entity';
 
-// Typed command union for exhaustiveness + safety
+// Typed command union (unified verbs)
 type EntityCreateCmd = {
-  kind: "entity.create";
+  kind: 'entity.create';
   payload: Parameters<typeof createEntity>[0];
   meta?: Record<string, unknown>;
 };
-type EntityUpdateCmd = {
-  kind: "entity.update";
+type EntityDeleteCmd = {
+  kind: 'entity.delete';
+  payload: { id: string };
+  meta?: Record<string, unknown>;
+};
+type EntityDescribeCmd = {
+  kind: 'entity.describe';
+  payload: { id: string };
+  meta?: Record<string, unknown>;
+};
+type EntitySetCoreCmd = {
+  kind: 'entity.setCore';
   payload: {
     id: string;
-    patch: Parameters<typeof updateEntity>[1];
-    expectedRevision?: Concurrency["expectedRevision"];
+    name?: string;
+    type?: string;
+    expectedRevision?: Concurrency['expectedRevision'];
   };
   meta?: Record<string, unknown>;
 };
-type EntityDeleteCmd = {
-  kind: "entity.delete";
-  payload: { id: string };
+type EntitySetStateCmd = {
+  kind: 'entity.setState';
+  payload: {
+    id: string;
+    state: Record<string, unknown>;
+    expectedRevision?: Concurrency['expectedRevision'];
+  };
   meta?: Record<string, unknown>;
 };
-type EntityGetCmd = {
-  kind: "entity.get";
-  payload: { id: string };
+type EntityPatchStateCmd = {
+  kind: 'entity.patchState';
+  payload: {
+    id: string;
+    patch: Record<string, unknown>;
+    expectedRevision?: Concurrency['expectedRevision'];
+  };
+  meta?: Record<string, unknown>;
+};
+type EntitySetFacetsCmd = {
+  kind: 'entity.setFacets';
+  payload: {
+    id: string;
+    facets: Record<string, unknown>;
+    expectedRevision?: Concurrency['expectedRevision'];
+  };
+  meta?: Record<string, unknown>;
+};
+type EntityMergeFacetsCmd = {
+  kind: 'entity.mergeFacets';
+  payload: {
+    id: string;
+    patch: Record<string, unknown>;
+    expectedRevision?: Concurrency['expectedRevision'];
+  };
+  meta?: Record<string, unknown>;
+};
+type EntitySetSignatureCmd = {
+  kind: 'entity.setSignature';
+  payload: {
+    id: string;
+    signature?: Record<string, unknown>;
+    expectedRevision?: Concurrency['expectedRevision'];
+  };
+  meta?: Record<string, unknown>;
+};
+type EntityMergeSignatureCmd = {
+  kind: 'entity.mergeSignature';
+  payload: {
+    id: string;
+    patch: Record<string, unknown>;
+    expectedRevision?: Concurrency['expectedRevision'];
+  };
   meta?: Record<string, unknown>;
 };
 
 export type EntityCommand =
   | EntityCreateCmd
-  | EntityUpdateCmd
   | EntityDeleteCmd
-  | EntityGetCmd;
+  | EntityDescribeCmd
+  | EntitySetCoreCmd
+  | EntitySetStateCmd
+  | EntityPatchStateCmd
+  | EntitySetFacetsCmd
+  | EntityMergeFacetsCmd
+  | EntitySetSignatureCmd
+  | EntityMergeSignatureCmd;
 
 /**
- * EntityEngine — repo-backed CRUD engine for Entity docs.
- * Command-in, Event-out. No legacy verb/messaging, no registry.
+ * EntityEngine — repo-backed engine for Entity docs.
+ * Unified Command verbs (create/delete/describe/set/patch)
  */
 export class EntityEngine {
   constructor(
     private readonly repo: Repository<Entity>,
     private readonly bus: EventBus = new InMemoryEventBus(),
-    private readonly scope: string = "form" // optional namespace for events/trace meta
+    private readonly scope: string = 'entity',
   ) {}
 
   get eventBus(): EventBus {
     return this.bus;
   }
 
-  // small helper to standardize event emission + trace meta
   private emit(
     base: Record<string, any>,
-    kind: Event["kind"],
-    payload: Event["payload"],
-    extraMeta?: Record<string, unknown>
+    kind: Event['kind'],
+    payload: Event['payload'],
+    extraMeta?: Record<string, unknown>,
   ): Event {
-    const meta = childSpan(base as any, { action: kind, scope: this.scope, ...(extraMeta ?? {}) });
+    const meta = childSpan(base as any, {
+      action: kind,
+      scope: this.scope,
+      ...(extraMeta ?? {}),
+    });
     const evt: Event = { kind, payload, meta };
     this.bus.publish(evt);
     return evt;
   }
 
+  private async mustGet(id: string): Promise<Entity> {
+    const doc = await this.repo.get(id);
+    if (!doc) throw new Error(`entity not found: ${id}`);
+    return EntitySchema.parse(doc);
+  }
+
+  private async save(
+    id: string,
+    next: Entity,
+    expectedRevision?: Concurrency['expectedRevision'],
+  ): Promise<Entity> {
+    const saved = await this.repo.update(
+      id,
+      () => EntitySchema.parse(next),
+      expectedRevision !== undefined ? { expectedRevision } : undefined,
+    );
+    return EntitySchema.parse(saved);
+  }
+
   async handle(cmd: EntityCommand | Command): Promise<Event[]> {
     const base = startTrace(
-      "EntityEngine",
+      'EntityEngine',
       (cmd as any).meta?.correlationId as string | undefined,
-      (cmd as any).meta
+      (cmd as any).meta,
     );
 
     switch (cmd.kind) {
-      case "entity.create": {
-        const doc = createEntity(cmd.payload as any);
-        const created = await this.repo.create(EntitySchema.parse(doc));
-        const evt = this.emit(base, "entity.created", {
+      case 'entity.create': {
+        const doc = EntitySchema.parse(
+          createEntity((cmd as EntityCreateCmd).payload as any),
+        );
+        const created = await this.repo.create(doc);
+        const evt = this.emit(base, 'entity.created', {
           id: created.shape.core.id,
           type: created.shape.core.type,
+          name: created.shape.core.name ?? null,
         });
         return [evt];
       }
 
-      case "entity.update": {
-        const { id, patch, expectedRevision } = cmd.payload;
-        const current = await this.repo.get(id);
-        if (!current) throw new Error(`entity not found: ${id}`);
-        const next = updateEntity(current, patch as any);
-        const saved = await this.repo.update(
-          id,
-          () => EntitySchema.parse(next),
-          expectedRevision !== undefined ? { expectedRevision } : undefined
-        );
-        const evt = this.emit(base, "entity.updated", {
-          id: saved.shape.core.id,
-          revision: saved.revision,
-        });
-        return [evt];
-      }
-
-      case "entity.delete": {
-        const { id } = cmd.payload;
+      case 'entity.delete': {
+        const { id } = (cmd as EntityDeleteCmd).payload;
         const ok = await this.repo.delete(id);
-        const evt = ok
-          ? this.emit(base, "entity.deleted", { id, ok: true })
-          : this.emit(base, "entity.deleted", { id, ok: false });
+        const evt = this.emit(base, 'entity.deleted', { id, ok });
         return [evt];
       }
 
-      case "entity.get": {
-        const { id } = cmd.payload;
-        const doc = await this.repo.get(id);
-        const evt = this.emit(base, "entity.got", { id, entity: doc ?? null });
+      case 'entity.describe': {
+        const { id } = (cmd as EntityDescribeCmd).payload;
+        const doc = await this.mustGet(id);
+        const payload = {
+          id,
+          type: doc.shape.core.type,
+          name: doc.shape.core.name ?? null,
+          state: doc.shape.state,
+          signatureKeys: Object.keys((doc.shape as any).signature ?? {}),
+          facetsKeys: Object.keys((doc.shape as any).facets ?? {}),
+        };
+        const evt = this.emit(base, 'entity.described', payload);
         return [evt];
+      }
+
+      case 'entity.setCore': {
+        const { id, name, type, expectedRevision } = (cmd as EntitySetCoreCmd)
+          .payload;
+        const curr = await this.mustGet(id);
+        const next = updateEntity(curr, {
+          core: {
+            ...(name !== undefined ? { name } : {}),
+            ...(type !== undefined ? { type } : {}),
+          },
+        } as any);
+        const saved = await this.save(id, next as any, expectedRevision);
+        return [
+          this.emit(base, 'entity.core.set', {
+            id,
+            name: saved.shape.core.name ?? null,
+            type: saved.shape.core.type,
+          }),
+        ];
+      }
+
+      case 'entity.setState': {
+        const { id, state, expectedRevision } = (cmd as EntitySetStateCmd)
+          .payload;
+        const curr = await this.mustGet(id);
+        const next = updateEntity(curr, { state } as any);
+        await this.save(id, next as any, expectedRevision);
+        return [this.emit(base, 'entity.state.set', { id })];
+      }
+
+      case 'entity.patchState': {
+        const { id, patch, expectedRevision } = (cmd as EntityPatchStateCmd)
+          .payload;
+        const curr = await this.mustGet(id);
+        const next = updateEntity(curr, { state: patch } as any);
+        await this.save(id, next as any, expectedRevision);
+        return [this.emit(base, 'entity.state.patched', { id })];
+      }
+
+      case 'entity.setFacets': {
+        const { id, facets, expectedRevision } = (cmd as EntitySetFacetsCmd)
+          .payload;
+        const curr = await this.mustGet(id);
+        const next = updateEntity(curr, { facets } as any);
+        await this.save(id, next as any, expectedRevision);
+        return [this.emit(base, 'entity.facets.set', { id })];
+      }
+
+      case 'entity.mergeFacets': {
+        const { id, patch, expectedRevision } = (cmd as EntityMergeFacetsCmd)
+          .payload;
+        const curr = await this.mustGet(id);
+        const merged = { ...((curr.shape as any).facets ?? {}), ...patch };
+        const next = updateEntity(curr, { facets: merged } as any);
+        await this.save(id, next as any, expectedRevision);
+        return [this.emit(base, 'entity.facets.merged', { id })];
+      }
+
+      case 'entity.setSignature': {
+        const { id, signature, expectedRevision } = (
+          cmd as EntitySetSignatureCmd
+        ).payload;
+        const curr = await this.mustGet(id);
+        // Convention: undefined clears signature (via null sentinel for schema helper, if required)
+        const next = updateEntity(curr, {
+          signature: signature === undefined ? (null as any) : signature,
+        } as any);
+        await this.save(id, next as any, expectedRevision);
+        return [this.emit(base, 'entity.signature.set', { id })];
+      }
+
+      case 'entity.mergeSignature': {
+        const { id, patch, expectedRevision } = (cmd as EntityMergeSignatureCmd)
+          .payload;
+        const curr = await this.mustGet(id);
+        const merged = { ...((curr.shape as any).signature ?? {}), ...patch };
+        const next = updateEntity(curr, { signature: merged } as any);
+        await this.save(id, next as any, expectedRevision);
+        return [this.emit(base, 'entity.signature.merged', { id })];
       }
 
       default:
-        // Keep permissive for now to allow generic Command usage;
-        // tighten to EntityCommand later if desired.
         throw new Error(`unsupported command: ${(cmd as Command).kind}`);
-      }
+    }
   }
 }

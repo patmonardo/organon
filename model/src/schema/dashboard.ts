@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { FormShapeSchema } from '../../../logic/src/schema/shape';
+import { FormShapeSchema } from './shape';
 
 /**
  * Schema for dashboard visualization components

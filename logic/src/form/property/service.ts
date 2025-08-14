@@ -1,329 +1,129 @@
-import { FormRelation } from "@/form/relation/relation";
-import { FormEntity } from "@/form/entity/entity";
-import { PropertyEngineVerbs } from "./engine";
-import { v4 as uuidv4 } from "uuid";
+import type { Event, EventBus } from "../triad/message";
+import { InMemoryEventBus } from "../triad/bus";
+import type { Repository } from "../../repository/repo";
+import {
+  PropertySchema,
+  type Property,
+  createProperty,
+  updateProperty,
+} from "../../schema/property";
 
-// Placeholder for getting a system entity to be the source of service verbs
-const getServiceSourceEntity = (): FormEntity => {
-    return FormEntity.findOrCreate({ id: 'system:propertyService', type: 'System::Service' });
-};
+export type PropertyId = string;
 
-/**
- * PropertyService - API layer for property operations.
- * Translates requests into verbs emitted for PropertyEngine.
- */
 export class PropertyService {
+  private readonly bus: EventBus;
+  private readonly mem = new Map<string, Property>();
 
-  /**
-   * Request the creation of a new property definition/instance.
-   * Emits 'propertyEngine:requestCreation'.
-   */
-  static createProperty(
-    options: {
-      id?: string;
-      name: string;
-      description?: string;
-      propertyType: 'qualitative' | 'quantitative' | 'derived' | 'scripted'; // Example types
-      contextId?: string; // Optional context association
-      entityId?: string; // Optional entity association
-      relationId?: string; // Optional relation association
-      staticValue?: any; // Initial static value if applicable
-      derivedFrom?: string[]; // For derived properties
-      scriptId?: string; // For scripted properties
-      qualitative?: { possibleValues: string[] }; // Qualitative details
-      quantitative?: { dataType: 'string' | 'number' | 'boolean' | 'date' | 'object' | 'array'; unit?: string; range?: { min?: number; max?: number } }; // Quantitative details
-    },
-    requestMetadata?: Record<string, any>
-  ): string { // Return the generated/requested ID
-    const serviceEntity = getServiceSourceEntity();
-    const propertyId = options.id || `prop:${uuidv4()}`; // Generate ID if not provided
-
-    // Prepare content matching expected PropertySchema/Engine input
-    const verbContent = {
-      id: propertyId,
-      name: options.name,
-      description: options.description,
-      propertyType: options.propertyType,
-      contextId: options.contextId,
-      entityId: options.entityId,
-      relationId: options.relationId,
-      staticValue: options.staticValue,
-      derivedFrom: options.derivedFrom,
-      scriptId: options.scriptId,
-      qualitative: options.qualitative,
-      quantitative: options.quantitative,
-      // Engine will add created/updated timestamps
-    };
-    const verbMetadata = { ...(requestMetadata || {}), contextId: options.contextId };
-
-    console.log(`PropertyService: Requesting creation for property '${options.name}' (ID: ${propertyId})`);
-
-    FormRelation.emit(
-        serviceEntity,
-        PropertyEngineVerbs.REQUEST_CREATE, // Use the creation verb
-        verbContent,
-        verbMetadata
-    );
-
-    return propertyId; // Return the ID
+  constructor(private readonly repo?: Repository<Property>, bus?: EventBus) {
+    this.bus = bus ?? new InMemoryEventBus();
   }
 
-  /**
-   * Request setting a property value on an entity/relation within a context.
-   * Emits 'propertyEngine:requestSet'.
-   */
-  static setProperty(
-    contextId: string,
-    targetId: string, // Can be entityId or relationId
-    propertyName: string,
-    value: any,
-    options?: {
-      targetType?: 'entity' | 'relation'; // Clarify target
-      // ... other options ...
-    },
-    requestMetadata?: Record<string, any>
-  ): void {
-    const serviceEntity = getServiceSourceEntity();
-    const verbContent = {
-      contextId,
-      targetId,
-      propertyName,
-      value,
-      options: { ...(options || {}), targetType: options?.targetType || 'entity' }, // Default to entity
-    };
-    const verbMetadata = { ...(requestMetadata || {}), contextId };
-
-    FormRelation.emit(
-        serviceEntity,
-        PropertyEngineVerbs.REQUEST_SET, // Use new verb
-        verbContent,
-        verbMetadata
-    );
+  // Event API
+  on(kind: string, handler: (e: Event) => void) {
+    return this.bus.subscribe(kind, handler);
   }
 
-  /**
-   * Request getting a property value from an entity/relation within a context.
-   * Emits 'propertyEngine:requestGet'.
-   */
-  static getProperty(
-    contextId: string,
-    targetId: string, // Can be entityId or relationId
-    propertyName: string,
-    options?: { targetType?: 'entity' | 'relation' },
-    requestMetadata?: Record<string, any>
-  ): void {
-    const serviceEntity = getServiceSourceEntity();
-    const verbContent = {
-        contextId,
-        targetId,
-        propertyName,
-        options: { ...(options || {}), targetType: options?.targetType || 'entity' },
-    };
-    const verbMetadata = { ...(requestMetadata || {}), contextId };
-
-    FormRelation.emit(
-        serviceEntity,
-        PropertyEngineVerbs.REQUEST_GET, // Use new verb
-        verbContent,
-        verbMetadata
-    );
+  // Reads
+  async get(id: PropertyId): Promise<Property | undefined> {
+    if (this.repo) {
+      const doc = await this.repo.get(id);
+      return doc ? PropertySchema.parse(doc) : undefined;
+    }
+    const doc = this.mem.get(id);
+    return doc ? PropertySchema.parse(doc) : undefined;
   }
 
-  /**
-   * Request getting all properties of an entity/relation within a context.
-   * Emits 'propertyEngine:requestGetAll'.
-   */
-  static getAllProperties(
-    contextId: string,
-    targetId: string, // Can be entityId or relationId
-    options?: { targetType?: 'entity' | 'relation' },
-    requestMetadata?: Record<string, any>
-  ): void {
-    const serviceEntity = getServiceSourceEntity();
-    const verbContent = {
-        contextId,
-        targetId,
-        options: { ...(options || {}), targetType: options?.targetType || 'entity' },
-    };
-    const verbMetadata = { ...(requestMetadata || {}), contextId };
+  // SDK verbs
 
-    FormRelation.emit(
-        serviceEntity,
-        PropertyEngineVerbs.REQUEST_GET_ALL, // Use new verb
-        verbContent,
-        verbMetadata
-    );
+  async create(input: { type: string; name?: string; key: string; contextId: string }) {
+    const doc = PropertySchema.parse(createProperty(input as any));
+    await this.persist(doc);
+    this.bus.publish({
+      kind: "property.created",
+      payload: {
+        id: doc.shape.core.id,
+        type: doc.shape.core.type,
+        name: doc.shape.core.name ?? null,
+        key: doc.shape.core.key,
+        contextId: doc.shape.contextId,
+      },
+    });
+    return doc.shape.core.id as PropertyId;
   }
 
-   /**
-    * Request deleting a property from an entity/relation.
-    * Emits 'propertyEngine:requestDelete'.
-    */
-   static deleteProperty(
-    contextId: string,
-    targetId: string, // Can be entityId or relationId
-    propertyName: string,
-    options?: {
-        targetType?: 'entity' | 'relation';
-        deleteAllHistory?: boolean;
-        timestamp?: number;
-    },
-    requestMetadata?: Record<string, any>
-  ): void {
-    const serviceEntity = getServiceSourceEntity();
-    const verbContent = {
-        contextId,
-        targetId,
-        propertyName,
-        options: { ...(options || {}), targetType: options?.targetType || 'entity' },
-    };
-    const verbMetadata = { ...(requestMetadata || {}), contextId };
-
-    FormRelation.emit(
-        serviceEntity,
-        PropertyEngineVerbs.REQUEST_DELETE, // Use new verb
-        verbContent,
-        verbMetadata
-    );
+  async delete(id: PropertyId) {
+    const existed = await this.remove(id);
+    this.bus.publish({ kind: "property.deleted", payload: { id, ok: existed } });
   }
 
-  /**
-   * Request defining a derived property.
-   * Emits 'propertyEngine:requestDefineDerived'.
-   */
-  static defineDerivedProperty(
-    contextId: string,
-    targetId: string, // Can be entityId or relationId
-    propertyName: string,
-    definition: {
-      dependencies: string[];
-      derivation: string;
-    },
-    options?: { targetType?: 'entity' | 'relation' },
-    requestMetadata?: Record<string, any>
-  ): void {
-    const serviceEntity = getServiceSourceEntity();
-    const verbContent = {
-        contextId,
-        targetId,
-        propertyName,
-        definition,
-        options: { ...(options || {}), targetType: options?.targetType || 'entity' },
+  async describe(id: PropertyId) {
+    const doc = await this.mustGet(id);
+    const info = {
+      id,
+      type: doc.shape.core.type,
+      name: doc.shape.core.name ?? null,
+      state: doc.shape.state,
     };
-    const verbMetadata = { ...(requestMetadata || {}), contextId };
-
-    FormRelation.emit(
-        serviceEntity,
-        PropertyEngineVerbs.REQUEST_DEFINE_DERIVED, // Use new verb
-        verbContent,
-        verbMetadata
-    );
+    this.bus.publish({ kind: "property.described", payload: info });
+    return info;
   }
 
-  /**
-   * Request validating a property against specified rules.
-   * Emits 'propertyEngine:requestValidate'.
-   */
-  static validateProperty(
-    contextId: string,
-    targetId: string, // Can be entityId or relationId
-    propertyName: string,
-    rules: Array<{ ruleName: string; validator: string; validationType?: "required" | "optional"; }>,
-    options?: { targetType?: 'entity' | 'relation' },
-    requestMetadata?: Record<string, any>
-  ): void {
-    const serviceEntity = getServiceSourceEntity();
-    const verbContent = {
-        contextId,
-        targetId,
-        propertyName,
-        rules,
-        options: { ...(options || {}), targetType: options?.targetType || 'entity' },
-    };
-    const verbMetadata = { ...(requestMetadata || {}), contextId };
-
-    FormRelation.emit(
-        serviceEntity,
-        PropertyEngineVerbs.REQUEST_VALIDATE, // Use new verb
-        verbContent,
-        verbMetadata
-    );
+  async setCore(id: PropertyId, core: { name?: string; type?: string; key?: string }) {
+    const curr = await this.mustGet(id);
+    const next = PropertySchema.parse(updateProperty(curr, { core } as any));
+    await this.persist(next);
+    this.bus.publish({
+      kind: "property.core.set",
+      payload: {
+        id,
+        name: next.shape.core.name ?? null,
+        type: next.shape.core.type,
+        key: next.shape.core.key,
+        contextId: next.shape.contextId,
+      },
+    });
   }
 
-  /**
-   * Request propagating a property value along relations.
-   * Emits 'propertyEngine:requestPropagate'.
-   * Note: Propagation might involve coordination between PropertyEngine and RelationEngine.
-   */
-  static propagateProperty(
-    contextId: string,
-    sourceEntityId: string, // Propagation starts from an entity
-    propertyName: string,
-    relationType: string,
-    transformer?: string,
-    options?: { direction?: 'outgoing' | 'incoming' | 'both'; depth?: number; },
-    requestMetadata?: Record<string, any>
-  ): void {
-    const serviceEntity = getServiceSourceEntity();
-    // Target type is implicitly 'entity' for the source of propagation
-    const verbContent = { contextId, sourceEntityId, propertyName, relationType, transformer, options };
-    const verbMetadata = { ...(requestMetadata || {}), contextId };
-
-    FormRelation.emit(
-        serviceEntity,
-        PropertyEngineVerbs.REQUEST_PROPAGATE, // Use new verb
-        verbContent,
-        verbMetadata
-    );
+  async setState(id: PropertyId, state: Record<string, unknown>) {
+    const curr = await this.mustGet(id);
+    const next = PropertySchema.parse(updateProperty(curr, { state } as any));
+    await this.persist(next);
+    this.bus.publish({ kind: "property.state.set", payload: { id } });
   }
 
-  /**
-   * Request getting the historical values of a property.
-   * Emits 'propertyEngine:requestGetHistory'.
-   */
-  static getPropertyHistory(
-    contextId: string,
-    targetId: string, // Can be entityId or relationId
-    propertyName: string,
-    options?: {
-      targetType?: 'entity' | 'relation';
-      startTime?: number;
-      endTime?: number;
-      limit?: number;
-    },
-    requestMetadata?: Record<string, any>
-  ): void {
-    const serviceEntity = getServiceSourceEntity();
-    const verbContent = {
-        contextId,
-        targetId,
-        propertyName,
-        options: { ...(options || {}), targetType: options?.targetType || 'entity' },
-    };
-    const verbMetadata = { ...(requestMetadata || {}), contextId };
+  async patchState(id: PropertyId, patch: Record<string, unknown>) {
+    const curr = await this.mustGet(id);
+    const next = PropertySchema.parse(updateProperty(curr, { state: patch } as any));
+    await this.persist(next);
+    this.bus.publish({ kind: "property.state.patched", payload: { id } });
+  }
 
-    FormRelation.emit(
-        serviceEntity,
-        PropertyEngineVerbs.REQUEST_GET_HISTORY, // Use new verb
-        verbContent,
-        verbMetadata
-    );
+  // Internals
+
+  private async mustGet(id: string): Promise<Property> {
+    const found = await this.get(id);
+    if (!found) throw new Error(`Property not found: ${id}`);
+    return found;
+  }
+
+  private async persist(doc: Property): Promise<void> {
+    const id = doc.shape.core.id;
+    if (this.repo) {
+      const existing = await this.repo.get(id);
+      if (existing) await this.repo.update(id, () => doc);
+      else await this.repo.create(doc);
+    } else {
+      this.mem.set(id, doc);
+    }
+  }
+
+  private async remove(id: string): Promise<boolean> {
+    if (this.repo) {
+      const existing = await this.repo.get(id);
+      if (!existing) return false;
+      await this.repo.delete(id);
+      return true;
+    }
+    return this.mem.delete(id);
   }
 }
-
-// Export the main service class
-export default PropertyService;
-
-// For convenience, export individual methods
-
-// Export the static method as a standalone function
-export const createProperty = PropertyService.createProperty;
-export const setProperty = PropertyService.setProperty;
-export const getProperty = PropertyService.getProperty;
-export const getAllProperties = PropertyService.getAllProperties;
-export const deleteProperty = PropertyService.deleteProperty;
-export const defineDerivedProperty = PropertyService.defineDerivedProperty;
-// export const getDerivedProperty = PropertyService.getDerivedProperty; // Removed
-export const validateProperty = PropertyService.validateProperty;
-export const propagateProperty = PropertyService.propagateProperty;
-export const getPropertyHistory = PropertyService.getPropertyHistory;

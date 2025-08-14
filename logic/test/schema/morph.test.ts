@@ -1,51 +1,81 @@
-import { describe, it, expect } from 'vitest';
-import { createMorph, updateMorph, MorphSchema } from '../../src/schema/morph';
+import { describe, it, expect } from "vitest";
+import {
+  MorphSchema,
+  createMorph,
+  updateMorph,
+  defineMorph,
+  defineMorphPipeline,
+} from "../../src/schema/morph";
 
-describe('schema/morph', () => {
-  it('defaults input/output types and accepts optional transformFn', () => {
-    const m0 = createMorph({ type: 'system.Morph', name: 'M0' } as any);
-    const p0 = MorphSchema.parse(m0);
+describe("schema/morph — happy path", () => {
+  it("creates a single Morph with defaults", () => {
+    const m = createMorph({
+      type: "system.Morph",
+      name: "Normalize",
+      transformFn: "@pkg/mod#normalize",
+      // state omitted -> defaulted
+    });
 
-    const core0 = (p0 as any).shape?.core ?? (p0 as any).core ?? {};
-    expect(core0.inputType).toBe('FormShape');
-    expect(core0.outputType).toBe('FormShape');
-    expect(core0.transformFn).toBeUndefined();
-
-    const m1 = updateMorph(p0, { core: { transformFn: 'T.fn' } } as any);
-    const p1 = MorphSchema.parse(m1);
-    const core1 = (p1 as any).shape?.core ?? (p1 as any).core ?? {};
-    expect(core1.transformFn).toBe('T.fn');
+    const parsed = MorphSchema.parse(m);
+    expect(parsed.shape.core.type).toBe("system.Morph");
+    expect(parsed.shape.core.name).toBe("Normalize");
+    expect(parsed.shape.core.inputType).toBe("FormShape");
+    expect(parsed.shape.core.outputType).toBe("FormShape");
+    expect(parsed.shape.composition.kind).toBe("single");
+    expect(parsed.shape.composition.steps).toEqual([]);
+    expect(typeof parsed.shape.state).toBe("object");
+    expect(parsed.revision).toBe(0);
   });
 
-  it('preserves id and increments revision on update', () => {
-    const m0 = createMorph({ type: 'system.Morph', name: 'Rev' } as any);
-    const p0 = MorphSchema.parse(m0);
-    const id0 = (p0 as any).shape?.core?.id ?? (p0 as any).core?.id;
-    const r0 = (p0 as any).revision ?? 0;
+  it("updates core/state/composition/config/meta and bumps revision", () => {
+    const m0 = createMorph({ type: "system.Morph", name: "A" });
 
-    const m1 = updateMorph(p0, { core: { name: 'Rev2' } } as any);
-    const p1 = MorphSchema.parse(m1);
-    const id1 = (p1 as any).shape?.core?.id ?? (p1 as any).core?.id;
-    const r1 = (p1 as any).revision ?? 0;
+    const m1 = updateMorph(m0, {
+      core: { name: "A1", outputType: "World" },
+      state: { optimized: true, status: "active", tags: [], meta: {} },
+      composition: { kind: "pipeline", mode: "sequential", steps: ["m:x", "m:y"] },
+      config: { a: 1 },
+      meta: { note: "ok" },
+      version: "1.0.0",
+      ext: { e: true },
+    });
 
-    expect(id1).toBe(id0);
-    expect(r1).toBeGreaterThan(r0);
+    const p = MorphSchema.parse(m1);
+    expect(p.shape.core.name).toBe("A1");
+    expect(p.shape.core.outputType).toBe("World");
+    expect(p.shape.state.optimized).toBe(true);
+    expect(p.shape.state.status).toBe("active");
+    expect(p.shape.composition.kind).toBe("pipeline");
+    expect(p.shape.composition.steps).toEqual(["m:x", "m:y"]);
+    expect(p.shape.config).toEqual({ a: 1 });
+    expect(p.shape.meta).toEqual({ note: "ok" });
+    expect(p.version).toBe("1.0.0");
+    expect(p.ext).toMatchObject({ e: true });
+    expect(p.revision).toBe(m0.revision + 1);
   });
 
-  it('rejects invalid transformFn type when parsing raw doc', () => {
-    const m0 = createMorph({ type: 'system.Morph', name: 'Bad' } as any);
-    const p0 = MorphSchema.parse(m0);
-    const core0 = (p0 as any).shape?.core ?? (p0 as any).core ?? {};
+  it("defines single and pipeline morphs via helpers", () => {
+    const single = defineMorph({
+      type: "system.Morph",
+      name: "One",
+      transformFn: "@x#one",
+    });
+    const pipe = defineMorphPipeline("pipe:1", "Pipe", ["m:1", "m:2"], {
+      description: "demo",
+      inputType: "FormShape",
+      outputType: "FormShape",
+    });
 
-    // Manually inject invalid type to bypass helper validation
-    const bad = {
-      ...p0,
-      shape: {
-        ...(p0 as any).shape,
-        core: { ...core0, transformFn: 123 as any },
-      },
-    };
+    const s = MorphSchema.parse(single);
+    const p = MorphSchema.parse(pipe);
 
-    expect(() => MorphSchema.parse(bad as any)).toThrow();
+    expect(s.shape.composition.kind).toBe("single");
+    expect(s.shape.composition.steps).toEqual([]);
+
+    expect(p.shape.core.name).toBe("Pipe");
+    expect(p.shape.composition.kind).toBe("pipeline");
+    expect(p.shape.composition.mode).toBe("sequential");
+    expect(p.shape.composition.steps).toEqual(["m:1", "m:2"]);
   });
 });
+

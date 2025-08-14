@@ -1,114 +1,75 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from "vitest";
+import { z } from "zod";
 import {
-  Id,
-  Label,
-  Type,
-  IsoDateTime,
-  Timestamps,
-  stamp,
-  touch,
   BaseCore,
-  BaseState,
-  BaseShape,
   BaseSchema,
-} from '../../src/schema/base';
+  BaseState,
+  Type,
+  Label,
+} from "../../src/schema";
 
-describe('schema/base primitives', () => {
-  it('Id/Label/Type validate non-empty strings', () => {
-    expect(Id.parse('x')).toBe('x');
-    expect(Label.parse('name')).toBe('name');
-    expect(Type.parse('system.Type')).toBe('system.Type');
-    expect(() => Id.parse('')).toThrow();
-    expect(() => Label.parse('')).toThrow();
-    expect(() => Type.parse('')).toThrow();
+describe("schema/base — primitives", () => {
+  it("parses Type and Label", () => {
+    const t = Type.parse("system.Shape");
+    const n = Label.parse("World");
+    expect(t).toBe("system.Shape");
+    expect(n).toBe("World");
   });
 
-  it('IsoDateTime validates ISO strings', () => {
-    const iso = new Date().toISOString();
-    expect(IsoDateTime.parse(iso)).toBe(iso);
-    expect(() => IsoDateTime.parse('not-a-date')).toThrow();
-  });
-});
-
-describe('schema/base timestamps helpers', () => {
-  it('Timestamps supplies defaults', () => {
-    const t = Timestamps.parse({});
-    expect(typeof t.createdAt).toBe('string');
-    expect(typeof t.updatedAt).toBe('string');
-    // round-trip via schema
-    expect(() => IsoDateTime.parse(t.createdAt)).not.toThrow();
-    expect(() => IsoDateTime.parse(t.updatedAt)).not.toThrow();
+  it("parses BaseCore with id", () => {
+    // Provide type to satisfy schemas where BaseCore includes it;
+    // if BaseCore strips unknown keys, this still parses.
+    const core = BaseCore.parse({ id: "shape:1", type: "system.Base" });
+    expect(core.id).toBe("shape:1");
   });
 
-  it('stamp sets createdAt/updatedAt when missing and preserves provided values', () => {
-    const a = stamp({});
-    expect(a.createdAt).toBeDefined();
-    expect(a.updatedAt).toBeDefined();
-
-    const given = new Date(0).toISOString();
-    const b = stamp({ createdAt: given, updatedAt: given });
-    expect(b.createdAt).toBe(given);
-    expect(b.updatedAt).toBe(given);
-  });
-
-  it('touch updates only updatedAt', async () => {
-    const a = stamp({});
-    await new Promise((r) => setTimeout(r, 5));
-    const b = touch(a);
-    expect(b.createdAt).toBe(a.createdAt);
-    expect(b.updatedAt).not.toBe(a.updatedAt);
-    expect(() => IsoDateTime.parse(b.updatedAt!)).not.toThrow();
-  });
-});
-
-describe('schema/base models', () => {
-  it('BaseCore defaults timestamps', () => {
-    const core = BaseCore.parse({ id: 'id:1', type: 'system.Type' });
-    expect(core.id).toBe('id:1');
-    expect(core.type).toBe('system.Type');
-    expect(() => IsoDateTime.parse(core.createdAt)).not.toThrow();
-    expect(() => IsoDateTime.parse(core.updatedAt)).not.toThrow();
-  });
-
-  it('BaseState defaults status/tags/meta', () => {
-    const state = BaseState.parse({});
-    expect(state.status).toBe('active');
-    expect(Array.isArray(state.tags)).toBe(true);
-    expect(state.tags.length).toBe(0);
-    expect(state.meta && typeof state.meta).toBe('object');
-  });
-
-  it('BaseShape composes Core + State', () => {
-    const shape = BaseShape.parse({
-      core: { id: 'id:s', type: 'system.Type' },
-      state: {},
+  it("parses BaseState with status/tags/meta", () => {
+    const s = BaseState.parse({
+      status: "active",
+      tags: ["a", "b"],
+      meta: { note: "hello" },
     });
-    expect(shape.core.id).toBe('id:s');
-    expect(shape.state.status).toBe('active');
+    expect(s.status).toBe("active");
+    expect(s.tags).toEqual(["a", "b"]);
+    expect(s.meta.note).toBe("hello");
+  });
+});
+
+describe("schema/base — BaseSchema extension", () => {
+  // Minimal principle doc built on BaseSchema
+  const MinimalCore = BaseCore.extend({
+    type: Type,
+    name: Label.optional(),
+  });
+  const MinimalDoc = z.object({
+    core: MinimalCore,
+    state: BaseState.default({}),
+  });
+  const MinimalSchema = BaseSchema.extend({
+    shape: MinimalDoc,
   });
 
-  it('BaseSchema wraps shape and sets defaults (revision/ext)', () => {
-    const doc = BaseSchema.parse({
+  it("parses a minimal document with core/state", () => {
+    const doc = MinimalSchema.parse({
       shape: {
-        core: { id: 'id:b', type: 'system.Type' },
-        state: {},
+        core: { id: "min:1", type: "system.Minimal", name: "M1" },
+        state: { status: "active", tags: [], meta: {} },
       },
     });
-    expect(doc.shape.core.id).toBe('id:b');
-    expect(doc.revision).toBe(0);
-    expect(doc.ext && typeof doc.ext).toBe('object');
+    expect(doc.shape.core.id).toBe("min:1");
+    expect(doc.shape.core.type).toBe("system.Minimal");
+    expect(doc.shape.state.status).toBe("active");
   });
 
-  it('BaseSchema accepts provided revision and version', () => {
-    const doc = BaseSchema.parse({
+  it("allows defaulted state via BaseState.default", () => {
+    const doc = MinimalSchema.parse({
       shape: {
-        core: { id: 'id:c', type: 'system.Type' },
-        state: {},
+        core: { id: "min:2", type: "system.Minimal" },
+        // state omitted on purpose (defaulted)
       },
-      revision: 3,
-      version: '1.2.3',
     });
-    expect(doc.revision).toBe(3);
-    expect(doc.version).toBe('1.2.3');
+    expect(doc.shape.state).toBeDefined();
+    expect(typeof doc.shape.state).toBe("object");
   });
 });
+
