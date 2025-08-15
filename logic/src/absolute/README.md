@@ -2,7 +2,7 @@
 
 This folder hosts the FormProcessor: a small, deterministic pipeline that turns Form-level inputs into a World snapshot plus lightweight indexes.
 
-- Name: FormProcessor (with a FinalProcessor export kept as an alias). “Final” hints at the 7th integrator over the six pillars, but the surface is the Form.
+- Name: FormProcessor.
 - Scope: Bridge schemas and wrappers under `form/` and `thing/` to produce an assembled `world` and minimal indexes for consumers.
 
 ## Contracts

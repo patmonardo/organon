@@ -144,12 +144,24 @@ export class EntityEngine {
     next: Entity,
     expectedRevision?: Concurrency['expectedRevision'],
   ): Promise<Entity> {
+    const opts = expectedRevision == null ? undefined : { expectedRevision };
     const saved = await this.repo.update(
       id,
       () => EntitySchema.parse(next),
-      expectedRevision !== undefined ? { expectedRevision } : undefined,
+      opts,
     );
     return EntitySchema.parse(saved);
+  }
+
+  private async persist(doc: Entity): Promise<void> {
+    const id = (doc as any).shape.core.id as string;
+    const existing = await this.repo.get(id);
+    if (existing != null) {
+      // update expects (id, mutateFn, [concurrency])
+      await this.repo.update(id, () => EntitySchema.parse(doc));
+    } else {
+      await this.repo.create(EntitySchema.parse(doc));
+    }
   }
 
   async handle(cmd: EntityCommand | Command): Promise<Event[]> {
@@ -164,11 +176,11 @@ export class EntityEngine {
         const doc = EntitySchema.parse(
           createEntity((cmd as EntityCreateCmd).payload as any),
         );
-        const created = await this.repo.create(doc);
+        await this.persist(doc); // use upsert helper
         const evt = this.emit(base, 'entity.created', {
-          id: created.shape.core.id,
-          type: created.shape.core.type,
-          name: created.shape.core.name ?? null,
+          id: doc.shape.core.id,
+          type: doc.shape.core.type,
+          name: doc.shape.core.name ?? null,
         });
         return [evt];
       }

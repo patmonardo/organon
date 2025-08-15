@@ -11,7 +11,7 @@ import { ConceptSchema } from '../schema/concept';
 import { JudgmentSchema } from '../schema/judgment';
 import { SyllogismSchema } from '../schema/syllogism';
 
-// Inputs accepted by the Final Processor. Keep defaults for incremental adoption.
+// Inputs accepted by the Form Processor. Keep defaults for incremental adoption.
 export const ProcessorInputs = z.object({
   shapes: z.array(ShapeSchema).default([]),
   entities: z.array(EntitySchema).default([]),

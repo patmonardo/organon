@@ -4,11 +4,28 @@ Canonical Logic package providing:
 - Schema layer (canon): Zod models and helpers — single source of truth.
 - Form layer (six pillars): thin, engine-friendly services that wrap schemas.
 - Tests: happy-path suites for services and schema with BaseState defaults awareness.
+- Processor (absolute): integrates schemas + forms for world assembly and propagation.
 
-Key ideas
-- Shape = Principle (loose, not bound). Entity = Essence/Dharma of Shape (instantiated).
-- Concurrency applies to Entities (Contained), not Shapes (Principle).
-- Six pillars: Entity, Context, Property, Morph, Relation, Shape (principle-level FormShape).
+Theory snapshot
+- Container (Principles, Qualitative/Quality: Pure Being)
+  - Shape → Being (principle, composable)
+  - Context → Existence (grounding principle, versioned, immune to Property variations)
+  - Morph → Being-for-self (principle of self-related unity/composition; non-concurrent)
+- Truth of Quality (Essence-plane: Contained/Appearance, Quantitative)
+  - Entity → Essence (determinate content)
+  - Property → Reflection (measure within a Context)
+  - Relation → Ground (necessary ties; Absolute Relations carry constraints; propagation runs over E/P/R only)
+- Truth of Essence (Concept-plane)
+  - Concept = Truth of Essence (unified determination)
+  - Judgment = Truth of Reflection (measured determination)
+  - Syllogism = Truth of Ground (mediating unity)
+  - Runtime note: Syllogism is realized via Absolute Relations and the FormProcessor’s composition/propagation over E/P/R — not by Morph itself. Morph remains a principle (Being-for-self) that shapes admissible constructions.
+
+Triad in action
+- Qualitative → Quantitative
+- Being → Essence → Concept/Judgment/Syllogism (truths)
+- Principle → Law
+- Pure (Container) → “Impure” with a second (Contained)
 
 Project structure
 - src/schema: canonical Zod schemas and helpers
@@ -17,54 +34,49 @@ Project structure
 - src/form: small services over schemas (engine ergonomics)
   - entity/service.ts, context/service.ts, property/service.ts
   - morph/service.ts, relation/service.ts, shape/service.ts
-- test/schema: schema tests (e.g., shape.test.ts)
-- test/service: happy-path service tests (entity/context/property/morph/relation/shape)
+- src/absolute: processor entry points (FormProcessor)
+- test/schema + test/service: happy-path suites
+- docs: ADRs, concepts, roadmap, and API (TypeDoc HTML)
 
-Naming policy
-- In schema: only theory-bearing files use Form* (form.ts, shape.ts). Others use descriptive names.
-- In form: public classes/services consistently use Form* naming in code, but filenames may be descriptive; import from the barrel when available.
+Services (Form layer)
+Common surface
+- on(kind, handler), get(id)
+- create, delete, describe, setCore, setState, patchState
+Events
+- *.created, *.core.set, *.state.set, *.state.patched, *.described, *.deleted
+- Relation-only: relation.endpoints.set, relation.direction.set
+Create signatures
+- Shape/Entity/Context/Morph: { type, name? }
+- Property: { type, name?, key, contextId }
+- Relation: { type, name?, kind, source:{id,type}, target:{id,type}, direction? }
+Persistence
+- Repo-first; in-memory fallback. To avoid API mismatches, updates may use delete+create.
 
-Install
-- Workspace install (from repo root):
-  - pnpm install
+Docs
+- API (HTML): docs/api/index.html
+- ADRs: docs/adr
+  - 0001 — Shape as Principle; Entity as Essence
+  - 0002 — Container vs. Contained (Context/Morph/Shape as Principles; E/P/R as Essence)
+  - 0003 — Absolute Relation and Backpropagation in FormProcessor
+  - 0004 — Kriya Triad: Principles (Being) and Contained (Appearance)
+- Concepts: docs/concepts
+  - absolute-form.md — E/R/G inside a fixed Context
+  - erg-in-context.md — E/R/G as the Context’s soul
+  - kriya-syllogism.md — Syllogism realized via Absolute Relations and FormProcessor
+- Roadmap: docs/ROADMAP.md
 
-Build, test, lint
-- Build this package:
+Build, test, docs
+- Build:
   - pnpm -C /home/pat/VSCode/organon --filter @organon/logic build
 - Test (Vitest):
   - pnpm -C /home/pat/VSCode/organon --filter @organon/logic test
-- Single test file:
-  - pnpm -C /home/pat/VSCode/organon --filter @organon/logic exec vitest run logic/test/service/entity.test.ts
-- Lint:
-  - pnpm -C /home/pat/VSCode/organon --filter @organon/logic lint
+- Generate API docs (HTML):
+  - pnpm dlx typedoc --tsconfig ./tsconfig.json \
+    --entryPoints "./src/schema/*.ts" "./src/form/**/*.ts" \
+    --exclude "**/*.test.ts" --readme ./README.md --out ./docs/api
+- Open API docs (Linux):
+  - xdg-open /home/pat/VSCode/organon/logic/docs/api/index.html
 
-Services (Form layer)
-Common surface:
-- on(kind, handler), get(id)
-- create, delete, describe, setCore, setState, patchState
-Events:
-- *.created, *.core.set, *.state.set, *.state.patched, *.described, *.deleted
-- Relation-only: relation.endpoints.set, relation.direction.set
-
-Create signatures:
-- Shape: { type, name? }
-- Entity/Context/Morph: { type, name? }
-- Property: { type, name?, key, contextId }
-- Relation: { type, name?, kind, source:{id,type}, target:{id,type}, direction? }
-
-Persistence
-- Repo-backed when provided, in-memory Map otherwise.
-- To avoid API mismatches across repos, services may persist via delete+create on updates.
-
-Schema usage
-- All writes validate via Zod (e.g., RelationSchema.parse(...)).
-- BaseState provides defaults (e.g., status, tags); tests assert partials instead of exact state equality.
-
-Docs
-- See docs/form-theory.md for theory overview.
-- See docs/services.md for service/event surface and flows.
-
-Roadmap
-- Finalize barrel exports and naming alignment.
-- Enhance processor integration with Form wrappers.
-- Expand tests with edge cases
+Notes
+- BaseState provides defaults; tests use partial assertions for state.
+- Repos vary; services validate via Zod and keep persistence simple.

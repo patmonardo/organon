@@ -58,6 +58,3 @@ export class FormProcessor {
     return assembleWorld(parsed);
   }
 }
-
-// Back-compat alias honoring “7th/Final”
-export const FinalProcessor = FormProcessor;

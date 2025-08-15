@@ -173,10 +173,11 @@ export class RelationService {
     if (this.repo) {
       const r: any = this.repo as any;
       const existing = await r.get(id);
-      if (existing && typeof r.delete === 'function') {
-        await r.delete(id);
+      if (existing) {
+        await r.update(id, () => doc);
+      } else {
+        await r.create(doc);
       }
-      await r.create(doc);
     } else {
       this.mem.set(id, doc);
     }
