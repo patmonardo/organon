@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { assembleWorld } from "../../src/absolute/world/assemble";
+import { assembleWorld } from "../../src/absolute/essence/world";
 
 function entity(id: string) {
   return {

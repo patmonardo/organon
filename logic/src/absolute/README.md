@@ -7,70 +7,59 @@ This folder hosts the FormProcessor: a small, deterministic pipeline that turns 
 
 ## Contracts
 
-- Inputs (`ProcessorInputs`):
-  - `entities`: system.Entity[]
-  - `relations`: system.Relation[]
-  - `properties`: system.Property[]
-  - `contexts`: system.Context[]
-  - `morphs`: system.Morph[] (present; derivations to come)
-- Output (`ProcessorSnapshot`):
-  - `world`: canonical `system.World` document (things + relation edges)
-  - `indexes`: minimal helper indexes:
-    - `byThing`: { thingId -> { contexts: string[], properties: Record<string, unknown> } }
-    - `byContext`: { contextId -> { things: string[] } }
-    - `edgesByKind`: { kind -> count }
+# Absolute — Processor layer
 
-All contracts are Zod schemas, so inputs are sanitized and defaults applied.
+This folder implements the Processor (Absolute) that orchestrates Logic stages
+and exposes a stable engine contract. It assembles a `World` snapshot from
+`ProcessorInputs`, runs optional reflection and derivation (ground), builds
+projections/indexes, computes control plans, and can commit derived results.
 
-## Pipeline (today)
+Quick guide
 
-1) Parse inputs with Zod (types + defaults)
-2) Assemble world
-   - Entities become Things (by id)
-   - Relations become World edges
-   - Dedupe edges by (kind, direction, endpoints)
-   - Stable ordering for determinism (sort by id/kind)
-3) Build minimal indexes
-   - Context membership per thing
-   - Property bag per thing (last write wins in input order)
-   - Edge counts by kind
-4) Emit snapshot (world + indexes)
+- API validation/persistence:
+  - Use Zod contracts in `core/contracts.ts` (e.g. `ProcessorInputs`,
+    `ProcessorSnapshot`) to validate inputs at the boundary.
 
-Everything is deterministic given the same inputs.
+- Processor internals:
+  - Use runtime-friendly shapes (see `essence/reflect.ts`: `ThingLike`,
+    `PropertyLike`) and the canonical `KriyaOptions` in
+    `core/kriya.ts`.
 
-## Philosophy (short)
+Pipeline (where things live)
 
-- Form is more fundamental than World; World emerges from Matter (things) shaped by Form (relations, properties, contexts).
-- The processor is the “7th” that unifies the six pillars (Entity/Context/Property/Morph/Relation/FormShape) into a coherent snapshot suitable for engines and UIs.
+- assembleWorld — `essence/world.ts`
+- projectContentFromContexts — `form/project.ts`
+- reflectStage (ThingLike/PropertyLike) — `essence/reflect.ts`
+- groundStage (derivation/fixpoint) — `essence/ground.ts`
+- orchestrator / runKriya — `core/orchestrator.ts`
+- StageFns (model/control/plan) helpers — `core/kriya.ts`
+- commitGroundResults (triad) — `essence/ground.ts`
 
-## Usage
+Import guidance (recommended)
 
-```ts
-import { FormProcessor } from "@organon/logic/src/processor";
-import { createEntity, createRelation } from "@organon/logic/src/schema";
+- At API boundaries (validators/persistence) import schema types:
+  - `import { ProcessorInputs } from './core/contracts';`
+  - `import type { Property } from '../../schema/property';`
 
-const p = new FormProcessor();
-const e1 = createEntity({ type: "system.Entity" });
-const e2 = createEntity({ type: "system.Entity" });
-const r = createRelation({
-  type: "system.Relation",
-  kind: "related_to",
-  source: { id: e1.shape.core.id, type: e1.shape.core.type },
-  target: { id: e2.shape.core.id, type: e2.shape.core.type },
-});
+- Inside processor stages import runtime aliases instead of schema types:
+  - `import type { ThingLike, PropertyLike } from './essence/reflect';`
+  - `import type { KriyaOptions } from './core/kriya';`
 
-const snapshot = p.compute({ entities: [e1, e2], relations: [r] });
-console.log(snapshot.world.shape.things.length); // 2
-```
+Tests and smoke harness
 
-## Next steps
+- Unit tests exist under `logic/test/absolute`.
+- A small smoke test `test/absolute/kriya-smoke.spec.ts` demonstrates
+  calling `runKriya` with a minimal input — useful when exploring the
+  processor locally.
 
-- Property projection improvements (type-aware, context-scoped bags)
-- Morph-derived relations/properties (derive pass)
-- Time/version horizons (multi-snapshot, diffs)
-- Event-bus integration for incremental updates
-- Stronger indexes (byKind -> edge lists, reverse maps)
-- Tests: stable ordering and index correctness
+Next steps
 
----
-Node/TS notes: NodeNext is used; import TS without extensions, emitted JS uses `.js`. Keep imports from the published barrels to avoid churn.
+1. Add stronger typing for `RuleSpec`/Morphs and remove `any` casts in
+   `essence/ground.ts` (medium effort).
+2. Add additional smoke fixtures that exercise concept-level drivers
+   (`concept/*`) to see dialectical flows end-to-end.
+
+Node/TS notes
+
+- NodeNext is used; TypeScript imports omit extensions in source. Keep
+  imports via barrels where convenient to avoid churn.

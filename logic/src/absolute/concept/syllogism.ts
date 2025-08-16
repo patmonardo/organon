@@ -1,4 +1,4 @@
-import type { ProcessorInputs } from "../contracts";
+import type { ProcessorInputs } from "../core/contracts";
 import type { WorldEdge } from "../../schema/world";
 
 // Classical valid moods (minimal set) by figure

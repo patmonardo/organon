@@ -1,4 +1,4 @@
-import type { ProcessorInputs } from "../contracts";
+import type { ProcessorInputs } from "./contracts";
 import type { WorldEdge } from "../../schema/world";
 
 const THING = "system.Thing";

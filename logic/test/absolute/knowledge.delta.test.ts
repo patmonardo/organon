@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { runKriya } from '../../src/absolute/kriya/orchestrator';
+import { runKriya } from '../../src/absolute/core/orchestrator';
 import type { Morph } from '../../src/schema/morph';
 
 describe('Knowledge delta', () => {

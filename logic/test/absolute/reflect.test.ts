@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { reflectStage } from '../../src/absolute/reflect';
+import { reflectStage } from '../../src/absolute/essence/reflect';
 
 describe('absolute/reflect — basic facets and signatures', () => {
   it('computes stable signatures and evidence for things and properties', async () => {

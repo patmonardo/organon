@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { groundToEssentialBridge } from '../../src/absolute/ground';
+import { groundToEssentialBridge } from '../../src/absolute/essence/ground';
 
 describe('Ground → Essential bridge (whole & parts)', () => {
   it('creates or marks an essential relation when ground aggregates parts', () => {

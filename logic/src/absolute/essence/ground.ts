@@ -1,8 +1,8 @@
-import type { Entity } from '../schema/entity';
-import type { Property } from '../schema/property';
-import type { Relation } from '../schema/relation';
-import type { Morph } from '../schema/morph';
-import type { KriyaOptions } from './kriya';
+import type { Entity } from '../../schema/entity';
+import type { Property } from '../../schema/property';
+import type { Relation } from '../../schema/relation';
+import type { Morph } from '../../schema/morph';
+import type { KriyaOptions } from '../core/kriya';
 
 // Local loose types to avoid friction between strict schema shapes and
 // runtime working objects created by the processor. These are intentionally
@@ -49,6 +49,11 @@ export async function groundStage(
   let iter = 0;
   let changed = true;
 
+  // accessors to handle schema-backed shapes and runtime objects
+  const getRelationId = (r: LooseRelation) => (r && ((r as any).id ?? (r as any).shape?.core?.id)) as string | undefined;
+  const getPropertyId = (p: LooseProperty) => (p && ((p as any).id ?? (p as any).shape?.core?.id)) as string | undefined;
+  const getPropertyEntityId = (p: LooseProperty) => (p && ((p as any).entityId ?? (p as any).entity?.id ?? (p as any).entity)) as string | undefined;
+
   while (changed && iter < maxIters) {
     iter += 1;
     changed = false;
@@ -64,7 +69,10 @@ export async function groundStage(
 
       // merge relations: add new ones only
       for (const r of derivedRelations) {
-        const exists = working.relations.some((ex) => (ex as any).id === (r as any).id);
+  const rid = ((r as any)?.id ?? (r as any)?.shape?.core?.id) as string | undefined;
+        const exists = working.relations.some(
+          (ex) => getRelationId(ex) === rid,
+        );
         if (!exists) {
           working.relations.push(r);
           changed = true;
@@ -73,9 +81,12 @@ export async function groundStage(
 
       // merge properties: add or replace based on id (or entityId+key)
       for (const p of derivedProperties) {
-        const idx = working.properties.findIndex((ex) =>
-          (ex as any).id === (p as any).id || ((ex as any).entityId === (p as any).entityId && (ex as any).key === (p as any).key),
-        );
+  const pid = ((p as any)?.id ?? (p as any)?.shape?.core?.id) as string | undefined;
+  const pEntityId = (p as any)?.entityId ?? (p as any)?.entity?.id ?? (p as any)?.entity;
+  const pkey = (p as any)?.key;
+        const idx = working.properties.findIndex((ex) => {
+          return getPropertyId(ex) === pid || (getPropertyEntityId(ex) === pEntityId && (ex as any).key === pkey);
+        });
         if (idx === -1) {
           working.properties.push(p);
           changed = true;
@@ -102,21 +113,34 @@ export async function groundStage(
  * via `particularityOf`. Throws an Error in dev/test if violated.
  */
 export function assertEssentialHasAbsolute(relations: LooseRelation[]) {
+  const violations: Array<{ rel: LooseRelation; reason: string }> = [];
   for (const r of relations) {
-    if (isRelationKindEssential(r)) {
-      const absId = (r as any).particularityOf as string | undefined;
-      if (!absId) {
-        throw new Error(`Invariant violated: essential relation ${(r as any).id} missing particularityOf -> absolute id`);
-      }
-      const abs = relations.find((x) => (x as any).id === absId);
-      if (!abs) {
-        throw new Error(`Invariant violated: essential relation ${(r as any).id} references missing absolute ${absId}`);
-      }
-      if ((abs as any).kind !== 'absolute') {
-        throw new Error(`Invariant violated: referenced relation ${absId} is not kind 'absolute'`);
-      }
+    if (!isRelationKindEssential(r)) continue;
+    const absId = (r as LooseRelation).particularityOf as string | undefined;
+    if (!absId) {
+      violations.push({ rel: r, reason: 'missing particularityOf' });
+      continue;
+    }
+    const abs = relations.find((x) => (x as LooseRelation).id === absId);
+    if (!abs) {
+      violations.push({ rel: r, reason: `references missing absolute ${absId}` });
+      continue;
+    }
+    if ((abs as LooseRelation).kind !== 'absolute') {
+      violations.push({ rel: r, reason: `referenced relation ${absId} is not kind 'absolute'` });
     }
   }
+
+  if (violations.length === 0) return true;
+
+  const msg = `Invariant: ${violations.length} essential relation(s) with absolute-reference issues`;
+  if (process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'development') {
+  throw new Error(msg + ': ' + JSON.stringify(violations.map((v) => ({ id: (v.rel as LooseRelation).id, reason: v.reason }))));
+  }
+  // In production don't throw; log and return false so callers may degrade gracefully
+  // eslint-disable-next-line no-console
+  console.warn('[ground.assert] ' + msg, violations.map((v) => ({ id: (v.rel as LooseRelation).id, reason: v.reason })));
+  return false;
 }
 
 /**
@@ -125,7 +149,7 @@ export function assertEssentialHasAbsolute(relations: LooseRelation[]) {
  * to refer to EssentialRelation in runtime checks and invariants.
  */
 export function isRelationKindEssential(rel: LooseRelation) {
-  const k = (rel as any)?.kind;
+  const k = (rel as LooseRelation)?.kind;
   return k === 'essential' || k === 'relation';
 }
 
@@ -140,19 +164,22 @@ export function assertRelationHasAbsolute(relations: LooseRelation[]) {
 /**
  * Helper: find the Absolute container relation for a given essential relation id
  */
-export function findAbsoluteFor(relationId: string, relations: LooseRelation[]) {
-  const rel = relations.find((r) => (r as any).id === relationId);
+export function findAbsoluteFor(
+  relationId: string,
+  relations: LooseRelation[],
+) {
+  const rel = relations.find((r) => (r as LooseRelation).id === relationId);
   if (!rel) return undefined;
-  const absId = (rel as any).particularityOf as string | undefined;
+  const absId = (rel as LooseRelation).particularityOf as string | undefined;
   if (!absId) return undefined;
-  return relations.find((r) => (r as any).id === absId);
+  return relations.find((r) => (r as LooseRelation).id === absId);
 }
 
 /**
  * Helper: list particular (essential) relations for a given Absolute id
  */
 export function findParticularsFor(absId: string, relations: LooseRelation[]) {
-  return relations.filter((r) => (r as any).particularityOf === absId);
+  return relations.filter((r) => (r as LooseRelation).particularityOf === absId);
 }
 
 /**
@@ -177,7 +204,11 @@ export function groundToEssentialBridge(
   const sig = `${ground.type}:${ground.sourceId}->${ground.targetId}`;
 
   // find existing candidate with matching signature
-  let match = candidates.find((c) => `${(c as any).type}:${(c as any).sourceId}->${(c as any).targetId}` === sig);
+  let match = candidates.find(
+    (c) =>
+      `${(c as any).type}:${(c as any).sourceId}->${(c as any).targetId}` ===
+      sig,
+  );
 
   const confidence = Math.min(1, confidenceBase + clusterSize / 10);
 
@@ -411,18 +442,21 @@ function selectTargetIds(
  * applyMorphRule
  * - Interpret a Morph.ruleSpec (now richer) against the working graph and return derived items.
  */
-async function applyMorphRule(
+export async function applyMorphRule(
   morph: Morph,
   working: WorkingGraph,
   _opts?: KriyaOptions,
-): Promise<{ derivedRelations: LooseRelation[]; derivedProperties: LooseProperty[] }> {
+): Promise<{
+  derivedRelations: LooseRelation[];
+  derivedProperties: LooseProperty[];
+}> {
   const spec = (morph as any)?.ruleSpec as RuleSpec | undefined;
   if (!spec) return { derivedRelations: [], derivedProperties: [] };
 
   const derivedRelations: Relation[] = [];
   const derivedProperties: Property[] = [];
 
-  const { byEntity, propsByKey } = indexPropsByEntity(working);
+  const { propsByKey } = indexPropsByEntity(working);
 
   // Evaluate condition helpers
   const conditionMatchesEntity = (entityId: string): boolean => {
@@ -443,38 +477,46 @@ async function applyMorphRule(
   // Determine candidate sources
   let sourceIds: string[] = [];
   if (spec.source) {
-    if ('byId' in spec.source) sourceIds = [spec.source.byId];
-    else if ('byShape' in spec.source)
+    const s = spec.source as any;
+    if ('byId' in s) sourceIds = [s.byId];
+    else if ('byShape' in s)
       sourceIds = working.entities
-        .filter((e) => (e as any).shape?.core?.type === spec.source.byShape)
+        .filter((e) => (e as any).shape?.core?.type === s.byShape)
         .map((e) => e.id);
-    else if ('byTag' in spec.source)
+    else if ('byTag' in s)
       sourceIds = working.entities
         .filter((e) =>
-          ((e as any).shape?.state?.tags ?? []).includes(spec.source.byTag),
+          ((e as any).shape?.state?.tags ?? []).includes(s.byTag),
         )
         .map((e) => e.id);
-    else if ('all' in spec.source && spec.source.all)
-      sourceIds = working.entities.map((e) => e.id);
+    else if ('all' in s && s.all) sourceIds = working.entities.map((e) => e.id);
   } else {
     sourceIds = working.entities.map((e) => e.id);
   }
 
   // Iterate candidate sources and apply effects
   for (const srcId of sourceIds) {
+    // debug: log evaluation inputs for this morph/source
+    try {
+      // noop
+    } catch (e) {}
     if (!conditionMatchesEntity(srcId)) continue;
 
     const targetIds = selectTargetIds(spec.target, working);
     for (const tgtId of targetIds) {
+        try {
+          // noop
+        } catch (e) {}
       if (spec.kind === 'deriveRelation') {
-        const relId = `${spec.id ?? morph.id}:${srcId}->${tgtId}`;
+  const relId = `${(spec as any).id ?? (morph as any).id}:${srcId}->${tgtId}`;
         // idempotence guard
         if (spec.idempotent) {
           const exists = working.relations.some((r) => r.id === relId);
           if (exists) continue;
         }
         const triggerProp = working.properties.find(
-          (pp) => pp.entityId === srcId && pp.key === (spec.condition as any)?.key,
+          (pp) =>
+            pp.entityId === srcId && pp.key === (spec.condition as any)?.key,
         );
 
         const rel: any = {
@@ -483,10 +525,10 @@ async function applyMorphRule(
           targetId: tgtId,
           type: spec.relationType,
           kind: 'essential',
-          ruleId: spec.id ?? morph.id,
+          ruleId: (spec as any).id ?? (morph as any).id,
           // structured provenance with metaphysical annotations
           provenance: {
-            ruleId: spec.id ?? morph.id,
+            ruleId: (spec as any).id ?? (morph as any).id,
             source: 'ground',
             viaTriggerPropertyId: triggerProp?.id ?? undefined,
             timestamp: new Date().toISOString(),
@@ -506,18 +548,18 @@ async function applyMorphRule(
         // We represent this by creating an additional 'absolute' relation and
         // linking the essential relation as its particularity. No schema change
         // is performed; this is additional runtime metadata on derived items.
-  const absId = `${relId}:absolute`;
+        const absId = `${relId}:absolute`;
         const absRel: any = {
           id: absId,
           // keep same endpoints for the Absolute container
           sourceId: srcId,
           targetId: tgtId,
           // mark it as an absolute container; type names are advisory
-          type: `${spec.relationType}:absolute`,
+           type: `${(spec as any).relationType}:absolute`,
           kind: 'absolute',
-          ruleId: spec.id ?? morph.id,
+           ruleId: (spec as any).id ?? (morph as any).id,
           provenance: {
-            ruleId: spec.id ?? morph.id,
+            ruleId: (spec as any).id ?? (morph as any).id,
             source: 'ground',
             containsParticularityId: relId,
             timestamp: new Date().toISOString(),
@@ -531,34 +573,55 @@ async function applyMorphRule(
           // inherit context/provenance from triggering property when available
           contextId: triggerProp?.contextId ?? null,
           contextVersion: triggerProp?.contextVersion ?? null,
-          directed: spec.directed ?? true,
+          directed: (spec as any).directed ?? true,
         };
 
         // link the essential relation back to its Absolute container
         rel.particularityOf = absId;
 
-  // Reflection metadata: tag Absolute as vicara (reflection/universal)
-  // and mark the Essential relation as the particular (skill/doing).
-  absRel.meta = { vicara: true, dialectic: 'absolute' };
-  rel.meta = { vicara: false, dialectic: 'particular' };
+        // Reflection metadata: tag Absolute as vicara (reflection/universal)
+        // and mark the Essential relation as the particular (skill/doing).
+        absRel.meta = { vicara: true, dialectic: 'absolute' };
+        rel.meta = { vicara: false, dialectic: 'particular' };
+
+        // Attach advisory spectrum metadata when available from reflectStage
+        try {
+          const refl: any = (_opts as any)?.reflectResult;
+          if (refl && refl.thingFacets) {
+            const tf = refl.thingFacets[srcId];
+            if (tf && (tf as any).spectrum) {
+              rel.meta = { ...(rel.meta ?? {}), spectrum: (tf as any).spectrum };
+              absRel.meta = { ...(absRel.meta ?? {}), spectrum: (tf as any).spectrum };
+            }
+          }
+        } catch (err) {
+          // non-fatal: spectrum is advisory
+        }
 
         derivedRelations.push(rel as Relation);
         derivedRelations.push(absRel as Relation);
+        try {
+          // noop
+        } catch (e) {}
 
-        if (spec.setProperty) {
-          const propId = `${relId}:prop:${spec.setProperty.key}`;
+        const sp = (spec as any).setProperty;
+        if (sp) {
+          const propId = `${relId}:prop:${sp.key}`;
           // derive property inheriting context/provenance from trigger (if any)
-          const trigger = working.properties.find((pp) => pp.entityId === srcId && pp.key === (spec.condition as any)?.key);
+          const trigger = working.properties.find(
+            (pp) =>
+              pp.entityId === srcId && pp.key === (spec.condition as any)?.key,
+          );
           const newProp: any = {
             id: propId,
             entityId: tgtId,
-            key: spec.setProperty.key,
-            value: spec.setProperty.value,
+            key: sp.key,
+            value: sp.value,
             contextId: trigger?.contextId ?? null,
             contextVersion: trigger?.contextVersion ?? null,
-            status: spec.setProperty.status ?? 'derived',
+            status: sp.status ?? 'derived',
             provenance: {
-              ruleId: spec.id ?? morph.id,
+              ruleId: (spec as any).id ?? (morph as any).id,
               source: 'ground',
               viaRelation: relId,
               viaTriggerPropertyId: trigger?.id ?? undefined,
@@ -574,8 +637,8 @@ async function applyMorphRule(
           derivedProperties.push(newProp as Property);
         }
       } else if (spec.kind === 'deriveProperty') {
-        const propId = `${spec.id ?? morph.id}:${tgtId}:prop:${
-          spec.setProperty.key
+        const propId = `${(spec as any).id ?? (morph as any).id}:${tgtId}:prop:${
+          (spec as any).setProperty.key
         }`;
         if (spec.idempotent) {
           const exists = working.properties.some(
@@ -595,9 +658,9 @@ async function applyMorphRule(
           value: spec.setProperty.value,
           contextId: null,
           contextVersion: null,
-          status: spec.setProperty.status ?? 'derived',
-          provenance: {
-            ruleId: spec.id ?? morph.id,
+            status: (spec as any).setProperty.status ?? 'derived',
+            provenance: {
+              ruleId: (spec as any).id ?? (morph as any).id,
             source: 'ground',
             timestamp: new Date().toISOString(),
             metaphysics: {

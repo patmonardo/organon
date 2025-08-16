@@ -1,11 +1,11 @@
-import type { Shape } from "../schema/shape";
-import type { Context } from "../schema/context";
-import type { Morph } from "../schema/morph";
-import type { Entity } from "../schema/entity";
-import type { Property } from "../schema/property";
-import type { Property as ReflectProperty, Thing as ReflectThing, ReflectResult } from "./reflect";
-import type { KriyaActionResult, Action } from "./action";
-import type { Relation } from "../schema/relation";
+import type { Shape } from "../../schema/shape";
+import type { Context } from "../../schema/context";
+import type { Morph } from "../../schema/morph";
+import type { Entity } from "../../schema/entity";
+import type { Property } from "../../schema/property";
+import type { ReflectResult, ThingLike, PropertyLike } from "../essence/reflect";
+import type { KriyaActionResult } from "./action";
+import type { Relation } from "../../schema/relation";
 
 export type Principles = {
   shapes: Shape[];
@@ -34,22 +34,28 @@ export type Work = {
 };
 
 export type KriyaOptions = {
+  // Ground / runtime controls
   fixpointMaxIters?: number;
   budgetMs?: number;
   // pass-through options for reflect stage (e.g. { contextId })
   reflectOpts?: Record<string, unknown>;
+  // Orchestrator / processor controls
+  projectContent?: boolean;
+  contentIndexSource?: 'inputs' | 'projected' | 'both';
+  deriveSyllogistic?: boolean;
+  // persistence commit triad: { relation, property, bus }
+  triad?: any;
+  commitGround?: boolean;
+  // optional action thresholds passed through to action stage
+  actionThreshold?: number;
+  // extendable for future flags
+  [key: string]: unknown;
 };
 
-export type KriyaResult = {
-  graph: EssenceGraph;
-  projections: Projections;
-  controls: Controls;
-  work: Work;
-  // optional reflect results attached when opts.reflect is true and fns.reflect is provided
-  reflect?: ReflectResult;
-  // optional action results attached when fns.action is provided
-  action?: KriyaActionResult;
-};
+// Note: the public KriyaResult (orchestrator-level result shape) is defined in
+// `core/orchestrator.ts`. `runCycle` returns an internal cycle result that is
+// compatible with that shape but we avoid exporting the same symbol here to
+// prevent re-export collisions.
 
 export type StageFns = {
   seed: (p: Principles) => Promise<Pick<EssenceGraph, "entities">>;
@@ -59,8 +65,8 @@ export type StageFns = {
   ) => Promise<Pick<EssenceGraph, "properties">>;
   // optional reflect stage: inspects seeded entities + contextualized properties and returns reflective facets/signatures
   reflect?: (
-    things: ReflectThing[],
-    properties: ReflectProperty[],
+    things: ThingLike[],
+    properties: PropertyLike[],
     opts?: KriyaOptions
   ) => Promise<ReflectResult>;
   ground: (
@@ -79,11 +85,20 @@ export type StageFns = {
   plan: (ctrl: Controls) => Promise<Work>;
 };
 
+export type CycleResult = {
+  graph: EssenceGraph;
+  projections: Projections;
+  controls: Controls;
+  work: Work;
+  reflect?: ReflectResult;
+  action?: KriyaActionResult;
+};
+
 export async function runCycle(
   p: Principles,
   fns: StageFns,
   opts?: KriyaOptions
-): Promise<KriyaResult> {
+): Promise<CycleResult> {
   // Ring 1 — Essence
   const seeded = await fns.seed(p); // Shape → Entity
   const ctxed = await fns.contextualize(p, seeded); // Context → Property
@@ -112,7 +127,10 @@ export async function runCycle(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     reflectResult = await fns.reflect!(things as any, props as any, opts?.reflectOpts as any);
   }
-  const grounded = await fns.ground(p, { ...seeded, ...ctxed }, opts); // Morph → Relation
+  // Pass reflect result to ground as an advisory field on opts so groundStage
+  // can consult spectrum/advice without changing public APIs.
+  const groundOpts = { ...(opts as any), reflectResult } as any;
+  const grounded = await fns.ground(p, { ...seeded, ...ctxed }, groundOpts); // Morph → Relation
 
   const graph: EssenceGraph = {
     entities: seeded.entities,

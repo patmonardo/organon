@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { groundStage } from '../../src/absolute/ground';
+import { groundStage } from '../../src/absolute/essence/ground';
 
 describe('Ground — metaphysics provenance', () => {
   it('produces Absolute and Essential relations with metaphysics provenance and links', async () => {

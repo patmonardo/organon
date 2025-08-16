@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { groundStage } from '../../src/absolute/ground';
+import { groundStage } from '../../src/absolute/essence/ground';
 import type { Morph } from '../../src/schema/morph';
 
 // Minimal entities/properties as plain objects to drive groundStage

@@ -1,15 +1,15 @@
 import { z } from 'zod';
-import { EntitySchema } from '../schema/entity';
-import { RelationSchema } from '../schema/relation';
-import { PropertySchema } from '../schema/property';
-import { ContextSchema } from '../schema/context';
-import { MorphSchema } from '../schema/morph';
-import { WorldSchema } from '../schema/world';
-import { ShapeSchema } from '../schema/shape';
-import { ContentSchema } from '../schema/content';
-import { ConceptSchema } from '../schema/concept';
-import { JudgmentSchema } from '../schema/judgment';
-import { SyllogismSchema } from '../schema/syllogism';
+import { EntitySchema } from '../../schema/entity';
+import { RelationSchema } from '../../schema/relation';
+import { PropertySchema } from '../../schema/property';
+import { ContextSchema } from '../../schema/context';
+import { MorphSchema } from '../../schema/morph';
+import { WorldSchema } from '../../schema/world';
+import { ShapeSchema } from '../../schema/shape';
+import { ContentSchema } from '../../schema/content';
+import { ConceptSchema } from '../../schema/concept';
+import { JudgmentSchema } from '../../schema/judgment';
+import { SyllogismSchema } from '../../schema/syllogism';
 
 // Inputs accepted by the Form Processor. Keep defaults for incremental adoption.
 export const ProcessorInputs = z.object({

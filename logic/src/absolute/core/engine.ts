@@ -3,12 +3,9 @@ import {
   ProcessorSnapshot as SnapshotSchema,
 } from './contracts';
 import type { ProcessorInputs, ProcessorSnapshot } from './contracts';
-import { assembleWorld } from './world/assemble';
-import {
-  runKriya,
-  type KriyaOptions,
-  type KriyaResult,
-} from './kriya/orchestrator';
+import { assembleWorld } from '../essence/world';
+import { runKriya, type KriyaResult } from './orchestrator';
+import type { KriyaOptions } from './kriya';
 
 export type ProcessorRunOptions = KriyaOptions;
 

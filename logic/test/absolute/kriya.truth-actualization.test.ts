@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { runKriya } from '../../src/absolute/kriya/orchestrator';
+import { runKriya } from '../../src/absolute/core';
 import type { Morph } from '../../src/schema/morph';
 
 describe('Kriya — truth actualization', () => {

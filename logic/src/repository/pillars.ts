@@ -6,12 +6,7 @@ import {
   PropertySchema,
   MorphSchema,
   RelationSchema,
-  type Shape,
-  type Entity,
-  type Context,
-  type Property,
-  type Morph,
-  type Relation,
+
 } from "../schema";
 
 export const Repos = {
@@ -22,5 +17,3 @@ export const Repos = {
   morph: () => makeInMemoryRepository(MorphSchema),
   relation: () => makeInMemoryRepository(RelationSchema),
 };
-
-export type { Shape, Entity, Context, Property, Morph, Relation };

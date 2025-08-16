@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { runCycle, type StageFns, type Principles } from "../../src/absolute/kriya";
+import { runCycle, type StageFns, type Principles } from "../../src/absolute/core";
 import type { Entity } from "../../src/schema/entity";
 import type { Property } from "../../src/schema/property";
 import type { Relation } from "../../src/schema/relation";

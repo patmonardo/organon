@@ -1,5 +1,5 @@
 import { createContent, type Content, type ContentKind } from "../../schema/content";
-import type { ProcessorInputs } from "../contracts";
+import type { ProcessorInputs } from "../core/contracts";
 
 /**
  * Deterministic Content projection from Contexts:
