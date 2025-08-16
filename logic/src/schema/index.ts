@@ -10,6 +10,10 @@ export * from "./property";
 export * from "./morph";
 export * from "./relation";
 
+// Ground and Condition (metaphysical scaffolding)
+export * from "./ground";
+export * from "./condition";
+
 // Bridge (Form + Matter → Content)
 export * from "./content";
 
