@@ -3,7 +3,15 @@ import type { Context } from "../../schema/context";
 import type { Morph } from "../../schema/morph";
 import type { Entity } from "../../schema/entity";
 import type { Property } from "../../schema/property";
-import type { ReflectResult, ThingLike, PropertyLike } from "../essence/reflect";
+// reflect.ts no longer exports these types; declare local types compatible with reflectStage output
+type ThingLike = { id: string; type?: string; essence?: any; properties?: unknown };
+type PropertyLike = { id: string; entity?: { id?: string; type?: string } | string; key?: string; value?: unknown };
+type ReflectResult = {
+  thingFacets: Record<string, unknown>;
+  propertyFacets?: Record<string, unknown> | undefined;
+  signatures: Record<string, any> | undefined;
+  evidence: string[];
+};
 import type { KriyaActionResult } from "./action";
 import type { Relation } from "../../schema/relation";
 

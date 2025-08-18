@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { FormProperty } from "../../src/form/property/property";
 import { createEntity, createEntityRef } from "../../src/schema/entity";
 
-describe("FormProperty (wrapper)", () => {
+describe("FormProperty (principle)", () => {
   it("creates with defaults", () => {
     const p = FormProperty.create({
       type: "system.Property",

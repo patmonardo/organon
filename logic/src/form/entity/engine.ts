@@ -8,6 +8,7 @@ import {
   createEntity,
   updateEntity,
 } from '../../schema/entity';
+import { schemas } from '../../absolute/essence';
 
 // Typed command union (unified verbs)
 type EntityCreateCmd = {
@@ -290,5 +291,58 @@ export class EntityEngine {
       default:
         throw new Error(`unsupported command: ${(cmd as Command).kind}`);
     }
+  }
+
+  // ADR-0005: EntityEngine interface — process/commit
+  async process(
+    entities: Array<schemas.ActiveEntity>,
+    _particulars: any[] = [],
+    _context?: any,
+  ): Promise<{ actions: any[]; snapshot: { count: number } }> {
+    const list = schemas.parseActiveEntities(entities);
+    const actions: any[] = [];
+    for (const e of list) {
+      if (e.revoked === true) {
+        actions.push({ type: 'entity.delete', id: e.id });
+        continue;
+      }
+      actions.push({
+        type: 'entity.upsert',
+        id: e.id,
+        entityType: e.entityType,
+        labels: e.labels,
+      });
+    }
+    return { actions, snapshot: { count: list.length } };
+  }
+
+  async commit(actions: any[], _snapshot: { count: number }) {
+    const events: Event[] = [];
+    for (const a of actions) {
+      if (a.type === 'entity.delete') {
+        const [evt] = await this.handle({
+          kind: 'entity.delete',
+          payload: { id: a.id },
+        } as any);
+        events.push(evt);
+      } else if (a.type === 'entity.upsert') {
+        const id = a.id as string;
+        const existing = await this.repo.get(id);
+        if (!existing) {
+          const [evt] = await this.handle({
+            kind: 'entity.create',
+            payload: { id, type: a.entityType },
+          } as any);
+          events.push(evt);
+        } else {
+          const [evt] = await this.handle({
+            kind: 'entity.setCore',
+            payload: { id, type: a.entityType },
+          } as any);
+          events.push(evt);
+        }
+      }
+    }
+    return { success: true, errors: [], events } as any;
   }
 }

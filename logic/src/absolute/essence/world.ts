@@ -5,6 +5,8 @@ import {
   type WorldEdge,
 } from '../../schema/world';
 import type { ProcessorInputs } from '../core/contracts';
+import crypto from 'crypto';
+import { schemas } from '.';
 
 const THING = 'system.Thing';
 type ThingRef = { id: string; type: typeof THING };
@@ -150,3 +152,93 @@ export function indexContent(input: ProcessorInputs): {
   }
   return { subtleWorldTotal, grossByThing };
 }
+
+// --- Property analytics (mates with reflect.ts property facet logic) ---
+
+export type WorldProperty = {
+  id: string;
+  entity?: { id: string } | string;
+  key?: string;
+  value?: unknown;
+} & Record<string, unknown>;
+
+export type WorldPropertyFacet = {
+  positing: Record<string, unknown>;
+  external: Record<string, unknown>;
+  determining: Record<string, unknown>;
+  evidence: string[];
+};
+
+function stableHash(inputs: string[]): string {
+  const data = inputs.sort().join('|');
+  return crypto.createHash('sha1').update(data).digest('hex');
+}
+
+/**
+ * Compute world-scope property facets and stable signatures.
+ * Mirrors reflect.ts property facet/signature logic (no spectrum).
+ */
+export function computePropertyFacets(properties: WorldProperty[] = []): {
+  propertyFacets: Record<string, WorldPropertyFacet>;
+  signatures: Record<string, string>;
+} {
+  const propertyFacets: Record<string, WorldPropertyFacet> = {};
+  const signatures: Record<string, string> = {};
+  for (const p of properties) {
+    const pid = String((p as any).id);
+    const pkey = (p as any).key ?? '';
+    const pEntity = (p as any).entity;
+    const pEntityId = typeof pEntity === 'string' ? pEntity : pEntity && (pEntity as any).id;
+    const positing = { key: pkey, entity: pEntity };
+    const external = { valueType: typeof (p as any).value };
+    const determining = { expressive: typeof (p as any).value !== 'undefined' };
+    propertyFacets[pid] = { positing, external, determining, evidence: [] };
+    const sig = stableHash([pid, String(pEntityId), String(pkey), String((p as any).value)]);
+    signatures[pid] = sig;
+    propertyFacets[pid].evidence.push(`sig:${sig}`);
+  }
+  return { propertyFacets, signatures };
+}
+
+// World -> ActiveProperty driver (first pass)
+// Produces ActiveProperty instances from world-scoped property-like inputs.
+
+export function toActiveProperty(input: unknown): schemas.ActiveProperty {
+  // Validate via schema (will throw on invalid)
+  return schemas.ActivePropertySchema.parse(input ?? {});
+}
+
+export function fromWorldProperty(
+  p: WorldProperty,
+): schemas.ActiveProperty {
+  const subjectId = typeof p.entity === 'string' ? p.entity : p.entity?.id;
+  const id = String(p.id ?? `${subjectId}:${p.key}`);
+  // Attach provenance using computed facets/signature for traceability
+  const { propertyFacets, signatures } = computePropertyFacets([p]);
+  const prov = {
+    world: true,
+    signature: signatures[id] ?? signatures[String(p.id)] ?? null,
+    facets: propertyFacets[id] ?? undefined,
+  } as any;
+  const candidate = {
+    id,
+    subjectId: String(subjectId ?? 'unknown'),
+    key: String(p.key ?? 'unknown'),
+    value: p.value,
+    dtype:
+      typeof p.value === 'string'
+        ? 'string'
+        : typeof p.value === 'number'
+        ? 'number'
+        : undefined,
+    active: true,
+    provenance: prov,
+  } as any;
+  return schemas.ActivePropertySchema.parse(candidate);
+}
+
+export function batchFromWorld(properties: WorldProperty[] = []) {
+  return properties.map(fromWorldProperty);
+}
+
+export default { toActiveProperty, fromWorldProperty, batchFromWorld };

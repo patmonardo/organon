@@ -5,12 +5,8 @@ import { deriveSyllogisticEdges } from '../concept/syllogism';
 import { indexContent } from '../essence/world';
 import type { Content } from '../../schema/content';
 import type { World } from '../../schema/world';
-import {
-  groundStage,
-  commitGroundResults,
-  type GroundResult,
-  isRelationKindEssential,
-} from '../essence/ground';
+import { groundStage, commitGroundResults, type GroundResult } from '../essence/ground';
+import { isRelationKindEssential } from '../essence/relation';
 import type { KriyaOptions } from './kriya';
 import { classifyTruthOfRelation } from './qualquant';
 import { computeKnowledgeDelta, type KnowledgeDelta } from './knowledge';

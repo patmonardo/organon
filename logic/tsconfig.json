@@ -124,7 +124,7 @@
     "src/repository/pillars.ts",
     "src/repository/repo.ts",
     "src/repository/index.ts",
-    "src/absolute/**/*",
+    "src/absolute/**/*", "test/form/morph/expand.cmd.ts", "test/form/morph/extract.cmd.ts", "test/form/morph/filter.cmd.ts", "test/form/morph/form.cmd.ts", "test/form/morph/form.test.ts", "test/form/morph/format.cmd.ts", "test/form/morph/groups.cmd.ts", "test/form/morph/pipeline.cmd.ts", "test/form/morph/section.cmd.ts", "test/form/morph/style.cmd.ts",
     // "src/**/*"
   ],
   "exclude": [

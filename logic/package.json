@@ -8,9 +8,11 @@
     "clean": "rm -rf dist node_modules",
     "dev": "tsc --watch",
     "d": "tsc --watch",
-    "test": "vitest",
+  "test": "vitest run",
     "test:watch": "vitest --watch",
     "test:ui": "vitest --ui",
+  "test:ci": "vitest run --reporter=dot",
+  "demo": "vitest run test/demo/form-processing.demo.test.ts -- --run --reporter=dot --watch=false",
     "lint": "eslint . --cache",
     "format": "prettier --write \"**/*.{ts,js,md,json,yml,yaml}\" --ignore-path .gitignore",
     "docs:api": "typedoc --tsconfig ./tsconfig.json --entryPoints \"./src/schema/*.ts\" \"./src/form/**/*.ts\" --exclude \"**/*.test.ts\" --readme ./README.md --out ./docs/api"

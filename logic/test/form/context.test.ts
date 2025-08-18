@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { FormContext } from '../../src/form/context/context';
 import { createEntity, createEntityRef } from '../../src/schema/entity';
 
-describe('FormContext (wrapper)', () => {
+describe('FormContext (principle)', () => {
   it('creates with defaults', () => {
     const ctx = FormContext.create({ type: 'system.Context', name: 'World' });
     expect(ctx.id).toBeTruthy();

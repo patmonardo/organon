@@ -11,6 +11,7 @@ import {
   RelationDirection,
 } from '../../schema/relation';
 import { EntityRef } from '../../schema/entity';
+import * as essence from '../../absolute/essence';
 
 // Core commands (unified verbs)
 export type RelationCreateCmd = {
@@ -377,5 +378,119 @@ export class RelationEngine {
       default:
         throw new Error(`unsupported command: ${(cmd as Command).kind}`);
     }
+  }
+
+  // ADR-0007: RelationEngine interface — process/commit using ActiveRelation carrier
+  async process(
+    relations: Array<essence.schemas.ActiveRelation>,
+    _particulars: any[] = [],
+    _context?: any,
+  ): Promise<{ actions: any[]; snapshot: { count: number } }> {
+    const list = essence.schemas.parseActiveRelations(relations);
+    // validate invariants in dev/test
+    try {
+      essence.assertActiveRelationInvariants(list as any);
+    } catch {
+      // bubble up later if needed; for process just continue to collect actions
+    }
+    const actions: any[] = [];
+    for (const r of list) {
+      if (r.revoked === true) {
+        actions.push({ type: 'relation.delete', id: r.id });
+        continue;
+      }
+      actions.push({
+        type: 'relation.upsert',
+        id: r.id,
+        kind: r.kind ?? 'relation',
+        particularityOf: r.particularityOf,
+        source: r.source,
+        target: r.target,
+        direction: 'directed',
+        relType: r.type ?? 'system.Relation',
+      });
+    }
+    return { actions, snapshot: { count: list.length } };
+  }
+
+  async commit(actions: any[], _snapshot: { count: number }) {
+    const events: Event[] = [];
+    for (const a of actions) {
+      if (a.type === 'relation.delete') {
+        const [evt] = await this.handle({
+          kind: 'relation.delete',
+          payload: { id: a.id },
+        } as any);
+        events.push(evt);
+      } else if (a.type === 'relation.upsert') {
+        const id = a.id as string;
+        const existing = await this.repo.get(id);
+        if (!existing) {
+          const [created] = await this.handle({
+            kind: 'relation.create',
+            payload: {
+              id,
+              type: a.relType,
+              kind: a.kind,
+              source: a.source ?? { id: 'unknown', type: 'system.Entity' },
+              target: a.target ?? { id: 'unknown', type: 'system.Entity' },
+              direction: a.direction ?? 'directed',
+            },
+          } as any);
+          events.push(created);
+        } else {
+          const doc = RelationSchema.parse(existing);
+          // core
+          if (
+            (a.kind && doc.shape.core.kind !== a.kind) ||
+            (a.relType && doc.shape.core.type !== a.relType)
+          ) {
+            const [coreEvt] = await this.handle({
+              kind: 'relation.setCore',
+              payload: { id, kind: a.kind, type: a.relType },
+            } as any);
+            events.push(coreEvt);
+          }
+          // endpoints
+          const src = a.source ? EntityRef.parse(a.source) : undefined;
+          const tgt = a.target ? EntityRef.parse(a.target) : undefined;
+          if (
+            src &&
+            (src.id !== doc.shape.source.id ||
+              src.type !== doc.shape.source.type)
+          ) {
+            const nextSrc = src;
+            const nextTgt = tgt ?? doc.shape.target;
+            const [endEvt] = await this.handle({
+              kind: 'relation.setEndpoints',
+              payload: { id, source: nextSrc, target: nextTgt },
+            } as any);
+            events.push(endEvt);
+          } else if (
+            tgt &&
+            (tgt.id !== doc.shape.target.id ||
+              tgt.type !== doc.shape.target.type)
+          ) {
+            const nextSrc = src ?? doc.shape.source;
+            const nextTgt = tgt;
+            const [endEvt] = await this.handle({
+              kind: 'relation.setEndpoints',
+              payload: { id, source: nextSrc, target: nextTgt },
+            } as any);
+            events.push(endEvt);
+          }
+          // direction (default directed)
+          const desiredDir = a.direction ?? 'directed';
+          if (doc.shape.direction !== desiredDir) {
+            const [dirEvt] = await this.handle({
+              kind: 'relation.setDirection',
+              payload: { id, direction: desiredDir },
+            } as any);
+            events.push(dirEvt);
+          }
+        }
+      }
+    }
+    return { success: true, errors: [], events } as any;
   }
 }

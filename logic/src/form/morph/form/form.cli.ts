@@ -1,6 +1,6 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
-import { handleViewMode, handleViewForm } from './form.cmd';
+import { handleViewMode, handleViewForm } from '../../../../test/form/morph/form.cmd';
 
 /**
  * Register view mode commands
@@ -10,7 +10,7 @@ export function registerViewCommands(program: Command) {
   const viewCommand = program
     .command('view')
     .description('Form view mode operations');
-    
+
   // View mode with interactive shell
   viewCommand
     .command('mode')
@@ -22,7 +22,7 @@ export function registerViewCommands(program: Command) {
     .action(async (options) => {
       await handleViewMode(options);
     });
-    
+
   // Generate a view form from schema
   viewCommand
     .command('form')
@@ -37,6 +37,6 @@ export function registerViewCommands(program: Command) {
     .action(async (options) => {
       await handleViewForm(options);
     });
-    
+
   return viewCommand;
 }

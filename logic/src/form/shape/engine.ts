@@ -5,6 +5,7 @@ import { startTrace, childSpan } from '../triad/trace';
 import type { Repository } from '../../repository/repo';
 import { ShapeSchema, type Shape } from '../../schema/shape';
 import { FormShape } from './shape';
+import { schemas } from '../../absolute/essence';
 
 type BaseState = Shape['shape']['state'];
 type Signature = NonNullable<Shape['shape']['signature']>;
@@ -233,4 +234,56 @@ export class ShapeEngine {
         throw new Error(`unsupported command: ${(cmd as Command).kind}`);
     }
   }
+
+  // ADR 0002 ShapeEngine interface: process/commit
+  async process(
+    shapes: Array<schemas.ActiveShape>,
+    _particulars: any[] = [],
+    _context?: any,
+  ): Promise<{ actions: any[]; snapshot: { count: number } }> {
+    // Validate/normalize via Zod; this clamps confidence and checks ids
+    const list = schemas.parseActiveShapes(shapes);
+    // For now, produce deterministic actions that map to our command space
+    const actions: any[] = [];
+    for (const s of list) {
+      // Upsert behavior based on revoked/active
+      if (s.revoked === true) {
+        if (s.id) actions.push({ type: 'shape.delete', id: s.id, sourceShapeId: s.id });
+        continue;
+      }
+      actions.push({
+        type: 'shape.upsert',
+        id: s.id ?? childIdFromName(s.name),
+        name: s.name,
+        kind: s.kind ?? 'shape',
+      });
+    }
+    return { actions, snapshot: { count: list.length } };
+  }
+
+  async commit(actions: any[], _snapshot: { count: number }) {
+    const events: Event[] = [];
+    for (const a of actions) {
+      if (a.type === 'shape.delete') {
+        const [evt] = await this.handle({ kind: 'shape.delete', payload: { id: a.id } } as any);
+        events.push(evt);
+      } else if (a.type === 'shape.upsert') {
+        // Upsert → create or set core
+        const id = a.id as string;
+        if (!this.getShape(id)) {
+          const [evt] = await this.handle({ kind: 'shape.create', payload: { id, type: a.kind, name: a.name } } as any);
+          events.push(evt);
+        } else {
+          const [evt] = await this.handle({ kind: 'shape.setCore', payload: { id, type: a.kind, name: a.name } } as any);
+          events.push(evt);
+        }
+      }
+    }
+    return { success: true, errors: [], events } as any;
+  }
+}
+
+function childIdFromName(name?: string) {
+  if (!name) return `shape:${Math.random().toString(36).slice(2, 10)}`;
+  return `shape:${name.toLowerCase().replace(/\s+/g, '-')}`;
 }

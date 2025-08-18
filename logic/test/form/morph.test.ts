@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { FormMorph } from "../../src/form/morph/morph";
 
-describe("FormMorph (wrapper)", () => {
+describe("FormMorph (principle)", () => {
   it("defines and runs a simple morph", () => {
     const inc = FormMorph.define<number, number>("inc", (x) => x + 1);
 

@@ -10,6 +10,7 @@ import {
 } from '../../schema/property';
 import { EntityRef } from '../../schema/entity';
 import { Id } from '../../schema/base';
+import { schemas } from '../../absolute/essence';
 
 // Core CRUD and mutation commands
 export type PropertyCreateCmd = {
@@ -422,5 +423,99 @@ export class PropertyEngine {
     const doc = await this.repo.get(id);
     if (!doc) throw new Error(`property not found: ${id}`);
     return PropertySchema.parse(doc);
+  }
+
+  // ADR-0006: PropertyEngine interface — process/commit
+  async process(
+  properties: Array<schemas.ActiveProperty>,
+    _particulars: any[] = [],
+    _context?: any,
+  ): Promise<{ actions: any[]; snapshot: { count: number } }> {
+    const list = schemas.parseActiveProperties(properties);
+    const actions: any[] = [];
+    for (const p of list) {
+      if (p.revoked === true) {
+        actions.push({ type: 'property.delete', id: p.id });
+        continue;
+      }
+      actions.push({
+        type: 'property.upsert',
+        id: p.id,
+        subjectId: p.subjectId,
+        key: p.key,
+        value: p.value,
+        dtype: p.dtype,
+      });
+    }
+    return { actions, snapshot: { count: list.length } };
+  }
+
+  async commit(actions: any[], _snapshot: { count: number }) {
+    const events: Event[] = [];
+    const defaultContextId = 'ctx:world'; // assumption: fallback when no context supplied
+    for (const a of actions) {
+      if (a.type === 'property.delete') {
+        const [evt] = await this.handle({
+          kind: 'property.delete',
+          payload: { id: a.id },
+        } as any);
+        events.push(evt);
+      } else if (a.type === 'property.upsert') {
+        const id = a.id as string;
+        const existing = await this.repo.get(id);
+        if (!existing) {
+          // Create with minimal core and context, then bind/value
+          const [created] = await this.handle({
+            kind: 'property.create',
+            payload: {
+              id,
+              type: 'system.Property',
+              key: a.key,
+              contextId: a.contextId ?? defaultContextId,
+            },
+          } as any);
+          events.push(created);
+          if (a.subjectId) {
+            const [bound] = await this.handle({
+              kind: 'property.bindEntity',
+              payload: { id, ref: { id: a.subjectId, type: 'system.Entity' } },
+            } as any);
+            events.push(bound);
+          }
+          if (a.value !== undefined) {
+            const [valEvt] = await this.handle({
+              kind: 'property.setValue',
+              payload: { id, value: a.value, valueType: a.dtype },
+            } as any);
+            events.push(valEvt);
+          }
+        } else {
+          // Upsert existing: ensure key matches (setCore) and value applied
+          const current = PropertySchema.parse(existing);
+          if (current.shape.core.key !== a.key) {
+            const [coreEvt] = await this.handle({
+              kind: 'property.setCore',
+              payload: { id, key: a.key },
+            } as any);
+            events.push(coreEvt);
+          }
+          if (a.subjectId) {
+            const [bound] = await this.handle({
+              kind: 'property.bindEntity',
+              payload: { id, ref: { id: a.subjectId, type: 'system.Entity' } },
+            } as any);
+            events.push(bound);
+          }
+          if (a.value !== undefined) {
+            const [valEvt] = await this.handle({
+              kind: 'property.setValue',
+              payload: { id, value: a.value, valueType: a.dtype },
+            } as any);
+            events.push(valEvt);
+          }
+        }
+      }
+    }
+    return { success: true, errors: [], events } as any;
   }
 }

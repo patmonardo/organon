@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { FormRelation } from "../../src/form/relation/relation";
 import { createEntity, createEntityRef } from "../../src/schema/entity";
 
-describe("FormRelation (wrapper)", () => {
+describe("FormRelation (principle)", () => {
   it("creates directed relation with defaults", () => {
     const a = createEntity({ type: "system.Entity", name: "A" });
     const b = createEntity({ type: "system.Entity", name: "B" });

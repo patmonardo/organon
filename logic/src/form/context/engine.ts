@@ -9,6 +9,7 @@ import {
   updateContext,
 } from '../../schema/context';
 import { EntityRef } from '../../schema/entity';
+import { schemas } from '../../absolute/essence';
 
 // Core CRUD and mutation commands
 export type ContextCreateCmd = {
@@ -472,6 +473,61 @@ export class ContextEngine {
       default:
         throw new Error(`unsupported command: ${(cmd as Command).kind}`);
     }
+  }
+
+  // ADR-0003: ContextEngine process/commit interface (class methods)
+  async process(
+    contexts: Array<schemas.ActiveContext>,
+    _particulars: any[] = [],
+    _context?: any,
+  ): Promise<{ actions: any[]; snapshot: { count: number } }> {
+    const list = schemas.parseActiveContexts(contexts);
+    const actions: any[] = [];
+    for (const c of list) {
+      if (c.revoked === true) {
+        actions.push({ type: 'context.delete', id: c.id });
+        continue;
+      }
+      actions.push({
+        type: 'context.upsert',
+        id: c.id,
+        name: c.name,
+        kind: c.kind,
+        scope: c.scope,
+      });
+    }
+    return { actions, snapshot: { count: list.length } };
+  }
+
+  async commit(actions: any[], _snapshot: { count: number }) {
+    const events: Event[] = [];
+    for (const a of actions) {
+      if (a.type === 'context.delete') {
+        const [evt] = await this.handle({
+          kind: 'context.delete',
+          payload: { id: a.id },
+        } as any);
+        events.push(evt);
+      } else if (a.type === 'context.upsert') {
+        const id = a.id as string | undefined;
+        if (!id) continue; // skip malformed
+        const existing = await this.repo.get(id);
+        if (!existing) {
+          const [evt] = await this.handle({
+            kind: 'context.create',
+            payload: { id, type: a.kind, name: a.name },
+          } as any);
+          events.push(evt);
+        } else {
+          const [evt] = await this.handle({
+            kind: 'context.setCore',
+            payload: { id, type: a.kind, name: a.name },
+          } as any);
+          events.push(evt);
+        }
+      }
+    }
+    return { success: true, errors: [], events } as any;
   }
 
   private async mustGet(id: string): Promise<Context> {
