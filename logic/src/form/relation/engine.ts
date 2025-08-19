@@ -11,7 +11,8 @@ import {
   RelationDirection,
 } from '../../schema/relation';
 import { EntityRef } from '../../schema/entity';
-import * as essence from '../../absolute/essence';
+import * as active from '../../schema/active';
+import { assertActiveRelationInvariants } from '../../absolute/essence/relation';
 
 // Core commands (unified verbs)
 export type RelationCreateCmd = {
@@ -382,14 +383,14 @@ export class RelationEngine {
 
   // ADR-0007: RelationEngine interface — process/commit using ActiveRelation carrier
   async process(
-    relations: Array<essence.schemas.ActiveRelation>,
+  relations: Array<active.ActiveRelation>,
     _particulars: any[] = [],
     _context?: any,
   ): Promise<{ actions: any[]; snapshot: { count: number } }> {
-    const list = essence.schemas.parseActiveRelations(relations);
+  const list = active.parseActiveRelations(relations);
     // validate invariants in dev/test
     try {
-      essence.assertActiveRelationInvariants(list as any);
+      assertActiveRelationInvariants(list as any);
     } catch {
       // bubble up later if needed; for process just continue to collect actions
     }

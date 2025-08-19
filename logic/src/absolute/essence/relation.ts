@@ -1,7 +1,7 @@
-import * as schemas from './schemas';
+import * as active from '../../schema/active';
 
 // Carrier shape
-export type ActiveRelation = schemas.ActiveRelation;
+export type ActiveRelation = active.ActiveRelation;
 
 // Helpers and invariants for ActiveRelation (pure carrier)
 export const DEFAULT_ACTIVE_TRUTH_THRESHOLD = 0.5;

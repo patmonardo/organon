@@ -10,7 +10,7 @@ import {
 } from '../../schema/property';
 import { EntityRef } from '../../schema/entity';
 import { Id } from '../../schema/base';
-import { schemas } from '../../absolute/essence';
+import * as active from '../../schema/active';
 
 // Core CRUD and mutation commands
 export type PropertyCreateCmd = {
@@ -427,11 +427,11 @@ export class PropertyEngine {
 
   // ADR-0006: PropertyEngine interface — process/commit
   async process(
-  properties: Array<schemas.ActiveProperty>,
+  properties: Array<active.ActiveProperty>,
     _particulars: any[] = [],
     _context?: any,
   ): Promise<{ actions: any[]; snapshot: { count: number } }> {
-    const list = schemas.parseActiveProperties(properties);
+  const list = active.parseActiveProperties(properties);
     const actions: any[] = [];
     for (const p of list) {
       if (p.revoked === true) {

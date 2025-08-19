@@ -8,7 +8,15 @@
  */
 
 import { createHash } from 'node:crypto';
-import { schemas } from '.';
+import BaseDriver from '../core/driver';
+import type { ProcessorInputs } from '../core/contracts';
+import { createWorld } from '../../schema/world';
+import { ActiveFactory, type ActiveEntity as ActiveEntitySchemaType, ActiveEntitySchema } from '../../schema/active';
+import type { Repository } from '../../repository/repo';
+import { makeInMemoryRepository } from '../../repository/memory';
+import { EntitySchema, type Entity } from '../../schema/entity';
+import { EntityEngine } from '../../form/entity/engine';
+import type { EventBus } from '../../form/triad/bus';
 
 export type RawEntity = Record<string, any>;
 
@@ -60,14 +68,14 @@ export function computeEntitySignature(e: RawEntity): string {
 	return stableHash(seed);
 }
 
-export type ActiveEntity = schemas.ActiveEntity & {
+export type ActiveEntity = ActiveEntitySchemaType & {
 	signature?: string;
 	facets?: EntityFacet[];
 	raw?: RawEntity;
 };
 
-export function toActiveEntity(input: unknown): schemas.ActiveEntity {
-	return schemas.ActiveEntitySchema.parse(input);
+export function toActiveEntity(input: unknown): ActiveEntitySchemaType {
+	return ActiveEntitySchema.parse(input);
 }
 
 export function fromFormEntity(raw: RawEntity): ActiveEntity {
@@ -75,8 +83,8 @@ export function fromFormEntity(raw: RawEntity): ActiveEntity {
 	const entityType = (raw as any)?.entityType ?? (raw as any)?.type;
 	const id = (raw as any)?.id ?? signature;
 	const labels = Array.isArray((raw as any)?.labels) ? (raw as any).labels : undefined;
-	const base = { id, entityType, labels } as Partial<schemas.ActiveEntity>;
-	const parsed = schemas.ActiveEntitySchema.parse({
+	const base = { id, entityType, labels } as Partial<ActiveEntitySchemaType>;
+	const parsed = ActiveEntitySchema.parse({
 		id: base.id,
 		entityType: base.entityType ?? 'system.Entity',
 		labels: base.labels,
@@ -111,3 +119,97 @@ export class ActiveEntityWrapper {
 // Provide a constructor-compatible alias for older tests/imports that expect a class named
 // `ActiveEntity`. Consumers can still use the type `ActiveEntity` exported above for typing.
 export const ActiveEntity = ActiveEntityWrapper as unknown as { new (raw: RawEntity): any };
+
+// --- New Driver API --------------------------------------------------------
+// Thing as EntityDriver — class-based driver integrating the Active model.
+// Keeps functional exports above for backwards compatibility.
+export class ThingDriver extends BaseDriver {
+	constructor() {
+		super('ThingDriver');
+	}
+
+	// Assemble a minimal world surface that processors can consume.
+	assemble(input: ProcessorInputs) {
+		return createWorld({
+			type: 'system.World',
+			name: 'Thing',
+			horizon: { entity: { count: (input?.entities ?? []).length } },
+		});
+	}
+
+	// Delegate helpers to the functional surface for determinism
+	computeEntitySignature(e: Record<string, any>) {
+		return computeEntitySignature(e);
+	}
+	extractEntityFacets(e: Record<string, any>) {
+		return extractEntityFacets(e);
+	}
+	toActiveEntity(input: unknown) {
+		return toActiveEntity(input);
+	}
+	fromFormEntity(raw: RawEntity) {
+		return fromFormEntity(raw);
+	}
+
+	// BaseDriver Active conversion hooks (entity-focused)
+	toActive(input: unknown) {
+		return ActiveFactory.parseEntity(input ?? {});
+	}
+	fromActive(input: unknown) {
+		return input;
+	}
+
+		// --- Engine bridge ------------------------------------------------------
+		private createEngine(repo?: Repository<Entity>, bus?: EventBus) {
+			const r: Repository<Entity> =
+				(repo as Repository<Entity> | undefined) ??
+				(makeInMemoryRepository(EntitySchema as any) as unknown as Repository<Entity>);
+			return new EntityEngine(r, bus);
+		}
+
+		private toActiveBatch(inputs: unknown[]): ActiveEntitySchemaType[] {
+			return (inputs ?? []).map((i) => ActiveFactory.parseEntity(i ?? {}));
+		}
+
+		async processEntities(
+			entities: unknown[],
+			opts?: { repo?: Repository<Entity>; bus?: EventBus; particulars?: any[]; context?: any },
+		) {
+			const engine = this.createEngine(opts?.repo, opts?.bus);
+			const actives = this.toActiveBatch(entities);
+			return engine.process(actives, opts?.particulars ?? [], opts?.context);
+		}
+
+		async commitEntities(
+			entities: unknown[],
+			opts?: { repo?: Repository<Entity>; bus?: EventBus; particulars?: any[]; context?: any },
+		) {
+			const engine = this.createEngine(opts?.repo, opts?.bus);
+			const actives = this.toActiveBatch(entities);
+			const { actions, snapshot } = await engine.process(
+				actives,
+				opts?.particulars ?? [],
+				opts?.context,
+			);
+			const commitResult = await engine.commit(actions, snapshot);
+			return { actions, snapshot, commitResult } as const;
+		}
+}
+
+// Default instance for class-based usage
+export const DefaultThingDriver = new ThingDriver();
+
+// Thin wrappers for convenience (functional style)
+export async function processEntities(
+	entities: unknown[],
+	opts?: { repo?: Repository<Entity>; bus?: EventBus; particulars?: any[]; context?: any },
+) {
+	return DefaultThingDriver.processEntities(entities, opts);
+}
+
+export async function commitEntities(
+	entities: unknown[],
+	opts?: { repo?: Repository<Entity>; bus?: EventBus; particulars?: any[]; context?: any },
+) {
+	return DefaultThingDriver.commitEntities(entities, opts);
+}

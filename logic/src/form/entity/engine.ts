@@ -8,7 +8,7 @@ import {
   createEntity,
   updateEntity,
 } from '../../schema/entity';
-import { schemas } from '../../absolute/essence';
+import * as active from '../../schema/active';
 
 // Typed command union (unified verbs)
 type EntityCreateCmd = {
@@ -295,11 +295,11 @@ export class EntityEngine {
 
   // ADR-0005: EntityEngine interface — process/commit
   async process(
-    entities: Array<schemas.ActiveEntity>,
+    entities: Array<active.ActiveEntity>,
     _particulars: any[] = [],
     _context?: any,
   ): Promise<{ actions: any[]; snapshot: { count: number } }> {
-    const list = schemas.parseActiveEntities(entities);
+    const list = active.parseActiveEntities(entities);
     const actions: any[] = [];
     for (const e of list) {
       if (e.revoked === true) {

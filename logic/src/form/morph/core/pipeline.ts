@@ -1,4 +1,4 @@
-import { FormShape } from "@organon/logic/schema";
+import { Shape } from "../../../schema";
 import { Morph } from "./types";
 import { createMorph } from "./morph";
 
@@ -173,7 +173,7 @@ export function createPipeline<TInput, TOutput = TInput>(
 /**
  * FormPipeline - Specialized for form operations
  */
-export class FormPipeline<TOutput> extends Pipeline<FormShape, TOutput> {
+export class FormPipeline<TOutput> extends Pipeline<Shape, TOutput> {
   // Form-specific methods can go here
 }
 

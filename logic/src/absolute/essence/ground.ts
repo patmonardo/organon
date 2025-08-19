@@ -1,5 +1,12 @@
 import type { KriyaOptions } from '../core/kriya';
-import { schemas } from '.';
+import * as active from '../../schema/active';
+import BaseDriver from '../core/driver';
+import { createWorld, type World } from '../../schema/world';
+import type { EventBus } from '../../form/triad/bus';
+import type { Repository } from '../../repository/repo';
+import { makeInMemoryRepository } from '../../repository/memory';
+import { MorphSchema, type Morph } from '../../schema/morph';
+import { MorphEngine } from '../../form/morph/engine';
 
 // Strict working contracts for Ground stage
 export type GroundEntity = {
@@ -54,6 +61,150 @@ export type GroundResult = {
   relations: GroundRelation[];
   properties: GroundProperty[];
 };
+
+// --- GroundDriver — ActiveMorph orchestration to MorphEngine --------------
+
+export class GroundDriver extends BaseDriver {
+  private morphEngine?: MorphEngine;
+  constructor() {
+    super('GroundDriver');
+  }
+
+  // Minimal assemble to satisfy BaseDriver; Ground works on morphs (pre-World)
+  assemble(_input: any): World {
+    return createWorld({ type: 'system.World', name: 'Ground', horizon: { stage: 'ground' } });
+  }
+
+  toActiveMorph(input: unknown): active.ActiveMorph {
+    return active.ActiveFactory.parseMorph(input);
+  }
+
+  toActiveMorphBatch(inputs: unknown[] = []): active.ActiveMorph[] {
+    return inputs.map((i) => this.toActiveMorph(i));
+  }
+
+  // Create or reuse a MorphEngine; if repo/bus not provided, cache one
+  private createMorphEngine(repo?: Repository<Morph>, bus?: EventBus) {
+    if (!repo && !bus) {
+      if (!this.morphEngine) {
+        const r = makeInMemoryRepository(MorphSchema as any) as unknown as Repository<Morph>;
+        this.morphEngine = new MorphEngine(r as any, bus);
+      }
+      return this.morphEngine;
+    }
+    const r: Repository<Morph> =
+      (repo as Repository<Morph> | undefined) ??
+      (makeInMemoryRepository(MorphSchema as any) as unknown as Repository<Morph>);
+    return new MorphEngine(r as any, bus);
+  }
+
+  // Upsert ActiveMorphs into the MorphEngine (create if missing, else patch core/config)
+  async upsertMorphs(
+    morphs: active.ActiveMorph[] = [],
+    opts?: { repo?: Repository<Morph>; bus?: EventBus; engine?: MorphEngine },
+  ) {
+    const engine = opts?.engine ?? this.createMorphEngine(opts?.repo, opts?.bus);
+    const events: any[] = [];
+    for (const m of morphs) {
+      // check existence
+      const got = await engine.handle({ kind: 'morph.get', payload: { id: m.id } });
+      const existing = (got?.[0]?.payload as any)?.morph;
+      if (!existing) {
+        const payload = {
+          id: m.id,
+          type: 'system.Morph',
+          name: m.kind ?? m.id,
+          transformFn: m.transform,
+          config: m.params ?? {},
+        } as any;
+        events.push(
+          ...(await engine.handle({ kind: 'morph.create', payload })),
+        );
+      } else {
+        const patch = {
+          core: { transformFn: m.transform },
+          config: m.params ?? {},
+        } as any;
+        events.push(
+          ...(await engine.handle({ kind: 'morph.update', payload: { id: m.id, patch } })),
+        );
+      }
+    }
+    return events;
+  }
+
+  // Runtime helpers passthrough
+  async defineRuntime(
+    name: string,
+    transformer: (input: any) => any,
+    opts?: { repo?: Repository<Morph>; bus?: EventBus; engine?: MorphEngine },
+  ) {
+    const engine = opts?.engine ?? this.createMorphEngine(opts?.repo, opts?.bus);
+    return engine.handle({ kind: 'morph.defineRuntime', payload: { name, transformer } });
+  }
+
+  async composeRuntime(
+    name: string,
+    steps: string[],
+    composedName?: string,
+    opts?: { repo?: Repository<Morph>; bus?: EventBus; engine?: MorphEngine },
+  ) {
+    const engine = opts?.engine ?? this.createMorphEngine(opts?.repo, opts?.bus);
+    return engine.handle({ kind: 'morph.composeRuntime', payload: { name, steps, composedName } });
+  }
+
+  async executeRuntime(
+    name: string,
+    input: any,
+    opts?: { repo?: Repository<Morph>; bus?: EventBus; engine?: MorphEngine },
+  ) {
+    const engine = opts?.engine ?? this.createMorphEngine(opts?.repo, opts?.bus);
+    return engine.handle({ kind: 'morph.execute', payload: { name, input } });
+  }
+}
+
+export const DefaultGroundDriver = new GroundDriver();
+
+// Thin wrappers for convenience and parity with other drivers
+export function toActiveMorph(input: unknown) {
+  return DefaultGroundDriver.toActiveMorph(input);
+}
+
+export function toActiveMorphBatch(inputs: unknown[] = []) {
+  return DefaultGroundDriver.toActiveMorphBatch(inputs);
+}
+
+export function upsertMorphsToEngine(
+  morphs: active.ActiveMorph[] = [],
+  opts?: { repo?: Repository<Morph>; bus?: EventBus; engine?: MorphEngine },
+) {
+  return DefaultGroundDriver.upsertMorphs(morphs, opts);
+}
+
+export function defineRuntimeMorph(
+  name: string,
+  transformer: (input: any) => any,
+  opts?: { repo?: Repository<Morph>; bus?: EventBus; engine?: MorphEngine },
+) {
+  return DefaultGroundDriver.defineRuntime(name, transformer, opts);
+}
+
+export function composeRuntimeMorph(
+  name: string,
+  steps: string[],
+  composedName?: string,
+  opts?: { repo?: Repository<Morph>; bus?: EventBus; engine?: MorphEngine },
+) {
+  return DefaultGroundDriver.composeRuntime(name, steps, composedName, opts);
+}
+
+export function executeRuntimeMorph(
+  name: string,
+  input: any,
+  opts?: { repo?: Repository<Morph>; bus?: EventBus; engine?: MorphEngine },
+) {
+  return DefaultGroundDriver.executeRuntime(name, input, opts);
+}
 
 export async function groundStage(
   principles: { morphs: any[] },
@@ -661,11 +812,11 @@ export type { RuleSpec };
 
 // Helper: map Ground results to Active carriers for engines
 export function toActiveFromGround(res: GroundResult): {
-  properties: schemas.ActiveProperty[];
-  relations: schemas.ActiveRelation[];
+  properties: active.ActiveProperty[];
+  relations: active.ActiveRelation[];
 } {
   const properties = res.properties.map((p) =>
-    schemas.ActivePropertySchema.parse({
+  active.ActivePropertySchema.parse({
       id: p.id,
       subjectId: p.entityId,
       key: p.key,
@@ -681,7 +832,7 @@ export function toActiveFromGround(res: GroundResult): {
     }),
   );
   const relations = res.relations.map((r) =>
-    schemas.ActiveRelationSchema.parse({
+  active.ActiveRelationSchema.parse({
       id: r.id,
       kind: r.kind === 'essential' ? 'essential' : 'relation',
       particularityOf: r.particularityOf ?? r.id,

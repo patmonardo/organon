@@ -4,7 +4,18 @@
  * - Zod-backed creator for ActiveShape from raw input
  */
 import { createHash } from 'crypto';
-import { schemas } from '.';
+import BaseDriver from '../core/driver';
+import type { ProcessorInputs } from '../core/contracts';
+import { createWorld } from '../../schema/world';
+import {
+  ActiveFactory,
+  type ActiveShape as ActiveShapeSchemaType,
+} from '../../schema/active';
+import type { Repository } from '../../repository/repo';
+import { makeInMemoryRepository } from '../../repository/memory';
+import { ShapeSchema, type Shape } from '../../schema/shape';
+import { ShapeEngine } from '../../form/shape/engine';
+import type { EventBus } from '../../form/triad/bus';
 
 export type RawShape = Record<string, any>;
 
@@ -119,10 +130,8 @@ export type ActiveShape = {
  * If `input` already follows ADR 0002 ActiveShape fields, it passes through
  * after confidence clamping; otherwise, it attempts a tolerant mapping.
  */
-export function toActiveShape(input: unknown): schemas.ActiveShape {
-  // Allow passing through schema-like objects while ensuring confidence clamp
-  const res = schemas.ActiveShapeSchema.parse(input ?? {});
-  return res;
+export function toActiveShape(input: unknown): ActiveShapeSchemaType {
+  return ActiveFactory.parseShape(input ?? {});
 }
 
 /** From a canonical FormShape document (raw), assemble an engine-friendly view */
@@ -142,4 +151,126 @@ export function fromFormShape(shape: RawShape): ActiveShape {
  * Instantiate an engine-facing Thing from a Shape + optional property values.
  * The result is a small object consumed by reflect/ground stages.
  */
-export default { computeSignature, extractFacets, fromFormShape, toActiveShape };
+export default {
+  computeSignature,
+  extractFacets,
+  fromFormShape,
+  toActiveShape,
+};
+
+// --- New Driver API --------------------------------------------------------
+// Essence as ShapeDriver — class-based driver integrating the Active model.
+// Keeps functional exports above for backwards compatibility.
+export class EssenceDriver extends BaseDriver {
+  constructor() {
+    super('EssenceDriver');
+  }
+
+  // Assemble a minimal world surface that processors can consume.
+  assemble(input: ProcessorInputs) {
+    return createWorld({
+      type: 'system.World',
+      name: 'Essence',
+      horizon: { essence: { shapes: (input?.shapes ?? []).length } },
+    });
+  }
+
+  // Delegate helpers to the functional surface for determinism
+  computeSignature(shape: Record<string, any>) {
+    return computeSignature(shape);
+  }
+  extractFacets(shape: Record<string, any>) {
+    return extractFacets(shape);
+  }
+  fromFormShape(shape: Record<string, any>) {
+    return fromFormShape(shape);
+  }
+
+  // BaseDriver Active conversion hooks (shape-focused)
+  toActive(input: unknown) {
+    return ActiveFactory.parseShape(input ?? {});
+  }
+  fromActive(input: unknown) {
+    return input;
+  }
+
+  // --- Engine bridge: drive ShapeEngine with ActiveShape ------------------
+  private createEngine(repo?: Repository<Shape>, bus?: EventBus) {
+    const r: Repository<Shape> =
+      (repo as Repository<Shape> | undefined) ??
+      (makeInMemoryRepository(
+        ShapeSchema as any,
+      ) as unknown as Repository<Shape>);
+    return new ShapeEngine(r, bus);
+  }
+
+  private toActiveBatch(inputs: unknown[]): ActiveShapeSchemaType[] {
+    return (inputs ?? []).map((i) => ActiveFactory.parseShape(i ?? {}));
+  }
+
+  async processShapes(
+    shapes: unknown[],
+    opts?: {
+      repo?: Repository<Shape>;
+      bus?: EventBus;
+      particulars?: any[];
+      context?: any;
+    },
+  ) {
+    const engine = this.createEngine(opts?.repo, opts?.bus);
+    const actives = this.toActiveBatch(shapes);
+    return engine.process(
+      actives as any,
+      opts?.particulars ?? [],
+      opts?.context,
+    );
+  }
+
+  async commitShapes(
+    shapes: unknown[],
+    opts?: {
+      repo?: Repository<Shape>;
+      bus?: EventBus;
+      particulars?: any[];
+      context?: any;
+    },
+  ) {
+    const engine = this.createEngine(opts?.repo, opts?.bus);
+    const actives = this.toActiveBatch(shapes);
+    const { actions, snapshot } = await engine.process(
+      actives as any,
+      opts?.particulars ?? [],
+      opts?.context,
+    );
+    const commitResult = await engine.commit(actions, snapshot);
+    return { actions, snapshot, commitResult } as const;
+  }
+}
+
+// Default instance for class-based usage
+export const DefaultEssenceDriver = new EssenceDriver();
+
+// Thin wrappers (functional style)
+export async function processShapes(
+  shapes: unknown[],
+  opts?: {
+    repo?: Repository<Shape>;
+    bus?: EventBus;
+    particulars?: any[];
+    context?: any;
+  },
+) {
+  return DefaultEssenceDriver.processShapes(shapes, opts);
+}
+
+export async function commitShapes(
+  shapes: unknown[],
+  opts?: {
+    repo?: Repository<Shape>;
+    bus?: EventBus;
+    particulars?: any[];
+    context?: any;
+  },
+) {
+  return DefaultEssenceDriver.commitShapes(shapes, opts);
+}

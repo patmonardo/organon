@@ -9,7 +9,7 @@ import {
   updateContext,
 } from '../../schema/context';
 import { EntityRef } from '../../schema/entity';
-import { schemas } from '../../absolute/essence';
+import * as active from '../../schema/active';
 
 // Core CRUD and mutation commands
 export type ContextCreateCmd = {
@@ -477,11 +477,11 @@ export class ContextEngine {
 
   // ADR-0003: ContextEngine process/commit interface (class methods)
   async process(
-    contexts: Array<schemas.ActiveContext>,
+    contexts: Array<active.ActiveContext>,
     _particulars: any[] = [],
     _context?: any,
   ): Promise<{ actions: any[]; snapshot: { count: number } }> {
-    const list = schemas.parseActiveContexts(contexts);
+    const list = active.parseActiveContexts(contexts);
     const actions: any[] = [];
     for (const c of list) {
       if (c.revoked === true) {

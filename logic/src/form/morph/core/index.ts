@@ -1,4 +1,4 @@
-//@organon/form/morph/core/index.ts
+//@organon/logic/form/morph/index.ts
 
 export * from './types';
 export * from './morph';
