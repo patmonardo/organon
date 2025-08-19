@@ -24,7 +24,7 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm -r build
-      - run: pnpm --filter @organon/logic run docs:api
+      - run: pnpm --filter @organon/logic run doc:api
       - uses: actions/upload-pages-artifact@v3
         with:
           path: logic/doc/api
