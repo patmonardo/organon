@@ -2,7 +2,7 @@ import type { KriyaOptions } from '../core/kriya';
 import * as active from '../../schema/active';
 import BaseDriver from '../core/driver';
 import { createWorld, type World } from '../../schema/world';
-import type { EventBus } from '../../form/triad/bus';
+import type { EventBus } from '../core/triad/bus';
 import type { Repository } from '../../repository/repo';
 import { makeInMemoryRepository } from '../../repository/memory';
 import { MorphSchema, type Morph } from '../../schema/morph';
@@ -72,7 +72,11 @@ export class GroundDriver extends BaseDriver {
 
   // Minimal assemble to satisfy BaseDriver; Ground works on morphs (pre-World)
   assemble(_input: any): World {
-    return createWorld({ type: 'system.World', name: 'Ground', horizon: { stage: 'ground' } });
+    return createWorld({
+      type: 'system.World',
+      name: 'Ground',
+      horizon: { stage: 'ground' },
+    });
   }
 
   toActiveMorph(input: unknown): active.ActiveMorph {
@@ -87,14 +91,18 @@ export class GroundDriver extends BaseDriver {
   private createMorphEngine(repo?: Repository<Morph>, bus?: EventBus) {
     if (!repo && !bus) {
       if (!this.morphEngine) {
-        const r = makeInMemoryRepository(MorphSchema as any) as unknown as Repository<Morph>;
+        const r = makeInMemoryRepository(
+          MorphSchema as any,
+        ) as unknown as Repository<Morph>;
         this.morphEngine = new MorphEngine(r as any, bus);
       }
       return this.morphEngine;
     }
     const r: Repository<Morph> =
       (repo as Repository<Morph> | undefined) ??
-      (makeInMemoryRepository(MorphSchema as any) as unknown as Repository<Morph>);
+      (makeInMemoryRepository(
+        MorphSchema as any,
+      ) as unknown as Repository<Morph>);
     return new MorphEngine(r as any, bus);
   }
 
@@ -103,11 +111,15 @@ export class GroundDriver extends BaseDriver {
     morphs: active.ActiveMorph[] = [],
     opts?: { repo?: Repository<Morph>; bus?: EventBus; engine?: MorphEngine },
   ) {
-    const engine = opts?.engine ?? this.createMorphEngine(opts?.repo, opts?.bus);
+    const engine =
+      opts?.engine ?? this.createMorphEngine(opts?.repo, opts?.bus);
     const events: any[] = [];
     for (const m of morphs) {
       // check existence
-      const got = await engine.handle({ kind: 'morph.get', payload: { id: m.id } });
+      const got = await engine.handle({
+        kind: 'morph.get',
+        payload: { id: m.id },
+      });
       const existing = (got?.[0]?.payload as any)?.morph;
       if (!existing) {
         const payload = {
@@ -126,7 +138,10 @@ export class GroundDriver extends BaseDriver {
           config: m.params ?? {},
         } as any;
         events.push(
-          ...(await engine.handle({ kind: 'morph.update', payload: { id: m.id, patch } })),
+          ...(await engine.handle({
+            kind: 'morph.update',
+            payload: { id: m.id, patch },
+          })),
         );
       }
     }
@@ -139,8 +154,12 @@ export class GroundDriver extends BaseDriver {
     transformer: (input: any) => any,
     opts?: { repo?: Repository<Morph>; bus?: EventBus; engine?: MorphEngine },
   ) {
-    const engine = opts?.engine ?? this.createMorphEngine(opts?.repo, opts?.bus);
-    return engine.handle({ kind: 'morph.defineRuntime', payload: { name, transformer } });
+    const engine =
+      opts?.engine ?? this.createMorphEngine(opts?.repo, opts?.bus);
+    return engine.handle({
+      kind: 'morph.defineRuntime',
+      payload: { name, transformer },
+    });
   }
 
   async composeRuntime(
@@ -149,8 +168,12 @@ export class GroundDriver extends BaseDriver {
     composedName?: string,
     opts?: { repo?: Repository<Morph>; bus?: EventBus; engine?: MorphEngine },
   ) {
-    const engine = opts?.engine ?? this.createMorphEngine(opts?.repo, opts?.bus);
-    return engine.handle({ kind: 'morph.composeRuntime', payload: { name, steps, composedName } });
+    const engine =
+      opts?.engine ?? this.createMorphEngine(opts?.repo, opts?.bus);
+    return engine.handle({
+      kind: 'morph.composeRuntime',
+      payload: { name, steps, composedName },
+    });
   }
 
   async executeRuntime(
@@ -158,7 +181,8 @@ export class GroundDriver extends BaseDriver {
     input: any,
     opts?: { repo?: Repository<Morph>; bus?: EventBus; engine?: MorphEngine },
   ) {
-    const engine = opts?.engine ?? this.createMorphEngine(opts?.repo, opts?.bus);
+    const engine =
+      opts?.engine ?? this.createMorphEngine(opts?.repo, opts?.bus);
     return engine.handle({ kind: 'morph.execute', payload: { name, input } });
   }
 }
@@ -221,9 +245,19 @@ export async function groundStage(
     tags: e?.tags ?? e?.shape?.state?.tags ?? [],
   });
   const toProperty = (p: any): GroundProperty => ({
-    id: String(p?.id ?? p?.shape?.core?.id ?? p?.shape?.id ?? p?.core?.id ?? p?.shape?.core?.id),
+    id: String(
+      p?.id ??
+        p?.shape?.core?.id ??
+        p?.shape?.id ??
+        p?.core?.id ??
+        p?.shape?.core?.id,
+    ),
     entityId: String(
-      p?.entityId ?? p?.entity?.id ?? p?.shape?.entity?.id ?? p?.shape?.of?.id ?? 'unknown',
+      p?.entityId ??
+        p?.entity?.id ??
+        p?.shape?.entity?.id ??
+        p?.shape?.of?.id ??
+        'unknown',
     ),
     key: String(p?.key ?? p?.shape?.core?.key ?? p?.shape?.key ?? 'unknown'),
     value: p?.value ?? p?.shape?.value,
@@ -245,7 +279,8 @@ export async function groundStage(
   // accessors to handle schema-backed shapes and runtime objects
   const getRelationId = (r: GroundRelation) => r?.id as string | undefined;
   const getPropertyId = (p: GroundProperty) => p?.id as string | undefined;
-  const getPropertyEntityId = (p: GroundProperty) => p?.entityId as string | undefined;
+  const getPropertyEntityId = (p: GroundProperty) =>
+    p?.entityId as string | undefined;
 
   while (changed && iter < maxIters) {
     iter += 1;
@@ -263,7 +298,9 @@ export async function groundStage(
       // merge relations: add new ones only
       for (const r of derivedRelations) {
         const rid = r.id;
-        const exists = working.relations.some((ex) => getRelationId(ex) === rid);
+        const exists = working.relations.some(
+          (ex) => getRelationId(ex) === rid,
+        );
         if (!exists) {
           working.relations.push(r);
           changed = true;
@@ -330,7 +367,9 @@ export function groundToEssentialBridge(
   const sig = `${ground.type}:${ground.sourceId}->${ground.targetId}`;
 
   // find existing candidate with matching signature
-  let match = candidates.find((c) => `${c.type}:${c.sourceId}->${c.targetId}` === sig);
+  let match = candidates.find(
+    (c) => `${c.type}:${c.sourceId}->${c.targetId}` === sig,
+  );
 
   const confidence = Math.min(1, confidenceBase + clusterSize / 10);
 
@@ -355,7 +394,10 @@ export function groundToEssentialBridge(
   } else {
     // if found, ensure it's marked actual and linked
     match.particularityOf = ground.id;
-    match.provenance = { ...(match.provenance ?? {}), modality: { kind: 'actual', confidence } } as Record<string, unknown>;
+    match.provenance = {
+      ...(match.provenance ?? {}),
+      modality: { kind: 'actual', confidence },
+    } as Record<string, unknown>;
   }
 
   // annotate ground's contributing ids if not present
@@ -375,8 +417,16 @@ export function groundToEssentialBridge(
  */
 export async function commitGroundResults(
   triad: {
-    relation: { get(id: string): Promise<any | null>; create(doc: any): Promise<any>; update(id: string, mut: (c: any) => any): Promise<any> };
-    property: { get(id: string): Promise<any | null>; create(doc: any): Promise<any>; update(id: string, mut: (c: any) => any): Promise<any> };
+    relation: {
+      get(id: string): Promise<any | null>;
+      create(doc: any): Promise<any>;
+      update(id: string, mut: (c: any) => any): Promise<any>;
+    };
+    property: {
+      get(id: string): Promise<any | null>;
+      create(doc: any): Promise<any>;
+      update(id: string, mut: (c: any) => any): Promise<any>;
+    };
     bus?: { publish?: (evt: { kind: string; payload: unknown }) => void };
   },
   results: GroundResult,
@@ -388,13 +438,13 @@ export async function commitGroundResults(
     try {
       const existing = await relRepo.get(r.id);
       if (!existing) {
-    await relRepo.create(r);
+        await relRepo.create(r);
         bus?.publish?.({ kind: 'relation.created', payload: r });
       } else {
-    await relRepo.update(r.id, () => r);
+        await relRepo.update(r.id, () => r);
         bus?.publish?.({ kind: 'relation.updated', payload: r });
       }
-  } catch (err) {
+    } catch (err) {
       // swallow errors for now; processors should be resilient
       // TODO: surface/log errors via a tracer or explicit error return
     }
@@ -405,10 +455,10 @@ export async function commitGroundResults(
     try {
       const existing = await propRepo.get(p.id);
       if (!existing) {
-  await propRepo.create(p);
+        await propRepo.create(p);
         bus?.publish?.({ kind: 'property.created', payload: p });
       } else {
-  await propRepo.update(p.id, () => p);
+        await propRepo.update(p.id, () => p);
         bus?.publish?.({ kind: 'property.updated', payload: p });
       }
     } catch (err) {
@@ -627,7 +677,7 @@ export async function applyMorphRule(
       try {
         // noop
       } catch (e) {}
-  if (spec.kind === 'deriveRelation') {
+      if (spec.kind === 'deriveRelation') {
         const relId = `${
           (spec as any).id ?? (morph as any).id
         }:${srcId}->${tgtId}`;
@@ -641,7 +691,7 @@ export async function applyMorphRule(
             pp.entityId === srcId && pp.key === (spec.condition as any)?.key,
         );
 
-  const rel: GroundRelation = {
+        const rel: GroundRelation = {
           id: relId,
           sourceId: srcId,
           targetId: tgtId,
@@ -671,7 +721,7 @@ export async function applyMorphRule(
         // linking the essential relation as its particularity. No schema change
         // is performed; this is additional runtime metadata on derived items.
         const absId = `${relId}:absolute`;
-  const absRel: GroundRelation = {
+        const absRel: GroundRelation = {
           id: absId,
           // keep same endpoints for the Absolute container
           sourceId: srcId,
@@ -726,8 +776,8 @@ export async function applyMorphRule(
           // non-fatal: spectrum is advisory
         }
 
-  derivedRelations.push(rel);
-  derivedRelations.push(absRel);
+        derivedRelations.push(rel);
+        derivedRelations.push(absRel);
         try {
           // noop
         } catch (e) {}
@@ -779,7 +829,7 @@ export async function applyMorphRule(
           );
           if (exists) continue;
         }
-  const newProp: GroundProperty = {
+        const newProp: GroundProperty = {
           id: propId,
           entityId: tgtId,
           key: spec.setProperty.key,
@@ -816,7 +866,7 @@ export function toActiveFromGround(res: GroundResult): {
   relations: active.ActiveRelation[];
 } {
   const properties = res.properties.map((p) =>
-  active.ActivePropertySchema.parse({
+    active.ActivePropertySchema.parse({
       id: p.id,
       subjectId: p.entityId,
       key: p.key,
@@ -832,7 +882,7 @@ export function toActiveFromGround(res: GroundResult): {
     }),
   );
   const relations = res.relations.map((r) =>
-  active.ActiveRelationSchema.parse({
+    active.ActiveRelationSchema.parse({
       id: r.id,
       kind: r.kind === 'essential' ? 'essential' : 'relation',
       particularityOf: r.particularityOf ?? r.id,

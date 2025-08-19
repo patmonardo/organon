@@ -11,7 +11,7 @@ import type { Repository } from '../../repository/repo';
 import { makeInMemoryRepository } from '../../repository/memory';
 import { ContextSchema, type Context } from '../../schema/context';
 import { ContextEngine } from '../../form/context/engine';
-import type { EventBus } from '../../form/triad/bus';
+import type { EventBus } from '../core/triad/bus';
 
 // Focused ActiveContext driver — small, deterministic helpers used by Absolute
 // to normalize inputs for the ContextEngine (ADR-0003).

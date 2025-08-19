@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { RelationEngine } from '../../src/form/relation/engine';
+import { RelationEngine } from '../../src/form/aspect/engine';
 import { InMemoryEventBus } from '../../src/form/triad/bus';
 import { makeInMemoryRepository } from '../support/inMemoryRepo';
 import { type Relation } from '../../src/schema/relation';

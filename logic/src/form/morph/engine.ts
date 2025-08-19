@@ -1,4 +1,4 @@
-import { InMemoryEventBus, type EventBus } from '../triad/bus';
+import { InMemoryEventBus, type EventBus } from '../../absolute/core/triad/bus';
 import type { Morph as MorphDoc } from '../../schema/morph';
 import { MorphSchema, createMorph, updateMorph } from '../../schema/morph';
 

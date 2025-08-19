@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import * as rel from '../../src/absolute/essence/relation';
-import { RelationEngine } from '../../src/form/relation/engine';
+import { RelationEngine } from '../../src/form/aspect/engine';
 import { InMemoryEventBus } from '../../src/form/triad/bus';
 import { makeInMemoryRepository } from '../support/inMemoryRepo';
 

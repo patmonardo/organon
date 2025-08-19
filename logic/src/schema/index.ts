@@ -15,11 +15,10 @@ export * from "./ground";
 export * from "./condition";
 
 // Bridge (Form + Matter → Content)
+export * from "./active";
 export * from "./content";
 
 // Concept (truth of reflection; UPS + logic hooks)
 export * from "./concept";
 export * from "./judgment";
 export * from "./syllogism";
-
-// Note: matter.ts exists as a compatibility alias to content; not re-exported here on purpose.

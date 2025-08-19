@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { RelationEngine } from '../../src/form/relation/engine';
-import { InMemoryEventBus } from '../../src/form/triad/bus';
+import { RelationEngine } from '../../src/form/aspect/engine';
+import { InMemoryEventBus } from '../../src/absolute/core/triad/bus';
 import { makeInMemoryRepository } from '../support/inMemoryRepo';
-import * as schemas from '../../src/absolute/essence/schemas';
+import { ActiveRelation, ActiveRelationSchema } from '../../src/schema';
 
 describe('RelationEngine ADR-0007 process/commit', () => {
   it('processes upsert and delete actions and commit applies them idempotently', async () => {
@@ -10,8 +10,8 @@ describe('RelationEngine ADR-0007 process/commit', () => {
   const bus = new InMemoryEventBus();
   const engine = new RelationEngine(repo as any, bus as any);
 
-    const active: Array<schemas.ActiveRelation> = [
-      schemas.ActiveRelationSchema.parse({
+    const active: Array<ActiveRelation> = [
+      ActiveRelationSchema.parse({
         id: 'r1',
         kind: 'relation',
         particularityOf: 'abs:r1',
@@ -35,7 +35,7 @@ describe('RelationEngine ADR-0007 process/commit', () => {
 
     // Now revoke relation and ensure delete action produced
     const revoked = [
-      schemas.ActiveRelationSchema.parse({
+      ActiveRelationSchema.parse({
         id: 'r1',
         kind: 'relation',
         particularityOf: 'abs:r1',

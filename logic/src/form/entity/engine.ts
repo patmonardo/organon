@@ -1,6 +1,6 @@
-import type { Command, Event, EventBus } from '../triad/message';
-import { InMemoryEventBus } from '../triad/bus';
-import { startTrace, childSpan } from '../triad/trace';
+import type { Command, Event, EventBus } from '../../absolute/core/triad/message';
+import { InMemoryEventBus } from '../../absolute/core/triad/bus';
+import { startTrace, childSpan } from '../../absolute/core/triad/trace';
 import type { Repository, Concurrency } from '../../repository/repo';
 import {
   type Entity,

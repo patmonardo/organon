@@ -15,7 +15,7 @@ import type { Repository } from '../../repository/repo';
 import { makeInMemoryRepository } from '../../repository/memory';
 import { ShapeSchema, type Shape } from '../../schema/shape';
 import { ShapeEngine } from '../../form/shape/engine';
-import type { EventBus } from '../../form/triad/bus';
+import type { EventBus } from '../core/triad/bus';
 
 export type RawShape = Record<string, any>;
 

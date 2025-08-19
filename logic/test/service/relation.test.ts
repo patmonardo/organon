@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { RelationService } from '../../src/form/relation/service';
+import { RelationService } from '../../src/form/aspect/service';
 import { makeInMemoryRepository } from '../support/inMemoryRepo';
 
 describe('RelationService', () => {

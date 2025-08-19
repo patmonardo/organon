@@ -1,6 +1,6 @@
 import { describe, it } from 'vitest';
 import { groundStage, toActiveFromGround, commitGroundResults } from '../../src/absolute/essence/ground';
-import { RelationEngine } from '../../src/form/relation/engine';
+import { RelationEngine } from '../../src/form/aspect/engine';
 
 // ANSI color helpers for lively logs
 const C = {

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { ContextEngine } from '../../src/form/context/engine';
-import { InMemoryEventBus } from '../../src/form/triad/bus';
+import { InMemoryEventBus } from '../../src/absolute/core/triad/bus';
 import { makeInMemoryRepository } from '../support/inMemoryRepo';
 import {
   type Context,

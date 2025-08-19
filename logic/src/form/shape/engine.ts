@@ -1,7 +1,7 @@
-import type { Command, Event } from '../triad/message';
-import type { EventBus } from '../triad/bus';
-import { InMemoryEventBus } from '../triad/bus';
-import { startTrace, childSpan } from '../triad/trace';
+import type { Command, Event } from '../../absolute/core/triad/message';
+import type { EventBus } from '../../absolute/core/triad/bus';
+import { InMemoryEventBus } from '../../absolute/core/triad/bus';
+import { startTrace, childSpan } from '../../absolute/core/triad/trace';
 import type { Repository } from '../../repository/repo';
 import { ShapeSchema, type Shape } from '../../schema/shape';
 import { FormShape } from './shape';

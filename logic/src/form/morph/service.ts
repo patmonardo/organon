@@ -1,5 +1,5 @@
-import type { Event, EventBus } from '../triad/message';
-import { InMemoryEventBus } from '../triad/bus';
+import type { Event, EventBus } from '../../absolute/core/triad/message';
+import { InMemoryEventBus } from '../../absolute/core/triad/bus';
 import type { Repository } from '../../repository/repo';
 import {
   MorphSchema,

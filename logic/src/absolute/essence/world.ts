@@ -12,7 +12,7 @@ import { makeInMemoryRepository } from '../../repository/memory';
 import { PropertySchema, type Property } from '../../schema/property';
 import { ActiveFactory } from '../../schema/active';
 import { PropertyEngine } from '../../form/property/engine';
-import type { EventBus } from '../../form/triad/bus';
+import type { EventBus } from '../core/triad/bus';
 
 const THING = 'system.Thing';
 type ThingRef = { id: string; type: typeof THING };

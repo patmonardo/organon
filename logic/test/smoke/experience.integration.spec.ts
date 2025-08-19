@@ -8,7 +8,7 @@ import { ShapeSchema } from '../../src/schema/shape';
 import { EntitySchema } from '../../src/schema/entity';
 import { ContextSchema } from '../../src/schema/context';
 import { PropertySchema } from '../../src/schema/property';
-import { InMemoryEventBus } from '../../src/form/triad/bus';
+import { InMemoryEventBus } from '../../src/absolute/core/triad/bus';
 import { ContextEngine } from '../../src/form/context/engine';
 
 describe('Quad driver integration — Essence → Thing → Reflect → World', () => {
@@ -31,7 +31,10 @@ describe('Quad driver integration — Essence → Thing → Reflect → World', 
       { id: 'shape:fact', name: 'Fact', active: true },
       { id: 'shape:actor', name: 'Actor', active: true },
     ];
-    const essCommit = await DefaultEssenceDriver.commitShapes(shapes, { repo: shapeRepo, bus });
+    const essCommit = await DefaultEssenceDriver.commitShapes(shapes, {
+      repo: shapeRepo,
+      bus,
+    });
     expect(essCommit.commitResult.success).toBe(true);
 
     // 2) Thing: bring two entities into existence
@@ -39,7 +42,10 @@ describe('Quad driver integration — Essence → Thing → Reflect → World', 
       { id: 'thing:1', entityType: 'system.Entity', active: true },
       { id: 'thing:2', entityType: 'system.Entity', active: true },
     ];
-    const thingCommit = await DefaultThingDriver.commitEntities(entities, { repo: entityRepo, bus });
+    const thingCommit = await DefaultThingDriver.commitEntities(entities, {
+      repo: entityRepo,
+      bus,
+    });
     expect(thingCommit.commitResult.success).toBe(true);
 
     // Sanity: entity persisted
@@ -54,7 +60,10 @@ describe('Quad driver integration — Essence → Thing → Reflect → World', 
       scope: { ids: ['thing:1', 'thing:2'] },
       active: true,
     };
-    const reflectCommit = await DefaultReflectDriver.commitContexts([context], { repo: contextRepo, bus });
+    const reflectCommit = await DefaultReflectDriver.commitContexts([context], {
+      repo: contextRepo,
+      bus,
+    });
     expect(reflectCommit.commitResult.success).toBe(true);
 
     // Sanity: context saved, then attach memberships via ContextEngine (chain of thought)
@@ -71,14 +80,24 @@ describe('Quad driver integration — Essence → Thing → Reflect → World', 
     } as any);
     const c1 = await contextRepo.get('context:chain');
     expect(c1).toBeTruthy();
-    const entityIds = (((c1 as any)?.shape?.entities ?? []) as any[]).map((e) => e.id);
+    const entityIds = (((c1 as any)?.shape?.entities ?? []) as any[]).map(
+      (e) => e.id,
+    );
     expect(entityIds.sort()).toEqual(['thing:1', 'thing:2']);
 
     // 4) World: make a property appear for one of the entities
     const properties = [
-      { id: 'p:status:thing:1', entity: { id: 'thing:1' }, key: 'status', value: 'active' },
+      {
+        id: 'p:status:thing:1',
+        entity: { id: 'thing:1' },
+        key: 'status',
+        value: 'active',
+      },
     ];
-    const worldCommit = await DefaultWorldDriver.commitPropertiesFromWorld(properties as any, { repo: propertyRepo, bus });
+    const worldCommit = await DefaultWorldDriver.commitPropertiesFromWorld(
+      properties as any,
+      { repo: propertyRepo, bus },
+    );
     expect(worldCommit.commitResult.success).toBe(true);
 
     // Property persisted

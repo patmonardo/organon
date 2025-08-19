@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { FormRelation } from "../../src/form/relation/relation";
+import { FormRelation } from "../../src/form/aspect/aspect";
 import { createEntity, createEntityRef } from "../../src/schema/entity";
 
 describe("FormRelation (principle)", () => {
