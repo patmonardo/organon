@@ -1,0 +1,127 @@
+.
+├── absolute
+├── controller
+│   ├── Controller.ts
+│   ├── dto
+│   │   └── FormShapeDto.ts
+│   ├── FormController.ts
+│   └── ReactController.ts
+├── data
+│   ├── button
+│   │   ├── action-button.tsx
+│   │   └── button.tsx
+│   ├── card
+│   │   ├── card.morph.tsx
+│   │   ├── card.tsx
+│   │   ├── container.tsx
+│   │   ├── primitives.tsx
+│   │   └── stat.tsx
+│   ├── d3
+│   │   ├── conceptNetwork.tsx
+│   │   ├── conceptRadar.tsx
+│   │   ├── conceptTree.tsx
+│   │   ├── relationshipCircles.tsx
+│   │   └── wordCloud.tsx
+│   ├── dashboard
+│   │   ├── dashboard-generator.ts
+│   │   ├── dashboard.ts
+│   │   └── sankara.tsx
+│   ├── font
+│   │   ├── inter.ts
+│   │   └── lusitana.ts
+│   ├── image
+│   │   ├── avatar.ts
+│   │   └── image.ts
+│   ├── link
+│   │   ├── link.morph.tsx
+│   │   ├── link.test.tsx
+│   │   └── link.tsx
+│   ├── list
+│   │   ├── breadcrumbs.tsx
+│   │   ├── list.test.tsx
+│   │   ├── list.tsx
+│   │   ├── navlinks.tsx
+│   │   ├── pagination.tsx
+│   │   └── sidenav.tsx
+│   ├── modality
+│   │   ├── commander.cli.ts
+│   │   ├── commander.cmd.ts
+│   │   ├── commander.ts
+│   │   ├── commands.ts
+│   │   ├── generator.ts
+│   │   └── types.ts
+│   ├── morph
+│   │   ├── prisma
+│   │   └── react
+│   ├── prisma
+│   │   ├── generator.test.ts
+│   │   └── generator.ts
+│   ├── search
+│   │   └── search.tsx
+│   ├── style
+│   │   ├── global.css
+│   │   ├── home.module.css
+│   │   ├── logo.tsx
+│   │   └── skeletons.tsx
+│   ├── table
+│   │   ├── adapter.tsx
+│   │   ├── renderer.test.tsx
+│   │   ├── renderer.tsx
+│   │   ├── table.test.tsx
+│   │   └── table.tsx
+│   ├── text
+│   │   ├── base.test.ts
+│   │   ├── base.ts
+│   │   ├── card.tsx
+│   │   ├── cloud.tsx
+│   │   ├── network.tsx
+│   │   ├── schema.test.ts
+│   │   ├── schema.ts
+│   │   ├── textdata.schema.ts
+│   │   ├── textdata.ts
+│   │   ├── textmeta.schema.ts
+│   │   ├── textmeta.ts
+│   │   ├── textparser.ts
+│   │   ├── textref.schema.ts
+│   │   ├── textref.ts
+│   │   └── text.tsx
+│   └── theme
+│       ├── kb.ts
+│       ├── token
+│       └── viz.ts
+├── index.ts
+├── l3.txt
+├── model
+│   ├── FormModel.ts
+│   └── Model.ts
+├── repository
+│   └── prisma-client.ts
+├── schema
+│   ├── button.ts
+│   ├── card.test.ts
+│   ├── card.ts
+│   ├── chart.test.ts
+│   ├── chart.ts
+│   ├── controller.ts
+│   ├── dashboard.ts
+│   ├── display.ts
+│   ├── font.ts
+│   ├── link.test.ts
+│   ├── link.ts
+│   ├── list.test.ts
+│   ├── list.ts
+│   ├── model.ts
+│   ├── shape.d.ts
+│   ├── shape.d.ts.map
+│   ├── shape.js
+│   ├── shape.js.map
+│   ├── shape.ts
+│   ├── table.ts
+│   ├── text.ts
+│   └── view.ts
+└── view
+    ├── FormView.ts
+    ├── ReactView.ts
+    └── View.ts
+
+28 directories, 97 files

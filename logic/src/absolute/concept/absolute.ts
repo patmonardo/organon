@@ -16,7 +16,7 @@ import { deriveMechanisticEdges, type MechanismEdge } from './mechanism';
 import { deriveChemisticEdges, type ChemismEdge } from './chemism';
 import { planTeleology, type TeleologyGoal } from './teleology';
 import { computeAspectConflicts } from '../form/projection.conflict';
-import { assessBhumiForAspects, type BhumiStage } from './bhumi';
+import { assessStageForAspects, type Stage } from './stage';
 import { computeAttentionWeights, type AttentionEntry } from './attention';
 import synthesizeIdeasFromJudgments, { type IdeaConfig, type Idea } from './idea';
 
@@ -43,7 +43,7 @@ export type AbsoluteConceptOutputs = {
   chemism: ChemismEdge[];
   teleology: TeleologyGoal[];
   // samyama bhumi assessments for provided aspects
-  bhumis?: BhumiStage[];
+  bhumis?: Stage[];
   // per-aspect realm classification: 'nature' | 'spirit' | 'logic' | 'unknown'
   // Note: 'logic' is intentionally considered last — Nature & Spirit are
   // determined first, then remaining aspects may be classified as Logic
@@ -173,7 +173,7 @@ export function processAbsoluteConcept(
   // 6) Samyama bhumi mapping (pure): seed 11-stage bhumi assessments from truth
   // (left intentionally generic — bhumi is more about Jnana/Path Knowledge; keep
   // aspect-level mapping as a conservative seed)
-  const bhumis = assessBhumiForAspects(aspectTruth, input.qualquant, undefined).map(
+  const bhumis = assessStageForAspects(aspectTruth, input.qualquant, undefined).map(
     (b) => ({
       ...b,
       provenance: {

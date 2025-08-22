@@ -120,6 +120,7 @@
     "src/index.ts",
     "src/schema/**/*",
     "src/relative/form/**/*",
+    "src/relative/core/**/*",
     "src/relative/index.ts",
     "src/repository/memory.ts",
     "src/repository/pillars.ts",
@@ -135,6 +136,6 @@
     "src/relative/form/morph/cypher/**/*",
     "src/relative/form/morph/form/**/*",
     "src/relative/form/morph/graph/**/*",
-   // "**/service.ts"
+    // "**/service.ts"
   ]
 }
