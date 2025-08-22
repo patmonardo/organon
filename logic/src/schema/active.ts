@@ -37,25 +37,20 @@ export const ActiveShapeSchema = z
   .merge(ActivationSchema);
 export type ActiveShape = z.infer<typeof ActiveShapeSchema>;
 
-// ActiveContext
-export const ContextScopeSchema = z.union([
-  z
-    .object({
-      world: z.array(z.string()).optional(),
-      ids: z.array(z.string()).optional(),
-    })
-    .strict(),
-  z.string(),
-]);
+export const ActiveContextSchema = z.object({
+  id: z.string().optional(),
+  contextId: z.string().optional(),
+  name: z.string().optional(),
+  kind: z.string().optional(),
+  revoked: z.boolean().optional(),
+  state: z.record(z.unknown()).optional(),
+  signature: z.record(z.unknown()).optional(),
+  facets: z.record(z.unknown()).optional(),
+  version: z.string().optional(),
+  ext: z.record(z.unknown()).optional(),
+  shape: z.any().optional(),
+});
 
-export const ActiveContextSchema = ActiveBaseSchema.merge(
-  z.object({
-    name: z.string().optional(),
-    particularityOf: z.string().optional(),
-    scope: ContextScopeSchema.optional(),
-    rules: z.any().optional(),
-  }),
-);
 export type ActiveContext = z.infer<typeof ActiveContextSchema>;
 
 // ActiveMorph
@@ -92,26 +87,9 @@ export const ActivePropertySchema = z
   .merge(ActivationSchema);
 export type ActiveProperty = z.infer<typeof ActivePropertySchema>;
 
-// ActiveRelation
-export const RelationEndpointSchema = z
-  .object({
-    id: z.string().min(1),
-    type: z.string().optional(),
-  })
-  .strict()
-  .optional();
-
-export const ActiveRelationSchema = z
-  .object({
-    id: z.string().min(1),
-    kind: z.enum(['relation', 'essential']).optional(),
-    particularityOf: z.string().min(1),
-    source: RelationEndpointSchema,
-    target: RelationEndpointSchema,
-    type: z.string().optional(),
-  })
-  .merge(ActivationSchema);
-export type ActiveRelation = z.infer<typeof ActiveRelationSchema>;
+// ActiveAspect is skeletal: reuse ActiveShape (strip all relation extras)
+export const ActiveAspectSchema = ActiveShapeSchema;
+export type ActiveAspect = ActiveShape;
 
 // Batch validators
 export const parseActiveShapes = (data: unknown) =>
@@ -124,10 +102,10 @@ export const parseActiveEntities = (data: unknown) =>
   z.array(ActiveEntitySchema).parse(data);
 export const parseActiveProperties = (data: unknown) =>
   z.array(ActivePropertySchema).parse(data);
-export const parseActiveRelations = (data: unknown) =>
-  z.array(ActiveRelationSchema).parse(data);
+export const parseActiveAspects = (data: unknown) =>
+  z.array(ActiveAspectSchema).parse(data);
 
-// Single validators (safeParse variants provided for convenience)
+// Single validators (safeParse variants)
 export const safeParseActiveShape = (data: unknown) =>
   ActiveShapeSchema.safeParse(data);
 export const safeParseActiveContext = (data: unknown) =>
@@ -138,8 +116,8 @@ export const safeParseActiveEntity = (data: unknown) =>
   ActiveEntitySchema.safeParse(data);
 export const safeParseActiveProperty = (data: unknown) =>
   ActivePropertySchema.safeParse(data);
-export const safeParseActiveRelation = (data: unknown) =>
-  ActiveRelationSchema.safeParse(data);
+export const safeParseActiveAspect = (data: unknown) =>
+  ActiveAspectSchema.safeParse(data);
 
 // Normalizers
 export function normalizeActivation<
@@ -159,7 +137,7 @@ export type ActiveAny =
   | ActiveMorph
   | ActiveEntity
   | ActiveProperty
-  | ActiveRelation;
+  | ActiveAspect;
 
 // Lightweight runtime helpers for working with Active objects.
 export const ActiveFactory = {
@@ -169,7 +147,7 @@ export const ActiveFactory = {
   parseMorph: (d: unknown) => ActiveMorphSchema.parse(d),
   parseEntity: (d: unknown) => ActiveEntitySchema.parse(d),
   parseProperty: (d: unknown) => ActivePropertySchema.parse(d),
-  parseRelation: (d: unknown) => ActiveRelationSchema.parse(d),
+  parseAspect: (d: unknown) => ActiveAspectSchema.parse(d),
 
   // convenience factories with minimal defaults
   createProperty: (p: Partial<z.infer<typeof ActivePropertySchema>> = {}) =>
@@ -181,13 +159,13 @@ export const ActiveFactory = {
       ...p,
     }),
 
-  createRelation: (r: Partial<z.infer<typeof ActiveRelationSchema>> = {}) =>
-    ActiveRelationSchema.parse({
-      id: r.id ?? `rel:${Date.now()}`,
-      particularityOf: r.particularityOf ?? 'unknown',
-      source: r.source ?? { id: 'unknown' },
-      target: r.target ?? { id: 'unknown' },
-      ...r,
+  // skeletal aspect factory (no relation endpoints)
+  createAspect: (a: Partial<z.infer<typeof ActiveAspectSchema>> = {}) =>
+    ActiveAspectSchema.parse({
+      id: a.id ?? `aspect:${Date.now()}`,
+      name: a.name,
+      kind: a.kind ?? 'system.Aspect',
+      ...a,
     }),
 
   normalizeActivation,

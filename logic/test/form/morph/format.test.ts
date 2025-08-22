@@ -1,8 +1,8 @@
 import { FormShape } from "../../../../model/src/schema/shape";
 import { ViewContext } from "../core/mode";
-import { ViewFormatMorph, AnyFormattedViewOutput } from "../../../src/form/morph/form/format";
-import { generateView } from "../../../src/form/morph/form/pipeline";
-import { GroupedViewOutput } from "../../../src/form/morph/form/groups";
+import { ViewFormatMorph, AnyFormattedViewOutput } from "../../../src/relative/form/morph/form/format";
+import { generateView } from "../../../src/relative/form/morph/form/pipeline";
+import { GroupedViewOutput } from "../../../src/relative/form/morph/form/groups";
 
 // --- 1. Sample Input FormShape (Same as cmd.ts) ---
 const sampleShape: FormShape = {

@@ -1,11 +1,11 @@
 import { createCommand } from "@/form/modality/commands";
-import { FieldValue } from "../../../src/form/morph/form/value";
+import { FieldValue } from "../../../src/relative/form/morph/form/value";
 import {
   SectionShape,
   SectionContext,
   SectionsOptions,
   ApplySectionsMorph,
-} from "../../../src/form/morph/form/sections";
+} from "../../../src/relative/form/morph/form/sections";
 
 // Sample fields for testing
 const sampleFields: FieldValue[] = [

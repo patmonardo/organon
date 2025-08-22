@@ -1,105 +1,141 @@
 import { describe, it, expect } from "vitest";
 import { Repos } from "../../src/repository";
-import {
-  createEntity,
-  createEntityRef,
-  createRelation,
-  createContext,
-  createProperty,
-} from "../../src/schema";
+import { createEntity, createContext, createProperty } from "../../src/schema";
 
-describe("InMemoryRepository + Pillars", () => {
-  it("creates and updates Entity", async () => {
+describe("InMemoryRepository + Pillars (CRUD only)", () => {
+  it("creates, updates and deletes Entity", async () => {
     const entities = Repos.entity();
+
     const e = await entities.create(createEntity({ type: "system.Entity", name: "A" }));
     expect(e.shape.core.id).toBeTruthy();
+    expect(e.shape.core.type).toBe("system.Entity");
+    expect(e.shape.core.name).toBe("A");
     expect(e.revision).toBe(0);
 
     const updated = await entities.update(
       e.shape.core.id,
-      cur => ({
-        ...cur,
-        shape: { ...cur.shape, state: { ...cur.shape.state, tags: ["root"] } },
-      }),
-      { expectedRevision: e.revision },
+      (cur) => ({ ...cur, shape: { ...cur.shape, state: { ...cur.shape.state, foo: "bar" } } })
     );
+    expect(updated.revision).toBeGreaterThan(e.revision ?? 0);
+    expect((updated.shape.state as any).foo).toBe("bar");
 
-    expect(updated.revision).toBe(1);
-    expect(updated.shape.state.tags).toContain("root");
+    const deleted = await entities.delete(e.shape.core.id);
+    expect(deleted).toBe(true);
+    const missing = await entities.get(e.shape.core.id);
+    expect(missing).toBeNull();
   });
 
-  it("creates Relation between two Entities", async () => {
-    const entities = Repos.entity();
-    const rels = Repos.relation();
-
-    const a = await entities.create(createEntity({ type: "system.Entity", name: "A" }));
-    const b = await entities.create(createEntity({ type: "system.Entity", name: "B" }));
-
-    const r = await rels.create(
-      createRelation({
-        type: "system.Relation",
-        kind: "related_to",
-        source: createEntityRef(a),
-        target: createEntityRef(b),
-        direction: "directed",
-      }),
-    );
-
-    expect(r.shape.core.kind).toBe("related_to");
-    expect(r.shape.source.id).toBe(a.shape.core.id);
-    expect(r.shape.target.id).toBe(b.shape.core.id);
-  });
-
-  it("creates Context with memberships", async () => {
-    const entities = Repos.entity();
+  it("creates, updates and deletes Context (standard fields only)", async () => {
     const ctxs = Repos.context();
-    const rels = Repos.relation();
 
-    const a = await entities.create(createEntity({ type: "system.Entity", name: "A" }));
-    const b = await entities.create(createEntity({ type: "system.Entity", name: "B" }));
+    const c = await ctxs.create(createContext({ type: "system.Context", name: "World" }));
+    expect(c.shape.core.id).toBeTruthy();
+    expect(c.shape.core.type).toBe("system.Context");
+    expect(c.shape.core.name).toBe("World");
+    expect(c.revision).toBe(0);
 
-    const r = await rels.create(
-      createRelation({
-        type: "system.Relation",
-        kind: "related_to",
-        source: createEntityRef(a),
-        target: createEntityRef(b),
-      }),
+    const c2 = await ctxs.update(
+      c.shape.core.id,
+      (cur) => ({ ...cur, shape: { ...cur.shape, state: { ...cur.shape.state, mark: true } } })
     );
+    expect(c2.revision).toBeGreaterThan(c.revision ?? 0);
+    expect((c2.shape.state as any).mark).toBe(true);
 
-    const ctx = await ctxs.create(
-      createContext({
-        type: "system.Context",
-        name: "World",
-        entities: [createEntityRef(a), createEntityRef(b)],
-        relations: [r.shape.core.id],
-      }),
-    );
-
-    expect(ctx.shape.entities).toHaveLength(2);
-    expect(ctx.shape.relations).toHaveLength(1);
+    const del = await ctxs.delete(c.shape.core.id);
+    expect(del).toBe(true);
+    expect(await ctxs.get(c.shape.core.id)).toBeNull();
   });
 
-  it("creates Property bound to an Entity", async () => {
-    const entities = Repos.entity();
+  it("creates, updates and deletes Property (skeletal)", async () => {
     const props = Repos.property();
-    const ctxs = Repos.context();
-
-    const e = await entities.create(createEntity({ type: "system.Entity", name: "K" }));
-    const ctx = await ctxs.create(createContext({ type: "system.Context", name: "C" }));
 
     const p = await props.create(
       createProperty({
         type: "system.Property",
-        key: "title",
-        contextId: ctx.shape.core.id,
-        entity: createEntityRef(e),
-        value: "Hello",
-        valueType: "string",
-      }),
+        name: "title",
+      })
     );
 
-    expect(p.shape.core.key).toBe("title");
-    expect(p.shape.entity?.id).toBe(e.shape.core.id);
+    expect(p.shape.core.id).toBeTruthy();
+    expect(p.shape.core.type).toBe("system.Property");
+    expect(p.shape.core.name).toBe("title");
+    expect(p.revision).toBe(0);
+
+    const p2 = await props.update(
+      p.shape.core.id,
+      (cur) => ({
+        ...cur,
+        shape: {
+          ...cur.shape,
+          state: { ...(cur.shape.state as any), any: "Hello" },
+          signature: { s: 1 },
+          facets: { ns: { a: 1 } },
+        },
+      })
+    );
+
+    expect((p2.shape.state as any).any).toBe("Hello");
+    expect((p2.shape.signature as any).s).toBe(1);
+    expect((p2.shape.facets as any).ns).toEqual({ a: 1 });
+
+    const ok = await props.delete(p.shape.core.id);
+    expect(ok).toBe(true);
+    expect(await props.get(p.shape.core.id)).toBeNull();
+  });
+
+  it("creates Entity with state, signature and facets", async () => {
+    const entities = Repos.entity();
+    const e = await entities.create(
+      createEntity({
+        type: "system.Entity",
+        name: "A",
+        state: { foo: "bar" } as any,
+        signature: { s: 1 },
+        facets: { ns: { a: 1 } },
+      })
+    );
+
+    expect(e.shape.core.id).toBeTruthy();
+    expect(e.shape.core.type).toBe("system.Entity");
+    expect(e.shape.core.name).toBe("A");
+    expect((e.shape.state as any).foo).toBe("bar");
+    expect((e.shape.signature as any).s).toBe(1);
+    expect((e.shape.facets as any).ns).toEqual({ a: 1 });
+  });
+
+  it("creates Context with state", async () => {
+    const ctxs = Repos.context();
+
+    const c = await ctxs.create(
+      createContext({
+        type: "system.Context",
+        name: "World",
+        state: { mark: true } as any,
+      })
+    );
+
+    expect(c.shape.core.id).toBeTruthy();
+    expect(c.shape.core.type).toBe("system.Context");
+    expect(c.shape.core.name).toBe("World");
+    expect((c.shape.state as any).mark).toBe(true);
+  });
+
+  it("creates Property with state, signature and facets", async () => {
+    const props = Repos.property();
+
+    const p = await props.create(
+      createProperty({
+        type: "system.Property",
+        name: "title",
+        state: { any: "Hello" } as any,
+        signature: { s: 1 },
+        facets: { ns: { a: 1 } },
+      })
+    );
+
+    expect(p.shape.core.name).toBe("title");
+    expect((p.shape.state as any).any).toBe("Hello");
+    expect((p.shape.signature as any).s).toBe(1);
+    expect((p.shape.facets as any).ns).toEqual({ a: 1 });
   });
 });

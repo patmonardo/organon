@@ -1,7 +1,7 @@
 import { ActiveAspectSchema, type ActiveAspect } from "../../schema/active";
 
 export type AspectProjectionInputs = {
-  apec?: ActiveAspect[];
+  aspects?: ActiveAspect[];
 };
 
 export type AspectProjectionResult = {
@@ -10,33 +10,42 @@ export type AspectProjectionResult = {
 };
 
 /**
- * computeAspectProjection — Higher-Aspect projection over base aspects.
- * Deterministic & idempotent: given the same inputs, produces the same output set.
- *
- * Strategy (starter): for each base relation R(S, P, O), derive a higher aspect
- * with type `has_mark:${R.type}` and id `proj:${name}:${R.id}`.
+ * computeAspectProjection — Skeletal aspect projection.
+ * - No relation endpoints (source/target/type) or legacy fields.
+ * - Deterministic ids: proj:<name>:<baseId-or-slug(name)>
+ * - Passes through Activation flags; derives active from revoked if needed.
  */
 export function computeAspectProjection(
   name: string,
   input: AspectProjectionInputs,
 ): AspectProjectionResult {
-  const base = [...(input.apec ?? [])]
-    .filter((r) => r && r.source && r.target)
-    .sort((a, b) => a.id.localeCompare(b.id));
+  const base = [...(input.aspects ?? [])]
+    .map((a) => ActiveAspectSchema.parse(a))
+    .sort((a, b) => (a.id ?? "").localeCompare(b.id ?? ""));
 
-  const upserts: ActiveAspect[] = base.map((r) =>
+  const n = slug(name || "proj");
+
+  const upserts: ActiveAspect[] = base.map((a) =>
     ActiveAspectSchema.parse({
-      id: `proj:${name}:${r.id}`,
-      kind: "relation",
-      particularityOf: r.particularityOf ?? `ess:proj:${name}`,
-      source: r.source,
-      target: r.target,
-      type: `has_mark:${r.type ?? r.kind ?? "related_to"}`,
-      active: r.revoked ? false : true,
+      id: `proj:${n}:${a.id ?? slug(a.name ?? "anon")}`,
+      kind: a.kind ?? "system.Aspect",
+      name: a.name,
+      schema: a.schema,
+      particularityOf: a.particularityOf ?? `ess:proj:${n}`,
+      // prefer explicit active; fall back to !revoked; default true
+      active:
+        a.active !== undefined ? a.active : a.revoked !== true ? true : false,
+      // keep any activation window fields if they exist in ActivationSchema
+      startsAt: (a as any).startsAt,
+      endsAt: (a as any).endsAt,
     }),
   );
 
   return { upserts, deletes: [] };
+}
+
+function slug(s: string): string {
+  return s.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
 }
 
 export default { computeAspectProjection };

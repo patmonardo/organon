@@ -4,8 +4,8 @@ import {
   StyleField,
   StyleContext,
   StyleMorph
-} from "../../../src/form/morph/form/style";
-import { FieldValue } from "../../../src/form/morph/form/value";
+} from "../../../src/relative/form/morph/form/style";
+import { FieldValue } from "../../../src/relative/form/morph/form/value";
 
 // Sample field data for testing
 const sampleFields: FieldValue[] = [

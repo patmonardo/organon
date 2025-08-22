@@ -1,6 +1,6 @@
 import { FormShape, FormField } from "../../../../model/src/schema/shape";
 import { ViewContext } from "../core/mode";
-import { ViewSystemPipeline, ViewOutput, ViewField } from "../../../src/form/morph/form/pipeline"; // Assuming ViewField is exported
+import { ViewSystemPipeline, ViewOutput, ViewField } from "../../../src/relative/form/morph/form/pipeline"; // Assuming ViewField is exported
 
 // --- Sample Data ---
 

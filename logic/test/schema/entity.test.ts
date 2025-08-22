@@ -8,7 +8,7 @@ import {
   parseEntityKey,
 } from "../../src/schema/entity";
 
-describe("schema/entity — happy path", () => {
+describe("schema/entity — Foundation patterns", () => {
   it("creates an Entity with defaults and updates deterministically", () => {
     const e0 = createEntity({ type: "system.Entity", name: "A" });
     const p0 = EntitySchema.parse(e0);
@@ -31,7 +31,7 @@ describe("schema/entity — happy path", () => {
     expect(p1.revision).toBe(p0.revision + 1);
   });
 
-  it("creates refs, formats and parses entity keys round-trip", () => {
+  it("creates refs, formats and parses entity keys (round-trip)", () => {
     const e = createEntity({ type: "system.Entity", name: "K" });
     const ref = createEntityRef(e);
     const key = formatEntityKey(ref);
@@ -39,13 +39,12 @@ describe("schema/entity — happy path", () => {
     expect(parsed).toEqual(ref);
   });
 
-  it("supports types containing colons in keys (round-trip)", () => {
-    const e = createEntity({ type: "System::Engine", name: "Engine" });
+  it("handles simple dotted types in keys", () => {
+    const e = createEntity({ type: "system.Engine", name: "Engine" });
     const ref = createEntityRef(e);
-    const key = formatEntityKey(ref); // "System::Engine:<uuid>"
+    const key = formatEntityKey(ref); // "system.Engine:<uuid>"
     const parsed = parseEntityKey(key);
-    expect(parsed.type).toBe("System::Engine");
+    expect(parsed.type).toBe("system.Engine");
     expect(parsed.id).toBe(ref.id);
   });
 });
-

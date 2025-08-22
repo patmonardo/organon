@@ -1,23 +1,26 @@
 /**
  * ActiveShape (Container driver) — ADR 0002 alignment
- * - Deterministic helpers for signature and facet extraction
- * - Zod-backed creator for ActiveShape from raw input
+ *
+ * Deterministic helpers for signature and facet extraction and a Zod-backed
+ * creator for producing canonical ActiveShape instances from form-layer input.
  */
 import { createHash } from 'crypto';
 import BaseDriver from '../core/driver';
 import type { ProcessorInputs } from '../core/contracts';
 import { createWorld } from '../../schema/world';
-import {
-  ActiveFactory,
-  type ActiveShape as ActiveShapeSchemaType,
-} from '../../schema/active';
+import { ActiveFactory, type ActiveShape } from '../../schema/active';
 import type { Repository } from '../../repository/repo';
 import { makeInMemoryRepository } from '../../repository/memory';
 import { ShapeSchema, type Shape } from '../../schema/shape';
-import { ShapeEngine } from '../../form/shape/engine';
-import type { EventBus } from '../core/triad/bus';
+import { getCore, getShape } from '../../schema/base';
+import { ShapeEngine } from '../../relative/form/shape/shape-engine';
+import type { EventBus } from '../core/bus';
 
-export type RawShape = Record<string, any>;
+/**
+ * Loose input type for shape payloads coming from the form layer.
+ * Prefer validating these via ShapeSchema.parse(...) before use.
+ */
+export type ShapeInput = unknown;
 
 export type Facet = {
   key: string;
@@ -25,7 +28,9 @@ export type Facet = {
   value?: any;
 };
 
-// Stable hash: deterministic across property orderings by stringifying with sorted keys
+/**
+ * Stable hashing helper used to produce deterministic signatures for shapes.
+ */
 function stableHash(value: unknown): string {
   function canonicalize(v: unknown): any {
     if (v === null || typeof v !== 'object') return v;
@@ -40,67 +45,96 @@ function stableHash(value: unknown): string {
 }
 
 /**
- * Compute a deterministic signature for a Shape. Prefer shape.id if present
- * but fall back to hashing selected shape fields.
+ * Compute a deterministic signature for a Shape.
+ *
+ * Preference order:
+ * - Use shape.core.id when present.
+ * - Otherwise hash a stable selection of fields (type, name, property keys).
  */
-export function computeSignature(shape: RawShape): string {
+export function computeSignature(shape: ShapeInput): string {
   if (!shape) return '';
-  if (typeof shape === 'object' && shape.id) return String(shape.id);
-  // choose a small, stable selection of fields
-  const seed = {
-    type: shape.type,
-    name: shape.name,
-    props: extractShapeKeys(shape).slice(0, 50),
-  };
-  return stableHash(seed);
+  try {
+    const parsed = ShapeSchema.parse(shape as any) as Shape;
+    const core = getCore(parsed) ?? getShape(parsed)?.core ?? (parsed as any);
+    if (core && core.id) return String(core.id);
+    const seed = {
+      type: core?.type ?? (parsed as any).type,
+      name: core?.name ?? (parsed as any).name,
+      props: extractShapeKeys(parsed).slice(0, 50),
+    };
+    return stableHash(seed);
+  } catch {
+    // fallback: hash raw input
+    const seed = {
+      type: (shape as any)?.type,
+      name: (shape as any)?.name,
+      props: extractShapeKeys(shape as any).slice(0, 50),
+    };
+    return stableHash(seed);
+  }
 }
 
 /**
- * Extract salient keys (property names) from a shape definition. This uses
- * common conventions but is intentionally permissive to accept different
- * schema shapes present in the repository.
+ * Extract salient property keys from a shape definition.
+ *
+ * Tolerant to both FormShape and legacy payloads.
  */
-export function extractShapeKeys(shape: RawShape): string[] {
+export function extractShapeKeys(shape: ShapeInput): string[] {
   if (!shape || typeof shape !== 'object') return [];
-  // common locations where properties might live in FormShape
+  const s = shape as any;
   const candidates: string[] = [];
-  if (Array.isArray(shape.properties)) {
-    for (const p of shape.properties) {
+
+  const formShape = (() => {
+    try {
+      const parsed = ShapeSchema.parse(s) as Shape;
+      return getShape(parsed) ?? parsed;
+    } catch {
+      return s;
+    }
+  })();
+
+  if (Array.isArray(formShape.properties)) {
+    for (const p of formShape.properties) {
       if (typeof p === 'string') candidates.push(p);
       else if (p && typeof p === 'object' && p.name)
         candidates.push(String(p.name));
     }
   }
+
   if (
-    shape.properties &&
-    typeof shape.properties === 'object' &&
-    !Array.isArray(shape.properties)
+    formShape.properties &&
+    typeof formShape.properties === 'object' &&
+    !Array.isArray(formShape.properties)
   ) {
-    candidates.push(...Object.keys(shape.properties));
+    candidates.push(...Object.keys(formShape.properties));
   }
-  if (shape.fields && typeof shape.fields === 'object') {
-    candidates.push(...Object.keys(shape.fields));
+
+  if (formShape.fields && typeof formShape.fields === 'object') {
+    candidates.push(...Object.keys(formShape.fields));
   }
-  // fallback: any top-level keys except common metadata
+
   const meta = new Set(['id', 'type', 'name', 'description', 'title']);
-  for (const k of Object.keys(shape)) if (!meta.has(k)) candidates.push(k);
-  // unique and stable ordering
+  for (const k of Object.keys(formShape)) if (!meta.has(k)) candidates.push(k);
+
   return Array.from(new Set(candidates)).sort();
 }
 
 /**
- * Extract lightweight facets for the engine to use during reflectStage.
- * Facets are intentionally small and deterministic.
+ * Build lightweight deterministic facets for a shape.
+ *
+ * Facets are compact key/type/value triples intended for engine heuristics
+ * and reflect-stage processing.
  */
-export function extractFacets(shape: RawShape): Facet[] {
+export function extractFacets(shape: ShapeInput): Facet[] {
   const keys = extractShapeKeys(shape);
+  const s = shape as any;
   const facets: Facet[] = [];
   for (const k of keys) {
     const v =
-      shape.properties && shape.properties[k]
-        ? shape.properties[k]
-        : shape.fields && shape.fields[k]
-        ? shape.fields[k]
+      s.properties && s.properties[k]
+        ? s.properties[k]
+        : s.fields && s.fields[k]
+        ? s.fields[k]
         : undefined;
     facets.push({
       key: k,
@@ -108,48 +142,47 @@ export function extractFacets(shape: RawShape): Facet[] {
       value: typeof v === 'string' || typeof v === 'number' ? v : undefined,
     });
   }
-  // add a count facet
   facets.push({ key: '__propCount', value: keys.length, type: 'number' });
   return facets;
 }
 
 /**
- * Build a lightweight ActiveShape wrapper from a canonical FormShape object.
+ * Produce a Zod-validated ActiveShape from arbitrary input.
+ *
+ * This function maps form-layer payloads into the canonical ActiveShape
+ * representation using the ActiveFactory helper.
  */
-export type ActiveShape = {
-  id?: string;
-  type?: string;
-  name?: string;
-  signature: string;
-  facets: Facet[];
-  raw: RawShape;
-};
-
-/**
- * Build a Zod-validated ActiveShape-like driver view from arbitrary input.
- * If `input` already follows ADR 0002 ActiveShape fields, it passes through
- * after confidence clamping; otherwise, it attempts a tolerant mapping.
- */
-export function toActiveShape(input: unknown): ActiveShapeSchemaType {
-  return ActiveFactory.parseShape(input ?? {});
+export function toActiveShape(input: unknown): ActiveShape {
+  return ActiveFactory.parseShape(input ?? {}) as ActiveShape;
 }
 
-/** From a canonical FormShape document (raw), assemble an engine-friendly view */
-export function fromFormShape(shape: RawShape): ActiveShape {
-  const signature = computeSignature(shape);
-  return {
-    id: (shape as any)?.id,
-    type: (shape as any)?.type,
-    name: (shape as any)?.name,
+/**
+ * Construct a canonical ActiveShape from a validated Shape input.
+ *
+ * Steps:
+ *  - Normalize/validate the incoming payload using ShapeSchema.parse(...)
+ *  - Compute a deterministic signature
+ *  - Assemble candidate ActiveShape fields and validate via ActiveFactory
+ */
+export function fromFormShape(input: ShapeInput): ActiveShape {
+  const parsed = ShapeSchema.parse(input as any) as Shape;
+  const shapeCore = (getShape(parsed)?.core ?? (parsed as any)) as any;
+
+  const signature = computeSignature(parsed);
+  const candidate = {
+    id: shapeCore?.id ?? undefined,
+    type: shapeCore?.type ?? undefined,
+    name: shapeCore?.name ?? undefined,
     signature,
-    facets: extractFacets(shape),
-    raw: shape,
+    facets: extractFacets(parsed),
+    raw: parsed,
   };
+
+  return ActiveFactory.parseShape(candidate as any) as ActiveShape;
 }
 
 /**
- * Instantiate an engine-facing Thing from a Shape + optional property values.
- * The result is a small object consumed by reflect/ground stages.
+ * Exposed functional surface for shape utilities.
  */
 export default {
   computeSignature,
@@ -158,15 +191,23 @@ export default {
   toActiveShape,
 };
 
-// --- New Driver API --------------------------------------------------------
-// Essence as ShapeDriver — class-based driver integrating the Active model.
-// Keeps functional exports above for backwards compatibility.
+// --- Driver API ------------------------------------------------------------
+
+/**
+ * EssenceDriver
+ *
+ * Driver that exposes shape-centric engine helpers and integrates with the
+ * ShapeEngine. Keeps deterministic utility functions available while
+ * providing class-based driver ergonomics.
+ */
 export class EssenceDriver extends BaseDriver {
   constructor() {
     super('EssenceDriver');
   }
 
-  // Assemble a minimal world surface that processors can consume.
+  /**
+   * Assemble a minimal world surface consumed by processors.
+   */
   assemble(input: ProcessorInputs) {
     return createWorld({
       type: 'system.World',
@@ -175,26 +216,35 @@ export class EssenceDriver extends BaseDriver {
     });
   }
 
-  // Delegate helpers to the functional surface for determinism
-  computeSignature(shape: Record<string, any>) {
+  /**
+   * Delegate helpers to the functional surface for determinism.
+   */
+  computeSignature(shape: ShapeInput) {
     return computeSignature(shape);
   }
-  extractFacets(shape: Record<string, any>) {
+
+  extractFacets(shape: ShapeInput) {
     return extractFacets(shape);
   }
-  fromFormShape(shape: Record<string, any>) {
+
+  fromFormShape(shape: ShapeInput) {
     return fromFormShape(shape);
   }
 
-  // BaseDriver Active conversion hooks (shape-focused)
-  toActive(input: unknown) {
-    return ActiveFactory.parseShape(input ?? {});
+  /**
+   * BaseDriver Active conversion hooks (shape-focused).
+   */
+  toActive(input: unknown): ActiveShape {
+    return toActiveShape(input);
   }
-  fromActive(input: unknown) {
+
+  fromActive(input: ActiveShape) {
     return input;
   }
 
-  // --- Engine bridge: drive ShapeEngine with ActiveShape ------------------
+  /**
+   * Create a ShapeEngine instance with an in-memory repository by default.
+   */
   private createEngine(repo?: Repository<Shape>, bus?: EventBus) {
     const r: Repository<Shape> =
       (repo as Repository<Shape> | undefined) ??
@@ -204,10 +254,13 @@ export class EssenceDriver extends BaseDriver {
     return new ShapeEngine(r, bus);
   }
 
-  private toActiveBatch(inputs: unknown[]): ActiveShapeSchemaType[] {
-    return (inputs ?? []).map((i) => ActiveFactory.parseShape(i ?? {}));
+  private toActiveBatch(inputs: unknown[] = []): ActiveShape[] {
+    return (inputs ?? []).map((i) => toActiveShape(i ?? {}));
   }
 
+  /**
+   * Process an array of shapes through the ShapeEngine.
+   */
   async processShapes(
     shapes: unknown[],
     opts?: {
@@ -226,6 +279,9 @@ export class EssenceDriver extends BaseDriver {
     );
   }
 
+  /**
+   * Commit shapes by processing and then committing engine actions.
+   */
   async commitShapes(
     shapes: unknown[],
     opts?: {
@@ -243,14 +299,28 @@ export class EssenceDriver extends BaseDriver {
       opts?.context,
     );
     const commitResult = await engine.commit(actions, snapshot);
-    return { actions, snapshot, commitResult } as const;
+
+    // normalize events so callers can rely on payload.shape.core.id
+    const normalizedEvents = (commitResult?.events ?? []).map((e: any) =>
+      this.normalizeEvent(e),
+    );
+    const normalizedCommitResult = {
+      ...commitResult,
+      events: normalizedEvents,
+    };
+
+    return { actions, snapshot, commitResult: normalizedCommitResult } as const;
   }
 }
 
-// Default instance for class-based usage
+/**
+ * Default driver instance for convenience.
+ */
 export const DefaultEssenceDriver = new EssenceDriver();
 
-// Thin wrappers (functional style)
+/**
+ * Functional wrappers delegating to the default driver instance.
+ */
 export async function processShapes(
   shapes: unknown[],
   opts?: {

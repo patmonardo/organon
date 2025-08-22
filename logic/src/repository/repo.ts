@@ -34,6 +34,10 @@ export function getId<T extends Base>(doc: T): string {
 export function getType<T extends Base>(doc: T): string {
   return doc.shape.core.type as unknown as string;
 }
+
+// Optional tags accessor (absent in skeletal schemas)
+// Indexer will treat missing/non-array as empty.
 export function getTags<T extends Base>(doc: T): string[] {
-  return doc.shape.state.tags ?? [];
+  const tags = (doc.shape as any)?.state?.tags;
+  return Array.isArray(tags) ? tags.filter((t) => typeof t === "string") : [];
 }

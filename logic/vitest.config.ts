@@ -5,7 +5,7 @@ export default defineConfig({
   test: {
     environment: "node",
     include: ["test/**/*.test.ts", "test/**/*.spec.ts", "src/**/*.spec.ts"],
-    exclude: ["node_modules", "dist", "test/form/morph"],
+    exclude: ["node_modules", "dist", "test/form/morph", "test/archive"],
     globals: true
   },
   resolve: {

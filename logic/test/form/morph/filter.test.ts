@@ -7,7 +7,7 @@ import {
   FilterWhereMorph,
   FilterOrderMorph,
   FilterLimitMorph,
-} from "../../../src/form/morph/form/filter";
+} from "../../../src/relative/form/morph/form/filter";
 
 // Sample field data for testing
 const sampleFields: FilterField[] = [

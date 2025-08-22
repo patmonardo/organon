@@ -1,43 +1,34 @@
 import { z } from "zod";
-import { randomUUID } from "node:crypto";
-import {
-  BaseSchema,
-  BaseState,
-  BaseCore,
-  Type,
-  Id,
-  Label,
-  touch,
-} from "./base";
+import { BaseSchema, BaseState, BaseCore, Type, Id, Label } from "./base";
 
-// Core/state
+// Core/state (keep morph-specific core, but align with uniform base)
 export const MorphCore = BaseCore.extend({
-  type: Type, // schema/category, e.g., "system.Morph"
+  type: Type, // e.g., "system.Morph"
   inputType: Label.default("FormShape"),
   outputType: Label.default("FormShape"),
-  transformFn: z.string().optional(), // runtime entry (e.g., "@pkg/mod#symbol")
+  transformFn: z.string().optional(),
 });
 export type MorphCore = z.infer<typeof MorphCore>;
 
-export const MorphState = BaseState.extend({
-  optimized: z.boolean().optional(), // optional runtime hint
-});
+export const MorphState = BaseState;
 export type MorphState = z.infer<typeof MorphState>;
 
-// Composition (optional, first pass)
+// Optional composition (kept as-is)
 export const MorphComposition = z
   .object({
     kind: z.enum(["single", "pipeline", "composite"]).default("single"),
     mode: z.enum(["sequential", "parallel"]).optional(),
-    steps: z.array(Id).default([]), // references to other Morph ids
+    steps: z.array(Id).default([]),
   })
   .default({ kind: "single", steps: [] });
 export type MorphComposition = z.infer<typeof MorphComposition>;
 
-// Shape: core/state + composition + config/meta
+// Shape: uniform core/state/signature/facets + morph extras
 export const MorphShape = z.object({
   core: MorphCore,
-  state: MorphState,
+  state: MorphState.default({}),
+  signature: z.object({}).catchall(z.any()).optional(),
+  facets: z.record(z.string(), z.any()).default({}),
   composition: MorphComposition,
   config: z.record(z.unknown()).default({}),
   meta: z.record(z.unknown()).default({}),
@@ -50,7 +41,7 @@ export const MorphSchema = BaseSchema.extend({
 });
 export type Morph = z.infer<typeof MorphSchema>;
 
-// Create/update
+// Create/update (uniform signature handling)
 export function createMorph(input: {
   id?: string;
   type: z.input<typeof Type>;
@@ -65,26 +56,34 @@ export function createMorph(input: {
   config?: Record<string, unknown>;
   meta?: Record<string, unknown>;
 
+  signature?: Record<string, unknown>;
+  facets?: Record<string, unknown>;
+
   state?: z.input<typeof MorphState>;
   version?: string;
   ext?: Record<string, unknown>;
 }): Morph {
-  const core = MorphCore.parse({
-    id: input.id ?? randomUUID(),
-    type: input.type,
-    name: input.name,
-    description: input.description,
-    inputType: input.inputType ?? "FormShape",
-    outputType: input.outputType ?? "FormShape",
-    transformFn: input.transformFn,
-  });
-  const state = MorphState.parse(input.state ?? {});
-  const composition = MorphComposition.parse(input.composition ?? {});
+  const id =
+    input.id ??
+    `morph:${Date.now().toString(36)}:${Math.floor(Math.random() * 1e6)
+      .toString(36)
+      .padStart(4, "0")}`;
+
   return MorphSchema.parse({
     shape: {
-      core,
-      state,
-      composition,
+      core: MorphCore.parse({
+        id,
+        type: input.type,
+        name: input.name,
+        description: input.description,
+        inputType: input.inputType ?? "FormShape",
+        outputType: input.outputType ?? "FormShape",
+        transformFn: input.transformFn,
+      }),
+      state: MorphState.parse(input.state ?? {}),
+      signature: input.signature,
+      facets: input.facets ?? {},
+      composition: MorphComposition.parse(input.composition ?? {}),
       config: input.config ?? {},
       meta: input.meta ?? {},
     },
@@ -94,25 +93,26 @@ export function createMorph(input: {
   });
 }
 
-export function updateMorph(
-  current: Morph,
-  patch: Partial<{
-    core: Partial<z.input<typeof MorphCore>>;
-    state: Partial<z.input<typeof MorphState>>;
-    composition: z.input<typeof MorphComposition>;
-    config: Record<string, unknown>;
-    meta: Record<string, unknown>;
-    version: string;
-    ext: Record<string, unknown>;
-  }>
-): Morph {
-  const core = MorphCore.parse(
-    touch({ ...current.shape.core, ...(patch.core ?? {}) })
-  );
-  const state = MorphState.parse({
-    ...current.shape.state,
-    ...(patch.state ?? {}),
-  });
+type UpdateMorphPatch = Partial<{
+  core: Partial<z.input<typeof MorphCore>>;
+  state: Partial<z.input<typeof MorphState>>;
+  composition: z.input<typeof MorphComposition>;
+  config: Record<string, unknown>;
+  meta: Record<string, unknown>;
+  signature: Record<string, unknown> | null | undefined; // null => clear, undefined => preserve
+  facets: Record<string, unknown>;
+  version: string;
+  ext: Record<string, unknown>;
+}>;
+
+export function updateMorph(current: Morph, patch: UpdateMorphPatch): Morph {
+  const nextSignature =
+    patch.signature === null
+      ? undefined
+      : patch.signature !== undefined
+      ? patch.signature
+      : current.shape.signature;
+
   const composition =
     patch.composition !== undefined
       ? MorphComposition.parse(patch.composition)
@@ -121,13 +121,16 @@ export function updateMorph(
   return MorphSchema.parse({
     ...current,
     shape: {
-      core,
-      state,
+      ...current.shape,
+      core: MorphCore.parse({ ...current.shape.core, ...(patch.core ?? {}) }),
+      state: MorphState.parse({ ...current.shape.state, ...(patch.state ?? {}) }),
       composition,
       config: patch.config ?? current.shape.config,
       meta: patch.meta ?? current.shape.meta,
+      signature: nextSignature,
+      facets: patch.facets ?? current.shape.facets,
     },
-    revision: current.revision + 1,
+    revision: (current.revision ?? 0) + 1,
     version: patch.version ?? current.version,
     ext: { ...current.ext, ...(patch.ext ?? {}) },
   });

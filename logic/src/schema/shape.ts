@@ -54,7 +54,6 @@ export function createShape(input: CreateShapeInput): Shape {
 }
 
 export type ShapeCoreOut = z.output<typeof ShapeCore>;
-export type BaseStateOut = z.output<typeof BaseState>;
 
 type UpdateShapePatch = Partial<{
   core: Partial<z.output<typeof ShapeCore>>;

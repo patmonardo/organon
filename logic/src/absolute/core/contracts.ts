@@ -26,6 +26,13 @@ export const ProcessorInputs = z.object({
 });
 export type ProcessorInputs = z.infer<typeof ProcessorInputs>;
 
+// add shared runtime options for the processor (used by FormProcessor)
+export type ProcessorRunOptions = {
+  projectContent?: boolean;
+  contentIndexSource?: 'inputs';
+  deriveSyllogistic?: false; // placeholder; syllogistic disabled in skeletal runtime
+};
+
 const GrossByThing = z.record(z.number().int().nonnegative());
 export const ProcessorSnapshot = z.object({
   world: WorldSchema,

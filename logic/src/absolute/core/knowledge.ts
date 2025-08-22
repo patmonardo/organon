@@ -34,8 +34,12 @@ export function computeKnowledgeDelta(
       newRelationIds.push(id);
       continue;
     }
-    const prevMod = (prev as any)?.provenance?.modality?.kind as string | undefined;
-    const currMod = (r as any)?.provenance?.modality?.kind as string | undefined;
+    const prevMod = (prev as any)?.provenance?.modality?.kind as
+      | string
+      | undefined;
+    const currMod = (r as any)?.provenance?.modality?.kind as
+      | string
+      | undefined;
     if ((prevMod ?? 'possible') !== 'actual' && currMod === 'actual') {
       upgradedRelationIds.push(id);
     }

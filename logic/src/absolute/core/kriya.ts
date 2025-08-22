@@ -1,19 +1,29 @@
-import type { Shape } from "../../schema/shape";
-import type { Context } from "../../schema/context";
-import type { Morph } from "../../schema/morph";
-import type { Entity } from "../../schema/entity";
-import type { Property } from "../../schema/property";
+import type { Shape } from '../../schema/shape';
+import type { Context } from '../../schema/context';
+import type { Morph } from '../../schema/morph';
+import type { Entity } from '../../schema/entity';
+import type { Property } from '../../schema/property';
 // reflect.ts no longer exports these types; declare local types compatible with reflectStage output
-type ThingLike = { id: string; type?: string; essence?: any; properties?: unknown };
-type PropertyLike = { id: string; entity?: { id?: string; type?: string } | string; key?: string; value?: unknown };
+type ThingLike = {
+  id: string;
+  type?: string;
+  essence?: any;
+  properties?: unknown;
+};
+type PropertyLike = {
+  id: string;
+  entity?: { id?: string; type?: string } | string;
+  key?: string;
+  value?: unknown;
+};
 type ReflectResult = {
   thingFacets: Record<string, unknown>;
   propertyFacets?: Record<string, unknown> | undefined;
   signatures: Record<string, any> | undefined;
   evidence: string[];
 };
-import type { KriyaActionResult } from "./action";
-import type { Relation } from "../../schema/relation";
+import type { KriyaActionResult } from './action';
+import type { Relation } from '../../schema/relation';
 
 export type Principles = {
   shapes: Shape[];
@@ -66,27 +76,27 @@ export type KriyaOptions = {
 // prevent re-export collisions.
 
 export type StageFns = {
-  seed: (p: Principles) => Promise<Pick<EssenceGraph, "entities">>;
+  seed: (p: Principles) => Promise<Pick<EssenceGraph, 'entities'>>;
   contextualize: (
     p: Principles,
-    g: Pick<EssenceGraph, "entities">
-  ) => Promise<Pick<EssenceGraph, "properties">>;
+    g: Pick<EssenceGraph, 'entities'>,
+  ) => Promise<Pick<EssenceGraph, 'properties'>>;
   // optional reflect stage: inspects seeded entities + contextualized properties and returns reflective facets/signatures
   reflect?: (
     things: ThingLike[],
     properties: PropertyLike[],
-    opts?: KriyaOptions
+    opts?: KriyaOptions,
   ) => Promise<ReflectResult>;
   ground: (
     p: Principles,
-    g: Pick<EssenceGraph, "entities" | "properties">,
-    opts?: KriyaOptions
-  ) => Promise<Pick<EssenceGraph, "relations">>;
+    g: Pick<EssenceGraph, 'entities' | 'properties'>,
+    opts?: KriyaOptions,
+  ) => Promise<Pick<EssenceGraph, 'relations'>>;
   // optional action stage: computes actions (reciprocal effects) from the graph and reflect facets
   action?: (
     graph: EssenceGraph,
     reflect?: ReflectResult,
-    opts?: { threshold?: number; contextId?: string }
+    opts?: { threshold?: number; contextId?: string },
   ) => Promise<KriyaActionResult>;
   model: (g: EssenceGraph) => Promise<Projections>;
   control: (g: EssenceGraph, proj: Projections) => Promise<Controls>;
@@ -105,7 +115,7 @@ export type CycleResult = {
 export async function runCycle(
   p: Principles,
   fns: StageFns,
-  opts?: KriyaOptions
+  opts?: KriyaOptions,
 ): Promise<CycleResult> {
   // Ring 1 — Essence
   const seeded = await fns.seed(p); // Shape → Entity
@@ -125,15 +135,21 @@ export async function runCycle(
     });
     const props = (ctxAny.properties || []).map((p0: any) => {
       const id = p0.id ?? p0.shape?.core?.id ?? (p0 as any).core?.id;
-      const entityId = p0.entity ?? p0.entityId ?? p0.shape?.core?.entity ?? (p0 as any).owner;
-      const entityType = (p0 as any).entityType ?? p0.shape?.core?.entityType ?? undefined;
+      const entityId =
+        p0.entity ?? p0.entityId ?? p0.shape?.core?.entity ?? (p0 as any).owner;
+      const entityType =
+        (p0 as any).entityType ?? p0.shape?.core?.entityType ?? undefined;
       const key = p0.key ?? p0.shape?.core?.key ?? (p0 as any).name;
       const value = (p0 as any).value ?? (p0 as any).default ?? null;
       return { id, entity: { id: entityId, type: entityType }, key, value };
     });
     // call reflect with provided reflect options
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    reflectResult = await fns.reflect!(things as any, props as any, opts?.reflectOpts as any);
+    reflectResult = await fns.reflect!(
+      things as any,
+      props as any,
+      opts?.reflectOpts as any,
+    );
   }
   // Pass reflect result to ground as an advisory field on opts so groundStage
   // can consult spectrum/advice without changing public APIs.
@@ -155,9 +171,19 @@ export async function runCycle(
   let actionResult: KriyaActionResult | undefined = undefined;
   if (typeof fns.action === 'function') {
     // pass reflectResult and lightweight opts through (use reflectOpts for context if available)
-    const actionOpts = { threshold: (opts as any)?.actionThreshold, contextId: (opts as any)?.reflectOpts?.contextId };
+    const actionOpts = {
+      threshold: (opts as any)?.actionThreshold,
+      contextId: (opts as any)?.reflectOpts?.contextId,
+    };
     actionResult = await fns.action!(graph, reflectResult, actionOpts);
   }
 
-  return { graph, projections, controls, work, reflect: reflectResult, action: actionResult };
+  return {
+    graph,
+    projections,
+    controls,
+    work,
+    reflect: reflectResult,
+    action: actionResult,
+  };
 }

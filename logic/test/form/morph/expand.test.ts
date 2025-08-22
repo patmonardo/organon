@@ -5,8 +5,8 @@ import {
   ExpandedContext,
   ExpandedMorph,
   ExpandedLevel
-} from "../../../src/form/morph/form/expand";
-import { FilterField } from "../../../src/form/morph/form/filter";
+} from "../../../src/relative/form/morph/form/expand";
+import { FilterField } from "../../../src/relative/form/morph/form/filter";
 
 // Sample field data for testing different expansion scenarios
 const sampleFields: FilterField[] = [

@@ -1,16 +1,16 @@
 import { createCommand } from "@/form/modality/commands";
-import { createPipeline } from "../../../src/form/morph/core";
+import { createPipeline } from "../../../src/relative/form/morph/core";
 
 // Import all your form components
 import {
   FieldShape, FieldValue, FieldContext,
   FieldInitMorph, FieldConstraintsMorph, FieldHistoryMorph
-} from "../../../src/form/morph/form/value";
+} from "../../../src/relative/form/morph/form/value";
 
 import {
   FilterShape, FilterContext, FilterField,
   FilterWhereMorph, FilterOrderMorph, FilterLimitMorph
-} from "../../../src/form/morph/form/filter";
+} from "../../../src/relative/form/morph/form/filter";
 
 // Sample field data for testing
 const sampleFields: (FieldValue & FilterField)[] = [

@@ -25,16 +25,18 @@ export type BackpropagationHook = (summary: unknown) => void | Promise<void>;
  * Base abstract Driver class. Essence drivers should extend this and
  * implement the APIs used by engines.
  */
-export abstract class BaseDriver {
-  readonly name: string;
+export default abstract class BaseDriver {
   private hooks: Map<string, BackpropagationHook[]> = new Map();
 
-  constructor(name = 'BaseDriver') {
-    this.name = name;
-  }
+  constructor(public readonly name: string) {}
 
-  // Primary assemble hook used by world-like drivers
-  abstract assemble(input: ProcessorInputs): World;
+  /**
+   * World assemblers override this. Non-world drivers can ignore it.
+   * Default throws to make accidental calls explicit.
+   */
+  assemble(_input: ProcessorInputs): World {
+    throw new Error(`${this.name} does not implement assemble()`);
+  }
 
   // Optional content indexing
   indexContent?(input: ProcessorInputs): { subtleWorldTotal: number; grossByThing: Record<string, number> };
@@ -70,6 +72,47 @@ export abstract class BaseDriver {
   // Conversion helpers may be overridden by drivers
   toActive?(input: unknown): unknown;
   fromActive?(input: unknown): unknown;
-}
 
-export default BaseDriver;
+  /**
+   * Extract a canonical id from a variety of payload shapes.
+   * Prefer payload.shape.core.id, fall back to payload.id or payload.shape.id.
+   */
+  protected extractIdFromPayload(payload: unknown): string | undefined {
+    if (!payload || typeof payload !== 'object') return undefined;
+    const p = payload as Record<string, any>;
+    const shape = p.shape as Record<string, any> | undefined;
+    const core = shape?.core as Record<string, any> | undefined;
+    if (core && core.id) return String(core.id);
+    if (p.id) return String(p.id);
+    if (shape && (shape.id || (shape.core && shape.core.id))) return String(shape.id ?? shape.core?.id ?? '');
+    return undefined;
+  }
+
+  /**
+   * Normalize an engine/service event so callers can reliably read payload.shape.core.id.
+   * If only payload.id exists, copy it into payload.shape.core.id so consumers can use the canonical path.
+   */
+  protected normalizeEvent(evt: any) {
+    if (!evt || typeof evt !== 'object') return evt;
+    const payload = (evt.payload ?? {}) as Record<string, any>;
+    const id = this.extractIdFromPayload(payload);
+    if (!id) return evt;
+    // Ensure payload.shape.core.id exists
+    const shape = payload.shape ?? {};
+    const core = shape.core ?? {};
+    if (!core.id) {
+      const normalizedPayload = {
+        ...payload,
+        shape: {
+          ...shape,
+          core: {
+            ...core,
+            id,
+          },
+        },
+      };
+      return { ...evt, payload: normalizedPayload };
+    }
+    return evt;
+  }
+}

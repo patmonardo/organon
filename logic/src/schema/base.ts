@@ -47,11 +47,8 @@ export const BaseCore = z.object({
 export type BaseCore = z.infer<typeof BaseCore>;
 
 // BaseState (common state)
-export const BaseState = z.object({
-  status: z.enum(["active", "archived", "deleted"]).default("active"),
-  tags: z.array(Label).default([]),
-  meta: z.record(z.unknown()).default({}),
-});
+// Make state permissive so Forms can stash arbitrary runtime fields
+export const BaseState = z.object({}).catchall(z.unknown());
 export type BaseState = z.infer<typeof BaseState>;
 
 // BaseShape (Core + State)
@@ -69,3 +66,68 @@ export const BaseSchema = z.object({
   ext: z.record(z.unknown()).default({}),
 });
 export type Base = z.infer<typeof BaseSchema>;
+
+/**
+ * Return the canonical core object from a variety of schema shapes.
+ *
+ * Accepts:
+ * - full Base (with .shape.core)
+ * - BaseShape (with .core)
+ * - a direct core-like object
+ *
+ * Returns null when no core-like structure is found.
+ */
+export function getCore<T extends BaseCore = BaseCore>(obj: unknown): T | null {
+  const o = obj as any;
+  if (!o || typeof o !== 'object') return null;
+  if (o.shape && o.shape.core && typeof o.shape.core === 'object') {
+    return o.shape.core as T;
+  }
+  if (o.core && typeof o.core === 'object') {
+    return o.core as T;
+  }
+  return null;
+}
+
+/**
+ * Return the canonical state object from a variety of schema shapes.
+ *
+ * Accepts:
+ * - full Base (with .shape.state)
+ * - BaseShape (with .state)
+ * - a direct state-like object
+ *
+ * Returns null when no state-like structure is found.
+ */
+export function getState<T extends BaseState = BaseState>(obj: unknown): T | null {
+  const o = obj as any;
+  if (!o || typeof o !== 'object') return null;
+  if (o.shape && o.shape.state && typeof o.shape.state === 'object') {
+    return o.shape.state as T;
+  }
+  if (o.state && typeof o.state === 'object') {
+    return o.state as T;
+  }
+  return null;
+}
+
+/**
+ * Return the canonical shape object (core + state) from a variety of schema shapes.
+ *
+ * Accepts:
+ * - full Base (with .shape)
+ * - BaseShape (core+state)
+ *
+ * Returns null when no shape-like structure is found.
+ */
+export function getShape<T extends BaseShape = BaseShape>(obj: unknown): T | null {
+  const o = obj as any;
+  if (!o || typeof o !== 'object') return null;
+  if (o.shape && typeof o.shape === 'object') {
+    return o.shape as T;
+  }
+  if (o.core || o.state) {
+    return { core: (o.core ?? {}), state: (o.state ?? {}) } as T;
+  }
+  return null;
+}

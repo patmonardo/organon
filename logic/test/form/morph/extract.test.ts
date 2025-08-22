@@ -7,7 +7,7 @@ import {
   FilteredQualitiesMorph,
   QualitiesToDataMorph,
   determineDisplayType
-} from "../../../src/form/morph/form/extract";
+} from "../../../src/relative/form/morph/form/extract";
 
 // Sample field data for testing
 const sampleQualities: ExtractedField[] = [

@@ -5,4 +5,5 @@ export * from './mechanism';
 export * from './chemism';
 export * from './teleology';
 export * from './absolute';
+export * from "./truth";
 

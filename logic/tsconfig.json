@@ -119,19 +119,22 @@
   "include": [
     "src/index.ts",
     "src/schema/**/*",
-    "src/form/**/*",
+    "src/relative/form/**/*",
+    "src/relative/index.ts",
     "src/repository/memory.ts",
     "src/repository/pillars.ts",
     "src/repository/repo.ts",
     "src/repository/index.ts",
-    "src/absolute/**/*",
+    "src/absolute/index.ts",
+    "src/absolute/core/**/*",
+    "src/absolute/essence/**/*",
+    "src/absolute/form/**/*",
     // "src/**/*"
   ],
   "exclude": [
-    "src/form/morph/cypher/**/*",
-    "src/form/morph/form/**/*",
-    "src/form/morph/graph/**/*",
-    "src/form/modality/**/*",
+    "src/relative/form/morph/cypher/**/*",
+    "src/relative/form/morph/form/**/*",
+    "src/relative/form/morph/graph/**/*",
    // "**/service.ts"
   ]
 }

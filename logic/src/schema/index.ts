@@ -8,11 +8,12 @@ export * from "./entity";
 export * from "./context";
 export * from "./property";
 export * from "./morph";
-export * from "./relation";
+export * from './aspect';
 
 // Ground and Condition (metaphysical scaffolding)
 export * from "./ground";
 export * from "./condition";
+export * from "./relation";
 
 // Bridge (Form + Matter → Content)
 export * from "./active";

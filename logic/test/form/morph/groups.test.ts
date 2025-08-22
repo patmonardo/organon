@@ -6,8 +6,8 @@ import {
   GroupingOptions,
   ApplyGroupMorph,
   withGrouping
-} from "../../../src/form/morph/form/groups";
-import { FieldValue } from "../../../src/form/morph/form/value";
+} from "../../../src/relative/form/morph/form/groups";
+import { FieldValue } from "../../../src/relative/form/morph/form/value";
 
 // Sample field data for testing
 const sampleFields: FieldValue[] = [
