@@ -73,9 +73,9 @@ Tradeoffs:
 - Schema (Zod 4 compatible):
   - file: `logic/src/schema/empowerment.ts`
 - Form wrapper:
-  - file: `logic/src/form/FormEmpowerment.ts`
+  - file: `logic/src/relative/core/empowerment-formt.ts`
 - Processor hook & default algebra:
-  - file: `logic/src/processor/empowerment-processor.ts`
+  - file: `logic/src/relative/core/empowerment-processor.ts`
   - default combine: score = sum(weight * confidence); tie-breaker by provenance priority then timestamp.
 - Engine integration:
   - Add optional `empowerments?: FormEmpowerment[]` parameter to `process()`/`handle()` signatures where applicable.
@@ -87,7 +87,7 @@ Tradeoffs:
 
 To keep a minimal, consistent vocabulary across code and docs we adopt two Sanskrit-derived terms with precise technical meanings:
 - Kriya — maps to Empowerment in the runtime: tokens that enable, authorize, or weight action. Kriya tokens are active, transient or persistent, and carry weight/confidence/provenance.
-- Jnana — maps to Knowledge/confidence: the epistemic score or certainty attached to data, schema, or empowerment. Jnana influences scoring in the empowerment algebra (e.g., combined score uses weight * jnana).
+- Jnana — maps to Knowledge/confidence: the epistemic score or certainty attached to data, schema, or empowerment. Jnana influences scoring in the empowerment algebra (e.g., combined score uses weight * certainty).
 
 Rationale: this preserves the useful metaphors (Kriya as doing/empowering, Jnana as knowing) while keeping them small, explicit, and implementable in the schema/form/processor layers.
 

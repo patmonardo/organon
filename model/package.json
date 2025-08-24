@@ -1,7 +1,9 @@
 {
-  "name": "@organon/model",
+  "name": "model",
   "version": "0.1.0",
-  "description": "Organon Graph Data Science Model Library",
+  "private": true,
+  "type": "module",
+  "description": "Organon Logic Model",
   "scripts": {
     "build": "tsc",
     "b": "tsc",
@@ -15,7 +17,8 @@
     "format": "prettier --write \"**/*.{ts,js,md,json,yml,yaml}\" --ignore-path .gitignore"
   },
   "dependencies": {
-    "@types/node": "^22.15.17"
+    "@types/node": "^22.15.17",
+    "tsx": "^4.20.4"
   },
   "devDependencies": {
     "@types/js-yaml": "^4.0.9",

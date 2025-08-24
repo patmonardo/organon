@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import FormEmpowerment from '../../../src/relative/core/FormEmpowerment';
-import { combineEmpowerments } from '../../../src/relative/core/empowerment-processor';
+import FormEmpowerment from '../../../src/relative/core/empowerment-form';
+import { combineEmpowerments, combineEmpowermentsWithOptions } from '../../../src/relative/core/empowerment-processor';
 
 describe('empowerment processor', () => {
   it('combines scores correctly (happy path)', () => {
@@ -9,7 +9,7 @@ describe('empowerment processor', () => {
       subject: 'u1',
       actions: ['create'],
       weight: 2,
-      jnana: 0.5,
+      certainty: 0.5,
     });
 
     const b = FormEmpowerment.fromSchema({
@@ -17,7 +17,7 @@ describe('empowerment processor', () => {
       subject: 'u2',
       actions: ['create'],
       weight: 1,
-      jnana: 1,
+      certainty: 1,
     });
 
     const res = combineEmpowerments([a, b]);
@@ -31,12 +31,33 @@ describe('empowerment processor', () => {
       subject: 'u3',
       actions: ['*'],
       weight: 1,
-      jnana: 0.5,
+      certainty: 0.5,
     });
 
     const root = FormEmpowerment.createRoot();
     const res = combineEmpowerments([t], root);
     expect(res.scores.some((s) => s.id === root.id)).toBe(true);
     expect(res.total).toBeGreaterThan(0);
+  });
+
+  it('applies privilegeBoost to privileged tokens', () => {
+    const t = FormEmpowerment.fromSchema({
+      id: 't4',
+      subject: 'u4',
+      actions: ['create'],
+      weight: 2,
+      certainty: 0.5,
+      provenance: { source: 'epistemic.authority' },
+    });
+
+    const baseScore = t.score();
+    const res = combineEmpowermentsWithOptions([t], undefined, { privilegeBoost: 3 });
+    // find the token entry
+    const entry = res.scores.find((s) => s.id === t.id)!;
+    expect(entry).toBeDefined();
+    // boosted should equal base * 3
+    expect(entry.score).toBeCloseTo(baseScore * 3);
+    // isPrivileged flag should be set
+    expect((entry as any).isPrivileged).toBe(true);
   });
 });

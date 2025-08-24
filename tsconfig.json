@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "target": "ES2022",
+    "module": "preserve",
+    "moduleResolution": "bundler",
     "strict": true,
+    "resolveJsonModule": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
@@ -17,37 +18,12 @@
     "sourceMap": true,
     "baseUrl": ".",
     "paths": {
-      "@organon/reality": [
-        "reality/src/index.ts"
-      ],
-      "@organon/reality/*": [
-        "reality/src/*"
-      ],
-      "@organon/core": [
-        "core/src/index.ts"
-      ],
-      "@organon/core/*": [
-        "core/src/*"
-      ],
-      "@organon/logic": [
-        "logic/src/index.ts"
-      ],
-      "@organon/logic/*": [
-        "logic/src/*"
-      ],
-      "@organon/model": [
-        "model/src/index.ts"
-      ],
-      "@organon/model/*": [
-        "model/src/*"
-      ],
-      "@organon/task": [
-        "task/src/index.ts"
-      ],
-      "@organon/task/*": [
-        "task/src/*"
-      ],
-    }
+      "@reality/*": ["reality/src/*"],
+      "@core/*": ["core/src/*"],
+      "@logic/*": ["logic/src/*"],
+      "@model/*": ["model/src/*"],
+      "@task/*": ["task/src/*"],
+    },
   },
   "references": [
     {

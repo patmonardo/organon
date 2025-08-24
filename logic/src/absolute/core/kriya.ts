@@ -117,9 +117,49 @@ export async function runCycle(
   fns: StageFns,
   opts?: KriyaOptions,
 ): Promise<CycleResult> {
+  // Normalize options and provide small observability & budget checks
+  const _opts: KriyaOptions = {
+    fixpointMaxIters: 100,
+    budgetMs: undefined,
+    ...opts,
+  };
+  const startTs = Date.now();
+  const log =
+    typeof _opts.log === 'function'
+      ? (_opts.log as (m: string, d?: any) => void)
+      : undefined;
+  function checkBudget(stage?: string) {
+    if (
+      typeof _opts.budgetMs === 'number' &&
+      Date.now() - startTs > _opts.budgetMs
+    ) {
+      const msg = `kriya.runCycle: budget exceeded${
+        stage ? ` at ${stage}` : ''
+      }`;
+      log?.(msg);
+      throw new Error(msg);
+    }
+  }
+  // Validate required stages early
+  if (
+    typeof fns.seed !== 'function' ||
+    typeof fns.contextualize !== 'function' ||
+    typeof fns.ground !== 'function' ||
+    typeof fns.model !== 'function' ||
+    typeof fns.control !== 'function' ||
+    typeof fns.plan !== 'function'
+  ) {
+    throw new Error(
+      'runCycle: missing required stage function (seed/contextualize/ground/model/control/plan)',
+    );
+  }
   // Ring 1 — Essence
   const seeded = await fns.seed(p); // Shape → Entity
+  checkBudget('seed');
+  log?.('kriya:seed completed', { elapsed: Date.now() - startTs });
   const ctxed = await fns.contextualize(p, seeded); // Context → Property
+  checkBudget('contextualize');
+  log?.('kriya:contextualize completed', { elapsed: Date.now() - startTs });
   let reflectResult: ReflectResult | undefined = undefined;
   // Optional reflect stage (compute Citta/vṛtti facets and signatures)
   if (typeof fns.reflect === 'function') {
@@ -155,6 +195,8 @@ export async function runCycle(
   // can consult spectrum/advice without changing public APIs.
   const groundOpts = { ...(opts as any), reflectResult } as any;
   const grounded = await fns.ground(p, { ...seeded, ...ctxed }, groundOpts); // Morph → Relation
+  checkBudget('ground');
+  log?.('kriya:ground completed', { elapsed: Date.now() - startTs });
 
   const graph: EssenceGraph = {
     entities: seeded.entities,
@@ -164,8 +206,14 @@ export async function runCycle(
 
   // Rings 2–3 — read/plan layers
   const projections = await fns.model(graph);
+  checkBudget('model');
+  log?.('kriya:model completed', { elapsed: Date.now() - startTs });
   const controls = await fns.control(graph, projections);
+  checkBudget('control');
+  log?.('kriya:control completed', { elapsed: Date.now() - startTs });
   const work = await fns.plan(controls);
+  checkBudget('plan');
+  log?.('kriya:plan completed', { elapsed: Date.now() - startTs });
 
   // optional action stage (compute reciprocal effects)
   let actionResult: KriyaActionResult | undefined = undefined;
