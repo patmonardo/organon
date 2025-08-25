@@ -1,6 +1,6 @@
-import type { Empowerment } from '../../schema/empowerment';
-import type { Facet } from '../../schema/facet';
-import type { Signature } from '../../schema/signature';
+import type { Empowerment } from '@schema';
+import type { Facet } from '@schema';
+import type { Signature } from '@schema';
 
 // Replace the problematic interface extension with a composed type that
 // allows facets to be either Facet objects or string ids without conflicting
@@ -46,6 +46,7 @@ export abstract class EmpowermentProvider {
 
   // Engines override with real verification
   protected async verifySignatures(sigs?: SignatureLike[]): Promise<boolean> {
+    console.log("Verifying signatures:", sigs);
     return true;
   }
 

@@ -59,7 +59,7 @@ export function composeMorphs<T, U, V>(
 export class IdentityMorph<T> implements Morph<T, T> {
   readonly name: string;
   readonly options: MorphOptions;
-  
+
   constructor(name: string = "IdentityMorph") {
     this.name = name;
     this.options = {
@@ -69,8 +69,9 @@ export class IdentityMorph<T> implements Morph<T, T> {
       memoizable: true,
     };
   }
-  
+
   transform(input: T, context?: any): T {
+    console.log("Transforming context:", context);
     return input;
   }
 }
@@ -83,7 +84,7 @@ export class ComposedMorph<T, U> implements Morph<T, U> {
   readonly options: MorphOptions;
   private steps: Array<Morph<any, any>>;
   private postProcessor?: PostProcessor<U>;
-  
+
   constructor(
     name: string,
     steps: Array<Morph<any, any>>,
@@ -93,19 +94,19 @@ export class ComposedMorph<T, U> implements Morph<T, U> {
     this.name = name;
     this.steps = [...steps];
     this.postProcessor = postProcessor;
-    
+
     // Calculate combined options
-    const isPure = postProcessor 
+    const isPure = postProcessor
       ? false // Post-processing makes it impure by default
       : steps.every(step => step.options.pure);
-      
+
     const isFusible = !postProcessor && steps.every(step => step.options.fusible);
-    
+
     const totalCost = steps.reduce(
-      (total, step) => total + step.options.cost, 
+      (total, step) => total + step.options.cost,
       postProcessor ? 1 : 0
     );
-    
+
     this.options = {
       pure: isPure,
       fusible: isFusible,
@@ -114,37 +115,37 @@ export class ComposedMorph<T, U> implements Morph<T, U> {
       ...options
     };
   }
-  
+
   transform(input: T, context?: any): U {
     // Apply each step in sequence
     let result: any = input;
-    
+
     for (const step of this.steps) {
       result = step.transform(result, context);
     }
-    
+
     // Apply post-processing if provided
     if (this.postProcessor) {
       result = this.postProcessor(result as U, context);
     }
-    
+
     return result as U;
   }
-  
+
   /**
    * Get steps in this composed morph
    */
   getSteps(): Array<Morph<any, any>> {
     return [...this.steps];
   }
-  
+
   /**
    * Get post-processor if any
    */
   getPostProcessor(): PostProcessor<U> | undefined {
     return this.postProcessor;
   }
-  
+
   /**
    * Create a composed morph from an array of morphs
    */

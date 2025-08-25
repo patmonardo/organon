@@ -1,15 +1,15 @@
-import type { Command, Event } from '../../../absolute/core/message';
-import type { EventBus } from '../../../absolute/core/bus';
-import { InMemoryEventBus } from '../../../absolute/core/bus';
-import { startTrace, childSpan } from '../../../absolute/core/trace';
-import type { Repository } from '../../../repository/repo';
+import type { Command, Event } from '@absolute';
+import type { EventBus } from '@absolute';
+import { InMemoryEventBus } from '@absolute';
+import { startTrace, childSpan } from '@absolute';
+import type { Repository } from '@repository';
 import {
   type Aspect,
   AspectSchema,
   createAspect,
-} from '../../../schema/aspect';
+} from '@schema';
 import { FormAspect } from './aspect-form';
-import * as active from '../../../schema/active';
+import * as active from '@schema';
 
 type BaseState = Aspect['shape']['state'];
 

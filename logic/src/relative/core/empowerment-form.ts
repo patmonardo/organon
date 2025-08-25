@@ -1,4 +1,4 @@
-import { EmpowermentSchema, type Empowerment } from '../../schema/empowerment';
+import { EmpowermentSchema, type Empowerment } from '@schema';
 
 /**
  * Thin Form wrapper for Empowerment schema.

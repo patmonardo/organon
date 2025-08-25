@@ -2,13 +2,13 @@
   "name": "organon",
   "version": "0.1.0",
   "private": true,
-  "description": "Organon Graph Data Science- Research Assistant Platform",
+  "description": "Organon Research Assistant Platform",
   "workspaces": [
-    "reality",
-    "core",
-    "task",
-    "logic",
-    "model"
+    "@organon/reality",
+    "@organon/core",
+    "@organon/task",
+    "@organon/logic",
+    "@organon/model"
   ],
   "scripts": {
     "build": "pnpm run --recursive build",
@@ -17,6 +17,7 @@
     "dev": "pnpm run --parallel --recursive dev",
     "d": "pnpm run --parallel --recursive dev",
     "test": "pnpm run --recursive test",
+    "t": "pnpm run --recursive test",
     "lint": "eslint . --cache",
     "format": "prettier --write \"**/*.{ts,js,md,json,yml,yaml}\" --ignore-path .gitignore",
     "reality:build": "pnpm --filter=@organon/reality build",

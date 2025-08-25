@@ -1,2 +1,2 @@
-// TAW <knowledge> schemas barrel
-export * from './schema';
+const X = 42;
+export { X };

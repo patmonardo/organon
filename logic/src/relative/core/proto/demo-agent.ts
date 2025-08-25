@@ -1,9 +1,16 @@
 import fs from 'fs/promises';
+import { fileURLToPath } from 'url';
 import { ProtoEngine } from './proto-engine';
 import { AgentEngine } from './agent-engine';
 import { TaskEngine } from './task-engine';
 import { AgentProcessor } from './agent-processor';
 import type { EmpowermentLike } from '../empowerment-core';
+import path from 'path';
+import { dirname } from 'path';
+const scriptDir = dirname(fileURLToPath(import.meta.url));
+// climb up from logic/src/relative/core/proto -> repo root (adjust if layout changes)
+const repoRoot = path.resolve(scriptDir, '../../../../..');
+const cacheDir = path.join(repoRoot, '.cache');
 
 function parseArgs(argv: string[]) {
   const out: Record<string, string> = {};
@@ -113,9 +120,9 @@ async function demo() {
 
   // persist each engine's graph for inspection / reload (optional)
   try {
-    await policyEngine.saveGraph('./.cache/policy-engine.graph.json');
-    await taskEngine.saveGraph('./.cache/task-engine.graph.json');
-    await agentEngine.saveGraph('./.cache/agent-engine.graph.json');
+    await policyEngine.saveGraph(path.join(cacheDir, 'policy-engine.graph.json'));
+    await taskEngine.saveGraph(path.join(cacheDir, 'task-engine.graph.json'));
+    await agentEngine.saveGraph(path.join(cacheDir, 'agent-engine.graph.json'));
     logger('saved engine graphs to ./.cache/*.graph.json');
   } catch {
     /* non-fatal */
@@ -170,7 +177,9 @@ async function demo() {
   console.log('audit:', o.audit);
 }
 
-if (require.main === module) {
+// ESM entry check (avoid using require)
+const __filename = fileURLToPath(import.meta.url);
+if (process.argv[1] === __filename) {
   demo().catch((e) => {
     console.error('demo-agent failed:', e);
     process.exit(1);

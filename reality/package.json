@@ -1,23 +1,41 @@
 {
   "name": "@organon/reality",
+  "private": true,
   "version": "0.1.0",
-  "description": "Organon Graph Data Science Reality Library",
+  "description": "Organon Reality Processor",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts ",
   "scripts": {
     "build": "tsc",
     "b": "tsc",
-    "clean": "rm -rf dist node_modules",
+    "clean": "rm -rf dist node_modules tsconfig.tsbuildinfo",
     "dev": "tsc --watch",
     "d": "tsc --watch",
-    "test": "vitest",
+    "test": "vitest run",
     "test:watch": "vitest --watch",
     "test:ui": "vitest --ui",
+    "test:ci": "vitest run --reporter=dot",
+    "t": "vitest run",
     "lint": "eslint . --cache",
     "format": "prettier --write \"**/*.{ts,js,md,json,yml,yaml}\" --ignore-path .gitignore"
   },
+  "workspaces": [
+    "@organon/reality",
+    "@organon/core",
+    "@organon/logic",
+    "@organon/model",
+    "@organon/task"
+  ],
   "dependencies": {
-    "@types/node": "^22.15.17"
+    "@organon/task": "workspace:*",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
+    "@types/node": "^20.19.8",
+    "typescript": "^5.5.0",
+    "typedoc": "^0.26.0",
+    "tsx": "^4.20.4",
     "vitest": "^3.1.3"
   }
 }

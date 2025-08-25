@@ -127,12 +127,12 @@ export class ThingDriver extends BaseDriver {
           continue;
         }
 
-        // upsert: check if exists in repo OR we created it in this batch
         const id = a.id;
-        const existsInRepo = await repo.get(id);
+        // fetch once, treat as possibly undefined
+        const existingDoc = await repo.get(id);
         const existsInBatch = processedIds.has(id);
 
-        if (!existsInRepo && !existsInBatch) {
+        if (!existingDoc && !existsInBatch) {
           // create new entity
           const doc = createEntity({
             id,
@@ -151,8 +151,29 @@ export class ThingDriver extends BaseDriver {
           events.push(evt);
         } else {
           // update existing entity (either from repo or created in this batch)
-          const existing = existsInRepo || (await repo.get(id)); // Get the current state
-          const next = updateEntity(existing!, {
+          // use existingDoc when available, otherwise try to re-read (defensive)
+          const current = existingDoc ?? (await repo.get(id));
+          if (!current) {
+            // defensive fallback: if still missing, create instead of throwing
+            const doc = createEntity({
+              id,
+              type: a.entityType ?? 'system.Entity',
+              name: a.name,
+              state: a.state ?? {},
+              signature: a.signature,
+              facets: a.facets,
+              version: a.version,
+              ext: a.ext,
+            });
+            await repo.create(doc);
+            processedIds.add(id);
+            const evt = { kind: 'entity.create', payload: doc };
+            publish(bus, 'entity.create', evt);
+            events.push(evt);
+            continue;
+          }
+
+          const next = updateEntity(current, {
             core: {
               ...(a.name !== undefined ? { name: a.name } : {}),
               ...(a.entityType !== undefined ? { type: a.entityType } : {}),
@@ -208,6 +229,7 @@ export async function commitEntities(
 
 // Fix the publish function - it's not emitting events correctly:
 function publish(bus: EventBus | undefined, kind: string, evt: any) {
+  if (!kind) return;
   if (!bus) return;
   const anyBus = bus as any;
   // The bus expects just the event object, not nested in another wrapper
