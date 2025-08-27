@@ -134,3 +134,5 @@
 // }
 
 // // Note: For ES Modules, use `npx tsx index.ts` or `node index.js` to run
+
+export { reality } from './reality';

@@ -23,9 +23,61 @@
     "types": [
       "node"
     ],
+    "baseUrl": ".",
     "paths": {
+      "@schema": [
+        "src/schema/index.ts"
+      ],
+      "@schema/*": [
+        "src/schema/*"
+      ],
+      "@repository": [
+        "src/repository/index.ts"
+      ],
+      "@repository/*": [
+        "src/repository/*"
+      ],
+      "@relative": [
+        "src/relative/index.ts"
+      ],
+      "@relative/*": [
+        "src/relative/*"
+      ],
+      "@absolute": [
+        "src/absolute/index.ts"
+      ],
+      "@absolute/*": [
+        "src/absolute/*"
+      ],
+      "@organon/reality": [
+        "../reality/dist"
+      ],
+      "@organon/reality/*": [
+        "../reality/dist/*"
+      ],
+      "@organon/core": [
+        "../core/dist"
+      ],
+      "@organon/core/*": [
+        "../core/dist/*"
+      ],
+      "@organon/logic": [
+        "../logic/dist"
+      ],
+      "@organon/logic/*": [
+        "../logic/dist/*"
+      ],
+      "@organon/model": [
+        "../model/dist"
+      ],
+      "@organon/model/*": [
+        "../model/dist/*"
+      ],
       "@organon/task": [
         "../task/dist"
+      ],
+      "@organon/task/*": [
+        "../task/dist/*"
       ]
     }
   },

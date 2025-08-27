@@ -22,7 +22,8 @@
     "format": "prettier --write \"**/*.{ts,js,md,json,yml,yaml}\" --ignore-path .gitignore"
   },
   "dependencies": {
-    "@organon/task": "workspace:*",
+    "@organon/reality": "workspace:*",
+    "@organon/core": "workspace:*",
     "zod": "^3.25.76"
   },
   "devDependencies": {

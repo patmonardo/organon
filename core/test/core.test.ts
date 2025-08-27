@@ -1,9 +1,8 @@
 import { describe, it, expect } from "vitest";
-// import { logic } from '@organon/logic/logic';
-const logic = "logic";
+import { reality } from '@organon/reality';
 
-describe("@organon/logic/logic resolution", () => {
-  it('imports from "@organon/logic/logic" and exports "logic"', () => {
-    expect(logic).toBe("logic");
+describe("@organon/reality resolution", () => {
+  it('imports from "@organon/reality" and exports "core"', () => {
+    expect(reality).toBe("reality");
   });
 });

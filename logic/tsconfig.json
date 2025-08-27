@@ -48,6 +48,18 @@
       "@absolute/*": [
         "src/absolute/*"
       ],
+      "@organon/reality": [
+        "../reality/dist"
+      ],
+      "@organon/reality/*": [
+        "../reality/dist/*"
+      ],
+      "@organon/core": [
+        "../core/dist"
+      ],
+      "@organon/core/*": [
+        "../core/dist/*"
+      ],
       "@organon/logic": [
         "../logic/dist"
       ],

@@ -36,11 +36,23 @@
       "@repository/*": [
         "../src/repository/*"
       ],
+      "@organon/reality": [
+        "../../reality/dist/index"
+      ],
+      "@organon/reality/*": [
+        "../../reality/dist/*"
+      ],
+      "@organon/core": [
+        "../../core/dist/index"
+      ],
+      "@organon/core/*": [
+        "../../core/dist/*"
+      ],
       "@organon/logic": [
-        "../logic/dist/index"
+        "../../logic/dist/index"
       ],
       "@organon/logic/*": [
-        "../logic/dist/*"
+        "../../logic/dist/*"
       ],
       "@organon/model": [
         "../../model/dist/index"

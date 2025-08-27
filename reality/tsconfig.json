@@ -54,6 +54,18 @@
       "@controller/*": [
         "src/controller/*"
       ],
+      "@organon/reality": [
+        "../reality/dist/index"
+      ],
+      "@organon/reality/*": [
+        "../reality/dist/*"
+      ],
+      "@organon/core": [
+        "../core/dist/index"
+      ],
+      "@organon/core/*": [
+        "../core/dist/*"
+      ],
       "@organon/logic": [
         "../logic/dist/index"
       ],
@@ -76,6 +88,6 @@
   },
   "include": [
     "src/index.ts",
-    "src/model.ts"
+    "src/reality.ts"
   ]
 }
