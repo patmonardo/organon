@@ -13,7 +13,6 @@ const alias = Object.fromEntries(
   ]),
 );
 
-console.log(alias);
 export default defineConfig({
   resolve: {
     alias,

@@ -20,18 +20,18 @@ importers:
       tsx:
         specifier: ^4.20.4
         version: 4.20.4
-      typedoc:
-        specifier: ^0.26.0
-        version: 0.26.11(typescript@5.8.3)
       typescript:
-        specifier: ^5.5.0
-        version: 5.8.3
+        specifier: ^5.9.0
+        version: 5.9.2
       vitest:
         specifier: ^3.1.3
         version: 3.2.4(@types/node@20.19.8)(terser@5.43.1)(tsx@4.20.4)(yaml@2.8.0)
 
   logic:
     dependencies:
+      '@organon/task':
+        specifier: workspace:*
+        version: link:../task
       zod:
         specifier: ^3.25.76
         version: 3.25.76
@@ -55,7 +55,7 @@ importers:
   model:
     dependencies:
       '@organon/logic':
-        specifier: workspace:^0.1.0
+        specifier: workspace:*
         version: link:../logic
       zod:
         specifier: ^3.25.76
@@ -129,12 +129,9 @@ importers:
       tsx:
         specifier: ^4.20.4
         version: 4.20.4
-      typedoc:
-        specifier: ^0.26.0
-        version: 0.26.11(typescript@5.8.3)
       typescript:
-        specifier: ^5.5.0
-        version: 5.8.3
+        specifier: ^5.9.2
+        version: 5.9.2
       vitest:
         specifier: ^3.1.3
         version: 3.2.4(@types/node@20.19.8)(terser@5.43.1)(tsx@4.20.4)(yaml@2.8.0)

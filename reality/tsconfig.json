@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "composite": true,
     "target": "ES2022",
     "module": "ES2022",
     "moduleResolution": "bundler",
@@ -22,18 +21,61 @@
     "skipLibCheck": true,
     "types": [
       "node"
-    ]
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@schema": [
+        "src/schema/index.ts"
+      ],
+      "@schema/*": [
+        "src/schema/*"
+      ],
+      "@repository": [
+        "src/repository/index.ts"
+      ],
+      "@repository/*": [
+        "src/repository/*"
+      ],
+      "@model": [
+        "src/model/index.ts"
+      ],
+      "@model/*": [
+        "src/model/*"
+      ],
+      "@view": [
+        "src/view/index.ts"
+      ],
+      "@view/*": [
+        "src/view/*"
+      ],
+      "@controller": [
+        "src/controller/index.ts"
+      ],
+      "@controller/*": [
+        "src/controller/*"
+      ],
+      "@organon/logic": [
+        "../logic/dist/index"
+      ],
+      "@organon/logic/*": [
+        "../logic/dist/*"
+      ],
+      "@organon/model": [
+        "../model/dist"
+      ],
+      "@organon/model/*": [
+        "../model/dist/*"
+      ],
+      "@organon/task": [
+        "../task/dist"
+      ],
+      "@organon/task/*": [
+        "../task/dist/*"
+      ]
+    }
   },
   "include": [
     "src/index.ts",
-    "src/reality.ts",
-    // "src/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "**/dist",
-    "**/build",
-    "**/*.test.ts",
-    "**/*.spec.ts"
+    "src/model.ts"
   ]
 }

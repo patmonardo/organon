@@ -49,19 +49,22 @@
         "src/absolute/*"
       ],
       "@organon/logic": [
-        "../../logic/dist"
+        "../logic/dist"
       ],
       "@organon/logic/*": [
-        "../../logic/dist/*"
+        "../logic/dist/*"
       ],
       "@organon/model": [
-        "../..model/dist"
+        "../model/dist"
       ],
       "@organon/model/*": [
-        "../../model/dist/*"
+        "../model/dist/*"
       ],
       "@organon/task": [
-        "../../task/dist"
+        "../task/dist"
+      ],
+      "@organon/task/*": [
+        "../task/dist/*"
       ]
     }
   },

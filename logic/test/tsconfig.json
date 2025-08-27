@@ -25,34 +25,34 @@
     "baseUrl": ".",
     "paths": {
       "@schema": [
-        "src/schema/index.ts"
+        "../src/schema/index.ts"
       ],
       "@schema/*": [
-        "src/schema/*"
+        "../src/schema/*"
       ],
       "@repository": [
-        "src/repository/index.ts"
+        "../src/repository/index.ts"
       ],
       "@repository/*": [
-        "src/repository/*"
+        "../src/repository/*"
       ],
       "@absolute": [
-        "src/absolute/index.ts"
+        "../src/absolute/index.ts"
       ],
       "@absolute/*": [
-        "src/absolute/*"
+        "../src/absolute/*"
       ],
       "@relative": [
-        "src/relative/index.ts"
+        "../src/relative/index.ts"
       ],
       "@relative/*": [
-        "src/relative/*"
+        "../src/relative/*"
       ],
       "@organon/logic": [
-        "../../logic/dist/index"
+        "../logic/dist/index"
       ],
       "@organon/logic/*": [
-        "../../logic/dist/*"
+        "../logic/dist/*"
       ],
       "@organon/model": [
         "../../model/dist/index"

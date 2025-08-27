@@ -8,4 +8,9 @@
 // import * as test from '@relative/form/morph';
 // console.log(createShape ({type: "circle"}));
 
+// import { task } from '@organon/task/task';
+// import { ShapeSchema } from '@organon/logic/schema';
+// console.log(task);
+// console.log(ShapeSchema);
+
 export const logic = "logic";

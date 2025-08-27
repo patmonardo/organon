@@ -6,7 +6,7 @@
     "lib": [
       "ES2022"
     ],
-    "rootDir": "src",
+    "rootDir": ".",
     "outDir": "dist",
     "declaration": true,
     "strict": true,
@@ -25,57 +25,50 @@
     "baseUrl": ".",
     "paths": {
       "@schema": [
-        "src/schema/index.ts"
+        "../src/schema/index.ts"
       ],
       "@schema/*": [
-        "src/schema/*"
+        "../src/schema/*"
       ],
       "@repository": [
-        "src/repository/index.ts"
+        "../src/repository/index.ts"
       ],
       "@repository/*": [
-        "src/repository/*"
+        "../src/repository/*"
       ],
-      "@model": [
-        "src/model/index.ts"
+      "@absolute": [
+        "../src/absolute/index.ts"
       ],
-      "@model/*": [
-        "src/model/*"
+      "@absolute/*": [
+        "../src/absolute/*"
       ],
-      "@view": [
-        "src/view/index.ts"
+      "@relative": [
+        "../src/relative/index.ts"
       ],
-      "@view/*": [
-        "src/view/*"
-      ],
-      "@controller": [
-        "src/controller/index.ts"
-      ],
-      "@controller/*": [
-        "src/controller/*"
+      "@relative/*": [
+        "../src/relative/*"
       ],
       "@organon/logic": [
-        "../logic/dist/index"
+        "../../logic/dist/index"
       ],
       "@organon/logic/*": [
-        "../logic/dist/*"
+        "../../logic/dist/*"
       ],
       "@organon/model": [
-        "../model/src"
+        "../../model/dist/index"
       ],
       "@organon/model/*": [
-        "../model/src/*"
+        "../../model/dist/*"
       ],
       "@organon/task": [
-        "../task/src"
+        "../../task/dist/index"
       ],
       "@organon/task/*": [
-        "../task/src/*"
+        "../../task/dist/*"
       ]
     }
   },
   "include": [
-    "src/index.ts",
-    "src/model.ts"
+    "./**/*.test.ts"
   ]
 }

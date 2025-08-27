@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { AspectEngine } from '../../../src/relative/form/aspect/aspect-engine';
-import { InMemoryEventBus } from '../../../src/absolute/core/bus';
-import { makeInMemoryRepository } from '../../../src/repository/memory';
-// import { AspectSchema } from '../../../src/schema/aspect';
+import { AspectEngine } from '@relative/form/aspect/aspect-engine';
+import { InMemoryEventBus } from '@absolute';
+import { makeInMemoryRepository } from '@repository';
+// import { AspectSchema } from '@schema/aspect';
 import { AspectSchema } from '@schema';
 
 describe('AspectEngine (process/commit)', () => {

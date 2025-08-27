@@ -1,25 +1,26 @@
 import { defineConfig } from 'vitest/config';
+import tsconfig from './tsconfig.json';
+import path from 'path';
+
+// Create an alias object from the paths in tsconfig.json
+const alias = Object.fromEntries(
+  // For Each Path in tsconfig.json
+  Object.entries(tsconfig.compilerOptions.paths).map(([key, [value]]) => [
+    // Remove the "/*" from the key and resolve the path
+    key.replace('/*', ''),
+    // Remove the "/*" from the value Resolve the relative path
+    path.resolve(__dirname, value.replace('/*', '')),
+  ]),
+);
 
 export default defineConfig({
   resolve: {
-    alias: {
-      '@schema': '/home/pat/VSCode/organon/logic/src/schema/index.ts',
-      '@schema/*': '/home/pat/VSCode/organon/logic/src/schema/*',
-      '@repository': '/home/pat/VSCode/organon/logic/src/repository/index.ts',
-      '@repository/*': '/home/pat/VSCode/organon/logic/src/repository/*',
-      '@relative': '/home/pat/VSCode/organon/logic/src/relative/index.ts',
-      '@relative/*': '/home/pat/VSCode/organon/logic/src/relative/*',
-      '@absolute': '/home/pat/VSCode/organon/logic/src/absolute/index.ts',
-      '@absolute/*': '/home/pat/VSCode/organon/logic/src/absolute/*',
-    },
+    alias,
   },
   test: {
     environment: 'node',
-    include: ['test/**/*.test.ts', 'test/**/*.spec.ts', 'src/**/*.spec.ts'],
-    exclude: [
-      'node_modules',
-      'dist',
-    ],
+    include: ['test/**/*.test.ts', 'test/**/*.spec.ts'],
+    exclude: ['node_modules', 'dist'],
     globals: true,
   },
 });

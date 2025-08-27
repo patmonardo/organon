@@ -31,8 +31,7 @@
   },
   "include": [
     "src/index.ts",
-    "src/core.ts",
-    // "src/**/*"
+    "src/core.ts"
   ],
   "exclude": [
     "node_modules",

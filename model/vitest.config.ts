@@ -19,8 +19,8 @@ export default defineConfig({
   },
   test: {
     environment: 'node',
-    include: ['test/**/*.test.ts', 'test/**/*.spec.ts', 'src/**/*.spec.ts'],
-    exclude: ['node_modules', 'dist', 'test/relative/form/morph'],
+    include: ['test/**/*.test.ts', 'test/**/*.spec.ts'],
+    exclude: ['node_modules', 'dist'],
     globals: true,
   },
 });

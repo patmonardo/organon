@@ -1,2 +1,2 @@
-const X = 42;
-export { X };
+const task = "task";
+export { task };

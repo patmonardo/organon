@@ -2,7 +2,7 @@
   "name": "@organon/core",
   "private": true,
   "version": "0.1.0",
-  "description": "Organon Core Processor",
+  "description": "Organon Machine Learning",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts ",
@@ -32,9 +32,8 @@
   },
   "devDependencies": {
     "@types/node": "^20.19.8",
+    "typescript": "^5.9.0",
     "tsx": "^4.20.4",
-    "typescript": "^5.5.0",
-    "typedoc": "^0.26.0",
     "vitest": "^3.1.3"
   },
   "engines": {
