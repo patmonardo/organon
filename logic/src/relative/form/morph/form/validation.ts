@@ -1,4 +1,4 @@
-import { FormFieldValidationSchema } from "../../../../../../model/src/schema/shape";
+import { FormFieldValidationSchema } from "@@model/src/schema/shape";
 import { createMorph } from "../core";
 import {
   FilterShape,

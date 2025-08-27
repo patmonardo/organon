@@ -63,10 +63,19 @@ export class BaseEngine extends EmpowermentProvider {
     for (const e of this.graph.values()) {
       if (provider && e.provider !== provider) continue;
       if (subject && e.subject && e.subject !== subject) continue;
-      if (opts.action && Array.isArray(e.actions) && !e.actions.includes(opts.action)) continue;
+      if (
+        opts.action &&
+        Array.isArray(e.actions) &&
+        !e.actions.includes(opts.action)
+      )
+        continue;
       if (opts.resource && Array.isArray(e.facets)) {
-        const found = e.facets.some((f: any) =>
-          f === opts.resource || (typeof f === 'string' && f.endsWith('*') && opts.resource!.startsWith(f.slice(0, -1))),
+        const found = e.facets.some(
+          (f: any) =>
+            f === opts.resource ||
+            (typeof f === 'string' &&
+              f.endsWith('*') &&
+              opts.resource!.startsWith(f.slice(0, -1))),
         );
         if (!found) continue;
       }
@@ -76,9 +85,16 @@ export class BaseEngine extends EmpowermentProvider {
   }
 
   // Default fetch returns entries from this engine's graph
-  async fetchEmpowerments(subject: string, _opts?: any): Promise<EmpowermentLike[]> {
+  async fetchEmpowerments(
+    subject: string,
+    _opts?: any,
+  ): Promise<EmpowermentLike[]> {
     if (this.cache.has(subject)) return this.cache.get(subject)!;
-    const list = this.queryEmpowerments(subject, { provider: this.name, action: _opts?.action, resource: _opts?.resource });
+    const list = this.queryEmpowerments(subject, {
+      provider: this.name,
+      action: _opts?.action,
+      resource: _opts?.resource,
+    });
     this.cache.set(subject, list);
     return list;
   }

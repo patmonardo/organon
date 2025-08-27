@@ -1,4 +1,4 @@
-import { FormShape } from "../../../../../../model/src/schema/shape";
+import { FormShape } from "@@model/src/schema/shape";
 import { createMorph } from "../core";
 import {
   ViewFormField,

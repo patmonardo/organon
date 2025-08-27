@@ -6,7 +6,7 @@ import {
   createThingRef,
   ThingRef,
   isThingRef,
-} from "../../src/schema/thing";
+} from '@schema';
 
 describe("schema/thing — happy path", () => {
   it("creates a Thing with defaults", () => {

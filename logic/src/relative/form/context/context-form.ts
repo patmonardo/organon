@@ -6,9 +6,9 @@ import {
   ContextState,
   createContext as createContextDoc,
   updateContext as updateContextDoc,
-} from "../../../schema/context";
-import { EntityRef } from "../../../schema/entity";
-import { Id } from "../../../schema/base";
+} from '@schema';
+import { EntityRef } from '@schema';
+import { Id } from '@schema';
 
 type BaseState = Context["shape"]["state"];
 

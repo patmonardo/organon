@@ -1,5 +1,5 @@
 import type { ProcessorInputs } from "./contracts";
-import type { WorldEdge } from "../../schema/world";
+import type { WorldEdge } from '@schema';
 
 const THING = "system.Thing";
 type ThingRef = { id: string; type: typeof THING };

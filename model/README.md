@@ -18,6 +18,12 @@ The `@/model` package implements the Model-View-Controller (MVC) pattern as exec
 - The system is designed for extensibility, composability, and orchestration by higher-level controllers.
 - Models will evolve to use NestJS Decorators for seamless orchestration by `@/task`.
 
+## Philosophical Foundation
+
+- **Dialectical Movement**: The architecture embodies the dialectic from Pure Forms (principle, a priori analytic, defined in `@/logic`) to Given Forms (data, a posteriori, realized in `@/model`), and returns through practice (`@/task`) to renewed principle.
+- **Qualitative vs. Quantitative Logic**: The system distinguishes between qualitative reasoning (essence, meaning, pure discrimination) and quantitative reasoning (measurement, external relation). True knowledge arises from the synthesis and mediation of both.
+- **Triadic Structure**: While the architecture is sequential (`@logic` → `@model` → `@task`), it supports triadic reasoning—principle, mediation, and practice—essential for supersensible scientific language and dialectical systems.
+
 ## System Flow
 
 1. **Model Construction**: `@/logic` generates EPR schemas and Knowledge Graphs.

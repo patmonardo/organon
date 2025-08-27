@@ -1,9 +1,9 @@
-import { InMemoryEventBus, type EventBus } from '../../../absolute/core/bus';
-import { makeInMemoryRepository } from '../../../repository/memory';
-import { MorphSchema, type Morph } from '../../../schema/morph';
+import { InMemoryEventBus, type EventBus } from '@absolute';
+import { makeInMemoryRepository } from '@repository';
+import { MorphSchema, type Morph } from '@schema';
 import { MorphEngine } from './morph-engine';
-import type { Repository } from '../../../repository/repo';
-import type { Event } from '../../../absolute/core/message';
+import type { Repository } from '@repository';
+import type { Event } from '@absolute';
 
 export type MorphId = string;
 
@@ -29,7 +29,11 @@ export class MorphService {
 
   constructor(repo?: Repository<Morph>, bus?: EventBus) {
     this.bus = bus ?? new InMemoryEventBus();
-    const defaultRepo = repo ?? (makeInMemoryRepository(MorphSchema as any) as unknown as Repository<Morph>);
+    const defaultRepo =
+      repo ??
+      (makeInMemoryRepository(
+        MorphSchema as any,
+      ) as unknown as Repository<Morph>);
     this.engine = new MorphEngine(defaultRepo, this.bus);
   }
 
@@ -44,7 +48,11 @@ export class MorphService {
   }
 
   // Direct engine access
-  async send(cmd: { kind: string; payload?: any; meta?: Record<string, unknown> }): Promise<Event[]> {
+  async send(cmd: {
+    kind: string;
+    payload?: any;
+    meta?: Record<string, unknown>;
+  }): Promise<Event[]> {
     return this.engine.handle(cmd as any);
   }
 
@@ -61,7 +69,9 @@ export class MorphService {
 
     const rawId = (event.payload as any)?.id;
     if (typeof rawId !== 'string' && typeof rawId !== 'number') {
-      throw new Error(`${expectedKind} event payload.id must be string or number. Got: ${typeof rawId}`);
+      throw new Error(
+        `${expectedKind} event payload.id must be string or number. Got: ${typeof rawId}`,
+      );
     }
 
     return String(rawId) as MorphId;
@@ -106,7 +116,10 @@ export class MorphService {
     return event.payload as MorphDescribeResult;
   }
 
-  async setCore(id: MorphId, patch: { name?: string; type?: string }): Promise<void> {
+  async setCore(
+    id: MorphId,
+    patch: { name?: string; type?: string },
+  ): Promise<void> {
     await this.engine.handle({
       kind: 'morph.setCore',
       payload: { id, ...patch },
@@ -135,7 +148,9 @@ export class MorphService {
   }
 
   // Convenience method
-  async createAndDescribe(input: MorphCreateInput): Promise<{ id: MorphId; info: MorphDescribeResult }> {
+  async createAndDescribe(
+    input: MorphCreateInput,
+  ): Promise<{ id: MorphId; info: MorphDescribeResult }> {
     const id = await this.create(input);
     const info = await this.describe(id);
     return { id, info };

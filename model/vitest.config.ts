@@ -13,14 +13,13 @@ const alias = Object.fromEntries(
   ]),
 );
 
-console.log(alias);
 export default defineConfig({
   resolve: {
     alias,
   },
   test: {
     environment: 'node',
-    include: ['test/**/*.test.ts', 'test/**/*.spec.ts'],
+    include: ['test/**/*.test.ts', 'test/**/*.spec.ts', 'src/**/*.spec.ts'],
     exclude: ['node_modules', 'dist', 'test/relative/form/morph'],
     globals: true,
   },

@@ -1,4 +1,7 @@
-import { ShapeSchema, type Shape, createShape, updateShape } from "../../../schema/shape";
+import { ShapeSchema } from '@schema';
+import type { Shape } from '@schema';
+import { createShape } from '@schema';
+import { updateShape } from '@schema';
 
 type BaseState = Shape["shape"]["state"];
 

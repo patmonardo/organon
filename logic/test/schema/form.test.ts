@@ -5,7 +5,7 @@ import {
   updateForm,
   getFormShape,
   setFormShape,
-} from "../../src/schema/form";
+} from '@schema';
 
 describe("schema/form — principle of Form (happy path)", () => {
   it("creates a Form with sane defaults", () => {

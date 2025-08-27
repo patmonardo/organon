@@ -1,7 +1,7 @@
-import type { Event, EventBus } from '../../../absolute/core/message';
-import { InMemoryEventBus } from '../../../absolute/core/bus';
-import type { Repository } from '../../../repository/repo';
-import { ShapeSchema, type Shape } from '../../../schema/shape';
+import type { Event, EventBus } from '@absolute';
+import { InMemoryEventBus } from '@absolute';
+import type { Repository } from '@repository';
+import { ShapeSchema, type Shape } from '@schema';
 import { ShapeEngine } from './shape-engine';
 
 export type ShapeId = string;

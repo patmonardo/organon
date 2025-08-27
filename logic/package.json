@@ -7,9 +7,10 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts ",
   "scripts": {
-    "build": "tsc",
-    "b": "tsc",
+    "build": "tsc && tsc-alias",
+    "b": "tsc && tsc-alias",
     "clean": "rm -rf dist node_modules tsconfig.tsbuildinfo",
+    "vscode:prepublish": "rm -rf dist node_modules tsconfig.tsbuildinfo",
     "dev": "tsc --watch",
     "d": "tsc --watch",
     "test": "vitest run",
@@ -20,27 +21,14 @@
     "lint": "eslint . --cache",
     "format": "prettier --write \"**/*.{ts,js,md,json,yml,yaml}\" --ignore-path .gitignore"
   },
-  "workspaces": [
-    "@organon/reality",
-    "@organon/core",
-    "@organon/logic",
-    "@organon/model",
-    "@organon/task"
-  ],
-  "references": [
-    { "path": "../core" },
-    { "path": "../model" },
-    { "path": "../task" }
-  ],
   "dependencies": {
-    "zod": "^3.25.76",
-    "@organon/task": "workspace:*"
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@types/node": "^20.19.8",
+    "typescript": "^5.9.2",
+    "tsc-alias": "^1.8.16",
     "tsx": "^4.20.4",
-    "typescript": "^5.5.0",
-    "typedoc": "^0.26.0",
     "vitest": "^3.1.3"
   },
   "engines": {

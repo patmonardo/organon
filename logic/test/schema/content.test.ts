@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { ContentSchema, createContent, updateContent } from "../../src/schema/content";
-import { EntityRef } from "../../src/schema/entity";
+import { ContentSchema, createContent, updateContent } from '@schema';
+import { EntityRef } from '@schema';
 
 describe("schema/content — happy path", () => {
   it("creates subtle and gross content with deterministic carrier refs", () => {

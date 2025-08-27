@@ -1,9 +1,9 @@
-import { InMemoryEventBus, type EventBus } from '../../../absolute/core/bus';
-import { makeInMemoryRepository } from '../../../repository/memory';
-import { PropertySchema, type Property } from '../../../schema/property';
+import { InMemoryEventBus, type EventBus } from '@absolute';
+import { makeInMemoryRepository } from '@repository';
+import { PropertySchema, type Property } from '@schema';
 import { PropertyEngine } from './property-engine';
-import type { Repository } from '../../../repository/repo';
-import type { Event } from '../../../absolute/core/message';
+import type { Repository } from '@repository';
+import type { Event } from '@absolute';
 
 export type PropertyId = string;
 

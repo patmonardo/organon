@@ -3,7 +3,7 @@ import {
   PropertySchema,
   createProperty,
   updateProperty,
-} from '../../../schema/property';
+} from '@schema';
 
 type BaseState = Property['shape']['state'];
 

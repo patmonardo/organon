@@ -1,5 +1,5 @@
 import { GraphShape } from "../graph/types";
-import { FormMeta } from "../../../../../../model/src/schema/shape";
+import { FormMeta } from "@@model/src/schema/shape";
 
 /**
  * AbsoluteCypherShape – a relational version of CypherShape.

@@ -1,4 +1,4 @@
-import { Shape } from "../../../../schema";
+import { Shape } from "@schema";
 import { Morph } from "./types";
 import { createMorph } from "./morph";
 

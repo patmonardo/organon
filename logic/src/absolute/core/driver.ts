@@ -1,5 +1,5 @@
 import type { ProcessorInputs } from './contracts';
-import type { World } from '../../schema/world';
+import type { World } from '@schema';
 
 /**
  * Proposal / Commit shapes used by drivers.

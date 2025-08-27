@@ -3,7 +3,7 @@ import {
   PropertySchema,
   createProperty,
   updateProperty,
-} from "../../src/schema/property";
+} from '@schema';
 
 describe("schema/property — happy path (skeletal)", () => {
   it("creates a Property with defaults and exposes core fields", () => {

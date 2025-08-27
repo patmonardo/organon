@@ -3,7 +3,7 @@ import {
   MorphSchema,
   createMorph,
   updateMorph,
-} from '../../../schema/morph';
+} from '@schema';
 
 /**
  * FormMorph - Form layer wrapper over schema/morph for engine ergonomics.

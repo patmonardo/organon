@@ -1,5 +1,5 @@
 import { createMorph } from "../core";
-import { FormShape } from "../../../../../../model/src/schema/shape";
+import { FormShape } from "@@model/src/schema/shape";
 import { GraphShape, GraphEntity, GraphRelation } from "./types";
 
 /**

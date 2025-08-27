@@ -1,7 +1,7 @@
-import type { Event, EventBus } from '../../../absolute/core/message';
-import { InMemoryEventBus } from '../../../absolute/core/bus';
-import type { Repository } from '../../../repository/repo';
-import { ContextSchema, type Context } from '../../../schema/context';
+import type { Event, EventBus } from '@absolute';
+import { InMemoryEventBus } from '@absolute';
+import type { Repository } from '@repository';
+import { ContextSchema, type Context } from '@schema';
 import { ContextEngine } from './context-engine';
 
 export type ContextId = string;

@@ -5,7 +5,7 @@ import {
   updateRelation,
   createBidirectionalRelation,
   invertRelation,
-} from "../../src/schema/relation";
+} from '../../src/schema';
 
 describe("schema/relation — happy path", () => {
   it("creates a directed relation with defaults", () => {

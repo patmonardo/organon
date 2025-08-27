@@ -1,8 +1,8 @@
-import type { Shape } from '../../schema/shape';
-import type { Context } from '../../schema/context';
-import type { Morph } from '../../schema/morph';
-import type { Entity } from '../../schema/entity';
-import type { Property } from '../../schema/property';
+import type { Shape } from '@schema';
+import type { Context } from '@schema';
+import type { Morph } from '@schema';
+import type { Entity } from '@schema';
+import type { Property } from '@schema';
 // reflect.ts no longer exports these types; declare local types compatible with reflectStage output
 type ThingLike = {
   id: string;
@@ -23,7 +23,7 @@ type ReflectResult = {
   evidence: string[];
 };
 import type { KriyaActionResult } from './action';
-import type { Relation } from '../../schema/relation';
+import type { Relation } from '@schema';
 
 export type Principles = {
   shapes: Shape[];

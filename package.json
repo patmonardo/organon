@@ -6,9 +6,9 @@
   "workspaces": [
     "@organon/reality",
     "@organon/core",
-    "@organon/task",
     "@organon/logic",
-    "@organon/model"
+    "@organon/model",
+    "@organon/task"
   ],
   "scripts": {
     "build": "pnpm run --recursive build",
@@ -40,13 +40,5 @@
     "task:test": "pnpm --filter=@organon/task test",
     "task:dev": "pnpm --filter=@organon/task dev",
     "task:start": "pnpm --filter=@organon/task start"
-  },
-  "devDependencies": {
-    "@types/node": "^22.15.17",
-    "typescript": "^5.7.2"
-  },
-  "engines": {
-    "node": ">=18.0.0",
-    "pnpm": ">=8.0.0"
   }
 }

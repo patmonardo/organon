@@ -5,7 +5,7 @@ import {
   updateContext,
   addEntitiesToContext,
   addRelationsToContext,
-} from "../../src/schema/context";
+} from '@schema';
 
 describe("schema/context — happy path", () => {
   it("creates a Context with defaults (entities/relations empty, state defaulted)", () => {

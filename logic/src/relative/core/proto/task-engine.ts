@@ -12,22 +12,37 @@ export class TaskEngine extends BaseEngine {
   constructor(name = 'task-engine', empowerments: EmpowermentLike[] = []) {
     super({ scope: name });
     this.name = name;
-    this.staticEmpowerments = (empowerments || []).map((e) => ({ ...e, provider: name }));
+    this.staticEmpowerments = (empowerments || []).map((e) => ({
+      ...e,
+      provider: name,
+    }));
   }
 
-  async fetchEmpowerments(subject: string, _opts?: any): Promise<EmpowermentLike[]> {
-    return this.staticEmpowerments.map((e) => ({ ...e, subject: e.subject ?? subject, provider: this.name }));
+  async fetchEmpowerments(
+    subject: string,
+    _opts?: any,
+  ): Promise<EmpowermentLike[]> {
+    return this.staticEmpowerments.map((e) => ({
+      ...e,
+      subject: e.subject ?? subject,
+      provider: this.name,
+    }));
   }
 
   // Task empowerments should carry a signature (policy or task system)
   protected async verifySignatures(sigs?: any[]): Promise<boolean> {
     if (!sigs || sigs.length === 0) return false;
     // accept signatures issued by 'task' or 'policy' or any non-empty signature for prototype
-    return sigs.every((s) => typeof s.signature === 'string' && s.signature.length > 0);
+    return sigs.every(
+      (s) => typeof s.signature === 'string' && s.signature.length > 0,
+    );
   }
 
   // Facet check: require facet to include the task resource or action
-  checkFacets(facets: Array<any>, ctx: { action?: string; resource?: string } = {}) {
+  checkFacets(
+    facets: Array<any>,
+    ctx: { action?: string; resource?: string } = {},
+  ) {
     if (!facets || facets.length === 0) return false;
     for (const f of facets) {
       if (typeof f === 'string') {

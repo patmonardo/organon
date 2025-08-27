@@ -3,7 +3,7 @@ import {
   WorldSchema,
   createWorld,
   updateWorld,
-} from "../../src/schema/world";
+} from '@schema';
 
 function thing(id: string) {
   return { id, type: "system.Thing" as const };

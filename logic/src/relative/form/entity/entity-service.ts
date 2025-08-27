@@ -2,8 +2,8 @@ import {
   createEntity,
   updateEntity,
   type Entity,
-} from '../../../schema/entity';
-import type { Repository } from '../../../repository/repo';
+} from '@schema';
+import type { Repository } from '@repository';
 
 type EventHandler = (evt: { kind: string; payload?: any; meta?: any }) => void;
 

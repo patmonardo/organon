@@ -1,9 +1,9 @@
-import { InMemoryEventBus, type EventBus } from '../../../absolute/core/bus';
-import { makeInMemoryRepository } from '../../../repository/memory';
-import { AspectSchema, type Aspect } from '../../../schema/aspect';
+import { InMemoryEventBus, type EventBus } from '@absolute';
+import { makeInMemoryRepository } from '@repository';
+import { AspectSchema, type Aspect } from '@schema';
 import { AspectEngine } from './aspect-engine';
-import type { Repository } from '../../../repository/repo';
-import type { Event } from '../../../absolute/core/message';
+import type { Repository } from '@repository';
+import type { Event } from '@absolute';
 
 export type AspectId = string;
 

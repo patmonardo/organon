@@ -1,16 +1,16 @@
-import type { Command, Event } from '../../../absolute/core/message';
-import type { EventBus } from '../../../absolute/core/bus';
-import { InMemoryEventBus } from '../../../absolute/core/bus';
-import { startTrace, childSpan } from '../../../absolute/core/trace';
-import type { Repository } from '../../../repository/repo';
+import type { Command, Event } from '@absolute';
+import type { EventBus } from '@absolute';
+import { InMemoryEventBus } from '@absolute';
+import { startTrace, childSpan } from '@absolute';
+import type { Repository } from '@repository';
 import { FormProperty } from './property-form';
 
 import {
   type Property,
   PropertySchema,
   createProperty,
-} from '../../../schema/property';
-import * as active from '../../../schema/active';
+} from '@schema';
+import * as active from '@schema';
 
 type BaseState = Property['shape']['state'];
 

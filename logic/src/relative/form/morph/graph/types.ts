@@ -1,7 +1,7 @@
 // Add these imports if needed
-import { FormShape } from "../../../../../../model/src/schema/shape";
-import { FormRelation } from "../../../../../model/src/schema/relation";
-import { FormEntity } from "../../../../../model/src/schema/entity";
+import { FormShape } from "@@model/src/schema/shape";
+import { FormRelation } from "@../../model/src/schema/relation";
+import { FormEntity } from "@../../model/src/schema/entity";
 
 export interface GraphShape extends FormShape {
   /** Entities in the graph */

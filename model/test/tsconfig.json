@@ -6,7 +6,7 @@
     "lib": [
       "ES2022"
     ],
-    "rootDir": "src",
+    "rootDir": ".",
     "outDir": "dist",
     "declaration": true,
     "strict": true,
@@ -55,27 +55,26 @@
         "src/controller/*"
       ],
       "@organon/logic": [
-        "../../organon/logic/dist/index"
+        "../../logic/dist/index"
       ],
       "@organon/logic/*": [
-        "../../organon/logic/dist/*"
+        "../../logic/dist/*"
       ],
       "@organon/model": [
-        "../../model/src"
+        "../../model/dist/index"
       ],
       "@organon/model/*": [
-        "../../model/src/*"
+        "../../model/dist/*"
       ],
       "@organon/task": [
-        "../../task/src"
+        "../../task/dist/index"
       ],
       "@organon/task/*": [
-        "../../task/src/*"
+        "../../task/dist/*"
       ]
     }
   },
   "include": [
-    "src/index.ts",
-    "src/model.ts"
+    "./**/*.test.ts"
   ]
 }

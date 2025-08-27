@@ -1,11 +1,12 @@
-import type { Command, Event } from '../../../absolute/core/message';
-import type { EventBus } from '../../../absolute/core/bus';
-import { InMemoryEventBus } from '../../../absolute/core/bus';
-import { startTrace, childSpan } from '../../../absolute/core/trace';
-import type { Repository } from '../../../repository/repo';
-import { ShapeSchema, type Shape } from '../../../schema/shape';
+import type { Command, Event } from '@absolute';
+import type { EventBus } from '@absolute';
+import { InMemoryEventBus } from '@absolute';
+import { startTrace, childSpan } from '@absolute';
+import type { Repository } from '@repository';
+import { ShapeSchema, type Shape } from '@schema';
 import { FormShape } from './shape-form';
-import * as active from '../../../schema/active';
+import { ActiveShape } from '@schema';
+import { parseActiveShapes } from '@schema';
 
 type BaseState = Shape['shape']['state'];
 type Signature = NonNullable<Shape['shape']['signature']>;
@@ -234,12 +235,12 @@ export class ShapeEngine {
 
   // ADR 0002 ShapeEngine interface: process/commit
   async process(
-    shapes: Array<active.ActiveShape>,
+    shapes: Array<ActiveShape>,
     _particulars: any[] = [],
     _context?: any,
   ): Promise<{ actions: any[]; snapshot: { count: number } }> {
     // Validate/normalize via Zod; this clamps confidence and checks ids
-    const list = active.parseActiveShapes(shapes);
+    const list = parseActiveShapes(shapes);
     // For now, produce deterministic actions that map to our command space
     const actions: any[] = [];
     for (const s of list) {

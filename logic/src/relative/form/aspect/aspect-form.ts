@@ -6,7 +6,7 @@ import {
   AspectSchema,
   createAspect,
   updateAspect,
-} from '../../../schema/aspect';
+} from '@schema';
 
 type BaseState = Aspect['shape']['state'];
 

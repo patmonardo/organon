@@ -20,13 +20,6 @@
     "lint": "eslint . --cache",
     "format": "prettier --write \"**/*.{ts,js,md,json,yml,yaml}\" --ignore-path .gitignore"
   },
-  "workspaces": [
-    "@organon/reality",
-    "@organon/core",
-    "@organon/logic",
-    "@organon/model",
-    "@organon/task"
-  ],
   "dependencies": {
     "@organon/task": "workspace:*",
     "zod": "^3.25.76"

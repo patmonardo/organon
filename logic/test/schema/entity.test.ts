@@ -6,7 +6,7 @@ import {
   createEntityRef,
   formatEntityKey,
   parseEntityKey,
-} from "../../src/schema/entity";
+} from '@schema';
 
 describe("schema/entity — Foundation patterns", () => {
   it("creates an Entity with defaults and updates deterministically", () => {

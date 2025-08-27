@@ -5,7 +5,7 @@ import {
   updateMorph,
   defineMorph,
   defineMorphPipeline,
-} from "../../src/schema/morph";
+} from '@schema';
 
 describe("schema/morph — happy path", () => {
   it("creates a single Morph with defaults", () => {

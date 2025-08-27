@@ -6,8 +6,8 @@ import {
   addDetermination,
   addExemplar,
   advanceWheel,
-} from "../../src/schema/concept";
-import { EntityRef } from "../../src/schema/entity";
+} from '@schema';
+import { EntityRef } from '@schema';
 
 describe("schema/concept — UPS wheel (happy path)", () => {
   it("creates a Concept and advances the wheel deterministically", () => {

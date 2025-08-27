@@ -1,4 +1,4 @@
-// Explicit exports to avoid accidental duplicate symbol re-exports
+export * from "./logic"
 export * from "./schema";
 export * from "./repository";
 export * from "./absolute";

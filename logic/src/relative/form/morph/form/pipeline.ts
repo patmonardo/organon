@@ -1,5 +1,5 @@
 import { createPipeline } from "../core";
-import { FormShape } from "../../../../../../model/src/schema/shape";
+import { FormShape } from "@@model/src/schema/shape";
 import {
   ViewOutput,
   ViewContext,

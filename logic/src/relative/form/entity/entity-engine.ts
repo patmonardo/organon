@@ -1,14 +1,14 @@
-import type { Command, Event } from '../../../absolute/core/message';
-import type { EventBus } from '../../../absolute/core/bus';
-import { InMemoryEventBus } from '../../../absolute/core/bus';
-import { startTrace, childSpan } from '../../../absolute/core/trace';
-import type { Repository } from '../../../repository/repo';
+import type { Command, Event } from '@absolute';
+import type { EventBus } from '@absolute';
+import { InMemoryEventBus } from '@absolute';
+import { startTrace, childSpan } from '@absolute';
+import type { Repository } from '@repository';
 import {
   type Entity,
   EntitySchema,
   createEntity,
-} from '../../../schema/entity';
-import * as active from '../../../schema/active';
+} from '@schema';
+import * as active from '@schema';
 import { FormEntity } from './entity-form';
 
 type BaseState = Entity['shape']['state'];

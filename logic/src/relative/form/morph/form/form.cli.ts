@@ -1,6 +1,6 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
-import { handleViewMode, handleViewForm } from '../../../../test/form/morph/form.cmd';
+import { handleViewMode, handleViewForm } from '@../test/form/morph/form.cmd';
 
 /**
  * Register view mode commands

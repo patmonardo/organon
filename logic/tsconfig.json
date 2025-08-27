@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "composite": true,
     "target": "ES2022",
     "module": "ES2022",
     "moduleResolution": "bundler",
@@ -50,13 +49,19 @@
         "src/absolute/*"
       ],
       "@organon/logic": [
-        "../logic/dist"
+        "../../logic/dist"
+      ],
+      "@organon/logic/*": [
+        "../../logic/dist/*"
       ],
       "@organon/model": [
-        "../model/dist"
+        "../..model/dist"
+      ],
+      "@organon/model/*": [
+        "../../model/dist/*"
       ],
       "@organon/task": [
-        "../task/dist"
+        "../../task/dist"
       ]
     }
   },
@@ -74,17 +79,16 @@
     "src/absolute/index.ts",
     "src/absolute/core/**/*.ts",
     "src/absolute/essence/**/*.ts",
-    "src/absolute/form/**/*.ts",
-    // "src/**/*"
+    "src/absolute/form/**/*.ts"
   ],
   "exclude": [
     "src/relative/form/morph/cypher/**/*",
     "src/relative/form/morph/form/**/*",
     "src/relative/form/morph/graph/**/*",
-    "node_modules",
-    "**/dist",
-    "**/build",
-    "**/*.test.ts",
-    "**/*.spec.ts"
+    "src/node_modules",
+    "src/**/dist",
+    "src/**/build",
+    "src/**/*.test.ts",
+    "src/**/*.spec.ts"
   ]
 }

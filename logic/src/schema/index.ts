@@ -13,6 +13,8 @@ export * from './aspect';
 // Ground and Condition (metaphysical scaffolding)
 export * from "./ground";
 export * from "./condition";
+export * from "./thing";
+export * from './world';
 export * from "./relation";
 
 // Bridge (Form + Matter → Content)

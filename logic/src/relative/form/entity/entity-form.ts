@@ -9,7 +9,7 @@ import {
   type Entity,
   type EntityRef,
   type EntityState,
-} from "../../../schema/entity";
+} from '@schema';
 
 export type FormEntityId = string;
 

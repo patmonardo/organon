@@ -1,15 +1,15 @@
 import { z } from 'zod';
-import { EntitySchema } from '../../schema/entity';
-import { RelationSchema } from '../../schema/relation';
-import { PropertySchema } from '../../schema/property';
-import { ContextSchema } from '../../schema/context';
-import { MorphSchema } from '../../schema/morph';
-import { WorldSchema } from '../../schema/world';
-import { ShapeSchema } from '../../schema/shape';
-import { ContentSchema } from '../../schema/content';
-import { ConceptSchema } from '../../schema/concept';
-import { JudgmentSchema } from '../../schema/judgment';
-import { SyllogismSchema } from '../../schema/syllogism';
+import { EntitySchema } from '@schema';
+import { RelationSchema } from '@schema';
+import { PropertySchema } from '@schema';
+import { ContextSchema } from '@schema';
+import { MorphSchema } from '@schema';
+import { WorldSchema } from '@schema';
+import { ShapeSchema } from '@schema';
+import { ContentSchema } from '@schema';
+import { ConceptSchema } from '@schema';
+import { JudgmentSchema } from '@schema';
+import { SyllogismSchema } from '@schema';
 
 // Inputs accepted by the Form Processor. Keep defaults for incremental adoption.
 export const ProcessorInputs = z.object({
@@ -30,7 +30,7 @@ export type ProcessorInputs = z.infer<typeof ProcessorInputs>;
 export type ProcessorRunOptions = {
   projectContent?: boolean;
   contentIndexSource?: 'inputs';
-  deriveSyllogistic?: false; // placeholder; syllogistic disabled in skeletal runtime
+  deriveSyllogistic?: false;
 };
 
 const GrossByThing = z.record(z.number().int().nonnegative());

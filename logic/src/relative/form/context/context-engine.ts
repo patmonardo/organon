@@ -1,15 +1,15 @@
-import type { Command, Event } from '../../../absolute/core/message';
-import type { EventBus } from '../../../absolute/core/bus';
-import { InMemoryEventBus } from '../../../absolute/core/bus';
-import { startTrace, childSpan } from '../../../absolute/core/trace';
-import type { Repository } from '../../../repository/repo';
+import type { Command, Event } from '@absolute';
+import type { EventBus } from '@absolute';
+import { InMemoryEventBus } from '@absolute';
+import { startTrace, childSpan } from '@absolute';
+import type { Repository } from '@repository';
 import {
   type Context,
   ContextSchema,
   createContext,
   updateContext,
-} from '../../../schema/context';
-import * as active from '../../../schema/active';
+} from '@schema';
+import * as active from '@schema';
 
 type BaseState = Context['shape']['state'];
 
@@ -206,7 +206,6 @@ export class ContextEngine {
     }
   }
 
-  // ADR-like interface to mirror ShapeEngine
   async process(
     contexts: Array<active.ActiveContext>,
     _particulars: any[] = [],

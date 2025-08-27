@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { SyllogismSchema, createSyllogism } from "../../src/schema/syllogism";
+import { SyllogismSchema, createSyllogism } from '@schema';
 
 describe("schema/syllogism — happy path", () => {
   it("creates a valid AAA figure-1 syllogism", () => {

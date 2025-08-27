@@ -9,7 +9,11 @@ const TaskFactory = {
   createBeingTask: (goal: string, methodName: string) => ({
     id: `task:${Math.random().toString(36).slice(2, 9)}`,
     goal,
-    method: { name: methodName, steps: [{ action: 'run' }], entityType: 'being-entity' },
+    method: {
+      name: methodName,
+      steps: [{ action: 'run' }],
+      entityType: 'being-entity',
+    },
   }),
 };
 
@@ -33,9 +37,19 @@ async function run() {
   const task = TaskFactory.createBeingTask('demo-goal', 'demo-method');
   const actor = 'alice';
   const agent = AgentFactory.createBeingAgent('demo-agent', ['exec']);
-  const workflow = WorkflowFactory.createBeingWorkflow('demo-flow', ['step1', 'step2']);
+  const workflow = WorkflowFactory.createBeingWorkflow('demo-flow', [
+    'step1',
+    'step2',
+  ]);
 
-  console.log('created task.id=', task.id, 'agent.id=', agent.id, 'workflow.id=', workflow.id);
+  console.log(
+    'created task.id=',
+    task.id,
+    'agent.id=',
+    agent.id,
+    'workflow.id=',
+    workflow.id,
+  );
 
   // policy engine grants actor permission for the task action/resource
   const policyEngine = new ProtoEngine('policy-engine', [
@@ -64,7 +78,9 @@ async function run() {
   ]);
 
   // runner composes the pipeline and attempts to run the task
-  const runner = new AgentRunner([policyEngine, agentEngine], { logger: console.log });
+  const runner = new AgentRunner([policyEngine, agentEngine], {
+    logger: console.log,
+  });
 
   const protoTask = {
     id: task.id,

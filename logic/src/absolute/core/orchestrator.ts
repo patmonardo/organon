@@ -3,8 +3,8 @@
 // import { projectContentFromContexts } from '../form/project';
 // import { deriveSyllogisticEdges } from '../concept/syllogism';
 // import { indexContent } from '../essence/world';
-// import type { Content } from '../../schema/content';
-// import type { World } from '../../schema/world';
+// import type { Content } from '@schema';
+// import type { World } from '@schema';
 // import { groundStage, commitGroundResults, type GroundResult } from '../essence/ground';
 // import type { KriyaOptions } from './kriya';
 // import { classifyTruthOfRelation } from './qualquant';
