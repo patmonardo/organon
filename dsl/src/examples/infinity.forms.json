@@ -1,0 +1,82 @@
+{
+  "shapes": [
+    { "id": "shape.Infinity", "kind": "Shape", "name": "Infinity", "axioms": [] }
+  ],
+  "entities": [
+    {
+      "id": "entity.BadInfinite",
+      "kind": "Entity",
+      "shapeId": "shape.Infinity",
+      "clauses": [
+        { "kind": "assert", "name": "progressionOf", "args": ["Finite", "BeyondLimit"] },
+        { "kind": "assert", "name": "equals", "args": ["BadInfinite", "EndlessSurpassing"] }
+      ]
+    },
+    {
+      "id": "entity.TrueInfinite",
+      "kind": "Entity",
+      "shapeId": "shape.Infinity",
+      "clauses": [
+        { "kind": "assert", "name": "returnsIntoSelf", "args": ["Infinite", "Finite"] },
+        { "kind": "assert", "name": "sublates", "args": ["Infinite", "BeyondLimit"] }
+      ]
+    }
+  ],
+  "contexts": [
+    { "id": "ctx.Qualitative", "kind": "Context", "name": "Qualitative" }
+  ],
+  "properties": [
+    {
+      "id": "prop.BadInfiniteLaw",
+      "kind": "Property",
+      "contextId": "ctx.Qualitative",
+      "law": [
+        { "kind": "assert", "name": "is", "args": ["BadInfinite", "EndlessSurpassing"] }
+      ]
+    },
+    {
+      "id": "prop.TrueInfiniteLaw",
+      "kind": "Property",
+      "contextId": "ctx.Qualitative",
+      "law": [
+        { "kind": "assert", "name": "is", "args": ["Infinite", "SelfRelatedWhole"] },
+        { "kind": "assert", "name": "includes", "args": ["Infinite", "Finite"] }
+      ]
+    }
+  ],
+  "morphs": [
+    { "id": "morph.Infinity.Q", "kind": "Morph", "name": "Infinity×Qualitative", "shapeId": "shape.Infinity", "contextId": "ctx.Qualitative",
+      "program": [
+        { "kind": "assert", "name": "pass", "args": ["Finite", "BeyondLimit"] },
+        { "kind": "assert", "name": "loop", "args": ["BeyondLimit", "ReturnIntoSelf"] }
+      ]
+    }
+  ],
+  "aspects": [
+    {
+      "id": "aspect.BadInfinite",
+      "kind": "Aspect",
+      "morphId": "morph.Infinity.Q",
+      "entityId": "entity.BadInfinite",
+      "propertyId": "prop.BadInfiniteLaw",
+      "stage": "BadInfinite",
+      "judgments": [
+        { "type": "Affirmative", "subject": "BadInfinite", "predicate": "is", "object": "EndlessSurpassing", "source": "Infinity-a" },
+        { "type": "Relational", "subject": "Finite", "relation": "passesTo", "object": "BeyondLimit", "source": "Infinity-a" }
+      ]
+    },
+    {
+      "id": "aspect.TrueInfinite",
+      "kind": "Aspect",
+      "morphId": "morph.Infinity.Q",
+      "entityId": "entity.TrueInfinite",
+      "propertyId": "prop.TrueInfiniteLaw",
+      "stage": "TrueInfinite",
+      "judgments": [
+        { "type": "Affirmative", "subject": "Infinite", "predicate": "is", "object": "SelfRelatedWhole", "source": "Infinity-c" },
+        { "type": "Relational", "subject": "Infinite", "relation": "includes", "object": "Finite", "source": "Infinity-c" },
+        { "type": "Relational", "subject": "Infinite", "relation": "sublates", "object": "BeyondLimit", "source": "Infinity-c" }
+      ]
+    }
+  ]
+}

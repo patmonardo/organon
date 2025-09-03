@@ -1,0 +1,21 @@
+{
+  "facts": [
+    { "kind": "fact", "atom": { "pred": "hasProp", "args": [ { "kind": "sym", "name": "alice" }, { "kind": "sym", "name": "hot" } ] } },
+    { "kind": "fact", "atom": { "pred": "hasProp", "args": [ { "kind": "sym", "name": "alice" }, { "kind": "sym", "name": "cold" } ] } },
+    { "kind": "fact", "atom": { "pred": "opposes", "args": [ { "kind": "sym", "name": "hot" }, { "kind": "sym", "name": "cold" } ] } }
+  ],
+  "rules": [
+    {
+      "kind": "rule",
+      "head": { "pred": "tag", "args": [ { "kind": "var", "name": "X" }, { "kind": "str", "value": "exclusive" } ] },
+      "body": [
+        { "pred": "hasProp", "args": [ { "kind": "var", "name": "X" }, { "kind": "var", "name": "P" } ] },
+        { "pred": "hasProp", "args": [ { "kind": "var", "name": "X" }, { "kind": "var", "name": "Q" } ] },
+        { "kind": "builtin", "op": "neq", "args": [ { "kind": "var", "name": "P" }, { "kind": "var", "name": "Q" } ] },
+        { "pred": "opposes", "args": [ { "kind": "var", "name": "P" }, { "kind": "var", "name": "Q" } ] }
+      ],
+      "meta": { "tags": [ "quality:exclusivity" ] }
+    }
+  ],
+  "meta": { "tags": [ "example" ] }
+}

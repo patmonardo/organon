@@ -1,4 +1,4 @@
-import { FormShape } from "../../../../../model/src/schema/shape";
+import { FormShape } from "../../../../../../../model/src/schema/shape";
 import { ViewContext } from "../core/mode";
 import { ViewFormatMorph, AnyFormattedViewOutput } from "../../../../src/relative/form/morph/form/format";
 import { generateView } from "../../../../src/relative/form/morph/form/pipeline";

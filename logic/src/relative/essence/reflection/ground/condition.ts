@@ -91,17 +91,6 @@ class RelativelyUnconditioned implements UnconditionedStructure {
     `;
   }
 
-  getYogicParallel(): string {
-    return `
-    Yogic Parallel - PRATYAYA-NIMITTA Relationship:
-    - PRATYAYA: Immediate conditioning factors
-    - NIMITTA: Instrumental cause requiring conditions
-    - UPADANA: Material cause existing for efficient cause
-    - SAHAKARI-KARANA: Auxiliary causes as conditioning factors
-    - The incompleteness of any single causal factor
-    `;
-  }
-
   getManifestationPrinciple(): string {
     return `
     Manifestation Principle - EXTERNAL CONDITIONING:
@@ -209,17 +198,6 @@ class AbsolutelyUnconditioned implements UnconditionedStructure {
     - Mutual presupposition reveals absolute substrate
     - The unconditioned fact contains both as moments
     - True independence belongs only to the absolute totality
-    `;
-  }
-
-  getYogicParallel(): string {
-    return `
-    Yogic Parallel - KARANA-KARYA AIKYA (Cause-Effect Unity):
-    - BRAHMAN as absolute substrate of all conditioning
-    - MAYA-SHAKTI containing both efficient and material causation
-    - ISHVARA as unconditioned fact containing all conditions
-    - ADVAITA: Non-dual reality beyond cause-effect duality
-    - The recognition that all conditioning is BRAHMAN's self-activity
     `;
   }
 
@@ -334,17 +312,6 @@ class ProcessionIntoExistence implements ConditionRelation {
     - Mediation disappears in the act of mediation
     - Result is pure immediate existence
     - The groundless ground of concrete actuality
-    `;
-  }
-
-  getYogicParallel(): string {
-    return `
-    Yogic Parallel - UTPATTI-STHITI (Manifestation-Establishment):
-    - When all PRATYAYAS unite, ARTHA manifests
-    - STHITI: The moment of stable manifestation
-    - UTPATTI: Coming-forth that sublates its causal conditions
-    - SVARUPA-STHITI: Establishment in essential nature
-    - The immediacy of enlightenment transcending means
     `;
   }
 

@@ -1,0 +1,367 @@
+{
+  "totals": {
+    "chunks": 37,
+    "operations": 37,
+    "textWords": 5492,
+    "conciseWords": 844,
+    "overallCompression": 0.154
+  },
+  "duplicates": {
+    "chunkIds": [],
+    "opIds": []
+  },
+  "linkage": {
+    "opsWithMissingChunk": [],
+    "orphanChunks": []
+  },
+  "opsQuality": {
+    "opsMissingPredicates": [],
+    "opsLongSummaries": [],
+    "badClauses": []
+  },
+  "perChunk": [
+    {
+      "id": "con-univ-1-genesis-and-absoluteness",
+      "title": "Pure concept: absolutely infinite, unconditioned; genesis via being → essence → concept",
+      "textLines": 28,
+      "textWords": 164,
+      "conciseWords": 34,
+      "compressionRatio": 0.207
+    },
+    {
+      "id": "con-univ-2-universality-negation-of-negation",
+      "title": "Concept self-identity; universality as negation of negation",
+      "textLines": 16,
+      "textWords": 110,
+      "conciseWords": 22,
+      "compressionRatio": 0.2
+    },
+    {
+      "id": "con-univ-3-contrast-with-being-richness",
+      "title": "Contrast with Being; universal as simple yet rich, identity as absolute mediation",
+      "textLines": 18,
+      "textWords": 101,
+      "conciseWords": 21,
+      "compressionRatio": 0.208
+    },
+    {
+      "id": "con-univ-4-abstract-universal-and-externality",
+      "title": "Abstract universal, double negation, and not-yet externality",
+      "textLines": 28,
+      "textWords": 182,
+      "conciseWords": 28,
+      "compressionRatio": 0.154
+    },
+    {
+      "id": "con-univ-5-preserves-in-determination",
+      "title": "Universal maintains itself in its determination; persistence vs qualitative perishing",
+      "textLines": 24,
+      "textWords": 148,
+      "conciseWords": 21,
+      "compressionRatio": 0.142
+    },
+    {
+      "id": "con-univ-6-essence-creative-principle",
+      "title": "Not mere reflective shine; universal as essence and creative principle",
+      "textLines": 38,
+      "textWords": 258,
+      "conciseWords": 24,
+      "compressionRatio": 0.093
+    },
+    {
+      "id": "con-univ-7-free-power-love",
+      "title": "Universal as free power/love; rest in its other",
+      "textLines": 12,
+      "textWords": 76,
+      "conciseWords": 15,
+      "compressionRatio": 0.197
+    },
+    {
+      "id": "con-univ-8-determinateness-totality-abstract",
+      "title": "Determinateness within the universal; totality vs abstract universal",
+      "textLines": 36,
+      "textWords": 209,
+      "conciseWords": 22,
+      "compressionRatio": 0.105
+    },
+    {
+      "id": "con-univ-9-total-reflection-inward-outward",
+      "title": "Universal as total reflection: outward and inward shining; determinate concept as immanent character",
+      "textLines": 41,
+      "textWords": 291,
+      "conciseWords": 24,
+      "compressionRatio": 0.082
+    },
+    {
+      "id": "con-univ-10-higher-universal-and-concretes",
+      "title": "Higher universal: outward turned inward; life, I, spirit as concretes; idea of infinite spirit",
+      "textLines": 30,
+      "textWords": 199,
+      "conciseWords": 26,
+      "compressionRatio": 0.131
+    },
+    {
+      "id": "con-univ-11-true-infinite-universal-creative-differentiation",
+      "title": "True infinite universal as particularity: creative self-differentiation; universal differences",
+      "textLines": 18,
+      "textWords": 96,
+      "conciseWords": 21,
+      "compressionRatio": 0.219
+    },
+    {
+      "id": "con-univ-12-finite-as-universal-form-creativity-of-concept",
+      "title": "Finite subsistence as universality; the concept's creativity",
+      "textLines": 10,
+      "textWords": 63,
+      "conciseWords": 20,
+      "compressionRatio": 0.317
+    },
+    {
+      "id": "con-part-1-immanent-determinateness",
+      "title": "Particularity: determinateness of the concept; immanent to the universal",
+      "textLines": 8,
+      "textWords": 64,
+      "conciseWords": 22,
+      "compressionRatio": 0.344
+    },
+    {
+      "id": "con-part-2-universality-as-substance-totality",
+      "title": "Particular contains universality; diversity as universal totality",
+      "textLines": 19,
+      "textWords": 112,
+      "conciseWords": 25,
+      "compressionRatio": 0.223
+    },
+    {
+      "id": "con-part-3-contingent-completeness",
+      "title": "Completeness without inner standard; universality as external reflex",
+      "textLines": 8,
+      "textWords": 56,
+      "conciseWords": 17,
+      "compressionRatio": 0.304
+    },
+    {
+      "id": "con-part-4-particularity-as-immanent-connection",
+      "title": "From diversity to opposition; particularity as intrinsic totality and principle",
+      "textLines": 13,
+      "textWords": 63,
+      "conciseWords": 24,
+      "compressionRatio": 0.381
+    },
+    {
+      "id": "con-part-5-self-determination-of-universal",
+      "title": "Universal self-determines as particular; species as (a) universal (b) particular",
+      "textLines": 20,
+      "textWords": 124,
+      "conciseWords": 27,
+      "compressionRatio": 0.218
+    },
+    {
+      "id": "con-part-6-true-logical-division",
+      "title": "True logical division: two coordinated particulars; one negativity",
+      "textLines": 23,
+      "textWords": 148,
+      "conciseWords": 34,
+      "compressionRatio": 0.23
+    },
+    {
+      "id": "con-part-7-difference-in-concept",
+      "title": "Difference in its truth: from limit/relative to concept-unity; one determinate concept",
+      "textLines": 35,
+      "textWords": 235,
+      "conciseWords": 22,
+      "compressionRatio": 0.094
+    },
+    {
+      "id": "con-part-8-completeness-and-nature",
+      "title": "Completeness of particularity; impotence of nature; concept’s absolute power",
+      "textLines": 37,
+      "textWords": 270,
+      "conciseWords": 26,
+      "compressionRatio": 0.096
+    },
+    {
+      "id": "con-part-9-abstract-universality-form-content",
+      "title": "Mediated immediacy; abstract universality as form; determinateness as content",
+      "textLines": 29,
+      "textWords": 193,
+      "conciseWords": 21,
+      "compressionRatio": 0.109
+    },
+    {
+      "id": "con-part-10-determinate-universality-and-abc",
+      "title": "Particularity as determinate universality; abstract universal = U, D, immediate unity (no posited mediation)",
+      "textLines": 36,
+      "textWords": 231,
+      "conciseWords": 22,
+      "compressionRatio": 0.095
+    },
+    {
+      "id": "con-part-11-understanding-and-abstraction-limits",
+      "title": "Understanding’s abstract universal; limits; absolute substance still abstract; abstraction not empty",
+      "textLines": 40,
+      "textWords": 277,
+      "conciseWords": 35,
+      "compressionRatio": 0.126
+    },
+    {
+      "id": "con-part-12-empty-vs-principled-concepts",
+      "title": "Empty determinate concepts vs principled differentiation; absolute determinateness as true content",
+      "textLines": 14,
+      "textWords": 110,
+      "conciseWords": 21,
+      "compressionRatio": 0.191
+    },
+    {
+      "id": "con-sing-1-from-particularity",
+      "title": "Singularity already posited through particularity",
+      "textLines": 7,
+      "textWords": 24,
+      "conciseWords": 9,
+      "compressionRatio": 0.375
+    },
+    {
+      "id": "con-sing-2-self-mediation-and-false-abstraction",
+      "title": "Self-mediation; inward/outward shine; false abstraction vs true singularity",
+      "textLines": 32,
+      "textWords": 205,
+      "conciseWords": 24,
+      "compressionRatio": 0.117
+    },
+    {
+      "id": "con-sing-3-universal-particular-total-concept",
+      "title": "U and P as total concept; abstraction excludes singularity",
+      "textLines": 31,
+      "textWords": 194,
+      "conciseWords": 24,
+      "compressionRatio": 0.124
+    },
+    {
+      "id": "con-sing-4-abstraction-produces-singulars",
+      "title": "Abstraction’s products are singulars; concrete unity appears",
+      "textLines": 27,
+      "textWords": 181,
+      "conciseWords": 20,
+      "compressionRatio": 0.11
+    },
+    {
+      "id": "con-sing-5-particular-equals-singular",
+      "title": "Particular is also singular (and vice versa); three particular determinations",
+      "textLines": 19,
+      "textWords": 108,
+      "conciseWords": 17,
+      "compressionRatio": 0.157
+    },
+    {
+      "id": "con-sing-6-particularity-as-totality-middle-term",
+      "title": "Particularity as totality (concretion) and as immediate unity (middle term)",
+      "textLines": 15,
+      "textWords": 87,
+      "conciseWords": 22,
+      "compressionRatio": 0.253
+    },
+    {
+      "id": "con-sing-7-dissolution-of-distinctions",
+      "title": "Every distinction dissolves; counting (quantity) is inappropriate",
+      "textLines": 17,
+      "textWords": 107,
+      "conciseWords": 17,
+      "compressionRatio": 0.159
+    },
+    {
+      "id": "con-sing-8-negation-of-negation-totality",
+      "title": "S as negation of negation: each determination is totality",
+      "textLines": 22,
+      "textWords": 132,
+      "conciseWords": 23,
+      "compressionRatio": 0.174
+    },
+    {
+      "id": "con-sing-9-externalization-actuality",
+      "title": "Singularity externalizes the concept into actuality; posited abstraction fixes difference",
+      "textLines": 20,
+      "textWords": 131,
+      "conciseWords": 22,
+      "compressionRatio": 0.168
+    },
+    {
+      "id": "con-sing-10-this-exclusion-commonality",
+      "title": "Singular as qualitative “this”: exclusivity; lowest view of universal as commonality",
+      "textLines": 28,
+      "textWords": 191,
+      "conciseWords": 23,
+      "compressionRatio": 0.12
+    },
+    {
+      "id": "con-sing-11-this-vs-singular-mediation",
+      "title": "“This” as posited immediacy (pointing-at) vs singular as mediated-immediate within itself",
+      "textLines": 20,
+      "textWords": 152,
+      "conciseWords": 25,
+      "compressionRatio": 0.164
+    },
+    {
+      "id": "con-sing-12-posited-differences-essential-relation",
+      "title": "Singularity posits self-subsisting differences; essential relation (not mere plurality)",
+      "textLines": 17,
+      "textWords": 116,
+      "conciseWords": 22,
+      "compressionRatio": 0.19
+    },
+    {
+      "id": "con-sing-13-judgment-emergence",
+      "title": "Concept loses posited unity; determinate becomes totality; singularity posited as judgment",
+      "textLines": 15,
+      "textWords": 84,
+      "conciseWords": 22,
+      "compressionRatio": 0.262
+    }
+  ],
+  "tags": [
+    "AbsoluteDeterminateness,\"true-content-in-concept-element\"",
+    "AbstractUniversal,\"unconceptualized-concept\"",
+    "AbstractUniversality,\"form-of-determinate-concept\"",
+    "Abstraction,\"excludes-singularity→void-of-concept\"",
+    "BothSides,\"particular-and-coordinated\"",
+    "Causality,\"simple-concept\"",
+    "Completeness,\"contingent\"",
+    "Concept,\"absolutely-infinite\"",
+    "Concept,\"infinite-self-referring-determinateness\"",
+    "Concept,\"informing-creative-principle\"",
+    "Concept,\"inner-creativity\"",
+    "Concept,\"unconditioned\"",
+    "Concretes, \"Life|I|Spirit|AbsoluteConcept\"",
+    "Counting,\"inappropriate-here\"",
+    "DeterminateConcept,\"infinitely-free\"",
+    "Determinateness,\"genus-immanent-character\"",
+    "Determinateness,\"positedness/reflective-shine\"",
+    "Determinateness,\"simple-principle-and-moment-of-totality\"",
+    "Determinations,\"self-subsistent/in-and-for-themselves\"",
+    "Differences,\"fixed-isolated\"",
+    "Diversity,\"universal-totality\"",
+    "LeavingAside,\"further-negating\"",
+    "Manifoldness,\"abstract-side-of-nothingness\"",
+    "Nature,\"self-externality; impotent-for-rigor\"",
+    "Particularity,\"determinate-universality\"",
+    "Particularity,\"determinate-universality→self-referring-determinateness\"",
+    "Particularity,\"embracing-totality/concretion\"",
+    "Particularity,\"essential-principle\"",
+    "Products,\"singular-and-concrete\"",
+    "Result,\"Judgment\"",
+    "Singular,\"qualitative-this\"",
+    "Singular,\"repelling-separation + positive-connection\"",
+    "Singularity,\"absolute-originative-partition\"",
+    "Singularity,\"determinate-determinateness/posited-abstraction\"",
+    "Singularity,\"negation-of-negation\"",
+    "Singularity,\"self-mediation/absolute-negativity\"",
+    "Understanding,\"faculty-of-abstract-universal\"",
+    "Universal,\"absolute-negativity\"",
+    "Universal,\"concrete-with-own-content\"",
+    "Universal,\"creative-power\"",
+    "Universal,\"free-love\"",
+    "Universal,\"free-power\"",
+    "Universal,\"soul-of-concrete\"",
+    "Universal,\"totality-of-concept\"",
+    "Universality,\"contains-difference-by-absolute-negativity\""
+  ]
+}

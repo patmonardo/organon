@@ -4,6 +4,7 @@ packages:
   - logic
   - model
   - task
+  - dsl
 
 ignoredBuiltDependencies:
   - '@firebase/util'
