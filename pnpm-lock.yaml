@@ -33,7 +33,17 @@ importers:
         specifier: ^3.1.3
         version: 3.2.4(@types/node@20.19.8)(terser@5.43.1)(tsx@4.20.4)(yaml@2.8.0)
 
-  dsl:
+  gdsl:
+    dependencies:
+      '@organon/logic':
+        specifier: workspace:*
+        version: link:../logic
+      '@organon/reality':
+        specifier: workspace:*
+        version: link:../reality
+      zod:
+        specifier: ^3.25.76
+        version: 3.25.76
     devDependencies:
       '@types/node':
         specifier: ^22.5.0
@@ -50,6 +60,9 @@ importers:
       '@organon/core':
         specifier: workspace:*
         version: link:../core
+      '@organon/gdsl':
+        specifier: workspace:*
+        version: link:../gdsl
       '@organon/reality':
         specifier: workspace:*
         version: link:../reality
@@ -146,6 +159,9 @@ importers:
       '@organon/reality':
         specifier: workspace:*
         version: link:../reality
+      reflect-metadata:
+        specifier: ^0.2.2
+        version: 0.2.2
       zod:
         specifier: ^3.25.76
         version: 3.25.76
@@ -2770,7 +2786,7 @@ snapshots:
 
   jest-worker@27.5.1:
     dependencies:
-      '@types/node': 20.19.8
+      '@types/node': 22.18.0
       merge-stream: 2.0.0
       supports-color: 8.1.1
 

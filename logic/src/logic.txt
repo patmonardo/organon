@@ -1,0 +1,159 @@
+relative/being
+├── measure
+├── quality
+│   ├── being
+│   │   └── being.ts
+│   ├── being-for-self
+│   │   ├── attraction.ts
+│   │   ├── being-for-self.ts
+│   │   └── one-many.ts
+│   ├── being.ts
+│   ├── existence
+│   │   ├── affirmative-infinity.ts
+│   │   ├── alternating-infinity.ts
+│   │   ├── constitution.ts
+│   │   ├── existence.ts
+│   │   ├── finitude.ts
+│   │   ├── infinity.ts
+│   │   └── something-and-other.ts
+│   └── sources
+│       ├── affirmative-infinity.txt
+│       ├── alternating-infinity.txt
+│       ├── attraction.txt
+│       ├── being-for-self.txt
+│       ├── being.txt
+│       ├── constitution.txt
+│       ├── existence.txt
+│       ├── finitude.txt
+│       ├── infinity.txt
+│       ├── one-many.txt
+│       └── something-and-other.txt
+└── quantity
+    ├── quantity
+    │   └── quantity.ts
+    ├── quantum
+    │   ├── infinity.ts
+    │   ├── number.ts
+    │   └── quantum.ts
+    ├── ratio
+    │   ├── inverse.ts
+    │   ├── powers.ts
+    │   └── ratio.ts
+    └── sources
+        ├── infinity.txt
+        ├── inverse.txt
+        ├── number.txt
+        ├── powers.txt
+        ├── quantity.txt
+        ├── quantum.txt
+        └── ratio.txt
+relative/essence
+├── actuality
+├── appearance
+│   ├── relation
+│   │   ├── force-conditionedness.ts
+│   │   ├── force-expression.ts
+│   │   ├── force-solicitation.ts
+│   │   ├── outer-inner.ts
+│   │   ├── sources
+│   │   │   ├── force-expression.txt
+│   │   │   ├── outer-inner.txt
+│   │   │   └── whole-parts.txt
+│   │   └── whole-parts.ts
+│   ├── thing
+│   │   ├── dissolution.ts
+│   │   ├── matter.ts
+│   │   ├── sources
+│   │   │   ├── dissolution.txt
+│   │   │   ├── matter.txt
+│   │   │   └── thing.txt
+│   │   └── thing.ts
+│   └── world
+│       ├── disappearance.ts
+│       ├── law.ts
+│       ├── sources
+│       │   ├── disappearance.txt
+│       │   ├── law.txt
+│       │   └── world.txt
+│       └── world.ts
+└── reflection
+    ├── essence
+    │   ├── essence.ts
+    │   ├── reflection.ts
+    │   ├── shine.ts
+    │   └── sources
+    │       ├── essence.txt
+    │       ├── reflection.txt
+    │       └── shine.txt
+    ├── ground
+    │   ├── absolute.ts
+    │   ├── condition.ts
+    │   ├── determinate.ts
+    │   └── sources
+    │       ├── absolute.txt
+    │       ├── condition.txt
+    │       └── determinate.txt
+    └── reflect
+        ├── contradiction.ts
+        ├── difference.ts
+        ├── identity.ts
+        └── sources
+            ├── contradiction.txt
+            ├── difference.txt
+            └── identity.txt
+relative/concept
+├── idea
+├── object
+│   ├── chemism
+│   │   ├── chemism.ts
+│   │   ├── object.ts
+│   │   ├── process.ts
+│   │   └── sources
+│   │       ├── chemism.txt
+│   │       ├── object.txt
+│   │       └── process.txt
+│   ├── mechanism
+│   │   ├── mechanism.ts
+│   │   ├── object.ts
+│   │   ├── process.ts
+│   │   └── sources
+│   │       ├── mechanism.txt
+│   │       ├── object.txt
+│   │       └── process.txt
+│   └── teleology
+│       ├── means.ts
+│       ├── realized.ts
+│       ├── souces
+│       │   ├── means.txt
+│       │   ├── realized.txt
+│       │   └── subjective.txt
+│       └── subjective.ts
+└── subject
+    ├── concept
+    │   ├── particular.ts
+    │   ├── singular.ts
+    │   ├── sources
+    │   │   ├── particular.txt
+    │   │   ├── singular.txt
+    │   │   └── universal.txt
+    │   └── universal.ts
+    ├── judgment
+    │   ├── concept.ts
+    │   ├── existence.ts
+    │   ├── necessity.ts
+    │   ├── reflection.ts
+    │   └── sources
+    │       ├── concept.txt
+    │       ├── existence.txt
+    │       ├── necessity.txt
+    │       └── reflection.txt
+    └── syllogism
+        ├── existence.ts
+        ├── necessity.ts
+        ├── reflection.ts
+        └── sources
+            ├── existence.txt
+            ├── necessity.txt
+            └── reflection.txt
+
+44 directories, 113 files

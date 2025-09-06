@@ -9,7 +9,7 @@
     "@organon/logic",
     "@organon/model",
     "@organon/task",
-    "@organon/dsl"
+    "@organon/gdsl"
   ],
   "scripts": {
     "all": "pnpm clean && pnpm install && pnpm build && pnpm test",
@@ -42,6 +42,10 @@
     "task:build": "pnpm --filter=@organon/task build",
     "task:test": "pnpm --filter=@organon/task test",
     "task:dev": "pnpm --filter=@organon/task dev",
-    "task:start": "pnpm --filter=@organon/task start"
+    "task:start": "pnpm --filter=@organon/task start",
+    "gdsl:build": "pnpm --filter=@organon/gdsl build",
+    "gdsl:test": "pnpm --filter=@organon/gdsl test",
+    "gdsl:dev": "pnpm --filter=@organon/gdsl dev",
+    "gdsl:start": "pnpm --filter=@organon/gdsl start"
   }
 }

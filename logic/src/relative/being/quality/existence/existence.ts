@@ -1,350 +1,255 @@
-/**
- * EXISTENCE AS SUCH - The First Determinate Being
- * ===============================================
- *
- * Translation of Hegel's "Existence as Such" from existence-as-such.txt
- * This is where Qualitative Logic begins - not with empty forms,
- * but with Form:Quality Something as determinate being
- *
- * Structure: Existence as Such → (a) Existence in general, (b) Quality, (c) Something
- */
+import type { Chunk, LogicalOperation } from './index';
 
-// Interface for determinate beings (no longer pure/empty like Being)
-interface DeterminateBeing {
-  name: string;
-  description: string;
-  getDeterminateness(): string;
-  getQuality(): string;
-  getSomething(): string;
-}
-
-/**
- * EXISTENCE AS SUCH - The determinate immediate
- *
- * "Existence proceeds from becoming. It is the simple oneness of being and nothing.
- * It is not mere being but existence, or Dasein - being in a certain place"
- */
-export class ExistenceAsSuch implements DeterminateBeing {
-  readonly name = "Existence as Such";
-  readonly description = "The simple oneness of being and nothing, proceeding from becoming. Determinate being - Dasein.";
-
-  private existenceInGeneral: ExistenceInGeneral;
-  private quality: QualityDetermination;
-  private something: Something;
-
-  constructor() {
-    this.existenceInGeneral = new ExistenceInGeneral();
-    this.quality = new QualityDetermination();
-    this.something = new Something();
+export const CANONICAL_CHUNKS: Chunk[] = [
+  {
+    id: 'existence-1-outline-as-such',
+    title:
+      'Existence as such: outline (determinateness → quality → reality/negation → something)',
+    text: `In existence
+(a) as such, its determinateness is first
+(b) to be distinguished as quality.
+The latter, however, is to be taken in
+both the two determinations of
+existence as reality and negation.
+In these determinacies, however,
+existence is equally reflected into itself,
+and, as so reflected, it is posited as
+(c) something, an existent.`,
+    summary:
+      'Outline: determinateness first; becomes quality as reality|negation; in these, existence reflects-into-itself and is posited as “something” (an existent).'
+  },
+  {
+    id: 'existence-2-from-becoming-immediacy',
+    title:
+      'Existence from becoming: simple oneness; immediate (becoming behind it)',
+    text: `Existence proceeds from becoming.
+It is the simple oneness of being and nothing.
+On account of this simplicity,
+it has the form of an immediate.
+Its mediation, the becoming, lies behind it;
+it has sublated itself,
+and existence therefore appears as a first
+from which the forward move is made.
+It is at first in the one-sided determination of being;
+the other determination which it contains, nothing,
+will likewise come up in it,
+in contrast to the first.`,
+    summary:
+      'From Becoming: existence = simple oneness of being|nothing; now as immediacy (mediation behind it). Initially one-sided as being; its nothing will appear in contrast.'
+  },
+  {
+    id: 'existence-3-da-being-with-non-being',
+    title:
+      '“Da”-sein: being with non-being; determinateness as such (in form of being)',
+    text: `It is not mere being but existence,
+or Dasein [in German];
+according to its [German] etymology,
+it is being (Sein) in a certain place (da).
+But the representation of space does not belong here.
+As it follows upon becoming,
+existence is in general
+being with a non-being,
+so that this non-being is taken up
+into simple unity with being.
+Non-being thus taken up into being
+with the result that the concrete whole is
+in the form of being, of immediacy,
+constitutes determinateness as such.`,
+    summary:
+      'Da‑sein: not mere being but being‑with‑non‑being; non‑being is taken up into unity, so the whole stands in the form of being (immediacy). This is determinateness as such.'
+  },
+  {
+    id: 'existence-4-reflection-vs-posited-I',
+    title:
+      'Reflection vs posited I: being-as-moment (for us) vs determinateness-posited (in it)',
+    text: `The whole is likewise in the form
+or determinateness of being,
+since in becoming being has likewise
+shown itself to be only a moment:
+something sublated, negatively determined.
+It is such, however, for us, in our reflection;
+not yet as posited in it.
+What is posited, however, is
+the determinateness as such of existence,
+as is also expressed by the da (or “there”) of the Dasein.
+The two are always to be clearly distinguished.`,
+    summary:
+      'Method: being is only-a-moment (for us, by reflection); what is posited in existence itself is determinateness‑as‑such (“da”). Keep reflection vs posited strictly distinct.'
+  },
+  {
+    id: 'existence-5-reflection-vs-posited-II',
+    title:
+      'Reflection vs posited II: scope of commentary vs moments of the fact itself',
+    text: `Only that which is posited in a concept
+belongs in the course of the elaboration
+of the latter to its content.
+Any determinateness not yet posited
+in the concept itself
+belongs instead to our reflection,
+whether this reflection is directed to
+the nature of the concept itself
+or is a matter of external comparison.
+To remark on a determinateness
+of this last kind can only be
+for the clarification or anticipation of the whole
+that will transpire in the course of the development itself.
+That the whole, the unity of being and nothing,
+is in the one-sided determinateness of being
+is an external reflection;
+but in negation, in something and other,
+and so forth, it will become posited.
+It was necessary here to call attention to
+the distinction just given;
+but to comment on all
+that reflection can allow itself,
+to give an account of it,
+would lead to a long-winded anticipation
+of what must transpire in the fact itself.
+Although such reflections may
+serve to facilitate a general overview
+and thus facilitate understanding,
+they also bring the disadvantage of
+being seen as unjustified assertions,
+unjustified grounds and foundations,
+of what is to follow.
+They should be taken for no more than
+what they are supposed to be
+and should be distinguished from
+what constitutes a moment in
+the advance of the fact itself.`,
+    summary:
+      'Discipline: only what is posited belongs to the concept’s content; unposited belongs to reflection (ancillary, at most clarifying). Negation/something/other will be posited in due course.'
+  },
+  {
+    id: 'existence-6-correspondence-to-being',
+    title:
+      'Correspondence: being (indeterminate) vs existence (determinate being, concrete)',
+    text: `Existence corresponds to being in the preceding sphere.
+But being is the indeterminate;
+there are no determinations that therefore transpire in it.
+But existence is determinate being, something concrete;
+consequently, several determinations,
+several distinct relations of its moments,
+immediately emerge in it.`,
+    summary:
+      'Correspondence: being = indeterminate (no inner articulation); existence = determinate being (concrete), where multiple determinations and relations emerge at once.'
   }
+];
 
-  /**
-   * Existence's determinateness - what makes it concrete
-   * "Existence is determinate being, something concrete"
-   */
-  getDeterminateness(): string {
-    return `Existence as Such is determinate because:
-    - It proceeds from becoming (mediation lies behind it)
-    - It has the form of an immediate but contains mediation
-    - It is being with a non-being taken up into simple unity
-    - This non-being constitutes determinateness as such
-    - It appears as a first from which forward move is made`;
-  }
+export const LOGICAL_OPERATIONS: LogicalOperation[] = [
+  // Outline
+  {
+    id: 'existence-op-1-outline-as-such',
+    chunkId: 'existence-1-outline-as-such',
+    label:
+      'Outline: determinateness → quality (reality|negation) → something (existent)',
+    clauses: [
+      'tag(Existence,"as-such")',
+      'assert(distinguished(Determinateness,Quality))',
+      'assert(determinationsOf(Existence,["reality","negation"]))',
+      'assert(reflectedIntoItself(Existence))',
+      'tag(Something,"existent")',
+    ],
+    predicates: [{ name: 'ExistenceOutline', args: [] }],
+    relations: [
+      { predicate: 'hasDetermination', from: 'Existence', to: 'Reality' },
+      { predicate: 'hasDetermination', from: 'Existence', to: 'Negation' },
+      { predicate: 'yields', from: 'Existence', to: 'Something' },
+    ],
+  },
 
-  /**
-   * Quality as the determinateness of existence
-   */
-  getQuality(): string {
-    return this.quality.getQualityStructure();
-  }
+  // From becoming → immediacy
+  {
+    id: 'existence-op-2-from-becoming-immediate',
+    chunkId: 'existence-2-from-becoming-immediacy',
+    label: 'From becoming: simple oneness; immediate (mediation behind it)',
+    clauses: [
+      'assert(proceedsFrom(Existence,Becoming))',
+      'tag(Existence,"simple-oneness-of-being-and-nothing")',
+      'tag(Existence,"immediate")',
+      'assert(mediationBehind(Existence,Becoming))',
+      'tag(Existence,"appears-as-first")',
+      'assert(contains(Existence,Being))',
+      'assert(contains(Existence,Nothing))',
+    ],
+    predicates: [{ name: 'ExistenceFromBecoming', args: [] }],
+    relations: [
+      { predicate: 'proceedsFrom', from: 'Existence', to: 'Becoming' },
+    ],
+  },
 
-  /**
-   * Something as the result of existence's development
-   */
-  getSomething(): string {
-    return this.something.getSomethingStructure();
-  }
+  // Da-sein: being-with-non-being
+  {
+    id: 'existence-op-3-being-with-non-being',
+    chunkId: 'existence-3-da-being-with-non-being',
+    label: 'Being with non-being: determinateness in form of being (immediacy)',
+    clauses: [
+      'tag(Existence,"being-with-non-being")',
+      'assert(takenUpIntoUnity(NonBeing,Being))',
+      'assert(inFormOf(Whole,Being))',
+      'tag(Determinateness,"as-such")',
+      'annotate(Existence,{etymology:"da-sein",spatialRepresentation:"excluded"})',
+    ],
+    predicates: [{ name: 'BeingWithNonBeing', args: [] }],
+    relations: [
+      { predicate: 'includes', from: 'Existence', to: 'NonBeing' },
+      { predicate: 'includes', from: 'Existence', to: 'Being' },
+    ],
+  },
 
-  /**
-   * The three moments of Existence as Such
-   */
-  getMoments(): {
-    existenceInGeneral: ExistenceInGeneral;
-    quality: QualityDetermination;
-    something: Something
-  } {
-    return {
-      existenceInGeneral: this.existenceInGeneral,
-      quality: this.quality,
-      something: this.something
-    };
-  }
+  // Reflection vs posited (I)
+  {
+    id: 'existence-op-4-reflection-vs-posited-I',
+    chunkId: 'existence-4-reflection-vs-posited-I',
+    label: 'Being-as-moment (for us) vs determinateness-posited (in it)',
+    clauses: [
+      'assert(momentOnly(Being,Becoming))',
+      'tag(Being,"sublated")',
+      'assert(forUs(Reflection,BeingAsMoment))',
+      'assert(positedIn(Existence,Determinateness))',
+      'tag(Existence,"there-ness-da")',
+    ],
+    predicates: [{ name: 'ReflectionVsPositedI', args: [] }],
+    relations: [
+      { predicate: 'posits', from: 'Existence', to: 'Determinateness' },
+    ],
+  },
 
-  /**
-   * How Existence differs from pure Being
-   * "Existence corresponds to being in the preceding sphere. But being is indeterminate"
-   */
-  getDifferenceFromBeing(): string {
-    return `Existence vs Pure Being:
-    - Being: Indeterminate, no determinations transpire in it
-    - Existence: Determinate being, something concrete
-    - Being: Pure immediacy without content
-    - Existence: Immediacy that contains mediation (becoming)
-    - Being: Abstract, empty
-    - Existence: Several determinations and distinct relations emerge
-    - Result: Logic begins with determinate Something, not empty forms`;
-  }
-}
+  // Reflection vs posited (II)
+  {
+    id: 'existence-op-5-reflection-vs-posited-II',
+    chunkId: 'existence-5-reflection-vs-posited-II',
+    label: 'Scope: only posited belongs to concept; reflection is ancillary',
+    clauses: [
+      'assert(onlyPositedBelongsToConcept(Content))',
+      'assert(unpositedBelongsTo(Reflection))',
+      'tag(Reflection,"ancillary")',
+      'assert(willBePositedLater(["Negation","Something","Other"]))',
+    ],
+    predicates: [{ name: 'ReflectionDiscipline', args: [] }],
+    relations: [
+      {
+        predicate: 'belongsTo',
+        from: 'UnpositedDeterminateness',
+        to: 'Reflection',
+      },
+    ],
+  },
 
-/**
- * a. EXISTENCE IN GENERAL
- *
- * "Existence proceeds from becoming. It has the form of an immediate.
- * Its mediation, the becoming, lies behind it"
- */
-export class ExistenceInGeneral {
-  readonly name = "Existence in General";
-
-  /**
-   * How existence emerges from becoming
-   * "Existence proceeds from becoming. It is the simple oneness of being and nothing"
-   */
-  getEmergenceFromBecoming(): string {
-    return `Existence emerges from Becoming:
-    - Simple oneness of being and nothing
-    - Has the form of an immediate
-    - Its mediation (becoming) lies behind it, sublated
-    - Appears as a first from which forward move is made
-    - At first in one-sided determination of being
-    - But contains nothing which will come up in contrast`;
-  }
-
-  /**
-   * Existence as Dasein - being-there
-   * "It is not mere being but existence, or Dasein; being in a certain place"
-   */
-  getDasein(): string {
-    return `Existence as Dasein (being-there):
-    - Not mere being but existence
-    - Dasein = being (Sein) in a certain place (da)
-    - Being with a non-being taken up into simple unity
-    - Non-being taken up into being constitutes determinateness
-    - The 'da' (there) expresses the determinateness of existence`;
-  }
-
-  /**
-   * The concrete nature of existence
-   * "Existence is determinate being, something concrete"
-   */
-  getConcreteNature(): string {
-    return `Existence as concrete:
-    - Determinate being, not indeterminate like pure Being
-    - Something concrete with several determinations
-    - Several distinct relations of its moments emerge immediately
-    - Contains being and nothing in immediate unity
-    - Form of being/immediacy but with determinate content`;
-  }
-}
-
-/**
- * b. QUALITY (as determinateness of existence)
- *
- * "Determinateness thus isolated by itself, as existent determinateness, is quality"
- */
-export class QualityDetermination {
-  readonly name = "Quality";
-
-  private reality: Reality;
-  private negation: Negation;
-
-  constructor() {
-    this.reality = new Reality();
-    this.negation = new Negation();
-  }
-
-  /**
-   * Quality as simple, immediate determinateness
-   * "Quality: something totally simple, immediate"
-   */
-  getQualityStructure(): string {
-    return `Quality as determinateness:
-    - Determinateness isolated by itself as existent determinateness
-    - Something totally simple, immediate
-    - Not yet detached from being, immediate unity with being
-    - On account of this simplicity, nothing further to say about quality as such
-    - But must be posited in both determinations: reality and negation`;
-  }
-
-  /**
-   * The two determinations of quality: reality and negation
-   */
-  getTwoDeterminations(): { reality: Reality; negation: Negation } {
-    return {
-      reality: this.reality,
-      negation: this.negation
-    };
-  }
-
-  /**
-   * How quality measures the one-sidedness of existence
-   * "Existence is itself the measure of the one-sidedness of quality"
-   */
-  getQualityMeasurement(): string {
-    return `Quality's measurement of existence:
-    - Existence contains nothing and being equally
-    - This measures the one-sidedness of quality as only immediate determinateness
-    - Quality must be posited in determination of nothing as well
-    - Result: immediate determinateness becomes reflected, distinct
-    - Nothing becomes determinate element - a reflected negation`;
-  }
-}
-
-/**
- * Reality - Quality with accent on existing
- * "Quality, in the distinct value of existent, is reality"
- */
-export class Reality {
-  readonly name = "Reality";
-
-  getReality(): string {
-    return `Reality as quality:
-    - Quality with the accent on being an existent
-    - Determinateness and negation are concealed in it
-    - Has only the value of something positive
-    - Negating, restriction, lack are excluded from it
-    - But reality itself contains negation - it is existence, not abstract being`;
-  }
-}
-
-/**
- * Negation - Quality affected by negating
- * "When affected by a negating, it is negation in general"
- */
-export class Negation {
-  readonly name = "Negation";
-
-  getNegation(): string {
-    return `Negation as quality:
-    - Quality affected by a negating
-    - Still a quality but counts as a lack
-    - Further determined as limit, restriction
-    - Not mere lack (which would be nothing)
-    - But an existence, a quality, only determined with a non-being
-    - Equally existence, not supposed abstract nothing`;
-  }
-}
-
-/**
- * c. SOMETHING - The first negation of negation
- *
- * "Something is the first negation of negation, as simple existent self-reference"
- */
-export class Something {
-  readonly name = "Something";
-
-  /**
-   * Something as negation of negation
-   * "Something is the first negation of negation"
-   */
-  getSomethingStructure(): string {
-    return `Something as first negation of negation:
-    - Simple existent self-reference
-    - Sublation of the distinction between reality and negation
-    - Existence not void of distinctions but self-equal through sublation
-    - Simplicity of existence mediated through this sublation
-    - Being-in-itself, existent something`;
-  }
-
-  /**
-   * Something as beginning of the subject
-   * "As something, the negative of the negative is only the beginning of the subject"
-   */
-  getSubjectBeginning(): string {
-    return `Something as beginning of subject:
-    - First negation of negation
-    - Only the beginning of the subject, in-itselfness still indeterminate
-    - Determines itself further as existent-for-itself
-    - Until it obtains in the concept the intensity of the subject
-    - At base of all determinations lies negative unity with itself`;
-  }
-
-  /**
-   * Something's mediation with itself
-   * "Something is thereby equally the mediation of itself with itself"
-   */
-  getSelfMediation(): string {
-    return `Something's self-mediation:
-    - Mediation of itself with itself
-    - Present in simplicity of something
-    - Negation of negation as restoration of simple reference to itself
-    - But when taken only as negation of negation, collapses into simple unity
-    - Something is, and is therefore also an existent`;
-  }
-
-  /**
-   * Something's becoming and alteration
-   * "Something is a transition, the moments of which are themselves something"
-   */
-  getBecoming(): string {
-    return `Something's becoming:
-    - In itself also becoming, but no longer has only being and nothing
-    - One moment: existence and further an existent
-    - Other moment: equally existent but determined as negative - an other
-    - As becoming, it is transition with moments that are themselves something
-    - Therefore it is alteration - becoming that has become concrete
-    - At first alters only in concept, maintains itself in self-reference`;
-  }
-}
-
-/**
- * THE LOGIC BEGINS WITH DETERMINATE SOMETHING
- * ===========================================
- *
- * This demonstrates that Qualitative Logic doesn't begin with empty forms
- * but starts with Form:Quality Something as the determinate foundation
- */
-class LogicalBeginningClass {
-  private existenceAsSuch: ExistenceAsSuch;
-
-  constructor() {
-    this.existenceAsSuch = new ExistenceAsSuch();
-  }
-
-  /**
-   * Why Logic begins with Something, not empty forms
-   */
-  getLogicalBeginning(): string {
-    return `Logic begins with determinate Something:
-    - Not empty Being but determinate Existence
-    - Not abstract forms but Form:Quality Something
-    - Something carries connotation of a real thing
-    - Contains reality and negation as concrete determinations
-    - First negation of negation as beginning of subject
-    - Mediation with itself is posited, not abstract
-    - This is the foundation for all further logical development`;
-  }
-
-  /**
-   * The significance of starting with Something
-   */
-  getSignificance(): string {
-    return `Significance of Something as beginning:
-    - Qualitative Logic is conditioned by determinate content
-    - Form:Quality structure is immediate given
-    - Something is "real thing" not abstract category
-    - Contains its own principle of development (self-mediation)
-    - Negation of negation provides dialectical movement
-    - Beginning of subject, leading to full subjectivity in Concept
-    - Demonstrates that Logic has substantial, not formal, content`;
-  }
-
-  /**
-   * Get the complete Existence as Such
-   */
-  getExistenceAsSuch(): ExistenceAsSuch {
-    return this.existenceAsSuch;
-  }
-}
-
-// Export the main classes
-export { ExistenceAsSuch as default, LogicalBeginningClass as LogicalBeginning };
+  // Correspondence to being
+  {
+    id: 'existence-op-6-correspondence-to-being',
+    chunkId: 'existence-6-correspondence-to-being',
+    label:
+      'Existence vs being: indeterminate vs determinate (multiple relations emerge)',
+    clauses: [
+      'assert(correspondsTo(Existence,Being))',
+      'tag(Being,"indeterminate")',
+      'tag(Existence,"determinate-being")',
+      'tag(Existence,"concrete")',
+      'assert(multipleDeterminationsEmerge(Existence))',
+    ],
+    predicates: [{ name: 'ExistenceVsBeing', args: [] }],
+    relations: [{ predicate: 'correspondsTo', from: 'Existence', to: 'Being' }],
+  },
+];

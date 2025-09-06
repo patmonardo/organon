@@ -1,0 +1,30 @@
+{
+  "name": "@organon/gdsl",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "build": "tsc -p tsconfig.json",
+    "test": "node --test",
+    "clean": "rm -rf dist node_modules tsconfig.tsbuildinfo",
+    "demo:quality": "tsx src/examples/build_quality_core.ts",
+    "demo:being": "tsx src/examples/build_being_core.ts",
+    "demo:metaphysics": "tsx src/examples/build_metaphysics.ts",
+    "demo:bfs": "tsx src/examples/build_being_for_self.ts",
+    "analyze": "tsx scripts/analyze-logic.ts",
+    "export:cypher": "tsx scripts/export-cypher.ts"
+  },
+  "dependencies": {
+    "@organon/reality": "workspace:*",
+    "@organon/logic": "workspace:*",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^22.5.0",
+    "tsx": "^4.17.0",
+    "typescript": "^5.5.4"
+  }
+}

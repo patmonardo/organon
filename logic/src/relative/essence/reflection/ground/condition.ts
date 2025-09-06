@@ -1,565 +1,318 @@
-/**
- * CONDITION: The Conclusion of Objective Qualitative Logic
- * =======================================================
- *
- * The final resolution where all ground-relationships sublate themselves
- * into the pure immediacy of CONCRETE EXISTENCE. This is the complete
- * logical structure governing the emergence of actuality from essence.
- *
- * The Logical Rules of Manifestation:
- * 1. Every ground presupposes conditions
- * 2. Every condition presupposes ground
- * 3. Ground and condition are one absolute totality
- * 4. When all conditions are present, the fact steps into existence
- * 5. This stepping-forth sublates both ground and condition
- * 6. Result: Immediate concrete existence as groundless ground
- *
- * Yogic Correspondence:
- * - PRATYAYA: Condition as conditioning factor
- * - NIMITTA: Instrumental cause as conditioning ground
- * - KARANA-KARYA: Complete cause-effect totality
- * - STHITI: The moment of manifestation when all conditions unite
- * - UTPATTI: Coming-forth into concrete existence
- * - SAT-ASAT-SADAKHYA: Being-Nonbeing-Appearance as complete cycle
- *
- * "When all the conditions of a fact are at hand, the fact steps into concrete existence"
- * "The fact proceeds from the ground... the truth of the grounding is that in grounding
- * the ground unites with itself" - Hegel
- *
- * Based on Hegel's Logic Book Two: Essence - Chapter 3, C. Condition
- */
+import { Chunk } from './index';
 
-/**
- * Base interface for condition relations
- */
-interface ConditionRelation {
-  dialecticalMovement(): string;
-  getLogicalRule(): string;
-  getYogicParallel(): string;
-  getManifestationPrinciple(): string;
+export const CANONICAL_CHUNKS: Chunk[] = [
+  {
+    id: 'chunk-1-ground-self-positing',
+    title: 'Ground — self-positing & mediation',
+    text: `Ground is the immediate,
+and the grounded the mediated.
+But ground is positing reflection;
+as such, it makes itself into positedness
+and is presupposing reflection;
+as such it refers itself to itself
+as to something sublated,
+to an immediate through which
+it is itself mediated.
+This mediation, as an advance
+from the immediate to the ground,
+is not an external reflection
+but, as we have seen, the ground's own doing
+or, what is the same, the ground-connection,
+as reflection into its self-identity,
+is just as essentially self-externalizing reflection.
+The immediate to which ground refers as
+to its essential presupposition is condition;
+real ground is accordingly essentially conditioned.
+The determinateness that it contains is
+the otherness of itself.`
+  },
+  {
+    id: 'chunk-2-condition-conclusion',
+    title: 'Conclusion — what condition is',
+    text: `Condition is therefore,
+first, an immediate, manifold existence.
+Second, it is this existence referred to an other,
+to something which is ground,
+not of this existence but in some other respect,
+for existence itself is immediate and without ground.
+According to this reference, it is something posited;
+as condition, the immediate existence is supposed to be
+not for itself but for another.
+But this, that it thus is for another, is at the same time
+itself only a positedness;
+that it is posited is sublated in its immediacy:
+an existence is indifferent to being a condition.
+Third, condition is something immediate in the sense
+that it constitutes the presupposition of ground.`
+  },
+  {
+    id: 'chunk-3-condition-content-form',
+    title: 'Expansion — condition as content and form-connection',
+    text: `In this determination, it is the form-connection of ground
+withdrawn into self-identity, hence the content of ground.
+But content is as such only the indifferent unity of ground,
+as in the form: without form, no content.
+It nevertheless frees itself
+from this indifferent unity
+in that the ground-connection,
+in the complete ground,
+becomes a connection external to its identity,
+whereby content acquires immediacy.
+
+In so far, therefore, as condition is
+that in which the ground-connection has
+its identity with itself,
+it constitutes the content of ground;
+but since this content is indifferent to form,
+it is only implicitly the content of form,
+is something which has yet to become content
+and hence constitutes the material for the ground.`
+  },
+  {
+    id: 'chunk-4-condition-becomes-unconditioned',
+    title: 'Return — condition becomes relative unconditioned for ground',
+    text: `Posited as condition,
+and in accordance with the second moment,
+existence is determined to lose its indifferent immediacy
+and to become the moment of another.
+By virtue of its immediacy, it is indifferent to this connection;
+inasmuch as it enters into it, however,
+it constitutes the in-itself of the ground
+and is for it the unconditioned.
+In order to be condition,
+it has its presupposition in the ground
+and is itself conditioned;
+but this condition is external to it.`
+  },
+  {
+    id: 'chunk-5-condition-essence-distinction',
+    title: 'Essence — condition is not the ground; distinction of roles',
+    text: `Something is not through its condition; its condition is not its ground.
+Condition is for the ground the moment of unconditioned immediacy, but is not itself the positing-movement that refers itself to itself and makes itself into positedness.
+Over against condition there stands the ground-connection: something has, besides its condition, also a ground.
+The ground is the empty movement of reflection which nonetheless has immediacy as its presupposition outside it.`
+  },
+  {
+    id: 'chunk-6-ground-connection-content',
+    title: 'Ground-connection — self-subsisting reflection and content distinction',
+    text: `The ground-connection is the whole form and the self-subsistent process of mediation; since this mediating refers itself to itself as positing it is also something immediate and unconditioned on that side.
+As self-subsisting self-reference it has a content peculiar to itself (the informed content of ground) distinct from the immediate material content of the condition.
+The condition’s content is immediate material which, while external, constitutes the in-itself of the ground and should become a moment of it (material-for-form).`
+  },
+
+  // New: part-3 chunks (two precise chunks: indifference / mediation & contradiction)
+  {
+    id: 'chunk-7-two-sides-indifference',
+    title: 'The two sides — mutual indifference and unconditionedness',
+    text: `The two sides of the whole, condition and ground, are thus, on the one hand, indifferent and unconditioned with respect to each other:
+the one as the non-referred-to side, to which the connecting reference in which it is the condition is external;
+the other as the connecting reference, or form, for which the determinate existence of the condition is only a material, something passive whose form, such as it possesses on its own account, is unessential.`
+  },
+  {
+    id: 'chunk-8-mediation-contradiction',
+    title: 'Mediation — condition as in-itself of ground and the internal contradiction',
+    text: `On the other hand, the two sides are also mediated.
+Condition is the in-itself of the ground; so much is it the essential moment of the ground-connection, that it is the simple self-identity of the ground.
+But this is sublated; this in-itself is only something posited; immediate existence is indifferent to being a condition.
+Likewise, the ground-connection has in its self-subsistence also a presupposition; it has its in-itself outside itself.
+Consequently, each side is this contradiction: indifferent immediacy and essential mediation, both in one reference — independent subsistence and determination as only moments.`
+  }
+]
+
+export function getChunk(oneBasedIndex: number): Chunk | null {
+  return CANONICAL_CHUNKS[oneBasedIndex - 1] ?? null
 }
 
-/**
- * Interface for unconditioned structures
- */
-interface UnconditionedStructure extends ConditionRelation {
-  getUnconditionedNature(): string;
-  getPresuppositionStructure(): string;
-  getReflectiveShining(): string;
+/* Lightweight logical-op shape (TS-friendly) */
+export type Predicate = { name: string; args?: string[] }
+export type Relation = { predicate: string; from: string; to: string }
+
+export type LogicalOperation = {
+  id: string
+  label?: string
+  clauses: string[]
+  predicates?: Predicate[]
+  relations?: Relation[]
+  chunkId?: string
 }
 
-/**
- * THE RELATIVELY UNCONDITIONED: Initial Condition-Structure
- * =========================================================
- *
- * How ground becomes essentially conditioned and conditions become grounding
- */
-class RelativelyUnconditioned implements UnconditionedStructure {
-  private groundAsConditioned: string;
-  private conditionAsImmediate: string;
-  private conditionAsForAnother: string;
-  private conditionAsPresupposition: string;
-  private groundConnectionExternal: string;
+/* Minimal mapping: one logical operation per canonical chunk */
+export const LOGICAL_OPERATIONS: LogicalOperation[] = [
+  {
+    id: 'op-1-ground-self-positing',
+    chunkId: 'chunk-1-ground-self-positing',
+    label: 'Ground self-positing / mediation',
+    clauses: [
+      'ground.immediate = true',
+      'ground.posits(self) => ground.positedness',
+      'mediation := ground.connection (self-activity), not external reflection',
+      'condition = immediate presupposition referenced by ground',
+      'ground.determinateness = othernessOf(self)'
+    ],
+    predicates: [
+      { name: 'Immediate', args: ['ground'] },
+      { name: 'Posits', args: ['ground'] },
+      { name: 'MediationIsSelfDoing', args: ['ground'] }
+    ],
+    relations: [{ predicate: 'presupposes', from: 'ground', to: 'condition' }]
+  },
+  {
+    id: 'op-2-condition-conclusion',
+    chunkId: 'chunk-2-condition-conclusion',
+    label: 'Condition — immediacy, for-another, positedness, presupposition',
+    clauses: [
+      'condition.isImmediate = true',
+      'condition.referredTo = ground (for-another)',
+      'condition.isPosited = true',
+      'positedness.sublatedBy(immediacy) => existence.indifferentToBeingCondition',
+      'condition.constitutesPresuppositionOf(ground)'
+    ],
+    predicates: [
+      { name: 'Immediate', args: ['condition'] },
+      { name: 'ForAnother', args: ['condition', 'ground'] },
+      { name: 'Posited', args: ['condition'] }
+    ],
+    relations: [
+      { predicate: 'for', from: 'condition', to: 'ground' },
+      { predicate: 'constitutes', from: 'condition', to: 'ground.inItself' }
+    ]
+  },
+  {
+    id: 'op-3-condition-content-form',
+    chunkId: 'chunk-3-condition-content-form',
+    label: 'Form-connection withdrawn into self-identity → content of ground',
+    clauses: [
+      'formConnection(ground).withdrawnInto(selfIdentity) => content(ground)',
+      'content.initial = indifferentUnity(ground)',
+      'without form => no content',
+      'completeGround: groundConnection.becomesExternal => content.acquiresImmediacy',
+      'implicitContent => materialFor(groundForm)'
+    ],
+    predicates: [
+      { name: 'WithdrawnInto', args: ['formConnection','selfIdentity'] },
+      { name: 'IndifferentUnity', args: ['content','ground'] },
+      { name: 'BecomesExternal', args: ['groundConnection'] }
+    ],
+    relations: [
+      { predicate: 'yields', from: 'formConnection', to: 'ground.content' },
+      { predicate: 'materialFor', from: 'ground.content', to: 'ground.form' }
+    ]
+  },
+  {
+    id: 'op-4-condition-becomes-unconditioned',
+    chunkId: 'chunk-4-condition-becomes-unconditioned',
+    label: 'Condition → relative unconditioned for ground',
+    clauses: [
+      'condition.posited && condition.entersConnection => condition.losesIndifferentImmediacy',
+      'condition.entersConnection => condition.constitutes(ground.inItself)',
+      'condition.isFor(ground) && condition.isConditioned(externalToItself)',
+      'through entry, condition.functionsFor(ground) as relativeUnconditioned'
+    ],
+    predicates: [
+      { name: 'LosesImmediacy', args: ['condition'] },
+      { name: 'ConstitutesInItself', args: ['condition','ground'] },
+      { name: 'IsFor', args: ['condition','ground'] }
+    ],
+    relations: [
+      { predicate: 'constitutes', from: 'condition', to: 'ground.inItself' },
+      { predicate: 'functionsAs', from: 'condition', to: 'ground.relativeUnconditioned' }
+    ]
+  },
+  {
+    id: 'op-5-condition-essence-distinction',
+    chunkId: 'chunk-5-condition-essence-distinction',
+    label: 'Distinction: condition ≠ ground; condition as moment of immediacy',
+    clauses: [
+      'forAny(x): x.notIdenticalTo(x.condition)', // something is not through its condition
+      'condition.roleFor(ground) = momentOf(unconditionedImmediacy)',
+      'condition.isNot(positingMovement)', // condition lacks self-positing
+      'groundConnection.existsOppositeTo(condition)'
+    ],
+    predicates: [
+      { name: 'NotThroughCondition', args: ['something','condition'] },
+      { name: 'MomentOfImmediacy', args: ['condition','ground'] },
+      { name: 'IsNotPositing', args: ['condition'] }
+    ],
+    relations: [
+      { predicate: 'opposes', from: 'ground.connection', to: 'condition' },
+      { predicate: 'hasMoment', from: 'ground', to: 'condition' }
+    ]
+  },
 
-  constructor() {
-    this.groundAsConditioned = "real ground is accordingly essentially conditioned";
-    this.conditionAsImmediate = "condition is therefore, first, an immediate, manifold existence";
-    this.conditionAsForAnother = "as condition, the immediate existence is supposed to be not for itself but for another";
-    this.conditionAsPresupposition = "condition is something immediate in the sense that it constitutes the presupposition of ground";
-    this.groundConnectionExternal = "something has, besides its condition, also a ground";
+  {
+    id: 'op-6-ground-connection-content',
+    chunkId: 'chunk-6-ground-connection-content',
+    label: 'Ground-connection as self-subsisting reflection; content vs material distinction',
+    clauses: [
+      'groundConnection.isSelfSubsistent = true',
+      'groundConnection.hasIdentityOfReflection = true',
+      'ground.content = informedContent (distinct)',
+      'condition.content = immediateMaterial (external-to-ground)',
+      'condition.entersConnection => condition.materialBecomesMomentOf(ground)'
+    ],
+    predicates: [
+      { name: 'SelfSubsistent', args: ['groundConnection'] },
+      { name: 'HasReflectionIdentity', args: ['groundConnection'] },
+      { name: 'InformedContent', args: ['ground'] },
+      { name: 'ImmediateMaterial', args: ['condition'] }
+    ],
+    relations: [
+      { predicate: 'hasContent', from: 'groundConnection', to: 'ground.content' },
+      { predicate: 'materialFor', from: 'condition.content', to: 'ground' },
+      { predicate: 'constitutes', from: 'condition', to: 'ground.inItself' }
+    ]
+  },
+  {
+    id: 'op-7-two-sides-indifference',
+    chunkId: 'chunk-7-two-sides-indifference',
+    label: 'Two sides: mutual indifference; externality of reference',
+    clauses: [
+      'condition.indifferentTo(ground) && ground.indifferentTo(condition)',
+      'condition.isNonReferredSide = true',
+      'ground.isConnectingReference = true',
+      'condition.content = immediateMaterial (externalToReference)'
+    ],
+    predicates: [
+      { name: 'Indifferent', args: ['condition','ground'] },
+      { name: 'NonReferredSide', args: ['condition'] },
+      { name: 'ConnectingReference', args: ['ground'] },
+      { name: 'ImmediateMaterial', args: ['condition'] }
+    ],
+    relations: [
+      { predicate: 'externalTo', from: 'condition.content', to: 'ground.connection' },
+      { predicate: 'isFormFor', from: 'ground', to: 'condition' }
+    ]
+  },
+
+  {
+    id: 'op-8-mediation-contradiction',
+    chunkId: 'chunk-8-mediation-contradiction',
+    label: 'Mediation & contradiction: in-itself posited; mutual presupposition',
+    clauses: [
+      'condition.isInItselfOf(ground) = true',
+      'condition.inItselfIsPosited = true',
+      'groundConnection.hasPresuppositionOutsideItself = true',
+      'eachSide = (indifferentImmediacy && essentialMediation)'
+    ],
+    predicates: [
+      { name: 'InItselfOf', args: ['condition','ground'] },
+      { name: 'Posited', args: ['condition'] },
+      { name: 'HasPresuppositionOutside', args: ['groundConnection'] },
+      { name: 'ContradictoryDouble', args: ['side'] }
+    ],
+    relations: [
+      { predicate: 'constitutesInItself', from: 'condition', to: 'ground.inItself' },
+      { predicate: 'presupposesOutside', from: 'groundConnection', to: 'ground.inItself' }
+    ]
   }
+]
 
-  dialecticalMovement(): string {
-    return `
-    Relatively Unconditioned Movement:
-    1. Ground becomes essentially conditioned (presupposes conditions)
-    2. Condition as immediate manifold existence
-    3. Condition as for-another (material for ground)
-    4. Condition as presupposition of ground
-    5. External separation: condition AND ground as distinct
-    `;
-  }
-
-  getLogicalRule(): string {
-    return `
-    LOGICAL RULE 1: The Conditioning Structure
-    - Every real ground presupposes conditions
-    - Every condition exists for another (the ground)
-    - Ground and condition are externally related
-    - Neither is complete without the other
-    - Both claim independence yet depend on each other
-    `;
-  }
-
-  getManifestationPrinciple(): string {
-    return `
-    Manifestation Principle - EXTERNAL CONDITIONING:
-    - No manifestation without both ground and conditions
-    - Ground provides form, conditions provide content
-    - External relationship creates instability
-    - Pointing toward absolute unity beyond separation
-    - The necessity of transcending relative conditioning
-    `;
-  }
-
-  getUnconditionedNature(): string {
-    return `
-    "Something is not through its condition; its condition is not its ground"
-
-    The Relative Independence:
-    - Condition exists independently of being condition
-    - Ground exists independently of specific conditions
-    - Each claims unconditioned status in its sphere
-    - But this independence is only relative
-    - Points toward absolute unconditioned beyond both
-    `;
-  }
-
-  getPresuppositionStructure(): string {
-    return `
-    "The immediate to which ground refers as to its essential presupposition is condition"
-
-    The Presupposing Logic:
-    - Ground must presuppose immediate conditions
-    - Conditions presuppose grounding connection
-    - Circular structure of mutual presupposition
-    - SAMSKARIC conditioning presupposing KARMIC ground
-    - The infinite regress demanding absolute foundation
-    `;
-  }
-
-  getReflectiveShining(): string {
-    return `
-    The Reflective Shining Structure:
-    - Each side shines in the other
-    - Condition shines in ground as its content
-    - Ground shines in condition as its form
-    - Neither is complete without this mutual shining
-    - Preparation for absolute identity beyond separation
-    `;
-  }
-
-  /**
-   * The contradiction of relative unconditioned
-   */
-  getContradictionOfRelative(): string {
-    return `
-    "Each of the two sides is this contradiction,
-    that they are indifferent immediacy and essential mediation,
-    both in one reference"
-
-    The Fundamental Contradiction:
-    - Claims independence yet essentially mediated
-    - Indifferent immediacy yet essential relationship
-    - Self-subsistent yet determined as only moments
-    - This contradiction drives toward absolute resolution
-    - The logical necessity of absolute unconditioned
-    `;
-  }
+export function getLogicalOperations(): LogicalOperation[] {
+  return LOGICAL_OPERATIONS
 }
 
-/**
- * THE ABSOLUTELY UNCONDITIONED: The Complete Unity
- * ================================================
- *
- * How condition and ground reveal themselves as one absolute totality
- */
-class AbsolutelyUnconditioned implements UnconditionedStructure {
-  private oneWholeOfForm: string;
-  private oneWholeOfContent: string;
-  private absoluteUnity: string;
-  private unconditionedFact: string;
-  private totalityAsSubstrate: string;
-
-  constructor() {
-    this.oneWholeOfForm = "what we have here, therefore, is only one whole of form";
-    this.oneWholeOfContent = "but equally so only one whole of content";
-    this.absoluteUnity = "the two sides of the whole, condition and ground, are therefore one essential unity";
-    this.unconditionedFact = "this substrate, the one content and unity of form of both, is the truly unconditioned; the fact in itself";
-    this.totalityAsSubstrate = "now this contains within itself the two sides, condition and ground, as its moments";
-  }
-
-  dialecticalMovement(): string {
-    return `
-    Absolutely Unconditioned Movement:
-    1. Recognition of one whole of form and content
-    2. Condition and ground as essential unity
-    3. Mutual presupposition reveals one substrate
-    4. The unconditioned fact as absolute totality
-    5. Ground and condition as moments of one absolute
-    `;
-  }
-
-  getLogicalRule(): string {
-    return `
-    LOGICAL RULE 2: The Absolute Unity
-    - Condition and ground are one essential unity
-    - Same content appearing in different forms
-    - Mutual presupposition reveals absolute substrate
-    - The unconditioned fact contains both as moments
-    - True independence belongs only to the absolute totality
-    `;
-  }
-
-  getManifestationPrinciple(): string {
-    return `
-    Manifestation Principle - ABSOLUTE CONDITIONING:
-    - All conditioning is self-conditioning of the absolute
-    - No external conditions to absolute reality
-    - The absolute fact conditions itself through its own activity
-    - SWATANTRA: Complete self-dependence of absolute reality
-    - All relative conditioning as absolute's self-manifestation
-    `;
-  }
-
-  getUnconditionedNature(): string {
-    return `
-    "This substrate, the one content and unity of form of both,
-    is the truly unconditioned; the fact in itself"
-
-    The Absolute Unconditioned:
-    - Beyond the opposition of conditioned and conditioning
-    - Contains both ground and condition as its own moments
-    - Self-conditioning rather than externally conditioned
-    - BRAHMAN as unconditioned reality containing all conditions
-    - The absolute fact that is ground of its own grounding
-    `;
-  }
-
-  getPresuppositionStructure(): string {
-    return `
-    "These two sides presuppose the totality,
-    presuppose that it is that which posits them"
-
-    The Absolute Presupposition:
-    - Ground and condition presuppose their own unity
-    - The totality posits its own moments
-    - Self-presupposition rather than external presupposition
-    - ATMA-MAYA: Self-conditioning activity of absolute consciousness
-    - The circular structure of absolute self-determination
-    `;
-  }
-
-  getReflectiveShining(): string {
-    return `
-    "The absolutely unconditioned is in its movement of positing
-    and presupposing only the movement in which this shine sublates itself"
-
-    The Self-Sublating Shine:
-    - All conditioning revealed as reflective appearance
-    - The absolute's self-conditioning through apparent externality
-    - Sublation of the shine of external conditioning
-    - MAYA as self-sublating appearance of absolute reality
-    - The return to simple absolute identity
-    `;
-  }
-
-  /**
-   * The fact's self-conditioning
-   */
-  getFactsSelfConditioning(): string {
-    return `
-    "It is the fact's own doing that it conditions itself
-    and places itself as ground over against its conditions"
-
-    The Self-Conditioning Activity:
-    - The absolute fact conditions itself
-    - Creates the appearance of external conditioning
-    - Places itself as ground against its own conditions
-    - LILA: Divine play of self-conditioning activity
-    - The absolute freedom of self-determining reality
-    `;
-  }
+export function getLogicalOpsForChunk(oneBasedIndex: number): LogicalOperation | null {
+  const chunk = getChunk(oneBasedIndex)
+  if (!chunk) return null
+  return LOGICAL_OPERATIONS.find(op => op.chunkId === chunk.id) ?? null
 }
-
-/**
- * PROCESSION INTO CONCRETE EXISTENCE: The Final Resolution
- * ========================================================
- *
- * How the absolutely unconditioned steps forth into immediate concrete existence
- */
-class ProcessionIntoExistence implements ConditionRelation {
-  private factStepsIntoExistence: string;
-  private allConditionsAtHand: string;
-  private mediationDisappears: string;
-  private groundlessBecoming: string;
-  private concreteExistence: string;
-
-  constructor() {
-    this.factStepsIntoExistence = "when all the conditions of a fact are at hand, the fact steps into concrete existence";
-    this.allConditionsAtHand = "if, therefore, all the conditions of the fact are at hand, that is, if the totality of the fact is posited as a groundless immediate";
-    this.mediationDisappears = "the coming forth into concrete existence is therefore so immediate, that it is mediated only by the disappearing of the mediation";
-    this.groundlessBecoming = "mediation is simple reflection reflectively shining within itself and groundless, absolute becoming";
-    this.concreteExistence = "this immediacy, mediated by ground and condition and self-identical through the sublating of mediation, is concrete existence";
-  }
-
-  dialecticalMovement(): string {
-    return `
-    Procession into Existence Movement:
-    1. All conditions of the fact come to be at hand
-    2. The fact steps forth into concrete existence
-    3. Mediation sublates itself in the stepping-forth
-    4. Ground and condition disappear in the manifestation
-    5. Pure immediate concrete existence as result
-    `;
-  }
-
-  getLogicalRule(): string {
-    return `
-    LOGICAL RULE 3: The Stepping-Forth
-    - When all conditions are present, manifestation is immediate
-    - The stepping-forth sublates both ground and condition
-    - Mediation disappears in the act of mediation
-    - Result is pure immediate existence
-    - The groundless ground of concrete actuality
-    `;
-  }
-
-  getManifestationPrinciple(): string {
-    return `
-    Manifestation Principle - IMMEDIATE STEPPING-FORTH:
-    - Manifestation is immediate when conditions are complete
-    - The stepping-forth transcends causal dependency
-    - Concrete existence as groundless immediacy
-    - SAHAJA: Natural spontaneous manifestation
-    - The miracle of existence emerging from essence
-    `;
-  }
-
-  /**
-   * The critical moment of stepping-forth
-   */
-  getCriticalMoment(): string {
-    return `
-    "When all the conditions of a fact are at hand,
-    the fact steps into concrete existence"
-
-    The Critical Logical Moment:
-    - Not gradual emergence but sudden stepping-forth
-    - Completeness of conditions triggers immediate manifestation
-    - The quantum leap from essence to existence
-    - KSHANA: The instantaneous moment of manifestation
-    - The logical necessity of immediate appearance
-    `;
-  }
-
-  /**
-   * Disappearing mediation
-   */
-  getDisappearingMediation(): string {
-    return `
-    "The coming forth into concrete existence is therefore so immediate,
-    that it is mediated only by the disappearing of the mediation"
-
-    The Paradox of Mediation:
-    - Mediation mediates its own disappearance
-    - Immediate result through sublated mediation
-    - The self-canceling nature of causal process
-    - NIRVIKALPA: Beyond all mediating constructions
-    - Pure immediacy as result of complete mediation
-    `;
-  }
-
-  /**
-   * Ground's self-sublation
-   */
-  getGroundsSelfSublation(): string {
-    return `
-    "The fact proceeds from the ground. It is not grounded or posited by it
-    in such a manner that the ground would still stay underneath, as a substrate;
-    on the contrary, the positing is the outward movement of ground to itself
-    and the simple disappearing of it"
-
-    The Ground's Self-Sacrifice:
-    - Ground doesn't remain as substrate but disappears
-    - Positing as ground's outward movement to itself
-    - Ground unites with itself by disappearing as ground
-    - TYAGA: Self-sacrifice of causal ground in manifestation
-    - The truth that grounding sublates ground
-    `;
-  }
-
-  /**
-   * Concrete existence as final result
-   */
-  getConcreteExistenceResult(): string {
-    return `
-    "This immediacy, mediated by ground and condition
-    and self-identical through the sublating of mediation,
-    is concrete existence"
-
-    The Final Achievement:
-    - Concrete existence as mediated immediacy
-    - Self-identical through sublation of all mediation
-    - The pure fact of existing reality
-    - SATTA: Pure being-ness beyond all conditioning
-    - The miracle of immediate concrete actuality
-    `;
-  }
-}
-
-/**
- * THE COMPLETE CONDITION SYSTEM
- * =============================
- *
- * The systematic conclusion of Objective Qualitative Logic
- */
-class ConditionSystem {
-  private relativelyUnconditioned: RelativelyUnconditioned;
-  private absolutelyUnconditioned: AbsolutelyUnconditioned;
-  private processionIntoExistence: ProcessionIntoExistence;
-
-  constructor() {
-    this.relativelyUnconditioned = new RelativelyUnconditioned();
-    this.absolutelyUnconditioned = new AbsolutelyUnconditioned();
-    this.processionIntoExistence = new ProcessionIntoExistence();
-  }
-
-  /**
-   * Complete systematic development
-   */
-  getCompleteSystematicDevelopment(): string {
-    return `
-    CONDITION - The Conclusion of Objective Qualitative Logic:
-
-    1. The Relatively Unconditioned: External Conditioning Structure
-    ${this.relativelyUnconditioned.dialecticalMovement()}
-
-    2. The Absolutely Unconditioned: Complete Unity of Conditioning
-    ${this.absolutelyUnconditioned.dialecticalMovement()}
-
-    3. Procession into Concrete Existence: The Final Stepping-Forth
-    ${this.processionIntoExistence.dialecticalMovement()}
-
-    Result: CONCRETE EXISTENCE as the conclusion of essence
-    `;
-  }
-
-  /**
-   * The complete logical rules of manifestation
-   */
-  getLogicalRulesOfManifestation(): string {
-    return `
-    THE COMPLETE LOGICAL RULES OF MANIFESTATION:
-
-    RULE 1 - The Conditioning Structure:
-    ${this.relativelyUnconditioned.getLogicalRule()}
-
-    RULE 2 - The Absolute Unity:
-    ${this.absolutelyUnconditioned.getLogicalRule()}
-
-    RULE 3 - The Stepping-Forth:
-    ${this.processionIntoExistence.getLogicalRule()}
-
-    These are the ETERNAL LOGICAL LAWS governing all manifestation!
-    `;
-  }
-
-  /**
-   * The yogic synthesis of conditioning
-   */
-  getYogicConditioningSynthesis(): string {
-    return `
-    Complete Yogic Understanding of Conditioning:
-
-    RELATIVE CONDITIONING (PARATANTRA):
-    - All phenomena arise through conditions (PRATYAYA)
-    - Mutual dependence of causal factors
-    - The incompleteness of relative causation
-
-    ABSOLUTE CONDITIONING (SWATANTRA):
-    - BRAHMAN as self-conditioning absolute reality
-    - All conditioning as absolute's self-manifestation
-    - The unity beyond cause-effect duality
-
-    STEPPING-FORTH (UTPATTI):
-    - Immediate manifestation when conditions are complete
-    - Transcendence of causal dependency in actual appearance
-    - SAHAJA: Natural spontaneous arising
-
-    This IS the complete yoga of manifestation!
-    `;
-  }
-
-  /**
-   * Conclusion of objective qualitative logic
-   */
-  getConclusionOfObjectiveLogic(): string {
-    return `
-    THE CONCLUSION OF OBJECTIVE QUALITATIVE LOGIC:
-
-    From BEING through ESSENCE to CONCRETE EXISTENCE:
-    - BEING: Immediate being-determinations
-    - ESSENCE: The truth of being as self-grounding
-    - CONCRETE EXISTENCE: The stepping-forth of the absolute fact
-
-    The Complete Achievement:
-    - All ground-relationships sublated into immediate existence
-    - The miracle of concrete actuality emerging from logical necessity
-    - The transition from essence to concrete appearance
-    - EXISTENCE as the truth of the entire essence-sphere
-
-    This completes the OBJECTIVE QUALITATIVE LOGIC as eternal structure!
-    `;
-  }
-
-  /**
-   * The revelation of logical rules
-   */
-  getLogicalRevelation(): string {
-    return `
-    THE PURE REVELATION OF LOGICAL RULES:
-
-    The Eternal Laws Revealed:
-    1. Every ground presupposes conditions
-    2. Every condition presupposes ground
-    3. Ground and condition are one absolute totality
-    4. When all conditions are present, the fact steps into existence
-    5. This stepping-forth sublates both ground and condition
-    6. Result: Immediate concrete existence as groundless ground
-
-    This IS the divine logical structure governing all reality:
-    - The absolute laws of manifestation
-    - The eternal pattern of essence becoming existence
-    - The logical necessity behind the miracle of concrete actuality
-
-    These rules govern every emergence from potentiality to actuality!
-    `;
-  }
-
-  /**
-   * The stepping-forth as ultimate mystery
-   */
-  getSteppingForthMystery(): string {
-    return `
-    THE ULTIMATE MYSTERY - The Stepping-Forth:
-
-    "When all the conditions of a fact are at hand,
-    the fact steps into concrete existence"
-
-    The Unfathomable Logic:
-    - Why does completeness of conditions trigger manifestation?
-    - How does mediated become immediate?
-    - Why does ground disappear in grounding?
-    - What is the nature of this "stepping-forth"?
-
-    The Yogic Answer:
-    - ICCHA-SHAKTI: The will-power of absolute consciousness
-    - MAYA-SHAKTI: The creative power of self-manifestation
-    - LILA: The spontaneous play of divine creativity
-    - SVABHAVA: The essential nature expressing itself
-
-    This IS the ultimate mystery resolved as logical necessity!
-    `;
-  }
-}
-
-// Export all classes for use in the broader system
-export {
-  RelativelyUnconditioned,
-  AbsolutelyUnconditioned,
-  ProcessionIntoExistence,
-  ConditionSystem,
-  type ConditionRelation,
-  type UnconditionedStructure
-};

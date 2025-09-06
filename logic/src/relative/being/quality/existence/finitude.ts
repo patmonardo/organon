@@ -1,388 +1,369 @@
-/**
- * FINITUDE: The Self-Contradictory Nature of Finite Being
- * ======================================================
- *
- * The third and final step of FINITUDE - where finite being reveals itself
- * as essentially self-negating, containing the germ of its own transgression.
- *
- * Based on Hegel's Logic, showing how:
- * - Finitude is qualitative negation driven to the extreme
- * - The finite contains restriction and ought as contradictory moments
- * - Through self-contradiction, the finite transitions into the infinite
- *
- * "The hour of their birth is the hour of their death"
- */
+import type { Chunk, LogicalOperation } from './index'
 
-/**
- * Base interface for dialectical moments
- */
-interface DialecticalMoment {
-  dialecticalMovement(): string;
-}
+export const CANONICAL_CHUNKS: Chunk[] = [
+  {
+    id: 'finitude-1a-something-other-symmetric',
+    title: 'Something↔Other I: symmetry; “this” as external pointing',
+    text: `a. Something and other:
 
-/**
- * Interface for finite determinations that contain their own contradiction
- */
-interface FiniteDetermination extends DialecticalMoment {
-  getFiniteNature(): string;
-  getContradiction(): string;
-  getTransitionToInfinite(): string;
-}
-
-/**
- * THE ESSENCE OF FINITUDE
- * =======================
- *
- * Non-being constitutes the nature and being of finite things
- */
-class FinitudeEssence implements FiniteDetermination {
-  private qualitativeNegation: string;
-  private immanentLimit: string;
-  private perishingNature: string;
-
-  constructor() {
-    this.qualitativeNegation = "negation driven to the extreme";
-    this.immanentLimit = "limit immanent to existence as in-itselfness";
-    this.perishingNature = "germ of transgression in their in-itselfness";
+1. Something and other are,
+first, both existents or something.
+Second, each is equally an other.
+It is indifferent which is named first,
+and just for this reason it is named something
+(in Latin, when they occur in a proposition,
+both are aliud, or “the one, the other,” alius alium;
+in the case of an alternating relation,
+the analogous expression is alter alterum).
+If of two beings we call the one A and the other B,
+the B is the one which is first determined as other.
+But the A is just as much the other of the B.
+Both are other in the same way.
+“This” serves to fix the distinction
+and the something which is to be taken in the affirmative sense.
+But “this” also expresses the fact that the distinction,
+and the privileging of one something,
+is a subjective designation that falls outside the something itself.
+The whole determinateness falls on the side of this external pointing;
+also the expression “this” contains no distinctions;
+each and every something is just as good a “this” as any other.
+By “this” we mean to express something completely determinate,
+overlooking the fact that language, as a work of the understanding,
+only expresses the universal, albeit naming it as a single object.
+But an individual name is something meaningless in the sense
+that it does not express a universal.
+It appears as something merely posited
+and arbitrary for the same reason
+that proper names can also be arbitrarily picked,
+arbitrarily given as well as arbitrarily altered.`,
+    summary:
+      'Symmetry: both are existents; each is equally other. Any “this” that fixes one side is an external, subjective pointing; language names universals, so “this” and proper names lack intrinsic determination.'
+  },
+  {
+    id: 'finitude-1b-otherness-as-external',
+    title: 'Something↔Other II: otherness as alien/external (Third’s comparison)',
+    text: `Otherness thus appears as a determination
+alien to the existence thus pointed at,
+or the other existence as outside this one existence,
+partly because the one existence is determined as other
+only by being compared by a Third,
+and partly because it is so determined
+only on account of the other which is outside it,
+but is not an other for itself.
+At the same time, as has been remarked,
+even for ordinary thinking every existence
+equally determines itself as an other existence,
+so that there is no existence
+that remains determined simply as an existence,
+none which is not outside an existence
+and therefore is not itself an other.`,
+    summary:
+      'Externalization: at first, “other” seems alien—assigned by a Third or by comparison to an outside. Yet, for ordinary thinking, every existence also determines itself as other; none is simply “just existence.”'
+  },
+  {
+    id: 'finitude-1c-other-for-itself',
+    title: 'Something↔Other III: sameness of determinations vs other-for-itself',
+    text: `Both are determined as something as well as other:
+thus they are the same and there is as yet
+no distinction present in them.
+But this sameness of determinations, too,
+falls only within external reflection,
+in the comparison of the two;
+but the other, as posited at first,
+though an other with reference to something,
+is other also for itself apart from the something.`,
+    summary:
+      'Externally, both share “something/other,” seeming the same. But beyond external reflection, the other is also other-for-itself, not merely relative to a given something.'
+  },
+  {
+    id: 'finitude-1d-to-heteron-nature',
+    title: 'Other-in-itself: Plato’s to heteron; nature as other of spirit',
+    text: `Third, the other is therefore to be taken in isolation,
+with reference to itself, has to be taken abstractly as the other,
+the 'to heteron' of Plato who opposes it to the one
+as a moment of totality,
+and in this way ascribes to the other a nature of its own.
+Thus the other, taken solely as such,
+is not the other of something,
+but is the other within, that is, the other of itself.
+Such an other, which is the other by its own determination,
+is physical nature; nature is the other of spirit;
+this, its determination, is at first
+a mere relativity expressing not a quality of nature itself
+but only a reference external to it.
+But since spirit is the true something,
+and hence nature is what it is within only in contrast to spirit,
+taken for itself the quality of nature is just this,
+to be the other within, that which-exists-outside-itself
+(in the determinations of space, time, matter).`,
+    summary:
+      'Other-in-itself: as Plato’s to heteron—moment of totality—other is “other within,” other of itself. Nature, as other of spirit, exemplifies this: existing-outside-itself (space, time, matter).'
+  },
+  {
+    id: 'finitude-1e-other-of-other-alteration-identity',
+    title: 'Other-of-other: absolute inequality, alteration, and self-identity',
+    text: `The other which is such for itself is the other within it,
+hence the other of itself and so the other of the other;
+therefore, the absolutely unequal in itself,
+that which negates itself, alters itself.
+But it equally remains identical with itself,
+for that into which it alters is the other,
+and this other has no additional determination;
+but that which alters itself is not determined in
+any other way than in this, to be an other;
+in going over to this other, it only unites with itself.
+It is thus posited as reflected into itself
+with sublation of the otherness,
+a self-identical something from which the otherness,
+which is at the same time a moment of it, is therefore distinct,
+itself not appertaining to it as something.`,
+    summary:
+      'Other-for-itself is other-of-itself (other-of-other): absolute inequality that negates/alter itself; yet the passage unites with itself (other adds nothing new). Hence reflected-into-itself: self-identical something with otherness as a distinct moment.'
+  },
+  {
+    id: 'finitude-2a-preserves-in-nonbeing-bfo-bii',
+    title: 'Something VI: preserves itself in non-being; being-for-other; being-in-itself',
+    text: `2. The something preserves itself in its non-being;
+it is essentially one with it, and essentially not one with it.
+It therefore stands in reference to an otherness
+without being just this otherness.
+The otherness is at once contained in it
+and yet separated from it;
+it is being-for-other.
+Existence as such is an immediate, bare of references;
+or, it is in the determination of being.
+However, as including non-being within itself,
+existence is determinate being,
+being negated within itself,
+and then in the first instance an other;
+but, since in being negated it preserves itself
+at the same time, it is only being-for-other.
+It preserves itself in its non-being and is being;
+not, however, being in general but being with reference
+to itself in contrast to its reference to the other,
+as self-equality in contrast to its inequality.
+Such a being is being-in-itself.`,
+    summary:
+      'Something preserves itself in its non-being: essentially one with it and not-one. Otherness is both contained and separated → being-for-other. As negated-within-itself, existence is determinate being and, at first, only being-for-other; as self-equality against the other, this is being-in-itself.'
+  },
+  {
+    id: 'finitude-2b-two-pairs-moments-connection',
+    title: 'Something VII: two pairs; truth as connection; mutual containment of moments',
+    text: `Being-for-other and being-in-itself constitute
+the two moments of something.
+There are here two pairs of determinations:
+(1) something and other;
+(2) being-for-other and being-in-itself.
+The former contain the non-connectedness of their determinateness;
+something and other fall apart.
+But their truth is their connection;
+being-for-other and being-in-itself are
+therefore the same determinations posited as
+moments of one and the same unity,
+as determinations which are connections
+and which, in their unity,
+remain in the unity of existence.
+Each thus itself contains within it, at the same time,
+also the moment diverse from it.
+Being and nothing in their unity, which is existence,
+are no longer being and nothing
+(these they are only outside their unity);
+so in their restless unity, in becoming,
+they are coming-to-be and ceasing-to-be.
+In the something, being is being-in-itself.
+Now, as self-reference, self-equality,
+being is no longer immediately,
+but is self-reference only as the non-being of otherness
+(as existence reflected into itself).
+The same goes for non-being:
+as the moment of something in this
+unity of being and non-being:
+it is not non-existence in general
+but is the other, and more determinedly,
+according as being is at the same time distinguished from it,
+it is reference to its non-existence, being-for-other.`,
+    summary:
+      'Two pairs: (something|other) vs (being-for-other|being-in-itself). Truth = their connection: both are moments of one unity and mutually contain each other. In something: being = being-in-itself (self-reference as non-being of otherness); non-being = other, i.e., being-for-other (reference to non-existence).'
+  },
+  {
+    id: 'finitude-2c-being-in-itself-dual',
+    title: 'Something VIII: being-in-itself—dual character',
+    text: `Hence being-in-itself is, first,
+negative reference to non-existence;
+it has otherness outside it and is opposed to it;
+in so far as something is in itself,
+it is withdrawn from being-other and being-for-other.
+But, second, it has non-being also right in it;
+for it is itself the non-being of being-for-other.`,
+    summary:
+      'Being-in-itself: (1) negative reference to non-existence—withdrawn from being-(for-)other; (2) equally has non-being in it—namely, as the non-being of being-for-other.'
+  },
+  {
+    id: 'finitude-2d-being-for-other-dual',
+    title: 'Something IX: being-for-other—dual character; reciprocal pointing',
+    text: `But being-for-other is, first, the negation of
+the simple reference of being to itself
+which, in the first place, is supposed
+to be existence and something;
+in so far as something is in an other or for an other,
+it lacks a being of its own.
+But, second, it is not non-existence as pure nothing;
+it is non-existence that points to being-in-itself
+as its being reflected into itself,
+just as conversely the being-in-itself points to being-for-other.`,
+    summary:
+      'Being-for-other: (1) negates simple self-reference (lack of its own being when “in/for” an other); (2) not pure nothing—its non-existence points to being-in-itself, and conversely being-in-itself points back to being-for-other.'
   }
+]
 
-  getFiniteNature(): string {
-    return `The essence of finitude:
-    - Existence is determinate - something has quality and is delimited
-    - Quality is its limit, affected by it remains affirmative existence
-    - But developed so opposition of existence and negation as limit
-    - IS the very in-itselfness of something - thus only becoming in it
-    - Non-being constitutes their nature, their being
-    - Finite things refer to themselves negatively in self-reference
-    - They propel themselves beyond themselves, beyond their being
-    - Truth of their being is their finis, their end
-    - The hour of their birth is the hour of their death`;
+export const LOGICAL_OPERATIONS: LogicalOperation[] = [
+  {
+    id: 'finitude-op-1-symmetric-otherness-and-this',
+    chunkId: 'finitude-1a-something-other-symmetric',
+    label: 'Symmetric otherness; “this” as external subjective designation',
+    clauses: [
+      'assert(bothAre(["Something","Other"],"existents"))',
+      'assert(eachEquallyOther("Something","Other"))',
+      'tag(This,"external-pointing")',
+      'tag(This,"subjective-designation")',
+      'annotate(Language,{expresses:"universal"})',
+      'assert(properNamesArbitrary(true))'
+    ],
+    predicates: [{ name: 'SymmetricOtherness', args: [] }],
+    relations: [
+      { predicate: 'equallyOtherThan', from: 'Something', to: 'Other' },
+      { predicate: 'equallyOtherThan', from: 'Other', to: 'Something' }
+    ]
+  },
+  {
+    id: 'finitude-op-2-externalization-by-third',
+    chunkId: 'finitude-1b-otherness-as-external',
+    label: 'Otherness as alien/external (comparison by a Third); yet self-othering in ordinary thinking',
+    clauses: [
+      'assert(determinedAsOtherByThird(Existence))',
+      'assert(outsideOf(Other,Something))',
+      'tag(Otherness,"alien")',
+      'assert(everyExistenceSelfOthers(true))'
+    ],
+    predicates: [{ name: 'ExternalOtherness', args: [] }],
+    relations: [
+      { predicate: 'comparedBy', from: 'Existence', to: 'Third' },
+      { predicate: 'outsideOf', from: 'Other', to: 'Something' }
+    ]
+  },
+  {
+    id: 'finitude-op-3-other-for-itself',
+    chunkId: 'finitude-1c-other-for-itself',
+    label: 'Beyond external reflection: the other-for-itself',
+    clauses: [
+      'tag(Other,"for-itself")',
+      'assert(notMerelyRelativeTo(Other,Something))',
+      'annotate(Reflection,{external:true})'
+    ],
+    predicates: [{ name: 'OtherForItself', args: [] }],
+    relations: []
+  },
+  {
+    id: 'finitude-op-4-to-heteron-nature-of-spirit',
+    chunkId: 'finitude-1d-to-heteron-nature',
+    label: 'Plato’s to heteron; nature as other of spirit (outside-itself)',
+    clauses: [
+      'tag(Other,"to-heteron")',
+      'assert(momentOfTotality(Other))',
+      'assert(otherOf(Nature,Spirit))',
+      'tag(Nature,"exists-outside-itself")',
+      'annotate(Nature,{determinations:["space","time","matter"]})'
+    ],
+    predicates: [{ name: 'OtherInItself', args: [] }],
+    relations: [
+      { predicate: 'otherOf', from: 'Nature', to: 'Spirit' }
+    ]
+  },
+  {
+    id: 'finitude-op-5-other-of-other-alteration-identity',
+    chunkId: 'finitude-1e-other-of-other-alteration-identity',
+    label: 'Other-of-other: absolute inequality; alteration that unites with itself',
+    clauses: [
+      'tag(Other,"other-of-itself")',
+      'tag(Other,"other-of-other")',
+      'assert(negatesItself(Other))',
+      'assert(altersItself(Other))',
+      'assert(remainsIdenticalThrough(Other,"passage-into-other"))',
+      'assert(reflectedIntoItself(Something))',
+      'assert(sublatesOtherness(Something))',
+      'annotate(Something,{otherness:"distinct-moment"})'
+    ],
+    predicates: [{ name: 'AlterationAndIdentity', args: [] }],
+    relations: [
+      { predicate: 'reflectsIntoItself', from: 'Something', to: 'Something' }
+    ]
+  },
+  {
+    id: 'finitude-op-6-preserves-in-nonbeing',
+    chunkId: 'finitude-2a-preserves-in-nonbeing-bfo-bii',
+    label: 'Preserves itself in non-being; contained-and-separated otherness → being-for-other; toward being-in-itself',
+    clauses: [
+      'assert(preservesItselfIn(Something,NonBeing))',
+      'assert(essentiallyOneWith(Something,NonBeing))',
+      'assert(essentiallyNotOneWith(Something,NonBeing))',
+      'tag(Otherness,"contained-and-separated")',
+      'tag(BeingForOther,"defined")',
+      'assert(determinateBeing(Existence))',
+      'assert(negatedWithinItself(Existence))',
+      'tag(Something,"at-first-being-for-other")',
+      'tag(BeingInItself,"named-as-self-equality")'
+    ],
+    predicates: [{ name: 'PreservationInNonBeing', args: [] }],
+    relations: []
+  },
+  {
+    id: 'finitude-op-7-moments-and-connection',
+    chunkId: 'finitude-2b-two-pairs-moments-connection',
+    label: 'Two pairs; truth as connection; mutual containment; being↔non-being reinterpreted',
+    clauses: [
+      'assert(pairs([["Something","Other"],["BeingForOther","BeingInItself"]]))',
+      'assert(truthIsConnection(["BeingForOther","BeingInItself"]))',
+      'assert(momentOf(BeingForOther,Something))',
+      'assert(momentOf(BeingInItself,Something))',
+      'assert(containsMoment(BeingForOther,BeingInItself))',
+      'assert(containsMoment(BeingInItself,BeingForOther))',
+      'tag(Being,"as-being-in-itself")',
+      'tag(NonBeing,"as-being-for-other")'
+    ],
+    predicates: [{ name: 'MomentsConnected', args: [] }],
+    relations: [
+      { predicate: 'momentOf', from: 'BeingForOther', to: 'Something' },
+      { predicate: 'momentOf', from: 'BeingInItself', to: 'Something' }
+    ]
+  },
+  {
+    id: 'finitude-op-8-being-in-itself-dual',
+    chunkId: 'finitude-2c-being-in-itself-dual',
+    label: 'Being-in-itself: (1) negative reference to non-existence; (2) non-being of being-for-other',
+    clauses: [
+      'tag(BeingInItself,"negative-reference-to-non-existence")',
+      'assert(hasOthernessOutside(BeingInItself))',
+      'assert(withdrawnFrom(BeingInItself,["BeingOther","BeingForOther"]))',
+      'assert(nonBeingOf(BeingInItself,BeingForOther))'
+    ],
+    predicates: [{ name: 'BeingInItselfDual', args: [] }],
+    relations: []
+  },
+  {
+    id: 'finitude-op-9-being-for-other-dual',
+    chunkId: 'finitude-2d-being-for-other-dual',
+    label: 'Being-for-other: (1) negation of simple self-reference; (2) points to being-in-itself (and back)',
+    clauses: [
+      'tag(BeingForOther,"negation-of-self-reference")',
+      'assert(lacksOwnBeingWhenForOther(Something))',
+      'tag(BeingForOther,"not-pure-nothing")',
+      'assert(pointsTo(BeingForOther,BeingInItself))',
+      'assert(pointsTo(BeingInItself,BeingForOther))'
+    ],
+    predicates: [{ name: 'BeingForOtherDual', args: [] }],
+    relations: [
+      { predicate: 'pointsTo', from: 'BeingForOther', to: 'BeingInItself' },
+      { predicate: 'pointsTo', from: 'BeingInItself', to: 'BeingForOther' }
+    ]
   }
-
-  getContradiction(): string {
-    return `The fundamental contradiction:
-    - Finite does not just alter but perishes
-    - Perishing not mere possibility but essential nature
-    - Being as such of finite things: germ of transgression in in-itselfness
-    - They are, yet refer to themselves as non-being
-    - Self-reference becomes self-propulsion beyond themselves`;
-  }
-
-  getTransitionToInfinite(): string {
-    return "Through self-contradiction, finitude reveals its infinite nature";
-  }
-
-  dialecticalMovement(): string {
-    return `${this.getFiniteNature()}
-
-    Contradiction: ${this.getContradiction()}`;
-  }
-}
-
-/**
- * (a) THE IMMEDIACY OF FINITUDE
- * =============================
- *
- * Finitude as the most obstinate category of understanding
- */
-class ImmediateFinitude implements FiniteDetermination {
-  private mournfulNote: string;
-  private obstinateCategory: string;
-  private understandingsPersistence: string;
-
-  constructor() {
-    this.mournfulNote = "qualitative negation driven to extreme";
-    this.obstinateCategory = "negation fixed in itself, stark contrast to affirmative";
-    this.understandingsPersistence = "makes non-being imperishable and absolute";
-  }
-
-  getFiniteNature(): string {
-    return `The immediacy of finitude - mournful note:
-    - Qualitative negation driven to the extreme
-    - No longer affirmative being distinct from determination
-    - Things destined to ruin through qualitative simplicity of negation
-    - Abstract opposition of nothing and perishing to being
-    - Most obstinate of categories of understanding
-    - Negation fixed in itself, stark contrast to its affirmative`;
-  }
-
-  getContradiction(): string {
-    return `Understanding's obstinate contradiction:
-    - Finite lets itself be submitted to flux - comes to an end
-    - But refuses affirmative connection to infinite
-    - Inseparably posited with its nothing
-    - Cut off from reconciliation with affirmative
-    - Understanding makes non-being imperishable and absolute
-    - Finitude becomes eternal through this fixation
-    - "The finite is absolutely opposed to the infinite"`;
-  }
-
-  getTransitionToInfinite(): string {
-    return `The critical insight:
-    - But no philosophy endorses finite as absolute
-    - Question: does transitoriness persist or does perishing perish?
-    - If finite not to persist but perish into affirmative
-    - Then perishing would be perishing of perishing
-    - Contradiction must be brought to consciousness
-    - Development will show finite collapses internally
-    - In collapse, actually resolves the contradiction
-    - Perishing is not the last - perishing rather perishes`;
-  }
-
-  dialecticalMovement(): string {
-    return `${this.getFiniteNature()}
-
-    Contradiction: ${this.getContradiction()}
-
-    Resolution: ${this.getTransitionToInfinite()}`;
-  }
-}
-
-/**
- * (b) RESTRICTION AND THE OUGHT
- * =============================
- *
- * The finite as connecting determination and limit through ought and restriction
- */
-class RestrictionAndOught implements FiniteDetermination {
-  private restriction: string;
-  private ought: string;
-  private doubleDetermination: string;
-  private indivisibleConnection: string;
-
-  constructor() {
-    this.restriction = "something's own limit posited as negative which is essential";
-    this.ought = "negative reference to limit, reference to itself as restriction";
-    this.doubleDetermination = "in-itselfness over against negation, and non-being as restriction";
-    this.indivisibleConnection = "ought elevated above restriction, has restriction only as ought";
-  }
-
-  getFiniteNature(): string {
-    return `Restriction and ought as finite structure:
-    - Something reflected into itself with limit within it
-    - Limit as immanent to something, quality of its being-in-itself, is finitude
-    - Determination already contained otherness in in-itself
-    - Externality of otherness within something's own inwardness
-    - Otherness as limit = negation of negation
-    - Unity of something with itself through negating immanent limit
-    - Self-identical in-itself refers to itself as own non-being`;
-  }
-
-  getContradiction(): string {
-    return `The ought-restriction dialectic:
-
-    RESTRICTION:
-    - Something's own limit posited as essential negative
-    - Not only limit as such, but restriction
-    - For limit to be restriction, something must transcend it in itself
-    - Must refer to it from within as non-existent
-    - Something transcends limit as sublatedness of limit
-
-    OUGHT:
-    - Negative reference to limit distinguished from itself
-    - In-itself as negative reference to itself as restriction
-    - Contains double determination:
-      * Determination with in-itselfness over against negation
-      * Non-being as restriction, itself determination existing in itself
-
-    FINITE CONNECTION:
-    - Finite determined as connecting determination and limit
-    - Determination is ought, limit is restriction
-    - Both moments finite - ought as well as restriction
-    - Only restriction posited as finite
-    - Ought restricted only in itself, only for us`;
-  }
-
-  getTransitionToInfinite(): string {
-    return `The contradictory unity:
-    - "What ought to be is, and at the same time is not"
-    - If it were, would not be what merely ought to be
-    - Ought has restriction essentially - not anything alien
-    - Finite's own determination is also its restriction
-    - As ought, finite transcends restriction
-    - Same determinateness which is negation is also sublated
-    - Ought elevated above restriction, but has restriction only as ought
-    - The two are indivisible - contradiction in unity`;
-  }
-
-  dialecticalMovement(): string {
-    return `${this.getFiniteNature()}
-
-    Dialectic: ${this.getContradiction()}
-
-    Unity: ${this.getTransitionToInfinite()}`;
-  }
-}
-
-/**
- * (c) TRANSITION OF THE FINITE INTO THE INFINITE
- * ==============================================
- *
- * The self-sublation of finite contradiction into infinite affirmation
- */
-class TransitionToInfinite implements FiniteDetermination {
-  private selfContradiction: string;
-  private negationOfNegation: string;
-  private infiniteResult: string;
-
-  constructor() {
-    this.selfContradiction = "finite in itself contradiction of itself";
-    this.negationOfNegation = "identity with itself as affirmative being";
-    this.infiniteResult = "other of finite as negation of the negation";
-  }
-
-  getFiniteNature(): string {
-    return `The finite as self-contradiction:
-    - Ought contains restriction explicitly, for itself
-    - Restriction contains the ought
-    - Their mutual connection IS the finite itself
-    - Contains both in its in-itself
-    - Moments qualitatively opposed:
-      * Restriction = negative of ought
-      * Ought = negative of restriction
-    - Finite thus in itself contradiction of itself`;
-  }
-
-  getContradiction(): string {
-    return `The self-sublating movement:
-    - Finite sublates itself, goes away and ceases to be
-    - But this result, negative as such, IS its very determination
-    - For it is negative of the negative
-    - In going away, finite has not ceased
-    - Only become momentarily another finite
-    - Going-away as going-over into another finite
-    - And so forth to infinity (bad infinite)`;
-  }
-
-  getTransitionToInfinite(): string {
-    return `The true result - transition to infinite:
-    - Consider result more closely:
-    - In going-away and ceasing-to-be, in negation of itself
-    - Finite has attained its being-in-itself
-    - In it, has rejoined itself
-
-    Each moment contains this result:
-    - Ought transcends restriction = transcends itself
-    - But its beyond/other is only restriction itself
-    - Restriction points beyond itself to ought
-    - But ought is same diremption as restriction
-    - In going beyond itself, restriction rejoins itself
-
-    THE INFINITE:
-    - This identity with itself = negation of negation
-    - Is affirmative being = other of finite
-    - Finite supposed to have first negation for determinateness
-    - This other is the INFINITE
-    - True result of finite's self-contradiction`;
-  }
-
-  dialecticalMovement(): string {
-    return `${this.getFiniteNature()}
-
-    Self-Sublation: ${this.getContradiction()}
-
-    True Result: ${this.getTransitionToInfinite()}`;
-  }
-}
-
-/**
- * THE COMPLETE FINITUDE SYSTEM
- * ============================
- *
- * The full development of finite being as self-contradictory
- * and self-sublating into infinite
- */
-class FinitudeSystem {
-  private essence: FinitudeEssence;
-  private immediacy: ImmediateFinitude;
-  private restrictionOught: RestrictionAndOught;
-  private transition: TransitionToInfinite;
-
-  constructor() {
-    this.essence = new FinitudeEssence();
-    this.immediacy = new ImmediateFinitude();
-    this.restrictionOught = new RestrictionAndOught();
-    this.transition = new TransitionToInfinite();
-  }
-
-  /**
-   * The complete dialectical development
-   */
-  getCompleteFinitudeDevelopment(): string {
-    return `FINITUDE - The Self-Contradictory Nature of Finite Being:
-
-    ESSENCE OF FINITUDE:
-    ${this.essence.dialecticalMovement()}
-
-    (a) IMMEDIACY OF FINITUDE:
-    ${this.immediacy.dialecticalMovement()}
-
-    (b) RESTRICTION AND THE OUGHT:
-    ${this.restrictionOught.dialecticalMovement()}
-
-    (c) TRANSITION TO INFINITE:
-    ${this.transition.dialecticalMovement()}`;
-  }
-
-  /**
-   * The profound insight about finite and infinite
-   */
-  getFiniteInfiniteInsight(): string {
-    return `The Finite-Infinite Dialectical Truth:
-
-    - Finite is not simply opposed to infinite
-    - Finite contains infinite as its own truth
-    - Through self-contradiction, finite becomes infinite
-    - "Perishing of the perishing" reveals true infinite
-    - Negation of negation = affirmative being
-    - The infinite is not beyond finite but its own result
-    - Hour of birth = hour of death, but death dies into life
-    - This prepares the logic of true infinite vs spurious infinite`;
-  }
-
-  /**
-   * Hegel's famous formulation
-   */
-  getHegelianFormula(): string {
-    return `Hegel's Essential Formulation:
-    "The hour of their birth is the hour of their death"
-
-    But dialectically understood:
-    - Death is not the end but the beginning
-    - Finite perishes into its truth - the infinite
-    - Self-negation becomes self-affirmation
-    - The finite IS the infinite in its truth
-
-    This is the foundation of all dialectical logic:
-    Contradiction is not destruction but self-development`;
-  }
-
-  /**
-   * Access to individual moments
-   */
-  getEssence(): FinitudeEssence {
-    return this.essence;
-  }
-
-  getImmediacy(): ImmediateFinitude {
-    return this.immediacy;
-  }
-
-  getRestrictionOught(): RestrictionAndOught {
-    return this.restrictionOught;
-  }
-
-  getTransition(): TransitionToInfinite {
-    return this.transition;
-  }
-}
-
-// Export the main classes
-export {
-  FinitudeSystem as default,
-  FinitudeEssence,
-  ImmediateFinitude,
-  RestrictionAndOught,
-  TransitionToInfinite,
-  FiniteDetermination
-};
+]

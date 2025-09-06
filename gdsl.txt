@@ -1,0 +1,88 @@
+gdsl
+├── doc
+│   ├── adr
+│   │   ├── ADR-0001-dsl-engine.md
+│   │   └── ADR-0003-graphstore-api.md
+│   ├── glossary.md
+│   ├── schema.md
+│   └── vision.md
+├── node_modules
+│   ├── tsx -> ../../node_modules/.pnpm/tsx@4.20.4/node_modules/tsx
+│   ├── @types
+│   │   └── node -> ../../../node_modules/.pnpm/@types+node@22.18.0/node_modules/@types/node
+│   └── typescript -> ../../node_modules/.pnpm/typescript@5.9.2/node_modules/typescript
+├── package.json
+├── src
+│   ├── analysis
+│   │   ├── clause-parser.ts
+│   │   ├── index.ts
+│   │   ├── predicate-report.ts
+│   │   └── validate.ts
+│   ├── api
+│   │   └── graph-store.ts
+│   ├── cli.ts
+│   ├── core.ts
+│   ├── data
+│   │   └── datasets
+│   │       └── being-dataset.ts
+│   ├── dist
+│   │   └── datasets
+│   │       └── dataset_science-of-logic-being.json
+│   ├── domains
+│   │   ├── being_for_self.ts
+│   │   ├── being.ts
+│   │   ├── logic_unity.ts
+│   │   ├── metaphysics.ts
+│   │   └── quality.ts
+│   ├── emit
+│   │   ├── clingo.ts
+│   │   ├── souffle.ts
+│   │   └── z3.ts
+│   ├── engine
+│   │   ├── evaluator.ts
+│   │   ├── judgments.ts
+│   │   ├── parse_clauses.ts
+│   │   └── stratify.ts
+│   ├── examples
+│   │   ├── build_being_core.ts
+│   │   ├── build_being_for_self.ts
+│   │   ├── build_metaphysics.test.ts
+│   │   ├── build_metaphysics.ts
+│   │   ├── build_quality_core.ts
+│   │   ├── build_quality_prog.ts
+│   │   ├── finite.forms.json
+│   │   ├── infinity.forms.json
+│   │   ├── quality_exclusive.json
+│   │   ├── quality_quantity_examples.ts
+│   │   └── qual.txt
+│   ├── gdsl.ts
+│   ├── index.ts
+│   ├── model
+│   │   └── types.ts
+│   ├── nlp
+│   │   └── extract_qualities.ts
+│   ├── qual_quan.ts
+│   ├── schema
+│   │   ├── forms.ts
+│   │   └── graph.ts
+│   ├── scripts
+│   │   ├── analyze-logic.ts
+│   │   ├── export-cypher.ts
+│   │   ├── ingest
+│   │   │   └── ingest-dataset.ts
+│   │   ├── projection
+│   │   │   └── projection.ts
+│   │   ├── validate
+│   │   │   └── method-proof.ts
+│   │   └── views
+│   │       ├── cube-view.ts
+│   │       └── pipeline-view.ts
+│   ├── tools
+│   │   ├── aspects_to_graph.ts
+│   │   ├── export_existence_cypher.ts
+│   │   └── export_finitude_judgments_cypher.ts
+│   └── types
+│       └── node-fs.d.ts
+└── tsconfig.json
+
+29 directories, 57 files

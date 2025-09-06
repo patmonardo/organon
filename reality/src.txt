@@ -1,0 +1,21 @@
+src
+├── index.ts
+├── logos
+│   ├── datasets
+│   │   ├── package.ts
+│   │   └── vitarka.ts
+│   ├── lens
+│   │   └── map.ts
+│   ├── logos.ts
+│   └── ys
+│       ├── ys_i_41.ts
+│       ├── ys_i_42_commentary.ts
+│       ├── ys_i_42.ts
+│       ├── ys_i_43_commentary.ts
+│       └── ys_i_43.ts
+├── reality.ts
+├── registry
+└── scripts
+    └── project.ts
+
+7 directories, 12 files

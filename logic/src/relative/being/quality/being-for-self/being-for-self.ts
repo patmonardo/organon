@@ -1,519 +1,270 @@
-/**
- * BEING-FOR-ITSELF: The Completion of Qualitative Being
- * =====================================================
- *
- * Chapter 3 - The mystical culmination of Quality where qualitative being
- * is brought to completion as infinite being through self-reference.
- *
- * Based on Hegel's Logic, capturing the profound movement from:
- * - Existence (sphere of differentiation, dualism, finitude)
- * - To Being-for-Self (equalization of being and negation)
- * - The mystical utterances about I, Spirit, God as idealizations
- *
- * "In being-for-itself, qualitative being is brought to completion;
- *  it is infinite being; absolutely determinate being."
- */
+import type { Chunk, LogicalOperation } from './index'
 
-/**
- * Base interface for dialectical moments
- */
-interface DialecticalMoment {
-  dialecticalMovement(): string;
-}
+export const CANONICAL_CHUNKS: Chunk[] = [
+  {
+    id: 'bfs-a-existence-and-being-for-itself',
+    title: 'a) Existence and being-for-itself',
+    text: `As already mentioned, being-for-itself is
+infinity that has sunk into simple being;
+it is existence in so far as in the
+now posited form of the immediacy
+of being the negative nature of infinity,
+which is the negation of negation,
+is only as negation in general,
+as infinite qualitative determinateness.
+But in such a determinateness, wherein it is existence,
+being is at once also distinguished
+from this very being-for-itself
+which is such only as infinite
+qualitative determinateness;
+nevertheless, existence is at the same time
+a moment of being-for-itself,
+for the latter certainly contains
+being affected by negation.
+So the determinateness which in existence as such is
+an other, and a being-for-other,
+is bent back into the infinite unity of being-for-itself,
+and the moment of existence is present
+in the being-for-itself as being-for-one.`,
+    summary:
+      'Being-for-itself is infinity sunk into simple being, so existence appears as infinite qualitative determinateness. The otherness of existence is bent back into the unity of being-for-itself; existence persists there as the moment being-for-one.'
+  },
+  {
+    id: 'bfs-b-being-for-one',
+    title: 'b) Being-for-one',
+    text: `This moment gives expression to how the finite is
+in its unity with the infinite or as an idealization.
+Being-for-itself does not have negation in it as
+a determinateness or limit,
+and consequently also not as reference
+to an existence other than it.
+Although this moment is now being
+designated as being-for-one,
+there is yet nothing at hand for which it would be;
+there is not the one of which it would be the moment.
+There is in fact nothing of the sort
+yet fixed in being-for-itself;
+that for which something (and there is no something here)
+would be, what the other side in general should be,
+is likewise a moment,
+itself only being-for-one,
+not yet a one.
+What we have before us, therefore,
+is still an undistinguishedness of two sides
+that may suggest themselves in the being-for-one;
+there is only one being-for-another,
+and since this is only one being-for-another,
+it is also only being-for-one;
+there is only the one ideality,
+of that for which or in which
+there should be a determination as moment,
+and of that which should be the moment in it.
+Being-for-one and being-for-itself do not therefore
+constitute two genuine determinacies,
+each as against the other.
+Inasmuch as the distinction is momentarily assumed
+and we speak of a-being-for-itself,
+it is this very being-for-itself,
+as the sublated being of otherness,
+that refers itself to itself as to the sublated other,
+is therefore for-one;
+in its other it refers itself only to itself.
+An idealization is necessarily for-one,
+but it is not for an other;
+the one, for which it is, is only itself.
+The "I," therefore, spirit in general,
+or God, are idealizations,
+because they are infinite;
+as existents which are for-themselves, however,
+they are not ideationally different
+from that which is for-one.
+For if they were different,
+they would be only immediate,
+or, more precisely, they would only be
+existence and a being-for-another;
+for if the moment of being for-one did
+not attach to them,
+it is not they themselves
+but an other that would be
+that which is for them.
+God is therefore for himself,
+in so far he is himself
+that which is for him.
 
-/**
- * Interface for being-for-self determinations
- */
-interface BeingForSelfDetermination extends DialecticalMoment {
-  getInfiniteNature(): string;
-  getSelfReference(): string;
-  getIdealization(): string;
-}
+Being-for-itself and being-for-one are not, therefore,
+diverse significations of ideality
+but essential, inseparable, moments of it.`,
+    summary:
+      'Being-for-one names the moment of ideality without an external One; the two sides are undistinguished. If distinguished, for-itself refers to itself in the other; I/spirit/God illustrate that for-itself is not different from for-one; both are inseparable moments.'
+  },
+  {
+    id: 'bfs-c-the-one',
+    title: 'c) The one',
+    text: `Being-for-itself is the simple unity of
+itself and its moments, of the being-for-one.
+There is only one determination present,
+the self-reference itself of the sublating.
+The moments of being-for-itself have sunk into
+an indifferentiation which is immediacy or being,
+but an immediacy that is based on
+the negating posited as its determination.
+Being-for-itself is thus an existent-for-itself,
+and, since in this immediacy its inner meaning vanishes,
+it is the totally abstract limit of itself: the one.
 
-/**
- * THE COMPLETION OF QUALITATIVE BEING
- * ===================================
- *
- * Introduction to Being-for-Self as infinite being
- */
-class QualitativeCompletion implements BeingForSelfDetermination {
-  private infiniteBeing: string;
-  private existenceVsBeingForSelf: string;
-  private absolutelyDeterminate: string;
-
-  constructor() {
-    this.infiniteBeing = "qualitative being brought to completion as infinite being";
-    this.existenceVsBeingForSelf = "existence as sphere of differentiation vs being-for-self as equalization";
-    this.absolutelyDeterminate = "negation as simple self-reference, equalization with being";
+Attention may be drawn in advance
+to the difficulties that lie ahead
+in the exposition of the development of the one,
+and to the source of these difficulties.
+The moments that constitute the concept of
+the one as being-for-itself
+occur in it one outside the other;
+they are
+(1) negation in general;
+(2) two negations that are, therefore,
+(3) the same,
+(4) absolutely opposed;
+(5) self-reference, identity as such;
+(6) negative reference which is nonetheless self-reference.
+These moments occur here apart because
+the form of immediacy, of being, enters into
+the being-for-itself as existent-for-itself;
+because of this immediacy, each moment is posited
+as a determination existent on its own,
+and yet they are just as inseparable.
+Hence, of each determination the opposite must equally be said;
+it is this contradiction that causes the difficulty
+that goes with the abstract nature of the moments.`,
+    summary:
+      'The One is being-for-itself as simple self-reference of sublating: an existent-for-itself whose immediacy makes it the abstract limit of itself. Its concept-moments appear apart (negation, two negations, sameness, absolute opposition, identity, negative-yet-self-reference) yet are inseparable; each bears its opposite, yielding the difficulty.'
   }
+]
 
-  getInfiniteNature(): string {
-    return `Being-for-itself as infinite being:
-    - Qualitative being brought to completion
-    - It IS infinite being (not merely related to infinite)
-    - Being of beginning was void of determination
-    - Existence = sublated but only immediately sublated being
-    - Contains only first negation, itself immediate
-    - Being retained, united in existence in simple unity
-    - But each still unlike other, unity not posited`;
+export const LOGICAL_OPERATIONS: LogicalOperation[] = [
+  {
+    id: 'bfs-op-a1-def-being-for-itself',
+    chunkId: 'bfs-a-existence-and-being-for-itself',
+    label: 'Definition: being-for-itself = infinity sunk into simple being; existence = infinite qualitative determinateness',
+    clauses: [
+      'assert(is(BeingForItself,"infinity-in-simple-being"))',
+      'assert(exhibits(BeingForItself,"negation-of-negation-as-general"))',
+      'assert(is(Existence,"infinite-qualitative-determinateness"))'
+    ],
+    predicates: [{ name: 'BFS_Definition', args: [] }],
+    relations: []
+  },
+  {
+    id: 'bfs-op-a2-existence-as-moment',
+    chunkId: 'bfs-a-existence-and-being-for-itself',
+    label: 'Existence is a moment of being-for-itself (being affected by negation)',
+    clauses: [
+      'assert(distinguishedFrom(Being,BeingForItself))',
+      'assert(contains(BeingForItself,"being-affected-by-negation"))',
+      'assert(isMomentOf(Existence,BeingForItself))'
+    ],
+    predicates: [{ name: 'BFS_ExistenceMoment', args: [] }],
+    relations: []
+  },
+  {
+    id: 'bfs-op-a3-bent-back-being-for-other-to-for-one',
+    chunkId: 'bfs-a-existence-and-being-for-itself',
+    label: 'Bent-back: being-for-other becomes being-for-one within being-for-itself',
+    clauses: [
+      'assert(is(ExistenceMode,"being-for-other"))',
+      'assert(bentBackInto(ExistenceMode,BeingForItself))',
+      'assert(presentAs(Existence, "being-for-one", BeingForItself))'
+    ],
+    predicates: [{ name: 'BFS_BentBack_ForOther_To_ForOne', args: [] }],
+    relations: []
+  },
+  {
+    id: 'bfs-op-b1-no-external-one-no-limit',
+    chunkId: 'bfs-b-being-for-one',
+    label: 'Being-for-one: no external One posited; no limit or reference to another existence',
+    clauses: [
+      'assert(hasLimit(BeingForItself,false))',
+      'assert(hasReferenceToOtherExistence(BeingForItself,false))',
+      'tag(Moment,"being-for-one-without-external-one")'
+    ],
+    predicates: [{ name: 'BFS_ForOne_NoExternal', args: [] }],
+    relations: []
+  },
+  {
+    id: 'bfs-op-b2-undistinguished-one-ideality',
+    chunkId: 'bfs-b-being-for-one',
+    label: 'Undistinguished sides: one being-for-another = being-for-one; one ideality',
+    clauses: [
+      'assert(undistinguishedSides(true))',
+      'assert(equals(BeingForAnother,BeingForOne))',
+      'tag(Ideality,"single")'
+    ],
+    predicates: [{ name: 'BFS_OneIdeality', args: [] }],
+    relations: []
+  },
+  {
+    id: 'bfs-op-b3-self-reference-in-other',
+    chunkId: 'bfs-b-being-for-one',
+    label: 'If distinguished: for-itself refers to itself as sublated other (hence for-one)',
+    clauses: [
+      'assert(refersToItselfAsSublatedOther(BeingForItself,true))',
+      'assert(is(BeingForItself,BeingForOne))',
+      'assert(isForOther(Ideality,false))'
+    ],
+    predicates: [{ name: 'BFS_SublatedOther', args: [] }],
+    relations: []
+  },
+  {
+    id: 'bfs-op-b4-idealizations-i-spirit-god',
+    chunkId: 'bfs-b-being-for-one',
+    label: 'I/Spirit/God: idealizations; as for-themselves not different from for-one; else regress',
+    clauses: [
+      'tag(Examples,["I","Spirit","God"])',
+      'assert(idealizations(["I","Spirit","God"]))',
+      'assert(notDifferentFromForOne(["I","Spirit","God"]))',
+      'assert(regressIfDifferent("to-immediacy-and-being-for-another",true))',
+      'assert(isForItself("God",true))',
+      'assert(isThatWhichIsForHim("God","God"))'
+    ],
+    predicates: [{ name: 'BFS_Idealization_Examples', args: [] }],
+    relations: []
+  },
+  {
+    id: 'bfs-op-b5-inseparable-moments',
+    chunkId: 'bfs-b-being-for-one',
+    label: 'Being-for-itself and being-for-one are inseparable moments of ideality',
+    clauses: [
+      'assert(inseparableMoments(["BeingForItself","BeingForOne"],Ideality))'
+    ],
+    predicates: [{ name: 'BFS_Inseparable', args: [] }],
+    relations: []
+  },
+  {
+    id: 'bfs-op-c1-one-as-abstract-limit',
+    chunkId: 'bfs-c-the-one',
+    label: 'One = existent-for-itself as abstract limit; simple self-reference of sublating grounded in negation',
+    clauses: [
+      'assert(simpleUnity(BeingForItself,"being-for-one"))',
+      'assert(selfReferenceOfSublating(true))',
+      'assert(hasImmediacy(BeingForItself,true))',
+      'assert(basedOnNegationAsDetermination(BeingForItself,true))',
+      'assert(is(One,"existent-for-itself"))',
+      'assert(is(AbstractLimit,One))'
+    ],
+    predicates: [{ name: 'BFS_One_AbstractLimit', args: [] }],
+    relations: []
+  },
+  {
+    id: 'bfs-op-c2-moments-apart-yet-inseparable-contradiction',
+    chunkId: 'bfs-c-the-one',
+    label: 'Moments listed: apart due to immediacy, yet inseparable; each bears its opposite (contradiction)',
+    clauses: [
+      'assert(momentsOfOne(["negation-in-general","two-negations","the-same","absolutely-opposed","identity-self-reference","negative-reference-yet-self-reference"]))',
+      'assert(appearApartDueToImmediacy(true))',
+      'assert(inseparable(true))',
+      'assert(eachBearsOpposite(true))',
+      'tag(Difficulty,"abstract-contradictory-moments")'
+    ],
+    predicates: [{ name: 'BFS_One_Moments_Contradiction', args: [] }],
+    relations: []
   }
-
-  getSelfReference(): string {
-    return `From differentiation to equalization:
-    - Existence = sphere of differentiation, dualism, domain of finitude
-    - Determinateness as determinateness as such
-    - Being which is relatively, not absolutely, determined
-    - In being-for-itself: distinction between being and negation POSITED AND EQUALIZED
-    - Quality, otherness, limit, reality, ought = incomplete configurations
-    - Based on differentiation of the two
-    - But negation passed over into infinity as negation of negation
-    - Negation becomes simple self-reference
-    - Therefore equalization with being: ABSOLUTELY DETERMINATE BEING`;
-  }
-
-  getIdealization(): string {
-    return `The three-fold structure:
-    1. Being-for-itself immediately as existent-for-itself: THE ONE
-    2. One passes into multiplicity of ones: REPULSION → ATTRACTION
-    3. Alternating determination of repulsion and attraction
-    - Sink into equilibrium
-    - Quality driven to head in being-for-itself
-    - Passes over into QUANTITY`;
-  }
-
-  dialecticalMovement(): string {
-    return `${this.getInfiniteNature()}
-
-    Equalization: ${this.getSelfReference()}
-
-    Structure: ${this.getIdealization()}`;
-  }
-}
-
-/**
- * BEING-FOR-ITSELF AS SUCH
- * ========================
- *
- * The general concept and its correspondence to representation
- */
-class BeingForItselfAsSuch implements BeingForSelfDetermination {
-  private conceptRepresentation: string;
-  private sublatingSelfMovement: string;
-  private infiniteTurningBack: string;
-
-  constructor() {
-    this.conceptRepresentation = "expression corresponds to the concept";
-    this.sublatingSelfMovement = "sublates otherness, connection and community with other";
-    this.infiniteTurningBack = "infinite turning back into itself";
-  }
-
-  getInfiniteNature(): string {
-    return `Being-for-itself as sublating otherness:
-    - Something is for itself inasmuch as it sublates otherness
-    - Sublates its connection and community with other
-    - Has rejected them by abstracting from them
-    - Other is in it only as something sublated, as its moment
-    - Consists in having transcended limitation, its otherness
-    - Consists in being, as this negation, the infinite turning back into itself`;
-  }
-
-  getSelfReference(): string {
-    return `The polemical, negative relating:
-    - Being-for-itself is polemical, negative relating to limiting other
-    - Through this negation of other, is being-reflected-within-itself
-    - Even while becoming involved in negative of itself, in other
-    - It abides with itself
-    - Self-reference achieved through negation of otherness`;
-  }
-
-  getIdealization(): string {
-    return `Consciousness as example of being-for-itself:
-    - In representing intended object (feeling, intuiting, etc.)
-    - Consciousness contains determination of being-for-itself
-    - Has content of object in it - thus an idealization
-    - Even involved in other, abides with itself
-    - But consciousness is phenomenal, dualistic:
-      * Knows external object as other than it
-      * Is for-itself, has object as idealized, abides with itself`;
-  }
-
-  dialecticalMovement(): string {
-    return `${this.getInfiniteNature()}
-
-    Negative Relating: ${this.getSelfReference()}
-
-    Consciousness Example: ${this.getIdealization()}`;
-  }
-}
-
-/**
- * THE MYSTICAL UTTERANCE: SELF-CONSCIOUSNESS
- * ==========================================
- *
- * Self-consciousness as being-for-itself brought to completion
- */
-class SelfConsciousnessCompletion implements BeingForSelfDetermination {
-  private completedBeingForSelf: string;
-  private infinityPresence: string;
-  private qualitativeInfinity: string;
-
-  constructor() {
-    this.completedBeingForSelf = "being-for-itself brought to completion and posited";
-    this.infinityPresence = "nearest example of presence of infinity";
-    this.qualitativeInfinity = "infinity with qualitative determinateness";
-  }
-
-  getInfiniteNature(): string {
-    return `Self-consciousness as completed being-for-itself:
-    - Being-for-itself brought to completion and posited
-    - Side of reference to another, to external object, is REMOVED
-    - No longer dualistic like consciousness
-    - Pure self-reference without external mediation`;
-  }
-
-  getSelfReference(): string {
-    return `Nearest example of presence of infinity:
-    - Self-consciousness = nearest example of presence of infinity
-    - Granted, still abstract infinity
-    - But totally different, concrete determination
-    - Than being-for-itself in general
-    - Whose infinity still has only qualitative determinateness`;
-  }
-
-  getIdealization(): string {
-    return `The mystical significance:
-    - Self-consciousness shows pure self-reference
-    - Infinite that has achieved concrete presence
-    - Not abstract beyond but present self-relation
-    - Foundation for all spiritual determinations`;
-  }
-
-  dialecticalMovement(): string {
-    return `${this.getInfiniteNature()}
-
-    Infinity Present: ${this.getSelfReference()}
-
-    Mystical Foundation: ${this.getIdealization()}`;
-  }
-}
-
-/**
- * EXISTENCE AND BEING-FOR-ITSELF
- * ==============================
- *
- * How infinity sinks into simple being
- */
-class ExistenceBeingForItself implements BeingForSelfDetermination {
-  private infinitySinking: string;
-  private negationOfNegation: string;
-  private beingForOne: string;
-
-  constructor() {
-    this.infinitySinking = "infinity that has sunk into simple being";
-    this.negationOfNegation = "negative nature of infinity as negation of negation";
-    this.beingForOne = "moment of existence present as being-for-one";
-  }
-
-  getInfiniteNature(): string {
-    return `Infinity sunk into simple being:
-    - Being-for-itself = infinity that has sunk into simple being
-    - It is existence insofar as negative nature of infinity
-    - Which is negation of negation
-    - Is only as negation in general
-    - As infinite qualitative determinateness`;
-  }
-
-  getSelfReference(): string {
-    return `Being distinguished from being-for-itself:
-    - In this determinateness wherein it is existence
-    - Being at once distinguished from this being-for-itself
-    - Which is such only as infinite qualitative determinateness
-    - Nevertheless existence is moment of being-for-itself
-    - Latter contains being affected by negation`;
-  }
-
-  getIdealization(): string {
-    return `Bent back into infinite unity:
-    - Determinateness which in existence is other, being-for-other
-    - Is bent back into infinite unity of being-for-itself
-    - Moment of existence present in being-for-itself as BEING-FOR-ONE
-    - The first emergence of "the one" as determination`;
-  }
-
-  dialecticalMovement(): string {
-    return `${this.getInfiniteNature()}
-
-    Distinction: ${this.getSelfReference()}
-
-    Unity: ${this.getIdealization()}`;
-  }
-}
-
-/**
- * THE MYSTICAL UTTERANCE: BEING-FOR-ONE
- * =====================================
- *
- * The profound analysis of idealization and the mystical examples
- */
-class BeingForOne implements BeingForSelfDetermination {
-  private finiteInInfinite: string;
-  private idealityNature: string;
-  private mysticalExamples: string;
-
-  constructor() {
-    this.finiteInInfinite = "how finite is in unity with infinite as idealization";
-    this.idealityNature = "undistinguishedness of two sides in being-for-one";
-    this.mysticalExamples = "I, spirit in general, or God as idealizations";
-  }
-
-  getInfiniteNature(): string {
-    return `Being-for-one as idealization moment:
-    - Gives expression to how finite is in unity with infinite
-    - Or as an idealization
-    - Being-for-itself does not have negation as determinateness or limit
-    - Consequently not as reference to existence other than it
-    - Yet designated as being-for-one
-    - But nothing at hand for which it would be
-    - Not yet the one of which it would be moment`;
-  }
-
-  getSelfReference(): string {
-    return `The undistinguishedness revealed:
-    - Nothing yet fixed in being-for-itself
-    - That for which something would be is likewise a moment
-    - Itself only being-for-one, not yet a one
-    - Undistinguishedness of two sides in being-for-one
-    - Only one being-for-another = only being-for-one
-    - Only one ideality of that for which and that which should be moment
-    - Being-for-one and being-for-itself not two genuine determinacies`;
-  }
-
-  getIdealization(): string {
-    return `THE MYSTICAL UTTERANCE - I, Spirit, God:
-    - Being-for-itself refers itself to itself as to sublated other
-    - Therefore for-one; in its other refers itself only to itself
-    - An idealization is necessarily for-one, but not for an other
-    - The one for which it is, is only itself
-
-    THE PROFOUND EXAMPLES:
-    - The "I," therefore, spirit in general, or God, are idealizations
-    - Because they are infinite
-    - As existents which are for-themselves
-    - Not ideationally different from that which is for-one
-    - If they were different, would be only immediate existence
-    - Being-for-another rather than for-themselves
-
-    THE ULTIMATE MYSTICAL STATEMENT:
-    - God is therefore for himself, insofar as he is himself that which is for him
-    - Being-for-itself and being-for-one = essential, inseparable moments of ideality`;
-  }
-
-  dialecticalMovement(): string {
-    return `${this.getInfiniteNature()}
-
-    Undistinguishedness: ${this.getSelfReference()}
-
-    MYSTICAL REVELATION: ${this.getIdealization()}`;
-  }
-}
-
-/**
- * THE ONE
- * =======
- *
- * Being-for-itself as simple unity and the contradictory moments
- */
-class TheOne implements BeingForSelfDetermination {
-  private simpleUnity: string;
-  private abstractLimit: string;
-  private contradictoryMoments: string;
-
-  constructor() {
-    this.simpleUnity = "simple unity of itself and its moments";
-    this.abstractLimit = "totally abstract limit of itself";
-    this.contradictoryMoments = "six moments occurring one outside the other";
-  }
-
-  getInfiniteNature(): string {
-    return `The One as simple unity:
-    - Being-for-itself = simple unity of itself and its moments
-    - Of the being-for-one
-    - Only one determination present: self-reference itself of sublating
-    - Moments have sunk into indifferentiation which is immediacy or being
-    - But immediacy based on negating posited as its determination`;
-  }
-
-  getSelfReference(): string {
-    return `Being-for-itself as existent-for-itself:
-    - Thus an existent-for-itself
-    - Since in this immediacy its inner meaning vanishes
-    - It is the totally abstract limit of itself: THE ONE
-    - The culmination of being-for-itself in pure self-reference`;
-  }
-
-  getIdealization(): string {
-    return `THE CONTRADICTORY MOMENTS OF THE ONE:
-    - Attention drawn to difficulties in exposition of development of one
-    - Moments constituting concept of one as being-for-itself
-    - Occur in it one outside the other:
-
-    (1) Negation in general
-    (2) Two negations that are, therefore,
-    (3) The same,
-    (4) Absolutely opposed
-    (5) Self-reference, identity as such
-    (6) Negative reference which is nonetheless self-reference
-
-    THE SOURCE OF DIFFICULTY:
-    - Form of immediacy, of being, enters being-for-itself as existent-for-itself
-    - Each moment posited as determination existent on its own
-    - Yet just as inseparable
-    - Of each determination the opposite must equally be said
-    - This contradiction causes difficulty with abstract nature of moments`;
-  }
-
-  dialecticalMovement(): string {
-    return `${this.getInfiniteNature()}
-
-    Abstract Limit: ${this.getSelfReference()}
-
-    CONTRADICTORY STRUCTURE: ${this.getIdealization()}`;
-  }
-}
-
-/**
- * THE BEING-FOR-ITSELF SYSTEM
- * ===========================
- *
- * Complete first part of Being-for-Self with mystical culmination
- */
-class BeingForItselfSystem {
-  private completion: QualitativeCompletion;
-  private asSuch: BeingForItselfAsSuch;
-  private selfConsciousness: SelfConsciousnessCompletion;
-  private existence: ExistenceBeingForItself;
-  private beingForOne: BeingForOne;
-  private theOne: TheOne;
-
-  constructor() {
-    this.completion = new QualitativeCompletion();
-    this.asSuch = new BeingForItselfAsSuch();
-    this.selfConsciousness = new SelfConsciousnessCompletion();
-    this.existence = new ExistenceBeingForItself();
-    this.beingForOne = new BeingForOne();
-    this.theOne = new TheOne();
-  }
-
-  /**
-   * The complete first part of Being-for-Self
-   */
-  getCompleteBeingForItselfDevelopment(): string {
-    return `BEING-FOR-ITSELF - The Mystical Completion of Quality:
-
-    INTRODUCTION - QUALITATIVE COMPLETION:
-    ${this.completion.dialecticalMovement()}
-
-    A. BEING-FOR-ITSELF AS SUCH:
-    ${this.asSuch.dialecticalMovement()}
-
-    MYSTICAL MOMENT - SELF-CONSCIOUSNESS:
-    ${this.selfConsciousness.dialecticalMovement()}
-
-    a. EXISTENCE AND BEING-FOR-ITSELF:
-    ${this.existence.dialecticalMovement()}
-
-    b. BEING-FOR-ONE - THE MYSTICAL UTTERANCE:
-    ${this.beingForOne.dialecticalMovement()}
-
-    c. THE ONE - CONTRADICTORY MOMENTS:
-    ${this.theOne.dialecticalMovement()}`;
-  }
-
-  /**
-   * The mystical insights of Being-for-Self
-   */
-  getMysticalInsights(): string {
-    return `THE MYSTICAL DIMENSION OF BEING-FOR-ITSELF:
-
-    1. CONSCIOUSNESS AS BEING-FOR-ITSELF:
-    - Already contains idealization of its object
-    - Abides with itself even in otherness
-    - Polemical, negative relating to limiting other
-
-    2. SELF-CONSCIOUSNESS AS COMPLETION:
-    - Being-for-itself brought to completion and posited
-    - Nearest example of presence of infinity
-    - Reference to external object removed
-
-    3. THE PROFOUND UTTERANCE - I, SPIRIT, GOD:
-    - "The I, therefore, spirit in general, or God, are idealizations"
-    - "Because they are infinite"
-    - "God is for himself, insofar as he is himself that which is for him"
-    - Being-for-itself and being-for-one as essential moments of ideality
-
-    4. THE ONE AS CONTRADICTORY UNITY:
-    - Simple unity containing contradictory moments
-    - Six moments occurring "one outside the other"
-    - Abstract limit of itself through immediate form
-    - Source of all dialectical difficulties in development`;
-  }
-
-  /**
-   * Preparation for the development of One and Many
-   */
-  getPreparationForMultiplicity(): string {
-    return `Preparation for One and Many, Repulsion and Attraction:
-
-    The One has been established as:
-    - Simple unity of being-for-itself and being-for-one
-    - Totally abstract limit of itself
-    - Containing contradictory moments in immediate form
-
-    This sets up the necessity for:
-    - Development of multiplicity of ones
-    - Repulsion as otherness of the one
-    - Attraction as sublation into ideality
-    - Alternating determination leading to quantity
-
-    The mystical foundation is complete - now comes the dynamic development!`;
-  }
-
-  /**
-   * Access to individual moments
-   */
-  getCompletion(): QualitativeCompletion {
-    return this.completion;
-  }
-
-  getAsSuch(): BeingForItselfAsSuch {
-    return this.asSuch;
-  }
-
-  getSelfConsciousness(): SelfConsciousnessCompletion {
-    return this.selfConsciousness;
-  }
-
-  getExistence(): ExistenceBeingForItself {
-    return this.existence;
-  }
-
-  getBeingForOne(): BeingForOne {
-    return this.beingForOne;
-  }
-
-  getTheOne(): TheOne {
-    return this.theOne;
-  }
-}
-
-// Export the main classes
-export {
-  BeingForItselfSystem as default,
-  QualitativeCompletion,
-  BeingForItselfAsSuch,
-  SelfConsciousnessCompletion,
-  ExistenceBeingForItself,
-  BeingForOne,
-  TheOne,
-  BeingForSelfDetermination
-};
+]

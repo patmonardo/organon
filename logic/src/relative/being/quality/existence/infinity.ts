@@ -1,321 +1,192 @@
-/**
- * INFINITY: The Infinite in General
- * =================================
- *
- * The foundational concept of infinity as negation of negation.
- * Establishes the crucial distinction between true and bad infinity,
- * and shows how the finite becomes infinite through its own nature.
- *
- * Based on Hegel's Logic, showing how:
- * - Infinity is self-reference devoid of determination
- * - True infinity vs bad infinity (infinite of reason vs understanding)
- * - Finite transcends itself and becomes infinite through its own nature
- * - "What is, is only the infinite"
- */
+import type { Chunk, LogicalOperation } from './index'
 
-/**
- * Base interface for dialectical moments
- */
-interface DialecticalMoment {
-  dialecticalMovement(): string;
-}
+export const CANONICAL_CHUNKS: Chunk[] = [
+  {
+    id: 'infinity-6a-intro-absolute-and-caveat',
+    title: 'Infinity: absolute, but not by mere negation of the finite',
+    text: `C. INFINITY
 
-/**
- * Interface for infinite determinations
- */
-interface InfiniteDetermination extends DialecticalMoment {
-  getInfiniteNature(): string;
-  getRelationToFinite(): string;
-  getTrueVsBadInfinite(): string;
-}
-
-/**
- * THE INFINITE AS FRESH DEFINITION OF THE ABSOLUTE
- * ===============================================
- *
- * Simple concept of infinity as self-reference devoid of determination
- */
-class InfiniteAsAbsolute implements InfiniteDetermination {
-  private selfReference: string;
-  private negationOfFinite: string;
-  private restrictednessStatus: string;
-
-  constructor() {
-    this.selfReference = "self-reference devoid of determination";
-    this.negationOfFinite = "explicitly determined as negation of finite";
-    this.restrictednessStatus = "by negation not yet free from restrictedness";
+The infinite in its simple concept
+can be regarded, first of all,
+as a fresh definition of the absolute;
+as self-reference devoid of determination,
+it is posited as being and becoming. ...
+But, in fact, by just this negation the infinite is
+not already free from restrictedness and finitude.
+It is essential to distinguish
+the true concept of infinity
+from bad infinity,
+the infinite of reason from
+the infinite of the understanding.`,
+    summary:
+      'Infinite often taken as absolute (self-reference as being/becoming). Mere negation of the finite does not free it from finitude; distinguish true vs bad infinite.'
+  },
+  {
+    id: 'infinity-6b-outline-a-b-c',
+    title: 'Outline: (a) affirmative as negation-of-finite; (b) alternating one-sided; (c) self-sublation → true infinite',
+    text: `The latter is in fact a finitized infinite ... In wanting to keep the infinite pure from the finite, it is thereby made finite.
+The infinite (a) in simple determination is the affirmative as negation of the finite;
+(b) thereby in alternating determination with the finite, abstract/one-sided;
+(c) the self-sublation of this infinite and of the finite in one process. This is the true infinite.`,
+    summary:
+      'Schema: (a) infinite as negation of finite; (b) alternation with finite (bad infinite); (c) their self-sublation in one process = true infinite.'
+  },
+  {
+    id: 'infinity-6c-def-negation-of-negation',
+    title: 'a) Infinite in general: negation of negation, true being, elevation above restriction',
+    text: `The infinite is the negation of negation, the affirmative,
+being that has reinstated itself out of restrictedness.
+The infinite is, in a more intense sense than first being, the true being—the elevation above restriction.`,
+    summary:
+      'Infinite = negation of negation (affirmative true being), reinstated beyond restriction—an elevation.'
+  },
+  {
+    id: 'infinity-6d-spirit-at-home',
+    title: 'Spirit at home in the infinite',
+    text: `At the mention of the infinite, soul and spirit light up; in the infinite the spirit is at home—not abstractly but rising to itself, universality, freedom.`,
+    summary:
+      'Spirit recognizes itself in the infinite: universality and freedom.'
+  },
+  {
+    id: 'infinity-6e-finite-nature-to-transcend',
+    title: 'Finite’s nature: transcend restriction and become infinite',
+    text: `What is first given with the concept of the infinite: in-itself, existence is finite and transcends restriction. It is the nature of the finite to transcend itself, negate its negation, and become infinite.`,
+    summary:
+      'Finite intrinsically transcends itself (negates its negation) and becomes infinite.'
+  },
+  {
+    id: 'infinity-6f-not-external-not-merely-subjective',
+    title: 'Not an external beyond, nor merely our subjective elevation',
+    text: `The infinite is not a ready-made beyond with the finite fixed outside it, nor only our subjective reason elevating itself without affecting the finite.`,
+    summary:
+      'Infinite is not a fixed beyond, nor merely subjective; it implicates the finite itself.'
+  },
+  {
+    id: 'infinity-6g-finite-self-elevation-via-restriction-ought',
+    title: 'Finite elevates itself: refers to restriction/ought and sublates it',
+    text: `Insofar as the finite itself is elevated, it is its nature to refer to itself as restriction (and as ought) and to transcend it—indeed to have already negated it in that self-reference.`,
+    summary:
+      'Finite’s self-reference to restriction/ought is already sublation—its own elevation.'
+  },
+  {
+    id: 'infinity-6h-infinity-as-vocation',
+    title: 'Infinity as the finite’s affirmative determination (vocation)',
+    text: `Infinity does not come by sublating “the finite in general”; rather the finite is such that through its nature it becomes itself the infinite. Infinity is its affirmative determination, its vocation, its truth.`,
+    summary:
+      'Infinity is the finite’s own truth/vocation—its affirmative determination.'
+  },
+  {
+    id: 'infinity-6i-only-infinite-is',
+    title: 'Conclusion of (a): the finite vanishes; what is, is only the infinite',
+    text: `The finite has thus vanished into the infinite and what is, is only the infinite.`,
+    summary:
+      'Finite vanishes into the infinite; only the infinite is.'
   }
+]
 
-  getInfiniteNature(): string {
-    return `Infinite as fresh definition of absolute:
-    - Self-reference devoid of determination
-    - Posited as being and becoming
-    - Forms of existence have no place in absolute determinations
-    - Existence forms posited only as determinacies, as finite in general
-    - Infinite accepted unqualifiedly as absolute
-    - Explicitly determined as negation of finite
-    - Restrictedness both referred to and denied in it`;
+export const LOGICAL_OPERATIONS: LogicalOperation[] = [
+  {
+    id: 'infinity-op-59-intro-absolute-caveat',
+    chunkId: 'infinity-6a-intro-absolute-and-caveat',
+    label: 'Infinite as absolute by self-reference; beware finitized (bad) infinite',
+    clauses: [
+      'tag(Infinite,"absolute")',
+      'tag(Infinite,"self-reference-as-being/becoming")',
+      'assert(distinguish(TrueInfinite,BadInfinite))',
+      'tag(BadInfinite,"finitized")'
+    ],
+    predicates: [{ name: 'InfinityIntro', args: [] }],
+    relations: []
+  },
+  {
+    id: 'infinity-op-60-outline-abc',
+    chunkId: 'infinity-6b-outline-a-b-c',
+    label: '(a) negate finite; (b) alternation (one-sided); (c) self-sublation = true infinite',
+    clauses: [
+      'assert(stages(Infinite,["negate-finite","alternation","self-sublation"]))',
+      'assert(defines(TrueInfinite,"self-sublation-of-finite-and-bad-infinite"))'
+    ],
+    predicates: [{ name: 'InfinityOutline', args: [] }],
+    relations: []
+  },
+  {
+    id: 'infinity-op-61-negation-of-negation',
+    chunkId: 'infinity-6c-def-negation-of-negation',
+    label: 'Infinite = negation-of-negation; true being; elevation above restriction',
+    clauses: [
+      'assert(isNegationOfNegation(Infinite,true))',
+      'tag(Infinite,"true-being")',
+      'assert(elevationAbove(Infinite,"Restriction"))'
+    ],
+    predicates: [{ name: 'NegNegDef', args: [] }],
+    relations: []
+  },
+  {
+    id: 'infinity-op-62-spirit-home',
+    chunkId: 'infinity-6d-spirit-at-home',
+    label: 'Spirit at home in the infinite (universality, freedom)',
+    clauses: [
+      'tag(Spirit,"at-home-in-infinite")',
+      'assert(signifies(Infinite,["Universality","Freedom"]))'
+    ],
+    predicates: [{ name: 'SpiritHome', args: [] }],
+    relations: []
+  },
+  {
+    id: 'infinity-op-63-finite-transcend-become-infinite',
+    chunkId: 'infinity-6e-finite-nature-to-transcend',
+    label: 'Finite’s nature: negate negation, transcend restriction, become infinite',
+    clauses: [
+      'assert(natureToTranscend(Finite,true))',
+      'assert(negatesNegation(Finite,true))',
+      'assert(becomes(Finite,Infinite))'
+    ],
+    predicates: [{ name: 'FiniteBecomesInfinite', args: [] }],
+    relations: []
+  },
+  {
+    id: 'infinity-op-64-not-external-nor-merely-subjective',
+    chunkId: 'infinity-6f-not-external-not-merely-subjective',
+    label: 'Infinite not a fixed beyond nor only subjective elevation',
+    clauses: [
+      'assert(notExternalBeyond(Infinite,Finite))',
+      'assert(notMerelySubjectiveElevation(Infinite,true))'
+    ],
+    predicates: [{ name: 'NotExternal', args: [] }],
+    relations: []
+  },
+  {
+    id: 'infinity-op-65-self-elevation-via-restriction-ought',
+    chunkId: 'infinity-6g-finite-self-elevation-via-restriction-ought',
+    label: 'Finite refers to restriction/ought and sublates it (self-elevation)',
+    clauses: [
+      'assert(refersTo(Finite,["Restriction","Ought"]))',
+      'assert(sublates(Finite,"Restriction"))',
+      'assert(sublates(Finite,"Ought"))'
+    ],
+    predicates: [{ name: 'SelfElevation', args: [] }],
+    relations: []
+  },
+  {
+    id: 'infinity-op-66-infinity-as-vocation',
+    chunkId: 'infinity-6h-infinity-as-vocation',
+    label: 'Infinity is the finite’s affirmative determination (vocation)',
+    clauses: [
+      'assert(affirmativeDeterminationOf(Infinite,Finite))',
+      'tag(Infinite,"vocation-of-finite")'
+    ],
+    predicates: [{ name: 'Vocation', args: [] }],
+    relations: []
+  },
+  {
+    id: 'infinity-op-67-only-infinite-is',
+    chunkId: 'infinity-6i-only-infinite-is',
+    label: 'Finite vanishes into infinite; only the infinite is',
+    clauses: [
+      'assert(vanishesInto(Finite,Infinite))',
+      'tag(Result,"only-infinite-is")'
+    ],
+    predicates: [{ name: 'OnlyInfiniteIs', args: [] }],
+    relations: []
   }
-
-  getRelationToFinite(): string {
-    return `Critical insight about negation:
-    - By just this negation, infinite not yet free from restrictedness
-    - In wanting to maintain infinite pure and distant from finite
-    - Infinite is by that very fact only made finite
-    - This produces the "finitized infinite"`;
-  }
-
-  getTrueVsBadInfinite(): string {
-    return `Essential distinction to be established:
-    - True concept of infinity vs bad infinity
-    - Infinite of reason vs infinite of understanding
-    - Understanding's infinite is finitized infinite
-    - True infinite emerges through self-sublation process`;
-  }
-
-  dialecticalMovement(): string {
-    return `${this.getInfiniteNature()}
-
-    Problem: ${this.getRelationToFinite()}
-
-    Solution: ${this.getTrueVsBadInfinite()}`;
-  }
-}
-
-/**
- * THE TRIADIC STRUCTURE OF INFINITY
- * =================================
- *
- * Hegel's systematic presentation of infinity's development
- */
-class InfinityTriad implements InfiniteDetermination {
-  private simpleInfinite: string;
-  private alternatingInfinite: string;
-  private trueInfinite: string;
-
-  constructor() {
-    this.simpleInfinite = "affirmative as negation of finite";
-    this.alternatingInfinite = "alternating determination, abstract one-sided infinite";
-    this.trueInfinite = "self-sublation of infinite and finite in one process";
-  }
-
-  getInfiniteNature(): string {
-    return `The three moments of infinity's development:
-    (a) Simple determination: affirmative as negation of finite
-    (b) Alternating determination: abstract, one-sided infinite
-    (c) Self-sublation: infinite and finite in one process - TRUE INFINITE`;
-  }
-
-  getRelationToFinite(): string {
-    return `How infinite relates to finite through development:
-    - First: negation of finite (but still related to it)
-    - Second: alternating with finite (external opposition)
-    - Third: unity process where both sublate themselves`;
-  }
-
-  getTrueVsBadInfinite(): string {
-    return `True infinite distinguished:
-    - Not simple negation of finite (moment a)
-    - Not alternating opposition to finite (moment b)
-    - But self-sublation of both in one process (moment c)
-    - This alone is the true infinite`;
-  }
-
-  dialecticalMovement(): string {
-    return `${this.getInfiniteNature()}
-
-    Development: ${this.getRelationToFinite()}
-
-    Result: ${this.getTrueVsBadInfinite()}`;
-  }
-}
-
-/**
- * THE INFINITE IN GENERAL - PROPER
- * ================================
- *
- * The infinite as negation of negation, true being, elevation above restriction
- */
-class InfiniteInGeneral implements InfiniteDetermination {
-  private negationOfNegation: string;
-  private trueBeing: string;
-  private spiritualSignificance: string;
-  private finiteTranscendence: string;
-
-  constructor() {
-    this.negationOfNegation = "affirmative, being reinstated out of restrictedness";
-    this.trueBeing = "in more intense sense than first immediate being";
-    this.spiritualSignificance = "soul and spirit light up, spirit at home";
-    this.finiteTranscendence = "finite's own nature to transcend itself";
-  }
-
-  getInfiniteNature(): string {
-    return `Infinite as negation of negation:
-    - The affirmative, being reinstated out of restrictedness
-    - In more intense sense than first immediate being
-    - The true being, elevation above restriction
-    - At mention of infinite, soul and spirit light up
-    - In infinite, spirit is at home, not only abstractly
-    - Rises to itself, to light of its thinking, universality, freedom`;
-  }
-
-  getRelationToFinite(): string {
-    return `How finite becomes infinite:
-    - First given: existence determined as finite transcends restriction
-    - Very nature of finite to transcend itself
-    - Negate its negation and become infinite
-    - Infinite does not stand above finite as ready-made
-    - Not external subjective elevation by us alone
-    - Finite itself being elevated to infinity
-    - Not alien force but finite's own nature
-    - Refers itself to itself as restriction and transcends it`;
-  }
-
-  getTrueVsBadInfinite(): string {
-    return `The profound truth:
-    - Not sublation of finite in general that produces infinity
-    - But finite is just this: through its nature becomes itself infinite
-    - Infinity is finite's affirmative determination
-    - Its vocation, what it truly is in itself
-    - Finite has vanished into infinite
-    - What is, is only the infinite`;
-  }
-
-  /**
-   * The spiritual dimension of infinity
-   */
-  getSpiritualDimension(): string {
-    return `Infinity's spiritual significance:
-    - Soul and spirit light up at mention of infinite
-    - Spirit is at home in infinite, not only abstractly
-    - Rises to itself, to light of its thinking
-    - Achieves its universality, its freedom
-    - This is why infinite is definition of absolute
-    - Self-reference that contains all determination`;
-  }
-
-  /**
-   * The self-transcendence of finite
-   */
-  getFiniteSelfTranscendence(): string {
-    return `Finite's self-transcendence into infinite:
-    - Finite refers itself to itself as restriction
-    - Both restriction as such and as ought
-    - In this self-reference, negates restriction
-    - Goes above and beyond it through own nature
-    - Not external process but immanent development
-    - Finite becomes infinite through being finite
-    - This is the dialectical truth of finitude`;
-  }
-
-  dialecticalMovement(): string {
-    return `${this.getInfiniteNature()}
-
-    Self-Transcendence: ${this.getRelationToFinite()}
-
-    Spiritual Truth: ${this.getSpiritualDimension()}
-
-    Final Result: ${this.getTrueVsBadInfinite()}`;
-  }
-}
-
-/**
- * THE INFINITY SYSTEM - IN GENERAL
- * ================================
- *
- * Complete foundational system of infinity as negation of negation
- */
-class InfinitySystem {
-  private absolute: InfiniteAsAbsolute;
-  private triad: InfinityTriad;
-  private general: InfiniteInGeneral;
-
-  constructor() {
-    this.absolute = new InfiniteAsAbsolute();
-    this.triad = new InfinityTriad();
-    this.general = new InfiniteInGeneral();
-  }
-
-  /**
-   * The complete foundational development
-   */
-  getFoundationalDevelopment(): string {
-    return `INFINITY IN GENERAL - Complete Foundation:
-
-    INFINITE AS ABSOLUTE:
-    ${this.absolute.dialecticalMovement()}
-
-    TRIADIC STRUCTURE:
-    ${this.triad.dialecticalMovement()}
-
-    INFINITE PROPER:
-    ${this.general.dialecticalMovement()}`;
-  }
-
-  /**
-   * The key insights for the whole infinity development
-   */
-  getKeyInsights(): string {
-    return `Foundational insights for infinity development:
-
-    1. TRUE VS BAD INFINITY:
-    - Bad: infinite as mere negation of finite
-    - True: self-sublation of finite and infinite together
-
-    2. FINITE'S SELF-TRANSCENDENCE:
-    - Finite becomes infinite through its own nature
-    - Not external elevation but immanent development
-    - Self-reference to restriction becomes self-transcendence
-
-    3. SPIRITUAL SIGNIFICANCE:
-    - Infinite is where spirit is at home
-    - Light of thinking, universality, freedom
-    - True being in more intense sense
-
-    4. DIALECTICAL RESULT:
-    - "What is, is only the infinite"
-    - Finite has vanished into infinite
-    - But through finite's own self-development`;
-  }
-
-  /**
-   * Preparation for alternating and affirmative infinity
-   */
-  getPreparation(): string {
-    return `Preparation for further development:
-
-    This "infinite in general" establishes:
-    - The problem: bad vs true infinity distinction
-    - The principle: finite's self-transcendence
-    - The goal: genuine unity of finite and infinite
-
-    Still to be developed:
-    - How bad infinity emerges in alternating determination
-    - How true infinity achieves affirmative self-determination
-    - The complete resolution of finite-infinite opposition`;
-  }
-
-  /**
-   * Access to individual moments
-   */
-  getAbsolute(): InfiniteAsAbsolute {
-    return this.absolute;
-  }
-
-  getTriad(): InfinityTriad {
-    return this.triad;
-  }
-
-  getGeneral(): InfiniteInGeneral {
-    return this.general;
-  }
-}
-
-// Export the main classes
-export {
-  InfinitySystem as default,
-  InfiniteAsAbsolute,
-  InfinityTriad,
-  InfiniteInGeneral,
-  InfiniteDetermination
-};
+]

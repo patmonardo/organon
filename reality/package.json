@@ -7,7 +7,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts ",
   "scripts": {
-    "build": "tsc && tsc-alias",
+    "build": "tsc -p ./",
     "b": "tsc && tsc-alias",
     "clean": "rm -rf dist node_modules tsconfig.tsbuildinfo",
     "dev": "tsc --watch",
@@ -18,7 +18,8 @@
     "test:ci": "vitest run --reporter=dot",
     "t": "vitest run",
     "lint": "eslint . --cache",
-    "format": "prettier --write \"**/*.{ts,js,md,json,yml,yaml}\" --ignore-path .gitignore"
+    "format": "prettier --write \"**/*.{ts,js,md,json,yml,yaml}\" --ignore-path .gitignore",
+    "validate:ys": "node --loader ts-node/esm src/logos/ys/validate.ts"
   },
   "dependencies": {
     "zod": "^3.25.76"
