@@ -1,4 +1,9 @@
-import { DatasetUnit, makeUnitId, Chunk, Hlo } from '../registry/canon';
+import {
+  DatasetUnit,
+  makeUnitId,
+  Chunk,
+  Hlo,
+} from '@organon/gdsl/registry/canon';
 
 /*
 I.41 — Canonical chunks
@@ -238,10 +243,10 @@ export const YS_I_41_OPS_ALL: Hlo[] = [...YS_I_41_OPS, ...YS_I_41_OPS_B];
 
 // Unit export (for barrel)
 export const YS_I_41_UNIT: DatasetUnit = {
-  id: makeUnitId('i.41'),
+  id: makeUnitId('ys:i.41'),
   title: 'YS I.41 — Canon and Development (Light, Insight, Method)',
-  scope: 'method',
-  logosMode: 'light',
+  scope: 'idea',
+  logosMode: 'prajna',
   synthesis: 'pre-factum',
   faculty: 'buddhi',
   lens: 'fichte',

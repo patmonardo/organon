@@ -18,8 +18,15 @@
     ]
   },
   "include": [
-    "src/index.ts",
-    "src/gdsl.ts",
-    // "src/**/*"
+    "src/**/*"
+  ],
+  "exclude": [
+    "src/archive/**/*.ts",
+    "src/eval/**/*.ts",
+    "node_modules",
+    "dist",
+    "test",
+    "scripts",
+    "archive"
   ]
 }

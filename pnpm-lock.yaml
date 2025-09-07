@@ -35,12 +35,6 @@ importers:
 
   gdsl:
     dependencies:
-      '@organon/logic':
-        specifier: workspace:*
-        version: link:../logic
-      '@organon/reality':
-        specifier: workspace:*
-        version: link:../reality
       zod:
         specifier: ^3.25.76
         version: 3.25.76
@@ -48,6 +42,9 @@ importers:
       '@types/node':
         specifier: ^22.5.0
         version: 22.18.0
+      tsc-alias:
+        specifier: ^1.8.16
+        version: 1.8.16
       tsx:
         specifier: ^4.17.0
         version: 4.20.4
@@ -119,6 +116,9 @@ importers:
 
   reality:
     dependencies:
+      '@organon/gdsl':
+        specifier: workspace:*
+        version: link:../gdsl
       zod:
         specifier: ^3.25.76
         version: 3.25.76

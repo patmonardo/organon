@@ -20,7 +20,9 @@ export const EmpowermentSchema = z.object({
 
 export type Empowerment = z.infer<typeof EmpowermentSchema>;
 
-export function createRootEmpowerment(opts?: Partial<Empowerment>): Empowerment {
+export function createRootEmpowerment(
+  opts?: Partial<Empowerment>,
+): Empowerment {
   const base: Empowerment = {
     id: opts?.id ?? 'empowerment:root',
     subject: opts?.subject ?? 'system.bootstrap',

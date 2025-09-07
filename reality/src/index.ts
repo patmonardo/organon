@@ -1,2 +1,2 @@
-export * from './logos/lens/map';
+export * from './reality';
 export * from './logos/logos';

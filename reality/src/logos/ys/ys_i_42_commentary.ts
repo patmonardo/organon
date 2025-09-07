@@ -1,4 +1,4 @@
-import { makeUnitId, DatasetUnit } from '../registry/canon';
+import { makeUnitId, DatasetUnit } from '@organon/gdsl/registry/canon';
 
 export const CHUNKS_I_42_COMMENTARY = [
   {

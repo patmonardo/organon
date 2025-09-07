@@ -84,6 +84,7 @@
     "src/index.ts",
     "src/logic.ts",
     "src/schema/**/*",
+    "src/cli/**/*",
     "src/repository/memory.ts",
     "src/repository/pillars.ts",
     "src/repository/repo.ts",

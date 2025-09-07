@@ -22,6 +22,7 @@
     "validate:ys": "node --loader ts-node/esm src/logos/ys/validate.ts"
   },
   "dependencies": {
+    "@organon/gdsl": "workspace:*",
     "zod": "^3.25.76"
   },
   "devDependencies": {

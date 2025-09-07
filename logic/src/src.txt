@@ -1,0 +1,401 @@
+.
+├── absolute
+│   ├── being
+│   │   ├── index.ts
+│   │   └── README.md
+│   ├── concept
+│   │   ├── absolute.ts
+│   │   ├── attention.ts
+│   │   ├── chemism.ts
+│   │   ├── concept.ts
+│   │   ├── idea.ts
+│   │   ├── index.ts
+│   │   ├── judgment.ts
+│   │   ├── mechanism.ts
+│   │   ├── README.md
+│   │   ├── stage.ts
+│   │   ├── syllogism.ts
+│   │   ├── teleology.ts
+│   │   └── truth.ts
+│   ├── core
+│   │   ├── action.ts
+│   │   ├── bus.ts
+│   │   ├── contracts.ts
+│   │   ├── derive.ts
+│   │   ├── dialectic.ts
+│   │   ├── driver.ts
+│   │   ├── index.ts
+│   │   ├── jnana.ts
+│   │   ├── knowledge.ts
+│   │   ├── kriya.ts
+│   │   ├── message.ts
+│   │   ├── orchestrator.ts
+│   │   ├── protocol.ts
+│   │   ├── qualquant.ts
+│   │   └── trace.ts
+│   ├── essence
+│   │   ├── essence.ts
+│   │   ├── ground.ts
+│   │   ├── index.ts
+│   │   ├── reflect.ts
+│   │   ├── relation.ts
+│   │   ├── thing.ts
+│   │   └── world.ts
+│   ├── form
+│   │   ├── index.ts
+│   │   ├── projection.aspect.ts
+│   │   ├── projection.conflict.ts
+│   │   └── project.ts
+│   ├── index.ts
+│   └── README.md
+├── index.ts
+├── logic.ts
+├── logic.txt
+├── relative
+│   ├── being
+│   │   ├── measure
+│   │   ├── quality
+│   │   │   ├── being
+│   │   │   │   ├── being1.ts
+│   │   │   │   ├── being2.ts
+│   │   │   │   ├── being.ts
+│   │   │   │   └── index.ts
+│   │   │   ├── being-for-self
+│   │   │   │   ├── attraction1.ts
+│   │   │   │   ├── attraction2.ts
+│   │   │   │   ├── attraction.ts
+│   │   │   │   ├── being-for-self.ts
+│   │   │   │   ├── index.ts
+│   │   │   │   ├── one-many1.ts
+│   │   │   │   ├── one-many2.ts
+│   │   │   │   └── one-many.ts
+│   │   │   ├── existence
+│   │   │   │   ├── existence1.ts
+│   │   │   │   ├── existence2.ts
+│   │   │   │   ├── existence.ts
+│   │   │   │   ├── finitude1.ts
+│   │   │   │   ├── finitude2.ts
+│   │   │   │   ├── finitude.ts
+│   │   │   │   ├── index.ts
+│   │   │   │   ├── infinity1.ts
+│   │   │   │   ├── infinity2.ts
+│   │   │   │   └── infinity.ts
+│   │   │   └── sources
+│   │   │       ├── affirmative-infinity.txt
+│   │   │       ├── alternating-infinity.txt
+│   │   │       ├── attraction.txt
+│   │   │       ├── being-for-self.txt
+│   │   │       ├── being.txt
+│   │   │       ├── constitution.txt
+│   │   │       ├── existence.txt
+│   │   │       ├── finitude.txt
+│   │   │       ├── infinity.txt
+│   │   │       ├── one-many.txt
+│   │   │       └── something-and-other.txt
+│   │   └── quantity
+│   │       ├── quantity
+│   │       │   └── quantity.ts
+│   │       ├── quantum
+│   │       │   ├── infinity.ts
+│   │       │   ├── number.ts
+│   │       │   └── quantum.ts
+│   │       ├── ratio
+│   │       │   ├── inverse.ts
+│   │       │   ├── powers.ts
+│   │       │   └── ratio.ts
+│   │       └── sources
+│   │           ├── infinity.txt
+│   │           ├── inverse.txt
+│   │           ├── number.txt
+│   │           ├── powers.txt
+│   │           ├── quantity.txt
+│   │           ├── quantum.txt
+│   │           └── ratio.txt
+│   ├── concept
+│   │   ├── idea
+│   │   ├── object
+│   │   │   ├── chemism
+│   │   │   │   ├── chemism.ts
+│   │   │   │   ├── object.ts
+│   │   │   │   ├── process.ts
+│   │   │   │   └── sources
+│   │   │   │       ├── chemism.txt
+│   │   │   │       ├── object.txt
+│   │   │   │       └── process.txt
+│   │   │   ├── mechanism
+│   │   │   │   ├── mechanism.ts
+│   │   │   │   ├── object.ts
+│   │   │   │   ├── process.ts
+│   │   │   │   └── sources
+│   │   │   │       ├── mechanism.txt
+│   │   │   │       ├── object.txt
+│   │   │   │       └── process.txt
+│   │   │   └── teleology
+│   │   │       ├── means.ts
+│   │   │       ├── realized.ts
+│   │   │       ├── souces
+│   │   │       │   ├── means.txt
+│   │   │       │   ├── realized.txt
+│   │   │       │   └── subjective.txt
+│   │   │       └── subjective.ts
+│   │   └── subject
+│   │       ├── concept
+│   │       │   ├── concept_particular.ts
+│   │       │   ├── concept_singular.ts
+│   │       │   ├── concept_universal.ts
+│   │       │   ├── index.ts
+│   │       │   └── sources
+│   │       │       ├── particular.txt
+│   │       │       ├── singular.txt
+│   │       │       └── universal.txt
+│   │       ├── judgment
+│   │       │   ├── index.ts
+│   │       │   ├── judgment_concept1.ts
+│   │       │   ├── judgment_concept2.ts
+│   │       │   ├── judgment_concept.ts
+│   │       │   ├── judgment_existence1.ts
+│   │       │   ├── judgment_existence2.ts
+│   │       │   ├── judgment_existence.ts
+│   │       │   ├── judgment_necessity1.ts
+│   │       │   ├── judgment_necessity2.ts
+│   │       │   ├── judgment_necessity.ts
+│   │       │   ├── judgment_reflection1.ts
+│   │       │   ├── judgment_reflection2.ts
+│   │       │   ├── judgment_reflection.ts
+│   │       │   └── sources
+│   │       │       ├── concept.txt
+│   │       │       ├── existence.txt
+│   │       │       ├── necessity.txt
+│   │       │       └── reflection.txt
+│   │       └── syllogism
+│   │           ├── index.ts
+│   │           ├── sources
+│   │           │   ├── existence.txt
+│   │           │   ├── necessity.txt
+│   │           │   └── reflection.txt
+│   │           ├── syllogism_existence1.ts
+│   │           ├── syllogism_existence2.ts
+│   │           ├── syllogism_existence3.ts
+│   │           ├── syllogism_existence.ts
+│   │           ├── syllogism_necessity1.ts
+│   │           ├── syllogism_necessity2.ts
+│   │           ├── syllogism_necessity.ts
+│   │           ├── syllogism_reflection1.ts
+│   │           ├── syllogism_reflection2.ts
+│   │           └── syllogism_reflection.ts
+│   ├── core
+│   │   ├── base-engine.ts
+│   │   ├── empowerment-core.ts
+│   │   ├── empowerment-form.ts
+│   │   ├── empowerment-processor.ts
+│   │   ├── empowerment-protocol.ts
+│   │   ├── index.ts
+│   │   ├── proto
+│   │   │   ├── agent-engine.ts
+│   │   │   ├── agent-processor.ts
+│   │   │   ├── agent-runner.ts
+│   │   │   ├── composite-provider.ts
+│   │   │   ├── demo-agent.ts
+│   │   │   ├── demo.ts
+│   │   │   ├── helpers.ts
+│   │   │   ├── proto-engine.ts
+│   │   │   ├── proto-processor.ts
+│   │   │   ├── shaktipat.json
+│   │   │   ├── task-engine.ts
+│   │   │   └── test-task-link.ts
+│   │   └── README.md
+│   ├── essence
+│   │   ├── actuality
+│   │   ├── appearance
+│   │   │   ├── relation
+│   │   │   │   ├── force-conditionedness.ts
+│   │   │   │   ├── force-expression.ts
+│   │   │   │   ├── force-solicitation.ts
+│   │   │   │   ├── outer-inner.ts
+│   │   │   │   ├── sources
+│   │   │   │   │   ├── force-expression.txt
+│   │   │   │   │   ├── outer-inner.txt
+│   │   │   │   │   └── whole-parts.txt
+│   │   │   │   └── whole-parts.ts
+│   │   │   ├── thing
+│   │   │   │   ├── dissolution.ts
+│   │   │   │   ├── matter.ts
+│   │   │   │   ├── sources
+│   │   │   │   │   ├── dissolution.txt
+│   │   │   │   │   ├── matter.txt
+│   │   │   │   │   └── thing.txt
+│   │   │   │   └── thing.ts
+│   │   │   └── world
+│   │   │       ├── disappearance.ts
+│   │   │       ├── law.ts
+│   │   │       ├── sources
+│   │   │       │   ├── disappearance.txt
+│   │   │       │   ├── law.txt
+│   │   │       │   └── world.txt
+│   │   │       └── world.ts
+│   │   └── reflection
+│   │       ├── essence
+│   │       │   ├── essemce.ts
+│   │       │   ├── index.ts
+│   │       │   ├── lenses.ts
+│   │       │   ├── reflection1.ts
+│   │       │   ├── reflection2.ts
+│   │       │   ├── reflection.ts
+│   │       │   ├── shine.ts
+│   │       │   └── sources
+│   │       │       ├── essence.txt
+│   │       │       ├── reflection.txt
+│   │       │       └── shine.txt
+│   │       ├── ground
+│   │       │   ├── condition1.ts
+│   │       │   ├── condition2.ts
+│   │       │   ├── condition.ts
+│   │       │   ├── ground-abs.ts1.ts
+│   │       │   ├── ground-abs.ts2.ts
+│   │       │   ├── ground-abs.ts.ts
+│   │       │   ├── ground-det1.ts
+│   │       │   ├── ground-det2.ts
+│   │       │   ├── ground-det.ts
+│   │       │   ├── index.ts
+│   │       │   └── sources
+│   │       │       ├── absolute.txt
+│   │       │       ├── condition.txt
+│   │       │       └── determinate.txt
+│   │       └── reflect
+│   │           ├── contradiction.ts
+│   │           ├── difference1.ts
+│   │           ├── difference2.ts
+│   │           ├── difference.ts
+│   │           ├── identity.ts
+│   │           ├── index.ts
+│   │           └── sources
+│   │               ├── contradiction.txt
+│   │               ├── difference.txt
+│   │               └── identity.txt
+│   ├── form
+│   │   ├── aspect
+│   │   │   ├── aspect-engine.ts
+│   │   │   ├── aspect-form.ts
+│   │   │   ├── aspect-service.ts
+│   │   │   └── index.ts
+│   │   ├── context
+│   │   │   ├── context-engine.ts
+│   │   │   ├── context-form.ts
+│   │   │   ├── context-service.ts
+│   │   │   └── index.ts
+│   │   ├── entity
+│   │   │   ├── entity-engine.ts
+│   │   │   ├── entity-form.ts
+│   │   │   ├── entity-service.ts
+│   │   │   └── index.ts
+│   │   ├── index.ts
+│   │   ├── morph
+│   │   │   ├── core
+│   │   │   │   ├── index.ts
+│   │   │   │   ├── morph.ts
+│   │   │   │   ├── pipeline.ts
+│   │   │   │   ├── registry.ts
+│   │   │   │   └── types.ts
+│   │   │   ├── cypher
+│   │   │   │   ├── absoluteTypes.ts
+│   │   │   │   ├── cypher.cli.ts
+│   │   │   │   ├── cypher.cmd.ts
+│   │   │   │   ├── cypher.ts
+│   │   │   │   ├── pipeline.cmd.ts
+│   │   │   │   ├── pipeline.ts
+│   │   │   │   ├── query.ts
+│   │   │   │   └── types.ts
+│   │   │   ├── form
+│   │   │   │   ├── customize.ts
+│   │   │   │   ├── date-idea.ts
+│   │   │   │   ├── date.ts
+│   │   │   │   ├── entity.ts
+│   │   │   │   ├── expand.ts
+│   │   │   │   ├── extract.ts
+│   │   │   │   ├── filter.ts
+│   │   │   │   ├── format.ts
+│   │   │   │   ├── form.cli.ts
+│   │   │   │   ├── form.ts
+│   │   │   │   ├── groups.ts
+│   │   │   │   ├── pipeline.ts
+│   │   │   │   ├── property.ts
+│   │   │   │   ├── relation.ts
+│   │   │   │   ├── sections.ts
+│   │   │   │   ├── style.test.ts
+│   │   │   │   ├── style.ts
+│   │   │   │   ├── summary.cmd.ts
+│   │   │   │   ├── summary.ts
+│   │   │   │   ├── truncate.cmd.ts
+│   │   │   │   ├── truncate.ts
+│   │   │   │   ├── types.ts
+│   │   │   │   ├── validation.cmd.ts
+│   │   │   │   ├── validation.ts
+│   │   │   │   ├── value.cmd.ts
+│   │   │   │   └── value.ts
+│   │   │   ├── graph
+│   │   │   │   ├── analysis.ts
+│   │   │   │   ├── graph.cli.ts
+│   │   │   │   ├── graph.cmd.ts
+│   │   │   │   ├── graph.ts
+│   │   │   │   ├── pipeline.cmd.ts
+│   │   │   │   ├── pipeline.ts
+│   │   │   │   ├── types.ts
+│   │   │   │   └── visualization.ts
+│   │   │   ├── index.ts
+│   │   │   ├── morph-engine.ts
+│   │   │   ├── morph-form.ts
+│   │   │   └── morph-service.ts
+│   │   ├── property
+│   │   │   ├── index.ts
+│   │   │   ├── property-engine.ts
+│   │   │   ├── property-form.ts
+│   │   │   └── property-service.ts
+│   │   └── shape
+│   │       ├── index.ts
+│   │       ├── shape-engine.ts
+│   │       ├── shape-form.ts
+│   │       └── shape-service.ts
+│   └── index.ts
+├── repository
+│   ├── context.ts
+│   ├── entity.ts
+│   ├── index.ts
+│   ├── memory.ts
+│   ├── morph.ts
+│   ├── neo4j-client.ts
+│   ├── pillars.ts
+│   ├── property.ts
+│   ├── relation.ts
+│   ├── repo.ts
+│   └── shape.ts
+├── schema
+│   ├── active.ts
+│   ├── aspect.ts
+│   ├── base.ts
+│   ├── being.ts
+│   ├── concept.ts
+│   ├── condition.ts
+│   ├── content.ts
+│   ├── context.ts
+│   ├── empowerment.ts
+│   ├── entity.ts
+│   ├── essence.ts
+│   ├── facet.ts
+│   ├── form.ts
+│   ├── ground.ts
+│   ├── index.ts
+│   ├── judgment.ts
+│   ├── matter.ts
+│   ├── morph.ts
+│   ├── path.ts
+│   ├── property.ts
+│   ├── relation.ts
+│   ├── shape.ts
+│   ├── signature.ts
+│   ├── syllogism.ts
+│   ├── thing.ts
+│   ├── triad.ts
+│   └── world.ts
+└── src.txt
+
+67 directories, 332 files

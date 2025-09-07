@@ -1,4 +1,4 @@
-import { DatasetUnit, makeUnitId } from '../registry/canon'
+import { DatasetUnit, makeUnitId } from '@organon/gdsl/registry/canon'
 
 /*
 YS I.50 — taj-ja saṃskāra anya-saṃskāra-pratibandhī

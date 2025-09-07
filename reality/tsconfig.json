@@ -83,6 +83,12 @@
       ],
       "@organon/task/*": [
         "../task/dist/*"
+      ],
+      "@organon/gdsl": [
+        "../gdsl/dist"
+      ],
+      "@organon/gdsl/*": [
+        "../gdsl/dist/*"
       ]
     }
   },

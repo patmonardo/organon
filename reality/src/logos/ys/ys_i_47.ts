@@ -1,4 +1,4 @@
-import { DatasetUnit, makeUnitId } from '../registry/canon'
+import { DatasetUnit, makeUnitId } from '@organon/gdsl/registry/canon'
 
 // Keep arrays module-private to avoid leaking CHUNKS/HLOS.
 const CHUNKS_I_47 = [

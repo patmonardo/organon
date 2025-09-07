@@ -1,5 +1,5 @@
 import type { LogicalOperation } from './index'
-import { parseClause } from './clause-parser'
+import { parseClause } from '../parser/clause-parser'
 
 export type PredicateStats = {
   count: number

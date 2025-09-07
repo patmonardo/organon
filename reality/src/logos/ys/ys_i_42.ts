@@ -1,4 +1,4 @@
-import { DatasetUnit, makeUnitId } from '../registry/canon'
+import { DatasetUnit, makeUnitId } from '@organon/gdsl/registry/canon'
 
 export type Chunk = { id: string; title: string; text: string }
 export type LogicalOperation = {

@@ -5,25 +5,40 @@
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./package.json": "./package.json",
+    "./registry/canon": "./dist/registry/canon.js",
+    "./packaging/dataset-manifest": "./dist/packaging/dataset-manifest.js",
+    "./packaging/extensions": "./dist/packaging/extensions.js",
+    "./schema/types": "./dist/schema/types.js",
+    "./core": "./dist/core.js",
+    "./workflow/spec": "./dist/workflow/spec.js",
+    "./workflow/run": "./dist/workflow/run.js",
+    "./adapters/unit-to-graph": "./dist/adapters/unit-to-graph.js"
+  },
   "scripts": {
-    "typecheck": "tsc -p tsconfig.json --noEmit",
-    "build": "tsc -p tsconfig.json",
-    "test": "node --test",
+    "build": "tsc && tsc-alias",
+    "b": "tsc && tsc-alias",
     "clean": "rm -rf dist node_modules tsconfig.tsbuildinfo",
-    "demo:quality": "tsx src/examples/build_quality_core.ts",
-    "demo:being": "tsx src/examples/build_being_core.ts",
-    "demo:metaphysics": "tsx src/examples/build_metaphysics.ts",
-    "demo:bfs": "tsx src/examples/build_being_for_self.ts",
-    "analyze": "tsx scripts/analyze-logic.ts",
-    "export:cypher": "tsx scripts/export-cypher.ts"
+    "dev": "tsc --watch",
+    "d": "tsc --watch",
+    "test": "vitest run",
+    "test:watch": "vitest --watch",
+    "test:ui": "vitest --ui",
+    "test:ci": "vitest run --reporter=dot",
+    "t": "vitest run",
+    "lint": "eslint . --cache",
+    "format": "prettier --write \"**/*.{ts,js,md,json,yml,yaml}\" --ignore-path .gitignore",
+    "gdsl": "tsx src/cli/gdsl.ts",
+    "gdsl:dataset:pack": "tsx src/cli/gdsl.ts dataset pack"
   },
   "dependencies": {
-    "@organon/reality": "workspace:*",
-    "@organon/logic": "workspace:*",
     "zod": "^3.25.76"
   },
   "devDependencies": {
     "@types/node": "^22.5.0",
+    "tsc-alias": "^1.8.16",
     "tsx": "^4.17.0",
     "typescript": "^5.5.4"
   }

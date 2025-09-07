@@ -6,7 +6,5 @@ export const gdsl = 'gdsl';
 // import * as logic from '@organon/logic';
 // console.log(logic.logic);
 
-// import * as co
-// re fro
-// m '@organon/core';
+// import * as core from '@organon/core';
 // console.log(core.core);

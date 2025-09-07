@@ -1,4 +1,4 @@
-import { DatasetUnit, makeUnitId } from '../registry/canon'
+import { DatasetUnit, makeUnitId } from '@organon/gdsl/registry/canon'
 
 /*
 YS I.51 — tasyāpi nirodhe sarva-nirodhāt nirbījaḥ samādhiḥ
