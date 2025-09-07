@@ -12,7 +12,7 @@ async function loadManifest(spec: string): Promise<DatasetPackageManifest> {
 async function pack(args: string[]) {
   const spec = args[0]; const extra = args.slice(1)
   if (!spec) { console.log('usage: gdsl dataset pack <manifest.(ts|json)>'); process.exit(1) }
-  const mod = await import('../../package/pack-dataset')
+  const mod = await import('../../package/dataset-pack')
   const tgz = await (mod as any).packDataset(spec, extra)
   console.log(tgz)
 }

@@ -1,4 +1,4 @@
-/* Compact Projection tool: DatasetManifest -> GraphArtifact -> GraphStore
+ /* Compact Projection tool: DatasetManifest -> GraphArtifact -> GraphStore
    Usage (quick):
      tsx src/scripts/projection/projection.ts path/to/being-dataset.ts
 */

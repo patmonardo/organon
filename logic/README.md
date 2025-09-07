@@ -6,6 +6,8 @@ Canonical Logic package providing:
 - Tests: happy-path suites for services and schema with BaseState defaults awareness.
 - Processor (absolute): integrates schemas + forms for world assembly and propagation.
 
+Logic is both a scripting language and a consumer-facing library: it exposes the language surface while reusing and re-exporting the core GDSL primitives (Dataset, Lens, Topic, Projection) from @organon/gdsl.
+
 Theory snapshot
 - Container (Principles, Qualitative/Quality: Pure Being)
   - Shape → Being (principle, composable)

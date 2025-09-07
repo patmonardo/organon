@@ -1,10 +1,10 @@
 packages:
-  - reality
-  - core
+  - gds
+  - gdsl
   - logic
   - model
   - task
-  - gdsl
+  - reality
 
 ignoredBuiltDependencies:
   - '@firebase/util'

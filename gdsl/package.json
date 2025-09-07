@@ -1,7 +1,8 @@
 {
   "name": "@organon/gdsl",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
+  "description": "Organon Graph Data Science Language",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -19,27 +20,30 @@
   },
   "scripts": {
     "build": "tsc && tsc-alias",
-    "b": "tsc && tsc-alias",
-    "clean": "rm -rf dist node_modules tsconfig.tsbuildinfo",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist node_modules tsconfig.tsbuildinfo .cache",
     "dev": "tsc --watch",
-    "d": "tsc --watch",
     "test": "vitest run",
     "test:watch": "vitest --watch",
     "test:ui": "vitest --ui",
     "test:ci": "vitest run --reporter=dot",
-    "t": "vitest run",
     "lint": "eslint . --cache",
     "format": "prettier --write \"**/*.{ts,js,md,json,yml,yaml}\" --ignore-path .gitignore",
     "gdsl": "tsx src/cli/gdsl.ts",
-    "gdsl:dataset:pack": "tsx src/cli/gdsl.ts dataset pack"
+    "gdsl:dataset:pack": "tsx src/cli/gdsl.ts dataset pack",
+    "b": "npm run build",
+    "d": "npm run dev",
+    "t": "npm run test"
   },
   "dependencies": {
+    "@organon/gds": "workspace:*",
     "zod": "^3.25.76"
   },
   "devDependencies": {
     "@types/node": "^22.5.0",
     "tsc-alias": "^1.8.16",
     "tsx": "^4.17.0",
-    "typescript": "^5.5.4"
+    "typescript": "^5.5.4",
+    "vitest": "^3.2.4"
   }
 }

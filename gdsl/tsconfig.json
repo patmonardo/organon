@@ -15,7 +15,11 @@
     "resolveJsonModule": true,
     "types": [
       "node"
-    ]
+    ],
+    "paths": {
+      "@organon/gds": ["../core/src/index.ts"],
+      "@organon/gds/*": ["../core/src/*"]
+    }
   },
   "include": [
     "src/**/*"

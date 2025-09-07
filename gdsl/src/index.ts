@@ -1,3 +1,14 @@
-export * from './cli'
-export * from './gdsl'
-export * from './schema/core'
+// Public library surface for agents and datasets (core only).
+
+// export * from './cli'   // remove: CLI is a bin, not part of library API
+
+export * from './schema/projection'
+export * from './schema/signature'
+
+export * from './dataset/canonicalize'
+export * from './dataset/signatures'
+
+export * from './topic/search'
+
+export * from './agent/kit'
+export * from './agent/gds'

@@ -61,10 +61,10 @@
         "../reality/dist/*"
       ],
       "@organon/core": [
-        "../core/dist/index"
+        "../gds/dist/index"
       ],
       "@organon/core/*": [
-        "../core/dist/*"
+        "../gds/dist/*"
       ],
       "@organon/logic": [
         "../logic/dist/index"

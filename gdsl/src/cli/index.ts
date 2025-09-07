@@ -1,2 +1,2 @@
 export * from './gdsl';
-export * from './core';
+export * from './nouns';
