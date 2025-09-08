@@ -36,14 +36,13 @@
     "t": "npm run test"
   },
   "dependencies": {
-    "@organon/gds": "workspace:*",
     "zod": "^3.25.76"
   },
   "devDependencies": {
     "@types/node": "^20.19.0",
+    "typescript": "^5.9.2",
     "tsc-alias": "^1.8.16",
     "tsx": "^4.17.0",
-    "typescript": "^5.9.2",
     "vitest": "^3.2.4"
   }
 }

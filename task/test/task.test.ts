@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import { model } from '@organon/model';
+import { gdsl } from '@organon/gdsl';
+// import { model } from '@organon/model';
 // import { logic } from '@organon/logic';
-// const logic = 'logic';
 
-describe('@organon/model resolution', () => {
-  it('imports from "@organon/model" and exports "task"', () => {
-    expect(model).toBe('model');
+describe('@organon/gdsl resolution', () => {
+  it('imports from "@organon/gdsl" and exports "task"', () => {
+    expect(gdsl).toBe('gdsl');
   });
 });

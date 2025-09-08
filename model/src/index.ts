@@ -1,1 +1,1 @@
-export const model = "model";
+export * from './model';

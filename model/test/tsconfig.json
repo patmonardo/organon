@@ -1,92 +1,11 @@
 {
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "target": "ES2022",
-    "module": "ES2022",
-    "moduleResolution": "bundler",
-    "lib": [
-      "ES2022"
-    ],
-    "rootDir": ".",
-    "outDir": "dist",
-    "declaration": true,
-    "strict": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
-    "types": [
-      "node"
-    ],
-    "baseUrl": ".",
-    "paths": {
-      "@schema": [
-        "src/schema/index.ts"
-      ],
-      "@schema/*": [
-        "src/schema/*"
-      ],
-      "@repository": [
-        "src/repository/index.ts"
-      ],
-      "@repository/*": [
-        "src/repository/*"
-      ],
-      "@model": [
-        "src/model/index.ts"
-      ],
-      "@model/*": [
-        "src/model/*"
-      ],
-      "@view": [
-        "src/view/index.ts"
-      ],
-      "@view/*": [
-        "src/view/*"
-      ],
-      "@controller": [
-        "src/controller/index.ts"
-      ],
-      "@controller/*": [
-        "src/controller/*"
-      ],
-      "@organon/reality": [
-        "../../reality/dist/index"
-      ],
-      "@organon/reality/*": [
-        "../../reality/dist/*"
-      ],
-      "@organon/gds": [
-        "../../core/dist/index"
-      ],
-      "@organon/gds/*": [
-        "../../core/dist/*"
-      ],
-      "@organon/logic": [
-        "../../logic/dist/index"
-      ],
-      "@organon/logic/*": [
-        "../../logic/dist/*"
-      ],
-      "@organon/model": [
-        "../../model/dist/index"
-      ],
-      "@organon/model/*": [
-        "../../model/dist/*"
-      ],
-      "@organon/task": [
-        "../../task/dist/index"
-      ],
-      "@organon/task/*": [
-        "../../task/dist/*"
-      ]
-    }
+    "baseUrl": "."
   },
   "include": [
-    "./**/*.test.ts"
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "**/*.ts"
   ]
 }

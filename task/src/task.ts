@@ -1,7 +1,7 @@
 export const task = "task";
 
-// import { logic } from '@organon/logic';
-// console.log(logic);
+import { logic } from '@organon/logic';
+console.log(logic);
 
-import { reality } from "@organon/reality";
-console.log(reality);
+import { gdsl } from "@organon/gdsl";
+console.log(gdsl);

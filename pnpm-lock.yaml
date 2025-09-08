@@ -10,6 +10,9 @@ importers:
 
   gds:
     dependencies:
+      '@organon/gdsl':
+        specifier: workspace:*
+        version: link:../gdsl
       zod:
         specifier: ^3.25.76
         version: 3.25.76
@@ -32,9 +35,6 @@ importers:
 
   gdsl:
     dependencies:
-      '@organon/gds':
-        specifier: workspace:*
-        version: link:../gds
       zod:
         specifier: ^3.25.76
         version: 3.25.76
@@ -57,9 +57,6 @@ importers:
 
   logic:
     dependencies:
-      '@organon/gds':
-        specifier: workspace:*
-        version: link:../gds
       '@organon/gdsl':
         specifier: workspace:*
         version: link:../gdsl
@@ -88,9 +85,6 @@ importers:
 
   model:
     dependencies:
-      '@organon/gds':
-        specifier: workspace:*
-        version: link:../gds
       '@organon/gdsl':
         specifier: workspace:*
         version: link:../gdsl

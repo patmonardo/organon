@@ -1,8 +1,8 @@
 import { describe, it, expect } from "vitest";
-const reality = "reality";
+import { gdsl } from "@organon/gdsl";
 
-describe("@organon/task/task resolution", () => {
-  it('imports from "@organon/task/task" and exports "task"', () => {
-    expect(reality).toBe("reality");
+describe("@organon/gdsl/gdsl resolution", () => {
+  it('imports from "@organon/gdsl/gdsl" and exports "gdsl"', () => {
+    expect(gdsl).toBe("gdsl");
   });
 });

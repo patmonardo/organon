@@ -4,12 +4,12 @@
   "private": true,
   "description": "Organon Research Assistant Platform",
   "workspaces": [
-    "@organon/gds",
-    "@organon/gdsl",
-    "@organon/logic",
-    "@organon/model",
-    "@organon/task",
-    "@organon/reality"
+    "gds",
+    "gdsl",
+    "logic",
+    "model",
+    "task",
+    "reality"
   ],
   "scripts": {
     "all": "pnpm clean && pnpm install && pnpm build && pnpm test",
@@ -17,6 +17,7 @@
     "build": "pnpm run --recursive build",
     "b": "pnpm run --recursive build",
     "clean": "rm -rf node_modules && pnpm run --recursive clean",
+    "cc": "rm -rf node_modules && pnpm run --recursive clean",
     "dev": "pnpm run --parallel --recursive dev",
     "d": "pnpm run --parallel --recursive dev",
     "test": "pnpm run --recursive test",

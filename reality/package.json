@@ -1,13 +1,13 @@
 {
   "name": "@organon/reality",
-  "private": true,
+  "private": false,
   "version": "0.1.0",
   "description": "Organon Reality Processor",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts ",
   "scripts": {
-    "build": "tsc -p ./",
+    "build": "tsc && tsc-alias",
     "b": "tsc && tsc-alias",
     "clean": "rm -rf dist node_modules tsconfig.tsbuildinfo",
     "dev": "tsc --watch",

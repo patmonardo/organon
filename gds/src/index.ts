@@ -1,1 +1,1 @@
-export { core } from './core';
+export { gds } from './gds';

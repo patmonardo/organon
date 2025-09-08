@@ -1,7 +1,7 @@
 export const model = "model";
 
-// import * as reality from '@organon/reality';
-// import * as core from '@organon/gds';
+import { gdsl } from '@organon/gdsl';
+console.log(gdsl);
 
-// console.log(reality);
-// console.log(core);
+import { logic } from '@organon/logic';
+console.log(logic);

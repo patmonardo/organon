@@ -1,6 +1,6 @@
 {
   "name": "@organon/model",
-  "private": true,
+  "private": false,
   "version": "0.1.0",
   "description": "Organon Model Processor",
   "type": "module",
@@ -21,7 +21,6 @@
     "format": "prettier --write \"**/*.{ts,js,md,json,yml,yaml}\" --ignore-path .gitignore"
   },
   "dependencies": {
-    "@organon/gds": "workspace:*",
     "@organon/gdsl": "workspace:*",
     "@organon/logic": "workspace:*",
     "@organon/reality": "workspace:*",
