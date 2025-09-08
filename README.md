@@ -64,7 +64,7 @@ task/src/schema/
 ```
 **Completion**: The **Absolute Dialectic** where **BEC-MVC** unity becomes **systematic practical synthesis**
 
-### **@organon/core** - Computational Substrate
+### **@organon/gds** - Computational Substrate
 ```bash
 core/src/
 ├── graph/        # Graph processing kernel
@@ -136,7 +136,7 @@ pnpm task:dev
 pnpm task:start
 ```
 
-#### Core Substrate (`@organon/core`)
+#### Core Substrate (`@organon/gds`)
 ```bash
 # Build computational kernel
 pnpm core:build

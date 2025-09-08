@@ -3,12 +3,12 @@
 ## Project Structure & Module Organization
 - Monorepo managed by pnpm workspaces: `reality/`, `core/`, `logic/`, `model/`, `task/`.
 - Source lives under each package’s `src/`; package-local tests under `test/`. Root `test/` holds examples/demos.
-- TypeScript path aliases are provided (see `tsconfig.json`). Example: `import { X } from "@organon/core"`.
+- TypeScript path aliases are provided (see `tsconfig.json`). Example: `import { X } from "@organon/gds"`.
 
 ## Build, Test, and Development Commands
 - Install: `pnpm install` (Node >= 18, pnpm >= 8).
 - Build all: `pnpm build` (runs `tsc` or `nest build` per package).
-- Dev (watch): `pnpm dev` or package-scoped: `pnpm --filter=@organon/core dev`.
+- Dev (watch): `pnpm dev` or package-scoped: `pnpm --filter=@organon/gds dev`.
 - Test all: `pnpm test`; package-scoped: `pnpm --filter=@organon/model test`.
 - Run Task service (NestJS): `pnpm --filter=@organon/task start` (or `start:debug`).
 
@@ -22,7 +22,7 @@
 ## Testing Guidelines
 - Framework: Vitest across packages.
 - Test files: co-locate as `*.spec.ts` or in `test/`. Build excludes `*.spec.ts`/`*.test.ts`.
-- Run: `pnpm test` or `pnpm --filter=@organon/core test`; coverage (task): `pnpm --filter=@organon/task test:cov`.
+- Run: `pnpm test` or `pnpm --filter=@organon/gds test`; coverage (task): `pnpm --filter=@organon/task test:cov`.
 - Expectations: add/extend unit tests for new modules; keep tests deterministic and fast.
 
 ## Commit & Pull Request Guidelines

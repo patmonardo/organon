@@ -4,7 +4,7 @@ export const logic = "logic";
 // console.log(gdsl.gdsl);
 
 // import * as reality from '@organon/reality';
-// import * as core from '@organon/core';
+// import * as core from '@organon/gds';
 
 // console.log(reality.reality);
 // console.log(core.core);

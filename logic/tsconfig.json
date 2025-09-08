@@ -54,10 +54,10 @@
       "@organon/reality/*": [
         "../reality/dist/*"
       ],
-      "@organon/core": [
+      "@organon/gds": [
         "../gds/dist"
       ],
-      "@organon/core/*": [
+      "@organon/gds/*": [
         "../gds/dist/*"
       ],
       "@organon/logic": [

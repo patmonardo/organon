@@ -1,5 +1,5 @@
 // Graph Port scoped under <knowledge> namespace
-// Keep tiny and swappable: @organon/core will provide production adapters.
+// Keep tiny and swappable: @organon/gds will provide production adapters.
 
 import type {
   KnowledgeNode,

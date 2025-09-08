@@ -1,9 +1,9 @@
 import { describe, it, expect } from "vitest";
-import { core } from '@organon/core';
+import { core } from '@organon/gds';
 // import { reality } from '@organon/reality';
 
-describe("@organon/core resolution", () => {
-  it('imports from "@organon/core and exports "logic"', () => {
+describe("@organon/gds resolution", () => {
+  it('imports from "@organon/gds and exports "logic"', () => {
     expect(core).toBe("core");
   });
 });

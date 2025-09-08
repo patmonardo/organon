@@ -42,10 +42,10 @@
       "@organon/reality/*": [
         "../../reality/dist/*"
       ],
-      "@organon/core": [
+      "@organon/gds": [
         "../../core/dist/index"
       ],
-      "@organon/core/*": [
+      "@organon/gds/*": [
         "../../core/dist/*"
       ],
       "@organon/logic": [

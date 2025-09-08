@@ -1,5 +1,5 @@
 // In-memory GraphPort implementation. Suitable for tests and local runs.
-// Replace with an @organon/core adapter when ready.
+// Replace with an @organon/gds adapter when ready.
 
 import type { GraphPort, GraphQuery, NodeId, EdgeId } from './port';
 import type {

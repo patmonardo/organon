@@ -4,12 +4,12 @@
   "private": true,
   "description": "Organon Research Assistant Platform",
   "workspaces": [
-    "@organon/reality",
-    "@organon/core",
+    "@organon/gds",
+    "@organon/gdsl",
     "@organon/logic",
     "@organon/model",
     "@organon/task",
-    "@organon/gdsl"
+    "@organon/reality"
   ],
   "scripts": {
     "all": "pnpm clean && pnpm install && pnpm build && pnpm test",
@@ -23,14 +23,14 @@
     "t": "pnpm run --recursive test",
     "lint": "eslint . --cache",
     "format": "prettier --write \"**/*.{ts,js,md,json,yml,yaml}\" --ignore-path .gitignore",
-    "reality:build": "pnpm --filter=@organon/reality build",
-    "reality:test": "pnpm --filter=@organon/reality test",
-    "reality:dev": "pnpm --filter=@organon/reality dev",
-    "reality:start": "pnpm --filter=@organon/reality start",
-    "core:build": "pnpm --filter=@organon/core build",
-    "core:test": "pnpm --filter=@organon/core test",
-    "core:dev": "pnpm --filter=@organon/core dev",
-    "core:start": "pnpm --filter=@organon/core start",
+    "gds:build": "pnpm --filter=@organon/gds build",
+    "gds:test": "pnpm --filter=@organon/gds test",
+    "gds:dev": "pnpm --filter=@organon/gds dev",
+    "gds:start": "pnpm --filter=@organon/gds start",
+    "gdsl:build": "pnpm --filter=@organon/gdsl build",
+    "gdsl:test": "pnpm --filter=@organon/gdsl test",
+    "gdsl:dev": "pnpm --filter=@organon/gdsl dev",
+    "gdsl:start": "pnpm --filter=@organon/gdsl start",
     "logic:build": "pnpm --filter=@organon/logic build",
     "logic:test": "pnpm --filter=@organon/logic test",
     "logic:dev": "pnpm --filter=@organon/logic dev",
@@ -43,9 +43,9 @@
     "task:test": "pnpm --filter=@organon/task test",
     "task:dev": "pnpm --filter=@organon/task dev",
     "task:start": "pnpm --filter=@organon/task start",
-    "gdsl:build": "pnpm --filter=@organon/gdsl build",
-    "gdsl:test": "pnpm --filter=@organon/gdsl test",
-    "gdsl:dev": "pnpm --filter=@organon/gdsl dev",
-    "gdsl:start": "pnpm --filter=@organon/gdsl start"
+    "reality:build": "pnpm --filter=@organon/reality build",
+    "reality:test": "pnpm --filter=@organon/reality test",
+    "reality:dev": "pnpm --filter=@organon/reality dev",
+    "reality:start": "pnpm --filter=@organon/reality start"
   }
 }
