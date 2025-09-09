@@ -24,6 +24,7 @@
     "t": "pnpm run --recursive test",
     "lint": "eslint . --cache",
     "format": "prettier --write \"**/*.{ts,js,md,json,yml,yaml}\" --ignore-path .gitignore",
+    "doc:api": "pnpm run --recursive doc:api",
     "gds:build": "pnpm --filter=@organon/gds build",
     "gds:test": "pnpm --filter=@organon/gds test",
     "gds:dev": "pnpm --filter=@organon/gds dev",

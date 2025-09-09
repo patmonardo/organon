@@ -27,7 +27,8 @@
     "test:ci": "vitest run --reporter=dot",
     "t": "vitest run",
     "lint": "eslint . --cache",
-    "format": "prettier --write \"**/*.{ts,js,md,json,yml,yaml}\" --ignore-path .gitignore"
+    "format": "prettier --write \"**/*.{ts,js,md,json,yml,yaml}\" --ignore-path .gitignore",
+    "doc:api": "typedoc --options typedoc.json"
   },
   "dependencies": {
     "@organon/gdsl": "workspace:*",

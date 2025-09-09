@@ -29,6 +29,7 @@
     "test:ci": "vitest run --reporter=dot",
     "lint": "eslint . --cache",
     "format": "prettier --write \"**/*.{ts,js,md,json,yml,yaml}\" --ignore-path .gitignore",
+    "doc:api": "typedoc --options typedoc.json",
     "gdsl": "tsx src/cli/gdsl.ts",
     "gdsl:dataset:pack": "tsx src/cli/gdsl.ts dataset pack",
     "b": "npm run build",

@@ -1,0 +1,76 @@
+name: Build TypeDoc → Pages
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install workspace deps
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate per-package TypeDoc (HTML)
+        run: |
+          set -e
+          PACKAGES="gds gdsl logic model task reality"
+          for pkg in $PACKAGES; do
+            echo "=== $pkg ==="
+            # prefer local script if typedoc is declared; otherwise use dlx
+            if pnpm --filter @organon/$pkg -w exec -- pnpm -v >/dev/null 2>&1; then
+              # run package script if exists
+              if jq -e '.scripts["doc:api"]' $pkg/package.json >/dev/null 2>&1; then
+                pnpm --filter @organon/$pkg run doc:api || echo "doc failed for $pkg"
+              else
+                # fallback: dlx typedoc to package/doc/api
+                pnpm dlx typedoc --entryPoints "$pkg/src/index.ts" --tsconfig "$pkg/tsconfig.json" --out "$pkg/doc/api" || echo "dlx typedoc failed for $pkg"
+              fi
+            else
+              pnpm dlx typedoc --entryPoints "$pkg/src/index.ts" --tsconfig "$pkg/tsconfig.json" --out "$pkg/doc/api" || echo "dlx typedoc failed for $pkg"
+            fi
+          done
+
+      - name: Assemble site tree (repo-root doc/api/<pkg>)
+        run: |
+          rm -rf doc/api || true
+          mkdir -p doc/api
+          for pkg in gds gdsl logic model task reality; do
+            if [ -d "$pkg/doc/api" ]; then
+              mkdir -p "doc/api/$pkg"
+              cp -r "$pkg/doc/api/." "doc/api/$pkg/"
+            fi
+          done
+
+      - name: Show assembled docs
+        run: |
+          echo "=== doc/api tree ==="
+          ls -la doc/api || true
+          find doc/api -maxdepth 3 -type f -print || true
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: doc/api
+
+  deploy:
+    needs: build-and-publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/deploy-pages@v4

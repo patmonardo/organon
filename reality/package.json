@@ -19,6 +19,7 @@
     "t": "vitest run",
     "lint": "eslint . --cache",
     "format": "prettier --write \"**/*.{ts,js,md,json,yml,yaml}\" --ignore-path .gitignore",
+    "doc:api": "typedoc --options typedoc.json",
     "validate:ys": "node --loader ts-node/esm src/logos/ys/validate.ts"
   },
   "dependencies": {
