@@ -5,15 +5,10 @@
     "outDir": "dist",
     "baseUrl": ".",
     "paths": {
-      "@organon/gds": [
-        "../gds/dist/index"
-      ],
-      "@organon/gds/*": [
-        "../gds/dist/*"
-      ]
     }
   },
   "include": [
+    "tsconfig.json",
     "src/**/*.ts"
   ],
   "exclude": [

@@ -14,9 +14,10 @@
     }
   },
   "include": [
+    "tsconfig.json",
     "src/index.ts",
-    "src/logos/**/*.ts",
-    "src/reality.ts"
+    "src/reality.ts",
+    "src/logos/**/*.ts"
   ],
   "exclude": [
     "src/archive/**/*.ts",

@@ -22,10 +22,17 @@
       ],
       "@organon/model/*": [
         "../model/dist/*"
+      ],
+      "@organon/reality": [
+        "../reality/dist/index"
+      ],
+      "@organon/reality/*": [
+        "../reality/dist/*"
       ]
     }
   },
   "include": [
+    "tsconfig.json",
     "src/index.ts",
     "src/task.ts"
   ],

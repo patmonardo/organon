@@ -2,21 +2,24 @@ import { defineConfig } from 'vitest/config';
 import tsconfig from './tsconfig.json';
 import path from 'path';
 
-// Create an alias object from the paths in tsconfig.json
+// Defensive: gracefully handle missing/empty paths
+const rawPaths = tsconfig.compilerOptions?.paths ?? {};
 const alias = Object.fromEntries(
-  // For Each Path in tsconfig.json
-  Object.entries(tsconfig.compilerOptions.paths).map(([key, [value]]) => [
-    // Remove the "/*" from the key and resolve the path
-    key.replace('/*', ''),
-    // Remove the "/*" from the value Resolve the relative path
-    path.resolve(__dirname, value.replace('/*', '')),
-  ]),
+  Object.entries(rawPaths)
+    .filter(([k, v]) => !!k && Array.isArray(v) && typeof v[0] === 'string')
+    .map(([key, value]) => [
+      key.replace(/\/\*$/, ''), // strip wildcard
+      path.resolve(__dirname, (value as string[])[0].replace(/\/\*$/, '')),
+    ]),
 );
 
+if (Object.keys(alias).length === 0) {
+  // optional: small debug line so CI/editor logs the fact there are no aliases
+  // console.info('vitest: no tsconfig paths found — running without aliases');
+}
+
 export default defineConfig({
-  resolve: {
-    alias,
-  },
+  resolve: { alias },
   test: {
     environment: 'node',
     include: ['test/**/*.test.ts', 'test/**/*.spec.ts'],

@@ -1,6 +1,6 @@
 {
   "name": "@organon/gds",
-  "private": true,
+  "private": false,
   "version": "0.1.0",
   "description": "Organon Graph Data Science (GDS) core",
   "type": "module",

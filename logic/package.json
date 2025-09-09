@@ -10,7 +10,6 @@
     "build": "tsc && tsc-alias",
     "b": "tsc && tsc-alias",
     "clean": "rm -rf dist node_modules tsconfig.tsbuildinfo",
-    "vscode:prepublish": "rm -rf dist node_modules tsconfig.tsbuildinfo",
     "dev": "tsc --watch",
     "d": "tsc --watch",
     "test": "vitest run",

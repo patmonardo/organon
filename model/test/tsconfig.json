@@ -1,11 +1,26 @@
 {
-  "extends": "../../tsconfig.base.json",
+  "extends": "../../tsconfig.test.json",
   "compilerOptions": {
-    "baseUrl": "."
-  },
-  "include": [
-    "**/*.test.ts",
-    "**/*.spec.ts",
-    "**/*.ts"
-  ]
+    "baseUrl": ".",
+    "paths": {
+      "@organon/gdsl": [
+        "../../gdsl/dist/index"
+      ],
+      "@organon/gdsl/*": [
+        "../../gdsl/dist/*"
+      ],
+      "@organon/logic": [
+        "../../logic/dist/index"
+      ],
+      "@organon/logic/*": [
+        "../../logic/dist/*"
+      ],
+      "@organon/reality": [
+        "../../reality/dist/index"
+      ],
+      "@organon/reality/*": [
+        "../../reality/dist/*"
+      ],
+    }
+  }
 }

@@ -20,7 +20,7 @@ export default defineConfig({
   test: {
     environment: 'node',
     include: ['test/**/*.test.ts', 'test/**/*.spec.ts'],
-    exclude: ['node_modules', 'dist'],
+    // exclude: ['node_modules', 'dist'],
     globals: true,
   },
 });
