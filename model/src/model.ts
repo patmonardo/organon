@@ -6,5 +6,5 @@ console.log("model:", gdsl);
 import { logic } from '@organon/logic';
 console.log("model:", logic);
 
-import { reality } from '@organon/reality';
-console.log('model:', reality);
+// import { reality } from '@organon/reality';
+// console.log('model:', reality);
