@@ -1,8 +1,6 @@
 export { YS_I_41_UNIT } from './ys_i_41';
-export { YS_I_42_SUTRA_UNIT } from './ys_i_42';
-export { YS_I_42_COMMENTARY_UNIT } from './ys_i_42_commentary';
-export { YS_I_43_SUTRA_UNIT } from './ys_i_43';
-export { YS_I_43_COMMENTARY_UNIT } from './ys_i_43_commentary';
+export { YS_I_42_UNIT } from './ys_i_42';
+export { YS_I_43_UNIT } from './ys_i_43';
 export { YS_I_44_UNIT } from './ys_i_44';
 export { YS_I_45_1_UNIT } from './ys_i_45_1';
 export { YS_I_45_2_UNIT } from './ys_i_45_2';

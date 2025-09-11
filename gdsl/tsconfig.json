@@ -12,12 +12,10 @@
     "src/**/*.ts"
   ],
   "exclude": [
-    "src/archive/**/*.ts",
     "src/eval/**/*.ts",
+    "archive",
     "node_modules",
     "dist",
-    "test",
-    "scripts",
-    "archive"
+    "test"
   ]
 }

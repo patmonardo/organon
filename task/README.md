@@ -1,79 +1,45 @@
+# Task / Agent / Workflow — Engineering Overview
 
-# Task/Agent/Workflow: UML & Engineering Overview
+A compact overview of the Task–Agent–Workflow subsystem: typed schemas, runtime roles, and implementation guidance for building, testing, and integrating workflow engines.
 
-## System UML Overview
+## Purpose
+Provide a type-safe, extensible framework for defining and executing computational Tasks, assigning them to Agents, and orchestrating them inside Workflows. Designed for production use (validation, observability, scalability) and for reuse across the Organon monorepo.
 
-```uml
-@startuml
-class Task {
-  +id: string
-  +name: string
-  +state: TaskState
-  +config: TaskConfig
-  +execute(): TaskResult
-}
+## Core Concepts
+- Task — a unit of work with id, config, state, and result.  
+- Agent — an active executor with capabilities, health, and assignment logic.  
+- Workflow — an orchestrator of Tasks and Agents (DAGs or sequences), responsible for scheduling, monitoring, and recovery.
 
-class Agent {
-  +id: string
-  +name: string
-  +capabilities: Capability[]
-  +health: AgentHealth
-  +assignTask(task: Task): void
-}
-
-class Workflow {
-  +id: string
-  +name: string
-  +steps: WorkflowStep[]
-  +run(): WorkflowResult
-}
-
-Task "1" -- "*" Agent : assignedTo
-Workflow "1" -- "*" Task : contains
-Agent "1" -- "*" Workflow : participatesIn
-@enduml
-```
-
-## Engineering Schema Structure
-
-- **Task**: Represents a computational work unit. Tracks execution state, configuration, and results. Can be assigned to Agents and included in Workflows.
-- **Agent**: Represents an active computational entity. Manages capabilities, health, and can be assigned Tasks. Participates in Workflows.
-- **Workflow**: Orchestrates Tasks and Agents in a directed acyclic graph (DAG) or sequence. Handles execution, scheduling, and monitoring.
-
-### Relationships
-
-- A **Workflow** contains multiple **Tasks**.
-- An **Agent** can be assigned to multiple **Tasks** and participate in multiple **Workflows**.
-- **Tasks** are executed by **Agents** within the context of a **Workflow**.
-
-## Schema Files
-
-- `src/schema/task.ts`: Task Zod schema (engineering, execution, state)
-- `src/schema/agent.ts`: Agent Zod schema (capabilities, health, assignment)
-- `src/schema/workflow.ts`: Workflow Zod schema (orchestration, steps, monitoring)
-- `src/schema/definition.ts`: Philosophical foundation (reference only)
-- `src/schema/index.ts`: Module exports
+## Schema files
+- `src/schema/task.ts` — Task Zod schema (execution, state, config)  
+- `src/schema/agent.ts` — Agent Zod schema (capabilities, health, assignment)  
+- `src/schema/workflow.ts` — Workflow Zod schema (steps, orchestration)  
+- `src/schema/definition.ts` — conceptual foundation (reference)  
+- `src/schema/index.ts` — consolidated exports
 
 ## Design Principles
+- API-first: clear schemas suitable for REST/GraphQL endpoints.  
+- Type-safe: derive types from Zod schemas for runtime + compile-time guarantees.  
+- Extensible: plugin/adaptor friendly (executors, persistence, schedulers).  
+- Observable: metrics, logs, and traces for operational visibility.  
+- Scalable & resilient: distributed execution and task recovery patterns.
 
-- **API-First**: REST/GraphQL ready, strong validation
-- **Framework Integration**: Native NestJS & Genkit compatibility
-- **Production-Ready**: Security, monitoring, audit, error handling
-- **Extensible**: Plugin/configuration architecture
-- **Observable**: Metrics, logging, tracing
-- **Scalable**: Distributed execution, resource management
-- **Type-Safe**: Full TypeScript type inference from Zod schemas
+## Implementation Outline
+1. Service layer: business logic for creating, scheduling, and reconciling Tasks.  
+2. Controller layer: REST/GraphQL endpoints for clients and operators.  
+3. Repository layer: persistence adapters (databases, queues).  
+4. Executor layer: concrete runtime implementations for Agents.  
+5. Integration adapters: connectors for external tooling and infra.
 
-## Practical Implementation
+## Development
+- Build: `pnpm --filter @organon/task build`  
+- Test: `pnpm --filter @organon/task test`  
+- Generate docs (if configured): `pnpm --filter @organon/task run doc:api`
 
-1. **Service Classes**: Business logic for Task, Agent, Workflow
-2. **Controller Classes**: REST API endpoints (NestJS)
-3. **Repository Classes**: Data persistence
-4. **Executor Classes**: Runtime execution engines
-5. **Integration Adapters**: Genkit, external tools
+## Notes
+- Prefer package-scoped imports (e.g. `@organon/task`) across the monorepo.  
+- Keep schemas minimal and well-documented to support API-first development.  
+- Use the `src/schema` index for barrel exports to simplify imports.
 
-## Conceptual Context (Summary)
-
-- The Task/Agent/Workflow system is grounded in a triadic, dialectical logic (see `src/schema/definition.ts`).
-- Tasks = Being (work units), Agents = Entity (actors), Workflows = Container (orchestration logic).
-- The system is designed for both practical engineering and as a living demonstration of knowledge creation and orchestration.
+## Conceptual context
+This module expresses a practical dialectic of work, actor, and orchestration: Tasks as determinate work, Agents as active executors, and Workflows as the organizing frame that actualizes possibilities
