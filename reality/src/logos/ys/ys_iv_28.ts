@@ -1,4 +1,4 @@
-import { DatasetUnit, makeUnitId } from '@organon/gdsl/registry/canon'
+import { DatasetUnit, makeUnitId } from '@organon/gdsl/registry/canon';
 
 /*
 C. ACTUALITY → Absolute Realization (closure and method)
@@ -14,11 +14,14 @@ export const YS_IV_28_ONTOLOGY = {
   esam: '“Of these” — the intruding pratyayas arising in gaps (IV.27)',
   klesavad: 'Like the kleśas — by the already stated method of kleśa-removal',
   uktam: 'As stated/said before — refers back to prior prescriptions',
-  intrusionsFromSamskara: 'Non‑viveka pratyayas arising from saṁskāras (from IV.27)',
+  intrusionsFromSamskara:
+    'Non‑viveka pratyayas arising from saṁskāras (from IV.27)',
   vivekaCurrent: 'Discriminative current established in IV.26',
-  methodReapplication: 'Reapplication of previously stated method, not invention of a new one',
+  methodReapplication:
+    'Reapplication of previously stated method, not invention of a new one',
   // Method anchors (Book II cross‑reference, abstracted)
-  klesaMethod: 'Kleśa‑removal method: viveka‑khyāti, pratyaya‑nirodha, saṁskāra‑kṣaya, sattva‑śuddhi (as previously stated)',
+  klesaMethod:
+    'Kleśa‑removal method: viveka‑khyāti, pratyaya‑nirodha, saṁskāra‑kṣaya, sattva‑śuddhi (as previously stated)',
   // Crosswalks
   fichteMethodCompass:
     'Fichte: keep penetrating method‑remarks present; method is the compass through the maze',
@@ -31,7 +34,7 @@ export const YS_IV_28_ONTOLOGY = {
     'Error: attributing intrusions to witness failure; non‑transference stands',
   errorWorldDenial:
     'Error: denying appearance instead of resolving latencies by method',
-}
+};
 
 // ---------- Chunks ----------
 const CHUNKS_YS_IV_28 = [
@@ -43,17 +46,20 @@ const CHUNKS_YS_IV_28 = [
   {
     id: 'ys-iv-28-semantics',
     title: 'Semantics: hāna / eṣām / kleśavat / uktam',
-    summary: 'Removal of the IV.27 intrusions by the already stated kleśa‑method; no new procedure.',
+    summary:
+      'Removal of the IV.27 intrusions by the already stated kleśa‑method; no new procedure.',
   },
   {
     id: 'ys-iv-28-method',
     title: 'Method: Reapplication of Prior Discipline',
-    summary: 'Re‑establish viveka continuity; reduce saṁskāra fuel; rely on previously stated prescriptions.',
+    summary:
+      'Re‑establish viveka continuity; reduce saṁskāra fuel; rely on previously stated prescriptions.',
   },
   {
     id: 'ys-iv-28-crosswalk',
     title: 'Crosswalk (Fichte — Method/Compass)',
-    summary: 'Keep the method‑remarks present; the compass through the maze ensures categorical advance.',
+    summary:
+      'Keep the method‑remarks present; the compass through the maze ensures categorical advance.',
   },
   {
     id: 'ys-iv-28-guards',
@@ -63,9 +69,10 @@ const CHUNKS_YS_IV_28 = [
   {
     id: 'ys-iv-28-bridges',
     title: 'Bridges → IV.29+',
-    summary: 'From stabilized method to higher abatements and Absolute stance consolidation.',
+    summary:
+      'From stabilized method to higher abatements and Absolute stance consolidation.',
   },
-]
+];
 
 // ---------- HLO Clauses ----------
 const HLOS_YS_IV_28 = [
@@ -131,7 +138,7 @@ const HLOS_YS_IV_28 = [
       'prepare(IV_29_plus := consolidate(method → steady_kaivalya_vector))',
     ],
   },
-]
+];
 
 // ---------- Export Unit ----------
 export const YS_IV_28_UNIT: DatasetUnit = {
@@ -145,7 +152,6 @@ export const YS_IV_28_UNIT: DatasetUnit = {
   lens: 'yoga',
   chunks: CHUNKS_YS_IV_28 as any,
   hlos: HLOS_YS_IV_28 as any,
-}
+};
 
-export const YS_IV_28_SYMBOLS = Object.keys(YS_IV_28_ONTOLOGY)
-
+export const YS_IV_28_SYMBOLS = Object.keys(YS_IV_28_ONTOLOGY);
