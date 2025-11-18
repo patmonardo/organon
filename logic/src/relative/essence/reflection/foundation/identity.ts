@@ -1,15 +1,14 @@
 import type { Chunk, LogicalOperation } from './index'
 
 /*
-  Essence — A. IDENTITY
+  Foundation — A. IDENTITY
 
   This module covers the Identity section of the Determinations of Reflection.
 
-  TERMINOLOGY NOTE:
-  The parent module is "reflection" and its children/concepts are:
-  - essence (the Essential and the Unessential)
-  - reflect (the Determinations of Reflection: Identity, Difference, Contradiction)
-  - ground (the resolved contradiction)
+  STRUCTURE: Essence → Foundation → Ground
+  - Essence: The Essential and the Unessential
+  - Foundation: The Determinations of Reflection (Identity, Difference, Contradiction)
+  - Ground: The resolved contradiction (Absolute Ground, Determinate Ground, Condition)
 
   PHILOSOPHICAL NOTES:
 
@@ -23,10 +22,10 @@ import type { Chunk, LogicalOperation } from './index'
      in itself is identity itself. This establishes the fundamental unity: identity
      remains the same as essence.
 
-  3. **Reflection as the Idea:Concept**:
-     Reflection is the idea:concept itself — the shining of essence within itself.
-     Identity is the first moment of this self-shining, the pure self-reference
-     that grounds all further determinations.
+  3. **Foundation as the Shining of Essence**:
+     Reflection is the shining of essence within itself. Identity is the first moment
+     of this Foundation — the pure self-reference that forms the basis for all further
+     determinations (Difference, Contradiction) which resolve to Ground.
 */
 
 export const CANONICAL_CHUNKS: Chunk[] = [

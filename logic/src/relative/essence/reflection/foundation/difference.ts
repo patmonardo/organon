@@ -1,18 +1,17 @@
 import type { Chunk, LogicalOperation } from './index'
 
 /*
-  Essence — B. DIFFERENCE
+  Foundation — B. DIFFERENCE
 
   This module consolidates the complete Difference section:
   - Part 1: Absolute difference
   - Part 2: Diversity
   - Part 3: Opposition
 
-  TERMINOLOGY NOTE:
-  The parent module is "reflection" and its children/concepts are:
-  - essence (the Essential and the Unessential)
-  - reflect (the Determinations of Reflection: Identity, Difference, Contradiction)
-  - ground (the resolved contradiction)
+  STRUCTURE: Essence → Foundation → Ground
+  - Essence: The Essential and the Unessential
+  - Foundation: The Determinations of Reflection (Identity, Difference, Contradiction)
+  - Ground: The resolved contradiction (Absolute Ground, Determinate Ground, Condition)
 
   PHILOSOPHICAL NOTES:
   

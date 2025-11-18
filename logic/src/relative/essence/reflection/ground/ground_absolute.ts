@@ -8,6 +8,16 @@ import type { Chunk, LogicalOperation } from './index'
   - Part b: Form and Matter
   - Part c: Form and Content
 
+  THE LOGICALLY PROFOUND TRANSITION: FOUNDATION → GROUND
+  This is where Identity-Difference (Foundation) becomes Form-Matter (Ground).
+  This transition is one of the most profound logical moves in the System of Reflection:
+  - Identity (Foundation) → Form (Ground): The self-identical becomes the determining
+  - Difference (Foundation) → Matter (Ground): The differentiated becomes the substrate
+  
+  This is the systematic foundation that makes Reflection explicit and computable.
+  It is not surprising that ML researchers struggle to codify "Reflection" — this
+  structure requires the full systematic development from Foundation to Ground.
+
   PHILOSOPHICAL NOTES:
 
   1. **Dependent Origination (Pratītyasamutpāda)**:

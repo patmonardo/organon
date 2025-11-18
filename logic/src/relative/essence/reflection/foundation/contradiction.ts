@@ -1,18 +1,17 @@
 import type { Chunk, LogicalOperation } from './index'
 
 /*
-  Essence — C. CONTRADICTION
+  Foundation — C. CONTRADICTION
 
   This module consolidates the complete Contradiction section:
   - Part 1: Contradiction as self-exclusion (positive/negative)
   - Part 2: Contradiction resolves itself (null, sublation, self-withdrawal)
   - Part 3: Return to ground (essence as ground, unity of positive/negative)
 
-  TERMINOLOGY NOTE:
-  The parent module is "reflection" and its children/concepts are:
-  - essence (the Essential and the Unessential)
-  - reflect (the Determinations of Reflection: Identity, Difference, Contradiction)
-  - ground (the resolved contradiction)
+  STRUCTURE: Essence → Foundation → Ground
+  - Essence: The Essential and the Unessential
+  - Foundation: The Determinations of Reflection (Identity, Difference, Contradiction)
+  - Ground: The resolved contradiction (Absolute Ground, Determinate Ground, Condition)
 
   PHILOSOPHICAL NOTES:
 
