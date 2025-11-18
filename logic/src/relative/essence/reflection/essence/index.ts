@@ -42,28 +42,16 @@ import {
   CANONICAL_CHUNKS as REFLECTION_CHUNKS,
   LOGICAL_OPERATIONS as REFLECTION_OPS
 } from './reflection'
-import {
-  CANONICAL_CHUNKS as REFLECTION1_CHUNKS,
-  LOGICAL_OPERATIONS as REFLECTION1_OPS
-} from './reflection1'
-import {
-  CANONICAL_CHUNKS as REFLECTION2_CHUNKS,
-  LOGICAL_OPERATIONS as REFLECTION2_OPS
-} from './reflection2'
 
 // Central registry
 export const CHUNKS: Chunk[] = [
   ...SHINE_CHUNKS,
-  ...REFLECTION_CHUNKS,
-  ...REFLECTION1_CHUNKS,
-  ...REFLECTION2_CHUNKS
+  ...REFLECTION_CHUNKS
 ]
 
 export const OPS: LogicalOperation[] = [
   ...SHINE_OPS,
-  ...REFLECTION_OPS,
-  ...REFLECTION1_OPS,
-  ...REFLECTION2_OPS
+  ...REFLECTION_OPS
 ]
 
 // Validators

@@ -1,4 +1,59 @@
-import type { Chunk, LogicalOperation } from './index'
+import type { Chunk, LogicalOperation } from './index';
+
+/*
+  Infinity — C. INFINITY: THE DETERMINATION OF BEING (Section b)
+
+  This module covers section b: Alternating determination of finite and infinite
+  - Bad infinite setup: immediacy falls back to Something-with-limit
+  - Finite as restriction → passes over; Infinite as realized ought
+  - Affirmative slips back to Being; Infinite burdened with opposition
+  - Bad infinite (of understanding): unreconciled contradictions
+  - Two-worlds contradiction: infinite as mere limit → finitized infinite
+  - Separation: finite "here," infinite "beyond"
+  - Common limit; each finite-in-itself; each posits the other
+  - Mediation by negation; exclusion re-finitizes the infinite
+  - Alternating transition (external connection)
+  - Process: external pass-over → emptiness → limit → cycle to infinity
+  - Alternating determination: relativity and inseparable-opposed unity
+  - Infinite progress as unresolved contradiction
+  - Bad infinite = perpetual ought; monotony
+  - Hidden unity as impulse; beyond unattainable
+
+  PHILOSOPHICAL NOTES:
+
+  1. **The Bad Infinite**:
+     As immediate, the infinite is "not-finite" and thus falls back into the category
+     of Something-with-limit. It resurrects the finite over against it, creating the
+     bad infinite—the understanding's "highest" but unreconciled contradictions.
+
+  2. **Two Worlds**:
+     Split into two worlds (finite and infinite) makes the infinite a mere limit of
+     the finite—thus a finitized infinite. The infinite is separated as "beyond,"
+     the finite remains "here"—separation persists.
+
+  3. **Common Limit**:
+     The negation connecting them is their common limit. Each has this limit in itself
+     (as in-itselfness) and is thus finite-in-itself. Each posits its other: the finite
+     posits its non-being as the infinite, and the infinite posits the finite.
+
+  4. **The Alternating Process**:
+     The process appears as external: finite passes over into infinite; in the empty
+     beyond, limit arises; infinite vanishes, finite steps in; cycle repeats ad infinitum.
+     This is the "progress to infinity"—unresolved contradiction.
+
+  5. **Hidden Unity**:
+     The unity of finite and infinite is hidden in their qualitative otherness—it is
+     their inner unity, the impulse driving the progress. But as "beyond," the infinite
+     is unattainable; the finite persists as "this-side" that perennially regenerates.
+
+  6. **Perpetual Ought**:
+     The bad infinite equals the perpetual ought: negation of the finite that cannot
+     free itself from it. The transcending itself is not transcended—monotonous repetition.
+*/
+
+// ============================================================================
+// b. ALTERNATING DETERMINATION OF FINITE AND INFINITE
+// ============================================================================
 
 export const CANONICAL_CHUNKS: Chunk[] = [
   {
@@ -320,4 +375,25 @@ export const LOGICAL_OPERATIONS: LogicalOperation[] = [
     predicates: [{ name: 'HiddenUnityImpulse', args: [] }],
     relations: []
   }
-]
+];
+
+// Accessors
+export function getChunk(oneBasedIndex: number): Chunk | null {
+  return CANONICAL_CHUNKS[oneBasedIndex - 1] ?? null;
+}
+
+export function getChunkById(id: string): Chunk | null {
+  return CANONICAL_CHUNKS.find((c) => c.id === id) ?? null;
+}
+
+export function getLogicalOpsForChunkId(chunkId: string): LogicalOperation[] {
+  return LOGICAL_OPERATIONS.filter((op) => op.chunkId === chunkId);
+}
+
+export function getAllChunks(): Chunk[] {
+  return CANONICAL_CHUNKS;
+}
+
+export function getLogicalOperations(): LogicalOperation[] {
+  return LOGICAL_OPERATIONS;
+}

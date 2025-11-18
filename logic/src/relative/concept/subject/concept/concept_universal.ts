@@ -1,11 +1,26 @@
-import type { Chunk, LogicalOperation } from '../essence'
+import type { Chunk, LogicalOperation } from '../syllogism/index';
 
-/*
-  Doctrine of the Concept — A. THE UNIVERSAL CONCEPT
-  Two-fold representation:
-  - text: verbatim source segmented into readable chunks (preserve lines)
-  - summary: short IR summary to support HLO extraction (non-destructive)
-*/
+/**
+ * THE UNIVERSAL CONCEPT — Complete Structure
+ * 
+ * NOTE: The pure concept is the absolutely infinite, unconditioned and free.
+ * This is the moment of "being" in the concept—simpler than reflection/existence
+ * determinations, yet foundational for the entire concept structure.
+ * 
+ * Structure:
+ * - Genesis and absoluteness
+ * - Universality as negation of negation
+ * - Contrast with Being
+ * - Abstract universal and externality
+ * - Persistence in determination
+ * - Essence and creative principle
+ * - Free power/love
+ * - Determinateness and totality
+ * - Total reflection (outward/inward)
+ * - Higher universal and concretes
+ * - Creative self-differentiation
+ * - Finite as universality
+ */
 
 export const CANONICAL_CHUNKS: Chunk[] = [
   {
@@ -39,7 +54,6 @@ and this pure immanent reflection simply is
 the becoming-other or determinateness
 which is, consequently, no less
 infinite, self-referring determinateness.`,
-    summary: 'Pure concept = absolutely infinite, unconditioned. Genesis: being → essence → concept via self-repulsion; positedness/positing sublate to original being. Concept = mutual penetration of positing and immanent turning-back; pure reflection as infinite, self-referring determinateness.'
   },
   {
     id: 'con-univ-2-universality-negation-of-negation',
@@ -60,7 +74,6 @@ the universal to be a simple that,
 by virtue of absolute negativity,
 contains difference and determinateness
 in itself in the highest degree.`,
-    summary: 'Concept = absolute self-identity as negation of negation. Universality = pure self-reference through negativity; simplest yet contains maximal difference via absolute negativity.'
   },
   {
     id: 'con-univ-3-contrast-with-being-richness',
@@ -374,7 +387,6 @@ export const LOGICAL_OPERATIONS: LogicalOperation[] = [
     id: 'con-univ-op-1-define-pure-concept',
     chunkId: 'con-univ-1-genesis-and-absoluteness',
     label: 'Define pure concept: absolutely infinite, unconditioned; genesis via self-repulsion',
-    digest: 'Concept from being→essence via self-repulsion; positing/positedness sublate to original being; mutual penetration of positing and immanent turning-back; infinite self-referring determinateness.',
     clauses: [
       'tag(Concept,"absolutely-infinite")',
       'tag(Concept,"unconditioned")',
@@ -393,7 +405,6 @@ export const LOGICAL_OPERATIONS: LogicalOperation[] = [
     id: 'con-univ-op-2-universality-negation-of-negation',
     chunkId: 'con-univ-2-universality-negation-of-negation',
     label: 'Universality as pure self-reference (negation of negation)',
-    digest: 'Concept\'s self-identity = negation of negation; universality = self-reference via negativity that contains difference.',
     clauses: [
       'assert(selfIdentity(Concept) == negationOfNegation)',
       'assert(universality(Concept) == selfReference(via:"negativity"))',
@@ -408,7 +419,6 @@ export const LOGICAL_OPERATIONS: LogicalOperation[] = [
     id: 'con-univ-op-3-being-vs-universal',
     chunkId: 'con-univ-3-contrast-with-being-richness',
     label: 'Contrast Being and Universal; identity as absolute mediation',
-    digest: 'Being: immediate, vanishes into non-being → becoming. Universal: simple yet rich; identity as absolute mediation (not mediated).',
     clauses: [
       'annotate(Being,{mode:"immediate", fate:"vanish-into-opposite", truth:"Becoming"})',
       'annotate(Universal,{simple:true, rich:true})',
@@ -424,7 +434,6 @@ export const LOGICAL_OPERATIONS: LogicalOperation[] = [
     id: 'con-univ-op-4-abstract-universal-double-negation',
     chunkId: 'con-univ-4-abstract-universal-and-externality',
     label: 'Abstract universal via leaving-aside; double negation present; no externality yet',
-    digest: 'Abstract universal obtained by abstraction (leaving-aside = further negating). Double negation present but misrepresented as external; universal has not yet externality; remains absolute negativity.',
     clauses: [
       'assert(obtains(AbstractUniversal) == by(leavingAside(ConcreteDeterminations)))',
       'tag(LeavingAside,"further-negating")',
@@ -443,7 +452,6 @@ export const LOGICAL_OPERATIONS: LogicalOperation[] = [
     id: 'con-univ-op-5-persistence-in-determination',
     chunkId: 'con-univ-5-preserves-in-determination',
     label: 'Universal maintains positive self-identity within determination',
-    digest: 'Unlike qualitative being, universal persists as soul of the concrete; determination is not restriction.',
     clauses: [
       'assert(persists(UniverseUniversal,in:Determination) == true)',
       'tag(Universal,"soul-of-concrete")',
@@ -458,7 +466,6 @@ export const LOGICAL_OPERATIONS: LogicalOperation[] = [
     id: 'con-univ-op-6-essence-creative-principle',
     chunkId: 'con-univ-6-essence-creative-principle',
     label: 'Universal as essence and creative mediation (not mere reflective shine)',
-    digest: 'Determination as positedness (negative of negative); universal is substance of its determinations; concept is informing/creative principle.',
     clauses: [
       'assert(determinationAs(Positedness) && is(Universal,"negative-of-negative"))',
       'assert(substanceOf(Universal, Determinations))',
@@ -474,7 +481,6 @@ export const LOGICAL_OPERATIONS: LogicalOperation[] = [
     id: 'con-univ-op-7-free-power-love',
     chunkId: 'con-univ-7-free-power-love',
     label: 'Free power/love: rest in its other as in its own',
-    digest: 'Universal embraces other without violence; relates to distinct as to itself; return-to-self in other.',
     clauses: [
       'tag(Universal,"free-power")',
       'tag(Universal,"free-love")',
@@ -489,7 +495,6 @@ export const LOGICAL_OPERATIONS: LogicalOperation[] = [
     id: 'con-univ-op-8-totality-vs-abstract',
     chunkId: 'con-univ-8-determinateness-totality-abstract',
     label: 'Universal contains P and S; totality of concept vs abstract universal',
-    digest: 'Universal contains determinateness inherently (P and S) via absolute negativity; concrete content vs isolated abstract universal.',
     clauses: [
       'assert(contains(Universal, Particular) && contains(Universal, Singular))',
       'tag(Universal,"totality-of-concept")',
@@ -506,7 +511,6 @@ export const LOGICAL_OPERATIONS: LogicalOperation[] = [
     id: 'con-univ-op-9-double-reflection-genus-character',
     chunkId: 'con-univ-9-total-reflection-inward-outward',
     label: 'Double reflection (outward/inward); genus as immanent character; freedom of determinate concept',
-    digest: 'Determinateness = outward distinction + inward self-reference; as inward it is the genus-character equal in extension to universality; determinate concept remains infinitely free.',
     clauses: [
       'assert(determinateness(Universal).reflection == { outward:true, inward:true })',
       'tag(Determinateness,"genus-immanent-character")',
@@ -523,7 +527,6 @@ export const LOGICAL_OPERATIONS: LogicalOperation[] = [
     id: 'con-univ-op-10-higher-universal-inwarded',
     chunkId: 'con-univ-10-higher-universal-and-concretes',
     label: 'Truly higher universal = outward turned inward (second negation); concretes → idea of infinite spirit',
-    digest: 'Higher universal is inwarded externality (reflective shine as positedness). Life/I/Spirit/AbsoluteConcept are concretes; resolution → idea of infinite spirit.',
     clauses: [
       'assert(trulyHigherUniversal == inwardTurn(OutwardSide))',
       'tag(Determinateness,"positedness/reflective-shine")',
@@ -539,7 +542,6 @@ export const LOGICAL_OPERATIONS: LogicalOperation[] = [
     id: 'con-univ-op-11-creative-self-differentiation',
     chunkId: 'con-univ-11-true-infinite-universal-creative-differentiation',
     label: 'Creative self-differentiation; posit universal differences',
-    digest: 'True infinite universal freely particularizes as creative absolute negativity; posits internal differences that are themselves universals.',
     clauses: [
       'tag(Universal,"creative-power")',
       'assert(selfReferringAbsoluteNegativity(Universal) == true)',
@@ -555,7 +557,6 @@ export const LOGICAL_OPERATIONS: LogicalOperation[] = [
     id: 'con-univ-op-12-finite-as-universality',
     chunkId: 'con-univ-12-finite-as-universal-form-creativity-of-concept',
     label: 'Finite being-for-itself = universality as form; inner creativity of the concept',
-    digest: 'Finite thinghood/substance is, in truth, universality—the form with which the infinite concept clothes its differences; this is the concept\'s inner creativity.',
     clauses: [
       'assert(equalsTruth(FiniteBeingForItself, Universality))',
       'assert(forms(InfiniteConcept, Differences) == Universality)',
@@ -565,5 +566,16 @@ export const LOGICAL_OPERATIONS: LogicalOperation[] = [
     relations: [
       { predicate: 'clothesWith', from: 'InfiniteConcept', to: 'Differences~Universality' }
     ]
-  }
-]
+  },
+];
+
+/* accessors */
+export function getChunk(oneBasedIndex: number): Chunk | null {
+  return CANONICAL_CHUNKS[oneBasedIndex - 1] ?? null;
+}
+
+export function getLogicalOpsForChunk(oneBasedIndex: number) {
+  const chunk = getChunk(oneBasedIndex);
+  if (!chunk) return [];
+  return LOGICAL_OPERATIONS.filter((op) => op.chunkId === chunk.id);
+}

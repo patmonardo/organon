@@ -1,11 +1,26 @@
-import type { Chunk, LogicalOperation } from '../essence'
+import type { Chunk, LogicalOperation } from '../syllogism/index';
 
-/*
-  Doctrine of the Concept — B. THE PARTICULAR CONCEPT (Part 1 of 3)
-  Two-fold representation:
-  - text: verbatim source segmented into readable chunks (preserve lines)
-  - summary: short IR summary to support HLO extraction (non-destructive)
-*/
+/**
+ * THE PARTICULAR CONCEPT — Complete Structure
+ * 
+ * NOTE: Particularity is the determinateness of the concept—the universal's own
+ * immanent moment. This is the moment of "being" in the concept, simpler than
+ * reflection/existence determinations, yet essential for the concept's self-determination.
+ * 
+ * Structure:
+ * - Immanent determinateness
+ * - Universality as substance and totality
+ * - Contingent completeness
+ * - Intrinsic totality and principle
+ * - Universal self-determination
+ * - True logical division
+ * - Difference in its truth
+ * - Completeness and nature
+ * - Mediated immediacy (form/content)
+ * - Determinate universality and abstract universal
+ * - Understanding and abstraction limits
+ * - Empty vs principled concepts
+ */
 
 export const CANONICAL_CHUNKS: Chunk[] = [
   {
@@ -357,7 +372,6 @@ export const LOGICAL_OPERATIONS: LogicalOperation[] = [
     id: 'con-part-op-1-define-particularity',
     chunkId: 'con-part-1-immanent-determinateness',
     label: 'Define particularity as immanent determinateness (not external limit)',
-    digest: 'Particularity is the concept’s determinateness—universal’s immanent moment; universal is with itself in it.',
     clauses: [
       'assert(Particularity == determinateness(Of:Concept))',
       'assert(immanentTo(Particularity, Universal) == true)',
@@ -370,7 +384,6 @@ export const LOGICAL_OPERATIONS: LogicalOperation[] = [
     id: 'con-part-op-2-diversity-as-totality',
     chunkId: 'con-part-2-universality-as-substance-totality',
     label: 'Diversity of particulars as universal totality; sphere to exhaust',
-    digest: 'Particulars share the same universality; their diversity is universal totality; each exhibits the universal and must exhaust its sphere.',
     clauses: [
       'assert(sharedUniversality(Particulars) == Universal)',
       'tag(Diversity,"universal-totality")',
@@ -386,7 +399,6 @@ export const LOGICAL_OPERATIONS: LogicalOperation[] = [
     id: 'con-part-op-3-contingent-completeness',
     chunkId: 'con-part-3-contingent-completeness',
     label: 'Completeness without inner principle; universality as external reflex',
-    digest: 'Counting species gives contingent completeness; no inner standard; universality functions merely as external reflex.',
     clauses: [
       'tag(Completeness,"contingent")',
       'assert(noInnerStandard(SpeciesListing) == true)',
@@ -399,7 +411,6 @@ export const LOGICAL_OPERATIONS: LogicalOperation[] = [
     id: 'con-part-op-4-intrinsic-totality',
     chunkId: 'con-part-4-particularity-as-immanent-connection',
     label: 'Particularity as intrinsic totality and essential principle',
-    digest: 'Particularity (as universality) is immanent connection in-and-for-itself; simple determinateness; only universal-posited determinateness.',
     clauses: [
       'assert(intrinsicTotality(Particularity) == true)',
       'tag(Particularity,"essential-principle")',
@@ -414,7 +425,7 @@ export const LOGICAL_OPERATIONS: LogicalOperation[] = [
     id: 'con-part-op-5-universal-self-determines',
     chunkId: 'con-part-5-self-determination-of-universal',
     label: 'Universal self-determines as particular; species schema (U, P)',
-    digest: 'Universal differentiates only from itself; becomes particular. Species: (a) universal itself, (b) particular. Universal overreaches its opposite and remains with itself.',
+ 'Universal differentiates only from itself; becomes particular. Species: (a) universal itself, (b) particular. Universal overreaches its opposite and remains with itself.',
     clauses: [
       'assert(selfDetermines(Universal, as: Particular))',
       'assert(speciesOf(Universal) == ["Universal-itself","Particular"])',
@@ -430,7 +441,7 @@ export const LOGICAL_OPERATIONS: LogicalOperation[] = [
     id: 'con-part-op-6-true-division',
     chunkId: 'con-part-6-true-logical-division',
     label: 'True logical division: two coordinated particulars; one simple negativity',
-    digest: 'Concept sets itself as indeterminate U → P; both sides are particulars (coordinated, subordinated to U). Their opposition is one determinateness: simple negativity.',
+ 'Concept sets itself as indeterminate U → P; both sides are particulars (coordinated, subordinated to U). Their opposition is one determinateness: simple negativity.',
     clauses: [
       'assert(divides(Concept) == { universal:"indeterminate", particular:true })',
       'tag(BothSides,"particular-and-coordinated")',
@@ -446,7 +457,7 @@ export const LOGICAL_OPERATIONS: LogicalOperation[] = [
     id: 'con-part-op-7-difference-in-truth',
     chunkId: 'con-part-7-difference-in-concept',
     label: 'Difference as concept-unity; cause/effect as one simple concept',
-    digest: 'Difference in being=limit, in reflection=relative; in concept=unity. Whole–part, cause–effect etc. are one determinate/simple concept when unified.',
+ 'Difference in being=limit, in reflection=relative; in concept=unity. Whole–part, cause–effect etc. are one determinate/simple concept when unified.',
     clauses: [
       'annotate(Difference,{inBeing:"limit-of-other", inReflection:"relative-referring", inConcept:"unity"})',
       'assert(unifiesAsOneConcept(["whole~part","substance~accident","cause~effect"]))',
@@ -461,7 +472,7 @@ export const LOGICAL_OPERATIONS: LogicalOperation[] = [
     id: 'con-part-op-8-nature-and-absolute-power',
     chunkId: 'con-part-8-completeness-and-nature',
     label: 'Completeness via U–P; nature’s impotence; concept’s freedom of differences',
-    digest: 'Particularity complete in U–P. Nature’s manifold species = self-externality and arbitrariness. Concept as absolute power lets differences go free (external necessity, accidentality, opinion) as abstract nothingness-side.',
+ 'Particularity complete in U–P. Nature’s manifold species = self-externality and arbitrariness. Concept as absolute power lets differences go free (external necessity, accidentality, opinion) as abstract nothingness-side.',
     clauses: [
       'assert(complete(Particularity) == difference(Universal, Particular))',
       'tag(Nature,"self-externality; impotent-for-rigor")',
@@ -478,7 +489,7 @@ export const LOGICAL_OPERATIONS: LogicalOperation[] = [
     id: 'con-part-op-9-mediated-immediacy-form-content',
     chunkId: 'con-part-9-abstract-universality-form-content',
     label: 'Determinate concept as mediated immediacy; universality=form, determinateness=content',
-    digest: 'Determinate existence equals itself via absolute mediation; universality clothes it as form; determinateness is its content (abstract universality).',
+ 'Determinate existence equals itself via absolute mediation; universality clothes it as form; determinateness is its content (abstract universality).',
     clauses: [
       'tag(Determinateness,"simple-principle-and-moment-of-totality")',
       'assert(determining(Concept) -> determinateExistence)',
@@ -496,7 +507,7 @@ export const LOGICAL_OPERATIONS: LogicalOperation[] = [
     id: 'con-part-op-10-unconceptualized-concept',
     chunkId: 'con-part-10-determinate-universality-and-abc',
     label: 'Abstract universal = U + determinateness + immediate unity; mediation not posited',
-    digest: 'Particularity is determinate universality. Abstract universal holds U, D, their immediate unity; mediation is only conditional → unconceptualized concept.',
+ 'Particularity is determinate universality. Abstract universal holds U, D, their immediate unity; mediation is only conditional → unconceptualized concept.',
     clauses: [
       'tag(Particularity,"determinate-universality")',
       'assert(abstractUniversal.moments == ["Universality","Determinateness","ImmediateUnity"])',
@@ -512,7 +523,7 @@ export const LOGICAL_OPERATIONS: LogicalOperation[] = [
     id: 'con-part-op-11-understanding-limits-and-substance',
     chunkId: 'con-part-11-understanding-and-abstraction-limits',
     label: 'Understanding’s range; absolute substance still abstract; abstraction has content',
-    digest: 'Understanding’s demonstrations (by determinations) reach only finitude/necessity/negative-infinite. Absolute substance lacks concept-form; abstraction isn’t empty—naming indeterminateness makes it determinate.',
+ 'Understanding’s demonstrations (by determinations) reach only finitude/necessity/negative-infinite. Absolute substance lacks concept-form; abstraction isn’t empty—naming indeterminateness makes it determinate.',
     clauses: [
       'tag(Understanding,"faculty-of-abstract-universal")',
       'annotate(Demonstration,{via:"concept-determinations", bounds:["finitude","necessity","negative-infinite"]})',
@@ -529,7 +540,6 @@ export const LOGICAL_OPERATIONS: LogicalOperation[] = [
     id: 'con-part-op-12-principle-of-differentiation',
     chunkId: 'con-part-12-empty-vs-principled-concepts',
     label: 'Empty determinate concepts vs principled differentiation; absolute determinateness as true content',
-    digest: 'A determinate concept lacking totality or a principle of differentiation is empty; true content is absolute determinateness (the concept’s own difference).',
     clauses: [
       'assert(empty(DeterminateConcept) == (lacks("totality") || lacks("principle-of-differentiation")))',
       'annotate(Examples,{concrete:["humankind","state","animal"], stillEmptyIf:"no-principle"})',

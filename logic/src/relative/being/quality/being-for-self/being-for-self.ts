@@ -1,6 +1,173 @@
-import type { Chunk, LogicalOperation } from './index'
+import type { Chunk, LogicalOperation } from './index';
+
+/*
+  Being-for-Itself — CHAPTER 3: QUALITATIVE BEING COMPLETED
+
+  This module covers Being-for-Itself as Such (Section A), including:
+  - Introduction: Qualitative being brought to completion; infinite being
+  - The general concept: being-for-itself sublates otherness, infinite turning back
+  - Consciousness and self-consciousness as examples
+  - a) Existence and being-for-itself: infinity sunk into simple being
+  - b) Being-for-one: ideality without external One; I/Spirit/God as examples
+  - c) The one: abstract limit; moments apart yet inseparable (contradiction)
+
+  PHILOSOPHICAL NOTES:
+
+  1. **Return to Being**:
+     Being-for-itself is the completion of qualitative being—infinite being.
+     The being of the beginning is void of determination; existence is sublated
+     but only immediately sublated being. In being-for-itself, the distinction
+     between being and determinateness (negation) is posited and equalized:
+     absolutely determinate being.
+
+  2. **The General Concept**:
+     Being-for-itself sublates otherness, rejects connection with other by
+     abstracting from them. The other is in it only as something sublated,
+     as its moment. It consists in transcending limitation, its otherness;
+     it is the infinite turning back into itself.
+
+  3. **Consciousness as Example**:
+     In representing an intended object, consciousness already contains
+     being-for-itself—it has the content as idealization. Even as it intuits
+     the other, it abides with itself. Self-consciousness is being-for-itself
+     brought to completion—the nearest example of infinity.
+
+  4. **Infinity Sunk into Simple Being**:
+     Being-for-itself is infinity that has sunk into simple being. The negative
+     nature of infinity (negation of negation) appears only as negation in general,
+     as infinite qualitative determinateness. Existence is a moment of being-for-itself,
+     bent back into the infinite unity as being-for-one.
+
+  5. **Ideality**:
+     Being-for-one expresses how the finite is in its unity with the infinite
+     or as an idealization. There is no external One—only one ideality. I, Spirit,
+     God are idealizations because they are infinite; as for-themselves, they are
+     not different from for-one. If different, they would regress to immediacy.
+
+  6. **The One**:
+     The One is being-for-itself as simple self-reference of sublating—an existent-for-itself
+     whose immediacy makes it the abstract limit of itself. Its moments appear apart
+     (negation, two negations, sameness, absolute opposition, identity, negative-yet-self-reference)
+     yet are inseparable; each bears its opposite—this contradiction is the difficulty.
+*/
+
+// ============================================================================
+// A. BEING-FOR-ITSELF AS SUCH
+// ============================================================================
 
 export const CANONICAL_CHUNKS: Chunk[] = [
+  {
+    id: 'bfs-intro-qualitative-being-completed',
+    title: 'Introduction: Qualitative being brought to completion; infinite being',
+    text: `CHAPTER 3
+
+Being-for-itself
+
+In being-for-itself,
+qualitative being is brought to completion;
+it is infinite being;
+the being of the beginning is void of determination;
+existence is sublated but only immediately sublated being;
+it thus contains, to begin with,
+only the first negation, itself immediate;
+being is of course retained as well,
+and the two are united in existence in simple unity;
+for this reason, however,
+each is in itself still unlike the other,
+and their unity is still not posited.
+Existence is therefore the sphere of differentiation,
+of dualism, the domain of finitude.
+Determinateness is determinateness as such;
+being which is relatively, not absolutely, determined.
+In being-for-itself, the distinction
+between being and determinateness,
+or negation, is posited and equalized.
+Quality, otherness, limit, as well as reality,
+in-itselfness, ought, and so forth, are the
+incomplete configurations of negation in being
+which are still based on the differentiation of the two.
+But since in finitude negation has passed over into infinity,
+in the posited negation of negation,
+negation is simple self-reference
+and in it, therefore, the equalization with being:
+absolutely determinate being.
+
+First, being-for-itself is immediately
+an existent-for-itself, the one.
+
+Second, the one passes over
+into a multiplicity of ones,
+repulsion or the otherness of the one
+which sublates itself into its ideality, attraction.
+
+Third, we have the alternating
+determination of repulsion and attraction
+in which the two sink into a state of equilibrium;
+and quality, driven to a head in being-for-itself,
+passes over into quantity.`,
+    summary:
+      'Being-for-itself completes qualitative being as infinite being. The distinction between being and determinateness is posited and equalized: absolutely determinate being. Three stages: one → many ones (repulsion) → attraction → equilibrium → quantity.'
+  },
+  {
+    id: 'bfs-concept-general-concept',
+    title: 'A. Being-for-itself as such: The general concept',
+    text: `A. BEING-FOR-ITSELF AS SUCH
+
+The general concept of being-for-itself has come to light.
+The justification for using the expression "being-for-itself"
+for that concept would depend on showing that the representation
+associated with the expression corresponds to the concept.
+So indeed it appears to do.
+We say that something is for itself
+inasmuch as it sublates otherness,
+sublates its connection and community with other,
+has rejected them by abstracting from them.
+The other is in it only as something sublated, as its moment;
+being-for-itself consists in
+having thus transcended limitation, its otherness;
+it consists in being, as this negation,
+the infinite turning back into itself.
+In representing to itself an intended object
+which it feels, or intuits, and so forth,
+consciousness already contains in itself as consciousness
+the determination of being-for-itself;
+that is, it has in it the content of that object,
+which is thus an idealization;
+even as it intuits, or in general becomes
+involved in the negative of itself, in the other,
+it abides with itself.
+Being-for-itself is the polemical,
+negative relating to the limiting other
+and, through this negation of the other,
+is being-reflected-within-itself;
+even though, side by side with this
+immanent turning back of consciousness
+and the ideality of its object,
+the reality of this object is also retained,
+for the object is at the same time
+known as an external existence.
+Consciousness is thus phenomenal,
+or it is this dualism:
+on the one side, it knows an external object
+which is other than it;
+on the other side, it is for-itself,
+has this intended object in it as idealized,
+abides not only by this other
+but therein abides also with itself.
+Self-consciousness, on the contrary, is
+being-for-itself brought to completion and posited;
+the side of reference to another,
+to an external object, is removed.
+Self-consciousness is thus the nearest
+example of the presence of infinity;
+granted, of a still abstract infinity,
+but one which is of a totally different,
+concrete determination than the
+being-for-itself in general,
+whose infinity still has only qualitative determinateness.`,
+    summary:
+      'Being-for-itself sublates otherness, transcends limitation—the infinite turning back into itself. Consciousness exemplifies this: it has the object as idealization while abiding with itself. Self-consciousness is being-for-itself completed—the nearest example of infinity.'
+  },
   {
     id: 'bfs-a-existence-and-being-for-itself',
     title: 'a) Existence and being-for-itself',
@@ -142,6 +309,44 @@ that goes with the abstract nature of the moments.`,
 
 export const LOGICAL_OPERATIONS: LogicalOperation[] = [
   {
+    id: 'bfs-op-intro-qualitative-completed',
+    chunkId: 'bfs-intro-qualitative-being-completed',
+    label: 'Being-for-itself completes qualitative being as infinite being; absolutely determinate being',
+    clauses: [
+      'assert(completes(QualitativeBeing,BeingForItself))',
+      'assert(is(BeingForItself,"infinite-being"))',
+      'assert(is(BeginningBeing,"void-of-determination"))',
+      'assert(is(Existence,"sublated-immediately-sublated-being"))',
+      'assert(contains(Existence,"first-negation-immediate"))',
+      'assert(is(Existence,"sphere-of-differentiation-dualism-finitude"))',
+      'assert(equalized(Being,Determinateness))',
+      'assert(is(Negation,"simple-self-reference"))',
+      'assert(is(Result,"absolutely-determinate-being"))',
+      'assert(stages(["one","many-ones-repulsion","attraction","equilibrium","quantity"]))'
+    ],
+    predicates: [{ name: 'BFS_Intro_QualitativeCompleted', args: [] }],
+    relations: []
+  },
+  {
+    id: 'bfs-op-concept-sublates-otherness',
+    chunkId: 'bfs-concept-general-concept',
+    label: 'Being-for-itself sublates otherness; infinite turning back; consciousness/self-consciousness as examples',
+    clauses: [
+      'assert(sublates(BeingForItself,Otherness))',
+      'assert(rejectsConnectionWithOther(true))',
+      'assert(transcendsLimitation(BeingForItself,true))',
+      'assert(is(BeingForItself,"infinite-turning-back-into-itself"))',
+      'assert(contains(Consciousness,"being-for-itself-determination"))',
+      'assert(hasContentAsIdealization(Consciousness,true))',
+      'assert(abidesWithItself(Consciousness,true))',
+      'assert(is(Consciousness,"phenomenal-dualism"))',
+      'assert(is(SelfConsciousness,"being-for-itself-completed"))',
+      'assert(is(SelfConsciousness,"nearest-example-of-infinity"))'
+    ],
+    predicates: [{ name: 'BFS_Concept_SublatesOtherness', args: [] }],
+    relations: []
+  },
+  {
     id: 'bfs-op-a1-def-being-for-itself',
     chunkId: 'bfs-a-existence-and-being-for-itself',
     label: 'Definition: being-for-itself = infinity sunk into simple being; existence = infinite qualitative determinateness',
@@ -267,4 +472,25 @@ export const LOGICAL_OPERATIONS: LogicalOperation[] = [
     predicates: [{ name: 'BFS_One_Moments_Contradiction', args: [] }],
     relations: []
   }
-]
+];
+
+// Accessors
+export function getChunk(oneBasedIndex: number): Chunk | null {
+  return CANONICAL_CHUNKS[oneBasedIndex - 1] ?? null;
+}
+
+export function getChunkById(id: string): Chunk | null {
+  return CANONICAL_CHUNKS.find((c) => c.id === id) ?? null;
+}
+
+export function getLogicalOpsForChunkId(chunkId: string): LogicalOperation[] {
+  return LOGICAL_OPERATIONS.filter((op) => op.chunkId === chunkId);
+}
+
+export function getAllChunks(): Chunk[] {
+  return CANONICAL_CHUNKS;
+}
+
+export function getLogicalOperations(): LogicalOperation[] {
+  return LOGICAL_OPERATIONS;
+}

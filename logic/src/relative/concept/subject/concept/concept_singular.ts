@@ -1,11 +1,28 @@
-import type { Chunk, LogicalOperation } from '../essence'
+import type { Chunk, LogicalOperation } from '../syllogism/index';
 
-/*
-  Doctrine of the Concept — C. THE SINGULAR (Part 1)
-  Two-fold representation:
-  - text: verbatim source segmented into readable chunks (preserve lines)
-  - summary: short IR summary to support HLO extraction (non-destructive)
-*/
+/**
+ * THE SINGULAR CONCEPT — Complete Structure
+ * 
+ * NOTE: Singularity is already posited through particularity—it is determinate
+ * universality and hence self-referring determinateness. This is the moment of
+ * "being" in the concept, simpler than reflection/existence determinations,
+ * yet the culmination where the concept externalizes into actuality.
+ * 
+ * Structure:
+ * - Singularity from particularity
+ * - Self-mediation and false abstraction
+ * - Universal and particular as total concept
+ * - Abstraction produces singulars
+ * - Particular equals singular
+ * - Particularity as totality and middle term
+ * - Dissolution of distinctions
+ * - Negation of negation and totality
+ * - Externalization into actuality
+ * - "This" as exclusivity and commonality
+ * - "This" vs singular mediation
+ * - Posited differences and essential relation
+ * - Judgment emergence
+ */
 
 export const CANONICAL_CHUNKS: Chunk[] = [
   {
@@ -350,7 +367,7 @@ export const LOGICAL_OPERATIONS: LogicalOperation[] = [
     id: 'con-sing-op-1-from-particularity',
     chunkId: 'con-sing-1-from-particularity',
     label: 'Singularity posited through particularity',
-    digest: 'Particularity as determinate universality yields self-referring determinateness: singularity.',
+ 'Particularity as determinate universality yields self-referring determinateness: singularity.',
     clauses: [
       'assert(positedThrough(Singularity, Particularity))',
       'tag(Particularity,"determinate-universality→self-referring-determinateness")'
@@ -362,7 +379,7 @@ export const LOGICAL_OPERATIONS: LogicalOperation[] = [
     id: 'con-sing-op-2-self-mediation',
     chunkId: 'con-sing-2-self-mediation-and-false-abstraction',
     label: 'Self-mediation; inward/outward shine; abstraction vs singularity',
-    digest: 'S = self-mediation (negation of negation). Inward: P stays U; outward: determinate P. Abstraction climbs to empty genera; true S is depth where concept posits itself.',
+ 'S = self-mediation (negation of negation). Inward: P stays U; outward: determinate P. Abstraction climbs to empty genera; true S is depth where concept posits itself.',
     clauses: [
       'tag(Singularity,"self-mediation/absolute-negativity")',
       'annotate(ReflectiveShine,{inward:true, outward:true})',
@@ -378,7 +395,7 @@ export const LOGICAL_OPERATIONS: LogicalOperation[] = [
     id: 'con-sing-op-3-u-p-total-concept',
     chunkId: 'con-sing-3-universal-particular-total-concept',
     label: 'U and P as total concept; abstraction void of concept',
-    digest: 'U and P are total concept and in S are what they are in-and-for-themselves. Abstraction excludes S → lifeless universals (void of concept).',
+ 'U and P are total concept and in S are what they are in-and-for-themselves. Abstraction excludes S → lifeless universals (void of concept).',
     clauses: [
       'assert(totalConcept(["Universal","Particular"]))',
       'tag(Abstraction,"excludes-singularity→void-of-concept")'
@@ -392,7 +409,7 @@ export const LOGICAL_OPERATIONS: LogicalOperation[] = [
     id: 'con-sing-op-4-abstraction-produces-singulars',
     chunkId: 'con-sing-4-abstraction-produces-singulars',
     label: 'Abstraction isolates; its products are singular yet concrete',
-    digest: 'Abstraction partitions and picks singular moments; product = unity of singular content and abstract universality (concrete).',
+ 'Abstraction partitions and picks singular moments; product = unity of singular content and abstract universality (concrete).',
     clauses: [
       'assert(partitions(Abstraction, Concrete) && isolates(Abstraction, Determinations))',
       'tag(Products,"singular-and-concrete")'
@@ -406,7 +423,7 @@ export const LOGICAL_OPERATIONS: LogicalOperation[] = [
     id: 'con-sing-op-5-p-is-s',
     chunkId: 'con-sing-5-particular-equals-singular',
     label: 'Particular = singular as determinate universal; three determinations counted',
-    digest: 'P is S (both determinate universals). Counting gives U, P, S as particular determinations.',
+ 'P is S (both determinate universals). Counting gives U, P, S as particular determinations.',
     clauses: [
       'assert(equivalent(Particular, Singularity, inSense:"determinate-universal"))',
       'assert(countedDeterminations(Concept) == ["U","P","S"])'
@@ -418,7 +435,7 @@ export const LOGICAL_OPERATIONS: LogicalOperation[] = [
     id: 'con-sing-op-6-particularity-totality-middle',
     chunkId: 'con-sing-6-particularity-as-totality-middle-term',
     label: 'Particularity as embracing totality and middle term',
-    digest: 'With S listed, particularity = concretion/totality; as determinate universality it is immediate unity → middle term of formal syllogism.',
+ 'With S listed, particularity = concretion/totality; as determinate universality it is immediate unity → middle term of formal syllogism.',
     clauses: [
       'tag(Particularity,"embracing-totality/concretion")',
       'assert(actsAsMiddleTerm(Particularity, in:"formal-syllogism"))'
@@ -432,7 +449,7 @@ export const LOGICAL_OPERATIONS: LogicalOperation[] = [
     id: 'con-sing-op-7-no-quantitative-counting',
     chunkId: 'con-sing-7-dissolution-of-distinctions',
     label: 'Determinational dissolution; counting is inappropriate',
-    digest: 'Determinations dissolve into each other; only representation isolates and counts; quantitative distinction is out of place.',
+ 'Determinations dissolve into each other; only representation isolates and counts; quantitative distinction is out of place.',
     clauses: [
       'assert(dissolvesIntoEachOther(["U","P","S"]))',
       'tag(Counting,"inappropriate-here")'
@@ -446,7 +463,7 @@ export const LOGICAL_OPERATIONS: LogicalOperation[] = [
     id: 'con-sing-op-8-each-is-totality',
     chunkId: 'con-sing-8-negation-of-negation-totality',
     label: 'Negation of negation: each determination is the whole concept',
-    digest: 'S grounds opposition in unity; positedness = being-in-and-for-itself; each distinct determination is the totality—determinateness = whole concept.',
+ 'S grounds opposition in unity; positedness = being-in-and-for-itself; each distinct determination is the totality—determinateness = whole concept.',
     clauses: [
       'tag(Singularity,"negation-of-negation")',
       'assert(eachDeterminationIsTotality(["U","P","S"]))',
@@ -461,7 +478,7 @@ export const LOGICAL_OPERATIONS: LogicalOperation[] = [
     id: 'con-sing-op-9-actuality-posited-abstraction',
     chunkId: 'con-sing-9-externalization-actuality',
     label: 'Singularity externalizes concept to actuality; fixes difference as determinate determinateness',
-    digest: 'Immanent abstraction in U and P concretizes them as content (a singular); singularity as posited abstraction fixes difference and determines the particular.',
+ 'Immanent abstraction in U and P concretizes them as content (a singular); singularity as posited abstraction fixes difference and determines the particular.',
     clauses: [
       'assert(stepsIntoActuality(Concept, via: Singularity))',
       'assert(immanent(Abstraction, in:["Universal","Particular"]))',
@@ -478,7 +495,7 @@ export const LOGICAL_OPERATIONS: LogicalOperation[] = [
     id: 'con-sing-op-10-exclusivity-and-commonality',
     chunkId: 'con-sing-10-this-exclusion-commonality',
     label: 'Singular as qualitative this: exclusivity; universal-as-commonality is lowest view',
-    digest: 'Singular is qualitative this: repulsion presupposes many; negatively relates to others (exclusive). Universal viewed as mere commonality of indifferent singulars mixes immediacy of being into concept.',
+ 'Singular is qualitative this: repulsion presupposes many; negatively relates to others (exclusive). Universal viewed as mere commonality of indifferent singulars mixes immediacy of being into concept.',
     clauses: [
       'tag(Singular,"qualitative-this")',
       'assert(repulsionFromSelf(Singular) && presupposesMany(Singular))',
@@ -494,7 +511,7 @@ export const LOGICAL_OPERATIONS: LogicalOperation[] = [
     id: 'con-sing-op-11-this-vs-singular-mediation',
     chunkId: 'con-sing-11-this-vs-singular-mediation',
     label: '“This” needs external pointing; singular internalizes mediation',
-    digest: '“This” = posited immediacy via external pointing (reflective mediation). Singular is immediate-as-mediated within itself: self-separating abstraction that is positive connection.',
+ '“This” = posited immediacy via external pointing (reflective mediation). Singular is immediate-as-mediated within itself: self-separating abstraction that is positive connection.',
     clauses: [
       'assert(positedImmediacy(This) && pointedAtBy(This, "external"))',
       'annotate(ReflectiveMovement,{role:"points-and-posits-immediacy"})',
@@ -511,7 +528,7 @@ export const LOGICAL_OPERATIONS: LogicalOperation[] = [
     id: 'con-sing-op-12-posits-essential-differences',
     chunkId: 'con-sing-12-posited-differences-essential-relation',
     label: 'Singularity posits self-subsisting differences; essential relation; excludes-yet-refers to U',
-    digest: 'Act of abstraction (singularity) first posits differences as self-subsisting in essential relation (not mere plurality of being); excludes universal yet essentially refers to it.',
+ 'Act of abstraction (singularity) first posits differences as self-subsisting in essential relation (not mere plurality of being); excludes universal yet essentially refers to it.',
     clauses: [
       'assert(positsSelfSubsistingDifferences(Singularity))',
       'assert(essentialRelation(Differences) == true)',
@@ -530,7 +547,7 @@ export const LOGICAL_OPERATIONS: LogicalOperation[] = [
     id: 'con-sing-op-13-judgment-origin',
     chunkId: 'con-sing-13-judgment-emergence',
     label: 'Concept loses posited unity; determinate→totality; turning-back as originative partition = judgment',
-    digest: 'With determinations self-subsisting, concept loses posited unity; singularity returns into itself so the determinate is totality. Turning-back is absolute, originative partition—concept posited as judgment.',
+ 'With determinations self-subsisting, concept loses posited unity; singularity returns into itself so the determinate is totality. Turning-back is absolute, originative partition—concept posited as judgment.',
     clauses: [
       'assert(losesPositedUnity(Concept) == true)',
       'tag(Determinations,"self-subsistent/in-and-for-themselves")',

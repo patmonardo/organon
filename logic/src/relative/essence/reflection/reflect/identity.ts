@@ -1,9 +1,33 @@
 import type { Chunk, LogicalOperation } from './index'
 
-/**
- * Reflection — A. Identity
- * Conservative chunking of the Hegelian "Identity" passage with focused logical operations.
- */
+/*
+  Essence — A. IDENTITY
+
+  This module covers the Identity section of the Determinations of Reflection.
+
+  TERMINOLOGY NOTE:
+  The parent module is "reflection" and its children/concepts are:
+  - essence (the Essential and the Unessential)
+  - reflect (the Determinations of Reflection: Identity, Difference, Contradiction)
+  - ground (the resolved contradiction)
+
+  PHILOSOPHICAL NOTES:
+
+  1. **Identity as the First Determination**:
+     Identity is the first determination of reflection — essence as simple self-reference,
+     pure identity. It is the immediacy of reflection, not abstract identity but
+     essential identity produced from itself.
+
+  2. **Identity = Essence**:
+     Identity is not separate from essence; it is essence itself. The negativity of being
+     in itself is identity itself. This establishes the fundamental unity: identity
+     remains the same as essence.
+
+  3. **Reflection as the Idea:Concept**:
+     Reflection is the idea:concept itself — the shining of essence within itself.
+     Identity is the first moment of this self-shining, the pure self-reference
+     that grounds all further determinations.
+*/
 
 export const CANONICAL_CHUNKS: Chunk[] = [
   {

@@ -34,13 +34,10 @@ export interface LogicalOperation {
 }
 
 import { CHUNKS } from '../essence'
-// Module imports (append more Essence parts here)
-import { CANONICAL_CHUNKS as CH1, LOGICAL_OPERATIONS as HLO1 } from './being'
-import { CANONICAL_CHUNKS as CH2, LOGICAL_OPERATIONS as HLO2 } from './being1'
-import { CANONICAL_CHUNKS as CH3, LOGICAL_OPERATIONS as HLO3 } from './being2'
+// Module imports (consolidated Being module)
+import { CANONICAL_CHUNKS as BEING_CHUNKS, LOGICAL_OPERATIONS as BEING_HLOS } from './being'
 
-export const BEING_CHUNKS: Chunk[] = [...CH1, ...CH2, ...CH3]
-export const BEING_HLOS: LogicalOperation[] = [...HLO1, ...HLO2, ...HLO3]
+export { BEING_CHUNKS, BEING_HLOS }
 
 // Validators
 export function validateUniqueIds(chunks = BEING_CHUNKS, ops = BEING_HLOS) {

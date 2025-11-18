@@ -21,9 +21,10 @@ import { DefShortLongArray } from './primitive/DefShortLongArray';
 export class PrimitiveValues {
   private static readonly EMPTY_NUMBERS: number[] = []; // Changed from EMPTY_LONGS to reflect number[] usage
   public static readonly NO_VALUE: GdsNoValue = GdsNoValue.NO_VALUE;
-  public static readonly EMPTY_LONG_ARRAY: LongArray = PrimitiveValues.longArray(
-    PrimitiveValues.EMPTY_NUMBERS // Use the number[]
-  );
+  public static readonly EMPTY_LONG_ARRAY: LongArray =
+    PrimitiveValues.longArray(
+      PrimitiveValues.EMPTY_NUMBERS, // Use the number[]
+    );
 
   public static create(value: unknown): GdsValue {
     const gdsValue = this.of(value);
@@ -35,11 +36,13 @@ export class PrimitiveValues {
       // Java version allows null to be passed to create, which then calls of(null) -> NO_VALUE
       // To align, we might want of() to handle this, or create() to return NO_VALUE for null/undefined.
       // For now, matching your existing throw for undefined/null in create if 'of' fails.
-      throw new Error("Value cannot be null or undefined if not directly convertible by 'of'.");
+      throw new Error(
+        "Value cannot be null or undefined if not directly convertible by 'of'.",
+      );
     }
 
     throw new Error(
-      `[${value}:${typeof value}] is not a supported property value`
+      `[${value}:${typeof value}] is not a supported property value`,
     );
   }
 
@@ -82,7 +85,6 @@ export class PrimitiveValues {
     //   return this.longArrayFromBigInt(Array.from(value).map(v => BigInt(v))); // Assuming longArray takes bigint[]
     // }
 
-
     // Handle generic JavaScript arrays (approximating Java's Object[] handling)
     if (Array.isArray(value)) {
       // This is where the logic from Java's arrayValue(Object[]) comes in.
@@ -110,21 +112,21 @@ export class PrimitiveValues {
 
     // Check for nulls, Java's copy method throws if an element is null.
     for (let i = 0; i < arr.length; i++) {
-        if (arr[i] === null || arr[i] === undefined) {
-            // Java's PrimitiveValues.copy throws IllegalArgumentException for null elements.
-            // We can either throw or return null to indicate non-convertibility.
-            // Returning null might be more idiomatic for an 'of'-style converter.
-            // throw new Error("Property array value elements may not be null.");
-            return null; // Indicates this array cannot be converted due to nulls
-        }
+      if (arr[i] === null || arr[i] === undefined) {
+        // Java's PrimitiveValues.copy throws IllegalArgumentException for null elements.
+        // We can either throw or return null to indicate non-convertibility.
+        // Returning null might be more idiomatic for an 'of'-style converter.
+        // throw new Error("Property array value elements may not be null.");
+        return null; // Indicates this array cannot be converted due to nulls
+      }
     }
 
     if (typeof firstElement === 'number') {
       // Are all elements numbers?
-      if (arr.every(el => typeof el === 'number')) {
+      if (arr.every((el) => typeof el === 'number')) {
         const numArray = arr as number[];
         // Now, are they all integers or do they contain floats?
-        if (numArray.every(el => Number.isInteger(el))) {
+        if (numArray.every((el) => Number.isInteger(el))) {
           // Treat as LongArray (using number[] as per your design)
           return this.longArray(numArray);
         } else {
@@ -141,7 +143,6 @@ export class PrimitiveValues {
     // If no specific GDS array type can be determined from the generic array.
     return null;
   }
-
 
   // Factory methods for specific types remain largely the same,
   // ensuring they use the correct underlying types (e.g., number[] for LongArray)
@@ -165,7 +166,8 @@ export class PrimitiveValues {
   /**
    * Creates a LongArray from a number array (representing longs).
    */
-  public static longArray(data: number[]): LongArray { // Parameter is number[]
+  public static longArray(data: number[]): LongArray {
+    // Parameter is number[]
     return new DefLongArray(data); // Assumes LongArray constructor takes number[]
   }
 

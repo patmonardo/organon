@@ -1,4 +1,55 @@
-import type { Chunk, LogicalOperation } from './index'
+import type { Chunk, LogicalOperation } from './index';
+
+/*
+  Finitude — B. FINITUDE: THE DETERMINATION OF BEING (Section b)
+
+  This module covers section b: Determination, Constitution, and Limit
+  - The in-itself mediated by being-for-other → determinateness existent-in-itself
+  - Determination (affirmative determinateness) vs Constitution (external determinateness)
+  - Their passing over into each other
+  - Limit as negation-of-negation that unites and separates
+  - Limit as principle/element (geometric and numerical)
+  - Dialectic: no absolute point/line/plane
+  - Transition to finitude (something with immanent limit)
+
+  PHILOSOPHICAL NOTES:
+
+  1. **Determination, Constitution, and Limit as the Hard Machinery**:
+     This is the "hard machinery of reflection" - where the in-itself becomes
+     determinate through its mediation by being-for-other. Determination and
+     Constitution pass over into each other, revealing the dynamic structure
+     of something's self-determination.
+
+  2. **Determination ↔ Constitution**:
+     Determination (affirmative determinateness, preserving self-equality)
+     and Constitution (external determinateness, for-other) are distinct yet
+     pass over into each other. Determinateness-as-such is their middle term.
+
+  3. **Limit as Negation-of-Negation**:
+     Limit is the negation-of-negation that both unites and separates the
+     two somethings. It is immanent, self-contradictory, and drives the
+     something beyond itself—this is finitude.
+
+  4. **Limit as Principle/Element**:
+     Limits are not mere boundaries but principles and elements: point is
+     the beginning and element of line; line of plane; plane of solid.
+     Likewise "one" as both limit and element of hundred.
+
+  5. **Geometric Dialectic**:
+     Point → Line → Plane → Space by concept, not accidental motion.
+     Limits are self-contradictory beginnings that pass over; hence no
+     absolute point/line/plane as fixed existents.
+
+  6. **The Hard Machinery**:
+     This section reveals the "hard machinery" of determination—how something
+     maintains itself while being determined, how determination and constitution
+     interact, and how limit emerges as the immanent structure that drives
+     toward finitude.
+*/
+
+// ============================================================================
+// b. DETERMINATION, CONSTITUTION, AND LIMIT
+// ============================================================================
 
 export const CANONICAL_CHUNKS: Chunk[] = [
   {
@@ -826,4 +877,25 @@ export const LOGICAL_OPERATIONS: LogicalOperation[] = [
     predicates: [{ name: 'FiniteDef', args: [] }],
     relations: []
   }
-]
+];
+
+// Accessors
+export function getChunk(oneBasedIndex: number): Chunk | null {
+  return CANONICAL_CHUNKS[oneBasedIndex - 1] ?? null;
+}
+
+export function getChunkById(id: string): Chunk | null {
+  return CANONICAL_CHUNKS.find((c) => c.id === id) ?? null;
+}
+
+export function getLogicalOpsForChunkId(chunkId: string): LogicalOperation[] {
+  return LOGICAL_OPERATIONS.filter((op) => op.chunkId === chunkId);
+}
+
+export function getAllChunks(): Chunk[] {
+  return CANONICAL_CHUNKS;
+}
+
+export function getLogicalOperations(): LogicalOperation[] {
+  return LOGICAL_OPERATIONS;
+}

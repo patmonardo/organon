@@ -1,4 +1,54 @@
-import type { Chunk, LogicalOperation } from './index'
+import type { Chunk, LogicalOperation } from './index';
+
+/*
+  Finitude — B. FINITUDE: THE DETERMINATION OF BEING (Section c)
+
+  This module covers section c: Finitude proper
+  - Finitude as immanent negation (quality as limit)
+  - Non-being as being: finite self-transcendence and perishing
+  - (a) Immediacy of finitude: mournful, obstinate category
+  - (b) Restriction and the ought: determination and limit as moments
+  - (c) Transition to infinite: perishing perishes, contradiction resolves
+
+  PHILOSOPHICAL NOTES:
+
+  1. **Finitude as Immanent Negation**:
+     Finitude is quality as limit, where the limit (negation) is immanent
+     to existence as its in-itself. This renders the something a mere becoming—
+     the immanent negation is finitude itself.
+
+  2. **Non-Being as Being**:
+     Finite things have non-being as their nature, their being. They refer
+     to themselves negatively and propel themselves beyond themselves. Their
+     truth is finis (end). Perishing is essential—the hour of birth is the
+     hour of death.
+
+  3. **The Mournful Category**:
+     Finitude is "mournful" because it fixes qualitative negation: nothing/
+     perishing opposed to being. Unlike constitution/limit, it won't reconcile—
+     hence the understanding's most obstinate category.
+
+  4. **Restriction and the Ought**:
+     The finite connects determination and limit as Ought and Restriction.
+     Both are moments of the finite, both themselves finite. The ought contains
+     double determination: in-itselfness over against negation, and non-being
+     as restriction.
+
+  5. **The Transition to Infinite**:
+     The finite's contradiction collapses internally, resolving itself. The
+     perishing perishes—the nothing is not the last. This transition reveals
+     that finitude is not absolute but passes over into the infinite.
+
+  6. **Simple Yet Complex**:
+     As the user noted, this is "simple yet complex!"—the determination of being
+     reveals its deepest structure: how something maintains itself while being
+     determined, how finitude emerges from limit, and how the finite transitions
+     to the infinite.
+*/
+
+// ============================================================================
+// c. FINITUDE
+// ============================================================================
 
 export const CANONICAL_CHUNKS: Chunk[] = [
   {
@@ -684,4 +734,25 @@ export const LOGICAL_OPERATIONS: LogicalOperation[] = [
     predicates: [{ name: 'TransitionToInfinite', args: [] }],
     relations: []
   }
-]
+];
+
+// Accessors
+export function getChunk(oneBasedIndex: number): Chunk | null {
+  return CANONICAL_CHUNKS[oneBasedIndex - 1] ?? null;
+}
+
+export function getChunkById(id: string): Chunk | null {
+  return CANONICAL_CHUNKS.find((c) => c.id === id) ?? null;
+}
+
+export function getLogicalOpsForChunkId(chunkId: string): LogicalOperation[] {
+  return LOGICAL_OPERATIONS.filter((op) => op.chunkId === chunkId);
+}
+
+export function getAllChunks(): Chunk[] {
+  return CANONICAL_CHUNKS;
+}
+
+export function getLogicalOperations(): LogicalOperation[] {
+  return LOGICAL_OPERATIONS;
+}

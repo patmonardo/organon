@@ -1,4 +1,79 @@
-import type { Chunk, LogicalOperation } from './index'
+import type { Chunk, LogicalOperation } from './index';
+
+/*
+  Infinity — C. INFINITY: THE DETERMINATION OF BEING (Section c)
+
+  This module covers section c: Affirmative infinity (the true infinite)
+  - Reciprocal truth implicit in alternation
+  - Immediate determinations: mutual inclusion
+  - "And" joining yields two finites
+  - Two paths (relation vs separation) → same result
+  - "Scandalous" unity; qualitative determinacies negated
+  - Double unity: finitized infinite, infinitized finite
+  - Understanding's falsification
+  - Each is unity by self-sublation (no external power)
+  - Sublation ≠ alteration; empty beyond returns
+  - Both share negation-of-negation → mediated self-affirmation
+  - Both negated and posed distinct; connection already present
+  - Cycle from finite: transcend → infinite → new limit → finite (self-closing)
+  - Cycle for infinite: new limit → sublation → same infinite (no advance)
+  - Each returns-through-negation; negation-of-negation; both are results
+  - Indifference of starting point; double meaning; result = infinite
+  - Infinite lowers to one side, elevates via mediation → true infinite
+  - True infinite as becoming (not static unity)
+  - True infinite is Dasein (negation of negation, determinateness present)
+  - Bad infinite = unattainable beyond (defect)
+  - Images: straight line (bad) vs circle (true)
+  - True infinite as higher reality (essence/concept/idea)
+  - Ideality: finite as moment in true infinite
+  - Misopposition: real(finite) vs ideal(infinite) → bad infinite
+
+  PHILOSOPHICAL NOTES:
+
+  1. **The True Infinite**:
+     The alternation already contains the truth implicitly. Comparing the two moments
+     yields their unity—the concept. The "unity of finite and infinite" is an uneven
+     expression; its correction appears in the true infinite.
+
+  2. **Mutual Inclusion**:
+     Each contains the other's determinateness. Saying "infinite" (negation of finite)
+     already says "finite." Neither can be posited without the other. If separated by
+     "and," each becomes finite—we have only two finites.
+
+  3. **The "Scandalous" Unity**:
+     The unity embraces both finite and infinite, but negates their qualitative determinacies.
+     This resolves (rather than preserves) the contradiction. Do not carry over separated
+     qualities into the unity—the unity negates those qualities.
+
+  4. **Self-Sublation**:
+     Each is itself the unity only as a sublating of itself. No external power—the finite's
+     infinity consists in self-sublation. The infinite contains its other essentially.
+     This is internal self-sublation, not alteration.
+
+  5. **The Cycle**:
+     From finite: transcend → infinite → new limit → finite (self-closing). From infinite:
+     new limit → sublation → same infinite (no advance). Each returns to itself through
+     negation—both are results, not initial determinations.
+
+  6. **True Infinite as Becoming**:
+     The true infinite is not a motionless "unity of finite and infinite." It is essentially
+     becoming—now with finite and infinite themselves as moments in becoming. As negation
+     of negation, it is Dasein (determinateness present).
+
+  7. **Bad vs True Infinite**:
+     Bad infinite = unattainable beyond (straight line to remote ends). True infinite =
+     circle—self-return, closed presence, without beginning or end. The infinite is the
+     real (not the finite); reality deepens as essence/concept/idea.
+
+  8. **Ideality**:
+     Negation is determined as ideality. The finite, as present in the true infinite, is
+     idealized: a determination/content, distinct but not subsistent—only a moment. Opposing
+     "real finite" to "ideal infinite" restates the bad infinite.
+*/
+
+// ============================================================================
+// c. AFFIRMATIVE INFINITY (THE TRUE INFINITE)
+// ============================================================================
 
 export const CANONICAL_CHUNKS: Chunk[] = [
   {
@@ -469,4 +544,25 @@ export const LOGICAL_OPERATIONS: LogicalOperation[] = [
     predicates: [{ name: 'ReversionBadInfinite', args: [] }],
     relations: []
   }
-]
+];
+
+// Accessors
+export function getChunk(oneBasedIndex: number): Chunk | null {
+  return CANONICAL_CHUNKS[oneBasedIndex - 1] ?? null;
+}
+
+export function getChunkById(id: string): Chunk | null {
+  return CANONICAL_CHUNKS.find((c) => c.id === id) ?? null;
+}
+
+export function getLogicalOpsForChunkId(chunkId: string): LogicalOperation[] {
+  return LOGICAL_OPERATIONS.filter((op) => op.chunkId === chunkId);
+}
+
+export function getAllChunks(): Chunk[] {
+  return CANONICAL_CHUNKS;
+}
+
+export function getLogicalOperations(): LogicalOperation[] {
+  return LOGICAL_OPERATIONS;
+}

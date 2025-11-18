@@ -471,8 +471,7 @@ Object.assign(YS_IV_34_ONTOLOGY, {
     'Value exists only in knowing — indeed in absolute knowing; all else is without value',
   l25ScienceInSpecieInstrumentalOnly:
     'The science of knowing in specie is instrumental only (not intrinsic value)',
-  l25LadderMetaphor:
-    'Whoever has arrived no longer worries about the ladder',
+  l25LadderMetaphor: 'Whoever has arrived no longer worries about the ladder',
 });
 
 // L25 — Unconditional “Should” and Descent Question
@@ -593,10 +592,10 @@ export const YS_IV_34_UNIT: DatasetUnit = {
     ...CHUNKS_YS_IV_34_L25_GENESIS,
     ...CHUNKS_YS_IV_34_L25_ORDINARY_COND,
     ...CHUNKS_YS_IV_34_L25_INFERENCE,
-    ...CHUNKS_YS_IV_34_L25_UNCONDITIONAL, // NEW
-    ...CHUNKS_YS_IV_34_L25_DESCENT,       // NEW
-    ...CHUNKS_YS_IV_34_L25_SPECIE,        // NEW
-    ...CHUNKS_YS_IV_34_L25_TELEOLOGY,     // NEW
+    ...CHUNKS_YS_IV_34_L25_UNCONDITIONAL,
+    ...CHUNKS_YS_IV_34_L25_DESCENT,
+    ...CHUNKS_YS_IV_34_L25_SPECIE,
+    ...CHUNKS_YS_IV_34_L25_TELEOLOGY,
   ] as any,
   hlos: [
     ...HLOS_YS_IV_34,
@@ -611,10 +610,10 @@ export const YS_IV_34_UNIT: DatasetUnit = {
     ...HLOS_YS_IV_34_L25_GENESIS,
     ...HLOS_YS_IV_34_L25_ORDINARY_COND,
     ...HLOS_YS_IV_34_L25_INFERENCE,
-    ...HLOS_YS_IV_34_L25_UNCONDITIONAL, // NEW
-    ...HLOS_YS_IV_34_L25_DESCENT,       // NEW
-    ...HLOS_YS_IV_34_L25_SPECIE,        // NEW
-    ...HLOS_YS_IV_34_L25_TELEOLOGY,     // NEW
+    ...HLOS_YS_IV_34_L25_UNCONDITIONAL,
+    ...HLOS_YS_IV_34_L25_DESCENT,
+    ...HLOS_YS_IV_34_L25_SPECIE,
+    ...HLOS_YS_IV_34_L25_TELEOLOGY,
   ] as any,
 };
 

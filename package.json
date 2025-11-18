@@ -48,6 +48,13 @@
     "reality:build": "pnpm --filter=@organon/reality build",
     "reality:test": "pnpm --filter=@organon/reality test",
     "reality:dev": "pnpm --filter=@organon/reality dev",
-    "reality:start": "pnpm --filter=@organon/reality start"
+    "reality:start": "pnpm --filter=@organon/reality start",
+    "kg:validate": "tsx tools/validate-kg.ts",
+    "kg:build": "tsx tools/build-kg.ts"
+  },
+  "devDependencies": {
+    "fast-glob": "^3.3.2",
+    "picocolors": "^1.0.0",
+    "tsx": "^4.15.7"
   }
 }

@@ -1,10 +1,27 @@
 import type { Chunk, LogicalOperation } from './index'
 
 /*
-  Essence — B. SHINE — Part 1: Being is shine.
+  Essence — B. SHINE
+  
+  This module covers the complete Shine section.
+  
   Two-fold representation:
   - text: verbatim source segmented into readable chunks (preserve full passage)
   - summary: short IR summary to support HLO extraction (non-destructive)
+  
+  PHILOSOPHICAL NOTE: The Cit-Citi-Citta Triad
+  
+  **Cit** (Essence) = Pure Consciousness, the Principle
+  **Citi** (Shine) = Consciousness as Activity/Operation  
+  **Citta** (Synthesis) = Mind, the Dharma/Law of Citta
+  
+  Essence (Cit) + Shine (Citi) = Citta (the synthesis, the Law of Citta)
+  
+  This is the essence of Citta—the Dharma of Citta, the Law of Citta.
+  Essence and Shine together synthesize into Citta, the complete structure of Mind.
+  
+  Shine (Citi) is the activity/operation of consciousness—the movement, the shining,
+  the reflective activity that makes Essence (Cit) manifest as Citta (Mind).
 */
 
 export const CANONICAL_CHUNKS: Chunk[] = [

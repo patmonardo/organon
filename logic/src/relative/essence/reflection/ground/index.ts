@@ -11,8 +11,22 @@ export type LogicalOperation = {
   chunkId?: string;
 };
 
-export const CANONICAL_CHUNKS: Chunk[] = [];
-export const LOGICAL_OPERATIONS: LogicalOperation[] = [];
+// Aggregate chunks and operations from consolidated modules
+import { CANONICAL_CHUNKS as ABSOLUTE_CHUNKS, LOGICAL_OPERATIONS as ABSOLUTE_OPS } from './ground_absolute';
+import { CANONICAL_CHUNKS as DETERMINATE_CHUNKS, LOGICAL_OPERATIONS as DETERMINATE_OPS } from './ground_determinate';
+import { CANONICAL_CHUNKS as CONDITION_CHUNKS, LOGICAL_OPERATIONS as CONDITION_OPS } from './ground_condition';
+
+export const CANONICAL_CHUNKS: Chunk[] = [
+  ...ABSOLUTE_CHUNKS,
+  ...DETERMINATE_CHUNKS,
+  ...CONDITION_CHUNKS
+];
+
+export const LOGICAL_OPERATIONS: LogicalOperation[] = [
+  ...ABSOLUTE_OPS,
+  ...DETERMINATE_OPS,
+  ...CONDITION_OPS
+];
 
 /* minimal, stable accessors */
 export function getChunk(oneBasedIndex: number): Chunk | null {

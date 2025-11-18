@@ -34,19 +34,11 @@ export interface LogicalOperation {
 }
 
 import { CHUNKS } from '../essence';
-// Module imports (append Existence parts here)
+// Module imports (consolidated Existence module)
 import {
   CANONICAL_CHUNKS as ECH0,
   LOGICAL_OPERATIONS as EOP0,
 } from './existence';
-import {
-  CANONICAL_CHUNKS as ECH1,
-  LOGICAL_OPERATIONS as EOP1,
-} from './existence1';
-import {
-  CANONICAL_CHUNKS as ECH2,
-  LOGICAL_OPERATIONS as EOP2,
-} from './existence2';
 import {
   CANONICAL_CHUNKS as FCH0,
   LOGICAL_OPERATIONS as FOP0,
@@ -75,8 +67,6 @@ import {
 // Existence registry
 export const EXISTENCE_CHUNKS: Chunk[] = [
   ...ECH0,
-  ...ECH1,
-  ...ECH2,
   ...FCH0,
   ...FCH1,
   ...FCH2,
@@ -86,8 +76,6 @@ export const EXISTENCE_CHUNKS: Chunk[] = [
 ];
 export const EXISTENCE_HLOS: LogicalOperation[] = [
   ...EOP0,
-  ...EOP1,
-  ...EOP2,
   ...FOP0,
   ...FOP1,
   ...FOP2,

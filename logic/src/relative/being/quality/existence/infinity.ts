@@ -1,4 +1,57 @@
-import type { Chunk, LogicalOperation } from './index'
+import type { Chunk, LogicalOperation } from './index';
+
+/*
+  Infinity — C. INFINITY: THE DETERMINATION OF BEING (Section a)
+
+  This module covers section a: The infinite in general
+  - Infinite as absolute (self-reference as being/becoming)
+  - Distinction: true infinite vs bad infinite (finitized infinite)
+  - Outline: (a) affirmative as negation-of-finite; (b) alternating one-sided; (c) self-sublation → true infinite
+  - Infinite = negation of negation, true being, elevation above restriction
+  - Spirit at home in the infinite (universality, freedom)
+  - Finite's nature: transcend restriction, negate negation, become infinite
+  - Not external beyond, nor merely subjective elevation
+  - Finite's self-elevation via restriction/ought
+  - Infinity as finite's vocation (affirmative determination)
+  - Conclusion: finite vanishes; only the infinite is
+
+  PHILOSOPHICAL NOTES:
+
+  1. **The Infinite in General**:
+     The infinite is negation of negation—the affirmative, true being that has
+     reinstated itself out of restrictedness. It is elevation above restriction,
+     more intense than first immediate being.
+
+  2. **Spirit at Home**:
+     At the mention of the infinite, soul and spirit light up. In the infinite,
+     spirit is at home—rising to itself, to universality and freedom. This is
+     not abstract but concrete self-recognition.
+
+  3. **Finite's Nature to Become Infinite**:
+     The finite's very nature is to transcend itself, negate its negation, and
+     become infinite. This is not external power but the finite's own self-elevation
+     through reference to restriction/ought.
+
+  4. **Infinity as Vocation**:
+     Infinity is the finite's affirmative determination, its vocation, its truth.
+     The finite becomes itself the infinite through its nature—not by being sublated
+     "in general" but by its own self-transcendence.
+
+  5. **Not External, Not Merely Subjective**:
+     The infinite is not a ready-made beyond with the finite fixed outside it, nor
+     only our subjective reason elevating itself. The finite itself is elevated,
+     and this elevation affects it—the finite's own nature accomplishes this.
+
+  6. **True vs Bad Infinite**:
+     Essential distinction: true infinite (of reason) vs bad infinite (of understanding).
+     The bad infinite is finitized—wanting to keep the infinite pure from the finite
+     makes it finite. The true infinite is the self-sublation of both finite and
+     bad infinite in one process.
+*/
+
+// ============================================================================
+// a. THE INFINITE IN GENERAL
+// ============================================================================
 
 export const CANONICAL_CHUNKS: Chunk[] = [
   {
@@ -10,16 +63,36 @@ The infinite in its simple concept
 can be regarded, first of all,
 as a fresh definition of the absolute;
 as self-reference devoid of determination,
-it is posited as being and becoming. ...
+it is posited as being and becoming.
+The forms of existence have no place in
+the series of determinations that can be
+regarded as definitions of the absolute,
+since the forms of that sphere are
+immediately posited for themselves
+only as determinacies, as finite in general.
+But the infinite is accepted
+unqualifiedly as absolute,
+since it is explicitly determined
+as the negation of the finite;
+the restrictedness
+(to which being and becoming would somehow be susceptible
+even if they do not have it or exhibit it)
+is thereby both explicitly referred to and denied in it.
 But, in fact, by just this negation the infinite is
 not already free from restrictedness and finitude.
 It is essential to distinguish
 the true concept of infinity
 from bad infinity,
 the infinite of reason from
-the infinite of the understanding.`,
+the infinite of the understanding.
+The latter is in fact a finitized infinite,
+and, as we shall now discover,
+in wanting to maintain the infinite
+pure and distant from the finite,
+the infinite is by that very fact
+only made finite.`,
     summary:
-      'Infinite often taken as absolute (self-reference as being/becoming). Mere negation of the finite does not free it from finitude; distinguish true vs bad infinite.'
+      'Infinite often taken as absolute (self-reference as being/becoming). Mere negation of the finite does not free it from finitude; distinguish true vs bad infinite. Bad infinite is finitized—wanting to keep it pure makes it finite.'
   },
   {
     id: 'infinity-6b-outline-a-b-c',
@@ -189,4 +262,25 @@ export const LOGICAL_OPERATIONS: LogicalOperation[] = [
     predicates: [{ name: 'OnlyInfiniteIs', args: [] }],
     relations: []
   }
-]
+];
+
+// Accessors
+export function getChunk(oneBasedIndex: number): Chunk | null {
+  return CANONICAL_CHUNKS[oneBasedIndex - 1] ?? null;
+}
+
+export function getChunkById(id: string): Chunk | null {
+  return CANONICAL_CHUNKS.find((c) => c.id === id) ?? null;
+}
+
+export function getLogicalOpsForChunkId(chunkId: string): LogicalOperation[] {
+  return LOGICAL_OPERATIONS.filter((op) => op.chunkId === chunkId);
+}
+
+export function getAllChunks(): Chunk[] {
+  return CANONICAL_CHUNKS;
+}
+
+export function getLogicalOperations(): LogicalOperation[] {
+  return LOGICAL_OPERATIONS;
+}

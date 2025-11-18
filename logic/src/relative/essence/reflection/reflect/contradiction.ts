@@ -1,6 +1,42 @@
 import type { Chunk, LogicalOperation } from './index'
 
-/* Contradiction — chunking and high‑level logical operations (HLOs) */
+/*
+  Essence — C. CONTRADICTION
+
+  This module consolidates the complete Contradiction section:
+  - Part 1: Contradiction as self-exclusion (positive/negative)
+  - Part 2: Contradiction resolves itself (null, sublation, self-withdrawal)
+  - Part 3: Return to ground (essence as ground, unity of positive/negative)
+
+  TERMINOLOGY NOTE:
+  The parent module is "reflection" and its children/concepts are:
+  - essence (the Essential and the Unessential)
+  - reflect (the Determinations of Reflection: Identity, Difference, Contradiction)
+  - ground (the resolved contradiction)
+
+  PHILOSOPHICAL NOTES:
+
+  1. **Contradiction as the Completion of Opposition**:
+     Contradiction emerges when opposition's self-subsisting moments exclude their
+     own self-subsistence. The positive and negative, each containing and excluding
+     the other, become self-contradictory — negation turned back upon itself.
+
+  2. **Contradiction Resolves Itself**:
+     Contradiction is not static; it resolves itself through sublation. The self-excluding
+     reflection causes opposites to translate into one another, producing first the null,
+     then through sublation a positive self-unity — essence identical with itself through
+     self-negation.
+
+  3. **Return to Ground**:
+     The resolved contradiction returns to ground — essence as unity of positive and negative.
+     Ground preserves and removes opposition simultaneously. This is the foundation that
+     makes possible all further determinations.
+
+  4. **Reflection as the Idea:Concept**:
+     Contradiction completes the Determinations of Reflection. Through contradiction's
+     resolution to ground, reflection shows itself as the idea:concept — the systematic
+     self-determination of essence through its own internal movement.
+*/
 
 export const CANONICAL_CHUNKS: Chunk[] = [
   {
