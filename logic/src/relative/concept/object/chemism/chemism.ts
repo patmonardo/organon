@@ -1,1012 +1,469 @@
-/**
- * TRANSITION OF CHEMISM - Achievement of Scientific Cognition
- * =========================================================
- *
- * "The concept that has thus sublated as external all the moments of its objective existence,
- * and has posited them in its simple unity, is thereby completely liberated from
- * the objective externality to which it refers only as an unessential reality.
- * This objective free concept is purpose."
- *
- * ACHIEVEMENT OF SCIENTIFIC COGNITION STRUCTURE:
- * 1. SELF-CREATING PRESUPPOSITIONS (Object creates its own conditions)
- * 2. THREE SYLLOGISMS TOTALITY (Complete cognitive architecture)
- * 3. PROGRESSIVE SUBLATION OF EXTERNALITY (Achieving objectivity)
- * 4. OBJECTIVE FREE CONCEPT = PURPOSE (Science proper achieved)
- *
- * This IS the achievement of scientific cognition - the transition from
- * conditioned to unconditioned cognition, from externality to self-determination.
- *
- * THE END OF THE THEORY OF SCIENCE - PURPOSE BEGINS SCIENCE PROPER!
- */
+import type { Chunk, LogicalOperation } from '../../../types';
 
-interface AchievementOfScientificCognition {
-  getSelfCreatingPresuppositions(): SelfCreatingPresuppositions;
-  getThreeSyllogismsTotality(): ThreeSyllogismsTotality;
-  getProgressiveSublationExternality(): ProgressiveSublationExternality;
-  getObjectiveFreeConcept(): ObjectiveFreeConcept;
-  getScientificCognitionPatterns(): string;
-  dialecticalMovement(): string;
+/*
+  Transition of Chemism — C. TRANSITION OF CHEMISM
+
+  This module translates the Transition of Chemism section:
+  - Self-mediation: object posits presupposition for real connection
+  - Chemism as first negation of indifferent objectivity
+  - Three syllogisms and their falling apart
+  - Processes as stages sublatting externality
+  - Concept emerging as determined in-and-for-itself
+  - Transition to Purpose (Teleology)
+
+  PHILOSOPHICAL NOTES:
+
+  1. **Self-Mediation: Object Posits Presupposition**:
+     Even ordinary chemistry shows examples where body imparts higher oxidation to one part,
+     reduces another to lower degree, at which degree alone can enter neutral combination
+     with another differing body - combination to which would not have been receptive at
+     first immediate degree. Object does not connect with another in accordance with immediate
+     one-sided determinateness, but in accordance with inner totality of original relation,
+     posits presupposition needed for real connection, gives itself middle term by virtue of
+     which unites concept with reality in conclusion. Singularity determined in-and-for-itself,
+     concrete concept as principle of disjunction into extremes whose re-union is activity of
+     same negative principle returning to first determination but objectified.
+
+  2. **Chemism as First Negation**:
+     Chemism is first negation of indifferent objectivity and externality of determinateness.
+     Still burdened by immediate self-subsistence of object and with externality. Not yet for
+     itself that totality of self-determination that proceeds from it and in which it is rather
+     sublated. Three syllogisms constitute its totality: (1) Formal neutrality as middle term,
+     objects in tension as extremes. (2) Real neutrality (product of first) as middle term,
+     disrupting activity and indifferent element as extremes. (3) Self-realizing concept that
+     posits for itself presupposition - syllogism with universal for essence.
+
+  3. **Syllogisms Falling Apart**:
+     On account of immediacy and externality by which chemical objectivity still determined,
+     three syllogisms fall apart. First process extinguished in product, re-activated only by
+     differentiation from outside - conditioned by immediate presupposition, exhausted in it.
+     Excretion of non-indifferent extremes, decomposition into abstract elements, must proceed
+     from conditions and stimulations brought in from outside. Two essential moments (neutralization
+     and dissolution/reduction) bound together in same process - union blunting tension is also
+     separation - constitute two diverse sides on account of underlying externality. Extremes
+     separated are other than objects uniting - as non-indifferent, must turn outwards. Renewed
+     neutralization is process other than first.
+
+  4. **Processes as Stages Sublatting Externality**:
+     Various processes demonstrated to be necessary are stages by which externality and
+     conditionality are sublated, concept emerges as determined in-and-for-itself, totality
+     unconditioned by externality. First process: sublated is externality of mutually non-
+     indifferent extremes constituting whole reality, or distinction between implicitly determinate
+     concept and existing determinateness. Second process: sublated is externality of real unity,
+     union as merely neutral. More precisely, formal activity sublates itself in bases equally
+     formal, neutral determinacies whose inner concept is absolute activity withdrawn into itself,
+     realizes itself internally - posits determinate difference within itself, through mediation
+     constitutes itself as real unity. This is concept's own mediation, self-determination,
+     immanent presupposing (concept reflects itself back into itself).
+
+  5. **Third Syllogism and Transition to Purpose**:
+     Third syllogism, on one hand restoration of preceding processes, on other hand sublates
+     last remaining moment of indifferent bases - sublates whole abstract external immediacy
+     that becomes concept's own moment of self-mediation. Concept that has sublated as external
+     all moments of objective existence, posited them in simple unity, thereby completely
+     liberated from objective externality to which refers only as unessential reality. This
+     objective free concept is purpose (Teleology).
+
+  6. **Objectivity as Compositions of Syllogism**:
+     Transition of Chemism completes second moment of Objectivity - shows how three syllogisms
+     of chemism, though falling apart due to externality, progressively sublate externality
+     through their necessary processes. Concept emerges as self-determining, self-mediating -
+     liberated from externality, becomes Purpose. This prepares Teleology as third and final
+     moment of Objectivity - where concept is for itself, self-determining purpose.
+*/
+
+// ============================================================================
+// SECTION III: OBJECTIVITY
+// ============================================================================
+
+export const CANONICAL_CHUNKS: Chunk[] = [
+  {
+    id: 'chem-trans-self-mediation',
+    title: 'Self-mediation: object posits presupposition',
+    text: `C. TRANSITION OF CHEMISM
+
+Even ordinary chemistry shows examples of
+chemical alterations in which a body, for example,
+imparts a higher oxidation to one part of its mass
+and thereby reduces another part to a lower degree of the same,
+at which degree alone it can enter into a neutral combination
+with another differing body brought into contact with it,
+a combination to which it would not have been receptive
+at that other first immediate degree.
+What happens here is that the object does not connect
+with another in accordance with an immediate, one-sided determinateness,
+but, in accordance with the inner totality of an original relation,
+posits the presupposition which it needs for a real connection
+and thereby gives itself a middle term by virtue of which
+it unites its concept with its reality in conclusion;
+it is a singularity determined in and for itself,
+the concrete concept as the principle of the disjunction
+into extremes whose re-union is the activity of
+that same negative principle that thereby
+returns to its first determination,
+but returns to it objectified.`,
+    summary:
+      'Self-mediation: Chemistry shows body imparts higher oxidation to one part, reduces another to lower degree - at which degree alone can enter neutral combination. Object does not connect with immediate one-sided determinateness but in accordance with inner totality, posits presupposition needed for real connection, gives itself middle term, unites concept with reality. Singularity determined in-and-for-itself, concrete concept as principle of disjunction into extremes whose re-union is activity of negative principle returning to first determination but objectified.'
+  },
+
+  {
+    id: 'chem-trans-negation',
+    title: 'Chemism as first negation: three syllogisms',
+    text: `Chemism is itself the first negation
+of the indifferent objectivity
+and of the externality of determinateness;
+it is still burdened, therefore,
+by the immediate self-subsistence
+of the object and with externality.
+Consequently it is not yet for itself
+that totality of self-determination
+that proceeds from it
+and in which it is rather sublated.
+The three syllogisms that have resulted
+constitute its totality.
+The first has formal neutrality
+for its middle term and
+for extremes the objects in tension.
+The second has for its middle term the
+product of the first, real neutrality;
+and for extremes the disrupting activity
+and its product, the indifferent element.
+But the third is the self-realizing concept
+that posits for itself the presupposition
+by virtue of which the process of its
+realization is conditioned:
+a syllogism that has the universal for its essence.`,
+    summary:
+      'Chemism: First negation of indifferent objectivity and externality of determinateness. Still burdened by immediate self-subsistence and externality. Not yet for itself totality of self-determination. Three syllogisms constitute totality: (1) Formal neutrality as middle term, objects in tension as extremes. (2) Real neutrality (product of first) as middle term, disrupting activity and indifferent element as extremes. (3) Self-realizing concept positing presupposition - syllogism with universal for essence.'
+  },
+
+  {
+    id: 'chem-trans-falling-apart',
+    title: 'Syllogisms falling apart: externality',
+    text: `Yet, on account of the immediacy and externality
+by which the chemical objectivity is still determined,
+these three syllogisms fall apart.
+The first process whose product is
+the neutrality of the tensed objects is
+extinguished in this product
+and is re-activated only by
+a differentiation that comes to it from outside;
+conditioned by an immediate presupposition,
+the process is exhausted in it.
+The excretion out of the neutral product
+of the non-indifferent extremes,
+as also their decomposition into their abstract elements,
+must likewise proceed from conditions and
+stimulations of activity brought in from the outside.
+But the two essential moments of the process,
+neutralization on the one hand
+and dissolution and reduction on the other,
+since they too are bound together
+in one and the same process
+and the union blunting the tension of the extremes is
+also a separation into these,
+constitute on account of the still underlying
+externality two diverse sides;
+the extremes that are separated in that same process
+are other than the objects or matters uniting in it;
+in so far as the former proceed from it again
+as non-indifferent, they must turn outwards;
+their renewed neutralization is a process other
+than the one that took place in the first.`,
+    summary:
+      'Syllogisms falling apart: On account of immediacy and externality, three syllogisms fall apart. First process extinguished in product, re-activated only by differentiation from outside - conditioned by immediate presupposition, exhausted. Excretion and decomposition must proceed from conditions brought in from outside. Two essential moments (neutralization and dissolution/reduction) bound together - union blunting tension is also separation - constitute two diverse sides. Extremes separated are other than objects uniting - as non-indifferent, must turn outwards. Renewed neutralization is process other than first.'
+  },
+
+  {
+    id: 'chem-trans-stages',
+    title: 'Processes as stages sublatting externality',
+    text: `But these various processes,
+which have demonstrated themselves to be necessary,
+are equally so many stages by which
+externality and conditionality are sublated,
+and from which the concept emerges as
+determined in and for itself,
+a totality unconditioned by externality.
+In the first process, what is sublated is
+the externality of the mutually non-indifferent extremes that
+constitute the whole reality,
+or the distinction between the implicitly
+determinate concept and its existing determinateness.
+Sublated in the second process is the externality
+of the real unity, union as merely neutral.
+Or more precisely, the formal activity sublates itself
+in bases that are equally formal, neutral determinacies
+whose inner concept is now the absolute activity
+that has withdrawn into itself
+and now realizes itself internally,
+that is, posits the determinate difference within itself
+and through this mediation constitutes itself as real unity;
+this is a mediation which is thus the concept's
+own mediation, its self-determination
+and, considering that in it
+the concept reflects itself back into itself,
+an immanent presupposing.`,
+    summary:
+      'Processes as stages: Various processes are stages by which externality and conditionality sublated, concept emerges as determined in-and-for-itself, totality unconditioned by externality. First process: sublated is externality of mutually non-indifferent extremes, or distinction between implicitly determinate concept and existing determinateness. Second process: sublated is externality of real unity, union as merely neutral. More precisely, formal activity sublates itself in bases equally formal, neutral determinacies whose inner concept is absolute activity withdrawn into itself, realizes itself internally - posits determinate difference within itself, through mediation constitutes itself as real unity. Concept\'s own mediation, self-determination, immanent presupposing (concept reflects itself back into itself).'
+  },
+
+  {
+    id: 'chem-trans-purpose',
+    title: 'Transition to purpose: objective free concept',
+    text: `The third syllogism, which on the one hand is
+the restoration of the preceding processes,
+sublates on the other hand the last
+remaining moment of indifferent bases:
+it sublates the whole abstract external immediacy
+that becomes in this way
+the concept's own moment of self-mediation.
+The concept that has thus sublated as external
+all the moments of its objective existence,
+and has posited them in its simple unity,
+is thereby completely liberated from
+the objective externality to which
+it refers only as an unessential reality.
+This objective free concept is purpose.`,
+    summary:
+      'Transition to purpose: Third syllogism, on one hand restoration of preceding processes, on other hand sublates last remaining moment of indifferent bases - sublates whole abstract external immediacy that becomes concept\'s own moment of self-mediation. Concept that has sublated as external all moments of objective existence, posited them in simple unity, thereby completely liberated from objective externality to which refers only as unessential reality. This objective free concept is purpose (Teleology).'
+  }
+];
+
+export const LOGICAL_OPERATIONS: LogicalOperation[] = [
+  {
+    id: 'op-chem-trans-1',
+    chunkId: 'chem-trans-self-mediation',
+    label: 'Self-mediation: positing presupposition',
+    clauses: [
+      'Chemistry shows body imparts higher oxidation to one part',
+      'Reduces another to lower degree',
+      'At which degree alone can enter neutral combination',
+      'Combination to which would not have been receptive at first degree',
+      'Object does not connect with immediate one-sided determinateness',
+      'But in accordance with inner totality of original relation',
+      'Posits presupposition needed for real connection',
+      'Gives itself middle term',
+      'Unites concept with reality in conclusion',
+      'Singularity determined in-and-for-itself',
+      'Concrete concept as principle of disjunction into extremes',
+      'Re-union is activity of negative principle',
+      'Returns to first determination but objectified'
+    ],
+    predicates: [
+      { name: 'shows', args: ['chemistry', 'examples'] },
+      { name: 'imparts', args: ['body', 'higherOxidation'] },
+      { name: 'reduces', args: ['body', 'toLowerDegree'] },
+      { name: 'can', args: ['body', 'enterNeutralCombination'] },
+      { name: 'wouldNot', args: ['body', 'haveBeenReceptive'] },
+      { name: 'doesNot', args: ['object', 'connectWithImmediate'] },
+      { name: 'posits', args: ['object', 'presupposition'] },
+      { name: 'gives', args: ['object', 'middleTerm'] },
+      { name: 'unites', args: ['object', 'conceptWithReality'] },
+      { name: 'is', args: ['singularity', 'determinedInAndForItself'] },
+      { name: 'is', args: ['concept', 'principleOfDisjunction'] },
+      { name: 'is', args: ['reUnion', 'activity'] },
+      { name: 'returns', args: ['principle', 'toFirstDetermination'] },
+      { name: 'is', args: ['return', 'objectified'] }
+    ],
+    relations: [
+      { predicate: 'posits', from: 'object', to: 'presupposition' },
+      { predicate: 'unites', from: 'object', to: 'conceptWithReality' }
+    ],
+    candidateSummary:
+      'Self-mediation: Object posits presupposition needed for real connection, gives itself middle term, unites concept with reality. Concrete concept as principle of disjunction - re-union is activity of negative principle returning objectified.'
+  },
+
+  {
+    id: 'op-chem-trans-2',
+    chunkId: 'chem-trans-negation',
+    label: 'Chemism as first negation',
+    clauses: [
+      'Chemism is first negation of indifferent objectivity',
+      'First negation of externality of determinateness',
+      'Still burdened by immediate self-subsistence',
+      'Still burdened with externality',
+      'Not yet for itself totality of self-determination',
+      'Three syllogisms constitute totality',
+      'First: formal neutrality as middle term, objects in tension as extremes',
+      'Second: real neutrality as middle term, disrupting activity and indifferent element as extremes',
+      'Third: self-realizing concept positing presupposition',
+      'Syllogism with universal for essence'
+    ],
+    predicates: [
+      { name: 'is', args: ['chemism', 'firstNegation'] },
+      { name: 'is', args: ['chemism', 'negationOfIndifferentObjectivity'] },
+      { name: 'is', args: ['chemism', 'negationOfExternality'] },
+      { name: 'is', args: ['chemism', 'burdened'] },
+      { name: 'isNot', args: ['chemism', 'forItself'] },
+      { name: 'constitute', args: ['threeSyllogisms', 'totality'] },
+      { name: 'has', args: ['firstSyllogism', 'formalNeutrality'] },
+      { name: 'has', args: ['firstSyllogism', 'objectsInTension'] },
+      { name: 'has', args: ['secondSyllogism', 'realNeutrality'] },
+      { name: 'has', args: ['secondSyllogism', 'disruptingActivity'] },
+      { name: 'is', args: ['thirdSyllogism', 'selfRealizingConcept'] },
+      { name: 'has', args: ['thirdSyllogism', 'universal'] }
+    ],
+    relations: [
+      { predicate: 'is', from: 'chemism', to: 'firstNegation' },
+      { predicate: 'constitute', from: 'threeSyllogisms', to: 'totality' }
+    ],
+    candidateSummary:
+      'Chemism: First negation of indifferent objectivity and externality. Still burdened. Three syllogisms constitute totality - formal neutrality, real neutrality, self-realizing concept.'
+  },
+
+  {
+    id: 'op-chem-trans-3',
+    chunkId: 'chem-trans-falling-apart',
+    label: 'Syllogisms falling apart',
+    clauses: [
+      'On account of immediacy and externality',
+      'Three syllogisms fall apart',
+      'First process extinguished in product',
+      'Re-activated only by differentiation from outside',
+      'Conditioned by immediate presupposition',
+      'Process exhausted',
+      'Excretion and decomposition must proceed from outside',
+      'Two essential moments: neutralization and dissolution/reduction',
+      'Bound together in same process',
+      'Union blunting tension is also separation',
+      'Constitute two diverse sides',
+      'Extremes separated are other than objects uniting',
+      'As non-indifferent, must turn outwards',
+      'Renewed neutralization is process other than first'
+    ],
+    predicates: [
+      { name: 'is', args: ['objectivity', 'determinedByExternality'] },
+      { name: 'fall', args: ['syllogisms', 'apart'] },
+      { name: 'is', args: ['firstProcess', 'extinguished'] },
+      { name: 'is', args: ['firstProcess', 'reActivated'] },
+      { name: 'is', args: ['firstProcess', 'conditioned'] },
+      { name: 'is', args: ['firstProcess', 'exhausted'] },
+      { name: 'must', args: ['excretion', 'proceedFromOutside'] },
+      { name: 'must', args: ['decomposition', 'proceedFromOutside'] },
+      { name: 'are', args: ['moments', 'boundTogether'] },
+      { name: 'is', args: ['union', 'separation'] },
+      { name: 'constitute', args: ['moments', 'twoDiverseSides'] },
+      { name: 'are', args: ['extremes', 'other'] },
+      { name: 'must', args: ['extremes', 'turnOutwards'] },
+      { name: 'is', args: ['renewedNeutralization', 'otherProcess'] }
+    ],
+    relations: [
+      { predicate: 'fall', from: 'syllogisms', to: 'apart' },
+      { predicate: 'is', from: 'union', to: 'separation' }
+    ],
+    candidateSummary:
+      'Syllogisms falling apart: Due to externality, fall apart. First process extinguished, re-activated from outside. Two moments bound together but constitute diverse sides. Renewed neutralization is other process.'
+  },
+
+  {
+    id: 'op-chem-trans-4',
+    chunkId: 'chem-trans-stages',
+    label: 'Processes as stages sublatting externality',
+    clauses: [
+      'Various processes are stages',
+      'Externality and conditionality sublated',
+      'Concept emerges as determined in-and-for-itself',
+      'Totality unconditioned by externality',
+      'First process: sublated is externality of extremes',
+      'Or distinction between concept and determinateness',
+      'Second process: sublated is externality of real unity',
+      'Union as merely neutral',
+      'Formal activity sublates itself in bases',
+      'Bases equally formal, neutral determinacies',
+      'Inner concept is absolute activity',
+      'Withdrawn into itself',
+      'Realizes itself internally',
+      'Posits determinate difference within itself',
+      'Through mediation constitutes itself as real unity',
+      'Concept\'s own mediation, self-determination',
+      'Immanent presupposing',
+      'Concept reflects itself back into itself'
+    ],
+    predicates: [
+      { name: 'are', args: ['processes', 'stages'] },
+      { name: 'are', args: ['externality', 'sublated'] },
+      { name: 'are', args: ['conditionality', 'sublated'] },
+      { name: 'emerges', args: ['concept', 'asDetermined'] },
+      { name: 'is', args: ['concept', 'determinedInAndForItself'] },
+      { name: 'is', args: ['totality', 'unconditioned'] },
+      { name: 'is', args: ['externalityOfExtremes', 'sublated'] },
+      { name: 'is', args: ['distinction', 'sublated'] },
+      { name: 'is', args: ['externalityOfUnity', 'sublated'] },
+      { name: 'is', args: ['union', 'merelyNeutral'] },
+      { name: 'sublates', args: ['formalActivity', 'itself'] },
+      { name: 'are', args: ['bases', 'equallyFormal'] },
+      { name: 'is', args: ['innerConcept', 'absoluteActivity'] },
+      { name: 'has', args: ['activity', 'withdrawn'] },
+      { name: 'realizes', args: ['activity', 'itself'] },
+      { name: 'posits', args: ['activity', 'determinateDifference'] },
+      { name: 'constitutes', args: ['activity', 'realUnity'] },
+      { name: 'is', args: ['mediation', 'conceptOwn'] },
+      { name: 'is', args: ['mediation', 'selfDetermination'] },
+      { name: 'is', args: ['mediation', 'immanentPresupposing'] },
+      { name: 'reflects', args: ['concept', 'itselfBack'] }
+    ],
+    relations: [
+      { predicate: 'emerges', from: 'concept', to: 'asDetermined' },
+      { predicate: 'is', from: 'mediation', to: 'conceptOwn' }
+    ],
+    candidateSummary:
+      'Processes as stages: Sublate externality and conditionality. Concept emerges as determined in-and-for-itself. Formal activity sublates itself - absolute activity withdrawn, realizes internally, constitutes real unity. Concept\'s own mediation, self-determination, immanent presupposing.'
+  },
+
+  {
+    id: 'op-chem-trans-5',
+    chunkId: 'chem-trans-purpose',
+    label: 'Transition to purpose',
+    clauses: [
+      'Third syllogism: restoration of preceding processes',
+      'Sublates last remaining moment of indifferent bases',
+      'Sublates whole abstract external immediacy',
+      'Becomes concept\'s own moment of self-mediation',
+      'Concept has sublated as external all moments',
+      'Posited them in simple unity',
+      'Completely liberated from objective externality',
+      'Refers to externality only as unessential reality',
+      'This objective free concept is purpose',
+      'Teleology'
+    ],
+    predicates: [
+      { name: 'is', args: ['thirdSyllogism', 'restoration'] },
+      { name: 'sublates', args: ['thirdSyllogism', 'indifferentBases'] },
+      { name: 'sublates', args: ['thirdSyllogism', 'externalImmediacy'] },
+      { name: 'becomes', args: ['immediacy', 'conceptOwnMoment'] },
+      { name: 'has', args: ['concept', 'sublatedAllMoments'] },
+      { name: 'has', args: ['concept', 'positedInUnity'] },
+      { name: 'is', args: ['concept', 'liberated'] },
+      { name: 'refers', args: ['concept', 'toExternality'] },
+      { name: 'is', args: ['externality', 'unessential'] },
+      { name: 'is', args: ['concept', 'objectiveFree'] },
+      { name: 'is', args: ['concept', 'purpose'] }
+    ],
+    relations: [
+      { predicate: 'is', from: 'concept', to: 'purpose' }
+    ],
+    candidateSummary:
+      'Transition to purpose: Third syllogism sublates last moment of indifferent bases, external immediacy becomes concept\'s own moment. Concept liberated from externality - objective free concept is purpose (Teleology).'
+  }
+];
+
+/* minimal, stable accessors */
+export function getChunk(oneBasedIndex: number): Chunk | null {
+  return CANONICAL_CHUNKS[oneBasedIndex - 1] ?? null;
 }
 
-export class TransitionOfChemism implements AchievementOfScientificCognition {
-  private selfCreatingPresuppositions: SelfCreatingPresuppositions;
-  private threeSyllogismsTotality: ThreeSyllogismsTotality;
-  private progressiveSublationExternality: ProgressiveSublationExternality;
-  private objectiveFreeConcept: ObjectiveFreeConcept;
-  private achievementScientificCognition: AchievementScientificCognitionArchitecture;
-  private theoryOfScienceCompletion: TheoryOfScienceCompletion;
-
-  constructor() {
-    this.selfCreatingPresuppositions = new SelfCreatingPresuppositions();
-    this.threeSyllogismsTotality = new ThreeSyllogismsTotality();
-    this.progressiveSublationExternality = new ProgressiveSublationExternality();
-    this.objectiveFreeConcept = new ObjectiveFreeConcept();
-    this.achievementScientificCognition = new AchievementScientificCognitionArchitecture();
-    this.theoryOfScienceCompletion = new TheoryOfScienceCompletion();
-  }
-
-  /**
-   * SELF-CREATING PRESUPPOSITIONS - Scientific Method Paradigm
-   *
-   * "What happens here is that the object does not connect with another
-   * in accordance with an immediate, one-sided determinateness, but, in accordance with
-   * the inner totality of an original relation, posits the presupposition which it needs
-   * for a real connection and thereby gives itself a middle term"
-   */
-  getSelfCreatingPresuppositions(): SelfCreatingPresuppositions {
-    const ordinaryChemistryExample = this.getOrdinaryChemistryExample();
-    const objectCreatesOwnConditions = this.getObjectCreatesOwnConditions();
-    const innerTotalityOriginalRelation = this.getInnerTotalityOriginalRelation();
-    const selfGivenMiddleTerm = this.getSelfGivenMiddleTerm();
-    const concreteConceptPrinciple = this.getConcreteConceptPrinciple();
-
-    return new SelfCreatingPresuppositions(ordinaryChemistryExample, objectCreatesOwnConditions, innerTotalityOriginalRelation, selfGivenMiddleTerm, concreteConceptPrinciple);
-  }
-
-  /**
-   * ORDINARY CHEMISTRY EXAMPLE - Scientific Cognition Paradigm
-   *
-   * "Even ordinary chemistry shows examples of chemical alterations in which a body, for example,
-   * imparts a higher oxidation to one part of its mass and thereby reduces another part
-   * to a lower degree of the same, at which degree alone it can enter into a neutral combination"
-   */
-  getOrdinaryChemistryExample(): OrdinaryChemistryExample {
-    const chemicalAlterations = this.getChemicalAlterations();
-    const selfModificationForConnection = this.getSelfModificationForConnection();
-    const scientificMethodParadigm = this.getScientificMethodParadigm();
-
-    return new OrdinaryChemistryExample(chemicalAlterations, selfModificationForConnection, scientificMethodParadigm);
-  }
-
-  /**
-   * CHEMICAL ALTERATIONS - Self-Modification for Cognition
-   *
-   * "imparts a higher oxidation to one part of its mass and thereby reduces another part
-   * to a lower degree of the same, at which degree alone it can enter into a neutral combination"
-   */
-  getChemicalAlterations(): ChemicalAlterations {
-    // "imparts a higher oxidation to one part of its mass"
-    const impartsHigherOxidationPartMass = new ImpartsHigherOxidationPartMass();
-
-    // "and thereby reduces another part to a lower degree of the same"
-    const reducesAnotherPartLowerDegreeSame = impartsHigherOxidationPartMass.reducesAnotherPartLowerDegreeSame();
-
-    // "at which degree alone it can enter into a neutral combination"
-    const degreeAloneCanEnterNeutralCombination = reducesAnotherPartLowerDegreeSame.degreeAloneCanEnterNeutralCombination();
-
-    // "with another differing body brought into contact with it"
-    const anotherDifferingBodyBroughtContact = degreeAloneCanEnterNeutralCombination.anotherDifferingBodyBroughtContact();
-
-    // "a combination to which it would not have been receptive at that other first immediate degree"
-    const combinationNotReceptiveFirstImmediateDegree = anotherDifferingBodyBroughtContact.combinationNotReceptiveFirstImmediateDegree();
-
-    return new ChemicalAlterations(combinationNotReceptiveFirstImmediateDegree);
-  }
-
-  /**
-   * SELF-MODIFICATION FOR CONNECTION - Object Creates Conditions
-   *
-   * "What happens here is that the object does not connect with another
-   * in accordance with an immediate, one-sided determinateness"
-   */
-  getSelfModificationForConnection(): SelfModificationForConnection {
-    // "the object does not connect with another in accordance with an immediate, one-sided determinateness"
-    const objectNotConnectImmediateOneSidedDeterminateness = new ObjectNotConnectImmediateOneSidedDeterminateness();
-
-    // Object actively modifies itself to create conditions for connection
-    const objectActivelyModifiesItselfCreateConditionsConnection = objectNotConnectImmediateOneSidedDeterminateness.objectActivelyModifiesItselfCreateConditionsConnection();
-
-    return new SelfModificationForConnection(objectActivelyModifiesItselfCreateConditionsConnection);
-  }
-
-  /**
-   * SCIENTIFIC METHOD PARADIGM - Cognitive Self-Determination
-   *
-   * This IS the paradigm of scientific method: creating one's own experimental conditions
-   */
-  getScientificMethodParadigm(): ScientificMethodParadigm {
-    // Scientific cognition creates its own experimental conditions
-    const scientificCognitionCreatesOwnExperimentalConditions = new ScientificCognitionCreatesOwnExperimentalConditions();
-
-    // Not passive reception but active self-modification for knowledge
-    const notPassiveReceptionActiveSelflModificationKnowledge = scientificCognitionCreatesOwnExperimentalConditions.notPassiveReceptionActiveSelflModificationKnowledge();
-
-    // This IS how objectivity is achieved in subjective logic
-    const howObjectivityAchievedSubjectiveLogic = notPassiveReceptionActiveSelflModificationKnowledge.howObjectivityAchievedSubjectiveLogic();
-
-    return new ScientificMethodParadigm(howObjectivityAchievedSubjectiveLogic);
-  }
-
-  /**
-   * OBJECT CREATES OWN CONDITIONS - Scientific Self-Determination
-   *
-   * "but, in accordance with the inner totality of an original relation,
-   * posits the presupposition which it needs for a real connection"
-   */
-  getObjectCreatesOwnConditions(): ObjectCreatesOwnConditions {
-    const accordanceInnerTotality = this.getAccordanceInnerTotality();
-    const positsPresuppositionNeeds = this.getPositsPresuppositionNeeds();
-    const scientificSelfDetermination = this.getScientificSelfDetermination();
-
-    return new ObjectCreatesOwnConditions(accordanceInnerTotality, positsPresuppositionNeeds, scientificSelfDetermination);
-  }
-
-  /**
-   * ACCORDANCE INNER TOTALITY - Scientific Systematic Approach
-   *
-   * "in accordance with the inner totality of an original relation"
-   */
-  getAccordanceInnerTotality(): AccordanceInnerTotality {
-    // "in accordance with the inner totality of an original relation"
-    const accordanceInnerTotalityOriginalRelation = new AccordanceInnerTotalityOriginalRelation();
-
-    // Scientific systematic approach based on comprehensive understanding
-    const scientificSystematicApproachComprehensiveUnderstanding = accordanceInnerTotalityOriginalRelation.scientificSystematicApproachComprehensiveUnderstanding();
-
-    return new AccordanceInnerTotality(scientificSystematicApproachComprehensiveUnderstanding);
-  }
-
-  /**
-   * POSITS PRESUPPOSITION NEEDS - Scientific Hypothesis Formation
-   *
-   * "posits the presupposition which it needs for a real connection"
-   */
-  getPositsPresuppositionNeeds(): PositsPresuppositionNeeds {
-    // "posits the presupposition which it needs for a real connection"
-    const positsPresuppositionNeedsRealConnection = new PositsPresuppositionNeedsRealConnection();
-
-    // Scientific hypothesis formation - creating testable conditions
-    const scientificHypothesisFormationCreatingTestableConditions = positsPresuppositionNeedsRealConnection.scientificHypothesisFormationCreatingTestableConditions();
-
-    return new PositsPresuppositionNeeds(scientificHypothesisFormationCreatingTestableConditions);
-  }
-
-  /**
-   * SCIENTIFIC SELF-DETERMINATION - Autonomous Cognitive Method
-   *
-   * This IS scientific method as cognitive self-determination
-   */
-  getScientificSelfDetermination(): ScientificSelfDetermination {
-    // Scientific cognition determines its own conditions
-    const scientificCognitionDeterminesOwnConditions = new ScientificCognitionDeterminesOwnConditions();
-
-    // Not dependent on external authority but self-validating
-    const notDependentExternalAuthoritySelfValidating = scientificCognitionDeterminesOwnConditions.notDependentExternalAuthoritySelfValidating();
-
-    return new ScientificSelfDetermination(notDependentExternalAuthoritySelfValidating);
-  }
-
-  /**
-   * INNER TOTALITY ORIGINAL RELATION - Systematic Scientific Understanding
-   *
-   * "in accordance with the inner totality of an original relation"
-   */
-  getInnerTotalityOriginalRelation(): InnerTotalityOriginalRelation {
-    // Inner systematic understanding of relationships
-    const innerSystematicUnderstandingRelationships = new InnerSystematicUnderstandingRelationships();
-
-    // Not fragmentary but comprehensive cognitive approach
-    const notFragmentaryComprehensiveCognitiveApproach = innerSystematicUnderstandingRelationships.notFragmentaryComprehensiveCognitiveApproach();
-
-    // Scientific cognition grasps totality of relations
-    const scientificCognitionGraspsTotalityRelations = notFragmentaryComprehensiveCognitiveApproach.scientificCognitionGraspsTotalityRelations();
-
-    return new InnerTotalityOriginalRelation(scientificCognitionGraspsTotalityRelations);
-  }
-
-  /**
-   * SELF-GIVEN MIDDLE TERM - Scientific Mediation
-   *
-   * "and thereby gives itself a middle term by virtue of which it unites its concept with its reality in conclusion"
-   */
-  getSelfGivenMiddleTerm(): SelfGivenMiddleTerm {
-    // "gives itself a middle term"
-    const givesItselfMiddleTerm = new GivesItselfMiddleTerm();
-
-    // "by virtue of which it unites its concept with its reality in conclusion"
-    const unitesConceptRealityConclusion = givesItselfMiddleTerm.unitesConceptRealityConclusion();
-
-    // Scientific method as self-created mediation
-    const scientificMethodSelfCreatedMediation = unitesConceptRealityConclusion.scientificMethodSelfCreatedMediation();
-
-    return new SelfGivenMiddleTerm(scientificMethodSelfCreatedMediation);
-  }
-
-  /**
-   * CONCRETE CONCEPT PRINCIPLE - Scientific Conceptual Framework
-   *
-   * "it is a singularity determined in and for itself, the concrete concept as the principle
-   * of the disjunction into extremes whose re-union is the activity of that same negative principle
-   * that thereby returns to its first determination, but returns to it objectified."
-   */
-  getConcreteConceptPrinciple(): ConcreteConceptPrinciple {
-    const singularityDeterminedInForItself = this.getSingularityDeterminedInForItself();
-    const principleDisjunctionExtremes = this.getPrincipleDisjunctionExtremes();
-    const returnsFirstDeterminationObjectified = this.getReturnsFirstDeterminationObjectified();
-
-    return new ConcreteConceptPrinciple(singularityDeterminedInForItself, principleDisjunctionExtremes, returnsFirstDeterminationObjectified);
-  }
-
-  /**
-   * SINGULARITY DETERMINED IN FOR ITSELF - Scientific Individual Cognition
-   *
-   * "it is a singularity determined in and for itself, the concrete concept"
-   */
-  getSingularityDeterminedInForItself(): SingularityDeterminedInForItself {
-    // "singularity determined in and for itself"
-    const singularityDeterminedInForItself = new SingularityDeterminedInForItselfStructure();
-
-    // "the concrete concept"
-    const concreteConcept = singularityDeterminedInForItself.concreteConcept();
-
-    // Scientific cognition as individual yet universal
-    const scientificCognitionIndividualYetUniversal = concreteConcept.scientificCognitionIndividualYetUniversal();
-
-    return new SingularityDeterminedInForItself(scientificCognitionIndividualYetUniversal);
-  }
-
-  /**
-   * PRINCIPLE DISJUNCTION EXTREMES - Scientific Analysis/Synthesis
-   *
-   * "as the principle of the disjunction into extremes whose re-union is the activity
-   * of that same negative principle"
-   */
-  getPrincipleDisjunctionExtremes(): PrincipleDisjunctionExtremes {
-    // "principle of the disjunction into extremes"
-    const principleDisjunctionIntoExtremes = new PrincipleDisjunctionIntoExtremes();
-
-    // "whose re-union is the activity of that same negative principle"
-    const reUnionActivitySameNegativePrinciple = principleDisjunctionIntoExtremes.reUnionActivitySameNegativePrinciple();
-
-    // Scientific method: analysis and synthesis as one activity
-    const scientificMethodAnalysisSynthesisOneActivity = reUnionActivitySameNegativePrinciple.scientificMethodAnalysisSynthesisOneActivity();
-
-    return new PrincipleDisjunctionExtremes(scientificMethodAnalysisSynthesisOneActivity);
-  }
-
-  /**
-   * RETURNS FIRST DETERMINATION OBJECTIFIED - Scientific Objectivity Achievement
-   *
-   * "that thereby returns to its first determination, but returns to it objectified"
-   */
-  getReturnsFirstDeterminationObjectified(): ReturnsFirstDeterminationObjectified {
-    // "returns to its first determination"
-    const returnsFirstDetermination = new ReturnsFirstDetermination();
-
-    // "but returns to it objectified"
-    const returnsObjectified = returnsFirstDetermination.returnsObjectified();
-
-    // Scientific cognition achieves objectivity through self-determination
-    const scientificCognitionAchievesObjectivitySelfDetermination = returnsObjectified.scientificCognitionAchievesObjectivitySelfDetermination();
-
-    return new ReturnsFirstDeterminationObjectified(scientificCognitionAchievesObjectivitySelfDetermination);
-  }
-
-  /**
-   * THREE SYLLOGISMS TOTALITY - Complete Scientific Cognitive Architecture
-   *
-   * "The three syllogisms that have resulted constitute its totality.
-   * The first has formal neutrality for its middle term and for extremes the objects in tension.
-   * The second has for its middle term the product of the first, real neutrality..."
-   */
-  getThreeSyllogismsTotality(): ThreeSyllogismsTotality {
-    const chemismFirstNegation = this.getChemismFirstNegation();
-    const threeSyllogismsStructure = this.getThreeSyllogismsStructure();
-    const syllogismsFallApart = this.getSyllogismsFallApart();
-    const variousProcessesNecessary = this.getVariousProcessesNecessary();
-
-    return new ThreeSyllogismsTotality(chemismFirstNegation, threeSyllogismsStructure, syllogismsFallApart, variousProcessesNecessary);
-  }
-
-  /**
-   * CHEMISM FIRST NEGATION - Beginning of Scientific Cognition
-   *
-   * "Chemism is itself the first negation of the indifferent objectivity
-   * and of the externality of determinateness; it is still burdened, therefore,
-   * by the immediate self-subsistence of the object and with externality."
-   */
-  getChemismFirstNegation(): ChemismFirstNegation {
-    const firstNegationIndifferentObjectivity = this.getFirstNegationIndifferentObjectivity();
-    const stillBurdenedExternality = this.getStillBurdenedExternality();
-    const notYetTotalitySelfDetermination = this.getNotYetTotalitySelfDetermination();
-
-    return new ChemismFirstNegation(firstNegationIndifferentObjectivity, stillBurdenedExternality, notYetTotalitySelfDetermination);
-  }
-
-  /**
-   * FIRST NEGATION INDIFFERENT OBJECTIVITY
-   *
-   * "Chemism is itself the first negation of the indifferent objectivity and of the externality of determinateness"
-   */
-  getFirstNegationIndifferentObjectivity(): FirstNegationIndifferentObjectivity {
-    // "first negation of the indifferent objectivity"
-    const firstNegationIndifferentObjectivity = new FirstNegationIndifferentObjectivityStructure();
-
-    // "and of the externality of determinateness"
-    const externalityDeterminateness = firstNegationIndifferentObjectivity.externalityDeterminateness();
-
-    // Beginning of cognitive engagement with objects
-    const beginningCognitiveEngagementObjects = externalityDeterminateness.beginningCognitiveEngagementObjects();
-
-    return new FirstNegationIndifferentObjectivity(beginningCognitiveEngagementObjects);
-  }
-
-  /**
-   * STILL BURDENED EXTERNALITY
-   *
-   * "it is still burdened, therefore, by the immediate self-subsistence of the object and with externality"
-   */
-  getStillBurdenedExternality(): StillBurdenedExternality {
-    // "still burdened... by the immediate self-subsistence of the object and with externality"
-    const stillBurdenedImmediateSelfSubsistenceObjectExternality = new StillBurdenedImmediateSelfSubsistenceObjectExternality();
-
-    // Scientific cognition still partially external to objects
-    const scientificCognitionStillPartiallyExternalObjects = stillBurdenedImmediateSelfSubsistenceObjectExternality.scientificCognitionStillPartiallyExternalObjects();
-
-    return new StillBurdenedExternality(scientificCognitionStillPartiallyExternalObjects);
-  }
-
-  /**
-   * NOT YET TOTALITY SELF-DETERMINATION
-   *
-   * "Consequently it is not yet for itself that totality of self-determination
-   * that proceeds from it and in which it is rather sublated."
-   */
-  getNotYetTotalitySelfDetermination(): NotYetTotalitySelfDetermination {
-    // "not yet for itself that totality of self-determination"
-    const notYetTotalitySelfDetermination = new NotYetTotalitySelfDeterminationStructure();
-
-    // "that proceeds from it and in which it is rather sublated"
-    const proceedsFromItRatherSublated = notYetTotalitySelfDetermination.proceedsFromItRatherSublated();
-
-    // Scientific cognition developing toward complete self-determination
-    const scientificCognitionDevelopingCompleteSelfDetermination = proceedsFromItRatherSublated.scientificCognitionDevelopingCompleteSelfDetermination();
-
-    return new NotYetTotalitySelfDetermination(scientificCognitionDevelopingCompleteSelfDetermination);
-  }
-
-  /**
-   * THREE SYLLOGISMS STRUCTURE - Scientific Cognitive Architecture
-   *
-   * "The three syllogisms that have resulted constitute its totality.
-   * The first has formal neutrality for its middle term..."
-   */
-  getThreeSyllogismsStructure(): ThreeSyllogismsStructure {
-    const firstSyllogism = this.getFirstSyllogismFormalNeutrality();
-    const secondSyllogism = this.getSecondSyllogismRealNeutrality();
-    const thirdSyllogism = this.getThirdSyllogismSelfRealizingConcept();
-
-    return new ThreeSyllogismsStructure(firstSyllogism, secondSyllogism, thirdSyllogism);
-  }
-
-  /**
-   * FIRST SYLLOGISM FORMAL NEUTRALITY
-   *
-   * "The first has formal neutrality for its middle term and for extremes the objects in tension."
-   */
-  getFirstSyllogismFormalNeutrality(): FirstSyllogismFormalNeutrality {
-    // "formal neutrality for its middle term and for extremes the objects in tension"
-    const formalNeutralityMiddleTermObjectsTensionExtremes = new FormalNeutralityMiddleTermObjectsTensionExtremes();
-
-    // Initial scientific approach: neutral observation of tensions
-    const initialScientificApproachNeutralObservationTensions = formalNeutralityMiddleTermObjectsTensionExtremes.initialScientificApproachNeutralObservationTensions();
-
-    return new FirstSyllogismFormalNeutrality(initialScientificApproachNeutralObservationTensions);
-  }
-
-  /**
-   * SECOND SYLLOGISM REAL NEUTRALITY
-   *
-   * "The second has for its middle term the product of the first, real neutrality;
-   * and for extremes the disrupting activity and its product, the indifferent element."
-   */
-  getSecondSyllogismRealNeutrality(): SecondSyllogismRealNeutrality {
-    // "product of the first, real neutrality; ...disrupting activity and its product, the indifferent element"
-    const productFirstRealNeutralityDisruptingActivityIndifferentElement = new ProductFirstRealNeutralityDisruptingActivityIndifferentElement();
-
-    // Scientific analysis: real engagement with disrupting forces
-    const scientificAnalysisRealEngagementDisruptingForces = productFirstRealNeutralityDisruptingActivityIndifferentElement.scientificAnalysisRealEngagementDisruptingForces();
-
-    return new SecondSyllogismRealNeutrality(scientificAnalysisRealEngagementDisruptingForces);
-  }
-
-  /**
-   * THIRD SYLLOGISM SELF-REALIZING CONCEPT
-   *
-   * "But the third is the self-realizing concept that posits for itself the presupposition
-   * by virtue of which the process of its realization is conditioned:
-   * a syllogism that has the universal for its essence."
-   */
-  getThirdSyllogismSelfRealizingConcept(): ThirdSyllogismSelfRealizingConcept {
-    // "self-realizing concept that posits for itself the presupposition"
-    const selfRealizingConceptPositsPresupposition = new SelfRealizingConceptPositsPresupposition();
-
-    // "by virtue of which the process of its realization is conditioned"
-    const processRealizationConditioned = selfRealizingConceptPositsPresupposition.processRealizationConditioned();
-
-    // "a syllogism that has the universal for its essence"
-    const syllogismUniversalEssence = processRealizationConditioned.syllogismUniversalEssence();
-
-    // Scientific method as self-conditioning universal cognition
-    const scientificMethodSelfConditioningUniversalCognition = syllogismUniversalEssence.scientificMethodSelfConditioningUniversalCognition();
-
-    return new ThirdSyllogismSelfRealizingConcept(scientificMethodSelfConditioningUniversalCognition);
-  }
-
-  /**
-   * SYLLOGISMS FALL APART - Incomplete Scientific Integration
-   *
-   * "Yet, on account of the immediacy and externality by which the chemical objectivity is still determined,
-   * these three syllogisms fall apart."
-   */
-  getSyllogismsFallApart(): SyllogismsFallApart {
-    const immediacyExternalityStillDetermined = this.getImmediacyExternalityStillDetermined();
-    const firstProcessExtinguished = this.getFirstProcessExtinguished();
-    const excretionDecompositionExternal = this.getExcretionDecompositionExternal();
-    const twoEssentialMomentsDiverse = this.getTwoEssentialMomentsDiverse();
-
-    return new SyllogismsFallApart(immediacyExternalityStillDetermined, firstProcessExtinguished, excretionDecompositionExternal, twoEssentialMomentsDiverse);
-  }
-
-  /**
-   * IMMEDIACY EXTERNALITY STILL DETERMINED
-   *
-   * "on account of the immediacy and externality by which the chemical objectivity is still determined"
-   */
-  getImmediacyExternalityStillDetermined(): ImmediacyExternalityStillDetermined {
-    // "immediacy and externality by which the chemical objectivity is still determined"
-    const immediacyExternalityChemicalObjectivityStillDetermined = new ImmediacyExternalityChemicalObjectivityStillDetermined();
-
-    // Scientific cognition not yet fully self-determining
-    const scientificCognitionNotYetFullySelfDetermining = immediacyExternalityChemicalObjectivityStillDetermined.scientificCognitionNotYetFullySelfDetermining();
-
-    return new ImmediacyExternalityStillDetermined(scientificCognitionNotYetFullySelfDetermining);
-  }
-
-  /**
-   * FIRST PROCESS EXTINGUISHED
-   *
-   * "The first process whose product is the neutrality of the tensed objects is
-   * extinguished in this product and is re-activated only by a differentiation that comes to it from outside"
-   */
-  getFirstProcessExtinguished(): FirstProcessExtinguished {
-    // "extinguished in this product and is re-activated only by a differentiation that comes to it from outside"
-    const extinguishedProductReactivatedDifferentiationOutside = new ExtinguishedProductReactivatedDifferentiationOutside();
-
-    // "conditioned by an immediate presupposition, the process is exhausted in it"
-    const conditionedImmediatePresuppositionProcessExhausted = extinguishedProductReactivatedDifferentiationOutside.conditionedImmediatePresuppositionProcessExhausted();
-
-    // Scientific process requires external stimulation to continue
-    const scientificProcessRequiresExternalStimulationContinue = conditionedImmediatePresuppositionProcessExhausted.scientificProcessRequiresExternalStimulationContinue();
-
-    return new FirstProcessExtinguished(scientificProcessRequiresExternalStimulationContinue);
-  }
-
-  /**
-   * EXCRETION DECOMPOSITION EXTERNAL
-   *
-   * "The excretion out of the neutral product of the non-indifferent extremes,
-   * as also their decomposition into their abstract elements,
-   * must likewise proceed from conditions and stimulations of activity brought in from the outside."
-   */
-  getExcretionDecompositionExternal(): ExcretionDecompositionExternal {
-    // "excretion...decomposition...must likewise proceed from conditions and stimulations...from the outside"
-    const excretionDecompositionConditionsStimulationsOutside = new ExcretionDecompositionConditionsStimulationsOutside();
-
-    // Scientific analysis still dependent on external conditions
-    const scientificAnalysisStillDependentExternalConditions = excretionDecompositionConditionsStimulationsOutside.scientificAnalysisStillDependentExternalConditions();
-
-    return new ExcretionDecompositionExternal(scientificAnalysisStillDependentExternalConditions);
-  }
-
-  /**
-   * TWO ESSENTIAL MOMENTS DIVERSE
-   *
-   * "But the two essential moments of the process, neutralization on the one hand
-   * and dissolution and reduction on the other...constitute on account of the still underlying
-   * externality two diverse sides"
-   */
-  getTwoEssentialMomentsDiverse(): TwoEssentialMomentsDiverse {
-    const neutralizationDissolutionReduction = this.getNeutralizationDissolutionReduction();
-    const underlyingExternalityDiverseSides = this.getUnderlyingExternalityDiverseSides();
-    const renewedNeutralizationOtherProcess = this.getRenewedNeutralizationOtherProcess();
-
-    return new TwoEssentialMomentsDiverse(neutralizationDissolutionReduction, underlyingExternalityDiverseSides, renewedNeutralizationOtherProcess);
-  }
-
-  /**
-   * NEUTRALIZATION DISSOLUTION REDUCTION - Scientific Dual Process
-   *
-   * "the two essential moments of the process, neutralization on the one hand
-   * and dissolution and reduction on the other"
-   */
-  getNeutralizationDissolutionReduction(): NeutralizationDissolutionReduction {
-    // "neutralization on the one hand and dissolution and reduction on the other"
-    const neutralizationOnHandDissolutionReductionOther = new NeutralizationOnHandDissolutionReductionOther();
-
-    // Scientific cognition involves both synthesis and analysis
-    const scientificCognitionInvolvesBothSynthesisAnalysis = neutralizationOnHandDissolutionReductionOther.scientificCognitionInvolvesBothSynthesisAnalysis();
-
-    return new NeutralizationDissolutionReduction(scientificCognitionInvolvesBothSynthesisAnalysis);
-  }
-
-  /**
-   * UNDERLYING EXTERNALITY DIVERSE SIDES
-   *
-   * "constitute on account of the still underlying externality two diverse sides"
-   */
-  getUnderlyingExternalityDiverseSides(): UnderlyingExternalityDiverseSides {
-    // "on account of the still underlying externality two diverse sides"
-    const stillUnderlyingExternalityTwoDiverseSides = new StillUnderlyingExternalityTwoDiverseSides();
-
-    // Scientific synthesis and analysis not yet unified
-    const scientificSynthesisAnalysisNotYetUnified = stillUnderlyingExternalityTwoDiverseSides.scientificSynthesisAnalysisNotYetUnified();
-
-    return new UnderlyingExternalityDiverseSides(scientificSynthesisAnalysisNotYetUnified);
-  }
-
-  /**
-   * RENEWED NEUTRALIZATION OTHER PROCESS
-   *
-   * "their renewed neutralization is a process other than the one that took place in the first"
-   */
-  getRenewedNeutralizationOtherProcess(): RenewedNeutralizationOtherProcess {
-    // "renewed neutralization is a process other than the one that took place in the first"
-    const renewedNeutralizationProcessOtherTookPlaceFirst = new RenewedNeutralizationProcessOtherTookPlaceFirst();
-
-    // Scientific processes not yet integrated into unified method
-    const scientificProcessesNotYetIntegratedUnifiedMethod = renewedNeutralizationProcessOtherTookPlaceFirst.scientificProcessesNotYetIntegratedUnifiedMethod();
-
-    return new RenewedNeutralizationOtherProcess(scientificProcessesNotYetIntegratedUnifiedMethod);
-  }
-
-  /**
-   * VARIOUS PROCESSES NECESSARY - Stages of Scientific Development
-   *
-   * "But these various processes, which have demonstrated themselves to be necessary,
-   * are equally so many stages by which externality and conditionality are sublated"
-   */
-  getVariousProcessesNecessary(): VariousProcessesNecessary {
-    // "various processes, which have demonstrated themselves to be necessary"
-    const variousProcessesDemonstratedNecessary = new VariousProcessesDemonstratedNecessary();
-
-    // "equally so many stages by which externality and conditionality are sublated"
-    const stagesByWhichExternalityConditionalitySublated = variousProcessesDemonstratedNecessary.stagesByWhichExternalityConditionalitySublated();
-
-    // "and from which the concept emerges as determined in and for itself"
-    const conceptEmergesDeterminedInForItself = stagesByWhichExternalityConditionalitySublated.conceptEmergesDeterminedInForItself();
-
-    // "a totality unconditioned by externality"
-    const totalityUnconditionedExternality = conceptEmergesDeterminedInForItself.totalityUnconditionedExternality();
-
-    return new VariousProcessesNecessary(totalityUnconditionedExternality);
-  }
-
-  /**
-   * PROGRESSIVE SUBLATION EXTERNALITY - Achievement of Objectivity
-   *
-   * "In the first process, what is sublated is the externality of the mutually non-indifferent extremes...
-   * Sublated in the second process is the externality of the real unity...
-   * The third syllogism...sublates the whole abstract external immediacy"
-   */
-  getProgressiveSublationExternality(): ProgressiveSublationExternality {
-    const firstProcessSublation = this.getFirstProcessSublation();
-    const secondProcessSublation = this.getSecondProcessSublation();
-    const thirdProcessSublation = this.getThirdProcessSublation();
-    const achievementObjectivity = this.getAchievementObjectivity();
-
-    return new ProgressiveSublationExternality(firstProcessSublation, secondProcessSublation, thirdProcessSublation, achievementObjectivity);
-  }
-
-  /**
-   * FIRST PROCESS SUBLATION - Externality of Extremes
-   *
-   * "In the first process, what is sublated is the externality of the mutually non-indifferent extremes
-   * that constitute the whole reality, or the distinction between the implicitly determinate concept
-   * and its existing determinateness."
-   */
-  getFirstProcessSublation(): FirstProcessSublation {
-    // "sublated is the externality of the mutually non-indifferent extremes that constitute the whole reality"
-    const sublatedExternalityMutuallyNonIndifferentExtremesWholeReality = new SublatedExternalityMutuallyNonIndifferentExtremesWholeReality();
-
-    // "the distinction between the implicitly determinate concept and its existing determinateness"
-    const distinctionImplicitlyDeterminateConceptExistingDeterminateness = sublatedExternalityMutuallyNonIndifferentExtremesWholeReality.distinctionImplicitlyDeterminateConceptExistingDeterminateness();
-
-    // Scientific cognition overcomes externality of observed phenomena
-    const scientificCognitionOvercomesExternalityObservedPhenomena = distinctionImplicitlyDeterminateConceptExistingDeterminateness.scientificCognitionOvercomesExternalityObservedPhenomena();
-
-    return new FirstProcessSublation(scientificCognitionOvercomesExternalityObservedPhenomena);
-  }
-
-  /**
-   * SECOND PROCESS SUBLATION - Externality of Real Unity
-   *
-   * "Sublated in the second process is the externality of the real unity, union as merely neutral."
-   */
-  getSecondProcessSublation(): SecondProcessSublation {
-    const externalityRealUnityMerelyNeutral = this.getExternalityRealUnityMerelyNeutral();
-    const formalActivitySublatesItself = this.getFormalActivitySublatesItself();
-    const absoluteActivityWithdrawnItself = this.getAbsoluteActivityWithdrawnItself();
-    const conceptsOwnMediation = this.getConceptsOwnMediation();
-
-    return new SecondProcessSublation(externalityRealUnityMerelyNeutral, formalActivitySublatesItself, absoluteActivityWithdrawnItself, conceptsOwnMediation);
-  }
-
-  /**
-   * EXTERNALITY REAL UNITY MERELY NEUTRAL
-   *
-   * "Sublated in the second process is the externality of the real unity, union as merely neutral"
-   */
-  getExternalityRealUnityMerelyNeutral(): ExternalityRealUnityMerelyNeutral {
-    // "externality of the real unity, union as merely neutral"
-    const externalityRealUnityUnionMerelyNeutral = new ExternalityRealUnityUnionMerelyNeutral();
-
-    // Scientific cognition overcomes merely external unity
-    const scientificCognitionOvercomesMerelyExternalUnity = externalityRealUnityUnionMerelyNeutral.scientificCognitionOvercomesMerelyExternalUnity();
-
-    return new ExternalityRealUnityMerelyNeutral(scientificCognitionOvercomesMerelyExternalUnity);
-  }
-
-  /**
-   * FORMAL ACTIVITY SUBLATES ITSELF
-   *
-   * "the formal activity sublates itself in bases that are equally formal, neutral determinacies"
-   */
-  getFormalActivitySublatesItself(): FormalActivitySublatesItself {
-    // "formal activity sublates itself in bases that are equally formal, neutral determinacies"
-    const formalActivitySublatesBasesEquallyFormalNeutralDeterminacies = new FormalActivitySublatesBasesEquallyFormalNeutralDeterminacies();
-
-    // Scientific method overcomes merely formal approach
-    const scientificMethodOvercomesMerelyFormalApproach = formalActivitySublatesBasesEquallyFormalNeutralDeterminacies.scientificMethodOvercomesMerelyFormalApproach();
-
-    return new FormalActivitySublatesItself(scientificMethodOvercomesMerelyFormalApproach);
-  }
-
-  /**
-   * ABSOLUTE ACTIVITY WITHDRAWN ITSELF
-   *
-   * "whose inner concept is now the absolute activity that has withdrawn into itself
-   * and now realizes itself internally, that is, posits the determinate difference within itself
-   * and through this mediation constitutes itself as real unity"
-   */
-  getAbsoluteActivityWithdrawnItself(): AbsoluteActivityWithdrawnItself {
-    // "absolute activity that has withdrawn into itself and now realizes itself internally"
-    const absoluteActivityWithdrawnItselfRealizesInternally = new AbsoluteActivityWithdrawnItselfRealizesInternally();
-
-    // "posits the determinate difference within itself"
-    const positsDeterminateDifferenceWithinItself = absoluteActivityWithdrawnItselfRealizesInternally.positsDeterminateDifferenceWithinItself();
-
-    // "and through this mediation constitutes itself as real unity"
-    const throughMediationConstitutesRealUnity = positsDeterminateDifferenceWithinItself.throughMediationConstitutesRealUnity();
-
-    // Scientific cognition becomes self-determining activity
-    const scientificCognitionBecomesSelfDeterminingActivity = throughMediationConstitutesRealUnity.scientificCognitionBecomesSelfDeterminingActivity();
-
-    return new AbsoluteActivityWithdrawnItself(scientificCognitionBecomesSelfDeterminingActivity);
-  }
-
-  /**
-   * CONCEPTS OWN MEDIATION - Scientific Self-Determination
-   *
-   * "this is a mediation which is thus the concept's own mediation, its self-determination
-   * and, considering that in it the concept reflects itself back into itself, an immanent presupposing."
-   */
-  getConceptsOwnMediation(): ConceptsOwnMediation {
-    // "the concept's own mediation, its self-determination"
-    const conceptsOwnMediationSelfDetermination = new ConceptsOwnMediationSelfDetermination();
-
-    // "the concept reflects itself back into itself, an immanent presupposing"
-    const conceptReflectsItselfBackImmanentPresupposing = conceptsOwnMediationSelfDetermination.conceptReflectsItselfBackImmanentPresupposing();
-
-    // Scientific method becomes self-grounding
-    const scientificMethodBecomesSelfGrounding = conceptReflectsItselfBackImmanentPresupposing.scientificMethodBecomesSelfGrounding();
-
-    return new ConceptsOwnMediation(scientificMethodBecomesSelfGrounding);
-  }
-
-  /**
-   * THIRD PROCESS SUBLATION - Abstract External Immediacy
-   *
-   * "The third syllogism, which on the one hand is the restoration of the preceding processes,
-   * sublates on the other hand the last remaining moment of indifferent bases:
-   * it sublates the whole abstract external immediacy"
-   */
-  getThirdProcessSublation(): ThirdProcessSublation {
-    // "restoration of the preceding processes"
-    const restorationPrecedingProcesses = new RestorationPrecedingProcesses();
-
-    // "sublates...the last remaining moment of indifferent bases"
-    const sublatesLastRemainingMomentIndifferentBases = restorationPrecedingProcesses.sublatesLastRemainingMomentIndifferentBases();
-
-    // "sublates the whole abstract external immediacy"
-    const sublatesWholeAbstractExternalImmediacy = sublatesLastRemainingMomentIndifferentBases.sublatesWholeAbstractExternalImmediacy();
-
-    // "that becomes in this way the concept's own moment of self-mediation"
-    const becomesConceptsOwnMomentSelfMediation = sublatesWholeAbstractExternalImmediacy.becomesConceptsOwnMomentSelfMediation();
-
-    return new ThirdProcessSublation(becomesConceptsOwnMomentSelfMediation);
-  }
-
-  /**
-   * ACHIEVEMENT OBJECTIVITY - Scientific Cognition Completed
-   *
-   * Complete sublation of externality = Achievement of scientific objectivity
-   */
-  getAchievementObjectivity(): AchievementObjectivity {
-    // Progressive sublation of all forms of externality
-    const progressiveSublationAllFormsExternality = new ProgressiveSublationAllFormsExternality();
-
-    // Scientific cognition achieves complete objectivity
-    const scientificCognitionAchievesCompleteObjectivity = progressiveSublationAllFormsExternality.scientificCognitionAchievesCompleteObjectivity();
-
-    // This IS the achievement of objectivity in subjective logic
-    const achievementObjectivitySubjectiveLogic = scientificCognitionAchievesCompleteObjectivity.achievementObjectivitySubjectiveLogic();
-
-    return new AchievementObjectivity(achievementObjectivitySubjectiveLogic);
-  }
-
-  /**
-   * OBJECTIVE FREE CONCEPT - PURPOSE = SCIENCE PROPER
-   *
-   * "The concept that has thus sublated as external all the moments of its objective existence,
-   * and has posited them in its simple unity, is thereby completely liberated from
-   * the objective externality to which it refers only as an unessential reality.
-   * This objective free concept is purpose."
-   */
-  getObjectiveFreeConcept(): ObjectiveFreeConcept {
-    const conceptSublatedExternalMoments = this.getConceptSublatedExternalMoments();
-    const completelyLiberatedObjectiveExternality = this.getCompletelyLiberatedObjectiveExternality();
-    const objectiveFreeConceptIsPurpose = this.getObjectiveFreeConceptIsPurpose();
-    const scienceProperAchieved = this.getScienceProperAchieved();
-
-    return new ObjectiveFreeConcept(conceptSublatedExternalMoments, completelyLiberatedObjectiveExternality, objectiveFreeConceptIsPurpose, scienceProperAchieved);
-  }
-
-  /**
-   * CONCEPT SUBLATED EXTERNAL MOMENTS
-   *
-   * "The concept that has thus sublated as external all the moments of its objective existence,
-   * and has posited them in its simple unity"
-   */
-  getConceptSublatedExternalMoments(): ConceptSublatedExternalMoments {
-    // "sublated as external all the moments of its objective existence"
-    const sublatedExternalAllMomentsObjectiveExistence = new SublatedExternalAllMomentsObjectiveExistence();
-
-    // "and has posited them in its simple unity"
-    const positedThemSimpleUnity = sublatedExternalAllMomentsObjectiveExistence.positedThemSimpleUnity();
-
-    // Scientific cognition integrates all objective moments
-    const scientificCognitionIntegratesAllObjectiveMoments = positedThemSimpleUnity.scientificCognitionIntegratesAllObjectiveMoments();
-
-    return new ConceptSublatedExternalMoments(scientificCognitionIntegratesAllObjectiveMoments);
-  }
-
-  /**
-   * COMPLETELY LIBERATED OBJECTIVE EXTERNALITY
-   *
-   * "is thereby completely liberated from the objective externality
-   * to which it refers only as an unessential reality"
-   */
-  getCompletelyLiberatedObjectiveExternality(): CompletelyLiberatedObjectiveExternality {
-    // "completely liberated from the objective externality"
-    const completelyLiberatedObjectiveExternality = new CompletelyLiberatedObjectiveExternalityStructure();
-
-    // "to which it refers only as an unessential reality"
-    const refersOnlyUnessentialReality = completelyLiberatedObjectiveExternality.refersOnlyUnessentialReality();
-
-    // Scientific cognition achieves complete autonomy
-    const scientificCognitionAchievesCompleteAutonomy = refersOnlyUnessentialReality.scientificCognitionAchievesCompleteAutonomy();
-
-    return new CompletelyLiberatedObjectiveExternality(scientificCognitionAchievesCompleteAutonomy);
-  }
-
-  /**
-   * OBJECTIVE FREE CONCEPT IS PURPOSE
-   *
-   * "This objective free concept is purpose."
-   */
-  getObjectiveFreeConceptIsPurpose(): ObjectiveFreeConceptIsPurpose {
-    // "This objective free concept is purpose"
-    const objectiveFreeConceptPurpose = new ObjectiveFreeConceptPurposeStructure();
-
-    // Purpose as completely self-determining cognition
-    const purposeCompletelySelfDeterminingCognition = objectiveFreeConceptPurpose.purposeCompletelySelfDeterminingCognition();
-
-    return new ObjectiveFreeConceptIsPurpose(purposeCompletelySelfDeterminingCognition);
-  }
-
-  /**
-   * SCIENCE PROPER ACHIEVED
-   *
-   * PURPOSE = SCIENCE PROPER - The achievement of Hegel's Theory of Science
-   */
-  getScienceProperAchieved(): ScienceProperAchieved {
-    // Purpose is science proper - completely self-determining cognition
-    const purposeScienceProperCompletelySelfDeterminingCognition = new PurposeScienceProperCompletelySelfDeterminingCognition();
-
-    // End of Theory of Science - beginning of Science proper
-    const endTheoryOfScienceBeginningScience = purposeScienceProperCompletelySelfDeterminingCognition.endTheoryOfScienceBeginningScience();
-
-    // You must achieve the concept before you can use it - NOW ACHIEVED!
-    const mustAchieveConceptBeforeCanUseItNowAchieved = endTheoryOfScienceBeginningScience.mustAchieveConceptBeforeCanUseItNowAchieved();
-
-    return new ScienceProperAchieved(mustAchieveConceptBeforeCanUseItNowAchieved);
-  }
-
-  /**
-   * SCIENTIFIC COGNITION PATTERNS
-   */
-  getScientificCognitionPatterns(): string {
-    return `
-    SCIENTIFIC COGNITION ACHIEVEMENT PATTERNS:
-
-    1. SELF-CREATING PRESUPPOSITIONS:
-    - Objects create their own conditions for connection (oxidation example)
-    - Scientific method as self-conditioning cognition
-    - Inner totality of original relations (systematic approach)
-    - Self-given middle term (scientific mediation)
-    - Concrete concept as principle of analysis/synthesis unity
-
-    2. THREE SYLLOGISMS TOTALITY:
-    - First: Formal neutrality (neutral observation)
-    - Second: Real neutrality (active engagement)
-    - Third: Self-realizing concept (self-conditioning universal)
-    - But they still fall apart due to remaining externality
-
-    3. PROGRESSIVE SUBLATION OF EXTERNALITY:
-    - First process: Sublates externality of extremes
-    - Second process: Sublates externality of real unity
-    - Third process: Sublates abstract external immediacy
-    - Achievement of complete objectivity
-
-    4. OBJECTIVE FREE CONCEPT = PURPOSE:
-    - Completely liberated from objective externality
-    - Self-determining cognition achieved
-    - PURPOSE = SCIENCE PROPER
-    - End of Theory of Science → Beginning of Science proper
-
-    "You must achieve the Concept before you can use it" - NOW ACHIEVED!
-    This IS the achievement of scientific objectivity in subjective logic!
-    `;
-  }
-
-  /**
-   * COMPLETE DIALECTICAL MOVEMENT
-   */
-  dialecticalMovement(): string {
-    const selfCreatingPresuppositions = this.getSelfCreatingPresuppositions();
-    const threeSyllogismsTotality = this.getThreeSyllogismsTotality();
-    const progressiveSublationExternality = this.getProgressiveSublationExternality();
-    const objectiveFreeConcept = this.getObjectiveFreeConcept();
-
-    return `
-    COMPLETE DIALECTICAL MOVEMENT - TRANSITION OF CHEMISM:
-
-    1. SELF-CREATING PRESUPPOSITIONS:
-    ${selfCreatingPresuppositions.getDialecticalStep()}
-
-    2. THREE SYLLOGISMS TOTALITY:
-    ${threeSyllogismsTotality.getDialecticalStep()}
-
-    3. PROGRESSIVE SUBLATION EXTERNALITY:
-    ${progressiveSublationExternality.getDialecticalStep()}
-
-    4. OBJECTIVE FREE CONCEPT:
-    ${objectiveFreeConcept.getDialecticalStep()}
-
-    RESULT: Purpose achieved as objective free concept
-    TRANSITION: Chemism → Teleology (Science proper begins)
-
-    EPISTEMOLOGICAL SIGNIFICANCE:
-    This IS the complete achievement of Hegel's Theory of Science:
-    - From conditioned to unconditioned cognition
-    - From externality to complete self-determination
-    - From subjective to objective cognition
-    - Purpose = Science proper - scientific cognition achieved!
-
-    THE END OF THEORY OF SCIENCE → BEGINNING OF SCIENCE PROPER!
-    "You must achieve the Concept before you can use it" - NOW ACHIEVED!
-    `;
-  }
+export function getChunkById(id: string): Chunk | null {
+  return CANONICAL_CHUNKS.find((c) => c.id === id) ?? null;
 }
 
-// Supporting classes implementing the complete dialectical chain
-
-class SelfCreatingPresuppositions {
-  constructor(
-    private ordinaryChemistry: OrdinaryChemistryExample,
-    private objectCreatesConditions: ObjectCreatesOwnConditions,
-    private innerTotality: InnerTotalityOriginalRelation,
-    private selfGivenMiddle: SelfGivenMiddleTerm,
-    private conceptPrinciple: ConcreteConceptPrinciple
-  ) {}
-
-  getDialecticalStep(): string {
-    return "Object creates own conditions → Inner totality → Self-given mediation → Concrete concept principle";
-  }
+export function getLogicalOpsForChunkId(chunkId: string): LogicalOperation[] {
+  return LOGICAL_OPERATIONS.filter((op) => op.chunkId === chunkId);
 }
 
-class ThreeSyllogismsTotality {
-  constructor(
-    private firstNegation: ChemismFirstNegation,
-    private threeSyllogisms: ThreeSyllogismsStructure,
-    private fallApart: SyllogismsFallApart,
-    private variousProcesses: VariousProcessesNecessary
-  ) {}
-
-  getDialecticalStep(): string {
-    return "Three syllogisms structure → Fall apart due to externality → Various necessary processes → Stages sublating externality";
-  }
+export function getAllChunks(): Chunk[] {
+  return CANONICAL_CHUNKS;
 }
 
-class ProgressiveSublationExternality {
-  constructor(
-    private firstProcess: FirstProcessSublation,
-    private secondProcess: SecondProcessSublation,
-    private thirdProcess: ThirdProcessSublation,
-    private achievementObjectivity: AchievementObjectivity
-  ) {}
-
-  getDialecticalStep(): string {
-    return "Sublate externality of extremes → Sublate externality of unity → Sublate abstract immediacy → Complete objectivity";
-  }
+export function getLogicalOperations(): LogicalOperation[] {
+  return LOGICAL_OPERATIONS;
 }
-
-class ObjectiveFreeConcept {
-  constructor(
-    private conceptSublated: ConceptSublatedExternalMoments,
-    private liberated: CompletelyLiberatedObjectiveExternality,
-    private isPurpose: ObjectiveFreeConceptIsPurpose,
-    private scienceProper: ScienceProperAchieved
-  ) {}
-
-  getDialecticalStep(): string {
-    return "Concept sublates external moments → Complete liberation → Objective free concept = Purpose → Science proper achieved";
-  }
-}
-
-class AchievementScientificCognitionArchitecture {
-  getArchitecture(): string {
-    return `
-    Complete achievement of scientific cognition:
-    - Self-creating presuppositions (scientific method)
-    - Progressive sublation of externality (objectivity)
-    - Objective free concept = Purpose (science proper)
-    `;
-  }
-}
-
-class TheoryOfScienceCompletion {
-  getCompletion(): string {
-    return `
-    End of Hegel's Theory of Science demonstration:
-    - Chemism achieves objectivity in subjective logic
-    - Purpose = Science proper begins
-    - "You must achieve the Concept before you can use it" - ACHIEVED!
-    `;
-  }
-}
-
-// [Many supporting classes following the same pattern...]
-
-export { TransitionOfChemism };

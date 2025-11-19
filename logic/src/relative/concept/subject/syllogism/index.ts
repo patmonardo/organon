@@ -1,16 +1,8 @@
-export type Chunk = { id: string; title?: string; text: string }
+// Syllogism module: re-export types and module data
+import type { Chunk, LogicalOperation } from '../../../../types'
 
-export type Predicate = { name: string; args?: string[] }
-export type Relation = { predicate: string; from: string; to: string }
-
-export type LogicalOperation = {
-  id: string
-  label?: string
-  clauses: string[]
-  predicates?: Predicate[]
-  relations?: Relation[]
-  chunkId?: string
-}
+// Re-export types for convenience
+export type { Chunk, LogicalOperation, Predicate, Relation } from '../../../../types'
 
 export const CANONICAL_CHUNKS: Chunk[] = [
   // ... populate with canonical chunks for syllogism when ready ...

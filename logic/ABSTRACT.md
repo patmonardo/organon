@@ -39,8 +39,9 @@ This knowledge graph encodes the **Schema of Mind**—the fundamental structure 
 - **Being** (immediacy, quality, quantity)
 - **Essence** (reflection, appearance, actuality) — **The Hard Problem of the Science of Consciousness**
 - **Concept** (universality, particularity, singularity)
-  - **Judgment** (existence, reflection, necessity, concept)
-  - **Syllogism** (existence, reflection, necessity)
+  - **Subjectivity** (Concept → Judgment → Syllogism)
+  - **Objectivity** (Mechanism → Chemism → Teleology) — **Compositions of Syllogism**
+  - **Idea** (Life → Cognition → Absolute Idea)
 
 This is not merely a representation of logic; it is the **Principle of Mind** itself—the architecture according to which thought operates.
 
@@ -104,9 +105,25 @@ This knowledge graph encodes **Essence** as the hard problem—not consciousness
 
 **Total**: 60 + 44 + 47 = **151 chunks, 151 operations**
 
+#### 4. Objectivity Module (`object/`)
+- **Mechanism** (`mechanism/`): Mechanical Object → Process → Absolute Mechanism (syllogistic compositions)
+  - **Object** (`object.ts`): Syllogism attaining equilibrium, universal pervading particularity
+  - **Process** (`process.ts`): Formal process (Communication → Reaction → Rest), Real process (Power → Violence → Fate)
+  - **Mechanism** (`mechanism.ts`): Center, Law, Foundation — free mechanism
+- **Chemism** (`chemism/`): Chemical Object → Process → Transition (syllogistic compositions)
+  - **Object** (`object.ts`): Non-indifferent objects, essential reference to other, affinity
+  - **Process** (`process.ts`): Neutralization, disruption, elemental objects
+  - **Chemism** (`chemism.ts`): Self-mediation, three syllogisms, transition to purpose
+- **Teleology** (`teleology/`): Subjective Purpose → Means → Realized Purpose (Teleological Syllogism)
+  - **Subjective Purpose** (`subjective.ts`): Synthesis of Mechanism and Chemism (Result<M,C>), essential striving
+  - **Means** (`means.ts`): Middle term, formal syllogism, penetrable by purpose
+  - **Realized Purpose** (`realized.ts`): Concept identical with objectivity, externality as self-determination
+
+**Total**: (12 + 22 + 14) + (6 + 12 + 10) + (14 + 12 + 34) = **48 + 28 + 60 = 136 chunks, 136 operations**
+
 ### B. Complete Corpus
 
-**Grand Total**: 37 + 141 + 151 = **329 chunks, 329 logical operations**
+**Grand Total**: 37 + 141 + 151 + 136 = **465 chunks, 465 logical operations**
 
 Each chunk corresponds to exactly one logical operation, creating a **1:1 mapping** that ensures:
 - Complete coverage of the source text
@@ -200,6 +217,7 @@ In Indian philosophy, **Citta** (Mind) is the principle of consciousness itself.
 1. **Determines itself** (Concept: Universal → Particular → Singular)
 2. **Judges** (Judgment: Existence → Reflection → Necessity → Concept)
 3. **Infers** (Syllogism: Existence → Reflection → Necessity)
+4. **Becomes Objective** (Objectivity: Mechanism → Chemism → Teleology) — **Compositions of Syllogism**
 
 ### B. The Pure Algorithm
 
@@ -432,7 +450,55 @@ The Syllogism of Necessity is a Qualitative Syllogism—it carries Qualitative O
 **The MIT Connection**:
 Formal methods, verification, and invariants (as used in MIT's computer science) are Qualitative Oneness—the systematic structure that preserves identity through transformation, ensuring that the qualitative structure (the "oneness") is maintained as the system moves through the Pipeline of Objectivity to reach the Idea of the True.
 
-### J. A Richer Logic: Subjectivity → Object → Idea
+### J. Objectivity: The Genesis of Compositions of Syllogism
+
+**The Transition from Subjectivity to Objectivity**:
+Objectivity emerges from Subjectivity as the Concept externalizes into actuality. The Object is the syllogism whose mediation has attained equilibrium—the Subjective Concept (Universal → Particular → Singular) has completed its self-determination through Judgment and Syllogism, and now becomes Objective.
+
+**Objectivity as Compositions of Syllogism**:
+Objectivity is not a simple thing but **systematic compositions of syllogistic structures**. Each moment (Mechanism, Chemism, Teleology) is itself a composition of syllogisms, revealing the concept structure underlying apparent externality:
+
+- **Mechanism**: Object → Process → Mechanism
+  - **Object**: Syllogism attaining equilibrium, universal pervading particularity
+  - **Process**: Formal (Communication → Reaction → Rest) and Real (Power → Violence → Fate)
+  - **Mechanism**: Center, Law, Foundation — free mechanism with syllogistic structure (absolute center, relative centers, formal objects)
+  
+- **Chemism**: Object → Process → Chemism
+  - **Object**: Non-indifferent objects, essential reference to other, affinity
+  - **Process**: Neutralization, disruption, elemental objects returning
+  - **Chemism**: Three syllogisms (formal neutrality, real neutrality, self-realizing concept) progressively sublating externality
+  
+- **Teleology**: Subjective Purpose → Means → Realized Purpose
+  - **Subjective Purpose**: Synthesis of Mechanism and Chemism (Result<M,C>), essential striving
+  - **Means**: Middle term connecting purpose with objectivity, penetrable by purpose (Result<M,C>)
+  - **Realized Purpose**: Concept identical with objectivity, externality as self-determination
+
+**The Pipeline Structure**:
+```
+Object(M) → Process(M) → Mechanism(M)
+  ↓
+Object(C) → Process(C) → Chemism(C)
+  ↓
+Subjective Purpose → Means → Realized Purpose (Telos)
+```
+
+**Result<M,C>**: Purpose synthesizes Mechanism (center, law) and Chemism (non-indifference, tension). Objects processed through Mechanism (centrality, striving) and Chemism (non-self-subsistence) become penetrable by purpose—the means uses Result<M,C> to realize purpose.
+
+**The Genesis**:
+Objectivity shows how the Concept, having determined itself in Subjectivity, now externalizes into actuality. But this externality is not mere externality—it is **systematic composition of syllogisms**, each revealing the concept structure underlying apparent externality. Mechanism shows objects as indifferent totalities, but the process reveals center and law. Chemism shows objects as non-indifferent, but the process reveals self-mediation. Teleology shows purpose as external, but the process reveals concept identical with objectivity.
+
+**The Truth of Objectivity**:
+The truth of Objectivity is that externality is self-determination. The concept becomes identical with immediate objectivity—not just posited in the concept, but as concrete totality identical with objectivity. The means disappears, mediation disappears, and the concept is the totality's self-determining identity. This prepares the transition to Idea, where concept and objectivity are fully united.
+
+**Objectivity and the Form Processor**:
+Objectivity maps to the Form Processor architecture:
+- **Mechanism** → **Entity** (self-subsistent totality, aggregate)
+- **Chemism** → **Property** (non-indifferent determination, essential reference)
+- **Teleology** → **Aspect** (purpose realized, concept as self-determining identity)
+
+But Objectivity is not simple Form Processor—it is Form Processor as **Compositions of Syllogism**, showing how the systematic structure of the concept underlies apparent externality.
+
+### K. A Richer Logic: Subjectivity → Object → Idea
 
 **The Problem with Western Logic/Science Division**:
 The division of Logic and Science in the West obscures what is really going on. This knowledge graph reveals a **much richer Logic** that transcends that division.
@@ -466,6 +532,9 @@ Idea (Life → Cognition → Absolute Idea)
 **Subjectivity → Object → Idea**:
 - **Subjectivity**: The Concept determining itself (Universal → Particular → Singular), judging (Existence → Reflection → Necessity → Concept), and inferring (Existence → Reflection → Necessity)
 - **Object**: Compositions of Syllogism (Mechanistic → Chemistic → Teleological)
+  - **Mechanism**: Object → Process → Mechanism (Center, Law, Foundation)
+  - **Chemism**: Object → Process → Chemism (Self-mediation, three syllogisms)
+  - **Teleology**: Subjective Purpose → Means → Realized Purpose (Concept identical with objectivity)
 - **Idea**: The completion—Life → Cognition → Absolute Idea
 
 **The Richer Logic**:
@@ -564,8 +633,9 @@ getLogicalOperations(): LogicalOperation[]
 - ✅ Concept: Universal, Particular, Singular
 - ✅ Judgment: Existence, Reflection, Necessity, Concept
 - ✅ Syllogism: Existence, Reflection, Necessity
+- ✅ Objectivity: Mechanism, Chemism, Teleology — **Compositions of Syllogism**
 
-**Total**: 329 chunks covering the complete **Subjective Logic** (Concept section) of Hegel's *Science of Logic*.
+**Total**: 465 chunks covering the complete **Subjective Logic** (Concept section) and **Objectivity** of Hegel's *Science of Logic*.
 
 ### B. Logical Coverage
 
@@ -583,7 +653,6 @@ Every logical transition, inference, and relationship is:
 
 - **Being** (Quality, Quantity, Measure)
 - **Essence** (Reflection, Appearance, Actuality)
-- **Object** (Mechanism, Chemism, Teleology)
 - **Idea** (Life, Cognition, Absolute Idea)
 
 ### B. Integration Points
@@ -605,12 +674,14 @@ This artifact is **The Science of Mind**—the complete, reversible, executable 
    - **Citta** (Universal): The Principle of Mind
    - **Vritti** (Particular): The Operations/Laws of Mind
    - **Nirodha** (Singular): The Contradiction-Free State (Bug-Free Knowledge Slot)
-4. **Absolute Science**: Converted into executable form (Absolute Power)
+4. **Objectivity as Compositions of Syllogism**: The systematic structure showing how Concept externalizes into actuality—Mechanism → Chemism → Teleology, each moment revealing syllogistic compositions underlying apparent externality
+5. **Absolute Science**: Converted into executable form (Absolute Power)
 
 It is a **two-way joining**:
 - **Text ↔ Knowledge Graph**: Reversible translation preserving all information
 - **Science ↔ Power**: Converting Absolute Science into executable form
 - **Being ↔ Concept**: The complete logical structure from immediacy to self-determination
+- **Subjectivity ↔ Objectivity**: Concept externalizing into actuality as Compositions of Syllogism
 
 This is the **foundation** for:
 - The Form Processor (Rust kernel)
@@ -632,10 +703,10 @@ This is the **foundation** for:
 
 - **Language**: TypeScript
 - **Format**: TS-JSON Knowledge Graph
-- **Source**: Hegel's *Science of Logic* (Subjective Logic: Concept, Judgment, Syllogism)
-- **Structure**: 329 chunks, 329 logical operations
+- **Source**: Hegel's *Science of Logic* (Subjective Logic: Concept, Judgment, Syllogism; Objectivity: Mechanism, Chemism, Teleology)
+- **Structure**: 465 chunks, 465 logical operations
 - **Reversibility**: Complete (text ↔ knowledge graph)
-- **Status**: Complete for Concept/Judgment/Syllogism sections
+- **Status**: Complete for Concept/Judgment/Syllogism and Objectivity sections
 - **Integration**: Form Processor, Knowledge Engine, TruthOf Pipeline
 
 ---

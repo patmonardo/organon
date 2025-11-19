@@ -62,18 +62,11 @@ import {
   LOGICAL_OPERATIONS as CONTRADICTION_OPS
 } from './contradiction'
 
-export type Chunk = { id: string; title?: string; text: string }
-export type Predicate = { name: string; args?: string[] }
-export type Relation = { predicate: string; from: string; to: string }
+// Foundation module: re-export types and aggregate module data
+import type { Chunk, LogicalOperation } from '../../../../types'
 
-export type LogicalOperation = {
-  id: string
-  label?: string
-  clauses: string[]
-  predicates?: Predicate[]
-  relations?: Relation[]
-  chunkId?: string
-}
+// Re-export types for convenience
+export type { Chunk, LogicalOperation, Predicate, Relation } from '../../../../types'
 
 // Central registry: all Determinations of Reflection
 export const CANONICAL_CHUNKS: Chunk[] = [
