@@ -1,0 +1,52 @@
+{
+  "name": "@organon/logic",
+  "private": false,
+  "version": "0.1.0",
+  "license": "GPL-3.0-only",
+  "description": "Organon Logic Processor",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts ",
+  "scripts": {
+    "prebuild": "pnpm codegen:dialectic",
+    "build": "tsc && tsc-alias",
+    "b": "tsc && tsc-alias",
+    "clean": "rm -rf dist node_modules tsconfig.tsbuildinfo",
+    "dev": "tsc --watch",
+    "d": "tsc --watch",
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest --watch",
+    "test:ui": "vitest --ui",
+    "test:ci": "vitest run --reporter=dot",
+    "test:integration": "vitest run --config vitest.integration.config.ts",
+    "test:seeded": "vitest run --config vitest.integration.config.ts test/integration/seeded-data.test.ts",
+    "t": "vitest run --passWithNoTests",
+    "lint": "eslint . --cache",
+    "format": "prettier --write \"**/*.{ts,js,md,json,yml,yaml}\" --ignore-path .gitignore",
+    "doc:api": "typedoc --options typedoc.json",
+    "codegen:dialectic": "tsx src/tools/codegen-dialectic-registry.ts",
+    "seed": "tsx src/tools/run-seed.ts",
+    "seed:enhanced": "tsx src/tools/run-seed-enhanced.ts",
+    "seed:reflective": "tsx src/tools/run-seed-context-property.ts",
+    "db:reset": "tsx src/tools/db-reset.ts",
+    "db:stats": "tsx src/tools/db-stats.ts",
+    "db:explore": "tsx src/tools/db-query.ts"
+  },
+  "dependencies": {
+    "neo4j-driver": "^5.25.0",
+    "uuid": "^11.1.0",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.0",
+    "tsc-alias": "^1.8.16",
+    "tsx": "^4.20.4",
+    "typescript": "^5.9.2",
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^3.1.3"
+  },
+  "engines": {
+    "node": ">=20.19.0",
+    "pnpm": ">=9"
+  }
+}

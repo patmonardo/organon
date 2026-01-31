@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": [
+      "ESNext"
+    ],
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "composite": true,
+    "incremental": true,
+    "outDir": "dist",
+    "rootDir": "."
+  },
+  "include": [
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "**/*.ts"
+  ],
+  "exclude": [
+    "**/vitest.config.ts",
+    "**/vite.config.ts",
+    "node_modules",
+    "dist",
+    "target"
+  ]
+}

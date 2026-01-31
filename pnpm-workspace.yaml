@@ -1,0 +1,20 @@
+packages:
+  - logic
+  - model
+  - task
+  - logic/examples
+  - model/examples/dashboard
+
+ignoredBuiltDependencies:
+  - '@firebase/util'
+  - '@scarf/scarf'
+  - duckdb
+  - esbuild
+  - protobufjs
+
+onlyBuiltDependencies:
+  - '@swc/core'
+  - '@prisma/engines'
+  - bcrypt
+  - prisma
+  - sharp

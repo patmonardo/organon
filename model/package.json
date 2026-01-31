@@ -1,0 +1,68 @@
+{
+  "name": "@organon/model",
+  "private": false,
+  "version": "0.1.0",
+  "license": "GPL-3.0-only",
+  "description": "Organon Model Processor",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc && tsc-alias",
+    "b": "tsc && tsc-alias",
+    "clean": "rm -rf dist node_modules tsconfig.tsbuildinfo",
+    "dev": "tsc --watch",
+    "d": "tsc --watch",
+    "demo:loop": "pnpm -w tsx model/src/demo/demo-loop-run.ts",
+    "pretest": "pnpm --filter @organon/gdsl build && pnpm --filter @organon/task build",
+    "test": "vitest run",
+    "test:watch": "vitest --watch",
+    "test:ui": "vitest --ui",
+    "test:ci": "vitest run --reporter=dot",
+    "t": "vitest run",
+    "lint": "eslint . --cache",
+    "format": "prettier --write \"**/*.{ts,js,md,json,yml,yaml}\" --ignore-path .gitignore",
+    "doc:api": "typedoc --options typedoc.json",
+    "db:generate": "prisma generate --no-hints",
+    "db:push": "prisma db push",
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio",
+    "db:backup": "bash prisma/scripts/backup.sh",
+    "db:restore": "bash prisma/scripts/restore.sh"
+  },
+  "dependencies": {
+    "@heroicons/react": "^2.1.1",
+    "@organon/logic": "workspace:*",
+    "@organon/task": "workspace:*",
+    "@prisma/client": "^7.2.0",
+    "apache-arrow": "^21.1.0",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^2.5.5",
+    "zod": "^4.0.0"
+  },
+  "peerDependencies": {
+    "next": "^16.1.0",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/forms": "^0.5.10",
+    "@types/node": "^20.19.0",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.1",
+    "autoprefixer": "^10.4.22",
+    "next": "^16.1.0",
+    "postcss": "^8.5.6",
+    "prisma": "^7.2.0",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "tailwindcss": "^4.1.17",
+    "tsc-alias": "^1.8.16",
+    "typescript": "^5.9.2",
+    "vitest": "^3.1.3"
+  },
+  "engines": {
+    "node": ">=20.19.0",
+    "pnpm": ">=9"
+  }
+}

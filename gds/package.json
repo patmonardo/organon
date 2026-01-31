@@ -1,0 +1,12 @@
+{
+  "name": "@organon/gds",
+  "version": "0.1.0",
+  "license": "GPL-3.0-only",
+  "scripts": {
+    "build": "cargo build -p gds",
+    "test": "cargo test -p gds"
+  },
+  "engines": {
+    "node": ">= 10"
+  }
+}

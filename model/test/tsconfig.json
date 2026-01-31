@@ -1,0 +1,38 @@
+{
+  "extends": "../../tsconfig.test.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "jsx": "react-jsx",
+    "lib": [
+      "ESNext",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "paths": {
+      "@organon/gdsl": [
+        "../../gdsl/dist/index"
+      ],
+      "@organon/gdsl/*": [
+        "../../gdsl/dist/*"
+      ],
+      "@organon/logic": [
+        "../../logic/dist/index"
+      ],
+      "@organon/logic/*": [
+        "../../logic/dist/*"
+      ],
+      "@organon/reality": [
+        "../../reality/dist/index"
+      ],
+      "@organon/reality/*": [
+        "../../reality/dist/*"
+      ]
+    }
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "../examples/**/*.ts",
+    "../examples/**/*.tsx"
+  ]
+}

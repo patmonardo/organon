@@ -1,0 +1,20 @@
+{
+  "extends": "../../tsconfig.test.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@organon/logic": [
+        "../../logic/dist/index"
+      ],
+      "@organon/logic/*": [
+        "../../logic/dist/*"
+      ],
+      "@organon/model": [
+        "../../model/dist/index"
+      ],
+      "@organon/model/*": [
+        "../../model/dist/*"
+      ]
+    }
+  }
+}

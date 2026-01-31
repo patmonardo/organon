@@ -1,0 +1,51 @@
+{
+  "extends": "../tsconfig.src.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "baseUrl": ".",
+    "paths": {
+      "@repository": [
+        "src/repository/index"
+      ],
+      "@repository/*": [
+        "src/repository/*"
+      ],
+      "@schema": [
+        "src/schema/index"
+      ],
+      "@schema/*": [
+        "src/schema/*"
+      ],
+      "@absolute": [
+        "src/absolute/index"
+      ],
+      "@absolute/*": [
+        "src/absolute/*"
+      ],
+      "@relative": [
+        "src/relative/index"
+      ],
+      "@relative/*": [
+        "src/relative/*"
+      ]
+    }
+  },
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "src/**/*.test.ts",
+    "src/**/*.spec.ts",
+    // "src/relative/index.ts",
+    // "src/relative/form/**/*",
+    "src/relative/form/morph/core",
+    "src/relative/form/morph/form",
+    "src/relative/form/morph/graph",
+    "src/relative/form/morph/cypher",
+    "src/relative/concept/**/*",
+    "src/relative/essence/**/*",
+    "src/relative/being/**/*",
+    "src/relative/types.ts"
+  ]
+}
