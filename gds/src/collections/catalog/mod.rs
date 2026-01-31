@@ -8,6 +8,7 @@ pub mod polars_io;
 pub mod samples;
 pub mod schema;
 pub mod types;
+pub mod unity;
 
 pub use catalog::*;
 pub use disk::*;
@@ -15,3 +16,4 @@ pub use polars_io::*;
 pub use samples::*;
 pub use schema::*;
 pub use types::*;
+pub use unity::*;

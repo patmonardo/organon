@@ -9,10 +9,11 @@ use crate::collections::catalog::types::{
 };
 use crate::collections::dataframe::{
     read_table_csv, read_table_ipc, read_table_parquet, write_table_csv, write_table_ipc,
-    write_table_parquet, PolarsDataFrameCollection,
+    write_table_parquet, PolarsDataFrameCollection, Selector,
 };
 use crate::config::CollectionsBackend;
 use crate::types::ValueType;
+use polars::prelude::LazyFrame;
 
 /// Configuration for the catalog extension facade.
 #[derive(Debug, Clone)]
@@ -198,6 +199,40 @@ impl CatalogExtension {
         }
 
         Ok(table)
+    }
+
+    /// Read a table and apply a selector projection (py-polars style).
+    pub fn read_table_select(
+        &mut self,
+        name: &str,
+        selector: &Selector,
+    ) -> Result<PolarsDataFrameCollection, CatalogError> {
+        let table = self.read_table(name)?;
+        table
+            .select_selector(selector)
+            .map_err(|e| CatalogError::Polars(e.to_string()))
+    }
+
+    /// Scan a table into a LazyFrame (py-polars style).
+    pub fn scan_table(&self, name: &str) -> Result<LazyFrame, CatalogError> {
+        let entry = self
+            .catalog
+            .get(name)
+            .ok_or_else(|| CatalogError::NotFound(name.to_string()))?;
+        self.catalog.scan_table(entry)
+    }
+
+    /// Scan a table into a LazyFrame and apply selector projection.
+    pub fn scan_table_select(
+        &self,
+        name: &str,
+        selector: &Selector,
+    ) -> Result<LazyFrame, CatalogError> {
+        let entry = self
+            .catalog
+            .get(name)
+            .ok_or_else(|| CatalogError::NotFound(name.to_string()))?;
+        self.catalog.scan_table_select(entry, selector)
     }
 
     pub fn refresh_schema(&mut self, name: &str) -> Result<(), CatalogError> {

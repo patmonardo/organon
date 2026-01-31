@@ -79,10 +79,12 @@ pub fn value_type_to_polars_dtype(
         ValueType::Short => Some(DataType::Int16),
         ValueType::Int => Some(DataType::Int32),
         ValueType::Long => Some(DataType::Int64),
+        ValueType::BigInt => Some(DataType::Int128),
         ValueType::Float => Some(DataType::Float32),
         ValueType::Double => Some(DataType::Float64),
         ValueType::Boolean => Some(DataType::Boolean),
         ValueType::String | ValueType::Char => Some(DataType::String),
+        ValueType::Decimal => Some(DataType::Decimal(None, None)),
         ValueType::Date => Some(DataType::Date),
         ValueType::DateTime => Some(DataType::Datetime(
             time_unit
@@ -90,16 +92,26 @@ pub fn value_type_to_polars_dtype(
                 .unwrap_or(TimeUnit::Milliseconds),
             None,
         )),
+        ValueType::Null => Some(DataType::Null),
         ValueType::ByteArray => Some(DataType::List(Box::new(DataType::Int8))),
         ValueType::ShortArray => Some(DataType::List(Box::new(DataType::Int16))),
         ValueType::IntArray => Some(DataType::List(Box::new(DataType::Int32))),
         ValueType::LongArray => Some(DataType::List(Box::new(DataType::Int64))),
+        ValueType::BigIntArray => Some(DataType::List(Box::new(DataType::Int128))),
         ValueType::FloatArray => Some(DataType::List(Box::new(DataType::Float32))),
         ValueType::DoubleArray => Some(DataType::List(Box::new(DataType::Float64))),
         ValueType::BooleanArray => Some(DataType::List(Box::new(DataType::Boolean))),
         ValueType::StringArray | ValueType::CharArray => {
             Some(DataType::List(Box::new(DataType::String)))
         }
+        ValueType::DecimalArray => Some(DataType::List(Box::new(DataType::Decimal(None, None)))),
+        ValueType::DateArray => Some(DataType::List(Box::new(DataType::Date))),
+        ValueType::DateTimeArray => Some(DataType::List(Box::new(DataType::Datetime(
+            time_unit
+                .map(collections_time_unit_to_polars)
+                .unwrap_or(TimeUnit::Milliseconds),
+            None,
+        )))),
         ValueType::StringMap
         | ValueType::LongMap
         | ValueType::DoubleMap
@@ -118,10 +130,13 @@ pub fn polars_dtype_to_value_type(dtype: &DataType) -> ValueType {
         DataType::Int16 => ValueType::Short,
         DataType::Int32 => ValueType::Int,
         DataType::Int64 => ValueType::Long,
+        DataType::Int128 => ValueType::BigInt,
         DataType::Float32 => ValueType::Float,
         DataType::Float64 => ValueType::Double,
         DataType::Boolean => ValueType::Boolean,
         DataType::String => ValueType::String,
+        DataType::Binary | DataType::BinaryOffset => ValueType::ByteArray,
+        DataType::Decimal(_, _) => ValueType::Decimal,
         DataType::Date => ValueType::Date,
         DataType::Datetime(_, _) => ValueType::DateTime,
         DataType::List(inner) => match inner.as_ref() {
@@ -129,12 +144,17 @@ pub fn polars_dtype_to_value_type(dtype: &DataType) -> ValueType {
             DataType::Int16 => ValueType::ShortArray,
             DataType::Int32 => ValueType::IntArray,
             DataType::Int64 => ValueType::LongArray,
+            DataType::Int128 => ValueType::BigIntArray,
             DataType::Float32 => ValueType::FloatArray,
             DataType::Float64 => ValueType::DoubleArray,
             DataType::Boolean => ValueType::BooleanArray,
             DataType::String => ValueType::StringArray,
+            DataType::Decimal(_, _) => ValueType::DecimalArray,
+            DataType::Date => ValueType::DateArray,
+            DataType::Datetime(_, _) => ValueType::DateTimeArray,
             _ => ValueType::UntypedArray,
         },
+        DataType::Null => ValueType::Null,
         _ => ValueType::Unknown,
     }
 }

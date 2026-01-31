@@ -1,8 +1,10 @@
 //! Polars DataFrame integration for Collections.
 
 use polars::error::PolarsError;
+use polars::frame::row::Row;
 use polars::prelude::{
-    col, Column, DataFrame, DataType, Expr, IntoLazy, PlSmallStr, Series, SortMultipleOptions,
+    col, Column, DataFrame, DataType, Expr, IntoLazy, PlSmallStr, Schema, Series,
+    SortMultipleOptions,
 };
 
 use crate::collections::dataframe::selectors::{expand_selector, Selector};
@@ -99,6 +101,12 @@ impl PolarsDataFrameCollection {
         Self { df }
     }
 
+    /// Create an empty DataFrame with a given schema.
+    pub fn empty_with_schema(schema: &Schema) -> Self {
+        let df = DataFrame::empty_with_schema(schema);
+        Self { df }
+    }
+
     pub fn dataframe(&self) -> &DataFrame {
         &self.df
     }
@@ -110,6 +118,24 @@ impl PolarsDataFrameCollection {
     pub fn from_series(columns: Vec<Series>) -> Result<Self, PolarsError> {
         let cols: Vec<Column> = columns.into_iter().map(Column::from).collect();
         let df = DataFrame::new(cols)?;
+        Ok(Self { df })
+    }
+
+    /// Construct from Polars columns.
+    pub fn from_columns(columns: Vec<Column>) -> Result<Self, PolarsError> {
+        let df = DataFrame::new(columns)?;
+        Ok(Self { df })
+    }
+
+    /// Construct from rows (slower; row-wise input).
+    pub fn from_rows(rows: &[Row]) -> Result<Self, PolarsError> {
+        let df = DataFrame::from_rows(rows)?;
+        Ok(Self { df })
+    }
+
+    /// Construct from rows with an explicit schema.
+    pub fn from_rows_and_schema(rows: &[Row], schema: &Schema) -> Result<Self, PolarsError> {
+        let df = DataFrame::from_rows_and_schema(rows, schema)?;
         Ok(Self { df })
     }
 

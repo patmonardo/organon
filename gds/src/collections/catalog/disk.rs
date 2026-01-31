@@ -15,11 +15,16 @@ use crate::collections::catalog::schema::CollectionsSchema;
 use crate::collections::catalog::types::{
     CatalogError, CollectionsCatalogDiskEntry, CollectionsCatalogManifest, CollectionsIoFormat,
 };
-use crate::collections::dataframe::{read_table_csv, read_table_ipc, read_table_parquet};
+use crate::collections::catalog::unity::{ColumnInfo, DataSourceFormat, TableInfo, TableType};
+use crate::collections::dataframe::{read_table_csv, read_table_ipc, read_table_parquet, Selector};
 use crate::collections::dataframe::{
     write_table_csv, write_table_ipc, write_table_parquet, PolarsDataFrameCollection,
 };
 use crate::collections::Collections;
+use polars::prelude::{
+    col, DataFrame, LazyCsvReader, LazyFileListReader, LazyFrame, PlPath, ScanArgsIpc,
+    ScanArgsParquet,
+};
 
 pub const CATALOG_MANIFEST_FILE: &str = "catalog.json";
 
@@ -101,6 +106,23 @@ impl CollectionsCatalogDisk {
             .iter()
             .position(|entry| entry.name == name)?;
         Some(self.manifest.entries.remove(index))
+    }
+
+    /// List Unity-style table metadata for all catalog entries.
+    pub fn list_table_info(&self) -> Vec<TableInfo> {
+        self.manifest
+            .entries
+            .iter()
+            .map(|entry| self.entry_to_table_info(entry))
+            .collect()
+    }
+
+    /// Get Unity-style table metadata for a specific entry.
+    pub fn table_info(&self, name: &str) -> Result<TableInfo, CatalogError> {
+        let entry = self
+            .get(name)
+            .ok_or_else(|| CatalogError::NotFound(name.to_string()))?;
+        Ok(self.entry_to_table_info(entry))
     }
 
     /// Refresh schema metadata for an entry by reading the on-disk data.
@@ -265,6 +287,61 @@ impl CollectionsCatalogDisk {
         }
     }
 
+    /// Read a DataFrame-backed table and apply a selector projection.
+    pub fn read_table_select(
+        &self,
+        entry: &CollectionsCatalogDiskEntry,
+        selector: &Selector,
+    ) -> Result<PolarsDataFrameCollection, CatalogError> {
+        let table = self.read_table(entry)?;
+        table
+            .select_selector(selector)
+            .map_err(|e| CatalogError::Polars(e.to_string()))
+    }
+
+    /// Scan a DataFrame-backed table into a LazyFrame.
+    pub fn scan_table(
+        &self,
+        entry: &CollectionsCatalogDiskEntry,
+    ) -> Result<LazyFrame, CatalogError> {
+        let data_path = self.data_path(entry);
+        let path_str = data_path.to_string_lossy();
+        let path = PlPath::new(path_str.as_ref());
+        match entry.io_policy.format {
+            CollectionsIoFormat::Auto | CollectionsIoFormat::Parquet => {
+                LazyFrame::scan_parquet(path, ScanArgsParquet::default())
+                    .map_err(|e| CatalogError::Polars(e.to_string()))
+            }
+            CollectionsIoFormat::ArrowIpc => LazyFrame::scan_ipc(path, ScanArgsIpc::default())
+                .map_err(|e| CatalogError::Polars(e.to_string())),
+            CollectionsIoFormat::Csv => LazyCsvReader::new(path)
+                .finish()
+                .map_err(|e: polars::error::PolarsError| CatalogError::Polars(e.to_string())),
+            CollectionsIoFormat::Json => Err(CatalogError::Polars(
+                "JSON scan not implemented for Collections yet".to_string(),
+            )),
+            CollectionsIoFormat::Database => Err(CatalogError::Polars(
+                "Database scan not implemented for Collections yet".to_string(),
+            )),
+        }
+    }
+
+    /// Scan a table into a LazyFrame and apply selector projection.
+    pub fn scan_table_select(
+        &self,
+        entry: &CollectionsCatalogDiskEntry,
+        selector: &Selector,
+    ) -> Result<LazyFrame, CatalogError> {
+        let mut lazy = self.scan_table(entry)?;
+        let schema = lazy
+            .collect_schema()
+            .map_err(|e| CatalogError::Polars(e.to_string()))?;
+        let df = DataFrame::empty_with_schema(schema.as_ref());
+        let names = crate::collections::dataframe::selectors::expand_selector(&df, selector);
+        let exprs = names.into_iter().map(|name| col(&name)).collect::<Vec<_>>();
+        Ok(lazy.select(exprs))
+    }
+
     /// Validate a path is inside the catalog root.
     pub fn validate_entry_path(&self, path: &Path) -> Result<(), CatalogError> {
         if !path.starts_with(&self.root) {
@@ -303,5 +380,55 @@ impl CollectionsCatalogDisk {
                 "Database schema inference not implemented for Collections yet".to_string(),
             )),
         }
+    }
+
+    fn entry_to_table_info(&self, entry: &CollectionsCatalogDiskEntry) -> TableInfo {
+        let columns = entry
+            .schema
+            .as_ref()
+            .map(|schema| schema_to_columns(schema))
+            .unwrap_or_default();
+
+        TableInfo {
+            name: entry.name.clone(),
+            comment: None,
+            table_id: entry.name.clone(),
+            table_type: TableType::Managed,
+            storage_location: Some(self.data_path(entry).to_string_lossy().to_string()),
+            data_source_format: Some(io_format_to_data_source(entry.io_policy.format)),
+            columns,
+            properties: Vec::new(),
+            created_at: None,
+            created_by: None,
+            updated_at: None,
+            updated_by: None,
+        }
+    }
+}
+
+fn schema_to_columns(schema: &CollectionsSchema) -> Vec<ColumnInfo> {
+    schema
+        .fields
+        .iter()
+        .enumerate()
+        .map(|(index, field)| ColumnInfo {
+            name: field.name.clone(),
+            type_name: field.value_type.name().to_string(),
+            type_text: field.value_type.name().to_string(),
+            type_json: field.value_type.name().to_string(),
+            position: Some(index),
+            comment: None,
+            partition_index: None,
+        })
+        .collect()
+}
+
+fn io_format_to_data_source(format: CollectionsIoFormat) -> DataSourceFormat {
+    match format {
+        CollectionsIoFormat::Parquet | CollectionsIoFormat::Auto => DataSourceFormat::Parquet,
+        CollectionsIoFormat::Csv => DataSourceFormat::Csv,
+        CollectionsIoFormat::Json => DataSourceFormat::Json,
+        CollectionsIoFormat::ArrowIpc => DataSourceFormat::UnityCatalog,
+        CollectionsIoFormat::Database => DataSourceFormat::Unknown,
     }
 }

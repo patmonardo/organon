@@ -28,6 +28,12 @@ polars = { version = "0.51.0", features = [
     "dtype-date",
     "dtype-datetime",
     "dtype-time",
+    "dtype-array",
+    "dtype-decimal",
+    "dtype-categorical",
+    "dtype-struct",
+    "object",
+    "timezones",
     "csv",
     "ipc",
     "lazy",
@@ -61,7 +67,16 @@ regex = "1.10"
 napi-build = "2"
 
 [features]
-default = ["arrow", "rayon", "serde", "procedures", "ml"]
+default = [
+    "arrow",
+    "rayon",
+    "serde",
+    "procedures",
+    "ml",
+    "dtype-array",
+    "dtype-decimal",
+    "object",
+]
 node = ["dep:napi", "dep:napi-derive"]
 full = ["default", "node"]
 arrow = []
@@ -70,3 +85,6 @@ rayon = []      # Parallel computation support
 procedures = [] # Procedure execution system
 ml = []         # Machine learning features
 new_streaming = [] # Polars lazy streaming engine support
+dtype-array = []   # Polars dtype array support
+dtype-decimal = [] # Polars decimal dtype support
+object = []        # Polars object dtype support
