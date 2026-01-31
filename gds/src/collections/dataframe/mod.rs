@@ -3,12 +3,16 @@
 pub mod chunked;
 pub mod collection;
 pub mod column;
+pub mod construction;
 pub mod datatypes;
 pub mod expr;
 pub mod frame;
+pub mod getitem;
+pub mod parse;
 pub mod row;
 pub mod selectors;
 pub mod series;
+pub mod slice;
 pub mod streaming;
 pub mod table;
 
@@ -23,6 +27,11 @@ pub use column::{
     column_i8_opt, column_str, column_str_opt, column_string, column_string_opt, column_u16,
     column_u16_opt, column_u32, column_u32_opt, column_u64, column_u64_opt, column_u8,
     column_u8_opt,
+};
+pub use construction::{
+    dataframe_from_columns, dataframe_from_columns_vec, dataframe_from_records,
+    dataframe_from_rows, dataframe_from_series, schema_from_pairs, ConstructionOptions,
+    DataOrientation, SchemaDefinition,
 };
 #[cfg(feature = "dtype-array")]
 pub use datatypes::array as dtype_array;
@@ -40,13 +49,27 @@ pub use datatypes::{
     uint64 as dtype_uint64, uint8 as dtype_uint8, utf8 as dtype_utf8, PolarsDataType as DataType,
 };
 pub use expr::{
-    expr_alias, expr_and, expr_cast, expr_col, expr_cols, expr_count, expr_eq, expr_fill_null,
-    expr_gt, expr_gte, expr_is_not_null, expr_is_null, expr_lit_bool, expr_lit_f32, expr_lit_f64,
-    expr_lit_i16, expr_lit_i32, expr_lit_i64, expr_lit_i8, expr_lit_str, expr_lit_u16,
-    expr_lit_u32, expr_lit_u64, expr_lit_u8, expr_lt, expr_lte, expr_max, expr_mean, expr_min,
-    expr_neq, expr_not, expr_or, expr_sum, expr_when, PolarsExpr,
+    all, all_horizontal, any, any_horizontal, arange, arg_where, coalesce, col, cols, concat_arr,
+    concat_list, concat_str, corr, cov, cum_fold, cum_reduce, date, date_range, date_ranges,
+    datetime, datetime_range, datetime_ranges, dtype_of, duration, expr_alias, expr_and, expr_cast,
+    expr_col, expr_cols, expr_count, expr_eq, expr_fill_null, expr_gt, expr_gte, expr_is_not_null,
+    expr_is_null, expr_lit_bool, expr_lit_f32, expr_lit_f64, expr_lit_i16, expr_lit_i32,
+    expr_lit_i64, expr_lit_i8, expr_lit_str, expr_lit_u16, expr_lit_u32, expr_lit_u64, expr_lit_u8,
+    expr_lt, expr_lte, expr_max, expr_mean, expr_min, expr_neq, expr_not, expr_or, expr_sum,
+    expr_when, fold, format, int_range, int_ranges, len, linear_space, linear_spaces, lit, max,
+    max_horizontal, mean, mean_horizontal, min, min_horizontal, reduce, repeat, self_dtype,
+    struct_, struct_with_fields, sum, sum_horizontal, time, time_range, time_ranges, when,
+    PolarsExpr,
 };
 pub use frame::PolarsDataFrame;
+pub use getitem::{
+    get_df_item_by_key, get_series_item_by_key, ColSelector, DataFrameGetItem, DataFrameKey,
+    RowSelector, SeriesGetItem, SeriesKey,
+};
+pub use parse::{
+    parse_into_expression, parse_into_list_of_expressions, parse_into_list_of_expressions_for_df,
+    parse_predicates_constraints_into_expression, ExprInput, ParseExprOptions,
+};
 pub use polars::prelude::SortMultipleOptions as PolarsSortMultipleOptions;
 pub use row::{row_to_owned, PolarsRow, RowValue};
 pub use selectors::{
@@ -70,6 +93,7 @@ pub use series::{
     series_u16_opt, series_u32, series_u32_opt, series_u64, series_u64_opt, series_u8,
     series_u8_opt,
 };
+pub use slice::{slice_dataframe, slice_lazyframe, slice_series, SliceSpec};
 pub use streaming::PolarsStreamingFrame;
 pub use table::{
     read_table_csv, read_table_ipc, read_table_parquet, scale_f64_column, write_table_csv,

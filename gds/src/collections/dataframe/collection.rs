@@ -3,11 +3,21 @@
 use polars::error::PolarsError;
 use polars::frame::row::Row;
 use polars::prelude::{
-    col, Column, DataFrame, DataType, Expr, IntoLazy, PlSmallStr, Schema, Series,
+    col, AnyValue, Column, DataFrame, DataType, Expr, IntoLazy, PlSmallStr, Schema, Series,
     SortMultipleOptions,
 };
+use std::collections::HashMap;
 
+use crate::collections::dataframe::construction::{
+    dataframe_from_columns, dataframe_from_columns_vec, dataframe_from_records,
+    dataframe_from_rows, dataframe_from_series, ConstructionOptions,
+};
+use crate::collections::dataframe::getitem::{get_df_item_by_key, DataFrameGetItem, DataFrameKey};
+use crate::collections::dataframe::parse::{
+    parse_into_list_of_expressions_for_df, ExprInput, ParseExprOptions,
+};
 use crate::collections::dataframe::selectors::{expand_selector, Selector};
+use crate::collections::dataframe::slice::{slice_dataframe, SliceSpec};
 
 pub use polars::prelude::Column as PolarsColumn;
 pub use polars::prelude::DataType as PolarsDataType;
@@ -116,27 +126,88 @@ impl PolarsDataFrameCollection {
     }
 
     pub fn from_series(columns: Vec<Series>) -> Result<Self, PolarsError> {
-        let cols: Vec<Column> = columns.into_iter().map(Column::from).collect();
-        let df = DataFrame::new(cols)?;
-        Ok(Self { df })
+        dataframe_from_series(columns, ConstructionOptions::default())
+    }
+
+    /// Construct from Polars series with construction options.
+    pub fn from_series_with_options(
+        columns: Vec<Series>,
+        options: ConstructionOptions,
+    ) -> Result<Self, PolarsError> {
+        dataframe_from_series(columns, options)
     }
 
     /// Construct from Polars columns.
     pub fn from_columns(columns: Vec<Column>) -> Result<Self, PolarsError> {
-        let df = DataFrame::new(columns)?;
-        Ok(Self { df })
+        dataframe_from_columns_vec(columns, ConstructionOptions::default())
+    }
+
+    /// Construct from Polars columns with construction options.
+    pub fn from_columns_with_options(
+        columns: Vec<Column>,
+        options: ConstructionOptions,
+    ) -> Result<Self, PolarsError> {
+        dataframe_from_columns_vec(columns, options)
     }
 
     /// Construct from rows (slower; row-wise input).
     pub fn from_rows(rows: &[Row]) -> Result<Self, PolarsError> {
-        let df = DataFrame::from_rows(rows)?;
-        Ok(Self { df })
+        let rows = rows
+            .iter()
+            .map(|row| row.0.iter().cloned().map(AnyValue::into_static).collect())
+            .collect::<Vec<_>>();
+        dataframe_from_rows(&rows, ConstructionOptions::default())
+    }
+
+    /// Construct from rows with construction options.
+    pub fn from_rows_with_options(
+        rows: &[Row],
+        options: ConstructionOptions,
+    ) -> Result<Self, PolarsError> {
+        let rows = rows
+            .iter()
+            .map(|row| row.0.iter().cloned().map(AnyValue::into_static).collect())
+            .collect::<Vec<_>>();
+        dataframe_from_rows(&rows, options)
     }
 
     /// Construct from rows with an explicit schema.
     pub fn from_rows_and_schema(rows: &[Row], schema: &Schema) -> Result<Self, PolarsError> {
-        let df = DataFrame::from_rows_and_schema(rows, schema)?;
-        Ok(Self { df })
+        let rows = rows
+            .iter()
+            .map(|row| row.0.iter().cloned().map(AnyValue::into_static).collect())
+            .collect::<Vec<_>>();
+        dataframe_from_rows(
+            &rows,
+            ConstructionOptions {
+                schema: Some(schema.clone()),
+                ..ConstructionOptions::default()
+            },
+        )
+    }
+
+    /// Construct from column-oriented AnyValue data (py-polars style).
+    pub fn from_any_columns(
+        data: &HashMap<String, Vec<AnyValue<'static>>>,
+        options: ConstructionOptions,
+    ) -> Result<Self, PolarsError> {
+        dataframe_from_columns(data, options)
+    }
+
+    /// Construct from row-oriented AnyValue data (py-polars style).
+    pub fn from_any_rows(
+        rows: &[Vec<AnyValue<'static>>],
+        options: ConstructionOptions,
+    ) -> Result<Self, PolarsError> {
+        dataframe_from_rows(rows, options)
+    }
+
+    /// Construct from record-oriented AnyValue data (py-polars style).
+    pub fn from_any_records(
+        records: &[HashMap<String, AnyValue<'static>>],
+        options: ConstructionOptions,
+    ) -> Result<Self, PolarsError> {
+        dataframe_from_records(records, options)
     }
 
     /// Select a subset of columns (eager).
@@ -150,6 +221,17 @@ impl PolarsDataFrameCollection {
     pub fn select(&self, exprs: &[Expr]) -> Result<Self, PolarsError> {
         let df = self.df.clone().lazy().select(exprs.to_vec()).collect()?;
         Ok(Self { df })
+    }
+
+    /// Select columns from parsed inputs (py-polars parsing helpers).
+    pub fn select_inputs(
+        &self,
+        inputs: &[ExprInput],
+        named_inputs: Option<&HashMap<String, ExprInput>>,
+        options: ParseExprOptions,
+    ) -> Result<Self, PolarsError> {
+        let exprs = parse_into_list_of_expressions_for_df(&self.df, inputs, named_inputs, options)?;
+        self.select(&exprs)
     }
 
     /// Select columns using a selector (py-polars style).
@@ -184,6 +266,17 @@ impl PolarsDataFrameCollection {
     /// Python-Polars alias for with_columns.
     pub fn with_columns(&self, exprs: &[Expr]) -> Result<Self, PolarsError> {
         self.with_columns_exprs(exprs)
+    }
+
+    /// Add/replace columns from parsed inputs (py-polars parsing helpers).
+    pub fn with_columns_inputs(
+        &self,
+        inputs: &[ExprInput],
+        named_inputs: Option<&HashMap<String, ExprInput>>,
+        options: ParseExprOptions,
+    ) -> Result<Self, PolarsError> {
+        let exprs = parse_into_list_of_expressions_for_df(&self.df, inputs, named_inputs, options)?;
+        self.with_columns(&exprs)
     }
 
     /// Order rows by named columns (eager), using Polars sort options.
@@ -274,6 +367,17 @@ impl PolarsDataFrameCollection {
     pub fn slice(&self, offset: i64, length: usize) -> Self {
         let df = self.df.slice(offset, length);
         Self { df }
+    }
+
+    /// Slice rows using a Python-like slice spec.
+    pub fn slice_spec(&self, spec: SliceSpec) -> Result<Self, PolarsError> {
+        let df = slice_dataframe(&self.df, spec)?;
+        Ok(Self { df })
+    }
+
+    /// Python-like getitem selection.
+    pub fn getitem(&self, key: DataFrameKey) -> Result<DataFrameGetItem, PolarsError> {
+        get_df_item_by_key(&self.df, key)
     }
 
     pub fn into_inner(self) -> DataFrame {
