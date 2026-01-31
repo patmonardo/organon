@@ -6,12 +6,8 @@
 use std::path::PathBuf;
 
 use gds::collections::catalog::types::CollectionsIoFormat;
-use gds::collections::dataframe::{expr_col, expr_gt, expr_lit_f64};
 use gds::collections::dataframe::{scale_f64_column, TableBuilder};
 use gds::collections::extensions::catalog::{CatalogExtension, CatalogExtensionConfig};
-
-#[cfg(feature = "polars-lazy")]
-use gds::collections::dataframe::{expr_col, expr_gt, expr_lit_f64};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let root = PathBuf::from("target/collections_catalog_extensible");
@@ -50,11 +46,18 @@ fn run_pipeline(catalog: &mut CatalogExtension) -> Result<(), Box<dyn std::error
     let selected = table.select_columns(&["id", "score"])?;
     println!("Selected columns (eager):\n{}", selected.fmt_table());
 
-    let filtered = table.filter_expr(expr_gt(expr_col("score"), expr_lit_f64(30.0)))?;
+    let filtered = table.filter_expr(gds::collections::dataframe::expr_gt(
+        gds::collections::dataframe::expr_col("score"),
+        gds::collections::dataframe::expr_lit_f64(30.0),
+    ))?;
     println!("Filtered rows (expr):\n{}", filtered.fmt_table());
 
-    let grouped =
-        table.group_by_columns(&["id"], &[expr_col("score").mean().alias("mean_score")])?;
+    let grouped = table.group_by_columns(
+        &["id"],
+        &[gds::collections::dataframe::expr_col("score")
+            .mean()
+            .alias("mean_score")],
+    )?;
     println!("Grouped table (expr):\n{}", grouped.fmt_table());
 
     Ok(())

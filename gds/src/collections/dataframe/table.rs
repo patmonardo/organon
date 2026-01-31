@@ -3,13 +3,14 @@
 use std::path::Path;
 
 use polars::prelude::{
-    Column, CsvReadOptions, CsvWriter, DataFrame, IpcReader, IpcWriter, ParquetReader,
+    Column, CsvReadOptions, CsvWriter, DataFrame, IpcReader, IpcWriter, NamedFrom, ParquetReader,
     ParquetWriter, SerReader, SerWriter, Series,
 };
 
 use crate::collections::dataframe::collection::PolarsDataFrameCollection;
 use crate::collections::dataframe::column::{
-    column_bool, column_f32, column_f64, column_i32, column_i64, column_string,
+    column_bool, column_f32, column_f64, column_i16, column_i32, column_i64, column_i8, column_str,
+    column_string, column_u16, column_u32, column_u64, column_u8,
 };
 
 /// Builder for creating a DataFrame-backed table without exposing Polars types.
@@ -33,6 +34,36 @@ impl TableBuilder {
         self
     }
 
+    pub fn with_i16_column(mut self, name: &str, values: &[i16]) -> Self {
+        self.columns.push(column_i16(name, values));
+        self
+    }
+
+    pub fn with_i8_column(mut self, name: &str, values: &[i8]) -> Self {
+        self.columns.push(column_i8(name, values));
+        self
+    }
+
+    pub fn with_u64_column(mut self, name: &str, values: &[u64]) -> Self {
+        self.columns.push(column_u64(name, values));
+        self
+    }
+
+    pub fn with_u32_column(mut self, name: &str, values: &[u32]) -> Self {
+        self.columns.push(column_u32(name, values));
+        self
+    }
+
+    pub fn with_u16_column(mut self, name: &str, values: &[u16]) -> Self {
+        self.columns.push(column_u16(name, values));
+        self
+    }
+
+    pub fn with_u8_column(mut self, name: &str, values: &[u8]) -> Self {
+        self.columns.push(column_u8(name, values));
+        self
+    }
+
     pub fn with_f64_column(mut self, name: &str, values: &[f64]) -> Self {
         self.columns.push(column_f64(name, values));
         self
@@ -50,6 +81,11 @@ impl TableBuilder {
 
     pub fn with_string_column(mut self, name: &str, values: &[String]) -> Self {
         self.columns.push(column_string(name, values));
+        self
+    }
+
+    pub fn with_str_column(mut self, name: &str, values: &[&str]) -> Self {
+        self.columns.push(column_str(name, values));
         self
     }
 
@@ -135,10 +171,10 @@ pub fn scale_f64_column(
     let series = column.as_materialized_series();
     let scaled = series
         .f64()?
-        .into_no_null_iter()
-        .map(|value| value * factor)
-        .collect::<Vec<_>>();
-    let mut new_series: Series = scaled.into_iter().collect();
+        .into_iter()
+        .map(|value| value.map(|v| v * factor))
+        .collect::<Vec<Option<f64>>>();
+    let mut new_series = Series::new(column_name.into(), scaled);
     new_series.rename(column_name.into());
     df.replace(column_name, new_series)?;
     Ok(())

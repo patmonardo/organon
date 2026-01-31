@@ -5,6 +5,8 @@ use polars::prelude::{
     col, Column, DataFrame, DataType, Expr, IntoLazy, PlSmallStr, Series, SortMultipleOptions,
 };
 
+use crate::collections::dataframe::selectors::{expand_selector, Selector};
+
 pub use polars::prelude::Column as PolarsColumn;
 pub use polars::prelude::DataType as PolarsDataType;
 pub use polars::prelude::Series as PolarsSeries;
@@ -55,10 +57,19 @@ pub trait DataFrameCollection: Send + Sync {
         self.dataframe().column(name)
     }
 
-    /// Select a subset of columns.
-    fn select(&self, columns: &[&str]) -> Result<DataFrame, PolarsError> {
+    /// Select a subset of columns by name.
+    fn select_columns(&self, columns: &[&str]) -> Result<DataFrame, PolarsError> {
         let selection: Vec<&str> = columns.iter().copied().collect();
         self.dataframe().select(selection)
+    }
+
+    /// Select columns using Polars expressions (py-polars style).
+    fn select(&self, exprs: &[Expr]) -> Result<DataFrame, PolarsError> {
+        self.dataframe()
+            .clone()
+            .lazy()
+            .select(exprs.to_vec())
+            .collect()
     }
 
     /// Return the first N rows.
@@ -109,15 +120,17 @@ impl PolarsDataFrameCollection {
         Ok(Self { df })
     }
 
-    /// Python-Polars alias for select columns (eager).
-    pub fn select(&self, columns: &[&str]) -> Result<Self, PolarsError> {
-        self.select_columns(columns)
-    }
-
-    /// Select columns using Polars expressions.
-    pub fn select_exprs(&self, exprs: &[Expr]) -> Result<Self, PolarsError> {
+    /// Select columns using Polars expressions (py-polars style).
+    pub fn select(&self, exprs: &[Expr]) -> Result<Self, PolarsError> {
         let df = self.df.clone().lazy().select(exprs.to_vec()).collect()?;
         Ok(Self { df })
+    }
+
+    /// Select columns using a selector (py-polars style).
+    pub fn select_selector(&self, selector: &Selector) -> Result<Self, PolarsError> {
+        let names = expand_selector(&self.df, selector);
+        let columns: Vec<&str> = names.iter().map(|name| name.as_str()).collect();
+        self.select_columns(&columns)
     }
 
     /// Filter rows using a Polars predicate expression.

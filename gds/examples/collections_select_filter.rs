@@ -35,7 +35,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("Filtered rows (score > 20):\n{}", filtered.fmt_table());
 
     // Select using expressions (rename score -> score_x2).
-    let projected = table.select_exprs(&[
+    let projected = table.select(&[
         expr_col("id"),
         (expr_col("score") * expr_lit_f64(2.0)).alias("score_x2"),
     ])?;

@@ -9,6 +9,7 @@ use polars::error::PolarsError;
 use polars::prelude::{Expr, SortMultipleOptions};
 
 use crate::collections::dataframe::collection::{DataFrameCollection, PolarsDataFrameCollection};
+use crate::collections::dataframe::selectors::Selector;
 use crate::collections::dataframe::table::{
     read_table_csv, read_table_ipc, read_table_parquet, write_table_csv, write_table_ipc,
     write_table_parquet, TableBuilder,
@@ -113,6 +114,7 @@ impl Dataset {
         }
     }
 
+    /// Select columns by name.
     pub fn select_columns(&self, columns: &[&str]) -> Result<Self, PolarsError> {
         let table = self.table.select_columns(columns)?;
         Ok(Self {
@@ -121,13 +123,18 @@ impl Dataset {
         })
     }
 
-    /// Python-Polars alias for select columns.
-    pub fn select(&self, columns: &[&str]) -> Result<Self, PolarsError> {
-        self.select_columns(columns)
+    /// Select columns using Polars expressions (py-polars style).
+    pub fn select(&self, exprs: &[Expr]) -> Result<Self, PolarsError> {
+        let table = self.table.select(exprs)?;
+        Ok(Self {
+            name: self.name.clone(),
+            table,
+        })
     }
 
-    pub fn select_exprs(&self, exprs: &[Expr]) -> Result<Self, PolarsError> {
-        let table = self.table.select_exprs(exprs)?;
+    /// Select columns using a selector (py-polars style).
+    pub fn select_selector(&self, selector: &Selector) -> Result<Self, PolarsError> {
+        let table = self.table.select_selector(selector)?;
         Ok(Self {
             name: self.name.clone(),
             table,
