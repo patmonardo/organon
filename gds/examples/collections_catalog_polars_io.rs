@@ -9,9 +9,8 @@ use gds::collections::catalog::disk::CollectionsCatalogDisk;
 use gds::collections::catalog::types::{
     CollectionsCatalogDiskEntry, CollectionsIoFormat, CollectionsIoPolicy,
 };
-use gds::collections::dataframe::{
-    read_table_parquet, scale_f64_column, write_table_csv, write_table_parquet, TableBuilder,
-};
+use gds::collections::dataframe::{scale_f64_column, PolarsDataFrameCollection, TableBuilder};
+use gds::collections::io::{csv, parquet};
 use gds::config::CollectionsBackend;
 use gds::types::ValueType;
 
@@ -53,7 +52,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     if let Some(parent) = table_csv_path.parent() {
         std::fs::create_dir_all(parent)?;
     }
-    write_table_csv(&table_csv_path, &table)?;
+    csv::write_table(&table_csv_path, &table, csv::CsvWriteConfig::default())?;
 
     // --- Parquet out (multi-column table) ---
     let table_parquet_name = "sample_table_parquet";
@@ -75,7 +74,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     if let Some(parent) = table_parquet_path.parent() {
         std::fs::create_dir_all(parent)?;
     }
-    write_table_parquet(&table_parquet_path, &table)?;
+    parquet::write_table(&table_parquet_path, &table)?;
 
     // --- Process Parquet table and write a second Parquet ---
     let processed_parquet_name = "sample_table_parquet_processed";
@@ -92,7 +91,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         data_path: catalog.default_data_path(processed_parquet_name, CollectionsIoFormat::Parquet),
     };
 
-    let mut table_df = read_table_parquet(&table_parquet_path)?;
+    let mut table_df = parquet::read_table(&table_parquet_path)?;
     println!("Raw table (parquet):\n{}", table_df.fmt_table());
     scale_f64_column(&mut table_df, "score", 2.0)?;
     println!("Scaled table (parquet):\n{}", table_df.fmt_table());
@@ -102,7 +101,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     if let Some(parent) = processed_parquet_path.parent() {
         std::fs::create_dir_all(parent)?;
     }
-    write_table_parquet(&processed_parquet_path, &table_df)?;
+    parquet::write_table(&processed_parquet_path, &table_df)?;
 
     // --- Export processed Parquet table to CSV ---
     let processed_csv_name = "sample_table_parquet_processed_csv";
@@ -124,7 +123,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     if let Some(parent) = processed_csv_path.parent() {
         std::fs::create_dir_all(parent)?;
     }
-    write_table_csv(&processed_csv_path, &table_df)?;
+    csv::write_table(
+        &processed_csv_path,
+        &table_df,
+        csv::CsvWriteConfig::default(),
+    )?;
 
     catalog.refresh_schema(table_csv_name)?;
     catalog.refresh_schema(table_parquet_name)?;
@@ -137,25 +140,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     for entry in catalog.list() {
         println!("- {} ({:?})", entry.name, entry.io_policy.format);
         if let Some(schema) = &entry.schema {
-            let fields = schema
-                .fields
-                .iter()
-                .map(|field| {
-                    let time = field
-                        .time_unit
-                        .map(|unit| format!("{:?}", unit))
-                        .unwrap_or_else(|| "None".to_string());
-                    format!(
-                        "{}:{} nullable={} time_unit={}",
-                        field.name,
-                        field.value_type.name(),
-                        field.nullable,
-                        time
-                    )
-                })
-                .collect::<Vec<_>>()
-                .join(", ");
-            println!("  schema: {fields}");
+            let schema_df =
+                PolarsDataFrameCollection::empty_with_schema(&schema.to_polars_schema());
+            println!("  schema:\n{}", schema_df.fmt_table());
         }
     }
 

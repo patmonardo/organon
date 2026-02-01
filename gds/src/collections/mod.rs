@@ -30,6 +30,12 @@ pub mod datasets;
 // DataFrame integration
 pub mod dataframe;
 
+// IO system
+pub mod io;
+
+// Schema utilities
+pub mod schema;
+
 // Plugins
 pub mod plugins;
 
@@ -42,7 +48,9 @@ pub mod adapter;
 pub use adapter::*;
 pub use catalog::*;
 pub use dataframe::*;
+pub use io::*;
 pub use plugins::*;
+pub use schema::*;
 pub use traits::*;
 
 // Utility modules and their common types (retain legacy paths)

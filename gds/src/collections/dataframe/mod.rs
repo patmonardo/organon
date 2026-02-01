@@ -8,6 +8,7 @@ pub mod datatypes;
 pub mod expr;
 pub mod frame;
 pub mod getitem;
+pub mod interchange;
 pub mod parse;
 pub mod row;
 pub mod selectors;
@@ -66,6 +67,13 @@ pub use getitem::{
     get_df_item_by_key, get_series_item_by_key, ColSelector, DataFrameGetItem, DataFrameKey,
     RowSelector, SeriesGetItem, SeriesKey,
 };
+pub use interchange::{
+    Buffer as InterchangeBuffer, Column as InterchangeColumn, ColumnBuffers, ColumnNullType,
+    CompatLevel as InterchangeCompatLevel, CopyNotAllowedError as InterchangeCopyNotAllowedError,
+    DataFrame as InterchangeDataFrame, Dtype as InterchangeDtype, DtypeKind as InterchangeDtypeKind,
+    Endianness as InterchangeEndianness, InterchangeError, PolarsInterchangeBuffer,
+    PolarsInterchangeColumn, PolarsInterchangeDataFrame, SupportsInterchange,
+};
 pub use parse::{
     parse_into_expression, parse_into_list_of_expressions, parse_into_list_of_expressions_for_df,
     parse_predicates_constraints_into_expression, ExprInput, ParseExprOptions,
@@ -96,6 +104,5 @@ pub use series::{
 pub use slice::{slice_dataframe, slice_lazyframe, slice_series, SliceSpec};
 pub use streaming::PolarsStreamingFrame;
 pub use table::{
-    read_table_csv, read_table_ipc, read_table_parquet, scale_f64_column, write_table_csv,
-    write_table_ipc, write_table_parquet, TableBuilder,
+    scale_f64_column, TableBuilder,
 };

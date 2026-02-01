@@ -10,10 +10,8 @@ use polars::prelude::{Expr, SortMultipleOptions};
 
 use crate::collections::dataframe::collection::{DataFrameCollection, PolarsDataFrameCollection};
 use crate::collections::dataframe::selectors::Selector;
-use crate::collections::dataframe::table::{
-    read_table_csv, read_table_ipc, read_table_parquet, write_table_csv, write_table_ipc,
-    write_table_parquet, TableBuilder,
-};
+use crate::collections::dataframe::table::TableBuilder;
+use crate::collections::io::{csv, ipc, json, parquet};
 
 /// Minimal dataset wrapper (Polars-backed).
 #[derive(Debug, Clone)]
@@ -40,17 +38,22 @@ impl Dataset {
     }
 
     pub fn from_csv(path: impl AsRef<Path>) -> Result<Self, PolarsError> {
-        let table = read_table_csv(path.as_ref())?;
+        let table = csv::read_table(path.as_ref())?;
         Ok(Self::new(table))
     }
 
     pub fn from_parquet(path: impl AsRef<Path>) -> Result<Self, PolarsError> {
-        let table = read_table_parquet(path.as_ref())?;
+        let table = parquet::read_table(path.as_ref())?;
         Ok(Self::new(table))
     }
 
     pub fn from_ipc(path: impl AsRef<Path>) -> Result<Self, PolarsError> {
-        let table = read_table_ipc(path.as_ref())?;
+        let table = ipc::read_table(path.as_ref())?;
+        Ok(Self::new(table))
+    }
+
+    pub fn from_json(path: impl AsRef<Path>) -> Result<Self, PolarsError> {
+        let table = json::read_table(path.as_ref(), json::JsonReadConfig::default())?;
         Ok(Self::new(table))
     }
 
@@ -231,14 +234,18 @@ impl Dataset {
     }
 
     pub fn to_csv(&self, path: impl AsRef<Path>) -> Result<(), PolarsError> {
-        write_table_csv(path.as_ref(), &self.table)
+        csv::write_table(path.as_ref(), &self.table, csv::CsvWriteConfig::default())
     }
 
     pub fn to_parquet(&self, path: impl AsRef<Path>) -> Result<(), PolarsError> {
-        write_table_parquet(path.as_ref(), &self.table)
+        parquet::write_table(path.as_ref(), &self.table)
     }
 
     pub fn to_ipc(&self, path: impl AsRef<Path>) -> Result<(), PolarsError> {
-        write_table_ipc(path.as_ref(), &self.table)
+        ipc::write_table(path.as_ref(), &self.table)
+    }
+
+    pub fn to_json(&self, path: impl AsRef<Path>) -> Result<(), PolarsError> {
+        json::write_table(path.as_ref(), &self.table, json::JsonWriteConfig::default())
     }
 }

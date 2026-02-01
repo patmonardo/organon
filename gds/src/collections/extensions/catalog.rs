@@ -7,10 +7,8 @@ use crate::collections::catalog::schema::CollectionsSchema;
 use crate::collections::catalog::types::{
     CatalogError, CollectionsCatalogDiskEntry, CollectionsIoFormat, CollectionsIoPolicy,
 };
-use crate::collections::dataframe::{
-    read_table_csv, read_table_ipc, read_table_parquet, write_table_csv, write_table_ipc,
-    write_table_parquet, PolarsDataFrameCollection, Selector,
-};
+use crate::collections::dataframe::{PolarsDataFrameCollection, Selector};
+use crate::collections::io::{csv, ipc, json, parquet};
 use crate::config::CollectionsBackend;
 use crate::types::ValueType;
 use polars::prelude::LazyFrame;
@@ -122,21 +120,20 @@ impl CatalogExtension {
 
         match entry.io_policy.format {
             CollectionsIoFormat::Auto | CollectionsIoFormat::Parquet => {
-                write_table_parquet(&data_path, table)
+                parquet::write_table(&data_path, table)
                     .map_err(|e| CatalogError::Polars(e.to_string()))?;
             }
             CollectionsIoFormat::Csv => {
-                write_table_csv(&data_path, table)
+                csv::write_table(&data_path, table, csv::CsvWriteConfig::default())
                     .map_err(|e| CatalogError::Polars(e.to_string()))?;
             }
             CollectionsIoFormat::ArrowIpc => {
-                write_table_ipc(&data_path, table)
+                ipc::write_table(&data_path, table)
                     .map_err(|e| CatalogError::Polars(e.to_string()))?;
             }
             CollectionsIoFormat::Json => {
-                return Err(CatalogError::Polars(
-                    "JSON table write not implemented for Collections yet".to_string(),
-                ));
+                json::write_table(&data_path, table, json::JsonWriteConfig::default())
+                    .map_err(|e| CatalogError::Polars(e.to_string()))?;
             }
             CollectionsIoFormat::Database => {
                 return Err(CatalogError::Polars(
@@ -162,18 +159,17 @@ impl CatalogExtension {
 
         let table = match entry.io_policy.format {
             CollectionsIoFormat::Auto | CollectionsIoFormat::Parquet => {
-                read_table_parquet(&data_path).map_err(|e| CatalogError::Polars(e.to_string()))?
+                parquet::read_table(&data_path).map_err(|e| CatalogError::Polars(e.to_string()))?
             }
             CollectionsIoFormat::Csv => {
-                read_table_csv(&data_path).map_err(|e| CatalogError::Polars(e.to_string()))?
+                csv::read_table(&data_path).map_err(|e| CatalogError::Polars(e.to_string()))?
             }
             CollectionsIoFormat::ArrowIpc => {
-                read_table_ipc(&data_path).map_err(|e| CatalogError::Polars(e.to_string()))?
+                ipc::read_table(&data_path).map_err(|e| CatalogError::Polars(e.to_string()))?
             }
             CollectionsIoFormat::Json => {
-                return Err(CatalogError::Polars(
-                    "JSON table read not implemented for Collections yet".to_string(),
-                ));
+                json::read_table(&data_path, json::JsonReadConfig::default())
+                    .map_err(|e| CatalogError::Polars(e.to_string()))?
             }
             CollectionsIoFormat::Database => {
                 return Err(CatalogError::Polars(
