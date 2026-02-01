@@ -1,143 +1,90 @@
-//! Series builders and helpers.
+//! Series builders and helpers (py-polars shaped).
 
-use polars::prelude::{
-    BinaryChunked, IntoSeries, NamedFrom, NewChunkedArray, Series, UInt16Chunked, UInt8Chunked,
-};
+use polars::prelude::{DataType, NamedFrom, Series};
 
-pub fn series_i64(name: &str, values: &[i64]) -> Series {
+use crate::collections::dataframe::namespaces::array::ArrayNameSpace;
+use crate::collections::dataframe::namespaces::binary::BinaryNameSpace;
+use crate::collections::dataframe::namespaces::categorical::CategoricalNameSpace;
+use crate::collections::dataframe::namespaces::datetime::DateTimeNameSpace;
+use crate::collections::dataframe::namespaces::ext::ExtNameSpace;
+use crate::collections::dataframe::namespaces::list::ListNameSpace;
+use crate::collections::dataframe::namespaces::string::StringNameSpace;
+use crate::collections::dataframe::namespaces::struct_::StructNameSpace;
+
+/// Python-shaped Series facade for the Collections SDK.
+#[derive(Debug, Clone)]
+pub struct SeriesModel {
+    series: Series,
+}
+
+impl SeriesModel {
+    pub fn new(series: Series) -> Self {
+        Self { series }
+    }
+
+    pub fn from<T, Phantom>(name: &str, values: T) -> Self
+    where
+        Series: NamedFrom<T, Phantom>,
+        Phantom: ?Sized,
+    {
+        Self {
+            series: Series::new(name.into(), values),
+        }
+    }
+
+    pub fn series(&self) -> &Series {
+        &self.series
+    }
+
+    pub fn into_series(self) -> Series {
+        self.series
+    }
+
+    pub fn name(&self) -> &str {
+        self.series.name()
+    }
+
+    pub fn dtype(&self) -> &DataType {
+        self.series.dtype()
+    }
+
+    pub fn bin(&self) -> BinaryNameSpace {
+        BinaryNameSpace::new(self.series.clone())
+    }
+
+    pub fn cat(&self) -> CategoricalNameSpace {
+        CategoricalNameSpace::new(self.series.clone())
+    }
+
+    pub fn str_(&self) -> StringNameSpace {
+        StringNameSpace::new(self.series.clone())
+    }
+
+    pub fn list(&self) -> ListNameSpace {
+        ListNameSpace::new(self.series.clone())
+    }
+
+    pub fn dt(&self) -> DateTimeNameSpace {
+        DateTimeNameSpace::new(self.series.clone())
+    }
+
+    pub fn struct_(&self) -> StructNameSpace {
+        StructNameSpace::new(self.series.clone())
+    }
+
+    pub fn arr(&self) -> ArrayNameSpace {
+        ArrayNameSpace::new(self.series.clone())
+    }
+
+    pub fn ext(&self) -> ExtNameSpace {
+        ExtNameSpace::new(self.series.clone())
+    }
+}
+
+pub fn series<T, Phantom>(name: &str, values: T) -> Series
+where
+    Series: NamedFrom<T, Phantom>,
+    Phantom: ?Sized,
+{
     Series::new(name.into(), values)
-}
-
-pub fn series_i64_opt(name: &str, values: &[Option<i64>]) -> Series {
-    Series::new(name.into(), values)
-}
-
-pub fn series_i128(name: &str, values: &[i128]) -> Series {
-    Series::new(name.into(), values)
-}
-
-pub fn series_i128_opt(name: &str, values: &[Option<i128>]) -> Series {
-    Series::new(name.into(), values)
-}
-
-pub fn series_i32(name: &str, values: &[i32]) -> Series {
-    Series::new(name.into(), values)
-}
-
-pub fn series_i32_opt(name: &str, values: &[Option<i32>]) -> Series {
-    Series::new(name.into(), values)
-}
-
-pub fn series_i16(name: &str, values: &[i16]) -> Series {
-    Series::new(name.into(), values)
-}
-
-pub fn series_i16_opt(name: &str, values: &[Option<i16>]) -> Series {
-    Series::new(name.into(), values)
-}
-
-pub fn series_i8(name: &str, values: &[i8]) -> Series {
-    Series::new(name.into(), values)
-}
-
-pub fn series_i8_opt(name: &str, values: &[Option<i8>]) -> Series {
-    Series::new(name.into(), values)
-}
-
-pub fn series_u64(name: &str, values: &[u64]) -> Series {
-    Series::new(name.into(), values)
-}
-
-pub fn series_u64_opt(name: &str, values: &[Option<u64>]) -> Series {
-    Series::new(name.into(), values)
-}
-
-pub fn series_u32(name: &str, values: &[u32]) -> Series {
-    Series::new(name.into(), values)
-}
-
-pub fn series_u32_opt(name: &str, values: &[Option<u32>]) -> Series {
-    Series::new(name.into(), values)
-}
-
-pub fn series_u16(name: &str, values: &[u16]) -> Series {
-    UInt16Chunked::from_slice(name.into(), values).into_series()
-}
-
-pub fn series_u16_opt(name: &str, values: &[Option<u16>]) -> Series {
-    let mut series = UInt16Chunked::from_iter(values.iter().copied()).into_series();
-    series.rename(name.into());
-    series
-}
-
-pub fn series_u8(name: &str, values: &[u8]) -> Series {
-    UInt8Chunked::from_slice(name.into(), values).into_series()
-}
-
-pub fn series_u8_opt(name: &str, values: &[Option<u8>]) -> Series {
-    let mut series = UInt8Chunked::from_iter(values.iter().copied()).into_series();
-    series.rename(name.into());
-    series
-}
-
-pub fn series_f64(name: &str, values: &[f64]) -> Series {
-    Series::new(name.into(), values)
-}
-
-pub fn series_f64_opt(name: &str, values: &[Option<f64>]) -> Series {
-    Series::new(name.into(), values)
-}
-
-pub fn series_f32(name: &str, values: &[f32]) -> Series {
-    Series::new(name.into(), values)
-}
-
-pub fn series_f32_opt(name: &str, values: &[Option<f32>]) -> Series {
-    Series::new(name.into(), values)
-}
-
-pub fn series_bool(name: &str, values: &[bool]) -> Series {
-    Series::new(name.into(), values)
-}
-
-pub fn series_bool_opt(name: &str, values: &[Option<bool>]) -> Series {
-    Series::new(name.into(), values)
-}
-
-pub fn series_str(name: &str, values: &[&str]) -> Series {
-    Series::new(name.into(), values)
-}
-
-pub fn series_str_opt(name: &str, values: &[Option<&str>]) -> Series {
-    Series::new(name.into(), values)
-}
-
-pub fn series_string(name: &str, values: &[String]) -> Series {
-    Series::new(name.into(), values)
-}
-
-pub fn series_string_opt(name: &str, values: &[Option<String>]) -> Series {
-    Series::new(name.into(), values)
-}
-
-pub fn series_binary(name: &str, values: &[&[u8]]) -> Series {
-    BinaryChunked::from_slice(name.into(), values).into_series()
-}
-
-pub fn series_binary_opt(name: &str, values: &[Option<&[u8]>]) -> Series {
-    let slices: Vec<Option<&[u8]>> = values.iter().copied().collect();
-    Series::new(name.into(), slices)
-}
-
-pub fn series_bytes(name: &str, values: &[Vec<u8>]) -> Series {
-    let slices: Vec<&[u8]> = values.iter().map(|value| value.as_slice()).collect();
-    BinaryChunked::from_slice(name.into(), &slices).into_series()
-}
-
-pub fn series_bytes_opt(name: &str, values: &[Option<Vec<u8>>]) -> Series {
-    let slices: Vec<Option<&[u8]>> = values
-        .iter()
-        .map(|value| value.as_ref().map(|bytes| bytes.as_slice()))
-        .collect();
-    Series::new(name.into(), slices)
 }

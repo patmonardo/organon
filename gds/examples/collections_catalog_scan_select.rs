@@ -6,7 +6,7 @@
 use std::path::PathBuf;
 
 use gds::collections::catalog::types::CollectionsIoFormat;
-use gds::collections::dataframe::{expr_col, expr_lit_f64, selector_by_name, TableBuilder};
+use gds::collections::dataframe::{col, lit, selector_by_name, TableBuilder};
 use gds::collections::extensions::catalog::{CatalogExtension, CatalogExtensionConfig};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -35,10 +35,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let selector = selector_by_name(&["id", "score"]);
     let lazy = catalog.scan_table_select("sample_table", &selector)?;
     let df = lazy
-        .select([
-            expr_col("id"),
-            (expr_col("score") * expr_lit_f64(2.0)).alias("score_x2"),
-        ])
+        .select([col("id"), (col("score") * lit(2.0)).alias("score_x2")])
         .collect()?;
 
     println!("Lazy scan + selector result:\n{}", df);

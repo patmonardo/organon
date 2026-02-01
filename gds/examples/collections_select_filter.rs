@@ -3,9 +3,7 @@
 //! Run with:
 //!   cargo run -p gds --example collections_select_filter
 
-use gds::collections::dataframe::{
-    expr_col, expr_gt, expr_lit_f64, PolarsSortMultipleOptions, TableBuilder,
-};
+use gds::collections::dataframe::{col, lit, PolarsSortMultipleOptions, TableBuilder};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let table = TableBuilder::new()
@@ -31,14 +29,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("Selected columns:\n{}", selected.fmt_table());
 
     // Filter with an expression (score > 20).
-    let filtered = table.filter_expr(expr_gt(expr_col("score"), expr_lit_f64(20.0)))?;
+    let filtered = table.filter_expr(col("score").gt(lit(20.0)))?;
     println!("Filtered rows (score > 20):\n{}", filtered.fmt_table());
 
     // Select using expressions (rename score -> score_x2).
-    let projected = table.select(&[
-        expr_col("id"),
-        (expr_col("score") * expr_lit_f64(2.0)).alias("score_x2"),
-    ])?;
+    let projected = table.select(&[col("id"), (col("score") * lit(2.0)).alias("score_x2")])?;
     println!("Selected exprs (score_x2):\n{}", projected.fmt_table());
 
     // Order by score descending.
@@ -52,8 +47,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let grouped = table.group_by_columns(
         &["group"],
         &[
-            expr_col("score").mean().alias("avg_score"),
-            expr_col("id").count().alias("rows"),
+            col("score").mean().alias("avg_score"),
+            col("id").count().alias("rows"),
         ],
     )?;
     println!("Grouped by group:\n{}", grouped.fmt_table());

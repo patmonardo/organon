@@ -3,9 +3,7 @@
 //! Run with:
 //!   cargo run -p gds --example collections_order_group_exprs
 
-use gds::collections::dataframe::{
-    expr_col, expr_lit_f64, expr_when, PolarsSortMultipleOptions, TableBuilder,
-};
+use gds::collections::dataframe::{col, lit, when, PolarsSortMultipleOptions, TableBuilder};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let table = TableBuilder::new()
@@ -29,13 +27,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Derive a weighted score and a banding column.
     let weighted = table.with_columns_exprs(&[
-        (expr_col("score") * expr_col("weight")).alias("weighted_score"),
-        expr_when(
-            expr_col("score").gt(expr_lit_f64(20.0)),
-            expr_lit_f64(1.0),
-            expr_lit_f64(0.0),
-        )
-        .alias("is_high"),
+        (col("score") * col("weight")).alias("weighted_score"),
+        when(col("score").gt(lit(20.0)))
+            .then(lit(1.0))
+            .otherwise(lit(0.0))
+            .alias("is_high"),
     ])?;
 
     // Order by region (asc), then weighted_score (desc).
@@ -52,9 +48,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let grouped = ordered.group_by_columns(
         &["region"],
         &[
-            expr_col("weighted_score").mean().alias("avg_weighted"),
-            expr_col("score").max().alias("max_score"),
-            expr_col("id").count().alias("rows"),
+            col("weighted_score").mean().alias("avg_weighted"),
+            col("score").max().alias("max_score"),
+            col("id").count().alias("rows"),
         ],
     )?;
     println!("Grouped by region:\n{}", grouped.fmt_table());

@@ -3,7 +3,7 @@
 //! Run with:
 //!   cargo run -p gds --example collections_streaming_dataset
 
-use gds::collections::dataframe::{expr_col, expr_lit_f64, expr_when, TableBuilder};
+use gds::collections::dataframe::{col, lit, when, TableBuilder};
 use gds::collections::datasets::{Dataset, StreamingDataset};
 use gds::collections::extensions::streaming::StreamingConfig;
 
@@ -27,20 +27,18 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         },
     )
     .with_transform(|lazy| {
-        lazy.with_columns([(expr_col("score") * expr_col("weight")).alias("weighted_score")])
-            .with_columns([expr_when(
-                expr_col("score").gt(expr_lit_f64(20.0)),
-                expr_lit_f64(1.0),
-                expr_lit_f64(0.0),
-            )
-            .alias("is_high")])
-            .filter(expr_col("score").gt(expr_lit_f64(12.0)))
-            .group_by([expr_col("is_high")])
+        lazy.with_columns([(col("score") * col("weight")).alias("weighted_score")])
+            .with_columns([when(col("score").gt(lit(20.0)))
+                .then(lit(1.0))
+                .otherwise(lit(0.0))
+                .alias("is_high")])
+            .filter(col("score").gt(lit(12.0)))
+            .group_by([col("is_high")])
             .agg([
-                expr_col("weighted_score").mean().alias("avg_weighted"),
-                expr_col("id").count().alias("rows"),
+                col("weighted_score").mean().alias("avg_weighted"),
+                col("id").count().alias("rows"),
             ])
-            .sort_by_exprs([expr_col("is_high")], Default::default())
+            .sort_by_exprs([col("is_high")], Default::default())
     });
 
     let summary = streaming_summary

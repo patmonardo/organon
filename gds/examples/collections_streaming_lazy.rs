@@ -3,9 +3,7 @@
 //! Run with:
 //!   cargo run -p gds --example collections_streaming_lazy
 
-use gds::collections::dataframe::{
-    expr_col, expr_gt, expr_lit_f64, PolarsStreamingFrame, TableBuilder,
-};
+use gds::collections::dataframe::{col, lit, PolarsStreamingFrame, TableBuilder};
 use gds::collections::extensions::streaming::{StreamingConfig, StreamingSupport};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -22,8 +20,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Build a LazyFrame pipeline.
     let lazy = streaming
         .stream_lazy()
-        .select([expr_col("id"), expr_col("score")])
-        .filter(expr_gt(expr_col("score"), expr_lit_f64(20.0)));
+        .select([col("id"), col("score")])
+        .filter(col("score").gt(lit(20.0)));
 
     let df = streaming.collect_streaming_lazy(lazy)?;
     println!("Streaming LazyFrame result:\n{}", df);

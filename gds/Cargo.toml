@@ -25,6 +25,8 @@ thiserror = "1.0"
 lazy_static = "1.4"
 chrono = { version = "0.4", features = ["serde"] }
 polars = { version = "0.51.0", features = [
+    "dtype-u8",
+    "dtype-u16",
     "dtype-date",
     "dtype-datetime",
     "dtype-time",
@@ -48,6 +50,7 @@ polars = { version = "0.51.0", features = [
     "partition_by",
     "temporal",
     "serde",
+    "meta",
 ] }
 polars-io = { version = "0.51.0", features = ["json"] }
 polars-lazy = { version = "0.51.0", features = ["json"] }
@@ -86,6 +89,8 @@ default = [
     "ml",
     "dtype-array",
     "dtype-decimal",
+    "dtype-u8",
+    "dtype-u16",
     "object",
 ]
 node = ["dep:napi", "dep:napi-derive"]
@@ -98,4 +103,6 @@ ml = []         # Machine learning features
 new_streaming = [] # Polars lazy streaming engine support
 dtype-array = []   # Polars dtype array support
 dtype-decimal = [] # Polars decimal dtype support
+dtype-u8 = ["polars/dtype-u8"]   # Polars UInt8 support
+dtype-u16 = ["polars/dtype-u16"] # Polars UInt16 support
 object = []        # Polars object dtype support
