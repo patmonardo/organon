@@ -57,9 +57,6 @@ pyg_service/
 graphstore-jsx-prototype/
 gdl-to-pdf/
 tools/reports/
-gds/graph-data-science
-gds/polars
-gds/pytorch_geometric
-gds/litData
+gds/src/collections/polars
 
 
