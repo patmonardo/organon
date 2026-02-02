@@ -10,11 +10,11 @@ pub mod list;
 pub mod meta;
 pub mod name;
 pub mod string;
-pub mod struct_;
+pub mod structure;
 pub mod whenthen;
 
 pub use array::ExprArray;
-pub use binary::ExprBinary;
+pub use binary::{BinaryEncoding, BinaryEndianness, BinarySizeUnit, ExprBinary};
 pub use categorical::ExprCategorical;
 pub use datetime::ExprDateTime;
 pub use expr::ExprNamespace;
@@ -23,7 +23,7 @@ pub use list::ExprList;
 pub use meta::ExprMeta;
 pub use name::ExprName;
 pub use string::ExprString;
-pub use struct_::ExprStruct;
+pub use structure::*;
 
 use polars::prelude::Expr;
 
@@ -69,4 +69,8 @@ pub fn str_ns(expr: Expr) -> ExprString {
 
 pub fn struct_ns(expr: Expr) -> ExprStruct {
     ExprStruct::new(expr)
+}
+
+pub fn record_ns(expr: Expr) -> ExprStruct {
+    struct_ns(expr)
 }

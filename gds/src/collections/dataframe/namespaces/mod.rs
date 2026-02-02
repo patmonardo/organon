@@ -7,5 +7,4 @@ pub mod datetime;
 pub mod ext;
 pub mod list;
 pub mod string;
-pub mod struct_;
-pub mod utils;
+pub mod structure;

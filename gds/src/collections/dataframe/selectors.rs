@@ -186,6 +186,11 @@ pub fn struct_() -> Selector {
     Selector::Struct
 }
 
+/// Select struct columns.
+pub fn record() -> Selector {
+    struct_()
+}
+
 /// Select first column.
 pub fn first() -> Selector {
     Selector::First

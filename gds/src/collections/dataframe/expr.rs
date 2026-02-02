@@ -13,7 +13,7 @@ use crate::collections::dataframe::expressions::list::ExprList;
 use crate::collections::dataframe::expressions::meta::ExprMeta;
 use crate::collections::dataframe::expressions::name::ExprName;
 use crate::collections::dataframe::expressions::string::ExprString;
-use crate::collections::dataframe::expressions::struct_::ExprStruct;
+use crate::collections::dataframe::expressions::structure::ExprStruct;
 
 /// Wrapper that enables an Expr namespace pipeline from a Series.
 #[derive(Debug, Clone)]
@@ -94,7 +94,7 @@ impl SeriesExpr {
         ExprNamespace::new(series_col_expr(&self.series))
     }
 
-    pub fn str_(&self) -> SeriesExprString {
+    pub fn str(&self) -> SeriesExprString {
         SeriesExprString::new(self.series.clone())
     }
 
@@ -112,6 +112,10 @@ impl SeriesExpr {
 
     pub fn struct_(&self) -> SeriesExprStruct {
         SeriesExprStruct::new(self.series.clone())
+    }
+
+    pub fn record(&self) -> SeriesExprStruct {
+        self.struct_()
     }
 
     pub fn cat(&self) -> SeriesExprCategorical {

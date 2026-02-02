@@ -24,7 +24,7 @@ uuid = { version = "1", features = ["v4"] }
 thiserror = "1.0"
 lazy_static = "1.4"
 chrono = { version = "0.4", features = ["serde"] }
-polars = { version = "0.51.0", features = [
+polars = { version = "0.52.0", features = [
     "dtype-u8",
     "dtype-u16",
     "dtype-date",
@@ -66,12 +66,13 @@ polars = { version = "0.51.0", features = [
     "array_count",
     "array_to_struct",
     "abs",
+    "moment",
 ] }
-polars-io = { version = "0.51.0", features = ["json"] }
-polars-lazy = { version = "0.51.0", features = ["json"] }
-polars-plan = { version = "0.51.0", features = ["abs"] }
-polars-parquet = "0.51.0"
-arrow = { package = "polars-arrow", version = "0.51.0" }
+polars-io = { version = "0.52.0", features = ["json"] }
+polars-lazy = { version = "0.52.0", features = ["json", "moment"] }
+polars-plan = { version = "0.52.0", features = ["abs", "moment"] }
+polars-parquet = "0.52.0"
+arrow = { package = "polars-arrow", version = "0.52.0" }
 memmap2 = "0.5"
 arrow2 = { version = "0.18", features = ["io_ipc", "io_parquet", "io_parquet_compression"] }
 rand = { version = "0.8", features = ["std", "std_rng"] }
@@ -108,6 +109,7 @@ default = [
     "dtype-u8",
     "dtype-u16",
     "object",
+    "strings",
 ]
 node = ["dep:napi", "dep:napi-derive"]
 full = ["default", "node"]
@@ -119,6 +121,18 @@ ml = []         # Machine learning features
 new_streaming = [] # Polars lazy streaming engine support
 dtype-array = []   # Polars dtype array support
 dtype-decimal = [] # Polars decimal dtype support
+dtype-duration = ["polars/dtype-duration"] # Polars duration dtype support
 dtype-u8 = ["polars/dtype-u8"]   # Polars UInt8 support
 dtype-u16 = ["polars/dtype-u16"] # Polars UInt16 support
 object = []        # Polars object dtype support
+strings = ["polars/strings"] # Polars string namespace support
+binary_encoding = ["polars/binary_encoding"] # Polars binary encode/decode/reinterpret
+binary_slicing = [] # Enable binary slice/head/tail when upstream supports it
+business = ["polars/business"] # Business day operations for datetime namespace
+offset_by = ["polars/offset_by"] # Datetime offset_by expressions
+month_start = ["polars/month_start"] # Datetime month_start expressions
+month_end = ["polars/month_end"] # Datetime month_end expressions
+find_many = ["polars/find_many"] # String find_many/replace_many helpers
+extract_jsonpath = ["polars/extract_jsonpath"] # String JSON path helpers
+regex = ["polars/regex"] # String regex helpers
+json = ["polars/json", "polars-plan/json", "polars-lazy/json", "polars-io/json"] # Json helpers

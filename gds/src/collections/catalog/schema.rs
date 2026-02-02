@@ -84,7 +84,7 @@ pub fn value_type_to_polars_dtype(
         ValueType::Double => Some(DataType::Float64),
         ValueType::Boolean => Some(DataType::Boolean),
         ValueType::String | ValueType::Char => Some(DataType::String),
-        ValueType::Decimal => Some(DataType::Decimal(None, None)),
+        ValueType::Decimal => Some(DataType::Decimal(38, 0)),
         ValueType::Date => Some(DataType::Date),
         ValueType::DateTime => Some(DataType::Datetime(
             time_unit
@@ -104,7 +104,7 @@ pub fn value_type_to_polars_dtype(
         ValueType::StringArray | ValueType::CharArray => {
             Some(DataType::List(Box::new(DataType::String)))
         }
-        ValueType::DecimalArray => Some(DataType::List(Box::new(DataType::Decimal(None, None)))),
+        ValueType::DecimalArray => Some(DataType::List(Box::new(DataType::Decimal(38, 0)))),
         ValueType::DateArray => Some(DataType::List(Box::new(DataType::Date))),
         ValueType::DateTimeArray => Some(DataType::List(Box::new(DataType::Datetime(
             time_unit

@@ -99,7 +99,7 @@ pub fn array(inner: DataType, width: usize) -> DataType {
 
 #[cfg(feature = "dtype-decimal")]
 pub fn decimal(precision: Option<usize>, scale: Option<usize>) -> DataType {
-    DataType::Decimal(precision, scale)
+    DataType::Decimal(precision.unwrap_or(38), scale.unwrap_or(0))
 }
 
 #[cfg(feature = "object")]
@@ -109,6 +109,10 @@ pub fn object(name: &'static str) -> DataType {
 
 pub fn struct_(fields: Vec<Field>) -> DataType {
     DataType::Struct(fields)
+}
+
+pub fn record(fields: Vec<Field>) -> DataType {
+    struct_(fields)
 }
 
 pub fn field(name: &str, dtype: DataType) -> Field {

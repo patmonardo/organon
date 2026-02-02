@@ -5,14 +5,14 @@ use std::path::Path;
 
 use polars::prelude::PlSmallStr;
 use polars::prelude::{
-    col, IpcWriter, LazyFrame, PlPath, PolarsError, ScanArgsIpc, SchemaRef, SerWriter,
+    col, IdxSize, IpcWriter, LazyFrame, PlPath, PolarsError, SchemaRef, SerWriter,
 };
+use polars_io::ipc::IpcScanOptions;
 use polars_io::{HiveOptions, RowIndex};
+use polars_plan::prelude::UnifiedScanArgs;
 
 use crate::collections::dataframe::collection::PolarsDataFrameCollection;
-use crate::collections::io::partition::{
-    partition_dataframe_for_write, PartitionByConfig,
-};
+use crate::collections::io::partition::{partition_dataframe_for_write, PartitionByConfig};
 
 /// Read an IPC file into a Polars-backed table.
 pub fn read_table(path: &Path) -> Result<PolarsDataFrameCollection, PolarsError> {
@@ -21,7 +21,7 @@ pub fn read_table(path: &Path) -> Result<PolarsDataFrameCollection, PolarsError>
 
 #[derive(Clone)]
 pub struct IpcScanConfig {
-    pub scan_args: ScanArgsIpc,
+    pub ipc_options: IpcScanOptions,
     pub n_rows: Option<usize>,
     pub rechunk: bool,
     pub cache: bool,
@@ -38,7 +38,7 @@ pub struct IpcScanConfig {
 impl Default for IpcScanConfig {
     fn default() -> Self {
         Self {
-            scan_args: ScanArgsIpc::default(),
+            ipc_options: IpcScanOptions::default(),
             n_rows: None,
             rechunk: false,
             cache: true,
@@ -98,11 +98,10 @@ pub fn scan_table_with_options(
     path: PlPath,
     config: IpcScanConfig,
 ) -> Result<LazyFrame, PolarsError> {
-    let mut scan_args = config.scan_args;
-    scan_args.n_rows = config.n_rows;
-    scan_args.rechunk = config.rechunk;
-    scan_args.cache = config.cache;
-    scan_args.include_file_paths = config
+    let mut unified_scan_args = UnifiedScanArgs::default();
+    unified_scan_args.rechunk = config.rechunk;
+    unified_scan_args.cache = config.cache;
+    unified_scan_args.include_file_paths = config
         .include_file_paths
         .as_ref()
         .map(|name| PlSmallStr::from(name.as_str()));
@@ -111,7 +110,7 @@ pub fn scan_table_with_options(
         || config.hive_schema.is_some()
         || !config.hive_try_parse_dates
     {
-        scan_args.hive_options = HiveOptions {
+        unified_scan_args.hive_options = HiveOptions {
             enabled: config.hive_enabled,
             hive_start_idx: config.hive_start_idx,
             schema: config.hive_schema,
@@ -119,12 +118,15 @@ pub fn scan_table_with_options(
         };
     }
     if let Some(name) = config.row_index_name.as_ref() {
-        scan_args.row_index = Some(RowIndex {
+        unified_scan_args.row_index = Some(RowIndex {
             name: name.as_str().into(),
             offset: config.row_index_offset as _,
         });
     }
-    let mut lf = LazyFrame::scan_ipc(path, scan_args)?;
+    let mut lf = LazyFrame::scan_ipc(path, config.ipc_options, unified_scan_args)?;
+    if let Some(n_rows) = config.n_rows {
+        lf = lf.slice(0, n_rows as IdxSize);
+    }
     if let Some(columns) = config.columns {
         let exprs = columns.iter().map(|name| col(name)).collect::<Vec<_>>();
         lf = lf.select(exprs);

@@ -9,7 +9,7 @@ use crate::collections::dataframe::namespaces::datetime::DateTimeNameSpace;
 use crate::collections::dataframe::namespaces::ext::ExtNameSpace;
 use crate::collections::dataframe::namespaces::list::ListNameSpace;
 use crate::collections::dataframe::namespaces::string::StringNameSpace;
-use crate::collections::dataframe::namespaces::struct_::StructNameSpace;
+use crate::collections::dataframe::namespaces::structure::StructNameSpace;
 
 /// Python-shaped Series facade for the Collections SDK.
 #[derive(Debug, Clone)]
@@ -62,7 +62,7 @@ impl SeriesModel {
         CategoricalNameSpace::new(self.series.clone())
     }
 
-    pub fn str_(&self) -> StringNameSpace {
+    pub fn str(&self) -> StringNameSpace {
         StringNameSpace::new(self.series.clone())
     }
 
@@ -76,6 +76,10 @@ impl SeriesModel {
 
     pub fn struct_(&self) -> StructNameSpace {
         StructNameSpace::new(self.series.clone())
+    }
+
+    pub fn record(&self) -> StructNameSpace {
+        self.struct_()
     }
 
     pub fn arr(&self) -> ArrayNameSpace {

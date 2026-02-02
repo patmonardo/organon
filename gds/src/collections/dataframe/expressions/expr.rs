@@ -11,7 +11,7 @@ use crate::collections::dataframe::expressions::list::ExprList;
 use crate::collections::dataframe::expressions::meta::ExprMeta;
 use crate::collections::dataframe::expressions::name::ExprName;
 use crate::collections::dataframe::expressions::string::ExprString;
-use crate::collections::dataframe::expressions::struct_::ExprStruct;
+use crate::collections::dataframe::expressions::structure::ExprStruct;
 
 #[derive(Debug, Clone)]
 pub struct ExprNamespace {
@@ -63,11 +63,19 @@ impl ExprNamespace {
         ExprName::new(self.expr.clone())
     }
 
-    pub fn str_(&self) -> ExprString {
+    pub fn str(&self) -> ExprString {
         ExprString::new(self.expr.clone())
+    }
+
+    pub fn str_(&self) -> ExprString {
+        self.str()
     }
 
     pub fn struct_(&self) -> ExprStruct {
         ExprStruct::new(self.expr.clone())
+    }
+
+    pub fn record(&self) -> ExprStruct {
+        self.struct_()
     }
 }

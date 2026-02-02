@@ -163,7 +163,7 @@ pub fn polars_dtype_to_dtype(dtype: &DataType) -> Result<Dtype, InterchangeError
         Decimal(precision, scale) => Dtype {
             kind: DtypeKind::Decimal,
             bit_width: 128,
-            format: format!("decimal:{}:{}", precision.unwrap_or(38), scale.unwrap_or(0)),
+            format: format!("decimal:{precision}:{scale}"),
             endianness: NE,
             children: Vec::new(),
             child_names: Vec::new(),

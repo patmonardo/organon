@@ -48,9 +48,10 @@ pub use datatypes::{
     date as dtype_date, datetime as dtype_datetime, duration as dtype_duration,
     field as dtype_field, float32 as dtype_float32, float64 as dtype_float64,
     int128 as dtype_int128, int16 as dtype_int16, int32 as dtype_int32, int64 as dtype_int64,
-    int8 as dtype_int8, list as dtype_list, null as dtype_null, string as dtype_string,
-    struct_ as dtype_struct, time as dtype_time, uint16 as dtype_uint16, uint32 as dtype_uint32,
-    uint64 as dtype_uint64, uint8 as dtype_uint8, utf8 as dtype_utf8, PolarsDataType as DataType,
+    int8 as dtype_int8, list as dtype_list, null as dtype_null, record as dtype_record,
+    string as dtype_string, struct_ as dtype_struct, time as dtype_time, uint16 as dtype_uint16,
+    uint32 as dtype_uint32, uint64 as dtype_uint64, uint8 as dtype_uint8, utf8 as dtype_utf8,
+    PolarsDataType as DataType,
 };
 pub use expr::{
     series_expr, SeriesExpr, SeriesExprArray, SeriesExprBinary, SeriesExprCategorical,
@@ -58,9 +59,10 @@ pub use expr::{
     SeriesExprString, SeriesExprStruct,
 };
 pub use expressions::{
-    arr_ns, binary_ns, cat_ns, dt_ns, expr_ns, ext_ns, list_ns, meta_ns, name_ns, str_ns,
-    struct_ns, ExprArray, ExprBinary, ExprCategorical, ExprDateTime, ExprExt, ExprList, ExprMeta,
-    ExprName, ExprNamespace, ExprString, ExprStruct,
+    arr_ns, binary_ns, cat_ns, dt_ns, expr_ns, ext_ns, list_ns, meta_ns, name_ns, record_ns,
+    str_ns, struct_ns, BinaryEncoding, BinaryEndianness, BinarySizeUnit, ExprArray, ExprBinary,
+    ExprCategorical, ExprDateTime, ExprExt, ExprList, ExprMeta, ExprName, ExprNamespace,
+    ExprString, ExprStruct,
 };
 pub use frame::PolarsDataFrame;
 pub use functions::*;
@@ -90,10 +92,10 @@ pub use selectors::{
     expand_exprs as selector_expand_exprs, expand_selector as selector_expand,
     first as selector_first, float as selector_float, integer as selector_integer,
     last as selector_last, list as selector_list, matches as selector_matches,
-    numeric as selector_numeric, signed_integer as selector_signed_integer,
-    starts_with as selector_starts_with, string as selector_string, struct_ as selector_struct,
-    temporal as selector_temporal, time as selector_time,
-    unsigned_integer as selector_unsigned_integer, Selector,
+    numeric as selector_numeric, record as selector_record,
+    signed_integer as selector_signed_integer, starts_with as selector_starts_with,
+    string as selector_string, struct_ as selector_struct, temporal as selector_temporal,
+    time as selector_time, unsigned_integer as selector_unsigned_integer, Selector,
 };
 pub use series::{series, series_list_i64, SeriesModel};
 pub use slice::{slice_dataframe, slice_lazyframe, slice_series, SliceSpec};
