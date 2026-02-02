@@ -51,9 +51,25 @@ polars = { version = "0.51.0", features = [
     "temporal",
     "serde",
     "meta",
+    "regex",
+    "diff",
+    "is_in",
+    "list_any_all",
+    "list_drop_nulls",
+    "list_sample",
+    "list_gather",
+    "list_to_struct",
+    "list_count",
+    "list_sets",
+    "list_eval",
+    "array_any_all",
+    "array_count",
+    "array_to_struct",
+    "abs",
 ] }
 polars-io = { version = "0.51.0", features = ["json"] }
 polars-lazy = { version = "0.51.0", features = ["json"] }
+polars-plan = { version = "0.51.0", features = ["abs"] }
 polars-parquet = "0.51.0"
 arrow = { package = "polars-arrow", version = "0.51.0" }
 memmap2 = "0.5"

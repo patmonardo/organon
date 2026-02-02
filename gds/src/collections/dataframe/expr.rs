@@ -245,6 +245,14 @@ impl SeriesExprArray {
         let expr = f(ExprArray::new(series_col_expr(&self.series)));
         eval_series_expr(&self.series, expr)
     }
+
+    pub fn apply_result<F>(&self, f: F) -> PolarsResult<Series>
+    where
+        F: FnOnce(ExprArray) -> PolarsResult<Expr>,
+    {
+        let expr = f(ExprArray::new(series_col_expr(&self.series)))?;
+        eval_series_expr(&self.series, expr)
+    }
 }
 
 impl SeriesExprName {

@@ -32,6 +32,12 @@ impl SeriesModel {
         }
     }
 
+    pub fn from_list_i64(name: &str, values: &[Vec<i64>]) -> Self {
+        Self {
+            series: series_list_i64(name, values),
+        }
+    }
+
     pub fn series(&self) -> &Series {
         &self.series
     }
@@ -79,6 +85,20 @@ impl SeriesModel {
     pub fn ext(&self) -> ExtNameSpace {
         ExtNameSpace::new(self.series.clone())
     }
+}
+
+pub fn series_list_i64(name: &str, values: &[Vec<i64>]) -> Series {
+    let inner: Vec<Series> = values
+        .iter()
+        .map(|value| {
+            if value.is_empty() {
+                Series::new_empty("".into(), &DataType::Int64)
+            } else {
+                Series::new("".into(), value.as_slice())
+            }
+        })
+        .collect();
+    Series::new(name.into(), inner.as_slice())
 }
 
 pub fn series<T, Phantom>(name: &str, values: T) -> Series

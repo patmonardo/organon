@@ -95,7 +95,7 @@ pub use selectors::{
     temporal as selector_temporal, time as selector_time,
     unsigned_integer as selector_unsigned_integer, Selector,
 };
-pub use series::{series, SeriesModel};
+pub use series::{series, series_list_i64, SeriesModel};
 pub use slice::{slice_dataframe, slice_lazyframe, slice_series, SliceSpec};
 pub use streaming::PolarsStreamingFrame;
 pub use table::{scale_f64_column, TableBuilder};
