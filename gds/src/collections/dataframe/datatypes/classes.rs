@@ -4,7 +4,7 @@
 
 use polars::prelude::DataType;
 
-pub type GDSDataType = DataType;
+use super::GDSDataType;
 
 /// Base extension dtype description (seed pass).
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
