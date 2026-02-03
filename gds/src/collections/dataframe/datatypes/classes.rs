@@ -4,18 +4,18 @@
 
 use polars::prelude::DataType;
 
-pub type PolarsDataType = DataType;
+pub type GDSDataType = DataType;
 
 /// Base extension dtype description (seed pass).
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct BaseExtension {
     name: String,
-    storage: PolarsDataType,
+    storage: GDSDataType,
     metadata: Option<String>,
 }
 
 impl BaseExtension {
-    pub fn new(name: impl Into<String>, storage: PolarsDataType, metadata: Option<String>) -> Self {
+    pub fn new(name: impl Into<String>, storage: GDSDataType, metadata: Option<String>) -> Self {
         Self {
             name: name.into(),
             storage,
@@ -27,7 +27,7 @@ impl BaseExtension {
         &self.name
     }
 
-    pub fn ext_storage(&self) -> &PolarsDataType {
+    pub fn ext_storage(&self) -> &GDSDataType {
         &self.storage
     }
 
@@ -41,7 +41,7 @@ impl BaseExtension {
 pub struct Extension(BaseExtension);
 
 impl Extension {
-    pub fn new(name: impl Into<String>, storage: PolarsDataType, metadata: Option<String>) -> Self {
+    pub fn new(name: impl Into<String>, storage: GDSDataType, metadata: Option<String>) -> Self {
         Self(BaseExtension::new(name, storage, metadata))
     }
 

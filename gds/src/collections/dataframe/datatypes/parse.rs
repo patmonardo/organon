@@ -1,24 +1,24 @@
 //! Rust translation scaffold for polars.datatypes._parse.
 
-use super::PolarsDataType;
+use super::GDSDataType;
 use polars::prelude::{DataType, DataTypeExpr, TimeUnit, UnknownKind};
 use std::fmt;
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum DTypeInput<'a> {
-    Polars(PolarsDataType),
+    Polars(GDSDataType),
     Name(&'a str),
     DataTypeExpr(DataTypeExpr),
 }
 
-impl<'a> From<PolarsDataType> for DTypeInput<'a> {
-    fn from(dtype: PolarsDataType) -> Self {
+impl<'a> From<GDSDataType> for DTypeInput<'a> {
+    fn from(dtype: GDSDataType) -> Self {
         Self::Polars(dtype)
     }
 }
 
-impl<'a> From<&'a PolarsDataType> for DTypeInput<'a> {
-    fn from(dtype: &'a PolarsDataType) -> Self {
+impl<'a> From<&'a GDSDataType> for DTypeInput<'a> {
+    fn from(dtype: &'a GDSDataType) -> Self {
         Self::Polars(dtype.clone())
     }
 }
@@ -82,7 +82,7 @@ pub fn parse_into_datatype_expr<'a>(
 
 pub fn parse_py_type_into_dtype<'a>(
     input: impl Into<DTypeInput<'a>>,
-) -> Result<PolarsDataType, DTypeParseError> {
+) -> Result<GDSDataType, DTypeParseError> {
     match input.into() {
         DTypeInput::Polars(dtype) => Ok(dtype),
         DTypeInput::Name(name) => parse_name_to_dtype(name),
@@ -92,15 +92,15 @@ pub fn parse_py_type_into_dtype<'a>(
 
 pub fn parse_into_dtype<'a>(
     input: impl Into<DTypeInput<'a>>,
-) -> Result<PolarsDataType, DTypeParseError> {
+) -> Result<GDSDataType, DTypeParseError> {
     parse_into_dtype_from_input(input.into())
 }
 
-pub fn try_parse_into_dtype<'a>(input: impl Into<DTypeInput<'a>>) -> Option<PolarsDataType> {
+pub fn try_parse_into_dtype<'a>(input: impl Into<DTypeInput<'a>>) -> Option<GDSDataType> {
     parse_into_dtype(input).ok()
 }
 
-fn parse_name_to_dtype(raw: &str) -> Result<PolarsDataType, DTypeParseError> {
+fn parse_name_to_dtype(raw: &str) -> Result<GDSDataType, DTypeParseError> {
     let trimmed = raw.trim();
     if trimmed.is_empty() {
         return Err(DTypeParseError::invalid(raw));
@@ -146,7 +146,7 @@ fn parse_name_to_dtype(raw: &str) -> Result<PolarsDataType, DTypeParseError> {
     }
 }
 
-fn parse_generic(raw: &str) -> Option<Result<PolarsDataType, DTypeParseError>> {
+fn parse_generic(raw: &str) -> Option<Result<GDSDataType, DTypeParseError>> {
     let trimmed = raw.trim();
 
     if let Some(rest) = trimmed.strip_prefix("datetime[") {
@@ -183,7 +183,7 @@ fn parse_time_unit(raw: &str) -> Result<TimeUnit, DTypeParseError> {
     }
 }
 
-fn parse_into_dtype_from_input(input: DTypeInput<'_>) -> Result<PolarsDataType, DTypeParseError> {
+fn parse_into_dtype_from_input(input: DTypeInput<'_>) -> Result<GDSDataType, DTypeParseError> {
     match input {
         DTypeInput::Polars(dtype) => Ok(dtype),
         DTypeInput::Name(name) => parse_name_to_dtype(name),
@@ -202,7 +202,7 @@ fn strip_optional(raw: &str) -> &str {
     formatted
 }
 
-fn parse_py_type_name(raw: &str) -> Option<PolarsDataType> {
+fn parse_py_type_name(raw: &str) -> Option<GDSDataType> {
     match raw {
         "Decimal" => Some(DataType::Decimal(38, 0)),
         "NoneType" => Some(DataType::Null),

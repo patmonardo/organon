@@ -202,43 +202,16 @@ fn parse_into_list_of_expressions_with_df(
         }
     }
 
-    Ok(exprs)
-}
-
-/// Parse predicates and constraints into a single expression (AND-reduction).
-pub fn parse_predicates_constraints_into_expression(
-    predicates: &[ExprInput],
-    constraints: &HashMap<String, ExprInput>,
-) -> Result<Expr, PolarsError> {
-    let mut parsed = Vec::new();
-
-    for predicate in predicates {
-        parsed.push(parse_into_expression(
-            predicate.clone(),
-            ParseExprOptions::default(),
-        )?);
-    }
-
-    for (name, value) in constraints {
-        let value_expr = parse_into_expression(
-            value.clone(),
-            ParseExprOptions {
-                str_as_lit: true,
-                ..ParseExprOptions::default()
-            },
-        )?;
-        parsed.push(col(name).eq(value_expr));
-    }
-
-    if parsed.is_empty() {
+    if exprs.is_empty() {
         return Err(PolarsError::ComputeError(
-            "at least one predicate or constraint must be provided".into(),
+            "no expressions provided for evaluation".into(),
         ));
     }
 
-    if parsed.len() == 1 {
-        return Ok(parsed.remove(0));
+    if options.require_selector {
+        let expr = all_horizontal(exprs)?;
+        Ok(vec![expr])
+    } else {
+        Ok(exprs)
     }
-
-    Ok(all_horizontal(parsed)?)
 }

@@ -2,16 +2,16 @@
 
 use polars::prelude::{DataType, DataTypeExpr, DataTypeSelector, Expr, PolarsResult, Schema};
 
-use crate::collections::dataframe::datatype::array::DataTypeExprArrNameSpace;
-use crate::collections::dataframe::datatype::list::DataTypeExprListNameSpace;
-use crate::collections::dataframe::datatype::struct_::DataTypeExprStructNameSpace;
+use super::array::DataTypeExprArrNameSpace;
+use super::list::DataTypeExprListNameSpace;
+use super::structure::DataTypeExprStructNameSpace;
 
 #[derive(Debug, Clone)]
-pub struct DataTypeExprModel {
+pub struct GDSDataTypeExpr {
     expr: DataTypeExpr,
 }
 
-impl DataTypeExprModel {
+impl GDSDataTypeExpr {
     pub fn new(expr: DataTypeExpr) -> Self {
         Self { expr }
     }

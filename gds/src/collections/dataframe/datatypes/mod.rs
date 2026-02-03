@@ -11,4 +11,4 @@ pub mod group;
 pub mod parse;
 pub mod utils;
 
-pub type PolarsDataType = DataType;
+pub type GDSDataType = DataType;

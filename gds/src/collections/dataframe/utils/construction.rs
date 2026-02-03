@@ -203,20 +203,16 @@ fn apply_schema_overrides(
     for field in overrides.iter_fields() {
         let name = field.name();
         let dtype = field.dtype();
-        if let Ok(column) = df.column(name) {
-            let series = column
-                .as_series()
-                .ok_or_else(|| PolarsError::ComputeError("column is not a series".into()))?;
-            let casted = if series.dtype() == dtype {
-                series.clone()
-            } else {
-                series.cast(dtype)?
-            };
-            df.with_column(casted)?;
+        let column = df.column(name)?;
+        let series = column
+            .as_series()
+            .ok_or_else(|| PolarsError::ComputeError("column is not a series".into()))?;
+        let casted = if series.dtype() == dtype {
+            series.clone()
         } else {
-            let filler = Series::full_null(name.clone(), df.height(), dtype);
-            df.with_column(filler)?;
-        }
+            series.cast(dtype)?
+        };
+        df.replace(name.as_str(), casted)?;
     }
     Ok(df)
 }

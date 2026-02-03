@@ -2,7 +2,7 @@
 
 use polars::prelude::{DataTypeExpr, Expr};
 
-use super::DataTypeExprModel;
+use super::GDSDataTypeExpr;
 
 #[derive(Debug, Clone)]
 pub struct DataTypeExprArrNameSpace {
@@ -14,8 +14,8 @@ impl DataTypeExprArrNameSpace {
         Self { expr }
     }
 
-    pub fn inner_dtype(&self) -> DataTypeExprModel {
-        DataTypeExprModel::new(self.expr.clone().arr().inner_dtype())
+    pub fn inner_dtype(&self) -> GDSDataTypeExpr {
+        GDSDataTypeExpr::new(self.expr.clone().arr().inner_dtype())
     }
 
     pub fn width(&self) -> Expr {

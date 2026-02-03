@@ -2,7 +2,7 @@
 
 use polars::prelude::DataTypeExpr;
 
-use super::DataTypeExprModel;
+use super::GDSDataTypeExpr;
 
 #[derive(Debug, Clone)]
 pub struct DataTypeExprListNameSpace {
@@ -14,7 +14,7 @@ impl DataTypeExprListNameSpace {
         Self { expr }
     }
 
-    pub fn inner_dtype(&self) -> DataTypeExprModel {
-        DataTypeExprModel::new(self.expr.clone().list().inner_dtype())
+    pub fn inner_dtype(&self) -> GDSDataTypeExpr {
+        GDSDataTypeExpr::new(self.expr.clone().list().inner_dtype())
     }
 }

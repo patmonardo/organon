@@ -6,10 +6,10 @@ use arrow::datatypes::{ArrowDataType, Field as ArrowField, TimeUnit as ArrowTime
 use polars::prelude::{AnyValue, DataType, PlSmallStr, TimeUnit};
 
 use super::parse::parse_into_dtype;
-use super::PolarsDataType;
+use super::GDSDataType;
 
 /// Indicate whether the given dtype is a Polars dtype.
-pub fn is_polars_dtype(dtype: &PolarsDataType, include_unknown: bool) -> bool {
+pub fn is_polars_dtype(dtype: &GDSDataType, include_unknown: bool) -> bool {
     if include_unknown {
         true
     } else {
@@ -18,9 +18,9 @@ pub fn is_polars_dtype(dtype: &PolarsDataType, include_unknown: bool) -> bool {
 }
 
 /// Return a set of unique dtypes found in one or more (potentially compound) dtypes.
-pub fn unpack_dtypes<I>(dtypes: I, include_compound: bool) -> HashSet<PolarsDataType>
+pub fn unpack_dtypes<I>(dtypes: I, include_compound: bool) -> HashSet<GDSDataType>
 where
-    I: IntoIterator<Item = PolarsDataType>,
+    I: IntoIterator<Item = GDSDataType>,
 {
     let mut unpacked = HashSet::new();
     for dtype in dtypes {
@@ -58,7 +58,7 @@ where
 }
 
 /// Return a stable string name for FFI use.
-pub fn dtype_to_ffiname(dtype: &PolarsDataType) -> Option<&'static str> {
+pub fn dtype_to_ffiname(dtype: &GDSDataType) -> Option<&'static str> {
     use DataType::*;
 
     let name = match dtype {
@@ -95,7 +95,7 @@ pub fn dtype_to_ffiname(dtype: &PolarsDataType) -> Option<&'static str> {
 }
 
 /// Convert a Polars dtype to an Arrow dtype (best-effort).
-pub fn dtype_to_arrow_type(dtype: &PolarsDataType) -> ArrowDataType {
+pub fn dtype_to_arrow_type(dtype: &GDSDataType) -> ArrowDataType {
     use DataType::*;
 
     match dtype {
@@ -150,7 +150,7 @@ pub fn dtype_to_arrow_type(dtype: &PolarsDataType) -> ArrowDataType {
 }
 
 /// Map a Polars short repr (eg: "i64", "list[str]") back into a dtype.
-pub fn dtype_short_repr_to_dtype(dtype_string: Option<&str>) -> Option<PolarsDataType> {
+pub fn dtype_short_repr_to_dtype(dtype_string: Option<&str>) -> Option<GDSDataType> {
     let raw = dtype_string?.trim();
     if raw.is_empty() {
         return None;
@@ -164,7 +164,7 @@ pub fn dtype_short_repr_to_dtype(dtype_string: Option<&str>) -> Option<PolarsDat
 }
 
 /// Best-effort value casting helper (seed pass).
-pub fn maybe_cast(value: AnyValue<'static>, _dtype: &PolarsDataType) -> AnyValue<'static> {
+pub fn maybe_cast(value: AnyValue<'static>, _dtype: &GDSDataType) -> AnyValue<'static> {
     value
 }
 
