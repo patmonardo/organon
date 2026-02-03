@@ -5,7 +5,7 @@ use polars::prelude::{
     BooleanChunked, Column, DataFrame, IdxCa, NamedFrom, NewChunkedArray, PolarsResult, Series,
 };
 
-use crate::collections::dataframe::slice::{slice_dataframe, slice_series, SliceSpec};
+use crate::collections::dataframe::utils::slice::{slice_dataframe, slice_series, SliceSpec};
 
 /// Series selection keys.
 #[derive(Debug, Clone)]

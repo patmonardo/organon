@@ -8,7 +8,7 @@ use polars::prelude::{ChunkAgg, SortOptions};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Build Series using the Collections helpers.
-    let values = series("values", &[-3, -1, 2, 4]);
+    let values = series("values", &[-3i64, -1, 2, 4]);
     let weights = series("weights", &[0.5, 1.0, 1.5, 2.0]);
 
     println!("values:\n{values}");

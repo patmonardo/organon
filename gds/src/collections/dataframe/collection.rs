@@ -8,19 +8,20 @@ use polars::prelude::{
 };
 use std::collections::HashMap;
 
-use crate::collections::dataframe::construction::{
+use crate::collections::dataframe::selectors::{expand_selector, Selector};
+use crate::collections::dataframe::utils::construction::{
     dataframe_from_columns, dataframe_from_columns_vec, dataframe_from_records,
     dataframe_from_rows, dataframe_from_series, ConstructionOptions,
 };
-use crate::collections::dataframe::getitem::{get_df_item_by_key, DataFrameGetItem, DataFrameKey};
-use crate::collections::dataframe::parse::{
+use crate::collections::dataframe::utils::getitem::{
+    get_df_item_by_key, DataFrameGetItem, DataFrameKey,
+};
+use crate::collections::dataframe::utils::parse::{
     parse_into_list_of_expressions_for_df, ExprInput, ParseExprOptions,
 };
-use crate::collections::dataframe::selectors::{expand_selector, Selector};
-use crate::collections::dataframe::slice::{slice_dataframe, SliceSpec};
+use crate::collections::dataframe::utils::slice::{slice_dataframe, SliceSpec};
 
 pub use polars::prelude::Column as PolarsColumn;
-pub use polars::prelude::DataType as PolarsDataType;
 pub use polars::prelude::Series as PolarsSeries;
 
 /// Trait for DataFrame-backed Collections with full Polars access.

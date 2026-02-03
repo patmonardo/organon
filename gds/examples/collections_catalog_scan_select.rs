@@ -6,7 +6,9 @@
 use std::path::PathBuf;
 
 use gds::collections::catalog::types::CollectionsIoFormat;
-use gds::collections::dataframe::{col, lit, selector_by_name, TableBuilder};
+use gds::collections::dataframe::{
+    col, lit, selector_by_name, PolarsDataFrameCollection, TableBuilder,
+};
 use gds::collections::extensions::catalog::{CatalogExtension, CatalogExtensionConfig};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -38,7 +40,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .select([col("id"), (col("score") * lit(2.0)).alias("score_x2")])
         .collect()?;
 
-    println!("Lazy scan + selector result:\n{}", df);
+    println!(
+        "Lazy scan + selector result:\n{}",
+        PolarsDataFrameCollection::new(df).fmt_table()
+    );
 
     Ok(())
 }

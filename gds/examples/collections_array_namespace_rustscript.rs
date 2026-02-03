@@ -3,7 +3,9 @@
 //! Run with:
 //!   cargo run -p gds --example collections_array_namespace_rustscript
 
-use gds::collections::dataframe::{arr_ns, col, series_list_i64, SeriesModel};
+use gds::collections::dataframe::{
+    arr_ns, col, series_list_i64, PolarsDataFrameCollection, SeriesModel,
+};
 use polars::prelude::*;
 
 fn main() -> PolarsResult<()> {
@@ -31,7 +33,7 @@ fn main() -> PolarsResult<()> {
         .with_columns([
             arr_ns(col("vals")).len().alias("len"),
             arr_ns(col("vals")).sum().alias("sum"),
-            arr_ns(col("vals")).sort(false, false, true).alias("sorted"),
+            arr_ns(col("vals")).sort(false, false).alias("sorted"),
             arr_ns(col("vals"))
                 .get_expr(col("idx"), true)
                 .alias("picked"),
@@ -39,7 +41,7 @@ fn main() -> PolarsResult<()> {
         ])
         .collect()?;
 
-    println!("{result}");
+    println!("{}", PolarsDataFrameCollection::new(result).fmt_table());
 
     // SeriesModel + ArrayNameSpace (no DataFrame needed).
     let array_series = SeriesModel::new(vals.cast(&DataType::Array(Box::new(DataType::Int64), 3))?);

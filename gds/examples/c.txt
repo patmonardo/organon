@@ -1,0 +1,185 @@
+collections_array_namespace_rustscript:
+   Compiling gds v0.1.0 (/home/pat/VSCode/organon/gds)
+error[E0432]: unresolved imports `gds::collections::dataframe::arr_ns`, `gds::collections::dataframe::col`
+ --> gds/examples/collections_array_namespace_rustscript.rs:7:5
+  |
+7 |     arr_ns, col, series_list_i64, PolarsDataFrameCollection, SeriesModel,
+  |     ^^^^^^  ^^^ no `col` in `collections::dataframe`
+  |     |
+  |     no `arr_ns` in `collections::dataframe`
+  |
+  = help: consider importing this module instead:
+          gds::collections::functions::col
+
+For more information about this error, try `rustc --explain E0432`.
+error: could not compile `gds` (example "collections_array_namespace_rustscript") due to 1 previous error
+collections_catalog_extensible:
+   Compiling gds v0.1.0 (/home/pat/VSCode/organon/gds)
+error[E0432]: unresolved imports `gds::collections::dataframe::col`, `gds::collections::dataframe::lit`
+ --> gds/examples/collections_catalog_extensible.rs:9:35
+  |
+9 | use gds::collections::dataframe::{col, lit, scale_f64_column, TableBuilder};
+  |                                   ^^^  ^^^
+  |                                   |    |
+  |                                   |    no `lit` in `collections::dataframe`
+  |                                   |    help: a similar name exists in the module: `list`
+  |                                   no `col` in `collections::dataframe`
+  |
+  = help: consider importing this module instead:
+          gds::collections::functions::col
+  = help: consider importing this module instead:
+          gds::collections::functions::lit
+
+For more information about this error, try `rustc --explain E0432`.
+error: could not compile `gds` (example "collections_catalog_extensible") due to 1 previous error
+collections_catalog_polars_io:
+   Compiling gds v0.1.0 (/home/pat/VSCode/organon/gds)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 17.77s
+     Running `/home/pat/VSCode/organon/target/debug/examples/collections_catalog_polars_io`
+Raw table (parquet):
+shape: (7, 2)
+┌─────┬───────┐
+│ id  ┆ score │
+│ --- ┆ ---   │
+│ i64 ┆ f64   │
+╞═════╪═══════╡
+│ 1   ┆ 10.0  │
+│ 2   ┆ 15.0  │
+│ 3   ┆ 20.0  │
+│ 5   ┆ 25.0  │
+│ 8   ┆ 30.0  │
+│ 13  ┆ 35.0  │
+│ 21  ┆ 40.0  │
+└─────┴───────┘
+Scaled table (parquet):
+shape: (7, 2)
+┌─────┬───────┐
+│ id  ┆ score │
+│ --- ┆ ---   │
+│ i64 ┆ f64   │
+╞═════╪═══════╡
+│ 1   ┆ 20.0  │
+│ 2   ┆ 30.0  │
+│ 3   ┆ 40.0  │
+│ 5   ┆ 50.0  │
+│ 8   ┆ 60.0  │
+│ 13  ┆ 70.0  │
+│ 21  ┆ 80.0  │
+└─────┴───────┘
+Catalog entries:
+- sample_table_csv (Csv)
+  schema:
+shape: (0, 2)
+┌─────┬───────┐
+│ id  ┆ score │
+│ --- ┆ ---   │
+│ i64 ┆ f64   │
+╞═════╪═══════╡
+└─────┴───────┘
+- sample_table_parquet (Parquet)
+  schema:
+shape: (0, 2)
+┌─────┬───────┐
+│ id  ┆ score │
+│ --- ┆ ---   │
+│ i64 ┆ f64   │
+╞═════╪═══════╡
+└─────┴───────┘
+- sample_table_parquet_processed (Parquet)
+  schema:
+shape: (0, 2)
+┌─────┬───────┐
+│ id  ┆ score │
+│ --- ┆ ---   │
+│ i64 ┆ f64   │
+╞═════╪═══════╡
+└─────┴───────┘
+- sample_table_parquet_processed_csv (Csv)
+  schema:
+shape: (0, 2)
+┌─────┬───────┐
+│ id  ┆ score │
+│ --- ┆ ---   │
+│ i64 ┆ f64   │
+╞═════╪═══════╡
+└─────┴───────┘
+collections_catalog_scan_select:
+   Compiling gds v0.1.0 (/home/pat/VSCode/organon/gds)
+error[E0432]: unresolved imports `gds::collections::dataframe::col`, `gds::collections::dataframe::lit`, `gds::collections::dataframe::selector_by_name`
+  --> gds/examples/collections_catalog_scan_select.rs:10:5
+   |
+10 |     col, lit, selector_by_name, PolarsDataFrameCollection, TableBuilder,
+   |     ^^^  ^^^  ^^^^^^^^^^^^^^^^ no `selector_by_name` in `collections::dataframe`
+   |     |    |
+   |     |    no `lit` in `collections::dataframe`
+   |     |    help: a similar name exists in the module: `list`
+   |     no `col` in `collections::dataframe`
+   |
+   = help: consider importing this module instead:
+           gds::collections::functions::col
+   = help: consider importing this module instead:
+           gds::collections::functions::lit
+
+For more information about this error, try `rustc --explain E0432`.
+error: could not compile `gds` (example "collections_catalog_scan_select") due to 1 previous error
+collections_chunking_rechunk:
+   Compiling gds v0.1.0 (/home/pat/VSCode/organon/gds)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 13.45s
+     Running `/home/pat/VSCode/organon/target/debug/examples/collections_chunking_rechunk`
+Combined (multiple chunks):
+shape: (6, 2)
+┌─────┬───────┐
+│ id  ┆ score │
+│ --- ┆ ---   │
+│ i64 ┆ f64   │
+╞═════╪═══════╡
+│ 1   ┆ 10.0  │
+│ 2   ┆ 25.0  │
+│ 3   ┆ 40.0  │
+│ 4   ┆ 15.0  │
+│ 5   ┆ 30.0  │
+│ 6   ┆ 22.0  │
+└─────┴───────┘
+Before rechunk chunk counts -> id: 2, score: 2
+After rechunk chunk counts -> id: 2, score: 2
+collections_dataframe_multicolumn:
+   Compiling gds v0.1.0 (/home/pat/VSCode/organon/gds)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 13.76s
+     Running `/home/pat/VSCode/organon/target/debug/examples/collections_dataframe_multicolumn`
+Framing (multi-column layout):
+  cell(2,1) = 25
+  row(2) = [3, 25, 0]
+  col(0) = [1, 2, 3, 4]
+collections_expr_basic:
+   Compiling gds v0.1.0 (/home/pat/VSCode/organon/gds)
+error[E0432]: unresolved imports `gds::collections::dataframe::col`, `gds::collections::dataframe::lit`, `gds::collections::dataframe::when`
+ --> gds/examples/collections_expr_basic.rs:6:35
+  |
+6 | use gds::collections::dataframe::{col, lit, when, TableBuilder};
+  |                                   ^^^  ^^^  ^^^^ no `when` in `collections::dataframe`
+  |                                   |    |
+  |                                   |    no `lit` in `collections::dataframe`
+  |                                   |    help: a similar name exists in the module: `list`
+  |                                   no `col` in `collections::dataframe`
+  |
+  = help: consider importing this module instead:
+          gds::collections::functions::col
+  = help: consider importing this module instead:
+          gds::collections::functions::lit
+
+For more information about this error, try `rustc --explain E0432`.
+error: could not compile `gds` (example "collections_expr_basic") due to 1 previous error
+collections_extensions_framing_chunking:
+   Compiling gds v0.1.0 (/home/pat/VSCode/organon/gds)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 13.19s
+     Running `/home/pat/VSCode/organon/target/debug/examples/collections_extensions_framing_chunking`
+Framing:
+  cell(1,1) = 5
+  row(1) = [4, 5, 6]
+  col(2) = [3, 6, 9]
+Chunking:
+  chunk ChunkRange { start: 0, end: 4 } => [1, 2, 3, 4]
+  chunk ChunkRange { start: 4, end: 8 } => [5, 6, 7, 8]
+  chunk ChunkRange { start: 8, end: 12 } => [9, 10, 11, 12]
+collections_graphframe_catalog_write:
+   Compiling gds v0.1.0 (/home/pat/VSCode/organon/gds)

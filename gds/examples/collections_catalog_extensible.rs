@@ -8,6 +8,7 @@ use std::path::PathBuf;
 use gds::collections::catalog::types::CollectionsIoFormat;
 use gds::collections::dataframe::{col, lit, scale_f64_column, TableBuilder};
 use gds::collections::extensions::catalog::{CatalogExtension, CatalogExtensionConfig};
+use gds::collections::schema::schema_to_dataframe;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let root = PathBuf::from("target/collections_catalog_extensible");
@@ -60,25 +61,8 @@ fn print_catalog(catalog: &gds::collections::catalog::disk::CollectionsCatalogDi
     for entry in catalog.list() {
         println!("- {} ({:?})", entry.name, entry.io_policy.format);
         if let Some(schema) = &entry.schema {
-            let fields = schema
-                .fields
-                .iter()
-                .map(|field| {
-                    let time = field
-                        .time_unit
-                        .map(|unit| format!("{:?}", unit))
-                        .unwrap_or_else(|| "None".to_string());
-                    format!(
-                        "{}:{} nullable={} time_unit={}",
-                        field.name,
-                        field.value_type.name(),
-                        field.nullable,
-                        time
-                    )
-                })
-                .collect::<Vec<_>>()
-                .join(", ");
-            println!("  schema: {fields}");
+            let schema_df = schema_to_dataframe(&schema.to_polars_schema());
+            println!("  schema:\n{}", schema_df.fmt_table());
         }
     }
 }
