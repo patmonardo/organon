@@ -1,6 +1,6 @@
 //! Extension namespace for SeriesModel (py-polars inspired).
 
-use polars::prelude::Series;
+use polars::prelude::{DataType, Series};
 
 #[derive(Debug, Clone)]
 pub struct ExtNameSpace {
@@ -18,5 +18,15 @@ impl ExtNameSpace {
 
     pub fn into_series(self) -> Series {
         self.series
+    }
+
+    /// Create a Series with an extension `dtype` (seed pass: cast to dtype).
+    pub fn to(&self, dtype: &DataType) -> polars::prelude::PolarsResult<Series> {
+        self.series.cast(dtype)
+    }
+
+    /// Get the storage values of an extension dtype (seed pass: identity).
+    pub fn storage(&self) -> Series {
+        self.series.clone()
     }
 }

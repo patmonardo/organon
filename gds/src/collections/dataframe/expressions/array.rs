@@ -76,11 +76,10 @@ impl ExprArray {
         self.expr.arr().all()
     }
 
-    pub fn sort(self, descending: bool, nulls_last: bool, multithreaded: bool) -> Expr {
+    pub fn sort(self, descending: bool, nulls_last: bool) -> Expr {
         self.expr.arr().sort(SortOptions {
             descending,
             nulls_last,
-            multithreaded,
             ..SortOptions::default()
         })
     }
@@ -167,5 +166,15 @@ impl ExprArray {
 
     pub fn shift_expr(self, n: Expr) -> Expr {
         self.expr.arr().shift(n)
+    }
+
+    pub fn eval(self, _expr: Expr, _as_list: bool) -> Expr {
+        // Not implemented in Polars 0.52 Rust Expr API yet.
+        todo!()
+    }
+
+    pub fn agg(self, _expr: Expr) -> Expr {
+        // Not implemented in Polars 0.52 Rust Expr API yet.
+        todo!()
     }
 }

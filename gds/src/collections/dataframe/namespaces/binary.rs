@@ -3,10 +3,9 @@
 use polars::prelude::{Expr, PolarsResult, Series};
 
 use crate::collections::dataframe::expr::SeriesExprBinary;
-use crate::collections::dataframe::expressions::binary::{BinarySizeUnit, ExprBinary};
-
-#[cfg(feature = "binary_encoding")]
-use crate::collections::dataframe::expressions::binary::{BinaryEncoding, BinaryEndianness};
+use crate::collections::dataframe::expressions::binary::{
+    BinaryEncoding, BinaryEndianness, BinarySizeUnit, ExprBinary,
+};
 
 #[derive(Debug, Clone)]
 pub struct BinaryNameSpace {
@@ -65,17 +64,14 @@ impl BinaryNameSpace {
         self.apply_expr(|expr| expr.size(unit))
     }
 
-    #[cfg(feature = "binary_encoding")]
     pub fn decode(&self, encoding: BinaryEncoding, strict: bool) -> PolarsResult<Series> {
         self.apply_expr(|expr| expr.decode(encoding, strict))
     }
 
-    #[cfg(feature = "binary_encoding")]
     pub fn encode(&self, encoding: BinaryEncoding) -> PolarsResult<Series> {
         self.apply_expr(|expr| expr.encode(encoding))
     }
 
-    #[cfg(feature = "binary_encoding")]
     pub fn reinterpret(
         &self,
         dtype: impl Into<polars::prelude::DataTypeExpr>,
@@ -85,33 +81,15 @@ impl BinaryNameSpace {
         self.apply_expr(|expr| expr.reinterpret(dtype, endianness))
     }
 
-    #[cfg(feature = "binary_slicing")]
     pub fn slice(&self, offset: i64, length: i64) -> PolarsResult<Series> {
         self.apply_expr(|expr| expr.slice(offset, length))
     }
 
-    #[cfg(feature = "binary_slicing")]
-    pub fn slice_expr(&self, offset: Expr, length: Expr) -> PolarsResult<Series> {
-        self.apply_expr(|expr| expr.slice_expr(offset, length))
-    }
-
-    #[cfg(feature = "binary_slicing")]
     pub fn head(&self, n: i64) -> PolarsResult<Series> {
         self.apply_expr(|expr| expr.head(n))
     }
 
-    #[cfg(feature = "binary_slicing")]
-    pub fn head_expr(&self, n: Expr) -> PolarsResult<Series> {
-        self.apply_expr(|expr| expr.head_expr(n))
-    }
-
-    #[cfg(feature = "binary_slicing")]
     pub fn tail(&self, n: i64) -> PolarsResult<Series> {
         self.apply_expr(|expr| expr.tail(n))
-    }
-
-    #[cfg(feature = "binary_slicing")]
-    pub fn tail_expr(&self, n: Expr) -> PolarsResult<Series> {
-        self.apply_expr(|expr| expr.tail_expr(n))
     }
 }

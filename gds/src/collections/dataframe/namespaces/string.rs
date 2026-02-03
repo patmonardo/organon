@@ -56,13 +56,12 @@ impl StringNameSpace {
         self.apply_expr(|expr| expr.contains_expr(pat, literal, strict))
     }
 
-    #[cfg(feature = "find_many")]
     pub fn contains_any(
         &self,
-        patterns: Expr,
-        ascii_case_insensitive: bool,
+        _patterns: Expr,
+        _ascii_case_insensitive: bool,
     ) -> PolarsResult<Series> {
-        self.apply_expr(|expr| expr.contains_any(patterns, ascii_case_insensitive))
+        todo!()
     }
 
     pub fn find(&self, pat: &str, literal: bool, strict: bool) -> PolarsResult<Series> {
@@ -89,30 +88,24 @@ impl StringNameSpace {
         self.apply_expr(|expr| expr.extract_all_expr(pat))
     }
 
-    #[cfg(feature = "find_many")]
     pub fn extract_many(
         &self,
-        patterns: Expr,
-        ascii_case_insensitive: bool,
-        overlapping: bool,
-        leftmost: bool,
+        _patterns: Expr,
+        _ascii_case_insensitive: bool,
+        _overlapping: bool,
+        _leftmost: bool,
     ) -> PolarsResult<Series> {
-        self.apply_expr(|expr| {
-            expr.extract_many(patterns, ascii_case_insensitive, overlapping, leftmost)
-        })
+        todo!()
     }
 
-    #[cfg(feature = "find_many")]
     pub fn find_many(
         &self,
-        patterns: Expr,
-        ascii_case_insensitive: bool,
-        overlapping: bool,
-        leftmost: bool,
+        _patterns: Expr,
+        _ascii_case_insensitive: bool,
+        _overlapping: bool,
+        _leftmost: bool,
     ) -> PolarsResult<Series> {
-        self.apply_expr(|expr| {
-            expr.find_many(patterns, ascii_case_insensitive, overlapping, leftmost)
-        })
+        todo!()
     }
 
     pub fn count_matches(&self, pat: &str, literal: bool) -> PolarsResult<Series> {
@@ -200,12 +193,10 @@ impl StringNameSpace {
         self.apply_expr(|expr| expr.split_inclusive_expr(by))
     }
 
-    #[cfg(feature = "regex")]
     pub fn split_regex(&self, pat: Expr, strict: bool) -> PolarsResult<Series> {
         self.apply_expr(|expr| expr.split_regex(pat, strict))
     }
 
-    #[cfg(feature = "regex")]
     pub fn split_regex_inclusive(&self, pat: Expr, strict: bool) -> PolarsResult<Series> {
         self.apply_expr(|expr| expr.split_regex_inclusive(pat, strict))
     }
@@ -294,32 +285,26 @@ impl StringNameSpace {
         self.apply_expr(|expr| expr.to_decimal(scale))
     }
 
-    #[cfg(feature = "binary_encoding")]
-    pub fn hex_decode(&self, strict: bool) -> PolarsResult<Series> {
-        self.apply_expr(|expr| expr.hex_decode(strict))
+    pub fn hex_decode(&self, _strict: bool) -> PolarsResult<Series> {
+        todo!()
     }
 
-    #[cfg(feature = "binary_encoding")]
-    pub fn base64_decode(&self, strict: bool) -> PolarsResult<Series> {
-        self.apply_expr(|expr| expr.base64_decode(strict))
+    pub fn base64_decode(&self, _strict: bool) -> PolarsResult<Series> {
+        todo!()
     }
 
-    #[cfg(feature = "extract_jsonpath")]
-    pub fn json_decode(&self, dtype: impl Into<DataTypeExpr>) -> PolarsResult<Series> {
-        let dtype = dtype.into();
-        self.apply_expr(|expr| expr.json_decode(dtype))
+    pub fn json_decode(&self, _dtype: impl Into<DataTypeExpr>) -> PolarsResult<Series> {
+        todo!()
     }
 
-    #[cfg(feature = "extract_jsonpath")]
-    pub fn json_path_match(&self, pat: Expr) -> PolarsResult<Series> {
-        self.apply_expr(|expr| expr.json_path_match(pat))
+    pub fn json_path_match(&self, _pat: Expr) -> PolarsResult<Series> {
+        todo!()
     }
 
     pub fn join(&self, delimiter: &str, ignore_nulls: bool) -> PolarsResult<Series> {
         self.apply_expr(|expr| expr.join(delimiter, ignore_nulls))
     }
 
-    #[cfg(feature = "regex")]
     pub fn escape_regex(&self) -> PolarsResult<Series> {
         self.apply_expr(|expr| expr.escape_regex())
     }

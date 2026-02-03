@@ -25,6 +25,9 @@ thiserror = "1.0"
 lazy_static = "1.4"
 chrono = { version = "0.4", features = ["serde"] }
 polars = { version = "0.52.0", features = [
+    "business",
+    "month_end",
+    "month_start",
     "dtype-u8",
     "dtype-u16",
     "dtype-date",
@@ -67,10 +70,12 @@ polars = { version = "0.52.0", features = [
     "array_to_struct",
     "abs",
     "moment",
+    "binary_encoding",
+    "reinterpret",
 ] }
-polars-io = { version = "0.52.0", features = ["json"] }
-polars-lazy = { version = "0.52.0", features = ["json", "moment"] }
-polars-plan = { version = "0.52.0", features = ["abs", "moment"] }
+polars-io = { version = "0.52.0" }
+polars-lazy = { version = "0.52.0" }
+polars-plan = { version = "0.52.0" }
 polars-parquet = "0.52.0"
 arrow = { package = "polars-arrow", version = "0.52.0" }
 memmap2 = "0.5"
@@ -110,6 +115,8 @@ default = [
     "dtype-u16",
     "object",
     "strings",
+    "regex",
+    "polars",
 ]
 node = ["dep:napi", "dep:napi-derive"]
 full = ["default", "node"]
@@ -120,12 +127,14 @@ procedures = [] # Procedure execution system
 ml = []         # Machine learning features
 new_streaming = [] # Polars lazy streaming engine support
 dtype-array = []   # Polars dtype array support
+dtype-struct = []   # Polars dtype struct support
 dtype-decimal = [] # Polars decimal dtype support
 dtype-duration = ["polars/dtype-duration"] # Polars duration dtype support
 dtype-u8 = ["polars/dtype-u8"]   # Polars UInt8 support
 dtype-u16 = ["polars/dtype-u16"] # Polars UInt16 support
 object = []        # Polars object dtype support
 strings = ["polars/strings"] # Polars string namespace support
+timezones = ["polars/timezones"] # Polars timezone support
 binary_encoding = ["polars/binary_encoding"] # Polars binary encode/decode/reinterpret
 binary_slicing = [] # Enable binary slice/head/tail when upstream supports it
 business = ["polars/business"] # Business day operations for datetime namespace
@@ -136,3 +145,51 @@ find_many = ["polars/find_many"] # String find_many/replace_many helpers
 extract_jsonpath = ["polars/extract_jsonpath"] # String JSON path helpers
 regex = ["polars/regex"] # String regex helpers
 json = ["polars/json", "polars-plan/json", "polars-lazy/json", "polars-io/json"] # Json helpers
+polars = [
+  #  "month_end",
+  #  "month_start",
+  #  "dtype-u8",
+  #  "dtype-u16",
+  #  "dtype-date",
+  #  "dtype-datetime",
+  #  "dtype-time",
+    "dtype-array",
+    "dtype-decimal",
+  #  "dtype-categorical",
+  #  "dtype-struct",
+    "object",
+    "timezones",
+    "strings",
+  #  "concat_str",
+  #  "range",
+  #  "cov",
+  #  "arg_where",
+  #  "csv",
+  #  "ipc",
+  #  "lazy",
+  #  "fmt",
+  #  "json",
+  #  "parquet",
+  #  "partition_by",
+  #  "temporal",
+    "serde",
+  #  "meta",
+  # "regex",
+  # "diff",
+  # "is_in",
+  # "list_any_all",
+  # "list_drop_nulls",
+  # "list_sample",
+  # "list_gather",
+  # "list_to_struct",
+  # "list_count",
+  # "list_sets",
+  # "list_eval",
+  # "array_any_all",
+  # "array_count",
+  # "array_to_struct",
+  # "abs",
+  # "moment",
+  # "binary_encoding",
+  # "reinterpret",
+ ]

@@ -32,7 +32,6 @@ impl ExprDateTime {
         self.expr
     }
 
-    #[cfg(feature = "business")]
     pub fn add_business_days(
         self,
         n: i64,
@@ -45,7 +44,6 @@ impl ExprDateTime {
             .add_business_days(lit(n), week_mask, holidays, roll)
     }
 
-    #[cfg(feature = "business")]
     pub fn add_business_days_expr(
         self,
         n: Expr,
@@ -101,7 +99,6 @@ impl ExprDateTime {
         self.expr.dt().year()
     }
 
-    #[cfg(feature = "business")]
     pub fn is_business_day(self, week_mask: [bool; 7], holidays: Vec<i32>) -> Expr {
         self.expr.dt().is_business_day(week_mask, holidays)
     }
@@ -224,26 +221,14 @@ impl ExprDateTime {
         self.expr.dt().round(every)
     }
 
-    #[cfg(feature = "offset_by")]
-    pub fn offset_by(self, by: &str) -> Expr {
-        self.expr.dt().offset_by(lit(by))
-    }
-
-    #[cfg(feature = "offset_by")]
-    pub fn offset_by_expr(self, by: Expr) -> Expr {
-        self.expr.dt().offset_by(by)
-    }
-
     pub fn combine(self, time: Expr, time_unit: TimeUnit) -> Expr {
         self.expr.dt().combine(time, time_unit)
     }
 
-    #[cfg(feature = "month_start")]
     pub fn month_start(self) -> Expr {
         self.expr.dt().month_start()
     }
 
-    #[cfg(feature = "month_end")]
     pub fn month_end(self) -> Expr {
         self.expr.dt().month_end()
     }
@@ -256,37 +241,30 @@ impl ExprDateTime {
         self.expr.dt().dst_offset()
     }
 
-    #[cfg(feature = "dtype-duration")]
     pub fn total_days(self, fractional: bool) -> Expr {
         self.expr.dt().total_days(fractional)
     }
 
-    #[cfg(feature = "dtype-duration")]
     pub fn total_hours(self, fractional: bool) -> Expr {
         self.expr.dt().total_hours(fractional)
     }
 
-    #[cfg(feature = "dtype-duration")]
     pub fn total_minutes(self, fractional: bool) -> Expr {
         self.expr.dt().total_minutes(fractional)
     }
 
-    #[cfg(feature = "dtype-duration")]
     pub fn total_seconds(self, fractional: bool) -> Expr {
         self.expr.dt().total_seconds(fractional)
     }
 
-    #[cfg(feature = "dtype-duration")]
     pub fn total_milliseconds(self, fractional: bool) -> Expr {
         self.expr.dt().total_milliseconds(fractional)
     }
 
-    #[cfg(feature = "dtype-duration")]
     pub fn total_microseconds(self, fractional: bool) -> Expr {
         self.expr.dt().total_microseconds(fractional)
     }
 
-    #[cfg(feature = "dtype-duration")]
     pub fn total_nanoseconds(self, fractional: bool) -> Expr {
         self.expr.dt().total_nanoseconds(fractional)
     }

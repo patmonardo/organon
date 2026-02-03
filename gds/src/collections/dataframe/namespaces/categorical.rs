@@ -34,27 +34,22 @@ impl CategoricalNameSpace {
         self.apply_expr(|expr| expr.get_categories())
     }
 
-    #[cfg(feature = "strings")]
     pub fn len_bytes(&self) -> PolarsResult<Series> {
         self.apply_expr(|expr| expr.len_bytes())
     }
 
-    #[cfg(feature = "strings")]
     pub fn len_chars(&self) -> PolarsResult<Series> {
         self.apply_expr(|expr| expr.len_chars())
     }
 
-    #[cfg(feature = "strings")]
     pub fn starts_with(&self, prefix: &str) -> PolarsResult<Series> {
         self.apply_expr(|expr| expr.starts_with(prefix))
     }
 
-    #[cfg(feature = "strings")]
     pub fn ends_with(&self, suffix: &str) -> PolarsResult<Series> {
         self.apply_expr(|expr| expr.ends_with(suffix))
     }
 
-    #[cfg(feature = "strings")]
     pub fn slice(&self, offset: i64, length: Option<usize>) -> PolarsResult<Series> {
         self.apply_expr(|expr| expr.slice(offset, length))
     }

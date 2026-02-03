@@ -30,7 +30,6 @@ impl DateTimeNameSpace {
         SeriesExprDateTime::new(self.series.clone()).apply(f)
     }
 
-    #[cfg(feature = "business")]
     pub fn add_business_days(
         &self,
         n: i64,
@@ -41,7 +40,6 @@ impl DateTimeNameSpace {
         self.apply_expr(|expr| expr.add_business_days(n, week_mask, holidays, roll))
     }
 
-    #[cfg(feature = "business")]
     pub fn add_business_days_expr(
         &self,
         n: Expr,
@@ -93,7 +91,6 @@ impl DateTimeNameSpace {
         self.apply_expr(|expr| expr.year())
     }
 
-    #[cfg(feature = "business")]
     pub fn is_business_day(
         &self,
         week_mask: [bool; 7],
@@ -158,8 +155,12 @@ impl DateTimeNameSpace {
         self.apply_expr(|expr| expr.minute())
     }
 
-    pub fn second(&self) -> PolarsResult<Series> {
-        self.apply_expr(|expr| expr.second())
+    pub fn second(&self, fractional: bool) -> PolarsResult<Series> {
+        if fractional {
+            self.second_fractional()
+        } else {
+            self.apply_expr(|expr| expr.second())
+        }
     }
 
     pub fn second_fractional(&self) -> PolarsResult<Series> {
@@ -194,6 +195,11 @@ impl DateTimeNameSpace {
         self.apply_expr(|expr| expr.timestamp_ns())
     }
 
+    pub fn epoch(&self, time_unit: TimeUnit) -> PolarsResult<Series> {
+        // Python exposes `dt.epoch(time_unit)`; forward to timestamp
+        self.apply_expr(|expr| expr.timestamp(time_unit))
+    }
+
     pub fn truncate(&self, every: &str) -> PolarsResult<Series> {
         self.apply_expr(|expr| expr.truncate(every))
     }
@@ -210,26 +216,18 @@ impl DateTimeNameSpace {
         self.apply_expr(|expr| expr.round_expr(every))
     }
 
-    #[cfg(feature = "offset_by")]
-    pub fn offset_by(&self, by: &str) -> PolarsResult<Series> {
-        self.apply_expr(|expr| expr.offset_by(by))
-    }
-
-    #[cfg(feature = "offset_by")]
-    pub fn offset_by_expr(&self, by: Expr) -> PolarsResult<Series> {
-        self.apply_expr(|expr| expr.offset_by_expr(by))
-    }
+    // pub fn offset_by(&self, by: &str) -> PolarsResult<Series> {
+    //     self.apply_expr(|expr| expr.offset_by(by))
+    // }
 
     pub fn combine(&self, time: Expr, time_unit: TimeUnit) -> PolarsResult<Series> {
         self.apply_expr(|expr| expr.combine(time, time_unit))
     }
 
-    #[cfg(feature = "month_start")]
     pub fn month_start(&self) -> PolarsResult<Series> {
         self.apply_expr(|expr| expr.month_start())
     }
 
-    #[cfg(feature = "month_end")]
     pub fn month_end(&self) -> PolarsResult<Series> {
         self.apply_expr(|expr| expr.month_end())
     }
@@ -242,37 +240,30 @@ impl DateTimeNameSpace {
         self.apply_expr(|expr| expr.dst_offset())
     }
 
-    #[cfg(feature = "dtype-duration")]
     pub fn total_days(&self, fractional: bool) -> PolarsResult<Series> {
         self.apply_expr(|expr| expr.total_days(fractional))
     }
 
-    #[cfg(feature = "dtype-duration")]
     pub fn total_hours(&self, fractional: bool) -> PolarsResult<Series> {
         self.apply_expr(|expr| expr.total_hours(fractional))
     }
 
-    #[cfg(feature = "dtype-duration")]
     pub fn total_minutes(&self, fractional: bool) -> PolarsResult<Series> {
         self.apply_expr(|expr| expr.total_minutes(fractional))
     }
 
-    #[cfg(feature = "dtype-duration")]
     pub fn total_seconds(&self, fractional: bool) -> PolarsResult<Series> {
         self.apply_expr(|expr| expr.total_seconds(fractional))
     }
 
-    #[cfg(feature = "dtype-duration")]
     pub fn total_milliseconds(&self, fractional: bool) -> PolarsResult<Series> {
         self.apply_expr(|expr| expr.total_milliseconds(fractional))
     }
 
-    #[cfg(feature = "dtype-duration")]
     pub fn total_microseconds(&self, fractional: bool) -> PolarsResult<Series> {
         self.apply_expr(|expr| expr.total_microseconds(fractional))
     }
 
-    #[cfg(feature = "dtype-duration")]
     pub fn total_nanoseconds(&self, fractional: bool) -> PolarsResult<Series> {
         self.apply_expr(|expr| expr.total_nanoseconds(fractional))
     }

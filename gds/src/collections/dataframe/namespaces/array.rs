@@ -89,13 +89,8 @@ impl ArrayNameSpace {
         self.apply_expr(|expr| expr.all())
     }
 
-    pub fn sort(
-        &self,
-        descending: bool,
-        nulls_last: bool,
-        multithreaded: bool,
-    ) -> PolarsResult<Series> {
-        self.apply_expr(|expr| expr.sort(descending, nulls_last, multithreaded))
+    pub fn sort(&self, descending: bool, nulls_last: bool) -> PolarsResult<Series> {
+        self.apply_expr(|expr| expr.sort(descending, nulls_last))
     }
 
     pub fn reverse(&self) -> PolarsResult<Series> {
@@ -180,5 +175,13 @@ impl ArrayNameSpace {
 
     pub fn shift_expr(&self, n: Expr) -> PolarsResult<Series> {
         self.apply_expr(|expr| expr.shift_expr(n))
+    }
+
+    pub fn eval(&self, expr: Expr, as_list: bool) -> PolarsResult<Series> {
+        self.apply_expr(|e| e.eval(expr, as_list))
+    }
+
+    pub fn agg(&self, expr: Expr) -> PolarsResult<Series> {
+        self.apply_expr(|e| e.agg(expr))
     }
 }

@@ -4,6 +4,7 @@ pub mod chunked;
 pub mod collection;
 pub mod column;
 pub mod construction;
+pub mod datatype_expr;
 pub mod datatypes;
 pub mod expr;
 pub mod expressions;
@@ -36,6 +37,10 @@ pub use construction::{
     dataframe_from_columns, dataframe_from_columns_vec, dataframe_from_records,
     dataframe_from_rows, dataframe_from_series, schema_from_pairs, ConstructionOptions,
     DataOrientation, SchemaDefinition,
+};
+pub use datatype_expr::{
+    DataTypeExprArrNameSpace, DataTypeExprListNameSpace, DataTypeExprModel,
+    DataTypeExprStructNameSpace,
 };
 #[cfg(feature = "dtype-array")]
 pub use datatypes::array as dtype_array;

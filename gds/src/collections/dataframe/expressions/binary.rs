@@ -1,12 +1,6 @@
 //! Binary namespace for expressions (py-polars inspired).
 
-use polars::prelude::{lit, DataType, Expr};
-
-#[cfg(feature = "binary_slicing")]
-use polars::prelude::{BinaryFunction, FunctionExpr};
-
-#[cfg(feature = "binary_encoding")]
-use polars::prelude::DataTypeExpr;
+use polars::prelude::{lit, DataType, DataTypeExpr, Expr};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum BinaryEncoding {
@@ -96,7 +90,6 @@ impl ExprBinary {
         }
     }
 
-    #[cfg(feature = "binary_encoding")]
     pub fn decode(self, encoding: BinaryEncoding, strict: bool) -> Expr {
         match encoding {
             BinaryEncoding::Hex => self.expr.binary().hex_decode(strict),
@@ -104,7 +97,6 @@ impl ExprBinary {
         }
     }
 
-    #[cfg(feature = "binary_encoding")]
     pub fn encode(self, encoding: BinaryEncoding) -> Expr {
         match encoding {
             BinaryEncoding::Hex => self.expr.binary().hex_encode(),
@@ -112,7 +104,6 @@ impl ExprBinary {
         }
     }
 
-    #[cfg(feature = "binary_encoding")]
     pub fn reinterpret(self, dtype: impl Into<DataTypeExpr>, endianness: BinaryEndianness) -> Expr {
         let is_little_endian = matches!(endianness, BinaryEndianness::Little);
         self.expr
@@ -120,45 +111,20 @@ impl ExprBinary {
             .reinterpret(dtype.into(), is_little_endian)
     }
 
-    #[cfg(feature = "binary_slicing")]
-    pub fn slice(self, offset: i64, length: i64) -> Expr {
-        self.expr.map_ternary(
-            FunctionExpr::BinaryExpr(BinaryFunction::Slice),
-            lit(offset),
-            lit(length),
-        )
+    pub fn slice(self, _offset: i64, _length: i64) -> Expr {
+        // Element-wise binary slice is not available in Polars 0.52 as an Expr
+        // (no BinaryFunction::Slice). Keep as stub and implement when upstream
+        // adds the BinaryFunction variants or when we add a safe fallback.
+        todo!("binary slice requires newer Polars or a series-level fallback")
     }
 
-    #[cfg(feature = "binary_slicing")]
-    pub fn slice_expr(self, offset: Expr, length: Expr) -> Expr {
-        self.expr.map_ternary(
-            FunctionExpr::BinaryExpr(BinaryFunction::Slice),
-            offset,
-            length,
-        )
+    pub fn head(self, _n: i64) -> Expr {
+        // Element-wise head is not available in Polars 0.52 as an Expr.
+        todo!("binary head requires newer Polars or a series-level fallback")
     }
 
-    #[cfg(feature = "binary_slicing")]
-    pub fn head(self, n: i64) -> Expr {
-        self.expr
-            .map_binary(FunctionExpr::BinaryExpr(BinaryFunction::Head), lit(n))
-    }
-
-    #[cfg(feature = "binary_slicing")]
-    pub fn head_expr(self, n: Expr) -> Expr {
-        self.expr
-            .map_binary(FunctionExpr::BinaryExpr(BinaryFunction::Head), n)
-    }
-
-    #[cfg(feature = "binary_slicing")]
-    pub fn tail(self, n: i64) -> Expr {
-        self.expr
-            .map_binary(FunctionExpr::BinaryExpr(BinaryFunction::Tail), lit(n))
-    }
-
-    #[cfg(feature = "binary_slicing")]
-    pub fn tail_expr(self, n: Expr) -> Expr {
-        self.expr
-            .map_binary(FunctionExpr::BinaryExpr(BinaryFunction::Tail), n)
+    pub fn tail(self, _n: i64) -> Expr {
+        // Element-wise tail is not available in Polars 0.52 as an Expr.
+        todo!("binary tail requires newer Polars or a series-level fallback")
     }
 }

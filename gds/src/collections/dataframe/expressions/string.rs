@@ -52,11 +52,8 @@ impl ExprString {
         }
     }
 
-    #[cfg(feature = "find_many")]
-    pub fn contains_any(self, patterns: Expr, ascii_case_insensitive: bool) -> Expr {
-        self.expr
-            .str()
-            .contains_any(patterns, ascii_case_insensitive)
+    pub fn contains_any(self, _patterns: Expr, _ascii_case_insensitive: bool) -> Expr {
+        todo!()
     }
 
     pub fn find(self, pat: &str, literal: bool, strict: bool) -> Expr {
@@ -91,30 +88,24 @@ impl ExprString {
         self.expr.str().extract_all(pat)
     }
 
-    #[cfg(feature = "find_many")]
     pub fn extract_many(
         self,
-        patterns: Expr,
-        ascii_case_insensitive: bool,
-        overlapping: bool,
-        leftmost: bool,
+        _patterns: Expr,
+        _ascii_case_insensitive: bool,
+        _overlapping: bool,
+        _leftmost: bool,
     ) -> Expr {
-        self.expr
-            .str()
-            .extract_many(patterns, ascii_case_insensitive, overlapping, leftmost)
+        todo!()
     }
 
-    #[cfg(feature = "find_many")]
     pub fn find_many(
         self,
-        patterns: Expr,
-        ascii_case_insensitive: bool,
-        overlapping: bool,
-        leftmost: bool,
+        _patterns: Expr,
+        _ascii_case_insensitive: bool,
+        _overlapping: bool,
+        _leftmost: bool,
     ) -> Expr {
-        self.expr
-            .str()
-            .find_many(patterns, ascii_case_insensitive, overlapping, leftmost)
+        todo!()
     }
 
     pub fn count_matches(self, pat: &str, literal: bool) -> Expr {
@@ -133,7 +124,6 @@ impl ExprString {
         self.expr.str().replace(pat, value, literal)
     }
 
-    #[cfg(feature = "regex")]
     pub fn replace_n(self, pat: Expr, value: Expr, literal: bool, n: i64) -> Expr {
         self.expr.str().replace_n(pat, value, literal, n)
     }
@@ -202,14 +192,14 @@ impl ExprString {
         self.expr.str().split_inclusive(by)
     }
 
-    #[cfg(feature = "regex")]
-    pub fn split_regex(self, pat: Expr, strict: bool) -> Expr {
-        self.expr.str().split_regex(pat, strict)
+    pub fn split_regex(self, pat: Expr, _strict: bool) -> Expr {
+        // Polars 0.52 does not provide split_regex, forward to `split` which accepts an Expr.
+        self.expr.str().split(pat)
     }
 
-    #[cfg(feature = "regex")]
-    pub fn split_regex_inclusive(self, pat: Expr, strict: bool) -> Expr {
-        self.expr.str().split_regex_inclusive(pat, strict)
+    pub fn split_regex_inclusive(self, pat: Expr, _strict: bool) -> Expr {
+        // Polars 0.52 does not provide split_regex_inclusive, forward to `split_inclusive`.
+        self.expr.str().split_inclusive(pat)
     }
 
     pub fn split_exact(self, by: &str, n: usize) -> Expr {
@@ -297,31 +287,26 @@ impl ExprString {
         self.expr.str().to_decimal(scale)
     }
 
-    #[cfg(feature = "binary_encoding")]
-    pub fn hex_decode(self, strict: bool) -> Expr {
-        self.expr.str().hex_decode(strict)
+    pub fn hex_decode(self, _strict: bool) -> Expr {
+        todo!()
     }
 
-    #[cfg(feature = "binary_encoding")]
-    pub fn base64_decode(self, strict: bool) -> Expr {
-        self.expr.str().base64_decode(strict)
+    pub fn base64_decode(self, _strict: bool) -> Expr {
+        todo!()
     }
 
-    #[cfg(feature = "extract_jsonpath")]
-    pub fn json_decode(self, dtype: impl Into<DataTypeExpr>) -> Expr {
-        self.expr.str().json_decode(dtype)
+    pub fn json_decode(self, _dtype: impl Into<DataTypeExpr>) -> Expr {
+        todo!()
     }
 
-    #[cfg(feature = "extract_jsonpath")]
-    pub fn json_path_match(self, pat: Expr) -> Expr {
-        self.expr.str().json_path_match(pat)
+    pub fn json_path_match(self, _pat: Expr) -> Expr {
+        todo!()
     }
 
     pub fn join(self, delimiter: &str, ignore_nulls: bool) -> Expr {
         self.expr.str().join(delimiter, ignore_nulls)
     }
 
-    #[cfg(feature = "regex")]
     pub fn escape_regex(self) -> Expr {
         self.expr.str().escape_regex()
     }
