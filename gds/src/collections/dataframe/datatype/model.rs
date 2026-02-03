@@ -1,14 +1,10 @@
-//! DataTypeExpr helpers and namespaces (seed pass), inspired by py-polars.
-
-pub mod array;
-pub mod list;
-pub mod struct_;
+//! DataTypeExpr model wrapper.
 
 use polars::prelude::{DataType, DataTypeExpr, DataTypeSelector, Expr, PolarsResult, Schema};
 
-pub use array::DataTypeExprArrNameSpace;
-pub use list::DataTypeExprListNameSpace;
-pub use struct_::DataTypeExprStructNameSpace;
+use crate::collections::dataframe::datatype::array::DataTypeExprArrNameSpace;
+use crate::collections::dataframe::datatype::list::DataTypeExprListNameSpace;
+use crate::collections::dataframe::datatype::struct_::DataTypeExprStructNameSpace;
 
 #[derive(Debug, Clone)]
 pub struct DataTypeExprModel {

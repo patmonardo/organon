@@ -21,7 +21,6 @@ pub use download::{
     copy_local, download_if_missing, download_to_dir, download_url, DownloadReport,
 };
 pub use error::DatasetIoError;
-pub use expr::*;
 pub use extract::{extract_archive, ExtractReport};
 pub use io::detect_format_from_path;
 pub use registry::{DatasetArtifact, DatasetMetadata, DatasetRegistry, DatasetSplit};

@@ -21,9 +21,6 @@ use crate::collections::dataframe::utils::parse::{
 };
 use crate::collections::dataframe::utils::slice::{slice_dataframe, SliceSpec};
 
-pub use polars::prelude::Column as PolarsColumn;
-pub use polars::prelude::Series as PolarsSeries;
-
 /// Trait for DataFrame-backed Collections with full Polars access.
 pub trait DataFrameCollection: Send + Sync {
     /// Immutable access to the underlying DataFrame.

@@ -1,6 +1,4 @@
 //! Dataset-level expression facade.
 //!
-//! This module re-exports the DataFrame expression helpers to keep a
-//! Python-like "dataset -> expr" workflow scoped under `datasets`.
-
-pub use crate::collections::dataframe::functions::*;
+//! Keep DataFrame expression helpers available within the crate,
+//! without exporting them as a public API surface.

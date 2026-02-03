@@ -57,6 +57,6 @@ pyg_service/
 graphstore-jsx-prototype/
 gdl-to-pdf/
 tools/reports/
-gds/src/collections/polars
+gds/src/polars
 
 
