@@ -67,28 +67,8 @@ impl StreamingSupport for PolarsStreamingFrame {
     }
 
     fn collect_streaming_lazy(&self, lazy: LazyFrame) -> Result<DataFrame, StreamingError> {
-        #[cfg(feature = "new_streaming")]
-        {
-            let lazy = if self.is_streaming_enabled {
-                if let Some(config) = self.streaming_config.as_ref() {
-                    if config.enable_new_streaming {
-                        lazy.with_new_streaming(true)
-                    } else {
-                        lazy
-                    }
-                } else {
-                    lazy
-                }
-            } else {
-                lazy
-            };
-
-            return Ok(lazy.collect()?);
-        }
-
-        #[cfg(not(feature = "new_streaming"))]
-        {
-            return Ok(lazy.collect()?);
-        }
+        let _ = self.is_streaming_enabled;
+        let _ = &self.streaming_config;
+        Ok(lazy.collect()?)
     }
 }

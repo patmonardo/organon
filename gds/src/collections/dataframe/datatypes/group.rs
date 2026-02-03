@@ -37,9 +37,7 @@ fn base_type(dtype: &DataType) -> DataType {
         DataType::Datetime(_, _) => DataType::Datetime(TimeUnit::Microseconds, None),
         DataType::Duration(_) => DataType::Duration(TimeUnit::Microseconds),
         DataType::List(_) => DataType::List(Box::new(DataType::Null)),
-        #[cfg(feature = "dtype-array")]
         DataType::Array(_, _) => DataType::Array(Box::new(DataType::Null), 0),
-        #[cfg(feature = "dtype-struct")]
         DataType::Struct(_) => DataType::Struct(Vec::new()),
         _ => dtype.clone(),
     }
@@ -98,7 +96,6 @@ pub fn numeric_dtypes() -> &'static DataTypeGroup {
         let mut items = Vec::new();
         items.extend_from_slice(float_dtypes().items());
         items.extend_from_slice(integer_dtypes().items());
-        #[cfg(feature = "dtype-decimal")]
         items.push(DataType::Decimal(38, 0));
         DataTypeGroup::new(items, true)
     })
@@ -146,9 +143,7 @@ pub fn nested_dtypes() -> &'static DataTypeGroup {
     static GROUP: OnceLock<DataTypeGroup> = OnceLock::new();
     GROUP.get_or_init(|| {
         let mut items = vec![DataType::List(Box::new(DataType::Null))];
-        #[cfg(feature = "dtype-struct")]
         items.push(DataType::Struct(Vec::new()));
-        #[cfg(feature = "dtype-array")]
         items.push(DataType::Array(Box::new(DataType::Null), 0));
         DataTypeGroup::new(items, true)
     })

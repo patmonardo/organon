@@ -3,6 +3,7 @@
 //! Provides core configuration interfaces that other configs extend.
 
 use crate::projection::{NodeLabel, RelationshipType};
+use serde::{Deserialize, Serialize};
 
 /// Marker trait for all configuration types
 pub trait Config: Send + Sync {}
@@ -49,8 +50,7 @@ pub trait DeduplicationConfig: Config {
 }
 
 /// Base configuration for algorithms
-#[derive(Debug, Clone)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AlgoBaseConfig {
     pub concurrency: usize,
     pub node_labels: Vec<NodeLabel>,
@@ -76,8 +76,7 @@ impl ConcurrencyConfig for AlgoBaseConfig {
 }
 
 /// Base configuration for mutate operations
-#[derive(Debug, Clone)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct MutateConfig {
     pub write_concurrency: usize,
     pub mutate_property: String,
@@ -101,8 +100,7 @@ impl WriteConfig for MutateConfig {
 }
 
 /// Base configuration for builder operations
-#[derive(Debug, Clone)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BuilderConfig {
     pub use_pooled_builder_provider: bool,
     pub max_original_id: i64,

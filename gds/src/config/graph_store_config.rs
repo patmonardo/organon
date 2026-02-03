@@ -7,9 +7,10 @@ use super::base_types::ConcurrencyConfig;
 use super::collections_config::{CollectionsBackend, CollectionsConfig, CollectionsConfigBuilder};
 use super::validation::ConfigValidation;
 use crate::define_config;
+use serde::{Deserialize, Serialize};
 
 define_config!(
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Serialize, Deserialize)]
     pub struct GraphStoreMemoryConfig {
         validate = |cfg: &GraphStoreMemoryConfig| {
             ConfigValidation::validate_positive(cfg.max_memory_bytes as f64, "maxMemoryBytes")?;
@@ -28,7 +29,7 @@ define_config!(
 );
 
 define_config!(
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Serialize, Deserialize)]
     pub struct GraphStoreCacheConfig {
         validate = |cfg: &GraphStoreCacheConfig| {
             if cfg.enable_node_cache {
@@ -59,8 +60,7 @@ define_config!(
 );
 
 /// Cache eviction strategies
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum CacheEvictionStrategy {
     /// Least Recently Used
     Lru,
@@ -73,7 +73,7 @@ pub enum CacheEvictionStrategy {
 }
 
 define_config!(
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Serialize, Deserialize)]
     pub struct GraphStoreComputeConfig {
         validate = |cfg: &GraphStoreComputeConfig| {
             ConfigValidation::validate_positive(cfg.concurrency as f64, "concurrency")?;
@@ -99,7 +99,7 @@ impl ConcurrencyConfig for GraphStoreComputeConfig {
 }
 
 define_config!(
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Serialize, Deserialize)]
     /// Properties configuration for Collections-backed property storage
     ///
     /// This config drives the selection of Collections backends for different property levels.
@@ -127,7 +127,7 @@ define_config!(
 );
 
 define_config!(
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Serialize, Deserialize)]
     pub struct GraphStoreConfig {
         validate = |cfg: &GraphStoreConfig| {
             cfg.memory.validate()?;

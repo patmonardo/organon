@@ -293,7 +293,6 @@ impl Column for PolarsInterchangeColumn {
         let array = series.to_arrow(0, CompatLevel::newest());
         let data_dtype = match series.dtype() {
             DataType::List(_) | DataType::Struct(_) => series.dtype().clone(),
-            #[cfg(feature = "dtype-array")]
             DataType::Array(_, _) => series.dtype().clone(),
             _ if matches!(array.dtype().to_physical_type(), PhysicalType::Union) => DataType::Int8,
             _ => polars_dtype_to_data_buffer_dtype(series.dtype())?,

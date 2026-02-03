@@ -159,7 +159,6 @@ pub fn polars_dtype_to_dtype(dtype: &DataType) -> Result<Dtype, InterchangeError
             children: Vec::new(),
             child_names: Vec::new(),
         },
-        #[cfg(feature = "dtype-decimal")]
         Decimal(precision, scale) => Dtype {
             kind: DtypeKind::Decimal,
             bit_width: 128,
@@ -176,7 +175,6 @@ pub fn polars_dtype_to_dtype(dtype: &DataType) -> Result<Dtype, InterchangeError
             children: Vec::new(),
             child_names: Vec::new(),
         },
-        #[cfg(feature = "object")]
         Object(_) => Dtype {
             kind: DtypeKind::Object,
             bit_width: 0,
@@ -193,7 +191,6 @@ pub fn polars_dtype_to_dtype(dtype: &DataType) -> Result<Dtype, InterchangeError
             children: vec![polars_dtype_to_dtype(inner.as_ref())?],
             child_names: vec!["item".to_string()],
         },
-        #[cfg(feature = "dtype-array")]
         Array(inner, size) => Dtype {
             kind: DtypeKind::Array,
             bit_width: 64,

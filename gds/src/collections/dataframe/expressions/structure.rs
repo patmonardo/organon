@@ -44,7 +44,6 @@ impl ExprStruct {
         self.expr.struct_().rename_fields(names.iter().cloned())
     }
 
-    #[cfg(feature = "json")]
     pub fn json_encode(self) -> Expr {
         self.expr.struct_().json_encode()
     }

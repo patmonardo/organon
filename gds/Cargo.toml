@@ -25,58 +25,91 @@ thiserror = "1.0"
 lazy_static = "1.4"
 chrono = { version = "0.4", features = ["serde"] }
 polars = { version = "0.52.0", features = [
-    "business",
-    "month_end",
-    "month_start",
-    "dtype-u8",
-    "dtype-u16",
+    "dtype-array",
+    "dtype-decimal",
     "dtype-date",
     "dtype-datetime",
     "dtype-time",
-    "dtype-array",
-    "dtype-decimal",
+    "dtype-duration",
+    "dtype-i8",
+    "dtype-i16",
+    "dtype-i128",
+    "dtype-u8",
+    "dtype-u16",
+    "dtype-u128",
     "dtype-categorical",
     "dtype-struct",
-    "object",
-    "timezones",
-    "strings",
-    "concat_str",
-    "range",
-    "cov",
-    "arg_where",
-    "csv",
-    "ipc",
-    "lazy",
-    "fmt",
-    "json",
-    "parquet",
-    "partition_by",
-    "temporal",
-    "serde",
-    "meta",
     "regex",
-    "diff",
+    "timezones",
+    "temporal",
+    "strings",
+    "string_pad",
+    "string_to_integer",
+    "object",
+    "serde",
+    "serde-lazy",
+    "parquet",
+    "json",
+    "ipc",
     "is_in",
+    "zip_with",
+    "round_series",
+    "repeat_by",
+    "is_first_distinct",
+    "is_last_distinct",
+    "checked_arithmetic",
+    "dot_product",
+    "concat_str",
+    "reinterpret",
+    "take_opt_iter",
+    "mode",
+    "cum_agg",
+    "rolling_window",
+    "interpolate",
+    "extract_jsonpath",
+    "list_gather",
+    "rank",
+    "moment",
+    "ewma",
+    "abs",
+    "range",
+    "product",
+    "diff",
+    "pct_change",
+    "unique_counts",
+    "log",
+    "list_to_struct",
+    "list_count",
+    "list_eval",
+    "cumulative_eval",
+    "arg_where",
+    "search_sorted",
+    "offset_by",
+    "trigonometry",
+    "sign",
+    "propagate_nans",
+    "fmt",
+    #
+    "month_end",
+    "month_start",
+    "business",
+    "cov",
+    "lazy",
+    "meta",
+    "partition_by",
     "list_any_all",
     "list_drop_nulls",
     "list_sample",
-    "list_gather",
-    "list_to_struct",
-    "list_count",
     "list_sets",
-    "list_eval",
     "array_any_all",
     "array_count",
     "array_to_struct",
-    "abs",
-    "moment",
     "binary_encoding",
-    "reinterpret",
 ] }
 polars-io = { version = "0.52.0" }
 polars-lazy = { version = "0.52.0" }
 polars-plan = { version = "0.52.0" }
-polars-parquet = "0.52.0"
+polars-parquet = { version = "0.52.0" }
 arrow = { package = "polars-arrow", version = "0.52.0" }
 memmap2 = "0.5"
 arrow2 = { version = "0.18", features = ["io_ipc", "io_parquet", "io_parquet_compression"] }
@@ -103,93 +136,6 @@ regex = "1.10"
 napi-build = "2"
 
 [features]
-default = [
-    "arrow",
-    "rayon",
-    "serde",
-    "procedures",
-    "ml",
-    "dtype-array",
-    "dtype-decimal",
-    "dtype-u8",
-    "dtype-u16",
-    "object",
-    "strings",
-    "regex",
-    "polars",
-]
+default = []
 node = ["dep:napi", "dep:napi-derive"]
-full = ["default", "node"]
-arrow = []
-serde = []      # Enables config serialization (serde already in deps)
-rayon = []      # Parallel computation support
-procedures = [] # Procedure execution system
-ml = []         # Machine learning features
-new_streaming = [] # Polars lazy streaming engine support
-dtype-array = []   # Polars dtype array support
-dtype-struct = []   # Polars dtype struct support
-dtype-decimal = [] # Polars decimal dtype support
-dtype-duration = ["polars/dtype-duration"] # Polars duration dtype support
-dtype-u8 = ["polars/dtype-u8"]   # Polars UInt8 support
-dtype-u16 = ["polars/dtype-u16"] # Polars UInt16 support
-object = []        # Polars object dtype support
-strings = ["polars/strings"] # Polars string namespace support
-timezones = ["polars/timezones"] # Polars timezone support
-binary_encoding = ["polars/binary_encoding"] # Polars binary encode/decode/reinterpret
-binary_slicing = [] # Enable binary slice/head/tail when upstream supports it
-business = ["polars/business"] # Business day operations for datetime namespace
-offset_by = ["polars/offset_by"] # Datetime offset_by expressions
-month_start = ["polars/month_start"] # Datetime month_start expressions
-month_end = ["polars/month_end"] # Datetime month_end expressions
-find_many = ["polars/find_many"] # String find_many/replace_many helpers
-extract_jsonpath = ["polars/extract_jsonpath"] # String JSON path helpers
-regex = ["polars/regex"] # String regex helpers
-json = ["polars/json", "polars-plan/json", "polars-lazy/json", "polars-io/json"] # Json helpers
-polars = [
-  #  "month_end",
-  #  "month_start",
-  #  "dtype-u8",
-  #  "dtype-u16",
-  #  "dtype-date",
-  #  "dtype-datetime",
-  #  "dtype-time",
-    "dtype-array",
-    "dtype-decimal",
-  #  "dtype-categorical",
-  #  "dtype-struct",
-    "object",
-    "timezones",
-    "strings",
-  #  "concat_str",
-  #  "range",
-  #  "cov",
-  #  "arg_where",
-  #  "csv",
-  #  "ipc",
-  #  "lazy",
-  #  "fmt",
-  #  "json",
-  #  "parquet",
-  #  "partition_by",
-  #  "temporal",
-    "serde",
-  #  "meta",
-  # "regex",
-  # "diff",
-  # "is_in",
-  # "list_any_all",
-  # "list_drop_nulls",
-  # "list_sample",
-  # "list_gather",
-  # "list_to_struct",
-  # "list_count",
-  # "list_sets",
-  # "list_eval",
-  # "array_any_all",
-  # "array_count",
-  # "array_to_struct",
-  # "abs",
-  # "moment",
-  # "binary_encoding",
-  # "reinterpret",
- ]
+full = ["node"]

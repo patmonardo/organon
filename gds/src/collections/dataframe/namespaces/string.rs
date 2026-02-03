@@ -124,7 +124,6 @@ impl StringNameSpace {
         self.apply_expr(|expr| expr.replace_expr(pat, value, literal))
     }
 
-    #[cfg(feature = "regex")]
     pub fn replace_n(&self, pat: Expr, value: Expr, literal: bool, n: i64) -> PolarsResult<Series> {
         self.apply_expr(|expr| expr.replace_n(pat, value, literal, n))
     }

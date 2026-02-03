@@ -56,7 +56,6 @@ pub use traits::*;
 // Utility modules and their common types (retain legacy paths)
 pub use utils::*;
 
-#[cfg(feature = "arrow")]
 pub use backends::arrow::{
     ArrowArrayBehavior, ArrowDoubleArray, ArrowFloatArray, ArrowIntArray, ArrowLongArray,
     ArrowPrimitiveArray,

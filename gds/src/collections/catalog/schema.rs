@@ -1,12 +1,12 @@
 //! Catalog schema types and Polars mappings.
 
 use polars::prelude::{DataFrame, DataType, Field, PlSmallStr, Schema, TimeUnit};
+use serde::{Deserialize, Serialize};
 
 use crate::types::ValueType;
 
 /// A single schema field.
-#[derive(Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct CollectionsField {
     pub name: String,
     pub value_type: ValueType,
@@ -15,8 +15,7 @@ pub struct CollectionsField {
 }
 
 /// Time precision for datetime fields.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum CollectionsTimeUnit {
     Nanoseconds,
     Microseconds,
@@ -24,8 +23,7 @@ pub enum CollectionsTimeUnit {
 }
 
 /// Schema for a catalog entry (table or series).
-#[derive(Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct CollectionsSchema {
     pub fields: Vec<CollectionsField>,
 }

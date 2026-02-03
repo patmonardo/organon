@@ -42,11 +42,8 @@ pub use datatype_expr::{
     DataTypeExprArrNameSpace, DataTypeExprListNameSpace, DataTypeExprModel,
     DataTypeExprStructNameSpace,
 };
-#[cfg(feature = "dtype-array")]
 pub use datatypes::array as dtype_array;
-#[cfg(feature = "dtype-decimal")]
 pub use datatypes::decimal as dtype_decimal;
-#[cfg(feature = "object")]
 pub use datatypes::object as dtype_object;
 pub use datatypes::{
     binary as dtype_binary, binary_offset as dtype_binary_offset, boolean as dtype_boolean,

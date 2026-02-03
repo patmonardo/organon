@@ -99,7 +99,6 @@ mod tests {
     use std::fs;
 
     #[test]
-    #[cfg(feature = "arrow")]
     fn missing_files_yield_io_error() {
         let tmp_dir = std::env::temp_dir().join("arrow_loader_missing");
         // Ensure directory exists but no parquet files

@@ -6,10 +6,10 @@ use crate::core::Aggregation;
 use crate::define_config;
 use crate::projection::{NodeLabel, Orientation, RelationshipType};
 use crate::types::{DefaultValue, PropertyState};
+use serde::{Deserialize, Serialize};
 
 /// Property configuration for graph construction
-#[derive(Debug, Clone)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PropertyConfig {
     pub property_key: String,
     pub aggregation: Aggregation,
@@ -47,7 +47,6 @@ pub struct PropertyConfigBuilder {
     default_value: Option<DefaultValue>,
     property_state: Option<PropertyState>,
 }
-
 impl PropertyConfigBuilder {
     pub fn new(property_key: String) -> Self {
         Self {
@@ -89,8 +88,7 @@ impl PropertyConfigBuilder {
 }
 
 /// Graph creation configuration
-#[derive(Debug, Clone)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct GraphCreateConfig {
     pub base: AlgoBaseConfig,
     pub graph_name: String,
@@ -250,8 +248,7 @@ define_config!(
 );
 
 /// Relationships builder configuration
-#[derive(Debug, Clone)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct RelationshipsBuilderConfig {
     pub base: AlgoBaseConfig,
     pub builder: BuilderConfig,

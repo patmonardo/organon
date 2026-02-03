@@ -106,17 +106,14 @@ pub fn list(inner: DataType) -> DataType {
     DataType::List(Box::new(inner))
 }
 
-#[cfg(feature = "dtype-array")]
 pub fn array(inner: DataType, width: usize) -> DataType {
     DataType::Array(Box::new(inner), width)
 }
 
-#[cfg(feature = "dtype-decimal")]
 pub fn decimal(precision: Option<usize>, scale: Option<usize>) -> DataType {
     DataType::Decimal(precision.unwrap_or(38), scale.unwrap_or(0))
 }
 
-#[cfg(feature = "object")]
 pub fn object(name: &'static str) -> DataType {
     DataType::Object(name)
 }

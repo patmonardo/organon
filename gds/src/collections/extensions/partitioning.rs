@@ -447,17 +447,9 @@ where
             return Err(PartitioningError::PartitioningNotEnabled);
         }
 
-        // Use rayon for parallel processing if available
-        #[cfg(feature = "rayon")]
-        {
-            use rayon::prelude::*;
-            Ok(partitions.into_par_iter().map(processor).collect())
-        }
-
-        #[cfg(not(feature = "rayon"))]
-        {
-            Ok(partitions.into_iter().map(processor).collect())
-        }
+        // Use rayon for parallel processing.
+        use rayon::prelude::*;
+        Ok(partitions.into_par_iter().map(processor).collect())
     }
 
     fn optimal_partitioning_strategy(&self) -> MLPartitioningStrategy {

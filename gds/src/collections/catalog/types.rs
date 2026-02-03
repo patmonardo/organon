@@ -5,10 +5,10 @@
 use crate::collections::catalog::schema::CollectionsSchema;
 use crate::config::{CollectionsBackend, DatasetConfig, Extension};
 use crate::types::ValueType;
+use serde::{Deserialize, Serialize};
 
 /// IO formats supported for disk-first Collections
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum CollectionsIoFormat {
     Auto,
     ArrowIpc,
@@ -19,8 +19,7 @@ pub enum CollectionsIoFormat {
 }
 
 /// Disk-first IO policy derived from CollectionsConfig
-#[derive(Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct CollectionsIoPolicy {
     pub format: CollectionsIoFormat,
     pub location: Option<String>,
@@ -67,8 +66,7 @@ pub struct CollectionsCatalogEntry {
 }
 
 /// On-disk manifest entry for Collections catalog
-#[derive(Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct CollectionsCatalogDiskEntry {
     pub name: String,
     pub value_type: ValueType,
@@ -98,8 +96,7 @@ impl CollectionsCatalogDiskEntry {
 }
 
 /// On-disk manifest for a Collections catalog
-#[derive(Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct CollectionsCatalogManifest {
     pub version: u32,
     pub created_at: String,

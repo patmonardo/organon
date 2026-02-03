@@ -5,6 +5,7 @@
 
 use crate::types::default_value::DefaultValue;
 use crate::types::ValueType;
+use serde::{Deserialize, Serialize};
 use std::marker::PhantomData;
 
 /// Main Collections configuration
@@ -101,8 +102,7 @@ pub struct DatasetConfig {
 }
 
 /// Collections backend enumeration
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum CollectionsBackend {
     // Core backends
     Vec,   // Standard library vectors

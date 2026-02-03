@@ -2,7 +2,6 @@
 //!
 //! Mirrors Java GraphDropNodePropertiesConfig interface and integrates with the Rust config system.
 
-#[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 
 use crate::config::base_types::ConcurrencyConfig;
@@ -10,7 +9,7 @@ use crate::config::validation::ConfigError;
 use crate::define_config;
 
 define_config!(
-    #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+    #[derive(Serialize, Deserialize)]
     pub struct GraphDropNodePropertiesConfig {
         validate = |cfg: &GraphDropNodePropertiesConfig| {
             if cfg.node_properties.is_empty() {

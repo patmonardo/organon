@@ -1,9 +1,9 @@
 //! Canonical Partitioning strategy enum for the core partition utilities.
 use core::fmt;
+use serde::{Deserialize, Serialize};
 
 /// Partitioning strategies used by Pregel and other parallel algorithms.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum Partitioning {
     Range,
     Degree,

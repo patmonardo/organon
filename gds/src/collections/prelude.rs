@@ -26,7 +26,6 @@ pub use super::backends::vec::{
 };
 
 // Arrow backend - Apache Arrow arrays
-#[cfg(feature = "arrow")]
 pub use super::backends::arrow::{
     ArrowArrayBehavior, ArrowDoubleArray, ArrowFloatArray, ArrowIntArray, ArrowLongArray,
     ArrowPrimitiveArray,

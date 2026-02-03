@@ -98,12 +98,10 @@ pub mod prelude {
     pub use super::GraphStoreFactory;
 
     // Re-export Arrow factory when available
-    #[cfg(feature = "arrow")]
     pub use super::arrow::{ArrowNativeFactory, ArrowProjectionConfig, ArrowProjectionError};
 }
 
 // Arrow-native factory (PRIORITY - Phase 1-8)
-#[cfg(feature = "arrow")]
 pub mod arrow;
 
 // Relationships builder trait (minimal stub for ML negative sampling)

@@ -1,8 +1,9 @@
 /// Orientation of relationships in a graph.
 ///
 /// Defines how relationships are interpreted during graph construction.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Default)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+use serde::{Deserialize, Serialize};
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Default, Serialize, Deserialize)]
 pub enum Orientation {
     /// Use the natural direction of the relationship (source → target).
     #[default]

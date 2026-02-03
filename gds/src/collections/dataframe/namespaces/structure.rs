@@ -54,7 +54,6 @@ impl StructNameSpace {
         self.apply_expr(|expr| expr.rename_fields_pl(names))
     }
 
-    #[cfg(feature = "json")]
     pub fn json_encode(&self) -> PolarsResult<Series> {
         self.apply_expr(|expr| expr.json_encode())
     }
