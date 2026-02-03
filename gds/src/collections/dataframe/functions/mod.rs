@@ -11,3 +11,17 @@ pub mod range;
 pub mod repeat;
 pub mod structure;
 pub mod temporal;
+pub mod whenthen;
+
+pub use aggregation::*;
+pub use col::*;
+pub use datatype::*;
+pub use expr::*;
+pub use len::*;
+pub use lit::*;
+pub use misc::*;
+pub use range::*;
+pub use repeat::*;
+pub use structure::*;
+pub use temporal::*;
+pub use whenthen::*;

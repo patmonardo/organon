@@ -77,15 +77,24 @@ impl Selector {
         }
     }
 }
-
 /// Select all columns.
 pub fn all() -> Selector {
     Selector::All
 }
 
+/// Selector helper: explicit prefix to avoid name clashes with functions::all.
+pub fn selector_all() -> Selector {
+    all()
+}
+
 /// Select columns by name.
 pub fn by_name(names: &[&str]) -> Selector {
     Selector::ByName(names.iter().map(|name| (*name).to_string()).collect())
+}
+
+/// Selector helper: explicit prefix for by-name selection.
+pub fn selector_by_name(names: &[&str]) -> Selector {
+    by_name(names)
 }
 
 /// Select columns by index.
@@ -104,6 +113,11 @@ pub fn by_index_signed(indices: &[isize], require_all: bool) -> Selector {
 /// Select columns whose name starts with the prefix.
 pub fn starts_with(prefix: &str) -> Selector {
     Selector::StartsWith(prefix.to_string())
+}
+
+/// Selector helper: explicit prefix for starts-with selection.
+pub fn selector_starts_with(prefix: &str) -> Selector {
+    starts_with(prefix)
 }
 
 /// Select columns whose name starts with any of the prefixes.
@@ -136,6 +150,11 @@ pub fn contains(needle: &str) -> Selector {
     Selector::Contains(needle.to_string())
 }
 
+/// Selector helper: explicit prefix for contains selection.
+pub fn selector_contains(needle: &str) -> Selector {
+    contains(needle)
+}
+
 /// Select columns whose name contains any of the substrings.
 pub fn contains_any(needles: &[&str]) -> Selector {
     Selector::ContainsAny(needles.iter().map(|needle| (*needle).to_string()).collect())
@@ -144,6 +163,11 @@ pub fn contains_any(needles: &[&str]) -> Selector {
 /// Select columns whose name matches the regex.
 pub fn matches(pattern: &str) -> Result<Selector, regex::Error> {
     Ok(Selector::Matches(Regex::new(pattern)?))
+}
+
+/// Selector helper: explicit prefix for regex selection.
+pub fn selector_matches(pattern: &str) -> Result<Selector, regex::Error> {
+    matches(pattern)
 }
 
 /// Select columns with alphabetic names.
@@ -183,9 +207,19 @@ pub fn by_dtype(dtypes: &[DataType]) -> Selector {
     Selector::ByDtype(dtypes.to_vec())
 }
 
+/// Selector helper: explicit prefix for dtype selection.
+pub fn selector_by_dtype(dtypes: &[DataType]) -> Selector {
+    by_dtype(dtypes)
+}
+
 /// Select numeric columns (integers and floats).
 pub fn numeric() -> Selector {
     Selector::Numeric
+}
+
+/// Selector helper: explicit prefix for numeric selection.
+pub fn selector_numeric() -> Selector {
+    numeric()
 }
 
 /// Select integer columns (signed + unsigned).
@@ -218,6 +252,11 @@ pub fn string() -> Selector {
     Selector::String
 }
 
+/// Selector helper: explicit prefix for string selection.
+pub fn selector_string() -> Selector {
+    string()
+}
+
 /// Select string and categorical columns.
 pub fn string_with_categorical() -> Selector {
     Selector::String.or(Selector::Categorical)
@@ -231,6 +270,11 @@ pub fn binary() -> Selector {
 /// Select temporal columns (date, datetime, time, duration).
 pub fn temporal() -> Selector {
     Selector::Temporal
+}
+
+/// Selector helper: explicit prefix for temporal selection.
+pub fn selector_temporal() -> Selector {
+    temporal()
 }
 
 /// Select date columns.
@@ -322,7 +366,7 @@ pub fn expand_selector(df: &DataFrame, selector: &Selector) -> Vec<String> {
                 index,
                 total,
             };
-            if selector_matches(selector, &info, by_index_signed.as_ref()) {
+            if selector_matches_impl(selector, &info, by_index_signed.as_ref()) {
                 Some(info.name.to_string())
             } else {
                 None
@@ -381,7 +425,7 @@ struct ColumnInfo<'a> {
     total: usize,
 }
 
-fn selector_matches(
+fn selector_matches_impl(
     selector: &Selector,
     info: &ColumnInfo<'_>,
     resolved_indices: Option<&Vec<usize>>,
@@ -433,14 +477,14 @@ fn selector_matches(
         Selector::Last => info.index + 1 == info.total,
         Selector::Or(selectors) => selectors
             .iter()
-            .any(|sel| selector_matches(sel, info, resolved_indices)),
+            .any(|sel| selector_matches_impl(sel, info, resolved_indices)),
         Selector::And(selectors) => selectors
             .iter()
-            .all(|sel| selector_matches(sel, info, resolved_indices)),
-        Selector::Not(selector) => !selector_matches(selector, info, resolved_indices),
+            .all(|sel| selector_matches_impl(sel, info, resolved_indices)),
+        Selector::Not(selector) => !selector_matches_impl(selector, info, resolved_indices),
         Selector::Exclude { base, remove } => {
-            selector_matches(base, info, resolved_indices)
-                && !selector_matches(remove, info, resolved_indices)
+            selector_matches_impl(base, info, resolved_indices)
+                && !selector_matches_impl(remove, info, resolved_indices)
         }
     }
 }

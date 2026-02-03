@@ -29,11 +29,18 @@ pub use datatype::*;
 pub use datatypes::*;
 pub use expr::*;
 pub use frame::*;
+pub use functions::*;
 pub use interchange::*;
 pub use namespace::*;
 pub use row::*;
 pub use schema::*;
-pub use selectors::*;
+pub use selectors::{
+    expand_exprs, expand_selector, selector_all, selector_by_dtype, selector_by_name,
+    selector_contains, selector_matches, selector_numeric, selector_starts_with, selector_string,
+    selector_temporal, Selector,
+};
 pub use series::*;
 pub use streaming::*;
 pub use table::*;
+
+pub type PolarsSortMultipleOptions = polars::prelude::SortMultipleOptions;

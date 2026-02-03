@@ -76,6 +76,21 @@ pub fn series_expr(series: Series) -> SeriesExpr {
     SeriesExpr::new(series)
 }
 
+/// Expr namespace helper for list operations.
+pub fn list_ns(expr: Expr) -> ExprList {
+    ExprList::new(expr)
+}
+
+/// Expr namespace helper for array operations.
+pub fn arr_ns(expr: Expr) -> ExprArray {
+    ExprArray::new(expr)
+}
+
+/// Expr namespace helper for string operations.
+pub fn str_ns(expr: Expr) -> ExprString {
+    ExprString::new(expr)
+}
+
 fn series_col_expr(series: &Series) -> Expr {
     pl_col(series.name().as_str())
 }
