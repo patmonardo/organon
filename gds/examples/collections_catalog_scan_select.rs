@@ -7,11 +7,11 @@ use std::path::PathBuf;
 
 use gds::collections::catalog::types::CollectionsIoFormat;
 use gds::collections::dataframe::{
-    col, lit, selector_by_name, GDSDataFrame, GDSPolarsError, TableBuilder,
+    col, lit, selector_by_name, GDSDataFrame, GDSFrameError, TableBuilder,
 };
 use gds::collections::extensions::catalog::{CatalogExtension, CatalogExtensionConfig};
 
-fn main() -> Result<(), GDSPolarsError> {
+fn main() -> Result<(), GDSFrameError> {
     let root = PathBuf::from("target/collections_catalog_scan_select");
 
     let config = CatalogExtensionConfig {

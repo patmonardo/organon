@@ -6,11 +6,11 @@
 use std::path::PathBuf;
 
 use gds::collections::catalog::types::CollectionsIoFormat;
-use gds::collections::dataframe::{col, lit, scale_f64_column, GDSPolarsError, TableBuilder};
+use gds::collections::dataframe::{col, lit, scale_f64_column, GDSFrameError, TableBuilder};
 use gds::collections::extensions::catalog::{CatalogExtension, CatalogExtensionConfig};
 use gds::collections::schema::schema_to_dataframe;
 
-fn main() -> Result<(), GDSPolarsError> {
+fn main() -> Result<(), GDSFrameError> {
     let root = PathBuf::from("target/collections_catalog_extensible");
 
     let config = CatalogExtensionConfig {
@@ -30,7 +30,7 @@ fn main() -> Result<(), GDSPolarsError> {
     Ok(())
 }
 
-fn run_pipeline(catalog: &mut CatalogExtension) -> Result<(), GDSPolarsError> {
+fn run_pipeline(catalog: &mut CatalogExtension) -> Result<(), GDSFrameError> {
     let table = TableBuilder::new()
         .with_i64_column("id", &[1, 2, 3, 5, 8, 13, 21])
         .with_f64_column("score", &[10.0, 15.0, 20.0, 25.0, 30.0, 35.0, 40.0])

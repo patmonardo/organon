@@ -6,7 +6,7 @@
 use std::path::PathBuf;
 
 use gds::collections::catalog::CollectionsIoFormat;
-use gds::collections::dataframe::GDSPolarsError;
+use gds::collections::dataframe::GDSFrameError;
 use gds::collections::datasets::catalog::DatasetCatalog;
 use gds::collections::plugins::write_graph_store_polars32_to_catalog;
 use gds::types::prelude::{DefaultGraphStore, RandomGraphConfig};
@@ -19,7 +19,7 @@ fn main() {
     }
 }
 
-fn run() -> Result<(), GDSPolarsError> {
+fn run() -> Result<(), GDSFrameError> {
     let config = RandomGraphConfig {
         graph_name: "graphframe-demo".into(),
         database_name: "in-memory".into(),

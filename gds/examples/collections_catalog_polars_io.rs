@@ -9,7 +9,7 @@ use gds::collections::catalog::disk::CollectionsCatalogDisk;
 use gds::collections::catalog::types::{
     CollectionsCatalogDiskEntry, CollectionsIoFormat, CollectionsIoPolicy,
 };
-use gds::collections::dataframe::{scale_f64_column, GDSDataFrame, GDSPolarsError, TableBuilder};
+use gds::collections::dataframe::{scale_f64_column, GDSDataFrame, GDSFrameError, TableBuilder};
 use gds::collections::io::{csv, parquet};
 use gds::config::CollectionsBackend;
 use gds::types::ValueType;
@@ -17,13 +17,13 @@ use gds::types::ValueType;
 fn register_or_replace(
     catalog: &mut CollectionsCatalogDisk,
     entry: CollectionsCatalogDiskEntry,
-) -> Result<CollectionsCatalogDiskEntry, GDSPolarsError> {
+) -> Result<CollectionsCatalogDiskEntry, GDSFrameError> {
     let _ = catalog.remove(&entry.name);
     catalog.register(entry.clone())?;
     Ok(entry)
 }
 
-fn main() -> Result<(), GDSPolarsError> {
+fn main() -> Result<(), GDSFrameError> {
     let root = PathBuf::from("target/collections_catalog_example");
     let mut catalog = CollectionsCatalogDisk::load(&root)?;
 

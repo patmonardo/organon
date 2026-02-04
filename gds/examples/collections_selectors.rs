@@ -5,12 +5,12 @@
 
 use gds::collections::dataframe::{
     selector_all, selector_by_dtype, selector_contains, selector_matches, selector_numeric,
-    selector_starts_with, selector_string, selector_temporal, GDSDataFrame, GDSPolarsError,
+    selector_starts_with, selector_string, selector_temporal, GDSDataFrame, GDSFrameError,
     Selector,
 };
 use polars::prelude::{DataType, Field, Schema, TimeUnit};
 
-fn main() -> Result<(), GDSPolarsError> {
+fn main() -> Result<(), GDSFrameError> {
     let schema = Schema::from_iter(vec![
         Field::new("abc".into(), DataType::UInt16),
         Field::new("bbb".into(), DataType::UInt32),
@@ -30,7 +30,7 @@ fn main() -> Result<(), GDSPolarsError> {
 
     let df = GDSDataFrame::empty_with_schema(&schema);
 
-    let assert_schema = |selector: Selector, expected: Schema| -> Result<(), GDSPolarsError> {
+    let assert_schema = |selector: Selector, expected: Schema| -> Result<(), GDSFrameError> {
         let selected = df.select_selector(&selector)?;
         assert_eq!(selected.dataframe().schema().as_ref(), &expected);
         Ok(())

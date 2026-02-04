@@ -3,23 +3,23 @@
 //! Run with:
 //!   cargo run -p gds --example collections_join_operations
 
-use gds::collections::dataframe::{series, GDSDataFrame, GDSPolarsError, JoinType};
+use gds::collections::dataframe::{series, GDSDataFrame, GDSFrameError, JoinType};
 
-fn build_left() -> Result<GDSDataFrame, GDSPolarsError> {
+fn build_left() -> Result<GDSDataFrame, GDSFrameError> {
     Ok(GDSDataFrame::from_series(vec![
         series("id", &[1i64, 2, 3]),
         series("left", &["l1", "l2", "l3"]),
     ])?)
 }
 
-fn build_right() -> Result<GDSDataFrame, GDSPolarsError> {
+fn build_right() -> Result<GDSDataFrame, GDSFrameError> {
     Ok(GDSDataFrame::from_series(vec![
         series("id", &[2i64, 3, 4]),
         series("right", &["r2", "r3", "r4"]),
     ])?)
 }
 
-fn main() -> Result<(), GDSPolarsError> {
+fn main() -> Result<(), GDSFrameError> {
     let left = build_left()?;
     let right = build_right()?;
 

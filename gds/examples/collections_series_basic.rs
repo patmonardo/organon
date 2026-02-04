@@ -4,10 +4,10 @@
 //!   cargo run -p gds --example collections_series_basic
 
 use gds::collections::dataframe::{
-    col, series, GDSDataFrame, GDSPolarsError, PolarsSortMultipleOptions,
+    col, series, GDSDataFrame, GDSFrameError, PolarsSortMultipleOptions,
 };
 
-fn main() -> Result<(), GDSPolarsError> {
+fn main() -> Result<(), GDSFrameError> {
     // Build Series using the Collections helpers.
     let values = series("values", &[-3i64, -1, 2, 4]);
     let weights = series("weights", &[0.5, 1.0, 1.5, 2.0]);

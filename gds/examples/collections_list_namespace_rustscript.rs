@@ -4,10 +4,10 @@
 //!   cargo run -p gds --example collections_list_namespace_rustscript
 
 use gds::collections::dataframe::{
-    col, list_ns, series_list_i64, GDSDataFrame, GDSPolarsError, GDSSeries,
+    col, list_ns, series_list_i64, GDSDataFrame, GDSFrameError, GDSSeries,
 };
 
-fn main() -> Result<(), GDSPolarsError> {
+fn main() -> Result<(), GDSFrameError> {
     // DataFrame + ExprList facade (Pythonic list ops).
     let values = series_list_i64("values", &[vec![1, 2, 3], vec![3, 3, 2], vec![]]);
     let df = GDSDataFrame::from_series(vec![values.clone()])?;

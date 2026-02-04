@@ -3,9 +3,9 @@
 //! Run with:
 //!   cargo run -p gds --example collections_series_expr_pipeline
 
-use gds::collections::dataframe::{col, series, series_expr, GDSDataFrame, GDSPolarsError};
+use gds::collections::dataframe::{col, series, series_expr, GDSDataFrame, GDSFrameError};
 
-fn main() -> Result<(), GDSPolarsError> {
+fn main() -> Result<(), GDSFrameError> {
     let s = series("text", &["ax", "by", "cx"]);
     let contains_x = series_expr(s).str().apply(|e| e.ends_with("x"))?;
     println!("contains_x = {:?}", contains_x);

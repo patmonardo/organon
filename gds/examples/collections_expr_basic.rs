@@ -3,9 +3,9 @@
 //! Run with:
 //!   cargo run -p gds --example collections_expr_basic
 
-use gds::collections::dataframe::{col, lit, when, GDSPolarsError, TableBuilder};
+use gds::collections::dataframe::{col, lit, when, GDSFrameError, TableBuilder};
 
-fn main() -> Result<(), GDSPolarsError> {
+fn main() -> Result<(), GDSFrameError> {
     // Build a DataFrame via the Collections facade.
     let table = TableBuilder::new()
         .with_i64_column("id", &[1, 2, 3, 4, 5])

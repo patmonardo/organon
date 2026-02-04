@@ -3,11 +3,11 @@
 //! Run with:
 //!   cargo run -p gds --example collections_streaming_dataset
 
-use gds::collections::dataframe::{col, lit, when, GDSDataFrame, GDSPolarsError, TableBuilder};
+use gds::collections::dataframe::{col, lit, when, GDSDataFrame, GDSFrameError, TableBuilder};
 use gds::collections::datasets::{Dataset, StreamingDataset};
 use gds::collections::extensions::streaming::StreamingConfig;
 
-fn main() -> Result<(), GDSPolarsError> {
+fn main() -> Result<(), GDSFrameError> {
     // Build a dataset (Polars-backed).
     let dataset = Dataset::from_builder(
         TableBuilder::new()
