@@ -4,11 +4,12 @@
 //!   cargo run -p gds --example collections_dataframe_multicolumn
 
 use gds::collections::backends::vec::VecInt;
+use gds::collections::dataframe::GDSPolarsError;
 use gds::collections::extensions::framing::{
     FrameCollection, FrameOrder, FrameShape, FramingConfig, FramingSupport,
 };
 
-fn main() -> Result<(), Box<dyn std::error::Error>> {
+fn main() -> Result<(), GDSPolarsError> {
     // Simulated multi-column layout: [id, score_x10, label_id]
     // rows = 4, cols = 3 (row-major)
     let values: Vec<i32> = vec![1, 5, 0, 2, 15, 1, 3, 25, 0, 4, 35, 2];

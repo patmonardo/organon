@@ -4,12 +4,13 @@
 //!   cargo run -p gds --example collections_extensions_framing_chunking
 
 use gds::collections::backends::vec::VecInt;
+use gds::collections::dataframe::GDSPolarsError;
 use gds::collections::extensions::chunking::{ChunkedCollection, ChunkingConfig, ChunkingSupport};
 use gds::collections::extensions::framing::{
     FrameCollection, FrameOrder, FrameShape, FramingConfig, FramingSupport,
 };
 
-fn main() -> Result<(), Box<dyn std::error::Error>> {
+fn main() -> Result<(), GDSPolarsError> {
     // --- Framing example ---
     let framing_values: Vec<i32> = (1..=9).collect();
     let framing_base = VecInt::from(framing_values);

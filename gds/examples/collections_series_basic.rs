@@ -3,38 +3,42 @@
 //! Run with:
 //!   cargo run -p gds --example collections_series_basic
 
-use gds::collections::dataframe::series;
-use polars::prelude::{ChunkAgg, SortOptions};
+use gds::collections::dataframe::{
+    col, series, GDSDataFrame, GDSPolarsError, PolarsSortMultipleOptions,
+};
 
-fn main() -> Result<(), Box<dyn std::error::Error>> {
+fn main() -> Result<(), GDSPolarsError> {
     // Build Series using the Collections helpers.
     let values = series("values", &[-3i64, -1, 2, 4]);
     let weights = series("weights", &[0.5, 1.0, 1.5, 2.0]);
-
-    println!("values:\n{values}");
-    println!("weights:\n{weights}");
-
-    // Basic Series operations.
-    let abs_values_vec: Vec<i64> = values.i64()?.into_no_null_iter().map(|v| v.abs()).collect();
-    let abs_values = series("abs_values", &abs_values_vec);
-    println!("abs(values):\n{abs_values}");
-
-    let sum_values = values.i64()?.sum().unwrap_or(0);
-    println!("sum(values) = {sum_values}");
-
-    let mean_weights = weights.f64()?.mean().unwrap_or(0.0);
-    println!("mean(weights) = {mean_weights}");
-
-    // Filter using a boolean mask.
     let mask = series("mask", &[true, false, true, true]);
-    let filtered = values.filter(mask.bool()?)?;
-    println!("filtered(values):\n{filtered}");
+
+    let df = GDSDataFrame::from_series(vec![values, weights, mask])?;
+
+    println!("values:\n{}", df.select_columns(&["values"])?.fmt_table());
+    println!("weights:\n{}", df.select_columns(&["weights"])?.fmt_table());
+
+    // Basic operations (Series-like via expressions).
+    let abs_values = df.select(&[col("values").abs().alias("abs_values")])?;
+    println!("abs(values):\n{}", abs_values.fmt_table());
+
+    let stats = df.select(&[
+        col("values").sum().alias("sum_values"),
+        col("weights").mean().alias("mean_weights"),
+    ])?;
+    println!("stats:\n{}", stats.fmt_table());
+
+    // Filter using a boolean mask column.
+    let filtered = df.filter_expr(col("mask"))?.select_columns(&["values"])?;
+    println!("filtered(values):\n{}", filtered.fmt_table());
 
     // Sort and take head.
-    let sorted = values.sort(SortOptions::default())?;
-    let head = sorted.head(Some(2));
-    println!("sorted(values):\n{sorted}");
-    println!("head(sorted, 2):\n{head}");
+    let sorted = df
+        .order_by_columns(&["values"], PolarsSortMultipleOptions::default())?
+        .select_columns(&["values"])?;
+    let head = sorted.head(2);
+    println!("sorted(values):\n{}", sorted.fmt_table());
+    println!("head(sorted, 2):\n{}", head.fmt_table());
 
     Ok(())
 }

@@ -44,3 +44,5 @@ pub use streaming::*;
 pub use table::*;
 
 pub type PolarsSortMultipleOptions = polars::prelude::SortMultipleOptions;
+pub type JoinType = polars::prelude::JoinType;
+pub use errors::GDSPolarsError;

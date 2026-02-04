@@ -2,7 +2,7 @@
 
 use polars::prelude::{DataFrame, LazyFrame};
 
-use crate::collections::dataframe::PolarsStreamingFrame;
+use crate::collections::dataframe::GDSStreamingFrame;
 use crate::collections::datasets::Dataset;
 use crate::collections::extensions::streaming::{
     StreamingConfig, StreamingError, StreamingSupport,
@@ -81,7 +81,7 @@ impl StreamingDataset {
 
     fn build_batch_frame(&self, offset: usize) -> Result<DataFrame, StreamingError> {
         let batch = self.dataset.slice(offset as i64, self.batch_size);
-        let mut streaming = PolarsStreamingFrame::from(batch.table().dataframe().clone());
+        let mut streaming = GDSStreamingFrame::from(batch.table().dataframe().clone());
         streaming.enable_streaming(self.streaming_config.clone())?;
 
         let mut lazy = streaming.stream_lazy();

@@ -3,27 +3,23 @@
 //! Run with:
 //!   cargo run -p gds --example collections_join_operations
 
-use gds::collections::dataframe::{series, GDSDataFrame};
-use polars::error::PolarsError;
-use polars::prelude::{Column, DataFrame, JoinType};
+use gds::collections::dataframe::{series, GDSDataFrame, GDSPolarsError, JoinType};
 
-fn build_left() -> Result<GDSDataFrame, PolarsError> {
-    let df = DataFrame::new(vec![
-        Column::from(series("id", &[1i64, 2, 3])),
-        Column::from(series("left", &["l1", "l2", "l3"])),
-    ])?;
-    Ok(GDSDataFrame::new(df))
+fn build_left() -> Result<GDSDataFrame, GDSPolarsError> {
+    Ok(GDSDataFrame::from_series(vec![
+        series("id", &[1i64, 2, 3]),
+        series("left", &["l1", "l2", "l3"]),
+    ])?)
 }
 
-fn build_right() -> Result<GDSDataFrame, PolarsError> {
-    let df = DataFrame::new(vec![
-        Column::from(series("id", &[2i64, 3, 4])),
-        Column::from(series("right", &["r2", "r3", "r4"])),
-    ])?;
-    Ok(GDSDataFrame::new(df))
+fn build_right() -> Result<GDSDataFrame, GDSPolarsError> {
+    Ok(GDSDataFrame::from_series(vec![
+        series("id", &[2i64, 3, 4]),
+        series("right", &["r2", "r3", "r4"]),
+    ])?)
 }
 
-fn main() -> Result<(), PolarsError> {
+fn main() -> Result<(), GDSPolarsError> {
     let left = build_left()?;
     let right = build_right()?;
 

@@ -2,6 +2,16 @@
 
 use thiserror::Error;
 
+use polars::error::PolarsError as PolarsCoreError;
+use std::io;
+
+use crate::collections::catalog::types::CatalogError;
+use crate::collections::extensions::chunking::ChunkingError;
+use crate::collections::extensions::framing::FramingError;
+use crate::collections::extensions::streaming::StreamingError;
+use crate::collections::plugins::graphframe::GraphFramePluginError;
+use crate::types::random::RandomGraphError;
+
 macro_rules! simple_error {
     ($name:ident, $doc:expr) => {
         #[doc = $doc]
@@ -109,3 +119,40 @@ simple_warning!(
     "Potentially slow map operation."
 );
 simple_warning!(UnstableWarning, "Unstable functionality used.");
+
+/// Unified error wrapper for GDS/Polars-facing APIs and examples.
+#[derive(Debug, Error)]
+pub enum GDSPolarsError {
+    #[error(transparent)]
+    Polars(#[from] PolarsCoreError),
+    #[error(transparent)]
+    Streaming(#[from] StreamingError),
+    #[error(transparent)]
+    Catalog(#[from] CatalogError),
+    #[error(transparent)]
+    Framing(#[from] FramingError),
+    #[error(transparent)]
+    Chunking(#[from] ChunkingError),
+    #[error(transparent)]
+    GraphFrame(#[from] GraphFramePluginError),
+    #[error(transparent)]
+    RandomGraph(#[from] RandomGraphError),
+    #[error(transparent)]
+    Io(#[from] io::Error),
+    #[error(transparent)]
+    Regex(#[from] regex::Error),
+    #[error("{0}")]
+    Message(String),
+}
+
+impl From<&str> for GDSPolarsError {
+    fn from(value: &str) -> Self {
+        Self::Message(value.to_string())
+    }
+}
+
+impl From<String> for GDSPolarsError {
+    fn from(value: String) -> Self {
+        Self::Message(value)
+    }
+}

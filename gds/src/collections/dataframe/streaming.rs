@@ -8,13 +8,13 @@ use crate::collections::extensions::streaming::{
 
 /// Streaming adapter over a Polars DataFrame.
 #[derive(Debug, Clone)]
-pub struct PolarsStreamingFrame {
+pub struct GDSStreamingFrame {
     df: DataFrame,
     streaming_config: Option<StreamingConfig>,
     is_streaming_enabled: bool,
 }
 
-impl PolarsStreamingFrame {
+impl GDSStreamingFrame {
     pub fn new(df: DataFrame) -> Self {
         Self {
             df,
@@ -32,13 +32,13 @@ impl PolarsStreamingFrame {
     }
 }
 
-impl From<DataFrame> for PolarsStreamingFrame {
+impl From<DataFrame> for GDSStreamingFrame {
     fn from(df: DataFrame) -> Self {
         Self::new(df)
     }
 }
 
-impl StreamingSupport for PolarsStreamingFrame {
+impl StreamingSupport for GDSStreamingFrame {
     fn enable_streaming(&mut self, config: StreamingConfig) -> Result<(), StreamingError> {
         self.streaming_config = Some(config);
         self.is_streaming_enabled = true;

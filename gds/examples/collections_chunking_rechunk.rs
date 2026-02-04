@@ -3,9 +3,9 @@
 //! Run with:
 //!   cargo run -p gds --example collections_chunking_rechunk
 
-use gds::collections::dataframe::{GDSDataFrame, TableBuilder};
+use gds::collections::dataframe::{GDSDataFrame, GDSPolarsError, TableBuilder};
 
-fn main() -> Result<(), Box<dyn std::error::Error>> {
+fn main() -> Result<(), GDSPolarsError> {
     let left = TableBuilder::new()
         .with_i64_column("id", &[1, 2, 3])
         .with_f64_column("score", &[10.0, 25.0, 40.0])

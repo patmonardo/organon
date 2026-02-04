@@ -3,11 +3,11 @@
 //! Run with:
 //!   cargo run -p gds --example collections_streaming_dataset
 
-use gds::collections::dataframe::{col, lit, when, GDSDataFrame, TableBuilder};
+use gds::collections::dataframe::{col, lit, when, GDSDataFrame, GDSPolarsError, TableBuilder};
 use gds::collections::datasets::{Dataset, StreamingDataset};
 use gds::collections::extensions::streaming::StreamingConfig;
 
-fn main() -> Result<(), Box<dyn std::error::Error>> {
+fn main() -> Result<(), GDSPolarsError> {
     // Build a dataset (Polars-backed).
     let dataset = Dataset::from_builder(
         TableBuilder::new()
@@ -44,7 +44,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let summary = streaming_summary
         .iter()
         .next()
-        .ok_or("missing summary batch")??;
+        .ok_or_else(|| "missing summary batch".to_string())??;
     println!(
         "Streaming dataset summary:\n{}",
         GDSDataFrame::new(summary).fmt_table()
