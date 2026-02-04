@@ -1,4 +1,4 @@
-//! Struct namespace for SeriesModel (py-polars inspired).
+//! Struct namespace for GDSSeries (py-polars inspired).
 
 use polars::prelude::{Expr, PlSmallStr, PolarsResult, Series};
 

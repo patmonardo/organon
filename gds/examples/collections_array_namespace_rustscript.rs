@@ -4,7 +4,7 @@
 //!   cargo run -p gds --example collections_array_namespace_rustscript
 
 use gds::collections::dataframe::{
-    arr_ns, col, series_list_i64, PolarsDataFrameCollection, SeriesModel,
+    arr_ns, col, series_list_i64, GDSSeries, PolarsDataFrameCollection,
 };
 use polars::prelude::*;
 
@@ -43,8 +43,8 @@ fn main() -> PolarsResult<()> {
 
     println!("{}", PolarsDataFrameCollection::new(result).fmt_table());
 
-    // SeriesModel + ArrayNameSpace (no DataFrame needed).
-    let array_series = SeriesModel::new(vals.cast(&DataType::Array(Box::new(DataType::Int64), 3))?);
+    // GDSSeries + ArrayNameSpace (no DataFrame needed).
+    let array_series = GDSSeries::new(vals.cast(&DataType::Array(Box::new(DataType::Int64), 3))?);
     let as_array = array_series.arr().slice(0, 2, true)?;
 
     println!("{as_array:?}");

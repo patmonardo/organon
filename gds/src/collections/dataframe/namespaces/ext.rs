@@ -1,4 +1,4 @@
-//! Extension namespace for SeriesModel (py-polars inspired).
+//! Extension namespace for GDSSeries (py-polars inspired).
 
 use polars::prelude::{DataType, Series};
 

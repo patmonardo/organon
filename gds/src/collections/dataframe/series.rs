@@ -13,11 +13,11 @@ use crate::collections::dataframe::namespaces::structure::StructNameSpace;
 
 /// Python-shaped Series facade for the Collections SDK.
 #[derive(Debug, Clone)]
-pub struct SeriesModel {
+pub struct GDSSeries {
     series: Series,
 }
 
-impl SeriesModel {
+impl GDSSeries {
     pub fn new(series: Series) -> Self {
         Self { series }
     }

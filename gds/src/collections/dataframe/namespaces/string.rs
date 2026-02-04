@@ -1,4 +1,4 @@
-//! String namespace for SeriesModel (py-polars inspired).
+//! String namespace for GDSSeries (py-polars inspired).
 
 use polars::prelude::{
     DataTypeExpr, Expr, PolarsResult, Series, StrptimeOptions, TimeUnit, TimeZone,

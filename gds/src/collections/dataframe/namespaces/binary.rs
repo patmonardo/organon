@@ -1,4 +1,4 @@
-//! Binary namespace for SeriesModel (py-polars inspired).
+//! Binary namespace for GDSSeries (py-polars inspired).
 
 use polars::prelude::{Expr, PolarsResult, Series};
 

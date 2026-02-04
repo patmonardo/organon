@@ -3,7 +3,7 @@
 //! Run with:
 //!   cargo run -p gds --example collections_string_namespace_rustscript
 
-use gds::collections::dataframe::{col, str_ns, PolarsDataFrameCollection, SeriesModel};
+use gds::collections::dataframe::{col, str_ns, PolarsDataFrameCollection, GDSSeries};
 use polars::prelude::*;
 
 fn main() -> PolarsResult<()> {
@@ -24,8 +24,8 @@ fn main() -> PolarsResult<()> {
 
     println!("{}", PolarsDataFrameCollection::new(result).fmt_table());
 
-    // SeriesModel + StringNameSpace (no DataFrame needed).
-    let fruit = SeriesModel::from("fruit", ["pear", "peer", "pêra", "päärynä"]);
+    // GDSSeries + StringNameSpace (no DataFrame needed).
+    let fruit = GDSSeries::from("fruit", ["pear", "peer", "pêra", "päärynä"]);
     let upper = fruit.str().to_uppercase()?;
     let bytes = fruit.str().len_bytes()?;
 

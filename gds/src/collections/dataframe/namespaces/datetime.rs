@@ -1,4 +1,4 @@
-//! Datetime namespace for SeriesModel (py-polars inspired).
+//! Datetime namespace for GDSSeries (py-polars inspired).
 
 use polars::prelude::{Expr, NonExistent, PolarsResult, Series, TimeUnit, TimeZone};
 

@@ -1,4 +1,4 @@
-//! List namespace for SeriesModel (py-polars inspired).
+//! List namespace for GDSSeries (py-polars inspired).
 
 use polars::prelude::{Expr, Literal, PolarsResult, Series};
 use polars::series::ops::NullBehavior;

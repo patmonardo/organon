@@ -1,4 +1,4 @@
-//! Categorical namespace for SeriesModel (py-polars inspired).
+//! Categorical namespace for GDSSeries (py-polars inspired).
 
 use polars::prelude::{Expr, PolarsResult, Series};
 
