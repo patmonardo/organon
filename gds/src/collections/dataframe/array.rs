@@ -1,7 +1,7 @@
-//! Polars Series -> ChunkedArray integration.
+//! Fundamental array API for the RustScript Polars facade.
 //!
-//! This layer bridges Polars Series chunking semantics with Collections
-//! chunking utilities and configuration.
+//! This layer bridges Polars Series (Arrow ChunkedArray) semantics with
+//! Collections chunking utilities and configuration.
 
 use polars::prelude::Series;
 
@@ -9,15 +9,15 @@ use crate::collections::extensions::chunking::{
     ChunkRange, ChunkingConfig, ChunkingError, ChunkingUtils,
 };
 
-/// Chunked Series view built on Collections chunking configuration.
+/// Array/ChunkedArray Series view built on Collections chunking configuration.
 #[derive(Debug, Clone)]
-pub struct PolarsChunkedSeries {
+pub struct GDSArraySeries {
     series: Series,
     chunking_config: Option<ChunkingConfig>,
     is_chunking_enabled: bool,
 }
 
-impl PolarsChunkedSeries {
+impl GDSArraySeries {
     pub fn new(series: Series) -> Self {
         Self {
             series,
@@ -68,6 +68,20 @@ impl PolarsChunkedSeries {
             Ok(ranges) => ranges.len(),
             Err(_) => 0,
         }
+    }
+
+    /// Number of physical Arrow chunks in the underlying Polars Series.
+    pub fn physical_chunk_count(&self) -> usize {
+        self.series.n_chunks()
+    }
+
+    /// Length of each physical Arrow chunk in the underlying Series.
+    pub fn physical_chunk_lengths(&self) -> Vec<usize> {
+        self.series
+            .chunks()
+            .iter()
+            .map(|chunk| chunk.len())
+            .collect()
     }
 
     pub fn chunk_ranges(&self) -> Result<Vec<ChunkRange>, ChunkingError> {
@@ -162,11 +176,14 @@ impl PolarsChunkedSeries {
     }
 }
 
-impl From<Series> for PolarsChunkedSeries {
+impl From<Series> for GDSArraySeries {
     fn from(series: Series) -> Self {
         Self::new(series)
     }
 }
+
+/// Backwards-compatible alias (legacy name).
+pub type PolarsChunkedSeries = GDSArraySeries;
 
 fn normalize_chunk_size(config: &ChunkingConfig) -> usize {
     if config.prefer_power_of_two {

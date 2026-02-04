@@ -6,7 +6,7 @@ use std::sync::Arc;
 use arrow::datatypes::ArrowSchema;
 use polars::prelude::{Column, DataFrame, DataType, PolarsError, Schema, SchemaRef};
 
-use crate::collections::dataframe::collection::PolarsDataFrameCollection;
+use crate::collections::dataframe::GDSDataFrame;
 
 /// Convert an Arrow schema to a Polars schema.
 pub fn arrow_schema_to_polars_schema(schema: &ArrowSchema) -> SchemaRef {
@@ -33,8 +33,8 @@ pub fn schema_dtypes(schema: &Schema) -> Vec<DataType> {
 }
 
 /// Create an empty DataFrame collection from a Polars schema.
-pub fn schema_to_dataframe(schema: &Schema) -> PolarsDataFrameCollection {
-    PolarsDataFrameCollection::empty_with_schema(schema)
+pub fn schema_to_dataframe(schema: &Schema) -> GDSDataFrame {
+    GDSDataFrame::empty_with_schema(schema)
 }
 
 /// Get a schema reference from a Polars DataFrame.

@@ -9,7 +9,7 @@ use crate::collections::catalog::schema::CollectionsSchema;
 use crate::collections::catalog::{
     CollectionsCatalogDisk, CollectionsCatalogDiskEntry, CollectionsIoFormat, CollectionsIoPolicy,
 };
-use crate::collections::dataframe::PolarsDataFrameCollection;
+use crate::collections::dataframe::GDSDataFrame;
 use crate::config::CollectionsBackend;
 use crate::types::graph_store::{DefaultGraphStore, GraphStore};
 use crate::types::ValueType;
@@ -21,8 +21,8 @@ use std::path::PathBuf;
 /// Output tables for a GraphFrame-style export.
 #[derive(Debug, Clone)]
 pub struct GraphFrameTables {
-    pub nodes: PolarsDataFrameCollection,
-    pub edges: PolarsDataFrameCollection,
+    pub nodes: GDSDataFrame,
+    pub edges: GDSDataFrame,
 }
 
 /// On-disk catalog entries for a GraphFrame export.
@@ -107,7 +107,7 @@ impl GraphFramePolars32Plugin {
     fn build_nodes(
         &self,
         store: &DefaultGraphStore,
-    ) -> Result<PolarsDataFrameCollection, GraphFramePluginError> {
+    ) -> Result<GDSDataFrame, GraphFramePluginError> {
         let id_map = store.nodes();
         let mut node_ids: Vec<i32> = Vec::with_capacity(id_map.node_count());
         let mut labels: Vec<String> = if self.include_labels {
@@ -134,13 +134,13 @@ impl GraphFramePolars32Plugin {
             columns.push(Series::new(PlSmallStr::from_static("labels"), labels));
         }
 
-        Ok(PolarsDataFrameCollection::from_series(columns)?)
+        Ok(GDSDataFrame::from_series(columns)?)
     }
 
     fn build_edges(
         &self,
         store: &DefaultGraphStore,
-    ) -> Result<PolarsDataFrameCollection, GraphFramePluginError> {
+    ) -> Result<GDSDataFrame, GraphFramePluginError> {
         let mut sources: Vec<i32> = Vec::with_capacity(store.relationship_count());
         let mut targets: Vec<i32> = Vec::with_capacity(store.relationship_count());
         let mut types: Vec<String> = if self.include_relationship_type {
@@ -199,14 +199,14 @@ impl GraphFramePolars32Plugin {
             columns.push(Series::new(PlSmallStr::from_static("weight"), weights));
         }
 
-        Ok(PolarsDataFrameCollection::from_series(columns)?)
+        Ok(GDSDataFrame::from_series(columns)?)
     }
 
     fn build_graph_table(
         &self,
         store: &DefaultGraphStore,
         graph_name: &str,
-    ) -> Result<PolarsDataFrameCollection, GraphFramePluginError> {
+    ) -> Result<GDSDataFrame, GraphFramePluginError> {
         let schema_json: JsonValue = store.schema().to_map();
         let schema_json = serde_json::to_string(&schema_json)
             .map_err(|err| GraphFramePluginError::Graph(err.to_string()))?;
@@ -233,7 +233,7 @@ impl GraphFramePolars32Plugin {
             Series::new(PlSmallStr::from_static("modified_at"), vec![modified_at]),
         ];
 
-        Ok(PolarsDataFrameCollection::from_series(columns)?)
+        Ok(GDSDataFrame::from_series(columns)?)
     }
 }
 

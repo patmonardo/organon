@@ -5,7 +5,7 @@
 
 use gds::collections::dataframe::{
     selector_all, selector_by_dtype, selector_contains, selector_matches, selector_numeric,
-    selector_starts_with, selector_string, selector_temporal, PolarsDataFrameCollection,
+    selector_starts_with, selector_string, selector_temporal, GDSDataFrame,
 };
 use polars::prelude::{DataType, Field, Schema, TimeUnit};
 
@@ -27,7 +27,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         Field::new("qqR".into(), DataType::String),
     ]);
 
-    let df = PolarsDataFrameCollection::empty_with_schema(&schema);
+    let df = GDSDataFrame::empty_with_schema(&schema);
 
     // Select the UNION of temporal, strings and columns that start with "e".
     let union = selector_temporal()

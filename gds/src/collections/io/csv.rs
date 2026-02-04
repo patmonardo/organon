@@ -10,7 +10,7 @@ use polars::prelude::{
 use polars_io::csv::read::{CsvEncoding, NullValues};
 use polars_io::RowIndex;
 
-use crate::collections::dataframe::collection::PolarsDataFrameCollection;
+use crate::collections::dataframe::GDSDataFrame;
 use crate::collections::io::partition::{partition_dataframe_for_write, PartitionByConfig};
 
 #[derive(Debug, Clone, Copy)]
@@ -27,7 +27,7 @@ impl Default for CsvWriteConfig {
 }
 
 /// Read a CSV file into a Polars-backed table.
-pub fn read_table(path: &Path) -> Result<PolarsDataFrameCollection, PolarsError> {
+pub fn read_table(path: &Path) -> Result<GDSDataFrame, PolarsError> {
     read_table_with_options(path, CsvScanConfig::default())
 }
 
@@ -98,16 +98,16 @@ impl Default for CsvScanConfig {
 pub fn read_table_with_options(
     path: &Path,
     config: CsvScanConfig,
-) -> Result<PolarsDataFrameCollection, PolarsError> {
+) -> Result<GDSDataFrame, PolarsError> {
     let path = PlPath::new(path.to_string_lossy().as_ref());
     let df = scan_table_with_options(path, config)?.collect()?;
-    Ok(PolarsDataFrameCollection::from(df))
+    Ok(GDSDataFrame::from(df))
 }
 
 /// Write a Polars-backed table to CSV.
 pub fn write_table(
     path: &Path,
-    table: &PolarsDataFrameCollection,
+    table: &GDSDataFrame,
     config: CsvWriteConfig,
 ) -> Result<(), PolarsError> {
     let mut df = table.dataframe().clone();
@@ -120,7 +120,7 @@ pub fn write_table(
 
 /// Write a Polars-backed table to partitioned CSV files.
 pub fn write_table_partitioned(
-    table: &PolarsDataFrameCollection,
+    table: &GDSDataFrame,
     config: PartitionByConfig,
     write_config: CsvWriteConfig,
 ) -> Result<Vec<std::path::PathBuf>, PolarsError> {

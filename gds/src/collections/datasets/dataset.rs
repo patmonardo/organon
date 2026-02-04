@@ -8,24 +8,24 @@ use std::path::Path;
 use polars::error::PolarsError;
 use polars::prelude::{Expr, SortMultipleOptions};
 
-use crate::collections::dataframe::collection::{DataFrameCollection, PolarsDataFrameCollection};
 use crate::collections::dataframe::selectors::Selector;
 use crate::collections::dataframe::table::TableBuilder;
+use crate::collections::dataframe::GDSDataFrame;
 use crate::collections::io::{csv, ipc, json, parquet};
 
 /// Minimal dataset wrapper (Polars-backed).
 #[derive(Debug, Clone)]
 pub struct Dataset {
     name: Option<String>,
-    table: PolarsDataFrameCollection,
+    table: GDSDataFrame,
 }
 
 impl Dataset {
-    pub fn new(table: PolarsDataFrameCollection) -> Self {
+    pub fn new(table: GDSDataFrame) -> Self {
         Self { name: None, table }
     }
 
-    pub fn named(name: impl Into<String>, table: PolarsDataFrameCollection) -> Self {
+    pub fn named(name: impl Into<String>, table: GDSDataFrame) -> Self {
         Self {
             name: Some(name.into()),
             table,
@@ -61,15 +61,15 @@ impl Dataset {
         self.name.as_deref()
     }
 
-    pub fn table(&self) -> &PolarsDataFrameCollection {
+    pub fn table(&self) -> &GDSDataFrame {
         &self.table
     }
 
-    pub fn table_mut(&mut self) -> &mut PolarsDataFrameCollection {
+    pub fn table_mut(&mut self) -> &mut GDSDataFrame {
         &mut self.table
     }
 
-    pub fn into_table(self) -> PolarsDataFrameCollection {
+    pub fn into_table(self) -> GDSDataFrame {
         self.table
     }
 

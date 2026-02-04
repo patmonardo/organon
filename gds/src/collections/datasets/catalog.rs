@@ -7,7 +7,7 @@ use crate::collections::catalog::{
     CollectionsIoPolicy,
 };
 use crate::collections::catalog::schema::CollectionsSchema;
-use crate::collections::dataframe::PolarsDataFrameCollection;
+use crate::collections::dataframe::GDSDataFrame;
 use crate::collections::datasets::dataset::Dataset;
 use crate::collections::datasets::io::detect_format_from_path;
 use crate::config::CollectionsBackend;
@@ -55,7 +55,7 @@ impl DatasetCatalog {
     pub fn ingest_table(
         &mut self,
         name: &str,
-        table: &PolarsDataFrameCollection,
+        table: &GDSDataFrame,
         format: CollectionsIoFormat,
     ) -> Result<CollectionsCatalogDiskEntry, CatalogError> {
         let schema = Some(CollectionsSchema::from_polars(table.dataframe()));

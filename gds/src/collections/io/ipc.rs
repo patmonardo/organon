@@ -11,11 +11,11 @@ use polars_io::ipc::IpcScanOptions;
 use polars_io::{HiveOptions, RowIndex};
 use polars_plan::prelude::UnifiedScanArgs;
 
-use crate::collections::dataframe::collection::PolarsDataFrameCollection;
+use crate::collections::dataframe::GDSDataFrame;
 use crate::collections::io::partition::{partition_dataframe_for_write, PartitionByConfig};
 
 /// Read an IPC file into a Polars-backed table.
-pub fn read_table(path: &Path) -> Result<PolarsDataFrameCollection, PolarsError> {
+pub fn read_table(path: &Path) -> Result<GDSDataFrame, PolarsError> {
     read_table_with_options(path, IpcScanConfig::default())
 }
 
@@ -58,14 +58,14 @@ impl Default for IpcScanConfig {
 pub fn read_table_with_options(
     path: &Path,
     config: IpcScanConfig,
-) -> Result<PolarsDataFrameCollection, PolarsError> {
+) -> Result<GDSDataFrame, PolarsError> {
     let path = PlPath::new(path.to_string_lossy().as_ref());
     let df = scan_table_with_options(path, config)?.collect()?;
-    Ok(PolarsDataFrameCollection::from(df))
+    Ok(GDSDataFrame::from(df))
 }
 
 /// Write a Polars-backed table to IPC.
-pub fn write_table(path: &Path, table: &PolarsDataFrameCollection) -> Result<(), PolarsError> {
+pub fn write_table(path: &Path, table: &GDSDataFrame) -> Result<(), PolarsError> {
     let mut df = table.dataframe().clone();
     let mut file = File::create(path)?;
     IpcWriter::new(&mut file).finish(&mut df)?;
@@ -74,7 +74,7 @@ pub fn write_table(path: &Path, table: &PolarsDataFrameCollection) -> Result<(),
 
 /// Write a Polars-backed table to partitioned IPC files.
 pub fn write_table_partitioned(
-    table: &PolarsDataFrameCollection,
+    table: &GDSDataFrame,
     config: PartitionByConfig,
 ) -> Result<Vec<std::path::PathBuf>, PolarsError> {
     let chunks = partition_dataframe_for_write(table.dataframe(), &config, "ipc")?;

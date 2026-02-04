@@ -13,7 +13,7 @@ use polars_io::prelude::{SerReader, SerWriter};
 use polars_io::RowIndex;
 use polars_lazy::prelude::LazyJsonLineReader;
 
-use crate::collections::dataframe::collection::PolarsDataFrameCollection;
+use crate::collections::dataframe::GDSDataFrame;
 
 pub struct JsonWriteConfig {
     pub format: JsonFormat,
@@ -44,10 +44,7 @@ impl Default for JsonReadConfig {
 }
 
 /// Read a JSON file into a Polars-backed table.
-pub fn read_table(
-    path: &Path,
-    config: JsonReadConfig,
-) -> Result<PolarsDataFrameCollection, PolarsError> {
+pub fn read_table(path: &Path, config: JsonReadConfig) -> Result<GDSDataFrame, PolarsError> {
     let file = File::open(path)?;
     let mut reader = JsonReader::new(file).with_json_format(config.format);
     if let Some(schema) = config.schema {
@@ -57,13 +54,13 @@ pub fn read_table(
         reader = reader.with_schema_overwrite(schema_overwrite);
     }
     let df = reader.finish()?;
-    Ok(PolarsDataFrameCollection::from(df))
+    Ok(GDSDataFrame::from(df))
 }
 
 /// Write a Polars-backed table to JSON.
 pub fn write_table(
     path: &Path,
-    table: &PolarsDataFrameCollection,
+    table: &GDSDataFrame,
     config: JsonWriteConfig,
 ) -> Result<(), PolarsError> {
     let mut df = table.dataframe().clone();

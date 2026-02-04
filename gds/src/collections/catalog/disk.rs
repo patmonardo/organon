@@ -14,7 +14,7 @@ use crate::collections::catalog::types::{
 use crate::collections::catalog::unity::{ColumnInfo, DataSourceFormat, TableInfo, TableType};
 use crate::collections::dataframe::Selector;
 use crate::collections::io::{csv, ipc, json, parquet};
-use crate::collections::PolarsDataFrameCollection;
+use crate::collections::GDSDataFrame;
 use polars::prelude::{col, DataFrame, LazyFrame, PlPath};
 
 pub const CATALOG_MANIFEST_FILE: &str = "catalog.json";
@@ -170,7 +170,7 @@ impl CollectionsCatalogDisk {
     pub fn write_table(
         &self,
         entry: &CollectionsCatalogDiskEntry,
-        table: &PolarsDataFrameCollection,
+        table: &GDSDataFrame,
     ) -> Result<(), CatalogError> {
         let data_path = self.data_path(entry);
         if let Some(parent) = data_path.parent() {
@@ -203,7 +203,7 @@ impl CollectionsCatalogDisk {
     pub fn read_table(
         &self,
         entry: &CollectionsCatalogDiskEntry,
-    ) -> Result<PolarsDataFrameCollection, CatalogError> {
+    ) -> Result<GDSDataFrame, CatalogError> {
         let data_path = self.data_path(entry);
         match entry.io_policy.format {
             CollectionsIoFormat::Auto | CollectionsIoFormat::Parquet => {
@@ -230,7 +230,7 @@ impl CollectionsCatalogDisk {
         &self,
         entry: &CollectionsCatalogDiskEntry,
         selector: &Selector,
-    ) -> Result<PolarsDataFrameCollection, CatalogError> {
+    ) -> Result<GDSDataFrame, CatalogError> {
         let table = self.read_table(entry)?;
         table
             .select_selector(selector)

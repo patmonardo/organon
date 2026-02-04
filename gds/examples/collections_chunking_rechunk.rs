@@ -3,7 +3,7 @@
 //! Run with:
 //!   cargo run -p gds --example collections_chunking_rechunk
 
-use gds::collections::dataframe::{PolarsDataFrameCollection, TableBuilder};
+use gds::collections::dataframe::{GDSDataFrame, TableBuilder};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let left = TableBuilder::new()
@@ -19,7 +19,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // vstack adds chunks. This is typical when building up a DataFrame in pieces.
     let mut combined_df = left.clone().into_inner();
     combined_df.vstack_mut(&right.into_inner())?;
-    let combined = PolarsDataFrameCollection::new(combined_df);
+    let combined = GDSDataFrame::new(combined_df);
 
     println!("Combined (multiple chunks):\n{}", combined.fmt_table());
     print_chunk_counts("Before rechunk", &combined);
@@ -27,14 +27,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Rechunk to coalesce column chunks for faster scans.
     let mut rechunked_df = combined.clone().into_inner();
     rechunked_df.align_chunks_par();
-    let rechunked = PolarsDataFrameCollection::new(rechunked_df);
+    let rechunked = GDSDataFrame::new(rechunked_df);
 
     print_chunk_counts("After rechunk", &rechunked);
 
     Ok(())
 }
 
-fn print_chunk_counts(label: &str, table: &PolarsDataFrameCollection) {
+fn print_chunk_counts(label: &str, table: &GDSDataFrame) {
     let counts: Vec<String> = table
         .dataframe()
         .get_columns()

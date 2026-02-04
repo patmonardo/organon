@@ -1,7 +1,6 @@
 //! Polars DataFrame integration for Collections.
 
-pub mod chunked;
-pub mod collection;
+pub mod array;
 pub mod column;
 pub mod config;
 pub mod datatype_expr;
@@ -12,6 +11,7 @@ pub mod expressions;
 pub mod frame;
 pub mod functions;
 pub mod interchange;
+pub mod lazy;
 pub mod namespace;
 pub mod namespaces;
 pub mod row;
@@ -22,8 +22,7 @@ pub mod streaming;
 pub mod table;
 pub mod utils;
 
-pub use chunked::*;
-pub use collection::*;
+pub use array::*;
 pub use column::*;
 pub use datatype_expr::*;
 pub use datatypes::*;
@@ -31,6 +30,7 @@ pub use expr::*;
 pub use frame::*;
 pub use functions::*;
 pub use interchange::*;
+pub use lazy::*;
 pub use namespace::*;
 pub use row::*;
 pub use schema::*;

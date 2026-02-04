@@ -2,7 +2,6 @@
 
 use polars::prelude::{Column, DataFrame, NamedFrom, Series};
 
-use crate::collections::dataframe::collection::PolarsDataFrameCollection;
 use crate::collections::dataframe::column::{
     column_binary, column_binary_opt, column_bool, column_bool_opt, column_bytes, column_bytes_opt,
     column_f32, column_f32_opt, column_f64, column_f64_opt, column_i128, column_i128_opt,
@@ -11,6 +10,7 @@ use crate::collections::dataframe::column::{
     column_u16_opt, column_u32, column_u32_opt, column_u64, column_u64_opt, column_u8,
     column_u8_opt,
 };
+use crate::collections::dataframe::GDSDataFrame;
 
 /// Builder for creating a DataFrame-backed table without exposing Polars types.
 #[derive(Debug, Default)]
@@ -183,15 +183,15 @@ impl TableBuilder {
         self
     }
 
-    pub fn build(self) -> Result<PolarsDataFrameCollection, polars::error::PolarsError> {
+    pub fn build(self) -> Result<GDSDataFrame, polars::error::PolarsError> {
         let df = DataFrame::new(self.columns)?;
-        Ok(PolarsDataFrameCollection::from(df))
+        Ok(GDSDataFrame::from(df))
     }
 }
 
 /// Multiply an f64 column by a scalar factor.
 pub fn scale_f64_column(
-    table: &mut PolarsDataFrameCollection,
+    table: &mut GDSDataFrame,
     column_name: &str,
     factor: f64,
 ) -> Result<(), polars::error::PolarsError> {

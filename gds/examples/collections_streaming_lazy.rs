@@ -4,7 +4,7 @@
 //!   cargo run -p gds --example collections_streaming_lazy
 
 use gds::collections::dataframe::{
-    col, lit, PolarsDataFrameCollection, PolarsStreamingFrame, TableBuilder,
+    col, lit, GDSDataFrame, PolarsStreamingFrame, TableBuilder,
 };
 use gds::collections::extensions::streaming::{StreamingConfig, StreamingSupport};
 
@@ -28,7 +28,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let df = streaming.collect_streaming_lazy(lazy)?;
     println!(
         "Streaming LazyFrame result:\n{}",
-        PolarsDataFrameCollection::new(df).fmt_table()
+        GDSDataFrame::new(df).fmt_table()
     );
 
     Ok(())

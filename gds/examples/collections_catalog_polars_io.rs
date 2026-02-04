@@ -9,7 +9,7 @@ use gds::collections::catalog::disk::CollectionsCatalogDisk;
 use gds::collections::catalog::types::{
     CollectionsCatalogDiskEntry, CollectionsIoFormat, CollectionsIoPolicy,
 };
-use gds::collections::dataframe::{scale_f64_column, PolarsDataFrameCollection, TableBuilder};
+use gds::collections::dataframe::{scale_f64_column, GDSDataFrame, TableBuilder};
 use gds::collections::io::{csv, parquet};
 use gds::config::CollectionsBackend;
 use gds::types::ValueType;
@@ -140,8 +140,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     for entry in catalog.list() {
         println!("- {} ({:?})", entry.name, entry.io_policy.format);
         if let Some(schema) = &entry.schema {
-            let schema_df =
-                PolarsDataFrameCollection::empty_with_schema(&schema.to_polars_schema());
+            let schema_df = GDSDataFrame::empty_with_schema(&schema.to_polars_schema());
             println!("  schema:\n{}", schema_df.fmt_table());
         }
     }

@@ -8,7 +8,7 @@ use polars::prelude::{
     AnyValue, Column, DataFrame, DataType, Field, PolarsResult, Schema, SchemaExt, Series,
 };
 
-use crate::collections::dataframe::collection::PolarsDataFrameCollection;
+use crate::collections::dataframe::GDSDataFrame;
 
 pub type SchemaDefinition = Schema;
 
@@ -45,7 +45,7 @@ impl Default for ConstructionOptions {
 pub fn dataframe_from_columns(
     data: &HashMap<String, Vec<AnyValue<'static>>>,
     options: ConstructionOptions,
-) -> Result<PolarsDataFrameCollection, PolarsError> {
+) -> Result<GDSDataFrame, PolarsError> {
     let order = resolve_column_order(data.keys(), options.schema.as_ref());
     let mut columns = Vec::with_capacity(order.len());
     for name in order {
@@ -61,7 +61,7 @@ pub fn dataframe_from_columns(
 pub fn dataframe_from_rows(
     rows: &[Vec<AnyValue<'static>>],
     options: ConstructionOptions,
-) -> Result<PolarsDataFrameCollection, PolarsError> {
+) -> Result<GDSDataFrame, PolarsError> {
     let mut row_values = Vec::with_capacity(rows.len());
     for row in rows {
         let normalized = normalize_values(row.clone(), options.nan_to_null);
@@ -78,7 +78,7 @@ pub fn dataframe_from_rows(
 pub fn dataframe_from_records(
     records: &[HashMap<String, AnyValue<'static>>],
     options: ConstructionOptions,
-) -> Result<PolarsDataFrameCollection, PolarsError> {
+) -> Result<GDSDataFrame, PolarsError> {
     let mut key_set = BTreeSet::new();
     if let Some(schema) = options.schema.as_ref() {
         for name in schema.iter_names() {
@@ -107,7 +107,7 @@ pub fn dataframe_from_records(
 pub fn dataframe_from_series(
     series: Vec<Series>,
     options: ConstructionOptions,
-) -> Result<PolarsDataFrameCollection, PolarsError> {
+) -> Result<GDSDataFrame, PolarsError> {
     let columns: Vec<Column> = series.into_iter().map(Column::from).collect();
     dataframe_from_columns_vec(columns, options)
 }
@@ -115,7 +115,7 @@ pub fn dataframe_from_series(
 pub fn dataframe_from_columns_vec(
     columns: Vec<Column>,
     options: ConstructionOptions,
-) -> Result<PolarsDataFrameCollection, PolarsError> {
+) -> Result<GDSDataFrame, PolarsError> {
     let df = DataFrame::new(columns)?;
     finalize_dataframe(df, options)
 }
@@ -160,7 +160,7 @@ fn resolve_column_order(
 fn finalize_dataframe(
     df: DataFrame,
     options: ConstructionOptions,
-) -> Result<PolarsDataFrameCollection, PolarsError> {
+) -> Result<GDSDataFrame, PolarsError> {
     let mut df = df;
     if let Some(schema) = options.schema.as_ref() {
         df = apply_schema(df, schema, options.strict)?;
@@ -168,7 +168,7 @@ fn finalize_dataframe(
     if let Some(overrides) = options.schema_overrides.as_ref() {
         df = apply_schema_overrides(df, overrides, options.strict)?;
     }
-    Ok(PolarsDataFrameCollection::new(df))
+    Ok(GDSDataFrame::new(df))
 }
 
 fn apply_schema(df: DataFrame, schema: &Schema, _strict: bool) -> PolarsResult<DataFrame> {

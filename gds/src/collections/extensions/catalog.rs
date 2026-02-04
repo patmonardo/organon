@@ -7,7 +7,7 @@ use crate::collections::catalog::schema::CollectionsSchema;
 use crate::collections::catalog::types::{
     CatalogError, CollectionsCatalogDiskEntry, CollectionsIoFormat, CollectionsIoPolicy,
 };
-use crate::collections::dataframe::{PolarsDataFrameCollection, Selector};
+use crate::collections::dataframe::{GDSDataFrame, Selector};
 use crate::collections::io::{csv, ipc, json, parquet};
 use crate::config::CollectionsBackend;
 use crate::types::ValueType;
@@ -109,7 +109,7 @@ impl CatalogExtension {
     pub fn write_table(
         &mut self,
         name: &str,
-        table: &PolarsDataFrameCollection,
+        table: &GDSDataFrame,
         format: Option<CollectionsIoFormat>,
     ) -> Result<CollectionsCatalogDiskEntry, CatalogError> {
         let entry = self.register_table(name, format)?;
@@ -149,7 +149,7 @@ impl CatalogExtension {
         Ok(entry)
     }
 
-    pub fn read_table(&mut self, name: &str) -> Result<PolarsDataFrameCollection, CatalogError> {
+    pub fn read_table(&mut self, name: &str) -> Result<GDSDataFrame, CatalogError> {
         let entry = self
             .catalog
             .get(name)
@@ -202,7 +202,7 @@ impl CatalogExtension {
         &mut self,
         name: &str,
         selector: &Selector,
-    ) -> Result<PolarsDataFrameCollection, CatalogError> {
+    ) -> Result<GDSDataFrame, CatalogError> {
         let table = self.read_table(name)?;
         table
             .select_selector(selector)

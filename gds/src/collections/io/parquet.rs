@@ -18,12 +18,12 @@ use polars_parquet::parquet::compression::Compression;
 use polars_parquet::parquet::schema::types::PhysicalType;
 use polars_parquet::parquet::statistics::Statistics;
 
-use crate::collections::dataframe::collection::PolarsDataFrameCollection;
+use crate::collections::dataframe::GDSDataFrame;
 use crate::collections::io::partition::{partition_dataframe_for_write, PartitionByConfig};
 use crate::collections::schema::arrow_schema_to_polars_schema;
 
 /// Read a Parquet file into a Polars-backed table.
-pub fn read_table(path: &Path) -> Result<PolarsDataFrameCollection, PolarsError> {
+pub fn read_table(path: &Path) -> Result<GDSDataFrame, PolarsError> {
     read_table_with_options(path, ParquetScanConfig::default())
 }
 
@@ -393,14 +393,14 @@ impl Default for ParquetScanConfig {
 pub fn read_table_with_options(
     path: &Path,
     config: ParquetScanConfig,
-) -> Result<PolarsDataFrameCollection, PolarsError> {
+) -> Result<GDSDataFrame, PolarsError> {
     let path = PlPath::new(path.to_string_lossy().as_ref());
     let df = scan_table_with_options(path, config)?.collect()?;
-    Ok(PolarsDataFrameCollection::from(df))
+    Ok(GDSDataFrame::from(df))
 }
 
 /// Write a Polars-backed table to Parquet.
-pub fn write_table(path: &Path, table: &PolarsDataFrameCollection) -> Result<(), PolarsError> {
+pub fn write_table(path: &Path, table: &GDSDataFrame) -> Result<(), PolarsError> {
     let mut df = table.dataframe().clone();
     let mut file = File::create(path)?;
     ParquetWriter::new(&mut file).finish(&mut df)?;
@@ -409,7 +409,7 @@ pub fn write_table(path: &Path, table: &PolarsDataFrameCollection) -> Result<(),
 
 /// Write a Polars-backed table to partitioned Parquet files.
 pub fn write_table_partitioned(
-    table: &PolarsDataFrameCollection,
+    table: &GDSDataFrame,
     config: PartitionByConfig,
 ) -> Result<Vec<PathBuf>, PolarsError> {
     let chunks = partition_dataframe_for_write(table.dataframe(), &config, "parquet")?;

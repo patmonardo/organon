@@ -3,9 +3,7 @@
 //! Run with:
 //!   cargo run -p gds --example collections_list_namespace_rustscript
 
-use gds::collections::dataframe::{
-    col, list_ns, series_list_i64, GDSSeries, PolarsDataFrameCollection,
-};
+use gds::collections::dataframe::{col, list_ns, series_list_i64, GDSSeries, GDSDataFrame};
 use polars::prelude::*;
 
 fn main() -> PolarsResult<()> {
@@ -25,7 +23,7 @@ fn main() -> PolarsResult<()> {
         ])
         .collect()?;
 
-    println!("{}", PolarsDataFrameCollection::new(result).fmt_table());
+    println!("{}", GDSDataFrame::new(result).fmt_table());
 
     // GDSSeries + ListNameSpace (no DataFrame needed).
     let series = GDSSeries::from_list_i64("values", &[vec![1, 2, 3], vec![3, 3, 2], vec![]]);

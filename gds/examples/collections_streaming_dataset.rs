@@ -3,7 +3,7 @@
 //! Run with:
 //!   cargo run -p gds --example collections_streaming_dataset
 
-use gds::collections::dataframe::{col, lit, when, PolarsDataFrameCollection, TableBuilder};
+use gds::collections::dataframe::{col, lit, when, GDSDataFrame, TableBuilder};
 use gds::collections::datasets::{Dataset, StreamingDataset};
 use gds::collections::extensions::streaming::StreamingConfig;
 
@@ -47,7 +47,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .ok_or("missing summary batch")??;
     println!(
         "Streaming dataset summary:\n{}",
-        PolarsDataFrameCollection::new(summary).fmt_table()
+        GDSDataFrame::new(summary).fmt_table()
     );
 
     // Stream raw batches (no transform) for inspection.
@@ -58,7 +58,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!(
             "Batch @{}:\n{}",
             offset,
-            PolarsDataFrameCollection::new(batch_df).fmt_table()
+            GDSDataFrame::new(batch_df).fmt_table()
         );
     }
 
