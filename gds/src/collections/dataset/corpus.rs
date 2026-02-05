@@ -69,7 +69,6 @@ impl Corpus {
             .column("text")?
             .as_series()
             .ok_or_else(|| GDSFrameError::from("column is not a Series"))?;
-        use polars::prelude::AnyValue;
 
         let mut counts: Vec<i64> = Vec::with_capacity(series.len());
         for i in 0..series.len() {

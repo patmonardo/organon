@@ -30,14 +30,14 @@ pub mod dataset;
 // DataFrame integration
 pub mod dataframe;
 
+// GraphFrame integration (Polars-backed graph tables)
+pub mod graphframe;
+
 // IO system
 pub mod io;
 
 // Schema utilities
 pub mod schema;
-
-// Plugins
-pub mod plugins;
 
 // Utilities
 pub mod utils;
@@ -49,8 +49,8 @@ pub use adapter::*;
 pub use catalog::*;
 pub use dataframe::*;
 // pub use dataset::*;
+// pub use graphframe::*;
 pub use io::*;
-pub use plugins::*;
 pub use schema::*;
 pub use traits::*;
 

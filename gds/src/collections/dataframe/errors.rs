@@ -9,7 +9,6 @@ use crate::collections::catalog::types::CatalogError;
 use crate::collections::extensions::chunking::ChunkingError;
 use crate::collections::extensions::framing::FramingError;
 use crate::collections::extensions::streaming::StreamingError;
-use crate::collections::plugins::graphframe::GraphFramePluginError;
 use crate::types::random::RandomGraphError;
 
 macro_rules! simple_error {
@@ -133,8 +132,6 @@ pub enum GDSFrameError {
     Framing(#[from] FramingError),
     #[error(transparent)]
     Chunking(#[from] ChunkingError),
-    #[error(transparent)]
-    GraphFrame(#[from] GraphFramePluginError),
     #[error(transparent)]
     RandomGraph(#[from] RandomGraphError),
     #[error(transparent)]

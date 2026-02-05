@@ -6,9 +6,9 @@ Summary
 - Use `dataset` (snake_case) for module/file names (e.g., `dataset.rs`).
 - Preserve external/quoted spellings (vendor docs, data releases) verbatim when quoting. Do not change third-party source text.
 
-CI enforcement
+Local check
 
-- A small check script (`tools/check_dataset_naming.sh`) runs on push/PR to ensure forbidden spellings (`DataSet`, `dataSet`, `GdsDataFrame`, `gdsDataFrame`) do not appear in source files. Note: `GDSDataFrame` is an allowed exception.
+- A local check script (`tools/check_dataset_naming.sh`) is provided to scan tracked source files for forbidden spellings (`DataSet`, `dataSet`, `GdsDataFrame`, `gdsDataFrame`). Note: `GDSDataFrame` is an allowed exception.
 - Documentation directories (e.g., `gds/doc/`, `logic/doc/`) are excluded so `DATASET` or other verbatim text can remain.
 
 Exception
