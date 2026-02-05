@@ -3,7 +3,7 @@
 use polars::prelude::{DataFrame, LazyFrame};
 
 use crate::collections::dataframe::GDSStreamingFrame;
-use crate::collections::datasets::Dataset;
+use crate::collections::dataset::Dataset;
 use crate::collections::extensions::streaming::{
     StreamingConfig, StreamingError, StreamingSupport,
 };

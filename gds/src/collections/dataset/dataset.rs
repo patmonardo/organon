@@ -5,12 +5,12 @@
 
 use std::path::Path;
 
-use polars::error::PolarsError;
 use polars::prelude::{Expr, SortMultipleOptions};
 
 use crate::collections::dataframe::selectors::Selector;
 use crate::collections::dataframe::table::TableBuilder;
 use crate::collections::dataframe::GDSDataFrame;
+use crate::collections::dataframe::GDSFrameError;
 use crate::collections::io::{csv, ipc, json, parquet};
 
 /// Minimal dataset wrapper (Polars-backed).
@@ -32,27 +32,27 @@ impl Dataset {
         }
     }
 
-    pub fn from_builder(builder: TableBuilder) -> Result<Self, PolarsError> {
+    pub fn from_builder(builder: TableBuilder) -> Result<Self, GDSFrameError> {
         let table = builder.build()?;
         Ok(Self::new(table))
     }
 
-    pub fn from_csv(path: impl AsRef<Path>) -> Result<Self, PolarsError> {
+    pub fn from_csv(path: impl AsRef<Path>) -> Result<Self, GDSFrameError> {
         let table = csv::read_table(path.as_ref())?;
         Ok(Self::new(table))
     }
 
-    pub fn from_parquet(path: impl AsRef<Path>) -> Result<Self, PolarsError> {
+    pub fn from_parquet(path: impl AsRef<Path>) -> Result<Self, GDSFrameError> {
         let table = parquet::read_table(path.as_ref())?;
         Ok(Self::new(table))
     }
 
-    pub fn from_ipc(path: impl AsRef<Path>) -> Result<Self, PolarsError> {
+    pub fn from_ipc(path: impl AsRef<Path>) -> Result<Self, GDSFrameError> {
         let table = ipc::read_table(path.as_ref())?;
         Ok(Self::new(table))
     }
 
-    pub fn from_json(path: impl AsRef<Path>) -> Result<Self, PolarsError> {
+    pub fn from_json(path: impl AsRef<Path>) -> Result<Self, GDSFrameError> {
         let table = json::read_table(path.as_ref(), json::JsonReadConfig::default())?;
         Ok(Self::new(table))
     }
@@ -118,7 +118,7 @@ impl Dataset {
     }
 
     /// Select columns by name.
-    pub fn select_columns(&self, columns: &[&str]) -> Result<Self, PolarsError> {
+    pub fn select_columns(&self, columns: &[&str]) -> Result<Self, GDSFrameError> {
         let table = self.table.select_columns(columns)?;
         Ok(Self {
             name: self.name.clone(),
@@ -127,7 +127,7 @@ impl Dataset {
     }
 
     /// Select columns using Polars expressions (py-polars style).
-    pub fn select(&self, exprs: &[Expr]) -> Result<Self, PolarsError> {
+    pub fn select(&self, exprs: &[Expr]) -> Result<Self, GDSFrameError> {
         let table = self.table.select(exprs)?;
         Ok(Self {
             name: self.name.clone(),
@@ -136,7 +136,7 @@ impl Dataset {
     }
 
     /// Select columns using a selector (py-polars style).
-    pub fn select_selector(&self, selector: &Selector) -> Result<Self, PolarsError> {
+    pub fn select_selector(&self, selector: &Selector) -> Result<Self, GDSFrameError> {
         let table = self.table.select_selector(selector)?;
         Ok(Self {
             name: self.name.clone(),
@@ -144,7 +144,7 @@ impl Dataset {
         })
     }
 
-    pub fn filter_expr(&self, predicate: Expr) -> Result<Self, PolarsError> {
+    pub fn filter_expr(&self, predicate: Expr) -> Result<Self, GDSFrameError> {
         let table = self.table.filter_expr(predicate)?;
         Ok(Self {
             name: self.name.clone(),
@@ -153,11 +153,11 @@ impl Dataset {
     }
 
     /// Python-Polars alias for filter expression.
-    pub fn filter(&self, predicate: Expr) -> Result<Self, PolarsError> {
+    pub fn filter(&self, predicate: Expr) -> Result<Self, GDSFrameError> {
         self.filter_expr(predicate)
     }
 
-    pub fn with_columns_exprs(&self, exprs: &[Expr]) -> Result<Self, PolarsError> {
+    pub fn with_columns_exprs(&self, exprs: &[Expr]) -> Result<Self, GDSFrameError> {
         let table = self.table.with_columns_exprs(exprs)?;
         Ok(Self {
             name: self.name.clone(),
@@ -166,7 +166,7 @@ impl Dataset {
     }
 
     /// Python-Polars alias for with_columns.
-    pub fn with_columns(&self, exprs: &[Expr]) -> Result<Self, PolarsError> {
+    pub fn with_columns(&self, exprs: &[Expr]) -> Result<Self, GDSFrameError> {
         self.with_columns_exprs(exprs)
     }
 
@@ -174,7 +174,7 @@ impl Dataset {
         &self,
         columns: &[&str],
         options: SortMultipleOptions,
-    ) -> Result<Self, PolarsError> {
+    ) -> Result<Self, GDSFrameError> {
         let table = self.table.order_by_columns(columns, options)?;
         Ok(Self {
             name: self.name.clone(),
@@ -187,7 +187,7 @@ impl Dataset {
         &self,
         columns: &[&str],
         options: SortMultipleOptions,
-    ) -> Result<Self, PolarsError> {
+    ) -> Result<Self, GDSFrameError> {
         self.order_by_columns(columns, options)
     }
 
@@ -195,7 +195,7 @@ impl Dataset {
         &self,
         exprs: &[Expr],
         options: SortMultipleOptions,
-    ) -> Result<Self, PolarsError> {
+    ) -> Result<Self, GDSFrameError> {
         let table = self.table.order_by_exprs(exprs, options)?;
         Ok(Self {
             name: self.name.clone(),
@@ -208,11 +208,11 @@ impl Dataset {
         &self,
         exprs: &[Expr],
         options: SortMultipleOptions,
-    ) -> Result<Self, PolarsError> {
+    ) -> Result<Self, GDSFrameError> {
         self.order_by_exprs(exprs, options)
     }
 
-    pub fn group_by_exprs(&self, keys: &[Expr], aggs: &[Expr]) -> Result<Self, PolarsError> {
+    pub fn group_by_exprs(&self, keys: &[Expr], aggs: &[Expr]) -> Result<Self, GDSFrameError> {
         let table = self.table.group_by_exprs(keys, aggs)?;
         Ok(Self {
             name: self.name.clone(),
@@ -220,7 +220,7 @@ impl Dataset {
         })
     }
 
-    pub fn group_by_columns(&self, keys: &[&str], aggs: &[Expr]) -> Result<Self, PolarsError> {
+    pub fn group_by_columns(&self, keys: &[&str], aggs: &[Expr]) -> Result<Self, GDSFrameError> {
         let table = self.table.group_by_columns(keys, aggs)?;
         Ok(Self {
             name: self.name.clone(),
@@ -229,23 +229,27 @@ impl Dataset {
     }
 
     /// Python-Polars alias for group_by columns.
-    pub fn group_by(&self, keys: &[&str], aggs: &[Expr]) -> Result<Self, PolarsError> {
+    pub fn group_by(&self, keys: &[&str], aggs: &[Expr]) -> Result<Self, GDSFrameError> {
         self.group_by_columns(keys, aggs)
     }
 
-    pub fn to_csv(&self, path: impl AsRef<Path>) -> Result<(), PolarsError> {
-        csv::write_table(path.as_ref(), &self.table, csv::CsvWriteConfig::default())
+    pub fn to_csv(&self, path: impl AsRef<Path>) -> Result<(), GDSFrameError> {
+        csv::write_table(path.as_ref(), &self.table, csv::CsvWriteConfig::default())?;
+        Ok(())
     }
 
-    pub fn to_parquet(&self, path: impl AsRef<Path>) -> Result<(), PolarsError> {
-        parquet::write_table(path.as_ref(), &self.table)
+    pub fn to_parquet(&self, path: impl AsRef<Path>) -> Result<(), GDSFrameError> {
+        parquet::write_table(path.as_ref(), &self.table)?;
+        Ok(())
     }
 
-    pub fn to_ipc(&self, path: impl AsRef<Path>) -> Result<(), PolarsError> {
-        ipc::write_table(path.as_ref(), &self.table)
+    pub fn to_ipc(&self, path: impl AsRef<Path>) -> Result<(), GDSFrameError> {
+        ipc::write_table(path.as_ref(), &self.table)?;
+        Ok(())
     }
 
-    pub fn to_json(&self, path: impl AsRef<Path>) -> Result<(), PolarsError> {
-        json::write_table(path.as_ref(), &self.table, json::JsonWriteConfig::default())
+    pub fn to_json(&self, path: impl AsRef<Path>) -> Result<(), GDSFrameError> {
+        json::write_table(path.as_ref(), &self.table, json::JsonWriteConfig::default())?;
+        Ok(())
     }
 }

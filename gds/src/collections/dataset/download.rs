@@ -6,7 +6,7 @@ use std::path::{Path, PathBuf};
 
 use reqwest::blocking::Response;
 
-use crate::collections::datasets::error::DatasetIoError;
+use crate::collections::dataset::error::DatasetIoError;
 
 #[derive(Debug, Clone)]
 pub struct DownloadReport {

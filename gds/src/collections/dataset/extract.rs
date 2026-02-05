@@ -8,7 +8,7 @@ use flate2::read::GzDecoder;
 use tar::Archive;
 use zip::ZipArchive;
 
-use crate::collections::datasets::error::DatasetIoError;
+use crate::collections::dataset::error::DatasetIoError;
 
 #[derive(Debug, Clone)]
 pub struct ExtractReport {

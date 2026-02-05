@@ -4,7 +4,7 @@
 //!   cargo run -p gds --example collections_streaming_dataset
 
 use gds::collections::dataframe::{col, lit, when, GDSDataFrame, GDSFrameError, TableBuilder};
-use gds::collections::datasets::{Dataset, StreamingDataset};
+use gds::collections::dataset::{Dataset, StreamingDataset};
 use gds::collections::extensions::streaming::StreamingConfig;
 
 fn main() -> Result<(), GDSFrameError> {

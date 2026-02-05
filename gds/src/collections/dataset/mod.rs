@@ -6,22 +6,26 @@
 //! Rust-heavy call sites.
 
 pub mod catalog;
+pub mod corpus;
 pub mod dataset;
 pub mod download;
 pub mod error;
 pub mod expr;
+pub mod expressions;
 pub mod extract;
+pub mod functions;
 pub mod io;
+pub mod namespaces;
 pub mod registry;
 pub mod streaming;
 
+// Keep the module surface small and explicitly export the core public items.
 pub use catalog::DatasetCatalog;
 pub use dataset::Dataset;
-pub use download::{
-    copy_local, download_if_missing, download_to_dir, download_url, DownloadReport,
-};
 pub use error::DatasetIoError;
-pub use extract::{extract_archive, ExtractReport};
-pub use io::detect_format_from_path;
+pub use functions::scan_text_dir;
 pub use registry::{DatasetArtifact, DatasetMetadata, DatasetRegistry, DatasetSplit};
 pub use streaming::{StreamingBatchIter, StreamingDataset};
+
+// Export specialized datasets (Corpus) as a convenience type.
+pub use corpus::Corpus;

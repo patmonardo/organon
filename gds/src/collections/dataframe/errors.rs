@@ -120,9 +120,9 @@ simple_warning!(
 );
 simple_warning!(UnstableWarning, "Unstable functionality used.");
 
-/// Unified error wrapper for GDS/Polars-facing APIs and examples.
+/// Unified error wrapper for GDS/frame-facing APIs and examples.
 #[derive(Debug, Error)]
-pub enum GDSPolarsError {
+pub enum GDSFrameError {
     #[error(transparent)]
     Polars(#[from] PolarsCoreError),
     #[error(transparent)]
@@ -145,13 +145,13 @@ pub enum GDSPolarsError {
     Message(String),
 }
 
-impl From<&str> for GDSPolarsError {
+impl From<&str> for GDSFrameError {
     fn from(value: &str) -> Self {
         Self::Message(value.to_string())
     }
 }
 
-impl From<String> for GDSPolarsError {
+impl From<String> for GDSFrameError {
     fn from(value: String) -> Self {
         Self::Message(value)
     }

@@ -2,14 +2,14 @@
 
 use std::path::{Path, PathBuf};
 
+use crate::collections::catalog::schema::CollectionsSchema;
 use crate::collections::catalog::{
     CatalogError, CollectionsCatalogDisk, CollectionsCatalogDiskEntry, CollectionsIoFormat,
     CollectionsIoPolicy,
 };
-use crate::collections::catalog::schema::CollectionsSchema;
 use crate::collections::dataframe::GDSDataFrame;
-use crate::collections::datasets::dataset::Dataset;
-use crate::collections::datasets::io::detect_format_from_path;
+use crate::collections::dataset::dataset::Dataset;
+use crate::collections::dataset::io::detect_format_from_path;
 use crate::config::CollectionsBackend;
 use crate::types::ValueType;
 
@@ -84,7 +84,9 @@ impl DatasetCatalog {
                     path, root
                 )));
             }
-            let relative = path.strip_prefix(root).map_err(|e| CatalogError::Io(e.to_string()))?;
+            let relative = path
+                .strip_prefix(root)
+                .map_err(|e| CatalogError::Io(e.to_string()))?;
             return Ok(relative.to_string_lossy().to_string());
         }
         Ok(path.to_string_lossy().to_string())

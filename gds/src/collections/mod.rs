@@ -25,7 +25,7 @@ pub mod extensions;
 pub mod catalog;
 
 // Dataset tooling (dataset registry + expr facade)
-pub mod datasets;
+pub mod dataset;
 
 // DataFrame integration
 pub mod dataframe;
@@ -48,6 +48,7 @@ pub mod adapter;
 pub use adapter::*;
 pub use catalog::*;
 pub use dataframe::*;
+// pub use dataset::*;
 pub use io::*;
 pub use plugins::*;
 pub use schema::*;
