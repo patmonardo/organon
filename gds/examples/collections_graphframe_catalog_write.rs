@@ -8,7 +8,7 @@ use std::path::PathBuf;
 use gds::collections::catalog::CollectionsIoFormat;
 use gds::collections::dataframe::GDSFrameError;
 use gds::collections::dataset::catalog::DatasetCatalog;
-use gds::collections::graphframe::write_graph_store_polars32_to_catalog;
+use gds::collections::extensions::graph::write_graph_store_polars32_to_catalog;
 use gds::types::prelude::{DefaultGraphStore, RandomGraphConfig};
 use gds::types::random::RandomRelationshipConfig;
 

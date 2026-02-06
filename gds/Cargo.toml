@@ -105,11 +105,13 @@ polars = { version = "0.52.0", features = [
     "array_count",
     "array_to_struct",
     "binary_encoding",
+    "asof_join",
 ] }
 polars-io = { version = "0.52.0" }
 polars-lazy = { version = "0.52.0" }
 polars-plan = { version = "0.52.0" }
 polars-parquet = { version = "0.52.0" }
+polars-ops = { version = "0.52.0", features = ["pivot", "to_dummies", "asof_join"] }
 arrow = { package = "polars-arrow", version = "0.52.0" }
 memmap2 = "0.5"
 arrow2 = { version = "0.18", features = ["io_ipc", "io_parquet", "io_parquet_compression"] }
@@ -131,11 +133,20 @@ tar = "0.4"
 flate2 = "1.0"
 zip = "0.6"
 regex = "1.10"
+either = "1.10"
 
 [build-dependencies]
 napi-build = "2"
 
 [features]
-default = []
+default = ["dataset", "graphframe"]
 node = ["dep:napi", "dep:napi-derive"]
 full = ["node"]
+
+# Experimental feature: enable GraphFrame (Polars-backed graph tables).
+# Keep this opt-in to avoid pulling experimental APIs into stable builds.
+graphframe = []
+
+# Experimental feature: enable Dataset APIs (Polars-backed dataset DSL).
+# Gate at the top-level so internals are unchanged, but the module is opt-in.
+dataset = []

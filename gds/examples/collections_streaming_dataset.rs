@@ -1,7 +1,8 @@
 //! Streaming Dataset example (Dataset + LazyFrame pipeline).
 //!
 //! Run with:
-//!   cargo run -p gds --example collections_streaming_dataset
+//!   cargo run -p gds --example collections_streaming_dataset --features dataset
+#![cfg(feature = "dataset")]
 
 use gds::collections::dataframe::{col, lit, when, GDSDataFrame, GDSFrameError, TableBuilder};
 use gds::collections::dataset::{Dataset, StreamingDataset};

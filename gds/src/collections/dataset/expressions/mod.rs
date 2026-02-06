@@ -4,5 +4,3 @@
 //! a dataset-level API surface layered above frames.
 
 pub mod text;
-
-pub use text::{lowercase_expr, token_count_expr, tokenize_expr};

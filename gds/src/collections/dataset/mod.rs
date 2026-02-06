@@ -16,6 +16,7 @@ pub mod extract;
 pub mod functions;
 pub mod io;
 pub mod namespaces;
+pub mod prelude;
 pub mod registry;
 pub mod streaming;
 

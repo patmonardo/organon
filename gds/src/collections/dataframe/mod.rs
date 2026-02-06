@@ -22,6 +22,9 @@ pub mod streaming;
 pub mod table;
 pub mod utils;
 
+pub mod macros;
+pub mod prelude;
+
 pub use array::*;
 pub use column::*;
 pub use datatype_expr::*;

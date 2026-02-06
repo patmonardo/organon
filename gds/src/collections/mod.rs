@@ -25,12 +25,18 @@ pub mod extensions;
 pub mod catalog;
 
 // Dataset tooling (dataset registry + expr facade)
+// Experimental: opt-in at top-level to avoid pulling dataset DSL into stable builds.
+// Enable with the crate feature "dataset". The module internals remain unchanged.
+#[cfg(feature = "dataset")]
 pub mod dataset;
 
 // DataFrame integration
 pub mod dataframe;
 
 // GraphFrame integration (Polars-backed graph tables)
+// Experimental: keep module available but gate compilation via a Cargo feature.
+// Control public surface inside the module itself to avoid polluting top-level API.
+#[cfg(feature = "graphframe")]
 pub mod graphframe;
 
 // IO system
@@ -48,8 +54,15 @@ pub mod adapter;
 pub use adapter::*;
 pub use catalog::*;
 pub use dataframe::*;
-// pub use dataset::*;
-// pub use graphframe::*;
+// NOTE: `dataset` is a DSL and may introduce name clashes if globally re-exported.
+// Keep it as a top-level module (pub mod dataset) but do NOT glob re-export its
+// contents here. Access dataset APIs via `crate::collections::dataset::...` or
+// add selective, stable re-exports here as specific symbols land in the public API.
+
+// GraphFrame is experimental/inactive: do NOT glob re-export to avoid top-level pollution.
+// It is kept behind a feature gate ("graphframe") and its API surface should be
+// controlled inside `crate::collections::graphframe`.
+
 pub use io::*;
 pub use schema::*;
 pub use traits::*;
