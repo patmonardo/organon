@@ -67,11 +67,11 @@ impl ExprNamespace {
         ExprString::new(self.expr.clone())
     }
 
-    pub fn struct_(&self) -> ExprStruct {
+    pub fn structure(&self) -> ExprStruct {
         ExprStruct::new(self.expr.clone())
     }
 
     pub fn record(&self) -> ExprStruct {
-        self.struct_()
+        self.structure()
     }
 }

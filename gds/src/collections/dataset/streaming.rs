@@ -3,6 +3,8 @@
 use polars::prelude::{DataFrame, LazyFrame};
 
 use crate::collections::dataframe::GDSStreamingFrame;
+use crate::collections::dataset::feature::Feature;
+use crate::collections::dataset::plan::{Plan, Step};
 use crate::collections::dataset::Dataset;
 use crate::collections::extensions::streaming::{
     StreamingConfig, StreamingError, StreamingSupport,
@@ -41,6 +43,28 @@ impl StreamingDataset {
     {
         self.transform = Some(Box::new(transform));
         self
+    }
+
+    /// Treat a `Plan` as a streaming "model": apply it to each batch.
+    ///
+    /// Notes:
+    /// - Only tabular steps are applied (`filter`, `select`, `with_columns`, `item`).
+    /// - If the plan contains a `batch(n)` hint, this sets the batch size.
+    pub fn with_plan(mut self, plan: &Plan) -> Self {
+        if let Some(n) = plan.steps().iter().rev().find_map(|s| match s {
+            Step::Batch(n) => Some(*n),
+            _ => None,
+        }) {
+            self.batch_size = n.max(1);
+        }
+
+        self.transform = Some(plan.to_streaming_transform());
+        self
+    }
+
+    /// Treat a `Feature` as a streaming feature processor.
+    pub fn with_feature(self, feature: &Feature) -> Self {
+        self.with_plan(feature.plan())
     }
 
     pub fn transform(&self) -> Option<&(dyn Fn(LazyFrame) -> LazyFrame + Send + Sync)> {

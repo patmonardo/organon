@@ -51,7 +51,8 @@ fn run() -> Result<(), GDSFrameError> {
         &root,
         graph_name,
         CollectionsIoFormat::Parquet,
-    )?;
+    )
+    .map_err(|err| GDSFrameError::from(err.to_string()))?;
 
     println!(
         "Wrote GraphFrame tables: nodes={}, edges={}, graph={}",

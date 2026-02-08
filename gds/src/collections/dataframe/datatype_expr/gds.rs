@@ -66,7 +66,7 @@ impl GDSDataTypeExpr {
         DataTypeExprArrNameSpace::new(self.expr.clone())
     }
 
-    pub fn struct_(&self) -> DataTypeExprStructNameSpace {
+    pub fn structure(&self) -> DataTypeExprStructNameSpace {
         DataTypeExprStructNameSpace::new(self.expr.clone())
     }
 

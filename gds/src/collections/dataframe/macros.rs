@@ -33,6 +33,7 @@ macro_rules! lit {
 /// - `expr!(col)` expands to `col("col")`.
 /// - `expr!(1)` expands to `lit(1)`.
 /// - `expr!(a + b)` expands recursively to `(expr!(a) + expr!(b))`.
+/// - Chained arithmetic is left-associative; use parentheses for precedence.
 /// - Parentheses are supported: `expr!((a * 2.0))`.
 #[macro_export]
 macro_rules! expr {
@@ -47,6 +48,19 @@ macro_rules! expr {
     // Parenthesized group
     ( ( $($inner:tt)+ ) ) => {
         $crate::expr!($($inner)+)
+    };
+    // Left-associative chaining for arithmetic
+    ($lhs:tt + $rhs:tt $($rest:tt)+) => {
+        $crate::expr!(($lhs + $rhs) $($rest)+)
+    };
+    ($lhs:tt - $rhs:tt $($rest:tt)+) => {
+        $crate::expr!(($lhs - $rhs) $($rest)+)
+    };
+    ($lhs:tt * $rhs:tt $($rest:tt)+) => {
+        $crate::expr!(($lhs * $rhs) $($rest)+)
+    };
+    ($lhs:tt / $rhs:tt $($rest:tt)+) => {
+        $crate::expr!(($lhs / $rhs) $($rest)+)
     };
     // Relational operators -> call the corresponding method on Expr
     ($lhs:tt > $rhs:tt) => {
@@ -73,9 +87,13 @@ macro_rules! expr {
     };
 }
 
-/// Scheme-style prefix expression macro. Use `s!(+ a b)` as sugar for
-/// `expr!(a) + expr!(b)`, and support common arithmetic and comparison
-/// operators. Nested forms are supported via parenthesized groups.
+/// Prefix expression macro for concise arithmetic and comparisons.
+///
+/// Examples:
+/// ```rust
+/// let a = s!(+ score 2.0);
+/// let b = s!(> score 20.0);
+/// ```
 #[macro_export]
 macro_rules! s {
     // parenthesized group -> recurse
@@ -183,7 +201,7 @@ macro_rules! tbl_def {
 
 // Simpler unambiguous table builder macro that uses parenthesized column specs.
 // Example:
-// tbl_simple!(
+// tbl_def!(
 //   (id: i64 => [1,2,3]),
 //   (score: f64 => [1.0,2.0]),
 //   (group: ["A","B"]),
@@ -394,6 +412,15 @@ macro_rules! sel {
     (temporal) => {
         $crate::collections::dataframe::selector_temporal()
     };
+    (struct) => {
+        $crate::collections::dataframe::selectors::structure()
+    };
+    (structure) => {
+        $crate::collections::dataframe::selectors::structure()
+    };
+    (record) => {
+        $crate::collections::dataframe::selectors::record()
+    };
     (starts_with($prefix:expr)) => {
         $crate::collections::dataframe::selector_starts_with($prefix)
     };
@@ -401,7 +428,8 @@ macro_rules! sel {
         $crate::collections::dataframe::selector_contains($needle)
     };
     (matches($pattern:expr)) => {
-        $crate::collections::dataframe::selector_matches($pattern)?
+        $crate::collections::dataframe::selector_matches($pattern)
+            .expect("sel!(matches(...)) requires a valid regex")
     };
     (by_dtype([ $( $dtype:ident $( ( $($args:tt)* ) )? ),* $(,)? ])) => {
         $crate::collections::dataframe::selector_by_dtype(&[

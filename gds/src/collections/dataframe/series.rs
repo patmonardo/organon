@@ -74,12 +74,12 @@ impl GDSSeries {
         DateTimeNameSpace::new(self.series.clone())
     }
 
-    pub fn struct_(&self) -> StructNameSpace {
+    pub fn structure(&self) -> StructNameSpace {
         StructNameSpace::new(self.series.clone())
     }
 
     pub fn record(&self) -> StructNameSpace {
-        self.struct_()
+        self.structure()
     }
 
     pub fn arr(&self) -> ArrayNameSpace {

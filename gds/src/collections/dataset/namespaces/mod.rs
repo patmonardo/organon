@@ -8,6 +8,9 @@ use once_cell::sync::Lazy;
 use std::collections::HashSet;
 use std::sync::RwLock;
 
+pub mod feature;
+pub mod tree;
+
 /// Errors raised during namespace registration.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum NameSpaceError {
@@ -28,7 +31,8 @@ impl NameSpaceRegistry {
 static DATASET_NAMESPACE_REGISTRY: Lazy<RwLock<NameSpaceRegistry>> =
     Lazy::new(|| RwLock::new(NameSpaceRegistry::default()));
 
-const RESERVED_DATASET_NAMESPACES: &[&str] = &["corpus", "text", "image", "audio", "tabular"];
+const RESERVED_DATASET_NAMESPACES: &[&str] =
+    &["corpus", "text", "image", "audio", "tabular", "tree"];
 
 /// Helper to register the canonical `corpus` namespace.
 pub fn register_corpus_namespace() -> Result<(), NameSpaceError> {

@@ -8,6 +8,10 @@ use std::path::Path;
 use crate::collections::dataframe::GDSFrameError;
 use crate::collections::dataset::corpus::Corpus;
 
+pub mod feature;
+pub mod model;
+pub mod tree;
+
 /// Scan a directory for text files (non-recursive) and build a `Corpus`.
 /// Only regular files are considered; file contents are read as UTF-8.
 pub fn scan_text_dir(path: impl AsRef<Path>) -> Result<Corpus, GDSFrameError> {

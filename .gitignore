@@ -58,5 +58,6 @@ graphstore-jsx-prototype/
 gdl-to-pdf/
 tools/reports/
 gds/src/polars
+gds/src/nltk
 
 

@@ -125,12 +125,12 @@ impl SeriesExpr {
         SeriesExprBinary::new(self.series.clone())
     }
 
-    pub fn struct_(&self) -> SeriesExprStruct {
+    pub fn structure(&self) -> SeriesExprStruct {
         SeriesExprStruct::new(self.series.clone())
     }
 
     pub fn record(&self) -> SeriesExprStruct {
-        self.struct_()
+        self.structure()
     }
 
     pub fn cat(&self) -> SeriesExprCategorical {

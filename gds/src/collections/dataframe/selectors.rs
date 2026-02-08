@@ -328,13 +328,13 @@ pub fn array() -> Selector {
 }
 
 /// Select struct columns.
-pub fn struct_() -> Selector {
+pub fn structure() -> Selector {
     Selector::Struct
 }
 
 /// Select struct columns.
 pub fn record() -> Selector {
-    struct_()
+    structure()
 }
 
 /// Select nested columns (list/array/struct).
