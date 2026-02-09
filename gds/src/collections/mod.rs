@@ -27,7 +27,6 @@ pub mod catalog;
 // Dataset tooling (dataset registry + expr facade)
 // Experimental: opt-in at top-level to avoid pulling dataset DSL into stable builds.
 // Enable with the crate feature "dataset". The module internals remain unchanged.
-#[cfg(feature = "dataset")]
 pub mod dataset;
 
 // DataFrame integration
@@ -38,6 +37,9 @@ pub mod dataframe;
 // Control public surface inside the module itself to avoid polluting top-level API.
 #[cfg(feature = "graphframe")]
 pub mod graphframe;
+
+// StatFrame integration (statistical ML surfaces)
+pub mod statframe;
 
 // IO system
 pub mod io;

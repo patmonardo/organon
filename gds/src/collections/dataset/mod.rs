@@ -13,23 +13,34 @@ pub mod error;
 pub mod expr;
 pub mod expressions;
 pub mod extract;
+pub mod featstruct;
 pub mod feature;
 pub mod functions;
 pub mod io;
+pub mod r#macro;
 pub mod model;
 pub mod namespace;
 pub mod namespaces;
+pub mod parse;
 pub mod plan;
 pub mod prelude;
 pub mod registry;
 pub mod schema;
+pub mod stem;
 pub mod streaming;
+pub mod tag;
+pub mod token;
 pub mod tree;
 
 // Keep the module surface small and explicitly export the core public items.
 pub use catalog::DatasetCatalog;
 pub use dataset::Dataset;
 pub use error::DatasetIoError;
+pub use featstruct::{
+    format_featstruct, parse_featstruct, parse_featvalue, subsumes_featstruct, unify_featstruct,
+    FeatBindings, FeatDict, FeatList, FeatPath, FeatPathSegment, FeatReentranceId, FeatStruct,
+    FeatStructParseError, FeatStructSet, FeatValue,
+};
 pub use feature::{Feature, FeatureSpace, FeatureView};
 pub use feature::{
     FeatureCondition, FeatureExpr, FeatureExprNameSpace, FeatureNamespace, FeaturePath,
@@ -45,18 +56,30 @@ pub use functions::model::preprocessing::{
     padded_everygrams,
 };
 pub use functions::scan_text_dir;
-pub use model::ModelWithFeatures;
+pub use model::{
+    Model, ModelAttributeUpdate, ModelContext, ModelDelta, ModelId, ModelKind, ModelReport,
+    ModelResult, ModelScore, ModelSpec, ModelState, ModelView, NoOpLanguageModel, NoOpParser,
+    NoOpTagger,
+};
 pub use namespace::{
     DatasetLazyFrameNameSpace, FeatureLazyFrameNameSpace, LazyFrameDatasetExt,
     TreeLazyFrameNameSpace,
 };
+pub use namespaces::dataset::DatasetNs;
+pub use parse::{Parse, ParseForest, ParseKind};
 pub use plan::{EvalMode as DatasetEvalMode, Plan as DatasetPlan, PlanEnv, PlanError};
 pub use registry::{DatasetArtifact, DatasetMetadata, DatasetRegistry, DatasetSplit};
 pub use schema::FeatureSchema;
+pub use stem::{Stem, StemKind};
 pub use streaming::{StreamingBatchIter, StreamingDataset};
+pub use tag::Tag;
+pub use token::{Token, TokenKind, TokenSpan};
 pub use tree::{
-    TreeCollection, TreeExpr, TreeId, TreeIndex, TreeLeafExpr, TreeLeafValue, TreeNamespace,
-    TreeNode, TreeOp, TreePos, TreeSeries, TreeSeriesNameSpace, TreeSpan, TreeValue,
+    format_bracketed, format_pretty, parse_bracketed, MultiParentedIndex, MultiParentedNode,
+    MultiParentedTree, MultiParentedValue, ParentedIndex, ParentedNode, ParentedTree,
+    ParentedValue, ProbabilisticTree, TreeCollection, TreeExpr, TreeId, TreeIndex, TreeLeafExpr,
+    TreeLeafValue, TreeNamespace, TreeNode, TreeOp, TreeParseError, TreePos, TreeSeries,
+    TreeSeriesNameSpace, TreeSpan, TreeTraversal, TreeValue,
 };
 
 // Export specialized datasets (Corpus) as a convenience type.

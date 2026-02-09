@@ -174,11 +174,27 @@ macro_rules! tpos {
     };
 }
 
+/// Tree root position expression builder.
+#[macro_export]
+macro_rules! troot {
+    () => {
+        $crate::collections::dataset::tree::pos_expr(Vec::<usize>::new())
+    };
+}
+
 /// Tree span expression builder.
 #[macro_export]
 macro_rules! tspan {
     ($start:expr, $end:expr $(,)?) => {
         $crate::collections::dataset::tree::span_expr($start as usize, $end as usize)
+    };
+}
+
+/// Tree transform expression builder.
+#[macro_export]
+macro_rules! ttransform {
+    ($input:expr, $op:expr $(,)?) => {
+        $crate::collections::dataset::tree::transform_expr($input, $op)
     };
 }
 
@@ -252,6 +268,7 @@ macro_rules! fexpr {
 ///
 /// Grammar (minimal):
 /// - `plan!(-> X (filter score > 20.0) (select id, (score * 2.0) as "score_x2") (item id: id, score: score))`
+/// - `plan!(-> (my_dataset()) (filter score > 20.0))`
 ///
 /// Notes:
 /// - `X` is a dataset variable bound in a `PlanEnv`.
@@ -266,7 +283,7 @@ macro_rules! plan {
         $( __p = $crate::plan!(@step __p, $op $($args)*); )*
         __p
     }};
-    (-> $src:expr $( ( $op:ident $($args:tt)* ) )* $(,)?) => {{
+    (-> ( $src:expr ) $( ( $op:ident $($args:tt)* ) )* $(,)?) => {{
         let mut __p = $crate::collections::dataset::plan::Plan::new(
             $crate::collections::dataset::plan::Source::Value($src),
         );

@@ -59,5 +59,10 @@ gdl-to-pdf/
 tools/reports/
 gds/src/polars
 gds/src/nltk
+gds/src/skrub
+gds/src/sklearn
+gds/src/lightning
+gds/src/litdata
+gds/src/pytorch_geometric
 
 

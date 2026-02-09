@@ -28,9 +28,7 @@ pub fn scan_text_dir(path: impl AsRef<Path>) -> Result<Corpus, GDSFrameError> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::collections::dataset::corpus::Corpus;
     use std::fs::{create_dir_all, remove_dir_all, write};
-    use std::path::PathBuf;
 
     #[test]
     fn test_scan_text_dir() {

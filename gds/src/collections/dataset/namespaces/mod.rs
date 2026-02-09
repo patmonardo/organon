@@ -8,6 +8,7 @@ use once_cell::sync::Lazy;
 use std::collections::HashSet;
 use std::sync::RwLock;
 
+pub mod dataset;
 pub mod feature;
 pub mod tree;
 

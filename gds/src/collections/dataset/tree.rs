@@ -6,8 +6,9 @@
 use std::collections::BTreeMap;
 
 use crate::collections::dataset::expressions::tree as tree_expr;
-use crate::collections::dataset::functions::tree::transform;
+use crate::collections::dataset::functions::tree::{format, inspect, pretty, transform};
 use crate::collections::dataset::namespaces::tree::TreeNs;
+use crate::collections::dataset::tag::Tag;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct TreeId(pub u64);
@@ -34,6 +35,361 @@ pub enum TreeLeafValue {
     Bool(bool),
     BytesRange { start: usize, end: usize },
     Empty,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct ProbabilisticTree {
+    tree: TreeValue,
+    prob: f64,
+}
+
+impl ProbabilisticTree {
+    pub fn new(tree: TreeValue, prob: f64) -> Self {
+        Self { tree, prob }
+    }
+
+    pub fn tree(&self) -> &TreeValue {
+        &self.tree
+    }
+
+    pub fn into_tree(self) -> TreeValue {
+        self.tree
+    }
+
+    pub fn prob(&self) -> f64 {
+        self.prob
+    }
+
+    pub fn with_prob(mut self, prob: f64) -> Self {
+        self.prob = prob;
+        self
+    }
+
+    pub fn copy(&self) -> Self {
+        Self {
+            tree: self.tree.clone(),
+            prob: self.prob,
+        }
+    }
+
+    pub fn convert(tree: &TreeValue, prob: f64) -> Self {
+        Self {
+            tree: tree.clone(),
+            prob,
+        }
+    }
+
+    pub fn format_bracketed(&self) -> String {
+        self.tree.format_bracketed()
+    }
+
+    pub fn format_pretty(&self, indent: usize) -> String {
+        self.tree.format_pretty(indent)
+    }
+
+    pub fn pretty_print(&self, options: pretty::PrettyOptions) -> String {
+        pretty::pretty_print(&self.tree, options)
+    }
+}
+
+impl PartialOrd for ProbabilisticTree {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        let a = self.format_bracketed();
+        let b = other.format_bracketed();
+        match a.partial_cmp(&b) {
+            Some(std::cmp::Ordering::Equal) => Some(self.prob.total_cmp(&other.prob)),
+            other => other,
+        }
+    }
+}
+
+impl ProbabilisticTree {
+    pub fn compare(&self, other: &Self) -> std::cmp::Ordering {
+        let a = self.format_bracketed();
+        let b = other.format_bracketed();
+        match a.cmp(&b) {
+            std::cmp::Ordering::Equal => self.prob.total_cmp(&other.prob),
+            other => other,
+        }
+    }
+}
+
+impl std::fmt::Display for ProbabilisticTree {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{} (p={:.6})", self.format_bracketed(), self.prob)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub struct ParentedIndex(pub usize);
+
+#[derive(Debug, Clone)]
+pub struct ParentedTree {
+    nodes: Vec<ParentedNode>,
+    root: ParentedIndex,
+}
+
+#[derive(Debug, Clone)]
+pub struct ParentedNode {
+    value: ParentedValue,
+    parent: Option<ParentedIndex>,
+}
+
+#[derive(Debug, Clone)]
+pub enum ParentedValue {
+    Node {
+        label: tree_expr::TreeLabel,
+        children: Vec<ParentedIndex>,
+    },
+    Leaf(TreeLeafValue),
+}
+
+impl ParentedTree {
+    pub fn from_tree(tree: &TreeValue) -> Self {
+        let mut nodes = Vec::new();
+        let root = build_parented(tree, None, &mut nodes);
+        Self { nodes, root }
+    }
+
+    pub fn root(&self) -> ParentedIndex {
+        self.root
+    }
+
+    pub fn get(&self, index: ParentedIndex) -> Option<&ParentedNode> {
+        self.nodes.get(index.0)
+    }
+
+    pub fn parent(&self, index: ParentedIndex) -> Option<ParentedIndex> {
+        self.get(index).and_then(|node| node.parent)
+    }
+
+    pub fn parent_index(&self, index: ParentedIndex) -> Option<usize> {
+        let parent = self.parent(index)?;
+        let parent_node = self.get(parent)?;
+        match &parent_node.value {
+            ParentedValue::Node { children, .. } => {
+                children.iter().position(|child| *child == index)
+            }
+            ParentedValue::Leaf(_) => None,
+        }
+    }
+
+    pub fn left_sibling(&self, index: ParentedIndex) -> Option<ParentedIndex> {
+        let parent = self.parent(index)?;
+        let parent_node = self.get(parent)?;
+        if let ParentedValue::Node { children, .. } = &parent_node.value {
+            let pos = children.iter().position(|child| *child == index)?;
+            if pos > 0 {
+                return Some(children[pos - 1]);
+            }
+        }
+        None
+    }
+
+    pub fn right_sibling(&self, index: ParentedIndex) -> Option<ParentedIndex> {
+        let parent = self.parent(index)?;
+        let parent_node = self.get(parent)?;
+        if let ParentedValue::Node { children, .. } = &parent_node.value {
+            let pos = children.iter().position(|child| *child == index)?;
+            if pos + 1 < children.len() {
+                return Some(children[pos + 1]);
+            }
+        }
+        None
+    }
+
+    pub fn treeposition(&self, index: ParentedIndex) -> Vec<usize> {
+        let mut path = Vec::new();
+        let mut current = index;
+        while let Some(parent) = self.parent(current) {
+            if let Some(pos) = self.parent_index(current) {
+                path.push(pos);
+            }
+            current = parent;
+        }
+        path.reverse();
+        path
+    }
+}
+
+impl ParentedNode {
+    pub fn value(&self) -> &ParentedValue {
+        &self.value
+    }
+
+    pub fn parent(&self) -> Option<ParentedIndex> {
+        self.parent
+    }
+
+    pub fn children(&self) -> Option<&[ParentedIndex]> {
+        match &self.value {
+            ParentedValue::Node { children, .. } => Some(children),
+            ParentedValue::Leaf(_) => None,
+        }
+    }
+
+    pub fn label(&self) -> Option<&str> {
+        match &self.value {
+            ParentedValue::Node { label, .. } => Some(label),
+            ParentedValue::Leaf(_) => None,
+        }
+    }
+}
+
+fn build_parented(
+    tree: &TreeValue,
+    parent: Option<ParentedIndex>,
+    nodes: &mut Vec<ParentedNode>,
+) -> ParentedIndex {
+    let index = ParentedIndex(nodes.len());
+    let value = match tree {
+        TreeValue::Leaf(value) => ParentedValue::Leaf(value.clone()),
+        TreeValue::Node(node) => {
+            let mut children = Vec::new();
+            for child in node.children() {
+                let child_index = build_parented(child, Some(index), nodes);
+                children.push(child_index);
+            }
+            ParentedValue::Node {
+                label: node.label().to_string(),
+                children,
+            }
+        }
+    };
+    nodes.push(ParentedNode { value, parent });
+    index
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub struct MultiParentedIndex(pub usize);
+
+#[derive(Debug, Clone)]
+pub struct MultiParentedTree {
+    nodes: Vec<MultiParentedNode>,
+    root: MultiParentedIndex,
+}
+
+#[derive(Debug, Clone)]
+pub struct MultiParentedNode {
+    value: MultiParentedValue,
+    parents: Vec<MultiParentedIndex>,
+}
+
+#[derive(Debug, Clone)]
+pub enum MultiParentedValue {
+    Node {
+        label: tree_expr::TreeLabel,
+        children: Vec<MultiParentedIndex>,
+    },
+    Leaf(TreeLeafValue),
+}
+
+impl MultiParentedTree {
+    pub fn from_tree(tree: &TreeValue) -> Self {
+        let mut nodes = Vec::new();
+        let root = build_multi_parented(tree, None, &mut nodes);
+        Self { nodes, root }
+    }
+
+    pub fn root(&self) -> MultiParentedIndex {
+        self.root
+    }
+
+    pub fn get(&self, index: MultiParentedIndex) -> Option<&MultiParentedNode> {
+        self.nodes.get(index.0)
+    }
+
+    pub fn parents(&self, index: MultiParentedIndex) -> &[MultiParentedIndex] {
+        self.get(index)
+            .map(|node| node.parents.as_slice())
+            .unwrap_or(&[])
+    }
+
+    pub fn parent_indices(
+        &self,
+        index: MultiParentedIndex,
+        parent: MultiParentedIndex,
+    ) -> Vec<usize> {
+        let mut out = Vec::new();
+        let parent_node = match self.get(parent) {
+            Some(node) => node,
+            None => return out,
+        };
+        if let MultiParentedValue::Node { children, .. } = &parent_node.value {
+            for (pos, child) in children.iter().enumerate() {
+                if *child == index {
+                    out.push(pos);
+                }
+            }
+        }
+        out
+    }
+
+    pub fn roots(&self) -> Vec<MultiParentedIndex> {
+        self.nodes
+            .iter()
+            .enumerate()
+            .filter_map(|(idx, node)| {
+                if node.parents.is_empty() {
+                    Some(MultiParentedIndex(idx))
+                } else {
+                    None
+                }
+            })
+            .collect()
+    }
+}
+
+impl MultiParentedNode {
+    pub fn value(&self) -> &MultiParentedValue {
+        &self.value
+    }
+
+    pub fn parents(&self) -> &[MultiParentedIndex] {
+        &self.parents
+    }
+
+    pub fn children(&self) -> Option<&[MultiParentedIndex]> {
+        match &self.value {
+            MultiParentedValue::Node { children, .. } => Some(children),
+            MultiParentedValue::Leaf(_) => None,
+        }
+    }
+
+    pub fn label(&self) -> Option<&str> {
+        match &self.value {
+            MultiParentedValue::Node { label, .. } => Some(label),
+            MultiParentedValue::Leaf(_) => None,
+        }
+    }
+}
+
+fn build_multi_parented(
+    tree: &TreeValue,
+    parent: Option<MultiParentedIndex>,
+    nodes: &mut Vec<MultiParentedNode>,
+) -> MultiParentedIndex {
+    let index = MultiParentedIndex(nodes.len());
+    let value = match tree {
+        TreeValue::Leaf(value) => MultiParentedValue::Leaf(value.clone()),
+        TreeValue::Node(node) => {
+            let mut children = Vec::new();
+            for child in node.children() {
+                let child_index = build_multi_parented(child, Some(index), nodes);
+                children.push(child_index);
+            }
+            MultiParentedValue::Node {
+                label: node.label().to_string(),
+                children,
+            }
+        }
+    };
+    let mut parents = Vec::new();
+    if let Some(parent) = parent {
+        parents.push(parent);
+    }
+    nodes.push(MultiParentedNode { value, parents });
+    index
 }
 
 impl TreeNode {
@@ -109,6 +465,78 @@ impl TreeValue {
         } else {
             None
         }
+    }
+
+    pub fn leaves(&self) -> Vec<TreeLeafValue> {
+        inspect::leaves(self)
+    }
+
+    pub fn height(&self) -> usize {
+        inspect::height(self)
+    }
+
+    pub fn treepositions_preorder(&self) -> Vec<tree_expr::TreePos> {
+        inspect::treepositions(self, inspect::TreeTraversal::PreOrder)
+    }
+
+    pub fn treepositions_postorder(&self) -> Vec<tree_expr::TreePos> {
+        inspect::treepositions(self, inspect::TreeTraversal::PostOrder)
+    }
+
+    pub fn treepositions_bothorder(&self) -> Vec<tree_expr::TreePos> {
+        inspect::treepositions(self, inspect::TreeTraversal::BothOrder)
+    }
+
+    pub fn treepositions_leaves(&self) -> Vec<tree_expr::TreePos> {
+        inspect::treepositions(self, inspect::TreeTraversal::Leaves)
+    }
+
+    pub fn leaf_treeposition(&self, index: usize) -> Option<tree_expr::TreePos> {
+        inspect::leaf_treeposition(self, index)
+    }
+
+    pub fn treeposition_spanning_leaves(
+        &self,
+        start: usize,
+        end: usize,
+    ) -> Option<tree_expr::TreePos> {
+        inspect::treeposition_spanning_leaves(self, start, end)
+    }
+
+    pub fn format_bracketed(&self) -> String {
+        format::format_bracketed(self)
+    }
+
+    pub fn format_pretty(&self, indent: usize) -> String {
+        format::format_pretty(self, indent)
+    }
+
+    pub fn pretty_print(&self, options: pretty::PrettyOptions) -> String {
+        pretty::pretty_print(self, options)
+    }
+
+    pub fn align_tags_by_index(&self, tags: &[Tag]) -> Vec<Option<Tag>> {
+        self.leaves()
+            .into_iter()
+            .map(|leaf| match leaf {
+                TreeLeafValue::TokenIndex(index) => tags.get(index).cloned(),
+                _ => None,
+            })
+            .collect()
+    }
+
+    pub fn align_tags_by_span(&self, tags: &[Tag]) -> Vec<Option<Tag>> {
+        self.leaves()
+            .into_iter()
+            .map(|leaf| match leaf {
+                TreeLeafValue::TokenIndex(index) => tags.get(index).cloned(),
+                TreeLeafValue::BytesRange { start, end } => tags
+                    .iter()
+                    .find(|tag| tag.span().start() == start && tag.span().end() == end)
+                    .cloned(),
+                _ => None,
+            })
+            .collect()
     }
 }
 
@@ -334,4 +762,8 @@ pub use crate::collections::dataset::expressions::tree::{
     TreeExpr, TreeLabel, TreeLeafExpr, TreeOp, TreePos, TreeSpan,
 };
 pub use crate::collections::dataset::functions::tree as tree_fn;
+pub use crate::collections::dataset::functions::tree::format::{format_bracketed, format_pretty};
+pub use crate::collections::dataset::functions::tree::inspect::TreeTraversal;
+pub use crate::collections::dataset::functions::tree::parse::{parse_bracketed, TreeParseError};
+pub use crate::collections::dataset::functions::tree::pretty::{pretty_print, PrettyOptions};
 pub use crate::collections::dataset::namespaces::tree::TreeNs as TreeNamespace;
