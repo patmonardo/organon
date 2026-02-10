@@ -6,6 +6,7 @@
 use std::collections::BTreeMap;
 
 use crate::collections::dataset::expressions::tree as tree_expr;
+use crate::collections::dataset::featstruct::FeatStruct;
 use crate::collections::dataset::functions::tree::{format, inspect, pretty, transform};
 use crate::collections::dataset::namespaces::tree::TreeNs;
 use crate::collections::dataset::tag::Tag;
@@ -19,6 +20,7 @@ pub struct TreeNode {
     children: Vec<TreeValue>,
     span: Option<tree_expr::TreeSpan>,
     id: Option<TreeId>,
+    attributes: Option<FeatStruct>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -399,6 +401,7 @@ impl TreeNode {
             children,
             span: None,
             id: None,
+            attributes: None,
         }
     }
 
@@ -428,8 +431,17 @@ impl TreeNode {
         self.id
     }
 
+    pub fn attributes(&self) -> Option<&FeatStruct> {
+        self.attributes.as_ref()
+    }
+
     pub fn with_children(mut self, children: Vec<TreeValue>) -> Self {
         self.children = children;
+        self
+    }
+
+    pub fn with_attributes(mut self, attributes: FeatStruct) -> Self {
+        self.attributes = Some(attributes);
         self
     }
 }

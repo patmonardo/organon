@@ -11,6 +11,9 @@
 pub use crate::collections::dataset::catalog::DatasetCatalog;
 pub use crate::collections::dataset::corpus::Corpus;
 pub use crate::collections::dataset::dataset::Dataset;
+pub use crate::collections::dataset::dependency::{
+    DependencyEdge, DependencyGraph, DependencyNode,
+};
 
 // Plan / DataOps (lazy computation graphs)
 pub use crate::collections::dataset::plan::{EvalMode, Plan, PlanEnv, PlanError, Source, Step};
@@ -26,6 +29,9 @@ pub use crate::collections::dataset::model::{
     ModelResult, ModelScore, ModelSpec, ModelState, ModelView, NoOpLanguageModel, NoOpParser,
     NoOpTagger,
 };
+
+// Metrics
+pub use crate::collections::dataset::metrics::{BinaryMetrics, MetricError};
 
 // Language model helpers
 pub use crate::collections::dataset::functions::model::lm::{
@@ -49,8 +55,25 @@ pub use crate::collections::dataset::token::{Token, TokenKind, TokenSpan};
 // Stem surface
 pub use crate::collections::dataset::stem::{Stem, StemKind};
 
+// Stemmer surface
+pub use crate::collections::dataset::stemmer::{
+    IdentityStemmer, LowercaseStemmer, SimpleSuffixStemmer, Stemmer,
+};
+
+// Tokenizer
+pub use crate::collections::dataset::tokenizer::{
+    BlanklineTokenizer, CharTokenizer, JsonTokenizer, LineBlankMode, LineTokenizer,
+    MarkupTokenizer, RegexpTokenizer, SExprTokenizer, SpaceTokenizer, StringSplitTokenizer,
+    TabTokenizer, Tokenizer, WhitespaceTokenizer, WordPunctTokenizer,
+};
+
 // Parse surface
 pub use crate::collections::dataset::parse::{Parse, ParseForest, ParseKind};
+
+// Parser surface
+pub use crate::collections::dataset::parser::{
+    BracketedParser, DependencyParser, FlatParser, JsonParser, MarkupParser, Parser,
+};
 
 // Feature structure surface
 pub use crate::collections::dataset::featstruct::{
@@ -61,6 +84,11 @@ pub use crate::collections::dataset::featstruct::{
 
 // Tag surface
 pub use crate::collections::dataset::tag::Tag;
+
+// Tagger surface
+pub use crate::collections::dataset::tagger::{
+    DefaultTagger, LookupTagger, RegexTagger, Tagger, UnigramTagger,
+};
 
 // Tree surface (namespace + collection)
 pub use crate::collections::dataset::tree::{

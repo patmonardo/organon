@@ -10,6 +10,14 @@ use polars::prelude::{NamedFrom, PlSmallStr, Series};
 use crate::collections::dataframe::GDSDataFrame;
 use crate::collections::dataframe::GDSFrameError;
 use crate::collections::dataset::dataset::Dataset;
+use crate::collections::dataset::parse::ParseForest;
+use crate::collections::dataset::parser::Parser;
+use crate::collections::dataset::stem::Stem;
+use crate::collections::dataset::stemmer::Stemmer;
+use crate::collections::dataset::tag::Tag;
+use crate::collections::dataset::tagger::Tagger;
+use crate::collections::dataset::token::Token;
+use crate::collections::dataset::tokenizer::Tokenizer;
 
 /// Text Corpus: a single-column dataset with `text` column.
 #[derive(Debug, Clone)]
@@ -83,5 +91,68 @@ impl Corpus {
         }
 
         Ok(Series::new(PlSmallStr::from_static("token_count"), counts))
+    }
+
+    /// Tokenize each document with a pluggable tokenizer.
+    pub fn tokenize<T: Tokenizer>(&self, tokenizer: &T) -> Result<Vec<Vec<Token>>, GDSFrameError> {
+        let df = self.dataset.table().dataframe().clone();
+        let series = df
+            .column("text")?
+            .as_series()
+            .ok_or_else(|| GDSFrameError::from("column is not a Series"))?;
+
+        let mut out = Vec::with_capacity(series.len());
+        for i in 0..series.len() {
+            let av = series.get(i)?;
+            let s = av.to_string();
+            if s == "null" {
+                out.push(Vec::new());
+            } else {
+                out.push(tokenizer.tokenize(&s));
+            }
+        }
+        Ok(out)
+    }
+
+    /// Stem each document using the provided tokenizer and stemmer.
+    pub fn stem<T: Tokenizer, S: Stemmer>(
+        &self,
+        tokenizer: &T,
+        stemmer: &S,
+    ) -> Result<Vec<Vec<Stem>>, GDSFrameError> {
+        let tokens = self.tokenize(tokenizer)?;
+        let mut out = Vec::with_capacity(tokens.len());
+        for doc in tokens {
+            out.push(stemmer.stem_tokens(&doc));
+        }
+        Ok(out)
+    }
+
+    /// Parse each document using the provided tokenizer and parser.
+    pub fn parse<T: Tokenizer, P: Parser>(
+        &self,
+        tokenizer: &T,
+        parser: &P,
+    ) -> Result<Vec<ParseForest>, GDSFrameError> {
+        let tokens = self.tokenize(tokenizer)?;
+        let mut out = Vec::with_capacity(tokens.len());
+        for doc in tokens {
+            out.push(parser.parse_tokens(&doc));
+        }
+        Ok(out)
+    }
+
+    /// Tag each document using the provided tokenizer and tagger.
+    pub fn tag<T: Tokenizer, G: Tagger>(
+        &self,
+        tokenizer: &T,
+        tagger: &G,
+    ) -> Result<Vec<Vec<Tag>>, GDSFrameError> {
+        let tokens = self.tokenize(tokenizer)?;
+        let mut out = Vec::with_capacity(tokens.len());
+        for doc in tokens {
+            out.push(tagger.tag_tokens(&doc));
+        }
+        Ok(out)
     }
 }
