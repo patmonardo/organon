@@ -19,6 +19,10 @@ pub fn parse_field_expr(column: &str, field: &str) -> Expr {
     col(column).struct_().field_by_name(field)
 }
 
+pub fn parse_field_expr_from(expr: Expr, field: &str) -> Expr {
+    expr.struct_().field_by_name(field)
+}
+
 pub fn parse_kind_expr(column: &str) -> Expr {
     parse_field_expr(column, PARSE_KIND_FIELD)
 }

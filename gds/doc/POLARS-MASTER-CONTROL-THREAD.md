@@ -66,3 +66,4 @@ Launch a focused thread to reframe GDS I/O around Polars-first data control, red
 ## Related Drafts
 
 - Polars ↔ Collections API: gds/doc/POLARS-COLLECTIONS-API.md
+- RustScript DSL matrix (Frame/Lazy × Series/Expr): gds/doc/ADR-2026-02-10-RUSTSCRIPT-DSL-MATRIX.md

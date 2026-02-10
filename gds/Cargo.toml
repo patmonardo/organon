@@ -147,6 +147,10 @@ full = ["node"]
 # Keep this opt-in to avoid pulling experimental APIs into stable builds.
 graphframe = []
 
+# Optional: enable the WIP PGQL submodule under `collections::graphframe::pgql`.
+# This is intentionally off by default.
+graphframe_pgql = []
+
 # Experimental feature: enable Dataset APIs (Polars-backed dataset DSL).
 # Gate at the top-level so internals are unchanged, but the module is opt-in.
 dataset = []

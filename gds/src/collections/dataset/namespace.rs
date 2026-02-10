@@ -1,84 +1,11 @@
-//! Dataset-level namespaces facade.
+//! Dataset-level namespace facade.
 //!
-//! Minimal LazyFrame namespace glue for dataset surfaces.
-use crate::collections::dataset::feature::Feature;
-use polars::prelude::LazyFrame;
+//! Retired: the dataset-layer namespace glue now lives in `series.rs`.
+//!
+//! This module remains as a small compatibility shim to keep older imports
+//! working while we converge on the dataset facade layout.
 
-#[derive(Clone)]
-pub struct DatasetLazyFrameNameSpace {
-    lf: LazyFrame,
-}
-
-impl DatasetLazyFrameNameSpace {
-    pub fn new(lf: LazyFrame) -> Self {
-        Self { lf }
-    }
-
-    pub fn lazyframe(&self) -> &LazyFrame {
-        &self.lf
-    }
-
-    pub fn into_lazyframe(self) -> LazyFrame {
-        self.lf
-    }
-
-    pub fn feature(&self) -> FeatureLazyFrameNameSpace {
-        FeatureLazyFrameNameSpace::new(self.lf.clone())
-    }
-
-    pub fn tree(&self) -> TreeLazyFrameNameSpace {
-        TreeLazyFrameNameSpace::new(self.lf.clone())
-    }
-}
-
-#[derive(Clone)]
-pub struct FeatureLazyFrameNameSpace {
-    lf: LazyFrame,
-}
-
-impl FeatureLazyFrameNameSpace {
-    pub fn new(lf: LazyFrame) -> Self {
-        Self { lf }
-    }
-
-    pub fn lazyframe(&self) -> &LazyFrame {
-        &self.lf
-    }
-
-    pub fn into_lazyframe(self) -> LazyFrame {
-        self.lf
-    }
-
-    pub fn apply(&self, feature: &Feature) -> LazyFrame {
-        feature.apply_to_lazyframe(self.lf.clone())
-    }
-}
-
-#[derive(Clone)]
-pub struct TreeLazyFrameNameSpace {
-    lf: LazyFrame,
-}
-
-impl TreeLazyFrameNameSpace {
-    pub fn new(lf: LazyFrame) -> Self {
-        Self { lf }
-    }
-
-    pub fn lazyframe(&self) -> &LazyFrame {
-        &self.lf
-    }
-
-    pub fn into_lazyframe(self) -> LazyFrame {
-        self.lf
-    }
-}
-
-pub trait LazyFrameDatasetExt {
-    fn ds(self) -> DatasetLazyFrameNameSpace;
-}
-
-impl LazyFrameDatasetExt for LazyFrame {
-    fn ds(self) -> DatasetLazyFrameNameSpace {
-        DatasetLazyFrameNameSpace::new(self)
-    }
-}
+pub use crate::collections::dataset::lazy::{
+    DatasetLazyFrameNameSpace, FeatureLazyFrameNameSpace, LazyFrameDatasetExt,
+    TreeLazyFrameNameSpace,
+};

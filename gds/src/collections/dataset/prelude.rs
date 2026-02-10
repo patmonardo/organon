@@ -70,8 +70,11 @@ pub use crate::collections::dataset::tree::{
     TreeParseError, TreeSeries, TreeTraversal,
 };
 
-// LazyFrame namespace glue
-pub use crate::collections::dataset::namespace::LazyFrameDatasetExt;
+// Tabular DSL matrix: extension traits
+pub use crate::collections::dataset::expr::ExprDatasetExt;
+pub use crate::collections::dataset::frame::DataFrameDatasetExt;
+pub use crate::collections::dataset::lazy::LazyFrameDatasetExt;
+pub use crate::collections::dataset::series::SeriesDatasetExt;
 
 // Dataset expression namespace
 pub use crate::collections::dataset::namespaces::dataset::DatasetNs;

@@ -17,6 +17,10 @@ pub fn stem_field_expr(column: &str, field: &str) -> Expr {
     col(column).struct_().field_by_name(field)
 }
 
+pub fn stem_field_expr_from(expr: Expr, field: &str) -> Expr {
+    expr.struct_().field_by_name(field)
+}
+
 pub fn stem_text_expr(column: &str) -> Expr {
     stem_field_expr(column, STEM_TEXT_FIELD)
 }

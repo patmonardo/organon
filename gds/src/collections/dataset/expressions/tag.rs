@@ -17,6 +17,10 @@ pub fn tag_field_expr(column: &str, field: &str) -> Expr {
     col(column).struct_().field_by_name(field)
 }
 
+pub fn tag_field_expr_from(expr: Expr, field: &str) -> Expr {
+    expr.struct_().field_by_name(field)
+}
+
 pub fn tag_text_expr(column: &str) -> Expr {
     tag_field_expr(column, TAG_TEXT_FIELD)
 }

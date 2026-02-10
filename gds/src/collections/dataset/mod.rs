@@ -15,8 +15,10 @@ pub mod expressions;
 pub mod extract;
 pub mod featstruct;
 pub mod feature;
+pub mod frame;
 pub mod functions;
 pub mod io;
+pub mod lazy;
 pub mod r#macro;
 pub mod model;
 pub mod namespace;
@@ -26,6 +28,7 @@ pub mod plan;
 pub mod prelude;
 pub mod registry;
 pub mod schema;
+pub mod series;
 pub mod stem;
 pub mod streaming;
 pub mod tag;
@@ -61,10 +64,16 @@ pub use model::{
     ModelResult, ModelScore, ModelSpec, ModelState, ModelView, NoOpLanguageModel, NoOpParser,
     NoOpTagger,
 };
-pub use namespace::{
+
+// Dataset tabular DSL matrix exports.
+pub use expr::{DatasetExprNameSpace, ExprDatasetExt};
+pub use frame::{DataFrameDatasetExt, DatasetDataFrameNameSpace};
+pub use lazy::{
     DatasetLazyFrameNameSpace, FeatureLazyFrameNameSpace, LazyFrameDatasetExt,
     TreeLazyFrameNameSpace,
 };
+pub use series::{DatasetSeriesNameSpace, SeriesDatasetExt};
+
 pub use namespaces::dataset::DatasetNs;
 pub use parse::{Parse, ParseForest, ParseKind};
 pub use plan::{EvalMode as DatasetEvalMode, Plan as DatasetPlan, PlanEnv, PlanError};

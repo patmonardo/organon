@@ -87,38 +87,6 @@ macro_rules! expr {
     };
 }
 
-/// Prefix expression macro for concise arithmetic and comparisons.
-///
-/// Examples:
-/// ```rust
-/// let a = s!(+ score 2.0);
-/// let b = s!(> score 20.0);
-/// ```
-#[macro_export]
-macro_rules! s {
-    // parenthesized group -> recurse
-    ( ( $($inner:tt)+ ) ) => {
-        $crate::s!($($inner)+)
-    };
-
-    // arithmetic
-    ( + $a:tt $b:tt ) => { ($crate::expr!($a) + $crate::expr!($b)) };
-    ( - $a:tt $b:tt ) => { ($crate::expr!($a) - $crate::expr!($b)) };
-    ( * $a:tt $b:tt ) => { ($crate::expr!($a) * $crate::expr!($b)) };
-    ( / $a:tt $b:tt ) => { ($crate::expr!($a) / $crate::expr!($b)) };
-
-    // comparisons -> use Expr methods
-    ( > $a:tt $b:tt ) => { $crate::expr!($a).gt($crate::expr!($b)) };
-    ( < $a:tt $b:tt ) => { $crate::expr!($a).lt($crate::expr!($b)) };
-    ( >= $a:tt $b:tt ) => { $crate::expr!($a).gt_eq($crate::expr!($b)) };
-    ( <= $a:tt $b:tt ) => { $crate::expr!($a).lt_eq($crate::expr!($b)) };
-    ( == $a:tt $b:tt ) => { $crate::expr!($a).eq($crate::expr!($b)) };
-    ( != $a:tt $b:tt ) => { $crate::expr!($a).neq($crate::expr!($b)) };
-
-    // fallback to `expr!` for single tokens
-    ($e:tt) => { $crate::expr!($e) };
-}
-
 /// Shorthand for `when(expr)`.
 #[macro_export]
 macro_rules! when {
