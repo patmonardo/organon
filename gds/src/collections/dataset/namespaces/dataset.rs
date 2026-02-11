@@ -3,7 +3,7 @@
 //! These helpers create declarative dataset expressions that can later be
 //! interpreted by higher-level Dataset planners.
 
-use crate::collections::dataset::expressions::etl::DatasetEtlExpr;
+use crate::collections::dataset::expressions::dataop::DatasetDataOpExpr;
 use crate::collections::dataset::expressions::io::DatasetIoExpr;
 use crate::collections::dataset::expressions::metadata::DatasetMetadataExpr;
 use crate::collections::dataset::expressions::projection::DatasetProjectionExpr;
@@ -33,7 +33,10 @@ impl DatasetNs {
         DatasetIoExpr::from_url(url)
     }
 
-    pub fn metadata(key: impl Into<String>, value: impl Into<serde_json::Value>) -> DatasetMetadataExpr {
+    pub fn metadata(
+        key: impl Into<String>,
+        value: impl Into<serde_json::Value>,
+    ) -> DatasetMetadataExpr {
         DatasetMetadataExpr::new(key, value)
     }
 
@@ -49,24 +52,44 @@ impl DatasetNs {
         DatasetProjectionExpr::graph(columns)
     }
 
-    pub fn etl_rename(from: impl Into<String>, to: impl Into<String>) -> DatasetEtlExpr {
-        DatasetEtlExpr::rename(from, to)
+    pub fn dataop_input(name: impl Into<String>) -> DatasetDataOpExpr {
+        DatasetDataOpExpr::input(name)
     }
 
-    pub fn etl_cast(column: impl Into<String>, dtype: impl Into<String>) -> DatasetEtlExpr {
-        DatasetEtlExpr::cast(column, dtype)
+    pub fn dataop_encode(name: impl Into<String>) -> DatasetDataOpExpr {
+        DatasetDataOpExpr::encode(name)
     }
 
-    pub fn etl_drop(columns: Vec<String>) -> DatasetEtlExpr {
-        DatasetEtlExpr::drop(columns)
+    pub fn dataop_transform(name: impl Into<String>) -> DatasetDataOpExpr {
+        DatasetDataOpExpr::transform(name)
     }
 
-    pub fn etl_dedupe(columns: Option<Vec<String>>) -> DatasetEtlExpr {
-        DatasetEtlExpr::dedupe(columns)
+    pub fn dataop_decode(name: impl Into<String>) -> DatasetDataOpExpr {
+        DatasetDataOpExpr::decode(name)
     }
 
-    pub fn etl_null_cleanup(columns: Option<Vec<String>>) -> DatasetEtlExpr {
-        DatasetEtlExpr::null_cleanup(columns)
+    pub fn dataop_output(name: impl Into<String>) -> DatasetDataOpExpr {
+        DatasetDataOpExpr::output(name)
+    }
+
+    pub fn dataop_text_input(name: impl Into<String>) -> DatasetDataOpExpr {
+        DatasetDataOpExpr::text_input(name)
+    }
+
+    pub fn dataop_text_encode(name: impl Into<String>) -> DatasetDataOpExpr {
+        DatasetDataOpExpr::text_encode(name)
+    }
+
+    pub fn dataop_text_transform(name: impl Into<String>) -> DatasetDataOpExpr {
+        DatasetDataOpExpr::text_transform(name)
+    }
+
+    pub fn dataop_text_decode(name: impl Into<String>) -> DatasetDataOpExpr {
+        DatasetDataOpExpr::text_decode(name)
+    }
+
+    pub fn dataop_text_output(name: impl Into<String>) -> DatasetDataOpExpr {
+        DatasetDataOpExpr::text_output(name)
     }
 
     pub fn report_summary() -> DatasetReportExpr {

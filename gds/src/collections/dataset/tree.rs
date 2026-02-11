@@ -770,6 +770,21 @@ pub fn transform_expr(input: tree_expr::TreeExpr, op: tree_expr::TreeOp) -> tree
     TreeNs::transform(input, op)
 }
 
+pub fn encode_expr(input: tree_expr::TreeExpr, name: impl Into<String>) -> tree_expr::TreeExpr {
+    TreeNs::encode(input, name)
+}
+
+pub fn decode_expr(input: tree_expr::TreeExpr, name: impl Into<String>) -> tree_expr::TreeExpr {
+    TreeNs::decode(input, name)
+}
+
+pub fn transform_named_expr(
+    input: tree_expr::TreeExpr,
+    name: impl Into<String>,
+) -> tree_expr::TreeExpr {
+    TreeNs::transform_named(input, name)
+}
+
 pub use crate::collections::dataset::expressions::tree::{
     TreeExpr, TreeLabel, TreeLeafExpr, TreeOp, TreePos, TreeSpan,
 };

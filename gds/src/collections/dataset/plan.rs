@@ -15,6 +15,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::Value as JsonValue;
 
 use crate::collections::dataframe::GDSFrameError;
+use crate::collections::dataset::expressions::dataop::{DatasetDataOp, DatasetDataOpExpr};
 use crate::collections::dataset::{Dataset, DatasetSplit};
 use crate::prints::{PrintEnvelope, PrintKind, PrintProvenance};
 
@@ -133,6 +134,9 @@ pub enum Step {
 
     /// Hint for downstream evaluation (batching / streaming).
     Batch(usize),
+
+    /// Dataset data-op step (Input/Encode/Transform/Decode/Output).
+    DataOp(DatasetDataOpExpr),
 }
 
 #[derive(Debug, Clone)]
@@ -222,6 +226,7 @@ impl Plan {
                 Step::Item(_) => "item".to_string(),
                 Step::Split(split) => format!("split({split:?})"),
                 Step::Batch(n) => format!("batch({n})"),
+                Step::DataOp(op) => format!("dataop({})", describe_dataop(op.op())),
             };
             lines.push(format!("  {i}: {s}"));
         }
@@ -262,6 +267,9 @@ impl Plan {
                 }
                 Step::Batch(_) => {
                     // Hint-only for now; streaming evaluation will consume this later.
+                }
+                Step::DataOp(_) => {
+                    // Dataset-level data-op: eval handled by higher-level adapters.
                 }
             }
         }
@@ -343,6 +351,7 @@ impl Plan {
                     batch_hint = Some(*n);
                     ("batch".to_string(), Some(serde_json::json!({"size": n})))
                 }
+                Step::DataOp(op) => ("dataop".to_string(), Some(dataop_report_detail(op.op()))),
             };
             steps.push(PlanStepReport { index, op, detail });
         }
@@ -442,7 +451,7 @@ impl Plan {
                 Step::Item(item_expr) => {
                     lf = lf.with_columns([item_expr.clone()]);
                 }
-                Step::Split(_) | Step::Batch(_) => {
+                Step::Split(_) | Step::Batch(_) | Step::DataOp(_) => {
                     // Control-plane only.
                 }
             }
@@ -470,11 +479,51 @@ impl Plan {
                     Step::Item(item_expr) => {
                         lf = lf.with_columns([item_expr.clone()]);
                     }
-                    Step::Split(_) | Step::Batch(_) => {}
+                    Step::Split(_) | Step::Batch(_) | Step::DataOp(_) => {}
                 }
             }
             lf
         })
+    }
+}
+
+fn describe_dataop(op: &DatasetDataOp) -> String {
+    match op {
+        DatasetDataOp::Input { name, .. } => format!("input:{name}"),
+        DatasetDataOp::Encode { name, .. } => format!("encode:{name}"),
+        DatasetDataOp::Transform { name, .. } => format!("transform:{name}"),
+        DatasetDataOp::Decode { name, .. } => format!("decode:{name}"),
+        DatasetDataOp::Output { name, .. } => format!("output:{name}"),
+    }
+}
+
+fn dataop_report_detail(op: &DatasetDataOp) -> JsonValue {
+    match op {
+        DatasetDataOp::Input { name, detail } => serde_json::json!({
+            "kind": "input",
+            "name": name,
+            "detail": detail,
+        }),
+        DatasetDataOp::Encode { name, detail } => serde_json::json!({
+            "kind": "encode",
+            "name": name,
+            "detail": detail,
+        }),
+        DatasetDataOp::Transform { name, detail } => serde_json::json!({
+            "kind": "transform",
+            "name": name,
+            "detail": detail,
+        }),
+        DatasetDataOp::Decode { name, detail } => serde_json::json!({
+            "kind": "decode",
+            "name": name,
+            "detail": detail,
+        }),
+        DatasetDataOp::Output { name, detail } => serde_json::json!({
+            "kind": "output",
+            "name": name,
+            "detail": detail,
+        }),
     }
 }
 

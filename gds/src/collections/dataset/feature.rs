@@ -17,7 +17,7 @@ use polars::prelude::{Expr, LazyFrame};
 
 use crate::collections::dataframe::Selector;
 use crate::collections::dataset::plan::{EvalMode, Plan, PlanAttentionReport, PlanEnv, PlanError};
-use crate::collections::dataset::schema::FeatureSchema;
+use crate::collections::dataset::schema::{FeatureSchema, SymbolTable};
 use crate::collections::dataset::streaming::StreamingDataset;
 use crate::collections::dataset::Dataset;
 use crate::prints::{PrintEnvelope, PrintKind, PrintProvenance};
@@ -196,11 +196,39 @@ impl Feature {
 #[derive(Debug, Clone, Default)]
 pub struct FeatureSpace {
     features: BTreeMap<String, Feature>,
+    schema: FeatureSchema,
+    symbols: SymbolTable,
 }
 
 impl FeatureSpace {
     pub fn new() -> Self {
         Self::default()
+    }
+
+    pub fn schema(&self) -> &FeatureSchema {
+        &self.schema
+    }
+
+    pub fn schema_mut(&mut self) -> &mut FeatureSchema {
+        &mut self.schema
+    }
+
+    pub fn with_schema(mut self, schema: FeatureSchema) -> Self {
+        self.schema = schema;
+        self
+    }
+
+    pub fn symbols(&self) -> &SymbolTable {
+        &self.symbols
+    }
+
+    pub fn symbols_mut(&mut self) -> &mut SymbolTable {
+        &mut self.symbols
+    }
+
+    pub fn with_symbols(mut self, symbols: SymbolTable) -> Self {
+        self.symbols = symbols;
+        self
     }
 
     pub fn len(&self) -> usize {

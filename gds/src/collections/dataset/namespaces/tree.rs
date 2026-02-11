@@ -35,4 +35,16 @@ impl TreeNs {
             op,
         }
     }
+
+    pub fn encode(input: TreeExpr, name: impl Into<String>) -> TreeExpr {
+        Self::transform(input, TreeOp::encode(name))
+    }
+
+    pub fn decode(input: TreeExpr, name: impl Into<String>) -> TreeExpr {
+        Self::transform(input, TreeOp::decode(name))
+    }
+
+    pub fn transform_named(input: TreeExpr, name: impl Into<String>) -> TreeExpr {
+        Self::transform(input, TreeOp::transform_named(name))
+    }
 }

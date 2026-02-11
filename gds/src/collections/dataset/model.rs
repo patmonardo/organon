@@ -3,11 +3,16 @@
 //! A model is a schema-to-schema transform over the dataset graph. It consumes
 //! selected views (tokens, tags, parses, trees) and emits structured updates
 //! that remain anchored to the schema.
+//!
+//! Compiler note:
+//! - FeatureSpace and ModelSpace are primary compilation targets.
+//! - Plan is the executable graph that gives those targets their runtime shape.
 
 use std::collections::BTreeMap;
 
 use crate::collections::dataset::featstruct::{FeatPath, FeatValue};
 use crate::collections::dataset::parse::Parse;
+use crate::collections::dataset::schema::{ModelSchema, SymbolTable};
 use crate::collections::dataset::tag::Tag;
 use crate::collections::dataset::tree::TreeValue;
 use crate::collections::dataset::Dataset;
@@ -111,6 +116,69 @@ pub trait Model {
 
     fn evaluate(&self, _dataset: &Dataset, _ctx: &ModelContext) -> ModelReport {
         ModelReport::default()
+    }
+}
+
+/// A minimal registry for dataset models.
+///
+/// This is intentionally small and can act as the model/feature anchor for
+/// Dataset DataOps when they need to lower into DataFrame UDT expressions.
+#[derive(Default)]
+pub struct ModelSpace {
+    models: BTreeMap<ModelId, Box<dyn Model + Send + Sync>>,
+    schema: ModelSchema,
+    symbols: SymbolTable,
+}
+
+impl ModelSpace {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn schema(&self) -> &ModelSchema {
+        &self.schema
+    }
+
+    pub fn schema_mut(&mut self) -> &mut ModelSchema {
+        &mut self.schema
+    }
+
+    pub fn with_schema(mut self, schema: ModelSchema) -> Self {
+        self.schema = schema;
+        self
+    }
+
+    pub fn symbols(&self) -> &SymbolTable {
+        &self.symbols
+    }
+
+    pub fn symbols_mut(&mut self) -> &mut SymbolTable {
+        &mut self.symbols
+    }
+
+    pub fn with_symbols(mut self, symbols: SymbolTable) -> Self {
+        self.symbols = symbols;
+        self
+    }
+
+    pub fn register<M>(&mut self, model: M) -> Option<Box<dyn Model + Send + Sync>>
+    where
+        M: Model + Send + Sync + 'static,
+    {
+        let id = model.spec().id.clone();
+        self.models.insert(id, Box::new(model))
+    }
+
+    pub fn get(&self, id: &ModelId) -> Option<&dyn Model> {
+        self.models.get(id).map(|m| m.as_ref() as &dyn Model)
+    }
+
+    pub fn ids(&self) -> Vec<&ModelId> {
+        self.models.keys().collect()
+    }
+
+    pub fn list(&self) -> Vec<&ModelSpec> {
+        self.models.values().map(|m| m.spec()).collect()
     }
 }
 

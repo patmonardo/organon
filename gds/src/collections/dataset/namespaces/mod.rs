@@ -10,6 +10,7 @@ use std::sync::RwLock;
 
 pub mod dataset;
 pub mod feature;
+pub mod text;
 pub mod tree;
 
 /// Errors raised during namespace registration.

@@ -273,4 +273,30 @@ pub enum TreeOp {
     Normalize,
     CollapseUnary,
     ChomskyNormalForm,
+    Encode { name: String },
+    Decode { name: String },
+    Transform { name: String },
+}
+
+impl TreeOp {
+    pub fn encode(name: impl Into<String>) -> Self {
+        Self::Encode { name: name.into() }
+    }
+
+    pub fn decode(name: impl Into<String>) -> Self {
+        Self::Decode { name: name.into() }
+    }
+
+    pub fn transform_named(name: impl Into<String>) -> Self {
+        Self::Transform { name: name.into() }
+    }
+
+    pub fn name(&self) -> Option<&str> {
+        match self {
+            Self::Encode { name } | Self::Decode { name } | Self::Transform { name } => {
+                Some(name.as_str())
+            }
+            _ => None,
+        }
+    }
 }

@@ -4,6 +4,10 @@
 //! This is where we can map dataset families (e.g. pytorch-geometric) into
 //! a consistent registry and reuse DataFrame expressions without adding
 //! Rust-heavy call sites.
+//!
+//! Dragon Seed note:
+//! - The top-level modules read like a compiler: catalog/registry, schema,
+//!   plans, features, models, and the DSL namespaces that bind it together.
 
 pub mod catalog;
 pub mod corpus;
@@ -70,8 +74,8 @@ pub use functions::scan_text_dir;
 pub use metrics::{BinaryMetrics, MetricError};
 pub use model::{
     Model, ModelAttributeUpdate, ModelContext, ModelDelta, ModelId, ModelKind, ModelReport,
-    ModelResult, ModelScore, ModelSpec, ModelState, ModelView, NoOpLanguageModel, NoOpParser,
-    NoOpTagger,
+    ModelResult, ModelScore, ModelSpace, ModelSpec, ModelState, ModelView, NoOpLanguageModel,
+    NoOpParser, NoOpTagger,
 };
 
 // Dataset tabular DSL matrix exports.
@@ -84,11 +88,12 @@ pub use lazy::{
 pub use series::{DatasetSeriesNameSpace, SeriesDatasetExt};
 
 pub use namespaces::dataset::DatasetNs;
+pub use namespaces::text::TextNs;
 pub use parse::{Parse, ParseForest, ParseKind};
 pub use parser::{BracketedParser, DependencyParser, FlatParser, JsonParser, MarkupParser, Parser};
 pub use plan::{EvalMode as DatasetEvalMode, Plan as DatasetPlan, PlanEnv, PlanError};
 pub use registry::{DatasetArtifact, DatasetMetadata, DatasetRegistry, DatasetSplit};
-pub use schema::FeatureSchema;
+pub use schema::{FeatureSchema, ModelSchema, SymbolDef, SymbolTable};
 pub use stdlib::{
     catalog_resource_tables, data_home, data_home_with, fetch_resource, list_resources,
     resource_dir, BracketedCorpusReader, ConcatenatedCorpusView, CorpusFiles, CorpusReader,

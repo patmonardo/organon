@@ -1,4 +1,10 @@
 //! Dataset catalog integration with CollectionsCatalogDisk.
+//!
+//! Dragon Book note:
+//! - Catalog/Registry entries are the source datasets (the input language).
+//! - Plans compile datasets into Features and Models (the derived artifacts).
+//! - Datasets can ship with precompiled features, and further processing
+//!   can iteratively refine or extend those models.
 
 use std::path::{Path, PathBuf};
 

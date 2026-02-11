@@ -24,6 +24,36 @@ See:
 - DataExprs = the expression DSL (functions are chained into Exprs).
 - Functions = constructors and helpers that yield Exprs or Series (e.g., `col`, `lit`, `when/then`).
 
+## Four-layer split (current direction)
+
+We are treating the overall platform as four layers, each with a distinct scope.
+The intent is to keep the DataFrame DSL pure and ergonomic, while moving ML and
+statistics into higher-order frames.
+
+- DataFrame = identity with the PyPolars client DSL (Expr/Plan aligned).
+- Dataset = ergonomic stdlib/SDK above DataFrame (common dataset utilities and
+  selectors; no UI; includes foundational LM/NLP dataset ideas inspired by NLTK,
+  but not full model training).
+- GraphFrame = higher-level system built on DataFrame + Dataset, borrowing
+  _some_ ML ideas from sklearn and LitData, but mostly oriented to PyG/GNN/GCN
+  workflows. This is the crowning layer where DataFrame + Dataset reach their
+  intended purpose.
+- StatFrame = statistical modeling and estimator-heavy ideas (where full
+  sklearn-style model training belongs). It is intentionally heavy
+  (numerical/mathematical/statistical) and can remain minimal, but it is still
+  useful as a named home for sklearn-style concepts and AI codegen prompts.
+
+We are not committing to a full R/Fortran-style numerical stack in Rust. The
+intent is to pull in only the sklearn-adjacent pieces required by ML/NLP (via
+NLTK-style foundations), while investing heavily in GraphFrame (GDS ML + PyG +
+Lightning) as the primary advanced capability layer.
+
+This split keeps DataOps/DataExprs aligned to Polars-style plans, and reserves
+model/estimator semantics for StatFrame.
+
+GraphFrame is the third key that sublates DataFrame + Dataset into higher-order
+graph-native workflows.
+
 ## Core DataOps (minimal surface)
 
 DataOps should reflect Polars/SQL mechanics with key/index features for hierarchical text (book/section/chapter/verse/line/word). The following are the minimum semantics to keep coherent with the client DSL:
@@ -96,8 +126,13 @@ We can extend DataOps/Exprs without adopting RDF:
 ## Boundaries
 
 - DataOps/DataExprs stay model-agnostic (no StatFrame, no model fit/eval).
-- StatFrame is a separate layer that consumes DataOps results.
-- GraphFrame can be a higher-order library that builds on the same key/index + join semantics.
+- Dataset is the dataset-aware wrapper around the DataFrame DSL, covering the
+  full Input -> DataFrame System -> Output flow (IO, caching, selectors,
+  deterministic cleaning), without UI or modeling.
+- GraphFrame is the higher-order layer built on DataFrame + Dataset, extending
+  into ML/NLTK/PyG plus semantic-web graph data for advanced workflows.
+- StatFrame is a separate, heavier layer for statistical/mathematical modeling
+  and higher analytics, deferred until needed.
 
 ## Dataset utility layer (above DataFrame DSL)
 
@@ -122,7 +157,11 @@ Advanced DataOps are intentionally stubbed for now (window ops, complex joins, s
 
 ## NLP-first dataset note
 
-We can keep the NTLK-inspired NLP-first dataset ideas as an overlay in the Dataset layer, but the base remains the DataFrame client DSL. Text datasets should be projectable into indexed DataFrames, with a path to richer GraphFrame semantics later.
+We can keep the NTLK-inspired NLP-first dataset ideas as a core overlay in the
+Dataset layer, but the base remains the DataFrame client DSL. Text datasets
+should be projectable into indexed DataFrames, with a path to richer GraphFrame
+semantics later. This keeps LM/NLP dataset conventions close to their proper
+home without turning Dataset into a modeling layer.
 
 ## Seed extraction map (from skrub)
 

@@ -3,7 +3,7 @@
 //! These namespaces will mirror the DataFrame expression tree but remain
 //! a dataset-level API surface layered above frames.
 
-pub mod etl;
+pub mod dataop;
 pub mod feature;
 pub mod io;
 pub mod metadata;
