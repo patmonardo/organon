@@ -32,6 +32,7 @@ pub mod prelude;
 pub mod registry;
 pub mod schema;
 pub mod series;
+pub mod stdlib;
 pub mod stem;
 pub mod stemmer;
 pub mod streaming;
@@ -88,6 +89,12 @@ pub use parser::{BracketedParser, DependencyParser, FlatParser, JsonParser, Mark
 pub use plan::{EvalMode as DatasetEvalMode, Plan as DatasetPlan, PlanEnv, PlanError};
 pub use registry::{DatasetArtifact, DatasetMetadata, DatasetRegistry, DatasetSplit};
 pub use schema::FeatureSchema;
+pub use stdlib::{
+    catalog_resource_tables, data_home, data_home_with, fetch_resource, list_resources,
+    resource_dir, BracketedCorpusReader, ConcatenatedCorpusView, CorpusFiles, CorpusReader,
+    CorpusResource, DatasetResource, DatasetResourceReport, PlaintextCorpusReader,
+    StreamBackedCorpusView, WordListCorpusReader, XmlCorpusReader,
+};
 pub use stem::{Stem, StemKind};
 pub use stemmer::{IdentityStemmer, LowercaseStemmer, SimpleSuffixStemmer, Stemmer};
 pub use streaming::{StreamingBatchIter, StreamingDataset};

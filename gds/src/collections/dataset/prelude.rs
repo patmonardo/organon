@@ -90,6 +90,15 @@ pub use crate::collections::dataset::tagger::{
     DefaultTagger, LookupTagger, RegexTagger, Tagger, UnigramTagger,
 };
 
+// Dataset stdlib resources
+pub use crate::collections::dataset::stdlib::{
+    catalog_resource_tables, data_home, data_home_with, fetch_resource, list_resources,
+    normalize_resource_name, normalize_resource_url, resource_dir, split_resource_url,
+    BracketedCorpusReader, ConcatenatedCorpusView, CorpusFiles, CorpusReader, CorpusResource,
+    DatasetResource, DatasetResourceReport, PlaintextCorpusReader, StreamBackedCorpusView,
+    WordListCorpusReader, XmlCorpusReader,
+};
+
 // Tree surface (namespace + collection)
 pub use crate::collections::dataset::tree::{
     format_bracketed, format_pretty, parse_bracketed, pretty_print, MultiParentedIndex,
