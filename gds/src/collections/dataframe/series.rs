@@ -20,6 +20,14 @@ pub struct GDSSeries {
     series: Series,
 }
 
+macro_rules! series_ns_getter {
+    ($method:ident, $ns:ident) => {
+        pub fn $method(&self) -> $ns {
+            $ns::new(self.series.clone())
+        }
+    };
+}
+
 impl GDSSeries {
     pub fn new(series: Series) -> Self {
         Self { series }
@@ -57,41 +65,25 @@ impl GDSSeries {
         self.series.dtype()
     }
 
-    pub fn bin(&self) -> BinaryNameSpace {
-        BinaryNameSpace::new(self.series.clone())
-    }
+    series_ns_getter!(bin, BinaryNameSpace);
 
-    pub fn cat(&self) -> CategoricalNameSpace {
-        CategoricalNameSpace::new(self.series.clone())
-    }
+    series_ns_getter!(cat, CategoricalNameSpace);
 
-    pub fn str(&self) -> StringNameSpace {
-        StringNameSpace::new(self.series.clone())
-    }
+    series_ns_getter!(str, StringNameSpace);
 
-    pub fn list(&self) -> ListNameSpace {
-        ListNameSpace::new(self.series.clone())
-    }
+    series_ns_getter!(list, ListNameSpace);
 
-    pub fn dt(&self) -> DateTimeNameSpace {
-        DateTimeNameSpace::new(self.series.clone())
-    }
+    series_ns_getter!(dt, DateTimeNameSpace);
 
-    pub fn structure(&self) -> StructNameSpace {
-        StructNameSpace::new(self.series.clone())
-    }
+    series_ns_getter!(structure, StructNameSpace);
 
     pub fn record(&self) -> StructNameSpace {
         self.structure()
     }
 
-    pub fn arr(&self) -> ArrayNameSpace {
-        ArrayNameSpace::new(self.series.clone())
-    }
+    series_ns_getter!(arr, ArrayNameSpace);
 
-    pub fn ext(&self) -> ExtNameSpace {
-        ExtNameSpace::new(self.series.clone())
-    }
+    series_ns_getter!(ext, ExtNameSpace);
 
     /// Suggest a native expression rewrite for a Series-level UDF name.
     ///

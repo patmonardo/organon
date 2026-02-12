@@ -1,6 +1,5 @@
 //! Polars DataFrame integration for Collections.
 
-pub mod array;
 pub mod column;
 pub mod config;
 pub mod datatype_expr;
@@ -25,7 +24,6 @@ pub mod utils;
 pub mod macros;
 pub mod prelude;
 
-pub use array::*;
 pub use column::*;
 pub use datatype_expr::*;
 pub use datatypes::*;

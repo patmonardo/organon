@@ -45,6 +45,7 @@ pub mod tagger;
 pub mod token;
 pub mod tokenizer;
 pub mod tree;
+pub mod utils;
 
 // Keep the module surface small and explicitly export the core public items.
 pub use catalog::DatasetCatalog;
@@ -117,6 +118,10 @@ pub use tree::{
     ParentedValue, ProbabilisticTree, TreeCollection, TreeExpr, TreeId, TreeIndex, TreeLeafExpr,
     TreeLeafValue, TreeNamespace, TreeNode, TreeOp, TreeParseError, TreePos, TreeSeries,
     TreeSeriesNameSpace, TreeSpan, TreeTraversal, TreeValue,
+};
+pub use utils::{
+    render_rust_dsl_module, DatasetCatalogIndex, DatasetCompilation, DatasetNode, DatasetNodeKind,
+    DslCodegenOptions,
 };
 
 // Export specialized datasets (Corpus) as a convenience type.

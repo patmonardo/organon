@@ -141,3 +141,9 @@ pub use crate::collections::dataset::expressions::text::{
 pub use crate::collections::dataset::expressions::token::{
     token_end_expr, token_field_expr, token_kind_expr, token_start_expr, token_text_expr,
 };
+
+// Dataset compiler utility surface
+pub use crate::collections::dataset::utils::{
+    render_rust_dsl_module, DatasetCatalogIndex, DatasetCompilation, DatasetNode, DatasetNodeKind,
+    DslCodegenOptions,
+};

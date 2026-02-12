@@ -74,6 +74,37 @@ pub struct SeriesExprExt {
     series: Series,
 }
 
+macro_rules! impl_series_expr_ns {
+    ($wrapper:ident, $ns:ident) => {
+        impl $wrapper {
+            pub fn new(series: Series) -> Self {
+                Self { series }
+            }
+
+            pub fn apply<F>(&self, f: F) -> PolarsResult<Series>
+            where
+                F: FnOnce($ns) -> Expr,
+            {
+                let expr = f($ns::new(series_col_expr(&self.series)));
+                eval_series_expr(&self.series, expr)
+            }
+        }
+    };
+    ($wrapper:ident, $ns:ident, result) => {
+        impl_series_expr_ns!($wrapper, $ns);
+
+        impl $wrapper {
+            pub fn apply_result<F>(&self, f: F) -> PolarsResult<Series>
+            where
+                F: FnOnce($ns) -> PolarsResult<Expr>,
+            {
+                let expr = f($ns::new(series_col_expr(&self.series)))?;
+                eval_series_expr(&self.series, expr)
+            }
+        }
+    };
+}
+
 /// Create a Series/Expr pipeline wrapper.
 pub fn series_expr(series: Series) -> SeriesExpr {
     SeriesExpr::new(series)
@@ -179,161 +210,16 @@ impl SeriesExpr {
     }
 }
 
-impl SeriesExprString {
-    pub fn new(series: Series) -> Self {
-        Self { series }
-    }
-
-    pub fn apply<F>(&self, f: F) -> PolarsResult<Series>
-    where
-        F: FnOnce(ExprString) -> Expr,
-    {
-        let expr = f(ExprString::new(series_col_expr(&self.series)));
-        eval_series_expr(&self.series, expr)
-    }
-}
-
-impl SeriesExprList {
-    pub fn new(series: Series) -> Self {
-        Self { series }
-    }
-
-    pub fn apply<F>(&self, f: F) -> PolarsResult<Series>
-    where
-        F: FnOnce(ExprList) -> Expr,
-    {
-        let expr = f(ExprList::new(series_col_expr(&self.series)));
-        eval_series_expr(&self.series, expr)
-    }
-}
-
-impl SeriesExprDateTime {
-    pub fn new(series: Series) -> Self {
-        Self { series }
-    }
-
-    pub fn apply<F>(&self, f: F) -> PolarsResult<Series>
-    where
-        F: FnOnce(ExprDateTime) -> Expr,
-    {
-        let expr = f(ExprDateTime::new(series_col_expr(&self.series)));
-        eval_series_expr(&self.series, expr)
-    }
-}
-
-impl SeriesExprBinary {
-    pub fn new(series: Series) -> Self {
-        Self { series }
-    }
-
-    pub fn apply<F>(&self, f: F) -> PolarsResult<Series>
-    where
-        F: FnOnce(ExprBinary) -> Expr,
-    {
-        let expr = f(ExprBinary::new(series_col_expr(&self.series)));
-        eval_series_expr(&self.series, expr)
-    }
-
-    pub fn apply_result<F>(&self, f: F) -> PolarsResult<Series>
-    where
-        F: FnOnce(ExprBinary) -> PolarsResult<Expr>,
-    {
-        let expr = f(ExprBinary::new(series_col_expr(&self.series)))?;
-        eval_series_expr(&self.series, expr)
-    }
-}
-
-impl SeriesExprStruct {
-    pub fn new(series: Series) -> Self {
-        Self { series }
-    }
-
-    pub fn apply<F>(&self, f: F) -> PolarsResult<Series>
-    where
-        F: FnOnce(ExprStruct) -> Expr,
-    {
-        let expr = f(ExprStruct::new(series_col_expr(&self.series)));
-        eval_series_expr(&self.series, expr)
-    }
-}
-
-impl SeriesExprCategorical {
-    pub fn new(series: Series) -> Self {
-        Self { series }
-    }
-
-    pub fn apply<F>(&self, f: F) -> PolarsResult<Series>
-    where
-        F: FnOnce(ExprCategorical) -> Expr,
-    {
-        let expr = f(ExprCategorical::new(series_col_expr(&self.series)));
-        eval_series_expr(&self.series, expr)
-    }
-}
-
-impl SeriesExprArray {
-    pub fn new(series: Series) -> Self {
-        Self { series }
-    }
-
-    pub fn apply<F>(&self, f: F) -> PolarsResult<Series>
-    where
-        F: FnOnce(ExprArray) -> Expr,
-    {
-        let expr = f(ExprArray::new(series_col_expr(&self.series)));
-        eval_series_expr(&self.series, expr)
-    }
-
-    pub fn apply_result<F>(&self, f: F) -> PolarsResult<Series>
-    where
-        F: FnOnce(ExprArray) -> PolarsResult<Expr>,
-    {
-        let expr = f(ExprArray::new(series_col_expr(&self.series)))?;
-        eval_series_expr(&self.series, expr)
-    }
-}
-
-impl SeriesExprName {
-    pub fn new(series: Series) -> Self {
-        Self { series }
-    }
-
-    pub fn apply<F>(&self, f: F) -> PolarsResult<Series>
-    where
-        F: FnOnce(ExprName) -> Expr,
-    {
-        let expr = f(ExprName::new(series_col_expr(&self.series)));
-        eval_series_expr(&self.series, expr)
-    }
-}
-
-impl SeriesExprMeta {
-    pub fn new(series: Series) -> Self {
-        Self { series }
-    }
-
-    pub fn apply<F>(&self, f: F) -> PolarsResult<Series>
-    where
-        F: FnOnce(ExprMeta) -> Expr,
-    {
-        let expr = f(ExprMeta::new(series_col_expr(&self.series)));
-        eval_series_expr(&self.series, expr)
-    }
-}
-
-impl SeriesExprExt {
-    pub fn new(series: Series) -> Self {
-        Self { series }
-    }
-
-    pub fn apply<F>(&self, f: F) -> PolarsResult<Series>
-    where
-        F: FnOnce(ExprExt) -> Expr,
-    {
-        let expr = f(ExprExt::new(series_col_expr(&self.series)));
-        eval_series_expr(&self.series, expr)
-    }
-}
+impl_series_expr_ns!(SeriesExprString, ExprString);
+impl_series_expr_ns!(SeriesExprList, ExprList);
+impl_series_expr_ns!(SeriesExprDateTime, ExprDateTime);
+impl_series_expr_ns!(SeriesExprBinary, ExprBinary, result);
+impl_series_expr_ns!(SeriesExprStruct, ExprStruct);
+impl_series_expr_ns!(SeriesExprCategorical, ExprCategorical);
+impl_series_expr_ns!(SeriesExprArray, ExprArray, result);
+impl_series_expr_ns!(SeriesExprName, ExprName);
+impl_series_expr_ns!(SeriesExprMeta, ExprMeta);
+impl_series_expr_ns!(SeriesExprExt, ExprExt);
 
 fn eval_series_expr(series: &Series, expr: Expr) -> PolarsResult<Series> {
     let df = DataFrame::new(vec![Column::from(series.clone())])?;
