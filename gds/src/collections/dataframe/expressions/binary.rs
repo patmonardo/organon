@@ -1,6 +1,6 @@
 //! Binary namespace for expressions (py-polars inspired).
 
-use polars::prelude::{lit, DataType, DataTypeExpr, Expr};
+use polars::prelude::{lit, DataType, DataTypeExpr, Expr, PolarsError, PolarsResult};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum BinaryEncoding {
@@ -111,20 +111,21 @@ impl ExprBinary {
             .reinterpret(dtype.into(), is_little_endian)
     }
 
-    pub fn slice(self, _offset: i64, _length: i64) -> Expr {
-        // Element-wise binary slice is not available in Polars 0.52 as an Expr
-        // (no BinaryFunction::Slice). Keep as stub and implement when upstream
-        // adds the BinaryFunction variants or when we add a safe fallback.
-        todo!("binary slice requires newer Polars or a series-level fallback")
+    pub fn slice(self, _offset: i64, _length: i64) -> PolarsResult<Expr> {
+        Err(PolarsError::ComputeError(
+            "binary.slice is not supported in Polars 0.52 expression API".into(),
+        ))
     }
 
-    pub fn head(self, _n: i64) -> Expr {
-        // Element-wise head is not available in Polars 0.52 as an Expr.
-        todo!("binary head requires newer Polars or a series-level fallback")
+    pub fn head(self, _n: i64) -> PolarsResult<Expr> {
+        Err(PolarsError::ComputeError(
+            "binary.head is not supported in Polars 0.52 expression API".into(),
+        ))
     }
 
-    pub fn tail(self, _n: i64) -> Expr {
-        // Element-wise tail is not available in Polars 0.52 as an Expr.
-        todo!("binary tail requires newer Polars or a series-level fallback")
+    pub fn tail(self, _n: i64) -> PolarsResult<Expr> {
+        Err(PolarsError::ComputeError(
+            "binary.tail is not supported in Polars 0.52 expression API".into(),
+        ))
     }
 }

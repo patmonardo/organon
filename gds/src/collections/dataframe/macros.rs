@@ -81,6 +81,16 @@ macro_rules! expr {
     ($lhs:tt != $rhs:tt) => {
         $crate::expr!($lhs).neq($crate::expr!($rhs))
     };
+    // Logical boolean combinators
+    ($lhs:tt && $rhs:tt) => {
+        $crate::expr!($lhs).and($crate::expr!($rhs))
+    };
+    ($lhs:tt || $rhs:tt) => {
+        $crate::expr!($lhs).or($crate::expr!($rhs))
+    };
+    (! $inner:tt) => {
+        $crate::expr!($inner).not()
+    };
     // Fallback to allow arithmetic ops (like *) to use regular operator overloading
     ($lhs:tt $op:tt $rhs:tt) => {
         ($crate::expr!($lhs) $op $crate::expr!($rhs))
@@ -632,5 +642,203 @@ macro_rules! order_by {
             $crate::collections::dataframe::PolarsSortMultipleOptions::new()
                 .with_order_descending(false),
         )
+    };
+}
+
+/// Pythonic alias for `filter!` (avoid reserved-word ergonomics around `where`).
+///
+/// Example:
+/// ```rust
+/// let out = where_!(table, (score >= 70.0) && (attempts > 0))?;
+/// ```
+#[macro_export]
+macro_rules! where_ {
+    ($table:expr, $($e:tt)+) => {
+        $crate::filter!($table, $($e)+)
+    };
+}
+
+/// Add/replace multiple columns in one shot using assignment syntax.
+///
+/// Example:
+/// ```rust
+/// let out = mutate!(
+///     table,
+///     score_x2 = (score * 2.0),
+///     passed = (score >= 70.0),
+/// )?;
+/// ```
+#[macro_export]
+macro_rules! mutate {
+    ($table:expr, $( $name:ident = ( $($e:tt)+ ) ),+ $(,)?) => {{
+        let mut __exprs = ::std::vec::Vec::new();
+        $( __exprs.push($crate::expr!($($e)+).alias(stringify!($name))); )+
+        $table.with_columns(&__exprs)
+    }};
+
+    ($table:expr, $( $name:literal = ( $($e:tt)+ ) ),+ $(,)?) => {{
+        let mut __exprs = ::std::vec::Vec::new();
+        $( __exprs.push($crate::expr!($($e)+).alias($name)); )+
+        $table.with_columns(&__exprs)
+    }};
+}
+
+/// Aggregate/select shorthand (semantic alias for `select!`).
+///
+/// Example:
+/// ```rust
+/// let out = summarize!(table, (score.mean()) as "avg_score", (id.count()) as rows)?;
+/// ```
+#[macro_export]
+macro_rules! summarize {
+    ($table:expr, $($rest:tt)+) => {
+        $crate::select!($table, $($rest)+)
+    };
+}
+
+/// Pythonic alias for ordering rows.
+///
+/// Example:
+/// ```rust
+/// let out = arrange!(table, [score], desc)?;
+/// ```
+#[macro_export]
+macro_rules! arrange {
+    ($table:expr, [ $($sel:tt),* $(,)? ]) => {
+        $crate::order_by!($table, [ $($sel),* ])
+    };
+    ($table:expr, [ $($sel:tt),* $(,)? ], $dir:ident) => {
+        $crate::order_by!($table, [ $($sel),* ], $dir)
+    };
+}
+
+/// Join shorthand with pythonic `how` keyword style.
+///
+/// Examples:
+/// ```rust
+/// let out = join!(left, right, on=[id], how=left)?;
+/// let out = join!(left, right, on=["id"], how=inner)?;
+/// ```
+#[macro_export]
+macro_rules! join {
+    ($left:expr, $right:expr, on=[ $($key:ident),* $(,)? ], how=inner) => {
+        $left.join_on(&$right, &[ $( stringify!($key) ),* ], polars::prelude::JoinType::Inner, None)
+    };
+    ($left:expr, $right:expr, on=[ $($key:literal),* $(,)? ], how=inner) => {
+        $left.join_on(&$right, &[ $( $key ),* ], polars::prelude::JoinType::Inner, None)
+    };
+
+    ($left:expr, $right:expr, on=[ $($key:ident),* $(,)? ], how=left) => {
+        $left.join_on(&$right, &[ $( stringify!($key) ),* ], polars::prelude::JoinType::Left, None)
+    };
+    ($left:expr, $right:expr, on=[ $($key:literal),* $(,)? ], how=left) => {
+        $left.join_on(&$right, &[ $( $key ),* ], polars::prelude::JoinType::Left, None)
+    };
+
+    ($left:expr, $right:expr, on=[ $($key:ident),* $(,)? ], how=right) => {
+        $left.join_on(&$right, &[ $( stringify!($key) ),* ], polars::prelude::JoinType::Right, None)
+    };
+    ($left:expr, $right:expr, on=[ $($key:literal),* $(,)? ], how=right) => {
+        $left.join_on(&$right, &[ $( $key ),* ], polars::prelude::JoinType::Right, None)
+    };
+
+    ($left:expr, $right:expr, on=[ $($key:ident),* $(,)? ], how=full) => {
+        $left.join_on(&$right, &[ $( stringify!($key) ),* ], polars::prelude::JoinType::Full, None)
+    };
+    ($left:expr, $right:expr, on=[ $($key:literal),* $(,)? ], how=full) => {
+        $left.join_on(&$right, &[ $( $key ),* ], polars::prelude::JoinType::Full, None)
+    };
+}
+
+/// Generic method-chaining pipeline helper.
+///
+/// Example:
+/// ```rust
+/// let out = pipe!(
+///     table,
+///     |t| where_!(t, score > 70.0).unwrap(),
+///     |t| arrange!(t, [score], desc).unwrap(),
+/// );
+/// ```
+#[macro_export]
+macro_rules! pipe {
+    // Method chain form: pipe!(value => method(args...) => method2(args...))
+    ($value:expr => $method:ident ( $($args:tt)* ) $(=> $next_method:ident ( $($next_args:tt)* ))+ $(,)?) => {{
+        let __value = $value;
+        let __value = __value.$method($($args)*);
+        $( let __value = __value.$next_method($($next_args)*); )+
+        __value
+    }};
+
+    // Single method chain form
+    ($value:expr => $method:ident ( $($args:tt)* ) $(,)?) => {{
+        let __value = $value;
+        __value.$method($($args)*)
+    }};
+
+    // Functional transform form: pipe!(value, |v| ..., |v| ...)
+    ($value:expr, $step:expr $(, $next:expr )+ $(,)?) => {{
+        let __value = $step($value);
+        $( let __value = $next(__value); )+
+        __value
+    }};
+
+    ($value:expr, $step:expr $(,)?) => {
+        $step($value)
+    };
+}
+
+/// Query macro for lazy pipelines.
+///
+/// Converts the input to lazy via `.lazy()` and chains lazy methods.
+///
+/// Example:
+/// ```rust
+/// let lf = q!(
+///     table
+///         => filter(expr!(score > 70.0))
+///         => with_columns_exprs(vec![expr!(score * 1.1).alias("score_boost")])
+///         => select_exprs(vec![col!(id), col!(score_boost)])
+/// );
+/// ```
+#[macro_export]
+macro_rules! q {
+    ($value:expr => $method:ident ( $($args:tt)* ) $(=> $next_method:ident ( $($next_args:tt)* ))* $(,)?) => {{
+        let __lazy = $value.lazy();
+        let __lazy = __lazy.$method($($args)*);
+        $( let __lazy = __lazy.$next_method($($next_args)*); )*
+        __lazy
+    }};
+}
+
+/// Conditional helper: create a `when(...).then(...)` expression or finalize a full condition.
+///
+/// Examples:
+/// ```rust
+/// let w = then!(expr!(score > 80.0) => lit!("A"));
+/// let g = then!(expr!(score > 80.0) => lit!("A"), lit!("B"));
+/// ```
+#[macro_export]
+macro_rules! then {
+    ($cond:expr => $then_expr:expr) => {
+        $crate::collections::dataframe::when($cond).then($then_expr)
+    };
+    ($cond:expr => $then_expr:expr, $otherwise_expr:expr) => {
+        $crate::collections::dataframe::when($cond)
+            .then($then_expr)
+            .otherwise($otherwise_expr)
+    };
+}
+
+/// Conditional helper: finalize a `then!` chain with an `otherwise` branch.
+///
+/// Example:
+/// ```rust
+/// let grade = otherwise!(then!(expr!(score > 80.0) => lit!("A")), lit!("B"));
+/// ```
+#[macro_export]
+macro_rules! otherwise {
+    ($when_then:expr, $otherwise_expr:expr) => {
+        $when_then.otherwise($otherwise_expr)
     };
 }

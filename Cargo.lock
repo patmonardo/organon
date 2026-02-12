@@ -2086,6 +2086,7 @@ dependencies = [
  "polars-compute",
  "polars-core",
  "polars-error",
+ "polars-expr",
  "polars-io",
  "polars-lazy",
  "polars-ops",
@@ -2378,6 +2379,7 @@ version = "0.52.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7b59c80a019ef0e6f09b4416d2647076a52839305c9eb11919e8298ec667f853"
 dependencies = [
+ "aho-corasick",
  "argminmax",
  "base64 0.22.1",
  "bytemuck",

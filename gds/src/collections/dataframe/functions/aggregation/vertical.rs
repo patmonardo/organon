@@ -33,3 +33,7 @@ pub fn sum(names: &[&str]) -> Expr {
 pub fn mean(names: &[&str]) -> Expr {
     select_expr_from_names(names).mean()
 }
+
+pub fn cum_sum(names: &[&str], reverse: bool) -> Expr {
+    select_expr_from_names(names).cum_sum(reverse)
+}

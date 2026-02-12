@@ -14,6 +14,9 @@ use crate::collections::dataframe::expressions::meta::ExprMeta;
 use crate::collections::dataframe::expressions::name::ExprName;
 use crate::collections::dataframe::expressions::string::ExprString;
 use crate::collections::dataframe::expressions::structure::ExprStruct;
+use crate::collections::dataframe::utils::udfs::{
+    suggest_from_function_name, MapTarget, UdfError, UdfRewriteSuggestion,
+};
 
 /// Wrapper that enables an Expr namespace pipeline from a Series.
 #[derive(Debug, Clone)]
@@ -166,6 +169,14 @@ impl SeriesExpr {
         let expr = f(self.expr());
         eval_series_expr(&self.series, expr)
     }
+
+    /// Suggest a native expression rewrite for an Expr-level UDF name.
+    pub fn suggest_udf_rewrite(
+        &self,
+        function_name: &str,
+    ) -> Result<Option<UdfRewriteSuggestion>, UdfError> {
+        suggest_from_function_name(function_name, self.series.name().as_str(), MapTarget::Expr)
+    }
 }
 
 impl SeriesExprString {
@@ -220,6 +231,14 @@ impl SeriesExprBinary {
         F: FnOnce(ExprBinary) -> Expr,
     {
         let expr = f(ExprBinary::new(series_col_expr(&self.series)));
+        eval_series_expr(&self.series, expr)
+    }
+
+    pub fn apply_result<F>(&self, f: F) -> PolarsResult<Series>
+    where
+        F: FnOnce(ExprBinary) -> PolarsResult<Expr>,
+    {
+        let expr = f(ExprBinary::new(series_col_expr(&self.series)))?;
         eval_series_expr(&self.series, expr)
     }
 }

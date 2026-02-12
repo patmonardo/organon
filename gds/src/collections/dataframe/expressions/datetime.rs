@@ -193,6 +193,10 @@ impl ExprDateTime {
         self.expr.dt().timestamp(time_unit)
     }
 
+    pub fn epoch(self, time_unit: TimeUnit) -> Expr {
+        self.timestamp(time_unit)
+    }
+
     pub fn timestamp_ms(self) -> Expr {
         self.expr.dt().timestamp(TimeUnit::Milliseconds)
     }
@@ -219,6 +223,14 @@ impl ExprDateTime {
 
     pub fn round_expr(self, every: Expr) -> Expr {
         self.expr.dt().round(every)
+    }
+
+    pub fn offset_by(self, by: &str) -> Expr {
+        self.expr.dt().offset_by(lit(by))
+    }
+
+    pub fn offset_by_expr(self, by: Expr) -> Expr {
+        self.expr.dt().offset_by(by)
     }
 
     pub fn combine(self, time: Expr, time_unit: TimeUnit) -> Expr {

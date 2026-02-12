@@ -32,6 +32,13 @@ impl BinaryNameSpace {
         SeriesExprBinary::new(self.series.clone()).apply(f)
     }
 
+    fn apply_expr_result<F>(&self, f: F) -> PolarsResult<Series>
+    where
+        F: FnOnce(ExprBinary) -> PolarsResult<Expr>,
+    {
+        SeriesExprBinary::new(self.series.clone()).apply_result(f)
+    }
+
     pub fn contains(&self, literal: &[u8]) -> PolarsResult<Series> {
         self.apply_expr(|expr| expr.contains(literal))
     }
@@ -82,14 +89,14 @@ impl BinaryNameSpace {
     }
 
     pub fn slice(&self, offset: i64, length: i64) -> PolarsResult<Series> {
-        self.apply_expr(|expr| expr.slice(offset, length))
+        self.apply_expr_result(|expr| expr.slice(offset, length))
     }
 
     pub fn head(&self, n: i64) -> PolarsResult<Series> {
-        self.apply_expr(|expr| expr.head(n))
+        self.apply_expr_result(|expr| expr.head(n))
     }
 
     pub fn tail(&self, n: i64) -> PolarsResult<Series> {
-        self.apply_expr(|expr| expr.tail(n))
+        self.apply_expr_result(|expr| expr.tail(n))
     }
 }

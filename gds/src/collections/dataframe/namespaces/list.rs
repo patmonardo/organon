@@ -280,7 +280,15 @@ impl ListNameSpace {
         self.apply_expr(|expr| expr.set_symmetric_difference_expr(other))
     }
 
+    pub fn explode(&self) -> PolarsResult<Series> {
+        self.apply_expr(|list| list.explode())
+    }
+
     pub fn eval(&self, expr: Expr) -> PolarsResult<Series> {
         self.apply_expr(|list| list.eval(expr))
+    }
+
+    pub fn agg(&self, expr: Expr) -> PolarsResult<Series> {
+        self.apply_expr(|list| list.agg(expr))
     }
 }

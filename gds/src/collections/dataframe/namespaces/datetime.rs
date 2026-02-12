@@ -196,8 +196,7 @@ impl DateTimeNameSpace {
     }
 
     pub fn epoch(&self, time_unit: TimeUnit) -> PolarsResult<Series> {
-        // Python exposes `dt.epoch(time_unit)`; forward to timestamp
-        self.apply_expr(|expr| expr.timestamp(time_unit))
+        self.apply_expr(|expr| expr.epoch(time_unit))
     }
 
     pub fn truncate(&self, every: &str) -> PolarsResult<Series> {
@@ -216,9 +215,13 @@ impl DateTimeNameSpace {
         self.apply_expr(|expr| expr.round_expr(every))
     }
 
-    // pub fn offset_by(&self, by: &str) -> PolarsResult<Series> {
-    //     self.apply_expr(|expr| expr.offset_by(by))
-    // }
+    pub fn offset_by(&self, by: &str) -> PolarsResult<Series> {
+        self.apply_expr(|expr| expr.offset_by(by))
+    }
+
+    pub fn offset_by_expr(&self, by: Expr) -> PolarsResult<Series> {
+        self.apply_expr(|expr| expr.offset_by_expr(by))
+    }
 
     pub fn combine(&self, time: Expr, time_unit: TimeUnit) -> PolarsResult<Series> {
         self.apply_expr(|expr| expr.combine(time, time_unit))

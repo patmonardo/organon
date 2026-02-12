@@ -104,6 +104,14 @@ impl ExprArray {
         self.expr.arr().get(index, null_on_oob)
     }
 
+    pub fn first(self) -> Expr {
+        self.get(0, true)
+    }
+
+    pub fn last(self) -> Expr {
+        self.get(-1, true)
+    }
+
     pub fn join(self, separator: &str, ignore_nulls: bool) -> Expr {
         self.expr.arr().join(lit(separator), ignore_nulls)
     }
@@ -168,13 +176,11 @@ impl ExprArray {
         self.expr.arr().shift(n)
     }
 
-    pub fn eval(self, _expr: Expr, _as_list: bool) -> Expr {
-        // Not implemented in Polars 0.52 Rust Expr API yet.
-        todo!()
+    pub fn eval(self, expr: Expr, as_list: bool) -> Expr {
+        self.expr.arr().eval(expr, as_list)
     }
 
-    pub fn agg(self, _expr: Expr) -> Expr {
-        // Not implemented in Polars 0.52 Rust Expr API yet.
-        todo!()
+    pub fn agg(self, expr: Expr) -> Expr {
+        self.expr.arr().agg(expr)
     }
 }

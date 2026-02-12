@@ -46,12 +46,16 @@ polars = { version = "0.52.0", features = [
     "strings",
     "string_pad",
     "string_to_integer",
+    "string_encoding",
+    "string_reverse",
+    "string_normalize",
     "object",
     "serde",
     "serde-lazy",
     "parquet",
     "json",
     "ipc",
+    "csv",
     "is_in",
     "zip_with",
     "round_series",
@@ -91,6 +95,8 @@ polars = { version = "0.52.0", features = [
     "propagate_nans",
     "fmt",
     #
+    "dynamic_group_by",
+    "merge_sorted",
     "month_end",
     "month_start",
     "business",
@@ -106,6 +112,7 @@ polars = { version = "0.52.0", features = [
     "array_count",
     "array_to_struct",
     "binary_encoding",
+    "find_many",
     "asof_join",
 ] }
 polars-io = { version = "0.52.0" }

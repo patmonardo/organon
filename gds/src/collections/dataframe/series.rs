@@ -10,6 +10,9 @@ use crate::collections::dataframe::namespaces::ext::ExtNameSpace;
 use crate::collections::dataframe::namespaces::list::ListNameSpace;
 use crate::collections::dataframe::namespaces::string::StringNameSpace;
 use crate::collections::dataframe::namespaces::structure::StructNameSpace;
+use crate::collections::dataframe::utils::udfs::{
+    suggest_from_function_name, MapTarget, UdfError, UdfRewriteSuggestion,
+};
 
 /// Python-shaped Series facade for the Collections SDK.
 #[derive(Debug, Clone)]
@@ -88,6 +91,16 @@ impl GDSSeries {
 
     pub fn ext(&self) -> ExtNameSpace {
         ExtNameSpace::new(self.series.clone())
+    }
+
+    /// Suggest a native expression rewrite for a Series-level UDF name.
+    ///
+    /// This is a Rust-side analogue of py-polars inefficient-map guidance.
+    pub fn suggest_udf_rewrite(
+        &self,
+        function_name: &str,
+    ) -> Result<Option<UdfRewriteSuggestion>, UdfError> {
+        suggest_from_function_name(function_name, self.name(), MapTarget::Series)
     }
 }
 

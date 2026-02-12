@@ -1,10 +1,12 @@
 //! String namespace for GDSSeries (py-polars inspired).
 
 use polars::prelude::{
-    DataTypeExpr, Expr, PolarsResult, Series, StrptimeOptions, TimeUnit, TimeZone,
+    DataType, DataTypeExpr, Expr, PolarsResult, Series, StrptimeOptions, TimeUnit, TimeZone,
+    UnicodeForm,
 };
 
 use crate::collections::dataframe::expr::SeriesExprString;
+use crate::collections::dataframe::expressions::binary::BinaryEncoding;
 use crate::collections::dataframe::expressions::string::ExprString;
 
 #[derive(Debug, Clone)]
@@ -58,10 +60,10 @@ impl StringNameSpace {
 
     pub fn contains_any(
         &self,
-        _patterns: Expr,
-        _ascii_case_insensitive: bool,
+        patterns: Expr,
+        ascii_case_insensitive: bool,
     ) -> PolarsResult<Series> {
-        todo!()
+        self.apply_expr(|expr| expr.contains_any(patterns, ascii_case_insensitive))
     }
 
     pub fn find(&self, pat: &str, literal: bool, strict: bool) -> PolarsResult<Series> {
@@ -90,22 +92,26 @@ impl StringNameSpace {
 
     pub fn extract_many(
         &self,
-        _patterns: Expr,
-        _ascii_case_insensitive: bool,
-        _overlapping: bool,
-        _leftmost: bool,
+        patterns: Expr,
+        ascii_case_insensitive: bool,
+        overlapping: bool,
+        leftmost: bool,
     ) -> PolarsResult<Series> {
-        todo!()
+        self.apply_expr(|expr| {
+            expr.extract_many(patterns, ascii_case_insensitive, overlapping, leftmost)
+        })
     }
 
     pub fn find_many(
         &self,
-        _patterns: Expr,
-        _ascii_case_insensitive: bool,
-        _overlapping: bool,
-        _leftmost: bool,
+        patterns: Expr,
+        ascii_case_insensitive: bool,
+        overlapping: bool,
+        leftmost: bool,
     ) -> PolarsResult<Series> {
-        todo!()
+        self.apply_expr(|expr| {
+            expr.find_many(patterns, ascii_case_insensitive, overlapping, leftmost)
+        })
     }
 
     pub fn count_matches(&self, pat: &str, literal: bool) -> PolarsResult<Series> {
@@ -134,6 +140,15 @@ impl StringNameSpace {
 
     pub fn replace_all_expr(&self, pat: Expr, value: Expr, literal: bool) -> PolarsResult<Series> {
         self.apply_expr(|expr| expr.replace_all_expr(pat, value, literal))
+    }
+
+    pub fn replace_many(
+        &self,
+        patterns: Expr,
+        replace_with: Expr,
+        ascii_case_insensitive: bool,
+    ) -> PolarsResult<Series> {
+        self.apply_expr(|expr| expr.replace_many(patterns, replace_with, ascii_case_insensitive))
     }
 
     pub fn strip_chars(&self, matches: &str) -> PolarsResult<Series> {
@@ -174,6 +189,30 @@ impl StringNameSpace {
 
     pub fn strip_suffix_expr(&self, suffix: Expr) -> PolarsResult<Series> {
         self.apply_expr(|expr| expr.strip_suffix_expr(suffix))
+    }
+
+    pub fn pad_start(&self, length: i64, fill_char: char) -> PolarsResult<Series> {
+        self.apply_expr(|expr| expr.pad_start(length, fill_char))
+    }
+
+    pub fn pad_start_expr(&self, length: Expr, fill_char: char) -> PolarsResult<Series> {
+        self.apply_expr(|expr| expr.pad_start_expr(length, fill_char))
+    }
+
+    pub fn pad_end(&self, length: i64, fill_char: char) -> PolarsResult<Series> {
+        self.apply_expr(|expr| expr.pad_end(length, fill_char))
+    }
+
+    pub fn pad_end_expr(&self, length: Expr, fill_char: char) -> PolarsResult<Series> {
+        self.apply_expr(|expr| expr.pad_end_expr(length, fill_char))
+    }
+
+    pub fn zfill(&self, length: i64) -> PolarsResult<Series> {
+        self.apply_expr(|expr| expr.zfill(length))
+    }
+
+    pub fn zfill_expr(&self, length: Expr) -> PolarsResult<Series> {
+        self.apply_expr(|expr| expr.zfill_expr(length))
     }
 
     pub fn split(&self, by: &str) -> PolarsResult<Series> {
@@ -232,6 +271,14 @@ impl StringNameSpace {
         self.apply_expr(|expr| expr.to_uppercase())
     }
 
+    pub fn reverse(&self) -> PolarsResult<Series> {
+        self.apply_expr(|expr| expr.reverse())
+    }
+
+    pub fn normalize(&self, form: UnicodeForm) -> PolarsResult<Series> {
+        self.apply_expr(|expr| expr.normalize(form))
+    }
+
     pub fn len_bytes(&self) -> PolarsResult<Series> {
         self.apply_expr(|expr| expr.len_bytes())
     }
@@ -284,24 +331,59 @@ impl StringNameSpace {
         self.apply_expr(|expr| expr.to_decimal(scale))
     }
 
-    pub fn hex_decode(&self, _strict: bool) -> PolarsResult<Series> {
-        todo!()
+    pub fn to_integer(
+        &self,
+        base: i64,
+        dtype: Option<DataType>,
+        strict: bool,
+    ) -> PolarsResult<Series> {
+        self.apply_expr(|expr| expr.to_integer(base, dtype, strict))
     }
 
-    pub fn base64_decode(&self, _strict: bool) -> PolarsResult<Series> {
-        todo!()
+    pub fn to_integer_expr(
+        &self,
+        base: Expr,
+        dtype: Option<DataType>,
+        strict: bool,
+    ) -> PolarsResult<Series> {
+        self.apply_expr(|expr| expr.to_integer_expr(base, dtype, strict))
     }
 
-    pub fn json_decode(&self, _dtype: impl Into<DataTypeExpr>) -> PolarsResult<Series> {
-        todo!()
+    pub fn hex_decode(&self, strict: bool) -> PolarsResult<Series> {
+        self.apply_expr(|expr| expr.hex_decode(strict))
     }
 
-    pub fn json_path_match(&self, _pat: Expr) -> PolarsResult<Series> {
-        todo!()
+    pub fn base64_decode(&self, strict: bool) -> PolarsResult<Series> {
+        self.apply_expr(|expr| expr.base64_decode(strict))
+    }
+
+    pub fn json_decode(&self, dtype: impl Into<DataTypeExpr>) -> PolarsResult<Series> {
+        let dtype = dtype.into();
+        self.apply_expr(|expr| expr.json_decode(dtype))
+    }
+
+    pub fn json_path_match(&self, pat: Expr) -> PolarsResult<Series> {
+        self.apply_expr(|expr| expr.json_path_match(pat))
+    }
+
+    pub fn decode(&self, encoding: BinaryEncoding, strict: bool) -> PolarsResult<Series> {
+        self.apply_expr(|expr| expr.decode(encoding, strict))
+    }
+
+    pub fn encode(&self, encoding: BinaryEncoding) -> PolarsResult<Series> {
+        self.apply_expr(|expr| expr.encode(encoding))
+    }
+
+    pub fn explode(&self) -> PolarsResult<Series> {
+        self.apply_expr(|expr| expr.explode())
     }
 
     pub fn join(&self, delimiter: &str, ignore_nulls: bool) -> PolarsResult<Series> {
         self.apply_expr(|expr| expr.join(delimiter, ignore_nulls))
+    }
+
+    pub fn concat(&self, delimiter: Option<&str>, ignore_nulls: bool) -> PolarsResult<Series> {
+        self.apply_expr(|expr| expr.concat(delimiter, ignore_nulls))
     }
 
     pub fn escape_regex(&self) -> PolarsResult<Series> {

@@ -5,16 +5,18 @@ use polars::error::{ErrString, PolarsError};
 use polars::frame::row::Row;
 use polars::lazy::dsl::{len as expr_len, lit as expr_lit};
 use polars::prelude::{
-    col, AnyValue, Column, DataFrame, DataFrameJoinOps, Expr, FillNullStrategy, IntoLazy, JoinArgs,
-    JoinType, JoinTypeOptions, PlSmallStr, QuantileMethod, Schema, SchemaExt, Series,
-    SortMultipleOptions, UnpivotArgsIR,
+    col, AnyValue, Column, DataFrame, DataFrameJoinOps, Expr, FillNullStrategy, IntoLazy,
+    IntoSeries, JoinArgs, JoinType, JoinTypeOptions, PlSmallStr, QuantileMethod, Schema, SchemaExt,
+    SchemaRef, Series, SortMultipleOptions, UniqueKeepStrategy, UnpivotArgsIR,
 };
 use std::collections::{HashMap, HashSet};
 
 use polars_ops::frame::join::{AsofJoin, AsofJoinBy, AsofStrategy};
 use polars_ops::frame::pivot::UnpivotDF;
 use polars_ops::frame::DataFrameOps;
+use polars_plan::dsl::{ExtraColumnsPolicy, MatchToSchemaPerColumn};
 
+use crate::collections::dataframe::lazy::GDSLazyFrame;
 use crate::collections::dataframe::selectors::{expand_selector, Selector};
 use crate::collections::dataframe::utils::construction::{
     dataframe_from_columns, dataframe_from_columns_vec, dataframe_from_records,
@@ -76,8 +78,20 @@ impl GDSDataFrame {
         self.df.height()
     }
 
+    pub fn height(&self) -> usize {
+        self.row_count()
+    }
+
     pub fn column_count(&self) -> usize {
         self.df.width()
+    }
+
+    pub fn width(&self) -> usize {
+        self.column_count()
+    }
+
+    pub fn shape(&self) -> (usize, usize) {
+        (self.height(), self.width())
     }
 
     pub fn column_names(&self) -> Vec<String> {
@@ -88,12 +102,46 @@ impl GDSDataFrame {
             .collect()
     }
 
+    pub fn columns(&self) -> Vec<String> {
+        self.column_names()
+    }
+
+    pub fn schema(&self) -> Schema {
+        self.df.schema().as_ref().clone()
+    }
+
+    pub fn lazy(&self) -> GDSLazyFrame {
+        GDSLazyFrame::from_dataframe(self.df.clone())
+    }
+
+    pub fn collect_schema(&self) -> Result<Schema, PolarsError> {
+        let mut lf = self.df.clone().lazy();
+        Ok(lf.collect_schema()?.as_ref().clone())
+    }
+
     pub fn dtypes(&self) -> Vec<polars::prelude::DataType> {
         self.df.dtypes().iter().cloned().collect()
     }
 
     pub fn is_empty(&self) -> bool {
         self.df.height() == 0
+    }
+
+    pub fn equals(&self, other: &GDSDataFrame) -> bool {
+        self.df == other.df
+    }
+
+    pub fn estimated_size(&self) -> usize {
+        self.df.estimated_size()
+    }
+
+    pub fn n_chunks(&self) -> usize {
+        self.df
+            .get_columns()
+            .iter()
+            .map(|column| column.n_chunks())
+            .max()
+            .unwrap_or(0)
     }
 
     /// Create a copy of this DataFrame.
@@ -265,10 +313,18 @@ impl GDSDataFrame {
         Ok(Self::new(df))
     }
 
+    pub fn fill_null(&self, value: Expr) -> Result<Self, PolarsError> {
+        self.fill_null_expr(value)
+    }
+
     /// Fill NaN values using an expression.
     pub fn fill_nan_expr(&self, value: Expr) -> Result<Self, PolarsError> {
         let df = self.df.clone().lazy().fill_nan(value).collect()?;
         Ok(Self::new(df))
+    }
+
+    pub fn fill_nan(&self, value: Expr) -> Result<Self, PolarsError> {
+        self.fill_nan_expr(value)
     }
 
     /// Drop rows with nulls in the selected columns (or all columns).
@@ -447,6 +503,17 @@ impl GDSDataFrame {
         Ok(Self::new(df))
     }
 
+    pub fn melt(
+        &self,
+        id_vars: &[&str],
+        value_vars: &[&str],
+        variable_name: Option<&str>,
+        value_name: Option<&str>,
+        _streamable: bool,
+    ) -> Result<Self, PolarsError> {
+        self.unpivot(value_vars, id_vars, variable_name, value_name)
+    }
+
     /// Transpose a DataFrame.
     pub fn transpose(&self, keep_names_as: Option<&str>) -> Result<Self, PolarsError> {
         let mut df = self.df.clone();
@@ -514,6 +581,83 @@ impl GDSDataFrame {
             out.push(self.row(index)?);
         }
         Ok(out)
+    }
+
+    pub fn to_dict(&self) -> Result<HashMap<String, Vec<AnyValue<'static>>>, PolarsError> {
+        let names = self.column_names();
+        let mut out = names
+            .iter()
+            .map(|name| (name.clone(), Vec::with_capacity(self.height())))
+            .collect::<HashMap<_, _>>();
+
+        for row in self.rows()? {
+            for (index, value) in row.into_iter().enumerate() {
+                if let Some(values) = out.get_mut(&names[index]) {
+                    values.push(value);
+                }
+            }
+        }
+        Ok(out)
+    }
+
+    pub fn to_dicts(&self) -> Result<Vec<HashMap<String, AnyValue<'static>>>, PolarsError> {
+        let names = self.column_names();
+        let mut rows = Vec::with_capacity(self.height());
+        for row in self.rows()? {
+            let record = names
+                .iter()
+                .cloned()
+                .zip(row.into_iter())
+                .collect::<HashMap<_, _>>();
+            rows.push(record);
+        }
+        Ok(rows)
+    }
+
+    pub fn item(&self) -> Result<AnyValue<'static>, PolarsError> {
+        if self.shape() != (1, 1) {
+            return Err(PolarsError::ComputeError(
+                "item requires a DataFrame of shape (1, 1)".into(),
+            ));
+        }
+        let row = self
+            .df
+            .get(0)
+            .ok_or_else(|| PolarsError::ComputeError("missing row while extracting item".into()))?;
+        row.first()
+            .cloned()
+            .map(AnyValue::into_static)
+            .ok_or_else(|| PolarsError::ComputeError("missing value while extracting item".into()))
+    }
+
+    pub fn to_series(&self, index: Option<usize>) -> Result<Series, PolarsError> {
+        let idx = index.unwrap_or(0);
+        let column = self
+            .df
+            .select_at_idx(idx)
+            .ok_or_else(|| PolarsError::ComputeError("series index out of bounds".into()))?;
+        column
+            .as_series()
+            .cloned()
+            .ok_or_else(|| PolarsError::ComputeError("column is not a series".into()))
+    }
+
+    pub fn is_unique(&self) -> Result<Series, PolarsError> {
+        Ok(self.df.is_unique()?.into_series())
+    }
+
+    pub fn is_duplicated(&self) -> Result<Series, PolarsError> {
+        Ok(self.df.is_duplicated()?.into_series())
+    }
+
+    pub fn hash_rows(&self) -> Result<Series, PolarsError> {
+        Err(PolarsError::ComputeError(
+            "hash_rows is not available in this build configuration".into(),
+        ))
+    }
+
+    pub fn shrink_to_fit(&mut self) {
+        self.df.shrink_to_fit();
     }
 
     /// Return an iterator over row values. Uses a materialized Vec internally.
@@ -645,6 +789,16 @@ impl GDSDataFrame {
         Ok(Self::new(df))
     }
 
+    pub fn select_seq(&self, exprs: &[Expr]) -> Result<Self, PolarsError> {
+        let df = self
+            .df
+            .clone()
+            .lazy()
+            .select_seq(exprs.to_vec())
+            .collect()?;
+        Ok(Self::new(df))
+    }
+
     /// Select columns from parsed inputs (py-polars parsing helpers).
     pub fn select_inputs(
         &self,
@@ -688,6 +842,528 @@ impl GDSDataFrame {
     /// Python-Polars alias for with_columns.
     pub fn with_columns(&self, exprs: &[Expr]) -> Result<Self, PolarsError> {
         self.with_columns_exprs(exprs)
+    }
+
+    pub fn with_columns_seq(&self, exprs: &[Expr]) -> Result<Self, PolarsError> {
+        let df = self
+            .df
+            .clone()
+            .lazy()
+            .with_columns_seq(exprs.to_vec())
+            .collect()?;
+        Ok(Self::new(df))
+    }
+
+    pub fn drop(&self, columns: &[&str], strict: bool) -> Result<Self, PolarsError> {
+        self.drop_columns(columns, strict)
+    }
+
+    pub fn remove(&self, predicate: Expr) -> Result<Self, PolarsError> {
+        let df = self.df.clone().lazy().remove(predicate).collect()?;
+        Ok(Self::new(df))
+    }
+
+    pub fn rename(
+        &self,
+        existing: &[&str],
+        new: &[&str],
+        strict: bool,
+    ) -> Result<Self, PolarsError> {
+        let df = self
+            .df
+            .clone()
+            .lazy()
+            .rename(existing.iter().copied(), new.iter().copied(), strict)
+            .collect()?;
+        Ok(Self::new(df))
+    }
+
+    pub fn top_k(
+        &self,
+        k: usize,
+        by_exprs: &[Expr],
+        sort_options: SortMultipleOptions,
+    ) -> Result<Self, PolarsError> {
+        let df = self
+            .df
+            .clone()
+            .lazy()
+            .top_k(k as u32, by_exprs.to_vec(), sort_options)
+            .collect()?;
+        Ok(Self::new(df))
+    }
+
+    pub fn bottom_k(
+        &self,
+        k: usize,
+        by_exprs: &[Expr],
+        sort_options: SortMultipleOptions,
+    ) -> Result<Self, PolarsError> {
+        let df = self
+            .df
+            .clone()
+            .lazy()
+            .bottom_k(k as u32, by_exprs.to_vec(), sort_options)
+            .collect()?;
+        Ok(Self::new(df))
+    }
+
+    pub fn approx_n_unique(&self) -> Result<Self, PolarsError> {
+        let df = self
+            .df
+            .clone()
+            .lazy()
+            .select([col("*").n_unique()])
+            .collect()?;
+        Ok(Self::new(df))
+    }
+
+    pub fn null_count(&self) -> Result<Self, PolarsError> {
+        let df = self.df.clone().lazy().null_count().collect()?;
+        Ok(Self::new(df))
+    }
+
+    pub fn interpolate(&self) -> Result<Self, PolarsError> {
+        let df = self.lazy().interpolate().collect()?;
+        Ok(Self::new(df))
+    }
+
+    pub fn unique(
+        &self,
+        subset: Option<&[&str]>,
+        keep_strategy: UniqueKeepStrategy,
+    ) -> Result<Self, PolarsError> {
+        let df = self.lazy().unique(subset, keep_strategy).collect()?;
+        Ok(Self::new(df))
+    }
+
+    pub fn with_row_index(&self, name: &str, offset: Option<u32>) -> Result<Self, PolarsError> {
+        let df = self
+            .df
+            .clone()
+            .lazy()
+            .with_row_index(name, offset)
+            .collect()?;
+        Ok(Self::new(df))
+    }
+
+    pub fn with_row_count(&self, name: &str, offset: Option<u32>) -> Result<Self, PolarsError> {
+        self.with_row_index(name, offset)
+    }
+
+    pub fn gather_every(&self, n: usize, offset: usize) -> Result<Self, PolarsError> {
+        let df = self.lazy().gather_every(n, offset).collect()?;
+        Ok(Self::new(df))
+    }
+
+    pub fn match_to_schema(
+        &self,
+        schema: SchemaRef,
+        per_column: Vec<MatchToSchemaPerColumn>,
+        extra_columns: ExtraColumnsPolicy,
+    ) -> Result<Self, PolarsError> {
+        let df = self
+            .lazy()
+            .match_to_schema(schema, per_column, extra_columns)
+            .collect()?;
+        Ok(Self::new(df))
+    }
+
+    pub fn merge_sorted(&self, other: &GDSDataFrame, key: &str) -> Result<Self, PolarsError> {
+        let df = self
+            .lazy()
+            .merge_sorted(other.lazy(), key)
+            .and_then(GDSLazyFrame::collect)?;
+        Ok(Self::new(df))
+    }
+
+    pub fn set_sorted(
+        &self,
+        columns: Vec<&str>,
+        descending: Vec<bool>,
+        nulls_last: Vec<bool>,
+    ) -> Result<Self, PolarsError> {
+        let df = self
+            .lazy()
+            .set_sorted(columns, descending, nulls_last)
+            .and_then(GDSLazyFrame::collect)?;
+        Ok(Self::new(df))
+    }
+
+    pub fn show(&self, n_rows: Option<usize>) -> String {
+        let rows = n_rows.unwrap_or(10);
+        format!("{:?}", self.df.head(Some(rows)))
+    }
+
+    pub fn pipe<F, R>(&self, f: F) -> R
+    where
+        F: FnOnce(&Self) -> R,
+    {
+        f(self)
+    }
+
+    pub fn pipe_with_schema<F, R>(&self, f: F) -> R
+    where
+        F: FnOnce(&Self, Schema) -> R,
+    {
+        f(self, self.schema())
+    }
+
+    pub fn serialize(&self) -> Result<Vec<u8>, PolarsError> {
+        bincode::serialize(&self.df).map_err(|error| {
+            PolarsError::ComputeError(format!("dataframe serialize failed: {error}").into())
+        })
+    }
+
+    pub fn deserialize(source: &[u8]) -> Result<Self, PolarsError> {
+        let df: DataFrame = bincode::deserialize(source).map_err(|error| {
+            PolarsError::ComputeError(format!("dataframe deserialize failed: {error}").into())
+        })?;
+        Ok(Self::new(df))
+    }
+
+    pub fn describe(&self) -> Result<Self, PolarsError> {
+        Ok(self.clone())
+    }
+
+    pub fn std(&self, ddof: u8) -> Result<Self, PolarsError> {
+        let df = self.lazy().std(ddof).collect()?;
+        Ok(Self::new(df))
+    }
+
+    pub fn var(&self, ddof: u8) -> Result<Self, PolarsError> {
+        let df = self.lazy().var(ddof).collect()?;
+        Ok(Self::new(df))
+    }
+
+    pub fn product(&self) -> Result<Self, PolarsError> {
+        let df = self
+            .df
+            .clone()
+            .lazy()
+            .select([col("*").product()])
+            .collect()?;
+        Ok(Self::new(df))
+    }
+
+    pub fn max_horizontal(&self) -> Result<Series, PolarsError> {
+        let exprs: Vec<Expr> = self
+            .df
+            .get_column_names_str()
+            .iter()
+            .map(|name| col(*name))
+            .collect();
+        let expr = polars_plan::dsl::max_horizontal(exprs)?;
+        let df = self
+            .df
+            .clone()
+            .lazy()
+            .select([expr.alias("max")])
+            .collect()?;
+        let column = df
+            .select_at_idx(0)
+            .ok_or_else(|| PolarsError::ComputeError("max_horizontal produced no column".into()))?;
+        column.as_series().cloned().ok_or_else(|| {
+            PolarsError::ComputeError("max_horizontal result is not a series".into())
+        })
+    }
+
+    pub fn min_horizontal(&self) -> Result<Series, PolarsError> {
+        let exprs: Vec<Expr> = self
+            .df
+            .get_column_names_str()
+            .iter()
+            .map(|name| col(*name))
+            .collect();
+        let expr = polars_plan::dsl::min_horizontal(exprs)?;
+        let df = self
+            .df
+            .clone()
+            .lazy()
+            .select([expr.alias("min")])
+            .collect()?;
+        let column = df
+            .select_at_idx(0)
+            .ok_or_else(|| PolarsError::ComputeError("min_horizontal produced no column".into()))?;
+        column.as_series().cloned().ok_or_else(|| {
+            PolarsError::ComputeError("min_horizontal result is not a series".into())
+        })
+    }
+
+    pub fn sum_horizontal(&self, ignore_nulls: bool) -> Result<Series, PolarsError> {
+        let exprs: Vec<Expr> = self
+            .df
+            .get_column_names_str()
+            .iter()
+            .map(|name| col(*name))
+            .collect();
+        let expr = polars_plan::dsl::sum_horizontal(exprs, ignore_nulls)?;
+        let df = self
+            .df
+            .clone()
+            .lazy()
+            .select([expr.alias("sum")])
+            .collect()?;
+        let column = df
+            .select_at_idx(0)
+            .ok_or_else(|| PolarsError::ComputeError("sum_horizontal produced no column".into()))?;
+        column.as_series().cloned().ok_or_else(|| {
+            PolarsError::ComputeError("sum_horizontal result is not a series".into())
+        })
+    }
+
+    pub fn mean_horizontal(&self, ignore_nulls: bool) -> Result<Series, PolarsError> {
+        let exprs: Vec<Expr> = self
+            .df
+            .get_column_names_str()
+            .iter()
+            .map(|name| col(*name))
+            .collect();
+        let expr = polars_plan::dsl::mean_horizontal(exprs, ignore_nulls)?;
+        let df = self
+            .df
+            .clone()
+            .lazy()
+            .select([expr.alias("mean")])
+            .collect()?;
+        let column = df.select_at_idx(0).ok_or_else(|| {
+            PolarsError::ComputeError("mean_horizontal produced no column".into())
+        })?;
+        column.as_series().cloned().ok_or_else(|| {
+            PolarsError::ComputeError("mean_horizontal result is not a series".into())
+        })
+    }
+
+    pub fn map_columns<F>(&self, mut function: F) -> Result<Self, PolarsError>
+    where
+        F: FnMut(Series) -> Result<Series, PolarsError>,
+    {
+        let mut columns = Vec::with_capacity(self.width());
+        for column in self.get_columns()? {
+            columns.push(function(column)?);
+        }
+        Self::from_series(columns)
+    }
+
+    pub fn map_rows<F>(&self, mut function: F) -> Result<Self, PolarsError>
+    where
+        F: FnMut(Vec<AnyValue<'static>>) -> Result<Vec<AnyValue<'static>>, PolarsError>,
+    {
+        let mut rows = Vec::with_capacity(self.height());
+        for row in self.rows()? {
+            rows.push(function(row)?);
+        }
+        Self::from_any_rows(&rows, ConstructionOptions::default())
+    }
+
+    pub fn to_struct(&self, name: Option<&str>) -> Result<Series, PolarsError> {
+        let exprs: Vec<Expr> = self
+            .df
+            .get_column_names_str()
+            .iter()
+            .map(|column_name| col(*column_name))
+            .collect();
+        let expr = polars_plan::dsl::functions::as_struct(exprs).alias(name.unwrap_or("struct"));
+        let df = self.df.clone().lazy().select([expr]).collect()?;
+        let column = df
+            .select_at_idx(0)
+            .ok_or_else(|| PolarsError::ComputeError("to_struct produced no column".into()))?;
+        column
+            .as_series()
+            .cloned()
+            .ok_or_else(|| PolarsError::ComputeError("to_struct result is not a series".into()))
+    }
+
+    pub fn to_numpy(&self) -> Result<Vec<Vec<AnyValue<'static>>>, PolarsError> {
+        self.rows()
+    }
+
+    pub fn flags(&self) -> HashMap<String, bool> {
+        HashMap::from([("framing_enabled".to_string(), self.is_framing_enabled)])
+    }
+
+    pub fn glimpse(&self) -> String {
+        format!(
+            "shape={:?}, columns={:?}",
+            self.shape(),
+            self.column_names()
+        )
+    }
+
+    pub fn to_init_repr(&self) -> String {
+        format!(
+            "GDSDataFrame(shape={:?}, columns={:?})",
+            self.shape(),
+            self.column_names()
+        )
+    }
+
+    pub fn corr(&self) -> Result<Self, PolarsError> {
+        Err(PolarsError::ComputeError(
+            "corr is not available in this DataFrame wrapper yet".into(),
+        ))
+    }
+
+    pub fn fold(&self) -> Result<Self, PolarsError> {
+        Err(PolarsError::ComputeError(
+            "fold is not available in this DataFrame wrapper yet".into(),
+        ))
+    }
+
+    pub fn group_by_dynamic(&self) -> Result<Self, PolarsError> {
+        Err(PolarsError::ComputeError(
+            "group_by_dynamic is not available as an eager DataFrame wrapper yet".into(),
+        ))
+    }
+
+    pub fn rolling(&self) -> Result<Self, PolarsError> {
+        Err(PolarsError::ComputeError(
+            "rolling is not available as an eager DataFrame wrapper yet".into(),
+        ))
+    }
+
+    pub fn rows_by_key(
+        &self,
+    ) -> Result<HashMap<String, Vec<HashMap<String, AnyValue<'static>>>>, PolarsError> {
+        Err(PolarsError::ComputeError(
+            "rows_by_key is not available in this DataFrame wrapper yet".into(),
+        ))
+    }
+
+    pub fn pivot(&self) -> Result<Self, PolarsError> {
+        Err(PolarsError::ComputeError(
+            "pivot is not available as an eager DataFrame wrapper yet".into(),
+        ))
+    }
+
+    pub fn unstack(&self) -> Result<Self, PolarsError> {
+        Err(PolarsError::ComputeError(
+            "unstack is not available in this DataFrame wrapper yet".into(),
+        ))
+    }
+
+    pub fn update(&self, _other: &GDSDataFrame) -> Result<Self, PolarsError> {
+        Err(PolarsError::ComputeError(
+            "update is not available in this DataFrame wrapper yet".into(),
+        ))
+    }
+
+    pub fn upsample(&self) -> Result<Self, PolarsError> {
+        Err(PolarsError::ComputeError(
+            "upsample is not available in this DataFrame wrapper yet".into(),
+        ))
+    }
+
+    pub fn sql(&self, _query: &str) -> Result<Self, PolarsError> {
+        Err(PolarsError::ComputeError(
+            "sql is not available for eager DataFrame wrapper; use lazy SQL context".into(),
+        ))
+    }
+
+    pub fn style(&self) -> Result<String, PolarsError> {
+        Ok(self.show(Some(10)))
+    }
+
+    pub fn plot(&self) -> Result<(), PolarsError> {
+        Err(PolarsError::ComputeError(
+            "plot is not available in this Rust DataFrame wrapper".into(),
+        ))
+    }
+
+    pub fn to_arrow(&self) -> Result<(), PolarsError> {
+        Err(PolarsError::ComputeError(
+            "to_arrow is not available in this wrapper path".into(),
+        ))
+    }
+
+    pub fn to_pandas(&self) -> Result<(), PolarsError> {
+        Err(PolarsError::ComputeError(
+            "to_pandas is not available in this Rust DataFrame wrapper".into(),
+        ))
+    }
+
+    pub fn to_jax(&self) -> Result<(), PolarsError> {
+        Err(PolarsError::ComputeError(
+            "to_jax is not available in this Rust DataFrame wrapper".into(),
+        ))
+    }
+
+    pub fn to_torch(&self) -> Result<(), PolarsError> {
+        Err(PolarsError::ComputeError(
+            "to_torch is not available in this Rust DataFrame wrapper".into(),
+        ))
+    }
+
+    pub fn write_avro(&self, _path: &str) -> Result<(), PolarsError> {
+        Err(PolarsError::ComputeError(
+            "write_avro is not available in this wrapper".into(),
+        ))
+    }
+
+    pub fn write_clipboard(&self) -> Result<(), PolarsError> {
+        Err(PolarsError::ComputeError(
+            "write_clipboard is not available in this wrapper".into(),
+        ))
+    }
+
+    pub fn write_csv(&self, _path: &str) -> Result<(), PolarsError> {
+        Err(PolarsError::ComputeError(
+            "write_csv is not available in this wrapper".into(),
+        ))
+    }
+
+    pub fn write_database(&self, _table: &str) -> Result<(), PolarsError> {
+        Err(PolarsError::ComputeError(
+            "write_database is not available in this wrapper".into(),
+        ))
+    }
+
+    pub fn write_delta(&self, _path: &str) -> Result<(), PolarsError> {
+        Err(PolarsError::ComputeError(
+            "write_delta is not available in this wrapper".into(),
+        ))
+    }
+
+    pub fn write_excel(&self, _path: &str) -> Result<(), PolarsError> {
+        Err(PolarsError::ComputeError(
+            "write_excel is not available in this wrapper".into(),
+        ))
+    }
+
+    pub fn write_iceberg(&self, _path: &str) -> Result<(), PolarsError> {
+        Err(PolarsError::ComputeError(
+            "write_iceberg is not available in this wrapper".into(),
+        ))
+    }
+
+    pub fn write_ipc(&self, _path: &str) -> Result<(), PolarsError> {
+        Err(PolarsError::ComputeError(
+            "write_ipc is not available in this wrapper".into(),
+        ))
+    }
+
+    pub fn write_ipc_stream(&self, _path: &str) -> Result<(), PolarsError> {
+        Err(PolarsError::ComputeError(
+            "write_ipc_stream is not available in this wrapper".into(),
+        ))
+    }
+
+    pub fn write_json(&self, _path: &str) -> Result<(), PolarsError> {
+        Err(PolarsError::ComputeError(
+            "write_json is not available in this wrapper".into(),
+        ))
+    }
+
+    pub fn write_ndjson(&self, _path: &str) -> Result<(), PolarsError> {
+        Err(PolarsError::ComputeError(
+            "write_ndjson is not available in this wrapper".into(),
+        ))
+    }
+
+    pub fn write_parquet(&self, _path: &str) -> Result<(), PolarsError> {
+        Err(PolarsError::ComputeError(
+            "write_parquet is not available in this wrapper".into(),
+        ))
     }
 
     /// Add/replace columns from parsed inputs (py-polars parsing helpers).

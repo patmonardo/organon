@@ -288,7 +288,15 @@ impl ExprList {
         self.expr.list().set_symmetric_difference(other)
     }
 
+    pub fn explode(self) -> Expr {
+        self.expr.explode()
+    }
+
     pub fn eval(self, expr: Expr) -> Expr {
         self.expr.list().eval(expr)
+    }
+
+    pub fn agg(self, expr: Expr) -> Expr {
+        self.expr.list().agg(expr)
     }
 }

@@ -1,6 +1,10 @@
 //! String namespace for expressions (py-polars inspired).
 
-use polars::prelude::{lit, DataTypeExpr, Expr, StrptimeOptions, TimeUnit, TimeZone};
+use polars::prelude::{
+    lit, DataType, DataTypeExpr, Expr, StrptimeOptions, TimeUnit, TimeZone, UnicodeForm,
+};
+
+use crate::collections::dataframe::expressions::binary::BinaryEncoding;
 
 #[derive(Debug, Clone)]
 pub struct ExprString {
@@ -52,8 +56,10 @@ impl ExprString {
         }
     }
 
-    pub fn contains_any(self, _patterns: Expr, _ascii_case_insensitive: bool) -> Expr {
-        todo!()
+    pub fn contains_any(self, patterns: Expr, ascii_case_insensitive: bool) -> Expr {
+        self.expr
+            .str()
+            .contains_any(patterns, ascii_case_insensitive)
     }
 
     pub fn find(self, pat: &str, literal: bool, strict: bool) -> Expr {
@@ -90,22 +96,28 @@ impl ExprString {
 
     pub fn extract_many(
         self,
-        _patterns: Expr,
-        _ascii_case_insensitive: bool,
-        _overlapping: bool,
-        _leftmost: bool,
+        patterns: Expr,
+        ascii_case_insensitive: bool,
+        overlapping: bool,
+        leftmost: bool,
     ) -> Expr {
-        todo!()
+        let _ = leftmost;
+        self.expr
+            .str()
+            .extract_many(patterns, ascii_case_insensitive, overlapping)
     }
 
     pub fn find_many(
         self,
-        _patterns: Expr,
-        _ascii_case_insensitive: bool,
-        _overlapping: bool,
-        _leftmost: bool,
+        patterns: Expr,
+        ascii_case_insensitive: bool,
+        overlapping: bool,
+        leftmost: bool,
     ) -> Expr {
-        todo!()
+        let _ = leftmost;
+        self.expr
+            .str()
+            .find_many(patterns, ascii_case_insensitive, overlapping)
     }
 
     pub fn count_matches(self, pat: &str, literal: bool) -> Expr {
@@ -134,6 +146,17 @@ impl ExprString {
 
     pub fn replace_all_expr(self, pat: Expr, value: Expr, literal: bool) -> Expr {
         self.expr.str().replace_all(pat, value, literal)
+    }
+
+    pub fn replace_many(
+        self,
+        patterns: Expr,
+        replace_with: Expr,
+        ascii_case_insensitive: bool,
+    ) -> Expr {
+        self.expr
+            .str()
+            .replace_many(patterns, replace_with, ascii_case_insensitive)
     }
 
     pub fn strip_chars(self, matches: &str) -> Expr {
@@ -174,6 +197,30 @@ impl ExprString {
 
     pub fn strip_suffix_expr(self, suffix: Expr) -> Expr {
         self.expr.str().strip_suffix(suffix)
+    }
+
+    pub fn pad_start(self, length: i64, fill_char: char) -> Expr {
+        self.expr.str().pad_start(lit(length), fill_char)
+    }
+
+    pub fn pad_start_expr(self, length: Expr, fill_char: char) -> Expr {
+        self.expr.str().pad_start(length, fill_char)
+    }
+
+    pub fn pad_end(self, length: i64, fill_char: char) -> Expr {
+        self.expr.str().pad_end(lit(length), fill_char)
+    }
+
+    pub fn pad_end_expr(self, length: Expr, fill_char: char) -> Expr {
+        self.expr.str().pad_end(length, fill_char)
+    }
+
+    pub fn zfill(self, length: i64) -> Expr {
+        self.expr.str().zfill(lit(length))
+    }
+
+    pub fn zfill_expr(self, length: Expr) -> Expr {
+        self.expr.str().zfill(length)
     }
 
     pub fn split(self, by: &str) -> Expr {
@@ -234,6 +281,14 @@ impl ExprString {
         self.expr.str().to_uppercase()
     }
 
+    pub fn reverse(self) -> Expr {
+        self.expr.str().reverse()
+    }
+
+    pub fn normalize(self, form: UnicodeForm) -> Expr {
+        self.expr.str().normalize(form)
+    }
+
     pub fn len_bytes(self) -> Expr {
         self.expr.str().len_bytes()
     }
@@ -287,24 +342,54 @@ impl ExprString {
         self.expr.str().to_decimal(scale)
     }
 
-    pub fn hex_decode(self, _strict: bool) -> Expr {
-        todo!()
+    pub fn to_integer(self, base: i64, dtype: Option<DataType>, strict: bool) -> Expr {
+        self.expr.str().to_integer(lit(base), dtype, strict)
     }
 
-    pub fn base64_decode(self, _strict: bool) -> Expr {
-        todo!()
+    pub fn to_integer_expr(self, base: Expr, dtype: Option<DataType>, strict: bool) -> Expr {
+        self.expr.str().to_integer(base, dtype, strict)
     }
 
-    pub fn json_decode(self, _dtype: impl Into<DataTypeExpr>) -> Expr {
-        todo!()
+    pub fn hex_decode(self, strict: bool) -> Expr {
+        self.expr.str().hex_decode(strict)
     }
 
-    pub fn json_path_match(self, _pat: Expr) -> Expr {
-        todo!()
+    pub fn base64_decode(self, strict: bool) -> Expr {
+        self.expr.str().base64_decode(strict)
+    }
+
+    pub fn json_decode(self, dtype: impl Into<DataTypeExpr>) -> Expr {
+        self.expr.str().json_decode(dtype)
+    }
+
+    pub fn json_path_match(self, pat: Expr) -> Expr {
+        self.expr.str().json_path_match(pat)
+    }
+
+    pub fn decode(self, encoding: BinaryEncoding, strict: bool) -> Expr {
+        match encoding {
+            BinaryEncoding::Hex => self.expr.str().hex_decode(strict),
+            BinaryEncoding::Base64 => self.expr.str().base64_decode(strict),
+        }
+    }
+
+    pub fn encode(self, encoding: BinaryEncoding) -> Expr {
+        match encoding {
+            BinaryEncoding::Hex => self.expr.str().hex_encode(),
+            BinaryEncoding::Base64 => self.expr.str().base64_encode(),
+        }
+    }
+
+    pub fn explode(self) -> Expr {
+        self.expr.str().split(lit("")).explode()
     }
 
     pub fn join(self, delimiter: &str, ignore_nulls: bool) -> Expr {
         self.expr.str().join(delimiter, ignore_nulls)
+    }
+
+    pub fn concat(self, delimiter: Option<&str>, ignore_nulls: bool) -> Expr {
+        self.join(delimiter.unwrap_or("-"), ignore_nulls)
     }
 
     pub fn escape_regex(self) -> Expr {

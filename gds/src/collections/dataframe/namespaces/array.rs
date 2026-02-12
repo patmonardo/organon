@@ -113,6 +113,14 @@ impl ArrayNameSpace {
         self.apply_expr(|expr| expr.get_expr(index, null_on_oob))
     }
 
+    pub fn first(&self) -> PolarsResult<Series> {
+        self.apply_expr(|expr| expr.first())
+    }
+
+    pub fn last(&self) -> PolarsResult<Series> {
+        self.apply_expr(|expr| expr.last())
+    }
+
     pub fn join(&self, separator: &str, ignore_nulls: bool) -> PolarsResult<Series> {
         self.apply_expr(|expr| expr.join(separator, ignore_nulls))
     }
