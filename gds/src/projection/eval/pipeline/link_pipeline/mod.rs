@@ -1,4 +1,3 @@
-
 pub mod batch_link_feature_extractor;
 pub mod expected_set_sizes;
 pub mod link_feature_appender;
@@ -24,4 +23,3 @@ pub use link_prediction_predict_pipeline::*;
 pub use link_prediction_split_config::*;
 pub use link_prediction_training_pipeline::*;
 pub use train::*;
-

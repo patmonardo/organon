@@ -5,11 +5,11 @@
 //! Responsible for constructing per-relationship-type graph views and invoking
 //! the computation runtime.
 
-use super::CollapsePathComputationRuntime;
 use super::spec::{CollapsePathConfig, CollapsePathResult};
+use super::CollapsePathComputationRuntime;
 use crate::projection::{Orientation, RelationshipType};
-use crate::types::graph::MappedNodeId;
 use crate::types::graph::Graph;
+use crate::types::graph::MappedNodeId;
 use crate::types::graph_store::{GraphName, GraphStore};
 use crate::types::prelude::DefaultGraphStore;
 use crate::types::schema::Direction;
@@ -135,8 +135,8 @@ fn build_outgoing(
 mod tests {
     use super::*;
     use crate::config::GraphStoreConfig;
-    use crate::types::graph::SimpleIdMap;
     use crate::types::graph::RelationshipTopology;
+    use crate::types::graph::SimpleIdMap;
     use crate::types::graph_store::{Capabilities, DatabaseId, DatabaseInfo, DatabaseLocation};
     use crate::types::schema::{GraphSchema, MutableGraphSchema, NodeLabel};
     use std::collections::{HashMap, HashSet};

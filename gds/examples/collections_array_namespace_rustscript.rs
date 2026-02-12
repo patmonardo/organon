@@ -3,7 +3,7 @@
 //! Run with:
 //!   cargo run -p gds --example collections_array_namespace_rustscript
 
-use gds::collections::dataframe::{arr_ns, col, series_list_i64, GDSSeries, GDSDataFrame};
+use gds::collections::dataframe::{arr_ns, col, series_list_i64, GDSDataFrame, GDSSeries};
 use polars::prelude::*;
 
 fn main() -> PolarsResult<()> {

@@ -3,8 +3,8 @@
 //! Translated from Java GDS ml-core functions LazyConstant.java.
 //! This is a literal 1:1 translation following repository translation policy.
 
-use crate::ml::core::NotAFunctionException;
 use crate::ml::core::ComputationContext;
+use crate::ml::core::NotAFunctionException;
 use crate::ml::core::Tensor;
 use crate::ml::core::{Variable, VariableRef};
 use std::fmt;

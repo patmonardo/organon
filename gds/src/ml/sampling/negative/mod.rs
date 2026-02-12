@@ -10,4 +10,3 @@ pub use factory::*;
 pub use negative_sampler::*;
 pub use random::*;
 pub use user_input::*;
-

@@ -27,6 +27,7 @@
 //!     .collect::<Vec<_>>();
 //! ```
 
+use crate::algo::algorithms::{CentralityScore, Result};
 use crate::algo::algorithms::{ConfigValidator, WriteResult};
 use crate::algo::pagerank::{
     computation::PageRankComputationRuntime, storage::PageRankStorageRuntime, PageRankConfig,
@@ -40,7 +41,6 @@ use crate::core::utils::progress::{
     EmptyTaskRegistryFactory, JobId, TaskProgressTracker, TaskRegistryFactory, Tasks,
 };
 use crate::mem::MemoryRange;
-use crate::algo::algorithms::{CentralityScore, Result};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::Orientation;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};

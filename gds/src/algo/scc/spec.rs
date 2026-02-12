@@ -10,8 +10,8 @@ use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use std::time::Duration;
 
-use super::SccStorageRuntime;
 use super::SccComputationRuntime;
+use super::SccStorageRuntime;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SccConfig {

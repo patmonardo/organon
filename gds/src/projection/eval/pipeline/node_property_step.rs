@@ -12,9 +12,9 @@ use crate::projection::eval::pipeline::node_property_step_execution::execute_nod
 use crate::projection::eval::pipeline::{
     ExecutableNodePropertyStep, NodePropertyStepContextConfig,
 };
+use crate::types::graph_store::DefaultGraphStore;
 use std::collections::HashMap;
 use std::error::Error as StdError;
-use crate::types::graph_store::DefaultGraphStore;
 
 /// Configuration key for the mutate property name.
 pub const MUTATE_PROPERTY_KEY: &str = "mutateProperty";

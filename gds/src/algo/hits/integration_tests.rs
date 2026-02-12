@@ -9,8 +9,8 @@ mod tests {
     use crate::algo::hits::HitsStorageRuntime;
     use crate::config::GraphStoreConfig;
     use crate::core::utils::progress::tasks::NoopProgressTracker;
-    use crate::types::graph::SimpleIdMap;
     use crate::types::graph::RelationshipTopology;
+    use crate::types::graph::SimpleIdMap;
     use crate::types::graph_store::{
         Capabilities, DatabaseId, DatabaseInfo, DatabaseLocation, DefaultGraphStore, GraphName,
         GraphStore,

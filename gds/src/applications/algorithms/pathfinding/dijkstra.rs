@@ -7,13 +7,11 @@ use crate::applications::algorithms::machinery::{
     AlgorithmProcessingTemplateConvenience, DefaultAlgorithmProcessingTemplate,
     FnStatsResultBuilder, FnStreamResultBuilder, ProgressTrackerCreator, RequestScopedDependencies,
 };
-use crate::applications::algorithms::pathfinding::{
-    err, get_bool, get_str, get_u64, timings_json,
-};
+use crate::applications::algorithms::pathfinding::{err, get_bool, get_str, get_u64, timings_json};
 use crate::concurrency::{Concurrency, TerminationFlag};
 use crate::core::loading::{CatalogLoader, GraphResources};
-use crate::projection::eval::algorithm::AlgorithmError;
 use crate::core::utils::progress::{JobId, ProgressTracker, TaskRegistryFactories, Tasks};
+use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::catalog::GraphCatalog;
 use serde_json::{json, Value};
 use std::sync::Arc;
@@ -27,7 +25,10 @@ pub fn handle_dijkstra(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value
         None => return err(op, "INVALID_REQUEST", "Missing 'graphName' parameter"),
     };
 
-    let mode = request.get("mode").and_then(|v| v.as_str()).unwrap_or("stream");
+    let mode = request
+        .get("mode")
+        .and_then(|v| v.as_str())
+        .unwrap_or("stream");
 
     let concurrency_value = request
         .get("concurrency")
@@ -52,15 +53,14 @@ pub fn handle_dijkstra(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value
         None => return err(op, "INVALID_REQUEST", "Missing 'source' parameter"),
     };
 
-    let targets: Vec<u64> = if let Some(t) =
-        get_u64(request, "target").or_else(|| get_u64(request, "targetNode"))
-    {
-        vec![t]
-    } else if let Some(arr) = request.get("targets").and_then(|v| v.as_array()) {
-        arr.iter().filter_map(|v| v.as_u64()).collect()
-    } else {
-        Vec::new()
-    };
+    let targets: Vec<u64> =
+        if let Some(t) = get_u64(request, "target").or_else(|| get_u64(request, "targetNode")) {
+            vec![t]
+        } else if let Some(arr) = request.get("targets").and_then(|v| v.as_array()) {
+            arr.iter().filter_map(|v| v.as_u64()).collect()
+        } else {
+            Vec::new()
+        };
 
     let weight_property = get_str(request, "weightProperty")
         .or_else(|| get_str(request, "weight_property"))
@@ -115,16 +115,19 @@ pub fn handle_dijkstra(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value
                     builder = builder.targets(targets.clone());
                 }
 
-                let iter = builder.stream().map_err(|e: AlgorithmError| e.to_string())?;
+                let iter = builder
+                    .stream()
+                    .map_err(|e: AlgorithmError| e.to_string())?;
                 let rows = iter
                     .map(|row| serde_json::to_value(row).map_err(|e| e.to_string()))
                     .collect::<Result<Vec<_>, _>>()?;
                 Ok(Some(rows))
             };
 
-            let result_builder = FnStreamResultBuilder::new(
-                |_gr: &GraphResources, rows: Option<Vec<Value>>| rows.unwrap_or_default().into_iter(),
-            );
+            let result_builder =
+                FnStreamResultBuilder::new(|_gr: &GraphResources, rows: Option<Vec<Value>>| {
+                    rows.unwrap_or_default().into_iter()
+                });
 
             match convenience.process_stream(
                 &graph_resources,
@@ -176,11 +179,13 @@ pub fn handle_dijkstra(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value
                 }
 
                 let stats = builder.stats().map_err(|e| e.to_string())?;
-                Ok(Some(serde_json::to_value(stats).map_err(|e| e.to_string())?))
+                Ok(Some(
+                    serde_json::to_value(stats).map_err(|e| e.to_string())?,
+                ))
             };
 
-            let builder = FnStatsResultBuilder(
-                |_gr: &GraphResources, stats: Option<Value>, timings| {
+            let builder =
+                FnStatsResultBuilder(|_gr: &GraphResources, stats: Option<Value>, timings| {
                     json!({
                         "ok": true,
                         "op": op,
@@ -188,8 +193,7 @@ pub fn handle_dijkstra(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value
                         "data": stats,
                         "timings": timings_json(timings)
                     })
-                },
-            );
+                });
 
             match convenience.process_stats(&graph_resources, concurrency, task, compute, builder) {
                 Ok(v) => v,
@@ -266,7 +270,11 @@ pub fn handle_dijkstra(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value
                         }
                     })
                 }
-                Err(e) => err(op, "EXECUTION_ERROR", &format!("Dijkstra mutate failed: {e:?}")),
+                Err(e) => err(
+                    op,
+                    "EXECUTION_ERROR",
+                    &format!("Dijkstra mutate failed: {e:?}"),
+                ),
             }
         }
         "write" => {
@@ -300,7 +308,11 @@ pub fn handle_dijkstra(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value
                     "op": op,
                     "data": result
                 }),
-                Err(e) => err(op, "EXECUTION_ERROR", &format!("Dijkstra write failed: {e:?}")),
+                Err(e) => err(
+                    op,
+                    "EXECUTION_ERROR",
+                    &format!("Dijkstra write failed: {e:?}"),
+                ),
             }
         }
         _ => err(op, "INVALID_REQUEST", "Invalid mode"),

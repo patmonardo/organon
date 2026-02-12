@@ -1,5 +1,5 @@
-use super::{AdjacencyGraph, LeidenComputationRuntime};
 use super::spec::LeidenConfig;
+use super::{AdjacencyGraph, LeidenComputationRuntime};
 use crate::concurrency::TerminationFlag;
 
 fn build_adj(node_count: usize, edges: &[(usize, usize, f64)]) -> AdjacencyGraph {

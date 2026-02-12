@@ -5,8 +5,8 @@
 
 use crate::collections::Collections;
 use crate::config::{CollectionsBackend, Extension};
-use crate::types::ValueType;
 use crate::core::utils::paged::{HugeLongArrayStack, PagedLongStack};
+use crate::types::ValueType;
 use std::marker::PhantomData;
 
 /// Stack extension trait for Collections

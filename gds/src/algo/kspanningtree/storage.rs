@@ -4,8 +4,8 @@ use super::computation::KSpanningTreeComputationRuntime;
 use super::spec::KSpanningTreeResult;
 use crate::core::utils::progress::ProgressTracker;
 use crate::projection::eval::algorithm::AlgorithmError;
-use crate::types::graph::NodeId;
 use crate::types::graph::Graph;
+use crate::types::graph::NodeId;
 
 /// KSpanningTree Storage Runtime - handles persistent data access and algorithm orchestration
 pub struct KSpanningTreeStorageRuntime {

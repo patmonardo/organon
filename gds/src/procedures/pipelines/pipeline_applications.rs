@@ -325,9 +325,7 @@ impl PipelineApplications {
 }
 
 fn pipeline_catalog_entry_to_result(entry: PipelineCatalogEntry) -> PipelineCatalogResult {
-    match entry
-        .pipeline_as::<LinkPredictionTrainingPipeline>()
-    {
+    match entry.pipeline_as::<LinkPredictionTrainingPipeline>() {
         Some(pipeline) => {
             return create_pipeline_catalog_result(pipeline.as_ref(), entry.pipeline_name());
         }

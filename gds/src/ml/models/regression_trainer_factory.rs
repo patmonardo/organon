@@ -1,12 +1,12 @@
 use crate::concurrency::Concurrency;
 use crate::concurrency::TerminationFlag;
 use crate::core::utils::progress::TaskProgressTracker;
+use crate::core::LogLevel as ProcedureLogLevel;
 use crate::ml::models::linear_regression::{LinearRegressionTrainConfig, LinearRegressionTrainer};
 use crate::ml::models::random_forest::{
     RandomForestRegressorTrainer, RandomForestRegressorTrainerConfig,
 };
 use crate::ml::models::{base::TrainerConfigTrait, RegressorTrainer, TrainingMethod};
-use crate::core::LogLevel as ProcedureLogLevel;
 use parking_lot::RwLock;
 use std::sync::Arc;
 

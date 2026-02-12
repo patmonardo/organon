@@ -2,8 +2,8 @@
 //!
 //! Builds per-relationship-type outgoing/incoming adjacency from a graph view.
 
-use crate::types::graph::MappedNodeId;
 use crate::types::graph::Graph;
+use crate::types::graph::MappedNodeId;
 
 #[derive(Default, Clone)]
 pub struct IndexInverseComputationRuntime;

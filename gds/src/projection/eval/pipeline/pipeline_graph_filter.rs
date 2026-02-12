@@ -59,10 +59,8 @@ mod tests {
 
     #[test]
     fn test_new_with_relationships() {
-        let filter = PipelineGraphFilter::new(
-            vec!["Person".to_string()],
-            Some(vec!["KNOWS".to_string()]),
-        );
+        let filter =
+            PipelineGraphFilter::new(vec!["Person".to_string()], Some(vec!["KNOWS".to_string()]));
 
         assert_eq!(filter.node_labels, vec!["Person"]);
         assert_eq!(filter.relationship_types, vec!["KNOWS"]);

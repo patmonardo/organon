@@ -89,10 +89,11 @@ impl crate::config::ValidatedConfig for NodeRegressionPipelineTrainConfig {
     fn validate(&self) -> Result<(), ConfigError> {
         crate::config::validate_non_empty_string(self.pipeline(), "pipeline")?;
         crate::config::validate_non_empty_string(self.target_property(), "targetProperty")?;
-        self.validate_metrics().map_err(|msg| ConfigError::InvalidParameter {
-            parameter: "metrics".to_string(),
-            reason: msg,
-        })?;
+        self.validate_metrics()
+            .map_err(|msg| ConfigError::InvalidParameter {
+                parameter: "metrics".to_string(),
+                reason: msg,
+            })?;
         Ok(())
     }
 }

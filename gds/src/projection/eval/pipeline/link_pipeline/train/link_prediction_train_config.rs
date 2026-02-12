@@ -186,10 +186,11 @@ impl LinkPredictionTrainConfig {
 
 impl crate::config::ValidatedConfig for LinkPredictionTrainConfig {
     fn validate(&self) -> Result<(), ConfigError> {
-        self.validate().map_err(|err| ConfigError::InvalidParameter {
-            parameter: "LinkPredictionTrainConfig".to_string(),
-            reason: err,
-        })
+        self.validate()
+            .map_err(|err| ConfigError::InvalidParameter {
+                parameter: "LinkPredictionTrainConfig".to_string(),
+                reason: err,
+            })
     }
 }
 

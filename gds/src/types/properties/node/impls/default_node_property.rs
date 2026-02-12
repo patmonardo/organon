@@ -88,17 +88,15 @@ impl Property for DefaultNodeProperty {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::collections::backends::vec::VecLong;
     use crate::types::properties::node::DefaultLongNodePropertyValues;
     use crate::types::properties::PropertyValues;
-    use crate::collections::backends::vec::VecLong;
 
     #[test]
     fn default_node_property_creation() {
-        let values: Arc<dyn NodePropertyValues> =
-            Arc::new(DefaultLongNodePropertyValues::from_collection(
-                VecLong::from(vec![1, 2, 3]),
-                3,
-            ));
+        let values: Arc<dyn NodePropertyValues> = Arc::new(
+            DefaultLongNodePropertyValues::from_collection(VecLong::from(vec![1, 2, 3]), 3),
+        );
         let property = DefaultNodeProperty::of("age", values.clone());
 
         assert_eq!(property.key(), "age");
@@ -112,11 +110,9 @@ mod tests {
 
     #[test]
     fn node_property_with_state() {
-        let values: Arc<dyn NodePropertyValues> =
-            Arc::new(DefaultLongNodePropertyValues::from_collection(
-                VecLong::from(vec![10, 20]),
-                2,
-            ));
+        let values: Arc<dyn NodePropertyValues> = Arc::new(
+            DefaultLongNodePropertyValues::from_collection(VecLong::from(vec![10, 20]), 2),
+        );
         let property = DefaultNodeProperty::with_state("rank", PropertyState::Persistent, values);
 
         assert_eq!(property.key(), "rank");
@@ -128,11 +124,9 @@ mod tests {
 
     #[test]
     fn node_property_with_explicit_default() {
-        let values: Arc<dyn NodePropertyValues> =
-            Arc::new(DefaultLongNodePropertyValues::from_collection(
-                VecLong::from(vec![5, 6]),
-                2,
-            ));
+        let values: Arc<dyn NodePropertyValues> = Arc::new(
+            DefaultLongNodePropertyValues::from_collection(VecLong::from(vec![5, 6]), 2),
+        );
         let default_value = DefaultValue::long(0);
         let property = DefaultNodeProperty::with_default(
             "score",
@@ -147,11 +141,9 @@ mod tests {
 
     #[test]
     fn node_property_values_access() {
-        let values: Arc<dyn NodePropertyValues> =
-            Arc::new(DefaultLongNodePropertyValues::from_collection(
-                VecLong::from(vec![1, 2, 3]),
-                3,
-            ));
+        let values: Arc<dyn NodePropertyValues> = Arc::new(
+            DefaultLongNodePropertyValues::from_collection(VecLong::from(vec![1, 2, 3]), 3),
+        );
         let property = DefaultNodeProperty::of("age", values);
 
         // Test trait object access

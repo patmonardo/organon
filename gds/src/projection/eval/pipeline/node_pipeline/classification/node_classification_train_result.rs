@@ -53,12 +53,12 @@ impl NodeClassificationTrainResult {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::ml::core::tensor::Matrix;
     use crate::ml::metrics::classification::GlobalAccuracy;
     use crate::ml::metrics::Metric;
-    use crate::ml::models::Features;
-    use crate::ml::core::tensor::Matrix;
     use crate::ml::models::base::{BaseModelData, ClassifierData};
     use crate::ml::models::training_method::TrainingMethod;
+    use crate::ml::models::Features;
     use std::any::Any;
 
     #[derive(Debug)]
@@ -96,11 +96,7 @@ mod tests {
             vec![0.5, 0.5]
         }
 
-        fn predict_probabilities_batch(
-            &self,
-            batch: &[usize],
-            _features: &dyn Features,
-        ) -> Matrix {
+        fn predict_probabilities_batch(&self, batch: &[usize], _features: &dyn Features) -> Matrix {
             Matrix::new(vec![0.5; batch.len() * 2], batch.len(), 2)
         }
     }

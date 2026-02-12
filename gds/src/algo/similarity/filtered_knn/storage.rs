@@ -1,9 +1,9 @@
 use super::{FilteredKnnComputationResult, FilteredKnnComputationRuntime};
-use crate::algo::similarity::knn::KnnNnDescentConfig;
-use crate::algo::similarity::knn::KnnNnDescentStats;
 use crate::algo::similarity::knn::metrics::{
     KnnNodePropertySpec, SimilarityComputer, SimilarityMetric,
 };
+use crate::algo::similarity::knn::KnnNnDescentConfig;
+use crate::algo::similarity::knn::KnnNnDescentStats;
 use crate::algo::similarity::knn::{KnnSamplerType, KnnStorageRuntime};
 use crate::core::utils::progress::ProgressTracker;
 use crate::projection::eval::algorithm::AlgorithmError;

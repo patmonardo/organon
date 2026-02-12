@@ -6,8 +6,8 @@
 //! Delta Stepping uses a sophisticated binning strategy to manage the frontier
 //! efficiently in parallel shortest path computation.
 
-use super::DeltaSteppingStorageRuntime;
 use super::DeltaSteppingComputationRuntime;
+use super::DeltaSteppingStorageRuntime;
 use crate::algo::algorithms::pathfinding::{
     PathFindingResult, PathFindingResultBuilder, PathResult,
 };
@@ -16,8 +16,8 @@ use crate::config::validation::ConfigError;
 use crate::core::utils::progress::TaskProgressTracker;
 use crate::define_algorithm_spec;
 use crate::projection::eval::algorithm::AlgorithmError;
-use crate::projection::Orientation;
 use crate::projection::relationship_type::RelationshipType;
+use crate::projection::Orientation;
 use crate::types::graph::NodeId;
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;

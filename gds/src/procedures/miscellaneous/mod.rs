@@ -1,4 +1,3 @@
-
 pub mod collapse_path;
 pub mod index_inverse;
 pub mod indirect_exposure;
@@ -10,4 +9,3 @@ pub use index_inverse::*;
 pub use indirect_exposure::*;
 pub use scale_properties::*;
 pub use to_undirected::*;
-

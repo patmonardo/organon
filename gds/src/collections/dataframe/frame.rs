@@ -11,9 +11,9 @@ use polars::prelude::{
 };
 use std::collections::{HashMap, HashSet};
 
+use polars_ops::frame::join::{AsofJoin, AsofJoinBy, AsofStrategy};
 use polars_ops::frame::pivot::UnpivotDF;
 use polars_ops::frame::DataFrameOps;
-use polars_ops::frame::join::{AsofJoin, AsofJoinBy, AsofStrategy};
 
 use crate::collections::dataframe::selectors::{expand_selector, Selector};
 use crate::collections::dataframe::utils::construction::{

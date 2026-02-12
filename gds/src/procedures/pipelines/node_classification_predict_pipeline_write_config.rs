@@ -2,10 +2,10 @@ use serde_json::Value;
 
 use crate::applications::algorithms::machinery::{WriteConfigLike, WritePropertyConfigLike};
 use crate::concurrency::Concurrency;
+use crate::procedures::pipelines::types::AnyMap;
 use crate::procedures::pipelines::{
     NodeClassificationPredictPipelineConfig, NodeClassificationPredictPipelineMutateOrWriteConfig,
 };
-use crate::procedures::pipelines::types::AnyMap;
 
 #[derive(Debug, Clone)]
 pub struct NodeClassificationPredictPipelineWriteConfig {

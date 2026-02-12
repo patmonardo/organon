@@ -1,7 +1,7 @@
 use super::config::GATConfig;
 use super::layer::GATLayer;
-use crate::types::graph::NodeId;
 use crate::types::graph::Graph;
+use crate::types::graph::NodeId;
 use std::collections::HashMap;
 
 pub struct GATAggregator {

@@ -1,9 +1,9 @@
 use serde_json::Value;
 
+use crate::procedures::pipelines::types::AnyMap;
 use crate::procedures::pipelines::{
     LinkPredictionPredictPipelineBaseConfig, LinkPredictionPredictPipelineConfig,
 };
-use crate::procedures::pipelines::types::AnyMap;
 
 #[derive(Debug, Clone)]
 pub struct LinkPredictionPredictPipelineMutateConfig {

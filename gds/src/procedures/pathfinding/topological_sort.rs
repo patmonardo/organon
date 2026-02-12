@@ -3,14 +3,14 @@
 //! Orders nodes in a directed acyclic graph (DAG) such that for every edge (u, v),
 //! u appears before v. Optionally computes longest path distances.
 
+use crate::algo::algorithms::pathfinding::PathResult;
+use crate::algo::algorithms::Result;
 use crate::algo::topological_sort::{
     TopologicalSortComputationRuntime, TopologicalSortConfig, TopologicalSortMutateResult,
     TopologicalSortMutationSummary, TopologicalSortResult, TopologicalSortResultBuilder,
     TopologicalSortRow, TopologicalSortStats, TopologicalSortWriteSummary,
 };
 use crate::mem::MemoryRange;
-use crate::algo::algorithms::Result;
-use crate::algo::algorithms::pathfinding::PathResult;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};

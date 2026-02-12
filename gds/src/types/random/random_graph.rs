@@ -372,9 +372,9 @@ impl Randomizable<RandomGraphConfig> for DefaultGraphStore {
         } else {
             total_relationships as f64 / max_edges as f64
         };
-        let graph_property_values = Arc::new(DefaultDoubleGraphPropertyValues::<VecDouble>::singleton(
-            density,
-        ));
+        let graph_property_values = Arc::new(
+            DefaultDoubleGraphPropertyValues::<VecDouble>::singleton(density),
+        );
         store.add_graph_property("edge_density", graph_property_values)?;
 
         // Add per-relationship weights.

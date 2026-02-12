@@ -13,8 +13,8 @@ use crate::algo::dijkstra::targets::create_targets;
 use crate::algo::dijkstra::{DijkstraComputationRuntime, DijkstraStorageRuntime};
 use crate::core::utils::progress::{ProgressTracker, TaskProgressTracker, Tasks, UNKNOWN_VOLUME};
 use crate::projection::eval::algorithm::AlgorithmError;
-use crate::types::graph::NodeId;
 use crate::types::graph::Graph;
+use crate::types::graph::NodeId;
 use std::collections::HashSet;
 
 /// Yen's Storage Runtime - handles persistent data access and algorithm orchestration

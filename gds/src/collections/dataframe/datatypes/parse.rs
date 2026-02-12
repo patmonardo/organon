@@ -1,8 +1,9 @@
 //! Rust translation scaffold for polars.datatypes._parse.
 
-use super::GDSDataType;
+use super::{Categorical, EnumType, GDSDataType};
 use polars::prelude::{DataType, DataTypeExpr, TimeUnit, UnknownKind};
 use std::fmt;
+use std::string::String as StdString;
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum DTypeInput<'a> {
@@ -127,6 +128,8 @@ fn parse_name_to_dtype(raw: &str) -> Result<GDSDataType, DTypeParseError> {
         "uint16" | "u16" => Ok(DataType::UInt16),
         "uint32" | "u32" => Ok(DataType::UInt32),
         "uint64" | "u64" => Ok(DataType::UInt64),
+        "uint128" | "u128" => Ok(DataType::UInt128),
+        "float16" | "f16" => Ok(super::Float16),
         "float32" | "f32" => Ok(DataType::Float32),
         "float" | "float64" | "f64" => Ok(DataType::Float64),
         "bool" | "boolean" => Ok(DataType::Boolean),
@@ -142,6 +145,8 @@ fn parse_name_to_dtype(raw: &str) -> Result<GDSDataType, DTypeParseError> {
         "unknown" => Ok(DataType::Unknown(UnknownKind::Any)),
         "decimal" => Ok(DataType::Decimal(38, 0)),
         "object" => Ok(DataType::Object("object")),
+        "categorical" => categorical_global_dtype(),
+        "enum" => enum_dtype_from_categories(Vec::new()),
         _ => Err(DTypeParseError::invalid(raw)),
     }
 }
@@ -157,6 +162,16 @@ fn parse_generic(raw: &str) -> Option<Result<GDSDataType, DTypeParseError>> {
     if let Some(rest) = trimmed.strip_prefix("duration[") {
         let unit = rest.strip_suffix(']')?;
         return Some(parse_time_unit(unit).map(DataType::Duration));
+    }
+
+    if let Some(rest) = trimmed.strip_prefix("categorical[") {
+        let inner = rest.strip_suffix(']')?;
+        return Some(parse_categorical_subtype(inner));
+    }
+
+    if let Some(rest) = trimmed.strip_prefix("enum[") {
+        let inner = rest.strip_suffix(']')?;
+        return Some(enum_dtype_from_categories(parse_enum_categories(inner)));
     }
 
     if let Some(rest) = trimmed.strip_prefix("list[") {
@@ -208,8 +223,10 @@ fn parse_py_type_name(raw: &str) -> Option<GDSDataType> {
         "NoneType" => Some(DataType::Null),
         "bool" => Some(DataType::Boolean),
         "bytes" => Some(DataType::Binary),
+        "Categorical" => categorical_global_dtype().ok(),
         "date" => Some(DataType::Date),
         "datetime" => Some(DataType::Datetime(TimeUnit::Microseconds, None)),
+        "Enum" => enum_dtype_from_categories(Vec::new()).ok(),
         "float" => Some(DataType::Float64),
         "int" => Some(DataType::Int64),
         "list" => Some(DataType::List(Box::new(DataType::Null))),
@@ -220,5 +237,128 @@ fn parse_py_type_name(raw: &str) -> Option<GDSDataType> {
         "tuple" => Some(DataType::List(Box::new(DataType::Null))),
         "Unknown" => Some(DataType::Unknown(UnknownKind::Any)),
         _ => None,
+    }
+}
+
+fn categorical_global_dtype() -> Result<GDSDataType, DTypeParseError> {
+    Categorical::new(None)
+        .to_dtype()
+        .map_err(|err| DTypeParseError::InvalidInput(err.to_string()))
+}
+
+fn enum_dtype_from_categories(categories: Vec<StdString>) -> Result<GDSDataType, DTypeParseError> {
+    EnumType::new(categories)
+        .to_dtype()
+        .map_err(|err| DTypeParseError::InvalidInput(err.to_string()))
+}
+
+fn parse_enum_categories(raw: &str) -> Vec<StdString> {
+    raw.split(',')
+        .map(|value| value.trim())
+        .filter(|value| !value.is_empty())
+        .map(|value| value.trim_matches('"').trim_matches('\''))
+        .filter(|value| !value.is_empty())
+        .map(StdString::from)
+        .collect()
+}
+
+fn parse_categorical_subtype(raw: &str) -> Result<GDSDataType, DTypeParseError> {
+    let parts = parse_categorical_parts(raw);
+    if parts.is_empty() {
+        return Err(DTypeParseError::invalid(raw));
+    }
+    if parts.len() > 3 {
+        return Err(DTypeParseError::invalid(raw));
+    }
+
+    let name = parts[0].clone();
+    if name.is_empty() {
+        return Err(DTypeParseError::invalid(raw));
+    }
+
+    let (namespace, physical) = match parts.len() {
+        1 => (StdString::new(), DataType::UInt32),
+        2 => match parse_categorical_physical(&parts[1]) {
+            Ok(physical) => (StdString::new(), physical),
+            Err(_) => (parts[1].clone(), DataType::UInt32),
+        },
+        _ => (parts[1].clone(), parse_categorical_physical(&parts[2])?),
+    };
+
+    let categories = super::Categories::new(Some(name), namespace, physical);
+    Categorical::new(Some(categories))
+        .to_dtype()
+        .map_err(|err| DTypeParseError::InvalidInput(err.to_string()))
+}
+
+fn parse_categorical_parts(raw: &str) -> Vec<StdString> {
+    raw.split(',')
+        .map(|value| value.trim())
+        .filter(|value| !value.is_empty())
+        .map(|value| value.trim_matches('"').trim_matches('\''))
+        .filter(|value| !value.is_empty())
+        .map(StdString::from)
+        .collect()
+}
+
+fn parse_categorical_physical(raw: &str) -> Result<DataType, DTypeParseError> {
+    match raw.trim().to_ascii_lowercase().as_str() {
+        "u8" | "uint8" => Ok(DataType::UInt8),
+        "u16" | "uint16" => Ok(DataType::UInt16),
+        "u32" | "uint32" => Ok(DataType::UInt32),
+        _ => Err(DTypeParseError::Unsupported(format!(
+            "unsupported categorical physical dtype '{raw}'"
+        ))),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use polars::prelude::CategoricalPhysical;
+
+    #[test]
+    fn parses_categorical_global() {
+        let dtype = parse_into_dtype("categorical").expect("categorical dtype");
+        assert!(matches!(dtype, DataType::Categorical(_, _)));
+        if let DataType::Categorical(categories, _) = dtype {
+            assert!(categories.is_global());
+        }
+    }
+
+    #[test]
+    fn parses_categorical_named() {
+        let dtype =
+            parse_into_dtype("categorical[team, ns, u16]").expect("categorical named dtype");
+        if let DataType::Categorical(categories, _) = dtype {
+            assert_eq!(categories.name().as_str(), "team");
+            assert_eq!(categories.namespace().as_str(), "ns");
+            assert_eq!(categories.physical(), CategoricalPhysical::U16);
+        } else {
+            panic!("expected categorical dtype");
+        }
+    }
+
+    #[test]
+    fn parses_categorical_physical_only() {
+        let dtype =
+            parse_into_dtype("categorical[team, u8]").expect("categorical with physical dtype");
+        if let DataType::Categorical(categories, _) = dtype {
+            assert_eq!(categories.name().as_str(), "team");
+            assert_eq!(categories.namespace().as_str(), "");
+            assert_eq!(categories.physical(), CategoricalPhysical::U8);
+        } else {
+            panic!("expected categorical dtype");
+        }
+    }
+
+    #[test]
+    fn parses_enum_categories() {
+        let dtype = parse_into_dtype("enum[alpha,beta]").expect("enum dtype");
+        if let DataType::Enum(frozen, _) = dtype {
+            assert_eq!(frozen.categories().len(), 2);
+        } else {
+            panic!("expected enum dtype");
+        }
     }
 }

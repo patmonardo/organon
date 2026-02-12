@@ -1,4 +1,3 @@
-
 pub mod activation_function;
 pub mod activation_function_factory;
 pub mod activation_function_wrapper;
@@ -55,4 +54,3 @@ pub use sigmoid_wrapper::*;
 pub use single_label_feature_function::*;
 pub use train_config_transformer::*;
 pub use types::*;
-

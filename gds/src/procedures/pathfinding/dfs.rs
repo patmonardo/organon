@@ -30,8 +30,8 @@
 //! ```
 
 use crate::algo::algorithms::pathfinding::PathFindingResult;
-use crate::algo::algorithms::Result;
 use crate::algo::algorithms::pathfinding::PathResult;
+use crate::algo::algorithms::Result;
 use crate::algo::dfs::{
     DfsComputationRuntime, DfsConfig, DfsMutateResult, DfsMutationSummary, DfsResultBuilder,
     DfsStats, DfsStorageRuntime, DfsWriteSummary,

@@ -6,4 +6,3 @@ pub mod updater;
 
 pub use adam_optimizer::*;
 pub use updater::*;
-

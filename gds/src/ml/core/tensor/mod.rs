@@ -18,4 +18,3 @@ pub use tensor::*;
 pub use tensor_factory::*;
 pub use tensor_functions::*;
 pub use vector::*;
-

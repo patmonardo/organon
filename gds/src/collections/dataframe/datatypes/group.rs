@@ -2,7 +2,7 @@
 
 use std::sync::OnceLock;
 
-use polars::prelude::{DataType, TimeUnit};
+use polars::prelude::{DataType, TimeUnit, TimeZone};
 
 #[derive(Debug, Clone)]
 pub struct DataTypeGroup {
@@ -87,7 +87,12 @@ pub fn integer_dtypes() -> &'static DataTypeGroup {
 
 pub fn float_dtypes() -> &'static DataTypeGroup {
     static GROUP: OnceLock<DataTypeGroup> = OnceLock::new();
-    GROUP.get_or_init(|| DataTypeGroup::new(vec![DataType::Float32, DataType::Float64], true))
+    GROUP.get_or_init(|| {
+        DataTypeGroup::new(
+            vec![super::Float16, DataType::Float32, DataType::Float64],
+            true,
+        )
+    })
 }
 
 pub fn numeric_dtypes() -> &'static DataTypeGroup {
@@ -104,11 +109,15 @@ pub fn numeric_dtypes() -> &'static DataTypeGroup {
 pub fn datetime_dtypes() -> &'static DataTypeGroup {
     static GROUP: OnceLock<DataTypeGroup> = OnceLock::new();
     GROUP.get_or_init(|| {
+        let wildcard = Some(unsafe { TimeZone::from_static("*") });
         DataTypeGroup::new(
             vec![
                 DataType::Datetime(TimeUnit::Milliseconds, None),
                 DataType::Datetime(TimeUnit::Microseconds, None),
                 DataType::Datetime(TimeUnit::Nanoseconds, None),
+                DataType::Datetime(TimeUnit::Milliseconds, wildcard.clone()),
+                DataType::Datetime(TimeUnit::Microseconds, wildcard.clone()),
+                DataType::Datetime(TimeUnit::Nanoseconds, wildcard.clone()),
             ],
             true,
         )

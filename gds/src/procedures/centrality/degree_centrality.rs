@@ -25,6 +25,7 @@
 //! graph.degree_centrality().mutate("degree")?;
 //! ```
 
+use crate::algo::algorithms::{CentralityScore, Result};
 use crate::algo::algorithms::{ConfigValidator, WriteResult};
 pub use crate::algo::degree_centrality::storage::Orientation;
 use crate::algo::degree_centrality::{
@@ -39,7 +40,6 @@ use crate::core::utils::progress::{
     Tasks,
 };
 use crate::mem::MemoryRange;
-use crate::algo::algorithms::{CentralityScore, Result};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::NodeLabel;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};

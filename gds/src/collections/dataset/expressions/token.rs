@@ -14,7 +14,7 @@ pub const TOKEN_END_FIELD: &str = "end";
 pub const TOKEN_KIND_FIELD: &str = "kind";
 
 pub fn token_field_expr(column: &str, field: &str) -> Expr {
-	col(column).struct_().field_by_name(field)
+    col(column).struct_().field_by_name(field)
 }
 
 pub fn token_field_expr_from(expr: Expr, field: &str) -> Expr {
@@ -22,17 +22,17 @@ pub fn token_field_expr_from(expr: Expr, field: &str) -> Expr {
 }
 
 pub fn token_text_expr(column: &str) -> Expr {
-	token_field_expr(column, TOKEN_TEXT_FIELD)
+    token_field_expr(column, TOKEN_TEXT_FIELD)
 }
 
 pub fn token_start_expr(column: &str) -> Expr {
-	token_field_expr(column, TOKEN_START_FIELD)
+    token_field_expr(column, TOKEN_START_FIELD)
 }
 
 pub fn token_end_expr(column: &str) -> Expr {
-	token_field_expr(column, TOKEN_END_FIELD)
+    token_field_expr(column, TOKEN_END_FIELD)
 }
 
 pub fn token_kind_expr(column: &str) -> Expr {
-	token_field_expr(column, TOKEN_KIND_FIELD)
+    token_field_expr(column, TOKEN_KIND_FIELD)
 }

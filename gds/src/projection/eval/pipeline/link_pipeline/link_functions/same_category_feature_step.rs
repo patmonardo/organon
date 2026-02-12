@@ -39,12 +39,8 @@ impl LinkFeatureStep for SameCategoryStep {
                 .unwrap_or_else(|| panic!("Property {} not found", property_name));
 
             let appender: Box<dyn LinkFeatureAppender> = match property.value_type() {
-                ValueType::Long => {
-                    Box::new(SameCategoryLongAppender { props: property })
-                }
-                ValueType::Double => {
-                    Box::new(SameCategoryDoubleAppender { props: property })
-                }
+                ValueType::Long => Box::new(SameCategoryLongAppender { props: property }),
+                ValueType::Double => Box::new(SameCategoryDoubleAppender { props: property }),
                 _ => panic!(
                     "SameCategory only supports numeric properties (Long, Double), got {:?}",
                     property.value_type()

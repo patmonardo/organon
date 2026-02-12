@@ -1,9 +1,7 @@
-use crate::algo::algorithms::{
-    ExecutionMetadata, ResultBuilder, ResultBuilderError,
-};
 use crate::algo::algorithms::statistics::{
     Histogram, StatisticalSummary, StatisticsConfig, StatisticsEngine,
 };
+use crate::algo::algorithms::{ExecutionMetadata, ResultBuilder, ResultBuilderError};
 use crate::collections::backends::vec::VecDouble;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::RelationshipType;

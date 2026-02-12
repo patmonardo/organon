@@ -1,8 +1,8 @@
 use std::sync::Arc;
 
 use crate::applications::graph_store_catalog::configs::SamplingConfig;
-use crate::applications::graph_store_catalog::results::SamplingResult;
 use crate::applications::graph_store_catalog::loaders::GraphStoreCatalogService;
+use crate::applications::graph_store_catalog::results::SamplingResult;
 use crate::applications::services::logging::Log;
 use crate::core::User;
 use crate::types::graph::IdMap as _;

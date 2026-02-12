@@ -1,9 +1,9 @@
 //! Dependency graph core types.
 
-use polars::prelude::{NamedFrom, PlSmallStr, Series, lit, Expr};
+use polars::prelude::{lit, Expr, NamedFrom, PlSmallStr, Series};
 
-use crate::collections::dataframe::{GDSDataFrame, GDSFrameError};
 use crate::collections::dataframe::record;
+use crate::collections::dataframe::{GDSDataFrame, GDSFrameError};
 use crate::collections::dataset::token::{Token, TokenSpan};
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
@@ -103,11 +103,7 @@ impl DependencyGraph {
         Self { nodes, edges, root }
     }
 
-    pub fn from_tokens(
-        tokens: &[Token],
-        edges: Vec<DependencyEdge>,
-        root: Option<usize>,
-    ) -> Self {
+    pub fn from_tokens(tokens: &[Token], edges: Vec<DependencyEdge>, root: Option<usize>) -> Self {
         let nodes = tokens
             .iter()
             .enumerate()

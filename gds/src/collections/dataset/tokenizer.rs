@@ -434,7 +434,13 @@ impl Tokenizer for JsonTokenizer {
                 i += ch_len;
                 while i < bytes.len() {
                     let next = text[i..].chars().next().unwrap();
-                    if next.is_ascii_digit() || next == '.' || next == 'e' || next == 'E' || next == '+' || next == '-' {
+                    if next.is_ascii_digit()
+                        || next == '.'
+                        || next == 'e'
+                        || next == 'E'
+                        || next == '+'
+                        || next == '-'
+                    {
                         i += next.len_utf8();
                     } else {
                         break;

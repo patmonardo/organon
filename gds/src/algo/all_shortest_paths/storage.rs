@@ -8,8 +8,8 @@
 
 use crate::core::utils::progress::ProgressTracker;
 use crate::projection::eval::algorithm::AlgorithmError;
-use crate::types::graph::NodeId;
 use crate::types::graph::Graph;
+use crate::types::graph::NodeId;
 use std::sync::mpsc;
 
 use super::AllShortestPathsComputationRuntime;

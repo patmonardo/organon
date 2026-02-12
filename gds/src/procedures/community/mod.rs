@@ -1,4 +1,3 @@
-
 pub mod approx_max_kcut;
 pub mod conductance;
 pub mod k1coloring;
@@ -24,4 +23,3 @@ pub use modularity::*;
 pub use scc::*;
 pub use triangle::*;
 pub use wcc::*;
-

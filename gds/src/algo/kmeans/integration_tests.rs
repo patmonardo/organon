@@ -1,5 +1,5 @@
-use super::KMeansComputationRuntime;
 use super::spec::{KMeansConfig, KMeansSamplerType};
+use super::KMeansComputationRuntime;
 
 #[test]
 fn kmeans_two_clusters_converges() {

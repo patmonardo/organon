@@ -18,18 +18,20 @@ pub fn extract_property(property: &str, token: &TaggedToken) -> Option<FeatureVa
         "pos" | "tag" => Some(FeatureValue::text(token.1.clone())),
         "lower" => Some(FeatureValue::text(token.0.to_lowercase())),
         "len" => Some(FeatureValue::Number(token.0.len() as i64)),
-        "is_upper" => Some(FeatureValue::Bool(token.0.chars().all(|c| !c.is_lowercase()))),
-        "is_lower" => Some(FeatureValue::Bool(token.0.chars().all(|c| !c.is_uppercase()))),
+        "is_upper" => Some(FeatureValue::Bool(
+            token.0.chars().all(|c| !c.is_lowercase()),
+        )),
+        "is_lower" => Some(FeatureValue::Bool(
+            token.0.chars().all(|c| !c.is_uppercase()),
+        )),
         _ => None,
     }
 }
 
-pub fn extract_at(
-    property: &str,
-    tokens: &[TaggedToken],
-    index: usize,
-) -> Option<FeatureValue> {
-    tokens.get(index).and_then(|token| extract_property(property, token))
+pub fn extract_at(property: &str, tokens: &[TaggedToken], index: usize) -> Option<FeatureValue> {
+    tokens
+        .get(index)
+        .and_then(|token| extract_property(property, token))
 }
 
 #[cfg(test)]

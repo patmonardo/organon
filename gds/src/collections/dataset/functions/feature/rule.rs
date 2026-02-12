@@ -3,9 +3,7 @@
 use crate::collections::dataset::expressions::feature::{
     FeatureCondition, FeaturePath, FeatureRule, FeatureSpec, FeatureValue,
 };
-use crate::collections::dataset::functions::feature::token::{
-    extract_at, TaggedToken,
-};
+use crate::collections::dataset::functions::feature::token::{extract_at, TaggedToken};
 
 pub fn apply_rule(rule: &FeatureRule, tokens: &mut [TaggedToken]) -> Vec<usize> {
     apply_rule_at(rule, tokens, None)

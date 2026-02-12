@@ -120,7 +120,10 @@ where
         Ok(())
     }
 
-    fn build_index(&self, config: &IndexingConfig) -> Result<HashMap<T, Vec<usize>>, IndexingError> {
+    fn build_index(
+        &self,
+        config: &IndexingConfig,
+    ) -> Result<HashMap<T, Vec<usize>>, IndexingError> {
         let mut map: HashMap<T, Vec<usize>> = HashMap::new();
         for idx in 0..self.inner.len() {
             let value = self
@@ -334,10 +337,7 @@ where
 
     fn lookup(&mut self, value: &T) -> Result<Vec<usize>, IndexingError> {
         self.ensure_index()?;
-        let index = self
-            .index
-            .as_ref()
-            .ok_or(IndexingError::IndexUnavailable)?;
+        let index = self.index.as_ref().ok_or(IndexingError::IndexUnavailable)?;
         Ok(index.get(value).cloned().unwrap_or_default())
     }
 

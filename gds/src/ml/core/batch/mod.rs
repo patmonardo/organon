@@ -16,4 +16,3 @@ pub use list_batch::*;
 pub use mapped_batch::*;
 pub use range_batch::*;
 pub use singleton_batch::*;
-

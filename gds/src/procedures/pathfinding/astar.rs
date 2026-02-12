@@ -45,8 +45,8 @@ use crate::algo::astar::{
 use crate::core::utils::progress::TaskProgressTracker;
 use crate::mem::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
-use crate::projection::Orientation;
 use crate::projection::relationship_type::RelationshipType;
+use crate::projection::Orientation;
 use crate::types::graph::id_map::NodeId;
 use crate::types::graph_store::GraphStore;
 use crate::types::prelude::DefaultGraphStore;

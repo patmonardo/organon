@@ -137,13 +137,11 @@ impl ProgressTracker for TaskProgressTracker {
         if next_task.status() == Status::Pending {
             next_task.start();
         } else {
-            inner
-                .task_progress_logger
-                .log_warning(&format!(
-                    ":: Attempted to start task '{}' but it is already {:?}",
-                    next_task.description(),
-                    next_task.status()
-                ));
+            inner.task_progress_logger.log_warning(&format!(
+                ":: Attempted to start task '{}' but it is already {:?}",
+                next_task.description(),
+                next_task.status()
+            ));
         }
 
         inner

@@ -1,3 +1,4 @@
+use crate::algo::similarity::filtered_node_similarity::FilteredNodeSimilarityStats;
 use crate::algo::similarity::node_similarity::{NodeSimilarityMetric, NodeSimilarityResult};
 use crate::applications::algorithms::machinery::{
     AlgorithmProcessingTemplateConvenience, DefaultAlgorithmProcessingTemplate,
@@ -9,7 +10,6 @@ use crate::applications::algorithms::similarity::{
 use crate::concurrency::TerminationFlag;
 use crate::core::loading::{CatalogLoader, GraphResources};
 use crate::core::utils::progress::{JobId, ProgressTracker, TaskRegistryFactories, Tasks};
-use crate::algo::similarity::filtered_node_similarity::FilteredNodeSimilarityStats;
 use crate::procedures::similarity::filtered_node_similarity::FilteredNodeSimilarityFacade;
 use crate::projection::NodeLabel;
 use crate::types::catalog::GraphCatalog;

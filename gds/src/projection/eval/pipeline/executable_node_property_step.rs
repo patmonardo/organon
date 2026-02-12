@@ -2,10 +2,10 @@
 //!
 //! Direct 1:1 translation of Java `org.neo4j.gds.ml.pipeline.ExecutableNodePropertyStep`.
 
+use crate::types::graph_store::DefaultGraphStore;
 use dyn_clone::DynClone;
 use std::collections::HashMap;
 use std::error::Error as StdError;
-use crate::types::graph_store::DefaultGraphStore;
 
 /// Executable node property step.
 ///

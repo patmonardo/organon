@@ -4,8 +4,8 @@
 //!
 //! This module defines the Yen's algorithm specification, configuration, and result types.
 
-use super::YensStorageRuntime;
 use super::YensComputationRuntime;
+use super::YensStorageRuntime;
 use crate::algo::algorithms::pathfinding::{
     PathFindingResult, PathFindingResultBuilder, PathResult,
 };
@@ -15,8 +15,8 @@ use crate::core::utils::progress::TaskProgressTracker;
 use crate::core::utils::progress::Tasks;
 use crate::define_algorithm_spec;
 use crate::projection::eval::algorithm::AlgorithmError;
-use crate::projection::Orientation;
 use crate::projection::relationship_type::RelationshipType;
+use crate::projection::Orientation;
 use crate::types::graph::NodeId;
 use serde::{Deserialize, Serialize};
 use std::collections::{HashMap, HashSet};

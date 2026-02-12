@@ -5,6 +5,7 @@ use crate::concurrency::TerminationFlag;
 use crate::core::utils::progress::tasks::LogLevel;
 use crate::core::utils::progress::tasks::ProgressTracker;
 use crate::core::utils::progress::tasks::TaskProgressTracker;
+use crate::core::LogLevel as ProcedureLogLevel;
 use crate::mem::Estimate;
 use crate::mem::MemoryEstimation;
 use crate::mem::MemoryEstimations;
@@ -21,7 +22,6 @@ use crate::ml::models::random_forest::RandomForestRegressorTrainerConfig;
 use crate::ml::models::Features;
 use crate::ml::models::Regressor;
 use crate::ml::models::RegressorTrainer;
-use crate::core::LogLevel as ProcedureLogLevel;
 use rand::SeedableRng;
 use std::sync::Arc;
 

@@ -1,4 +1,3 @@
-
 pub mod abstract_link_feature_appender_factory;
 pub mod cosine_feature_step;
 pub mod hadamard_feature_step;
@@ -16,4 +15,3 @@ pub use link_feature_step_configuration::*;
 pub use same_category_feature_step::*;
 pub use single_property_feature_appender::*;
 pub use union_link_feature_appender::*;
-

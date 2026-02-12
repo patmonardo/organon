@@ -1,4 +1,3 @@
-
 pub mod compute;
 pub mod error;
 pub mod parameters;
@@ -9,4 +8,3 @@ pub use compute::*;
 pub use error::*;
 pub use parameters::*;
 pub use result::*;
-

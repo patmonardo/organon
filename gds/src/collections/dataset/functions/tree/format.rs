@@ -36,7 +36,10 @@ fn format_pretty_inner(tree: &TreeValue, depth: usize, indent: usize) -> String 
             out.push_str(&pad);
             out.push('(');
             out.push_str(&format_token(node.label()));
-            let multiline = node.children().iter().any(|child| matches!(child, TreeValue::Node(_)));
+            let multiline = node
+                .children()
+                .iter()
+                .any(|child| matches!(child, TreeValue::Node(_)));
             if multiline {
                 for child in node.children() {
                     out.push('\n');
@@ -73,7 +76,10 @@ fn format_token(value: &str) -> String {
     if value.is_empty() {
         return "\"\"".to_string();
     }
-    if value.chars().any(|c| c.is_whitespace() || c == '(' || c == ')') {
+    if value
+        .chars()
+        .any(|c| c.is_whitespace() || c == '(' || c == ')')
+    {
         let escaped = value.replace('"', "\\\"");
         return format!("\"{escaped}\"");
     }

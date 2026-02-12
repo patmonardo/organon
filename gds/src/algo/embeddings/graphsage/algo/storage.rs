@@ -1,7 +1,7 @@
 //! GraphSAGE Storage Runtime
 
-use super::GraphSageComputationRuntime;
 use super::spec::{GraphSageConfig, GraphSageResult};
+use super::GraphSageComputationRuntime;
 use crate::types::graph::Graph;
 
 pub struct GraphSageStorageRuntime;

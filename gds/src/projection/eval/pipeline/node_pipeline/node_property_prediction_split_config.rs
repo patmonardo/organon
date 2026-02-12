@@ -1,7 +1,7 @@
+use crate::config::validation::ConfigError;
 use crate::projection::eval::pipeline::non_empty_set_validation::{
     validate_node_set_size, MIN_SET_SIZE, MIN_TRAIN_SET_SIZE,
 };
-use crate::config::validation::ConfigError;
 use std::collections::HashMap;
 
 /// Configuration for splitting node property prediction datasets.

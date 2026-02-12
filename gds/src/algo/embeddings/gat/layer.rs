@@ -1,7 +1,7 @@
 use super::attention::AttentionMechanism;
 use super::config::GATConfig;
-use crate::types::graph::NodeId;
 use crate::types::graph::Graph;
+use crate::types::graph::NodeId;
 use std::collections::HashMap;
 
 pub struct GATLayer {

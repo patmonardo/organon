@@ -103,13 +103,22 @@ impl NodeRegressionPredictPipelineBaseConfig {
 
     pub fn to_map(&self) -> AnyMap {
         let mut map = AnyMap::new();
-        map.insert("graphName".to_string(), Value::String(self.graph_name.clone()));
+        map.insert(
+            "graphName".to_string(),
+            Value::String(self.graph_name.clone()),
+        );
         map.insert(
             "concurrency".to_string(),
             Value::Number(serde_json::Number::from(self.concurrency as i64)),
         );
-        map.insert("modelName".to_string(), Value::String(self.model_name.clone()));
-        map.insert("modelUser".to_string(), Value::String(self.model_user.clone()));
+        map.insert(
+            "modelName".to_string(),
+            Value::String(self.model_name.clone()),
+        );
+        map.insert(
+            "modelUser".to_string(),
+            Value::String(self.model_user.clone()),
+        );
         map.insert(
             "targetNodeLabels".to_string(),
             Value::Array(

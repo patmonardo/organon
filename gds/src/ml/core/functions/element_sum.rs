@@ -3,8 +3,8 @@
 //! Translated from Java GDS ml-core functions ElementSum.java.
 //! This is a literal 1:1 translation following repository translation policy.
 
-use crate::ml::core::ComputationContext;
 use crate::ml::core::dimensions;
+use crate::ml::core::ComputationContext;
 use crate::ml::core::{Scalar, Tensor};
 use crate::ml::core::{Variable, VariableRef};
 use std::fmt;

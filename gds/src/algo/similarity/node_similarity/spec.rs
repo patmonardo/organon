@@ -1,8 +1,8 @@
 use super::similarity_metric::NodeSimilarityMetric;
 use super::NodeSimilarityStorageRuntime;
 use super::{NodeSimilarityComputationResult, NodeSimilarityComputationRuntime};
-use crate::algo::algorithms::similarity::similarity_stats;
 use crate::algo::algorithms::pathfinding::PathResult;
+use crate::algo::algorithms::similarity::similarity_stats;
 use crate::config::validation::ConfigError;
 use crate::define_algorithm_spec;
 use crate::projection::eval::algorithm::AlgorithmError;

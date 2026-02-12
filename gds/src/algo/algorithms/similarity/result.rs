@@ -2,12 +2,10 @@
 //!
 //! **Translation Source**: `org.neo4j.gds.result.AbstractSimilarityResultBuilder`
 
-use crate::algo::algorithms::{
-    ExecutionMetadata, ResultBuilder, ResultBuilderError,
-};
 use crate::algo::algorithms::statistics::{
     Histogram, StatisticalSummary, StatisticsConfig, StatisticsEngine,
 };
+use crate::algo::algorithms::{ExecutionMetadata, ResultBuilder, ResultBuilderError};
 use serde::{Deserialize, Serialize};
 use std::time::Duration;
 

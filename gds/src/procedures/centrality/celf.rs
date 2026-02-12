@@ -3,6 +3,7 @@
 //! Live wiring for Cost-Effective Lazy Forward influence maximization.
 
 use crate::algo::algorithms::WriteResult;
+use crate::algo::algorithms::{AlgorithmRunner, Result};
 use crate::algo::celf::storage::CELFStorageRuntime;
 use crate::algo::celf::{
     CELFComputationRuntime, CELFConfig, CELFMutateResult, CELFMutationSummary, CELFResult,
@@ -12,7 +13,6 @@ use crate::collections::backends::vec::VecDouble;
 use crate::concurrency::TerminationFlag;
 use crate::core::utils::progress::{ProgressTracker, TaskProgressTracker, TaskRegistry, Tasks};
 use crate::mem::MemoryRange;
-use crate::algo::algorithms::{AlgorithmRunner, Result};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph_store::GraphStore;
 use crate::types::prelude::DefaultGraphStore;

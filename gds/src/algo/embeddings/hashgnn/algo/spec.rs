@@ -15,8 +15,8 @@ use crate::projection::Orientation;
 use crate::projection::RelationshipType;
 use serde::{Deserialize, Serialize};
 
-use super::HashGNNStorageRuntime;
 use super::HashGNNComputationRuntime;
+use super::HashGNNStorageRuntime;
 
 // ============================================================================
 // Configuration

@@ -1,6 +1,6 @@
-use super::GATComputationRuntime;
 use super::config::GATConfig;
 use super::types::GATResult;
+use super::GATComputationRuntime;
 use crate::types::graph::Graph;
 
 pub struct GATStorageRuntime;

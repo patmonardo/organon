@@ -8,4 +8,3 @@ pub mod predicted_link;
 pub use exhaustive::*;
 pub use link_prediction_result::*;
 pub use predicted_link::*;
-

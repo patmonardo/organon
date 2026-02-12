@@ -1,8 +1,8 @@
 use crate::applications::algorithms::machinery::{AlgorithmProcessingTimings, ResultRenderer};
 use crate::core::loading::GraphResources;
 use crate::procedures::pipelines::types::{MLTrainResult, NodeRegressionPipelineTrainResult};
-use crate::projection::eval::pipeline::node_pipeline::regression::node_regression_train_result::NodeRegressionTrainPipelineResult;
 use crate::projection::eval::pipeline::node_pipeline::node_property_pipeline_base_train_config::NodePropertyPipelineBaseTrainConfig;
+use crate::projection::eval::pipeline::node_pipeline::regression::node_regression_train_result::NodeRegressionTrainPipelineResult;
 use serde_json::Value;
 use std::collections::HashMap;
 

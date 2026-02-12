@@ -12,8 +12,8 @@
 //! where \(W_{\ell}\) has shape (projected_dim, feature_dim_for_label).
 
 use crate::collections::HugeObjectArray;
-use crate::ml::core::ComputationContext;
 use crate::ml::core::dimensions;
+use crate::ml::core::ComputationContext;
 use crate::ml::core::{Matrix, Tensor};
 use crate::ml::core::{Variable, VariableRef};
 use crate::types::schema::NodeLabel;

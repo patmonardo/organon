@@ -4,8 +4,8 @@
 //!
 //! This module contains integration tests for DFS algorithm with the executor runtime.
 
-use super::DfsComputationRuntime;
 use super::spec::{DFSAlgorithmSpec, DfsConfig, DfsResult};
+use super::DfsComputationRuntime;
 use super::DfsStorageRuntime;
 use crate::core::utils::progress::{TaskProgressTracker, Tasks};
 use crate::projection::eval::algorithm::AlgorithmSpec;

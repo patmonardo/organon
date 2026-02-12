@@ -1,10 +1,10 @@
 use crate::applications::algorithms::machinery::MutateStep;
 use crate::core::loading::GraphResources;
 use crate::ml::link_models::LinkPredictionResult;
+use crate::procedures::pipelines::types::AnyMap;
 use crate::procedures::pipelines::{
     LinkPredictionMutateMetadata, LinkPredictionPredictPipelineMutateConfig,
 };
-use crate::procedures::pipelines::types::AnyMap;
 
 pub struct LinkPredictionPipelineMutateStep {
     #[allow(dead_code)]

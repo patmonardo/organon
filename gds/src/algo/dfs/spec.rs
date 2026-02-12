@@ -4,8 +4,8 @@
 //!
 //! This module defines the DFS algorithm specification, configuration, and result types.
 
-use super::DfsStorageRuntime;
 use super::DfsComputationRuntime;
+use super::DfsStorageRuntime;
 use crate::algo::algorithms::pathfinding::{
     PathFindingResult, PathFindingResultBuilder, PathResult,
 };

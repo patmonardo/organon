@@ -1,4 +1,3 @@
-
 pub mod combined_similarity_computer;
 pub mod cosine;
 pub mod double_array_property_similarity_computer;
@@ -21,4 +20,3 @@ pub use long_array_property_similarity_computer::*;
 pub use long_property_similarity_computer::*;
 pub use null_checking_node_property_values::*;
 pub use similarity_computer::*;
-

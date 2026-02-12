@@ -1,4 +1,3 @@
-
 pub mod computation;
 pub mod similarity_metric;
 pub mod spec;
@@ -11,4 +10,3 @@ pub use similarity_metric::*;
 pub use spec::*;
 pub use storage::*;
 pub use vector_computer::*;
-

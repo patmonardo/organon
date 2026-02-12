@@ -1,7 +1,7 @@
+use crate::algo::similarity::knn::metrics::SimilarityComputer;
 use crate::algo::similarity::knn::KnnComputationRuntime;
 use crate::algo::similarity::knn::KnnNnDescentConfig;
 use crate::algo::similarity::knn::KnnNnDescentStats;
-use crate::algo::similarity::knn::metrics::SimilarityComputer;
 use std::sync::Arc;
 
 #[derive(Debug, Clone)]

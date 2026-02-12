@@ -12,8 +12,8 @@ use std::collections::HashSet;
 use std::sync::Arc;
 use std::time::{Duration, Instant};
 
-use super::PageRankStorageRuntime;
 use super::PageRankComputationRuntime;
+use super::PageRankStorageRuntime;
 
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub struct PageRankConfig {

@@ -3,8 +3,8 @@
 //! Translation source: `org.neo4j.gds.indexInverse.InverseRelationships`.
 //! Builds a graph store with inverse relationship indices populated.
 
-use super::IndexInverseComputationRuntime;
 use super::spec::{IndexInverseConfig, IndexInverseResult};
+use super::IndexInverseComputationRuntime;
 use crate::projection::Orientation;
 use crate::types::graph::RelationshipTopology;
 use crate::types::graph_store::{GraphName, GraphStore};
@@ -93,8 +93,8 @@ mod tests {
     use super::*;
     use crate::config::GraphStoreConfig;
     use crate::types::graph::degrees::Degrees;
-    use crate::types::graph::SimpleIdMap;
     use crate::types::graph::RelationshipTopology;
+    use crate::types::graph::SimpleIdMap;
     use crate::types::graph_store::{Capabilities, DatabaseId, DatabaseInfo, DatabaseLocation};
     use crate::types::schema::{
         Direction, GraphSchema, MutableGraphSchema, NodeLabel, RelationshipType,

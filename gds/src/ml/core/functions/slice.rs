@@ -4,9 +4,9 @@
 //! This is a literal 1:1 translation following repository translation policy.
 
 use crate::ml::core::dimensions::{self, COLUMNS_INDEX};
-use crate::ml::core::{Matrix, Tensor};
 use crate::ml::core::AbstractVariable;
 use crate::ml::core::ComputationContext;
+use crate::ml::core::{Matrix, Tensor};
 use crate::ml::core::{Variable, VariableRef};
 use std::fmt;
 

@@ -11,8 +11,8 @@ use super::targets::Targets;
 use super::DijkstraComputationRuntime;
 use crate::core::utils::progress::{ProgressTracker, UNKNOWN_VOLUME};
 use crate::projection::eval::algorithm::AlgorithmError;
-use crate::types::graph::NodeId;
 use crate::types::graph::Graph;
+use crate::types::graph::NodeId;
 use std::time::Instant;
 
 /// Dijkstra Storage Runtime

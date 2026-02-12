@@ -1,7 +1,5 @@
-use super::{
-    KnnComputationResult, KnnComputationRuntime, KnnNnDescentConfig, KnnNnDescentStats,
-};
 use super::metrics::{KnnNodePropertySpec, SimilarityComputer, SimilarityMetric};
+use super::{KnnComputationResult, KnnComputationRuntime, KnnNnDescentConfig, KnnNnDescentStats};
 use crate::core::utils::progress::ProgressTracker;
 use crate::ml::core::samplers::RandomWalkSampler;
 use crate::projection::eval::algorithm::AlgorithmError;
@@ -219,11 +217,8 @@ impl KnnStorageRuntime {
                 ));
             }
 
-            let mut props: Vec<(
-                String,
-                Arc<dyn NodePropertyValues>,
-                SimilarityMetric,
-            )> = Vec::with_capacity(node_properties.len());
+            let mut props: Vec<(String, Arc<dyn NodePropertyValues>, SimilarityMetric)> =
+                Vec::with_capacity(node_properties.len());
 
             for spec in node_properties {
                 let name = spec.name.trim();

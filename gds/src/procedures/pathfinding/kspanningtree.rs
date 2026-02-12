@@ -3,9 +3,9 @@
 //! Computes k spanning trees by first computing an MST using Prim's algorithm,
 //! then progressively pruning to maintain exactly k nodes.
 
-use crate::algo::algorithms::{ConfigValidator, WriteResult};
-use crate::algo::algorithms::Result;
 use crate::algo::algorithms::pathfinding::PathResult;
+use crate::algo::algorithms::Result;
+use crate::algo::algorithms::{ConfigValidator, WriteResult};
 use crate::algo::kspanningtree::computation::KSpanningTreeComputationRuntime;
 use crate::algo::kspanningtree::storage::KSpanningTreeStorageRuntime;
 use crate::algo::kspanningtree::{

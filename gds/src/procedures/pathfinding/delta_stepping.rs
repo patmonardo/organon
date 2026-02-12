@@ -5,8 +5,8 @@
 //! This facade runs the translated Delta Stepping runtime against a live
 //! `DefaultGraphStore`.
 
-use crate::algo::algorithms::Result;
 use crate::algo::algorithms::pathfinding::PathResult;
+use crate::algo::algorithms::Result;
 use crate::algo::delta_stepping::{
     DeltaSteppingComputationRuntime, DeltaSteppingConfig, DeltaSteppingMutateResult,
     DeltaSteppingMutationSummary, DeltaSteppingResultBuilder, DeltaSteppingStats,

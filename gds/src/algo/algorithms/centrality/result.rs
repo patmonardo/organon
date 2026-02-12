@@ -4,13 +4,11 @@
 //!
 //! This module provides result types and traits for centrality algorithms.
 
-use crate::algo::algorithms::{
-    ExecutionMetadata, ResultBuilder, ResultBuilderError,
-};
 use crate::algo::algorithms::scaling::Scaler;
 use crate::algo::algorithms::statistics::{
     Histogram, StatisticalSummary, StatisticsConfig, StatisticsEngine,
 };
+use crate::algo::algorithms::{ExecutionMetadata, ResultBuilder, ResultBuilderError};
 use crate::types::properties::node::NodePropertyValues;
 use std::time::Duration;
 

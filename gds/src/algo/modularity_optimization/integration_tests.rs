@@ -1,5 +1,5 @@
-use super::{ModularityOptimizationComputationRuntime, ModularityOptimizationInput};
 use super::spec::ModularityOptimizationConfig;
+use super::{ModularityOptimizationComputationRuntime, ModularityOptimizationInput};
 
 #[test]
 fn modopt_empty_ok() {

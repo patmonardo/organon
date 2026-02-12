@@ -13,7 +13,7 @@
 
 use crate::ml::core::AbstractVariable;
 use crate::ml::core::ComputationContext;
-use crate::ml::core::{Matrix, Tensor, size_in_bytes};
+use crate::ml::core::{size_in_bytes, Matrix, Tensor};
 use crate::ml::core::{Variable, VariableRef};
 use std::fmt;
 

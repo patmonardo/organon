@@ -7,16 +7,16 @@ use crate::config::validation::ConfigError;
 use crate::core::LogLevel;
 use crate::define_algorithm_spec;
 use crate::projection::eval::algorithm::AlgorithmError;
-use crate::projection::Orientation;
 use crate::projection::NodeLabel;
+use crate::projection::Orientation;
 use crate::projection::RelationshipType;
 use crate::types::properties::node::{DefaultFloatArrayNodePropertyValues, NodePropertyValues};
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 use std::sync::Arc;
 
-use super::FastRPStorageRuntime;
 use super::FastRPComputationRuntime;
+use super::FastRPStorageRuntime;
 
 // ============================================================================
 // Configuration

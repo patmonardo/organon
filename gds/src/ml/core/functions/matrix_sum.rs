@@ -11,9 +11,9 @@
 //! - MatrixSum adds: element-wise summation logic
 //! - Delegates Variable trait methods to inner AbstractVariable
 
+use crate::ml::core::dimensions::{COLUMNS_INDEX, ROWS_INDEX};
 use crate::ml::core::AbstractVariable;
 use crate::ml::core::ComputationContext;
-use crate::ml::core::dimensions::{COLUMNS_INDEX, ROWS_INDEX};
 use crate::ml::core::{Matrix, Tensor};
 use crate::ml::core::{Variable, VariableRef};
 use std::fmt;
