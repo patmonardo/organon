@@ -114,7 +114,23 @@ pub use crate::collections::dataset::lazy::LazyFrameDatasetExt;
 pub use crate::collections::dataset::series::SeriesDatasetExt;
 
 // Dataset expression namespace
+pub use crate::collections::dataset::namespaces::dataop::DataOpNs;
 pub use crate::collections::dataset::namespaces::dataset::DatasetNs;
+pub use crate::collections::dataset::namespaces::feature::FeatureNs;
+pub use crate::collections::dataset::namespaces::text::TextNs;
+pub use crate::collections::dataset::namespaces::tree::TreeNs;
+pub use crate::collections::dataset::{
+    is_dataset_namespace_registered, register_corpus_namespace, register_dataset_namespace,
+};
+
+// Dataset expression surface (top-level ToolChain vocabulary)
+pub use crate::collections::dataset::{
+    DataFrameLoweringArtifact, DatasetAspectArtifact, DatasetDataOp, DatasetDataOpExpr,
+    DatasetIoExpr, DatasetMetadataExpr, DatasetPipeline, DatasetPipelineArtifacts,
+    DatasetProjectionExpr, DatasetProjectionKind, DatasetRegistryExpr, DatasetReportExpr,
+    DatasetReportKind, DatasetSource, DatasetToolChain, GenusSpecies, LogicalEngineIntent,
+    ModelSpecRef, MvcEngineIntent, SdslSpecification,
+};
 
 // Utilities
 pub use crate::collections::dataset::functions::scan_text_dir;
@@ -143,7 +159,7 @@ pub use crate::collections::dataset::expressions::token::{
 };
 
 // Dataset compiler utility surface
-pub use crate::collections::dataset::utils::{
+pub use crate::collections::dataset::{
     render_rust_dsl_module, DatasetCatalogIndex, DatasetCompilation, DatasetNode, DatasetNodeKind,
     DslCodegenOptions,
 };

@@ -28,6 +28,7 @@
     "seed": "tsx src/tools/run-seed.ts",
     "seed:enhanced": "tsx src/tools/run-seed-enhanced.ts",
     "seed:reflective": "tsx src/tools/run-seed-context-property.ts",
+    "example:sdsl:neo4j": "tsx examples/src/sdsl/sdsl-specification-neo4j.ts",
     "db:reset": "tsx src/tools/db-reset.ts",
     "db:stats": "tsx src/tools/db-stats.ts",
     "db:explore": "tsx src/tools/db-query.ts"

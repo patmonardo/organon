@@ -19,7 +19,7 @@ import type {
   OperationResult,
   DisplayDocument,
   DisplayElement,
-  DisplayLayout
+  DisplayLayout,
 } from './types';
 import type { FormModel } from './form-model';
 
@@ -74,21 +74,21 @@ export abstract class FormView<T extends FormShape = FormShape> {
           return {
             status: 'success',
             data: doc,
-            message: 'Serialized to JSON'
+            message: 'Serialized to JSON',
           };
 
         case 'html':
           return {
             status: 'success',
             data: this.toHTML(doc),
-            message: 'Serialized to HTML'
+            message: 'Serialized to HTML',
           };
 
         case 'xml':
           return {
             status: 'success',
             data: this.toXML(doc),
-            message: 'Serialized to XML'
+            message: 'Serialized to XML',
           };
 
         case 'jsx':
@@ -96,21 +96,21 @@ export abstract class FormView<T extends FormShape = FormShape> {
           return {
             status: 'success',
             data: doc,
-            message: 'DisplayDocument ready for JSX adapter'
+            message: 'DisplayDocument ready for JSX adapter',
           };
 
         default:
           return {
             status: 'error',
             data: null,
-            message: `Unknown content type: ${content}`
+            message: `Unknown content type: ${content}`,
           };
       }
     } catch (error) {
       return {
         status: 'error',
         data: null,
-        message: `Serialization error: ${error}`
+        message: `Serialization error: ${error}`,
       };
     }
   }
@@ -133,11 +133,11 @@ export abstract class FormView<T extends FormShape = FormShape> {
 
       case 'edit':
         // Show editable fields
-        return fields.filter(f => !f.disabled);
+        return fields.filter((f) => !f.disabled);
 
       case 'create':
         // Show fields for creation
-        return fields.filter(f => !f.disabled);
+        return fields.filter((f) => !f.disabled);
 
       default:
         return fields;
@@ -176,7 +176,9 @@ export abstract class FormView<T extends FormShape = FormShape> {
       }
 
       if (el.children && el.children.length > 0) {
-        const children = el.children.map(c => renderElement(c, indent + 1)).join('\n');
+        const children = el.children
+          .map((c) => renderElement(c, indent + 1))
+          .join('\n');
         return `${spaces}<${el.type}${props ? ' ' + props : ''}>\n${children}\n${spaces}</${el.type}>`;
       }
 
@@ -186,7 +188,7 @@ export abstract class FormView<T extends FormShape = FormShape> {
     const layoutEl: DisplayElement = {
       type: 'div',
       props: { class: `layout-${doc.layout.type}` },
-      children: doc.layout.children
+      children: doc.layout.children,
     };
 
     return `<!DOCTYPE html>
@@ -217,7 +219,9 @@ ${renderElement(layoutEl, 1)}
       }
 
       if (el.children && el.children.length > 0) {
-        const children = el.children.map(c => renderElement(c, indent + 1)).join('\n');
+        const children = el.children
+          .map((c) => renderElement(c, indent + 1))
+          .join('\n');
         return `${spaces}<${el.type}${props ? ' ' + props : ''}>\n${children}\n${spaces}</${el.type}>`;
       }
 
@@ -227,7 +231,7 @@ ${renderElement(layoutEl, 1)}
     return `<?xml version="1.0" encoding="UTF-8"?>
 <document title="${doc.title || 'Form'}">
   <layout type="${doc.layout.type}">
-${doc.layout.children.map(c => renderElement(c, 2)).join('\n')}
+${doc.layout.children.map((c) => renderElement(c, 2)).join('\n')}
   </layout>
 </document>`;
   }
@@ -237,13 +241,15 @@ ${doc.layout.children.map(c => renderElement(c, 2)).join('\n')}
  * SimpleFormView: Concrete implementation for simple use cases
  * Produces a basic form layout
  */
-export class SimpleFormView<T extends FormShape = FormShape> extends FormView<T> {
+export class SimpleFormView<
+  T extends FormShape = FormShape,
+> extends FormView<T> {
   render(): DisplayDocument {
     const shape = this._model.shape;
     const fields = this.filterFields();
 
     // Build field elements
-    const fieldElements: DisplayElement[] = fields.map(field => ({
+    const fieldElements: DisplayElement[] = fields.map((field) => ({
       type: 'field',
       props: {
         id: field.id,
@@ -252,14 +258,14 @@ export class SimpleFormView<T extends FormShape = FormShape> extends FormView<T>
         required: field.required,
         disabled: field.disabled || this._mode === 'view',
       },
-      text: this.formatValue(field.id, field.value)
+      text: this.formatValue(field.id, this._model.getField(field.id)),
     }));
 
     // Build layout based on mode
     const layout: DisplayLayout = {
       type: this._mode === 'view' ? 'card' : 'stack',
       gap: 4,
-      children: fieldElements
+      children: fieldElements,
     };
 
     // Add action buttons for edit/create modes
@@ -270,21 +276,21 @@ export class SimpleFormView<T extends FormShape = FormShape> extends FormView<T>
           {
             type: 'button',
             props: { action: 'submit', variant: 'primary' },
-            text: this._mode === 'create' ? 'Create' : 'Save'
+            text: this._mode === 'create' ? 'Create' : 'Save',
           },
           {
             type: 'button',
             props: { action: 'cancel', variant: 'secondary' },
-            text: 'Cancel'
-          }
-        ]
+            text: 'Cancel',
+          },
+        ],
       });
     }
 
     return {
       title: shape.title || shape.name || 'Form',
       layout,
-      meta: shape.meta
+      meta: shape.meta,
     };
   }
 }

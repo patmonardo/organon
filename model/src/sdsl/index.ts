@@ -41,6 +41,7 @@ export * from './form-controller';
 // Agent MVC Core (Root Synthesis - Universal Speaker)
 // The Agent is the Root Meaning of MVC - it speaks GDSL and Every SDSL
 export * from './agent-model';
+export * from './agent-logic-model-client';
 export * from './agent-view';
 export * from './agent-controller';
 export * from './agent-adapter';
@@ -57,6 +58,7 @@ export * from './essence-to-agent';
 // Middleware primitives (event stream → agent outputs)
 export * from './agent-bus';
 export * from './agent-runtime';
+export * from './specification-runtime';
 
 // RealityPipe primitives (internal middleware)
 export * from './reality-pipe';

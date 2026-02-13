@@ -51,3 +51,5 @@ export * from './tsjson';
 export * from './common';
 export * from './handles';
 export * from './graph';
+export * from './sdsl';
+export * from './sdsl-compiler';

@@ -1,3 +1,8 @@
+# ADR index updates
+
+- ADR 0012: Absolute Kernel ↔ Relative ToolChain Bridge (BEC:MVC, GDSL/SDSL)
+  - File: `logic/doc/adr/0012-absolute-kernel-relative-toolchain-bridge.md`
+
 # ADR 0001: Absolute Form (core)
 
 Status: Accepted

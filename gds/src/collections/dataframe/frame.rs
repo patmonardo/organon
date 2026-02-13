@@ -1307,9 +1307,11 @@ impl GDSDataFrame {
     }
 
     pub fn write_csv(&self, _path: &str) -> Result<(), PolarsError> {
-        Err(PolarsError::ComputeError(
-            "write_csv is not available in this wrapper".into(),
-        ))
+        crate::collections::io::csv::write_table(
+            std::path::Path::new(_path),
+            self,
+            crate::collections::io::csv::CsvWriteConfig::default(),
+        )
     }
 
     pub fn write_database(&self, _table: &str) -> Result<(), PolarsError> {
@@ -1337,33 +1339,35 @@ impl GDSDataFrame {
     }
 
     pub fn write_ipc(&self, _path: &str) -> Result<(), PolarsError> {
-        Err(PolarsError::ComputeError(
-            "write_ipc is not available in this wrapper".into(),
-        ))
+        crate::collections::io::ipc::write_table(std::path::Path::new(_path), self)
     }
 
     pub fn write_ipc_stream(&self, _path: &str) -> Result<(), PolarsError> {
-        Err(PolarsError::ComputeError(
-            "write_ipc_stream is not available in this wrapper".into(),
-        ))
+        self.write_ipc(_path)
     }
 
     pub fn write_json(&self, _path: &str) -> Result<(), PolarsError> {
-        Err(PolarsError::ComputeError(
-            "write_json is not available in this wrapper".into(),
-        ))
+        crate::collections::io::json::write_table(
+            std::path::Path::new(_path),
+            self,
+            crate::collections::io::json::JsonWriteConfig {
+                format: polars_io::json::JsonFormat::Json,
+            },
+        )
     }
 
     pub fn write_ndjson(&self, _path: &str) -> Result<(), PolarsError> {
-        Err(PolarsError::ComputeError(
-            "write_ndjson is not available in this wrapper".into(),
-        ))
+        crate::collections::io::json::write_table(
+            std::path::Path::new(_path),
+            self,
+            crate::collections::io::json::JsonWriteConfig {
+                format: polars_io::json::JsonFormat::JsonLines,
+            },
+        )
     }
 
     pub fn write_parquet(&self, _path: &str) -> Result<(), PolarsError> {
-        Err(PolarsError::ComputeError(
-            "write_parquet is not available in this wrapper".into(),
-        ))
+        crate::collections::io::parquet::write_table(std::path::Path::new(_path), self)
     }
 
     /// Add/replace columns from parsed inputs (py-polars parsing helpers).

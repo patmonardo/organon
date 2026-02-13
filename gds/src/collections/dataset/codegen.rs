@@ -1,7 +1,7 @@
 //! Rust DSL module code generation from dataset compilation artifacts.
 
-use crate::collections::dataset::utils::catalog_index::DatasetCatalogIndex;
-use crate::collections::dataset::utils::compile_ir::{DatasetCompilation, DatasetNodeKind};
+use crate::collections::dataset::catalog_index::DatasetCatalogIndex;
+use crate::collections::dataset::compile_ir::{DatasetCompilation, DatasetNodeKind};
 
 #[derive(Debug, Clone)]
 pub struct DslCodegenOptions {

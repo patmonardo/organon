@@ -7,6 +7,7 @@
  */
 
 import { z } from 'zod';
+import { schema as logicSchema } from '@organon/logic';
 
 // ============================================================
 // FORM SHAPE - The Universal Data Shape
@@ -16,14 +17,11 @@ import { z } from 'zod';
  * FormField: A single field in a form
  * This is what the FactStore speaks as Property
  */
-export const FormFieldSchema = z.object({
-  id: z.string(),
+export const FormFieldSchema = logicSchema.FormFieldSchema.extend({
   type: z.string().default('text'),
-  label: z.string().optional(),
-  value: z.unknown().optional(),
   required: z.boolean().default(false),
   disabled: z.boolean().default(false),
-  placeholder: z.string().optional(),
+  value: z.unknown().optional(),
   validation: z.record(z.string(), z.unknown()).optional(),
 });
 
@@ -33,11 +31,8 @@ export type FormField = z.infer<typeof FormFieldSchema>;
  * FormShape: The universal shape that flows through the SDSL
  * This is what the FactStore speaks as Entity
  */
-export const FormShapeSchema = z.object({
-  id: z.string(),
+export const FormShapeSchema = logicSchema.FormShapeSchema.extend({
   name: z.string().optional(),
-  title: z.string().optional(),
-  description: z.string().optional(),
   fields: z.array(FormFieldSchema).default([]),
   meta: z.record(z.string(), z.unknown()).optional(),
 });
@@ -48,7 +43,7 @@ export type FormShape = z.infer<typeof FormShapeSchema>;
 // FORM MODE - How the Form is Being Used
 // ============================================================
 
-export const FormModeSchema = z.enum(['create', 'edit', 'view']);
+export const FormModeSchema = logicSchema.FormModeSchema;
 export type FormMode = z.infer<typeof FormModeSchema>;
 
 // ============================================================
@@ -64,8 +59,42 @@ export type FormMode = z.infer<typeof FormModeSchema>;
  * - html: Server-rendered HTML
  * - xml: XML serialization
  */
-export const FormContentSchema = z.enum(['jsx', 'json', 'html', 'xml']);
+export const FormContentSchema = logicSchema.FormContentSchema;
 export type FormContent = z.infer<typeof FormContentSchema>;
+
+// ============================================================
+// PLATONIC FORM TRIAD - Logical model projection
+// ============================================================
+
+export const PlatonicFormProjectionSchema = z.object({
+  entity: logicSchema.EntityShapeSchema,
+  properties: z.array(logicSchema.PropertyShapeSchema),
+  aspects: z.array(logicSchema.AspectShapeSchema),
+});
+export type PlatonicFormProjection = z.infer<
+  typeof PlatonicFormProjectionSchema
+>;
+
+export const DatasetModelProjectionSchema = z.object({
+  specification: logicSchema.SdslSpecificationSchema,
+  dataframe: logicSchema.SdslDataFramePlanSchema,
+  kernel: logicSchema.SdslKernelArtifactsSchema,
+});
+export type DatasetModelProjection = z.infer<
+  typeof DatasetModelProjectionSchema
+>;
+
+export const AgentModelProjectionSchema = z.object({
+  formShape: FormShapeSchema,
+  platonic: PlatonicFormProjectionSchema,
+});
+export type AgentModelProjection = z.infer<typeof AgentModelProjectionSchema>;
+
+export const UnifiedModelBridgeSchema = z.object({
+  dataset: DatasetModelProjectionSchema,
+  agent: AgentModelProjectionSchema,
+});
+export type UnifiedModelBridge = z.infer<typeof UnifiedModelBridgeSchema>;
 
 // ============================================================
 // FORM HANDLER - Action Callbacks
@@ -102,7 +131,7 @@ export interface OperationResult<T> {
 
 /**
  * ControllerResult: What controllers return (transport-agnostic)
- * 
+ *
  * - tRPC returns this directly
  * - HTTP wraps in JSON response
  * - Next.js can redirect based on this

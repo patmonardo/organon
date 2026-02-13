@@ -14,9 +14,9 @@ fn main() {
     )
     .expect("build table");
 
-    // Build an expression with the Scheme-style `s!` prefix macro.
-    // This expands to `expr!(score).gt(expr!(20.0))`.
-    let expr = gds::s!(> score 20.0);
+    // Build an expression with the `expr!` macro.
+    // This expands to `col("score").gt(lit(20.0))`.
+    let expr = gds::expr!(score > 20.0);
 
     // Use the Python-like `sc!` shorthand to select columns from the table.
     // Accepts either bare selectors or a bracketed list.

@@ -18,170 +18,56 @@ pub struct TableBuilder {
     columns: Vec<Column>,
 }
 
+macro_rules! table_builder_with_column {
+    ($( $method:ident => $column_fn:ident : $ty:ty ),+ $(,)?) => {
+        $(
+            pub fn $method(mut self, name: &str, values: $ty) -> Self {
+                self.columns.push($column_fn(name, values));
+                self
+            }
+        )+
+    };
+}
+
 impl TableBuilder {
     pub fn new() -> Self {
         Self::default()
     }
 
-    pub fn with_i64_column(mut self, name: &str, values: &[i64]) -> Self {
-        self.columns.push(column_i64(name, values));
-        self
-    }
-
-    pub fn with_i64_opt_column(mut self, name: &str, values: &[Option<i64>]) -> Self {
-        self.columns.push(column_i64_opt(name, values));
-        self
-    }
-
-    pub fn with_i128_column(mut self, name: &str, values: &[i128]) -> Self {
-        self.columns.push(column_i128(name, values));
-        self
-    }
-
-    pub fn with_i128_opt_column(mut self, name: &str, values: &[Option<i128>]) -> Self {
-        self.columns.push(column_i128_opt(name, values));
-        self
-    }
-
-    pub fn with_i32_column(mut self, name: &str, values: &[i32]) -> Self {
-        self.columns.push(column_i32(name, values));
-        self
-    }
-
-    pub fn with_i32_opt_column(mut self, name: &str, values: &[Option<i32>]) -> Self {
-        self.columns.push(column_i32_opt(name, values));
-        self
-    }
-
-    pub fn with_i16_column(mut self, name: &str, values: &[i16]) -> Self {
-        self.columns.push(column_i16(name, values));
-        self
-    }
-
-    pub fn with_i16_opt_column(mut self, name: &str, values: &[Option<i16>]) -> Self {
-        self.columns.push(column_i16_opt(name, values));
-        self
-    }
-
-    pub fn with_i8_column(mut self, name: &str, values: &[i8]) -> Self {
-        self.columns.push(column_i8(name, values));
-        self
-    }
-
-    pub fn with_i8_opt_column(mut self, name: &str, values: &[Option<i8>]) -> Self {
-        self.columns.push(column_i8_opt(name, values));
-        self
-    }
-
-    pub fn with_u64_column(mut self, name: &str, values: &[u64]) -> Self {
-        self.columns.push(column_u64(name, values));
-        self
-    }
-
-    pub fn with_u64_opt_column(mut self, name: &str, values: &[Option<u64>]) -> Self {
-        self.columns.push(column_u64_opt(name, values));
-        self
-    }
-
-    pub fn with_u32_column(mut self, name: &str, values: &[u32]) -> Self {
-        self.columns.push(column_u32(name, values));
-        self
-    }
-
-    pub fn with_u32_opt_column(mut self, name: &str, values: &[Option<u32>]) -> Self {
-        self.columns.push(column_u32_opt(name, values));
-        self
-    }
-
-    pub fn with_u16_column(mut self, name: &str, values: &[u16]) -> Self {
-        self.columns.push(column_u16(name, values));
-        self
-    }
-
-    pub fn with_u16_opt_column(mut self, name: &str, values: &[Option<u16>]) -> Self {
-        self.columns.push(column_u16_opt(name, values));
-        self
-    }
-
-    pub fn with_u8_column(mut self, name: &str, values: &[u8]) -> Self {
-        self.columns.push(column_u8(name, values));
-        self
-    }
-
-    pub fn with_u8_opt_column(mut self, name: &str, values: &[Option<u8>]) -> Self {
-        self.columns.push(column_u8_opt(name, values));
-        self
-    }
-
-    pub fn with_f64_column(mut self, name: &str, values: &[f64]) -> Self {
-        self.columns.push(column_f64(name, values));
-        self
-    }
-
-    pub fn with_f64_opt_column(mut self, name: &str, values: &[Option<f64>]) -> Self {
-        self.columns.push(column_f64_opt(name, values));
-        self
-    }
-
-    pub fn with_f32_column(mut self, name: &str, values: &[f32]) -> Self {
-        self.columns.push(column_f32(name, values));
-        self
-    }
-
-    pub fn with_f32_opt_column(mut self, name: &str, values: &[Option<f32>]) -> Self {
-        self.columns.push(column_f32_opt(name, values));
-        self
-    }
-
-    pub fn with_bool_column(mut self, name: &str, values: &[bool]) -> Self {
-        self.columns.push(column_bool(name, values));
-        self
-    }
-
-    pub fn with_bool_opt_column(mut self, name: &str, values: &[Option<bool>]) -> Self {
-        self.columns.push(column_bool_opt(name, values));
-        self
-    }
-
-    pub fn with_string_column(mut self, name: &str, values: &[String]) -> Self {
-        self.columns.push(column_string(name, values));
-        self
-    }
-
-    pub fn with_string_opt_column(mut self, name: &str, values: &[Option<String>]) -> Self {
-        self.columns.push(column_string_opt(name, values));
-        self
-    }
-
-    pub fn with_str_column(mut self, name: &str, values: &[&str]) -> Self {
-        self.columns.push(column_str(name, values));
-        self
-    }
-
-    pub fn with_str_opt_column(mut self, name: &str, values: &[Option<&str>]) -> Self {
-        self.columns.push(column_str_opt(name, values));
-        self
-    }
-
-    pub fn with_binary_column(mut self, name: &str, values: &[&[u8]]) -> Self {
-        self.columns.push(column_binary(name, values));
-        self
-    }
-
-    pub fn with_binary_opt_column(mut self, name: &str, values: &[Option<&[u8]>]) -> Self {
-        self.columns.push(column_binary_opt(name, values));
-        self
-    }
-
-    pub fn with_bytes_column(mut self, name: &str, values: &[Vec<u8>]) -> Self {
-        self.columns.push(column_bytes(name, values));
-        self
-    }
-
-    pub fn with_bytes_opt_column(mut self, name: &str, values: &[Option<Vec<u8>>]) -> Self {
-        self.columns.push(column_bytes_opt(name, values));
-        self
-    }
+    table_builder_with_column!(
+        with_i64_column => column_i64: &[i64],
+        with_i64_opt_column => column_i64_opt: &[Option<i64>],
+        with_i128_column => column_i128: &[i128],
+        with_i128_opt_column => column_i128_opt: &[Option<i128>],
+        with_i32_column => column_i32: &[i32],
+        with_i32_opt_column => column_i32_opt: &[Option<i32>],
+        with_i16_column => column_i16: &[i16],
+        with_i16_opt_column => column_i16_opt: &[Option<i16>],
+        with_i8_column => column_i8: &[i8],
+        with_i8_opt_column => column_i8_opt: &[Option<i8>],
+        with_u64_column => column_u64: &[u64],
+        with_u64_opt_column => column_u64_opt: &[Option<u64>],
+        with_u32_column => column_u32: &[u32],
+        with_u32_opt_column => column_u32_opt: &[Option<u32>],
+        with_u16_column => column_u16: &[u16],
+        with_u16_opt_column => column_u16_opt: &[Option<u16>],
+        with_u8_column => column_u8: &[u8],
+        with_u8_opt_column => column_u8_opt: &[Option<u8>],
+        with_f64_column => column_f64: &[f64],
+        with_f64_opt_column => column_f64_opt: &[Option<f64>],
+        with_f32_column => column_f32: &[f32],
+        with_f32_opt_column => column_f32_opt: &[Option<f32>],
+        with_bool_column => column_bool: &[bool],
+        with_bool_opt_column => column_bool_opt: &[Option<bool>],
+        with_string_column => column_string: &[String],
+        with_string_opt_column => column_string_opt: &[Option<String>],
+        with_str_column => column_str: &[&str],
+        with_str_opt_column => column_str_opt: &[Option<&str>],
+        with_binary_column => column_binary: &[&[u8]],
+        with_binary_opt_column => column_binary_opt: &[Option<&[u8]>],
+        with_bytes_column => column_bytes: &[Vec<u8>],
+        with_bytes_opt_column => column_bytes_opt: &[Option<Vec<u8>>],
+    );
 
     pub fn build(self) -> Result<GDSDataFrame, polars::error::PolarsError> {
         let df = DataFrame::new(self.columns)?;

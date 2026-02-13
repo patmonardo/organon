@@ -9,6 +9,7 @@ use std::collections::HashSet;
 use std::sync::RwLock;
 
 pub mod dataset;
+pub mod dataop;
 pub mod feature;
 pub mod text;
 pub mod tree;

@@ -4,4 +4,7 @@
 //! It contains the core evaluation logic and interfaces.
 
 pub mod algorithm;
+pub mod form;
 pub mod pipeline;
+
+pub use form::*;

@@ -14,6 +14,28 @@
 
 use serde_json::{json, Value as JsonValue};
 
+use polars::prelude::{col, Expr};
+
+use crate::collections::dataset::expressions::text::{
+    lowercase_expr_from, token_count_expr_from, tokenize_expr_from,
+};
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DataFrameLoweringArtifact {
+    pub stage: String,
+    pub op_name: String,
+    pub domain: Option<String>,
+    pub input_column: String,
+    pub expr_debug: String,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct DatasetAspectArtifact {
+    pub stage: String,
+    pub op_name: String,
+    pub detail: JsonValue,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum DatasetDataOp {
     Input {
@@ -156,5 +178,84 @@ impl DatasetDataOpExpr {
 
     pub fn op(&self) -> &DatasetDataOp {
         &self.op
+    }
+
+    pub fn name(&self) -> &str {
+        match &self.op {
+            DatasetDataOp::Input { name, .. }
+            | DatasetDataOp::Encode { name, .. }
+            | DatasetDataOp::Transform { name, .. }
+            | DatasetDataOp::Decode { name, .. }
+            | DatasetDataOp::Output { name, .. } => name,
+        }
+    }
+
+    pub fn detail(&self) -> Option<&JsonValue> {
+        match &self.op {
+            DatasetDataOp::Input { detail, .. }
+            | DatasetDataOp::Encode { detail, .. }
+            | DatasetDataOp::Transform { detail, .. }
+            | DatasetDataOp::Decode { detail, .. }
+            | DatasetDataOp::Output { detail, .. } => detail.as_ref(),
+        }
+    }
+
+    pub fn domain(&self) -> Option<&str> {
+        self.detail()
+            .and_then(|d| d.get("domain"))
+            .and_then(|d| d.as_str())
+    }
+
+    pub fn stage(&self) -> &'static str {
+        match self.op() {
+            DatasetDataOp::Input { .. } => "input",
+            DatasetDataOp::Encode { .. } => "encode",
+            DatasetDataOp::Transform { .. } => "transform",
+            DatasetDataOp::Decode { .. } => "decode",
+            DatasetDataOp::Output { .. } => "output",
+        }
+    }
+
+    /// Lower this dataset data-op into a DataFrame expression step.
+    ///
+    /// This provides compatibility with the DataFrame engine by making
+    /// dataset-level operations executable as Polars `Expr` transforms.
+    pub fn as_dataframe_expr(&self, expr: Expr) -> Expr {
+        let is_text = self.domain() == Some("text");
+
+        match self.op() {
+            DatasetDataOp::Input { .. } => expr,
+            DatasetDataOp::Encode { .. } if is_text => lowercase_expr_from(expr),
+            DatasetDataOp::Transform { .. } if is_text => tokenize_expr_from(expr),
+            DatasetDataOp::Decode { .. } if is_text => token_count_expr_from(expr),
+            DatasetDataOp::Output { .. } => expr,
+            _ => expr,
+        }
+    }
+
+    pub fn as_dataframe_expr_for_column(&self, column: &str) -> Expr {
+        self.as_dataframe_expr(col(column))
+    }
+
+    /// Capture this operation as a Dataset-level SDSL aspect artifact.
+    pub fn as_dataset_aspect_artifact(&self) -> DatasetAspectArtifact {
+        DatasetAspectArtifact {
+            stage: self.stage().to_string(),
+            op_name: self.name().to_string(),
+            detail: self.detail().cloned().unwrap_or_else(|| json!({})),
+        }
+    }
+
+    /// Lower this operation to a DataFrame expression and capture a
+    /// DataFrame-lowering artifact describing the generated representation.
+    pub fn lower_to_dataframe_artifact(&self, input_column: &str) -> DataFrameLoweringArtifact {
+        let lowered = self.as_dataframe_expr_for_column(input_column);
+        DataFrameLoweringArtifact {
+            stage: self.stage().to_string(),
+            op_name: self.name().to_string(),
+            domain: self.domain().map(str::to_string),
+            input_column: input_column.to_string(),
+            expr_debug: format!("{lowered:?}"),
+        }
     }
 }

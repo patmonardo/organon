@@ -84,7 +84,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     // This demonstrates the current behavior in examples, without hiding it.
     match roundtrip_df.write_parquet("target/collections_dataframe_macros_expository.parquet") {
         Ok(_) => println!("write_parquet succeeded"),
-        Err(error) => println!("write_parquet currently unavailable in wrapper path: {error}"),
+        Err(error) => println!("write_parquet failed: {error}"),
     }
 
     Ok(())

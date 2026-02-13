@@ -1,14 +1,10 @@
-//! Dataset compiler utilities.
-//!
-//! These helpers support an LM-first dataset->DSL compilation workflow:
-//! - compile an explicit IR graph
-//! - build a catalog/index for iterative exploration
-//! - emit deterministic Rust DSL module text
+//! Dataset operational utilities (I/O helpers).
 
-pub mod catalog_index;
-pub mod codegen;
-pub mod compile_ir;
+pub mod download;
+pub mod extract;
 
-pub use catalog_index::DatasetCatalogIndex;
-pub use codegen::{render_rust_dsl_module, DslCodegenOptions};
-pub use compile_ir::{DatasetCompilation, DatasetNode, DatasetNodeKind};
+pub use download::{
+    copy_local, download_if_missing, download_to_dir, download_url, stream_to_writer,
+    DownloadReport,
+};
+pub use extract::{extract_archive, ExtractReport};

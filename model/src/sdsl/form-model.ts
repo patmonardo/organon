@@ -25,10 +25,18 @@ import type { FormShape, FormField, OperationResult } from './types';
  */
 export abstract class FormModel<T extends FormShape = FormShape> {
   protected _shape: T;
+  protected _values: Record<string, unknown>;
   protected _dirty: boolean = false;
 
-  constructor(shape: T) {
+  constructor(shape: T, values: Record<string, unknown> = {}) {
     this._shape = shape;
+    const seededValues = Object.fromEntries(
+      this._shape.fields.map((field) => [field.id, field.value]),
+    );
+    this._values = {
+      ...seededValues,
+      ...values,
+    };
   }
 
   // ============================================================
@@ -46,22 +54,25 @@ export abstract class FormModel<T extends FormShape = FormShape> {
    * Get a specific field value
    */
   getField(fieldId: string): unknown {
-    const field = this._shape.fields.find(f => f.id === fieldId);
-    return field?.value;
+    return this._values[fieldId];
   }
 
   /**
    * Set a field value (marks model as dirty)
    */
   setField(fieldId: string, value: unknown): void {
-    const fieldIndex = this._shape.fields.findIndex(f => f.id === fieldId);
+    const fieldIndex = this._shape.fields.findIndex((f) => f.id === fieldId);
     if (fieldIndex >= 0) {
-      this._shape.fields[fieldIndex] = {
-        ...this._shape.fields[fieldIndex],
-        value
-      };
+      this._values[fieldId] = value;
       this._dirty = true;
     }
+  }
+
+  /**
+   * Get all current field values
+   */
+  getValues(): Record<string, unknown> {
+    return this._values;
   }
 
   /**
@@ -93,7 +104,7 @@ export abstract class FormModel<T extends FormShape = FormShape> {
    * Get field definition by id
    */
   getFieldDef(fieldId: string): FormField | undefined {
-    return this._shape.fields.find(f => f.id === fieldId);
+    return this._shape.fields.find((f) => f.id === fieldId);
   }
 
   // ============================================================
@@ -108,7 +119,8 @@ export abstract class FormModel<T extends FormShape = FormShape> {
     const errors: Record<string, string[]> = {};
 
     for (const field of this._shape.fields) {
-      if (field.required && (field.value === undefined || field.value === '')) {
+      const value = this._values[field.id];
+      if (field.required && (value === undefined || value === '')) {
         errors[field.id] = [`${field.label || field.id} is required`];
       }
     }
@@ -118,14 +130,14 @@ export abstract class FormModel<T extends FormShape = FormShape> {
         status: 'error',
         data: false,
         message: 'Validation failed',
-        errors
+        errors,
       };
     }
 
     return {
       status: 'success',
       data: true,
-      message: 'Validation passed'
+      message: 'Validation passed',
     };
   }
 
@@ -156,7 +168,13 @@ export abstract class FormModel<T extends FormShape = FormShape> {
    * Convert to plain object
    */
   toJSON(): T {
-    return { ...this._shape };
+    return {
+      ...this._shape,
+      fields: this._shape.fields.map((field) => ({
+        ...field,
+        value: this._values[field.id],
+      })),
+    };
   }
 
   /**
@@ -171,27 +189,36 @@ export abstract class FormModel<T extends FormShape = FormShape> {
  * SimpleFormModel: Concrete implementation for simple use cases
  * Uses in-memory storage (for testing/prototyping)
  */
-export class SimpleFormModel<T extends FormShape = FormShape> extends FormModel<T> {
-  private static storage: Map<string, FormShape> = new Map();
+export class SimpleFormModel<
+  T extends FormShape = FormShape,
+> extends FormModel<T> {
+  private static storage: Map<
+    string,
+    {
+      shape: FormShape;
+      values: Record<string, unknown>;
+    }
+  > = new Map();
 
   async load(id?: string): Promise<OperationResult<T>> {
     const loadId = id || this._shape.id;
     const data = SimpleFormModel.storage.get(loadId);
 
     if (data) {
-      this._shape = data as T;
+      this._shape = data.shape as T;
+      this._values = { ...data.values };
       this._dirty = false;
       return {
         status: 'success',
         data: this._shape,
-        message: 'Loaded successfully'
+        message: 'Loaded successfully',
       };
     }
 
     return {
       status: 'error',
       data: null,
-      message: `Not found: ${loadId}`
+      message: `Not found: ${loadId}`,
     };
   }
 
@@ -202,17 +229,20 @@ export class SimpleFormModel<T extends FormShape = FormShape> extends FormModel<
         status: 'error',
         data: null,
         message: validation.message,
-        errors: validation.errors
+        errors: validation.errors,
       };
     }
 
-    SimpleFormModel.storage.set(this._shape.id, this._shape);
+    SimpleFormModel.storage.set(this._shape.id, {
+      shape: this._shape,
+      values: this._values,
+    });
     this._dirty = false;
 
     return {
       status: 'success',
       data: this._shape,
-      message: 'Saved successfully'
+      message: 'Saved successfully',
     };
   }
 
@@ -222,7 +252,7 @@ export class SimpleFormModel<T extends FormShape = FormShape> extends FormModel<
     return {
       status: deleted ? 'success' : 'error',
       data: deleted,
-      message: deleted ? 'Deleted successfully' : 'Not found'
+      message: deleted ? 'Deleted successfully' : 'Not found',
     };
   }
 

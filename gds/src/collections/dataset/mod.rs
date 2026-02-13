@@ -5,19 +5,31 @@
 //! a consistent registry and reuse DataFrame expressions without adding
 //! Rust-heavy call sites.
 //!
+//! Boundary note:
+//! - This module exposes the Kernel-side dataset/tooling vocabulary and a
+//!   top-level ToolChain facade for authoring.
+//! - GUI workflow adaptation (GDSL -> TS-JSON -> React/Next MVC) is a
+//!   Relative/TypeScript concern and remains outside this crate.
+//! - Inference and semantics that belong to Logic:Model UserLand can consume
+//!   this vocabulary without being executed in the GDS kernel runtime.
+//! - SDSL is treated here as a specification language: model/feature artifacts
+//!   and genus/species classification can drive dataset compilation IR, while
+//!   DataFrame lowerings remain generated artifacts of that specification.
+//!
 //! Dragon Seed note:
 //! - The top-level modules read like a compiler: catalog/registry, schema,
 //!   plans, features, models, and the DSL namespaces that bind it together.
 
 pub mod catalog;
+pub mod catalog_index;
+pub mod codegen;
+pub mod compile_ir;
 pub mod corpus;
 pub mod dataset;
 pub mod dependency;
-pub mod download;
 pub mod error;
 pub mod expr;
 pub mod expressions;
-pub mod extract;
 pub mod featstruct;
 pub mod feature;
 pub mod frame;
@@ -44,6 +56,7 @@ pub mod tag;
 pub mod tagger;
 pub mod token;
 pub mod tokenizer;
+pub mod toolchain;
 pub mod tree;
 pub mod utils;
 
@@ -88,8 +101,25 @@ pub use lazy::{
 };
 pub use series::{DatasetSeriesNameSpace, SeriesDatasetExt};
 
+pub use catalog_index::DatasetCatalogIndex;
+pub use codegen::{render_rust_dsl_module, DslCodegenOptions};
+pub use compile_ir::{DatasetCompilation, DatasetNode, DatasetNodeKind};
+pub use expressions::dataop::{
+    DataFrameLoweringArtifact, DatasetAspectArtifact, DatasetDataOp, DatasetDataOpExpr,
+};
+pub use expressions::io::{DatasetIoExpr, DatasetSource};
+pub use expressions::metadata::DatasetMetadataExpr;
+pub use expressions::projection::{DatasetProjectionExpr, DatasetProjectionKind};
+pub use expressions::registry::DatasetRegistryExpr;
+pub use expressions::reporting::{DatasetReportExpr, DatasetReportKind};
+pub use namespaces::dataop::DataOpNs;
 pub use namespaces::dataset::DatasetNs;
+pub use namespaces::feature::{FeatureExprNameSpace as DatasetFeatureExprNameSpace, FeatureNs};
+pub use namespaces::is_dataset_namespace_registered;
+pub use namespaces::register_corpus_namespace;
+pub use namespaces::register_dataset_namespace;
 pub use namespaces::text::TextNs;
+pub use namespaces::tree::TreeNs;
 pub use parse::{Parse, ParseForest, ParseKind};
 pub use parser::{BracketedParser, DependencyParser, FlatParser, JsonParser, MarkupParser, Parser};
 pub use plan::{EvalMode as DatasetEvalMode, Plan as DatasetPlan, PlanEnv, PlanError};
@@ -112,6 +142,10 @@ pub use tokenizer::{
     MarkupTokenizer, RegexpTokenizer, SExprTokenizer, SpaceTokenizer, StringSplitTokenizer,
     TabTokenizer, Tokenizer, WhitespaceTokenizer, WordPunctTokenizer,
 };
+pub use toolchain::{
+    DatasetPipeline, DatasetPipelineArtifacts, DatasetToolChain, GenusSpecies, LogicalEngineIntent,
+    ModelSpecRef, MvcEngineIntent, SdslSpecification,
+};
 pub use tree::{
     format_bracketed, format_pretty, parse_bracketed, MultiParentedIndex, MultiParentedNode,
     MultiParentedTree, MultiParentedValue, ParentedIndex, ParentedNode, ParentedTree,
@@ -119,10 +153,11 @@ pub use tree::{
     TreeLeafValue, TreeNamespace, TreeNode, TreeOp, TreeParseError, TreePos, TreeSeries,
     TreeSeriesNameSpace, TreeSpan, TreeTraversal, TreeValue,
 };
-pub use utils::{
-    render_rust_dsl_module, DatasetCatalogIndex, DatasetCompilation, DatasetNode, DatasetNodeKind,
-    DslCodegenOptions,
+pub use utils::download::{
+    copy_local, download_if_missing, download_to_dir, download_url, stream_to_writer,
+    DownloadReport,
 };
+pub use utils::extract::{extract_archive, ExtractReport};
 
 // Export specialized datasets (Corpus) as a convenience type.
 pub use corpus::Corpus;

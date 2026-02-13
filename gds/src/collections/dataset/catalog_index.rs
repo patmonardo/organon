@@ -2,9 +2,7 @@
 
 use std::collections::{BTreeMap, BTreeSet};
 
-use crate::collections::dataset::utils::compile_ir::{
-    DatasetCompilation, DatasetNode, DatasetNodeKind,
-};
+use crate::collections::dataset::compile_ir::{DatasetCompilation, DatasetNode, DatasetNodeKind};
 
 /// Derived index over compilation nodes to support multi-pass exploration.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]

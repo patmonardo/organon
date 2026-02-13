@@ -12,8 +12,8 @@
  *                      AgentModel (here)
  */
 
-import { z } from "zod";
-import type { FormShape, FormField } from "./types";
+import { z } from 'zod';
+import type { FormShape, FormField, PlatonicFormProjection } from './types';
 
 // =============================================================================
 // AGENT-SPECIFIC OVERLAYS ON FACTS
@@ -23,11 +23,11 @@ import type { FormShape, FormField } from "./types";
  * Relevance - How important is this fact to the current goal?
  */
 export const RelevanceLevel = z.enum([
-  "critical",    // Must have for goal
-  "important",   // Strongly supports goal
-  "relevant",    // Somewhat useful
-  "peripheral",  // Tangentially related
-  "irrelevant",  // Not needed
+  'critical', // Must have for goal
+  'important', // Strongly supports goal
+  'relevant', // Somewhat useful
+  'peripheral', // Tangentially related
+  'irrelevant', // Not needed
 ]);
 export type RelevanceLevel = z.infer<typeof RelevanceLevel>;
 
@@ -43,11 +43,11 @@ export type FactRelevance = z.infer<typeof FactRelevance>;
  * Provenance - Where did this fact come from?
  */
 export const ProvenanceType = z.enum([
-  "asserted",    // Directly stated
-  "inferred",    // Derived from other facts
-  "observed",    // From external source
-  "hypothesized", // Tentative/uncertain
-  "inherited",   // From parent context
+  'asserted', // Directly stated
+  'inferred', // Derived from other facts
+  'observed', // From external source
+  'hypothesized', // Tentative/uncertain
+  'inherited', // From parent context
 ]);
 export type ProvenanceType = z.infer<typeof ProvenanceType>;
 
@@ -64,11 +64,11 @@ export type FactProvenance = z.infer<typeof FactProvenance>;
  * Confidence - How certain are we about this fact?
  */
 export const ConfidenceLevel = z.enum([
-  "certain",     // 100% confident
-  "high",        // Very likely true
-  "medium",      // Probably true
-  "low",         // Uncertain
-  "speculative", // Guess/hypothesis
+  'certain', // 100% confident
+  'high', // Very likely true
+  'medium', // Probably true
+  'low', // Uncertain
+  'speculative', // Guess/hypothesis
 ]);
 export type ConfidenceLevel = z.infer<typeof ConfidenceLevel>;
 
@@ -84,11 +84,11 @@ export type FactConfidence = z.infer<typeof FactConfidence>;
  * Dependency - How do facts relate to each other?
  */
 export const DependencyType = z.enum([
-  "requires",    // A requires B
-  "implies",     // A implies B
-  "contradicts", // A contradicts B
-  "supports",    // A supports B
-  "derived",     // A derived from B
+  'requires', // A requires B
+  'implies', // A implies B
+  'contradicts', // A contradicts B
+  'supports', // A supports B
+  'derived', // A derived from B
 ]);
 export type DependencyType = z.infer<typeof DependencyType>;
 
@@ -108,13 +108,13 @@ export type FactDependency = z.infer<typeof FactDependency>;
  * Goal - What the agent is trying to achieve
  */
 export const GoalType = z.enum([
-  "query",       // Find/retrieve information
-  "transform",   // Change data structure
-  "validate",    // Check correctness
-  "infer",       // Derive new facts
-  "summarize",   // Condense information
-  "compare",     // Analyze differences
-  "generate",    // Create new content
+  'query', // Find/retrieve information
+  'transform', // Change data structure
+  'validate', // Check correctness
+  'infer', // Derive new facts
+  'summarize', // Condense information
+  'compare', // Analyze differences
+  'generate', // Create new content
 ]);
 export type GoalType = z.infer<typeof GoalType>;
 
@@ -232,7 +232,10 @@ export class AgentModel<T extends FormShape = FormShape> {
   // Relevance Management
   // ---------------------------------------------------------------------------
 
-  setRelevance(fieldId: string, relevance: Omit<FactRelevance, "fieldId">): void {
+  setRelevance(
+    fieldId: string,
+    relevance: Omit<FactRelevance, 'fieldId'>,
+  ): void {
     this.state.relevance.set(fieldId, { fieldId, ...relevance });
   }
 
@@ -240,13 +243,13 @@ export class AgentModel<T extends FormShape = FormShape> {
     return this.state.relevance.get(fieldId);
   }
 
-  getRelevantFields(minLevel: RelevanceLevel = "relevant"): FormField[] {
+  getRelevantFields(minLevel: RelevanceLevel = 'relevant'): FormField[] {
     const levelOrder: RelevanceLevel[] = [
-      "critical",
-      "important",
-      "relevant",
-      "peripheral",
-      "irrelevant",
+      'critical',
+      'important',
+      'relevant',
+      'peripheral',
+      'irrelevant',
     ];
     const minIndex = levelOrder.indexOf(minLevel);
 
@@ -262,7 +265,10 @@ export class AgentModel<T extends FormShape = FormShape> {
   // Provenance Management
   // ---------------------------------------------------------------------------
 
-  setProvenance(fieldId: string, provenance: Omit<FactProvenance, "fieldId">): void {
+  setProvenance(
+    fieldId: string,
+    provenance: Omit<FactProvenance, 'fieldId'>,
+  ): void {
     this.state.provenance.set(fieldId, { fieldId, ...provenance });
   }
 
@@ -281,7 +287,10 @@ export class AgentModel<T extends FormShape = FormShape> {
   // Confidence Management
   // ---------------------------------------------------------------------------
 
-  setConfidence(fieldId: string, confidence: Omit<FactConfidence, "fieldId">): void {
+  setConfidence(
+    fieldId: string,
+    confidence: Omit<FactConfidence, 'fieldId'>,
+  ): void {
     this.state.confidence.set(fieldId, { fieldId, ...confidence });
   }
 
@@ -289,13 +298,13 @@ export class AgentModel<T extends FormShape = FormShape> {
     return this.state.confidence.get(fieldId);
   }
 
-  getCertainFacts(minLevel: ConfidenceLevel = "medium"): FormField[] {
+  getCertainFacts(minLevel: ConfidenceLevel = 'medium'): FormField[] {
     const levelOrder: ConfidenceLevel[] = [
-      "certain",
-      "high",
-      "medium",
-      "low",
-      "speculative",
+      'certain',
+      'high',
+      'medium',
+      'low',
+      'speculative',
     ];
     const minIndex = levelOrder.indexOf(minLevel);
 
@@ -317,7 +326,7 @@ export class AgentModel<T extends FormShape = FormShape> {
 
   getDependencies(fieldId: string): FactDependency[] {
     return this.state.dependencies.filter(
-      (d) => d.fromField === fieldId || d.toField === fieldId
+      (d) => d.fromField === fieldId || d.toField === fieldId,
     );
   }
 
@@ -410,7 +419,7 @@ export class AgentModel<T extends FormShape = FormShape> {
 
   static fromFormShape<T extends FormShape>(
     shape: T,
-    values: Record<string, unknown> = {}
+    values: Record<string, unknown> = {},
   ): AgentModel<T> {
     return new AgentModel(shape, values);
   }
@@ -421,10 +430,55 @@ export class AgentModel<T extends FormShape = FormShape> {
   static withGoal<T extends FormShape>(
     shape: T,
     values: Record<string, unknown>,
-    goal: AgentGoal
+    goal: AgentGoal,
   ): AgentModel<T> {
     const model = new AgentModel(shape, values);
     model.setGoal(goal);
+    return model;
+  }
+
+  /**
+   * Create an AgentModel as a perspective over a logical model projection
+   * (Entity + Property + Aspect) rather than UI form fields.
+   */
+  static fromLogicalProjection(
+    projection: PlatonicFormProjection,
+    options: {
+      id?: string;
+      name?: string;
+      title?: string;
+      description?: string;
+      values?: Record<string, unknown>;
+      goal?: AgentGoal;
+    } = {},
+  ): AgentModel<FormShape> {
+    const fields: FormField[] = projection.properties.map((property) => ({
+      id: property.id,
+      type: property.type,
+      label: property.name,
+      required: false,
+      disabled: false,
+    }));
+
+    const shape: FormShape = {
+      id: options.id ?? projection.entity.id,
+      name: options.name ?? projection.entity.name ?? projection.entity.id,
+      title: options.title ?? projection.entity.name,
+      description: options.description ?? projection.entity.description,
+      fields,
+      meta: {
+        projection: {
+          entityId: projection.entity.id,
+          propertyCount: projection.properties.length,
+          aspectCount: projection.aspects.length,
+        },
+      },
+    };
+
+    const model = new AgentModel(shape, options.values ?? {});
+    if (options.goal) {
+      model.setGoal(options.goal);
+    }
     return model;
   }
 }
@@ -436,7 +490,9 @@ export class AgentModel<T extends FormShape = FormShape> {
 /**
  * SimpleAgentModel - Convenient wrapper with fluent API
  */
-export class SimpleAgentModel<T extends FormShape = FormShape> extends AgentModel<T> {
+export class SimpleAgentModel<
+  T extends FormShape = FormShape,
+> extends AgentModel<T> {
   constructor(shape: T, values: Record<string, unknown> = {}) {
     super(shape, values);
   }
@@ -462,7 +518,11 @@ export class SimpleAgentModel<T extends FormShape = FormShape> extends AgentMode
     return this;
   }
 
-  markConfidence(fieldId: string, level: ConfidenceLevel, basis?: string): this {
+  markConfidence(
+    fieldId: string,
+    level: ConfidenceLevel,
+    basis?: string,
+  ): this {
     this.setConfidence(fieldId, { level, basis });
     return this;
   }
@@ -475,7 +535,7 @@ export class SimpleAgentModel<T extends FormShape = FormShape> extends AgentMode
   // Static factory
   static create<T extends FormShape>(
     shape: T,
-    values: Record<string, unknown> = {}
+    values: Record<string, unknown> = {},
   ): SimpleAgentModel<T> {
     return new SimpleAgentModel(shape, values);
   }

@@ -11,9 +11,9 @@ use zip::ZipArchive;
 use crate::collections::catalog::CatalogError;
 use crate::collections::catalog::CollectionsCatalogDiskEntry;
 use crate::collections::dataset::catalog::DatasetCatalog;
-use crate::collections::dataset::download::{copy_local, download_url, DownloadReport};
 use crate::collections::dataset::error::DatasetIoError;
 use crate::collections::dataset::io::detect_format_from_path;
+use crate::collections::dataset::utils::download::{copy_local, download_url, DownloadReport};
 
 const DATA_HOME_ENV: &str = "GDS_DATA_DIRECTORY";
 

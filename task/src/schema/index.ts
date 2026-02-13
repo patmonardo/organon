@@ -1,5 +1,6 @@
 export * from './task';
 export * from './agent';
+export * from './agent-omniscient';
 export * from './agent-control';
 export * from './workflow';
 export * from './knowledge';
