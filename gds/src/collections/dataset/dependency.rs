@@ -1,10 +1,13 @@
 //! Dependency graph core types.
 
+use std::collections::HashSet;
+
 use polars::prelude::{lit, Expr, NamedFrom, PlSmallStr, Series};
 
 use crate::collections::dataframe::record;
 use crate::collections::dataframe::{GDSDataFrame, GDSFrameError};
 use crate::collections::dataset::token::{Token, TokenSpan};
+use crate::collections::dataset::tree::TreeValue;
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct DependencyNode {
@@ -124,8 +127,36 @@ impl DependencyGraph {
         self.root
     }
 
+    pub fn set_root(&mut self, root: Option<usize>) {
+        self.root = root;
+    }
+
+    pub fn node(&self, index: usize) -> Option<&DependencyNode> {
+        self.nodes.get(index)
+    }
+
     pub fn add_edge(&mut self, edge: DependencyEdge) {
         self.edges.push(edge);
+    }
+
+    pub fn head_of(&self, dep: usize) -> Option<usize> {
+        if self.root == Some(dep) {
+            return None;
+        }
+        self.edges
+            .iter()
+            .find(|edge| edge.dep == dep)
+            .map(|edge| edge.head)
+    }
+
+    pub fn relation_of(&self, dep: usize) -> Option<&str> {
+        if self.root == Some(dep) {
+            return Some("ROOT");
+        }
+        self.edges
+            .iter()
+            .find(|edge| edge.dep == dep)
+            .map(|edge| edge.label.as_str())
     }
 
     pub fn edges_from(&self, head: usize) -> Vec<&DependencyEdge> {
@@ -134,6 +165,110 @@ impl DependencyGraph {
 
     pub fn edges_to(&self, dep: usize) -> Vec<&DependencyEdge> {
         self.edges.iter().filter(|e| e.dep == dep).collect()
+    }
+
+    pub fn children_of(&self, head: usize) -> Vec<usize> {
+        let mut children = self
+            .edges
+            .iter()
+            .filter(|edge| edge.head == head)
+            .map(|edge| edge.dep)
+            .collect::<Vec<_>>();
+        children.sort_unstable();
+        children
+    }
+
+    pub fn left_children(&self, node_index: usize) -> usize {
+        self.children_of(node_index)
+            .into_iter()
+            .filter(|child| *child < node_index)
+            .count()
+    }
+
+    pub fn right_children(&self, node_index: usize) -> usize {
+        self.children_of(node_index)
+            .into_iter()
+            .filter(|child| *child > node_index)
+            .count()
+    }
+
+    pub fn triples(&self) -> Vec<((String, usize), String, (String, usize))> {
+        let mut out = Vec::new();
+        for edge in &self.edges {
+            let Some(head) = self.nodes.get(edge.head) else {
+                continue;
+            };
+            let Some(dep) = self.nodes.get(edge.dep) else {
+                continue;
+            };
+            out.push((
+                (head.text.clone(), head.index),
+                edge.label.clone(),
+                (dep.text.clone(), dep.index),
+            ));
+        }
+        out
+    }
+
+    pub fn to_dependency_tree(&self) -> Option<TreeValue> {
+        let root = self.root?;
+        self.node(root)?;
+        Some(self.tree_from(root))
+    }
+
+    pub fn to_dot(&self) -> String {
+        let mut output = String::new();
+        output.push_str("digraph G{\n");
+        output.push_str("edge [dir=forward]\n");
+        output.push_str("node [shape=plaintext]\n\n");
+
+        output.push_str("0 [label=\"0 (TOP)\"]\n");
+        if let Some(root) = self.root {
+            output.push_str(&format!("0 -> {} [label=\"ROOT\"]\n", root + 1));
+        }
+
+        for node in &self.nodes {
+            output.push_str(&format!(
+                "{} [label=\"{} ({})\"]\n",
+                node.index + 1,
+                node.index + 1,
+                node.text
+            ));
+        }
+
+        for edge in &self.edges {
+            output.push_str(&format!(
+                "{} -> {} [label=\"{}\"]\n",
+                edge.head + 1,
+                edge.dep + 1,
+                edge.label
+            ));
+        }
+
+        output.push('}');
+        output
+    }
+
+    pub fn to_conll_4(&self) -> String {
+        let mut lines = Vec::with_capacity(self.nodes.len());
+        for node in &self.nodes {
+            let head = self.head_of(node.index).map(|value| value + 1).unwrap_or(0);
+            let rel = self.relation_of(node.index).unwrap_or("dep");
+            lines.push(format!("{}\t_\t{}\t{}", node.text, head, rel));
+        }
+        lines.join("\n")
+    }
+
+    pub fn contains_cycle(&self) -> bool {
+        let mut visited = HashSet::new();
+        let mut stack = HashSet::new();
+
+        for node in &self.nodes {
+            if self.detect_cycle(node.index, &mut visited, &mut stack) {
+                return true;
+            }
+        }
+        false
     }
 
     pub fn to_node_frame(&self) -> Result<GDSDataFrame, GDSFrameError> {
@@ -161,6 +296,46 @@ impl DependencyGraph {
         ])?;
         Ok(df)
     }
+
+    fn tree_from(&self, node_index: usize) -> TreeValue {
+        let node = &self.nodes[node_index];
+        let children = self
+            .children_of(node_index)
+            .into_iter()
+            .map(|child_index| self.tree_from(child_index))
+            .collect::<Vec<_>>();
+        if children.is_empty() {
+            TreeValue::leaf(node.text.clone())
+        } else {
+            TreeValue::node(node.text.clone(), children)
+        }
+    }
+
+    fn detect_cycle(
+        &self,
+        node_index: usize,
+        visited: &mut HashSet<usize>,
+        stack: &mut HashSet<usize>,
+    ) -> bool {
+        if stack.contains(&node_index) {
+            return true;
+        }
+        if visited.contains(&node_index) {
+            return false;
+        }
+
+        visited.insert(node_index);
+        stack.insert(node_index);
+
+        for child in self.children_of(node_index) {
+            if self.detect_cycle(child, visited, stack) {
+                return true;
+            }
+        }
+
+        stack.remove(&node_index);
+        false
+    }
 }
 
 #[cfg(test)]
@@ -179,5 +354,40 @@ mod tests {
         assert_eq!(graph.nodes().len(), 2);
         assert_eq!(graph.edges().len(), 1);
         assert_eq!(graph.root(), Some(1));
+    }
+
+    #[test]
+    fn dependency_graph_dot_and_conll() {
+        let tokens = vec![
+            Token::new("John", TokenSpan::new(0, 4), TokenKind::Word),
+            Token::new("loves", TokenSpan::new(5, 10), TokenKind::Word),
+            Token::new("Mary", TokenSpan::new(11, 15), TokenKind::Word),
+        ];
+        let edges = vec![
+            DependencyEdge::new(1, 0, "nsubj"),
+            DependencyEdge::new(1, 2, "obj"),
+        ];
+        let graph = DependencyGraph::from_tokens(&tokens, edges, Some(1));
+
+        let dot = graph.to_dot();
+        assert!(dot.contains("0 -> 2 [label=\"ROOT\"]"));
+
+        let conll = graph.to_conll_4();
+        assert!(conll.contains("John\t_\t2\tnsubj"));
+        assert!(conll.contains("loves\t_\t0\tROOT"));
+    }
+
+    #[test]
+    fn dependency_tree_and_cycle_check() {
+        let tokens = vec![
+            Token::new("I", TokenSpan::new(0, 1), TokenKind::Word),
+            Token::new("run", TokenSpan::new(2, 5), TokenKind::Word),
+        ];
+        let edges = vec![DependencyEdge::new(1, 0, "nsubj")];
+        let graph = DependencyGraph::from_tokens(&tokens, edges, Some(1));
+
+        let tree = graph.to_dependency_tree().expect("tree");
+        assert_eq!(tree.format_bracketed(), "(run I)");
+        assert!(!graph.contains_cycle());
     }
 }

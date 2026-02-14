@@ -10,6 +10,7 @@ use crate::collections::dataset::featstruct::FeatStruct;
 use crate::collections::dataset::functions::tree::{format, inspect, pretty, transform};
 use crate::collections::dataset::namespaces::tree::TreeNs;
 use crate::collections::dataset::tag::Tag;
+use crate::collections::dataset::token::TokenSpan;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct TreeId(pub u64);
@@ -455,6 +456,25 @@ impl TreeValue {
         TreeValue::Leaf(value.into())
     }
 
+    pub fn from_tags(root_label: impl Into<tree_expr::TreeLabel>, tags: &[Tag]) -> Self {
+        let children = tags
+            .iter()
+            .map(|tag| {
+                TreeValue::Node(
+                    TreeNode::new(
+                        tag.tag(),
+                        vec![TreeValue::leaf(TreeLeafValue::text(tag.text()))],
+                    )
+                    .with_span(tree_expr::TreeSpan::new(
+                        tag.span().start(),
+                        tag.span().end(),
+                    )),
+                )
+            })
+            .collect();
+        TreeValue::node(root_label, children)
+    }
+
     pub fn is_node(&self) -> bool {
         matches!(self, TreeValue::Node(_))
     }
@@ -549,6 +569,46 @@ impl TreeValue {
                 _ => None,
             })
             .collect()
+    }
+
+    pub fn to_preterminal_tags(&self) -> Vec<Tag> {
+        let mut out = Vec::new();
+        collect_preterminal_tags(self, &mut out);
+        out
+    }
+}
+
+fn collect_preterminal_tags(tree: &TreeValue, out: &mut Vec<Tag>) {
+    if let TreeValue::Node(node) = tree {
+        if node.children().len() == 1 {
+            let child = &node.children()[0];
+            if let Some(text) = leaf_text(child) {
+                let span = node
+                    .span()
+                    .map(|span| TokenSpan::new(span.start(), span.end()))
+                    .or_else(|| leaf_span(child).map(|(start, end)| TokenSpan::new(start, end)))
+                    .unwrap_or_else(|| TokenSpan::new(0, 0));
+                out.push(Tag::new(text, node.label(), span));
+                return;
+            }
+        }
+        for child in node.children() {
+            collect_preterminal_tags(child, out);
+        }
+    }
+}
+
+fn leaf_text(tree: &TreeValue) -> Option<&str> {
+    match tree {
+        TreeValue::Leaf(TreeLeafValue::Text(value)) => Some(value.as_str()),
+        _ => None,
+    }
+}
+
+fn leaf_span(tree: &TreeValue) -> Option<(usize, usize)> {
+    match tree {
+        TreeValue::Leaf(TreeLeafValue::BytesRange { start, end }) => Some((*start, *end)),
+        _ => None,
     }
 }
 
@@ -794,3 +854,32 @@ pub use crate::collections::dataset::functions::tree::inspect::TreeTraversal;
 pub use crate::collections::dataset::functions::tree::parse::{parse_bracketed, TreeParseError};
 pub use crate::collections::dataset::functions::tree::pretty::{pretty_print, PrettyOptions};
 pub use crate::collections::dataset::namespaces::tree::TreeNs as TreeNamespace;
+
+#[cfg(test)]
+mod tests {
+    use super::{Tag, TokenSpan, TreeValue};
+
+    #[test]
+    fn from_tags_builds_preterminal_tree() {
+        let tags = vec![
+            Tag::new("Mary", "NNP", TokenSpan::new(0, 4)),
+            Tag::new("walks", "VBZ", TokenSpan::new(5, 10)),
+        ];
+
+        let tree = TreeValue::from_tags("S", &tags);
+        assert_eq!(tree.format_bracketed(), "(S (NNP Mary) (VBZ walks))");
+    }
+
+    #[test]
+    fn preterminal_tags_roundtrip_from_tag_tree() {
+        let tags = vec![
+            Tag::new("Mary", "NNP", TokenSpan::new(0, 4)),
+            Tag::new("walks", "VBZ", TokenSpan::new(5, 10)),
+        ];
+
+        let tree = TreeValue::from_tags("S", &tags);
+        let recovered = tree.to_preterminal_tags();
+
+        assert_eq!(recovered, tags);
+    }
+}

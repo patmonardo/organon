@@ -5,12 +5,43 @@ use std::collections::HashMap;
 use regex::Regex;
 
 use crate::collections::dataset::tag::Tag;
-use crate::collections::dataset::token::Token;
+use crate::collections::dataset::token::{Token, TokenKind};
 
 /// Pluggable tagger trait.
 pub trait Tagger {
     /// Tag a slice of tokens.
     fn tag_tokens(&self, tokens: &[Token]) -> Vec<Tag>;
+
+    /// Tag a batch of tokenized sentences.
+    fn tag_sents(&self, sentences: &[Vec<Token>]) -> Vec<Vec<Tag>> {
+        sentences.iter().map(|sent| self.tag_tokens(sent)).collect()
+    }
+
+    /// Compute token-level exact-tag accuracy against gold tagged sentences.
+    fn accuracy(&self, gold: &[Vec<Tag>]) -> f64 {
+        let mut correct = 0usize;
+        let mut total = 0usize;
+
+        for gold_sent in gold {
+            let tokens = gold_sent
+                .iter()
+                .map(|tag| Token::new(tag.text(), tag.span(), TokenKind::Word))
+                .collect::<Vec<Token>>();
+            let predicted = self.tag_tokens(&tokens);
+            for (g, p) in gold_sent.iter().zip(predicted.iter()) {
+                if g.tag() == p.tag() {
+                    correct += 1;
+                }
+                total += 1;
+            }
+        }
+
+        if total == 0 {
+            0.0
+        } else {
+            correct as f64 / total as f64
+        }
+    }
 }
 
 /// Default tagger: assigns a constant tag to all tokens.
@@ -212,5 +243,29 @@ mod tests {
         let tokens = vec![Token::new("Hello", TokenSpan::new(0, 5), TokenKind::Word)];
         let tags = tagger.tag_tokens(&tokens);
         assert_eq!(tags[0].tag(), "GREET");
+    }
+
+    #[test]
+    fn tag_sents_batches_sentences() {
+        let tagger = DefaultTagger::new("X");
+        let sents = vec![
+            vec![Token::new("a", TokenSpan::new(0, 1), TokenKind::Word)],
+            vec![Token::new("b", TokenSpan::new(2, 3), TokenKind::Word)],
+        ];
+        let out = tagger.tag_sents(&sents);
+        assert_eq!(out.len(), 2);
+        assert_eq!(out[0][0].tag(), "X");
+        assert_eq!(out[1][0].tag(), "X");
+    }
+
+    #[test]
+    fn accuracy_scores_exact_tags() {
+        let tagger = DefaultTagger::new("NN");
+        let gold = vec![vec![
+            Tag::new("John", "NN", TokenSpan::new(0, 4)),
+            Tag::new("walks", "VB", TokenSpan::new(5, 10)),
+        ]];
+        let score = tagger.accuracy(&gold);
+        assert!((score - 0.5).abs() < f64::EPSILON);
     }
 }

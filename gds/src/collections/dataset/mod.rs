@@ -53,6 +53,7 @@ pub mod stem;
 pub mod stemmer;
 pub mod streaming;
 pub mod tag;
+pub mod tag_util;
 pub mod tagger;
 pub mod token;
 pub mod tokenizer;
@@ -135,10 +136,13 @@ pub use stem::{Stem, StemKind};
 pub use stemmer::{IdentityStemmer, LowercaseStemmer, SimpleSuffixStemmer, Stemmer};
 pub use streaming::{StreamingBatchIter, StreamingDataset};
 pub use tag::Tag;
+pub use tag_util::{str2tuple, tuple2str, untag};
 pub use tagger::{DefaultTagger, LookupTagger, RegexTagger, Tagger, UnigramTagger};
 pub use token::{Token, TokenKind, TokenSpan};
 pub use tokenizer::{
-    BlanklineTokenizer, CharTokenizer, JsonTokenizer, LineBlankMode, LineTokenizer,
+    align_token_texts, align_tokens, blankline_tokenize, line_tokenize, regexp_span_tokenize,
+    regexp_tokenize, spans_to_relative, string_span_tokenize, wordpunct_tokenize,
+    BlanklineTokenizer, CharTokenizer, JsonTokenizer, LineBlankMode, LineTokenizer, MWETokenizer,
     MarkupTokenizer, RegexpTokenizer, SExprTokenizer, SpaceTokenizer, StringSplitTokenizer,
     TabTokenizer, Tokenizer, WhitespaceTokenizer, WordPunctTokenizer,
 };

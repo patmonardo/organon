@@ -8,6 +8,19 @@ use crate::collections::dataset::token::{Token, TokenKind, TokenSpan};
 pub trait Tokenizer {
     /// Tokenize the input text and return a sequence of `Token`s.
     fn tokenize(&self, text: &str) -> Vec<Token>;
+
+    /// Apply `tokenize()` to each input string.
+    fn tokenize_sents(&self, texts: &[&str]) -> Vec<Vec<Token>> {
+        texts.iter().map(|text| self.tokenize(text)).collect()
+    }
+
+    /// Return just the token spans for the given text.
+    fn span_tokenize(&self, text: &str) -> Vec<TokenSpan> {
+        self.tokenize(text)
+            .into_iter()
+            .map(|token| token.span())
+            .collect()
+    }
 }
 
 /// Default whitespace tokenizer: splits on Unicode whitespace.
@@ -489,6 +502,224 @@ impl Tokenizer for JsonTokenizer {
     }
 }
 
+/// Multi-word-expression tokenizer.
+#[derive(Debug, Clone)]
+pub struct MWETokenizer {
+    mwes: Vec<Vec<String>>,
+    separator: String,
+}
+
+impl MWETokenizer {
+    pub fn new(mwes: Vec<Vec<String>>, separator: impl Into<String>) -> Self {
+        Self {
+            mwes,
+            separator: separator.into(),
+        }
+    }
+
+    pub fn with_separator(separator: impl Into<String>) -> Self {
+        Self::new(Vec::new(), separator)
+    }
+
+    pub fn add_mwe<I, S>(&mut self, mwe: I)
+    where
+        I: IntoIterator<Item = S>,
+        S: Into<String>,
+    {
+        let candidate: Vec<String> = mwe.into_iter().map(Into::into).collect();
+        if !candidate.is_empty() {
+            self.mwes.push(candidate);
+        }
+    }
+
+    pub fn tokenize_tokens<S: AsRef<str>>(&self, tokens: &[S]) -> Vec<String> {
+        let token_texts: Vec<&str> = tokens.iter().map(|t| t.as_ref()).collect();
+        self.merge_token_texts(&token_texts)
+    }
+
+    fn merge_token_texts(&self, token_texts: &[&str]) -> Vec<String> {
+        let mut out = Vec::new();
+        let mut idx = 0usize;
+
+        while idx < token_texts.len() {
+            let mut best_match: Option<&[String]> = None;
+            for mwe in &self.mwes {
+                if idx + mwe.len() > token_texts.len() {
+                    continue;
+                }
+                let is_match = mwe
+                    .iter()
+                    .zip(&token_texts[idx..idx + mwe.len()])
+                    .all(|(left, right)| left == right);
+                if is_match && best_match.is_none_or(|best| mwe.len() > best.len()) {
+                    best_match = Some(mwe);
+                }
+            }
+
+            if let Some(matched) = best_match {
+                out.push(matched.join(&self.separator));
+                idx += matched.len();
+            } else {
+                out.push(token_texts[idx].to_string());
+                idx += 1;
+            }
+        }
+
+        out
+    }
+}
+
+impl Default for MWETokenizer {
+    fn default() -> Self {
+        Self::new(Vec::new(), "_")
+    }
+}
+
+impl Tokenizer for MWETokenizer {
+    fn tokenize(&self, text: &str) -> Vec<Token> {
+        let base_tokens = WhitespaceTokenizer.tokenize(text);
+        let mut out = Vec::new();
+        let mut idx = 0usize;
+
+        while idx < base_tokens.len() {
+            let mut best_match: Option<&[String]> = None;
+            for mwe in &self.mwes {
+                if idx + mwe.len() > base_tokens.len() {
+                    continue;
+                }
+                let is_match = mwe
+                    .iter()
+                    .zip(&base_tokens[idx..idx + mwe.len()])
+                    .all(|(candidate, token)| candidate == token.text());
+                if is_match && best_match.is_none_or(|best| mwe.len() > best.len()) {
+                    best_match = Some(mwe);
+                }
+            }
+
+            if let Some(matched) = best_match {
+                let start = base_tokens[idx].span().start();
+                let end = base_tokens[idx + matched.len() - 1].span().end();
+                out.push(Token::new(
+                    matched.join(&self.separator),
+                    TokenSpan::new(start, end),
+                    TokenKind::Word,
+                ));
+                idx += matched.len();
+            } else {
+                out.push(base_tokens[idx].clone());
+                idx += 1;
+            }
+        }
+
+        out
+    }
+}
+
+pub fn regexp_tokenize(
+    text: &str,
+    pattern: impl AsRef<str>,
+    gaps: bool,
+    discard_empty: bool,
+) -> Result<Vec<Token>, regex::Error> {
+    let tokenizer = RegexpTokenizer::with_options(pattern, gaps, discard_empty)?;
+    Ok(tokenizer.tokenize(text))
+}
+
+pub fn wordpunct_tokenize(text: &str) -> Vec<Token> {
+    WordPunctTokenizer::new().tokenize(text)
+}
+
+pub fn blankline_tokenize(text: &str) -> Vec<Token> {
+    BlanklineTokenizer::new().tokenize(text)
+}
+
+pub fn line_tokenize(text: &str, blank_mode: LineBlankMode) -> Vec<Token> {
+    LineTokenizer::new(blank_mode).tokenize(text)
+}
+
+pub fn string_span_tokenize(text: &str, sep: &str) -> Result<Vec<TokenSpan>, String> {
+    if sep.is_empty() {
+        return Err("Token delimiter must not be empty".to_string());
+    }
+
+    let mut spans = Vec::new();
+    let mut left = 0usize;
+    while let Some(pos) = text[left..].find(sep) {
+        let right = left + pos;
+        if right != 0 {
+            spans.push(TokenSpan::new(left, right));
+        }
+        left = right + sep.len();
+    }
+
+    if left != text.len() {
+        spans.push(TokenSpan::new(left, text.len()));
+    }
+
+    Ok(spans)
+}
+
+pub fn regexp_span_tokenize(
+    text: &str,
+    regexp: impl AsRef<str>,
+) -> Result<Vec<TokenSpan>, regex::Error> {
+    let regex = Regex::new(regexp.as_ref())?;
+    let mut spans = Vec::new();
+    let mut left = 0usize;
+
+    for m in regex.find_iter(text) {
+        let right = m.start();
+        if right != left {
+            spans.push(TokenSpan::new(left, right));
+        }
+        left = m.end();
+    }
+
+    spans.push(TokenSpan::new(left, text.len()));
+    Ok(spans)
+}
+
+pub fn spans_to_relative(spans: &[TokenSpan]) -> Vec<(usize, usize)> {
+    let mut prev = 0usize;
+    let mut out = Vec::with_capacity(spans.len());
+    for span in spans {
+        out.push((
+            span.start().saturating_sub(prev),
+            span.end().saturating_sub(span.start()),
+        ));
+        prev = span.end();
+    }
+    out
+}
+
+pub fn align_tokens(tokens: &[Token], sentence: &str) -> Result<Vec<TokenSpan>, String> {
+    align_token_texts(
+        &tokens.iter().map(|t| t.text()).collect::<Vec<_>>(),
+        sentence,
+    )
+}
+
+pub fn align_token_texts(token_texts: &[&str], sentence: &str) -> Result<Vec<TokenSpan>, String> {
+    let mut point = 0usize;
+    let mut offsets = Vec::with_capacity(token_texts.len());
+
+    for token in token_texts {
+        match sentence[point..].find(token) {
+            Some(rel_start) => {
+                let start = point + rel_start;
+                let end = start + token.len();
+                offsets.push(TokenSpan::new(start, end));
+                point = end;
+            }
+            None => {
+                return Err(format!("substring {token:?} not found in {sentence:?}"));
+            }
+        }
+    }
+
+    Ok(offsets)
+}
+
 fn whitespace_spans(text: &str) -> Vec<(usize, usize)> {
     let mut spans = Vec::new();
     let mut start: Option<usize> = None;
@@ -610,5 +841,101 @@ mod tests {
         let toks = tok.tokenize("<p>Hello</p>");
         let texts: Vec<&str> = toks.iter().map(|tk| tk.text()).collect();
         assert_eq!(texts, vec!["<p>", "Hello", "</p>"]);
+    }
+
+    #[test]
+    fn tokenizer_span_tokenize_uses_token_spans() {
+        let t = WhitespaceTokenizer;
+        let spans = t.span_tokenize("a bb");
+        assert_eq!(spans, vec![TokenSpan::new(0, 1), TokenSpan::new(2, 4)]);
+    }
+
+    #[test]
+    fn tokenizer_tokenize_sents_applies_per_input() {
+        let t = WordPunctTokenizer::new();
+        let batch = t.tokenize_sents(&["a!", "b?"]);
+        let first: Vec<&str> = batch[0].iter().map(|tk| tk.text()).collect();
+        let second: Vec<&str> = batch[1].iter().map(|tk| tk.text()).collect();
+        assert_eq!(first, vec!["a", "!"]);
+        assert_eq!(second, vec!["b", "?"]);
+    }
+
+    #[test]
+    fn mwe_tokenizer_merges_longest_matches() {
+        let mut t = MWETokenizer::new(
+            vec![
+                vec!["a".into(), "little".into()],
+                vec!["a".into(), "little".into(), "bit".into()],
+                vec!["a".into(), "lot".into()],
+            ],
+            "_",
+        );
+        t.add_mwe(vec!["in", "spite", "of"]);
+
+        let toks = t.tokenize("In a little or a little bit or a lot in spite of");
+        let texts: Vec<&str> = toks.iter().map(|tk| tk.text()).collect();
+        assert_eq!(
+            texts,
+            vec![
+                "In",
+                "a_little",
+                "or",
+                "a_little_bit",
+                "or",
+                "a_lot",
+                "in_spite_of"
+            ]
+        );
+    }
+
+    #[test]
+    fn helper_function_regexp_tokenize_matches_words() {
+        let toks = regexp_tokenize("Good muffins", r"\w+", false, true).unwrap();
+        let texts: Vec<&str> = toks.iter().map(|tk| tk.text()).collect();
+        assert_eq!(texts, vec!["Good", "muffins"]);
+    }
+
+    #[test]
+    fn string_span_tokenize_supports_fixed_separator() {
+        let spans = string_span_tokenize("Good muffins", " ").expect("valid separator");
+        assert_eq!(spans, vec![TokenSpan::new(0, 4), TokenSpan::new(5, 12)]);
+    }
+
+    #[test]
+    fn regexp_span_tokenize_supports_regex_separator() {
+        let spans = regexp_span_tokenize("a\tb c", r"\s+").expect("valid regex");
+        assert_eq!(
+            spans,
+            vec![
+                TokenSpan::new(0, 1),
+                TokenSpan::new(2, 3),
+                TokenSpan::new(4, 5)
+            ]
+        );
+    }
+
+    #[test]
+    fn spans_to_relative_converts_offsets() {
+        let spans = vec![
+            TokenSpan::new(0, 4),
+            TokenSpan::new(5, 12),
+            TokenSpan::new(13, 17),
+        ];
+        let rel = spans_to_relative(&spans);
+        assert_eq!(rel, vec![(0, 4), (1, 7), (1, 4)]);
+    }
+
+    #[test]
+    fn align_token_texts_finds_offsets_in_sentence() {
+        let spans =
+            align_token_texts(&["The", "plane", ","], "The plane,").expect("alignable tokens");
+        assert_eq!(
+            spans,
+            vec![
+                TokenSpan::new(0, 3),
+                TokenSpan::new(4, 9),
+                TokenSpan::new(9, 10)
+            ]
+        );
     }
 }

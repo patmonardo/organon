@@ -41,6 +41,7 @@ pub fn render_rust_dsl_module(
     out.push_str("    pub const NODES: &[NodeSpec] = &[\n");
     for node in compilation.nodes.values() {
         let kind_name = match node.kind {
+            DatasetNodeKind::Image => "image",
             DatasetNodeKind::Model => "model",
             DatasetNodeKind::Feature => "feature",
             DatasetNodeKind::Frame => "frame",
@@ -83,6 +84,7 @@ pub fn render_rust_dsl_module(
         out.push_str("        &[\n");
         for kind in index.all_kinds() {
             let group_name = match kind {
+                DatasetNodeKind::Image => "image",
                 DatasetNodeKind::Model => "model",
                 DatasetNodeKind::Feature => "feature",
                 DatasetNodeKind::Frame => "frame",

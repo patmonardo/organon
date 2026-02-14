@@ -4,6 +4,7 @@ pub mod gradient_descent;
 pub mod link_models;
 pub mod metrics;
 pub mod models;
+pub mod nlp;
 pub mod node_classification;
 pub mod node_prediction;
 pub mod sampling;

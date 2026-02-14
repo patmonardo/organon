@@ -25,6 +25,7 @@ use crate::collections::dataset::namespaces::dataset::DatasetNs;
 use crate::collections::dataset::namespaces::feature::FeatureNs;
 use crate::collections::dataset::namespaces::text::TextNs;
 use crate::collections::dataset::namespaces::tree::TreeNs;
+use crate::form::ProgramFeatures;
 use polars::prelude::{col, Expr};
 
 /// Ancient-science-style specification marker for SDSL artifacts.
@@ -272,6 +273,20 @@ impl DatasetPipeline {
 
         compilation
     }
+
+    /// Build a dataset compilation and merge Program Feature image formation.
+    ///
+    /// This composes pipeline artifacts with a Unix-style program image rooted in
+    /// `ProgramFeatures`, preserving feature-first semantics for execution.
+    pub fn to_compilation_with_program_features(
+        &self,
+        program_features: &ProgramFeatures,
+    ) -> DatasetCompilation {
+        let mut compilation = self.to_compilation();
+        let image = DatasetCompilation::from_program_features(program_features);
+        compilation.merge(image);
+        compilation
+    }
 }
 
 /// Top-level UserLand ToolChain facade.
@@ -301,6 +316,11 @@ impl DatasetToolChain {
 
     pub fn pipeline() -> DatasetPipeline {
         DatasetPipeline::new()
+    }
+
+    /// Compile a Program Feature set directly into a dataset image compilation.
+    pub fn image_from_program_features(program_features: &ProgramFeatures) -> DatasetCompilation {
+        DatasetCompilation::from_program_features(program_features)
     }
 
     pub fn specification(

@@ -39,6 +39,7 @@ ProgramForm execution is valid only as in-world interpretation under a pre-estab
 - Uses `DirectCompute` path.
 - Valid for external utility APIs.
 - Does not define FormDB epistemic semantics.
+- Acts as a generic compute surface for REST/JSON, MCP, and agent-to-agent runtime calls.
 
 ## Binding Doctrine
 
@@ -58,6 +59,32 @@ ProgramForm execution is valid only as in-world interpretation under a pre-estab
 - TS/Zod is authoritative for human-facing schema contract design.
 - JSON-safe Form contract (`FormContract`) is the bridge surface.
 - Any contract evolution must preserve compatibility rules or explicitly version-break.
+- Cypher Knowledge Graph semantics are mapped into TS-JSON via Zod contracts; Rust consumes the projected contract for execution.
+
+## GDSL/SDSL Embedding Doctrine
+
+- GDSL/SDSL specifications define the epistemic pathway shared by Rust and TS toolchains.
+- FormDB embedding is represented as specification metadata, not ad-hoc execution flags.
+- Canonical business meaning may originate from Cypher FactStore/KnowledgeStore, while Rust holds an execution-ready projection.
+- Existing `logic/model/task` schema structure is treated as non-arbitrary and must be referenced, not re-invented.
+
+### Rust-first mock strategy (current phase)
+
+- Keep runtime structs stable; avoid speculative deep type expansion.
+- Encode FormDB/GDSL/SDSL embedding using namespaced metadata attributes.
+- Preserve compatibility with partial schema definitions while allowing progressive refinement.
+- Use provenance fields to mark:
+  - specification kind (`gdsl`/`sdsl`),
+  - schema reference,
+  - Cypher graph bindings (fact/knowledge),
+  - Cypher ontology bindings (labels/relationship types),
+  - engine role and human-in-loop boundary.
+
+## DataFrame/Dataset Orientation
+
+- GDSL/SDSL is the epistemic path for DataFrame/Dataset work in both Rust and TS.
+- RustScript is treated as a Polars client SDK (client-of-clients), not a replacement for TS/Zod contracts.
+- Ontology structure (labels + relationship types) is first-class metadata for meta-analysis and editing by agents/humans.
 
 ## Architectural Invariants (PR Checklist)
 

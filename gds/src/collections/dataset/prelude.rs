@@ -62,7 +62,9 @@ pub use crate::collections::dataset::stemmer::{
 
 // Tokenizer
 pub use crate::collections::dataset::tokenizer::{
-    BlanklineTokenizer, CharTokenizer, JsonTokenizer, LineBlankMode, LineTokenizer,
+    align_token_texts, align_tokens, blankline_tokenize, line_tokenize, regexp_span_tokenize,
+    regexp_tokenize, spans_to_relative, string_span_tokenize, wordpunct_tokenize,
+    BlanklineTokenizer, CharTokenizer, JsonTokenizer, LineBlankMode, LineTokenizer, MWETokenizer,
     MarkupTokenizer, RegexpTokenizer, SExprTokenizer, SpaceTokenizer, StringSplitTokenizer,
     TabTokenizer, Tokenizer, WhitespaceTokenizer, WordPunctTokenizer,
 };
@@ -84,6 +86,7 @@ pub use crate::collections::dataset::featstruct::{
 
 // Tag surface
 pub use crate::collections::dataset::tag::Tag;
+pub use crate::collections::dataset::tag_util::{str2tuple, tuple2str, untag};
 
 // Tagger surface
 pub use crate::collections::dataset::tagger::{

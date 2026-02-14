@@ -85,6 +85,28 @@ impl Stemmer for SimpleSuffixStemmer {
     }
 }
 
+pub fn suffix_replace(original: &str, old: &str, new: &str) -> String {
+    if old.is_empty() {
+        return format!("{original}{new}");
+    }
+    if let Some(stem) = original.strip_suffix(old) {
+        format!("{stem}{new}")
+    } else {
+        original.to_string()
+    }
+}
+
+pub fn prefix_replace(original: &str, old: &str, new: &str) -> String {
+    if old.is_empty() {
+        return format!("{new}{original}");
+    }
+    if let Some(rest) = original.strip_prefix(old) {
+        format!("{new}{rest}")
+    } else {
+        original.to_string()
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -109,5 +131,15 @@ mod tests {
         let tok = Token::new("running", TokenSpan::new(0, 7), TokenKind::Word);
         let stem = SimpleSuffixStemmer::default().stem_token(&tok);
         assert_eq!(stem.text(), "runn");
+    }
+
+    #[test]
+    fn suffix_replace_works() {
+        assert_eq!(suffix_replace("churches", "es", ""), "church");
+    }
+
+    #[test]
+    fn prefix_replace_works() {
+        assert_eq!(prefix_replace("redo", "re", "un"), "undo");
     }
 }
