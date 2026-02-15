@@ -28,12 +28,12 @@ export const PutGraphStoreCallSchema = GraphStoreBase.extend({
               target: z.number().int(),
               properties: z.record(z.string(), z.unknown()).optional(),
             })
-            .passthrough(),
+            .catchall(z.unknown()),
         )
         .optional(),
       nodeProperties: z.record(z.string(), z.array(z.unknown())).optional(),
     })
-    .passthrough(),
+    .catchall(z.unknown()),
 });
 
 export const GdsGraphStoreCallSchema = z.discriminatedUnion('op', [

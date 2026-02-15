@@ -9,28 +9,28 @@ import { GdsApplicationCallSchema } from './application';
  */
 
 export const GdsTsjsonOkResponseSchema = z.object({
-	ok: z.literal(true),
-	op: z.string().min(1),
-	data: z.unknown(),
+  ok: z.literal(true),
+  op: z.string().min(1),
+  data: z.unknown(),
 });
 export type GdsTsjsonOkResponse = z.infer<typeof GdsTsjsonOkResponseSchema>;
 
 export const GdsTsjsonErrorSchema = z.object({
-	code: z.string().min(1),
-	message: z.string().min(1),
+  code: z.string().min(1),
+  message: z.string().min(1),
 });
 export type GdsTsjsonError = z.infer<typeof GdsTsjsonErrorSchema>;
 
 export const GdsTsjsonErrResponseSchema = z.object({
-	ok: z.literal(false),
-	op: z.string(),
-	error: GdsTsjsonErrorSchema,
+  ok: z.literal(false),
+  op: z.string(),
+  error: GdsTsjsonErrorSchema,
 });
 export type GdsTsjsonErrResponse = z.infer<typeof GdsTsjsonErrResponseSchema>;
 
 export const GdsTsjsonResponseSchema = z.union([
-	GdsTsjsonOkResponseSchema,
-	GdsTsjsonErrResponseSchema,
+  GdsTsjsonOkResponseSchema,
+  GdsTsjsonErrResponseSchema,
 ]);
 export type GdsTsjsonResponse = z.infer<typeof GdsTsjsonResponseSchema>;
 
@@ -42,25 +42,25 @@ export type GdsTsjsonResponse = z.infer<typeof GdsTsjsonResponseSchema>;
  * - `ping` and `version` are top-level ops (no facade).
  */
 export const GdsTsjsonPingRequestSchema = z
-	.object({
-		op: z.literal('ping'),
-		nonce: z.unknown().optional(),
-	})
-	.passthrough();
+  .object({
+    op: z.literal('ping'),
+    nonce: z.unknown().optional(),
+  })
+  .catchall(z.unknown());
 export type GdsTsjsonPingRequest = z.infer<typeof GdsTsjsonPingRequestSchema>;
 
 export const GdsTsjsonVersionRequestSchema = z
-	.object({
-		op: z.literal('version'),
-	})
-	.passthrough();
-export type GdsTsjsonVersionRequest = z.infer<typeof GdsTsjsonVersionRequestSchema>;
+  .object({
+    op: z.literal('version'),
+  })
+  .catchall(z.unknown());
+export type GdsTsjsonVersionRequest = z.infer<
+  typeof GdsTsjsonVersionRequestSchema
+>;
 
 export const GdsTsjsonRequestSchema = z.union([
-	GdsApplicationCallSchema,
-	GdsTsjsonPingRequestSchema,
-	GdsTsjsonVersionRequestSchema,
+  GdsApplicationCallSchema,
+  GdsTsjsonPingRequestSchema,
+  GdsTsjsonVersionRequestSchema,
 ]);
 export type GdsTsjsonRequest = z.infer<typeof GdsTsjsonRequestSchema>;
-
-

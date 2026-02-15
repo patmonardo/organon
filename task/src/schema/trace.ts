@@ -16,13 +16,13 @@ const FactStoreMetaSchema = z
     mode: z.string().optional(),
     store: z.string().optional(),
   })
-  .passthrough();
+  .catchall(z.unknown());
 
 export const TraceEventMetaSchema = z
   .object({
     factStore: FactStoreMetaSchema.optional(),
   })
-  .passthrough();
+  .catchall(z.unknown());
 
 export const TraceEventSchema = z.object({
   kind: z.string(),
@@ -30,5 +30,3 @@ export const TraceEventSchema = z.object({
   meta: TraceEventMetaSchema.optional(),
 });
 export type TraceEvent = z.infer<typeof TraceEventSchema>;
-
-

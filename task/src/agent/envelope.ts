@@ -2,7 +2,12 @@ import { z } from 'zod';
 
 import { ContextDocumentSchema } from '../schema/context-document';
 import { TraceEventSchema } from '../schema/trace';
-import { TawActEventSchema, TawIntentEventSchema, TawPlanEventSchema, TawResultEventSchema } from '../schema/taw';
+import {
+  TawActEventSchema,
+  TawIntentEventSchema,
+  TawPlanEventSchema,
+  TawResultEventSchema,
+} from '../schema/taw';
 
 /**
  * RootAgent container surface (schema-first)
@@ -27,7 +32,7 @@ export const RootAgentEnvelopeMetaSchema = z
     stepId: RootAgentStepIdSchema.optional(),
     note: z.string().optional(),
   })
-  .passthrough();
+  .catchall(z.unknown());
 export type RootAgentEnvelopeMeta = z.infer<typeof RootAgentEnvelopeMetaSchema>;
 
 export const RootAgentLoopTurnSchema = z
@@ -76,7 +81,9 @@ export const RootAgentAbsorbRequestSchema = z
     meta: z.record(z.string(), z.unknown()).optional(),
   })
   .strict();
-export type RootAgentAbsorbRequest = z.infer<typeof RootAgentAbsorbRequestSchema>;
+export type RootAgentAbsorbRequest = z.infer<
+  typeof RootAgentAbsorbRequestSchema
+>;
 
 export const RootAgentAbsorbResultSchema = z
   .object({
@@ -87,7 +94,9 @@ export const RootAgentAbsorbResultSchema = z
   .strict();
 export type RootAgentAbsorbResult = z.infer<typeof RootAgentAbsorbResultSchema>;
 
-export function parseRootAgentBootEnvelope(input: unknown): RootAgentBootEnvelope {
+export function parseRootAgentBootEnvelope(
+  input: unknown,
+): RootAgentBootEnvelope {
   return RootAgentBootEnvelopeSchema.parse(input);
 }
 export function parseRootAgentLoopTurn(input: unknown): RootAgentLoopTurn {
@@ -96,11 +105,13 @@ export function parseRootAgentLoopTurn(input: unknown): RootAgentLoopTurn {
 export function parseRootAgentKernelTurn(input: unknown): RootAgentKernelTurn {
   return RootAgentKernelTurnSchema.parse(input);
 }
-export function parseRootAgentAbsorbRequest(input: unknown): RootAgentAbsorbRequest {
+export function parseRootAgentAbsorbRequest(
+  input: unknown,
+): RootAgentAbsorbRequest {
   return RootAgentAbsorbRequestSchema.parse(input);
 }
-export function parseRootAgentAbsorbResult(input: unknown): RootAgentAbsorbResult {
+export function parseRootAgentAbsorbResult(
+  input: unknown,
+): RootAgentAbsorbResult {
   return RootAgentAbsorbResultSchema.parse(input);
 }
-
-

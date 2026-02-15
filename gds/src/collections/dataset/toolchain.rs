@@ -11,10 +11,13 @@
 //! - User Design Surfaces can be persisted as Entity/Property/Aspect records
 //!   in external stores (for example Neo4j-backed Relative Form persistence).
 
+use crate::collections::dataset::compile_ir::{
+    ontology_image_from_program_features, DatasetCompilation, DatasetNode, DatasetNodeKind,
+    OntologyDataFrameImage,
+};
 use crate::collections::dataset::expressions::dataop::{
     DataFrameLoweringArtifact, DatasetAspectArtifact, DatasetDataOpExpr,
 };
-use crate::collections::dataset::compile_ir::{DatasetCompilation, DatasetNode, DatasetNodeKind};
 use crate::collections::dataset::expressions::io::DatasetIoExpr;
 use crate::collections::dataset::expressions::metadata::DatasetMetadataExpr;
 use crate::collections::dataset::expressions::projection::DatasetProjectionExpr;
@@ -287,6 +290,17 @@ impl DatasetPipeline {
         compilation.merge(image);
         compilation
     }
+
+    /// Merge a pre-built ontology image manifest into the dataset compilation graph.
+    pub fn to_compilation_with_ontology_image(
+        &self,
+        ontology_image: &OntologyDataFrameImage,
+    ) -> DatasetCompilation {
+        let mut compilation = self.to_compilation();
+        let image = DatasetCompilation::from_ontology_image(ontology_image);
+        compilation.merge(image);
+        compilation
+    }
 }
 
 /// Top-level UserLand ToolChain facade.
@@ -321,6 +335,20 @@ impl DatasetToolChain {
     /// Compile a Program Feature set directly into a dataset image compilation.
     pub fn image_from_program_features(program_features: &ProgramFeatures) -> DatasetCompilation {
         DatasetCompilation::from_program_features(program_features)
+    }
+
+    /// Build an ontology dataframe image manifest from Program Features.
+    pub fn ontology_image_from_program_features(
+        program_features: &ProgramFeatures,
+    ) -> OntologyDataFrameImage {
+        ontology_image_from_program_features(program_features)
+    }
+
+    /// Compile a manifest-level ontology image directly into dataset compilation nodes.
+    pub fn image_from_ontology_manifest(
+        ontology_image: &OntologyDataFrameImage,
+    ) -> DatasetCompilation {
+        DatasetCompilation::from_ontology_image(ontology_image)
     }
 
     pub fn specification(

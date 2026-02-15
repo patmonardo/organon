@@ -32,7 +32,7 @@ export const KernelMorphStepSchema = z.discriminatedUnion('kind', [
       op: KernelFormOpSchema,
       params: z.record(z.string(), z.unknown()).optional(),
     })
-    .passthrough(),
+    .catchall(z.unknown()),
   z
     .object({
       kind: z.literal('judge'),
@@ -40,12 +40,12 @@ export const KernelMorphStepSchema = z.discriminatedUnion('kind', [
         .enum(['existence', 'reflection', 'necessity', 'concept'])
         .optional(),
     })
-    .passthrough(),
+    .catchall(z.unknown()),
   z
     .object({
       kind: z.literal('syllogize'),
     })
-    .passthrough(),
+    .catchall(z.unknown()),
 ]);
 export type KernelMorphStep = z.infer<typeof KernelMorphStepSchema>;
 
@@ -54,7 +54,7 @@ export const KernelMorphSchema = z
     patterns: z.array(KernelFormOpSchema).min(1),
     steps: z.array(KernelMorphStepSchema).optional(),
   })
-  .passthrough();
+  .catchall(z.unknown());
 export type KernelMorph = z.infer<typeof KernelMorphSchema>;
 
 // Core FormShape (kernel-facing; distinct from UI FormShape in form.ts).
@@ -70,7 +70,7 @@ export const KernelFormShapeSchema = z
         type_constraints: z.record(z.string(), z.string()).optional(),
         validation_rules: z.record(z.string(), z.string()).optional(),
       })
-      .passthrough()
+      .catchall(z.unknown())
       .optional(),
     context: z
       .object({
@@ -79,7 +79,7 @@ export const KernelFormShapeSchema = z
         runtime_strategy: z.string().optional(),
         conditions: z.array(z.string()).optional(),
       })
-      .passthrough()
+      .catchall(z.unknown())
       .optional(),
     morph: KernelMorphSchema,
     content: z.unknown().optional(),
@@ -95,7 +95,7 @@ export const KernelFormShapeSchema = z
       })
       .optional(),
   })
-  .passthrough();
+  .catchall(z.unknown());
 export type KernelFormShape = z.infer<typeof KernelFormShapeSchema>;
 // Alias for legacy naming in relative/absolute logic layers.
 export type KernelFormProgram = KernelFormShape;
@@ -161,7 +161,7 @@ export const KernelApplicationFormSchema = z
       .default('formshape'),
     artifacts: z.record(z.string(), z.unknown()).optional(),
   })
-  .passthrough();
+  .catchall(z.unknown());
 export type KernelApplicationForm = z.infer<typeof KernelApplicationFormSchema>;
 
 // Streaming envelope for long-running graph/program executions.

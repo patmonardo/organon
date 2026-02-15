@@ -104,7 +104,12 @@ pub use series::{DatasetSeriesNameSpace, SeriesDatasetExt};
 
 pub use catalog_index::DatasetCatalogIndex;
 pub use codegen::{render_rust_dsl_module, DslCodegenOptions};
-pub use compile_ir::{DatasetCompilation, DatasetNode, DatasetNodeKind};
+pub use compile_ir::{
+    ontology_image_from_program_features, DatasetCompilation, DatasetNode, DatasetNodeKind,
+    OntologyDataFrameImage, OntologyDataFrameImageTables, OntologyImageConstraintRow,
+    OntologyImageFeatureRow, OntologyImageModelRow, OntologyImageProvenanceRow,
+    OntologyImageQueryRow, OntologyRuntimeMode,
+};
 pub use expressions::dataop::{
     DataFrameLoweringArtifact, DatasetAspectArtifact, DatasetDataOp, DatasetDataOpExpr,
 };

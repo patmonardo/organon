@@ -7,7 +7,7 @@
 use std::fmt;
 
 use once_cell::sync::Lazy;
-use regex::Regex;
+use regex::{Captures, Regex};
 
 use crate::collections::dataframe::errors::PolarsInefficientMapWarning;
 use crate::collections::dataframe::utils::various::{in_terminal_that_supports_colour, re_escape};
@@ -82,7 +82,7 @@ impl fmt::Display for UdfError {
 impl std::error::Error for UdfError {}
 
 static RE_IMPLICIT_BOOL: Lazy<Regex> = Lazy::new(|| {
-    Regex::new(r#"pl\.col\("([^"]*)"\) & pl\.col\("\1"\)\.(.+)"#)
+    Regex::new(r#"pl\.col\("([^"]*)"\) & pl\.col\("([^"]*)"\)\.(.+)"#)
         .expect("valid implicit bool regex")
 });
 static RE_STRIP_BOOL: Lazy<Regex> =
@@ -159,10 +159,27 @@ pub fn strip_bool_wrapper(expr: &str) -> String {
 /// Drop redundant implicit-bool constructs that arise in expression rewrites.
 pub fn omit_implicit_bool(expr: &str) -> String {
     let mut out = expr.to_string();
-    while RE_IMPLICIT_BOOL.is_match(&out) {
-        out = RE_IMPLICIT_BOOL
-            .replace_all(&out, r#"pl.col("$1").$2"#)
+    loop {
+        let next = RE_IMPLICIT_BOOL
+            .replace_all(&out, |caps: &Captures<'_>| {
+                let lhs = caps.get(1).map(|m| m.as_str()).unwrap_or_default();
+                let rhs = caps.get(2).map(|m| m.as_str()).unwrap_or_default();
+                let suffix = caps.get(3).map(|m| m.as_str()).unwrap_or_default();
+
+                if lhs == rhs {
+                    format!(r#"pl.col("{}").{}"#, lhs, suffix)
+                } else {
+                    caps.get(0)
+                        .map(|m| m.as_str().to_string())
+                        .unwrap_or_default()
+                }
+            })
             .to_string();
+
+        if next == out {
+            break;
+        }
+        out = next;
     }
     out
 }

@@ -26,17 +26,20 @@ import {
 } from './graph-store-catalog';
 import { GdsGraphStoreCallSchema, type GdsGraphStoreCall } from './graph-store';
 import { GdsAlgorithmsCallSchema, type GdsAlgorithmsCall } from './algorithms';
+import { GdsFormEvalCallSchema, type GdsFormEvalCall } from './program';
 
 export const GdsApplicationCallSchema = z.union([
   GdsGraphStoreCatalogCallSchema,
   GdsGraphStoreCallSchema,
   GdsAlgorithmsCallSchema,
+  GdsFormEvalCallSchema,
 ]);
 
 export type GdsApplicationCall =
   | GdsGraphStoreCatalogCall
   | GdsGraphStoreCall
-  | GdsAlgorithmsCall;
+  | GdsAlgorithmsCall
+  | GdsFormEvalCall;
 
 export function gdsApplicationOperationId(call: GdsApplicationCall): string {
   return `gds.${call.facade}.${call.op}`;

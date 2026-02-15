@@ -163,6 +163,9 @@ pub use crate::collections::dataset::expressions::token::{
 
 // Dataset compiler utility surface
 pub use crate::collections::dataset::{
-    render_rust_dsl_module, DatasetCatalogIndex, DatasetCompilation, DatasetNode, DatasetNodeKind,
-    DslCodegenOptions,
+    ontology_image_from_program_features, render_rust_dsl_module, DatasetCatalogIndex,
+    DatasetCompilation, DatasetNode, DatasetNodeKind, DslCodegenOptions,
+    OntologyDataFrameImage, OntologyDataFrameImageTables, OntologyImageConstraintRow,
+    OntologyImageFeatureRow, OntologyImageModelRow, OntologyImageProvenanceRow,
+    OntologyImageQueryRow, OntologyRuntimeMode,
 };

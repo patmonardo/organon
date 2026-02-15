@@ -10,7 +10,6 @@
 /// <reference types="node" />
 
 import { tsjsonInvoke } from './_tsjson';
-import { asFormDbApplicationRecord } from './_tsjson';
 
 export function astarStreamDemo(): void {
   const user = { username: 'alice', isAdmin: true };
@@ -27,7 +26,8 @@ export function astarStreamDemo(): void {
   //
   // Shortest 0→5: 0→1→2→5 (cost 4.0) or 0→1→4→5 (cost 4.0)
   const batch = [
-    asFormDbApplicationRecord({
+    {
+      kind: 'ApplicationForm',
       facade: 'graph_store',
       op: 'put',
       user,
@@ -48,8 +48,9 @@ export function astarStreamDemo(): void {
           { type: 'ROAD', source: 4, target: 5, properties: { weight: 1.0 } },
         ],
       },
-    }),
-    asFormDbApplicationRecord({
+    },
+    {
+      kind: 'ApplicationForm',
       facade: 'algorithms',
       op: 'astar',
       mode: 'stream',
@@ -62,14 +63,14 @@ export function astarStreamDemo(): void {
       heuristic: 'manhattan',
       direction: 'outgoing',
       concurrency: 1,
-    }),
+    },
   ];
 
   const resp = tsjsonInvoke(batch);
   // eslint-disable-next-line no-console
   console.log('batch.response:', resp);
 
-  const result = Array.isArray(resp) ? ((resp[1] as any)?.data ?? {}) : {};
+  const result = (resp as any[])?.[1]?.data ?? {};
   // eslint-disable-next-line no-console
   console.dir(result, { depth: null });
 }

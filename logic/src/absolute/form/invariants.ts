@@ -131,7 +131,7 @@ export const EventMetaSchema = z
     factStore: FactStoreInfoSchema.optional(),
     dialectic: DialecticalInfoSchema.optional(),
   })
-  .passthrough();
+  .catchall(z.unknown());
 
 export const TraceEventSchema = z
   .object({
