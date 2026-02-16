@@ -1,329 +1,216 @@
-/**
- * Existence Syllogism IR: Dialectic Pseudo-Code for Syllogism of Existence
- *
- * Architecture: CPU Inference Engine (Representation / Disambiguation)
- * Section: C. THE CONCEPT - I. SUBJECTIVITY - C. The Syllogism - A. Syllogism of Existence
- *
- * Covers the dialectical movement:
- * - First Figure (S-P-U): Singular emerges into existence through particularity
- * - Second Figure (P-S-U): Negative unity, singular as middle
- * - Third Figure (S-U-P): Reciprocal mediation, abstract universal
- * - Fourth Figure (U-U-U): Mathematical syllogism, quantitative equality
- * - Transition to Syllogism of Reflection
- *
- * The CPU's inference engine - holds representation, disambiguates GPU processes
- */
-
-import type {
-  DialecticState,
-  DialecticIR,
-} from '@schema/dialectic';
+import type { DialecticIR, DialecticState } from '@schema/dialectic';
+import { EXISTENCE_SYLLOGISM_TOPIC_MAP } from './sources/existence-topic-map';
 
 const state1: DialecticState = {
   id: 'syl-exist-1',
-  title: 'First figure S-P-U — singular emerges into existence',
-  concept: 'FirstFigureSPU',
+  title: 'Immediate formal syllogism S-P-U',
+  concept: 'ImmediateFormalSyllogism',
   phase: 'subject',
-
   moments: [
     {
-      name: 'SPUSchema',
-      definition: 'S-P-U general schema, particularity as middle term',
+      name: 'particularMiddle',
+      definition:
+        'Particularity is immediate middle connecting singular and universal',
       type: 'determination',
     },
     {
-      name: 'singularEmerges',
-      definition: 'Singular emerges through particularity into existence (universality)',
-      type: 'process',
-      relation: 'mediates',
-      relatedTo: 'SPUSchema',
-    },
-    {
-      name: 'allThingsAreSyllogism',
-      definition: 'All things are syllogism - universal united through particularity with singularity',
-      type: 'determination',
+      name: 'formalContingency',
+      definition:
+        'As merely formal arrangement, mediation remains contingent and externally arranged',
+      type: 'negation',
+      relation: 'contains',
+      relatedTo: 'particularMiddle',
     },
   ],
-
   invariants: [
     {
       id: 'syl-exist-1-inv-1',
-      constraint: 'middle = particularity',
-      predicate: 'equals(middle, particularity)',
+      constraint: 'first schema is S-P-U',
+      predicate: 'equals(schema, SPU)',
     },
     {
       id: 'syl-exist-1-inv-2',
-      constraint: 'singular.connects(universal) = via(particularity)',
-      predicate: 'connects(singular, universal, particularity)',
+      constraint: 'formal syllogism requires further mediating development',
+      predicate: 'requiresFurtherMediation(formalSyllogism)',
     },
   ],
-
   forces: [
     {
       id: 'syl-exist-1-force-1',
-      description: 'First figure drives toward second figure',
+      description:
+        'Contingent formalism drives to negative mediation and inversion of figures',
       type: 'negation',
-      trigger: 'mediation.contingent = true',
-      effect: 'secondFigure.emerges = true',
+      trigger: 'middle.formal = true',
+      effect: 'figureDevelopment.emerges = true',
       targetState: 'syl-exist-14',
     },
   ],
-
   transitions: [
     {
       id: 'syl-exist-1-trans-1',
       from: 'syl-exist-1',
       to: 'syl-exist-14',
       mechanism: 'negation',
-      description: 'From first to second figure',
+      description: 'From first immediate figure to developed figure movement',
     },
   ],
-
   nextStates: ['syl-exist-14'],
-  previousStates: ['concept-judgment-ir'],
-
+  previousStates: ['conc-14'],
   provenance: {
     topicMapId: 'syl-exist-1-introduction-immediate',
-    lineRange: { start: 4, end: 210 },
-    section: 'First Figure',
+    lineRange: { start: 4, end: 36 },
+    section: 'The Syllogism of Existence',
     order: 1,
   },
-
-  description: 'S-P-U schema. Singular emerges through particularity into existence. All things are syllogism. Premises need proof (infinite progression, bad infinity). Contingency and contradiction.',
+  description: EXISTENCE_SYLLOGISM_TOPIC_MAP.entries[0]?.description,
+  keyPoints: EXISTENCE_SYLLOGISM_TOPIC_MAP.entries[0]?.keyPoints,
 };
 
 const state2: DialecticState = {
   id: 'syl-exist-14',
-  title: 'Second figure P-S-U — negative unity, singular as middle',
-  concept: 'SecondFigurePSU',
+  title: 'Figure development and reciprocal presupposition',
+  concept: 'FigureDevelopment',
   phase: 'subject',
-
   moments: [
     {
-      name: 'PSUSchema',
-      definition: 'P-S-U, singular as middle term',
-      type: 'determination',
+      name: 'negativeMediation',
+      definition:
+        'Second and third figures expose mediation as negative and reciprocally presupposing',
+      type: 'mediation',
     },
     {
-      name: 'negativeUnity',
-      definition: 'Mediation contains negative moment, sublation of immediacy',
-      type: 'negation',
+      name: 'formalTruthCrisis',
+      definition:
+        'No single figure secures total conceptual mediation on its own',
+      type: 'contradiction',
       relation: 'contains',
-      relatedTo: 'PSUSchema',
-    },
-    {
-      name: 'particularConclusion',
-      definition: 'Conclusion can only be particular (positive and negative)',
-      type: 'determination',
+      relatedTo: 'negativeMediation',
     },
   ],
-
   invariants: [
     {
       id: 'syl-exist-14-inv-1',
-      constraint: 'middle = singularity',
-      predicate: 'equals(middle, singularity)',
+      constraint:
+        'figure transitions expose insufficiency of isolated middle-term fixation',
+      predicate: 'insufficient(isolatedMiddleFixation)',
     },
     {
       id: 'syl-exist-14-inv-2',
-      constraint: 'mediation = negativeUnity',
-      predicate: 'equals(mediation, negativeUnity)',
+      constraint:
+        'mediation must become self-referring rather than externally ordered',
+      predicate: 'mustBecome(mediation, selfReferring)',
     },
   ],
-
   forces: [
     {
       id: 'syl-exist-14-force-1',
-      description: 'Second figure drives toward third figure',
-      type: 'mediation',
-      trigger: 'singularity.selfSublating = true',
-      effect: 'thirdFigure.emerges = true',
-      targetState: 'syl-exist-20',
+      description:
+        'Reciprocal presupposition resolves toward reflected mediation',
+      type: 'sublation',
+      trigger: 'figures.reciprocallyPresuppose = true',
+      effect: 'reflectionMediation.emerges = true',
+      targetState: 'syl-exist-25',
     },
   ],
-
   transitions: [
     {
       id: 'syl-exist-14-trans-1',
       from: 'syl-exist-14',
-      to: 'syl-exist-20',
-      mechanism: 'mediation',
-      description: 'From second to third figure',
+      to: 'syl-exist-25',
+      mechanism: 'sublation',
+      description: 'From figure contradiction to reflected mediation',
     },
   ],
-
-  nextStates: ['syl-exist-20'],
+  nextStates: ['syl-exist-25'],
   previousStates: ['syl-exist-1'],
-
   provenance: {
     topicMapId: 'syl-exist-14-second-figure',
     lineRange: { start: 486, end: 670 },
     section: 'Second Figure',
-    order: 2,
+    order: 14,
   },
-
-  description: 'P-S-U, singular as middle. Negative unity, sublation of immediacy. Conclusion necessarily particular. Points beyond to mediation by means of universal.',
+  description: EXISTENCE_SYLLOGISM_TOPIC_MAP.entries[13]?.description,
+  keyPoints: EXISTENCE_SYLLOGISM_TOPIC_MAP.entries[13]?.keyPoints,
 };
 
 const state3: DialecticState = {
-  id: 'syl-exist-20',
-  title: 'Third figure S-U-P — reciprocal mediation, abstract universal',
-  concept: 'ThirdFigureSUP',
+  id: 'syl-exist-25',
+  title: 'Existence syllogism passes to reflection syllogism',
+  concept: 'TransitionToReflectionSyllogism',
   phase: 'subject',
-
   moments: [
     {
-      name: 'SUPSchema',
-      definition: 'S-U-P, universal as middle term',
-      type: 'determination',
+      name: 'mediationThroughConcreteIdentity',
+      definition:
+        'Mediation is grounded in concrete identity of determinacies, not isolated qualitative middle',
+      type: 'reflection',
     },
     {
-      name: 'reciprocalMediation',
-      definition: 'Each mediation but not totality, reciprocal presupposing',
-      type: 'mediation',
-      relation: 'contains',
-      relatedTo: 'SUPSchema',
-    },
-    {
-      name: 'abstractUniversal',
-      definition: 'Middle is abstract universal, extremes not contained according essential determinateness',
-      type: 'negation',
-    },
-  ],
-
-  invariants: [
-    {
-      id: 'syl-exist-20-inv-1',
-      constraint: 'middle = universality',
-      predicate: 'equals(middle, universality)',
-    },
-    {
-      id: 'syl-exist-20-inv-2',
-      constraint: 'universal.abstract = true',
-      predicate: 'isAbstract(universal)',
-    },
-  ],
-
-  forces: [
-    {
-      id: 'syl-exist-20-force-1',
-      description: 'Third figure drives toward fourth figure',
-      type: 'negation',
-      trigger: 'universal.abstract = true',
-      effect: 'fourthFigure.emerges = true',
-      targetState: 'syl-exist-23',
-    },
-  ],
-
-  transitions: [
-    {
-      id: 'syl-exist-20-trans-1',
-      from: 'syl-exist-20',
-      to: 'syl-exist-23',
-      mechanism: 'negation',
-      description: 'From third to fourth figure',
-    },
-  ],
-
-  nextStates: ['syl-exist-23'],
-  previousStates: ['syl-exist-14'],
-
-  provenance: {
-    topicMapId: 'syl-exist-20-third-figure',
-    lineRange: { start: 674, end: 783 },
-    section: 'Third Figure',
-    order: 3,
-  },
-
-  description: 'S-U-P, universal as middle. Reciprocal mediation, truth of formal syllogism. Middle is abstract universal. Conclusion necessarily negative. Formalism.',
-};
-
-const state4: DialecticState = {
-  id: 'syl-exist-23',
-  title: 'Fourth figure U-U-U — mathematical syllogism',
-  concept: 'FourthFigureUUU',
-  phase: 'subject',
-
-  moments: [
-    {
-      name: 'UUUSchema',
-      definition: 'U-U-U, mathematical syllogism - if two equal to third, then equal to each other',
-      type: 'determination',
-    },
-    {
-      name: 'quantitativeEquality',
-      definition: 'Abstracts from qualitative, only quantitative equality',
-      type: 'negation',
-      relation: 'contains',
-      relatedTo: 'UUUSchema',
-    },
-    {
-      name: 'noConceptualComprehension',
-      definition: 'No conceptual comprehension, self-evidence rests on indigence and abstractness',
-      type: 'negation',
-    },
-  ],
-
-  invariants: [
-    {
-      id: 'syl-exist-23-inv-1',
-      constraint: 'middle.determination = none',
-      predicate: 'equals(middle.determination, none)',
-    },
-    {
-      id: 'syl-exist-23-inv-2',
-      constraint: 'equality = quantitative',
-      predicate: 'equals(equality, quantitative)',
-    },
-  ],
-
-  forces: [
-    {
-      id: 'syl-exist-23-force-1',
-      description: 'Fourth figure drives toward syllogism of reflection',
+      name: 'selfReferringMediation',
+      definition:
+        'Mediation becomes mediation-of-mediation, a turning-back totality',
       type: 'passover',
-      trigger: 'mediation.concrete = true',
-      effect: 'syllogismOfReflection.emerges = true',
+      relation: 'transitions',
+      relatedTo: 'mediationThroughConcreteIdentity',
+    },
+  ],
+  invariants: [
+    {
+      id: 'syl-exist-25-inv-1',
+      constraint: 'formalism of single middle determinateness is sublated',
+      predicate: 'sublated(singleMiddleFormalism)',
+    },
+    {
+      id: 'syl-exist-25-inv-2',
+      constraint: 'result is positive reflection totality',
+      predicate: 'equals(result, positiveReflectionTotality)',
+    },
+  ],
+  forces: [
+    {
+      id: 'syl-exist-25-force-1',
+      description:
+        'Self-referring mediation hands off to syllogism of reflection',
+      type: 'passover',
+      trigger: 'reflectionMediation.totalized = true',
+      effect: 'reflectionSyllogism.emerges = true',
       targetState: 'syl-refl-1',
     },
   ],
-
   transitions: [
     {
-      id: 'syl-exist-23-trans-1',
-      from: 'syl-exist-23',
+      id: 'syl-exist-25-trans-1',
+      from: 'syl-exist-25',
       to: 'syl-refl-1',
       mechanism: 'passover',
       description: 'From syllogism of existence to syllogism of reflection',
     },
   ],
-
   nextStates: ['syl-refl-1'],
-  previousStates: ['syl-exist-20'],
-
+  previousStates: ['syl-exist-14'],
   provenance: {
-    topicMapId: 'syl-exist-23-fourth-mathematical',
-    lineRange: { start: 787, end: 896 },
+    topicMapId: 'syl-exist-25-each-determination',
+    lineRange: { start: 871, end: 896 },
     section: 'Fourth Figure',
-    order: 4,
+    order: 25,
   },
-
-  description: 'U-U-U, mathematical syllogism. Quantitative equality, abstracts from qualitative. Mediation based on mediation, circle of reciprocal presupposing. Passed over into syllogism of reflection.',
+  description: EXISTENCE_SYLLOGISM_TOPIC_MAP.entries[24]?.description,
+  keyPoints: EXISTENCE_SYLLOGISM_TOPIC_MAP.entries[24]?.keyPoints,
 };
 
 export const existenceSyllogismIR: DialecticIR = {
   id: 'existence-syllogism-ir',
-  title: 'Existence Syllogism IR: S-P-U, P-S-U, S-U-P, U-U-U',
-  section: 'C. THE CONCEPT - I. SUBJECTIVITY - C. The Syllogism - A. Syllogism of Existence',
-  states: [state1, state2, state3, state4],
+  title:
+    'Existence Syllogism IR: Immediate Form, Figure Development, Reflection Handoff',
+  section: 'CONCEPT - SUBJECTIVITY - C. Syllogism - A. Syllogism of Existence',
+  states: [state1, state2, state3],
   metadata: {
     sourceFile: 'existence.txt',
-    totalStates: 4,
+    totalStates: 3,
     cpuGpuMapping: {
       'syl-exist-1': 'subject',
       'syl-exist-14': 'subject',
-      'syl-exist-20': 'subject',
-      'syl-exist-23': 'subject',
+      'syl-exist-25': 'subject',
     },
   },
 };
@@ -331,6 +218,5 @@ export const existenceSyllogismIR: DialecticIR = {
 export const existenceSyllogismStates = {
   'syl-exist-1': state1,
   'syl-exist-14': state2,
-  'syl-exist-20': state3,
-  'syl-exist-23': state4,
+  'syl-exist-25': state3,
 };

@@ -1,174 +1,213 @@
-/**
- * Means IR: Dialectic Pseudo-Code for The Means
- *
- * Architecture: GPU Object (Self-Executing Reality)
- * Section: C. THE CONCEPT - II. OBJECTIVITY - C. Teleology - B. The Means
- *
- * Covers the dialectical movement:
- * - Means as Middle Term: Finitude of purpose, external existence
- * - Means as Mechanical Object: Concept and objectivity externally linked
- * - Means as Totality: Penetrable by purpose, powerless and serving
- *
- * The GPU's purposive means - middle term, mechanical, penetrable
- */
-
-import type {
-  DialecticState,
-  DialecticIR,
-} from '@schema/dialectic';
+import type { DialecticIR, DialecticState } from '@schema/dialectic';
+import { meansTopicMap } from './souces/means-topic-map';
 
 const state1: DialecticState = {
   id: 'means-1',
-  title: 'Means as middle term — finitude of purpose',
+  title: 'Means as formal middle term',
   concept: 'MeansAsMiddleTerm',
   phase: 'object',
-
   moments: [
     {
-      name: 'meansAsMiddleTerm',
-      definition: 'Means is middle term of syllogism, purpose unites with objectivity through means',
+      name: 'formalMiddleTerm',
+      definition:
+        'Means mediates purpose and objectivity as a first external linkage',
       type: 'mediation',
     },
     {
-      name: 'finitudeOfPurpose',
-      definition: 'Purpose in need of means because finite, external existence indifferent to purpose',
+      name: 'finitudeExposed',
+      definition:
+        'Need for means exposes purpose as finite against indifferent externality',
       type: 'negation',
       relation: 'contains',
-      relatedTo: 'meansAsMiddleTerm',
+      relatedTo: 'formalMiddleTerm',
     },
   ],
-
   invariants: [
     {
       id: 'means-1-inv-1',
-      constraint: 'means = middleTerm',
-      predicate: 'equals(means, middleTerm)',
+      constraint: 'means is middle term of purposive syllogism',
+      predicate: 'equals(means, middleTerm(purposiveSyllogism))',
     },
     {
       id: 'means-1-inv-2',
-      constraint: 'purpose.finite = true',
-      predicate: 'isFinite(purpose)',
+      constraint: 'means remains first as external objectivity',
+      predicate: 'initiallyExternal(means)',
     },
   ],
-
   forces: [
     {
       id: 'means-1-force-1',
-      description: 'Means drives toward mechanical object',
+      description: 'Formal mediation develops into mechanical means',
       type: 'mediation',
-      trigger: 'means.formalMiddleTerm = true',
-      effect: 'mechanicalObject.emerges = true',
+      trigger: 'middleTerm.externalLinkage = explicit',
+      effect: 'mechanicalMeans.emerges = true',
       targetState: 'means-4',
     },
   ],
-
   transitions: [
     {
       id: 'means-1-trans-1',
       from: 'means-1',
       to: 'means-4',
       mechanism: 'mediation',
-      description: 'From middle term to mechanical object',
+      description: 'From formal middle term to mechanical means',
     },
   ],
-
   nextStates: ['means-4'],
-  previousStates: ['teleology-ir'],
-
+  previousStates: ['tele-6'],
   provenance: {
     topicMapId: 'means-2',
     lineRange: { start: 27, end: 78 },
     section: 'B. THE MEANS',
     order: 1,
   },
-
-  description: 'Means is middle term of syllogism. Purpose unites with objectivity through means. Purpose finite, needs means. Means is formal middle term, external to extremes.',
+  description: meansTopicMap[1]?.description,
+  keyPoints: meansTopicMap[1]?.keyPoints,
 };
 
 const state2: DialecticState = {
   id: 'means-4',
-  title: 'Means as totality — penetrable by purpose, powerless and serving',
-  concept: 'MeansAsTotality',
+  title: 'Means as mechanical object and concept-totality',
+  concept: 'MechanicalMeans',
   phase: 'object',
-
   moments: [
     {
-      name: 'mechanicalObject',
-      definition: 'Concept and objectivity externally linked, means is mechanical object',
+      name: 'mechanicalObjectMedius',
+      definition:
+        'Means appears as mechanical object where concept and objectivity are externally linked',
       type: 'determination',
     },
     {
-      name: 'penetrableByPurpose',
-      definition: 'Means is totality of concept, utterly penetrable by purpose, no resistance',
-      type: 'mediation',
-      relation: 'contains',
-      relatedTo: 'mechanicalObject',
-    },
-    {
-      name: 'powerlessAndServing',
-      definition: 'Object has character of being powerless and serving purpose',
-      type: 'negation',
+      name: 'penetrableTotality',
+      definition:
+        'As implicit concept-totality, the means is penetrable and serviceable to purpose',
+      type: 'reflection',
+      relation: 'transforms',
+      relatedTo: 'mechanicalObjectMedius',
     },
   ],
-
   invariants: [
     {
       id: 'means-4-inv-1',
-      constraint: 'means = mechanicalObject',
-      predicate: 'equals(means, mechanicalObject)',
+      constraint: 'means is objective yet conceptually pervious',
+      predicate: 'and(objective(means), perviousToConcept(means))',
     },
     {
       id: 'means-4-inv-2',
-      constraint: 'means.penetrableByPurpose = true',
-      predicate: 'isPenetrableByPurpose(means)',
+      constraint: 'object side is rendered powerless before purpose',
+      predicate: 'renderedPowerless(objectSide, purpose)',
     },
   ],
-
   forces: [
     {
       id: 'means-4-force-1',
-      description: 'Means drives toward realized purpose',
-      type: 'mediation',
-      trigger: 'activity.throughMeans = true',
-      effect: 'realizedPurpose.emerges = true',
-      targetState: 'realized-1',
+      description:
+        'Means-totality drives purposive activity against presupposition',
+      type: 'reflection',
+      trigger: 'purpose.activityThroughMeans = explicit',
+      effect: 'meansActivity.emerges = true',
+      targetState: 'means-6',
     },
   ],
-
   transitions: [
     {
       id: 'means-4-trans-1',
       from: 'means-4',
-      to: 'realized-1',
-      mechanism: 'mediation',
-      description: 'From means to realized purpose',
+      to: 'means-6',
+      mechanism: 'reflection',
+      description: 'From mechanical means to means-activity',
     },
   ],
-
-  nextStates: ['realized-1'],
+  nextStates: ['means-6'],
   previousStates: ['means-1'],
-
   provenance: {
     topicMapId: 'means-5',
-    lineRange: { start: 125, end: 181 },
+    lineRange: { start: 125, end: 162 },
     section: 'B. THE MEANS',
     order: 2,
   },
+  description: meansTopicMap[4]?.description,
+  keyPoints: meansTopicMap[4]?.keyPoints,
+};
 
-  description: 'Means is mechanical object, concept and objectivity externally linked. Means is totality of concept, penetrable by purpose. Object powerless and serving. Activity through means directed against presupposition.',
+const state3: DialecticState = {
+  id: 'means-6',
+  title: 'Activity through means remains against presupposition',
+  concept: 'TransitionToRealizedPurpose',
+  phase: 'object',
+  moments: [
+    {
+      name: 'activityAgainstPresupposition',
+      definition:
+        'Purpose, now active, still confronts presupposed external objectivity',
+      type: 'process',
+    },
+    {
+      name: 'realizationBridge',
+      definition:
+        'The means-activity becomes the immediate bridge into realized purpose',
+      type: 'passover',
+      relation: 'transitions',
+      relatedTo: 'activityAgainstPresupposition',
+    },
+  ],
+  invariants: [
+    {
+      id: 'means-6-inv-1',
+      constraint:
+        'objectivity is within concept yet still external as presupposed',
+      predicate:
+        'and(withinConcept(objectivity), stillPresupposedExternal(objectivity))',
+    },
+    {
+      id: 'means-6-inv-2',
+      constraint: 'purpose is no longer mere impulse but explicit activity',
+      predicate: 'explicitActivity(purpose)',
+    },
+  ],
+  forces: [
+    {
+      id: 'means-6-force-1',
+      description: 'Means mediation passes over into realized purpose process',
+      type: 'passover',
+      trigger: 'means.activityComplete = true',
+      effect: 'realizedPurpose.emerges = true',
+      targetState: 'realized-2',
+    },
+  ],
+  transitions: [
+    {
+      id: 'means-6-trans-1',
+      from: 'means-6',
+      to: 'realized-2',
+      mechanism: 'passover',
+      description: 'From means to realized purpose',
+    },
+  ],
+  nextStates: ['realized-2'],
+  previousStates: ['means-4'],
+  provenance: {
+    topicMapId: 'means-6',
+    lineRange: { start: 163, end: 181 },
+    section: 'B. THE MEANS',
+    order: 3,
+  },
+  description: meansTopicMap[5]?.description,
+  keyPoints: meansTopicMap[5]?.keyPoints,
 };
 
 export const meansIR: DialecticIR = {
   id: 'means-ir',
-  title: 'Means IR: Middle Term, Mechanical Object, Totality',
-  section: 'C. THE CONCEPT - II. OBJECTIVITY - C. Teleology - B. The Means',
-  states: [state1, state2],
+  title: 'Means IR: Formal Middle, Mechanical Means, Realization Bridge',
+  section: 'CONCEPT - OBJECTIVITY - C. Teleology - B. The Means',
+  states: [state1, state2, state3],
   metadata: {
     sourceFile: 'means.txt',
-    totalStates: 2,
+    totalStates: 3,
     cpuGpuMapping: {
       'means-1': 'object',
       'means-4': 'object',
+      'means-6': 'object',
     },
   },
 };
@@ -176,4 +215,5 @@ export const meansIR: DialecticIR = {
 export const meansStates = {
   'means-1': state1,
   'means-4': state2,
+  'means-6': state3,
 };

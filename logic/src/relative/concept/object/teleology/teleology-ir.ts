@@ -1,185 +1,216 @@
-/**
- * Teleology IR: Dialectic Pseudo-Code for Subjective Purpose
- *
- * Architecture: GPU Object (Self-Executing Reality)
- * Section: C. THE CONCEPT - II. OBJECTIVITY - C. Teleology - A. Subjective Purpose
- *
- * Covers the dialectical movement:
- * - Purpose Rediscovered: Exempt from transition, rational in concrete existence
- * - Purpose as Syllogism: Self-equal universal, self-determining
- * - Purpose as Finite: Has objective world as presupposition
- * - Realization of Purpose: Sublating presupposition, unification with objective being
- *
- * The GPU's purposive object - self-determining, realizing itself
- */
-
-import type {
-  DialecticState,
-  DialecticIR,
-} from '@schema/dialectic';
+import type { DialecticIR, DialecticState } from '@schema/dialectic';
+import { subjectiveTopicMap } from './souces/subjective-topic-map';
 
 const state1: DialecticState = {
   id: 'tele-1',
-  title: 'Purpose rediscovered — exempt from transition, rational in concrete existence',
+  title: 'Purpose rediscovered as objective-free concept',
   concept: 'SubjectivePurpose',
   phase: 'object',
-
   moments: [
     {
       name: 'purposeRediscovered',
-      definition: 'Purpose rediscovered in centrality and chemism, exempt from transition',
+      definition:
+        'In centrality and chemism the concept rediscovers itself as purposive unity',
       type: 'determination',
     },
     {
-      name: 'rationalInConcreteExistence',
-      definition: 'Purpose is rational in concrete existence, concrete concept holding objective difference in absolute unity',
-      type: 'determination',
+      name: 'rationalConcreteUnity',
+      definition:
+        'Purpose is concrete rationality holding objective difference in absolute unity',
+      type: 'mediation',
       relation: 'contains',
       relatedTo: 'purposeRediscovered',
     },
-    {
-      name: 'essentialStrivingAndImpulse',
-      definition: 'Purpose is subjective concept as essential striving and impulse to posit itself externally',
-      type: 'process',
-    },
   ],
-
   invariants: [
     {
       id: 'tele-1-inv-1',
-      constraint: 'purpose.exemptFromTransition = true',
-      predicate: 'isExemptFromTransition(purpose)',
+      constraint: 'purpose is exempt from mere transition process',
+      predicate: 'exemptFromMereTransition(purpose)',
     },
     {
       id: 'tele-1-inv-2',
-      constraint: 'purpose = rationalInConcreteExistence',
+      constraint: 'purpose is rational in concrete existence',
       predicate: 'equals(purpose, rationalInConcreteExistence)',
     },
   ],
-
   forces: [
     {
       id: 'tele-1-force-1',
-      description: 'Purpose drives toward realization',
+      description: 'Purpose unfolds its inner syllogistic articulation',
       type: 'mediation',
-      trigger: 'purpose.striving = true',
-      effect: 'realization.emerges = true',
-      targetState: 'tele-2',
+      trigger: 'purpose.selfRepellingUnity = explicit',
+      effect: 'innerSyllogism.emerges = true',
+      targetState: 'tele-4',
     },
   ],
-
   transitions: [
     {
       id: 'tele-1-trans-1',
       from: 'tele-1',
-      to: 'tele-2',
+      to: 'tele-4',
       mechanism: 'mediation',
-      description: 'From subjective purpose to realization',
+      description: 'From rediscovered purpose to its inner syllogism',
     },
   ],
-
-  nextStates: ['tele-2'],
-  previousStates: ['chemism-ir'],
-
+  nextStates: ['tele-4'],
+  previousStates: ['chem-6'],
   provenance: {
     topicMapId: 'subjective-1',
-    lineRange: { start: 2, end: 73 },
+    lineRange: { start: 2, end: 50 },
     section: 'A. THE SUBJECTIVE PURPOSE',
     order: 1,
   },
-
-  description: 'Purpose rediscovered in centrality and chemism. Exempt from transition. Rational in concrete existence. Purpose is subjective concept as essential striving and impulse to posit itself externally. Essentially syllogism within.',
+  description: subjectiveTopicMap[0]?.description,
+  keyPoints: subjectiveTopicMap[0]?.keyPoints,
 };
 
 const state2: DialecticState = {
-  id: 'tele-2',
-  title: 'Realization of purpose — sublating presupposition, unification with objective being',
-  concept: 'RealizationOfPurpose',
+  id: 'tele-4',
+  title: 'Purpose as finite syllogism and presupposition',
+  concept: 'FiniteSubjectivePurpose',
   phase: 'object',
+  moments: [
+    {
+      name: 'innerSyllogism',
+      definition:
+        'Purpose is internally syllogistic as self-equal universality and singularizing negativity',
+      type: 'determination',
+    },
+    {
+      name: 'finitudeAsPresupposition',
+      definition:
+        'Purpose stands over against presupposed mechanical/chemical objectivity',
+      type: 'negation',
+      relation: 'contains',
+      relatedTo: 'innerSyllogism',
+    },
+  ],
+  invariants: [
+    {
+      id: 'tele-4-inv-1',
+      constraint: 'purpose is finite by objective presupposition',
+      predicate: 'finiteByObjectivePresupposition(purpose)',
+    },
+    {
+      id: 'tele-4-inv-2',
+      constraint: 'self-determining activity is immediately external to itself',
+      predicate: 'immediatelyExternal(selfDeterminingActivity)',
+    },
+  ],
+  forces: [
+    {
+      id: 'tele-4-force-1',
+      description: 'Finite purpose passes into realization movement',
+      type: 'reflection',
+      trigger: 'presupposition.mustBeSublated = true',
+      effect: 'realizationMovement.emerges = true',
+      targetState: 'tele-6',
+    },
+  ],
+  transitions: [
+    {
+      id: 'tele-4-trans-1',
+      from: 'tele-4',
+      to: 'tele-6',
+      mechanism: 'reflection',
+      description: 'From finite purposiveness to realization movement',
+    },
+  ],
+  nextStates: ['tele-6'],
+  previousStates: ['tele-1'],
+  provenance: {
+    topicMapId: 'subjective-3',
+    lineRange: { start: 75, end: 119 },
+    section: 'A. THE SUBJECTIVE PURPOSE',
+    order: 2,
+  },
+  description: subjectiveTopicMap[2]?.description,
+  keyPoints: subjectiveTopicMap[2]?.keyPoints,
+};
 
+const state3: DialecticState = {
+  id: 'tele-6',
+  title: 'Realization movement posits means',
+  concept: 'TransitionToMeans',
+  phase: 'object',
   moments: [
     {
       name: 'sublatingPresupposition',
-      definition: 'Movement directed at sublating presupposition, immediacy of object',
+      definition:
+        'Purpose negates immediate objectivity and posits it as concept-determined',
       type: 'sublation',
     },
     {
-      name: 'realizationOfPurpose',
-      definition: 'Realization is unification of objective being with purpose',
-      type: 'process',
-      relation: 'contains',
+      name: 'meansPositing',
+      definition:
+        'Self-determination is at once presupposing and therefore first posits means',
+      type: 'passover',
+      relation: 'transitions',
       relatedTo: 'sublatingPresupposition',
     },
-    {
-      name: 'impulseToRealization',
-      definition: 'Purpose is impulse to its realization, concept repels itself from itself',
-      type: 'process',
-    },
   ],
-
   invariants: [
     {
-      id: 'tele-2-inv-1',
-      constraint: 'purpose.movement = sublatingPresupposition',
-      predicate: 'equals(purpose.movement, sublatingPresupposition)',
-    },
-    {
-      id: 'tele-2-inv-2',
-      constraint: 'realization = unification(objectiveBeing, purpose)',
+      id: 'tele-6-inv-1',
+      constraint: 'realization is unification of objective being with purpose',
       predicate: 'equals(realization, unification(objectiveBeing, purpose))',
     },
+    {
+      id: 'tele-6-inv-2',
+      constraint: 'self-positing of purpose is simultaneously presupposing',
+      predicate: 'simultaneous(selfPositing(purpose), presupposing(purpose))',
+    },
   ],
-
   forces: [
     {
-      id: 'tele-2-force-1',
-      description: 'Realization of purpose transitions to Idea',
+      id: 'tele-6-force-1',
+      description: 'Realization of purpose opens the means stage',
       type: 'passover',
-      trigger: 'purpose.realized = true',
-      effect: 'idea.emerges = true',
-      targetState: 'idea-1',
+      trigger: 'purpose.activity = explicit',
+      effect: 'means.emerges = true',
+      targetState: 'means-1',
     },
   ],
-
   transitions: [
     {
-      id: 'tele-2-trans-1',
-      from: 'tele-2',
-      to: 'idea-1',
+      id: 'tele-6-trans-1',
+      from: 'tele-6',
+      to: 'means-1',
       mechanism: 'passover',
-      description: 'From teleology to Idea',
+      description: 'From subjective purpose to means',
     },
   ],
-
-  nextStates: ['idea-1'],
-  previousStates: ['tele-1'],
-
+  nextStates: ['means-1'],
+  previousStates: ['tele-4'],
   provenance: {
     topicMapId: 'subjective-4',
     lineRange: { start: 121, end: 164 },
     section: 'A. THE SUBJECTIVE PURPOSE',
-    order: 2,
+    order: 3,
   },
-
-  description: 'Movement of purpose directed at sublating presupposition. Realization is unification of objective being with purpose. Purpose is impulse to realization. Concept repels itself from itself. Posited as means.',
+  description: subjectiveTopicMap[3]?.description,
+  keyPoints: subjectiveTopicMap[3]?.keyPoints,
 };
 
 export const teleologyIR: DialecticIR = {
   id: 'teleology-ir',
-  title: 'Teleology IR: Subjective Purpose, Realization, Idea',
-  section: 'C. THE CONCEPT - II. OBJECTIVITY - C. Teleology - A. Subjective Purpose',
-  states: [state1, state2],
+  title: 'Teleology IR: Rediscovered Purpose, Finitude, Means Bridge',
+  section: 'CONCEPT - OBJECTIVITY - C. Teleology - A. Subjective Purpose',
+  states: [state1, state2, state3],
   metadata: {
     sourceFile: 'subjective.txt',
-    totalStates: 2,
+    totalStates: 3,
     cpuGpuMapping: {
       'tele-1': 'object',
-      'tele-2': 'object',
+      'tele-4': 'object',
+      'tele-6': 'object',
     },
   },
 };
 
 export const teleologyStates = {
   'tele-1': state1,
-  'tele-2': state2,
+  'tele-4': state2,
+  'tele-6': state3,
 };

@@ -67,7 +67,7 @@ const state1: DialecticState = {
     },
     {
       id: 'ess-1-inv-4',
-      constraint: 'movement.isBeing\'sOwnNature = true',
+      constraint: "movement.isBeing'sOwnNature = true",
       predicate: 'isBeingsOwnNature(movement)',
     },
   ],
@@ -95,7 +95,7 @@ const state1: DialecticState = {
   ],
 
   nextStates: ['ess-2'],
-  previousStates: [],
+  previousStates: ['becoming-essence-4'],
 
   provenance: {
     topicMapId: 'ess-1',
@@ -160,7 +160,8 @@ const state2: DialecticState = {
   forces: [
     {
       id: 'ess-2-force-1',
-      description: 'Dead emptiness of external abstraction drives toward absolute negativity',
+      description:
+        'Dead emptiness of external abstraction drives toward absolute negativity',
       type: 'negation',
       trigger: 'externalAbstraction.fails = true',
       effect: 'absoluteNegativity.sought = true',
@@ -174,7 +175,8 @@ const state2: DialecticState = {
       from: 'ess-2',
       to: 'ess-3',
       mechanism: 'negation',
-      description: 'From external abstraction to essence through its own negativity',
+      description:
+        'From external abstraction to essence through its own negativity',
     },
   ],
 
@@ -201,7 +203,8 @@ const state3: DialecticState = {
   moments: [
     {
       name: 'absoluteNegativity',
-      definition: 'Essence through its own negativity, infinite movement of being',
+      definition:
+        'Essence through its own negativity, infinite movement of being',
       type: 'negation',
     },
     {
@@ -328,7 +331,8 @@ const state4: DialecticState = {
   forces: [
     {
       id: 'ess-4-force-1',
-      description: 'Repelling of itself from itself drives comparison with quality/quantity',
+      description:
+        'Repelling of itself from itself drives comparison with quality/quantity',
       type: 'reflection',
       trigger: 'negatively.selfRefers = true',
       effect: 'comparisonEmerges = {quality, quantity}',
@@ -417,7 +421,8 @@ const state5: DialecticState = {
   forces: [
     {
       id: 'ess-5-force-1',
-      description: 'Reflection as positing negativity drives toward middle-term role',
+      description:
+        'Reflection as positing negativity drives toward middle-term role',
       type: 'mediation',
       trigger: 'reflection.posits = determinations',
       effect: 'middleTermEmerges = true',
@@ -483,7 +488,8 @@ const state6: DialecticState = {
     },
     {
       id: 'ess-6-inv-2',
-      constraint: 'essence = beingInAndForItself.inDeterminationOfBeingInItself',
+      constraint:
+        'essence = beingInAndForItself.inDeterminationOfBeingInItself',
       predicate: 'is(essence, beingInAndForItself(beingInItself))',
     },
     {
@@ -501,7 +507,8 @@ const state6: DialecticState = {
   forces: [
     {
       id: 'ess-6-force-1',
-      description: 'Middle-term role prepares threefold structure: shine, appearance, actuality',
+      description:
+        'Middle-term role prepares threefold structure: shine, appearance, actuality',
       type: 'passover',
       trigger: 'movement.complete = true',
       effect: 'threefoldStructure.emerges = true',

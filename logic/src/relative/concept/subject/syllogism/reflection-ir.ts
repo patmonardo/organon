@@ -1,68 +1,49 @@
-/**
- * Reflection Syllogism IR: Dialectic Pseudo-Code for Syllogism of Reflection
- *
- * Architecture: CPU Inference Engine (Representation / Disambiguation)
- * Section: C. THE CONCEPT - I. SUBJECTIVITY - C. The Syllogism - B. Syllogism of Reflection
- *
- * Covers the dialectical movement:
- * - Allness: Understanding in perfection, external universality, mere illusion
- * - Induction: Singularity as completed, experience, bad infinity
- * - Analogy: Singular in universal nature, essential universality
- * - Transition to Syllogism of Necessity
- *
- * Middle term as totality, sublated abstractness
- */
-
-import type {
-  DialecticState,
-  DialecticIR,
-} from '@schema/dialectic';
+import type { DialecticIR, DialecticState } from '@schema/dialectic';
+import { REFLECTION_SYLLOGISM_TOPIC_MAP } from './sources/reflection-topic-map';
 
 const state1: DialecticState = {
   id: 'syl-refl-1',
-  title: 'Allness — understanding in perfection, mere illusion',
+  title: 'Allness as externally reflected universality',
   concept: 'SyllogismOfAllness',
   phase: 'subject',
-
   moments: [
     {
-      name: 'allness',
-      definition: 'Middle as "all", understanding in perfection, external universality',
+      name: 'allnessMiddle',
+      definition:
+        "Middle term appears as allness, understanding's perfected but external universality",
       type: 'determination',
     },
     {
-      name: 'mereIllusion',
-      definition: 'Major premise presupposes conclusion, mere illusion',
+      name: 'presuppositionalIllusion',
+      definition: 'Major premise presupposes what conclusion should establish',
       type: 'negation',
       relation: 'contains',
-      relatedTo: 'allness',
+      relatedTo: 'allnessMiddle',
     },
   ],
-
   invariants: [
     {
       id: 'syl-refl-1-inv-1',
-      constraint: 'middle = allness',
-      predicate: 'equals(middle, allness)',
+      constraint: 'allness remains external universality of reflection',
+      predicate: 'equals(allness, externalUniversalityReflection)',
     },
     {
       id: 'syl-refl-1-inv-2',
-      constraint: 'major.presupposes = conclusion',
-      predicate: 'presupposes(major, conclusion)',
+      constraint: 'middle still relies on subjective singular basis',
+      predicate: 'reliesOn(middle, subjectiveSingularity)',
     },
   ],
-
   forces: [
     {
       id: 'syl-refl-1-force-1',
-      description: 'Allness drives toward induction',
+      description:
+        'Presuppositional form drives to inductive completion attempt',
       type: 'mediation',
-      trigger: 'major.presupposesConclusion = true',
+      trigger: 'allness.illusionExposed = true',
       effect: 'induction.emerges = true',
       targetState: 'syl-refl-8',
     },
   ],
-
   transitions: [
     {
       id: 'syl-refl-1-trans-1',
@@ -72,170 +53,153 @@ const state1: DialecticState = {
       description: 'From allness to induction',
     },
   ],
-
   nextStates: ['syl-refl-8'],
-  previousStates: ['existence-syllogism-ir'],
-
+  previousStates: ['syl-exist-25'],
   provenance: {
     topicMapId: 'syl-refl-1-introduction-sublated',
-    lineRange: { start: 4, end: 185 },
-    section: 'The Syllogism of Allness',
+    lineRange: { start: 4, end: 30 },
+    section: 'The Syllogism of Reflection',
     order: 1,
   },
-
-  description: 'Allness - understanding in perfection. Middle as "all". Major premise presupposes conclusion. Mere illusion. Essence rests on subjective singularity.',
+  description: REFLECTION_SYLLOGISM_TOPIC_MAP.entries[0]?.description,
+  keyPoints: REFLECTION_SYLLOGISM_TOPIC_MAP.entries[0]?.keyPoints,
 };
 
 const state2: DialecticState = {
   id: 'syl-refl-8',
-  title: 'Induction — singularity as completed, bad infinity',
-  concept: 'SyllogismOfInduction',
+  title: 'Induction and analogy as reflective completion',
+  concept: 'InductionAnalogyMovement',
   phase: 'subject',
-
   moments: [
     {
-      name: 'induction',
-      definition: 'U-S-P, singularity as completed, syllogism of experience',
+      name: 'inductiveCompletion',
+      definition:
+        'Induction gathers singulars under universal but remains task-like and infinite',
       type: 'determination',
     },
     {
-      name: 'badInfinity',
-      definition: 'Progression into bad infinity, perpetual ought, problematic conclusion',
-      type: 'negation',
-      relation: 'contains',
-      relatedTo: 'induction',
-    },
-    {
-      name: 'presupposesGenus',
-      definition: 'Presupposes genus in and for itself, presupposes conclusion',
-      type: 'mediation',
+      name: 'analogicalEssentiality',
+      definition:
+        'Analogy raises middle toward essential universality while retaining reflective externality',
+      type: 'reflection',
+      relation: 'transforms',
+      relatedTo: 'inductiveCompletion',
     },
   ],
-
   invariants: [
     {
       id: 'syl-refl-8-inv-1',
-      constraint: 'schema = U-S-P',
-      predicate: 'equals(schema, USP)',
+      constraint: 'induction presupposes genus/conclusion as in-itself true',
+      predicate: 'presupposes(induction, genusConclusionTruth)',
     },
     {
       id: 'syl-refl-8-inv-2',
-      constraint: 'induction.presupposes = genus',
-      predicate: 'presupposes(induction, genus)',
+      constraint:
+        'analogy expresses essential universality not mere empirical mark',
+      predicate: 'not(mereEmpiricalMark(analogyMiddle))',
     },
   ],
-
   forces: [
     {
       id: 'syl-refl-8-force-1',
-      description: 'Induction drives toward analogy',
-      type: 'mediation',
-      trigger: 'singularity.immediatelyIdentical = universality',
-      effect: 'analogy.emerges = true',
-      targetState: 'syl-refl-12',
+      description: 'Analogical form demands sublation of singular immediacy',
+      type: 'sublation',
+      trigger: 'analogy.presuppositionBecomesExplicit = true',
+      effect: 'necessityBridge.emerges = true',
+      targetState: 'syl-refl-16',
     },
   ],
-
   transitions: [
     {
       id: 'syl-refl-8-trans-1',
       from: 'syl-refl-8',
-      to: 'syl-refl-12',
-      mechanism: 'mediation',
-      description: 'From induction to analogy',
+      to: 'syl-refl-16',
+      mechanism: 'sublation',
+      description: 'From induction/analogy to necessity transition',
     },
   ],
-
-  nextStates: ['syl-refl-12'],
+  nextStates: ['syl-refl-16'],
   previousStates: ['syl-refl-1'],
-
   provenance: {
     topicMapId: 'syl-refl-8-induction-schema',
-    lineRange: { start: 189, end: 320 },
+    lineRange: { start: 189, end: 215 },
     section: 'The Syllogism of Induction',
-    order: 2,
+    order: 8,
   },
-
-  description: 'Induction U-S-P. Singularity as completed. Syllogism of experience. Bad infinity, perpetual ought. Presupposes genus in and for itself. Truth is analogy.',
+  description: REFLECTION_SYLLOGISM_TOPIC_MAP.entries[7]?.description,
+  keyPoints: REFLECTION_SYLLOGISM_TOPIC_MAP.entries[7]?.keyPoints,
 };
 
 const state3: DialecticState = {
-  id: 'syl-refl-12',
-  title: 'Analogy — singular in universal nature, essential universality',
-  concept: 'SyllogismOfAnalogy',
+  id: 'syl-refl-16',
+  title: 'Reflection syllogism passes to necessity syllogism',
+  concept: 'TransitionToNecessitySyllogism',
   phase: 'subject',
-
   moments: [
     {
-      name: 'analogy',
-      definition: 'S-U-P, singular in universal nature, essential universality',
-      type: 'determination',
+      name: 'concreteMediationUnity',
+      definition:
+        'Mediation is posited as concrete unity of form-determinations',
+      type: 'mediation',
     },
     {
-      name: 'superficiality',
-      definition: 'More superficial the more universal is mere quality, form vs content',
-      type: 'negation',
-      relation: 'contains',
-      relatedTo: 'analogy',
-    },
-    {
-      name: 'demandsSublation',
-      definition: 'Demands sublation of moment of singularity, passes to necessity',
-      type: 'sublation',
+      name: 'necessityPassover',
+      definition:
+        'Sublated immediacy yields objective universality as necessity-middle',
+      type: 'passover',
+      relation: 'transitions',
+      relatedTo: 'concreteMediationUnity',
     },
   ],
-
   invariants: [
     {
-      id: 'syl-refl-12-inv-1',
-      constraint: 'schema = S-U-P',
-      predicate: 'equals(schema, SUP)',
+      id: 'syl-refl-16-inv-1',
+      constraint: 'singular immediacy is no longer immediate but posited',
+      predicate: 'posited(notImmediate(singularity))',
     },
     {
-      id: 'syl-refl-12-inv-2',
-      constraint: 'middle = universality(immanentReflection)',
-      predicate: 'equals(middle, universality(immanentReflection))',
+      id: 'syl-refl-16-inv-2',
+      constraint: 'higher universality re-joins presupposition and mediation',
+      predicate: 'rejoins(higherUniversality, presuppositionMediation)',
     },
   ],
-
   forces: [
     {
-      id: 'syl-refl-12-force-1',
-      description: 'Analogy drives toward syllogism of necessity',
+      id: 'syl-refl-16-force-1',
+      description:
+        'Concrete reflective mediation passes over to syllogism of necessity',
       type: 'passover',
-      trigger: 'singularity.sublated = true',
+      trigger: 'mediatingUnity.concrete = true',
       effect: 'necessitySyllogism.emerges = true',
       targetState: 'syl-nec-1',
     },
   ],
-
   transitions: [
     {
-      id: 'syl-refl-12-trans-1',
-      from: 'syl-refl-12',
+      id: 'syl-refl-16-trans-1',
+      from: 'syl-refl-16',
       to: 'syl-nec-1',
       mechanism: 'passover',
-      description: 'From analogy to syllogism of necessity',
+      description: 'From syllogism of reflection to syllogism of necessity',
     },
   ],
-
   nextStates: ['syl-nec-1'],
   previousStates: ['syl-refl-8'],
-
   provenance: {
-    topicMapId: 'syl-refl-12-analogy-schema',
-    lineRange: { start: 324, end: 543 },
-    section: 'The Syllogism of Analogy',
-    order: 3,
+    topicMapId: 'syl-refl-16-review-necessity',
+    lineRange: { start: 514, end: 543 },
+    section: 'The Syllogism of Reflection',
+    order: 16,
   },
-
-  description: 'Analogy S-U-P. Singular in universal nature. Essential universality. Demands sublation of moment of singularity. Genus posited. Passed over into syllogism of necessity.',
+  description: REFLECTION_SYLLOGISM_TOPIC_MAP.entries[15]?.description,
+  keyPoints: REFLECTION_SYLLOGISM_TOPIC_MAP.entries[15]?.keyPoints,
 };
 
 export const reflectionSyllogismIR: DialecticIR = {
   id: 'reflection-syllogism-ir',
-  title: 'Reflection Syllogism IR: Allness, Induction, Analogy',
-  section: 'C. THE CONCEPT - I. SUBJECTIVITY - C. The Syllogism - B. Syllogism of Reflection',
+  title:
+    'Reflection Syllogism IR: Allness, Induction/Analogy, Necessity Handoff',
+  section: 'CONCEPT - SUBJECTIVITY - C. Syllogism - B. Syllogism of Reflection',
   states: [state1, state2, state3],
   metadata: {
     sourceFile: 'reflection.txt',
@@ -243,7 +207,7 @@ export const reflectionSyllogismIR: DialecticIR = {
     cpuGpuMapping: {
       'syl-refl-1': 'subject',
       'syl-refl-8': 'subject',
-      'syl-refl-12': 'subject',
+      'syl-refl-16': 'subject',
     },
   },
 };
@@ -251,5 +215,5 @@ export const reflectionSyllogismIR: DialecticIR = {
 export const reflectionSyllogismStates = {
   'syl-refl-1': state1,
   'syl-refl-8': state2,
-  'syl-refl-12': state3,
+  'syl-refl-16': state3,
 };

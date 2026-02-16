@@ -1,289 +1,211 @@
-/**
- * Magnitude IR: Dialectic Pseudo-Code for Continuous and Discrete Magnitude
- *
- * Architecture: GPU (Quantity / Mathematical Coprocessor)
- * Section: B. CONTINUOUS AND DISCRETE MAGNITUDE
- *
- * Covers the dialectical movement:
- * - Quantity contains both moments (continuity and discreteness)
- * - Continuous magnitude as immediate quantity
- * - Discrete magnitude as discontinuous outsideness-of-one-another
- */
-
-import type {
-  DialecticState,
-  DialecticIR,
-} from '@schema/dialectic';
+import type { DialecticIR, DialecticState } from '@schema/dialectic';
+import { CONTINUOUS_DISCRETE_MAGNITUDE_TOPIC_MAP } from './sources/magnitude-topic-map';
 
 const state1: DialecticState = {
-  id: 'quantity-continuous-discrete-intro',
-  title: 'Continuous and Discrete Magnitude: two moments of quantity',
-  concept: 'ContinuousDiscreteMoments',
+  id: 'magnitude-1',
+  title: 'Magnitude as differentiated quantity',
+  concept: 'MagnitudeIntro',
   phase: 'quantity',
-
   moments: [
     {
-      name: 'continuity',
-      definition: 'Compact unity holding discrete together',
-      type: 'moment',
-    },
-    {
-      name: 'discreteness',
-      definition: 'Other moment, brought to completion',
-      type: 'moment',
-      relation: 'opposite',
-      relatedTo: 'continuity',
-    },
-    {
       name: 'continuousMagnitude',
-      definition: 'Whole quantity posited as continuity',
+      definition: 'Quantity first appears as continuity, compact unity of many',
       type: 'determination',
     },
+    {
+      name: 'discreteMomentImplicit',
+      definition:
+        'This continuity already contains discreteness as its own moment',
+      type: 'mediation',
+      relation: 'contains',
+      relatedTo: 'continuousMagnitude',
+    },
   ],
-
   invariants: [
     {
       id: 'magnitude-1-inv-1',
-      constraint: 'quantity.contains = {continuity, discreteness}',
-      predicate: 'contains(quantity, continuity) ∧ contains(quantity, discreteness)',
+      constraint: 'each moment remains the whole quantity in its form',
+      predicate: 'momentAsWhole(continuity, discreteness)',
     },
     {
       id: 'magnitude-1-inv-2',
-      constraint: 'continuousMagnitude = wholequantity',
-      predicate: 'equals(continuousMagnitude, wholeQuantity)',
-    },
-    {
-      id: 'magnitude-1-inv-3',
-      constraint: 'continuity.holdsTogetherDiscrete = true',
-      predicate: 'holdsTogether(continuity, discrete)',
+      constraint: 'continuity does not abolish discreteness, but holds it',
+      predicate: 'holdsWithin(continuity, discreteness)',
     },
   ],
-
   forces: [
     {
       id: 'magnitude-1-force-1',
-      description: 'Posited continuity drives toward continuous magnitude',
-      type: 'passover',
-      trigger: 'continuity.posited = true',
-      effect: 'continuousMagnitude.emerges = true',
-      targetState: 'quantity-continuous-magnitude',
+      description:
+        'Immediacy of continuity must be negated into explicit discreteness',
+      type: 'negation',
+      trigger: 'immediacy.sublated = true',
+      effect: 'discreteMagnitude.explicit = true',
+      targetState: 'magnitude-4',
     },
   ],
-
   transitions: [
     {
       id: 'magnitude-1-trans-1',
-      from: 'quantity-continuous-discrete-intro',
-      to: 'quantity-continuous-magnitude',
-      mechanism: 'passover',
-      description: 'From two moments to continuous magnitude',
+      from: 'magnitude-1',
+      to: 'magnitude-4',
+      mechanism: 'negation',
+      description: 'From continuous magnitude to discrete magnitude',
     },
   ],
-
-  nextStates: ['quantity-continuous-magnitude'],
+  nextStates: ['magnitude-4'],
   previousStates: ['quantity-pure-unity'],
-
   provenance: {
     topicMapId: 'quantity-continuous-discrete-intro',
     lineRange: { start: 3, end: 23 },
     section: 'B. CONTINUOUS AND DISCRETE MAGNITUDE',
     order: 1,
   },
-
-  description: 'Continuous/Discrete Magnitude: Quantity contains both moments. Posited at first as continuity (continuous magnitude). Continuity is compact unity holding discrete together; posited as such, it is whole quantity, not just moment.',
+  description: CONTINUOUS_DISCRETE_MAGNITUDE_TOPIC_MAP.entries[0]?.description,
+  keyPoints: CONTINUOUS_DISCRETE_MAGNITUDE_TOPIC_MAP.entries[0]?.keyPoints,
 };
 
 const state2: DialecticState = {
-  id: 'quantity-continuous-magnitude',
-  title: 'Continuous Magnitude: immediate quantity',
-  concept: 'ContinuousMagnitude',
+  id: 'magnitude-4',
+  title: 'Discrete magnitude as continuity of ones',
+  concept: 'DiscreteMagnitude',
   phase: 'quantity',
-
   moments: [
     {
-      name: 'immediateQuantity',
-      definition: 'Continuous magnitude as immediate',
+      name: 'discontinuousOutsideness',
+      definition:
+        'Discrete magnitude appears as broken outsideness-of-one-another',
       type: 'determination',
     },
     {
-      name: 'sublatedImmediacy',
-      definition: 'Immediacy as determinateness is sublated',
-      type: 'sublation',
-      relation: 'negates',
-      relatedTo: 'immediateQuantity',
-    },
-    {
-      name: 'immanentDeterminateness',
-      definition: 'The one, as immanent determinateness',
-      type: 'determination',
+      name: 'implicitContinuityOfOnes',
+      definition:
+        'Yet these ones share the same unity, so discreteness is itself continuous',
+      type: 'mediation',
+      relation: 'contains',
+      relatedTo: 'discontinuousOutsideness',
     },
   ],
-
   invariants: [
     {
-      id: 'magnitude-2-inv-1',
-      constraint: 'immediateQuantity = continuousMagnitude',
-      predicate: 'equals(immediateQuantity, continuousMagnitude)',
+      id: 'magnitude-4-inv-1',
+      constraint: 'discrete magnitude remains quantitative unity of many ones',
+      predicate: 'unityOfManyOnes(discreteMagnitude)',
     },
     {
-      id: 'magnitude-2-inv-2',
-      constraint: 'quantity.isImmediate = false',
-      predicate: 'not(isImmediate(quantity))',
-    },
-    {
-      id: 'magnitude-2-inv-3',
-      constraint: 'immediacy.sublated = true',
-      predicate: 'sublated(immediacy)',
-    },
-    {
-      id: 'magnitude-2-inv-4',
-      constraint: 'quantity.mustBePosited = immanentDeterminateness',
-      predicate: 'mustBePosited(quantity, immanentDeterminateness)',
+      id: 'magnitude-4-inv-2',
+      constraint: 'outsideness remains within common quantitative form',
+      predicate: 'withinSameForm(outsideness)',
     },
   ],
-
   forces: [
     {
-      id: 'magnitude-2-force-1',
-      description: 'Sublation of immediacy drives toward discrete magnitude',
-      type: 'negation',
-      trigger: 'immediacy.sublated = true',
-      effect: 'discreteMagnitude.required = true',
+      id: 'magnitude-4-force-1',
+      description: 'Discrete magnitude requires explicit limiting as quantum',
+      type: 'sublation',
+      trigger: 'discreteness.requiresLimit = true',
+      effect: 'quantumForm.posited = true',
       targetState: 'quantity-discrete-magnitude',
     },
   ],
-
   transitions: [
     {
-      id: 'magnitude-2-trans-1',
-      from: 'quantity-continuous-magnitude',
+      id: 'magnitude-4-trans-1',
+      from: 'magnitude-4',
       to: 'quantity-discrete-magnitude',
-      mechanism: 'negation',
-      description: 'From continuous to discrete magnitude via sublation',
+      mechanism: 'sublation',
+      description: 'From discrete magnitude to its limiting form',
     },
   ],
-
   nextStates: ['quantity-discrete-magnitude'],
-  previousStates: ['quantity-continuous-discrete-intro'],
-
+  previousStates: ['magnitude-1'],
   provenance: {
-    topicMapId: 'quantity-continuous-magnitude',
-    lineRange: { start: 25, end: 32 },
+    topicMapId: 'quantity-discrete-magnitude',
+    lineRange: { start: 34, end: 57 },
     section: 'B. CONTINUOUS AND DISCRETE MAGNITUDE',
     order: 2,
   },
-
-  description: 'Continuous Magnitude: Immediate quantity is continuous magnitude. But quantity is not immediate; immediacy is sublated. Quantity must be posited in immanent determinateness (the one) - discrete magnitude.',
+  description: CONTINUOUS_DISCRETE_MAGNITUDE_TOPIC_MAP.entries[2]?.description,
+  keyPoints: CONTINUOUS_DISCRETE_MAGNITUDE_TOPIC_MAP.entries[2]?.keyPoints,
 };
 
 const state3: DialecticState = {
   id: 'quantity-discrete-magnitude',
-  title: 'Discrete Magnitude: outsideness-of-one-another as discontinuous',
-  concept: 'DiscreteMagnitude',
+  title: 'Magnitude transitions to limiting quantity',
+  concept: 'MagnitudeToQuantumThreshold',
   phase: 'quantity',
-
   moments: [
     {
-      name: 'discreteness',
-      definition: 'Moment and whole of quantity',
-      type: 'moment',
-    },
-    {
-      name: 'discontinuous',
-      definition: 'Outsideness-of-one-another broken off',
+      name: 'limitEmergence',
+      definition:
+        'Magnitude now requires one as explicit limit within quantity',
       type: 'determination',
-      relation: 'contains',
-      relatedTo: 'discreteness',
     },
     {
-      name: 'continuous',
-      definition: 'Discreteness is itself continuous (ones same unity)',
-      type: 'quality',
-      relation: 'mediates',
-      relatedTo: 'discreteness',
-    },
-    {
-      name: 'manyOnesOfUnity',
-      definition: 'Not many ones in general, but many of a unity',
-      type: 'determination',
+      name: 'quantumThreshold',
+      definition:
+        'Continuous and discrete difference becomes indifferent in the emerging quantum form',
+      type: 'process',
+      relation: 'transitions',
+      relatedTo: 'limitEmergence',
     },
   ],
-
   invariants: [
     {
-      id: 'magnitude-3-inv-1',
-      constraint: 'discreteness = momentAndWhole(quantity)',
-      predicate: 'momentAndWhole(discreteness, quantity)',
-    },
-    {
-      id: 'magnitude-3-inv-2',
-      constraint: 'discreteness.continuous = true',
-      predicate: 'continuous(discreteness)',
-    },
-    {
-      id: 'magnitude-3-inv-3',
-      constraint: 'ones.haveSameUnity = true',
-      predicate: 'haveSameUnity(ones)',
-    },
-    {
-      id: 'magnitude-3-inv-4',
-      constraint: 'discreteMagnitude = manyOnesOfUnity',
-      predicate: 'equals(discreteMagnitude, manyOnesOfUnity)',
+      id: 'quantity-discrete-magnitude-inv-1',
+      constraint: 'magnitude tends toward explicit boundedness',
+      predicate: 'tendsTowardBoundedness(magnitude)',
     },
   ],
-
   forces: [
     {
-      id: 'magnitude-3-force-1',
-      description: 'Many ones of unity prepares quantum as determined magnitude',
+      id: 'quantity-discrete-magnitude-force-1',
+      description: 'Magnitude passes over to the chapter of limiting quantity',
       type: 'passover',
-      trigger: 'manyOnesOfUnity.posited = true',
-      effect: 'quantum.emerges = true',
-      targetState: 'quantum-1',
+      trigger: 'limit.formallyPosited = true',
+      effect: 'limitingQuantityChapter.initiated = true',
+      targetState: 'quantity-limiting-intro',
     },
   ],
-
   transitions: [
     {
-      id: 'magnitude-3-trans-1',
+      id: 'quantity-discrete-magnitude-trans-1',
       from: 'quantity-discrete-magnitude',
-      to: 'quantum-1',
+      to: 'quantity-limiting-intro',
       mechanism: 'passover',
-      description: 'From discrete magnitude to quantum',
+      description: 'From magnitude to limiting quantity',
     },
   ],
-
-  nextStates: ['quantum-1'],
-  previousStates: ['quantity-continuous-magnitude'],
-
+  nextStates: ['quantity-limiting-intro'],
+  previousStates: ['magnitude-4'],
   provenance: {
     topicMapId: 'quantity-discrete-magnitude',
     lineRange: { start: 34, end: 57 },
     section: 'B. CONTINUOUS AND DISCRETE MAGNITUDE',
     order: 3,
   },
-
-  description: 'Discrete Magnitude: Moment and whole of quantity. Outsideness-of-one-another as discontinuous/broken off. But discreteness is itself continuous (ones are same, have same unity). Discrete magnitude is many ones of a unity, not many ones in general.',
+  description: CONTINUOUS_DISCRETE_MAGNITUDE_TOPIC_MAP.entries[2]?.description,
+  keyPoints: CONTINUOUS_DISCRETE_MAGNITUDE_TOPIC_MAP.entries[2]?.keyPoints,
 };
 
 export const magnitudeIR: DialecticIR = {
   id: 'magnitude-ir',
   title: 'Magnitude IR: Continuous and Discrete Magnitude',
-  section: 'B. CONTINUOUS AND DISCRETE MAGNITUDE',
+  section: 'BEING - QUANTITY - B. Continuous and Discrete Magnitude',
   states: [state1, state2, state3],
   metadata: {
     sourceFile: 'continuous-discrete-magnitude.txt',
     totalStates: 3,
     cpuGpuMapping: {
-      'quantity-continuous-discrete-intro': 'quantity',
-      'quantity-continuous-magnitude': 'quantity',
+      'magnitude-1': 'quantity',
+      'magnitude-4': 'quantity',
       'quantity-discrete-magnitude': 'quantity',
     },
   },
 };
 
 export const magnitudeStates = {
-  'quantity-continuous-discrete-intro': state1,
-  'quantity-continuous-magnitude': state2,
+  'magnitude-1': state1,
+  'magnitude-4': state2,
   'quantity-discrete-magnitude': state3,
 };

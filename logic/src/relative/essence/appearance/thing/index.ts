@@ -1,3 +1,3 @@
-export * from './thing';
-export * from './matter';
-export * from './dissolution';
+export * from './thing-ir';
+export * from './matter-ir';
+export * from './dissolution-ir';

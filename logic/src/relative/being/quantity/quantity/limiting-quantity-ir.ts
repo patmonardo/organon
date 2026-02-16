@@ -1,275 +1,199 @@
-/**
- * Limiting Quantity IR: Dialectic Pseudo-Code for The Limiting of Quantity
- *
- * Architecture: GPU (Quantity / Mathematical Coprocessor)
- * Section: C. THE LIMITING OF QUANTITY
- *
- * Covers the dialectical movement:
- * - Discrete magnitude as quantum (one as determinateness/limit)
- * - Encompassing limit (enclosing/encompassing, negative point)
- * - Quantum as limit encompassing many ones, passing over
- */
-
-import type {
-  DialecticState,
-  DialecticIR,
-} from '@schema/dialectic';
+import type { DialecticIR, DialecticState } from '@schema/dialectic';
+import { LIMITING_QUANTITY_TOPIC_MAP } from './sources/limiting-quantity-topic-map';
 
 const state1: DialecticState = {
   id: 'quantity-limiting-intro',
-  title: 'Limiting of Quantity: discrete magnitude as quantum',
-  concept: 'LimitingQuantity',
+  title: 'Discrete magnitude as quantum',
+  concept: 'QuantumIntroduction',
   phase: 'quantity',
-
   moments: [
     {
-      name: 'discreteMagnitude',
-      definition: 'One as principle, plurality of ones, essentially continuous',
+      name: 'oneAsLimit',
+      definition:
+        'Discrete quantity is one magnitude whose determinateness is explicit limit',
       type: 'determination',
     },
     {
-      name: 'oneMagnitude',
-      definition: 'Posited as one magnitude; one is determinateness/limit',
-      type: 'determination',
-      relation: 'mediates',
-      relatedTo: 'discreteMagnitude',
-    },
-    {
-      name: 'quantum',
-      definition: 'Existence/something with one as limit',
-      type: 'determination',
-      relation: 'transforms',
-      relatedTo: 'discreteMagnitude',
+      name: 'quantumAsSomething',
+      definition:
+        'Quantity appears as determinate existence with one as limiting principle',
+      type: 'quality',
+      relation: 'contains',
+      relatedTo: 'oneAsLimit',
     },
   ],
-
   invariants: [
     {
-      id: 'limiting-1-inv-1',
-      constraint: 'discreteMagnitude.principle = one',
-      predicate: 'principle(discreteMagnitude, one)',
+      id: 'quantity-limiting-intro-inv-1',
+      constraint: 'quantum combines plurality with enclosed unity',
+      predicate: 'combinesPluralityAndUnity(quantum)',
     },
     {
-      id: 'limiting-1-inv-2',
-      constraint: 'discreteMagnitude.essentiallyContinuous = true',
-      predicate: 'essentiallyContinuous(discreteMagnitude)',
-    },
-    {
-      id: 'limiting-1-inv-3',
-      constraint: 'one.sublatedAs = unity',
-      predicate: 'sublatedAs(one, unity)',
-    },
-    {
-      id: 'limiting-1-inv-4',
-      constraint: 'quantum = existence(something, oneAsLimit)',
-      predicate: 'existence(quantum, something, oneAsLimit)',
+      id: 'quantity-limiting-intro-inv-2',
+      constraint: 'limit is internal to quantity as one',
+      predicate: 'internalLimit(quantity)',
     },
   ],
-
   forces: [
     {
-      id: 'limiting-1-force-1',
-      description: 'One as determinateness drives toward encompassing limit',
+      id: 'quantity-limiting-intro-force-1',
+      description:
+        'Internal limit becomes encompassing and explicit as enclosing boundary',
       type: 'mediation',
-      trigger: 'one.posited = determinateExistence',
-      effect: 'encompassingLimit.emerges = true',
+      trigger: 'limit.enclosingCharacter = true',
+      effect: 'encompassingLimit.explicit = true',
       targetState: 'quantity-limiting-encompassing',
     },
   ],
-
   transitions: [
     {
-      id: 'limiting-1-trans-1',
+      id: 'quantity-limiting-intro-trans-1',
       from: 'quantity-limiting-intro',
       to: 'quantity-limiting-encompassing',
       mechanism: 'mediation',
-      description: 'From discrete magnitude to encompassing limit',
+      description: 'From quantum in general to encompassing limit',
     },
   ],
-
   nextStates: ['quantity-limiting-encompassing'],
   previousStates: ['quantity-discrete-magnitude'],
-
   provenance: {
     topicMapId: 'quantity-limiting-intro',
     lineRange: { start: 3, end: 21 },
     section: 'C. THE LIMITING OF QUANTITY',
     order: 1,
   },
-
-  description: 'Limiting of Quantity: Discrete magnitude has one as principle, plurality of ones, essentially continuous (one sublated as unity). Posited as one magnitude; "one" is determinateness/limit. Distinguished from continuous magnitude, it is existence/something with "one" as limit.',
+  description: LIMITING_QUANTITY_TOPIC_MAP.entries[0]?.description,
+  keyPoints: LIMITING_QUANTITY_TOPIC_MAP.entries[0]?.keyPoints,
 };
 
 const state2: DialecticState = {
   id: 'quantity-limiting-encompassing',
-  title: 'Encompassing limit: one as enclosing limit',
+  title: 'Encompassing limit as negative point',
   concept: 'EncompassingLimit',
   phase: 'quantity',
-
   moments: [
     {
-      name: 'encompassingLimit',
-      definition: 'Limit as enclosing/encompassing, self-referred as one',
-      type: 'determination',
-    },
-    {
-      name: 'negativePoint',
-      definition: 'Limit as negative point itself (not distinct from something)',
+      name: 'enclosingOne',
+      definition:
+        'The one is self-referred limit that encloses quantity as negative point',
       type: 'negation',
-      relation: 'contains',
-      relatedTo: 'encompassingLimit',
     },
     {
-      name: 'continuityTranscending',
-      definition: 'Limited being is continuity, transcending limit',
+      name: 'continuityTranscendsLimit',
+      definition: 'Quantity as continuity both has and exceeds this limit',
       type: 'mediation',
+      relation: 'contains',
+      relatedTo: 'enclosingOne',
     },
   ],
-
   invariants: [
     {
-      id: 'limiting-2-inv-1',
-      constraint: 'limit.referToUnity = negationMoment',
-      predicate: 'referTo(limit, unity, negationMoment)',
+      id: 'quantity-limiting-encompassing-inv-1',
+      constraint: 'limit both bounds and belongs to quantity',
+      predicate: 'internalBoundary(limit, quantity)',
     },
     {
-      id: 'limiting-2-inv-2',
-      constraint: 'limit.selfReferred = one',
-      predicate: 'selfReferred(limit, one)',
-    },
-    {
-      id: 'limiting-2-inv-3',
-      constraint: 'limit = negativePointItself',
-      predicate: 'is(limit, negativePointItself)',
-    },
-    {
-      id: 'limiting-2-inv-4',
-      constraint: 'limitedBeing.transcendsLimit = true',
-      predicate: 'transcends(limitedBeing, limit)',
+      id: 'quantity-limiting-encompassing-inv-2',
+      constraint: 'continuity/discreteness distinction tends to indifference',
+      predicate: 'tendsToIndifference(continuity, discreteness)',
     },
   ],
-
   forces: [
     {
-      id: 'limiting-2-force-1',
-      description: 'Continuity transcending limit drives toward quantum as many ones',
-      type: 'passover',
-      trigger: 'continuity.transcendsLimit = true',
-      effect: 'quantumAsManyOnes.emerges = true',
+      id: 'quantity-limiting-encompassing-force-1',
+      description:
+        'Encompassing limit yields quantum as the explicit passage into determinable quanta',
+      type: 'sublation',
+      trigger: 'limitAndContinuity.interpenetrate = true',
+      effect: 'quantumPassage.explicit = true',
       targetState: 'quantity-limiting-quantum',
     },
   ],
-
   transitions: [
     {
-      id: 'limiting-2-trans-1',
+      id: 'quantity-limiting-encompassing-trans-1',
       from: 'quantity-limiting-encompassing',
       to: 'quantity-limiting-quantum',
-      mechanism: 'passover',
-      description: 'From encompassing limit to quantum encompassing many ones',
+      mechanism: 'sublation',
+      description: 'From enclosing limit to explicit quantum transition',
     },
   ],
-
   nextStates: ['quantity-limiting-quantum'],
   previousStates: ['quantity-limiting-intro'],
-
   provenance: {
     topicMapId: 'quantity-limiting-encompassing',
     lineRange: { start: 23, end: 34 },
     section: 'C. THE LIMITING OF QUANTITY',
     order: 2,
   },
-
-  description: 'Encompassing Limit: Limit refers to unity (negation moment) and is self-referred as one - enclosing/encompassing. Limit is negative point itself (not distinct from something). But limited being is continuity, transcending limit, indifferent to it. Discrete quantity is quantum: quantity as existence/something.',
+  description: LIMITING_QUANTITY_TOPIC_MAP.entries[1]?.description,
+  keyPoints: LIMITING_QUANTITY_TOPIC_MAP.entries[1]?.keyPoints,
 };
 
 const state3: DialecticState = {
   id: 'quantity-limiting-quantum',
-  title: 'Quantum: limit encompassing many ones, passing over',
-  concept: 'QuantumEncompassing',
+  title: 'Quantum as passage into extensive determination',
+  concept: 'QuantumTransition',
   phase: 'quantity',
-
   moments: [
     {
-      name: 'quantumAsEncompassing',
-      definition: 'One as limit encompasses many ones (sublated in it)',
+      name: 'manyWithinLimit',
+      definition: 'The one-limit encloses many ones as sublated moments',
       type: 'determination',
     },
     {
-      name: 'limitToContinuity',
-      definition: 'Limit to continuity; distinction becomes indifferent',
-      type: 'mediation',
-    },
-    {
-      name: 'passingOver',
-      definition: 'Both pass over into quanta',
-      type: 'process',
-      relation: 'transforms',
-      relatedTo: 'limitToContinuity',
+      name: 'passoverToQuanta',
+      definition:
+        'Continuous and discrete sides pass over into explicit quanta',
+      type: 'passover',
+      relation: 'transitions',
+      relatedTo: 'manyWithinLimit',
     },
   ],
-
   invariants: [
     {
-      id: 'limiting-3-inv-1',
-      constraint: 'oneAsLimit.encompasses = manyOnes',
-      predicate: 'encompasses(oneAsLimit, manyOnes)',
-    },
-    {
-      id: 'limiting-3-inv-2',
-      constraint: 'manyOnes.sublatedIn = limit',
-      predicate: 'sublatedIn(manyOnes, limit)',
-    },
-    {
-      id: 'limiting-3-inv-3',
-      constraint: 'distinction(continuous, discrete).indifferent = true',
-      predicate: 'indifferent(distinction(continuous, discrete))',
-    },
-    {
-      id: 'limiting-3-inv-4',
-      constraint: 'one ∧ other → quanta',
-      predicate: 'passOver(one, quanta) ∧ passOver(other, quanta)',
+      id: 'quantity-limiting-quantum-inv-1',
+      constraint:
+        'quantum is the immediate threshold of further quantitative determination',
+      predicate: 'threshold(quantum)',
     },
   ],
-
   forces: [
     {
-      id: 'limiting-3-force-1',
-      description: 'Passing over into quanta prepares for number as quantum',
+      id: 'quantity-limiting-quantum-force-1',
+      description:
+        'Quantum transition opens the number chapter as the first explicit quantum determination',
       type: 'passover',
-      trigger: 'distinction.becomesIndifferent = true',
-      effect: 'number.emerges = true',
+      trigger: 'quantum.requiresFurtherDetermination = true',
+      effect: 'quantumChapter.initiated = true',
       targetState: 'number-quantum-as-number',
     },
   ],
-
   transitions: [
     {
-      id: 'limiting-3-trans-1',
+      id: 'quantity-limiting-quantum-trans-1',
       from: 'quantity-limiting-quantum',
       to: 'number-quantum-as-number',
       mechanism: 'passover',
-      description: 'From quantum to number as complete positedness',
+      description: 'From limiting quantity to number',
     },
   ],
-
   nextStates: ['number-quantum-as-number'],
   previousStates: ['quantity-limiting-encompassing'],
-
   provenance: {
     topicMapId: 'quantity-limiting-quantum',
     lineRange: { start: 36, end: 45 },
     section: 'C. THE LIMITING OF QUANTITY',
     order: 3,
   },
-
-  description: 'Quantum: One as limit encompasses many ones (sublated in it). Limit to continuity; distinction continuous/discrete becomes indifferent. Limit to continuity of one and other; both pass over into quanta.',
+  description: LIMITING_QUANTITY_TOPIC_MAP.entries[2]?.description,
+  keyPoints: LIMITING_QUANTITY_TOPIC_MAP.entries[2]?.keyPoints,
 };
 
 export const limitingQuantityIR: DialecticIR = {
   id: 'limiting-quantity-ir',
-  title: 'Limiting Quantity IR: Discrete Magnitude as Quantum',
-  section: 'C. THE LIMITING OF QUANTITY',
+  title: 'Limiting Quantity IR: Quantum Threshold',
+  section: 'BEING - QUANTITY - C. Limiting Quantity',
   states: [state1, state2, state3],
   metadata: {
     sourceFile: 'limiting-quantity.txt',

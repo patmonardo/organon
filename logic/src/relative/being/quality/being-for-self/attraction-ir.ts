@@ -1,245 +1,202 @@
-/**
- * Repulsion and Attraction IR: Dialectic Pseudo-Code for Repulsion and Attraction
- *
- * Architecture: CPU Quality (Immediate Determination)
- * Section: I. BEING - A. QUALITY - C. Being-for-Self - C. Repulsion and Attraction
- *
- * Covers the dialectical movement:
- * - Exclusion of the One: Mutual repulsion, self-preservation, dissolution
- * - The One One of Attraction: Ideality realized, mediated one
- * - Connection of Repulsion and Attraction: Inseparable unity, self-presupposing
- *
- * The CPU's quality - repulsion, attraction, transition to quantity
- */
-
-import type {
-  DialecticState,
-  DialecticIR,
-} from '@schema/dialectic';
+import type { DialecticIR, DialecticState } from '@schema/dialectic';
+import { attractionTopicMap } from './sources/attraction-topic-map';
 
 const state1: DialecticState = {
   id: 'attraction-a',
-  title: 'Exclusion of the one — mutual repulsion, self-preservation, dissolution',
-  concept: 'ExclusionOfTheOne',
+  title: 'Mutual exclusion as unstable self-preservation',
+  concept: 'ExclusionOfOne',
   phase: 'quality',
-
   moments: [
     {
       name: 'mutualRepulsion',
-      definition: 'Mutual repulsion is posited existence of many ones, their own distinguishing',
+      definition:
+        'Many ones mutually repel and preserve themselves only through reciprocal negation',
       type: 'negation',
     },
     {
-      name: 'selfPreservation',
-      definition: 'Self-preservation through mediation of mutual repulsion, sublate reciprocally',
-      type: 'mediation',
-      relation: 'contains',
+      name: 'dissolvingSelfPreservation',
+      definition:
+        'This preservation is already dissolution because repulsion is a self-relation',
+      type: 'contradiction',
+      relation: 'transitions',
       relatedTo: 'mutualRepulsion',
     },
-    {
-      name: 'dissolution',
-      definition: 'Self-preservation through negative reference is rather their dissolution',
-      type: 'negation',
-    },
   ],
-
   invariants: [
     {
       id: 'attraction-a-inv-1',
-      constraint: 'mutualRepulsion = positedExistence',
-      predicate: 'equals(mutualRepulsion, positedExistence)',
+      constraint: 'repulsion remains connected to what it excludes',
+      predicate: 'connectedExclusion(repulsion)',
     },
     {
       id: 'attraction-a-inv-2',
-      constraint: 'selfPreservation = dissolution',
-      predicate: 'equals(selfPreservation, dissolution)',
+      constraint:
+        'self-preservation through exclusion implies internal collapse',
+      predicate: 'preservationImpliesDissolution(ones)',
     },
   ],
-
   forces: [
     {
       id: 'attraction-a-force-1',
-      description: 'Exclusion drives toward attraction',
-      type: 'mediation',
-      trigger: 'repelling.crossesOverIntoIdentity = true',
-      effect: 'attraction.emerges = true',
+      description:
+        'Repulsion crossing into identity posits attraction as its own truth',
+      type: 'sublation',
+      trigger: 'repulsion.crossesIntoSelfIdentity = true',
+      effect: 'attractingOne.emerges = true',
       targetState: 'attraction-b',
     },
   ],
-
   transitions: [
     {
       id: 'attraction-a-trans-1',
       from: 'attraction-a',
       to: 'attraction-b',
-      mechanism: 'mediation',
-      description: 'From exclusion to attraction',
+      mechanism: 'sublation',
+      description: 'From exclusion to attracting one',
     },
   ],
-
   nextStates: ['attraction-b'],
-  previousStates: ['one-many-ir'],
-
+  previousStates: ['one-many-c'],
   provenance: {
     topicMapId: 'attraction-a-2',
     lineRange: { start: 65, end: 136 },
     section: 'C. a. Exclusion of the one',
     order: 1,
   },
-
-  description: 'Exclusion of the one - mutual repulsion, self-preservation. Ones maintain themselves through reciprocal exclusion. Self-preservation is dissolution. Negative relating is coming-together-with-oneself. Self-positing-in-a-one is attraction.',
+  description: attractionTopicMap[1]?.description,
+  keyPoints: attractionTopicMap[1]?.keyPoints,
 };
 
 const state2: DialecticState = {
   id: 'attraction-b',
-  title: 'The one one of attraction — ideality realized, mediated one',
-  concept: 'TheOneOneOfAttraction',
+  title: 'The one one of attraction',
+  concept: 'AttractingOne',
   phase: 'quality',
-
   moments: [
     {
-      name: 'idealityRealized',
-      definition: 'Repulsion passes over into attraction, ideality realized in attraction',
-      type: 'sublation',
-    },
-    {
       name: 'mediatedOne',
-      definition: 'One of attraction is mediated one, one posited as one',
+      definition:
+        'Attraction posits a mediated one that includes repulsion in its own determination',
       type: 'mediation',
-      relation: 'contains',
-      relatedTo: 'idealityRealized',
     },
     {
-      name: 'unityOfRepulsionAndAttraction',
-      definition: 'Attraction contains repulsion, unity of repulsion and attraction',
-      type: 'mediation',
+      name: 'realizedIdeality',
+      definition:
+        'The one one is realized ideality, preserving plurality within gathered unity',
+      type: 'sublation',
+      relation: 'contains',
+      relatedTo: 'mediatedOne',
     },
   ],
-
   invariants: [
     {
       id: 'attraction-b-inv-1',
-      constraint: 'attraction = idealityRealized',
-      predicate: 'equals(attraction, idealityRealized)',
+      constraint: 'attraction requires ongoing repulsion as condition',
+      predicate: 'requires(attraction, repulsion)',
     },
     {
       id: 'attraction-b-inv-2',
-      constraint: 'attraction.inseparableFrom(repulsion) = true',
-      predicate: 'inseparableFrom(attraction, repulsion)',
+      constraint:
+        'unity preserves many as moments rather than annihilating them',
+      predicate: 'preservingUnity(one, many)',
     },
   ],
-
   forces: [
     {
       id: 'attraction-b-force-1',
-      description: 'Attraction drives toward connection with repulsion',
+      description:
+        'Mediated one compels explicit conceptual connection of repulsion and attraction',
       type: 'mediation',
-      trigger: 'attraction.containsRepulsion = true',
-      effect: 'connectionOfRepulsionAndAttraction.emerges = true',
+      trigger: 'unityOfForces.requiresExplicitForm = true',
+      effect: 'connectionChapter.explicit = true',
       targetState: 'attraction-c',
     },
   ],
-
   transitions: [
     {
       id: 'attraction-b-trans-1',
       from: 'attraction-b',
       to: 'attraction-c',
       mechanism: 'mediation',
-      description: 'From attraction to connection',
+      description: 'From attracting one to explicit force-unity',
     },
   ],
-
   nextStates: ['attraction-c'],
   previousStates: ['attraction-a'],
-
   provenance: {
     topicMapId: 'attraction-b',
     lineRange: { start: 139, end: 211 },
     section: 'b. The one one of attraction',
     order: 2,
   },
-
-  description: 'The one one of attraction - ideality realized, mediated one. Repulsion passes over into attraction. Attraction inseparable from repulsion. Contains repulsion, preserves ones as many. Unity of repulsion and attraction.',
+  description: attractionTopicMap[2]?.description,
+  keyPoints: attractionTopicMap[2]?.keyPoints,
 };
 
 const state3: DialecticState = {
   id: 'attraction-c',
-  title: 'Connection of repulsion and attraction — inseparable unity, transition to quantity',
-  concept: 'ConnectionOfRepulsionAndAttraction',
+  title: 'Repulsion and attraction as self-mediation',
+  concept: 'UnifiedForceProcess',
   phase: 'quality',
-
   moments: [
     {
-      name: 'inseparableUnity',
-      definition: 'Repulsion and attraction essentially joined together, inseparable',
+      name: 'inseparableDuality',
+      definition:
+        'Repulsion and attraction are distinct only as mutually mediating moments of one process',
       type: 'mediation',
     },
     {
-      name: 'selfPresupposing',
-      definition: 'Each presupposes itself, each contains other as moment',
-      type: 'mediation',
+      name: 'selfPresupposingUnity',
+      definition:
+        'Each force presupposes and contains the other as its own moment',
+      type: 'reflection',
       relation: 'contains',
-      relatedTo: 'inseparableUnity',
-    },
-    {
-      name: 'transitionToQuantity',
-      definition: 'Each is its own self-mediation, transition to quantity',
-      type: 'sublation',
+      relatedTo: 'inseparableDuality',
     },
   ],
-
   invariants: [
     {
       id: 'attraction-c-inv-1',
-      constraint: 'repulsion.inseparableFrom(attraction) = true',
-      predicate: 'inseparableFrom(repulsion, attraction)',
-    },
-    {
-      id: 'attraction-c-inv-2',
-      constraint: 'each.presupposesItself = true',
-      predicate: 'presupposesItself(each)',
+      constraint: 'each force is self-mediation through the other',
+      predicate: 'selfMediationThroughOther(repulsion, attraction)',
     },
   ],
-
   forces: [
     {
       id: 'attraction-c-force-1',
-      description: 'Connection transitions to quantity',
-      type: 'sublation',
-      trigger: 'each.selfMediation = true',
-      effect: 'quantity.emerges = true',
+      description:
+        'Unified qualitative force-process passes to quantity as stabilized determinateness',
+      type: 'passover',
+      trigger: 'qualitativeForceUnity.stabilized = true',
+      effect: 'quantityChapter.initiated = true',
       targetState: 'quantity-1',
     },
   ],
-
   transitions: [
     {
       id: 'attraction-c-trans-1',
       from: 'attraction-c',
       to: 'quantity-1',
-      mechanism: 'sublation',
-      description: 'From repulsion and attraction to quantity',
+      mechanism: 'passover',
+      description: 'From force-unity to quantity',
     },
   ],
-
   nextStates: ['quantity-1'],
   previousStates: ['attraction-b'],
-
   provenance: {
     topicMapId: 'attraction-c-2',
     lineRange: { start: 303, end: 393 },
     section: 'c. The connection of repulsion and attraction',
     order: 3,
   },
-
-  description: 'Connection of repulsion and attraction - inseparable unity. Each presupposes itself, each contains other as moment. Each is self-mediation. Repulsion is positing of many, attraction positing of one. Transitions to quantity.',
+  description: attractionTopicMap[4]?.description,
+  keyPoints: attractionTopicMap[4]?.keyPoints,
 };
 
 export const attractionIR: DialecticIR = {
   id: 'attraction-ir',
-  title: 'Repulsion and Attraction IR: Exclusion, Attraction, Connection, Quantity',
-  section: 'I. BEING - A. QUALITY - C. Being-for-Self - C. Repulsion and Attraction',
+  title: 'Attraction IR: Exclusion, Attraction, and Their Unity',
+  section: 'BEING - QUALITY - C. Being-for-Self - C. Repulsion and Attraction',
   states: [state1, state2, state3],
   metadata: {
     sourceFile: 'attraction.txt',

@@ -12,33 +12,34 @@
  * The CPU's quality - bad infinite, infinite progression, ought
  */
 
-import type {
-  DialecticState,
-  DialecticIR,
-} from '@schema/dialectic';
+import type { DialecticState, DialecticIR } from '@schema/dialectic';
 
 const state1: DialecticState = {
   id: 'alternating-infinity-1',
-  title: 'Bad infinite — infinite falls back into something, finite resurrected',
+  title:
+    'Bad infinite — infinite falls back into something, finite resurrected',
   concept: 'BadInfinite',
   phase: 'quality',
 
   moments: [
     {
       name: 'fallsBackIntoSomething',
-      definition: 'Infinite as existent and non-being of other, fallen back into category of something with limit',
+      definition:
+        'Infinite as existent and non-being of other, fallen back into category of something with limit',
       type: 'negation',
     },
     {
       name: 'finiteResurrected',
-      definition: 'Immediate being of infinite resurrects being of its negation, the finite',
+      definition:
+        'Immediate being of infinite resurrects being of its negation, the finite',
       type: 'negation',
       relation: 'contains',
       relatedTo: 'fallsBackIntoSomething',
     },
     {
       name: 'qualitativeMutualReference',
-      definition: 'Finite stands over against infinite as real existence, qualitative mutual reference',
+      definition:
+        'Finite stands over against infinite as real existence, qualitative mutual reference',
       type: 'determination',
     },
   ],
@@ -78,7 +79,7 @@ const state1: DialecticState = {
   ],
 
   nextStates: ['alternating-infinity-5'],
-  previousStates: ['finitude-ir'],
+  previousStates: ['infinity-6'],
 
   provenance: {
     topicMapId: 'alternating-infinity-4',
@@ -87,7 +88,8 @@ const state1: DialecticState = {
     order: 1,
   },
 
-  description: 'Bad infinite - infinite falls back into category of something with limit. Finite resurrected. Infinite of understanding, counts as highest truth but entangled in unresolved contradictions.',
+  description:
+    'Bad infinite - infinite falls back into category of something with limit. Finite resurrected. Infinite of understanding, counts as highest truth but entangled in unresolved contradictions.',
 };
 
 const state2: DialecticState = {
@@ -99,19 +101,22 @@ const state2: DialecticState = {
   moments: [
     {
       name: 'twoWorlds',
-      definition: 'Two determinacies, two worlds: one infinite, one finite. Infinite only limit of finite, itself finite infinite',
+      definition:
+        'Two determinacies, two worlds: one infinite, one finite. Infinite only limit of finite, itself finite infinite',
       type: 'negation',
     },
     {
       name: 'inseparableYetOther',
-      definition: 'Two inseparable and at same time absolutely other, each has other in itself',
+      definition:
+        'Two inseparable and at same time absolutely other, each has other in itself',
       type: 'mediation',
       relation: 'contains',
       relatedTo: 'twoWorlds',
     },
     {
       name: 'unityHidden',
-      definition: 'Unity rests hidden in qualitative otherness, inner unity lying at base',
+      definition:
+        'Unity rests hidden in qualitative otherness, inner unity lying at base',
       type: 'mediation',
     },
   ],
@@ -160,31 +165,36 @@ const state2: DialecticState = {
     order: 2,
   },
 
-  description: 'Contradiction - two worlds (infinite and finite), inseparable yet absolutely other. Each posits its other. Unity rests hidden in qualitative otherness, lies only at base.',
+  description:
+    'Contradiction - two worlds (infinite and finite), inseparable yet absolutely other. Each posits its other. Unity rests hidden in qualitative otherness, lies only at base.',
 };
 
 const state3: DialecticState = {
   id: 'alternating-infinity-12',
-  title: 'Progress to infinity — repetitious monotony, unresolved contradiction',
+  title:
+    'Progress to infinity — repetitious monotony, unresolved contradiction',
   concept: 'ProgressToInfinity',
   phase: 'quality',
 
   moments: [
     {
       name: 'alternatingDetermination',
-      definition: 'Alternating determination of self-negating and negating the negating, progress to infinity',
+      definition:
+        'Alternating determination of self-negating and negating the negating, progress to infinity',
       type: 'negation',
     },
     {
       name: 'unresolvedContradiction',
-      definition: 'Contradiction not resolved but always pronounced simply as present',
+      definition:
+        'Contradiction not resolved but always pronounced simply as present',
       type: 'negation',
       relation: 'contains',
       relatedTo: 'alternatingDetermination',
     },
     {
       name: 'perpetualOught',
-      definition: 'Bad infinite same as perpetual ought, unable to free itself from finite',
+      definition:
+        'Bad infinite same as perpetual ought, unable to free itself from finite',
       type: 'negation',
     },
   ],
@@ -209,7 +219,7 @@ const state3: DialecticState = {
       type: 'sublation',
       trigger: 'unity.reflectedUpon = true',
       effect: 'affirmativeInfinity.emerges = true',
-      targetState: 'affirmative-infinity-1',
+      targetState: 'affirmative-infinity-7',
     },
   ],
 
@@ -217,13 +227,13 @@ const state3: DialecticState = {
     {
       id: 'alternating-infinity-12-trans-1',
       from: 'alternating-infinity-12',
-      to: 'affirmative-infinity-1',
+      to: 'affirmative-infinity-7',
       mechanism: 'sublation',
       description: 'From progress to infinity to affirmative infinity',
     },
   ],
 
-  nextStates: ['affirmative-infinity-1'],
+  nextStates: ['affirmative-infinity-7'],
   previousStates: ['alternating-infinity-5'],
 
   provenance: {
@@ -233,12 +243,14 @@ const state3: DialecticState = {
     order: 3,
   },
 
-  description: 'Progress to infinity - repetitious monotony, tedious alternation. Contradiction not resolved. Bad infinite as perpetual ought, unable to free itself from finite. Unity not reflected upon, beyond unattainable.',
+  description:
+    'Progress to infinity - repetitious monotony, tedious alternation. Contradiction not resolved. Bad infinite as perpetual ought, unable to free itself from finite. Unity not reflected upon, beyond unattainable.',
 };
 
 export const alternatingInfinityIR: DialecticIR = {
   id: 'alternating-infinity-ir',
-  title: 'Alternating Infinity IR: Bad Infinite, Contradiction, Progress to Infinity',
+  title:
+    'Alternating Infinity IR: Bad Infinite, Contradiction, Progress to Infinity',
   section: 'I. BEING - A. QUALITY - C. Infinity - B. Alternating Determination',
   states: [state1, state2, state3],
   metadata: {

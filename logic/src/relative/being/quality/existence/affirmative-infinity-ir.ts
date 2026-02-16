@@ -12,33 +12,34 @@
  * The CPU's quality - true infinite, ideality, transition to quantity
  */
 
-import type {
-  DialecticState,
-  DialecticIR,
-} from '@schema/dialectic';
+import type { DialecticState, DialecticIR } from '@schema/dialectic';
 
 const state1: DialecticState = {
   id: 'affirmative-infinity-7',
-  title: 'Unity of finite and infinite — each contains other, negation of negation',
+  title:
+    'Unity of finite and infinite — each contains other, negation of negation',
   concept: 'UnityOfFiniteAndInfinite',
   phase: 'quality',
 
   moments: [
     {
       name: 'eachContainsOther',
-      definition: 'Each is itself this unity, as sublating of itself. Finitude only as transcending of itself, contains infinite',
+      definition:
+        'Each is itself this unity, as sublating of itself. Finitude only as transcending of itself, contains infinite',
       type: 'sublation',
     },
     {
       name: 'negationOfNegation',
-      definition: 'Negation of negation in itself is self-reference, affirmation, turning back to itself',
+      definition:
+        'Negation of negation in itself is self-reference, affirmation, turning back to itself',
       type: 'sublation',
       relation: 'contains',
       relatedTo: 'eachContainsOther',
     },
     {
       name: 'selfMediation',
-      definition: 'Finite not sublated by infinite as external power, its infinity consists in sublating itself',
+      definition:
+        'Finite not sublated by infinite as external power, its infinity consists in sublating itself',
       type: 'mediation',
     },
   ],
@@ -78,7 +79,7 @@ const state1: DialecticState = {
   ],
 
   nextStates: ['affirmative-infinity-15'],
-  previousStates: ['alternating-infinity-ir'],
+  previousStates: ['alternating-infinity-12'],
 
   provenance: {
     topicMapId: 'affirmative-infinity-7',
@@ -87,7 +88,8 @@ const state1: DialecticState = {
     order: 1,
   },
 
-  description: 'Unity of finite and infinite - each is itself this unity as sublating of itself. Finitude contains infinite, infinite contains finite. Negation of negation is self-reference, affirmation. Finite sublates itself.',
+  description:
+    'Unity of finite and infinite - each is itself this unity as sublating of itself. Finitude contains infinite, infinite contains finite. Negation of negation is self-reference, affirmation. Finite sublates itself.',
 };
 
 const state2: DialecticState = {
@@ -99,12 +101,14 @@ const state2: DialecticState = {
   moments: [
     {
       name: 'essentiallyBecoming',
-      definition: 'Infinite essentially only as becoming, further determined in its moments',
+      definition:
+        'Infinite essentially only as becoming, further determined in its moments',
       type: 'sublation',
     },
     {
       name: 'momentsOfBecoming',
-      definition: 'Becoming: first being and nothing; as alteration, something and other; now as infinite, finite and infinite',
+      definition:
+        'Becoming: first being and nothing; as alteration, something and other; now as infinite, finite and infinite',
       type: 'mediation',
       relation: 'contains',
       relatedTo: 'essentiallyBecoming',
@@ -127,7 +131,8 @@ const state2: DialecticState = {
   forces: [
     {
       id: 'affirmative-infinity-15-force-1',
-      description: 'True infinite as becoming transitions to true infinite as being',
+      description:
+        'True infinite as becoming transitions to true infinite as being',
       type: 'sublation',
       trigger: 'becomingTurnedBackIntoItself = true',
       effect: 'trueInfiniteAsBeing.emerges = true',
@@ -155,31 +160,36 @@ const state2: DialecticState = {
     order: 2,
   },
 
-  description: 'True infinite as becoming - essentially only as becoming, further determined in moments. Becoming has finite and infinite as its moments, themselves as in becoming.',
+  description:
+    'True infinite as becoming - essentially only as becoming, further determined in moments. Becoming has finite and infinite as its moments, themselves as in becoming.',
 };
 
 const state3: DialecticState = {
   id: 'affirmative-infinity-16',
-  title: 'True infinite as being — circle vs straight line, ideality, transition to quantity',
+  title:
+    'True infinite as being — circle vs straight line, ideality, transition to quantity',
   concept: 'TrueInfiniteAsBeing',
   phase: 'quality',
 
   moments: [
     {
       name: 'beingTurnedBackIntoItself',
-      definition: 'Infinite as being-turned-back-unto-itself, reference of itself to itself, is being',
+      definition:
+        'Infinite as being-turned-back-unto-itself, reference of itself to itself, is being',
       type: 'sublation',
     },
     {
       name: 'circleNotStraightLine',
-      definition: 'Bad infinite as straight line (infinite only at limits). True infinite as circle, bent back upon itself, closed and wholly present',
+      definition:
+        'Bad infinite as straight line (infinite only at limits). True infinite as circle, bent back upon itself, closed and wholly present',
       type: 'determination',
       relation: 'contains',
       relatedTo: 'beingTurnedBackIntoItself',
     },
     {
       name: 'ideality',
-      definition: 'Negation determined as ideality. Idealized is finite as it is in true infinite (moment, not subsistent existent)',
+      definition:
+        'Negation determined as ideality. Idealized is finite as it is in true infinite (moment, not subsistent existent)',
       type: 'sublation',
     },
   ],
@@ -228,12 +238,14 @@ const state3: DialecticState = {
     order: 3,
   },
 
-  description: 'True infinite as being - being-turned-back-unto-itself, negating negation. Image is circle (closed, wholly present) not straight line. Negation as ideality. Not finite which is real, but infinite. Transitions to being-for-self.',
+  description:
+    'True infinite as being - being-turned-back-unto-itself, negating negation. Image is circle (closed, wholly present) not straight line. Negation as ideality. Not finite which is real, but infinite. Transitions to being-for-self.',
 };
 
 export const affirmativeInfinityIR: DialecticIR = {
   id: 'affirmative-infinity-ir',
-  title: 'Affirmative Infinity IR: Unity, True Infinite as Becoming, True Infinite as Being',
+  title:
+    'Affirmative Infinity IR: Unity, True Infinite as Becoming, True Infinite as Being',
   section: 'I. BEING - A. QUALITY - C. Infinity - C. Affirmative Infinity',
   states: [state1, state2, state3],
   metadata: {

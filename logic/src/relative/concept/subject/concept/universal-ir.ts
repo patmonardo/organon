@@ -1,505 +1,210 @@
-/**
- * Universal IR: Dialectic Pseudo-Code for Universal Concept
- *
- * Architecture: Knowledge Processor (GDSL → SDSL Integration)
- * Section: C. THE CONCEPT - I. SUBJECTIVITY - A. The Concept - 1. The Universal
- *
- * Covers the dialectical movement:
- * - Pure concept as absolutely infinite, unconditioned
- * - Universality as negation of negation
- * - Universal as creative principle, free power/love
- * - Determinateness within universal (particularity/singularity)
- * - Total reflection (outward/inward shining)
- * - Creative self-differentiation
- */
-
-import type {
-  DialecticState,
-  DialecticIR,
-} from '@schema/dialectic';
+import type { DialecticIR, DialecticState } from '@schema/dialectic';
+import { UNIVERSAL_TOPIC_MAP } from './sources/universal-topic-map';
 
 const state1: DialecticState = {
   id: 'univ-1',
-  title: 'Pure Concept — absolutely infinite, unconditioned',
+  title: 'Pure concept as absolutely infinite and unconditioned',
   concept: 'PureConcept',
   phase: 'subject',
-
   moments: [
     {
       name: 'pureConcept',
-      definition: 'Absolutely infinite, unconditioned, free',
+      definition: 'Concept as free, unconditioned, and absolutely infinite',
       type: 'determination',
     },
     {
-      name: 'genesis',
-      definition: 'Being → Essence → Concept via self-repulsion',
-      type: 'process',
-      relation: 'transforms',
+      name: 'geneticMediation',
+      definition:
+        'Being and essence are sublated into conceptive self-mediation',
+      type: 'mediation',
+      relation: 'contains',
       relatedTo: 'pureConcept',
     },
-    {
-      name: 'mutualPenetration',
-      definition: 'Mutual penetration of moments, immanent reflection',
-      type: 'mediation',
-    },
   ],
-
   invariants: [
     {
       id: 'univ-1-inv-1',
-      constraint: 'concept = absolutelyInfinite',
-      predicate: 'equals(concept, absolutelyInfinite)',
+      constraint: 'concept is unconditioned',
+      predicate: 'equals(concept, unconditioned)',
     },
     {
       id: 'univ-1-inv-2',
-      constraint: 'becoming = selfRepulsion',
-      predicate: 'equals(becoming, selfRepulsion)',
-    },
-    {
-      id: 'univ-1-inv-3',
-      constraint: 'determinateness = infiniteSelfReferring',
-      predicate: 'equals(determinateness, infiniteSelfReferring)',
+      constraint: 'determinateness is self-referring',
+      predicate: 'selfReferring(determinateness)',
     },
   ],
-
   forces: [
     {
       id: 'univ-1-force-1',
-      description: 'Pure concept drives toward universality as negation of negation',
+      description: 'Pure concept determines itself as universality',
       type: 'mediation',
-      trigger: 'concept.pure = true',
+      trigger: 'concept.selfIdentity = explicit',
       effect: 'universality.emerges = true',
-      targetState: 'univ-2',
+      targetState: 'univ-6',
     },
   ],
-
   transitions: [
     {
       id: 'univ-1-trans-1',
       from: 'univ-1',
-      to: 'univ-2',
+      to: 'univ-6',
       mechanism: 'mediation',
-      description: 'From pure concept to universality',
+      description: 'From pure concept to universal as creative principle',
     },
   ],
-
-  nextStates: ['univ-2'],
-  previousStates: ['actuality-ir'],
-
+  nextStates: ['univ-6'],
+  previousStates: ['sub-c-5'],
   provenance: {
     topicMapId: 'univ-1-genesis-absoluteness',
     lineRange: { start: 1, end: 28 },
-    section: '1. The Universal',
+    section: 'The Universal Concept',
     order: 1,
   },
-
-  description: 'Pure concept is absolutely infinite, unconditioned, free. Genesis: Being → Essence → Concept via self-repulsion. Mutual penetration of moments. Determinateness is infinite, self-referring.',
+  description: UNIVERSAL_TOPIC_MAP.entries[0]?.description,
+  keyPoints: UNIVERSAL_TOPIC_MAP.entries[0]?.keyPoints,
 };
 
 const state2: DialecticState = {
-  id: 'univ-2',
-  title: 'Universality — negation of negation',
-  concept: 'UniversalityAsNegationOfNegation',
-  phase: 'subject',
-
-  moments: [
-    {
-      name: 'universality',
-      definition: 'Absolute self-identity, negation of negation, infinite unity of negativity',
-      type: 'determination',
-    },
-    {
-      name: 'pureSelfreference',
-      definition: 'Pure self-reference via negativity',
-      type: 'mediation',
-      relation: 'contains',
-      relatedTo: 'universality',
-    },
-    {
-      name: 'absoluteNegativity',
-      definition: 'Contains difference/determinateness by absolute negativity',
-      type: 'negation',
-    },
-  ],
-
-  invariants: [
-    {
-      id: 'univ-2-inv-1',
-      constraint: 'universality = negationOfNegation',
-      predicate: 'equals(universality, negationOfNegation)',
-    },
-    {
-      id: 'univ-2-inv-2',
-      constraint: 'universality = infiniteUnity(negativity)',
-      predicate: 'equals(universality, infiniteUnity(negativity))',
-    },
-    {
-      id: 'univ-2-inv-3',
-      constraint: 'universal.simple = true',
-      predicate: 'isSimple(universal)',
-    },
-  ],
-
-  forces: [
-    {
-      id: 'univ-2-force-1',
-      description: 'Universality drives toward creative principle',
-      type: 'mediation',
-      trigger: 'universality.established = true',
-      effect: 'creativePrinciple.emerges = true',
-      targetState: 'univ-6',
-    },
-  ],
-
-  transitions: [
-    {
-      id: 'univ-2-trans-1',
-      from: 'univ-2',
-      to: 'univ-6',
-      mechanism: 'mediation',
-      description: 'From universality to creative principle',
-    },
-  ],
-
-  nextStates: ['univ-6'],
-  previousStates: ['univ-1'],
-
-  provenance: {
-    topicMapId: 'univ-2-universality-negation-of-negation',
-    lineRange: { start: 30, end: 45 },
-    section: '1. The Universal',
-    order: 2,
-  },
-
-  description: 'Universality is absolute self-identity, negation of negation, infinite unity of negativity. Pure self-reference via negativity. Contains difference/determinateness by absolute negativity.',
-};
-
-const state3: DialecticState = {
   id: 'univ-6',
-  title: 'Universal as creative principle — essence',
-  concept: 'CreativePrinciple',
+  title: 'Universal as essence and creative principle',
+  concept: 'CreativeUniversality',
   phase: 'subject',
-
   moments: [
     {
       name: 'creativePrinciple',
-      definition: 'Universal as informing and creative principle, absolute negativity',
+      definition: 'Universal as informing, self-mediating absolute negativity',
       type: 'determination',
     },
     {
-      name: 'essence',
-      definition: 'Universal is essence of its determination, positive nature',
-      type: 'determination',
+      name: 'freePowerLove',
+      definition: 'Universal as free power that preserves itself in its other',
+      type: 'reflection',
       relation: 'contains',
       relatedTo: 'creativePrinciple',
     },
-    {
-      name: 'freePower',
-      definition: 'Free power, free love, boundless blessedness',
-      type: 'determination',
-    },
   ],
-
   invariants: [
     {
       id: 'univ-6-inv-1',
-      constraint: 'universal = creativePrinciple',
-      predicate: 'equals(universal, creativePrinciple)',
-    },
-    {
-      id: 'univ-6-inv-2',
-      constraint: 'universal = essence(determination)',
+      constraint: 'universal is essence of its determination',
       predicate: 'equals(universal, essence(determination))',
     },
     {
-      id: 'univ-6-inv-3',
-      constraint: 'universal = freePower',
-      predicate: 'equals(universal, freePower)',
+      id: 'univ-6-inv-2',
+      constraint: 'determinateness is positedness, not external limitation',
+      predicate: 'equals(determinateness, positedness)',
     },
   ],
-
   forces: [
     {
       id: 'univ-6-force-1',
-      description: 'Creative principle drives toward determinateness within universal',
-      type: 'mediation',
-      trigger: 'creativePrinciple.established = true',
-      effect: 'determinateness.emerges = true',
-      targetState: 'univ-8',
+      description:
+        'Creative universality internalizes determinateness as particularity',
+      type: 'reflection',
+      trigger: 'universal.containsDeterminateness = true',
+      effect: 'particularity.emerges = true',
+      targetState: 'univ-11',
     },
   ],
-
   transitions: [
     {
       id: 'univ-6-trans-1',
       from: 'univ-6',
-      to: 'univ-8',
-      mechanism: 'mediation',
-      description: 'From creative principle to determinateness',
+      to: 'univ-11',
+      mechanism: 'reflection',
+      description:
+        'From creative universality to self-differentiating universals',
     },
   ],
-
-  nextStates: ['univ-8'],
-  previousStates: ['univ-2'],
-
+  nextStates: ['univ-11'],
+  previousStates: ['univ-1'],
   provenance: {
     topicMapId: 'univ-6-essence-creative-principle',
-    lineRange: { start: 118, end: 168 },
-    section: '1. The Universal',
-    order: 3,
+    lineRange: { start: 118, end: 155 },
+    section: 'The Universal Concept',
+    order: 6,
   },
-
-  description: 'Universal is essence of its determination, creative principle. Free power, free love, boundless blessedness. At rest in its other as in its own.',
+  description: UNIVERSAL_TOPIC_MAP.entries[5]?.description,
+  keyPoints: UNIVERSAL_TOPIC_MAP.entries[5]?.keyPoints,
 };
 
-const state4: DialecticState = {
-  id: 'univ-8',
-  title: 'Determinateness within universal — totality',
-  concept: 'DeterminatenessWithinUniversal',
-  phase: 'subject',
-
-  moments: [
-    {
-      name: 'determinateness',
-      definition: 'Universal contains determinateness (particularity/singularity) via absolute negativity',
-      type: 'determination',
-    },
-    {
-      name: 'totality',
-      definition: 'Universal is totality of concept, concrete, has content',
-      type: 'determination',
-      relation: 'contains',
-      relatedTo: 'determinateness',
-    },
-    {
-      name: 'abstractUniversal',
-      definition: 'Abstract universal is isolated, imperfect, void of truth',
-      type: 'negation',
-    },
-  ],
-
-  invariants: [
-    {
-      id: 'univ-8-inv-1',
-      constraint: 'universal.contains = determinateness',
-      predicate: 'contains(universal, determinateness)',
-    },
-    {
-      id: 'univ-8-inv-2',
-      constraint: 'universal = totality',
-      predicate: 'equals(universal, totality)',
-    },
-    {
-      id: 'univ-8-inv-3',
-      constraint: 'abstractUniversal.voidOfTruth = true',
-      predicate: 'isVoidOfTruth(abstractUniversal)',
-    },
-  ],
-
-  forces: [
-    {
-      id: 'univ-8-force-1',
-      description: 'Determinateness drives toward total reflection',
-      type: 'mediation',
-      trigger: 'determinateness.established = true',
-      effect: 'totalReflection.emerges = true',
-      targetState: 'univ-9',
-    },
-  ],
-
-  transitions: [
-    {
-      id: 'univ-8-trans-1',
-      from: 'univ-8',
-      to: 'univ-9',
-      mechanism: 'mediation',
-      description: 'From determinateness to total reflection',
-    },
-  ],
-
-  nextStates: ['univ-9'],
-  previousStates: ['univ-6'],
-
-  provenance: {
-    topicMapId: 'univ-8-determinateness-totality',
-    lineRange: { start: 169, end: 204 },
-    section: '1. The Universal',
-    order: 4,
-  },
-
-  description: 'Universal contains determinateness (particularity/singularity) via absolute negativity. Universal is totality of concept, concrete. Abstract universal is isolated, void of truth.',
-};
-
-const state5: DialecticState = {
-  id: 'univ-9',
-  title: 'Total reflection — outward and inward shining',
-  concept: 'TotalReflection',
-  phase: 'subject',
-
-  moments: [
-    {
-      name: 'totalReflection',
-      definition: 'Doubly reflective shine: outward (particularity) and inward (genus)',
-      type: 'mediation',
-    },
-    {
-      name: 'genus',
-      definition: 'Determinateness as determinate concept, immanent character',
-      type: 'determination',
-      relation: 'contains',
-      relatedTo: 'totalReflection',
-    },
-    {
-      name: 'infinitelyFree',
-      definition: 'Determinate concept is infinitely free concept',
-      type: 'determination',
-    },
-  ],
-
-  invariants: [
-    {
-      id: 'univ-9-inv-1',
-      constraint: 'reflection = doubly(outward, inward)',
-      predicate: 'equals(reflection, doubly(outward, inward))',
-    },
-    {
-      id: 'univ-9-inv-2',
-      constraint: 'determinateness = genus',
-      predicate: 'equals(determinateness, genus)',
-    },
-    {
-      id: 'univ-9-inv-3',
-      constraint: 'determinateConcept = infinitelyFree',
-      predicate: 'equals(determinateConcept, infinitelyFree)',
-    },
-  ],
-
-  forces: [
-    {
-      id: 'univ-9-force-1',
-      description: 'Total reflection drives toward creative self-differentiation',
-      type: 'mediation',
-      trigger: 'totalReflection.established = true',
-      effect: 'selfDifferentiation.emerges = true',
-      targetState: 'univ-11',
-    },
-  ],
-
-  transitions: [
-    {
-      id: 'univ-9-trans-1',
-      from: 'univ-9',
-      to: 'univ-11',
-      mechanism: 'mediation',
-      description: 'From total reflection to creative self-differentiation',
-    },
-  ],
-
-  nextStates: ['univ-11'],
-  previousStates: ['univ-8'],
-
-  provenance: {
-    topicMapId: 'univ-9-total-reflection-inward-outward',
-    lineRange: { start: 206, end: 246 },
-    section: '1. The Universal',
-    order: 5,
-  },
-
-  description: 'Total reflection is doubly reflective shine: outward (particularity) and inward (genus). Determinateness as determinate concept is immanent character. Infinitely free concept.',
-};
-
-const state6: DialecticState = {
+const state3: DialecticState = {
   id: 'univ-11',
-  title: 'Creative self-differentiation — particularity emerges',
-  concept: 'CreativeSelfDifferentiation',
+  title: 'Universal freely differentiates into universal differences',
+  concept: 'SelfDifferentiatingUniversal',
   phase: 'subject',
-
   moments: [
     {
-      name: 'selfDifferentiation',
-      definition: 'Universal determines itself freely, differentiates internally',
+      name: 'internalDifferentiation',
+      definition:
+        'Universal differentiates itself through self-referring negativity',
       type: 'process',
     },
     {
-      name: 'creativePower',
-      definition: 'Creative power as self-referring absolute negativity',
+      name: 'finiteUniversality',
+      definition:
+        'Finite isolates are forms through which concept clothes differences',
       type: 'determination',
-      relation: 'contains',
-      relatedTo: 'selfDifferentiation',
-    },
-    {
-      name: 'universalDifferences',
-      definition: 'Posits differences that are themselves universals, self-referring',
-      type: 'determination',
+      relation: 'transforms',
+      relatedTo: 'internalDifferentiation',
     },
   ],
-
   invariants: [
     {
       id: 'univ-11-inv-1',
-      constraint: 'universal.determinesFreelyItself = true',
-      predicate: 'determinesFreelyItself(universal)',
+      constraint: 'differences are themselves universals',
+      predicate: 'forall(difference, universal(difference))',
     },
     {
       id: 'univ-11-inv-2',
-      constraint: 'creativePower = selfReferringAbsoluteNegativity',
-      predicate: 'equals(creativePower, selfReferringAbsoluteNegativity)',
-    },
-    {
-      id: 'univ-11-inv-3',
-      constraint: 'differences = universals',
-      predicate: 'equals(differences, universals)',
+      constraint: 'true higher universal is inward second negation',
+      predicate: 'equals(higherUniversal, inwardSecondNegation)',
     },
   ],
-
   forces: [
     {
       id: 'univ-11-force-1',
-      description: 'Creative self-differentiation drives toward particularity',
+      description:
+        'Differentiated universal passes over to explicit particularity',
       type: 'passover',
-      trigger: 'selfDifferentiation.complete = true',
-      effect: 'particularity.emerges = true',
+      trigger: 'universal.differencesFixed = true',
+      effect: 'particularConcept.emerges = true',
       targetState: 'part-1',
     },
   ],
-
   transitions: [
     {
       id: 'univ-11-trans-1',
       from: 'univ-11',
       to: 'part-1',
       mechanism: 'passover',
-      description: 'From universal to particularity',
+      description: 'From universal concept to particular concept',
     },
   ],
-
   nextStates: ['part-1'],
-  previousStates: ['univ-9'],
-
+  previousStates: ['univ-6'],
   provenance: {
     topicMapId: 'univ-11-creative-differentiation',
     lineRange: { start: 279, end: 296 },
-    section: '1. The Universal',
-    order: 6,
+    section: 'The Universal Concept',
+    order: 11,
   },
-
-  description: 'Universal determines itself freely, differentiates internally. Creative power as self-referring absolute negativity. Posits differences that are themselves universals.',
+  description: UNIVERSAL_TOPIC_MAP.entries[10]?.description,
+  keyPoints: UNIVERSAL_TOPIC_MAP.entries[10]?.keyPoints,
 };
 
 export const universalIR: DialecticIR = {
   id: 'universal-ir',
-  title: 'Universal IR: Pure Concept, Negation of Negation, Creative Principle',
-  section: 'C. THE CONCEPT - I. SUBJECTIVITY - A. The Concept - 1. The Universal',
-  states: [state1, state2, state3, state4, state5, state6],
+  title:
+    'Universal IR: Pure Concept, Creative Universality, Self-Differentiation',
+  section: 'CONCEPT - SUBJECTIVITY - A. The Concept - 1. The Universal',
+  states: [state1, state2, state3],
   metadata: {
     sourceFile: 'universal.txt',
-    totalStates: 6,
+    totalStates: 3,
     cpuGpuMapping: {
       'univ-1': 'subject',
-      'univ-2': 'subject',
       'univ-6': 'subject',
-      'univ-8': 'subject',
-      'univ-9': 'subject',
       'univ-11': 'subject',
     },
   },
@@ -507,9 +212,6 @@ export const universalIR: DialecticIR = {
 
 export const universalStates = {
   'univ-1': state1,
-  'univ-2': state2,
-  'univ-6': state3,
-  'univ-8': state4,
-  'univ-9': state5,
-  'univ-11': state6,
+  'univ-6': state2,
+  'univ-11': state3,
 };

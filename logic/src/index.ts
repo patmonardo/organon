@@ -1,9 +1,12 @@
 // logic package public API.
 // This package is the TS discursive/relative layer that authors kernel calls.
 
+import * as schemaNamespace from './schema';
+
+export const schema = schemaNamespace;
+
 export * from './logic';
-export * from './absolute';
+export * from './schema';
 export * from './repository';
-// Expose schema and relative layers under namespaces to avoid name collisions (e.g., FormShape class vs schema record)
-export * as schema from './schema';
-export * as relative from './relative';
+export * from './absolute';
+export * from './relative';

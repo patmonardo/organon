@@ -1,3 +1,3 @@
-export * from './world';
-export * from './law';
-export * from './disappearance';
+export * from './world-ir';
+export * from './law-ir';
+export * from './disappearance-ir';

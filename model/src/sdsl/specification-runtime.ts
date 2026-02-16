@@ -4,6 +4,7 @@ import {
   schema as logicSchema,
   SdslSpecificationRepository,
   defaultConnection,
+  type SdslCompilerArtifacts,
 } from '@organon/logic';
 
 import {
@@ -54,7 +55,7 @@ export const SdslDashboardBindingSchema = z.object({
 export type SdslDashboardBinding = z.infer<typeof SdslDashboardBindingSchema>;
 
 export type SdslRuntimeOutput = {
-  compiled: logicSchema.SdslCompilerArtifacts;
+  compiled: SdslCompilerArtifacts;
   formShape: FormShape;
   modelBridge: UnifiedModelBridge;
   contextDocument: ContextDocument;
@@ -123,7 +124,7 @@ function toAgentOutputs(
 }
 
 function toPlatonicProjection(
-  compiled: logicSchema.SdslCompilerArtifacts,
+  compiled: SdslCompilerArtifacts,
 ): PlatonicFormProjection {
   const entity = logicSchema.EntityShapeSchema.parse(
     compiled.designSurface.entity,
@@ -143,7 +144,7 @@ function toPlatonicProjection(
 }
 
 function toUnifiedModelBridge(
-  compiled: logicSchema.SdslCompilerArtifacts,
+  compiled: SdslCompilerArtifacts,
   formShape: FormShape,
 ): UnifiedModelBridge {
   return UnifiedModelBridgeSchema.parse({
@@ -190,9 +191,7 @@ function toFormShape(
   };
 }
 
-function toContextDocument(
-  compiled: logicSchema.SdslCompilerArtifacts,
-): ContextDocument {
+function toContextDocument(compiled: SdslCompilerArtifacts): ContextDocument {
   const nowIso = new Date().toISOString();
 
   return {

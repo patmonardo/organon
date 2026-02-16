@@ -1,241 +1,201 @@
-/**
- * One and Many IR: Dialectic Pseudo-Code for The One and The Many
- *
- * Architecture: CPU Quality (Immediate Determination)
- * Section: I. BEING - A. QUALITY - C. Being-for-Self - B. The One and The Many
- *
- * Covers the dialectical movement:
- * - The One and The Many: Simple reference and determining
- * - The One Within: Unalterable and void
- * - The One and The Void: Existence and externalization
- * - Many Ones: Repulsion and plurality
- *
- * The CPU's quality - the one, the void, repulsion, plurality
- */
-
-import type {
-  DialecticState,
-  DialecticIR,
-} from '@schema/dialectic';
+import type { DialecticIR, DialecticState } from '@schema/dialectic';
+import { oneManyTopicMap } from './sources/one-many-topic-map';
 
 const state1: DialecticState = {
   id: 'one-many-a',
-  title: 'The one within — unalterable and void',
-  concept: 'TheOneWithin',
+  title: 'The one and the void',
+  concept: 'OneAndVoid',
   phase: 'quality',
-
   moments: [
     {
-      name: 'unalterable',
-      definition: 'One is unalterable, not capable of becoming any other',
+      name: 'unalterableOne',
+      definition:
+        'The one is self-referential, unalterable, and excludes becoming-other',
       type: 'determination',
     },
     {
-      name: 'void',
-      definition: 'In the one there is nothing, this nothing is the void',
+      name: 'voidAsPositedNothing',
+      definition:
+        'Within this immediacy, nothing appears as the void outside yet tied to the one',
       type: 'negation',
       relation: 'contains',
-      relatedTo: 'unalterable',
-    },
-    {
-      name: 'qualityOfOne',
-      definition: 'Void is quality of one in its immediacy',
-      type: 'determination',
+      relatedTo: 'unalterableOne',
     },
   ],
-
   invariants: [
     {
       id: 'one-many-a-inv-1',
-      constraint: 'one.unalterable = true',
-      predicate: 'isUnalterable(one)',
+      constraint: 'one and void stand in one relation while remaining opposed',
+      predicate: 'singleRelationWithOpposition(one, void)',
     },
     {
       id: 'one-many-a-inv-2',
-      constraint: 'void = qualityOfOne',
-      predicate: 'equals(void, qualityOfOne)',
+      constraint: 'immediacy preserves negation as constitutive',
+      predicate: 'constitutiveNegation(immediacy)',
     },
   ],
-
   forces: [
     {
       id: 'one-many-a-force-1',
-      description: 'The one within drives toward the one and the void',
+      description:
+        'Self-reference of the one externalizes as repulsion into plurality',
       type: 'negation',
-      trigger: 'void.outsideOne = true',
-      effect: 'oneAndVoid.emerges = true',
+      trigger: 'one.negativelyRefersToItself = true',
+      effect: 'manyOnes.posited = true',
       targetState: 'one-many-b-1',
     },
   ],
-
   transitions: [
     {
       id: 'one-many-a-trans-1',
       from: 'one-many-a',
       to: 'one-many-b-1',
       mechanism: 'negation',
-      description: 'From the one within to the one and the void',
+      description: 'From one-and-void to repulsion and plurality',
     },
   ],
-
   nextStates: ['one-many-b-1'],
-  previousStates: ['being-for-self-ir'],
-
+  previousStates: ['being-for-self-c'],
   provenance: {
     topicMapId: 'one-many-a',
     lineRange: { start: 43, end: 82 },
     section: 'a. The one within',
     order: 1,
   },
-
-  description: 'The one within - unalterable, indeterminate. In the one there is nothing. Void is quality of one in its immediacy.',
+  description: oneManyTopicMap[1]?.description,
+  keyPoints: oneManyTopicMap[1]?.keyPoints,
 };
 
 const state2: DialecticState = {
   id: 'one-many-b-1',
-  title: 'The one and the void — existence and externalization',
-  concept: 'TheOneAndTheVoid',
+  title: 'Repulsion and many ones',
+  concept: 'RepulsivePlurality',
   phase: 'quality',
-
   moments: [
     {
-      name: 'oneAndVoid',
-      definition: 'Being-for-itself determined as one and void has again acquired existence',
-      type: 'determination',
+      name: 'selfRepulsionOfOne',
+      definition:
+        'The one repels itself from itself, positing many ones as its own output',
+      type: 'process',
     },
     {
-      name: 'externalization',
-      definition: 'Moments come out of unity, become external to themselves',
-      type: 'negation',
-      relation: 'contains',
-      relatedTo: 'oneAndVoid',
+      name: 'pluralityAsExternalInfinity',
+      definition:
+        'Plurality appears as externally laid-out infinity with void as limit',
+      type: 'externality',
+      relation: 'transitions',
+      relatedTo: 'selfRepulsionOfOne',
     },
   ],
-
   invariants: [
     {
       id: 'one-many-b-1-inv-1',
-      constraint: 'beingForItself = oneAndVoid',
-      predicate: 'equals(beingForItself, oneAndVoid)',
+      constraint: 'many ones are mutually presupposed through repulsion',
+      predicate: 'mutualPresupposition(manyOnes)',
     },
     {
       id: 'one-many-b-1-inv-2',
-      constraint: 'moments.external = true',
-      predicate: 'isExternal(moments)',
+      constraint: 'repulsion keeps connection while appearing as separation',
+      predicate: 'connectedSeparation(repulsion)',
     },
   ],
-
   forces: [
     {
       id: 'one-many-b-1-force-1',
-      description: 'The one and the void drive toward many ones',
-      type: 'negation',
-      trigger: 'one.repelsItself = true',
-      effect: 'manyOnes.emerges = true',
+      description:
+        'Repulsion crossing into identity demands attraction as self-positing-in-one',
+      type: 'sublation',
+      trigger: 'repulsion.crossesIntoIdentity = true',
+      effect: 'attraction.emerges = true',
       targetState: 'one-many-c',
     },
   ],
-
   transitions: [
     {
       id: 'one-many-b-1-trans-1',
       from: 'one-many-b-1',
       to: 'one-many-c',
-      mechanism: 'negation',
-      description: 'From the one and the void to many ones',
+      mechanism: 'sublation',
+      description: 'From repulsive plurality to attractional unity',
     },
   ],
-
   nextStates: ['one-many-c'],
   previousStates: ['one-many-a'],
-
   provenance: {
-    topicMapId: 'one-many-b-1',
-    lineRange: { start: 84, end: 109 },
-    section: 'b. The one and the void',
+    topicMapId: 'one-many-c',
+    lineRange: { start: 111, end: 248 },
+    section: 'c. Many ones / Repulsion',
     order: 2,
   },
-
-  description: 'The one and the void - existence and externalization. Moments come out of unity, become external. Unity withdraws to one side, confronted by void.',
+  description: oneManyTopicMap[3]?.description,
+  keyPoints: oneManyTopicMap[3]?.keyPoints,
 };
 
 const state3: DialecticState = {
   id: 'one-many-c',
-  title: 'Many ones — repulsion and plurality',
-  concept: 'ManyOnes',
+  title: 'Transition from repulsion to attraction',
+  concept: 'RepulsionToAttraction',
   phase: 'quality',
-
   moments: [
     {
-      name: 'repulsion',
-      definition: 'Negative reference of one to itself is repulsion, one repels itself from itself',
-      type: 'negation',
+      name: 'oneOfAttraction',
+      definition:
+        'Attraction posits the mediated one that gathers many without abstractly swallowing them',
+      type: 'mediation',
     },
     {
-      name: 'manyOnes',
-      definition: 'Repulsion is positing of many ones through one itself',
-      type: 'determination',
+      name: 'unityOfRepulsionAttraction',
+      definition:
+        'Repulsion and attraction are inseparable moments of one process',
+      type: 'sublation',
       relation: 'contains',
-      relatedTo: 'repulsion',
-    },
-    {
-      name: 'infinityExternalized',
-      definition: 'Infinity externalized itself, plurality is contradiction that produces itself',
-      type: 'negation',
+      relatedTo: 'oneOfAttraction',
     },
   ],
-
   invariants: [
     {
       id: 'one-many-c-inv-1',
-      constraint: 'repulsion = negativeReferenceToItself',
-      predicate: 'equals(repulsion, negativeReferenceToItself)',
-    },
-    {
-      id: 'one-many-c-inv-2',
-      constraint: 'manyOnes = repulsion',
-      predicate: 'equals(manyOnes, repulsion)',
+      constraint: 'attraction presupposes repulsion and vice versa',
+      predicate: 'mutualPresupposition(attraction, repulsion)',
     },
   ],
-
   forces: [
     {
       id: 'one-many-c-force-1',
-      description: 'Many ones drive toward attraction',
-      type: 'mediation',
-      trigger: 'repulsion.crossesOverIntoIdentity = true',
-      effect: 'attraction.emerges = true',
-      targetState: 'attraction-a-1',
+      description:
+        'The unity of repulsion and attraction requires explicit treatment as a dedicated chapter',
+      type: 'passover',
+      trigger: 'repulsionAttraction.unity.explicit = true',
+      effect: 'attractionChapter.initiated = true',
+      targetState: 'attraction-a',
     },
   ],
-
   transitions: [
     {
       id: 'one-many-c-trans-1',
       from: 'one-many-c',
-      to: 'attraction-a-1',
-      mechanism: 'mediation',
-      description: 'From many ones to attraction',
+      to: 'attraction-a',
+      mechanism: 'passover',
+      description:
+        'From one-many dialectic to repulsion and attraction chapter',
     },
   ],
-
-  nextStates: ['attraction-a-1'],
+  nextStates: ['attraction-a'],
   previousStates: ['one-many-b-1'],
-
   provenance: {
     topicMapId: 'one-many-c',
     lineRange: { start: 111, end: 248 },
     section: 'c. Many ones / Repulsion',
     order: 3,
   },
-
-  description: 'Many ones - repulsion and plurality. One repels itself from itself. Ones presupposed, posited as non-posited. Plurality is infinity externalized, contradiction producing itself. Self-positing-in-a-one is attraction.',
+  description: oneManyTopicMap[3]?.description,
+  keyPoints: oneManyTopicMap[3]?.keyPoints,
 };
 
 export const oneManyIR: DialecticIR = {
   id: 'one-many-ir',
-  title: 'One and Many IR: The One Within, The One and The Void, Many Ones',
-  section: 'I. BEING - A. QUALITY - C. Being-for-Self - B. The One and The Many',
+  title: 'One and Many IR: One, Void, Repulsion, Attraction',
+  section: 'BEING - QUALITY - C. Being-for-Self - B. One and Many',
   states: [state1, state2, state3],
   metadata: {
     sourceFile: 'one-many.txt',

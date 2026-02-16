@@ -25,6 +25,8 @@
     "format": "prettier --write \"**/*.{ts,js,md,json,yml,yaml}\" --ignore-path .gitignore",
     "doc:api": "typedoc --options typedoc.json",
     "codegen:dialectic": "tsx src/tools/codegen-dialectic-registry.ts",
+    "preview:factstore": "tsx src/tools/preview-fact-store-prototype.ts",
+    "preview:factstore:explain": "tsx src/tools/preview-fact-store-explained.ts",
     "seed": "tsx src/tools/run-seed.ts",
     "seed:enhanced": "tsx src/tools/run-seed-enhanced.ts",
     "seed:reflective": "tsx src/tools/run-seed-context-property.ts",

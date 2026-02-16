@@ -1,240 +1,206 @@
-/**
- * Chemical Process IR: Dialectic Pseudo-Code for The Chemical Process
- *
- * Architecture: GPU Object (Self-Executing Reality)
- * Section: C. THE CONCEPT - II. OBJECTIVITY - B. Chemism - B. The Process
- *
- * Covers the dialectical movement:
- * - Presupposition: Objects in tension, affinity, middle term (element of communication)
- * - Product: Neutral object, tension dissolved, negativity outside
- * - Disjunctive Syllogism: Disruption, elemental objects, chemism sublates itself
- *
- * The GPU's chemical process - affinity, neutralization, transition to higher sphere
- */
-
-import type {
-  DialecticState,
-  DialecticIR,
-} from '@schema/dialectic';
+import type { DialecticIR, DialecticState } from '@schema/dialectic';
+import { processTopicMap } from './sources/process-topic-map';
 
 const state1: DialecticState = {
   id: 'chem-proc-1',
-  title: 'Presupposition — objects in tension, affinity, communication',
-  concept: 'ChemicalPresupposition',
+  title: 'Affinity and communicative middle term',
+  concept: 'ChemicalAffinityProcess',
   phase: 'object',
-
   moments: [
     {
-      name: 'objectsInTension',
-      definition: 'Objects in tension, tensed against themselves and each other, affinity',
+      name: 'tensedObjects',
+      definition:
+        'Objects are in reciprocal tension and seek to sublate one-sidedness through affinity',
       type: 'determination',
     },
     {
-      name: 'middleTerm',
-      definition: 'Middle term - implicit nature, element of communication (water, language)',
+      name: 'middleElementOfCommunication',
+      definition:
+        'A formal middle term mediates relation as communication element',
       type: 'mediation',
       relation: 'contains',
-      relatedTo: 'objectsInTension',
-    },
-    {
-      name: 'communication',
-      definition: 'Communication - tranquil coming-together and negative relating',
-      type: 'mediation',
+      relatedTo: 'tensedObjects',
     },
   ],
-
   invariants: [
     {
       id: 'chem-proc-1-inv-1',
-      constraint: 'objects.inTension = true',
-      predicate: 'areInTension(objects)',
+      constraint: 'affinity presupposes objects in reciprocal tension',
+      predicate: 'presupposes(affinity, reciprocalTension(objects))',
     },
     {
       id: 'chem-proc-1-inv-2',
-      constraint: 'middleTerm = elementOfCommunication',
-      predicate: 'equals(middleTerm, elementOfCommunication)',
+      constraint: 'middle term is formal communication medium',
+      predicate: 'isFormalCommunicationMedium(middleTerm)',
     },
   ],
-
   forces: [
     {
       id: 'chem-proc-1-force-1',
-      description: 'Communication drives toward neutral product',
+      description:
+        'Reciprocal communication resolves immediate tension into neutral product',
       type: 'mediation',
-      trigger: 'striving.attainsTranquilNeutrality = true',
+      trigger: 'reciprocalBalancing.active = true',
       effect: 'neutralProduct.emerges = true',
       targetState: 'chem-proc-4',
     },
   ],
-
   transitions: [
     {
       id: 'chem-proc-1-trans-1',
       from: 'chem-proc-1',
       to: 'chem-proc-4',
       mechanism: 'mediation',
-      description: 'From affinity to neutral product',
+      description: 'From affinity to neutralized product',
     },
   ],
-
   nextStates: ['chem-proc-4'],
-  previousStates: ['chemical-object-ir'],
-
+  previousStates: ['chem-obj-4'],
   provenance: {
     topicMapId: 'process-1',
-    lineRange: { start: 4, end: 60 },
+    lineRange: { start: 4, end: 45 },
     section: 'B. THE PROCESS',
     order: 1,
   },
-
-  description: 'Objects in tension, affinity. Middle term - implicit nature, element of communication. Communication - tranquil coming-together, negative relating. Striving attains tranquil neutrality.',
+  description: processTopicMap[0]?.description,
+  keyPoints: processTopicMap[0]?.keyPoints,
 };
 
 const state2: DialecticState = {
   id: 'chem-proc-4',
-  title: 'Product — neutral object, negativity outside',
-  concept: 'ChemicalNeutralProduct',
+  title: 'Neutral product and externalized negativity',
+  concept: 'ChemicalNeutrality',
   phase: 'object',
-
   moments: [
     {
-      name: 'neutralProduct',
-      definition: 'Product is neutral, tension dissolved, formal unity',
+      name: 'formalNeutrality',
+      definition:
+        'Process yields a neutral product where opposition is blunted into formal unity',
       type: 'determination',
     },
     {
-      name: 'negativityOutside',
-      definition: 'Negativity stepped outside neutral object, restless activity',
+      name: 'negativityStepsOutside',
+      definition:
+        'Essential negativity persists but external to the neutral object as restless activity',
       type: 'negation',
       relation: 'opposite',
-      relatedTo: 'neutralProduct',
+      relatedTo: 'formalNeutrality',
     },
   ],
-
   invariants: [
     {
       id: 'chem-proc-4-inv-1',
-      constraint: 'product.neutral = true',
-      predicate: 'isNeutral(product)',
+      constraint: 'neutral product retains possibility of renewed tension',
+      predicate: 'retainsPotentialForTension(neutralProduct)',
     },
     {
       id: 'chem-proc-4-inv-2',
-      constraint: 'negativity.outside = true',
-      predicate: 'isOutside(negativity)',
+      constraint: 'negativity is no longer immanent to product form',
+      predicate: 'externalized(negativity, neutralProduct)',
     },
   ],
-
   forces: [
     {
       id: 'chem-proc-4-force-1',
-      description: 'Negativity outside drives toward disjunctive syllogism',
-      type: 'mediation',
-      trigger: 'negativity.restlessActivity = true',
-      effect: 'disjunctiveSyllogism.emerges = true',
-      targetState: 'chem-proc-6',
+      description:
+        'External negativity disrupts neutrality and drives disjunctive articulation',
+      type: 'contradiction',
+      trigger: 'negativity.restless = true',
+      effect: 'disjunctiveTotality.emerges = true',
+      targetState: 'chem-proc-7',
     },
   ],
-
   transitions: [
     {
       id: 'chem-proc-4-trans-1',
       from: 'chem-proc-4',
-      to: 'chem-proc-6',
-      mechanism: 'mediation',
-      description: 'From neutral product to disjunctive syllogism',
+      to: 'chem-proc-7',
+      mechanism: 'contradiction',
+      description: 'From formal neutrality to disjunctive totality',
     },
   ],
-
-  nextStates: ['chem-proc-6'],
+  nextStates: ['chem-proc-7'],
   previousStates: ['chem-proc-1'],
-
   provenance: {
     topicMapId: 'process-4',
     lineRange: { start: 62, end: 108 },
     section: 'B. THE PROCESS',
     order: 2,
   },
-
-  description: 'Product is neutral, tension dissolved. Negativity stepped outside object, restless activity. Process does not spontaneously restart.',
+  description: processTopicMap[3]?.description,
+  keyPoints: processTopicMap[3]?.keyPoints,
 };
 
 const state3: DialecticState = {
-  id: 'chem-proc-6',
-  title: 'Disjunctive syllogism — disruption, elemental objects, chemism sublates itself',
-  concept: 'ChemicalDisjunctiveSyllogism',
+  id: 'chem-proc-7',
+  title: 'Elemental liberation and self-sublation of chemism',
+  concept: 'TransitionToChemismProper',
   phase: 'object',
-
   moments: [
     {
-      name: 'disruption',
-      definition: 'Disruption - real neutrality breaks up into neutral moments',
-      type: 'mediation',
-    },
-    {
-      name: 'disjunctiveSyllogism',
-      definition: 'Disjunctive syllogism - totality of chemism, negative unity/real unity/abstract moments',
-      type: 'mediation',
-      relation: 'contains',
-      relatedTo: 'disruption',
-    },
-    {
-      name: 'elementalObjects',
-      definition: 'Elemental objects liberated, chemism sublates itself, transitions to higher sphere',
+      name: 'elementalLiberation',
+      definition:
+        'Elemental objects are liberated from immediate chemical tension',
       type: 'sublation',
     },
+    {
+      name: 'returnAndHigherPassover',
+      definition:
+        'Chemism returns to its beginning and in this return sublates itself into a higher sphere',
+      type: 'passover',
+      relation: 'transitions',
+      relatedTo: 'elementalLiberation',
+    },
   ],
-
   invariants: [
     {
-      id: 'chem-proc-6-inv-1',
-      constraint: 'syllogism.disjunctive = true',
-      predicate: 'isDisjunctive(syllogism)',
+      id: 'chem-proc-7-inv-1',
+      constraint: 'chemism returns to beginning through real process',
+      predicate: 'returnsToBeginningThroughRealProcess(chemism)',
     },
     {
-      id: 'chem-proc-6-inv-2',
-      constraint: 'chemism.sublatesItself = true',
-      predicate: 'sublatesItself(chemism)',
+      id: 'chem-proc-7-inv-2',
+      constraint: 'return is simultaneously self-sublation to higher sphere',
+      predicate:
+        'simultaneous(returnToConcept(chemism), selfSublation(chemism))',
     },
   ],
-
   forces: [
     {
-      id: 'chem-proc-6-force-1',
-      description: 'Chemism sublates itself, transitions to higher sphere',
-      type: 'sublation',
-      trigger: 'chemism.goesBackToConcept = true',
-      effect: 'higherSphere.emerges = true',
+      id: 'chem-proc-7-force-1',
+      description:
+        'Chemism as process-totality gives way to transition of chemism proper',
+      type: 'passover',
+      trigger: 'selfSublation(chemism) = true',
+      effect: 'transitionOfChemism.emerges = true',
       targetState: 'chem-1',
     },
   ],
-
   transitions: [
     {
-      id: 'chem-proc-6-trans-1',
-      from: 'chem-proc-6',
+      id: 'chem-proc-7-trans-1',
+      from: 'chem-proc-7',
       to: 'chem-1',
-      mechanism: 'sublation',
-      description: 'From disjunctive syllogism to transition of chemism',
+      mechanism: 'passover',
+      description: 'From process totality to transition of chemism',
     },
   ],
-
   nextStates: ['chem-1'],
   previousStates: ['chem-proc-4'],
-
   provenance: {
-    topicMapId: 'process-6',
-    lineRange: { start: 110, end: 180 },
+    topicMapId: 'process-7',
+    lineRange: { start: 156, end: 180 },
     section: 'B. THE PROCESS',
     order: 3,
   },
-
-  description: 'Disjunctive syllogism - totality of chemism. Disruption, elemental objects liberated. Chemism gone back to beginning, sublates itself, transitions to higher sphere.',
+  description: processTopicMap[6]?.description,
+  keyPoints: processTopicMap[6]?.keyPoints,
 };
 
 export const chemicalProcessIR: DialecticIR = {
   id: 'chemical-process-ir',
-  title: 'Chemical Process IR: Affinity, Neutral Product, Disjunctive Syllogism',
-  section: 'C. THE CONCEPT - II. OBJECTIVITY - B. Chemism - B. The Process',
+  title: 'Chemical Process IR: Affinity, Neutrality, Self-Sublation',
+  section: 'CONCEPT - OBJECTIVITY - B. Chemism - B. The Process',
   states: [state1, state2, state3],
   metadata: {
     sourceFile: 'process.txt',
@@ -242,7 +208,7 @@ export const chemicalProcessIR: DialecticIR = {
     cpuGpuMapping: {
       'chem-proc-1': 'object',
       'chem-proc-4': 'object',
-      'chem-proc-6': 'object',
+      'chem-proc-7': 'object',
     },
   },
 };
@@ -250,5 +216,5 @@ export const chemicalProcessIR: DialecticIR = {
 export const chemicalProcessStates = {
   'chem-proc-1': state1,
   'chem-proc-4': state2,
-  'chem-proc-6': state3,
+  'chem-proc-7': state3,
 };

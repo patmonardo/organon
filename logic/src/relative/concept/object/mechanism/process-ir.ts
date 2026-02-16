@@ -1,251 +1,212 @@
-/**
- * Mechanical Process IR: Dialectic Pseudo-Code for The Mechanical Process
- *
- * Architecture: GPU Object (Self-Executing Reality)
- * Section: C. THE CONCEPT - II. OBJECTIVITY - A. Mechanism - B. The Mechanical Process
- *
- * Covers the dialectical movement:
- * - Formal Process: Communication, reaction, product (rest)
- * - Real Process: Determined opposition, resistance, power, fate
- * - Product: Center and law, rational fate, foundation
- *
- * The GPU's mechanical process - communication, resistance, center, law
- */
-
-import type {
-  DialecticState,
-  DialecticIR,
-} from '@schema/dialectic';
+import type { DialecticIR, DialecticState } from '@schema/dialectic';
+import { MECHANICAL_PROCESS_TOPIC_MAP } from './sources/process-topic-map';
 
 const state1: DialecticState = {
-  id: 'mech-proc-1',
-  title: 'Formal process — communication, reaction, product',
+  id: 'mech-proc-3',
+  title: 'Formal mechanical process: communication, reaction, product',
   concept: 'FormalMechanicalProcess',
   phase: 'object',
-
   moments: [
     {
-      name: 'communication',
-      definition: 'Communication - determinateness widens in idealizing manner, universality',
+      name: 'communicationReactionCycle',
+      definition:
+        'Universality communicates and is particularized by reciprocal reaction',
       type: 'process',
     },
     {
-      name: 'reaction',
-      definition: 'Reaction - particularization, reciprocal repulsion, elasticity',
-      type: 'process',
-      relation: 'opposite',
-      relatedTo: 'communication',
-    },
-    {
-      name: 'productAsRest',
-      definition: 'Product - return to rest, mediation sublated, external determinateness',
-      type: 'determination',
+      name: 'formalProductRest',
+      definition:
+        'Product returns to rest with determinateness still external/posited',
+      type: 'mediation',
+      relation: 'contains',
+      relatedTo: 'communicationReactionCycle',
     },
   ],
-
   invariants: [
     {
-      id: 'mech-proc-1-inv-1',
-      constraint: 'communication = universality',
-      predicate: 'equals(communication, universality)',
+      id: 'mech-proc-3-inv-1',
+      constraint:
+        'communication and reaction are one process in opposite determination',
+      predicate: 'oneProcessOpposed(communication, reaction)',
     },
     {
-      id: 'mech-proc-1-inv-2',
-      constraint: 'reaction = action',
-      predicate: 'equals(reaction, action)',
+      id: 'mech-proc-3-inv-2',
+      constraint: 'formal product preserves externality of determinateness',
+      predicate: 'external(determinateness(formalProduct))',
     },
   ],
-
   forces: [
     {
-      id: 'mech-proc-1-force-1',
-      description: 'Formal process drives toward real process',
-      type: 'mediation',
-      trigger: 'determinateness.reflected = true',
+      id: 'mech-proc-3-force-1',
+      description:
+        'Formal product contradiction drives toward real determined opposition',
+      type: 'contradiction',
+      trigger: 'rest.externalToObject = true',
       effect: 'realProcess.emerges = true',
       targetState: 'mech-proc-6',
     },
   ],
-
   transitions: [
     {
-      id: 'mech-proc-1-trans-1',
-      from: 'mech-proc-1',
+      id: 'mech-proc-3-trans-1',
+      from: 'mech-proc-3',
       to: 'mech-proc-6',
-      mechanism: 'mediation',
-      description: 'From formal to real mechanical process',
+      mechanism: 'contradiction',
+      description: 'From formal process to real mechanical process',
     },
   ],
-
   nextStates: ['mech-proc-6'],
-  previousStates: ['mechanical-object-ir'],
-
+  previousStates: ['mech-obj-7'],
   provenance: {
     topicMapId: 'mech-proc-3-formal-communication',
-    lineRange: { start: 96, end: 250 },
+    lineRange: { start: 96, end: 147 },
     section: 'The Formal Mechanical Process',
-    order: 1,
+    order: 3,
   },
-
-  description: 'Formal mechanical process. Communication - idealized connection, universality. Reaction - particularization, reciprocal repulsion. Product - rest, external determinateness posited.',
+  description: MECHANICAL_PROCESS_TOPIC_MAP.entries[2]?.description,
+  keyPoints: MECHANICAL_PROCESS_TOPIC_MAP.entries[2]?.keyPoints,
 };
 
 const state2: DialecticState = {
   id: 'mech-proc-6',
-  title: 'Real process — resistance, power, fate',
+  title: 'Real process: resistance, power, and fate',
   concept: 'RealMechanicalProcess',
   phase: 'object',
-
   moments: [
     {
       name: 'determinedOpposition',
-      definition: 'Determined opposition: self-subsistent singularity vs non-self-subsistent universality',
+      definition:
+        'Objects stand in determined opposition of self-subsistent singularity and universality',
       type: 'determination',
     },
     {
-      name: 'resistanceAndPower',
-      definition: 'Resistance overpowered, violence, power as objective universality',
-      type: 'process',
+      name: 'powerAsFate',
+      definition:
+        'Overpowering resistance reveals objective universality as fate',
+      type: 'negation',
       relation: 'contains',
       relatedTo: 'determinedOpposition',
     },
-    {
-      name: 'fate',
-      definition: 'Power as fate - blind mechanism, genus, self-consciousness and deed',
-      type: 'determination',
-    },
   ],
-
   invariants: [
     {
       id: 'mech-proc-6-inv-1',
-      constraint: 'opposition.determined = true',
-      predicate: 'isDetermined(opposition)',
+      constraint:
+        'violence is objective universality confronting external singularity',
+      predicate:
+        'equals(violence, objectiveUniversalityAgainstExternalSingularity)',
     },
     {
       id: 'mech-proc-6-inv-2',
-      constraint: 'power = fate',
-      predicate: 'equals(power, fate)',
+      constraint: 'fate emerges where self-conscious deed externalizes itself',
+      predicate: 'emergesFrom(fate, externalizedDeed)',
     },
   ],
-
   forces: [
     {
       id: 'mech-proc-6-force-1',
-      description: 'Real process drives toward center and law',
-      type: 'mediation',
-      trigger: 'negativity.reflected = true',
-      effect: 'centerAndLaw.emerges = true',
+      description: 'Real process reflects negativity into center/law result',
+      type: 'reflection',
+      trigger: 'power.negativityReflected = true',
+      effect: 'centerLawProduct.emerges = true',
       targetState: 'mech-proc-8',
     },
   ],
-
   transitions: [
     {
       id: 'mech-proc-6-trans-1',
       from: 'mech-proc-6',
       to: 'mech-proc-8',
-      mechanism: 'mediation',
-      description: 'From real process to center and law',
+      mechanism: 'reflection',
+      description: 'From resistance/power to product as center and law',
     },
   ],
-
   nextStates: ['mech-proc-8'],
-  previousStates: ['mech-proc-1'],
-
+  previousStates: ['mech-proc-3'],
   provenance: {
     topicMapId: 'mech-proc-6-real-communication',
-    lineRange: { start: 252, end: 409 },
+    lineRange: { start: 252, end: 325 },
     section: 'The Real Mechanical Process',
-    order: 2,
+    order: 6,
   },
-
-  description: 'Real mechanical process. Determined opposition - self-subsistent vs non-self-subsistent. Resistance and power. Fate - blind mechanism, genus, self-consciousness.',
+  description: MECHANICAL_PROCESS_TOPIC_MAP.entries[5]?.description,
+  keyPoints: MECHANICAL_PROCESS_TOPIC_MAP.entries[5]?.keyPoints,
 };
 
 const state3: DialecticState = {
   id: 'mech-proc-8',
-  title: 'Product — center and law, rational fate',
-  concept: 'ProductCenterLaw',
+  title: 'Product as center and law, foundation of mechanism',
+  concept: 'TransitionToAbsoluteMechanism',
   phase: 'object',
-
   moments: [
     {
-      name: 'center',
-      definition: 'Center - objective oneness, individual self-subsistence',
+      name: 'centeredObjectivity',
+      definition:
+        'Objectivity becomes centered singular unity through reflected determinateness',
       type: 'determination',
     },
     {
-      name: 'law',
-      definition: 'Law - rational fate, immanently determined, universality particularizing from within',
-      type: 'determination',
-      relation: 'contains',
-      relatedTo: 'center',
-    },
-    {
-      name: 'truthAndFoundation',
-      definition: 'Result is truth and foundation of mechanical process',
+      name: 'lawAsRationalFate',
+      definition: 'Law is immanent rational fate particularizing from within',
       type: 'mediation',
+      relation: 'transitions',
+      relatedTo: 'centeredObjectivity',
     },
   ],
-
   invariants: [
     {
       id: 'mech-proc-8-inv-1',
-      constraint: 'center = objectiveOneness',
-      predicate: 'equals(center, objectiveOneness)',
+      constraint: 'center is objective oneness of process result',
+      predicate: 'equals(center, objectiveOneness(processResult))',
     },
     {
       id: 'mech-proc-8-inv-2',
-      constraint: 'law = rationalFate',
-      predicate: 'equals(law, rationalFate)',
+      constraint: 'law constitutes truth and foundation of process',
+      predicate: 'grounds(law, mechanicalProcess)',
     },
   ],
-
   forces: [
     {
       id: 'mech-proc-8-force-1',
-      description: 'Center and law transition to absolute mechanism',
-      type: 'mediation',
-      trigger: 'law.established = true',
+      description:
+        'Centered lawful product passes to absolute mechanism articulation',
+      type: 'passover',
+      trigger: 'law.immanent = true',
       effect: 'absoluteMechanism.emerges = true',
       targetState: 'mech-abs-1',
     },
   ],
-
   transitions: [
     {
       id: 'mech-proc-8-trans-1',
       from: 'mech-proc-8',
       to: 'mech-abs-1',
-      mechanism: 'mediation',
-      description: 'From product to absolute mechanism',
+      mechanism: 'passover',
+      description: 'From mechanical process product to absolute mechanism',
     },
   ],
-
   nextStates: ['mech-abs-1'],
   previousStates: ['mech-proc-6'],
-
   provenance: {
     topicMapId: 'mech-proc-8-product-center-law',
     lineRange: { start: 411, end: 456 },
     section: 'The Product of Mechanical Process',
-    order: 3,
+    order: 8,
   },
-
-  description: 'Product of mechanical process. Center - objective oneness, individual self-subsistence. Law - rational fate, immanently determined. Truth and foundation of mechanical process.',
+  description: MECHANICAL_PROCESS_TOPIC_MAP.entries[7]?.description,
+  keyPoints: MECHANICAL_PROCESS_TOPIC_MAP.entries[7]?.keyPoints,
 };
 
 export const mechanicalProcessIR: DialecticIR = {
   id: 'mechanical-process-ir',
-  title: 'Mechanical Process IR: Formal, Real, Product (Center/Law)',
-  section: 'C. THE CONCEPT - II. OBJECTIVITY - A. Mechanism - B. The Mechanical Process',
+  title: 'Mechanical Process IR: Formal Cycle, Real Opposition, Lawful Product',
+  section: 'CONCEPT - OBJECTIVITY - A. Mechanism - B. The Mechanical Process',
   states: [state1, state2, state3],
   metadata: {
     sourceFile: 'process.txt',
     totalStates: 3,
     cpuGpuMapping: {
-      'mech-proc-1': 'object',
+      'mech-proc-3': 'object',
       'mech-proc-6': 'object',
       'mech-proc-8': 'object',
     },
@@ -253,7 +214,7 @@ export const mechanicalProcessIR: DialecticIR = {
 };
 
 export const mechanicalProcessStates = {
-  'mech-proc-1': state1,
+  'mech-proc-3': state1,
   'mech-proc-6': state2,
   'mech-proc-8': state3,
 };

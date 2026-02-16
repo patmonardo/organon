@@ -1,3 +1,3 @@
-export * from './whole-parts';
-export * from './outer-inner';
-export * from './force-expression';
+export * from './whole-parts-ir';
+export * from './force-expression-ir';
+export * from './outer-inner-ir';

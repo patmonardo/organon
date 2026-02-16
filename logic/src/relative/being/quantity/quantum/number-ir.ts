@@ -1,369 +1,213 @@
-/**
- * Number IR: Dialectic Pseudo-Code for Number
- *
- * Architecture: GPU (Quantity / Mathematical Coprocessor)
- * Section: A. NUMBER
- *
- * Covers the dialectical movement:
- * - Quantum as number (complete positedness)
- * - Amount and unit (two moments of number)
- * - Amount in the limit (many ones present)
- * - Number indifference and exteriority (intrinsic contradiction)
- */
-
-import type {
-  DialecticState,
-  DialecticIR,
-} from '@schema/dialectic';
+import type { DialecticIR, DialecticState } from '@schema/dialectic';
+import { NUMBER_TOPIC_MAP } from './sources/number-topic-map';
 
 const state1: DialecticState = {
   id: 'number-quantum-as-number',
   title: 'Quantum as number: complete positedness',
   concept: 'QuantumAsNumber',
   phase: 'quantity',
-
   moments: [
     {
-      name: 'number',
-      definition: 'Complete positedness with limit as plurality distinguished from unity',
+      name: 'completePositedness',
+      definition:
+        'Quantum is posited as number, with limit explicit as plurality in unity',
       type: 'determination',
     },
     {
       name: 'oneAsPrinciple',
-      definition: 'The one as principle: self-referring, enclosing, other-excluding',
-      type: 'determination',
-      relation: 'contains',
-      relatedTo: 'number',
-    },
-    {
-      name: 'discreteMagnitudeWithContinuity',
-      definition: 'Discrete magnitude with continuity in unity',
+      definition:
+        'The one is self-referring, enclosing, and excluding while preserving continuity',
       type: 'mediation',
+      relation: 'contains',
+      relatedTo: 'completePositedness',
     },
   ],
-
   invariants: [
     {
-      id: 'number-1-inv-1',
-      constraint: 'number = completePositedness',
-      predicate: 'is(number, completePositedness)',
+      id: 'number-quantum-as-number-inv-1',
+      constraint: 'number is the explicit quantitative limit',
+      predicate: 'explicitLimit(number)',
     },
     {
-      id: 'number-1-inv-2',
-      constraint: 'limit.as = pluralityDistinguishedFromUnity',
-      predicate: 'as(limit, pluralityDistinguishedFromUnity)',
-    },
-    {
-      id: 'number-1-inv-3',
-      constraint: 'one.principle = {selfReferring, enclosing, otherExcluding}',
-      predicate: 'principle(one, selfReferring) ∧ principle(one, enclosing) ∧ principle(one, otherExcluding)',
-    },
-    {
-      id: 'number-1-inv-4',
-      constraint: 'number = discreteMagnitude(continuityInUnity)',
-      predicate: 'equals(number, discreteMagnitude(continuityInUnity))',
+      id: 'number-quantum-as-number-inv-2',
+      constraint: 'discreteness and continuity remain united in number',
+      predicate: 'unity(discreteness, continuity)',
     },
   ],
-
   forces: [
     {
-      id: 'number-1-force-1',
-      description: 'Complete positedness drives toward explicit moments: amount and unit',
-      type: 'reflection',
-      trigger: 'completePositedness.achieved = true',
-      effect: 'moments.emerge = {amount, unit}',
-      targetState: 'number-amount-and-unit',
+      id: 'number-quantum-as-number-force-1',
+      description:
+        'Complete positedness differentiates into the moments of amount and unit in concrete delimitation',
+      type: 'mediation',
+      trigger: 'number.momentsRequireConcreteShape = true',
+      effect: 'amountInLimit.explicit = true',
+      targetState: 'number-amount-in-limit',
     },
   ],
-
   transitions: [
     {
-      id: 'number-1-trans-1',
+      id: 'number-quantum-as-number-trans-1',
       from: 'number-quantum-as-number',
-      to: 'number-amount-and-unit',
-      mechanism: 'reflection',
-      description: 'From quantum as number to amount and unit as moments',
+      to: 'number-amount-in-limit',
+      mechanism: 'mediation',
+      description:
+        'From abstract complete positedness to amount and unit as determinate limit',
     },
   ],
-
-  nextStates: ['number-amount-and-unit'],
+  nextStates: ['number-amount-in-limit'],
   previousStates: ['quantity-limiting-quantum'],
-
   provenance: {
     topicMapId: 'number-quantum-as-number',
     lineRange: { start: 4, end: 52 },
     section: 'A. NUMBER',
     order: 1,
   },
-
-  description: 'Quantum as number: Complete positedness with limit as plurality distinguished from unity. Number is discrete magnitude with continuity in unity. The one is principle: (a) self-referring, (b) enclosing, (c) other-excluding limit.',
+  description: NUMBER_TOPIC_MAP.entries[0]?.description,
+  keyPoints: NUMBER_TOPIC_MAP.entries[0]?.keyPoints,
 };
 
 const state2: DialecticState = {
-  id: 'number-amount-and-unit',
-  title: 'Amount and unit: the two moments of number',
-  concept: 'AmountAndUnit',
-  phase: 'quantity',
-
-  moments: [
-    {
-      name: 'amount',
-      definition: 'The how many times, determinate aggregate',
-      type: 'moment',
-    },
-    {
-      name: 'unit',
-      definition: 'The continuity of the amount',
-      type: 'moment',
-      relation: 'mediates',
-      relatedTo: 'amount',
-    },
-    {
-      name: 'twoMomentsOfNumber',
-      definition: 'Amount and unit constitute the moments of number',
-      type: 'determination',
-    },
-  ],
-
-  invariants: [
-    {
-      id: 'number-2-inv-1',
-      constraint: 'limit.manifold = true',
-      predicate: 'manifold(limit)',
-    },
-    {
-      id: 'number-2-inv-2',
-      constraint: 'limit.contains = manyOnesAsDeterminateAggregate',
-      predicate: 'contains(limit, manyOnes, determinateAggregate)',
-    },
-    {
-      id: 'number-2-inv-3',
-      constraint: 'amount = howManyTimes',
-      predicate: 'is(amount, howManyTimes)',
-    },
-    {
-      id: 'number-2-inv-4',
-      constraint: 'unit = continuityOfAmount',
-      predicate: 'is(unit, continuityOfAmount)',
-    },
-  ],
-
-  forces: [
-    {
-      id: 'number-2-force-1',
-      description: 'Two moments drive toward amount in the limit',
-      type: 'mediation',
-      trigger: 'momentsExplicit = true',
-      effect: 'amountInLimit.emerges = true',
-      targetState: 'number-amount-in-limit',
-    },
-  ],
-
-  transitions: [
-    {
-      id: 'number-2-trans-1',
-      from: 'number-amount-and-unit',
-      to: 'number-amount-in-limit',
-      mechanism: 'mediation',
-      description: 'From abstract moments to amount in the limit',
-    },
-  ],
-
-  nextStates: ['number-amount-in-limit'],
-  previousStates: ['number-quantum-as-number'],
-
-  provenance: {
-    topicMapId: 'number-amount-and-unit',
-    lineRange: { start: 53, end: 65 },
-    section: 'A. NUMBER',
-    order: 2,
-  },
-
-  description: 'Amount and unit: Number limit is manifold, containing many ones as determinate aggregate. Amount is the how many times; unit is the continuity of the amount. These are the two moments of number.',
-};
-
-const state3: DialecticState = {
   id: 'number-amount-in-limit',
-  title: 'Amount in the limit: many ones present',
-  concept: 'AmountInLimit',
+  title: 'Amount in the limit: delimitation by many ones',
+  concept: 'AmountUnitDelimitation',
   phase: 'quantity',
-
   moments: [
     {
-      name: 'manyOnesPresent',
-      definition: 'Many ones are present (not sublated), posited with excluding limit',
+      name: 'amountAndUnit',
+      definition:
+        'Number divides into amount as how-many and unit as continuity of that amount',
       type: 'determination',
     },
     {
-      name: 'allOnesEqual',
-      definition: 'All ones are equal; each is the hundredth',
-      type: 'quality',
-    },
-    {
-      name: 'manyConstituteDelimitation',
-      definition: 'The many constitute the delimitation itself',
-      type: 'determination',
-      relation: 'transforms',
-      relatedTo: 'manyOnesPresent',
+      name: 'manyOnesAsLimit',
+      definition:
+        'The many ones are present and equal, and constitute delimitation itself',
+      type: 'mediation',
+      relation: 'contains',
+      relatedTo: 'amountAndUnit',
     },
   ],
-
   invariants: [
     {
-      id: 'number-3-inv-1',
-      constraint: 'manyOnes.present = true ∧ manyOnes.sublated = false',
-      predicate: 'present(manyOnes) ∧ not(sublated(manyOnes))',
+      id: 'number-amount-in-limit-inv-1',
+      constraint: 'amount and unit are inseparable moments of number',
+      predicate: 'inseparable(amount, unit)',
     },
     {
-      id: 'number-3-inv-2',
-      constraint: 'all(ones).equal = true',
-      predicate: 'all(ones, equal)',
-    },
-    {
-      id: 'number-3-inv-3',
-      constraint: 'each(one) = hundredth',
-      predicate: 'equals(each(one), hundredth)',
-    },
-    {
-      id: 'number-3-inv-4',
-      constraint: 'many.constitute = delimitation',
-      predicate: 'constitute(many, delimitation)',
+      id: 'number-amount-in-limit-inv-2',
+      constraint: 'the many ones delimit from within, not as external residue',
+      predicate: 'internalDelimitation(manyOnes)',
     },
   ],
-
   forces: [
     {
-      id: 'number-3-force-1',
-      description: 'Delimitation not external drives toward intrinsic contradiction',
+      id: 'number-amount-in-limit-force-1',
+      description:
+        'Internal delimitation reveals the contradiction of indifference and exteriority in number',
       type: 'contradiction',
-      trigger: 'delimitation.internal = true',
-      effect: 'intrinsicContradiction.emerges = true',
+      trigger: 'delimitation.internalizesExternality = true',
+      effect: 'numberContradiction.explicit = true',
       targetState: 'number-indifference-and-exteriority',
     },
   ],
-
   transitions: [
     {
-      id: 'number-3-trans-1',
+      id: 'number-amount-in-limit-trans-1',
       from: 'number-amount-in-limit',
       to: 'number-indifference-and-exteriority',
       mechanism: 'contradiction',
-      description: 'From amount in limit to intrinsic contradiction',
+      description: 'From delimitation to indifference and exteriority',
     },
   ],
-
   nextStates: ['number-indifference-and-exteriority'],
-  previousStates: ['number-amount-and-unit'],
-
+  previousStates: ['number-quantum-as-number'],
   provenance: {
     topicMapId: 'number-amount-in-limit',
     lineRange: { start: 67, end: 109 },
     section: 'A. NUMBER',
     order: 3,
   },
-
-  description: 'Amount in limit: Many ones are present (not sublated), posited with excluding limit. All ones are equal; each is the hundredth. The many constitute the delimitation itself - the number is not plurality over against limiting one, but is the delimitation.',
+  description: NUMBER_TOPIC_MAP.entries[2]?.description,
+  keyPoints: NUMBER_TOPIC_MAP.entries[2]?.keyPoints,
 };
 
-const state4: DialecticState = {
+const state3: DialecticState = {
   id: 'number-indifference-and-exteriority',
-  title: 'Number indifference and exteriority',
+  title: 'Number contradiction: indifference and exteriority',
   concept: 'NumberContradiction',
   phase: 'quantity',
-
   moments: [
     {
       name: 'indifference',
-      definition: 'Number is indifferent to others, essential determination',
+      definition:
+        'Number is determined in itself yet indifferent in relation to other numbers',
       type: 'quality',
     },
     {
-      name: 'exteriority',
-      definition: 'Reference to other remains completely external',
-      type: 'determination',
+      name: 'exteriorityInOne',
+      definition:
+        'External reference is not merely outside but lodged in the one itself',
+      type: 'negation',
       relation: 'opposite',
       relatedTo: 'indifference',
     },
-    {
-      name: 'intrinsicContradiction',
-      definition: 'Absolute exteriority is in the one itself',
-      type: 'negation',
-    },
   ],
-
   invariants: [
     {
-      id: 'number-4-inv-1',
-      constraint: 'distinguishing.quantitative = true',
-      predicate: 'quantitative(distinguishing)',
+      id: 'number-indifference-and-exteriority-inv-1',
+      constraint:
+        'number keeps absolute determinateness only as external reference',
+      predicate: 'determinatenessThroughExternality(number)',
     },
     {
-      id: 'number-4-inv-2',
-      constraint: 'number.indifferent = others',
-      predicate: 'indifferent(number, others)',
-    },
-    {
-      id: 'number-4-inv-3',
-      constraint: 'referenceToOther.external = completely',
-      predicate: 'external(referenceToOther, completely)',
-    },
-    {
-      id: 'number-4-inv-4',
-      constraint: 'absoluteExteriority ∈ oneItself',
-      predicate: 'in(absoluteExteriority, oneItself)',
-    },
-    {
-      id: 'number-4-inv-5',
-      constraint: 'intrinsicContradiction = qualityOfQuantum',
-      predicate: 'equals(intrinsicContradiction, qualityOfQuantum)',
+      id: 'number-indifference-and-exteriority-inv-2',
+      constraint: 'the contradiction of number is the quality of quantum',
+      predicate: 'qualityOfQuantum(numberContradiction)',
     },
   ],
-
   forces: [
     {
-      id: 'number-4-force-1',
-      description: 'Intrinsic contradiction prepares transition to extensive/intensive quantum',
+      id: 'number-indifference-and-exteriority-force-1',
+      description:
+        'Contradiction of number drives the transition to extensive and intensive quantum',
       type: 'passover',
-      trigger: 'contradiction.develops = true',
-      effect: 'extensiveIntensiveQuantum.emerges = true',
+      trigger: 'numberContradiction.develops = true',
+      effect: 'quantumDifferentiation.initiated = true',
       targetState: 'quantum-extensive-magnitude',
     },
   ],
-
   transitions: [
     {
-      id: 'number-4-trans-1',
+      id: 'number-indifference-and-exteriority-trans-1',
       from: 'number-indifference-and-exteriority',
       to: 'quantum-extensive-magnitude',
       mechanism: 'passover',
-      description: 'From number contradiction to extensive/intensive quantum',
+      description: 'From number contradiction to quantum differentiation',
     },
   ],
-
   nextStates: ['quantum-extensive-magnitude'],
   previousStates: ['number-amount-in-limit'],
-
   provenance: {
     topicMapId: 'number-indifference-and-exteriority',
     lineRange: { start: 111, end: 136 },
     section: 'A. NUMBER',
     order: 4,
   },
-
-  description: 'Number indifference/exteriority: Distinguishing remains quantitative (external reflection). Number is absolutely determined but has simple immediacy; reference to other is external. Yet amount is plurality of ones - absolute exteriority is in the one itself. This intrinsic contradiction is the quality of quantum.',
+  description: NUMBER_TOPIC_MAP.entries[3]?.description,
+  keyPoints: NUMBER_TOPIC_MAP.entries[3]?.keyPoints,
 };
 
 export const numberIR: DialecticIR = {
   id: 'number-ir',
-  title: 'Number IR: Complete Positedness, Amount and Unit',
-  section: 'A. NUMBER',
-  states: [state1, state2, state3, state4],
+  title: 'Number IR: Quantum as Number',
+  section: 'BEING - QUANTITY - A. Number',
+  states: [state1, state2, state3],
   metadata: {
     sourceFile: 'number.txt',
-    totalStates: 4,
+    totalStates: 3,
     cpuGpuMapping: {
       'number-quantum-as-number': 'quantity',
-      'number-amount-and-unit': 'quantity',
       'number-amount-in-limit': 'quantity',
       'number-indifference-and-exteriority': 'quantity',
     },
@@ -372,7 +216,6 @@ export const numberIR: DialecticIR = {
 
 export const numberStates = {
   'number-quantum-as-number': state1,
-  'number-amount-and-unit': state2,
-  'number-amount-in-limit': state3,
-  'number-indifference-and-exteriority': state4,
+  'number-amount-in-limit': state2,
+  'number-indifference-and-exteriority': state3,
 };

@@ -1,359 +1,215 @@
-/**
- * Ratio IR: Dialectic Pseudo-Code for Ratio (Quantitative Relation)
- *
- * Architecture: GPU (Quantity / Mathematical Coprocessor)
- * Section: D. THE QUANTITATIVE RATIO
- *
- * Covers the dialectical movement:
- * - Infinite quantum as unity of quantitative/qualitative (ratio)
- * - Direct ratio (qualitative moment not yet explicit)
- * - Exponent as one determinateness of both quanta
- * - Incompleteness driving transition to inverse ratio
- */
+import type { DialecticIR, DialecticState } from '@schema/dialectic';
+import { RATIO_TOPIC_MAP } from './sources/ratio-topic-map';
 
-import type {
-  DialecticState,
-  DialecticIR,
-} from '@schema/dialectic';
+const ratioEntryById = (id: string) =>
+  RATIO_TOPIC_MAP.entries.find((entry) => entry.id === id);
 
 const state1: DialecticState = {
   id: 'ratio-intro-qualitative-moment',
-  title: 'Ratio: quantum qualit atively determined',
+  title: 'Ratio: quantum qualitatively determined',
   concept: 'QuantitativeRelation',
   phase: 'quantity',
-
   moments: [
     {
-      name: 'infiniteQuantum',
-      definition: 'Unity of quantitative and qualitative determinateness',
+      name: 'infiniteQuantumAsRelation',
+      definition:
+        'Quantum is posited as relation: quantitative externality internally bears qualitative determinateness',
       type: 'determination',
-    },
-    {
-      name: 'ratio',
-      definition: 'Quantum qualitatively determined, referring to beyond',
-      type: 'mediation',
-      relation: 'mediates',
-      relatedTo: 'infiniteQuantum',
     },
     {
       name: 'selfEnclosedTotality',
-      definition: 'Quantum as relation, infinite within',
-      type: 'determination',
+      definition:
+        'Each quantum has determinateness through the other and returns into itself as infinite-within',
+      type: 'mediation',
+      relation: 'contains',
+      relatedTo: 'infiniteQuantumAsRelation',
     },
   ],
-
   invariants: [
     {
-      id: 'ratio-1-inv-1',
-      constraint: 'infiniteQuantum = unity(quantitative, qualitative)',
-      predicate: 'unity(infiniteQuantum, quantitative, qualitative)',
+      id: 'ratio-intro-qualitative-moment-inv-1',
+      constraint: 'ratio unifies quantitative and qualitative moments',
+      predicate: 'unity(quantitative, qualitative)',
     },
     {
-      id: 'ratio-1-inv-2',
-      constraint: 'quantum.qualitativelyDetermined = true',
-      predicate: 'qualitativelyDetermined(quantum)',
-    },
-    {
-      id: 'ratio-1-inv-3',
-      constraint: 'quantum.refersToBeyond = true',
-      predicate: 'refersToBeyond(quantum)',
-    },
-    {
-      id: 'ratio-1-inv-4',
-      constraint: 'ratio = selfEnclosedTotality',
-      predicate: 'is(ratio, selfEnclosedTotality)',
+      id: 'ratio-intro-qualitative-moment-inv-2',
+      constraint: 'external reference is constitutive, not accidental',
+      predicate: 'constitutiveReferenceToOther(quantum)',
     },
   ],
-
   forces: [
     {
-      id: 'ratio-1-force-1',
-      description: 'Self-enclosed totality drives toward direct ratio',
-      type: 'passover',
-      trigger: 'quantumAsRelation = true',
-      effect: 'directRatio.emerges = true',
-      targetState: 'ratio-direct-intro',
+      id: 'ratio-intro-qualitative-moment-force-1',
+      description:
+        'Relation must give itself an explicit shared determinateness as exponent',
+      type: 'mediation',
+      trigger: 'relation.requiresCommonLimit = true',
+      effect: 'exponent.explicit = true',
+      targetState: 'ratio-direct-exponent',
     },
   ],
-
   transitions: [
     {
-      id: 'ratio-1-trans-1',
+      id: 'ratio-intro-qualitative-moment-trans-1',
       from: 'ratio-intro-qualitative-moment',
-      to: 'ratio-direct-intro',
-      mechanism: 'passover',
-      description: 'From infinite quantum to direct ratio',
+      to: 'ratio-direct-exponent',
+      mechanism: 'mediation',
+      description: 'From ratio in general to direct ratio exponent',
     },
   ],
-
-  nextStates: ['ratio-direct-intro'],
-  previousStates: ['quantum-alteration-necessity'],
-
+  nextStates: ['ratio-direct-exponent'],
+  previousStates: ['infinity-quantum-return-quality'],
   provenance: {
     topicMapId: 'ratio-intro-qualitative-moment',
     lineRange: { start: 6, end: 50 },
     section: 'Introduction',
     order: 1,
   },
-
-  description: 'Ratio: Infinite quantum is unity of quantitative/qualitative determinateness. Quantum qualitatively determined, referring to beyond. Quantum is itself posited as relation - self-enclosed totality, infinite within.',
+  description: ratioEntryById('ratio-intro-qualitative-moment')?.description,
+  keyPoints: ratioEntryById('ratio-intro-qualitative-moment')?.keyPoints,
 };
 
 const state2: DialecticState = {
-  id: 'ratio-direct-intro',
-  title: 'Direct ratio: qualitative moment not yet explicit',
-  concept: 'DirectRatio',
-  phase: 'quantity',
-
-  moments: [
-    {
-      name: 'directRatio',
-      definition: 'Qualitative moment not yet explicit',
-      type: 'determination',
-    },
-    {
-      name: 'contradiction',
-      definition: 'Externality and self-reference in quantitative relation',
-      type: 'negation',
-    },
-    {
-      name: 'sublation',
-      definition: 'Contradiction sublates toward inverse ratio and ratio of powers',
-      type: 'sublation',
-      relation: 'transforms',
-      relatedTo: 'contradiction',
-    },
-  ],
-
-  invariants: [
-    {
-      id: 'ratio-2-inv-1',
-      constraint: 'qualitativeMoment.explicit = false',
-      predicate: 'not(explicit(qualitativeMoment))',
-    },
-    {
-      id: 'ratio-2-inv-2',
-      constraint: 'quantitativeRelation = contradiction(externality, selfReference)',
-      predicate: 'contradiction(quantitativeRelation, externality, selfReference)',
-    },
-    {
-      id: 'ratio-2-inv-3',
-      constraint: 'contradiction.sublates = true',
-      predicate: 'sublates(contradiction)',
-    },
-  ],
-
-  forces: [
-    {
-      id: 'ratio-2-force-1',
-      description: 'Quantitative relation requires exponent',
-      type: 'mediation',
-      trigger: 'determinatenessInExternality = true',
-      effect: 'exponent.required = true',
-      targetState: 'ratio-direct-exponent',
-    },
-  ],
-
-  transitions: [
-    {
-      id: 'ratio-2-trans-1',
-      from: 'ratio-direct-intro',
-      to: 'ratio-direct-exponent',
-      mechanism: 'mediation',
-      description: 'From direct ratio to exponent as determinateness',
-    },
-  ],
-
-  nextStates: ['ratio-direct-exponent'],
-  previousStates: ['ratio-intro-qualitative-moment'],
-
-  provenance: {
-    topicMapId: 'ratio-direct-intro',
-    lineRange: { start: 52, end: 74 },
-    section: 'Ratio in general',
-    order: 2,
-  },
-
-  description: 'Direct ratio: Qualitative moment not yet explicit. Quantum posited as having determinateness in externality. Quantitative relation is contradiction of externality/self-reference. Contradiction sublates toward inverse ratio and ratio of powers.',
-};
-
-const state3: DialecticState = {
   id: 'ratio-direct-exponent',
-  title: 'Exponent: one determinateness of both quanta',
-  concept: 'Exponent',
+  title: 'Direct ratio: exponent as common determinateness',
+  concept: 'DirectRatioExponent',
   phase: 'quantity',
-
   moments: [
     {
-      name: 'exponent',
-      definition: 'One determinateness/limit of both quanta',
+      name: 'commonLimit',
+      definition:
+        'The exponent is one determinateness of both quanta and so the direct ratio form',
       type: 'determination',
     },
     {
-      name: 'qualitativelyDetermined',
-      definition: 'Quantum but qualitatively determined',
-      type: 'quality',
+      name: 'unitAmountDifference',
+      definition:
+        'Within the exponent, difference appears as unit and amount, with qualitative determination',
+      type: 'mediation',
       relation: 'contains',
-      relatedTo: 'exponent',
-    },
-    {
-      name: 'unitAndAmount',
-      definition: 'Difference as unit and amount',
-      type: 'determination',
+      relatedTo: 'commonLimit',
     },
   ],
-
   invariants: [
     {
-      id: 'ratio-3-inv-1',
-      constraint: 'exponent = oneDeterminateness(both)',
-      predicate: 'oneDeterminateness(exponent, both)',
+      id: 'ratio-direct-exponent-inv-1',
+      constraint: 'each side is determined only through the other side',
+      predicate: 'reciprocalDetermination(sides)',
     },
     {
-      id: 'ratio-3-inv-2',
-      constraint: 'exponent.qualitativelyDetermined = true',
-      predicate: 'qualitativelyDetermined(exponent)',
-    },
-    {
-      id: 'ratio-3-inv-3',
-      constraint: 'difference = {unit, amount}',
-      predicate: 'equals(difference, pair(unit, amount))',
-    },
-    {
-      id: 'ratio-3-inv-4',
-      constraint: 'unit = beingDeterminedForItself',
-      predicate: 'is(unit, beingDeterminedForItself)',
+      id: 'ratio-direct-exponent-inv-2',
+      constraint: 'the exponent is still a quantum but qualitatively marked',
+      predicate: 'qualitativelyMarkedQuantum(exponent)',
     },
   ],
-
   forces: [
     {
-      id: 'ratio-3-force-1',
-      description: 'Incompleteness of sides drives toward inverse ratio',
-      type: 'negation',
-      trigger: 'sides.incomplete = true',
-      effect: 'inverseRatio.emerges = true',
+      id: 'ratio-direct-exponent-force-1',
+      description:
+        'Direct-ratio sides prove incomplete and negate their own isolated self-subsistence',
+      type: 'contradiction',
+      trigger: 'sides.onlyMomentaryCompleteness = true',
+      effect: 'directRatioIncompleteness.explicit = true',
       targetState: 'ratio-direct-incompleteness',
     },
   ],
-
   transitions: [
     {
-      id: 'ratio-3-trans-1',
+      id: 'ratio-direct-exponent-trans-1',
       from: 'ratio-direct-exponent',
       to: 'ratio-direct-incompleteness',
-      mechanism: 'negation',
-      description: 'From exponent to incompleteness of sides',
+      mechanism: 'contradiction',
+      description: 'From exponent form to incompleteness of direct ratio',
     },
   ],
-
   nextStates: ['ratio-direct-incompleteness'],
-  previousStates: ['ratio-direct-intro'],
-
+  previousStates: ['ratio-intro-qualitative-moment'],
   provenance: {
     topicMapId: 'ratio-direct-exponent-qualitative',
     lineRange: { start: 92, end: 106 },
     section: 'A. THE DIRECT RATIO',
     order: 4,
   },
-
-  description: 'Exponent: Some quantum, but qualitatively determined (difference/beyond/otherness in it). Difference is unit and amount. In ratio, each moment appears as quantum on its own - delimitations.',
+  description: ratioEntryById('ratio-direct-exponent-qualitative')?.description,
+  keyPoints: ratioEntryById('ratio-direct-exponent-qualitative')?.keyPoints,
 };
 
-const state4: DialecticState = {
+const state3: DialecticState = {
   id: 'ratio-direct-incompleteness',
-  title: 'Incompleteness: each side only one moment',
-  concept: 'IncompleteSides',
+  title: 'Incompleteness of direct ratio',
+  concept: 'DirectRatioSublation',
   phase: 'quantity',
-
   moments: [
     {
-      name: 'incompleteness',
-      definition: 'Two sides constitute one quantum but each only one moment',
+      name: 'momentarySides',
+      definition:
+        'Both sides belong to one quantum totality but each expresses only one moment of it',
       type: 'negation',
     },
     {
-      name: 'determinedNegation',
-      definition: 'Not general variability but determined alteration',
-      type: 'negation',
-      relation: 'negates',
-      relatedTo: 'self-subsistence',
-    },
-    {
-      name: 'qualitativeCombination',
-      definition: 'Sides negative with respect to each other',
-      type: 'quality',
+      name: 'determinedTransition',
+      definition:
+        'Negation is determined and qualitative, compelling a new ratio-form beyond direct immediacy',
+      type: 'sublation',
+      relation: 'transitions',
+      relatedTo: 'momentarySides',
     },
   ],
-
   invariants: [
     {
-      id: 'ratio-4-inv-1',
-      constraint: 'sides.constitute = oneQuantum',
-      predicate: 'constitute(sides, oneQuantum)',
+      id: 'ratio-direct-incompleteness-inv-1',
+      constraint: 'direct-ratio sides cannot each be complete quanta',
+      predicate: 'not(eachCompleteQuantum(directRatioSides))',
     },
     {
-      id: 'ratio-4-inv-2',
-      constraint: 'each.isCompleteQuanta = false',
-      predicate: 'not(isCompleteQuanta(each))',
-    },
-    {
-      id: 'ratio-4-inv-3',
-      constraint: 'negation = determined (not general)',
-      predicate: 'determined(negation) ∧ not(general(negation))',
-    },
-    {
-      id: 'ratio-4-inv-4',
-      constraint: 'selfSubsistence.negated = true',
-      predicate: 'negated(selfSubsistence)',
+      id: 'ratio-direct-incompleteness-inv-2',
+      constraint:
+        'the transition is determined negation, not arbitrary variation',
+      predicate: 'determinedNegation(transition)',
     },
   ],
-
   forces: [
     {
-      id: 'ratio-4-force-1',
-      description: 'Incompleteness drives exponent to become product (inverse ratio)',
+      id: 'ratio-direct-incompleteness-force-1',
+      description:
+        'Sublation of direct incompleteness yields the inverse ratio structure',
       type: 'sublation',
-      trigger: 'negation.qualifying = true',
-      effect: 'inverseRatio.emerges = true',
-      targetState: 'measure-1',
+      trigger: 'directRatio.incomplete = true',
+      effect: 'inverseRatio.initiated = true',
+      targetState: 'inverse-sublated-direct',
     },
   ],
-
   transitions: [
     {
-      id: 'ratio-4-trans-1',
+      id: 'ratio-direct-incompleteness-trans-1',
       from: 'ratio-direct-incompleteness',
-      to: 'measure-1',
+      to: 'inverse-sublated-direct',
       mechanism: 'sublation',
-      description: 'From incomplete direct ratio to measure',
+      description: 'From direct-ratio incompleteness to inverse ratio',
     },
   ],
-
-  nextStates: ['measure-1'],
+  nextStates: ['inverse-sublated-direct'],
   previousStates: ['ratio-direct-exponent'],
-
   provenance: {
     topicMapId: 'ratio-direct-transition-inverse',
     lineRange: { start: 157, end: 191 },
     section: 'A. THE DIRECT RATIO',
     order: 7,
   },
-
-  description: 'Incompleteness: Two constitute one quantum. Each side only one moment - self-subsistence negated, negative with respect to each other. Exponent ought to be complete quantum but as quotient only value of amount or unit. More real ratio arises: exponent as product - inverse ratio.',
+  description: ratioEntryById('ratio-direct-transition-inverse')?.description,
+  keyPoints: ratioEntryById('ratio-direct-transition-inverse')?.keyPoints,
 };
 
 export const ratioIR: DialecticIR = {
   id: 'ratio-ir',
   title: 'Ratio IR: Quantitative Relation',
-  section: 'D. THE QUANTITATIVE RATIO',
-  states: [state1, state2, state3, state4],
+  section: 'BEING - QUANTITY - D. Ratio',
+  states: [state1, state2, state3],
   metadata: {
     sourceFile: 'ratio.txt',
-    totalStates: 4,
+    totalStates: 3,
     cpuGpuMapping: {
       'ratio-intro-qualitative-moment': 'quantity',
-      'ratio-direct-intro': 'quantity',
       'ratio-direct-exponent': 'quantity',
       'ratio-direct-incompleteness': 'quantity',
     },
@@ -362,7 +218,6 @@ export const ratioIR: DialecticIR = {
 
 export const ratioStates = {
   'ratio-intro-qualitative-moment': state1,
-  'ratio-direct-intro': state2,
-  'ratio-direct-exponent': state3,
-  'ratio-direct-incompleteness': state4,
+  'ratio-direct-exponent': state2,
+  'ratio-direct-incompleteness': state3,
 };

@@ -1,442 +1,222 @@
-/**
- * Quantum IR: Dialectic Pseudo-Code for Extensive and Intensive Quantum
- *
- * Architecture: GPU (Quantity / Mathematical Coprocessor)
- * Section: C. QUANTUM - Extensive and Intensive Quantum
- *
- * Covers the dialectical movement:
- * - Extensive magnitude as limit in plurality (amount)
- * - Number's determinateness as self-referring limit
- * - Intensive magnitude (degree) as simple determinateness
- * - Identity of extensive and intensive magnitude
- * - Quantum must alter, sends itself beyond to infinity
- */
-
-import type {
-  DialecticState,
-  DialecticIR,
-} from '@schema/dialectic';
+import type { DialecticIR, DialecticState } from '@schema/dialectic';
+import { QUANTUM_TOPIC_MAP } from './sources/quantum-topic-map';
 
 const state1: DialecticState = {
   id: 'quantum-extensive-magnitude',
-  title: 'Extensive magnitude: limit as plurality',
+  title: 'Extensive magnitude: determinateness as amount',
   concept: 'ExtensiveMagnitude',
   phase: 'quantity',
-
   moments: [
     {
-      name: 'extensiveMagnitude',
-      definition: 'Quantum has determinateness as limit in amount (plurality)',
+      name: 'limitAsPlurality',
+      definition:
+        'Quantum has its determinateness as limit in amount and explicit plurality',
       type: 'determination',
     },
     {
-      name: 'amount',
-      definition: 'Essentially amount of one unit',
-      type: 'determination',
+      name: 'amountAsOneUnitMany',
+      definition:
+        'Extensive quantum is amount as many ones gathered in one delimiting form',
+      type: 'mediation',
       relation: 'contains',
-      relatedTo: 'extensiveMagnitude',
-    },
-    {
-      name: 'plurality',
-      definition: 'Limit as many, concentrated into one',
-      type: 'determination',
+      relatedTo: 'limitAsPlurality',
     },
   ],
-
   invariants: [
     {
-      id: 'quantum-1-inv-1',
-      constraint: 'quantum.determinateness = limitInAmount',
-      predicate: 'determinateness(quantum, limitInAmount)',
+      id: 'quantum-extensive-magnitude-inv-1',
+      constraint: 'extensive quantum makes plurality explicit in the limit',
+      predicate: 'explicitPlurality(extensiveQuantum)',
     },
     {
-      id: 'quantum-1-inv-2',
-      constraint: 'extensiveMagnitude.amount = essentially(oneUnit)',
-      predicate: 'essentially(extensiveMagnitude.amount, oneUnit)',
-    },
-    {
-      id: 'quantum-1-inv-3',
-      constraint: 'extensiveMagnitude ≈ number (differ only in explicit plurality)',
-      predicate: 'similar(extensiveMagnitude, number, explicitPlurality)',
+      id: 'quantum-extensive-magnitude-inv-2',
+      constraint: 'extensive and intensive belong to one quantitative limit',
+      predicate: 'sameLimit(extensiveMagnitude, intensiveMagnitude)',
     },
   ],
-
   forces: [
     {
-      id: 'quantum-1-force-1',
-      description: 'Limit concentrated into one drives toward number as self-referring limit',
+      id: 'quantum-extensive-magnitude-force-1',
+      description:
+        'Plural limit reflected into itself posits degree as simple determinateness',
       type: 'mediation',
-      trigger: 'many.concentratedIntoOne = true',
-      effect: 'numberDeterminateness.emerges = true',
-      targetState: 'quantum-number-determinateness',
+      trigger: 'pluralLimit.turnsInward = true',
+      effect: 'degree.explicit = true',
+      targetState: 'quantum-intensive-magnitude-degree',
     },
   ],
-
   transitions: [
     {
-      id: 'quantum-1-trans-1',
+      id: 'quantum-extensive-magnitude-trans-1',
       from: 'quantum-extensive-magnitude',
-      to: 'quantum-number-determinateness',
+      to: 'quantum-intensive-magnitude-degree',
       mechanism: 'mediation',
-      description: 'From extensive magnitude to number determinateness',
+      description: 'From extensive amount to intensive degree',
     },
   ],
-
-  nextStates: ['quantum-number-determinateness'],
-  previousStates: ['quantity-discrete-magnitude'],
-
+  nextStates: ['quantum-intensive-magnitude-degree'],
+  previousStates: ['number-indifference-and-exteriority'],
   provenance: {
     topicMapId: 'quantum-extensive-magnitude',
     lineRange: { start: 6, end: 54 },
     section: 'a. Their difference',
     order: 1,
   },
-
-  description: 'Extensive magnitude: Quantum has determinateness as limit in amount (plurality). Extensive quantum is amount essentially (amount of one unit), distinguished from number only by explicit plurality.',
+  description: QUANTUM_TOPIC_MAP.entries[0]?.description,
+  keyPoints: QUANTUM_TOPIC_MAP.entries[0]?.keyPoints,
 };
 
 const state2: DialecticState = {
-  id: 'quantum-number-determinateness',
-  title: 'Number\'s determinateness: self-referring limit',
-  concept: 'NumberDeterminateness',
-  phase: 'quantity',
-
-  moments: [
-    {
-      name: 'selfReferringLimit',
-      definition: 'Limit determined for itself, indifferent and self-referring',
-      type: 'determination',
-    },
-    {
-      name: 'enclosedExternality',
-      definition: 'Externality/reference to other is inside number',
-      type: 'mediation',
-      relation: 'contains',
-      relatedTo: 'selfReferringLimit',
-    },
-    {
-      name: 'collapsedMany',
-      definition: 'Many collapses into continuity, simple unity',
-      type: 'sublation',
-    },
-  ],
-
-  invariants: [
-    {
-      id: 'quantum-2-inv-1',
-      constraint: 'limit.determinedForItself = true',
-      predicate: 'determinedForItself(limit)',
-    },
-    {
-      id: 'quantum-2-inv-2',
-      constraint: 'externality ∈ number (inside)',
-      predicate: 'inside(externality, number)',
-    },
-    {
-      id: 'quantum-2-inv-3',
-      constraint: 'many.collapses = continuity',
-      predicate: 'collapses(many, continuity)',
-    },
-    {
-      id: 'quantum-2-inv-4',
-      constraint: 'ones.sublated = number.selfReference',
-      predicate: 'sublated(ones, number.selfReference)',
-    },
-  ],
-
-  forces: [
-    {
-      id: 'quantum-2-force-1',
-      description: 'Self-reference drives toward intensive magnitude',
-      type: 'passover',
-      trigger: 'externalityTurnedBackIntoItself = true',
-      effect: 'intensiveMagnitude.emerges = true',
-      targetState: 'quantum-intensive-magnitude-degree',
-    },
-  ],
-
-  transitions: [
-    {
-      id: 'quantum-2-trans-1',
-      from: 'quantum-number-determinateness',
-      to: 'quantum-intensive-magnitude-degree',
-      mechanism: 'passover',
-      description: 'From number self-reference to intensive magnitude (degree)',
-    },
-  ],
-
-  nextStates: ['quantum-intensive-magnitude-degree'],
-  previousStates: ['quantum-extensive-magnitude'],
-
-  provenance: {
-    topicMapId: 'quantum-number-determinateness',
-    lineRange: { start: 56, end: 86 },
-    section: 'a. Their difference',
-    order: 2,
-  },
-
-  description: 'Number\'s determinateness: Limit is determined for itself, indifferent and self-referring. In number, limit is enclosed within one - externality/reference to other is inside it. Many collapses into continuity, becomes simple unity.',
-};
-
-const state3: DialecticState = {
   id: 'quantum-intensive-magnitude-degree',
-  title: 'Intensive magnitude: degree as simple determinateness',
-  concept: 'IntensiveMagnitude',
+  title: 'Degree: intensive magnitude as simple determinateness',
+  concept: 'IntensiveMagnitudeDegree',
   phase: 'quantity',
-
   moments: [
-    {
-      name: 'degree',
-      definition: 'Quantum but not aggregate - simple determinateness',
-      type: 'determination',
-    },
     {
       name: 'simpleDeterminateness',
-      definition: 'Plurality gathered into simple determination',
+      definition:
+        'Degree is quantum as non-aggregate simplicity, with plurality sublated into one determination',
       type: 'sublation',
-      relation: 'mediates',
-      relatedTo: 'degree',
     },
     {
-      name: 'beingForItself',
-      definition: 'Existence returned into being-for-itself',
-      type: 'determination',
+      name: 'externalityInDegree',
+      definition:
+        'Degree remains tied to externality through scale and comparative plurality',
+      type: 'mediation',
+      relation: 'contains',
+      relatedTo: 'simpleDeterminateness',
     },
   ],
-
   invariants: [
     {
-      id: 'quantum-3-inv-1',
-      constraint: 'degree = quantum ∧ not(aggregate)',
-      predicate: 'is(degree, quantum) ∧ not(aggregate(degree))',
+      id: 'quantum-intensive-magnitude-degree-inv-1',
+      constraint: 'degree is intensive quantum, not aggregate amount',
+      predicate: 'intensiveNotAggregate(degree)',
     },
     {
-      id: 'quantum-3-inv-2',
-      constraint: 'plurality.gatheredInto = simpleDetermination',
-      predicate: 'gatheredInto(plurality, simpleDetermination)',
-    },
-    {
-      id: 'quantum-3-inv-3',
-      constraint: 'existence.returnedInto = beingForItself',
-      predicate: 'returnedInto(existence, beingForItself)',
+      id: 'quantum-intensive-magnitude-degree-inv-2',
+      constraint:
+        'degree remains quantitatively comparable through externality',
+      predicate: 'comparableByExternality(degree)',
     },
   ],
-
   forces: [
     {
-      id: 'quantum-3-force-1',
-      description: 'Degree externality drives toward identity with extensive',
-      type: 'contradiction',
-      trigger: 'degree.hasExternality = true',
-      effect: 'identityEmerges = extensiveIntensive',
+      id: 'quantum-intensive-magnitude-degree-force-1',
+      description:
+        'Degree reveals itself as identical with extensive determinateness',
+      type: 'reflection',
+      trigger: 'degree.requiresExternalScale = true',
+      effect: 'identityOfSides.explicit = true',
       targetState: 'quantum-identity-two-sides',
     },
   ],
-
   transitions: [
     {
-      id: 'quantum-3-trans-1',
+      id: 'quantum-intensive-magnitude-degree-trans-1',
       from: 'quantum-intensive-magnitude-degree',
       to: 'quantum-identity-two-sides',
       mechanism: 'reflection',
       description: 'From degree to identity of extensive and intensive',
     },
   ],
-
   nextStates: ['quantum-identity-two-sides'],
-  previousStates: ['quantum-number-determinateness'],
-
+  previousStates: ['quantum-extensive-magnitude'],
   provenance: {
     topicMapId: 'quantum-intensive-magnitude-degree',
     lineRange: { start: 88, end: 117 },
     section: 'a. Their difference',
     order: 3,
   },
-
-  description: 'Intensive magnitude (degree): Limit passes over into simple determinateness. Degree is quantum but not aggregate - plurality gathered into simple determination, existence returned into being-for-itself.',
+  description: QUANTUM_TOPIC_MAP.entries[2]?.description,
+  keyPoints: QUANTUM_TOPIC_MAP.entries[2]?.keyPoints,
 };
 
-const state4: DialecticState = {
+const state3: DialecticState = {
   id: 'quantum-identity-two-sides',
-  title: 'Identity: extensive and intensive are same determinateness',
+  title: 'Identity of sides and necessity of alteration',
   concept: 'ExtensiveIntensiveIdentity',
   phase: 'quantity',
-
   moments: [
     {
-      name: 'identity',
-      definition: 'Extensive/intensive are same determinateness',
+      name: 'identityOfDeterminateness',
+      definition:
+        'Extensive and intensive are the same quantitative determinateness under different placements of amount',
       type: 'determination',
     },
     {
-      name: 'amountWithinWithout',
-      definition: 'Distinguished only by amount within vs without',
-      type: 'determination',
-      relation: 'mediates',
-      relatedTo: 'identity',
-    },
-    {
-      name: 'qualitativeSomething',
-      definition: 'Unity through negation of distinct terms',
-      type: 'quality',
+      name: 'necessaryAlteration',
+      definition:
+        'As self-negating indifferent limit, quantum must alter and pass beyond itself',
+      type: 'negation',
+      relation: 'transitions',
+      relatedTo: 'identityOfDeterminateness',
     },
   ],
-
   invariants: [
     {
-      id: 'quantum-4-inv-1',
-      constraint: 'extensiveMagnitude.determinateness = intensiveMagnitude.determinateness',
-      predicate: 'equals(extensive.determinateness, intensive.determinateness)',
+      id: 'quantum-identity-two-sides-inv-1',
+      constraint:
+        'difference of extensive and intensive is only formal placement',
+      predicate: 'formalDifference(extensive, intensive)',
     },
     {
-      id: 'quantum-4-inv-2',
-      constraint: 'distinction = amountWithin ∨ amountWithout',
-      predicate: 'distinction(amountWithin, amountWithout)',
-    },
-    {
-      id: 'quantum-4-inv-3',
-      constraint: 'qualitativeSomething = unityThroughNegation',
-      predicate: 'equals(qualitativeSomething, unityThroughNegation)',
+      id: 'quantum-identity-two-sides-inv-2',
+      constraint: 'quantum as indifferent limit is self-altering',
+      predicate: 'mustAlter(quantum)',
     },
   ],
-
   forces: [
     {
-      id: 'quantum-4-force-1',
-      description: 'Identity as indifferent limit drives quantum to alter',
-      type: 'contradiction',
-      trigger: 'quantum.indifferentLimit = true',
-      effect: 'alteration.necessary = true',
-      targetState: 'quantum-alteration-necessity',
+      id: 'quantum-identity-two-sides-force-1',
+      description:
+        'Necessity of alteration pushes quantum into the quantitative infinite',
+      type: 'passover',
+      trigger: 'quantum.mustAlter = true',
+      effect: 'quantitativeInfinity.initiated = true',
+      targetState: 'infinity-concept-self-contradictory',
     },
   ],
-
   transitions: [
     {
-      id: 'quantum-4-trans-1',
+      id: 'quantum-identity-two-sides-trans-1',
       from: 'quantum-identity-two-sides',
-      to: 'quantum-alteration-necessity',
-      mechanism: 'contradiction',
-      description: 'From identity to necessary alteration of quantum',
+      to: 'infinity-concept-self-contradictory',
+      mechanism: 'passover',
+      description:
+        'From identity and alteration to the concept of quantitative infinity',
     },
   ],
-
-  nextStates: ['quantum-alteration-necessity'],
+  nextStates: ['infinity-concept-self-contradictory'],
   previousStates: ['quantum-intensive-magnitude-degree'],
-
   provenance: {
     topicMapId: 'quantum-identity-two-sides',
     lineRange: { start: 199, end: 254 },
     section: 'b. Identity of extensive and intensive magnitude',
     order: 6,
   },
-
-  description: 'Identity: Extensive/intensive are same determinateness. Distinguished only by amount within vs without. With this identity, qualitative something appears - unity through negation of distinct terms.',
-};
-
-const state5: DialecticState = {
-  id: 'quantum-alteration-necessity',
-  title: 'Alteration of quantum: quantum must alter',
-  concept: 'QuantumAlteration',
-  phase: 'quantity',
-
-  moments: [
-    {
-      name: 'indifferentLimit',
-      definition: 'Determinateness posited as sublated',
-      type: 'negation',
-    },
-    {
-      name: 'absoluteContinuity',
-      definition: 'Quantum in continuity with externality/otherness',
-      type: 'mediation',
-    },
-    {
-      name: 'becoming',
-      definition: 'Limit becomes, not just exists',
-      type: 'process',
-    },
-  ],
-
-  invariants: [
-    {
-      id: 'quantum-5-inv-1',
-      constraint: 'quantum.determinateness = sublated',
-      predicate: 'sublated(quantum.determinateness)',
-    },
-    {
-      id: 'quantum-5-inv-2',
-      constraint: 'quantum.inAbsoluteContinuity = externality',
-      predicate: 'inAbsoluteContinuity(quantum, externality)',
-    },
-    {
-      id: 'quantum-5-inv-3',
-      constraint: 'quantum.mustAlter = true',
-      predicate: 'mustAlter(quantum)',
-    },
-    {
-      id: 'quantum-5-inv-4',
-      constraint: 'limit.becomes = true (not just exists)',
-      predicate: 'becomes(limit) ∧ not(justExists(limit))',
-    },
-  ],
-
-  forces: [
-    {
-      id: 'quantum-5-force-1',
-      description: 'Self-referring negation drives quantum beyond itself to infinity',
-      type: 'passover',
-      trigger: 'quantum.selfReferringNegation = true',
-      effect: 'infinityEmerges = true',
-      targetState: 'ratio-1',
-    },
-  ],
-
-  transitions: [
-    {
-      id: 'quantum-5-trans-1',
-      from: 'quantum-alteration-necessity',
-      to: 'ratio-1',
-      mechanism: 'passover',
-      description: 'Quantum sends itself beyond to infinity (ratio)',
-    },
-  ],
-
-  nextStates: ['ratio-1'],
-  previousStates: ['quantum-identity-two-sides'],
-
-  provenance: {
-    topicMapId: 'quantum-alteration-necessity',
-    lineRange: { start: 256, end: 281 },
-    section: 'c. Alteration of quantum',
-    order: 7,
-  },
-
-  description: 'Alteration: Quantum is determinateness posited as sublated - indifferent limit that is negation of itself. Quantum is in absolute continuity with externality/otherness. It must alter - has being only in continuity with other.',
+  description: QUANTUM_TOPIC_MAP.entries[5]?.description,
+  keyPoints: QUANTUM_TOPIC_MAP.entries[5]?.keyPoints,
 };
 
 export const quantumIR: DialecticIR = {
   id: 'quantum-ir',
   title: 'Quantum IR: Extensive and Intensive Quantum',
-  section: 'C. QUANTUM - Extensive and Intensive',
-  states: [state1, state2, state3, state4, state5],
+  section: 'BEING - QUANTITY - C. Quantum',
+  states: [state1, state2, state3],
   metadata: {
     sourceFile: 'quantum.txt',
-    totalStates: 5,
+    totalStates: 3,
     cpuGpuMapping: {
       'quantum-extensive-magnitude': 'quantity',
-      'quantum-number-determinateness': 'quantity',
       'quantum-intensive-magnitude-degree': 'quantity',
       'quantum-identity-two-sides': 'quantity',
-      'quantum-alteration-necessity': 'quantity',
     },
   },
 };
 
 export const quantumStates = {
   'quantum-extensive-magnitude': state1,
-  'quantum-number-determinateness': state2,
-  'quantum-intensive-magnitude-degree': state3,
-  'quantum-identity-two-sides': state4,
-  'quantum-alteration-necessity': state5,
+  'quantum-intensive-magnitude-degree': state2,
+  'quantum-identity-two-sides': state3,
 };

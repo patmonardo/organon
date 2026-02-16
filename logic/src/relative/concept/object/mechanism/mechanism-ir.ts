@@ -1,246 +1,208 @@
-/**
- * Mechanism IR: Dialectic Pseudo-Code for Absolute Mechanism
- *
- * Architecture: GPU Object (Self-Executing Reality)
- * Section: C. THE CONCEPT - II. OBJECTIVITY - A. Mechanism - C. Absolute Mechanism
- *
- * Covers the dialectical movement:
- * - Center: Objective singularity, central body, striving, centrality
- * - Syllogistic Structure: Absolute center, relative centers, free mechanism
- * - Law: Idealized reality vs external reality, free necessity
- * - Transition to Chemism: Objectified opposition, reciprocally negative
- *
- * The GPU's mechanical object - self-subsisting, law-governed
- */
-
-import type {
-  DialecticState,
-  DialecticIR,
-} from '@schema/dialectic';
+import type { DialecticIR, DialecticState } from '@schema/dialectic';
+import { ABSOLUTE_MECHANISM_TOPIC_MAP } from './sources/mechanism-topic-map';
 
 const state1: DialecticState = {
   id: 'mech-abs-1',
-  title: 'Center — objective singularity, striving towards center',
-  concept: 'MechanicalCenter',
+  title: 'Center as objective singularity and striving',
+  concept: 'AbsoluteMechanismCenter',
   phase: 'object',
-
   moments: [
     {
-      name: 'objectiveSingularity',
-      definition: 'Empty manifoldness gathered into objective singularity, middle point',
+      name: 'objectiveCenter',
+      definition:
+        'Manifold objectivity gathers into centered singular universality',
       type: 'determination',
     },
     {
-      name: 'objectiveUniversality',
-      definition: 'Central body is genus, objective universality pervading objects',
-      type: 'determination',
-      relation: 'contains',
-      relatedTo: 'objectiveSingularity',
-    },
-    {
-      name: 'strivingTowardsCenter',
-      definition: 'Striving towards center is absolute universality, friction brings body back',
+      name: 'strivingCentrality',
+      definition:
+        'Externality appears as striving back toward center through centrality',
       type: 'process',
+      relation: 'contains',
+      relatedTo: 'objectiveCenter',
     },
   ],
-
   invariants: [
     {
       id: 'mech-abs-1-inv-1',
-      constraint: 'center = objectiveSingularity',
-      predicate: 'equals(center, objectiveSingularity)',
+      constraint: 'center is objective singular middle',
+      predicate: 'equals(center, objectiveSingularMiddle)',
     },
     {
       id: 'mech-abs-1-inv-2',
-      constraint: 'centralBody = genus',
-      predicate: 'equals(centralBody, genus)',
+      constraint:
+        'central body functions as immanent genus of mechanical field',
+      predicate: 'equals(centralBody, immanentGenus)',
     },
   ],
-
   forces: [
     {
       id: 'mech-abs-1-force-1',
-      description: 'Center drives toward syllogistic structure',
+      description:
+        'Centered universality develops syllogistic articulation of mechanism',
       type: 'mediation',
-      trigger: 'center.objective = true',
-      effect: 'syllogisticStructure.emerges = true',
+      trigger: 'center.striving = immanent',
+      effect: 'syllogisticMechanism.emerges = true',
       targetState: 'mech-abs-2',
     },
   ],
-
   transitions: [
     {
       id: 'mech-abs-1-trans-1',
       from: 'mech-abs-1',
       to: 'mech-abs-2',
       mechanism: 'mediation',
-      description: 'From center to syllogistic structure',
+      description:
+        'From objective center to free-mechanism syllogistic structure',
     },
   ],
-
   nextStates: ['mech-abs-2'],
-  previousStates: ['necessity-syllogism-ir'],
-
+  previousStates: ['mech-proc-8'],
   provenance: {
     topicMapId: 'mech-abs-1-center-singularity',
     lineRange: { start: 4, end: 64 },
     section: 'Absolute Mechanism - The Center',
     order: 1,
   },
-
-  description: 'Center as objective singularity. Central body is genus, objective universality. Striving towards center is absolute universality. Friction is phenomenon of centrality.',
+  description: ABSOLUTE_MECHANISM_TOPIC_MAP.entries[0]?.description,
+  keyPoints: ABSOLUTE_MECHANISM_TOPIC_MAP.entries[0]?.keyPoints,
 };
 
 const state2: DialecticState = {
   id: 'mech-abs-2',
-  title: 'Syllogistic structure — absolute center, relative centers, free mechanism',
-  concept: 'MechanicalSyllogism',
+  title: 'Free mechanism and immanent law',
+  concept: 'FreeMechanismLaw',
   phase: 'object',
-
   moments: [
     {
-      name: 'absoluteCenter',
-      definition: 'Absolute individual is objectively universal middle term',
-      type: 'determination',
-    },
-    {
-      name: 'relativeCenters',
-      definition: 'Relative individual centers constitute middle term of second syllogism',
-      type: 'determination',
-      relation: 'contains',
-      relatedTo: 'absoluteCenter',
-    },
-    {
-      name: 'freeMechanism',
-      definition: 'Free mechanism - objective universality as fundamental determination, law',
+      name: 'threefoldSyllogisticField',
+      definition:
+        'Absolute center, relative centers, and formal objects form one free-mechanism structure',
       type: 'mediation',
     },
+    {
+      name: 'lawEmergence',
+      definition: 'External order passes into immanent objective law',
+      type: 'reflection',
+      relation: 'transforms',
+      relatedTo: 'threefoldSyllogisticField',
+    },
   ],
-
   invariants: [
     {
       id: 'mech-abs-2-inv-1',
-      constraint: 'absoluteCenter = objectivelyUniversalMiddle',
-      predicate: 'equals(absoluteCenter, objectivelyUniversalMiddle)',
+      constraint:
+        'free mechanism has objective universality as fundamental determination',
+      predicate:
+        'fundamentalDetermination(freeMechanism, objectiveUniversality)',
     },
     {
       id: 'mech-abs-2-inv-2',
-      constraint: 'mechanism.free = true',
-      predicate: 'isFree(mechanism)',
+      constraint: 'law is immanent, not merely external arrangement',
+      predicate: 'and(immanent(law), not(mereArrangement(law)))',
     },
   ],
-
   forces: [
     {
       id: 'mech-abs-2-force-1',
-      description: 'Free mechanism drives toward law',
-      type: 'mediation',
-      trigger: 'mechanism.free = true',
-      effect: 'law.emerges = true',
-      targetState: 'mech-abs-3',
+      description:
+        'Law differentiates idealized and external reality into tense opposition',
+      type: 'negation',
+      trigger: 'law.differencePosited = true',
+      effect: 'transitionToChemism.prepared = true',
+      targetState: 'mech-abs-4',
     },
   ],
-
   transitions: [
     {
       id: 'mech-abs-2-trans-1',
       from: 'mech-abs-2',
-      to: 'mech-abs-3',
-      mechanism: 'mediation',
-      description: 'From syllogistic structure to law',
+      to: 'mech-abs-4',
+      mechanism: 'negation',
+      description: 'From immanent law to objectified opposition',
     },
   ],
-
-  nextStates: ['mech-abs-3'],
+  nextStates: ['mech-abs-4'],
   previousStates: ['mech-abs-1'],
-
   provenance: {
     topicMapId: 'mech-abs-2-center-syllogistic',
     lineRange: { start: 66, end: 165 },
     section: 'Absolute Mechanism - The Center',
     order: 2,
   },
-
-  description: 'Syllogistic structure. Absolute center, relative centers, formal objects. Three syllogisms. Free mechanism - objective universality as fundamental determination. Order passed over into law.',
+  description: ABSOLUTE_MECHANISM_TOPIC_MAP.entries[1]?.description,
+  keyPoints: ABSOLUTE_MECHANISM_TOPIC_MAP.entries[1]?.keyPoints,
 };
 
 const state3: DialecticState = {
-  id: 'mech-abs-3',
-  title: 'Law — idealized reality vs external reality, free necessity',
-  concept: 'MechanicalLaw',
+  id: 'mech-abs-4',
+  title: 'Mechanism-to-chemism bridge via objectified opposition',
+  concept: 'TransitionToChemism',
   phase: 'object',
-
   moments: [
     {
-      name: 'idealizedReality',
-      definition: 'Idealized reality - real ideality is soul of objective totality',
-      type: 'determination',
+      name: 'objectifiedOpposition',
+      definition:
+        'Centrality falls apart into reciprocally negative and tense objectivities',
+      type: 'contradiction',
     },
     {
-      name: 'externalReality',
-      definition: 'External reality does not correspond to concept, mere striving',
-      type: 'negation',
-      relation: 'opposite',
-      relatedTo: 'idealizedReality',
-    },
-    {
-      name: 'freeNecessity',
-      definition: 'Law is free necessity, self-igniting fire, refers only to itself',
-      type: 'mediation',
+      name: 'chemismPassover',
+      definition: 'Free mechanism determines itself into chemism',
+      type: 'passover',
+      relation: 'transitions',
+      relatedTo: 'objectifiedOpposition',
     },
   ],
-
   invariants: [
     {
-      id: 'mech-abs-3-inv-1',
-      constraint: 'idealizedReality ≠ externalReality',
-      predicate: 'not(equals(idealizedReality, externalReality))',
+      id: 'mech-abs-4-inv-1',
+      constraint:
+        'law remains immanent but no longer sufficient as closed mechanism',
+      predicate: 'and(immanent(law), insufficientAsClosedMechanism(law))',
     },
     {
-      id: 'mech-abs-3-inv-2',
-      constraint: 'law = freeNecessity',
-      predicate: 'equals(law, freeNecessity)',
+      id: 'mech-abs-4-inv-2',
+      constraint:
+        'opposition is mutually negative, not indifferent externality',
+      predicate: 'mutuallyNegative(opposedObjectivities)',
     },
   ],
-
   forces: [
     {
-      id: 'mech-abs-3-force-1',
-      description: 'Law drives toward chemism',
-      type: 'negation',
-      trigger: 'difference.objectified = true',
-      effect: 'chemism.emerges = true',
-      targetState: 'chem-1',
+      id: 'mech-abs-4-force-1',
+      description: 'Objectified negativity initiates chemical object relation',
+      type: 'passover',
+      trigger: 'opposition.tense = true',
+      effect: 'chemicalObject.emerges = true',
+      targetState: 'chem-obj-1',
     },
   ],
-
   transitions: [
     {
-      id: 'mech-abs-3-trans-1',
-      from: 'mech-abs-3',
-      to: 'chem-1',
-      mechanism: 'negation',
-      description: 'From mechanism to chemism',
+      id: 'mech-abs-4-trans-1',
+      from: 'mech-abs-4',
+      to: 'chem-obj-1',
+      mechanism: 'passover',
+      description: 'From absolute mechanism to chemism',
     },
   ],
-
-  nextStates: ['chem-1'],
+  nextStates: ['chem-obj-1'],
   previousStates: ['mech-abs-2'],
-
   provenance: {
-    topicMapId: 'mech-abs-3-law',
-    lineRange: { start: 167, end: 278 },
-    section: 'Absolute Mechanism - The Law',
-    order: 3,
+    topicMapId: 'mech-abs-4-transition-chemism',
+    lineRange: { start: 236, end: 278 },
+    section: 'Absolute Mechanism - Transition',
+    order: 4,
   },
-
-  description: 'Law - idealized reality vs external reality. Idealized reality is soul of objective totality. Free necessity, self-igniting fire. Centrality falls apart, negativity passed over into objectified opposition. Mechanism determines itself to chemism.',
+  description: ABSOLUTE_MECHANISM_TOPIC_MAP.entries[3]?.description,
+  keyPoints: ABSOLUTE_MECHANISM_TOPIC_MAP.entries[3]?.keyPoints,
 };
 
 export const mechanismIR: DialecticIR = {
   id: 'mechanism-ir',
-  title: 'Mechanism IR: Center, Syllogistic Structure, Law, Chemism',
-  section: 'C. THE CONCEPT - II. OBJECTIVITY - A. Mechanism - C. Absolute Mechanism',
+  title: 'Mechanism IR: Center, Free Law, Chemism Bridge',
+  section: 'CONCEPT - OBJECTIVITY - A. Mechanism - C. Absolute Mechanism',
   states: [state1, state2, state3],
   metadata: {
     sourceFile: 'mechanism.txt',
@@ -248,7 +210,7 @@ export const mechanismIR: DialecticIR = {
     cpuGpuMapping: {
       'mech-abs-1': 'object',
       'mech-abs-2': 'object',
-      'mech-abs-3': 'object',
+      'mech-abs-4': 'object',
     },
   },
 };
@@ -256,5 +218,5 @@ export const mechanismIR: DialecticIR = {
 export const mechanismStates = {
   'mech-abs-1': state1,
   'mech-abs-2': state2,
-  'mech-abs-3': state3,
+  'mech-abs-4': state3,
 };
