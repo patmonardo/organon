@@ -1,6 +1,59 @@
 import { z } from 'zod';
 import { BaseCore, BaseSchema, BaseState, Type, Label } from './base';
 import { FormDialecticSchema } from './rules';
+import { CpuGpuPhaseSchema, MomentSchema } from './dialectic';
+
+// ==========================================
+// DIALECTICAL FORM META-OBJECT
+// ==========================================
+
+/**
+ * Form as Dialectical Meta-Object
+ *
+ * Forms are meta-objects that govern the dialectical process,
+ * supporting raw form definitions and integrating with the Context system.
+ * They represent the transcendental structure that shapes empirical forms.
+ */
+export const DialecticalFormSchema = z.object({
+  /** Unique identifier */
+  id: z.string(),
+
+  /** Dialectical phase (CPU/GPU) */
+  phase: CpuGpuPhaseSchema,
+
+  /** Active moments in this form's dialectic */
+  moments: z.array(MomentSchema),
+
+  /** Raw form definition this meta-object governs */
+  rawDefinition: z.record(z.string(), z.any()).optional(),
+
+  /** Context integration - how this form relates to contexts */
+  contextBindings: z
+    .array(
+      z.object({
+        contextId: z.string(),
+        role: z.enum(['governs', 'mediates', 'transforms']),
+        binding: z.record(z.string(), z.any()),
+      }),
+    )
+    .optional(),
+
+  /** Meta-object properties */
+  meta: z
+    .object({
+      catalogId: z.string(),
+      version: z.string().optional(),
+      dialect: z.string().optional(), // e.g., 'hegelian', 'kantian'
+      invariants: z.array(z.string()).optional(),
+    })
+    .optional(),
+
+  /** Timestamps */
+  createdAt: z.number().optional(),
+  updatedAt: z.number().optional(),
+});
+
+export type DialecticalForm = z.infer<typeof DialecticalFormSchema>;
 
 // ==========================================
 // FORM SHAPE DEFINITIONS

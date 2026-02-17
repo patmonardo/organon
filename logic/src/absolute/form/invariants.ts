@@ -152,7 +152,7 @@ export const KernelRunResultStrictSchema = KernelRunResultSchema.superRefine(
     if (result.ok) {
       if (result.error !== undefined) {
         ctx.addIssue({
-          code: z.ZodIssueCode.custom,
+          code: 'custom',
           message:
             'KernelRunResult invariant violated: ok=true requires error to be undefined',
         });
@@ -160,7 +160,7 @@ export const KernelRunResultStrictSchema = KernelRunResultSchema.superRefine(
     } else {
       if (result.error === undefined) {
         ctx.addIssue({
-          code: z.ZodIssueCode.custom,
+          code: 'custom',
           message:
             'KernelRunResult invariant violated: ok=false requires error to be defined',
         });

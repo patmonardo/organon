@@ -32,7 +32,7 @@ export const groundMorphKindSchema = z.enum([
   'condition-ground',
 ]);
 
-export const groundMorphStateSchema = z.object({
+export const groundMorphShapeSchema = z.object({
   id: z.string(),
   groundStateId: z.string(),
   groundKind: groundMorphKindSchema,
@@ -58,7 +58,7 @@ export const groundMorphStateSchema = z.object({
   }),
 });
 
-export type GroundMorphState = z.infer<typeof groundMorphStateSchema>;
+export type GroundMorphShape = z.infer<typeof groundMorphShapeSchema>;
 
 export const ABSOLUTE_GROUND_IR_KEY =
   '@relative/essence/reflection/ground/absolute-ir#absoluteIR';
@@ -91,9 +91,9 @@ function isReflectiveUnityCandidate(stateId: string): boolean {
   return stateId === 'con-15';
 }
 
-export function compileGroundStateToMorphState(
+export function compileGroundStateToMorphShape(
   state: DialecticState,
-): GroundMorphState | undefined {
+): GroundMorphShape | undefined {
   const groundKind = toGroundKind(state.id);
   if (!groundKind) {
     return undefined;
@@ -101,7 +101,7 @@ export function compileGroundStateToMorphState(
 
   const nextState = state.nextStates?.[0];
 
-  return groundMorphStateSchema.parse({
+  return groundMorphShapeSchema.parse({
     id: `morphstate-${state.id}`,
     groundStateId: state.id,
     groundKind,
@@ -131,15 +131,15 @@ export function compileGroundStateToMorphState(
   });
 }
 
-export function compileGroundIRToMorphStates(
+export function compileGroundIRToMorphShapes(
   ir: DialecticIR,
-): GroundMorphState[] {
+): GroundMorphShape[] {
   return ir.states
-    .map((state) => compileGroundStateToMorphState(state))
-    .filter((shape): shape is GroundMorphState => Boolean(shape));
+    .map((state) => compileGroundStateToMorphShape(state))
+    .filter((shape): shape is GroundMorphShape => Boolean(shape));
 }
 
-export async function compileGroundMorphStates(): Promise<GroundMorphState[]> {
+export async function compileGroundMorphShapes(): Promise<GroundMorphShape[]> {
   const [absoluteIR, determinateIR, conditionIR] = await Promise.all([
     loadDialecticIR(ABSOLUTE_GROUND_IR_KEY),
     loadDialecticIR(DETERMINATE_GROUND_IR_KEY),
@@ -147,24 +147,24 @@ export async function compileGroundMorphStates(): Promise<GroundMorphState[]> {
   ]);
 
   return [
-    ...compileGroundIRToMorphStates(absoluteIR),
-    ...compileGroundIRToMorphStates(determinateIR),
-    ...compileGroundIRToMorphStates(conditionIR),
+    ...compileGroundIRToMorphShapes(absoluteIR),
+    ...compileGroundIRToMorphShapes(determinateIR),
+    ...compileGroundIRToMorphShapes(conditionIR),
   ];
 }
 
-export async function compileGroundMorphStateRecord(): Promise<
-  Record<string, GroundMorphState>
+export async function compileGroundMorphShapeRecord(): Promise<
+  Record<string, GroundMorphShape>
 > {
-  const compiled = await compileGroundMorphStates();
+  const compiled = await compileGroundMorphShapes();
   return Object.fromEntries(
     compiled.map((state) => [state.groundStateId, state]),
   );
 }
 
 export async function compileReflectiveConsciousnessUnitySeed(): Promise<
-  GroundMorphState | undefined
+  GroundMorphShape | undefined
 > {
-  const compiled = await compileGroundMorphStates();
+  const compiled = await compileGroundMorphShapes();
   return compiled.find((state) => state.handoff.reflectiveUnityCandidate);
 }

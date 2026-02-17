@@ -3,9 +3,9 @@ import { reflectionFormShapeSchema } from './reflection-form-shape';
 import { compileEssenceReflectionFormShapes } from './compile-reflection-form-shape';
 import { compileFoundationContextTriad } from './compile-foundation-context-shape';
 import {
-  compileGroundMorphStateRecord,
+  compileGroundMorphShapeRecord,
   compileReflectiveConsciousnessUnitySeed,
-} from './compile-ground-morph-state';
+} from './compile-ground-morph-shape';
 
 const determinationKindEnum = z.enum([
   'identity',
@@ -158,7 +158,7 @@ export async function compileContextShapePrototype(): Promise<ContextShapeProtot
 export async function compileMorphShapePrototype(
   contextShape: ContextShapePrototype,
 ): Promise<MorphShapePrototype> {
-  const groundRecord = await compileGroundMorphStateRecord();
+  const groundRecord = await compileGroundMorphShapeRecord();
   const unitySeed = await compileReflectiveConsciousnessUnitySeed();
 
   const concreteGround = groundRecord['con-15'] ?? unitySeed;

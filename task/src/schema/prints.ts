@@ -12,7 +12,12 @@ export const PrintKind = z.enum([
 ]);
 
 export const PrintRole = z.enum(['kernel', 'user', 'system']);
-export const EpistemicLevel = z.enum(['tacit', 'inferred', 'proven', 'conclusive']);
+export const EpistemicLevel = z.enum([
+  'tacit',
+  'inferred',
+  'proven',
+  'conclusive',
+]);
 
 // Ontology discriminator: `monadic` for kernel-level (Being/Presence) prints, `triadic` for
 // conceptual/logic-layer (Understanding / Triadic Concept) prints.
@@ -22,7 +27,7 @@ export type Ontology = z.infer<typeof Ontology>;
 const KnowingPayloadSchema = z.object({
   modality: z.string().optional(),
   embedding: z.array(z.number()).optional(),
-  trace: z.record(z.any()).optional(),
+  trace: z.record(z.string(), z.any()).optional(),
   summary: z.string().optional(),
 });
 
@@ -42,11 +47,16 @@ const PrintEnvelopeBase = z.object({
   id: z.string(),
   kind: PrintKind,
   role: PrintRole,
-  timestamp: z.preprocess((val) => (typeof val === 'string' ? new Date(val) : val), z.date()).default(() => new Date()),
+  timestamp: z
+    .preprocess(
+      (val) => (typeof val === 'string' ? new Date(val) : val),
+      z.date(),
+    )
+    .default(() => new Date()),
   provenance: ProvenanceSchema.optional(),
   derivedFrom: z.array(z.string()).optional(),
   schemaVersion: z.string().default('1.0'),
-  metadata: z.record(z.any()).optional(),
+  metadata: z.record(z.string(), z.any()).optional(),
   epistemicLevel: EpistemicLevel.optional(),
   confidence: z.number().min(0).max(1).optional(),
   // Optional ontology discriminator and phases (triadic phases like Being/Nothing/Becoming etc.)

@@ -29,13 +29,11 @@ export * from './content';
 export * from './judgment';
 export * from './syllogism';
 
-// Kernel boundary vocabulary
-export * from './form-processor';
-
 // Empowerment (will, action, doing)
 export * from './power';
 export * from './signature';
 export * from './facet';
+export * from './formdb-props';
 
 // Dialectic IR (pseudo-code schema)
 export * from './dialectic';
@@ -51,4 +49,4 @@ export * from './tsjson';
 export * from './common';
 export * from './graph';
 export * from './sdsl';
-export * from './sdsl-compiler';
+export * from './root-shapes';

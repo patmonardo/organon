@@ -7,14 +7,14 @@ import {
   type SdslSpecification,
   type SdslUdfSpec,
   type SdslUdtSpec,
-} from './sdsl';
+} from '../../../schema/sdsl';
 import {
   GdsApplicationFormKindSchema,
   GdsDatabaseIdSchema,
   GdsGraphNameSchema,
   GdsUserSchema,
-} from './common';
-import { GdsFormProgramSchema } from './program';
+} from '../../../schema/common';
+import { GdsFormProgramSchema } from '../../../schema/program';
 
 export const SdslCompilerInputSchema = z.object({
   user: z.object({

@@ -75,26 +75,11 @@ export type PlatonicFormProjection = z.infer<
   typeof PlatonicFormProjectionSchema
 >;
 
-export const DatasetModelProjectionSchema = z.object({
-  specification: logicSchema.SdslSpecificationSchema,
-  dataframe: logicSchema.SdslDataFramePlanSchema,
-  kernel: logicSchema.SdslKernelArtifactsSchema,
-});
-export type DatasetModelProjection = z.infer<
-  typeof DatasetModelProjectionSchema
->;
-
 export const AgentModelProjectionSchema = z.object({
   formShape: FormShapeSchema,
   platonic: PlatonicFormProjectionSchema,
 });
 export type AgentModelProjection = z.infer<typeof AgentModelProjectionSchema>;
-
-export const UnifiedModelBridgeSchema = z.object({
-  dataset: DatasetModelProjectionSchema,
-  agent: AgentModelProjectionSchema,
-});
-export type UnifiedModelBridge = z.infer<typeof UnifiedModelBridgeSchema>;
 
 // ============================================================
 // FORM HANDLER - Action Callbacks

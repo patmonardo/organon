@@ -37,6 +37,8 @@
   },
   "dependencies": {
     "neo4j-driver": "^5.25.0",
+    "swipl": "^1.0.6",
+    "tau-prolog": "^0.3.4",
     "uuid": "^11.1.0",
     "zod": "^4.0.0"
   },
