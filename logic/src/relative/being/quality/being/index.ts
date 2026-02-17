@@ -7,3 +7,4 @@
 export * from './being-ir';
 export * from './nothing-ir';
 export * from './becoming-ir';
+export * from './integrated-topicmap-ir';

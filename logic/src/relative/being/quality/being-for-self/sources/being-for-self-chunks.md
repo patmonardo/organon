@@ -2,50 +2,62 @@
 
 **SOURCE ANALYSIS PHASE 1: Planning Document**
 
-**Purpose**: Systematic chunking methodology to yield meaningful Logical Operations.
-The TopicMap helps check and improve understanding of Hegel through step-by-step analysis.
+**Purpose**: Chunk the text into readable semantic units that preserve the movement of the source.
+The TopicMap is a check that each unit is text-grounded and trackable.
 
-**Status**: Work in progress - refining methodology as we practice.
+**Status**: Work in progress - refining chunks through review.
 
 **Workflow Stage**: **SEED** → **UPGRADES**
+
 - **SEED**: Initial chunking plan (current state) - good enough to form initial seed
 - **UPGRADES**: Refined chunks through actual study and editing
 - As you study each chunk, edit and upgrade the seed chunks
 - This document evolves from planning → studied/refined chunks
 
 **Structure**: A. BEING-FOR-ITSELF AS SUCH (183 lines)
+
 - A. BEING-FOR-ITSELF AS SUCH (lines 49-103)
 - a. Existence and being-for-itself (lines 104-127)
 - b. Being-for-one (lines 129-192)
 - c. The one (lines 194-231)
 
-**Note**: Focusing on the Species (A. BEING-FOR-ITSELF AS SUCH and sub-sections) only,
-ignoring top-level Genus introduction (lines 6-47). The introduction contains seeds
-but is not part of our Conceptual Analysis at this stage.
+**Note**: This plan follows A. BEING-FOR-ITSELF AS SUCH and its sub-sections.
+The chapter introduction (lines 1-47) is left as context and not chunked at this stage.
 
-**Workflow**: 
+**Workflow**:
+
 ```
 Source Text → [Source Analysis] → Chunks + Topics → [Logical Op Generation] → Logical Operations
 ```
 
-**References**: 
+**References**:
+
 - `tools/source-analysis/SOURCE-ANALYSIS.md` - Source Analysis workflow documentation
 - `tools/source-analysis/ARCHITECTURE.md` - Architecture overview
 - `being-for-self-topic-map.ts` - Formal TopicMap structure (Topics)
 
 **TopicMap**: See `being-for-self-topic-map.ts` for the formal TopicMap structure that maps to:
+
 - `TopicMapEntry.id` → `Chunk.id`
 - `TopicMapEntry.title` → `Chunk.title` AND `LogicalOperation.label` (the "Title")
 - `TopicMapEntry.lineRange` → Extract text → `Chunk.text`
 
-The TopicMap ensures systematic, trackable chunking that yields meaningful Logical Operations.
+The TopicMap keeps chunk IDs, titles, and line ranges aligned with the source text.
+
+**Chunk Quality Check**:
+
+- At a glance, the chunk should show a complete move in the text
+- Meaning should be visible without reading every word
+- If a line break blocks that, adjust boundaries
 
 ## Chunk Details
 
 ### Chunk 1: A. BEING-FOR-ITSELF AS SUCH — general concept and representation
+
 **Lines**: 49-103
 **Title**: A. BEING-FOR-ITSELF AS SUCH — general concept and representation
 **Key Points**:
+
 - General concept of being-for-itself has come to light
 - Expression "being-for-itself" corresponds to concept
 - Something is for itself inasmuch as it sublates otherness
@@ -63,9 +75,11 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - Self-consciousness is nearest example of presence of infinity
 
 ### Chunk 2: a. Existence and being-for-itself — infinity sunk into simple being
+
 **Lines**: 104-127
 **Title**: a. Existence and being-for-itself — infinity sunk into simple being
 **Key Points**:
+
 - Being-for-itself is infinity that has sunk into simple being
 - Existence in posited form of immediacy of being
 - Negative nature of infinity is negation of negation
@@ -77,9 +91,11 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - Moment of existence present in being-for-itself as being-for-one
 
 ### Chunk 3: b. Being-for-one — idealization and unity
+
 **Lines**: 129-192
 **Title**: b. Being-for-one — idealization and unity
 **Key Points**:
+
 - Moment expresses how finite is in unity with infinite or as idealization
 - Being-for-itself does not have negation as determinateness or limit
 - Not as reference to existence other than it
@@ -99,9 +115,11 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - Being-for-itself and being-for-one are essential, inseparable moments of ideality
 
 ### Chunk 4: c. The one — simple unity and abstract limit
+
 **Lines**: 194-231
 **Title**: c. The one — simple unity and abstract limit
 **Key Points**:
+
 - Being-for-itself is simple unity of itself and its moments, of being-for-one
 - Only one determination present: self-reference itself of sublating
 - Moments of being-for-itself have sunk into indifferentiation
@@ -121,4 +139,3 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - Each moment posited as determination existent on its own, yet inseparable
 - Of each determination the opposite must equally be said
 - Contradiction causes difficulty with abstract nature of moments
-

@@ -11,3 +11,4 @@ export * from './finitude-ir';
 export * from './alternating-infinity-ir';
 export * from './affirmative-infinity-ir';
 export * from './infinity-ir';
+export * from './existence-chapter-ir';

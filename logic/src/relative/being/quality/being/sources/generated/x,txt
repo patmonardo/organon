@@ -1,0 +1,4 @@
+MATCH (n) RETURN count(n);
+MATCH (n:Topic) RETURN count(n);
+MATCH (:Topic)-[r:PARENT_OF]->(:Topic) RETURN count(r);
+MATCH (:IntegratedChunk)-[r:ABOUT]->(:Topic) RETURN count(r);

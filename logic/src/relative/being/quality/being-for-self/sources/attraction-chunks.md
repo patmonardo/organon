@@ -2,50 +2,62 @@
 
 **SOURCE ANALYSIS PHASE 1: Planning Document**
 
-**Purpose**: Systematic chunking methodology to yield meaningful Logical Operations.
-The TopicMap helps check and improve understanding of Hegel through step-by-step analysis.
+**Purpose**: Chunk the text into readable semantic units that preserve the movement of the source.
+The TopicMap is a check that each unit is text-grounded and trackable.
 
-**Status**: Work in progress - refining methodology as we practice.
+**Status**: Work in progress - refining chunks through review.
 
 **Workflow Stage**: **SEED** → **UPGRADES**
+
 - **SEED**: Initial chunking plan (current state) - good enough to form initial seed
 - **UPGRADES**: Refined chunks through actual study and editing
 - As you study each chunk, edit and upgrade the seed chunks
 - This document evolves from planning → studied/refined chunks
 
 **Structure**: C. REPULSION AND ATTRACTION (392 lines)
+
 - C. REPULSION AND ATTRACTION (lines 2-137)
   - a. Exclusion of the one (lines 4-137)
 - b. The one one of attraction (lines 139-211)
 - c. The connection of repulsion and attraction (lines 213-393)
 
-**Note**: The a., b., c. sub-sections here may be leaf concepts rather than full Species
-that could themselves become Genera. The main C. section (lines 2-137) contains the
-Species-level content, with a., b., c. as its moments/leaf concepts.
+**Note**: This plan follows C. REPULSION AND ATTRACTION as presented in the source text,
+including its a., b., c. sub-sections as moments of the section.
 
-**Workflow**: 
+**Workflow**:
+
 ```
 Source Text → [Source Analysis] → Chunks + Topics → [Logical Op Generation] → Logical Operations
 ```
 
-**References**: 
+**References**:
+
 - `tools/source-analysis/SOURCE-ANALYSIS.md` - Source Analysis workflow documentation
 - `tools/source-analysis/ARCHITECTURE.md` - Architecture overview
 - `attraction-topic-map.ts` - Formal TopicMap structure (Topics)
 
 **TopicMap**: See `attraction-topic-map.ts` for the formal TopicMap structure that maps to:
+
 - `TopicMapEntry.id` → `Chunk.id`
 - `TopicMapEntry.title` → `Chunk.title` AND `LogicalOperation.label` (the "Title")
 - `TopicMapEntry.lineRange` → Extract text → `Chunk.text`
 
-The TopicMap ensures systematic, trackable chunking that yields meaningful Logical Operations.
+The TopicMap keeps chunk IDs, titles, and line ranges aligned with the source text.
+
+**Chunk Quality Check**:
+
+- At a glance, the chunk should show a complete move in the text
+- Meaning should be visible without reading every word
+- If a line break blocks that, adjust boundaries
 
 ## Chunk Details
 
 ### Chunk 1: C. a. Exclusion of the one — mutual repulsion and self-preservation
+
 **Lines**: 4-64
 **Title**: C. a. Exclusion of the one — mutual repulsion and self-preservation
 **Key Points**:
+
 - Many ones are each a being
 - Their existence or reference to one another is non-reference, external: abstract void
 - They themselves are negative reference to themselves as existent others
@@ -69,9 +81,11 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - Self-preservation through negative reference is rather their dissolution
 
 ### Chunk 2: C. a. Exclusion — ones maintaining themselves through reciprocal exclusion
+
 **Lines**: 65-136
 **Title**: C. a. Exclusion — ones maintaining themselves through reciprocal exclusion
 **Key Points**:
+
 - Ones not only are but maintain themselves through reciprocal exclusion
 - In their being-in-itself as contrasted with reference to other
 - Should have firm point of support for diversity as against being negated
@@ -97,9 +111,11 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - Self-positing-in-a-one of many ones is attraction
 
 ### Chunk 3: b. The one one of attraction — ideality realized
+
 **Lines**: 139-211
 **Title**: b. The one one of attraction — ideality realized
 **Key Points**:
+
 - Repulsion is fragmentation of one into many
 - Negative relating, since they presuppose each other as existent
 - Only ought of ideality; ideality realized in attraction
@@ -133,9 +149,11 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - Unity of repulsion and attraction in general
 
 ### Chunk 4: c. The connection of repulsion and attraction — inseparable unity
+
 **Lines**: 213-302
 **Title**: c. The connection of repulsion and attraction — inseparable unity
 **Key Points**:
+
 - Difference of one and many determined as difference of mutual reference
 - Breaks down into two: repulsion and attraction
 - Each stands at first outside other on its own
@@ -182,9 +200,11 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - Closer examination brings back to unity of concept
 
 ### Chunk 5: c. Self-presupposing — each contains other as moment
+
 **Lines**: 303-393
 **Title**: c. Self-presupposing — each contains other as moment
 **Key Points**:
+
 - Each presupposes itself, refers only to itself
 - Present in way relative repulsion and attraction behave at first
 - Relative repulsion is mutual repulsion of many ones already at hand
@@ -227,4 +247,3 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - Attraction of existent ones is their ideality and positing of one
 - As both negating and producing of one, attraction sublates itself
 - As positing within it of one, is negative of itself: repulsion
-

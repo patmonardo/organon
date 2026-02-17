@@ -2,18 +2,20 @@
 
 **SOURCE ANALYSIS PHASE 1: Planning Document**
 
-**Purpose**: Systematic chunking methodology to yield meaningful Logical Operations.
-The TopicMap helps check and improve understanding of Hegel through step-by-step analysis.
+**Purpose**: Chunk the text into readable semantic units that preserve the movement of the source.
+The TopicMap is a check that each unit is text-grounded and trackable.
 
-**Status**: Work in progress - refining methodology as we practice.
+**Status**: Work in progress - refining chunks through review.
 
 **Workflow Stage**: **SEED** → **UPGRADES**
-- **SEED**: Initial chunking plan (current state) - good enough to form initial seed
-- **UPGRADES**: Refined chunks through actual study and editing
+
+- **SEED**: Initial chunking plan
+- **UPGRADES**: Refined chunks through study and editing
 - As you study each chunk, edit and upgrade the seed chunks
 - This document evolves from planning → studied/refined chunks
 
 **Structure**: B. FINITUDE (c) Finitude (311 lines)
+
 - Introduction: Definition of finitude; non-being as nature; perishing; hour of birth = hour of death (lines 4-37)
 - (a) The immediacy of finitude:
   - Mournful note; qualitative negation driven to extreme; understanding's persistence (lines 41-79)
@@ -29,29 +31,40 @@ The TopicMap helps check and improve understanding of Hegel through step-by-step
 
 **Note**: This is the third subspecies of B. FINITUDE. It develops finitude itself, showing how the finite contains the contradiction that propels it beyond itself into the infinite. The analysis culminates in the transition to infinity.
 
-**Workflow**: 
+**Workflow**:
+
 ```
 Source Text → [Source Analysis] → Chunks + Topics → [Logical Op Generation] → Logical Operations
 ```
 
-**References**: 
+**Chunk Quality Check**:
+
+- At a glance, the chunk should show a complete move in the text
+- Meaning should be visible without reading every word
+- If a line break blocks that, adjust boundaries
+
+**References**:
+
 - `tools/source-analysis/SOURCE-ANALYSIS.md` - Source Analysis workflow documentation
 - `tools/source-analysis/ARCHITECTURE.md` - Architecture overview
 - `finitude-topic-map.ts` - Formal TopicMap structure (Topics)
 
 **TopicMap**: See `finitude-topic-map.ts` for the formal TopicMap structure that maps to:
+
 - `TopicMapEntry.id` → `Chunk.id`
 - `TopicMapEntry.title` → `Chunk.title` AND `LogicalOperation.label` (the "Title")
 - `TopicMapEntry.lineRange` → Extract text → `Chunk.text`
 
-The TopicMap ensures systematic, trackable chunking that yields meaningful Logical Operations.
+The TopicMap keeps chunk IDs, titles, and line ranges aligned with the source text.
 
 ## Chunk Details
 
 ### Chunk 1: Introduction — definition of finitude; non-being as nature; perishing
+
 **Lines**: 4-37
 **Title**: Introduction: definition of finitude; non-being as nature; perishing; hour of birth = hour of death
 **Key Points**:
+
 - Existence determinate; something has quality; delimited; quality is limit
 - Opposition of existence and negation (limit immanent) = in-itselfness
 - This negation = finitude
@@ -63,9 +76,11 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - Hour of birth = hour of death
 
 ### Chunk 2: Immediacy of finitude I: mournful note; qualitative negation driven to extreme
+
 **Lines**: 41-79
 **Title**: Immediacy of finitude I: mournful note; qualitative negation driven to extreme; understanding's persistence
 **Key Points**:
+
 - Thought of finitude brings mournful note
 - Finitude = qualitative negation driven to extreme
 - In simplicity, no affirmative being distinct from determination
@@ -82,9 +97,11 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - Finitude does not pass over into affirmative; finitude is eternal
 
 ### Chunk 3: Immediacy of finitude II: finite as absolute? No—depends on view
+
 **Lines**: 81-94
 **Title**: Immediacy of finitude II: finite as absolute? No—depends on view
 **Key Points**:
+
 - Important consideration
 - Finite as absolute not standpoint any philosophy/understanding would endorse
 - Opposite present in assertion: finite = restricted, perishable, only finite, not imperishable
@@ -92,9 +109,11 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - Perishing of perishing does not happen on view that makes perishing final end
 
 ### Chunk 4: Immediacy of finitude III: contradiction with infinite; perishing of perishing
+
 **Lines**: 98-137
 **Title**: Immediacy of finitude III: contradiction with infinite; perishing of perishing
 **Key Points**:
+
 - Official claim: finite incompatible with infinite, cannot be united
 - Finite absolutely opposed to infinite
 - Being ascribed to infinite; finite held fast as negative
@@ -111,9 +130,11 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - Perishing rather perishes
 
 ### Chunk 5: Restriction and ought I: contradiction abstractly present; limit as finitude
+
 **Lines**: 141-155
 **Title**: Restriction and ought I: contradiction abstractly present; limit as finitude
 **Key Points**:
+
 - Contradiction abstractly present by fact that something is finite
 - Something/being no longer posited abstractly but reflected into itself
 - Developed as being-in-itself with determination and constitution
@@ -122,9 +143,11 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - To be seen: what moments contained in concept of finite something
 
 ### Chunk 6: Restriction and ought II: determination and constitution; limit as connection; restriction and ought
+
 **Lines**: 157-189
 **Title**: Restriction and ought II: determination and constitution; limit as connection; restriction and ought
 **Key Points**:
+
 - Determination and constitution arose as sides for external reflection
 - Determination already contained otherness as belonging to in-itself
 - Externality of otherness within something's inwardness; remains as otherness distinguished
@@ -139,18 +162,22 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - In-itself as negative reference to limit (distinguished from it), as negative reference to itself as restriction = ought
 
 ### Chunk 7: Restriction and ought III: ought transcends restriction; restriction only as ought
+
 **Lines**: 191-201
 **Title**: Restriction and ought III: ought transcends restriction; restriction only as ought
 **Key Points**:
+
 - For limit to be restriction: something must transcend it in itself, refer to it from within as non-existent
 - Existence lies quietly indifferent alongside limit
 - Something transcends limit only in so far as sublatedness of limit, negative in-itselfness over against it
 - Since limit as restriction in determination itself: something thereby transcends itself
 
 ### Chunk 8: Restriction and ought IV: ought's double determination; finite = ought + restriction
+
 **Lines**: 203-227
 **Title**: Restriction and ought IV: ought's double determination; finite = ought + restriction
 **Key Points**:
+
 - Ought contains double determination:
   - (1) Determination which has in-itselfness over against negation
   - (2) Non-being which, as restriction, distinguished from determination but itself determination existing in itself
@@ -163,9 +190,11 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - According to determinate being (determinateness in contrast to restriction): posited as being-in-itself
 
 ### Chunk 9: Restriction and ought V: what ought to be is and is not; restriction not alien
+
 **Lines**: 229-253
 **Title**: Restriction and ought V: what ought to be is and is not; restriction not alien
 **Key Points**:
+
 - What ought to be is, and at same time is not
 - If it were, would not be what merely ought to be
 - Ought has restriction essentially
@@ -178,9 +207,11 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - Restriction = both itself and ought; common to both, or that in which two identical
 
 ### Chunk 10: Restriction and ought VI: ought transcends restriction; restriction only as ought; indivisible
+
 **Lines**: 255-266
 **Title**: Restriction and ought VI: ought transcends restriction; restriction only as ought; indivisible
 **Key Points**:
+
 - As "ought" finite transcends restriction
 - Same determinateness which is negation also sublated = in-itself
 - Limit also not its limit
@@ -191,9 +222,11 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - Determination also being sublated of restriction
 
 ### Chunk 11: Transition I: ought and restriction mutually connected; finite as contradiction
+
 **Lines**: 270-277
 **Title**: Transition I: ought and restriction mutually connected; finite as contradiction
 **Key Points**:
+
 - Ought contains restriction explicitly, for itself
 - Restriction contains ought
 - Mutual connection = finite itself, contains both in in-itself
@@ -203,9 +236,11 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - Sublates itself, goes away, ceases to be
 
 ### Chunk 12: Transition II: result (a) other finite (infinite progression)
+
 **Lines**: 279-286
 **Title**: Transition II: result (a) other finite (infinite progression)
 **Key Points**:
+
 - Result, negative as such, is (a) its very determination (negative of negative)
 - In going away and ceasing to be, finite has not ceased
 - Only become momentarily other finite
@@ -213,9 +248,11 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - And so forth to infinity
 
 ### Chunk 13: Transition III: result (b) identity with itself = infinite
+
 **Lines**: 288-310
 **Title**: Transition III: result (b) identity with itself = infinite
 **Key Points**:
+
 - (b) If consider result more closely
 - In going-away and ceasing-to-be, in negation of itself, finite attained its being-in-itself
 - In it, rejoined itself
@@ -228,4 +265,3 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - Identity with itself, negation of negation = affirmative being
 - Other of finite (which supposed to have first negation for determinateness)
 - This other = infinite
-

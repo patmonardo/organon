@@ -2,49 +2,61 @@
 
 **SOURCE ANALYSIS PHASE 1: Planning Document**
 
-**Purpose**: Systematic chunking methodology to yield meaningful Logical Operations.
-The TopicMap helps check and improve understanding of Hegel through step-by-step analysis.
+**Purpose**: Chunk the text into readable semantic units that preserve the movement of the source.
+The TopicMap is a check that each unit is text-grounded and trackable.
 
-**Status**: Work in progress - refining methodology as we practice.
+**Status**: Work in progress - refining chunks through review.
 
 **Workflow Stage**: **SEED** → **UPGRADES**
+
 - **SEED**: Initial chunking plan (current state) - good enough to form initial seed
 - **UPGRADES**: Refined chunks through actual study and editing
 - As you study each chunk, edit and upgrade the seed chunks
 - This document evolves from planning → studied/refined chunks
 
 **Structure**: B. THE ONE AND THE MANY (247 lines)
+
 - B. THE ONE AND THE MANY (lines 2-41)
 - a. The one within (lines 43-82)
 - b. The one and the void (lines 84-109)
 - c. Many ones / Repulsion (lines 111-248)
 
-**Note**: Focusing on the Species (B. THE ONE AND THE MANY and sub-sections) only.
-No top-level Genus introduction present in this file.
+**Note**: This plan follows B. THE ONE AND THE MANY and its sub-sections as they appear in the source text.
 
-**Workflow**: 
+**Workflow**:
+
 ```
 Source Text → [Source Analysis] → Chunks + Topics → [Logical Op Generation] → Logical Operations
 ```
 
-**References**: 
+**References**:
+
 - `tools/source-analysis/SOURCE-ANALYSIS.md` - Source Analysis workflow documentation
 - `tools/source-analysis/ARCHITECTURE.md` - Architecture overview
 - `one-many-topic-map.ts` - Formal TopicMap structure (Topics)
 
 **TopicMap**: See `one-many-topic-map.ts` for the formal TopicMap structure that maps to:
+
 - `TopicMapEntry.id` → `Chunk.id`
 - `TopicMapEntry.title` → `Chunk.title` AND `LogicalOperation.label` (the "Title")
 - `TopicMapEntry.lineRange` → Extract text → `Chunk.text`
 
-The TopicMap ensures systematic, trackable chunking that yields meaningful Logical Operations.
+The TopicMap keeps chunk IDs, titles, and line ranges aligned with the source text.
+
+**Chunk Quality Check**:
+
+- At a glance, the chunk should show a complete move in the text
+- Meaning should be visible without reading every word
+- If a line break blocks that, adjust boundaries
 
 ## Chunk Details
 
 ### Chunk 1: B. THE ONE AND THE MANY — simple reference and determining
+
 **Lines**: 2-41
 **Title**: B. THE ONE AND THE MANY — simple reference and determining
 **Key Points**:
+
 - One is simple reference of being-for-itself to itself
 - Moments have fallen together
 - Being-for-itself has form of immediacy, moments are existents
@@ -62,9 +74,11 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - Negation of itself as other, excluding of one as other from itself
 
 ### Chunk 2: a. The one within — unalterable and void
+
 **Lines**: 43-82
 **Title**: a. The one within — unalterable and void
 **Key Points**:
+
 - Within it, one just is
 - Its being is not existence, not determination as reference to other, not constitution
 - Has negated this circle of categories
@@ -84,9 +98,11 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - Void is quality of one in its immediacy
 
 ### Chunk 3: b. The one and the void — existence and externalization
+
 **Lines**: 84-109
 **Title**: b. The one and the void — existence and externalization
 **Key Points**:
+
 - One is void as abstract self-reference of negation
 - Void as nothing is absolutely diverse from simple immediacy of one
 - From being of latter which is also affirmative
@@ -101,9 +117,11 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - Negation as such and likewise as existence of nothing, as void
 
 ### Chunk 4: c. Many ones — repulsion and plurality
+
 **Lines**: 111-248
 **Title**: c. Many ones — repulsion and plurality
 **Key Points**:
+
 - One and void constitute first existence of being-for-itself
 - Each moment has negation for determination, posited as existence
 - One and void are reference of negation to negation as other to other
@@ -158,4 +176,3 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - One is precisely sublating of otherness
 - Repulsion is self-reference and simple equality with itself
 - Plurality of ones is infinity as contradiction that unconstrainedly produces itself
-

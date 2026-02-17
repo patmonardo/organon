@@ -2,18 +2,20 @@
 
 **SOURCE ANALYSIS PHASE 1: Planning Document**
 
-**Purpose**: Systematic chunking methodology to yield meaningful Logical Operations.
-The TopicMap helps check and improve understanding of Hegel through step-by-step analysis.
+**Purpose**: Chunk the text into readable semantic units that preserve the movement of the source.
+The TopicMap is a check that each unit is text-grounded and trackable.
 
-**Status**: Work in progress - refining methodology as we practice.
+**Status**: Work in progress - refining chunks through review.
 
 **Workflow Stage**: **SEED** → **UPGRADES**
-- **SEED**: Initial chunking plan (current state) - good enough to form initial seed
-- **UPGRADES**: Refined chunks through actual study and editing
+
+- **SEED**: Initial chunking plan
+- **UPGRADES**: Refined chunks through study and editing
 - As you study each chunk, edit and upgrade the seed chunks
 - This document evolves from planning → studied/refined chunks
 
 **Structure**: C. INFINITY (b) Alternating determination of finite and infinite (289 lines)
+
 - Introduction: Infinite falls back into category of something; finite resurrected (lines 4-27)
 - Further determination: finite and infinite as others; bad infinite (lines 29-88)
 - Contradiction: two determinacies, two worlds; develops into explicit forms (lines 90-173)
@@ -23,29 +25,40 @@ The TopicMap helps check and improve understanding of Hegel through step-by-step
 
 **Note**: This is the second subspecies of C. INFINITY. It develops the "bad infinite" - the infinite of the understanding that alternates with the finite in an endless progression. The unity of finite and infinite is present but hidden, driving the alternation.
 
-**Workflow**: 
+**Workflow**:
+
 ```
 Source Text → [Source Analysis] → Chunks + Topics → [Logical Op Generation] → Logical Operations
 ```
 
-**References**: 
+**Chunk Quality Check**:
+
+- At a glance, the chunk should show a complete move in the text
+- Meaning should be visible without reading every word
+- If a line break blocks that, adjust boundaries
+
+**References**:
+
 - `tools/source-analysis/SOURCE-ANALYSIS.md` - Source Analysis workflow documentation
 - `tools/source-analysis/ARCHITECTURE.md` - Architecture overview
 - `alternating-infinity-topic-map.ts` - Formal TopicMap structure (Topics)
 
 **TopicMap**: See `alternating-infinity-topic-map.ts` for the formal TopicMap structure that maps to:
+
 - `TopicMapEntry.id` → `Chunk.id`
 - `TopicMapEntry.title` → `Chunk.title` AND `LogicalOperation.label` (the "Title")
 - `TopicMapEntry.lineRange` → Extract text → `Chunk.text`
 
-The TopicMap ensures systematic, trackable chunking that yields meaningful Logical Operations.
+The TopicMap keeps chunk IDs, titles, and line ranges aligned with the source text.
 
 ## Chunk Details
 
 ### Chunk 1: Introduction — infinite falls back into category of something; finite resurrected
+
 **Lines**: 4-27
 **Title**: Introduction: infinite falls back into category of something; finite resurrected
 **Key Points**:
+
 - Infinite is; in immediacy negation of other (finite)
 - As existent and non-being of other: fallen back into category of something
 - More precisely: existence reflected into itself from mediating sublation of determinateness
@@ -57,9 +70,11 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - Finite seemed to have vanished but reappears
 
 ### Chunk 2: Further determination I: finite and infinite as others; ought and satisfaction
+
 **Lines**: 29-47
 **Title**: Further determination I: finite and infinite as others; ought and satisfaction
 **Key Points**:
+
 - Infinite and finite not in referential categories only
 - Two sides further determined as mere others
 - Finite = restriction posited as restriction
@@ -70,9 +85,11 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - Nothing of finite posited
 
 ### Chunk 3: Further determination II: negation of negation; led back to being; bad infinite
+
 **Lines**: 48-72
 **Title**: Further determination II: negation of negation; led back to being; bad infinite
 **Key Points**:
+
 - Negation of finite = being-in-itself determined (negation of negation, affirmative)
 - Yet affirmation qualitatively immediate self-reference, being
 - Because of this, affirmative led back to category of being with finite confronting as other
@@ -85,9 +102,11 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - Being-in-itself not in its existence (which is determinate)
 
 ### Chunk 4: Bad infinite: definition; understanding's belief; contradictions
+
 **Lines**: 73-88
 **Title**: Bad infinite: definition; understanding's belief; contradictions
 **Key Points**:
+
 - As posited over against finite, connected by qualitative mutual reference
 - Infinite = bad infinite, infinite of understanding
 - Counts as highest, absolute truth
@@ -97,9 +116,11 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - Must make it conscious of fact
 
 ### Chunk 5: Contradiction I: two determinacies, two worlds; finite infinite
+
 **Lines**: 90-96
 **Title**: Contradiction I: two determinacies, two worlds; finite infinite
 **Key Points**:
+
 - Contradiction present in fact that infinite remains over against finite
 - Result: two determinacies
 - Two worlds: one infinite, one finite
@@ -107,9 +128,11 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - Itself finite infinite
 
 ### Chunk 6: Contradiction II: develops into explicit forms; separation
+
 **Lines**: 98-122
 **Title**: Contradiction II: develops into explicit forms; separation
 **Key Points**:
+
 - Contradiction develops content into more explicit forms
 - Finite = real existence which persists even when gone over into non-being (infinite)
 - Infinite has only first, immediate negation over against finite
@@ -121,9 +144,11 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - Outside which finite stands, enduring
 
 ### Chunk 7: Contradiction III: essentially connected; limit; both finite
+
 **Lines**: 124-144
 **Title**: Contradiction III: essentially connected; limit; both finite
 **Key Points**:
+
 - As separated, essentially connected through negation that divides them
 - Negation connecting them = common limit of each over against other
 - Each not merely has limit in it, but negation = in-itselfness of each
@@ -134,9 +159,11 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - Posits it as other being outside: finite posits non-being as infinite; infinite posits finite
 
 ### Chunk 8: Contradiction IV: transition necessary; infinite's mediation; inseparable
+
 **Lines**: 145-173
 **Title**: Contradiction IV: transition necessary; infinite's mediation; inseparable; unity hidden
 **Key Points**:
+
 - Finite passes over into infinite necessarily (through determination)
 - Elevated to in-itself
 - Finite determined as subsistent existence but null in itself, destined to self-dissolution
@@ -151,9 +178,11 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - Unity rests hidden in qualitative otherness; inner unity, lies only at base
 
 ### Chunk 9: Unity appears as transition; external connection
+
 **Lines**: 175-183
 **Title**: Unity appears as transition; external connection
 **Key Points**:
+
 - Manner of appearance of unity defined
 - Unity posited in existence as turning over/transition of finite into infinite, vice-versa
 - Infinite only emerges in finite; finite in infinite; other in other
@@ -161,9 +190,11 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - Connection only external
 
 ### Chunk 10: Process of transition: detailed shape; progress to infinity
+
 **Lines**: 185-206
 **Title**: Process of transition: detailed shape; progress to infinity
 **Key Points**:
+
 - Process of transition: finite passing over into infinite
 - Passing over appears as external doing
 - In emptiness beyond finite, what arises? What positive?
@@ -178,9 +209,11 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - And so forth to infinity
 
 ### Chunk 11: Alternating determination; inseparable and absolutely other
+
 **Lines**: 208-219
 **Title**: Alternating determination; inseparable and absolutely other
 **Key Points**:
+
 - Alternating determination of finite and infinite
 - Finite finite only with reference to ought or infinite
 - Infinite only infinite with reference to finite
@@ -191,9 +224,11 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - It is existence
 
 ### Chunk 12: Progress to infinity: contradiction not resolved
+
 **Lines**: 221-235
 **Title**: Progress to infinity: contradiction not resolved
 **Key Points**:
+
 - Alternating determination of self-negating and negating the negating = progress to infinity
 - Accepted in many shapes/applications as unsurpassable ultimate
 - Thought having reached "and so on to infinity" has usually achieved its end
@@ -202,9 +237,11 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - Progress = contradiction not resolved but always pronounced simply as present
 
 ### Chunk 13: Abstract transcending incomplete; bad infinite = perpetual ought
+
 **Lines**: 237-255
 **Title**: Abstract transcending incomplete; bad infinite = perpetual ought
 **Key Points**:
+
 - Abstract transcending which remains incomplete (transcending itself not transcended)
 - Before us infinite; infinite transcended (another limit posited)
 - But just because of that, return made back to finite
@@ -216,9 +253,11 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - One and same tedious alternation of finite and infinite
 
 ### Chunk 14: Unity not reflected upon; progress as outside; beyond unattainable
+
 **Lines**: 257-288
 **Title**: Unity not reflected upon; progress as outside; beyond unattainable
 **Key Points**:
+
 - Infinity of infinite progress remains burdened by finite as such
 - Restricted, itself finite
 - In fact posited as unity of finite and infinite
@@ -234,4 +273,3 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - Infinite has finite as this-side over against it
 - Finite unable to raise itself to infinite
 - Has determination of other (existence that perennially regenerates itself in beyond by being different from it)
-

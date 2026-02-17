@@ -37,6 +37,7 @@ export * from './formdb-props';
 
 // Dialectic IR (pseudo-code schema)
 export * from './dialectic';
+export * from './integrated-topic-ir';
 
 // Kernel-facing wire schemas (FormShape + ApplicationForm)
 export * from './kernel';

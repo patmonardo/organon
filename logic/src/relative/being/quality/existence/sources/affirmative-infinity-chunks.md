@@ -2,18 +2,20 @@
 
 **SOURCE ANALYSIS PHASE 1: Planning Document**
 
-**Purpose**: Systematic chunking methodology to yield meaningful Logical Operations.
-The TopicMap helps check and improve understanding of Hegel through step-by-step analysis.
+**Purpose**: Chunk the text into readable semantic units that preserve the movement of the source.
+The TopicMap is a check that each unit is text-grounded and trackable.
 
-**Status**: Work in progress - refining methodology as we practice.
+**Status**: Work in progress - refining chunks through review.
 
 **Workflow Stage**: **SEED** → **UPGRADES**
-- **SEED**: Initial chunking plan (current state) - good enough to form initial seed
-- **UPGRADES**: Refined chunks through actual study and editing
+
+- **SEED**: Initial chunking plan
+- **UPGRADES**: Refined chunks through study and editing
 - As you study each chunk, edit and upgrade the seed chunks
 - This document evolves from planning → studied/refined chunks
 
 **Structure**: C. INFINITY (c) Affirmative infinity (428 lines)
+
 - Introduction: Truth already present; need to take it up; unity uneven expression (lines 4-18)
 - First immediate determination: Each contains the other; two finites (lines 20-60)
 - Two pathways yield same result (lines 62-78)
@@ -27,29 +29,40 @@ The TopicMap helps check and improve understanding of Hegel through step-by-step
 
 **Note**: This is the third and final subspecies of C. INFINITY. It develops the **true infinite** - the self-sublation of the bad infinite and finite in one process. The true infinite is the affirmative being that emerges from the negation of negation, the unity that embraces both itself and the finite.
 
-**Workflow**: 
+**Workflow**:
+
 ```
 Source Text → [Source Analysis] → Chunks + Topics → [Logical Op Generation] → Logical Operations
 ```
 
-**References**: 
+**Chunk Quality Check**:
+
+- At a glance, the chunk should show a complete move in the text
+- Meaning should be visible without reading every word
+- If a line break blocks that, adjust boundaries
+
+**References**:
+
 - `tools/source-analysis/SOURCE-ANALYSIS.md` - Source Analysis workflow documentation
 - `tools/source-analysis/ARCHITECTURE.md` - Architecture overview
 - `affirmative-infinity-topic-map.ts` - Formal TopicMap structure (Topics)
 
 **TopicMap**: See `affirmative-infinity-topic-map.ts` for the formal TopicMap structure that maps to:
+
 - `TopicMapEntry.id` → `Chunk.id`
 - `TopicMapEntry.title` → `Chunk.title` AND `LogicalOperation.label` (the "Title")
 - `TopicMapEntry.lineRange` → Extract text → `Chunk.text`
 
-The TopicMap ensures systematic, trackable chunking that yields meaningful Logical Operations.
+The TopicMap keeps chunk IDs, titles, and line ranges aligned with the source text.
 
 ## Chunk Details
 
 ### Chunk 1: Introduction — truth already present; need to take it up; unity uneven expression
+
 **Lines**: 4-18
 **Title**: Introduction: truth already present; need to take it up; unity uneven expression
 **Key Points**:
+
 - In reciprocal determination alternating back and forth, truth of finite and infinite already implicitly present
 - All needed is to take up what is there
 - Back and forth movement = external realization of concept (content posited externally, as falling out of two)
@@ -58,9 +71,11 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - Removal of uneven determination must be found in externalization of concept
 
 ### Chunk 2: First immediate determination I: each contains the other; two finites
+
 **Lines**: 20-50
 **Title**: First immediate determination I: each contains the other; two finites
 **Key Points**:
+
 - In first immediate determination: infinite = transcending of finite, negation of finite
 - Finite = that which must be transcended, negation in it of itself, and this is infinite
 - In each, determinateness of other
@@ -75,18 +90,22 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - We have before us only two finites
 
 ### Chunk 3: First immediate determination II: finitude of infinite; finite as self-subsistence
+
 **Lines**: 52-60
 **Title**: First immediate determination II: finitude of infinite; finite as self-subsistence
 **Key Points**:
+
 - Finitude of infinite (and unity with finite) lies in fact that separated from finite, placed on one side
 - Finite, removed from infinite and positioned for itself, is self-reference
 - In which relativity, dependence, transitoriness removed
 - Same self-subsistence and self-affirmation which infinite presumed to be
 
 ### Chunk 4: Two pathways yield same result
+
 **Lines**: 62-78
 **Title**: Two pathways yield same result
 **Key Points**:
+
 - Two pathways of consideration seem to have different determinateness for point of departure
 - Former: assumes only reference of infinite and finite to each other
 - Latter: their complete separation from each other
@@ -96,9 +115,11 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - Just as, when each taken for itself, each has other present in it as own moment
 
 ### Chunk 5: Scandalous unity; two unities; falsification
+
 **Lines**: 80-103
 **Title**: Scandalous unity; two unities; falsification
 **Key Points**:
+
 - Yields scandalous unity of finite and infinite
 - Unity which is itself infinite that embraces both itself and finite
 - Infinite understood in sense other than when finite separated and placed on other side
@@ -111,9 +132,11 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - Unity of infinite and finite, at first simple and universal, falsified
 
 ### Chunk 6: Double unity falsified; finitized infinite and infinitized finite
+
 **Lines**: 105-138
 **Title**: Double unity falsified; finitized infinite and infinitized finite
 **Key Points**:
+
 - Since two to be taken as distinguished, unity of infinite (itself both moments) determined differently in each
 - Infinite, determined as such, has in it finitude distinct from it
 - In unity, infinite = in-itself; finite = only determinateness, limit in infinite
@@ -129,9 +152,11 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - In combination with infinite, elevated to what it is not, infinitized (determination not vanished but perpetuated)
 
 ### Chunk 7: Understanding's falsification; each is itself the unity
+
 **Lines**: 140-165
 **Title**: Understanding's falsification; each is itself the unity
 **Key Points**:
+
 - Falsification: holding reciprocal reference fixed as qualitative differentiation
 - Maintaining determination separate, absolutely separate
 - Comes from forgetting what for understanding itself is concept of these moments
@@ -146,9 +171,11 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - Its infinity consists rather in sublating itself
 
 ### Chunk 8: Sublating is negation of negation
+
 **Lines**: 167-183
 **Title**: Sublating is negation of negation
 **Key Points**:
+
 - Sublating not alteration or otherness in general, not sublating of something
 - That into which finite sublated = infinite as negating of finitude
 - But latter long since been only existence, determined as non-being
@@ -158,9 +185,11 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - Negation of beyond which is inherently negative
 
 ### Chunk 9: Negation of negation = self-reference, affirmation
+
 **Lines**: 185-192
 **Title**: Negation of negation = self-reference, affirmation
 **Key Points**:
+
 - Present in both: same negation of negation
 - Negation of negation in itself = self-reference, affirmation
 - But as turning back to itself, through mediation that negation of negation is
@@ -168,9 +197,11 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - Second point: in infinite progression they also posited, but not in ultimate truth
 
 ### Chunk 10: Infinite progression: both negated and posited as distinct
+
 **Lines**: 194-209
 **Title**: Infinite progression: both negated and posited as distinct
 **Key Points**:
+
 - First: both negated in progression (infinite and finite); both equally transcended
 - Second: also posited as distinct, one after other, each positive for itself
 - Sort out these two determinations while comparing
@@ -178,9 +209,11 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - Need to see in one simple reflection what is in fact present
 
 ### Chunk 11: Twofold sublation: external and connection; finite restored
+
 **Lines**: 211-242
 **Title**: Twofold sublation: external and connection; finite restored
 **Key Points**:
+
 - Negation of finite and infinite can be taken as simple, mutual externality, only following of one upon other
 - Starting from finite: limit transcended, finite negated
 - Beyond = infinite; but in this limit rises up again
@@ -195,9 +228,11 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - Finite rejoined itself, in beyond only found itself again
 
 ### Chunk 12: Infinite also returns to itself
+
 **Lines**: 244-255
 **Title**: Infinite also returns to itself
 **Key Points**:
+
 - Same case regarding infinite
 - In infinite, in beyond of limit, new limit arises (same fate: as finite must be negated)
 - What again at hand = same infinite that just disappeared in new limit
@@ -205,9 +240,11 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - Distanced itself neither from finite (finite just this: pass over into infinite) nor from itself (arrived at itself)
 
 ### Chunk 13: Both are movement returning to itself; result
+
 **Lines**: 257-282
 **Title**: Both are movement returning to itself; result
 **Key Points**:
+
 - Finite and infinite both = movement of each returning to itself through its negation
 - Only as implicit mediation
 - Affirmative of each contains negative of each = negation of negation
@@ -220,9 +257,11 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - Each emerges only through mediation of opposite but essentially by sublation of opposite
 
 ### Chunk 14: Error of one-sidedness; double meaning; true infinite
+
 **Lines**: 284-333
 **Title**: Error of one-sidedness; double meaning; true infinite
 **Key Points**:
+
 - If immanent turning back reckoned as turning back of finite to itself and infinite to itself
 - Error: finite and infinite each taken as starting point; two results
 - Matter of total indifference which taken as starting point
@@ -240,9 +279,11 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - Through this mediation = true infinite
 
 ### Chunk 15: True infinite as becoming
+
 **Lines**: 335-347
 **Title**: True infinite as becoming
 **Key Points**:
+
 - Determination of true infinite cannot be captured in formula of unity of finite and infinite
 - Unity = abstract, motionless self-sameness; moments unmoved beings
 - But infinite (like both its moments) essentially only as becoming
@@ -251,9 +292,11 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - Now as infinite, finite and infinite (these two themselves as in becoming)
 
 ### Chunk 16: True infinite as being; circle vs straight line
+
 **Lines**: 349-382
 **Title**: True infinite as being; circle vs straight line
 **Key Points**:
+
 - Infinite as being-turned-back-unto-itself, reference of itself to itself = being
 - Not indeterminate, abstract being (posited as negating negation)
 - Consequently also existence or "thereness" (contains negation, determinateness)
@@ -269,9 +312,11 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - Line that has reached itself, closed and wholly present, without beginning and end
 
 ### Chunk 17: True infinity as reality; ideality
+
 **Lines**: 384-427
 **Title**: True infinity as reality; ideality
 **Key Points**:
+
 - True infinity as existence posited as affirmative (contrast to abstract negation) = reality in higher sense
 - Has now obtained concrete content
 - Not finite which is real, but infinite
@@ -285,4 +330,3 @@ The TopicMap ensures systematic, trackable chunking that yields meaningful Logic
 - Concept regarded as idealization (mere idealization) in contrast to existence (regarded as "the real")
 - When contrasted this way: back to one-sidedness of abstract negative characteristic of bad infinite
 - Still fixed in affirmative existence of finite
-
