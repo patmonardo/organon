@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
-export const CitMomentSchema = z.enum(['CIT', 'CITI', 'CITTA']);
-export type CitMoment = z.infer<typeof CitMomentSchema>;
+export const DialecticalMomentSchema = z.enum(['INTUITIVE', 'CONCEPTUAL', 'REFLECTIVE_SCIENCE']);
+export type DialecticalMoment = z.infer<typeof DialecticalMomentSchema>;
 
 export const IntegratedLineRangeSchema = z.object({
   start: z.number().int().positive(),
@@ -19,7 +19,7 @@ export const IntegratedTopicChunkSchema = z.object({
   orderInSource: z.number().int().positive(),
   globalOrder: z.number().int().positive(),
   sourceText: z.string(),
-  dialecticalRole: CitMomentSchema,
+  dialecticalRole: DialecticalMomentSchema,
   tags: z.array(z.string()).default([]),
 });
 
@@ -98,13 +98,13 @@ export const ConsciousnessDoctrineSchema = z.object({
 
 export type ConsciousnessDoctrine = z.infer<typeof ConsciousnessDoctrineSchema>;
 
-export const IntegratedCitProtocolSchema = z.object({
-  root: z.literal('CITTA'),
-  members: z.tuple([z.literal('CIT'), z.literal('CITI')]),
+export const IntegratedTriadicProtocolSchema = z.object({
+  root: z.literal('REFLECTIVE_SCIENCE'),
+  members: z.tuple([z.literal('INTUITIVE'), z.literal('CONCEPTUAL')]),
   relation: z.literal('SUBLATED_MEMBERSHIP'),
 });
 
-export type IntegratedCitProtocol = z.infer<typeof IntegratedCitProtocolSchema>;
+export type IntegratedTriadicProtocol = z.infer<typeof IntegratedTriadicProtocolSchema>;
 
 export const IntegratedTopicMapIRSchema = z.object({
   id: z.string(),
@@ -114,7 +114,7 @@ export const IntegratedTopicMapIRSchema = z.object({
   sourceDocuments: z.array(IntegratedSourceDocumentSchema),
   traces: z.array(IntegratedTopicTraceSchema),
   doctrine: ConsciousnessDoctrineSchema,
-  citProtocol: IntegratedCitProtocolSchema,
+  triadicProtocol: IntegratedTriadicProtocolSchema,
   metadata: z.object({
     totalSources: z.number().int().nonnegative(),
     totalChunks: z.number().int().nonnegative(),

@@ -174,7 +174,7 @@ The chunking appears to be:
 
 3. **Final chunk** (Substance not substance as substance) appropriately represents the transition point to the next species (causality).
 
-4. **Chunk lengths** are appropriate, with chunk 2 and chunk 4 being longer (33 lines each) representing complete logical developments that are appropriately unified.
+4. **Chunk lengths** are appropriate, with chunk 2 and chunk 4 being longer (33 lines each) representing complete logical developments that are appropriately topicmap.
 
 ## Next Steps
 

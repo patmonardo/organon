@@ -230,7 +230,7 @@ The chunking appears to be:
 
 3. **Final chunk** (Substance) appropriately represents the transition point to the next major section of Hegel's Logic.
 
-4. **Long chunks** (chunks 4, 5, 6, 9, 10) represent complete logical developments that are appropriately unified.
+4. **Long chunks** (chunks 4, 5, 6, 9, 10) represent complete logical developments that are appropriately topicmap.
 
 ## Next Steps
 

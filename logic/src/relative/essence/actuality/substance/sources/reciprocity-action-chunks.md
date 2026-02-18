@@ -147,7 +147,7 @@ The chunking appears to be:
 
 3. **Final chunk** (Concept — universal, singular, particular) appropriately represents the transition point from Essence to Concept, completing the Sphere of Essence.
 
-4. **Chunk lengths** are appropriate, with chunk 2 and chunk 5 being longer (42 lines each) representing complete logical developments that are appropriately unified.
+4. **Chunk lengths** are appropriate, with chunk 2 and chunk 5 being longer (42 lines each) representing complete logical developments that are appropriately topicmap.
 
 5. **Philosophical significance**: This section completes the Sphere of Essence. As Hegel says, what appears is moral - Dharma in the Sphere of Essence as Absolute Relation has its truth in the Idea that is being Projected. The transition to Concept (subjectivity/freedom) represents the completion of Essence and the beginning of the Concept.
 

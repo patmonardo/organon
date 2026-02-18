@@ -216,7 +216,7 @@ The chunking appears to be:
 
 ### Potential Refinements (for future upgrades)
 
-1. **Chunk 8** (76 lines) is the longest chunk, but represents a complete logical development about contingency's two sides, appropriately unified.
+1. **Chunk 8** (76 lines) is the longest chunk, but represents a complete logical development about contingency's two sides, appropriately topicmap.
 
 2. **Chunk 9** overlaps with chunk 8 (lines 184-216). This is intentional as it develops the "absolute restlessness" aspect that begins in chunk 8. Consider if this could be restructured, but current analysis suggests the overlap is meaningful.
 

@@ -197,7 +197,7 @@ The chunking appears to be:
 
 1. **Chunks 3-5** (5-6 lines each) are shorter chunks but represent complete logical thoughts (exposition exhaustive, first/second aspects), appropriately sized.
 
-2. **Chunk 6** (19 lines) is the longest chunk, but represents a single complete logical development about determinateness from absolute itself, appropriately unified.
+2. **Chunk 6** (19 lines) is the longest chunk, but represents a single complete logical development about determinateness from absolute itself, appropriately topicmap.
 
 3. **Chunk boundaries** align with natural paragraph breaks and logical transitions, which is good for readability.
 
