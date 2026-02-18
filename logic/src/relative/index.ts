@@ -1,2 +1,5 @@
 export * from './form';
-export * from './essence';
+export * from './core';
+// export * from './being';
+// export * from './essence';
+// export * from './concept';

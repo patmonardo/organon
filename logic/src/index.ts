@@ -5,7 +5,4 @@ import * as schemaNamespace from './schema';
 
 export const schema = schemaNamespace;
 
-export * from './logic';
 export * from './schema';
-export * from './repository';
-export * from './relative';

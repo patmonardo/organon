@@ -32,11 +32,20 @@
     }
   },
   "include": [
-    "src/**/*.ts"
+    "src/index.ts",
+    "src/schema",
+    "src/repository",
+    "src/absolute",
+    "src/relative",
   ],
   "exclude": [
     "src/**/*.test.ts",
     "src/**/*.spec.ts",
+    "src/tools",
+    "src/relative/essence",
+    "src/relative/concept",
+    "src/relative/being",
+    "src/relative/core/compiler",
     "src/relative/form/morph/core",
     "src/relative/form/morph/form",
     "src/relative/form/morph/graph",

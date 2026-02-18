@@ -1197,7 +1197,7 @@ const topicmapAppearanceThingTopicMapTraces = [
 const topicmapAppearanceThingTopicMapMetadata = {
   "totalSources": 3,
   "totalChunks": 32,
-  "generatedAt": "2026-02-17T21:53:58.727Z"
+  "generatedAt": "2026-02-17T22:47:23.621Z"
 } as const;
 
 export const topicmapAppearanceThingTopicMapIR = {

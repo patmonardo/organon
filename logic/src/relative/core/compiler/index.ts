@@ -16,3 +16,6 @@ export * from './fact-store-prototype';
 export * from './relation-store-prototype';
 export * from './knowledge-store-prototype';
 export * from './three-store-boundary';
+
+// Workbook-compiled contract artifacts
+export * from './generated/workbook-compiler-manifest';

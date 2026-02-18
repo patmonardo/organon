@@ -1,0 +1,401 @@
+# Essence Part B Workbook (V2)
+
+Part: `B. SHINE`
+Status: active
+Authority: original source text only
+
+## Authority + format lock (must persist)
+
+- Contract reference: `WORKBOOK-CONTRACT-V1.md`
+- This workbook markdown is the authoritative Knowledge Graph artifact for this part.
+- Any generated Cypher/DB projection is derivative and non-authoritative.
+- Future edits must preserve this exact section order and entry schema unless a migration is explicitly recorded in `Decision:` and applied repo-wide to all affected workbooks.
+- Do not introduce alternate entry styles, headings, or compressed formats.
+
+## Clean-room rules
+
+- Source authority is `shine.txt` only.
+- Claims must be line-anchored.
+- If uncertain, mark `review_pending` and capture an open question.
+- Chunk boundaries must follow complete sentence groups (no mid-sentence start/end).
+
+## Working template
+
+### Entry <id> — <title>
+
+- span: `<lineStart-lineEnd>`
+- summary: one sentence
+- keyPoints: (KeyPoint) 3-8 non-redundant points
+- claims: (Claim) 1-3 minimum, with evidence
+- relations: (Relation) typed only (`supports|contrasts|negates|sublates|presupposes|refines|transitions_to`), using labeled bullets (`r1`, `r2`, ...)
+
+## Session: 2026-02-17 (prepared)
+
+Scope:
+
+- file: `shine.txt`
+- focus: how shine is non-self-subsistent immediacy and essence's own determinateness
+- fixed range (active in this pass): lines `6-36`, `95-215`
+
+Decision:
+
+- Use Part A workbook format unchanged.
+- Exclude comparative skepticism/idealism discussion (`38-93`) from active base entries.
+- Keep claim count minimal and non-redundant.
+- Adopt pseudo-Cypher KG labels in section headers: `Key points: (KeyPoint)`, `Claims: (Claim)`, `Relations: (Relation)`.
+- Align this pass with `WORKBOOK-CONTRACT-V1.md` Path-forward principle (`LogoLogia`) and KG-first direction.
+- Keep `Key points` and `Claims` first-order, source-restricted, and line-anchored to `shine.txt`.
+- Treat `Relations` as second-order modeling expanded across iterative cycles (`Shine -> Reflection -> relation-expansion cycles`).
+- Keep `review_pending` where relation semantics remain provisional.
+- Use comparative block (`38-93`) as second-order relation reservoir (not base claims), especially for skepticism/idealism and realism/idealism dialectical polarity.
+- When relation-cycling this block, model philosophical references as interpretive scaffolding in relation notes, not as first-order source claims.
+- Treat relation-building as a proof-trace of the passage from Essence/Appearance into Concept, to inform the Meta Compiler Generation system.
+
+### Entry ess-ref-b-001 — Shine as non-self-subsistent immediacy
+
+Span:
+
+- sourceFile: `src/relative/essence/reflection/essence/sources/shine.txt`
+- lineStart: 6
+- lineEnd: 36
+
+Summary:
+
+Part B opens by determining shine as the residue of sublated being: immediate non-being that has existence only in negation and mediation.
+
+Key points: (KeyPoint)
+
+- k1. Shine's being consists solely in being's sublatedness/nothingness.
+- k2. As the leftover of the being-sphere, shine still appears as an immediate side seemingly independent of essence.
+- k3. Otherness here contains the two moments of existence and non-existence, but for the unessential only non-existence remains.
+- k4. Shine is immediate non-existence in the determinateness of being, existing only in reference-to-another and in negation.
+- k5. Shine's immediacy is reflected/mediated, an empty determinateness rather than simple immediacy.
+
+Claims: (Claim)
+
+- c1. id: ess-ref-b-001-c1
+  - subject: shine
+  - predicate: is
+  - object: residue_of_being_as_sublated_nothingness
+  - modality: asserted
+  - confidence: 0.97
+  - evidence:
+    - [6-12] shine as being's sublatedness/nothingness and negative posited as negative.
+    - [14-17] shine as what remains from being while seeming immediate and other than essence.
+
+- c2. id: ess-ref-b-001-c2
+  - subject: shine
+  - predicate: exists_only_in
+  - object: nonexistence_relation_and_negation
+  - modality: asserted
+  - confidence: 0.97
+  - evidence:
+    - [18-23] otherness has existence/non-existence moments; for the unessential only non-existence remains as immediate non-existence.
+    - [24-28] shine exists only with reference to another, in its negation, as non-self-subsistent.
+
+- c3. id: ess-ref-b-001-c3
+  - subject: shine_immediacy
+  - predicate: is
+  - object: reflected_mediated_empty_immediacy
+  - modality: asserted
+  - confidence: 0.95
+  - evidence:
+    - [29-36] pure determinateness of immediacy as reflected immediacy through mediation of negation and empty immediacy of non-existence.
+
+Claim ↔ key point map:
+
+- c1 -> k1, k2
+- c2 -> k3, k4
+- c3 -> k5
+
+Relations: (Relation)
+
+- r1. type: transitions_to
+  - targetEntryId: ess-ref-b-002
+  - note: move from first determination of shine to explicit statement of the task.
+
+Review outcome:
+
+- review_pending
+- notes: comparative block [38-93] excluded from base claims in this pass and reserved for second-order relation expansion cycles.
+
+### Entry ess-ref-b-002 — Task shift from return-proof to immanent demonstration
+
+Span:
+
+- sourceFile: `src/relative/essence/reflection/essence/sources/shine.txt`
+- lineStart: 95
+- lineEnd: 105
+
+Summary:
+
+The text states that the task is not to prove a return already accomplished, but to show that shine's distinct determinations are essence's own and are sublated in essence.
+
+Key points: (KeyPoint)
+
+- k1. Shine appears as immediate presupposition against essence.
+- k2. Being's return into essence is already complete.
+- k3. The method is demonstration of internal identity of determinations.
+- k4. Shine as determinateness is to be shown sublated in essence itself.
+
+Claims: (Claim)
+
+- c1. id: ess-ref-b-002-c1
+  - subject: shine
+  - predicate: appears_as
+  - object: immediate_presupposition_against_essence
+  - modality: asserted
+  - confidence: 0.94
+  - evidence:
+    - [95-97] shine contains an immediate presupposition, an independent side vis-à-vis essence.
+
+- c2. id: ess-ref-b-002-c2
+  - subject: return_of_being_to_essence
+  - predicate: is
+  - object: already_accomplished
+  - modality: asserted
+  - confidence: 0.97
+  - evidence:
+    - [98-101] not to show return; being has returned in totality; shine is the null as such.
+
+- c3. id: ess-ref-b-002-c3
+  - subject: task
+  - predicate: is_to_demonstrate
+  - object: shine_determinations_as_essence_determinations_sublated_in_essence
+  - modality: asserted
+  - confidence: 0.98
+  - evidence:
+    - [102-105] determinations distinguishing shine from essence are determinations of essence itself and sublated in it.
+
+Claim ↔ key point map:
+
+- c1 -> k1
+- c2 -> k2
+- c3 -> k3, k4
+
+Relations: (Relation)
+
+- r1. type: refines
+  - targetEntryId: ess-ref-b-001
+  - note: methodological precision on what exactly must be shown.
+
+- r2. type: transitions_to
+  - targetEntryId: ess-ref-b-003
+  - note: task is executed via genetic derivation of shine's moments.
+
+Review outcome:
+
+- review_pending
+- notes: task statement isolated as its own boundary.
+
+### Entry ess-ref-b-003 — Shine's moments are the moments of essence
+
+Span:
+
+- sourceFile: `src/relative/essence/reflection/essence/sources/shine.txt`
+- lineStart: 107
+- lineEnd: 141
+
+Summary:
+
+Shine's non-being and immediacy are derived as essence's own negativity and reflective immediacy, so shine is not an external other but a moment of essence.
+
+Key points: (KeyPoint)
+
+- k1. What constitutes shine is immediacy of non-being.
+- k2. This non-being is essence's own negativity.
+- k3. Essence's negativity is self-equal immediacy/indifference.
+- k4. Shine's immediacy is absolutely mediated (reflective immediacy).
+- k5. The two moments in shine are explicitly moments of essence itself.
+
+Claims: (Claim)
+
+- c1. id: ess-ref-b-003-c1
+  - subject: shine_nonbeing
+  - predicate: is
+  - object: essence_negativity_within_essence
+  - modality: asserted
+  - confidence: 0.98
+  - evidence:
+    - [107-113] non-being of shine is negativity of essence; essence as non-being of being.
+
+- c2. id: ess-ref-b-003-c2
+  - subject: shine_immediacy_against_essence
+  - predicate: is
+  - object: essence_own_reflective_immediacy
+  - modality: asserted
+  - confidence: 0.96
+  - evidence:
+    - [123-131] shine's immediacy is essence's own, as absolutely mediated or reflective immediacy.
+
+- c3. id: ess-ref-b-003-c3
+  - subject: shine_in_essence
+  - predicate: is
+  - object: essence_shining_itself_not_other
+  - modality: asserted
+  - confidence: 0.97
+  - evidence:
+    - [133-141] shine in essence is not shine of another but shine of essence itself.
+
+Claim ↔ key point map:
+
+- c1 -> k1, k2
+- c2 -> k3, k4
+- c3 -> k5
+
+Relations: (Relation)
+
+- r1. type: supports
+  - targetEntryId: ess-ref-b-002
+  - note: executes the task by deriving identity of determinations.
+
+- r2. type: transitions_to
+  - targetEntryId: ess-ref-b-004
+  - note: from identity-of-moments to self-sublation of determinateness.
+
+Review outcome:
+
+- review_pending
+- notes: no external-comparative material included.
+
+### Entry ess-ref-b-004 — Determinateness self-sublates as essence's self-shining
+
+Span:
+
+- sourceFile: `src/relative/essence/reflection/essence/sources/shine.txt`
+- lineStart: 143
+- lineEnd: 190
+
+Summary:
+
+Shine is essence in determinateness, and this determinateness immediately sublates itself through absolute negativity into essence's self-shining within itself.
+
+Key points: (KeyPoint)
+
+- k1. Shine is explicitly essence itself in determinateness of being.
+- k2. Essence is the self-mediating unity of negativity and immediacy.
+- k3. Determining immediately turns back into itself.
+- k4. Shine as non-self-subsistent being exists in another/its negation.
+- k5. Determinateness and self-subsistence are shown as moments in identity.
+
+Claims: (Claim)
+
+- c1. id: ess-ref-b-004-c1
+  - subject: shine
+  - predicate: is
+  - object: essence_itself_in_determinateness
+  - modality: asserted
+  - confidence: 0.99
+  - evidence:
+    - [143-147] shine as essence itself in determinateness.
+    - [187-190] determinateness is only a moment; essence shines within itself.
+
+- c2. id: ess-ref-b-004-c2
+  - subject: essence
+  - predicate: is
+  - object: self_mediating_unity_of_absolute_negativity_and_immediacy
+  - modality: asserted
+  - confidence: 0.97
+  - evidence:
+    - [148-159] essence as self-mediating negation and unity of negativity/immediacy.
+
+- c3. id: ess-ref-b-004-c3
+  - subject: shine_determinateness
+  - predicate: self_sublates_into
+  - object: return_to_self
+  - modality: asserted
+  - confidence: 0.95
+  - evidence:
+    - [161-175] non-self-subsistent negative in another/negation.
+    - [177-186] determinateness and self-subsistence as moments in identity.
+
+Claim ↔ key point map:
+
+- c1 -> k1, k5
+- c2 -> k2
+- c3 -> k3, k4, k5
+
+Relations: (Relation)
+
+- r1. type: refines
+  - targetEntryId: ess-ref-b-003
+  - note: moves from identity of moments to explicit self-sublation dynamics.
+
+- r2. type: transitions_to
+  - targetEntryId: ess-ref-b-005
+  - note: closure through being/essence contrast and reflection.
+
+Review outcome:
+
+- review_pending
+- notes: long span retained to keep sentence-complete movement intact.
+
+### Entry ess-ref-b-005 — Closure: essence as reflection
+
+Span:
+
+- sourceFile: `src/relative/essence/reflection/essence/sources/shine.txt`
+- lineStart: 192
+- lineEnd: 215
+
+Summary:
+
+The conclusion re-situates shine within the being/essence contrast and shows that sublating first immediacy yields essence's self-movement as reflection.
+
+Key points: (KeyPoint)
+
+- k1. Being/non-being in the being-sphere has becoming as truth.
+- k2. Non-essential and shine are leftovers of being in the essence-sphere.
+- k3. The apparent split comes from taking essence first as immediate.
+- k4. Sublation shows unessential as shine contained in essence.
+- k5. Essence determines immediacy as negativity and negativity as immediacy.
+
+Claims: (Claim)
+
+- c1. id: ess-ref-b-005-c1
+  - subject: being_sphere_pair
+  - predicate: has_truth
+  - object: becoming
+  - modality: asserted
+  - confidence: 0.96
+  - evidence:
+    - [192-193] being/non-being truth is becoming.
+
+- c2. id: ess-ref-b-005-c2
+  - subject: nonessential_and_shine
+  - predicate: are
+  - object: leftovers_of_being_within_essence_contrast
+  - modality: asserted
+  - confidence: 0.93
+  - evidence:
+    - [194-198] contrast of essence with non-essential/shine; both leftovers of being.
+
+- c3. id: ess-ref-b-005-c3
+  - subject: essence
+  - predicate: is
+  - object: self_movement_reflection
+  - modality: asserted
+  - confidence: 0.98
+  - evidence:
+    - [207-215] sublation of first immediacy and essence as infinite self-contained movement; essence is reflection.
+
+Claim ↔ key point map:
+
+- c1 -> k1
+- c2 -> k2, k3, k4
+- c3 -> k5
+
+Relations: (Relation)
+
+- r1. type: sublates
+  - targetEntryId: ess-ref-b-001
+  - note: closure retroactively resolves first immediacy into reflection.
+
+- r2. type: supports
+  - targetEntryId: ess-ref-b-004
+  - note: confirms determinateness-as-moment in essence's self-shining movement.
+
+Review outcome:
+
+- review_pending
+- notes: closure boundary fixed at final line of Part B.

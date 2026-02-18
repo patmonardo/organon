@@ -5,7 +5,7 @@ CREATE CONSTRAINT topicmap_source_id IF NOT EXISTS FOR (s:SourceText) REQUIRE s.
 CREATE CONSTRAINT topicmap_chunk_id IF NOT EXISTS FOR (c:TopicMapChunk) REQUIRE c.id IS UNIQUE;
 CREATE CONSTRAINT topicmap_kp_id IF NOT EXISTS FOR (k:KeyPoint) REQUIRE k.id IS UNIQUE;
 
-MERGE (ir:TopicMapIR {id: 'appearance-thing-topicmap-ir'}) SET ir.mode = 'debug', ir.title = 'Appearance-Thing TopicMap IR', ir.section = 'Doctrine of Essence / Appearance / Thing', ir.generatedAt = '2026-02-17T21:53:58.727Z', ir.totalSources = 3, ir.totalChunks = 32;
+MERGE (ir:TopicMapIR {id: 'appearance-thing-topicmap-ir'}) SET ir.mode = 'debug', ir.title = 'Appearance-Thing TopicMap IR', ir.section = 'Doctrine of Essence / Appearance / Thing', ir.generatedAt = '2026-02-17T22:47:23.621Z', ir.totalSources = 3, ir.totalChunks = 32;
 
 MERGE (s:SourceText {id: 'source-thing'})
 SET s.title = 'A. THE THING AND ITS PROPERTIES'
