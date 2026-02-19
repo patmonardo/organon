@@ -10,3 +10,7 @@
 export * from './message';
 export * from './bus';
 export * from './trace';
+export * from './invariants';
+export * from './kernel-port';
+export * from './kernel-trace';
+export * from './gds-link.client';

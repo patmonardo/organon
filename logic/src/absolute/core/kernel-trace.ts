@@ -18,8 +18,8 @@ function mergeFactStore(
       override?.ids !== undefined
         ? override.ids
         : base?.ids !== undefined
-        ? base.ids
-        : undefined,
+          ? base.ids
+          : undefined,
   };
 }
 

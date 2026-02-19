@@ -1,4 +1,12 @@
 import { randomUUID } from 'node:crypto';
+/**
+ * Trace vocabulary (structural)
+ *
+ * Canonical meta types live in sdk/terminology.
+ */
+
+import type { EventMeta } from './invariants';
+export type { FactStoreInfo, FactStoreOp, EventMeta } from './invariants';
 
 export type TraceMeta = {
   traceId: string;
@@ -36,3 +44,9 @@ export function childSpan(parent: TraceMeta, extra?: Record<string, unknown>) {
     ...(extra ?? {}),
   } as TraceMeta;
 }
+
+export type TraceEvent<Payload = unknown> = {
+  kind: string;
+  payload?: Payload;
+  meta?: EventMeta;
+};

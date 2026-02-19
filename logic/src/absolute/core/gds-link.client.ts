@@ -4,7 +4,7 @@ import type { KernelPort } from './kernel-port';
 import {
   GdsFormEvalEvaluateDataSchema,
   GdsFormEvalEvaluateData,
-} from '../../schema/program';
+} from '@schema/program';
 
 /**
  * Absolute / Form (Logic)

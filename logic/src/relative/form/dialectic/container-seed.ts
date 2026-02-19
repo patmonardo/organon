@@ -1,7 +1,7 @@
-import type { KernelPort, KernelRunResult } from '@absolute/form/kernel-port';
+import type { KernelPort, KernelRunResult } from '@absolute/core/kernel-port';
 import type { KernelFormProgram } from '@schema/kernel';
 
-import { createLogicApi, type FormEvalCall } from '@absolute/form';
+import { createLogicApi, type FormEvalCall } from '@absolute/core';
 
 import { GdsFormProgram } from '@schema';
 /**

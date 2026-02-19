@@ -3,11 +3,7 @@
 
 export type Meta = Record<string, unknown>;
 
-import type {
-  DialecticalInfo,
-  FactStoreInfo,
-  EventMeta,
-} from '../form/invariants';
+import type { DialecticalInfo, FactStoreInfo, EventMeta } from './invariants';
 
 // Unscoped (stringly-typed)
 export type Command<P = unknown> = { kind: string; payload: P; meta?: Meta };
