@@ -1,4 +1,4 @@
-# Essence Part B Workbook (V2)
+# Essence Part B (TopicMap) Workbook (V2)
 
 Part: `B. SHINE`
 Status: active
@@ -9,7 +9,7 @@ Authority: original source text only
 - Contract reference: `WORKBOOK-CONTRACT-V1.md`
 - This workbook markdown is the authoritative Knowledge Graph artifact for this part.
 - Any generated Cypher/DB projection is derivative and non-authoritative.
-- Future edits must preserve this exact section order and entry schema unless a migration is explicitly recorded in `Decision:` and applied repo-wide to all affected workbooks.
+- Future edits must preserve this exact heading order and entry schema unless a migration is explicitly recorded in `Decision:` and applied repo-wide to all affected workbooks.
 - Do not introduce alternate entry styles, headings, or compressed formats.
 
 ## Clean-room rules
@@ -17,11 +17,19 @@ Authority: original source text only
 - Source authority is `shine.txt` only.
 - Claims must be line-anchored.
 - If uncertain, mark `review_pending` and capture an open question.
-- Chunk boundaries must follow complete sentence groups (no mid-sentence start/end).
+- Span boundaries must follow complete sentence groups (no mid-sentence start/end).
+
+## TopicMap terminology contract
+
+- Workbook = serialized artifact of one TopicMap.
+- TopicMap = graph container (topics + typed relations) within the broader Knowledge Graph.
+- Entry (Topic) = one topic node with id, title, key points, claims, and relations.
+- Scope / section / span = textual referents for source inclusion boundaries.
+- Chunk = informal analysis term only; do not use as a formal schema field.
 
 ## Working template
 
-### Entry <id> — <title>
+### Entry (Topic) <id> — <title>
 
 - span: `<lineStart-lineEnd>`
 - summary: one sentence
@@ -42,7 +50,7 @@ Decision:
 - Use Part A workbook format unchanged.
 - Exclude comparative skepticism/idealism discussion (`38-93`) from active base entries.
 - Keep claim count minimal and non-redundant.
-- Adopt pseudo-Cypher KG labels in section headers: `Key points: (KeyPoint)`, `Claims: (Claim)`, `Relations: (Relation)`.
+- Adopt pseudo-Cypher KG labels in entry headers: `Key points: (KeyPoint)`, `Claims: (Claim)`, `Relations: (Relation)`.
 - Align this pass with `WORKBOOK-CONTRACT-V1.md` Path-forward principle (`LogoLogia`) and KG-first direction.
 - Keep `Key points` and `Claims` first-order, source-restricted, and line-anchored to `shine.txt`.
 - Treat `Relations` as second-order modeling expanded across iterative cycles (`Shine -> Reflection -> relation-expansion cycles`).
@@ -50,6 +58,8 @@ Decision:
 - Use comparative block (`38-93`) as second-order relation reservoir (not base claims), especially for skepticism/idealism and realism/idealism dialectical polarity.
 - When relation-cycling this block, model philosophical references as interpretive scaffolding in relation notes, not as first-order source claims.
 - Treat relation-building as a proof-trace of the passage from Essence/Appearance into Concept, to inform the Meta Compiler Generation system.
+- Migration: `relation_schema_v1 -> relation_schema_v1_1_overlay` (non-breaking).
+- Apply relation claim/keypoint anchor overlay for this workbook pass; keep claims unchanged.
 
 ### Entry ess-ref-b-001 — Shine as non-self-subsistent immediacy
 
@@ -113,6 +123,11 @@ Relations: (Relation)
 - r1. type: transitions_to
   - targetEntryId: ess-ref-b-002
   - note: move from first determination of shine to explicit statement of the task.
+  - sourceClaimIds: [`ess-ref-b-001-c3`]
+  - sourceKeyPointIds: [`k5`]
+  - targetClaimIds: [`ess-ref-b-002-c3`]
+  - logicalOperator: sequential_transition
+  - analysisMode: first_order_claim_projection
 
 Review outcome:
 
@@ -178,10 +193,20 @@ Relations: (Relation)
 - r1. type: refines
   - targetEntryId: ess-ref-b-001
   - note: methodological precision on what exactly must be shown.
+  - sourceClaimIds: [`ess-ref-b-002-c2`, `ess-ref-b-002-c3`]
+  - sourceKeyPointIds: [`k2`, `k3`, `k4`]
+  - targetClaimIds: [`ess-ref-b-001-c2`, `ess-ref-b-001-c3`]
+  - logicalOperator: presuppositional_link
+  - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
   - targetEntryId: ess-ref-b-003
   - note: task is executed via genetic derivation of shine's moments.
+  - sourceClaimIds: [`ess-ref-b-002-c3`]
+  - sourceKeyPointIds: [`k3`, `k4`]
+  - targetClaimIds: [`ess-ref-b-003-c1`, `ess-ref-b-003-c2`]
+  - logicalOperator: sequential_transition
+  - analysisMode: first_order_claim_projection
 
 Review outcome:
 
@@ -248,10 +273,20 @@ Relations: (Relation)
 - r1. type: supports
   - targetEntryId: ess-ref-b-002
   - note: executes the task by deriving identity of determinations.
+  - sourceClaimIds: [`ess-ref-b-003-c1`, `ess-ref-b-003-c2`, `ess-ref-b-003-c3`]
+  - sourceKeyPointIds: [`k2`, `k4`, `k5`]
+  - targetClaimIds: [`ess-ref-b-002-c3`]
+  - logicalOperator: implicative_support
+  - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
   - targetEntryId: ess-ref-b-004
   - note: from identity-of-moments to self-sublation of determinateness.
+  - sourceClaimIds: [`ess-ref-b-003-c3`]
+  - sourceKeyPointIds: [`k5`]
+  - targetClaimIds: [`ess-ref-b-004-c3`]
+  - logicalOperator: sequential_transition
+  - analysisMode: first_order_claim_projection
 
 Review outcome:
 
@@ -320,10 +355,20 @@ Relations: (Relation)
 - r1. type: refines
   - targetEntryId: ess-ref-b-003
   - note: moves from identity of moments to explicit self-sublation dynamics.
+  - sourceClaimIds: [`ess-ref-b-004-c2`, `ess-ref-b-004-c3`]
+  - sourceKeyPointIds: [`k2`, `k3`, `k4`]
+  - targetClaimIds: [`ess-ref-b-003-c2`, `ess-ref-b-003-c3`]
+  - logicalOperator: presuppositional_link
+  - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
   - targetEntryId: ess-ref-b-005
   - note: closure through being/essence contrast and reflection.
+  - sourceClaimIds: [`ess-ref-b-004-c1`, `ess-ref-b-004-c3`]
+  - sourceKeyPointIds: [`k1`, `k3`, `k5`]
+  - targetClaimIds: [`ess-ref-b-005-c3`]
+  - logicalOperator: sequential_transition
+  - analysisMode: first_order_claim_projection
 
 Review outcome:
 
@@ -390,10 +435,20 @@ Relations: (Relation)
 - r1. type: sublates
   - targetEntryId: ess-ref-b-001
   - note: closure retroactively resolves first immediacy into reflection.
+  - sourceClaimIds: [`ess-ref-b-005-c2`, `ess-ref-b-005-c3`]
+  - sourceKeyPointIds: [`k2`, `k4`, `k5`]
+  - targetClaimIds: [`ess-ref-b-001-c1`, `ess-ref-b-001-c3`]
+  - logicalOperator: sublative_transition
+  - analysisMode: first_order_claim_projection
 
 - r2. type: supports
   - targetEntryId: ess-ref-b-004
   - note: confirms determinateness-as-moment in essence's self-shining movement.
+  - sourceClaimIds: [`ess-ref-b-005-c3`]
+  - sourceKeyPointIds: [`k5`]
+  - targetClaimIds: [`ess-ref-b-004-c1`, `ess-ref-b-004-c3`]
+  - logicalOperator: implicative_support
+  - analysisMode: first_order_claim_projection
 
 Review outcome:
 

@@ -1,7 +1,7 @@
 # Workbook Contract (V1)
 
 Status: active
-Applies to: all Foundation workbooks in this folder
+Applies to: all Ground workbooks in this folder
 Priority: workbook markdown over generated projections
 
 ## Canonical authority
@@ -41,20 +41,6 @@ Priority: workbook markdown over generated projections
 - Use direct visible relation bullets in each relation block (`- r1. type: <relation_type>`, `- r2. type: <relation_type>`, ...).
 - Do not mix alternate label spellings once adopted.
 
-## Exclusion discipline
-
-- If a range/topic is excluded for a pass, write the excluded range explicitly in `Scope` or `Decision`.
-- Excluded blocks must not be silently reintroduced.
-
-## Short-section and remark exception policy
-
-- Short-section exception: if a source part is textually short or contains only one numbered movement, a workbook may use fewer entries than usual (including one entry) without forcing artificial subdivision.
-- Triadic claim baseline remains valid, but for short sections a single entry may carry the complete first-order coverage.
-- Remark handling rule: remarks are excluded by default at first-order unless explicitly included in `Scope`/`Decision`.
-- If no remark block exists in the authority source, record that explicitly in `Decision` to avoid ambiguity.
-- Complex-section exception: if a source part has dense nested movements (e.g., many subsection transitions), workbook structure may use richer entry decomposition while preserving stable claim ids and evidence discipline.
-- In complex sections, triadic claim baseline remains per entry, but the section may contain many entries to maintain textual fidelity.
-
 ## Relation analysis overlay (V1.1, non-breaking)
 
 - Relation blocks may be enriched without changing top-level entry schema.
@@ -68,6 +54,11 @@ Priority: workbook markdown over generated projections
 - First-order passes default to `analysisMode: first_order_claim_projection`.
 - If relation semantics are provisional, keep `review_pending` and state uncertainty in `note`.
 
+## Exclusion discipline
+
+- If a range/topic is excluded for a pass, write the excluded range explicitly in `Scope` or `Decision`.
+- Excluded blocks must not be silently reintroduced.
+
 ## Session discipline
 
 - Each workbook must keep a short `Decision:` block describing current pass constraints.
@@ -79,4 +70,4 @@ Priority: workbook markdown over generated projections
 - Expand `Relations` in iterative cycles after base source-restricted entries are stable.
 - Relations may include broader inferential structure (including hypothetical/prolog-like forms) only as second-order modeling artifacts, not as first-order source claims.
 - Distinguish first-order and second-order status in notes when needed, and keep `review_pending` until relation semantics are accepted.
-- Current sequencing default for this track: `Identity -> Difference -> Contradiction -> relation-expansion cycles`.
+- Current sequencing default for this track: `Absolute Ground -> Determinate Ground -> Condition -> relation-expansion cycles`.

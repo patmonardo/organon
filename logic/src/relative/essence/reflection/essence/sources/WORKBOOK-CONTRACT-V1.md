@@ -41,6 +41,19 @@ Priority: workbook markdown over generated projections
 - Use direct visible relation bullets in each relation block (`- r1. type: <relation_type>`, `- r2. type: <relation_type>`, ...).
 - Do not mix alternate label spellings once adopted.
 
+## Relation analysis overlay (V1.1, non-breaking)
+
+- Relation blocks may be enriched without changing top-level entry schema.
+- Keep existing relation fields (`type`, `targetEntryId`, `note`) intact.
+- Optional relation-analysis fields:
+  - `sourceClaimIds`: list of source claim ids that ground the relation.
+  - `sourceKeyPointIds`: list of source key point ids that ground the relation.
+  - `targetClaimIds`: list of target claim ids when known (`pending_cross_workbook` allowed).
+  - `logicalOperator`: concise operator tag for inferential intent (`implicative_support|sequential_transition|contrastive_negation|sublative_transition|presuppositional_link`, etc.).
+  - `analysisMode`: `first_order_claim_projection|second_order_inference`.
+- First-order passes default to `analysisMode: first_order_claim_projection`.
+- If relation semantics are provisional, keep `review_pending` and state uncertainty in `note`.
+
 ## Exclusion discipline
 
 - If a range/topic is excluded for a pass, write the excluded range explicitly in `Scope` or `Decision`.

@@ -1,4 +1,4 @@
-# Essence Part C Workbook (V2)
+# Essence Part C (TopicMap) Workbook (V2)
 
 Part: `C. REFLECTION`
 Status: active
@@ -9,7 +9,7 @@ Authority: original source text only
 - Contract reference: `WORKBOOK-CONTRACT-V1.md`
 - This workbook markdown is the authoritative Knowledge Graph artifact for this part.
 - Any generated Cypher/DB projection is derivative and non-authoritative.
-- Future edits must preserve this exact section order and entry schema unless a migration is explicitly recorded in `Decision:` and applied repo-wide to all affected workbooks.
+- Future edits must preserve this exact heading order and entry schema unless a migration is explicitly recorded in `Decision:` and applied repo-wide to all affected workbooks.
 - Do not introduce alternate entry styles, headings, or compressed formats.
 
 ## Clean-room rules
@@ -17,11 +17,19 @@ Authority: original source text only
 - Source authority is `reflection.txt` only.
 - Claims must be line-anchored.
 - If uncertain, mark `review_pending` and capture an open question.
-- Chunk boundaries must follow complete sentence groups (no mid-sentence start/end).
+- Span boundaries must follow complete sentence groups (no mid-sentence start/end).
+
+## TopicMap terminology contract
+
+- Workbook = serialized artifact of one TopicMap.
+- TopicMap = graph container (topics + typed relations) within the broader Knowledge Graph.
+- Entry (Topic) = one topic node with id, title, key points, claims, and relations.
+- Scope / section / span = textual referents for source inclusion boundaries.
+- Chunk = informal analysis term only; do not use as a formal schema field.
 
 ## Working template
 
-### Entry <id> — <title>
+### Entry (Topic) <id> — <title>
 
 - span: `<lineStart-lineEnd>`
 - summary: one sentence
@@ -41,12 +49,14 @@ Decision:
 
 - Use Part B workbook format unchanged.
 - Keep claim count minimal and non-redundant.
-- Adopt pseudo-Cypher KG labels in section headers: `Key points: (KeyPoint)`, `Claims: (Claim)`, `Relations: (Relation)`.
+- Adopt pseudo-Cypher KG labels in entry headers: `Key points: (KeyPoint)`, `Claims: (Claim)`, `Relations: (Relation)`.
 - Align this pass with `WORKBOOK-CONTRACT-V1.md` Path-forward principle (`LogoLogia`) and KG-first direction.
 - Keep `Key points` and `Claims` first-order, source-restricted, and line-anchored to `reflection.txt`.
 - Treat `Relations` as second-order modeling expanded across iterative cycles (`Reflection -> Appearance -> relation-expansion cycles`).
 - Keep `review_pending` where relation semantics remain provisional.
 - Treat relation-building as a proof-trace of the passage from Essence/Appearance into Concept, to inform the Meta Compiler Generation system.
+- Migration: `relation_schema_v1 -> relation_schema_v1_1_overlay` (non-breaking).
+- Apply relation claim/keypoint anchor overlay for this workbook pass; keep claims unchanged.
 
 ### Entry ess-ref-c-001 — Reflection as internalized shine and absolute negativity
 
@@ -108,6 +118,11 @@ Relations: (Relation)
 - r1. type: transitions_to
   - targetEntryId: ess-ref-c-002
   - note: from initial concept of reflective movement to explicit nothing-to-nothing dynamic and triadic articulation.
+  - sourceClaimIds: [`ess-ref-c-001-c3`]
+  - sourceKeyPointIds: [`k4`, `k5`]
+  - targetClaimIds: [`ess-ref-c-002-c1`]
+  - logicalOperator: sequential_transition
+  - analysisMode: first_order_claim_projection
 
 Review outcome:
 
@@ -173,10 +188,20 @@ Relations: (Relation)
 - r1. type: supports
   - targetEntryId: ess-ref-c-001
   - note: formalizes the movement implicit in initial definition of reflection.
+  - sourceClaimIds: [`ess-ref-c-002-c1`, `ess-ref-c-002-c2`]
+  - sourceKeyPointIds: [`k1`, `k2`, `k3`]
+  - targetClaimIds: [`ess-ref-c-001-c3`]
+  - logicalOperator: implicative_support
+  - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
   - targetEntryId: ess-ref-c-003
   - note: triad now enters detailed exposition with positing reflection.
+  - sourceClaimIds: [`ess-ref-c-002-c3`]
+  - sourceKeyPointIds: [`k4`]
+  - targetClaimIds: [`ess-ref-c-003-c1`]
+  - logicalOperator: sequential_transition
+  - analysisMode: first_order_claim_projection
 
 Review outcome:
 
@@ -242,10 +267,20 @@ Relations: (Relation)
 - r1. type: refines
   - targetEntryId: ess-ref-c-002
   - note: unpacks the first moment of the triad by deriving its internal structure.
+  - sourceClaimIds: [`ess-ref-c-003-c1`, `ess-ref-c-003-c2`]
+  - sourceKeyPointIds: [`k1`, `k2`]
+  - targetClaimIds: [`ess-ref-c-002-c3`]
+  - logicalOperator: presuppositional_link
+  - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
   - targetEntryId: ess-ref-c-004
   - note: moves from self-negating equality to positedness/turning-back determinateness.
+  - sourceClaimIds: [`ess-ref-c-003-c3`]
+  - sourceKeyPointIds: [`k3`, `k4`]
+  - targetClaimIds: [`ess-ref-c-004-c1`, `ess-ref-c-004-c2`]
+  - logicalOperator: sequential_transition
+  - analysisMode: first_order_claim_projection
 
 Review outcome:
 
@@ -311,10 +346,20 @@ Relations: (Relation)
 - r1. type: supports
   - targetEntryId: ess-ref-c-003
   - note: grounds self-negating immediacy in the explicit category of positedness.
+  - sourceClaimIds: [`ess-ref-c-004-c1`, `ess-ref-c-004-c2`]
+  - sourceKeyPointIds: [`k1`, `k2`]
+  - targetClaimIds: [`ess-ref-c-003-c3`]
+  - logicalOperator: implicative_support
+  - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
   - targetEntryId: ess-ref-c-005
   - note: the turning-back form now develops into presupposing and self-repulsion.
+  - sourceClaimIds: [`ess-ref-c-004-c3`]
+  - sourceKeyPointIds: [`k3`, `k4`]
+  - targetClaimIds: [`ess-ref-c-005-c2`]
+  - logicalOperator: sequential_transition
+  - analysisMode: first_order_claim_projection
 
 Review outcome:
 
@@ -380,10 +425,20 @@ Relations: (Relation)
 - r1. type: refines
   - targetEntryId: ess-ref-c-004
   - note: explains how turning-back implies presupposition without external substrate.
+  - sourceClaimIds: [`ess-ref-c-005-c2`, `ess-ref-c-005-c3`]
+  - sourceKeyPointIds: [`k2`, `k3`, `k4`]
+  - targetClaimIds: [`ess-ref-c-004-c3`]
+  - logicalOperator: presuppositional_link
+  - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
   - targetEntryId: ess-ref-c-006
   - note: proceeds to full account of presupposition/self-arrival and determination of external reflection.
+  - sourceClaimIds: [`ess-ref-c-005-c3`]
+  - sourceKeyPointIds: [`k4`]
+  - targetClaimIds: [`ess-ref-c-006-c1`, `ess-ref-c-006-c2`]
+  - logicalOperator: sequential_transition
+  - analysisMode: first_order_claim_projection
 
 Review outcome:
 
@@ -449,10 +504,20 @@ Relations: (Relation)
 - r1. type: supports
   - targetEntryId: ess-ref-c-005
   - note: provides extended derivation of presupposition dynamic implicit in positing reflection.
+  - sourceClaimIds: [`ess-ref-c-006-c1`, `ess-ref-c-006-c2`]
+  - sourceKeyPointIds: [`k1`, `k2`, `k3`]
+  - targetClaimIds: [`ess-ref-c-005-c2`, `ess-ref-c-005-c3`]
+  - logicalOperator: implicative_support
+  - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
   - targetEntryId: ess-ref-c-007
   - note: threshold statement becomes explicit treatment of external reflection.
+  - sourceClaimIds: [`ess-ref-c-006-c3`]
+  - sourceKeyPointIds: [`k4`]
+  - targetClaimIds: [`ess-ref-c-007-c1`]
+  - logicalOperator: sequential_transition
+  - analysisMode: first_order_claim_projection
 
 Review outcome:
 
@@ -519,10 +584,20 @@ Relations: (Relation)
 - r1. type: refines
   - targetEntryId: ess-ref-c-006
   - note: develops the threshold claim of external reflection into its full procedure and result.
+  - sourceClaimIds: [`ess-ref-c-007-c1`, `ess-ref-c-007-c2`]
+  - sourceKeyPointIds: [`k1`, `k2`, `k3`]
+  - targetClaimIds: [`ess-ref-c-006-c3`]
+  - logicalOperator: presuppositional_link
+  - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
   - targetEntryId: ess-ref-c-008
   - note: conclusion now opens explicit treatment of determining reflection.
+  - sourceClaimIds: [`ess-ref-c-007-c3`]
+  - sourceKeyPointIds: [`k5`]
+  - targetClaimIds: [`ess-ref-c-008-c1`]
+  - logicalOperator: sequential_transition
+  - analysisMode: first_order_claim_projection
 
 Review outcome:
 
@@ -588,10 +663,20 @@ Relations: (Relation)
 - r1. type: supports
   - targetEntryId: ess-ref-c-007
   - note: confirms external reflection's result by defining determining reflection's basic structure.
+  - sourceClaimIds: [`ess-ref-c-008-c1`]
+  - sourceKeyPointIds: [`k1`]
+  - targetClaimIds: [`ess-ref-c-007-c3`]
+  - logicalOperator: implicative_support
+  - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
   - targetEntryId: ess-ref-c-009
   - note: moves from definition to the internal logic of determination-of-reflection versus quality.
+  - sourceClaimIds: [`ess-ref-c-008-c2`, `ess-ref-c-008-c3`]
+  - sourceKeyPointIds: [`k3`, `k4`]
+  - targetClaimIds: [`ess-ref-c-009-c2`]
+  - logicalOperator: sequential_transition
+  - analysisMode: first_order_claim_projection
 
 Review outcome:
 
@@ -658,10 +743,20 @@ Relations: (Relation)
 - r1. type: refines
   - targetEntryId: ess-ref-c-008
   - note: deepens determining reflection from structural definition to determinative content.
+  - sourceClaimIds: [`ess-ref-c-009-c1`, `ess-ref-c-009-c2`]
+  - sourceKeyPointIds: [`k1`, `k2`, `k3`, `k4`]
+  - targetClaimIds: [`ess-ref-c-008-c1`, `ess-ref-c-008-c2`]
+  - logicalOperator: presuppositional_link
+  - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
   - targetEntryId: ess-ref-c-010
   - note: culminates in the explicit synthesis of positedness and immanent reflection.
+  - sourceClaimIds: [`ess-ref-c-009-c3`]
+  - sourceKeyPointIds: [`k5`]
+  - targetClaimIds: [`ess-ref-c-010-c1`]
+  - logicalOperator: sequential_transition
+  - analysisMode: first_order_claim_projection
 
 Review outcome:
 
@@ -728,10 +823,20 @@ Relations: (Relation)
 - r1. type: supports
   - targetEntryId: ess-ref-c-009
   - note: completes the two-sided structure by explicit synthesis.
+  - sourceClaimIds: [`ess-ref-c-010-c1`, `ess-ref-c-010-c2`]
+  - sourceKeyPointIds: [`k1`, `k2`, `k3`]
+  - targetClaimIds: [`ess-ref-c-009-c3`]
+  - logicalOperator: implicative_support
+  - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
   - targetEntryId: ess-ref-d-001
   - note: carries forward from reflection synthesis into the next Appearance-phase entry in the concept proof-trace.
+  - sourceClaimIds: [`ess-ref-c-010-c3`]
+  - sourceKeyPointIds: [`k4`, `k5`]
+  - targetClaimIds: pending_cross_workbook
+  - logicalOperator: sequential_transition
+  - analysisMode: first_order_claim_projection
 
 Review outcome:
 

@@ -1,4 +1,4 @@
-# Essence Part A Workbook (V2)
+# Essence Part A (TopicMap) Workbook (V2)
 
 Part: `A. THE ESSENTIAL AND THE UNESSENTIAL`
 Status: active
@@ -9,18 +9,26 @@ Authority: original source text only
 - Contract reference: `WORKBOOK-CONTRACT-V1.md`
 - This workbook markdown is the authoritative Knowledge Graph artifact for this part.
 - Any generated Cypher/DB projection is derivative and non-authoritative.
-- Future edits must preserve this exact section order and entry schema unless a migration is explicitly recorded in `Decision:` and applied repo-wide to all affected workbooks.
+- Future edits must preserve this exact heading order and entry schema unless a migration is explicitly recorded in `Decision:` and applied repo-wide to all affected workbooks.
 
 ## Clean-room rules
 
 - Use only `essence.txt` as authority.
 - Every accepted claim must have line-anchored evidence.
 - If uncertain, mark `review_pending` and capture an open question.
-- Chunk boundaries must follow complete sentence groups (no mid-sentence start/end).
+- Span boundaries must follow complete sentence groups (no mid-sentence start/end).
+
+## TopicMap terminology contract
+
+- Workbook = serialized artifact of one TopicMap.
+- TopicMap = graph container (topics + typed relations) within the broader Knowledge Graph.
+- Entry (Topic) = one topic node with id, title, key points, claims, and relations.
+- Scope / section / span = textual referents for source inclusion boundaries.
+- Chunk = informal analysis term only; do not use as a formal schema field.
 
 ## Working template
 
-### Entry <id> — <title>
+### Entry (Topic) <id> — <title>
 
 - span: `<lineStart-lineEnd>`
 - summary: one sentence
@@ -39,7 +47,9 @@ Decision:
 
 - This is a fresh TopicMap analysis from source text only.
 - Keep claim count minimal and non-redundant.
-- Adopt pseudo-Cypher KG labels in section headers: `Key points: (KeyPoint)`, `Claims: (Claim)`, `Relations: (Relation)`.
+- Adopt pseudo-Cypher KG labels in entry headers: `Key points: (KeyPoint)`, `Claims: (Claim)`, `Relations: (Relation)`.
+- Migration: `relation_schema_v1 -> relation_schema_v1_1_overlay` (non-breaking).
+- Apply relation claim/keypoint anchor overlay for this workbook pass; keep claims unchanged.
 
 ### Entry ess-ref-a-001 — Essence is sublated being and determined negation
 
@@ -100,6 +110,11 @@ Relations: (Relation)
 - r1. type: transitions_to
   - targetEntryId: ess-ref-a-002
   - note: the comparative frame shifts into explicit essential/unessential split.
+  - sourceClaimIds: [`ess-ref-a-001-c3`]
+  - sourceKeyPointIds: [`k4`]
+  - targetClaimIds: [`ess-ref-a-002-c1`]
+  - logicalOperator: sequential_transition
+  - analysisMode: first_order_claim_projection
 
 Review outcome:
 
@@ -160,10 +175,20 @@ Relations: (Relation)
 - r1. type: supports
   - targetEntryId: ess-ref-a-001
   - note: explains why first determination is insufficient if held externally.
+  - sourceClaimIds: [`ess-ref-a-002-c1`, `ess-ref-a-002-c2`]
+  - sourceKeyPointIds: [`k3`, `k4`]
+  - targetClaimIds: [`ess-ref-a-001-c3`]
+  - logicalOperator: implicative_support
+  - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
   - targetEntryId: ess-ref-a-003
   - note: move to deeper determination of essence as absolute negativity.
+  - sourceClaimIds: [`ess-ref-a-002-c1`]
+  - sourceKeyPointIds: [`k1`, `k2`]
+  - targetClaimIds: [`ess-ref-a-003-c1`]
+  - logicalOperator: sequential_transition
+  - analysisMode: first_order_claim_projection
 
 Review outcome:
 
@@ -224,10 +249,20 @@ Relations: (Relation)
 - r1. type: sublates
   - targetEntryId: ess-ref-a-002
   - note: deeper determination of essence overcomes external essential/unessential partition.
+  - sourceClaimIds: [`ess-ref-a-003-c1`, `ess-ref-a-003-c3`]
+  - sourceKeyPointIds: [`k2`, `k4`, `k5`]
+  - targetClaimIds: [`ess-ref-a-002-c1`]
+  - logicalOperator: sublative_transition
+  - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
   - targetEntryId: ess-ref-b-001
   - note: culminates in the immanent synthesis of shine itself, which Part B then unfolds explicitly.
+  - sourceClaimIds: [`ess-ref-a-003-c3`]
+  - sourceKeyPointIds: [`k5`]
+  - targetClaimIds: pending_cross_workbook
+  - logicalOperator: sequential_transition
+  - analysisMode: first_order_claim_projection
 
 Review outcome:
 

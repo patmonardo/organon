@@ -1,4 +1,4 @@
-# Foundation Idea Workbook (Part-A Introduction View)
+# Foundation Idea (TopicMap) Workbook (Part-A Introduction View)
 
 Status: active
 Scope: Part-A introduction-level architecture only
@@ -9,7 +9,15 @@ Authority: original source text files in this folder
 - Contract reference: `WORKBOOK-CONTRACT-V1.md`
 - This workbook markdown is the authoritative Knowledge Graph artifact for Idea-level structure in Foundation.
 - Any generated Cypher/DB projection is derivative and non-authoritative.
-- Future edits must preserve this exact section order and entry schema unless a migration is explicitly recorded in `Decision:` and applied repo-wide to all affected workbooks.
+- Future edits must preserve this exact heading order and entry schema unless a migration is explicitly recorded in `Decision:` and applied repo-wide to all affected workbooks.
+
+## TopicMap terminology contract
+
+- Workbook = serialized artifact of one TopicMap.
+- TopicMap = graph container (topics + typed relations) within the broader Knowledge Graph.
+- Entry (Topic) = one topic node with id, title, key points, claims, and relations.
+- Scope / section / span = textual referents for source inclusion boundaries.
+- Chunk = informal analysis term only; do not use as a formal schema field.
 
 ## Purpose
 
@@ -51,7 +59,7 @@ Part A provides the introduction-anchored movement where reflection first appear
 
 - `A. IDENTITY` -> see `FOUNDATION-PART-A-V2-WORKBOOK.md`
 - `B. DIFFERENCE` -> see `FOUNDATION-PART-B-V2-WORKBOOK.md`
-- `C. CONTRADICTION` -> deferred to dedicated part workbook
+- `C. CONTRADICTION` -> see `FOUNDATION-PART-C-V2-WORKBOOK.md`
 
 ## Session log
 
