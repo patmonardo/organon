@@ -37,10 +37,6 @@
     "src/repository",
     "src/absolute",
     "src/relative",
-    "src/compiler/concept",
-    "src/compiler/essence",
-    "src/compiler/being",
-    "src/compiler",
   ],
   "exclude": [
     "src/**/*.test.ts",

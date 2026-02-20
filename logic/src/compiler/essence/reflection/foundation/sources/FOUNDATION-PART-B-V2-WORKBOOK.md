@@ -41,7 +41,7 @@ Authority: original source text only
 Scope:
 
 - file: `difference.txt`
-- section range: lines `2-589`
+- section range: lines `2-593`
 
 Decision:
 
@@ -513,24 +513,23 @@ Review outcome:
 - review_pending
 - notes: relation expansion remains constrained until Ground pass.
 
-### Entry fnd-dif-b-007 — Opposition completes difference as positive/negative in-and-for-itself
+### Entry fnd-dif-b-007 — Opposition is the completed unity of identity and diversity
 
 Span:
 
 - sourceFile: `src/relative/essence/reflection/foundation/sources/difference.txt`
 - lineStart: 349
-- lineEnd: 589
+- lineEnd: 421
 
 Summary:
 
-Opposition completes determinate reflection by constituting positive and negative as internally mediated, self-subsisting moments that are in and for themselves only through their exclusive relation.
+Opposition first appears as determinate reflection brought to completion, where each opposed side is the whole only by containing and referring to its own non-being.
 
 Key points: (KeyPoint)
 
 - k1. Opposition is the completed unity of identity and diversity.
-- k2. Positive/negative are self-subsisting sides containing their other within.
-- k3. Their determination is not merely external comparison but internal reflective opposition.
-- k4. In-and-for-itself status includes, rather than cancels, opposed reference.
+- k2. Opposed determinations are reflected moments, not externally indifferent terms.
+- k3. Each side is whole only through essential reference to its other.
 
 Claims: (Claim)
 
@@ -541,9 +540,78 @@ Claims: (Claim)
   - modality: asserted
   - confidence: 0.98
   - evidence:
-    - [349-354] "Opposition is the unity of identity and diversity..."
+    - [351-355] "Opposition is the unity of identity and diversity..."
 
 - c2. id: fnd-dif-b-007-c2
+  - subject: moments_of_opposition
+  - predicate: are
+  - object: reflected_determinations_of_positedness
+  - modality: asserted
+  - confidence: 0.95
+  - evidence:
+    - [372-377] "the moments of opposition are positedness reflected into itself..."
+
+- c3. id: fnd-dif-b-007-c3
+  - subject: each_opposed_moment
+  - predicate: is_whole_only_as
+  - object: reference_to_its_non_being
+  - modality: asserted
+  - confidence: 0.94
+  - evidence:
+    - [386-393] "Each... is therefore the whole... only as essentially referring to its non-being."
+
+Claim ↔ key point map:
+
+- c1 -> k1
+- c2 -> k2
+- c3 -> k3
+
+Relations: (Relation)
+
+- r1. type: supports
+  - targetEntryId: fnd-dif-b-006
+  - note: formalizes opposition as the completed truth of diversity's negative unity.
+  - sourceClaimIds: [`fnd-dif-b-007-c1`]
+  - sourceKeyPointIds: [`k1`]
+  - targetClaimIds: [`fnd-dif-b-006-c3`]
+  - logicalOperator: implicative_support
+  - analysisMode: first_order_claim_projection
+
+- r2. type: transitions_to
+  - targetEntryId: fnd-dif-b-008
+  - note: moves from formal constitution of opposition to positive/negative as self-subsisting sides.
+  - sourceClaimIds: [`fnd-dif-b-007-c3`]
+  - sourceKeyPointIds: [`k3`]
+  - targetClaimIds: [`fnd-dif-b-008-c1`]
+  - logicalOperator: sequential_transition
+  - analysisMode: first_order_claim_projection
+
+Review outcome:
+
+- review_pending
+- notes: first opposition movement isolated before the self-subsistence derivation.
+
+### Entry fnd-dif-b-008 — Positive and negative are self-subsisting absolute moments of opposition
+
+Span:
+
+- sourceFile: `src/relative/essence/reflection/foundation/sources/difference.txt`
+- lineStart: 422
+- lineEnd: 500
+
+Summary:
+
+Positive and negative are derived as self-subsisting sides of one opposition, yet in the register of mere positedness and external reflection they still appear as interchangeable determinations.
+
+Key points: (KeyPoint)
+
+- k1. Positive and negative are self-subsisting sides of opposition.
+- k2. Each side is itself only through relation to and sublation of its other.
+- k3. As mere positedness under external reflection, either side can be taken as positive or negative.
+
+Claims: (Claim)
+
+- c1. id: fnd-dif-b-008-c1
   - subject: positive_and_negative
   - predicate: are
   - object: self_subsisting_sides_of_opposition
@@ -552,37 +620,124 @@ Claims: (Claim)
   - evidence:
     - [422-431] "The positive and the negative are thus the sides of opposition that have become self-subsisting..."
 
-- c3. id: fnd-dif-b-007-c3
-  - subject: positive_and_negative
-  - predicate: are_in_and_for_themselves_as
-  - object: exclusively_related_opposites
+- c2. id: fnd-dif-b-008-c2
+  - subject: each_side_of_opposition
+  - predicate: is_only_through
+  - object: reference_to_and_sublation_of_its_other
   - modality: asserted
   - confidence: 0.94
   - evidence:
-    - [558-589] "not just in themselves, but in and for themselves... this reference, precisely as exclusive, constitutes their determination..."
+    - [432-449] "Each refers itself to itself only as referring itself to its other..."
+
+- c3. id: fnd-dif-b-008-c3
+  - subject: positive_negative_as_mere_positedness
+  - predicate: are
+  - object: externally_interchangeable_determinacies
+  - modality: asserted
+  - confidence: 0.92
+  - evidence:
+    - [478-500] "the positive and the negative are indifferent... the two can be interchanged..."
 
 Claim ↔ key point map:
 
 - c1 -> k1
-- c2 -> k2, k3
-- c3 -> k4
+- c2 -> k2
+- c3 -> k3
 
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: fnd-dif-b-006
-  - note: opposition is the explicit completion of diversity's negative unity.
-  - sourceClaimIds: [`fnd-dif-b-007-c1`, `fnd-dif-b-007-c2`]
-  - sourceKeyPointIds: [`k1`, `k2`, `k3`]
-  - targetClaimIds: [`fnd-dif-b-006-c3`]
+  - targetEntryId: fnd-dif-b-007
+  - note: concretizes the first opposition movement into explicit positive/negative sides.
+  - sourceClaimIds: [`fnd-dif-b-008-c1`, `fnd-dif-b-008-c2`]
+  - sourceKeyPointIds: [`k1`, `k2`]
+  - targetClaimIds: [`fnd-dif-b-007-c3`]
+  - logicalOperator: implicative_support
+  - analysisMode: first_order_claim_projection
+
+- r2. type: transitions_to
+  - targetEntryId: fnd-dif-b-009
+  - note: advances from interchangeability toward in-and-for-itself opposition.
+  - sourceClaimIds: [`fnd-dif-b-008-c3`]
+  - sourceKeyPointIds: [`k3`]
+  - targetClaimIds: [`fnd-dif-b-009-c1`]
+  - logicalOperator: sequential_transition
+  - analysisMode: first_order_claim_projection
+
+Review outcome:
+
+- review_pending
+- notes: keeps the "mere positedness" phase distinct from in-and-for-itself closure.
+
+### Entry fnd-dif-b-009 — Opposition returns into each side as in-and-for-itself determination
+
+Span:
+
+- sourceFile: `src/relative/essence/reflection/foundation/sources/difference.txt`
+- lineStart: 501
+- lineEnd: 593
+
+Summary:
+
+Opposition culminates when each side internalizes the opposite, stands as self-subsisting unity, and is in-and-for-itself precisely through exclusive relation to the other.
+
+Key points: (KeyPoint)
+
+- k1. Positive and negative are each internally both moments.
+- k2. Each side is a self-subsisting unity that excludes and presupposes its other.
+- k3. In-and-for-itself status means exclusive opposed reference is constitutive, not external.
+
+Claims: (Claim)
+
+- c1. id: fnd-dif-b-009-c1
+  - subject: each_side_of_opposition
+  - predicate: contains
+  - object: positive_and_negative_within
+  - modality: asserted
+  - confidence: 0.94
+  - evidence:
+    - [501-518] "Each is itself positive and negative within..."
+
+- c2. id: fnd-dif-b-009-c2
+  - subject: positive_and_negative
+  - predicate: are
+  - object: self_subsisting_unities_excluding_their_other
+  - modality: asserted
+  - confidence: 0.93
+  - evidence:
+    - [519-556] "Each is thus self-subsistent unity existing for itself... the excluding of it from itself."
+
+- c3. id: fnd-dif-b-009-c3
+  - subject: positive_and_negative
+  - predicate: are_in_and_for_themselves_as
+  - object: exclusively_related_opposites
+  - modality: asserted
+  - confidence: 0.95
+  - evidence:
+    - [557-593] "not just in themselves, but in and for themselves... this reference, precisely as exclusive, constitutes their determination..."
+
+Claim ↔ key point map:
+
+- c1 -> k1
+- c2 -> k2
+- c3 -> k3
+
+Relations: (Relation)
+
+- r1. type: supports
+  - targetEntryId: fnd-dif-b-008
+  - note: resolves the interchangeability moment by internalizing opposition in each side.
+  - sourceClaimIds: [`fnd-dif-b-009-c1`, `fnd-dif-b-009-c2`]
+  - sourceKeyPointIds: [`k1`, `k2`]
+  - targetClaimIds: [`fnd-dif-b-008-c3`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
   - targetEntryId: fnd-ctr-c-001
-  - note: prepares direct transition into Contradiction where opposition becomes explicit contradiction.
-  - sourceClaimIds: [`fnd-dif-b-007-c3`]
-  - sourceKeyPointIds: [`k4`]
+  - note: direct handoff into Contradiction from opposition's in-and-for-itself completion.
+  - sourceClaimIds: [`fnd-dif-b-009-c3`]
+  - sourceKeyPointIds: [`k3`]
   - targetClaimIds: pending_cross_workbook
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
@@ -590,4 +745,4 @@ Relations: (Relation)
 Review outcome:
 
 - review_pending
-- notes: contradiction handoff is provisional until Part C workbook is created.
+- notes: contradiction handoff remains provisional until Part C workbook is created.

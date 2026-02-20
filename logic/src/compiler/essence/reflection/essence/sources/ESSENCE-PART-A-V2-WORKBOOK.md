@@ -159,7 +159,7 @@ Claims: (Claim)
   - modality: asserted
   - confidence: 0.93
   - evidence:
-    - [282-285] same content can be considered essential or unessential depending on standpoint.
+    - [279-281] same content can be considered essential or unessential depending on standpoint.
 
 - c3. id: ess-ref-a-002-c3
   - subject: essence_in_this_split

@@ -1,5 +1,8 @@
 # ADR index updates
 
+- ADR 0013: Actuality as Reciprocal Name/Form Eval
+  - File: `logic/doc/adr/0013-actuality-reciprocal-name-form-eval.md`
+
 - ADR 0012: Absolute Kernel ↔ Relative ToolChain Bridge (BEC:MVC, GDSL/SDSL)
   - File: `logic/doc/adr/0012-absolute-kernel-relative-toolchain-bridge.md`
 
@@ -22,7 +25,29 @@ Date: 2025-08-17
   - `absolute/core`: Contracts (canonical schemas such as `ProcessorInputs`), Kriya orchestration contracts, Action signatures, and the non-transactional root `FormProcessor` API surface.
   - `absolute/essence`: Drivers (Container/Contained drivers) that name and supply semantics for both the Container and Contained triads; these drivers feed the transactional engines located under `logic/src/essence`.
   - The Absolute surface exposes six Active objects that act as the bridge vocabulary and drivers: ActiveShape, ActiveContext, ActiveMorph, ActiveEntity, ActiveProperty, ActiveRelation. Container-side Active objects are non-transactional unities; Contained-side Active objects are the transactional carriers consumed by engines.
-  - Action: externalized effects and decisions are emitted by the root but executed transactionally by engines below.
+  - Action: externalized effects### Original Sanskrit Verse 31
+स्वां स्वां प्रतिपद्यन्ते परस्पराकूतहेतुकां वृत्तिम् ।
+पुरुषार्थैव हेतुर्न केनचित् कार्यते करणम् ॥ ३१॥
+
+### Transliteration (IAST)
+svāṃ svāṃ pratipadyante parasparākūtahetukāṃ vṛttim |
+puruṣārthaiva heturna kenacit kāryate karaṇam || 31 ||
+
+### Translation
+Each assumes their respective roles driven by mutual understanding; the purpose of Purusha alone is the cause, not any instrument operated by someone.
+
+### Commentary
+This verse delves into the dynamics of action and purpose within the context of Samkhya philosophy:
+
+1. **Respective Roles and Mutual Understanding:** The verse describes how entities assume their respective functions or roles (vṛttim) based on a mutual understanding or agreement (parasparākūtahetukāṃ), suggesting a harmonious interaction within the cosmos where each element plays its part according to an inherent order or design.
+
+2. **Purusha as the Sole Cause:** The emphasis is on Purusha (consciousness) being the ultimate cause (puruṣārthaiva hetur) behind actions, indicating that the true motive or purpose of actions is rooted in the realization or liberation of Purusha. This statement underscores the philosophical viewpoint that actions in the material world (operated by Prakriti or nature) serve the higher purpose of achieving spiritual understanding or liberation.
+
+3. **Absence of External Instrumentation:** The phrase "na kenacit kāryate karaṇam" suggests that no external instrument or agent is responsible for initiating action for the sake of Purusha's purpose. This reinforces the idea that the material processes and entities (considered instruments in this context) are not the ultimate drivers of action; instead, the inherent purpose or quest for liberation within consciousness itself (Purusha) is the driving force.
+
+4. **Implications for Spiritual Liberation:** The verse highlights a key aspect of Samkhya philosophy, which posits that the entire play of creation, maintenance, and dissolution in the material world is orchestrated with the ultimate goal of facilitating the liberation of Purusha from the cycle of birth and rebirth. Actions, therefore, are seen as expressions of the natural order working towards this spiritual objective, rather than being driven by any external agency.
+
+This verse encapsulates the Samkhya view of the cosmos as a self-regulating system where actions are aligned with the overarching goal of Purusha's liberation, emphasizing the non-dualistic nature of cause and effect in the pursuit of spiritual realization. and decisions are emitted by the root but executed transactionally by engines below.
 - The Root remains non-transactional. It validates and dispatches; transactional engines (the only true transaction committers) live in `logic/src/essence` and perform property derivations, relation truthing and world assembly.
 - The Absolute surface dispatches a precise set of objects: Container drivers (Shape, Context, Morph) and Contained carriers (Entity, Property, Relation), plus content, concepts, judgments, syllogisms.
 

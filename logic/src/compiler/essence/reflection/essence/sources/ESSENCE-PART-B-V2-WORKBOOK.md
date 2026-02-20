@@ -49,6 +49,8 @@ Decision:
 
 - Use Part A workbook format unchanged.
 - Exclude comparative skepticism/idealism discussion (`38-93`) from active base entries.
+- Working segmentation (provisional): entries use spans (`6-36`, `95-131`, `133-175`, `177-190`) followed by a concluding transition (`192-215`).
+- Section labels are not encoded in entry headings in this pass.
 - Keep claim count minimal and non-redundant.
 - Adopt pseudo-Cypher KG labels in entry headers: `Key points: (KeyPoint)`, `Claims: (Claim)`, `Relations: (Relation)`.
 - Align this pass with `WORKBOOK-CONTRACT-V1.md` Path-forward principle (`LogoLogia`) and KG-first direction.
@@ -140,18 +142,18 @@ Span:
 
 - sourceFile: `src/relative/essence/reflection/essence/sources/shine.txt`
 - lineStart: 95
-- lineEnd: 105
+- lineEnd: 131
 
 Summary:
 
-The text states that the task is not to prove a return already accomplished, but to show that shine's distinct determinations are essence's own and are sublated in essence.
+The entry states the methodological task and immediately grounds it in what constitutively defines shine as immediacy of non-being.
 
 Key points: (KeyPoint)
 
 - k1. Shine appears as immediate presupposition against essence.
 - k2. Being's return into essence is already complete.
 - k3. The method is demonstration of internal identity of determinations.
-- k4. Shine as determinateness is to be shown sublated in essence itself.
+- k4. What constitutes shine is immediacy of non-being, i.e., essence's own negativity and reflective immediacy.
 
 Claims: (Claim)
 
@@ -175,12 +177,13 @@ Claims: (Claim)
 
 - c3. id: ess-ref-b-002-c3
   - subject: task
-  - predicate: is_to_demonstrate
-  - object: shine_determinations_as_essence_determinations_sublated_in_essence
+  - predicate: is_to_demonstrate_and_ground
+  - object: shine_as_essence_determinations_through_constitutive_immediacy
   - modality: asserted
   - confidence: 0.98
   - evidence:
     - [102-105] determinations distinguishing shine from essence are determinations of essence itself and sublated in it.
+    - [107-131] shine is constituted as immediacy of non-being and reflective immediacy (being as moment).
 
 Claim ↔ key point map:
 
@@ -201,7 +204,7 @@ Relations: (Relation)
 
 - r2. type: transitions_to
   - targetEntryId: ess-ref-b-003
-  - note: task is executed via genetic derivation of shine's moments.
+  - note: after constitutive grounding, the exposition moves to explicit two-moment identity and self-sublation.
   - sourceClaimIds: [`ess-ref-b-002-c3`]
   - sourceKeyPointIds: [`k3`, `k4`]
   - targetClaimIds: [`ess-ref-b-003-c1`, `ess-ref-b-003-c2`]
@@ -211,56 +214,57 @@ Relations: (Relation)
 Review outcome:
 
 - review_pending
-- notes: task statement isolated as its own boundary.
+- notes: entry now includes the constitutive/immediacy paragraph through line 131.
 
-### Entry ess-ref-b-003 — Shine's moments are the moments of essence
+### Entry ess-ref-b-003 — Middle movement (identity and self-sublation)
 
 Span:
 
 - sourceFile: `src/relative/essence/reflection/essence/sources/shine.txt`
-- lineStart: 107
-- lineEnd: 141
+- lineStart: 133
+- lineEnd: 175
 
 Summary:
 
-Shine's non-being and immediacy are derived as essence's own negativity and reflective immediacy, so shine is not an external other but a moment of essence.
+The middle movement begins from the explicit two-moment identity and develops it into determinateness and self-sublation.
 
 Key points: (KeyPoint)
 
-- k1. What constitutes shine is immediacy of non-being.
-- k2. This non-being is essence's own negativity.
-- k3. Essence's negativity is self-equal immediacy/indifference.
-- k4. Shine's immediacy is absolutely mediated (reflective immediacy).
-- k5. The two moments in shine are explicitly moments of essence itself.
+- k1. The two moments of shine are explicitly stated as moments of essence itself.
+- k2. Shine in essence is not that of an other but essence's own shining.
+- k3. Shine is explicitly essence in determinateness.
+- k4. Essence is presented as unity of negativity and immediacy.
+- k5. Determinateness self-sublates as the negative returns to itself.
 
 Claims: (Claim)
 
 - c1. id: ess-ref-b-003-c1
-  - subject: shine_nonbeing
-  - predicate: is
-  - object: essence_negativity_within_essence
+  - subject: shine_moments
+  - predicate: are
+  - object: moments_of_essence_itself
   - modality: asserted
   - confidence: 0.98
   - evidence:
-    - [107-113] non-being of shine is negativity of essence; essence as non-being of being.
+    - [133-141] the two moments of shine are moments of essence; shine in essence is essence's own shining.
 
 - c2. id: ess-ref-b-003-c2
-  - subject: shine_immediacy_against_essence
-  - predicate: is
-  - object: essence_own_reflective_immediacy
+  - subject: shine_in_determinateness
+  - predicate: is_identical_with
+  - object: essence_as_unity_of_negativity_and_immediacy
   - modality: asserted
   - confidence: 0.96
   - evidence:
-    - [123-131] shine's immediacy is essence's own, as absolutely mediated or reflective immediacy.
+    - [143-147] shine is essence itself in determinateness.
+    - [148-159] essence as identical unity of negativity and immediacy.
 
 - c3. id: ess-ref-b-003-c3
-  - subject: shine_in_essence
-  - predicate: is
-  - object: essence_shining_itself_not_other
+  - subject: shine_determinateness
+  - predicate: self_sublates_as
+  - object: return_to_self
   - modality: asserted
   - confidence: 0.97
   - evidence:
-    - [133-141] shine in essence is not shine of another but shine of essence itself.
+    - [161-175] non-self-subsistent negative in another/negation and absolute sublation of determinateness.
 
 Claim ↔ key point map:
 
@@ -281,91 +285,89 @@ Relations: (Relation)
 
 - r2. type: transitions_to
   - targetEntryId: ess-ref-b-004
-  - note: from identity-of-moments to self-sublation of determinateness.
+  - note: from middle movement to the concluding paragraph on determinateness-as-moment.
   - sourceClaimIds: [`ess-ref-b-003-c3`]
-  - sourceKeyPointIds: [`k5`]
-  - targetClaimIds: [`ess-ref-b-004-c3`]
+  - sourceKeyPointIds: [`k4`, `k5`]
+  - targetClaimIds: [`ess-ref-b-004-c1`, `ess-ref-b-004-c3`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: no external-comparative material included.
+- notes: second entry now starts at line 133.
 
-### Entry ess-ref-b-004 — Determinateness self-sublates as essence's self-shining
+### Entry ess-ref-b-004 — Infinite determinateness as moment
 
 Span:
 
 - sourceFile: `src/relative/essence/reflection/essence/sources/shine.txt`
-- lineStart: 143
+- lineStart: 177
 - lineEnd: 190
 
 Summary:
 
-Shine is essence in determinateness, and this determinateness immediately sublates itself through absolute negativity into essence's self-shining within itself.
+This paragraph states infinite determinateness and concludes with shine as essence itself where determinateness is only a moment.
 
 Key points: (KeyPoint)
 
-- k1. Shine is explicitly essence itself in determinateness of being.
-- k2. Essence is the self-mediating unity of negativity and immediacy.
-- k3. Determining immediately turns back into itself.
-- k4. Shine as non-self-subsistent being exists in another/its negation.
-- k5. Determinateness and self-subsistence are shown as moments in identity.
+- k1. Determinateness in essence is infinite determinateness.
+- k2. The negative that coincides with itself is self-subsistent as determinateness.
+- k3. Self-subsistence as immediacy is equally determinateness and moment.
+- k4. Identity of negativity and immediacy is essence.
+- k5. Shine is essence itself in determinateness, where determinateness is only a moment.
 
 Claims: (Claim)
 
 - c1. id: ess-ref-b-004-c1
-  - subject: shine
+  - subject: determinateness_in_essence
   - predicate: is
-  - object: essence_itself_in_determinateness
+  - object: infinite_determinateness
   - modality: asserted
-  - confidence: 0.99
+  - confidence: 0.96
   - evidence:
-    - [143-147] shine as essence itself in determinateness.
-    - [187-190] determinateness is only a moment; essence shines within itself.
+    - [177-181] determinateness in essence is infinite; negative coincides with itself.
 
 - c2. id: ess-ref-b-004-c2
-  - subject: essence
-  - predicate: is
-  - object: self_mediating_unity_of_absolute_negativity_and_immediacy
+  - subject: self_subsistence_and_determinateness
+  - predicate: are
+  - object: reciprocal_moments_in_identity_of_negativity_and_immediacy
   - modality: asserted
-  - confidence: 0.97
+  - confidence: 0.93
   - evidence:
-    - [148-159] essence as self-mediating negation and unity of negativity/immediacy.
+    - [182-186] self-subsistence and determinateness are reciprocal moments; negativity/immediacy identity is essence.
 
 - c3. id: ess-ref-b-004-c3
-  - subject: shine_determinateness
-  - predicate: self_sublates_into
-  - object: return_to_self
+  - subject: shine
+  - predicate: is
+  - object: essence_itself_with_determinateness_as_moment
   - modality: asserted
-  - confidence: 0.95
+  - confidence: 0.98
   - evidence:
-    - [161-175] non-self-subsistent negative in another/negation.
-    - [177-186] determinateness and self-subsistence as moments in identity.
+    - [187-190] shine is essence itself; determinateness is only a moment; essence shines within itself.
 
 Claim ↔ key point map:
 
 - c1 -> k1, k5
-- c2 -> k2
-- c3 -> k3, k4, k5
+- c2 -> k2, k3, k4
+- c3 -> k5
 
 Relations: (Relation)
 
 - r1. type: refines
   - targetEntryId: ess-ref-b-003
-  - note: moves from identity of moments to explicit self-sublation dynamics.
-  - sourceClaimIds: [`ess-ref-b-004-c2`, `ess-ref-b-004-c3`]
-  - sourceKeyPointIds: [`k2`, `k3`, `k4`]
-  - targetClaimIds: [`ess-ref-b-003-c2`, `ess-ref-b-003-c3`]
+  - note: states explicitly the identity result toward which the middle movement was directed.
+  - sourceClaimIds: [`ess-ref-b-004-c1`, `ess-ref-b-004-c2`]
+  - sourceKeyPointIds: [`k1`, `k2`, `k3`, `k4`]
+  - targetClaimIds: [`ess-ref-b-003-c3`]
   - logicalOperator: presuppositional_link
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
   - targetEntryId: ess-ref-b-005
-  - note: closure through being/essence contrast and reflection.
-  - sourceClaimIds: [`ess-ref-b-004-c1`, `ess-ref-b-004-c3`]
-  - sourceKeyPointIds: [`k1`, `k3`, `k5`]
+  - note: transition from determinateness-as-moment into reflection movement.
+  - sourceClaimIds: [`ess-ref-b-004-c3`]
+  - sourceKeyPointIds: [`k5`]
   - targetClaimIds: [`ess-ref-b-005-c3`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
@@ -373,9 +375,9 @@ Relations: (Relation)
 Review outcome:
 
 - review_pending
-- notes: long span retained to keep sentence-complete movement intact.
+- notes: this entry uses the single paragraph 177-190.
 
-### Entry ess-ref-b-005 — Closure: essence as reflection
+### Entry ess-ref-b-005 — Transition: into reflection
 
 Span:
 
@@ -385,7 +387,7 @@ Span:
 
 Summary:
 
-The conclusion re-situates shine within the being/essence contrast and shows that sublating first immediacy yields essence's self-movement as reflection.
+This transition re-situates shine within the being/essence contrast and shows that sublating first immediacy yields essence's self-movement as reflection.
 
 Key points: (KeyPoint)
 
@@ -434,7 +436,7 @@ Relations: (Relation)
 
 - r1. type: sublates
   - targetEntryId: ess-ref-b-001
-  - note: closure retroactively resolves first immediacy into reflection.
+  - note: transition retroactively resolves first immediacy into reflection.
   - sourceClaimIds: [`ess-ref-b-005-c2`, `ess-ref-b-005-c3`]
   - sourceKeyPointIds: [`k2`, `k4`, `k5`]
   - targetClaimIds: [`ess-ref-b-001-c1`, `ess-ref-b-001-c3`]
@@ -443,14 +445,14 @@ Relations: (Relation)
 
 - r2. type: supports
   - targetEntryId: ess-ref-b-004
-  - note: confirms determinateness-as-moment in essence's self-shining movement.
+  - note: confirms section-2 determinateness-as-moment within the movement to reflection.
   - sourceClaimIds: [`ess-ref-b-005-c3`]
   - sourceKeyPointIds: [`k5`]
-  - targetClaimIds: [`ess-ref-b-004-c1`, `ess-ref-b-004-c3`]
+  - targetClaimIds: [`ess-ref-b-004-c2`, `ess-ref-b-004-c3`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: closure boundary fixed at final line of Part B.
+- notes: transition boundary fixed at final line of Part B.

@@ -41,89 +41,25 @@ Authority: original source text only
 Scope:
 
 - file: `identity.txt`
-- active range: lines `3-64` (full A. Identity movement in this source)
+- active range: lines `34-63` (conceptual Identity segment used in this pass)
 
 Decision:
 
 - Fresh TopicMap analysis from source text only.
+- Opening lines `3-36` are deferred from this workbook pass as Idea-level framing (candidate for IDEA workbook later).
 - Keep claim count minimal and non-redundant.
 - Adopt pseudo-Cypher KG labels in entry headers: `Key points: (KeyPoint)`, `Claims: (Claim)`, `Relations: (Relation)`.
 - Keep this pass in Dhyana-stage discipline: no Ground handoff claims are accepted from Part A without contradiction-resolution gates in downstream workbooks.
 - Apply short-section exception policy: do not force artificial over-segmentation for the short Identity source.
 - Remark handling: no explicit remark block exists in `identity.txt`, so no remark exclusion decision is needed beyond source lock.
 
-### Entry fnd-id-a-001 — Reflection as determined essence and pure identity
+### Entry fnd-id-a-001 — Identity as pure production and in-itself sublation of being
 
 Span:
 
 - sourceFile: `src/relative/essence/reflection/foundation/sources/identity.txt`
-- lineStart: 3
-- lineEnd: 36
-
-Summary:
-
-Foundation opens by determining reflection as essence's self-shining mediation, whose first determination is pure identity as simple self-reference.
-
-Key points: (KeyPoint)
-
-- k1. Reflection is determined reflection and essence is determined essence.
-- k2. Reflection is essence shining within itself.
-- k3. Essence is negative simplicity and absolute mediation with itself.
-- k4. The first determination is pure identity as simple self-reference.
-
-Claims: (Claim)
-
-- c1. id: fnd-id-a-001-c1
-  - subject: reflection
-  - predicate: is_determined_as
-  - object: determined_reflection
-  - modality: asserted
-  - confidence: 0.98
-  - evidence:
-    - [5-6] "Reflection is determined reflection; accordingly, essence is determined essence..."
-
-- c2. id: fnd-id-a-001-c2
-  - subject: reflection
-  - predicate: is
-  - object: essence_shining_within_itself
-  - modality: asserted
-  - confidence: 0.99
-  - evidence:
-    - [8-8] "Reflection is the shining of essence within itself."
-
-- c3. id: fnd-id-a-001-c3
-  - subject: essence
-  - predicate: first_determination_is
-  - object: pure_identity_simple_self_reference
-  - modality: asserted
-  - confidence: 0.95
-  - evidence:
-    - [18-19] "First, essence is simple self-reference, pure identity."
-
-Claim ↔ key point map:
-
-- c1 -> k1
-- c2 -> k2
-- c3 -> k3, k4
-
-Relations: (Relation)
-
-- r1. type: transitions_to
-  - targetEntryId: fnd-id-a-002
-  - note: move from pure identity framing toward identity as immediacy of reflection.
-
-Review outcome:
-
-- review_pending
-- notes: boundary locked to opening determinations; next entry should continue through identity as pure production.
-
-### Entry fnd-id-a-002 — Identity as pure production and in-itself sublation of being
-
-Span:
-
-- sourceFile: `src/relative/essence/reflection/foundation/sources/identity.txt`
-- lineStart: 37
-- lineEnd: 64
+- lineStart: 34
+- lineEnd: 63
 
 Summary:
 
@@ -138,32 +74,32 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: fnd-id-a-002-c1
+- c1. id: fnd-id-a-001-c1
   - subject: identity
   - predicate: is_determined_as
   - object: immediacy_of_reflection_and_pure_self_production
   - modality: asserted
   - confidence: 0.97
   - evidence:
-    - [37-48] self-identity is immediacy of reflection and pure production from itself and in itself.
+    - [41-46] self-identity is immediacy of reflection and pure production from itself and in itself.
 
-- c2. id: fnd-id-a-002-c2
+- c2. id: fnd-id-a-001-c2
   - subject: essential_identity
   - predicate: is_not
   - object: abstract_identity_from_relative_negation
   - modality: asserted
   - confidence: 0.95
   - evidence:
-    - [50-56] denial of abstract identity produced by relative negation that leaves the other outside.
+    - [48-54] denial of abstract identity produced by relative negation that leaves the other outside.
 
-- c3. id: fnd-id-a-002-c3
+- c3. id: fnd-id-a-001-c3
   - subject: being_and_its_determinateness
   - predicate: are_sublated_in_themselves_as
   - object: simple_negativity_identical_with_essence
   - modality: asserted
   - confidence: 0.97
   - evidence:
-    - [57-64] being and every determinateness are sublated in themselves; simple negativity is identity and still the same as essence.
+    - [56-63] being and every determinateness are sublated in themselves; simple negativity is identity and still the same as essence.
 
 Claim ↔ key point map:
 
@@ -173,15 +109,11 @@ Claim ↔ key point map:
 
 Relations: (Relation)
 
-- r1. type: supports
-  - targetEntryId: fnd-id-a-001
-  - note: deepens pure identity from opening framing into its explicit anti-abstract determination.
-
-- r2. type: transitions_to
+- r1. type: transitions_to
   - targetEntryId: fnd-dif-b-001
   - note: closure of Identity hands off to Difference as the next essentiality.
 
 Review outcome:
 
 - review_pending
-- notes: full first-order coverage for available Identity movement in this source is complete.
+- notes: single-entry conceptual pass retained; opening Idea-level framing deferred.
