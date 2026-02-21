@@ -1,0 +1,351 @@
+# Concept Idea Workbook
+
+Part: `IDEA. CHAPTER 1 — THE CONCEPT`
+Status: active
+Authority: original source text only
+
+## Authority + format lock (must persist)
+
+- Contract reference: `src/compiler/essence/reflection/foundation/sources/WORKBOOK-CONTRACT-V1.md`
+- This workbook markdown is the authoritative Knowledge Graph artifact for this part.
+- Any generated Cypher/DB projection is derivative and non-authoritative.
+- Future edits must preserve this exact heading order and entry schema unless a migration is explicitly recorded in `Decision:` and applied repo-wide to all affected workbooks.
+
+## Clean-room rules
+
+- Source authority is limited to Concept source files in this folder.
+- Claims must be line-anchored.
+- If uncertain, mark `review_pending` and capture an open question.
+- Span boundaries must follow complete sentence groups (no mid-sentence start/end).
+
+## TopicMap terminology contract
+
+- Workbook = serialized artifact of one TopicMap.
+- TopicMap = graph container (topics + typed relations) within the broader Knowledge Graph.
+- Entry (Topic) = one topic node with id, title, key points, claims, and relations.
+- Scope / section / span = textual referents for source inclusion boundaries.
+- Chunk = informal analysis term only; do not use as a formal schema field.
+
+## Working template
+
+### Entry (Topic) <id> — <title>
+
+- span: `<lineStart-lineEnd>`
+- summary: one sentence
+- keyPoints: (KeyPoint) 3-8 non-redundant points
+- claims: (Claim) 1-3 minimum, with evidence
+- relations: (Relation) typed only (`supports|contrasts|negates|sublates|presupposes|refines|transitions_to`), using labeled bullets (`r1`, `r2`, ...)
+
+## Session: 2026-02-20 (initial scaffold)
+
+Scope:
+
+- files:
+  - `samyama-greater-subjectivity.tex`
+- focus: focused Chapter 1 study (`The concept`) as the Concept-as-such determination, with only the final boundary sentence that opens Judgment.
+
+Decision:
+
+- Keep this workbook Chapter 1 specific and concept-focused.
+- Keep first-order claims anchored only to Chapter 1 lines in `samyama-greater-subjectivity.tex`.
+- Treat this workbook as the focused Concept-IDEA map; place sphere-level (`Concept | Judgment | Syllogism`) coordination in `SUBJECT-IDEA-WORKBOOK.md`.
+- Treat source text spans as authoritative Text Segments for Knowledge Graph ingestion.
+
+### Entry con-idea-001 — Chapter 1 opening: concept as such beyond abstract understanding
+
+Span:
+
+- sourceFile: `src/compiler/concept/subject/sources/samyama-greater-subjectivity.tex`
+- lineStart: 1428
+- lineEnd: 1454
+
+Summary:
+
+The chapter opening distinguishes the concept as such from the merely determinate-concept function of understanding.
+
+Key points: (KeyPoint)
+
+- k1. Common doctrine reduces understanding to determinate concepts and separates it from judgment/reason.
+- k2. Formal judgment and formal syllogism are treated as understanding when subsumed under abstract determinateness.
+- k3. The chapter explicitly redefines the target as the concept as such, not merely abstractly determinate concept.
+
+Claims: (Claim)
+
+- c1. id: con-idea-001-c1
+  - subject: concept_as_such
+  - predicate: is_distinguished_from
+  - object: merely_determinate_concept_of_understanding
+  - modality: asserted
+  - confidence: 0.97
+  - evidence:
+    - [samyama-greater-subjectivity.tex:1428-1441] understanding commonly taken as faculty of determinate concepts.
+    - [samyama-greater-subjectivity.tex:1451-1454] explicit distinction: understanding as faculty of concept as such (not abstractly determined).
+
+- c2. id: con-idea-001-c2
+  - subject: formal_judgment_and_formal_syllogism
+  - predicate: are_classified_as
+  - object: understanding_when_abstractly_subsumed
+  - modality: asserted
+  - confidence: 0.93
+  - evidence:
+    - [samyama-greater-subjectivity.tex:1446-1450] judgment/syllogism as formal are treated as understanding under abstract determinateness.
+
+Relations: (Relation)
+
+- r1. type: transitions_to
+  - targetEntryId: con-idea-002
+  - note: opening distinction transitions into explicit triadic moments of the universal concept.
+  - sourceClaimIds: [`con-idea-001-c1`, `con-idea-001-c2`]
+  - sourceKeyPointIds: [`k1`, `k2`, `k3`]
+  - targetClaimIds: [`con-idea-002-c1`]
+  - logicalOperator: sequential_transition
+  - analysisMode: first_order_claim_projection
+
+Review outcome:
+
+- review_pending
+- notes: chapter opening fixed as Concept-as-such baseline.
+
+### Entry con-idea-002 — Universal concept as triadic totality (U/P/S)
+
+Span:
+
+- sourceFile: `src/compiler/concept/subject/sources/samyama-greater-subjectivity.tex`
+- lineStart: 1456
+- lineEnd: 1466
+
+Summary:
+
+The universal concept is explicitly articulated as universality, particularity, and singularity, with each moment carrying whole-concept status.
+
+Key points: (KeyPoint)
+
+- k1. The universal concept contains three moments: universality, particularity, singularity.
+- k2. Positedness names the sides generated by conceptual self-distinguishing.
+- k3. Each moment is both whole concept and determinate concept.
+
+Claims: (Claim)
+
+- c1. id: con-idea-002-c1
+  - subject: universal_concept
+  - predicate: contains
+  - object: universality_particularity_singularity_as_three_moments
+  - modality: asserted
+  - confidence: 0.98
+  - evidence:
+    - [samyama-greater-subjectivity.tex:1456-1458] explicit triadic statement of moments.
+
+- c2. id: con-idea-002-c2
+  - subject: conceptual_positedness
+  - predicate: entails
+  - object: each_moment_as_total_and_determinate_concept
+  - modality: asserted
+  - confidence: 0.96
+  - evidence:
+    - [samyama-greater-subjectivity.tex:1459-1466] positedness and each moment as whole concept + determinate concept.
+
+Relations: (Relation)
+
+- r1. type: refines
+  - targetEntryId: con-idea-001
+  - note: specifies what concept-as-such contains internally once abstract reduction is refused.
+  - sourceClaimIds: [`con-idea-002-c1`, `con-idea-002-c2`]
+  - sourceKeyPointIds: [`k1`, `k2`, `k3`]
+  - targetClaimIds: [`con-idea-001-c1`]
+  - logicalOperator: implicative_support
+  - analysisMode: first_order_claim_projection
+
+- r2. type: transitions_to
+  - targetEntryId: con-idea-003
+  - note: triadic statement transitions into ordered exposition (first universal, second particular, third singular).
+  - sourceClaimIds: [`con-idea-002-c1`]
+  - sourceKeyPointIds: [`k1`, `k3`]
+  - targetClaimIds: [`con-idea-003-c1`]
+  - logicalOperator: sequential_transition
+  - analysisMode: first_order_claim_projection
+
+Review outcome:
+
+- review_pending
+- notes: triadic core fixed as Chapter 1 concept-as-such center.
+
+### Entry con-idea-003 — Ordered self-determination: first universal, second particular, third singular
+
+Span:
+
+- sourceFile: `src/compiler/concept/subject/sources/samyama-greater-subjectivity.tex`
+- lineStart: 1468
+- lineEnd: 1492
+
+Summary:
+
+Chapter 1 orders the concept's moments as universal, then particular, then singular as reflective return into absolute negativity.
+
+Key points: (KeyPoint)
+
+- k1. The first moment is pure universality, yet already a determinate position among moments.
+- k2. The second moment posits particularity as determinate distinctness.
+- k3. The third moment is singularity as reflection out of difference into absolute negativity.
+
+Claims: (Claim)
+
+- c1. id: con-idea-003-c1
+  - subject: concept_moment_order
+  - predicate: proceeds_as
+  - object: universal_then_particular_then_singular
+  - modality: asserted
+  - confidence: 0.97
+  - evidence:
+    - [samyama-greater-subjectivity.tex:1468-1487] first universal, second particular.
+    - [samyama-greater-subjectivity.tex:1489-1492] third singularity as reflective return into absolute negativity.
+
+- c2. id: con-idea-003-c2
+  - subject: universal_moment
+  - predicate: is_determined_as
+  - object: self_identical_totality_that_self_distinguishes
+  - modality: asserted
+  - confidence: 0.93
+  - evidence:
+    - [samyama-greater-subjectivity.tex:1468-1483] universal moment as pure self-reference that determines/distinguishes itself against distinct moments.
+
+Relations: (Relation)
+
+- r1. type: supports
+  - targetEntryId: con-idea-002
+  - note: ordered exposition operationalizes the triadic structure stated in entry-002.
+  - sourceClaimIds: [`con-idea-003-c1`, `con-idea-003-c2`]
+  - sourceKeyPointIds: [`k1`, `k2`, `k3`]
+  - targetClaimIds: [`con-idea-002-c1`]
+  - logicalOperator: implicative_support
+  - analysisMode: first_order_claim_projection
+
+- r2. type: transitions_to
+  - targetEntryId: con-idea-004
+  - note: third moment (singularity) transitions directly to the boundary clause that opens judgment.
+  - sourceClaimIds: [`con-idea-003-c1`]
+  - sourceKeyPointIds: [`k1`, `k3`]
+  - targetClaimIds: [`con-idea-004-c1`]
+  - logicalOperator: sequential_transition
+  - analysisMode: first_order_claim_projection
+
+Review outcome:
+
+- review_pending
+- notes: ordered Chapter 1 movement fixed for concept-as-such pass.
+
+### Entry con-idea-004 — Transition gate: singularity becomes judgment
+
+Span:
+
+- sourceFile: `src/compiler/concept/subject/sources/samyama-greater-subjectivity.tex`
+- lineStart: 1493
+- lineEnd: 1494
+
+Summary:
+
+The third moment concludes with singularity stepping into otherness and becoming judgment.
+
+Key points: (KeyPoint)
+
+- k1. The third moment is singularity as reflective return into negativity.
+- k2. This singularity steps out of identity into otherness.
+- k3. The immediate consequence is becoming judgment.
+
+Claims: (Claim)
+
+- c1. id: con-idea-004-c1
+  - subject: singularity_moment
+  - predicate: is_posited_as
+  - object: transition_into_judgment
+  - modality: asserted
+  - confidence: 0.96
+  - evidence:
+    - [samyama-greater-subjectivity.tex:1493-1494] singularity stepping into otherness becomes judgment.
+
+Relations: (Relation)
+
+- r1. type: transitions_to
+  - targetEntryId: sub-idea-judgment-001
+  - note: closes Chapter 1 by marking the explicit transition boundary into the Subject-IDEA judgment track.
+  - sourceClaimIds: [`con-idea-004-c1`]
+  - sourceKeyPointIds: [`k1`, `k2`, `k3`]
+  - targetClaimIds: [`sub-idea-judgment-001-c1`]
+  - logicalOperator: sequential_transition
+  - analysisMode: first_order_claim_projection
+
+Review outcome:
+
+- review_pending
+- notes: boundary claim kept minimal to match explicit Chapter 1 wording.
+
+### Entry con-idea-007 — DIVISION topic: First / Second / Third model
+
+Span:
+
+- sourceFile: `src/compiler/concept/subject/sources/samyama-greater-subjectivity.tex`
+- lineStart: 1378
+- lineEnd: 1423
+
+Summary:
+
+The DIVISION movement is modeled as a three-step development (First, Second, Third) of concept subjectivity into judgment, inference, and objective transition.
+
+Key points: (KeyPoint)
+
+- k1. First: immediate formal concept with simple reflective-shine difference.
+- k2. Second: absolute negativity divides concept and posits judgment.
+- k3. Third: dialectical movement of judgment yields syllogistic inference and transition toward objectivity.
+
+Claims: (Claim)
+
+- c1. id: con-idea-007-c1
+  - subject: division_first
+  - predicate: determines
+  - object: immediate_formal_concept_with_simple_difference
+  - modality: asserted
+  - confidence: 0.95
+  - evidence:
+    - [samyama-greater-subjectivity.tex:1378-1387] immediate formal concept; difference as simple reflective shine.
+
+- c2. id: con-idea-007-c2
+  - subject: division_second
+  - predicate: determines
+  - object: concept_self_division_and_judgment_positing
+  - modality: asserted
+  - confidence: 0.96
+  - evidence:
+    - [samyama-greater-subjectivity.tex:1389-1401] second moment divides/posits concept; concept is judgment.
+
+- c3. id: con-idea-007-c3
+  - subject: division_third
+  - predicate: determines
+  - object: judgment_to_syllogistic_inference_and_objective_transition
+  - modality: asserted
+  - confidence: 0.94
+  - evidence:
+    - [samyama-greater-subjectivity.tex:1403-1423] third moment: judgment movement to inference and passage toward objectivity.
+
+Relations: (Relation)
+
+- r1. type: refines
+  - targetEntryId: con-idea-004
+  - note: gives explicit First/Second/Third architecture for the judgment boundary used in Chapter 1 handoff.
+  - sourceClaimIds: [`con-idea-007-c1`, `con-idea-007-c2`, `con-idea-007-c3`]
+  - sourceKeyPointIds: [`k1`, `k2`, `k3`]
+  - targetClaimIds: [`con-idea-004-c1`]
+  - logicalOperator: constrained_refinement
+  - analysisMode: first_order_claim_projection
+
+- r2. type: supports
+  - targetEntryId: con-idea-003
+  - note: triadic Division model supports triadic Chapter 1 movement reading.
+  - sourceClaimIds: [`con-idea-007-c1`, `con-idea-007-c2`, `con-idea-007-c3`]
+  - sourceKeyPointIds: [`k1`, `k2`, `k3`]
+  - targetClaimIds: [`con-idea-003-c1`]
+  - logicalOperator: implicative_support
+  - analysisMode: first_order_claim_projection
+
+Review outcome:
+
+- review_pending
+- notes: DIVISION encoded as explicit First/Second/Third claim model for KG extraction.
