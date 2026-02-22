@@ -36,343 +36,1000 @@ Authority: original source text only
 - claims: (Claim) 1-3 minimum, with evidence
 - relations: (Relation) typed only (`supports|contrasts|negates|sublates|presupposes|refines|transitions_to`), using labeled bullets (`r1`, `r2`, ...)
 
-## Session: 2026-02-22 (seed pass)
+## Session: 2026-02-22 (deep pass)
 
 Scope:
 
 - files: `something-and-other.txt`, `constitution.txt`, `finitude.txt`
 - fixed range: full files
-- pass policy: lock 1 marker + up to 3 numbered entries only
+- pass policy: lock marker, then triadic species decomposition with nested triads where the source marks internal `(a)/(b)/(c)`
 
 Decision:
 
-- Seven-source artifact is normalized here into one logical Part B workbook.
-- Two-level IDs:
-  - Level 1 marker: `exi-b`
-  - Level 2 numbered entries: `exi-b-<nnn>`
-- Keep transitions explicit (`something/other -> constitution/limit -> finitude`).
+- Part B uses species-first IDs aligned to explicit source markers.
+- Top species in Part B: `b-a`, `b-b`, `b-c`.
+- Nested species under `b-c` (explicit in `finitude.txt`): `b-c-a`, `b-c-b`, `b-c-c`.
+- Numbered entries use suffix `-001..003` per species triad.
+- Numbered subentries are analytic segmentations, not additional source-labeled species.
+- Keep transitions explicit (`something/other -> determination/constitution/limit -> finitude -> infinite`).
 
-### Entry exi-b — Marker `B`: Finitude across three bounded source segments
+### Entry exi-b — Marker `B`: Finitude as triadic species matrix
 
 Span:
 
 - sourceFile: `src/compiler/being/quality/existence/sources/something-and-other.txt`
 - lineStart: 2
-- lineEnd: 329
+- lineEnd: 19
 
 Summary:
 
-Part B is developed through three bounded movements: something/other, determination-constitution-limit, and finitude proper.
+Part B is organized as three explicit species (`a`, `b`, `c`), where `c` itself unfolds again as a triad.
 
 Key points: (KeyPoint)
 
-- k1. The first movement establishes the dialectic of something and other.
-- k2. The second movement internalizes otherness as determination/constitution/limit.
-- k3. The third movement develops finite contradiction into transition toward the infinite.
+- k1. `a` establishes something/other.
+- k2. `b` develops determination/constitution/limit.
+- k3. `c` determines finitude and transitions to infinity through its own internal triad.
 
 Claims: (Claim)
 
 - c1. id: exi-b-c1
-  - subject: finitude_part_b
-  - predicate: begins_with
-  - object: something_and_other
+  - subject: part_b
+  - predicate: has_species
+  - object: b_a_b_b_b_c
   - modality: asserted
-  - confidence: 0.97
+  - confidence: 0.98
   - evidence:
-    - [4-9] explicit `(a) Something and other` opening movement.
-
-- c2. id: exi-b-c2
-  - subject: finitude_part_b
-  - predicate: develops_through
-  - object: determination_constitution_limit
-  - modality: asserted
-  - confidence: 0.97
-  - evidence:
-    - [11-16] explicit `(b)` movement toward constitution and limit.
-
-- c3. id: exi-b-c3
-  - subject: finitude_part_b
-  - predicate: culminates_in
-  - object: finite_as_immanent_determination
-  - modality: asserted
-  - confidence: 0.97
-  - evidence:
-    - [18-19] explicit `(c)` closure: something thus is finite.
+    - [4-19] explicit `(a)`, `(b)`, `(c)` framing in Part B opening.
 
 Claim ↔ key point map:
 
-- c1 -> k1
-- c2 -> k2
-- c3 -> k3
+- c1 -> k1, k2, k3
 
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: exi-b-001
-  - note: marker to first bounded text segment (`something-and-other.txt`).
+  - targetEntryId: b-a-001
+  - note: marker to species `a` triad.
   - sourceClaimIds: [`exi-b-c1`]
   - sourceKeyPointIds: [`k1`]
-  - targetClaimIds: [`exi-b-001-c1`]
+  - targetClaimIds: [`b-a-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: exi-b-002
-  - note: marker to second bounded text segment (`constitution.txt`).
-  - sourceClaimIds: [`exi-b-c2`]
+  - targetEntryId: b-b-001
+  - note: marker to species `b` triad.
+  - sourceClaimIds: [`exi-b-c1`]
   - sourceKeyPointIds: [`k2`]
-  - targetClaimIds: [`exi-b-002-c1`]
+  - targetClaimIds: [`b-b-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 - r3. type: transitions_to
-  - targetEntryId: exi-b-003
-  - note: marker to third bounded text segment (`finitude.txt`).
-  - sourceClaimIds: [`exi-b-c3`]
+  - targetEntryId: b-c-a
+  - note: marker to species `c` internal triad beginning.
+  - sourceClaimIds: [`exi-b-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`exi-b-003-c1`]
+  - targetClaimIds: [`b-c-a-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: aligns exactly with requested three-text analysis structure.
+- notes: matrix framing locked.
 
-### Entry exi-b-001 — `something-and-other.txt`: from indifferent otherness to being-in-itself/being-for-other identity
+### Entry b-a-001 — `a. Something and other` I: indifferent reversibility
 
 Span:
 
 - sourceFile: `src/compiler/being/quality/existence/sources/something-and-other.txt`
 - lineStart: 32
-- lineEnd: 329
+- lineEnd: 90
 
 Summary:
 
-The first segment develops something and other from external indifference into internally connected moments of being-in-itself and being-for-other, with limit emerging as immanent determinateness.
+Something and other first appear as reversible and indifferent designations.
 
 Key points: (KeyPoint)
 
-- k1. Something and other are mutually reversible and initially indifferent.
-- k2. Being-in-itself and being-for-other are moments of one unity, not isolated terms.
-- k3. Limit emerges as immanent negation that both joins and separates somethings.
+- k1. Each something is equally an other.
+- k2. Naming priority is external and subjective.
+- k3. Initial sameness/difference remains reflection-external.
 
 Claims: (Claim)
 
-- c1. id: exi-b-001-c1
+- c1. id: b-a-001-c1
   - subject: something_and_other
-  - predicate: are_determined_as
-  - object: reciprocal_and_indifferent_others
+  - predicate: are
+  - object: reciprocally_indifferent_designations
   - modality: asserted
   - confidence: 0.95
   - evidence:
-    - [34-46] each is equally other; ordering is indifferent.
-    - [81-89] sameness/difference initially falls within external reflection.
-
-- c2. id: exi-b-001-c2
-  - subject: something
-  - predicate: contains
-  - object: unity_of_being_in_itself_and_being_for_other
-  - modality: asserted
-  - confidence: 0.96
-  - evidence:
-    - [147-160] being-for-other and being-in-itself posited as moments of one unity.
-    - [199-216] identity of both moments in one and the same something.
-
-- c3. id: exi-b-001-c3
-  - subject: limit
-  - predicate: is_determined_as
-  - object: immanent_negation_joining_and_separating_somethings
-  - modality: asserted
-  - confidence: 0.95
-  - evidence:
-    - [219-227] determinateness as limit.
-    - [258-285] limit as mediation in which each something both is and is not.
+    - [34-46] each is equally other and naming order is indifferent.
+    - [81-90] sameness/difference initially belongs to reflection.
 
 Claim ↔ key point map:
 
-- c1 -> k1
-- c2 -> k2
-- c3 -> k3
+- c1 -> k1, k2, k3
 
 Relations: (Relation)
 
-- r1. type: refines
-  - targetEntryId: exi-a-003
-  - note: specifies the `something` reached at Part A closure by unfolding its relation to otherness.
-  - sourceClaimIds: [`exi-b-001-c2`]
-  - sourceKeyPointIds: [`k2`]
-  - targetClaimIds: [`exi-a-003-c3`]
-  - logicalOperator: presuppositional_link
-  - analysisMode: first_order_claim_projection
-
-- r2. type: transitions_to
-  - targetEntryId: exi-b-002
-  - note: limit/otherness dialectic is further developed as determination-constitution-limit.
-  - sourceClaimIds: [`exi-b-001-c3`]
+- r1. type: transitions_to
+  - targetEntryId: b-a-002
+  - note: moves to being-for-other / being-in-itself articulation.
+  - sourceClaimIds: [`b-a-001-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`exi-b-002-c1`]
+  - targetClaimIds: [`b-a-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: dense segment compressed into three anchor claims without micro-fragmentation.
+- notes: species `b-a`, moment 1.
 
-### Entry exi-b-002 — `constitution.txt`: determination/constitution reciprocity and immanent limit
+### Entry b-a-002 — `a. Something and other` II: being-for-other / being-in-itself unity
+
+Span:
+
+- sourceFile: `src/compiler/being/quality/existence/sources/something-and-other.txt`
+- lineStart: 131
+- lineEnd: 208
+
+Summary:
+
+The truth of something/other is a unity of being-for-other and being-in-itself within one something.
+
+Key points: (KeyPoint)
+
+- k1. Something preserves itself in non-being as being-for-other.
+- k2. Being-for-other and being-in-itself are moments of one unity.
+- k3. Each moment contains the other.
+
+Claims: (Claim)
+
+- c1. id: b-a-002-c1
+  - subject: something
+  - predicate: contains
+  - object: unity_of_being_for_other_and_being_in_itself
+  - modality: asserted
+  - confidence: 0.96
+  - evidence:
+    - [147-160] both moments are determinations of one and the same unity.
+    - [185-198] each moment points to and contains the other.
+
+Claim ↔ key point map:
+
+- c1 -> k1, k2, k3
+
+Relations: (Relation)
+
+- r1. type: refines
+  - targetEntryId: a-c-003
+  - note: unfolds the `something` reached in Part A into explicit dual moments.
+  - sourceClaimIds: [`b-a-002-c1`]
+  - sourceKeyPointIds: [`k2`]
+  - targetClaimIds: [`a-c-003-c1`]
+  - logicalOperator: presuppositional_link
+  - analysisMode: first_order_claim_projection
+
+- r2. type: transitions_to
+  - targetEntryId: b-a-003
+  - note: advances to identity and concept-level cognizability of in-itself.
+  - sourceClaimIds: [`b-a-002-c1`]
+  - sourceKeyPointIds: [`k3`]
+  - targetClaimIds: [`b-a-003-c1`]
+  - logicalOperator: sequential_transition
+  - analysisMode: first_order_claim_projection
+
+Review outcome:
+
+- review_pending
+- notes: species `b-a`, moment 2.
+
+### Entry b-a-003 — `a. Something and other` III: identity claim and preparation for determination
+
+Span:
+
+- sourceFile: `src/compiler/being/quality/existence/sources/something-and-other.txt`
+- lineStart: 209
+- lineEnd: 329
+
+Summary:
+
+The in-itself is clarified against empty abstraction and reintegrated as determinateness reflected into the something.
+
+Key points: (KeyPoint)
+
+- k1. Thing-in-itself as indeterminate abstraction is void.
+- k2. True in-itself is concrete conceptually knowable content.
+- k3. Reflected determinateness reappears as quality (determination).
+
+Claims: (Claim)
+
+- c1. id: b-a-003-c1
+  - subject: true_in_itself
+  - predicate: is
+  - object: concrete_conceptual_determinateness_not_empty_abstraction
+  - modality: asserted
+  - confidence: 0.95
+  - evidence:
+    - [241-272] critique of empty thing-in-itself abstraction.
+    - [326-329] determinateness reflected into itself is again quality.
+
+Claim ↔ key point map:
+
+- c1 -> k1, k2, k3
+
+Relations: (Relation)
+
+- r1. type: transitions_to
+  - targetEntryId: b-b-001
+  - note: reflected determinateness opens species `b` (determination/constitution/limit).
+  - sourceClaimIds: [`b-a-003-c1`]
+  - sourceKeyPointIds: [`k3`]
+  - targetClaimIds: [`b-b-001-c1`]
+  - logicalOperator: sequential_transition
+  - analysisMode: first_order_claim_projection
+
+Review outcome:
+
+- review_pending
+- notes: species `b-a`, moment 3.
+
+### Entry b-b-001 — `b. Determination/constitution/limit` I: determination as affirmative in-itself
 
 Span:
 
 - sourceFile: `src/compiler/being/quality/existence/sources/constitution.txt`
 - lineStart: 2
-- lineEnd: 410
+- lineEnd: 79
 
 Summary:
 
-The second segment shows determination and constitution as distinct yet reciprocal moments whose transition into one another yields immanent limit as the negative unity of something and other.
+Determination is the affirmative in-itself by which something preserves self-equality in relation to other.
 
 Key points: (KeyPoint)
 
-- k1. Determination is affirmative in-itselfness present in the something.
-- k2. Constitution is determinateness as externally conditioned being-for-other.
-- k3. Their reciprocal passage produces immanent negation and limit.
+- k1. In-itself is mediated through being-for-other.
+- k2. Determination is affirmative determinateness.
+- k3. Determination implies presence-in-existence of what is in-itself.
 
 Claims: (Claim)
 
-- c1. id: exi-b-002-c1
+- c1. id: b-b-001-c1
   - subject: determination
-  - predicate: is_determined_as
-  - object: affirmative_in_itselfness_present_in_existence
+  - predicate: is
+  - object: affirmative_in_itselfness_preserving_self_equality
   - modality: asserted
   - confidence: 0.95
   - evidence:
-    - [27-53] determination as affirmative determinateness and in-itself present in the something.
-
-- c2. id: exi-b-002-c2
-  - subject: constitution
-  - predicate: is_determined_as
-  - object: externally_conditioned_determinateness_of_something
-  - modality: asserted
-  - confidence: 0.95
-  - evidence:
-    - [80-101] constitution as determinateness distinguished from in-itself and given over to externality.
-    - [103-108] alteration belongs to constitution-side while something preserves itself.
-
-- c3. id: exi-b-002-c3
-  - subject: determination_and_constitution
-  - predicate: pass_over_into
-  - object: immanent_limit_as_negative_unity
-  - modality: asserted
-  - confidence: 0.96
-  - evidence:
-    - [121-123] reciprocal passage of determination and constitution.
-    - [163-179] transition yields two somethings with immanent negation.
-    - [219-227] determinateness as limit.
+    - [27-53] determination as affirmative in-itself preserving itself with other.
+    - [77-79] what something is in itself is also present in it.
 
 Claim ↔ key point map:
 
-- c1 -> k1
-- c2 -> k2
-- c3 -> k3
+- c1 -> k1, k2, k3
 
 Relations: (Relation)
 
-- r1. type: supports
-  - targetEntryId: exi-b-001
-  - note: provides structural grounding for why something/other relation is internally mediated.
-  - sourceClaimIds: [`exi-b-002-c3`]
-  - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`exi-b-001-c3`]
-  - logicalOperator: implicative_support
-  - analysisMode: first_order_claim_projection
-
-- r2. type: transitions_to
-  - targetEntryId: exi-b-003
-  - note: immanent limit develops into explicit finitude contradiction and transition.
-  - sourceClaimIds: [`exi-b-002-c3`]
-  - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`exi-b-003-c1`]
+- r1. type: transitions_to
+  - targetEntryId: b-b-002
+  - note: determination is opposed by constitution as externality.
+  - sourceClaimIds: [`b-b-001-c1`]
+  - sourceKeyPointIds: [`k2`]
+  - targetClaimIds: [`b-b-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: keeps long segment readable by retaining only core movement claims.
+- notes: species `b-b`, moment 1.
 
-### Entry exi-b-003 — `finitude.txt`: finite contradiction, ought/restriction, and transition to infinite
+### Entry b-b-002 — `b. Determination/constitution/limit` II: constitution and reciprocal passage
+
+Span:
+
+- sourceFile: `src/compiler/being/quality/existence/sources/constitution.txt`
+- lineStart: 80
+- lineEnd: 179
+
+Summary:
+
+Constitution is determinateness as being-for-other, yet it reciprocally passes into determination.
+
+Key points: (KeyPoint)
+
+- k1. Constitution is externalized determinateness.
+- k2. Alteration first falls on constitution.
+- k3. Determination and constitution pass into each other.
+
+Claims: (Claim)
+
+- c1. id: b-b-002-c1
+  - subject: constitution
+  - predicate: is
+  - object: externally_conditioned_determinateness_reciprocal_with_determination
+  - modality: asserted
+  - confidence: 0.95
+  - evidence:
+    - [80-108] constitution as external determinateness and side of alteration.
+    - [121-156] reciprocal passage between determination and constitution.
+
+Claim ↔ key point map:
+
+- c1 -> k1, k2, k3
+
+Relations: (Relation)
+
+- r1. type: transitions_to
+  - targetEntryId: b-b-003
+  - note: reciprocal passage culminates in immanent limit.
+  - sourceClaimIds: [`b-b-002-c1`]
+  - sourceKeyPointIds: [`k3`]
+  - targetClaimIds: [`b-b-003-c1`]
+  - logicalOperator: sequential_transition
+  - analysisMode: first_order_claim_projection
+
+Review outcome:
+
+- review_pending
+- notes: species `b-b`, moment 2.
+
+### Entry b-b-003 — `b. Determination/constitution/limit` III: limit as immanent contradiction
+
+Span:
+
+- sourceFile: `src/compiler/being/quality/existence/sources/constitution.txt`
+- lineStart: 180
+- lineEnd: 410
+
+Summary:
+
+Limit appears as immanent negation that both joins and separates somethings, pushing them beyond themselves.
+
+Key points: (KeyPoint)
+
+- k1. Limit is one determinateness of both somethings.
+- k2. Limit mediates each something as both being and non-being.
+- k3. Immanent contradiction in limit drives transition toward finitude.
+
+Claims: (Claim)
+
+- c1. id: b-b-003-c1
+  - subject: limit
+  - predicate: is_determined_as
+  - object: immanent_negation_joining_separating_and_propelling_something
+  - modality: asserted
+  - confidence: 0.96
+  - evidence:
+    - [219-227] determinateness named as limit.
+    - [258-321] limit mediates both being and non-being of somethings.
+    - [401-410] something with immanent limit is directed beyond itself: finite.
+
+Claim ↔ key point map:
+
+- c1 -> k1, k2, k3
+
+Relations: (Relation)
+
+- r1. type: transitions_to
+  - targetEntryId: b-c-a
+  - note: immanent limit opens finitude as explicit species `c`.
+  - sourceClaimIds: [`b-b-003-c1`]
+  - sourceKeyPointIds: [`k3`]
+  - targetClaimIds: [`b-c-a-c1`]
+  - logicalOperator: sequential_transition
+  - analysisMode: first_order_claim_projection
+
+Review outcome:
+
+- review_pending
+- notes: species `b-b`, moment 3.
+
+### Entry b-c-a — Species `c(a)`: Immediacy of finitude
+
+Span:
+
+- sourceFile: `src/compiler/being/quality/existence/sources/finitude.txt`
+- lineStart: 39
+- lineEnd: 139
+
+Summary:
+
+Species `c(a)` develops immediacy of finitude as fixed negation that collapses internally.
+
+Key points: (KeyPoint)
+
+- k1. Finitude is posed as qualitative extremity of negation.
+- k2. Understanding fixes finite against infinite.
+- k3. This fixation collapses as contradiction.
+
+Claims: (Claim)
+
+- c1. id: b-c-a-c1
+  - subject: species_c_a
+  - predicate: unfolds_as
+  - object: immediacy_of_finitude_to_internal_collapse
+  - modality: asserted
+  - confidence: 0.95
+  - evidence:
+    - [39-71] fixed negation character of finitude.
+    - [124-139] contradiction and collapse of finite.
+
+Claim ↔ key point map:
+
+- c1 -> k1, k2, k3
+
+Relations: (Relation)
+
+- r1. type: transitions_to
+  - targetEntryId: b-c-a-001
+  - note: opens first moment of species `c(a)` triad.
+  - sourceClaimIds: [`b-c-a-c1`]
+  - sourceKeyPointIds: [`k1`]
+  - targetClaimIds: [`b-c-a-001-c1`]
+  - logicalOperator: sequential_transition
+  - analysisMode: first_order_claim_projection
+
+Review outcome:
+
+- review_pending
+- notes: nested species marker for `b-c-a`.
+
+### Entry b-c-a-001 — `c(a). Immediacy of finitude` I: non-being as finite nature
 
 Span:
 
 - sourceFile: `src/compiler/being/quality/existence/sources/finitude.txt`
 - lineStart: 2
-- lineEnd: 310
+- lineEnd: 37
 
 Summary:
 
-The third segment determines finitude as immanent non-being of the finite, develops restriction and ought as inseparable moments, and culminates in the finite's self-sublation into the infinite.
+Finitude begins where non-being is internal to finite being itself.
 
 Key points: (KeyPoint)
 
-- k1. Finitude means non-being belongs to the finite's own nature.
-- k2. Restriction and ought are mutually implicated moments of finite determination.
-- k3. Finite contradiction drives self-sublation and transition into the infinite.
+- k1. Finite things are delimited by their quality as limit.
+- k2. Non-being constitutes finite nature.
+- k3. Perishing is immanent, not merely possible.
 
 Claims: (Claim)
 
-- c1. id: exi-b-003-c1
+- c1. id: b-c-a-001-c1
   - subject: finite
-  - predicate: is_determined_as
-  - object: being_whose_nature_includes_non_being_and_perishing
+  - predicate: has_nature
+  - object: immanent_non_being_and_necessary_perishing
   - modality: asserted
   - confidence: 0.97
   - evidence:
     - [15-22] non-being constitutes finite nature.
-    - [27-37] finite being has end/perishing as immanent determination.
-
-- c2. id: exi-b-003-c2
-  - subject: finite_structure
-  - predicate: includes
-  - object: restriction_and_ought_as_inseparable_moments
-  - modality: asserted
-  - confidence: 0.95
-  - evidence:
-    - [179-189] restriction yields ought.
-    - [211-217] ought and restriction both moments of finite.
-    - [260-266] both are indivisible in finite determination.
-
-- c3. id: exi-b-003-c3
-  - subject: finite_contradiction
-  - predicate: transitions_to
-  - object: infinite_as_negation_of_negation
-  - modality: asserted
-  - confidence: 0.97
-  - evidence:
-    - [277-283] finite as contradiction sublates itself and ceases.
-    - [306-310] identity with itself as negation of negation is the infinite.
+    - [30-37] perishing is immanent in finite being.
 
 Claim ↔ key point map:
 
-- c1 -> k1
-- c2 -> k2
-- c3 -> k3
+- c1 -> k1, k2, k3
+
+Relations: (Relation)
+
+- r1. type: transitions_to
+  - targetEntryId: b-c-a-002
+  - note: immediacy unfolds as understanding's fixation of finitude.
+  - sourceClaimIds: [`b-c-a-001-c1`]
+  - sourceKeyPointIds: [`k3`]
+  - targetClaimIds: [`b-c-a-002-c1`]
+  - logicalOperator: sequential_transition
+  - analysisMode: first_order_claim_projection
+
+Review outcome:
+
+- review_pending
+- notes: species `b-c-a`, moment 1.
+
+### Entry b-c-a-002 — `c(a). Immediacy of finitude` II: obstinacy of finite understanding
+
+Span:
+
+- sourceFile: `src/compiler/being/quality/existence/sources/finitude.txt`
+- lineStart: 39
+- lineEnd: 110
+
+Summary:
+
+Understanding absolutizes finitude by fixing negation against affirmation.
+
+Key points: (KeyPoint)
+
+- k1. Finitude appears as obstinate category of understanding.
+- k2. Understanding posits finite as irreconcilable with infinite.
+- k3. This stance implicitly contradicts itself.
+
+Claims: (Claim)
+
+- c1. id: b-c-a-002-c1
+  - subject: understanding_of_finitude
+  - predicate: absolutizes
+  - object: finite_as_fixed_negation_against_infinite
+  - modality: asserted
+  - confidence: 0.95
+  - evidence:
+    - [49-71] finitude as obstinate fixed negation.
+    - [93-110] finite held in absolute opposition to infinite.
+
+Claim ↔ key point map:
+
+- c1 -> k1, k2, k3
+
+Relations: (Relation)
+
+- r1. type: transitions_to
+  - targetEntryId: b-c-a-003
+  - note: contradiction is made explicit in collapse of finite.
+  - sourceClaimIds: [`b-c-a-002-c1`]
+  - sourceKeyPointIds: [`k3`]
+  - targetClaimIds: [`b-c-a-003-c1`]
+  - logicalOperator: sequential_transition
+  - analysisMode: first_order_claim_projection
+
+Review outcome:
+
+- review_pending
+- notes: species `b-c-a`, moment 2.
+
+### Entry b-c-a-003 — `c(a). Immediacy of finitude` III: perishing of perishing
+
+Span:
+
+- sourceFile: `src/compiler/being/quality/existence/sources/finitude.txt`
+- lineStart: 111
+- lineEnd: 139
+
+Summary:
+
+Finite contradiction is announced as self-collapse in which even perishing perishes.
+
+Key points: (KeyPoint)
+
+- k1. Contradiction appears in finite itself, not only subjectively.
+- k2. Finite collapses internally as contradiction.
+- k3. Perishing is not last; perishing itself perishes.
+
+Claims: (Claim)
+
+- c1. id: b-c-a-003-c1
+  - subject: development_of_finite
+  - predicate: shows
+  - object: collapse_of_finite_and_perishing_of_perishing
+  - modality: asserted
+  - confidence: 0.95
+  - evidence:
+    - [124-133] finite in perpetual opposition is contradiction to be made conscious.
+    - [134-139] finite collapses and perishing is not the last.
+
+Claim ↔ key point map:
+
+- c1 -> k1, k2, k3
+
+Relations: (Relation)
+
+- r1. type: transitions_to
+  - targetEntryId: b-c-b
+  - note: explicit contradiction leads to restriction/ought structure.
+  - sourceClaimIds: [`b-c-a-003-c1`]
+  - sourceKeyPointIds: [`k2`]
+  - targetClaimIds: [`b-c-b-c1`]
+  - logicalOperator: sequential_transition
+  - analysisMode: first_order_claim_projection
+
+Review outcome:
+
+- review_pending
+- notes: species `b-c-a`, moment 3.
+
+### Entry b-c-b — Species `c(b)`: Restriction and ought
+
+Span:
+
+- sourceFile: `src/compiler/being/quality/existence/sources/finitude.txt`
+- lineStart: 141
+- lineEnd: 286
+
+Summary:
+
+Species `c(b)` develops the finite as identity of restriction and ought.
+
+Key points: (KeyPoint)
+
+- k1. Finite contains restriction as immanent limit.
+- k2. Ought is double-determined and restricted.
+- k3. Restriction and ought are identical moments.
+
+Claims: (Claim)
+
+- c1. id: b-c-b-c1
+  - subject: species_c_b
+  - predicate: unfolds_as
+  - object: identity_of_restriction_and_ought
+  - modality: asserted
+  - confidence: 0.95
+  - evidence:
+    - [199-217] emergence of ought from restriction.
+    - [269-286] identity and indivisibility of ought/restriction.
+
+Claim ↔ key point map:
+
+- c1 -> k1, k2, k3
+
+Relations: (Relation)
+
+- r1. type: transitions_to
+  - targetEntryId: b-c-b-001
+  - note: opens first moment of species `c(b)` triad.
+  - sourceClaimIds: [`b-c-b-c1`]
+  - sourceKeyPointIds: [`k1`]
+  - targetClaimIds: [`b-c-b-001-c1`]
+  - logicalOperator: sequential_transition
+  - analysisMode: first_order_claim_projection
+
+Review outcome:
+
+- review_pending
+- notes: nested species marker for `b-c-b`.
+
+### Entry b-c-b-001 — `c(b). Restriction and ought` I: finite concept as two-sided
+
+Span:
+
+- sourceFile: `src/compiler/being/quality/existence/sources/finitude.txt`
+- lineStart: 141
+- lineEnd: 198
+
+Summary:
+
+The finite concept is unpacked as internal two-sidedness of in-itself and otherness under limit.
+
+Key points: (KeyPoint)
+
+- k1. Finite something is reflected in-itself with immanent limit.
+- k2. Otherness is both inward and distinguished externality.
+- k3. Restriction arises as essential negative self-reference.
+
+Claims: (Claim)
+
+- c1. id: b-c-b-001-c1
+  - subject: finite_concept
+  - predicate: includes
+  - object: immanent_limit_and_two_sided_otherness
+  - modality: asserted
+  - confidence: 0.95
+  - evidence:
+    - [145-158] finite as reflected being-in-itself with limit.
+    - [163-189] otherness both inward and distinguished.
+    - [194-198] own limit becomes restriction.
+
+Claim ↔ key point map:
+
+- c1 -> k1, k2, k3
+
+Relations: (Relation)
+
+- r1. type: transitions_to
+  - targetEntryId: b-c-b-002
+  - note: restriction posits the ought.
+  - sourceClaimIds: [`b-c-b-001-c1`]
+  - sourceKeyPointIds: [`k3`]
+  - targetClaimIds: [`b-c-b-002-c1`]
+  - logicalOperator: sequential_transition
+  - analysisMode: first_order_claim_projection
+
+Review outcome:
+
+- review_pending
+- notes: species `b-c-b`, moment 1.
+
+### Entry b-c-b-002 — `c(b). Restriction and ought` II: double determination of ought
+
+Span:
+
+- sourceFile: `src/compiler/being/quality/existence/sources/finitude.txt`
+- lineStart: 199
+- lineEnd: 256
+
+Summary:
+
+The ought is the finite's in-itselfness against restriction and simultaneously restricted by it.
+
+Key points: (KeyPoint)
+
+- k1. Ought is negative reference to restriction.
+- k2. Ought has double determination (in-itselfness and non-being).
+- k3. Ought and restriction are inseparable finite moments.
+
+Claims: (Claim)
+
+- c1. id: b-c-b-002-c1
+  - subject: ought
+  - predicate: is_determined_as
+  - object: restricted_in_itself_and_inseparable_from_restriction
+  - modality: asserted
+  - confidence: 0.95
+  - evidence:
+    - [199-217] restriction and ought definitions.
+    - [231-247] both moments are finite and inseparable.
+    - [254-256] what ought to be is and is not.
+
+Claim ↔ key point map:
+
+- c1 -> k1, k2, k3
+
+Relations: (Relation)
+
+- r1. type: transitions_to
+  - targetEntryId: b-c-b-003
+  - note: inseparability is radicalized into identity of restriction and ought.
+  - sourceClaimIds: [`b-c-b-002-c1`]
+  - sourceKeyPointIds: [`k3`]
+  - targetClaimIds: [`b-c-b-003-c1`]
+  - logicalOperator: sequential_transition
+  - analysisMode: first_order_claim_projection
+
+Review outcome:
+
+- review_pending
+- notes: species `b-c-b`, moment 2.
+
+### Entry b-c-b-003 — `c(b). Restriction and ought` III: identity and self-transcendence
+
+Span:
+
+- sourceFile: `src/compiler/being/quality/existence/sources/finitude.txt`
+- lineStart: 257
+- lineEnd: 286
+
+Summary:
+
+Restriction and ought are identical finite moments, and this identity makes finite self-transcendence necessary.
+
+Key points: (KeyPoint)
+
+- k1. Finite determination is also its own restriction.
+- k2. As ought, finite transcends restriction.
+- k3. Restriction and transcendence are indivisible.
+
+Claims: (Claim)
+
+- c1. id: b-c-b-003-c1
+  - subject: finite_determination
+  - predicate: is
+  - object: identity_of_restriction_and_ought_with_self_transcendence
+  - modality: asserted
+  - confidence: 0.95
+  - evidence:
+    - [269-279] restriction is finite's own determination and common identity with ought.
+    - [280-286] as ought finite transcends restriction, but only as restriction.
+
+Claim ↔ key point map:
+
+- c1 -> k1, k2, k3
+
+Relations: (Relation)
+
+- r1. type: transitions_to
+  - targetEntryId: b-c-c
+  - note: identity of moments opens explicit transition of finite into infinite.
+  - sourceClaimIds: [`b-c-b-003-c1`]
+  - sourceKeyPointIds: [`k2`]
+  - targetClaimIds: [`b-c-c-c1`]
+  - logicalOperator: sequential_transition
+  - analysisMode: first_order_claim_projection
+
+Review outcome:
+
+- review_pending
+- notes: species `b-c-b`, moment 3.
+
+### Entry b-c-c — Species `c(c)`: Transition of finite into infinite
+
+Span:
+
+- sourceFile: `src/compiler/being/quality/existence/sources/finitude.txt`
+- lineStart: 288
+- lineEnd: 310
+
+Summary:
+
+Species `c(c)` develops finite contradiction through bad infinity into negation-of-negation as infinite.
+
+Key points: (KeyPoint)
+
+- k1. Finite is contradiction of itself.
+- k2. First result appears as endless progression.
+- k3. Deeper result is affirmative infinite.
+
+Claims: (Claim)
+
+- c1. id: b-c-c-c1
+  - subject: species_c_c
+  - predicate: unfolds_as
+  - object: contradiction_progression_resolution_into_infinite
+  - modality: asserted
+  - confidence: 0.96
+  - evidence:
+    - [288-302] contradiction and first endless progression moment.
+    - [303-310] resolution as negation of negation, infinite.
+
+Claim ↔ key point map:
+
+- c1 -> k1, k2, k3
+
+Relations: (Relation)
+
+- r1. type: transitions_to
+  - targetEntryId: b-c-c-001
+  - note: opens first moment of species `c(c)` triad.
+  - sourceClaimIds: [`b-c-c-c1`]
+  - sourceKeyPointIds: [`k1`]
+  - targetClaimIds: [`b-c-c-001-c1`]
+  - logicalOperator: sequential_transition
+  - analysisMode: first_order_claim_projection
+
+Review outcome:
+
+- review_pending
+- notes: nested species marker for `b-c-c`.
+
+### Entry b-c-c-001 — `c(c). Transition finite->infinite` I: contradiction of finite
+
+Span:
+
+- sourceFile: `src/compiler/being/quality/existence/sources/finitude.txt`
+- lineStart: 288
+- lineEnd: 297
+
+Summary:
+
+Finite contains qualitatively opposed moments and is contradiction of itself.
+
+Key points: (KeyPoint)
+
+- k1. Ought and restriction are opposed negatives.
+- k2. Their unity is finite itself.
+- k3. Finite therefore self-sublates and ceases.
+
+Claims: (Claim)
+
+- c1. id: b-c-c-001-c1
+  - subject: finite
+  - predicate: is
+  - object: self_contradiction_that_sublates_itself
+  - modality: asserted
+  - confidence: 0.96
+  - evidence:
+    - [288-294] finite contains opposed moments.
+    - [295-297] finite sublates itself and ceases.
+
+Claim ↔ key point map:
+
+- c1 -> k1, k2, k3
+
+Relations: (Relation)
+
+- r1. type: transitions_to
+  - targetEntryId: b-c-c-002
+  - note: first result appears as endless passing into another finite.
+  - sourceClaimIds: [`b-c-c-001-c1`]
+  - sourceKeyPointIds: [`k3`]
+  - targetClaimIds: [`b-c-c-002-c1`]
+  - logicalOperator: sequential_transition
+  - analysisMode: first_order_claim_projection
+
+Review outcome:
+
+- review_pending
+- notes: species `b-c-c`, moment 1.
+
+### Entry b-c-c-002 — `c(c). Transition finite->infinite` II: bad infinity moment
+
+Span:
+
+- sourceFile: `src/compiler/being/quality/existence/sources/finitude.txt`
+- lineStart: 298
+- lineEnd: 302
+
+Summary:
+
+At first, finite's cessation appears as progression to another finite and so on.
+
+Key points: (KeyPoint)
+
+- k1. Finite has not yet truly ceased in first result.
+- k2. It becomes another finite.
+- k3. Process appears as indefinite progression.
+
+Claims: (Claim)
+
+- c1. id: b-c-c-002-c1
+  - subject: first_result_of_finite_ceasing
+  - predicate: appears_as
+  - object: endless_transition_to_another_finite
+  - modality: asserted
+  - confidence: 0.94
+  - evidence:
+    - [298-302] finite becomes another finite and so forth to infinity.
+
+Claim ↔ key point map:
+
+- c1 -> k1, k2, k3
+
+Relations: (Relation)
+
+- r1. type: transitions_to
+  - targetEntryId: b-c-c-003
+  - note: deeper result resolves progression into affirmative identity.
+  - sourceClaimIds: [`b-c-c-002-c1`]
+  - sourceKeyPointIds: [`k3`]
+  - targetClaimIds: [`b-c-c-003-c1`]
+  - logicalOperator: sequential_transition
+  - analysisMode: first_order_claim_projection
+
+Review outcome:
+
+- review_pending
+- notes: species `b-c-c`, moment 2.
+
+### Entry b-c-c-003 — `c(c). Transition finite->infinite` III: negation of negation as infinite
+
+Span:
+
+- sourceFile: `src/compiler/being/quality/existence/sources/finitude.txt`
+- lineStart: 303
+- lineEnd: 310
+
+Summary:
+
+Finite rejoined with itself in negation-of-negation is affirmative being: the infinite.
+
+Key points: (KeyPoint)
+
+- k1. In self-negation finite attains being-in-itself.
+- k2. Restriction and ought each rejoin themselves in beyond-themselves.
+- k3. Identity as negation of negation is infinite.
+
+Claims: (Claim)
+
+- c1. id: b-c-c-003-c1
+  - subject: finite_contradiction
+  - predicate: resolves_as
+  - object: infinite_as_affirmative_negation_of_negation
+  - modality: asserted
+  - confidence: 0.97
+  - evidence:
+    - [303-309] finite rejoins itself through negation of negation.
+    - [310-310] this other is the infinite.
+
+Claim ↔ key point map:
+
+- c1 -> k1, k2, k3
 
 Relations: (Relation)
 
 - r1. type: supports
   - targetEntryId: exi-b
-  - note: third movement confirms Part B culmination in explicit finitude determination.
-  - sourceClaimIds: [`exi-b-003-c1`, `exi-b-003-c3`]
-  - sourceKeyPointIds: [`k1`, `k3`]
-  - targetClaimIds: [`exi-b-c3`]
+  - note: confirms Part B culmination as finite contradiction resolving into infinite transition.
+  - sourceClaimIds: [`b-c-c-003-c1`]
+  - sourceKeyPointIds: [`k3`]
+  - targetClaimIds: [`exi-b-c1`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
   - targetEntryId: exi-c
-  - note: finite's self-sublation opens Part C (`Infinity`).
-  - sourceClaimIds: [`exi-b-003-c3`]
+  - note: finite's resolved contradiction opens Part C (`Infinity`).
+  - sourceClaimIds: [`b-c-c-003-c1`]
   - sourceKeyPointIds: [`k3`]
   - targetClaimIds: []
   - logicalOperator: sequential_transition
@@ -381,4 +1038,4 @@ Relations: (Relation)
 Review outcome:
 
 - review_pending
-- notes: completes the requested three-text Part B extraction at bounded density.
+- notes: species `b-c-c`, moment 3 and Part C handoff.

@@ -49,10 +49,11 @@ Decision:
 - Adopt two-level IDs for this part:
   - Level 1 marker: `bei-b`
   - Level 2 numbered entries: `bei-b-<nnn>`
-- Apply short-section exception if needed; avoid artificial subdivision.
+- Numbered subentries are analytic segmentations, not additional source-labeled species.
+- Prefer one-claim subentries over claim-packed entries.
 - Keep transition handoff explicit to Part C (`bei-c-001`) when evidence supports it.
 
-### Entry bei-b-001 — Pure nothing as empty self-equality and equivalence with pure being
+### Entry bei-b — Marker `B`: Pure Nothing
 
 Span:
 
@@ -62,13 +63,62 @@ Span:
 
 Summary:
 
-Nothing is determined as pure empty self-equality lacking all distinction, and in that absence of determinacy it is explicitly equivalent to pure being.
+Part B determines pure nothing as empty self-equality, as empty intuiting/thinking, and as equivalent to pure being.
+
+Key points: (KeyPoint)
+
+- k1. Nothing is pure empty self-equality without distinction.
+- k2. Nothing is intuited and thought as emptiness itself.
+- k3. Nothing shares the same absence of determination as pure being.
+
+Claims: (Claim)
+
+- c1. id: bei-b-c1
+  - subject: part_b_nothing
+  - predicate: unfolds_as
+  - object: emptiness_intuited_empty_equivalence_with_being
+  - modality: asserted
+  - confidence: 0.97
+  - evidence:
+    - [12-28] sequence from empty self-equality through empty intuiting/thinking to equivalence with pure being.
+
+Claim ↔ key point map:
+
+- c1 -> k1, k2, k3
+
+Relations: (Relation)
+
+- r1. type: transitions_to
+  - targetEntryId: bei-b-001
+  - note: marker to first analytic moment of pure nothing.
+  - sourceClaimIds: [`bei-b-c1`]
+  - sourceKeyPointIds: [`k1`]
+  - targetClaimIds: [`bei-b-001-c1`]
+  - logicalOperator: sequential_transition
+  - analysisMode: first_order_claim_projection
+
+Review outcome:
+
+- review_pending
+- notes: marker stabilized for one-claim subentry regime.
+
+### Entry bei-b-001 — Pure nothing I: empty self-equality
+
+Span:
+
+- sourceFile: `src/compiler/being/quality/being/sources/nothing.txt`
+- lineStart: 12
+- lineEnd: 28
+
+Summary:
+
+Nothing is first determined as pure empty self-equality lacking all distinction.
 
 Key points: (KeyPoint)
 
 - k1. Nothing is pure nothingness, emptiness, and absence of determination.
-- k2. Nothing has meaning in intuiting/thinking as empty intuiting/thinking itself.
-- k3. Nothing is the same absence of determination as pure being.
+- k2. Nothing is purely empty.
+- k3. Nothing excludes distinction.
 
 Claims: (Claim)
 
@@ -81,7 +131,49 @@ Claims: (Claim)
   - evidence:
     - [12-16] nothing as pure nothingness, emptiness, and lack of distinction.
 
-- c2. id: bei-b-001-c2
+Claim ↔ key point map:
+
+- c1 -> k1
+- c1 -> k2
+- c1 -> k3
+
+Relations: (Relation)
+
+- r1. type: transitions_to
+  - targetEntryId: bei-b-002
+  - note: empty self-equality is rendered as empty intuiting/thinking.
+  - sourceClaimIds: [`bei-b-001-c1`]
+  - sourceKeyPointIds: [`k1`]
+  - targetClaimIds: [`bei-b-002-c1`]
+  - logicalOperator: sequential_transition
+  - analysisMode: first_order_claim_projection
+
+Review outcome:
+
+- review_pending
+- notes: one-claim opening moment for Part B.
+
+### Entry bei-b-002 — Pure nothing II: empty intuiting and thinking
+
+Span:
+
+- sourceFile: `src/compiler/being/quality/being/sources/nothing.txt`
+- lineStart: 17
+- lineEnd: 25
+
+Summary:
+
+Nothing is given as what is intuited and thought only as emptiness itself.
+
+Key points: (KeyPoint)
+
+- k1. Nothing is apprehended in intuition and thought.
+- k2. This apprehension has empty content.
+- k3. Empty intuition and thinking are the mode of nothing.
+
+Claims: (Claim)
+
+- c1. id: bei-b-002-c1
   - subject: nothing
   - predicate: appears_as
   - object: empty_intuiting_and_thinking
@@ -90,7 +182,47 @@ Claims: (Claim)
   - evidence:
     - [17-25] thinking/intuiting nothing has meaning as empty intuiting/thinking itself.
 
-- c3. id: bei-b-001-c3
+Claim ↔ key point map:
+
+- c1 -> k1, k2, k3
+
+Relations: (Relation)
+
+- r1. type: transitions_to
+  - targetEntryId: bei-b-003
+  - note: empty apprehension culminates in explicit equivalence with pure being.
+  - sourceClaimIds: [`bei-b-002-c1`]
+  - sourceKeyPointIds: [`k3`]
+  - targetClaimIds: [`bei-b-003-c1`]
+  - logicalOperator: sequential_transition
+  - analysisMode: first_order_claim_projection
+
+Review outcome:
+
+- review_pending
+- notes: one-claim middle moment for Part B.
+
+### Entry bei-b-003 — Pure nothing III: equivalence with pure being
+
+Span:
+
+- sourceFile: `src/compiler/being/quality/being/sources/nothing.txt`
+- lineStart: 26
+- lineEnd: 28
+
+Summary:
+
+Nothing is explicitly determined as the same absence of determination as pure being.
+
+Key points: (KeyPoint)
+
+- k1. Nothing and pure being share indeterminacy.
+- k2. Their difference has no determinative content.
+- k3. Equivalence is explicitly asserted.
+
+Claims: (Claim)
+
+- c1. id: bei-b-003-c1
   - subject: nothing
   - predicate: is_identical_with
   - object: pure_being
@@ -101,31 +233,29 @@ Claims: (Claim)
 
 Claim ↔ key point map:
 
-- c1 -> k1
-- c2 -> k2
-- c3 -> k3
+- c1 -> k1, k2, k3
 
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: bei-a-001
-  - note: Part B confirms and mirrors Part A identity claim from the side of nothing.
-  - sourceClaimIds: [`bei-b-001-c3`]
+  - targetEntryId: bei-a-003
+  - note: Part B mirrors Part A closure claim from the side of nothing.
+  - sourceClaimIds: [`bei-b-003-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`bei-a-001-c3`]
+  - targetClaimIds: [`bei-a-003-c1`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: bei-c-a-001
+  - targetEntryId: bei-c-001
   - note: identity of being and nothing passes into Becoming as their truth.
-  - sourceClaimIds: [`bei-b-001-c3`]
+  - sourceClaimIds: [`bei-b-003-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`bei-c-a-001-c1`]
+  - targetClaimIds: [`bei-c-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: short-section exception applied with one seed entry for first pass.
+- notes: one-claim closure moment for Part B.

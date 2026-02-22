@@ -36,20 +36,21 @@ Authority: original source text only
 - claims: (Claim) 1-3 minimum, with evidence
 - relations: (Relation) typed only (`supports|contrasts|negates|sublates|presupposes|refines|transitions_to`), using labeled bullets (`r1`, `r2`, ...)
 
-## Session: 2026-02-22 (seed pass)
+## Session: 2026-02-22 (deep pass)
 
 Scope:
 
 - file: `attraction.txt`
 - fixed range: full file
-- pass policy: lock 1 marker + up to 3 numbered entries only
+- pass policy: lock species (`a`/`b`/`c`) with analytic subentries
 
 Decision:
 
-- Two-level IDs:
-  - Level 1 marker: `bfs-c`
-  - Level 2 numbered entries: `bfs-c-<nnn>`
-- Keep first pass at conceptual readability level; no micro-fragmentation.
+- Species-first IDs for Part C:
+  - Marker: `bfs-c`
+  - Species groups from source labels: `c-a`, `c-b`, `c-c`
+  - Numbered subentries within each species: `<species>-001..003`
+- Numbered subentries are analytic segmentations, not additional source-labeled species.
 - Keep transition closure available toward Quantity stage in later passes.
 
 ### Entry bfs-c — Marker `C`: Repulsion and attraction
@@ -129,7 +130,7 @@ Relations: (Relation)
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
-### Entry bfs-c-001 — `a. Exclusion of the one`
+### Entry c-a-001 — `a. Exclusion of the one`
 
 Span:
 
@@ -149,7 +150,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: bfs-c-001-c1
+- c1. id: c-a-001-c1
   - subject: exclusion
   - predicate: is_determined_as
   - object: mutual_relative_repulsion_of_many_ones
@@ -159,7 +160,7 @@ Claims: (Claim)
     - [14-20] repulsion appears as mutual excluding limited by being of ones.
     - [29-40] mutual negation posits being-only-for-one and repels this ideality.
 
-- c2. id: bfs-c-001-c2
+- c2. id: c-a-001-c2
   - subject: self_preservation_of_ones
   - predicate: turns_into
   - object: dissolution
@@ -169,7 +170,7 @@ Claims: (Claim)
     - [53-64] self-preservation via repulsion is rather dissolution.
     - [104-121] negation of reciprocal negating negates their being.
 
-- c3. id: bfs-c-001-c3
+- c3. id: c-a-001-c3
   - subject: attraction
   - predicate: emerges_as
   - object: self_positing_of_many_ones_into_one
@@ -190,22 +191,22 @@ Relations: (Relation)
 - r1. type: refines
   - targetEntryId: bfs-c
   - note: unpacks the opening exclusion movement summarized by marker claim c1.
-  - sourceClaimIds: [`bfs-c-001-c1`, `bfs-c-001-c2`]
+  - sourceClaimIds: [`c-a-001-c1`, `c-a-001-c2`]
   - sourceKeyPointIds: [`k1`, `k2`]
   - targetClaimIds: [`bfs-c-c1`]
   - logicalOperator: decomposition
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: bfs-c-002
+  - targetEntryId: c-b-001
   - note: attraction announced at end of exclusion section becomes explicit mediated one-one.
-  - sourceClaimIds: [`bfs-c-001-c3`]
+  - sourceClaimIds: [`c-a-001-c3`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`bfs-c-002-c1`]
+  - targetClaimIds: [`c-b-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
-### Entry bfs-c-002 — `b. The one one of attraction`
+### Entry c-b-001 — `b. The one one of attraction`
 
 Span:
 
@@ -225,7 +226,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: bfs-c-002-c1
+- c1. id: c-b-001-c1
   - subject: attraction
   - predicate: presupposes
   - object: repulsion_and_many_ones
@@ -235,7 +236,7 @@ Claims: (Claim)
     - [147-156] repulsion passes into attraction; attraction has repulsion as presupposition.
     - [160-168] continuing attraction presupposes continuing generation of ones.
 
-- c2. id: bfs-c-002-c2
+- c2. id: c-b-001-c2
   - subject: attraction
   - predicate: is
   - object: inseparable_from_repulsion
@@ -244,7 +245,7 @@ Claims: (Claim)
   - evidence:
     - [169-173] attraction contains negation of itself and is inseparable from repulsion.
 
-- c3. id: bfs-c-002-c3
+- c3. id: c-b-001-c3
   - subject: one_one
   - predicate: is_determined_as
   - object: mediated_unity_of_repulsion_and_attraction
@@ -265,22 +266,22 @@ Relations: (Relation)
 - r1. type: refines
   - targetEntryId: bfs-c
   - note: details the marker-level claim that attraction emerges immanently.
-  - sourceClaimIds: [`bfs-c-002-c1`, `bfs-c-002-c3`]
+  - sourceClaimIds: [`c-b-001-c1`, `c-b-001-c3`]
   - sourceKeyPointIds: [`k1`, `k3`]
   - targetClaimIds: [`bfs-c-c2`]
   - logicalOperator: decomposition
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: bfs-c-003
+  - targetEntryId: c-c-001
   - note: mediated one-one leads into explicit conceptual connection of repulsion and attraction.
-  - sourceClaimIds: [`bfs-c-002-c3`]
+  - sourceClaimIds: [`c-b-001-c3`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`bfs-c-003-c1`]
+  - targetClaimIds: [`c-c-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
-### Entry bfs-c-003 — `c. The connection of repulsion and attraction`
+### Entry c-c-001 — `c. The connection of repulsion and attraction`
 
 Span:
 
@@ -300,7 +301,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: bfs-c-003-c1
+- c1. id: c-c-001-c1
   - subject: repulsion_and_attraction
   - predicate: are
   - object: externally_distinct_but_essentially_joined
@@ -310,7 +311,7 @@ Claims: (Claim)
     - [215-224] difference appears as two references yet essential joining is asserted.
     - [226-242] repulsion appears immediate while attraction seems external.
 
-- c2. id: bfs-c-003-c2
+- c2. id: c-c-001-c2
   - subject: repulsion_and_attraction
   - predicate: mutually_presuppose
   - object: one_another_as_conditions
@@ -320,7 +321,7 @@ Claims: (Claim)
     - [258-276] attraction is within repulsion; reverse presupposition also present.
     - [293-296] each is itself only through mediation of the other.
 
-- c3. id: bfs-c-003-c3
+- c3. id: c-c-001-c3
   - subject: mediation_of_repulsion_and_attraction
   - predicate: culminates_in
   - object: self_mediation_and_restored_unity
@@ -341,7 +342,7 @@ Relations: (Relation)
 - r1. type: refines
   - targetEntryId: bfs-c
   - note: specifies the marker claim that repulsion and attraction are inseparable mutual mediation.
-  - sourceClaimIds: [`bfs-c-003-c2`, `bfs-c-003-c3`]
+  - sourceClaimIds: [`c-c-001-c2`, `c-c-001-c3`]
   - sourceKeyPointIds: [`k2`, `k3`]
   - targetClaimIds: [`bfs-c-c3`]
   - logicalOperator: decomposition
@@ -350,7 +351,7 @@ Relations: (Relation)
 - r2. type: transitions_to
   - targetEntryId: qty-a
   - note: resolved unity of repulsion/attraction provides the final quality-to-quantity handoff.
-  - sourceClaimIds: [`bfs-c-003-c3`]
+  - sourceClaimIds: [`c-c-001-c3`]
   - sourceKeyPointIds: [`k3`]
   - targetClaimIds: [`pending_cross_workbook`]
   - logicalOperator: sequential_transition
