@@ -1,7 +1,7 @@
 
 A. THE SYLLOGISM OF EXISTENCE
 
-1. The syllogism in its immediate form
+The syllogism in its immediate form
 has for its moments the determinations
 of the concept as immediate.
 Accordingly, these are the abstract determinacies of form,
@@ -37,7 +37,7 @@ that alone constitutes the syllogism.
 
 a. First figure of the syllogism
 
-S-P-U is the general schema of the determinate syllogism.
+1. S-P-U is the general schema of the determinate syllogism.
 Singularity connects with universality through particularity;
 the singular is not universal immediately
 but by means of particularity;

@@ -50,6 +50,7 @@ with respect to which there are higher genera;
 on the other hand, it is not the most proximate genus,
 that is, its determinateness is not directly the
 principle of the specific particularity of the subject.
+
 But what is necessary in it is
 the substantial identity of subject and predicate,
 in view of which the distinguishing mark of each is
@@ -100,6 +101,7 @@ is in a connection of identity with this repelled
 determinateness as such, essentially,
 that is, this determinateness is not to
 be posited as merely accidental.
+
 Only through this necessity of its immediate being
 does the categorical judgment conform
 to its objective universality

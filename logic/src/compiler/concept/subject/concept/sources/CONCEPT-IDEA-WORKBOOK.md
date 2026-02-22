@@ -175,7 +175,7 @@ Span:
 
 - sourceFile: `src/compiler/concept/subject/sources/samyama-greater-subjectivity.tex`
 - lineStart: 1468
-- lineEnd: 1492
+- lineEnd: 1491
 
 Summary:
 
@@ -197,7 +197,7 @@ Claims: (Claim)
   - confidence: 0.97
   - evidence:
     - [samyama-greater-subjectivity.tex:1468-1487] first universal, second particular.
-    - [samyama-greater-subjectivity.tex:1489-1492] third singularity as reflective return into absolute negativity.
+    - [samyama-greater-subjectivity.tex:1489-1491] third singularity as reflective return into absolute negativity.
 
 - c2. id: con-idea-003-c2
   - subject: universal_moment
@@ -238,7 +238,7 @@ Review outcome:
 Span:
 
 - sourceFile: `src/compiler/concept/subject/sources/samyama-greater-subjectivity.tex`
-- lineStart: 1493
+- lineStart: 1492
 - lineEnd: 1494
 
 Summary:
@@ -260,7 +260,7 @@ Claims: (Claim)
   - modality: asserted
   - confidence: 0.96
   - evidence:
-    - [samyama-greater-subjectivity.tex:1493-1494] singularity stepping into otherness becomes judgment.
+    - [samyama-greater-subjectivity.tex:1491-1493] singularity stepping into otherness becomes judgment.
 
 Relations: (Relation)
 
@@ -277,75 +277,3 @@ Review outcome:
 
 - review_pending
 - notes: boundary claim kept minimal to match explicit Chapter 1 wording.
-
-### Entry con-idea-007 — DIVISION topic: First / Second / Third model
-
-Span:
-
-- sourceFile: `src/compiler/concept/subject/sources/samyama-greater-subjectivity.tex`
-- lineStart: 1378
-- lineEnd: 1423
-
-Summary:
-
-The DIVISION movement is modeled as a three-step development (First, Second, Third) of concept subjectivity into judgment, inference, and objective transition.
-
-Key points: (KeyPoint)
-
-- k1. First: immediate formal concept with simple reflective-shine difference.
-- k2. Second: absolute negativity divides concept and posits judgment.
-- k3. Third: dialectical movement of judgment yields syllogistic inference and transition toward objectivity.
-
-Claims: (Claim)
-
-- c1. id: con-idea-007-c1
-  - subject: division_first
-  - predicate: determines
-  - object: immediate_formal_concept_with_simple_difference
-  - modality: asserted
-  - confidence: 0.95
-  - evidence:
-    - [samyama-greater-subjectivity.tex:1378-1387] immediate formal concept; difference as simple reflective shine.
-
-- c2. id: con-idea-007-c2
-  - subject: division_second
-  - predicate: determines
-  - object: concept_self_division_and_judgment_positing
-  - modality: asserted
-  - confidence: 0.96
-  - evidence:
-    - [samyama-greater-subjectivity.tex:1389-1401] second moment divides/posits concept; concept is judgment.
-
-- c3. id: con-idea-007-c3
-  - subject: division_third
-  - predicate: determines
-  - object: judgment_to_syllogistic_inference_and_objective_transition
-  - modality: asserted
-  - confidence: 0.94
-  - evidence:
-    - [samyama-greater-subjectivity.tex:1403-1423] third moment: judgment movement to inference and passage toward objectivity.
-
-Relations: (Relation)
-
-- r1. type: refines
-  - targetEntryId: con-idea-004
-  - note: gives explicit First/Second/Third architecture for the judgment boundary used in Chapter 1 handoff.
-  - sourceClaimIds: [`con-idea-007-c1`, `con-idea-007-c2`, `con-idea-007-c3`]
-  - sourceKeyPointIds: [`k1`, `k2`, `k3`]
-  - targetClaimIds: [`con-idea-004-c1`]
-  - logicalOperator: constrained_refinement
-  - analysisMode: first_order_claim_projection
-
-- r2. type: supports
-  - targetEntryId: con-idea-003
-  - note: triadic Division model supports triadic Chapter 1 movement reading.
-  - sourceClaimIds: [`con-idea-007-c1`, `con-idea-007-c2`, `con-idea-007-c3`]
-  - sourceKeyPointIds: [`k1`, `k2`, `k3`]
-  - targetClaimIds: [`con-idea-003-c1`]
-  - logicalOperator: implicative_support
-  - analysisMode: first_order_claim_projection
-
-Review outcome:
-
-- review_pending
-- notes: DIVISION encoded as explicit First/Second/Third claim model for KG extraction.

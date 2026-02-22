@@ -91,11 +91,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: con-sub-b-003
-  - note: confirms Part B culmination in singularity.
+  - targetEntryId: con-sub-b-004
+  - note: confirms Part B's explicit singularity transition claim.
   - sourceClaimIds: [`con-sub-c-001-c1`]
   - sourceKeyPointIds: [`k1`, `k3`]
-  - targetClaimIds: [`con-sub-b-003-c3`]
+  - targetClaimIds: [`con-sub-b-004-c1`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
@@ -172,61 +172,135 @@ Review outcome:
 - review_pending
 - notes: entry-2 span locked at 179-227.
 
-### Entry con-sub-c-003 — Section 2b synthesis + judgment transition marker
+### Entry con-sub-c-003 — Section 2b synthesis: mediated immediacy and essential relation
 
 Span:
 
 - sourceFile: `src/compiler/concept/subject/concept/sources/singular.txt`
 - lineStart: 229
-- lineEnd: 282
+- lineEnd: 266
 
 Summary:
 
-This entry captures reflective synthesis of singular exclusion with essential universality relation and preserves the final paragraph as transition-only to judgment.
+This entry captures reflective synthesis of singular exclusion with essential universality relation.
 
 Key points: (KeyPoint)
 
-- k1. Entry span (`229-266`) synthesizes mediated immediacy and essential relation to universality.
-- k2. Transition-only span (`268-282`) marks originative partition and positing as judgment.
+- k1. Singularity is mediated immediacy with internal separation that remains positive connection.
+- k2. Singular abstraction posits differences as self-subsisting and reflected into themselves.
+- k3. Singularity excludes universality only while referring to it essentially as its own moment.
 
 Claims: (Claim)
 
 - c1. id: con-sub-c-003-c1
-  - subject: singular_abstraction
-  - predicate: synthesizes
-  - object: self_subsisting_difference_with_essential_universal_relation
+  - subject: singular
+  - predicate: is_determined_as
+  - object: mediated_immediacy_with_internal_positive_connection
   - modality: asserted
   - confidence: 0.95
   - evidence:
-    - [229-248] singular as mediated immediacy with internal separation and positive connection.
-    - [250-266] abstraction posits concept-difference; exclusion refers essentially to universal.
+    - [229-248] singular as immediate result of mediation with internal repelling separation and positive connection.
+
+- c2. id: con-sub-c-003-c2
+  - subject: singular_abstraction
+  - predicate: posits
+  - object: self_subsisting_differences_with_essential_relation_to_universal
+  - modality: asserted
+  - confidence: 0.95
+  - evidence:
+    - [250-258] abstraction first posits differences as self-subsisting, reflected into themselves.
+    - [259-266] exclusion of universal remains essential relation because universal is singularity's own moment.
 
 Claim ↔ key point map:
 
 - c1 -> k1
-
-Transition (non-claim):
-
-- t1. span: `268-282`
-  - function: transition_to_judgment
-  - note: this span is transition-only and is not encoded as a claim.
+- c2 -> k2, k3
 
 Relations: (Relation)
 
 - r1. type: supports
   - targetEntryId: con-sub-c-002
   - note: synthesis block grounds section 2 by uniting exclusion with essential relation.
-  - sourceClaimIds: [`con-sub-c-003-c1`]
-  - sourceKeyPointIds: [`k1`]
+  - sourceClaimIds: [`con-sub-c-003-c1`, `con-sub-c-003-c2`]
+  - sourceKeyPointIds: [`k1`, `k2`, `k3`]
   - targetClaimIds: [`con-sub-c-002-c1`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
+  - targetEntryId: con-sub-c-004
+  - note: synthesis transitions into explicit judgment handoff marker.
+  - sourceClaimIds: [`con-sub-c-003-c2`]
+  - sourceKeyPointIds: [`k2`, `k3`]
+  - targetClaimIds: [`con-sub-c-004-c2`]
+  - logicalOperator: sequential_transition
+  - analysisMode: first_order_claim_projection
+
+Review outcome:
+
+- review_pending
+- notes: entry-3 span locked at 229-266.
+
+### Entry con-sub-c-004 — Transition marker: singularity as judgment handoff
+
+Span:
+
+- sourceFile: `src/compiler/concept/subject/concept/sources/singular.txt`
+- lineStart: 268
+- lineEnd: 282
+
+Summary:
+
+The final paragraph marks singularity as the concept's originative partition and explicit transition into judgment.
+
+Key points: (KeyPoint)
+
+- k1. The concept's self-subsistent determinations lose immediate posited unity as mere moments.
+- k2. In singularity, determinate totality returns into itself as originative partition.
+- k3. This originative partition is explicitly posited as judgment.
+
+Claims: (Claim)
+
+- c1. id: con-sub-c-004-c1
+  - subject: concept_as_connection_of_self_subsistent_determinations
+  - predicate: loses
+  - object: posited_unity_of_moments
+  - modality: asserted
+  - confidence: 0.95
+  - evidence:
+    - [268-276] concept's determinations no longer stand as moments of posited unity but as self-subsisting.
+    - [277-279] as singularity, concept returns in determinateness into itself and determinate becomes totality.
+
+- c2. id: con-sub-c-004-c2
+  - subject: concept_as_singularity
+  - predicate: is_posited_as
+  - object: originative_partition_into_judgment
+  - modality: asserted
+  - confidence: 0.97
+  - evidence:
+    - [280-282] turning back into itself is absolute originative partition; as singularity, concept is posited as judgment.
+
+Claim ↔ key point map:
+
+- c1 -> k1, k2
+- c2 -> k3
+
+Relations: (Relation)
+
+- r1. type: refines
+  - targetEntryId: con-sub-c-003
+  - note: specifies the explicit judgment-handoff determination emerging from section 2b synthesis.
+  - sourceClaimIds: [`con-sub-c-004-c1`, `con-sub-c-004-c2`]
+  - sourceKeyPointIds: [`k1`, `k2`, `k3`]
+  - targetClaimIds: [`con-sub-c-003-c1`, `con-sub-c-003-c2`]
+  - logicalOperator: constrained_refinement
+  - analysisMode: first_order_claim_projection
+
+- r2. type: transitions_to
   - targetEntryId: con-idea-001
-  - note: transition-only span (`268-282`) opens next movement to judgment.
-  - sourceClaimIds: [`con-sub-c-003-c1`]
-  - sourceKeyPointIds: [`k1`, `k2`]
+  - note: explicit transition from singularity into judgment track.
+  - sourceClaimIds: [`con-sub-c-004-c2`]
+  - sourceKeyPointIds: [`k2`, `k3`]
   - targetClaimIds: [pending]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
@@ -234,4 +308,4 @@ Relations: (Relation)
 Review outcome:
 
 - review_pending
-- notes: entry-3 span locked at 229-266; final paragraph retained as transition-only marker.
+- notes: transition block isolated as 268-282 per span precision policy.

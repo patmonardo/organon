@@ -127,6 +127,15 @@ Relations: (Relation)
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
+- r3. type: supports
+  - targetEntryId: con-sub-a-004
+  - note: reciprocal cross-part support: Particular's immediate determination confirms Universal's explicit handoff into particularity.
+  - sourceClaimIds: [`con-sub-b-001-c1`, `con-sub-b-001-c2`]
+  - sourceKeyPointIds: [`k1`, `k2`, `k4`]
+  - targetClaimIds: [`con-sub-a-004-c1`]
+  - logicalOperator: implicative_support
+  - analysisMode: first_order_claim_projection
+
 Review outcome:
 
 - review_pending
@@ -138,11 +147,11 @@ Span:
 
 - sourceFile: `src/compiler/concept/subject/concept/sources/particular.txt`
 - lineStart: 97
-- lineEnd: 236
+- lineEnd: 291
 
 Summary:
 
-Particularity is mediated through conceptual difference and abstraction: the abstract universal is shown as concept only in deficient, unposited form.
+Particularity is mediated through conceptual difference and abstraction up to the limit where the determinate concept is exposed as one-sided unless grasped in conceptual totality.
 
 Key points: (KeyPoint)
 
@@ -150,7 +159,7 @@ Key points: (KeyPoint)
 - k2. Nature's manifold species do not reliably exhibit conceptual rigor.
 - k3. Particular determinateness appears as abstract universality (form/content split).
 - k4. Abstract universal still contains concept-moments but only in immediate, unposited unity.
-- k5. Hence abstract universality is concept, yet unconceptualized concept.
+- k5. The determinate concept remains one-sided and "empty" when its determinateness is not the principle of differentiation.
 
 Claims: (Claim)
 
@@ -184,11 +193,22 @@ Claims: (Claim)
     - [138-145] multiplicity of natural species shows impotence to exhibit conceptual rigor.
     - [158-169] manifold forms are free self-externality and abstract side of nothingness.
 
+- c4. id: con-sub-b-002-c4
+  - subject: determinate_abstract_concept
+  - predicate: is_determined_as
+  - object: one_sided_if_not_principled_by_conceptual_totality
+  - modality: asserted
+  - confidence: 0.92
+  - evidence:
+    - [278-287] determinate concept is empty when it does not contain totality and principled differentiation.
+    - [288-291] reproach of emptiness misses absolute determinateness as concept-difference content.
+
 Claim ↔ key point map:
 
 - c1 -> k1
-- c2 -> k3, k4, k5
+- c2 -> k3, k4
 - c3 -> k2
+- c4 -> k5
 
 Relations: (Relation)
 
@@ -203,29 +223,29 @@ Relations: (Relation)
 
 - r2. type: transitions_to
   - targetEntryId: con-sub-b-003
-  - note: from abstract-universal deficiency to explicit dialectical role of understanding and turn toward singularity.
-  - sourceClaimIds: [`con-sub-b-002-c2`]
+  - note: from one-sided abstract determinateness to explicit reason/understanding dialectic.
+  - sourceClaimIds: [`con-sub-b-002-c2`, `con-sub-b-002-c4`]
   - sourceKeyPointIds: [`k4`, `k5`]
-  - targetClaimIds: [`con-sub-b-003-c1`, `con-sub-b-003-c3`]
+  - targetClaimIds: [`con-sub-b-003-c1`, `con-sub-b-003-c2`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: mediated block includes abstraction critique and conceptual clarification.
+- notes: mediated block now runs through line 291 to include the one-sidedness/emptiness boundary.
 
-### Entry con-sub-b-003 — Concluding transition: dialectical force and emergence of singularity
+### Entry con-sub-b-003 — High-level dialectic: understanding, reason, and the force of transition
 
 Span:
 
 - sourceFile: `src/compiler/concept/subject/concept/sources/particular.txt`
-- lineStart: 238
-- lineEnd: 452
+- lineStart: 293
+- lineEnd: 426
 
 Summary:
 
-The conclusion repositions understanding within reason, shows abstract fixity as both limitation and transition-power, and culminates in singularity as the third moment.
+This block develops the high-level dialectic in which understanding and reason are non-separable: fixity and universality become the very medium of transition.
 
 Key points: (KeyPoint)
 
@@ -233,7 +253,7 @@ Key points: (KeyPoint)
 - k2. Understanding fixes determinacies but also sharpens them to dialectical transition.
 - k3. Separation of understanding and reason is rejected.
 - k4. The determinate abstract concept is an essential moment of reason.
-- k5. Particularity passes into singularity as self-referring determinateness and turning-back of concept into itself.
+- k5. Reason appears through the internal kindling of finite determinacies in universal self-reference.
 
 Claims: (Claim)
 
@@ -258,20 +278,20 @@ Claims: (Claim)
     - [421-426] determinate abstract concept is essential moment and beginning appearance of reason.
 
 - c3. id: con-sub-b-003-c3
-  - subject: particularity
-  - predicate: culminates_in
-  - object: singularity_as_third_moment_and_conceptual_return
+  - subject: reason
+  - predicate: emerges_through
+  - object: dialectical_kindling_of_finite_in_universal_form
   - modality: asserted
-  - confidence: 0.97
+  - confidence: 0.94
   - evidence:
-    - [432-440] determinate universality as self-referring determinateness; self-reference is singularity.
-    - [441-452] particularity immediately singularity; singularity as third moment and turning back of concept.
+    - [324-330] infinite force of understanding as power causing transition of determinacies.
+    - [397-413] self-referring universality exposes finite disproportionality and posits unity as concept.
 
 Claim ↔ key point map:
 
 - c1 -> k1, k2
 - c2 -> k3, k4
-- c3 -> k5
+- c3 -> k2, k5
 
 Relations: (Relation)
 
@@ -280,20 +300,79 @@ Relations: (Relation)
   - note: explains why abstract universality cannot remain final: its own form drives dialectical overcoming.
   - sourceClaimIds: [`con-sub-b-003-c1`, `con-sub-b-003-c2`]
   - sourceKeyPointIds: [`k2`, `k3`, `k4`]
-  - targetClaimIds: [`con-sub-b-002-c2`]
+  - targetClaimIds: [`con-sub-b-002-c2`, `con-sub-b-002-c4`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: con-sub-c-001
-  - note: concluding determination explicitly posits singularity as third moment and handoff to Part C.
-  - sourceClaimIds: [`con-sub-b-003-c3`]
-  - sourceKeyPointIds: [`k5`]
-  - targetClaimIds: [pending]
+  - targetEntryId: con-sub-b-004
+  - note: high-level reason/understanding dialectic transitions to explicit singularity determination.
+  - sourceClaimIds: [`con-sub-b-003-c2`, `con-sub-b-003-c3`]
+  - sourceKeyPointIds: [`k4`, `k5`]
+  - targetClaimIds: [`con-sub-b-004-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: final block already states singularity as third moment; verify cross-link with first Part C pass.
+- notes: high-level abstract discussion isolated as 293-426 before explicit transition block.
+
+### Entry con-sub-b-004 — Transition: singularity as third moment and conceptual return
+
+Span:
+
+- sourceFile: `src/compiler/concept/subject/concept/sources/particular.txt`
+- lineStart: 428
+- lineEnd: 452
+
+Summary:
+
+The transition explicitly posits singularity as the third moment and as the concept's turning back into itself.
+
+Key points: (KeyPoint)
+
+- k1. Difference in determinate concept is brought to explicit due as essential moment.
+- k2. Self-referring determinateness is singularity.
+- k3. Particularity immediately is singularity, and singularity is the concept's absolute return.
+
+Claims: (Claim)
+
+- c1. id: con-sub-b-004-c1
+  - subject: singularity
+  - predicate: is_determined_as
+  - object: third_moment_and_absolute_turning_back_of_concept
+  - modality: asserted
+  - confidence: 0.97
+  - evidence:
+    - [428-440] determinate universality as self-referring determinateness; self-reference is singularity.
+    - [441-452] particularity immediately singularity; singularity as third moment and turning back of concept.
+
+Claim ↔ key point map:
+
+- c1 -> k1, k2, k3
+
+Relations: (Relation)
+
+- r1. type: refines
+  - targetEntryId: con-sub-b-003
+  - note: makes explicit the singularity determination implied by the reason/understanding dialectical block.
+  - sourceClaimIds: [`con-sub-b-004-c1`]
+  - sourceKeyPointIds: [`k1`, `k2`, `k3`]
+  - targetClaimIds: [`con-sub-b-003-c2`]
+  - logicalOperator: constrained_refinement
+  - analysisMode: first_order_claim_projection
+
+- r2. type: transitions_to
+  - targetEntryId: con-sub-c-001
+  - note: explicit handoff from Particular (Part B) to Singularity (Part C).
+  - sourceClaimIds: [`con-sub-b-004-c1`]
+  - sourceKeyPointIds: [`k2`, `k3`]
+  - targetClaimIds: [`con-sub-c-001-c1`]
+  - logicalOperator: sequential_transition
+  - analysisMode: first_order_claim_projection
+
+Review outcome:
+
+- review_pending
+- notes: transition block isolated as 428-452 per revised span strategy.

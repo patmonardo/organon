@@ -28,9 +28,9 @@ Authority: original source text only
 
 ## Working template
 
-### Entry (Topic) <id> — <title>
+### Entry (Topic) `id` — `title`
 
-- span: `<lineStart-lineEnd>`
+- span: `lineStart-lineEnd`
 - summary: one sentence
 - keyPoints: (KeyPoint) 3-8 non-redundant points
 - claims: (Claim) 1-3 minimum, with evidence
@@ -129,19 +129,18 @@ Span:
 
 - sourceFile: `src/compiler/concept/subject/concept/sources/universal.txt`
 - lineStart: 94
-- lineEnd: 205
+- lineEnd: 156
 
 Summary:
 
-The universal is shown as positively self-identical in its determinations, immanent in difference, and concrete rather than empty abstraction.
+The universal is shown as positively self-identical in determination, with concept-internal positedness and reflective shine as appearance of the identical.
 
 Key points: (KeyPoint)
 
 - k1. Determination is not an external restriction of the universal.
 - k2. The universal remains itself in manifold determinations and persists through becoming.
 - k3. Determinateness in concept is positedness/negative-of-negative, not external shine.
-- k4. The universal is free power in relation-to-other and contains particularity/singularity within itself.
-- k5. The universal is concrete totality; abstract universal is a partial, truth-deficient moment.
+- k4. Mediation is concept-internal and creative, not an external constraining necessity.
 
 Claims: (Claim)
 
@@ -165,21 +164,10 @@ Claims: (Claim)
     - [129-137] determination is concept-internal positedness and negative of the negative.
     - [151-156] determination as sublated limitation; reflective shine as appearance of identical.
 
-- c3. id: con-sub-a-002-c3
-  - subject: universal
-  - predicate: is
-  - object: concrete_totality_containing_particularity_and_singularity
-  - modality: asserted
-  - confidence: 0.96
-  - evidence:
-    - [174-191] universal contains determinateness as particularity and singularity.
-    - [192-205] universal as concrete totality; abstract universal is isolated moment void of truth.
-
 Claim ↔ key point map:
 
 - c1 -> k1, k2
-- c2 -> k3
-- c3 -> k4, k5
+- c2 -> k3, k4
 
 Relations: (Relation)
 
@@ -194,61 +182,122 @@ Relations: (Relation)
 
 - r2. type: transitions_to
   - targetEntryId: con-sub-a-003
-  - note: from concrete universality to explicit transition into particularity.
-  - sourceClaimIds: [`con-sub-a-002-c3`]
-  - sourceKeyPointIds: [`k4`, `k5`]
-  - targetClaimIds: [`con-sub-a-003-c1`, `con-sub-a-003-c3`]
+  - note: from immanent self-preserving universality to explicit articulation of free power and concrete totality.
+  - sourceClaimIds: [`con-sub-a-002-c2`]
+  - sourceKeyPointIds: [`k3`, `k4`]
+  - targetClaimIds: [`con-sub-a-003-c1`, `con-sub-a-003-c2`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: this entry serves as mediated determination block for Part A analysis.
+- notes: this entry now ends at line 156 to isolate the pre-free-power mediation block.
 
-### Entry con-sub-a-003 — Concluding transition: reflective totality resolves into particularity
+### Entry con-sub-a-003 — Middle development: free power, concrete totality, and higher inward universality
 
 Span:
 
 - sourceFile: `src/compiler/concept/subject/concept/sources/universal.txt`
-- lineStart: 207
-- lineEnd: 307
+- lineStart: 158
+- lineEnd: 278
 
 Summary:
 
-The universal is concluded as doubly reflective totality that preserves itself in determinateness, resolves lower genus into higher inward universality, and freely determines itself toward particularity.
+The universal is developed as free power and concrete totality, then elevated through doubly reflective mediation into higher inward universality.
 
 Key points: (KeyPoint)
 
-- k1. Determinateness in the universal is both first negation and reflection-into-self.
-- k2. Outward distinction is sublated in higher universality through inward redirection.
-- k3. True higher universality is concrete (life, I, spirit, absolute concept), not merely abstract genus.
-- k4. The true infinite universal is immediately particularity and singularity.
-- k5. Transition to particularity is free self-differentiation (creative, self-referring negativity), not mere being-transition.
+- k1. The universal is free power in its relation-to-other and remains at rest in the other as in itself.
+- k2. The universal contains determinateness as particularity and singularity and is concrete totality.
+- k3. Determinateness is doubly reflective (outward and inward), preserving universality in differentiation.
+- k4. Lower genus resolves in higher inward universality.
+- k5. True higher universality is concrete (life, I, spirit, absolute concept), not merely abstract genus.
 
 Claims: (Claim)
 
 - c1. id: con-sub-a-003-c1
-  - subject: universal_determinateness
-  - predicate: is
-  - object: doubly_reflective_negation_with_inward_return
+  - subject: universal
+  - predicate: is_determined_as
+  - object: free_power_and_self_returning_relation_to_other
+  - modality: asserted
+  - confidence: 0.96
+  - evidence:
+    - [158-169] universal as free power/free love, relating to distinct other as to itself.
+    - [174-191] universal contains determinateness as particularity/singularity in and for itself.
+
+- c2. id: con-sub-a-003-c2
+  - subject: universal
+  - predicate: is_determined_as
+  - object: concrete_totality_and_doubly_reflective_self_mediation
   - modality: asserted
   - confidence: 0.95
   - evidence:
-    - [209-221] determinateness as first negation plus reflection into itself; doubly reflective shine outwards/inwards.
-    - [232-247] determinate concept bent into itself, universal-immanent, freely self-referential.
+    - [192-205] universal as concrete totality; abstract universal as isolated, truth-deficient moment.
+    - [209-247] doubly reflective determinateness and inward shining preserve universality.
 
-- c2. id: con-sub-a-003-c2
+- c3. id: con-sub-a-003-c3
   - subject: true_higher_universal
   - predicate: is_determined_as
   - object: inwardly_redirected_concrete_universality
   - modality: asserted
   - confidence: 0.93
   - evidence:
-    - [249-263] lower genus resolves in higher universal where outward side is redirected inward as positedness.
+    - [249-263] lower genus resolves in higher universal through inward redirection.
     - [264-278] life/I/spirit/absolute concept as concrete universals with self-contained determinacies.
 
-- c3. id: con-sub-a-003-c3
+Claim ↔ key point map:
+
+- c1 -> k1, k2
+- c2 -> k2, k3
+- c3 -> k4, k5
+
+Relations: (Relation)
+
+- r1. type: refines
+  - targetEntryId: con-sub-a-002
+  - note: develops the mediated block into explicit free-power and reflective-totality determinations.
+  - sourceClaimIds: [`con-sub-a-003-c1`, `con-sub-a-003-c2`]
+  - sourceKeyPointIds: [`k1`, `k2`, `k3`]
+  - targetClaimIds: [`con-sub-a-002-c1`, `con-sub-a-002-c2`]
+  - logicalOperator: presuppositional_link
+  - analysisMode: first_order_claim_projection
+
+- r2. type: transitions_to
+  - targetEntryId: con-sub-a-004
+  - note: higher inward universality transitions to explicit infinite-universal determination and handoff sentence.
+  - sourceClaimIds: [`con-sub-a-003-c3`]
+  - sourceKeyPointIds: [`k4`, `k5`]
+  - targetClaimIds: [`con-sub-a-004-c1`]
+  - logicalOperator: sequential_transition
+  - analysisMode: first_order_claim_projection
+
+Review outcome:
+
+- review_pending
+- notes: middle block now isolates lines 158-278 per revised span strategy.
+
+### Entry con-sub-a-004 — Final handoff: true infinite universal proceeds to particularity
+
+Span:
+
+- sourceFile: `src/compiler/concept/subject/concept/sources/universal.txt`
+- lineStart: 280
+- lineEnd: 307
+
+Summary:
+
+The final lines explicitly hand off from universal to particularity through free self-determination as creative self-referring negativity.
+
+Key points: (KeyPoint)
+
+- k1. The true infinite universal is immediately particularity and singularity.
+- k2. Its becoming finite is creative self-referring negativity, not mere being-transition.
+- k3. It posits universal, self-referring differences as fixed, isolated determinations.
+
+Claims: (Claim)
+
+- c1. id: con-sub-a-004-c1
   - subject: infinite_universal
   - predicate: freely_determines_itself_as
   - object: particularity_through_creative_self_differentiation
@@ -256,30 +305,39 @@ Claims: (Claim)
   - confidence: 0.97
   - evidence:
     - [280-283] true infinite universal immediately includes particularity and singularity; proceeds to particularity.
-    - [284-307] becoming finite as creative self-referring negativity; positing universal differences.
+    - [284-290] becoming finite as creative self-referring negativity, not being-transition.
+
+- c2. id: con-sub-a-004-c2
+  - subject: universal_creativity
+  - predicate: posits
+  - object: self_referring_universal_differences_as_isolated_determinations
+  - modality: asserted
+  - confidence: 0.95
+  - evidence:
+    - [291-297] internal differentiation as determining; positing of self-referring universal differences.
+    - [298-307] finite isolation resolved as universality and creativity of concept.
 
 Claim ↔ key point map:
 
 - c1 -> k1, k2
-- c2 -> k3
-- c3 -> k4, k5
+- c2 -> k2, k3
 
 Relations: (Relation)
 
 - r1. type: refines
-  - targetEntryId: con-sub-a-002
-  - note: clarifies how concrete universality preserves itself by inwardly mediating outward determinateness.
-  - sourceClaimIds: [`con-sub-a-003-c1`, `con-sub-a-003-c2`]
+  - targetEntryId: con-sub-a-003
+  - note: makes explicit the final transition sentence implied by the higher-universal development.
+  - sourceClaimIds: [`con-sub-a-004-c1`, `con-sub-a-004-c2`]
   - sourceKeyPointIds: [`k1`, `k2`, `k3`]
-  - targetClaimIds: [`con-sub-a-002-c2`, `con-sub-a-002-c3`]
-  - logicalOperator: presuppositional_link
+  - targetClaimIds: [`con-sub-a-003-c3`]
+  - logicalOperator: constrained_refinement
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
   - targetEntryId: con-sub-b-001
-  - note: explicit handoff from universal to particular as next determination of the concept.
-  - sourceClaimIds: [`con-sub-a-003-c3`]
-  - sourceKeyPointIds: [`k4`, `k5`]
+  - note: explicit handoff from Universal (Part A) to Particular (Part B).
+  - sourceClaimIds: [`con-sub-a-004-c1`]
+  - sourceKeyPointIds: [`k1`, `k2`]
   - targetClaimIds: [pending]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
@@ -287,4 +345,4 @@ Relations: (Relation)
 Review outcome:
 
 - review_pending
-- notes: concluding lines explicitly frame the transition to Particular; verify later against first Part B pass.
+- notes: final handoff block isolated as 280-307 per revised span policy.
