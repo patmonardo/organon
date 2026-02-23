@@ -4,6 +4,7 @@ pub mod cluster;
 pub mod parse;
 pub mod stem;
 pub mod tag;
+pub mod tree;
 
 pub use classify::classify::*;
 pub use classify::decision_tree::*;
@@ -38,3 +39,7 @@ pub use stem::snowball::*;
 pub use stem::wordnet::*;
 
 pub use tag::*;
+pub use tree::{
+    GrammarTreeExt, NlpTree, Nonterminal, ParseTreeExt, ProductionRhs, QueryTreeExt,
+    TransformTreeExt,
+};
