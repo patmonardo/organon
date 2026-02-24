@@ -1,0 +1,56 @@
+# Chemism Part A Workbook
+
+Part: `A. CHEMICAL OBJECT`
+Status: active
+Authority: original source text only
+
+## Authority + format lock (must persist)
+
+- Contract reference: `src/compiler/essence/reflection/foundation/WORKBOOK-CONTRACT-V1.md`
+- This workbook markdown is the authoritative Knowledge Graph artifact for this part.
+- Any generated Cypher/DB projection is derivative and non-authoritative.
+- Future edits must preserve this exact heading order and entry schema unless a migration is explicitly recorded in `Decision:` and applied repo-wide to all affected workbooks.
+
+## Clean-room rules
+
+- Use only `object.txt` as authority.
+- Every accepted claim must have line-anchored evidence.
+- If uncertain, mark `review_pending` and capture an open question.
+- Span boundaries must follow complete sentence groups (no mid-sentence start/end).
+
+## TopicMap terminology contract
+
+- Workbook = serialized artifact of one TopicMap.
+- TopicMap = graph container (topics + typed relations) within the broader Knowledge Graph.
+- Entry (Topic) = one topic node with id, title, key points, claims, and relations.
+- Scope / section / span = textual referents for source inclusion boundaries.
+- Chunk = informal analysis term only; do not use as a formal schema field.
+
+## Working template
+
+### Entry (Topic) <id> — <title>
+
+- span: `<lineStart-lineEnd>`
+- summary: one sentence
+- keyPoints: (KeyPoint) 3-8 non-redundant points
+- claims: (Claim) 1-3 minimum, with evidence
+- relations: (Relation) typed only (`supports|contrasts|negates|sublates|presupposes|refines|transitions_to`), using labeled bullets (`r1`, `r2`, ...)
+
+## Session: 2026-02-22 (study-first scaffold)
+
+Scope:
+
+- file: `object.txt`
+- fixed range: `pending_line_lock`
+- segmentation basis: block-first (to be refined into moments during review)
+
+Decision:
+
+- Object requires study before stable segmentation into moments.
+- Keep this file in scaffold mode until span locks are reviewed.
+- Keep IDs in normalized form: `obj-chem-a-001`, `obj-chem-a-002`, ...
+
+Review outcome:
+
+- review_pending
+- notes: deferred pending study of `object.txt` conceptual blocks.
