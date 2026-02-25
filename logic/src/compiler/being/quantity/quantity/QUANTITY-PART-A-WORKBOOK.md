@@ -46,11 +46,11 @@ Scope:
 
 Decision:
 
-- Use IDs: `qty-a-001`, `qty-a-002`, `qty-a-003`.
+- Use IDs: `quant-pur-001`, `quant-pur-002`, `quant-pur-003`.
 - This part has no source-native numeric subsections; triadic segmentation here is analytic.
-- Keep handoff explicit to Part B (`qty-b-001`).
+- Keep handoff explicit to Part B (`quant-mag-001`).
 
-### Entry qty-a-001 — Pure quantity I: sublated being-for-itself as attraction-continuity
+### Entry quant-pur-001 — Pure quantity I: sublated being-for-itself as attraction-continuity
 
 Span:
 
@@ -70,7 +70,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: qty-a-001-c1
+- c1. id: quant-pur-001-c1
   - subject: being_for_itself
   - predicate: sublates_into
   - object: attraction_as_moment_of_continuity
@@ -86,11 +86,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: qty-a-002
+  - targetEntryId: quant-pur-002
   - note: continuity is next determined as unbroken self-same unity of ones.
-  - sourceClaimIds: [`qty-a-001-c1`]
+  - sourceClaimIds: [`quant-pur-001-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`qty-a-002-c1`]
+  - targetClaimIds: [`quant-pur-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -99,7 +99,7 @@ Review outcome:
 - review_pending
 - notes: one-claim opening seed entry.
 
-### Entry qty-a-002 — Pure quantity II: continuity as unbroken equality of ones
+### Entry quant-pur-002 — Pure quantity II: continuity as unbroken equality of ones
 
 Span:
 
@@ -119,7 +119,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: qty-a-002-c1
+- c1. id: quant-pur-002-c1
   - subject: continuity
   - predicate: is_determined_as
   - object: unbroken_self_same_unity_of_plural_ones
@@ -135,11 +135,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: qty-a-003
+  - targetEntryId: quant-pur-003
   - note: continuity now unfolds as unity with discreteness in quantity.
-  - sourceClaimIds: [`qty-a-002-c1`]
+  - sourceClaimIds: [`quant-pur-002-c1`]
   - sourceKeyPointIds: [`k2`]
-  - targetClaimIds: [`qty-a-003-c1`]
+  - targetClaimIds: [`quant-pur-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -148,7 +148,7 @@ Review outcome:
 - review_pending
 - notes: one-claim middle seed entry.
 
-### Entry qty-a-003 — Pure quantity III: unity of continuity and discreteness
+### Entry quant-pur-003 — Pure quantity III: unity of continuity and discreteness
 
 Span:
 
@@ -168,7 +168,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: qty-a-003-c1
+- c1. id: quant-pur-003-c1
   - subject: quantity
   - predicate: is
   - object: unity_of_continuity_and_discreteness
@@ -185,11 +185,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: qty-b-001
+  - targetEntryId: quant-mag-001
   - note: Part A unity is developed as continuous magnitude in Part B.
-  - sourceClaimIds: [`qty-a-003-c1`]
+  - sourceClaimIds: [`quant-pur-003-c1`]
   - sourceKeyPointIds: [`k1`]
-  - targetClaimIds: [`qty-b-001-c1`]
+  - targetClaimIds: [`quant-mag-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 

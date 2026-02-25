@@ -46,11 +46,11 @@ Scope:
 
 Decision:
 
-- Use IDs: `qty-b-001`, `qty-b-002`, `qty-b-003`.
+- Use IDs: `quant-mag-001`, `quant-mag-002`, `quant-mag-003`.
 - This part contains source-native numeric subsectioning; seed segmentation respects that structure.
-- Keep handoff explicit to Part C (`qty-c-001`).
+- Keep handoff explicit to Part C (`quant-lim-001`).
 
-### Entry qty-b-001 — Magnitude I: immediate unity as continuous magnitude
+### Entry quant-mag-001 — Magnitude I: immediate unity as continuous magnitude
 
 Span:
 
@@ -70,7 +70,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: qty-b-001-c1
+- c1. id: quant-mag-001-c1
   - subject: immediate_quantity
   - predicate: is_posited_as
   - object: continuous_magnitude
@@ -87,11 +87,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: qty-b-002
+  - targetEntryId: quant-mag-002
   - note: immediate continuity is negated as sufficient, requiring discrete magnitude.
-  - sourceClaimIds: [`qty-b-001-c1`]
+  - sourceClaimIds: [`quant-mag-001-c1`]
   - sourceKeyPointIds: [`k2`]
-  - targetClaimIds: [`qty-b-002-c1`]
+  - targetClaimIds: [`quant-mag-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -100,7 +100,7 @@ Review outcome:
 - review_pending
 - notes: one-claim seed entry aligned to source subsection 1.
 
-### Entry qty-b-002 — Magnitude II: discrete magnitude as immanent determinateness
+### Entry quant-mag-002 — Magnitude II: discrete magnitude as immanent determinateness
 
 Span:
 
@@ -120,7 +120,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: qty-b-002-c1
+- c1. id: quant-mag-002-c1
   - subject: quantity
   - predicate: is_determined_as
   - object: discrete_magnitude
@@ -136,11 +136,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: qty-b-003
+  - targetEntryId: quant-mag-003
   - note: discrete magnitude is further shown to retain continuity as unity of many ones.
-  - sourceClaimIds: [`qty-b-002-c1`]
+  - sourceClaimIds: [`quant-mag-002-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`qty-b-003-c1`]
+  - targetClaimIds: [`quant-mag-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -149,7 +149,7 @@ Review outcome:
 - review_pending
 - notes: one-claim seed entry aligned to source subsection 2 opening.
 
-### Entry qty-b-003 — Magnitude III: discrete magnitude as continuity of many ones
+### Entry quant-mag-003 — Magnitude III: discrete magnitude as continuity of many ones
 
 Span:
 
@@ -169,7 +169,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: qty-b-003-c1
+- c1. id: quant-mag-003-c1
   - subject: discrete_magnitude
   - predicate: contains
   - object: continuity_of_many_ones_in_same_unity
@@ -185,11 +185,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: qty-c-001
+  - targetEntryId: quant-lim-001
   - note: unity of many ones now appears as determinately limited quantity.
-  - sourceClaimIds: [`qty-b-003-c1`]
+  - sourceClaimIds: [`quant-mag-003-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`qty-c-001-c1`]
+  - targetClaimIds: [`quant-lim-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 

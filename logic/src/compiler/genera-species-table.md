@@ -23,32 +23,32 @@ Edit the ID cells manually as you settle IDs.
 
 ## Detailed Genus → Species (3 moments)
 
-| Genus ID | Genus                  | Species 1 ID | Species 1                       | Species 2 ID | Species 2                        | Species 3 ID | Species 3                 |
-| -------- | ---------------------- | ------------ | ------------------------------- | ------------ | -------------------------------- | ------------ | ------------------------- |
-|          | Being                  |              | BEING                           |              | NOTHING                          |              | BECOMING                  |
-|          | Existence              |              | EXISTENCE AS SUCH               |              | FINITUDE                         |              | INFINITY                  |
-|          | Being-for-itself       |              | BEING-FOR-ITSELF AS SUCH        |              | ONE AND MANY                     |              | ATTRACTION                |
-|          | Quantity               |              | PURE QUANTITY                   |              | MAGNITUDE                        |              | LIMITING OF QUANTITY      |
-|          | Quantum                |              | NUMBER                          |              | QUANTUM                          |              | QUANTITATIVE INFINITY     |
-|          | Ratio                  |              | DIRECT RATIO                    |              | INVERSE RATIO                    |              | RATIO OF POWERS           |
-|          | Specific Quantity      |              | THE BEING-FOR-ITSELF IN MEASURE |              | SPECIFIC QUANTUM                 |              | SPECIFYING MEASURE        |
-|          | Real Measure           |              | MEASURE-RELATIONS               |              | RELATION OF INDEPENDENT MEASURES |              | THE MEASURELESS           |
-|          | Becoming of Essence    |              | ABSOLUTE INDIFFERENCE           |              | INDIFFERENCE AS INVERSE RATIO    |              | BECOMING-ESSENCE          |
-|          | Essence                |              | ESSENCE                         |              | SHINE                            |              | REFLECTION                |
-|          | Reflection             |              | IDENTITY                        |              | DIFFERENCE                       |              | CONTRADICTION             |
-|          | Ground                 |              | ABSOLUTE GROUND                 |              | DETERMINATE GROUND               |              | CONDITION                 |
-|          | Concrete existence     |              | THING                           |              | MATTERS                          |              | DISSOLUTION OF THE THING  |
-|          | Appearance             |              | LAW OF APPEARANCE               |              | WORLD OF APPEARANCE              |              | DISSOLUTION OF APPEARANCE |
-|          | The essential relation |              | WHOLE AND PARTS                 |              | FORCE AND ITS EXPRESSION         |              | OUTER AND INNER           |
-|          | The absolute           |              | EXPOSITION OF THE ABSOLUTE      |              | ABSOLUTE ATTRIBUTE               |              | MODE OF THE ABSOLUTE      |
-|          | Actuality              |              | CONTINGENCY                     |              | RELATIVE NECESSITY               |              | ABSOLUTE NECESSITY        |
-|          | The absolute relation  |              | SUBSTANTIALITY                  |              | CAUSALITY                        |              | RECIPROCITY OF ACTION     |
-|          | Concept as such        |              | UNIVERSAL CONCEPT               |              | PARTICULAR CONCEPT               |              | SINGULAR CONCEPT          |
-|          | Judgment               |              | JUDGMENT OF EXISTENCE           |              | JUDGMENT OF REFLECTION           |              | JUDGMENT OF NECESSITY     |
-|          | Syllogism              |              | SYLLOGISM OF EXISTENCE          |              | SYLLOGISM OF NECESSITY           |              | SYLLOGISM OF REFLECTION   |
-|          | Mechanism              |              | MECHANICAL OBJECT               |              | MECHANICAL PROCESS               |              | ABSOLUTE MECHANISM        |
-|          | Chemism                |              | CHEMICAL OBJECT                 |              | PROCESS                          |              | CHEMISM                   |
-|          | Teleology              |              | SUBJECTIVE PURPOSE              |              | MEANS                            |              | REALIZED PURPOSE          |
-|          | Life                   |              | LIVING INDIVIDUAL               |              | LIFE-PROCESS                     |              | GENUS                     |
-|          | Cognition              |              | IDEA OF THE GOOD                |              | IDEA OF THE TRUE                 |              | EMPTY                     |
-|          | The absolute idea      |              | EMPTY                           |              | EMPTY                            |              | EMPTY                     |
+| Genus ID | Genus                  | Species 1 ID | Species 1                   | Species 2 ID | Species 2                        | Species 3 ID | Species 3                 |
+| -------- | ---------------------- | ------------ | --------------------------- | ------------ | -------------------------------- | ------------ | ------------------------- |
+| being    | Being                  | bei          | BEING                       | not          | NOTHING                          | bec          | BECOMING                  |
+| exist    | Existence              | suc          | EXISTENCE AS SUCH           | fin          | FINITUDE                         | inf          | INFINITY                  |
+| befor    | Being-for-itself       | suc          | BEING-FOR-ITSELF AS SUCH    | oam          | ONE AND MANY                     | att          | ATTRACTION                |
+| quant    | Quantity               | pur          | PURE QUANTITY               | mag          | MAGNITUDE                        | lim          | LIMITING OF QUANTITY      |
+| qntum    | Quantum                | num          | NUMBER                      | qua          | QUANTUM                          | inf          | QUANTITATIVE INFINITY     |
+| ratio    | Ratio                  | dir          | DIRECT RATIO                | inv          | INVERSE RATIO                    | pow          | RATIO OF POWERS           |
+| specq    | Specific Quantity      | bfr          | BEING-FOR-ITSELF IN MEASURE | qua          | SPECIFIC QUANTUM                 | spm          | SPECIFYING MEASURE        |
+| rmeas    | Real Measure           | mer          | MEASURE-RELATIONS           | rel          | RELATION OF INDEPENDENT MEASURES | mel          | THE MEASURELESS           |
+| becom    | Becoming of Essence    | abs          | ABSOLUTE INDIFFERENCE       | ind          | INDIFFERENCE AS INVERSE RATIO    | bec          | BECOMING-ESSENCE          |
+| essen    | Essence                | ess          | ESSENCE                     | shn          | SHINE                            | ref          | REFLECTION                |
+| reflc    | Reflection             | ide          | IDENTITY                    | dif          | DIFFERENCE                       | cnt          | CONTRADICTION             |
+| groun    | Ground                 | abs          | ABSOLUTE GROUND             | det          | DETERMINATE GROUND               | cnd          | CONDITION                 |
+| concr    | Concrete existence     | thg          | THING                       | mat          | MATTERS                          | dis          | DISSOLUTION OF THE THING  |
+| apper    | Appearance             | law          | LAW OF APPEARANCE           | wor          | WORLD OF APPEARANCE              | dis          | DISSOLUTION OF APPEARANCE |
+| esrel    | The essential relation | wap          | WHOLE AND PARTS             | fae          | FORCE AND ITS EXPRESSION         | oai          | OUTER AND INNER           |
+| absol    | The absolute           | exp          | EXPOSITION OF THE ABSOLUTE  | att          | ABSOLUTE ATTRIBUTE               | mod          | MODE OF THE ABSOLUTE      |
+| actua    | Actuality              | con          | CONTINGENCY                 | rel          | RELATIVE NECESSITY               | abs          | ABSOLUTE NECESSITY        |
+| absrl    | The absolute relation  | sub          | SUBSTANTIALITY              | cau          | CAUSALITY                        | rec          | RECIPROCITY OF ACTION     |
+| conce    | Concept as such        | uni          | UNIVERSAL CONCEPT           | par          | PARTICULAR CONCEPT               | sin          | SINGULAR CONCEPT          |
+| judgm    | Judgment               | jow          | JUDGMENT OF EXISTENCE       | jor          | JUDGMENT OF REFLECTION           | jon          | JUDGMENT OF NECESSITY     |
+| syllo    | Syllogism              | soe          | SYLLOGISM OF EXISTENCE      | sor          | SYLLOGISM OF REFLECION           | son          | SYLLOGISM OF NECESSITY    |
+| mecha    | Mechanism              | obj          | MECHANICAL OBJECT           | pro          | MECHANICAL PROCESS               | abs          | ABSOLUTE MECHANISM        |
+| chemi    | Chemism                | obj          | CHEMICAL OBJECT             | pro          | PROCESS                          | chm          | CHEMISM                   |
+| teleo    | Teleology              | sub          | SUBJECTIVE PURPOSE          | mea          | MEANS                            | pur          | REALIZED PURPOSE          |
+| ilife    | Life                   | liv          | LIVING INDIVIDUAL           | lip          | LIFE-PROCESS                     | gen          | GENUS                     |
+| cogni    | Cognition              | tru          | IDEA OF THE TRUE            | god          | IDEA OF THE GOOD                 | emp          | EMPTY                     |
+| aidea    | The absolute idea      | emp          | EMPTY                       | emp          | EMPTY                            | emp          | EMPTY                     |

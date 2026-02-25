@@ -51,7 +51,7 @@ Decision:
 - Migration: `relation_schema_v1 -> relation_schema_v1_1_overlay` (non-breaking).
 - Apply relation claim/keypoint anchor overlay for this workbook pass; keep claims unchanged.
 
-### Entry ess-ref-a-001 — Essence is sublated being and determined negation
+### Entry essen-ess-001 — Essence is sublated being and determined negation
 
 Span:
 
@@ -72,7 +72,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: ess-ref-a-001-c1
+- c1. id: essen-ess-001-c1
   - subject: essence
   - predicate: is
   - object: sublated_being
@@ -81,7 +81,7 @@ Claims: (Claim)
   - evidence:
     - [234-234] "Essence is sublated being."
 
-- c2. id: ess-ref-a-001-c2
+- c2. id: essen-ess-001-c2
   - subject: essence
   - predicate: is_determined_as
   - object: determined_negation_of_being
@@ -90,7 +90,7 @@ Claims: (Claim)
   - evidence:
     - [234-247] essence as negation of being-sphere and determined negation.
 
-- c3. id: ess-ref-a-001-c3
+- c3. id: essen-ess-001-c3
   - subject: being_and_essence_in_first_comparison
   - predicate: stand_as
   - object: mutually_indifferent_equals_in_immediacy
@@ -108,11 +108,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: ess-ref-a-002
+  - targetEntryId: essen-ess-002
   - note: the comparative frame shifts into explicit essential/unessential split.
-  - sourceClaimIds: [`ess-ref-a-001-c3`]
+  - sourceClaimIds: [`essen-ess-001-c3`]
   - sourceKeyPointIds: [`k4`]
-  - targetClaimIds: [`ess-ref-a-002-c1`]
+  - targetClaimIds: [`essen-ess-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -122,7 +122,7 @@ Review outcome:
 - notes: sentence-complete boundary locked at line 251.
 - interpretive note (outside formal claims): possible cognitive transition marker from outer intuition to inner intuition.
 
-### Entry ess-ref-a-002 — Essential/unessential split relapses into external standpoint
+### Entry essen-ess-002 — Essential/unessential split relapses into external standpoint
 
 Span:
 
@@ -143,7 +143,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: ess-ref-a-002-c1
+- c1. id: essen-ess-002-c1
   - subject: essential_unessential_distinction
   - predicate: is
   - object: external_positing
@@ -152,7 +152,7 @@ Claims: (Claim)
   - evidence:
     - [271-281] the distinction is an external positing that leaves existence untouched.
 
-- c2. id: ess-ref-a-002-c2
+- c2. id: essen-ess-002-c2
   - subject: essential_unessential_distinction
   - predicate: depends_on
   - object: external_standpoint
@@ -161,7 +161,7 @@ Claims: (Claim)
   - evidence:
     - [279-281] same content can be considered essential or unessential depending on standpoint.
 
-- c3. id: ess-ref-a-002-c3
+- c3. id: essen-ess-002-c3
   - subject: essence_in_this_split
   - predicate: is_reduced_to
   - object: another_existence_called_essential
@@ -173,20 +173,20 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: ess-ref-a-001
+  - targetEntryId: essen-ess-001
   - note: explains why first determination is insufficient if held externally.
-  - sourceClaimIds: [`ess-ref-a-002-c1`, `ess-ref-a-002-c2`]
+  - sourceClaimIds: [`essen-ess-002-c1`, `essen-ess-002-c2`]
   - sourceKeyPointIds: [`k3`, `k4`]
-  - targetClaimIds: [`ess-ref-a-001-c3`]
+  - targetClaimIds: [`essen-ess-001-c3`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: ess-ref-a-003
+  - targetEntryId: essen-ess-003
   - note: move to deeper determination of essence as absolute negativity.
-  - sourceClaimIds: [`ess-ref-a-002-c1`]
+  - sourceClaimIds: [`essen-ess-002-c1`]
   - sourceKeyPointIds: [`k1`, `k2`]
-  - targetClaimIds: [`ess-ref-a-003-c1`]
+  - targetClaimIds: [`essen-ess-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -195,7 +195,7 @@ Review outcome:
 - review_pending
 - notes: decide whether c3 should be modality `interpretive` or `asserted`.
 
-### Entry ess-ref-a-003 — Absolute negativity resolves the split into non-essence (shine)
+### Entry essen-ess-003 — Absolute negativity resolves the split into non-essence (shine)
 
 Span:
 
@@ -217,7 +217,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: ess-ref-a-003-c1
+- c1. id: essen-ess-003-c1
   - subject: essence
   - predicate: is
   - object: absolute_negativity_of_being
@@ -226,7 +226,7 @@ Claims: (Claim)
   - evidence:
     - [295-300] essence as being that has sublated immediate being and immediate negation.
 
-- c2. id: ess-ref-a-003-c2
+- c2. id: essen-ess-003-c2
   - subject: being_or_existence
   - predicate: does_not_persist_except_as
   - object: what_essence_is
@@ -235,7 +235,7 @@ Claims: (Claim)
   - evidence:
     - [301-301] being or existence does not persist except as what essence is.
 
-- c3. id: ess-ref-a-003-c3
+- c3. id: essen-ess-003-c3
   - subject: immediate_opposed_to_essence
   - predicate: is_determined_as
   - object: non_essence_shine
@@ -247,18 +247,18 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: sublates
-  - targetEntryId: ess-ref-a-002
+  - targetEntryId: essen-ess-002
   - note: deeper determination of essence overcomes external essential/unessential partition.
-  - sourceClaimIds: [`ess-ref-a-003-c1`, `ess-ref-a-003-c3`]
+  - sourceClaimIds: [`essen-ess-003-c1`, `essen-ess-003-c3`]
   - sourceKeyPointIds: [`k2`, `k4`, `k5`]
-  - targetClaimIds: [`ess-ref-a-002-c1`]
+  - targetClaimIds: [`essen-ess-002-c1`]
   - logicalOperator: sublative_transition
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: ess-ref-b-001
+  - targetEntryId: essen-shn-001
   - note: culminates in the immanent synthesis of shine itself, which Part B then unfolds explicitly.
-  - sourceClaimIds: [`ess-ref-a-003-c3`]
+  - sourceClaimIds: [`essen-ess-003-c3`]
   - sourceKeyPointIds: [`k5`]
   - targetClaimIds: pending_cross_workbook
   - logicalOperator: sequential_transition

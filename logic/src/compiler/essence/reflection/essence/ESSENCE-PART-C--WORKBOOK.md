@@ -50,8 +50,8 @@ Decision:
 - Use Part B workbook format unchanged.
 - Working section alignment (provisional): prelude (`4-66`), then source-labeled movements `1. Positing reflection` (`69-228`), `2. External reflection` (`232-314`), `3. Determining reflection` (`317-481`).
 - Prelude handling: entries for `4-66` are deferred (candidate move to IDEA workbook) and are not included in this Part C workbook pass.
-- Entry grouping for review: positing = `ess-ref-c-001..004`; external = `ess-ref-c-005..007`; determining = `ess-ref-c-008..010`.
-- Determining-reflection internal labels respected in spans: `1` -> `ess-ref-c-008` (`317-371`), `2` -> `ess-ref-c-009` (`373-441`), `3` -> `ess-ref-c-010` (`443-481`).
+- Entry grouping for review: `essen-ref-a-001..003`, `essen-ref-b-001..003`, `essen-ref-c-001..003`, final transition = `essen-ref-t-001`.
+- Determining-reflection internal labels respected in spans: `1` -> `essen-ref-c-002` (`317-371`), `2` -> `essen-ref-c-003` (`373-441`), with final transition synthesis in `essen-ref-t-001` (`443-481`).
 - Section labels are tracked in this Decision block and spans, not encoded in entry headings.
 - Keep claim count minimal and non-redundant.
 - Adopt pseudo-Cypher KG labels in entry headers: `Key points: (KeyPoint)`, `Claims: (Claim)`, `Relations: (Relation)`.
@@ -63,7 +63,7 @@ Decision:
 - Migration: `relation_schema_v1 -> relation_schema_v1_1_overlay` (non-breaking).
 - Apply relation claim/keypoint anchor overlay for this workbook pass; keep claims unchanged.
 
-### Entry ess-ref-c-001 — Positing reflection as self-referring negativity
+### Entry essen-ref-a-001 — Positing reflection as self-referring negativity
 
 Span:
 
@@ -84,7 +84,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: ess-ref-c-001-c1
+- c1. id: essen-ref-a-001-c1
   - subject: shine_nothingness
   - predicate: has_being_as
   - object: own_equality_with_itself
@@ -93,7 +93,7 @@ Claims: (Claim)
   - evidence:
     - [69-74] nothingness does not shine in another; its being is equality with itself as absolute reflection.
 
-- c2. id: ess-ref-c-001-c2
+- c2. id: essen-ref-a-001-c2
   - subject: self_referring_negativity
   - predicate: is
   - object: unity_of_negativity_and_sublated_negativity
@@ -102,7 +102,7 @@ Claims: (Claim)
   - evidence:
     - [76-84] negativity negates itself and is both negative and simple self-equality.
 
-- c3. id: ess-ref-c-001-c3
+- c3. id: essen-ref-a-001-c3
   - subject: reflective_immediacy
   - predicate: is
   - object: self_negating_equality
@@ -120,20 +120,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: refines
-  - targetEntryId: ess-ref-c-002
+  - targetEntryId: essen-ref-a-002
   - note: establishes self-negating immediacy presupposed by the turning-back account.
-  - sourceClaimIds: [`ess-ref-c-001-c1`, `ess-ref-c-001-c2`]
+  - sourceClaimIds: [`essen-ref-a-001-c1`, `essen-ref-a-001-c2`]
   - sourceKeyPointIds: [`k1`, `k2`]
-  - targetClaimIds: [`ess-ref-c-002-c1`, `ess-ref-c-002-c3`]
+  - targetClaimIds: [`essen-ref-a-002-c1`, `essen-ref-a-002-c3`]
   - logicalOperator: presuppositional_link
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: ess-ref-c-002
+  - targetEntryId: essen-ref-a-002
   - note: moves from self-negating equality to positedness/turning-back determinateness.
-  - sourceClaimIds: [`ess-ref-c-001-c3`]
+  - sourceClaimIds: [`essen-ref-a-001-c3`]
   - sourceKeyPointIds: [`k3`, `k4`]
-  - targetClaimIds: [`ess-ref-c-002-c1`, `ess-ref-c-002-c2`]
+  - targetClaimIds: [`essen-ref-a-002-c1`, `essen-ref-a-002-c2`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -142,7 +142,7 @@ Review outcome:
 - review_pending
 - notes: no comparative additions in first-order blocks.
 
-### Entry ess-ref-c-002 — Turning-back immediacy as positedness
+### Entry essen-ref-a-002 — Turning-back immediacy as positedness
 
 Span:
 
@@ -163,7 +163,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: ess-ref-c-002-c1
+- c1. id: essen-ref-a-002-c1
   - subject: negative_self_reference
   - predicate: is
   - object: turning_back_into_itself
@@ -172,7 +172,7 @@ Claims: (Claim)
   - evidence:
     - [107-113] self-reference is turning back and self-sublating immediacy.
 
-- c2. id: ess-ref-c-002-c2
+- c2. id: essen-ref-a-002-c2
   - subject: positedness
   - predicate: is
   - object: immediacy_as_determinateness_of_shine
@@ -181,7 +181,7 @@ Claims: (Claim)
   - evidence:
     - [113-119] positedness as immediacy purely as determinateness/self-reflecting.
 
-- c3. id: ess-ref-c-002-c3
+- c3. id: essen-ref-a-002-c3
   - subject: reflection
   - predicate: is
   - object: movement_existing_only_in_turning_back
@@ -199,20 +199,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: ess-ref-c-001
+  - targetEntryId: essen-ref-a-001
   - note: grounds self-negating immediacy in the explicit category of positedness.
-  - sourceClaimIds: [`ess-ref-c-002-c1`, `ess-ref-c-002-c2`]
+  - sourceClaimIds: [`essen-ref-a-002-c1`, `essen-ref-a-002-c2`]
   - sourceKeyPointIds: [`k1`, `k2`]
-  - targetClaimIds: [`ess-ref-c-001-c3`]
+  - targetClaimIds: [`essen-ref-a-001-c3`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: ess-ref-c-003
+  - targetEntryId: essen-ref-a-003
   - note: the turning-back form now develops into presupposing and self-repulsion.
-  - sourceClaimIds: [`ess-ref-c-002-c3`]
+  - sourceClaimIds: [`essen-ref-a-002-c3`]
   - sourceKeyPointIds: [`k3`, `k4`]
-  - targetClaimIds: [`ess-ref-c-003-c2`]
+  - targetClaimIds: [`essen-ref-a-003-c2`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -221,7 +221,7 @@ Review outcome:
 - review_pending
 - notes: semantics of beginning/return can be enriched in relation cycles.
 
-### Entry ess-ref-c-003 — Positing as presupposing and self-repulsion
+### Entry essen-ref-a-003 — Positing as presupposing and self-repulsion
 
 Span:
 
@@ -242,7 +242,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: ess-ref-c-003-c1
+- c1. id: essen-ref-a-003-c1
   - subject: positing_reflection
   - predicate: is
   - object: turning_back_without_prior_other
@@ -251,7 +251,7 @@ Claims: (Claim)
   - evidence:
     - [128-133] no other beforehand; reflection is only as turning-back/negative of itself.
 
-- c2. id: ess-ref-c-003-c2
+- c2. id: essen-ref-a-003-c2
   - subject: reflection
   - predicate: becomes
   - object: presupposing_by_sublating_its_own_positing
@@ -260,7 +260,7 @@ Claims: (Claim)
   - evidence:
     - [134-151] sublating negative and positing leads to presupposing.
 
-- c3. id: ess-ref-c-003-c3
+- c3. id: essen-ref-a-003-c3
   - subject: inner_directed_reflection
   - predicate: is
   - object: presupposing_of_that_from_which_it_turns_back
@@ -278,20 +278,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: refines
-  - targetEntryId: ess-ref-c-002
+  - targetEntryId: essen-ref-a-002
   - note: explains how turning-back implies presupposition without external substrate.
-  - sourceClaimIds: [`ess-ref-c-003-c2`, `ess-ref-c-003-c3`]
+  - sourceClaimIds: [`essen-ref-a-003-c2`, `essen-ref-a-003-c3`]
   - sourceKeyPointIds: [`k2`, `k3`, `k4`]
-  - targetClaimIds: [`ess-ref-c-002-c3`]
+  - targetClaimIds: [`essen-ref-a-002-c3`]
   - logicalOperator: presuppositional_link
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: ess-ref-c-004
+  - targetEntryId: essen-ref-b-001
   - note: proceeds to full account of presupposition/self-arrival and determination of external reflection.
-  - sourceClaimIds: [`ess-ref-c-003-c3`]
+  - sourceClaimIds: [`essen-ref-a-003-c3`]
   - sourceKeyPointIds: [`k4`]
-  - targetClaimIds: [`ess-ref-c-004-c1`, `ess-ref-c-004-c2`]
+  - targetClaimIds: [`essen-ref-b-001-c1`, `essen-ref-b-001-c2`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -300,7 +300,7 @@ Review outcome:
 - review_pending
 - notes: presupposition paradox to be expanded in second-order relation notes.
 
-### Entry ess-ref-c-004 — Presupposition, counter-repelling movement, and the threshold of external reflection
+### Entry essen-ref-b-001 — Presupposition, counter-repelling movement, and the threshold of external reflection
 
 Span:
 
@@ -321,7 +321,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: ess-ref-c-004-c1
+- c1. id: essen-ref-b-001-c1
   - subject: essence
   - predicate: presupposes_and_sublates
   - object: itself
@@ -330,7 +330,7 @@ Claims: (Claim)
   - evidence:
     - [167-173] essence presupposes itself; sublating presupposition is essence itself.
 
-- c2. id: ess-ref-c-004-c2
+- c2. id: essen-ref-b-001-c2
   - subject: reflective_movement
   - predicate: is
   - object: absolute_internal_counter_repelling_self_movement
@@ -339,7 +339,7 @@ Claims: (Claim)
   - evidence:
     - [190-207] movement as internal counter-repelling where transcending immediate is arriving at immediate.
 
-- c3. id: ess-ref-c-004-c3
+- c3. id: essen-ref-b-001-c3
   - subject: reflection_determinate
   - predicate: is
   - object: external_reflection_when_presupposition_is_taken_as_other
@@ -357,20 +357,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: ess-ref-c-003
+  - targetEntryId: essen-ref-a-003
   - note: provides extended derivation of presupposition dynamic implicit in positing reflection.
-  - sourceClaimIds: [`ess-ref-c-004-c1`, `ess-ref-c-004-c2`]
+  - sourceClaimIds: [`essen-ref-b-001-c1`, `essen-ref-b-001-c2`]
   - sourceKeyPointIds: [`k1`, `k2`, `k3`]
-  - targetClaimIds: [`ess-ref-c-003-c2`, `ess-ref-c-003-c3`]
+  - targetClaimIds: [`essen-ref-a-003-c2`, `essen-ref-a-003-c3`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: ess-ref-c-005
+  - targetEntryId: essen-ref-b-002
   - note: threshold statement becomes explicit treatment of external reflection.
-  - sourceClaimIds: [`ess-ref-c-004-c3`]
+  - sourceClaimIds: [`essen-ref-b-001-c3`]
   - sourceKeyPointIds: [`k4`]
-  - targetClaimIds: [`ess-ref-c-005-c1`]
+  - targetClaimIds: [`essen-ref-b-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -379,7 +379,7 @@ Review outcome:
 - review_pending
 - notes: core for proof-trace from positing to external is captured; relation thickening pending.
 
-### Entry ess-ref-c-005 — External reflection and the sublation of externality
+### Entry essen-ref-b-002 — External reflection and the sublation of externality
 
 Span:
 
@@ -400,7 +400,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: ess-ref-c-005-c1
+- c1. id: essen-ref-b-002-c1
   - subject: external_reflection
   - predicate: is_doubled_as
   - object: presupposed_immediate_and_negative_self_reference
@@ -409,7 +409,7 @@ Claims: (Claim)
   - evidence:
     - [232-247] reflection presupposes itself as sublated and is doubled as immediate and negative self-reference.
 
-- c2. id: ess-ref-c-005-c2
+- c2. id: essen-ref-b-002-c2
   - subject: external_reflection
   - predicate: starts_from_and_negates
   - object: immediate_as_its_other
@@ -418,7 +418,7 @@ Claims: (Claim)
   - evidence:
     - [249-263] reflection starts from immediate presupposition and negates it as its negative.
 
-- c3. id: ess-ref-c-005-c3
+- c3. id: essen-ref-b-002-c3
   - subject: external_reflection
   - predicate: posits_as_external
   - object: determinations_in_the_immediate
@@ -436,20 +436,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: refines
-  - targetEntryId: ess-ref-c-004
+  - targetEntryId: essen-ref-b-001
   - note: develops the threshold claim of external reflection into its initial doubled structure.
-  - sourceClaimIds: [`ess-ref-c-005-c1`, `ess-ref-c-005-c2`]
+  - sourceClaimIds: [`essen-ref-b-002-c1`, `essen-ref-b-002-c2`]
   - sourceKeyPointIds: [`k1`, `k2`]
-  - targetClaimIds: [`ess-ref-c-004-c3`]
+  - targetClaimIds: [`essen-ref-b-001-c3`]
   - logicalOperator: presuppositional_link
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: ess-ref-c-006
+  - targetEntryId: essen-ref-b-003
   - note: external reflection next appears in explicit syllogistic form.
-  - sourceClaimIds: [`ess-ref-c-005-c3`]
+  - sourceClaimIds: [`essen-ref-b-002-c3`]
   - sourceKeyPointIds: [`k3`, `k4`]
-  - targetClaimIds: [`ess-ref-c-006-c1`]
+  - targetClaimIds: [`essen-ref-b-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -458,7 +458,7 @@ Review outcome:
 - review_pending
 - notes: first external-reflection movement isolated as 232-277.
 
-### Entry ess-ref-c-006 — External reflection as syllogistic mediation
+### Entry essen-ref-b-003 — External reflection as syllogistic mediation
 
 Span:
 
@@ -478,7 +478,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: ess-ref-c-006-c1
+- c1. id: essen-ref-b-003-c1
   - subject: external_reflection
   - predicate: operates_as
   - object: syllogistic_mediation_between_immediate_and_reflection_into_self
@@ -494,20 +494,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: ess-ref-c-005
+  - targetEntryId: essen-ref-b-002
   - note: specifies the formal mediation structure implicit in external reflection's doubled setup.
-  - sourceClaimIds: [`ess-ref-c-006-c1`]
+  - sourceClaimIds: [`essen-ref-b-003-c1`]
   - sourceKeyPointIds: [`k1`, `k2`, `k3`]
-  - targetClaimIds: [`ess-ref-c-005-c2`]
+  - targetClaimIds: [`essen-ref-b-002-c2`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: ess-ref-c-007
+  - targetEntryId: essen-ref-c-001
   - note: from syllogistic form to the self-negating operation that sublates externality.
-  - sourceClaimIds: [`ess-ref-c-006-c1`]
+  - sourceClaimIds: [`essen-ref-b-003-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`ess-ref-c-007-c1`]
+  - targetClaimIds: [`essen-ref-c-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -516,7 +516,7 @@ Review outcome:
 - review_pending
 - notes: isolated formal paragraph 278-285 as its own entry.
 
-### Entry ess-ref-c-007 — Sublation of externality into determining reflection
+### Entry essen-ref-c-001 — Sublation of externality into determining reflection
 
 Span:
 
@@ -537,7 +537,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: ess-ref-c-007-c1
+- c1. id: essen-ref-c-001-c1
   - subject: external_reflection
   - predicate: posits_and_sublates
   - object: immediate_as_its_negative
@@ -546,7 +546,7 @@ Claims: (Claim)
   - evidence:
     - [286-297] external reflection posits immediate as negative and equally sublates this positing.
 
-- c2. id: ess-ref-c-007-c2
+- c2. id: essen-ref-c-001-c2
   - subject: immediate
   - predicate: is_posited_as
   - object: same_as_reflection
@@ -555,7 +555,7 @@ Claims: (Claim)
   - evidence:
     - [297-308] immediate is posited as same as reflection through self-negating positing.
 
-- c3. id: ess-ref-c-007-c3
+- c3. id: essen-ref-c-001-c3
   - subject: external_reflection
   - predicate: sublates_into
   - object: determining_reflection
@@ -573,20 +573,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: refines
-  - targetEntryId: ess-ref-c-006
+  - targetEntryId: essen-ref-b-003
   - note: turns syllogistic mediation into explicit self-negating operation.
-  - sourceClaimIds: [`ess-ref-c-007-c1`, `ess-ref-c-007-c2`]
+  - sourceClaimIds: [`essen-ref-c-001-c1`, `essen-ref-c-001-c2`]
   - sourceKeyPointIds: [`k1`, `k2`, `k3`]
-  - targetClaimIds: [`ess-ref-c-006-c1`]
+  - targetClaimIds: [`essen-ref-b-003-c1`]
   - logicalOperator: presuppositional_link
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: ess-ref-c-008
+  - targetEntryId: essen-ref-c-002
   - note: result of external reflection opens the first movement of determining reflection.
-  - sourceClaimIds: [`ess-ref-c-007-c3`]
+  - sourceClaimIds: [`essen-ref-c-001-c3`]
   - sourceKeyPointIds: [`k4`]
-  - targetClaimIds: [`ess-ref-c-008-c1`]
+  - targetClaimIds: [`essen-ref-c-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -595,7 +595,7 @@ Review outcome:
 - review_pending
 - notes: transition to determining reflection isolated at 309-314.
 
-### Entry ess-ref-c-008 — Determining reflection: positedness, existence, and superiority
+### Entry essen-ref-c-002 — Determining reflection: positedness, existence, and superiority
 
 Span:
 
@@ -616,7 +616,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: ess-ref-c-008-c1
+- c1. id: essen-ref-c-002-c1
   - subject: determining_reflection
   - predicate: is
   - object: unity_of_positing_and_external_reflection
@@ -625,7 +625,7 @@ Claims: (Claim)
   - evidence:
     - [317-319] determining reflection explicitly defined as their unity.
 
-- c2. id: ess-ref-c-008-c2
+- c2. id: essen-ref-c-002-c2
   - subject: positedness
   - predicate: corresponds_to
   - object: existence_in_essence
@@ -634,7 +634,7 @@ Claims: (Claim)
   - evidence:
     - [345-353] positedness corresponds to existence and is principle of essence of existence.
 
-- c3. id: ess-ref-c-008-c3
+- c3. id: essen-ref-c-002-c3
   - subject: positedness
   - predicate: is_superior_to
   - object: existence
@@ -652,20 +652,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: ess-ref-c-007
+  - targetEntryId: essen-ref-c-001
   - note: confirms external reflection's result by defining determining reflection's basic structure.
-  - sourceClaimIds: [`ess-ref-c-008-c1`]
+  - sourceClaimIds: [`essen-ref-c-002-c1`]
   - sourceKeyPointIds: [`k1`]
-  - targetClaimIds: [`ess-ref-c-007-c3`]
+  - targetClaimIds: [`essen-ref-c-001-c3`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: ess-ref-c-009
+  - targetEntryId: essen-ref-c-003
   - note: moves from definition to the internal logic of determination-of-reflection versus quality.
-  - sourceClaimIds: [`ess-ref-c-008-c2`, `ess-ref-c-008-c3`]
+  - sourceClaimIds: [`essen-ref-c-002-c2`, `essen-ref-c-002-c3`]
   - sourceKeyPointIds: [`k3`, `k4`]
-  - targetClaimIds: [`ess-ref-c-009-c2`]
+  - targetClaimIds: [`essen-ref-c-003-c2`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -674,7 +674,7 @@ Review outcome:
 - review_pending
 - notes: superiority claim may need fine-grained relation links to Being chapter during cross-part cycle.
 
-### Entry ess-ref-c-009 — Determination of reflection versus quality
+### Entry essen-ref-c-003 — Determination of reflection versus quality
 
 Span:
 
@@ -696,7 +696,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: ess-ref-c-009-c1
+- c1. id: essen-ref-c-003-c1
   - subject: positedness
   - predicate: becomes
   - object: determination_of_reflection
@@ -705,7 +705,7 @@ Claims: (Claim)
   - evidence:
     - [373-381] positing united with external reflection yields positedness as determination of reflection.
 
-- c2. id: ess-ref-c-009-c2
+- c2. id: essen-ref-c-003-c2
   - subject: determination_of_reflection
   - predicate: differs_from
   - object: quality_by_immanent_reflected_ground
@@ -714,7 +714,7 @@ Claims: (Claim)
   - evidence:
     - [383-408] contrast with quality; persistence through reflection's self-equality and sublated negation.
 
-- c3. id: ess-ref-c-009-c3
+- c3. id: essen-ref-c-003-c3
   - subject: determination_of_reflection
   - predicate: has_two_sides
   - object: posited_negation_and_immanent_reflection
@@ -732,20 +732,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: refines
-  - targetEntryId: ess-ref-c-008
+  - targetEntryId: essen-ref-c-002
   - note: deepens determining reflection from structural definition to determinative content.
-  - sourceClaimIds: [`ess-ref-c-009-c1`, `ess-ref-c-009-c2`]
+  - sourceClaimIds: [`essen-ref-c-003-c1`, `essen-ref-c-003-c2`]
   - sourceKeyPointIds: [`k1`, `k2`, `k3`, `k4`]
-  - targetClaimIds: [`ess-ref-c-008-c1`, `ess-ref-c-008-c2`]
+  - targetClaimIds: [`essen-ref-c-002-c1`, `essen-ref-c-002-c2`]
   - logicalOperator: presuppositional_link
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: ess-ref-c-010
+  - targetEntryId: essen-ref-t-001
   - note: culminates in the explicit synthesis of positedness and immanent reflection.
-  - sourceClaimIds: [`ess-ref-c-009-c3`]
+  - sourceClaimIds: [`essen-ref-c-003-c3`]
   - sourceKeyPointIds: [`k5`]
-  - targetClaimIds: [`ess-ref-c-010-c1`]
+  - targetClaimIds: [`essen-ref-t-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -754,7 +754,7 @@ Review outcome:
 - review_pending
 - notes: fixed-essentiality language ready for second-order Concept mapping.
 
-### Entry ess-ref-c-010 — Final synthesis: determination as infinite self-reference
+### Entry essen-ref-t-001 — Final transition moment: determination as infinite self-reference
 
 Span:
 
@@ -776,7 +776,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: ess-ref-c-010-c1
+- c1. id: essen-ref-t-001-c1
   - subject: determination_of_reflection
   - predicate: is
   - object: unity_of_positedness_and_immanent_reflection
@@ -785,7 +785,7 @@ Claims: (Claim)
   - evidence:
     - [443-457] determination has both immanently reflected reference and positedness.
 
-- c2. id: ess-ref-c-010-c2
+- c2. id: essen-ref-t-001-c2
   - subject: reflection_determinateness
   - predicate: includes
   - object: determinate_side_and_reference_to_its_negation
@@ -794,7 +794,7 @@ Claims: (Claim)
   - evidence:
     - [465-468] determinate side and reference to negation are internal to the determination.
 
-- c3. id: ess-ref-c-010-c3
+- c3. id: essen-ref-t-001-c3
   - subject: reflection_determination
   - predicate: is
   - object: essentiality_as_infinite_self_reference
@@ -812,18 +812,18 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: ess-ref-c-009
+  - targetEntryId: essen-ref-c-003
   - note: completes the two-sided structure by explicit synthesis.
-  - sourceClaimIds: [`ess-ref-c-010-c1`, `ess-ref-c-010-c2`]
+  - sourceClaimIds: [`essen-ref-t-001-c1`, `essen-ref-t-001-c2`]
   - sourceKeyPointIds: [`k1`, `k2`, `k3`]
-  - targetClaimIds: [`ess-ref-c-009-c3`]
+  - targetClaimIds: [`essen-ref-c-003-c3`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
   - targetEntryId: ess-ref-d-001
   - note: carries forward from reflection synthesis into the next Appearance-phase entry in the concept proof-trace.
-  - sourceClaimIds: [`ess-ref-c-010-c3`]
+  - sourceClaimIds: [`essen-ref-t-001-c3`]
   - sourceKeyPointIds: [`k4`, `k5`]
   - targetClaimIds: pending_cross_workbook
   - logicalOperator: sequential_transition

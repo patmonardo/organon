@@ -42,67 +42,17 @@ Scope:
 
 - file: `being.txt`
 - fixed range: lines `1-47`
-- pass policy: stabilize marker + analytic subentries with one claim per subentry
+- pass policy: stabilize analytic subentries with one claim per subentry
 
 Decision:
 
-- Two-level IDs for Part A:
-  - Level 1 marker: `bei-a`
-  - Level 2 numbered entries: `bei-a-<nnn>`
+- Expanded IDs for Part A:
+  - Analytic entries: `being-bei-<nnn>`
 - Numbered subentries are analytic segmentations, not additional source-labeled species.
 - Prefer one-claim subentries over claim-packed entries.
-- Keep transition handoff explicit to Part B (`bei-b-001`) when evidence supports it.
+- Keep transition handoff explicit to Part B (`being-not-001`) when evidence supports it.
 
-### Entry bei-a — Marker `A`: Pure Being
-
-Span:
-
-- sourceFile: `src/compiler/being/quality/being/being.txt`
-- lineStart: 32
-- lineEnd: 47
-
-Summary:
-
-Part A determines pure being as indeterminate immediacy whose emptiness leads to identity with nothing.
-
-Key points: (KeyPoint)
-
-- k1. Pure being is indeterminate immediacy.
-- k2. Posited determinacy contradicts pure being.
-- k3. Pure being passes into identity with nothing.
-
-Claims: (Claim)
-
-- c1. id: bei-a-c1
-  - subject: part_a_being
-  - predicate: unfolds_as
-  - object: indeterminacy_exclusion_identity_with_nothing
-  - modality: asserted
-  - confidence: 0.97
-  - evidence:
-    - [32-47] sequence from indeterminate immediacy to explicit identity with nothing.
-
-Claim ↔ key point map:
-
-- c1 -> k1, k2, k3
-
-Relations: (Relation)
-
-- r1. type: transitions_to
-  - targetEntryId: bei-a-001
-  - note: marker to first analytic moment of pure being.
-  - sourceClaimIds: [`bei-a-c1`]
-  - sourceKeyPointIds: [`k1`]
-  - targetClaimIds: [`bei-a-001-c1`]
-  - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
-
-Review outcome:
-
-- review_pending
-- notes: marker stabilized for one-claim subentry regime.
-
-### Entry bei-a-001 — Pure being I: indeterminate immediacy
+### Entry being-bei-001 — Pure being I: indeterminate immediacy
 
 Span:
 
@@ -122,7 +72,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: bei-a-001-c1
+- c1. id: being-bei-001-c1
   - subject: pure_being
   - predicate: is_determined_as
   - object: indeterminate_immediacy_without_difference
@@ -138,11 +88,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: bei-a-002
+  - targetEntryId: being-bei-002
   - note: immediacy is tested against any posited content.
-  - sourceClaimIds: [`bei-a-001-c1`]
+  - sourceClaimIds: [`being-bei-001-c1`]
   - sourceKeyPointIds: [`k2`]
-  - targetClaimIds: [`bei-a-002-c1`]
+  - targetClaimIds: [`being-bei-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -151,7 +101,7 @@ Review outcome:
 - review_pending
 - notes: one-claim moment for opening determination.
 
-### Entry bei-a-002 — Pure being II: exclusion of posited content
+### Entry being-bei-002 — Pure being II: exclusion of posited content
 
 Span:
 
@@ -171,7 +121,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: bei-a-002-c1
+- c1. id: being-bei-002-c1
   - subject: pure_being
   - predicate: excludes
   - object: posited_determination_or_content
@@ -187,11 +137,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: bei-a-003
+  - targetEntryId: being-bei-003
   - note: exclusion of content leads to explicit emptiness and identity with nothing.
-  - sourceClaimIds: [`bei-a-002-c1`]
+  - sourceClaimIds: [`being-bei-002-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`bei-a-003-c1`]
+  - targetClaimIds: [`being-bei-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -200,7 +150,7 @@ Review outcome:
 - review_pending
 - notes: one-claim moment for purity constraint.
 
-### Entry bei-a-003 — Pure being III: identity with nothing
+### Entry being-bei-003 — Pure being III: identity with nothing
 
 Span:
 
@@ -220,7 +170,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: bei-a-003-c1
+- c1. id: being-bei-003-c1
   - subject: indeterminate_immediate_being
   - predicate: is_identical_with
   - object: nothing
@@ -236,11 +186,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: bei-b-001
+  - targetEntryId: being-not-001
   - note: Part A closes with being=nothing, opening Part B from the side of nothing.
-  - sourceClaimIds: [`bei-a-003-c1`]
+  - sourceClaimIds: [`being-bei-003-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`bei-b-001-c1`]
+  - targetClaimIds: [`being-not-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 

@@ -32,5 +32,5 @@ Authority: source text only
 ## Seed policy for Ratio
 
 - Ratio has no subspecies in this pass.
-- Ordinary entries use only numeric labels per part: `rat-a-001..`, `rat-b-001..`, `rat-c-001..`.
+- Ordinary entries use only numeric labels per part: `ratio-dir-001..`, `ratio-inv-001..`, `ratio-pow-001..`.
 - Analysis scope is transitions and claims; one seed claim per entry is valid.

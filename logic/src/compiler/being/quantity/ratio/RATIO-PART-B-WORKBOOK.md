@@ -46,11 +46,11 @@ Scope:
 
 Decision:
 
-- Use IDs: `rat-b-001`, `rat-b-002`, `rat-b-003`.
+- Use IDs: `ratio-inv-001`, `ratio-inv-002`, `ratio-inv-003`.
 - Ratio has no subspecies in this workbook pass.
-- Keep handoff explicit to Part C (`rat-c-001`).
+- Keep handoff explicit to Part C (`ratio-pow-001`).
 
-### Entry rat-b-001 — Inverse ratio I: exponent as product and internalized alteration
+### Entry ratio-inv-001 — Inverse ratio I: exponent as product and internalized alteration
 
 Span:
 
@@ -70,7 +70,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: rat-b-001-c1
+- c1. id: ratio-inv-001-c1
   - subject: inverse_ratio
   - predicate: is_determined_as
   - object: product_exponent_with_internalized_alteration
@@ -87,11 +87,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: rat-b-002
+  - targetEntryId: ratio-inv-002
   - note: internalized alteration is analyzed as unity of affirmative and negative moments.
-  - sourceClaimIds: [`rat-b-001-c1`]
+  - sourceClaimIds: [`ratio-inv-001-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`rat-b-002-c1`]
+  - targetClaimIds: [`ratio-inv-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -100,7 +100,7 @@ Review outcome:
 - review_pending
 - notes: one-claim numeric ordinary entry.
 
-### Entry rat-b-002 — Inverse ratio II: reciprocal limiting, bad infinity, and affirmative exponent
+### Entry ratio-inv-002 — Inverse ratio II: reciprocal limiting, bad infinity, and affirmative exponent
 
 Span:
 
@@ -120,7 +120,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: rat-b-002-c1
+- c1. id: ratio-inv-002-c1
   - subject: exponent_in_inverse_ratio
   - predicate: is
   - object: negative_limit_and_affirmative_unity_of_sides
@@ -138,11 +138,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: rat-b-003
+  - targetEntryId: ratio-inv-003
   - note: unity of limit and mediation yields transition to a new ratio determination.
-  - sourceClaimIds: [`rat-b-002-c1`]
+  - sourceClaimIds: [`ratio-inv-002-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`rat-b-003-c1`]
+  - targetClaimIds: [`ratio-inv-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -151,7 +151,7 @@ Review outcome:
 - review_pending
 - notes: one-claim numeric ordinary entry.
 
-### Entry rat-b-003 — Inverse ratio III: mediated self-rejoining exponent and transition to powers
+### Entry ratio-inv-003 — Inverse ratio III: mediated self-rejoining exponent and transition to powers
 
 Span:
 
@@ -171,7 +171,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: rat-b-003-c1
+- c1. id: ratio-inv-003-c1
   - subject: inverse_ratio
   - predicate: transitions_into
   - object: ratio_of_powers
@@ -187,11 +187,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: rat-c-001
+  - targetEntryId: ratio-pow-001
   - note: inverse ratio passes into ratio of powers.
-  - sourceClaimIds: [`rat-b-003-c1`]
+  - sourceClaimIds: [`ratio-inv-003-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`rat-c-001-c1`]
+  - targetClaimIds: [`ratio-pow-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 

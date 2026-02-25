@@ -46,11 +46,11 @@ Scope:
 
 Decision:
 
-- Use IDs: `rat-c-001`, `rat-c-002`, `rat-c-003`.
+- Use IDs: `ratio-pow-001`, `ratio-pow-002`, `ratio-pow-003`.
 - Ratio has no subspecies in this workbook pass.
 - Keep closure handoff explicit to Measure (`mea-a-001`) for next domain seeding.
 
-### Entry rat-c-001 — Powers I: quantum self-identical in its otherness
+### Entry ratio-pow-001 — Powers I: quantum self-identical in its otherness
 
 Span:
 
@@ -70,7 +70,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: rat-c-001-c1
+- c1. id: ratio-pow-001-c1
   - subject: ratio_of_powers
   - predicate: is
   - object: self_identity_of_quantum_in_otherness
@@ -87,11 +87,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: rat-c-002
+  - targetEntryId: ratio-pow-002
   - note: qualitative exponent is next shown as full realization of quantum’s concept.
-  - sourceClaimIds: [`rat-c-001-c1`]
+  - sourceClaimIds: [`ratio-pow-001-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`rat-c-002-c1`]
+  - targetClaimIds: [`ratio-pow-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -100,7 +100,7 @@ Review outcome:
 - review_pending
 - notes: one-claim numeric ordinary entry.
 
-### Entry rat-c-002 — Powers II: realized concept of quantum as self-determined difference
+### Entry ratio-pow-002 — Powers II: realized concept of quantum as self-determined difference
 
 Span:
 
@@ -120,7 +120,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: rat-c-002-c1
+- c1. id: ratio-pow-002-c1
   - subject: ratio_of_powers
   - predicate: realizes
   - object: quantum_as_self_determining_relation
@@ -137,11 +137,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: rat-c-003
+  - targetEntryId: ratio-pow-003
   - note: realized concept transitions into explicit passage to measure.
-  - sourceClaimIds: [`rat-c-002-c1`]
+  - sourceClaimIds: [`ratio-pow-002-c1`]
   - sourceKeyPointIds: [`k1`]
-  - targetClaimIds: [`rat-c-003-c1`]
+  - targetClaimIds: [`ratio-pow-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -150,7 +150,7 @@ Review outcome:
 - review_pending
 - notes: one-claim numeric ordinary entry.
 
-### Entry rat-c-003 — Powers III: quantity returned into itself as measure
+### Entry ratio-pow-003 — Powers III: quantity returned into itself as measure
 
 Span:
 
@@ -170,7 +170,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: rat-c-003-c1
+- c1. id: ratio-pow-003-c1
   - subject: truth_of_quantum
   - predicate: is
   - object: measure
@@ -188,7 +188,7 @@ Relations: (Relation)
 - r1. type: transitions_to
   - targetEntryId: mea-a-001
   - note: ratio culminates in measure domain.
-  - sourceClaimIds: [`rat-c-003-c1`]
+  - sourceClaimIds: [`ratio-pow-003-c1`]
   - sourceKeyPointIds: [`k3`]
   - targetClaimIds: [`mea-a-001-c1`]
   - logicalOperator: sequential_transition

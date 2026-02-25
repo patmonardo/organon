@@ -46,11 +46,11 @@ Scope:
 
 Decision:
 
-- Use IDs: `qtm-a-001`, `qtm-a-002`, `qtm-a-003`.
+- Use IDs: `qntum-num-001`, `qntum-num-002`, `qntum-num-003`.
 - Inline `(a)(b)(c)` is analyzed as ordered moments, not subspecies IDs, in this pass.
-- Keep transition handoff explicit to Part B (`qtm-b-a-001`).
+- Keep transition handoff explicit to Part B (`qntum-qua-a-001`).
 
-### Entry qtm-a-001 — Self-referring one as quantitative principle
+### Entry qntum-num-001 — Self-referring one as quantitative principle
 
 Span:
 
@@ -70,7 +70,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: qtm-a-001-c1
+- c1. id: qntum-num-001-c1
   - subject: one_of_quantity
   - predicate: is
   - object: unity_and_equal_plurality
@@ -86,11 +86,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: qtm-a-002
+  - targetEntryId: qntum-num-002
   - note: principle one is next determined as enclosing and excluding limit.
-  - sourceClaimIds: [`qtm-a-001-c1`]
+  - sourceClaimIds: [`qntum-num-001-c1`]
   - sourceKeyPointIds: [`k1`]
-  - targetClaimIds: [`qtm-a-002-c1`]
+  - targetClaimIds: [`qntum-num-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -99,7 +99,7 @@ Review outcome:
 - review_pending
 - notes: one-claim numeric ordinary entry.
 
-### Entry qtm-a-002 — Enclosing limit
+### Entry qntum-num-002 — Enclosing limit
 
 Span:
 
@@ -119,7 +119,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: qtm-a-002-c1
+- c1. id: qntum-num-002-c1
   - subject: one_of_quantity
   - predicate: functions_as
   - object: self_enclosing_other_excluding_limit
@@ -135,11 +135,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: qtm-a-003
+  - targetEntryId: qntum-num-003
   - note: enclosing limit is fully posited in number as unity/amount structure.
-  - sourceClaimIds: [`qtm-a-002-c1`]
+  - sourceClaimIds: [`qntum-num-002-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`qtm-a-003-c1`]
+  - targetClaimIds: [`qntum-num-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -148,7 +148,7 @@ Review outcome:
 - review_pending
 - notes: one-claim numeric ordinary entry.
 
-### Entry qtm-a-003 — Amount/unit contradiction and quantitative quality
+### Entry qntum-num-003 — Amount/unit contradiction and quantitative quality
 
 Span:
 
@@ -168,7 +168,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: qtm-a-003-c1
+- c1. id: qntum-num-003-c1
   - subject: number
   - predicate: contains
   - object: unity_of_amount_unit_and_intrinsic_contradiction
@@ -185,11 +185,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: qtm-b-a-001
+  - targetEntryId: qntum-qua-a-001
   - note: contradiction of number unfolds in extensive/intensive quantum.
-  - sourceClaimIds: [`qtm-a-003-c1`]
+  - sourceClaimIds: [`qntum-num-003-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`qtm-b-a-001-c1`]
+  - targetClaimIds: [`qntum-qua-a-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 

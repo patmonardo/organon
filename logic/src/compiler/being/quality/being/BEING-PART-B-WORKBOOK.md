@@ -46,63 +46,13 @@ Scope:
 
 Decision:
 
-- Adopt two-level IDs for this part:
-  - Level 1 marker: `bei-b`
-  - Level 2 numbered entries: `bei-b-<nnn>`
+- Adopt expanded IDs for this part:
+  - Analytic entries: `being-not-<nnn>`
 - Numbered subentries are analytic segmentations, not additional source-labeled species.
 - Prefer one-claim subentries over claim-packed entries.
-- Keep transition handoff explicit to Part C (`bei-c-001`) when evidence supports it.
+- Keep transition handoff explicit to Part C (`being-bec-001`) when evidence supports it.
 
-### Entry bei-b — Marker `B`: Pure Nothing
-
-Span:
-
-- sourceFile: `src/compiler/being/quality/being/nothing.txt`
-- lineStart: 12
-- lineEnd: 28
-
-Summary:
-
-Part B determines pure nothing as empty self-equality, as empty intuiting/thinking, and as equivalent to pure being.
-
-Key points: (KeyPoint)
-
-- k1. Nothing is pure empty self-equality without distinction.
-- k2. Nothing is intuited and thought as emptiness itself.
-- k3. Nothing shares the same absence of determination as pure being.
-
-Claims: (Claim)
-
-- c1. id: bei-b-c1
-  - subject: part_b_nothing
-  - predicate: unfolds_as
-  - object: emptiness_intuited_empty_equivalence_with_being
-  - modality: asserted
-  - confidence: 0.97
-  - evidence:
-    - [12-28] sequence from empty self-equality through empty intuiting/thinking to equivalence with pure being.
-
-Claim ↔ key point map:
-
-- c1 -> k1, k2, k3
-
-Relations: (Relation)
-
-- r1. type: transitions_to
-  - targetEntryId: bei-b-001
-  - note: marker to first analytic moment of pure nothing.
-  - sourceClaimIds: [`bei-b-c1`]
-  - sourceKeyPointIds: [`k1`]
-  - targetClaimIds: [`bei-b-001-c1`]
-  - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
-
-Review outcome:
-
-- review_pending
-- notes: marker stabilized for one-claim subentry regime.
-
-### Entry bei-b-001 — Pure nothing I: empty self-equality
+### Entry being-not-001 — Pure nothing I: empty self-equality
 
 Span:
 
@@ -122,7 +72,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: bei-b-001-c1
+- c1. id: being-not-001-c1
   - subject: pure_nothing
   - predicate: is_determined_as
   - object: empty_self_equality_without_distinction
@@ -140,11 +90,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: bei-b-002
+  - targetEntryId: being-not-002
   - note: empty self-equality is rendered as empty intuiting/thinking.
-  - sourceClaimIds: [`bei-b-001-c1`]
+  - sourceClaimIds: [`being-not-001-c1`]
   - sourceKeyPointIds: [`k1`]
-  - targetClaimIds: [`bei-b-002-c1`]
+  - targetClaimIds: [`being-not-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -153,7 +103,7 @@ Review outcome:
 - review_pending
 - notes: one-claim opening moment for Part B.
 
-### Entry bei-b-002 — Pure nothing II: empty intuiting and thinking
+### Entry being-not-002 — Pure nothing II: empty intuiting and thinking
 
 Span:
 
@@ -173,7 +123,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: bei-b-002-c1
+- c1. id: being-not-002-c1
   - subject: nothing
   - predicate: appears_as
   - object: empty_intuiting_and_thinking
@@ -189,11 +139,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: bei-b-003
+  - targetEntryId: being-not-003
   - note: empty apprehension culminates in explicit equivalence with pure being.
-  - sourceClaimIds: [`bei-b-002-c1`]
+  - sourceClaimIds: [`being-not-002-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`bei-b-003-c1`]
+  - targetClaimIds: [`being-not-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -202,7 +152,7 @@ Review outcome:
 - review_pending
 - notes: one-claim middle moment for Part B.
 
-### Entry bei-b-003 — Pure nothing III: equivalence with pure being
+### Entry being-not-003 — Pure nothing III: equivalence with pure being
 
 Span:
 
@@ -222,7 +172,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: bei-b-003-c1
+- c1. id: being-not-003-c1
   - subject: nothing
   - predicate: is_identical_with
   - object: pure_being
@@ -238,20 +188,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: bei-a-003
+  - targetEntryId: being-bei-003
   - note: Part B mirrors Part A closure claim from the side of nothing.
-  - sourceClaimIds: [`bei-b-003-c1`]
+  - sourceClaimIds: [`being-not-003-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`bei-a-003-c1`]
+  - targetClaimIds: [`being-bei-003-c1`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: bei-c-001
+  - targetEntryId: being-bec-001
   - note: identity of being and nothing passes into Becoming as their truth.
-  - sourceClaimIds: [`bei-b-003-c1`]
+  - sourceClaimIds: [`being-not-003-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`bei-c-001-c1`]
+  - targetClaimIds: [`being-bec-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 

@@ -46,11 +46,11 @@ Scope:
 
 Decision:
 
-- Use IDs: `qty-c-001`, `qty-c-002`, `qty-c-003`.
+- Use IDs: `quant-lim-001`, `quant-lim-002`, `quant-lim-003`.
 - This part has no explicit numeric subsectioning in the source; triadic segmentation here is analytic.
 - Keep closure handoff explicit toward Quantum seeding.
 
-### Entry qty-c-001 — Limiting I: one as determinateness and limit of discrete quantity
+### Entry quant-lim-001 — Limiting I: one as determinateness and limit of discrete quantity
 
 Span:
 
@@ -70,7 +70,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: qty-c-001-c1
+- c1. id: quant-lim-001-c1
   - subject: discrete_magnitude
   - predicate: is_determined_by
   - object: one_as_limiting_determinateness
@@ -87,11 +87,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: qty-c-002
+  - targetEntryId: quant-lim-002
   - note: limit is further determined as self-referred enclosing limit against continuity.
-  - sourceClaimIds: [`qty-c-001-c1`]
+  - sourceClaimIds: [`quant-lim-001-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`qty-c-002-c1`]
+  - targetClaimIds: [`quant-lim-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -100,7 +100,7 @@ Review outcome:
 - review_pending
 - notes: one-claim opening seed entry.
 
-### Entry qty-c-002 — Limiting II: enclosing limit and continuity’s transcendence
+### Entry quant-lim-002 — Limiting II: enclosing limit and continuity’s transcendence
 
 Span:
 
@@ -120,7 +120,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: qty-c-002-c1
+- c1. id: quant-lim-002-c1
   - subject: limiting_one
   - predicate: is_sublated_by
   - object: continuity_that_transcends_indifferent_limit
@@ -137,11 +137,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: qty-c-003
+  - targetEntryId: quant-lim-003
   - note: the limiting relation is generalized to both continuous and discrete magnitude becoming quanta.
-  - sourceClaimIds: [`qty-c-002-c1`]
+  - sourceClaimIds: [`quant-lim-002-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`qty-c-003-c1`]
+  - targetClaimIds: [`quant-lim-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -150,7 +150,7 @@ Review outcome:
 - review_pending
 - notes: one-claim middle seed entry.
 
-### Entry qty-c-003 — Limiting III: indifference of the distinction and passage into quantum
+### Entry quant-lim-003 — Limiting III: indifference of the distinction and passage into quantum
 
 Span:
 
@@ -170,7 +170,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: qty-c-003-c1
+- c1. id: quant-lim-003-c1
   - subject: distinction_of_continuous_and_discrete_magnitude
   - predicate: passes_over_into
   - object: indifferent_quanta
@@ -186,11 +186,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: qtm-a-001
+  - targetEntryId: qntum-num-001
   - note: closure of Quantity section passes to Quantum seed domain (target to be confirmed in quantum workbook pass).
-  - sourceClaimIds: [`qty-c-003-c1`]
+  - sourceClaimIds: [`quant-lim-003-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`qtm-a-001-c1`]
+  - targetClaimIds: [`qntum-num-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 

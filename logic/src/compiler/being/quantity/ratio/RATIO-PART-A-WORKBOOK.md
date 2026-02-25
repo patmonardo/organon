@@ -46,11 +46,11 @@ Scope:
 
 Decision:
 
-- Use IDs: `rat-a-001`, `rat-a-002`, `rat-a-003`.
+- Use IDs: `ratio-dir-001`, `ratio-dir-002`, `ratio-dir-003`.
 - Ratio has no subspecies in this workbook pass.
-- Keep handoff explicit to Part B (`rat-b-001`).
+- Keep handoff explicit to Part B (`ratio-inv-001`).
 
-### Entry rat-a-001 — Direct ratio I: reciprocal determination under one exponent
+### Entry ratio-dir-001 — Direct ratio I: reciprocal determination under one exponent
 
 Span:
 
@@ -70,7 +70,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: rat-a-001-c1
+- c1. id: ratio-dir-001-c1
   - subject: direct_ratio
   - predicate: is_determined_by
   - object: common_exponent_of_both_sides
@@ -86,11 +86,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: rat-a-002
+  - targetEntryId: ratio-dir-002
   - note: exponent is next developed as unity of unit and amount.
-  - sourceClaimIds: [`rat-a-001-c1`]
+  - sourceClaimIds: [`ratio-dir-001-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`rat-a-002-c1`]
+  - targetClaimIds: [`ratio-dir-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -99,7 +99,7 @@ Review outcome:
 - review_pending
 - notes: one-claim numeric ordinary entry.
 
-### Entry rat-a-002 — Direct ratio II: exponent as qualitative unity of unit and amount
+### Entry ratio-dir-002 — Direct ratio II: exponent as qualitative unity of unit and amount
 
 Span:
 
@@ -119,7 +119,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: rat-a-002-c1
+- c1. id: ratio-dir-002-c1
   - subject: exponent_in_direct_ratio
   - predicate: is
   - object: qualitative_unity_of_unit_and_amount
@@ -136,11 +136,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: rat-a-003
+  - targetEntryId: ratio-dir-003
   - note: incomplete side-self-subsistence drives move to more real ratio.
-  - sourceClaimIds: [`rat-a-002-c1`]
+  - sourceClaimIds: [`ratio-dir-002-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`rat-a-003-c1`]
+  - targetClaimIds: [`ratio-dir-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -149,7 +149,7 @@ Review outcome:
 - review_pending
 - notes: one-claim numeric ordinary entry.
 
-### Entry rat-a-003 — Direct ratio III: incompleteness and transition to inverse ratio
+### Entry ratio-dir-003 — Direct ratio III: incompleteness and transition to inverse ratio
 
 Span:
 
@@ -169,7 +169,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: rat-a-003-c1
+- c1. id: ratio-dir-003-c1
   - subject: direct_ratio
   - predicate: transitions_into
   - object: inverse_ratio
@@ -185,11 +185,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: rat-b-001
+  - targetEntryId: ratio-inv-001
   - note: direct ratio is sublated into inverse ratio.
-  - sourceClaimIds: [`rat-a-003-c1`]
+  - sourceClaimIds: [`ratio-dir-003-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`rat-b-001-c1`]
+  - targetClaimIds: [`ratio-inv-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 

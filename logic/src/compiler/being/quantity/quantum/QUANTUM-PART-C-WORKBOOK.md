@@ -47,13 +47,13 @@ Scope:
 Decision:
 
 - ID grammar:
-  - `qtm-c-a-001..003`
-  - `qtm-c-b-001..003`
-  - `qtm-c-c-001..003`
+  - `qntum-inf-a-001..003`
+  - `qntum-inf-b-001..003`
+  - `qntum-inf-c-001..003`
 - One claim per ordinary entry in this seed pass.
-- Keep closure handoff explicit to Ratio (`rat-a-001`) for next domain seeding.
+- Keep closure handoff explicit to Ratio (`ratio-dir-001`) for next domain seeding.
 
-### Entry qtm-c-a-001 — Infinity concept (a1): quantum’s self-contradictory beyond
+### Entry qntum-inf-a-001 — Infinity concept (a1): quantum’s self-contradictory beyond
 
 Span:
 
@@ -73,7 +73,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: qtm-c-a-001-c1
+- c1. id: qntum-inf-a-001-c1
   - subject: quantum
   - predicate: posits
   - object: infinity_as_self_contradictory_beyond
@@ -90,11 +90,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: qtm-c-a-002
+  - targetEntryId: qntum-inf-a-002
   - note: concept develops into doubled finite/infinite moments.
-  - sourceClaimIds: [`qtm-c-a-001-c1`]
+  - sourceClaimIds: [`qntum-inf-a-001-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`qtm-c-a-002-c1`]
+  - targetClaimIds: [`qntum-inf-a-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -103,7 +103,7 @@ Review outcome:
 - review_pending
 - notes: analytic ordinary entry under subspecies `a`.
 
-### Entry qtm-c-a-002 — Infinity concept (a2): finite and infinite each include the other
+### Entry qntum-inf-a-002 — Infinity concept (a2): finite and infinite each include the other
 
 Span:
 
@@ -123,7 +123,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: qtm-c-a-002-c1
+- c1. id: qntum-inf-a-002-c1
   - subject: finite_and_infinite_in_quantum
   - predicate: are
   - object: mutually_internal_moments
@@ -139,11 +139,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: qtm-c-a-003
+  - targetEntryId: qntum-inf-a-003
   - note: mutual inclusion is clarified against qualitative infinity and leads into infinite process.
-  - sourceClaimIds: [`qtm-c-a-002-c1`]
+  - sourceClaimIds: [`qntum-inf-a-002-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`qtm-c-a-003-c1`]
+  - targetClaimIds: [`qntum-inf-a-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -152,7 +152,7 @@ Review outcome:
 - review_pending
 - notes: analytic ordinary entry under subspecies `a`.
 
-### Entry qtm-c-a-003 — Infinity concept (a3): quantitative vs qualitative infinite and process opening
+### Entry qntum-inf-a-003 — Infinity concept (a3): quantitative vs qualitative infinite and process opening
 
 Span:
 
@@ -172,7 +172,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: qtm-c-a-003-c1
+- c1. id: qntum-inf-a-003-c1
   - subject: quantitative_infinite
   - predicate: is_differentiated_as
   - object: self_referential_process_not_abstract_opposition
@@ -188,11 +188,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: qtm-c-b-001
+  - targetEntryId: qntum-inf-b-001
   - note: conceptual distinction passes into explicit infinite process.
-  - sourceClaimIds: [`qtm-c-a-003-c1`]
+  - sourceClaimIds: [`qntum-inf-a-003-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`qtm-c-b-001-c1`]
+  - targetClaimIds: [`qntum-inf-b-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -201,7 +201,7 @@ Review outcome:
 - review_pending
 - notes: analytic ordinary entry under subspecies `a`.
 
-### Entry qtm-c-b-001 — Infinite process (b1): contradiction expressed as perpetual progress
+### Entry qntum-inf-b-001 — Infinite process (b1): contradiction expressed as perpetual progress
 
 Span:
 
@@ -221,7 +221,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: qtm-c-b-001-c1
+- c1. id: qntum-inf-b-001-c1
   - subject: infinite_progress
   - predicate: is
   - object: unresolved_repetition_of_quantum_and_beyond
@@ -238,11 +238,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: qtm-c-b-002
+  - targetEntryId: qntum-inf-b-002
   - note: unresolved process appears as double infinity (infinitely great/small).
-  - sourceClaimIds: [`qtm-c-b-001-c1`]
+  - sourceClaimIds: [`qntum-inf-b-001-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`qtm-c-b-002-c1`]
+  - targetClaimIds: [`qntum-inf-b-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -251,7 +251,7 @@ Review outcome:
 - review_pending
 - notes: analytic ordinary entry under subspecies `b`.
 
-### Entry qtm-c-b-002 — Infinite process (b2): infinitely great and small as persistent opposition
+### Entry qntum-inf-b-002 — Infinite process (b2): infinitely great and small as persistent opposition
 
 Span:
 
@@ -271,7 +271,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: qtm-c-b-002-c1
+- c1. id: qntum-inf-b-002-c1
   - subject: double_infinity
   - predicate: preserves
   - object: contradiction_of_quantum_and_beyond
@@ -288,11 +288,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: qtm-c-b-003
+  - targetEntryId: qntum-inf-b-003
   - note: persistence is named bad quantitative infinity.
-  - sourceClaimIds: [`qtm-c-b-002-c1`]
+  - sourceClaimIds: [`qntum-inf-b-002-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`qtm-c-b-003-c1`]
+  - targetClaimIds: [`qntum-inf-b-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -301,7 +301,7 @@ Review outcome:
 - review_pending
 - notes: analytic ordinary entry under subspecies `b`.
 
-### Entry qtm-c-b-003 — Infinite process (b3): bad quantitative infinity as powerless repetition
+### Entry qntum-inf-b-003 — Infinite process (b3): bad quantitative infinity as powerless repetition
 
 Span:
 
@@ -321,7 +321,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: qtm-c-b-003-c1
+- c1. id: qntum-inf-b-003-c1
   - subject: bad_quantitative_infinity
   - predicate: is
   - object: repetitive_impotent_oscillation
@@ -338,11 +338,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: qtm-c-c-001
+  - targetEntryId: qntum-inf-c-001
   - note: critique of bad infinity opens true infinity of quantum.
-  - sourceClaimIds: [`qtm-c-b-003-c1`]
+  - sourceClaimIds: [`qntum-inf-b-003-c1`]
   - sourceKeyPointIds: [`k2`]
-  - targetClaimIds: [`qtm-c-c-001-c1`]
+  - targetClaimIds: [`qntum-inf-c-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -351,7 +351,7 @@ Review outcome:
 - review_pending
 - notes: analytic ordinary entry under subspecies `b`.
 
-### Entry qtm-c-c-001 — Infinity of quantum (c1): figurative infinities and explicit contradiction
+### Entry qntum-inf-c-001 — Infinity of quantum (c1): figurative infinities and explicit contradiction
 
 Span:
 
@@ -371,7 +371,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: qtm-c-c-001-c1
+- c1. id: qntum-inf-c-001-c1
   - subject: infinite_progress
   - predicate: posits
   - object: concept_of_quantum_through_explicit_contradiction
@@ -388,11 +388,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: qtm-c-c-002
+  - targetEntryId: qntum-inf-c-002
   - note: explicit contradiction is resolved as negation of negation and restoration of concept.
-  - sourceClaimIds: [`qtm-c-c-001-c1`]
+  - sourceClaimIds: [`qntum-inf-c-001-c1`]
   - sourceKeyPointIds: [`k2`]
-  - targetClaimIds: [`qtm-c-c-002-c1`]
+  - targetClaimIds: [`qntum-inf-c-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -401,7 +401,7 @@ Review outcome:
 - review_pending
 - notes: analytic ordinary entry under subspecies `c`.
 
-### Entry qtm-c-c-002 — Infinity of quantum (c2): negation of negation restores magnitude concept
+### Entry qntum-inf-c-002 — Infinity of quantum (c2): negation of negation restores magnitude concept
 
 Span:
 
@@ -421,7 +421,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: qtm-c-c-002-c1
+- c1. id: qntum-inf-c-002-c1
   - subject: truth_of_infinite_progress
   - predicate: is
   - object: negation_of_negation_restoring_conceptual_quantum
@@ -439,11 +439,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: qtm-c-c-003
+  - targetEntryId: qntum-inf-c-003
   - note: restored concept culminates in quantitative relation (ratio).
-  - sourceClaimIds: [`qtm-c-c-002-c1`]
+  - sourceClaimIds: [`qntum-inf-c-002-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`qtm-c-c-003-c1`]
+  - targetClaimIds: [`qntum-inf-c-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -452,7 +452,7 @@ Review outcome:
 - review_pending
 - notes: analytic ordinary entry under subspecies `c`.
 
-### Entry qtm-c-c-003 — Infinity of quantum (c3): ratio as qualitative determinateness of quantum
+### Entry qntum-inf-c-003 — Infinity of quantum (c3): ratio as qualitative determinateness of quantum
 
 Span:
 
@@ -472,7 +472,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: qtm-c-c-003-c1
+- c1. id: qntum-inf-c-003-c1
   - subject: quantum
   - predicate: culminates_as
   - object: quantitative_relation_ratio
@@ -489,11 +489,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: rat-a-001
+  - targetEntryId: ratio-dir-001
   - note: quantum infinity culminates in ratio domain.
-  - sourceClaimIds: [`qtm-c-c-003-c1`]
+  - sourceClaimIds: [`qntum-inf-c-003-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`rat-a-001-c1`]
+  - targetClaimIds: [`ratio-dir-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 

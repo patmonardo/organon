@@ -47,12 +47,12 @@ Scope:
 Decision:
 
 - ID grammar:
-  - `qtm-b-a-001..003` (source numeric moments under `a`)
-  - `qtm-b-b-001..003` (analytic triad for subspecies `b`)
-  - `qtm-b-c-001..003` (analytic triad for subspecies `c`)
+  - `qntum-qua-a-001..003` (source numeric moments under `a`)
+  - `qntum-qua-b-001..003` (analytic triad for subspecies `b`)
+  - `qntum-qua-c-001..003` (analytic triad for subspecies `c`)
 - One claim per ordinary entry in this seed pass.
 
-### Entry qtm-b-a-001 — Difference (a1): extensive magnitude as limit-in-amount
+### Entry qntum-qua-a-001 — Difference (a1): extensive magnitude as limit-in-amount
 
 Span:
 
@@ -72,7 +72,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: qtm-b-a-001-c1
+- c1. id: qntum-qua-a-001-c1
   - subject: extensive_quantum
   - predicate: is
   - object: limit_as_plurality_amount_of_same_unit
@@ -89,11 +89,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: qtm-b-a-002
+  - targetEntryId: qntum-qua-a-002
   - note: extensive limit passes to simple limit as degree.
-  - sourceClaimIds: [`qtm-b-a-001-c1`]
+  - sourceClaimIds: [`qntum-qua-a-001-c1`]
   - sourceKeyPointIds: [`k1`]
-  - targetClaimIds: [`qtm-b-a-002-c1`]
+  - targetClaimIds: [`qntum-qua-a-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -102,7 +102,7 @@ Review outcome:
 - review_pending
 - notes: source numeric subsection 1.
 
-### Entry qtm-b-a-002 — Difference (a2): degree as intensive magnitude
+### Entry qntum-qua-a-002 — Difference (a2): degree as intensive magnitude
 
 Span:
 
@@ -122,7 +122,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: qtm-b-a-002-c1
+- c1. id: qntum-qua-a-002-c1
   - subject: intensive_quantum
   - predicate: is_determined_as
   - object: degree_simple_limit_with_sublated_amount
@@ -139,11 +139,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: qtm-b-a-003
+  - targetEntryId: qntum-qua-a-003
   - note: degree’s simplicity externalizes determinateness and continuous scale reference.
-  - sourceClaimIds: [`qtm-b-a-002-c1`]
+  - sourceClaimIds: [`qntum-qua-a-002-c1`]
   - sourceKeyPointIds: [`k2`]
-  - targetClaimIds: [`qtm-b-a-003-c1`]
+  - targetClaimIds: [`qntum-qua-a-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -152,7 +152,7 @@ Review outcome:
 - review_pending
 - notes: source numeric subsection 2.
 
-### Entry qtm-b-a-003 — Difference (a3): degree as self-reference through externality
+### Entry qntum-qua-a-003 — Difference (a3): degree as self-reference through externality
 
 Span:
 
@@ -172,7 +172,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: qtm-b-a-003-c1
+- c1. id: qntum-qua-a-003-c1
   - subject: degree
   - predicate: has_quality_as
   - object: self_reference_through_external_continuity
@@ -189,11 +189,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: qtm-b-b-001
+  - targetEntryId: qntum-qua-b-001
   - note: relation of degree to amount opens identity of extensive and intensive magnitude.
-  - sourceClaimIds: [`qtm-b-a-003-c1`]
+  - sourceClaimIds: [`qntum-qua-a-003-c1`]
   - sourceKeyPointIds: [`k2`]
-  - targetClaimIds: [`qtm-b-b-001-c1`]
+  - targetClaimIds: [`qntum-qua-b-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -202,7 +202,7 @@ Review outcome:
 - review_pending
 - notes: source numeric subsection 3.
 
-### Entry qtm-b-b-001 — Identity (b1): degree implicitly contains amount
+### Entry qntum-qua-b-001 — Identity (b1): degree implicitly contains amount
 
 Span:
 
@@ -222,7 +222,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: qtm-b-b-001-c1
+- c1. id: qntum-qua-b-001-c1
   - subject: degree
   - predicate: contains
   - object: amount_as_continuous_plurality
@@ -238,11 +238,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: qtm-b-b-002
+  - targetEntryId: qntum-qua-b-002
   - note: containment of amount becomes explicit dual-sided determination.
-  - sourceClaimIds: [`qtm-b-b-001-c1`]
+  - sourceClaimIds: [`qntum-qua-b-001-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`qtm-b-b-002-c1`]
+  - targetClaimIds: [`qntum-qua-b-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -251,7 +251,7 @@ Review outcome:
 - review_pending
 - notes: analytic ordinary entry under subspecies `b`.
 
-### Entry qtm-b-b-002 — Identity (b2): intensive determinateness from exclusion and internal amount
+### Entry qntum-qua-b-002 — Identity (b2): intensive determinateness from exclusion and internal amount
 
 Span:
 
@@ -271,7 +271,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: qtm-b-b-002-c1
+- c1. id: qntum-qua-b-002-c1
   - subject: intensive_magnitude
   - predicate: is_determined_by
   - object: exclusion_and_internal_amount
@@ -288,11 +288,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: qtm-b-b-003
+  - targetEntryId: qntum-qua-b-003
   - note: two-sided determination resolves as identity of extensive and intensive magnitude.
-  - sourceClaimIds: [`qtm-b-b-002-c1`]
+  - sourceClaimIds: [`qntum-qua-b-002-c1`]
   - sourceKeyPointIds: [`k2`]
-  - targetClaimIds: [`qtm-b-b-003-c1`]
+  - targetClaimIds: [`qntum-qua-b-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -301,7 +301,7 @@ Review outcome:
 - review_pending
 - notes: analytic ordinary entry under subspecies `b`.
 
-### Entry qtm-b-b-003 — Identity (b3): extensive and intensive as one determinateness
+### Entry qntum-qua-b-003 — Identity (b3): extensive and intensive as one determinateness
 
 Span:
 
@@ -321,7 +321,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: qtm-b-b-003-c1
+- c1. id: qntum-qua-b-003-c1
   - subject: extensive_and_intensive_magnitude
   - predicate: are_identical_as
   - object: one_quantitative_determinateness
@@ -338,11 +338,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: qtm-b-c-001
+  - targetEntryId: qntum-qua-c-001
   - note: identity now unfolds as alteration of quantum.
-  - sourceClaimIds: [`qtm-b-b-003-c1`]
+  - sourceClaimIds: [`qntum-qua-b-003-c1`]
   - sourceKeyPointIds: [`k1`]
-  - targetClaimIds: [`qtm-b-c-001-c1`]
+  - targetClaimIds: [`qntum-qua-c-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -351,7 +351,7 @@ Review outcome:
 - review_pending
 - notes: analytic ordinary entry under subspecies `b`.
 
-### Entry qtm-b-c-001 — Alteration (c1): contradiction of quantum’s self-reference and external determinateness
+### Entry qntum-qua-c-001 — Alteration (c1): contradiction of quantum’s self-reference and external determinateness
 
 Span:
 
@@ -371,7 +371,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: qtm-b-c-001-c1
+- c1. id: qntum-qua-c-001-c1
   - subject: quantum
   - predicate: is_contradictory_as
   - object: self_reference_with_external_determinateness
@@ -387,11 +387,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: qtm-b-c-002
+  - targetEntryId: qntum-qua-c-002
   - note: contradiction is expressed as necessary alteration.
-  - sourceClaimIds: [`qtm-b-c-001-c1`]
+  - sourceClaimIds: [`qntum-qua-c-001-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`qtm-b-c-002-c1`]
+  - targetClaimIds: [`qntum-qua-c-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -400,7 +400,7 @@ Review outcome:
 - review_pending
 - notes: analytic ordinary entry under subspecies `c`.
 
-### Entry qtm-b-c-002 — Alteration (c2): quantum must alter by continuity into otherness
+### Entry qntum-qua-c-002 — Alteration (c2): quantum must alter by continuity into otherness
 
 Span:
 
@@ -420,7 +420,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: qtm-b-c-002-c1
+- c1. id: qntum-qua-c-002-c1
   - subject: quantum
   - predicate: necessarily_alters_into
   - object: otherness_by_continuity
@@ -436,11 +436,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: qtm-b-c-003
+  - targetEntryId: qntum-qua-c-003
   - note: necessary alteration appears as increase/decrease and endless beyond.
-  - sourceClaimIds: [`qtm-b-c-002-c1`]
+  - sourceClaimIds: [`qntum-qua-c-002-c1`]
   - sourceKeyPointIds: [`k2`]
-  - targetClaimIds: [`qtm-b-c-003-c1`]
+  - targetClaimIds: [`qntum-qua-c-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -449,7 +449,7 @@ Review outcome:
 - review_pending
 - notes: analytic ordinary entry under subspecies `c`.
 
-### Entry qtm-b-c-003 — Alteration (c3): increase/decrease and self-sublating limit to infinity
+### Entry qntum-qua-c-003 — Alteration (c3): increase/decrease and self-sublating limit to infinity
 
 Span:
 
@@ -469,7 +469,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: qtm-b-c-003-c1
+- c1. id: qntum-qua-c-003-c1
   - subject: quantum_limit
   - predicate: unfolds_as
   - object: endless_self_sublating_beyond
@@ -485,11 +485,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: qtm-c-a-001
+  - targetEntryId: qntum-inf-a-001
   - note: alteration of quantum passes into quantitative infinity.
-  - sourceClaimIds: [`qtm-b-c-003-c1`]
+  - sourceClaimIds: [`qntum-qua-c-003-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`qtm-c-a-001-c1`]
+  - targetClaimIds: [`qntum-inf-a-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 

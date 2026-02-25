@@ -46,12 +46,12 @@ Scope:
 
 Decision:
 
-- Adopt flat sequential IDs for this part: `bei-c-001`, `bei-c-002`, `bei-c-003`.
+- Adopt flat sequential IDs for this part: `being-bec-001`, `being-bec-002`, `being-bec-003`.
 - Use lettered IDs only when lettered section markers are explicitly present in the source text.
 - Preserve explicit internal movement: unity of being/nothing -> moments of becoming.
 - Keep cross-part transition closure available for export to Existence stage in later passes.
 
-### Entry bei-c-001 — Becoming I: truth of being and nothing as movement
+### Entry being-bec-001 — Becoming I: truth of being and nothing as movement
 
 Span:
 
@@ -71,7 +71,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: bei-c-001-c1
+- c1. id: being-bec-001-c1
   - subject: truth_of_being_and_nothing
   - predicate: is
   - object: movement_of_passing_over_between_them
@@ -81,7 +81,7 @@ Claims: (Claim)
     - [14-18] truth is not either side alone, but passed-over relation between being and nothing.
     - [27-30] truth is becoming as immediate vanishing of one into the other.
 
-- c2. id: bei-c-001-c2
+- c2. id: being-bec-001-c2
   - subject: being_and_nothing
   - predicate: are
   - object: absolutely_distinct_yet_unseparated
@@ -98,11 +98,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: bei-c-002
+  - targetEntryId: being-bec-002
   - note: movement-truth is developed into explicit moment structure of becoming.
-  - sourceClaimIds: [`bei-c-001-c1`]
+  - sourceClaimIds: [`being-bec-001-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`bei-c-002-c1`]
+  - targetClaimIds: [`being-bec-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -111,7 +111,7 @@ Review outcome:
 - review_pending
 - notes: first numbered entry for subsection `1. Unity of being and nothing`.
 
-### Entry bei-c-002 — Becoming II: doubled moments as coming-to-be and ceasing-to-be
+### Entry being-bec-002 — Becoming II: doubled moments as coming-to-be and ceasing-to-be
 
 Span:
 
@@ -131,7 +131,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: bei-c-002-c1
+- c1. id: being-bec-002-c1
   - subject: becoming
   - predicate: contains
   - object: sublated_moments_of_being_and_nothing
@@ -140,7 +140,7 @@ Claims: (Claim)
   - evidence:
     - [34-45] becoming as determinate unity where moments are distinguished yet sublated.
 
-- c2. id: bei-c-002-c2
+- c2. id: being-bec-002-c2
   - subject: becoming
   - predicate: is_determined_as
   - object: coming_to_be_and_ceasing_to_be
@@ -149,7 +149,7 @@ Claims: (Claim)
   - evidence:
     - [56-64] doubled determination into transitions from nothing->being and being->nothing.
 
-- c3. id: bei-c-002-c3
+- c3. id: being-bec-002-c3
   - subject: coming_to_be_and_ceasing_to_be
   - predicate: interpenetrate_as
   - object: self_sublating_opposed_directions
@@ -167,11 +167,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: bei-c-003
+  - targetEntryId: being-bec-003
   - note: doubled unrest proceeds to sublation into quiescent unity.
-  - sourceClaimIds: [`bei-c-002-c2`, `bei-c-002-c3`]
+  - sourceClaimIds: [`being-bec-002-c2`, `being-bec-002-c3`]
   - sourceKeyPointIds: [`k2`, `k3`]
-  - targetClaimIds: [`bei-c-003-c1`]
+  - targetClaimIds: [`being-bec-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -180,7 +180,7 @@ Review outcome:
 - review_pending
 - notes: first numbered entry for subsection `2. The moments of becoming`.
 
-### Entry bei-c-003 — Becoming III: sublation of becoming into existence
+### Entry being-bec-003 — Becoming III: sublation of becoming into existence
 
 Span:
 
@@ -200,7 +200,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: bei-c-003-c1
+- c1. id: being-bec-003-c1
   - subject: becoming
   - predicate: sublates_into
   - object: quiescent_unity
@@ -209,7 +209,7 @@ Claims: (Claim)
   - evidence:
     - [85-92] equilibrium and collapse of ceaseless unrest into quiescent result.
 
-- c2. id: bei-c-003-c2
+- c2. id: being-bec-003-c2
   - subject: result_of_becoming
   - predicate: is
   - object: quiescent_unity_of_being_and_nothing_not_nothing
@@ -218,7 +218,7 @@ Claims: (Claim)
   - evidence:
     - [103-110] result is not nothing but the unity become quiescent simplicity.
 
-- c3. id: bei-c-003-c3
+- c3. id: being-bec-003-c3
   - subject: becoming_transition_result
   - predicate: is_named
   - object: existence
@@ -236,18 +236,18 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: bei-c-001
+  - targetEntryId: being-bec-001
   - note: final sublation confirms that becoming is the truth of being/nothing relation.
-  - sourceClaimIds: [`bei-c-003-c2`, `bei-c-003-c3`]
+  - sourceClaimIds: [`being-bec-003-c2`, `being-bec-003-c3`]
   - sourceKeyPointIds: [`k2`, `k3`]
-  - targetClaimIds: [`bei-c-001-c1`]
+  - targetClaimIds: [`being-bec-001-c1`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
   - targetEntryId: exi-001
   - note: becoming's result opens the next stage (`Existence`) in the quality sequence.
-  - sourceClaimIds: [`bei-c-003-c3`]
+  - sourceClaimIds: [`being-bec-003-c3`]
   - sourceKeyPointIds: [`k3`]
   - targetClaimIds: [`pending_cross_workbook`]
   - logicalOperator: sequential_transition

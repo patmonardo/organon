@@ -63,7 +63,7 @@ Decision:
 - Migration: `relation_schema_v1 -> relation_schema_v1_1_overlay` (non-breaking).
 - Apply relation claim/keypoint anchor overlay for this workbook pass; keep claims unchanged.
 
-### Entry ess-ref-b-001 — Shine as non-self-subsistent immediacy
+### Entry essen-shn-001 — Shine as non-self-subsistent immediacy
 
 Span:
 
@@ -85,7 +85,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: ess-ref-b-001-c1
+- c1. id: essen-shn-001-c1
   - subject: shine
   - predicate: is
   - object: residue_of_being_as_sublated_nothingness
@@ -95,7 +95,7 @@ Claims: (Claim)
     - [6-12] shine as being's sublatedness/nothingness and negative posited as negative.
     - [14-17] shine as what remains from being while seeming immediate and other than essence.
 
-- c2. id: ess-ref-b-001-c2
+- c2. id: essen-shn-001-c2
   - subject: shine
   - predicate: exists_only_in
   - object: nonexistence_relation_and_negation
@@ -105,7 +105,7 @@ Claims: (Claim)
     - [18-23] otherness has existence/non-existence moments; for the unessential only non-existence remains as immediate non-existence.
     - [24-28] shine exists only with reference to another, in its negation, as non-self-subsistent.
 
-- c3. id: ess-ref-b-001-c3
+- c3. id: essen-shn-001-c3
   - subject: shine_immediacy
   - predicate: is
   - object: reflected_mediated_empty_immediacy
@@ -123,11 +123,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: ess-ref-b-002
+  - targetEntryId: essen-shn-002
   - note: move from first determination of shine to explicit statement of the task.
-  - sourceClaimIds: [`ess-ref-b-001-c3`]
+  - sourceClaimIds: [`essen-shn-001-c3`]
   - sourceKeyPointIds: [`k5`]
-  - targetClaimIds: [`ess-ref-b-002-c3`]
+  - targetClaimIds: [`essen-shn-002-c3`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -136,7 +136,7 @@ Review outcome:
 - review_pending
 - notes: comparative block [38-93] excluded from base claims in this pass and reserved for second-order relation expansion cycles.
 
-### Entry ess-ref-b-002 — Task shift from return-proof to immanent demonstration
+### Entry essen-shn-002 — Task shift from return-proof to immanent demonstration
 
 Span:
 
@@ -157,7 +157,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: ess-ref-b-002-c1
+- c1. id: essen-shn-002-c1
   - subject: shine
   - predicate: appears_as
   - object: immediate_presupposition_against_essence
@@ -166,7 +166,7 @@ Claims: (Claim)
   - evidence:
     - [95-97] shine contains an immediate presupposition, an independent side vis-à-vis essence.
 
-- c2. id: ess-ref-b-002-c2
+- c2. id: essen-shn-002-c2
   - subject: return_of_being_to_essence
   - predicate: is
   - object: already_accomplished
@@ -175,7 +175,7 @@ Claims: (Claim)
   - evidence:
     - [98-101] not to show return; being has returned in totality; shine is the null as such.
 
-- c3. id: ess-ref-b-002-c3
+- c3. id: essen-shn-002-c3
   - subject: task
   - predicate: is_to_demonstrate_and_ground
   - object: shine_as_essence_determinations_through_constitutive_immediacy
@@ -194,20 +194,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: refines
-  - targetEntryId: ess-ref-b-001
+  - targetEntryId: essen-shn-001
   - note: methodological precision on what exactly must be shown.
-  - sourceClaimIds: [`ess-ref-b-002-c2`, `ess-ref-b-002-c3`]
+  - sourceClaimIds: [`essen-shn-002-c2`, `essen-shn-002-c3`]
   - sourceKeyPointIds: [`k2`, `k3`, `k4`]
-  - targetClaimIds: [`ess-ref-b-001-c2`, `ess-ref-b-001-c3`]
+  - targetClaimIds: [`essen-shn-001-c2`, `essen-shn-001-c3`]
   - logicalOperator: presuppositional_link
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: ess-ref-b-003
+  - targetEntryId: essen-shn-003
   - note: after constitutive grounding, the exposition moves to explicit two-moment identity and self-sublation.
-  - sourceClaimIds: [`ess-ref-b-002-c3`]
+  - sourceClaimIds: [`essen-shn-002-c3`]
   - sourceKeyPointIds: [`k3`, `k4`]
-  - targetClaimIds: [`ess-ref-b-003-c1`, `ess-ref-b-003-c2`]
+  - targetClaimIds: [`essen-shn-003-c1`, `essen-shn-003-c2`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -216,7 +216,7 @@ Review outcome:
 - review_pending
 - notes: entry now includes the constitutive/immediacy paragraph through line 131.
 
-### Entry ess-ref-b-003 — Middle movement (identity and self-sublation)
+### Entry essen-shn-003 — Middle movement (identity and self-sublation)
 
 Span:
 
@@ -238,7 +238,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: ess-ref-b-003-c1
+- c1. id: essen-shn-003-c1
   - subject: shine_moments
   - predicate: are
   - object: moments_of_essence_itself
@@ -247,7 +247,7 @@ Claims: (Claim)
   - evidence:
     - [133-141] the two moments of shine are moments of essence; shine in essence is essence's own shining.
 
-- c2. id: ess-ref-b-003-c2
+- c2. id: essen-shn-003-c2
   - subject: shine_in_determinateness
   - predicate: is_identical_with
   - object: essence_as_unity_of_negativity_and_immediacy
@@ -257,7 +257,7 @@ Claims: (Claim)
     - [143-147] shine is essence itself in determinateness.
     - [148-159] essence as identical unity of negativity and immediacy.
 
-- c3. id: ess-ref-b-003-c3
+- c3. id: essen-shn-003-c3
   - subject: shine_determinateness
   - predicate: self_sublates_as
   - object: return_to_self
@@ -275,20 +275,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: ess-ref-b-002
+  - targetEntryId: essen-shn-002
   - note: executes the task by deriving identity of determinations.
-  - sourceClaimIds: [`ess-ref-b-003-c1`, `ess-ref-b-003-c2`, `ess-ref-b-003-c3`]
+  - sourceClaimIds: [`essen-shn-003-c1`, `essen-shn-003-c2`, `essen-shn-003-c3`]
   - sourceKeyPointIds: [`k2`, `k4`, `k5`]
-  - targetClaimIds: [`ess-ref-b-002-c3`]
+  - targetClaimIds: [`essen-shn-002-c3`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: ess-ref-b-004
+  - targetEntryId: essen-shn-004
   - note: from middle movement to the concluding paragraph on determinateness-as-moment.
-  - sourceClaimIds: [`ess-ref-b-003-c3`]
+  - sourceClaimIds: [`essen-shn-003-c3`]
   - sourceKeyPointIds: [`k4`, `k5`]
-  - targetClaimIds: [`ess-ref-b-004-c1`, `ess-ref-b-004-c3`]
+  - targetClaimIds: [`essen-shn-004-c1`, `essen-shn-004-c3`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -297,7 +297,7 @@ Review outcome:
 - review_pending
 - notes: second entry now starts at line 133.
 
-### Entry ess-ref-b-004 — Infinite determinateness as moment
+### Entry essen-shn-004 — Infinite determinateness as moment
 
 Span:
 
@@ -319,7 +319,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: ess-ref-b-004-c1
+- c1. id: essen-shn-004-c1
   - subject: determinateness_in_essence
   - predicate: is
   - object: infinite_determinateness
@@ -328,7 +328,7 @@ Claims: (Claim)
   - evidence:
     - [177-181] determinateness in essence is infinite; negative coincides with itself.
 
-- c2. id: ess-ref-b-004-c2
+- c2. id: essen-shn-004-c2
   - subject: self_subsistence_and_determinateness
   - predicate: are
   - object: reciprocal_moments_in_identity_of_negativity_and_immediacy
@@ -337,7 +337,7 @@ Claims: (Claim)
   - evidence:
     - [182-186] self-subsistence and determinateness are reciprocal moments; negativity/immediacy identity is essence.
 
-- c3. id: ess-ref-b-004-c3
+- c3. id: essen-shn-004-c3
   - subject: shine
   - predicate: is
   - object: essence_itself_with_determinateness_as_moment
@@ -355,20 +355,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: refines
-  - targetEntryId: ess-ref-b-003
+  - targetEntryId: essen-shn-003
   - note: states explicitly the identity result toward which the middle movement was directed.
-  - sourceClaimIds: [`ess-ref-b-004-c1`, `ess-ref-b-004-c2`]
+  - sourceClaimIds: [`essen-shn-004-c1`, `essen-shn-004-c2`]
   - sourceKeyPointIds: [`k1`, `k2`, `k3`, `k4`]
-  - targetClaimIds: [`ess-ref-b-003-c3`]
+  - targetClaimIds: [`essen-shn-003-c3`]
   - logicalOperator: presuppositional_link
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: ess-ref-b-005
+  - targetEntryId: essen-shn-005
   - note: transition from determinateness-as-moment into reflection movement.
-  - sourceClaimIds: [`ess-ref-b-004-c3`]
+  - sourceClaimIds: [`essen-shn-004-c3`]
   - sourceKeyPointIds: [`k5`]
-  - targetClaimIds: [`ess-ref-b-005-c3`]
+  - targetClaimIds: [`essen-shn-005-c3`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -377,7 +377,7 @@ Review outcome:
 - review_pending
 - notes: this entry uses the single paragraph 177-190.
 
-### Entry ess-ref-b-005 — Transition: into reflection
+### Entry essen-shn-005 — Transition: into reflection
 
 Span:
 
@@ -399,7 +399,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: ess-ref-b-005-c1
+- c1. id: essen-shn-005-c1
   - subject: being_sphere_pair
   - predicate: has_truth
   - object: becoming
@@ -408,7 +408,7 @@ Claims: (Claim)
   - evidence:
     - [192-193] being/non-being truth is becoming.
 
-- c2. id: ess-ref-b-005-c2
+- c2. id: essen-shn-005-c2
   - subject: nonessential_and_shine
   - predicate: are
   - object: leftovers_of_being_within_essence_contrast
@@ -417,7 +417,7 @@ Claims: (Claim)
   - evidence:
     - [194-198] contrast of essence with non-essential/shine; both leftovers of being.
 
-- c3. id: ess-ref-b-005-c3
+- c3. id: essen-shn-005-c3
   - subject: essence
   - predicate: is
   - object: self_movement_reflection
@@ -435,20 +435,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: sublates
-  - targetEntryId: ess-ref-b-001
+  - targetEntryId: essen-shn-001
   - note: transition retroactively resolves first immediacy into reflection.
-  - sourceClaimIds: [`ess-ref-b-005-c2`, `ess-ref-b-005-c3`]
+  - sourceClaimIds: [`essen-shn-005-c2`, `essen-shn-005-c3`]
   - sourceKeyPointIds: [`k2`, `k4`, `k5`]
-  - targetClaimIds: [`ess-ref-b-001-c1`, `ess-ref-b-001-c3`]
+  - targetClaimIds: [`essen-shn-001-c1`, `essen-shn-001-c3`]
   - logicalOperator: sublative_transition
   - analysisMode: first_order_claim_projection
 
 - r2. type: supports
-  - targetEntryId: ess-ref-b-004
+  - targetEntryId: essen-shn-004
   - note: confirms section-2 determinateness-as-moment within the movement to reflection.
-  - sourceClaimIds: [`ess-ref-b-005-c3`]
+  - sourceClaimIds: [`essen-shn-005-c3`]
   - sourceKeyPointIds: [`k5`]
-  - targetClaimIds: [`ess-ref-b-004-c2`, `ess-ref-b-004-c3`]
+  - targetClaimIds: [`essen-shn-004-c2`, `essen-shn-004-c3`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
