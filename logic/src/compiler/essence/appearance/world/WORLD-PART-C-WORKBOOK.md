@@ -51,13 +51,13 @@ Decision:
 
 ## Decomposition status
 
-- completed: `wld-dis-c-001` for paragraph 1 (line `4` to `21`)
-- completed: `wld-dis-c-002` for paragraph 2 (line `22` to `55`)
-- completed: `wld-dis-c-003` for paragraph 3 (line `56` to `76`)
-- completed: `wld-dis-c-004` for transition paragraph 1 (line `77` to `100`)
-- completed: `wld-dis-c-005` for transition paragraph 2 (line `101` to `123`)
+- completed: `appea-dis-001` for paragraph 1 (line `4` to `21`)
+- completed: `appea-dis-002` for paragraph 2 (line `22` to `55`)
+- completed: `appea-dis-003` for paragraph 3 (line `56` to `76`)
+- completed: `appea-dis-004` for transition paragraph 1 (line `77` to `100`)
+- completed: `appea-dis-005` for transition paragraph 2 (line `101` to `123`)
 
-### Entry wld-dis-c-001 — Oppositional ground-relation of the two worlds
+### Entry appea-dis-001 — Oppositional ground-relation of the two worlds
 
 Span:
 
@@ -77,7 +77,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: wld-dis-c-001-c1
+- c1. id: appea-dis-001-c1
   - subject: world_in_and_for_itself
   - predicate: is
   - object: determinate_ground_as_negative_moment_and_totality_of_corresponding_determinations
@@ -86,7 +86,7 @@ Claims: (Claim)
   - evidence:
     - [4-10] world in-and-for-itself is determinate ground only as negative moment and totality of corresponding determinations/alterations.
 
-- c2. id: wld-dis-c-001-c2
+- c2. id: appea-dis-001-c2
   - subject: relation_of_world_in_and_for_itself_to_world_of_appearance
   - predicate: is
   - object: simultaneous_ground_and_completely_opposed_side
@@ -95,7 +95,7 @@ Claims: (Claim)
   - evidence:
     - [10-12] it is at once determinate ground and completely opposed side.
 
-- c3. id: wld-dis-c-001-c3
+- c3. id: appea-dis-001-c3
   - subject: two_world_relation
   - predicate: has_form
   - object: polarity_inversion_of_positive_and_negative
@@ -114,17 +114,17 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: wld-wld-b-003
-  - sourceClaimIds: [wld-dis-c-001-c3]
+  - targetEntryId: appea-wor-003
+  - sourceClaimIds: [appea-dis-001-c3]
   - sourceKeyPointIds: [k3]
-  - targetClaimIds: [wld-wld-b-003-c3]
+  - targetClaimIds: [appea-wor-003-c3]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
   - note: Part C.1 makes explicit the inversion structure that Part B.3 formulates.
 
 - r2. type: transitions_to
-  - targetEntryId: wld-dis-c-002
-  - sourceClaimIds: [wld-dis-c-001-c2, wld-dis-c-001-c3]
+  - targetEntryId: appea-dis-002
+  - sourceClaimIds: [appea-dis-001-c2, appea-dis-001-c3]
   - sourceKeyPointIds: [k2, k3]
   - targetClaimIds: [pending_local]
   - logicalOperator: sequential_transition
@@ -136,7 +136,7 @@ Review outcome:
 - review_pending
 - notes: `c-001` complete under user-defined first-three-plus-two-transition decomposition.
 
-### Entry wld-dis-c-002 — Opposition dissolves into reciprocal self-reference and self-inverting content
+### Entry appea-dis-002 — Opposition dissolves into reciprocal self-reference and self-inverting content
 
 Span:
 
@@ -157,7 +157,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: wld-dis-c-002-c1
+- c1. id: appea-dis-002-c1
   - subject: opposition_of_the_two_worlds
   - predicate: results_in
   - object: disappearance_of_their_difference_and_reciprocal_identity
@@ -166,7 +166,7 @@ Claims: (Claim)
   - evidence:
     - [22-28] in their opposition, difference disappears; world-in-itself is itself world of appearance and conversely essential within.
 
-- c2. id: wld-dis-c-002-c2
+- c2. id: appea-dis-002-c2
   - subject: world_of_appearance
   - predicate: becomes
   - object: lawful_self_reference_through_sublation_of_otherness
@@ -176,7 +176,7 @@ Claims: (Claim)
     - [29-38] reflection into otherness leads to other that sublates itself as other; both refer to themselves.
     - [38-39] world of appearance is within it law equal to itself.
 
-- c3. id: wld-dis-c-002-c3
+- c3. id: appea-dis-002-c3
   - subject: world_in_and_for_itself
   - predicate: is
   - object: self_inverting_content_that_is_sublated_ground_and_immediate_concrete_existence
@@ -195,17 +195,17 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: refines
-  - targetEntryId: wld-dis-c-001
-  - sourceClaimIds: [wld-dis-c-002-c1, wld-dis-c-002-c2]
+  - targetEntryId: appea-dis-001
+  - sourceClaimIds: [appea-dis-002-c1, appea-dis-002-c2]
   - sourceKeyPointIds: [k1, k2]
-  - targetClaimIds: [wld-dis-c-001-c3]
+  - targetClaimIds: [appea-dis-001-c3]
   - logicalOperator: dialectical_refinement
   - analysisMode: first_order_claim_projection
   - note: `c-002` internalizes the inversion stated in `c-001` by showing reciprocal self-reference rather than fixed external polarity.
 
 - r2. type: transitions_to
-  - targetEntryId: wld-dis-c-003
-  - sourceClaimIds: [wld-dis-c-002-c3]
+  - targetEntryId: appea-dis-003
+  - sourceClaimIds: [appea-dis-002-c3]
   - sourceKeyPointIds: [k4]
   - targetClaimIds: [pending_local]
   - logicalOperator: sequential_transition
@@ -217,7 +217,7 @@ Review outcome:
 - review_pending
 - notes: `c-002` complete; ready for core paragraph `c-003`.
 
-### Entry wld-dis-c-003 — Two totalities unified by reciprocal containment
+### Entry appea-dis-003 — Two totalities unified by reciprocal containment
 
 Span:
 
@@ -238,7 +238,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: wld-dis-c-003-c1
+- c1. id: appea-dis-003-c1
   - subject: world_of_appearance_and_essential_world
   - predicate: are
   - object: totalities_of_self_identical_reflection_and_reflection_into_other
@@ -248,7 +248,7 @@ Claims: (Claim)
     - [56-60] both worlds are each the totality of self-identical reflection and reflection-into-other.
     - [61-64] both are self-subsisting wholes of concrete existence.
 
-- c2. id: wld-dis-c-003-c2
+- c2. id: appea-dis-003-c2
   - subject: reflected_and_immediate_concrete_existence
   - predicate: are
   - object: mutually_continuing_moments_within_identity
@@ -258,7 +258,7 @@ Claims: (Claim)
     - [62-64] one is reflected and the other immediate concrete existence.
     - [64-65] each continues into the other and is identity of both moments.
 
-- c3. id: wld-dis-c-003-c3
+- c3. id: appea-dis-003-c3
   - subject: distinct_self_subsistence_of_each_totality
   - predicate: is
   - object: posited_reference_to_other_and_unity_of_the_two
@@ -277,17 +277,17 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: refines
-  - targetEntryId: wld-dis-c-002
-  - sourceClaimIds: [wld-dis-c-003-c2, wld-dis-c-003-c3]
+  - targetEntryId: appea-dis-002
+  - sourceClaimIds: [appea-dis-003-c2, appea-dis-003-c3]
   - sourceKeyPointIds: [k2, k4]
-  - targetClaimIds: [wld-dis-c-002-c1, wld-dis-c-002-c3]
+  - targetClaimIds: [appea-dis-002-c1, appea-dis-002-c3]
   - logicalOperator: dialectical_refinement
   - analysisMode: first_order_claim_projection
   - note: `c-003` stabilizes the reciprocal inversion of `c-002` as explicit two-totality structure with unity-in-reference.
 
 - r2. type: transitions_to
-  - targetEntryId: wld-dis-c-004
-  - sourceClaimIds: [wld-dis-c-003-c3]
+  - targetEntryId: appea-dis-004
+  - sourceClaimIds: [appea-dis-003-c3]
   - sourceKeyPointIds: [k4]
   - targetClaimIds: [pending_local]
   - logicalOperator: sequential_transition
@@ -299,7 +299,7 @@ Review outcome:
 - review_pending
 - notes: `c-003` complete; core three-paragraph analysis for Part C is complete.
 
-### Entry wld-dis-c-004 — Transition I: from merely internal law-identity to realized law
+### Entry appea-dis-004 — Transition I: from merely internal law-identity to realized law
 
 Span:
 
@@ -320,7 +320,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: wld-dis-c-004-c1
+- c1. id: appea-dis-004-c1
   - subject: law_of_appearance
   - predicate: is_initially
   - object: identity_of_different_contents_via_reciprocal_positedness
@@ -329,7 +329,7 @@ Claims: (Claim)
   - evidence:
     - [77-81] law starts as identity of one content with another different content through reciprocal positedness.
 
-- c2. id: wld-dis-c-004-c2
+- c2. id: appea-dis-004-c2
   - subject: initial_identity_in_law
   - predicate: is
   - object: internal_and_not_yet_realized_with_indifferent_content
@@ -339,7 +339,7 @@ Claims: (Claim)
     - [82-89] identity of sides is at first only internal and not yet in them.
     - [86-92] content is not identical but indifferent/diversified; determination not yet present in it.
 
-- c3. id: wld-dis-c-004-c3
+- c3. id: appea-dis-004-c3
   - subject: realized_law
   - predicate: consists_in
   - object: existent_inner_identity_and_reflected_ideality_where_each_side_contains_the_other
@@ -358,17 +358,17 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: refines
-  - targetEntryId: wld-dis-c-003
-  - sourceClaimIds: [wld-dis-c-004-c3]
+  - targetEntryId: appea-dis-003
+  - sourceClaimIds: [appea-dis-004-c3]
   - sourceKeyPointIds: [k3, k4]
-  - targetClaimIds: [wld-dis-c-003-c3]
+  - targetClaimIds: [appea-dis-003-c3]
   - logicalOperator: sublative_transition
   - analysisMode: first_order_claim_projection
   - note: `c-004` restates the unity-of-two-totalities result as realized law at the level of explicit conceptual determination.
 
 - r2. type: transitions_to
-  - targetEntryId: wld-dis-c-005
-  - sourceClaimIds: [wld-dis-c-004-c3]
+  - targetEntryId: appea-dis-005
+  - sourceClaimIds: [appea-dis-004-c3]
   - sourceKeyPointIds: [k4]
   - targetClaimIds: [pending_local]
   - logicalOperator: sequential_transition
@@ -380,7 +380,7 @@ Review outcome:
 - review_pending
 - notes: `c-004` complete as transition paragraph 1.
 
-### Entry wld-dis-c-005 — Transition II: law as essential relation and consummated unity of worlds
+### Entry appea-dis-005 — Transition II: law as essential relation and consummated unity of worlds
 
 Span:
 
@@ -401,7 +401,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: wld-dis-c-005-c1
+- c1. id: appea-dis-005-c1
   - subject: law
   - predicate: is
   - object: essential_relation
@@ -410,7 +410,7 @@ Claims: (Claim)
   - evidence:
     - [101] explicit statement: law is essential relation.
 
-- c2. id: wld-dis-c-005-c2
+- c2. id: appea-dis-005-c2
   - subject: truth_of_unessential_world
   - predicate: is
   - object: totality_of_immediate_and_reflected_concrete_existence
@@ -420,7 +420,7 @@ Claims: (Claim)
     - [102-108] truth is world in-and-for-itself and other-to-it, as totality of immediate existence and reflection in otherness, equally reflected into itself.
     - [109-114] world as formless manifold totality has foundered as separate worlds but remains totality as essential relation.
 
-- c3. id: wld-dis-c-005-c3
+- c3. id: appea-dis-005-c3
   - subject: essential_relation
   - predicate: consummates
   - object: unity_of_form_between_two_content_totalities
@@ -439,17 +439,17 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: refines
-  - targetEntryId: wld-dis-c-004
-  - sourceClaimIds: [wld-dis-c-005-c1, wld-dis-c-005-c3]
+  - targetEntryId: appea-dis-004
+  - sourceClaimIds: [appea-dis-005-c1, appea-dis-005-c3]
   - sourceKeyPointIds: [k1, k4]
-  - targetClaimIds: [wld-dis-c-004-c3]
+  - targetClaimIds: [appea-dis-004-c3]
   - logicalOperator: consummative_refinement
   - analysisMode: first_order_claim_projection
   - note: `c-005` completes `c-004` by naming the realized law explicitly as essential relation and showing its consummated formal unity.
 
 - r2. type: transitions_to
   - targetEntryId: pending_next_chapter
-  - sourceClaimIds: [wld-dis-c-005-c3]
+  - sourceClaimIds: [appea-dis-005-c3]
   - sourceKeyPointIds: [k4]
   - targetClaimIds: [pending_cross_workbook]
   - logicalOperator: sequential_transition

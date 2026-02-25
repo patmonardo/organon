@@ -51,11 +51,11 @@ Decision:
 
 ## Decomposition status
 
-- completed: `wld-wld-b-001` for section `1` opening movement (line `4` to `156`)
-- completed: `wld-wld-b-002` for section `2` main opposition/ground movement (line `157` to `241`)
-- completed: `wld-wld-b-003` for final paragraph (line `242` to `259`) [includes: "The world that exists in and for itself is ... inversion of the world of appearance."]
+- completed: `appea-wor-001` for section `1` opening movement (line `4` to `156`)
+- completed: `appea-wor-002` for section `2` main opposition/ground movement (line `157` to `241`)
+- completed: `appea-wor-003` for final paragraph (line `242` to `259`) [includes: "The world that exists in and for itself is ... inversion of the world of appearance."]
 
-### Entry wld-wld-b-001 — From law as substrate to suprasensible world as essential totality
+### Entry appea-wor-001 — From law as substrate to suprasensible world as essential totality
 
 Span:
 
@@ -76,7 +76,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: wld-wld-b-001-c1
+- c1. id: appea-wor-001-c1
   - subject: kingdom_of_laws
   - predicate: is
   - object: enduring_self_identity_of_appearance_in_flux
@@ -86,7 +86,7 @@ Claims: (Claim)
     - [4-11] world raises to kingdom of laws; appearance in changing is also enduring and its positedness is law.
     - [12-23] law as simple identity/substrate of appearance, with grounds and conditions among appearing things.
 
-- c2. id: wld-wld-b-001-c2
+- c2. id: appea-wor-001-c2
   - subject: law
   - predicate: develops_into
   - object: negative_unity_of_reciprocal_positedness
@@ -96,7 +96,7 @@ Claims: (Claim)
     - [24-41] law is other of appearance and reflection into itself; appearance has in law its opposite.
     - [42-74] each side's positedness is the other's; subsistence is non-subsistence; negative unity becomes explicit.
 
-- c3. id: wld-wld-b-001-c3
+- c3. id: appea-wor-001-c3
   - subject: appearance_reflected_into_itself
   - predicate: becomes
   - object: suprasensible_world_of_reflected_essential_concrete_existence
@@ -115,17 +115,17 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: wld-law-a-003
-  - sourceClaimIds: [wld-wld-b-001-c2]
+  - targetEntryId: appea-law-003
+  - sourceClaimIds: [appea-wor-001-c2]
   - sourceKeyPointIds: [k2]
-  - targetClaimIds: [wld-law-a-003-c3]
+  - targetClaimIds: [appea-law-003-c3]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
   - note: Part B.1 realizes the necessity deficit from Part A.3 by making negative unity explicit in law itself.
 
 - r2. type: transitions_to
-  - targetEntryId: wld-wld-b-002
-  - sourceClaimIds: [wld-wld-b-001-c3]
+  - targetEntryId: appea-wor-002
+  - sourceClaimIds: [appea-wor-001-c3]
   - sourceKeyPointIds: [k3, k4]
   - targetClaimIds: [pending_local]
   - logicalOperator: sequential_transition
@@ -137,7 +137,7 @@ Review outcome:
 - review_pending
 - notes: `b-001` complete with section-1 boundary preserved.
 
-### Entry wld-wld-b-002 — World opposition as restored ground-connection of negative identity
+### Entry appea-wor-002 — World opposition as restored ground-connection of negative identity
 
 Span:
 
@@ -158,7 +158,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: wld-wld-b-002-c1
+- c1. id: appea-wor-002-c1
   - subject: world_in_and_for_itself
   - predicate: is
   - object: totality_of_concrete_existence_that_splits_by_absolute_negativity
@@ -168,7 +168,7 @@ Claims: (Claim)
     - [157-168] totality of concrete existence, absolute negativity, and split into world of senses/otherness/appearance.
     - [169-179] as totality it is one side over against world of appearance, which returns to it as ground.
 
-- c2. id: wld-wld-b-002-c2
+- c2. id: appea-wor-002-c2
   - subject: essential_world
   - predicate: functions_as
   - object: positing_and_determinate_ground_of_world_of_appearance
@@ -178,7 +178,7 @@ Claims: (Claim)
     - [176-183] essential world is positing ground that makes itself posited immediacy as world of appearance.
     - [184-199] as kingdom of laws with content, it is determinate ground and total content of appearance's manifoldness.
 
-- c3. id: wld-wld-b-002-c3
+- c3. id: appea-wor-002-c3
   - subject: restored_ground_connection
   - predicate: is
   - object: essential_negative_identity_of_opposed_sides_as_becoming_transition
@@ -197,17 +197,17 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: refines
-  - targetEntryId: wld-wld-b-001
-  - sourceClaimIds: [wld-wld-b-002-c2, wld-wld-b-002-c3]
+  - targetEntryId: appea-wor-001
+  - sourceClaimIds: [appea-wor-002-c2, appea-wor-002-c3]
   - sourceKeyPointIds: [k2, k3]
-  - targetClaimIds: [wld-wld-b-001-c3]
+  - targetClaimIds: [appea-wor-001-c3]
   - logicalOperator: dialectical_refinement
   - analysisMode: first_order_claim_projection
   - note: `b-002` makes explicit that the in-and-for-itself world from `b-001` is internally oppositional and ground-connected through negative identity.
 
 - r2. type: transitions_to
-  - targetEntryId: wld-wld-b-003
-  - sourceClaimIds: [wld-wld-b-002-c3]
+  - targetEntryId: appea-wor-003
+  - sourceClaimIds: [appea-wor-002-c3]
   - sourceKeyPointIds: [k4]
   - targetClaimIds: [pending_local]
   - logicalOperator: sequential_transition
@@ -219,7 +219,7 @@ Review outcome:
 - review_pending
 - notes: `b-002` complete; ready for final paragraph entry `b-003`.
 
-### Entry wld-wld-b-003 — Identity as opposition: the in-itself world as inversion of appearance
+### Entry appea-wor-003 — Identity as opposition: the in-itself world as inversion of appearance
 
 Span:
 
@@ -240,7 +240,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: wld-wld-b-003-c1
+- c1. id: appea-wor-003-c1
   - subject: world_in_and_for_itself
   - predicate: is
   - object: internally_differentiated_totality_of_manifold_content
@@ -249,7 +249,7 @@ Claims: (Claim)
   - evidence:
     - [242-244] in-and-for-itself world is itself distinguished within itself in manifold content.
 
-- c2. id: wld-wld-b-003-c2
+- c2. id: appea-wor-003-c2
   - subject: world_in_and_for_itself
   - predicate: is_identical_with
   - object: world_of_appearance_as_its_posited_ground_relation
@@ -258,7 +258,7 @@ Claims: (Claim)
   - evidence:
     - [245-247] it is identical with the world of appearance/posited world and to this extent its ground.
 
-- c3. id: wld-wld-b-003-c3
+- c3. id: appea-wor-003-c3
   - subject: specific_connection_of_the_two_worlds
   - predicate: is
   - object: oppositional_identity_as_inversion
@@ -277,17 +277,17 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: refines
-  - targetEntryId: wld-wld-b-002
-  - sourceClaimIds: [wld-wld-b-003-c3]
+  - targetEntryId: appea-wor-002
+  - sourceClaimIds: [appea-wor-003-c3]
   - sourceKeyPointIds: [k3, k4]
-  - targetClaimIds: [wld-wld-b-002-c3]
+  - targetClaimIds: [appea-wor-002-c3]
   - logicalOperator: dialectical_refinement
   - analysisMode: first_order_claim_projection
   - note: `b-003` gives the explicit formula (inversion) for the oppositional ground-connection developed in `b-002`.
 
 - r2. type: transitions_to
-  - targetEntryId: wld-dis-c-001
-  - sourceClaimIds: [wld-wld-b-003-c3]
+  - targetEntryId: appea-dis-001
+  - sourceClaimIds: [appea-wor-003-c3]
   - sourceKeyPointIds: [k4]
   - targetClaimIds: [pending_local]
   - logicalOperator: sequential_transition

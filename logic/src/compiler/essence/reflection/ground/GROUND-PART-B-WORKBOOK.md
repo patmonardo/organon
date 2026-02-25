@@ -54,7 +54,7 @@ Decision:
 - Migration: `relation_schema_v1 -> relation_schema_v1_1_overlay` (non-breaking).
 - Apply relation claim/keypoint anchor overlay consistently across Ground Part A/B/C in this session.
 
-### Entry grd-det-b-001 — Formal ground as sufficient but merely formal mediation
+### Entry groun-det-001 — Formal ground as sufficient but merely formal mediation
 
 Span:
 
@@ -76,7 +76,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: grd-det-b-001-c1
+- c1. id: groun-det-001-c1
   - subject: formal_ground
   - predicate: has
   - object: determinate_content_as_positive_mediating_substrate
@@ -85,7 +85,7 @@ Claims: (Claim)
   - evidence:
     - [6-15] ground has determinate content; substrate/content is indifferent positive unity and mediating factor.
 
-- c2. id: grd-det-b-001-c2
+- c2. id: groun-det-001-c2
   - subject: ground_grounded_mediation
   - predicate: is
   - object: symmetric_formal_mediation_with_identical_content_and_form
@@ -95,7 +95,7 @@ Claims: (Claim)
     - [38-52] each side passes into the other and presupposes identical determinate content.
     - [53-75] each side is both ground and posited, each the whole mediation/form; form and content are one identity.
 
-- c3. id: grd-det-b-001-c3
+- c3. id: groun-det-001-c3
   - subject: formal_ground_sufficiency
   - predicate: is_limited_as
   - object: sufficient_yet_only_formal_due_to_content_form_externality
@@ -108,20 +108,20 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: grd-abs-a-003
+  - targetEntryId: groun-abs-003
   - note: unfolds determinate ground announced at the end of Part A into its first formal articulation.
-  - sourceClaimIds: [`grd-det-b-001-c1`, `grd-det-b-001-c2`]
+  - sourceClaimIds: [`groun-det-001-c1`, `groun-det-001-c2`]
   - sourceKeyPointIds: [`k1`, `k2`, `k3`]
   - targetClaimIds: pending_cross_workbook
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: grd-det-b-002
+  - targetEntryId: groun-det-002
   - note: limitation of formal sufficiency opens section `b. Real ground`.
-  - sourceClaimIds: [`grd-det-b-001-c3`]
+  - sourceClaimIds: [`groun-det-001-c3`]
   - sourceKeyPointIds: [`k5`]
-  - targetClaimIds: [`grd-det-b-002-c1`]
+  - targetClaimIds: [`groun-det-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -130,7 +130,7 @@ Review outcome:
 - review_pending
 - notes: first deep pass complete for section `a` of Part B; section chain now completed through `b` and `c`.
 
-### Entry grd-det-b-002 — Real ground as realized but externally split connection
+### Entry groun-det-002 — Real ground as realized but externally split connection
 
 Span:
 
@@ -152,7 +152,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: grd-det-b-002-c1
+- c1. id: groun-det-002-c1
   - subject: real_ground_transition
   - predicate: occurs_when
   - object: ground_and_grounded_have_diverse_content_and_form_difference_is_internal_to_content
@@ -162,7 +162,7 @@ Claims: (Claim)
     - [105-133] content and form are not external; each side is identity of whole and thereby has diverse content.
     - [134-143] once content differs, grounding ceases to be formal tautology and becomes realized.
 
-- c2. id: grd-det-b-002-c2
+- c2. id: groun-det-002-c2
   - subject: real_grounding_connection
   - predicate: contains
   - object: essential_identity_continuity_plus_unessential_indifferent_manifold
@@ -172,7 +172,7 @@ Claims: (Claim)
     - [165-182] grounded contains simple essential compactness of ground; additional manifold is unessential and free from that ground.
     - [183-201] connection of substrate and unessential manifold is only external tie, not true ground.
 
-- c3. id: grd-det-b-002-c3
+- c3. id: groun-det-002-c3
   - subject: real_ground
   - predicate: is_determined_as
   - object: self_externalized_ground_connection_requiring_external_ground_reference
@@ -185,20 +185,20 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: grd-det-b-001
+  - targetEntryId: groun-det-001
   - note: realizes the limitation noted in formal ground by introducing genuinely diverse content.
-  - sourceClaimIds: [`grd-det-b-002-c1`, `grd-det-b-002-c2`]
+  - sourceClaimIds: [`groun-det-002-c1`, `groun-det-002-c2`]
   - sourceKeyPointIds: [`k1`, `k2`, `k3`]
-  - targetClaimIds: [`grd-det-b-001-c3`]
+  - targetClaimIds: [`groun-det-001-c3`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: grd-det-b-003
+  - targetEntryId: groun-det-003
   - note: externalization of real ground necessitates section `c. Complete ground`.
-  - sourceClaimIds: [`grd-det-b-002-c3`]
+  - sourceClaimIds: [`groun-det-002-c3`]
   - sourceKeyPointIds: [`k4`, `k5`]
-  - targetClaimIds: [`grd-det-b-003-c1`]
+  - targetClaimIds: [`groun-det-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -207,7 +207,7 @@ Review outcome:
 - review_pending
 - notes: first deep pass complete for section `b` of Part B; completed sequence now continues through section `c`.
 
-### Entry grd-det-b-003 — Complete ground as conditioning mediation
+### Entry groun-det-003 — Complete ground as conditioning mediation
 
 Span:
 
@@ -229,7 +229,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: grd-det-b-003-c1
+- c1. id: groun-det-003-c1
   - subject: complete_ground_initial_moment
   - predicate: is_determined_as
   - object: sublation_of_real_ground_into_immanent_link_restoring_formality
@@ -239,7 +239,7 @@ Claims: (Claim)
     - [233-255] real ground as content/connection is only substrate and posited linkage, thus sublated and regrounded.
     - [256-264] complete ground contains formal and real ground together and mediates formerly immediate content determinations.
 
-- c2. id: grd-det-b-003-c2
+- c2. id: groun-det-003-c2
   - subject: complete_ground_mediation_structure
   - predicate: is
   - object: two_connection_inference_where_shared_determination_mediates_posited_determination
@@ -249,7 +249,7 @@ Claims: (Claim)
     - [265-307] second connection shares content but differs by immediate vs posited linkage; ground/grounded distinction is formal.
     - [308-360] formal and real moments integrate; one content determination is essential substrate grounding the other in the second something.
 
-- c3. id: grd-det-b-003-c3
+- c3. id: groun-det-003-c3
   - subject: complete_ground_totality
   - predicate: culminates_in
   - object: presupposing_reflection_as_conditioning_mediation
@@ -262,18 +262,18 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: grd-det-b-002
+  - targetEntryId: groun-det-002
   - note: resolves real ground's externalization by reintegrating formal and real mediation.
-  - sourceClaimIds: [`grd-det-b-003-c1`, `grd-det-b-003-c2`]
+  - sourceClaimIds: [`groun-det-003-c1`, `groun-det-003-c2`]
   - sourceKeyPointIds: [`k1`, `k2`, `k3`, `k4`]
-  - targetClaimIds: [`grd-det-b-002-c3`]
+  - targetClaimIds: [`groun-det-002-c3`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: grd-cnd-c-001
+  - targetEntryId: groun-con-001
   - note: emergence of conditioning mediation hands off to Ground Part C (`condition.txt`).
-  - sourceClaimIds: [`grd-det-b-003-c3`]
+  - sourceClaimIds: [`groun-det-003-c3`]
   - sourceKeyPointIds: [`k5`]
   - targetClaimIds: pending_cross_workbook
   - logicalOperator: sequential_transition

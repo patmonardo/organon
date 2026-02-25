@@ -47,9 +47,9 @@ Scope:
 Decision:
 
 - Use numeric section boundaries as primary entry boundaries.
-- Keep IDs in normalized form: `obj-chem-b-001`, `obj-chem-b-002`, `obj-chem-b-003`.
+- Keep IDs in normalized form: `chemi-pro-001`, `chemi-pro-002`, `chemi-pro-003`.
 
-### Entry obj-chem-b-001 — Section 1: affinity, communication, and formal neutralization
+### Entry chemi-pro-001 — Section 1: affinity, communication, and formal neutralization
 
 Span:
 
@@ -70,7 +70,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: obj-chem-b-001-c1
+- c1. id: chemi-pro-001-c1
   - subject: chemically_tensed_objects
   - predicate: strive_toward
   - object: reciprocal_complementation_and_concept_conformable_reality
@@ -79,7 +79,7 @@ Claims: (Claim)
   - evidence:
     - [4-17] reciprocal striving to sublate one-sidedness and combine into concept-conformable reality.
 
-- c2. id: obj-chem-b-001-c2
+- c2. id: chemi-pro-001-c2
   - subject: communication_medium
   - predicate: functions_as
   - object: formal_neutral_middle_term
@@ -89,7 +89,7 @@ Claims: (Claim)
     - [24-39] middle term as abstract neutrality/theoretical element.
     - [40-45] examples: water (bodies), sign/language (spirit analogy).
 
-- c3. id: obj-chem-b-001-c3
+- c3. id: chemi-pro-001-c3
   - subject: neutral_product
   - predicate: is_determined_as
   - object: formal_unity_with_retained_tension_capacity
@@ -108,11 +108,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: obj-chem-b-002
+  - targetEntryId: chemi-pro-002
   - note: formal neutrality externalizes negativity and requires reactivation.
-  - sourceClaimIds: [`obj-chem-b-001-c3`]
+  - sourceClaimIds: [`chemi-pro-001-c3`]
   - sourceKeyPointIds: [`k4`]
-  - targetClaimIds: [`obj-chem-b-002-c1`]
+  - targetClaimIds: [`chemi-pro-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -121,7 +121,7 @@ Review outcome:
 - review_pending
 - notes: numeric subentry boundary preserved.
 
-### Entry obj-chem-b-002 — Section 2: externalized negativity and disjunctive totality
+### Entry chemi-pro-002 — Section 2: externalized negativity and disjunctive totality
 
 Span:
 
@@ -142,7 +142,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: obj-chem-b-002-c1
+- c1. id: chemi-pro-002-c1
   - subject: externalized_negativity
   - predicate: reactivates
   - object: chemical_process_by_disrupting_neutrality
@@ -152,7 +152,7 @@ Claims: (Claim)
     - [88-109] negativity remains outside neutral product and reconnects as restless consuming activity.
     - [110-123] immediate connection differentiates/disrupts middle term.
 
-- c2. id: obj-chem-b-002-c2
+- c2. id: chemi-pro-002-c2
   - subject: disruption_of_real_neutrality
   - predicate: yields
   - object: abstract_indifferent_base_and_activating_principle
@@ -161,7 +161,7 @@ Claims: (Claim)
   - evidence:
     - [129-143] opposite extreme and breakup into neutral moments/base + activating principle.
 
-- c3. id: obj-chem-b-002-c3
+- c3. id: chemi-pro-002-c3
   - subject: disjunctive_syllogism
   - predicate: is_determined_as
   - object: totality_of_chemism
@@ -179,11 +179,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: obj-chem-b-003
+  - targetEntryId: chemi-pro-003
   - note: resolved abstract moments become elemental presupposition for renewed cycle and sublation of chemism.
-  - sourceClaimIds: [`obj-chem-b-002-c2`, `obj-chem-b-002-c3`]
+  - sourceClaimIds: [`chemi-pro-002-c2`, `chemi-pro-002-c3`]
   - sourceKeyPointIds: [`k3`, `k4`]
-  - targetClaimIds: [`obj-chem-b-003-c1`, `obj-chem-b-003-c2`]
+  - targetClaimIds: [`chemi-pro-003-c1`, `chemi-pro-003-c2`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -192,7 +192,7 @@ Review outcome:
 - review_pending
 - notes: numeric subentry boundary preserved.
 
-### Entry obj-chem-b-003 — Section 3: elemental return and transition beyond chemism
+### Entry chemi-pro-003 — Section 3: elemental return and transition beyond chemism
 
 Span:
 
@@ -212,7 +212,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: obj-chem-b-003-c1
+- c1. id: chemi-pro-003-c1
   - subject: elemental_objects
   - predicate: are_determined_as
   - object: liberated_basis_for_renewed_chemical_tension
@@ -221,7 +221,7 @@ Claims: (Claim)
   - evidence:
     - [156-170] elemental objects posited and driven to relate/non-indifferent neutralization.
 
-- c2. id: obj-chem-b-003-c2
+- c2. id: chemi-pro-003-c2
   - subject: chemism
   - predicate: both_restores_and_sublates
   - object: its_beginning_and_itself_into_higher_sphere
@@ -238,11 +238,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: obj-chem-c-001
+  - targetEntryId: chemi-chm-001
   - note: explicit beyond-chemism transition is developed in Part C transition treatment.
-  - sourceClaimIds: [`obj-chem-b-003-c2`]
+  - sourceClaimIds: [`chemi-pro-003-c2`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`obj-chem-c-001-c1`]
+  - targetClaimIds: [`chemi-chm-001-c1`]
   - logicalOperator: boundary_transition
   - analysisMode: first_order_claim_projection
 

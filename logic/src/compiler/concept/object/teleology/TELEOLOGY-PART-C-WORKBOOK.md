@@ -47,9 +47,9 @@ Scope:
 Decision:
 
 - Part C is large but numerically segmented; preserve that structure.
-- Keep IDs in normalized form: `obj-tel-c-001`, `obj-tel-c-002`, `obj-tel-c-003`.
+- Keep IDs in normalized form: `teleo-pur-001`, `teleo-pur-002`, `teleo-pur-003`.
 
-### Entry obj-tel-c-001 — Section 1: means-mediated activity and self-return of purpose
+### Entry teleo-pur-001 — Section 1: means-mediated activity and self-return of purpose
 
 Span:
 
@@ -71,7 +71,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: obj-tel-c-001-c1
+- c1. id: teleo-pur-001-c1
   - subject: purposive_activity_through_means
   - predicate: must_sublate
   - object: its_external_mediation_to_attain_objective_purpose
@@ -80,7 +80,7 @@ Claims: (Claim)
   - evidence:
     - [12-25] if activity only redetermines external immediacy, infinite means-regress follows; mediation must self-sublate as external.
 
-- c2. id: obj-tel-c-001-c2
+- c2. id: teleo-pur-001-c2
   - subject: mechanism_chemism_under_purpose
   - predicate: are_determined_as
   - object: objectivitys_internal_turning_back_into_concept
@@ -90,7 +90,7 @@ Claims: (Claim)
     - [41-47] objective processes recur under dominance of purpose and return into purpose.
     - [58-66] mechanism here is objectivity’s own alteration/internal transition into concept.
 
-- c3. id: obj-tel-c-001-c3
+- c3. id: teleo-pur-001-c3
   - subject: teleological_identity
   - predicate: posits
   - object: end_beginning_effect_cause_identity_in_simple_concept
@@ -108,11 +108,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: obj-tel-c-002
+  - targetEntryId: teleo-pur-002
   - note: identity claim is tested against defects of external purposiveness in product analysis.
-  - sourceClaimIds: [`obj-tel-c-001-c1`, `obj-tel-c-001-c3`]
+  - sourceClaimIds: [`teleo-pur-001-c1`, `teleo-pur-001-c3`]
   - sourceKeyPointIds: [`k1`, `k5`]
-  - targetClaimIds: [`obj-tel-c-002-c1`, `obj-tel-c-002-c2`]
+  - targetClaimIds: [`teleo-pur-002-c1`, `teleo-pur-002-c2`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -121,7 +121,7 @@ Review outcome:
 - review_pending
 - notes: numeric section boundary preserved.
 
-### Entry obj-tel-c-002 — Section 2: critique of external purposiveness and infinite mediation
+### Entry teleo-pur-002 — Section 2: critique of external purposiveness and infinite mediation
 
 Span:
 
@@ -143,7 +143,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: obj-tel-c-002-c1
+- c1. id: teleo-pur-002-c1
   - subject: external_purposive_product
   - predicate: remains
   - object: relative_means_not_realized_objective_purpose
@@ -153,7 +153,7 @@ Claims: (Claim)
     - [214-246] purpose appears external to object; determination still mechanically lodged.
     - [310-319] product is only means, not truly realized purpose.
 
-- c2. id: obj-tel-c-002-c2
+- c2. id: teleo-pur-002-c2
   - subject: formal_teleological_syllogism
   - predicate: entails
   - object: infinite_progress_of_mediation_and_imperfect_conclusion
@@ -163,7 +163,7 @@ Claims: (Claim)
     - [269-299] immediate premises force endless interjected means.
     - [306-309] conclusion remains imperfect because premises presuppose conclusion.
 
-- c3. id: obj-tel-c-002-c3
+- c3. id: teleo-pur-002-c3
   - subject: relative_external_purposes
   - predicate: are_determined_as
   - object: perishable_used_up_and_inadequate_to_conceptual_infinity
@@ -182,11 +182,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: obj-tel-c-003
+  - targetEntryId: teleo-pur-003
   - note: failure of external purposiveness forces transition to inner purposive connection and realized objective purpose.
-  - sourceClaimIds: [`obj-tel-c-002-c1`, `obj-tel-c-002-c2`, `obj-tel-c-002-c3`]
+  - sourceClaimIds: [`teleo-pur-002-c1`, `teleo-pur-002-c2`, `teleo-pur-002-c3`]
   - sourceKeyPointIds: [`k2`, `k3`, `k5`]
-  - targetClaimIds: [`obj-tel-c-003-c1`, `obj-tel-c-003-c2`]
+  - targetClaimIds: [`teleo-pur-003-c1`, `teleo-pur-003-c2`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -195,7 +195,7 @@ Review outcome:
 - review_pending
 - notes: numeric section boundary preserved.
 
-### Entry obj-tel-c-003 — Section 3: truth of external teleology as inner objective purpose
+### Entry teleo-pur-003 — Section 3: truth of external teleology as inner objective purpose
 
 Span:
 
@@ -217,7 +217,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: obj-tel-c-003-c1
+- c1. id: teleo-pur-003-c1
   - subject: truth_of_external_teleology
   - predicate: is_determined_as
   - object: inner_purposive_connection_and_objective_purpose
@@ -226,7 +226,7 @@ Claims: (Claim)
   - evidence:
     - [399-413] truth of external purposive connection is inner purposive connection/objective purpose.
 
-- c2. id: obj-tel-c-003-c2
+- c2. id: teleo-pur-003-c2
   - subject: realized_purpose
   - predicate: sublates
   - object: means_and_external_mediation_while_preserving_their_truth
@@ -236,7 +236,7 @@ Claims: (Claim)
     - [452-470] means and mediation disappear into concrete identity of objective purpose.
     - [472-497] realized purpose is also means; first and second sublations reciprocally contained.
 
-- c3. id: obj-tel-c-003-c3
+- c3. id: teleo-pur-003-c3
   - subject: concept_objectivity_unity
   - predicate: culminates_as
   - object: self_determining_identity_of_external_totality
@@ -254,18 +254,18 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: obj-tel-c-001
+  - targetEntryId: teleo-pur-001
   - note: final identity clarifies section 1 claim that teleological mediation is internally self-returning.
-  - sourceClaimIds: [`obj-tel-c-003-c2`, `obj-tel-c-003-c3`]
+  - sourceClaimIds: [`teleo-pur-003-c2`, `teleo-pur-003-c3`]
   - sourceKeyPointIds: [`k4`, `k5`]
-  - targetClaimIds: [`obj-tel-c-001-c2`, `obj-tel-c-001-c3`]
+  - targetClaimIds: [`teleo-pur-001-c2`, `teleo-pur-001-c3`]
   - logicalOperator: retrospective_grounding
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
   - targetEntryId: pending_objective_idea_entry
   - note: realized purpose as concept-objectivity identity opens transition to objective Idea articulation.
-  - sourceClaimIds: [`obj-tel-c-003-c3`]
+  - sourceClaimIds: [`teleo-pur-003-c3`]
   - sourceKeyPointIds: [`k5`]
   - targetClaimIds: [`pending`]
   - logicalOperator: boundary_transition

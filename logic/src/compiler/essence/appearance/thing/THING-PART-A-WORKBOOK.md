@@ -54,19 +54,19 @@ Decision:
 ## Decomposition status
 
 - `a. The thing in itself and concrete existence`
-  - completed: `thg-a-a-001` for `a.1` (line `240` to pre-`303`)
-  - completed: `thg-a-a-002` for `a.2` (line `303` to pre-`374`)
-  - completed: `thg-a-a-003` for `a.3` (line `374` to pre-`436`)
+  - completed: `concr-thi-a-001` for `a.1` (line `240` to pre-`303`)
+  - completed: `concr-thi-a-002` for `a.2` (line `303` to pre-`374`)
+  - completed: `concr-thi-a-003` for `a.3` (line `374` to pre-`436`)
 - `b. Property`
-  - completed: `thg-a-b-001` for initial-property framing + `First` paragraph (line `438` to pre-`467`)
-  - completed: `thg-a-b-002` for `Second` paragraph (line `467` to pre-`490`)
-  - completed: `thg-a-b-003` for final grounding paragraph (line `490` to pre-`537`)
+  - completed: `concr-thi-b-001` for initial-property framing + `First` paragraph (line `438` to pre-`467`)
+  - completed: `concr-thi-b-002` for `Second` paragraph (line `467` to pre-`490`)
+  - completed: `concr-thi-b-003` for final grounding paragraph (line `490` to pre-`537`)
 - `c. The reciprocal action of things`
-  - completed: `thg-a-c-001` for paragraph 1 (line `539` to `587`)
-  - completed: `thg-a-c-002` for paragraph 2 (line `589` to `601`)
-  - completed: `thg-a-c-003` for paragraph 3 (line `603` to `642`)
+  - completed: `concr-thi-c-001` for paragraph 1 (line `539` to `587`)
+  - completed: `concr-thi-c-002` for paragraph 2 (line `589` to `601`)
+  - completed: `concr-thi-c-003` for paragraph 3 (line `603` to `642`)
 
-### Entry thg-a-a-001 — Thing-in-itself as essential concrete existence and externalized unessentiality
+### Entry concr-thi-a-001 — Thing-in-itself as essential concrete existence and externalized unessentiality
 
 Span:
 
@@ -87,7 +87,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: thg-a-a-001-c1
+- c1. id: concr-thi-a-001-c1
   - subject: thing_in_itself
   - predicate: is
   - object: essential_immediate_resulting_from_sublated_mediation
@@ -97,7 +97,7 @@ Claims: (Claim)
     - [240-247] "The thing in itself is the concrete existent as the essential immediate that has resulted from the sublated mediation."
     - [267-272] thing-in-itself exists concretely as essential concrete existence.
 
-- c2. id: thg-a-a-001-c2
+- c2. id: concr-thi-a-001-c2
   - subject: mediated_being_of_the_thing
   - predicate: is
   - object: unessential_posited_concrete_existence
@@ -107,7 +107,7 @@ Claims: (Claim)
     - [248-259] mediated being appears as external, manifold, other-to-itself existence.
     - [271-273] mediated being is the thing's unessential concrete existence.
 
-- c3. id: thg-a-a-001-c3
+- c3. id: concr-thi-a-001-c3
   - subject: manifoldness_ascribed_to_thing_in_itself
   - predicate: is_grounded_in
   - object: external_reflection_not_own_determination
@@ -126,8 +126,8 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: thg-a-a-002
-  - sourceClaimIds: [thg-a-a-001-c3]
+  - targetEntryId: concr-thi-a-002
+  - sourceClaimIds: [concr-thi-a-001-c3]
   - sourceKeyPointIds: [k4]
   - targetClaimIds: [pending_local]
   - logicalOperator: sequential_transition
@@ -139,7 +139,7 @@ Review outcome:
 - review_pending
 - notes: `a.1` boundary is complete and respects explicit numbered segmentation.
 
-### Entry thg-a-a-002 — External reflection collapses into thing-in-itself identity
+### Entry concr-thi-a-002 — External reflection collapses into thing-in-itself identity
 
 Span:
 
@@ -160,7 +160,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: thg-a-a-002-c1
+- c1. id: concr-thi-a-002-c1
   - subject: external_reflection
   - predicate: is
   - object: unity_of_manifoldness_and_reference_to_thing_in_itself
@@ -170,7 +170,7 @@ Claims: (Claim)
     - [303-312] external reflection is manifold and refers to thing-in-itself as absolute presupposition.
     - [313-319] these two moments are one and the same.
 
-- c2. id: thg-a-a-002-c2
+- c2. id: concr-thi-a-002-c2
   - subject: manifold_otherness
   - predicate: lacks
   - object: independent_subsistence_besides_thing_in_itself
@@ -180,7 +180,7 @@ Claims: (Claim)
     - [315-326] manifoldness has no independent subsistence besides thing-in-itself; it is reflective shine.
     - [327-336] otherness exists only as reference and repulsion, as unsupported rebound.
 
-- c3. id: thg-a-a-002-c3
+- c3. id: concr-thi-a-002-c3
   - subject: essenceless_external_reflection
   - predicate: collapses_into
   - object: essential_identity_of_thing_in_itself_and_external_concrete_existence
@@ -200,17 +200,17 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: thg-a-a-001
-  - sourceClaimIds: [thg-a-a-002-c1, thg-a-a-002-c2]
+  - targetEntryId: concr-thi-a-001
+  - sourceClaimIds: [concr-thi-a-002-c1, concr-thi-a-002-c2]
   - sourceKeyPointIds: [k1, k2]
-  - targetClaimIds: [thg-a-a-001-c3]
+  - targetClaimIds: [concr-thi-a-001-c3]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
   - note: `a.2` explains why the manifold attributed in `a.1` lacks independent standing and remains externally reflective.
 
 - r2. type: transitions_to
-  - targetEntryId: thg-a-a-003
-  - sourceClaimIds: [thg-a-a-002-c3]
+  - targetEntryId: concr-thi-a-003
+  - sourceClaimIds: [concr-thi-a-002-c3]
   - sourceKeyPointIds: [k4]
   - targetClaimIds: [pending_local]
   - logicalOperator: sequential_transition
@@ -222,7 +222,7 @@ Review outcome:
 - review_pending
 - notes: `a.2` boundary complete; handoff to `a.3` remains pending.
 
-### Entry thg-a-a-003 — Reciprocal mediation collapses plurality into self-related determinateness
+### Entry concr-thi-a-003 — Reciprocal mediation collapses plurality into self-related determinateness
 
 Span:
 
@@ -243,7 +243,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: thg-a-a-003-c1
+- c1. id: concr-thi-a-003-c1
   - subject: external_reflection
   - predicate: structures
   - object: reciprocal_mediation_of_things_in_themselves_via_external_concrete_existence
@@ -253,7 +253,7 @@ Claims: (Claim)
     - [374-382] things-in-themselves are extremes; middle term is their external concrete existence.
     - [383-388] difference falls in their connecting reference while they remain indifferent as extremes.
 
-- c2. id: thg-a-a-003-c2
+- c2. id: concr-thi-a-003-c2
   - subject: reciprocal_determination_of_things_in_themselves
   - predicate: entails
   - object: non_distinctness_of_the_supposed_extremes
@@ -263,7 +263,7 @@ Claims: (Claim)
     - [389-404] each thing is determined through the other and has supposition in the other.
     - [405-412] since each has difference not in itself but in the other, they are not distinct things.
 
-- c3. id: thg-a-a-003-c3
+- c3. id: concr-thi-a-003-c3
   - subject: thing_in_itself
   - predicate: has_determinateness_as
   - object: self_relation_to_itself_as_other_grounding_property
@@ -282,17 +282,17 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: thg-a-a-002
-  - sourceClaimIds: [thg-a-a-003-c2]
+  - targetEntryId: concr-thi-a-002
+  - sourceClaimIds: [concr-thi-a-003-c2]
   - sourceKeyPointIds: [k2, k3]
-  - targetClaimIds: [thg-a-a-002-c3]
+  - targetClaimIds: [concr-thi-a-002-c3]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
   - note: `a.3` extends `a.2` by showing how collapse into identity determines the fate of plurality and mediation.
 
 - r2. type: transitions_to
-  - targetEntryId: thg-a-b-001
-  - sourceClaimIds: [thg-a-a-003-c3]
+  - targetEntryId: concr-thi-b-001
+  - sourceClaimIds: [concr-thi-a-003-c3]
   - sourceKeyPointIds: [k4]
   - targetClaimIds: [pending_local]
   - logicalOperator: sequential_transition
@@ -304,7 +304,7 @@ Review outcome:
 - review_pending
 - notes: `a` subpart (`1/2/3`) is now complete under explicit numbered-span discipline.
 
-### Entry thg-a-b-001 — Property as reflective negativity and first-order posited reference
+### Entry concr-thi-b-001 — Property as reflective negativity and first-order posited reference
 
 Span:
 
@@ -324,7 +324,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: thg-a-b-001-c1
+- c1. id: concr-thi-b-001-c1
   - subject: property_of_the_thing
   - predicate: is
   - object: negativity_of_reflection_constituting_thing_in_itself
@@ -333,7 +333,7 @@ Claims: (Claim)
   - evidence:
     - [438-445] property is negativity of reflection by virtue of which concrete existence is concrete existent and thing-in-itself.
 
-- c2. id: thg-a-b-001-c2
+- c2. id: concr-thi-b-001-c2
   - subject: reflective_negativity
   - predicate: is_determined_as
   - object: self_referential_mediation_and_constitution_excluded_from_simple_otherness
@@ -343,7 +343,7 @@ Claims: (Claim)
     - [446-457] sublated mediation is essential reference to self as other, not unreflected reference.
     - [454-459] thing-in-itself is determined in itself as constitution and excluded from passing into otherness.
 
-- c3. id: thg-a-b-001-c3
+- c3. id: concr-thi-b-001-c3
   - subject: first_determination_of_property
   - predicate: is
   - object: determinate_reference_to_something_other_as_positedness
@@ -361,17 +361,17 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: thg-a-a-003
-  - sourceClaimIds: [thg-a-b-001-c1]
+  - targetEntryId: concr-thi-a-003
+  - sourceClaimIds: [concr-thi-b-001-c1]
   - sourceKeyPointIds: [k1]
-  - targetClaimIds: [thg-a-a-003-c3]
+  - targetClaimIds: [concr-thi-a-003-c3]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
   - note: explicit emergence of property in `b` concretizes the terminus reached at end of `a.3`.
 
 - r2. type: transitions_to
-  - targetEntryId: thg-a-b-002
-  - sourceClaimIds: [thg-a-b-001-c3]
+  - targetEntryId: concr-thi-b-002
+  - sourceClaimIds: [concr-thi-b-001-c3]
   - sourceKeyPointIds: [k3]
   - targetClaimIds: [pending_local]
   - logicalOperator: sequential_transition
@@ -383,7 +383,7 @@ Review outcome:
 - review_pending
 - notes: segmentation of `b` now follows explicit user rule: initial+`First`, then `Second`, then final paragraph.
 
-### Entry thg-a-b-002 — Property preserved in alteration and proto-causal efficacy
+### Entry concr-thi-b-002 — Property preserved in alteration and proto-causal efficacy
 
 Span:
 
@@ -403,7 +403,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: thg-a-b-002-c1
+- c1. id: concr-thi-b-002-c1
   - subject: property
   - predicate: is_preserved_in
   - object: externality_and_alteration_of_concrete_existence
@@ -412,7 +412,7 @@ Claims: (Claim)
   - evidence:
     - [467-472] in positedness the thing is in itself; property is not lost under becoming and alteration.
 
-- c2. id: thg-a-b-002-c2
+- c2. id: concr-thi-b-002-c2
   - subject: property
   - predicate: is
   - object: conditional_efficacy_and_self_identical_substrate_of_the_thing
@@ -421,7 +421,7 @@ Claims: (Claim)
   - evidence:
     - [473-480] property effects in another under corresponding constitution and is the thing's own self-identical substrate.
 
-- c3. id: thg-a-b-002-c3
+- c3. id: concr-thi-b-002-c3
   - subject: thing_with_properties
   - predicate: becomes
   - object: cause_not_yet_actual_cause
@@ -439,17 +439,17 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: thg-a-b-001
-  - sourceClaimIds: [thg-a-b-002-c1]
+  - targetEntryId: concr-thi-b-001
+  - sourceClaimIds: [concr-thi-b-002-c1]
   - sourceKeyPointIds: [k1]
-  - targetClaimIds: [thg-a-b-001-c3]
+  - targetClaimIds: [concr-thi-b-001-c3]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
   - note: `Second` deepens `First` by showing that posited reference does not dissolve in alteration.
 
 - r2. type: transitions_to
-  - targetEntryId: thg-a-b-003
-  - sourceClaimIds: [thg-a-b-002-c3]
+  - targetEntryId: concr-thi-b-003
+  - sourceClaimIds: [concr-thi-b-002-c3]
   - sourceKeyPointIds: [k3]
   - targetClaimIds: [pending_local]
   - logicalOperator: sequential_transition
@@ -461,7 +461,7 @@ Review outcome:
 - review_pending
 - notes: `Second` paragraph captured as its own entry under the user-guided decomposition protocol.
 
-### Entry thg-a-b-003 — Property as ground-connection and in-itselfness in externality
+### Entry concr-thi-b-003 — Property as ground-connection and in-itselfness in externality
 
 Span:
 
@@ -481,7 +481,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: thg-a-b-003-c1
+- c1. id: concr-thi-b-003-c1
   - subject: thing_in_itself
   - predicate: is
   - object: ground_present_in_its_properties_not_substrate_behind_existence
@@ -491,7 +491,7 @@ Claims: (Claim)
     - [490-499] properties are own determinations; thing is not substrate on other side of existence.
     - [498-501] thing is present in properties as ground and self-identity in positedness.
 
-- c2. id: thg-a-b-003-c2
+- c2. id: concr-thi-b-003-c2
   - subject: ground_connection_of_thinghood
   - predicate: is
   - object: conditioned_external_reflection_that_reflects_into_itself
@@ -501,7 +501,7 @@ Claims: (Claim)
     - [501-505] thing is conditioned ground; positedness is reflection external to itself.
     - [506-513] through concrete existence and alteration, thing remains reflected immediacy of the ground.
 
-- c3. id: thg-a-b-003-c3
+- c3. id: concr-thi-b-003-c3
   - subject: property
   - predicate: is_determined_as
   - object: ground_as_implicit_positedness_unifying_external_immediacy_and_in_itselfness
@@ -520,17 +520,17 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: thg-a-b-002
-  - sourceClaimIds: [thg-a-b-003-c2]
+  - targetEntryId: concr-thi-b-002
+  - sourceClaimIds: [concr-thi-b-003-c2]
   - sourceKeyPointIds: [k2]
-  - targetClaimIds: [thg-a-b-002-c3]
+  - targetClaimIds: [concr-thi-b-002-c3]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
   - note: final grounding clarifies why `b.2` could treat causal efficacy as not yet fully positing reflection.
 
 - r2. type: transitions_to
-  - targetEntryId: thg-a-c-001
-  - sourceClaimIds: [thg-a-b-003-c3]
+  - targetEntryId: concr-thi-c-001
+  - sourceClaimIds: [concr-thi-b-003-c3]
   - sourceKeyPointIds: [k3]
   - targetClaimIds: [pending_local]
   - logicalOperator: sequential_transition
@@ -542,7 +542,7 @@ Review outcome:
 - review_pending
 - notes: `b. Property` is now complete under the user-guided three-part decomposition.
 
-### Entry thg-a-c-001 — Reciprocal action reduces thinghood to property-determined reflection
+### Entry concr-thi-c-001 — Reciprocal action reduces thinghood to property-determined reflection
 
 Span:
 
@@ -562,7 +562,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: thg-a-c-001-c1
+- c1. id: concr-thi-c-001-c1
   - subject: many_things_in_themselves
   - predicate: stand_in
   - object: essential_reciprocal_action_by_virtue_of_properties
@@ -572,7 +572,7 @@ Claims: (Claim)
     - [539-548] thing-in-itself as thing with properties; many distinct things stand in essential reciprocal action.
     - [548-556] reciprocal determination is middle term and self-identical reflection.
 
-- c2. id: thg-a-c-001-c2
+- c2. id: concr-thi-c-001-c2
   - subject: thinghood
   - predicate: is_reduced_to
   - object: indeterminate_self_identity_with_essentiality_only_in_property
@@ -582,7 +582,7 @@ Claims: (Claim)
     - [556-559] thinghood reduced to indeterminate self-identity with essentiality only in property.
     - [560-575] determinateness of "this thing" lies solely in properties as differentiating reflection.
 
-- c3. id: thg-a-c-001-c3
+- c3. id: concr-thi-c-001-c3
   - subject: thing_without_determinate_property
   - predicate: has
   - object: merely_external_quantitative_difference_and_unessential_remainder
@@ -601,17 +601,17 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: thg-a-b-003
-  - sourceClaimIds: [thg-a-c-001-c2]
+  - targetEntryId: concr-thi-b-003
+  - sourceClaimIds: [concr-thi-c-001-c2]
   - sourceKeyPointIds: [k2]
-  - targetClaimIds: [thg-a-b-003-c3]
+  - targetClaimIds: [concr-thi-b-003-c3]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
   - note: `c.1` operationalizes the `b.3` result by showing thinghood's essentiality only in property/ground reflection.
 
 - r2. type: transitions_to
-  - targetEntryId: thg-a-c-002
-  - sourceClaimIds: [thg-a-c-001-c3]
+  - targetEntryId: concr-thi-c-002
+  - sourceClaimIds: [concr-thi-c-001-c3]
   - sourceKeyPointIds: [k3]
   - targetClaimIds: [pending_local]
   - logicalOperator: sequential_transition
@@ -623,7 +623,7 @@ Review outcome:
 - review_pending
 - notes: `c` paragraph 1 captured as a standalone entry under the natural three-paragraph decomposition.
 
-### Entry thg-a-c-002 — Extremes vanish into property as the true continuity
+### Entry concr-thi-c-002 — Extremes vanish into property as the true continuity
 
 Span:
 
@@ -643,7 +643,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: thg-a-c-002-c1
+- c1. id: concr-thi-c-002-c1
   - subject: initial_thing_relation_schema
   - predicate: posits
   - object: thing_as_extreme_and_property_as_middle_term
@@ -652,7 +652,7 @@ Claims: (Claim)
   - evidence:
     - [589-592] thing as extreme term; property as middle term between connected things.
 
-- c2. id: thg-a-c-002-c2
+- c2. id: concr-thi-c-002-c2
   - subject: connecting_reference_of_things
   - predicate: is
   - object: one_reflection_and_continuity_of_distinction_and_connection
@@ -661,7 +661,7 @@ Claims: (Claim)
   - evidence:
     - [593-597] connection is where things meet as self-repelling reflection; distinction and connecting reference are one reflection/continuity.
 
-- c3. id: thg-a-c-002-c3
+- c3. id: concr-thi-c-002-c3
   - subject: self_subsisting_extremes
   - predicate: vanish_into
   - object: continuity_that_is_property
@@ -679,17 +679,17 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: thg-a-c-001
-  - sourceClaimIds: [thg-a-c-002-c3]
+  - targetEntryId: concr-thi-c-001
+  - sourceClaimIds: [concr-thi-c-002-c3]
   - sourceKeyPointIds: [k3]
-  - targetClaimIds: [thg-a-c-001-c2]
+  - targetClaimIds: [concr-thi-c-001-c2]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
   - note: paragraph 2 sharpens paragraph 1 by formally collapsing supposed extremes into property-continuity.
 
 - r2. type: transitions_to
-  - targetEntryId: thg-a-c-003
-  - sourceClaimIds: [thg-a-c-002-c3]
+  - targetEntryId: concr-thi-c-003
+  - sourceClaimIds: [concr-thi-c-002-c3]
   - sourceKeyPointIds: [k3]
   - targetClaimIds: [pending_local]
   - logicalOperator: sequential_transition
@@ -701,7 +701,7 @@ Review outcome:
 - review_pending
 - notes: `c` paragraph 2 captured as a standalone entry in the user-guided decomposition sequence.
 
-### Entry thg-a-c-003 — Property becomes self-subsistent matter and thing is reduced to unessential form
+### Entry concr-thi-c-003 — Property becomes self-subsistent matter and thing is reduced to unessential form
 
 Span:
 
@@ -721,7 +721,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: thg-a-c-003-c1
+- c1. id: concr-thi-c-003-c1
   - subject: property
   - predicate: is
   - object: self_subsistent_while_thing_as_such_is_unessential
@@ -731,7 +731,7 @@ Claims: (Claim)
     - [603-610] property is self-subsistent; things are unessential except as self-referring reflection.
     - [611-616] truth of the thing is only an unessential compass/negative unity.
 
-- c2. id: thg-a-c-003-c2
+- c2. id: concr-thi-c-003-c2
   - subject: evaluative_structure_of_thing_and_property
   - predicate: is
   - object: inverted_in_favor_of_property_through_transition_of_thing_in_itself
@@ -741,7 +741,7 @@ Claims: (Claim)
     - [617-623] earlier abstraction that omitted property is reversed through transition of thing-in-itself into property.
     - [624-631] abstract thing without property is no longer essential; thing is reduced to external form of property.
 
-- c3. id: thg-a-c-003-c3
+- c3. id: concr-thi-c-003-c3
   - subject: property
   - predicate: becomes
   - object: self_subsisting_matter_manifold_constituting_the_thing
@@ -760,17 +760,17 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: thg-a-c-002
-  - sourceClaimIds: [thg-a-c-003-c1]
+  - targetEntryId: concr-thi-c-002
+  - sourceClaimIds: [concr-thi-c-003-c1]
   - sourceKeyPointIds: [k1]
-  - targetClaimIds: [thg-a-c-002-c3]
+  - targetClaimIds: [concr-thi-c-002-c3]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
   - note: paragraph 3 consummates paragraph 2 by explicitly granting self-subsistence to property and nullifying self-subsisting extremes.
 
 - r2. type: transitions_to
-  - targetEntryId: thg-mat-b-001
-  - sourceClaimIds: [thg-a-c-003-c3]
+  - targetEntryId: concr-mat-001
+  - sourceClaimIds: [concr-thi-c-003-c3]
   - sourceKeyPointIds: [k3]
   - targetClaimIds: [pending_cross_workbook]
   - logicalOperator: sequential_transition

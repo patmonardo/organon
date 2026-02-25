@@ -53,12 +53,12 @@ Decision:
 
 ## Decomposition status
 
-- completed: `thg-dis-c-001` for paragraph 1 (line `4` to `19`)
-- completed: `thg-dis-c-002` for paragraph 2 (line `20` to `55`)
-- completed: `thg-dis-c-003` for paragraph 3 (line `56` to `102`)
-- completed: `thg-dis-c-004` for special transition paragraph (line `103` to `110`) -> handoff into Appearance/World architecture
+- completed: `concr-dis-001` for paragraph 1 (line `4` to `19`)
+- completed: `concr-dis-002` for paragraph 2 (line `20` to `55`)
+- completed: `concr-dis-003` for paragraph 3 (line `56` to `102`)
+- completed: `concr-dis-004` for special transition paragraph (line `103` to `110`) -> handoff into Appearance/World architecture
 
-### Entry thg-dis-c-001 — Quantitative thinghood as absolute alterability and porous dissolution
+### Entry concr-dis-001 — Quantitative thinghood as absolute alterability and porous dissolution
 
 Span:
 
@@ -78,7 +78,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: thg-dis-c-001-c1
+- c1. id: concr-dis-001-c1
   - subject: thing_as_quantitative_combination_of_free_matters
   - predicate: is
   - object: absolutely_alterable
@@ -87,7 +87,7 @@ Claims: (Claim)
   - evidence:
     - [4-6] the thing, as merely quantitative combination of free matters, is absolutely alterable.
 
-- c2. id: thg-dis-c-001-c2
+- c2. id: concr-dis-001-c2
   - subject: alteration_of_the_thing
   - predicate: consists_in
   - object: quantitative_addition_subtraction_and_rearrangement_of_matters
@@ -96,7 +96,7 @@ Claims: (Claim)
   - evidence:
     - [7-11] alteration defined as matters dropped/added/rearranged in quantitative ratio.
 
-- c3. id: thg-dis-c-001-c3
+- c3. id: concr-dis-001-c3
   - subject: coming_to_be_and_passing_away_of_the_thing
   - predicate: are
   - object: external_dissolution_of_indifferent_bonding_and_absolute_porosity
@@ -115,17 +115,17 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: thg-mat-b-003
-  - sourceClaimIds: [thg-dis-c-001-c1]
+  - targetEntryId: concr-mat-003
+  - sourceClaimIds: [concr-dis-001-c1]
   - sourceKeyPointIds: [k1]
-  - targetClaimIds: [thg-mat-b-003-c3]
+  - targetClaimIds: [concr-mat-003-c3]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
   - note: dissolution paragraph 1 operationalizes Part B's result that thinghood is a quantitative collection of indifferent matters.
 
 - r2. type: transitions_to
-  - targetEntryId: thg-dis-c-002
-  - sourceClaimIds: [thg-dis-c-001-c3]
+  - targetEntryId: concr-dis-002
+  - sourceClaimIds: [concr-dis-001-c3]
   - sourceKeyPointIds: [k3]
   - targetClaimIds: [pending_local]
   - logicalOperator: sequential_transition
@@ -137,7 +137,7 @@ Review outcome:
 - review_pending
 - notes: `c-001` complete under the three-core-plus-transition Part C decomposition.
 
-### Entry thg-dis-c-002 — The thing as absolutely dissoluble self-dissolution and negative unity
+### Entry concr-dis-002 — The thing as absolutely dissoluble self-dissolution and negative unity
 
 Span:
 
@@ -157,7 +157,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: thg-dis-c-002-c1
+- c1. id: concr-dis-002-c1
   - subject: thing_as_absolute_this
   - predicate: is
   - object: absolutely_dissoluble_with_externality_as_essential_being
@@ -166,7 +166,7 @@ Claims: (Claim)
   - evidence:
     - [20-27] thing as absolute determinateness of “this” is absolutely dissoluble; dissolution/externality are essential.
 
-- c2. id: thg-dis-c-002-c2
+- c2. id: concr-dis-002-c2
   - subject: this_thing_whole
   - predicate: is
   - object: dissolution_of_itself
@@ -176,7 +176,7 @@ Claims: (Claim)
     - [28-31] thing consists not only in abstract “this” but as whole is the dissolution of itself.
     - [32-39] it is an external collection of self-subsisting matters while thinghood belongs to reflected properties.
 
-- c3. id: thg-dis-c-002-c3
+- c3. id: concr-dis-002-c3
   - subject: relation_of_matters_in_the_thing
   - predicate: is
   - object: negative_reflection_as_puncticity
@@ -195,17 +195,17 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: refines
-  - targetEntryId: thg-dis-c-001
-  - sourceClaimIds: [thg-dis-c-002-c1]
+  - targetEntryId: concr-dis-001
+  - sourceClaimIds: [concr-dis-002-c1]
   - sourceKeyPointIds: [k1]
-  - targetClaimIds: [thg-dis-c-001-c3]
+  - targetClaimIds: [concr-dis-001-c3]
   - logicalOperator: determinative_refinement
   - analysisMode: first_order_claim_projection
   - note: c-002 makes explicit that porous externality from c-001 is the essential being of the thing as absolutely dissoluble.
 
 - r2. type: transitions_to
-  - targetEntryId: thg-dis-c-003
-  - sourceClaimIds: [thg-dis-c-002-c3]
+  - targetEntryId: concr-dis-003
+  - sourceClaimIds: [concr-dis-002-c3]
   - sourceKeyPointIds: [k3]
   - targetClaimIds: [pending_local]
   - logicalOperator: sequential_transition
@@ -217,7 +217,7 @@ Review outcome:
 - review_pending
 - notes: `c-002` complete; relation depth from self-dissolution to contradictory mediation continues in `c-003`.
 
-### Entry thg-dis-c-003 — Contradictory mediation of interpenetrating porous matters
+### Entry concr-dis-003 — Contradictory mediation of interpenetrating porous matters
 
 Span:
 
@@ -237,7 +237,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: thg-dis-c-003-c1
+- c1. id: concr-dis-003-c1
   - subject: thing
   - predicate: is
   - object: connecting_reference_of_matters_via_reciprocal_sublation
@@ -247,7 +247,7 @@ Claims: (Claim)
     - [56-67] one matter subsists in the thing only insofar as the other is sublated, while the thing remains the “also” of the other.
     - [68-72] with diverse matters, each both subsists and does not subsist in relation to the others.
 
-- c2. id: thg-dis-c-003-c2
+- c2. id: concr-dis-003-c2
   - subject: one_subsistence_of_matters
   - predicate: is
   - object: puncticity_or_negative_unity_with_absolute_interpenetration
@@ -257,7 +257,7 @@ Claims: (Claim)
     - [73-78] shared subsistence is puncticity/negative unity; the two interpenetrate absolutely.
     - [79-83] as indifferent matters in interpenetration, they do not touch.
 
-- c3. id: thg-dis-c-003-c3
+- c3. id: concr-dis-003-c3
   - subject: thing
   - predicate: is
   - object: self_contradictory_mediation_of_self_subsistence_through_negation
@@ -276,17 +276,17 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: refines
-  - targetEntryId: thg-dis-c-002
-  - sourceClaimIds: [thg-dis-c-003-c1, thg-dis-c-003-c2]
+  - targetEntryId: concr-dis-002
+  - sourceClaimIds: [concr-dis-003-c1, concr-dis-003-c2]
   - sourceKeyPointIds: [k1, k2]
-  - targetClaimIds: [thg-dis-c-002-c3]
+  - targetClaimIds: [concr-dis-002-c3]
   - logicalOperator: dialectical_expansion
   - analysisMode: first_order_claim_projection
   - note: c-003 unfolds the prior claim of negative reflection/puncticity into explicit reciprocal subsistence, interpenetration, and non-contact.
 
 - r2. type: transitions_to
-  - targetEntryId: thg-dis-c-004
-  - sourceClaimIds: [thg-dis-c-003-c3]
+  - targetEntryId: concr-dis-004
+  - sourceClaimIds: [concr-dis-003-c3]
   - sourceKeyPointIds: [k3]
   - targetClaimIds: [pending_local]
   - logicalOperator: sequential_transition
@@ -298,7 +298,7 @@ Review outcome:
 - review_pending
 - notes: `c-003` complete; next entry is the reserved transition paragraph into Appearance/World architecture.
 
-### Entry thg-dis-c-004 — Completion of concrete existence as appearance through absolute otherness
+### Entry concr-dis-004 — Completion of concrete existence as appearance through absolute otherness
 
 Span:
 
@@ -318,7 +318,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: thg-dis-c-004-c1
+- c1. id: concr-dis-004-c1
   - subject: concrete_existence_in_this_thing
   - predicate: has_attained
   - object: completion_as_unity_of_independent_subsistence_and_unessential_concrete_existence
@@ -327,7 +327,7 @@ Claims: (Claim)
   - evidence:
     - [103-105] concrete existence is at once independent subsistence and unessential concrete existence.
 
-- c2. id: thg-dis-c-004-c2
+- c2. id: concr-dis-004-c2
   - subject: truth_of_concrete_existence
   - predicate: is
   - object: subsistence_in_absolute_otherness_and_own_nothingness_as_substrate
@@ -336,7 +336,7 @@ Claims: (Claim)
   - evidence:
     - [106-109] truth is in-itself in unessentiality, subsisting in an other, indeed the absolute other, with own nothingness as substrate.
 
-- c3. id: thg-dis-c-004-c3
+- c3. id: concr-dis-004-c3
   - subject: concrete_existence_so_determined
   - predicate: is
   - object: appearance
@@ -354,19 +354,19 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: refines
-  - targetEntryId: thg-dis-c-003
-  - sourceClaimIds: [thg-dis-c-004-c2]
+  - targetEntryId: concr-dis-003
+  - sourceClaimIds: [concr-dis-004-c2]
   - sourceKeyPointIds: [k2]
-  - targetClaimIds: [thg-dis-c-003-c3]
+  - targetClaimIds: [concr-dis-003-c3]
   - logicalOperator: sublative_transition
   - analysisMode: first_order_claim_projection
   - note: c-004 states the explicit truth-form of the contradictory mediation developed in c-003.
 
 - r2. type: transitions_to
-  - targetEntryId: wld-law-a-001
-  - sourceClaimIds: [thg-dis-c-004-c3]
+  - targetEntryId: appea-law-001
+  - sourceClaimIds: [concr-dis-004-c3]
   - sourceKeyPointIds: [k3]
-  - targetClaimIds: [wld-law-a-001-c1]
+  - targetClaimIds: [appea-law-001-c1]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
   - note: explicit handoff from thing-dissolution's conclusion (appearance) into `A. THE LAW OF APPEARANCE`.

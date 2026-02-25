@@ -1,6 +1,6 @@
 # Object Idea Workbook
 
-Part: `IDEA. OBJECT (MECHANISM) COORDINATION`
+Part: `IDEA. MECHANISM COORDINATION`
 Status: active
 Authority: original source text only
 

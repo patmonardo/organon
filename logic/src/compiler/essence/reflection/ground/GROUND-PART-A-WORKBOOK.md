@@ -55,7 +55,7 @@ Decision:
 - Migration: `relation_schema_v1 -> relation_schema_v1_1_overlay` (non-breaking).
 - Apply relation claim/keypoint anchor overlay consistently across Ground Part A/B/C in this session.
 
-### Entry grd-abs-a-001 — Form and essence as absolute reciprocal grounding
+### Entry groun-abs-001 — Form and essence as absolute reciprocal grounding
 
 Span:
 
@@ -77,7 +77,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: grd-abs-a-001-c1
+- c1. id: groun-abs-001-c1
   - subject: absolute_ground_beginning
   - predicate: is_determined_as
   - object: posited_immediacy_presupposing_non_posited_ground
@@ -86,7 +86,7 @@ Claims: (Claim)
   - evidence:
     - [5-20] immediate existence is positedness that presupposes ground; ground is essence self-identical in negativity.
 
-- c2. id: grd-abs-a-001-c2
+- c2. id: groun-abs-001-c2
   - subject: mediation_of_ground
   - predicate: is
   - object: unity_of_pure_and_determining_reflection_generating_form_against_essence
@@ -95,7 +95,7 @@ Claims: (Claim)
   - evidence:
     - [60-69] mediation is unity of pure and determining reflection; determinations are distinguished from simple identity and constitute form against essence.
 
-- c3. id: grd-abs-a-001-c3
+- c3. id: groun-abs-001-c3
   - subject: form_essence_relation_in_absolute_ground
   - predicate: is
   - object: reciprocal_self_grounding_where_form_is_absolute_negativity_and_identity_with_essence
@@ -109,20 +109,20 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: fnd-ctr-c-003
+  - targetEntryId: found-con-003
   - note: specifies how resolved contradiction as ground is internally articulated as form/essence reciprocity.
-  - sourceClaimIds: [`grd-abs-a-001-c2`, `grd-abs-a-001-c3`]
+  - sourceClaimIds: [`groun-abs-001-c2`, `groun-abs-001-c3`]
   - sourceKeyPointIds: [`k3`, `k4`, `k5`]
   - targetClaimIds: pending_cross_workbook
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: grd-abs-a-002
+  - targetEntryId: groun-abs-002
   - note: section `a` culminates by determining formless identity as matter, opening section `b`.
-  - sourceClaimIds: [`grd-abs-a-001-c3`]
+  - sourceClaimIds: [`groun-abs-001-c3`]
   - sourceKeyPointIds: [`k5`]
-  - targetClaimIds: [`grd-abs-a-002-c1`]
+  - targetClaimIds: [`groun-abs-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -131,7 +131,7 @@ Review outcome:
 - review_pending
 - notes: first deep pass complete for section `a`; triadic claim structure is intentionally retained for cross-pass stability.
 
-### Entry grd-abs-a-002 — Form and matter as reciprocal presupposition and restored unity
+### Entry groun-abs-002 — Form and matter as reciprocal presupposition and restored unity
 
 Span:
 
@@ -153,7 +153,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: grd-abs-a-002-c1
+- c1. id: groun-abs-002-c1
   - subject: matter
   - predicate: is_determined_as
   - object: essence_as_abstract_identity_other_of_form_and_its_substrate
@@ -163,7 +163,7 @@ Claims: (Claim)
     - [206-215] matter is simple, distinctionless identity as the other of form and proper substrate.
     - [225-236] abstraction yielding matter is form's own self-reduction, not external removal.
 
-- c2. id: grd-abs-a-002-c2
+- c2. id: groun-abs-002-c2
   - subject: form_and_matter_relation
   - predicate: is
   - object: reciprocal_presupposition_without_unilateral_grounding
@@ -173,7 +173,7 @@ Claims: (Claim)
     - [237-271] each presupposes the other; each is groundless with respect to the other.
     - [272-297] matter as passive and form as active remain internally related, requiring informing/materialization.
 
-- c3. id: grd-abs-a-002-c3
+- c3. id: groun-abs-002-c3
   - subject: movement_of_form_and_matter
   - predicate: culminates_in
   - object: posited_unity_of_in_itself_and_positedness_as_content_transition
@@ -188,20 +188,20 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: grd-abs-a-001
+  - targetEntryId: groun-abs-001
   - note: concretizes section `a`'s form/essence reciprocity as form/matter mediation.
-  - sourceClaimIds: [`grd-abs-a-002-c2`, `grd-abs-a-002-c3`]
+  - sourceClaimIds: [`groun-abs-002-c2`, `groun-abs-002-c3`]
   - sourceKeyPointIds: [`k3`, `k4`, `k5`]
-  - targetClaimIds: [`grd-abs-a-001-c3`]
+  - targetClaimIds: [`groun-abs-001-c3`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: grd-abs-a-003
+  - targetEntryId: groun-abs-003
   - note: section `b` terminates in content, opening section `c`.
-  - sourceClaimIds: [`grd-abs-a-002-c3`]
+  - sourceClaimIds: [`groun-abs-002-c3`]
   - sourceKeyPointIds: [`k5`]
-  - targetClaimIds: [`grd-abs-a-003-c1`]
+  - targetClaimIds: [`groun-abs-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -210,7 +210,7 @@ Review outcome:
 - review_pending
 - notes: first deep pass complete for section `b`; triadic claim structure retained and relation expansion deferred.
 
-### Entry grd-abs-a-003 — Form and content as determinate ground
+### Entry groun-abs-003 — Form and content as determinate ground
 
 Span:
 
@@ -232,7 +232,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: grd-abs-a-003-c1
+- c1. id: groun-abs-003-c1
   - subject: content
   - predicate: is_determined_as
   - object: unity_of_form_and_matter_that_as_posited_stands_indifferent_over_against_form
@@ -241,7 +241,7 @@ Claims: (Claim)
   - evidence:
     - [477-487] content is unity of form and matter, yet as determinate/posited unity stands over against form and is indifferent to it.
 
-- c2. id: grd-abs-a-003-c2
+- c2. id: groun-abs-003-c2
   - subject: content_and_ground_relation
   - predicate: is
   - object: identity_where_ground_connection_is_internalized_as_content_essential_form
@@ -251,7 +251,7 @@ Claims: (Claim)
     - [489-503] content is identity of form and matter in which positedness returns to ground; content has ground-connection as essential form and ground has content.
     - [504-529] content of ground is informed identity with opposition-determinations posited as negated.
 
-- c3. id: grd-abs-a-003-c3
+- c3. id: groun-abs-003-c3
   - subject: determinate_ground
   - predicate: has_determinateness
   - object: twofold_determinateness_of_form_and_content
@@ -263,18 +263,18 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: grd-abs-a-002
+  - targetEntryId: groun-abs-002
   - note: develops section `b`'s transition from restored form/matter unity into explicit content.
-  - sourceClaimIds: [`grd-abs-a-003-c1`, `grd-abs-a-003-c2`]
+  - sourceClaimIds: [`groun-abs-003-c1`, `groun-abs-003-c2`]
   - sourceKeyPointIds: [`k2`, `k3`, `k4`]
-  - targetClaimIds: [`grd-abs-a-002-c3`]
+  - targetClaimIds: [`groun-abs-002-c3`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: grd-det-b-001
+  - targetEntryId: groun-det-001
   - note: determinate ground announced at section end provides handoff to Part B (`determinate.txt`).
-  - sourceClaimIds: [`grd-abs-a-003-c3`]
+  - sourceClaimIds: [`groun-abs-003-c3`]
   - sourceKeyPointIds: [`k5`]
   - targetClaimIds: pending_cross_workbook
   - logicalOperator: sequential_transition

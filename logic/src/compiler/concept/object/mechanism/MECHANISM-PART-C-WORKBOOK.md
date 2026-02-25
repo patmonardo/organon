@@ -53,7 +53,7 @@ Decision:
 - Prioritize execution-graph-relevant relations over fine moment subdivision.
 - Keep section `b` strictly paragraph-segmented as requested.
 
-### Entry obj-mech-c-a-001 — a.1 Objective singularity and universality as middle term
+### Entry mecha-mec-a-001 — a.1 Objective singularity and universality as middle term
 
 Span:
 
@@ -73,7 +73,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: obj-mech-c-a-001-c1
+- c1. id: mecha-mec-a-001-c1
   - subject: objective_singularity
   - predicate: emerges_as
   - object: self_determining_middle_point
@@ -82,7 +82,7 @@ Claims: (Claim)
   - evidence:
     - [6-8] manifoldness gathered into objective singularity/middle point.
 
-- c2. id: obj-mech-c-a-001-c2
+- c2. id: mecha-mec-a-001-c2
   - subject: essential_determinateness
   - predicate: functions_as
   - object: real_middle_term_and_immanent_objective_universality
@@ -100,11 +100,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: obj-mech-c-a-002
+  - targetEntryId: mecha-mec-a-002
   - note: conceptual middle term is concretized as central body and concrete rest.
-  - sourceClaimIds: [`obj-mech-c-a-001-c2`]
+  - sourceClaimIds: [`mecha-mec-a-001-c2`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`obj-mech-c-a-002-c1`]
+  - targetClaimIds: [`mecha-mec-a-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -113,7 +113,7 @@ Review outcome:
 - review_pending
 - notes: coarse block retained for later moment-splitting.
 
-### Entry obj-mech-c-a-002 — a.2 Central body, true rest, and return from instability
+### Entry mecha-mec-a-002 — a.2 Central body, true rest, and return from instability
 
 Span:
 
@@ -133,7 +133,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: obj-mech-c-a-002-c1
+- c1. id: mecha-mec-a-002-c1
   - subject: central_body
   - predicate: is_determined_as
   - object: individualized_universality_of_mechanical_objects
@@ -142,7 +142,7 @@ Claims: (Claim)
   - evidence:
     - [25-27] central body named genus/individualized universality.
 
-- c2. id: obj-mech-c-a-002-c2
+- c2. id: mecha-mec-a-002-c2
   - subject: striving_toward_center
   - predicate: aims_at
   - object: concrete_rest_not_externally_posited
@@ -151,7 +151,7 @@ Claims: (Claim)
   - evidence:
     - [34-45] identity with center as rest/concept; striving toward true concrete rest.
 
-- c3. id: obj-mech-c-a-002-c3
+- c3. id: mecha-mec-a-002-c3
   - subject: friction_and_resistance
   - predicate: are_interpreted_as
   - object: phenomena_of_centrality
@@ -170,11 +170,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: obj-mech-c-a-003
+  - targetEntryId: mecha-mec-a-003
   - note: centrality shifts from abstract body-role to individual immanent form.
-  - sourceClaimIds: [`obj-mech-c-a-002-c1`, `obj-mech-c-a-002-c2`]
+  - sourceClaimIds: [`mecha-mec-a-002-c1`, `mecha-mec-a-002-c2`]
   - sourceKeyPointIds: [`k1`, `k2`]
-  - targetClaimIds: [`obj-mech-c-a-003-c1`]
+  - targetClaimIds: [`mecha-mec-a-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -183,7 +183,7 @@ Review outcome:
 - review_pending
 - notes: block kept broad to preserve execution-level semantics.
 
-### Entry obj-mech-c-a-003 — a.3 Center as individual immanent form and true One
+### Entry mecha-mec-a-003 — a.3 Center as individual immanent form and true One
 
 Span:
 
@@ -203,7 +203,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: obj-mech-c-a-003-c1
+- c1. id: mecha-mec-a-003-c1
   - subject: central_body
   - predicate: is_determined_as
   - object: individual_immanent_self_determining_principle
@@ -220,11 +220,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: obj-mech-c-a-004
+  - targetEntryId: mecha-mec-a-004
   - note: individual center now dirempts into extremes and distributed centralities.
-  - sourceClaimIds: [`obj-mech-c-a-003-c1`]
+  - sourceClaimIds: [`mecha-mec-a-003-c1`]
   - sourceKeyPointIds: [`k1`]
-  - targetClaimIds: [`obj-mech-c-a-004-c1`]
+  - targetClaimIds: [`mecha-mec-a-004-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -233,7 +233,7 @@ Review outcome:
 - review_pending
 - notes: compact block to keep center-individual thesis explicit.
 
-### Entry obj-mech-c-a-004 — a.4 Diremption: relative centers and mediated unity
+### Entry mecha-mec-a-004 — a.4 Diremption: relative centers and mediated unity
 
 Span:
 
@@ -253,7 +253,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: obj-mech-c-a-004-c1
+- c1. id: mecha-mec-a-004-c1
   - subject: central_individual
   - predicate: dirempts_into
   - object: relative_centers_and_non_self_subsistent_objects
@@ -270,11 +270,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: obj-mech-c-a-005
+  - targetEntryId: mecha-mec-a-005
   - note: diremption is formalized as nested syllogistic mediation.
-  - sourceClaimIds: [`obj-mech-c-a-004-c1`]
+  - sourceClaimIds: [`mecha-mec-a-004-c1`]
   - sourceKeyPointIds: [`k1`, `k3`]
-  - targetClaimIds: [`obj-mech-c-a-005-c1`]
+  - targetClaimIds: [`mecha-mec-a-005-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -283,7 +283,7 @@ Review outcome:
 - review_pending
 - notes: block treated as structural pivot.
 
-### Entry obj-mech-c-a-005 — a.5 Three syllogisms and civic analogy of mediated totality
+### Entry mecha-mec-a-005 — a.5 Three syllogisms and civic analogy of mediated totality
 
 Span:
 
@@ -303,7 +303,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: obj-mech-c-a-005-c1
+- c1. id: mecha-mec-a-005-c1
   - subject: syllogistic_structure_of_centered_mechanism
   - predicate: consists_of
   - object: nested_middle_terms_linking_absolute_relative_and_formal_levels
@@ -312,7 +312,7 @@ Claims: (Claim)
   - evidence:
     - [99-127] second/third syllogism articulation and formal middle-term roles.
 
-- c2. id: obj-mech-c-a-005-c2
+- c2. id: mecha-mec-a-005-c2
   - subject: civic_analogy
   - predicate: instantiates
   - object: same_tripartite_mediation_logic
@@ -329,11 +329,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: obj-mech-c-a-006
+  - targetEntryId: mecha-mec-a-006
   - note: multi-syllogistic mediation closes as free mechanism and objective law.
-  - sourceClaimIds: [`obj-mech-c-a-005-c1`]
+  - sourceClaimIds: [`mecha-mec-a-005-c1`]
   - sourceKeyPointIds: [`k1`, `k2`]
-  - targetClaimIds: [`obj-mech-c-a-006-c1`]
+  - targetClaimIds: [`mecha-mec-a-006-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -342,7 +342,7 @@ Review outcome:
 - review_pending
 - notes: preserved as execution-graph-relevant architecture block.
 
-### Entry obj-mech-c-a-006 — a.6 Free mechanism and law emergence
+### Entry mecha-mec-a-006 — a.6 Free mechanism and law emergence
 
 Span:
 
@@ -362,7 +362,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: obj-mech-c-a-006-c1
+- c1. id: mecha-mec-a-006-c1
   - subject: free_mechanism
   - predicate: is_determined_as
   - object: completed_totality_of_conceptual_syllogistic_relations
@@ -371,7 +371,7 @@ Claims: (Claim)
   - evidence:
     - [146-156] free mechanism as totality with objective universality.
 
-- c2. id: obj-mech-c-a-006-c2
+- c2. id: mecha-mec-a-006-c2
   - subject: order
   - predicate: passes_over_into
   - object: immanent_objective_determination_law
@@ -388,11 +388,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: obj-mech-c-b-001
+  - targetEntryId: mecha-mec-b-001
   - note: law announced at end of `a` becomes thematic object of section `b`.
-  - sourceClaimIds: [`obj-mech-c-a-006-c2`]
+  - sourceClaimIds: [`mecha-mec-a-006-c2`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`obj-mech-c-b-001-c1`]
+  - targetClaimIds: [`mecha-mec-b-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -401,7 +401,7 @@ Review outcome:
 - review_pending
 - notes: closes section `a` as block-level foundation for law.
 
-### Entry obj-mech-c-b-001 — b.1 Law paragraph 1: idealized reality versus external striving
+### Entry mecha-mec-b-001 — b.1 Law paragraph 1: idealized reality versus external striving
 
 Span:
 
@@ -421,7 +421,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: obj-mech-c-b-001-c1
+- c1. id: mecha-mec-b-001-c1
   - subject: law_domain
   - predicate: articulates
   - object: difference_between_idealized_and_external_reality
@@ -430,7 +430,7 @@ Claims: (Claim)
   - evidence:
     - [169-187] contrast of idealized objectivity vs external reality and striving.
 
-- c2. id: obj-mech-c-b-001-c2
+- c2. id: mecha-mec-b-001-c2
   - subject: real_ideality
   - predicate: is_determined_as
   - object: soul_and_identity_of_objective_system
@@ -447,11 +447,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: obj-mech-c-b-002
+  - targetEntryId: mecha-mec-b-002
   - note: system-identity is specified as self-moving law-principle.
-  - sourceClaimIds: [`obj-mech-c-b-001-c2`]
+  - sourceClaimIds: [`mecha-mec-b-001-c2`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`obj-mech-c-b-002-c1`]
+  - targetClaimIds: [`mecha-mec-b-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -460,7 +460,7 @@ Review outcome:
 - review_pending
 - notes: paragraph segmentation kept exact per request (`001`).
 
-### Entry obj-mech-c-b-002 — b.2 Law paragraph 2: law as self-movement principle
+### Entry mecha-mec-b-002 — b.2 Law paragraph 2: law as self-movement principle
 
 Span:
 
@@ -480,7 +480,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: obj-mech-c-b-002-c1
+- c1. id: mecha-mec-b-002-c1
   - subject: self_determining_unity
   - predicate: reduces
   - object: external_objectivity_to_ideality_as_self_movement_principle
@@ -496,11 +496,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: obj-mech-c-b-003
+  - targetEntryId: mecha-mec-b-003
   - note: self-movement law is contrasted with dead mechanism’s rule-like uniformity.
-  - sourceClaimIds: [`obj-mech-c-b-002-c1`]
+  - sourceClaimIds: [`mecha-mec-b-002-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`obj-mech-c-b-003-c1`]
+  - targetClaimIds: [`mecha-mec-b-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -509,7 +509,7 @@ Review outcome:
 - review_pending
 - notes: paragraph segmentation kept exact per request (`002`).
 
-### Entry obj-mech-c-b-003 — b.3 Law paragraph 3: free necessity beyond dead mechanism
+### Entry mecha-mec-b-003 — b.3 Law paragraph 3: free necessity beyond dead mechanism
 
 Span:
 
@@ -529,7 +529,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: obj-mech-c-b-003-c1
+- c1. id: mecha-mec-b-003-c1
   - subject: dead_mechanism
   - predicate: lacks
   - object: genuine_law
@@ -538,7 +538,7 @@ Claims: (Claim)
   - evidence:
     - [220-227] dead mechanism yields contingency/formal uniformity; rule not law.
 
-- c2. id: obj-mech-c-b-003-c2
+- c2. id: mecha-mec-b-003-c2
   - subject: free_mechanism_law
   - predicate: is_determined_as
   - object: free_necessity_of_concept_existing_for_itself
@@ -555,11 +555,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: obj-mech-c-c-001
+  - targetEntryId: mecha-mec-c-001
   - note: free necessity in law opens transition problem of mechanism.
-  - sourceClaimIds: [`obj-mech-c-b-003-c2`]
+  - sourceClaimIds: [`mecha-mec-b-003-c2`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`obj-mech-c-c-001-c1`]
+  - targetClaimIds: [`mecha-mec-c-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -568,7 +568,7 @@ Review outcome:
 - review_pending
 - notes: paragraph segmentation kept exact per request (`003`).
 
-### Entry obj-mech-c-c-001 — c.1 Transition block: law still immersed in objectivity
+### Entry mecha-mec-c-001 — c.1 Transition block: law still immersed in objectivity
 
 Span:
 
@@ -588,7 +588,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: obj-mech-c-c-001-c1
+- c1. id: mecha-mec-c-001-c1
   - subject: transition_state_of_mechanism
   - predicate: is_determined_as
   - object: law_immersed_in_body_like_objectivity
@@ -605,11 +605,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: obj-mech-c-c-002
+  - targetEntryId: mecha-mec-c-002
   - note: immersion gives way to explicit non-self-subsistence under concept-judgment.
-  - sourceClaimIds: [`obj-mech-c-c-001-c1`]
+  - sourceClaimIds: [`mecha-mec-c-001-c1`]
   - sourceKeyPointIds: [`k2`]
-  - targetClaimIds: [`obj-mech-c-c-002-c1`]
+  - targetClaimIds: [`mecha-mec-c-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -618,7 +618,7 @@ Review outcome:
 - review_pending
 - notes: coarse block retained for later moment split.
 
-### Entry obj-mech-c-c-002 — c.2 Transition block: collapse of abstract self-subsistence
+### Entry mecha-mec-c-002 — c.2 Transition block: collapse of abstract self-subsistence
 
 Span:
 
@@ -638,7 +638,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: obj-mech-c-c-002-c1
+- c1. id: mecha-mec-c-002-c1
   - subject: object_self_subsistence
   - predicate: is_subordinated_to
   - object: idealized_centrality_and_law
@@ -647,7 +647,7 @@ Claims: (Claim)
   - evidence:
     - [255-263] object lacks resistance; existence is determinateness posited by concept.
 
-- c2. id: obj-mech-c-c-002-c2
+- c2. id: mecha-mec-c-002-c2
   - subject: prior_striving_relation
   - predicate: is_transformed_from
   - object: apparent_external_independence_to_explicit_non_self_subsistence
@@ -664,11 +664,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: obj-mech-c-c-003
+  - targetEntryId: mecha-mec-c-003
   - note: collapse of abstract independence culminates in tense reciprocal opposition.
-  - sourceClaimIds: [`obj-mech-c-c-002-c1`, `obj-mech-c-c-002-c2`]
+  - sourceClaimIds: [`mecha-mec-c-002-c1`, `mecha-mec-c-002-c2`]
   - sourceKeyPointIds: [`k2`, `k3`]
-  - targetClaimIds: [`obj-mech-c-c-003-c1`]
+  - targetClaimIds: [`mecha-mec-c-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -677,7 +677,7 @@ Review outcome:
 - review_pending
 - notes: coarse block retained for later moment split.
 
-### Entry obj-mech-c-c-003 — c.3 Transition block: objectified opposition and chemism threshold
+### Entry mecha-mec-c-003 — c.3 Transition block: objectified opposition and chemism threshold
 
 Span:
 
@@ -697,7 +697,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: obj-mech-c-c-003-c1
+- c1. id: mecha-mec-c-003-c1
   - subject: centrality
   - predicate: transforms_into
   - object: reciprocally_negative_tense_connection_of_objectivities
@@ -706,7 +706,7 @@ Claims: (Claim)
   - evidence:
     - [271-278] center falls apart; centrality becomes reciprocal negative tension.
 
-- c2. id: obj-mech-c-c-003-c2
+- c2. id: mecha-mec-c-003-c2
   - subject: free_mechanism
   - predicate: transitions_to
   - object: chemism
@@ -725,7 +725,7 @@ Relations: (Relation)
 - r1. type: transitions_to
   - targetEntryId: pending_chemism_part_a_entry
   - note: explicit boundary transition into Chemism sequence.
-  - sourceClaimIds: [`obj-mech-c-c-003-c2`]
+  - sourceClaimIds: [`mecha-mec-c-003-c2`]
   - sourceKeyPointIds: [`k3`]
   - targetClaimIds: [`pending`]
   - logicalOperator: boundary_transition

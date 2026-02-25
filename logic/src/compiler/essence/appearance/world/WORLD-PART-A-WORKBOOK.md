@@ -51,11 +51,11 @@ Decision:
 
 ## Decomposition status
 
-- completed: `wld-law-a-001` for `A.1` (line `127` to `231`)
-- completed: `wld-law-a-002` for `A.2` (line `232` to `344`)
-- completed: `wld-law-a-003` for `A.3` (line `345` to `451`)
+- completed: `appea-law-001` for `A.1` (line `127` to `231`)
+- completed: `appea-law-002` for `A.2` (line `232` to `344`)
+- completed: `appea-law-003` for `A.3` (line `345` to `451`)
 
-### Entry wld-law-a-001 — Appearance as negative mediation whose positive identity is law
+### Entry appea-law-001 — Appearance as negative mediation whose positive identity is law
 
 Span:
 
@@ -76,7 +76,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: wld-law-a-001-c1
+- c1. id: appea-law-001-c1
   - subject: appearance
   - predicate: is
   - object: concrete_existence_mediated_by_negation_with_reflective_self_subsistence
@@ -86,7 +86,7 @@ Claims: (Claim)
     - [127-146] appearance is concrete existent mediated through negation and negation of negation.
     - [147-166] reciprocal grounding is reciprocal negation; subsistence is posited connection.
 
-- c2. id: wld-law-a-001-c2
+- c2. id: appea-law-001-c2
   - subject: negative_mediation_of_appearance
   - predicate: contains
   - object: positive_self_identity_as_reflection_into_itself
@@ -96,7 +96,7 @@ Claims: (Claim)
     - [167-184] in its negation, concrete existent refers to itself and is positive essentiality.
     - [185-196] essential content has two sides: external posited immediacy and self-identical positedness.
 
-- c3. id: wld-law-a-001-c3
+- c3. id: appea-law-001-c3
   - subject: reciprocal_positedness_of_differences
   - predicate: is
   - object: unity_named_law_of_appearance
@@ -115,8 +115,8 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: wld-law-a-002
-  - sourceClaimIds: [wld-law-a-001-c3]
+  - targetEntryId: appea-law-002
+  - sourceClaimIds: [appea-law-001-c3]
   - sourceKeyPointIds: [k4]
   - targetClaimIds: [pending_local]
   - logicalOperator: sequential_transition
@@ -125,7 +125,7 @@ Relations: (Relation)
 
 - r2. type: refines
   - targetEntryId: thg-dis-c-003
-  - sourceClaimIds: [wld-law-a-001-c1, wld-law-a-001-c2]
+  - sourceClaimIds: [appea-law-001-c1, appea-law-001-c2]
   - sourceKeyPointIds: [k1, k2]
   - targetClaimIds: [thg-dis-c-003-c3]
   - logicalOperator: sublative_transition
@@ -137,7 +137,7 @@ Review outcome:
 - review_pending
 - notes: `A.1` complete; cross-chapter handoff anchored to Thing dissolution result.
 
-### Entry wld-law-a-002 — Law as posited essentiality sharing content with appearance
+### Entry appea-law-002 — Law as posited essentiality sharing content with appearance
 
 Span:
 
@@ -158,7 +158,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: wld-law-a-002-c1
+- c1. id: appea-law-002-c1
   - subject: law
   - predicate: is
   - object: positive_element_of_appearance_mediation
@@ -168,7 +168,7 @@ Claims: (Claim)
     - [232-247] law is positive persistence in mediation where each side exists in sublation of the other.
     - [248-263] positive element of dissolution is self-identity of what appears.
 
-- c2. id: wld-law-a-002-c2
+- c2. id: appea-law-002-c2
   - subject: law
   - predicate: has_form_as
   - object: essential_positedness_and_connection_of_differences
@@ -178,7 +178,7 @@ Claims: (Claim)
     - [264-282] reflected immediacy is positedness over immediate being.
     - [283-295] essential differences are simple determinations that are only through each other.
 
-- c3. id: wld-law-a-002-c3
+- c3. id: appea-law-002-c3
   - subject: law_and_appearance
   - predicate: share
   - object: one_content_with_law_as_substrate_of_appearance
@@ -197,17 +197,17 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: wld-law-a-001
-  - sourceClaimIds: [wld-law-a-002-c1, wld-law-a-002-c2]
+  - targetEntryId: appea-law-001
+  - sourceClaimIds: [appea-law-002-c1, appea-law-002-c2]
   - sourceKeyPointIds: [k1, k2]
-  - targetClaimIds: [wld-law-a-001-c3]
+  - targetClaimIds: [appea-law-001-c3]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
   - note: `A.2` deepens `A.1` by specifying law as explicitly posited essential connection.
 
 - r2. type: transitions_to
-  - targetEntryId: wld-law-a-003
-  - sourceClaimIds: [wld-law-a-002-c3]
+  - targetEntryId: appea-law-003
+  - sourceClaimIds: [appea-law-002-c3]
   - sourceKeyPointIds: [k3, k4]
   - targetClaimIds: [pending_local]
   - logicalOperator: sequential_transition
@@ -219,7 +219,7 @@ Review outcome:
 - review_pending
 - notes: `A.2` complete; prepares determination of the law's insufficiency as merely positive essentiality.
 
-### Entry wld-law-a-003 — Essential appearance, deficiency of immediate law, and demand for necessary form
+### Entry appea-law-003 — Essential appearance, deficiency of immediate law, and demand for necessary form
 
 Span:
 
@@ -240,7 +240,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: wld-law-a-003-c1
+- c1. id: appea-law-003-c1
   - subject: law
   - predicate: is
   - object: essential_appearance_identity_of_essential_and_unessential_concrete_existence
@@ -250,7 +250,7 @@ Claims: (Claim)
     - [345-353] law is essential appearance, reflection into itself in positedness, identical content with unessential concrete existence.
     - [354-370] identity is immediate and law remains indifferent to concrete existence, which includes additional determinations.
 
-- c2. id: wld-law-a-003-c2
+- c2. id: appea-law-003-c2
   - subject: appearance_relative_to_law
   - predicate: is
   - object: richer_totality_as_restless_negative_form
@@ -260,7 +260,7 @@ Claims: (Claim)
     - [371-392] appearance is law as negative, self-mutating movement of passing-over and return.
     - [393-395] therefore appearance, against law, is totality because it contains law plus self-moving form.
 
-- c3. id: wld-law-a-003-c3
+- c3. id: appea-law-003-c3
   - subject: law_in_its_current_determination
   - predicate: lacks
   - object: explicit_necessity_of_content_connection_and_real_negative_form
@@ -279,17 +279,17 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: refines
-  - targetEntryId: wld-law-a-002
-  - sourceClaimIds: [wld-law-a-003-c3]
+  - targetEntryId: appea-law-002
+  - sourceClaimIds: [appea-law-003-c3]
   - sourceKeyPointIds: [k3, k4]
-  - targetClaimIds: [wld-law-a-002-c2]
+  - targetClaimIds: [appea-law-002-c2]
   - logicalOperator: dialectical_refinement
   - analysisMode: first_order_claim_projection
   - note: the law's posited essentiality is retained but shown insufficient as long as necessity is only inner.
 
 - r2. type: transitions_to
-  - targetEntryId: wld-wld-b-001
-  - sourceClaimIds: [wld-law-a-003-c3]
+  - targetEntryId: appea-wor-001
+  - sourceClaimIds: [appea-law-003-c3]
   - sourceKeyPointIds: [k4]
   - targetClaimIds: [pending_local]
   - logicalOperator: sequential_transition

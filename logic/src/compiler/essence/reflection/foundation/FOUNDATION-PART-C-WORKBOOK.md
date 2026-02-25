@@ -62,7 +62,7 @@ Decision:
 - Migration: `relation_schema_v1 -> relation_schema_v1_1_overlay` (non-breaking).
 - Apply relation claim/keypoint anchor overlay for this workbook pass; keep claims unchanged.
 
-### Entry fnd-ctr-c-001 — Opposition's self-subsistence is contradiction
+### Entry found-con-001 — Opposition's self-subsistence is contradiction
 
 Span:
 
@@ -88,7 +88,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: fnd-ctr-c-001-c1
+- c1. id: found-con-001-c1
   - subject: self_subsisting_determination_of_reflection
   - predicate: is
   - object: contradiction
@@ -97,7 +97,7 @@ Claims: (Claim)
   - evidence:
     - [25-39] self-subsistence both contains and excludes its other; "And so it is contradiction."
 
-- c2. id: fnd-ctr-c-001-c2
+- c2. id: found-con-001-c2
   - subject: difference_and_opposition
   - predicate: culminate_as
   - object: posited_contradiction_in_positive_and_negative
@@ -106,7 +106,7 @@ Claims: (Claim)
   - evidence:
     - [41-48] "Difference as such is already implicitly contradiction... The positive and the negative, however, are the posited contradiction..."
 
-- c3. id: fnd-ctr-c-001-c3
+- c3. id: found-con-001-c3
   - subject: negative
   - predicate: is_determined_as
   - object: whole_opposition_and_posited_contradiction
@@ -124,20 +124,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: fnd-dif-b-007
+  - targetEntryId: found-dif-c-001
   - note: makes explicit that opposition's self-subsistence is contradiction.
-  - sourceClaimIds: [`fnd-ctr-c-001-c1`, `fnd-ctr-c-001-c2`]
+  - sourceClaimIds: [`found-con-001-c1`, `found-con-001-c2`]
   - sourceKeyPointIds: [`k1`, `k2`, `k3`]
   - targetClaimIds: pending_cross_workbook
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: fnd-ctr-c-002
+  - targetEntryId: found-con-002
   - note: move from contradiction-posited to contradiction's self-resolution.
-  - sourceClaimIds: [`fnd-ctr-c-001-c3`]
+  - sourceClaimIds: [`found-con-001-c3`]
   - sourceKeyPointIds: [`k4`]
-  - targetClaimIds: [`fnd-ctr-c-002-c1`]
+  - targetClaimIds: [`found-con-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -146,7 +146,7 @@ Review outcome:
 - review_pending
 - notes: section boundary locked to source section `1`.
 
-### Entry fnd-ctr-c-002 — Contradiction resolves through self-sublation
+### Entry found-con-002 — Contradiction resolves through self-sublation
 
 Span:
 
@@ -172,7 +172,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: fnd-ctr-c-002-c1
+- c1. id: found-con-002-c1
   - subject: positive_and_negative_in_contradiction
   - predicate: self_translate_into
   - object: their_opposite
@@ -181,7 +181,7 @@ Claims: (Claim)
   - evidence:
     - [136-143] each sublates itself as "self-translating of itself into its opposite" and this vanishing first appears as null.
 
-- c2. id: fnd-ctr-c-002-c2
+- c2. id: found-con-002-c2
   - subject: result_of_contradiction
   - predicate: is_not_only
   - object: null_but_also_positive_reflective_result
@@ -190,7 +190,7 @@ Claims: (Claim)
   - evidence:
     - [145-154] contradiction contains positive as well; "the result of contradiction is not only the null... founders to the ground in contradiction."
 
-- c3. id: fnd-ctr-c-002-c3
+- c3. id: found-con-002-c3
   - subject: self_subsistence
   - predicate: becomes
   - object: self_unity_through_negation_of_its_own_positedness
@@ -208,20 +208,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: fnd-ctr-c-001
+  - targetEntryId: found-con-001
   - note: shows contradiction's internal dynamic as self-sublation, not static antinomy.
-  - sourceClaimIds: [`fnd-ctr-c-002-c1`, `fnd-ctr-c-002-c2`]
+  - sourceClaimIds: [`found-con-002-c1`, `found-con-002-c2`]
   - sourceKeyPointIds: [`k1`, `k2`]
-  - targetClaimIds: [`fnd-ctr-c-001-c1`]
+  - targetClaimIds: [`found-con-001-c1`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: fnd-ctr-c-003
+  - targetEntryId: found-con-003
   - note: move from resolved contradiction to explicit determination as ground.
-  - sourceClaimIds: [`fnd-ctr-c-002-c3`]
+  - sourceClaimIds: [`found-con-002-c3`]
   - sourceKeyPointIds: [`k3`, `k4`]
-  - targetClaimIds: [`fnd-ctr-c-003-c1`]
+  - targetClaimIds: [`found-con-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -230,7 +230,7 @@ Review outcome:
 - review_pending
 - notes: section boundary locked to source section `2`.
 
-### Entry fnd-ctr-c-003 — Resolved contradiction is ground
+### Entry found-con-003 — Resolved contradiction is ground
 
 Span:
 
@@ -256,7 +256,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: fnd-ctr-c-003-c1
+- c1. id: found-con-003-c1
   - subject: opposition_in_foundering
   - predicate: returns_to
   - object: foundation_ground
@@ -265,7 +265,7 @@ Claims: (Claim)
   - evidence:
     - [212-219] opposition founders and "has gone back to its foundation, to its ground."
 
-- c2. id: fnd-ctr-c-003-c2
+- c2. id: found-con-003-c2
   - subject: essence_as_ground
   - predicate: is
   - object: excluding_reflection_and_positedness_that_posits_itself
@@ -274,7 +274,7 @@ Claims: (Claim)
   - evidence:
     - [244-257] essence as ground is positedness and excluding reflection that "excludes itself from itself, it posits itself."
 
-- c3. id: fnd-ctr-c-003-c3
+- c3. id: found-con-003-c3
   - subject: resolved_contradiction
   - predicate: is
   - object: ground_as_unity_of_positive_and_negative
@@ -292,18 +292,18 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: fnd-ctr-c-002
+  - targetEntryId: found-con-002
   - note: determines the positive result of contradiction explicitly as ground.
-  - sourceClaimIds: [`fnd-ctr-c-003-c1`, `fnd-ctr-c-003-c3`]
+  - sourceClaimIds: [`found-con-003-c1`, `found-con-003-c3`]
   - sourceKeyPointIds: [`k1`, `k3`, `k4`]
-  - targetClaimIds: [`fnd-ctr-c-002-c2`, `fnd-ctr-c-002-c3`]
+  - targetClaimIds: [`found-con-002-c2`, `found-con-002-c3`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: fnd-grd-d-001
+  - targetEntryId: groun-abs-001
   - note: handoff to Ground workbook where essence as ground is unfolded directly.
-  - sourceClaimIds: [`fnd-ctr-c-003-c3`]
+  - sourceClaimIds: [`found-con-003-c3`]
   - sourceKeyPointIds: [`k3`, `k4`]
   - targetClaimIds: pending_cross_workbook
   - logicalOperator: sequential_transition

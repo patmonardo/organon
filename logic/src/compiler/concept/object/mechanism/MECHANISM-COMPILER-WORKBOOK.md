@@ -11,16 +11,16 @@ Authority: derivative from Object workbooks (non-authoritative)
 
 ## Inputs
 
-- `OBJECT-PART-A-WORKBOOK.md`
-- `OBJECT-PART-B-WORKBOOK.md`
-- `OBJECT-PART-C-WORKBOOK.md`
-- `OBJECT-IDEA-WORKBOOK.md`
+- `MECHANISM-PART-A-WORKBOOK.md`
+- `MECHANISM-PART-B-WORKBOOK.md`
+- `MECHANISM-PART-C-WORKBOOK.md`
+- `MECHANISM-IDEA-WORKBOOK.md`
 
 ## Mapping contract
 
 - Only accepted, line-anchored claims can feed operation generation.
 - Relations become operation directives only after review acceptance.
-- Keep speculative protocol notes in `OBJECT-NOTEBOOK.ipynb` until promoted.
+- Keep speculative protocol notes in `MECHANISM-NOTEBOOK.ipynb` until promoted.
 
 ## Block ID convention
 

@@ -57,9 +57,9 @@ Part A provides the introduction-anchored movement where reflection first appear
 
 ## Part decomposition for detailed study
 
-- `A. IDENTITY` -> see `FOUNDATION-PART-A-V2-WORKBOOK.md`
-- `B. DIFFERENCE` -> see `FOUNDATION-PART-B-V2-WORKBOOK.md`
-- `C. CONTRADICTION` -> see `FOUNDATION-PART-C-V2-WORKBOOK.md`
+- `A. IDENTITY` -> see `FOUNDATION-PART-AWORKBOOK.md`
+- `B. DIFFERENCE` -> see `FOUNDATION-PART-BWORKBOOK.md`
+- `C. CONTRADICTION` -> see `FOUNDATION-PART-CWORKBOOK.md`
 
 ## Session log
 

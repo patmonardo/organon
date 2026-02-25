@@ -54,11 +54,11 @@ Decision:
 
 ## Decomposition status
 
-- completed: `rel-whp-a-001` for opening `First` movement (line `4` to `51`)
-- completed: `rel-whp-a-002` for `2.` movement (line `52` to `132`)
-- completed: `rel-whp-a-003` for unmarked synthesis movement beginning `Now...` (line `133` to `263`)
+- completed: `esrel-who-001` for opening `First` movement (line `4` to `51`)
+- completed: `esrel-who-002` for `2.` movement (line `52` to `132`)
+- completed: `esrel-who-003` for unmarked synthesis movement beginning `Now...` (line `133` to `263`)
 
-### Entry rel-whp-a-001 — Immediate whole/parts relation as split self-subsistence in one unity
+### Entry esrel-who-001 — Immediate whole/parts relation as split self-subsistence in one unity
 
 Span:
 
@@ -78,7 +78,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: rel-whp-a-001-c1
+- c1. id: esrel-who-001-c1
   - subject: essential_relation
   - predicate: is_initially
   - object: reflected_self_subsistence_identical_with_immediate_opposite
@@ -87,7 +87,7 @@ Claims: (Claim)
   - evidence:
     - [4-14] essential relation contains reflected self-subsistence and identity with opposite immediate self-subsistence.
 
-- c2. id: rel-whp-a-001-c2
+- c2. id: esrel-who-001-c2
   - subject: whole_parts_sides
   - predicate: are
   - object: reflected_whole_and_immediate_manifold_parts_in_mutual_reference
@@ -97,7 +97,7 @@ Claims: (Claim)
     - [15-27] other side is immediate multifarious manifold with reference to reflected unity.
     - [22-33] whole corresponds to in-and-for-itself side, parts to world-of-appearance side; each shines in the other.
 
-- c3. id: rel-whp-a-001-c3
+- c3. id: esrel-who-001-c3
   - subject: immediate_whole_parts_relation
   - predicate: has_structure
   - object: dual_positedness_of_moments_and_self_subsistent_substrates
@@ -117,7 +117,7 @@ Relations: (Relation)
 
 - r1. type: presupposes
   - targetEntryId: rel-idea-ch1
-  - sourceClaimIds: [rel-whp-a-001-c1]
+  - sourceClaimIds: [esrel-who-001-c1]
   - sourceKeyPointIds: [k1]
   - targetClaimIds: [pending_cross_workbook]
   - logicalOperator: presuppositional_link
@@ -125,8 +125,8 @@ Relations: (Relation)
   - note: opening Part A presupposes the chapter-level idea that essential relation unifies reflection and immediacy.
 
 - r2. type: transitions_to
-  - targetEntryId: rel-whp-a-002
-  - sourceClaimIds: [rel-whp-a-001-c3]
+  - targetEntryId: esrel-who-002
+  - sourceClaimIds: [esrel-who-001-c3]
   - sourceKeyPointIds: [k3]
   - targetClaimIds: [pending_local]
   - logicalOperator: sequential_transition
@@ -138,7 +138,7 @@ Review outcome:
 - review_pending
 - notes: `a-001` complete with opening `First` boundary preserved.
 
-### Entry rel-whp-a-002 — Contradiction of reciprocal conditioning and the rise of the unconditioned
+### Entry esrel-who-002 — Contradiction of reciprocal conditioning and the rise of the unconditioned
 
 Span:
 
@@ -159,7 +159,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: rel-whp-a-002-c1
+- c1. id: esrel-who-002-c1
   - subject: whole_parts_relation
   - predicate: is
   - object: immediate_contradiction_of_self_subsistence_and_momentality
@@ -169,7 +169,7 @@ Claims: (Claim)
     - [52-61] relation contains both self-subsistence and sublatedness; each side is relative to an other.
     - [62-63] explicit statement: immediate contradiction that sublates itself.
 
-- c2. id: rel-whp-a-002-c2
+- c2. id: esrel-who-002-c2
   - subject: subsistence_of_whole_and_parts
   - predicate: is
   - object: reciprocal_external_dependence_in_the_other
@@ -179,7 +179,7 @@ Claims: (Claim)
     - [64-79] whole is self-externalized and has subsistence in manifold parts.
     - [80-106] parts are likewise whole relation yet have self-subsistence only in reflected unity of whole.
 
-- c3. id: rel-whp-a-002-c3
+- c3. id: esrel-who-002-c3
   - subject: realized_reciprocal_conditioning
   - predicate: yields
   - object: turning_back_into_the_unconditioned
@@ -198,17 +198,17 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: refines
-  - targetEntryId: rel-whp-a-001
-  - sourceClaimIds: [rel-whp-a-002-c1, rel-whp-a-002-c2]
+  - targetEntryId: esrel-who-001
+  - sourceClaimIds: [esrel-who-002-c1, esrel-who-002-c2]
   - sourceKeyPointIds: [k1, k2]
-  - targetClaimIds: [rel-whp-a-001-c3]
+  - targetClaimIds: [esrel-who-001-c3]
   - logicalOperator: dialectical_refinement
   - analysisMode: first_order_claim_projection
   - note: `a-002` develops the immediate dual-positedness of `a-001` into explicit contradiction and mutual dependence.
 
 - r2. type: transitions_to
-  - targetEntryId: rel-whp-a-003
-  - sourceClaimIds: [rel-whp-a-002-c3]
+  - targetEntryId: esrel-who-003
+  - sourceClaimIds: [esrel-who-002-c3]
   - sourceKeyPointIds: [k4]
   - targetClaimIds: [pending_local]
   - logicalOperator: sequential_transition
@@ -220,7 +220,7 @@ Review outcome:
 - review_pending
 - notes: `a-002` complete at explicit `2.` boundary.
 
-### Entry rel-whp-a-003 — Synthesis through mediation beyond whole-and-parts immediacy
+### Entry esrel-who-003 — Synthesis through mediation beyond whole-and-parts immediacy
 
 Span:
 
@@ -241,7 +241,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: rel-whp-a-003-c1
+- c1. id: esrel-who-003-c1
   - subject: whole_parts_relation_in_now_movement
   - predicate: is
   - object: identity_of_moments_that_equally_split_into_indifferent_self_subsistences
@@ -250,7 +250,7 @@ Claims: (Claim)
   - evidence:
     - [133-139] one identity of two moments, yet also two self-subsistent concrete existences indifferent to each other.
 
-- c2. id: rel-whp-a-003-c2
+- c2. id: esrel-who-003-c2
   - subject: equality_of_whole_and_parts
   - predicate: is
   - object: tautological_self_equality_without_stable_differentiated_ground
@@ -260,7 +260,7 @@ Claims: (Claim)
     - [140-165] whole equals parts as indivisible identity, but this reduces to whole equal to whole.
     - [166-184] parts equal whole only as apportioned parts, likewise yielding tautology (parts equal themselves).
 
-- c3. id: rel-whp-a-003-c3
+- c3. id: esrel-who-003-c3
   - subject: truth_of_relation
   - predicate: is
   - object: mediation_as_negative_unity_that_sublates_whole_parts_into_force_expression
@@ -279,17 +279,17 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: refines
-  - targetEntryId: rel-whp-a-002
-  - sourceClaimIds: [rel-whp-a-003-c1, rel-whp-a-003-c3]
+  - targetEntryId: esrel-who-002
+  - sourceClaimIds: [esrel-who-003-c1, esrel-who-003-c3]
   - sourceKeyPointIds: [k1, k4]
-  - targetClaimIds: [rel-whp-a-002-c3]
+  - targetClaimIds: [esrel-who-002-c3]
   - logicalOperator: dialectical_refinement
   - analysisMode: first_order_claim_projection
   - note: `a-003` develops the unconditioned turn-back of `a-002` into explicit mediation and transition beyond the whole/parts form.
 
 - r2. type: transitions_to
-  - targetEntryId: rel-frc-b-001
-  - sourceClaimIds: [rel-whp-a-003-c3]
+  - targetEntryId: esrel-for-001
+  - sourceClaimIds: [esrel-who-003-c3]
   - sourceKeyPointIds: [k4]
   - targetClaimIds: [pending_cross_workbook]
   - logicalOperator: sequential_transition

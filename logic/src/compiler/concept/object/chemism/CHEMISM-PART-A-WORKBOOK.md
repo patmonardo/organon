@@ -48,7 +48,7 @@ Decision:
 
 - Object requires study before stable segmentation into moments.
 - Keep this file in scaffold mode until span locks are reviewed.
-- Keep IDs in normalized form: `obj-chem-a-001`, `obj-chem-a-002`, ...
+- Keep IDs in normalized form: `chemi-obj-001`, `chemi-obj-002`, ...
 
 Review outcome:
 

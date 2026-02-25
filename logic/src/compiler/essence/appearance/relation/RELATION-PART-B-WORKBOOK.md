@@ -51,11 +51,11 @@ Decision:
 
 ## Decomposition status
 
-- completed: `rel-frc-b-001` for `a. The conditionedness of force` (line `57` to `188`)
-- completed: `rel-frc-b-002` for `b. The solicitation of force` (line `189` to `341`)
-- completed: `rel-frc-b-003` for `c. The infinity of force` (line `342` to `370`)
+- completed: `esrel-for-001` for `a. The conditionedness of force` (line `57` to `188`)
+- completed: `esrel-for-002` for `b. The solicitation of force` (line `189` to `341`)
+- completed: `esrel-for-003` for `c. The infinity of force` (line `342` to `370`)
 
-### Entry rel-frc-b-001 — Conditioned force as self-mediated relation to force
+### Entry esrel-for-001 — Conditioned force as self-mediated relation to force
 
 Span:
 
@@ -76,7 +76,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: rel-frc-b-001-c1
+- c1. id: esrel-for-001-c1
   - subject: force_in_initial_determination
   - predicate: appears_as
   - object: reflected_positedness_conditioned_by_immediate_thinghood
@@ -85,7 +85,7 @@ Claims: (Claim)
   - evidence:
     - [59-81] force appears as reflected/posited relative to an immediate thing or matter, seemingly externally impressed.
 
-- c2. id: rel-frc-b-001-c2
+- c2. id: esrel-for-001-c2
   - subject: force
   - predicate: is
   - object: negative_unity_that_sublates_thinghood_into_posited_externality
@@ -95,7 +95,7 @@ Claims: (Claim)
     - [82-115] matter-like interpretation is critiqued; immediate concrete existence is only transient moment.
     - [116-123] force itself is positing of externality; determinate matter-self-subsistence has passed into appearance.
 
-- c3. id: rel-frc-b-001-c3
+- c3. id: esrel-for-001-c3
   - subject: conditionedness_of_force
   - predicate: is
   - object: self_relation_of_force_through_another_force
@@ -115,8 +115,8 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: rel-frc-b-002
-  - sourceClaimIds: [rel-frc-b-001-c3]
+  - targetEntryId: esrel-for-002
+  - sourceClaimIds: [esrel-for-001-c3]
   - sourceKeyPointIds: [k4]
   - targetClaimIds: [pending_local]
   - logicalOperator: sequential_transition
@@ -124,10 +124,10 @@ Relations: (Relation)
   - note: conditionedness of force opens directly into explicit solicitation in subpart `b`.
 
 - r2. type: supports
-  - targetEntryId: rel-whp-a-003
-  - sourceClaimIds: [rel-frc-b-001-c2]
+  - targetEntryId: esrel-who-003
+  - sourceClaimIds: [esrel-for-001-c2]
   - sourceKeyPointIds: [k2]
-  - targetClaimIds: [rel-whp-a-003-c3]
+  - targetClaimIds: [esrel-who-003-c3]
   - logicalOperator: sublative_transition
   - analysisMode: first_order_claim_projection
   - note: force as posited externality confirms the Part A transition beyond whole/parts immediacy.
@@ -137,7 +137,7 @@ Review outcome:
 - review_pending
 - notes: `b-001` complete at explicit `a.` boundary.
 
-### Entry rel-frc-b-002 — Solicitation as reciprocal mediation of force with itself through the other
+### Entry esrel-for-002 — Solicitation as reciprocal mediation of force with itself through the other
 
 Span:
 
@@ -158,7 +158,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: rel-frc-b-002-c1
+- c1. id: esrel-for-002-c1
   - subject: solicitation_structure_of_force
   - predicate: is
   - object: reciprocal_presupposing_of_force_as_other_force
@@ -168,7 +168,7 @@ Claims: (Claim)
     - [189-205] conditioned immediacy is posited/presupposed; externality is own presupposing activity first as another force.
     - [206-214] reciprocal presupposing: each force posits its externality as other force.
 
-- c2. id: rel-frc-b-002-c2
+- c2. id: esrel-for-002-c2
   - subject: stimulus
   - predicate: functions_as
   - object: soliciting_moment_of_force_own_expression
@@ -178,7 +178,7 @@ Claims: (Claim)
     - [215-236] presupposing activity sublates external negation and posits externality as its own.
     - [237-249] stimulus only solicits; force's act is reducing externality to stimulus and positing it as own self-repelling expression.
 
-- c3. id: rel-frc-b-002-c3
+- c3. id: esrel-for-002-c3
   - subject: relation_between_soliciting_and_solicited_forces
   - predicate: is
   - object: mediated_identity_of_active_and_passive_reactivity
@@ -197,17 +197,17 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: refines
-  - targetEntryId: rel-frc-b-001
-  - sourceClaimIds: [rel-frc-b-002-c1, rel-frc-b-002-c3]
+  - targetEntryId: esrel-for-001
+  - sourceClaimIds: [esrel-for-002-c1, esrel-for-002-c3]
   - sourceKeyPointIds: [k1, k4]
-  - targetClaimIds: [rel-frc-b-001-c3]
+  - targetClaimIds: [esrel-for-001-c3]
   - logicalOperator: dialectical_refinement
   - analysisMode: first_order_claim_projection
   - note: `b-002` explicates how conditionedness in `b-001` operates concretely as reciprocal solicitation.
 
 - r2. type: transitions_to
-  - targetEntryId: rel-frc-b-003
-  - sourceClaimIds: [rel-frc-b-002-c3]
+  - targetEntryId: esrel-for-003
+  - sourceClaimIds: [esrel-for-002-c3]
   - sourceKeyPointIds: [k4]
   - targetClaimIds: [pending_local]
   - logicalOperator: sequential_transition
@@ -219,7 +219,7 @@ Review outcome:
 - review_pending
 - notes: `b-002` complete at explicit `b.` boundary.
 
-### Entry rel-frc-b-003 — Infinity of force as identity of externality and inwardness
+### Entry esrel-for-003 — Infinity of force as identity of externality and inwardness
 
 Span:
 
@@ -240,7 +240,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: rel-frc-b-003-c1
+- c1. id: esrel-for-003-c1
   - subject: finitude_of_force
   - predicate: consists_in
   - object: immediacy_of_separated_moments_of_presupposing_and_reflection
@@ -250,7 +250,7 @@ Claims: (Claim)
     - [342-350] force is finite while moments have immediate form; presupposing and self-referring reflection appear as separated.
     - [351-353] conditionedness in form and restriction in content persist.
 
-- c2. id: rel-frc-b-003-c2
+- c2. id: esrel-for-003-c2
   - subject: activity_of_force
   - predicate: is
   - object: sublation_of_externality_into_self_identity
@@ -259,7 +259,7 @@ Claims: (Claim)
   - evidence:
     - [354-358] activity consists in expressing itself by sublating externality and determining it as identical with itself.
 
-- c3. id: rel-frc-b-003-c3
+- c3. id: esrel-for-003-c3
   - subject: infinite_truth_of_force
   - predicate: is
   - object: identity_of_reference_to_other_with_self_reference_externality_with_inwardness
@@ -278,17 +278,17 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: refines
-  - targetEntryId: rel-frc-b-002
-  - sourceClaimIds: [rel-frc-b-003-c3]
+  - targetEntryId: esrel-for-002
+  - sourceClaimIds: [esrel-for-003-c3]
   - sourceKeyPointIds: [k3, k4]
-  - targetClaimIds: [rel-frc-b-002-c3]
+  - targetClaimIds: [esrel-for-002-c3]
   - logicalOperator: consummative_refinement
   - analysisMode: first_order_claim_projection
   - note: `b-003` consummates `b-002` by explicitly naming the mediated unity of active/passive and internal/external as the infinity of force.
 
 - r2. type: transitions_to
-  - targetEntryId: rel-oin-c-001
-  - sourceClaimIds: [rel-frc-b-003-c3]
+  - targetEntryId: esrel-out-001
+  - sourceClaimIds: [esrel-for-003-c3]
   - sourceKeyPointIds: [k4]
   - targetClaimIds: [pending_cross_workbook]
   - logicalOperator: sequential_transition

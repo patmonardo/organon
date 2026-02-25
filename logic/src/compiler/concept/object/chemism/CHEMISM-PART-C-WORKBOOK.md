@@ -47,9 +47,9 @@ Scope:
 Decision:
 
 - Segment strictly by paragraph boundaries.
-- Keep IDs in normalized form: `obj-chem-c-001`, `obj-chem-c-002`, `obj-chem-c-003`.
+- Keep IDs in normalized form: `chemi-chm-001`, `chemi-chm-002`, `chemi-chm-003`.
 
-### Entry obj-chem-c-001 — Paragraph 1: self-mediating chemical connection
+### Entry chemi-chm-001 — Paragraph 1: self-mediating chemical connection
 
 Span:
 
@@ -70,7 +70,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: obj-chem-c-001-c1
+- c1. id: chemi-chm-001-c1
   - subject: chemical_object
   - predicate: posits_for_itself
   - object: presupposition_and_middle_term_for_real_connection
@@ -79,7 +79,7 @@ Claims: (Claim)
   - evidence:
     - [12-17] object posits needed presupposition and middle term to unite concept with reality.
 
-- c2. id: obj-chem-c-001-c2
+- c2. id: chemi-chm-001-c2
   - subject: concrete_concept_as_negative_principle
   - predicate: both_disjoins_and_reunites
   - object: extremes_in_objectified_return
@@ -96,11 +96,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: obj-chem-c-002
+  - targetEntryId: chemi-chm-002
   - note: self-mediated model transitions to diagnosis of chemism's still-external three-syllogism structure.
-  - sourceClaimIds: [`obj-chem-c-001-c1`, `obj-chem-c-001-c2`]
+  - sourceClaimIds: [`chemi-chm-001-c1`, `chemi-chm-001-c2`]
   - sourceKeyPointIds: [`k3`, `k4`]
-  - targetClaimIds: [`obj-chem-c-002-c1`, `obj-chem-c-002-c2`]
+  - targetClaimIds: [`chemi-chm-002-c1`, `chemi-chm-002-c2`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -109,7 +109,7 @@ Review outcome:
 - review_pending
 - notes: paragraph boundary preserved.
 
-### Entry obj-chem-c-002 — Paragraph 2: chemism totality and external falling-apart
+### Entry chemi-chm-002 — Paragraph 2: chemism totality and external falling-apart
 
 Span:
 
@@ -130,7 +130,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: obj-chem-c-002-c1
+- c1. id: chemi-chm-002-c1
   - subject: chemism
   - predicate: is_determined_as
   - object: first_negation_not_yet_self_determining_totality
@@ -139,7 +139,7 @@ Claims: (Claim)
   - evidence:
     - [25-34] chemism as first negation still burdened by externality.
 
-- c2. id: obj-chem-c-002-c2
+- c2. id: chemi-chm-002-c2
   - subject: chemism_totality
   - predicate: is_articulated_as
   - object: three_syllogisms_that_fall_apart_under_externality
@@ -148,7 +148,7 @@ Claims: (Claim)
   - evidence:
     - [35-51] three-syllogism articulation and falling apart.
 
-- c3. id: obj-chem-c-002-c3
+- c3. id: chemi-chm-002-c3
   - subject: chemical_process_moments
   - predicate: remain
   - object: externally_conditioned_and_split_into_diverse_sides
@@ -166,11 +166,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: obj-chem-c-003
+  - targetEntryId: chemi-chm-003
   - note: external conditionality is progressively sublated into unconditioned conceptual totality.
-  - sourceClaimIds: [`obj-chem-c-002-c2`, `obj-chem-c-002-c3`]
+  - sourceClaimIds: [`chemi-chm-002-c2`, `chemi-chm-002-c3`]
   - sourceKeyPointIds: [`k3`, `k4`]
-  - targetClaimIds: [`obj-chem-c-003-c1`, `obj-chem-c-003-c2`]
+  - targetClaimIds: [`chemi-chm-003-c1`, `chemi-chm-003-c2`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -179,7 +179,7 @@ Review outcome:
 - review_pending
 - notes: paragraph boundary preserved.
 
-### Entry obj-chem-c-003 — Paragraph 3: staged sublation to objective free concept
+### Entry chemi-chm-003 — Paragraph 3: staged sublation to objective free concept
 
 Span:
 
@@ -200,7 +200,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: obj-chem-c-003-c1
+- c1. id: chemi-chm-003-c1
   - subject: staged_chemical_processes
   - predicate: sublate
   - object: externality_and_conditionality_toward_unconditioned_totality
@@ -209,7 +209,7 @@ Claims: (Claim)
   - evidence:
     - [80-93] processes as necessary stages sublating externality; first/second sublations specified.
 
-- c2. id: obj-chem-c-003-c2
+- c2. id: chemi-chm-003-c2
   - subject: third_syllogism_and_concept
   - predicate: culminate_in
   - object: objective_free_concept_as_purpose
@@ -226,18 +226,18 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: obj-chem-c-001
+  - targetEntryId: chemi-chm-001
   - note: final liberation confirms opening thesis that chemism's own mediation is concept-driven.
-  - sourceClaimIds: [`obj-chem-c-003-c1`, `obj-chem-c-003-c2`]
+  - sourceClaimIds: [`chemi-chm-003-c1`, `chemi-chm-003-c2`]
   - sourceKeyPointIds: [`k2`, `k4`]
-  - targetClaimIds: [`obj-chem-c-001-c1`, `obj-chem-c-001-c2`]
+  - targetClaimIds: [`chemi-chm-001-c1`, `chemi-chm-001-c2`]
   - logicalOperator: retrospective_grounding
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
   - targetEntryId: pending_teleology_part_a_entry
   - note: purpose marks boundary transition beyond chemism into teleological determination.
-  - sourceClaimIds: [`obj-chem-c-003-c2`]
+  - sourceClaimIds: [`chemi-chm-003-c2`]
   - sourceKeyPointIds: [`k4`]
   - targetClaimIds: [`pending`]
   - logicalOperator: boundary_transition

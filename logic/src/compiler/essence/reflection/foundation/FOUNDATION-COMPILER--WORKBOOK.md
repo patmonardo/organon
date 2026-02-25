@@ -1,4 +1,4 @@
-# FOUNDATION-COMPILER-V2-WORKBOOK
+# FOUNDATION-COMPILERWORKBOOK
 
 Status: Scaffold workbook (translation in progress)
 Doctrine scope: Identity / Difference / Contradiction

@@ -47,9 +47,9 @@ Scope:
 Decision:
 
 - No fixed subspecies in text; use conceptual blocks for first pass.
-- Keep IDs in normalized form: `obj-tel-a-001`, `obj-tel-a-002`, `obj-tel-a-003`.
+- Keep IDs in normalized form: `teleo-sub-001`, `teleo-sub-002`, `teleo-sub-003`.
 
-### Entry obj-tel-a-001 — Block 1: subjective purpose as self-repelling rational concept
+### Entry teleo-sub-001 — Block 1: subjective purpose as self-repelling rational concept
 
 Span:
 
@@ -70,7 +70,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: obj-tel-a-001-c1
+- c1. id: teleo-sub-001-c1
   - subject: purpose
   - predicate: is_determined_as
   - object: self_repelling_subjective_concept_striving_for_externalization
@@ -79,7 +79,7 @@ Claims: (Claim)
   - evidence:
     - [12-20] purpose defined as subjective concept and striving impulse to posit itself externally.
 
-- c2. id: obj-tel-a-001-c2
+- c2. id: teleo-sub-001-c2
   - subject: purpose
   - predicate: differs_from
   - object: ordinary_force_cause_substance_by_free_self_mediation
@@ -88,7 +88,7 @@ Claims: (Claim)
   - evidence:
     - [21-41] force/cause/substance transition-bound unless sublated as self-causing expression.
 
-- c3. id: obj-tel-a-001-c3
+- c3. id: teleo-sub-001-c3
   - subject: purpose_as_such
   - predicate: manifests
   - object: rationality_as_concrete_conceptual_unity_of_difference
@@ -106,11 +106,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: obj-tel-a-002
+  - targetEntryId: teleo-sub-002
   - note: rational subjective structure transitions into finitude through objective indifference.
-  - sourceClaimIds: [`obj-tel-a-001-c3`]
+  - sourceClaimIds: [`teleo-sub-001-c3`]
   - sourceKeyPointIds: [`k4`]
-  - targetClaimIds: [`obj-tel-a-002-c1`]
+  - targetClaimIds: [`teleo-sub-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -119,7 +119,7 @@ Review outcome:
 - review_pending
 - notes: block segmentation used due to lack of explicit subspecies.
 
-### Entry obj-tel-a-002 — Block 2: finite purpose and objective presupposition
+### Entry teleo-sub-002 — Block 2: finite purpose and objective presupposition
 
 Span:
 
@@ -139,7 +139,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: obj-tel-a-002-c1
+- c1. id: teleo-sub-002-c1
   - subject: finite_purpose
   - predicate: is_determined_as
   - object: concept_with_externalized_determinateness_and_presupposition
@@ -149,7 +149,7 @@ Claims: (Claim)
     - [75-90] purpose in objectivity: objective indifference enclosed in concept-unity.
     - [103-110] determinateness has form of presupposed objective world.
 
-- c2. id: obj-tel-a-002-c2
+- c2. id: teleo-sub-002-c2
   - subject: purposive_activity
   - predicate: stands_as
   - object: reflection_into_itself_and_reflection_outwards
@@ -166,11 +166,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: obj-tel-a-003
+  - targetEntryId: teleo-sub-003
   - note: finite opposition drives movement toward sublating presupposition and positing means.
-  - sourceClaimIds: [`obj-tel-a-002-c1`, `obj-tel-a-002-c2`]
+  - sourceClaimIds: [`teleo-sub-002-c1`, `teleo-sub-002-c2`]
   - sourceKeyPointIds: [`k2`, `k3`]
-  - targetClaimIds: [`obj-tel-a-003-c1`, `obj-tel-a-003-c2`]
+  - targetClaimIds: [`teleo-sub-003-c1`, `teleo-sub-003-c2`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -179,7 +179,7 @@ Review outcome:
 - review_pending
 - notes: second analytical block locked.
 
-### Entry obj-tel-a-003 — Block 3: realization movement and first positing of means
+### Entry teleo-sub-003 — Block 3: realization movement and first positing of means
 
 Span:
 
@@ -200,7 +200,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: obj-tel-a-003-c1
+- c1. id: teleo-sub-003-c1
   - subject: movement_of_purpose
   - predicate: aims_at
   - object: sublation_of_presupposition_and_realization_as_unification
@@ -209,7 +209,7 @@ Claims: (Claim)
   - evidence:
     - [121-134] movement sublates object-immediacy and unifies objective being with concept.
 
-- c2. id: obj-tel-a-003-c2
+- c2. id: teleo-sub-003-c2
   - subject: purposive_resolution
   - predicate: posits
   - object: simultaneous_inner_determination_and_external_presupposition
@@ -227,11 +227,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: obj-tel-b-001
+  - targetEntryId: teleo-mea-001
   - note: first positing of means opens Part B treatment of the middle term.
-  - sourceClaimIds: [`obj-tel-a-003-c2`]
+  - sourceClaimIds: [`teleo-sub-003-c2`]
   - sourceKeyPointIds: [`k4`]
-  - targetClaimIds: [`obj-tel-b-001-c1`]
+  - targetClaimIds: [`teleo-mea-001-c1`]
   - logicalOperator: boundary_transition
   - analysisMode: first_order_claim_projection
 

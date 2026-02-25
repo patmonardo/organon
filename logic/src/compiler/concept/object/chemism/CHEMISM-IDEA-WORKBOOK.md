@@ -1,6 +1,6 @@
 # Chemism Idea Workbook
 
-Part: `IDEA. OBJECT (CHEMISM) COORDINATION`
+Part: `IDEA. CHEMISM COORDINATION`
 Status: active
 Authority: original source text only
 

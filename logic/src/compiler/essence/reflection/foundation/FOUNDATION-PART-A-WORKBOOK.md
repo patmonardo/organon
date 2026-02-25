@@ -53,7 +53,7 @@ Decision:
 - Apply short-section exception policy: do not force artificial over-segmentation for the short Identity source.
 - Remark handling: no explicit remark block exists in `identity.txt`, so no remark exclusion decision is needed beyond source lock.
 
-### Entry fnd-id-a-001 — Identity as pure production and in-itself sublation of being
+### Entry found-ide-001 — Identity as pure production and in-itself sublation of being
 
 Span:
 
@@ -74,7 +74,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: fnd-id-a-001-c1
+- c1. id: found-ide-001-c1
   - subject: identity
   - predicate: is_determined_as
   - object: immediacy_of_reflection_and_pure_self_production
@@ -83,7 +83,7 @@ Claims: (Claim)
   - evidence:
     - [41-46] self-identity is immediacy of reflection and pure production from itself and in itself.
 
-- c2. id: fnd-id-a-001-c2
+- c2. id: found-ide-001-c2
   - subject: essential_identity
   - predicate: is_not
   - object: abstract_identity_from_relative_negation
@@ -92,7 +92,7 @@ Claims: (Claim)
   - evidence:
     - [48-54] denial of abstract identity produced by relative negation that leaves the other outside.
 
-- c3. id: fnd-id-a-001-c3
+- c3. id: found-ide-001-c3
   - subject: being_and_its_determinateness
   - predicate: are_sublated_in_themselves_as
   - object: simple_negativity_identical_with_essence
@@ -110,7 +110,7 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: fnd-dif-b-001
+  - targetEntryId: found-dif-a-001
   - note: closure of Identity hands off to Difference as the next essentiality.
 
 Review outcome:

@@ -50,7 +50,7 @@ Decision:
 - Keep relation semantics conservative pending cross-part review.
 - Use pseudo-Cypher labels: `Key points: (KeyPoint)`, `Claims: (Claim)`, `Relations: (Relation)`.
 
-### Entry obj-mech-a-001 — Section 1: object as immediate totality without intrinsic opposition
+### Entry mecha-obj-001 — Section 1: object as immediate totality without intrinsic opposition
 
 Span:
 
@@ -72,7 +72,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: obj-mech-a-001-c1
+- c1. id: mecha-obj-001-c1
   - subject: mechanical_object
   - predicate: is_determined_as
   - object: informed_totality_without_matter_form_split
@@ -82,7 +82,7 @@ Claims: (Claim)
     - [12-20] explicit rejection of abstract matter/form split and requirement that matter be understood as informed.
     - [17-18] abstract separation of singularity and universality has no place in the object.
 
-- c2. id: obj-mech-a-001-c2
+- c2. id: mecha-obj-001-c2
   - subject: mechanical_object
   - predicate: negates_as_explanatory_forms
   - object: thing_property_substance_accident_and_external_part_whole_models
@@ -92,7 +92,7 @@ Claims: (Claim)
     - [21-29] inherited reflection-relations are treated as concluded in the concept; no separable properties/accidents.
     - [30-34] differences are themselves object-totalities, not merely parts against a whole.
 
-- c3. id: obj-mech-a-001-c3
+- c3. id: mecha-obj-001-c3
   - subject: object_plurality
   - predicate: is_determined_as
   - object: aggregate_of_totalities_without_self_grounding_determinacy
@@ -111,11 +111,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: obj-mech-a-002
+  - targetEntryId: mecha-obj-002
   - note: shifts from internal indeterminacy/plurality to explicit externalization of determinacy and deterministic regress.
-  - sourceClaimIds: [`obj-mech-a-001-c3`]
+  - sourceClaimIds: [`mecha-obj-001-c3`]
   - sourceKeyPointIds: [`k3`, `k4`]
-  - targetClaimIds: [`obj-mech-a-002-c1`, `obj-mech-a-002-c2`]
+  - targetClaimIds: [`mecha-obj-002-c1`, `mecha-obj-002-c2`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -124,7 +124,7 @@ Review outcome:
 - review_pending
 - notes: section-1 segmentation locked to numbered boundary.
 
-### Entry obj-mech-a-002 — Section 2: externalized determinacy and deterministic infinite progression
+### Entry mecha-obj-002 — Section 2: externalized determinacy and deterministic infinite progression
 
 Span:
 
@@ -146,7 +146,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: obj-mech-a-002-c1
+- c1. id: mecha-obj-002-c1
   - subject: mechanical_object
   - predicate: is_determined_as
   - object: determinate_totality_without_immanent_negative_unity
@@ -156,7 +156,7 @@ Claims: (Claim)
     - [75-85] totality of determinateness is stated, but singular determinations are indifferent and not intrinsically comprehended.
     - [86-92] unifying form is external and indifferent to the determinacies it combines.
 
-- c2. id: obj-mech-a-002-c2
+- c2. id: mecha-obj-002-c2
   - subject: object_determinateness
   - predicate: is_displaced_into
   - object: other_objects_in_indefinite_regress
@@ -166,7 +166,7 @@ Claims: (Claim)
     - [94-103] determinateness of totality lies outside in other objects ad infinitum.
     - [105-113] object points beyond itself and no principle of self-determination is found.
 
-- c3. id: obj-mech-a-002-c3
+- c3. id: mecha-obj-002-c3
   - subject: determinist_explanation
   - predicate: collapses_into
   - object: empty_formal_progression_without_grounding
@@ -185,20 +185,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: obj-mech-a-001
+  - targetEntryId: mecha-obj-001
   - note: confirms section-1 diagnosis that plurality lacks intrinsic self-grounding determination.
-  - sourceClaimIds: [`obj-mech-a-002-c2`, `obj-mech-a-002-c3`]
+  - sourceClaimIds: [`mecha-obj-002-c2`, `mecha-obj-002-c3`]
   - sourceKeyPointIds: [`k3`, `k4`, `k5`]
-  - targetClaimIds: [`obj-mech-a-001-c3`]
+  - targetClaimIds: [`mecha-obj-001-c3`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: obj-mech-a-003
+  - targetEntryId: mecha-obj-003
   - note: deterministic externalization transitions into explicit contradiction and mechanical process.
-  - sourceClaimIds: [`obj-mech-a-002-c3`]
+  - sourceClaimIds: [`mecha-obj-002-c3`]
   - sourceKeyPointIds: [`k4`, `k5`]
-  - targetClaimIds: [`obj-mech-a-003-c1`, `obj-mech-a-003-c2`]
+  - targetClaimIds: [`mecha-obj-003-c1`, `mecha-obj-003-c2`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -207,7 +207,7 @@ Review outcome:
 - review_pending
 - notes: section-2 span preserved exactly at numbered boundary.
 
-### Entry obj-mech-a-003 — Section 3: tautological doubling and contradiction as mechanical process
+### Entry mecha-obj-003 — Section 3: tautological doubling and contradiction as mechanical process
 
 Span:
 
@@ -228,7 +228,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: obj-mech-a-003-c1
+- c1. id: mecha-obj-003-c1
   - subject: duplicated_determinateness_between_objects
   - predicate: entails
   - object: tautological_explanation
@@ -238,7 +238,7 @@ Claims: (Claim)
     - [132-138] determinateness doubled across two objects is identical; comprehension is tautology.
     - [139-145] doubling expresses only externality and vacuity of difference.
 
-- c2. id: obj-mech-a-003-c2
+- c2. id: mecha-obj-003-c2
   - subject: object_relation_under_mechanical_condition
   - predicate: culminates_in
   - object: contradiction_of_external_indifference_and_identical_determinateness
@@ -256,11 +256,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: refines
-  - targetEntryId: obj-mech-a-002
+  - targetEntryId: mecha-obj-002
   - note: makes explicit the logical contradiction implicit in deterministic infinite progression.
-  - sourceClaimIds: [`obj-mech-a-003-c1`, `obj-mech-a-003-c2`]
+  - sourceClaimIds: [`mecha-obj-003-c1`, `mecha-obj-003-c2`]
   - sourceKeyPointIds: [`k2`, `k4`]
-  - targetClaimIds: [`obj-mech-a-002-c2`, `obj-mech-a-002-c3`]
+  - targetClaimIds: [`mecha-obj-002-c2`, `mecha-obj-002-c3`]
   - logicalOperator: contradiction_explication
   - analysisMode: first_order_claim_projection
 

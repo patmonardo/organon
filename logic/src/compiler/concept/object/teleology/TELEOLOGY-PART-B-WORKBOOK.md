@@ -47,9 +47,9 @@ Scope:
 Decision:
 
 - No fixed subspecies in text; use conceptual blocks for first pass.
-- Keep IDs in normalized form: `obj-tel-b-001`, `obj-tel-b-002`, `obj-tel-b-003`.
+- Keep IDs in normalized form: `teleo-mea-001`, `teleo-mea-002`, `teleo-mea-003`.
 
-### Entry obj-tel-b-001 — Block 1: means as first realization-beginning and finite mediation
+### Entry teleo-mea-001 — Block 1: means as first realization-beginning and finite mediation
 
 Span:
 
@@ -70,7 +70,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: obj-tel-b-001-c1
+- c1. id: teleo-mea-001-c1
   - subject: means
   - predicate: is_determined_as
   - object: first_objective_positedness_of_purpose_not_yet_realized_end
@@ -79,7 +79,7 @@ Claims: (Claim)
   - evidence:
     - [22-25] means identified as beginning of realization, not realized purpose.
 
-- c2. id: obj-tel-b-001-c2
+- c2. id: teleo-mea-001-c2
   - subject: finite_purpose
   - predicate: requires
   - object: external_middle_term_due_to_split_supposing_presupposing
@@ -97,11 +97,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: obj-tel-b-002
+  - targetEntryId: teleo-mea-002
   - note: initial finitude of means transitions to formal syllogistic middle-term structure.
-  - sourceClaimIds: [`obj-tel-b-001-c2`]
+  - sourceClaimIds: [`teleo-mea-001-c2`]
   - sourceKeyPointIds: [`k3`, `k4`]
-  - targetClaimIds: [`obj-tel-b-002-c1`]
+  - targetClaimIds: [`teleo-mea-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -110,7 +110,7 @@ Review outcome:
 - review_pending
 - notes: block segmentation used due to no explicit subspecies.
 
-### Entry obj-tel-b-002 — Block 2: formal middle term and external linkage
+### Entry teleo-mea-002 — Block 2: formal middle term and external linkage
 
 Span:
 
@@ -131,7 +131,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: obj-tel-b-002-c1
+- c1. id: teleo-mea-002-c1
   - subject: means
   - predicate: functions_as
   - object: formal_medius_terminus_of_formal_syllogism
@@ -140,7 +140,7 @@ Claims: (Claim)
   - evidence:
     - [56-77] means as formal, externally related middle term.
 
-- c2. id: obj-tel-b-002-c2
+- c2. id: teleo-mea-002-c2
   - subject: means
   - predicate: is_determined_as
   - object: mechanical_object_with_externally_linked_purpose
@@ -150,7 +150,7 @@ Claims: (Claim)
     - [79-83] concept and objectivity only externally linked; means merely mechanical.
     - [97-103] purpose initially external determinateness in means.
 
-- c3. id: obj-tel-b-002-c3
+- c3. id: teleo-mea-002-c3
   - subject: middle_term
   - predicate: tends_toward
   - object: totality_of_purpose_through_immanent_reflection_activity
@@ -169,11 +169,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: obj-tel-b-003
+  - targetEntryId: teleo-mea-003
   - note: formal-external means transitions to concept-penetrable object serving purposive activity.
-  - sourceClaimIds: [`obj-tel-b-002-c2`, `obj-tel-b-002-c3`]
+  - sourceClaimIds: [`teleo-mea-002-c2`, `teleo-mea-002-c3`]
   - sourceKeyPointIds: [`k3`, `k4`]
-  - targetClaimIds: [`obj-tel-b-003-c1`, `obj-tel-b-003-c2`]
+  - targetClaimIds: [`teleo-mea-003-c1`, `teleo-mea-003-c2`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -182,7 +182,7 @@ Review outcome:
 - review_pending
 - notes: second analytical block locked.
 
-### Entry obj-tel-b-003 — Block 3: means as penetrable concept-totality and active premise
+### Entry teleo-mea-003 — Block 3: means as penetrable concept-totality and active premise
 
 Span:
 
@@ -203,7 +203,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: obj-tel-b-003-c1
+- c1. id: teleo-mea-003-c1
   - subject: means_object
   - predicate: is_determined_as
   - object: concept_identical_penetrable_and_serviceable_to_purpose
@@ -213,7 +213,7 @@ Claims: (Claim)
     - [136-146] means as concept-totality penetrable/receptive to purpose.
     - [149-161] non-self-subsistence and service-character toward purpose.
 
-- c2. id: obj-tel-b-003-c2
+- c2. id: teleo-mea-003-c2
   - subject: purposive_activity_through_means
   - predicate: remains_directed_against
   - object: persisting_presupposition_of_external_objectivity
@@ -231,11 +231,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: obj-tel-c-001
+  - targetEntryId: teleo-pur-001
   - note: persistence of presupposition transitions to realized-purpose section where externality must self-sublate.
-  - sourceClaimIds: [`obj-tel-b-003-c2`]
+  - sourceClaimIds: [`teleo-mea-003-c2`]
   - sourceKeyPointIds: [`k4`]
-  - targetClaimIds: [`obj-tel-c-001-c1`]
+  - targetClaimIds: [`teleo-pur-001-c1`]
   - logicalOperator: boundary_transition
   - analysisMode: first_order_claim_projection
 

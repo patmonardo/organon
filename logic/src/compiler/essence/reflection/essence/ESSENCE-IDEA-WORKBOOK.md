@@ -38,9 +38,9 @@ Reason this is Idea-level: the text gives a top-order conceptual overview before
 
 ## Part decomposition for detailed study
 
-- `A. THE ESSENTIAL AND THE UNESSENTIAL` -> see `ESSENCE-PART-A-V2-WORKBOOK.md`
-- `B. SHINE` -> see `ESSENCE-PART-B-V2-WORKBOOK.md`
-- `C. REFLECTION` -> see `ESSENCE-PART-C-V2-WORKBOOK.md`
+- `A. THE ESSENTIAL AND THE UNESSENTIAL` -> see `ESSENCE-PART-AWORKBOOK.md`
+- `B. SHINE` -> see `ESSENCE-PART-BWORKBOOK.md`
+- `C. REFLECTION` -> see `ESSENCE-PART-CWORKBOOK.md`
 
 ## Session log
 

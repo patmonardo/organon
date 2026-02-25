@@ -1,4 +1,4 @@
-# ESSENCE-COMPILER-V2-WORKBOOK
+# ESSENCE-COMPILERWORKBOOK
 
 Status: Active rewrite workbook (source-local)
 Doctrine scope: Essence / Reflection / Shine

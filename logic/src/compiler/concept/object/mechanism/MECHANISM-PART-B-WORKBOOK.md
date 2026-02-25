@@ -54,7 +54,7 @@ Decision:
 - For `b` and `c`, use paragraph-level subspecies exactly as requested.
 - Keep relation typing conservative and primarily sequential.
 
-### Entry obj-mech-b-000 — Preface: monad critique and causal non-originariness
+### Entry mecha-pro-000 — Preface: monad critique and causal non-originariness
 
 Span:
 
@@ -75,7 +75,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: obj-mech-b-000-c1
+- c1. id: mecha-pro-000-c1
   - subject: monad_model
   - predicate: fails_to_ground
   - object: genuine_self_determined_interaction
@@ -85,7 +85,7 @@ Claims: (Claim)
     - [4-18] monad-like closure blocks interaction and makes determinateness other-posited.
     - [26-42] mirroring self-reference is passivity; development degree has ground in an other.
 
-- c2. id: obj-mech-b-000-c2
+- c2. id: mecha-pro-000-c2
   - subject: mechanism
   - predicate: is_determined_as
   - object: causality_as_mere_positedness_of_indifferent_objects
@@ -103,11 +103,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: obj-mech-b-a-001
+  - targetEntryId: mecha-pro-a-001
   - note: preface grounds the formal process as explicit positing of mechanism's contradiction.
-  - sourceClaimIds: [`obj-mech-b-000-c2`]
+  - sourceClaimIds: [`mecha-pro-000-c2`]
   - sourceKeyPointIds: [`k3`, `k4`]
-  - targetClaimIds: [`obj-mech-b-a-001-c1`]
+  - targetClaimIds: [`mecha-pro-a-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -116,7 +116,7 @@ Review outcome:
 - review_pending
 - notes: preface retained because it establishes the method-necessity of the `a/b/c` process forms.
 
-### Entry obj-mech-b-a-001 — a.1 Communication as universalized determinateness
+### Entry mecha-pro-a-001 — a.1 Communication as universalized determinateness
 
 Span:
 
@@ -136,7 +136,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: obj-mech-b-a-001-c1
+- c1. id: mecha-pro-a-001-c1
   - subject: interaction_of_objects
   - predicate: initially_posits
   - object: identical_connection_as_communication
@@ -146,7 +146,7 @@ Claims: (Claim)
     - [102-108] interaction is positing of identical connection via universality.
     - [120-125] formal object-totality enables unimpeded continuation of determinateness.
 
-- c2. id: obj-mech-b-a-001-c2
+- c2. id: mecha-pro-a-001-c2
   - subject: objective_universal_content
   - predicate: pervades
   - object: spirit_and_body_beyond_singular_resistance
@@ -164,11 +164,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: obj-mech-b-a-002
+  - targetEntryId: mecha-pro-a-002
   - note: pure communication requires the counter-moment of particularity and reaction.
-  - sourceClaimIds: [`obj-mech-b-a-001-c1`]
+  - sourceClaimIds: [`mecha-pro-a-001-c1`]
   - sourceKeyPointIds: [`k1`]
-  - targetClaimIds: [`obj-mech-b-a-002-c1`]
+  - targetClaimIds: [`mecha-pro-a-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -177,7 +177,7 @@ Review outcome:
 - review_pending
 - notes: numeric subsection boundary preserved.
 
-### Entry obj-mech-b-a-002 — a.2 Reaction as particularization of the communicated universal
+### Entry mecha-pro-a-002 — a.2 Reaction as particularization of the communicated universal
 
 Span:
 
@@ -198,7 +198,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: obj-mech-b-a-002-c1
+- c1. id: mecha-pro-a-002-c1
   - subject: reaction
   - predicate: is_determined_as
   - object: coequal_moment_particularizing_communicated_universal
@@ -208,7 +208,7 @@ Claims: (Claim)
     - [149-157] universality requires particularity; objects produce singularity as reaction.
     - [161-179] communicated universal remains itself while distributed and particularized into species.
 
-- c2. id: obj-mech-b-a-002-c2
+- c2. id: mecha-pro-a-002-c2
   - subject: reciprocal_reaction
   - predicate: culminates_in
   - object: restoration_of_external_singularity_and_passage_to_rest
@@ -226,11 +226,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: obj-mech-b-a-003
+  - targetEntryId: mecha-pro-a-003
   - note: return to rest necessitates explicit determination of process-product.
-  - sourceClaimIds: [`obj-mech-b-a-002-c2`]
+  - sourceClaimIds: [`mecha-pro-a-002-c2`]
   - sourceKeyPointIds: [`k4`]
-  - targetClaimIds: [`obj-mech-b-a-003-c1`]
+  - targetClaimIds: [`mecha-pro-a-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -239,7 +239,7 @@ Review outcome:
 - review_pending
 - notes: numeric subsection boundary preserved.
 
-### Entry obj-mech-b-a-003 — a.3 Product: posited concept-totality and accidental outcome
+### Entry mecha-pro-a-003 — a.3 Product: posited concept-totality and accidental outcome
 
 Span:
 
@@ -259,7 +259,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: obj-mech-b-a-003-c1
+- c1. id: mecha-pro-a-003-c1
   - subject: product_of_formal_mechanical_process
   - predicate: is_determined_as
   - object: posited_totality_of_concept
@@ -268,7 +268,7 @@ Claims: (Claim)
   - evidence:
     - [209-223] product as concept-totality and mediated unity of universal/singular via particularity.
 
-- c2. id: obj-mech-b-a-003-c2
+- c2. id: mecha-pro-a-003-c2
   - subject: mechanical_object_as_product
   - predicate: has
   - object: externally_posited_accidental_determinateness
@@ -286,11 +286,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: obj-mech-b-b-001
+  - targetEntryId: mecha-pro-b-001
   - note: external product/rest drives transition from formal to real mechanism.
-  - sourceClaimIds: [`obj-mech-b-a-003-c2`]
+  - sourceClaimIds: [`mecha-pro-a-003-c2`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`obj-mech-b-b-001-c1`]
+  - targetClaimIds: [`mecha-pro-b-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -299,7 +299,7 @@ Review outcome:
 - review_pending
 - notes: numeric subsection boundary preserved.
 
-### Entry obj-mech-b-b-001 — b.1 Real process paragraph 1: differentiated opposition after formal rest
+### Entry mecha-pro-b-001 — b.1 Real process paragraph 1: differentiated opposition after formal rest
 
 Span:
 
@@ -319,7 +319,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: obj-mech-b-b-001-c1
+- c1. id: mecha-pro-b-001-c1
   - subject: real_mechanical_process
   - predicate: begins_with
   - object: reflected_external_determinateness
@@ -328,7 +328,7 @@ Claims: (Claim)
   - evidence:
     - [254-269] process passes into rest, but determinateness as posited is reflected into object.
 
-- c2. id: obj-mech-b-b-001-c2
+- c2. id: mecha-pro-b-001-c2
   - subject: opposed_objects
   - predicate: are_determined_as
   - object: singular_self_subsistence_versus_universal_non_self_subsistence
@@ -346,11 +346,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: obj-mech-b-b-002
+  - targetEntryId: mecha-pro-b-002
   - note: determined opposition opens the communication-overpowering dynamic.
-  - sourceClaimIds: [`obj-mech-b-b-001-c2`]
+  - sourceClaimIds: [`mecha-pro-b-001-c2`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`obj-mech-b-b-002-c1`]
+  - targetClaimIds: [`mecha-pro-b-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -359,7 +359,7 @@ Review outcome:
 - review_pending
 - notes: first large paragraph in `b.` treated as requested subspecies.
 
-### Entry obj-mech-b-b-002 — b.2 Real process paragraph 2: communication, resistance, overpowering, violence
+### Entry mecha-pro-b-002 — b.2 Real process paragraph 2: communication, resistance, overpowering, violence
 
 Span:
 
@@ -380,7 +380,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: obj-mech-b-b-002-c1
+- c1. id: mecha-pro-b-002-c1
   - subject: communication_under_real_mechanism
   - predicate: requires
   - object: shared_sphere_and_contact
@@ -389,7 +389,7 @@ Claims: (Claim)
   - evidence:
     - [299-324] stronger seizes weaker only where one sphere/contact is constituted.
 
-- c2. id: obj-mech-b-b-002-c2
+- c2. id: mecha-pro-b-002-c2
   - subject: resistance_and_power_relation
   - predicate: develops_into
   - object: overpowering_and_violence_when_negativity_remains_abstract
@@ -407,11 +407,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: obj-mech-b-b-003
+  - targetEntryId: mecha-pro-b-003
   - note: violence/power determination transitions to fate and ethical-political mechanism.
-  - sourceClaimIds: [`obj-mech-b-b-002-c2`]
+  - sourceClaimIds: [`mecha-pro-b-002-c2`]
   - sourceKeyPointIds: [`k4`]
-  - targetClaimIds: [`obj-mech-b-b-003-c1`]
+  - targetClaimIds: [`mecha-pro-b-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -420,7 +420,7 @@ Review outcome:
 - review_pending
 - notes: second large paragraph in `b.` treated as requested subspecies.
 
-### Entry obj-mech-b-b-003 — b.3 Real process paragraph 3: fate and self-consciousness entering mechanism
+### Entry mecha-pro-b-003 — b.3 Real process paragraph 3: fate and self-consciousness entering mechanism
 
 Span:
 
@@ -440,7 +440,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: obj-mech-b-b-003-c1
+- c1. id: mecha-pro-b-003-c1
   - subject: fate_within_mechanism
   - predicate: is_determined_as
   - object: objective_universality_unrecognized_by_subject
@@ -449,7 +449,7 @@ Claims: (Claim)
   - evidence:
     - [357-378] fate as objective universality/blindness; contingency for merely animate natures.
 
-- c2. id: obj-mech-b-b-003-c2
+- c2. id: mecha-pro-b-003-c2
   - subject: self_consciousness
   - predicate: enters
   - object: mechanical_relation_through_deed_and_particularization
@@ -467,11 +467,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: obj-mech-b-c-001
+  - targetEntryId: mecha-pro-c-001
   - note: fate-mediated mechanism transitions to explicit account of product in section `c`.
-  - sourceClaimIds: [`obj-mech-b-b-003-c1`, `obj-mech-b-b-003-c2`]
+  - sourceClaimIds: [`mecha-pro-b-003-c1`, `mecha-pro-b-003-c2`]
   - sourceKeyPointIds: [`k1`, `k3`]
-  - targetClaimIds: [`obj-mech-b-c-001-c1`]
+  - targetClaimIds: [`mecha-pro-c-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -480,7 +480,7 @@ Review outcome:
 - review_pending
 - notes: third large paragraph in `b.` treated as requested subspecies.
 
-### Entry obj-mech-b-c-001 — c.1 Product paragraph 1: objective singularity as sublated semblance
+### Entry mecha-pro-c-001 — c.1 Product paragraph 1: objective singularity as sublated semblance
 
 Span:
 
@@ -500,7 +500,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: obj-mech-b-c-001-c1
+- c1. id: mecha-pro-c-001-c1
   - subject: product_of_mechanism
   - predicate: is_determined_as
   - object: posited_totality_with_true_objective_singularity
@@ -517,11 +517,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: obj-mech-b-c-002
+  - targetEntryId: mecha-pro-c-002
   - note: objective singularity is specified as centered individual self-subsistence.
-  - sourceClaimIds: [`obj-mech-b-c-001-c1`]
+  - sourceClaimIds: [`mecha-pro-c-001-c1`]
   - sourceKeyPointIds: [`k2`]
-  - targetClaimIds: [`obj-mech-b-c-002-c1`]
+  - targetClaimIds: [`mecha-pro-c-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -530,7 +530,7 @@ Review outcome:
 - review_pending
 - notes: first paragraph in `c.` treated as requested subspecies.
 
-### Entry obj-mech-b-c-002 — c.2 Product paragraph 2: center as individual self-subsistence
+### Entry mecha-pro-c-002 — c.2 Product paragraph 2: center as individual self-subsistence
 
 Span:
 
@@ -549,7 +549,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: obj-mech-b-c-002-c1
+- c1. id: mecha-pro-c-002-c1
   - subject: objective_oneness
   - predicate: is_determined_as
   - object: individual_self_subsistence_center
@@ -565,11 +565,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: obj-mech-b-c-003
+  - targetEntryId: mecha-pro-c-003
   - note: centered oneness is complemented by universal law as rational fate.
-  - sourceClaimIds: [`obj-mech-b-c-002-c1`]
+  - sourceClaimIds: [`mecha-pro-c-002-c1`]
   - sourceKeyPointIds: [`k2`]
-  - targetClaimIds: [`obj-mech-b-c-003-c1`]
+  - targetClaimIds: [`mecha-pro-c-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -578,7 +578,7 @@ Review outcome:
 - review_pending
 - notes: second paragraph in `c.` treated as requested subspecies.
 
-### Entry obj-mech-b-c-003 — c.3 Product paragraph 3: law as immanent rational fate
+### Entry mecha-pro-c-003 — c.3 Product paragraph 3: law as immanent rational fate
 
 Span:
 
@@ -597,7 +597,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: obj-mech-b-c-003-c1
+- c1. id: mecha-pro-c-003-c1
   - subject: law
   - predicate: is_determined_as
   - object: immanent_rational_fate_particularizing_from_within
@@ -613,11 +613,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: obj-mech-b-tr-001
+  - targetEntryId: mecha-pro-tr-001
   - note: law+center synthesis leads to truth/foundation transition statement.
-  - sourceClaimIds: [`obj-mech-b-c-003-c1`]
+  - sourceClaimIds: [`mecha-pro-c-003-c1`]
   - sourceKeyPointIds: [`k1`]
-  - targetClaimIds: [`obj-mech-b-tr-001-c1`]
+  - targetClaimIds: [`mecha-pro-tr-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -626,7 +626,7 @@ Review outcome:
 - review_pending
 - notes: third paragraph in `c.` treated as requested subspecies.
 
-### Entry obj-mech-b-tr-001 — Transition: result as truth/foundation of mechanism
+### Entry mecha-pro-tr-001 — Transition: result as truth/foundation of mechanism
 
 Span:
 
@@ -645,7 +645,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: obj-mech-b-tr-001-c1
+- c1. id: mecha-pro-tr-001-c1
   - subject: resulting_structure_center_plus_law
   - predicate: is
   - object: truth_and_foundation_of_mechanical_process
@@ -663,7 +663,7 @@ Relations: (Relation)
 - r1. type: transitions_to
   - targetEntryId: pending_part_c_entry
   - note: explicit bridge sentence to next part-level determination.
-  - sourceClaimIds: [`obj-mech-b-tr-001-c1`]
+  - sourceClaimIds: [`mecha-pro-tr-001-c1`]
   - sourceKeyPointIds: [`k2`]
   - targetClaimIds: [`pending`]
   - logicalOperator: boundary_transition

@@ -55,7 +55,7 @@ Decision:
 - Migration: `relation_schema_v1 -> relation_schema_v1_1_overlay` (non-breaking).
 - Apply relation claim/keypoint anchor overlay consistently across Ground Part A/B/C in this session.
 
-### Entry grd-cnd-c-001 — Relative unconditioned as contradiction of immediacy and mediation
+### Entry groun-con-001 — Relative unconditioned as contradiction of immediacy and mediation
 
 Span:
 
@@ -77,7 +77,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: grd-cnd-c-001-c1
+- c1. id: groun-con-001-c1
   - subject: condition
   - predicate: is_determined_as
   - object: immediate_manifold_presupposition_of_ground_that_is_itself_posited
@@ -86,7 +86,7 @@ Claims: (Claim)
   - evidence:
     - [6-72] subsection `1`: condition as immediate/presupposed content of ground, yet also posited and indifferent immediacy.
 
-- c2. id: grd-cnd-c-001-c2
+- c2. id: groun-con-001-c2
   - subject: ground_connection
   - predicate: is
   - object: self_sufficient_mediation_with_peculiar_informed_content_beside_condition_material
@@ -95,7 +95,7 @@ Claims: (Claim)
   - evidence:
     - [73-114] subsection `2`: something has not only condition but also ground; mediation is whole form with content distinct from immediate condition-material.
 
-- c3. id: grd-cnd-c-001-c3
+- c3. id: groun-con-001-c3
   - subject: relation_of_condition_and_ground
   - predicate: culminates_as
   - object: contradiction_of_indifferent_unconditionedness_and_essential_mediation
@@ -107,20 +107,20 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: grd-det-b-003
+  - targetEntryId: groun-det-003
   - note: unfolds conditioning mediation announced at the close of complete ground.
-  - sourceClaimIds: [`grd-cnd-c-001-c1`, `grd-cnd-c-001-c3`]
+  - sourceClaimIds: [`groun-con-001-c1`, `groun-con-001-c3`]
   - sourceKeyPointIds: [`k1`, `k4`, `k5`]
   - targetClaimIds: pending_cross_workbook
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: grd-cnd-c-002
+  - targetEntryId: groun-con-002
   - note: contradiction of the relative unconditioned necessitates the absolutely unconditioned.
-  - sourceClaimIds: [`grd-cnd-c-001-c3`]
+  - sourceClaimIds: [`groun-con-001-c3`]
   - sourceKeyPointIds: [`k4`, `k5`]
-  - targetClaimIds: [`grd-cnd-c-002-c1`]
+  - targetClaimIds: [`groun-con-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -129,7 +129,7 @@ Review outcome:
 - review_pending
 - notes: first deep pass complete for section `a`; claims explicitly align to subsection blocks `1/2/3`.
 
-### Entry grd-cnd-c-002 — Absolutely unconditioned as one whole of form and content
+### Entry groun-con-002 — Absolutely unconditioned as one whole of form and content
 
 Span:
 
@@ -151,7 +151,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: grd-cnd-c-002-c1
+- c1. id: groun-con-002-c1
   - subject: condition_and_ground_initial_relation
   - predicate: appears_as
   - object: reciprocal_reflective_shine_between_relatively_unconditioned_sides
@@ -160,7 +160,7 @@ Claims: (Claim)
   - evidence:
     - [150-225] condition and ground reflectively shine in each other; existence as condition and conditioned ground each prove to be the whole form-process.
 
-- c2. id: grd-cnd-c-002-c2
+- c2. id: groun-con-002-c2
   - subject: truly_unconditioned_fact
   - predicate: is
   - object: one_substrate_of_condition_and_ground_as_unity_of_form_and_content
@@ -169,7 +169,7 @@ Claims: (Claim)
   - evidence:
     - [226-274] one whole of form/content; reciprocal presupposition resolves to one identity/substrate, the truly unconditioned fact.
 
-- c3. id: grd-cnd-c-002-c3
+- c3. id: groun-con-002-c3
   - subject: absolute_fact
   - predicate: self_determines_as
   - object: unity_posited_as_condition_and_ground_whose_relation_sublates_into_reflective_shine
@@ -181,20 +181,20 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: grd-cnd-c-001
+  - targetEntryId: groun-con-001
   - note: resolves the contradiction of the relatively unconditioned into one absolute substrate.
-  - sourceClaimIds: [`grd-cnd-c-002-c2`, `grd-cnd-c-002-c3`]
+  - sourceClaimIds: [`groun-con-002-c2`, `groun-con-002-c3`]
   - sourceKeyPointIds: [`k3`, `k5`]
-  - targetClaimIds: [`grd-cnd-c-001-c3`]
+  - targetClaimIds: [`groun-con-001-c3`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: grd-cnd-c-003
+  - targetEntryId: groun-con-003
   - note: absolute fact now proceeds into concrete existence.
-  - sourceClaimIds: [`grd-cnd-c-002-c3`]
+  - sourceClaimIds: [`groun-con-002-c3`]
   - sourceKeyPointIds: [`k5`]
-  - targetClaimIds: [`grd-cnd-c-003-c1`]
+  - targetClaimIds: [`groun-con-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -203,7 +203,7 @@ Review outcome:
 - review_pending
 - notes: first deep pass complete for section `b`; claim chunking follows non-numbered conceptual subdivisions.
 
-### Entry grd-cnd-c-003 — Procession of the fact into concrete existence
+### Entry groun-con-003 — Procession of the fact into concrete existence
 
 Span:
 
@@ -225,7 +225,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: grd-cnd-c-003-c1
+- c1. id: groun-con-003-c1
   - subject: absolute_unconditioned_as_ground
   - predicate: posits
   - object: conditions_as_presupposed_immediacy_of_its_own_reflective_form
@@ -234,7 +234,7 @@ Claims: (Claim)
   - evidence:
     - [311-381] absolute ground posits condition-side as presupposed immediacy; condition-sphere is the fact's own reflected externality.
 
-- c2. id: grd-cnd-c-003-c2
+- c2. id: groun-con-003-c2
   - subject: ground_condition_mediation
   - predicate: is
   - object: one_self_mediation_of_unconditioned_fact_ending_in_absolute_becoming
@@ -243,7 +243,7 @@ Claims: (Claim)
   - evidence:
     - [382-439] other side of reflective shine and unification of internal movement; mediation becomes groundless absolute becoming and pure self-staging.
 
-- c3. id: grd-cnd-c-003-c3
+- c3. id: groun-con-003-c3
   - subject: fact_coming_forth
   - predicate: culminates_in
   - object: concrete_existence_as_immediacy_through_sublated_mediation
@@ -257,18 +257,18 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: grd-cnd-c-002
+  - targetEntryId: groun-con-002
   - note: executes the absolute fact's self-conditioning and self-grounding as concrete procession.
-  - sourceClaimIds: [`grd-cnd-c-003-c1`, `grd-cnd-c-003-c2`]
+  - sourceClaimIds: [`groun-con-003-c1`, `groun-con-003-c2`]
   - sourceKeyPointIds: [`k1`, `k2`, `k3`]
-  - targetClaimIds: [`grd-cnd-c-002-c3`]
+  - targetClaimIds: [`groun-con-002-c3`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
   - targetEntryId: fnd-nxt-001
   - note: concrete existence as result marks handoff to the next doctrinal movement (target id provisional).
-  - sourceClaimIds: [`grd-cnd-c-003-c3`]
+  - sourceClaimIds: [`groun-con-003-c3`]
   - sourceKeyPointIds: [`k5`]
   - targetClaimIds: pending_cross_workbook
   - logicalOperator: sequential_transition

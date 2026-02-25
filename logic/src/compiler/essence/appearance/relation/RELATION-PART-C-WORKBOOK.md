@@ -51,12 +51,12 @@ Decision:
 
 ## Decomposition status
 
-- completed: `rel-oin-c-001` for movement `1.` (line `4` to `67`)
-- completed: `rel-oin-c-002` for movement `2.` (line `68` to `156`)
-- completed: `rel-oin-c-003` for movement `3.` main block (line `157` to `228`)
-- completed: `rel-oin-c-004` for final transition paragraph (line `229` to `231`) ["...has determined itself as actuality."]
+- completed: `esrel-out-001` for movement `1.` (line `4` to `67`)
+- completed: `esrel-out-002` for movement `2.` (line `68` to `156`)
+- completed: `esrel-out-003` for movement `3.` main block (line `157` to `228`)
+- completed: `esrel-out-004` for final transition paragraph (line `229` to `231`) ["...has determined itself as actuality."]
 
-### Entry rel-oin-c-001 — Immediate unity of inner and outer through mediated reflective shine
+### Entry esrel-out-001 — Immediate unity of inner and outer through mediated reflective shine
 
 Span:
 
@@ -77,7 +77,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: rel-oin-c-001-c1
+- c1. id: esrel-out-001-c1
   - subject: relation_of_inner_and_outer_in_its_first_determination
   - predicate: emerges_from
   - object: mediated_negative_unity_of_force_expression
@@ -87,7 +87,7 @@ Claims: (Claim)
     - [4-16] self-subsisting immediacies are now posited as negative unity in expression of force.
     - [17-30] transition is self-positing turning-back; each determination is already unity with its other.
 
-- c2. id: rel-oin-c-001-c2
+- c2. id: esrel-out-001-c2
   - subject: inner_and_outer
   - predicate: are
   - object: one_identity_as_contentful_substrate_or_fact
@@ -97,7 +97,7 @@ Claims: (Claim)
     - [31-44] inner and outer are one identity, sustaining unity as substrate replete of content.
     - [45-51] outer is equal to inner in content; both are one fact.
 
-- c3. id: rel-oin-c-001-c3
+- c3. id: esrel-out-001-c3
   - subject: difference_of_inner_and_outer
   - predicate: persists_as
   - object: external_indifferent_form_determinations
@@ -116,17 +116,17 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: rel-frc-b-003
-  - sourceClaimIds: [rel-oin-c-001-c1]
+  - targetEntryId: esrel-for-003
+  - sourceClaimIds: [esrel-out-001-c1]
   - sourceKeyPointIds: [k1]
-  - targetClaimIds: [rel-frc-b-003-c3]
+  - targetClaimIds: [esrel-for-003-c3]
   - logicalOperator: sublative_transition
   - analysisMode: first_order_claim_projection
   - note: movement `1` unfolds the Part B infinity claim into the explicit inner/outer identity-form relation.
 
 - r2. type: transitions_to
-  - targetEntryId: rel-oin-c-002
-  - sourceClaimIds: [rel-oin-c-001-c3]
+  - targetEntryId: esrel-out-002
+  - sourceClaimIds: [esrel-out-001-c3]
   - sourceKeyPointIds: [k4]
   - targetClaimIds: [pending_local]
   - logicalOperator: sequential_transition
@@ -138,7 +138,7 @@ Review outcome:
 - review_pending
 - notes: `c-001` complete at explicit `1.` boundary.
 
-### Entry rel-oin-c-002 — Formal opposition and immediate conversion of inner and outer
+### Entry esrel-out-002 — Formal opposition and immediate conversion of inner and outer
 
 Span:
 
@@ -159,7 +159,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: rel-oin-c-002-c1
+- c1. id: esrel-out-002-c1
   - subject: inner_and_outer_as_form_determinations
   - predicate: are
   - object: opposed_reflection_forms_on_identical_substrate
@@ -169,7 +169,7 @@ Claims: (Claim)
     - [68-76] inner and outer are different forms on an identical substrate not in them but in another.
     - [77-80] relation's nature shows these determinations constitute one identity.
 
-- c2. id: rel-oin-c-002-c2
+- c2. id: esrel-out-002-c2
   - subject: identity_of_inner_and_outer_in_form
   - predicate: has_mode
   - object: immediate_conversion_of_each_into_its_opposite
@@ -179,7 +179,7 @@ Claims: (Claim)
     - [81-96] in pure form, unity is abstract determination in which one is immediately the other.
     - [97-103] inner is only outer and outer only inner.
 
-- c3. id: rel-oin-c-002-c3
+- c3. id: esrel-out-002-c3
   - subject: mediation_of_inner_outer_in_movement_two
   - predicate: is
   - object: formal_conversion_with_negative_unity_still_empty_of_content
@@ -198,17 +198,17 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: refines
-  - targetEntryId: rel-oin-c-001
-  - sourceClaimIds: [rel-oin-c-002-c2, rel-oin-c-002-c3]
+  - targetEntryId: esrel-out-001
+  - sourceClaimIds: [esrel-out-002-c2, esrel-out-002-c3]
   - sourceKeyPointIds: [k2, k4]
-  - targetClaimIds: [rel-oin-c-001-c3]
+  - targetClaimIds: [esrel-out-001-c3]
   - logicalOperator: dialectical_refinement
   - analysisMode: first_order_claim_projection
   - note: `c-002` specifies the mode of distinction from `c-001` as formal inversion rather than contentful difference.
 
 - r2. type: transitions_to
-  - targetEntryId: rel-oin-c-003
-  - sourceClaimIds: [rel-oin-c-002-c3]
+  - targetEntryId: esrel-out-003
+  - sourceClaimIds: [esrel-out-002-c3]
   - sourceKeyPointIds: [k4]
   - targetClaimIds: [pending_local]
   - logicalOperator: sequential_transition
@@ -220,7 +220,7 @@ Review outcome:
 - review_pending
 - notes: `c-002` complete at explicit `2.` boundary.
 
-### Entry rel-oin-c-003 — Totality of inner and outer as self-mediating expression
+### Entry esrel-out-003 — Totality of inner and outer as self-mediating expression
 
 Span:
 
@@ -241,7 +241,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: rel-oin-c-003-c1
+- c1. id: esrel-out-003-c1
   - subject: inner_outer_relation_in_movement_three
   - predicate: is
   - object: unity_of_content_identity_and_form_identity_as_one_totality
@@ -251,7 +251,7 @@ Claims: (Claim)
     - [157-168] first identity (content/substrate) and second identity (pure form conversion) are two sides of one totality.
     - [169-179] totality is reflected immediacy through presupposing reflection that sublates difference.
 
-- c2. id: rel-oin-c-003-c2
+- c2. id: esrel-out-003-c2
   - subject: inner_and_outer
   - predicate: are
   - object: each_totality_of_relation_mediated_through_its_other
@@ -261,7 +261,7 @@ Claims: (Claim)
     - [180-201] each form-difference is posited as totality of itself and its other; inner includes being/externality and outer returns to ground as inner.
     - [202-211] each side is what it is in itself precisely through the other; totality mediates itself through determinateness and simple identity.
 
-- c3. id: rel-oin-c-003-c3
+- c3. id: esrel-out-003-c3
   - subject: something_in_its_truth
   - predicate: is
   - object: entirely_in_externality_as_self_revealing_essence
@@ -280,17 +280,17 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: refines
-  - targetEntryId: rel-oin-c-002
-  - sourceClaimIds: [rel-oin-c-003-c1, rel-oin-c-003-c2]
+  - targetEntryId: esrel-out-002
+  - sourceClaimIds: [esrel-out-003-c1, esrel-out-003-c2]
   - sourceKeyPointIds: [k1, k3]
-  - targetClaimIds: [rel-oin-c-002-c3]
+  - targetClaimIds: [esrel-out-002-c3]
   - logicalOperator: dialectical_refinement
   - analysisMode: first_order_claim_projection
   - note: `c-003` overcomes the empty formal conversion of `c-002` by restoring mediated totality and contentful identity.
 
 - r2. type: transitions_to
-  - targetEntryId: rel-oin-c-004
-  - sourceClaimIds: [rel-oin-c-003-c3]
+  - targetEntryId: esrel-out-004
+  - sourceClaimIds: [esrel-out-003-c3]
   - sourceKeyPointIds: [k4]
   - targetClaimIds: [pending_local]
   - logicalOperator: sequential_transition
@@ -302,7 +302,7 @@ Review outcome:
 - review_pending
 - notes: `c-003` complete at explicit `3.` boundary.
 
-### Entry rel-oin-c-004 — Transition: essential relation determines itself as actuality
+### Entry esrel-out-004 — Transition: essential relation determines itself as actuality
 
 Span:
 
@@ -322,7 +322,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: rel-oin-c-004-c1
+- c1. id: esrel-out-004-c1
   - subject: essential_relation
   - predicate: is
   - object: identity_of_appearance_with_inner_or_essence
@@ -331,7 +331,7 @@ Claims: (Claim)
   - evidence:
     - [229-230] essential relation is stated in identity of appearance with inner/essence.
 
-- c2. id: rel-oin-c-004-c2
+- c2. id: esrel-out-004-c2
   - subject: essential_relation_in_this_identity
   - predicate: determines_itself_as
   - object: actuality
@@ -340,7 +340,7 @@ Claims: (Claim)
   - evidence:
     - [231] explicit determination: it has determined itself as actuality.
 
-- c3. id: rel-oin-c-004-c3
+- c3. id: esrel-out-004-c3
   - subject: transition_status_of_part_c
   - predicate: is
   - object: completed_handoff_to_actuality
@@ -358,17 +358,17 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: refines
-  - targetEntryId: rel-oin-c-003
-  - sourceClaimIds: [rel-oin-c-004-c1, rel-oin-c-004-c2]
+  - targetEntryId: esrel-out-003
+  - sourceClaimIds: [esrel-out-004-c1, esrel-out-004-c2]
   - sourceKeyPointIds: [k1, k2]
-  - targetClaimIds: [rel-oin-c-003-c3]
+  - targetClaimIds: [esrel-out-003-c3]
   - logicalOperator: consummative_refinement
   - analysisMode: first_order_claim_projection
   - note: `c-004` consummates movement `3` by explicitly naming its result as actuality.
 
 - r2. type: transitions_to
   - targetEntryId: pending_actuality_chapter
-  - sourceClaimIds: [rel-oin-c-004-c2]
+  - sourceClaimIds: [esrel-out-004-c2]
   - sourceKeyPointIds: [k3]
   - targetClaimIds: [pending_cross_workbook]
   - logicalOperator: sequential_transition

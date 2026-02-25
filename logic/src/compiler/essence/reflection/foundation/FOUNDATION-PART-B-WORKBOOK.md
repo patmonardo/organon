@@ -53,7 +53,7 @@ Decision:
 - Migration: `relation_schema_v1 -> relation_schema_v1_1_overlay` (non-breaking).
 - Apply relation claim/keypoint anchor overlay for this workbook pass; keep claims unchanged.
 
-### Entry fnd-dif-b-001 — Absolute difference is self-referring negativity
+### Entry found-dif-a-001 — Absolute difference is self-referring negativity
 
 Span:
 
@@ -74,7 +74,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: fnd-dif-b-001-c1
+- c1. id: found-dif-a-001-c1
   - subject: difference
   - predicate: is
   - object: reflection_internal_negativity
@@ -83,7 +83,7 @@ Claims: (Claim)
   - evidence:
     - [6-12] "Difference is the negativity that reflection possesses in itself..."
 
-- c2. id: fnd-dif-b-001-c2
+- c2. id: found-dif-a-001-c2
   - subject: absolute_difference
   - predicate: is_determined_as
   - object: in_and_for_itself_self_referring_difference
@@ -92,7 +92,7 @@ Claims: (Claim)
   - evidence:
     - [14-18] "This difference is difference in and for itself... self-referring, hence simple, difference."
 
-- c3. id: fnd-dif-b-001-c3
+- c3. id: found-dif-a-001-c3
   - subject: difference_of_reflection
   - predicate: is_not
   - object: external_otherness_of_existence
@@ -110,11 +110,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: fnd-dif-b-002
+  - targetEntryId: found-dif-a-002
   - note: move from absolute difference to difference as unity of itself and identity.
-  - sourceClaimIds: [`fnd-dif-b-001-c2`, `fnd-dif-b-001-c3`]
+  - sourceClaimIds: [`found-dif-a-001-c2`, `found-dif-a-001-c3`]
   - sourceKeyPointIds: [`k2`, `k3`, `k4`]
-  - targetClaimIds: [`fnd-dif-b-002-c1`]
+  - targetClaimIds: [`found-dif-a-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -123,7 +123,7 @@ Review outcome:
 - review_pending
 - notes: boundary locked to first absolute-difference movement.
 
-### Entry fnd-dif-b-002 — Difference in itself is self-reference containing identity
+### Entry found-dif-a-002 — Difference in itself is self-reference containing identity
 
 Span:
 
@@ -143,7 +143,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: fnd-dif-b-002-c1
+- c1. id: found-dif-a-002-c1
   - subject: difference_in_itself
   - predicate: refers_to
   - object: itself_as_its_own_other
@@ -152,7 +152,7 @@ Claims: (Claim)
   - evidence:
     - [49-54] "Difference in itself is the difference that refers itself to itself... of itself from itself."
 
-- c2. id: fnd-dif-b-002-c2
+- c2. id: found-dif-a-002-c2
   - subject: difference
   - predicate: includes
   - object: identity_as_internal_moment
@@ -161,7 +161,7 @@ Claims: (Claim)
   - evidence:
     - [55-60] "What is different from difference... Difference is, therefore, itself and identity..."
 
-- c3. id: fnd-dif-b-002-c3
+- c3. id: found-dif-a-002-c3
   - subject: reflectional_self_reference
   - predicate: grounds
   - object: activity_and_self_movement
@@ -179,20 +179,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: fnd-dif-b-001
+  - targetEntryId: found-dif-a-001
   - note: deepens absolute difference into explicit internal two-moment structure.
-  - sourceClaimIds: [`fnd-dif-b-002-c1`, `fnd-dif-b-002-c2`]
+  - sourceClaimIds: [`found-dif-a-002-c1`, `found-dif-a-002-c2`]
   - sourceKeyPointIds: [`k1`, `k2`]
-  - targetClaimIds: [`fnd-dif-b-001-c2`]
+  - targetClaimIds: [`found-dif-a-001-c2`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: fnd-dif-b-003
+  - targetEntryId: found-dif-a-003
   - note: hands off to the third numbered movement of Absolute difference.
-  - sourceClaimIds: [`fnd-dif-b-002-c2`]
+  - sourceClaimIds: [`found-dif-a-002-c2`]
   - sourceKeyPointIds: [`k2`]
-  - targetClaimIds: [`fnd-dif-b-003-c1`]
+  - targetClaimIds: [`found-dif-a-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -201,7 +201,7 @@ Review outcome:
 - review_pending
 - notes: entry span aligned to source numbering (Absolute difference §2).
 
-### Entry fnd-dif-b-003 — Difference's reflected two-moment form is diversity
+### Entry found-dif-a-003 — Difference's reflected two-moment form is diversity
 
 Span:
 
@@ -221,7 +221,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: fnd-dif-b-003-c1
+- c1. id: found-dif-a-003-c1
   - subject: difference
   - predicate: has_moments
   - object: identity_and_difference_as_positedness
@@ -230,7 +230,7 @@ Claims: (Claim)
   - evidence:
     - [84-90] "Difference has both these moments, identity and difference; thus the two are both a positedness, determinateness..."
 
-- c2. id: fnd-dif-b-003-c2
+- c2. id: found-dif-a-003-c2
   - subject: each_moment
   - predicate: refers_to
   - object: itself
@@ -239,7 +239,7 @@ Claims: (Claim)
   - evidence:
     - [87-92] "But in this positedness each refers to itself..."
 
-- c3. id: fnd-dif-b-003-c3
+- c3. id: found-dif-a-003-c3
   - subject: reflected_difference
   - predicate: is_determined_as
   - object: diversity
@@ -257,20 +257,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: fnd-dif-b-002
+  - targetEntryId: found-dif-a-002
   - note: completes Absolute difference by making the two-moment form explicit.
-  - sourceClaimIds: [`fnd-dif-b-003-c1`, `fnd-dif-b-003-c2`]
+  - sourceClaimIds: [`found-dif-a-003-c1`, `found-dif-a-003-c2`]
   - sourceKeyPointIds: [`k1`, `k2`]
-  - targetClaimIds: [`fnd-dif-b-002-c2`]
+  - targetClaimIds: [`found-dif-a-002-c2`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: fnd-dif-b-004
+  - targetEntryId: found-dif-b-001
   - note: transition from Absolute difference (§3) to Diversity (§1).
-  - sourceClaimIds: [`fnd-dif-b-003-c3`]
+  - sourceClaimIds: [`found-dif-a-003-c3`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`fnd-dif-b-004-c1`]
+  - targetClaimIds: [`found-dif-b-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -279,7 +279,7 @@ Review outcome:
 - review_pending
 - notes: small entry retained as its own numbered movement with explicit claim.
 
-### Entry fnd-dif-b-004 — Diversity arises from identity's self-differentiation
+### Entry found-dif-b-001 — Diversity arises from identity's self-differentiation
 
 Span:
 
@@ -299,7 +299,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: fnd-dif-b-004-c1
+- c1. id: found-dif-b-001-c1
   - subject: diversity
   - predicate: is_generated_from
   - object: identity_self_differentiation
@@ -308,7 +308,7 @@ Claims: (Claim)
   - evidence:
     - [98-112] "Identity internally breaks apart into diversity..."
 
-- c2. id: fnd-dif-b-004-c2
+- c2. id: found-dif-b-001-c2
   - subject: diverse
   - predicate: subsists_as
   - object: indifferent_terms_grounded_in_identity
@@ -317,7 +317,7 @@ Claims: (Claim)
   - evidence:
     - [109-114] "The different subsists as diverse... because identity constitutes its base and element..."
 
-- c3. id: fnd-dif-b-004-c3
+- c3. id: found-dif-b-001-c3
   - subject: moments_of_difference
   - predicate: are_related_as
   - object: externally_differentiated_indifferent_moments
@@ -335,20 +335,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: fnd-dif-b-003
+  - targetEntryId: found-dif-a-003
   - note: first expansion of two-moment reflected difference into Diversity.
-  - sourceClaimIds: [`fnd-dif-b-004-c1`, `fnd-dif-b-004-c2`]
+  - sourceClaimIds: [`found-dif-b-001-c1`, `found-dif-b-001-c2`]
   - sourceKeyPointIds: [`k1`, `k2`]
-  - targetClaimIds: [`fnd-dif-b-003-c3`]
+  - targetClaimIds: [`found-dif-a-003-c3`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: fnd-dif-b-005
+  - targetEntryId: found-dif-b-002
   - note: move from initial Diversity to external reflection structure.
-  - sourceClaimIds: [`fnd-dif-b-004-c3`]
+  - sourceClaimIds: [`found-dif-b-001-c3`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`fnd-dif-b-005-c1`]
+  - targetClaimIds: [`found-dif-b-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -357,7 +357,7 @@ Review outcome:
 - review_pending
 - notes: aligned to source numbering (Diversity §1).
 
-### Entry fnd-dif-b-005 — Diversity develops external reflection as likeness/unlikeness
+### Entry found-dif-b-002 — Diversity develops external reflection as likeness/unlikeness
 
 Span:
 
@@ -377,7 +377,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: fnd-dif-b-005-c1
+- c1. id: found-dif-b-002-c1
   - subject: diversity
   - predicate: renders
   - object: reflection_external
@@ -386,7 +386,7 @@ Claims: (Claim)
   - evidence:
     - [142-151] "In diversity... reflection has in general become external..."
 
-- c2. id: fnd-dif-b-005-c2
+- c2. id: found-dif-b-002-c2
   - subject: reflection_moments_identity_difference
   - predicate: are_posited_as
   - object: externally_determined_moments
@@ -395,7 +395,7 @@ Claims: (Claim)
   - evidence:
     - [167-195] "...its two moments... are thus externally posited..."
 
-- c3. id: fnd-dif-b-005-c3
+- c3. id: found-dif-b-002-c3
   - subject: likeness_and_unlikeness
   - predicate: are
   - object: external_reflection_determinations
@@ -413,20 +413,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: fnd-dif-b-004
+  - targetEntryId: found-dif-b-001
   - note: specifies the mode of externalization latent in initial Diversity.
-  - sourceClaimIds: [`fnd-dif-b-005-c1`, `fnd-dif-b-005-c2`]
+  - sourceClaimIds: [`found-dif-b-002-c1`, `found-dif-b-002-c2`]
   - sourceKeyPointIds: [`k1`, `k2`]
-  - targetClaimIds: [`fnd-dif-b-004-c3`]
+  - targetClaimIds: [`found-dif-b-001-c3`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: fnd-dif-b-006
+  - targetEntryId: found-dif-b-003
   - note: move into oscillation and self-sublation of likeness/unlikeness.
-  - sourceClaimIds: [`fnd-dif-b-005-c3`]
+  - sourceClaimIds: [`found-dif-b-002-c3`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`fnd-dif-b-006-c1`]
+  - targetClaimIds: [`found-dif-b-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -435,7 +435,7 @@ Review outcome:
 - review_pending
 - notes: keep comparison language strictly source-anchored.
 
-### Entry fnd-dif-b-006 — External comparison self-sublates into opposition
+### Entry found-dif-b-003 — External comparison self-sublates into opposition
 
 Span:
 
@@ -455,7 +455,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: fnd-dif-b-006-c1
+- c1. id: found-dif-b-003-c1
   - subject: external_reflection
   - predicate: oscillates_between
   - object: likeness_and_unlikeness
@@ -464,7 +464,7 @@ Claims: (Claim)
   - evidence:
     - [210-231] "External reflection connects diversity... moves back and forth from likeness to unlikeness..."
 
-- c2. id: fnd-dif-b-006-c2
+- c2. id: found-dif-b-003-c2
   - subject: separated_likeness_unlikeness
   - predicate: self_sublates
   - object: through_internal_contradiction
@@ -473,7 +473,7 @@ Claims: (Claim)
   - evidence:
     - [249-283] "Because of this separation... is their destruction..."
 
-- c3. id: fnd-dif-b-006-c3
+- c3. id: found-dif-b-003-c3
   - subject: diversity
   - predicate: passes_over_into
   - object: opposition_through_negative_unity
@@ -491,20 +491,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: fnd-dif-b-005
+  - targetEntryId: found-dif-b-002
   - note: develops external reflection into explicit self-sublating movement.
-  - sourceClaimIds: [`fnd-dif-b-006-c1`, `fnd-dif-b-006-c2`]
+  - sourceClaimIds: [`found-dif-b-003-c1`, `found-dif-b-003-c2`]
   - sourceKeyPointIds: [`k1`, `k2`]
-  - targetClaimIds: [`fnd-dif-b-005-c3`]
+  - targetClaimIds: [`found-dif-b-002-c3`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: fnd-dif-b-007
+  - targetEntryId: found-dif-c-001
   - note: negative unity of Diversity yields Opposition proper.
-  - sourceClaimIds: [`fnd-dif-b-006-c3`]
+  - sourceClaimIds: [`found-dif-b-003-c3`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`fnd-dif-b-007-c1`]
+  - targetClaimIds: [`found-dif-c-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -513,7 +513,7 @@ Review outcome:
 - review_pending
 - notes: relation expansion remains constrained until Ground pass.
 
-### Entry fnd-dif-b-007 — Opposition is the completed unity of identity and diversity
+### Entry found-dif-c-001 — Opposition is the completed unity of identity and diversity
 
 Span:
 
@@ -533,7 +533,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: fnd-dif-b-007-c1
+- c1. id: found-dif-c-001-c1
   - subject: opposition
   - predicate: is
   - object: unity_of_identity_and_diversity
@@ -542,7 +542,7 @@ Claims: (Claim)
   - evidence:
     - [351-355] "Opposition is the unity of identity and diversity..."
 
-- c2. id: fnd-dif-b-007-c2
+- c2. id: found-dif-c-001-c2
   - subject: moments_of_opposition
   - predicate: are
   - object: reflected_determinations_of_positedness
@@ -551,7 +551,7 @@ Claims: (Claim)
   - evidence:
     - [372-377] "the moments of opposition are positedness reflected into itself..."
 
-- c3. id: fnd-dif-b-007-c3
+- c3. id: found-dif-c-001-c3
   - subject: each_opposed_moment
   - predicate: is_whole_only_as
   - object: reference_to_its_non_being
@@ -569,20 +569,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: fnd-dif-b-006
+  - targetEntryId: found-dif-b-003
   - note: formalizes opposition as the completed truth of diversity's negative unity.
-  - sourceClaimIds: [`fnd-dif-b-007-c1`]
+  - sourceClaimIds: [`found-dif-c-001-c1`]
   - sourceKeyPointIds: [`k1`]
-  - targetClaimIds: [`fnd-dif-b-006-c3`]
+  - targetClaimIds: [`found-dif-b-003-c3`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: fnd-dif-b-008
+  - targetEntryId: found-dif-c-002
   - note: moves from formal constitution of opposition to positive/negative as self-subsisting sides.
-  - sourceClaimIds: [`fnd-dif-b-007-c3`]
+  - sourceClaimIds: [`found-dif-c-001-c3`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`fnd-dif-b-008-c1`]
+  - targetClaimIds: [`found-dif-c-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -591,7 +591,7 @@ Review outcome:
 - review_pending
 - notes: first opposition movement isolated before the self-subsistence derivation.
 
-### Entry fnd-dif-b-008 — Positive and negative are self-subsisting absolute moments of opposition
+### Entry found-dif-c-002 — Positive and negative are self-subsisting absolute moments of opposition
 
 Span:
 
@@ -611,7 +611,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: fnd-dif-b-008-c1
+- c1. id: found-dif-c-002-c1
   - subject: positive_and_negative
   - predicate: are
   - object: self_subsisting_sides_of_opposition
@@ -620,7 +620,7 @@ Claims: (Claim)
   - evidence:
     - [422-431] "The positive and the negative are thus the sides of opposition that have become self-subsisting..."
 
-- c2. id: fnd-dif-b-008-c2
+- c2. id: found-dif-c-002-c2
   - subject: each_side_of_opposition
   - predicate: is_only_through
   - object: reference_to_and_sublation_of_its_other
@@ -629,7 +629,7 @@ Claims: (Claim)
   - evidence:
     - [432-449] "Each refers itself to itself only as referring itself to its other..."
 
-- c3. id: fnd-dif-b-008-c3
+- c3. id: found-dif-c-002-c3
   - subject: positive_negative_as_mere_positedness
   - predicate: are
   - object: externally_interchangeable_determinacies
@@ -647,20 +647,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: fnd-dif-b-007
+  - targetEntryId: found-dif-c-001
   - note: concretizes the first opposition movement into explicit positive/negative sides.
-  - sourceClaimIds: [`fnd-dif-b-008-c1`, `fnd-dif-b-008-c2`]
+  - sourceClaimIds: [`found-dif-c-002-c1`, `found-dif-c-002-c2`]
   - sourceKeyPointIds: [`k1`, `k2`]
-  - targetClaimIds: [`fnd-dif-b-007-c3`]
+  - targetClaimIds: [`found-dif-c-001-c3`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: fnd-dif-b-009
+  - targetEntryId: found-dif-c-003
   - note: advances from interchangeability toward in-and-for-itself opposition.
-  - sourceClaimIds: [`fnd-dif-b-008-c3`]
+  - sourceClaimIds: [`found-dif-c-002-c3`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`fnd-dif-b-009-c1`]
+  - targetClaimIds: [`found-dif-c-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -669,7 +669,7 @@ Review outcome:
 - review_pending
 - notes: keeps the "mere positedness" phase distinct from in-and-for-itself closure.
 
-### Entry fnd-dif-b-009 — Opposition returns into each side as in-and-for-itself determination
+### Entry found-dif-c-003 — Opposition returns into each side as in-and-for-itself determination
 
 Span:
 
@@ -689,7 +689,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: fnd-dif-b-009-c1
+- c1. id: found-dif-c-003-c1
   - subject: each_side_of_opposition
   - predicate: contains
   - object: positive_and_negative_within
@@ -698,7 +698,7 @@ Claims: (Claim)
   - evidence:
     - [501-518] "Each is itself positive and negative within..."
 
-- c2. id: fnd-dif-b-009-c2
+- c2. id: found-dif-c-003-c2
   - subject: positive_and_negative
   - predicate: are
   - object: self_subsisting_unities_excluding_their_other
@@ -707,7 +707,7 @@ Claims: (Claim)
   - evidence:
     - [519-556] "Each is thus self-subsistent unity existing for itself... the excluding of it from itself."
 
-- c3. id: fnd-dif-b-009-c3
+- c3. id: found-dif-c-003-c3
   - subject: positive_and_negative
   - predicate: are_in_and_for_themselves_as
   - object: exclusively_related_opposites
@@ -725,18 +725,18 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: fnd-dif-b-008
+  - targetEntryId: found-dif-c-002
   - note: resolves the interchangeability moment by internalizing opposition in each side.
-  - sourceClaimIds: [`fnd-dif-b-009-c1`, `fnd-dif-b-009-c2`]
+  - sourceClaimIds: [`found-dif-c-003-c1`, `found-dif-c-003-c2`]
   - sourceKeyPointIds: [`k1`, `k2`]
-  - targetClaimIds: [`fnd-dif-b-008-c3`]
+  - targetClaimIds: [`found-dif-c-002-c3`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: fnd-ctr-c-001
+  - targetEntryId: found-con-001
   - note: direct handoff into Contradiction from opposition's in-and-for-itself completion.
-  - sourceClaimIds: [`fnd-dif-b-009-c3`]
+  - sourceClaimIds: [`found-dif-c-003-c3`]
   - sourceKeyPointIds: [`k3`]
   - targetClaimIds: pending_cross_workbook
   - logicalOperator: sequential_transition

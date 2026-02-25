@@ -34,9 +34,8 @@ is essentially elaborated within it;
 its concept is generated in the course of this elaboration
 and cannot therefore be given in advance.
 What is anticipated in this Introduction, therefore,
-is not intended to ground as it ere the concept of logic,
-or to justify in advance its content and method
-scientifically,
+is not intended to ground as it were the concept of logic,
+or to justify in advance its content and method scientifically,
 but rather to make more intuitable,
 by means of some explanations and reflections
 of an argumentative and historical nature,
@@ -83,7 +82,7 @@ fills itself with it, and only then gains a content,
 thereby becoming real knowledge.
 
 Further, these two component parts
-(for they are supposed to be related to each otheras component parts,
+(for they are supposed to be related to each other as component parts,
 and cognition is compounded from them in a mechanical,
 or at best chemical, manner)
 are said to stand to each other in this order:
@@ -159,63 +158,92 @@ is restricted to the knowledge of mere subjective truth, of mere appearances,
 of only something to which the nature of the fact does not correspond;
 knowledge has lapsed into opinion.
 
-Yet there is something deeper lying at the foundation of this turn which knowledge takes,
-and appears as a loss and a retrograde step, something on which
+Yet there is something deeper lying at the foundation of
+ this turn which knowledge takes,
+and appears as a loss and a retrograde step,
+ something on which
 the elevation of reason to the loftier spirit of modern philosophy in fact rests.
 The basis of that conception now universally accepted is to be sought, namely, in the
 insight into the necessary conflict of the determinations of the understanding with
-themselves. – The reflection already mentioned consists in transcending the concrete
+themselves. –
+ The reflection already mentioned consists in transcending the concrete
 immediate, in determining and parting it.
-But this reflection must equally transcend its separating determinations and above all
+But this reflection must equally transcend its separating determinations
+and above all
 connect them.
 The conflict of determinations breaks out precisely at the point of connection.
-This reflective activity of connection belongs in itself to reason, and to rise above
-the determinations and attain insight into their discord is the great negative step on
+This reflective activity of connection belongs in itself to reason,
+and to rise above
+the determinations and attain insight into their discord is
+the great negative step on
 the way to the true concept of reason.
-But, when not carried through, this insight runs into the misconception that reason is
-the one that contradicts itself; it fails to see that the contradiction is in fact the
+But, when not carried through, this insight runs into the misconception
+that reason is
+the one that contradicts itself;
+it fails to see that the contradiction is in fact the
 elevation of reason above the restrictions of the understanding and the dissolution of
 them.
-At that point, instead of making the final step that would take it to the summit,
-knowledge flees from the unsatisfactoriness of the determinations of the understanding
-to sensuous existence, believing that there it will find stability and accord.
-On the other hand, since this cognition is self-admittedly a cognition only of
-appearances, the unsatisfactoriness of the latter is admitted but at the same time
-presupposed: as much as to say that although we do not have cognition of things in
-themselves, nevertheless, within the sphere of appearance we do have correct cognition;
+At that point, instead of making the final step
+that would take it to the summit,
+knowledge flees from the unsatisfactoriness of
+the determinations of the understanding
+to sensuous existence,
+believing that there it will find stability and accord.
+On the other hand, since this cognition is self-admittedly
+ a cognition only of
+appearances,
+the unsatisfactoriness of the latter is admitted
+ but at the same time
+presupposed:
+as much as to say that although we do not have cognition of things in
+themselves,
+nevertheless, within the sphere of appearance we do have correct cognition;
 as if, so to speak, there were a difference only in the kind of subject matters and one
-kind, namely the things in themselves, does not fall within the scope of knowledge
-whereas the other kind, namely the appearances, does. This is like attributing right
-insight to someone, with the stipulation, however, that he is not fit to see what is
+kind, namely the things in themselves,
+ does not fall within the scope of knowledge
+whereas the other kind, namely the appearances, does.
+This is like attributing right
+insight to someone, with the stipulation,
+ however, that he is not fit to see what is
 true but only what is false.
-Absurd as this might be, no less absurd would be a cognition which is true but does not
-know its subject matter as it is in itself.
+Absurd as this might be, no less absurd would be a cognition which is true
+but does notknow its subject matter as it is in itself.
 
-The critique of the forms of the understanding has arrived precisely at this result,
-namely that such forms do not apply to things in themselves. – This can only mean
-that they are in themselves something untrue.
-However, since they have been allowed to remain valid for reason and experience, the
-critique has not altered them in any way but rather has let them be for the subject in
-the same shape as they formerly applied to the object.
-But if they are inadequate for the thing in itself, still less must the understanding
-to which they supposedly belong have to put up with them and rest content with them.
-If they cannot be determinations of the thing in itself, still less can they be
-determinations of the understanding, to which one ought to concede at least the dignity
-of a thing.
-The determinations of finite and infinite run into the same conflict, whether they are
-applied to time and space, to the world, or are determinations internal to the spirit
-– just as black and white yield gray, whether they are mixed on a wall or on a
-palette.
-If our representation of the world is dissolved when we carry over to it the
-determinations of the infinite and finite, still more is spirit itself, which contains
-both determinations within itself, something inwardly selfcontradictory,
-self-dissolving. – It is not the nature of the material or of the subject matter to
-which they are applied or in which they are found that can make a difference; for it is
-only through such determinations, and in accordance with them, that the subject matter
-has contradiction within it.
+The critique of the forms of the understanding
+has arrived precisely at this result,
+namely that such forms do not apply to things in themselves. –
+This can only mean that they are in themselves something untrue.
+However, since they have been allowed
+to remain valid for reason and experience, the
+critique has not altered them in any way
+but rather has let them be for the subject
+in the same shape as they formerly applied to the object.
+But if they are inadequate for the thing in itself,
+still less must the understanding to which they supposedly belong
+have to put up with them and rest content with them.
+If they cannot be determinations of the thing in itself,
+still less can they be determinations of the understanding,
+to which one ought to concede at least the dignity of a thing.
+The determinations of finite and infinite run into the same conflict,
+whether they are applied to time and space, to the world,
+or are determinations internal to the spirit –
+just as black and white yield gray,
+whether they are mixed on a wall or on a palette.
+If our representation of the world is dissolved
+when we carry over to it the determinations of the infinite and finite,
+still more is spirit itself,
+which contains both determinations within itself,
+something inwardly selfcontradictory, self-dissolving. –
+It is not the nature of the material
+or of the subject matter to which they are applied
+or in which they are found that can make a difference;
+for it is only through such determinations,
+and in accordance with them,
+that the subject matter has contradiction within it.
 
-The said critique has therefore removed the forms of objective thinking
-only from the thing, but has left them in the subject as it originally found them.
+The said critique has therefore removed the forms
+of objective thinking only from the thing,
+but has left them in the subject as it originally found them.
 That is to say, it did not consider them in and for themselves,
 according to their proper content,
 but simply took them over from subjective logic in the manner of lemmas.
@@ -405,12 +433,13 @@ on the most superficial observation, by the disproportion and the unworthiness o
 latter consciousness as contrasted with spirit’s other elevations.
 
 As a matter of fact, the need for a reformation of logic has long been felt.
-In the form and content in which it is found in the textbooks, it must be said that it
-has fallen into disrepute.
-It is still being dragged along, more from a feeling that one cannot dispense with a
-logic altogether and the persisting traditional belief in its importance, than from any
-conviction that such a commonplace content and the occupation with such empty forms are
-of any value or use.
+In the form and content in which it is found in the textbooks,
+it must be said that it has fallen into disrepute.
+It is still being dragged along, more from a feeling that
+one cannot dispense with a logic altogether
+and the persisting traditional belief in its importance,
+than from any conviction that such a commonplace content
+and the occupation with such empty forms are of any value or use.
 
 The additions of psychological, pedagogical, and even physiological material which
 logic was at one time given, have later been almost universally recognized as
