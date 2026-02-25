@@ -46,14 +46,12 @@ Scope:
 
 Decision:
 
-- Adopt a two-level ID system for precision:
-  - Level 1 SubTopic markers: `syl-exi-a`, `syl-exi-b`, `syl-exi-c`, `syl-exi-d`
-  - Level 2 numbered Entries under each marker: `syl-exi-<letter>-<nnn>`
+- Adopt marker-free numbered IDs for precision: `syllo-exi-<letter>-<nnn>`.
 - Treat numerically labeled subsubtopics as Entries (`001`, `002`, ...).
 - Integrate the moved numeral-1 exposition into `a. First figure` entry sequence.
 - Retain `d. U-U-U` as explicit fourth subspecies and transition gate toward Reflection.
 
-### Entry syl-exi-idea-001 — Part A framing: end of qualitative logic and content-bearing form
+### Entry syllo-exi-idea-001 — Part A framing: end of qualitative logic and content-bearing form
 
 Span:
 
@@ -73,7 +71,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: syl-exi-idea-001-c1
+- c1. id: syllo-exi-idea-001-c1
   - subject: first_syllogism
   - predicate: is_determined_as
   - object: immediate_formal_syllogism
@@ -82,7 +80,7 @@ Claims: (Claim)
   - evidence:
     - [2-17] immediate moments and first strictly formal syllogism.
 
-- c2. id: syl-exi-idea-001-c2
+- c2. id: syllo-exi-idea-001-c2
   - subject: syllogism_of_existence
   - predicate: has_task
   - object: positing_mediation_moments
@@ -94,11 +92,11 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: syl-exi-a
-  - note: framing transitions to first-figure SubTopic marker.
-  - sourceClaimIds: [`syl-exi-idea-001-c1`, `syl-exi-idea-001-c2`]
+  - targetEntryId: syllo-exi-a-001
+  - note: framing transitions to first-figure numbered sequence.
+  - sourceClaimIds: [`syllo-exi-idea-001-c1`, `syllo-exi-idea-001-c2`]
   - sourceKeyPointIds: [`k1`, `k3`]
-  - targetClaimIds: [`syl-exi-a-c1`]
+  - targetClaimIds: [`syllo-exi-a-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -107,79 +105,7 @@ Review outcome:
 - review_pending
 - notes: special seed entry inserted before marker chain.
 
-### Entry syl-exi-a — Marker `a`: first figure (S-P-U)
-
-Span:
-
-- sourceFile: `src/compiler/concept/subject/syllogism/existence.txt`
-- lineStart: 38
-- lineEnd: 483
-
-Summary:
-
-The first figure articulates formal S-P-U mediation, demonstrates content-contingency in qualitative syllogism, and forces reconfiguration of mediation form.
-
-Key points: (KeyPoint)
-
-- k1. First figure schema is S-P-U.
-- k2. Formal syllogism is contingent in content because middle selection is external/arbitrary.
-- k3. Progression of proving premises reveals deficiency of immediate-premise form.
-
-Claims: (Claim)
-
-- c1. id: syl-exi-a-c1
-  - subject: first_figure
-  - predicate: has_schema
-  - object: S_P_U
-  - modality: asserted
-  - confidence: 0.97
-  - evidence:
-    - [38-41] explicit schema statement.
-
-- c2. id: syl-exi-a-c2
-  - subject: formal_syllogism
-  - predicate: is_contingent_with_respect_to
-  - object: content
-  - modality: asserted
-  - confidence: 0.94
-  - evidence:
-    - [212-347] contingency/arbitrariness of middle terms and contradictory deductions.
-
-- c3. id: syl-exi-a-c3
-  - subject: immediate_premise_form
-  - predicate: transitions_to
-  - object: alternate_mediation_forms_P_S_U_and_S_U_P
-  - modality: asserted
-  - confidence: 0.93
-  - evidence:
-    - [348-483] infinite progression and transition to other mediation shapes.
-
-Relations: (Relation)
-
-- r1. type: transitions_to
-  - targetEntryId: syl-exi-a-001
-  - note: marker to numbered entry sequence for fine-grained extraction.
-  - sourceClaimIds: [`syl-exi-a-c1`]
-  - sourceKeyPointIds: [`k1`]
-  - targetClaimIds: [`syl-exi-a-001-c1`]
-  - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
-
-- r2. type: transitions_to
-  - targetEntryId: syl-exi-b
-  - note: first figure passes into second figure.
-  - sourceClaimIds: [`syl-exi-a-c3`]
-  - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`syl-exi-b-c1`]
-  - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
-
-Review outcome:
-
-- review_pending
-- notes: marker-level entry for first-figure SubTopic.
-
-### Entry syl-exi-a-001 — First figure opening: formal schema and mediated connection claim
+### Entry syllo-exi-a-001 — First figure opening: formal schema and mediated connection claim
 
 Span:
 
@@ -199,7 +125,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: syl-exi-a-001-c1
+- c1. id: syllo-exi-a-001-c1
   - subject: therefore_relation
   - predicate: is_grounded_in
   - object: nature_of_extremes_via_middle
@@ -208,7 +134,7 @@ Claims: (Claim)
   - evidence:
     - [122-159] therefore not merely external to proposition; grounded in middle-term connection.
 
-- c2. id: syl-exi-a-001-c2
+- c2. id: syllo-exi-a-001-c2
   - subject: syllogism
   - predicate: is_not_reducible_to
   - object: three_isolated_judgments
@@ -220,9 +146,9 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: syl-exi-a-002
+  - targetEntryId: syllo-exi-a-002
   - note: continue numbered decomposition of first-figure internal phases.
-  - sourceClaimIds: [`syl-exi-a-001-c1`, `syl-exi-a-001-c2`]
+  - sourceClaimIds: [`syllo-exi-a-001-c1`, `syllo-exi-a-001-c2`]
   - sourceKeyPointIds: [`k2`, `k3`]
   - targetClaimIds: []
   - logicalOperator: sequential_transition
@@ -233,7 +159,7 @@ Review outcome:
 - review_pending
 - notes: first-figure subsection `1` stabilized.
 
-### Entry syl-exi-a-002 — First figure subsection 2: qualitative content and contingency of middle selection
+### Entry syllo-exi-a-002 — First figure subsection 2: qualitative content and contingency of middle selection
 
 Span:
 
@@ -253,7 +179,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: syl-exi-a-002-c1
+- c1. id: syllo-exi-a-002-c1
   - subject: immediate_singular_content
   - predicate: provides
   - object: indeterminate_plurality_of_middle_terms
@@ -262,7 +188,7 @@ Claims: (Claim)
   - evidence:
     - [226-251] infinite manifold of determinacies; any may function as middle.
 
-- c2. id: syl-exi-a-002-c2
+- c2. id: syllo-exi-a-002-c2
   - subject: formal_syllogistic_inference
   - predicate: permits
   - object: contradictory_conclusions_with_equal_formal_correctness
@@ -271,7 +197,7 @@ Claims: (Claim)
   - evidence:
     - [271-330] examples of opposing conclusions through alternate middle terms.
 
-- c3. id: syl-exi-a-002-c3
+- c3. id: syllo-exi-a-002-c3
   - subject: contingency_of_formal_syllogism
   - predicate: is_grounded_in
   - object: abstract_form_of_single_immediate_determinateness
@@ -283,11 +209,11 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: syl-exi-a-003
+  - targetEntryId: syllo-exi-a-003
   - note: contingency analysis transitions to explicit critique of immediate premises and infinite proof regress.
-  - sourceClaimIds: [`syl-exi-a-002-c2`, `syl-exi-a-002-c3`]
+  - sourceClaimIds: [`syllo-exi-a-002-c2`, `syllo-exi-a-002-c3`]
   - sourceKeyPointIds: [`k2`, `k3`]
-  - targetClaimIds: [`syl-exi-a-003-c1`]
+  - targetClaimIds: [`syllo-exi-a-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -296,7 +222,7 @@ Review outcome:
 - review_pending
 - notes: first-figure subsection `2` stabilized.
 
-### Entry syl-exi-a-003 — First figure subsection 3: contradiction of immediate premises and re-formation of mediation
+### Entry syllo-exi-a-003 — First figure subsection 3: contradiction of immediate premises and re-formation of mediation
 
 Span:
 
@@ -316,7 +242,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: syl-exi-a-003-c1
+- c1. id: syllo-exi-a-003-c1
   - subject: premise_form_as_immediate_judgment
   - predicate: contradicts
   - object: nature_of_syllogism_as_posited_mediation
@@ -325,7 +251,7 @@ Claims: (Claim)
   - evidence:
     - [364-373] immediate premises conflict with syllogistic truth.
 
-- c2. id: syl-exi-a-003-c2
+- c2. id: syllo-exi-a-003-c2
   - subject: proving_premises_by_further_syllogisms
   - predicate: yields
   - object: infinite_regress
@@ -335,7 +261,7 @@ Claims: (Claim)
     - [381-389] geometric progression of premises/conclusions.
     - [402-425] bad infinity as repetition of original deficiency.
 
-- c3. id: syl-exi-a-003-c3
+- c3. id: syllo-exi-a-003-c3
   - subject: mediation_reformulation
   - predicate: takes_shape
   - object: P_S_U_and_S_U_P
@@ -347,21 +273,12 @@ Claims: (Claim)
 
 Relations: (Relation)
 
-- r1. type: supports
-  - targetEntryId: syl-exi-a
-  - note: numbered decomposition grounds marker-level transition claim for first figure.
-  - sourceClaimIds: [`syl-exi-a-003-c1`, `syl-exi-a-003-c2`, `syl-exi-a-003-c3`]
-  - sourceKeyPointIds: [`k1`, `k2`, `k3`]
-  - targetClaimIds: [`syl-exi-a-c3`]
-  - logicalOperator: implicative_support
-  - analysisMode: first_order_claim_projection
-
-- r2. type: transitions_to
-  - targetEntryId: syl-exi-b-001
+- r1. type: transitions_to
+  - targetEntryId: syllo-exi-b-001
   - note: explicit handoff from first-figure completion to second-figure subsection `1`.
-  - sourceClaimIds: [`syl-exi-a-003-c3`]
+  - sourceClaimIds: [`syllo-exi-a-003-c3`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`syl-exi-b-001-c1`]
+  - targetClaimIds: [`syllo-exi-b-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -370,70 +287,7 @@ Review outcome:
 - review_pending
 - notes: first-figure subsection `3` stabilized.
 
-### Entry syl-exi-b — Marker `b`: second figure (P-S-U)
-
-Span:
-
-- sourceFile: `src/compiler/concept/subject/syllogism/existence.txt`
-- lineStart: 484
-- lineEnd: 671
-
-Summary:
-
-The second figure posits contingency of immediate singular mediation and points beyond itself to universality as mediating ground.
-
-Key points: (KeyPoint)
-
-- k1. Second figure restructures mediation as P-S-U.
-- k2. Figure incompletion reveals mismatch with first formal schema.
-- k3. Contingent singular mediation self-sublates toward universal mediation.
-
-Claims: (Claim)
-
-- c1. id: syl-exi-b-c1
-  - subject: second_figure
-  - predicate: has_schema
-  - object: P_S_U
-  - modality: asserted
-  - confidence: 0.96
-  - evidence:
-    - [484-485] heading and schema statement.
-
-- c2. id: syl-exi-b-c2
-  - subject: singular_mediation
-  - predicate: points_beyond_itself_to
-  - object: universal_mediation
-  - modality: asserted
-  - confidence: 0.92
-  - evidence:
-    - [640-671] immediacy points to opposite, reflected universality.
-
-Relations: (Relation)
-
-- r1. type: transitions_to
-  - targetEntryId: syl-exi-b-001
-  - note: marker to numbered entry sequence.
-  - sourceClaimIds: [`syl-exi-b-c1`]
-  - sourceKeyPointIds: [`k1`]
-  - targetClaimIds: []
-  - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
-
-- r2. type: transitions_to
-  - targetEntryId: syl-exi-c
-  - note: second figure passes into third figure.
-  - sourceClaimIds: [`syl-exi-b-c2`]
-  - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`syl-exi-c-c1`]
-  - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
-
-Review outcome:
-
-- review_pending
-- notes: marker-level entry initialized.
-
-### Entry syl-exi-b-001 — Second figure subsection 1: contingency-mediated universality and negative unity
+### Entry syllo-exi-b-001 — Second figure subsection 1: contingency-mediated universality and negative unity
 
 Span:
 
@@ -453,7 +307,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: syl-exi-b-001-c1
+- c1. id: syllo-exi-b-001-c1
   - subject: truth_of_first_qualitative_syllogism
   - predicate: is
   - object: contingent_union_through_singularity
@@ -462,7 +316,7 @@ Claims: (Claim)
   - evidence:
     - [486-497] contingency/singularity as real middle.
 
-- c2. id: syl-exi-b-001-c2
+- c2. id: syllo-exi-b-001-c2
   - subject: second_figure_mediation
   - predicate: is_determined_as
   - object: negative_unity
@@ -471,7 +325,7 @@ Claims: (Claim)
   - evidence:
     - [501-510] mediation contains negative moment.
 
-- c3. id: syl-exi-b-001-c3
+- c3. id: syllo-exi-b-001-c3
   - subject: second_figure_extremes
   - predicate: are_repositioned_as
   - object: particular_and_universal_with_exchanged_formal_roles
@@ -483,11 +337,11 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: syl-exi-b-002
+  - targetEntryId: syllo-exi-b-002
   - note: first subsection moves to explicit form-variance critique.
-  - sourceClaimIds: [`syl-exi-b-001-c2`, `syl-exi-b-001-c3`]
+  - sourceClaimIds: [`syllo-exi-b-001-c2`, `syllo-exi-b-001-c3`]
   - sourceKeyPointIds: [`k2`, `k3`]
-  - targetClaimIds: [`syl-exi-b-002-c1`]
+  - targetClaimIds: [`syllo-exi-b-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -496,7 +350,7 @@ Review outcome:
 - review_pending
 - notes: second-figure subsection `1` stabilized.
 
-### Entry syl-exi-b-002 — Second figure subsection 2: mismatch with first schema and formal indeterminacy
+### Entry syllo-exi-b-002 — Second figure subsection 2: mismatch with first schema and formal indeterminacy
 
 Span:
 
@@ -516,7 +370,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: syl-exi-b-002-c1
+- c1. id: syllo-exi-b-002-c1
   - subject: transition_to_second_figure
   - predicate: is
   - object: realization_of_concept_and_alteration_of_pure_form
@@ -525,7 +379,7 @@ Claims: (Claim)
   - evidence:
     - [552-560] realization + alteration duality.
 
-- c2. id: syl-exi-b-002-c2
+- c2. id: syllo-exi-b-002-c2
   - subject: second_figure
   - predicate: lacks
   - object: strict_conformity_to_general_schema_S_P_U
@@ -534,7 +388,7 @@ Claims: (Claim)
   - evidence:
     - [561-589] non-conformity analysis.
 
-- c3. id: syl-exi-b-002-c3
+- c3. id: syllo-exi-b-002-c3
   - subject: particular_conclusion_in_second_figure
   - predicate: is
   - object: formally_indeterminate_in_value
@@ -546,11 +400,11 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: syl-exi-b-003
+  - targetEntryId: syllo-exi-b-003
   - note: indeterminate formality transitions to self-sublation of contingent mediation.
-  - sourceClaimIds: [`syl-exi-b-002-c2`, `syl-exi-b-002-c3`]
+  - sourceClaimIds: [`syllo-exi-b-002-c2`, `syllo-exi-b-002-c3`]
   - sourceKeyPointIds: [`k2`, `k3`]
-  - targetClaimIds: [`syl-exi-b-003-c1`]
+  - targetClaimIds: [`syllo-exi-b-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -559,7 +413,7 @@ Review outcome:
 - review_pending
 - notes: second-figure subsection `2` stabilized.
 
-### Entry syl-exi-b-003 — Second figure subsection 3: self-sublation of contingency into reflected universality
+### Entry syllo-exi-b-003 — Second figure subsection 3: self-sublation of contingency into reflected universality
 
 Span:
 
@@ -579,7 +433,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: syl-exi-b-003-c1
+- c1. id: syllo-exi-b-003-c1
   - subject: second_figure_mediation
   - predicate: posits
   - object: contingency_of_first_mediation
@@ -588,7 +442,7 @@ Claims: (Claim)
   - evidence:
     - [631-635] contingency now posited.
 
-- c2. id: syl-exi-b-003-c2
+- c2. id: syllo-exi-b-003-c2
   - subject: mediation_by_immediate_singularity
   - predicate: self_sublates_into
   - object: need_for_immediate_identity_of_extremes
@@ -597,7 +451,7 @@ Claims: (Claim)
   - evidence:
     - [636-651] self-external mediation and immediate-identity requirement.
 
-- c3. id: syl-exi-b-003-c3
+- c3. id: syllo-exi-b-003-c3
   - subject: resulting_immediacy
   - predicate: is
   - object: reflected_universality
@@ -608,21 +462,12 @@ Claims: (Claim)
 
 Relations: (Relation)
 
-- r1. type: supports
-  - targetEntryId: syl-exi-b
-  - note: subsection completion grounds marker-level transition toward third figure.
-  - sourceClaimIds: [`syl-exi-b-003-c1`, `syl-exi-b-003-c2`, `syl-exi-b-003-c3`]
-  - sourceKeyPointIds: [`k1`, `k2`, `k3`]
-  - targetClaimIds: [`syl-exi-b-c2`]
-  - logicalOperator: implicative_support
-  - analysisMode: first_order_claim_projection
-
-- r2. type: transitions_to
-  - targetEntryId: syl-exi-c-001
+- r1. type: transitions_to
+  - targetEntryId: syllo-exi-c-001
   - note: direct handoff to third-figure subsection `1`.
-  - sourceClaimIds: [`syl-exi-b-003-c3`]
+  - sourceClaimIds: [`syllo-exi-b-003-c3`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`syl-exi-c-001-c1`]
+  - targetClaimIds: [`syllo-exi-c-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -631,70 +476,7 @@ Review outcome:
 - review_pending
 - notes: second-figure subsection `3` stabilized.
 
-### Entry syl-exi-c — Marker `c`: third figure (S-U-P)
-
-Span:
-
-- sourceFile: `src/compiler/concept/subject/syllogism/existence.txt`
-- lineStart: 672
-- lineEnd: 784
-
-Summary:
-
-The third figure completes reciprocal presupposition among figures and exposes formalism where abstract universality mediates without containing extreme determinateness.
-
-Key points: (KeyPoint)
-
-- k1. Third figure is S-U-P and presupposes the other figures reciprocally.
-- k2. Abstract universal as middle reveals formal deficiency.
-- k3. Subject/predicate and major/minor assignments become indifferent under this form.
-
-Claims: (Claim)
-
-- c1. id: syl-exi-c-c1
-  - subject: third_figure
-  - predicate: has_schema
-  - object: S_U_P
-  - modality: asserted
-  - confidence: 0.96
-  - evidence:
-    - [672-684] heading and reciprocal presupposition setup.
-
-- c2. id: syl-exi-c-c2
-  - subject: abstract_universal_middle
-  - predicate: discloses
-  - object: formalism_of_syllogism
-  - modality: asserted
-  - confidence: 0.92
-  - evidence:
-    - [688-713] truth of formal syllogism as abstract-universal mediation.
-
-Relations: (Relation)
-
-- r1. type: transitions_to
-  - targetEntryId: syl-exi-c-001
-  - note: marker to numbered decomposition entry.
-  - sourceClaimIds: [`syl-exi-c-c1`, `syl-exi-c-c2`]
-  - sourceKeyPointIds: [`k1`, `k2`]
-  - targetClaimIds: []
-  - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
-
-- r2. type: transitions_to
-  - targetEntryId: syl-exi-d
-  - note: transition to fourth figure U-U-U.
-  - sourceClaimIds: [`syl-exi-c-c2`]
-  - sourceKeyPointIds: [`k2`, `k3`]
-  - targetClaimIds: [`syl-exi-d-c1`]
-  - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
-
-Review outcome:
-
-- review_pending
-- notes: marker-level entry initialized.
-
-### Entry syl-exi-c-001 — Third figure subsection 1: reciprocal presupposition and formal truth
+### Entry syllo-exi-c-001 — Third figure subsection 1: reciprocal presupposition and formal truth
 
 Span:
 
@@ -714,7 +496,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: syl-exi-c-001-c1
+- c1. id: syllo-exi-c-001-c1
   - subject: third_figure
   - predicate: completes
   - object: reciprocal_presupposition_of_figures
@@ -723,7 +505,7 @@ Claims: (Claim)
   - evidence:
     - [674-687] reciprocal presupposition and incomplete mediation in each figure.
 
-- c2. id: syl-exi-c-001-c2
+- c2. id: syllo-exi-c-001-c2
   - subject: syllogism_S_U_P
   - predicate: reveals
   - object: abstract_universal_middle_as_formal_truth
@@ -732,7 +514,7 @@ Claims: (Claim)
   - evidence:
     - [688-695] universal middle and non-contained essential determinateness.
 
-- c3. id: syl-exi-c-001-c3
+- c3. id: syllo-exi-c-001-c3
   - subject: formalism_of_syllogism
   - predicate: consists_in
   - object: immediate_content_indifferent_to_form
@@ -744,11 +526,11 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: syl-exi-c-002
+  - targetEntryId: syllo-exi-c-002
   - note: from formal truth statement to legitimacy/indifference analysis.
-  - sourceClaimIds: [`syl-exi-c-001-c2`, `syl-exi-c-001-c3`]
+  - sourceClaimIds: [`syllo-exi-c-001-c2`, `syllo-exi-c-001-c3`]
   - sourceKeyPointIds: [`k2`, `k3`]
-  - targetClaimIds: [`syl-exi-c-002-c1`]
+  - targetClaimIds: [`syllo-exi-c-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -757,7 +539,7 @@ Review outcome:
 - review_pending
 - notes: third-figure subsection `1` stabilized.
 
-### Entry syl-exi-c-002 — Third figure subsection 2: formal legitimacy and indifference of term-placement
+### Entry syllo-exi-c-002 — Third figure subsection 2: formal legitimacy and indifference of term-placement
 
 Span:
 
@@ -777,7 +559,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: syl-exi-c-002-c1
+- c1. id: syllo-exi-c-002-c1
   - subject: universal_middle_in_third_figure
   - predicate: is
   - object: abstract_unity_distinct_from_extremes
@@ -786,7 +568,7 @@ Claims: (Claim)
   - evidence:
     - [706-714] universal middle as abstract from determinate extremes.
 
-- c2. id: syl-exi-c-002-c2
+- c2. id: syllo-exi-c-002-c2
   - subject: third_figure_legitimation
   - predicate: depends_on
   - object: indifferent_subject_predicate_relation_of_negative_judgment
@@ -795,7 +577,7 @@ Claims: (Claim)
   - evidence:
     - [723-730] legitimating move and necessary negativity of conclusion.
 
-- c3. id: syl-exi-c-002-c3
+- c3. id: syllo-exi-c-002-c3
   - subject: formal_term_assignment
   - predicate: becomes
   - object: indifferent_and_idle
@@ -807,11 +589,11 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: syl-exi-c-003
+  - targetEntryId: syllo-exi-c-003
   - note: formal indifference transitions to objective-significance and U-U-U emergence.
-  - sourceClaimIds: [`syl-exi-c-002-c3`]
+  - sourceClaimIds: [`syllo-exi-c-002-c3`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`syl-exi-c-003-c1`]
+  - targetClaimIds: [`syllo-exi-c-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -820,7 +602,7 @@ Review outcome:
 - review_pending
 - notes: third-figure subsection `2` stabilized.
 
-### Entry syl-exi-c-003 — Third figure subsection 3: abstract universal middle and emergence of relationless U-U-U
+### Entry syllo-exi-c-003 — Third figure subsection 3: abstract universal middle and emergence of relationless U-U-U
 
 Span:
 
@@ -840,7 +622,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: syl-exi-c-003-c1
+- c1. id: syllo-exi-c-003-c1
   - subject: objective_significance_of_universal_middle
   - predicate: is_limited_by
   - object: abstract_universality
@@ -849,7 +631,7 @@ Claims: (Claim)
   - evidence:
     - [761-768] universal middle essential yet only abstract.
 
-- c2. id: syl-exi-c-003-c2
+- c2. id: syllo-exi-c-003-c2
   - subject: conjunction_of_extremes
   - predicate: requires
   - object: external_contingent_mediation
@@ -858,7 +640,7 @@ Claims: (Claim)
   - evidence:
     - [769-776] conjunction depends on mediation outside this syllogism.
 
-- c3. id: syl-exi-c-003-c3
+- c3. id: syllo-exi-c-003-c3
   - subject: abstraction_from_qualitative_difference
   - predicate: yields
   - object: relationless_syllogism_U_U_U
@@ -869,21 +651,12 @@ Claims: (Claim)
 
 Relations: (Relation)
 
-- r1. type: supports
-  - targetEntryId: syl-exi-c
-  - note: subsection completion grounds marker-level transition claim to fourth figure.
-  - sourceClaimIds: [`syl-exi-c-003-c1`, `syl-exi-c-003-c2`, `syl-exi-c-003-c3`]
-  - sourceKeyPointIds: [`k1`, `k2`, `k3`]
-  - targetClaimIds: [`syl-exi-c-c2`]
-  - logicalOperator: implicative_support
-  - analysisMode: first_order_claim_projection
-
-- r2. type: transitions_to
-  - targetEntryId: syl-exi-d-001
+- r1. type: transitions_to
+  - targetEntryId: syllo-exi-d-001
   - note: direct handoff into fourth-figure subsection `1`.
-  - sourceClaimIds: [`syl-exi-c-003-c3`]
+  - sourceClaimIds: [`syllo-exi-c-003-c3`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`syl-exi-d-001-c1`]
+  - targetClaimIds: [`syllo-exi-d-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -892,70 +665,7 @@ Review outcome:
 - review_pending
 - notes: third-figure subsection `3` stabilized.
 
-### Entry syl-exi-d — Marker `d`: fourth figure (U-U-U / mathematical syllogism)
-
-Span:
-
-- sourceFile: `src/compiler/concept/subject/syllogism/existence.txt`
-- lineStart: 785
-- lineEnd: 895
-
-Summary:
-
-The fourth figure abstracts to equality-form mediation yet yields the positive transition from formal figure-circulation to reflection-based mediation.
-
-Key points: (KeyPoint)
-
-- k1. Fourth figure is U-U-U and removes inherence/subsumption form.
-- k2. Mathematical self-evidence rests on abstraction from qualitative determinateness.
-- k3. The result is positive transition toward syllogism of reflection.
-
-Claims: (Claim)
-
-- c1. id: syl-exi-d-c1
-  - subject: fourth_figure
-  - predicate: has_schema
-  - object: U_U_U
-  - modality: asserted
-  - confidence: 0.98
-  - evidence:
-    - [785-801] heading and equal-to-a-third formulation.
-
-- c2. id: syl-exi-d-c2
-  - subject: mathematical_syllogism
-  - predicate: abstracts_from
-  - object: qualitative_differentiation
-  - modality: asserted
-  - confidence: 0.93
-  - evidence:
-    - [817-847] abstraction account and formal self-evidence critique.
-
-- c3. id: syl-exi-d-c3
-  - subject: syllogism_of_existence
-  - predicate: transitions_to
-  - object: syllogism_of_reflection
-  - modality: asserted
-  - confidence: 0.95
-  - evidence:
-    - [874-895] explicit transition to syllogism of reflection.
-
-Relations: (Relation)
-
-- r1. type: transitions_to
-  - targetEntryId: syl-ref-001
-  - note: handoff to Part B first entry placeholder.
-  - sourceClaimIds: [`syl-exi-d-c3`]
-  - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: []
-  - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
-
-Review outcome:
-
-- review_pending
-- notes: includes explicit U-U-U subspecies as requested.
-
-### Entry syl-exi-d-001 — Fourth figure subsection 1: mathematical equal-to-a-third schema
+### Entry syllo-exi-d-001 — Fourth figure subsection 1: mathematical equal-to-a-third schema
 
 Span:
 
@@ -975,7 +685,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: syl-exi-d-001-c1
+- c1. id: syllo-exi-d-001-c1
   - subject: mathematical_syllogism
   - predicate: has_form
   - object: equal_to_a_third_implies_equal_to_each_other
@@ -984,7 +694,7 @@ Claims: (Claim)
   - evidence:
     - [787-790] explicit mathematical schema.
 
-- c2. id: syl-exi-d-001-c2
+- c2. id: syllo-exi-d-001-c2
   - subject: U_U_U_relation
   - predicate: eliminates
   - object: inherence_and_subsumption_of_terms
@@ -993,7 +703,7 @@ Claims: (Claim)
   - evidence:
     - [791-792] inherence/subsumption removed.
 
-- c3. id: syl-exi-d-001-c3
+- c3. id: syllo-exi-d-001-c3
   - subject: mediation_selection
   - predicate: depends_on
   - object: external_circumstances
@@ -1005,11 +715,11 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: syl-exi-d-002
+  - targetEntryId: syllo-exi-d-002
   - note: schema exposition transitions to critique of axiomatic self-evidence.
-  - sourceClaimIds: [`syl-exi-d-001-c2`, `syl-exi-d-001-c3`]
+  - sourceClaimIds: [`syllo-exi-d-001-c2`, `syllo-exi-d-001-c3`]
   - sourceKeyPointIds: [`k2`, `k3`]
-  - targetClaimIds: [`syl-exi-d-002-c1`]
+  - targetClaimIds: [`syllo-exi-d-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -1018,7 +728,7 @@ Review outcome:
 - review_pending
 - notes: fourth-figure subsection `1` stabilized.
 
-### Entry syl-exi-d-002 — Fourth figure subsection 2: axiomatic self-evidence as abstraction-effect
+### Entry syllo-exi-d-002 — Fourth figure subsection 2: axiomatic self-evidence as abstraction-effect
 
 Span:
 
@@ -1038,7 +748,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: syl-exi-d-002-c1
+- c1. id: syllo-exi-d-002-c1
   - subject: mathematical_syllogism_in_mathematics
   - predicate: is_treated_as
   - object: immediate_axiom
@@ -1047,7 +757,7 @@ Claims: (Claim)
   - evidence:
     - [804-808] axiom characterization.
 
-- c2. id: syl-exi-d-002-c2
+- c2. id: syllo-exi-d-002-c2
   - subject: axiomatic_self_evidence
   - predicate: rests_on
   - object: abstraction_from_qualitative_difference
@@ -1056,7 +766,7 @@ Claims: (Claim)
   - evidence:
     - [812-819] formalism and abstraction account.
 
-- c3. id: syl-exi-d-002-c3
+- c3. id: syllo-exi-d-002-c3
   - subject: mathematical_syllogism
   - predicate: lacks
   - object: conceptual_comprehension
@@ -1068,11 +778,11 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: syl-exi-d-003
+  - targetEntryId: syllo-exi-d-003
   - note: abstraction critique transitions to positive result and reflection handoff.
-  - sourceClaimIds: [`syl-exi-d-002-c2`, `syl-exi-d-002-c3`]
+  - sourceClaimIds: [`syllo-exi-d-002-c2`, `syllo-exi-d-002-c3`]
   - sourceKeyPointIds: [`k2`, `k3`]
-  - targetClaimIds: [`syl-exi-d-003-c1`]
+  - targetClaimIds: [`syllo-exi-d-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -1081,7 +791,7 @@ Review outcome:
 - review_pending
 - notes: fourth-figure subsection `2` stabilized.
 
-### Entry syl-exi-d-003 — Fourth figure subsection 3: positive result and transition to reflection
+### Entry syllo-exi-d-003 — Fourth figure subsection 3: positive result and transition to reflection
 
 Span:
 
@@ -1101,7 +811,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: syl-exi-d-003-c1
+- c1. id: syllo-exi-d-003-c1
   - subject: result_of_syllogism_of_existence
   - predicate: includes
   - object: positive_concretion_of_determinateness
@@ -1110,7 +820,7 @@ Claims: (Claim)
   - evidence:
     - [833-840] positive side beyond abstract dissolution.
 
-- c2. id: syl-exi-d-003-c2
+- c2. id: syllo-exi-d-003-c2
   - subject: reciprocal_presupposition_of_figures
   - predicate: forms
   - object: closed_totality_of_self_referring_mediation
@@ -1119,7 +829,7 @@ Claims: (Claim)
   - evidence:
     - [842-865] mediation based on mediation and closed circle.
 
-- c3. id: syl-exi-d-003-c3
+- c3. id: syllo-exi-d-003-c3
   - subject: immediate_syllogism_of_existence
   - predicate: passes_over_into
   - object: syllogism_of_reflection
@@ -1130,19 +840,10 @@ Claims: (Claim)
 
 Relations: (Relation)
 
-- r1. type: supports
-  - targetEntryId: syl-exi-d
-  - note: subsection completion grounds marker-level transition claim.
-  - sourceClaimIds: [`syl-exi-d-003-c1`, `syl-exi-d-003-c2`, `syl-exi-d-003-c3`]
-  - sourceKeyPointIds: [`k1`, `k2`, `k3`]
-  - targetClaimIds: [`syl-exi-d-c3`]
-  - logicalOperator: implicative_support
-  - analysisMode: first_order_claim_projection
-
-- r2. type: transitions_to
-  - targetEntryId: syl-ref-001
+- r1. type: transitions_to
+  - targetEntryId: syllo-ref-001
   - note: concrete handoff to Part B reflection opening.
-  - sourceClaimIds: [`syl-exi-d-003-c3`]
+  - sourceClaimIds: [`syllo-exi-d-003-c3`]
   - sourceKeyPointIds: [`k3`]
   - targetClaimIds: []
   - logicalOperator: sequential_transition

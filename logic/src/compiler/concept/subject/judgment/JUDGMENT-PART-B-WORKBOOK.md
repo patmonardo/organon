@@ -46,14 +46,13 @@ Scope:
 
 Decision:
 
-- Adopt a two-level Entry system for Judgment Part B:
-  - Level 1 marker entries: `jud-ref-a`, `jud-ref-b`, `jud-ref-c`
-  - Level 2 numbered entries under each marker: `jud-ref-<letter>-<nnn>`
-- Terminology note: each Entry is treated as a Topic; numbered children under marker topics are SubTopics.
+- Remove marker-only entries for this pass and keep only substantive, evidence-bearing entries.
+- Keep the existing numbered ID pattern (`judgm-ref-<letter>-<nnn>`) so inbound/outbound cross-part links remain stable.
+- Terminology note: each Entry is treated as a Topic; numbered entries are SubTopics.
 - Keep all claims source-anchored and minimally decomposed for first pass.
 - Preserve transition readiness to Part C (`judgment of necessity`).
 
-### Entry jud-ref-001 — Reflection-judgment setup: determinate content and relational universality
+### Entry judgm-ref-001 — Reflection-judgment setup: determinate content and relational universality
 
 Span:
 
@@ -74,7 +73,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: jud-ref-001-c1
+- c1. id: judgm-ref-001-c1
   - subject: judgment_of_reflection
   - predicate: introduces
   - object: determinate_content_as_reflected_identity
@@ -84,7 +83,7 @@ Claims: (Claim)
     - [20-26] determinate content appears only here, as form determination reflected into identity.
     - [27-29] contrast: existence judgment has only immediate/abstract indeterminate content.
 
-- c2. id: jud-ref-001-c2
+- c2. id: judgm-ref-001-c2
   - subject: universality_in_reflection_judgment
   - predicate: is_determined_as
   - object: relational_comprehensive_universality_still_linked_to_immediacy
@@ -94,7 +93,7 @@ Claims: (Claim)
     - [37-48] predicates express essentiality as relational determination; universality still connected to immediate basis.
     - [53-58] true universal is inner essence in appearance, not yet element existing in-and-for-itself.
 
-- c3. id: jud-ref-001-c3
+- c3. id: judgm-ref-001-c3
   - subject: judgment_of_reflection
   - predicate: is_determined_as
   - object: judgment_of_subsumption
@@ -113,99 +112,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: jud-ref-a
-  - note: moves from general architecture of reflection judgment to explicit singular-judgment form.
-  - sourceClaimIds: [`jud-ref-001-c2`, `jud-ref-001-c3`]
+  - targetEntryId: judgm-ref-a-001
+  - note: moves from general architecture of reflection judgment to the first singular subtopic.
+  - sourceClaimIds: [`judgm-ref-001-c2`, `judgm-ref-001-c3`]
   - sourceKeyPointIds: [`k2`, `k4`]
-  - targetClaimIds: [`jud-ref-a-c1`]
+  - targetClaimIds: [`judgm-ref-a-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: setup block fixed as first non-lettered foundation for the two-level marker system.
+- notes: setup block fixed as first non-lettered foundation for the reflection sequence.
 
-### Entry jud-ref-a — Marker `a`: singular judgment
-
-Span:
-
-- sourceFile: `src/compiler/concept/subject/judgment/reflection.txt`
-- lineStart: 116
-- lineEnd: 143
-
-Summary:
-
-The singular judgment appears as immediate reflection judgment, then negates the immediacy of "this" and transitions into particular judgment.
-
-Key points: (KeyPoint)
-
-- k1. Immediate form: singular is universal / this is essential universal.
-- k2. Negation falls on the subject-side immediacy of "this".
-- k3. Singular judgment transitions to particular judgment.
-
-Claims: (Claim)
-
-- c1. id: jud-ref-a-c1
-  - subject: singular_judgment
-  - predicate: is_determined_as
-  - object: immediate_reflection_form_this_is_essential_universal
-  - modality: asserted
-  - confidence: 0.95
-  - evidence:
-    - [118-124] immediate expression of singular judgment.
-
-- c2. id: jud-ref-a-c2
-  - subject: negation_in_singular_reflection_judgment
-  - predicate: targets
-  - object: subject_immediacy_this_not_predicate_as_implicit_being
-  - modality: asserted
-  - confidence: 0.93
-  - evidence:
-    - [126-139] "this" not essential universal; negation does not directly affect predicate.
-    - [135-139] subject is alterable; negative judgment reformulates as "not a this".
-
-- c3. id: jud-ref-a-c3
-  - subject: singular_judgment
-  - predicate: transitions_to
-  - object: particular_judgment
-  - modality: asserted
-  - confidence: 0.97
-  - evidence:
-    - [142-143] proximate truth explicitly in the particular judgment.
-
-Claim ↔ key point map:
-
-- c1 -> k1
-- c2 -> k2
-- c3 -> k3
-
-Relations: (Relation)
-
-- r1. type: transitions_to
-  - targetEntryId: jud-ref-a-001
-  - note: marker to first numbered entry for singular-form statement.
-  - sourceClaimIds: [`jud-ref-a-c1`]
-  - sourceKeyPointIds: [`k1`]
-  - targetClaimIds: [`jud-ref-a-001-c1`]
-  - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
-
-- r2. type: transitions_to
-  - targetEntryId: jud-ref-b
-  - note: explicit handoff from singular to particular marker.
-  - sourceClaimIds: [`jud-ref-a-c3`]
-  - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`jud-ref-b-c1`]
-  - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
-
-Review outcome:
-
-- review_pending
-- notes: marker-level entry for layer-1 node `a`.
-
-### Entry jud-ref-a-001 — Singular formula and essential-universal expression
+### Entry judgm-ref-a-001 — Singular formula and essential-universal expression
 
 Span:
 
@@ -225,7 +145,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: jud-ref-a-001-c1
+- c1. id: judgm-ref-a-001-c1
   - subject: singular_judgment_formula
   - predicate: is
   - object: singular_is_universal
@@ -234,7 +154,7 @@ Claims: (Claim)
   - evidence:
     - [118-121] direct singular judgment statement.
 
-- c2. id: jud-ref-a-001-c2
+- c2. id: judgm-ref-a-001-c2
   - subject: singular_judgment_formula
   - predicate: is_reexpressed_as
   - object: this_is_essential_universal
@@ -251,20 +171,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: jud-ref-a-002
+  - targetEntryId: judgm-ref-a-002
   - note: immediate singular formula is negated and re-grounded.
-  - sourceClaimIds: [`jud-ref-a-001-c2`]
+  - sourceClaimIds: [`judgm-ref-a-001-c2`]
   - sourceKeyPointIds: [`k2`]
-  - targetClaimIds: [`jud-ref-a-002-c1`]
+  - targetClaimIds: [`judgm-ref-a-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: first numbered child under marker `a`.
+- notes: first singular subtopic.
 
-### Entry jud-ref-a-002 — Negation of "this" and subject-side alterability
+### Entry judgm-ref-a-002 — Negation of "this" and subject-side alterability
 
 Span:
 
@@ -284,7 +204,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: jud-ref-a-002-c1
+- c1. id: judgm-ref-a-002-c1
   - subject: this_as_subject
   - predicate: is_negated_as
   - object: inadequate_essential_universal
@@ -293,7 +213,7 @@ Claims: (Claim)
   - evidence:
     - [126-132] "this" not essential universal; negation framing.
 
-- c2. id: jud-ref-a-002-c2
+- c2. id: judgm-ref-a-002-c2
   - subject: reflection_negation
   - predicate: preserves
   - object: predicate_as_implicit_being_while_determining_subject
@@ -302,7 +222,7 @@ Claims: (Claim)
   - evidence:
     - [133-139] predicate does not inhere; subject alterable.
 
-- c3. id: jud-ref-a-002-c3
+- c3. id: judgm-ref-a-002-c3
   - subject: negation_in_reflection_judgment
   - predicate: targets
   - object: subject_immediacy_not_predicate_essentiality
@@ -320,20 +240,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: jud-ref-a-003
+  - targetEntryId: judgm-ref-a-003
   - note: third paragraph articulates the negative judgment formulation and explicit transition sentence.
-  - sourceClaimIds: [`jud-ref-a-002-c3`]
+  - sourceClaimIds: [`judgm-ref-a-002-c3`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`jud-ref-a-003-c1`]
+  - targetClaimIds: [`judgm-ref-a-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: second numbered child under marker `a` (second paragraph).
+- notes: second singular subtopic (second paragraph).
 
-### Entry jud-ref-a-003 — Negative-judgment formulation and transition to particularity
+### Entry judgm-ref-a-003 — Negative-judgment formulation and transition to particularity
 
 Span:
 
@@ -353,7 +273,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: jud-ref-a-003-c1
+- c1. id: judgm-ref-a-003-c1
   - subject: negative_judgment
   - predicate: is_reformulated_as
   - object: not_a_this_as_universal_of_reflection
@@ -362,7 +282,7 @@ Claims: (Claim)
   - evidence:
     - [141-142] explicit reformulation and universal concrete existence claim.
 
-- c2. id: jud-ref-a-003-c2
+- c2. id: judgm-ref-a-003-c2
   - subject: singular_judgment
   - predicate: has_proximate_truth_in
   - object: particular_judgment
@@ -379,100 +299,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: jud-ref-b-001
+  - targetEntryId: judgm-ref-b-001
   - note: third-paragraph conclusion hands off singular judgment to particularity.
-  - sourceClaimIds: [`jud-ref-a-003-c2`]
+  - sourceClaimIds: [`judgm-ref-a-003-c2`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`jud-ref-b-001-c1`]
+  - targetClaimIds: [`judgm-ref-b-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: third numbered child under marker `a` (third paragraph transition).
+- notes: third singular subtopic (third paragraph transition).
 
-### Entry jud-ref-b — Marker `b`: particular judgment
-
-Span:
-
-- sourceFile: `src/compiler/concept/subject/judgment/reflection.txt`
-- lineStart: 146
-- lineEnd: 241
-
-Summary:
-
-Particular judgment extends singularity into "some," contains positive and negative together, and drives toward allness/universal judgment.
-
-Key points: (KeyPoint)
-
-- k1. Particularity is essential singularity as extension, not dissolution.
-- k2. "Some" carries both positivity and negativity and is indeterminate.
-- k3. Universal species-content is anticipated within particular judgment.
-- k4. Indeterminate "some" drives to determined totality/allness.
-
-Claims: (Claim)
-
-- c1. id: jud-ref-b-c1
-  - subject: particular_judgment
-  - predicate: is_determined_as
-  - object: essential_singularity_extended_as_some
-  - modality: asserted
-  - confidence: 0.95
-  - evidence:
-    - [147-159] non-singularity posited as particularity, yet as essential singularity / these ones.
-
-- c2. id: jud-ref-b-c2
-  - subject: some_form
-  - predicate: contains
-  - object: positive_and_negative_unity_with_indeterminacy
-  - modality: asserted
-  - confidence: 0.94
-  - evidence:
-    - [161-184] "some" both positive and negative; immediate implication of not-happy/not-useful; indeterminate.
-
-- c3. id: jud-ref-b-c3
-  - subject: particular_judgment
-  - predicate: transitions_to
-  - object: universal_judgment_via_allness
-  - modality: asserted
-  - confidence: 0.96
-  - evidence:
-    - [226-231] extension should become completely determined totality.
-    - [233-240] universality attained as allness; passage to universal.
-
-Claim ↔ key point map:
-
-- c1 -> k1
-- c2 -> k2
-- c3 -> k3, k4
-
-Relations: (Relation)
-
-- r1. type: transitions_to
-  - targetEntryId: jud-ref-b-001
-  - note: marker to first numbered entry for particularity as essential singular extension.
-  - sourceClaimIds: [`jud-ref-b-c1`]
-  - sourceKeyPointIds: [`k1`]
-  - targetClaimIds: [`jud-ref-b-001-c1`]
-  - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
-
-- r2. type: transitions_to
-  - targetEntryId: jud-ref-c
-  - note: particular judgment culminates in allness and universal judgment.
-  - sourceClaimIds: [`jud-ref-b-c3`]
-  - sourceKeyPointIds: [`k4`]
-  - targetClaimIds: [`jud-ref-c-c1`]
-  - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
-
-Review outcome:
-
-- review_pending
-- notes: marker-level entry for layer-1 node `b`.
-
-### Entry jud-ref-b-001 — Particularity as essential singular extension
+### Entry judgm-ref-b-001 — Particularity as essential singular extension
 
 Span:
 
@@ -492,7 +332,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: jud-ref-b-001-c1
+- c1. id: judgm-ref-b-001-c1
   - subject: particularity
   - predicate: is_determined_as
   - object: essential_singularity
@@ -501,7 +341,7 @@ Claims: (Claim)
   - evidence:
     - [147-152] non-singularity posited as particularity determined as essential singularity.
 
-- c2. id: jud-ref-b-001-c2
+- c2. id: judgm-ref-b-001-c2
   - subject: particularity
   - predicate: is
   - object: extension_of_singular_in_external_reflection
@@ -510,7 +350,7 @@ Claims: (Claim)
   - evidence:
     - [153-157] not abstract dissolution but extension of singular.
 
-- c3. id: jud-ref-b-001-c3
+- c3. id: judgm-ref-b-001-c3
   - subject: particular_judgment_subject
   - predicate: takes_form
   - object: these_ones_particular_number_of_singulars
@@ -528,20 +368,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: jud-ref-b-002
+  - targetEntryId: judgm-ref-b-002
   - note: from pluralized singular subject to the positive/negative duality of "some".
-  - sourceClaimIds: [`jud-ref-b-001-c3`]
+  - sourceClaimIds: [`judgm-ref-b-001-c3`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`jud-ref-b-002-c1`]
+  - targetClaimIds: [`judgm-ref-b-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: first numbered child under marker `b`.
+- notes: first particular subtopic.
 
-### Entry jud-ref-b-002 — "Some" as indeterminate unity of positive and negative
+### Entry judgm-ref-b-002 — "Some" as indeterminate unity of positive and negative
 
 Span:
 
@@ -561,7 +401,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: jud-ref-b-002-c1
+- c1. id: judgm-ref-b-002-c1
   - subject: some_judgment
   - predicate: is
   - object: simultaneously_positive_and_negative
@@ -571,7 +411,7 @@ Claims: (Claim)
     - [161-168] "some" has universality yet particular disproportionality.
     - [180-184] positive/negative no longer outside each other; judgment indeterminate.
 
-- c2. id: jud-ref-b-002-c2
+- c2. id: judgm-ref-b-002-c2
   - subject: negative_determination
   - predicate: appears_in
   - object: copula_connection_of_particular_judgment
@@ -580,7 +420,7 @@ Claims: (Claim)
   - evidence:
     - [169-173] negative determination connected to copula.
 
-- c3. id: jud-ref-b-002-c3
+- c3. id: judgm-ref-b-002-c3
   - subject: subject_some
   - predicate: includes
   - object: universal_content_and_anticipated_species_result
@@ -599,20 +439,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: jud-ref-b-003
+  - targetEntryId: judgm-ref-b-003
   - note: after two-paragraph development of "some," the next paragraph makes determined extension explicit.
-  - sourceClaimIds: [`jud-ref-b-002-c1`, `jud-ref-b-002-c3`]
+  - sourceClaimIds: [`judgm-ref-b-002-c1`, `judgm-ref-b-002-c3`]
   - sourceKeyPointIds: [`k1`, `k3`]
-  - targetClaimIds: [`jud-ref-b-003-c1`]
+  - targetClaimIds: [`judgm-ref-b-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: second numbered child under marker `b`, spanning two paragraphs.
+- notes: second particular subtopic, spanning two paragraphs.
 
-### Entry jud-ref-b-003 — Determined extension: from "some" to totality
+### Entry judgm-ref-b-003 — Determined extension: from "some" to totality
 
 Span:
 
@@ -632,7 +472,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: jud-ref-b-003-c1
+- c1. id: judgm-ref-b-003-c1
   - subject: particular_judgment_subject
   - predicate: is_posited_as
   - object: totality_of_concept_determinations
@@ -641,7 +481,7 @@ Claims: (Claim)
   - evidence:
     - [214-218] subject contains singulars, particularity-connection, and universal nature.
 
-- c2. id: jud-ref-b-003-c2
+- c2. id: judgm-ref-b-003-c2
   - subject: some_determination
   - predicate: is
   - object: indeterminate_and_not_commensurate_with_this
@@ -650,7 +490,7 @@ Claims: (Claim)
   - evidence:
     - [220-225] extension to particularity is not commensurate; "some" indeterminate.
 
-- c3. id: jud-ref-b-003-c3
+- c3. id: judgm-ref-b-003-c3
   - subject: extension_of_this
   - predicate: requires
   - object: complete_determination_as_totality_universality
@@ -668,20 +508,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: jud-ref-b-004
+  - targetEntryId: judgm-ref-b-004
   - note: after determined extension, the final paragraph gives explicit allness transition.
-  - sourceClaimIds: [`jud-ref-b-003-c3`]
+  - sourceClaimIds: [`judgm-ref-b-003-c3`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`jud-ref-b-004-c1`]
+  - targetClaimIds: [`judgm-ref-b-004-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: third numbered child under marker `b` (next paragraph).
+- notes: third particular subtopic (next paragraph).
 
-### Entry jud-ref-b-004 — Transition paragraph: allness handoff to universal judgment
+### Entry judgm-ref-b-004 — Transition paragraph: allness handoff to universal judgment
 
 Span:
 
@@ -701,7 +541,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: jud-ref-b-004-c1
+- c1. id: judgm-ref-b-004-c1
   - subject: universality
   - predicate: has_basis_in
   - object: reflected_singular_this
@@ -710,7 +550,7 @@ Claims: (Claim)
   - evidence:
     - [233-237] universality has "this" as basis; singular reflected into itself.
 
-- c2. id: jud-ref-b-004-c2
+- c2. id: judgm-ref-b-004-c2
   - subject: attained_universality
   - predicate: is
   - object: allness
@@ -719,7 +559,7 @@ Claims: (Claim)
   - evidence:
     - [238-239] universality attained as allness.
 
-- c3. id: jud-ref-b-004-c3
+- c3. id: judgm-ref-b-004-c3
   - subject: particular_judgment
   - predicate: passes_over_into
   - object: universal_judgment
@@ -737,100 +577,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: jud-ref-c-001
+  - targetEntryId: judgm-ref-c-001
   - note: allness handoff into universal judgment analysis.
-  - sourceClaimIds: [`jud-ref-b-004-c3`]
+  - sourceClaimIds: [`judgm-ref-b-004-c3`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`jud-ref-c-001-c1`]
+  - targetClaimIds: [`judgm-ref-c-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: transition subtopic for marker `b`; completes marker `b` numbered layer.
+- notes: transition subtopic; completes the particular sequence.
 
-### Entry jud-ref-c — Marker `c`: universal judgment
-
-Span:
-
-- sourceFile: `src/compiler/concept/subject/judgment/reflection.txt`
-- lineStart: 242
-- lineEnd: 432
-
-Summary:
-
-Universal judgment in reflection unfolds as an S-P-U movement: from singular/particular allness-forms toward a universal that is simultaneously logical universality and subject-predicate identity, culminating in genus/species determination as the basis of necessity.
-
-Key points: (KeyPoint)
-
-- k1. External allness/commonality is insufficient universality.
-- k2. True universality is rule/concept, not mere proliferation of singular terms.
-- k3. Reflection reveals objective universality where "all humans" becomes "the human being," i.e., allness yields species-subject expression.
-- k4. Subject-predicate reversal and copular identity exhibit the universal as genus/nature and ground transition to necessity.
-
-Claims: (Claim)
-
-- c1. id: jud-ref-c-c1
-  - subject: universal_judgment_initial_form
-  - predicate: is_determined_as
-  - object: external_allness
-  - modality: asserted
-  - confidence: 0.95
-  - evidence:
-    - [244-251] universality as allness/commonality by comparison.
-
-- c2. id: jud-ref-c-c2
-  - subject: external_allness
-  - predicate: is_criticized_as
-  - object: bad_infinity_or_plurality_not_true_universality
-  - modality: asserted
-  - confidence: 0.94
-  - evidence:
-    - [285-296] bad infinity and plurality fail to reach allness/conceptual universality.
-
-- c3. id: jud-ref-c-c3
-  - subject: universal_judgment_result
-  - predicate: transitions_to
-  - object: judgment_of_necessity
-  - modality: asserted
-  - confidence: 0.96
-  - evidence:
-    - [404-414] subject/predicate coincide in copula.
-    - [430-432] basis of new judgment explicitly named as judgment of necessity.
-
-Claim ↔ key point map:
-
-- c1 -> k1
-- c2 -> k2
-- c3 -> k3, k4
-
-Relations: (Relation)
-
-- r1. type: transitions_to
-  - targetEntryId: jud-ref-c-001
-  - note: marker to first numbered entry on allness as external universality.
-  - sourceClaimIds: [`jud-ref-c-c1`]
-  - sourceKeyPointIds: [`k1`]
-  - targetClaimIds: [`jud-ref-c-001-c1`]
-  - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
-
-- r2. type: transitions_to
-  - targetEntryId: jud-nes-a-001
-  - note: handoff from Reflection universal judgment into Necessity part (Part C workbook target).
-  - sourceClaimIds: [`jud-ref-c-c3`]
-  - sourceKeyPointIds: [`k4`]
-  - targetClaimIds: [`pending`]
-  - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
-
-Review outcome:
-
-- review_pending
-- notes: marker-level entry for layer-1 node `c`; Part C target claim left pending until Necessity pass.
-
-### Entry jud-ref-c-001 — External allness and bad infinity critique
+### Entry judgm-ref-c-001 — External allness and bad infinity critique
 
 Span:
 
@@ -850,7 +610,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: jud-ref-c-001-c1
+- c1. id: judgm-ref-c-001-c1
   - subject: allness
   - predicate: initially_means
   - object: external_commonality_of_singulars
@@ -859,7 +619,7 @@ Claims: (Claim)
   - evidence:
     - [244-251] allness as all of singulars/commonality by comparison.
 
-- c2. id: jud-ref-c-001-c2
+- c2. id: judgm-ref-c-001-c2
   - subject: representational_universality
   - predicate: is
   - object: fitting_many_or_enumerative_expansion
@@ -868,7 +628,7 @@ Claims: (Claim)
   - evidence:
     - [255-284] universality taken as fitting many / polynomial expansion example.
 
-- c3. id: jud-ref-c-001-c3
+- c3. id: judgm-ref-c-001-c3
   - subject: conceptual_universality
   - predicate: exceeds
   - object: bad_infinity_and_mere_plurality
@@ -887,20 +647,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: jud-ref-c-002
+  - targetEntryId: judgm-ref-c-002
   - note: critique of allness continues through empirical universality.
-  - sourceClaimIds: [`jud-ref-c-001-c3`]
+  - sourceClaimIds: [`judgm-ref-c-001-c3`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`jud-ref-c-002-c1`]
+  - targetClaimIds: [`judgm-ref-c-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: first numbered child under marker `c`.
+- notes: first universal subtopic.
 
-### Entry jud-ref-c-002 — Empirical allness to objective universality
+### Entry judgm-ref-c-002 — Empirical allness to objective universality
 
 Span:
 
@@ -921,7 +681,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: jud-ref-c-002-c1
+- c1. id: judgm-ref-c-002-c1
   - subject: empirical_allness
   - predicate: remains
   - object: external_reflective_collection
@@ -930,7 +690,7 @@ Claims: (Claim)
   - evidence:
     - [309-316] external picking and inability to unify universality with collected singularity.
 
-- c2. id: jud-ref-c-002-c2
+- c2. id: judgm-ref-c-002-c2
   - subject: empirical_universality
   - predicate: is_determined_as
   - object: ought_with_subjective_allness_as_proxy
@@ -940,7 +700,7 @@ Claims: (Claim)
     - [317-319] allness remains a task/ought not representable in form of being.
     - [320-327] tacit agreement: plurality/no counter-instance counts as allness.
 
-- c3. id: jud-ref-c-002-c3
+- c3. id: judgm-ref-c-002-c3
   - subject: universal_judgment_subject
   - predicate: is_reformulated_as
   - object: objective_universality_the_human_being_instead_of_all_humans
@@ -960,11 +720,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: jud-ref-c-003
+  - targetEntryId: judgm-ref-c-003
   - note: objective universality now leads into genus/copular identity consolidation.
-  - sourceClaimIds: [`jud-ref-c-002-c3`]
+  - sourceClaimIds: [`judgm-ref-c-002-c3`]
   - sourceKeyPointIds: [`k3`, `k4`]
-  - targetClaimIds: [`jud-ref-c-003-c1`]
+  - targetClaimIds: [`judgm-ref-c-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -973,7 +733,7 @@ Review outcome:
 - review_pending
 - notes: merged former `c-002` and `c-003` into a single subtopic.
 
-### Entry jud-ref-c-003 — Genus reversal and copular necessity identity
+### Entry judgm-ref-c-003 — Genus reversal and copular necessity identity
 
 Span:
 
@@ -994,7 +754,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: jud-ref-c-003-c1
+- c1. id: judgm-ref-c-003-c1
   - subject: objective_universality
   - predicate: is_determined_as
   - object: concrete_genus
@@ -1003,7 +763,7 @@ Claims: (Claim)
   - evidence:
     - [373-378] genus as concrete universality containing singular determinacies.
 
-- c2. id: jud-ref-c-003-c2
+- c2. id: judgm-ref-c-003-c2
   - subject: reflection_judgment_relation
   - predicate: is_reversed_and_sublated
   - object: prior_subsumption_structure
@@ -1013,7 +773,7 @@ Claims: (Claim)
     - [379-383] subject no longer subsumed under predicate.
     - [385-402] subsumption structure reversed; judgment sublated.
 
-- c3. id: jud-ref-c-003-c3
+- c3. id: judgm-ref-c-003-c3
   - subject: genus_identity
   - predicate: is
   - object: copular_connection_of_necessity
@@ -1033,11 +793,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: jud-ref-c-004
+  - targetEntryId: judgm-ref-c-004
   - note: genus/copular necessity consolidation culminates in the explicit transition paragraph.
-  - sourceClaimIds: [`jud-ref-c-003-c3`]
+  - sourceClaimIds: [`judgm-ref-c-003-c3`]
   - sourceKeyPointIds: [`k4`]
-  - targetClaimIds: [`jud-ref-c-004-c1`]
+  - targetClaimIds: [`judgm-ref-c-004-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -1046,7 +806,7 @@ Review outcome:
 - review_pending
 - notes: merged former `c-004` and `c-005` into a single subtopic.
 
-### Entry jud-ref-c-004 — Transition paragraph: basis of the judgment of necessity
+### Entry judgm-ref-c-004 — Transition paragraph: basis of the judgment of necessity
 
 Span:
 
@@ -1066,7 +826,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: jud-ref-c-004-c1
+- c1. id: judgm-ref-c-004-c1
   - subject: genus_relation
   - predicate: is_asserted_as
   - object: what_belongs_to_all_singulars_belongs_to_genus_by_nature
@@ -1075,7 +835,7 @@ Claims: (Claim)
   - evidence:
     - [423-426] immediate consequence sentence establishing genus relation.
 
-- c2. id: jud-ref-c-004-c2
+- c2. id: judgm-ref-c-004-c2
   - subject: subject_expression
   - predicate: is_reformulated_as
   - object: the_human_being_instead_of_all_humans
@@ -1084,7 +844,7 @@ Claims: (Claim)
   - evidence:
     - [427-429] explicit reformulation of subject form.
 
-- c3. id: jud-ref-c-004-c3
+- c3. id: judgm-ref-c-004-c3
   - subject: implicit_explicit_combination
   - predicate: constitutes
   - object: basis_of_judgment_of_necessity
@@ -1101,19 +861,10 @@ Claim ↔ key point map:
 
 Relations: (Relation)
 
-- r1. type: supports
-  - targetEntryId: jud-ref-c
-  - note: establishes marker-level claim that universal judgment culminates in necessity transition.
-  - sourceClaimIds: [`jud-ref-c-004-c3`]
-  - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`jud-ref-c-c3`]
-  - logicalOperator: implicative_support
-  - analysisMode: first_order_claim_projection
-
-- r2. type: transitions_to
-  - targetEntryId: jud-nes-a-001
+- r1. type: transitions_to
+  - targetEntryId: judgm-nec-a-001
   - note: direct boundary handoff into Part C (necessity), to be linked concretely in Part C pass.
-  - sourceClaimIds: [`jud-ref-c-004-c3`]
+  - sourceClaimIds: [`judgm-ref-c-004-c3`]
   - sourceKeyPointIds: [`k3`]
   - targetClaimIds: [`pending`]
   - logicalOperator: sequential_transition
@@ -1122,4 +873,4 @@ Relations: (Relation)
 Review outcome:
 
 - review_pending
-- notes: renumbered transition subtopic after merges; completes marker `c` numbered layer.
+- notes: renumbered transition subtopic after merges; completes the universal sequence.

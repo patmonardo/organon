@@ -39,14 +39,14 @@ Authority: derivative from Concept workbooks (non-authoritative)
 ### OperationMap con-op-001 — Placeholder map
 
 - sourceClaims:
-  - `con-sub-a-001-c1`
+  - `conce-uni-001-c1`
 - sourceRelations:
   - pending
 - protocolMode: mixed
 - targetOperation: pending
 - confidence: 0.5
 - proofPath:
-  - `con-sub-a-001-c1`
+  - `conce-uni-001-c1`
 - status: review_pending
 
 Notes:

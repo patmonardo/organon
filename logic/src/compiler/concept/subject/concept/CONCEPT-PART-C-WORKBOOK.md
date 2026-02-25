@@ -54,7 +54,7 @@ Decision:
   - entry-3: `229-266`
   - transition-only: `268-282`
 
-### Entry con-sub-c-001 — Section 1: singularity as self-mediating return
+### Entry conce-sin-001 — Section 1: singularity as self-mediating return
 
 Span:
 
@@ -74,7 +74,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: con-sub-c-001-c1
+- c1. id: conce-sin-001-c1
   - subject: singularity
   - predicate: is_determined_as
   - object: self_mediation_and_totalizing_return_of_concept
@@ -91,20 +91,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: con-sub-b-004
+  - targetEntryId: conce-par-004
   - note: confirms Part B's explicit singularity transition claim.
-  - sourceClaimIds: [`con-sub-c-001-c1`]
+  - sourceClaimIds: [`conce-sin-001-c1`]
   - sourceKeyPointIds: [`k1`, `k3`]
-  - targetClaimIds: [`con-sub-b-004-c1`]
+  - targetClaimIds: [`conce-par-004-c1`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: con-sub-c-002
+  - targetEntryId: conce-sin-002
   - note: moves from reflective return to immediate actualization in section 2.
-  - sourceClaimIds: [`con-sub-c-001-c1`]
+  - sourceClaimIds: [`conce-sin-001-c1`]
   - sourceKeyPointIds: [`k1`]
-  - targetClaimIds: [`con-sub-c-002-c1`]
+  - targetClaimIds: [`conce-sin-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -113,7 +113,7 @@ Review outcome:
 - review_pending
 - notes: entry-1 span locked at 10-177.
 
-### Entry con-sub-c-002 — Section 2a: immediate loss into actuality
+### Entry conce-sin-002 — Section 2a: immediate loss into actuality
 
 Span:
 
@@ -133,7 +133,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: con-sub-c-002-c1
+- c1. id: conce-sin-002-c1
   - subject: singularity
   - predicate: is_determined_as
   - object: immediate_actualizing_this_and_exclusive_negativity
@@ -150,20 +150,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: refines
-  - targetEntryId: con-sub-c-001
+  - targetEntryId: conce-sin-001
   - note: concretizes section 1 return as actualized singular determinateness.
-  - sourceClaimIds: [`con-sub-c-002-c1`]
+  - sourceClaimIds: [`conce-sin-002-c1`]
   - sourceKeyPointIds: [`k1`, `k2`]
-  - targetClaimIds: [`con-sub-c-001-c1`]
+  - targetClaimIds: [`conce-sin-001-c1`]
   - logicalOperator: presuppositional_link
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: con-sub-c-003
+  - targetEntryId: conce-sin-003
   - note: advances to reflective synthesis of exclusion with essential universal relation.
-  - sourceClaimIds: [`con-sub-c-002-c1`]
+  - sourceClaimIds: [`conce-sin-002-c1`]
   - sourceKeyPointIds: [`k2`, `k3`]
-  - targetClaimIds: [`con-sub-c-003-c1`]
+  - targetClaimIds: [`conce-sin-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -172,7 +172,7 @@ Review outcome:
 - review_pending
 - notes: entry-2 span locked at 179-227.
 
-### Entry con-sub-c-003 — Section 2b synthesis: mediated immediacy and essential relation
+### Entry conce-sin-003 — Section 2b synthesis: mediated immediacy and essential relation
 
 Span:
 
@@ -192,7 +192,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: con-sub-c-003-c1
+- c1. id: conce-sin-003-c1
   - subject: singular
   - predicate: is_determined_as
   - object: mediated_immediacy_with_internal_positive_connection
@@ -201,7 +201,7 @@ Claims: (Claim)
   - evidence:
     - [229-248] singular as immediate result of mediation with internal repelling separation and positive connection.
 
-- c2. id: con-sub-c-003-c2
+- c2. id: conce-sin-003-c2
   - subject: singular_abstraction
   - predicate: posits
   - object: self_subsisting_differences_with_essential_relation_to_universal
@@ -219,20 +219,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: con-sub-c-002
+  - targetEntryId: conce-sin-002
   - note: synthesis block grounds section 2 by uniting exclusion with essential relation.
-  - sourceClaimIds: [`con-sub-c-003-c1`, `con-sub-c-003-c2`]
+  - sourceClaimIds: [`conce-sin-003-c1`, `conce-sin-003-c2`]
   - sourceKeyPointIds: [`k1`, `k2`, `k3`]
-  - targetClaimIds: [`con-sub-c-002-c1`]
+  - targetClaimIds: [`conce-sin-002-c1`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: con-sub-c-004
+  - targetEntryId: conce-sin-004
   - note: synthesis transitions into explicit judgment handoff marker.
-  - sourceClaimIds: [`con-sub-c-003-c2`]
+  - sourceClaimIds: [`conce-sin-003-c2`]
   - sourceKeyPointIds: [`k2`, `k3`]
-  - targetClaimIds: [`con-sub-c-004-c2`]
+  - targetClaimIds: [`conce-sin-004-c2`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -241,7 +241,7 @@ Review outcome:
 - review_pending
 - notes: entry-3 span locked at 229-266.
 
-### Entry con-sub-c-004 — Transition marker: singularity as judgment handoff
+### Entry conce-sin-004 — Transition marker: singularity as judgment handoff
 
 Span:
 
@@ -261,7 +261,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: con-sub-c-004-c1
+- c1. id: conce-sin-004-c1
   - subject: concept_as_connection_of_self_subsistent_determinations
   - predicate: loses
   - object: posited_unity_of_moments
@@ -271,7 +271,7 @@ Claims: (Claim)
     - [268-276] concept's determinations no longer stand as moments of posited unity but as self-subsisting.
     - [277-279] as singularity, concept returns in determinateness into itself and determinate becomes totality.
 
-- c2. id: con-sub-c-004-c2
+- c2. id: conce-sin-004-c2
   - subject: concept_as_singularity
   - predicate: is_posited_as
   - object: originative_partition_into_judgment
@@ -288,18 +288,18 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: refines
-  - targetEntryId: con-sub-c-003
+  - targetEntryId: conce-sin-003
   - note: specifies the explicit judgment-handoff determination emerging from section 2b synthesis.
-  - sourceClaimIds: [`con-sub-c-004-c1`, `con-sub-c-004-c2`]
+  - sourceClaimIds: [`conce-sin-004-c1`, `conce-sin-004-c2`]
   - sourceKeyPointIds: [`k1`, `k2`, `k3`]
-  - targetClaimIds: [`con-sub-c-003-c1`, `con-sub-c-003-c2`]
+  - targetClaimIds: [`conce-sin-003-c1`, `conce-sin-003-c2`]
   - logicalOperator: constrained_refinement
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
   - targetEntryId: con-idea-001
   - note: explicit transition from singularity into judgment track.
-  - sourceClaimIds: [`con-sub-c-004-c2`]
+  - sourceClaimIds: [`conce-sin-004-c2`]
   - sourceKeyPointIds: [`k2`, `k3`]
   - targetClaimIds: [pending]
   - logicalOperator: sequential_transition

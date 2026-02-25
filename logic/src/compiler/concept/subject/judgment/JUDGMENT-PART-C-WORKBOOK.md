@@ -46,13 +46,12 @@ Scope:
 
 Decision:
 
-- Use the same two-layer Entry system as Parts A-B:
-  - Level 1 marker entries: `jud-nes-a`, `jud-nes-b`, `jud-nes-c`
-  - Level 2 numbered entries under each marker: `jud-nes-<letter>-<nnn>`
+- Remove marker-only entries for this pass and keep only substantive, evidence-bearing entries.
+- Keep the existing numbered ID pattern (`judgm-nec-<letter>-<nnn>`) so inbound/outbound cross-part links remain stable.
 - Keep this pass minimally decomposed while preserving explicit transitions.
 - Keep Part D handoff explicit but claim target pending until Part D extraction.
 
-### Entry jud-nes-001 — Necessity setup: objective universality as genus/species ground
+### Entry judgm-nec-001 — Necessity setup: objective universality as genus/species ground
 
 Span:
 
@@ -72,7 +71,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: jud-nes-001-c1
+- c1. id: judgm-nec-001-c1
   - subject: objective_universality
   - predicate: is_determined_as
   - object: concept_immanent_posited_necessity
@@ -82,7 +81,7 @@ Claims: (Claim)
     - [4-13] universality exists in-and-for-itself and is posited necessity of determinations.
     - [14-15] contrast: substance does not hold distinction as internal principle.
 
-- c2. id: jud-nes-001-c2
+- c2. id: judgm-nec-001-c2
   - subject: universality_in_judgment_of_necessity
   - predicate: grounds
   - object: genus_species_determination
@@ -99,20 +98,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: presupposes
-  - targetEntryId: jud-ref-c-003
+  - targetEntryId: judgm-ref-c-003
   - note: necessity setup presupposes Reflection's copular identity result.
-  - sourceClaimIds: [`jud-nes-001-c1`]
+  - sourceClaimIds: [`judgm-nec-001-c1`]
   - sourceKeyPointIds: [`k1`, `k2`]
-  - targetClaimIds: [`jud-ref-c-003-c3`]
+  - targetClaimIds: [`judgm-ref-c-003-c3`]
   - logicalOperator: presuppositional_link
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: jud-nes-a
-  - note: setup proceeds into categorical judgment as first necessity form.
-  - sourceClaimIds: [`jud-nes-001-c2`]
+  - targetEntryId: judgm-nec-a-001
+  - note: setup proceeds directly into the first categorical subtopic.
+  - sourceClaimIds: [`judgm-nec-001-c2`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`jud-nes-a-c1`]
+  - targetClaimIds: [`judgm-nec-a-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -121,87 +120,7 @@ Review outcome:
 - review_pending
 - notes: base setup entry fixed for Part C.
 
-### Entry jud-nes-a — Marker `a`: categorical judgment
-
-Span:
-
-- sourceFile: `src/compiler/concept/subject/judgment/necessity.txt`
-- lineStart: 26
-- lineEnd: 107
-
-Summary:
-
-Categorial necessity presents subject-predicate substantial identity in genus/species form, while immediate subject determinateness remains contingent and drives transition to the hypothetical.
-
-Key points: (KeyPoint)
-
-- k1. Genus/species relation structures categorical judgment.
-- k2. Its necessary core is substantial identity of subject and predicate.
-- k3. Immediate determinateness remains only inwardly necessary, forcing transition.
-
-Claims: (Claim)
-
-- c1. id: jud-nes-a-c1
-  - subject: categorical_judgment
-  - predicate: is_determined_as
-  - object: immediate_judgment_of_necessity_in_genus_species_form
-  - modality: asserted
-  - confidence: 0.95
-  - evidence:
-    - [28-40] genus divides into species; categorical is first/immediate judgment of necessity.
-
-- c2. id: jud-nes-a-c2
-  - subject: necessity_in_categorical_judgment
-  - predicate: is
-  - object: substantial_identity_of_subject_and_predicate
-  - modality: asserted
-  - confidence: 0.95
-  - evidence:
-    - [53-58] substantial identity; distinctions only unessential positedness.
-    - [81-84] copula has meaning of necessity.
-
-- c3. id: jud-nes-a-c3
-  - subject: categorical_judgment
-  - predicate: transitions_to
-  - object: hypothetical_judgment
-  - modality: asserted
-  - confidence: 0.96
-  - evidence:
-    - [86-93] determinateness still contingent; necessity still inner.
-    - [103-107] by necessity of immediate being it passes over into hypothetical.
-
-Claim ↔ key point map:
-
-- c1 -> k1
-- c2 -> k2
-- c3 -> k3
-
-Relations: (Relation)
-
-- r1. type: transitions_to
-  - targetEntryId: jud-nes-a-001
-  - note: marker to numbered articulation of categorical necessity.
-  - sourceClaimIds: [`jud-nes-a-c1`]
-  - sourceKeyPointIds: [`k1`]
-  - targetClaimIds: [`jud-nes-a-001-c1`]
-  - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
-
-- r2. type: transitions_to
-  - targetEntryId: jud-nes-b
-  - note: explicit handoff from categorical to hypothetical marker.
-  - sourceClaimIds: [`jud-nes-a-c3`]
-  - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`jud-nes-b-c1`]
-  - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
-
-Review outcome:
-
-- review_pending
-- notes: marker-level entry for layer-1 node `a`.
-
-### Entry jud-nes-a-001 — Genus/species immediate structure of the categorical
+### Entry judgm-nec-a-001 — Genus/species immediate structure of the categorical
 
 Span:
 
@@ -221,7 +140,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: jud-nes-a-001-c1
+- c1. id: judgm-nec-a-001-c1
   - subject: genus_species_relation
   - predicate: is
   - object: reciprocal_structure_of_necessity
@@ -230,7 +149,7 @@ Claims: (Claim)
   - evidence:
     - [28-35] reciprocal genus/species determination.
 
-- c2. id: jud-nes-a-001-c2
+- c2. id: judgm-nec-a-001-c2
   - subject: categorical_judgment
   - predicate: is_determined_as
   - object: first_or_immediate_judgment_of_necessity
@@ -239,7 +158,7 @@ Claims: (Claim)
   - evidence:
     - [36-40] predicate is universality in which subject has immanent nature; first/immediate necessity.
 
-- c3. id: jud-nes-a-001-c3
+- c3. id: judgm-nec-a-001-c3
   - subject: objective_universality_in_categorical_form
   - predicate: remains
   - object: immediate_particularization_not_yet_proximate_genus_principle
@@ -257,20 +176,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: jud-nes-a-002
+  - targetEntryId: judgm-nec-a-002
   - note: first paragraph gives way to substantial identity and non-accidental predicate determination.
-  - sourceClaimIds: [`jud-nes-a-001-c3`]
+  - sourceClaimIds: [`judgm-nec-a-001-c3`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`jud-nes-a-002-c1`]
+  - targetClaimIds: [`judgm-nec-a-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: first numbered child under marker `a` (first paragraph).
+- notes: first categorical subtopic (first paragraph).
 
-### Entry jud-nes-a-002 — Substantial identity and categorical copula-necessity
+### Entry judgm-nec-a-002 — Substantial identity and categorical copula-necessity
 
 Span:
 
@@ -290,7 +209,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: jud-nes-a-002-c1
+- c1. id: judgm-nec-a-002-c1
   - subject: necessity_in_categorical_judgment
   - predicate: is
   - object: substantial_identity_of_subject_and_predicate
@@ -299,7 +218,7 @@ Claims: (Claim)
   - evidence:
     - [54-58] substantial identity; distinctions as unessential positedness.
 
-- c2. id: jud-nes-a-002-c2
+- c2. id: judgm-nec-a-002-c2
   - subject: categorical_predicate
   - predicate: is_determined_as
   - object: immanent_nature_not_external_property
@@ -308,7 +227,7 @@ Claims: (Claim)
   - evidence:
     - [59-73] rose-red vs rose-plant marks accidental vs immanent nature.
 
-- c3. id: jud-nes-a-002-c3
+- c3. id: judgm-nec-a-002-c3
   - subject: categorical_copula
   - predicate: means
   - object: necessity
@@ -326,20 +245,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: jud-nes-a-003
+  - targetEntryId: judgm-nec-a-003
   - note: from substantial identity account to paragraph on remaining contingency/inner necessity.
-  - sourceClaimIds: [`jud-nes-a-002-c3`]
+  - sourceClaimIds: [`judgm-nec-a-002-c3`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`jud-nes-a-003-c1`]
+  - targetClaimIds: [`judgm-nec-a-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: second numbered child under marker `a` (lines 54-85).
+- notes: second categorical subtopic (lines 54-85).
 
-### Entry jud-nes-a-003 — Contingent determinateness and inner necessity
+### Entry judgm-nec-a-003 — Contingent determinateness and inner necessity
 
 Span:
 
@@ -359,7 +278,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: jud-nes-a-003-c1
+- c1. id: judgm-nec-a-003-c1
   - subject: subject_determinateness
   - predicate: is_initially
   - object: contingent_with_respect_to_predicate
@@ -368,7 +287,7 @@ Claims: (Claim)
   - evidence:
     - [87-93] determinateness contingent; necessity still inner.
 
-- c2. id: jud-nes-a-003-c2
+- c2. id: judgm-nec-a-003-c2
   - subject: objective_universal_self_determination
   - predicate: requires
   - object: non_accidental_identity_with_determinateness
@@ -385,20 +304,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: jud-nes-a-004
+  - targetEntryId: judgm-nec-a-004
   - note: final paragraph gives explicit passage from categorical to hypothetical judgment.
-  - sourceClaimIds: [`jud-nes-a-003-c2`]
+  - sourceClaimIds: [`judgm-nec-a-003-c2`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`jud-nes-a-004-c1`]
+  - targetClaimIds: [`judgm-nec-a-004-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: third numbered child under marker `a` (prior paragraph).
+- notes: third categorical subtopic (prior paragraph).
 
-### Entry jud-nes-a-004 — Transition paragraph: passage to hypothetical judgment
+### Entry judgm-nec-a-004 — Transition paragraph: passage to hypothetical judgment
 
 Span:
 
@@ -418,7 +337,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: jud-nes-a-004-c1
+- c1. id: judgm-nec-a-004-c1
   - subject: categorical_judgment
   - predicate: conforms_to
   - object: objective_universality_through_necessity_of_immediate_being
@@ -427,7 +346,7 @@ Claims: (Claim)
   - evidence:
     - [104-106] conformity through necessity of immediate being.
 
-- c2. id: jud-nes-a-004-c2
+- c2. id: judgm-nec-a-004-c2
   - subject: categorical_judgment
   - predicate: passes_over_into
   - object: hypothetical_judgment
@@ -444,100 +363,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: jud-nes-b-001
+  - targetEntryId: judgm-nec-b-001
   - note: transition paragraph hands off into the first hypothetical subtopic.
-  - sourceClaimIds: [`jud-nes-a-004-c2`]
+  - sourceClaimIds: [`judgm-nec-a-004-c2`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`jud-nes-b-001-c1`]
+  - targetClaimIds: [`judgm-nec-b-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: transition subtopic for marker `a`; completes marker `a` numbered layer.
+- notes: transition subtopic that completes the categorical sequence.
 
-### Entry jud-nes-b — Marker `b`: hypothetical judgment
-
-Span:
-
-- sourceFile: `src/compiler/concept/subject/judgment/necessity.txt`
-- lineStart: 109
-- lineEnd: 204
-
-Summary:
-
-Hypothetical judgment explicitly posits necessary connectedness of immediate determinacies, where each extreme is the being of the other, and develops toward concrete universality as disjunctive form.
-
-Key points: (KeyPoint)
-
-- k1. Hypothetical form posits connectedness, not independent extremes.
-- k2. Finite being is both its own and the being of an other.
-- k3. Connected identity of differentiated moments yields disjunctive judgment.
-
-Claims: (Claim)
-
-- c1. id: jud-nes-b-c1
-  - subject: hypothetical_judgment
-  - predicate: posits
-  - object: necessary_connectedness_of_immediate_determinacies
-  - modality: asserted
-  - confidence: 0.95
-  - evidence:
-    - [111-117] if A then B; connectedness now posited.
-    - [134-138] connectedness posited as existing, not extremes.
-
-- c2. id: jud-nes-b-c2
-  - subject: finite_being_in_hypothetical_form
-  - predicate: is
-  - object: own_being_and_being_of_other
-  - modality: asserted
-  - confidence: 0.95
-  - evidence:
-    - [145-149] finite is its own being and being of an other.
-    - [158-163] concept posits concrete self-identity as being-of-other.
-
-- c3. id: jud-nes-b-c3
-  - subject: hypothetical_judgment
-  - predicate: transitions_to
-  - object: disjunctive_judgment
-  - modality: asserted
-  - confidence: 0.96
-  - evidence:
-    - [200-204] concrete identity of concept with dependent particularities yields disjunctive judgment.
-
-Claim ↔ key point map:
-
-- c1 -> k1
-- c2 -> k2
-- c3 -> k3
-
-Relations: (Relation)
-
-- r1. type: transitions_to
-  - targetEntryId: jud-nes-b-001
-  - note: marker to first numbered articulation of conditional necessity.
-  - sourceClaimIds: [`jud-nes-b-c1`]
-  - sourceKeyPointIds: [`k1`]
-  - targetClaimIds: [`jud-nes-b-001-c1`]
-  - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
-
-- r2. type: transitions_to
-  - targetEntryId: jud-nes-c
-  - note: explicit handoff from hypothetical to disjunctive marker.
-  - sourceClaimIds: [`jud-nes-b-c3`]
-  - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`jud-nes-c-c1`]
-  - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
-
-Review outcome:
-
-- review_pending
-- notes: marker-level entry for layer-1 node `b`.
-
-### Entry jud-nes-b-001 — Conditional form and being-of-another
+### Entry judgm-nec-b-001 — Conditional form and being-of-another
 
 Span:
 
@@ -557,7 +396,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: jud-nes-b-001-c1
+- c1. id: judgm-nec-b-001-c1
   - subject: hypothetical_form
   - predicate: is
   - object: if_a_then_b_conditional_necessity
@@ -566,7 +405,7 @@ Claims: (Claim)
   - evidence:
     - [111-117] explicit formula and necessary connectedness.
 
-- c2. id: jud-nes-b-001-c2
+- c2. id: judgm-nec-b-001-c2
   - subject: hypothetical_link
   - predicate: posits
   - object: connectedness_without_asserting_extremes
@@ -575,7 +414,7 @@ Claims: (Claim)
   - evidence:
     - [134-138] connectedness exists; extremes not posited as existing.
 
-- c3. id: jud-nes-b-001-c3
+- c3. id: judgm-nec-b-001-c3
   - subject: finite_being
   - predicate: is_formally_true_as
   - object: being_of_an_other
@@ -594,20 +433,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: jud-nes-b-002
+  - targetEntryId: judgm-nec-b-002
   - note: from conditional structure to conceptual-universal determination.
-  - sourceClaimIds: [`jud-nes-b-001-c3`]
+  - sourceClaimIds: [`judgm-nec-b-001-c3`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`jud-nes-b-002-c1`]
+  - targetClaimIds: [`judgm-nec-b-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: first numbered child under marker `b`.
+- notes: first hypothetical subtopic.
 
-### Entry jud-nes-b-002 — Indeterminate proposition-form to concrete universality
+### Entry judgm-nec-b-002 — Indeterminate proposition-form to concrete universality
 
 Span:
 
@@ -627,7 +466,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: jud-nes-b-002-c1
+- c1. id: judgm-nec-b-002-c1
   - subject: hypothetical_judgment_relations
   - predicate: are
   - object: moments_of_single_identity
@@ -636,7 +475,7 @@ Claims: (Claim)
   - evidence:
     - [165-175] ground/consequence, causality, etc. recur as moments of one identity.
 
-- c2. id: jud-nes-b-002-c2
+- c2. id: judgm-nec-b-002-c2
   - subject: hypothetical_form
   - predicate: remains
   - object: proposition_like_and_indeterminate
@@ -645,7 +484,7 @@ Claims: (Claim)
   - evidence:
     - [180-185] shape more like proposition; indeterminate form/content conformity.
 
-- c3. id: jud-nes-b-002-c3
+- c3. id: judgm-nec-b-002-c3
   - subject: posited_truth_of_hypothetical
   - predicate: is
   - object: universality_as_concrete_identity_of_concept
@@ -663,101 +502,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: jud-nes-c-001
+  - targetEntryId: judgm-nec-c-001
   - note: concrete universality now appears as explicit disjunctive form.
-  - sourceClaimIds: [`jud-nes-b-002-c3`]
+  - sourceClaimIds: [`judgm-nec-b-002-c3`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`jud-nes-c-001-c1`]
+  - targetClaimIds: [`judgm-nec-c-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: completes marker `b` numbered layer.
+- notes: completes the hypothetical sequence.
 
-### Entry jud-nes-c — Marker `c`: disjunctive judgment
-
-Span:
-
-- sourceFile: `src/compiler/concept/subject/judgment/necessity.txt`
-- lineStart: 206
-- lineEnd: 449
-
-Summary:
-
-Disjunctive judgment posits objective universality in union with form: species are positively grounded in genus and negatively exclusive, and this identity culminates in the copula as posited concept, transitioning to judgment of concept.
-
-Key points: (KeyPoint)
-
-- k1. Disjunction unites concrete genus-universality with differentiated totality.
-- k2. Species are both positively identical in genus and negatively exclusive.
-- k3. True disjunction is concept-immanent, not empirical listing.
-- k4. Copular unity of subject/predicate rises to judgment of concept.
-
-Claims: (Claim)
-
-- c1. id: jud-nes-c-c1
-  - subject: disjunctive_judgment
-  - predicate: is_determined_as
-  - object: objective_universality_united_with_form
-  - modality: asserted
-  - confidence: 0.95
-  - evidence:
-    - [216-223] objective universality in union with form; genus plus differentiated totality.
-
-- c2. id: jud-nes-c-c2
-  - subject: species_relation_in_disjunction
-  - predicate: is
-  - object: positive_identity_and_negative_exclusion
-  - modality: asserted
-  - confidence: 0.95
-  - evidence:
-    - [245-260] B as well as C (positive identity) and either-or (negative connection).
-    - [311-316] unity of exclusion and concrete universality as truth.
-
-- c3. id: jud-nes-c-c3
-  - subject: disjunctive_copula
-  - predicate: raises
-  - object: judgment_of_necessity_to_judgment_of_concept
-  - modality: asserted
-  - confidence: 0.97
-  - evidence:
-    - [443-447] unity/coupling is concept itself as posited.
-    - [448-449] explicit rise to judgment of concept.
-
-Claim ↔ key point map:
-
-- c1 -> k1
-- c2 -> k2, k3
-- c3 -> k4
-
-Relations: (Relation)
-
-- r1. type: transitions_to
-  - targetEntryId: jud-nes-c-001
-  - note: marker to numbered articulation of disjunctive necessity structure.
-  - sourceClaimIds: [`jud-nes-c-c1`]
-  - sourceKeyPointIds: [`k1`]
-  - targetClaimIds: [`jud-nes-c-001-c1`]
-  - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
-
-- r2. type: transitions_to
-  - targetEntryId: jud-conc-001
-  - note: boundary handoff into Part D (judgment of concept) to be concretized in Part D extraction.
-  - sourceClaimIds: [`jud-nes-c-c3`]
-  - sourceKeyPointIds: [`k4`]
-  - targetClaimIds: [`pending`]
-  - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
-
-Review outcome:
-
-- review_pending
-- notes: marker-level entry for layer-1 node `c`.
-
-### Entry jud-nes-c-001 — Disjunctive form as concrete universal totality
+### Entry judgm-nec-c-001 — Disjunctive form as concrete universal totality
 
 Span:
 
@@ -777,7 +535,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: jud-nes-c-001-c1
+- c1. id: judgm-nec-c-001-c1
   - subject: disjunctive_form
   - predicate: expresses
   - object: necessity_of_conceptual_totality
@@ -786,7 +544,7 @@ Claims: (Claim)
   - evidence:
     - [223-238] either-or as necessity of concept with identity, difference, and totality.
 
-- c2. id: jud-nes-c-001-c2
+- c2. id: judgm-nec-c-001-c2
   - subject: species_in_disjunction
   - predicate: are
   - object: positively_identical_and_negatively_connected
@@ -796,7 +554,7 @@ Claims: (Claim)
     - [249-260] positive and negative connection in one genus-unity.
     - [311-316] unity is truth of contrary/contradictory determinations.
 
-- c3. id: jud-nes-c-001-c3
+- c3. id: judgm-nec-c-001-c3
   - subject: empirical_disjunction
   - predicate: lacks
   - object: immanent_necessity_of_totality
@@ -815,20 +573,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: jud-nes-c-002
+  - targetEntryId: judgm-nec-c-002
   - note: from disjunctive necessity to proximate-genus and copular culmination.
-  - sourceClaimIds: [`jud-nes-c-001-c1`, `jud-nes-c-001-c3`]
+  - sourceClaimIds: [`judgm-nec-c-001-c1`, `judgm-nec-c-001-c3`]
   - sourceKeyPointIds: [`k1`, `k3`]
-  - targetClaimIds: [`jud-nes-c-002-c1`]
+  - targetClaimIds: [`judgm-nec-c-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: first numbered child under marker `c`.
+- notes: first disjunctive subtopic.
 
-### Entry jud-nes-c-002 — Proximate genus, conceptive disjunction, and rise to concept-judgment
+### Entry judgm-nec-c-002 — Proximate genus, conceptive disjunction, and rise to concept-judgment
 
 Span:
 
@@ -848,7 +606,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: jud-nes-c-002-c1
+- c1. id: judgm-nec-c-002-c1
   - subject: proximate_genus
   - predicate: is_determined_as
   - object: concrete_universality_with_immanent_species_difference
@@ -857,7 +615,7 @@ Claims: (Claim)
   - evidence:
     - [343-353] concrete genus as unity of concept-moments with real difference in species.
 
-- c2. id: jud-nes-c-002-c2
+- c2. id: judgm-nec-c-002-c2
   - subject: concept
   - predicate: posits
   - object: its_own_disjunction
@@ -867,7 +625,7 @@ Claims: (Claim)
     - [381-394] concept's progressive determination posits disjunction and totality of particulars.
     - [395-399] invalid disjunction indicates failure to proceed from concept.
 
-- c3. id: jud-nes-c-002-c3
+- c3. id: judgm-nec-c-002-c3
   - subject: copula_unity_of_disjunctive_judgment
   - predicate: is
   - object: concept_as_posited_and_transition_to_judgment_of_concept
@@ -885,19 +643,10 @@ Claim ↔ key point map:
 
 Relations: (Relation)
 
-- r1. type: supports
-  - targetEntryId: jud-nes-c
-  - note: grounds marker-level transition claim from disjunctive necessity to concept judgment.
-  - sourceClaimIds: [`jud-nes-c-002-c3`]
-  - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`jud-nes-c-c3`]
-  - logicalOperator: implicative_support
-  - analysisMode: first_order_claim_projection
-
-- r2. type: transitions_to
-  - targetEntryId: jud-conc-001
+- r1. type: transitions_to
+  - targetEntryId: judgm-con-001
   - note: direct Part D boundary handoff; claim target to be set during Part D extraction.
-  - sourceClaimIds: [`jud-nes-c-002-c3`]
+  - sourceClaimIds: [`judgm-nec-c-002-c3`]
   - sourceKeyPointIds: [`k3`]
   - targetClaimIds: [`pending`]
   - logicalOperator: sequential_transition
@@ -906,4 +655,4 @@ Relations: (Relation)
 Review outcome:
 
 - review_pending
-- notes: completes marker `c` numbered layer and Part C seed-pass boundary.
+- notes: completes the disjunctive sequence and Part C seed-pass boundary.

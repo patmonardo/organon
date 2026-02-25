@@ -46,13 +46,12 @@ Scope:
 
 Decision:
 
-- Apply the same two-layer Entry system used in Parts A-C:
-  - Level 1 marker entries: `jud-conc-a`, `jud-conc-b`, `jud-conc-c`
-  - Level 2 numbered entries under each marker: `jud-conc-<letter>-<nnn>`
+- Remove marker-only entries for this pass and keep only substantive, evidence-bearing entries.
+- Keep the existing numbered ID pattern (`judgm-con-<letter>-<nnn>`) so inbound/outbound cross-part links remain stable.
 - Keep this pass minimal but preserve the key special role of Part D: explicit copula repletion and transition to syllogism.
-- Keep syllogism handoff explicit, anchored to extracted entry `syl-exi-idea-001`.
+- Keep syllogism handoff explicit, anchored to extracted entry `syllo-exi-idea-001`.
 
-### Entry jud-conc-001 — Concept-judgment setup: true adjudication against ought
+### Entry judgm-con-001 — Concept-judgment setup: true adjudication against ought
 
 Span:
 
@@ -72,7 +71,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: jud-conc-001-c1
+- c1. id: judgm-con-001-c1
   - subject: judgment_of_the_concept
   - predicate: is_determined_as
   - object: first_true_adjudication_against_ought
@@ -81,7 +80,7 @@ Claims: (Claim)
   - evidence:
     - [12-19] concept as basis/ought; predicates like good/bad/true/right as measure.
 
-- c2. id: jud-conc-001-c2
+- c2. id: judgm-con-001-c2
   - subject: judgment_of_the_concept
   - predicate: is
   - object: objective_truth_of_judgment
@@ -90,7 +89,7 @@ Claims: (Claim)
   - evidence:
     - [49-56] judgment of concept is objective and true, resting on concept as concept.
 
-- c3. id: jud-conc-001-c3
+- c3. id: judgm-con-001-c3
   - subject: disjunctive_result
   - predicate: must_develop_into
   - object: subject_predicate_dyads_out_of_genus_species_structure
@@ -109,20 +108,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: refines
-  - targetEntryId: jud-nes-c-002
+  - targetEntryId: judgm-nec-c-002
   - note: elaborates Necessity's transition into concept-judgment by specifying ought/adjudication structure.
-  - sourceClaimIds: [`jud-conc-001-c1`, `jud-conc-001-c2`]
+  - sourceClaimIds: [`judgm-con-001-c1`, `judgm-con-001-c2`]
   - sourceKeyPointIds: [`k1`, `k2`]
-  - targetClaimIds: [`jud-nes-c-002-c3`]
+  - targetClaimIds: [`judgm-nec-c-002-c3`]
   - logicalOperator: presuppositional_link
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: jud-conc-a
-  - note: setup proceeds to assertoric judgment as first immediate concept-judgment.
-  - sourceClaimIds: [`jud-conc-001-c3`]
+  - targetEntryId: judgm-con-a-001
+  - note: setup proceeds directly to the first assertoric subtopic.
+  - sourceClaimIds: [`judgm-con-001-c3`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`jud-conc-a-c1`]
+  - targetClaimIds: [`judgm-con-a-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -131,86 +130,7 @@ Review outcome:
 - review_pending
 - notes: base setup entry fixed for Part D special role.
 
-### Entry jud-conc-a — Marker `a`: assertoric judgment
-
-Span:
-
-- sourceFile: `src/compiler/concept/subject/judgment/concept.txt`
-- lineStart: 93
-- lineEnd: 164
-
-Summary:
-
-Assertoric judgment immediately connects singular actuality/constitution to concept but leaves the connection merely asserted and externally certified, which makes the judgment essentially problematic.
-
-Key points: (KeyPoint)
-
-- k1. Assertoric form is immediate concept-judgment.
-- k2. Predicate measures constitution against concept (good/bad, right/wrong).
-- k3. Connection is not yet posited in object; thus opposing assurances stand equally.
-
-Claims: (Claim)
-
-- c1. id: jud-conc-a-c1
-  - subject: assertoric_judgment
-  - predicate: is_determined_as
-  - object: immediate_judgment_of_the_concept
-  - modality: asserted
-  - confidence: 0.95
-  - evidence:
-    - [95-101] concept-judgment is first immediate; predicate connects actuality/constitution to concept.
-
-- c2. id: jud-conc-a-c2
-  - subject: assertoric_predication
-  - predicate: evaluates
-  - object: conformity_or_nonconformity_of_fact_to_concept
-  - modality: asserted
-  - confidence: 0.95
-  - evidence:
-    - [102-115] subject ought/concept and constituted actuality may/may not conform.
-
-- c3. id: jud-conc-a-c3
-  - subject: assertoric_connection
-  - predicate: remains
-  - object: external_subjective_assurance_and_therefore_problematic
-  - modality: asserted
-  - confidence: 0.94
-  - evidence:
-    - [127-147] connectedness still external; copula immediate abstract being.
-    - [149-164] opposing assurances equally justified; therefore judgment is problematic.
-
-Claim ↔ key point map:
-
-- c1 -> k1
-- c2 -> k2
-- c3 -> k3
-
-Relations: (Relation)
-
-- r1. type: transitions_to
-  - targetEntryId: jud-conc-a-001
-  - note: marker to numbered articulation of assertoric structure and defect.
-  - sourceClaimIds: [`jud-conc-a-c1`]
-  - sourceKeyPointIds: [`k1`]
-  - targetClaimIds: [`jud-conc-a-001-c1`]
-  - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
-
-- r2. type: transitions_to
-  - targetEntryId: jud-conc-b
-  - note: explicit handoff from assertoric to problematic marker.
-  - sourceClaimIds: [`jud-conc-a-c3`]
-  - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`jud-conc-b-c1`]
-  - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
-
-Review outcome:
-
-- review_pending
-- notes: marker-level entry for layer-1 node `a`.
-
-### Entry jud-conc-a-001 — Assertoric immediacy: ought, constitution, and split extremes
+### Entry judgm-con-a-001 — Assertoric immediacy: ought, constitution, and split extremes
 
 Span:
 
@@ -230,7 +150,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: jud-conc-a-001-c1
+- c1. id: judgm-con-a-001-c1
   - subject: assertoric_subject
   - predicate: contains
   - object: universal_ought_and_constituted_particularity
@@ -239,7 +159,7 @@ Claims: (Claim)
   - evidence:
     - [103-115] two moments: oughted universal and constituted actuality.
 
-- c2. id: jud-conc-a-001-c2
+- c2. id: judgm-con-a-001-c2
   - subject: assertoric_form
   - predicate: lacks
   - object: posited_conceptive_unity_of_extremes
@@ -256,20 +176,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: jud-conc-a-002
+  - targetEntryId: judgm-con-a-002
   - note: second paragraph develops assertoric status as subjective assurance with external connectedness.
-  - sourceClaimIds: [`jud-conc-a-001-c2`]
+  - sourceClaimIds: [`judgm-con-a-001-c2`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`jud-conc-a-002-c1`]
+  - targetClaimIds: [`judgm-con-a-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: first numbered child under marker `a` (first paragraph).
+- notes: first assertoric subtopic (first paragraph).
 
-### Entry jud-conc-a-002 — Assertoric assurance and external copula
+### Entry judgm-con-a-002 — Assertoric assurance and external copula
 
 Span:
 
@@ -289,7 +209,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: jud-conc-a-002-c1
+- c1. id: judgm-con-a-002-c1
   - subject: assertoric_credential
   - predicate: is
   - object: subjective_assurance
@@ -298,7 +218,7 @@ Claims: (Claim)
   - evidence:
     - [127-133] external connectedness means only internal/in-itself status.
 
-- c2. id: jud-conc-a-002-c2
+- c2. id: judgm-con-a-002-c2
   - subject: copula_in_assertoric
   - predicate: remains
   - object: immediate_abstract_being
@@ -307,7 +227,7 @@ Claims: (Claim)
   - evidence:
     - [140-147] connectedness not yet posited; copula still immediate abstract being.
 
-- c3. id: jud-conc-a-002-c3
+- c3. id: judgm-con-a-002-c3
   - subject: assertoric_connectedness
   - predicate: remains
   - object: external_and_not_posited_as_immanent_connection
@@ -325,20 +245,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: jud-conc-a-003
+  - targetEntryId: judgm-con-a-003
   - note: third paragraph articulates equal-opposed assurances and the explicit problematic conclusion.
-  - sourceClaimIds: [`jud-conc-a-002-c3`]
+  - sourceClaimIds: [`judgm-con-a-002-c3`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`jud-conc-a-003-c1`]
+  - targetClaimIds: [`judgm-con-a-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: second numbered child under marker `a` (second paragraph).
+- notes: second assertoric subtopic (second paragraph).
 
-### Entry jud-conc-a-003 — Opposed assurances and explicit problematic status
+### Entry judgm-con-a-003 — Opposed assurances and explicit problematic status
 
 Span:
 
@@ -358,7 +278,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: jud-conc-a-003-c1
+- c1. id: judgm-con-a-003-c1
   - subject: assertoric_assurance
   - predicate: has
   - object: equally_justified_opposition
@@ -367,7 +287,7 @@ Claims: (Claim)
   - evidence:
     - [149-155] "this action is good" / "this action is bad" equally justified.
 
-- c2. id: jud-conc-a-003-c2
+- c2. id: judgm-con-a-003-c2
   - subject: assertoric_judgment
   - predicate: is_essentially
   - object: problematic
@@ -384,99 +304,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: jud-conc-b-001
-  - note: assertoric problematicity passes to explicit problematic judgment marker development.
-  - sourceClaimIds: [`jud-conc-a-003-c2`]
+  - targetEntryId: judgm-con-b-001
+  - note: assertoric problematicity passes to explicit problematic judgment development.
+  - sourceClaimIds: [`judgm-con-a-003-c2`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`jud-conc-b-001-c1`]
+  - targetClaimIds: [`judgm-con-b-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: third numbered child under marker `a` and transition paragraph.
+- notes: third assertoric subtopic and transition paragraph.
 
-### Entry jud-conc-b — Marker `b`: problematic judgment
-
-Span:
-
-- sourceFile: `src/compiler/concept/subject/judgment/concept.txt`
-- lineStart: 166
-- lineEnd: 258
-
-Summary:
-
-Problematic judgment internalizes the contingency of assertoric predication by splitting subject into objective ought and constituted singularity, thereby grounding whether predicate-conformity holds and leading to apodictic form.
-
-Key points: (KeyPoint)
-
-- k1. Problematic judgment carries both positive and negative valence immanently.
-- k2. Indeterminacy lies in contingent immediacy of the subject, not in objective predicate content.
-- k3. Subject's internal partition into universal/particular grounds transition to apodictic.
-
-Claims: (Claim)
-
-- c1. id: jud-conc-b-c1
-  - subject: problematic_judgment
-  - predicate: is_determined_as
-  - object: assertoric_taken_positively_and_negatively
-  - modality: asserted
-  - confidence: 0.95
-  - evidence:
-    - [168-170] problematic as assertoric taken both positively and negatively.
-
-- c2. id: jud-conc-b-c2
-  - subject: problematic_indeterminacy
-  - predicate: falls_on
-  - object: immediate_subject_contingency
-  - modality: asserted
-  - confidence: 0.94
-  - evidence:
-    - [186-196] indeterminateness at copula side resolves into subject contingency.
-
-- c3. id: jud-conc-b-c3
-  - subject: problematic_subject_partition
-  - predicate: transitions_to
-  - object: apodictic_judgment
-  - modality: asserted
-  - confidence: 0.96
-  - evidence:
-    - [212-224] subject partition into universal/particular as judgment's own structure.
-    - [254-258] once posited as character of fact, judgment is no longer problematic but apodictic.
-
-Claim ↔ key point map:
-
-- c1 -> k1
-- c2 -> k2
-- c3 -> k3
-
-Relations: (Relation)
-
-- r1. type: transitions_to
-  - targetEntryId: jud-conc-b-001
-  - note: marker to numbered articulation of immanent problematic structure.
-  - sourceClaimIds: [`jud-conc-b-c1`]
-  - sourceKeyPointIds: [`k1`]
-  - targetClaimIds: [`jud-conc-b-001-c1`]
-  - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
-
-- r2. type: transitions_to
-  - targetEntryId: jud-conc-c
-  - note: explicit handoff from problematic to apodictic marker.
-  - sourceClaimIds: [`jud-conc-b-c3`]
-  - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`jud-conc-c-c1`]
-  - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
-
-Review outcome:
-
-- review_pending
-- notes: marker-level entry for layer-1 node `b`.
-
-### Entry jud-conc-b-001 — Problematic as immanent positive/negative valence
+### Entry judgm-con-b-001 — Problematic as immanent positive/negative valence
 
 Span:
 
@@ -496,7 +337,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: jud-conc-b-001-c1
+- c1. id: judgm-con-b-001-c1
   - subject: problematic_form
   - predicate: is
   - object: immanent_posited_contingency_of_immediate
@@ -505,7 +346,7 @@ Claims: (Claim)
   - evidence:
     - [179-184] in problematic judgment, contingency of immediate is itself present.
 
-- c2. id: jud-conc-b-001-c2
+- c2. id: judgm-con-b-001-c2
   - subject: problematic_judgment
   - predicate: is_determined_as
   - object: assertoric_taken_positively_and_negatively
@@ -523,20 +364,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: jud-conc-b-002
+  - targetEntryId: judgm-con-b-002
   - note: second paragraph locates problematicity on subject-immediacy while preserving predicate objectivity.
-  - sourceClaimIds: [`jud-conc-b-001-c1`]
+  - sourceClaimIds: [`judgm-con-b-001-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`jud-conc-b-002-c1`]
+  - targetClaimIds: [`judgm-con-b-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: first numbered child under marker `b` (first paragraph).
+- notes: first problematic subtopic (first paragraph).
 
-### Entry jud-conc-b-002 — Predicate objectivity and subject-side contingency
+### Entry judgm-con-b-002 — Predicate objectivity and subject-side contingency
 
 Span:
 
@@ -556,7 +397,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: jud-conc-b-002-c1
+- c1. id: judgm-con-b-002-c1
   - subject: predicate
   - predicate: remains
   - object: objective_concrete_universality
@@ -565,7 +406,7 @@ Claims: (Claim)
   - evidence:
     - [191-194] predicate has no determination to gain; already objective concrete universality.
 
-- c2. id: jud-conc-b-002-c2
+- c2. id: judgm-con-b-002-c2
   - subject: problematic_element
   - predicate: falls_on
   - object: immediacy_of_subject_as_contingency
@@ -583,20 +424,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: jud-conc-b-003
+  - targetEntryId: judgm-con-b-003
   - note: third paragraph shows subject partition into universal/particular as judgment's own structure.
-  - sourceClaimIds: [`jud-conc-b-002-c2`]
+  - sourceClaimIds: [`judgm-con-b-002-c2`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`jud-conc-b-003-c1`]
+  - targetClaimIds: [`judgm-con-b-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: second numbered child under marker `b` (second paragraph).
+- notes: second problematic subtopic (second paragraph).
 
-### Entry jud-conc-b-003 — Subject partition as ground of conformity judgment
+### Entry judgm-con-b-003 — Subject partition as ground of conformity judgment
 
 Span:
 
@@ -616,7 +457,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: jud-conc-b-003-c1
+- c1. id: judgm-con-b-003-c1
   - subject: subject
   - predicate: contains
   - object: ground_for_being_or_not_being_what_it_ought
@@ -625,7 +466,7 @@ Claims: (Claim)
   - evidence:
     - [212-217] subject differentiated into ought and constituted existence; contains ground.
 
-- c2. id: jud-conc-b-003-c2
+- c2. id: judgm-con-b-003-c2
   - subject: problematic_negativity
   - predicate: is
   - object: original_partition_of_subject_unity
@@ -642,20 +483,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: jud-conc-b-004
+  - targetEntryId: judgm-con-b-004
   - note: next paragraph explicates the duplicity of subjectivity and its one-sided misreadings.
-  - sourceClaimIds: [`jud-conc-b-003-c2`]
+  - sourceClaimIds: [`judgm-con-b-003-c2`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`jud-conc-b-004-c1`]
+  - targetClaimIds: [`judgm-con-b-004-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: third numbered child under marker `b` (third paragraph).
+- notes: third problematic subtopic (third paragraph).
 
-### Entry jud-conc-b-004 — Duplicity of subjectivity and unity-in-opposition
+### Entry judgm-con-b-004 — Duplicity of subjectivity and unity-in-opposition
 
 Span:
 
@@ -675,7 +516,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: jud-conc-b-004-c1
+- c1. id: judgm-con-b-004-c1
   - subject: subjectivity
   - predicate: has
   - object: dual_meaning_conceptive_and_constituted
@@ -684,7 +525,7 @@ Claims: (Claim)
   - evidence:
     - [226-236] both sides of subject called subjectivity.
 
-- c2. id: jud-conc-b-004-c2
+- c2. id: judgm-con-b-004-c2
   - subject: truth_of_subjectivity
   - predicate: is
   - object: unity_of_opposed_meanings
@@ -701,20 +542,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: jud-conc-b-005
+  - targetEntryId: judgm-con-b-005
   - note: final paragraph explicitly converts problematic to apodictic judgment.
-  - sourceClaimIds: [`jud-conc-b-004-c2`]
+  - sourceClaimIds: [`judgm-con-b-004-c2`]
   - sourceKeyPointIds: [`k2`]
-  - targetClaimIds: [`jud-conc-b-005-c1`]
+  - targetClaimIds: [`judgm-con-b-005-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: fourth numbered child under marker `b` (fourth paragraph).
+- notes: fourth problematic subtopic (fourth paragraph).
 
-### Entry jud-conc-b-005 — Transition paragraph: problematic to apodictic
+### Entry judgm-con-b-005 — Transition paragraph: problematic to apodictic
 
 Span:
 
@@ -734,7 +575,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: jud-conc-b-005-c1
+- c1. id: judgm-con-b-005-c1
   - subject: problematic_judgment
   - predicate: becomes
   - object: apodictic_when_character_of_fact_is_posited
@@ -750,101 +591,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: jud-conc-c-001
-  - note: transition paragraph hands off into apodictic marker development.
-  - sourceClaimIds: [`jud-conc-b-005-c1`]
+  - targetEntryId: judgm-con-c-001
+  - note: transition paragraph hands off into apodictic development.
+  - sourceClaimIds: [`judgm-con-b-005-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`jud-conc-c-001-c1`]
+  - targetClaimIds: [`judgm-con-c-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: transition subtopic for marker `b`; completes marker `b` numbered layer.
+- notes: transition subtopic; completes the problematic sequence.
 
-### Entry jud-conc-c — Marker `c`: apodictic judgment
-
-Span:
-
-- sourceFile: `src/compiler/concept/subject/judgment/concept.txt`
-- lineStart: 260
-- lineEnd: 374
-
-Summary:
-
-Apodictic judgment makes objective correspondence explicit: subject and predicate share the same concrete concept, the copula becomes grounded and contentful, and judgment passes into syllogism.
-
-Key points: (KeyPoint)
-
-- k1. Apodictic subject includes ought and constitution as ground of correspondence.
-- k2. Judgment is objective truth with shared conceptive content.
-- k3. Copula develops from abstract is into determinate ground/connection.
-- k4. Replete copula transforms judgment into syllogism.
-
-Claims: (Claim)
-
-- c1. id: jud-conc-c-c1
-  - subject: apodictic_judgment
-  - predicate: is_determined_as
-  - object: objective_truth_of_judgment
-  - modality: asserted
-  - confidence: 0.96
-  - evidence:
-    - [262-272] apodictic subject includes ground for correspondence; judgment now truly objective.
-
-- c2. id: jud-conc-c-c2
-  - subject: copula_in_apodictic
-  - predicate: develops_into
-  - object: determinate_accomplished_ground_connection
-  - modality: asserted
-  - confidence: 0.95
-  - evidence:
-    - [304-320] transition from abstract is to developed ground.
-    - [321-325] copula is subject-universality correspondence.
-
-- c3. id: jud-conc-c-c3
-  - subject: judgment_of_the_concept
-  - predicate: transitions_to
-  - object: syllogism
-  - modality: asserted
-  - confidence: 0.97
-  - evidence:
-    - [369-372] replete copula as unity of concept re-emerging.
-    - [373-374] judgment has become syllogism.
-
-Claim ↔ key point map:
-
-- c1 -> k1, k2
-- c2 -> k3
-- c3 -> k4
-
-Relations: (Relation)
-
-- r1. type: transitions_to
-  - targetEntryId: jud-conc-c-001
-  - note: marker to numbered articulation of apodictic correspondence structure.
-  - sourceClaimIds: [`jud-conc-c-c1`]
-  - sourceKeyPointIds: [`k1`, `k2`]
-  - targetClaimIds: [`jud-conc-c-001-c1`]
-  - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
-
-- r2. type: transitions_to
-  - targetEntryId: syl-exi-idea-001
-  - note: boundary handoff into syllogism stage via Part A framing entry.
-  - sourceClaimIds: [`jud-conc-c-c3`]
-  - sourceKeyPointIds: [`k4`]
-  - targetClaimIds: [`syl-exi-idea-001-c1`]
-  - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
-
-Review outcome:
-
-- review_pending
-- notes: marker-level entry for layer-1 node `c`.
-
-### Entry jud-conc-c-001 — Apodictic subject and predicate-correspondence universal
+### Entry judgm-con-c-001 — Apodictic subject and predicate-correspondence universal
 
 Span:
 
@@ -864,7 +624,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: jud-conc-c-001-c1
+- c1. id: judgm-con-c-001-c1
   - subject: apodictic_subject
   - predicate: includes
   - object: universal_ought_and_constitutional_ground
@@ -873,7 +633,7 @@ Claims: (Claim)
   - evidence:
     - [262-270] subject includes ought and constitution grounding predication.
 
-- c2. id: jud-conc-c-001-c2
+- c2. id: judgm-con-c-001-c2
   - subject: apodictic_predicate_universal
   - predicate: is
   - object: correspondence_of_existence_to_ought
@@ -882,7 +642,7 @@ Claims: (Claim)
   - evidence:
     - [282-288] universality is correspondence, not ought/genus by itself.
 
-- c3. id: jud-conc-c-001-c3
+- c3. id: judgm-con-c-001-c3
   - subject: apodictic_judgment
   - predicate: is
   - object: objective_correspondence_of_shared_conceptive_content
@@ -900,20 +660,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: jud-conc-c-002
+  - targetEntryId: judgm-con-c-002
   - note: second paragraph develops fact-truth as fracture and reconnection of ought and being.
-  - sourceClaimIds: [`jud-conc-c-001-c3`]
+  - sourceClaimIds: [`judgm-con-c-001-c3`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`jud-conc-c-002-c1`]
+  - targetClaimIds: [`judgm-con-c-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: first numbered child under marker `c` (first paragraph).
+- notes: first apodictic subtopic (first paragraph).
 
-### Entry jud-conc-c-002 — Fact-truth as fracture and reconnection
+### Entry judgm-con-c-002 — Fact-truth as fracture and reconnection
 
 Span:
 
@@ -933,7 +693,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: jud-conc-c-002-c1
+- c1. id: judgm-con-c-002-c1
   - subject: fact_truth
   - predicate: is
   - object: fractured_and_reunified_connection_of_ought_and_being
@@ -950,20 +710,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: jud-conc-c-003
+  - targetEntryId: judgm-con-c-003
   - note: third paragraph develops ground/correspondence through determinate copula.
-  - sourceClaimIds: [`jud-conc-c-002-c1`]
+  - sourceClaimIds: [`judgm-con-c-002-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`jud-conc-c-003-c1`]
+  - targetClaimIds: [`judgm-con-c-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: second numbered child under marker `c` (second paragraph).
+- notes: second apodictic subtopic (second paragraph).
 
-### Entry jud-conc-c-003 — Grounded copula as determinate correspondence
+### Entry judgm-con-c-003 — Grounded copula as determinate correspondence
 
 Span:
 
@@ -983,7 +743,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: jud-conc-c-003-c1
+- c1. id: judgm-con-c-003-c1
   - subject: apodictic_copula
   - predicate: is_determined_as
   - object: developed_ground_of_subject_predicate_correspondence
@@ -1000,20 +760,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: jud-conc-c-004
+  - targetEntryId: judgm-con-c-004
   - note: fourth paragraph shows form's passing-away as content identity and connecting activity coincide.
-  - sourceClaimIds: [`jud-conc-c-003-c1`]
+  - sourceClaimIds: [`judgm-con-c-003-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`jud-conc-c-004-c1`]
+  - targetClaimIds: [`judgm-con-c-004-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: third numbered child under marker `c` (third paragraph).
+- notes: third apodictic subtopic (third paragraph).
 
-### Entry jud-conc-c-004 — Form passing-away and recovered conceptive identity
+### Entry judgm-con-c-004 — Form passing-away and recovered conceptive identity
 
 Span:
 
@@ -1033,7 +793,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: jud-conc-c-004-c1
+- c1. id: judgm-con-c-004-c1
   - subject: judgment_form
   - predicate: passes_away_in
   - object: identity_of_content_and_posited_connecting
@@ -1050,20 +810,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: jud-conc-c-005
+  - targetEntryId: judgm-con-c-005
   - note: final paragraph presents replete copula and explicit syllogism transition.
-  - sourceClaimIds: [`jud-conc-c-004-c1`]
+  - sourceClaimIds: [`judgm-con-c-004-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`jud-conc-c-005-c1`]
+  - targetClaimIds: [`judgm-con-c-005-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: fourth numbered child under marker `c` (fourth paragraph).
+- notes: fourth apodictic subtopic (fourth paragraph).
 
-### Entry jud-conc-c-005 — Transition paragraph: replete copula to syllogism
+### Entry judgm-con-c-005 — Transition paragraph: replete copula to syllogism
 
 Span:
 
@@ -1083,7 +843,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: jud-conc-c-005-c1
+- c1. id: judgm-con-c-005-c1
   - subject: copula_replete_of_content
   - predicate: grounds
   - object: transition_to_syllogism
@@ -1099,25 +859,16 @@ Claim ↔ key point map:
 
 Relations: (Relation)
 
-- r1. type: supports
-  - targetEntryId: jud-conc-c
-  - note: grounds marker-level transition from apodictic judgment to syllogism.
-  - sourceClaimIds: [`jud-conc-c-005-c1`]
-  - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`jud-conc-c-c3`]
-  - logicalOperator: implicative_support
-  - analysisMode: first_order_claim_projection
-
-- r2. type: transitions_to
-  - targetEntryId: syl-exi-idea-001
+- r1. type: transitions_to
+  - targetEntryId: syllo-exi-idea-001
   - note: concrete boundary handoff into syllogism extraction.
-  - sourceClaimIds: [`jud-conc-c-005-c1`]
+  - sourceClaimIds: [`judgm-con-c-005-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`syl-exi-idea-001-c1`]
+  - targetClaimIds: [`syllo-exi-idea-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: completes marker `c` numbered layer and Part D seed-pass boundary.
+- notes: completes the apodictic sequence and Part D seed-pass boundary.

@@ -46,13 +46,12 @@ Scope:
 
 Decision:
 
-- Adopt the same two-level Entry system used in Part B:
-  - Level 1 marker entries: `jud-exi-a`, `jud-exi-b`, `jud-exi-c`
-  - Level 2 numbered entries under each marker: `jud-exi-<letter>-<nnn>`
+- Remove marker-only entries for this pass and keep only substantive, evidence-bearing entries.
+- Keep the existing numbered ID pattern (`judgm-exi-<letter>-<nnn>`) so inbound/outbound cross-part links remain stable.
 - Keep claim decomposition minimal and evidence-anchored for first pass.
-- Preserve explicit transition into Reflection (`jud-ref-001`).
+- Preserve explicit transition into Reflection (`judgm-ref-001`).
 
-### Entry jud-exi-001 — Existence-judgment setup: immediacy, quality, inherence
+### Entry judgm-exi-001 — Existence-judgment setup: immediacy, quality, inherence
 
 Span:
 
@@ -72,7 +71,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: jud-exi-001-c1
+- c1. id: judgm-exi-001-c1
   - subject: judgment_of_existence
   - predicate: begins_as
   - object: immediate_qualitative_judgment
@@ -81,7 +80,7 @@ Claims: (Claim)
   - evidence:
     - [14-20] first judgment is immediate and therefore judgment of immediate existence / qualitative.
 
-- c2. id: jud-exi-001-c2
+- c2. id: judgm-exi-001-c2
   - subject: judgment_of_existence
   - predicate: is_determined_as
   - object: judgment_of_inherence
@@ -98,101 +97,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: jud-exi-a
-  - note: setup proceeds to positive judgment as first explicit form.
-  - sourceClaimIds: [`jud-exi-001-c1`, `jud-exi-001-c2`]
+  - targetEntryId: judgm-exi-a-001
+  - note: setup proceeds directly into the first positive subtopic.
+  - sourceClaimIds: [`judgm-exi-001-c1`, `judgm-exi-001-c2`]
   - sourceKeyPointIds: [`k2`, `k3`]
-  - targetClaimIds: [`jud-exi-a-c1`]
+  - targetClaimIds: [`judgm-exi-a-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: base setup entry preceding marker hierarchy.
+- notes: base setup entry preceding the substantive positive sequence.
 
-### Entry jud-exi-a — Marker `a`: positive judgment
-
-Span:
-
-- sourceFile: `src/compiler/concept/subject/judgment/existence.txt`
-- lineStart: 38
-- lineEnd: 335
-
-Summary:
-
-Positive judgment posits immediate subject-predicate connection, unfolds the reciprocal propositions of form/content, then shows their contradiction and necessity of transition to the negative judgment.
-
-Key points: (KeyPoint)
-
-- k1. Positive judgment is immediate connection of abstract singular and abstract universal.
-- k2. Core proposition is "the singular is universal," with reciprocal content movement.
-- k3. Immediate positivity proves internally contradictory and must be negated.
-
-Claims: (Claim)
-
-- c1. id: jud-exi-a-c1
-  - subject: positive_judgment
-  - predicate: is_determined_as
-  - object: immediate_connection_of_abstract_singular_and_abstract_universal
-  - modality: asserted
-  - confidence: 0.95
-  - evidence:
-    - [40-52] subject/predicate as abstract singular/universal under immediacy.
-    - [83-88] copula as immediate abstract being; judgment called positive.
-
-- c2. id: jud-exi-a-c2
-  - subject: positive_judgment_formulation
-  - predicate: is
-  - object: singular_is_universal_with_reciprocal_content
-  - modality: asserted
-  - confidence: 0.94
-  - evidence:
-    - [90-107] first pure expression: singular is universal.
-    - [190-243] reciprocal propositions articulate content/form movement.
-
-- c3. id: jud-exi-a-c3
-  - subject: positive_judgment
-  - predicate: transitions_to
-  - object: negative_judgment
-  - modality: asserted
-  - confidence: 0.96
-  - evidence:
-    - [311-317] immediate singular is not universal.
-    - [334-335] both propositions must be united; positive must be posited as negative.
-
-Claim ↔ key point map:
-
-- c1 -> k1
-- c2 -> k2
-- c3 -> k3
-
-Relations: (Relation)
-
-- r1. type: transitions_to
-  - targetEntryId: jud-exi-a-001
-  - note: marker to first numbered analysis of immediate positive form.
-  - sourceClaimIds: [`jud-exi-a-c1`]
-  - sourceKeyPointIds: [`k1`]
-  - targetClaimIds: [`jud-exi-a-001-c1`]
-  - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
-
-- r2. type: transitions_to
-  - targetEntryId: jud-exi-b
-  - note: explicit handoff from positive to negative judgment marker.
-  - sourceClaimIds: [`jud-exi-a-c3`]
-  - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`jud-exi-b-c1`]
-  - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
-
-Review outcome:
-
-- review_pending
-- notes: marker-level entry for layer-1 node `a`.
-
-### Entry jud-exi-a-001 — Immediate positive form: abstract extremes and positive copula
+### Entry judgm-exi-a-001 — Immediate positive form: abstract extremes and positive copula
 
 Span:
 
@@ -212,7 +130,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: jud-exi-a-001-c1
+- c1. id: judgm-exi-a-001-c1
   - subject: predicate
   - predicate: is_determined_as
   - object: abstract_universal
@@ -221,7 +139,7 @@ Claims: (Claim)
   - evidence:
     - [53-57] predicate as abstract universal with mediation presupposed.
 
-- c2. id: jud-exi-a-001-c2
+- c2. id: judgm-exi-a-001-c2
   - subject: subject
   - predicate: is_determined_as
   - object: abstract_singular
@@ -230,7 +148,7 @@ Claims: (Claim)
   - evidence:
     - [74-80] subject as abstract singular/side of externality.
 
-- c3. id: jud-exi-a-001-c3
+- c3. id: judgm-exi-a-001-c3
   - subject: copula_is
   - predicate: is
   - object: immediate_abstract_being
@@ -248,20 +166,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: jud-exi-a-002
+  - targetEntryId: judgm-exi-a-002
   - note: moves from immediate structure to explicit propositional articulation.
-  - sourceClaimIds: [`jud-exi-a-001-c3`]
+  - sourceClaimIds: [`judgm-exi-a-001-c3`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`jud-exi-a-002-c1`]
+  - targetClaimIds: [`judgm-exi-a-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: first numbered child under marker `a`.
+- notes: first positive subtopic.
 
-### Entry jud-exi-a-002 — Propositional unfolding: form/content reciprocity
+### Entry judgm-exi-a-002 — Propositional unfolding: form/content reciprocity
 
 Span:
 
@@ -282,7 +200,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: jud-exi-a-002-c1
+- c1. id: judgm-exi-a-002-c1
   - subject: first_pure_positive_expression
   - predicate: is
   - object: singular_is_universal
@@ -292,7 +210,7 @@ Claims: (Claim)
     - [90-93] first pure expression of positive judgment.
     - [102-107] every judgment in principle says singular is universal.
 
-- c2. id: jud-exi-a-002-c2
+- c2. id: judgm-exi-a-002-c2
   - subject: positive_judgment_objective_meaning
   - predicate: contains
   - object: perishability_of_singulars_and_positive_subsistence_in_concept
@@ -302,7 +220,7 @@ Claims: (Claim)
     - [130-138] perishableness of singular things and concept's persistence.
     - [145-148] judgment as universal resolving into singular through negativity.
 
-- c3. id: jud-exi-a-002-c3
+- c3. id: judgm-exi-a-002-c3
   - subject: reciprocal_determination
   - predicate: yields
   - object: universal_is_singular_and_singular_is_universal_in_one_judgment
@@ -321,20 +239,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: jud-exi-a-003
+  - targetEntryId: judgm-exi-a-003
   - note: unity remains immediate and therefore leads to contradiction and negation.
-  - sourceClaimIds: [`jud-exi-a-002-c3`]
+  - sourceClaimIds: [`judgm-exi-a-002-c3`]
   - sourceKeyPointIds: [`k4`]
-  - targetClaimIds: [`jud-exi-a-003-c1`]
+  - targetClaimIds: [`judgm-exi-a-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: second numbered child under marker `a`.
+- notes: second positive subtopic.
 
-### Entry jud-exi-a-003 — Contradiction of immediacy and transition to negation
+### Entry judgm-exi-a-003 — Contradiction of immediacy and transition to negation
 
 Span:
 
@@ -354,7 +272,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: jud-exi-a-003-c1
+- c1. id: judgm-exi-a-003-c1
   - subject: combination_of_form_and_content_propositions
   - predicate: yields
   - object: empty_identity_if_taken_as_completed_result
@@ -363,7 +281,7 @@ Claims: (Claim)
   - evidence:
     - [282-295] combination would become empty identical proposition.
 
-- c2. id: jud-exi-a-003-c2
+- c2. id: judgm-exi-a-003-c2
   - subject: positive_judgment_immediacy
   - predicate: blocks
   - object: union_of_singularity_and_universality_into_particularity
@@ -372,7 +290,7 @@ Claims: (Claim)
   - evidence:
     - [299-307] singularity/universality cannot yet be united due to immediacy.
 
-- c3. id: jud-exi-a-003-c3
+- c3. id: judgm-exi-a-003-c3
   - subject: positive_judgment
   - predicate: must_be_posited_as
   - object: negative_judgment
@@ -391,102 +309,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: jud-exi-b-001
+  - targetEntryId: judgm-exi-b-001
   - note: contradiction of positive form enters the negative judgment's logical content.
-  - sourceClaimIds: [`jud-exi-a-003-c3`]
+  - sourceClaimIds: [`judgm-exi-a-003-c3`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`jud-exi-b-001-c1`]
+  - targetClaimIds: [`judgm-exi-b-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: completes marker `a` numbered layer.
+- notes: completes the positive sequence.
 
-### Entry jud-exi-b — Marker `b`: negative judgment
-
-Span:
-
-- sourceFile: `src/compiler/concept/subject/judgment/existence.txt`
-- lineStart: 337
-- lineEnd: 699
-
-Summary:
-
-Negative judgment reveals positive judgment's contradiction, yields particularity as mediated result, and drives the negation of residual positive connection toward the infinite judgment.
-
-Key points: (KeyPoint)
-
-- k1. True logical content is singular-universal relation, not empirical filler.
-- k2. Negative judgment first realizes truth by mediating to particularity.
-- k3. Residual universal sphere in negation forces a further negation.
-- k4. This culminates in the infinite judgment.
-
-Claims: (Claim)
-
-- c1. id: jud-exi-b-c1
-  - subject: negative_judgment
-  - predicate: is_truth_of
-  - object: positive_judgment
-  - modality: asserted
-  - confidence: 0.95
-  - evidence:
-    - [361-367] positive judgment not true due to contradiction.
-    - [390-398] positive first attains truth in negative judgment.
-
-- c2. id: jud-exi-b-c2
-  - subject: negative_judgment_result
-  - predicate: is
-  - object: singular_is_particular
-  - modality: asserted
-  - confidence: 0.96
-  - evidence:
-    - [411-413] reduction to singular is particular.
-    - [429-430] explicit positive expression of negative judgment.
-
-- c3. id: jud-exi-b-c3
-  - subject: negative_judgment
-  - predicate: transitions_to
-  - object: infinite_judgment
-  - modality: asserted
-  - confidence: 0.95
-  - evidence:
-    - [685-693] remaining universality more purified and to be negated of singular subject.
-    - [694-699] whole extent of predicate negated; this is the infinite judgment.
-
-Claim ↔ key point map:
-
-- c1 -> k1
-- c2 -> k2
-- c3 -> k3, k4
-
-Relations: (Relation)
-
-- r1. type: transitions_to
-  - targetEntryId: jud-exi-b-001
-  - note: marker to first numbered analysis of logical truth in negation.
-  - sourceClaimIds: [`jud-exi-b-c1`]
-  - sourceKeyPointIds: [`k1`]
-  - targetClaimIds: [`jud-exi-b-001-c1`]
-  - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
-
-- r2. type: transitions_to
-  - targetEntryId: jud-exi-c
-  - note: explicit handoff from negative to infinite marker.
-  - sourceClaimIds: [`jud-exi-b-c3`]
-  - sourceKeyPointIds: [`k4`]
-  - targetClaimIds: [`jud-exi-c-c1`]
-  - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
-
-Review outcome:
-
-- review_pending
-- notes: marker-level entry for layer-1 node `b`.
-
-### Entry jud-exi-b-001 — Logical content and first negation to particularity
+### Entry judgm-exi-b-001 — Logical content and first negation to particularity
 
 Span:
 
@@ -506,7 +342,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: jud-exi-b-001-c1
+- c1. id: judgm-exi-b-001-c1
   - subject: logical_content_of_judgment
   - predicate: consists_in
   - object: relation_of_singular_and_universal
@@ -516,7 +352,7 @@ Claims: (Claim)
     - [347-353] concepts relate as singular/universal; this is logical content.
     - [358-360] judgment says singular is universal and vice versa.
 
-- c2. id: jud-exi-b-001-c2
+- c2. id: judgm-exi-b-001-c2
   - subject: positive_judgment
   - predicate: contradicts
   - object: requirement_of_noncontradiction
@@ -525,7 +361,7 @@ Claims: (Claim)
   - evidence:
     - [362-367] positive judgment not true and contradicts itself.
 
-- c3. id: jud-exi-b-001-c3
+- c3. id: judgm-exi-b-001-c3
   - subject: non_universal
   - predicate: is_determined_as
   - object: particular
@@ -543,20 +379,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: jud-exi-b-002
+  - targetEntryId: judgm-exi-b-002
   - note: moves into explicit account of residual universal sphere and positive side of negation.
-  - sourceClaimIds: [`jud-exi-b-001-c3`]
+  - sourceClaimIds: [`judgm-exi-b-001-c3`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`jud-exi-b-002-c1`]
+  - targetClaimIds: [`judgm-exi-b-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: first numbered child under marker `b`.
+- notes: first negative subtopic.
 
-### Entry jud-exi-b-002 — Residual positivity of negation and stabilized particularity
+### Entry judgm-exi-b-002 — Residual positivity of negation and stabilized particularity
 
 Span:
 
@@ -576,7 +412,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: jud-exi-b-002-c1
+- c1. id: judgm-exi-b-002-c1
   - subject: negative_judgment
   - predicate: is
   - object: not_total_negation
@@ -585,7 +421,7 @@ Claims: (Claim)
   - evidence:
     - [571-579] universality not negated as such; universal sphere remains.
 
-- c2. id: jud-exi-b-002-c2
+- c2. id: judgm-exi-b-002-c2
   - subject: rose_not_red_example
   - predicate: shows
   - object: retained_universal_sphere_color
@@ -594,7 +430,7 @@ Claims: (Claim)
   - evidence:
     - [582-590] color sphere retained despite negated determinateness.
 
-- c3. id: jud-exi-b-002-c3
+- c3. id: judgm-exi-b-002-c3
   - subject: transformed_determinateness
   - predicate: is
   - object: particularity
@@ -613,20 +449,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: jud-exi-b-003
+  - targetEntryId: judgm-exi-b-003
   - note: mediated particularity now drives second negation toward infinite judgment.
-  - sourceClaimIds: [`jud-exi-b-002-c3`]
+  - sourceClaimIds: [`judgm-exi-b-002-c3`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`jud-exi-b-003-c1`]
+  - targetClaimIds: [`judgm-exi-b-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: second numbered child under marker `b`.
+- notes: second negative subtopic.
 
-### Entry jud-exi-b-003 — Negation of negation and emergence of infinite judgment
+### Entry judgm-exi-b-003 — Negation of negation and emergence of infinite judgment
 
 Span:
 
@@ -646,7 +482,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: jud-exi-b-003-c1
+- c1. id: judgm-exi-b-003-c1
   - subject: particularity
   - predicate: functions_as
   - object: mediating_term_for_third_step
@@ -655,7 +491,7 @@ Claims: (Claim)
   - evidence:
     - [612-617] particularity mediates toward reflection of judgment into itself.
 
-- c2. id: jud-exi-b-003-c2
+- c2. id: judgm-exi-b-003-c2
   - subject: negation_of_negative_judgment
   - predicate: yields
   - object: singular_is_singular_and_universal_is_universal
@@ -665,7 +501,7 @@ Claims: (Claim)
     - [642-648] negation is posited as negation of negation.
     - [667-679] resulting double proposition.
 
-- c3. id: jud-exi-b-003-c3
+- c3. id: judgm-exi-b-003-c3
   - subject: second_negation_of_residual_connection
   - predicate: culminates_in
   - object: infinite_judgment
@@ -683,101 +519,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: jud-exi-c-001
+  - targetEntryId: judgm-exi-c-001
   - note: the negated connection now appears as explicitly infinite judgment form.
-  - sourceClaimIds: [`jud-exi-b-003-c3`]
+  - sourceClaimIds: [`judgm-exi-b-003-c3`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`jud-exi-c-001-c1`]
+  - targetClaimIds: [`judgm-exi-c-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: completes marker `b` numbered layer.
+- notes: completes the negative sequence.
 
-### Entry jud-exi-c — Marker `c`: infinite judgment
-
-Span:
-
-- sourceFile: `src/compiler/concept/subject/judgment/existence.txt`
-- lineStart: 700
-- lineEnd: 798
-
-Summary:
-
-Infinite judgment sublates ordinary judgment form (negative infinite as nonsensical non-judgment), while its positive side reflects singularity/universality into self-identity and transitions into judgment of reflection.
-
-Key points: (KeyPoint)
-
-- k1. Negative infinite judgment cancels the possibility of ordinary subject-predicate connection.
-- k2. Positive side is reflection of singular/universal into self-relation.
-- k3. Judgment of existence thereby sublates itself and passes to reflection.
-
-Claims: (Claim)
-
-- c1. id: jud-exi-c-c1
-  - subject: negative_infinite_judgment
-  - predicate: is_determined_as
-  - object: nonsensical_non_judgment
-  - modality: asserted
-  - confidence: 0.95
-  - evidence:
-    - [704-709] form of judgment sublated; connection required and not-there.
-    - [724-727] such examples may be "true" yet are not judgments.
-
-- c2. id: jud-exi-c-c2
-  - subject: positive_side_of_infinite_judgment
-  - predicate: is
-  - object: negation_of_negation_reflection_into_self
-  - modality: asserted
-  - confidence: 0.94
-  - evidence:
-    - [747-754] positive element is negation of negation and reflection of singularity.
-    - [767-770] universal also posited as turning back into itself.
-
-- c3. id: jud-exi-c-c3
-  - subject: judgment_of_existence
-  - predicate: transitions_to
-  - object: judgment_of_reflection
-  - modality: asserted
-  - confidence: 0.97
-  - evidence:
-    - [785-791] judgment of existence sublated; copula's unity posited.
-    - [797-798] explicit passage into judgment of reflection.
-
-Claim ↔ key point map:
-
-- c1 -> k1
-- c2 -> k2
-- c3 -> k3
-
-Relations: (Relation)
-
-- r1. type: transitions_to
-  - targetEntryId: jud-exi-c-001
-  - note: marker to numbered analysis of negative infinite form.
-  - sourceClaimIds: [`jud-exi-c-c1`]
-  - sourceKeyPointIds: [`k1`]
-  - targetClaimIds: [`jud-exi-c-001-c1`]
-  - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
-
-- r2. type: transitions_to
-  - targetEntryId: jud-ref-001
-  - note: direct boundary handoff into Part B Reflection setup.
-  - sourceClaimIds: [`jud-exi-c-c3`]
-  - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`jud-ref-001-c1`]
-  - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
-
-Review outcome:
-
-- review_pending
-- notes: marker-level entry for layer-1 node `c`.
-
-### Entry jud-exi-c-001 — Negative infinite judgment as sublated judgment-form
+### Entry judgm-exi-c-001 — Negative infinite judgment as sublated judgment-form
 
 Span:
 
@@ -797,7 +552,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: jud-exi-c-001-c1
+- c1. id: judgm-exi-c-001-c1
   - subject: infinite_judgment_negative_expression
   - predicate: sublates
   - object: form_of_judgment
@@ -806,7 +561,7 @@ Claims: (Claim)
   - evidence:
     - [702-706] infinite judgment as truth of negative judgment yet sublated form.
 
-- c2. id: jud-exi-c-001-c2
+- c2. id: judgm-exi-c-001-c2
   - subject: negatively_infinite_examples
   - predicate: are
   - object: correct_but_nonsensical_non_judgments
@@ -815,7 +570,7 @@ Claims: (Claim)
   - evidence:
     - [719-727] spirit-not-red / rose-not-elephant examples and verdict.
 
-- c3. id: jud-exi-c-001-c3
+- c3. id: judgm-exi-c-001-c3
   - subject: crime_as_infinite_judgment
   - predicate: negates
   - object: universal_sphere_of_right_as_right
@@ -833,20 +588,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: jud-exi-c-002
+  - targetEntryId: judgm-exi-c-002
   - note: from negative infinite side to positive reflection side.
-  - sourceClaimIds: [`jud-exi-c-001-c1`]
+  - sourceClaimIds: [`judgm-exi-c-001-c1`]
   - sourceKeyPointIds: [`k2`]
-  - targetClaimIds: [`jud-exi-c-002-c1`]
+  - targetClaimIds: [`judgm-exi-c-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: first numbered child under marker `c`.
+- notes: first infinite subtopic.
 
-### Entry jud-exi-c-002 — Positive infinite side: reflected singularity and universality
+### Entry judgm-exi-c-002 — Positive infinite side: reflected singularity and universality
 
 Span:
 
@@ -866,7 +621,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: jud-exi-c-002-c1
+- c1. id: judgm-exi-c-002-c1
   - subject: positive_infinite_judgment
   - predicate: states
   - object: singular_is_singular_by_reflection_into_itself
@@ -876,7 +631,7 @@ Claims: (Claim)
     - [747-754] positive element and "singular is singular" in reflection.
     - [758-760] singular posited for first time through mediation.
 
-- c2. id: jud-exi-c-002-c2
+- c2. id: judgm-exi-c-002-c2
   - subject: universal
   - predicate: is_posited_as
   - object: turning_back_into_itself
@@ -894,20 +649,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-- targetEntryId: jud-exi-c-003
+- targetEntryId: judgm-exi-c-003
 - note: after positive infinite self-return, judgment-form sublation is made explicit.
-- sourceClaimIds: [`jud-exi-c-002-c1`, `jud-exi-c-002-c2`]
+- sourceClaimIds: [`judgm-exi-c-002-c1`, `judgm-exi-c-002-c2`]
 - sourceKeyPointIds: [`k1`, `k2`, `k3`]
-- targetClaimIds: [`jud-exi-c-003-c1`]
+- targetClaimIds: [`judgm-exi-c-003-c1`]
 - logicalOperator: sequential_transition
 - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: second numbered child under marker `c`.
+- notes: second infinite subtopic.
 
-### Entry jud-exi-c-003 — Judgment-form collapse after infinite extremes
+### Entry judgm-exi-c-003 — Judgment-form collapse after infinite extremes
 
 Span:
 
@@ -927,7 +682,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: jud-exi-c-003-c1
+- c1. id: judgm-exi-c-003-c1
   - subject: reflection_of_judgment_determinations
   - predicate: sublates
   - object: judgment_form_as_such
@@ -936,7 +691,7 @@ Claims: (Claim)
   - evidence:
     - [772-775] reflection into themselves sublates judgment.
 
-- c2. id: jud-exi-c-003-c2
+- c2. id: judgm-exi-c-003-c2
   - subject: negatively_infinite_judgment
   - predicate: lacks
   - object: positive_subject_predicate_connection
@@ -945,7 +700,7 @@ Claims: (Claim)
   - evidence:
     - [775-779] difference too great for judgmental connection.
 
-- c3. id: jud-exi-c-003-c3
+- c3. id: judgm-exi-c-003-c3
   - subject: positively_infinite_judgment
   - predicate: lacks
   - object: judgment_due_to_total_identity
@@ -963,20 +718,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: jud-exi-c-004
+  - targetEntryId: judgm-exi-c-004
   - note: from collapse of judgment-form to explicit transition into reflection judgment.
-  - sourceClaimIds: [`jud-exi-c-003-c1`]
+  - sourceClaimIds: [`judgm-exi-c-003-c1`]
   - sourceKeyPointIds: [`k1`]
-  - targetClaimIds: [`jud-exi-c-004-c1`]
+  - targetClaimIds: [`judgm-exi-c-004-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: third numbered child under marker `c`.
+- notes: third infinite subtopic.
 
-### Entry jud-exi-c-004 — Transition paragraph: existence judgment passes to reflection
+### Entry judgm-exi-c-004 — Transition paragraph: existence judgment passes to reflection
 
 Span:
 
@@ -996,7 +751,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: jud-exi-c-004-c1
+- c1. id: judgm-exi-c-004-c1
   - subject: judgment_of_existence
   - predicate: has_sublated_itself
   - object: qualitative_extremes_in_copular_identity
@@ -1005,7 +760,7 @@ Claims: (Claim)
   - evidence:
     - [785-791] existence judgment sublated; qualitative extremes sublated in identity.
 
-- c2. id: jud-exi-c-004-c2
+- c2. id: judgm-exi-c-004-c2
   - subject: resulting_judgment_terms
   - predicate: are_determined_as
   - object: reflected_into_themselves_not_immediate
@@ -1014,7 +769,7 @@ Claims: (Claim)
   - evidence:
     - [792-796] unity as concept tears into judgment with reflected terms.
 
-- c3. id: jud-exi-c-004-c3
+- c3. id: judgm-exi-c-004-c3
   - subject: judgment_of_existence
   - predicate: passes_over_into
   - object: judgment_of_reflection
@@ -1031,25 +786,16 @@ Claim ↔ key point map:
 
 Relations: (Relation)
 
-- r1. type: supports
-  - targetEntryId: jud-exi-c
-  - note: establishes marker-level transition from infinite judgment to reflection.
-  - sourceClaimIds: [`jud-exi-c-004-c3`]
-  - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`jud-exi-c-c3`]
-  - logicalOperator: implicative_support
-  - analysisMode: first_order_claim_projection
-
-- r2. type: transitions_to
-  - targetEntryId: jud-ref-001
+- r1. type: transitions_to
+  - targetEntryId: judgm-ref-001
   - note: concrete handoff into Part B Reflection setup entry.
-  - sourceClaimIds: [`jud-exi-c-004-c3`]
+  - sourceClaimIds: [`judgm-exi-c-004-c3`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`jud-ref-001-c1`]
+  - targetClaimIds: [`judgm-ref-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: transition subtopic for marker `c`; completes Part A first-pass boundary.
+- notes: transition subtopic; completes Part A first-pass boundary.

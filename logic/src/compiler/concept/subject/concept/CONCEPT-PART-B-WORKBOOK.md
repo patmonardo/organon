@@ -49,7 +49,7 @@ Decision:
 - Preserve cross-links to Part A/Part C only when claim anchors are stable.
 - Use pseudo-Cypher labels: `Key points: (KeyPoint)`, `Claims: (Claim)`, `Relations: (Relation)`.
 
-### Entry con-sub-b-001 — Immediate determination: particularity as immanent universality
+### Entry conce-par-001 — Immediate determination: particularity as immanent universality
 
 Span:
 
@@ -71,7 +71,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: con-sub-b-001-c1
+- c1. id: conce-par-001-c1
   - subject: particularity
   - predicate: is_determined_as
   - object: universal_immanent_moment_nonexternal_limit
@@ -81,7 +81,7 @@ Claims: (Claim)
     - [4-9] determinateness of concept is particularity; universal remains solely with itself.
     - [40-47] particularity as universality is immanent connection, intrinsic totality, essential principle.
 
-- c2. id: con-sub-b-001-c2
+- c2. id: conce-par-001-c2
   - subject: particular
   - predicate: contains_and_exhibits
   - object: universality_as_substance_totality
@@ -91,7 +91,7 @@ Claims: (Claim)
     - [11-26] particular contains universality and exhibits it through determinateness.
     - [52-71] universal determines itself as particular; principle of diversity is self-determined.
 
-- c3. id: con-sub-b-001-c3
+- c3. id: conce-par-001-c3
   - subject: true_logical_division
   - predicate: consists_in
   - object: concept_self_division_into_coordinated_particular_opposites
@@ -110,29 +110,29 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: con-sub-a-003
+  - targetEntryId: conce-uni-003
   - note: confirms the Universal conclusion that transition to particularity is concept-immanent self-differentiation.
-  - sourceClaimIds: [`con-sub-b-001-c1`, `con-sub-b-001-c2`]
+  - sourceClaimIds: [`conce-par-001-c1`, `conce-par-001-c2`]
   - sourceKeyPointIds: [`k1`, `k2`, `k4`]
-  - targetClaimIds: [`con-sub-a-003-c3`]
+  - targetClaimIds: [`conce-uni-003-c3`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: con-sub-b-002
+  - targetEntryId: conce-par-002
   - note: from immediate determination into mediated analysis of difference, abstraction, and understanding.
-  - sourceClaimIds: [`con-sub-b-001-c3`]
+  - sourceClaimIds: [`conce-par-001-c3`]
   - sourceKeyPointIds: [`k5`]
-  - targetClaimIds: [`con-sub-b-002-c1`, `con-sub-b-002-c2`]
+  - targetClaimIds: [`conce-par-002-c1`, `conce-par-002-c2`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 - r3. type: supports
-  - targetEntryId: con-sub-a-004
+  - targetEntryId: conce-uni-004
   - note: reciprocal cross-part support: Particular's immediate determination confirms Universal's explicit handoff into particularity.
-  - sourceClaimIds: [`con-sub-b-001-c1`, `con-sub-b-001-c2`]
+  - sourceClaimIds: [`conce-par-001-c1`, `conce-par-001-c2`]
   - sourceKeyPointIds: [`k1`, `k2`, `k4`]
-  - targetClaimIds: [`con-sub-a-004-c1`]
+  - targetClaimIds: [`conce-uni-004-c1`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
@@ -141,7 +141,7 @@ Review outcome:
 - review_pending
 - notes: initial division logic stabilized for triadic pass.
 
-### Entry con-sub-b-002 — Mediated determination: abstract universality and unconceptualized concept
+### Entry conce-par-002 — Mediated determination: abstract universality and unconceptualized concept
 
 Span:
 
@@ -163,7 +163,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: con-sub-b-002-c1
+- c1. id: conce-par-002-c1
   - subject: conceptual_difference
   - predicate: is_truth_of
   - object: prior_relational_differences
@@ -173,7 +173,7 @@ Claims: (Claim)
     - [97-110] difference in concept is truth; prior determinations attain truth by reaching concept.
     - [119-131] relations like whole/part and cause/effect are one determinate concept, not separate concepts.
 
-- c2. id: con-sub-b-002-c2
+- c2. id: conce-par-002-c2
   - subject: abstract_universal
   - predicate: is_determined_as
   - object: particularity_as_unposited_mediated_totality
@@ -183,7 +183,7 @@ Claims: (Claim)
     - [171-199] particular determinateness as abstract universality; universality as form, determinateness as content.
     - [201-236] abstract-universal contains concept-moments but mediation is unposited; thus unconceptualized concept.
 
-- c3. id: con-sub-b-002-c3
+- c3. id: conce-par-002-c3
   - subject: natural_species_manifold
   - predicate: is
   - object: self_externality_not_trustworthy_copy_of_concept
@@ -193,7 +193,7 @@ Claims: (Claim)
     - [138-145] multiplicity of natural species shows impotence to exhibit conceptual rigor.
     - [158-169] manifold forms are free self-externality and abstract side of nothingness.
 
-- c4. id: con-sub-b-002-c4
+- c4. id: conce-par-002-c4
   - subject: determinate_abstract_concept
   - predicate: is_determined_as
   - object: one_sided_if_not_principled_by_conceptual_totality
@@ -213,20 +213,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: refines
-  - targetEntryId: con-sub-b-001
+  - targetEntryId: conce-par-001
   - note: explains how immediate particularity is mediated in abstraction without yet positing full conceptual totality.
-  - sourceClaimIds: [`con-sub-b-002-c1`, `con-sub-b-002-c2`]
+  - sourceClaimIds: [`conce-par-002-c1`, `conce-par-002-c2`]
   - sourceKeyPointIds: [`k1`, `k3`, `k4`]
-  - targetClaimIds: [`con-sub-b-001-c1`, `con-sub-b-001-c3`]
+  - targetClaimIds: [`conce-par-001-c1`, `conce-par-001-c3`]
   - logicalOperator: presuppositional_link
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: con-sub-b-003
+  - targetEntryId: conce-par-003
   - note: from one-sided abstract determinateness to explicit reason/understanding dialectic.
-  - sourceClaimIds: [`con-sub-b-002-c2`, `con-sub-b-002-c4`]
+  - sourceClaimIds: [`conce-par-002-c2`, `conce-par-002-c4`]
   - sourceKeyPointIds: [`k4`, `k5`]
-  - targetClaimIds: [`con-sub-b-003-c1`, `con-sub-b-003-c2`]
+  - targetClaimIds: [`conce-par-003-c1`, `conce-par-003-c2`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -235,7 +235,7 @@ Review outcome:
 - review_pending
 - notes: mediated block now runs through line 291 to include the one-sidedness/emptiness boundary.
 
-### Entry con-sub-b-003 — High-level dialectic: understanding, reason, and the force of transition
+### Entry conce-par-003 — High-level dialectic: understanding, reason, and the force of transition
 
 Span:
 
@@ -257,7 +257,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: con-sub-b-003-c1
+- c1. id: conce-par-003-c1
   - subject: understanding_fixity
   - predicate: both_limits_and_enables
   - object: dialectical_transition_of_determinacies
@@ -267,7 +267,7 @@ Claims: (Claim)
     - [293-310] understanding grants fixed universality to finite determinacies.
     - [381-390] that same sharpening enables dissolution and transition into opposite.
 
-- c2. id: con-sub-b-003-c2
+- c2. id: conce-par-003-c2
   - subject: understanding_reason_relation
   - predicate: is
   - object: nonseparable_with_abstract_concept_as_moment_of_reason
@@ -277,7 +277,7 @@ Claims: (Claim)
     - [414-420] separation of understanding and reason is rejected.
     - [421-426] determinate abstract concept is essential moment and beginning appearance of reason.
 
-- c3. id: con-sub-b-003-c3
+- c3. id: conce-par-003-c3
   - subject: reason
   - predicate: emerges_through
   - object: dialectical_kindling_of_finite_in_universal_form
@@ -296,20 +296,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: con-sub-b-002
+  - targetEntryId: conce-par-002
   - note: explains why abstract universality cannot remain final: its own form drives dialectical overcoming.
-  - sourceClaimIds: [`con-sub-b-003-c1`, `con-sub-b-003-c2`]
+  - sourceClaimIds: [`conce-par-003-c1`, `conce-par-003-c2`]
   - sourceKeyPointIds: [`k2`, `k3`, `k4`]
-  - targetClaimIds: [`con-sub-b-002-c2`, `con-sub-b-002-c4`]
+  - targetClaimIds: [`conce-par-002-c2`, `conce-par-002-c4`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: con-sub-b-004
+  - targetEntryId: conce-par-004
   - note: high-level reason/understanding dialectic transitions to explicit singularity determination.
-  - sourceClaimIds: [`con-sub-b-003-c2`, `con-sub-b-003-c3`]
+  - sourceClaimIds: [`conce-par-003-c2`, `conce-par-003-c3`]
   - sourceKeyPointIds: [`k4`, `k5`]
-  - targetClaimIds: [`con-sub-b-004-c1`]
+  - targetClaimIds: [`conce-par-004-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -318,7 +318,7 @@ Review outcome:
 - review_pending
 - notes: high-level abstract discussion isolated as 293-426 before explicit transition block.
 
-### Entry con-sub-b-004 — Transition: singularity as third moment and conceptual return
+### Entry conce-par-004 — Transition: singularity as third moment and conceptual return
 
 Span:
 
@@ -338,7 +338,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: con-sub-b-004-c1
+- c1. id: conce-par-004-c1
   - subject: singularity
   - predicate: is_determined_as
   - object: third_moment_and_absolute_turning_back_of_concept
@@ -355,20 +355,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: refines
-  - targetEntryId: con-sub-b-003
+  - targetEntryId: conce-par-003
   - note: makes explicit the singularity determination implied by the reason/understanding dialectical block.
-  - sourceClaimIds: [`con-sub-b-004-c1`]
+  - sourceClaimIds: [`conce-par-004-c1`]
   - sourceKeyPointIds: [`k1`, `k2`, `k3`]
-  - targetClaimIds: [`con-sub-b-003-c2`]
+  - targetClaimIds: [`conce-par-003-c2`]
   - logicalOperator: constrained_refinement
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: con-sub-c-001
+  - targetEntryId: conce-sin-001
   - note: explicit handoff from Particular (Part B) to Singularity (Part C).
-  - sourceClaimIds: [`con-sub-b-004-c1`]
+  - sourceClaimIds: [`conce-par-004-c1`]
   - sourceKeyPointIds: [`k2`, `k3`]
-  - targetClaimIds: [`con-sub-c-001-c1`]
+  - targetClaimIds: [`conce-sin-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
