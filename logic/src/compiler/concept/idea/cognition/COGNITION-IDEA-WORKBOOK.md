@@ -201,7 +201,7 @@ Relations: (Relation)
   - note: practical consummation opens explicit absolute-idea gate.
   - sourceClaimIds: [`con-idea-cog-003-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`con-idea-cog-004-c1`, `con-idea-cog-b-003-c2`]
+  - targetClaimIds: [`con-idea-cog-004-c1`, `cogni-god-003-c2`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 

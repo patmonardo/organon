@@ -47,13 +47,13 @@ Scope:
 Decision:
 
 - Part B uses species-first IDs aligned to explicit source markers.
-- Top species in Part B: `b-a`, `b-b`, `b-c`.
-- Nested species under `b-c` (explicit in `finitude.txt`): `b-c-a`, `b-c-b`, `b-c-c`.
+- Top species in Part B: `exist-fin-a`, `exist-fin-b`, `exist-fin-c`.
+- Nested species under `exist-fin-c` (explicit in `finitude.txt`): `exist-fin-c-a`, `exist-fin-c-b`, `exist-fin-c-c`.
 - Numbered entries use suffix `-001..003` per species triad.
 - Numbered subentries are analytic segmentations, not additional source-labeled species.
 - Keep transitions explicit (`something/other -> determination/constitution/limit -> finitude -> infinite`).
 
-### Entry exi-b — Marker `B`: Finitude as triadic species matrix
+### Entry exist-fin — Marker `B`: Finitude as triadic species matrix
 
 Span:
 
@@ -73,7 +73,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: exi-b-c1
+- c1. id: exist-fin-c1
   - subject: part_b
   - predicate: has_species
   - object: b_a_b_b_b_c
@@ -89,29 +89,29 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: b-a-001
+  - targetEntryId: exist-fin-a-001
   - note: marker to species `a` triad.
-  - sourceClaimIds: [`exi-b-c1`]
+  - sourceClaimIds: [`exist-fin-c1`]
   - sourceKeyPointIds: [`k1`]
-  - targetClaimIds: [`b-a-001-c1`]
+  - targetClaimIds: [`exist-fin-a-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: b-b-001
+  - targetEntryId: exist-fin-b-001
   - note: marker to species `b` triad.
-  - sourceClaimIds: [`exi-b-c1`]
+  - sourceClaimIds: [`exist-fin-c1`]
   - sourceKeyPointIds: [`k2`]
-  - targetClaimIds: [`b-b-001-c1`]
+  - targetClaimIds: [`exist-fin-b-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 - r3. type: transitions_to
-  - targetEntryId: b-c-a
+  - targetEntryId: exist-fin-c-a
   - note: marker to species `c` internal triad beginning.
-  - sourceClaimIds: [`exi-b-c1`]
+  - sourceClaimIds: [`exist-fin-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`b-c-a-c1`]
+  - targetClaimIds: [`exist-fin-c-a-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -120,7 +120,7 @@ Review outcome:
 - review_pending
 - notes: matrix framing locked.
 
-### Entry b-a-001 — `a. Something and other` I: indifferent reversibility
+### Entry exist-fin-a-001 — `a. Something and other` I: indifferent reversibility
 
 Span:
 
@@ -140,7 +140,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: b-a-001-c1
+- c1. id: exist-fin-a-001-c1
   - subject: something_and_other
   - predicate: are
   - object: reciprocally_indifferent_designations
@@ -157,20 +157,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: b-a-002
+  - targetEntryId: exist-fin-a-002
   - note: moves to being-for-other / being-in-itself articulation.
-  - sourceClaimIds: [`b-a-001-c1`]
+  - sourceClaimIds: [`exist-fin-a-001-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`b-a-002-c1`]
+  - targetClaimIds: [`exist-fin-a-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: species `b-a`, moment 1.
+- notes: species `exist-fin-a`, moment 1.
 
-### Entry b-a-002 — `a. Something and other` II: being-for-other / being-in-itself unity
+### Entry exist-fin-a-002 — `a. Something and other` II: being-for-other / being-in-itself unity
 
 Span:
 
@@ -190,7 +190,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: b-a-002-c1
+- c1. id: exist-fin-a-002-c1
   - subject: something
   - predicate: contains
   - object: unity_of_being_for_other_and_being_in_itself
@@ -207,29 +207,29 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: refines
-  - targetEntryId: a-c-003
+  - targetEntryId: exist-suc-c-003
   - note: unfolds the `something` reached in Part A into explicit dual moments.
-  - sourceClaimIds: [`b-a-002-c1`]
+  - sourceClaimIds: [`exist-fin-a-002-c1`]
   - sourceKeyPointIds: [`k2`]
-  - targetClaimIds: [`a-c-003-c1`]
+  - targetClaimIds: [`exist-suc-c-003-c1`]
   - logicalOperator: presuppositional_link
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: b-a-003
+  - targetEntryId: exist-fin-a-003
   - note: advances to identity and concept-level cognizability of in-itself.
-  - sourceClaimIds: [`b-a-002-c1`]
+  - sourceClaimIds: [`exist-fin-a-002-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`b-a-003-c1`]
+  - targetClaimIds: [`exist-fin-a-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: species `b-a`, moment 2.
+- notes: species `exist-fin-a`, moment 2.
 
-### Entry b-a-003 — `a. Something and other` III: identity claim and preparation for determination
+### Entry exist-fin-a-003 — `a. Something and other` III: identity claim and preparation for determination
 
 Span:
 
@@ -249,7 +249,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: b-a-003-c1
+- c1. id: exist-fin-a-003-c1
   - subject: true_in_itself
   - predicate: is
   - object: concrete_conceptual_determinateness_not_empty_abstraction
@@ -266,20 +266,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: b-b-001
+  - targetEntryId: exist-fin-b-001
   - note: reflected determinateness opens species `b` (determination/constitution/limit).
-  - sourceClaimIds: [`b-a-003-c1`]
+  - sourceClaimIds: [`exist-fin-a-003-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`b-b-001-c1`]
+  - targetClaimIds: [`exist-fin-b-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: species `b-a`, moment 3.
+- notes: species `exist-fin-a`, moment 3.
 
-### Entry b-b-001 — `b. Determination/constitution/limit` I: determination as affirmative in-itself
+### Entry exist-fin-b-001 — `b. Determination/constitution/limit` I: determination as affirmative in-itself
 
 Span:
 
@@ -299,7 +299,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: b-b-001-c1
+- c1. id: exist-fin-b-001-c1
   - subject: determination
   - predicate: is
   - object: affirmative_in_itselfness_preserving_self_equality
@@ -316,20 +316,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: b-b-002
+  - targetEntryId: exist-fin-b-002
   - note: determination is opposed by constitution as externality.
-  - sourceClaimIds: [`b-b-001-c1`]
+  - sourceClaimIds: [`exist-fin-b-001-c1`]
   - sourceKeyPointIds: [`k2`]
-  - targetClaimIds: [`b-b-002-c1`]
+  - targetClaimIds: [`exist-fin-b-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: species `b-b`, moment 1.
+- notes: species `exist-fin-b`, moment 1.
 
-### Entry b-b-002 — `b. Determination/constitution/limit` II: constitution and reciprocal passage
+### Entry exist-fin-b-002 — `b. Determination/constitution/limit` II: constitution and reciprocal passage
 
 Span:
 
@@ -349,7 +349,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: b-b-002-c1
+- c1. id: exist-fin-b-002-c1
   - subject: constitution
   - predicate: is
   - object: externally_conditioned_determinateness_reciprocal_with_determination
@@ -366,20 +366,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: b-b-003
+  - targetEntryId: exist-fin-b-003
   - note: reciprocal passage culminates in immanent limit.
-  - sourceClaimIds: [`b-b-002-c1`]
+  - sourceClaimIds: [`exist-fin-b-002-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`b-b-003-c1`]
+  - targetClaimIds: [`exist-fin-b-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: species `b-b`, moment 2.
+- notes: species `exist-fin-b`, moment 2.
 
-### Entry b-b-003 — `b. Determination/constitution/limit` III: limit as immanent contradiction
+### Entry exist-fin-b-003 — `b. Determination/constitution/limit` III: limit as immanent contradiction
 
 Span:
 
@@ -399,7 +399,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: b-b-003-c1
+- c1. id: exist-fin-b-003-c1
   - subject: limit
   - predicate: is_determined_as
   - object: immanent_negation_joining_separating_and_propelling_something
@@ -417,20 +417,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: b-c-a
+  - targetEntryId: exist-fin-c-a
   - note: immanent limit opens finitude as explicit species `c`.
-  - sourceClaimIds: [`b-b-003-c1`]
+  - sourceClaimIds: [`exist-fin-b-003-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`b-c-a-c1`]
+  - targetClaimIds: [`exist-fin-c-a-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: species `b-b`, moment 3.
+- notes: species `exist-fin-b`, moment 3.
 
-### Entry b-c-a — Species `c(a)`: Immediacy of finitude
+### Entry exist-fin-c-a — Species `c(a)`: Immediacy of finitude
 
 Span:
 
@@ -450,7 +450,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: b-c-a-c1
+- c1. id: exist-fin-c-a-c1
   - subject: species_c_a
   - predicate: unfolds_as
   - object: immediacy_of_finitude_to_internal_collapse
@@ -467,20 +467,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: b-c-a-001
+  - targetEntryId: exist-fin-c-a-001
   - note: opens first moment of species `c(a)` triad.
-  - sourceClaimIds: [`b-c-a-c1`]
+  - sourceClaimIds: [`exist-fin-c-a-c1`]
   - sourceKeyPointIds: [`k1`]
-  - targetClaimIds: [`b-c-a-001-c1`]
+  - targetClaimIds: [`exist-fin-c-a-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: nested species marker for `b-c-a`.
+- notes: nested species marker for `exist-fin-c-a`.
 
-### Entry b-c-a-001 — `c(a). Immediacy of finitude` I: non-being as finite nature
+### Entry exist-fin-c-a-001 — `c(a). Immediacy of finitude` I: non-being as finite nature
 
 Span:
 
@@ -500,7 +500,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: b-c-a-001-c1
+- c1. id: exist-fin-c-a-001-c1
   - subject: finite
   - predicate: has_nature
   - object: immanent_non_being_and_necessary_perishing
@@ -517,20 +517,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: b-c-a-002
+  - targetEntryId: exist-fin-c-a-002
   - note: immediacy unfolds as understanding's fixation of finitude.
-  - sourceClaimIds: [`b-c-a-001-c1`]
+  - sourceClaimIds: [`exist-fin-c-a-001-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`b-c-a-002-c1`]
+  - targetClaimIds: [`exist-fin-c-a-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: species `b-c-a`, moment 1.
+- notes: species `exist-fin-c-a`, moment 1.
 
-### Entry b-c-a-002 — `c(a). Immediacy of finitude` II: obstinacy of finite understanding
+### Entry exist-fin-c-a-002 — `c(a). Immediacy of finitude` II: obstinacy of finite understanding
 
 Span:
 
@@ -550,7 +550,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: b-c-a-002-c1
+- c1. id: exist-fin-c-a-002-c1
   - subject: understanding_of_finitude
   - predicate: absolutizes
   - object: finite_as_fixed_negation_against_infinite
@@ -567,20 +567,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: b-c-a-003
+  - targetEntryId: exist-fin-c-a-003
   - note: contradiction is made explicit in collapse of finite.
-  - sourceClaimIds: [`b-c-a-002-c1`]
+  - sourceClaimIds: [`exist-fin-c-a-002-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`b-c-a-003-c1`]
+  - targetClaimIds: [`exist-fin-c-a-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: species `b-c-a`, moment 2.
+- notes: species `exist-fin-c-a`, moment 2.
 
-### Entry b-c-a-003 — `c(a). Immediacy of finitude` III: perishing of perishing
+### Entry exist-fin-c-a-003 — `c(a). Immediacy of finitude` III: perishing of perishing
 
 Span:
 
@@ -600,7 +600,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: b-c-a-003-c1
+- c1. id: exist-fin-c-a-003-c1
   - subject: development_of_finite
   - predicate: shows
   - object: collapse_of_finite_and_perishing_of_perishing
@@ -617,20 +617,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: b-c-b
+  - targetEntryId: exist-fin-c-b
   - note: explicit contradiction leads to restriction/ought structure.
-  - sourceClaimIds: [`b-c-a-003-c1`]
+  - sourceClaimIds: [`exist-fin-c-a-003-c1`]
   - sourceKeyPointIds: [`k2`]
-  - targetClaimIds: [`b-c-b-c1`]
+  - targetClaimIds: [`exist-fin-c-b-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: species `b-c-a`, moment 3.
+- notes: species `exist-fin-c-a`, moment 3.
 
-### Entry b-c-b — Species `c(b)`: Restriction and ought
+### Entry exist-fin-c-b — Species `c(b)`: Restriction and ought
 
 Span:
 
@@ -650,7 +650,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: b-c-b-c1
+- c1. id: exist-fin-c-b-c1
   - subject: species_c_b
   - predicate: unfolds_as
   - object: identity_of_restriction_and_ought
@@ -667,20 +667,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: b-c-b-001
+  - targetEntryId: exist-fin-c-b-001
   - note: opens first moment of species `c(b)` triad.
-  - sourceClaimIds: [`b-c-b-c1`]
+  - sourceClaimIds: [`exist-fin-c-b-c1`]
   - sourceKeyPointIds: [`k1`]
-  - targetClaimIds: [`b-c-b-001-c1`]
+  - targetClaimIds: [`exist-fin-c-b-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: nested species marker for `b-c-b`.
+- notes: nested species marker for `exist-fin-c-b`.
 
-### Entry b-c-b-001 — `c(b). Restriction and ought` I: finite concept as two-sided
+### Entry exist-fin-c-b-001 — `c(b). Restriction and ought` I: finite concept as two-sided
 
 Span:
 
@@ -700,7 +700,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: b-c-b-001-c1
+- c1. id: exist-fin-c-b-001-c1
   - subject: finite_concept
   - predicate: includes
   - object: immanent_limit_and_two_sided_otherness
@@ -718,20 +718,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: b-c-b-002
+  - targetEntryId: exist-fin-c-b-002
   - note: restriction posits the ought.
-  - sourceClaimIds: [`b-c-b-001-c1`]
+  - sourceClaimIds: [`exist-fin-c-b-001-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`b-c-b-002-c1`]
+  - targetClaimIds: [`exist-fin-c-b-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: species `b-c-b`, moment 1.
+- notes: species `exist-fin-c-b`, moment 1.
 
-### Entry b-c-b-002 — `c(b). Restriction and ought` II: double determination of ought
+### Entry exist-fin-c-b-002 — `c(b). Restriction and ought` II: double determination of ought
 
 Span:
 
@@ -751,7 +751,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: b-c-b-002-c1
+- c1. id: exist-fin-c-b-002-c1
   - subject: ought
   - predicate: is_determined_as
   - object: restricted_in_itself_and_inseparable_from_restriction
@@ -769,20 +769,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: b-c-b-003
+  - targetEntryId: exist-fin-c-b-003
   - note: inseparability is radicalized into identity of restriction and ought.
-  - sourceClaimIds: [`b-c-b-002-c1`]
+  - sourceClaimIds: [`exist-fin-c-b-002-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`b-c-b-003-c1`]
+  - targetClaimIds: [`exist-fin-c-b-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: species `b-c-b`, moment 2.
+- notes: species `exist-fin-c-b`, moment 2.
 
-### Entry b-c-b-003 — `c(b). Restriction and ought` III: identity and self-transcendence
+### Entry exist-fin-c-b-003 — `c(b). Restriction and ought` III: identity and self-transcendence
 
 Span:
 
@@ -802,7 +802,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: b-c-b-003-c1
+- c1. id: exist-fin-c-b-003-c1
   - subject: finite_determination
   - predicate: is
   - object: identity_of_restriction_and_ought_with_self_transcendence
@@ -819,20 +819,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: b-c-c
+  - targetEntryId: exist-fin-c-c
   - note: identity of moments opens explicit transition of finite into infinite.
-  - sourceClaimIds: [`b-c-b-003-c1`]
+  - sourceClaimIds: [`exist-fin-c-b-003-c1`]
   - sourceKeyPointIds: [`k2`]
-  - targetClaimIds: [`b-c-c-c1`]
+  - targetClaimIds: [`exist-fin-c-c-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: species `b-c-b`, moment 3.
+- notes: species `exist-fin-c-b`, moment 3.
 
-### Entry b-c-c — Species `c(c)`: Transition of finite into infinite
+### Entry exist-fin-c-c — Species `c(c)`: Transition of finite into infinite
 
 Span:
 
@@ -852,7 +852,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: b-c-c-c1
+- c1. id: exist-fin-c-c-c1
   - subject: species_c_c
   - predicate: unfolds_as
   - object: contradiction_progression_resolution_into_infinite
@@ -869,20 +869,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: b-c-c-001
+  - targetEntryId: exist-fin-c-c-001
   - note: opens first moment of species `c(c)` triad.
-  - sourceClaimIds: [`b-c-c-c1`]
+  - sourceClaimIds: [`exist-fin-c-c-c1`]
   - sourceKeyPointIds: [`k1`]
-  - targetClaimIds: [`b-c-c-001-c1`]
+  - targetClaimIds: [`exist-fin-c-c-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: nested species marker for `b-c-c`.
+- notes: nested species marker for `exist-fin-c-c`.
 
-### Entry b-c-c-001 — `c(c). Transition finite->infinite` I: contradiction of finite
+### Entry exist-fin-c-c-001 — `c(c). Transition finite->infinite` I: contradiction of finite
 
 Span:
 
@@ -902,7 +902,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: b-c-c-001-c1
+- c1. id: exist-fin-c-c-001-c1
   - subject: finite
   - predicate: is
   - object: self_contradiction_that_sublates_itself
@@ -919,20 +919,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: b-c-c-002
+  - targetEntryId: exist-fin-c-c-002
   - note: first result appears as endless passing into another finite.
-  - sourceClaimIds: [`b-c-c-001-c1`]
+  - sourceClaimIds: [`exist-fin-c-c-001-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`b-c-c-002-c1`]
+  - targetClaimIds: [`exist-fin-c-c-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: species `b-c-c`, moment 1.
+- notes: species `exist-fin-c-c`, moment 1.
 
-### Entry b-c-c-002 — `c(c). Transition finite->infinite` II: bad infinity moment
+### Entry exist-fin-c-c-002 — `c(c). Transition finite->infinite` II: bad infinity moment
 
 Span:
 
@@ -952,7 +952,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: b-c-c-002-c1
+- c1. id: exist-fin-c-c-002-c1
   - subject: first_result_of_finite_ceasing
   - predicate: appears_as
   - object: endless_transition_to_another_finite
@@ -968,20 +968,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: b-c-c-003
+  - targetEntryId: exist-fin-c-c-003
   - note: deeper result resolves progression into affirmative identity.
-  - sourceClaimIds: [`b-c-c-002-c1`]
+  - sourceClaimIds: [`exist-fin-c-c-002-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`b-c-c-003-c1`]
+  - targetClaimIds: [`exist-fin-c-c-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: species `b-c-c`, moment 2.
+- notes: species `exist-fin-c-c`, moment 2.
 
-### Entry b-c-c-003 — `c(c). Transition finite->infinite` III: negation of negation as infinite
+### Entry exist-fin-c-c-003 — `c(c). Transition finite->infinite` III: negation of negation as infinite
 
 Span:
 
@@ -1001,7 +1001,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: b-c-c-003-c1
+- c1. id: exist-fin-c-c-003-c1
   - subject: finite_contradiction
   - predicate: resolves_as
   - object: infinite_as_affirmative_negation_of_negation
@@ -1018,18 +1018,18 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: exi-b
+  - targetEntryId: exist-fin
   - note: confirms Part B culmination as finite contradiction resolving into infinite transition.
-  - sourceClaimIds: [`b-c-c-003-c1`]
+  - sourceClaimIds: [`exist-fin-c-c-003-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`exi-b-c1`]
+  - targetClaimIds: [`exist-fin-c1`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: exi-c
+  - targetEntryId: exist-inf
   - note: finite's resolved contradiction opens Part C (`Infinity`).
-  - sourceClaimIds: [`b-c-c-003-c1`]
+  - sourceClaimIds: [`exist-fin-c-c-003-c1`]
   - sourceKeyPointIds: [`k3`]
   - targetClaimIds: []
   - logicalOperator: sequential_transition
@@ -1038,4 +1038,4 @@ Relations: (Relation)
 Review outcome:
 
 - review_pending
-- notes: species `b-c-c`, moment 3 and Part C handoff.
+- notes: species `exist-fin-c-c`, moment 3 and Part C handoff.

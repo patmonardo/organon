@@ -55,7 +55,7 @@ Extraction map:
 - c-002: `201-444`
 - c-003: `445-735`
 
-### Entry con-idea-spec-c-001 — c-001: universal beginning and analytic/synthetic immanence
+### Entry aidea-abs-001 — c-001: universal beginning and analytic/synthetic immanence
 
 Span:
 
@@ -75,7 +75,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: con-idea-spec-c-001-c1
+- c1. id: aidea-abs-001-c1
   - subject: method_beginning
   - predicate: is_determined_as
   - object: concrete_universality_with_immanent_advance
@@ -88,11 +88,11 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: con-idea-spec-c-002
+  - targetEntryId: aidea-abs-002
   - note: immanent setup opens full dialectical critique of fixed determinations.
-  - sourceClaimIds: [`con-idea-spec-c-001-c1`]
+  - sourceClaimIds: [`aidea-abs-001-c1`]
   - sourceKeyPointIds: [`k2`, `k3`]
-  - targetClaimIds: [`con-idea-spec-c-002-c1`]
+  - targetClaimIds: [`aidea-abs-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -101,7 +101,7 @@ Review outcome:
 - review_pending
 - notes: first analysis window fixed.
 
-### Entry con-idea-spec-c-002 — c-002: dialectical critique and preservation-through-negativity
+### Entry aidea-abs-002 — c-002: dialectical critique and preservation-through-negativity
 
 Span:
 
@@ -121,7 +121,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: con-idea-spec-c-002-c1
+- c1. id: aidea-abs-002-c1
   - subject: dialectical_negativity
   - predicate: is_determined_as
   - object: preserving_sublation_of_fixed_determinations
@@ -135,20 +135,20 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: refines
-  - targetEntryId: con-idea-spec-c-001
+  - targetEntryId: aidea-abs-001
   - note: concretizes the opening claim by showing the immanent engine of method advance.
-  - sourceClaimIds: [`con-idea-spec-c-002-c1`]
+  - sourceClaimIds: [`aidea-abs-002-c1`]
   - sourceKeyPointIds: [`k1`, `k2`, `k3`]
-  - targetClaimIds: [`con-idea-spec-c-001-c1`]
+  - targetClaimIds: [`aidea-abs-001-c1`]
   - logicalOperator: presuppositional_link
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: con-idea-spec-c-003
+  - targetEntryId: aidea-abs-003
   - note: negativity unfolds into result, circularity, and systematic closure.
-  - sourceClaimIds: [`con-idea-spec-c-002-c1`]
+  - sourceClaimIds: [`aidea-abs-002-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`con-idea-spec-c-003-c1`]
+  - targetClaimIds: [`aidea-abs-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -157,7 +157,7 @@ Review outcome:
 - review_pending
 - notes: second analysis window fixed.
 
-### Entry con-idea-spec-c-003 — c-003: self-returning method, circle form, and absolute idea closure
+### Entry aidea-abs-003 — c-003: self-returning method, circle form, and absolute idea closure
 
 Span:
 
@@ -177,7 +177,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: con-idea-spec-c-003-c1
+- c1. id: aidea-abs-003-c1
   - subject: method_closure
   - predicate: is_determined_as
   - object: circular_systematic_return_of_absolute_idea
@@ -191,11 +191,11 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: con-idea-spec-c-002
+  - targetEntryId: aidea-abs-002
   - note: closure demonstrates the positive truth-content of dialectical negativity.
-  - sourceClaimIds: [`con-idea-spec-c-003-c1`]
+  - sourceClaimIds: [`aidea-abs-003-c1`]
   - sourceKeyPointIds: [`k1`, `k2`, `k3`]
-  - targetClaimIds: [`con-idea-spec-c-002-c1`]
+  - targetClaimIds: [`aidea-abs-002-c1`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 

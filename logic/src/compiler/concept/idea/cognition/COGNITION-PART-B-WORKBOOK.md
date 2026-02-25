@@ -62,7 +62,7 @@ IDEA notebook intake (working map):
 - intake-2: `154-220` (ought/duality and completion pressure)
 - intake-3: `221-364` (syllogism of action to absolute idea)
 
-### Entry con-idea-cog-b-001 — b-001 (analysis): good as practical objective validity
+### Entry cogni-god-001 — b-001 (analysis): good as practical objective validity
 
 Span:
 
@@ -82,7 +82,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: con-idea-cog-b-001-c1
+- c1. id: cogni-god-001-c1
   - subject: practical_idea
   - predicate: is_determined_as
   - object: singular_self_determining_purpose
@@ -92,7 +92,7 @@ Claims: (Claim)
     - [4-27] singular subjective determination and certainty over non-actual world.
     - [40-50] good as absolute determination with objective dignity.
 
-- c2. id: con-idea-cog-b-001-c2
+- c2. id: cogni-god-001-c2
   - subject: good
   - predicate: is_determined_as
   - object: intrinsically_true_particular_purpose
@@ -110,11 +110,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: con-idea-cog-b-002
+  - targetEntryId: cogni-god-002
   - note: intrinsic validity moves into contradiction of realization and ought.
-  - sourceClaimIds: [`con-idea-cog-b-001-c2`]
+  - sourceClaimIds: [`cogni-god-001-c2`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`con-idea-cog-b-002-c1`]
+  - targetClaimIds: [`cogni-god-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -123,7 +123,7 @@ Review outcome:
 - review_pending
 - notes: immediate determination established from opening practical idea block.
 
-### Entry con-idea-cog-b-002 — b-002 (analysis): finitude of realization and unresolved ought
+### Entry cogni-god-002 — b-002 (analysis): finitude of realization and unresolved ought
 
 Span:
 
@@ -143,7 +143,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: con-idea-cog-b-002-c1
+- c1. id: cogni-god-002-c1
   - subject: realized_good
   - predicate: remains
   - object: finite_fragile_and_conflictual
@@ -153,7 +153,7 @@ Claims: (Claim)
     - [120-147] realized purpose remains means-like and vulnerable.
     - [154-168] good remains an ought across opposed worlds.
 
-- c2. id: con-idea-cog-b-002-c2
+- c2. id: cogni-god-002-c2
   - subject: practical_idea
   - predicate: requires_completion_in
   - object: idea_of_the_true
@@ -171,20 +171,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: refines
-  - targetEntryId: con-idea-cog-b-001
+  - targetEntryId: cogni-god-001
   - note: shows limits internal to the immediate practical validity of the good.
-  - sourceClaimIds: [`con-idea-cog-b-002-c1`]
+  - sourceClaimIds: [`cogni-god-002-c1`]
   - sourceKeyPointIds: [`k1`, `k2`]
-  - targetClaimIds: [`con-idea-cog-b-001-c2`]
+  - targetClaimIds: [`cogni-god-001-c2`]
   - logicalOperator: presuppositional_link
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: con-idea-cog-b-003
+  - targetEntryId: cogni-god-003
   - note: self-transition of the good opens the synthesis of mediated consummation.
-  - sourceClaimIds: [`con-idea-cog-b-002-c2`]
+  - sourceClaimIds: [`cogni-god-002-c2`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`con-idea-cog-b-003-c1`]
+  - targetClaimIds: [`cogni-god-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -193,7 +193,7 @@ Review outcome:
 - review_pending
 - notes: mediation determination fixed around the ought contradiction.
 
-### Entry con-idea-cog-b-003 — b-003 (analysis): mediated consummation and absolute idea threshold
+### Entry cogni-god-003 — b-003 (analysis): mediated consummation and absolute idea threshold
 
 Span:
 
@@ -213,7 +213,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: con-idea-cog-b-003-c1
+- c1. id: cogni-god-003-c1
   - subject: syllogism_of_good
   - predicate: is_determined_as
   - object: mediation_of_immediate_identity_into_consummation
@@ -223,7 +223,7 @@ Claims: (Claim)
     - [221-260] two premises brought together for consummation of the good.
     - [267-298] actuality of the good through mediated realization.
 
-- c2. id: con-idea-cog-b-003-c2
+- c2. id: cogni-god-003-c2
   - subject: practical_idea
   - predicate: culminates_in
   - object: absolute_idea
@@ -241,11 +241,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: con-idea-cog-b-002
+  - targetEntryId: cogni-god-002
   - note: mediated consummation resolves the unresolved ought structure.
-  - sourceClaimIds: [`con-idea-cog-b-003-c1`]
+  - sourceClaimIds: [`cogni-god-003-c1`]
   - sourceKeyPointIds: [`k1`, `k2`]
-  - targetClaimIds: [`con-idea-cog-b-002-c1`]
+  - targetClaimIds: [`cogni-god-002-c1`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 

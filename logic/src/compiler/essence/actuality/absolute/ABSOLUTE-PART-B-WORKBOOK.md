@@ -51,11 +51,11 @@ Decision:
 
 ## Decomposition status
 
-- completed: `abs-part-b-001` for lines `3-42`
-- completed: `abs-part-b-002` for lines `44-70`
-- completed: `abs-part-b-003` for lines `71-96`
+- completed: `absol-att-001` for lines `3-42`
+- completed: `absol-att-002` for lines `44-70`
+- completed: `absol-att-003` for lines `71-96`
 
-### Entry abs-part-b-001 — Attribute as relative absolute and total content
+### Entry absol-att-001 — Attribute as relative absolute and total content
 
 Span:
 
@@ -76,7 +76,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: abs-part-b-001-c1
+- c1. id: absol-att-001-c1
   - subject: attribute
   - predicate: is
   - object: relative_absolute_as_form_determination
@@ -85,7 +85,7 @@ Claims: (Claim)
   - evidence:
     - [3-9] "the absolute absolute... form is equal to content... The attribute is just the relative absolute... in a form determination."
 
-- c2. id: abs-part-b-001-c2
+- c2. id: absol-att-001-c2
   - subject: attribute
   - predicate: has
   - object: whole_content_of_absolute_as_totality
@@ -94,7 +94,7 @@ Claims: (Claim)
   - evidence:
     - [15-20] "the attribute is the whole content of the absolute... each of which is itself the whole."
 
-- c3. id: abs-part-b-001-c3
+- c3. id: absol-att-001-c3
   - subject: immediate_subsistences_of_opposed_worlds
   - predicate: are_reduced_to
   - object: reflective_shine_in_absolute
@@ -103,7 +103,7 @@ Claims: (Claim)
   - evidence:
     - [31-38] "these sides... immediate subsistence... In the absolute... reduced to a reflective shine."
 
-- c4. id: abs-part-b-001-c4
+- c4. id: absol-att-001-c4
   - subject: attribute_totality
   - predicate: is_posited_as
   - object: true_single_subsistence_with_form_determination_unessential
@@ -115,20 +115,20 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: abs-part-b-002
+  - targetEntryId: absol-att-002
   - note: from attribute as relative totality to the self-sublation of form-determination in reflection.
-  - sourceClaimIds: [abs-part-b-001-c3, abs-part-b-001-c4]
+  - sourceClaimIds: [absol-att-001-c3, absol-att-001-c4]
   - sourceKeyPointIds: [k3, k4]
-  - targetClaimIds: [abs-part-b-002-c1]
+  - targetClaimIds: [absol-att-002-c1]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 - r2. type: supports
-  - targetEntryId: abs-part-a-003
+  - targetEntryId: absol-exp-003
   - note: concretizes Part A’s handoff claim that absolute identity appears as attribute.
-  - sourceClaimIds: [abs-part-b-001-c1]
+  - sourceClaimIds: [absol-att-001-c1]
   - sourceKeyPointIds: [k1]
-  - targetClaimIds: [abs-part-a-003-c2]
+  - targetClaimIds: [absol-exp-003-c2]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
@@ -137,7 +137,7 @@ Review outcome:
 - review_pending
 - notes: line anchors verified against numbered source.
 
-### Entry abs-part-b-002 — Attribute’s positivity sublates itself into simple absolute
+### Entry absol-att-002 — Attribute’s positivity sublates itself into simple absolute
 
 Span:
 
@@ -158,7 +158,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: abs-part-b-002-c1
+- c1. id: absol-att-002-c1
   - subject: absolute_as_simple_identity
   - predicate: is
   - object: attribute_in_determination_of_identity
@@ -167,7 +167,7 @@ Claims: (Claim)
   - evidence:
     - [44-49] "The absolute is attribute because... in the determination of identity... other determinations can be attached."
 
-- c2. id: abs-part-b-002-c2
+- c2. id: absol-att-002-c2
   - subject: absolute_identity
   - predicate: posits
   - object: all_determinations_and_reflection_as_sublated
@@ -176,7 +176,7 @@ Claims: (Claim)
   - evidence:
     - [50-54] "not only all determinations have been sublated but... reflection itself... all determinations are thus posited... as sublated."
 
-- c3. id: abs-part-b-002-c3
+- c3. id: absol-att-002-c3
   - subject: attribute_form_determination
   - predicate: is
   - object: mere_reflective_shine
@@ -185,7 +185,7 @@ Claims: (Claim)
   - evidence:
     - [55-60] "attribute has the absolute for its content... form determination... posited immediately as mere reflective shine."
 
-- c4. id: abs-part-b-002-c4
+- c4. id: absol-att-002-c4
   - subject: positive_reflective_shine_of_exposition
   - predicate: sublates
   - object: attributehood_into_simple_absolute
@@ -197,20 +197,20 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: refines
-  - targetEntryId: abs-part-b-001
+  - targetEntryId: absol-att-001
   - note: specifies why attribute’s apparent positivity cannot stabilize as independent form.
-  - sourceClaimIds: [abs-part-b-002-c2, abs-part-b-002-c3]
+  - sourceClaimIds: [absol-att-002-c2, absol-att-002-c3]
   - sourceKeyPointIds: [k2, k3]
-  - targetClaimIds: [abs-part-b-001-c4]
+  - targetClaimIds: [absol-att-001-c4]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: abs-part-b-003
+  - targetEntryId: absol-att-003
   - note: after sublation of attributehood, reflection’s residual externality is diagnosed.
-  - sourceClaimIds: [abs-part-b-002-c4]
+  - sourceClaimIds: [absol-att-002-c4]
   - sourceKeyPointIds: [k4]
-  - targetClaimIds: [abs-part-b-003-c1]
+  - targetClaimIds: [absol-att-003-c1]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -219,7 +219,7 @@ Review outcome:
 - review_pending
 - notes: preserve distinction between sublated determination and reflective nullity in later cycles.
 
-### Entry abs-part-b-003 — Reflection’s failure to reach true absolute; form as null manner
+### Entry absol-att-003 — Reflection’s failure to reach true absolute; form as null manner
 
 Span:
 
@@ -240,7 +240,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: abs-part-b-003-c1
+- c1. id: absol-att-003-c1
   - subject: reflection_reversion
   - predicate: fails_to_reach
   - object: true_absolute_due_to_retained_externality
@@ -249,7 +249,7 @@ Claims: (Claim)
   - evidence:
     - [71-76] "reflection... has not... left its externality behind and has not arrived at the true absolute."
 
-- c2. id: abs-part-b-003-c2
+- c2. id: absol-att-003-c2
   - subject: reached_identity
   - predicate: is
   - object: indeterminate_abstract_identity
@@ -258,7 +258,7 @@ Claims: (Claim)
   - evidence:
     - [77-80] "It has only reached... indeterminate, abstract identity... identity in the determinateness of identity."
 
-- c3. id: abs-part-b-003-c3
+- c3. id: absol-att-003-c3
   - subject: inner_determination_as_attribute
   - predicate: does_not
   - object: penetrate_absolute_and_stably_subsist
@@ -267,7 +267,7 @@ Claims: (Claim)
   - evidence:
     - [81-89] "inner form... still distinct from externality... does not penetrate the absolute... is to disappear into the absolute."
 
-- c4. id: abs-part-b-003-c4
+- c4. id: absol-att-003-c4
   - subject: form_of_attribute
   - predicate: is
   - object: null_external_reflective_shine_or_mere_manner
@@ -279,20 +279,20 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: sublates
-  - targetEntryId: abs-part-b-002
+  - targetEntryId: absol-att-002
   - note: carries forward self-sublation by explicitly nullifying attribute-form as such.
-  - sourceClaimIds: [abs-part-b-003-c4]
+  - sourceClaimIds: [absol-att-003-c4]
   - sourceKeyPointIds: [k4]
-  - targetClaimIds: [abs-part-b-002-c3, abs-part-b-002-c4]
+  - targetClaimIds: [absol-att-002-c3, absol-att-002-c4]
   - logicalOperator: sublative_transition
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: abs-part-c-001
+  - targetEntryId: absol-mod-001
   - note: prepares Part C by moving from null attribute-form to mode as explicit determination of externality.
-  - sourceClaimIds: [abs-part-b-003-c1, abs-part-b-003-c4]
+  - sourceClaimIds: [absol-att-003-c1, absol-att-003-c4]
   - sourceKeyPointIds: [k1, k4]
-  - targetClaimIds: [abs-part-c-001-c2, abs-part-c-001-c3]
+  - targetClaimIds: [absol-mod-001-c2, absol-mod-001-c3]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 

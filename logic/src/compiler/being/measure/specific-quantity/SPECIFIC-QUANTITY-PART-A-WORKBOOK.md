@@ -46,7 +46,7 @@ Scope:
 
 Decision:
 
-- Use ID prefix `spq-a` for Part A entries.
+- Use ID prefix `speci-bfr` for Part A entries.
 - Part A has no subentries.
 - Section boundaries are the numerical labels `1`, `2`, `3` in `specific-quantum.txt`.
 - Keep first pass source-restricted and line-anchored.
@@ -56,11 +56,11 @@ Decision:
 
 - Entry model: one entry per numbered section.
 - Planned entries:
-  - `spq-a-001` -> section `1`
-  - `spq-a-002` -> section `2`
-  - `spq-a-003` -> section `3`
+  - `speci-bfr-001` -> section `1`
+  - `speci-bfr-002` -> section `2`
+  - `speci-bfr-003` -> section `3`
 
-### Entry spq-a-001 — Specific quantum I: measure as qualitative quantum
+### Entry speci-bfr-001 — Specific quantum I: measure as qualitative quantum
 
 Span:
 
@@ -81,7 +81,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: spq-a-001-c1
+- c1. id: speci-bfr-001-c1
   - subject: measure
   - predicate: determines
   - object: quantum_as_qualitative
@@ -90,7 +90,7 @@ Claims: (Claim)
   - evidence:
     - [4-18] measure is self-reference of quantum and quantum is qualitative, not indifferent.
 
-- c2. id: spq-a-001-c2
+- c2. id: speci-bfr-001-c2
   - subject: something_with_measure
   - predicate: has_quality_dependent_on
   - object: constitutive_magnitude
@@ -99,7 +99,7 @@ Claims: (Claim)
   - evidence:
     - [19-33] the magnitude belongs to the nature of the something; changing it changes quality.
 
-- c3. id: spq-a-001-c3
+- c3. id: speci-bfr-001-c3
   - subject: external_standard_and_gradualness_category
   - predicate: are_insufficient_as
   - object: intrinsic_measure_or_exhaustive_explanation_of_qualitative_transition
@@ -111,18 +111,18 @@ Claims: (Claim)
 
 Claim ↔ key point map:
 
-- spq-a-001-c1 -> k1
-- spq-a-001-c2 -> k2
-- spq-a-001-c3 -> k3, k4
+- speci-bfr-001-c1 -> k1
+- speci-bfr-001-c2 -> k2
+- speci-bfr-001-c3 -> k3, k4
 
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: spq-a-002
+  - targetEntryId: speci-bfr-002
   - note: section 1 grounds section 2 by moving from constitutive measure to the elenchi of qualitative threshold.
-  - sourceClaimIds: [`spq-a-001-c2`, `spq-a-001-c3`]
+  - sourceClaimIds: [`speci-bfr-001-c2`, `speci-bfr-001-c3`]
   - sourceKeyPointIds: [`k2`, `k4`]
-  - targetClaimIds: [`spq-a-002-c1`]
+  - targetClaimIds: [`speci-bfr-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -131,7 +131,7 @@ Review outcome:
 - review_pending
 - notes: section 1 stabilized as one entry with line-anchored first-order claims.
 
-### Entry spq-a-002 — Specific quantum II: elenchi and the threshold to qualitative change
+### Entry speci-bfr-002 — Specific quantum II: elenchi and the threshold to qualitative change
 
 Span:
 
@@ -152,7 +152,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: spq-a-002-c1
+- c1. id: speci-bfr-002-c1
   - subject: repeated_insignificant_quantitative_changes
   - predicate: culminate_in
   - object: qualitative_transformation_or_loss
@@ -161,7 +161,7 @@ Claims: (Claim)
   - evidence:
     - [111-143] one-hair/one-grain removals accumulate into baldness and disappearance of the heap.
 
-- c2. id: spq-a-002-c2
+- c2. id: speci-bfr-002-c2
   - subject: ordinary_consciousness
   - predicate: errs_by_assuming
   - object: quantity_as_merely_indifferent_limit
@@ -170,7 +170,7 @@ Claims: (Claim)
   - evidence:
     - [144-157] the mistake is taking quantity in a one-sided abstract sense.
 
-- c3. id: spq-a-002-c3
+- c3. id: speci-bfr-002-c3
   - subject: quantum
   - predicate: is
   - object: moment_of_measure_linked_to_quality
@@ -181,27 +181,27 @@ Claims: (Claim)
 
 Claim ↔ key point map:
 
-- spq-a-002-c1 -> k1
-- spq-a-002-c2 -> k2
-- spq-a-002-c3 -> k3, k4
+- speci-bfr-002-c1 -> k1
+- speci-bfr-002-c2 -> k2
+- speci-bfr-002-c3 -> k3, k4
 
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: spq-a-001
+  - targetEntryId: speci-bfr-001
   - note: section 2 confirms section 1's thesis that constitutive magnitude is not indifferent to qualitative being.
-  - sourceClaimIds: [`spq-a-002-c1`, `spq-a-002-c3`]
+  - sourceClaimIds: [`speci-bfr-002-c1`, `speci-bfr-002-c3`]
   - sourceKeyPointIds: [`k1`, `k3`]
-  - targetClaimIds: [`spq-a-001-c2`, `spq-a-001-c3`]
+  - targetClaimIds: [`speci-bfr-001-c2`, `speci-bfr-001-c3`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: spq-a-003
+  - targetEntryId: speci-bfr-003
   - note: from demonstrated threshold effects to explicit dual-sided immediacy of measure and specifying behavior.
-  - sourceClaimIds: [`spq-a-002-c3`]
+  - sourceClaimIds: [`speci-bfr-002-c3`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`spq-a-003-c1`]
+  - targetClaimIds: [`speci-bfr-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -210,7 +210,7 @@ Review outcome:
 - review_pending
 - notes: section 2 stabilized as one entry centered on elenchi and measure-threshold logic.
 
-### Entry spq-a-003 — Specific quantum III: immediate duality and the rise of specifying measure
+### Entry speci-bfr-003 — Specific quantum III: immediate duality and the rise of specifying measure
 
 Span:
 
@@ -231,7 +231,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: spq-a-003-c1
+- c1. id: speci-bfr-003-c1
   - subject: immediate_measure
   - predicate: contains
   - object: dual_magnitude_determination_indifferent_and_specific
@@ -240,7 +240,7 @@ Claims: (Claim)
   - evidence:
     - [170-181] one and the same thing has both indifferent-limit and qualitative-specific sides.
 
-- c2. id: spq-a-003-c2
+- c2. id: speci-bfr-003-c2
   - subject: determinate_measure_side
   - predicate: sublates
   - object: indifference_of_external_alterable_side
@@ -249,7 +249,7 @@ Claims: (Claim)
   - evidence:
     - [182-190] concrete existence of measure negates indifference and specifies it.
 
-- c3. id: spq-a-003-c3
+- c3. id: speci-bfr-003-c3
   - subject: sublation_of_indifference
   - predicate: is
   - object: specifying_measure
@@ -260,18 +260,18 @@ Claims: (Claim)
 
 Claim ↔ key point map:
 
-- spq-a-003-c1 -> k1, k2
-- spq-a-003-c2 -> k3
-- spq-a-003-c3 -> k4
+- speci-bfr-003-c1 -> k1, k2
+- speci-bfr-003-c2 -> k3
+- speci-bfr-003-c3 -> k4
 
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: spq-b-a-001
+  - targetEntryId: speci-qua-a-001
   - note: Part A culminates in the explicit transition to Part B (`a. The rule`) as specifying measure.
-  - sourceClaimIds: [`spq-a-003-c2`, `spq-a-003-c3`]
+  - sourceClaimIds: [`speci-bfr-003-c2`, `speci-bfr-003-c3`]
   - sourceKeyPointIds: [`k3`, `k4`]
-  - targetClaimIds: [`spq-b-a-001-c1`]
+  - targetClaimIds: [`speci-qua-a-001-c1`]
   - logicalOperator: sublative_transition
   - analysisMode: first_order_claim_projection
 

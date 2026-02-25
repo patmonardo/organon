@@ -49,7 +49,7 @@ Decision:
 - Keep first pass conservative with minimal, line-anchored claims.
 - Use pseudo-Cypher labels: `Key points: (KeyPoint)`, `Claims: (Claim)`, `Relations: (Relation)`.
 
-### Entry con-idea-life-c-001 — Analysis window 1: from presupposed individual to produced actuality
+### Entry ilife-gen-001 — Analysis window 1: from presupposed individual to produced actuality
 
 Span:
 
@@ -69,7 +69,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: con-idea-life-c-001-c1
+- c1. id: ilife-gen-001-c1
   - subject: living_individual
   - predicate: transitions_from_to
   - object: presupposed_unproven_to_self_produced_actuality
@@ -78,7 +78,7 @@ Claims: (Claim)
   - evidence:
     - [4-19] presupposition becomes production through process.
 
-- c2. id: con-idea-life-c-001-c2
+- c2. id: ilife-gen-001-c2
   - subject: genus
   - predicate: is_determined_as
   - object: identity_with_otherness_and_duplicated_self_relation
@@ -96,11 +96,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: con-idea-life-c-002
+  - targetEntryId: ilife-gen-002
   - note: from produced genus identity to explicit contradiction of reciprocal individuality.
-  - sourceClaimIds: [`con-idea-life-c-001-c2`]
+  - sourceClaimIds: [`ilife-gen-001-c2`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`con-idea-life-c-002-c1`]
+  - targetClaimIds: [`ilife-gen-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -109,7 +109,7 @@ Review outcome:
 - review_pending
 - notes: opening window stabilizes production-to-genus transition.
 
-### Entry con-idea-life-c-002 — Analysis window 2: contradiction of genus in immediate reciprocity
+### Entry ilife-gen-002 — Analysis window 2: contradiction of genus in immediate reciprocity
 
 Span:
 
@@ -129,7 +129,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: con-idea-life-c-002-c1
+- c1. id: ilife-gen-002-c1
   - subject: genus_relation
   - predicate: is_determined_as
   - object: contradictory_identity_of_reciprocal_individuality
@@ -139,7 +139,7 @@ Claims: (Claim)
     - [38-50] third stage of self-referential process with subsisting externality.
     - [52-57] contradiction and renewed impulse.
 
-- c2. id: con-idea-life-c-002-c2
+- c2. id: ilife-gen-002-c2
   - subject: immediate_genus
   - predicate: remains
   - object: singularized_objective_reciprocity_not_yet_concept_for_itself
@@ -157,20 +157,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: refines
-  - targetEntryId: con-idea-life-c-001
+  - targetEntryId: ilife-gen-001
   - note: clarifies limits of first achieved genus identity.
-  - sourceClaimIds: [`con-idea-life-c-002-c2`]
+  - sourceClaimIds: [`ilife-gen-002-c2`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`con-idea-life-c-001-c2`]
+  - targetClaimIds: [`ilife-gen-001-c2`]
   - logicalOperator: presuppositional_link
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: con-idea-life-c-003
+  - targetEntryId: ilife-gen-003
   - note: contradiction advances into longing, sublation of singularities, and germ determination.
-  - sourceClaimIds: [`con-idea-life-c-002-c1`]
+  - sourceClaimIds: [`ilife-gen-002-c1`]
   - sourceKeyPointIds: [`k2`]
-  - targetClaimIds: [`con-idea-life-c-003-c1`]
+  - targetClaimIds: [`ilife-gen-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -179,7 +179,7 @@ Review outcome:
 - review_pending
 - notes: this window isolates immediacy/contradiction of genus relation.
 
-### Entry con-idea-life-c-003 — Analysis window 3: longing, sublation, and germ as concept-actuality
+### Entry ilife-gen-003 — Analysis window 3: longing, sublation, and germ as concept-actuality
 
 Span:
 
@@ -199,7 +199,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: con-idea-life-c-003-c1
+- c1. id: ilife-gen-003-c1
   - subject: impulse_of_genus
   - predicate: realizes_itself_through
   - object: sublation_of_singular_individualities
@@ -209,7 +209,7 @@ Claims: (Claim)
     - [72-86] longing to posit universality and realized identity as negative unity.
     - [87-93] individuality of life appears as concept that objectifies itself.
 
-- c2. id: con-idea-life-c-003-c2
+- c2. id: ilife-gen-003-c2
   - subject: germ
   - predicate: is_determined_as
   - object: complete_inner_concretion_of_living_individuality
@@ -227,20 +227,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: con-idea-life-c-002
+  - targetEntryId: ilife-gen-002
   - note: resolves immediate contradiction by specifying the generative mechanism of genus realization.
-  - sourceClaimIds: [`con-idea-life-c-003-c1`]
+  - sourceClaimIds: [`ilife-gen-003-c1`]
   - sourceKeyPointIds: [`k1`, `k2`]
-  - targetClaimIds: [`con-idea-life-c-002-c1`]
+  - targetClaimIds: [`ilife-gen-002-c1`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: con-idea-life-c-004
+  - targetEntryId: ilife-gen-004
   - note: from germ determination to realized genus universality and cognition handoff.
-  - sourceClaimIds: [`con-idea-life-c-003-c2`]
+  - sourceClaimIds: [`ilife-gen-003-c2`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`con-idea-life-c-004-c1`]
+  - targetClaimIds: [`ilife-gen-004-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -249,7 +249,7 @@ Review outcome:
 - review_pending
 - notes: this window treats germ as explicit concept-actuality unity.
 
-### Entry con-idea-life-c-004 — Analysis window 4: propagation, finite repetition, and transition to cognition
+### Entry ilife-gen-004 — Analysis window 4: propagation, finite repetition, and transition to cognition
 
 Span:
 
@@ -269,7 +269,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: con-idea-life-c-004-c1
+- c1. id: ilife-gen-004-c1
   - subject: process_of_genus
   - predicate: culminates_in
   - object: explicit_universality_of_idea
@@ -279,7 +279,7 @@ Claims: (Claim)
     - [127-143] reciprocal sublation of singulars and genus rejoining itself.
     - [148-156] idea becomes explicit universal self-relation.
 
-- c2. id: con-idea-life-c-004-c2
+- c2. id: ilife-gen-004-c2
   - subject: death_of_immediate_life
   - predicate: is_determined_as
   - object: transition_to_spirit_and_cognition
@@ -297,11 +297,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: con-idea-life-c-003
+  - targetEntryId: ilife-gen-003
   - note: actual propagation and universality fulfills the germ's conceptual potential.
-  - sourceClaimIds: [`con-idea-life-c-004-c1`]
+  - sourceClaimIds: [`ilife-gen-004-c1`]
   - sourceKeyPointIds: [`k1`, `k2`]
-  - targetClaimIds: [`con-idea-life-c-003-c2`]
+  - targetClaimIds: [`ilife-gen-003-c2`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 

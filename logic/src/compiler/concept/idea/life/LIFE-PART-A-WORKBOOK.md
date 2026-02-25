@@ -49,7 +49,7 @@ Decision:
 - Claims remain minimal, line-anchored, and non-redundant for first pass.
 - Use pseudo-Cypher labels: `Key points: (KeyPoint)`, `Claims: (Claim)`, `Relations: (Relation)`.
 
-### Entry con-idea-life-a-001 — Section 1: immediate life as self-determining individual organism
+### Entry ilife-liv-001 — Section 1: immediate life as self-determining individual organism
 
 Span:
 
@@ -71,7 +71,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: con-idea-life-a-001-c1
+- c1. id: ilife-liv-001-c1
   - subject: universal_life
   - predicate: is_determined_as
   - object: immediate_idea_as_negative_self_reference
@@ -81,7 +81,7 @@ Claims: (Claim)
     - [4-26] immediate idea, negativity, self-determining diremption, and judgment-to-syllogism articulation.
     - [28-33] opposition determinations arise from concept itself.
 
-- c2. id: con-idea-life-a-001-c2
+- c2. id: ilife-liv-001-c2
   - subject: living_individual
   - predicate: has
   - object: inwardly_purposive_organismic_objectivity
@@ -99,11 +99,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: con-idea-life-a-002
+  - targetEntryId: ilife-liv-002
   - note: from immediate organismic constitution to immanent self-process of individuality.
-  - sourceClaimIds: [`con-idea-life-a-001-c1`, `con-idea-life-a-001-c2`]
+  - sourceClaimIds: [`ilife-liv-001-c1`, `ilife-liv-001-c2`]
   - sourceKeyPointIds: [`k2`, `k5`]
-  - targetClaimIds: [`con-idea-life-a-002-c1`]
+  - targetClaimIds: [`ilife-liv-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -112,7 +112,7 @@ Review outcome:
 - review_pending
 - notes: first numeric block stabilized as one entry.
 
-### Entry con-idea-life-a-002 — Section 2: self-process as productive negativity
+### Entry ilife-liv-002 — Section 2: self-process as productive negativity
 
 Span:
 
@@ -132,7 +132,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: con-idea-life-a-002-c1
+- c1. id: ilife-liv-002-c1
   - subject: living_process
   - predicate: is_determined_as
   - object: premise_that_is_also_conclusion
@@ -142,7 +142,7 @@ Claims: (Claim)
     - [163-185] process with itself repeats purposive premise while already realizing purpose.
     - [186-190] externality returns into negative unity of purpose.
 
-- c2. id: con-idea-life-a-002-c2
+- c2. id: ilife-liv-002-c2
   - subject: conceptual_productivity
   - predicate: culminates_in
   - object: reproduction_as_self_positing_production
@@ -160,20 +160,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: refines
-  - targetEntryId: con-idea-life-a-001
+  - targetEntryId: ilife-liv-001
   - note: clarifies organismic purposiveness as active self-process.
-  - sourceClaimIds: [`con-idea-life-a-002-c1`]
+  - sourceClaimIds: [`ilife-liv-002-c1`]
   - sourceKeyPointIds: [`k1`]
-  - targetClaimIds: [`con-idea-life-a-001-c2`]
+  - targetClaimIds: [`ilife-liv-001-c2`]
   - logicalOperator: presuppositional_link
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: con-idea-life-a-003
+  - targetEntryId: ilife-liv-003
   - note: passes from process-form determination to explicit conceptual moments of living reality.
-  - sourceClaimIds: [`con-idea-life-a-002-c2`]
+  - sourceClaimIds: [`ilife-liv-002-c2`]
   - sourceKeyPointIds: [`k2`, `k3`]
-  - targetClaimIds: [`con-idea-life-a-003-c1`]
+  - targetClaimIds: [`ilife-liv-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -182,7 +182,7 @@ Review outcome:
 - review_pending
 - notes: section 2 isolated as process-only hinge entry.
 
-### Entry con-idea-life-a-003 — Section 3: conceptual moments of living corporeity and reproduction
+### Entry ilife-liv-003 — Section 3: conceptual moments of living corporeity and reproduction
 
 Span:
 
@@ -204,7 +204,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: con-idea-life-a-003-c1
+- c1. id: ilife-liv-003-c1
   - subject: living_objectivity
   - predicate: includes
   - object: conceptual_moments_as_essential_differences
@@ -214,7 +214,7 @@ Claims: (Claim)
     - [223-231] corporeity includes universality-particularity-singularity differentiation.
     - [233-253] sensibility as inwardly reflected universality.
 
-- c2. id: con-idea-life-a-003-c2
+- c2. id: ilife-liv-003-c2
   - subject: reproduction
   - predicate: is_determined_as
   - object: concrete_totality_of_life_moments_and_actual_individuality
@@ -232,11 +232,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: con-idea-life-a-002
+  - targetEntryId: ilife-liv-002
   - note: concreteness of reproduction confirms section 2's claim that production is self-reproductive negativity.
-  - sourceClaimIds: [`con-idea-life-a-003-c2`]
+  - sourceClaimIds: [`ilife-liv-003-c2`]
   - sourceKeyPointIds: [`k4`, `k5`]
-  - targetClaimIds: [`con-idea-life-a-002-c2`]
+  - targetClaimIds: [`ilife-liv-002-c2`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 

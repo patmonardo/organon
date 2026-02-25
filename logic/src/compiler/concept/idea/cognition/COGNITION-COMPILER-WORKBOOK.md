@@ -38,39 +38,39 @@ Authority: derivative from Cognition workbooks (non-authoritative)
 ### OperationMap cog-op-001 — True analytic-to-synthetic transition map
 
 - sourceClaims:
-  - `con-idea-cog-a-001-c2`
-  - `con-idea-cog-a-002-c2`
-  - `con-idea-cog-a-003-c1`
+  - `cogni-tru-a-001-c2`
+  - `cogni-tru-a-002-c2`
+  - `cogni-tru-a-003-c1`
 - sourceRelations:
-  - `con-idea-cog-a-001-r1`
-  - `con-idea-cog-a-002-r2`
+  - `cogni-tru-a-001-r1`
+  - `cogni-tru-a-002-r2`
 - protocolMode: mixed
 - targetOperation: cognition_transition_projection
 - confidence: 0.69
 - proofPath:
-  - `con-idea-cog-a-001-c2`
-  - `con-idea-cog-a-001-r1`
-  - `con-idea-cog-a-002-c2`
-  - `con-idea-cog-a-002-r2`
-  - `con-idea-cog-a-003-c1`
+  - `cogni-tru-a-001-c2`
+  - `cogni-tru-a-001-r1`
+  - `cogni-tru-a-002-c2`
+  - `cogni-tru-a-002-r2`
+  - `cogni-tru-a-003-c1`
 - status: review_pending
 
 ### OperationMap cog-op-002 — Good-to-absolute consummation map
 
 - sourceClaims:
-  - `con-idea-cog-b-002-c2`
-  - `con-idea-cog-b-003-c2`
+  - `cogni-god-002-c2`
+  - `cogni-god-003-c2`
   - `con-idea-cog-004-c1`
 - sourceRelations:
-  - `con-idea-cog-b-002-r2`
+  - `cogni-god-002-r2`
   - `con-idea-cog-003-r2`
 - protocolMode: mixed
 - targetOperation: practical_consummation_projection
 - confidence: 0.72
 - proofPath:
-  - `con-idea-cog-b-002-c2`
-  - `con-idea-cog-b-002-r2`
-  - `con-idea-cog-b-003-c2`
+  - `cogni-god-002-c2`
+  - `cogni-god-002-r2`
+  - `cogni-god-003-c2`
   - `con-idea-cog-003-r2`
   - `con-idea-cog-004-c1`
 - status: review_pending

@@ -51,11 +51,11 @@ Decision:
 
 ## Decomposition status
 
-- completed: `abs-part-c-001` for lines `3-35`
-- completed: `abs-part-c-002` for lines `37-74`
-- completed: `abs-part-c-003` for lines `76-114`
+- completed: `absol-mod-001` for lines `3-35`
+- completed: `absol-mod-002` for lines `37-74`
+- completed: `absol-mod-003` for lines `76-114`
 
-### Entry abs-part-c-001 — Mode as externality and self-identity of the absolute
+### Entry absol-mod-001 — Mode as externality and self-identity of the absolute
 
 Span:
 
@@ -76,7 +76,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: abs-part-c-001-c1
+- c1. id: absol-mod-001-c1
   - subject: attribute
   - predicate: has_structure
   - object: extremes_of_self_identity_and_negation_with_attribute_as_middle
@@ -85,7 +85,7 @@ Claims: (Claim)
   - evidence:
     - [3-11] "The attribute is first... self-identity... Second, it is negation... two extremes... middle term..."
 
-- c2. id: abs-part-c-001-c2
+- c2. id: absol-mod-001-c2
   - subject: negative_as_mode
   - predicate: is
   - object: self_externality_and_contingent_non_total_manifoldness
@@ -94,7 +94,7 @@ Claims: (Claim)
   - evidence:
     - [12-23] "negative as negative... reflection external... self-externality... changeability and contingency... lacks totality."
 
-- c3. id: abs-part-c-001-c3
+- c3. id: absol-mod-001-c3
   - subject: mode
   - predicate: is
   - object: externality_posited_as_externality_and_reflective_shine
@@ -103,7 +103,7 @@ Claims: (Claim)
   - evidence:
     - [25-30] "mode... not just this... externality posited as externality... reflective shine... self-identity..."
 
-- c4. id: abs-part-c-001-c4
+- c4. id: absol-mod-001-c4
   - subject: absolute_identity
   - predicate: is_first_posited_in
   - object: mode_as_self_referring_negativity
@@ -115,20 +115,20 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: abs-part-c-002
+  - targetEntryId: absol-mod-002
   - note: from initial determination of mode to explicit triadic account of exposition's movement.
-  - sourceClaimIds: [abs-part-c-001-c4]
+  - sourceClaimIds: [absol-mod-001-c4]
   - sourceKeyPointIds: [k4]
-  - targetClaimIds: [abs-part-c-002-c1]
+  - targetClaimIds: [absol-mod-002-c1]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 - r2. type: supports
-  - targetEntryId: abs-part-b-003
+  - targetEntryId: absol-att-003
   - note: clarifies Part B's null form as positively re-read through mode's immanent reflective function.
-  - sourceClaimIds: [abs-part-c-001-c3]
+  - sourceClaimIds: [absol-mod-001-c3]
   - sourceKeyPointIds: [k3]
-  - targetClaimIds: [abs-part-b-003-c4]
+  - targetClaimIds: [absol-att-003-c4]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
@@ -137,7 +137,7 @@ Review outcome:
 - review_pending
 - notes: line anchors verified against numbered source.
 
-### Entry abs-part-c-002 — Exposition’s three determinations and immanent reflective movement
+### Entry absol-mod-002 — Exposition’s three determinations and immanent reflective movement
 
 Span:
 
@@ -159,7 +159,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: abs-part-c-002-c1
+- c1. id: absol-mod-002-c1
   - subject: exposition_path
   - predicate: exhausts
   - object: moments_of_absolute_identity_attribute_mode
@@ -168,7 +168,7 @@ Claims: (Claim)
   - evidence:
     - [37-41] "begins from... identity... passes over to attribute... from there to mode... exhaustively run through its moments."
 
-- c2. id: abs-part-c-002-c2
+- c2. id: absol-mod-002-c2
   - subject: expository_act
   - predicate: is
   - object: reflective_movement_required_for_true_absolute_identity
@@ -177,7 +177,7 @@ Claims: (Claim)
   - evidence:
     - [43-47] "does not just behave negatively... its act is rather the reflective movement itself..."
 
-- c3. id: abs-part-c-002-c3
+- c3. id: absol-mod-002-c3
   - subject: mode
   - predicate: is
   - object: immanent_turning_back_and_self_dissolving_reflection
@@ -186,7 +186,7 @@ Claims: (Claim)
   - evidence:
     - [49-54] "mode is not only... externality... reflective shine as shine... immanent turning back, self-dissolving reflection..."
 
-- c4. id: abs-part-c-002-c4
+- c4. id: absol-mod-002-c4
   - subject: initial_determinateness_of_exposition
   - predicate: is_found_in
   - object: absolute_itself_as_determinate_unreflected_attribute
@@ -195,7 +195,7 @@ Claims: (Claim)
   - evidence:
     - [56-67] "seems to begin... from something external... But it has in fact found the determinateness... in the absolute itself..."
 
-- c5. id: abs-part-c-002-c5
+- c5. id: absol-mod-002-c5
   - subject: reflective_movement
   - predicate: alone_confers
   - object: absolute_form_and_self_positing_of_absolute
@@ -207,29 +207,29 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: refines
-  - targetEntryId: abs-part-c-001
+  - targetEntryId: absol-mod-001
   - note: explicates mode's role by embedding it in the complete triadic movement of exposition.
-  - sourceClaimIds: [abs-part-c-002-c1, abs-part-c-002-c2]
+  - sourceClaimIds: [absol-mod-002-c1, absol-mod-002-c2]
   - sourceKeyPointIds: [k1, k2]
-  - targetClaimIds: [abs-part-c-001-c4]
+  - targetClaimIds: [absol-mod-001-c4]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: supports
-  - targetEntryId: abs-part-a-003
+  - targetEntryId: absol-exp-003
   - note: confirms Part A's claim that exposition is absolute self-doing, not external imposition.
-  - sourceClaimIds: [abs-part-c-002-c4, abs-part-c-002-c5]
+  - sourceClaimIds: [absol-mod-002-c4, absol-mod-002-c5]
   - sourceKeyPointIds: [k4, k5]
-  - targetClaimIds: [abs-part-a-003-c1]
+  - targetClaimIds: [absol-exp-003-c1]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r3. type: transitions_to
-  - targetEntryId: abs-part-c-003
+  - targetEntryId: absol-mod-003
   - note: movement-account transitions to explicit determination of content, expression, and actuality.
-  - sourceClaimIds: [abs-part-c-002-c3, abs-part-c-002-c5]
+  - sourceClaimIds: [absol-mod-002-c3, absol-mod-002-c5]
   - sourceKeyPointIds: [k3, k5]
-  - targetClaimIds: [abs-part-c-003-c1]
+  - targetClaimIds: [absol-mod-003-c1]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -238,7 +238,7 @@ Review outcome:
 - review_pending
 - notes: keep c4/c5 distinction for second-order inference cycle.
 
-### Entry abs-part-c-003 — Mode as self-manifestation: content as exposition and actuality
+### Entry absol-mod-003 — Mode as self-manifestation: content as exposition and actuality
 
 Span:
 
@@ -260,7 +260,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: abs-part-c-003-c1
+- c1. id: absol-mod-003-c1
   - subject: mode
   - predicate: is
   - object: absolutes_own_reflective_movement
@@ -269,7 +269,7 @@ Claims: (Claim)
   - evidence:
     - [76-80] "true meaning of mode... absolute's own reflective movement... absolute would become... what it already is."
 
-- c2. id: abs-part-c-003-c2
+- c2. id: absol-mod-003-c2
   - subject: mode_externality
   - predicate: is
   - object: transparent_self_pointing_where_outwardness_equals_inwardness
@@ -278,7 +278,7 @@ Claims: (Claim)
   - evidence:
     - [81-88] "transparent externality... pointing to itself... being outwardly is just as much inwardness... absolute being."
 
-- c3. id: abs-part-c-003-c3
+- c3. id: absol-mod-003-c3
   - subject: content_of_absolute_exposition
   - predicate: is
   - object: dissolution_of_form_content_distinction_as_self_manifestation
@@ -287,7 +287,7 @@ Claims: (Claim)
   - evidence:
     - [90-95] "distinction of form and content... dissolved... this is the content... that it manifests itself."
 
-- c4. id: abs-part-c-003-c4
+- c4. id: absol-mod-003-c4
   - subject: absolute_form
   - predicate: is
   - object: negative_that_rejoins_itself_as_absolute_self_identity_and_content
@@ -296,7 +296,7 @@ Claims: (Claim)
   - evidence:
     - [96-104] "absolute form... negative as negative... rejoins itself... absolute self-identity... absolute content..."
 
-- c5. id: abs-part-c-003-c5
+- c5. id: absol-mod-003-c5
   - subject: absolute
   - predicate: is
   - object: actuality_as_absolute_manifestation_of_itself_for_itself
@@ -308,27 +308,27 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: sublates
-  - targetEntryId: abs-part-c-001
+  - targetEntryId: absol-mod-001
   - note: resolves initial externality by showing mode as transparent self-manifesting inwardness.
-  - sourceClaimIds: [abs-part-c-003-c2]
+  - sourceClaimIds: [absol-mod-003-c2]
   - sourceKeyPointIds: [k2]
-  - targetClaimIds: [abs-part-c-001-c2, abs-part-c-001-c3]
+  - targetClaimIds: [absol-mod-001-c2, absol-mod-001-c3]
   - logicalOperator: sublative_transition
   - analysisMode: first_order_claim_projection
 
 - r2. type: refines
-  - targetEntryId: abs-part-c-002
+  - targetEntryId: absol-mod-002
   - note: determines reflective movement's outcome as form/content identity and actuality.
-  - sourceClaimIds: [abs-part-c-003-c3, abs-part-c-003-c5]
+  - sourceClaimIds: [absol-mod-003-c3, absol-mod-003-c5]
   - sourceKeyPointIds: [k3, k5]
-  - targetClaimIds: [abs-part-c-002-c2, abs-part-c-002-c5]
+  - targetClaimIds: [absol-mod-002-c2, absol-mod-002-c5]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r3. type: transitions_to
   - targetEntryId: abs-idea-001
   - note: culmination in actuality now targets the Absolute idea-level handoff anchor.
-  - sourceClaimIds: [abs-part-c-003-c5]
+  - sourceClaimIds: [absol-mod-003-c5]
   - sourceKeyPointIds: [k5]
   - targetClaimIds: [abs-idea-001-c1]
   - logicalOperator: sequential_transition

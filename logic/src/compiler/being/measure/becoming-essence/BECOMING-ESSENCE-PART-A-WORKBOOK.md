@@ -45,7 +45,7 @@ Scope:
 
 Decision:
 
-- Use ID prefix `be-a` for Part A entries.
+- Use ID prefix `becom-abs` for Part A entries.
 - Concept-part-first workflow is active.
 - Transition-boundary choices are treated as review-sensitive decisions to minimize disruption of abstraction products.
 - Part A has no subentries.
@@ -57,11 +57,11 @@ Decision:
 
 - Entry model: three-entry paragraph grouping.
 - Planned entries:
-  - `be-a-001` -> paragraph 1 (`4-21`)
-  - `be-a-002` -> paragraph 2 (`23-39`)
-  - `be-a-003` -> paragraph 3 (`40-44`)
+  - `becom-abs-001` -> paragraph 1 (`4-21`)
+  - `becom-abs-002` -> paragraph 2 (`23-39`)
+  - `becom-abs-003` -> paragraph 3 (`40-44`)
 
-### Entry be-a-001 — Abstract indifference and mediated absolute indifference
+### Entry becom-abs-001 — Abstract indifference and mediated absolute indifference
 
 Span:
 
@@ -82,7 +82,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: be-a-001-c1
+- c1. id: becom-abs-001-c1
   - subject: pure_quantity
   - predicate: is
   - object: externally_determined_indifference
@@ -91,7 +91,7 @@ Claims: (Claim)
   - evidence:
     - [9-13] pure quantity is indifferent and open only to external determinations.
 
-- c2. id: be-a-001-c2
+- c2. id: becom-abs-001-c2
   - subject: absolute_indifference
   - predicate: is
   - object: self_mediated_unity_via_negation_of_being_determinations
@@ -100,7 +100,7 @@ Claims: (Claim)
   - evidence:
     - [14-18] absolute indifference mediates itself through negation of quality, quantity, and measure.
 
-- c3. id: be-a-001-c3
+- c3. id: becom-abs-001-c3
   - subject: determinateness_in_absolute_indifference
   - predicate: remains_as
   - object: external_state_on_substrate
@@ -111,18 +111,18 @@ Claims: (Claim)
 
 Claim ↔ key point map:
 
-- be-a-001-c1 -> k1, k2
-- be-a-001-c2 -> k3
-- be-a-001-c3 -> k4
+- becom-abs-001-c1 -> k1, k2
+- becom-abs-001-c2 -> k3
+- becom-abs-001-c3 -> k4
 
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: be-a-002
+  - targetEntryId: becom-abs-002
   - note: external state is tested as vanishing differentiation and internalized mediation.
-  - sourceClaimIds: [`be-a-001-c3`]
+  - sourceClaimIds: [`becom-abs-001-c3`]
   - sourceKeyPointIds: [`k4`]
-  - targetClaimIds: [`be-a-002-c1`]
+  - targetClaimIds: [`becom-abs-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -131,7 +131,7 @@ Review outcome:
 - review_pending
 - notes: paragraph 1 stabilized.
 
-### Entry be-a-002 — Vanishing externality and concrete indifference as result
+### Entry becom-abs-002 — Vanishing externality and concrete indifference as result
 
 Span:
 
@@ -152,7 +152,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: be-a-002-c1
+- c1. id: becom-abs-002-c1
   - subject: external_qualitative_determinateness
   - predicate: is
   - object: vanishing_self_sublating_opposition
@@ -161,7 +161,7 @@ Claims: (Claim)
   - evidence:
     - [23-28] qualitative external sphere is opposite of itself and sublates itself.
 
-- c2. id: be-a-002-c2
+- c2. id: becom-abs-002-c2
   - subject: empty_differentiation_in_substrate
   - predicate: is
   - object: result_form_of_indifference
@@ -170,7 +170,7 @@ Claims: (Claim)
   - evidence:
     - [29-34] empty differentiation is precisely indifference as result.
 
-- c3. id: be-a-002-c3
+- c3. id: becom-abs-002-c3
   - subject: concrete_indifference
   - predicate: contains
   - object: immanent_self_referring_differentiation
@@ -181,18 +181,18 @@ Claims: (Claim)
 
 Claim ↔ key point map:
 
-- be-a-002-c1 -> k1
-- be-a-002-c2 -> k2, k3
-- be-a-002-c3 -> k4
+- becom-abs-002-c1 -> k1
+- becom-abs-002-c2 -> k2, k3
+- becom-abs-002-c3 -> k4
 
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: be-a-003
+  - targetEntryId: becom-abs-003
   - note: concrete indifference is closed by explicitly internalizing externality and vanishing.
-  - sourceClaimIds: [`be-a-002-c3`]
+  - sourceClaimIds: [`becom-abs-002-c3`]
   - sourceKeyPointIds: [`k4`]
-  - targetClaimIds: [`be-a-003-c1`]
+  - targetClaimIds: [`becom-abs-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -201,7 +201,7 @@ Review outcome:
 - review_pending
 - notes: paragraph 2 stabilized.
 
-### Entry be-a-003 — Internalized externality and de-substratification of indifference
+### Entry becom-abs-003 — Internalized externality and de-substratification of indifference
 
 Span:
 
@@ -221,7 +221,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: be-a-003-c1
+- c1. id: becom-abs-003-c1
   - subject: indifference_unity
   - predicate: internalizes
   - object: externality_and_vanishing
@@ -230,7 +230,7 @@ Claims: (Claim)
   - evidence:
     - [40-42] externality and vanishing make unity of being into indifference and are inside it.
 
-- c2. id: be-a-003-c2
+- c2. id: becom-abs-003-c2
   - subject: indifference
   - predicate: ceases_to_be
   - object: merely_substrate_and_merely_abstract
@@ -241,17 +241,17 @@ Claims: (Claim)
 
 Claim ↔ key point map:
 
-- be-a-003-c1 -> k1, k2
-- be-a-003-c2 -> k3
+- becom-abs-003-c1 -> k1, k2
+- becom-abs-003-c2 -> k3
 
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: be-b-001
+  - targetEntryId: becom-inv-001
   - note: Part A closes by opening Part B, where indifference is explicitly posited as inverse ratio of factors.
-  - sourceClaimIds: [`be-a-003-c1`, `be-a-003-c2`]
+  - sourceClaimIds: [`becom-abs-003-c1`, `becom-abs-003-c2`]
   - sourceKeyPointIds: [`k2`, `k3`]
-  - targetClaimIds: [`be-b-001-c1`]
+  - targetClaimIds: [`becom-inv-001-c1`]
   - logicalOperator: sublative_transition
   - analysisMode: first_order_claim_projection
 

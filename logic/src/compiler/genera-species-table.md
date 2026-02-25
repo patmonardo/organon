@@ -32,8 +32,8 @@ Edit the ID cells manually as you settle IDs.
 | qntum    | Quantum                | num          | NUMBER                      | qua          | QUANTUM                          | inf          | QUANTITATIVE INFINITY     |
 | ratio    | Ratio                  | dir          | DIRECT RATIO                | inv          | INVERSE RATIO                    | pow          | RATIO OF POWERS           |
 | specq    | Specific Quantity      | bfr          | BEING-FOR-ITSELF IN MEASURE | qua          | SPECIFIC QUANTUM                 | spm          | SPECIFYING MEASURE        |
-| rmeas    | Real Measure           | mer          | MEASURE-RELATIONS           | rel          | RELATION OF INDEPENDENT MEASURES | mel          | THE MEASURELESS           |
-| becom    | Becoming of Essence    | abs          | ABSOLUTE INDIFFERENCE       | ind          | INDIFFERENCE AS INVERSE RATIO    | bec          | BECOMING-ESSENCE          |
+| rmeas    | Real Measure           | mea          | MEASURE-RELATIONS           | ind          | RELATION OF INDEPENDENT MEASURES | mel          | THE MEASURELESS           |
+| becom    | Becoming of Essence    | abs          | ABSOLUTE INDIFFERENCE       | inv          | INDIFFERENCE AS INVERSE RATIO    | bec          | BECOMING-ESSENCE          |
 | essen    | Essence                | ess          | ESSENCE                     | shi          | SHINE                            | ref          | REFLECTION                |
 | found    | Foundation             | ide          | IDENTITY                    | dif          | DIFFERENCE                       | con          | CONTRADICTION             |
 | groun    | Ground                 | abs          | ABSOLUTE GROUND             | det          | DETERMINATE GROUND               | con          | CONDITION                 |

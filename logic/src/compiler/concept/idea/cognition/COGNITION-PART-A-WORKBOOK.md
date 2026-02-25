@@ -64,7 +64,7 @@ Extraction map:
 - `a-c-003`: `2119-2194`
 - transition gate: `2195-2197`
 
-### Entry con-idea-cog-a-a-001 — a-a-001 (analysis): formal difference and immediate principle of analytic cognition
+### Entry cogni-tru-a-001 — a-a-001 (analysis): formal difference and immediate principle of analytic cognition
 
 Span:
 
@@ -84,7 +84,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: con-idea-cog-a-a-001-c1
+- c1. id: cogni-tru-a-001-c1
   - subject: analytic_cognition
   - predicate: is_determined_as
   - object: immediate_communication_of_concept_under_abstract_identity
@@ -97,11 +97,11 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: con-idea-cog-a-a-002
+  - targetEntryId: cogni-tru-a-002
   - note: formal principle moves to detailed analysis of presupposition and positing.
-  - sourceClaimIds: [`con-idea-cog-a-a-001-c1`]
+  - sourceClaimIds: [`cogni-tru-a-001-c1`]
   - sourceKeyPointIds: [`k2`, `k3`]
-  - targetClaimIds: [`con-idea-cog-a-a-002-c1`]
+  - targetClaimIds: [`cogni-tru-a-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -110,7 +110,7 @@ Review outcome:
 - review_pending
 - notes: first analysis window of analytic cognition fixed.
 
-### Entry con-idea-cog-a-a-002 — a-a-002 (analysis): presupposition, positing/presupposing unity, and limit of formal analysis
+### Entry cogni-tru-a-002 — a-a-002 (analysis): presupposition, positing/presupposing unity, and limit of formal analysis
 
 Span:
 
@@ -130,7 +130,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: con-idea-cog-a-a-002-c1
+- c1. id: cogni-tru-a-002-c1
   - subject: analytic_cognition
   - predicate: is_determined_as
   - object: positing_presupposing_unity_with_formal_limit
@@ -143,11 +143,11 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: con-idea-cog-a-a-003
+  - targetEntryId: cogni-tru-a-003
   - note: formal-limit critique advances into arithmetic/algebra exemplar and final transition marker.
-  - sourceClaimIds: [`con-idea-cog-a-a-002-c1`]
+  - sourceClaimIds: [`cogni-tru-a-002-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`con-idea-cog-a-a-003-c1`]
+  - targetClaimIds: [`cogni-tru-a-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -156,7 +156,7 @@ Review outcome:
 - review_pending
 - notes: second analysis window of analytic cognition fixed.
 
-### Entry con-idea-cog-a-a-003 — a-a-003 (analysis): arithmetic exemplar, analytic method limit, and handoff to synthetic cognition
+### Entry cogni-tru-a-003 — a-a-003 (analysis): arithmetic exemplar, analytic method limit, and handoff to synthetic cognition
 
 Span:
 
@@ -176,7 +176,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: con-idea-cog-a-a-003-c1
+- c1. id: cogni-tru-a-003-c1
   - subject: analytic_cognition
   - predicate: is_determined_as
   - object: identity_based_method_that_necessitates_transition_to_synthetic
@@ -189,11 +189,11 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: con-idea-cog-a-b-001
+  - targetEntryId: cogni-tru-b-001
   - note: transition opens numbered synthetic movement beginning with definition.
-  - sourceClaimIds: [`con-idea-cog-a-a-003-c1`]
+  - sourceClaimIds: [`cogni-tru-a-003-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`con-idea-cog-a-b-001-c1`]
+  - targetClaimIds: [`cogni-tru-b-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -202,7 +202,7 @@ Review outcome:
 - review_pending
 - notes: third analysis window ends at the synthetic-cognition handoff.
 
-### Entry con-idea-cog-a-b-001 — a-b-001 (numbered): 1. Definition
+### Entry cogni-tru-b-001 — a-b-001 (numbered): 1. Definition
 
 Span:
 
@@ -222,7 +222,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: con-idea-cog-a-b-001-c1
+- c1. id: cogni-tru-b-001-c1
   - subject: synthetic_definition
   - predicate: is_determined_as
   - object: initial_numbered_fixation_of_conceptual_content
@@ -235,11 +235,11 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: con-idea-cog-a-b-002
+  - targetEntryId: cogni-tru-b-002
   - note: definition passes into division.
-  - sourceClaimIds: [`con-idea-cog-a-b-001-c1`]
+  - sourceClaimIds: [`cogni-tru-b-001-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`con-idea-cog-a-b-002-c1`]
+  - targetClaimIds: [`cogni-tru-b-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -248,7 +248,7 @@ Review outcome:
 - review_pending
 - notes: numbered section 1 fixed by user boundary.
 
-### Entry con-idea-cog-a-b-002 — a-b-002 (numbered): 2. Division
+### Entry cogni-tru-b-002 — a-b-002 (numbered): 2. Division
 
 Span:
 
@@ -268,7 +268,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: con-idea-cog-a-b-002-c1
+- c1. id: cogni-tru-b-002-c1
   - subject: synthetic_division
   - predicate: is_determined_as
   - object: mediated_ordering_of_determinations
@@ -281,11 +281,11 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: con-idea-cog-a-b-003
+  - targetEntryId: cogni-tru-b-003
   - note: division opens theorem movement.
-  - sourceClaimIds: [`con-idea-cog-a-b-002-c1`]
+  - sourceClaimIds: [`cogni-tru-b-002-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`con-idea-cog-a-b-003-c1`]
+  - targetClaimIds: [`cogni-tru-b-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -294,7 +294,7 @@ Review outcome:
 - review_pending
 - notes: numbered section 2 fixed by user boundary.
 
-### Entry con-idea-cog-a-b-003 — a-b-003 (numbered): 3. The theorem
+### Entry cogni-tru-b-003 — a-b-003 (numbered): 3. The theorem
 
 Span:
 
@@ -314,7 +314,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: con-idea-cog-a-b-003-c1
+- c1. id: cogni-tru-b-003-c1
   - subject: theorem_movement
   - predicate: is_determined_as
   - object: mediated_proof_progression_with_subjective_ground
@@ -327,11 +327,11 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: con-idea-cog-a-c-001
+  - targetEntryId: cogni-tru-c-001
   - note: theorem limit opens final `a-c` critical movement.
-  - sourceClaimIds: [`con-idea-cog-a-b-003-c1`]
+  - sourceClaimIds: [`cogni-tru-b-003-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`con-idea-cog-a-c-001-c1`]
+  - targetClaimIds: [`cogni-tru-c-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -340,7 +340,7 @@ Review outcome:
 - review_pending
 - notes: numbered section 3 fixed by user boundary.
 
-### Entry con-idea-cog-a-c-001 — a-c-001 (analysis): explicit method limit and geometry restriction
+### Entry cogni-tru-c-001 — a-c-001 (analysis): explicit method limit and geometry restriction
 
 Span:
 
@@ -360,7 +360,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: con-idea-cog-a-c-001-c1
+- c1. id: cogni-tru-c-001-c1
   - subject: synthetic_method_limit
   - predicate: is_determined_as
   - object: explicit_boundary_of_geometric_formalism
@@ -373,11 +373,11 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: con-idea-cog-a-c-002
+  - targetEntryId: cogni-tru-c-002
   - note: first limit critique advances to deeper truth-relation correction.
-  - sourceClaimIds: [`con-idea-cog-a-c-001-c1`]
+  - sourceClaimIds: [`cogni-tru-c-001-c1`]
   - sourceKeyPointIds: [`k1`, `k2`]
-  - targetClaimIds: [`con-idea-cog-a-c-002-c1`]
+  - targetClaimIds: [`cogni-tru-c-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -386,7 +386,7 @@ Review outcome:
 - review_pending
 - notes: `a-c-*` range begins at user-fixed line 1894.
 
-### Entry con-idea-cog-a-c-002 — a-c-002 (analysis): correction of one-sided truth relation
+### Entry cogni-tru-c-002 — a-c-002 (analysis): correction of one-sided truth relation
 
 Span:
 
@@ -406,7 +406,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: con-idea-cog-a-c-002-c1
+- c1. id: cogni-tru-c-002-c1
   - subject: truth_relation_correction
   - predicate: is_determined_as
   - object: critique_of_one_sided_external_demonstration
@@ -419,11 +419,11 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: con-idea-cog-a-c-003
+  - targetEntryId: cogni-tru-c-003
   - note: corrected truth relation moves into final synthesis close of `a-c`.
-  - sourceClaimIds: [`con-idea-cog-a-c-002-c1`]
+  - sourceClaimIds: [`cogni-tru-c-002-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`con-idea-cog-a-c-003-c1`]
+  - targetClaimIds: [`cogni-tru-c-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -432,7 +432,7 @@ Review outcome:
 - review_pending
 - notes: second `a-c` window fixed.
 
-### Entry con-idea-cog-a-c-003 — a-c-003 (analysis): closure of true-cognition movement
+### Entry cogni-tru-c-003 — a-c-003 (analysis): closure of true-cognition movement
 
 Span:
 
@@ -452,7 +452,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: con-idea-cog-a-c-003-c1
+- c1. id: cogni-tru-c-003-c1
   - subject: closure_of_true_cognition
   - predicate: is_determined_as
   - object: final_inner_necessity_before_practical_transition
@@ -465,11 +465,11 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: con-idea-cog-a-tr-001
+  - targetEntryId: cogni-tru-tr-001
   - note: closes `a-c-*` and hands off to explicit practical idea marker.
-  - sourceClaimIds: [`con-idea-cog-a-c-003-c1`]
+  - sourceClaimIds: [`cogni-tru-c-003-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`con-idea-cog-a-tr-001-c1`]
+  - targetClaimIds: [`cogni-tru-tr-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -478,7 +478,7 @@ Review outcome:
 - review_pending
 - notes: `a-c-*` range ends at user-fixed line 2194.
 
-### Entry con-idea-cog-a-tr-001 — transition gate: practical idea (action)
+### Entry cogni-tru-tr-001 — transition gate: practical idea (action)
 
 Span:
 
@@ -498,7 +498,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: con-idea-cog-a-tr-001-c1
+- c1. id: cogni-tru-tr-001-c1
   - subject: practical_idea
   - predicate: is_determined_as
   - object: action
@@ -510,11 +510,11 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: con-idea-cog-b-001
+  - targetEntryId: cogni-god-001
   - note: direct handoff from end of Part A into Part B movement.
-  - sourceClaimIds: [`con-idea-cog-a-tr-001-c1`]
+  - sourceClaimIds: [`cogni-tru-tr-001-c1`]
   - sourceKeyPointIds: [`k2`, `k3`]
-  - targetClaimIds: [`con-idea-cog-b-001-c1`]
+  - targetClaimIds: [`cogni-god-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 

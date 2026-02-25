@@ -55,7 +55,7 @@ Extraction map:
 - b-002: `231-515`
 - b-003: `516-735`
 
-### Entry con-idea-spec-b-001 — b-001: concrete beginning and analytic/synthetic method setup
+### Entry aidea-adv-001 — b-001: concrete beginning and analytic/synthetic method setup
 
 Span:
 
@@ -75,7 +75,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: con-idea-spec-b-001-c1
+- c1. id: aidea-adv-001-c1
   - subject: absolute_method
   - predicate: is_determined_as
   - object: immanent_analytic_and_synthetic_movement
@@ -88,11 +88,11 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: con-idea-spec-b-002
+  - targetEntryId: aidea-adv-002
   - note: setup advances into full dialectical critique and negative determination.
-  - sourceClaimIds: [`con-idea-spec-b-001-c1`]
+  - sourceClaimIds: [`aidea-adv-001-c1`]
   - sourceKeyPointIds: [`k2`, `k3`]
-  - targetClaimIds: [`con-idea-spec-b-002-c1`]
+  - targetClaimIds: [`aidea-adv-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -101,7 +101,7 @@ Review outcome:
 - review_pending
 - notes: first movement of method-advance fixed.
 
-### Entry con-idea-spec-b-002 — b-002: dialectic, contradiction, and negative mediation
+### Entry aidea-adv-002 — b-002: dialectic, contradiction, and negative mediation
 
 Span:
 
@@ -121,7 +121,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: con-idea-spec-b-002-c1
+- c1. id: aidea-adv-002-c1
   - subject: dialectic
   - predicate: is_determined_as
   - object: objective_necessity_of_conceptual_movement
@@ -131,7 +131,7 @@ Claims: (Claim)
     - [231-320] critique of subjective and skeptical reductions.
     - [333-366] concept moves fixed oppositions from within.
 
-- c2. id: con-idea-spec-b-002-c2
+- c2. id: aidea-adv-002-c2
   - subject: negativity
   - predicate: is_determined_as
   - object: turning_point_of_absolute_mediation
@@ -144,20 +144,20 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: refines
-  - targetEntryId: con-idea-spec-b-001
+  - targetEntryId: aidea-adv-001
   - note: demonstrates concretely how the initial analytic/synthetic claim becomes dialectical necessity.
-  - sourceClaimIds: [`con-idea-spec-b-002-c1`, `con-idea-spec-b-002-c2`]
+  - sourceClaimIds: [`aidea-adv-002-c1`, `aidea-adv-002-c2`]
   - sourceKeyPointIds: [`k1`, `k3`]
-  - targetClaimIds: [`con-idea-spec-b-001-c1`]
+  - targetClaimIds: [`aidea-adv-001-c1`]
   - logicalOperator: presuppositional_link
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: con-idea-spec-b-003
+  - targetEntryId: aidea-adv-003
   - note: turning-point negativity unfolds into result, system, and circular closure.
-  - sourceClaimIds: [`con-idea-spec-b-002-c2`]
+  - sourceClaimIds: [`aidea-adv-002-c2`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`con-idea-spec-b-003-c1`]
+  - targetClaimIds: [`aidea-adv-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -166,7 +166,7 @@ Review outcome:
 - review_pending
 - notes: central dialectical deepening fixed.
 
-### Entry con-idea-spec-b-003 — b-003: result restoration, expansion, and circular closure
+### Entry aidea-adv-003 — b-003: result restoration, expansion, and circular closure
 
 Span:
 
@@ -186,7 +186,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: con-idea-spec-b-003-c1
+- c1. id: aidea-adv-003-c1
   - subject: method_result
   - predicate: is_determined_as
   - object: restored_immediacy_and_systematic_totality
@@ -196,7 +196,7 @@ Claims: (Claim)
     - [516-573] return, restoration, and mediated beginning.
     - [578-614] onward enrichment and intensification.
 
-- c2. id: con-idea-spec-b-003-c2
+- c2. id: aidea-adv-003-c2
   - subject: logical_science
   - predicate: culminates_in
   - object: circle_of_circles_absolute_idea_return
@@ -209,11 +209,11 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: con-idea-spec-b-002
+  - targetEntryId: aidea-adv-002
   - note: circular closure confirms that negative mediation is productive truth-motion.
-  - sourceClaimIds: [`con-idea-spec-b-003-c1`, `con-idea-spec-b-003-c2`]
+  - sourceClaimIds: [`aidea-adv-003-c1`, `aidea-adv-003-c2`]
   - sourceKeyPointIds: [`k1`, `k2`, `k3`]
-  - targetClaimIds: [`con-idea-spec-b-002-c2`]
+  - targetClaimIds: [`aidea-adv-002-c2`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 

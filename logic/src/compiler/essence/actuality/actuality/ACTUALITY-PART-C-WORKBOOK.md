@@ -51,11 +51,11 @@ Decision:
 
 ## Decomposition status
 
-- completed: `act-part-c-001` for lines `3-104`
-- completed: `act-part-c-002` for lines `105-164`
-- completed: `act-part-c-003` for lines `165-232`
+- completed: `actua-abs-001` for lines `3-104`
+- completed: `actua-abs-002` for lines `105-164`
+- completed: `actua-abs-003` for lines `165-232`
 
-### Entry act-part-c-001 — Real necessity's self-determination as contingency and absolute necessity
+### Entry actua-abs-001 — Real necessity's self-determination as contingency and absolute necessity
 
 Span:
 
@@ -77,7 +77,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: act-part-c-001-c1
+- c1. id: actua-abs-001-c1
   - subject: real_necessity
   - predicate: is
   - object: determinate_necessity_with_contingency_within_it
@@ -86,7 +86,7 @@ Claims: (Claim)
   - evidence:
     - [3-8] "Real necessity is determinate necessity... having its negation, contingency, within it."
 
-- c2. id: act-part-c-001-c2
+- c2. id: actua-abs-001-c2
   - subject: absolute_actuality
   - predicate: becomes
   - object: empty_contingency_and_absolute_possibility
@@ -95,7 +95,7 @@ Claims: (Claim)
   - evidence:
     - [18-31] "because this actuality is posited to be absolute... it is contingency... possibility is itself absolute possibility..."
 
-- c3. id: act-part-c-001-c3
+- c3. id: actua-abs-001-c3
   - subject: necessity
   - predicate: is
   - object: own_becoming_and_own_posited_presupposition
@@ -104,7 +104,7 @@ Claims: (Claim)
   - evidence:
     - [33-46] "contingency... becomes in it... necessity's own becoming... own positing... positive unity..."
 
-- c4. id: act-part-c-001-c4
+- c4. id: actua-abs-001-c4
   - subject: necessity
   - predicate: determines_itself_as
   - object: contingency
@@ -113,7 +113,7 @@ Claims: (Claim)
   - evidence:
     - [67-77] "It is necessity itself... that determines itself as contingency..."
 
-- c5. id: act-part-c-001-c5
+- c5. id: actua-abs-001-c5
   - subject: absolute_necessity
   - predicate: resolves
   - object: form_content_difference_by_self_penetrating_difference
@@ -125,20 +125,20 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: act-part-c-002
+  - targetEntryId: actua-abs-002
   - note: from genesis of absolute necessity to its explicit truth-definition as unity of being and essence.
-  - sourceClaimIds: [act-part-c-001-c5]
+  - sourceClaimIds: [actua-abs-001-c5]
   - sourceKeyPointIds: [k5]
-  - targetClaimIds: [act-part-c-002-c1]
+  - targetClaimIds: [actua-abs-002-c1]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 - r2. type: supports
-  - targetEntryId: act-part-b-003
+  - targetEntryId: actua-rel-003
   - note: confirms Part B claim that real necessity contains contingency and tends toward absolute actuality.
-  - sourceClaimIds: [act-part-c-001-c1, act-part-c-001-c2]
+  - sourceClaimIds: [actua-abs-001-c1, actua-abs-001-c2]
   - sourceKeyPointIds: [k1, k2]
-  - targetClaimIds: [act-part-b-003-c5]
+  - targetClaimIds: [actua-rel-003-c5]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
@@ -147,7 +147,7 @@ Review outcome:
 - review_pending
 - notes: line anchors verified against numbered source.
 
-### Entry act-part-c-002 — Absolute necessity as identity of being and essence
+### Entry actua-abs-002 — Absolute necessity as identity of being and essence
 
 Span:
 
@@ -169,7 +169,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: act-part-c-002-c1
+- c1. id: actua-abs-002-c1
   - subject: absolute_necessity
   - predicate: is
   - object: truth_of_actuality_possibility_and_formal_real_necessity
@@ -178,7 +178,7 @@ Claims: (Claim)
   - evidence:
     - [105-107] "Absolute necessity is therefore the truth in which actuality and possibility... formal and real necessity return."
 
-- c2. id: act-part-c-002-c2
+- c2. id: actua-abs-002-c2
   - subject: absolutely_necessary
   - predicate: is
   - object: self_grounding_identity_of_being_and_essence
@@ -188,7 +188,7 @@ Claims: (Claim)
     - [108-113] "being... and essence... one and the same... The absolutely necessary only is because it is..."
     - [118-121] "has a ground and a condition but has only itself for this ground and condition..."
 
-- c3. id: act-part-c-002-c3
+- c3. id: actua-abs-002-c3
   - subject: absolute_necessity
   - predicate: is
   - object: reflection_or_form_of_absolute_as_absolute_negativity
@@ -197,7 +197,7 @@ Claims: (Claim)
   - evidence:
     - [129-133] "Absolute necessity is... reflection or form of the absolute... simple immediacy which is absolute negativity."
 
-- c4. id: act-part-c-002-c4
+- c4. id: actua-abs-002-c4
   - subject: absolute_necessity
   - predicate: performs
   - object: absolute_conversion_of_actuality_and_possibility
@@ -206,7 +206,7 @@ Claims: (Claim)
   - evidence:
     - [138-143] "absolute conversion of its actuality into its possibility and its possibility into its actuality."
 
-- c5. id: act-part-c-002-c5
+- c5. id: actua-abs-002-c5
   - subject: absolute_necessity
   - predicate: is
   - object: blind
@@ -218,20 +218,20 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: refines
-  - targetEntryId: act-part-c-001
+  - targetEntryId: actua-abs-001
   - note: makes explicit the truth-structure toward which C.1's self-determining necessity was moving.
-  - sourceClaimIds: [act-part-c-002-c1, act-part-c-002-c2]
+  - sourceClaimIds: [actua-abs-002-c1, actua-abs-002-c2]
   - sourceKeyPointIds: [k1, k2]
-  - targetClaimIds: [act-part-c-001-c5]
+  - targetClaimIds: [actua-abs-001-c5]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: act-part-c-003
+  - targetEntryId: actua-abs-003
   - note: blind necessity is unfolded into collapse/rejoining movement that culminates as substance.
-  - sourceClaimIds: [act-part-c-002-c5]
+  - sourceClaimIds: [actua-abs-002-c5]
   - sourceKeyPointIds: [k5]
-  - targetClaimIds: [act-part-c-003-c1]
+  - targetClaimIds: [actua-abs-003-c1]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -240,7 +240,7 @@ Review outcome:
 - review_pending
 - notes: keep c4/c5 distinction for second-order analysis of blindness vs identity.
 
-### Entry act-part-c-003 — Blind collapse, self-rejoining contingency, and emergence of substance
+### Entry actua-abs-003 — Blind collapse, self-rejoining contingency, and emergence of substance
 
 Span:
 
@@ -262,7 +262,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: act-part-c-003-c1
+- c1. id: actua-abs-003-c1
   - subject: contingency
   - predicate: is
   - object: absolute_necessity_as_essence_of_free_actualities
@@ -271,7 +271,7 @@ Claims: (Claim)
   - evidence:
     - [165-166] "this contingency is rather absolute necessity; it is the essence of those free... actualities."
 
-- c2. id: act-part-c-003-c2
+- c2. id: actua-abs-003-c2
   - subject: self_grounded_being_of_actualities
   - predicate: is
   - object: absolute_negativity_and_self_contradiction
@@ -280,7 +280,7 @@ Claims: (Claim)
   - evidence:
     - [176-183] "simplicity of their being... is absolute negativity... being... is self-contradiction..."
 
-- c3. id: act-part-c-003-c3
+- c3. id: actua-abs-003-c3
   - subject: negative_breakthrough
   - predicate: appears_as
   - object: otherness_nothing_and_perishing_of_actualities
@@ -290,7 +290,7 @@ Claims: (Claim)
     - [184-189] "break forth... as the negation... as their nothing, as an otherness..."
     - [201-205] "necessity appeals... the actualities now perish..."
 
-- c4. id: act-part-c-003-c4
+- c4. id: actua-abs-003-c4
   - subject: transition_of_actual_into_possible
   - predicate: is
   - object: self_rejoining_absolute_identity_where_contingency_is_absolute_necessity
@@ -299,7 +299,7 @@ Claims: (Claim)
   - evidence:
     - [217-221] "transition... is a self-rejoining; contingency is absolute necessity..."
 
-- c5. id: act-part-c-003-c5
+- c5. id: actua-abs-003-c5
   - subject: identity_of_being_with_itself_in_negation
   - predicate: is
   - object: substance_and_absolutes_own_exposition
@@ -311,27 +311,27 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: sublates
-  - targetEntryId: act-part-c-002
+  - targetEntryId: actua-abs-002
   - note: resolves blind externality by showing it as absolute self-exposition and rejoining identity.
-  - sourceClaimIds: [act-part-c-003-c4, act-part-c-003-c5]
+  - sourceClaimIds: [actua-abs-003-c4, actua-abs-003-c5]
   - sourceKeyPointIds: [k4, k5]
-  - targetClaimIds: [act-part-c-002-c5]
+  - targetClaimIds: [actua-abs-002-c5]
   - logicalOperator: sublative_transition
   - analysisMode: first_order_claim_projection
 
 - r2. type: refines
-  - targetEntryId: act-part-c-001
+  - targetEntryId: actua-abs-001
   - note: concretizes C.1's thesis that necessity determines itself as contingency.
-  - sourceClaimIds: [act-part-c-003-c1, act-part-c-003-c4]
+  - sourceClaimIds: [actua-abs-003-c1, actua-abs-003-c4]
   - sourceKeyPointIds: [k1, k4]
-  - targetClaimIds: [act-part-c-001-c4]
+  - targetClaimIds: [actua-abs-001-c4]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r3. type: transitions_to
   - targetEntryId: act-idea-001
   - note: culmination in substance transitions to the chapter-level idea anchor.
-  - sourceClaimIds: [act-part-c-003-c5]
+  - sourceClaimIds: [actua-abs-003-c5]
   - sourceKeyPointIds: [k5]
   - targetClaimIds: [act-idea-001-c1]
   - logicalOperator: sequential_transition

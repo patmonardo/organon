@@ -45,7 +45,7 @@ Scope:
 
 Decision:
 
-- Use ID prefix `be-b` for Part B entries.
+- Use ID prefix `becom-inv` for Part B entries.
 - Concept-part-first workflow is active.
 - Transition-boundary choices are treated as review-sensitive decisions to minimize disruption of abstraction products.
 - Defer IDEA-special pass and compiler-normalization pass until Part A/B/C first-order claims are stabilized.
@@ -54,12 +54,12 @@ Decision:
 
 - Entry model: one entry per numerical label plus dedicated final transition entry.
 - Planned entries:
-  - `be-b-001` -> section `1` (`8-86`)
-  - `be-b-002` -> section `2` (`88-170`)
-  - `be-b-003` -> section `3` (`172-219`)
-  - `be-b-004` -> transition paragraph (`221-230`)
+  - `becom-inv-001` -> section `1` (`8-86`)
+  - `becom-inv-002` -> section `2` (`88-170`)
+  - `becom-inv-003` -> section `3` (`172-219`)
+  - `becom-inv-004` -> transition paragraph (`221-230`)
 
-### Entry be-b-001 — Substrate indifference as inverse-ratio whole
+### Entry becom-inv-001 — Substrate indifference as inverse-ratio whole
 
 Span:
 
@@ -80,7 +80,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: be-b-001-c1
+- c1. id: becom-inv-001-c1
   - subject: reduced_measure_relations
   - predicate: yield
   - object: one_indivisible_substrate_of_indifference
@@ -89,7 +89,7 @@ Claims: (Claim)
   - evidence:
     - [8-23] reduction establishes one substrate as independent measure present in differentiation.
 
-- c2. id: be-b-001-c2
+- c2. id: becom-inv-001-c2
   - subject: externally_quantitative_difference_under_fixed_limit
   - predicate: becomes
   - object: inverse_ratio_relation
@@ -98,7 +98,7 @@ Claims: (Claim)
   - evidence:
     - [25-53] two quanta restricted by fixed sum are negatively related and stand in inverse ratio.
 
-- c3. id: be-b-001-c3
+- c3. id: becom-inv-001-c3
   - subject: each_side_of_inverse_relation
   - predicate: is
   - object: whole_containing_both_qualities_in_different_quantum
@@ -109,27 +109,27 @@ Claims: (Claim)
 
 Claim ↔ key point map:
 
-- be-b-001-c1 -> k1
-- be-b-001-c2 -> k2, k3
-- be-b-001-c3 -> k4
+- becom-inv-001-c1 -> k1
+- becom-inv-001-c2 -> k2, k3
+- becom-inv-001-c3 -> k4
 
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: be-a-003
+  - targetEntryId: becom-abs-003
   - note: section 1 gives explicit internal structure to the indifference achieved in Part A.
-  - sourceClaimIds: [`be-b-001-c1`, `be-b-001-c2`]
+  - sourceClaimIds: [`becom-inv-001-c1`, `becom-inv-001-c2`]
   - sourceKeyPointIds: [`k1`, `k3`]
-  - targetClaimIds: [`be-a-003-c1`, `be-a-003-c2`]
+  - targetClaimIds: [`becom-abs-003-c1`, `becom-abs-003-c2`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: be-b-002
+  - targetEntryId: becom-inv-002
   - note: inverse-ratio totality is tested as developed indifference with internal defects.
-  - sourceClaimIds: [`be-b-001-c3`]
+  - sourceClaimIds: [`becom-inv-001-c3`]
   - sourceKeyPointIds: [`k4`]
-  - targetClaimIds: [`be-b-002-c1`]
+  - targetClaimIds: [`becom-inv-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -138,7 +138,7 @@ Review outcome:
 - review_pending
 - notes: section 1 stabilized.
 
-### Entry be-b-002 — Developed indifference and defects of quantitative form
+### Entry becom-inv-002 — Developed indifference and defects of quantitative form
 
 Span:
 
@@ -159,7 +159,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: be-b-002-c1
+- c1. id: becom-inv-002-c1
   - subject: developed_indifference
   - predicate: is
   - object: totality_with_unity_held_only_implicitly
@@ -168,7 +168,7 @@ Claims: (Claim)
   - evidence:
     - [88-109] indifference is totality, but moments are not yet self-sublating into unity.
 
-- c2. id: be-b-002-c2
+- c2. id: becom-inv-002-c2
   - subject: quantitative_form_of_indifference
   - predicate: exhibits
   - object: double_defect_of_immediate_positing_and_external_determination
@@ -177,7 +177,7 @@ Claims: (Claim)
   - evidence:
     - [117-145] (a) and (b) describe groundless emergence and externally determined fluctuation.
 
-- c3. id: be-b-002-c3
+- c3. id: becom-inv-002-c3
   - subject: quantitatively_limited_moments
   - predicate: develop_into
   - object: immediate_opposition_and_contradiction
@@ -188,18 +188,18 @@ Claims: (Claim)
 
 Claim ↔ key point map:
 
-- be-b-002-c1 -> k1
-- be-b-002-c2 -> k2, k3
-- be-b-002-c3 -> k4
+- becom-inv-002-c1 -> k1
+- becom-inv-002-c2 -> k2, k3
+- becom-inv-002-c3 -> k4
 
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: be-b-003
+  - targetEntryId: becom-inv-003
   - note: contradiction of quantitative representation is made explicit in equilibrium collapse and emergence of one whole.
-  - sourceClaimIds: [`be-b-002-c3`]
+  - sourceClaimIds: [`becom-inv-002-c3`]
   - sourceKeyPointIds: [`k4`]
-  - targetClaimIds: [`be-b-003-c1`]
+  - targetClaimIds: [`becom-inv-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -208,7 +208,7 @@ Review outcome:
 - review_pending
 - notes: section 2 stabilized.
 
-### Entry be-b-003 — Contradiction of factors and emergence of essence
+### Entry becom-inv-003 — Contradiction of factors and emergence of essence
 
 Span:
 
@@ -229,7 +229,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: be-b-003-c1
+- c1. id: becom-inv-003-c1
   - subject: qualitatively_connected_factors
   - predicate: invalidate
   - object: stable_quantitative_difference
@@ -238,7 +238,7 @@ Claims: (Claim)
   - evidence:
     - [172-197] each factor reaches only as far as the other; equilibrium follows from qualitative connection.
 
-- c2. id: be-b-003-c2
+- c2. id: becom-inv-003-c2
   - subject: factor_relation_under_quantitative_assumptions
   - predicate: collapses_into
   - object: vanishing_and_single_predominant_whole
@@ -247,7 +247,7 @@ Claims: (Claim)
   - evidence:
     - [198-219] more/less assumptions vanish; disturbance yields one self-subsistent whole.
 
-- c3. id: be-b-003-c3
+- c3. id: becom-inv-003-c3
   - subject: quantitative_representation_of_factor_relation
   - predicate: culminates_in
   - object: single_whole_after_disturbance_of_equilibrium
@@ -258,18 +258,18 @@ Claims: (Claim)
 
 Claim ↔ key point map:
 
-- be-b-003-c1 -> k1
-- be-b-003-c2 -> k2, k3
-- be-b-003-c3 -> k3, k4
+- becom-inv-003-c1 -> k1
+- becom-inv-003-c2 -> k2, k3
+- becom-inv-003-c3 -> k3, k4
 
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: be-b-004
+  - targetEntryId: becom-inv-004
   - note: section 3 collapse prepares the dedicated transition paragraph that explicitly posits essence.
-  - sourceClaimIds: [`be-b-003-c2`, `be-b-003-c3`]
+  - sourceClaimIds: [`becom-inv-003-c2`, `becom-inv-003-c3`]
   - sourceKeyPointIds: [`k3`, `k4`]
-  - targetClaimIds: [`be-b-004-c1`]
+  - targetClaimIds: [`becom-inv-004-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -278,7 +278,7 @@ Review outcome:
 - review_pending
 - notes: section 3 stabilized; Part B first-order pass complete.
 
-### Entry be-b-004 — Transition: indifference as self-sublating contradiction into essence
+### Entry becom-inv-004 — Transition: indifference as self-sublating contradiction into essence
 
 Span:
 
@@ -298,7 +298,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: be-b-004-c1
+- c1. id: becom-inv-004-c1
   - subject: indifference_as_totality_of_determining_process
   - predicate: is_posited_as
   - object: self_sublating_contradiction
@@ -307,7 +307,7 @@ Claims: (Claim)
   - evidence:
     - [221-227] totality as contradiction must be posited as self-sublating.
 
-- c2. id: be-b-004-c2
+- c2. id: becom-inv-004-c2
   - subject: self_sublating_contradiction_of_indifference
   - predicate: is_determined_as
   - object: immanently_negative_absolute_unity_essence
@@ -318,17 +318,17 @@ Claims: (Claim)
 
 Claim ↔ key point map:
 
-- be-b-004-c1 -> k1, k2
-- be-b-004-c2 -> k3
+- becom-inv-004-c1 -> k1, k2
+- becom-inv-004-c2 -> k3
 
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: be-c-001
+  - targetEntryId: becom-bec-001
   - note: dedicated transition paragraph opens Part C (`Transition into Essence`).
-  - sourceClaimIds: [`be-b-004-c1`, `be-b-004-c2`]
+  - sourceClaimIds: [`becom-inv-004-c1`, `becom-inv-004-c2`]
   - sourceKeyPointIds: [`k2`, `k3`]
-  - targetClaimIds: [`be-c-001-c1`]
+  - targetClaimIds: [`becom-bec-001-c1`]
   - logicalOperator: sublative_transition
   - analysisMode: first_order_claim_projection
 

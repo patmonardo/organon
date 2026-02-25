@@ -45,7 +45,7 @@ Scope:
 
 Decision:
 
-- Use ID prefix `rm-c` for Part C entries.
+- Use ID prefix `realm-mel` for Part C entries.
 - Concept-part-first workflow is active.
 - Sectioning lock for this pass:
   - `a` = `4-66`
@@ -59,12 +59,12 @@ Decision:
 
 - Entry model: sectioned pass with explicit final transition entry.
 - Planned entries:
-  - `rm-c-001` -> section `a` (`4-66`)
-  - `rm-c-002` -> section `b` (`68-131`)
-  - `rm-c-003` -> section `c` (`133-170`)
-  - `rm-c-004` -> transition paragraph (`171-175`)
+  - `realm-mel-001` -> section `a` (`4-66`)
+  - `realm-mel-002` -> section `b` (`68-131`)
+  - `realm-mel-003` -> section `c` (`133-170`)
+  - `realm-mel-004` -> transition paragraph (`171-175`)
 
-### Entry rm-c-001 — Measureless as collapse of exclusive measure and infinite alternation
+### Entry realm-mel-001 — Measureless as collapse of exclusive measure and infinite alternation
 
 Span:
 
@@ -85,7 +85,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: rm-c-001-c1
+- c1. id: realm-mel-001-c1
   - subject: exclusive_measure
   - predicate: is_vulnerable_to
   - object: quantitative_mutation_collapsing_into_measureless
@@ -94,7 +94,7 @@ Claims: (Claim)
   - evidence:
     - [4-14] measure remains susceptible to varying ratios and collapse by mutation of magnitude.
 
-- c2. id: rm-c-001-c2
+- c2. id: realm-mel-001-c2
   - subject: abstract_measureless_in_nodal_transition
   - predicate: sublates_into
   - object: qualitative_specifying_alternation_as_infinite_for_itself
@@ -103,7 +103,7 @@ Claims: (Claim)
   - evidence:
     - [16-51] indifferent measureless becomes specifying alternation and infinite existing for itself.
 
-- c3. id: rm-c-001-c3
+- c3. id: realm-mel-001-c3
   - subject: alternating_measure_process
   - predicate: yields
   - object: persisting_self_subsistent_matter
@@ -114,27 +114,27 @@ Claims: (Claim)
 
 Claim ↔ key point map:
 
-- rm-c-001-c1 -> k1
-- rm-c-001-c2 -> k2, k3
-- rm-c-001-c3 -> k4
+- realm-mel-001-c1 -> k1
+- realm-mel-001-c2 -> k2, k3
+- realm-mel-001-c3 -> k4
 
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: rm-b-003
+  - targetEntryId: realm-ind-003
   - note: explicates Part B's leap thesis by showing why quantitative mutation and qualitative break are structurally inseparable.
-  - sourceClaimIds: [`rm-c-001-c1`, `rm-c-001-c2`]
+  - sourceClaimIds: [`realm-mel-001-c1`, `realm-mel-001-c2`]
   - sourceKeyPointIds: [`k1`, `k3`]
-  - targetClaimIds: [`rm-b-003-c1`, `rm-b-003-c2`]
+  - targetClaimIds: [`realm-ind-003-c1`, `realm-ind-003-c2`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: rm-c-002
+  - targetEntryId: realm-mel-002
   - note: persisting matter is unfolded through explicit (a)(b)(c) determinations of substrate persistence.
-  - sourceClaimIds: [`rm-c-001-c3`]
+  - sourceClaimIds: [`realm-mel-001-c3`]
   - sourceKeyPointIds: [`k4`]
-  - targetClaimIds: [`rm-c-002-c1`]
+  - targetClaimIds: [`realm-mel-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -143,7 +143,7 @@ Review outcome:
 - review_pending
 - notes: section a stabilized.
 
-### Entry rm-c-002 — Substrate persistence through differentiated quantitative dispersion
+### Entry realm-mel-002 — Substrate persistence through differentiated quantitative dispersion
 
 Span:
 
@@ -164,7 +164,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: rm-c-002-c1
+- c1. id: realm-mel-002-c1
   - subject: substantial_substrate
   - predicate: is_posited_as
   - object: perennial_unity_of_qualitative_and_quantitative_moments
@@ -173,7 +173,7 @@ Claims: (Claim)
   - evidence:
     - [68-85] (a) defines one substantial matter as substrate with existent infinity determination.
 
-- c2. id: rm-c-002-c2
+- c2. id: realm-mel-002-c2
   - subject: substrate_self_sameness
   - predicate: persists_through
   - object: internally_differentiated_quantitative_dispersion_of_measures
@@ -182,7 +182,7 @@ Claims: (Claim)
   - evidence:
     - [87-92] (b) qualitative independent measures differ quantitatively while substrate persists.
 
-- c3. id: rm-c-002-c3
+- c3. id: realm-mel-002-c3
   - subject: nodal_progression_process
   - predicate: demonstrates
   - object: reciprocal_sublation_with_state_mutation_over_persisting_substrate
@@ -193,18 +193,18 @@ Claims: (Claim)
 
 Claim ↔ key point map:
 
-- rm-c-002-c1 -> k1
-- rm-c-002-c2 -> k2
-- rm-c-002-c3 -> k3, k4
+- realm-mel-002-c1 -> k1
+- realm-mel-002-c2 -> k2
+- realm-mel-002-c3 -> k3, k4
 
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: rm-c-003
+  - targetEntryId: realm-mel-003
   - note: substrate thesis is recapitulated as a systematic review of measure's progressive determination.
-  - sourceClaimIds: [`rm-c-002-c3`]
+  - sourceClaimIds: [`realm-mel-002-c3`]
   - sourceKeyPointIds: [`k3`, `k4`]
-  - targetClaimIds: [`rm-c-003-c1`]
+  - targetClaimIds: [`realm-mel-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -213,7 +213,7 @@ Review outcome:
 - review_pending
 - notes: section b stabilized.
 
-### Entry rm-c-003 — Review synthesis: measure demoted to a substrate-bound moment
+### Entry realm-mel-003 — Review synthesis: measure demoted to a substrate-bound moment
 
 Span:
 
@@ -234,7 +234,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: rm-c-003-c1
+- c1. id: realm-mel-003-c1
   - subject: measure
   - predicate: is
   - object: immediate_specific_ratio_unity_of_quality_and_quantity
@@ -243,7 +243,7 @@ Claims: (Claim)
   - evidence:
     - [133-148] review states measure as immediate unity and essential ratio structure.
 
-- c2. id: rm-c-003-c2
+- c2. id: realm-mel-003-c2
   - subject: ratio_difference
   - predicate: yields
   - object: plural_self_subsistent_formal_totalities
@@ -252,7 +252,7 @@ Claims: (Claim)
   - evidence:
     - [149-156] real difference produces multitude of self-subsistent measure-relations.
 
-- c3. id: rm-c-003-c3
+- c3. id: realm-mel-003-c3
   - subject: specifying_principle_at_this_stage
   - predicate: is
   - object: substrate_bound_non_free_conceptual_determination
@@ -263,18 +263,18 @@ Claims: (Claim)
 
 Claim ↔ key point map:
 
-- rm-c-003-c1 -> k1
-- rm-c-003-c2 -> k2
-- rm-c-003-c3 -> k3, k4
+- realm-mel-003-c1 -> k1
+- realm-mel-003-c2 -> k2
+- realm-mel-003-c3 -> k3, k4
 
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: rm-c-004
+  - targetEntryId: realm-mel-004
   - note: review culmination passes to explicit concluding demotion of measure-determination to a moment.
-  - sourceClaimIds: [`rm-c-003-c3`]
+  - sourceClaimIds: [`realm-mel-003-c3`]
   - sourceKeyPointIds: [`k4`]
-  - targetClaimIds: [`rm-c-004-c1`]
+  - targetClaimIds: [`realm-mel-004-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -283,7 +283,7 @@ Review outcome:
 - review_pending
 - notes: section c stabilized.
 
-### Entry rm-c-004 — Transition: measure determination sublated into externally determined state
+### Entry realm-mel-004 — Transition: measure determination sublated into externally determined state
 
 Span:
 
@@ -303,7 +303,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: rm-c-004-c1
+- c1. id: realm-mel-004-c1
   - subject: measure_determination_in_substrate_unity
   - predicate: is
   - object: sublated_into_external_state_determined_by_quantum
@@ -314,14 +314,14 @@ Claims: (Claim)
 
 Claim ↔ key point map:
 
-- rm-c-004-c1 -> k1, k2, k3
+- realm-mel-004-c1 -> k1, k2, k3
 
 Relations: (Relation)
 
 - r1. type: transitions_to
   - targetEntryId: pending_next_chapter
   - note: Part C closes Real Measure by completing measure's demotion and preparing the next chapter determination.
-  - sourceClaimIds: [`rm-c-004-c1`]
+  - sourceClaimIds: [`realm-mel-004-c1`]
   - sourceKeyPointIds: [`k3`]
   - targetClaimIds: [`pending_cross_workbook`]
   - logicalOperator: sublative_transition

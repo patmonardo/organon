@@ -47,12 +47,12 @@ Scope:
 Decision:
 
 - Species-first IDs for Part C:
-  - Marker: `exi-c`
-  - Species groups from source labels: `c-a`, `c-b`, `c-c`
+  - Marker: `exist-inf`
+  - Species groups from source labels: `exist-inf-a`, `exist-inf-b`, `exist-inf-c`
   - Analytic subentries within each species: `<species>-001..003`
 - Subentries are analytic segmentations, not additional source-labeled species.
 
-### Entry exi-c — Marker `C`: Infinity in three labeled species (`a` / `b` / `c`)
+### Entry exist-inf — Marker `C`: Infinity in three labeled species (`a` / `b` / `c`)
 
 Span:
 
@@ -72,7 +72,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: exi-c-c1
+- c1. id: exist-inf-c1
   - subject: infinity_part_c
   - predicate: has_species
   - object: c_a_c_b_c_c
@@ -88,29 +88,29 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: c-a-001
+  - targetEntryId: exist-inf-a-001
   - note: marker to species `a` triad.
-  - sourceClaimIds: [`exi-c-c1`]
+  - sourceClaimIds: [`exist-inf-c1`]
   - sourceKeyPointIds: [`k1`]
-  - targetClaimIds: [`c-a-001-c1`]
+  - targetClaimIds: [`exist-inf-a-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: c-b-001
+  - targetEntryId: exist-inf-b-001
   - note: marker to species `b` triad.
-  - sourceClaimIds: [`exi-c-c1`]
+  - sourceClaimIds: [`exist-inf-c1`]
   - sourceKeyPointIds: [`k2`]
-  - targetClaimIds: [`c-b-001-c1`]
+  - targetClaimIds: [`exist-inf-b-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 - r3. type: transitions_to
-  - targetEntryId: c-c-001
+  - targetEntryId: exist-inf-c-001
   - note: marker to species `c` triad.
-  - sourceClaimIds: [`exi-c-c1`]
+  - sourceClaimIds: [`exist-inf-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`c-c-001-c1`]
+  - targetClaimIds: [`exist-inf-c-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -119,7 +119,7 @@ Review outcome:
 - review_pending
 - notes: labeled species locked; triadic subentry decomposition is analytic.
 
-### Entry c-a-001 — `a. The infinite in general` I: absolute claim and initial risk
+### Entry exist-inf-a-001 — `a. The infinite in general` I: absolute claim and initial risk
 
 Span:
 
@@ -139,7 +139,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: c-a-001-c1
+- c1. id: exist-inf-a-001-c1
   - subject: initial_infinite
   - predicate: is_presented_as
   - object: absolute_negation_of_finite_yet_prone_to_finitization
@@ -156,29 +156,29 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: refines
-  - targetEntryId: b-c-c-003
+  - targetEntryId: exist-fin-c-c-003
   - note: opens Part C from Part B's finite->infinite transition.
-  - sourceClaimIds: [`c-a-001-c1`]
+  - sourceClaimIds: [`exist-inf-a-001-c1`]
   - sourceKeyPointIds: [`k1`]
-  - targetClaimIds: [`b-c-c-003-c1`]
+  - targetClaimIds: [`exist-fin-c-c-003-c1`]
   - logicalOperator: presuppositional_link
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: c-a-002
+  - targetEntryId: exist-inf-a-002
   - note: moves from initial claim to explicit triadic determination.
-  - sourceClaimIds: [`c-a-001-c1`]
+  - sourceClaimIds: [`exist-inf-a-001-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`c-a-002-c1`]
+  - targetClaimIds: [`exist-inf-a-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: species `c-a`, moment 1.
+- notes: species `exist-inf-a`, moment 1.
 
-### Entry c-a-002 — `a. The infinite in general` II: explicit triadic determination
+### Entry exist-inf-a-002 — `a. The infinite in general` II: explicit triadic determination
 
 Span:
 
@@ -198,7 +198,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: c-a-002-c1
+- c1. id: exist-inf-a-002-c1
   - subject: infinity_schema
   - predicate: is_explicitly_structured_as
   - object: a_affirmative_b_alternating_c_true_infinite
@@ -215,20 +215,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: c-a-003
+  - targetEntryId: exist-inf-a-003
   - note: schema culminates in substantive account of finite's own transcendence.
-  - sourceClaimIds: [`c-a-002-c1`]
+  - sourceClaimIds: [`exist-inf-a-002-c1`]
   - sourceKeyPointIds: [`k1`, `k3`]
-  - targetClaimIds: [`c-a-003-c1`]
+  - targetClaimIds: [`exist-inf-a-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: species `c-a`, moment 2.
+- notes: species `exist-inf-a`, moment 2.
 
-### Entry c-a-003 — `a. The infinite in general` III: finite's own becoming-infinite
+### Entry exist-inf-a-003 — `a. The infinite in general` III: finite's own becoming-infinite
 
 Span:
 
@@ -248,7 +248,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: c-a-003-c1
+- c1. id: exist-inf-a-003-c1
   - subject: finite
   - predicate: is_determined_as
   - object: self_transcending_into_infinite_by_its_own_nature
@@ -266,29 +266,29 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: exi-c
+  - targetEntryId: exist-inf
   - note: grounds marker-level claim about species `a`.
-  - sourceClaimIds: [`c-a-003-c1`]
+  - sourceClaimIds: [`exist-inf-a-003-c1`]
   - sourceKeyPointIds: [`k1`, `k2`, `k3`]
-  - targetClaimIds: [`exi-c-c1`]
+  - targetClaimIds: [`exist-inf-c1`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: c-b-001
+  - targetEntryId: exist-inf-b-001
   - note: passes from infinite in general to alternating determination.
-  - sourceClaimIds: [`c-a-003-c1`]
+  - sourceClaimIds: [`exist-inf-a-003-c1`]
   - sourceKeyPointIds: [`k2`]
-  - targetClaimIds: [`c-b-001-c1`]
+  - targetClaimIds: [`exist-inf-b-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: species `c-a`, moment 3.
+- notes: species `exist-inf-a`, moment 3.
 
-### Entry c-b-001 — `b. Alternating determination` I: finite infinite
+### Entry exist-inf-b-001 — `b. Alternating determination` I: finite infinite
 
 Span:
 
@@ -308,7 +308,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: c-b-001-c1
+- c1. id: exist-inf-b-001-c1
   - subject: bad_infinite
   - predicate: is_determined_as
   - object: infinite_fixed_over_against_finite_and_thereby_finite
@@ -326,20 +326,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: c-b-002
+  - targetEntryId: exist-inf-b-002
   - note: contradiction deepens into explicit alternating process.
-  - sourceClaimIds: [`c-b-001-c1`]
+  - sourceClaimIds: [`exist-inf-b-001-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`c-b-002-c1`]
+  - targetClaimIds: [`exist-inf-b-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: species `c-b`, moment 1.
+- notes: species `exist-inf-b`, moment 1.
 
-### Entry c-b-002 — `b. Alternating determination` II: external alternation
+### Entry exist-inf-b-002 — `b. Alternating determination` II: external alternation
 
 Span:
 
@@ -359,7 +359,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: c-b-002-c1
+- c1. id: exist-inf-b-002-c1
   - subject: infinite_progress
   - predicate: has_form
   - object: external_alternation_of_finite_and_infinite
@@ -377,20 +377,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: c-b-003
+  - targetEntryId: exist-inf-b-003
   - note: repetition reveals unresolved monotony and concealed unity.
-  - sourceClaimIds: [`c-b-002-c1`]
+  - sourceClaimIds: [`exist-inf-b-002-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`c-b-003-c1`]
+  - targetClaimIds: [`exist-inf-b-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: species `c-b`, moment 2.
+- notes: species `exist-inf-b`, moment 2.
 
-### Entry c-b-003 — `b. Alternating determination` III: unreconciled bad infinity
+### Entry exist-inf-b-003 — `b. Alternating determination` III: unreconciled bad infinity
 
 Span:
 
@@ -410,7 +410,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: c-b-003-c1
+- c1. id: exist-inf-b-003-c1
   - subject: bad_infinite_progress
   - predicate: is
   - object: repetitive_unresolved_alternation_with_hidden_unity
@@ -428,29 +428,29 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: exi-c
+  - targetEntryId: exist-inf
   - note: grounds marker-level claim about species `b`.
-  - sourceClaimIds: [`c-b-003-c1`]
+  - sourceClaimIds: [`exist-inf-b-003-c1`]
   - sourceKeyPointIds: [`k1`, `k2`, `k3`]
-  - targetClaimIds: [`exi-c-c2`]
+  - targetClaimIds: [`exist-inf-c2`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: c-c-001
+  - targetEntryId: exist-inf-c-001
   - note: unresolved alternation necessitates affirmative infinity.
-  - sourceClaimIds: [`c-b-003-c1`]
+  - sourceClaimIds: [`exist-inf-b-003-c1`]
   - sourceKeyPointIds: [`k1`, `k2`]
-  - targetClaimIds: [`c-c-001-c1`]
+  - targetClaimIds: [`exist-inf-c-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: species `c-b`, moment 3.
+- notes: species `exist-inf-b`, moment 3.
 
-### Entry c-c-001 — `c. Affirmative infinity` I: inseparability and unity
+### Entry exist-inf-c-001 — `c. Affirmative infinity` I: inseparability and unity
 
 Span:
 
@@ -470,7 +470,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: c-c-001-c1
+- c1. id: exist-inf-c-001-c1
   - subject: finite_infinite_unity
   - predicate: is_determined_as
   - object: inseparable_moments_not_external_combination
@@ -488,20 +488,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: c-c-002
+  - targetEntryId: exist-inf-c-002
   - note: unity is developed as self-sublation and self-return.
-  - sourceClaimIds: [`c-c-001-c1`]
+  - sourceClaimIds: [`exist-inf-c-001-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`c-c-002-c1`]
+  - targetClaimIds: [`exist-inf-c-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: species `c-c`, moment 1.
+- notes: species `exist-inf-c`, moment 1.
 
-### Entry c-c-002 — `c. Affirmative infinity` II: negation of negation and circle
+### Entry exist-inf-c-002 — `c. Affirmative infinity` II: negation of negation and circle
 
 Span:
 
@@ -521,7 +521,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: c-c-002-c1
+- c1. id: exist-inf-c-002-c1
   - subject: true_infinite
   - predicate: is
   - object: mediated_self_return_as_negation_of_negation
@@ -539,20 +539,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: c-c-003
+  - targetEntryId: exist-inf-c-003
   - note: self-return is further determined as concrete reality/ideality.
-  - sourceClaimIds: [`c-c-002-c1`]
+  - sourceClaimIds: [`exist-inf-c-002-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`c-c-003-c1`]
+  - targetClaimIds: [`exist-inf-c-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 Review outcome:
 
 - review_pending
-- notes: species `c-c`, moment 2.
+- notes: species `exist-inf-c`, moment 2.
 
-### Entry c-c-003 — `c. Affirmative infinity` III: concrete reality and ideality
+### Entry exist-inf-c-003 — `c. Affirmative infinity` III: concrete reality and ideality
 
 Span:
 
@@ -572,7 +572,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: c-c-003-c1
+- c1. id: exist-inf-c-003-c1
   - subject: affirmative_infinity
   - predicate: grounds
   - object: higher_reality_with_finite_as_ideality_moment
@@ -590,18 +590,18 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: exi-c
+  - targetEntryId: exist-inf
   - note: confirms marker-level claim that species `c` is true infinite.
-  - sourceClaimIds: [`c-c-002-c1`, `c-c-003-c1`]
+  - sourceClaimIds: [`exist-inf-c-002-c1`, `exist-inf-c-003-c1`]
   - sourceKeyPointIds: [`k2`, `k3`]
-  - targetClaimIds: [`exi-c-c3`]
+  - targetClaimIds: [`exist-inf-c3`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
   - targetEntryId: bfs-a
   - note: true infinite as concrete self-reference opens Being-for-self.
-  - sourceClaimIds: [`c-c-002-c1`]
+  - sourceClaimIds: [`exist-inf-c-002-c1`]
   - sourceKeyPointIds: [`k1`]
   - targetClaimIds: [`bfs-a-c1`]
   - logicalOperator: sequential_transition
@@ -610,4 +610,4 @@ Relations: (Relation)
 Review outcome:
 
 - review_pending
-- notes: species `c-c`, moment 3 and handoff to Being-for-self.
+- notes: species `exist-inf-c`, moment 3 and handoff to Being-for-self.

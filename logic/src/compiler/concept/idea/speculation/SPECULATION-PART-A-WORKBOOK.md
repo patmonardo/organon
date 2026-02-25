@@ -55,7 +55,7 @@ Extraction map:
 - a-002: `156-448`
 - a-003: `449-889`
 
-### Entry con-idea-spec-a-001 — a-001: beginning, immediacy, and abstract universality
+### Entry aidea-spe-001 — a-001: beginning, immediacy, and abstract universality
 
 Span:
 
@@ -75,7 +75,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: con-idea-spec-a-001-c1
+- c1. id: aidea-spe-001-c1
   - subject: beginning_of_method
   - predicate: is_determined_as
   - object: immediate_universal_with_internal_deficiency
@@ -85,7 +85,7 @@ Claims: (Claim)
     - [2-25] method starts from immediate thought universality.
     - [73-90] beginning's deficiency and impulse to advance.
 
-- c2. id: con-idea-spec-a-001-c2
+- c2. id: aidea-spe-001-c2
   - subject: absolute_at_beginning
   - predicate: is_determined_as
   - object: in_itself_not_yet_posited
@@ -98,11 +98,11 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: con-idea-spec-a-002
+  - targetEntryId: aidea-spe-002
   - note: beginning's internal deficiency opens concrete differentiating advance.
-  - sourceClaimIds: [`con-idea-spec-a-001-c1`, `con-idea-spec-a-001-c2`]
+  - sourceClaimIds: [`aidea-spe-001-c1`, `aidea-spe-001-c2`]
   - sourceKeyPointIds: [`k2`, `k3`]
-  - targetClaimIds: [`con-idea-spec-a-002-c1`]
+  - targetClaimIds: [`aidea-spe-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -111,7 +111,7 @@ Review outcome:
 - review_pending
 - notes: first chapter movement stabilized.
 
-### Entry con-idea-spec-a-002 — a-002: dialectical moment and negativity as method-soul
+### Entry aidea-spe-002 — a-002: dialectical moment and negativity as method-soul
 
 Span:
 
@@ -131,7 +131,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: con-idea-spec-a-002-c1
+- c1. id: aidea-spe-002-c1
   - subject: dialectical_moment
   - predicate: is_determined_as
   - object: immanent_self_differentiation_of_universal
@@ -141,7 +141,7 @@ Claims: (Claim)
     - [156-204] concrete totality and dialectical determination.
     - [231-257] dialectic's objective status and contradiction framing.
 
-- c2. id: con-idea-spec-a-002-c2
+- c2. id: aidea-spe-002-c2
   - subject: negative_of_negative
   - predicate: preserves
   - object: positive_content_of_first_in_second
@@ -154,20 +154,20 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: refines
-  - targetEntryId: con-idea-spec-a-001
+  - targetEntryId: aidea-spe-001
   - note: demonstrates how beginning develops through immanent dialectical negativity.
-  - sourceClaimIds: [`con-idea-spec-a-002-c1`, `con-idea-spec-a-002-c2`]
+  - sourceClaimIds: [`aidea-spe-002-c1`, `aidea-spe-002-c2`]
   - sourceKeyPointIds: [`k1`, `k2`, `k3`]
-  - targetClaimIds: [`con-idea-spec-a-001-c1`]
+  - targetClaimIds: [`aidea-spe-001-c1`]
   - logicalOperator: presuppositional_link
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: con-idea-spec-a-003
+  - targetEntryId: aidea-spe-003
   - note: negativity turns the movement back into self-mediating systematic closure.
-  - sourceClaimIds: [`con-idea-spec-a-002-c2`]
+  - sourceClaimIds: [`aidea-spe-002-c2`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`con-idea-spec-a-003-c1`]
+  - targetClaimIds: [`aidea-spe-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -176,7 +176,7 @@ Review outcome:
 - review_pending
 - notes: central dialectical movement stabilized.
 
-### Entry con-idea-spec-a-003 — a-003: result, system expansion, and circle of circles
+### Entry aidea-spe-003 — a-003: result, system expansion, and circle of circles
 
 Span:
 
@@ -196,7 +196,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: con-idea-spec-a-003-c1
+- c1. id: aidea-spe-003-c1
   - subject: result_of_method
   - predicate: is_determined_as
   - object: self_mediated_truth_restoring_immediacy
@@ -206,7 +206,7 @@ Claims: (Claim)
     - [572-603] third as living unity and subject.
     - [603-644] result restores immediacy and grounds system development.
 
-- c2. id: con-idea-spec-a-003-c2
+- c2. id: aidea-spe-003-c2
   - subject: absolute_method
   - predicate: culminates_in
   - object: circle_of_circles_and_absolute_idea_return
@@ -219,11 +219,11 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: con-idea-spec-a-002
+  - targetEntryId: aidea-spe-002
   - note: systematic closure validates negativity as productive, not merely destructive.
-  - sourceClaimIds: [`con-idea-spec-a-003-c1`, `con-idea-spec-a-003-c2`]
+  - sourceClaimIds: [`aidea-spe-003-c1`, `aidea-spe-003-c2`]
   - sourceKeyPointIds: [`k1`, `k2`, `k3`]
-  - targetClaimIds: [`con-idea-spec-a-002-c2`]
+  - targetClaimIds: [`aidea-spe-002-c2`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 

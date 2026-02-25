@@ -46,7 +46,7 @@ Scope:
 
 Decision:
 
-- Use ID prefix `be-c` for Part C entries.
+- Use ID prefix `becom-bec` for Part C entries.
 - Concept-part-first workflow is active.
 - Boundary between last analytical entry and final transition is explicitly review-sensitive and will be chosen to preserve abstraction continuity.
 - Defer IDEA-special pass and compiler-normalization pass until Part A/B/C first-order claims are stabilized.
@@ -55,12 +55,12 @@ Decision:
 
 - Entry model: one entry per paragraph in `C. TRANSITION INTO ESSENCE`.
 - Planned entries:
-  - `be-c-001` -> lines `4-28`
-  - `be-c-002` -> lines `30-58`
-  - `be-c-003` -> lines `60-77`
-  - `be-c-004` -> lines `79-92`
+  - `becom-bec-001` -> lines `4-28`
+  - `becom-bec-002` -> lines `30-58`
+  - `becom-bec-003` -> lines `60-77`
+  - `becom-bec-004` -> lines `79-92`
 
-### Entry be-c-001 — Absolute indifference remains in being as external reflection
+### Entry becom-bec-001 — Absolute indifference remains in being as external reflection
 
 Span:
 
@@ -81,7 +81,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: be-c-001-c1
+- c1. id: becom-bec-001-c1
   - subject: absolute_indifference
   - predicate: remains_within
   - object: sphere_of_being
@@ -90,7 +90,7 @@ Claims: (Claim)
   - evidence:
     - [4-9] final determination of being; difference remains external/quantitative.
 
-- c2. id: be-c-001-c2
+- c2. id: becom-bec-001-c2
   - subject: current_reflection_mode
   - predicate: is
   - object: external_subjective_reflection
@@ -99,7 +99,7 @@ Claims: (Claim)
   - evidence:
     - [14-24] reflection treated as thought of subjective consciousness.
 
-- c3. id: be-c-001-c3
+- c3. id: becom-bec-001-c3
   - subject: missing_moment
   - predicate: is
   - object: self_sublation_into_absolute_negativity
@@ -110,27 +110,27 @@ Claims: (Claim)
 
 Claim ↔ key point map:
 
-- be-c-001-c1 -> k1, k2
-- be-c-001-c2 -> k3
-- be-c-001-c3 -> k4
+- becom-bec-001-c1 -> k1, k2
+- becom-bec-001-c2 -> k3
+- becom-bec-001-c3 -> k4
 
 Relations: (Relation)
 
 - r1. type: presupposes
-  - targetEntryId: be-b-004
+  - targetEntryId: becom-inv-004
   - note: Part C opens from Part B's explicit positing of essence as result of self-sublating contradiction.
-  - sourceClaimIds: [`be-c-001-c1`]
+  - sourceClaimIds: [`becom-bec-001-c1`]
   - sourceKeyPointIds: [`k1`]
-  - targetClaimIds: [`be-b-004-c2`]
+  - targetClaimIds: [`becom-inv-004-c2`]
   - logicalOperator: inherited_transition_ground
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: be-c-002
+  - targetEntryId: becom-bec-002
   - note: unmet requirement of self-sublation is then shown as already immanent in indifference's contradiction.
-  - sourceClaimIds: [`be-c-001-c3`]
+  - sourceClaimIds: [`becom-bec-001-c3`]
   - sourceKeyPointIds: [`k4`]
-  - targetClaimIds: [`be-c-002-c1`]
+  - targetClaimIds: [`becom-bec-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -139,7 +139,7 @@ Review outcome:
 - review_pending
 - notes: opening keeps distinction between being-level indifference and essence-level negativity explicit.
 
-### Entry be-c-002 — Indifference as negative totality and self-repelling self-reference
+### Entry becom-bec-002 — Indifference as negative totality and self-repelling self-reference
 
 Span:
 
@@ -160,7 +160,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: be-c-002-c1
+- c1. id: becom-bec-002-c1
   - subject: self_sublation_of_indifference
   - predicate: is_already_manifest
   - object: contradiction_in_progressive_positing
@@ -169,7 +169,7 @@ Claims: (Claim)
   - evidence:
     - [30-33] self-sublation already manifested as contradiction.
 
-- c2. id: be-c-002-c2
+- c2. id: becom-bec-002-c2
   - subject: contradiction_between_implicit_and_posited_determinateness
   - predicate: constitutes
   - object: negative_totality_that_sublates_substrate_one_sidedness
@@ -178,7 +178,7 @@ Claims: (Claim)
   - evidence:
     - [41-47] contradiction and internal sublation of determinacies/in-itselfness.
 
-- c3. id: be-c-002-c3
+- c3. id: becom-bec-002-c3
   - subject: determining_and_being_determined
   - predicate: are
   - object: indifference_self_referring_negativity
@@ -189,27 +189,27 @@ Claims: (Claim)
 
 Claim ↔ key point map:
 
-- be-c-002-c1 -> k1
-- be-c-002-c2 -> k2, k3
-- be-c-002-c3 -> k4
+- becom-bec-002-c1 -> k1
+- becom-bec-002-c2 -> k2, k3
+- becom-bec-002-c3 -> k4
 
 Relations: (Relation)
 
 - r1. type: refines
-  - targetEntryId: be-c-001
+  - targetEntryId: becom-bec-001
   - note: supplies immanent demonstration that the missing self-sublation is already active in contradiction.
-  - sourceClaimIds: [`be-c-002-c1`, `be-c-002-c2`]
+  - sourceClaimIds: [`becom-bec-002-c1`, `becom-bec-002-c2`]
   - sourceKeyPointIds: [`k1`, `k3`]
-  - targetClaimIds: [`be-c-001-c3`]
+  - targetClaimIds: [`becom-bec-001-c3`]
   - logicalOperator: immanent_specification
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: be-c-003
+  - targetEntryId: becom-bec-003
   - note: once repelled, determinacies are recast as moments with purely relational significance.
-  - sourceClaimIds: [`be-c-002-c3`]
+  - sourceClaimIds: [`becom-bec-002-c3`]
   - sourceKeyPointIds: [`k4`]
-  - targetClaimIds: [`be-c-003-c1`]
+  - targetClaimIds: [`becom-bec-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -218,7 +218,7 @@ Review outcome:
 - review_pending
 - notes: contradiction and negativity kept as immanent process, not external inference.
 
-### Entry be-c-003 — Determinations become posited moments of unity and negation
+### Entry becom-bec-003 — Determinations become posited moments of unity and negation
 
 Span:
 
@@ -238,7 +238,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: be-c-003-c1
+- c1. id: becom-bec-003-c1
   - subject: repelled_determinations
   - predicate: are
   - object: moments_not_self_subsistent_entities
@@ -247,7 +247,7 @@ Claims: (Claim)
   - evidence:
     - [60-63] determinations are not self-possessed/external but moments.
 
-- c2. id: be-c-003-c2
+- c2. id: becom-bec-003-c2
   - subject: moment_determinations
   - predicate: are_borne_by
   - object: unity_as_substrate_and_for_itself_existence
@@ -256,7 +256,7 @@ Claims: (Claim)
   - evidence:
     - [64-70] unity bears them; they are through repulsion from themselves.
 
-- c3. id: be-c-003-c3
+- c3. id: becom-bec-003-c3
   - subject: posited_determinations
   - predicate: are_marked_by
   - object: relativity_to_unity_each_other_and_negation
@@ -267,27 +267,27 @@ Claims: (Claim)
 
 Claim ↔ key point map:
 
-- be-c-003-c1 -> k1
-- be-c-003-c2 -> k2
-- be-c-003-c3 -> k3
+- becom-bec-003-c1 -> k1
+- becom-bec-003-c2 -> k2
+- becom-bec-003-c3 -> k3
 
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: be-c-002
+  - targetEntryId: becom-bec-002
   - note: concretizes self-referential negativity in the status of determinations as moments.
-  - sourceClaimIds: [`be-c-003-c1`, `be-c-003-c2`]
+  - sourceClaimIds: [`becom-bec-003-c1`, `becom-bec-003-c2`]
   - sourceKeyPointIds: [`k1`, `k2`]
-  - targetClaimIds: [`be-c-002-c3`]
+  - targetClaimIds: [`becom-bec-002-c3`]
   - logicalOperator: concretizing_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: be-c-004
+  - targetEntryId: becom-bec-004
   - note: vanishing of immediacy and in-itselfness yields being as mediated self-rejoining, i.e. essence.
-  - sourceClaimIds: [`be-c-003-c3`]
+  - sourceClaimIds: [`becom-bec-003-c3`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`be-c-004-c1`]
+  - targetClaimIds: [`becom-bec-004-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -296,7 +296,7 @@ Review outcome:
 - review_pending
 - notes: preserves shift from existence-terms to pure relational positedness.
 
-### Entry be-c-004 — Being determined as essence through sublation of being
+### Entry becom-bec-004 — Being determined as essence through sublation of being
 
 Span:
 
@@ -317,7 +317,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: be-c-004-c1
+- c1. id: becom-bec-004-c1
   - subject: immediacy_and_in_itselfness
   - predicate: are_sublated_into
   - object: mediated_self_reference_of_unity
@@ -326,7 +326,7 @@ Claims: (Claim)
   - evidence:
     - [79-87] immediacy/in-itselfness vanish; presupposed being is a moment of repelling.
 
-- c2. id: be-c-004-c2
+- c2. id: becom-bec-004-c2
   - subject: original_self_subsistence_and_identity
   - predicate: persist_only_as
   - object: resulting_infinite_self_rejoining
@@ -335,7 +335,7 @@ Claims: (Claim)
   - evidence:
     - [88-89] self-identity only as resulting infinite self-rejoining.
 
-- c3. id: be-c-004-c3
+- c3. id: becom-bec-004-c3
   - subject: being
   - predicate: is_determined_as
   - object: essence_as_simple_being_with_itself
@@ -346,27 +346,27 @@ Claims: (Claim)
 
 Claim ↔ key point map:
 
-- be-c-004-c1 -> k1, k2
-- be-c-004-c2 -> k3
-- be-c-004-c3 -> k4
+- becom-bec-004-c1 -> k1, k2
+- becom-bec-004-c2 -> k3
+- becom-bec-004-c3 -> k4
 
 Relations: (Relation)
 
 - r1. type: sublates
-  - targetEntryId: be-c-001
+  - targetEntryId: becom-bec-001
   - note: resolves the initial externality of reflection and quantitative difference.
-  - sourceClaimIds: [`be-c-004-c3`]
+  - sourceClaimIds: [`becom-bec-004-c3`]
   - sourceKeyPointIds: [`k4`]
-  - targetClaimIds: [`be-c-001-c1`, `be-c-001-c2`]
+  - targetClaimIds: [`becom-bec-001-c1`, `becom-bec-001-c2`]
   - logicalOperator: determinate_negation
   - analysisMode: first_order_claim_projection
 
 - r2. type: refines
-  - targetEntryId: be-c-003
+  - targetEntryId: becom-bec-003
   - note: states final ontological determination resulting from relativity/negation of moments.
-  - sourceClaimIds: [`be-c-004-c1`, `be-c-004-c2`]
+  - sourceClaimIds: [`becom-bec-004-c1`, `becom-bec-004-c2`]
   - sourceKeyPointIds: [`k2`, `k3`]
-  - targetClaimIds: [`be-c-003-c3`]
+  - targetClaimIds: [`becom-bec-003-c3`]
   - logicalOperator: resultant_specification
   - analysisMode: first_order_claim_projection
 

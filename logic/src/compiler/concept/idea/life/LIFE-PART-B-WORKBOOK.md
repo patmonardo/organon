@@ -55,7 +55,7 @@ Extraction map:
 - Second determination (mediation): lines `69-130`
 - Third determination (concrete return): lines `131-180`
 
-### Entry con-idea-life-b-001 — First determination (immediate): need, contradiction, and pain
+### Entry ilife-lif-001 — First determination (immediate): need, contradiction, and pain
 
 Span:
 
@@ -75,7 +75,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: con-idea-life-b-001-c1
+- c1. id: ilife-lif-001-c1
   - subject: living_subject
   - predicate: is_determined_as
   - object: self_purpose_against_presupposed_external_nullity
@@ -85,7 +85,7 @@ Claims: (Claim)
     - [4-20] subject as purpose unto itself with certainty of other's nullity.
     - [21-29] inner process mediated by indifferent objective totality.
 
-- c2. id: con-idea-life-b-001-c2
+- c2. id: ilife-lif-001-c2
   - subject: living_contradiction
   - predicate: has_existent_form
   - object: pain
@@ -103,11 +103,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: con-idea-life-b-002
+  - targetEntryId: ilife-lif-002
   - note: contradiction in pain moves into purposive mediation with indifferent objectivity.
-  - sourceClaimIds: [`con-idea-life-b-001-c2`]
+  - sourceClaimIds: [`ilife-lif-001-c2`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`con-idea-life-b-002-c1`]
+  - targetClaimIds: [`ilife-lif-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -116,7 +116,7 @@ Review outcome:
 - review_pending
 - notes: first determination isolates the contradiction/pain core.
 
-### Entry con-idea-life-b-002 — Second determination (mediation): subjective certainty and sublation of external purposiveness
+### Entry ilife-lif-002 — Second determination (mediation): subjective certainty and sublation of external purposiveness
 
 Span:
 
@@ -136,7 +136,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: con-idea-life-b-002-c1
+- c1. id: ilife-lif-002-c1
   - subject: impulse_identity
   - predicate: is_determined_as
   - object: subjective_certainty_mediating_objective_appearance
@@ -146,7 +146,7 @@ Claims: (Claim)
     - [69-84] pain transitions to impulse and identity through negation.
     - [85-107] objectivity is indifferent appearance becoming apt to subject.
 
-- c2. id: con-idea-life-b-002-c2
+- c2. id: ilife-lif-002-c2
   - subject: external_purposiveness
   - predicate: is_sublated_into
   - object: immanent_conceptual_determination
@@ -164,20 +164,20 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: refines
-  - targetEntryId: con-idea-life-b-001
+  - targetEntryId: ilife-lif-001
   - note: specifies how pain-driven contradiction is processed into purposive mediation.
-  - sourceClaimIds: [`con-idea-life-b-002-c1`]
+  - sourceClaimIds: [`ilife-lif-002-c1`]
   - sourceKeyPointIds: [`k1`]
-  - targetClaimIds: [`con-idea-life-b-001-c2`]
+  - targetClaimIds: [`ilife-lif-001-c2`]
   - logicalOperator: presuppositional_link
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: con-idea-life-b-003
+  - targetEntryId: ilife-lif-003
   - note: internalized purposiveness moves into assimilation/reproduction and genus transition.
-  - sourceClaimIds: [`con-idea-life-b-002-c2`]
+  - sourceClaimIds: [`ilife-lif-002-c2`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`con-idea-life-b-003-c1`]
+  - targetClaimIds: [`ilife-lif-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -186,7 +186,7 @@ Review outcome:
 - review_pending
 - notes: second determination captures the mediation pivot.
 
-### Entry con-idea-life-b-003 — Third determination (concrete return): assimilation, reproduction, and rise to genus
+### Entry ilife-lif-003 — Third determination (concrete return): assimilation, reproduction, and rise to genus
 
 Span:
 
@@ -206,7 +206,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: con-idea-life-b-003-c1
+- c1. id: ilife-lif-003-c1
   - subject: assimilation
   - predicate: culminates_in
   - object: reproduction_as_self_identical_return
@@ -216,7 +216,7 @@ Claims: (Claim)
     - [132-158] appropriation and transformation produce reproduction.
     - [160-169] objective process yields feeling of self as negative unity.
 
-- c2. id: con-idea-life-b-003-c2
+- c2. id: ilife-lif-003-c2
   - subject: external_life_process
   - predicate: results_in
   - object: real_universal_life_as_genus
@@ -234,11 +234,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: con-idea-life-b-002
+  - targetEntryId: ilife-lif-002
   - note: confirms that sublated external purposiveness becomes internal reproduction.
-  - sourceClaimIds: [`con-idea-life-b-003-c1`]
+  - sourceClaimIds: [`ilife-lif-003-c1`]
   - sourceKeyPointIds: [`k1`, `k2`]
-  - targetClaimIds: [`con-idea-life-b-002-c2`]
+  - targetClaimIds: [`ilife-lif-002-c2`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 

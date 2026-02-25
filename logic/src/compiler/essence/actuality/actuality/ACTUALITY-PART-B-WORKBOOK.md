@@ -51,11 +51,11 @@ Decision:
 
 ## Decomposition status
 
-- completed: `act-part-b-001` for lines `3-46`
-- completed: `act-part-b-002` for lines `47-161`
-- completed: `act-part-b-003` for lines `162-242`
+- completed: `actua-rel-001` for lines `3-46`
+- completed: `actua-rel-002` for lines `47-161`
+- completed: `actua-rel-003` for lines `162-242`
 
-### Entry act-part-b-001 — Real actuality as contentful form-unity within formal necessity
+### Entry actua-rel-001 — Real actuality as contentful form-unity within formal necessity
 
 Span:
 
@@ -77,7 +77,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: act-part-b-001-c1
+- c1. id: actua-rel-001-c1
   - subject: formal_necessity
   - predicate: is
   - object: immediate_unity_of_formal_moments_without_self_subsistence
@@ -86,7 +86,7 @@ Claims: (Claim)
   - evidence:
     - [3-10] "necessity... formal... immediate unity... lack the shape of self-subsistence..."
 
-- c2. id: act-part-b-001-c2
+- c2. id: actua-rel-001-c2
   - subject: actuality_from_formal_necessity
   - predicate: is
   - object: real_actuality_with_indifferent_content
@@ -95,7 +95,7 @@ Claims: (Claim)
   - evidence:
     - [11-18] "this necessity is actuality... has a content... This actuality is real actuality."
 
-- c3. id: act-part-b-001-c3
+- c3. id: actua-rel-001-c3
   - subject: real_actuality
   - predicate: is
   - object: self_subsistent_immanent_reflection_manifesting_itself
@@ -104,7 +104,7 @@ Claims: (Claim)
   - evidence:
     - [20-38] "it is at the same time an in-itself and immanent reflection... self-subsistent... determinate essentiality in another self-subsistent."
 
-- c4. id: act-part-b-001-c4
+- c4. id: actua-rel-001-c4
   - subject: real_actuality
   - predicate: contains
   - object: immediate_possibility_as_distinguished_form_moment
@@ -116,20 +116,20 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: act-part-b-002
+  - targetEntryId: actua-rel-002
   - note: from immediate possibility in real actuality to explicit account of real possibility and conditions.
-  - sourceClaimIds: [act-part-b-001-c4]
+  - sourceClaimIds: [actua-rel-001-c4]
   - sourceKeyPointIds: [k5]
-  - targetClaimIds: [act-part-b-002-c1]
+  - targetClaimIds: [actua-rel-002-c1]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 - r2. type: supports
-  - targetEntryId: act-part-a-003
+  - targetEntryId: actua-con-003
   - note: develops Part A necessity into contentful real actuality rather than purely formal conversion.
-  - sourceClaimIds: [act-part-b-001-c2]
+  - sourceClaimIds: [actua-rel-001-c2]
   - sourceKeyPointIds: [k2]
-  - targetClaimIds: [act-part-a-003-c5]
+  - targetClaimIds: [actua-con-003-c5]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
@@ -138,7 +138,7 @@ Review outcome:
 - review_pending
 - notes: line anchors verified against numbered source.
 
-### Entry act-part-b-002 — Real possibility as conditioned totality and self-rejoining movement
+### Entry actua-rel-002 — Real possibility as conditioned totality and self-rejoining movement
 
 Span:
 
@@ -160,7 +160,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: act-part-b-002-c1
+- c1. id: actua-rel-002-c1
   - subject: real_possibility
   - predicate: is
   - object: contentful_in_itself_distinct_from_formal_possibility
@@ -169,7 +169,7 @@ Claims: (Claim)
   - evidence:
     - [47-55] "real possibility... in-itself full of content... not [just] formal possibility..."
 
-- c2. id: act-part-b-002-c2
+- c2. id: actua-rel-002-c2
   - subject: real_possibility_of_a_fact
   - predicate: is
   - object: immediately_existent_manifoldness_of_circumstances
@@ -178,7 +178,7 @@ Claims: (Claim)
   - evidence:
     - [57-64] "real possibility... immediate concrete existence... manifoldness of circumstances..."
 
-- c3. id: act-part-b-002-c3
+- c3. id: actua-rel-002-c3
   - subject: conditioned_manifoldness
   - predicate: is
   - object: contradictory_and_self_sublating
@@ -187,7 +187,7 @@ Claims: (Claim)
   - evidence:
     - [94-107] "because it is manifold... it is contradictory... manifold... to sublate itself... only a possibility."
 
-- c4. id: act-part-b-002-c4
+- c4. id: actua-rel-002-c4
   - subject: completeness_of_conditions
   - predicate: entails
   - object: actuality_of_fact
@@ -196,7 +196,7 @@ Claims: (Claim)
   - evidence:
     - [108-113] "Whenever all the conditions... are completely present, the fact is actually there..."
 
-- c5. id: act-part-b-002-c5
+- c5. id: actua-rel-002-c5
   - subject: self_sublating_circle_of_conditions
   - predicate: becomes
   - object: actuality_as_self_rejoining_of_possibility
@@ -209,20 +209,20 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: refines
-  - targetEntryId: act-part-b-001
+  - targetEntryId: actua-rel-001
   - note: specifies the immediate possibility in real actuality as concrete totality of conditions.
-  - sourceClaimIds: [act-part-b-002-c1, act-part-b-002-c2]
+  - sourceClaimIds: [actua-rel-002-c1, actua-rel-002-c2]
   - sourceKeyPointIds: [k1, k2]
-  - targetClaimIds: [act-part-b-001-c4]
+  - targetClaimIds: [actua-rel-001-c4]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: act-part-b-003
+  - targetEntryId: actua-rel-003
   - note: self-rejoining of real possibility yields real necessity and its relative character.
-  - sourceClaimIds: [act-part-b-002-c5]
+  - sourceClaimIds: [actua-rel-002-c5]
   - sourceKeyPointIds: [k5]
-  - targetClaimIds: [act-part-b-003-c1]
+  - targetClaimIds: [actua-rel-003-c1]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -231,7 +231,7 @@ Review outcome:
 - review_pending
 - notes: c3 and c5 should be preserved for later contingency/necessity unification mapping.
 
-### Entry act-part-b-003 — Real necessity as identity with possibility, yet still relative and contingent
+### Entry actua-rel-003 — Real necessity as identity with possibility, yet still relative and contingent
 
 Span:
 
@@ -253,7 +253,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: act-part-b-003-c1
+- c1. id: actua-rel-003-c1
   - subject: negation_of_real_possibility
   - predicate: is
   - object: real_necessity_as_self_identity
@@ -262,7 +262,7 @@ Claims: (Claim)
   - evidence:
     - [162-165] "The negation of real possibility... is real necessity."
 
-- c2. id: act-part-b-003-c2
+- c2. id: actua-rel-003-c2
   - subject: really_possible_under_given_conditions
   - predicate: cannot_be_otherwise
   - object: practical_identity_with_necessity
@@ -271,7 +271,7 @@ Claims: (Claim)
   - evidence:
     - [176-179] "what is really possible can no longer be otherwise..."
 
-- c3. id: act-part-b-003-c3
+- c3. id: actua-rel-003-c3
   - subject: real_possibility_and_real_necessity
   - predicate: are
   - object: presupposed_identity_only_apparently_distinguished
@@ -280,7 +280,7 @@ Claims: (Claim)
   - evidence:
     - [179-183] "only apparently distinguished... identity... already presupposed..."
 
-- c4. id: act-part-b-003-c4
+- c4. id: actua-rel-003-c4
   - subject: real_necessity
   - predicate: is
   - object: relative_because_it_begins_from_contingency
@@ -290,7 +290,7 @@ Claims: (Claim)
     - [187-190] "this necessity is... relative... takes its start from the contingent."
     - [208-214] "necessity... begins from... not yet reflected into itself..."
 
-- c5. id: act-part-b-003-c5
+- c5. id: actua-rel-003-c5
   - subject: real_necessity
   - predicate: contains
   - object: contingency_with_unity_named_absolute_actuality
@@ -302,29 +302,29 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: sublates
-  - targetEntryId: act-part-b-002
+  - targetEntryId: actua-rel-002
   - note: elevates conditioned self-sublation to explicit necessity while preserving its presupposed movement.
-  - sourceClaimIds: [act-part-b-003-c1, act-part-b-003-c3]
+  - sourceClaimIds: [actua-rel-003-c1, actua-rel-003-c3]
   - sourceKeyPointIds: [k1, k3]
-  - targetClaimIds: [act-part-b-002-c5]
+  - targetClaimIds: [actua-rel-002-c5]
   - logicalOperator: sublative_transition
   - analysisMode: first_order_claim_projection
 
 - r2. type: refines
-  - targetEntryId: act-part-a-003
+  - targetEntryId: actua-con-003
   - note: specifies Part A necessity as relative necessity that still contains contingency.
-  - sourceClaimIds: [act-part-b-003-c4, act-part-b-003-c5]
+  - sourceClaimIds: [actua-rel-003-c4, actua-rel-003-c5]
   - sourceKeyPointIds: [k4, k5]
-  - targetClaimIds: [act-part-a-003-c5]
+  - targetClaimIds: [actua-con-003-c5]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r3. type: transitions_to
-  - targetEntryId: act-part-c-001
+  - targetEntryId: actua-abs-001
   - note: transition to absolute necessity via unity of necessity and contingency as absolute actuality.
-  - sourceClaimIds: [act-part-b-003-c5]
+  - sourceClaimIds: [actua-rel-003-c5]
   - sourceKeyPointIds: [k5]
-  - targetClaimIds: [act-part-c-001-c1, act-part-c-001-c2]
+  - targetClaimIds: [actua-abs-001-c1, actua-abs-001-c2]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 

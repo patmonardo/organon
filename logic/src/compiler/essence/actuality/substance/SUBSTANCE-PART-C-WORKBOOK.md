@@ -51,11 +51,11 @@ Decision:
 
 ## Decomposition status
 
-- completed: `sub-part-c-001` for lines `3-61`
-- completed: `sub-part-c-002` for lines `62-120`
-- completed: `sub-part-c-003` for lines `121-163`
+- completed: `abrel-rec-001` for lines `3-61`
+- completed: `abrel-rec-002` for lines `62-120`
+- completed: `abrel-rec-003` for lines `121-163`
 
-### Entry sub-part-c-001 — Reciprocity as sublation of mechanism and reciprocal conditioning
+### Entry abrel-rec-001 — Reciprocity as sublation of mechanism and reciprocal conditioning
 
 Span:
 
@@ -77,7 +77,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: sub-part-c-001-c1
+- c1. id: abrel-rec-001-c1
   - subject: reciprocity_of_action
   - predicate: sublates
   - object: mechanism_as_externality_of_causality
@@ -86,7 +86,7 @@ Claims: (Claim)
   - evidence:
     - [3-17] "Mechanism consists in... externality... In reciprocity of action this mechanism is now sublated..."
 
-- c2. id: sub-part-c-001-c2
+- c2. id: abrel-rec-001-c2
   - subject: reciprocal_substances
   - predicate: are
   - object: both_active_and_passive_with_difference_sublated
@@ -95,7 +95,7 @@ Claims: (Claim)
   - evidence:
     - [19-28] "each... both active and passive... their difference... sublated..."
 
-- c3. id: sub-part-c-001-c3
+- c3. id: abrel-rec-001-c3
   - subject: external_conditioning_factor
   - predicate: is
   - object: mediated_passivity_posited_by_causalitys_own_activity
@@ -104,7 +104,7 @@ Claims: (Claim)
   - evidence:
     - [45-50] "external factor... mediated through the causality itself... passivity posited by its own activity."
 
-- c4. id: sub-part-c-001-c4
+- c4. id: abrel-rec-001-c4
   - subject: causality
   - predicate: is
   - object: conditioned_and_conditioning
@@ -113,7 +113,7 @@ Claims: (Claim)
   - evidence:
     - [51-57] "Causality is conditioned and conditioning..."
 
-- c5. id: sub-part-c-001-c5
+- c5. id: abrel-rec-001-c5
   - subject: cause
   - predicate: refers_back_to_itself
   - object: in_effect
@@ -125,20 +125,20 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: sub-part-c-002
+  - targetEntryId: abrel-rec-002
   - note: from reciprocal conditioning to explicit determination of freedom as manifested necessity.
-  - sourceClaimIds: [sub-part-c-001-c4, sub-part-c-001-c5]
+  - sourceClaimIds: [abrel-rec-001-c4, abrel-rec-001-c5]
   - sourceKeyPointIds: [k4, k5]
-  - targetClaimIds: [sub-part-c-002-c1]
+  - targetClaimIds: [abrel-rec-002-c1]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 - r2. type: supports
-  - targetEntryId: sub-part-b-003
+  - targetEntryId: abrel-cau-003
   - note: realizes Part B's infinite reciprocal action as explicit chapter determination.
-  - sourceClaimIds: [sub-part-c-001-c1, sub-part-c-001-c5]
+  - sourceClaimIds: [abrel-rec-001-c1, abrel-rec-001-c5]
   - sourceKeyPointIds: [k1, k5]
-  - targetClaimIds: [sub-part-b-003-c5]
+  - targetClaimIds: [abrel-cau-003-c5]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
@@ -147,7 +147,7 @@ Review outcome:
 - review_pending
 - notes: line anchors verified against numbered source.
 
-### Entry sub-part-c-002 — Reciprocity as manifestation of freedom through identity of necessity and contingency
+### Entry abrel-rec-002 — Reciprocity as manifestation of freedom through identity of necessity and contingency
 
 Span:
 
@@ -169,7 +169,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: sub-part-c-002-c1
+- c1. id: abrel-rec-002-c1
   - subject: causality
   - predicate: returns_to
   - object: absolute_concept
@@ -178,7 +178,7 @@ Claims: (Claim)
   - evidence:
     - [62-63] "Causality has thereby returned to its absolute concept..."
 
-- c2. id: sub-part-c-002-c2
+- c2. id: abrel-rec-002-c2
   - subject: reciprocity
   - predicate: elevates
   - object: necessity_to_freedom
@@ -187,7 +187,7 @@ Claims: (Claim)
   - evidence:
     - [68-73] "necessity... substantial otherness... sublated... necessity is elevated to freedom."
 
-- c3. id: sub-part-c-002-c3
+- c3. id: abrel-rec-002-c3
   - subject: originative_causality
   - predicate: is
   - object: becoming_from_negation_as_positive_rejoining
@@ -196,7 +196,7 @@ Claims: (Claim)
   - evidence:
     - [74-81] "originative causality... arising from its negation... transition into otherness is reflection-into-itself..."
 
-- c4. id: sub-part-c-002-c4
+- c4. id: abrel-rec-002-c4
   - subject: necessity_and_causality
   - predicate: are_sublated_as_merely_inner_relation
   - object: manifested_identity
@@ -206,7 +206,7 @@ Claims: (Claim)
     - [83-90] "necessity and causality have disappeared... absolute contradiction."
     - [101-109] "inwardness... sublates movement... necessity unveils itself... manifestation is identical movement..."
 
-- c5. id: sub-part-c-002-c5
+- c5. id: abrel-rec-002-c5
   - subject: contingency
   - predicate: becomes
   - object: freedom_in_identity_of_independent_actualities
@@ -218,20 +218,20 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: refines
-  - targetEntryId: sub-part-c-001
+  - targetEntryId: abrel-rec-001
   - note: clarifies reciprocal conditioning as manifestation of freedom, not merely formal reciprocity.
-  - sourceClaimIds: [sub-part-c-002-c2, sub-part-c-002-c5]
+  - sourceClaimIds: [abrel-rec-002-c2, abrel-rec-002-c5]
   - sourceKeyPointIds: [k2, k5]
-  - targetClaimIds: [sub-part-c-001-c4, sub-part-c-001-c5]
+  - targetClaimIds: [abrel-rec-001-c4, abrel-rec-001-c5]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: sub-part-c-003
+  - targetEntryId: abrel-rec-003
   - note: from manifested freedom to explicit determination of universal/singular/particular and concept.
-  - sourceClaimIds: [sub-part-c-002-c5]
+  - sourceClaimIds: [abrel-rec-002-c5]
   - sourceKeyPointIds: [k5]
-  - targetClaimIds: [sub-part-c-003-c1]
+  - targetClaimIds: [abrel-rec-003-c1]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -240,7 +240,7 @@ Review outcome:
 - review_pending
 - notes: preserve c4/c5 distinction for concept transition mapping.
 
-### Entry sub-part-c-003 — Differentiated totalities and emergence of the concept
+### Entry abrel-rec-003 — Differentiated totalities and emergence of the concept
 
 Span:
 
@@ -262,7 +262,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: sub-part-c-003-c1
+- c1. id: abrel-rec-003-c1
   - subject: absolute_substance
   - predicate: differentiates_into
   - object: universal_and_singular_totalities
@@ -272,7 +272,7 @@ Claims: (Claim)
     - [121-127] "No longer... falls apart... but... differentiates itself..."
     - [133-142] "on the one hand... universal... on the other hand... singular..."
 
-- c2. id: sub-part-c-003-c2
+- c2. id: abrel-rec-003-c2
   - subject: universality_and_singularity
   - predicate: are
   - object: immediately_identical_through_negative_self_identity
@@ -281,7 +281,7 @@ Claims: (Claim)
   - evidence:
     - [143-149] "the universal... immediately is the same negativity... singularity... same identity..."
 
-- c3. id: sub-part-c-003-c3
+- c3. id: abrel-rec-003-c3
   - subject: simple_identity_of_universal_and_singular
   - predicate: is
   - object: particularity
@@ -290,7 +290,7 @@ Claims: (Claim)
   - evidence:
     - [150-153] "This, their simple identity, is the particularity..."
 
-- c4. id: sub-part-c-003-c4
+- c4. id: abrel-rec-003-c4
   - subject: three_totalities
   - predicate: are
   - object: one_reflection_differentiating_itself_transparently
@@ -299,7 +299,7 @@ Claims: (Claim)
   - evidence:
     - [154-160] "These three totalities... one and the same reflection... transparent difference..."
 
-- c5. id: sub-part-c-003-c5
+- c5. id: abrel-rec-003-c5
   - subject: this_reflection
   - predicate: is
   - object: concept_realm_of_subjectivity_or_freedom
@@ -311,29 +311,29 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: sublates
-  - targetEntryId: sub-part-c-002
+  - targetEntryId: abrel-rec-002
   - note: concretizes manifested freedom as conceptually articulated universal/singular/particular unity.
-  - sourceClaimIds: [sub-part-c-003-c3, sub-part-c-003-c5]
+  - sourceClaimIds: [abrel-rec-003-c3, abrel-rec-003-c5]
   - sourceKeyPointIds: [k3, k5]
-  - targetClaimIds: [sub-part-c-002-c2, sub-part-c-002-c5]
+  - targetClaimIds: [abrel-rec-002-c2, abrel-rec-002-c5]
   - logicalOperator: sublative_transition
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
   - targetEntryId: sub-idea-001
   - note: chapter culmination hands off to the Substance idea-level closure anchor.
-  - sourceClaimIds: [sub-part-c-003-c5]
+  - sourceClaimIds: [abrel-rec-003-c5]
   - sourceKeyPointIds: [k5]
   - targetClaimIds: [sub-idea-001-c1]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 - r3. type: refines
-  - targetEntryId: sub-part-b-003
+  - targetEntryId: abrel-cau-003
   - note: develops reciprocal action into explicit logical articulation of freedom and concept.
-  - sourceClaimIds: [sub-part-c-003-c1, sub-part-c-003-c5]
+  - sourceClaimIds: [abrel-rec-003-c1, abrel-rec-003-c5]
   - sourceKeyPointIds: [k1, k5]
-  - targetClaimIds: [sub-part-b-003-c5]
+  - targetClaimIds: [abrel-cau-003-c5]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 

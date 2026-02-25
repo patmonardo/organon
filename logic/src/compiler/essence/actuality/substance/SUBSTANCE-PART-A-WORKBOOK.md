@@ -51,11 +51,11 @@ Decision:
 
 ## Decomposition status
 
-- completed: `sub-part-a-001` for lines `3-58`
-- completed: `sub-part-a-002` for lines `59-131`
-- completed: `sub-part-a-003` for lines `132-179`
+- completed: `abrel-sub-001` for lines `3-58`
+- completed: `abrel-sub-002` for lines `59-131`
+- completed: `abrel-sub-003` for lines `132-179`
 
-### Entry sub-part-a-001 — Substance as absolute relation and unity of being/reflection
+### Entry abrel-sub-001 — Substance as absolute relation and unity of being/reflection
 
 Span:
 
@@ -77,7 +77,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: sub-part-a-001-c1
+- c1. id: abrel-sub-001-c1
   - subject: absolute_necessity
   - predicate: is
   - object: absolute_relation_and_self_mediating_being_called_substance
@@ -86,7 +86,7 @@ Claims: (Claim)
   - evidence:
     - [3-10] "Absolute necessity is absolute relation... absolute mediation... This being is substance..."
 
-- c2. id: sub-part-a-001-c2
+- c2. id: abrel-sub-001-c2
   - subject: substance
   - predicate: is
   - object: immediate_actuality_reflected_into_self_as_in_and_for_itself_subsisting
@@ -95,7 +95,7 @@ Claims: (Claim)
   - evidence:
     - [11-17] "neither unreflected immediate... but immediate actuality itself... absolutely reflected into itself..."
 
-- c3. id: sub-part-a-001-c3
+- c3. id: abrel-sub-001-c3
   - subject: substance_being
   - predicate: includes
   - object: self_identical_positedness_as_shining_totality_accidentality
@@ -104,7 +104,7 @@ Claims: (Claim)
   - evidence:
     - [18-23] "Substance... is shining and positedness... this being is substance... as such it is... accidentality."
 
-- c4. id: sub-part-a-001-c4
+- c4. id: abrel-sub-001-c4
   - subject: accidentality_movement
   - predicate: is
   - object: becoming_contingency_and_conversion_of_possibility_actuality
@@ -113,7 +113,7 @@ Claims: (Claim)
   - evidence:
     - [25-34] "unity of possibility and actuality... contingency... immediate conversion..."
 
-- c5. id: sub-part-a-001-c5
+- c5. id: abrel-sub-001-c5
   - subject: movement_of_accidentality
   - predicate: exhibits
   - object: mutual_reflective_shine_of_being_and_essence_categories
@@ -125,20 +125,20 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: sub-part-a-002
+  - targetEntryId: abrel-sub-002
   - note: from substance/accidentality identity to substantial actuosity as creative-destructive power.
-  - sourceClaimIds: [sub-part-a-001-c3, sub-part-a-001-c5]
+  - sourceClaimIds: [abrel-sub-001-c3, abrel-sub-001-c5]
   - sourceKeyPointIds: [k3, k5]
-  - targetClaimIds: [sub-part-a-002-c1]
+  - targetClaimIds: [abrel-sub-002-c1]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 - r2. type: supports
-  - targetEntryId: act-part-c-003
+  - targetEntryId: actua-abs-003
   - note: carries forward absolute necessity into substance as explicit actuality-level relation.
-  - sourceClaimIds: [sub-part-a-001-c1]
+  - sourceClaimIds: [abrel-sub-001-c1]
   - sourceKeyPointIds: [k1]
-  - targetClaimIds: [act-part-c-003-c5]
+  - targetClaimIds: [actua-abs-003-c5]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
@@ -147,7 +147,7 @@ Review outcome:
 - review_pending
 - notes: line anchors verified against numbered source.
 
-### Entry sub-part-a-002 — Actuosity of substance and the power of creative/destructive conversion
+### Entry abrel-sub-002 — Actuosity of substance and the power of creative/destructive conversion
 
 Span:
 
@@ -169,7 +169,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: sub-part-a-002-c1
+- c1. id: abrel-sub-002-c1
   - subject: movement_of_accidentality
   - predicate: is
   - object: actuosity_of_substance_against_itself
@@ -178,7 +178,7 @@ Claims: (Claim)
   - evidence:
     - [59-63] "movement... actuosity of substance... not active against something, but only against itself..."
 
-- c2. id: sub-part-a-002-c2
+- c2. id: abrel-sub-002-c2
   - subject: sublating_of_presupposition
   - predicate: is
   - object: disappearing_shine_that_posits_immediacy
@@ -187,7 +187,7 @@ Claims: (Claim)
   - evidence:
     - [63-67] "sublating of a presupposition is the disappearing shine... beginning... positing of this itself..."
 
-- c3. id: sub-part-a-002-c3
+- c3. id: abrel-sub-002-c3
   - subject: substance
   - predicate: is
   - object: totality_embracing_accidentality_where_accidentality_is_whole_substance
@@ -196,7 +196,7 @@ Claims: (Claim)
   - evidence:
     - [69-71] "substance... totality... embraces accidentality... accidentality is the whole substance itself."
 
-- c4. id: sub-part-a-002-c4
+- c4. id: abrel-sub-002-c4
   - subject: flux_of_accidents
   - predicate: is
   - object: substance_as_absolute_power
@@ -205,7 +205,7 @@ Claims: (Claim)
   - evidence:
     - [82-84] "flux of accidents... is... substance as absolute power."
 
-- c5. id: sub-part-a-002-c5
+- c5. id: abrel-sub-002-c5
   - subject: substance
   - predicate: manifests_as
   - object: creative_and_destructive_power_in_absolute_union_of_possibility_negativity
@@ -217,20 +217,20 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: refines
-  - targetEntryId: sub-part-a-001
+  - targetEntryId: abrel-sub-001
   - note: determines how substance/accidentality identity operates as self-activity.
-  - sourceClaimIds: [sub-part-a-002-c1, sub-part-a-002-c5]
+  - sourceClaimIds: [abrel-sub-002-c1, abrel-sub-002-c5]
   - sourceKeyPointIds: [k1, k5]
-  - targetClaimIds: [sub-part-a-001-c3, sub-part-a-001-c4]
+  - targetClaimIds: [abrel-sub-001-c3, abrel-sub-001-c4]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: sub-part-a-003
+  - targetEntryId: abrel-sub-003
   - note: from substantial power to explicit mediation difference and passage toward causality.
-  - sourceClaimIds: [sub-part-a-002-c4, sub-part-a-002-c5]
+  - sourceClaimIds: [abrel-sub-002-c4, abrel-sub-002-c5]
   - sourceKeyPointIds: [k4, k5]
-  - targetClaimIds: [sub-part-a-003-c1]
+  - targetClaimIds: [abrel-sub-003-c1]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -239,7 +239,7 @@ Review outcome:
 - review_pending
 - notes: preserve c5 for causal power handoff in Part B.
 
-### Entry sub-part-a-003 — Substantiality as vanishing relation and transition to causality
+### Entry abrel-sub-003 — Substantiality as vanishing relation and transition to causality
 
 Span:
 
@@ -261,7 +261,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: sub-part-a-003-c1
+- c1. id: abrel-sub-003-c1
   - subject: immediate_presence_of_substance_in_accidents
   - predicate: entails
   - object: absence_of_real_difference
@@ -270,7 +270,7 @@ Claims: (Claim)
   - evidence:
     - [132-136] "Because of this immediate identity... there is still no real difference present..."
 
-- c2. id: sub-part-a-003-c2
+- c2. id: abrel-sub-003-c2
   - subject: substance_as_power
   - predicate: mediates
   - object: difference_as_necessity_middle_of_substantiality_and_accidentality
@@ -279,7 +279,7 @@ Claims: (Claim)
   - evidence:
     - [137-145] "substance... as power... mediates the difference... necessity... middle... unity of substantiality and accidentality..."
 
-- c3. id: sub-part-a-003-c3
+- c3. id: abrel-sub-003-c3
   - subject: substantiality
   - predicate: is
   - object: immediately_vanishing_relation_with_unretained_negativity
@@ -288,7 +288,7 @@ Claims: (Claim)
   - evidence:
     - [146-155] "Substantiality is... relation as immediately vanishing... does not [retain] negative essence..."
 
-- c4. id: sub-part-a-003-c4
+- c4. id: abrel-sub-003-c4
   - subject: first_relation_of_substantiality
   - predicate: is
   - object: formal_power_where_substance_is_inner_of_accidents
@@ -297,7 +297,7 @@ Claims: (Claim)
   - evidence:
     - [165-170] "relation... formal power... substance only is as the inner of the accidents..."
 
-- c5. id: sub-part-a-003-c5
+- c5. id: abrel-sub-003-c5
   - subject: relation_of_substantiality
   - predicate: passes_over_into
   - object: relation_of_causality
@@ -309,29 +309,29 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: sublates
-  - targetEntryId: sub-part-a-002
+  - targetEntryId: abrel-sub-002
   - note: transforms sheer substantial power into explicit mediated difference and relational transition.
-  - sourceClaimIds: [sub-part-a-003-c2, sub-part-a-003-c5]
+  - sourceClaimIds: [abrel-sub-003-c2, abrel-sub-003-c5]
   - sourceKeyPointIds: [k2, k5]
-  - targetClaimIds: [sub-part-a-002-c4, sub-part-a-002-c5]
+  - targetClaimIds: [abrel-sub-002-c4, abrel-sub-002-c5]
   - logicalOperator: sublative_transition
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: sub-part-b-001
+  - targetEntryId: abrel-cau-001
   - note: explicit handoff from substantiality relation to causality relation.
-  - sourceClaimIds: [sub-part-a-003-c5]
+  - sourceClaimIds: [abrel-sub-003-c5]
   - sourceKeyPointIds: [k5]
-  - targetClaimIds: [sub-part-b-001-c1, sub-part-b-001-c3]
+  - targetClaimIds: [abrel-cau-001-c1, abrel-cau-001-c3]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 - r3. type: refines
-  - targetEntryId: sub-part-a-001
+  - targetEntryId: abrel-sub-001
   - note: clarifies that initial substance identity remains incomplete until mediated negativity is posited.
-  - sourceClaimIds: [sub-part-a-003-c1, sub-part-a-003-c3]
+  - sourceClaimIds: [abrel-sub-003-c1, abrel-sub-003-c3]
   - sourceKeyPointIds: [k1, k3]
-  - targetClaimIds: [sub-part-a-001-c1, sub-part-a-001-c3]
+  - targetClaimIds: [abrel-sub-001-c1, abrel-sub-001-c3]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 

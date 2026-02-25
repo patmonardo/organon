@@ -45,7 +45,7 @@ Scope:
 
 Decision:
 
-- Use ID prefix `rm-a` for Part A entries.
+- Use ID prefix `realm-mea` for Part A entries.
 - Concept-part-first workflow is active.
 - Part A uses subentries labeled by letters (`a`, `b`, `c`).
 - Subsection `a` is sectioned by three core paragraphs followed by one transition paragraph.
@@ -58,20 +58,20 @@ Decision:
 - Entry model: subsection-specific decomposition.
 - Planned entries:
   - For `a. Combination of two measures`:
-    - `rm-a-a-001` -> paragraph 1 (`37-63`)
-    - `rm-a-a-002` -> paragraph 2 (`64-97`)
-    - `rm-a-a-003` -> paragraph 3 (`98-139`)
-    - `rm-a-a-004` -> transition paragraph (`140-146`)
+    - `realm-mea-a-001` -> paragraph 1 (`37-63`)
+    - `realm-mea-a-002` -> paragraph 2 (`64-97`)
+    - `realm-mea-a-003` -> paragraph 3 (`98-139`)
+    - `realm-mea-a-004` -> transition paragraph (`140-146`)
   - For `b. Measure as a series of measure-relations`:
-    - `rm-a-b-001` -> `1` (`150-172`)
-    - `rm-a-b-002` -> `2` (`174-271`)
-    - `rm-a-b-003` -> `3` (`272-325`)
+    - `realm-mea-b-001` -> `1` (`150-172`)
+    - `realm-mea-b-002` -> `2` (`174-271`)
+    - `realm-mea-b-003` -> `3` (`272-325`)
   - For `c. Elective affinity` (lettered decomposition):
-    - `rm-a-c-a` -> first movement (`328-370`)
-    - `rm-a-c-b` -> second movement (`371-405`)
-    - `rm-a-c-c` -> third movement (`406-431`)
+    - `realm-mea-c-a` -> first movement (`328-370`)
+    - `realm-mea-c-b` -> second movement (`371-405`)
+    - `realm-mea-c-c` -> third movement (`406-431`)
 
-### Entry rm-a-a-001 — Two-sided material relation as direct specific gravity ratio
+### Entry realm-mea-a-001 — Two-sided material relation as direct specific gravity ratio
 
 Span:
 
@@ -92,7 +92,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: rm-a-a-001-c1
+- c1. id: realm-mea-a-001-c1
   - subject: material_something_as_measure_relation
   - predicate: consists_of
   - object: in_itselfness_and_externality_in_quantitative_relation
@@ -101,7 +101,7 @@ Claims: (Claim)
   - evidence:
     - [37-50] thing is connection of two sides whose quantitative relation defines qualitative nature.
 
-- c2. id: rm-a-a-001-c2
+- c2. id: realm-mea-a-001-c2
   - subject: specific_gravity_relation
   - predicate: is_structured_as
   - object: volume_as_unit_and_weight_as_amount
@@ -110,7 +110,7 @@ Claims: (Claim)
   - evidence:
     - [51-55] volume is unit; intensive side appears as amount.
 
-- c3. id: rm-a-a-001-c3
+- c3. id: realm-mea-a-001-c3
   - subject: immediate_measure_form_of_material_being
   - predicate: replaces
   - object: power_ratio_with_direct_ratio_exponent
@@ -121,18 +121,18 @@ Claims: (Claim)
 
 Claim ↔ key point map:
 
-- rm-a-a-001-c1 -> k1, k2
-- rm-a-a-001-c2 -> k3
-- rm-a-a-001-c3 -> k4
+- realm-mea-a-001-c1 -> k1, k2
+- realm-mea-a-001-c2 -> k3
+- realm-mea-a-001-c3 -> k4
 
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: rm-a-a-002
+  - targetEntryId: realm-mea-a-002
   - note: direct-ratio exponent now appears as immediate yet alterable specific quantum.
-  - sourceClaimIds: [`rm-a-a-001-c3`]
+  - sourceClaimIds: [`realm-mea-a-001-c3`]
   - sourceKeyPointIds: [`k4`]
-  - targetClaimIds: [`rm-a-a-002-c1`]
+  - targetClaimIds: [`realm-mea-a-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -141,7 +141,7 @@ Review outcome:
 - review_pending
 - notes: subsection a paragraph 1 stabilized.
 
-### Entry rm-a-a-002 — Immediate exponent as inner measure yet external alterability
+### Entry realm-mea-a-002 — Immediate exponent as inner measure yet external alterability
 
 Span:
 
@@ -161,7 +161,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: rm-a-a-002-c1
+- c1. id: realm-mea-a-002-c1
   - subject: specific_exponent_of_something
   - predicate: is
   - object: immediate_quantum_determined_comparatively
@@ -170,7 +170,7 @@ Claims: (Claim)
   - evidence:
     - [64-70] exponent is immediate and determined by comparison with like ratios.
 
-- c2. id: rm-a-a-002-c2
+- c2. id: realm-mea-a-002-c2
   - subject: inner_measure_resting_on_quantum
   - predicate: is
   - object: externally_indifferent_and_subject_to_alteration
@@ -179,7 +179,7 @@ Claims: (Claim)
   - evidence:
     - [71-81] quantum basis makes measure externally alterable despite intrinsic determination.
 
-- c3. id: rm-a-a-002-c3
+- c3. id: realm-mea-a-002-c3
   - subject: composition_of_two_inner_measures
   - predicate: yields
   - object: reciprocal_specification_through_self_preserving_negation_of_quantum
@@ -190,18 +190,18 @@ Claims: (Claim)
 
 Claim ↔ key point map:
 
-- rm-a-a-002-c1 -> k1
-- rm-a-a-002-c2 -> k2
-- rm-a-a-002-c3 -> k3
+- realm-mea-a-002-c1 -> k1
+- realm-mea-a-002-c2 -> k2
+- realm-mea-a-002-c3 -> k3
 
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: rm-a-a-003
+  - targetEntryId: realm-mea-a-003
   - note: reciprocal specification becomes explicit in unequal additive behavior of weight and volume.
-  - sourceClaimIds: [`rm-a-a-002-c3`]
+  - sourceClaimIds: [`realm-mea-a-002-c3`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`rm-a-a-003-c1`]
+  - targetClaimIds: [`realm-mea-a-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -210,7 +210,7 @@ Review outcome:
 - review_pending
 - notes: subsection a paragraph 2 stabilized.
 
-### Entry rm-a-a-003 — Additive permanence and idealized-side alteration in composition
+### Entry realm-mea-a-003 — Additive permanence and idealized-side alteration in composition
 
 Span:
 
@@ -231,7 +231,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: rm-a-a-003-c1
+- c1. id: realm-mea-a-003-c1
   - subject: compound_additivity
   - predicate: is_realized_as
   - object: weight_sum_not_volume_sum
@@ -240,7 +240,7 @@ Claims: (Claim)
   - evidence:
     - [98-115] expected dual additivity is denied; weight alone persists as sum.
 
-- c2. id: rm-a-a-003-c2
+- c2. id: realm-mea-a-003-c2
   - subject: qualitative_specification_in_composition
   - predicate: appears_in
   - object: altered_exponents_and_idealized_side
@@ -249,7 +249,7 @@ Claims: (Claim)
   - evidence:
     - [116-126] alteration falls in exponents, not weight, and turns up on idealized side.
 
-- c3. id: rm-a-a-003-c3
+- c3. id: realm-mea-a-003-c3
   - subject: space_in_mixed_material_relation
   - predicate: is_posited_as
   - object: idealization_and_alterable_non_self_subsistent_side
@@ -260,18 +260,18 @@ Claims: (Claim)
 
 Claim ↔ key point map:
 
-- rm-a-a-003-c1 -> k1, k2
-- rm-a-a-003-c2 -> k3
-- rm-a-a-003-c3 -> k4
+- realm-mea-a-003-c1 -> k1, k2
+- realm-mea-a-003-c2 -> k3
+- realm-mea-a-003-c3 -> k4
 
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: rm-a-a-004
+  - targetEntryId: realm-mea-a-004
   - note: alteration of one qualitative side prepares the explicit transition claim about measure's instability.
-  - sourceClaimIds: [`rm-a-a-003-c2`, `rm-a-a-003-c3`]
+  - sourceClaimIds: [`realm-mea-a-003-c2`, `realm-mea-a-003-c3`]
   - sourceKeyPointIds: [`k3`, `k4`]
-  - targetClaimIds: [`rm-a-a-004-c1`]
+  - targetClaimIds: [`realm-mea-a-004-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -280,7 +280,7 @@ Review outcome:
 - review_pending
 - notes: subsection a paragraph 3 stabilized.
 
-### Entry rm-a-a-004 — Transition: measure determinateness shifts to other measure-relations
+### Entry realm-mea-a-004 — Transition: measure determinateness shifts to other measure-relations
 
 Span:
 
@@ -300,7 +300,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: rm-a-a-004-c1
+- c1. id: realm-mea-a-004-c1
   - subject: measure_determinateness_in_combination
   - predicate: is_not_stable_within_single_relation
   - object: but_moves_into_other_measure_relations
@@ -311,16 +311,16 @@ Claims: (Claim)
 
 Claim ↔ key point map:
 
-- rm-a-a-004-c1 -> k1, k2, k3
+- realm-mea-a-004-c1 -> k1, k2, k3
 
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: rm-a-b-001
+  - targetEntryId: realm-mea-b-001
   - note: subsection a transition opens subsection b, where measure is developed as a series of measure-relations.
-  - sourceClaimIds: [`rm-a-a-004-c1`]
+  - sourceClaimIds: [`realm-mea-a-004-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`rm-a-b-001-c1`]
+  - targetClaimIds: [`realm-mea-b-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -329,7 +329,7 @@ Review outcome:
 - review_pending
 - notes: subsection a completed as 3 core paragraphs plus transition paragraph.
 
-### Entry rm-a-b-001 — Neutralizing union preserves independent measure as specifying moment
+### Entry realm-mea-b-001 — Neutralizing union preserves independent measure as specifying moment
 
 Span:
 
@@ -350,7 +350,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: rm-a-b-001-c1
+- c1. id: realm-mea-b-001-c1
   - subject: measure_relation_something_in_union
   - predicate: preserves_itself_as
   - object: quantitatively_indifferent_specifying_moment
@@ -359,7 +359,7 @@ Claims: (Claim)
   - evidence:
     - [154-160] each independent measure preserves itself and behaves as specifying moment in new relation.
 
-- c2. id: rm-a-b-001-c2
+- c2. id: realm-mea-b-001-c2
   - subject: specific_property_of_measure_relation_something
   - predicate: is_not_expressed_in
   - object: one_single_neutralization_relation
@@ -370,17 +370,17 @@ Claims: (Claim)
 
 Claim ↔ key point map:
 
-- rm-a-b-001-c1 -> k2, k3
-- rm-a-b-001-c2 -> k4
+- realm-mea-b-001-c1 -> k2, k3
+- realm-mea-b-001-c2 -> k4
 
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: rm-a-b-002
+  - targetEntryId: realm-mea-b-002
   - note: non-exhaustive bilateral relation opens the plurality and series structure of exponents.
-  - sourceClaimIds: [`rm-a-b-001-c2`]
+  - sourceClaimIds: [`realm-mea-b-001-c2`]
   - sourceKeyPointIds: [`k4`]
-  - targetClaimIds: [`rm-a-b-002-c1`]
+  - targetClaimIds: [`realm-mea-b-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -389,7 +389,7 @@ Review outcome:
 - review_pending
 - notes: subsection b.1 stabilized.
 
-### Entry rm-a-b-002 — Series-comparison structure and common unit of independent measures
+### Entry realm-mea-b-002 — Series-comparison structure and common unit of independent measures
 
 Span:
 
@@ -410,7 +410,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: rm-a-b-002-c1
+- c1. id: realm-mea-b-002-c1
   - subject: independent_measure
   - predicate: displays_itself_as
   - object: series_of_exponents_across_plural_relations
@@ -419,7 +419,7 @@ Claims: (Claim)
   - evidence:
     - [174-197] plurality yields diverse exponents; qualitative aspect lies in relation of series.
 
-- c2. id: rm-a-b-002-c2
+- c2. id: realm-mea-b-002-c2
   - subject: comparison_of_independent_measures
   - predicate: requires
   - object: common_unit_existing_for_itself
@@ -428,7 +428,7 @@ Claims: (Claim)
   - evidence:
     - [212-229] determinate ratio requires common unit found in ratio of series exponents.
 
-- c3. id: rm-a-b-002-c3
+- c3. id: realm-mea-b-002-c3
   - subject: reciprocal_series_relation
   - predicate: constitutes
   - object: mutual_unit_amount_and_comparative_number_structure
@@ -439,18 +439,18 @@ Claims: (Claim)
 
 Claim ↔ key point map:
 
-- rm-a-b-002-c1 -> k1, k2
-- rm-a-b-002-c2 -> k3
-- rm-a-b-002-c3 -> k4
+- realm-mea-b-002-c1 -> k1, k2
+- realm-mea-b-002-c2 -> k3
+- realm-mea-b-002-c3 -> k4
 
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: rm-a-b-003
+  - targetEntryId: realm-mea-b-003
   - note: reciprocal series structure returns to degree-like externality and develops exclusive qualitative unity.
-  - sourceClaimIds: [`rm-a-b-002-c3`]
+  - sourceClaimIds: [`realm-mea-b-002-c3`]
   - sourceKeyPointIds: [`k4`]
-  - targetClaimIds: [`rm-a-b-003-c1`]
+  - targetClaimIds: [`realm-mea-b-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -459,7 +459,7 @@ Review outcome:
 - review_pending
 - notes: subsection b.2 stabilized.
 
-### Entry rm-a-b-003 — Degree-like externality turns into exclusive elective unity
+### Entry realm-mea-b-003 — Degree-like externality turns into exclusive elective unity
 
 Span:
 
@@ -480,7 +480,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: rm-a-b-003-c1
+- c1. id: realm-mea-b-003-c1
   - subject: independent_measure_self_reference
   - predicate: appears_as
   - object: series_externality_of_quantitative_relating
@@ -489,7 +489,7 @@ Claims: (Claim)
   - evidence:
     - [272-299] being-for-itself lies in totality of numerical-ratio series; quality falls into external relating.
 
-- c2. id: rm-a-b-003-c2
+- c2. id: realm-mea-b-003-c2
   - subject: connection_of_two_specific_measures_in_exponent
   - predicate: yields
   - object: exclusive_qualitative_unity_as_negation_of_negation
@@ -498,7 +498,7 @@ Claims: (Claim)
   - evidence:
     - [300-313] reciprocal negative positing and preserved selfhood produce exclusive unit specifying difference qualitatively.
 
-- c3. id: rm-a-b-003-c3
+- c3. id: realm-mea-b-003-c3
   - subject: affinity_of_independent_measure_to_plurality
   - predicate: becomes
   - object: elective_affinity_not_indifferent_connection
@@ -509,18 +509,18 @@ Claims: (Claim)
 
 Claim ↔ key point map:
 
-- rm-a-b-003-c1 -> k1, k2
-- rm-a-b-003-c2 -> k3
-- rm-a-b-003-c3 -> k4
+- realm-mea-b-003-c1 -> k1, k2
+- realm-mea-b-003-c2 -> k3
+- realm-mea-b-003-c3 -> k4
 
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: rm-a-c-a
+  - targetEntryId: realm-mea-c-a
   - note: subsection b culminates in elective affinity, opening subsection c's explicit treatment.
-  - sourceClaimIds: [`rm-a-b-003-c3`]
+  - sourceClaimIds: [`realm-mea-b-003-c3`]
   - sourceKeyPointIds: [`k4`]
-  - targetClaimIds: [`rm-a-c-a-c1`]
+  - targetClaimIds: [`realm-mea-c-a-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -529,7 +529,7 @@ Review outcome:
 - review_pending
 - notes: subsection b completed by numeric labels `1`, `2`, `3`.
 
-### Entry rm-a-c-a — Elective affinity generalized across chemical and tonal circles
+### Entry realm-mea-c-a — Elective affinity generalized across chemical and tonal circles
 
 Span:
 
@@ -550,7 +550,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: rm-a-c-a-c1
+- c1. id: realm-mea-c-a-c1
   - subject: elective_affinity
   - predicate: denotes
   - object: qualitative_non_indifference_structured_by_series_relations
@@ -559,7 +559,7 @@ Claims: (Claim)
   - evidence:
     - [328-342] chemical specificity is concrete non-indifference in series-affinity context.
 
-- c2. id: rm-a-c-a-c2
+- c2. id: realm-mea-c-a-c2
   - subject: elective_affinity_structure
   - predicate: is_exemplified_in
   - object: chemical_and_musical_combination_circles
@@ -568,7 +568,7 @@ Claims: (Claim)
   - evidence:
     - [343-359] note relations/harmonies parallel chemical affinity structure.
 
-- c3. id: rm-a-c-a-c3
+- c3. id: realm-mea-c-a-c3
   - subject: measure_principle_for_elective_affinities
   - predicate: is
   - object: deferred_higher_order_problem
@@ -579,18 +579,18 @@ Claims: (Claim)
 
 Claim ↔ key point map:
 
-- rm-a-c-a-c1 -> k1, k2
-- rm-a-c-a-c2 -> k3
-- rm-a-c-a-c3 -> k4
+- realm-mea-c-a-c1 -> k1, k2
+- realm-mea-c-a-c2 -> k3
+- realm-mea-c-a-c3 -> k4
 
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: rm-a-c-b
+  - targetEntryId: realm-mea-c-b
   - note: from general framing to quantitative test of exclusiveness within manifold affinity.
-  - sourceClaimIds: [`rm-a-c-a-c1`]
+  - sourceClaimIds: [`realm-mea-c-a-c1`]
   - sourceKeyPointIds: [`k2`]
-  - targetClaimIds: [`rm-a-c-b-c1`]
+  - targetClaimIds: [`realm-mea-c-b-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -599,7 +599,7 @@ Review outcome:
 - review_pending
 - notes: subsection c movement (a) stabilized.
 
-### Entry rm-a-c-b — Quantitative manifold and failed derivation of exclusiveness
+### Entry realm-mea-c-b — Quantitative manifold and failed derivation of exclusiveness
 
 Span:
 
@@ -620,7 +620,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: rm-a-c-b-c1
+- c1. id: realm-mea-c-b-c1
   - subject: manifold_affinity_determinateness
   - predicate: appears_as
   - object: quantitative_difference_prior_to_exclusive_connection
@@ -629,7 +629,7 @@ Claims: (Claim)
   - evidence:
     - [371-378] member unity over opposite series is first only quantitative.
 
-- c2. id: rm-a-c-b-c2
+- c2. id: realm-mea-c-b-c2
   - subject: extensive_to_intensive_conversion_strategy
   - predicate: does_not_establish
   - object: true_exclusiveness
@@ -638,7 +638,7 @@ Claims: (Claim)
   - evidence:
     - [379-397] proposed quantitative-to-intensive conversion changes no fundamental determination.
 
-- c3. id: rm-a-c-b-c3
+- c3. id: realm-mea-c-b-c3
   - subject: quantitative_basis_without_exclusive_principle
   - predicate: permits
   - object: multiple_proportional_combinations
@@ -649,18 +649,18 @@ Claims: (Claim)
 
 Claim ↔ key point map:
 
-- rm-a-c-b-c1 -> k1
-- rm-a-c-b-c2 -> k2, k3
-- rm-a-c-b-c3 -> k4
+- realm-mea-c-b-c1 -> k1
+- realm-mea-c-b-c2 -> k2, k3
+- realm-mea-c-b-c3 -> k4
 
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: rm-a-c-c
+  - targetEntryId: realm-mea-c-c
   - note: failure of quantitative derivation leads to explicit measure-exponent exclusiveness and leap structure.
-  - sourceClaimIds: [`rm-a-c-b-c2`, `rm-a-c-b-c3`]
+  - sourceClaimIds: [`realm-mea-c-b-c2`, `realm-mea-c-b-c3`]
   - sourceKeyPointIds: [`k3`, `k4`]
-  - targetClaimIds: [`rm-a-c-c-c1`]
+  - targetClaimIds: [`realm-mea-c-c-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -669,7 +669,7 @@ Review outcome:
 - review_pending
 - notes: subsection c movement (b) stabilized.
 
-### Entry rm-a-c-c — Exclusive exponent and reciprocal leap between quantitative and qualitative relation
+### Entry realm-mea-c-c — Exclusive exponent and reciprocal leap between quantitative and qualitative relation
 
 Span:
 
@@ -690,7 +690,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: rm-a-c-c-c1
+- c1. id: realm-mea-c-c-c1
   - subject: neutralization_exponent
   - predicate: is
   - object: exclusive_measure_determination
@@ -699,7 +699,7 @@ Claims: (Claim)
   - evidence:
     - [406-415] exponent is measure-determination; exclusive relation negates numeric continuity.
 
-- c2. id: rm-a-c-c-c2
+- c2. id: realm-mea-c-c-c2
   - subject: exclusive_relation
   - predicate: remains_vulnerable_to
   - object: quantitative_indifference_in_multi_source_neutralization
@@ -708,7 +708,7 @@ Claims: (Claim)
   - evidence:
     - [417-424] exclusiveness is exposed to quantitative incursion via divisible opposite moments.
 
-- c3. id: rm-a-c-c-c3
+- c3. id: realm-mea-c-c-c3
   - subject: relation_dynamics_in_elective_affinity
   - predicate: consists_in
   - object: sudden_two_way_conversion_between_quantitative_and_qualitative_measure_relations
@@ -719,16 +719,16 @@ Claims: (Claim)
 
 Claim ↔ key point map:
 
-- rm-a-c-c-c1 -> k1, k2
-- rm-a-c-c-c2 -> k3
-- rm-a-c-c-c3 -> k4
+- realm-mea-c-c-c1 -> k1, k2
+- realm-mea-c-c-c2 -> k3
+- realm-mea-c-c-c3 -> k4
 
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: rm-b-001
+  - targetEntryId: realm-ind-001
   - note: subsection c closes Part A by opening Part B (Nodal lines) where leap-structure and alternation are developed explicitly.
-  - sourceClaimIds: [`rm-a-c-c-c3`]
+  - sourceClaimIds: [`realm-mea-c-c-c3`]
   - sourceKeyPointIds: [`k4`]
   - targetClaimIds: [`pending_cross_workbook`]
   - logicalOperator: sublative_transition

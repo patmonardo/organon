@@ -46,7 +46,7 @@ Scope:
 
 Decision:
 
-- Use ID prefix `spq-b` for Part B entries.
+- Use ID prefix `speci-qua` for Part B entries.
 - Part B uses subentries by internal sectioning rules:
   - `a. The rule` is analyzed in three entries.
   - `b. Specifying measure` is sectioned by its three paragraphs.
@@ -59,18 +59,18 @@ Decision:
 - Entry model: section-specific decomposition.
 - Planned entries:
   - For `a. The rule`:
-    - `spq-b-a-001`
-    - `spq-b-a-002`
-    - `spq-b-a-003`
+    - `speci-qua-a-001`
+    - `speci-qua-a-002`
+    - `speci-qua-a-003`
   - For `b. Specifying measure` (three paragraphs):
-    - `spq-b-b-001`
-    - `spq-b-b-002`
-    - `spq-b-b-003`
+    - `speci-qua-b-001`
+    - `speci-qua-b-002`
+    - `speci-qua-b-003`
   - For `c. Relation of the two sides as qualities` (numerical labels):
-    - `spq-b-c-001` -> `1`
-    - `spq-b-c-002` -> `2`
+    - `speci-qua-c-001` -> `1`
+    - `speci-qua-c-002` -> `2`
 
-### Entry spq-b-a-001 — Rule as determinate unit for external comparison
+### Entry speci-qua-a-001 — Rule as determinate unit for external comparison
 
 Span:
 
@@ -90,7 +90,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: spq-b-a-001-c1
+- c1. id: speci-qua-a-001-c1
   - subject: rule
   - predicate: is_first_determined_as
   - object: magnitude_determinate_in_itself
@@ -99,7 +99,7 @@ Claims: (Claim)
   - evidence:
     - [16-19] the rule is first a magnitude determinate in itself.
 
-- c2. id: spq-b-a-001-c2
+- c2. id: speci-qua-a-001-c2
   - subject: determinate_rule_magnitude
   - predicate: functions_as
   - object: unit_for_measuring_other_concrete_quantum
@@ -110,26 +110,26 @@ Claims: (Claim)
 
 Claim ↔ key point map:
 
-- spq-b-a-001-c1 -> k1
-- spq-b-a-001-c2 -> k2, k3
+- speci-qua-a-001-c1 -> k1
+- speci-qua-a-001-c2 -> k2, k3
 
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: spq-b-a-002
+  - targetEntryId: speci-qua-a-002
   - note: from unit-function to the explicit externality and arbitrariness of comparison.
-  - sourceClaimIds: [`spq-b-a-001-c2`]
+  - sourceClaimIds: [`speci-qua-a-001-c2`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`spq-b-a-002-c1`]
+  - targetClaimIds: [`speci-qua-a-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 - r2. type: supports
-  - targetEntryId: spq-a-003
+  - targetEntryId: speci-bfr-003
   - note: operationalizes Part A's transition from immediate measure to specifying measure.
-  - sourceClaimIds: [`spq-b-a-001-c1`]
+  - sourceClaimIds: [`speci-qua-a-001-c1`]
   - sourceKeyPointIds: [`k1`]
-  - targetClaimIds: [`spq-a-003-c3`]
+  - targetClaimIds: [`speci-bfr-003-c3`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
@@ -138,7 +138,7 @@ Review outcome:
 - review_pending
 - notes: subsection a/entry 1 stabilized as first determination of rule.
 
-### Entry spq-b-a-002 — External act and arbitrariness of the measuring unit
+### Entry speci-qua-a-002 — External act and arbitrariness of the measuring unit
 
 Span:
 
@@ -158,7 +158,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: spq-b-a-002-c1
+- c1. id: speci-qua-a-002-c1
   - subject: measurement_comparison
   - predicate: is
   - object: external_act
@@ -167,7 +167,7 @@ Claims: (Claim)
   - evidence:
     - [25] the comparison is stated to be external.
 
-- c2. id: spq-b-a-002-c2
+- c2. id: speci-qua-a-002-c2
   - subject: measuring_unit
   - predicate: is
   - object: arbitrary_magnitude_reposable_as_amount
@@ -178,17 +178,17 @@ Claims: (Claim)
 
 Claim ↔ key point map:
 
-- spq-b-a-002-c1 -> k1
-- spq-b-a-002-c2 -> k2, k3
+- speci-qua-a-002-c1 -> k1
+- speci-qua-a-002-c2 -> k2, k3
 
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: spq-b-a-003
+  - targetEntryId: speci-qua-a-003
   - note: external arbitrariness is immediately restricted by measure's intrinsic relation to its other quantum.
-  - sourceClaimIds: [`spq-b-a-002-c1`, `spq-b-a-002-c2`]
+  - sourceClaimIds: [`speci-qua-a-002-c1`, `speci-qua-a-002-c2`]
   - sourceKeyPointIds: [`k1`, `k2`]
-  - targetClaimIds: [`spq-b-a-003-c1`]
+  - targetClaimIds: [`speci-qua-a-003-c1`]
   - logicalOperator: contrastive_negation
   - analysisMode: first_order_claim_projection
 
@@ -197,7 +197,7 @@ Review outcome:
 - review_pending
 - notes: subsection a/entry 2 stabilized as external-comparison moment.
 
-### Entry spq-b-a-003 — Rule sublated into specific measure
+### Entry speci-qua-a-003 — Rule sublated into specific measure
 
 Span:
 
@@ -217,7 +217,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: spq-b-a-003-c1
+- c1. id: speci-qua-a-003-c1
   - subject: specific_measure
   - predicate: is_not
   - object: merely_external_rule
@@ -226,7 +226,7 @@ Claims: (Claim)
   - evidence:
     - [29] measure is not only an external rule.
 
-- c2. id: spq-b-a-003-c2
+- c2. id: speci-qua-a-003-c2
   - subject: specific_measure
   - predicate: intrinsically_relates_to
   - object: other_as_quantum
@@ -237,17 +237,17 @@ Claims: (Claim)
 
 Claim ↔ key point map:
 
-- spq-b-a-003-c1 -> k1
-- spq-b-a-003-c2 -> k2, k3
+- speci-qua-a-003-c1 -> k1
+- speci-qua-a-003-c2 -> k2, k3
 
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: spq-b-b-001
+  - targetEntryId: speci-qua-b-001
   - note: subsection a concludes by opening subsection b's explicit account of specifying the external quantum.
-  - sourceClaimIds: [`spq-b-a-003-c2`]
+  - sourceClaimIds: [`speci-qua-a-003-c2`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`spq-b-b-001-c1`]
+  - targetClaimIds: [`speci-qua-b-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -256,7 +256,7 @@ Review outcome:
 - review_pending
 - notes: subsection a completed in three entries per decomposition lock.
 
-### Entry spq-b-b-001 — Specific measure as immanent assimilation of external alteration
+### Entry speci-qua-b-001 — Specific measure as immanent assimilation of external alteration
 
 Span:
 
@@ -277,7 +277,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: spq-b-b-001-c1
+- c1. id: speci-qua-b-001-c1
   - subject: specific_measure
   - predicate: determines
   - object: indifferent_external_quantum_qualitatively
@@ -286,7 +286,7 @@ Claims: (Claim)
   - evidence:
     - [35-43] the measure-side is qualitative and determines the indifferent external quantum.
 
-- c2. id: spq-b-b-001-c2
+- c2. id: speci-qua-b-001-c2
   - subject: internal_measure
   - predicate: reacts_to
   - object: externally_imposed_aggregate_as_intensive_measure
@@ -295,7 +295,7 @@ Claims: (Claim)
   - evidence:
     - [48-54] measure reacts against aggregate alteration and behaves as intensive measure.
 
-- c3. id: spq-b-b-001-c3
+- c3. id: speci-qua-b-001-c3
   - subject: specifying_function
   - predicate: demonstrates
   - object: for_itselfness_through_assimilative_transformation
@@ -306,27 +306,27 @@ Claims: (Claim)
 
 Claim ↔ key point map:
 
-- spq-b-b-001-c1 -> k1
-- spq-b-b-001-c2 -> k2
-- spq-b-b-001-c3 -> k3, k4
+- speci-qua-b-001-c1 -> k1
+- speci-qua-b-001-c2 -> k2
+- speci-qua-b-001-c3 -> k3, k4
 
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: spq-b-b-002
+  - targetEntryId: speci-qua-b-002
   - note: assimilated aggregate is now considered as stable specified quantum with ratio/exponent character.
-  - sourceClaimIds: [`spq-b-b-001-c3`]
+  - sourceClaimIds: [`speci-qua-b-001-c3`]
   - sourceKeyPointIds: [`k4`]
-  - targetClaimIds: [`spq-b-b-002-c1`]
+  - targetClaimIds: [`speci-qua-b-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 - r2. type: supports
-  - targetEntryId: spq-b-a-003
+  - targetEntryId: speci-qua-a-003
   - note: elaborates subsection a's claim that specific measure intrinsically relates to quantum as its other.
-  - sourceClaimIds: [`spq-b-b-001-c1`]
+  - sourceClaimIds: [`speci-qua-b-001-c1`]
   - sourceKeyPointIds: [`k1`]
-  - targetClaimIds: [`spq-b-a-003-c2`]
+  - targetClaimIds: [`speci-qua-a-003-c2`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
@@ -335,7 +335,7 @@ Review outcome:
 - review_pending
 - notes: subsection b/entry 1 stabilized as assimilation moment.
 
-### Entry spq-b-b-002 — Specified aggregate as ratio and exponent
+### Entry speci-qua-b-002 — Specified aggregate as ratio and exponent
 
 Span:
 
@@ -356,7 +356,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: spq-b-b-002-c1
+- c1. id: speci-qua-b-002-c1
   - subject: specified_aggregate
   - predicate: is
   - object: alterable_external_quantum_specified_constantly
@@ -365,7 +365,7 @@ Claims: (Claim)
   - evidence:
     - [59-64] aggregate is alterable yet not mere quantum; it is specified external quantum.
 
-- c2. id: spq-b-b-002-c2
+- c2. id: speci-qua-b-002-c2
   - subject: measure
   - predicate: has_determinate_existence_as
   - object: ratio_with_specificity_as_exponent
@@ -374,7 +374,7 @@ Claims: (Claim)
   - evidence:
     - [65-66] measure exists as ratio; specificity is exponent.
 
-- c3. id: spq-b-b-002-c3
+- c3. id: speci-qua-b-002-c3
   - subject: specifying_measure
   - predicate: differs_from
   - object: mere_intensive_extensive_form_difference_by_real_amount_shift
@@ -385,18 +385,18 @@ Claims: (Claim)
 
 Claim ↔ key point map:
 
-- spq-b-b-002-c1 -> k1, k2
-- spq-b-b-002-c2 -> k3
-- spq-b-b-002-c3 -> k4
+- speci-qua-b-002-c1 -> k1, k2
+- speci-qua-b-002-c2 -> k3
+- speci-qua-b-002-c3 -> k4
 
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: spq-b-b-003
+  - targetEntryId: speci-qua-b-003
   - note: ratio/exponent is clarified against misreading exponent as fixed external quotient.
-  - sourceClaimIds: [`spq-b-b-002-c2`]
+  - sourceClaimIds: [`speci-qua-b-002-c2`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`spq-b-b-003-c1`]
+  - targetClaimIds: [`speci-qua-b-003-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -405,7 +405,7 @@ Review outcome:
 - review_pending
 - notes: subsection b/entry 2 stabilized as ratio-exponent determination.
 
-### Entry spq-b-b-003 — Exponent as immanent qualitative determination and power-law relation
+### Entry speci-qua-b-003 — Exponent as immanent qualitative determination and power-law relation
 
 Span:
 
@@ -426,7 +426,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: spq-b-b-003-c1
+- c1. id: speci-qua-b-003-c1
   - subject: exponent
   - predicate: is_not
   - object: merely_external_fixed_quotient
@@ -435,7 +435,7 @@ Claims: (Claim)
   - evidence:
     - [81-86] exponent is not just fixed external quantum/quotient.
 
-- c2. id: spq-b-b-003-c2
+- c2. id: speci-qua-b-003-c2
   - subject: exponent
   - predicate: constitutes
   - object: immanent_qualitative_determination_of_ratio
@@ -444,7 +444,7 @@ Claims: (Claim)
   - evidence:
     - [87-92] exponent is the strictly immanent qualitative determination constituting ratio.
 
-- c3. id: spq-b-b-003-c3
+- c3. id: speci-qua-b-003-c3
   - subject: specifying_reaction
   - predicate: produces
   - object: power_determined_numerically_incommensurable_series_relation
@@ -455,18 +455,18 @@ Claims: (Claim)
 
 Claim ↔ key point map:
 
-- spq-b-b-003-c1 -> k1
-- spq-b-b-003-c2 -> k2
-- spq-b-b-003-c3 -> k3, k4
+- speci-qua-b-003-c1 -> k1
+- speci-qua-b-003-c2 -> k2
+- speci-qua-b-003-c3 -> k3, k4
 
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: spq-b-c-001
+  - targetEntryId: speci-qua-c-001
   - note: subsection b culminates in ratio/exponent determination that opens subsection c's relational unity of qualities.
-  - sourceClaimIds: [`spq-b-b-003-c2`, `spq-b-b-003-c3`]
+  - sourceClaimIds: [`speci-qua-b-003-c2`, `speci-qua-b-003-c3`]
   - sourceKeyPointIds: [`k2`, `k4`]
-  - targetClaimIds: [`spq-b-c-001-c1`]
+  - targetClaimIds: [`speci-qua-c-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -475,7 +475,7 @@ Review outcome:
 - review_pending
 - notes: subsection b completed in three paragraph entries per decomposition lock.
 
-### Entry spq-b-c-001 — Relational unity of qualitative sides under one measure
+### Entry speci-qua-c-001 — Relational unity of qualitative sides under one measure
 
 Span:
 
@@ -496,7 +496,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: spq-b-c-001-c1
+- c1. id: speci-qua-c-001-c1
   - subject: qualitative_side_of_quantum
   - predicate: exists_as
   - object: reference_to_external_quantitative_side_that_it_sublates
@@ -505,7 +505,7 @@ Claims: (Claim)
   - evidence:
     - [109-117] qualitative side refers to and sublates external quantitative side.
 
-- c2. id: spq-b-c-001-c2
+- c2. id: speci-qua-c-001-c2
   - subject: two_measure_sides
   - predicate: are_bound_by
   - object: one_measure_determination_with_exponent
@@ -514,7 +514,7 @@ Claims: (Claim)
   - evidence:
     - [118-140] sides are interwoven under one determination of measure and exponent.
 
-- c3. id: spq-b-c-001-c3
+- c3. id: speci-qua-c-001-c3
   - subject: measure
   - predicate: is
   - object: immanent_quantitative_relation_of_two_qualities
@@ -525,27 +525,27 @@ Claims: (Claim)
 
 Claim ↔ key point map:
 
-- spq-b-c-001-c1 -> k1
-- spq-b-c-001-c2 -> k2, k3
-- spq-b-c-001-c3 -> k4
+- speci-qua-c-001-c1 -> k1
+- speci-qua-c-001-c2 -> k2, k3
+- speci-qua-c-001-c3 -> k4
 
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: spq-b-c-002
+  - targetEntryId: speci-qua-c-002
   - note: from unity of two qualities to explicit variable magnitude and realized measure.
-  - sourceClaimIds: [`spq-b-c-001-c3`]
+  - sourceClaimIds: [`speci-qua-c-001-c3`]
   - sourceKeyPointIds: [`k4`]
-  - targetClaimIds: [`spq-b-c-002-c1`]
+  - targetClaimIds: [`speci-qua-c-002-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
 - r2. type: supports
-  - targetEntryId: spq-b-b-003
+  - targetEntryId: speci-qua-b-003
   - note: subsection c.1 secures subsection b's exponent determination as immanent rather than external.
-  - sourceClaimIds: [`spq-b-c-001-c2`]
+  - sourceClaimIds: [`speci-qua-c-001-c2`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`spq-b-b-003-c2`]
+  - targetClaimIds: [`speci-qua-b-003-c2`]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
@@ -554,7 +554,7 @@ Review outcome:
 - review_pending
 - notes: subsection c/entry 1 stabilized by numerical label `1`.
 
-### Entry spq-b-c-002 — Variable magnitude, realized measure, and power-determined relation
+### Entry speci-qua-c-002 — Variable magnitude, realized measure, and power-determined relation
 
 Span:
 
@@ -575,7 +575,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: spq-b-c-002-c1
+- c1. id: speci-qua-c-002-c1
   - subject: measure
   - predicate: determines
   - object: variable_magnitude_as_qualitatively_othered_quantum
@@ -584,7 +584,7 @@ Claims: (Claim)
   - evidence:
     - [144-159] variable magnitude follows from sublated quantum and qualitative moment in specifying measure.
 
-- c2. id: spq-b-c-002-c2
+- c2. id: speci-qua-c-002-c2
   - subject: differentiation_of_quantum_in_common_external_medium
   - predicate: yields
   - object: realized_measure
@@ -593,7 +593,7 @@ Claims: (Claim)
   - evidence:
     - [160-170] differentiated quantitative existence in one medium is identified as real measure.
 
-- c3. id: spq-b-c-002-c3
+- c3. id: speci-qua-c-002-c3
   - subject: genuine_variable_magnitude
   - predicate: is_determined_by
   - object: ratio_of_powers_with_qualitative_priority_over_formal_direct_ratio
@@ -605,18 +605,18 @@ Claims: (Claim)
 
 Claim ↔ key point map:
 
-- spq-b-c-002-c1 -> k1
-- spq-b-c-002-c2 -> k2
-- spq-b-c-002-c3 -> k3, k4
+- speci-qua-c-002-c1 -> k1
+- speci-qua-c-002-c2 -> k2
+- speci-qua-c-002-c3 -> k3, k4
 
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: spq-c-001
+  - targetEntryId: speci-spm-001
   - note: Part B closes by handing off realized, power-determined measure to Part C's being-for-itself in measure.
-  - sourceClaimIds: [`spq-b-c-002-c2`, `spq-b-c-002-c3`]
+  - sourceClaimIds: [`speci-qua-c-002-c2`, `speci-qua-c-002-c3`]
   - sourceKeyPointIds: [`k2`, `k3`]
-  - targetClaimIds: [`spq-c-001-c1`]
+  - targetClaimIds: [`speci-spm-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 

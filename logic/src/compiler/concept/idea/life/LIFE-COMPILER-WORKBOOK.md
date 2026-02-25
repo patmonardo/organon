@@ -39,38 +39,38 @@ Authority: derivative from Life workbooks (non-authoritative)
 ### OperationMap life-op-001 — Immediate-to-mediated life transition map
 
 - sourceClaims:
-  - `con-idea-life-a-001-c1`
-  - `con-idea-life-b-001-c2`
+  - `ilife-liv-001-c1`
+  - `ilife-lif-001-c2`
 - sourceRelations:
-  - `con-idea-life-a-001-r1`
-  - `con-idea-life-b-001-r1`
+  - `ilife-liv-001-r1`
+  - `ilife-lif-001-r1`
 - protocolMode: mixed
 - targetOperation: transition_chain_projection
 - confidence: 0.66
 - proofPath:
-  - `con-idea-life-a-001-c1`
-  - `con-idea-life-a-001-r1`
-  - `con-idea-life-b-001-c2`
-  - `con-idea-life-b-001-r1`
+  - `ilife-liv-001-c1`
+  - `ilife-liv-001-r1`
+  - `ilife-lif-001-c2`
+  - `ilife-lif-001-r1`
 - status: review_pending
 
 ### OperationMap life-op-002 — Reproduction-to-genus elevation map
 
 - sourceClaims:
-  - `con-idea-life-b-003-c2`
-  - `con-idea-life-c-001-c2`
-  - `con-idea-life-c-004-c1`
+  - `ilife-lif-003-c2`
+  - `ilife-gen-001-c2`
+  - `ilife-gen-004-c1`
 - sourceRelations:
-  - `con-idea-life-b-003-r1`
-  - `con-idea-life-c-001-r1`
+  - `ilife-lif-003-r1`
+  - `ilife-gen-001-r1`
 - protocolMode: mixed
 - targetOperation: universality_elevation_projection
 - confidence: 0.7
 - proofPath:
-  - `con-idea-life-b-003-c2`
-  - `con-idea-life-c-001-c2`
-  - `con-idea-life-c-001-r1`
-  - `con-idea-life-c-004-c1`
+  - `ilife-lif-003-c2`
+  - `ilife-gen-001-c2`
+  - `ilife-gen-001-r1`
+  - `ilife-gen-004-c1`
 - status: review_pending
 
 Notes:

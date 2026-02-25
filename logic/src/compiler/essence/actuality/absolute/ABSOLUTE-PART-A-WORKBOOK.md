@@ -51,11 +51,11 @@ Decision:
 
 ## Decomposition status
 
-- completed: `abs-part-a-001` for lines `3-75`
-- completed: `abs-part-a-002` for lines `77-144`
-- completed: `abs-part-a-003` for lines `146-181`
+- completed: `absol-exp-001` for lines `3-75`
+- completed: `absol-exp-002` for lines `77-144`
+- completed: `absol-exp-003` for lines `146-181`
 
-### Entry abs-part-a-001 — Absolute as unity of being and essence
+### Entry absol-exp-001 — Absolute as unity of being and essence
 
 Span:
 
@@ -77,7 +77,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: abs-part-a-001-c1
+- c1. id: absol-exp-001-c1
   - subject: absolute
   - predicate: is_not
   - object: mere_being_or_mere_essence
@@ -86,7 +86,7 @@ Claims: (Claim)
   - evidence:
     - [3-7] "The absolute is not just being, nor even essence... each is explicitly a totality, but a determinate totality."
 
-- c2. id: abs-part-a-001-c2
+- c2. id: absol-exp-001-c2
   - subject: absolute
   - predicate: is
   - object: unity_of_being_and_essence_as_ground_of_relation
@@ -95,7 +95,7 @@ Claims: (Claim)
   - evidence:
     - [17-22] "The absolute itself is the absolute unity of the two... the ground of the essential relation..."
 
-- c3. id: abs-part-a-001-c3
+- c3. id: absol-exp-001-c3
   - subject: absolute_identity
   - predicate: entails
   - object: each_determinateness_is_totality_and_reflective_shine
@@ -104,7 +104,7 @@ Claims: (Claim)
   - evidence:
     - [39-45] "each of its parts is itself the whole... determinateness has become... transparent reflective shine..."
 
-- c4. id: abs-part-a-001-c4
+- c4. id: absol-exp-001-c4
   - subject: reflection_movement
   - predicate: is_sublated_as
   - object: inner_outer_moment_of_absolute_identity
@@ -116,11 +116,11 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: abs-part-a-002
+  - targetEntryId: absol-exp-002
   - note: from absolute identity to the explicit negative/positive exposition movement.
-  - sourceClaimIds: [abs-part-a-001-c3, abs-part-a-001-c4]
+  - sourceClaimIds: [absol-exp-001-c3, absol-exp-001-c4]
   - sourceKeyPointIds: [k3, k5]
-  - targetClaimIds: [abs-part-a-002-c1]
+  - targetClaimIds: [absol-exp-002-c1]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -129,7 +129,7 @@ Review outcome:
 - review_pending
 - notes: line anchors verified against numbered source.
 
-### Entry abs-part-a-002 — Negative and positive exposition as finite foundering and shine
+### Entry absol-exp-002 — Negative and positive exposition as finite foundering and shine
 
 Span:
 
@@ -151,7 +151,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: abs-part-a-002-c1
+- c1. id: absol-exp-002-c1
   - subject: initial_reflective_movement
   - predicate: is
   - object: negative_exposition_of_absolute
@@ -160,7 +160,7 @@ Claims: (Claim)
   - evidence:
     - [77-83] "At first... movement consists only in sublating its act in the absolute... negative exposition of the absolute."
 
-- c2. id: abs-part-a-002-c2
+- c2. id: absol-exp-002-c2
   - subject: exposition
   - predicate: is
   - object: immanent_return_of_being_and_essence_into_absolute_ground
@@ -169,7 +169,7 @@ Claims: (Claim)
   - evidence:
     - [84-96] "the preceding whole... has determined itself within it... has returned into the absolute as into its ground."
 
-- c3. id: abs-part-a-002-c3
+- c3. id: absol-exp-002-c3
   - subject: finite_determinations
   - predicate: have
   - object: absolute_as_abyss_and_ground
@@ -178,7 +178,7 @@ Claims: (Claim)
   - evidence:
     - [98-108] "the finite demonstrates... referred to the absolute... absolute for their abyss, but also for their ground..."
 
-- c4. id: abs-part-a-002-c4
+- c4. id: absol-exp-002-c4
   - subject: positive_exposition
   - predicate: is_reduced_to
   - object: reflective_shine_with_external_starting_point
@@ -191,20 +191,20 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: supports
-  - targetEntryId: abs-part-a-001
+  - targetEntryId: absol-exp-001
   - note: finite determinations are grounded only in the absolute, reinforcing absolute identity.
-  - sourceClaimIds: [abs-part-a-002-c2, abs-part-a-002-c3]
+  - sourceClaimIds: [absol-exp-002-c2, absol-exp-002-c3]
   - sourceKeyPointIds: [k2, k3]
-  - targetClaimIds: [abs-part-a-001-c2, abs-part-a-001-c3]
+  - targetClaimIds: [absol-exp-001-c2, absol-exp-001-c3]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r2. type: transitions_to
-  - targetEntryId: abs-part-a-003
+  - targetEntryId: absol-exp-003
   - note: critique of external positivity transitions to absolute self-exposition.
-  - sourceClaimIds: [abs-part-a-002-c4]
+  - sourceClaimIds: [absol-exp-002-c4]
   - sourceKeyPointIds: [k5]
-  - targetClaimIds: [abs-part-a-003-c1]
+  - targetClaimIds: [absol-exp-003-c1]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -213,7 +213,7 @@ Review outcome:
 - review_pending
 - notes: keep `c4` wording stable for second-order relation cycles.
 
-### Entry abs-part-a-003 — Absolute self-exposition beyond abstract identity
+### Entry absol-exp-003 — Absolute self-exposition beyond abstract identity
 
 Span:
 
@@ -234,7 +234,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: abs-part-a-003-c1
+- c1. id: absol-exp-003-c1
   - subject: exposition_of_absolute
   - predicate: is
   - object: absolutes_own_self_movement
@@ -243,7 +243,7 @@ Claims: (Claim)
   - evidence:
     - [146-150] "the exposition of the absolute is the absolute's own doing, an act that begins from itself and arrives at itself."
 
-- c2. id: abs-part-a-003-c2
+- c2. id: absol-exp-003-c2
   - subject: absolute_as_mere_identity
   - predicate: is
   - object: determined_absolute_called_attribute
@@ -252,7 +252,7 @@ Claims: (Claim)
   - evidence:
     - [151-167] "only as absolute identity... not the absolutely absolute but the absolute in a determination, or it is attribute."
 
-- c3. id: abs-part-a-003-c3
+- c3. id: absol-exp-003-c3
   - subject: reflection_externality
   - predicate: is
   - object: immediately_internal_to_absolute
@@ -261,7 +261,7 @@ Claims: (Claim)
   - evidence:
     - [169-174] "reflection is not only external... it is immediately internal to it."
 
-- c4. id: abs-part-a-003-c4
+- c4. id: absol-exp-003-c4
   - subject: absolute
   - predicate: is_determined_as
   - object: identity_of_being_and_essence_or_inner_and_outer_as_absolute_form
@@ -273,29 +273,29 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: sublates
-  - targetEntryId: abs-part-a-002
+  - targetEntryId: absol-exp-002
   - note: removes the residual external starting point by grounding exposition in self-movement.
-  - sourceClaimIds: [abs-part-a-003-c1]
+  - sourceClaimIds: [absol-exp-003-c1]
   - sourceKeyPointIds: [k1]
-  - targetClaimIds: [abs-part-a-002-c4]
+  - targetClaimIds: [absol-exp-002-c4]
   - logicalOperator: sublative_transition
   - analysisMode: first_order_claim_projection
 
 - r2. type: refines
-  - targetEntryId: abs-part-a-001
+  - targetEntryId: absol-exp-001
   - note: clarifies that absolute identity must include immanent reflection, not abstract sameness.
-  - sourceClaimIds: [abs-part-a-003-c2, abs-part-a-003-c4]
+  - sourceClaimIds: [absol-exp-003-c2, absol-exp-003-c4]
   - sourceKeyPointIds: [k2, k4]
-  - targetClaimIds: [abs-part-a-001-c2, abs-part-a-001-c3]
+  - targetClaimIds: [absol-exp-001-c2, absol-exp-001-c3]
   - logicalOperator: implicative_support
   - analysisMode: first_order_claim_projection
 
 - r3. type: transitions_to
-  - targetEntryId: abs-part-b-001
+  - targetEntryId: absol-att-001
   - note: hands off to Part B where attribute becomes explicit topic.
-  - sourceClaimIds: [abs-part-a-003-c2]
+  - sourceClaimIds: [absol-exp-003-c2]
   - sourceKeyPointIds: [k2]
-  - targetClaimIds: [abs-part-b-001-c1, abs-part-b-001-c2]
+  - targetClaimIds: [absol-att-001-c1, absol-att-001-c2]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
