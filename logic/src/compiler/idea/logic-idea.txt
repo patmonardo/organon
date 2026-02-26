@@ -19,8 +19,10 @@ without further ado, as known and accepted;
 and to make use of customary ways of argumentation in order to
 establish their general concepts and fundamental determinations.
 
-Logic, on the contrary, cannot presuppose any of these forms of reflection,
-these rules and laws of thinking, for they are part of its content
+Logic, on the contrary, cannot presuppose
+any of these forms of reflection,
+these rules and laws of thinking,
+for they are part of its content
 and they first have to be established within it.
 And it is not just the declaration of scientific method
 but the concept itself of science as such that belongs to its content
@@ -167,8 +169,9 @@ and appears as a loss and a retrograde step,
 something on which the elevation of reason
 to the loftier spirit of modern philosophy in fact rests.
 The basis of that conception now universally accepted is
-to be sought, namely, in the insight into the necessary conflict of
-the determinations of the understanding with themselves. –
+to be sought, namely, in the insight into
+the necessary conflict of the determinations
+of the understanding with themselves. –
 The reflection already mentioned consists
 in transcending the concrete immediate,
 in determining and parting it.
@@ -181,8 +184,10 @@ This reflective activity of connection
 belongs in itself to reason,
 and to rise above the determinations
 and attain insight into their discord is
-the great negative step on the way to the true concept of reason.
-But, when not carried through, this insight runs into the misconception
+the great negative step on the way
+to the true concept of reason.
+But, when not carried through,
+this insight runs into the misconception
 that reason is the one that contradicts itself;
 it fails to see that the contradiction is in fact
 the elevation of reason above the restrictions of
@@ -440,7 +445,8 @@ the determinations of thought have
 objective value and concrete existence.
 
 Critical philosophy did indeed already turn metaphysics into logic
-but, like the subsequent idealism, it gave to the logical determinations
+but, like the subsequent idealism,
+it gave to the logical determinations
 an essentially subjective significance out of fear of the object,
 as we said earlier;
 for that reason, these determinations remained affected
