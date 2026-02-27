@@ -1,0 +1,150 @@
+# Actuality/Actuality - SANSKRIT IDEA WORKBOOK
+
+## Purpose
+
+Establishing the baseline Sanskrit philology and systemic philosophical analysis of Yoga Sūtras IV.27 through IV.33. This climactic sequence moves from the residual physical intrusions in the mind's vector, through the algebra of _dharma-megha samādhi_, to the absolute exhaustion of phenomenal time/sequence (_krama_) and the resulting infinite clarity.
+
+---
+
+## Sūtra IV.27: Intrusions in the Gaps
+
+### I. Text and Translation
+
+**Devanāgarī:**
+तच्छिद्रेषु प्रत्ययान्तराणि संस्कारेभ्यः ॥ ४.२७॥
+
+**Transliteration:**
+tad-chidreṣu pratyayāntarāṇi saṁskārebhyaḥ || 4.27 ||
+
+**Original Translation:**
+In the gaps (_chidreṣu_) of that discriminative current (_tad-_), other cognitions (_pratyayāntarāṇi_) arise from latent impressions (_saṁskārebhyaḥ_).
+
+### II. Systemic Analysis: Mechanical Slackness
+
+Even after the ego collapses (IV.25) and the mind tilts heavily toward _kaivalya_ (IV.26), the biological hardware remains. Patañjali notes a critical vulnerability: _chidra_ (gaps or chinks in the armor).
+
+The discriminative vector requires continuous _sattvic_ intensity. If attention slackens—if there is a momentary gap in the flow of insight—the old software re-executes. Distracting, non-discriminative thoughts (_pratyayāntarāṇi_) well up from the deep reservoir of _saṁskāras_ (karmic traces). Crucially, this is not a metaphysical failure of the _Puruṣa_; the Seer has not "fallen." It is simply the mechanical inertia of the _buddhi_. The practitioner must recognize these intrusions not as moral sins, but as structural artifacts of a machine winding down.
+
+---
+
+## Sūtra IV.28: Reapplication of the Method
+
+### I. Text and Translation
+
+**Devanāgarī:**
+हानमेषां क्लेशवदुक्तम् ॥ ४.२८॥
+
+**Transliteration:**
+hānam eṣāṃ kleśavad uktam || 4.28 ||
+
+**Original Translation:**
+The removal (_hānam_) of these [intrusions] is said (_uktam_) to be just like that of the _kleśas_ (_kleśavad_).
+
+### II. Systemic Analysis: No New Tricks
+
+What do you do when old habits intrude on the brink of absolute freedom? The mind, desperate for novelty, often invents dramatic new ascetic punishments. Patañjali forbids this.
+
+He instructs the practitioner to simply re-apply the foundational methods already stated (_uktam_)—specifically, the methods used to destroy the _kleśas_ (afflictions) earlier in the path. You seal the gaps exactly the way you started: by restoring _viveka-khyāti_ (discriminative vision) and starving the _saṁskāras_ of attention. The method that brought you to the precipice is the identical method that pushes you over it.
+
+---
+
+## Sūtra IV.29: The Cloud of Dharmas (Algebraic Discriminator)
+
+### I. Text and Translation
+
+**Devanāgarī:**
+प्रसङ्ख्यानेऽप्यकुसीदस्य सर्वथा विवेकख्यातेर्धर्ममेघः समाधिः ॥ ४.२९॥
+
+**Transliteration:**
+prasaṅkhyāne 'py akusīdasya sarvathā viveka-khyāteḥ dharma-meghaḥ samādhiḥ || 4.29 ||
+
+**Original Translation:**
+Even with regard to the highest insight (_prasaṅkhyāne 'py_), for one who is absolutely non-attached (_akusīdasya_), when complete discriminative knowledge (_sarvathā viveka-khyāteḥ_) is present, there arises the _dharma-megha samādhi_ (the cloud of _dharmas_).
+
+### II. Systemic Analysis: The Final Non-Attachment
+
+This is the absolute apex of the cognitive path. A subtle trap remains: attachment to the liberating insight (_prasaṅkhyāna_) itself. The ego tries to survive by claiming ownership of Enlightenment.
+
+When the practitioner becomes _akusīda_—utterly unattached and disinterested even in the mechanics of their own liberation—the system shifts into _dharma-megha samādhi_. This "cloud of _dharmas_" is not a mystical weather event. In Yoga/Abhidharma logic, it functions as a master algebraic discriminator (_prati-saṁkhyā-nirodha_). It perfectly delineates and isolates every phenomenal property (_dharma_) from the pure Light, ensuring that the _buddhi_ no longer mistakes any formal state for the Absolute Subject.
+
+---
+
+## Sūtra IV.30: Corollary 1 - The Halt of Karma
+
+### I. Text and Translation
+
+**Devanāgarī:**
+ततः क्लेशकर्मनिवृत्तिः ॥ ४.३०॥
+
+**Transliteration:**
+tataḥ kleśa-karma-nivṛttiḥ || 4.30 ||
+
+**Original Translation:**
+From that (_tataḥ_), there is the cessation (_nivṛttiḥ_) of afflictions (_kleśa_) and karmic momentum (_karma_).
+
+### II. Systemic Analysis: The Death of the Engine
+
+_Tataḥ_ ("from that") initiates a sequence of logical corollaries arising directly from _dharma-megha_. The first physical consequence is the absolute shutdown of the _rajasic_ engine. Because the mind has been definitively separated from the Seer, the _kleśas_ (ignorance, ego, desire, aversion, fear) completely lose their target host. Without _kleśas_ to motivate action, no new _karma_ is generated, and the flywheel of worldly momentum grinds to a permanent halt.
+
+---
+
+## Sūtra IV.31: Corollary 2 - The Infinity of Clarity
+
+### I. Text and Translation
+
+**Devanāgarī:**
+तदा सर्वावरणमलापेतस्य ज्ञानस्यानन्त्यात् ज्ञेयमल्पम् ॥ ४.३१॥
+
+**Transliteration:**
+tadā sarvāvaraṇa-malāpetasya jñānasyānantyāt jñeyam alpam || 4.31 ||
+
+**Original Translation:**
+Then (_tadā_), because knowledge is cleared of all coverings and taints (_sarvāvaraṇa-malāpetasya_), due to its infinity (_jñānasyānantyāt_), what remains to be known is very little (_jñeyam alpam_).
+
+### II. Systemic Analysis: Meaning Over Substance
+
+The second corollary concerns epistemology. Ignorance in Yoga is physical—it is an _āvaraṇa_ (a covering or taint on the _sattvic_ mirror). When _dharma-megha_ burns away these coverings, the reflective capacity of the mind aligns perfectly with the infinite nature of the Light.
+
+In this state of unobstructed, infinite clarity, the sum total of all empirical, finite objects (_jñeyam_—"the knowables") appears as an insignificant speck (_alpam_). The mind transitions from obsessing over the "substance" of objects into pure, unobstructed "Meaning" (_arthamātra_).
+
+---
+
+## Sūtra IV.32: Corollary 3 - The End of Relative Sequence
+
+### I. Text and Translation
+
+**Devanāgarī:**
+ततः कृतार्थानां परिणामक्रमसमाप्तिर्गुणानाम् ॥ ४.३२॥
+
+**Transliteration:**
+tataḥ kṛtārthānāṃ pariṇāma-krama-samāptiḥ guṇānām || 4.32 ||
+
+**Original Translation:**
+From that (_tataḥ_), the sequence of transformations (_pariṇāma-krama_) of the _guṇas_ comes to a complete halt (_samāptiḥ_) for those who have fulfilled their teleological purpose (_kṛtārthānāṃ_).
+
+### II. Systemic Analysis: Fulfilled Teleology
+
+The third corollary addresses physics. The _guṇas_ (the raw fabric of nature: _sattva, rajas, tamas_) mutate solely to provide experience and eventual liberation for the _Puruṣa_ (being "for another" per IV.24).
+
+Once _dharma-megha_ secures absolute liberation, the purpose of the _guṇas_ is fulfilled (_kṛtārtha_). Therefore, the compulsory sequence of their mutation (_pariṇāma-krama_) is terminated. The machinery of nature shuts down for that liberated Seer.
+
+---
+
+## Sūtra IV.33: The Logic of Time (Absolute Necessity)
+
+### I. Text and Translation
+
+**Devanāgarī:**
+क्षणप्रतियोगी परिणामापरान्तनिर्ग्राह्यः क्रमः ॥ ४.३३॥
+
+**Transliteration:**
+kṣaṇa-pratiyogī pariṇāma-aparānta-nirgrāhyaḥ kramaḥ || 4.33 ||
+
+**Original Translation:**
+Sequence (_kramaḥ_) has the momentary instant as its counterpart (_kṣaṇa-pratiyogī_), and is grasped/apprehended only at the absolute terminal limit of transformation (_pariṇāma-aparānta-nirgrāhyaḥ_).
+
+### II. Systemic Analysis: Grasping the Limit
+
+How do we define the phenomenal flow of time? Patañjali defines "sequence" (_krama_) algebraically. It is an accumulation of discrete moments (_kṣaṇas_). But, crucially, you cannot truly _see_ the sequence while you are caught in the middle of it.
+
+The sequence is only fully grasped (_nirgrāhya_) backwards, from its absolute terminal limit (_aparānta_). Only when the transformations of the _guṇas_ halt (IV.32) can the architecture of Time be comprehended as a completed whole. This marks the transition into Absolute Necessity—the meta-law that oversees the entirety of phenomenal reality from a position outside of its mutable flow.

@@ -51,7 +51,7 @@ Decision:
 - Keep this pass minimal but preserve the key special role of Part D: explicit copula repletion and transition to syllogism.
 - Keep syllogism handoff explicit, anchored to extracted entry `syllo-exi-idea-001`.
 
-### Entry judgm-con-001 — Concept-judgment setup: true adjudication against ought
+### Entry judgm-con-i-001 — Concept-judgment setup: true adjudication against ought
 
 Span:
 
@@ -71,7 +71,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: judgm-con-001-c1
+- c1. id: judgm-con-i-001-c1
   - subject: judgment_of_the_concept
   - predicate: is_determined_as
   - object: first_true_adjudication_against_ought
@@ -80,7 +80,7 @@ Claims: (Claim)
   - evidence:
     - [12-19] concept as basis/ought; predicates like good/bad/true/right as measure.
 
-- c2. id: judgm-con-001-c2
+- c2. id: judgm-con-i-001-c2
   - subject: judgment_of_the_concept
   - predicate: is
   - object: objective_truth_of_judgment
@@ -89,7 +89,7 @@ Claims: (Claim)
   - evidence:
     - [49-56] judgment of concept is objective and true, resting on concept as concept.
 
-- c3. id: judgm-con-001-c3
+- c3. id: judgm-con-i-001-c3
   - subject: disjunctive_result
   - predicate: must_develop_into
   - object: subject_predicate_dyads_out_of_genus_species_structure
@@ -110,7 +110,7 @@ Relations: (Relation)
 - r1. type: refines
   - targetEntryId: judgm-nec-c-002
   - note: elaborates Necessity's transition into concept-judgment by specifying ought/adjudication structure.
-  - sourceClaimIds: [`judgm-con-001-c1`, `judgm-con-001-c2`]
+  - sourceClaimIds: [`judgm-con-i-001-c1`, `judgm-con-i-001-c2`]
   - sourceKeyPointIds: [`k1`, `k2`]
   - targetClaimIds: [`judgm-nec-c-002-c3`]
   - logicalOperator: presuppositional_link
@@ -119,7 +119,7 @@ Relations: (Relation)
 - r2. type: transitions_to
   - targetEntryId: judgm-con-a-001
   - note: setup proceeds directly to the first assertoric subtopic.
-  - sourceClaimIds: [`judgm-con-001-c3`]
+  - sourceClaimIds: [`judgm-con-i-001-c3`]
   - sourceKeyPointIds: [`k3`]
   - targetClaimIds: [`judgm-con-a-001-c1`]
   - logicalOperator: sequential_transition
@@ -810,11 +810,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: judgm-con-c-005
+  - targetEntryId: judgm-con-t-001
   - note: final paragraph presents replete copula and explicit syllogism transition.
   - sourceClaimIds: [`judgm-con-c-004-c1`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`judgm-con-c-005-c1`]
+  - targetClaimIds: [`judgm-con-t-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -823,7 +823,7 @@ Review outcome:
 - review_pending
 - notes: fourth apodictic subtopic (fourth paragraph).
 
-### Entry judgm-con-c-005 — Transition paragraph: replete copula to syllogism
+### Entry judgm-con-t-001 — Transition paragraph: replete copula to syllogism
 
 Span:
 
@@ -843,7 +843,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: judgm-con-c-005-c1
+- c1. id: judgm-con-t-001-c1
   - subject: copula_replete_of_content
   - predicate: grounds
   - object: transition_to_syllogism
@@ -862,7 +862,7 @@ Relations: (Relation)
 - r1. type: transitions_to
   - targetEntryId: syllo-exi-idea-001
   - note: concrete boundary handoff into syllogism extraction.
-  - sourceClaimIds: [`judgm-con-c-005-c1`]
+  - sourceClaimIds: [`judgm-con-t-001-c1`]
   - sourceKeyPointIds: [`k3`]
   - targetClaimIds: [`syllo-exi-idea-001-c1`]
   - logicalOperator: sequential_transition

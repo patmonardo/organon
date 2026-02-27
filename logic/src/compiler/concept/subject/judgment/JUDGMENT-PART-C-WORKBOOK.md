@@ -51,7 +51,7 @@ Decision:
 - Keep this pass minimally decomposed while preserving explicit transitions.
 - Keep Part D handoff explicit but claim target pending until Part D extraction.
 
-### Entry judgm-nec-001 — Necessity setup: objective universality as genus/species ground
+### Entry judgm-nec-i-001 — Necessity setup: objective universality as genus/species ground
 
 Span:
 
@@ -71,7 +71,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: judgm-nec-001-c1
+- c1. id: judgm-nec-i-001-c1
   - subject: objective_universality
   - predicate: is_determined_as
   - object: concept_immanent_posited_necessity
@@ -81,7 +81,7 @@ Claims: (Claim)
     - [4-13] universality exists in-and-for-itself and is posited necessity of determinations.
     - [14-15] contrast: substance does not hold distinction as internal principle.
 
-- c2. id: judgm-nec-001-c2
+- c2. id: judgm-nec-i-001-c2
   - subject: universality_in_judgment_of_necessity
   - predicate: grounds
   - object: genus_species_determination
@@ -100,7 +100,7 @@ Relations: (Relation)
 - r1. type: presupposes
   - targetEntryId: judgm-ref-c-003
   - note: necessity setup presupposes Reflection's copular identity result.
-  - sourceClaimIds: [`judgm-nec-001-c1`]
+  - sourceClaimIds: [`judgm-nec-i-001-c1`]
   - sourceKeyPointIds: [`k1`, `k2`]
   - targetClaimIds: [`judgm-ref-c-003-c3`]
   - logicalOperator: presuppositional_link
@@ -109,7 +109,7 @@ Relations: (Relation)
 - r2. type: transitions_to
   - targetEntryId: judgm-nec-a-001
   - note: setup proceeds directly into the first categorical subtopic.
-  - sourceClaimIds: [`judgm-nec-001-c2`]
+  - sourceClaimIds: [`judgm-nec-i-001-c2`]
   - sourceKeyPointIds: [`k3`]
   - targetClaimIds: [`judgm-nec-a-001-c1`]
   - logicalOperator: sequential_transition
@@ -644,7 +644,7 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: judgm-con-001
+  - targetEntryId: judgm-con-i-001
   - note: direct Part D boundary handoff; claim target to be set during Part D extraction.
   - sourceClaimIds: [`judgm-nec-c-002-c3`]
   - sourceKeyPointIds: [`k3`]

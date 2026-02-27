@@ -49,9 +49,9 @@ Decision:
 - Remove marker-only entries for this pass and keep only substantive, evidence-bearing entries.
 - Keep the existing numbered ID pattern (`judgm-exi-<letter>-<nnn>`) so inbound/outbound cross-part links remain stable.
 - Keep claim decomposition minimal and evidence-anchored for first pass.
-- Preserve explicit transition into Reflection (`judgm-ref-001`).
+- Preserve explicit transition into Reflection (`judgm-ref-i-001`).
 
-### Entry judgm-exi-001 — Existence-judgment setup: immediacy, quality, inherence
+### Entry judgm-exi-i-001 — Existence-judgment setup: immediacy, quality, inherence
 
 Span:
 
@@ -71,7 +71,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: judgm-exi-001-c1
+- c1. id: judgm-exi-i-001-c1
   - subject: judgment_of_existence
   - predicate: begins_as
   - object: immediate_qualitative_judgment
@@ -80,7 +80,7 @@ Claims: (Claim)
   - evidence:
     - [14-20] first judgment is immediate and therefore judgment of immediate existence / qualitative.
 
-- c2. id: judgm-exi-001-c2
+- c2. id: judgm-exi-i-001-c2
   - subject: judgment_of_existence
   - predicate: is_determined_as
   - object: judgment_of_inherence
@@ -99,7 +99,7 @@ Relations: (Relation)
 - r1. type: transitions_to
   - targetEntryId: judgm-exi-a-001
   - note: setup proceeds directly into the first positive subtopic.
-  - sourceClaimIds: [`judgm-exi-001-c1`, `judgm-exi-001-c2`]
+  - sourceClaimIds: [`judgm-exi-i-001-c1`, `judgm-exi-i-001-c2`]
   - sourceKeyPointIds: [`k2`, `k3`]
   - targetClaimIds: [`judgm-exi-a-001-c1`]
   - logicalOperator: sequential_transition
@@ -718,11 +718,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: judgm-exi-c-004
+  - targetEntryId: judgm-exi-t-001
   - note: from collapse of judgment-form to explicit transition into reflection judgment.
   - sourceClaimIds: [`judgm-exi-c-003-c1`]
   - sourceKeyPointIds: [`k1`]
-  - targetClaimIds: [`judgm-exi-c-004-c1`]
+  - targetClaimIds: [`judgm-exi-t-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -731,7 +731,7 @@ Review outcome:
 - review_pending
 - notes: third infinite subtopic.
 
-### Entry judgm-exi-c-004 — Transition paragraph: existence judgment passes to reflection
+### Entry judgm-exi-t-001 — Transition paragraph: existence judgment passes to reflection
 
 Span:
 
@@ -751,7 +751,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: judgm-exi-c-004-c1
+- c1. id: judgm-exi-t-001-c1
   - subject: judgment_of_existence
   - predicate: has_sublated_itself
   - object: qualitative_extremes_in_copular_identity
@@ -760,7 +760,7 @@ Claims: (Claim)
   - evidence:
     - [785-791] existence judgment sublated; qualitative extremes sublated in identity.
 
-- c2. id: judgm-exi-c-004-c2
+- c2. id: judgm-exi-t-001-c2
   - subject: resulting_judgment_terms
   - predicate: are_determined_as
   - object: reflected_into_themselves_not_immediate
@@ -769,7 +769,7 @@ Claims: (Claim)
   - evidence:
     - [792-796] unity as concept tears into judgment with reflected terms.
 
-- c3. id: judgm-exi-c-004-c3
+- c3. id: judgm-exi-t-001-c3
   - subject: judgment_of_existence
   - predicate: passes_over_into
   - object: judgment_of_reflection
@@ -787,11 +787,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: judgm-ref-001
+  - targetEntryId: judgm-ref-i-001
   - note: concrete handoff into Part B Reflection setup entry.
-  - sourceClaimIds: [`judgm-exi-c-004-c3`]
+  - sourceClaimIds: [`judgm-exi-t-001-c3`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`judgm-ref-001-c1`]
+  - targetClaimIds: [`judgm-ref-i-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 

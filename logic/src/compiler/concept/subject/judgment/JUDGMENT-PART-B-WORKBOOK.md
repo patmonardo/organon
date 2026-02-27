@@ -52,7 +52,7 @@ Decision:
 - Keep all claims source-anchored and minimally decomposed for first pass.
 - Preserve transition readiness to Part C (`judgment of necessity`).
 
-### Entry judgm-ref-001 — Reflection-judgment setup: determinate content and relational universality
+### Entry judgm-ref-i-001 — Reflection-judgment setup: determinate content and relational universality
 
 Span:
 
@@ -73,7 +73,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: judgm-ref-001-c1
+- c1. id: judgm-ref-i-001-c1
   - subject: judgment_of_reflection
   - predicate: introduces
   - object: determinate_content_as_reflected_identity
@@ -83,7 +83,7 @@ Claims: (Claim)
     - [20-26] determinate content appears only here, as form determination reflected into identity.
     - [27-29] contrast: existence judgment has only immediate/abstract indeterminate content.
 
-- c2. id: judgm-ref-001-c2
+- c2. id: judgm-ref-i-001-c2
   - subject: universality_in_reflection_judgment
   - predicate: is_determined_as
   - object: relational_comprehensive_universality_still_linked_to_immediacy
@@ -93,7 +93,7 @@ Claims: (Claim)
     - [37-48] predicates express essentiality as relational determination; universality still connected to immediate basis.
     - [53-58] true universal is inner essence in appearance, not yet element existing in-and-for-itself.
 
-- c3. id: judgm-ref-001-c3
+- c3. id: judgm-ref-i-001-c3
   - subject: judgment_of_reflection
   - predicate: is_determined_as
   - object: judgment_of_subsumption
@@ -114,7 +114,7 @@ Relations: (Relation)
 - r1. type: transitions_to
   - targetEntryId: judgm-ref-a-001
   - note: moves from general architecture of reflection judgment to the first singular subtopic.
-  - sourceClaimIds: [`judgm-ref-001-c2`, `judgm-ref-001-c3`]
+  - sourceClaimIds: [`judgm-ref-i-001-c2`, `judgm-ref-i-001-c3`]
   - sourceKeyPointIds: [`k2`, `k4`]
   - targetClaimIds: [`judgm-ref-a-001-c1`]
   - logicalOperator: sequential_transition
@@ -793,11 +793,11 @@ Claim ↔ key point map:
 Relations: (Relation)
 
 - r1. type: transitions_to
-  - targetEntryId: judgm-ref-c-004
+  - targetEntryId: judgm-ref-t-001
   - note: genus/copular necessity consolidation culminates in the explicit transition paragraph.
   - sourceClaimIds: [`judgm-ref-c-003-c3`]
   - sourceKeyPointIds: [`k4`]
-  - targetClaimIds: [`judgm-ref-c-004-c1`]
+  - targetClaimIds: [`judgm-ref-t-001-c1`]
   - logicalOperator: sequential_transition
   - analysisMode: first_order_claim_projection
 
@@ -806,7 +806,7 @@ Review outcome:
 - review_pending
 - notes: merged former `c-004` and `c-005` into a single subtopic.
 
-### Entry judgm-ref-c-004 — Transition paragraph: basis of the judgment of necessity
+### Entry judgm-ref-t-001 — Transition paragraph: basis of the judgment of necessity
 
 Span:
 
@@ -826,7 +826,7 @@ Key points: (KeyPoint)
 
 Claims: (Claim)
 
-- c1. id: judgm-ref-c-004-c1
+- c1. id: judgm-ref-t-001-c1
   - subject: genus_relation
   - predicate: is_asserted_as
   - object: what_belongs_to_all_singulars_belongs_to_genus_by_nature
@@ -835,7 +835,7 @@ Claims: (Claim)
   - evidence:
     - [423-426] immediate consequence sentence establishing genus relation.
 
-- c2. id: judgm-ref-c-004-c2
+- c2. id: judgm-ref-t-001-c2
   - subject: subject_expression
   - predicate: is_reformulated_as
   - object: the_human_being_instead_of_all_humans
@@ -844,7 +844,7 @@ Claims: (Claim)
   - evidence:
     - [427-429] explicit reformulation of subject form.
 
-- c3. id: judgm-ref-c-004-c3
+- c3. id: judgm-ref-t-001-c3
   - subject: implicit_explicit_combination
   - predicate: constitutes
   - object: basis_of_judgment_of_necessity
@@ -864,7 +864,7 @@ Relations: (Relation)
 - r1. type: transitions_to
   - targetEntryId: judgm-nec-a-001
   - note: direct boundary handoff into Part C (necessity), to be linked concretely in Part C pass.
-  - sourceClaimIds: [`judgm-ref-c-004-c3`]
+  - sourceClaimIds: [`judgm-ref-t-001-c3`]
   - sourceKeyPointIds: [`k3`]
   - targetClaimIds: [`pending`]
   - logicalOperator: sequential_transition
