@@ -2,7 +2,7 @@
 
 Part: `REFLECTION/GROUND` (YS IV.7 - IV.11)
 Status: active
-Authority: TS source files (`ys_iv_07.ts` through `ys_iv_11.ts`)
+Authority: Varttika Source (`dharma-greater-varttika.tex`) and TS source files (`ys_iv_07.ts` through `ys_iv_11.ts`)
 
 ## Authority + format lock
 
@@ -13,133 +13,142 @@ Authority: TS source files (`ys_iv_07.ts` through `ys_iv_11.ts`)
 
 ---
 
-### Entry heg-iv-007 — From Essence to Ground
+### Entry heg-iv-007 — Absolute Ground (Form and Essence)
 
 Span:
 
-- sourceFile: `src/logos/ys/ys_iv_07.ts`
-- lineStart: 21
-- lineEnd: 27
+- sourceFile: `src/logos/ys-logic/dharma-greater-varttika.tex`
+- lineStart: 2074
+- lineEnd: 2100
 
 Summary:
-The uncolored karma mirrors Hegel's transition from Essence to Ground. The pure Ground is reflection into itself; when poorly integrated to the mediate standpoint, it splinters into qualitative polarities.
+The uncolored karma (YS IV.7) maps strictly to Hegel's Absolute Ground (Form and Essence). The pure Ground is essence determined through itself, yet determined as indeterminate or sublated positedness. In its negativity, it is identical with itself—this grounds the yogin's uncolored causal throughput. For the unintegrated standpoint, the determinateness of essence as ground splits twofold (ground and grounded), generating the triplex typology.
 
 Key points: (KeyPoint)
 
-- k1. Hegel maps the colorless state to the Ground standing transparent to itself without determinate opposition.
-- k2. The triplex model structurally represents mediated appearance (Essence reflecting outwards).
+- k1. Absolute Ground is essence in self-identical negativity, corresponding to the yogin's uncolored karmic transparency.
+- k2. The triplex model structurally represents the twofold determinateness of ground and grounded within Absolute Ground.
 
 Claims: (Claim)
 
 - c1. id: heg-iv-007-c1
   - subject: uncolored_karmic_ground
   - predicate: maps_to
-  - object: hegels_doctrine_of_ground
+  - object: hegels_absolute_ground
   - modality: asserted
-  - confidence: 0.94
+  - confidence: 0.98
   - evidence:
-    - [23-23] "Hegel (Essence → Ground): Ground as reflection into itself; for the unintegrated standpoint still mediated via determinate qualitative oppositions (white/black/compound)."
+    - [2077-2079] "A. ABSOLUTE GROUND -> a. Form and essence"
+    - [2096-2096] "It is essence that in its negativity is identical with itself."
 
-### Entry heg-iv-008 — Ground, Condition, and Appearance
+### Entry heg-iv-008 — Determinate Ground (Formal Ground)
 
 Span:
 
-- sourceFile: `src/logos/ys/ys_iv_08.ts`
-- lineStart: 37
-- lineEnd: 39
+- sourceFile: `src/logos/ys-logic/dharma-greater-varttika.tex`
+- lineStart: 2613
+- lineEnd: 2640
 
 Summary:
-The manifestation (ripening) of selection congruency is isomorphic with Hegel’s transition arc: Ground generates into Condition, which generates into Appearance.
+The congruent manifestation or ripening (_tad-vipāka-anuguṇānām_) corresponds to Hegel’s Determinate Ground (Formal ground). The ground establishes a determinate content acting as the substrate. Manifestation is strictly an internal mediation where the negative reference of form to itself mediates ground and grounded, ensuring selection is necessitated by form rather than external intervention.
 
 Key points: (KeyPoint)
 
-- k1. The transition guarantees necessity purely from internal selection rather than an external intervention.
+- k1. Congruency selection reflects formal mediation where the ground provides the identical substrate for manifestation.
+- k2. The transition guarantees necessity purely from internal formal selection (Determinate Ground).
 
 Claims: (Claim)
 
 - c1. id: heg-iv-008-c1
   - subject: vasana_manifestation_mechanism
   - predicate: instantiates
-  - object: ground_condition_appearance_schema
+  - object: determinate_formal_ground
   - modality: asserted
-  - confidence: 0.95
+  - confidence: 0.98
   - evidence:
-    - [37-37] "hegelBridge_GroundConditionAppearance: Ground → Condition (ripening) → Appearance selection schema"
+    - [2616-2618] "B. DETERMINATE GROUND -> a. Formal ground"
+    - [2628-2631] "this identity is the substrate or the content which thus constitutes the indifferent or positive unity of the ground-connection and... is the mediating factor."
 
-### Entry heg-iv-009 — Māyā Projector and Absolute Form
+### Entry heg-iv-009 — Condition (The Relatively Unconditioned)
 
 Span:
 
-- sourceFile: `src/logos/ys/ys_iv_09.ts`
-- lineStart: 433
-- lineEnd: 507
+- sourceFile: `src/logos/ys-logic/dharma-greater-varttika.tex`
+- lineStart: 3012
+- lineEnd: 3040
 
 Summary:
-Unbroken form-continuity maps Hegel's triad (Essence–Ground–Appearance) precisely as a formal theory of the Projection/Māyā law, where the Appearance field relies on structural identity-in-change rather than adjacent adjacency.
+The unbroken continuity (_ānantaryam_) despite spatiotemporal separation maps to Hegel's Condition (The relatively unconditioned). Ground functions as positing reflection that refers to an immediate existence through which it is mediated. This manifold immediate existence is the Condition. Form-invariance secures the linkage across the manifold array of existence without relying on spatiotemporal adjacency.
 
 Key points: (KeyPoint)
 
-- k1. Logic of projective selection functions as the objective filter (lens of Maya) to instantiate form without disrupting its signature.
-- k2. To know this reflexively cancels the delusion of requiring a distinct external producing agent.
+- k1. Continuity across separations represents the manifold existence of Conditions referred back to a Ground.
+- k2. Real ground is essentially conditioned by this immediate manifold, yet remains logically unconditioned relative to its form.
 
 Claims: (Claim)
 
 - c1. id: heg-iv-009-c1
-  - subject: hegel_essence_ground_appearance
-  - predicate: is_qualified_as
-  - object: formal_theory_of_projective_maya
+  - subject: unbroken_form_continuity
+  - predicate: correlates_with
+  - object: relatively_unconditioned_condition
   - modality: asserted
-  - confidence: 0.92
+  - confidence: 0.98
   - evidence:
-    - [446-446] "hegelLogicOfMaya: Essence→Ground→Appearance as complete theory of projection"
+    - [3015-3017] "C. CONDITION -> a. The relatively unconditioned"
+    - [3035-3037] "The immediate to which ground refers as to its essential presupposition is condition; real ground is accordingly essentially conditioned."
 
-### Entry heg-iv-010 — Transition to Dependent Facticity
+### Entry heg-iv-010 — Condition (The Absolutely Unconditioned)
 
 Span:
 
-- sourceFile: `src/logos/ys/ys_iv_10.ts`
-- lineStart: 35
-- lineEnd: 35
+- sourceFile: `src/logos/ys-logic/dharma-greater-varttika.tex`
+- lineStart: 3161
+- lineEnd: 3190
 
 Summary:
-Providing a temporal bypass (beginninglessness), the model enforces Hegel’s transition from causal genesis to absolute facticity and dependent structures found in Objective logic.
+The beginninglessness of latent impressions secured by the constancy of the aim (_āśiṣ nityatva_) maps to Hegel's Absolutely Unconditioned. The two relatively unconditioned sides (condition and ground) reflectively shine in one another; their ultimate foundation is the Absolute Unconditioned where condition constitutes the essentiality of ground. The temporal beginninglessness is the infinite logical return of essence.
 
 Key points: (KeyPoint)
 
-- k1. Abandoning first-cause arguments shifts the logical requirement to structural dependencies.
+- k1. The eternal desiderative vector is the absolutely unconditioned condition where essence grounds becoming.
+- k2. Shifting from temporal causation to absolute conditioning establishes structural dependencies rather than chronological origins.
 
 Claims: (Claim)
 
 - c1. id: heg-iv-010-c1
   - subject: assertion_of_beginninglessness
   - predicate: prepares
-  - object: structural_facticity_dependencies
+  - object: absolutely_unconditioned_ground
   - modality: asserted
-  - confidence: 0.96
+  - confidence: 0.98
+  - evidence:
+    - [3164-3164] "b. The absolutely unconditioned"
+    - [3178-3180] "and that of the in-itself, according to which it constitutes the essentiality of ground or its simple reflection into itself."
 
-### Entry heg-iv-011 — Asparśa as Condition Disablement
+### Entry heg-iv-011 — Procession of the Fact into Concrete Existence
 
 Span:
 
-- sourceFile: `src/logos/ys/ys_iv_11.ts`
-- lineStart: 44
-- lineEnd: 67
+- sourceFile: `src/logos/ys-logic/dharma-greater-varttika.tex`
+- lineStart: 3325
+- lineEnd: 3350
 
 Summary:
-The categorical absence rule tracks neatly against the logic of Conditions. If the Concept's manifestation requires specific conditions to bridge outward, the targeted invalidation of a condition causes immediate logical halt.
+The dependency-absence rule (_hetu-phala-āśraya-ālambana_) precisely translates Hegel's Procession of the Fact into Concrete Existence. The absolutely unconditioned Ground is identical with its conditions. These conditions encompass the whole content of the fact. If the conditioning presupposition is invalidated (as in _Asparśa_), the absolute Fact structure cannot emerge into concrete existence.
 
 Key points: (KeyPoint)
 
-- k1. Non-arising operates as an absolute rule of logical deduction for dependent objects.
-- k2. Kantian sensible intuitions contrast with Hegelian threefold intuition as tracking the contact parameters of Object support.
+- k1. Encompassed dependency is the totality of conditions required for the Procession of the Fact into Concrete Existence.
+- k2. The Absence law dictates that removing any required condition halts the fact's structural appearance.
 
 Claims: (Claim)
 
 - c1. id: heg-iv-011-c1
   - subject: dependency_absence_rule
   - predicate: correlates_with
-  - object: conditioned_logic_halt_rule
+  - object: procession_into_concrete_existence
   - modality: asserted
-  - confidence: 0.97
+  - confidence: 0.99
   - evidence:
-    - [44-44] "crosswalkHegel: Ground–Condition–Appearance schema of Objective Logic"
+    - [3328-3328] "c. Procession of the fact into concrete existence"
+    - [3349-3350] "For this reason the conditions are the whole content of the fact, because they are the unconditioned in the form of formless being."
