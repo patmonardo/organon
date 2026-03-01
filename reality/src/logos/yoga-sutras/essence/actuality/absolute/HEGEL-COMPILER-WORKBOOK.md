@@ -2,7 +2,7 @@
 
 Part: `ACTUALITY/ABSOLUTE` (YS IV.22 - IV.26)
 Status: active
-Authority: TS source files (`ys_iv_22.ts` through `ys_iv_26.ts`)
+Authority: Varttika Source (`dharma-greater-varttika.tex`) and TS source files (`ys_iv_22.ts` through `ys_iv_26.ts`)
 
 ## Authority + format lock
 
@@ -13,102 +13,114 @@ Authority: TS source files (`ys_iv_22.ts` through `ys_iv_26.ts`)
 
 ---
 
-### Entry heg-iv-022 — Actuality (_Wirklichkeit_)
+### Entry heg-iv-022 — The Exposition of the Absolute
 
 Span:
 
-- sourceFile: `src/logos/ys/ys_iv_22.ts`
-- lineStart: 44
-- lineEnd: 46
+- sourceFile: `src/logos/ys-logic/dharma-greater-varttika.tex`
+- lineStart: 6453
+- lineEnd: 6480
 
 Summary:
-The event of _sva-buddhi-saṁvedanam_ (the mind reflecting the object and knowing itself as reflecting) defines Hegelian Actuality (_Wirklichkeit_). It is not mere potential; it is Essence showing itself actively as the truth of Appearance in an accomplished, unified act.
+The mind taking on the form of the object under the non-transference of the Witness (_apratisaṅkrama_) maps to Hegel's "The Exposition of the Absolute." The Absolute is the absolute unity of the inner (essence) and outer (being). Its exposition cannot be an external determining reflection; rather, it is the Absolute's _own_ exposition—the mind's self-cognition (_sva-buddhi-saṁvedanam_) occurs precisely when the Absolute unifies the forms without surrendering its transcendental stance.
 
 Key points: (KeyPoint)
 
-- k1. Actuality in Hegel is the perfect, operative unity of inner essence and outer appearance.
-- k2. It requires the active assumption of form (_ākārāpatti_) while preserving the transcendent logic of the Essence (the non-transferring _Puruṣa_).
+- k1. The Absolute (Puruṣa) does not migrate into the forms (non-transference) but remains the absolute unity of inner and outer.
+- k2. Self-cognition is not the mind internally reflecting on itself, but the result of the Absolute's own exposition manifesting as the "taking-on-of-form."
 
 Claims: (Claim)
 
 - c1. id: heg-iv-022-c1
-  - subject: unity_of_seer_and_form_taking_mind
-  - predicate: instantiates
-  - object: hegelian_actuality_wirklichkeit
+  - subject: form_taking_under_non_transference
+  - predicate: implements
+  - object: absolute_self_exposition
   - modality: asserted
-  - confidence: 0.96
+  - confidence: 0.99
+  - evidence:
+    - [6456-6456] "A. THE EXPOSITION OF THE ABSOLUTE"
+    - [6449-6451] "...but is rather the exposition of the absolute, more precisely the absolute's own exposition, and only a displaying of what it is."
 
-### Entry heg-iv-024 — Being-For-Another
+### Entry heg-iv-023 — The Absolute Attribute
 
 Span:
 
-- sourceFile: `src/logos/ys/ys_iv_24.ts`
-- lineStart: 42
-- lineEnd: 44
+- sourceFile: `src/logos/ys-logic/dharma-greater-varttika.tex`
+- lineStart: 6638
+- lineEnd: 6670
 
 Summary:
-The mind's condition as _parārtham_ ("for another") translates directly to Hegel's _Für-Anderes_ (Being-for-another). The mind, as a composite, is not an end-in-itself; it exists as a subordinate moment within the scaffolding of Actuality, geared toward the ultimate Subject.
+When the mind is colored by both the seer and the seen (_draṣṭṛ-dṛśya-uparaktam_), it comprehends everything (_sarva-artham_). This aligns with Hegel's "The Absolute Attribute." The Attribute is the "relative absolute"—the whole content of the Absolute expressed in a specific form-determination. The mind, bearing both the subjective and objective poles simultaneously, acts as this totalizing Attribute embracing both worlds.
 
 Key points: (KeyPoint)
 
-- k1. Objects and composite systems are thoroughly relational; they have their being in their reference to an Other.
-- k2. The mind must recognize its own Being-for-Another to avoid the delusion that it is the Absolute _In-and-For-Itself_.
+- k1. The mind colored by both Seer and Seen is the absolute totality in the form of an Attribute.
+- k2. The Attribute contains the whole content of the Absolute, reconciling the phenomenal world and the world-in-itself into a single expression.
+
+Claims: (Claim)
+
+- c1. id: heg-iv-023-c1
+  - subject: doubly_colored_mind_sarvartham
+  - predicate: corresponds_to
+  - object: absolute_attribute_totality
+  - modality: asserted
+  - confidence: 0.98
+  - evidence:
+    - [6641-6641] "B. THE ABSOLUTE ATTRIBUTE"
+    - [6656-6657] "But because form is at the same time as the form of the absolute, the attribute is the whole content of the absolute"
+
+### Entry heg-iv-024 — The Mode of the Absolute
+
+Span:
+
+- sourceFile: `src/logos/ys-logic/dharma-greater-varttika.tex`
+- lineStart: 6738
+- lineEnd: 6770
+
+Summary:
+The mind as a composite aggregate functioning "for another" (_parārtham_) maps to "The Mode of the Absolute." The Mode is the Absolute's self-externality—its reflection into the changing manifold of forms (the karmic _vāsanās_). Yet, this externality is strictly posited as a "mere way and manner" serving the Absolute, confirming its teleological, non-independent status.
+
+Key points: (KeyPoint)
+
+- k1. The composite mind is the Absolute expressing itself in the mode of external contingency and changeability.
+- k2. "For another" (_parārtham_) means the Mode has no internal self-subsistence; it is simply the "manner" in which the Absolute reflects form into itself.
 
 Claims: (Claim)
 
 - c1. id: heg-iv-024-c1
-  - subject: instrument_status_of_mind_parartham
-  - predicate: explicitly_maps_to
-  - object: being_for_another_fur_anderes
+  - subject: composite_mind_parartham
+  - predicate: correlates_with
+  - object: mode_of_the_absolute_self_externality
   - modality: asserted
   - confidence: 0.98
+  - evidence:
+    - [6741-6741] "C. THE MODE OF THE ABSOLUTE"
+    - [6765-6767] "But the mode, the externality of the absolute... is rather externality posited as externality, a mere way and manner"
 
-### Entry heg-iv-025 — Sublating the For-Itself
+### Entry heg-iv-025 — Contingency and Formal Actuality
 
 Span:
 
-- sourceFile: `src/logos/ys/ys_iv_25.ts`
-- lineStart: 33
-- lineEnd: 35
+- sourceFile: `src/logos/ys-logic/dharma-greater-varttika.tex`
+- lineStart: 6961
+- lineEnd: 6980
 
 Summary:
-The cessation of _ātma-bhāva_ (the cultivation of self-being) represents the dialectical sublation (Aufhebung) of the ego's false "For-Itself" (Für-sich-sein). The empirical mind stops pretending to be the Absolute Subject and aligns itself with the true Universal.
+The cessation of selfing (_ātma-bhāva-bhāvanā-vinivṛtti_) initiates the Hegelian sphere of Actuality proper: "Contingency or Formal Actuality, Possibility, and Necessity." The Yoga Sutras stack 4.25, 4.26, 4.27, and 4.28 closely here. At 4.25, the illusion of "I" as an absolute substance collapses into mere Formal Actuality. The discriminative seer realizes that the mind's operations are merely contingent forms, exposing the true, underlying necessity of the Absolute.
 
 Key points: (KeyPoint)
 
-- k1. Subjective Idealism fails because it treats the finite mind as _For-Itself_, an independent sovereign entity.
-- k2. True discriminative vision (_viśeṣa-darśana_) shatters this; the mind's isolated ego is cancelled, but its functional transparency is preserved (sublated) within the Absolute machinery.
+- k1. The cessation of "self-being" is the recognition that empirical existence is merely Formal Actuality (contingent), not absolute.
+- k2. The mind's operations, once appropriated as "Self", are now recognized as mere formal possibilities yielding to real necessity.
 
 Claims: (Claim)
 
 - c1. id: heg-iv-025-c1
-  - subject: cessation_of_ego_cultivation
-  - predicate: performs_the_hegelian_operation_of
-  - object: sublating_the_false_for_itself
+  - subject: cessation_of_selfing_vinivrtti
+  - predicate: initiates_the_sphere_of
+  - object: formal_actuality_and_contingency
   - modality: asserted
-  - confidence: 0.95
-
-### Entry heg-iv-026 — The Tilt Toward Freedom
-
-Span:
-
-- sourceFile: `src/logos/ys/ys_iv_26.ts`
-- lineStart: 28
-- lineEnd: 30
-
-Summary:
-The gravity of the mind tilting toward _kaivalya_ (_kaivalya-prāg-bhāram_) represents the pivotal transition from the Doctrine of Essence (Actuality) into the domain of the Concept (Absolute Form/Freedom).
-
-Key points: (KeyPoint)
-
-- k1. Having mastered necessity and relation in Actuality, the logical vector points inevitably toward absolute Freedom.
-- k2. _Kaivalya_ represents the unconditioned, self-determining state of the Idea, free from compulsory external relations.
-
-Claims: (Claim)
-
-- c1. id: heg-iv-026-c1
-  - subject: gravitational_shift_toward_kaivalya
-  - predicate: structurally_anticipates
-  - object: transition_to_the_realm_of_freedom
-  - modality: asserted
-  - confidence: 0.94
+  - confidence: 0.96
+  - evidence:
+    - [6973-6973] "A. CONTINGENCY OR FORMAL ACTUALITY, POSSIBILITY, AND NECESSITY"
+    - [6949-6953] "...because in contingency the actual as well as the possible are a positedness... real actuality now arises"

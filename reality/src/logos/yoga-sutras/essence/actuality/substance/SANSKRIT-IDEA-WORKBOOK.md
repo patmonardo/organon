@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Establishing the baseline Sanskrit philology and systemic philosophical analysis of Yoga Sūtra IV.34, the final aphorism of the entire text. This sūtra defines _Kaivalya_—the absolute closure of the system—from two distinct but inherently unified perspectives: the physical involution of the _guṇas_ and the metaphysical abiding of the Seer.
+Establishing the baseline Sanskrit philology and systemic philosophical analysis of Yoga Sūtra IV.34, the final aphorism of the entire text. This sūtra defines _Kaivalya_—the absolute closure of the system—from two distinct but inherently unified perspectives: the physical involution of the _guṇas_ and the metaphysical abiding of the Seer. Furthermore, it incorporates a _Vārtika_ (expansive commentary) integrating the Fichte/Hegel synthetic logic into the traditional reading, demonstrating how the system resolves in Substantiality and Absolute Identity.
 
 ---
 
@@ -16,7 +16,7 @@ Establishing the baseline Sanskrit philology and systemic philosophical analysis
 **Transliteration:**
 puruṣārtha-śūnyānāṁ guṇānāṁ pratiprasavaḥ kaivalyaṁ svarūpa-pratiṣṭhā vā citi-śaktir iti || 4.34 ||
 
-**Original Translation:**
+**Translation:**
 _Kaivalya_ is the return/counter-flow of the _guṇas_ to their source (_pratiprasavaḥ_) when they are utterly devoid of purpose for the _Puruṣa_ (_puruṣārtha-śūnyānāṁ_); or (_vā_), it is the power of pure consciousness (_citi-śaktir_) established entirely in its own nature (_svarūpa-pratiṣṭhā_). Thus it is so (_iti_).
 
 ### II. Systemic Analysis: The Symmetrical Exhaustion
@@ -36,3 +36,9 @@ Throughout the text, normal human suffering was defined as the Seer falsely iden
 This is _Kaivalya_. It is not a heaven one travels to; it is the absolute subtraction of all false identification, leaving only the bedrock of the Seer, illuminating itself.
 
 _Iti_ — Thus it is finished.
+
+### III. Vārtika: The Idealist Synthesis
+
+In his final lecture, Fichte turns and asks the ultimate question: If the Absolute is unconditional, why did it ever descend into multiplicity? His answer is identical to Patañjali's: the only ground for empirical existence is the absolute teleological purpose (_puruṣārtha_) that _Absolute Knowing should be_. The universe exists solely to evolve a consciousness capable of recognizing the Absolute. Once achieved, the "science of knowing" in specie is revealed to be a purely instrumental ladder. He states, "Whoever has arrived no longer worries about the ladder." The scaffolding collapses (_pratiprasavaḥ_). The separation between the path and destination is annihilated, resulting in _Absolute Identity_ (_svarūpa-pratiṣṭhā_). We _are_ this One Pure Knowing.
+
+Hegel formally closes his Doctrine of Essence with this exact geometry under the _Relation of Substantiality_. The _Puruṣa_ is Substance: the final unity of essence and being, completely reflected into itself as a subsisting that exists in and for itself. The _guṇas_ return to latency because they are recognized as mere "accidents" against the absolute shining totality of Substance. Their teleological purpose exhausted, they vanish. _Kaivalya_ is the absolute relation of Substantiality. The restless dialectic of Appearance is over; the Subject knows itself as Subject, resting in the unbroken Light.

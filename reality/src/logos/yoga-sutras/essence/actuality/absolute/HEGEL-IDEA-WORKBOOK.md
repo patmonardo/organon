@@ -2,64 +2,64 @@
 
 ## Purpose
 
-Mapping the realization of Unity-in-Act, teleological necessity, ego-sublation, and the transition into Absolute Freedom in Yoga Sūtras IV.22 through IV.26 to Hegel's Doctrine of Essence, focusing on the categories of Actuality (_Wirklichkeit_), Being-For-Another, and the Concept.
+To provide an expansive transcendental demonstration (a _Varttika_) of the unity of Actuality, teleological necessity, ego-sublation, and the transition into Absolute Freedom established by Fichte in the Sūtras IV.22 through IV.26 IDEA workbook. We map the one-sided order, the instrumental nature of mind, the categorical turn, and the final compass vector onto Hegel's Exposition of the Absolute, the Absolute Attribute, the Mode of the Absolute, and the transition into Formal Actuality.
 
 ---
 
-## Sūtra IV.22: Actuality (_Wirklichkeit_)
+## Sūtra IV.22: The Exposition of the Absolute
 
-### I. Conceptual Alignment
+### I. The Fichtean Principle (The _Bhasya_)
 
-- **Apratisaṅkrama + Ākārāpatti $\leftrightarrow$ Inner Essence + Outer Appearance**: The non-transferring truth meets the formal assumption of shape.
-- **Sva-Buddhi-Saṁvedanam $\leftrightarrow$ Actuality (_Wirklichkeit_)**: The accomplished, operative unity of inner and outer, where Essence shows itself as the active Truth of Appearance.
+Fichte determines that the order from the Absolute downward is strictly one-sided; the Light never becomes the object. Yet they unite in the act without merging substances (Unity-in-Act / Actuality / Self-cognition).
 
-### II. Philosophical Essay: The Accomplished Deed
+### II. The Hegelian Demonstration (The _Varttika_)
 
-For Hegel, "Actuality" (_Wirklichkeit_) is not a synonym for "reality." A rock is real, but it is not Actual. Actuality is the dialectical apex of the Doctrine of Essence. It occurs when the hidden inner Essence and the external, fleeting Appearance perfectly fuse into a single, accomplished act. It is the Concept practically operating in the world.
+#### Actuality (_Wirklichkeit_)
 
-Patañjali describes precise Hegelian Actuality in IV.22. The _Puruṣa_ (Essence) remains absolutely non-transferring (_apratisaṅkrama_), refusing to lose its transcendent identity. Simultaneously, the mind embraces its role in Appearance, physically taking on the form of the object (_tad-ākārāpattau_). "Self-cognition" is the flash of Actuality—the exact moment the inner Light and the outer Form operate as a unified system without collapsing their distinct roles.
+In Hegel's Logic, "Actuality" (_Wirklichkeit_) is the dialectical apex of the Doctrine of Essence. It occurs when the hidden inner Essence and the external Appearance perfectly fuse into a single, accomplished act. It is the Concept practically operating in the world. However, the Absolute must not lose itself in this externalization.
 
----
+Patañjali describes this precise Hegelian Actuality in IV.22. The mind taking on the form of the object under the non-transference of the Witness (_apratisaṅkrama_) maps to Hegel's "The Exposition of the Absolute." The Absolute's exposition cannot be an external determining reflection; rather, it is the Absolute's _own_ exposition. The mind's self-cognition (_sva-buddhi-saṁvedanam_) occurs precisely when the Absolute unifies the forms without surrendering its transcendental stance.
 
-## Sūtra IV.24: Being-For-Another (_Für-Anderes_)
+#### The Absolute Attribute
 
-### I. Conceptual Alignment
-
-- **Parārtham (For another) $\leftrightarrow$ Being-for-Another (_Für-Anderes_)**: The mind's existence is ontologically subordinate and relational, defined by its service to the Absolute Subject.
-- **Saṁhatya-kāritvāt (Because it is aggregate) $\leftrightarrow$ Contingent Mechanism**: Composite objects belong to the realm of necessity and mechanism; they cannot be the Self-Determining Concept.
-
-### II. Philosophical Essay: The Mechanism of the Mind
-
-In the Logic, before a system achieves Absolute Freedom (the Concept _In-and-For-Itself_), it passes through phases of Necessity and Mechanism. Objects in these phases derive their meaning relationally—they exist "For Another." They are gears in a larger machine.
-
-Patañjali looks at the vast complexity of the human mind (_citram_), filled with infinite karmic programming (_vāsanās_), and applies Hegelian logic to it. Because the mind operates as an aggregate mechanism (_saṁhatya-kāritvāt_), it simply cannot be the Absolute Subject. The mind is ontologically _parārtham_—it exists purely "For Another." Patañjali aggressively demotes human psychology from the throne of the universe to the status of a sophisticated optical instrument serving the Notion.
+Furthermore, the mind colored by both the Seer and the Seen (_draṣṭṛ-dṛśya-uparaktam_, IV.23) acts as "The Absolute Attribute." The Attribute is the "relative absolute"—the whole content of the Absolute expressed in a specific form-determination, reconciling the phenomenal world and the world-in-itself into a single expression that comprehends everything (_sarva-artham_).
 
 ---
 
-## Sūtra IV.25: Sublating the "For-Itself"
+## Sūtra IV.24: The Mode of the Absolute
 
-### I. Conceptual Alignment
+### I. The Fichtean Principle (The _Bhasya_)
 
-- **Ātma-bhāva (Cultivation of self-being) $\leftrightarrow$ The False _Für-sich-sein_**: The ego's illegitimate claim to be an absolute, independent sovereign.
-- **Vinivṛtti (Cessation/Withdrawal) $\leftrightarrow$ Sublation (_Aufhebung_)**: The false ego is dialectically cancelled, but the functional mind is preserved and elevated into alignment with the Truth.
+Fichte defines empirical knowing as merely an aggregate, operating functionally as a connection between conditions (the hypothetical "Should"). It is not the Absolute end itself; it is an instrument "for another."
 
-### II. Philosophical Essay: The Dialectic of the Ego
+### II. The Hegelian Demonstration (The _Varttika_)
 
-Subjective Idealism and naive egoism share the exact same flaw: they assume the finite human mind is "For-Itself" (_Für-sich-sein_)—an independent, self-grounding monarch. Hegel’s entire logical project is designed to destroy this illusion and compel the finite subject to recognize its subordinate place within the Universal.
+#### Being-For-Another (_Für-Anderes_)
 
-Patañjali enacts this dialectical destruction in IV.25. When discriminative vision (_viśeṣa-darśana_) proves that the mind is merely a composite machine acting "for another" (IV.24), the ego's false paradigm shatters. The cultivation of the false self (_ātma-bhāva-bhāvanā_) categorically ceases (_vinivṛtti_). This is Hegelian _Aufhebung_ (sublation) at its finest. The mind is not destroyed; rather, its rebellious illusion of independence is cancelled, and its true instrumental function is preserved and elevated into the service of the Absolute.
+Before a system achieves Absolute Freedom, it passes through phases of Necessity and Mechanism. Objects in these phases derive their meaning relationally—they exist "For Another."
+
+Patañjali evaluates the vast complexity of the human mind (_citram_), filled with infinite karmic programming (_vāsanās_), and applies this exact Hegelian logic. Because the mind operates as an aggregate mechanism (_saṁhatya-kāritvāt_), it cannot be the Absolute Subject. The mind is ontologically _parārtham_—it exists purely "For Another."
+
+In Hegel's terminology, this is "The Mode of the Absolute." The Mode is the Absolute's self-externality—its reflection into the changing manifold of forms. This externality is strictly posited as a "mere way and manner" serving the Absolute, confirming its teleological, non-independent status.
 
 ---
 
-## Sūtra IV.26: The Transition to Absolute Freedom
+## Sūtra IV.25 & IV.26: Contingency and Formal Actuality
 
-### I. Conceptual Alignment
+### I. The Fichtean Principle (The _Bhasya_)
 
-- **Kaivalya-prāg-bhāram (Weight toward isolation) $\leftrightarrow$ Transition to the Concept**: Moving from the compulsory relations of Actuality into the self-determining realm of the Absolute Idea.
-- **Viveka-nimnam (Inclined to discrimination) $\leftrightarrow$ The Necessity of Freedom**: The realization that freedom is not arbitrary choice, but the necessary, gravitational culmination of logical truth.
+Fichte terminates the regress when immediate facticity is recognized as absolute genesis. The false ego drops, the Cartesian hypotheticalness ceases, and the entire system is locked onto the fixed compass vector of Liberation.
 
-### II. Philosophical Essay: The Gravity of the Concept
+### II. The Hegelian Demonstration (The _Varttika_)
 
-The transition from Hegel's Doctrine of Essence into the Doctrine of the Concept is the transition from external Necessity to absolute Freedom. Once Actuality recognizes itself, the tension of external relation dissolves, and logic tilts downhill into self-determining Freedom.
+#### Sublating the False "For-Itself"
 
-Patañjali maps this exact transition in IV.26. The mind that has sublated its false ego (IV.25) suddenly experiences a massive shift in logical gravity. It is now _viveka-nimnam_—sloping downhill toward truth rather than fighting uphill against ignorance. It bears the heavy forward-weight (_prāg-bhāram_) toward _kaivalya_—the Absolute Freedom and Isolation of the Seer. The work of Essence is complete; the system is now irreversibly locked into its final gravitational descent toward the Absolute Idea.
+Subjective Idealism claims the finite human mind is "For-Itself" (_Für-sich-sein_)—an independent monarch. Hegel’s project destroys this illusion. Patañjali enacts this destruction in IV.25. The cessation of selfing (_ātma-bhāva-bhāvanā-vinivṛtti_) initiates the Hegelian sphere of "Contingency or Formal Actuality."
+
+The discriminative seer (_viśeṣa-darśana_) realizes that the mind's operations, previously appropriated as "Self," are merely contingent forms (Formal Actuality). The ego's false paradigm shatters, exposing the true, underlying necessity of the Absolute. This is Hegelian _Aufhebung_ (sublation): the mind's rebellious illusion of independence is cancelled, and its true instrumental function is preserved and elevated into alignment with Truth.
+
+#### The Gravity of the Concept
+
+The transition from Hegel's Doctrine of Essence into the Doctrine of the Concept is the tilt from external Necessity into absolute Freedom.
+
+Patañjali maps this exact transition in IV.26. The sublated mind experiences a massive shift in logical gravity. It slopes downhill toward truth (_viveka-nimnam_) rather than fighting uphill. It bears the heavy forward-weight (_prāg-bhāram_) toward Absolute Freedom (_kaivalya_). The work of Essence is complete; the system is now irreversibly locked into its final gravitational descent toward the Absolute Idea.

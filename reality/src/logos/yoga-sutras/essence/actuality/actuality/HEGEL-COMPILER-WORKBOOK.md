@@ -1,8 +1,8 @@
 # HEGEL COMPILER Workbook (TopicMap Format)
 
-Part: `ACTUALITY/ACTUALITY` (YS IV.27 - IV.33)
+Part: `ACTUALITY/ACTUALITY` (YS IV.26 - IV.28)
 Status: active
-Authority: TS source files (`ys_iv_27.ts` through `ys_iv_33.ts`)
+Authority: Varttika Source (`dharma-greater-varttika.tex`) and TS source files (`ys_iv_26.ts` through `ys_iv_28.ts`)
 
 ## Authority + format lock
 
@@ -13,128 +13,89 @@ Authority: TS source files (`ys_iv_27.ts` through `ys_iv_33.ts`)
 
 ---
 
-### Entry heg-iv-027 — Actuality with Remainders
+### Entry heg-iv-026 — Formal Actuality and Contingency
 
 Span:
 
-- sourceFile: `src/logos/ys/ys_iv_27.ts`
-- lineStart: 44
-- lineEnd: 45
+- sourceFile: `src/logos/ys-logic/dharma-greater-varttika.tex`
+- lineStart: 6964
+- lineEnd: 6980
 
 Summary:
-The intrusions arising in the gaps (_chidreṣu_) map to Hegel's observation that Actuality (_Wirklichkeit_) is not instantly purified of all contingency.
+The gravitational shift of the mind toward _kaivalya_ (_viveka-nimnam kaivalya-prāg-bhāram cittam_) tracks Hegel's entry into "Contingency or Formal Actuality, Possibility, and Necessity." At this stage, the mind no longer attributes independent substance to its operations (from the realization of IV.25). Instead, the mind's operations are now grasped merely as Formal Actuality—contingent, immediate existence stripped of its false internal necessity.
 
 Key points: (KeyPoint)
 
-- k1. As the Concept emerges from Actuality toward Absolute Freedom, it still must sublate the stubborn remainders of external necessity and habit (the _saṁskāras_).
-- k2. These intrusions are contingent accidents, not structural defeats of the core logic.
+- k1. Hegel defines Formal Actuality as immediate, unreflected actuality that lacks the totality of true absolute form.
+- k2. The mind sliding toward _kaivalya_ is exactly this demotion of phenomenal experience to mere Formal Actuality. The world still exists, but simply as an empty receptacle of contingency, devoid of the power to trap the Puruṣa.
+- k3. What was once taken as a heavy, compelling law of nature is now seen as mere contingent possibility.
+
+Claims: (Claim)
+
+- c1. id: heg-iv-026-c1
+  - subject: kaivalya_gravitational_shift
+  - predicate: maps_to_hegels
+  - object: formal_actuality_and_contingency
+  - modality: asserted
+  - confidence: 0.98
+  - evidence:
+    - [6973-6973] "A. CONTINGENCY OR FORMAL ACTUALITY, POSSIBILITY, AND NECESSITY"
+    - [6975-6976] "Actuality is formal inasmuch as, as a first actuality, it is only immediate, unreflected actuality"
+
+### Entry heg-iv-027 — The Contingent Intrusion
+
+Span:
+
+- sourceFile: `src/logos/ys-logic/dharma-greater-varttika.tex`
+- lineStart: 7010
+- lineEnd: 7050
+
+Summary:
+The temporary arising of non-discriminative cognitions in the gaps of realization (_tad-chidreṣu pratyayāntarāṇi_) maps perfectly to the Hegelian problem of "limitless manifoldness" and "Contingency." Even when the mind is oriented toward liberation, the sheer mechanical receptacle of possibility allows old, ungrounded contingencies (the _saṁskāras_) to surface momentarily.
+
+Key points: (KeyPoint)
+
+- k1. Hegel notes that within Formal Possibility, everything is possible that does not contradict itself; the realm is "limitless manifoldness."
+- k2. The _pratyayāntarāṇi_ (other cognitions) are precisely these formal possibilities erupting out of the manifoldness of the karmic substrate.
+- k3. They are purely contingent intrusions—they operate as "absolute restlessness" but lack any true ground or absolute necessity.
 
 Claims: (Claim)
 
 - c1. id: heg-iv-027-c1
-  - subject: pratyaya_intrusions_in_the_gaps
-  - predicate: map_to
-  - object: hegelian_contingent_remainders_within_actuality
-  - modality: asserted
-  - confidence: 0.95
-
-### Entry heg-iv-029 — The Algebraic Discriminator vs Concept Modality
-
-Span:
-
-- sourceFile: `src/logos/ys/ys_iv_29.ts`
-- lineStart: 50
-- lineEnd: 561
-
-Summary:
-_Dharma-megha_ (the Cloud of Dharmas) acts as the ultimate Hegelian "Absolute Relation" operating at the level of the Idea/Reason, distinct from the mediated categories of the Understanding.
-
-Key points: (KeyPoint)
-
-- k1. Hegel (and Fichte) critiques Kant for over-dividing the system: putting Modality in the Concept and Relation in the Understanding.
-- k2. _Dharma-megha_ proves that "Absolute Relation" and "Absolute Modality" belong to the highest peak—the Idea in act.
-- k3. The "Cloud of Dharmas" is the algebraic discriminator that definitively separates the logical necessity of the Universal from the contingent noise of the particular.
-
-Claims: (Claim)
-
-- c1. id: heg-iv-029-c1
-  - subject: dharma_megha_samadhi
-  - predicate: operates_as
-  - object: absolute_relation_at_the_level_of_the_idea
-  - modality: asserted
-  - confidence: 0.97
-
-### Entry heg-iv-031 — Meaning Over Substance
-
-Span:
-
-- sourceFile: `src/logos/ys/ys_iv_31.ts`
-- lineStart: 23
-- lineEnd: 26
-
-Summary:
-The infinity of unobstructed knowledge (_jñānasyānantyāt_) tracks Hegel's transition from the Doctrine of Essence (Substance) into the Doctrine of the Concept (Meaning/Self-determination).
-
-Key points: (KeyPoint)
-
-- k1. The mind is no longer fixated on the "substance" of objects (_jñeyam alpam_).
-- k2. It transitions entirely into "Meaning" (_arthamātra_). For Hegel, the Concept is the Truth of Substance. The heavy, opaque materiality of objects dissolves into the infinite clarity of the self-knowing Concept.
-
-Claims: (Claim)
-
-- c1. id: heg-iv-031-c1
-  - subject: dissolution_of_finite_knowables
-  - predicate: represents
-  - object: transition_from_substance_to_meaning_concept
-  - modality: asserted
-  - confidence: 0.96
-
-### Entry heg-iv-032 — Completed Relative Necessity
-
-Span:
-
-- sourceFile: `src/logos/ys/ys_iv_32.ts`
-- lineStart: 18
-- lineEnd: 23
-
-Summary:
-The cessation of the _guṇa_ sequence (_samāptiḥ guṇānām_) is the end of "Relative Necessity."
-
-Key points: (KeyPoint)
-
-- k1. In Hegel's Doctrine of Essence, objects are bound by external, relative necessity (cause and effect, action and reaction).
-- k2. When the purpose is fulfilled, this external compulsion vanishes. The logical scaffolding drops away, preparing the leap into Absolute Necessity/Freedom.
-
-Claims: (Claim)
-
-- c1. id: heg-iv-032-c1
-  - subject: cessation_of_guna_transformations
-  - predicate: maps_to
-  - object: termination_of_hegelian_relative_necessity
+  - subject: pratyaya_intrusions_in_gaps
+  - predicate: instantiate
+  - object: contingent_manifoldness_of_formal_possibility
   - modality: asserted
   - confidence: 0.99
+  - evidence:
+    - [7010-7011] "As such it is the relationless, indeterminate receptacle of everything in general."
+    - [7015-7016] "...the realm of possibility is therefore limitless manifoldness."
 
-### Entry heg-iv-033 — Absolute Necessity (The Law of Lawfulness)
+### Entry heg-iv-028 — Sublating the Receptacle of Contingency
 
 Span:
 
-- sourceFile: `src/logos/ys/ys_iv_33.ts`
-- lineStart: 19
-- lineEnd: 26
+- sourceFile: `src/logos/ys-logic/dharma-greater-varttika.tex`
+- lineStart: 7120
+- lineEnd: 7190
 
 Summary:
-Grasping the sequence at its terminal limit (_aparānta_) locks in "Absolute Necessity."
+The directive to destroy these intrusions just like the original _kleśas_ (_hānam eṣāṁ kleśavad uktam_) aligns with Hegel's logic of sublating Contingency into Real Actuality and Absolute Necessity. Because the contingent (the gap-intrusion) is simply immediate actuality that has reverted into mere possibility, it must be logically negated. The old method of negation handles it perfectly.
 
 Key points: (KeyPoint)
 
-- k1. Absolute Necessity is not determined by an outside force; it is the "Law of lawfulness itself."
-- k2. It is the Hegelian Absolute Idea, where the end of the process loops back to completely justify the beginning. The sequence can only be truly "grasped" once the Concept has fully externalized and returned to itself, sealing the circle.
+- k1. Contingency is the "absolute restlessness" of actuality immediately turning into its opposite (possibility).
+- k2. The _kleśa_ method is the established logical operation of negating a false, groundless positedness.
+- k3. By applying the _kleśa_ method to the gap-intrusions, the practitioner drives the dialectic out of this restless contingency and forces the transition toward true Necessity (the _dharma-megha_).
 
 Claims: (Claim)
 
-- c1. id: heg-iv-033-c1
-  - subject: grasping_sequence_at_the_terminal_limit
-  - predicate: instantiates
-  - object: hegelian_absolute_necessity_as_the_completed_idea
+- c1. id: heg-iv-028-c1
+  - subject: application_of_klesa_method_to_intrusions
+  - predicate: functions_as
+  - object: logical_sublation_of_absolute_restlessness_contingency
   - modality: asserted
   - confidence: 0.98
+  - evidence:
+    - [7181-7182] "This absolute restlessness of the becoming of these two determinations is contingency."
+    - [7186-7188] "and this identity of the two, of each in the other, is necessity."

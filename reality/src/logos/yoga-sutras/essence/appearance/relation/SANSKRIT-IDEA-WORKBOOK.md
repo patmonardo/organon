@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Establishing the baseline Sanskrit philology and systemic philosophical analysis of Yoga Sūtras IV.19 through IV.21. This sequence formally defines the boundaries of the Essential Relation by proving the empirical mind (_citta_) is strictly an object, not the Light itself, structurally forbidding recursive regression and inter-mental transparency.
+Establishing the baseline Sanskrit philology and systemic philosophical analysis of Yoga Sūtras IV.19 through IV.21. This sequence formally defines the boundaries of the Essential Relation by proving the empirical mind (_citta_) is strictly an object, not the Light itself, structurally forbidding recursive regression and inter-mental transparency. Furthermore, it incorporates a _Vārtika_ (expansive commentary) integrating the Fichte/Hegel synthetic logic into the traditional reading.
 
 ---
 
@@ -16,7 +16,7 @@ Establishing the baseline Sanskrit philology and systemic philosophical analysis
 **Transliteration:**
 na tat sva-ābhāsam dṛśyatvāt || 4.19 ||
 
-**Original Translation:**
+**Translation:**
 It (the _citta_) is absolutely not self-luminous (_na tat sva-ābhāsam_), because it is something that is seen (_dṛśyatvāt_).
 
 ### II. Systemic Analysis: The Seer/Seen Divide
@@ -26,6 +26,10 @@ The preceding sutra (IV.18) established the _Puruṣa_ as the ultimate, invarian
 Patañjali uses the term _sva-ābhāsam_ (self-illuminating). The naive ego assumes that its own consciousness is the ultimate source of light in the universe. Patañjali destroys this illusion through structural logic (_dṛśyatvāt_). If you can observe your own mind operating—if you can say "I am thinking about a dog"—then the machinery generating the thought of the "dog" is an object of observation. It cannot be the ultimate Subject.
 
 The _citta_ borrows light. It is composed of _sattva_ (transparency/reflection), allowing it to catch the light of the _Puruṣa_ and project an image, much like a movie screen reflects a projector. But a screen does not generate its own photons. Confusing the reflective screen (_citta_) for the bulb (_Puruṣa_) is the primal metaphysical error.
+
+### III. Vārtika: The Idealist Synthesis
+
+By proving the mind is an object, Patañjali formalizes Fichte's choice of principle: philosophy must be grounded in immediate living seeing (Idealism), not in the objectified "is" (Realism). Fichte declares the empirical ego an objectified product—it is the "is" illuminated by the absolute "From," but it is not the Light itself. Hegel frames this as the _Dissolution of Appearance_. The finite ego does not generate truth; it merely reflects a pre-existing logical structure. The World of Appearance relates to the World-in-itself (_Puruṣa_) as an inverted opposition. Claiming the finite mind is self-luminous is a fundamental error of Objective Logic, confusing the dependent property for the true inner ground holding the relation.
 
 ---
 
@@ -39,7 +43,7 @@ The _citta_ borrows light. It is composed of _sattva_ (transparency/reflection),
 **Transliteration:**
 eka-samaye ca-ubhaya-anavadhāraṇam || 4.20 ||
 
-**Original Translation:**
+**Translation:**
 And within a single instant/cognitive act (_eka-samaye_), there is no simultaneous determination of both the seer and the seen (_ubhaya-anavadhāraṇam_).
 
 ### II. Systemic Analysis: The Physics of Observation
@@ -49,6 +53,10 @@ If the mind is not self-luminous (IV.19), could it rapidly alternate between bei
 _Eka-samaye_ means a single slice of time, a single stroke of the mental engine. In that single stroke, the mind cannot simultaneously grab the object it is looking at and grab _itself_ looking at the object (_ubhaya-anavadhāraṇam_). A knife cannot cut itself; a scale cannot weigh itself.
 
 To observe the mind looking at an object requires a _second_ cognitive stroke. But then who is observing _that_ stroke? The mind is trapped in a linear sequence of objective determinations. It can never "catch itself" in the present moment of acting. This biological limit definitively proves the mind's inadequacy as the Absolute Subject and clears the way for the necessity of the _Puruṣa_—a Subject that knows without needing to turn itself into an object.
+
+### III. Vārtika: The Idealist Synthesis
+
+Why is the cognitive machine constrained to sequentiality? Fichte defines this as the "Organic Law of Presentation." The mind cannot grasp absolute fluid genesis and frozen empirical "Being" in the exact same cognitive stroke. Immanent knowing must posit an endured Being. Therefore, there is a necessary gap—a _hiatum_—distancing the finite mind from Pure Genesis. Hegel formalizes IV.20 vividly in the _Essential Relation_, famously mocking immediate mystical intuition as "the night in which all cows are black." You cannot grasp the Subject and Object perfectly without mediation. The Essential Relation requires the "labor of the negative"—the sequential unfolding of moments. Reality is strictly barred from unmediated double-determination. It must unfold one determinate frame at a time. The _hiatum_ is logically necessary.
 
 ---
 
@@ -62,7 +70,7 @@ To observe the mind looking at an object requires a _second_ cognitive stroke. B
 **Transliteration:**
 citta-antara-dṛśye buddhi-buddher atiprasaṅgaḥ smṛti-saṅkaraś ca || 4.21 ||
 
-**Original Translation:**
+**Translation:**
 If a mind were directly seen by another mind (_citta-antara-dṛśye_), there would be an absurd infinite regress of intellects observing intellects (_buddhi-buddher atiprasaṅgaḥ_) and a chaotic commingling of memory streams (_smṛti-saṅkaraś ca_).
 
 ### II. Systemic Analysis: Structural Solitude and Memory
@@ -74,3 +82,7 @@ If minds were structurally transparent to other minds (_citta-antara-dṛśye_),
 Furthermore, if minds were open vessels to each other, individual identity would shatter. The _saṁskāras_ (karmic traces) and memories of Mind A would flood into Mind B, causing _smṛti-saṅkara_ (memory fusion). You would not know which memories were yours and which belonged to your neighbor.
 
 Therefore, minds are horizontally opaque. We only know each other via the mediated "Worldness" established in IV.15-16. The only vertical transparency is upward to the _Puruṣa_, which witnesses the _citta_ without triggering infinite regress because the _Puruṣa_ demands no further watcher.
+
+### III. Vārtika: The Idealist Synthesis
+
+If minds _could_ look directly into other minds, Fichte warns, the _hiatum_ would be completely erased, transferring the absolute transparency reserved solely for the Qualitative Oneness of Light down to the level of finite empirical nodes. This creates an absurd infinite regress (_atiprasaṅga_). Hegel categorizes this error under "The Relation of Whole and Parts" (the mechanical fallacy). If you assert that one mind can directly, unmediately mirror another mind without reference to the Absolute, you reduce subjective unity to an infinite horizontal mechanical regress of disjointed _Parts_ trying to act as a _Whole_. True relation requires objective mediation. Horizontal opacity between minds is not a flaw; it is the structural guarantee of individuation. The vertical transparency of the _Puruṣa_ (the true Whole) prevents the Parts from collapsing into a chaotic sludge (_smṛti-saṅkara_).

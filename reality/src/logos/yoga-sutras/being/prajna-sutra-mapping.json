@@ -1,0 +1,69 @@
+{
+  "version": "2.0-MASTER-RESET",
+  "description": "Comprehensive mapping of Yoga Sutras I.41-51 to Fichte's Science of Knowing and Hegel's Science of Logic, anchored strictly in prajna-greater-bhasya.tex",
+  "mappings": [
+    {
+      "node": "being/quality/being",
+      "sutra": "I.41 (Samāpatti / Transparent Crystal)",
+      "sanskrit_core": "kṣīṇa-vṛtter abhijātasyeva maṇer ... samāpatti",
+      "fichte_core": "The absolute Light, Pure transparent crystal, Methodological suspension of factical fluctuations",
+      "hegel_core": "Pure being, pure indeterminateness and emptiness. 'There is nothing to be intuited in it... only this pure empty intuiting itself' (Lines 125-140)."
+    },
+    {
+      "node": "being/quality/existence",
+      "sutra": "I.42 (Savitarkā Samāpatti)",
+      "sanskrit_core": "śabda-artha-jñāna-vikalpaiḥ saṃkīrṇā savitarkā",
+      "fichte_core": "The Anstoß (Check), the mixing/contamination of knowing and being via discursive word/meaning",
+      "hegel_core": "Existence as determinate being (Dasein). 'Through its quality, something is opposed to an other; it is alterable and finite' (Lines 278-291)."
+    },
+    {
+      "node": "being/quality/being-for-itself",
+      "sutra": "I.43 (Nirvitarkā Samāpatti)",
+      "sanskrit_core": "smṛti-pariśuddhau svarūpa-śūnyeva-artha-mātra-nirbhāsā",
+      "fichte_core": "Purified memory, the One shining as the object alone, True Infinity, absolute self-reference",
+      "hegel_core": "Being-for-itself, infinite being. 'The one passes over into a multiplicity of ones, repulsion' (Lines 322-361)."
+    },
+    {
+      "node": "being/quantity/quantity",
+      "sutra": "I.44 (Subtle Objects)",
+      "sanskrit_core": "etayaiva savicārā nirvicārā ca sūkṣma-viṣayā vyākhyātā",
+      "fichte_core": "Continuous productive imagination, converting qualitative boundaries into subtle spatial/temporal continuums",
+      "hegel_core": "Pure Quantity. 'Quantity is the determinateness that has become indifferent to being; a limit which is just as much no limit... the repulsion of the many ones which is immediate non-repulsion, their continuity' (Lines 377-412)."
+    },
+    {
+      "node": "being/quantity/quantum",
+      "sutra": "I.45 (Unmanifest Boundary)",
+      "sanskrit_core": "sūkṣma-viṣayatvaṃ cāliṅga-paryavasānam",
+      "fichte_core": "Arrest of the productive imagination, positing an empty mathematical boundary or abstract degree",
+      "hegel_core": "Quantum as determinate quantity. 'Quantity proceeds to determinateness... Quantity becomes quantum. Quantum is indifferent determinateness' (Lines 413-422)."
+    },
+    {
+      "node": "being/quantity/ratio",
+      "sutra": "I.46 (Samādhi with Seed)",
+      "sanskrit_core": "tā eva sabījaḥ samādhiḥ",
+      "fichte_core": "Vicious infinite progress (the bad infinity) driven by the un-sublated hiatus irrationalis ('seed')",
+      "hegel_core": "Quantitative Ratio. 'Quantum in qualitative form is quantitative ratio... it transcends itself into its otherness... is another quantum... formal unity of quality and quantity' (Lines 423-441)."
+    },
+    {
+      "node": "being/measure/specific-quantity",
+      "sutra": "I.47 (Inner Clarity)",
+      "sanskrit_core": "nirvicāra-vaiśāradye 'dhyātma-prasādaḥ",
+      "fichte_core": "Proficiency rejecting outward expansion; the absolute light resting in its own pure immanence",
+      "hegel_core": "Measure uniting quality and quantity. 'Quantity is being that has returned to itself... [Measure is] the externality that refers itself to itself... as taken back into itself, the qualitative' (Lines 462-473)."
+    },
+    {
+      "node": "being/measure/real-measure",
+      "sutra": "I.48-49 (Truth-Bearing Insight)",
+      "sanskrit_core": "ṛtambharā tatra prajñā ... śruta-anumāna-prajñābhyām anya-viṣayā viśeṣa-arthatvāt",
+      "fichte_core": "Genetic deduction of the Absolute vs factical inference; gripping the specific living Act rather than general abstracts",
+      "hegel_core": "Real Measure and the Spinozistic Mode. The Indian Trinity explicitly: 'Brahma... Vishnu... to the third, Shiva. The determination of this third is that of mode, alteration, coming-to-be and passing-away' (Lines 509-541)."
+    },
+    {
+      "node": "being/measure/becoming-essence",
+      "sutra": "I.50-51 (Seedless / Essence)",
+      "sanskrit_core": "taj-jaḥ saṃskāro 'nya-saṃskāra-pratibandhī ... tasyāpi nirodhe sarva-nirodhān nirbījaḥ samādhiḥ",
+      "fichte_core": "The Methodological Maxim acting as inhibitor (pratibandhī), followed by its own self-consumption to enter the Living Esse (nirbīja)",
+      "hegel_core": "Critique of Oriental annihilation. The goal 'is to sink into unconsciousness, into unity with Brahma, annihilation; the Buddhist Nirvana, Nibbana, etc... a sinking of all content into an only formal unity void of content' (Lines 567-573). Measure as sublated 'has passed over into essence' (Line 644)."
+    }
+  ]
+}

@@ -2,26 +2,56 @@
 
 ## Purpose
 
-Mapping the final sūtra of the Yoga Sūtras (IV.34) to the climax of Hegel's _Science of Logic_: the achievement of the Absolute Idea, the exhaustion of external teleology, and the sublation of all Substance into the self-knowing Subject.
+To provide an expansive transcendental demonstration (a _Varttika_) of the terminal sequences of the Yoga Sūtras (IV.29 through IV.34) established by Fichte in the IDEA workbook. We map teleological exhaustion, the dropping of the ladder, and Absolute Identity onto Hegel's concepts of Real Actuality, Absolute Necessity, and the Relation of Substantiality closing the system.
 
 ---
 
-## Sūtra IV.34: The Absolute Idea and the End of Substance
+## Sūtra IV.29 & IV.30: The Arrival at Real Actuality
 
-### I. Conceptual Alignment
+### I. The Fichtean Principle (The _Bhasya_)
 
-- **Puruṣārtha-śūnyānāṁ (Devoid of purpose) $\leftrightarrow$ The Exhaustion of External Teleology**: Teleology is the highest form of objectivity, but it relies on an external means. In the Absolute Idea, means and end are identical; external purpose is voided.
-- **Guṇānāṁ Pratiprasavaḥ (Involution of the guṇas) $\leftrightarrow$ The Sublation of Substance**: The material world (Substance) loses its independent validity and is fully digested by the Subject (Concept).
-- **Citi-śaktiḥ Svarūpa-pratiṣṭhā (Consciousness established in itself) $\leftrightarrow$ The Absolute Idea**: The Concept, having traversed all alienation, returns to itself as pure, self-knowing Truth.
+Fichte terminates regression by establishing certainty _in itself_ as an immanent, living process—the unobjectifiable "I" or "We." By peeling away lingering attachment to the Objectified "Is" (_akusīda_), the yogi stops trying to objectify Truth, resulting in the algebraic Discriminator (_dharma_megha_samādhi_).
 
-### II. Philosophical Essay: The Circle Completes Itself
+### II. The Hegelian Demonstration (The _Varttika_)
 
-To understand Patañjali’s conclusion through a Hegelian lens, we must look at the transition from Hegel’s "Doctrine of Essence" to the "Doctrine of the Concept," ending in the "Absolute Idea."
+#### Real Actuality
 
-For Hegel, "Substance" is the highest stage of Essence, but it is blind. It must be sublated into the "Subject" (the self-determining Concept). Throughout the _Science of Logic_, the Concept struggles to actualize itself in the world via Teleology—imposing subjective purpose onto objective, mechanical reality. But standard teleology is always frustrated; the end is always "out there," requiring a "means" to achieve it.
+In Hegel's Logic, the emergence of _dharma-megha samādhi_ (IV.29) and the resultant cessation of _kleśa_ and _karma_ (IV.30) correspond to "Real Actuality, Possibility, and Necessity."
 
-The climax of the _Logic_ is the realization of the Absolute Idea. Here, the Subject realizes that the objective world was never truly alien to begin with. The end was present in the beginning. The Subject and the Substance are identical. At this point, external Teleology exhausts itself—there is no longer any separation between the "purpose" and the "reality" it seeks to shape.
+When the mind establishes the algebraic discriminator, formal possibility is sublated into Real Actuality. This actuality is no longer an empty receptacle of contingency, but a manifold content containing form as an indifferent identity. The cessation of karmic afflictions demonstrates that the subject has preserved itself dynamically in the manifoldness. It relates only to itself internally, no longer losing itself in the chaos of Appearance. Real Actuality is the stable, self-relating identity that contains its own manifold forms.
 
-This mirrors precisely Patañjali’s IV.34. The _guṇas_ (Substance/Nature) have been churning teleologically for the sake of the _Puruṣa_ (Subject). But when the Seer realizes its absolute independence, the _guṇas_ become _puruṣārtha-śūnyānāṁ_—devoid of purpose. Because the external teleological drive is over, the objective mechanism collapses back into itself (_pratiprasava_). Substance has been fully sublated; it no longer holds any independent reality for the Seer.
+---
 
-In Hegel, when the Absolute Idea is reached, the logical circle closes. The dialectic does not proceed forward into a new abstraction; rather, the Idea "freely releases itself" into Nature, resting in its absolute self-comprehension. Patañjali expresses this ultimate resting state symmetrically: _citi-śakti_ (the power of consciousness/the Subject) becomes firmly established in its own inherent nature (_svarūpa-pratiṣṭhā_). The restless dialectic of the _kleśas_ and the _guṇas_ is over. The Subject knows itself as Subject, and in that knowing, the world is radically set free.
+## Sūtra IV.31, IV.32 & IV.33: Absolute Actuality and Necessity
+
+### I. The Fichtean Principle (The _Bhasya_)
+
+Finite concepts are merely "images" projected across a gap. When recognized, empirical substance shrinks into insignificance (_alpam_). The mechanical sequence halts because its teleological purpose is accomplished. "We" do not construct the Law; it constructs itself, and we grasp this sequence at its absolute terminal limit.
+
+### II. The Hegelian Demonstration (The _Varttika_)
+
+#### Exhaustion of Relative Necessity
+
+The infinity of knowledge opening up (_jñānasyānantyāt_, IV.31) and the completion of the _guṇa_ sequence (IV.32) represent the climax of Relative Necessity turning into Absolute Actuality. The sequence of external logical conditions (the _guṇa_ transformations) halts because real necessity has fully executed its turning back into itself.
+
+#### Absolute Necessity
+
+Grasping the sequence at the instantaneous terminal limit (_pariṇāma-aparānta-nirgrāhyaḥ kramaḥ_, IV.33) maps precisely to Hegel's "Absolute Necessity." Sequence formalizes time; when sequence drops away, determinate necessity reveals itself as immediate, actual Necessity. The possible is no longer a fluctuating alternative; it constitutes absolute possibility perfectly aligning with actuality. Contingency is negated, and the "in-itself" is no longer mere possibility but necessity itself. The logical circle closes.
+
+---
+
+## Sūtra IV.34: The Relation of Substantiality (Kaivalya)
+
+### I. The Fichtean Principle (The _Bhasya_)
+
+The physical world/science of knowing exists only to produce the realization of Truth. Upon completion, the instrumental ladder/scaffolding collapses back into its origin. The separation between the path and destination is annihilated, resulting in Absolute Identity.
+
+### II. The Hegelian Demonstration (The _Varttika_)
+
+#### The Sublation of Accidentality into Substance
+
+The ultimate involution of the purposeless _guṇas_ (_puruṣārtha-śūnyānāṁ pratiprasavaḥ_) and the establishment of the Seer in its own power (_svarūpa-pratiṣṭhā_) conclude the dialectic under the Hegelian "Relation of Substantiality."
+
+Absolute Necessity forms an Absolute Relation—not as an abstract being standing behind appearance, but as the absolute mediation of itself with itself. The _Puruṣa_ (Seer) is Substance: the final unity of essence and being, completely reflected into itself as a subsisting that exists in and for itself.
+
+The _guṇas_ return to unmanifest latency because they are recognized as mere "accidents" (accidentality) against the absolute shining totality of Substance. Their teleological purpose exhausted, they vanish. _Kaivalya_ is the Absolute Relation of Substantiality. The restless dialectic is over. The Subject knows itself as Subject, completely resting in the unbroken Light.

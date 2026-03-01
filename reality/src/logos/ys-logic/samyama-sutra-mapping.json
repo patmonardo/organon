@@ -1,0 +1,66 @@
+{
+  "version": "1.0",
+  "description": "Mapping of Yoga Sutras III.1-12 to Hegel Varttika sections and target workbooks",
+  "mappings": [
+    {
+      "sutra": "YS III.1",
+      "h_tag": "subjectivity",
+      "workbooks": ["HEGEL-SUBJECT", "HEGEL-IDEA"]
+    },
+    {
+      "sutra": "YS III.2",
+      "h_tag": "subjectivity",
+      "workbooks": ["HEGEL-SUBJECT", "HEGEL-IDEA"]
+    },
+    {
+      "sutra": "YS III.3",
+      "h_tag": "subjectivity",
+      "workbooks": ["HEGEL-SUBJECT", "HEGEL-IDEA"]
+    },
+    {
+      "sutra": "YS III.4",
+      "h_tag": "subjectivity",
+      "workbooks": ["HEGEL-SUBJECT", "HEGEL-IDEA"]
+    },
+    {
+      "sutra": "YS III.5",
+      "h_tag": "subjectivity",
+      "workbooks": ["HEGEL-SUBJECT", "HEGEL-IDEA"]
+    },
+    {
+      "sutra": "YS III.6",
+      "h_tag": "subjectivity",
+      "workbooks": ["HEGEL-SUBJECT", "HEGEL-IDEA"]
+    },
+    {
+      "sutra": "YS III.7",
+      "h_tag": "subjectivity",
+      "workbooks": ["HEGEL-SUBJECT", "HEGEL-IDEA"]
+    },
+    {
+      "sutra": "YS III.8",
+      "h_tag": "subjectivity",
+      "workbooks": ["HEGEL-SUBJECT", "HEGEL-IDEA"]
+    },
+    {
+      "sutra": "YS III.9",
+      "h_tag": "concept",
+      "workbooks": ["HEGEL-IDEA", "HEGEL-CONCEPT"]
+    },
+    {
+      "sutra": "YS III.10",
+      "h_tag": "concept",
+      "workbooks": ["HEGEL-IDEA", "HEGEL-CONCEPT"]
+    },
+    {
+      "sutra": "YS III.11",
+      "h_tag": "judgment",
+      "workbooks": ["HEGEL-CONCEPT"]
+    },
+    {
+      "sutra": "YS III.12",
+      "h_tag": "syllogism",
+      "workbooks": ["HEGEL-IDEA"]
+    }
+  ]
+}
