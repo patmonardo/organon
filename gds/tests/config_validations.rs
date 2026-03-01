@@ -157,7 +157,7 @@ fn pagerank_louvain_node_similarity_betweenness_validations() {
     assert!(ValidatedConfig::validate(&pr).is_ok());
 
     let mut bad = pr.clone();
-    bad.base.concurrency = 0;
+    bad.concurrency = 0;
     assert!(ValidatedConfig::validate(&bad).is_err());
 
     let l = LouvainConfig::default();
@@ -235,9 +235,8 @@ fn gradient_and_trainer_config_validations() {
     let g = GradientDescentConfig::default();
     assert!(ValidatedConfig::validate(&g).is_ok());
 
-    let mut gb = g.clone();
     // invalid learning rate
-    gb = GradientDescentConfig::builder()
+    let gb = GradientDescentConfig::builder()
         .learning_rate(0.0)
         .build()
         .unwrap();

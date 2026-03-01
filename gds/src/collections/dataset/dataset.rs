@@ -11,6 +11,7 @@ use crate::collections::dataframe::selectors::Selector;
 use crate::collections::dataframe::table::TableBuilder;
 use crate::collections::dataframe::GDSDataFrame;
 use crate::collections::dataframe::GDSFrameError;
+use crate::collections::dataset::semantic::LanguageModelFocus;
 use crate::collections::io::{csv, ipc, json, parquet};
 
 /// Minimal dataset wrapper (Polars-backed).
@@ -18,17 +19,23 @@ use crate::collections::io::{csv, ipc, json, parquet};
 pub struct Dataset {
     name: Option<String>,
     table: GDSDataFrame,
+    lm_focus: Option<LanguageModelFocus>,
 }
 
 impl Dataset {
     pub fn new(table: GDSDataFrame) -> Self {
-        Self { name: None, table }
+        Self {
+            name: None,
+            table,
+            lm_focus: None,
+        }
     }
 
     pub fn named(name: impl Into<String>, table: GDSDataFrame) -> Self {
         Self {
             name: Some(name.into()),
             table,
+            lm_focus: None,
         }
     }
 
@@ -59,6 +66,23 @@ impl Dataset {
 
     pub fn name(&self) -> Option<&str> {
         self.name.as_deref()
+    }
+
+    pub fn with_lm_focus(mut self, focus: LanguageModelFocus) -> Self {
+        self.lm_focus = Some(focus);
+        self
+    }
+
+    pub fn lm_focus(&self) -> Option<&LanguageModelFocus> {
+        self.lm_focus.as_ref()
+    }
+
+    pub fn lm_focus_mut(&mut self) -> Option<&mut LanguageModelFocus> {
+        self.lm_focus.as_mut()
+    }
+
+    pub fn is_language_model(&self) -> bool {
+        self.lm_focus.is_some()
     }
 
     pub fn table(&self) -> &GDSDataFrame {
@@ -98,6 +122,7 @@ impl Dataset {
         Self {
             name: self.name.clone(),
             table,
+            lm_focus: self.lm_focus.clone(),
         }
     }
 
@@ -106,6 +131,7 @@ impl Dataset {
         Self {
             name: self.name.clone(),
             table,
+            lm_focus: self.lm_focus.clone(),
         }
     }
 
@@ -114,33 +140,34 @@ impl Dataset {
         Self {
             name: self.name.clone(),
             table,
+            lm_focus: self.lm_focus.clone(),
         }
     }
 
-    /// Select columns by name.
     pub fn select_columns(&self, columns: &[&str]) -> Result<Self, GDSFrameError> {
         let table = self.table.select_columns(columns)?;
         Ok(Self {
             name: self.name.clone(),
             table,
+            lm_focus: self.lm_focus.clone(),
         })
     }
 
-    /// Select columns using Polars expressions (py-polars style).
     pub fn select(&self, exprs: &[Expr]) -> Result<Self, GDSFrameError> {
         let table = self.table.select(exprs)?;
         Ok(Self {
             name: self.name.clone(),
             table,
+            lm_focus: self.lm_focus.clone(),
         })
     }
 
-    /// Select columns using a selector (py-polars style).
     pub fn select_selector(&self, selector: &Selector) -> Result<Self, GDSFrameError> {
         let table = self.table.select_selector(selector)?;
         Ok(Self {
             name: self.name.clone(),
             table,
+            lm_focus: self.lm_focus.clone(),
         })
     }
 
@@ -149,6 +176,7 @@ impl Dataset {
         Ok(Self {
             name: self.name.clone(),
             table,
+            lm_focus: self.lm_focus.clone(),
         })
     }
 
@@ -162,6 +190,7 @@ impl Dataset {
         Ok(Self {
             name: self.name.clone(),
             table,
+            lm_focus: self.lm_focus.clone(),
         })
     }
 
@@ -179,6 +208,7 @@ impl Dataset {
         Ok(Self {
             name: self.name.clone(),
             table,
+            lm_focus: self.lm_focus.clone(),
         })
     }
 
@@ -200,6 +230,7 @@ impl Dataset {
         Ok(Self {
             name: self.name.clone(),
             table,
+            lm_focus: self.lm_focus.clone(),
         })
     }
 
@@ -217,6 +248,7 @@ impl Dataset {
         Ok(Self {
             name: self.name.clone(),
             table,
+            lm_focus: self.lm_focus.clone(),
         })
     }
 
@@ -225,6 +257,7 @@ impl Dataset {
         Ok(Self {
             name: self.name.clone(),
             table,
+            lm_focus: self.lm_focus.clone(),
         })
     }
 

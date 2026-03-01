@@ -47,6 +47,7 @@ pub mod plan;
 pub mod prelude;
 pub mod registry;
 pub mod schema;
+pub mod semantic;
 pub mod series;
 pub mod stdlib;
 pub mod stem;
@@ -131,6 +132,7 @@ pub use parser::{BracketedParser, DependencyParser, FlatParser, JsonParser, Mark
 pub use plan::{EvalMode as DatasetEvalMode, Plan as DatasetPlan, PlanEnv, PlanError};
 pub use registry::{DatasetArtifact, DatasetMetadata, DatasetRegistry, DatasetSplit};
 pub use schema::{FeatureSchema, ModelSchema, SymbolDef, SymbolTable};
+pub use semantic::{LanguageModelFocus, SemanticArtifacts, WordNetwork};
 pub use stdlib::{
     catalog_resource_tables, data_home, data_home_with, fetch_resource, list_resources,
     resource_dir, BracketedCorpusReader, ConcatenatedCorpusView, CorpusFiles, CorpusReader,
