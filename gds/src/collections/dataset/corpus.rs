@@ -12,7 +12,7 @@ use crate::collections::dataframe::GDSFrameError;
 use crate::collections::dataset::dataset::Dataset;
 use crate::collections::dataset::parse::ParseForest;
 use crate::collections::dataset::parser::Parser;
-use crate::collections::dataset::semantic::{LanguageModelFocus, SemanticArtifacts};
+use crate::collections::dataset::semantic::LanguageModelFocus;
 use crate::collections::dataset::stem::Stem;
 use crate::collections::dataset::stemmer::Stemmer;
 use crate::collections::dataset::tag::Tag;
@@ -71,19 +71,6 @@ impl Corpus {
     /// Attaches an NLP language model focus directly to the underlying dataset.
     pub fn with_language_model_focus(mut self, focus: LanguageModelFocus) -> Self {
         self.dataset = self.dataset.with_lm_focus(focus);
-        self
-    }
-
-    /// Modifies the existing language model focus via semantic artifacts closure.
-    pub fn map_semantic_artifacts(
-        mut self,
-        f: impl FnOnce(SemanticArtifacts) -> SemanticArtifacts,
-    ) -> Self {
-        let current_focus = self.dataset.lm_focus().cloned().unwrap_or_default();
-        let new_artifacts = f(current_focus.artifacts);
-        self.dataset = self
-            .dataset
-            .with_lm_focus(LanguageModelFocus::new().with_artifacts(new_artifacts));
         self
     }
 

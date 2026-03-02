@@ -47,6 +47,7 @@ pub mod plan;
 pub mod prelude;
 pub mod registry;
 pub mod schema;
+pub mod search;
 pub mod semantic;
 pub mod series;
 pub mod stdlib;
@@ -86,7 +87,6 @@ pub use functions::model::preprocessing::{
     everygrams, ngrams, pad_both_ends, pad_both_ends_default, padded_everygram_pipeline,
     padded_everygrams,
 };
-pub use functions::scan_text_dir;
 pub use metrics::{BinaryMetrics, MetricError};
 pub use model::{
     Model, ModelAttributeUpdate, ModelContext, ModelDelta, ModelId, ModelKind, ModelReport,
@@ -132,7 +132,8 @@ pub use parser::{BracketedParser, DependencyParser, FlatParser, JsonParser, Mark
 pub use plan::{EvalMode as DatasetEvalMode, Plan as DatasetPlan, PlanEnv, PlanError};
 pub use registry::{DatasetArtifact, DatasetMetadata, DatasetRegistry, DatasetSplit};
 pub use schema::{FeatureSchema, ModelSchema, SymbolDef, SymbolTable};
-pub use semantic::{LanguageModelFocus, SemanticArtifacts, WordNetwork};
+pub use search::{SdlQueryEdge, SdlQueryNode, SdlSearchQuery};
+pub use semantic::{LanguageModelFocus, SdlEdge, SdlNode, SdlSubgraph};
 pub use stdlib::{
     catalog_resource_tables, data_home, data_home_with, fetch_resource, list_resources,
     resource_dir, BracketedCorpusReader, ConcatenatedCorpusView, CorpusFiles, CorpusReader,
