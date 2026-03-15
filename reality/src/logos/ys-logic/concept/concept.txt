@@ -1185,11 +1185,11 @@ is not inherently dialectical.
 It is at once assumed that
 the judgment is capable of possessing
 truth on its own account,
- and that every proposition expressed in a positive
+and that every proposition expressed in a positive
 judgment is true,
 even though it is patently evident that the judgment lacks
 what is required by the definition of truth,
- namely the agreement of the concept with its subject matter;
+namely the agreement of the concept with its subject matter;
 for if the predicate, which here is the universal,
 is taken as the concept,
 and the subject, which is the singular,

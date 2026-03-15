@@ -31,26 +31,28 @@ Authority: original source text only
 ### Entry (Topic) `id` — `title`
 
 - span: `lineStart-lineEnd`
-- summary: one sentence
-- keyPoints: (KeyPoint) 3-8 non-redundant points
-- claims: (Claim) 1-3 minimum, with evidence
+- summary: one sentence focusing on the active cognitive movement of the Subject.
+- keyPoints: (KeyPoint) 3-8 non-redundant points explicitly naming the cognitive activity.
+- claims: (Claim) 1-3 minimum, formalizing subjective operations with evidence.
 - relations: (Relation) typed only (`supports|contrasts|negates|sublates|presupposes|refines|transitions_to`), using labeled bullets (`r1`, `r2`, ...)
+  - logicalOperator: the specific self-acting cognitive operation.
+  - cognitiveOperation: precise protocol describing the living logic move of the Subject.
 
-## Session: 2026-02-21 (first Necessity pass)
+## Session: 2026-03-10 (Cognitive Protocol Upgrade)
 
 Scope:
 
 - file: `necessity.txt`
-- fixed range: lines `2-537`
-- pass policy: full first decomposition from source sectioning (`a/b` with `1/2/3`) plus `c` paragraph-cluster entries.
+- fixed range: lines `2-538`
+- pass policy: Upgrading "Logic" to active protocols implementing the living logic via precise Logical Operations.
 
 Decision:
 
-- Keep marker-free numbered IDs aligned with Parts A/B: `syllo-nec-<letter>-<nnn>`.
-- Use explicit source numerals where present; for `c` (no numeric labels), use paragraph-cluster decomposition.
-- Keep transition continuity from Part B (`syllo-ref-c-003`) and forward endpoint toward objectivity.
+- Transform relations to include `logicalOperator` and `cognitiveOperation`.
+- Refocus key points and claims to reflect the "self-acting" cognitive operations of the Subject as it works through the forms of Necessity (Categorical, Hypothetical, Disjunctive), culminating in the absolute collapse into Objectivity.
+- Preserve the existing numbered ID pattern (`syllo-nec-<letter>-<nnn>`).
 
-### Entry syllo-nec-001 — Necessity setup: objective universal middle and contentful identity
+### Entry syllo-nec-001 — Necessity setup: forging the objective universal middle
 
 Span:
 
@@ -60,69 +62,67 @@ Span:
 
 Summary:
 
-The opening defines necessity-syllogism as contentful identity: middle term is objective universality/genus, and realization requires form and content to coincide.
+The Subject establishes the Syllogism of Necessity by actively fusing the external extremes into an objectively universal inner middle term, recognizing that it must now force this inner identity to appear explicitly in the form itself.
 
 Key points: (KeyPoint)
 
-- k1. Middle develops from determinate universality to objective universality as genus.
-- k2. Inner identity of extremes is carried by middle’s content-determinations.
-- k3. Initial necessity is still immediate/formal and must become posited-form connection.
+- k1. The Subject sublates the subjective reflection of the previous stage, forging a middle term that is an "objective universality" (a true Genus).
+- k2. The Subject realizes that because the middle term now contains the absolute determinateness of the extremes, the extremes themselves have been reduced to mere unessential forms.
+- k3. The Subject sets its task for this final section: to force this inner, hidden substantial necessity to unfold and prove itself explicitly in the outer form of the syllogism.
 
 Claims: (Claim)
 
 - c1. id: syllo-nec-001-c1
-  - subject: mediating_middle
-  - predicate: is_determined_as
-  - object: objective_universality_genus
+  - subject: cognitive_subject
+  - predicate: forges_middle_term_as
+  - object: objective_universality_containing_extreme_determinateness
   - modality: asserted
   - confidence: 0.95
   - evidence:
-    - [4-12] objective universality and genus statement.
+    - [4-23] objective universality, immanent reflection, inner identity in middle.
 
 - c2. id: syllo-nec-001-c2
-  - subject: syllogism_of_necessity
-  - predicate: is
-  - object: immanent_reflection_of_extreme_determinateness
+  - subject: cognitive_subject
+  - predicate: establishes_task_as
+  - object: forcing_inner_necessity_to_become_explicit_form_connection
   - modality: asserted
   - confidence: 0.94
   - evidence:
-    - [17-24] inner identity in middle.
+    - [31-39] realization requirement; connection of posited form.
 
-- c3. id: syllo-nec-001-c3
-  - subject: realization_of_necessity_syllogism
-  - predicate: requires
-  - object: posited_form_connection_of_totality
-  - modality: asserted
-  - confidence: 0.94
-  - evidence:
-    - [31-39] realization requirement.
+Claim ↔ key point map:
+
+- c1 -> k1, k2
+- c2 -> k3
 
 Relations: (Relation)
 
 - r1. type: presupposes
   - targetEntryId: syllo-ref-c-003
-  - note: necessity opening presupposes higher universality result from reflection.
+  - note: Necessity opening absolutely depends on the second negation executed at the end of Reflection.
   - sourceClaimIds: [`syllo-nec-001-c1`]
   - sourceKeyPointIds: [`k1`]
-  - targetClaimIds: [`syllo-ref-c-003-c3`]
-  - logicalOperator: presuppositional_link
-  - analysisMode: first_order_claim_projection
+  - targetClaimIds: [`syllo-ref-c-003-c2`]
+  - logicalOperator: integration_of_absolute_sublation
+  - cognitiveOperation: The Subject inherits the purified, self-sustaining Genus created by destroying the analogical singulars, using it as the bedrock for the new logic of Necessity.
+  - analysisMode: active_cognitive_protocol
 
 - r2. type: transitions_to
   - targetEntryId: syllo-nec-a-001
-  - note: setup passes into categorical subsection `1`.
-  - sourceClaimIds: [`syllo-nec-001-c3`]
+  - note: Setup passes into executing the Categorical Syllogism.
+  - sourceClaimIds: [`syllo-nec-001-c2`]
   - sourceKeyPointIds: [`k3`]
   - targetClaimIds: [`syllo-nec-a-001-c1`]
   - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
+  - cognitiveOperation: The Subject begins testing this solid, objective middle term by running it through the simplest necessity-schema (the Categorical).
+  - analysisMode: active_cognitive_protocol
 
 Review outcome:
 
 - review_pending
-- notes: Part C opening stabilized.
+- notes: Part C opening upgraded.
 
-### Entry syllo-nec-a-001 — Categorical subsection 1: necessity through substance/concept
+### Entry syllo-nec-a-001 — Categorical subsection 1: grounding inference in substance
 
 Span:
 
@@ -132,60 +132,57 @@ Span:
 
 Summary:
 
-Subsection 1 establishes categorical necessity by concept-elevated substance, with universality/singularity extremes mediated via specific difference.
+The Subject executes the Categorical Syllogism, firmly tethering a specific subject to a predicate not through arbitrary qualities, but entirely through its underlying, universal Substance.
 
 Key points: (KeyPoint)
 
-- k1. Categorical premises derive from categorical judgment and objective universality.
-- k2. Substance elevated into concept supplies necessity-form.
-- k3. Extremes are universality and singularity, tied through specific-difference middle.
+- k1. The Subject elevates Substance to the level of the Concept, stripping it of mere accidentality and treating it as a true Universal.
+- k2. The Subject constructs the extremes: abstract universality (specific difference) and pure singularity (immediate concrete unity).
+- k3. The Subject intentionally forces the inference to run strictly through this substantial identity rather than superficial traits.
 
 Claims: (Claim)
 
 - c1. id: syllo-nec-a-001-c1
-  - subject: categorical_syllogism
-  - predicate: takes_from
-  - object: categorical_judgment_with_objective_universal_middle
+  - subject: cognitive_subject
+  - predicate: elevates_substance_to
+  - object: the_universal_operating_under_the_concept
   - modality: asserted
-  - confidence: 0.93
+  - confidence: 0.95
   - evidence:
-    - [42-49] initial setup.
+    - [60-69] substance elevated to concept, removing accidentality.
 
 - c2. id: syllo-nec-a-001-c2
-  - subject: concept_elevated_substance
-  - predicate: determines
-  - object: necessity_structure_of_terms
+  - subject: cognitive_subject
+  - predicate: structures_extremes_as
+  - object: abstract_universality_and_immediate_singularity
   - modality: asserted
   - confidence: 0.94
   - evidence:
-    - [56-69] substance-as-universal under concept.
+    - [70-83] universality as specific difference, singularity as actual/immediate.
 
-- c3. id: syllo-nec-a-001-c3
-  - subject: universality_singularity_relation
-  - predicate: is_structured_by
-  - object: specific_difference
-  - modality: asserted
-  - confidence: 0.93
-  - evidence:
-    - [70-90] specific-difference articulation.
+Claim ↔ key point map:
+
+- c1 -> k1, k3
+- c2 -> k2
 
 Relations: (Relation)
 
 - r1. type: transitions_to
   - targetEntryId: syllo-nec-a-002
-  - note: subsection `1` moves to formal-schema clarification without infinite regress.
-  - sourceClaimIds: [`syllo-nec-a-001-c3`]
-  - sourceKeyPointIds: [`k3`]
+  - note: The Subject structurally analyzes how this new configuration removes the infinite regress of Existence.
+  - sourceClaimIds: [`syllo-nec-a-001-c1`]
+  - sourceKeyPointIds: [`k1`]
   - targetClaimIds: [`syllo-nec-a-002-c1`]
   - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
+  - cognitiveOperation: Having built the substance-based engine, the Subject steps back to compare its stability against the failed engines of the past.
+  - analysisMode: active_cognitive_protocol
 
 Review outcome:
 
 - review_pending
-- notes: subsection `1` stabilized.
+- notes: Categorical subsection 1 upgraded.
 
-### Entry syllo-nec-a-002 — Categorical subsection 2: no contingency-regress, objective identity begins
+### Entry syllo-nec-a-002 — Categorical subsection 2: destroying the threat of infinity and asserting inner identity
 
 Span:
 
@@ -195,61 +192,67 @@ Span:
 
 Summary:
 
-Subsection 2 places categorical necessity under S-P-U while removing arbitrary-middle contingency and infinite proof regress, initiating objectivity.
+The Subject observes that because the Categorical Syllogism is anchored by a single, solid essence running through all three terms, it completely destroys the threat of infinite regress and arbitrary contingency that plagued earlier systems.
 
 Key points: (KeyPoint)
 
-- k1. Form still appears under S-P-U.
-- k2. Essential middle blocks arbitrary quality-mediation.
-- k3. Conclusion is no longer presupposed as in reflection-allness.
-- k4. One substantial essence runs through all three terms.
+- k1. The Subject acknowledges that while this looks like the formal S-P-U schema, its nature is totally different because the middle is the essential nature, not a random trait.
+- k2. The Subject formally declares the infinite progression (from the Syllogism of Existence) and the circular presupposition (from the Syllogism of Reflection) to be fully defeated here.
+- k3. The Subject explicitly posits the beginning of "Objectivity": there is now one solid essence running equally through all three terms, reducing singularity, particularity, and universality to mere formal moments.
 
 Claims: (Claim)
 
 - c1. id: syllo-nec-a-002-c1
-  - subject: categorical_necessity_form
-  - predicate: appears_as
-  - object: S_P_U
+  - subject: cognitive_subject
+  - predicate: diagnoses_essential_middle_as
+  - object: immune_to_contingency_and_infinite_progression
   - modality: asserted
-  - confidence: 0.92
+  - confidence: 0.96
   - evidence:
-    - [91-95] schema placement.
+    - [106-113] removal of external immediacy and demand for infinite proof.
 
 - c2. id: syllo-nec-a-002-c2
-  - subject: essential_middle_content
-  - predicate: removes
-  - object: contingency_and_infinite_progression_demand
+  - subject: cognitive_subject
+  - predicate: locates_the_beginning_of_objectivity_in
+  - object: the_one_essence_running_through_all_terms
   - modality: asserted
-  - confidence: 0.94
+  - confidence: 0.97
   - evidence:
-    - [96-113] no arbitrary connection/proof regress.
+    - [118-134] essence running through terms, formal moments, objectivity begins.
 
-- c3. id: syllo-nec-a-002-c3
-  - subject: terms_in_categorical_syllogism
-  - predicate: share
-  - object: one_substantial_essence
-  - modality: asserted
-  - confidence: 0.95
-  - evidence:
-    - [114-139] identity-through-terms and objectivity beginning.
+Claim ↔ key point map:
+
+- c1 -> k1, k2
+- c2 -> k3
 
 Relations: (Relation)
 
-- r1. type: transitions_to
+- r1. type: sublates
+  - targetEntryId: syllo-exi-a-003
+  - note: Explicitly resolves the fatal infinite loop from the Syllogism of Existence.
+  - sourceClaimIds: [`syllo-nec-a-002-c1`]
+  - sourceKeyPointIds: [`k2`]
+  - targetClaimIds: [`syllo-exi-a-003-c1`]
+  - logicalOperator: resolution_of_infinite_regress
+  - cognitiveOperation: The Subject looks back at the geometric crash of the S-P-U form from Part A and notes that by replacing the empty variable "Particular" with the solid bedrock of "Substance," the loop is permanently closed. There are no unproven premises because Substance proves itself.
+  - analysisMode: active_cognitive_protocol
+
+- r2. type: transitions_to
   - targetEntryId: syllo-nec-a-003
-  - note: objective beginning transitions to residual-subjectivity diagnosis.
-  - sourceClaimIds: [`syllo-nec-a-002-c3`]
-  - sourceKeyPointIds: [`k4`]
+  - note: Moves to diagnosing the residual flaw in this new substantial identity.
+  - sourceClaimIds: [`syllo-nec-a-002-c2`]
+  - sourceKeyPointIds: [`k3`]
   - targetClaimIds: [`syllo-nec-a-003-c1`]
   - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
+  - cognitiveOperation: Not satisfied with "inner" stability, the Subject inspects the outer form for remaining cracks.
+  - analysisMode: active_cognitive_protocol
 
 Review outcome:
 
 - review_pending
-- notes: subsection `2` stabilized.
+- notes: Categorical subsection 2 upgraded.
 
-### Entry syllo-nec-a-003 — Categorical subsection 3: residual immediacy and transition to hypothetical
+### Entry syllo-nec-a-003 — Categorical subsection 3: diagnosing residual immediacy and shifting to Hypothetical
 
 Span:
 
@@ -259,60 +262,68 @@ Span:
 
 Summary:
 
-Subsection 3 diagnoses residual subjectivity: substantial identity is not yet form-identity, singular immediacy remains contingent, and categorical form transitions to hypothetical.
+Discovering a fatal flaw—that the Categorical Syllogism relies on an immediate, contingent Singular subject not fully captured by the Genus—the Subject actively determines the necessity of the system to shift into the Hypothetical Syllogism.
 
 Key points: (KeyPoint)
 
-- k1. Identity is still inner necessity, not fully posited form-identity.
-- k2. Singular immediacy leaves contingency in subsumption and concrete content.
-- k3. Therefore necessity determines itself as hypothetical syllogism.
+- k1. The Subject observes that the identity holding the Categorical Syllogism together is still basically internal; the outer form remains fractured.
+- k2. The Subject diagnoses the core issue: the Singular term still has too much random, immediate "concrete existence" that the Universal Genus doesn't account for (e.g., the Genus doesn't explain *why* this specific individual exists right now).
+- k3. The Subject realizes this residual immediacy makes the relationship contingent, forcing an absolute structural realignment into the Hypothetical Syllogism to capture this conditional existence.
 
 Claims: (Claim)
 
 - c1. id: syllo-nec-a-003-c1
-  - subject: categorical_identity
-  - predicate: remains
-  - object: substantial_inner_bond_not_form_identity
+  - subject: cognitive_subject
+  - predicate: diagnoses_categorical_identity_as
+  - object: merely_inner_not_yet_identical_with_form
   - modality: asserted
   - confidence: 0.94
   - evidence:
-    - [140-149] identity still inner/necessary.
+    - [140-149] identity still inner/necessary; not form identity.
 
 - c2. id: syllo-nec-a-003-c2
-  - subject: singular_immediacy
-  - predicate: posits
-  - object: contingency_of_extreme_relations
+  - subject: cognitive_subject
+  - predicate: forces_transition_to_hypothetical_due_to
+  - object: indifferent_immediacy_of_the_singular_extreme
   - modality: asserted
-  - confidence: 0.94
+  - confidence: 0.95
   - evidence:
-    - [150-187] contingency and indifferent concrete existence.
+    - [168-183] singular contains uncaptured determinations; indifferent immediacy.
+    - [195-200] identity is only inner, determining the shift to hypothetical.
 
-- c3. id: syllo-nec-a-003-c3
-  - subject: syllogism_of_necessity
-  - predicate: determines_itself_as
-  - object: hypothetical_syllogism
-  - modality: asserted
-  - confidence: 0.96
-  - evidence:
-    - [189-200] explicit concluding transition.
+Claim ↔ key point map:
+
+- c1 -> k1
+- c2 -> k2, k3
 
 Relations: (Relation)
 
-- r1. type: transitions_to
+- r1. type: negates
+  - targetEntryId: syllo-nec-a-002
+  - note: Proves that the "one essence" is not actually doing all the work yet.
+  - sourceClaimIds: [`syllo-nec-a-003-c1`]
+  - sourceKeyPointIds: [`k1`, `k2`]
+  - targetClaimIds: [`syllo-nec-a-002-c2`]
+  - logicalOperator: exposure_of_residual_contingency
+  - cognitiveOperation: The Subject points to the Singular term and says, "Yes, your inner substance is necessary. But the fact that you specifically exist right here, right now, with all these random extra traits, is completely contingent."
+  - analysisMode: active_cognitive_protocol
+
+- r2. type: transitions_to
   - targetEntryId: syllo-nec-b-001
-  - note: direct handoff to hypothetical subsection `1`.
-  - sourceClaimIds: [`syllo-nec-a-003-c3`]
+  - note: Direct leap into the Hypothetical form.
+  - sourceClaimIds: [`syllo-nec-a-003-c2`]
   - sourceKeyPointIds: [`k3`]
   - targetClaimIds: [`syllo-nec-b-001-c1`]
-  - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
+  - logicalOperator: transition_to_hypothetical_necessity
+  - cognitiveOperation: To fix the contingency problem, the Subject wires the existence of the Singular entirely to a condition ("If A, then B"), abandoning the blunt force of Categorical existence.
+  - analysisMode: active_cognitive_protocol
 
 Review outcome:
 
 - review_pending
-- notes: subsection `3` stabilized.
+- notes: Categorical subsection 3 upgraded.
 
-### Entry syllo-nec-b-001 — Hypothetical subsection 1: conditional bond plus immediate minor
+### Entry syllo-nec-b-001 — Hypothetical subsection 1: instituting the conditional-immediacy circuit
 
 Span:
 
@@ -322,60 +333,57 @@ Span:
 
 Summary:
 
-Subsection 1 states hypothetical judgment as necessary bond without term-being and then adds immediate minor-premise being in syllogistic form.
+Within the Hypothetical Syllogism, the Subject executes mediation by first positing a pure, abstract connection of necessity ("If A, then B"), and then violently shoving an immediate "Being" ("But A is") into the circuit to force a mediated conclusion.
 
 Key points: (KeyPoint)
 
-- k1. Hypothetical judgment posits connection, not term existence.
-- k2. Syllogism adds immediate being of A.
-- k3. Conclusion is mediated unity, not abstract copula only.
+- k1. The Subject recognizes that the first premise (the conditional) expresses pure necessary connection *without* asserting any actual existence.
+- k2. The Subject deliberately injects the minor premise ("But A is") to provide the immediate existence required to actuate the circuit.
+- k3. The Subject observes that the conclusion ("Therefore B is") is inherently a mediated unity, generated entirely by this collision of pure condition and crude immediacy.
 
 Claims: (Claim)
 
 - c1. id: syllo-nec-b-001-c1
-  - subject: hypothetical_judgment
-  - predicate: contains
-  - object: necessary_connection_without_immediate_being
+  - subject: cognitive_subject
+  - predicate: isolates_necessary_connection_from_being_in
+  - object: the_major_conditional_premise
   - modality: asserted
   - confidence: 0.94
   - evidence:
-    - [203-210] conditional form.
+    - [203-210] conditional form without immediacy of being.
 
 - c2. id: syllo-nec-b-001-c2
-  - subject: hypothetical_syllogism
-  - predicate: adds
-  - object: immediate_minor_A_is
+  - subject: cognitive_subject
+  - predicate: utilizes_immediate_being_of_A_to
+  - object: force_the_mediated_conclusion_of_B
   - modality: asserted
-  - confidence: 0.94
+  - confidence: 0.95
   - evidence:
-    - [211-218] explicit syllogistic addition.
+    - [211-226] syllogistic addition of A's being; conclusion is accomplished mediated unity.
 
-- c3. id: syllo-nec-b-001-c3
-  - subject: conclusion_B_is
-  - predicate: is
-  - object: accomplished_mediating_unity
-  - modality: asserted
-  - confidence: 0.93
-  - evidence:
-    - [219-226] conclusion characterization.
+Claim ↔ key point map:
+
+- c1 -> k1
+- c2 -> k2, k3
 
 Relations: (Relation)
 
 - r1. type: transitions_to
   - targetEntryId: syllo-nec-b-002
-  - note: subsection `1` transitions to condition/conditioned mediation analysis.
-  - sourceClaimIds: [`syllo-nec-b-001-c3`]
+  - note: The Subject moves to investigate what this "A" (the condition) actually is phenomenologically.
+  - sourceClaimIds: [`syllo-nec-b-001-c2`]
   - sourceKeyPointIds: [`k3`]
   - targetClaimIds: [`syllo-nec-b-002-c1`]
   - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
+  - cognitiveOperation: Having established the logic gate ("If-Then-Therefore"), the Subject examines the ontological status of the data (the "conditions") flowing through it.
+  - analysisMode: active_cognitive_protocol
 
 Review outcome:
 
 - review_pending
-- notes: subsection `1` stabilized.
+- notes: Hypothetical subsection 1 upgraded.
 
-### Entry syllo-nec-b-002 — Hypothetical subsection 2: condition relation and mediating negativity
+### Entry syllo-nec-b-002 — Hypothetical subsection 2: actuating the conditions through negative unity
 
 Span:
 
@@ -385,61 +393,68 @@ Span:
 
 Summary:
 
-Subsection 2 analyzes condition/conditioned relation as indifferent-yet-necessary content and identifies mediating singular negativity that actualizes conditions.
+Analyzing the conditional logic, the Subject reveals that the middle term isn't a static thing, but an active, negative singularity—a "free unity of the concept" that seizes dispersed, indifferent conditions and violently translates them into actuality.
 
 Key points: (KeyPoint)
 
-- k1. Condition relation best captures this hypothetical form.
-- k2. Conditions are dispersed material requiring application.
-- k3. Mediating unity is active negative conceptivity.
-- k4. Conclusion exhibits identity of mediating term and mediated necessary.
+- k1. The Subject maps the hypothetical logic to the relation of "Condition and Conditioned," noting conditions are just dispersed material lying around.
+- k2. The Subject identifies "A" not merely as a passive existent, but as an inherently contingent, self-sublating being.
+- k3. The Subject explicitly identifies the middle term as *pure activity* (self-referring negative unity) that grabs the dispersed conditions and forces them into a new shape.
+- k4. The Subject forces the conclusion to declare the absolute identity between the mediating activity and the mediated necessity.
 
 Claims: (Claim)
 
 - c1. id: syllo-nec-b-002-c1
-  - subject: condition_relation
-  - predicate: corresponds_to
-  - object: hypothetical_syllogism_structure
+  - subject: cognitive_subject
+  - predicate: determines_mediating_middle_term_as
+  - object: self_referring_negative_unity_acting_as_pure_activity
   - modality: asserted
-  - confidence: 0.93
+  - confidence: 0.96
   - evidence:
-    - [227-268] relation analysis.
+    - [279-305] negativity as mediating means, free unity of concept, determining itself as activity.
 
 - c2. id: syllo-nec-b-002-c2
-  - subject: mediating_term
-  - predicate: is
-  - object: self_referring_negative_unity_as_activity
+  - subject: cognitive_subject
+  - predicate: posits_conclusion_as
+  - object: absolute_identity_of_mediating_term_and_mediated_actuality
   - modality: asserted
   - confidence: 0.94
   - evidence:
-    - [279-309] mediating means and activity.
+    - [307-329] same concept, absolute content same, identity of mediator and mediated.
 
-- c3. id: syllo-nec-b-002-c3
-  - subject: conclusion
-  - predicate: posits
-  - object: identity_of_mediator_and_mediated
-  - modality: asserted
-  - confidence: 0.94
-  - evidence:
-    - [322-329] identity statement.
+Claim ↔ key point map:
+
+- c1 -> k1, k2, k3
+- c2 -> k4
 
 Relations: (Relation)
 
-- r1. type: transitions_to
+- r1. type: refines
+  - targetEntryId: syllo-nec-b-001
+  - note: Radically upgrades the "If-Then" logic from a static formal proposition into an active metaphysical engine.
+  - sourceClaimIds: [`syllo-nec-b-002-c1`]
+  - sourceKeyPointIds: [`k3`]
+  - targetClaimIds: [`syllo-nec-b-001-c2`]
+  - logicalOperator: elevation_to_active_process
+  - cognitiveOperation: The Subject peers inside the "If A" premise and realizes it's not a static fact, but a swirling vortex of conditions waiting for the Concept to strike them like lightning to create "B".
+  - analysisMode: active_cognitive_protocol
+
+- r2. type: transitions_to
   - targetEntryId: syllo-nec-b-003
-  - note: subsection `2` transitions to explicit disjunctive determination.
-  - sourceClaimIds: [`syllo-nec-b-002-c3`]
+  - note: This pure identity of middle and extremes annihilates the distinction between them.
+  - sourceClaimIds: [`syllo-nec-b-002-c2`]
   - sourceKeyPointIds: [`k4`]
   - targetClaimIds: [`syllo-nec-b-003-c1`]
   - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
+  - cognitiveOperation: The Subject watches as the difference between the 'cause' (A) and the 'effect' (B) collapses entirely, preparing to extract the final logic from this collapse.
+  - analysisMode: active_cognitive_protocol
 
 Review outcome:
 
 - review_pending
-- notes: subsection `2` stabilized.
+- notes: Hypothetical subsection 2 upgraded.
 
-### Entry syllo-nec-b-003 — Hypothetical subsection 3: form-necessity unity and disjunctive result
+### Entry syllo-nec-b-003 — Hypothetical subsection 3: collapsing the difference and pivoting to Disjunctive
 
 Span:
 
@@ -449,60 +464,67 @@ Span:
 
 Summary:
 
-Subsection 3 shows the unity of form-connectedness and necessary content, where difference becomes empty and mediation determines itself as disjunctive form.
+Realizing that in true necessity, the distinction between "A" and "B" is an empty illusion (the cause *is* the effect), the Subject explicitly sublates their external difference, pivoting logically into the Disjunctive Syllogism.
 
 Key points: (KeyPoint)
 
-- k1. Necessary connection appears as negative form-unity.
-- k2. Necessity and necessary merge into reflected identity.
-- k3. This determines the syllogism as disjunctive.
+- k1. The Subject observes that the form-activity perfectly matches the necessary content; they are no longer split.
+- k2. The Subject officially declares that the difference between A and B is merely an "empty name"—they are the exact same identical content, just in different states.
+- k3. The Subject executes the transition: sublating this illusion of externality, withdrawing into a self-differentiating identity, which instantly dictates the Disjunctive form.
 
 Claims: (Claim)
 
 - c1. id: syllo-nec-b-003-c1
-  - subject: hypothetical_syllogism
-  - predicate: displays
-  - object: form_connectedness_of_necessity
+  - subject: cognitive_subject
+  - predicate: exposes_difference_between_A_and_B_as
+  - object: an_empty_name_covering_identical_content
   - modality: asserted
-  - confidence: 0.94
+  - confidence: 0.95
   - evidence:
-    - [330-337] first display statement.
+    - [338-348] empty name difference; identical content.
 
 - c2. id: syllo-nec-b-003-c2
-  - subject: unity_in_hypothetical
-  - predicate: is
-  - object: identity_of_content_and_form_activity
-  - modality: asserted
-  - confidence: 0.93
-  - evidence:
-    - [338-354] empty name difference and reflected unity.
-
-- c3. id: syllo-nec-b-003-c3
-  - subject: mediated_determination
-  - predicate: is
-  - object: disjunctive_syllogism
+  - subject: cognitive_subject
+  - predicate: determines_retrieval_of_identity_out_of_difference_as
+  - object: the_disjunctive_syllogism
   - modality: asserted
   - confidence: 0.96
   - evidence:
-    - [355-364] explicit concluding sentence.
+    - [356-364] differentiating identity retrieving itself, leading to disjunctive syllogism.
+
+Claim ↔ key point map:
+
+- c1 -> k1, k2
+- c2 -> k3
 
 Relations: (Relation)
 
-- r1. type: transitions_to
+- r1. type: sublates
+  - targetEntryId: syllo-nec-b-001
+  - note: Destroys the basic "If A, Then B" logic by proving they aren't actually two different things.
+  - sourceClaimIds: [`syllo-nec-b-003-c1`]
+  - sourceKeyPointIds: [`k2`]
+  - targetClaimIds: [`syllo-nec-b-001-c1`]
+  - logicalOperator: dissolution_of_hypothetical_duality
+  - cognitiveOperation: The Subject points to the hypothetical equation and says, "A and B are just two words for the exact same substance. The action of A causing B is just the substance moving within itself."
+  - analysisMode: active_cognitive_protocol
+
+- r2. type: transitions_to
   - targetEntryId: syllo-nec-c-001
-  - note: direct handoff to disjunctive opening.
-  - sourceClaimIds: [`syllo-nec-b-003-c3`]
+  - note: Handoff to the Disjunctive Syllogism.
+  - sourceClaimIds: [`syllo-nec-b-003-c2`]
   - sourceKeyPointIds: [`k3`]
   - targetClaimIds: [`syllo-nec-c-001-c1`]
-  - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
+  - logicalOperator: transition_to_disjunctive_totality
+  - cognitiveOperation: Because the substance only differentiates itself internally, the Subject structures the next test as an "Either/Or" self-division (Disjunctive).
+  - analysisMode: active_cognitive_protocol
 
 Review outcome:
 
 - review_pending
-- notes: subsection `3` stabilized.
+- notes: Hypothetical subsection 3 upgraded.
 
-### Entry syllo-nec-c-001 — Disjunctive block 1: totalized middle and explicit either-or form
+### Entry syllo-nec-c-001 — Disjunctive block 1: executing the totalized either-or exclusion
 
 Span:
 
@@ -512,60 +534,67 @@ Span:
 
 Summary:
 
-The first disjunctive block details total middle-form and shows conclusion as truth of hypothetical through explicit unity of mediator and mediated.
+Entering the Disjunctive Syllogism, the Subject forces the middle term to contain both the Universal Genus and the totalized, self-excluding list of all its possible species ("A is either B, or C, or D"), making it the absolute totality.
 
 Key points: (KeyPoint)
 
-- k1. Middle includes genus identity and differentiated species-totality.
-- k2. Either-or carries both exclusion and self-referring singular determinacy.
-- k3. A remains subject across premises and conclusion as universal/determinate/excluding.
+- k1. The Subject engineers the ultimate middle term: a Universality perfectly packed with every single one of its particularizations.
+- k2. The Subject unleashes the "negative unity" within the middle term: forcing B, C, and D to violently exclude one another, ensuring that locking in one destroys the others.
+- k3. The Subject shows that the "A" remains the bedrock subject throughout the entire inference, transmuting from Universal (major premise) to Species (minor) to excluding Singular (conclusion).
 
 Claims: (Claim)
 
 - c1. id: syllo-nec-c-001-c1
-  - subject: disjunctive_middle
-  - predicate: includes
-  - object: universal_sphere_and_negative_exclusion
+  - subject: cognitive_subject
+  - predicate: constructs_disjunctive_middle_as
+  - object: total_universal_sphere_containing_all_mutually_exclusive_particularizations
   - modality: asserted
   - confidence: 0.95
   - evidence:
-    - [365-396] middle and either-or articulation.
+    - [383-396] universal sphere, totality of species, reciprocal exclusion of determinations.
 
 - c2. id: syllo-nec-c-001-c2
-  - subject: A_in_disjunctive_structure
-  - predicate: is
-  - object: universal_then_determinate_then_excluding_singular
+  - subject: cognitive_subject
+  - predicate: drives_A_through_states_of
+  - object: universal_determinate_and_excluding_singular
   - modality: asserted
-  - confidence: 0.93
+  - confidence: 0.94
   - evidence:
-    - [405-421] A’s formal positions.
+    - [405-421] A's formal positions across premises and conclusion.
 
-- c3. id: syllo-nec-c-001-c3
-  - subject: disjunctive_syllogism
-  - predicate: posits
-  - object: unity_of_mediator_and_mediated
-  - modality: asserted
-  - confidence: 0.95
-  - evidence:
-    - [422-431] explicit truth-of-hypothetical statement.
+Claim ↔ key point map:
+
+- c1 -> k1, k2
+- c2 -> k3
 
 Relations: (Relation)
 
-- r1. type: transitions_to
+- r1. type: refines
+  - targetEntryId: syllo-nec-b-003
+  - note: Actualizes the self-differentiating identity predicted at the end of the Hypothetical section.
+  - sourceClaimIds: [`syllo-nec-c-001-c1`]
+  - sourceKeyPointIds: [`k1`, `k2`]
+  - targetClaimIds: [`syllo-nec-b-003-c2`]
+  - logicalOperator: execution_of_immanent_differentiation
+  - cognitiveOperation: The Subject takes the single Identity "A" and forces it to split purely internally into a menu of absolute, mutually exclusive choices.
+  - analysisMode: active_cognitive_protocol
+
+- r2. type: transitions_to
   - targetEntryId: syllo-nec-c-002
-  - note: first block transitions to formalism-sublation analysis.
-  - sourceClaimIds: [`syllo-nec-c-001-c3`]
+  - note: The Subject realizes that this absolute totality breaks the form of the syllogism itself.
+  - sourceClaimIds: [`syllo-nec-c-001-c2`]
   - sourceKeyPointIds: [`k3`]
   - targetClaimIds: [`syllo-nec-c-002-c1`]
   - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
+  - cognitiveOperation: The Subject steps back to look at the perfect, self-contained Disjunctive puzzle and realizes it has made the concept of "inferring" obsolete.
+  - analysisMode: active_cognitive_protocol
 
 Review outcome:
 
 - review_pending
-- notes: disjunctive block `1` stabilized.
+- notes: Disjunctive block 1 upgraded.
 
-### Entry syllo-nec-c-002 — Disjunctive block 2: sublation of formalism and completed middle
+### Entry syllo-nec-c-002 — Disjunctive block 2: the absolute sublation of the Syllogism itself
 
 Span:
 
@@ -575,60 +604,67 @@ Span:
 
 Summary:
 
-The second disjunctive block shows formalism/subjectivity sublated because complete form-determination is posited in middle-term identity.
+The Subject executes the most radical move in Subjective Logic: realizing that because the Disjunctive middle term already explicitly contains all extremes within itself, the very separation between "mediator" and "mediated" is destroyed, effectively sublating the Syllogism as a form.
 
 Key points: (KeyPoint)
 
-- k1. Positive content-identity and form-identity coincide.
-- k2. Distinction of middle versus extremes loses independent determinacy.
-- k3. Formalism of syllogistic subjectivity is sublated.
+- k1. The Subject recognizes that in the Disjunctive syllogism, the middle term is an absolute mirror of the extremes; there is zero external "content" left outside it.
+- k2. The Subject officially declares the subjective formalism of the syllogism (the gap between middle and extremes) to be totally sublated.
+- k3. The Subject observes that the entire logical architecture—where things were inferred *through* other things—has collapsed entirely in on itself because everything is natively contained in the center.
 
 Claims: (Claim)
 
 - c1. id: syllo-nec-c-002-c1
-  - subject: disjunctive_unity
-  - predicate: is
-  - object: identity_of_content_and_form
+  - subject: cognitive_subject
+  - predicate: discovers_disjunctive_middle_term_contains
+  - object: extremes_in_their_complete_determinateness
   - modality: asserted
-  - confidence: 0.94
+  - confidence: 0.96
   - evidence:
-    - [432-447] content/form identity statements.
+    - [428-435] totality of concept contains extremes; no separate determinateness remains.
 
 - c2. id: syllo-nec-c-002-c2
-  - subject: middle_extreme_difference
-  - predicate: falls_away_in
-  - object: totality_of_concept_determination
+  - subject: cognitive_subject
+  - predicate: executes_absolute_sublation_of
+  - object: formalism_and_subjectivity_of_the_syllogism
   - modality: asserted
-  - confidence: 0.95
+  - confidence: 0.97
   - evidence:
-    - [448-457] mediating/mediated distinction collapse.
+    - [455-473] formalism sublated, distinction between mediated and mediating fallen away.
 
-- c3. id: syllo-nec-c-002-c3
-  - subject: syllogistic_formalism
-  - predicate: is_sublated_as
-  - object: subjectivity_of_concept
-  - modality: asserted
-  - confidence: 0.94
-  - evidence:
-    - [458-499] explicit formalism/subjectivity sublation.
+Claim ↔ key point map:
+
+- c1 -> k1
+- c2 -> k2, k3
 
 Relations: (Relation)
 
-- r1. type: transitions_to
+- r1. type: sublates
+  - targetEntryId: syllo-exi-idea-001
+  - note: This sublation destroys the entire project initiated at the start of the Syllogism chapter (Part A), which relied on separated extremes and a distinct middle.
+  - sourceClaimIds: [`syllo-nec-c-002-c2`]
+  - sourceKeyPointIds: [`k2`, `k3`]
+  - targetClaimIds: [`syllo-exi-idea-001-c1`]
+  - logicalOperator: absolute_dissolution_of_inferential_separation
+  - cognitiveOperation: The Subject realizes that the game of 'logic' is over: there is no longer a need to connect A to B using C, because A, B, and C have melted into a single, perfectly transparent, self-evident totality.
+  - analysisMode: active_cognitive_protocol
+
+- r2. type: transitions_to
   - targetEntryId: syllo-nec-c-003
-  - note: sublation analysis transitions to final objectivity conclusion.
-  - sourceClaimIds: [`syllo-nec-c-002-c3`]
+  - note: This sublation immediately precipitates the birth of Objectivity.
+  - sourceClaimIds: [`syllo-nec-c-002-c2`]
   - sourceKeyPointIds: [`k3`]
   - targetClaimIds: [`syllo-nec-c-003-c1`]
   - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
+  - cognitiveOperation: The Subject prepares to name the massive new paradigm created by this total collapse.
+  - analysisMode: active_cognitive_protocol
 
 Review outcome:
 
 - review_pending
-- notes: disjunctive block `2` stabilized.
+- notes: Disjunctive block 2 upgraded.
 
-### Entry syllo-nec-c-003 — Disjunctive block 3: realized concept and emergence of objectivity
+### Entry syllo-nec-c-003 — Disjunctive block 3: breaking out of Subjectivity into Objectivity
 
 Span:
 
@@ -638,55 +674,62 @@ Span:
 
 Summary:
 
-The final block concludes that mediation-sublation yields immediate-being identical with mediation, i.e., concept restored in otherness as objectivity.
+Having crushed the subjective machinery of mediation down to zero, the Subject witnesses the resulting emergence of an absolute, self-sustaining immediacy: the Concept fully restored out of otherness, definitively crossing the border into Objectivity.
 
 Key points: (KeyPoint)
 
-- k1. Syllogistic movement sublates mediation where each term is only through another.
-- k2. Resulting immediacy is mediation-restored identity.
-- k3. This being is objectivity.
+- k1. The Subject summarizes the entire journey: Subjective Logic was a process of mediation, where every part only existed defensively, propped up by another part.
+- k2. The Subject executes the final move: sublating mediation itself. When the scaffolding of logic is removed, what remains doesn't fall; it stands on its own.
+- k3. The Subject officially names this self-sustaining, restored fact: "Objectivity."
 
 Claims: (Claim)
 
 - c1. id: syllo-nec-c-003-c1
-  - subject: syllogistic_result
-  - predicate: is
-  - object: immediacy_emerging_through_sublated_mediation
+  - subject: cognitive_subject
+  - predicate: determines_final_movement_of_syllogism_as
+  - object: the_sublation_of_mediation_itself
   - modality: asserted
   - confidence: 0.95
   - evidence:
-    - [519-529] immediacy-through-sublation statement.
+    - [525-529] sublation of mediation; nothing is in and for itself but only through another.
 
 - c2. id: syllo-nec-c-003-c2
-  - subject: restored_concept
-  - predicate: is
-  - object: identity_of_being_and_mediation_in_otherness
+  - subject: cognitive_subject
+  - predicate: defines_resulting_immediacy_as
+  - object: the_concept_restored_out_of_otherness_as_objectivity
   - modality: asserted
-  - confidence: 0.95
+  - confidence: 0.98
   - evidence:
-    - [529-536] restored concept formulation.
+    - [530-537] immediacy emerged through sublation, restored concept, explicitly named objectivity.
 
-- c3. id: syllo-nec-c-003-c3
-  - subject: resulting_being
-  - predicate: is
-  - object: objectivity
-  - modality: asserted
-  - confidence: 0.97
-  - evidence:
-    - [536-537] explicit final sentence.
+Claim ↔ key point map:
+
+- c1 -> k1, k2
+- c2 -> k3
 
 Relations: (Relation)
 
-- r1. type: transitions_to
+- r1. type: sublates
+  - targetEntryId: syllo-nec-c-002
+  - note: Completes the sublation recorded in the prior entry, formalizing the exit from the entire Syllogism section.
+  - sourceClaimIds: [`syllo-nec-c-003-c1`, `syllo-nec-c-003-c2`]
+  - sourceKeyPointIds: [`k1`, `k2`, `k3`]
+  - targetClaimIds: [`syllo-nec-c-002-c2`]
+  - logicalOperator: ignition_of_objectivity
+  - cognitiveOperation: The Subject formally terminates the entire process of inward "Subjective Logic." The internal logic engine has successfully built a structure so perfectly sound that the Subject can detach from it, leaving an independent, freestanding "Object" in the exact shape of the Concept.
+  - analysisMode: active_cognitive_protocol
+
+- r2. type: transitions_to
   - targetEntryId: syl-obj-001
-  - note: explicit handoff from necessity-syllogism to objectivity placeholder.
-  - sourceClaimIds: [`syllo-nec-c-003-c3`]
+  - note: Absolute transition out of the Syllogism into the doctrine of Objectivity.
+  - sourceClaimIds: [`syllo-nec-c-003-c2`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: []
-  - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
+  - targetClaimIds: [pending]
+  - logicalOperator: transition_to_objectivity
+  - cognitiveOperation: The Subject crosses the threshold: we are no longer talking about *how* we think (Logic), but *what* we think about (Objects).
+  - analysisMode: active_cognitive_protocol
 
 Review outcome:
 
 - review_pending
-- notes: disjunctive block `3` stabilized; Part C first-pass decomposition complete.
+- notes: Disjunctive block 3 upgraded, ending the entire Syllogism pass and concluding Subjective Logic.

@@ -4,7 +4,6 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "prebuild": "pnpm -w --filter @organon/logic run codegen:dialectic || true",
     "build": "tsc -b",
     "clean": "rm -rf dist node_modules tsconfig.tsbuildinfo",
     "dev": "tsc --watch",

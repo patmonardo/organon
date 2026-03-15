@@ -31,27 +31,28 @@ Authority: original source text only
 ### Entry (Topic) `id` — `title`
 
 - span: `lineStart-lineEnd`
-- summary: one sentence
-- keyPoints: (KeyPoint) 3-8 non-redundant points
-- claims: (Claim) 1-3 minimum, with evidence
+- summary: one sentence focusing on the active cognitive movement of the judging Subject.
+- keyPoints: (KeyPoint) 3-8 non-redundant points explicitly naming the cognitive activity.
+- claims: (Claim) 1-3 minimum, formalizing subjective operations with evidence.
 - relations: (Relation) typed only (`supports|contrasts|negates|sublates|presupposes|refines|transitions_to`), using labeled bullets (`r1`, `r2`, ...)
+  - logicalOperator: the specific self-acting cognitive operation.
+  - cognitiveOperation: precise protocol describing the living logic move of the Subject.
 
-## Session: 2026-02-21 (first Existence pass)
+## Session: 2026-03-10 (Cognitive Protocol Upgrade)
 
 Scope:
 
 - file: `existence.txt`
 - fixed range: lines `4-798`
-- pass policy: first pass on Judgment parts first; then IDEA pass; then second pass over Parts A-D
+- pass policy: Upgrading "Logic" to active protocols implementing the living logic via precise Logical Operations.
 
 Decision:
 
-- Remove marker-only entries for this pass and keep only substantive, evidence-bearing entries.
-- Keep the existing numbered ID pattern (`judgm-exi-<letter>-<nnn>`) so inbound/outbound cross-part links remain stable.
-- Keep claim decomposition minimal and evidence-anchored for first pass.
-- Preserve explicit transition into Reflection (`judgm-ref-i-001`).
+- Transform relations to include `logicalOperator` and `cognitiveOperation`.
+- Refocus key points and claims to reflect the "self-acting" cognitive operations of the Subject.
+- Preserve the existing numbered ID pattern.
 
-### Entry judgm-exi-i-001 — Existence-judgment setup: immediacy, quality, inherence
+### Entry judgm-exi-i-001 — Existence-judgment setup: immediate qualitative positing
 
 Span:
 
@@ -61,19 +62,19 @@ Span:
 
 Summary:
 
-Judgment of existence starts as immediate qualitative judgment and, as judgment of inherence, privileges the subject as immediate basis and predicate as non-self-subsistent.
+The Subject expects truth as concept-reality agreement but initially performs only an immediate qualitative judgment, actively structuring it as a judgment of inherence where the subject is privileged.
 
 Key points: (KeyPoint)
 
-- k1. Subjective judgment intends concept-reality agreement but begins as immediate.
-- k2. First judgment is qualitative/immediate existence.
-- k3. As inherence judgment, subject is essential basis and predicate depends on it.
+- k1. The cognitive Subject intends concept-reality agreement but its first operation is merely immediate.
+- k2. The Subject executes the first judgment as qualitative and immediately existent.
+- k3. Generating the judgment of inherence, the Subject sets the logical subject as the essential basis and makes the predicate dependent upon it.
 
 Claims: (Claim)
 
 - c1. id: judgm-exi-i-001-c1
-  - subject: judgment_of_existence
-  - predicate: begins_as
+  - subject: cognitive_subject
+  - predicate: performs
   - object: immediate_qualitative_judgment
   - modality: asserted
   - confidence: 0.96
@@ -81,8 +82,8 @@ Claims: (Claim)
     - [14-20] first judgment is immediate and therefore judgment of immediate existence / qualitative.
 
 - c2. id: judgm-exi-i-001-c2
-  - subject: judgment_of_existence
-  - predicate: is_determined_as
+  - subject: cognitive_subject
+  - predicate: structures_judgment_as
   - object: judgment_of_inherence
   - modality: asserted
   - confidence: 0.95
@@ -98,19 +99,20 @@ Relations: (Relation)
 
 - r1. type: transitions_to
   - targetEntryId: judgm-exi-a-001
-  - note: setup proceeds directly into the first positive subtopic.
+  - note: Cognitive setup proceeds directly into positing the first positive abstract forms.
   - sourceClaimIds: [`judgm-exi-i-001-c1`, `judgm-exi-i-001-c2`]
   - sourceKeyPointIds: [`k2`, `k3`]
   - targetClaimIds: [`judgm-exi-a-001-c1`]
-  - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
+  - logicalOperator: immediate_qualitative_positing
+  - cognitiveOperation: The Subject actively establishes the initial relation without reflection or mediation, projecting the basic inherence structure.
+  - analysisMode: active_cognitive_protocol
 
 Review outcome:
 
 - review_pending
-- notes: base setup entry preceding the substantive positive sequence.
+- notes: base structural setup of the judging self-act.
 
-### Entry judgm-exi-a-001 — Immediate positive form: abstract extremes and positive copula
+### Entry judgm-exi-a-001 — Immediate positive form: positing abstract identity
 
 Span:
 
@@ -120,19 +122,19 @@ Span:
 
 Summary:
 
-In the first positive form, subject and predicate are immediate abstract concept-moments and the copula is immediate abstract being.
+The Subject posits the first positive judgment by directly linking abstract singular and abstract universal extremes using an immediate, unmediated copula.
 
 Key points: (KeyPoint)
 
-- k1. Predicate is abstract universal with mediation only presupposed.
-- k2. Subject is abstract singular/externalized concept side.
-- k3. Copula is immediate and unmediated, hence positive.
+- k1. The Subject projects the predicate as an abstract universal, only presupposing but not executing its mediation.
+- k2. The Subject isolates the concept's externality, determining the logical subject as abstract singular.
+- k3. The Subject ties both extremes with an explicit "is," acting out a purely immediate and positive connection.
 
 Claims: (Claim)
 
 - c1. id: judgm-exi-a-001-c1
-  - subject: predicate
-  - predicate: is_determined_as
+  - subject: cognitive_subject
+  - predicate: determines_predicate_as
   - object: abstract_universal
   - modality: asserted
   - confidence: 0.94
@@ -140,8 +142,8 @@ Claims: (Claim)
     - [53-57] predicate as abstract universal with mediation presupposed.
 
 - c2. id: judgm-exi-a-001-c2
-  - subject: subject
-  - predicate: is_determined_as
+  - subject: cognitive_subject
+  - predicate: determines_logical_subject_as
   - object: abstract_singular
   - modality: asserted
   - confidence: 0.94
@@ -149,8 +151,8 @@ Claims: (Claim)
     - [74-80] subject as abstract singular/side of externality.
 
 - c3. id: judgm-exi-a-001-c3
-  - subject: copula_is
-  - predicate: is
+  - subject: cognitive_subject
+  - predicate: posits_copula_as
   - object: immediate_abstract_being
   - modality: asserted
   - confidence: 0.95
@@ -167,19 +169,20 @@ Relations: (Relation)
 
 - r1. type: transitions_to
   - targetEntryId: judgm-exi-a-002
-  - note: moves from immediate structure to explicit propositional articulation.
+  - note: Moves from the immediate positing to the cognitive discovery of proportional reciprocity.
   - sourceClaimIds: [`judgm-exi-a-001-c3`]
   - sourceKeyPointIds: [`k3`]
   - targetClaimIds: [`judgm-exi-a-002-c1`]
-  - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
+  - logicalOperator: positing_of_abstract_identity
+  - cognitiveOperation: The Subject executes a direct connection of raw concept-determinations, actively suppressing any deeper mediation or inner reflection.
+  - analysisMode: active_cognitive_protocol
 
 Review outcome:
 
 - review_pending
-- notes: first positive subtopic.
+- notes: first positive cognitive action.
 
-### Entry judgm-exi-a-002 — Propositional unfolding: form/content reciprocity
+### Entry judgm-exi-a-002 — Propositional unfolding: reciprocal determination
 
 Span:
 
@@ -189,20 +192,20 @@ Span:
 
 Summary:
 
-Positive judgment unfolds as "the singular is universal" while content reciprocity yields "the universal is singular," with both poles held in one immediate judgment.
+The Subject unfolds the proposition "the singular is universal" and realizes its reciprocal "the universal is singular," forcing the cognitive apparatus to hold both poles in tension within one immediate judgment.
 
 Key points: (KeyPoint)
 
-- k1. Explicit form-proposition: singular is universal.
-- k2. Objective meaning includes perishability of singulars and persistence of concept.
-- k3. Reciprocal determination yields universal-in-subject and singularized predicate.
-- k4. Immediate positive judgment still holds form/content unity.
+- k1. The Subject articulates the pure form of positive judgment: singular is universal.
+- k2. Cognition objectively means the perishability of singulars dropping into the persistent concept.
+- k3. The Subject executes a reciprocal determination, yielding both a universalized subject and a singularized predicate.
+- k4. The Subject attempts to maintain form/content unity within a single immediate positive self-action.
 
 Claims: (Claim)
 
 - c1. id: judgm-exi-a-002-c1
-  - subject: first_pure_positive_expression
-  - predicate: is
+  - subject: cognitive_subject
+  - predicate: articulates_first_pure_expression_as
   - object: singular_is_universal
   - modality: asserted
   - confidence: 0.97
@@ -211,19 +214,18 @@ Claims: (Claim)
     - [102-107] every judgment in principle says singular is universal.
 
 - c2. id: judgm-exi-a-002-c2
-  - subject: positive_judgment_objective_meaning
-  - predicate: contains
-  - object: perishability_of_singulars_and_positive_subsistence_in_concept
+  - subject: cognitive_subject
+  - predicate: discovers_objective_meaning_in
+  - object: perishability_of_singulars_into_concept
   - modality: asserted
   - confidence: 0.94
   - evidence:
     - [130-138] perishableness of singular things and concept's persistence.
-    - [145-148] judgment as universal resolving into singular through negativity.
 
 - c3. id: judgm-exi-a-002-c3
-  - subject: reciprocal_determination
-  - predicate: yields
-  - object: universal_is_singular_and_singular_is_universal_in_one_judgment
+  - subject: cognitive_subject
+  - predicate: performs_reciprocal_determination_yielding
+  - object: universal_is_singular_and_singular_is_universal
   - modality: asserted
   - confidence: 0.93
   - evidence:
@@ -240,19 +242,20 @@ Relations: (Relation)
 
 - r1. type: transitions_to
   - targetEntryId: judgm-exi-a-003
-  - note: unity remains immediate and therefore leads to contradiction and negation.
+  - note: The tension of holding the reciprocal propositions immediately leads the Subject to contradiction.
   - sourceClaimIds: [`judgm-exi-a-002-c3`]
   - sourceKeyPointIds: [`k4`]
   - targetClaimIds: [`judgm-exi-a-003-c1`]
-  - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
+  - logicalOperator: reciprocal_determination
+  - cognitiveOperation: The Subject swings cognitively between form and content, asserting both 'singular is universal' and 'universal is singular', realizing they co-determine one another.
+  - analysisMode: active_cognitive_protocol
 
 Review outcome:
 
 - review_pending
-- notes: second positive subtopic.
+- notes: second positive cognitive action.
 
-### Entry judgm-exi-a-003 — Contradiction of immediacy and transition to negation
+### Entry judgm-exi-a-003 — Contradiction of immediacy: sublation via empty identity
 
 Span:
 
@@ -262,37 +265,37 @@ Span:
 
 Summary:
 
-When form and content propositions are explicitly combined, the immediate positive configuration becomes contradictory and must be posited as negative judgment.
+Attempting to unite the reciprocal propositions, the Subject confronts an empty identity and actively sublates the positive connection, driving itself into the negative judgment.
 
 Key points: (KeyPoint)
 
-- k1. External combination would produce empty identity (particular is particular).
-- k2. Immediate extremes prevent completed union in positive form.
-- k3. Both sides jointly compel transition to negative judgment.
+- k1. The Subject finds that externally combining form and content yields the empty tautology: particular is particular.
+- k2. The Subject recognizes that its initial immediate extremes prohibit a true union of singularity and universality.
+- k3. Experiencing this contradiction, the Subject actively rejects the positive judgment and posits it as negative.
 
 Claims: (Claim)
 
 - c1. id: judgm-exi-a-003-c1
-  - subject: combination_of_form_and_content_propositions
-  - predicate: yields
-  - object: empty_identity_if_taken_as_completed_result
+  - subject: cognitive_subject
+  - predicate: confronts
+  - object: empty_identity_from_combined_propositions
   - modality: asserted
   - confidence: 0.93
   - evidence:
     - [282-295] combination would become empty identical proposition.
 
 - c2. id: judgm-exi-a-003-c2
-  - subject: positive_judgment_immediacy
-  - predicate: blocks
-  - object: union_of_singularity_and_universality_into_particularity
+  - subject: cognitive_subject
+  - predicate: recognizes
+  - object: initial_immediacy_blocks_union
   - modality: asserted
   - confidence: 0.94
   - evidence:
     - [299-307] singularity/universality cannot yet be united due to immediacy.
 
 - c3. id: judgm-exi-a-003-c3
-  - subject: positive_judgment
-  - predicate: must_be_posited_as
+  - subject: cognitive_subject
+  - predicate: actively_posits_positive_judgment_as
   - object: negative_judgment
   - modality: asserted
   - confidence: 0.97
@@ -308,19 +311,20 @@ Claim ↔ key point map:
 
 Relations: (Relation)
 
-- r1. type: transitions_to
+- r1. type: negates_and_transitions
   - targetEntryId: judgm-exi-b-001
-  - note: contradiction of positive form enters the negative judgment's logical content.
+  - note: The Subject recoils from empty identity, splitting the immediate connection to seek mediated truth via negation.
   - sourceClaimIds: [`judgm-exi-a-003-c3`]
   - sourceKeyPointIds: [`k3`]
   - targetClaimIds: [`judgm-exi-b-001-c1`]
-  - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
+  - logicalOperator: sublation_of_positive_immediacy
+  - cognitiveOperation: The Subject, recoiling from the failure of immediate connection (contradiction), performs an active negation of the judgment's assumed positivity.
+  - analysisMode: active_cognitive_protocol
 
 Review outcome:
 
 - review_pending
-- notes: completes the positive sequence.
+- notes: completion of the positive triad through cognitive failure.
 
 ### Entry judgm-exi-b-001 — Logical content and first negation to particularity
 
@@ -332,19 +336,19 @@ Span:
 
 Summary:
 
-Negative judgment clarifies that logical content lies in singular-universal form itself and yields particularity as the immediate mediated determination.
+By negating the positive formulation, the Subject realizes the true logical content lies in singular-universal relations and determines the remaining non-universal as the particular.
 
 Key points: (KeyPoint)
 
-- k1. Judgment truth concerns concept determinations, not empirical examples.
-- k2. Positive judgment contradicts itself in its logical content.
-- k3. Negation of abstract universality yields particularity.
+- k1. The Subject refocuses attention from empirical examples to the pure logical form of the concepts.
+- k2. The Subject acknowledges that the positive judgment formally contradicts itself.
+- k3. By negating the abstract universality of the predicate, the Subject actively posits particularity.
 
 Claims: (Claim)
 
 - c1. id: judgm-exi-b-001-c1
-  - subject: logical_content_of_judgment
-  - predicate: consists_in
+  - subject: cognitive_subject
+  - predicate: identifies_logical_content_as
   - object: relation_of_singular_and_universal
   - modality: asserted
   - confidence: 0.94
@@ -353,17 +357,17 @@ Claims: (Claim)
     - [358-360] judgment says singular is universal and vice versa.
 
 - c2. id: judgm-exi-b-001-c2
-  - subject: positive_judgment
-  - predicate: contradicts
-  - object: requirement_of_noncontradiction
+  - subject: cognitive_subject
+  - predicate: acknowledges
+  - object: positive_judgment_contradicts_itself
   - modality: asserted
   - confidence: 0.93
   - evidence:
     - [362-367] positive judgment not true and contradicts itself.
 
 - c3. id: judgm-exi-b-001-c3
-  - subject: non_universal
-  - predicate: is_determined_as
+  - subject: cognitive_subject
+  - predicate: posits_non_universal_as
   - object: particular
   - modality: asserted
   - confidence: 0.95
@@ -380,19 +384,20 @@ Relations: (Relation)
 
 - r1. type: transitions_to
   - targetEntryId: judgm-exi-b-002
-  - note: moves into explicit account of residual universal sphere and positive side of negation.
+  - note: Having posited the particular, the Subject evaluates what remains from the partial negation.
   - sourceClaimIds: [`judgm-exi-b-001-c3`]
   - sourceKeyPointIds: [`k3`]
   - targetClaimIds: [`judgm-exi-b-002-c1`]
-  - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
+  - logicalOperator: negation_of_abstract_universality
+  - cognitiveOperation: The Subject executes a deliberate negation, separating the abstract universal from the singular, to force the emergence of the mediated particular.
+  - analysisMode: active_cognitive_protocol
 
 Review outcome:
 
 - review_pending
-- notes: first negative subtopic.
+- notes: first moment of negative action.
 
-### Entry judgm-exi-b-002 — Residual positivity of negation and stabilized particularity
+### Entry judgm-exi-b-002 — Residual positivity: the Subject retains the universal sphere
 
 Span:
 
@@ -402,37 +407,37 @@ Span:
 
 Summary:
 
-Because negative judgment still preserves a universal sphere, negation is partial and retains determinateness as transformed universal determinateness, i.e., particularity.
+The Subject performs a partial negation, rejecting only the specific predicate determinateness while keeping the universal sphere intact, thus stabilizing particularity.
 
 Key points: (KeyPoint)
 
-- k1. Negation targets predicate abstraction, not universality as such.
-- k2. Subject-predicate connection remains partly positive through retained universal sphere.
-- k3. Determinateness remains as particularity.
+- k1. The Subject carefully limits its negation to the predicate's abstraction, not destroying universality altogether.
+- k2. The Subject retains a positive connection between subject and predicate through the surviving universal sphere.
+- k3. The Subject preserves the negated determinateness as transformed, universal determinateness (particularity).
 
 Claims: (Claim)
 
 - c1. id: judgm-exi-b-002-c1
-  - subject: negative_judgment
-  - predicate: is
-  - object: not_total_negation
+  - subject: cognitive_subject
+  - predicate: executes_negative_judgment_as
+  - object: partial_not_total_negation
   - modality: asserted
   - confidence: 0.95
   - evidence:
     - [571-579] universality not negated as such; universal sphere remains.
 
 - c2. id: judgm-exi-b-002-c2
-  - subject: rose_not_red_example
-  - predicate: shows
-  - object: retained_universal_sphere_color
+  - subject: cognitive_subject
+  - predicate: retains
+  - object: universal_sphere_despite_negation
   - modality: asserted
   - confidence: 0.95
   - evidence:
     - [582-590] color sphere retained despite negated determinateness.
 
 - c3. id: judgm-exi-b-002-c3
-  - subject: transformed_determinateness
-  - predicate: is
+  - subject: cognitive_subject
+  - predicate: stabilizers_transformed_determinateness_as
   - object: particularity
   - modality: asserted
   - confidence: 0.95
@@ -450,19 +455,20 @@ Relations: (Relation)
 
 - r1. type: transitions_to
   - targetEntryId: judgm-exi-b-003
-  - note: mediated particularity now drives second negation toward infinite judgment.
+  - note: Particularity becomes the mediating term through which the Subject drives toward the infinite judgment.
   - sourceClaimIds: [`judgm-exi-b-002-c3`]
   - sourceKeyPointIds: [`k3`]
   - targetClaimIds: [`judgm-exi-b-003-c1`]
-  - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
+  - logicalOperator: retention_of_universal_sphere
+  - cognitiveOperation: The Subject holds back from total destruction, purposefully retaining the encompassing category (the sphere) while carving out the specific particularity.
+  - analysisMode: active_cognitive_protocol
 
 Review outcome:
 
 - review_pending
-- notes: second negative subtopic.
+- notes: second moment of negative action.
 
-### Entry judgm-exi-b-003 — Negation of negation and emergence of infinite judgment
+### Entry judgm-exi-b-003 — Negation of negation: driving toward infinite judgment
 
 Span:
 
@@ -472,28 +478,28 @@ Span:
 
 Summary:
 
-Particularity mediates to second negation, restoring mediated singularity and purified universality while negating residual connection, thereby producing the infinite judgment.
+The Subject utilizes particularity to mediate a second negation, obliterating the residual connection and forcing an infinite return of singular-to-singular and universal-to-universal.
 
 Key points: (KeyPoint)
 
-- k1. Negative judgment mediates toward reflection-into-self.
-- k2. Negation of negation yields singular-is-singular / universal-is-universal.
-- k3. Full predicate extent is negated, producing infinite judgment.
+- k1. The Subject leverages particularity to turn the judgment reflectively inward upon itself.
+- k2. The Subject executes a negation of the negation, splitting the proposition into two self-identities.
+- k3. The Subject totally negates the predicate's extent, giving rise to the infinite judgment.
 
 Claims: (Claim)
 
 - c1. id: judgm-exi-b-003-c1
-  - subject: particularity
-  - predicate: functions_as
-  - object: mediating_term_for_third_step
+  - subject: cognitive_subject
+  - predicate: utilizes_particularity_as
+  - object: mediating_term_for_reflection
   - modality: asserted
   - confidence: 0.94
   - evidence:
     - [612-617] particularity mediates toward reflection of judgment into itself.
 
 - c2. id: judgm-exi-b-003-c2
-  - subject: negation_of_negative_judgment
-  - predicate: yields
+  - subject: cognitive_subject
+  - predicate: performs_negation_of_negation_yielding
   - object: singular_is_singular_and_universal_is_universal
   - modality: asserted
   - confidence: 0.93
@@ -502,8 +508,8 @@ Claims: (Claim)
     - [667-679] resulting double proposition.
 
 - c3. id: judgm-exi-b-003-c3
-  - subject: second_negation_of_residual_connection
-  - predicate: culminates_in
+  - subject: cognitive_subject
+  - predicate: annihilates_residual_connection_culminating_in
   - object: infinite_judgment
   - modality: asserted
   - confidence: 0.95
@@ -520,19 +526,20 @@ Relations: (Relation)
 
 - r1. type: transitions_to
   - targetEntryId: judgm-exi-c-001
-  - note: the negated connection now appears as explicitly infinite judgment form.
+  - note: The totally negated connection forces the Subject into configuring the infinite judgment.
   - sourceClaimIds: [`judgm-exi-b-003-c3`]
   - sourceKeyPointIds: [`k3`]
   - targetClaimIds: [`judgm-exi-c-001-c1`]
-  - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
+  - logicalOperator: negation_of_the_negation
+  - cognitiveOperation: The Subject aggressively turns the negation back onto itself, tearing away the remaining positive sphere and enforcing absolute self-relation.
+  - analysisMode: active_cognitive_protocol
 
 Review outcome:
 
 - review_pending
-- notes: completes the negative sequence.
+- notes: completion of the negative sequence through self-acting recoil.
 
-### Entry judgm-exi-c-001 — Negative infinite judgment as sublated judgment-form
+### Entry judgm-exi-c-001 — Negative infinite judgment: absolute annulment of form
 
 Span:
 
@@ -542,38 +549,38 @@ Span:
 
 Summary:
 
-The negative infinite judgment annuls ordinary judgment form: it grammatically links subject and predicate while abolishing any valid common sphere.
+The Subject posits a negative infinite judgment, intentionally linking terms while actively destroying their common sphere, producing a nonsensical but logically corrective operation.
 
 Key points: (KeyPoint)
 
-- k1. Infinite judgment is introduced as supposed truth of negative judgment.
-- k2. Negative expression sublates judgment form and becomes nonsensical.
-- k3. Examples negate both determinate predicate and universal sphere.
+- k1. The Subject posits the negative infinite judgment as the severe truth behind the prior negative failure.
+- k2. The Subject forces a sublation of the judgment form itself, maintaining grammatical syntax but destroying the logical semantic tie.
+- k3. The Subject applies total negation to both the determinateness and the universal sphere (e.g., in the act of crime against Right).
 
 Claims: (Claim)
 
 - c1. id: judgm-exi-c-001-c1
-  - subject: infinite_judgment_negative_expression
-  - predicate: sublates
-  - object: form_of_judgment
+  - subject: cognitive_subject
+  - predicate: sublates_judgment_form_via
+  - object: infinite_negative_expression
   - modality: asserted
   - confidence: 0.95
   - evidence:
     - [702-706] infinite judgment as truth of negative judgment yet sublated form.
 
 - c2. id: judgm-exi-c-001-c2
-  - subject: negatively_infinite_examples
-  - predicate: are
-  - object: correct_but_nonsensical_non_judgments
+  - subject: cognitive_subject
+  - predicate: evaluates_negatively_infinite_examples_as
+  - object: logically_correct_but_nonsensical
   - modality: asserted
   - confidence: 0.94
   - evidence:
     - [719-727] spirit-not-red / rose-not-elephant examples and verdict.
 
 - c3. id: judgm-exi-c-001-c3
-  - subject: crime_as_infinite_judgment
-  - predicate: negates
-  - object: universal_sphere_of_right_as_right
+  - subject: cognitive_subject
+  - predicate: recognizes_crime_as
+  - object: infinite_judgment_against_universal_sphere_of_right
   - modality: asserted
   - confidence: 0.93
   - evidence:
@@ -589,19 +596,20 @@ Relations: (Relation)
 
 - r1. type: transitions_to
   - targetEntryId: judgm-exi-c-002
-  - note: from negative infinite side to positive reflection side.
+  - note: Having exhausted the negative, the Subject swings to the positive self-return of the infinite judgment.
   - sourceClaimIds: [`judgm-exi-c-001-c1`]
   - sourceKeyPointIds: [`k2`]
   - targetClaimIds: [`judgm-exi-c-002-c1`]
-  - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
+  - logicalOperator: absolute_negation_of_judgment_form
+  - cognitiveOperation: The Subject actively weaponizes logic against syntax, intentionally violating sphere-compatibiliy to break the structural confines of the given logic.
+  - analysisMode: active_cognitive_protocol
 
 Review outcome:
 
 - review_pending
-- notes: first infinite subtopic.
+- notes: first infinite cognitive operation.
 
-### Entry judgm-exi-c-002 — Positive infinite side: reflected singularity and universality
+### Entry judgm-exi-c-002 — Positive infinite side: reflection into self
 
 Span:
 
@@ -611,20 +619,20 @@ Span:
 
 Summary:
 
-The positive infinite moment posits singularity and universality as self-returning through negation-of-negation.
+Swinging from absolute negativity, the Subject asserts the positive infinite moment, consciously reflecting singularity and universality entirely back into themselves.
 
 Key points: (KeyPoint)
 
-- k1. Positive infinite element is reflective self-identity.
-- k2. Singularity is first posited as mediated self-identity.
-- k3. Universality is equally posited as turning back into itself.
+- k1. The Subject establishes the positive infinite element as pure, reflective self-identity.
+- k2. The Subject achieves the first true positing of singularity via returning mediation.
+- k3. The Subject identically forces universality to return into itself, avoiding cross-contamination.
 
 Claims: (Claim)
 
 - c1. id: judgm-exi-c-002-c1
-  - subject: positive_infinite_judgment
-  - predicate: states
-  - object: singular_is_singular_by_reflection_into_itself
+  - subject: cognitive_subject
+  - predicate: asserts_positive_infinite_judgment_as
+  - object: singular_is_singular_by_reflection
   - modality: asserted
   - confidence: 0.95
   - evidence:
@@ -632,8 +640,8 @@ Claims: (Claim)
     - [758-760] singular posited for first time through mediation.
 
 - c2. id: judgm-exi-c-002-c2
-  - subject: universal
-  - predicate: is_posited_as
+  - subject: cognitive_subject
+  - predicate: forces_universal_into
   - object: turning_back_into_itself
   - modality: asserted
   - confidence: 0.94
@@ -642,27 +650,27 @@ Claims: (Claim)
 
 Claim ↔ key point map:
 
-- c1 -> k1
-- c1 -> k2
+- c1 -> k1, k2
 - c2 -> k3
 
 Relations: (Relation)
 
 - r1. type: transitions_to
-- targetEntryId: judgm-exi-c-003
-- note: after positive infinite self-return, judgment-form sublation is made explicit.
-- sourceClaimIds: [`judgm-exi-c-002-c1`, `judgm-exi-c-002-c2`]
-- sourceKeyPointIds: [`k1`, `k2`, `k3`]
-- targetClaimIds: [`judgm-exi-c-003-c1`]
-- logicalOperator: sequential_transition
-- analysisMode: first_order_claim_projection
+  - targetEntryId: judgm-exi-c-003
+  - note: This extreme self-reflection isolates the poles, forcing the Subject to witness the death of the judgment form entirely.
+  - sourceClaimIds: [`judgm-exi-c-002-c1`, `judgm-exi-c-002-c2`]
+  - sourceKeyPointIds: [`k1`, `k2`, `k3`]
+  - targetClaimIds: [`judgm-exi-c-003-c1`]
+  - logicalOperator: reflection_into_self
+  - cognitiveOperation: The Subject executes an internal looping protocol, refusing outward projection and instead securing each concept node exclusively within its own identity.
+  - analysisMode: active_cognitive_protocol
 
 Review outcome:
 
 - review_pending
-- notes: second infinite subtopic.
+- notes: second infinite cognitive operation.
 
-### Entry judgm-exi-c-003 — Judgment-form collapse after infinite extremes
+### Entry judgm-exi-c-003 — Judgment-form collapse: the Subject sublates the judgment
 
 Span:
 
@@ -672,19 +680,19 @@ Span:
 
 Summary:
 
-Through reflection of judgment determinations into themselves, both negative and positive infinite forms exceed judgment-form, yielding no remaining judgment as such.
+Realizing that negative infinity yields excessive difference and positive infinity yields blank identity, the Subject explicitly witnesses and executes the collapse of the immediate judgment form.
 
 Key points: (KeyPoint)
 
-- k1. Reflective return sublates judgment as judgment.
-- k2. Negative infinite has too much difference for positive connection.
-- k3. Positive infinite has only identity and thus no judgment difference.
+- k1. The Subject observes that internal reflection explicitly sublates the entire scaffolding of the judgment.
+- k2. The Subject finds no binding connection in the negative infinite structure due to unsurmountable difference.
+- k3. The Subject finds no necessary connection in the positive infinite structure due to absolute lack of difference.
 
 Claims: (Claim)
 
 - c1. id: judgm-exi-c-003-c1
-  - subject: reflection_of_judgment_determinations
-  - predicate: sublates
+  - subject: cognitive_subject
+  - predicate: observes_reflection_sublating
   - object: judgment_form_as_such
   - modality: asserted
   - confidence: 0.95
@@ -692,18 +700,18 @@ Claims: (Claim)
     - [772-775] reflection into themselves sublates judgment.
 
 - c2. id: judgm-exi-c-003-c2
-  - subject: negatively_infinite_judgment
-  - predicate: lacks
-  - object: positive_subject_predicate_connection
+  - subject: cognitive_subject
+  - predicate: concludes_negatively_infinite_judgment_lacks
+  - object: positive_connection
   - modality: asserted
   - confidence: 0.94
   - evidence:
     - [775-779] difference too great for judgmental connection.
 
 - c3. id: judgm-exi-c-003-c3
-  - subject: positively_infinite_judgment
-  - predicate: lacks
-  - object: judgment_due_to_total_identity
+  - subject: cognitive_subject
+  - predicate: concludes_positively_infinite_judgment_is
+  - object: only_identity_without_judgment
   - modality: asserted
   - confidence: 0.94
   - evidence:
@@ -719,19 +727,20 @@ Relations: (Relation)
 
 - r1. type: transitions_to
   - targetEntryId: judgm-exi-t-001
-  - note: from collapse of judgment-form to explicit transition into reflection judgment.
+  - note: The collapse necessitates a structural evolutionary leap for the Subject.
   - sourceClaimIds: [`judgm-exi-c-003-c1`]
   - sourceKeyPointIds: [`k1`]
   - targetClaimIds: [`judgm-exi-t-001-c1`]
-  - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
+  - logicalOperator: collapse_of_judgmental_connection
+  - cognitiveOperation: The Subject acknowledges terminal failure semantics, accepting that the simple copula cannot hold the absolute contradiction of self-reflection.
+  - analysisMode: active_cognitive_protocol
 
 Review outcome:
 
 - review_pending
-- notes: third infinite subtopic.
+- notes: terminal infinite cognitive operation for Part A.
 
-### Entry judgm-exi-t-001 — Transition paragraph: existence judgment passes to reflection
+### Entry judgm-exi-t-001 — Transition paragraph: passage to Reflection Judgment
 
 Span:
 
@@ -741,37 +750,37 @@ Span:
 
 Summary:
 
-The final paragraph explicitly states that judgment of existence has sublated itself and passed over into judgment of reflection via reflected terms of the copula's conceptual unity.
+Having driven the terms into explicit reflection, the Subject abandons qualitative immediacy and thrusts the broken structure forward into the Judgment of Reflection.
 
 Key points: (KeyPoint)
 
-- k1. Existence judgment is explicitly sublated.
-- k2. Copular identity now posits reflected, non-immediate terms.
-- k3. Direct passage into judgment of reflection is declared.
+- k1. The Subject declares the total self-sublation of the Judgment of Existence.
+- k2. The Subject reconstructs the severed copula using terms now fully reflected into themselves.
+- k3. The Subject executes a direct passage into the next cognitive dimension: the Judgment of Reflection.
 
 Claims: (Claim)
 
 - c1. id: judgm-exi-t-001-c1
-  - subject: judgment_of_existence
-  - predicate: has_sublated_itself
-  - object: qualitative_extremes_in_copular_identity
+  - subject: cognitive_subject
+  - predicate: declares_existence_judgment_as
+  - object: sublated_in_qualitative_extremes
   - modality: asserted
   - confidence: 0.96
   - evidence:
     - [785-791] existence judgment sublated; qualitative extremes sublated in identity.
 
 - c2. id: judgm-exi-t-001-c2
-  - subject: resulting_judgment_terms
-  - predicate: are_determined_as
-  - object: reflected_into_themselves_not_immediate
+  - subject: cognitive_subject
+  - predicate: reconstructs_judgment_terms_as
+  - object: reflected_into_themselves
   - modality: asserted
   - confidence: 0.95
   - evidence:
     - [792-796] unity as concept tears into judgment with reflected terms.
 
 - c3. id: judgm-exi-t-001-c3
-  - subject: judgment_of_existence
-  - predicate: passes_over_into
+  - subject: cognitive_subject
+  - predicate: transitions_system_into
   - object: judgment_of_reflection
   - modality: asserted
   - confidence: 0.97
@@ -788,14 +797,15 @@ Relations: (Relation)
 
 - r1. type: transitions_to
   - targetEntryId: judgm-ref-i-001
-  - note: concrete handoff into Part B Reflection setup entry.
+  - note: Concrete handoff from Part A to Part B.
   - sourceClaimIds: [`judgm-exi-t-001-c3`]
   - sourceKeyPointIds: [`k3`]
   - targetClaimIds: [`judgm-ref-i-001-c1`]
-  - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
+  - logicalOperator: transition_to_judgment_of_reflection
+  - cognitiveOperation: The Subject deliberately upgrades its operational context, replacing naive qualitative connections with a fully self-reflective copular relation.
+  - analysisMode: active_cognitive_protocol
 
 Review outcome:
 
 - review_pending
-- notes: transition subtopic; completes Part A first-pass boundary.
+- notes: final bridging protocol.

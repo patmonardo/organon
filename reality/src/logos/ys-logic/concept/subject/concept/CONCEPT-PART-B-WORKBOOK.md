@@ -28,28 +28,31 @@ Authority: original source text only
 
 ## Working template
 
-### Entry (Topic) <id> — <title>
+### Entry (Topic) `id` — `title`
 
-- span: `<lineStart-lineEnd>`
-- summary: one sentence
-- keyPoints: (KeyPoint) 3-8 non-redundant points
-- claims: (Claim) 1-3 minimum, with evidence
+- span: `lineStart-lineEnd`
+- summary: one sentence focusing on the active cognitive movement of the Subject.
+- keyPoints: (KeyPoint) 3-8 non-redundant points explicitly naming the cognitive activity.
+- claims: (Claim) 1-3 minimum, formalizing subjective operations with evidence.
 - relations: (Relation) typed only (`supports|contrasts|negates|sublates|presupposes|refines|transitions_to`), using labeled bullets (`r1`, `r2`, ...)
+  - logicalOperator: the specific self-acting cognitive operation.
+  - cognitiveOperation: precise protocol describing the living logic move of the Subject.
 
-## Session: 2026-02-20 (first Particular pass)
+## Session: 2026-03-10 (Cognitive Protocol Upgrade)
 
 Scope:
 
 - file: `particular.txt`
 - fixed range: lines `4-452`
+- pass policy: Upgrading "Logic" to active protocols implementing the living logic via precise Logical Operations.
 
 Decision:
 
-- Keep claim count minimal and non-redundant.
-- Preserve cross-links to Part A/Part C only when claim anchors are stable.
-- Use pseudo-Cypher labels: `Key points: (KeyPoint)`, `Claims: (Claim)`, `Relations: (Relation)`.
+- Transform relations to include `logicalOperator` and `cognitiveOperation`.
+- Refocus key points and claims to reflect the "self-acting" cognitive operations of the Subject.
+- Preserve the existing numbered ID pattern (`conce-par-<nnn>`).
 
-### Entry conce-par-001 — Immediate determination: particularity as immanent universality
+### Entry conce-par-001 — Immediate determination: positing particularity as immanent universality
 
 Span:
 
@@ -59,22 +62,21 @@ Span:
 
 Summary:
 
-Particularity is first determined as the universal's own immanent moment: internally self-differentiating, self-related, and the sole true logical division of the concept.
+Refusing external limits, the Subject actively determines particularity entirely from within the universal, executing a logical division that coordinates opposing particulars while retaining their shared, simple negativity as the sole substance.
 
 Key points: (KeyPoint)
 
-- k1. Conceptual determinateness is particularity, not an external limit.
-- k2. The particular contains and exhibits universality as its substance and totality.
-- k3. Diversity is not contingent multiplicity in truth but immanent opposition/connection.
-- k4. The universal determines itself as particular and remains with itself in this difference.
-- k5. True logical division yields coordinated opposing particulars grounded in one simple negativity.
+- k1. The Subject actively prevents determinateness from acting as an external limit, grasping it instead as the universal's own internal self-differentiation.
+- k2. The Subject demonstrates that the particular explicitly exhibits the universal rather than merely containing it implicitly.
+- k3. The Subject consciously sublates mere diversity (which implies contingency) into strict logical opposition.
+- k4. The Subject executes a true logical division: splitting the concept into indeterminate universality and the particular, treating both as equal, coordinated halves of one simple negativity.
 
 Claims: (Claim)
 
 - c1. id: conce-par-001-c1
-  - subject: particularity
-  - predicate: is_determined_as
-  - object: universal_immanent_moment_nonexternal_limit
+  - subject: cognitive_subject
+  - predicate: determines_particularity_as
+  - object: internal_self_differentiation_without_external_limit
   - modality: asserted
   - confidence: 0.97
   - evidence:
@@ -82,19 +84,9 @@ Claims: (Claim)
     - [40-47] particularity as universality is immanent connection, intrinsic totality, essential principle.
 
 - c2. id: conce-par-001-c2
-  - subject: particular
-  - predicate: contains_and_exhibits
-  - object: universality_as_substance_totality
-  - modality: asserted
-  - confidence: 0.95
-  - evidence:
-    - [11-26] particular contains universality and exhibits it through determinateness.
-    - [52-71] universal determines itself as particular; principle of diversity is self-determined.
-
-- c3. id: conce-par-001-c3
-  - subject: true_logical_division
-  - predicate: consists_in
-  - object: concept_self_division_into_coordinated_particular_opposites
+  - subject: cognitive_subject
+  - predicate: executes_logical_division_by
+  - object: coordinating_indeterminate_universal_and_particular
   - modality: asserted
   - confidence: 0.94
   - evidence:
@@ -103,45 +95,37 @@ Claims: (Claim)
 
 Claim ↔ key point map:
 
-- c1 -> k1, k3
-- c2 -> k2, k4
-- c3 -> k5
+- c1 -> k1, k2, k3
+- c2 -> k4
 
 Relations: (Relation)
 
 - r1. type: supports
   - targetEntryId: conce-uni-003
-  - note: confirms the Universal conclusion that transition to particularity is concept-immanent self-differentiation.
-  - sourceClaimIds: [`conce-par-001-c1`, `conce-par-001-c2`]
-  - sourceKeyPointIds: [`k1`, `k2`, `k4`]
+  - note: Proves that the transition to particularity is truly self-determined.
+  - sourceClaimIds: [`conce-par-001-c1`]
+  - sourceKeyPointIds: [`k1`, `k2`]
   - targetClaimIds: [`conce-uni-003-c3`]
-  - logicalOperator: implicative_support
-  - analysisMode: first_order_claim_projection
+  - logicalOperator: confirmation_of_immanence
+  - cognitiveOperation: The Subject verifies that crossing the boundary from Universal to Particular involved zero contamination from "the outside," proving the Concept is feeding entirely on its own logical mass.
+  - analysisMode: active_cognitive_protocol
 
 - r2. type: transitions_to
   - targetEntryId: conce-par-002
-  - note: from immediate determination into mediated analysis of difference, abstraction, and understanding.
-  - sourceClaimIds: [`conce-par-001-c3`]
-  - sourceKeyPointIds: [`k5`]
-  - targetClaimIds: [`conce-par-002-c1`, `conce-par-002-c2`]
+  - note: From immediate immanence to the mediated abstractions of understanding.
+  - sourceClaimIds: [`conce-par-001-c2`]
+  - sourceKeyPointIds: [`k4`]
+  - targetClaimIds: [`conce-par-002-c1`]
   - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
-
-- r3. type: supports
-  - targetEntryId: conce-uni-004
-  - note: reciprocal cross-part support: Particular's immediate determination confirms Universal's explicit handoff into particularity.
-  - sourceClaimIds: [`conce-par-001-c1`, `conce-par-001-c2`]
-  - sourceKeyPointIds: [`k1`, `k2`, `k4`]
-  - targetClaimIds: [`conce-uni-004-c1`]
-  - logicalOperator: implicative_support
-  - analysisMode: first_order_claim_projection
+  - cognitiveOperation: The Subject takes this "true logical division" and tests what happens when consciousness attempts to freeze it into abstract categories.
+  - analysisMode: active_cognitive_protocol
 
 Review outcome:
 
 - review_pending
-- notes: initial division logic stabilized for triadic pass.
+- notes: opening active protocol.
 
-### Entry conce-par-002 — Mediated determination: abstract universality and unconceptualized concept
+### Entry conce-par-002 — Mediated determination: isolating abstract universality and exposing the unconceptualized concept
 
 Span:
 
@@ -151,52 +135,32 @@ Span:
 
 Summary:
 
-Particularity is mediated through conceptual difference and abstraction up to the limit where the determinate concept is exposed as one-sided unless grasped in conceptual totality.
+Investigating the faculty of Understanding, the Subject observes how consciousness abstracts determinateness from totality, diagnosing this resulting "abstract universal" as a one-sided, empty structure that possesses all conceptual moments but fails to posit their living mediation.
 
 Key points: (KeyPoint)
 
-- k1. Difference reaches truth when grasped as conceptual unity/opposition.
-- k2. Nature's manifold species do not reliably exhibit conceptual rigor.
-- k3. Particular determinateness appears as abstract universality (form/content split).
-- k4. Abstract universal still contains concept-moments but only in immediate, unposited unity.
-- k5. The determinate concept remains one-sided and "empty" when its determinateness is not the principle of differentiation.
+- k1. The Subject actively elevates differences (like whole/part) into their true form solely by comprehending them as conceptual unity.
+- k2. The Subject deliberately ignores the empirical manifold of nature, critiquing it as mere "blind" self-externality incapable of exhibiting conceptual rigor.
+- k3. The Subject perfectly diagnoses the mechanics of the Understanding: it splits the concept into static 'form' (universality) and isolated 'content' (determinateness).
+- k4. The Subject evaluates this abstract universal as genuinely containing the concept, yet remaining strictly "unconceptualized" because its internal mediation is left unposited.
+- k5. The Subject rules that any determinate concept is objectively "empty" unless its determinateness actively functions as the generating principle of its own differentiation.
 
 Claims: (Claim)
 
 - c1. id: conce-par-002-c1
-  - subject: conceptual_difference
-  - predicate: is_truth_of
-  - object: prior_relational_differences
-  - modality: asserted
-  - confidence: 0.94
-  - evidence:
-    - [97-110] difference in concept is truth; prior determinations attain truth by reaching concept.
-    - [119-131] relations like whole/part and cause/effect are one determinate concept, not separate concepts.
-
-- c2. id: conce-par-002-c2
-  - subject: abstract_universal
-  - predicate: is_determined_as
-  - object: particularity_as_unposited_mediated_totality
+  - subject: cognitive_subject
+  - predicate: diagnoses_abstract_universal_as
+  - object: concept_with_unposited_mediation
   - modality: asserted
   - confidence: 0.93
   - evidence:
     - [171-199] particular determinateness as abstract universality; universality as form, determinateness as content.
     - [201-236] abstract-universal contains concept-moments but mediation is unposited; thus unconceptualized concept.
 
-- c3. id: conce-par-002-c3
-  - subject: natural_species_manifold
-  - predicate: is
-  - object: self_externality_not_trustworthy_copy_of_concept
-  - modality: asserted
-  - confidence: 0.9
-  - evidence:
-    - [138-145] multiplicity of natural species shows impotence to exhibit conceptual rigor.
-    - [158-169] manifold forms are free self-externality and abstract side of nothingness.
-
-- c4. id: conce-par-002-c4
-  - subject: determinate_abstract_concept
-  - predicate: is_determined_as
-  - object: one_sided_if_not_principled_by_conceptual_totality
+- c2. id: conce-par-002-c2
+  - subject: cognitive_subject
+  - predicate: evaluates_determinate_concept_as_empty_when
+  - object: lacking_totality_and_differentiation_principle
   - modality: asserted
   - confidence: 0.92
   - evidence:
@@ -205,37 +169,37 @@ Claims: (Claim)
 
 Claim ↔ key point map:
 
-- c1 -> k1
-- c2 -> k3, k4
-- c3 -> k2
-- c4 -> k5
+- c1 -> k3, k4
+- c2 -> k5
 
 Relations: (Relation)
 
 - r1. type: refines
   - targetEntryId: conce-par-001
-  - note: explains how immediate particularity is mediated in abstraction without yet positing full conceptual totality.
-  - sourceClaimIds: [`conce-par-002-c1`, `conce-par-002-c2`]
-  - sourceKeyPointIds: [`k1`, `k3`, `k4`]
-  - targetClaimIds: [`conce-par-001-c1`, `conce-par-001-c3`]
-  - logicalOperator: presuppositional_link
-  - analysisMode: first_order_claim_projection
+  - note: Details how the logical division from 001 becomes rigidified in ordinary consciousness.
+  - sourceClaimIds: [`conce-par-002-c1`]
+  - sourceKeyPointIds: [`k3`, `k4`]
+  - targetClaimIds: [`conce-par-001-c2`]
+  - logicalOperator: abstraction_and_fixation
+  - cognitiveOperation: The Subject mimics the activity of the ordinary intellect, freezing the fluid moments of the Concept into rigid properties to expose exactly how 'understanding' structurally fails to grasp 'reason'.
+  - analysisMode: active_cognitive_protocol
 
 - r2. type: transitions_to
   - targetEntryId: conce-par-003
-  - note: from one-sided abstract determinateness to explicit reason/understanding dialectic.
-  - sourceClaimIds: [`conce-par-002-c2`, `conce-par-002-c4`]
-  - sourceKeyPointIds: [`k4`, `k5`]
-  - targetClaimIds: [`conce-par-003-c1`, `conce-par-003-c2`]
+  - note: The diagnosis of understanding transitions into revealing how this very fixation forces the dialectic of reason.
+  - sourceClaimIds: [`conce-par-002-c2`]
+  - sourceKeyPointIds: [`k5`]
+  - targetClaimIds: [`conce-par-003-c1`]
   - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
+  - cognitiveOperation: The Subject prepares to reverse the diagnosis, demonstrating that the very rigidity created by the Understanding is secretly the engine driving Reason forward.
+  - analysisMode: active_cognitive_protocol
 
 Review outcome:
 
 - review_pending
-- notes: mediated block now runs through line 291 to include the one-sidedness/emptiness boundary.
+- notes: second active protocol block.
 
-### Entry conce-par-003 — High-level dialectic: understanding, reason, and the force of transition
+### Entry conce-par-003 — High-level dialectic: weaponizing Understanding to kindle Reason
 
 Span:
 
@@ -245,22 +209,21 @@ Span:
 
 Summary:
 
-This block develops the high-level dialectic in which understanding and reason are non-separable: fixity and universality become the very medium of transition.
+Refusing to discard the Understanding, the Subject instead weaponizes it, actively utilizing the Understanding's infinite force of splitting and fixing determinacies to sharpen them to the point of absolute contradiction, thereby forcibly kindling Reason.
 
 Key points: (KeyPoint)
 
-- k1. Common usage of concept remains tied to understanding and abstraction.
-- k2. Understanding fixes determinacies but also sharpens them to dialectical transition.
-- k3. Separation of understanding and reason is rejected.
-- k4. The determinate abstract concept is an essential moment of reason.
-- k5. Reason appears through the internal kindling of finite determinacies in universal self-reference.
+- k1. The Subject strictly prohibits the psychological separation of Understanding and Reason.
+- k2. The Subject actively harnesses the Understanding's "infinite force" to violently split concretes into abstract determinacies.
+- k3. The Subject recognizes that imposing the form of universal eternity onto fragile finite things is exactly what drives those things to dialectical destruction.
+- k4. The Subject intentionally builds Reason out of this very destruction, observing Reason emerge precisely when the finite is internally kindled and passes into its opposite.
 
 Claims: (Claim)
 
 - c1. id: conce-par-003-c1
-  - subject: understanding_fixity
-  - predicate: both_limits_and_enables
-  - object: dialectical_transition_of_determinacies
+  - subject: cognitive_subject
+  - predicate: weaponizes_understanding_to
+  - object: sharpen_finite_determinacies_towards_dissolution
   - modality: asserted
   - confidence: 0.94
   - evidence:
@@ -268,57 +231,48 @@ Claims: (Claim)
     - [381-390] that same sharpening enables dissolution and transition into opposite.
 
 - c2. id: conce-par-003-c2
-  - subject: understanding_reason_relation
-  - predicate: is
-  - object: nonseparable_with_abstract_concept_as_moment_of_reason
+  - subject: cognitive_subject
+  - predicate: kindles_reason_through
+  - object: universal_exposure_of_finite_disproportionality
   - modality: asserted
   - confidence: 0.95
   - evidence:
-    - [414-420] separation of understanding and reason is rejected.
-    - [421-426] determinate abstract concept is essential moment and beginning appearance of reason.
-
-- c3. id: conce-par-003-c3
-  - subject: reason
-  - predicate: emerges_through
-  - object: dialectical_kindling_of_finite_in_universal_form
-  - modality: asserted
-  - confidence: 0.94
-  - evidence:
-    - [324-330] infinite force of understanding as power causing transition of determinacies.
     - [397-413] self-referring universality exposes finite disproportionality and posits unity as concept.
+    - [421-426] determinate abstract concept is essential moment and beginning appearance of reason.
 
 Claim ↔ key point map:
 
-- c1 -> k1, k2
-- c2 -> k3, k4
-- c3 -> k2, k5
+- c1 -> k2, k3
+- c2 -> k1, k4
 
 Relations: (Relation)
 
 - r1. type: supports
   - targetEntryId: conce-par-002
-  - note: explains why abstract universality cannot remain final: its own form drives dialectical overcoming.
-  - sourceClaimIds: [`conce-par-003-c1`, `conce-par-003-c2`]
-  - sourceKeyPointIds: [`k2`, `k3`, `k4`]
-  - targetClaimIds: [`conce-par-002-c2`, `conce-par-002-c4`]
-  - logicalOperator: implicative_support
-  - analysisMode: first_order_claim_projection
+  - note: Validates the abstract universal as an essential, rather than accidental, stage.
+  - sourceClaimIds: [`conce-par-003-c1`]
+  - sourceKeyPointIds: [`k2`, `k3`]
+  - targetClaimIds: [`conce-par-002-c1`]
+  - logicalOperator: revaluation_of_abstraction
+  - cognitiveOperation: The Subject redeems its own previous critique, elevating the "mistakes" of the intellect into the necessary structural friction required to ignite the dialectic.
+  - analysisMode: active_cognitive_protocol
 
 - r2. type: transitions_to
   - targetEntryId: conce-par-004
-  - note: high-level reason/understanding dialectic transitions to explicit singularity determination.
-  - sourceClaimIds: [`conce-par-003-c2`, `conce-par-003-c3`]
-  - sourceKeyPointIds: [`k4`, `k5`]
+  - note: The intense dialectical kindling immediately collapses the particular into the singularity.
+  - sourceClaimIds: [`conce-par-003-c2`]
+  - sourceKeyPointIds: [`k4`]
   - targetClaimIds: [`conce-par-004-c1`]
   - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
+  - cognitiveOperation: The Subject pushes the tension of particularity to its absolute limit, forcing it to collapse inward into the dense singularity.
+  - analysisMode: active_cognitive_protocol
 
 Review outcome:
 
 - review_pending
-- notes: high-level abstract discussion isolated as 293-426 before explicit transition block.
+- notes: third active protocol block.
 
-### Entry conce-par-004 — Transition: singularity as third moment and conceptual return
+### Entry conce-par-004 — Transition: executing the absolute return into Singularity
 
 Span:
 
@@ -328,20 +282,20 @@ Span:
 
 Summary:
 
-The transition explicitly posits singularity as the third moment and as the concept's turning back into itself.
+Pushing particularity to its conclusion, the Subject explicitly posits self-referring determinateness as Singularity, deliberately executing the Concept's absolute turning back into itself—which simultaneously registers as the concept's own posited loss.
 
 Key points: (KeyPoint)
 
-- k1. Difference in determinate concept is brought to explicit due as essential moment.
-- k2. Self-referring determinateness is singularity.
-- k3. Particularity immediately is singularity, and singularity is the concept's absolute return.
+- k1. The Subject officially recognizes determinateness, when referring entirely to itself, as Singularity.
+- k2. The Subject demonstrates that particularity, in its absolute depth, is immediately singularity.
+- k3. The Subject consciously executes a dual maneuver: positing Singularity as the triumphant return of the Concept into itself, while simultaneously acknowledging it as the absolute, tragic loss of the pure universal.
 
 Claims: (Claim)
 
 - c1. id: conce-par-004-c1
-  - subject: singularity
-  - predicate: is_determined_as
-  - object: third_moment_and_absolute_turning_back_of_concept
+  - subject: cognitive_subject
+  - predicate: posits_singularity_as
+  - object: absolute_return_and_simultaneous_loss_of_concept
   - modality: asserted
   - confidence: 0.97
   - evidence:
@@ -356,23 +310,25 @@ Relations: (Relation)
 
 - r1. type: refines
   - targetEntryId: conce-par-003
-  - note: makes explicit the singularity determination implied by the reason/understanding dialectical block.
+  - note: Formally names the result of the dialed-up reason/understanding dialectic.
   - sourceClaimIds: [`conce-par-004-c1`]
-  - sourceKeyPointIds: [`k1`, `k2`, `k3`]
+  - sourceKeyPointIds: [`k1`, `k2`]
   - targetClaimIds: [`conce-par-003-c2`]
-  - logicalOperator: constrained_refinement
-  - analysisMode: first_order_claim_projection
+  - logicalOperator: dialectical_collapse_into_singularity
+  - cognitiveOperation: The Subject compresses the vast, conflicting network of particular differences into a single, infinitely dense point, simultaneously achieving total self-reference and total alienation.
+  - analysisMode: active_cognitive_protocol
 
 - r2. type: transitions_to
   - targetEntryId: conce-sin-001
-  - note: explicit handoff from Particular (Part B) to Singularity (Part C).
+  - note: Direct handoff to the Part C workbook (Singularity).
   - sourceClaimIds: [`conce-par-004-c1`]
-  - sourceKeyPointIds: [`k2`, `k3`]
-  - targetClaimIds: [`conce-sin-001-c1`]
-  - logicalOperator: sequential_transition
-  - analysisMode: first_order_claim_projection
+  - sourceKeyPointIds: [`k3`]
+  - targetClaimIds: [pending]
+  - logicalOperator: transition_to_singularity
+  - cognitiveOperation: The Subject officially crosses the boundary from Particularity into Singularity, carrying the burden of absolute self-reference.
+  - analysisMode: active_cognitive_protocol
 
 Review outcome:
 
 - review_pending
-- notes: transition block isolated as 428-452 per revised span strategy.
+- notes: final handoff block resolving Part B.
