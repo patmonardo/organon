@@ -16,6 +16,10 @@ use polars_ops::frame::pivot::UnpivotDF;
 use polars_ops::frame::DataFrameOps;
 use polars_plan::dsl::{ExtraColumnsPolicy, MatchToSchemaPerColumn};
 
+use crate::collections::dataframe::functions::{
+    max_horizontal as expr_max_horizontal, mean_horizontal as expr_mean_horizontal,
+    min_horizontal as expr_min_horizontal, sum_horizontal as expr_sum_horizontal,
+};
 use crate::collections::dataframe::lazy::GDSLazyFrame;
 use crate::collections::dataframe::selectors::{expand_selector, Selector};
 use crate::collections::dataframe::utils::construction::{
@@ -1053,7 +1057,7 @@ impl GDSDataFrame {
             .iter()
             .map(|name| col(*name))
             .collect();
-        let expr = polars_plan::dsl::max_horizontal(exprs)?;
+        let expr = expr_max_horizontal(&exprs)?;
         let df = self
             .df
             .clone()
@@ -1075,7 +1079,7 @@ impl GDSDataFrame {
             .iter()
             .map(|name| col(*name))
             .collect();
-        let expr = polars_plan::dsl::min_horizontal(exprs)?;
+        let expr = expr_min_horizontal(&exprs)?;
         let df = self
             .df
             .clone()
@@ -1097,7 +1101,7 @@ impl GDSDataFrame {
             .iter()
             .map(|name| col(*name))
             .collect();
-        let expr = polars_plan::dsl::sum_horizontal(exprs, ignore_nulls)?;
+        let expr = expr_sum_horizontal(&exprs, ignore_nulls)?;
         let df = self
             .df
             .clone()
@@ -1119,7 +1123,7 @@ impl GDSDataFrame {
             .iter()
             .map(|name| col(*name))
             .collect();
-        let expr = polars_plan::dsl::mean_horizontal(exprs, ignore_nulls)?;
+        let expr = expr_mean_horizontal(&exprs, ignore_nulls)?;
         let df = self
             .df
             .clone()

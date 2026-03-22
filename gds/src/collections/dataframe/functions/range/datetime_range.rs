@@ -1,10 +1,10 @@
 //! Datetime range helpers.
 
-use polars::lazy::dsl::{
-    datetime_range as pl_datetime_range, datetime_ranges as pl_datetime_ranges,
-};
 use polars::prelude::{Expr, TimeUnit, TimeZone};
 use polars::time::{ClosedWindow, Duration};
+use polars_plan::dsl::functions::{
+    datetime_range as pl_datetime_range, datetime_ranges as pl_datetime_ranges,
+};
 
 pub fn datetime_range(
     start: Expr,
