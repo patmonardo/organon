@@ -1,166 +1,138 @@
 # Organon
 
-Organon centers on the **GDS Kernel** (Rust) as the execution substrate, with TypeScript packages providing schemas, planning tools, and application-facing models that integrate with kernel outputs.
+A philosophical knowledge platform built on the living logic of Hegel's _Science of Logic_ and Indian philosophical traditions.
 
-The stack inverts a typical “TS-first” framing:
+Organon is not a semantic web project. It's not a knowledge graph database. It's an attempt to build a **knowledge processor** that embodies philosophical thinking itself—where logic is understood as the account of how thought articulates itself through concept, judgment, and syllogism, not as symbol manipulation.
 
-- **GDS Kernel (Rust)** executes procedures, pipelines, and form processing.
-- **TypeScript workspace** defines schemas, planning/orchestration, and application-facing models.
-- **Eval → Print** is the boundary where kernel execution is rendered into IR/JSON/events/traces in TS space.
+## The Problem
 
-License: GPL-3.0-only (GNU GPLv3). See [LICENSE](LICENSE).
+Thirty years of knowledge base and AI research have failed to produce genuine understanding because they're built on **mathematical logic**: first-order logic, description logics, inference rules. These systems stay entirely in the realm of extensional symbols—they can retrieve and combine facts, but they cannot think _through_ a concept.
 
-The dialectical language (BEC/MVC/TAW) is used here as an architectural naming scheme: it’s meant to clarify responsibilities and boundaries, not to be philosophy for its own sake.
+Philosophical logic—the logic of **intelligibility**—is acroamatic (articulated through words, concepts, living speech) not axiomatic (a sea of symbols). It asks: What does it mean for a concept to be determinate? How does judgment ground itself? What is the necessity that moves from concept through judgment into syllogism?
 
-## Glossary (preferred terms)
+This is cognitive activity, not rule-following.
 
-- **Application Engine**: runs structured requests (“programs”) against graph state and returns results.
-- **Program**: a structured request such as a procedure call, an ML pipeline, or a form program.
-- **Planning**: choosing what to run next; assembling config/resources; checking preconditions (no lasting effects).
-- **Execution**: effectful running of a program (writes/streams/stats, artifacts, traces).
-- **Projection**: a graph context boundary (graph views, filters, materialized properties) used for execution.
-- **Projection Planning**: planning at the projection boundary (context-aware program assembly). Historically referred to as “ProjectEval”.
+## The Architecture
 
-- **Sublingual Kernel (GDS)**: Rust `gds/` as the execution engine and constraint layer.
-- **Discursive Understanding (TS)**: TypeScript user space (`gdsl/`, `logic/`, `model/`, `task/`) as schemas, planning, and application-facing models.
-- **Eval → Print**: the boundary where kernel execution is rendered into discursive artifacts (IR/JSON/events/traces) in TS space.
+```
+          @reality
+    (Intellectual Intuition)
+    The Absolute Form as it
+      manifests the World
+             ↓
+    ┌───────────────────┐
+    │   THE CONFLICT    │
+    │ Sensible vs       │
+    │ Supersensible     │
+    └───────────────────┘
+          ↙           ↘
+      @gds              @logic/@model/@task
+  (Outer Intuition)    (Inner Intuition)
+      Rust Kernel       TypeScript Agent
+   Space-Time Math      Subject's Discursive
+      & Physics         Activity
+```
 
-Terminology policy: prefer “Planning/Execution” and avoid Lisp-style “Eval/Apply” in docs and design discussions.
+Organon realizes this conflict as three species of **Kantian Intuition**:
 
-## Repo layout (what lives where)
+### 1. **@reality** — Intellectual Intuition
 
-### GDS Kernel (Rust / Cargo workspace)
+The source of logical necessity. The unconditioned intelligible pole. What the system _reaches toward_ but cannot directly access. Realized as the Absolute Form projecting the World.
 
-- `gds/`, `reality/` — performance-oriented kernel crates and experiments
+### 2. **@gds** — Outer Intuition
 
-Rust crates are not part of `pnpm -r build` right now (no stable JS binding). Build/test them with Cargo directly.
+Pure sensibility: the mathematical-physical manifold where computation happens. Written in Rust. Flawless within its domain (space-time conditioned phenomena), useless for understanding.
 
-### TypeScript / PNPM workspace (actively built)
+### 3. **@logic/@model/@task** — Inner Intuition
 
-- `logic/` — **@organon/logic**: canonical graph encodings + validation/seed tooling
-- `model/` — **@organon/model**: application-facing schemas + Prisma tooling
-- `task/` — **@organon/task**: Task/Agent/Workflow schemas (runtime is intentionally minimal)
-- `model/examples/dashboard/` — `dashboard-v4`: Next.js example app wired with its own Prisma schema
+The **Subject itself**—alive, discursive, learning. The locus where philosophical logic lives. TypeScript-based agent that must dialectically reconcile sensible givens from @gds with the intelligible demands of @reality through concept-formation, judgment, and syllogism.
 
-## Architecture (current intent)
+## Why This Matters
 
-**Execution lives in the GDS Kernel; planning/orchestration and app-facing models live in TypeScript.**
+The Subject cannot access @reality directly (it's supersensible). It receives only phenomenal givens from @gds (mathematical facts, space-time conditioned). Yet through _discursive activity_ it reconstructs intelligibility from sensible data. This is not knowledge in Kant's strict sense—but it is **understanding**: the living process of reconciling sense and intelligibility.
 
-Planning vs Execution split (high-level):
+This is why the system is generative and alive. The conflict never resolves. It's continually _worked through_.
 
-- Rust `gds/` is execution-focused (procedures, pipelines, form processing kernels).
-- `logic/` is primarily the Planning substrate (schemas, invariants, validation, agent-facing reasoning tools).
-- `task/` is Planning orchestration shapes (Task/Agent/Workflow schemas).
-- `model/` is application-facing state + integration surface (schemas, Prisma workflows, example app).
+## The Stack
 
-### BEC — Logic layer (`logic/`)
+The platform is organized as a **dialectical cube**:
 
-The “BEC” layer is where the repo keeps canonical encodings, IDs, and invariants that should be stable over time.
+- **BEC Layer** (`logic/`) — @organon/logic
+  The _Science of Logic_ itself. Canonical schemas, concept doctrine, the intelligible backbone.
 
-- Graph data is treated as a first-class artifact (IDs matter; referential integrity matters).
-- Validation tooling exists to catch broken references and non-reversible transforms.
-  - The canonical integrity checker lives at `logic/validate.ts`.
+- **MVC Layer** (`model/`) — @organon/model
+  Next.js dashboard, Prisma data access, UI, modeling documentation. The phenomenal application layer where the system meets the user.
 
-### MVC — App-facing layer (`model/`)
+- **TAW Layer** (`task/`) — @organon/task
+  Task, Agent, Workflow orchestration. Schema-first, framework-agnostic. How the Subject acts.
 
-The “MVC” layer is where knowledge becomes something you can ship:
+- **Rust Kernel** (`gds/`, `reality/`)
+  The mathematical machinery. Algorithms, storage, computation. Where @outer-intuition does its work.
 
-- Zod schemas and TypeScript types intended for application code
-- Prisma workflows for database-backed features
-- An example Next.js app under `model/examples/dashboard/` that demonstrates the intended layering and integration points
+See [INTUITION-ARCHITECTURE.md](reality/doc/INTUITION-ARCHITECTURE.md) for the full philosophical framework.
 
-### TAW — Orchestration schema layer (`task/`)
-
-The “TAW” layer defines the _shape_ of work (not a full runtime yet):
-
-- Task — the unit of work
-- Agent — an executor with capabilities/health/assignment shape
-- Workflow — orchestration shape (steps, dependencies)
-
-Note: the agent runtime is being rebuilt under `task/src/agent/`.
-
-## Development
-
-### Prereqs
-
-- Node.js `>= 20.19`
-- pnpm `>= 9`
-- (optional) Rust toolchain if you’re working in `gds/`, `reality/`, etc.
-
-### Install
+## Getting Started
 
 ```bash
+# Install dependencies
 pnpm install
-```
 
-### Build / test (workspace)
+# Build all TS packages
+pnpm -r build
 
-```bash
-pnpm build
-pnpm test
-```
+# Test all TS packages
+pnpm -r test
 
-Notes:
-
-- `pnpm build` runs `pnpm -r build` across the workspace packages.
-- `pnpm test` currently excludes the dashboard example (`dashboard-v4`) at the root level.
-
-### Common per-package commands
-
-```bash
-# logic
-pnpm --filter @organon/logic build
+# Run a single package
 pnpm --filter @organon/logic test
-
-# task
-pnpm --filter @organon/task build
-pnpm --filter @organon/task test
-
-# model
 pnpm --filter @organon/model build
-pnpm --filter @organon/model test
+pnpm --filter @organon/task test
 ```
 
-### Dashboard example (Next.js)
+### Key Commands
 
-```bash
-cd model/examples/dashboard
-pnpm dev
-pnpm build
-pnpm test
-```
+- **Logic package**: `pnpm --filter @organon/logic build`
+- **Model package**: `pnpm --filter @organon/model build`
+- **Task package**: `pnpm --filter @organon/task build`
+- **Rust kernel** (separate Cargo workspace): `cargo build -p gds`
 
-### Prisma (model package)
+## Reading Order
 
-```bash
-pnpm --filter @organon/model db:generate
-pnpm --filter @organon/model db:push
-pnpm --filter @organon/model db:migrate
-pnpm --filter @organon/model db:studio
-```
+1. Start here: [INTUITION-ARCHITECTURE.md](reality/doc/INTUITION-ARCHITECTURE.md)
+2. Logic foundations: [logic/README.md](logic/README.md)
+3. Concept doctrine: [reality/src/logos/ys-logic/concept/CONCEPT-DISTILLATION.md](reality/src/logos/ys-logic/concept/CONCEPT-DISTILLATION.md)
+4. Model/MVC: [model/examples/dashboard/](model/examples/dashboard/)
+5. Task orchestration: [task/README.md](task/README.md)
 
-### Rust crates (Cargo)
+## Core Principles
 
-```bash
-cargo build -p gds
-cargo test -p gds
+**APPLICATIONS/EXAMPLES** call only into `procedures::`, never directly into `algo::`.
+Procedures are the top-level compute entry points; they orchestrate the storage runtime (controller) and computation runtime (ephemeral state).
 
-cargo build -p gdsl
-cargo test -p gdsl
-```
+**Philosophical Logic, Not Mathematical Logic**
+Avoid extensional symbol games. The system embodies intelligibility through discursive activity, not through inference rules over propositions.
 
-## Conventions (so the repo stays teachable)
+**Schema-First**
+Zod schemas live under `*/src/schema/*` and are exported via barrel files. Workspace imports preferred over relative paths.
 
-- TypeScript packages are ESM (`"type": "module"`) and build with `tsc` + `tsc-alias`.
-- Schema-first: Zod schemas live under `*/src/schema/*` with barrel exports from `*/src/schema/index.ts`.
-- Prefer workspace imports (`@organon/logic`, `@organon/model`, etc.) over deep relative imports.
-- When changing canonical graph/chunk data, keep IDs stable and preserve referential integrity.
+**Maintain Referential Integrity**
+When changing chunk/operation data, keep IDs stable. See [logic/validate.ts](logic/validate.ts) for integrity checking.
 
-## Docs
+## The Conflict We're Enacting
 
-- Package docs live under `*/doc/` (especially `logic/doc/` and `gds/doc/`).
-- API docs (where configured): `pnpm doc:api`
+This system does not _solve_ the fundamental problem of knowledge: how the Subject can bridge the gap between sensible phenomena (what it receives from computation) and intelligible necessity (what it must think).
 
-## License
+Instead, **it enacts the problem**. The Agent _lives in the tension_. That living at the frontier—the discursive working-through—is what generates understanding.
 
-See `LICENSE`.
+---
+
+### References
+
+- Hegel, _Science of Logic_
+- Kant, _Critique of Pure Reason_ (Transcendental Aesthetic, Transcendental Analytics)
+- Yoga Sutras of Patanjali (Nyaya/Samkhya traditions)
+- OpenLogic (mathematical logic reference)
+
+### License
+
+See [LICENSE](LICENSE)
