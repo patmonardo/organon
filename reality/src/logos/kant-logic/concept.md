@@ -70,14 +70,14 @@ the other concept and besides this still more.
 
 In regard to the logical extension of concepts,
 the following universal rules hold:
-1. What belongs to or contradicts higher concepts
-also belongs to or contradicts all lower concepts
-that are contained under those higher ones; and
-2. conversely: What belongs to or contradicts all lower concepts
-also belongs to or contradicts their higher concept.
 
-Conditions for higher and lower concepts to arise:
-Logical abstraction and logical determination
+1. What belongs to or contradicts higher concepts
+   also belongs to or contradicts all lower concepts
+   that are contained under those higher ones; and
+2. conversely: What belongs to or contradicts all lower concepts
+   also belongs to or contradicts their higher concept.
+
+## Conditions for higher and lower concepts to arise: Logical abstraction and logical determination
 
 Through continued logical abstraction
 higher and higher concepts arise,
