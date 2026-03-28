@@ -1,6 +1,6 @@
 # The Judgment of the Concept — Distillation
 
-Source: [concept.txt](file:///home/pat/VSCode/organon/reality/src/logos/ys-logic/concept/subject/judgment/concept.txt)
+Source: [concept.txt](file:///home/pat/VSCode/organon/reality/src/logos/hegel-logic/concept/subject/judgment/concept.txt)
 
 ---
 

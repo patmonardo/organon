@@ -1,6 +1,6 @@
 # The Universal Concept — Distillation
 
-Source: [universal.txt](file:///home/pat/VSCode/organon/reality/src/logos/ys-logic/concept/subject/concept/universal.txt)
+Source: [universal.txt](file:///home/pat/VSCode/organon/reality/src/logos/hegel-logic/concept/subject/concept/universal.txt)
 
 ---
 

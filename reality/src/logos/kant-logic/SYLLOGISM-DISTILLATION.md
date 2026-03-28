@@ -2,341 +2,191 @@
 
 Source: [syllogism.md](syllogism.md)
 
-Role note:
-
-- This distillation is the quick commentary companion to [Syllogism Workbook](SYLLOGISM-WORKBOOK.md).
-- Read it to move quickly from workbook commitments to a readable sweep.
-- Return to `syllogism.md` when checking completeness, correctness, or source phrasing.
-
 ---
 
-## Reader Orientation
-
-- This file is easier to approach in passes rather than straight through.
-- First pass: SS1-SS2, SS7-SS10, SS16-SS17, and SS23.
-- Second pass: SS3-SS6 to see how the moments of judgment are repurposed as immediate inference operators.
-- Later technical pass: SS11-SS15 and SS18-SS22, once Concept and Judgment feel stable.
-
-### A. Understanding: Immediate Inference
-
-### SS1. Immediate Inference Alters Form While Preserving Matter
+### SS1. Syllogism Is the Derivational Region of Subjectivity
 
 **Distillation:**
-The file begins with inferences of the understanding. Their defining feature is that they alter only the form of judgment while leaving subject and predicate materially unchanged. Subalternation, opposition, conversion, and contraposition therefore exhibit a logic of formal transformation rather than a logic of new content.
+Syllogism is the third region of Subjectivity because it is the point at which cognition no longer merely has concepts or forms judgments, but lets judgment pass over into further judgment by lawful transition. The chapter therefore gathers the doctrine of inference into a single field, but it immediately differentiates that field by faculty. Understanding handles immediate formal transformations. Reason handles mediated necessity. The power of judgment handles the ascent from particulars back toward a rule. Syllogism is thus the grammar of derivation inside General Logic, and a kind of inner dance of faculties rather than one flat inferential act.
 
 **Structural Moves:**
 
-- Matter remains fixed.
-- Form is transformed.
-- Immediate inference belongs to the understanding's formal operations.
+- Syllogism is the derivational region of Subjectivity.
+- Inference is judgment proceeding to judgment.
+- Inference is immediately distributed by faculty.
+- Understanding, reason, and reflective judgment do different inferential work.
 
 ---
 
-### SS2. Immediate Inference Is Distributed Across the Moments of Judgment
+### SS2. Understanding Begins with Immediate Inference as Formal Alteration
 
 **Distillation:**
-Immediate inference is not one single move but a family of transformations distributed across the same moments that organize judgment: quantity, quality, relation, and modality. This means that the understanding already operates as a formal transformer of judgments by varying scope, opposition, transposition, and modal force while keeping the matter fixed.
+The opening doctrine of the understanding states the basic inferential law by which one judgment is drawn from another: only the form of judgment is altered, while the matter, subject and predicate, remains the same. Syllogism therefore does not begin from adding content, but from disciplined transformation of already given judgments. This is why the understanding-side of inference is a preparatory field of formal mobility, and why subject-predicate form remains the key thread.
 
 **Structural Moves:**
 
-- Quantity yields subalternation.
-- Quality yields opposition.
-- Relation yields conversion.
-- Modality yields contraposition.
-- The understanding operates by moment-specific transformation.
+- Immediate inference alters form only.
+- One judgment is generated from another by formal alteration.
+- Subject and predicate remain materially fixed.
+- Understanding prepares derivation through disciplined transformation.
 
 ---
 
-### SS3. Subalternation Is the Quantity-Operator of Immediate Inference
+### SS3. The Moments of Judgment Reappear as Immediate Inferential Operators
 
 **Distillation:**
-In subalternation the two judgments differ in quantity, and the particular judgment is derived from the universal. The operative rule is simple and directional: from the universal to the particular the consequence is valid. Quantity therefore functions as an operator of scoped descent.
+The understanding does not infer in one generic way. It redistributes the four moments of judgment into four immediate operators. Quantity appears as subalternation, where the universal descends to the particular. Quality appears as opposition, with distinct truth-transfer rules for contradictory, contrary, and subcontrary judgments. Relation appears as conversion, where subject and predicate are lawfully transposed. Modality appears as contraposition, where assertoric force is intensified toward apodeictic force. The chapter therefore shows that judgment was already preparing inference, and that immediate inference remains tied to the articulation of judgments rather than to a formless notion of transition.
 
 **Structural Moves:**
 
-- Universal judgment supplies the broader scope.
-- Particular judgment is derived under narrower scope.
-- Quantity operates as lawful descent from universal to particular.
+- Quantity becomes subalternation.
+- Quality becomes opposition.
+- Relation becomes conversion.
+- Modality becomes contraposition.
+- Judgment is repurposed as immediate inferential machinery.
 
 ---
 
-### SS4. Opposition Is the Quality-Operator of Immediate Inference
+### SS4. Reason Introduces Necessity Through Rule, Subsumption, and Conclusion
 
 **Distillation:**
-Immediate inference through opposition works by altering quality. Kant distinguishes contradictory, contrary, and subcontrary opposition. Each is an operator of truth-transfer with different constraints: contradiction allows full inversion of truth and falsehood; contrariety allows inference only from truth of one to falsehood of the other; subcontrariety allows inference only from falsehood of one to truth of the other. Quality therefore is not a mere list of relations but a system of regulated opposition-transitions.
+Inference of reason is defined as cognition of necessity through subsumption of a condition under a universal rule. Major premise, minor premise, and conclusion are therefore not merely three sentences placed side by side. They are the articulated moments through which mediation occurs: rule, condition, and concluded predicate. Read in its fuller Kantian distribution, the understanding supplies the rule, the power of judgment performs the subsumption, and reason closes the movement in the conclusion. The premises provide the antecedent material; the conclusion provides the inferential consequentia. Here syllogism becomes genuinely mediate and no longer merely transformational.
 
 **Structural Moves:**
 
-- Contradiction yields reciprocal truth-falsehood transfer.
-- Contrariety blocks joint truth but not joint falsehood.
-- Subcontrariety blocks joint falsehood but not joint truth.
-- Quality operates by opposition-specific transfer rules.
+- Reason cognizes necessity through a universal rule.
+- Rule, condition, and conclusion articulate the mediate act.
+- Major, minor, and conclusion are the essential triad.
+- Premises are matter; consequentia in the conclusion is form.
+- Mediation begins where immediate transformation ends.
 
 ---
 
-### SS5. Conversion Is the Relation-Operator of Immediate Inference
+### SS5. The Major Premise Divides Reason into Three Families of Mediation
 
 **Distillation:**
-Immediate inference through conversion concerns relation. It works by transposing subject and predicate, so that what was subject becomes predicate and conversely. Conversion may be pure, where quantity remains unchanged, or altered, where quantity shifts. Its rules are governed by the relative breadth of spheres. Relation therefore operates by lawful transposition, not by arbitrary reversal.
+Reason then divides according to the kind of universal rule that governs the major premise. Categorical inference proceeds by inherence of marks in a subject. Hypothetical inference proceeds by dependence of one cognition on another as ground and grounded, and thus also through the relation of condition and conditioned. Disjunctive inference proceeds by the combination of members in a whole through logical division. Jasche still names all three as inferences of reason. Yet the chapter itself gives them unequal weight: categorical inference is the full doctrine of three-term mediation proper, hypothetical inference makes the necessity-relation most explicit, and disjunctive inference leans toward exhaustive division and exclusion. On a stronger derivative reading, hypothetical and disjunctive work as objective servants of science: hypothetical discovers and orders grounds, while disjunctive orders conceptual wholes and their members, thereby preparing material for categorical binding.
 
 **Structural Moves:**
 
-- Subject and predicate are transposed.
-- Conversion may be pure or altered.
-- Sphere-breadth governs which conversions are valid.
-- Relation operates by lawful transposition.
+- Categorical mediation rests on inherence of marks.
+- Hypothetical mediation rests on ground and grounded, and on condition and conditioned.
+- Disjunctive mediation rests on division of a whole.
+- The three forms are differentiated, not evenly loaded.
+- Hypothetical and disjunctive prepare material for categorical science.
 
 ---
 
-### SS6. Contraposition Is the Modality-Operator of Immediate Inference
+### SS6. The Categorical Syllogism Grounds Conclusion Through the Middle Term
 
 **Distillation:**
-Immediate inference through contraposition keeps quantity the same while altering quality. Jasche treats this under modality because it transforms an assertoric judgment into an apodeictic one. Contraposition is therefore not just another transposition rule. It is a modal intensification of judgment through metathesis.
+The categorical syllogism introduces the three termini: major, minor, and middle. Its principle is mark-transmission: what belongs to the mark of a thing belongs to the thing itself, and what contradicts the mark of a thing contradicts the thing itself. The middle term is therefore the decisive mediating mark by which subject and predicate are lawfully bound. This is the clearest place where syllogism appears as grounded transition rather than mere juxtaposition, and it is also the privileged place where the same subject-predicate material that understanding can transform immediately is taken up again by reason in mediate form. For derivative purposes, this is why the categorical feels like the true scientific center of the chapter.
 
 **Structural Moves:**
 
-- Quantity remains fixed.
-- Quality is altered.
-- Assertoric force is transformed into apodeictic force.
-- Modality operates by intensifying the judgment through contraposition.
+- The middle term is the mediating mark.
+- Major and minor are linked through that mark.
+- Conclusion follows by mark-transmission.
+- Categorical inference keeps subject-predicate at the center of mediation.
+- Categorical syllogism is grounded mediation.
 
 ---
 
-### B. Reason: Mediation and Operator Families
-
-### SS7. Mediate Inference Splits into Reason and Power of Judgment
+### SS7. The Figures Test Whether Mediation Is Pure or Mixed
 
 **Distillation:**
-Once inference is no longer immediate, Jasche does not leave the mediate field undifferentiated. Mediate inference is split between inference of reason and inference of the power of judgment. This is already a highly articulated faculty map: deduction through a universal rule belongs to reason, while ascent from particulars toward rules and likeness belongs to the power of judgment.
+Once the position of the middle term is varied, the doctrine of figures appears. But the figures are not placed on one level. The first figure alone is legitimate because it directly satisfies the universal conditions of categorical inference. The latter three figures are valid only by reduction through immediate inference, conversion, contraposition, or transposition of premises. Jasche therefore treats them as mixed or impure. The figure doctrine is a test of whether mediation stands in its proper order or only indirectly.
 
 **Structural Moves:**
 
-- Immediate inference belongs to the understanding.
-- Mediate inference divides into reason and the power of judgment.
-- The inferential field is differentiated by faculty.
+- Figure depends on the position of the middle term.
+- The first figure is the legitimate form.
+- The latter figures require reduction.
+- Mixed inference includes silent immediate inference within mediate reasoning.
 
 ---
 
-### SS8. Reason Proper Begins with Mediation Through a Rule
+### SS8. Hypothetical and Disjunctive Syllogisms Make Ground and Division Explicit
 
 **Distillation:**
-Inference of reason introduces a stronger form of necessity. A proposition is no longer merely transformed but derived through subsumption under a universal rule. Major premise, minor premise, and conclusion therefore form the canonical triad by which thought moves from rule to conditioned case.
+Hypothetical inference states its own principle openly as the principle of the ground. But its operative form also exposes condition and conditioned: what follows does so under a condition, and the resulting sequence invites a further search for the condition of the conditioned. This is where the necessity-side of syllogism becomes most visible, and where judgment discovers grounds that can later function in stricter science. Disjunctive inference states its principle as the excluded middle and reasons through exhaustive members of a division. In that sense it works on concepts at the level of a whole and its members, ordering a field of possible assertions into contradiction-sensitive completeness. If categorical syllogism mediates through a middle mark, hypothetical syllogism mediates through grounded and conditioned sequence, and disjunctive syllogism mediates through complete partition. Syllogism therefore widens beyond inclusion to explicit necessity and exhaustive division.
 
 **Structural Moves:**
 
-- A universal rule is supplied.
-- A case is subsumed under its condition.
-- The conclusion follows as necessary consequence.
+- Hypothetical syllogism is governed by ground and by condition-conditioned sequence.
+- Disjunctive syllogism is governed by excluded middle.
+- Hypothetical inference makes necessity especially visible.
+- Disjunctive inference stabilizes exhaustive alternatives.
+- Both serve the later strictness of categorical mediation.
 
 ---
 
-### SS9. Inference of Reason Has Its Own Matter and Form
+### SS9. Dilemma and Covert Inference Show Combined and Contracted Mediation
 
 **Distillation:**
-Reasoned inference has matter and form. Its matter consists in the antecedent propositions or premises. Its form lies in the conclusion insofar as it contains the consequentia. This matters because syllogism is not merely a bundle of three propositions. It is an operator in which premises provide the matter and the consequent conclusion provides the formal inferential closure.
+Dilemma combines hypothetical and disjunctive structure into one compound form. Formal and covert inferences then show that mediation can also be incomplete in expression even where it remains active in thought. Enthymeme and contracted inference are not outside syllogism; they are shortened or partially hidden modes of it. The chapter therefore preserves not only canonical inferential form, but also combined and compressed inferential practice.
 
 **Structural Moves:**
 
-- Premises constitute the matter.
-- Consequentia in the conclusion constitutes the form.
-- Syllogism is an operator of mediated closure.
-
----
-
-### SS10. The Major Premise Divides Reason into Three Operator Families
-
-**Distillation:**
-The division of inferences of reason into categorical, hypothetical, and disjunctive is grounded in the three possible conditions of objective unity in consciousness: inherence in a subject, dependence on a ground, and combination of parts in a whole. The type of major premise therefore determines the type of syllogistic operator. Categorical, hypothetical, and disjunctive inference are not three external species but three forms in which mediation itself can occur.
-
-**Structural Moves:**
-
-- Subject-inherence grounds categorical mediation.
-- Ground-dependence grounds hypothetical mediation.
-- Whole-part division grounds disjunctive mediation.
-- The major premise selects the operator family.
-
----
-
-### SS11. The Categorical Syllogism Turns on the Middle Term
-
-**Distillation:**
-The categorical syllogism is organized by three terms: major, minor, and middle. The middle term is decisive because it mediates subject and predicate through a common mark. The rules of categorical inference show that valid reasoning depends on regulated inclusion, not on free associative movement.
-
-**Structural Moves:**
-
-- Major and minor are linked through the middle.
-- The middle provides the mediating mark.
-- Validity depends on lawful term-position and scope.
-
----
-
-### SS12. The Categorical Principle Is a Mark-Transmission Operator
-
-**Distillation:**
-The principle of categorical inference is not merely that three terms are present. It is that what belongs to the mark of a thing belongs to the thing itself, and what contradicts the mark of a thing contradicts the thing itself. Categorical syllogism therefore operates by transmission through the mediating mark. It is a mark-operator, not just a proposition-chain.
-
-**Structural Moves:**
-
-- What belongs to the mark belongs to the thing.
-- What contradicts the mark contradicts the thing.
-- The middle term transmits inclusion or contradiction.
-- Categorical reasoning operates by mark-transmission.
-
----
-
-### SS13. Figures Are Positional Variants That Must Be Reduced to the First
-
-**Distillation:**
-The figures of the categorical syllogism are determined by the position of the middle term in the premises. But Jasche does not treat them as equally primary. The first figure is the only legitimate one, and the remaining figures gain validity only through reduction by immediate inference, transposition, conversion, or contraposition. The figure-system is therefore an operator calculus of positional mediation and reduction.
-
-**Structural Moves:**
-
-- The position of the middle term generates the figures.
-- The first figure is the normative form.
-- The latter figures are valid only through reduction.
-- Figure theory is a calculus of positional mediation.
-
----
-
-### SS14. Hypothetical and Disjunctive Syllogisms Formalize Conditional Necessity
-
-**Distillation:**
-Hypothetical inference reasons through condition and conditioned; disjunctive inference reasons through exhaustive division. Together they show that syllogistic necessity is not exhausted by genus-species inclusion. Reason can also operate through conditional sequence and through complete partition of a conceptual field.
-
-**Structural Moves:**
-
-- Hypothetical form binds antecedent and consequent.
-- Disjunctive form binds excluding members of a whole.
-- Necessity appears as both conditionality and exhaustiveness.
-
----
-
-### SS15. Dilemma and Covert Inference Extend the Operator Space of Reason
-
-**Distillation:**
-Dilemma shows that operator families can be combined: it is a hypothetical-disjunctive inference. Jasche also distinguishes formal from covert inferences, including enthymemes and contracted inferences, where form is incomplete in expression though not absent in thought. Reason therefore includes not only pure canonical forms but compound and cryptic operator forms.
-
-**Structural Moves:**
-
-- Dilemma combines hypothetical and disjunctive structure.
+- Dilemma combines inferential families.
 - Formal inference expresses all required matter and form.
-- Covert inference withholds part of the form in expression.
-- Reason includes compound and cryptic operators.
+- Covert inference contracts what thought still supplies.
 
 ---
 
-### C. Power of Judgment: Reflective Ascent
-
-### SS16. The Power of Judgment Extends Inference Beyond Strict Deduction
+### SS10. Reflective Judgment Ascends From Particulars by Common Ground
 
 **Distillation:**
-The final movement is not a mere appendix to reason but the second branch of mediate inference: the power of judgment. Here thought proceeds from particulars toward universals through induction and analogy. This is weaker than apodictic deduction, but it is indispensable for empirical cognition because it explains how the mind moves from repeated cases toward rules and likenesses.
+The power of judgment introduces a distinct twofold step. Determinative judgment goes from universal to particular and names the downward return by which a rule is applied. Reflective judgment proceeds from particular to universal and has only empirical universality. The inferential forms treated here belong to this reflective side, whose principle is that the many do not agree in one without a common ground. Reflective judgment therefore does not merely generalize. It searches for the mediating mark or condition under which the many can belong together. From this arise induction and analogy. Syllogism therefore does not end with strict deduction. It also includes the reflective search by which empirical cognition seeks its rule.
 
 **Structural Moves:**
 
-- Deduction moves from rule to case.
-- Reflection moves from case to rule.
-- Induction and analogy extend cognition without full necessity.
-- The power of judgment is the faculty of reflective ascent.
+- Determinative and reflective judgment form a twofold movement.
+- Reflective judgment proceeds from particular to universal.
+- Its principle is common ground across the many.
+- Induction and analogy are its two operator modes.
 
 ---
 
-### SS17. Reflective Judgment Has Its Own Principle and Operators
+### SS11. Composite Reason Chains Grounds and Consequences into Systematic Mediation
 
 **Distillation:**
-The power of judgment has its own principle: the many do not agree in one without a common ground. From this it infers either by induction from many cases to all things of a kind, or by analogy from many shared determinations to the remaining ones that belong to the same principle. Reflective judgment therefore is not a weak imitation of reason; it is a distinct operator-family for empirical ascent.
+The chapter then extends beyond single inferences. Composite inference combines several inferences not by coordination but by subordination as grounds and consequences. Prosyllogisms and episyllogisms mark opposite directions through the chain. Sorites compresses multiple inferences into a shortened path. Syllogism thus becomes serial and architectonic: mediation can be prolonged, ordered, and compressed while preserving its inferential character.
 
 **Structural Moves:**
 
-- Agreement among many points to a common ground.
-- Induction moves from many to all of a kind.
-- Analogy moves from shared determinations to remaining ones.
-- Reflective judgment is an operator-family of empirical ascent.
+- Composite inference subordinates grounds and consequences.
+- Prosyllogism and episyllogism mark reverse directions through a chain.
+- Sorites compresses mediated sequence.
+- Syllogism scales from one inference to a series.
 
 ---
 
-### D. Extended Inferential Machinery
-
-### SS18. Composite Inference Builds Chains of Mediation
+### SS12. Fallacy and Bad Proof Name Failures in the Economy of Mediation
 
 **Distillation:**
-The file does not stop with single inferences. It also articulates composite inference, where several inferences of reason are combined through subordination as grounds and consequences. Polysyllogistic reasoning therefore extends the processor from single mediated closure to chained mediated closure.
+The close of the chapter turns to inferential defect. Fallacy, paralogism, and sophism are forms of formal wrongness under the appearance of correctness. Leap in inference omits the needed middle. Petitio principii and circulus in probando corrupt proof by presupposing what must be shown. Proof can also overreach or underreach what is to be demonstrated. These defects show that syllogism is governed not merely by conclusion, but by the proportion and integrity of mediation.
 
 **Structural Moves:**
 
-- Simple inference contains one reasoning step.
-- Composite inference contains several subordinate steps.
-- Polysyllogistic reasoning chains grounds and consequences.
-- Reason scales from single closure to inferential networks.
+- Fallacy is formal wrongness under apparent correctness.
+- Leap omits the needed mediating step.
+- Bad proof can beg the question, circle, overprove, or underprove.
+- Inferential failure is failure in mediation.
 
 ---
 
-### SS19. Prosyllogism and Episyllogism Orient the Inferential Chain
+### SS13. Syllogism Is the Truth of Ground on the General Logic Side
 
 **Distillation:**
-Once inference becomes composite, direction matters. In episyllogism one moves from grounds down to consequences; in prosyllogism one moves from consequences up to grounds. The inferential chain is therefore not merely long. It has orientation, and that orientation determines whether the process descends from principles or ascends toward them.
+Read as a whole, the chapter progressively discloses ground. It is explicit in hypothetical inference as the principle of ground. It reappears in reflective judgment as common ground. It becomes serial in polysyllogism as grounds and consequences. Even the categorical syllogism already performs grounded mediation through the middle mark on the subject-predicate axis. For our derivative use, this makes Syllogism the clearest Kantian site for reading the truth of ground within General Logic: not yet a full Hegelian doctrine of Ground, but already the place where formal transition becomes grounded, mediated, and capable of systematic chaining. It also clarifies why the chapter matters historically. Kant is already refusing to treat all inference as one undifferentiated act, and is marking differences among immediate transformation, mediate reason, and reflective ascent that later logic too often blurred and that Hegel will press still harder. On a stronger derivative reconstruction, the categorical is the only inference of reason in the strict sense because only there is the full rule-subsumption-conclusion form developed as pure subject-predicate mediation. Hypothetical inference then appears above all as an inference of necessity, where ground-grounded is read through condition and conditioned and where judgment discovers the grounds science needs. Disjunctive inference appears closer to the understanding, which holds members of a division in exhaustive, contradiction-sensitive order and arranges conceptual wholes into stable tables of possibility. In that sense both are objective servants of science, furnishing the material that categorical syllogism binds into strict scientific form. Kant does not rename them this way here, but the chapter strongly pressures that distinction.
 
 **Structural Moves:**
 
-- Episyllogism descends from grounds to consequences.
-- Prosyllogism ascends from consequences to grounds.
-- Composite reasoning is direction-sensitive.
-- Chain orientation is part of inferential form.
-
----
-
-### SS20. Sorites Condenses the Inferential Chain
-
-**Distillation:**
-Sorites is a shortened chain inference in which several inferences are combined for one conclusion. It can be progressive or regressive, categorical or hypothetical. Sorites therefore is a compression operator: it contracts a chain of mediation into a condensed inferential path.
-
-**Structural Moves:**
-
-- Sorites shortens multiple inferences into one chain.
-- Progressive sorites ascends through grounds.
-- Regressive sorites descends through grounds.
-- Categorical and hypothetical sorites preserve different inferential media.
-
----
-
-### SS21. Fallacy Names the Anti-Operators of Inference
-
-**Distillation:**
-The file also maps inferential failure. A fallacy is wrong in form while still carrying the illusion of correctness. Paralogism is self-deception; sophism is intended deception of others. These are not external moral notes. They identify anti-operators that mimic valid inferential form while corrupting it.
-
-**Structural Moves:**
-
-- Fallacy is formal invalidity under an appearance of validity.
-- Paralogism is self-deceptive failure.
-- Sophism is intentionally deceptive failure.
-- Invalid operators mimic valid ones.
-
----
-
-### SS22. Leap, Petitio, and Over- or Under-Proof Mark Defects of Mediation
-
-**Distillation:**
-The final distinctions refine defects in inferential mediation. A leap omits a mediating premise; it is legitimate only where the missing mediation can be supplied in thought. Petitio principii and circulus in probando collapse proof into itself by taking as ground what still requires proof. Probatio plus and minus probans distort the proportion of proof by proving too much or too little. These are all failures in the economy of mediation.
-
-**Structural Moves:**
-
-- Leap omits mediation.
-- Petitio and circulus collapse mediation into self-grounding.
-- Probatio plus/minus mismeasure the scope of proof.
-- Inferential defects are failures of mediated proportion.
-
----
-
-### E. Whole-File Compression
-
-### SS23. The Whole File Provides a Faculty-Differentiated Logic of Cognitive Transition
-
-**Distillation:**
-Taken as a whole, the file layers three grades of logical movement: immediate transformation by the understanding, mediated necessity by reason, and reflective ascent from particulars by the power of judgment. But these are not just three headings. Each grade contains its own operator-family: transformation of form, mediation through rules and marks, and ascent through empirical common ground. The file therefore gives a compact map of how a discursive intelligence can preserve, derive, and extend cognition. In that sense it reads as a formal operations manual for a thinking machine.
-
-**Structural Moves:**
-
-- Understanding preserves form across immediate inference.
-- Reason derives necessity through mediation.
-- Reflective judgment generalizes from particulars.
-- Chain, compression, and defect operators govern extended inferential processing.
+- Ground is explicit in hypothetical inference.
+- Common ground governs reflective ascent.
+- Grounds and consequences govern inferential chains.
+- Categorical mediation is the privileged center of the trio.
+- Hypothetical and disjunctive furnish material for categorical science.
+- Inferential acts must be differentiated rather than flattened.
+- Syllogism is the strongest Kantian site for reading grounded mediation.

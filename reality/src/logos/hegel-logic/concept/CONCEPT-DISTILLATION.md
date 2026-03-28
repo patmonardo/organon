@@ -1,10 +1,10 @@
 # The Doctrine of the Concept — Of the Concept in General
 
-Source: [concept.txt](file:///home/pat/VSCode/organon/reality/src/logos/ys-logic/concept/concept.txt)
+Source: [concept.txt](file:///home/pat/VSCode/organon/reality/src/logos/hegel-logic/concept/concept.txt)
 
 Detailed follow-through:
 
-- [Subjectivity — Distillation](file:///home/pat/VSCode/organon/reality/src/logos/ys-logic/concept/subject/SUBJECTIVITY-DISTILLATION.md)
+- [Subjectivity — Distillation](file:///home/pat/VSCode/organon/reality/src/logos/hegel-logic/concept/subject/SUBJECTIVITY-DISTILLATION.md)
 
 ---
 

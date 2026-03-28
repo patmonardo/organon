@@ -1,6 +1,6 @@
 # The Singular Concept — Distillation
 
-Source: [singular.txt](file:///home/pat/VSCode/organon/reality/src/logos/ys-logic/concept/subject/concept/singular.txt)
+Source: [singular.txt](file:///home/pat/VSCode/organon/reality/src/logos/hegel-logic/concept/subject/concept/singular.txt)
 
 ---
 

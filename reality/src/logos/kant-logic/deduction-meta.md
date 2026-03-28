@@ -8,15 +8,15 @@
 
 ## §13. On the Principles of a Transcendental Deduction in General
 
-Jurists, when they speak of entitlements and claims, distinguish in a legal matter between the questions about what is lawful (*quid juris*) and
-that which concerns the fact (*quid facti*), and since they demand proof of both, they call the first, that
+Jurists, when they speak of entitlements and claims, distinguish in a legal matter between the questions about what is lawful (_quid juris_) and
+that which concerns the fact (_quid facti_), and since they demand proof of both, they call the first, that
 which is to establish the entitlement or the legal claim, the deduction.
 
 We make use of a multitude of empirical concepts without objection from anyone, and
 take ourselves to be justified in granting them a sense and a supposed signification even without any deduction, because
 we always have experience ready at hand to prove their objective reality.
 But there are also concepts that have been usurped, such as fortune and fate, which circulate with almost universal indulgence, but
-that are occasionally called upon to establish their claim by the question *quid juris*, and
+that are occasionally called upon to establish their claim by the question _quid juris_, and
 then there is not a little embarrassment about their deduction because one can adduce no clear legal ground for
 an entitlement to their use either from experience or from reason.
 
@@ -50,7 +50,7 @@ it does not lie down this path at all, for in regard to their future use, which
 should be entirely independent of experience, an entirely different birth certificate than that of an ancestry from experiences must be produced.
 
 I will therefore call this attempted physiological derivation, which cannot properly be called a deduction at all because
-it concerns a *quaestio facti*, the explanation of the possession of a pure cognition.
+it concerns a _quaestio facti_, the explanation of the possession of a pure cognition.
 It is therefore clear that only a transcendental and never an empirical deduction of them can be given, and
 that in regard to pure a priori concepts empirical deductions are nothing but idle attempts, which
 can occupy only those who have not grasped the entirely distinctive nature of these cognitions.
@@ -183,15 +183,15 @@ their relation to any object could not be comprehended at all.
 There are, however, three original sources (capacities or faculties of the soul), which
 contain the conditions of the possibility of all experience, and cannot themselves be derived from any other faculty of the mind, namely:
 
-1. Sense, 2.
-Imagination, 3.
-Apperception.
+1. Sense,
+2. Imagination,
+3. Apperception.
 
 On these are grounded:
 
-1. The synopsis of the manifold a priori through sense, 2.
-The synthesis of this manifold through the imagination, 3.
-The unity of this synthesis through original apperception.
+1. The synopsis of the manifold a priori through sense,
+2. The synthesis of this manifold through the imagination,
+3. The unity of this synthesis through original apperception.
 
 In addition to their empirical use, all of these faculties have a transcendental one, which is concerned solely with form and
 which is possible a priori.
@@ -812,4 +812,3 @@ unity (in the representation of an object) is encountered merely in us, and thus
 first make it possible as far as its form is concerned.
 
 And from this ground, the only possible one among all, our deduction of the categories has been conducted.
-

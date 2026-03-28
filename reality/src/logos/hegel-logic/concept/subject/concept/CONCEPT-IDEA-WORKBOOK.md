@@ -1,7 +1,7 @@
 # CONCEPT-IDEA-WORKBOOK
 
 **Part**: CHAPTER 1 — The Concept as Such
-**Source**: [concept-idea.txt](file:///home/pat/VSCode/organon/reality/src/logos/ys-logic/concept/subject/concept/concept-idea.txt) (Lines 1–71)
+**Source**: [concept-idea.txt](file:///home/pat/VSCode/organon/reality/src/logos/hegel-logic/concept/subject/concept/concept-idea.txt) (Lines 1–71)
 **Status**: active
 **Authority**: original source text only
 
@@ -40,6 +40,7 @@
 ### Entry con-idea-001 — Faculty critique: the concept as such vs. abstract determination
 
 Span:
+
 - sourceFile: `concept-idea.txt`
 - lineStart: 6
 - lineEnd: 31
@@ -48,12 +49,14 @@ Summary:
 Hegel dismantles faculty-psychology by showing that formal judgment and formal syllogism collapse back into understanding when concept-determination is treated as merely abstract. The chapter's subject — "the concept as such" — is declared as self-determining totality, not dead determinateness.
 
 Key Points: (KeyPoint)
+
 - k1. Common doctrine reduces understanding to the faculty of determinate concepts and separates it from judgment/reason.
-- k2. Formal judgment and formal syllogism, when subsumed under abstract determinateness, are themselves functions of the understanding — the faculty-distinction is mislabeled *within its own register*.
+- k2. Formal judgment and formal syllogism, when subsumed under abstract determinateness, are themselves functions of the understanding — the faculty-distinction is mislabeled _within its own register_.
 - k3. The chapter redefines its target as "the concept as such" — not abstractly determinate — thereby distinguishing understanding from reason at a deeper level.
-- k4. *(Register note)* This faculty collapse is valid within transactional reason. It does not claim the Transcendental Verstand/Vernunft distinction is illusory — only that standard faculty-psychology mislabels its operations.
+- k4. _(Register note)_ This faculty collapse is valid within transactional reason. It does not claim the Transcendental Verstand/Vernunft distinction is illusory — only that standard faculty-psychology mislabels its operations.
 
 Claims: (Claim)
+
 - c1. id: `con-idea-001-c1`
   - subject: concept_as_such
   - predicate: is_distinguished_from
@@ -74,6 +77,7 @@ Claims: (Claim)
     - [concept-idea.txt:23–26] judgment/syllogism as formal are treated as understanding under abstract determinateness.
 
 Relations: (Relation)
+
 - r1. type: `transitions_to`
   - targetEntryId: con-idea-002
   - note: Faculty critique clears ground for the triadic structure of the universal concept.
@@ -87,6 +91,7 @@ Review: `review_pending`
 ### Entry con-idea-002 — The universal concept as triadic totality (U/P/S)
 
 Span:
+
 - sourceFile: `concept-idea.txt`
 - lineStart: 33
 - lineEnd: 43
@@ -95,12 +100,14 @@ Summary:
 The universal concept contains three moments — universality, particularity, singularity — and its positedness is identical with being-in-and-for-itself, so each moment is simultaneously the whole concept and a determinate concept.
 
 Key Points: (KeyPoint)
+
 - k1. The universal concept contains three moments: universality, particularity, singularity — the concept's own self-differentiation, not external classification.
-- k2. *Positedness* (from Essence) is here identical with *being-in-and-for-itself*. The concept's moments are posited *by* the concept *for* the concept — self-grounded, not dependent.
+- k2. _Positedness_ (from Essence) is here identical with _being-in-and-for-itself_. The concept's moments are posited _by_ the concept _for_ the concept — self-grounded, not dependent.
 - k3. Each moment is both the whole concept and a determination of the concept. No moment is merely partial.
-- k4. *(Dharma note)* This triadic self-completeness maps onto the structure of a Root Concept (Dharma): each Dharma is an isolated totality within the pre-existing Universal Encyclopedia of Science, illuminated from Paramārthika.
+- k4. _(Dharma note)_ This triadic self-completeness maps onto the structure of a Root Concept (Dharma): each Dharma is an isolated totality within the pre-existing Universal Encyclopedia of Science, illuminated from Paramārthika.
 
 Claims: (Claim)
+
 - c1. id: `con-idea-002-c1`
   - subject: universal_concept
   - predicate: contains
@@ -120,6 +127,7 @@ Claims: (Claim)
     - [concept-idea.txt:39–43] positedness identical with being-in-and-for-itself; each moment as whole concept + determinate concept.
 
 Relations: (Relation)
+
 - r1. type: `refines`
   - targetEntryId: con-idea-001
   - note: Specifies what "concept as such" contains internally once abstract reduction is refused.
@@ -139,6 +147,7 @@ Review: `review_pending`
 ### Entry con-idea-003 — First moment: universality as self-determining and self-limiting
 
 Span:
+
 - sourceFile: `concept-idea.txt`
 - lineStart: 45
 - lineEnd: 60
@@ -147,12 +156,14 @@ Summary:
 Universality is "first" but this very priority already particularizes it — the universal concept "takes its place alongside the other concepts." As a totality, universality's pure self-reference is essentially a determining and distinguishing that immediately limits itself to being "only the universal" against the distinctness of the moments.
 
 Key Points: (KeyPoint)
+
 - k1. Pure universality, the moment it is named as "first," becomes a determinate position — it takes its place alongside other concepts.
 - k2. The concept is a totality; therefore its universality is not static self-identity but active self-distinguishing.
 - k3. Universality "determines itself immediately as being only the universal as against the distinctness of the moments" — the universal self-limits by comprehending everything yet excluding particular and singular.
-- k4. *(Encyclopedia note)* "Takes its place alongside the other concepts" implies a pre-existing plurality of Root Concepts (Dharmas). Hegel correctly describes the structure but the plurality is not generated by conceptual self-determination — it is the eternal structure of the Universal Encyclopedia, illuminated from the Absolute.
+- k4. _(Encyclopedia note)_ "Takes its place alongside the other concepts" implies a pre-existing plurality of Root Concepts (Dharmas). Hegel correctly describes the structure but the plurality is not generated by conceptual self-determination — it is the eternal structure of the Universal Encyclopedia, illuminated from the Absolute.
 
 Claims: (Claim)
+
 - c1. id: `con-idea-003-c1`
   - subject: universal_moment
   - predicate: is_also
@@ -172,6 +183,7 @@ Claims: (Claim)
     - [concept-idea.txt:50–60] because concept is totality, its self-identity pervades and comprehends all moments yet immediately determines itself as only the universal.
 
 Relations: (Relation)
+
 - r1. type: `supports`
   - targetEntryId: con-idea-002
   - note: Demonstrates how the triadic totality works operationally — universality is self-complete yet self-limiting.
@@ -191,6 +203,7 @@ Review: `review_pending`
 ### Entry con-idea-004 — Second moment: particularity as determinate distinction
 
 Span:
+
 - sourceFile: `concept-idea.txt`
 - lineStart: 62
 - lineEnd: 64
@@ -199,10 +212,12 @@ Summary:
 The concept is "thereby" (damit) posited as this particular or determinate concept, distinct from others — a strict logical consequence of universality's self-limitation.
 
 Key Points: (KeyPoint)
+
 - k1. "Thereby" marks this as a strict logical consequence, not an external addition.
-- k2. Particularity = the concept as *this* concept, distinct from others. Self-identity has generated its own opposite: determinate difference.
+- k2. Particularity = the concept as _this_ concept, distinct from others. Self-identity has generated its own opposite: determinate difference.
 
 Claims: (Claim)
+
 - c1. id: `con-idea-004-c1`
   - subject: concept
   - predicate: is_posited_as
@@ -213,6 +228,7 @@ Claims: (Claim)
     - [concept-idea.txt:62–64] "the concept is thereby posited as this particular or determinate concept, distinct from others."
 
 Relations: (Relation)
+
 - r1. type: `presupposes`
   - targetEntryId: con-idea-003
   - note: Particularity is the direct result of universality's self-limitation.
@@ -232,6 +248,7 @@ Review: `review_pending`
 ### Entry con-idea-005 — Third moment: singularity as absolute negativity → transition to judgment
 
 Span:
+
 - sourceFile: `concept-idea.txt`
 - lineStart: 66
 - lineEnd: 70
@@ -240,12 +257,14 @@ Summary:
 Singularity is the concept reflecting itself out of difference into absolute negativity. This is simultaneously the moment at which it steps out of its identity into its otherness and becomes judgment — closing Chapter 1 and opening Chapter 2.
 
 Key Points: (KeyPoint)
-- k1. Singularity = the concept's reflective return out of the dispersal of particular determinations into *absolute negativity* — negation of difference-as-fixed.
-- k2. This absolute self-return is *simultaneously* self-externalization: the concept "steps out of its identity into its otherness."
-- k3. The immediate consequence: the concept *becomes judgment*. Judgment = the concept's self-diremption into subject and predicate.
+
+- k1. Singularity = the concept's reflective return out of the dispersal of particular determinations into _absolute negativity_ — negation of difference-as-fixed.
+- k2. This absolute self-return is _simultaneously_ self-externalization: the concept "steps out of its identity into its otherness."
+- k3. The immediate consequence: the concept _becomes judgment_. Judgment = the concept's self-diremption into subject and predicate.
 - k4. The entire Chapter 1 arc (U → P → S) is a dialectical circuit in which singularity generates a new form (judgment) by converting inward negativity into outward self-articulation.
 
 Claims: (Claim)
+
 - c1. id: `con-idea-005-c1`
   - subject: singularity
   - predicate: is
@@ -265,6 +284,7 @@ Claims: (Claim)
     - [concept-idea.txt:68–70] "the moment at which it has stepped out of its identity into its otherness and becomes judgment."
 
 Relations: (Relation)
+
 - r1. type: `sublates`
   - targetEntryId: con-idea-004
   - note: Singularity sublates determinite distinction by reflecting it into absolute negativity.
@@ -273,7 +293,7 @@ Relations: (Relation)
 
 - r2. type: `transitions_to`
   - targetEntryId: judgment-idea-001
-  - note: Closes Chapter 1 and opens Chapter 2 (Judgment). The concept's self-concentrated singularity, by stepping into otherness, *is* the act of judgment.
+  - note: Closes Chapter 1 and opens Chapter 2 (Judgment). The concept's self-concentrated singularity, by stepping into otherness, _is_ the act of judgment.
   - sourceClaimIds: [`con-idea-005-c2`]
   - logicalOperator: sequential_transition
 

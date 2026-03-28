@@ -1,6 +1,6 @@
 # The Syllogism of Necessity — Distillation
 
-Source: [necessity.txt](file:///home/pat/VSCode/organon/reality/src/logos/ys-logic/concept/subject/syllogism/necessity.txt)
+Source: [necessity.txt](file:///home/pat/VSCode/organon/reality/src/logos/hegel-logic/concept/subject/syllogism/necessity.txt)
 
 ---
 

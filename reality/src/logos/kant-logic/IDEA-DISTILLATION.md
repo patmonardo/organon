@@ -4,94 +4,94 @@ Source: [idea.md](idea.md)
 
 ---
 
-### SS1. Idea Divides Logic into Life and Knowing
+### SS1. Idea Is the Closing Container of General Logic
 
 **Distillation:**
-The Idea chapter closes General Logic by dividing it into two linked fields. First comes Life, where cognition is considered in its methodical ordering as science. Then comes Knowing, where cognition is considered in its relation to object and subject, and in the forms of perfection that belong to it. Idea is therefore not a separate metaphysical object here. It is the architectonic completion of logic as methodical life and perfected knowing.
+Idea does not introduce a new metaphysical object beyond logic. Here it names the architectonic closure of General Logic itself. What Subjectivity had unfolded as concept, judgment, and inference is recollected at a higher level as a container with two internal regions: Life and Knowing. The chapter therefore closes logic by ordering it into methodical life and perfected knowing, while still stopping short of an explicitly unfolded speculative moment.
 
 **Structural Moves:**
 
-- Idea divides into Life and Knowing.
-- Life fixes the methodical form of science.
-- Knowing fixes the relation and perfection of cognition.
-- Idea is the closing architectonic of General Logic.
+- Idea is the closing container of General Logic.
+- Idea recollects earlier logical moments into a higher architectonic frame.
+- Life and Knowing are the two internal regions of this container.
+- Speculative closure is pressured here but not yet explicitly developed.
 
 ---
 
-### SS2. Life Begins from Rule and Splits into Manner and Method
+### SS2. Life Is the First Internal Region of the Container
 
 **Distillation:**
-Life begins from the requirement that all cognition, and every whole of cognition, stand under a rule. Kant then distinguishes two modes of ruled procedure: manner and method. Manner is free procedure; method is constrained or compulsory procedure. The first operator in the chapter is therefore not yet science itself but the distinction between freer and stricter rule-following.
+Life is the first internal region of Idea. Here logic is considered from the side of rule, method, connection, and the operators by which a manifold of cognition becomes science. Life therefore does not mean biological life. It names the methodical animation of cognition into a rule-governed whole.
+
+**Structural Moves:**
+
+- Life is an internal logical region, not an empirical theme.
+- Life concerns rule, method, and connection.
+- Life transforms manifold cognition into science.
+- Life is the method-side of Idea.
+
+---
+
+### SS3. Life Begins from Rule and Splits into Manner and Method
+
+**Distillation:**
+Life begins from the requirement that all cognition, and every whole of cognition, stand under a rule. Kant then distinguishes two modes of ruled procedure: manner and method. Manner is free procedure; method is constrained or compulsory procedure. The first operator in Life is therefore the differentiation of forms of rule-following.
 
 **Structural Moves:**
 
 - All cognition must conform to a rule.
 - Manner is free rule-following.
 - Method is compelled rule-following.
-- Life begins by differentiating degrees of rule-governed procedure.
+- Life begins with differentiated rule-governed procedure.
 
 ---
 
-### SS3. Method Is the Form of Science Rather than Aggregate Knowing
+### SS4. Method Gives Science Its Systematic Form
 
 **Distillation:**
-Once cognition counts as science, it can no longer remain an aggregate. Science requires system, and system requires cognition composed according to rules on which we have reflected. Method therefore names the form through which cognition becomes a whole. It is the operator that transforms a manifold of cognitions into scientific order.
+Once cognition counts as science, it can no longer remain an aggregate. Science requires system, and system requires cognition composed according to rules on which we have reflected. Method therefore names the form through which cognition becomes a whole. It is the connective operator that turns manifold cognition into systematic order.
 
 **Structural Moves:**
 
 - Science is a system, not an aggregate.
 - System requires reflected rules of composition.
 - Method gives science its form.
-- Method transforms manifold cognition into ordered whole.
+- Method connects manifold cognition into an ordered whole.
 
 ---
 
-### SS4. The Doctrine of Method Governs the Connection of a Manifold into Science
+### SS5. Life Clarifies Concepts as Content and Extension
 
 **Distillation:**
-Kant explicitly pairs the doctrine of method with the doctrine of elements. If the doctrine of elements treats the elements and conditions of perfection in cognition, the doctrine of method treats the form of science in general and the ways of acting through which the manifold of cognition is connected into a science. Method is therefore a connective operator. It governs not isolated cognitions but their lawful composition into a unified body.
+The doctrine of method seeks the perfection of cognition through distinctness, thoroughness, and systematic ordering. Kant then gives the decisive split: concepts must become distinct both in regard to what is contained in them and in regard to what is contained under them. Content is clarified by exposition and definition. Extension is clarified by logical division. This is the cleanest paragraph for seeing that content and extension are not the same moment and do not receive the same operator.
 
 **Structural Moves:**
 
-- Doctrine of elements treats elements and conditions of perfection.
-- Doctrine of method treats the form of science.
-- Method governs the ways of connecting manifold cognition.
-- Method is an operator of scientific composition.
-
----
-
-### SS5. Method Seeks Distinctness, Thoroughness, and Systematic Ordering
-
-**Distillation:**
-The doctrine of method is supposed to provide the means for attaining the perfection of cognition. Kant names three leading logical perfections here: distinctness, thoroughness, and systematic ordering into the whole of a science. Life is therefore not bare procedural form. It is the ordered pursuit of these perfections through rule-governed method.
-
-**Structural Moves:**
-
-- Method aims at the perfection of cognition.
-- Distinctness is one principal target.
-- Thoroughness is one principal target.
-- Systematic ordering into a whole is one principal target.
-
----
-
-### SS6. Distinctness Is Advanced by Exposition, Definition, and Division
-
-**Distillation:**
-Kant then specifies how method advances distinctness. The distinctness of cognition and its systematic unity depend on the distinctness of concepts both as to what is contained in them and as to what is contained under them. Distinct consciousness of content is furthered by exposition and definition. Distinct consciousness of extension is furthered by logical division. Life therefore terminates in a precise operator set for clarifying concepts: exposition and definition for inner content, division for outer extension.
-
-**Structural Moves:**
-
-- Distinctness depends on conceptual content and extension.
-- Exposition furthers distinct consciousness of content.
-- Definition furthers distinct consciousness of content.
+- Method aims at distinctness, thoroughness, and systematic order.
+- Conceptual distinctness divides into content and extension.
+- Exposition and definition further distinct consciousness of content.
 - Logical division furthers distinct consciousness of extension.
 
 ---
 
-### SS7. Knowing Begins from Cognition's Twofold Relation and the Matter-Form Distinction
+### SS6. Knowing Is the Second Internal Region of the Container
 
 **Distillation:**
-Knowing opens by distinguishing the twofold relation present in all cognition. Cognition relates first to the object and second to the subject. In the first respect it concerns representation; in the second it concerns consciousness, the universal condition of cognition. Kant then restates this as the distinction between matter and form: the object is the matter, while the way the object is cognized is the form. Knowing therefore begins as a relational and formal operator analysis of cognition itself.
+Knowing is the second internal region of Idea. If Life orders cognition into science, Knowing determines how cognition stands in relation to object and subject, how it becomes clear and distinct, and how its perfection is judged. The chapter therefore turns from methodical composition to the norms governing cognition itself.
+
+**Structural Moves:**
+
+- Knowing is the second internal region of Idea.
+- Knowing turns from composition to norm.
+- Knowing concerns relation, clarity, distinctness, and perfection.
+- Knowing is the perfected-cognition side of Idea.
+
+---
+
+### SS7. Knowing Begins from Twofold Relation and Matter-Form
+
+**Distillation:**
+Knowing opens by distinguishing the twofold relation present in all cognition. Cognition relates first to the object and second to the subject. In the first respect it concerns representation; in the second it concerns consciousness, the universal condition of cognition. Kant then restates this as the distinction between matter and form: the object is the matter, while the way the object is cognized is the form.
 
 **Structural Moves:**
 
@@ -102,38 +102,38 @@ Knowing opens by distinguishing the twofold relation present in all cognition. C
 
 ---
 
-### SS8. Logical Form Begins with Clear Representation and Distinctness of the Manifold
+### SS8. Logic Begins Only with Clear and Distinct Representation
 
 **Distillation:**
-The difference in the form of cognition rests on consciousness. A representation is clear if I am conscious of it and obscure if I am not. Logic can therefore concern itself only with clear representations, because it deals not with the genesis of representations but with their agreement with logical form in concepts, judgments, and inferences. Among clear representations, Kant then distinguishes distinct from indistinct according to whether the manifold contained in the representation is itself consciously grasped. Knowing thus introduces clarity and distinctness as thresholds for logical treatment.
+The difference in the form of cognition rests on consciousness. A representation is clear if I am conscious of it and obscure if I am not. Logic can therefore concern itself only with clear representations, because it deals not with the genesis of representations but with their agreement with logical form in concepts, judgments, and inferences. Among clear representations, distinctness appears when the manifold contained in the representation is consciously grasped.
 
 **Structural Moves:**
 
 - Clear representation depends on consciousness.
 - Logic deals only with clear representations.
-- Distinctness depends on consciousness of the manifold within the representation.
+- Distinctness depends on consciousness of the contained manifold.
 - Knowing fixes logical eligibility by clarity and distinctness.
 
 ---
 
-### SS9. Distinctness Splits into Sensible and Intellectual Forms
+### SS9. Intellectual Distinctness Explains Content Without Adding Matter
 
 **Distillation:**
-Distinctness itself divides in two. Sensible distinctness is consciousness of a manifold in intuition. Intellectual distinctness is distinctness in concepts, achieved by analysis of the marks contained within them. When a concept is analyzed into its constituent marks, it becomes more distinct as to form without acquiring new matter. Knowing therefore preserves a decisive operator distinction: intuition can become sensibly distinct, while concepts become intellectually distinct through analysis.
+Distinctness divides into sensible and intellectual forms. Sensible distinctness is consciousness of the manifold in intuition. Intellectual distinctness rests on analysis of the marks contained within a concept. Kant's decisive restriction is that analysis adds nothing materially to the concept. It only explains what was already there and improves the concept as to form. This gives a rigorous sense in which content can be explicated without being newly produced.
 
 **Structural Moves:**
 
 - Sensible distinctness concerns the manifold in intuition.
 - Intellectual distinctness concerns analysis of marks in concepts.
-- Analysis adds no new matter to the concept.
-- Distinctness improves form rather than content.
+- Analysis adds no new matter to a concept.
+- Distinctness improves the concept only as to form.
 
 ---
 
 ### SS10. Knowing Is Organized by the Logical Difference Between Sensibility and Understanding
 
 **Distillation:**
-Once cognition is reflected through its two basic faculties, it divides into intuitions and concepts. Sensibility is the faculty of intuitions; understanding is the faculty of concepts. This is the logical distinction between the faculties, even if they can also be given metaphysical descriptions as receptivity and spontaneity. Knowing therefore organizes cognition by a faculty split: sensibility supplies material as intuition, while understanding supplies rule-governed conceptual form.
+Once cognition is reflected through its two basic faculties, it divides into intuitions and concepts. Sensibility is the faculty of intuitions; understanding is the faculty of concepts. This is the logical distinction between the faculties, even if they can also be given metaphysical descriptions as receptivity and spontaneity. Knowing therefore organizes cognition by a faculty split: sensibility supplies intuition, while understanding supplies concepts.
 
 **Structural Moves:**
 
@@ -144,10 +144,10 @@ Once cognition is reflected through its two basic faculties, it divides into int
 
 ---
 
-### SS11. Logical and Aesthetic Perfection Are Heterogeneous but Must Be Combined Under Rules
+### SS11. Logical and Aesthetic Perfection Must Be Combined Under Rules
 
 **Distillation:**
-Kant next distinguishes two kinds of perfection. Logical perfection concerns agreement with the object under universally valid laws of the understanding. Aesthetic perfection concerns agreement with the subject under the laws of human sensibility. These perfections can support one another when beauty remains formal, but they can also conflict when stimulation and excitement distract from the object. Kant therefore sets rules for combination: logical perfection must remain the basis, formal beauty is the best aesthetic ally, and sensory stimulation must be handled cautiously. Knowing here becomes a regulation of the relation between instruction and enlivenment.
+Kant next distinguishes two kinds of perfection. Logical perfection concerns agreement with the object under universally valid laws of the understanding. Aesthetic perfection concerns agreement with the subject under the laws of human sensibility. These perfections can support one another when beauty remains formal, but they can also conflict when stimulation and excitement distract from the object. Kant therefore gives explicit rules: logical perfection must remain the basis, formal beauty is the proper ally, and stimulation must be handled cautiously.
 
 **Structural Moves:**
 
@@ -155,18 +155,19 @@ Kant next distinguishes two kinds of perfection. Logical perfection concerns agr
 - Aesthetic perfection is subject-directed and sensibility-governed.
 - Formal beauty can support logical perfection.
 - Stimulation and excitement can damage logical perfection.
-- Their combination is governed by explicit rules of priority and caution.
+- Their combination is governed by rules of priority and caution.
 
 ---
 
-### SS12. The Four Moments of Perfection Recast Cognition Through Logical and Aesthetic Counterparts
+### SS12. The Four Moments Close Idea, but Speculation Remains Reserved
 
 **Distillation:**
-The chapter ends by comparing logical and aesthetic perfection through the four chief moments of quantity, quality, relation, and modality. Logically, cognition is perfect when it is universal, distinct, true, and certain. Aesthetically, the corresponding moments are applicability to many cases, intuitive vividness through examples, subjective semblance, and sensible confirmation through experience. Kant then adds the final architectonic condition: perfection always requires both manifoldness and unity, and truth is principal because it grounds unity by relating cognition to its object. Idea therefore closes General Logic by reassembling method, cognition, and perfection into one ordered schema.
+The chapter ends by comparing logical and aesthetic perfection through the four chief moments of quantity, quality, relation, and modality. Logically, cognition is perfect when it is universal, distinct, true, and certain. Aesthetically, the corresponding moments are applicability, intuitive exhibition, semblance, and sensible confirmation. Kant then adds the final architectonic condition: perfection requires both manifoldness and unity, and truth is principal because it grounds unity by relating cognition to the object. The chapter therefore achieves genuine closure, but not yet an explicitly unfolded speculative closure.
 
 **Structural Moves:**
 
 - Logical perfection is measured by universality, distinctness, truth, and certainty.
-- Aesthetic perfection has parallel moments for quantity, quality, relation, and modality.
+- Aesthetic perfection has parallel moments under the same four headings.
 - Perfection requires both manifoldness and unity.
 - Truth is principal because it grounds unity through relation to the object.
+- The chapter closes architectonically while reserving explicit speculation.

@@ -1,12 +1,12 @@
 # The Syllogism — Distillation
 
-Source: [syllogism-idea.txt](file:///home/pat/VSCode/organon/reality/src/logos/ys-logic/concept/subject/syllogism/syllogism-idea.txt)
+Source: [syllogism-idea.txt](file:///home/pat/VSCode/organon/reality/src/logos/hegel-logic/concept/subject/syllogism/syllogism-idea.txt)
 
 Detailed follow-through:
 
-- [Syllogism of Existence — Distillation](file:///home/pat/VSCode/organon/reality/src/logos/ys-logic/concept/subject/syllogism/EXISTENCE-DISTILLATION.md)
-- [Syllogism of Reflection — Distillation](file:///home/pat/VSCode/organon/reality/src/logos/ys-logic/concept/subject/syllogism/REFLECTION-DISTILLATION.md)
-- [Syllogism of Necessity — Distillation](file:///home/pat/VSCode/organon/reality/src/logos/ys-logic/concept/subject/syllogism/NECESSITY-DISTILLATION.md)
+- [Syllogism of Existence — Distillation](file:///home/pat/VSCode/organon/reality/src/logos/hegel-logic/concept/subject/syllogism/EXISTENCE-DISTILLATION.md)
+- [Syllogism of Reflection — Distillation](file:///home/pat/VSCode/organon/reality/src/logos/hegel-logic/concept/subject/syllogism/REFLECTION-DISTILLATION.md)
+- [Syllogism of Necessity — Distillation](file:///home/pat/VSCode/organon/reality/src/logos/hegel-logic/concept/subject/syllogism/NECESSITY-DISTILLATION.md)
 
 ---
 

@@ -17,7 +17,7 @@ Authority: Varttika Source (`dharma-greater-varttika.tex`) and TS source files (
 
 Span:
 
-- sourceFile: `src/logos/ys-logic/dharma-greater-varttika.tex`
+- sourceFile: `src/logos/hegel-logic/dharma-greater-varttika.tex`
 - lineStart: 2074
 - lineEnd: 2100
 
@@ -45,7 +45,7 @@ Claims: (Claim)
 
 Span:
 
-- sourceFile: `src/logos/ys-logic/dharma-greater-varttika.tex`
+- sourceFile: `src/logos/hegel-logic/dharma-greater-varttika.tex`
 - lineStart: 2613
 - lineEnd: 2640
 
@@ -73,7 +73,7 @@ Claims: (Claim)
 
 Span:
 
-- sourceFile: `src/logos/ys-logic/dharma-greater-varttika.tex`
+- sourceFile: `src/logos/hegel-logic/dharma-greater-varttika.tex`
 - lineStart: 3012
 - lineEnd: 3040
 
@@ -101,7 +101,7 @@ Claims: (Claim)
 
 Span:
 
-- sourceFile: `src/logos/ys-logic/dharma-greater-varttika.tex`
+- sourceFile: `src/logos/hegel-logic/dharma-greater-varttika.tex`
 - lineStart: 3161
 - lineEnd: 3190
 
@@ -129,7 +129,7 @@ Claims: (Claim)
 
 Span:
 
-- sourceFile: `src/logos/ys-logic/dharma-greater-varttika.tex`
+- sourceFile: `src/logos/hegel-logic/dharma-greater-varttika.tex`
 - lineStart: 3325
 - lineEnd: 3350
 

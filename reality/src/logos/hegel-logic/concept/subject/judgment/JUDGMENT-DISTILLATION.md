@@ -1,13 +1,13 @@
 # Judgment — Distillation
 
-Source: [judgment-idea.txt](file:///home/pat/VSCode/organon/reality/src/logos/ys-logic/concept/subject/judgment/judgment-idea.txt)
+Source: [judgment-idea.txt](file:///home/pat/VSCode/organon/reality/src/logos/hegel-logic/concept/subject/judgment/judgment-idea.txt)
 
 Detailed follow-through:
 
-- [Judgment of Existence — Distillation](file:///home/pat/VSCode/organon/reality/src/logos/ys-logic/concept/subject/judgment/EXISTENCE-DISTILLATION.md)
-- [Judgment of Reflection — Distillation](file:///home/pat/VSCode/organon/reality/src/logos/ys-logic/concept/subject/judgment/REFLECTION-DISTILLATION.md)
-- [Judgment of Necessity — Distillation](file:///home/pat/VSCode/organon/reality/src/logos/ys-logic/concept/subject/judgment/NECESSITY-DISTILLATION.md)
-- [Judgment of the Concept — Distillation](file:///home/pat/VSCode/organon/reality/src/logos/ys-logic/concept/subject/judgment/CONCEPT-DISTILLATION.md)
+- [Judgment of Existence — Distillation](file:///home/pat/VSCode/organon/reality/src/logos/hegel-logic/concept/subject/judgment/EXISTENCE-DISTILLATION.md)
+- [Judgment of Reflection — Distillation](file:///home/pat/VSCode/organon/reality/src/logos/hegel-logic/concept/subject/judgment/REFLECTION-DISTILLATION.md)
+- [Judgment of Necessity — Distillation](file:///home/pat/VSCode/organon/reality/src/logos/hegel-logic/concept/subject/judgment/NECESSITY-DISTILLATION.md)
+- [Judgment of the Concept — Distillation](file:///home/pat/VSCode/organon/reality/src/logos/hegel-logic/concept/subject/judgment/CONCEPT-DISTILLATION.md)
 
 ---
 

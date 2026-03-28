@@ -1,6 +1,6 @@
 # The Judgment of Existence — Distillation
 
-Source: [existence.txt](file:///home/pat/VSCode/organon/reality/src/logos/ys-logic/concept/subject/judgment/existence.txt)
+Source: [existence.txt](file:///home/pat/VSCode/organon/reality/src/logos/hegel-logic/concept/subject/judgment/existence.txt)
 
 ---
 

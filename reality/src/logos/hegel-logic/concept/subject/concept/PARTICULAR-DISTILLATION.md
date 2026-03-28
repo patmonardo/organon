@@ -1,6 +1,6 @@
 # The Particular Concept — Distillation
 
-Source: [particular.txt](file:///home/pat/VSCode/organon/reality/src/logos/ys-logic/concept/subject/concept/particular.txt)
+Source: [particular.txt](file:///home/pat/VSCode/organon/reality/src/logos/hegel-logic/concept/subject/concept/particular.txt)
 
 ---
 

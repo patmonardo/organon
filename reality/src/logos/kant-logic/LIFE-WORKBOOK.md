@@ -7,17 +7,18 @@ Authority: source-guided, distillation-assisted
 
 - This is a seed workbook, not a final graph.
 - Read the marker entry first.
-- This file treats Life as the practical operator-manual inside the Idea chapter.
-- It covers definition, division, method, and meditation.
+- This file treats Life as the working discipline of method inside the Idea chapter.
+- It covers definition, division, method, and meditation as preparatory operators.
+- It should be read as sharpening concept and formal rigor before the later syllogism pass.
 
 ## Quick orientation
 
 - First question: what does Life do?
-  Answer: it furthers logical perfection by clarifying concepts, partitioning spheres, and ordering scientific treatment.
+  Answer: it furthers logical perfection by clarifying concepts, partitioning spheres, and ordering science methodically.
 - Second question: what are the main operator families?
   Answer: definition, logical division, divisions of method, and meditation.
-- Third question: why does this matter for the earlier modules?
-  Answer: Life supplies the working procedures that sharpen concept and prepare scientific ordering.
+- Third question: why does this matter before syllogism?
+  Answer: Life disciplines concept and anticipates judgmental rigor so that science can later be expounded as a chain of inferences.
 
 ## Authority + format lock (must persist)
 
@@ -33,7 +34,7 @@ Authority: source-guided, distillation-assisted
 - Every accepted claim must have line-anchored evidence.
 - If uncertain, mark `review_pending`.
 
-## Session: 2026-03-26 (operator pass)
+## Session: 2026-03-27 (method pass)
 
 Scope:
 
@@ -44,10 +45,11 @@ Scope:
 
 Decision:
 
-- Rebuild Life as the practical method side of the new Idea pass.
-- Keep definition, division, method, and meditation distinct so their procedures are not compressed.
-- Preserve the four-moment structure of definition explicitly.
-- Keep the file readable enough for study while still fixing the KG operator inventory.
+- Regenerate the derivative layers from `life.md` without altering the Kant source.
+- Treat Life as the working discipline of method under the Idea container.
+- Make explicit that definition and division prepare concept and formal rigor before syllogistic exposition.
+- Preserve the four-moment discipline of definition and the extension logic of division.
+- Keep the method families explicit, especially the syllogistic/tabular contrast.
 
 ### Entry kant-life - Marker `Life`
 
@@ -55,14 +57,15 @@ Decision:
   - `life.md`
   - `LIFE-DISTILLATION.md`
 - lineSpans:
-  - `LIFE-DISTILLATION.md:7-200`
-- summary: Life furthers the logical perfection of cognition through operators of definition, division, scientific method, and reflective meditation.
+  - `life.md:1-231`
+- summary: Life is the working discipline of method inside Idea, furthering logical perfection through definition, division, method families, and meditation while preparing the way for later syllogistic science.
 
 Key points: (KeyPoint)
 
 - k1. Life advances logical perfection through practical operators.
 - k2. Definition and division clarify conceptual content and sphere.
-- k3. Method and meditation order cognition into scientific form.
+- k3. Method orders science for rigorous exposition.
+- k4. Life prepares the ground for inferential science without yet becoming the syllogism chapter.
 
 Claims: (Claim)
 
@@ -73,7 +76,8 @@ Claims: (Claim)
   - modality: asserted
   - confidence: 0.98
   - evidence:
-    - `LIFE-DISTILLATION.md:7-17`
+    - `life.md:1-3`
+    - `life.md:134-231`
 
 - c2. id: kant-life-c2
   - subject: life
@@ -82,7 +86,16 @@ Claims: (Claim)
   - modality: asserted
   - confidence: 0.96
   - evidence:
-    - `LIFE-DISTILLATION.md:21-200`
+    - `life.md:1-231`
+
+- c3. id: kant-life-c3
+  - subject: life
+  - predicate: prepares
+  - object: later_syllogistic_exposition_of_science
+  - modality: asserted
+  - confidence: 0.92
+  - evidence:
+    - `life.md:173-225`
 
 Relations: (Relation)
 
@@ -97,7 +110,7 @@ Relations: (Relation)
 Review outcome:
 
 - review_pending
-- notes: marker entry fixes Life as a practical operator-manual rather than a loose appendix on pedagogy.
+- notes: marker entry fixes Life as a method-discipline that prepares inferential science without collapsing into the syllogism chapter.
 
 ### Entry kant-life-definition-origin - `Life`: definition as adequacy and origin-split
 
@@ -105,7 +118,7 @@ Review outcome:
   - `life.md`
   - `LIFE-DISTILLATION.md`
 - lineSpans:
-  - `LIFE-DISTILLATION.md:21-45`
+  - `life.md:5-21`
 - summary: Definition begins as a distinct, precise, adequate concept and divides by origin into analytic and synthetic procedures for given and made concepts.
 
 Key points: (KeyPoint)
@@ -123,7 +136,7 @@ Claims: (Claim)
   - modality: asserted
   - confidence: 0.97
   - evidence:
-    - `LIFE-DISTILLATION.md:21-31`
+    - `life.md:5-13`
 
 - c2. id: kant-life-definition-origin-c2
   - subject: definition
@@ -132,7 +145,7 @@ Claims: (Claim)
   - modality: asserted
   - confidence: 0.96
   - evidence:
-    - `LIFE-DISTILLATION.md:35-45`
+    - `life.md:10-21`
 
 Relations: (Relation)
 
@@ -155,7 +168,7 @@ Review outcome:
   - `life.md`
   - `LIFE-DISTILLATION.md`
 - lineSpans:
-  - `LIFE-DISTILLATION.md:49-87`
+  - `life.md:24-69`
 - summary: Definition proceeds either through limited synthetic routes or through analytic mark-clarification, with exposition and description serving as approximation operators beneath full definition.
 
 Key points: (KeyPoint)
@@ -173,7 +186,7 @@ Claims: (Claim)
   - modality: asserted
   - confidence: 0.96
   - evidence:
-    - `LIFE-DISTILLATION.md:49-59`
+    - `life.md:24-43`
 
 - c2. id: kant-life-definition-procedures-c2
   - subject: analytic_definition_and_exposition_description
@@ -182,7 +195,7 @@ Claims: (Claim)
   - modality: asserted
   - confidence: 0.95
   - evidence:
-    - `LIFE-DISTILLATION.md:63-87`
+    - `life.md:45-69`
 
 Relations: (Relation)
 
@@ -205,7 +218,7 @@ Review outcome:
   - `life.md`
   - `LIFE-DISTILLATION.md`
 - lineSpans:
-  - `LIFE-DISTILLATION.md:91-115`
+  - `life.md:73-104`
 - summary: Definition separates nominal from real cognition and judges completeness through quantity, quality, relation, and modality.
 
 Key points: (KeyPoint)
@@ -223,7 +236,7 @@ Claims: (Claim)
   - modality: asserted
   - confidence: 0.96
   - evidence:
-    - `LIFE-DISTILLATION.md:91-101`
+    - `life.md:73-83`
 
 - c2. id: kant-life-definition-completeness-c2
   - subject: completeness_of_definition
@@ -232,7 +245,7 @@ Claims: (Claim)
   - modality: asserted
   - confidence: 0.97
   - evidence:
-    - `LIFE-DISTILLATION.md:105-115`
+    - `life.md:85-104`
 
 Relations: (Relation)
 
@@ -255,7 +268,7 @@ Review outcome:
   - `life.md`
   - `LIFE-DISTILLATION.md`
 - lineSpans:
-  - `LIFE-DISTILLATION.md:119-129`
+  - `life.md:107-128`
 - summary: Definition is made into a repeatable discipline through the same four acts of testing and preparation.
 
 Key points: (KeyPoint)
@@ -273,7 +286,7 @@ Claims: (Claim)
   - modality: asserted
   - confidence: 0.96
   - evidence:
-    - `LIFE-DISTILLATION.md:119-129`
+    - `life.md:107-115`
 
 - c2. id: kant-life-definition-discipline-c2
   - subject: preparation_of_definition
@@ -282,7 +295,7 @@ Claims: (Claim)
   - modality: asserted
   - confidence: 0.96
   - evidence:
-    - `LIFE-DISTILLATION.md:119-129`
+    - `life.md:118-128`
 
 Relations: (Relation)
 
@@ -305,7 +318,7 @@ Review outcome:
   - `life.md`
   - `LIFE-DISTILLATION.md`
 - lineSpans:
-  - `LIFE-DISTILLATION.md:133-171`
+  - `life.md:134-170`
 - summary: Logical division partitions the sphere of a concept through opposed members under a common higher concept, with codivision and subdivision tracking formal variants.
 
 Key points: (KeyPoint)
@@ -323,7 +336,7 @@ Claims: (Claim)
   - modality: asserted
   - confidence: 0.97
   - evidence:
-    - `LIFE-DISTILLATION.md:133-157`
+    - `life.md:134-158`
 
 - c2. id: kant-life-division-c2
   - subject: codivision_subdivision_dichotomy_and_polytomy
@@ -332,7 +345,7 @@ Claims: (Claim)
   - modality: asserted
   - confidence: 0.95
   - evidence:
-    - `LIFE-DISTILLATION.md:161-171`
+    - `life.md:160-170`
 
 Relations: (Relation)
 
@@ -355,14 +368,15 @@ Review outcome:
   - `life.md`
   - `LIFE-DISTILLATION.md`
 - lineSpans:
-  - `LIFE-DISTILLATION.md:175-186`
-- summary: Method divides into multiple presentation operators that distinguish thoroughness, exposition, inferential chaining, and questioning.
+  - `life.md:173-225`
+- summary: Method divides into multiple presentation operators that distinguish thoroughness, exposition, ordered transition, inferential chaining, completed display, and questioning.
 
 Key points: (KeyPoint)
 
 - k1. Scientific, systematic, and analytic methods order cognition by different aims and directions.
 - k2. Syllogistic and tabular methods contrast inferential chaining with completed display.
 - k3. Acroamatic and erotematic methods contrast exposition with question-led teaching.
+- k4. The syllogistic family shows how Life prepares the route from disciplined concept and judgment to inferential science.
 
 Claims: (Claim)
 
@@ -373,7 +387,7 @@ Claims: (Claim)
   - modality: asserted
   - confidence: 0.95
   - evidence:
-    - `LIFE-DISTILLATION.md:175-186`
+    - `life.md:173-225`
 
 - c2. id: kant-life-method-families-c2
   - subject: method_families
@@ -382,7 +396,16 @@ Claims: (Claim)
   - modality: asserted
   - confidence: 0.94
   - evidence:
-    - `LIFE-DISTILLATION.md:175-186`
+    - `life.md:180-225`
+
+- c3. id: kant-life-method-families-c3
+  - subject: syllogistic_method
+  - predicate: expounds
+  - object: science_as_chain_of_inferences
+  - modality: asserted
+  - confidence: 0.97
+  - evidence:
+    - `life.md:211-214`
 
 Relations: (Relation)
 
@@ -390,22 +413,72 @@ Relations: (Relation)
   - targetEntryId: kant-life
   - targetWorkbook: `LIFE-WORKBOOK.md`
   - note: this entry gathers the chapter's presentation operators without collapsing them into one generic method concept.
-  - sourceClaimIds: [`kant-life-method-families-c1`, `kant-life-method-families-c2`]
-  - sourceKeyPointIds: [`k1`, `k2`, `k3`]
+  - sourceClaimIds: [`kant-life-method-families-c1`, `kant-life-method-families-c2`, `kant-life-method-families-c3`]
+  - sourceKeyPointIds: [`k1`, `k2`, `k3`, `k4`]
   - targetClaimIds: [`kant-life-c2`]
 
 - r2. type: part_of
   - targetEntryId: kant-idea-life-method
   - targetWorkbook: `IDEA-WORKBOOK.md`
   - note: this entry expands the life-side method family summarized inside the Idea workbook.
-  - sourceClaimIds: [`kant-life-method-families-c1`, `kant-life-method-families-c2`]
-  - sourceKeyPointIds: [`k1`, `k2`, `k3`]
+  - sourceClaimIds: [`kant-life-method-families-c1`, `kant-life-method-families-c2`, `kant-life-method-families-c3`]
+  - sourceKeyPointIds: [`k1`, `k2`, `k3`, `k4`]
   - targetClaimIds: [`kant-idea-life-method-c2`]
 
 Review outcome:
 
 - review_pending
-- notes: the method families are preserved as a structured operator inventory rather than a glossary.
+- notes: the method families are preserved as a structured operator inventory, and the syllogistic family is kept visible as the natural forward bridge.
+
+### Entry kant-life-teaching-method - `Life`: acroamatic and erotematic forms of instruction
+
+- sourceFiles:
+  - `life.md`
+  - `LIFE-DISTILLATION.md`
+- lineSpans:
+  - `life.md:218-225`
+- summary: Method also differentiates forms of instruction, contrasting simple exposition with question-led teaching directed either to understanding or to memory.
+
+Key points: (KeyPoint)
+
+- k1. Acroamatic method teaches without questioning.
+- k2. Erotematic method teaches through questioning.
+- k3. Dialogic and catechistic forms differentiate understanding from memory-directed questioning.
+
+Claims: (Claim)
+
+- c1. id: kant-life-teaching-method-c1
+  - subject: method
+  - predicate: divides_instructionally_into
+  - object: acroamatic_and_erotematic_forms
+  - modality: asserted
+  - confidence: 0.95
+  - evidence:
+    - `life.md:218-225`
+
+- c2. id: kant-life-teaching-method-c2
+  - subject: erotematic_method
+  - predicate: divides_into
+  - object: dialogic_and_catechistic_forms
+  - modality: asserted
+  - confidence: 0.94
+  - evidence:
+    - `life.md:219-225`
+
+Relations: (Relation)
+
+- r1. type: explicates
+  - targetEntryId: kant-life-method-families
+  - targetWorkbook: `LIFE-WORKBOOK.md`
+  - note: this entry isolates the pedagogical side of the method family inventory.
+  - sourceClaimIds: [`kant-life-teaching-method-c1`, `kant-life-teaching-method-c2`]
+  - sourceKeyPointIds: [`k1`, `k2`, `k3`]
+  - targetClaimIds: [`kant-life-method-families-c1`, `kant-life-method-families-c2`]
+
+Review outcome:
+
+- review_pending
+- notes: the instructional forms are separated so the method-family entry can stay focused on scientific ordering.
 
 ### Entry kant-life-meditation - `Life`: meditation as reflective accompaniment of method
 
@@ -413,7 +486,7 @@ Review outcome:
   - `life.md`
   - `LIFE-DISTILLATION.md`
 - lineSpans:
-  - `LIFE-DISTILLATION.md:190-200`
+  - `life.md:227-231`
 - summary: Meditation is the reflective operator that must accompany reading and learning by ordering thoughts according to method.
 
 Key points: (KeyPoint)
@@ -431,7 +504,7 @@ Claims: (Claim)
   - modality: asserted
   - confidence: 0.96
   - evidence:
-    - `LIFE-DISTILLATION.md:190-200`
+    - `life.md:227-227`
 
 - c2. id: kant-life-meditation-c2
   - subject: meditation
@@ -440,7 +513,7 @@ Claims: (Claim)
   - modality: asserted
   - confidence: 0.95
   - evidence:
-    - `LIFE-DISTILLATION.md:190-200`
+    - `life.md:228-231`
 
 Relations: (Relation)
 

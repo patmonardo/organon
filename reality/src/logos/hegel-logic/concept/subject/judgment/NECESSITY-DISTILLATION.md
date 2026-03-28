@@ -1,6 +1,6 @@
 # The Judgment of Necessity — Distillation
 
-Source: [necessity.txt](file:///home/pat/VSCode/organon/reality/src/logos/ys-logic/concept/subject/judgment/necessity.txt)
+Source: [necessity.txt](file:///home/pat/VSCode/organon/reality/src/logos/hegel-logic/concept/subject/judgment/necessity.txt)
 
 ---
 

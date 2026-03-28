@@ -1,12 +1,12 @@
 # Subjectivity — Distillation
 
-Source: [subject-idea.txt](file:///home/pat/VSCode/organon/reality/src/logos/ys-logic/concept/subject/subject-idea.txt)
+Source: [subject-idea.txt](file:///home/pat/VSCode/organon/reality/src/logos/hegel-logic/concept/subject/subject-idea.txt)
 
 Detailed follow-through:
 
-- [Concept as Such — Distillation](file:///home/pat/VSCode/organon/reality/src/logos/ys-logic/concept/subject/concept/CONCEPT-DISTILLATION.md)
-- [Judgment — Distillation](file:///home/pat/VSCode/organon/reality/src/logos/ys-logic/concept/subject/judgment/JUDGMENT-DISTILLATION.md)
-- [Syllogism — Distillation](file:///home/pat/VSCode/organon/reality/src/logos/ys-logic/concept/subject/syllogism/SYLLOGISM-DISTILLATION.md)
+- [Concept as Such — Distillation](file:///home/pat/VSCode/organon/reality/src/logos/hegel-logic/concept/subject/concept/CONCEPT-DISTILLATION.md)
+- [Judgment — Distillation](file:///home/pat/VSCode/organon/reality/src/logos/hegel-logic/concept/subject/judgment/JUDGMENT-DISTILLATION.md)
+- [Syllogism — Distillation](file:///home/pat/VSCode/organon/reality/src/logos/hegel-logic/concept/subject/syllogism/SYLLOGISM-DISTILLATION.md)
 
 ---
 

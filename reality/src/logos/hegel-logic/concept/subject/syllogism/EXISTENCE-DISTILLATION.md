@@ -1,6 +1,6 @@
 # The Syllogism of Existence — Distillation
 
-Source: [existence.txt](file:///home/pat/VSCode/organon/reality/src/logos/ys-logic/concept/subject/syllogism/existence.txt)
+Source: [existence.txt](file:///home/pat/VSCode/organon/reality/src/logos/hegel-logic/concept/subject/syllogism/existence.txt)
 
 ---
 

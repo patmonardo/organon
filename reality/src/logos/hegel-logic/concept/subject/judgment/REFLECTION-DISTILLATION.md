@@ -1,6 +1,6 @@
 # The Judgment of Reflection — Distillation
 
-Source: [reflection.txt](file:///home/pat/VSCode/organon/reality/src/logos/ys-logic/concept/subject/judgment/reflection.txt)
+Source: [reflection.txt](file:///home/pat/VSCode/organon/reality/src/logos/hegel-logic/concept/subject/judgment/reflection.txt)
 
 ---
 

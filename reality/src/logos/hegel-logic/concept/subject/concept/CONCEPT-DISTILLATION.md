@@ -1,12 +1,12 @@
 # The Concept as Such — Distillation
 
-Source: [concept-idea.txt](file:///home/pat/VSCode/organon/reality/src/logos/ys-logic/concept/subject/concept/concept-idea.txt)
+Source: [concept-idea.txt](file:///home/pat/VSCode/organon/reality/src/logos/hegel-logic/concept/subject/concept/concept-idea.txt)
 
 Detailed follow-through:
 
-- [Universal Concept — Distillation](file:///home/pat/VSCode/organon/reality/src/logos/ys-logic/concept/subject/concept/UNIVERSAL-DISTILLATION.md)
-- [Particular Concept — Distillation](file:///home/pat/VSCode/organon/reality/src/logos/ys-logic/concept/subject/concept/PARTICULAR-DISTILLATION.md)
-- [Singular Concept — Distillation](file:///home/pat/VSCode/organon/reality/src/logos/ys-logic/concept/subject/concept/SINGULAR-DISTILLATION.md)
+- [Universal Concept — Distillation](file:///home/pat/VSCode/organon/reality/src/logos/hegel-logic/concept/subject/concept/UNIVERSAL-DISTILLATION.md)
+- [Particular Concept — Distillation](file:///home/pat/VSCode/organon/reality/src/logos/hegel-logic/concept/subject/concept/PARTICULAR-DISTILLATION.md)
+- [Singular Concept — Distillation](file:///home/pat/VSCode/organon/reality/src/logos/hegel-logic/concept/subject/concept/SINGULAR-DISTILLATION.md)
 
 ---
 

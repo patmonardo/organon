@@ -58,7 +58,7 @@ Decision:
 
 Span:
 
-- sourceFile: `src/logos/ys-logic/concept/subject/syllogism/syllogism-idea.txt`
+- sourceFile: `src/logos/hegel-logic/concept/subject/syllogism/syllogism-idea.txt`
 - lineStart: 1
 - lineEnd: 152
 
