@@ -17,6 +17,10 @@ Authority: workbook-family map only
 - This file is now a route map so it is immediately clear what each workbook is about.
 - Component workbooks remain distillation-first and source-aware.
 
+## Adjacent framing notes
+
+- [GENERAL-TRANSCENDENTAL-LOGIC-ARCHITECTURE.md](GENERAL-TRANSCENDENTAL-LOGIC-ARCHITECTURE.md) — derivative note on why the General Logic family now has to be read beside Transcendental Logic rather than as a self-standing formal block.
+
 ## Component workbooks
 
 - [SUBJECTIVITY-WORKBOOK.md](SUBJECTIVITY-WORKBOOK.md) — subjectivity as the formal side of discursive cognition.
