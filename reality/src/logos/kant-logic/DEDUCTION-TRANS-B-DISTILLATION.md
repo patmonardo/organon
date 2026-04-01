@@ -1,6 +1,6 @@
-# Deduction Trans - Distillation
+# Deduction Trans B - Distillation
 
-Source: [deduction-trans.md](deduction-trans.md)
+Source: [deduction-trans-b.md](deduction-trans-b.md)
 
 ---
 

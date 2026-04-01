@@ -1,6 +1,6 @@
-# Deduction Meta - Distillation
+# Deduction Trans A - Distillation
 
-Source: [deduction-meta.md](deduction-meta.md)
+Source: [deduction-trans-a.md](deduction-trans-a.md)
 
 ---
 

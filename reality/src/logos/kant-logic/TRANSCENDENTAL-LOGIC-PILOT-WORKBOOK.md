@@ -22,6 +22,8 @@ Authority: workbook-family map only
 
 - [GENERAL-TRANSCENDENTAL-LOGIC-ARCHITECTURE.md](GENERAL-TRANSCENDENTAL-LOGIC-ARCHITECTURE.md) — derivative note on the larger field split in which Transcendental Logic carries the relocated ontological science and General Logic preserves the formal and learned-cognition side.
 - [PRINCIPLES-BOUNDARY-ARGUMENT.md](PRINCIPLES-BOUNDARY-ARGUMENT.md) — derivative note on the continuous boundary argument developed across the Principles family.
+- [OBJECT-IN-GENERAL-ABSOLUTE-CONCEPT.md](OBJECT-IN-GENERAL-ABSOLUTE-CONCEPT.md) — derivative note on the stronger Hegelian reuse in which Objective Logic is treated as the Object() of the Absolute Concept and object in general is restated positively only after Kant's boundary has been secured.
+- [OBJECT-PASS-PREMISE.md](OBJECT-PASS-PREMISE.md) — opening premise for the planned Object() pass, beginning from Kant's replacement of possibility by object in general and upgrading that highest heading toward Satya Loka, Essence, and the matter/feature split.
 
 ## Component workbooks
 
@@ -29,8 +31,8 @@ Authority: workbook-family map only
 - `AESTHETIC-WORKBOOK.md` — transcendental aesthetic as the sensibility-side condition for later logic.
 - `INTRO-LOGIC-WORKBOOK.md` — introduction to transcendental logic and its analytic-dialectic division.
 - `CONCEPTS-WORKBOOK.md` — analytic of concepts and the clue to the pure concepts of understanding.
-- `DEDUCTION-META-WORKBOOK.md` — the deduction architecture centered on synthesis and the possibility of experience.
-- `DEDUCTION-TRANS-WORKBOOK.md` — the apperception-centered deduction of the categories.
+- `deduction-trans-a-WORKBOOK.md` — the deduction architecture centered on synthesis and the possibility of experience.
+- `deduction-trans-b-WORKBOOK.md` — the apperception-centered deduction of the categories.
 - `PRINCIPLES-WORKBOOK.md` — analytic of principles introduction and schematism.
 - `PRINCIPLES-SYSTEM-WORKBOOK.md` — system of all principles of pure understanding.
 - `PRINCIPLES-I-WORKBOOK.md` — axioms of intuition.

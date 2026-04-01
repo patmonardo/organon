@@ -10,10 +10,15 @@ Authority: distillation-synthesis only
 - `LIFE-DISTILLATION.md`
 - `COGNITION-DISTILLATION.md`
 - `IDEA-DISTILLATION.md`
+- `CONCEPT-DISTILLATION.md`
+- `JUDGMENT-DISTILLATION.md`
 - `PRINCIPLES-BOUNDARY-ARGUMENT.md`
 - `PRINCIPLES-III-DISTILLATION.md`
 - `PRINCIPLES-GROUND-DISTILLATION.md`
 - `PRINCIPLES-REFLECTION-DISTILLATION.md`
+- `concept.md`
+- `concepts.md`
+- `judgment.md`
 - `intro-logic.md`
 - `idea.md`
 - `life.md`
@@ -107,15 +112,47 @@ So the relocated ontological science has a double character. It is stronger than
 
 In the derivative architectonic reading used in this repository, Hegel's Objective Logic can then be treated as the self-moving completion of the field that Kant still holds apart.
 
+On the stronger version of that reading, Objective Logic is not merely one region within a larger logical whole. It is the Object() of the Absolute Concept: the objective field that the Concept has as its own objectivity, fully unfolded as Being and Essence.
+
 Kant relocates ontology into Transcendental Logic, while leaving General Logic as the formal and methodical articulation of discursive cognition plus a boundary-zone of learned cognition. Hegel radicalizes the situation by turning what Kant still distributes across ontology-like transcendental science and formal logic into one immanent science of objectivity.
 
-That is why the strongest bridge to Hegel does not run from Jasche General Logic taken in isolation. It runs from the Kantian split itself. Transcendental Logic is the stronger scientific side. General Logic preserves the formal articulation and pedagogical-cognitive aftermath. Hegel's Objective Logic reads, in that derivative sense, as the attempt to gather the whole field into one self-developing science.
+That is why the strongest bridge to Hegel does not run from Jasche General Logic taken in isolation. It runs from the Kantian split itself. Transcendental Logic is the stronger scientific side. General Logic preserves the formal articulation and pedagogical-cognitive aftermath. Hegel's Objective Logic reads, in that derivative sense, as the attempt to gather the whole field into one self-developing science; on the stronger reading, it is the Object() through which the Absolute Concept possesses and articulates its own objective world.
 
 ---
 
 ## 7. General Logic as Broken Image of Science
 
 On the strongest derivative reading used here, Jasche's General Logic is not yet a successfully constituted science but a broken image of one. It reaches toward science by demanding system, method, and rule-governed order, yet the principles and laws that should generate the science do not immanently organize the exposition. Moving those laws into a methodology of cognition does not repair the defect; it only relocates it. The genuinely scientific side appears instead in Transcendental Logic, where the principles and laws of cognition are unfolded as conditions of possible experience, and where syllogistic mediation already presses from ground-grounded into condition-conditioned sequence. In that sense the material often treated as introductory belongs more properly to the transcendental side of logic, which is also why this split already pressures toward the Hegelian demand that the principles and laws of logic be identical with the structure of science itself.
+
+---
+
+## 8. Schema -> Concept -> Feature -> Endpoint
+
+For derivative reuse in this repository, one productive sequence is:
+
+`schema -> concept -> feature -> endpoint`
+
+This sequence should not be projected back into Kant as a literal source doctrine. It is a controlled architectonic reuse of the split field already assembled across the concept, judgment, categories, and analogies material.
+
+The sequence can be stated as follows.
+
+Schema is the generative rule-space of objectivity. On the Kantian side, schema is what lets category bear on time and therefore on possible object-experience at all. On the stronger derivative reading used here, schema is therefore the base conceptual matter: not yet a finished list of marks, but the rule through which determination can become objectively valid.
+
+Concept is the universal containment of marks. In General Logic, concept already has an inside of content and an outside of extension. It therefore supplies the universal axis on which determinability can be held together as a concept at all.
+
+Feature is the particularized emergence of ordered marks under determination. This is where the architectonic passes beyond the bare possession of marks in concept toward their articulated ordering. Categorical judgment first exposes the subject-predicate form as the universal axis opened toward objectivity. Hypothetical judgment then develops the ground-consequence order through which determinations become serially intelligible. In that derivative sense, feature names the ordered mark-set that emerges from schematized concept through determination.
+
+Endpoint is the singular bearer that enters reciprocal field-relations. The third analogy and the category of community matter here. What is merely ordered in one-sided consequence is not yet fully situated in one shared world. Endpoint names the singularized concept-bearer as it enters commercium, reciprocal determination, and system. In this sense community is the field in which singular determinacies become mutually positionable and therefore available for stable interaction.
+
+The corresponding universal-particular-singular reuse can be stated compactly.
+
+- Universal: `subject-predicate x object`, that is, concept opened through categorical articulation toward objectivity.
+- Particular: hypothetical derivation, where determinations unfold as features or ordered marks.
+- Singular: community/commercium, where concept-bearers appear as endpoints in reciprocal interaction.
+
+This is why the strongest Hegelian pressure in the material does not run from concept taken alone. It runs from schematized concept through judgmental articulation into reciprocal object-world. The sequence does not abolish Kantian distinctions. It reuses them to show how schema, concept, judgment, and community can be read as stages in the generation of an ordered field of determinacies.
+
+For repository-level reuse, this also supports a schema-first discipline. Shared schemas provide the rule-space; concepts provide the universal containers; features provide the articulated determinations; endpoints provide the singular graph-bearers that enter relation, traversal, and community.
 
 ---
 

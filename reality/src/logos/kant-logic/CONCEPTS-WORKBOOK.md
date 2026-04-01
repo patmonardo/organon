@@ -96,12 +96,12 @@ Relations: (Relation)
   - targetClaimIds: [`kant-trans-intro-c2`]
 
 - r2. type: transitions_to
-  - targetEntryId: kant-trans-deduction-meta
-  - targetWorkbook: `DEDUCTION-META-WORKBOOK.md`
+  - targetEntryId: kant-trans-deduction-trans-a
+  - targetWorkbook: `deduction-trans-a-WORKBOOK.md`
   - note: once the categories are identified, their lawful relation to objects must be justified by deduction.
   - sourceClaimIds: [`kant-trans-concepts-c2`]
   - sourceKeyPointIds: [`k3`]
-  - targetClaimIds: [`kant-trans-deduction-meta-c1`]
+  - targetClaimIds: [`kant-trans-deduction-trans-a-c1`]
 
 Review outcome:
 

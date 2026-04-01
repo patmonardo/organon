@@ -20,7 +20,7 @@ Priority: workbook markdown over generated projections
 ## Human-scale extraction rule (Transcendental Logic)
 
 - Primary unit: one workbook per Transcendental Logic component.
-- Current component set: introduction, aesthetic, intro-logic, concepts, deduction-meta, deduction-trans, principles, principles-system, principles-I, principles-II, principles-III, principles-IV, principles-ground, principles-reflection, intro-ideas, ideas.
+- Current component set: introduction, aesthetic, intro-logic, concepts, deduction-trans-a, deduction-trans-b, principles, principles-system, principles-I, principles-II, principles-III, principles-IV, principles-ground, principles-reflection, intro-ideas, ideas.
 - Add a short plain-language reading note near the top so the workbook states what it is doing before the KG fields begin.
 - For small modules, prefer 1 marker entry plus 1 analytic entry in the first pass.
 - For large modules, expand to as many entries as needed to preserve all important logical operations, architectonic divisions, and major argumentative turns.

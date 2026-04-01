@@ -86,12 +86,12 @@ Claims: (Claim)
 Relations: (Relation)
 
 - r1. type: follows_from
-  - targetEntryId: kant-trans-deduction
-  - targetWorkbook: `DEDUCTION-TRANS-WORKBOOK.md`
+  - targetEntryId: kant-trans-b-deduction
+  - targetWorkbook: `deduction-trans-b-WORKBOOK.md`
   - note: once the categories are shown valid for possible experience, the next task is to explain how judgment can apply them.
   - sourceClaimIds: [`kant-trans-principles-c1`, `kant-trans-principles-c2`]
   - sourceKeyPointIds: [`k2`, `k3`, `k4`]
-  - targetClaimIds: [`kant-trans-deduction-c2`]
+  - targetClaimIds: [`kant-trans-b-deduction-c2`]
 
 - r2. type: transitions_to
   - targetEntryId: kant-trans-principles-system
