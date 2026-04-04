@@ -262,13 +262,14 @@ Review outcome:
   - `JUDGMENT-DISTILLATION.md`
 - lineSpans:
   - `JUDGMENT-DISTILLATION.md:63-73`
-- summary: Categorical judgment operates by binding subject and predicate through the copula.
+- summary: Categorical judgment operates by binding subject and predicate through the copula, thereby fixing the logical subject-position under which predicates can inhere.
 
 Key points: (KeyPoint)
 
 - k1. Subject and predicate are the matter of categorical judgment.
 - k2. The copula is the form that determines and expresses agreement or opposition.
 - k3. Categorical judgment is the operator of predicative binding.
+- k4. This logical subject-position later matters for transcendental substance-talk without yet amounting to a positive doctrine of the One Substance.
 
 Claims: (Claim)
 
@@ -303,7 +304,7 @@ Relations: (Relation)
 Review outcome:
 
 - review_pending
-- notes: the copula now appears as the formal operator rather than disappearing into generic predication language.
+- notes: the copula now appears as the formal operator rather than disappearing into generic predication language; the present pass treats categorical judgment as fixing the formal subject-position later required for substance in appearance, not as positively generating a monistic substance-doctrine.
 
 ### Entry kant-judgment-hypothetical — `Judgment`: hypothetical matter and form
 
@@ -362,13 +363,14 @@ Review outcome:
   - `JUDGMENT-DISTILLATION.md`
 - lineSpans:
   - `JUDGMENT-DISTILLATION.md:108-136`
-- summary: Disjunctive judgment operates by distributing a conceptual whole into complementary members and forcing truth through exhaustive division.
+- summary: Disjunctive judgment operates by distributing a conceptual whole into complementary members and forcing truth through exhaustive division; it therefore gives the clearest logical membership protocol for what counts as a member of a divided whole.
 
 Key points: (KeyPoint)
 
 - k1. The members of the disjunction are the matter of disjunctive judgment.
 - k2. Disjunction itself is the form relating members as complementary parts of a whole sphere.
 - k3. Disjunctive form carries an exhaustive truth protocol because problematic members are forced to assertoric resolution within the completed division.
+- k4. Membership in the whole is lawful: members exclude one another, belong under the same divided whole, and complete that whole under the given respect.
 
 Claims: (Claim)
 
@@ -403,7 +405,7 @@ Relations: (Relation)
 Review outcome:
 
 - review_pending
-- notes: disjunctive judgment now preserves both the whole-member complementarity and the internal shift from problematic members to assertoric truth.
+- notes: disjunctive judgment now preserves both the whole-member complementarity and the internal shift from problematic members to assertoric truth; this is the clearest local source for the membership protocol later reused in graph terms.
 
 ### Entry kant-judgment-modality — `Judgment`: modality as consciousness operator
 

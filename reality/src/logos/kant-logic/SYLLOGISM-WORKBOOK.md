@@ -173,6 +173,7 @@ Key points: (KeyPoint)
 - k2. Major, minor, and conclusion are the essential three moments of mediated inference.
 - k3. Reason divides by major premise into categorical, hypothetical, and disjunctive families.
 - k4. Jasche names all three as inferences of reason, but the categorical receives the full doctrine of pure mediation while hypothetical and disjunctive are treated more briefly.
+- k5. The formal spine to preserve in the present pass is copula, consequentia, and disjunctio.
 
 Claims: (Claim)
 
@@ -436,13 +437,14 @@ Review outcome:
   - `SYLLOGISM-DISTILLATION.md`
 - lineSpans:
   - `syllogism.md:513-596`
-- summary: Composite inference chains grounds and consequences through polysyllogism and sorites, while fallacy, leap, circular proof, and disproportionate proof mark failures in the proportion of mediation.
+- summary: Composite inference chains grounds and consequences through polysyllogism and sorites, with prosyllogism and episyllogism marking opposite directions of mediation that can be read as progressive and regressive; fallacy, leap, circular proof, and disproportionate proof mark failures in the proportion of mediation.
 
 Key points: (KeyPoint)
 
 - k1. Composite inference subordinates several inferences as grounds and consequences.
-- k2. Sorites compresses a chained series into a shortened path.
-- k3. Inferential defect appears where mediation is omitted, presupposed, circular, excessive, or insufficient.
+- k2. Prosyllogism and episyllogism mark opposed directions through the chain.
+- k3. Sorites compresses a chained series into a shortened path.
+- k4. Inferential defect appears where mediation is omitted, presupposed, circular, excessive, or insufficient.
 
 Claims: (Claim)
 
@@ -471,13 +473,13 @@ Relations: (Relation)
   - targetWorkbook: `SYLLOGISM-WORKBOOK.md`
   - note: this entry preserves the chapter's architectonic extension into chains and anti-mediation.
   - sourceClaimIds: [`kant-syllogism-chains-defects-c1`, `kant-syllogism-chains-defects-c2`]
-  - sourceKeyPointIds: [`k1`, `k2`, `k3`]
+  - sourceKeyPointIds: [`k1`, `k2`, `k3`, `k4`]
   - targetClaimIds: [`kant-syllogism-c2`]
 
 Review outcome:
 
 - review_pending
-- notes: the close of the chapter is treated as essential machinery, not leftover miscellany.
+- notes: the close of the chapter is treated as essential machinery, not leftover miscellany; it is also the clearest formal site for distinguishing progressive and regressive inferential movement before that contrast is reused architectonically.
 
 ### Entry kant-syllogism-truth-of-ground - `Syllogism`: derivative reading of grounded mediation
 
@@ -487,7 +489,7 @@ Review outcome:
 - lineSpans:
   - `syllogism.md:406-438`
   - `syllogism.md:491-553`
-- summary: On a source-guided derivative reading, this chapter is the strongest Kantian site for treating syllogism as the truth of ground, with the pure categorical syllogism as the scientific center, hypothetical inference as the clearest display of necessity through ground and condition, and disjunctive inference as the division-and-excluded-middle side of the inferential field that orders conceptual wholes for science.
+- summary: On a source-guided derivative reading, this chapter is the strongest Kantian site for treating syllogism as the truth of ground, with the pure categorical syllogism as the scientific center, hypothetical inference as the clearest display of necessity through ground and condition, disjunctive inference as the division-and-excluded-middle side of the inferential field that orders conceptual wholes for science, and chained reasoning as the formal site where progressive and regressive movement are both visible.
 
 Key points: (KeyPoint)
 
@@ -496,6 +498,9 @@ Key points: (KeyPoint)
 - k3. Grounds and consequences are explicit in chained reasoning.
 - k4. The pure first-figure categorical syllogism is the privileged center from which the chapter's scientific weight is best understood.
 - k5. Hypothetical and disjunctive inference can be read as objective servants furnishing the material of categorical science.
+- k6. Chained reasoning makes the contrast between progressive and regressive procedure formally available inside General Logic.
+- k7. Mark, ground, and excluded middle function as distinct truth-protocols internal to Conceptual mediation, which is why syllogism can be read derivatively as a restored unity of the Concept.
+- k8. For implementation, Concept-level processing should preserve internal operations for mark-transmission, ground-tracing, and whole-member division rather than merely storing object-derived content.
 
 Claims: (Claim)
 
@@ -546,7 +551,7 @@ Relations: (Relation)
   - targetWorkbook: `SYLLOGISM-WORKBOOK.md`
   - note: this derivative entry names the Ground-reading without altering the source or importing a full later doctrine of Ground.
   - sourceClaimIds: [`kant-syllogism-truth-of-ground-c1`, `kant-syllogism-truth-of-ground-c2`, `kant-syllogism-truth-of-ground-c3`, `kant-syllogism-truth-of-ground-c4`]
-  - sourceKeyPointIds: [`k1`, `k2`, `k3`, `k4`, `k5`]
+  - sourceKeyPointIds: [`k1`, `k2`, `k3`, `k4`, `k5`, `k6`]
   - targetClaimIds: [`kant-syllogism-c2`]
 
 Review outcome:

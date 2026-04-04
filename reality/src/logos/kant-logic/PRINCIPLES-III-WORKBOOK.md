@@ -162,7 +162,7 @@ Review outcome:
   - `PRINCIPLES-III-DISTILLATION.md`
 - lineSpans:
   - `principles-III.md:128-289`
-- summary: The first analogy argues that all time-determination in appearance presupposes a persistent substratum, so substance as appearance grounds duration and makes alteration intelligible as change of states rather than origination or annihilation of the substratum.
+- summary: The first analogy argues that all time-determination in appearance presupposes a persistent substratum, so substance as appearance grounds duration and makes alteration intelligible as change of states rather than origination or annihilation of the substratum; this is a regressive presupposition of experience, not yet a positive doctrine of the monistic One Substance.
 
 Key points: (KeyPoint)
 
@@ -170,6 +170,7 @@ Key points: (KeyPoint)
 - k2. A persistent correlate in appearance is required.
 - k3. Substance fulfills that role as substratum of time-determination.
 - k4. Alteration concerns determinations of substance, not substance's own arising or perishing.
+- k5. The argument reaches substance as a condition of possible experience rather than progressively unfolding it as the self-developing absolute.
 
 Claims: (Claim)
 
@@ -204,7 +205,7 @@ Relations: (Relation)
 Review outcome:
 
 - review_pending
-- notes: persistence is kept as the condition of all later temporal determination, not just one doctrine among others.
+- notes: persistence is kept as the condition of all later temporal determination, not just one doctrine among others; the current pass also distinguishes this regressive substance-presupposition from any stronger monistic claim.
 
 ### Entry kant-trans-principles-iii-causality — `Second Analogy`: objective succession through cause
 

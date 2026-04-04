@@ -21,13 +21,15 @@ The Analogies of Experience shift from the mathematical possibility of appearanc
 ### TPIII2. The First Analogy Secures Duration Through the Persistence of Substance
 
 **Distillation:**
-The first analogy argues that all temporal determination presupposes something persistent in appearance. Since time cannot itself be perceived, there must be a substratum in appearances that represents time's enduring correlate. Kant identifies this with substance as the persistent real in appearance. Only on that basis can duration, simultaneity, and succession be determined at all.
+The first analogy argues that all temporal determination presupposes something persistent in appearance. Since time cannot itself be perceived, there must be a substratum in appearances that represents time's enduring correlate. Kant identifies this with substance as the persistent real in appearance. Only on that basis can duration, simultaneity, and succession be determined at all. Substance is therefore not introduced here as a free metaphysical thing-in-itself, but as the enduring subject-position required for temporal objectivity within appearance. Nor is this yet the positive monistic One Substance. It is a presupposition reached by regressive critique: if experience of change is to be possible, something must persist as subject of alteration.
 
 **Structural Moves:**
 
 - Time itself is not an object of perception.
 - Temporal determination therefore requires a persistent substratum in appearance.
 - Substance is this persistent correlate of time.
+- Substance functions as the enduring subject of changing predicates in appearance.
+- The argument reaches substance regressively as a condition of experience, not progressively as the self-unfolding Absolute.
 - Duration becomes possible only through relation to what persists.
 
 ---

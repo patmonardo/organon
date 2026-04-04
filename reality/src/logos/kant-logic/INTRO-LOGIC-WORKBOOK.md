@@ -311,7 +311,7 @@ Review outcome:
   - `INTRO-LOGIC-DISTILLATION.md`
 - lineSpans:
   - `intro-logic.md:193-216`
-- summary: Transcendental logic divides into analytic and dialectic because pure understanding is lawful only under the condition of intuition and becomes illusory when it is used beyond possible experience.
+- summary: Transcendental logic divides into analytic and dialectic because pure understanding is lawful only under the condition of intuition and becomes illusory when it is used beyond possible experience; in the current presentation, this is treated as Kant's dualized presentation of one logical life under finite conditions.
 
 Key points: (KeyPoint)
 
@@ -352,7 +352,7 @@ Relations: (Relation)
 Review outcome:
 
 - review_pending
-- notes: the analytic-dialectic split is held here under the condition of intuition so the later critique never drifts into empty formalism.
+- notes: the analytic-dialectic split is held here under the condition of intuition so the later critique never drifts into empty formalism; derivative reuse reads this as a dualized presentation rather than as a denial that logic pressures toward higher unity.
 
 ### Entry kant-trans-intro-bridge — `Transcendental Logic`: distinction that demands reunion
 
@@ -363,13 +363,14 @@ Review outcome:
   - `intro-logic.md:13-42`
   - `intro-logic.md:93-124`
   - `intro-logic.md:193-216`
-- summary: On a derivative reading, the distinction between general and transcendental logic generates a demand for reunion, because the formal powers mapped in general logic call for transcendental completion if they are to relate to objects a priori.
+- summary: On a derivative reading, the distinction between general and transcendental logic generates a demand for reunion, because the formal powers mapped in general logic call for transcendental completion if they are to relate to objects a priori; this is the pressure by which a Kantian dualized presentation can be recollected monistically as one logic.
 
 Key points: (KeyPoint)
 
 - k1. General and transcendental logic are distinct without being foreign to one another.
 - k2. The distinction pressures a higher architectonic unity.
 - k3. This pressure can be read as a demand of pure reason itself.
+- k4. In a stronger derivative register, dialectic can be read as an internal moment of a single logic rather than as a merely external second half.
 
 Claims: (Claim)
 
@@ -407,4 +408,4 @@ Relations: (Relation)
 Review outcome:
 
 - review_pending
-- notes: the unity-demand is kept explicitly interpretive so the source distinction is preserved while the present architectonic is made legible.
+- notes: the unity-demand is kept explicitly interpretive so the source distinction is preserved while the present architectonic is made legible; the dualism-versus-monism axis is held explicit here without rewriting Kant as though he had already made the monistic move.

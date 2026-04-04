@@ -16,6 +16,7 @@ Authority: distillation-first, source-aware
 - Immediate extraction authority: `PRINCIPLES-GROUND-DISTILLATION.md`
 - Upstream source authority: `principles-ground.md`
 - This workbook covers the ground of the phenomena/noumena distinction across the A and B versions, with special weight on the fuller B-edition clarification.
+- A and B should be handled here as co-divisions of one boundary problem, not as duplicate chapters.
 
 ## Clean-room rules
 
@@ -24,6 +25,7 @@ Authority: distillation-first, source-aware
 - Do not confuse transcendental significance with transcendental use.
 - Do not flatten thing in itself, negative noumenon, and positive noumenon into one undifferentiated term.
 - Do not posit a second knowable world of understanding for us.
+- Do not treat A-text and B-text differences as arbitrary variants; they partition the same problem under different weights and clarifications.
 - Every accepted claim must have line-anchored evidence.
 - If uncertain, mark `review_pending`.
 
@@ -43,6 +45,7 @@ Decision:
 - Use `transcendental object-thought` as the clean label for the first object-in-general register, so it stays distinct from noumenon proper.
 - Keep the negative versus positive noumenon distinction explicit and central.
 - Treat noumenon as a boundary-concept, not as a hidden object-stock waiting to be catalogued.
+- Treat A and B as co-divisions of the same object-boundary graph: A secures the anti-ontology limit, B gives the fuller articulation of transcendental object-thought and noumenon.
 
 ### Entry kant-trans-principles-ground — Marker `Ground of the Distinction into Phenomena and Noumena`
 
@@ -54,7 +57,7 @@ Decision:
   - `principles-ground.md:160-194`
   - `principles-ground.md:241-344`
   - `principles-ground.md:346-485`
-- summary: The ground chapter closes the Analytic by showing that the categories and principles of understanding have objective validity only for possible experience, that object in general beyond sensible intuition is only indeterminately thought and not cognized, and that noumenon has for us only a negative, boundary-setting significance rather than a positive knowable domain.
+- summary: The ground chapter closes the Analytic by showing that the categories and principles of understanding have objective validity only for possible experience, that object in general beyond sensible intuition is only indeterminately thought and not cognized, and that noumenon has for us only a negative, boundary-setting significance rather than a positive knowable domain; the A and B versions act here as co-divisions of one boundary problem rather than as unrelated treatments.
 
 Key points: (KeyPoint)
 
@@ -62,6 +65,7 @@ Key points: (KeyPoint)
 - k2. Categories without sensible conditions lose determinate objective use.
 - k3. Object in general beyond sensible intuition is only indeterminately thought.
 - k4. Noumenon is a negative boundary-concept, not positive cognition.
+- k5. A and B divide the same problem under different explanatory weights rather than generating two separate doctrines.
 
 Claims: (Claim)
 
@@ -109,7 +113,7 @@ Relations: (Relation)
 Review outcome:
 
 - review_pending
-- notes: marker entry treats the chapter as a boundary-clarification, not as a new noumenal doctrine.
+- notes: marker entry treats the chapter as a boundary-clarification, not as a new noumenal doctrine, and keeps the A/B relation intelligible as a co-division within one graph-region.
 
 ### Entry kant-trans-principles-ground-limit — `Ground`: categories and ontology restricted to experience
 
@@ -221,7 +225,7 @@ Relations: (Relation)
 Review outcome:
 
 - review_pending
-- notes: this is the main anti-confusion entry for object in general and transcendental object.
+- notes: this is the main anti-confusion entry for object in general and transcendental object; later reflection material should be read as a co-division of the same higher object-problem, not as a replacement for this entry.
 
 ### Entry kant-trans-principles-ground-noumenon — `Ground`: ambiguity, negative noumenon, positive noumenon
 

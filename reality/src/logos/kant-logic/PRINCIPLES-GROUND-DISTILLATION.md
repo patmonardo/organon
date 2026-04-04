@@ -7,12 +7,13 @@ Source: [principles-ground.md](principles-ground.md)
 ### TPG1. The Chapter First Re-draws the Boundary of Truth as the Boundary of Possible Experience
 
 **Distillation:**
-The chapter opens by returning to the island image: the Analytic has charted the land of truth, but truth is bounded. The point of the review is not to add a new body of objects, but to secure the title under which the understanding legitimately occupies its domain. Everything the understanding brings forth from itself has use only for experience. The real gain of critique is therefore not extra information about supersensible things, but knowledge of the limits within which the understanding's claims are valid at all.
+The chapter opens by returning to the island image: the Analytic has charted the land of truth, but truth is bounded. The point of the review is not to add a new body of objects, but to secure the title under which the understanding legitimately occupies its domain. Everything the understanding brings forth from itself has use only for experience. The real gain of critique is therefore not extra information about supersensible things, but knowledge of the limits within which the understanding's claims are valid at all. The island is the domain in which cognition can justify its claim to objectivity; it is the bounded science of knowing as genuine knowledge for finite knowers.
 
 **Structural Moves:**
 
 - The Analytic has mapped the land of truth.
 - This land is bounded by nature itself.
+- The island names the domain of objectively valid cognition for us.
 - Pure understanding has use only for experience.
 - Critique's practical gain is boundary-knowledge.
 

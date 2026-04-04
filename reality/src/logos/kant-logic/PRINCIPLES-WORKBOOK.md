@@ -8,7 +8,7 @@ Authority: distillation-first, source-aware
 - This is a seed workbook, not a final graph.
 - Read the marker entry first.
 - This file fixes the introductory and schematism side of the Analytic of Principles.
-- In the current presentation, it should be read as the first judgment-side continuation of the deduction sequence.
+- In the current presentation, it should be read as the first judgment-side continuation of the deduction sequence inside one larger Kant-logic graph rather than as an isolated chapter-block.
 
 ## Authority + format lock (must persist)
 
@@ -41,6 +41,7 @@ Decision:
 - Preserve the double role of schematism as both realization and restriction of the categories.
 - Use empirical-significance and no-transcendental-use language where the chapter states the boundary sharply.
 - Use the judgment-side framing explicitly, since this book is the transition from categories to valid application.
+- Keep the graph-continuity explicit: this workbook is a lawful continuation from deduction and a preparation for the later principles subgraphs.
 
 ### Entry kant-trans-principles — Marker `Analytic of Principles`
 
@@ -104,7 +105,7 @@ Relations: (Relation)
 Review outcome:
 
 - review_pending
-- notes: marker entry fixes the book-level shift from deduction to judgment-side application.
+- notes: marker entry fixes the book-level shift from deduction to judgment-side application and keeps the whole sequence legible as one connected graph.
 
 ### Entry kant-trans-principles-judgment — `Analytic of Principles`: judgment as canon of application
 

@@ -10,6 +10,7 @@ Authority: workbook-family map only
 - If you want the actual KG seed work, open the matching component workbook.
 - The Transcendental Logic layer is newer and more architectonic than the General Logic seed, so the first pass should stay especially disciplined.
 - In the current presentation, this family should increasingly be read beside the General Logic family rather than as a detached second block.
+- The whole family should be read as a root graph whose workbooks are lawful subgraphs rather than as a loose stack of separate notes.
 
 ## Purpose
 
@@ -17,6 +18,7 @@ Authority: workbook-family map only
 - This file maps the planned workbook family for the Transcendental Logic pass.
 - Component workbooks remain distillation-first and source-aware.
 - Framing modules may be adjacent to the core Transcendental Logic sequence but still belong in the same family index when they govern the architectonic.
+- Divisions inside this family are not arbitrary file splits; each subgraph should be treated as a co-division under a determinate respect of the higher graph-region it articulates.
 
 ## Adjacent framing notes
 
@@ -51,6 +53,7 @@ Authority: workbook-family map only
 - The dialectic side opens from transcendental illusion and proceeds to the ideas of reason.
 - The whole family should keep Kant's object-bound discipline visible even where later ontological stakes are legible.
 - Read beside General Logic, this family shows why the formal powers of the thinking machine demand a transcendental completion rather than an external supplement.
+- A/B recensions, ground versus reflection treatments, and object-centered framing notes should be modeled as co-divisions when they partition the same higher problem under different lawful respects.
 
 ## Session: 2026-03-26 (first pass)
 

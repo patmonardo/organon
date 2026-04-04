@@ -73,12 +73,14 @@ General logic becomes dialectical only when it is misused. In itself it is merel
 ### TL6. Transcendental Logic Divides into Analytic and Dialectic Under the Condition of Intuition
 
 **Distillation:**
-When transcendental logic isolates pure understanding, it still remains bound to intuition as the condition under which objects can be given. Its analytic expounds the pure elements and principles without which no object can be thought at all, and is therefore a logic of truth. Its dialectic critiques the seduction to use pure understanding beyond experience as if it could legislate for objects in general. The introduction therefore installs the entire architectonic of lawful and lawless object-related thought in advance.
+When transcendental logic isolates pure understanding, it still remains bound to intuition as the condition under which objects can be given. Its analytic expounds the pure elements and principles without which no object can be thought at all, and is therefore a logic of truth. In that strong Kantian sense, the analytic is already a science of lawful knowing rather than a mere catalogue of concepts. Its dialectic critiques the seduction to use pure understanding beyond experience as if it could legislate for objects in general. Kant therefore presents transcendental logic in a dualized form: analytic as lawful cognition, dialectic as critique of illusion. The introduction installs that entire architectonic of lawful and lawless object-related thought in advance.
 
 **Structural Moves:**
 
 - Pure understanding still requires given intuition if it is to have objects.
 - Transcendental analytic is a logic of truth.
+- The analytic secures the lawful title of cognition, not an extra inventory of supersensible objects.
+- Kant's presentation keeps analytic and dialectic in a dualized relation.
 - Transcendental dialectic critiques hyperphysical misuse.
 - The introduction sets the full architectonic of transcendental logic.
 
@@ -87,12 +89,13 @@ When transcendental logic isolates pure understanding, it still remains bound to
 ### TL7. The Distinction from General Logic Generates a Demand for Reunion
 
 **Distillation:**
-In our presentation, the separation of general from transcendental logic does not leave the two as strangers. On the contrary, once general logic is seen as the articulated formal life of thinking, transcendental logic appears as the necessary completion that secures how those same acts can relate to objects a priori. The distinction therefore generates a pressure toward reunion. One begins to feel that the two belong together as one thinking machine viewed under different restrictions. Pushed to its strongest derivative consequence, this pressure can be read from the Hegelian side as the demand for one uninterrupted pipeline: transcendental logic begins the cycle by securing object-related identity a priori, and general logic immediately continues that same act as the articulated self-movement of thought. In that machine idiom, a complete cycle of the concept-processing unit is logic itself. One may even call this the demand for intellectual intuition, provided the phrase is heard here not as a literal Kantian claim that we possess such an intuition, but as the name for pure reason's demand that the two logics exhibit certainty of identity as one act.
+In our presentation, the separation of general from transcendental logic does not leave the two as strangers. On the contrary, once general logic is seen as the articulated formal life of thinking, transcendental logic appears as the necessary completion that secures how those same acts can relate to objects a priori. The distinction therefore generates a pressure toward reunion. One begins to feel that the two belong together as one thinking machine viewed under different restrictions. In that sense the Kantian split can be read as a dualistic presentation of a deeper monistic pressure: logic is divided for finite cognition, yet the division is internal to one and the same logical life. Pushed to its strongest derivative consequence, this pressure can be read from the Hegelian side as the demand for one uninterrupted pipeline in which dialectic is no longer merely the negative policing of illusion but an internal moment of a single logic. Dialectical idealism then names the standpoint of the infinite from which analytic and dialectic are recollected as one act. One may even call this the demand for intellectual intuition, provided the phrase is heard here not as a literal Kantian claim that we possess such an intuition, but as the name for pure reason's demand that the two logics exhibit certainty of identity as one act.
 
 **Structural Moves:**
 
 - General and transcendental logic are distinct but not foreign to one another.
 - The distinction generates a demand for higher unity.
+- The Kantian split can be read as dualistic presentation under pressure toward monistic recollection.
 - The two logics can be read as one thinking machine under different conditions.
-- In a stronger derivative register, that unity can be read as one uninterrupted pipeline or CPU cycle.
+- In a stronger derivative register, that unity can be read as one uninterrupted pipeline in which dialectic becomes an internal moment.
 - The felt demand for that unity belongs to pure reason's inner pressure.

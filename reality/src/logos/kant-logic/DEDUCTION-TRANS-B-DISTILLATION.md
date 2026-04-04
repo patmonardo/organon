@@ -7,12 +7,13 @@ Source: [deduction-trans-b.md](deduction-trans-b.md)
 ### DT1. Combination Comes from Spontaneity, Not from Sense
 
 **Distillation:**
-The B-deduction begins by relocating the source of combination. Sensibility can give a manifold, but it cannot give the manifold as combined. Combination is an act of spontaneity, hence an act of understanding. This already means that objectivity cannot be passively read off from the sensible given. Even analysis presupposes a prior synthesis. Kant therefore starts from self-activity: we can represent nothing as combined in the object unless we have first combined it ourselves. But combination also implies unity, and that unity cannot itself be extracted from the manifold. It must be sought in a still higher source.
+The B-deduction begins by relocating the source of combination. Sensibility can give a manifold, but it cannot give the manifold as combined. Combination is an act of spontaneity, hence an act of understanding. This already means that objectivity cannot be passively read off from the sensible given. Even analysis presupposes a prior synthesis. Kant therefore starts from self-activity: we can represent nothing as combined in the object unless we have first combined it ourselves. The movement is regressive in form: from the fact that a manifold must count as combined for an object, Kant backs up to the condition that alone makes such combination possible. It is not a progressive unfolding that generates the object from an immanent logical whole. But combination also implies unity, and that unity cannot itself be extracted from the manifold. It must be sought in a still higher source.
 
 **Structural Moves:**
 
 - Sense gives manifoldness, but not conjunction.
 - Combination is an act of spontaneity.
+- The argument regresses from given objectivity to its enabling condition.
 - Analysis presupposes prior synthesis.
 - The unity of combination must be grounded above the category of unity.
 
@@ -35,7 +36,7 @@ Kant then introduces the decisive principle: the I think must be able to accompa
 ### DT3. Objective Unity, Judgment, and Category Are One Line of Argument
 
 **Distillation:**
-The next movement clarifies what sort of unity is at stake. Objective unity of self-consciousness is not the contingent unity of associated inner states, but the necessary unity through which the manifold is united in the concept of an object. From here Kant redefines judgment: a judgment is not merely a relation between concepts, but the way given cognitions are brought to the objective unity of apperception. The copula marks precisely this objective tie. Categories then appear as those same functions for judging insofar as they determine the manifold of intuition. Thus all sensible intuitions stand under categories because only under them can their manifold come together in one consciousness as an object.
+The next movement clarifies what sort of unity is at stake. Objective unity of self-consciousness is not the contingent unity of associated inner states, but the necessary unity through which the manifold is united in the concept of an object. From here Kant redefines judgment: a judgment is not merely a relation between concepts, but the way given cognitions are brought to the objective unity of apperception. The copula marks precisely this objective tie. Categories then appear as those same functions for judging insofar as they determine the manifold of intuition. Thus judgment, category, and objectivity are one continuous line of operation: what the logical act does in judgment, the category does in the synthesis of intuition. This is why judgment can count as originative for substance in one sense without yet meaning that the One Substance is logically generated here. All sensible intuitions stand under categories because only under them can their manifold come together in one consciousness as an object.
 
 **Structural Moves:**
 
@@ -43,6 +44,7 @@ The next movement clarifies what sort of unity is at stake. Objective unity of s
 - Judgment brings cognitions to objective unity of apperception.
 - The copula marks objective, not merely associative, connection.
 - Categories are judgment-functions determining sensible manifold.
+- Judgment and category are the same unity-function under different conditions.
 
 ---
 

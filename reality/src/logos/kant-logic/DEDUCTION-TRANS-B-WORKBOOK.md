@@ -111,13 +111,14 @@ Review outcome:
   - `deduction-trans-b-DISTILLATION.md`
 - lineSpans:
   - `deduction-trans-b.md:19-49`
-- summary: The deduction begins by arguing that combination is never given by sense, but is an act of spontaneity that already presupposes a higher unity than the category of unity.
+- summary: The deduction begins by arguing that combination is never given by sense, but is an act of spontaneity that already presupposes a higher unity than the category of unity; methodically, the move is regressive, backing from given objectivity to its condition.
 
 Key points: (KeyPoint)
 
 - k1. Sensibility gives a manifold but not its conjunction.
 - k2. Combination is an act of self-activity.
 - k3. The unity of combination must be sought above the categories.
+- k4. The opening move is regressive rather than a progressive unfolding from an already explicit absolute whole.
 
 Claims: (Claim)
 
@@ -152,7 +153,7 @@ Relations: (Relation)
 Review outcome:
 
 - review_pending
-- notes: this entry preserves the opening shift from sensible givenness to spontaneous synthesis.
+- notes: this entry preserves the opening shift from sensible givenness to spontaneous synthesis and makes clear that Kant reaches the condition by regression from the fact of objectivity.
 
 ### Entry kant-trans-b-apperception — `Deduction`: original synthetic unity
 
@@ -214,7 +215,7 @@ Review outcome:
   - `deduction-trans-b-DISTILLATION.md`
 - lineSpans:
   - `deduction-trans-b.md:197-279`
-- summary: Judgment is the way cognitions are brought to objective unity of apperception, and the categories are those same judging functions insofar as they determine the manifold of intuition.
+- summary: Judgment is the way cognitions are brought to objective unity of apperception, and the categories are those same judging functions insofar as they determine the manifold of intuition; this makes judgment originative for substance only in the limited sense of fixing the unity-function later required for objective subjecthood.
 
 Key points: (KeyPoint)
 
@@ -257,7 +258,7 @@ Relations: (Relation)
 Review outcome:
 
 - review_pending
-- notes: this entry keeps judgment and category together because the B-deduction explicitly joins them at the point of objective validity.
+- notes: this entry keeps judgment and category together because the B-deduction explicitly joins them at the point of objective validity; the present pass avoids overstating this into a claim that the monistic One Substance is positively generated here.
 
 ### Entry kant-trans-b-boundary — `Deduction`: experience-bound use of the categories
 

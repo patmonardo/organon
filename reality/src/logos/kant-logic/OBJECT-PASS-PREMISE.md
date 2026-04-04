@@ -32,6 +32,24 @@ So the right contrast is not full reality versus mere placeholder. The right con
 - Kant: object in general as highest problematic heading, not yet positively inhabited by our ordinary cognition.
 - Derivative reuse: object in general as the first explicit marker of Satya Loka, the truth-world not knowable in the same way as cognition operates on this planet.
 
+## Division and Co-Division
+
+Object in general should also be treated as the highest locus of lawful division.
+
+A root graph is itself a graph, and its subordinate graph-regions should not be treated as arbitrary collections. Each subgraph must be lawful.
+
+A division is therefore not an arbitrary pile of subgraphs. The higher graph is the graph being divided. It is partitioned through co-divisional subgraphs governed by rules: the members must belong under one higher heading, they must divide that heading according to a determinate respect, and together they must exhaust that respect in a disciplined way.
+
+This also means that division has to be specified through a membership protocol. The subgraphs are members of the divided whole only insofar as they satisfy the protocol of Disjunctio and Divisio: they stand under the one higher graph, they exclude one another under the respect in question, they complement one another toward the whole, and they complete that whole under that same respect.
+
+If the same higher heading must be partitioned again according to a different lawful respect, that second partition is not a mistake or duplication. It is a co-division.
+
+That is the right way to handle object in general in this repository. The ground chapter gives one co-division of the problem by way of transcendental object-thought, transcendental significance without use, and the noumenon boundary. The reflection appendix gives another co-division when object in general reappears as the highest problematic heading prior to the division of something and nothing.
+
+The same rule should govern the A/B problem. A and B are not arbitrary duplicate tellings. They are co-divisions of one boundary-problem: A secures the anti-ontology and empirical-limit side with particular force, while B gives the fuller articulation of object in general, negative noumenon, and positive noumenon.
+
+So the Object() pass should not force one single division where the source actually requires several lawful co-divisions.
+
 ## Satya Loka and Asatya Loka
 
 Under the stronger reuse proposed here, this world is Asatya Loka: the world of features, appearances, and derivative manifestation.

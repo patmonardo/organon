@@ -69,7 +69,7 @@ Relation states how given representations are subordinated to one another for th
 ### SS5. Categorical Judgment Has Matter and Form
 
 **Distillation:**
-In categorical judgment, the matter is subject and predicate. The form is the copula, through which the relation of agreement or opposition between subject and predicate is determined and expressed. Categorical judgment therefore does not merely juxtapose two terms. It operates by holding a subject and predicate together through a formal act of relating them.
+In categorical judgment, the matter is subject and predicate. The form is the copula, through which the relation of agreement or opposition between subject and predicate is determined and expressed. Categorical judgment therefore does not merely juxtapose two terms. It operates by holding a subject and predicate together through a formal act of relating them. This matters later for substance: judgment already fixes the logical subject-position under which predicates can inhere, but it does not yet positively unfold a monistic One Substance. It gives the form of subjecthood that transcendental logic will later require for objectivity in appearance.
 
 **Structural Moves:**
 
@@ -77,6 +77,7 @@ In categorical judgment, the matter is subject and predicate. The form is the co
 - The copula constitutes the form.
 - The copula determines and expresses agreement or opposition.
 - Categorical judgment is the operator of predicative binding.
+- Categorical judgment fixes the logical subject-position later read transcendently as substance in appearance.
 
 ---
 

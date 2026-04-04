@@ -319,13 +319,14 @@ Review outcome:
   - `LIFE-DISTILLATION.md`
 - lineSpans:
   - `life.md:134-170`
-- summary: Logical division partitions the sphere of a concept through opposed members under a common higher concept, with codivision and subdivision tracking formal variants.
+- summary: Logical division partitions the sphere of a concept through opposed members under a common higher concept, with codivision and subdivision tracking formal variants; the divided higher concept is the whole whose members gain standing only through a lawful membership protocol.
 
 Key points: (KeyPoint)
 
 - k1. Logical division determines what is possible under a concept through opposed lower members.
 - k2. Valid division requires exclusion, common genus, and equality to the divided sphere.
 - k3. Codivision, subdivision, dichotomy, and polytomy are formal variants of partition.
+- k4. Members of division belong to the whole only by satisfying the protocol of common higher concept, opposition, and completeness.
 
 Claims: (Claim)
 
@@ -360,7 +361,7 @@ Relations: (Relation)
 Review outcome:
 
 - review_pending
-- notes: division is kept explicitly tied to sphere and opposition, which matches the earlier concept and judgment passes.
+- notes: division is kept explicitly tied to sphere and opposition, which matches the earlier concept and judgment passes; this is the formal basis for later graph-language about lawful membership in a divided whole.
 
 ### Entry kant-life-method-families - `Life`: families of scientific presentation
 

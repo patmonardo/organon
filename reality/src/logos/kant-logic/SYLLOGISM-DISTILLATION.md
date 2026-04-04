@@ -52,6 +52,8 @@ The understanding does not infer in one generic way. It redistributes the four m
 **Distillation:**
 Inference of reason is defined as cognition of necessity through subsumption of a condition under a universal rule. Major premise, minor premise, and conclusion are therefore not merely three sentences placed side by side. They are the articulated moments through which mediation occurs: rule, condition, and concluded predicate. Read in its fuller Kantian distribution, the understanding supplies the rule, the power of judgment performs the subsumption, and reason closes the movement in the conclusion. The premises provide the antecedent material; the conclusion provides the inferential consequentia. Here syllogism becomes genuinely mediate and no longer merely transformational.
 
+If the judgment chapter gives the copula as the formal bond of subject and predicate, the reason chapter now gives consequentia as the explicit form of mediate conclusion. And when disjunctive inference arrives, this formal line is widened again into disjunctio as the whole-form of exhaustive division. Before the descent into figures and their reductions, this copula-to-consequentia-to-disjunctio ladder is the clearest formal backbone of Subjectivity.
+
 **Structural Moves:**
 
 - Reason cognizes necessity through a universal rule.
@@ -59,6 +61,7 @@ Inference of reason is defined as cognition of necessity through subsumption of 
 - Major, minor, and conclusion are the essential triad.
 - Premises are matter; consequentia in the conclusion is form.
 - Mediation begins where immediate transformation ends.
+- Copula, consequentia, and disjunctio form a formal ladder within Subjectivity.
 
 ---
 
@@ -111,6 +114,10 @@ Once the position of the middle term is varied, the doctrine of figures appears.
 **Distillation:**
 Hypothetical inference states its own principle openly as the principle of the ground. But its operative form also exposes condition and conditioned: what follows does so under a condition, and the resulting sequence invites a further search for the condition of the conditioned. This is where the necessity-side of syllogism becomes most visible, and where judgment discovers grounds that can later function in stricter science. Disjunctive inference states its principle as the excluded middle and reasons through exhaustive members of a division. In that sense it works on concepts at the level of a whole and its members, ordering a field of possible assertions into contradiction-sensitive completeness. If categorical syllogism mediates through a middle mark, hypothetical syllogism mediates through grounded and conditioned sequence, and disjunctive syllogism mediates through complete partition. Syllogism therefore widens beyond inclusion to explicit necessity and exhaustive division.
 
+This is also why the chapter becomes twisty in the right way. A mark can function as a ground of cognition, but the three principles are still not interchangeable. Mark-transmission, ground-consequence, and excluded-middle division are three distinct protocols by which truth is internally connected inside the Concept itself. On a derivative Hegelian resonance, that is why syllogism can look like the restored unity of the Concept; on the present Kantian reading, it is the strongest local point where Concept becomes self-mediated rather than merely receiving an object from outside.
+
+For implementation, this suggests that Concept-level processing should not merely store object-derived content. It should preserve internal operations for transmitting marks, tracing grounds, and ordering whole-member divisions, because those are the protocols by which conceptual truth is actually mediated here.
+
 **Structural Moves:**
 
 - Hypothetical syllogism is governed by ground and by condition-conditioned sequence.
@@ -118,6 +125,8 @@ Hypothetical inference states its own principle openly as the principle of the g
 - Hypothetical inference makes necessity especially visible.
 - Disjunctive inference stabilizes exhaustive alternatives.
 - Both serve the later strictness of categorical mediation.
+- The three principles are distinct truth-protocols internal to Conceptual mediation.
+- Conceptual processing must support internal mediation protocols.
 
 ---
 
@@ -179,13 +188,14 @@ The close of the chapter turns to inferential defect. Fallacy, paralogism, and s
 ### SS13. Syllogism Is the Truth of Ground on the General Logic Side
 
 **Distillation:**
-Read as a whole, the chapter progressively discloses ground. It is explicit in hypothetical inference as the principle of ground. It reappears in reflective judgment as common ground. It becomes serial in polysyllogism as grounds and consequences. Even the categorical syllogism already performs grounded mediation through the middle mark on the subject-predicate axis. For our derivative use, this makes Syllogism the clearest Kantian site for reading the truth of ground within General Logic: not yet a full Hegelian doctrine of Ground, but already the place where formal transition becomes grounded, mediated, and capable of systematic chaining. It also clarifies why the chapter matters historically. Kant is already refusing to treat all inference as one undifferentiated act, and is marking differences among immediate transformation, mediate reason, and reflective ascent that later logic too often blurred and that Hegel will press still harder. On a stronger derivative reconstruction, the categorical is the only inference of reason in the strict sense because only there is the full rule-subsumption-conclusion form developed as pure subject-predicate mediation. Hypothetical inference then appears above all as an inference of necessity, where ground-grounded is read through condition and conditioned and where judgment discovers the grounds science needs. Disjunctive inference appears closer to the understanding, which holds members of a division in exhaustive, contradiction-sensitive order and arranges conceptual wholes into stable tables of possibility. In that sense both are objective servants of science, furnishing the material that categorical syllogism binds into strict scientific form. Kant does not rename them this way here, but the chapter strongly pressures that distinction.
+Read as a whole, the chapter progressively discloses ground. It is explicit in hypothetical inference as the principle of ground. It reappears in reflective judgment as common ground. It becomes serial in polysyllogism as grounds and consequences. Even the categorical syllogism already performs grounded mediation through the middle mark on the subject-predicate axis. For our derivative use, this makes Syllogism the clearest Kantian site for reading the truth of ground within General Logic: not yet a full Hegelian doctrine of Ground, but already the place where formal transition becomes grounded, mediated, and capable of systematic chaining. It also clarifies why the chapter matters historically. Kant is already refusing to treat all inference as one undifferentiated act, and is marking differences among immediate transformation, mediate reason, and reflective ascent that later logic too often blurred and that Hegel will press still harder. The chapter also gives the clearest formal site for contrasting progressive and regressive procedure: reason-chains can move forward from grounds to consequences or backward from conditioned results to what must ground them. Kant's transcendental method typically takes the regressive side, backing from factical cognition to its conditions. A stronger monistic logic will tend to privilege the progressive side, where the ground unfolds itself and no longer appears merely as presupposed. On a stronger derivative reconstruction, the categorical is the only inference of reason in the strict sense because only there is the full rule-subsumption-conclusion form developed as pure subject-predicate mediation. Hypothetical inference then appears above all as an inference of necessity, where ground-grounded is read through condition and conditioned and where judgment discovers the grounds science needs. Disjunctive inference appears closer to the understanding, which holds members of a division in exhaustive, contradiction-sensitive order and arranges conceptual wholes into stable tables of possibility. In that sense both are objective servants of science, furnishing the material that categorical syllogism binds into strict scientific form. Kant does not rename them this way here, but the chapter strongly pressures that distinction.
 
 **Structural Moves:**
 
 - Ground is explicit in hypothetical inference.
 - Common ground governs reflective ascent.
 - Grounds and consequences govern inferential chains.
+- Progressive and regressive movements are both formally available here.
 - Categorical mediation is the privileged center of the trio.
 - Hypothetical and disjunctive furnish material for categorical science.
 - Inferential acts must be differentiated rather than flattened.
