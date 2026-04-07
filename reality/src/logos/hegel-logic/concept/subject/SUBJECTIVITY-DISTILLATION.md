@@ -1,70 +1,86 @@
-# Subjectivity — Distillation
+# Subjectivity - Distillation
 
-Source: [subject-idea.txt](file:///home/pat/VSCode/organon/reality/src/logos/hegel-logic/concept/subject/subject-idea.txt)
+Source: [subject-idea.txt](subject-idea.txt), [concept/concept-idea.txt](concept/concept-idea.txt), [judgment/judgment-idea.txt](judgment/judgment-idea.txt), [syllogism/syllogism-idea.txt](syllogism/syllogism-idea.txt)
+
+Role note:
+
+- This distillation is the quick commentary companion to [SUBJECTIVITY-WORKBOOK.md](SUBJECTIVITY-WORKBOOK.md).
+- Read it as the container surface for the whole `subject/` folder.
+- Its job is not to replace the chapter-level pairs below it, but to show how the folder as a whole unfolds through `concept/`, `judgment/`, and `syllogism/`.
 
 Detailed follow-through:
 
-- [Concept as Such — Distillation](file:///home/pat/VSCode/organon/reality/src/logos/hegel-logic/concept/subject/concept/CONCEPT-DISTILLATION.md)
-- [Judgment — Distillation](file:///home/pat/VSCode/organon/reality/src/logos/hegel-logic/concept/subject/judgment/JUDGMENT-DISTILLATION.md)
-- [Syllogism — Distillation](file:///home/pat/VSCode/organon/reality/src/logos/hegel-logic/concept/subject/syllogism/SYLLOGISM-DISTILLATION.md)
+- [CONCEPT-WORKBOOK.md](CONCEPT-WORKBOOK.md)
+- [JUDGMENT-WORKBOOK.md](JUDGMENT-WORKBOOK.md)
+- [SYLLOGISM-WORKBOOK.md](SYLLOGISM-WORKBOOK.md)
+- [SUBJECT-IDEA-WORKBOOK.md](SUBJECT-IDEA-WORKBOOK.md)
 
 ---
 
-### §1. Subjectivity Is the Concept in Its First Formal Appearance
-
-**Lines:** 6–16
+### SJ1. Subjectivity Is the First Band of the Concept
 
 **Distillation:**
-Subjectivity is the first appearance of the concept as concept. Here the concept is still formal and immediate: its difference is only a reflective shine within an undivided unity. Its moments are already the totality of the concept, but they are not yet explicitly developed as self-standing forms. Subjectivity is therefore not mere inwardness in the psychological sense, but the concept at the stage where its determinations are still primarily within itself.
+Subjectivity is the concept in its first formal self-presence. The concept is still immediate; its difference is only reflective shine within one inward unity. Yet this immediacy cannot remain at rest, because the concept is absolute negativity. Subjectivity is therefore not a psychological inwardness but the first full architectonic band of the concept.
 
 **Structural Moves:**
 
-- **Formal beginning:** The concept first appears as immediate inward unity.
-- **Reflective difference:** Difference is present, but only as inner shine.
-- **Implicit totality:** The whole concept is already there, though not yet unfolded.
+- The concept first appears as immediate inward unity.
+- Difference is present as reflective shine.
+- The concept is already totality.
+- Subjectivity is the first band of the concept.
 
 ---
 
-### §2. Judgment Is the Concept's First Self-Division
-
-**Lines:** 17–29
+### SJ2. The `concept/` Subfolder Gives the Concept's First Self-Articulation
 
 **Distillation:**
-Because the concept is absolute negativity, it cannot remain in that first immediacy. It divides itself and posits its own moments as others to one another. In this form the moments stand with reciprocal indifference, each on its own, while their unity remains only external. This divided concept is judgment. Judgment is therefore not an externally added operation, but the concept itself in the form of self-sundering.
+The `concept/` subfolder is where the concept first articulates itself as universality, particularity, and singularity. Here the concept is still formally with itself, but its moments are no longer merely named from outside. Universality determines itself, particularity is internal difference, and singularity gathers the movement into self-relating negativity. This is the immediate subjective life of the concept.
 
 **Structural Moves:**
 
-- **Absolute negativity:** The concept must divide itself.
-- **Indifferent moments:** Its determinations appear as self-subsisting sides.
-- **Result:** The concept in this divided form is judgment.
+- Universality, particularity, and singularity are the concept's own moments.
+- Difference is generated from within.
+- Singularity gathers the movement.
+- The chapter turns toward judgment.
 
 ---
 
-### §3. Syllogism Restores the Unity Lost in Judgment
-
-**Lines:** 31–42
+### SJ3. The `judgment/` Subfolder Gives the Concept's Self-Division
 
 **Distillation:**
-Judgment contains the unity of the concept, but only implicitly. Through the dialectical movement of judgment, that missing unity becomes explicitly posited as mediation. This is syllogism: the fully posited concept in which the extremes and their mediating unity are all equally present. What was broken apart in judgment is restored, but now not as immediate unity; it is restored as explicit mediation.
+In `judgment/`, the concept no longer remains only inwardly articulated. It posits its own determinations over against one another. Subject and predicate stand as self-subsisting sides, yet their unity is still only implicit or externally connected. Judgment is thus the first reality of the concept, but it is a reality marked by contradiction and instability.
 
 **Structural Moves:**
 
-- **Implicit unity in judgment:** The concept is present, but not yet posited as such.
-- **Dialectical advance:** Judgment drives itself into mediation.
-- **Fully posited concept:** Syllogism reunites extremes and middle in one form.
+- The concept posits its own determinations as opposed.
+- Subject and predicate stand as self-subsisting sides.
+- The unity of the concept remains unfulfilled.
+- Judgment turns toward syllogism.
 
 ---
 
-### §4. Subjectivity Completes Itself by Passing into Objectivity
-
-**Lines:** 44–53
+### SJ4. The `syllogism/` Subfolder Restores the Concept As Mediation
 
 **Distillation:**
-Even in syllogism, the mediating unity and the self-subsisting extremes first stand opposed. This contradiction sublates itself. The concept, complete as subjective form, cannot remain enclosed within subjectivity, but passes over into the unity of totality, that is, into objectivity. Subjectivity is therefore the whole first movement of the concept: immediate inwardness, division into judgment, restoration in syllogism, and release into objective existence.
+In `syllogism/`, the broken unity of judgment is restored, not as simple immediacy but as explicit mediation. The middle term becomes the living unity of the extremes. Through existence, reflection, and necessity, the syllogism becomes the fully posited concept. In that completion, subjectivity can no longer remain merely subjective and passes into objectivity.
 
 **Structural Moves:**
 
-- **Contradiction of formal mediation:** Middle and extremes still first stand opposed.
-- **Self-sublation:** This opposition cannot stand as final.
-- **Transition:** Subjectivity passes into objectivity.
-- **Whole arc:** Concept, judgment, and syllogism are one completed movement.
+- Syllogism restores the unity lost in judgment.
+- The middle term is the living unity of the extremes.
+- The chapter unfolds through existence, reflection, and necessity.
+- Subjectivity passes into objectivity.
+
+---
+
+### SJ5. The Subject Folder Now Has the Same Layering As Essence
+
+**Distillation:**
+With this structure, the top layer of `subject/` becomes a genuine container layer rather than a lone overview distillation resting on older files. The root now carries an architectonic pair, while `concept/`, `judgment/`, and `syllogism/` each receive a readable synthetic pair above their older local workbooks and distillations. That gives Concept's subjectivity band the same middle-scale readability that Essence now has.
+
+**Structural Moves:**
+
+- Container artifacts sit at the folder root.
+- Chapter-level artifacts sit one level below.
+- The older local stacks remain in place.
+- The subjectivity band is now upgraded to the same layer logic as Essence.
