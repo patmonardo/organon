@@ -65,3 +65,4 @@ gds/src/lightning
 gds/src/litdata
 gds/src/pytorch_geometric
 reality/src/logos/open-logic
+logic/src/compiler.old
