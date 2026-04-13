@@ -15,11 +15,15 @@
 //! - SDSL is treated here as a specification language: model/feature artifacts
 //!   and genus/species classification can drive dataset compilation IR, while
 //!   DataFrame lowerings remain generated artifacts of that specification.
+//! - The "entities" extracted from datasets are therefore primarily storable
+//!   SDSL/GDSL plans and ontological/epistemological programs, rather than
+//!   graph-analytic entities from a GraphFrame layer.
 //!
 //! Dragon Seed note:
 //! - The top-level modules read like a compiler: catalog/registry, schema,
 //!   plans, features, models, and the DSL namespaces that bind it together.
 
+pub mod artifact;
 pub mod catalog;
 pub mod catalog_index;
 pub mod codegen;
@@ -64,6 +68,7 @@ pub mod tree;
 pub mod utils;
 
 // Keep the module surface small and explicitly export the core public items.
+pub use artifact::{DatasetArtifactKind, DatasetArtifactProfile};
 pub use catalog::DatasetCatalog;
 pub use dataset::Dataset;
 pub use dependency::{DependencyEdge, DependencyGraph, DependencyNode};
@@ -106,10 +111,10 @@ pub use series::{DatasetSeriesNameSpace, SeriesDatasetExt};
 pub use catalog_index::DatasetCatalogIndex;
 pub use codegen::{render_rust_dsl_module, DslCodegenOptions};
 pub use compile_ir::{
-    ontology_image_from_program_features, DatasetCompilation, DatasetNode, DatasetNodeKind,
-    OntologyDataFrameImage, OntologyDataFrameImageTables, OntologyImageConstraintRow,
-    OntologyImageFeatureRow, OntologyImageModelRow, OntologyImageProvenanceRow,
-    OntologyImageQueryRow, OntologyRuntimeMode,
+    ontology_image_from_program_features, DatasetCompilation, DatasetCompilationArtifacts,
+    DatasetNode, DatasetNodeKind, OntologyDataFrameImage, OntologyDataFrameImageTables,
+    OntologyImageConstraintRow, OntologyImageFeatureRow, OntologyImageModelRow,
+    OntologyImageProvenanceRow, OntologyImageQueryRow, OntologyRuntimeMode,
 };
 pub use expressions::dataop::{
     DataFrameLoweringArtifact, DatasetAspectArtifact, DatasetDataOp, DatasetDataOpExpr,
@@ -155,8 +160,8 @@ pub use tokenizer::{
     TabTokenizer, Tokenizer, WhitespaceTokenizer, WordPunctTokenizer,
 };
 pub use toolchain::{
-    DatasetPipeline, DatasetPipelineArtifacts, DatasetToolChain, GenusSpecies, LogicalEngineIntent,
-    ModelSpecRef, MvcEngineIntent, SdslSpecification,
+    DatasetPipeline, DatasetPipelineArtifacts, DatasetToolChain, GdslSourceLoweringError,
+    GenusSpecies, LogicalEngineIntent, ModelSpecRef, MvcEngineIntent, SdslSpecification,
 };
 pub use tree::{
     format_bracketed, format_pretty, parse_bracketed, MultiParentedIndex, MultiParentedNode,

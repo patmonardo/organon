@@ -14,6 +14,7 @@ pub use crate::collections::dataset::dataset::Dataset;
 pub use crate::collections::dataset::dependency::{
     DependencyEdge, DependencyGraph, DependencyNode,
 };
+pub use crate::collections::dataset::{DatasetArtifactKind, DatasetArtifactProfile};
 
 // Plan / DataOps (lazy computation graphs)
 pub use crate::collections::dataset::plan::{EvalMode, Plan, PlanEnv, PlanError, Source, Step};
@@ -131,8 +132,8 @@ pub use crate::collections::dataset::{
     DataFrameLoweringArtifact, DatasetAspectArtifact, DatasetDataOp, DatasetDataOpExpr,
     DatasetIoExpr, DatasetMetadataExpr, DatasetPipeline, DatasetPipelineArtifacts,
     DatasetProjectionExpr, DatasetProjectionKind, DatasetRegistryExpr, DatasetReportExpr,
-    DatasetReportKind, DatasetSource, DatasetToolChain, GenusSpecies, LogicalEngineIntent,
-    ModelSpecRef, MvcEngineIntent, SdslSpecification,
+    DatasetReportKind, DatasetSource, DatasetToolChain, GdslSourceLoweringError, GenusSpecies,
+    LogicalEngineIntent, ModelSpecRef, MvcEngineIntent, SdslSpecification,
 };
 
 // Utilities
@@ -164,8 +165,8 @@ pub use crate::collections::dataset::expressions::token::{
 // Dataset compiler utility surface
 pub use crate::collections::dataset::{
     ontology_image_from_program_features, render_rust_dsl_module, DatasetCatalogIndex,
-    DatasetCompilation, DatasetNode, DatasetNodeKind, DslCodegenOptions,
-    OntologyDataFrameImage, OntologyDataFrameImageTables, OntologyImageConstraintRow,
-    OntologyImageFeatureRow, OntologyImageModelRow, OntologyImageProvenanceRow,
-    OntologyImageQueryRow, OntologyRuntimeMode,
+    DatasetCompilation, DatasetCompilationArtifacts, DatasetNode, DatasetNodeKind,
+    DslCodegenOptions, OntologyDataFrameImage, OntologyDataFrameImageTables,
+    OntologyImageConstraintRow, OntologyImageFeatureRow, OntologyImageModelRow,
+    OntologyImageProvenanceRow, OntologyImageQueryRow, OntologyRuntimeMode,
 };

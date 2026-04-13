@@ -1,0 +1,108 @@
+{
+  "module": "org.hegel.epistemology.absolute_concept.scientific_inference",
+  "semanticProgression": [
+    "sensation",
+    "appearance",
+    "reflection",
+    "logogenesis",
+    "mark",
+    "concept",
+    "judgment",
+    "syllogism",
+    "absolute-concept"
+  ],
+  "artifactDatasets": [
+    {
+      "name": "org.hegel.epistemology.absolute_concept.scientific_inference.sensation",
+      "kind": "table",
+      "facets": ["sensation", "absolute-concept"],
+      "columns": [
+        "observation_id",
+        "timestamp",
+        "modality",
+        "intensity",
+        "note"
+      ]
+    },
+    {
+      "name": "org.hegel.epistemology.absolute_concept.scientific_inference.appearance",
+      "kind": "table",
+      "facets": ["appearance", "absolute-concept"],
+      "columns": [
+        "observation_id",
+        "timestamp",
+        "modality",
+        "intensity",
+        "note",
+        "immediacy",
+        "persistence",
+        "determinacy"
+      ]
+    },
+    {
+      "name": "org.hegel.epistemology.absolute_concept.scientific_inference.reflection",
+      "kind": "program-plan",
+      "facets": ["reflection", "absolute-concept", "genetic-method"],
+      "columns": ["stage", "source_stage", "target_stage", "sequence_index"]
+    },
+    {
+      "name": "org.hegel.epistemology.absolute_concept.scientific_inference.logogenesis",
+      "kind": "program-plan",
+      "facets": ["logogenesis", "absolute-concept", "genetic-method"],
+      "columns": ["stage", "source_stage", "target_stage", "sequence_index"]
+    },
+    {
+      "name": "org.hegel.epistemology.absolute_concept.scientific_inference.marks",
+      "kind": "feature-map",
+      "facets": ["mark", "absolute-concept"],
+      "columns": [
+        "observation_id",
+        "quality",
+        "measure",
+        "ground",
+        "determinacy"
+      ]
+    },
+    {
+      "name": "org.hegel.epistemology.absolute_concept.scientific_inference.concepts",
+      "kind": "program-plan",
+      "facets": ["concept", "absolute-concept"],
+      "columns": [
+        "observation_id",
+        "quality",
+        "measure",
+        "ground",
+        "determinacy"
+      ]
+    },
+    {
+      "name": "org.hegel.epistemology.absolute_concept.scientific_inference.judgments",
+      "kind": "program-plan",
+      "facets": ["judgment", "absolute-concept"],
+      "columns": ["observation_id", "singular", "stable", "grounded"]
+    },
+    {
+      "name": "org.hegel.epistemology.absolute_concept.scientific_inference.syllogisms",
+      "kind": "program-plan",
+      "facets": ["syllogism", "absolute-concept"],
+      "columns": ["observation_id", "ground", "knowable", "lawful"]
+    },
+    {
+      "name": "org.hegel.epistemology.absolute_concept.scientific_inference.principles",
+      "kind": "program-plan",
+      "facets": ["principle", "absolute-concept"],
+      "columns": ["observation_id", "lawful", "scientific_object"]
+    },
+    {
+      "name": "org.hegel.epistemology.absolute_concept.scientific_inference.absolute_concept_manifest",
+      "kind": "program-image",
+      "facets": ["absolute-concept", "manifest", "genetic-method"],
+      "columns": [
+        "artifact_id",
+        "artifact_kind",
+        "depends_on",
+        "semantic_stage"
+      ]
+    }
+  ]
+}

@@ -11,6 +11,7 @@ use crate::collections::dataframe::selectors::Selector;
 use crate::collections::dataframe::table::TableBuilder;
 use crate::collections::dataframe::GDSDataFrame;
 use crate::collections::dataframe::GDSFrameError;
+use crate::collections::dataset::artifact::{DatasetArtifactKind, DatasetArtifactProfile};
 use crate::collections::dataset::semantic::LanguageModelFocus;
 use crate::collections::io::{csv, ipc, json, parquet};
 
@@ -19,6 +20,7 @@ use crate::collections::io::{csv, ipc, json, parquet};
 pub struct Dataset {
     name: Option<String>,
     table: GDSDataFrame,
+    artifact_profile: DatasetArtifactProfile,
     lm_focus: Option<LanguageModelFocus>,
 }
 
@@ -27,6 +29,7 @@ impl Dataset {
         Self {
             name: None,
             table,
+            artifact_profile: DatasetArtifactProfile::default(),
             lm_focus: None,
         }
     }
@@ -35,6 +38,7 @@ impl Dataset {
         Self {
             name: Some(name.into()),
             table,
+            artifact_profile: DatasetArtifactProfile::default(),
             lm_focus: None,
         }
     }
@@ -68,7 +72,46 @@ impl Dataset {
         self.name.as_deref()
     }
 
+    pub fn artifact_profile(&self) -> &DatasetArtifactProfile {
+        &self.artifact_profile
+    }
+
+    pub fn artifact_kind(&self) -> &DatasetArtifactKind {
+        self.artifact_profile.primary_kind()
+    }
+
+    pub fn with_artifact_profile(mut self, artifact_profile: DatasetArtifactProfile) -> Self {
+        self.artifact_profile = artifact_profile;
+        self
+    }
+
+    pub fn with_artifact_kind(mut self, artifact_kind: DatasetArtifactKind) -> Self {
+        self.artifact_profile = self.artifact_profile.clone().with_primary_kind(artifact_kind);
+        self
+    }
+
+    pub fn with_artifact_facet(mut self, facet: impl Into<String>) -> Self {
+        self.artifact_profile = self.artifact_profile.clone().with_facet(facet);
+        self
+    }
+
+    pub fn has_artifact_kind(&self, artifact_kind: &DatasetArtifactKind) -> bool {
+        self.artifact_profile.has_kind(artifact_kind)
+    }
+
+    pub fn has_artifact_facet(&self, facet: &str) -> bool {
+        self.artifact_profile.has_facet(facet)
+    }
+
     pub fn with_lm_focus(mut self, focus: LanguageModelFocus) -> Self {
+        let mut profile = self
+            .artifact_profile
+            .clone()
+            .with_facet("language-model-focus");
+        if focus.is_sdl_compliant {
+            profile = profile.with_facet("sdl-compliant");
+        }
+        self.artifact_profile = profile;
         self.lm_focus = Some(focus);
         self
     }
@@ -179,6 +222,7 @@ impl Dataset {
         Ok(Self {
             name: self.name.clone(),
             table: GDSDataFrame::from(filtered_df),
+            artifact_profile: self.artifact_profile.clone(),
             lm_focus: self.lm_focus.clone(),
         })
     }
@@ -220,6 +264,7 @@ impl Dataset {
         Self {
             name: self.name.clone(),
             table,
+            artifact_profile: self.artifact_profile.clone(),
             lm_focus: self.lm_focus.clone(),
         }
     }
@@ -229,6 +274,7 @@ impl Dataset {
         Self {
             name: self.name.clone(),
             table,
+            artifact_profile: self.artifact_profile.clone(),
             lm_focus: self.lm_focus.clone(),
         }
     }
@@ -238,6 +284,7 @@ impl Dataset {
         Self {
             name: self.name.clone(),
             table,
+            artifact_profile: self.artifact_profile.clone(),
             lm_focus: self.lm_focus.clone(),
         }
     }
@@ -247,6 +294,7 @@ impl Dataset {
         Ok(Self {
             name: self.name.clone(),
             table,
+            artifact_profile: self.artifact_profile.clone(),
             lm_focus: self.lm_focus.clone(),
         })
     }
@@ -256,6 +304,7 @@ impl Dataset {
         Ok(Self {
             name: self.name.clone(),
             table,
+            artifact_profile: self.artifact_profile.clone(),
             lm_focus: self.lm_focus.clone(),
         })
     }
@@ -265,6 +314,7 @@ impl Dataset {
         Ok(Self {
             name: self.name.clone(),
             table,
+            artifact_profile: self.artifact_profile.clone(),
             lm_focus: self.lm_focus.clone(),
         })
     }
@@ -274,6 +324,7 @@ impl Dataset {
         Ok(Self {
             name: self.name.clone(),
             table,
+            artifact_profile: self.artifact_profile.clone(),
             lm_focus: self.lm_focus.clone(),
         })
     }
@@ -288,6 +339,7 @@ impl Dataset {
         Ok(Self {
             name: self.name.clone(),
             table,
+            artifact_profile: self.artifact_profile.clone(),
             lm_focus: self.lm_focus.clone(),
         })
     }
@@ -306,6 +358,7 @@ impl Dataset {
         Ok(Self {
             name: self.name.clone(),
             table,
+            artifact_profile: self.artifact_profile.clone(),
             lm_focus: self.lm_focus.clone(),
         })
     }
@@ -328,6 +381,7 @@ impl Dataset {
         Ok(Self {
             name: self.name.clone(),
             table,
+            artifact_profile: self.artifact_profile.clone(),
             lm_focus: self.lm_focus.clone(),
         })
     }
@@ -346,6 +400,7 @@ impl Dataset {
         Ok(Self {
             name: self.name.clone(),
             table,
+            artifact_profile: self.artifact_profile.clone(),
             lm_focus: self.lm_focus.clone(),
         })
     }
@@ -355,6 +410,7 @@ impl Dataset {
         Ok(Self {
             name: self.name.clone(),
             table,
+            artifact_profile: self.artifact_profile.clone(),
             lm_focus: self.lm_focus.clone(),
         })
     }

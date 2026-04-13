@@ -7,7 +7,9 @@ The goal is a stable, minimal, Python‑shaped surface that maps cleanly into Po
 
 - **Client**: application code imports Collections SDK only.
 - **SDK**: thin adapters that translate into Polars types + functions.
-- **Datasets layer**: the Collections SDK itself (dataset translations live here).
+- **DataFrame layer**: minimal columnar substrate over Polars tables and expressions.
+- **Dataset layer**: foundational semantic layer above DataFrame for corpus, feature, model, and plan vocabularies.
+- **GraphFrame layer**: opt-in experimental graph-table surface, not part of the stable default path.
 
 ## 2) Facade Objects (Python‑shaped)
 
@@ -66,8 +68,10 @@ The goal is a stable, minimal, Python‑shaped surface that maps cleanly into Po
 ## 5) Layering Rules
 
 1. Client code imports **only** Collections SDK.
-2. SDK surface calls Polars and stays thin.
-3. Stable SDK surface, evolving internals.
+2. DataFrame provides the minimal tabular substrate; Dataset adds semantic structure on top of it.
+3. GraphFrame stays opt-in and should not shape the default Collections surface.
+4. SDK surface calls Polars and stays thin.
+5. Stable SDK surface, evolving internals.
 
 ## 6) Folder Layout (Python‑shaped)
 

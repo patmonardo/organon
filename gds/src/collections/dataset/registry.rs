@@ -3,6 +3,9 @@
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 
+use crate::collections::dataset::artifact::DatasetArtifactProfile;
+use crate::collections::dataset::dataset::Dataset;
+
 /// Common dataset splits.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub enum DatasetSplit {
@@ -20,6 +23,26 @@ pub struct DatasetMetadata {
     pub description: Option<String>,
     pub homepage: Option<String>,
     pub tags: Vec<String>,
+    pub artifact_profile: DatasetArtifactProfile,
+}
+
+impl DatasetMetadata {
+    pub fn new(name: impl Into<String>) -> Self {
+        Self {
+            name: name.into(),
+            ..Default::default()
+        }
+    }
+
+    pub fn with_artifact_profile(mut self, artifact_profile: DatasetArtifactProfile) -> Self {
+        self.artifact_profile = artifact_profile;
+        self
+    }
+
+    pub fn from_dataset(dataset: &Dataset) -> Option<Self> {
+        let name = dataset.name()?.to_string();
+        Some(Self::new(name).with_artifact_profile(dataset.artifact_profile().clone()))
+    }
 }
 
 /// Resolved dataset artifact (path + split).
@@ -28,6 +51,7 @@ pub struct DatasetArtifact {
     pub split: DatasetSplit,
     pub path: PathBuf,
     pub format_hint: Option<String>,
+    pub artifact_profile: DatasetArtifactProfile,
 }
 
 /// In-memory registry for dataset metadata and roots.
@@ -51,6 +75,13 @@ impl DatasetRegistry {
 
     pub fn register(&mut self, metadata: DatasetMetadata) {
         self.entries.insert(metadata.name.clone(), metadata);
+    }
+
+    pub fn register_dataset(&mut self, dataset: &Dataset) -> Result<(), String> {
+        let metadata = DatasetMetadata::from_dataset(dataset)
+            .ok_or_else(|| "cannot register unnamed dataset".to_string())?;
+        self.register(metadata);
+        Ok(())
     }
 
     pub fn register_names(&mut self, names: &[&str]) {
@@ -77,10 +108,15 @@ impl DatasetRegistry {
     }
 
     pub fn dataset_artifact(&self, name: &str, split: DatasetSplit) -> DatasetArtifact {
+        let artifact_profile = self
+            .get(name)
+            .map(|metadata| metadata.artifact_profile.clone())
+            .unwrap_or_default();
         DatasetArtifact {
             split,
             path: self.dataset_root(name),
             format_hint: None,
+            artifact_profile,
         }
     }
 }

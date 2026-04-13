@@ -3,10 +3,12 @@
 Summary
 
 - Propose an NLP-first Dataset architecture for `gds` that treats a Dataset as a semantic carrier (corpus-centric), with lightweight token/stem/parse pipelines in-core and heavier ML/NLP algorithms moved to a separate `ml/nlp` extension.
+- The primary stored artifacts in that carrier are SDSL/GDSL plans and program images: ontological/epistemological specifications that Dataset can persist and lower.
 
 Goals and boundaries
 
 - Keep `gds` Dataset DSL lightweight and data-centric (ingest, registry, corpus, tabular/graph views).
+- Treat extracted "entities" as semantic plans/programs first, not as GraphFrame-native analytic entities.
 - Provide stable token/stem/parse primitives and N-gram LM helpers in `gds::collections::dataset` (already present: `Corpus`, `token`, `stem`, `functions::model::lm`).
 - Expose a small prelude (`gds::collections::dataset::prelude`) for common workflows.
 - Do NOT bundle heavy ML model libraries or app-style GUIs (e.g., avoid becoming an app like Lightning). Those belong in `ml/nlp` or other packages.
@@ -15,6 +17,7 @@ Core concepts / types
 
 - Corpus: single-column text dataset (existing `Corpus`) — primary ingestion primitive.
 - Dataset: tabular/graph-backed dataset with expression DSL and plan support (existing `Dataset`).
+- SDSL specification / program image: the canonical persisted artifact that Dataset compiles, stores, and lowers.
 - Token / Stem / Parse: canonical lightweight types for tokenization/stemming/parse spans (`token::Token`, `stem::Stem`, `parse::Parse`).
 - Feature structures: typed, queryable feature containers (`featstruct`, `feature`).
 - Registry: `DatasetRegistry` for dataset families and artifacts.

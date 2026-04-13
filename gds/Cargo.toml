@@ -148,18 +148,19 @@ sha2 = "0.10"
 napi-build = "2"
 
 [features]
-default = ["dataset", "graphframe"]
+default = ["dataset"]
 node = ["dep:napi", "dep:napi-derive"]
-full = ["node"]
+full = ["node", "dataset", "graphframe"]
+
+# Foundational dataset surface: enabled by default and kept as an explicit
+# feature so downstream bundles can refer to it declaratively.
+dataset = []
 
 # Experimental feature: enable GraphFrame (Polars-backed graph tables).
-# Keep this opt-in to avoid pulling experimental APIs into stable builds.
+# Keep this opt-in so the stable Collections/DataFrame/Dataset path does not
+# pull graph-specific APIs into ordinary builds.
 graphframe = []
 
 # Optional: enable the WIP PGQL submodule under `collections::graphframe::pgql`.
-# This is intentionally off by default.
-graphframe_pgql = []
-
-# Experimental feature: enable Dataset APIs (Polars-backed dataset DSL).
-# Gate at the top-level so internals are unchanged, but the module is opt-in.
-dataset = []
+# This is intentionally off by default and depends on GraphFrame.
+graphframe_pgql = ["graphframe"]

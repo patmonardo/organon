@@ -9,6 +9,7 @@ use polars::prelude::{NamedFrom, PlSmallStr, Series};
 
 use crate::collections::dataframe::GDSDataFrame;
 use crate::collections::dataframe::GDSFrameError;
+use crate::collections::dataset::artifact::DatasetArtifactKind;
 use crate::collections::dataset::dataset::Dataset;
 use crate::collections::dataset::parse::ParseForest;
 use crate::collections::dataset::parser::Parser;
@@ -33,7 +34,7 @@ impl Corpus {
         let s = Series::new(PlSmallStr::from_static("text"), strs);
         let df = GDSDataFrame::from_series(vec![s])?;
         Ok(Self {
-            dataset: Dataset::new(df),
+            dataset: Dataset::new(df).with_artifact_kind(DatasetArtifactKind::Corpus),
         })
     }
 

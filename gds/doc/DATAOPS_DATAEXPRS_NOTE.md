@@ -33,7 +33,8 @@ statistics into higher-order frames.
 - DataFrame = identity with the PyPolars client DSL (Expr/Plan aligned).
 - Dataset = ergonomic stdlib/SDK above DataFrame (common dataset utilities and
   selectors; no UI; includes foundational LM/NLP dataset ideas inspired by NLTK,
-  but not full model training).
+  but not full model training). Its primary extracted artifacts are stored
+  SDSL/GDSL plans and program images.
 - GraphFrame = higher-level system built on DataFrame + Dataset, borrowing
   _some_ ML ideas from sklearn and LitData, but mostly oriented to PyG/GNN/GCN
   workflows. This is the crowning layer where DataFrame + Dataset reach their
@@ -51,8 +52,10 @@ Lightning) as the primary advanced capability layer.
 This split keeps DataOps/DataExprs aligned to Polars-style plans, and reserves
 model/estimator semantics for StatFrame.
 
-GraphFrame is the third key that sublates DataFrame + Dataset into higher-order
-graph-native workflows.
+GraphFrame is intentionally not in the current picture for this pass. The
+discursive target here is the stored semantic program: Dataset should extract
+and persist SDSL plans, not elevate them prematurely into graph-native ML
+entities.
 
 ## Core DataOps (minimal surface)
 
@@ -128,7 +131,8 @@ We can extend DataOps/Exprs without adopting RDF:
 - DataOps/DataExprs stay model-agnostic (no StatFrame, no model fit/eval).
 - Dataset is the dataset-aware wrapper around the DataFrame DSL, covering the
   full Input -> DataFrame System -> Output flow (IO, caching, selectors,
-  deterministic cleaning), without UI or modeling.
+  deterministic cleaning), without UI or modeling. It should also carry the
+  storable plan/program vocabulary through the pipeline.
 - GraphFrame is the higher-order layer built on DataFrame + Dataset, extending
   into ML/NLTK/PyG plus semantic-web graph data for advanced workflows.
 - StatFrame is a separate, heavier layer for statistical/mathematical modeling
@@ -162,6 +166,11 @@ Dataset layer, but the base remains the DataFrame client DSL. Text datasets
 should be projectable into indexed DataFrames, with a path to richer GraphFrame
 semantics later. This keeps LM/NLP dataset conventions close to their proper
 home without turning Dataset into a modeling layer.
+
+For the current architecture, the important "entities" extracted from datasets
+are not graph nodes in an analytic sense. They are GDSL/SDSL plans: stored
+ontological and epistemological programs that can later be lowered, indexed, or
+projected into other substrates.
 
 ## Seed extraction map (from skrub)
 

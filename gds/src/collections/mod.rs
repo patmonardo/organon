@@ -25,8 +25,10 @@ pub mod extensions;
 pub mod catalog;
 
 // Dataset tooling (dataset registry + expr facade)
-// Experimental: opt-in at top-level to avoid pulling dataset DSL into stable builds.
-// Enable with the crate feature "dataset". The module internals remain unchanged.
+// Dataset is the foundational semantic layer above DataFrame in the current
+// Collections architecture. The primary artifacts of interest are stored
+// GDSL/SDSL plans and program images, not GraphFrame-style analytic entities,
+// so Dataset remains part of the stable default surface.
 pub mod dataset;
 
 // DataFrame integration
@@ -57,9 +59,9 @@ pub use adapter::*;
 pub use catalog::*;
 pub use dataframe::*;
 // NOTE: `dataset` is a DSL and may introduce name clashes if globally re-exported.
-// Keep it as a top-level module (pub mod dataset) but do NOT glob re-export its
-// contents here. Access dataset APIs via `crate::collections::dataset::...` or
-// add selective, stable re-exports here as specific symbols land in the public API.
+// Keep it as a top-level module but do NOT glob re-export its contents here.
+// Access dataset APIs via `crate::collections::dataset::...` or add selective,
+// stable re-exports here as specific symbols land in the public API.
 
 // GraphFrame is experimental/inactive: do NOT glob re-export to avoid top-level pollution.
 // It is kept behind a feature gate ("graphframe") and its API surface should be
