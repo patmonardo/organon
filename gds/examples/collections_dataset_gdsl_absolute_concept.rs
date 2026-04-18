@@ -1,6 +1,13 @@
+//! GDSL absolute-concept Dataset walkthrough.
+//!
+//! Run with:
+//!   cargo run -p gds --example collections_dataset_gdsl_absolute_concept
+
 use gds::collections::dataset::prelude::*;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
+    println!("== GDSL -> Dataset artifact walkthrough ==");
+    println!("A semantic source file compiles into a Dataset-centered image with artifact, relation, and property tables.");
     let fixture_path = concat!(
         env!("CARGO_MANIFEST_DIR"),
         "/fixtures/gdsl/absolute-concept-scientific-inference.gdsl"
@@ -18,8 +25,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("relation rows: {}", materialized.relations.row_count());
     println!("property rows: {}", materialized.properties.row_count());
 
+    println!("sample features:");
     for feature in features.features.iter().take(18) {
-        println!("feature: {} [{}]", feature.value, feature.source);
+        println!("- {} [{}]", feature.value, feature.source);
     }
 
     Ok(())

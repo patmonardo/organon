@@ -7,6 +7,9 @@ use gds::collections::dataframe::prelude::*;
 use gds::{agg, filter, group_by, order_by, select, select_columns, tbl_def};
 
 fn main() -> Result<(), GDSFrameError> {
+    println!("== Collections select/filter walkthrough ==");
+    println!("These operations show the DataFrame as the analytic surface through which a smart Dataset can be inspected and transformed.");
+
     let table = tbl_def!(
         (id: i64 => [1, 2, 3, 4, 5]),
         (score: f64 => [10.0, 25.0, 40.0, 15.0, 30.0]),

@@ -19,6 +19,30 @@ use crate::collections::dataset::io::detect_format_from_path;
 use crate::config::CollectionsBackend;
 use crate::types::ValueType;
 
+/// Indicates whether a schema came directly from the persisted catalog entry or
+/// had to be derived from the underlying table.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum DatasetCatalogSchemaSource {
+    Catalog,
+    Derived,
+}
+
+impl DatasetCatalogSchemaSource {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Catalog => "catalog",
+            Self::Derived => "dataset",
+        }
+    }
+}
+
+/// Unified schema view for a Dataset catalog entry.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ResolvedDatasetSchema {
+    pub schema: CollectionsSchema,
+    pub source: DatasetCatalogSchemaSource,
+}
+
 /// Dataset-first wrapper for the disk catalog.
 #[derive(Debug, Clone)]
 pub struct DatasetCatalog {
@@ -53,6 +77,10 @@ impl DatasetCatalog {
         let data_path = data_path.as_ref();
         let format = format.unwrap_or_else(|| detect_format_from_path(data_path));
         let relative_path = self.ensure_relative_path(data_path)?;
+        let schema = match schema {
+            Some(schema) => Some(schema),
+            None => Some(self.infer_table_schema(data_path, format)?),
+        };
         let entry = self.build_table_entry(name, format, schema, relative_path);
         self.catalog.register(entry.clone())?;
         Ok(entry)
@@ -73,12 +101,40 @@ impl DatasetCatalog {
     }
 
     pub fn load_table(&self, name: &str) -> Result<Dataset, CatalogError> {
-        let entry = self
-            .catalog
-            .get(name)
-            .ok_or_else(|| CatalogError::NotFound(name.to_string()))?;
+        let entry = self.entry(name)?;
         let table = self.catalog.read_table(entry)?;
         Ok(Dataset::named(name.to_string(), table))
+    }
+
+    pub fn entry(&self, name: &str) -> Result<&CollectionsCatalogDiskEntry, CatalogError> {
+        self.catalog
+            .get(name)
+            .ok_or_else(|| CatalogError::NotFound(name.to_string()))
+    }
+
+    pub fn resolve_table_schema(&self, name: &str) -> Result<ResolvedDatasetSchema, CatalogError> {
+        let entry = self.entry(name)?;
+        if let Some(schema) = entry.schema.clone() {
+            return Ok(ResolvedDatasetSchema {
+                schema,
+                source: DatasetCatalogSchemaSource::Catalog,
+            });
+        }
+
+        let table = self.catalog.read_table(entry)?;
+        Ok(ResolvedDatasetSchema {
+            schema: CollectionsSchema::from_polars(table.dataframe()),
+            source: DatasetCatalogSchemaSource::Derived,
+        })
+    }
+
+    pub fn remove_entry(
+        &mut self,
+        name: &str,
+    ) -> Result<CollectionsCatalogDiskEntry, CatalogError> {
+        self.catalog
+            .remove(name)
+            .ok_or_else(|| CatalogError::NotFound(name.to_string()))
     }
 
     fn ensure_relative_path(&self, path: &Path) -> Result<String, CatalogError> {
@@ -96,6 +152,17 @@ impl DatasetCatalog {
             return Ok(relative.to_string_lossy().to_string());
         }
         Ok(path.to_string_lossy().to_string())
+    }
+
+    fn infer_table_schema(
+        &self,
+        data_path: &Path,
+        format: CollectionsIoFormat,
+    ) -> Result<CollectionsSchema, CatalogError> {
+        let relative_path = self.ensure_relative_path(data_path)?;
+        let entry = self.build_table_entry("__schema_probe__", format, None, relative_path);
+        let table = self.catalog.read_table(&entry)?;
+        Ok(CollectionsSchema::from_polars(table.dataframe()))
     }
 
     fn build_table_entry(

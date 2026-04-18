@@ -6,6 +6,9 @@
 use gds::collections::dataframe::{col, series, series_expr, GDSDataFrame, GDSFrameError};
 
 fn main() -> Result<(), GDSFrameError> {
+    println!("== Series/Expr pipeline walkthrough ==");
+    println!("Series and Expr together provide the smallest compositional units of the Collections analytic grammar.");
+
     let s = series("text", &["ax", "by", "cx"]);
     let contains_x = series_expr(s).str().apply(|e| e.ends_with("x"))?;
     println!("contains_x = {:?}", contains_x);

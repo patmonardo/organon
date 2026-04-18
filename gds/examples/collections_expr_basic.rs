@@ -6,6 +6,9 @@
 use gds::collections::dataframe::{col, lit, when, GDSFrameError, TableBuilder};
 
 fn main() -> Result<(), GDSFrameError> {
+    println!("== Collections Expr walkthrough ==");
+    println!("Exprs are the reusable analytic grammar of the DataFrame layer.");
+
     // Build a DataFrame via the Collections facade.
     let table = TableBuilder::new()
         .with_i64_column("id", &[1, 2, 3, 4, 5])

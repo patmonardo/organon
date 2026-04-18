@@ -6,7 +6,7 @@ use crate::algo::similarity::knn::{
     KnnComputationRuntime, KnnConfig, KnnMutateResult, KnnNnDescentStats, KnnResultBuilder,
     KnnResultRow, KnnStats, KnnStorageRuntime,
 };
-pub use crate::algo::similarity::knn::{KnnNodePropertySpec, SimilarityMetric};
+use crate::algo::similarity::knn::{KnnNodePropertySpec, SimilarityMetric};
 use crate::core::utils::progress::Tasks;
 use crate::mem::MemoryRange;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};

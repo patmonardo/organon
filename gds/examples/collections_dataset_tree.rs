@@ -1,10 +1,14 @@
-//! Demonstration of the Dataset Tree DSL.
+//! Dataset Tree DSL walkthrough.
+//!
+//! Run with:
+//!   cargo run -p gds --example collections_dataset_tree
 
 use gds::collections::dataset as ds;
 use gds::collections::dataset::prelude::*;
 
 pub fn run() {
-    println!("== Dataset Tree DSL Demo ==");
+    println!("== Dataset Tree DSL walkthrough ==");
+    println!("Tree form shows that the Dataset layer is already a semantic SDK, not just a flat table wrapper.");
 
     // Build a tree expression with macros.
     let expr = gds::tree!("S" => [

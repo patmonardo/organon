@@ -15,6 +15,10 @@ fn print_step(name: &str, df: &GDSDataFrame) {
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
+    println!(
+        "This walkthrough treats the DataFrame as the analytic body of a richer semantic object."
+    );
+
     let students = gds::tbl_def!(
         (id: i64 => [1, 2, 3, 4, 5]),
         (score: f64 => [62.0, 74.5, 91.0, 88.0, 97.0]),
@@ -80,10 +84,9 @@ fn main() -> Result<(), Box<dyn Error>> {
     let roundtrip_df = GDSDataFrame::deserialize(&roundtrip_bytes)?;
     print_step("roundtrip_df", &roundtrip_df);
 
-    // IO parity note: eager write_* hooks are currently explicit placeholders.
-    // This demonstrates the current behavior in examples, without hiding it.
+    // Persistence note: the analytic body can now be written out directly.
     match roundtrip_df.write_parquet("target/collections_dataframe_macros_expository.parquet") {
-        Ok(_) => println!("write_parquet succeeded"),
+        Ok(_) => println!("write_parquet succeeded: roundtrip persistence is live"),
         Err(error) => println!("write_parquet failed: {error}"),
     }
 

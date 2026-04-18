@@ -1,7 +1,13 @@
+//! Dataset compilation IR walkthrough.
+//!
+//! Run with:
+//!   cargo run -p gds --example collections_dataset_compile_ir
+
 use gds::collections::dataset::prelude::*;
 use gds::form::{ProgramFeature, ProgramFeatureKind, ProgramFeatures};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
+    println!("== Dataset compilation IR / artifact story ==");
     let features = ProgramFeatures::new(
         "gdsl.analytics".to_string(),
         vec!["centrality".to_string()],
@@ -38,10 +44,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("artifact rows: {}", materialized.artifacts.row_count());
     println!("relation rows: {}", materialized.relations.row_count());
     println!("property rows: {}", materialized.properties.row_count());
+    println!("registry view:");
 
     for metadata in registry.list() {
         println!(
-            "{} [{}] {}",
+            "- {} [{}] {}",
             metadata.name,
             metadata.artifact_profile.primary_kind(),
             metadata.artifact_profile.facets().join(", ")

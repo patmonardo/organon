@@ -20,6 +20,9 @@ fn main() {
 }
 
 fn run() -> Result<(), GDSFrameError> {
+    println!("== GraphFrame catalog write walkthrough ==");
+    println!("This example shows how graph-structured data can already enter the Dataset catalog world as GraphFrame-style artifacts.");
+
     let config = RandomGraphConfig {
         graph_name: "graphframe-demo".into(),
         database_name: "in-memory".into(),
@@ -64,9 +67,19 @@ fn run() -> Result<(), GDSFrameError> {
     let edges = catalog.load_table(&edges_name)?;
     let graph = catalog.load_table(&graph_table_name)?;
 
-    println!("Nodes (head):\n{}", nodes.head(5).table().fmt_table());
-    println!("Edges (head):\n{}", edges.head(5).table().fmt_table());
-    println!("Graph (head):\n{}", graph.head(1).table().fmt_table());
+    println!(
+        "Nodes Dataset (head):\n{}",
+        nodes.head(5).table().fmt_table()
+    );
+    println!(
+        "Edges Dataset (head):\n{}",
+        edges.head(5).table().fmt_table()
+    );
+    println!(
+        "Graph metadata Dataset (head):\n{}",
+        graph.head(1).table().fmt_table()
+    );
+    println!("Interpretation: GraphStore-shaped output is already being cataloged as Dataset-facing artifacts.");
 
     Ok(())
 }

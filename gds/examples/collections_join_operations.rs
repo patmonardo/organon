@@ -20,6 +20,9 @@ fn build_right() -> Result<GDSDataFrame, GDSFrameError> {
 }
 
 fn main() -> Result<(), GDSFrameError> {
+    println!("== Collections join walkthrough ==");
+    println!("Joins show how multiple analytic bodies can be brought into relation inside the Collections layer.");
+
     let left = build_left()?;
     let right = build_right()?;
 

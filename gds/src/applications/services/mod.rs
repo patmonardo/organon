@@ -1,5 +1,7 @@
 pub mod algorithms_dispatch;
 pub mod applications_dispatch;
+pub mod collections_context;
+pub mod collections_dispatch;
 pub mod graph_store_catalog_dispatch;
 pub mod logging;
 

@@ -1,6 +1,13 @@
+//! Dataset stdlib resource walkthrough.
+//!
+//! Run with:
+//!   cargo run -p gds --example collections_dataset_stdlib
+
 use gds::collections::dataset::prelude::*;
 
 fn main() {
+    println!("== Dataset stdlib walkthrough ==");
+    println!("The Dataset SDK can already treat curated resources as semantic source material for later research workflows.");
     let mut args = std::env::args().skip(1);
     let resource = args.next();
 

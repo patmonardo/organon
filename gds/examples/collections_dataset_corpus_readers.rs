@@ -1,9 +1,16 @@
+//! Dataset corpus readers walkthrough.
+//!
+//! Run with:
+//!   cargo run -p gds --example collections_dataset_corpus_readers
+
 use std::fs;
 use std::path::PathBuf;
 
 use gds::collections::dataset::prelude::*;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
+    println!("== Dataset corpus readers walkthrough ==");
+    println!("The Dataset layer is not only tabular; it also knows how to ingest textual, tree, and markup corpora as semantic source material.");
     let root = demo_root();
     fs::create_dir_all(&root)?;
 
@@ -18,22 +25,23 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let text_files = CorpusFiles::from_root(&root, Some(r".*\.txt"))?;
     let text_reader = PlaintextCorpusReader::new(text_files);
     let words = text_reader.words(None)?;
-    println!("words: {}", words.len());
+    println!("plaintext words: {}", words.len());
 
     let word_files = CorpusFiles::from_root(&root, Some(r"words\.txt"))?;
     let word_reader = WordListCorpusReader::new(word_files);
     let wordlist = word_reader.words(None, "#")?;
-    println!("wordlist: {}", wordlist.len());
+    println!("wordlist entries: {}", wordlist.len());
 
     let tree_files = CorpusFiles::from_root(&root, Some(r"trees\.txt"))?;
     let tree_reader = BracketedCorpusReader::new(tree_files)?;
     let parses = tree_reader.parses(None)?;
-    println!("parses: {}", parses.len());
+    println!("tree parses: {}", parses.len());
 
     let xml_files = CorpusFiles::from_root(&root, Some(r"doc\.xml"))?;
     let xml_reader = XmlCorpusReader::new(xml_files);
     let xml_words = xml_reader.words_all(None)?;
-    println!("xml_words: {}", xml_words.len());
+    println!("xml words: {}", xml_words.len());
+    println!("Interpretation: corpus readers widen the idea of Dataset beyond ordinary flat tables while preserving a single semantic SDK surface.");
 
     Ok(())
 }

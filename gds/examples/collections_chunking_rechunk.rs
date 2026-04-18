@@ -25,10 +25,8 @@ fn main() -> Result<(), GDSFrameError> {
     print_chunk_counts("Before rechunk", &combined);
 
     // Rechunk to coalesce column chunks for faster scans.
-    let mut rechunked_df = combined.clone().into_inner();
-    rechunked_df.align_chunks_par();
-    let rechunked = GDSDataFrame::new(rechunked_df);
-
+    let rechunked = combined.rechunk();
+    println!("Rechunked (coalesced chunks):\n{}", rechunked.fmt_table());
     print_chunk_counts("After rechunk", &rechunked);
 
     Ok(())

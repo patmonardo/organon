@@ -1,4 +1,5 @@
 pub mod algorithms;
+pub mod collections;
 pub mod graph_store_catalog;
 pub mod services;
 

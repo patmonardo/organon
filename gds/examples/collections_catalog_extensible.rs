@@ -8,7 +8,6 @@ use std::path::PathBuf;
 use gds::collections::catalog::types::CollectionsIoFormat;
 use gds::collections::dataframe::{col, lit, scale_f64_column, GDSFrameError, TableBuilder};
 use gds::collections::extensions::catalog::{CatalogExtension, CatalogExtensionConfig};
-use gds::collections::schema::schema_to_dataframe;
 
 fn main() -> Result<(), GDSFrameError> {
     let root = PathBuf::from("target/collections_catalog_extensible");
@@ -61,8 +60,13 @@ fn print_catalog(catalog: &gds::collections::catalog::disk::CollectionsCatalogDi
     for entry in catalog.list() {
         println!("- {} ({:?})", entry.name, entry.io_policy.format);
         if let Some(schema) = &entry.schema {
-            let schema_df = schema_to_dataframe(&schema.to_polars_schema());
-            println!("  schema:\n{}", schema_df.fmt_table());
+            let columns = schema
+                .fields
+                .iter()
+                .map(|field| format!("{}:{:?}", field.name, field.value_type))
+                .collect::<Vec<_>>();
+            println!("  schema columns: {}", columns.join(", "));
+            println!("  note: this is schema metadata, not a row-bearing table.");
         }
     }
 }

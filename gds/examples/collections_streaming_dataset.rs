@@ -9,6 +9,9 @@ use gds::collections::dataset::{Dataset, StreamingDataset};
 use gds::collections::extensions::streaming::StreamingConfig;
 
 fn main() -> Result<(), GDSFrameError> {
+    println!("== Streaming Dataset walkthrough ==");
+    println!("A Dataset is the semantic source; streaming exposes its analytic body in motion.");
+
     // Build a dataset (Polars-backed).
     let dataset = Dataset::from_builder(
         TableBuilder::new()
@@ -18,6 +21,7 @@ fn main() -> Result<(), GDSFrameError> {
     )?;
 
     println!("Dataset rows: {}", dataset.row_count());
+    println!("Dataset columns: {:?}", dataset.column_names());
 
     // Build a streaming dataset with a LazyFrame transform.
     let streaming_summary = StreamingDataset::with_config(
@@ -47,7 +51,7 @@ fn main() -> Result<(), GDSFrameError> {
         .next()
         .ok_or_else(|| "missing summary batch".to_string())??;
     println!(
-        "Streaming dataset summary:\n{}",
+        "Streaming semantic summary (derived view):\n{}",
         GDSDataFrame::new(summary).fmt_table()
     );
 
@@ -57,7 +61,7 @@ fn main() -> Result<(), GDSFrameError> {
         let batch_df = batch?;
         let offset = index * streaming_batches.batch_size();
         println!(
-            "Batch @{}:\n{}",
+            "Batch @{} (analytic body slice):\n{}",
             offset,
             GDSDataFrame::new(batch_df).fmt_table()
         );

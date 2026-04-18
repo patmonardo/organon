@@ -621,6 +621,7 @@ pub fn invoke(request_json: String) -> String {
             "graph_store" => handle_graph_store(&request),
             "graph_store_catalog" => handle_graph_store_catalog(&request),
             "algorithms" => handle_algorithms(&request),
+            "collections" => super::collections_dispatch::handle_collections(&request),
             "form_eval" => handle_form_eval(&request),
             _ => err(op, "UNSUPPORTED_FACADE", "Unsupported facade."),
         };
