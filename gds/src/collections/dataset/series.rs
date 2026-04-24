@@ -1,13 +1,20 @@
-//! Dataset-level Series facade.
+//! Dataset DSL — `Series` namespace.
 //!
-//! This module is the dataset-side ergonomic entrypoint for eager `Series` work.
+//! Part of the dataset-side 2×2 matrix that mirrors the DataFrame DSL shell:
 //!
-//! Matrix alignment:
-//! - `Series` is to `DataFrame` as `Expr` is to `LazyFrame`.
-//! - This file provides the dataset-side `Series` half of the `Series`↔`DataFrame` pair.
+//! |        | lazy        | eager        |
+//! |--------|-------------|--------------|
+//! | scalar | `Expr`      | `Series`     |
+//! | frame  | `LazyFrame` | `DataFrame`  |
 //!
-//! Practically, dataset logic is *mostly* expressed via `Expr` (lazy-friendly), but
-//! having a small eager bridge is useful for tests and one-off eager transforms.
+//! This file provides [`DatasetSeriesNameSpace`], the eager-scalar entry
+//! point, plus the [`SeriesDatasetExt`] trait that attaches `.ds()` onto
+//! `GDSSeries`.
+//!
+//! Practically, dataset logic is *mostly* expressed via `Expr` (lazy-friendly),
+//! but this small eager bridge is useful for tests and one-off eager
+//! transforms. It evaluates a [`DatasetExprNameSpace`]-built expression
+//! against the underlying Polars `Series`.
 
 use polars::prelude::{Expr, PolarsResult, Series};
 

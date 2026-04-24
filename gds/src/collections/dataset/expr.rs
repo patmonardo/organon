@@ -1,10 +1,20 @@
-//! Dataset-level expression facade.
+//! Dataset DSL — `Expr` namespace.
 //!
-//! This module provides dataset-flavored `Expr` namespaces.
+//! Part of the dataset-side 2×2 matrix that mirrors the DataFrame DSL shell:
 //!
-//! Matrix alignment:
-//! - `Expr` is to `LazyFrame` as `Series` is to `DataFrame`.
-//! - This file provides the dataset-side `Expr` half of the `Expr`↔`LazyFrame` pair.
+//! |        | lazy        | eager        |
+//! |--------|-------------|--------------|
+//! | scalar | `Expr`      | `Series`     |
+//! | frame  | `LazyFrame` | `DataFrame`  |
+//!
+//! This file provides [`DatasetExprNameSpace`], the lazy-scalar entry point,
+//! plus the [`ExprDatasetExt`] trait that attaches `.ds()` onto Polars `Expr`.
+//!
+//! Most dataset logic flows through this surface because it composes cleanly
+//! into [`crate::collections::dataset::lazy::DatasetLazyFrameNameSpace`]
+//! pipelines. Concrete sub-namespaces (`text`, `token`, `parse`, `tag`,
+//! `stem`) are thin façades over the lower-level expression builders in
+//! [`crate::collections::dataset::expressions`].
 
 use polars::prelude::{col, Expr};
 

@@ -59,6 +59,7 @@ gdl-to-pdf/
 tools/reports/
 gds/src/polars
 gds/src/nltk
+gds/src/nltk_book
 gds/src/skrub
 gds/src/sklearn
 gds/src/lightning
@@ -66,3 +67,5 @@ gds/src/litdata
 gds/src/pytorch_geometric
 reality/src/logos/open-logic
 logic/src/compiler.old
+gds/nltk
+gds/nltk-book

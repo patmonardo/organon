@@ -1,16 +1,53 @@
-//! Dataset model abstractions (NLTK parity).
+//! `Model` — partial valuations against a Feature schema (R4 in the doctrine).
 //!
-//! A model is a schema-to-schema transform over the dataset graph. It consumes
-//! selected views (tokens, tags, parses, trees) and emits structured updates
-//! that remain anchored to the schema.
+//! See `gds/doc/SEMANTIC-DATASET-FIVE-FOLD.md` (Five-Fold Synthesis), Root
+//! Object **R4** and Principle **P3** (`Model:Feature`). NLTK Ch9 / Ch10 are
+//! the reference texts; the DRS, the FeatStruct, and the Valuation are all
+//! Models in this sense.
 //!
-//! Compiler note:
+//! ## Two senses of "Model" live in this crate
+//!
+//! 1. **Compute Model** — the [`Model`] trait below (Tagger / Parser /
+//!    Segmenter / …). A *transform* that consumes a `Dataset` and produces
+//!    a `ModelDelta`. This is the legacy/runtime sense.
+//! 2. **R4 Model = Valuation** —
+//!    [`crate::collections::dataset::valuation::Valuation`] and
+//!    [`crate::collections::dataset::valuation::ValuationFrame`]. A *partial
+//!    map* from Feature names to values, considered as satisfying a Feature
+//!    schema. This is what doctrine R4 names. Has no `apply` method;
+//!    carries data, not behavior.
+//!
+//! A compute Model produces and consumes Valuations. The two senses are
+//! complementary, not in conflict; see `valuation.rs` for the R4 access
+//! object and the Document/Valuation meeting-point.
+//!
+//! A `Model` is a *partial valuation*: a row, a region, or a sub-frame
+//! considered as satisfying a `Feature` (R5) schema. A Model can exist
+//! without ever being grounded in bytes — that is what distinguishes it from
+//! a `Document` (R2), which carries a distinguished `source : Source`
+//! Feature and lives on the extensional/evidentiary side. They meet at
+//! exactly one place; see the §"Document / Model meeting-point" in the
+//! doctrine note.
+//!
+//! Contract this module owes the kernel:
+//!
+//! - **Three** primitive ops, no more: `unify`, `subsumes`, `extend`. All
+//!   higher-level Model operations (delta application, schema lifting,
+//!   composition) are expressed in terms of these three.
+//! - A Model is read against a Feature schema; the schema is part of how
+//!   the Model is interpreted, not part of the Model's bytes.
+//! - The current `ModelKind` / `ModelView` / `ModelSpec` machinery
+//!   describes *kinds of Model*, not a parallel taxonomy. They classify R4
+//!   instances; they do not replace them.
+//!
+//! Compiler note (preserved):
 //! - FeatureSpace and ModelSpace are primary compilation targets.
-//! - Plan is the executable graph that gives those targets their runtime shape.
+//! - `Plan` (R6) is the executable graph that gives those targets their
+//!   runtime shape; see `crate::collections::dataset::plan`.
 
 use std::collections::BTreeMap;
 
-use crate::collections::dataset::featstruct::{FeatPath, FeatValue};
+use crate::collections::dataset::featstruct::{FeatPath, FeatStruct, FeatStructSet, FeatValue};
 use crate::collections::dataset::parse::Parse;
 use crate::collections::dataset::schema::{ModelSchema, SymbolTable};
 use crate::collections::dataset::tag::Tag;
@@ -97,6 +134,26 @@ pub trait Model {
     fn spec(&self) -> &ModelSpec;
 
     fn apply(&self, dataset: &Dataset, ctx: &ModelContext) -> ModelResult;
+
+    /// Essential relations the model brings to Box 1 preparation.
+    ///
+    /// Override to seed [`crate::collections::dataset::model_prep::prepare_model`]
+    /// with the model's accumulated [`FeatStruct`] constraints. The default
+    /// is the empty set (all features will be treated as having no prior
+    /// essence to unify against).
+    fn essential_constraints(&self) -> FeatStructSet {
+        FeatStructSet::new()
+    }
+
+    /// Optional seed essence for Box 1 preparation.
+    ///
+    /// Distinct from [`Self::essential_constraints`]: returns a single
+    /// [`FeatStruct`] (rather than the reentrance set) that becomes the
+    /// initial accumulated essence in
+    /// [`crate::collections::dataset::model_prep::prepare_model`].
+    fn essence_seed(&self) -> Option<FeatStruct> {
+        None
+    }
 
     fn fit(&self, _dataset: &Dataset, _ctx: &ModelContext) -> ModelState {
         ModelState::default()

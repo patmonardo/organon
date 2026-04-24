@@ -213,61 +213,13 @@ impl DatasetCompilation {
 
     /// Build a Dataset compilation graph from Program Features as an executable image.
     ///
-    /// This models Unix-style image formation: features are linked under a single image
-    /// root entrypoint rather than treated as standalone linked structs. In this
-    /// setting the "image" is a persisted semantic program, not a graph-analytic
-    /// entity store.
+    /// Routes through [`OntologyDataFrameImage`] as the canonical compilation IR:
+    /// program features are first lowered to an ontology image manifest, then
+    /// the manifest is lowered to compilation nodes via [`Self::from_ontology_image`].
+    /// This keeps a single image-to-graph lowering and avoids parallel direct
+    /// paths that can drift apart.
     pub fn from_program_features(features: &ProgramFeatures) -> Self {
-        let mut compilation = Self::new();
-        let image_id = format!("image:{}", sanitize_id_segment(&features.program_name));
-
-        let mut image_node = DatasetNode::new(
-            &image_id,
-            format!("{} image", features.program_name),
-            DatasetNodeKind::Image,
-        )
-        .with_meta("image.kind", "program-feature-image")
-        .with_meta("program.name", features.program_name.clone());
-
-        let mut previous_pattern_node: Option<String> = None;
-
-        for (index, feature) in features.features.iter().enumerate() {
-            let (prefix, kind) = match feature.kind {
-                ProgramFeatureKind::ApplicationForm => ("pf.feature", DatasetNodeKind::Feature),
-                ProgramFeatureKind::OperatorPattern => ("pf.expr", DatasetNodeKind::Expr),
-                ProgramFeatureKind::Dependency => ("pf.model", DatasetNodeKind::Model),
-                ProgramFeatureKind::Condition => ("pf.macro", DatasetNodeKind::Macro),
-                ProgramFeatureKind::SpecificationBinding => {
-                    ("pf.function", DatasetNodeKind::Function)
-                }
-            };
-
-            let node_id = format!(
-                "{}:{}:{}",
-                prefix,
-                index,
-                sanitize_id_segment(&feature.value)
-            );
-
-            let mut node = DatasetNode::new(&node_id, feature.value.clone(), kind)
-                .with_meta("program.feature.kind", format!("{:?}", feature.kind))
-                .with_meta("program.feature.source", feature.source.clone())
-                .with_dep(&image_id);
-
-            if matches!(feature.kind, ProgramFeatureKind::OperatorPattern) {
-                if let Some(previous) = &previous_pattern_node {
-                    node = node.with_dep(previous);
-                }
-                previous_pattern_node = Some(node_id.clone());
-            }
-
-            image_node = image_node.with_dep(&node_id);
-            compilation.add_node(node);
-        }
-
-        compilation.add_node(image_node);
-        compilation.add_entrypoint(image_id);
-        compilation
+        Self::from_ontology_image(&ontology_image_from_program_features(features))
     }
 
     /// Build a Dataset compilation graph from an Ontology DataFrame Image manifest.

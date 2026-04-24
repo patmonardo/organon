@@ -8,6 +8,7 @@ use crate::collections::dataset::expressions::feature::{
     FeatureTemplate, FeatureValue,
 };
 use crate::collections::dataset::expressions::tree::TreePos;
+use crate::collections::dataset::featstruct::FeatStruct;
 use crate::collections::dataset::functions::feature as feature_fn;
 use crate::collections::dataset::plan::PlanError;
 
@@ -111,5 +112,12 @@ impl FeatureExprNameSpace {
 
     pub fn template(template: FeatureTemplate) -> FeatureExpr {
         FeatureExpr::Template(template)
+    }
+
+    /// Lift an essence-level [`FeatStruct`] mark into a [`FeatureExpr::Mark`]
+    /// node, making it visible to IR walkers alongside the structural
+    /// expression variants.
+    pub fn mark(fs: FeatStruct) -> FeatureExpr {
+        FeatureExpr::Mark(fs)
     }
 }

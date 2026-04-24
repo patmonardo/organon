@@ -1,11 +1,16 @@
 //! Dataset catalog integration with CollectionsCatalogDisk.
 //!
-//! Dragon Book note:
-//! - Catalog/Registry entries are the source datasets (the input language).
-//! - Plans compile datasets into Features and Models (the derived artifacts).
-//! - Datasets can ship with precompiled features, and further processing
-//!   can iteratively refine or extend those models.
+//! This module covers two complementary catalog facets:
+//!
+//! 1. [`DatasetCatalog`] — the disk-backed catalog of source datasets
+//!    (the "input language"). Plans compile these into Features and Models
+//!    (the derived artifacts). Datasets can ship with precompiled features,
+//!    and further processing can iteratively refine or extend those models.
+//! 2. [`DatasetCatalogIndex`] — a derived index over a compiled dataset IR
+//!    ([`DatasetCompilation`]) that supports multi-pass exploration
+//!    (lookup by node kind, reverse-dependency traversal).
 
+use std::collections::{BTreeMap, BTreeSet};
 use std::path::{Path, PathBuf};
 
 use crate::collections::catalog::schema::CollectionsSchema;
@@ -14,6 +19,7 @@ use crate::collections::catalog::{
     CollectionsIoPolicy,
 };
 use crate::collections::dataframe::GDSDataFrame;
+use crate::collections::dataset::compile_ir::{DatasetCompilation, DatasetNode, DatasetNodeKind};
 use crate::collections::dataset::dataset::Dataset;
 use crate::collections::dataset::io::detect_format_from_path;
 use crate::config::CollectionsBackend;
@@ -185,5 +191,70 @@ impl DatasetCatalog {
             io_policy,
             data_path: data_path.into(),
         }
+    }
+}
+
+// =============================================================================
+// DatasetCatalogIndex — derived index over a compiled dataset IR.
+// =============================================================================
+
+/// Derived index over compilation nodes to support multi-pass exploration.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct DatasetCatalogIndex {
+    by_kind: BTreeMap<DatasetNodeKind, BTreeSet<String>>,
+    reverse_deps: BTreeMap<String, BTreeSet<String>>,
+}
+
+impl DatasetCatalogIndex {
+    pub fn from_compilation(compilation: &DatasetCompilation) -> Self {
+        let mut index = Self::default();
+
+        for (node_id, node) in &compilation.nodes {
+            index
+                .by_kind
+                .entry(node.kind)
+                .or_default()
+                .insert(node_id.clone());
+
+            for dep in &node.depends_on {
+                index
+                    .reverse_deps
+                    .entry(dep.clone())
+                    .or_default()
+                    .insert(node_id.clone());
+            }
+        }
+
+        index
+    }
+
+    pub fn nodes_of_kind<'a>(
+        &'a self,
+        compilation: &'a DatasetCompilation,
+        kind: DatasetNodeKind,
+    ) -> Vec<&'a DatasetNode> {
+        self.by_kind
+            .get(&kind)
+            .into_iter()
+            .flat_map(|ids| ids.iter())
+            .filter_map(|node_id| compilation.nodes.get(node_id))
+            .collect()
+    }
+
+    pub fn dependents_of<'a>(
+        &'a self,
+        compilation: &'a DatasetCompilation,
+        node_id: &str,
+    ) -> Vec<&'a DatasetNode> {
+        self.reverse_deps
+            .get(node_id)
+            .into_iter()
+            .flat_map(|ids| ids.iter())
+            .filter_map(|id| compilation.nodes.get(id))
+            .collect()
+    }
+
+    pub fn all_kinds(&self) -> Vec<DatasetNodeKind> {
+        self.by_kind.keys().copied().collect()
     }
 }

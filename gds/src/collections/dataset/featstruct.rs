@@ -261,6 +261,38 @@ pub fn subsumes_featstruct(left: &FeatStruct, right: &FeatStruct) -> bool {
         .unwrap_or(false)
 }
 
+/// Returns `true` if `value` contains a cyclic reentrance — that is, if
+/// some `Reentrant(id)` appears inside the body of its own
+/// `ReentranceDef(id)` (transitively). Mirrors NLTK `FeatStruct.cyclic()`.
+pub fn cyclic_featstruct(value: &FeatStruct) -> bool {
+    let mut active: BTreeSet<u64> = BTreeSet::new();
+    cyclic_in_struct(value, &mut active)
+}
+
+fn cyclic_in_struct(value: &FeatStruct, active: &mut BTreeSet<u64>) -> bool {
+    match value {
+        FeatStruct::Dict(dict) => dict.values().any(|v| cyclic_in_value(v, active)),
+        FeatStruct::List(list) => list.iter().any(|v| cyclic_in_value(v, active)),
+    }
+}
+
+fn cyclic_in_value(value: &FeatValue, active: &mut BTreeSet<u64>) -> bool {
+    match value {
+        FeatValue::ReentranceDef { id, value } => {
+            if !active.insert(id.0) {
+                return true;
+            }
+            let result = cyclic_in_value(value, active);
+            active.remove(&id.0);
+            result
+        }
+        FeatValue::Reentrant(id) => active.contains(&id.0),
+        FeatValue::Struct(inner) => cyclic_in_struct(inner, active),
+        FeatValue::List(list) => list.iter().any(|v| cyclic_in_value(v, active)),
+        _ => false,
+    }
+}
+
 impl FeatStructSet {
     pub fn new() -> Self {
         Self::default()
@@ -953,7 +985,14 @@ impl<'a> Materializer<'a> {
     fn materialize_value(&mut self, node: &NodeRef) -> FeatValue {
         let resolved = resolve_binding(node.clone(), self.bindings, self.forward);
         let id = node_id(&resolved);
-        if self.counts.get(&id).copied().unwrap_or(0) > 1 {
+        // NLTK only treats containers as reentrant — atomic values that
+        // happen to share an internal node (because they were bound from
+        // the same variable) are materialized as independent copies.
+        let is_container = matches!(
+            &*resolved.borrow(),
+            ResolvedValue::Struct(_) | ResolvedValue::List(_)
+        );
+        if is_container && self.counts.get(&id).copied().unwrap_or(0) > 1 {
             if let Some(existing) = self.ids.get(&id) {
                 return FeatValue::Reentrant(existing.clone());
             }
@@ -1220,6 +1259,11 @@ impl FeatStructParser {
             if ch.is_whitespace() || matches!(ch, '[' | ']' | ',' | '=') {
                 break;
             }
+            // Stop on `->` so reentrance-reference shortcuts (e.g. `b->(1)`)
+            // are not greedily absorbed into the preceding token.
+            if ch == '-' && self.chars.get(self.pos + 1).copied() == Some('>') {
+                break;
+            }
             out.push(ch);
             self.pos += 1;
         }
@@ -1431,5 +1475,203 @@ fn insert_prefix_value(dict: &mut FeatDict, prefix: String) {
         );
     } else {
         dict.insert(FEAT_PREFIX_KEY.to_string(), FeatValue::Text(prefix));
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    //! NLTK `featstruct` parity tests.
+    //!
+    //! These cases mirror the doctest invariants in `nltk/featstruct.py`
+    //! (unification, alpha-renaming, alias resolution, reentrance
+    //! preservation, subsumption, cycles). They are written as standard
+    //! `#[cfg(test)]` cases — not doctests — so they run under
+    //! `cargo test -p gds`.
+    use super::*;
+
+    fn fs(input: &str) -> FeatStruct {
+        parse_featstruct(input).unwrap_or_else(|e| panic!("parse {:?}: {}", input, e.message()))
+    }
+
+    fn unify_str(lhs: &str, rhs: &str) -> Option<FeatStruct> {
+        unify_featstruct(&fs(lhs), &fs(rhs), None)
+    }
+
+    fn key(name: &str) -> FeatPath {
+        FeatPath::new(vec![FeatPathSegment::key(name)])
+    }
+
+    // --- basic unification --------------------------------------------------
+
+    #[test]
+    fn unify_disjoint_dicts_merges_keys() {
+        let result = unify_str("[a=1, b=2]", "[b=2, c=3]").expect("unify ok");
+        assert_eq!(result, fs("[a=1, b=2, c=3]"));
+    }
+
+    #[test]
+    fn unify_identical_returns_equal() {
+        let result = unify_str("[a=1, b=2]", "[a=1, b=2]").expect("unify ok");
+        assert_eq!(result, fs("[a=1, b=2]"));
+    }
+
+    #[test]
+    fn unify_conflicting_atoms_fails() {
+        assert!(unify_str("[a=1]", "[a=2]").is_none());
+    }
+
+    #[test]
+    fn unify_nested_dicts_merges_recursively() {
+        let result = unify_str("[a=[b=1]]", "[a=[c=2]]").expect("unify ok");
+        assert_eq!(result, fs("[a=[b=1, c=2]]"));
+    }
+
+    #[test]
+    fn unify_nested_conflict_fails() {
+        assert!(unify_str("[a=[b=1]]", "[a=[b=2]]").is_none());
+    }
+
+    // --- variables ----------------------------------------------------------
+
+    #[test]
+    fn unify_variable_binds_to_value() {
+        // [a=?x, b=?x] ⊓ [a=1] = [a=1, b=1]
+        let result = unify_str("[a=?x, b=?x]", "[a=1]").expect("unify ok");
+        assert_eq!(result, fs("[a=1, b=1]"));
+    }
+
+    #[test]
+    fn unify_propagates_bindings_back_to_caller() {
+        let mut bindings = FeatBindings::new();
+        let result =
+            unify_featstruct(&fs("[a=?x]"), &fs("[a=1]"), Some(&mut bindings)).expect("unify ok");
+        assert_eq!(result, fs("[a=1]"));
+        assert_eq!(bindings.get("x"), Some(&FeatValue::Number(1)));
+    }
+
+    #[test]
+    fn unify_renames_variable_collision_in_rhs() {
+        // NLTK: [a=?x] ⊓ [b=?x] = [a=?x, b=?x2]
+        // The rhs `?x` collides with the lhs `?x` and is alpha-renamed.
+        // Both result variables remain unbound and must be distinct.
+        let result = unify_str("[a=?x]", "[b=?x]").expect("unify ok");
+        let a = result.get_path(&key("a"));
+        let b = result.get_path(&key("b"));
+        match (a, b) {
+            (Some(FeatValue::Variable(av)), Some(FeatValue::Variable(bv))) => {
+                assert_ne!(av, bv, "collision should produce distinct variables");
+            }
+            other => panic!("expected two distinct variables, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn unify_aliases_two_unbound_variables() {
+        // [a=?x] ⊓ [a=?y] : both unbound, aliased — result is a single var.
+        let result = unify_str("[a=?x]", "[a=?y]").expect("unify ok");
+        match result.get_path(&key("a")) {
+            Some(FeatValue::Variable(_)) => {}
+            other => panic!("expected variable at `a`, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn unify_two_aliased_paths_share_value() {
+        // [a=?x, b=?x] ⊓ [b=2] = [a=2, b=2] — alias propagates through.
+        let result = unify_str("[a=?x, b=?x]", "[b=2]").expect("unify ok");
+        assert_eq!(result, fs("[a=2, b=2]"));
+    }
+
+    // --- reentrance ---------------------------------------------------------
+
+    #[test]
+    fn unify_preserves_reentrance() {
+        // [a=(1)[x=1], b->(1)] ⊓ [a=[y=2]]
+        // The reentrant value at paths `a` and `b` must merge to {x=1, y=2}
+        // and remain shared.
+        let result = unify_featstruct(&fs("[a=(1)[x=1], b->(1)]"), &fs("[a=[y=2]]"), None)
+            .expect("unify ok");
+        let rendered = format_featstruct(&result);
+        assert!(
+            rendered.contains("x=1") && rendered.contains("y=2"),
+            "merged reentrant struct should contain both fields, got {}",
+            rendered
+        );
+        assert!(
+            rendered.contains("->("),
+            "result should preserve a reentrance marker, got {}",
+            rendered
+        );
+    }
+
+    #[test]
+    fn unify_introduces_reentrance_via_shared_variable() {
+        // [a=?x, b=?x] ⊓ [a=[k=1]] : `a` and `b` should both end up bound
+        // to the same `[k=1]` substructure (reentrant in the result).
+        let result =
+            unify_featstruct(&fs("[a=?x, b=?x]"), &fs("[a=[k=1]]"), None).expect("unify ok");
+        let rendered = format_featstruct(&result);
+        assert!(rendered.contains("k=1"), "got {}", rendered);
+        assert!(
+            rendered.contains("->("),
+            "shared variable should produce reentrance, got {}",
+            rendered
+        );
+    }
+
+    // --- shape errors -------------------------------------------------------
+
+    #[test]
+    fn unify_list_lengths_must_match() {
+        let result = unify_featstruct(
+            &FeatStruct::List(vec![FeatValue::Number(1)]),
+            &FeatStruct::List(vec![FeatValue::Number(1), FeatValue::Number(2)]),
+            None,
+        );
+        assert!(result.is_none());
+    }
+
+    #[test]
+    fn unify_cannot_mix_dict_and_list() {
+        let result = unify_featstruct(
+            &fs("[a=1]"),
+            &FeatStruct::List(vec![FeatValue::Number(1)]),
+            None,
+        );
+        assert!(result.is_none());
+    }
+
+    // --- subsumption --------------------------------------------------------
+
+    #[test]
+    fn subsumes_more_general_subsumes_more_specific() {
+        assert!(subsumes_featstruct(&fs("[a=1]"), &fs("[a=1, b=2]")));
+        assert!(!subsumes_featstruct(&fs("[a=1, b=2]"), &fs("[a=1]")));
+    }
+
+    #[test]
+    fn subsumes_reflexive() {
+        assert!(subsumes_featstruct(&fs("[a=1, b=2]"), &fs("[a=1, b=2]")));
+    }
+
+    // --- cyclic detection ---------------------------------------------------
+
+    #[test]
+    fn cyclic_detects_self_reference() {
+        // [a=(1)[b->(1)]] : the body of def(1) contains ref(1).
+        let value = fs("[a=(1)[b->(1)]]");
+        assert!(cyclic_featstruct(&value));
+    }
+
+    #[test]
+    fn cyclic_returns_false_for_acyclic_reentrance() {
+        // Two paths share a struct, but the struct does not contain itself.
+        let value = fs("[a=(1)[x=1], b->(1)]");
+        assert!(!cyclic_featstruct(&value));
+    }
+
+    #[test]
+    fn cyclic_returns_false_for_plain_tree() {
+        assert!(!cyclic_featstruct(&fs("[a=[b=[c=1]]]")));
     }
 }

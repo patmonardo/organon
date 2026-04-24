@@ -15,7 +15,11 @@ pub use crate::collections::dataset::dependency::{
     DependencyEdge, DependencyGraph, DependencyNode,
 };
 pub use crate::collections::dataset::{DatasetArtifactKind, DatasetArtifactProfile};
-
+// Language model helpers
+pub use crate::collections::dataset::lm::{
+    AbsoluteDiscountingInterpolated, KneserNeyInterpolated, LanguageModel, Laplace, Lidstone,
+    LmBase, LmError, NgramCounter, StupidBackoff, Vocabulary, WittenBellInterpolated, MLE,
+};
 // Plan / DataOps (lazy computation graphs)
 pub use crate::collections::dataset::plan::{EvalMode, Plan, PlanEnv, PlanError, Source, Step};
 
@@ -34,11 +38,6 @@ pub use crate::collections::dataset::model::{
 // Metrics
 pub use crate::collections::dataset::metrics::{BinaryMetrics, MetricError};
 
-// Language model helpers
-pub use crate::collections::dataset::functions::model::lm::{
-    AbsoluteDiscountingInterpolated, KneserNeyInterpolated, LanguageModel, Laplace, Lidstone,
-    LmBase, LmError, NgramCounter, StupidBackoff, Vocabulary, WittenBellInterpolated, MLE,
-};
 pub use crate::collections::dataset::functions::model::preprocessing::{
     everygrams, ngrams, pad_both_ends, pad_both_ends_default, padded_everygram_pipeline,
     padded_everygrams,
@@ -87,7 +86,7 @@ pub use crate::collections::dataset::featstruct::{
 
 // Tag surface
 pub use crate::collections::dataset::tag::Tag;
-pub use crate::collections::dataset::tag_util::{str2tuple, tuple2str, untag};
+pub use crate::collections::dataset::tag::{str2tuple, tuple2str, untag};
 
 // Tagger surface
 pub use crate::collections::dataset::tagger::{

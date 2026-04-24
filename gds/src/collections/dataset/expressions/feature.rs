@@ -4,6 +4,7 @@
 //! templates, and rule conditions (NLTK TBL inspired).
 
 use crate::collections::dataset::expressions::tree::TreePos;
+use crate::collections::dataset::featstruct::FeatStruct;
 use crate::collections::dataset::plan::PlanError;
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -304,6 +305,33 @@ pub enum FeatureExpr {
     Condition(FeatureCondition),
     Rule(FeatureRule),
     Template(FeatureTemplate),
+    /// Essence-level mark carried as a [`FeatStruct`].
+    ///
+    /// This is the IR-level bridge for the wrapper-side
+    /// [`crate::collections::dataset::model_prep::MarkedFeature::mark`].
+    /// Lifting the mark into [`FeatureExpr`] lets downstream IR walkers
+    /// (codegen, image realization, eval) see the model's essence-level
+    /// commitment as a first-class symbolic node rather than reaching into
+    /// the preparation wrapper. Box 2's predicate lowering still happens at
+    /// the wrapper level (where modality is known); this variant is the
+    /// *visible* form of that same mark inside the algebra.
+    Mark(FeatStruct),
+}
+
+impl FeatureExpr {
+    /// Borrow the inner [`FeatStruct`] if this expression is a [`Self::Mark`].
+    pub fn as_mark(&self) -> Option<&FeatStruct> {
+        if let FeatureExpr::Mark(fs) = self {
+            Some(fs)
+        } else {
+            None
+        }
+    }
+
+    /// Convenience constructor for [`Self::Mark`].
+    pub fn mark(fs: FeatStruct) -> Self {
+        FeatureExpr::Mark(fs)
+    }
 }
 
 impl From<FeatureValue> for FeatureExpr {
@@ -345,5 +373,48 @@ impl From<FeatureRule> for FeatureExpr {
 impl From<FeatureTemplate> for FeatureExpr {
     fn from(value: FeatureTemplate) -> Self {
         FeatureExpr::Template(value)
+    }
+}
+
+impl From<FeatStruct> for FeatureExpr {
+    fn from(value: FeatStruct) -> Self {
+        FeatureExpr::Mark(value)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::collections::dataset::featstruct::{FeatDict, FeatValue};
+
+    fn dict(pairs: &[(&str, FeatValue)]) -> FeatStruct {
+        let mut d = FeatDict::new();
+        for (k, v) in pairs {
+            d.insert((*k).to_string(), v.clone());
+        }
+        FeatStruct::Dict(d)
+    }
+
+    #[test]
+    fn mark_variant_round_trips_through_from_and_accessor() {
+        let fs = dict(&[("pos", FeatValue::text("noun"))]);
+        let expr: FeatureExpr = fs.clone().into();
+        match &expr {
+            FeatureExpr::Mark(inner) => assert_eq!(inner, &fs),
+            other => panic!("expected Mark, got {other:?}"),
+        }
+        assert_eq!(expr.as_mark(), Some(&fs));
+    }
+
+    #[test]
+    fn non_mark_variant_returns_none_for_as_mark() {
+        let v = FeatureExpr::Value(FeatureValue::text("x"));
+        assert!(v.as_mark().is_none());
+    }
+
+    #[test]
+    fn mark_constructor_matches_from_impl() {
+        let fs = dict(&[("num", FeatValue::text("sg"))]);
+        assert_eq!(FeatureExpr::mark(fs.clone()), FeatureExpr::from(fs));
     }
 }

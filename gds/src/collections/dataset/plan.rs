@@ -1,12 +1,34 @@
-//! Dataset Plans (DataOps): lazy computation graphs over Datasets.
+//! `Plan` — deferred Polars-side recipes (R6 in the doctrine).
 //!
-//! This is a small, intentionally conservative kernel surface:
-//! - A `Plan` is a lazily described transformation from a `Dataset` source.
-//! - The canonical row/record artifact is a Polars `Struct` field named `item`.
-//! - Plans can be evaluated in different modes (preview vs fit).
+//! See `gds/doc/SEMANTIC-DATASET-FIVE-FOLD.md` (Five-Fold Synthesis), Root
+//! Object **R6**.
 //!
-//! The long-term intent is to compile tabular-only subgraphs to Polars `LazyFrame`
-//! plans, while keeping unstructured/streaming nodes in a higher-level IR.
+//! `Plan` is the **deferred form of `Frame:Series`** — a lazily described
+//! transformation from a `Dataset` source, a thin sugar over Polars
+//! `LazyFrame` / `Expr`. It stays in the Polars world. The canonical
+//! row/record artifact is a Polars `Struct` field named `item`.
+//!
+//! There is **no `FeaturePlan`**. Earlier drafts of the doctrine named the
+//! intensional-deferred cell `Plan:FeaturePlan` and that was wrong:
+//! `Model:Feature` is a *client SDK* over Polars, not a parallel runtime.
+//! The deferred-intensional cell is the **Binder / Reentrancy roles of
+//! `Feature`** (R5), bound by `LanguageModel` (R8) contexts — not by a
+//! second flavor of `Plan`. Admissibility predicates (`consistent`,
+//! `informative`, `derivable_from`) live on `LanguageModel`, not here.
+//!
+//! Contract this module owes the kernel:
+//!
+//! - `Plan` produces a `Frame:Series` value when run. It does not produce
+//!   `Model`s, bind `Feature`s, or evaluate admissibility.
+//! - `Plan` exposes evaluation modes (preview / fit) and emits a structured
+//!   attention report.
+//! - Long-term intent is to compile tabular-only subgraphs to Polars
+//!   `LazyFrame` plans, while keeping unstructured/streaming nodes in a
+//!   higher-level IR. Both stay extensional.
+//!
+//! User surface: a `Corpus` or a `LanguageModel` *runs* `Plan`s; users
+//! reach for `Plan` when they want a Polars-flavored lazy compute over
+//! either Synthetic Product.
 
 use std::collections::BTreeMap;
 

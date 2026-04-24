@@ -1,7 +1,17 @@
-//! Dataset-level DataFrame facade.
+//! Dataset DSL — `DataFrame` namespace.
 //!
-//! This module completes the dataset-side 2×2 matrix by providing a small
-//! eager `DataFrame` entrypoint.
+//! Part of the dataset-side 2×2 matrix that mirrors the DataFrame DSL shell:
+//!
+//! |        | lazy        | eager        |
+//! |--------|-------------|--------------|
+//! | scalar | `Expr`      | `Series`     |
+//! | frame  | `LazyFrame` | `DataFrame`  |
+//!
+//! This file provides [`DatasetDataFrameNameSpace`], the eager-frame entry
+//! point, plus the [`DataFrameDatasetExt`] trait that attaches `.ds()` onto
+//! `GDSDataFrame`. The eager frame is intentionally thin: it exposes the
+//! underlying `GDSDataFrame` and a `.lazy()` bridge into
+//! [`crate::collections::dataset::lazy::DatasetLazyFrameNameSpace`].
 
 use crate::collections::dataframe::{GDSDataFrame, GDSLazyFrame};
 use crate::collections::dataset::lazy::DatasetLazyFrameNameSpace;

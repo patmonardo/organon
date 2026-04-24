@@ -1,6 +1,10 @@
-//! Text namespace for dataset-level data-op builders.
+//! Text-domain alias of [`super::dataop::DataOpNs`].
 //!
-//! These helpers create dataset data-op expressions scoped to the text domain.
+//! `TextNs` is a thin convenience surface that mirrors the `text_*` family on
+//! `DataOpNs` so toolchain authoring code can spell text-only stages without
+//! the `text_` prefix on every call. It deliberately exposes no other
+//! methods; for non-text stages, lowering helpers, or artifact accessors,
+//! reach for [`super::dataop::DataOpNs`] directly.
 
 use crate::collections::dataset::expressions::dataop::DatasetDataOpExpr;
 

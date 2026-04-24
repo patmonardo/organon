@@ -150,7 +150,7 @@ napi-build = "2"
 [features]
 default = ["dataset"]
 node = ["dep:napi", "dep:napi-derive"]
-full = ["node", "dataset", "graphframe"]
+full = ["node", "dataset"]
 
 # Foundational dataset surface: enabled by default and kept as an explicit
 # feature so downstream bundles can refer to it declaratively.

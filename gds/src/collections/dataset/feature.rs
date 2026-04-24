@@ -1,15 +1,36 @@
-//! Features: feature-oriented dataset transformations.
+//! `Feature` — the unit of meaning (R5 in the doctrine).
 //!
-//! In the NLTK / WordNet / corpora sense, a "Feature" is a mapping from raw input →
-//! feature representation(s) consumed by a downstream model or procedure.
+//! See `gds/doc/SEMANTIC-DATASET-FIVE-FOLD.md` (Five-Fold Synthesis), Root
+//! Object **R5** and Principle **P3** (`Model:Feature`, the augmenting
+//! principle). NLTK Ch9 / Ch10 are the reference texts.
 //!
-//! In this crate, a `Feature` is primarily backed by a `Plan` (DataOps) so that:
-//! - it can run over full datasets (`eval_dataset`) or streaming batches (`to_streaming_transform`)
-//! - it can be reported on via the Plan "attention" envelope.
+//! A `Feature` is a *named, typed address* into Models, with a lattice
+//! (`unify | subsume | eq | …`). Columns *carry* Features; rows *are read as*
+//! Models. The Polars frame is the extensional shadow.
 //!
-//! Convention (optional): the canonical feature-map artifact is an `item` column.
-//! This is *not required* for a `Feature`, but you can enforce it via
-//! `Feature::requiring_item(plan)` when you want that contract.
+//! Contract this module owes the kernel:
+//!
+//! - **One** `Feature` type, with **four roles**:
+//!   1. **Projection** — addresses a Model, codomain is a value or another
+//!      Model. The current `Plan`-backed Feature is this role.
+//!   2. **Binder** — addresses a Model with an *unbound, scope-local*
+//!      codomain (Ch10 discourse referent).
+//!   3. **Reentrancy** — addresses two paths and binds them to the same
+//!      cell (anaphora; AVM coreference).
+//!   4. **Annotation** — addresses a Document, codomain is a value plus a
+//!      mandatory provenance tuple. See `crate::collections::dataset::annotation`.
+//! - Each Feature instance must declare which role(s) it is playing. The
+//!   four roles are *projections of one definition*, not four parallel types.
+//! - The lattice is part of the Feature's identity, not an op chosen at the
+//!   call site. `unify`, `subsumes`, `extend` dispatch through it.
+//!
+//! Convention (optional): the canonical Projection-Feature output artifact is
+//! an `item` column. This is *not required*; enforce it via
+//! `Feature::requiring_item(plan)` when wanted.
+//!
+//! Recasting status: the existing `Feature = Plan-wrapper` becomes
+//! `Feature` in its **Projection** role specifically. Binder / Reentrancy /
+//! Annotation roles are doctrine commitments not yet typed.
 
 use std::collections::BTreeMap;
 

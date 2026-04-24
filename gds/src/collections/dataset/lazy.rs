@@ -1,11 +1,19 @@
-//! Dataset-level LazyFrame facade.
+//! Dataset DSL — `LazyFrame` namespace.
 //!
-//! This module is the dataset-layer ergonomic entrypoint for attaching
-//! dataset-specific namespaces to lazy tabular pipelines.
+//! Part of the dataset-side 2×2 matrix that mirrors the DataFrame DSL shell:
 //!
-//! Matrix alignment:
-//! - `Expr` is to `LazyFrame` as `Series` is to `DataFrame`.
-//! - This file provides the dataset-side `LazyFrame` half of the `Expr`↔`LazyFrame` pair.
+//! |        | lazy        | eager        |
+//! |--------|-------------|--------------|
+//! | scalar | `Expr`      | `Series`     |
+//! | frame  | `LazyFrame` | `DataFrame`  |
+//!
+//! This file provides [`DatasetLazyFrameNameSpace`], the lazy-frame entry
+//! point, plus the [`LazyFrameDatasetExt`] trait that attaches `.ds()` onto
+//! both `GDSLazyFrame` and Polars `LazyFrame`.
+//!
+//! From here you reach the dataset-flavored sub-namespaces
+//! [`FeatureLazyFrameNameSpace`] and [`TreeLazyFrameNameSpace`], which are
+//! the lazy-frame side of feature/tree pipelines.
 
 use crate::collections::dataframe::GDSLazyFrame;
 use crate::collections::dataset::feature::Feature;

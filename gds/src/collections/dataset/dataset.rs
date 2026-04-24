@@ -5,14 +5,13 @@
 
 use std::path::Path;
 
-use polars::prelude::{Expr, NewChunkedArray, SortMultipleOptions};
+use polars::prelude::{Expr, SortMultipleOptions};
 
 use crate::collections::dataframe::selectors::Selector;
 use crate::collections::dataframe::table::TableBuilder;
 use crate::collections::dataframe::GDSDataFrame;
 use crate::collections::dataframe::GDSFrameError;
 use crate::collections::dataset::artifact::{DatasetArtifactKind, DatasetArtifactProfile};
-use crate::collections::dataset::semantic::LanguageModelFocus;
 use crate::collections::io::{csv, ipc, json, parquet};
 
 /// Minimal dataset wrapper (Polars-backed).
@@ -21,7 +20,6 @@ pub struct Dataset {
     name: Option<String>,
     table: GDSDataFrame,
     artifact_profile: DatasetArtifactProfile,
-    lm_focus: Option<LanguageModelFocus>,
 }
 
 impl Dataset {
@@ -30,7 +28,6 @@ impl Dataset {
             name: None,
             table,
             artifact_profile: DatasetArtifactProfile::default(),
-            lm_focus: None,
         }
     }
 
@@ -39,7 +36,6 @@ impl Dataset {
             name: Some(name.into()),
             table,
             artifact_profile: DatasetArtifactProfile::default(),
-            lm_focus: None,
         }
     }
 
@@ -86,7 +82,10 @@ impl Dataset {
     }
 
     pub fn with_artifact_kind(mut self, artifact_kind: DatasetArtifactKind) -> Self {
-        self.artifact_profile = self.artifact_profile.clone().with_primary_kind(artifact_kind);
+        self.artifact_profile = self
+            .artifact_profile
+            .clone()
+            .with_primary_kind(artifact_kind);
         self
     }
 
@@ -101,130 +100,6 @@ impl Dataset {
 
     pub fn has_artifact_facet(&self, facet: &str) -> bool {
         self.artifact_profile.has_facet(facet)
-    }
-
-    pub fn with_lm_focus(mut self, focus: LanguageModelFocus) -> Self {
-        let mut profile = self
-            .artifact_profile
-            .clone()
-            .with_facet("language-model-focus");
-        if focus.is_sdl_compliant {
-            profile = profile.with_facet("sdl-compliant");
-        }
-        self.artifact_profile = profile;
-        self.lm_focus = Some(focus);
-        self
-    }
-
-    pub fn lm_focus(&self) -> Option<&LanguageModelFocus> {
-        self.lm_focus.as_ref()
-    }
-
-    pub fn lm_focus_mut(&mut self) -> Option<&mut LanguageModelFocus> {
-        self.lm_focus.as_mut()
-    }
-
-    pub fn is_language_model(&self) -> bool {
-        self.lm_focus.is_some()
-    }
-
-    pub fn is_sdl_compliant(&self) -> bool {
-        self.lm_focus
-            .as_ref()
-            .map(|f| f.is_sdl_compliant)
-            .unwrap_or(false)
-    }
-
-    /// Extract an `SdlSubgraph` from the given row index.
-    /// This requires the dataset to contain `doc_id` and `text` columns,
-    /// alongside nested `tokens` and `edges` struct lists for full topological parsing.
-    pub fn try_extract_sdl_subgraph(
-        &self,
-        row_index: usize,
-    ) -> Result<crate::collections::dataset::semantic::SdlSubgraph, GDSFrameError> {
-        if !self.is_sdl_compliant() {
-            return Err(GDSFrameError::from("Dataset lacks SDL compliance focus."));
-        }
-
-        let df = self.table.dataframe();
-
-        let doc_id = match df.column("doc_id") {
-            Ok(col) => {
-                let s = col.as_materialized_series();
-                match s.u64()?.get(row_index) {
-                    Some(id) => id,
-                    None => return Err(GDSFrameError::from("doc_id row out of bounds")),
-                }
-            }
-            Err(_) => 0, // Fallback if missing, though schema implies it
-        };
-
-        let text = match df.column("text") {
-            Ok(col) => {
-                let s = col.as_materialized_series();
-                match s.str()?.get(row_index) {
-                    Some(t) => t.to_string(),
-                    None => return Err(GDSFrameError::from("text row out of bounds")),
-                }
-            }
-            Err(_) => String::new(),
-        };
-
-        // Construct the base subgraph.
-        // Full Polars unpacking of `tokens` and `edges` List<Struct> into `FeatStruct` properties
-        // requires physical iteration over `ListChunked` arrays, which will be integrated in the
-        // specific Semantic Table loaders.
-        Ok(crate::collections::dataset::semantic::SdlSubgraph::new(
-            doc_id, text,
-        ))
-    }
-
-    /// Two-Phase Universal Dependency Graph Search
-    ///
-    /// Executes a semantic structure search against the Dataset.
-    /// Phase 1: Uses Polars natively to filter rows that contain the necessary structural edges.
-    /// Phase 2: Extracts the SdlSubgraphs and evaluates deep FeatStruct semantic unification.
-    pub fn search_graph(
-        &self,
-        query: &crate::collections::dataset::search::SdlSearchQuery,
-    ) -> Result<Self, GDSFrameError> {
-        if !self.is_sdl_compliant() {
-            return Err(GDSFrameError::from("Dataset lacks SDL compliance focus."));
-        }
-
-        let df = self.table.dataframe().clone();
-
-        // Phase 1: Topological Pre-Filtering (Fast)
-        // We require that for every edge in the query, the `edges` list-column contains that relation.
-        // In a full implementation, we would build a robust `Expr` checking the struct lists.
-        // For demonstration of the SDK bounding, we currently pass all rows to Phase 2,
-        // but this is where `df.filter(col("edges").... )` occurs.
-
-        // Phase 2: Semantic Unification (Deep)
-        let row_count = df.height();
-        let mut match_indices = Vec::new();
-
-        for i in 0..row_count {
-            if let Ok(subgraph) = self.try_extract_sdl_subgraph(i) {
-                if query.is_match(&subgraph) {
-                    match_indices.push(i as u32);
-                }
-            }
-        }
-
-        // Materialize the final filtered set using the matched indices
-        let ca = polars::prelude::ChunkedArray::<polars::prelude::UInt32Type>::from_slice(
-            polars::prelude::PlSmallStr::from_static("idx"),
-            &match_indices,
-        );
-        let filtered_df = df.take(&ca)?;
-
-        Ok(Self {
-            name: self.name.clone(),
-            table: GDSDataFrame::from(filtered_df),
-            artifact_profile: self.artifact_profile.clone(),
-            lm_focus: self.lm_focus.clone(),
-        })
     }
 
     pub fn table(&self) -> &GDSDataFrame {
@@ -265,7 +140,6 @@ impl Dataset {
             name: self.name.clone(),
             table,
             artifact_profile: self.artifact_profile.clone(),
-            lm_focus: self.lm_focus.clone(),
         }
     }
 
@@ -275,7 +149,6 @@ impl Dataset {
             name: self.name.clone(),
             table,
             artifact_profile: self.artifact_profile.clone(),
-            lm_focus: self.lm_focus.clone(),
         }
     }
 
@@ -285,7 +158,6 @@ impl Dataset {
             name: self.name.clone(),
             table,
             artifact_profile: self.artifact_profile.clone(),
-            lm_focus: self.lm_focus.clone(),
         }
     }
 
@@ -295,7 +167,6 @@ impl Dataset {
             name: self.name.clone(),
             table,
             artifact_profile: self.artifact_profile.clone(),
-            lm_focus: self.lm_focus.clone(),
         })
     }
 
@@ -305,7 +176,6 @@ impl Dataset {
             name: self.name.clone(),
             table,
             artifact_profile: self.artifact_profile.clone(),
-            lm_focus: self.lm_focus.clone(),
         })
     }
 
@@ -315,7 +185,6 @@ impl Dataset {
             name: self.name.clone(),
             table,
             artifact_profile: self.artifact_profile.clone(),
-            lm_focus: self.lm_focus.clone(),
         })
     }
 
@@ -325,7 +194,6 @@ impl Dataset {
             name: self.name.clone(),
             table,
             artifact_profile: self.artifact_profile.clone(),
-            lm_focus: self.lm_focus.clone(),
         })
     }
 
@@ -340,7 +208,6 @@ impl Dataset {
             name: self.name.clone(),
             table,
             artifact_profile: self.artifact_profile.clone(),
-            lm_focus: self.lm_focus.clone(),
         })
     }
 
@@ -359,7 +226,6 @@ impl Dataset {
             name: self.name.clone(),
             table,
             artifact_profile: self.artifact_profile.clone(),
-            lm_focus: self.lm_focus.clone(),
         })
     }
 
@@ -382,7 +248,6 @@ impl Dataset {
             name: self.name.clone(),
             table,
             artifact_profile: self.artifact_profile.clone(),
-            lm_focus: self.lm_focus.clone(),
         })
     }
 
@@ -401,7 +266,6 @@ impl Dataset {
             name: self.name.clone(),
             table,
             artifact_profile: self.artifact_profile.clone(),
-            lm_focus: self.lm_focus.clone(),
         })
     }
 
@@ -411,7 +275,6 @@ impl Dataset {
             name: self.name.clone(),
             table,
             artifact_profile: self.artifact_profile.clone(),
-            lm_focus: self.lm_focus.clone(),
         })
     }
 

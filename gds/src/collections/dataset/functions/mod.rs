@@ -6,7 +6,7 @@ use std::fs::read_dir;
 use std::path::Path;
 
 use crate::collections::dataframe::GDSFrameError;
-use crate::collections::dataset::corpus::Corpus;
+use crate::collections::dataset::corpus::{Corpus, CorpusError};
 
 pub mod feature;
 pub mod model;
@@ -14,11 +14,11 @@ pub mod tree;
 
 /// Scan a directory for text files (non-recursive) and build a `Corpus`.
 /// Only regular files are considered; file contents are read as UTF-8.
-pub fn scan_text_dir(path: impl AsRef<Path>) -> Result<Corpus, GDSFrameError> {
+pub fn scan_text_dir(path: impl AsRef<Path>) -> Result<Corpus, CorpusError> {
     let mut paths: Vec<std::path::PathBuf> = Vec::new();
-    for entry in read_dir(path.as_ref())? {
-        let entry = entry?;
-        if entry.file_type()?.is_file() {
+    for entry in read_dir(path.as_ref()).map_err(GDSFrameError::from)? {
+        let entry = entry.map_err(GDSFrameError::from)?;
+        if entry.file_type().map_err(GDSFrameError::from)?.is_file() {
             paths.push(entry.path());
         }
     }

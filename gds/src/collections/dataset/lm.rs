@@ -1,4 +1,32 @@
-//! N-gram language model utilities.
+//! `LanguageModel` — the intensional counterpart to `Corpus`.
+//!
+//! Where a [`Corpus`] is the **extensional** product of the dataset layer
+//! (the evidentiary three-frame triad of Sources, Documents, Annotations),
+//! a `LanguageModel` is the **intensional** product: a fitted distribution
+//! over an alphabet of words conditioned on a context window of
+//! `order - 1` preceding words.
+//!
+//! A semantic dataset in use is a `Corpus` paired with one or more
+//! `LanguageModel`s — evidence on one side, meaning on the other.
+//!
+//! This module mirrors the NLTK `nltk.lm` package and provides:
+//!
+//! - **Vocabulary state** ([`Vocabulary`]) with `<UNK>` masking and
+//!   frequency cutoff;
+//! - **N-gram counts** ([`NgramCounter`]) addressed by context tuple,
+//!   with a [`ContextCounts`] view for per-context statistics;
+//! - **Shared base state** ([`LmBase`]) carrying order + vocab + counts;
+//! - The [`LanguageModel`] trait — `score`, `logscore`, `entropy`,
+//!   `perplexity`, `generate`;
+//! - The [`Smoothing`] trait and three implementations ([`WittenBell`],
+//!   [`AbsoluteDiscounting`], [`KneserNey`]) for use with the generic
+//!   [`InterpolatedLanguageModel`];
+//! - Concrete models: [`MLE`], [`Lidstone`], [`Laplace`],
+//!   [`StupidBackoff`], [`InterpolatedLanguageModel`],
+//!   [`WittenBellInterpolated`], [`AbsoluteDiscountingInterpolated`],
+//!   [`KneserNeyInterpolated`].
+//!
+//! [`Corpus`]: crate::collections::dataset::corpus::Corpus
 
 use rand::distributions::WeightedIndex;
 use rand::prelude::{Distribution, SeedableRng, StdRng};
@@ -11,6 +39,10 @@ pub enum LmError {
     #[error("discount must be between 0 and 1 inclusive (got {0})")]
     InvalidDiscount(f64),
 }
+
+// =============================================================================
+// Vocabulary — UNK-masked word inventory with frequency cutoff.
+// =============================================================================
 
 #[derive(Debug, Clone)]
 pub struct Vocabulary {
@@ -93,6 +125,10 @@ impl Vocabulary {
         self.len_cache = count;
     }
 }
+
+// =============================================================================
+// NgramCounter / ContextCounts — order-indexed n-gram counts.
+// =============================================================================
 
 #[derive(Debug, Clone)]
 pub struct NgramCounter {
@@ -216,6 +252,10 @@ impl<'a> ContextCounts<'a> {
     }
 }
 
+// =============================================================================
+// LmBase — shared state (order + vocab + counts) reused by every model.
+// =============================================================================
+
 #[derive(Debug, Clone)]
 pub struct LmBase {
     order: usize,
@@ -283,6 +323,13 @@ impl LmBase {
         Ok(())
     }
 }
+
+// =============================================================================
+// LanguageModel — the trait every concrete model implements.
+//
+// Provides score / logscore / entropy / perplexity / generate on top of the
+// per-model `unmasked_score` hook.
+// =============================================================================
 
 pub trait LanguageModel {
     fn base(&self) -> &LmBase;
@@ -394,6 +441,10 @@ pub trait LanguageModel {
         generated
     }
 }
+
+// =============================================================================
+// Smoothing — backoff/discount strategies for `InterpolatedLanguageModel`.
+// =============================================================================
 
 pub trait Smoothing {
     fn unigram_score(&self, vocab: &Vocabulary, counts: &NgramCounter, word: &str) -> f64;
@@ -535,6 +586,12 @@ fn continuation_counts(counts: &NgramCounter, word: &str, context: &[String]) ->
     (continuation, total)
 }
 
+// =============================================================================
+// Concrete models.
+// =============================================================================
+
+/// **MLE** — maximum likelihood estimation. No smoothing; unseen n-grams
+/// score 0.
 #[derive(Debug, Clone)]
 pub struct MLE {
     base: LmBase,
@@ -571,6 +628,8 @@ impl LanguageModel for MLE {
     }
 }
 
+/// **Lidstone** — additive smoothing with arbitrary `gamma`
+/// (`gamma = 1.0` collapses to Laplace).
 #[derive(Debug, Clone)]
 pub struct Lidstone {
     base: LmBase,
@@ -613,6 +672,7 @@ impl LanguageModel for Lidstone {
     }
 }
 
+/// **Laplace** — add-one smoothing (Lidstone with `gamma = 1.0`).
 #[derive(Debug, Clone)]
 pub struct Laplace {
     inner: Lidstone,
@@ -646,6 +706,9 @@ impl LanguageModel for Laplace {
     }
 }
 
+/// **StupidBackoff** — Brants et al. 2007. Fall back to a shorter context
+/// scaled by `alpha` (typically 0.4) when the n-gram is unseen. Not a
+/// proper distribution but cheap and effective for large corpora.
 #[derive(Debug, Clone)]
 pub struct StupidBackoff {
     base: LmBase,
@@ -694,6 +757,9 @@ impl LanguageModel for StupidBackoff {
     }
 }
 
+/// **InterpolatedLanguageModel** — the generic Chen-and-Goodman style
+/// interpolation engine. The `Smoothing` strategy provides the
+/// `(alpha, gamma)` per-context weights.
 #[derive(Debug, Clone)]
 pub struct InterpolatedLanguageModel<S: Smoothing> {
     base: LmBase,

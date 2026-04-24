@@ -1,7 +1,9 @@
 pub mod chunk;
 pub mod classify;
 pub mod cluster;
+pub mod inference;
 pub mod parse;
+pub mod sem;
 pub mod stem;
 pub mod tag;
 pub mod tree;
