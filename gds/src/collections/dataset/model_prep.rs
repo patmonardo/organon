@@ -66,7 +66,7 @@ pub enum Modality {
 }
 
 /// Outcome of a single feature's preparation step, recorded for Box 3 to
-/// surface in the [`crate::collections::dataset::compile_ir::OntologyDataFrameImage`]
+/// surface in the [`crate::collections::dataset::compile::OntologyDataFrameImage`]
 /// provenance and constraint tables.
 #[derive(Debug, Clone)]
 pub struct PreparationStep {

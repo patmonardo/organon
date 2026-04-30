@@ -9,10 +9,10 @@ pub mod parse;
 pub mod query;
 pub mod transform;
 
-pub use grammar::{GrammarTreeExt, Nonterminal, Production, ProductionRhs};
-pub use parse::ParseTreeExt;
-pub use query::QueryTreeExt;
-pub use transform::TransformTreeExt;
+pub use grammar::*;
+pub use parse::*;
+pub use query::*;
+pub use transform::*;
 
 use crate::collections::dataset::tree::{TreeLeafValue, TreeValue};
 

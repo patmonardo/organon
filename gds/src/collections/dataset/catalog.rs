@@ -19,7 +19,7 @@ use crate::collections::catalog::{
     CollectionsIoPolicy,
 };
 use crate::collections::dataframe::GDSDataFrame;
-use crate::collections::dataset::compile_ir::{DatasetCompilation, DatasetNode, DatasetNodeKind};
+use crate::collections::dataset::compile::{DatasetCompilation, DatasetNode, DatasetNodeKind};
 use crate::collections::dataset::dataset::Dataset;
 use crate::collections::dataset::io::detect_format_from_path;
 use crate::config::CollectionsBackend;

@@ -16,7 +16,7 @@ use std::sync::{Arc, RwLock};
 
 use crate::collections::catalog::CatalogError;
 use crate::collections::dataset::catalog::DatasetCatalog;
-use crate::collections::dataset::compile_ir::DatasetCompilation;
+use crate::collections::dataset::compile::DatasetCompilation;
 use crate::core::User;
 use crate::types::graph_store::DatabaseId;
 

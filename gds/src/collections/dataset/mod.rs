@@ -13,7 +13,7 @@
 //!    the lightweight, Polars-shaped entry point. The single most useful
 //!    starting line is `use crate::collections::dataset::namespace::*;`.
 //! 2. **Semantic / compiler surfaces** (`dataset`, `plan`, `feature`,
-//!    `featstruct`, `model`, `schema`, `toolchain`, `compile_ir`,
+//!    `featstruct`, `model`, `schema`, `toolchain`, `compile`,
 //!    `expressions`) — the kernel-side dataset/tooling vocabulary, including
 //!    the top-level ToolChain façade for authoring SDSL/GDSL programs.
 //! 3. **Catalog, IO, and stdlib** (`catalog`, `corpus`, `io`,
@@ -44,7 +44,7 @@ pub mod artifact;
 pub mod catalog;
 pub mod codegen;
 pub mod collocations;
-pub mod compile_ir;
+pub mod compile;
 pub mod corpus;
 pub mod dataset;
 pub mod dependency;
@@ -170,7 +170,7 @@ pub use toolchain::{
 };
 
 pub use codegen::{render_rust_dsl_module, DslCodegenOptions};
-pub use compile_ir::{
+pub use compile::{
     ontology_image_from_program_features, DatasetCompilation, DatasetCompilationArtifacts,
     DatasetNode, DatasetNodeKind, OntologyDataFrameImage, OntologyDataFrameImageTables,
     OntologyImageConstraintRow, OntologyImageFeatureRow, OntologyImageModelRow,

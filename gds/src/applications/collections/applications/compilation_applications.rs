@@ -13,7 +13,7 @@ use crate::applications::collections::configs::{
 };
 use crate::applications::collections::results::{CompilationSummary, MaterializationSummary};
 use crate::applications::services::collections_context::CollectionsContext;
-use crate::collections::dataset::compile_ir::DatasetCompilation;
+use crate::collections::dataset::compile::DatasetCompilation;
 use crate::collections::dataset::toolchain::DatasetToolChain;
 
 fn ok(op: &str, data: Value) -> Value {

@@ -522,7 +522,7 @@ impl ProgramSpec {
     /// Compile into an explicit IR artifact.
     ///
     /// This is the compiler-facing boundary used by Dataset/SDSL and codegen work.
-    pub fn compile_ir(&self) -> Result<ProgramCompileIr, ProgramSpecError> {
+    pub fn compile(&self) -> Result<ProgramCompileIr, ProgramSpecError> {
         let features = self.define_features()?;
         Ok(ProgramCompileIr::from_features(features))
     }
@@ -744,7 +744,7 @@ impl ProgramCompiler {
     }
 
     pub fn compile(&self, program: &ProgramSpec) -> Result<ProgramCompileIr, ProgramSpecError> {
-        program.compile_ir()
+        program.compile()
     }
 
     pub fn define_features(

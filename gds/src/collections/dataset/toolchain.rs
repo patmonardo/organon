@@ -15,7 +15,7 @@
 use std::fs::read_to_string;
 use std::path::Path;
 
-use crate::collections::dataset::compile_ir::{
+use crate::collections::dataset::compile::{
     ontology_image_from_program_features, DatasetCompilation, DatasetNode, DatasetNodeKind,
     OntologyDataFrameImage,
 };

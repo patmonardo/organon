@@ -1,7 +1,7 @@
 //! Serde-facing request models for Dataset compilation and materialization.
 //!
 //! These configs wrap the SDSL / pipeline / GDSL compilation entrypoints from
-//! `collections::dataset::toolchain` and `collections::dataset::compile_ir`.
+//! `collections::dataset::toolchain` and `collections::dataset::compile`.
 //! Heavy kernel-side types (SdslSpecification, DatasetPipeline, ProgramFeatures,
 //! DatasetCompilation) are intentionally **not** exposed directly on the wire;
 //! service-layer code is responsible for lowering these configs into them.
