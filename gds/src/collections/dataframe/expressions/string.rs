@@ -101,10 +101,9 @@ impl ExprString {
         overlapping: bool,
         leftmost: bool,
     ) -> Expr {
-        let _ = leftmost;
         self.expr
             .str()
-            .extract_many(patterns, ascii_case_insensitive, overlapping)
+            .extract_many(patterns, ascii_case_insensitive, overlapping, leftmost)
     }
 
     pub fn find_many(
@@ -114,10 +113,9 @@ impl ExprString {
         overlapping: bool,
         leftmost: bool,
     ) -> Expr {
-        let _ = leftmost;
         self.expr
             .str()
-            .find_many(patterns, ascii_case_insensitive, overlapping)
+            .find_many(patterns, ascii_case_insensitive, overlapping, leftmost)
     }
 
     pub fn count_matches(self, pat: &str, literal: bool) -> Expr {
@@ -156,7 +154,7 @@ impl ExprString {
     ) -> Expr {
         self.expr
             .str()
-            .replace_many(patterns, replace_with, ascii_case_insensitive)
+            .replace_many(patterns, replace_with, ascii_case_insensitive, false)
     }
 
     pub fn strip_chars(self, matches: &str) -> Expr {
@@ -381,7 +379,13 @@ impl ExprString {
     }
 
     pub fn explode(self) -> Expr {
-        self.expr.str().split(lit("")).explode()
+        self.expr
+            .str()
+            .split(lit(""))
+            .explode(polars::prelude::ExplodeOptions {
+                empty_as_null: true,
+                keep_nulls: true,
+            })
     }
 
     pub fn join(self, delimiter: &str, ignore_nulls: bool) -> Expr {

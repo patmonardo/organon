@@ -89,6 +89,7 @@ pub fn dtype_to_rust_type(dtype: &GDSDataType) -> Option<RustType> {
         DataType::Datetime(_, _) => Some(RustType::DateTime),
         DataType::Decimal(_, _) => Some(RustType::Decimal),
         DataType::Duration(_) => Some(RustType::Duration),
+        DataType::Float16 => Some(RustType::Float32),
         DataType::Float32 => Some(RustType::Float32),
         DataType::Float64 => Some(RustType::Float64),
         DataType::Int8 | DataType::Int16 | DataType::Int32 | DataType::Int64 => {

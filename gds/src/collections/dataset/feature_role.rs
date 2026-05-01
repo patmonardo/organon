@@ -314,7 +314,7 @@ impl FeatureFrame {
             }
         }
 
-        let df = DataFrame::new(vec![
+        let df = DataFrame::new_infer_height(vec![
             Series::new(columns::NAME.into(), name).into(),
             Series::new(columns::DTYPE.into(), dtype).into(),
             Series::new(columns::ROLE.into(), role).into(),
@@ -439,7 +439,8 @@ mod tests {
     #[test]
     fn feature_frame_rejects_missing_columns() {
         let df = GDSDataFrame::new(
-            DataFrame::new(vec![Series::new("name".into(), vec!["x"]).into()]).unwrap(),
+            DataFrame::new_infer_height(vec![Series::new("name".into(), vec!["x"]).into()])
+                .unwrap(),
         );
         let err = FeatureFrame::from_dataframe(df).unwrap_err();
         assert!(matches!(err, PolarsError::ColumnNotFound(_)));

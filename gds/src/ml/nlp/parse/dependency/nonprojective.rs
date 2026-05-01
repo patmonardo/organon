@@ -1,6 +1,6 @@
 use super::common::{enumerate_assignments, graph_from_arcs, has_cycle, roots_count};
-use super::DependencyGraph;
 use super::grammar::DependencyGrammar;
+use super::DependencyGraph;
 
 #[derive(Debug, Clone)]
 pub struct NonprojectiveDependencyParser {

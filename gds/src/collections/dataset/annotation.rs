@@ -213,7 +213,7 @@ impl AnnotationFrame {
             derivation.push(r.derivation);
         }
 
-        let df = DataFrame::new(vec![
+        let df = DataFrame::new_infer_height(vec![
             Series::new(columns::DOCUMENT.into(), document).into(),
             Series::new(columns::SPAN_START.into(), span_start).into(),
             Series::new(columns::SPAN_END.into(), span_end).into(),
@@ -300,7 +300,8 @@ mod tests {
     #[test]
     fn annotation_frame_rejects_missing_columns() {
         let df = GDSDataFrame::new(
-            DataFrame::new(vec![Series::new("document".into(), vec!["x"]).into()]).unwrap(),
+            DataFrame::new_infer_height(vec![Series::new("document".into(), vec!["x"]).into()])
+                .unwrap(),
         );
         let err = AnnotationFrame::from_dataframe(df).unwrap_err();
         assert!(matches!(err, PolarsError::ColumnNotFound(_)));

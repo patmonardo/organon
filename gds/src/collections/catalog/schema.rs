@@ -44,7 +44,7 @@ impl CollectionsSchema {
 
     pub fn from_polars(df: &DataFrame) -> Self {
         let fields = df
-            .get_columns()
+            .columns()
             .iter()
             .map(|column| CollectionsField {
                 name: column.name().to_string(),

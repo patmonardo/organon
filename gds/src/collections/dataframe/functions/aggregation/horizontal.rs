@@ -1,10 +1,10 @@
 //! Horizontal aggregation helpers.
 
 use polars::error::PolarsError;
+use polars::lazy::dsl::as_struct;
 use polars::prelude::{
     all_horizontal as pl_all_horizontal, any_horizontal as pl_any_horizontal, Expr, PolarsResult,
 };
-use polars_plan::dsl::as_struct;
 use polars_plan::dsl::function_expr::FunctionExpr;
 
 fn ensure_non_empty(exprs: &[Expr]) -> PolarsResult<()> {

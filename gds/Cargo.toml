@@ -25,7 +25,7 @@ thiserror = "1.0"
 lazy_static = "1.4"
 chrono = { version = "0.4", features = ["serde"] }
 chrono-tz = "0.6"
-polars = { version = "0.52.0", features = [
+polars = { version = "0.53.0", features = [
     "dtype-array",
     "dtype-decimal",
     "dtype-date",
@@ -115,12 +115,14 @@ polars = { version = "0.52.0", features = [
     "find_many",
     "asof_join",
 ] }
-polars-io = { version = "0.52.0" }
-polars-lazy = { version = "0.52.0" }
-polars-plan = { version = "0.52.0" }
-polars-parquet = { version = "0.52.0" }
-polars-ops = { version = "0.52.0", features = ["pivot", "to_dummies", "asof_join"] }
-arrow = { package = "polars-arrow", version = "0.52.0" }
+polars-io = { version = "0.53.0" }
+polars-lazy = { version = "0.53.0" }
+polars-plan = { version = "0.53.0" }
+polars-parquet = { version = "0.53.0" }
+polars-ops = { version = "0.53.0", features = ["pivot", "to_dummies", "asof_join"] }
+polars-utils = { version = "0.53.0" }
+polars-buffer = { version = "0.53.0" }
+arrow = { package = "polars-arrow", version = "0.53.0" }
 memmap2 = "0.5"
 arrow2 = { version = "0.18", features = ["io_ipc", "io_parquet", "io_parquet_compression"] }
 rand = { version = "0.8", features = ["std", "std_rng"] }
@@ -155,6 +157,10 @@ full = ["node", "dataset"]
 # Foundational dataset surface: enabled by default and kept as an explicit
 # feature so downstream bundles can refer to it declaratively.
 dataset = []
+
+# Example-facing ML guard. The ML modules are compiled as part of the crate today,
+# but examples use this feature cfg to switch between smoke text and full demos.
+ml = []
 
 # Experimental feature: enable GraphFrame (Polars-backed graph tables).
 # Keep this opt-in so the stable Collections/DataFrame/Dataset path does not

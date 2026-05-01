@@ -6,12 +6,13 @@ use std::path::Path;
 use std::num::NonZeroUsize;
 
 use polars::prelude::{
-    col, LazyFileListReader, LazyFrame, PlPath, PlSmallStr, PolarsError, Schema, SchemaRef,
+    col, LazyFileListReader, LazyFrame, PlSmallStr, PolarsError, Schema, SchemaRef,
 };
 use polars_io::json::{JsonFormat, JsonReader, JsonWriter};
 use polars_io::prelude::{SerReader, SerWriter};
 use polars_io::RowIndex;
 use polars_lazy::prelude::LazyJsonLineReader;
+use polars_utils::pl_path::PlRefPath;
 
 use crate::collections::dataframe::GDSDataFrame;
 
@@ -72,7 +73,7 @@ pub fn write_table(
 }
 
 /// Scan a JSON Lines file into a LazyFrame.
-pub fn scan_table(path: PlPath) -> Result<LazyFrame, PolarsError> {
+pub fn scan_table(path: PlRefPath) -> Result<LazyFrame, PolarsError> {
     scan_table_with_options(path, JsonScanConfig::default())
 }
 
@@ -111,7 +112,7 @@ impl Default for JsonScanConfig {
 
 /// Scan a JSON Lines file into a LazyFrame with scan options.
 pub fn scan_table_with_options(
-    path: PlPath,
+    path: PlRefPath,
     config: JsonScanConfig,
 ) -> Result<LazyFrame, PolarsError> {
     let infer_schema_length = config.infer_schema_length.and_then(NonZeroUsize::new);

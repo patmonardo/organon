@@ -264,6 +264,32 @@ macro_rules! fexpr {
     };
 }
 
+/// Semantic Dataset pipeline builder.
+///
+/// This is the compact authoring macro for Dataset-side program/data-op
+/// pipelines. It delegates to typed constructors so the macro stays a surface
+/// language, not a hidden runtime.
+///
+/// Supported forms:
+/// - `pipeline!()` creates an empty `DatasetPipeline`.
+/// - `pipeline!(text "article")` creates the canonical text lifecycle:
+///   Input -> Encode -> Transform -> Decode -> Output.
+/// - `pipeline!(ops [op1, op2, ...])` appends explicit `DatasetDataOpExpr`s.
+#[macro_export]
+macro_rules! pipeline {
+    () => {
+        $crate::collections::dataset::functions::pipeline()
+    };
+    (text $base:expr $(,)?) => {
+        $crate::collections::dataset::functions::text_lifecycle($base)
+    };
+    (ops [ $( $op:expr ),* $(,)? ] $(,)?) => {{
+        let mut __pipeline = $crate::collections::dataset::functions::pipeline();
+        $( __pipeline = __pipeline.with_op($op); )*
+        __pipeline
+    }};
+}
+
 /// Build a lazy Dataset Plan (DataOps graph) with a small, schemish pipe grammar.
 ///
 /// Grammar (minimal):

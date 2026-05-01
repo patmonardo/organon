@@ -9,7 +9,7 @@ fn main() {
     println!("== Dataset JSON walkthrough ==");
     println!("Even structured JSON can enter the Dataset world as parsed semantic form, not just as opaque bytes.");
     let text = r#"{"a":1,"b":["x",true]}"#;
-    let tokenizer = JsonTokenizer::default();
+    let tokenizer = JsonTokenizer;
     let tokens = tokenizer.tokenize(text);
     let parser = JsonParser::default();
     let forest = parser.parse_tokens(&tokens);

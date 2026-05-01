@@ -54,7 +54,7 @@ pub fn dataframe_from_columns(
         let series = Series::from_any_values(name.as_str().into(), &values, options.strict)?;
         columns.push(Column::from(series));
     }
-    let df = DataFrame::new(columns)?;
+    let df = DataFrame::new_infer_height(columns)?;
     finalize_dataframe(df, options)
 }
 
@@ -116,7 +116,7 @@ pub fn dataframe_from_columns_vec(
     columns: Vec<Column>,
     options: ConstructionOptions,
 ) -> Result<GDSDataFrame, PolarsError> {
-    let df = DataFrame::new(columns)?;
+    let df = DataFrame::new_infer_height(columns)?;
     finalize_dataframe(df, options)
 }
 
@@ -192,7 +192,7 @@ fn apply_schema(df: DataFrame, schema: &Schema, _strict: bool) -> PolarsResult<D
         };
         columns.push(Column::from(series));
     }
-    DataFrame::new(columns)
+    DataFrame::new_infer_height(columns)
 }
 
 fn apply_schema_overrides(
@@ -212,7 +212,7 @@ fn apply_schema_overrides(
         } else {
             series.cast(dtype)?
         };
-        df.replace(name.as_str(), casted)?;
+        df.replace(name.as_str(), casted.into())?;
     }
     Ok(df)
 }

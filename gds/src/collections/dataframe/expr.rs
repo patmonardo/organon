@@ -222,7 +222,7 @@ impl_series_expr_ns!(SeriesExprMeta, ExprMeta);
 impl_series_expr_ns!(SeriesExprExt, ExprExt);
 
 fn eval_series_expr(series: &Series, expr: Expr) -> PolarsResult<Series> {
-    let df = DataFrame::new(vec![Column::from(series.clone())])?;
+    let df = DataFrame::new_infer_height(vec![Column::from(series.clone())])?;
     let out = df.lazy().select([expr]).collect()?;
     out.select_at_idx(0)
         .map(|column| column.as_materialized_series().clone())

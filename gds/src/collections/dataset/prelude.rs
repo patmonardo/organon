@@ -31,6 +31,16 @@ pub use crate::collections::dataset::model::{
     ModelResult, ModelScore, ModelSpec, ModelState, ModelView, NoOpLanguageModel, NoOpParser,
     NoOpTagger,
 };
+pub use crate::collections::dataset::model_exec::{
+    execute_essence, execute_feature, execute_marked, ExecutedFeature, Execution, ExecutionAction,
+};
+pub use crate::collections::dataset::model_image::{
+    realize_from_essence, realize_image, ImageOptions,
+};
+pub use crate::collections::dataset::model_prep::{
+    prepare_model, FeatureMark, MarkRequirement, MarkedFeature, Modality, ModelEssence,
+    ModelPrepExt, PreparationError, PreparationReport, PreparationStep,
+};
 
 // Metrics
 pub use crate::collections::dataset::metrics::{BinaryMetrics, MetricError};
@@ -132,8 +142,13 @@ pub use crate::collections::dataset::{
     LogicalEngineIntent, ModelSpecRef, MvcEngineIntent, SdslSpecification,
 };
 
-// Utilities
-pub use crate::collections::dataset::functions::scan_text_dir;
+// Dataset function DSL
+pub use crate::collections::dataset::functions::{
+    dataop_decode, dataop_encode, dataop_input, dataop_output, dataop_transform, io_path, io_url,
+    metadata, pipeline, project_corpus, project_graph, project_text, registry, registry_versioned,
+    report_profile, report_summary, scan_text_dir, text_decode, text_encode, text_input,
+    text_lifecycle, text_output, text_transform,
+};
 
 // Registry types
 pub use crate::collections::dataset::registry::{

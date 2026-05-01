@@ -70,7 +70,7 @@ impl TableBuilder {
     );
 
     pub fn build(self) -> Result<GDSDataFrame, polars::error::PolarsError> {
-        let df = DataFrame::new(self.columns)?;
+        let df = DataFrame::new_infer_height(self.columns)?;
         Ok(GDSDataFrame::from(df))
     }
 }
@@ -91,6 +91,6 @@ pub fn scale_f64_column(
         .collect::<Vec<Option<f64>>>();
     let mut new_series = Series::new(column_name.into(), scaled);
     new_series.rename(column_name.into());
-    df.replace(column_name, new_series)?;
+    df.replace(column_name, new_series.into())?;
     Ok(())
 }

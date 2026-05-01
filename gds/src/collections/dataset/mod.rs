@@ -185,6 +185,13 @@ pub use expressions::projection::{DatasetProjectionExpr, DatasetProjectionKind};
 pub use expressions::registry::DatasetRegistryExpr;
 pub use expressions::reporting::{DatasetReportExpr, DatasetReportKind};
 
+pub use functions::{
+    dataop_decode, dataop_encode, dataop_input, dataop_output, dataop_transform, io_path, io_url,
+    metadata, pipeline, project_corpus, project_graph, project_text, registry, registry_versioned,
+    report_profile, report_summary, scan_text_dir, text_decode, text_encode, text_input,
+    text_lifecycle, text_output, text_transform,
+};
+
 pub use metrics::{BinaryMetrics, MetricError};
 
 // -----------------------------------------------------------------------------

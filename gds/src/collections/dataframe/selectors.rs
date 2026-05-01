@@ -356,7 +356,7 @@ pub fn last() -> Selector {
 pub fn expand_selector(df: &DataFrame, selector: &Selector) -> Vec<String> {
     let total = df.width();
     let by_index_signed = resolve_signed_indices(selector, total);
-    df.get_columns()
+    df.columns()
         .iter()
         .enumerate()
         .filter_map(|(index, series)| {

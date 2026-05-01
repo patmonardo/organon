@@ -12,7 +12,7 @@ use polars::prelude::{
 use std::collections::{HashMap, HashSet};
 
 use polars_ops::frame::join::{AsofJoin, AsofJoinBy, AsofStrategy};
-use polars_ops::frame::pivot::UnpivotDF;
+use polars_ops::frame::unpivot::UnpivotDF;
 use polars_ops::frame::DataFrameOps;
 use polars_plan::dsl::{ExtraColumnsPolicy, MatchToSchemaPerColumn};
 
@@ -141,7 +141,7 @@ impl GDSDataFrame {
 
     pub fn n_chunks(&self) -> usize {
         self.df
-            .get_columns()
+            .columns()
             .iter()
             .map(|column| column.n_chunks())
             .max()
@@ -165,7 +165,7 @@ impl GDSDataFrame {
             let series = Series::full_null(field.name().clone(), n, field.dtype());
             columns.push(Column::from(series));
         }
-        Ok(Self::new(DataFrame::new(columns)?))
+        Ok(Self::new(DataFrame::new_infer_height(columns)?))
     }
 
     /// Get the first n rows.
@@ -183,7 +183,7 @@ impl GDSDataFrame {
     /// Get the DataFrame as a list of Series.
     pub fn get_columns(&self) -> Result<Vec<Series>, PolarsError> {
         self.df
-            .get_columns()
+            .columns()
             .iter()
             .map(|column| {
                 column
@@ -206,7 +206,7 @@ impl GDSDataFrame {
     /// Find the index of a column by name.
     pub fn get_column_index(&self, name: &str) -> Result<usize, PolarsError> {
         self.df
-            .get_column_names_str()
+            .get_column_names()
             .iter()
             .position(|col| *col == name)
             .ok_or_else(|| PolarsError::ColumnNotFound(ErrString::from(name.to_string())))
@@ -241,14 +241,14 @@ impl GDSDataFrame {
         }
 
         let mut columns = Vec::with_capacity(self.df.width());
-        for column in self.df.get_columns() {
+        for column in self.df.columns() {
             let next = match schema.get(column.name().as_str()) {
                 Some(dtype) => column.cast(dtype)?,
                 None => column.clone(),
             };
             columns.push(next);
         }
-        Ok(Self::new(DataFrame::new(columns)?))
+        Ok(Self::new(DataFrame::new_infer_height(columns)?))
     }
 
     /// Rechunk columns into a single contiguous chunk.
@@ -352,9 +352,9 @@ impl GDSDataFrame {
             Some(names) => names.iter().map(|name| col(*name)).collect(),
             None => self
                 .df
-                .get_column_names_str()
+                .get_column_names()
                 .iter()
-                .map(|name| col(*name))
+                .map(|name| col(name.as_str()))
                 .collect(),
         };
 
@@ -475,7 +475,13 @@ impl GDSDataFrame {
 
     /// Explode the DataFrame to long format by exploding the given columns.
     pub fn explode(&self, columns: &[&str]) -> Result<Self, PolarsError> {
-        let df = self.df.explode(columns.iter().copied())?;
+        let df = self.df.explode(
+            columns.iter().copied(),
+            polars::prelude::ExplodeOptions {
+                empty_as_null: true,
+                keep_nulls: true,
+            },
+        )?;
         Ok(Self::new(df))
     }
 
@@ -500,8 +506,12 @@ impl GDSDataFrame {
         let args = UnpivotArgsIR {
             on: on.iter().map(|name| PlSmallStr::from(*name)).collect(),
             index: index.iter().map(|name| PlSmallStr::from(*name)).collect(),
-            variable_name: variable_name.map(PlSmallStr::from),
-            value_name: value_name.map(PlSmallStr::from),
+            variable_name: variable_name
+                .map(PlSmallStr::from)
+                .unwrap_or_else(|| PlSmallStr::from_static("variable")),
+            value_name: value_name
+                .map(PlSmallStr::from)
+                .unwrap_or_else(|| PlSmallStr::from_static("value")),
         };
         let df = self.df.unpivot2(args)?;
         Ok(Self::new(df))
@@ -1053,9 +1063,9 @@ impl GDSDataFrame {
     pub fn max_horizontal(&self) -> Result<Series, PolarsError> {
         let exprs: Vec<Expr> = self
             .df
-            .get_column_names_str()
+            .get_column_names()
             .iter()
-            .map(|name| col(*name))
+            .map(|name| col(name.as_str()))
             .collect();
         let expr = expr_max_horizontal(&exprs)?;
         let df = self
@@ -1075,9 +1085,9 @@ impl GDSDataFrame {
     pub fn min_horizontal(&self) -> Result<Series, PolarsError> {
         let exprs: Vec<Expr> = self
             .df
-            .get_column_names_str()
+            .get_column_names()
             .iter()
-            .map(|name| col(*name))
+            .map(|name| col(name.as_str()))
             .collect();
         let expr = expr_min_horizontal(&exprs)?;
         let df = self
@@ -1097,9 +1107,9 @@ impl GDSDataFrame {
     pub fn sum_horizontal(&self, ignore_nulls: bool) -> Result<Series, PolarsError> {
         let exprs: Vec<Expr> = self
             .df
-            .get_column_names_str()
+            .get_column_names()
             .iter()
-            .map(|name| col(*name))
+            .map(|name| col(name.as_str()))
             .collect();
         let expr = expr_sum_horizontal(&exprs, ignore_nulls)?;
         let df = self
@@ -1119,9 +1129,9 @@ impl GDSDataFrame {
     pub fn mean_horizontal(&self, ignore_nulls: bool) -> Result<Series, PolarsError> {
         let exprs: Vec<Expr> = self
             .df
-            .get_column_names_str()
+            .get_column_names()
             .iter()
-            .map(|name| col(*name))
+            .map(|name| col(name.as_str()))
             .collect();
         let expr = expr_mean_horizontal(&exprs, ignore_nulls)?;
         let df = self
@@ -1163,11 +1173,11 @@ impl GDSDataFrame {
     pub fn to_struct(&self, name: Option<&str>) -> Result<Series, PolarsError> {
         let exprs: Vec<Expr> = self
             .df
-            .get_column_names_str()
+            .get_column_names()
             .iter()
-            .map(|column_name| col(*column_name))
+            .map(|column_name| col(column_name.as_str()))
             .collect();
-        let expr = polars_plan::dsl::functions::as_struct(exprs).alias(name.unwrap_or("struct"));
+        let expr = polars::lazy::dsl::as_struct(exprs).alias(name.unwrap_or("struct"));
         let df = self.df.clone().lazy().select([expr]).collect()?;
         let column = df
             .select_at_idx(0)

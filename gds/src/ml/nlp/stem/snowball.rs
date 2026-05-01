@@ -62,11 +62,7 @@ impl SnowballStemmer {
 
 impl Stemmer for SnowballStemmer {
     fn stem_token(&self, token: &Token) -> Stem {
-        Stem::new(
-            self.stem_word(token.text()),
-            token.span(),
-            StemKind::Stem,
-        )
+        Stem::new(self.stem_word(token.text()), token.span(), StemKind::Stem)
     }
 }
 

@@ -6,14 +6,17 @@ use std::sync::{Arc, Mutex};
 
 use polars::prelude::{
     col, CsvWriterOptions, DataFrame, DataType, DynamicGroupOptions, Expr, IdxSize,
-    InterpolationMethod, IntoLazy, IpcWriterOptions, JoinArgs, JsonWriterOptions, LazyFrame,
-    ParquetWriteOptions, PlSmallStr, PolarsResult, QuantileMethod, RollingGroupOptions, Schema,
-    SchemaRef, Selector, SortMultipleOptions, UniqueKeepStrategy,
+    InterpolationMethod, IntoLazy, IpcWriterOptions, JoinArgs, LazyFrame, ParquetWriteOptions,
+    PlSmallStr, PolarsResult, QuantileMethod, RollingGroupOptions, Schema, SchemaRef, Selector,
+    SortMultipleOptions, UniqueKeepStrategy,
 };
+use polars_io::cloud::CloudOptions;
+use polars_io::ndjson::NDJsonWriterOptions;
 use polars_ops::frame::join::AsOfOptions;
-use polars_ops::frame::pivot::UnpivotDF;
+use polars_ops::frame::unpivot::UnpivotDF;
 use polars_plan::dsl::{
-    ExtraColumnsPolicy, MatchToSchemaPerColumn, SinkOptions, SinkTarget, SpecialEq,
+    ExtraColumnsPolicy, FileWriteFormat, MatchToSchemaPerColumn, SinkDestination, SinkTarget,
+    SpecialEq, UnifiedSinkArgs,
 };
 use polars_plan::frame::OptFlags;
 use polars_plan::plans::{HintIR, Sorted as SortedHint};
@@ -37,6 +40,13 @@ fn selector_from_names(names: &[&str], strict: bool) -> Selector {
     Selector::ByName {
         names: Arc::from(names),
         strict,
+    }
+}
+
+fn unified_sink_args(cloud_options: Option<CloudOptions>) -> UnifiedSinkArgs {
+    UnifiedSinkArgs {
+        cloud_options: cloud_options.map(Arc::new),
+        ..Default::default()
     }
 }
 
@@ -538,7 +548,13 @@ impl GDSLazyFrame {
 
     pub fn explode(self, columns: &[&str], strict: bool) -> Self {
         Self {
-            lf: self.lf.explode(selector_from_names(columns, strict)),
+            lf: self.lf.explode(
+                selector_from_names(columns, strict),
+                polars::prelude::ExplodeOptions {
+                    empty_as_null: true,
+                    keep_nulls: true,
+                },
+            ),
         }
     }
 
@@ -821,8 +837,8 @@ impl GDSLazyFrame {
             .zip(nulls_last)
             .map(|((column, descending), nulls_last)| SortedHint {
                 column: PlSmallStr::from(column),
-                descending,
-                nulls_last,
+                descending: Some(descending),
+                nulls_last: Some(nulls_last),
             })
             .collect::<Vec<_>>();
 
@@ -868,8 +884,12 @@ impl GDSLazyFrame {
         let args = polars::prelude::UnpivotArgsIR {
             on: on.iter().map(|name| PlSmallStr::from(*name)).collect(),
             index: index.iter().map(|name| PlSmallStr::from(*name)).collect(),
-            variable_name: variable_name.map(PlSmallStr::from),
-            value_name: value_name.map(PlSmallStr::from),
+            variable_name: variable_name
+                .map(PlSmallStr::from)
+                .unwrap_or_else(|| PlSmallStr::from_static("variable")),
+            value_name: value_name
+                .map(PlSmallStr::from)
+                .unwrap_or_else(|| PlSmallStr::from_static("value")),
         };
         let df = self.lf.collect()?;
         let out = df.unpivot2(args)?;
@@ -906,13 +926,14 @@ impl GDSLazyFrame {
         self,
         target: SinkTarget,
         options: ParquetWriteOptions,
-        cloud_options: Option<polars_io::cloud::CloudOptions>,
-        sink_options: SinkOptions,
+        cloud_options: Option<CloudOptions>,
     ) -> PolarsResult<Self> {
         Ok(Self {
-            lf: self
-                .lf
-                .sink_parquet(target, options, cloud_options, sink_options)?,
+            lf: self.lf.sink(
+                SinkDestination::File { target },
+                FileWriteFormat::Parquet(Arc::new(options)),
+                unified_sink_args(cloud_options),
+            )?,
         })
     }
 
@@ -920,13 +941,14 @@ impl GDSLazyFrame {
         self,
         target: SinkTarget,
         options: IpcWriterOptions,
-        cloud_options: Option<polars_io::cloud::CloudOptions>,
-        sink_options: SinkOptions,
+        cloud_options: Option<CloudOptions>,
     ) -> PolarsResult<Self> {
         Ok(Self {
-            lf: self
-                .lf
-                .sink_ipc(target, options, cloud_options, sink_options)?,
+            lf: self.lf.sink(
+                SinkDestination::File { target },
+                FileWriteFormat::Ipc(options),
+                unified_sink_args(cloud_options),
+            )?,
         })
     }
 
@@ -934,27 +956,29 @@ impl GDSLazyFrame {
         self,
         target: SinkTarget,
         options: CsvWriterOptions,
-        cloud_options: Option<polars_io::cloud::CloudOptions>,
-        sink_options: SinkOptions,
+        cloud_options: Option<CloudOptions>,
     ) -> PolarsResult<Self> {
         Ok(Self {
-            lf: self
-                .lf
-                .sink_csv(target, options, cloud_options, sink_options)?,
+            lf: self.lf.sink(
+                SinkDestination::File { target },
+                FileWriteFormat::Csv(options),
+                unified_sink_args(cloud_options),
+            )?,
         })
     }
 
     pub fn sink_ndjson(
         self,
         target: SinkTarget,
-        options: JsonWriterOptions,
-        cloud_options: Option<polars_io::cloud::CloudOptions>,
-        sink_options: SinkOptions,
+        options: NDJsonWriterOptions,
+        cloud_options: Option<CloudOptions>,
     ) -> PolarsResult<Self> {
         Ok(Self {
-            lf: self
-                .lf
-                .sink_json(target, options, cloud_options, sink_options)?,
+            lf: self.lf.sink(
+                SinkDestination::File { target },
+                FileWriteFormat::NDJson(options),
+                unified_sink_args(cloud_options),
+            )?,
         })
     }
 
@@ -1133,7 +1157,7 @@ mod tests {
 
     #[test]
     fn lazyframe_select_parity() {
-        let df = DataFrame::new(vec![
+        let df = DataFrame::new_infer_height(vec![
             Column::from(Series::new("a".into(), &[1i64, 2, 3])),
             Column::from(Series::new("b".into(), &[10i64, 20, 30])),
         ])

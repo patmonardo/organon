@@ -48,6 +48,7 @@ pub fn polars_type_to_constructor<'a>(dtype: &'a DataType) -> SeriesConstructor<
         | DataType::Int32
         | DataType::Int64
         | DataType::Int128
+        | DataType::Float16
         | DataType::Float32
         | DataType::Float64
         | DataType::Decimal(_, _)

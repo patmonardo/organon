@@ -48,7 +48,7 @@ pub fn slice_dataframe(df: &DataFrame, spec: SliceSpec) -> PolarsResult<DataFram
 
 /// Apply a python-like slice to a Series.
 pub fn slice_series(series: &Series, spec: SliceSpec) -> PolarsResult<Series> {
-    let df = DataFrame::new(vec![Column::from(series.clone())])?;
+    let df = DataFrame::new_infer_height(vec![Column::from(series.clone())])?;
     let sliced = slice_dataframe(&df, spec)?;
     let column = sliced
         .column(series.name())

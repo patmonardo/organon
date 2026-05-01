@@ -189,12 +189,12 @@ pub fn align_dataframe_to_schema(
         for (name, _) in schema.clone().into_iter() {
             known.insert(name);
         }
-        for column in df.get_columns() {
+        for column in df.columns() {
             if !known.contains(column.name()) {
                 columns.push(column.clone());
             }
         }
     }
 
-    DataFrame::new(columns)
+    DataFrame::new_infer_height(columns)
 }

@@ -168,7 +168,7 @@ mod tests {
 
         // Seed a tiny parquet file so datasetLoad has something to read.
         use polars::prelude::{DataFrame, NamedFrom, ParquetWriter, Series};
-        let mut df = DataFrame::new(vec![
+        let mut df = DataFrame::new_infer_height(vec![
             Series::new("id".into(), &[1_i64, 2, 3]).into(),
             Series::new("name".into(), &["a", "b", "c"]).into(),
         ])
@@ -310,7 +310,7 @@ mod tests {
         let root = tempdir();
 
         use polars::prelude::{DataFrame, NamedFrom, ParquetWriter, Series};
-        let mut df = DataFrame::new(vec![
+        let mut df = DataFrame::new_infer_height(vec![
             Series::new("id".into(), &[1_i64, 2, 3, 4, 5]).into(),
             Series::new("name".into(), &["a", "b", "c", "d", "e"]).into(),
         ])

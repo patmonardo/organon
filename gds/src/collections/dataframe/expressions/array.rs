@@ -121,7 +121,10 @@ impl ExprArray {
     }
 
     pub fn explode(self) -> Expr {
-        self.expr.arr().explode()
+        self.expr.arr().explode(polars::prelude::ExplodeOptions {
+            empty_as_null: true,
+            keep_nulls: true,
+        })
     }
 
     pub fn contains<I: Literal>(self, item: I, nulls_equal: bool) -> Expr {

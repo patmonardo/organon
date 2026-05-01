@@ -120,7 +120,7 @@ pub fn get_df_item_by_key(df: &DataFrame, key: DataFrameKey) -> PolarsResult<Dat
                 .into_iter()
                 .map(|index| column_at_index(df, index))
                 .collect::<PolarsResult<Vec<_>>>()?;
-            Ok(DataFrameGetItem::Frame(DataFrame::new(
+            Ok(DataFrameGetItem::Frame(DataFrame::new_infer_height(
                 columns.into_iter().map(Column::from).collect(),
             )?))
         }
@@ -136,12 +136,14 @@ pub fn get_df_item_by_key(df: &DataFrame, key: DataFrameKey) -> PolarsResult<Dat
                 ));
             }
             let mut columns = Vec::new();
-            for (idx, column) in df.get_columns().iter().enumerate() {
+            for (idx, column) in df.columns().iter().enumerate() {
                 if mask[idx] {
                     columns.push(column.clone());
                 }
             }
-            Ok(DataFrameGetItem::Frame(DataFrame::new(columns)?))
+            Ok(DataFrameGetItem::Frame(DataFrame::new_infer_height(
+                columns,
+            )?))
         }
         DataFrameKey::Row(selector) => {
             let frame = select_rows(df, selector)?;
@@ -187,7 +189,7 @@ fn select_columns(df: &DataFrame, selector: ColSelector) -> PolarsResult<ColumnS
                 .into_iter()
                 .map(|index| column_at_index(df, index))
                 .collect::<PolarsResult<Vec<_>>>()?;
-            Ok(ColumnSelection::Frame(DataFrame::new(
+            Ok(ColumnSelection::Frame(DataFrame::new_infer_height(
                 columns.into_iter().map(Column::from).collect(),
             )?))
         }
@@ -203,12 +205,14 @@ fn select_columns(df: &DataFrame, selector: ColSelector) -> PolarsResult<ColumnS
                 ));
             }
             let mut columns = Vec::new();
-            for (idx, column) in df.get_columns().iter().enumerate() {
+            for (idx, column) in df.columns().iter().enumerate() {
                 if mask[idx] {
                     columns.push(column.clone());
                 }
             }
-            Ok(ColumnSelection::Frame(DataFrame::new(columns)?))
+            Ok(ColumnSelection::Frame(DataFrame::new_infer_height(
+                columns,
+            )?))
         }
         ColSelector::Slice(spec) => {
             let indices = slice_indices(df.width(), spec)?;
@@ -216,7 +220,7 @@ fn select_columns(df: &DataFrame, selector: ColSelector) -> PolarsResult<ColumnS
                 .into_iter()
                 .map(|index| column_at_index(df, index))
                 .collect::<PolarsResult<Vec<_>>>()?;
-            Ok(ColumnSelection::Frame(DataFrame::new(
+            Ok(ColumnSelection::Frame(DataFrame::new_infer_height(
                 columns.into_iter().map(Column::from).collect(),
             )?))
         }
@@ -262,7 +266,7 @@ fn select_series(series: Series, selector: RowSelector) -> PolarsResult<SeriesGe
 }
 
 fn column_at_index(df: &DataFrame, index: usize) -> PolarsResult<Series> {
-    let column = df.get_columns().get(index).ok_or_else(|| {
+    let column = df.columns().get(index).ok_or_else(|| {
         PolarsError::ComputeError(format!("column index {index} is out of bounds").into())
     })?;
     column

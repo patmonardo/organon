@@ -47,7 +47,7 @@ impl InterchangeDataFrame for PolarsInterchangeDataFrame {
     fn column_names(&self) -> Result<Vec<String>, InterchangeError> {
         Ok(self
             .df
-            .get_column_names_str()
+            .get_column_names()
             .iter()
             .map(|name| name.to_string())
             .collect())
@@ -80,7 +80,7 @@ impl InterchangeDataFrame for PolarsInterchangeDataFrame {
     fn get_columns(&self) -> Result<Vec<Box<dyn Column>>, InterchangeError> {
         Ok(self
             .df
-            .get_columns()
+            .columns()
             .iter()
             .filter_map(|column| column.as_series())
             .map(|series| {
@@ -96,7 +96,7 @@ impl InterchangeDataFrame for PolarsInterchangeDataFrame {
         &self,
         indices: &[usize],
     ) -> Result<Box<dyn InterchangeDataFrame>, InterchangeError> {
-        let names = self.df.get_column_names_str();
+        let names = self.df.get_column_names();
         let mut selected = Vec::with_capacity(indices.len());
         for &index in indices {
             let name = names.get(index).ok_or_else(|| {

@@ -7,10 +7,10 @@ use arrow::array::{
     ListArray, MapArray, NullArray, PrimitiveArray, StructArray, UnionArray, Utf8Array,
 };
 use arrow::bitmap::Bitmap;
-use arrow::buffer::Buffer as ArrowBuffer;
 use arrow::datatypes::{ArrowDataType, Field};
 use arrow::offset::OffsetsBuffer;
 use polars::prelude::{DataFrame, PlSmallStr, Series};
+use polars_buffer::Buffer as ArrowBuffer;
 
 use crate::collections::dataframe::interchange::protocol::{
     Column, ColumnBuffers, CopyNotAllowedError, DataFrame as InterchangeDataFrame, Dtype,
@@ -58,8 +58,8 @@ fn df_to_polars(
         columns.push(series);
     }
 
-    let columns = columns.into_iter().map(Into::into).collect();
-    DataFrame::new(columns).map_err(InterchangeError::Polars)
+    let columns: Vec<polars::prelude::Column> = columns.into_iter().map(Into::into).collect();
+    DataFrame::new_infer_height(columns).map_err(InterchangeError::Polars)
 }
 
 fn column_to_series(column: &dyn Column, allow_copy: bool) -> Result<Series, InterchangeError> {

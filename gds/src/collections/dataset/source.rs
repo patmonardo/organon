@@ -144,7 +144,7 @@ impl SourceFrame {
             mimes.push(row.media_type.0);
             lens.push(row.len);
         }
-        let df = DataFrame::new(vec![
+        let df = DataFrame::new_infer_height(vec![
             Series::new(columns::URI.into(), uris).into(),
             Series::new(columns::HASH.into(), hashes).into(),
             Series::new(columns::MEDIA_TYPE.into(), mimes).into(),
@@ -202,7 +202,7 @@ mod tests {
     #[test]
     fn source_frame_rejects_missing_columns() {
         let df = GDSDataFrame::new(
-            DataFrame::new(vec![Series::new("uri".into(), vec!["x"]).into()]).unwrap(),
+            DataFrame::new_infer_height(vec![Series::new("uri".into(), vec!["x"]).into()]).unwrap(),
         );
         let err = SourceFrame::from_dataframe(df).unwrap_err();
         assert!(matches!(err, PolarsError::ColumnNotFound(_)));

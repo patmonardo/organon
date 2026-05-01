@@ -5,9 +5,7 @@ use std::path::{Path, PathBuf};
 
 use arrow::datatypes::ArrowSchema;
 use polars::prelude::PlSmallStr;
-use polars::prelude::{
-    col, LazyFrame, ParquetWriter, PlPath, PolarsError, ScanArgsParquet, SchemaRef,
-};
+use polars::prelude::{col, LazyFrame, ParquetWriter, PolarsError, ScanArgsParquet, SchemaRef};
 use polars_io::parquet::read::ParallelStrategy;
 use polars_io::{HiveOptions, RowIndex};
 use polars_parquet::arrow::read::schema::{
@@ -17,6 +15,7 @@ use polars_parquet::arrow::read::{read_metadata as read_parquet_metadata, FileMe
 use polars_parquet::parquet::compression::Compression;
 use polars_parquet::parquet::schema::types::PhysicalType;
 use polars_parquet::parquet::statistics::Statistics;
+use polars_utils::pl_path::PlRefPath;
 
 use crate::collections::dataframe::GDSDataFrame;
 use crate::collections::io::partition::{partition_dataframe_for_write, PartitionByConfig};
@@ -394,7 +393,7 @@ pub fn read_table_with_options(
     path: &Path,
     config: ParquetScanConfig,
 ) -> Result<GDSDataFrame, PolarsError> {
-    let path = PlPath::new(path.to_string_lossy().as_ref());
+    let path = PlRefPath::new(path.to_string_lossy());
     let df = scan_table_with_options(path, config)?.collect()?;
     Ok(GDSDataFrame::from(df))
 }
@@ -424,13 +423,13 @@ pub fn write_table_partitioned(
 }
 
 /// Scan a Parquet file into a LazyFrame.
-pub fn scan_table(path: PlPath) -> Result<LazyFrame, PolarsError> {
+pub fn scan_table(path: PlRefPath) -> Result<LazyFrame, PolarsError> {
     scan_table_with_options(path, ParquetScanConfig::default())
 }
 
 /// Scan a Parquet file into a LazyFrame with scan options.
 pub fn scan_table_with_options(
-    path: PlPath,
+    path: PlRefPath,
     config: ParquetScanConfig,
 ) -> Result<LazyFrame, PolarsError> {
     let mut scan_args = config.scan_args;

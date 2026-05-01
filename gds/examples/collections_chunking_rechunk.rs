@@ -35,7 +35,7 @@ fn main() -> Result<(), GDSFrameError> {
 fn print_chunk_counts(label: &str, table: &GDSDataFrame) {
     let counts: Vec<String> = table
         .dataframe()
-        .get_columns()
+        .columns()
         .iter()
         .map(|col| format!("{}: {}", col.name(), col.n_chunks()))
         .collect();

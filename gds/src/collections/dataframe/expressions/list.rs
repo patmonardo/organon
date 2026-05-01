@@ -289,7 +289,10 @@ impl ExprList {
     }
 
     pub fn explode(self) -> Expr {
-        self.expr.explode()
+        self.expr.explode(polars::prelude::ExplodeOptions {
+            empty_as_null: true,
+            keep_nulls: true,
+        })
     }
 
     pub fn eval(self, expr: Expr) -> Expr {

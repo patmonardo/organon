@@ -160,7 +160,7 @@ impl Column for PolarsInterchangeColumn {
     ) -> Result<crate::collections::dataframe::interchange::protocol::Dtype, InterchangeError> {
         let series = self.ensure_contiguous()?;
         let array = series.to_arrow(0, CompatLevel::newest());
-        let logical = array.dtype().to_logical_type();
+        let logical = array.dtype().clone();
 
         if matches!(logical, ArrowDataType::Union(_) | ArrowDataType::Map(_, _)) {
             return arrow_datatype_to_dtype(&logical);
@@ -716,7 +716,7 @@ fn union_buffers(
     };
 
     let mut names = Vec::new();
-    if let ArrowDataType::Union(union_type) = array.dtype().to_logical_type() {
+    if let ArrowDataType::Union(union_type) = array.dtype() {
         names = union_type
             .fields
             .iter()

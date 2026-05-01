@@ -115,7 +115,8 @@ impl DocumentFrame {
         I: IntoIterator<Item = ContentHash>,
     {
         let strs: Vec<String> = hashes.into_iter().map(|h| h.0).collect();
-        let df = DataFrame::new(vec![Series::new(columns::SOURCE.into(), strs).into()])?;
+        let df =
+            DataFrame::new_infer_height(vec![Series::new(columns::SOURCE.into(), strs).into()])?;
         Ok(Self {
             df: GDSDataFrame::new(df),
         })
@@ -156,7 +157,8 @@ mod tests {
     #[test]
     fn document_frame_requires_source_column() {
         let df = GDSDataFrame::new(
-            DataFrame::new(vec![Series::new("not_source".into(), vec!["x"]).into()]).unwrap(),
+            DataFrame::new_infer_height(vec![Series::new("not_source".into(), vec!["x"]).into()])
+                .unwrap(),
         );
         let err = DocumentFrame::from_dataframe(df).unwrap_err();
         assert!(matches!(err, PolarsError::ColumnNotFound(_)));

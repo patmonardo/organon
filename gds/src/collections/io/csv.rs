@@ -4,11 +4,12 @@ use std::fs::File;
 use std::path::Path;
 
 use polars::prelude::{
-    col, CsvWriter, LazyCsvReader, LazyFileListReader, LazyFrame, PlPath, PlSmallStr, PolarsError,
+    col, CsvWriter, LazyCsvReader, LazyFileListReader, LazyFrame, PlSmallStr, PolarsError,
     SchemaRef, SerWriter,
 };
 use polars_io::csv::read::{CsvEncoding, NullValues};
 use polars_io::RowIndex;
+use polars_utils::pl_path::PlRefPath;
 
 use crate::collections::dataframe::GDSDataFrame;
 use crate::collections::io::partition::{partition_dataframe_for_write, PartitionByConfig};
@@ -99,7 +100,7 @@ pub fn read_table_with_options(
     path: &Path,
     config: CsvScanConfig,
 ) -> Result<GDSDataFrame, PolarsError> {
-    let path = PlPath::new(path.to_string_lossy().as_ref());
+    let path = PlRefPath::new(path.to_string_lossy());
     let df = scan_table_with_options(path, config)?.collect()?;
     Ok(GDSDataFrame::from(df))
 }
@@ -138,13 +139,13 @@ pub fn write_table_partitioned(
 }
 
 /// Scan a CSV file into a LazyFrame.
-pub fn scan_table(path: PlPath) -> Result<LazyFrame, PolarsError> {
+pub fn scan_table(path: PlRefPath) -> Result<LazyFrame, PolarsError> {
     scan_table_with_options(path, CsvScanConfig::default())
 }
 
 /// Scan a CSV file into a LazyFrame with scan options.
 pub fn scan_table_with_options(
-    path: PlPath,
+    path: PlRefPath,
     config: CsvScanConfig,
 ) -> Result<LazyFrame, PolarsError> {
     let row_index = config.row_index_name.as_ref().map(|name| RowIndex {

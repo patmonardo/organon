@@ -418,7 +418,7 @@ pub fn dtype_to_arrow_datatype(dtype: &Dtype) -> Result<ArrowDataType, Interchan
 }
 
 pub fn arrow_datatype_to_dtype(dtype: &ArrowDataType) -> Result<Dtype, InterchangeError> {
-    let dtype = match dtype.to_logical_type() {
+    let dtype = match dtype {
         ArrowDataType::Int8 => Dtype {
             kind: DtypeKind::Int,
             bit_width: 8,
@@ -558,7 +558,7 @@ pub fn arrow_datatype_to_dtype(dtype: &ArrowDataType) -> Result<Dtype, Interchan
         ArrowDataType::Time64(unit) => Dtype {
             kind: DtypeKind::Datetime,
             bit_width: 64,
-            format: format!("tt{}", arrow_time_unit_code(*unit)),
+            format: format!("tt{}", arrow_time_unit_code(unit.clone())),
             endianness: NE,
             children: Vec::new(),
             child_names: Vec::new(),
@@ -566,7 +566,7 @@ pub fn arrow_datatype_to_dtype(dtype: &ArrowDataType) -> Result<Dtype, Interchan
         ArrowDataType::Timestamp(unit, tz) => Dtype {
             kind: DtypeKind::Datetime,
             bit_width: 64,
-            format: datetime_format_from_arrow(*unit, tz.as_deref()),
+            format: datetime_format_from_arrow(unit.clone(), tz.as_deref()),
             endianness: NE,
             children: Vec::new(),
             child_names: Vec::new(),
@@ -574,7 +574,7 @@ pub fn arrow_datatype_to_dtype(dtype: &ArrowDataType) -> Result<Dtype, Interchan
         ArrowDataType::Duration(unit) => Dtype {
             kind: DtypeKind::Datetime,
             bit_width: 64,
-            format: duration_format_from_arrow(*unit),
+            format: duration_format_from_arrow(unit.clone()),
             endianness: NE,
             children: Vec::new(),
             child_names: Vec::new(),
@@ -621,7 +621,7 @@ pub fn arrow_datatype_to_dtype(dtype: &ArrowDataType) -> Result<Dtype, Interchan
         }
         ArrowDataType::Map(field, _is_sorted) => {
             let entry = field.dtype();
-            let (key, value) = if let ArrowDataType::Struct(entries) = entry.to_logical_type() {
+            let (key, value) = if let ArrowDataType::Struct(entries) = entry {
                 let key = entries
                     .get(0)
                     .ok_or_else(|| {

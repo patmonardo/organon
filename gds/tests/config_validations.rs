@@ -393,12 +393,16 @@ fn graphsage_train_config_valid_and_invalid() {
 fn fastrp_config_invalid_embedding_and_iteration_weights() {
     use gds::algo::embeddings::fastrp::FastRPConfig;
 
-    let mut cfg = FastRPConfig::default();
-    cfg.embedding_dimension = 0;
+    let cfg = FastRPConfig {
+        embedding_dimension: 0,
+        ..Default::default()
+    };
     assert!(ValidatedConfig::validate(&cfg).is_err());
 
-    let mut cfg2 = FastRPConfig::default();
-    cfg2.iteration_weights = vec![];
+    let cfg2 = FastRPConfig {
+        iteration_weights: vec![],
+        ..Default::default()
+    };
     assert!(ValidatedConfig::validate(&cfg2).is_err());
 }
 
@@ -428,12 +432,16 @@ fn hashgnn_config_valid_and_invalid() {
 fn gat_config_invalid_dropout_alpha() {
     use gds::algo::embeddings::gat::GATConfig;
 
-    let mut cfg = GATConfig::default();
-    cfg.dropout = -0.1;
+    let cfg = GATConfig {
+        dropout: -0.1,
+        ..Default::default()
+    };
     assert!(ValidatedConfig::validate(&cfg).is_err());
 
-    let mut cfg2 = GATConfig::default();
-    cfg2.alpha = 1.2; // >1.0
+    let cfg2 = GATConfig {
+        alpha: 1.2, // >1.0
+        ..Default::default()
+    };
     assert!(ValidatedConfig::validate(&cfg2).is_err());
 }
 

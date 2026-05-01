@@ -15,7 +15,8 @@ use crate::collections::catalog::unity::{ColumnInfo, DataSourceFormat, TableInfo
 use crate::collections::dataframe::Selector;
 use crate::collections::io::{csv, ipc, json, parquet};
 use crate::collections::GDSDataFrame;
-use polars::prelude::{col, DataFrame, LazyFrame, PlPath};
+use polars::prelude::{col, DataFrame, LazyFrame};
+use polars_utils::pl_path::PlRefPath;
 
 pub const CATALOG_MANIFEST_FILE: &str = "catalog.json";
 
@@ -244,7 +245,7 @@ impl CollectionsCatalogDisk {
     ) -> Result<LazyFrame, CatalogError> {
         let data_path = self.data_path(entry);
         let path_str = data_path.to_string_lossy();
-        let path = PlPath::new(path_str.as_ref());
+        let path = PlRefPath::new(path_str);
         match entry.io_policy.format {
             CollectionsIoFormat::Auto | CollectionsIoFormat::Parquet => {
                 parquet::scan_table(path).map_err(|e| CatalogError::Polars(e.to_string()))

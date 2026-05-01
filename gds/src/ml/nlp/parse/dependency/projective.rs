@@ -1,8 +1,8 @@
 use std::collections::HashSet;
 
-use super::DependencyGraph;
 use super::common::graph_from_arcs;
 use super::grammar::DependencyGrammar;
+use super::DependencyGraph;
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 struct DependencySpan {

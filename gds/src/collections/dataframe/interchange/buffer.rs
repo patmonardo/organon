@@ -5,9 +5,9 @@ use std::mem::size_of;
 use std::sync::Arc;
 
 use arrow::bitmap::Bitmap;
-use arrow::buffer::Buffer as ArrowBuffer;
 use arrow::offset::OffsetsBuffer;
 use arrow::types::NativeType;
+use polars_buffer::Buffer as ArrowBuffer;
 
 use crate::collections::dataframe::interchange::protocol::{
     Buffer, DlpackDeviceType, InterchangeError,
