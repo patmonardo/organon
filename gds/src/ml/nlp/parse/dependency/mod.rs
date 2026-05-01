@@ -1,10 +1,12 @@
 mod common;
 mod grammar;
+mod graph;
 mod io;
 mod nonprojective;
 mod projective;
 
 pub use grammar::DependencyGrammar;
+pub use graph::{DependencyEdge, DependencyGraph, DependencyNode};
 pub use io::{parse_malt_tab, to_dot};
 pub use nonprojective::NonprojectiveDependencyParser;
 pub use projective::ProjectiveDependencyParser;

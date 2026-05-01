@@ -1,6 +1,7 @@
-use crate::collections::dataset::dependency::{DependencyEdge, DependencyGraph};
 use crate::collections::dataset::token::{Token, TokenKind, TokenSpan};
 use crate::ml::nlp::parse::cfg::ParseError;
+
+use super::{DependencyEdge, DependencyGraph};
 
 pub fn parse_malt_tab(input: &str) -> Result<DependencyGraph, ParseError> {
     let mut words = Vec::new();

@@ -37,10 +37,7 @@ fn catalog_error(op: &str, e: CatalogError) -> Value {
     err(op, code, e.to_string())
 }
 
-fn entry_to_summary(
-    dataset_name: &str,
-    entry: &CollectionsCatalogDiskEntry,
-) -> CapabilitySummary {
+fn entry_to_summary(dataset_name: &str, entry: &CollectionsCatalogDiskEntry) -> CapabilitySummary {
     let mut storage_modifiers = Vec::new();
     if let Some(compression) = entry.io_policy.compression.as_deref() {
         if !compression.trim().is_empty() {

@@ -4,7 +4,7 @@
 //!   cargo run -p gds --example collections_streaming_dataset --features dataset
 #![cfg(feature = "dataset")]
 
-use gds::collections::dataframe::{col, lit, when, GDSDataFrame, GDSFrameError, TableBuilder};
+use gds::collections::dataframe::{GDSDataFrame, GDSFrameError};
 use gds::collections::dataset::{Dataset, StreamingDataset};
 use gds::collections::extensions::streaming::StreamingConfig;
 
@@ -12,13 +12,12 @@ fn main() -> Result<(), GDSFrameError> {
     println!("== Streaming Dataset walkthrough ==");
     println!("A Dataset is the semantic source; streaming exposes its analytic body in motion.");
 
-    // Build a dataset (Polars-backed).
-    let dataset = Dataset::from_builder(
-        TableBuilder::new()
-            .with_i64_column("id", &[1, 2, 3, 4, 5, 6, 7, 8])
-            .with_f64_column("score", &[10.0, 25.0, 40.0, 15.0, 30.0, 22.0, 12.0, 35.0])
-            .with_f64_column("weight", &[1.1, 0.8, 1.5, 1.0, 1.2, 0.7, 1.3, 0.9]),
+    let table = gds::tbl_def!(
+        (id: i64 => [1, 2, 3, 4, 5, 6, 7, 8]),
+        (score: f64 => [10.0, 25.0, 40.0, 15.0, 30.0, 22.0, 12.0, 35.0]),
+        (weight: f64 => [1.1, 0.8, 1.5, 1.0, 1.2, 0.7, 1.3, 0.9]),
     )?;
+    let dataset = Dataset::new(table);
 
     println!("Dataset rows: {}", dataset.row_count());
     println!("Dataset columns: {:?}", dataset.column_names());
@@ -32,18 +31,18 @@ fn main() -> Result<(), GDSFrameError> {
         },
     )
     .with_transform(|lazy| {
-        lazy.with_columns([(col("score") * col("weight")).alias("weighted_score")])
-            .with_columns([when(col("score").gt(lit(20.0)))
-                .then(lit(1.0))
-                .otherwise(lit(0.0))
+        lazy.with_columns([(gds::col!(score) * gds::col!(weight)).alias("weighted_score")])
+            .with_columns([gds::when!(gds::expr!(score > 20.0))
+                .then(gds::lit!(1.0))
+                .otherwise(gds::lit!(0.0))
                 .alias("is_high")])
-            .filter(col("score").gt(lit(12.0)))
-            .group_by([col("is_high")])
+            .filter(gds::expr!(score > 12.0))
+            .group_by([gds::col!(is_high)])
             .agg([
-                col("weighted_score").mean().alias("avg_weighted"),
-                col("id").count().alias("rows"),
+                gds::col!(weighted_score).mean().alias("avg_weighted"),
+                gds::col!(id).count().alias("rows"),
             ])
-            .sort_by_exprs([col("is_high")], Default::default())
+            .sort_by_exprs([gds::col!(is_high)], Default::default())
     });
 
     let summary = streaming_summary

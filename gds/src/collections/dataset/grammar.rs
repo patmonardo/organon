@@ -22,7 +22,7 @@
 //! - CNF transformation (we have FOL CNF elsewhere via
 //!   [`crate::ml::nlp::sem::skolemize`]),
 //! - separate dependency-grammar parser (we have richer
-//!   [`crate::collections::dataset::dependency`] types already).
+//!   dependency-parser graph types under [`crate::ml::nlp::parse::dependency`] already).
 //!
 //! Lives at the dataset top level, alongside [`super::featstruct`] and
 //! [`super::tree`], so the "text + tree + feature-grammar" world is in

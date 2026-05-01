@@ -11,9 +11,6 @@
 pub use crate::collections::dataset::catalog::DatasetCatalog;
 pub use crate::collections::dataset::corpus::Corpus;
 pub use crate::collections::dataset::dataset::Dataset;
-pub use crate::collections::dataset::dependency::{
-    DependencyEdge, DependencyGraph, DependencyNode,
-};
 pub use crate::collections::dataset::{DatasetArtifactKind, DatasetArtifactProfile};
 // Language model helpers
 pub use crate::collections::dataset::lm::{

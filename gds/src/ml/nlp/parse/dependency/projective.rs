@@ -1,7 +1,6 @@
 use std::collections::HashSet;
 
-use crate::collections::dataset::dependency::DependencyGraph;
-
+use super::DependencyGraph;
 use super::common::graph_from_arcs;
 use super::grammar::DependencyGrammar;
 

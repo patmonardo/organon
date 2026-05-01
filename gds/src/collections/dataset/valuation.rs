@@ -1,6 +1,6 @@
 //! `Valuation` — partial valuation against a Feature schema (R4 access object).
 //!
-//! See `gds/doc/SEMANTIC-DATASET-FIVE-FOLD.md` (Five-Fold Synthesis), Root
+//! See `gds/doc/SEMANTIC-DATASET.md` (Five-Fold Synthesis), Root
 //! Object **R4** ("`Model` — a partial valuation: a row, a region, or a
 //! sub-frame considered as satisfying a Feature schema"). NLTK Ch9 / Ch10
 //! are the reference texts; the DRS, the FeatStruct, and the Valuation are

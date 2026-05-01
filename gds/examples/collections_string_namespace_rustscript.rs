@@ -1,28 +1,23 @@
-//! RustScript string namespace example (Polars-first).
+//! RustScript string namespace example (GDS DataFrame DSL).
 //!
 //! Run with:
 //!   cargo run -p gds --example collections_string_namespace_rustscript
 
-use gds::collections::dataframe::{col, str_ns, GDSDataFrame, GDSSeries};
-use polars::prelude::*;
+use gds::collections::dataframe::{str_ns, GDSFrameError, GDSSeries};
 
-fn main() -> PolarsResult<()> {
-    let df = df!(
-        "language" => ["English", "Dutch", "Portuguese", "Finish"],
-        "fruit" => ["pear", "peer", "pêra", "päärynä"],
+fn main() -> Result<(), GDSFrameError> {
+    let df = gds::tbl_def!(
+        (language: ["English", "Dutch", "Portuguese", "Finish"]),
+        (fruit: ["pear", "peer", "pêra", "päärynä"]),
     )?;
 
-    let result = df
-        .clone()
-        .lazy()
-        .with_columns([
-            str_ns(col("fruit")).len_bytes().alias("byte_count"),
-            str_ns(col("fruit")).len_chars().alias("letter_count"),
-            str_ns(col("fruit")).to_uppercase().alias("upper"),
-        ])
-        .collect()?;
+    let result = df.with_columns(&[
+        str_ns(gds::col!(fruit)).len_bytes().alias("byte_count"),
+        str_ns(gds::col!(fruit)).len_chars().alias("letter_count"),
+        str_ns(gds::col!(fruit)).to_uppercase().alias("upper"),
+    ])?;
 
-    println!("{}", GDSDataFrame::new(result).fmt_table());
+    println!("{}", result.fmt_table());
 
     // GDSSeries + StringNameSpace (no DataFrame needed).
     let fruit = GDSSeries::from("fruit", ["pear", "peer", "pêra", "päärynä"]);

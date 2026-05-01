@@ -2,13 +2,18 @@ use std::collections::HashMap;
 use std::error::Error;
 use std::fmt;
 
-use crate::collections::dataset::dependency::DependencyGraph;
+use crate::ml::nlp::parse::dependency::DependencyGraph;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum EvaluationError {
     SentenceCountMismatch,
-    TokenCountMismatch { sentence_index: usize },
-    TokenSequenceMismatch { sentence_index: usize, token_index: usize },
+    TokenCountMismatch {
+        sentence_index: usize,
+    },
+    TokenSequenceMismatch {
+        sentence_index: usize,
+        token_index: usize,
+    },
     EmptyScoringSet,
 }
 
@@ -167,10 +172,10 @@ mod tests {
 
     #[test]
     fn evaluator_scores_perfect_parse() {
-        let gold = parse_malt_tab("John N 2 nsubj\nloves V 0 ROOT\nMary N 2 obj")
-            .expect("valid graph");
-        let parsed = parse_malt_tab("John N 2 nsubj\nloves V 0 ROOT\nMary N 2 obj")
-            .expect("valid graph");
+        let gold =
+            parse_malt_tab("John N 2 nsubj\nloves V 0 ROOT\nMary N 2 obj").expect("valid graph");
+        let parsed =
+            parse_malt_tab("John N 2 nsubj\nloves V 0 ROOT\nMary N 2 obj").expect("valid graph");
 
         let evaluator = DependencyEvaluator::new(vec![parsed], vec![gold]);
         let (las, uas) = evaluator.eval().expect("evaluation should succeed");
@@ -180,10 +185,10 @@ mod tests {
 
     #[test]
     fn evaluator_detects_relation_drop() {
-        let gold = parse_malt_tab("John N 2 nsubj\nloves V 0 ROOT\nMary N 2 obj")
-            .expect("valid graph");
-        let parsed = parse_malt_tab("John N 2 nsubj\nloves V 0 ROOT\nMary N 2 dep")
-            .expect("valid graph");
+        let gold =
+            parse_malt_tab("John N 2 nsubj\nloves V 0 ROOT\nMary N 2 obj").expect("valid graph");
+        let parsed =
+            parse_malt_tab("John N 2 nsubj\nloves V 0 ROOT\nMary N 2 dep").expect("valid graph");
 
         let evaluator = DependencyEvaluator::new(vec![parsed], vec![gold]);
         let (las, uas) = evaluator.eval().expect("evaluation should succeed");

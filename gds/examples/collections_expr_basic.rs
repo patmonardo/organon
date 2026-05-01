@@ -3,38 +3,32 @@
 //! Run with:
 //!   cargo run -p gds --example collections_expr_basic
 
-use gds::collections::dataframe::{col, lit, when, GDSFrameError, TableBuilder};
+use gds::collections::dataframe::GDSFrameError;
 
 fn main() -> Result<(), GDSFrameError> {
     println!("== Collections Expr walkthrough ==");
     println!("Exprs are the reusable analytic grammar of the DataFrame layer.");
 
-    // Build a DataFrame via the Collections facade.
-    let table = TableBuilder::new()
-        .with_i64_column("id", &[1, 2, 3, 4, 5])
-        .with_f64_column("score", &[10.0, 25.0, 40.0, 15.0, 30.0])
-        .build()?;
+    let table = gds::tbl_def!(
+        (id: i64 => [1, 2, 3, 4, 5]),
+        (score: f64 => [10.0, 25.0, 40.0, 15.0, 30.0]),
+    )?;
 
     println!("Input table:\n{}", table.fmt_table());
 
     // Exprs are first-class: build them independently, then reuse.
-    let score_col = col("score");
-    let high_score = score_col.clone().gt(lit(20.0));
+    let high_score = gds::expr!(score > 20.0);
 
     // Filter rows using a predicate expression.
     let filtered = table.filter_expr(high_score.clone())?;
     println!("Filtered (score > 20):\n{}", filtered.fmt_table());
 
     // Create a derived column using an expression.
-    let tagged = table.with_columns_exprs(&[when(high_score)
-        .then(lit(1.0))
-        .otherwise(lit(0.0))
-        .alias("is_high")])?;
+    let tagged = table.with_columns(&[high_score.alias("is_high")])?;
     println!("With derived column (is_high):\n{}", tagged.fmt_table());
 
     // Group by and aggregate using expressions.
-    let grouped =
-        tagged.group_by_columns(&["is_high"], &[col("score").mean().alias("mean_score")])?;
+    let grouped = gds::group_by!(tagged, [is_high], [gds::agg!(score.mean => "mean_score")])?;
     println!("Grouped by is_high:\n{}", grouped.fmt_table());
 
     Ok(())

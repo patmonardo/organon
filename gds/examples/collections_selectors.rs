@@ -14,9 +14,8 @@ use gds::collections::dataframe::{GDSDataFrame, GDSFrameError, Selector};
 use polars::prelude::Schema;
 
 fn main() -> Result<(), GDSFrameError> {
-    // Build a schema using the `fields!` macro and Polars `Schema::from_iter`.
-    // This keeps the example focused on selector composition (not Schema APIs).
-    let schema = Schema::from_iter(fields!(
+    // Build a schema using the DataFrame schema macro.
+    let schema = schema!(
         abc => UInt16,
         bbb => UInt32,
         cde => Float64,
@@ -28,7 +27,7 @@ fn main() -> Result<(), GDSFrameError> {
         Lmn => Duration(Milliseconds),
         opp => Datetime(Milliseconds, None),
         qqR => String,
-    ));
+    );
 
     let df = GDSDataFrame::empty_with_schema(&schema);
 

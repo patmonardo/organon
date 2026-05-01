@@ -416,7 +416,7 @@ impl DatasetCompilation {
             build_artifact_relations_table(&relation_rows)?,
         )
         .with_artifact_profile(
-            DatasetArtifactProfile::new(DatasetArtifactKind::DependencyGraph)
+            DatasetArtifactProfile::new(DatasetArtifactKind::SemanticSubgraph)
                 .with_facet("artifact-relations")
                 .with_facet("dataset-compilation"),
         );

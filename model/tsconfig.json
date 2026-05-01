@@ -3,7 +3,6 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "dist",
-    "baseUrl": ".",
     "jsx": "react-jsx",
     "types": [
       "node"
@@ -26,10 +25,10 @@
         "../model/dist/*"
       ],
       "@model": [
-        "src/model/index"
+        "./src/model/index"
       ],
       "@model/*": [
-        "src/model/*"
+        "./src/model/*"
       ],
       "@/model": [
         "./src/index"

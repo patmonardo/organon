@@ -1,10 +1,10 @@
-//! RustScript list namespace example (Polars-first).
+//! RustScript list namespace example (GDS DataFrame DSL).
 //!
 //! Run with:
 //!   cargo run -p gds --example collections_list_namespace_rustscript
 
 use gds::collections::dataframe::{
-    col, list_ns, series_list_i64, GDSDataFrame, GDSFrameError, GDSSeries,
+    list_ns, series_list_i64, GDSDataFrame, GDSFrameError, GDSSeries,
 };
 
 fn main() -> Result<(), GDSFrameError> {
@@ -13,11 +13,13 @@ fn main() -> Result<(), GDSFrameError> {
     let df = GDSDataFrame::from_series(vec![values.clone()])?;
 
     let result = df.with_columns(&[
-        list_ns(col("values")).len().alias("len"),
-        list_ns(col("values")).sum().alias("sum"),
-        list_ns(col("values")).unique(true).alias("unique"),
-        list_ns(col("values")).get(0, true).alias("first"),
-        list_ns(col("values")).contains(2_i64, true).alias("has_2"),
+        list_ns(gds::col!(values)).len().alias("len"),
+        list_ns(gds::col!(values)).sum().alias("sum"),
+        list_ns(gds::col!(values)).unique(true).alias("unique"),
+        list_ns(gds::col!(values)).get(0, true).alias("first"),
+        list_ns(gds::col!(values))
+            .contains(2_i64, true)
+            .alias("has_2"),
     ])?;
 
     println!("{}", result.fmt_table());

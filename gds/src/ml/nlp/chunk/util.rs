@@ -141,10 +141,15 @@ impl ChunkScore {
     }
 }
 
-fn chunksets(tree: &ChunkTree, count: usize, chunk_label: &str) -> HashSet<((usize, usize), Chunk)> {
+fn chunksets(
+    tree: &ChunkTree,
+    count: usize,
+    chunk_label: &str,
+) -> HashSet<((usize, usize), Chunk)> {
     let mut pos = 0usize;
     let mut chunks = HashSet::new();
-    let label_re = Regex::new(chunk_label).unwrap_or_else(|_| Regex::new(".*").expect("valid regex"));
+    let label_re =
+        Regex::new(chunk_label).unwrap_or_else(|_| Regex::new(".*").expect("valid regex"));
 
     for item in &tree.items {
         match item {
@@ -162,7 +167,12 @@ fn chunksets(tree: &ChunkTree, count: usize, chunk_label: &str) -> HashSet<((usi
     chunks
 }
 
-pub fn tagstr2tree(s: &str, chunk_label: &str, root_label: &str, sep: Option<&str>) -> Result<ChunkTree, String> {
+pub fn tagstr2tree(
+    s: &str,
+    chunk_label: &str,
+    root_label: &str,
+    sep: Option<&str>,
+) -> Result<ChunkTree, String> {
     let token_re = Regex::new(r"\[|\]|[^\[\]\s]+").map_err(|e| e.to_string())?;
 
     let mut stack: Vec<Vec<ChunkItem>> = vec![Vec::new()];
@@ -177,12 +187,16 @@ pub fn tagstr2tree(s: &str, chunk_label: &str, root_label: &str, sep: Option<&st
             if stack.len() != 2 {
                 return Err(format!("Unexpected ] at char {}", m.start()));
             }
-            let chunk_items = stack.pop().ok_or_else(|| "parser stack underflow".to_string())?;
+            let chunk_items = stack
+                .pop()
+                .ok_or_else(|| "parser stack underflow".to_string())?;
             let tokens = chunk_items
                 .into_iter()
                 .map(|item| match item {
                     ChunkItem::Token(tok) => Ok(tok),
-                    ChunkItem::Chunk(_) => Err("Nested chunk not allowed in tagstr2tree".to_string()),
+                    ChunkItem::Chunk(_) => {
+                        Err("Nested chunk not allowed in tagstr2tree".to_string())
+                    }
                 })
                 .collect::<Result<Vec<_>, _>>()?;
             stack[0].push(ChunkItem::Chunk(Chunk::new(chunk_label, tokens)));
@@ -194,7 +208,9 @@ pub fn tagstr2tree(s: &str, chunk_label: &str, root_label: &str, sep: Option<&st
                 TaggedToken::new(text, "")
             };
 
-            let top = stack.last_mut().ok_or_else(|| "parser stack missing".to_string())?;
+            let top = stack
+                .last_mut()
+                .ok_or_else(|| "parser stack missing".to_string())?;
             top.push(ChunkItem::Token(tok));
         }
     }
@@ -206,7 +222,11 @@ pub fn tagstr2tree(s: &str, chunk_label: &str, root_label: &str, sep: Option<&st
     Ok(ChunkTree::new(root_label, stack.pop().unwrap_or_default()))
 }
 
-pub fn conllstr2tree(s: &str, chunk_types: Option<&[&str]>, root_label: &str) -> Result<ChunkTree, String> {
+pub fn conllstr2tree(
+    s: &str,
+    chunk_types: Option<&[&str]>,
+    root_label: &str,
+) -> Result<ChunkTree, String> {
     let line_re = Regex::new(r"(\S+)\s+(\S+)\s+([IOB])-?(\S+)?").map_err(|e| e.to_string())?;
 
     let mut items = Vec::<ChunkItem>::new();
@@ -225,7 +245,10 @@ pub fn conllstr2tree(s: &str, chunk_types: Option<&[&str]>, root_label: &str) ->
         let word = caps.get(1).map(|x| x.as_str()).unwrap_or_default();
         let tag = caps.get(2).map(|x| x.as_str()).unwrap_or_default();
         let mut state = caps.get(3).map(|x| x.as_str()).unwrap_or("O").to_string();
-        let chunk_type = caps.get(4).map(|x| x.as_str().to_string()).unwrap_or_default();
+        let chunk_type = caps
+            .get(4)
+            .map(|x| x.as_str().to_string())
+            .unwrap_or_default();
 
         if let Some(allowed) = chunk_types {
             if !allowed.contains(&chunk_type.as_str()) {
@@ -237,7 +260,10 @@ pub fn conllstr2tree(s: &str, chunk_types: Option<&[&str]>, root_label: &str) ->
 
         if state == "B" || state == "O" || mismatch_i {
             if let Some(label) = current_label.take() {
-                items.push(ChunkItem::Chunk(Chunk::new(label, std::mem::take(&mut current_tokens))));
+                items.push(ChunkItem::Chunk(Chunk::new(
+                    label,
+                    std::mem::take(&mut current_tokens),
+                )));
             }
         }
 
@@ -265,7 +291,9 @@ pub fn tree2conlltags(tree: &ChunkTree) -> Vec<(String, String, String)> {
 
     for item in &tree.items {
         match item {
-            ChunkItem::Token(tok) => tags.push((tok.word.clone(), tok.tag.clone(), "O".to_string())),
+            ChunkItem::Token(tok) => {
+                tags.push((tok.word.clone(), tok.tag.clone(), "O".to_string()))
+            }
             ChunkItem::Chunk(chunk) => {
                 let mut prefix = "B-";
                 for tok in &chunk.tokens {
@@ -298,22 +326,37 @@ pub fn conlltags2tree(
 
         if chunktag == "O" {
             if let Some(label) = current_label.take() {
-                items.push(ChunkItem::Chunk(Chunk::new(label, std::mem::take(&mut current_tokens))));
+                items.push(ChunkItem::Chunk(Chunk::new(
+                    label,
+                    std::mem::take(&mut current_tokens),
+                )));
             }
-            items.push(ChunkItem::Token(TaggedToken::new(word.clone(), postag.clone())));
+            items.push(ChunkItem::Token(TaggedToken::new(
+                word.clone(),
+                postag.clone(),
+            )));
             continue;
         }
 
         if let Some(rest) = chunktag.strip_prefix("B-") {
             if let Some(label) = current_label.take() {
-                items.push(ChunkItem::Chunk(Chunk::new(label, std::mem::take(&mut current_tokens))));
+                items.push(ChunkItem::Chunk(Chunk::new(
+                    label,
+                    std::mem::take(&mut current_tokens),
+                )));
             }
 
-            if chunk_types.map(|types| types.contains(&rest)).unwrap_or(true) {
+            if chunk_types
+                .map(|types| types.contains(&rest))
+                .unwrap_or(true)
+            {
                 current_label = Some(rest.to_string());
                 current_tokens.push(TaggedToken::new(word.clone(), postag.clone()));
             } else {
-                items.push(ChunkItem::Token(TaggedToken::new(word.clone(), postag.clone())));
+                items.push(ChunkItem::Token(TaggedToken::new(
+                    word.clone(),
+                    postag.clone(),
+                )));
             }
             continue;
         }
@@ -325,7 +368,10 @@ pub fn conlltags2tree(
                 }
 
                 if let Some(label) = current_label.take() {
-                    items.push(ChunkItem::Chunk(Chunk::new(label, std::mem::take(&mut current_tokens))));
+                    items.push(ChunkItem::Chunk(Chunk::new(
+                        label,
+                        std::mem::take(&mut current_tokens),
+                    )));
                 }
                 current_label = Some(rest.to_string());
             }
@@ -367,10 +413,7 @@ mod tests {
 
     impl ChunkParser for PassthroughChunker {
         fn parse(&self, tokens: &[TaggedToken]) -> ChunkTree {
-            ChunkTree::new(
-                "S",
-                tokens.iter().cloned().map(ChunkItem::Token).collect(),
-            )
+            ChunkTree::new("S", tokens.iter().cloned().map(ChunkItem::Token).collect())
         }
     }
 
@@ -385,10 +428,10 @@ mod tests {
 
     #[test]
     fn chunk_score_metrics_work() {
-        let gold = conllstr2tree("the DT B-NP\ncat NN I-NP\nsat VBD O", None, "S")
-            .expect("gold parse");
-        let guess = conllstr2tree("the DT B-NP\ncat NN I-NP\nsat VBD O", None, "S")
-            .expect("guess parse");
+        let gold =
+            conllstr2tree("the DT B-NP\ncat NN I-NP\nsat VBD O", None, "S").expect("gold parse");
+        let guess =
+            conllstr2tree("the DT B-NP\ncat NN I-NP\nsat VBD O", None, "S").expect("guess parse");
 
         let mut score = ChunkScore::new(".*");
         score.score(&gold, &guess);
@@ -399,8 +442,8 @@ mod tests {
 
     #[test]
     fn parser_accuracy_runs() {
-        let gold_tree = conllstr2tree("the DT B-NP\ncat NN I-NP\nsat VBD O", None, "S")
-            .expect("gold parse");
+        let gold_tree =
+            conllstr2tree("the DT B-NP\ncat NN I-NP\nsat VBD O", None, "S").expect("gold parse");
         let acc = accuracy(&PassthroughChunker, &[gold_tree]);
         assert!(acc <= 1.0);
     }

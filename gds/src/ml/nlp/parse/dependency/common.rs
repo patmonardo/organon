@@ -1,5 +1,6 @@
-use crate::collections::dataset::dependency::{DependencyEdge, DependencyGraph};
 use crate::collections::dataset::token::{Token, TokenKind, TokenSpan};
+
+use super::{DependencyEdge, DependencyGraph};
 
 pub(super) fn strip_quotes(value: &str) -> &str {
     value.trim_matches('"').trim_matches('\'')

@@ -1,6 +1,5 @@
-use crate::collections::dataset::dependency::DependencyGraph;
-
 use super::common::{enumerate_assignments, graph_from_arcs, has_cycle, roots_count};
+use super::DependencyGraph;
 use super::grammar::DependencyGrammar;
 
 #[derive(Debug, Clone)]
