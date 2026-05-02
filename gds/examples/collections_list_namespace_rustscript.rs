@@ -12,15 +12,14 @@ fn main() -> Result<(), GDSFrameError> {
     let values = series_list_i64("values", &[vec![1, 2, 3], vec![3, 3, 2], vec![]]);
     let df = GDSDataFrame::from_series(vec![values.clone()])?;
 
-    let result = df.with_columns(&[
-        list_ns(gds::col!(values)).len().alias("len"),
-        list_ns(gds::col!(values)).sum().alias("sum"),
-        list_ns(gds::col!(values)).unique(true).alias("unique"),
-        list_ns(gds::col!(values)).get(0, true).alias("first"),
-        list_ns(gds::col!(values))
-            .contains(2_i64, true)
-            .alias("has_2"),
-    ])?;
+    let result = gds::mutate!(
+        df,
+        len = { list_ns(gds::col!(values)).len() },
+        sum = { list_ns(gds::col!(values)).sum() },
+        unique = { list_ns(gds::col!(values)).unique(true) },
+        first = { list_ns(gds::col!(values)).get(0, true) },
+        has_2 = { list_ns(gds::col!(values)).contains(2_i64, true) },
+    )?;
 
     println!("{}", result.fmt_table());
 

@@ -533,7 +533,7 @@ fn lower_gdsl_source_to_program_features(
         if let Some(import_name) = line.strip_prefix("use ") {
             let import_name = strip_trailing_semicolon(import_name).trim();
             features.push(ProgramFeature::new(
-                ProgramFeatureKind::Dependency,
+                ProgramFeatureKind::Import,
                 format!("use::{import_name}"),
                 format!("use::{import_name}"),
             ));
@@ -543,7 +543,7 @@ fn lower_gdsl_source_to_program_features(
         if line.starts_with("source ") {
             let name = parse_nth_token(line, 2)?;
             features.push(ProgramFeature::new(
-                ProgramFeatureKind::Dependency,
+                ProgramFeatureKind::Source,
                 format!("source::{name}"),
                 normalize_gdsl_phrase(line),
             ));
@@ -553,7 +553,7 @@ fn lower_gdsl_source_to_program_features(
         if line.starts_with("appearance ") {
             let name = parse_named_declaration(line, "appearance", Some("from"))?;
             features.push(ProgramFeature::new(
-                ProgramFeatureKind::OperatorPattern,
+                ProgramFeatureKind::Observation,
                 format!("appearance::{name}"),
                 format!("appearance::{name}"),
             ));
@@ -563,7 +563,7 @@ fn lower_gdsl_source_to_program_features(
         if line.starts_with("reflection ") {
             let name = parse_named_declaration(line, "reflection", Some("for"))?;
             features.push(ProgramFeature::new(
-                ProgramFeatureKind::OperatorPattern,
+                ProgramFeatureKind::Reflection,
                 format!("reflection::{name}"),
                 format!("reflection::{name}"),
             ));
@@ -573,7 +573,7 @@ fn lower_gdsl_source_to_program_features(
         if line.starts_with("logogenesis ") {
             let name = parse_named_declaration(line, "logogenesis", Some("for"))?;
             features.push(ProgramFeature::new(
-                ProgramFeatureKind::OperatorPattern,
+                ProgramFeatureKind::Logogenesis,
                 format!("logogenesis::{name}"),
                 format!("logogenesis::{name}"),
             ));
@@ -588,8 +588,28 @@ fn lower_gdsl_source_to_program_features(
                 .filter(|value| !value.is_empty())
                 .ok_or_else(|| GdslSourceLoweringError::InvalidDeclaration(line.to_string()))?;
             features.push(ProgramFeature::new(
-                ProgramFeatureKind::OperatorPattern,
+                ProgramFeatureKind::Mark,
                 format!("derive::{derived_name}"),
+                normalize_gdsl_phrase(line),
+            ));
+            continue;
+        }
+
+        if let Some(rest) = line.strip_prefix("key ") {
+            let key = strip_trailing_semicolon(rest).trim();
+            features.push(ProgramFeature::new(
+                ProgramFeatureKind::Observation,
+                format!("key::{key}"),
+                normalize_gdsl_phrase(line),
+            ));
+            continue;
+        }
+
+        if let Some(rest) = line.strip_prefix("retain ") {
+            let retained = strip_trailing_semicolon(rest).trim();
+            features.push(ProgramFeature::new(
+                ProgramFeatureKind::Observation,
+                format!("retain::{}", normalize_gdsl_phrase(retained)),
                 normalize_gdsl_phrase(line),
             ));
             continue;
@@ -598,7 +618,7 @@ fn lower_gdsl_source_to_program_features(
         if line.starts_with("mark ") {
             let name = parse_named_declaration(line, "mark", Some("on"))?;
             features.push(ProgramFeature::new(
-                ProgramFeatureKind::ApplicationForm,
+                ProgramFeatureKind::Mark,
                 format!("mark::{name}"),
                 normalize_gdsl_phrase(line),
             ));
@@ -611,9 +631,19 @@ fn lower_gdsl_source_to_program_features(
                 selected_forms.push(name.to_string());
             }
             features.push(ProgramFeature::new(
-                ProgramFeatureKind::ApplicationForm,
+                ProgramFeatureKind::Concept,
                 format!("concept::{name}"),
                 format!("concept::{name}"),
+            ));
+            continue;
+        }
+
+        if let Some(rest) = line.strip_prefix("identity ") {
+            let identity = strip_trailing_semicolon(rest).trim();
+            features.push(ProgramFeature::new(
+                ProgramFeatureKind::Concept,
+                format!("identity::{identity}"),
+                normalize_gdsl_phrase(line),
             ));
             continue;
         }
@@ -621,7 +651,7 @@ fn lower_gdsl_source_to_program_features(
         if line.starts_with("judgment ") {
             let name = parse_named_declaration(line, "judgment", Some("for"))?;
             features.push(ProgramFeature::new(
-                ProgramFeatureKind::OperatorPattern,
+                ProgramFeatureKind::Judgment,
                 format!("judgment::{name}"),
                 format!("judgment::{name}"),
             ));
@@ -631,7 +661,7 @@ fn lower_gdsl_source_to_program_features(
         if line.starts_with("syllogism ") {
             let name = parse_named_declaration(line, "syllogism", Some("for"))?;
             features.push(ProgramFeature::new(
-                ProgramFeatureKind::OperatorPattern,
+                ProgramFeatureKind::Syllogism,
                 format!("syllogism::{name}"),
                 format!("syllogism::{name}"),
             ));
@@ -641,7 +671,7 @@ fn lower_gdsl_source_to_program_features(
         if line.starts_with("principle ") {
             let name = parse_named_declaration(line, "principle", Some("for"))?;
             features.push(ProgramFeature::new(
-                ProgramFeatureKind::Condition,
+                ProgramFeatureKind::Principle,
                 format!("principle::{name}"),
                 format!("principle::{name}"),
             ));
@@ -651,7 +681,7 @@ fn lower_gdsl_source_to_program_features(
         if line.starts_with("query ") {
             let name = parse_named_declaration(line, "query", Some(":="))?;
             features.push(ProgramFeature::new(
-                ProgramFeatureKind::OperatorPattern,
+                ProgramFeatureKind::Query,
                 format!("query::{name}"),
                 format!("query::{name}"),
             ));
@@ -661,7 +691,7 @@ fn lower_gdsl_source_to_program_features(
         if line.starts_with("procedure ") {
             let name = parse_named_declaration(line, "procedure", None)?;
             features.push(ProgramFeature::new(
-                ProgramFeatureKind::SpecificationBinding,
+                ProgramFeatureKind::Procedure,
                 format!("procedure::{name}"),
                 format!("procedure::{name}"),
             ));
@@ -676,8 +706,33 @@ fn lower_gdsl_source_to_program_features(
                 .filter(|value| !value.is_empty())
                 .ok_or_else(|| GdslSourceLoweringError::InvalidDeclaration(line.to_string()))?;
             features.push(ProgramFeature::new(
-                ProgramFeatureKind::OperatorPattern,
+                ProgramFeatureKind::Inference,
                 format!("infer::{infer_name}"),
+                normalize_gdsl_phrase(line),
+            ));
+            continue;
+        }
+
+        if let Some(rest) = line.strip_prefix("conclude ") {
+            let conclusion = rest
+                .split(" when ")
+                .next()
+                .map(str::trim)
+                .filter(|value| !value.is_empty())
+                .ok_or_else(|| GdslSourceLoweringError::InvalidDeclaration(line.to_string()))?;
+            features.push(ProgramFeature::new(
+                ProgramFeatureKind::Inference,
+                format!("conclude::{conclusion}"),
+                normalize_gdsl_phrase(line),
+            ));
+            continue;
+        }
+
+        if let Some(rest) = line.strip_prefix("select ") {
+            let selected = strip_trailing_semicolon(rest).trim();
+            features.push(ProgramFeature::new(
+                ProgramFeatureKind::Query,
+                format!("select::{}", normalize_gdsl_phrase(selected)),
                 normalize_gdsl_phrase(line),
             ));
             continue;
@@ -686,7 +741,7 @@ fn lower_gdsl_source_to_program_features(
         if let Some(rest) = line.strip_prefix("middle ") {
             let middle = strip_trailing_semicolon(rest).trim();
             features.push(ProgramFeature::new(
-                ProgramFeatureKind::Condition,
+                ProgramFeatureKind::Syllogism,
                 format!("middle::{middle}"),
                 normalize_gdsl_phrase(line),
             ));
@@ -696,7 +751,7 @@ fn lower_gdsl_source_to_program_features(
         if let Some(rest) = line.strip_prefix("stage ") {
             let stage = strip_trailing_semicolon(rest).trim();
             features.push(ProgramFeature::new(
-                ProgramFeatureKind::Condition,
+                ProgramFeatureKind::Reflection,
                 format!("stage::{stage}"),
                 normalize_gdsl_phrase(line),
             ));
@@ -706,7 +761,7 @@ fn lower_gdsl_source_to_program_features(
         if let Some(rest) = line.strip_prefix("preserve ") {
             let preserved = strip_trailing_semicolon(rest).trim();
             features.push(ProgramFeature::new(
-                ProgramFeatureKind::Condition,
+                ProgramFeatureKind::Reflection,
                 format!("preserve::{preserved}"),
                 normalize_gdsl_phrase(line),
             ));
@@ -716,7 +771,7 @@ fn lower_gdsl_source_to_program_features(
         if let Some(rest) = line.strip_prefix("culminate ") {
             let culmination = strip_trailing_semicolon(rest).trim();
             features.push(ProgramFeature::new(
-                ProgramFeatureKind::Condition,
+                ProgramFeatureKind::Reflection,
                 format!("culminate::{culmination}"),
                 normalize_gdsl_phrase(line),
             ));
@@ -726,7 +781,7 @@ fn lower_gdsl_source_to_program_features(
         if let Some(rest) = line.strip_prefix("from ") {
             let source = strip_trailing_semicolon(rest).trim();
             features.push(ProgramFeature::new(
-                ProgramFeatureKind::Dependency,
+                ProgramFeatureKind::Source,
                 format!("from::{source}"),
                 normalize_gdsl_phrase(line),
             ));
@@ -736,7 +791,7 @@ fn lower_gdsl_source_to_program_features(
         if let Some(rest) = line.strip_prefix("unfold ") {
             let unfolded = strip_trailing_semicolon(rest).trim();
             features.push(ProgramFeature::new(
-                ProgramFeatureKind::OperatorPattern,
+                ProgramFeatureKind::Logogenesis,
                 format!("unfold::{unfolded}"),
                 normalize_gdsl_phrase(line),
             ));
@@ -753,10 +808,20 @@ fn lower_gdsl_source_to_program_features(
             continue;
         }
 
+        if let Some(rest) = line.strip_prefix("where ") {
+            let condition = strip_trailing_semicolon(rest).trim();
+            features.push(ProgramFeature::new(
+                ProgramFeatureKind::Condition,
+                format!("where::{}", normalize_gdsl_phrase(condition)),
+                normalize_gdsl_phrase(line),
+            ));
+            continue;
+        }
+
         if let Some(rest) = line.strip_prefix("unify ") {
             let unify_expr = strip_trailing_semicolon(rest).trim();
             features.push(ProgramFeature::new(
-                ProgramFeatureKind::Condition,
+                ProgramFeatureKind::Principle,
                 format!("unify::{}", normalize_gdsl_phrase(unify_expr)),
                 normalize_gdsl_phrase(line),
             ));
@@ -766,7 +831,7 @@ fn lower_gdsl_source_to_program_features(
         if let Some(rest) = line.strip_prefix("emit ") {
             let emitted = strip_trailing_semicolon(rest).trim();
             features.push(ProgramFeature::new(
-                ProgramFeatureKind::ApplicationForm,
+                ProgramFeatureKind::Procedure,
                 format!("emit::{}", normalize_gdsl_phrase(emitted)),
                 normalize_gdsl_phrase(line),
             ));
@@ -863,27 +928,53 @@ mod tests {
         assert!(lowered
             .features
             .iter()
-            .any(|feature| feature.value == "mark::quality"));
+            .any(|feature| feature.kind == ProgramFeatureKind::Mark
+                && feature.value == "mark::quality"));
         assert!(lowered
             .features
             .iter()
-            .any(|feature| feature.value == "judgment::determinate_appearance"));
+            .any(|feature| feature.kind == ProgramFeatureKind::Judgment
+                && feature.value == "judgment::determinate_appearance"));
         assert!(lowered
             .features
             .iter()
-            .any(|feature| feature.value == "syllogism::scientific_inference"));
+            .any(|feature| feature.kind == ProgramFeatureKind::Syllogism
+                && feature.value == "syllogism::scientific_inference"));
         assert!(lowered
             .features
             .iter()
-            .any(|feature| feature.value == "reflection::essence_path"));
+            .any(|feature| feature.kind == ProgramFeatureKind::Reflection
+                && feature.value == "reflection::essence_path"));
         assert!(lowered
             .features
             .iter()
-            .any(|feature| feature.value == "logogenesis::scientific_genesis"));
+            .any(|feature| feature.kind == ProgramFeatureKind::Logogenesis
+                && feature.value == "logogenesis::scientific_genesis"));
         assert!(lowered
             .features
             .iter()
-            .any(|feature| feature.value == "unfold::essential_relation"));
+            .any(|feature| feature.kind == ProgramFeatureKind::Logogenesis
+                && feature.value == "unfold::essential_relation"));
+        assert!(lowered
+            .features
+            .iter()
+            .any(|feature| feature.kind == ProgramFeatureKind::Source));
+        assert!(lowered
+            .features
+            .iter()
+            .any(|feature| feature.kind == ProgramFeatureKind::Observation));
+        assert!(lowered
+            .features
+            .iter()
+            .any(|feature| feature.kind == ProgramFeatureKind::Principle));
+        assert!(lowered
+            .features
+            .iter()
+            .any(|feature| feature.kind == ProgramFeatureKind::Concept));
+        assert!(lowered
+            .features
+            .iter()
+            .any(|feature| feature.kind == ProgramFeatureKind::Procedure));
     }
 
     #[test]

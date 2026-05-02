@@ -12,17 +12,13 @@ fn main() -> Result<(), GDSFrameError> {
         ("group": ["A", "B", "A"]),
     )?;
 
-    // Build an expression with the `expr!` macro.
-    // This expands to `col("score").gt(lit(20.0))`.
-    let expr = gds::expr!(score > 20.0);
-
     // Use the Python-like `sc!` shorthand to select columns from the table.
     // Accepts either bare selectors or a bracketed list.
     let view1 = gds::sc!(table, id, score)?;
     let view2 = gds::sc!(table, [id, "group"])?;
 
-    // Evaluate the `expr` as a filter and show results.
-    let filtered = table.filter_expr(expr)?;
+    // Filter with the macro DSL rather than dropping to `filter_expr`.
+    let filtered = gds::filter!(table, score > 20.0)?;
 
     println!("--- original table ---");
     println!("columns: {:?}", table.column_names());

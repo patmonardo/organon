@@ -18,14 +18,24 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 "specification::gdsl.analytics".to_string(),
             ),
             ProgramFeature::new(
-                ProgramFeatureKind::OperatorPattern,
-                "algo.pagerank".to_string(),
-                "operator_pattern::algo.pagerank".to_string(),
+                ProgramFeatureKind::Source,
+                "source::graph".to_string(),
+                "source graph : catalog(graphframe-demo)".to_string(),
             ),
             ProgramFeature::new(
-                ProgramFeatureKind::Dependency,
-                "collections.dataset".to_string(),
-                "dependency::collections.dataset".to_string(),
+                ProgramFeatureKind::Principle,
+                "principle::centrality_admissible".to_string(),
+                "principle centrality_admissible for graph".to_string(),
+            ),
+            ProgramFeature::new(
+                ProgramFeatureKind::Concept,
+                "concept::Centrality".to_string(),
+                "concept Centrality from graph".to_string(),
+            ),
+            ProgramFeature::new(
+                ProgramFeatureKind::Procedure,
+                "procedure::emit_centrality".to_string(),
+                "procedure emit_centrality".to_string(),
             ),
         ],
     );

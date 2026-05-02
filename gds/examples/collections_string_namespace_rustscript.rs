@@ -11,11 +11,12 @@ fn main() -> Result<(), GDSFrameError> {
         (fruit: ["pear", "peer", "pêra", "päärynä"]),
     )?;
 
-    let result = df.with_columns(&[
-        str_ns(gds::col!(fruit)).len_bytes().alias("byte_count"),
-        str_ns(gds::col!(fruit)).len_chars().alias("letter_count"),
-        str_ns(gds::col!(fruit)).to_uppercase().alias("upper"),
-    ])?;
+    let result = gds::mutate!(
+        df,
+        byte_count = { str_ns(gds::col!(fruit)).len_bytes() },
+        letter_count = { str_ns(gds::col!(fruit)).len_chars() },
+        upper = { str_ns(gds::col!(fruit)).to_uppercase() },
+    )?;
 
     println!("{}", result.fmt_table());
 

@@ -9,7 +9,7 @@ use gds::collections::catalog::disk::CollectionsCatalogDisk;
 use gds::collections::catalog::types::{
     CollectionsCatalogDiskEntry, CollectionsIoFormat, CollectionsIoPolicy,
 };
-use gds::collections::dataframe::{scale_f64_column, GDSFrameError, TableBuilder};
+use gds::collections::dataframe::{scale_f64_column, GDSFrameError};
 use gds::collections::io::{csv, parquet};
 use gds::config::CollectionsBackend;
 use gds::types::ValueType;
@@ -42,10 +42,10 @@ fn main() -> Result<(), GDSFrameError> {
         data_path: catalog.default_data_path(table_csv_name, CollectionsIoFormat::Csv),
     };
 
-    let table = TableBuilder::new()
-        .with_i64_column("id", &[1, 2, 3, 5, 8, 13, 21])
-        .with_f64_column("score", &[10.0, 15.0, 20.0, 25.0, 30.0, 35.0, 40.0])
-        .build()?;
+    let table = gds::tbl_def!(
+        (id: i64 => [1, 2, 3, 5, 8, 13, 21]),
+        (score: f64 => [10.0, 15.0, 20.0, 25.0, 30.0, 35.0, 40.0]),
+    )?;
 
     let table_csv_entry = register_or_replace(&mut catalog, table_csv_entry)?;
     let table_csv_path = root.join(&table_csv_entry.data_path);

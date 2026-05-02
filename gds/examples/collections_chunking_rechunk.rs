@@ -3,18 +3,18 @@
 //! Run with:
 //!   cargo run -p gds --example collections_chunking_rechunk
 
-use gds::collections::dataframe::{GDSDataFrame, GDSFrameError, TableBuilder};
+use gds::collections::dataframe::{GDSDataFrame, GDSFrameError};
 
 fn main() -> Result<(), GDSFrameError> {
-    let left = TableBuilder::new()
-        .with_i64_column("id", &[1, 2, 3])
-        .with_f64_column("score", &[10.0, 25.0, 40.0])
-        .build()?;
+    let left = gds::tbl_def!(
+        (id: i64 => [1, 2, 3]),
+        (score: f64 => [10.0, 25.0, 40.0]),
+    )?;
 
-    let right = TableBuilder::new()
-        .with_i64_column("id", &[4, 5, 6])
-        .with_f64_column("score", &[15.0, 30.0, 22.0])
-        .build()?;
+    let right = gds::tbl_def!(
+        (id: i64 => [4, 5, 6]),
+        (score: f64 => [15.0, 30.0, 22.0]),
+    )?;
 
     // vstack adds chunks. This is typical when building up a DataFrame in pieces.
     let mut combined_df = left.clone().into_inner();

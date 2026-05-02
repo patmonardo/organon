@@ -16,7 +16,7 @@ use crate::collections::dataset::artifact::{
     DatasetArtifactRecord, DatasetArtifactRelationRecord,
 };
 use crate::collections::dataset::dataset::Dataset;
-use crate::form::{ProgramFeatureKind, ProgramFeatures};
+use crate::form::ProgramFeatures;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -458,22 +458,12 @@ pub fn ontology_image_from_program_features(features: &ProgramFeatures) -> Ontol
         .features
         .iter()
         .enumerate()
-        .filter_map(|(index, feature)| {
-            let kind = match feature.kind {
-                ProgramFeatureKind::ApplicationForm => "application-form",
-                ProgramFeatureKind::OperatorPattern => "operator-pattern",
-                ProgramFeatureKind::Dependency => "dependency",
-                ProgramFeatureKind::Condition => "condition",
-                ProgramFeatureKind::SpecificationBinding => "specification-binding",
-            };
-
-            Some(OntologyImageFeatureRow {
-                feature_id: format!("pf:{}:{}", index, sanitize_id_segment(&feature.value)),
-                model_id: None,
-                label: feature.value.clone(),
-                kind: kind.to_string(),
-                ontology_ids: ontology_ids.clone(),
-            })
+        .map(|(index, feature)| OntologyImageFeatureRow {
+            feature_id: format!("pf:{}:{}", index, sanitize_id_segment(&feature.value)),
+            model_id: None,
+            label: feature.value.clone(),
+            kind: feature.kind.as_str().to_string(),
+            ontology_ids: ontology_ids.clone(),
         })
         .collect::<Vec<_>>();
 
@@ -608,9 +598,9 @@ mod tests {
                     "specification::gdsl.analytics".to_string(),
                 ),
                 ProgramFeature::new(
-                    ProgramFeatureKind::OperatorPattern,
-                    "algo.pagerank".to_string(),
-                    "operator_pattern::algo.pagerank".to_string(),
+                    ProgramFeatureKind::Principle,
+                    "principle::centrality_admissible".to_string(),
+                    "principle centrality_admissible for graph".to_string(),
                 ),
             ],
         );
@@ -619,6 +609,11 @@ mod tests {
         assert_eq!(image.engine, "polars");
         assert_eq!(image.tables.models.len(), 1);
         assert_eq!(image.tables.features.len(), 2);
+        assert!(image
+            .tables
+            .features
+            .iter()
+            .any(|feature| feature.kind == "principle"));
         assert_eq!(
             image.tables.provenance[0].runtime_mode,
             OntologyRuntimeMode::TranscendentalLogic
@@ -637,9 +632,9 @@ mod tests {
                     "specification::gdsl.analytics".to_string(),
                 ),
                 ProgramFeature::new(
-                    ProgramFeatureKind::OperatorPattern,
-                    "algo.pagerank".to_string(),
-                    "operator_pattern::algo.pagerank".to_string(),
+                    ProgramFeatureKind::Procedure,
+                    "procedure::emit_centrality".to_string(),
+                    "procedure emit_centrality".to_string(),
                 ),
             ],
         );

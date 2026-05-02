@@ -49,11 +49,10 @@ fn main() -> Result<(), GDSFrameError> {
         println!("lowering[{index}]: {expr:?}");
     }
 
-    let semantic_view = dataset.with_columns(&[gds::col!(text)
-        .ds()
-        .text()
-        .lowercase()
-        .alias("normalized_text")])?;
+    let semantic_view = gds::mutate!(
+        dataset,
+        normalized_text = { gds::col!(text).ds().text().lowercase() },
+    )?;
     println!("semantic view:\n{}", semantic_view.table().fmt_table());
 
     let compilation = pipeline.to_compilation();

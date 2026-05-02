@@ -6,7 +6,7 @@
 use std::path::PathBuf;
 
 use gds::collections::catalog::types::CollectionsIoFormat;
-use gds::collections::dataframe::{col, lit, scale_f64_column, GDSFrameError, TableBuilder};
+use gds::collections::dataframe::{scale_f64_column, GDSFrameError};
 use gds::collections::extensions::catalog::{CatalogExtension, CatalogExtensionConfig};
 
 fn main() -> Result<(), GDSFrameError> {
@@ -30,10 +30,10 @@ fn main() -> Result<(), GDSFrameError> {
 }
 
 fn run_pipeline(catalog: &mut CatalogExtension) -> Result<(), GDSFrameError> {
-    let table = TableBuilder::new()
-        .with_i64_column("id", &[1, 2, 3, 5, 8, 13, 21])
-        .with_f64_column("score", &[10.0, 15.0, 20.0, 25.0, 30.0, 35.0, 40.0])
-        .build()?;
+    let table = gds::tbl_def!(
+        (id: i64 => [1, 2, 3, 5, 8, 13, 21]),
+        (score: f64 => [10.0, 15.0, 20.0, 25.0, 30.0, 35.0, 40.0]),
+    )?;
 
     catalog.write_table("sample_table", &table, None)?;
 
@@ -43,13 +43,13 @@ fn run_pipeline(catalog: &mut CatalogExtension) -> Result<(), GDSFrameError> {
     println!("Scaled table:\n{}", table.fmt_table());
     catalog.write_table("sample_table_processed", &table, None)?;
 
-    let selected = table.select_columns(&["id", "score"])?;
+    let selected = gds::sc!(table, [id, score])?;
     println!("Selected columns (eager):\n{}", selected.fmt_table());
 
-    let filtered = table.filter_expr(col("score").gt(lit(30.0)))?;
+    let filtered = gds::filter!(table, score > 30.0)?;
     println!("Filtered rows (expr):\n{}", filtered.fmt_table());
 
-    let grouped = table.group_by_columns(&["id"], &[col("score").mean().alias("mean_score")])?;
+    let grouped = gds::group_by!(table, [id], [gds::agg!(score.mean => "mean_score")])?;
     println!("Grouped table (expr):\n{}", grouped.fmt_table());
 
     Ok(())

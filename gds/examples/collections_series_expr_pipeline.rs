@@ -23,10 +23,11 @@ fn main() -> Result<(), GDSFrameError> {
     let a = series("a", &[1, 2, 3]);
     let b = series("b", &[10, 20, 30]);
     let df = GDSDataFrame::from_series(vec![a, b])?;
-    let result = df.with_columns(&[
-        (col("a") + col("b")).alias("sum_ab"),
-        (col("a") * col("b")).alias("prod_ab"),
-    ])?;
+    let result = gds::mutate!(
+        df,
+        sum_ab = { col("a") + col("b") },
+        prod_ab = { col("a") * col("b") },
+    )?;
     println!("expr_result = {}", result.fmt_table());
 
     Ok(())

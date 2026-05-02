@@ -553,7 +553,7 @@ impl ProgramSpec {
 
         for dependency in &self.form.context.dependencies {
             features.push(ProgramFeature::new(
-                ProgramFeatureKind::Dependency,
+                ProgramFeatureKind::Import,
                 dependency.clone(),
                 format!("context_dependency::{dependency}"),
             ));
@@ -643,13 +643,58 @@ pub struct ProgramExecutionPlan {
 }
 
 /// Canonical feature kinds that define what a Program means prior to compilation.
+///
+/// The GDSL-facing variants are the Doctrine taxonomy: Source → Observation →
+/// Reflection → Principle → Concept → Judgment → Syllogism → Procedure.
+/// `ApplicationForm` and `OperatorPattern` remain as the native PureForm bridge
+/// for existing `ProgramSpec` execution-plan opcodes.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ProgramFeatureKind {
+    Import,
+    Source,
+    Observation,
+    Reflection,
+    Logogenesis,
+    Principle,
+    Condition,
+    Mark,
+    Concept,
+    Judgment,
+    Syllogism,
+    Inference,
+    Query,
+    Procedure,
+    SpecificationBinding,
     ApplicationForm,
     OperatorPattern,
-    Dependency,
-    Condition,
-    SpecificationBinding,
+}
+
+impl ProgramFeatureKind {
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Import => "import",
+            Self::Source => "source",
+            Self::Observation => "observation",
+            Self::Reflection => "reflection",
+            Self::Logogenesis => "logogenesis",
+            Self::Principle => "principle",
+            Self::Condition => "condition",
+            Self::Mark => "mark",
+            Self::Concept => "concept",
+            Self::Judgment => "judgment",
+            Self::Syllogism => "syllogism",
+            Self::Inference => "inference",
+            Self::Query => "query",
+            Self::Procedure => "procedure",
+            Self::SpecificationBinding => "specification-binding",
+            Self::ApplicationForm => "application-form",
+            Self::OperatorPattern => "operator-pattern",
+        }
+    }
+
+    pub fn is_operator_pattern(&self) -> bool {
+        matches!(self, Self::OperatorPattern)
+    }
 }
 
 /// Atomic program feature used by Dataset/DataFrame composition and compiler inputs.
@@ -694,7 +739,7 @@ impl ProgramFeatures {
     pub fn opcodes(&self) -> Vec<String> {
         self.features
             .iter()
-            .filter(|feature| matches!(feature.kind, ProgramFeatureKind::OperatorPattern))
+            .filter(|feature| feature.kind.is_operator_pattern())
             .map(|feature| feature.value.clone())
             .collect()
     }

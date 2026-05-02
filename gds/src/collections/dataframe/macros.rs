@@ -618,8 +618,25 @@ macro_rules! sc {
 /// Examples:
 /// `order_by!(table, [score], desc)`
 /// `order_by!(table, ["score"], asc)`
+/// `order_by!(table, [(region, asc), (weighted_score, desc)])`
 #[macro_export]
 macro_rules! order_by {
+    ($table:expr, [ $( ($sel:ident, $dir:ident) ),* $(,)? ]) => {
+        $table.order_by_columns(
+            &[ $( stringify!($sel) ),* ],
+            $crate::collections::dataframe::PolarsSortMultipleOptions::new()
+                .with_order_descending_multi([ $( $crate::order_by!(@descending $dir) ),* ]),
+        )
+    };
+
+    ($table:expr, [ $( ($sel:literal, $dir:ident) ),* $(,)? ]) => {
+        $table.order_by_columns(
+            &[ $( $sel ),* ],
+            $crate::collections::dataframe::PolarsSortMultipleOptions::new()
+                .with_order_descending_multi([ $( $crate::order_by!(@descending $dir) ),* ]),
+        )
+    };
+
     ($table:expr, [ $($sel:tt),* $(,)? ]) => {
         $table.order_by_columns(
             &$crate::selector![ $($sel),* ],
@@ -642,6 +659,14 @@ macro_rules! order_by {
             $crate::collections::dataframe::PolarsSortMultipleOptions::new()
                 .with_order_descending(false),
         )
+    };
+
+    (@descending asc) => {
+        false
+    };
+
+    (@descending desc) => {
+        true
     };
 }
 
@@ -670,6 +695,18 @@ macro_rules! where_ {
 /// ```
 #[macro_export]
 macro_rules! mutate {
+    ($table:expr, $( $name:ident = { $expr:expr } ),+ $(,)?) => {{
+        let mut __exprs = ::std::vec::Vec::new();
+        $( __exprs.push(($expr).alias(stringify!($name))); )+
+        $table.with_columns(&__exprs)
+    }};
+
+    ($table:expr, $( $name:literal = { $expr:expr } ),+ $(,)?) => {{
+        let mut __exprs = ::std::vec::Vec::new();
+        $( __exprs.push(($expr).alias($name)); )+
+        $table.with_columns(&__exprs)
+    }};
+
     ($table:expr, $( $name:ident = ( $($e:tt)+ ) ),+ $(,)?) => {{
         let mut __exprs = ::std::vec::Vec::new();
         $( __exprs.push($crate::expr!($($e)+).alias(stringify!($name))); )+
@@ -704,6 +741,9 @@ macro_rules! summarize {
 /// ```
 #[macro_export]
 macro_rules! arrange {
+    ($table:expr, [ $( ($sel:tt, $dir:ident) ),* $(,)? ]) => {
+        $crate::order_by!($table, [ $( ($sel, $dir) ),* ])
+    };
     ($table:expr, [ $($sel:tt),* $(,)? ]) => {
         $crate::order_by!($table, [ $($sel),* ])
     };

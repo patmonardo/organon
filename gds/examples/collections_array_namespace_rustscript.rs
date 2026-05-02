@@ -15,24 +15,20 @@ fn main() -> Result<(), GDSFrameError> {
     let tags = Series::new("tags".into(), &[tag0, tag1]);
     let idx = Series::new("idx".into(), [1i64, -1]);
 
-    let df = GDSDataFrame::from_series(vec![vals.clone(), tags, idx])?.with_columns(&[
-        gds::col!(vals)
-            .cast(DataType::Array(Box::new(DataType::Int64), 3))
-            .alias("vals"),
-        gds::col!(tags)
-            .cast(DataType::Array(Box::new(DataType::String), 2))
-            .alias("tags"),
-    ])?;
+    let df = gds::mutate!(
+        GDSDataFrame::from_series(vec![vals.clone(), tags, idx])?,
+        vals = { gds::col!(vals).cast(DataType::Array(Box::new(DataType::Int64), 3)) },
+        tags = { gds::col!(tags).cast(DataType::Array(Box::new(DataType::String), 2)) },
+    )?;
 
-    let result = df.with_columns(&[
-        arr_ns(gds::col!(vals)).len().alias("len"),
-        arr_ns(gds::col!(vals)).sum().alias("sum"),
-        arr_ns(gds::col!(vals)).sort(false, false).alias("sorted"),
-        arr_ns(gds::col!(vals))
-            .get_expr(gds::col!(idx), true)
-            .alias("picked"),
-        arr_ns(gds::col!(tags)).join("-", true).alias("joined"),
-    ])?;
+    let result = gds::mutate!(
+        df,
+        len = { arr_ns(gds::col!(vals)).len() },
+        sum = { arr_ns(gds::col!(vals)).sum() },
+        sorted = { arr_ns(gds::col!(vals)).sort(false, false) },
+        picked = { arr_ns(gds::col!(vals)).get_expr(gds::col!(idx), true) },
+        joined = { arr_ns(gds::col!(tags)).join("-", true) },
+    )?;
 
     println!("{}", result.fmt_table());
 

@@ -3,7 +3,7 @@
 //! Run with:
 //!   cargo run -p gds --example collections_order_group_exprs
 
-use gds::collections::dataframe::{GDSFrameError, PolarsSortMultipleOptions};
+use gds::collections::dataframe::GDSFrameError;
 
 fn main() -> Result<(), GDSFrameError> {
     println!("== Collections ordering/grouping walkthrough ==");
@@ -26,10 +26,7 @@ fn main() -> Result<(), GDSFrameError> {
     )?;
 
     // Order by region (asc), then weighted_score (desc).
-    let ordered = weighted.order_by_columns(
-        &gds::selector![region, weighted_score],
-        PolarsSortMultipleOptions::new().with_order_descending_multi([false, true]),
-    )?;
+    let ordered = gds::order_by!(weighted, [(region, asc), (weighted_score, desc)])?;
     println!(
         "Ordered by region, weighted_score desc:\n{}",
         ordered.fmt_table()
