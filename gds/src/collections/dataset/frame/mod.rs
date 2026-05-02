@@ -7,7 +7,7 @@
 //! | scalar | `Expr`      | `Series`     |
 //! | frame  | `LazyFrame` | `DataFrame`  |
 //!
-//! This file provides [`DatasetDataFrameNameSpace`], the eager-frame entry
+//! This module provides [`DatasetDataFrameNameSpace`], the eager-frame entry
 //! point, plus the [`DataFrameDatasetExt`] trait that attaches `.ds()` onto
 //! `GDSDataFrame`. The eager frame is intentionally thin: it exposes the
 //! underlying `GDSDataFrame` and a `.lazy()` bridge into

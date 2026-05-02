@@ -7,39 +7,40 @@
 //! use gds::collections::dataset::prelude::*;
 //! ```
 
-// Core dataset types
+// Core SDK and Concept-return types
 pub use crate::collections::dataset::catalog::DatasetCatalog;
 pub use crate::collections::dataset::corpus::Corpus;
 pub use crate::collections::dataset::dataset::Dataset;
+pub use crate::collections::dataset::sem::{SemDataset, SemError, SemForm};
 pub use crate::collections::dataset::{DatasetArtifactKind, DatasetArtifactProfile};
-// Language model helpers
+
+// Language fold: LanguageModel and statistical LM helpers
 pub use crate::collections::dataset::lm::{
     AbsoluteDiscountingInterpolated, KneserNeyInterpolated, LanguageModel, Laplace, Lidstone,
     LmBase, LmError, NgramCounter, StupidBackoff, Vocabulary, WittenBellInterpolated, MLE,
 };
-// Plan / DataOps (lazy computation graphs)
+
+// Essence middle: Model:Feature::Plan
 pub use crate::collections::dataset::plan::{EvalMode, Plan, PlanEnv, PlanError, Source, Step};
 
-// Features (TypedDict-like `item` Struct)
 pub use crate::collections::dataset::feature::{
     Feature, FeatureExpr, FeatureExprNameSpace, FeatureNamespace, FeatureSpace, FeatureView,
 };
 
-// Model interface
+pub use crate::collections::dataset::model::exec::{
+    execute_essence, execute_feature, execute_marked, ExecutedFeature, Execution, ExecutionAction,
+};
+pub use crate::collections::dataset::model::image::{
+    realize_from_essence, realize_image, ImageOptions,
+};
+pub use crate::collections::dataset::model::prep::{
+    prepare_model, FeatureMark, MarkRequirement, MarkedFeature, Modality, ModelEssence,
+    ModelPrepExt, PreparationError, PreparationReport, PreparationStep,
+};
 pub use crate::collections::dataset::model::{
     Model, ModelAttributeUpdate, ModelContext, ModelDelta, ModelId, ModelKind, ModelReport,
     ModelResult, ModelScore, ModelSpec, ModelState, ModelView, NoOpLanguageModel, NoOpParser,
     NoOpTagger,
-};
-pub use crate::collections::dataset::model_exec::{
-    execute_essence, execute_feature, execute_marked, ExecutedFeature, Execution, ExecutionAction,
-};
-pub use crate::collections::dataset::model_image::{
-    realize_from_essence, realize_image, ImageOptions,
-};
-pub use crate::collections::dataset::model_prep::{
-    prepare_model, FeatureMark, MarkRequirement, MarkedFeature, Modality, ModelEssence,
-    ModelPrepExt, PreparationError, PreparationReport, PreparationStep,
 };
 
 // Metrics
@@ -56,18 +57,13 @@ pub use crate::collections::dataset::schema::FeatureSchema;
 // Streaming convenience types
 pub use crate::collections::dataset::streaming::{StreamingBatchIter, StreamingDataset};
 
-// Token surface
-pub use crate::collections::dataset::token::{Token, TokenKind, TokenSpan};
-
-// Stem surface
+// LanguageModel SubFeatures and value forms. These paths intentionally use the
+// top-level shim modules so the prelude remains stable during namespace moves.
 pub use crate::collections::dataset::stem::{Stem, StemKind};
-
-// Stemmer surface
 pub use crate::collections::dataset::stemmer::{
     IdentityStemmer, LowercaseStemmer, SimpleSuffixStemmer, Stemmer,
 };
-
-// Tokenizer
+pub use crate::collections::dataset::token::{Token, TokenKind, TokenSpan};
 pub use crate::collections::dataset::tokenizer::{
     align_token_texts, align_tokens, blankline_tokenize, line_tokenize, regexp_span_tokenize,
     regexp_tokenize, spans_to_relative, string_span_tokenize, wordpunct_tokenize,
@@ -76,16 +72,13 @@ pub use crate::collections::dataset::tokenizer::{
     TabTokenizer, Tokenizer, WhitespaceTokenizer, WordPunctTokenizer,
 };
 
-// Parse surface
 pub use crate::collections::dataset::parse::{Parse, ParseForest, ParseKind};
-
-// Parser surface
 pub use crate::collections::dataset::parser::{
     BracketedParser, DependencyParser, FlatParser, JsonParser, MarkupParser, Parser,
 };
 
 // Feature structure surface
-pub use crate::collections::dataset::featstruct::{
+pub use crate::collections::dataset::feature::featstruct::{
     format_featstruct, parse_featstruct, parse_featvalue, subsumes_featstruct, unify_featstruct,
     FeatBindings, FeatDict, FeatList, FeatPath, FeatPathSegment, FeatReentranceId, FeatStruct,
     FeatStructParseError, FeatStructSet, FeatValue,

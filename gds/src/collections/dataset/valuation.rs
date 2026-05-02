@@ -43,7 +43,7 @@ use polars::prelude::PolarsError;
 
 use crate::collections::dataframe::GDSDataFrame;
 use crate::collections::dataset::document::{DocumentFrame, Span};
-use crate::collections::dataset::feature_role::{
+use crate::collections::dataset::feature::role::{
     FeatureDType, FeatureDescriptor, FeatureName, FeatureRole,
 };
 use crate::collections::dataset::source::ContentHash;
@@ -171,7 +171,7 @@ impl Valuation {
 /// columns are tolerated and ignored.
 ///
 /// The schema is held as `Vec<FeatureDescriptor>` so iteration is cheap;
-/// if you have a [`crate::collections::dataset::feature_role::FeatureFrame`]
+/// if you have a [`crate::collections::dataset::feature::role::FeatureFrame`]
 /// you can hand its descriptors in via [`Self::with_schema_descriptors`].
 #[derive(Debug, Clone)]
 pub struct ValuationFrame {

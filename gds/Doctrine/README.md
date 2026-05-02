@@ -16,7 +16,7 @@ gds/Doctrine/
   ├── PRINCIPLE-FOUNDATION.md     ← The high principle: Source → Observation → Reflection → Principle → Concept → Judgment → Syllogism → Procedure
   ├── PHASE-1-STATUS.md           ← What's done, what remains
   │
-  ├── EXEMPLARS/                  ← Canonical texts (25/41 written, 16 to come)
+  ├── EXEMPLARS/                  ← Canonical texts (28/42 written, 14 to come)
   │   ├── TEMPLATE.md             ← How to write an exemplar
   │   ├── 001-frame-dsl.md        ← Stage 1: The DSL surface
   │   ├── 002-corpus-readers.md   ← Stage 1-2: Sources and corpus
@@ -28,9 +28,9 @@ gds/Doctrine/
   │   ├── 008-stdlib-resources.md
   │   ├── 009-json-semantic-form.md
   │   ├── 010-xml-html-semantic-form.md
-  │   └── ... through 025-graphframe-catalog-write.md
+  │   └── ... through 028-dataframe-intuition.md
   │
-  └── REFERENCES/                 ← Consulted definitions (29 written)
+  └── REFERENCES/                 ← Consulted definitions (31 written)
       ├── collections-dataset/
       │   └── core-concepts.md    ← Dataset, DataFrame, Mark, Feature, Pipeline
       ├── form-processor/

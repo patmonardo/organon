@@ -29,6 +29,20 @@
 //! intensional counterpart to a `Corpus`. A semantic dataset in use is a
 //! `Corpus` paired with a `LanguageModel`: evidence on one side,
 //! meaning on the other.
+//!
+//! In the nine-moment Dataset SDK, `Corpus` is the Concept-body fold. Its
+//! canonical SubFeatures live here:
+//!
+//! - [`document`] — document frames and spans;
+//! - [`annotation`] — annotation records and annotation frames;
+//! - [`source`] — source identity, content hashes, and media types.
+//!
+//! Top-level `dataset::document`, `dataset::annotation`, and `dataset::source`
+//! remain compatibility shims for existing callers and prelude exports.
+
+pub mod annotation;
+pub mod document;
+pub mod source;
 
 use std::collections::BTreeSet;
 use std::fs::read_to_string;
@@ -38,10 +52,13 @@ use polars::prelude::{NamedFrom, PlSmallStr, PolarsError, Series};
 use sha2::{Digest, Sha256};
 
 use crate::collections::dataframe::{GDSDataFrame, GDSFrameError};
-use crate::collections::dataset::annotation::{columns as anncols, AnnotationFrame};
+use crate::collections::dataset::annotation::{
+    columns as anncols, AnnotationFrame, AnnotationRecord,
+};
 use crate::collections::dataset::artifact::DatasetArtifactKind;
 use crate::collections::dataset::dataset::Dataset;
-use crate::collections::dataset::document::DocumentFrame;
+use crate::collections::dataset::document::{columns as doccols, DocumentFrame, SpanUnit};
+use crate::collections::dataset::feature::role::Provenance;
 use crate::collections::dataset::parse::ParseForest;
 use crate::collections::dataset::parser::Parser;
 use crate::collections::dataset::source::{ContentHash, Source, SourceFrame};
@@ -49,7 +66,7 @@ use crate::collections::dataset::stem::Stem;
 use crate::collections::dataset::stemmer::Stemmer;
 use crate::collections::dataset::tag::Tag;
 use crate::collections::dataset::tagger::Tagger;
-use crate::collections::dataset::token::Token;
+use crate::collections::dataset::token::{Token, TokenSpan};
 use crate::collections::dataset::tokenizer::Tokenizer;
 
 /// Errors raised when constructing or querying a `Corpus`.
@@ -290,10 +307,7 @@ impl Corpus {
     /// Token counts per document, computed by whitespace splitting.
     pub fn token_counts(&self) -> Result<Series, GDSFrameError> {
         let df = self.dataset.table().dataframe().clone();
-        let series = df
-            .column("text")?
-            .as_series()
-            .ok_or_else(|| GDSFrameError::from("column is not a Series"))?;
+        let series = df.column("text")?.as_materialized_series();
 
         let mut counts: Vec<i64> = Vec::with_capacity(series.len());
         for i in 0..series.len() {
@@ -345,12 +359,119 @@ impl Corpus {
         Ok(tokens.iter().map(|doc| tagger.tag_tokens(doc)).collect())
     }
 
+    /// Tokenize each document and append token observations to the annotation frame.
+    pub fn annotate_tokens<T: Tokenizer>(
+        &mut self,
+        tokenizer: &T,
+        provenance: &Provenance,
+    ) -> Result<usize, CorpusError> {
+        let hashes = self.document_hashes()?;
+        let tokens = self.tokenize(tokenizer)?;
+        let mut records = Vec::new();
+
+        for (document, doc_tokens) in hashes.iter().zip(tokens.iter()) {
+            for token in doc_tokens {
+                let span = token.span();
+                records.push(AnnotationRecord::new(
+                    document.clone(),
+                    span.start() as u64,
+                    span.end() as u64,
+                    SpanUnit::Byte,
+                    format!("{}:{}", token.kind().as_str(), token.text()),
+                    provenance,
+                ));
+            }
+        }
+
+        self.extend_annotations(records)
+    }
+
+    /// Tag each document and append marks to the annotation frame.
+    pub fn annotate_tags<T: Tokenizer, G: Tagger>(
+        &mut self,
+        tokenizer: &T,
+        tagger: &G,
+        provenance: &Provenance,
+    ) -> Result<usize, CorpusError> {
+        let hashes = self.document_hashes()?;
+        let tagged = self.tag(tokenizer, tagger)?;
+        let mut records = Vec::new();
+
+        for (document, doc_tags) in hashes.iter().zip(tagged.iter()) {
+            for tag in doc_tags {
+                let span = tag.span();
+                records.push(AnnotationRecord::new(
+                    document.clone(),
+                    span.start() as u64,
+                    span.end() as u64,
+                    SpanUnit::Byte,
+                    crate::collections::dataset::tag::tuple2str((tag.text(), Some(tag.tag())), "/"),
+                    provenance,
+                ));
+            }
+        }
+
+        self.extend_annotations(records)
+    }
+
+    /// Parse each document and append reflection structures to the annotation frame.
+    pub fn annotate_parses<T: Tokenizer, P: Parser>(
+        &mut self,
+        tokenizer: &T,
+        parser: &P,
+        provenance: &Provenance,
+    ) -> Result<usize, CorpusError> {
+        let hashes = self.document_hashes()?;
+        let tokens = self.tokenize(tokenizer)?;
+        let mut records = Vec::new();
+
+        for (document, doc_tokens) in hashes.iter().zip(tokens.iter()) {
+            let parses = parser.parse_tokens(doc_tokens);
+            let fallback_span = span_from_tokens(doc_tokens);
+            for parse in parses {
+                let span = parse.span().or(fallback_span);
+                let (start, end) = span
+                    .map(|span| (span.start() as u64, span.end() as u64))
+                    .unwrap_or((0, 0));
+                records.push(AnnotationRecord::new(
+                    document.clone(),
+                    start,
+                    end,
+                    SpanUnit::Byte,
+                    parse.tree().format_bracketed(),
+                    provenance,
+                ));
+            }
+        }
+
+        self.extend_annotations(records)
+    }
+
+    fn extend_annotations(&mut self, records: Vec<AnnotationRecord>) -> Result<usize, CorpusError> {
+        let added = records.len();
+        if added == 0 {
+            return Ok(0);
+        }
+
+        let new_frame = AnnotationFrame::from_records(records)?;
+        let stacked = self.annotations.dataframe().vstack(new_frame.dataframe())?;
+        self.annotations = AnnotationFrame::from_dataframe(stacked)?;
+        Ok(added)
+    }
+
+    fn document_hashes(&self) -> Result<Vec<String>, CorpusError> {
+        let df = self.documents.dataframe().dataframe().clone();
+        let series = df.column(doccols::SOURCE)?.as_materialized_series();
+        let mut out = Vec::with_capacity(series.len());
+        for i in 0..series.len() {
+            out.push(series.get(i)?.to_string());
+        }
+        Ok(out)
+    }
+
     fn read_text_column(&self) -> Result<Vec<String>, GDSFrameError> {
         let df = self.dataset.table().dataframe().clone();
-        let series = df
-            .column("text")?
-            .as_series()
-            .ok_or_else(|| GDSFrameError::from("column is not a Series"))?;
+        let series = df.column("text")?.as_materialized_series();
         let mut out = Vec::with_capacity(series.len());
         for i in 0..series.len() {
             let av = series.get(i)?;
@@ -359,6 +480,12 @@ impl Corpus {
         }
         Ok(out)
     }
+}
+
+fn span_from_tokens(tokens: &[Token]) -> Option<TokenSpan> {
+    let first = tokens.first()?;
+    let last = tokens.last()?;
+    Some(TokenSpan::new(first.span().start(), last.span().end()))
 }
 
 fn sha256_hex(bytes: &[u8]) -> String {
@@ -377,6 +504,13 @@ fn sha256_hex(bytes: &[u8]) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::collections::dataset::parser::FlatParser;
+    use crate::collections::dataset::tagger::DefaultTagger;
+    use crate::collections::dataset::tokenizer::WhitespaceTokenizer;
+
+    fn provenance(layer: &str) -> Provenance {
+        Provenance::new(layer, "dataset", "v1", "automatic")
+    }
 
     #[test]
     fn from_texts_builds_all_three_frames() {
@@ -400,5 +534,45 @@ mod tests {
         let c = Corpus::from_texts(&["a b c", "x y"]).expect("corpus");
         let counts = c.token_counts().expect("token counts");
         assert_eq!(counts.len(), 2);
+    }
+
+    #[test]
+    fn annotate_tokens_appends_observation_records() {
+        let mut c = Corpus::from_texts(&["alpha beta"]).expect("corpus");
+        let added = c
+            .annotate_tokens(&WhitespaceTokenizer, &provenance("Observation"))
+            .expect("annotation");
+
+        assert_eq!(added, 2);
+        assert_eq!(c.annotation_count(), 2);
+        assert!(c.layers().unwrap().contains("Observation"));
+    }
+
+    #[test]
+    fn annotate_tags_appends_mark_records() {
+        let mut c = Corpus::from_texts(&["alpha beta"]).expect("corpus");
+        let added = c
+            .annotate_tags(
+                &WhitespaceTokenizer,
+                &DefaultTagger::new("NN"),
+                &provenance("Mark"),
+            )
+            .expect("annotation");
+
+        assert_eq!(added, 2);
+        assert_eq!(c.annotation_count(), 2);
+        assert!(c.layers().unwrap().contains("Mark"));
+    }
+
+    #[test]
+    fn annotate_parses_appends_reflection_records() {
+        let mut c = Corpus::from_texts(&["alpha beta"]).expect("corpus");
+        let added = c
+            .annotate_parses(&WhitespaceTokenizer, &FlatParser, &provenance("Reflection"))
+            .expect("annotation");
+
+        assert_eq!(added, 1);
+        assert_eq!(c.annotation_count(), 1);
+        assert!(c.layers().unwrap().contains("Reflection"));
     }
 }

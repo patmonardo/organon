@@ -45,6 +45,19 @@
 //! - `Plan` (R6) is the executable graph that gives those targets their
 //!   runtime shape; see `crate::collections::dataset::plan`.
 
+pub mod exec;
+pub mod image;
+pub mod prep;
+
+pub use exec::{
+    execute_essence, execute_feature, execute_marked, ExecutedFeature, Execution, ExecutionAction,
+};
+pub use image::{realize_from_essence, realize_image, ImageOptions};
+pub use prep::{
+    prepare_model, FeatureMark, MarkRequirement, MarkedFeature, Modality, ModelEssence,
+    ModelPrepExt, PreparationError, PreparationReport, PreparationStep,
+};
+
 use std::collections::BTreeMap;
 
 use crate::collections::dataset::featstruct::{FeatPath, FeatStruct, FeatStructSet, FeatValue};
@@ -137,7 +150,7 @@ pub trait Model {
 
     /// Essential relations the model brings to Box 1 preparation.
     ///
-    /// Override to seed [`crate::collections::dataset::model_prep::prepare_model`]
+    /// Override to seed [`crate::collections::dataset::model::prep::prepare_model`]
     /// with the model's accumulated [`FeatStruct`] constraints. The default
     /// is the empty set (all features will be treated as having no prior
     /// essence to unify against).
@@ -150,7 +163,7 @@ pub trait Model {
     /// Distinct from [`Self::essential_constraints`]: returns a single
     /// [`FeatStruct`] (rather than the reentrance set) that becomes the
     /// initial accumulated essence in
-    /// [`crate::collections::dataset::model_prep::prepare_model`].
+    /// [`crate::collections::dataset::model::prep::prepare_model`].
     fn essence_seed(&self) -> Option<FeatStruct> {
         None
     }

@@ -13,7 +13,7 @@ The core difficulty we hit during initial implementation was a _confusion matrix
 - eager vs lazy evaluation, and
 - column vs table operations.
 
-This confusion produces misplacements like “LazyFrame namespace glue living in series.rs” (conceptually wrong) and “Expr helper logic mixed with LazyFrame APIs” (hard to reason about).
+This confusion produces misplacements like “LazyFrame namespace glue living in the `series` root module” (conceptually wrong) and “Expr helper logic mixed with LazyFrame APIs” (hard to reason about).
 
 We want a stable convention that:
 
@@ -39,7 +39,7 @@ Interpretation:
 
 Each Client DSL module MUST provide the following top-level entrypoints:
 
-- `expr.rs`
+- `expr` root module (typically `expr/mod.rs`)
   - Owns Expr namespaces and `Expr*Ext` traits (e.g. `ExprDatasetExt`).
   - Input/Output: `Expr → Expr`.
   - No execution.
@@ -49,13 +49,13 @@ Each Client DSL module MUST provide the following top-level entrypoints:
   - Input/Output: `LazyFrame → LazyFrame`.
   - No execution.
 
-- `series.rs`
+- `series` root module (typically `series/mod.rs`)
   - Owns Series namespaces and `Series*Ext` traits (e.g. `SeriesDatasetExt`).
   - Input/Output: `Series → Series`.
   - Execution allowed.
   - Bridges (optional): evaluate an `Expr` against a `Series` for tests/parity.
 
-- `frame.rs`
+- `frame` root module (typically `frame/mod.rs`)
   - Owns DataFrame namespaces and `DataFrame*Ext` traits (e.g. `DataFrameDatasetExt`).
   - Input/Output: `DataFrame → DataFrame`.
   - Execution allowed.
@@ -77,7 +77,7 @@ For any module `X` (e.g. `dataframe`, `dataset`, future `graphframe`, `statframe
 
 ### Required entrypoints (the 2×2 matrix)
 
-- `X/expr.rs`
+- `X/expr` root module
   - Defines: `XExprNameSpace` + `ExprXExt` (`fn x(self) -> XExprNameSpace`).
   - Returns: `Expr`.
   - Scope: column semantics as expressions.
@@ -87,13 +87,13 @@ For any module `X` (e.g. `dataframe`, `dataset`, future `graphframe`, `statframe
   - Returns: `LazyFrame` (or the project wrapper, e.g. `GDSLazyFrame`).
   - Scope: plan-level orchestration and composition.
 
-- `X/series.rs`
+- `X/series` root module
   - Defines: `XSeriesNameSpace` + `SeriesXExt`.
   - Returns: `Series` (or wrapper).
   - Scope: eager column operations.
   - Optional: small bridges to evaluate `Expr` on `Series` for tests/parity.
 
-- `X/frame.rs`
+- `X/frame` root module
   - Defines: `XDataFrameNameSpace` + `DataFrameXExt`.
   - Returns: `DataFrame` (or wrapper).
   - Scope: eager table operations.
@@ -127,10 +127,10 @@ For any module `X` (e.g. `dataframe`, `dataset`, future `graphframe`, `statframe
 
 ### Naming conventions (to prevent the confusion matrix)
 
-- If a thing wraps/extends `Expr`, it lives in `expr.rs` and is named `*Expr*NameSpace`.
+- If a thing wraps/extends `Expr`, it lives in the `expr` root module and is named `*Expr*NameSpace`.
 - If a thing wraps/extends `LazyFrame`, it lives in `lazy.rs` and is named `*LazyFrame*NameSpace`.
-- If a thing wraps/extends `Series`, it lives in `series.rs` and is named `*Series*NameSpace`.
-- If a thing wraps/extends `DataFrame`, it lives in `frame.rs` and is named `*DataFrame*NameSpace`.
+- If a thing wraps/extends `Series`, it lives in the `series` root module and is named `*Series*NameSpace`.
+- If a thing wraps/extends `DataFrame`, it lives in the `frame` root module and is named `*DataFrame*NameSpace`.
 
 These are _intentionally redundant_ to make the quadrant obvious at the call site and in search results.
 
@@ -159,19 +159,19 @@ These are _intentionally redundant_ to make the quadrant obvious at the call sit
 
 Dataset module currently follows this matrix:
 
-- `gds/src/collections/dataset/expr.rs`: dataset-flavored Expr namespaces (token/parse/tag/stem/text).
+- `gds/src/collections/dataset/expr/mod.rs`: dataset-flavored Expr namespaces (token/parse/tag/stem/text).
 - `gds/src/collections/dataset/lazy.rs`: dataset-flavored LazyFrame namespaces (`.ds().feature().apply(...)`).
-- `gds/src/collections/dataset/series.rs`: eager bridge for evaluating dataset Expr pipelines against a `GDSSeries`.
-- `gds/src/collections/dataset/frame.rs`: minimal eager DataFrame facade and explicit bridge into dataset lazy namespace.
+- `gds/src/collections/dataset/series/mod.rs`: eager bridge for evaluating dataset Expr pipelines against a `GDSSeries`.
+- `gds/src/collections/dataset/frame/mod.rs`: minimal eager DataFrame facade and explicit bridge into dataset lazy namespace.
 
 The `dataframe` module is the base Client DSL; the `dataset` module is a higher-level Client DSL built on top of it.
 
 ## Guidance for adding new DSL features
 
-1. If it returns `Expr`, it belongs in `expr.rs`.
+1. If it returns `Expr`, it belongs in the `expr` root module.
 2. If it returns `LazyFrame`, it belongs in `lazy.rs`.
-3. If it executes on `Series`, it belongs in `series.rs`.
-4. If it executes on `DataFrame`, it belongs in `frame.rs`.
+3. If it executes on `Series`, it belongs in the `series` root module.
+4. If it executes on `DataFrame`, it belongs in the `frame` root module.
 5. If it’s a reusable constructor, it belongs in `functions/`.
 6. If it’s syntax sugar, it belongs in `macro.rs` but should lower into (1)-(5).
 
@@ -180,10 +180,10 @@ The `dataframe` module is the base Client DSL; the `dataset` module is a higher-
 - Polars-first control direction: gds/doc/POLARS-MASTER-CONTROL-THREAD.md
 - Quick reference index: gds/doc/RUSTSCRIPT-DSL-QUICK-REFERENCE.md
 - Dataset module entrypoints:
-  - gds/src/collections/dataset/expr.rs
+  - gds/src/collections/dataset/expr/mod.rs
   - gds/src/collections/dataset/lazy.rs
-  - gds/src/collections/dataset/series.rs
-  - gds/src/collections/dataset/frame.rs
+  - gds/src/collections/dataset/series/mod.rs
+  - gds/src/collections/dataset/frame/mod.rs
 - DataFrame module entrypoints:
   - gds/src/collections/dataframe/expr.rs
   - gds/src/collections/dataframe/lazy.rs

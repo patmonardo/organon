@@ -152,6 +152,20 @@ that shows what a stage of the arc teaches.
    File: `gds/examples/collections_graphframe_catalog_write.rs`
    Teaches: GraphFrame catalog writes as graph artifacts.
 
+### Semantic Meta Pipeline
+
+26. **[026-semantic-meta-pipeline.md](EXEMPLARS/026-semantic-meta-pipeline.md)**
+   File: `gds/examples/collections_semantic_meta_pipeline.rs`
+   Teaches: SemDataset as the Corpus:LM end-view where Form Program Features become logical forms.
+
+27. **[027-model-feature-plan-middle.md](EXEMPLARS/027-model-feature-plan-middle.md)**
+   File: `gds/examples/collections_model_feature_plan.rs`
+   Teaches: Model:Feature::Plan as the hard Middle where DataFrame body becomes Dataset form.
+
+28. **[028-dataframe-intuition.md](EXEMPLARS/028-dataframe-intuition.md)**
+   File: `gds/examples/collections_dataframe_intuition.rs`
+   Teaches: DataFrame as Intuition, the first formed body reflected by Model:Feature::Plan.
+
 ---
 
 ## The References
@@ -162,6 +176,7 @@ References are organized by topic, not by project.
 ### Collections Dataset
 
 - [core-concepts.md](REFERENCES/collections-dataset/core-concepts.md) — Dataset, DataFrame, Mark, Feature, Pipeline, Compilation, Artifact
+- [namespace-invariants.md](REFERENCES/collections-dataset/namespace-invariants.md) — Canonical nine-moment module homes and shim policy
 - [frame-dsl.md](REFERENCES/collections-dataset/frame-dsl.md) — Dataset authoring over DataFrame execution
 - [corpus-structures.md](REFERENCES/collections-dataset/corpus-structures.md) — Documents, spans, annotations, and source identity
 - [io-and-readers.md](REFERENCES/collections-dataset/io-and-readers.md) — Source loading discipline
@@ -175,6 +190,9 @@ References are organized by topic, not by project.
 - [modality.md](REFERENCES/collections-dataset/modality.md) — Execution status of marks/features
 - [ontology-images.md](REFERENCES/collections-dataset/ontology-images.md) — Runtime-readable images of semantic intent
 - [compilation.md](REFERENCES/collections-dataset/compilation.md) — DatasetCompilation as compiler graph
+- [dataframe-intuition.md](REFERENCES/collections-dataset/dataframe-intuition.md) — DataFrame as Intuition and first formed body
+- [semantic-pipeline.md](REFERENCES/collections-dataset/semantic-pipeline.md) — SemDataset as the Semantic Graph Meta Pipeline
+- [model-feature-plan.md](REFERENCES/collections-dataset/model-feature-plan.md) — Model:Feature::Plan as the Essence Middle
 - [artifact-materialization.md](REFERENCES/collections-dataset/artifact-materialization.md) — Records, relations, properties, provenance
 - [attention-reports.md](REFERENCES/collections-dataset/attention-reports.md) — Feature evaluation inspection records
 

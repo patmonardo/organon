@@ -7,7 +7,7 @@
 //! | scalar | `Expr`      | `Series`     |
 //! | frame  | `LazyFrame` | `DataFrame`  |
 //!
-//! This file provides [`DatasetSeriesNameSpace`], the eager-scalar entry
+//! This module provides [`DatasetSeriesNameSpace`], the eager-scalar entry
 //! point, plus the [`SeriesDatasetExt`] trait that attaches `.ds()` onto
 //! `GDSSeries`.
 //!

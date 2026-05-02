@@ -308,7 +308,7 @@ pub enum FeatureExpr {
     /// Essence-level mark carried as a [`FeatStruct`].
     ///
     /// This is the IR-level bridge for the wrapper-side
-    /// [`crate::collections::dataset::model_prep::MarkedFeature::mark`].
+    /// [`crate::collections::dataset::model::prep::MarkedFeature::mark`].
     /// Lifting the mark into [`FeatureExpr`] lets downstream IR walkers
     /// (codegen, image realization, eval) see the model's essence-level
     /// commitment as a first-class symbolic node rather than reaching into

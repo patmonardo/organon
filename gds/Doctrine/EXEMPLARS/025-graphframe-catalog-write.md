@@ -3,7 +3,7 @@
 **Source file**: `gds/examples/collections_graphframe_catalog_write.rs`
 **Arc position**: GraphFrame (graph-structured Procedure artifacts entering the Dataset catalog)
 **Prior exemplar**: [024 — Catalog Extension as Artifact Persistence](024-catalog-extension-persistence.md)
-**Next exemplar**: [026 — Catalog Polars IO as Typed Artifact Load](026-catalog-polars-io.md)
+**Next exemplar**: [026 — Semantic Meta Pipeline as End-Stage Concept](026-semantic-meta-pipeline.md)
 
 ---
 

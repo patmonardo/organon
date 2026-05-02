@@ -180,3 +180,17 @@ It is a logic platform that materializes as datasets, dataframes, and graph bodi
 when the semantic intent asks for them.
 
 The principle is simple. The arc is canonical. The examples teach it. Everything else serves the examples.
+
+---
+
+## One -> Many -> One (Program Form)
+
+The Doctrine also enforces a science-form return:
+
+```text
+One   : PureForm (Program)
+Many  : differentiated pipeline moments in collections/{dataframe,dataset}
+One   : Programmatic Form recovered as unified scientific process
+```
+
+In this reading, the triadic pipeline is not fragmentation. It is the necessary differentiation through which Program becomes explicitly knowable as one.

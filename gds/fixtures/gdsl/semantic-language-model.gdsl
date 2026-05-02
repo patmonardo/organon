@@ -1,0 +1,34 @@
+module org.semdata.language_model.specific;
+
+use std.dataset;
+use std.logic;
+
+source raw_corpus : parquet("fixtures/data/sample_texts.parquet");
+
+observation text_corpus from raw_corpus {
+  key text_id;
+  retain text_id, text, language;
+}
+
+logogenesis language_genesis for text_corpus {
+  from text_corpus;
+  unfold form;
+  preserve language;
+}
+
+subfeature tokenizer;
+subfeature stemmer;
+subfeature tagger;
+subfeature parser;
+
+concept LanguageModelDataset from text_corpus {
+  identity text_id;
+}
+
+judgment linguistic_form for LanguageModelDataset {
+  infer tokenizable when text != null;
+  infer parseable when language != null;
+}
+
+procedure build_lm for LanguageModelDataset {
+}

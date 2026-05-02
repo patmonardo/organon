@@ -7,7 +7,7 @@
 //! | scalar | `Expr`      | `Series`     |
 //! | frame  | `LazyFrame` | `DataFrame`  |
 //!
-//! This file provides [`DatasetExprNameSpace`], the lazy-scalar entry point,
+//! This module provides [`DatasetExprNameSpace`], the lazy-scalar entry point,
 //! plus the [`ExprDatasetExt`] trait that attaches `.ds()` onto Polars `Expr`.
 //!
 //! Most dataset logic flows through this surface because it composes cleanly

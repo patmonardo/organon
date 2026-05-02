@@ -32,6 +32,9 @@
 //! `Feature` in its **Projection** role specifically. Binder / Reentrancy /
 //! Annotation roles are doctrine commitments not yet typed.
 
+pub mod featstruct;
+pub mod role;
+
 use std::collections::BTreeMap;
 
 use polars::prelude::{Expr, LazyFrame};

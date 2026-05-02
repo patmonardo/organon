@@ -1,27 +1,39 @@
 //! Collections datasets.
 //!
-//! The Dataset layer is the semantic-first DSL shell of the Collections SDK.
-//! It sits alongside the runtime/tabular [`crate::collections::dataframe`]
-//! layer and shares its 2×2 (`Expr`/`LazyFrame`/`DataFrame`/`Series`) shape,
-//! while owning a distinct vocabulary of plans, features, models, and
-//! toolchains.
+//! The Dataset layer is the semantic-first SDK shell of Collections. It sits
+//! above the runtime/tabular [`crate::collections::dataframe`] layer, keeps the
+//! DataFrame/Polars body available, and recursively names that body through the
+//! Dataset pipeline.
+//!
+//! The canonical pipeline has nine moments:
+//!
+//! ```text
+//! Frame:Series::Expr -> Model:Feature::Plan -> Corpus:Language::Semantics
+//! ```
+//!
+//! DataFrame remains the constrained runtime substrate. Dataset is the SDK that
+//! mediates the substrate into models, features, plans, corpora, language
+//! models, semantic forms, compilation artifacts, and GDSL/SDSL toolchains.
 //!
 //! Public surface (read this before adding new exports):
 //!
-//! 1. **DSL shell** (`expr`, `frame`, `lazy`, `series`, `namespace`) — the
-//!    dataset-flavored 2×2 matrix and the dataset namespace registry. This is
-//!    the lightweight, Polars-shaped entry point. The single most useful
-//!    starting line is `use crate::collections::dataset::namespace::*;`.
-//! 2. **Semantic / compiler surfaces** (`dataset`, `plan`, `feature`,
-//!    `featstruct`, `model`, `schema`, `toolchain`, `compile`,
-//!    `expressions`) — the kernel-side dataset/tooling vocabulary, including
-//!    the top-level ToolChain façade for authoring SDSL/GDSL programs.
-//! 3. **Catalog, IO, and stdlib** (`catalog`, `corpus`, `io`,
-//!    `registry`, `stdlib`, `streaming`, `utils`) — discovery, persistence,
-//!    and resource access for datasets.
-//! 4. **Linguistic stdlib** (`token`, `tokenizer`, `parse`, `parser`, `tag`,
-//!    `tagger`, `stem`, `stemmer`, `tree`, `functions::model`) —
-//!    NLTK-flavored building blocks used by the Dataset DSL.
+//! 1. **DataFrame shell** (`frame`, `series`, `expr`, plus `lazy`,
+//!    `namespace`) — the Dataset-facing view of the Polars-shaped body.
+//! 2. **Essence middle** (`model`, `feature`, `plan`) — semantic addresses,
+//!    deferred Meta Plans, model preparation, execution, and ontology images.
+//! 3. **Concept return** (`corpus`, `lm`, `sem`) — evidence, language,
+//!    and semantic forms gathered into end-stage Dataset objects.
+//! 4. **SDK services** (`toolchain`, `compile`, `expressions`, `functions`,
+//!    `catalog`, `registry`, `io`, `stdlib`) — compilation, resource access,
+//!    namespace builders, and GDSL/SDSL authoring support.
+//!
+//! Compatibility note: top-level modules such as `token`, `stemmer`,
+//! `document`, `source`, `model_prep`, `featstruct`, and `semantic` are
+//! intentionally kept as shim modules. The canonical homes are `lm::*` for
+//! LanguageModel SubFeatures, `corpus::*` for Corpus SubFeatures,
+//! `model::*`/`feature::*`/`plan::*` for the Essence fold, and `sem::*` for
+//! the SemDataset return fold, but the old paths remain prelude-friendly while
+//! the SDK namespace settles.
 //!
 //! Boundary notes:
 //! - GUI workflow adaptation (GDSL → TS-JSON → React/Next MVC) is a
@@ -76,6 +88,8 @@ pub mod prelude;
 pub mod probability;
 pub mod registry;
 pub mod schema;
+pub mod sem;
+pub mod semantic;
 pub mod series;
 pub mod source;
 pub mod stdlib;
@@ -97,11 +111,10 @@ pub mod valuation;
 // Public surface
 // =============================================================================
 //
-// Exports below are grouped to match the four sections described in the module
-// header: (1) DSL shell, (2) semantic/compiler surfaces, (3) catalog/IO/stdlib,
-// (4) linguistic stdlib. Keep new exports in the matching section; do not
-// re-export deeper builder namespaces from `namespaces::*` here unless they
-// belong to the top-level shell.
+// Exports below keep the nine-moment SDK readable while preserving old public
+// paths. New implementation modules should prefer the canonical `corpus::*`,
+// `lm::*`, and `sem::*` homes; top-level linguistic, evidentiary, and semantic
+// modules are compatibility shims for existing callers and the curated prelude.
 
 // -----------------------------------------------------------------------------
 // (1) DSL shell — dataset-side 2×2 matrix and namespace registry.
@@ -134,8 +147,9 @@ pub use namespaces::tree::TreeNs;
 
 pub use dataset::Dataset;
 pub use plan::{EvalMode as DatasetEvalMode, Plan as DatasetPlan, PlanEnv, PlanError};
+pub use sem::{SemDataset, SemError, SemForm};
 
-pub use featstruct::{
+pub use feature::featstruct::{
     format_featstruct, parse_featstruct, parse_featvalue, subsumes_featstruct, unify_featstruct,
     FeatBindings, FeatDict, FeatList, FeatPath, FeatPathSegment, FeatReentranceId, FeatStruct,
     FeatStructParseError, FeatStructSet, FeatValue,
@@ -146,18 +160,18 @@ pub use feature::{
     FeatureSeries, FeatureSeriesNameSpace, FeatureSpec, FeatureTemplate, FeatureValue,
 };
 
+pub use model::exec::{
+    execute_essence, execute_feature, execute_marked, ExecutedFeature, Execution, ExecutionAction,
+};
+pub use model::image::{realize_from_essence, realize_image, ImageOptions};
+pub use model::prep::{
+    prepare_model, FeatureMark, MarkRequirement, MarkedFeature, Modality, ModelEssence,
+    ModelPrepExt, PreparationError, PreparationReport, PreparationStep,
+};
 pub use model::{
     Model, ModelAttributeUpdate, ModelContext, ModelDelta, ModelId, ModelKind, ModelReport,
     ModelResult, ModelScore, ModelSpace, ModelSpec, ModelState, ModelView, NoOpLanguageModel,
     NoOpParser, NoOpTagger,
-};
-pub use model_exec::{
-    execute_essence, execute_feature, execute_marked, ExecutedFeature, Execution, ExecutionAction,
-};
-pub use model_image::{realize_from_essence, realize_image, ImageOptions};
-pub use model_prep::{
-    prepare_model, FeatureMark, MarkRequirement, MarkedFeature, Modality, ModelEssence,
-    ModelPrepExt, PreparationError, PreparationReport, PreparationStep,
 };
 pub use schema::{FeatureSchema, ModelSchema, SymbolDef, SymbolTable};
 

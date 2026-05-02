@@ -21,6 +21,9 @@ gds/
       005-compile-ir.md
       ...
       025-graphframe-catalog-write.md
+      026-semantic-meta-pipeline.md
+      027-model-feature-plan-middle.md
+      028-dataframe-intuition.md
     REFERENCES/                 ← Consulted docs
       collections-dataset/
         core-concepts.md
@@ -36,7 +39,7 @@ gds/
 - **PRINCIPLE-FOUNDATION.md**: The Knowledge Agent arc and high covenant
 - **INDEX.md**: Navigation and quick reference
 
-### 3. Exemplar Companions Written (25/41) ✓
+### 3. Exemplar Companions Written (28/42) ✓
 
 1. 001-frame-dsl.md — The DSL surface
 2. 002-corpus-readers.md — How sources enter
@@ -63,6 +66,9 @@ gds/
 23. 023-string-namespace-observation.md — String namespace as text-form Observation
 24. 024-catalog-extension-persistence.md — Catalog extension as artifact persistence
 25. 025-graphframe-catalog-write.md — GraphFrame catalog write as graph artifact
+26. 026-semantic-meta-pipeline.md — SemDataset as the Corpus:LM Meta Pipeline
+27. 027-model-feature-plan-middle.md — Model:Feature::Plan as the Essence Middle
+28. 028-dataframe-intuition.md — DataFrame as Intuition and first formed body
 
 Each exemplar:
 - States its principle
@@ -72,7 +78,7 @@ Each exemplar:
 - Points to the next exemplar
 - Includes notes for students
 
-### 4. Foundational References Written (29 docs)
+### 4. Foundational References Written (31 docs)
 
 - **core-concepts.md**: Dataset, DataFrame, Mark, Feature, Pipeline, Compilation, Artifact, Provenance
 - **seven-moments.md**: The 7-moment Reflection sequence and the Absolute Reflection threshold
@@ -82,14 +88,17 @@ Each exemplar:
 - **hegel-objectivity.md**: Procedure as Process
 - **applications-facade.md**: Dataset-first service boundary
 - **collections-dataset references**: frame DSL, corpus, readers, provenance, structured sources, stdlib resources, tree structures, feature structures, unification, modality, ontology images, compilation, materialization, and attention reports
+- **semantic-pipeline.md**: SemDataset as the Semantic Graph Meta Pipeline
+- **model-feature-plan.md**: Model:Feature::Plan as the Essence Middle
+- **dataframe-intuition.md**: DataFrame as Intuition and first formed body
 
 ---
 
 ## What Remains
 
-### Phase 2: Complete Exemplar Coverage (16 exemplars remaining)
+### Phase 2: Complete Exemplar Coverage (14 exemplars remaining)
 
-- 26+: remaining catalog, selector, GraphFrame, and support surfaces
+- 28+: remaining catalog, selector, GraphFrame, and support surfaces
 - ML exemplars remain paused until the ML/NLP layer is refreshed
 - Continue updating references as the exemplar sequence expands
 

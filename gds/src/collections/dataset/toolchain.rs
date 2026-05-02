@@ -579,7 +579,16 @@ fn lower_gdsl_source_to_program_features(
             ));
             continue;
         }
-
+        if line.starts_with("subfeature ") {
+            let rest = line.strip_prefix("subfeature ").unwrap().trim();
+            let name = strip_trailing_semicolon(rest).trim();
+            features.push(ProgramFeature::new(
+                ProgramFeatureKind::Subfeature,
+                format!("subfeature::{name}"),
+                format!("subfeature::{name}"),
+            ));
+            continue;
+        }
         if let Some(rest) = line.strip_prefix("derive ") {
             let derived_name = rest
                 .split('=')

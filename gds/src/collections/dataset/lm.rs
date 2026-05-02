@@ -26,7 +26,27 @@
 //!   [`WittenBellInterpolated`], [`AbsoluteDiscountingInterpolated`],
 //!   [`KneserNeyInterpolated`].
 //!
+//! In the nine-moment Dataset SDK, `lm` is the Language fold. It owns the
+//! LanguageModel SubFeatures that transform or read a `Corpus`: tokenizer,
+//! stemmer, tagger, and parser. Their value forms — token, stem, tag, parse,
+//! and tree — live beside them so a Specific Model can declare logogenesis as a
+//! concrete SubFeature composition.
+//!
+//! Top-level `dataset::tokenizer`, `dataset::stemmer`, `dataset::tagger`,
+//! `dataset::parser`, and related value-form modules remain compatibility
+//! shims for existing callers and prelude exports.
+//!
 //! [`Corpus`]: crate::collections::dataset::corpus::Corpus
+
+pub mod parse;
+pub mod parser;
+pub mod stem;
+pub mod stemmer;
+pub mod tag;
+pub mod tagger;
+pub mod token;
+pub mod tokenizer;
+pub mod tree;
 
 use rand::distributions::WeightedIndex;
 use rand::prelude::{Distribution, SeedableRng, StdRng};

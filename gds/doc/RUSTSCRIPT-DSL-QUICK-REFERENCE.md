@@ -13,10 +13,10 @@ This is a short index for the “Client DSL” module pattern used by Collection
 
 Required entrypoints:
 
-- `X/expr.rs` — `Expr → Expr` namespaces + `ExprXExt`
+- `X/expr` (root module, typically `X/expr/mod.rs`) — `Expr → Expr` namespaces + `ExprXExt`
 - `X/lazy.rs` — `LazyFrame → LazyFrame` namespaces + `LazyFrameXExt`
-- `X/series.rs` — `Series → Series` namespaces + `SeriesXExt`
-- `X/frame.rs` — `DataFrame → DataFrame` namespaces + `DataFrameXExt`
+- `X/series` (root module, typically `X/series/mod.rs`) — `Series → Series` namespaces + `SeriesXExt`
+- `X/frame` (root module, typically `X/frame/mod.rs`) — `DataFrame → DataFrame` namespaces + `DataFrameXExt`
 
 Recommended support:
 
@@ -30,10 +30,10 @@ Recommended support:
 ## Current implementations
 
 - Dataset DSL:
-  - `gds/src/collections/dataset/expr.rs`
+  - `gds/src/collections/dataset/expr/mod.rs`
   - `gds/src/collections/dataset/lazy.rs`
-  - `gds/src/collections/dataset/series.rs`
-  - `gds/src/collections/dataset/frame.rs`
+  - `gds/src/collections/dataset/series/mod.rs`
+  - `gds/src/collections/dataset/frame/mod.rs`
 
 - DataFrame DSL:
   - `gds/src/collections/dataframe/expr.rs`

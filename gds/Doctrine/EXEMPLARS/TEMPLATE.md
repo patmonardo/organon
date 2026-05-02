@@ -1,6 +1,6 @@
 # Exemplar Template
 
-Use this template for each example. Each exemplar should answer these four questions clearly.
+Use this template for each example. Each exemplar should answer these questions clearly and preserve canonical namespace language.
 
 ---
 
@@ -37,6 +37,18 @@ Example:
 > It shows the surface where programs begin authoring semantic intent, before any Reflection.
 > There is no Reflection here yet; there is no Principle. The exemplar teaches the ergonomic
 > entry point.
+
+## Namespace Discipline
+
+State canonical module homes when naming code surfaces. Prefer canonical paths over compatibility shims unless the exemplar is explicitly teaching backwards compatibility.
+
+Reference:
+- `Doctrine/REFERENCES/collections-dataset/namespace-invariants.md`
+
+Example:
+> Canonical path: `dataset::model::prep`.
+> Compatibility path (legacy): `dataset::model_prep`.
+> This exemplar uses canonical paths unless noted otherwise.
 
 ## Key Vocabulary
 
