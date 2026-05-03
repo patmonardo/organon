@@ -5,6 +5,7 @@
 
 use gds::collections::dataframe::{col, lit, record};
 use gds::collections::dataset::prelude::*;
+use gds::shell::GdsShell;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("== DataFrame as Intuition ==");
@@ -23,6 +24,29 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("{}", table.fmt_table());
 
     let dataset = Dataset::named("dataframe-intuition-demo", table.clone());
+    let shell_glimpse = GdsShell::from_dataset(dataset.clone());
+    println!("\n[shell] DataFrame as readable immediate register");
+    println!("register: {:?}", shell_glimpse.register_kind());
+    println!("address: {:?}", shell_glimpse.address());
+    if let Some(knowledge) = shell_glimpse.dataframe_knowledge() {
+        println!("knowledge columns: {:?}", knowledge.columns());
+        println!(
+            "knowledge shape: {} rows x {} cols",
+            knowledge.row_count(),
+            knowledge.column_count()
+        );
+        println!("knowledge dataset: {:?}", knowledge.dataset_name());
+    }
+    if let Some(seed) = shell_glimpse.seed() {
+        println!("seed columns: {:?}", seed.columns());
+        println!("seed dtypes: {:?}", seed.dtypes());
+        println!(
+            "seed shape: {} rows x {} cols",
+            seed.row_count(),
+            seed.column_count()
+        );
+    }
+
     let env = PlanEnv::new().bind_dataset("intuition", dataset.clone());
 
     let intuition_plan = Plan::new(Source::Var("intuition".to_string()))

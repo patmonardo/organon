@@ -3,7 +3,7 @@
 **Source file**: `gds/examples/collections_dataframe_intuition.rs`
 **Arc position**: Beginning: DataFrame as Intuition, before Essence mediation
 **Prior exemplar**: [027 — Model:Feature::Plan as Essence Middle](027-model-feature-plan-middle.md)
-**Next exemplar**: TBD
+**Next exemplar**: [029 — GDS Shell as Compute Protocol](029-shell-compute-protocol.md)
 
 ---
 
@@ -19,11 +19,12 @@ It constructs the smallest first-moment passage:
 
 1. Creates a DataFrame from raw rows
 2. Prints the immediate Frame, Series, and dtype body
-3. Wraps that body as a named `Dataset`
-4. Builds a `Plan` from a DataFrame `Expr`
-5. Wraps the Plan as a `Feature`
-6. Prepares a `Model` stamp over the DataFrame body
-7. Prints the mapping from Beginning into Essence
+3. Lets `GdsShell` read the same body as an immediate register seed
+4. Wraps that body as a named `Dataset`
+5. Builds a `Plan` from a DataFrame `Expr`
+6. Wraps the Plan as a `Feature`
+7. Prepares a `Model` stamp over the DataFrame body
+8. Prints the mapping from Beginning into Essence
 
 The point is not runtime complexity. The point is location: the DataFrame is the first object of the pipeline.
 
@@ -40,6 +41,16 @@ Raw contents
 ```
 
 The DataFrame is the beginning that `Model:Feature::Plan` reflects. It is not bypassed by Doctrine. Doctrine begins where the system first has a formed body.
+
+The Shell confirms this placement. When `GdsShell` reads the same DataFrame body, it does
+not ask the DataFrame to become Dataset. It seeds from the body: columns, dtypes, rows,
+and shape. The DataFrame appears as the immediate register of an executable Form.
+
+The example now prints `ShellDataFrameKnowledge`, the Shell's compact answer to the
+question: what does this DataFrame contribute to executable Form? At this moment the
+answer is still simple: address, columns, shape, dataset name, and schema seed. That is
+enough to prove that DataFrame is not an implementation detail. It is knowable as the
+first body of the Form.
 
 ---
 
@@ -75,6 +86,10 @@ Once the system sees `SemDataset` and then `Model:Feature::Plan`, it can finally
 
 **`DataFrame`** — The first formed body of the Dataset pipeline. See [DataFrame as Intuition](../REFERENCES/collections-dataset/dataframe-intuition.md).
 
+**`ShellDataFrameKnowledge`** — The Shell-readable account of what a DataFrame body
+contributes to executable Form: address, columns, dtypes, shape, schema, semantic envelope,
+and program identity when present.
+
 **`Frame:Series::Expr`** — The immediate DataFrame triad before Dataset mediation.
 
 **`Model:Feature::Plan`** — The Essence triad that reflects DataFrame body into semantic form. See [Model:Feature::Plan](../REFERENCES/collections-dataset/model-feature-plan.md).
@@ -87,6 +102,7 @@ Once the system sees `SemDataset` and then `Model:Feature::Plan`, it can finally
 
 - Do not treat the DataFrame as a mere implementation detail. It is the first formed appearance of contents.
 - The DataFrame is still extensional. Essence begins only when Frame, Series, and Expr are reflected as Model, Feature, and Plan.
+- The Shell knows the DataFrame first as schema seed and immediate body. That is enough to begin the passage toward PureForm.
 - This exemplar deliberately comes after 026 and 027 because the system has learned its Beginning from its Middle and End.
 - In science terms: the Program begins as One, differentiates into the triadic Many, and returns as One. `form/program` is the return path through `collections/{dataframe,dataset}`.
 

@@ -22,6 +22,12 @@ pub struct ProgramFeature {
 
 A set of features becomes `ProgramFeatures`, the compiler contract between GDSL and Dataset.
 
+In the Shell, `ProgramFeatures` are also the mediated account of the Dataset middle.
+The DataFrame body supplies the immediate register; the Dataset envelope supplies the
+Model side; `ProgramFeatures` supply the Feature declarations and the Plan of return.
+`GdsShell::model_feature_plan_knowledge()` reads these together as
+`ShellModelFeaturePlanKnowledge`.
+
 ---
 
 ## Canonical Taxonomy
@@ -68,6 +74,46 @@ Source -> Observation -> Reflection -> Principle -> Concept -> Judgment -> Syllo
 ```
 
 Do not place Principle after Concept in new Doctrine work. Principle is the threshold that permits Concept to emerge.
+
+## Shell Middle Rule
+
+The Shell integrates `Model:Feature::Plan` without turning it into a separate runtime.
+It reads the middle this way:
+
+| Middle moment | Shell source | Meaning |
+|---|---|---|
+| `Model` | Dataset name, artifact kind, and semantic envelope | The mediated body as a framework object |
+| `Feature` | `ProgramFeatures.features` | Typed commitments: source, reflection, principle, concept, procedure |
+| `Plan` | Shell concept-return order | The staged return through `dataframe.seed`, `dataset.model`, `dataset.feature`, `dataset.plan`, `shell.program`, `shell.concept-return` |
+
+This is why the Shell comes into its own at `Model:Feature::Plan`: it can see the
+DataFrame body, the Dataset mediation, and the Program declaration at once. From there
+it returns to its own Concept through `ShellPipelineDescriptor::to_pure_form_principle()`.
+
+## Shell DataPipeline Return Rule
+
+The current Shell is not a multipipeline system. It is one pipeline type:
+
+```text
+ShellPipelineKind::DataPipeline
+```
+
+The DataPipeline gathers:
+
+```text
+DataFrame body -> Dataset middle -> Program declaration -> Shell descriptor
+```
+
+and returns:
+
+```text
+ShellPureFormReturn -> PureFormPrinciple(Shape:Context::Morph)
+```
+
+`ShellPipelineDescriptor::to_pure_form_return()` names this passage. The older
+`to_pure_form_principle()` remains as the direct extraction of the principle, but the
+return object is the doctrinally clearer form: it says which kind of pipeline returned
+and at which Shell address.
 
 ---
 

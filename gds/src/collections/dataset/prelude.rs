@@ -136,6 +136,17 @@ pub use crate::collections::dataset::{
 };
 
 // Dataset function DSL
+pub use crate::collections::dataset::functions::program::{
+    program_appearance, program_concept, program_conclude, program_culminate, program_derive,
+    program_emit, program_feature, program_features, program_from, program_identity,
+    program_import, program_infer, program_judgment, program_key, program_logogenesis,
+    program_mark, program_middle, program_observation, program_principle, program_procedure,
+    program_query, program_reflection, program_require, program_retain, program_source,
+    program_stage, program_subfeature, program_syllogism, program_unfold, program_unify,
+};
+pub use crate::collections::dataset::functions::shell::{
+    ds_col, ds_expr, ds_frame, ds_lazy, ds_series,
+};
 pub use crate::collections::dataset::functions::{
     dataop_decode, dataop_encode, dataop_input, dataop_output, dataop_transform, io_path, io_url,
     metadata, pipeline, project_corpus, project_graph, project_text, registry, registry_versioned,

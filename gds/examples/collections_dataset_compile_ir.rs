@@ -4,39 +4,18 @@
 //!   cargo run -p gds --example collections_dataset_compile_ir
 
 use gds::collections::dataset::prelude::*;
-use gds::form::{ProgramFeature, ProgramFeatureKind, ProgramFeatures};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("== Dataset compilation IR / artifact story ==");
-    let features = ProgramFeatures::new(
-        "gdsl.analytics".to_string(),
-        vec!["centrality".to_string()],
-        vec![
-            ProgramFeature::new(
-                ProgramFeatureKind::SpecificationBinding,
-                "gdsl.analytics".to_string(),
-                "specification::gdsl.analytics".to_string(),
-            ),
-            ProgramFeature::new(
-                ProgramFeatureKind::Source,
-                "source::graph".to_string(),
-                "source graph : catalog(graphframe-demo)".to_string(),
-            ),
-            ProgramFeature::new(
-                ProgramFeatureKind::Principle,
-                "principle::centrality_admissible".to_string(),
-                "principle centrality_admissible for graph".to_string(),
-            ),
-            ProgramFeature::new(
-                ProgramFeatureKind::Concept,
-                "concept::Centrality".to_string(),
-                "concept Centrality from graph".to_string(),
-            ),
-            ProgramFeature::new(
-                ProgramFeatureKind::Procedure,
-                "procedure::emit_centrality".to_string(),
-                "procedure emit_centrality".to_string(),
-            ),
+
+    let features = program_features(
+        "gdsl.analytics",
+        ["centrality"],
+        [
+            program_source("graph", "catalog(graphframe-demo)"),
+            program_principle("centrality_admissible"),
+            program_concept("Centrality"),
+            program_procedure("emit_centrality"),
         ],
     );
 

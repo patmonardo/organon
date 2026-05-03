@@ -22,6 +22,8 @@ use crate::collections::dataset::toolchain::DatasetPipeline;
 
 pub mod feature;
 pub mod model;
+pub mod program;
+pub mod shell;
 pub mod tree;
 
 /// Start an empty semantic Dataset pipeline.

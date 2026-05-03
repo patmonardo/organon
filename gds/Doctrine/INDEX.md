@@ -22,6 +22,22 @@ Then study the exemplars in order (see section below).
 traversal from Source through Absolute Reflection to Objectivity, where Principle gates the
 emergence of Concept, and every stage is a readable Dataset artifact.
 
+### Kernel Identity Statement
+
+The GDS Kernel is the Knowledge Agent kernel pipeline. Its controlling protocol is the
+GDS Shell, which governs one canonical DataPipeline:
+
+```text
+Frame -> Model:Feature::Plan -> SemDataset -> ShellPureFormReturn -> PureFormPrinciple
+```
+
+DataFrame is the immediate runtime body. Dataset is the mediated semantic controller.
+SemDataset is the Concept-return end-view. The Shell unifies these as one addressable
+pipeline for Knowledge Agents.
+
+Forward-looking law: every RootAgent world projection must anchor to a root Dataset
+through a SemDataset Principle (World Projection is valid only as rooted semantic projection).
+
 **The Arc** (the only arc):
 ```
 Source → Observation → Reflection (7 moments) → Principle → Concept → Judgment → Syllogism → Procedure
@@ -166,6 +182,16 @@ that shows what a stage of the arc teaches.
    File: `gds/examples/collections_dataframe_intuition.rs`
    Teaches: DataFrame as Intuition, the first formed body reflected by Model:Feature::Plan.
 
+### Shell and the Ideal Register Language
+
+29. **[029-shell-compute-protocol.md](EXEMPLARS/029-shell-compute-protocol.md)**
+   File: `gds/examples/collections_gds_shell.rs`
+   Teaches: GDS Shell as the unified compute protocol — how DataFrame and Dataset are two registers at one address, and how the shell projects both to PureFormPrinciple.
+
+30. **[030-ideal-dataframe-dsl.md](EXEMPLARS/030-ideal-dataframe-dsl.md)**
+   File: *(design fiction — no source file)*
+   Teaches: What the ideal DataFrame DSL would look like if designed from the Shell's perspective downward — the negative space the Shell leaves and the register contract it implies.
+
 ---
 
 ## The References
@@ -213,6 +239,7 @@ References are organized by topic, not by project.
 
 - [zeroCopy-boundary.md](REFERENCES/gds-kernel/zeroCopy-boundary.md) — The kernel-agent contract at Absolute Reflection
 - [pureform.md](REFERENCES/gds-kernel/pureform.md) — Kernel Form/Context/Morph shape language
+- [three-tier-architecture.md](REFERENCES/gds-kernel/three-tier-architecture.md) — Core Kernel, SemDataset discourse platform, and RealityFabric delivery layer
 
 ### Philosophy
 

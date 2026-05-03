@@ -38,6 +38,29 @@ This is why Plan belongs in Dataset, not DataFrame. A DataFrame plan is physical
 
 ---
 
+## Evolution Rule (Dataset Getting Smarter)
+
+`Model:Feature::Plan` is the stage where Dataset becomes progressively intelligent
+without abandoning DataFrame execution.
+
+The evolution is cumulative:
+
+```text
+Dataset (named body)
+    -> Feature-addressed Dataset (typed commitments)
+    -> Model-prepared Dataset (modality and marks)
+    -> Plan-governed Dataset (deferred semantic execution)
+    -> SemDataset (Corpus:LM end-view with readable forms)
+```
+
+At each stage, DataFrame remains the runtime body. What changes is Dataset's semantic
+capacity. The Shell reads this progression as the mediated register gaining determination.
+
+This is why the Middle is essential: Dataset does not jump from table to semantics in one
+move. It becomes SemDataset by passing through Model, Feature, and Plan.
+
+---
+
 ## The Three Boxes
 
 The Middle Layer currently appears as three boxes:
