@@ -15,9 +15,10 @@ mod schema;
 pub use crate::dsl::*;
 
 pub use core::{
-    GdsShell, ShellDataFrameKnowledge, ShellLearningReport, ShellModelFeaturePlanKnowledge,
-    ShellProjectionTraceValidation, ShellSeed, ShellSemanticCapability,
-    ShellSemanticPipelineKnowledge,
+    GdsShell, ShellCapabilityBand, ShellCapabilityMap, ShellCapabilityState, ShellCorpusError,
+    ShellCorpusReport, ShellDataFrameKnowledge, ShellLearningReport, ShellMemoryEstimate,
+    ShellModelFeaturePlanKnowledge, ShellPlatformCapability, ShellProjectionTraceValidation,
+    ShellSeed, ShellSemanticCapability, ShellSemanticPipelineKnowledge,
 };
 pub use moments::{ShellAddress, ShellAlgebra, ShellMoment, ShellPipeline, ShellRegister};
 pub use pipeline::{ShellPipelineDescriptor, ShellPipelineKind, ShellPureFormReturn};

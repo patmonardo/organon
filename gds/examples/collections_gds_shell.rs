@@ -3,6 +3,7 @@
 //! Run with:
 //!   cargo run -p gds --example collections_gds_shell
 
+use gds::form::ProgramFeatureKind;
 use gds::shell::*;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -29,11 +30,27 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             program_reflection("dataset-mediated-register"),
             program_principle("dataframe-dataset-unity"),
             program_concept("ShellComputeGraph"),
+            program_feature(
+                ProgramFeatureKind::Judgment,
+                "all x. (human(x) -> mortal(x))",
+                "doctrine://shell/judgment",
+            ),
+            program_feature(
+                ProgramFeatureKind::Inference,
+                "human(socrates) -> mortal(socrates)",
+                "doctrine://shell/inference",
+            ),
             program_procedure("interface-pureform"),
         ],
     );
 
-    let shell = ds_frame.into_shell_with_program_features(program);
+    let shell = ds_frame
+        .into_shell_with_program_features(program)
+        .materialize_semdataset_from_texts(&[
+            "Socrates is human.",
+            "All humans are mortal.",
+            "Socrates is mortal.",
+        ])?;
     let descriptor = shell.descriptor();
     let pureform_return = descriptor.to_pure_form_return();
     let principle = pureform_return.principle();
@@ -122,6 +139,25 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     );
     println!("learning KG ready: {}", learning.kg_ready());
     println!("learning readiness score: {}", learning.readiness_score());
+    if let Some(corpus) = shell.corpus_report() {
+        println!("corpus materialized: {}", corpus.materialized());
+        println!("corpus documents: {}", corpus.document_count());
+        println!("corpus lm order: {}", corpus.lm_order());
+        println!("corpus lm vocab size: {}", corpus.lm_vocab_size());
+        println!("corpus semforms: {}", corpus.semform_count());
+        println!("corpus parsed forms: {}", corpus.parsed_form_count());
+    }
+    let capability_map = shell.capability_map();
+    println!("capability map address: {:?}", capability_map.address());
+    for state in capability_map.states() {
+        println!(
+            "capability {}:{} available={} active={}",
+            state.band().as_str(),
+            state.capability().as_str(),
+            state.available(),
+            state.active()
+        );
+    }
     if let Some(seed) = shell.seed() {
         println!("seed columns: {:?}", seed.columns());
         println!("seed dtypes: {:?}", seed.dtypes());

@@ -240,6 +240,7 @@ References are organized by topic, not by project.
 - [zeroCopy-boundary.md](REFERENCES/gds-kernel/zeroCopy-boundary.md) — The kernel-agent contract at Absolute Reflection
 - [pureform.md](REFERENCES/gds-kernel/pureform.md) — Kernel Form/Context/Morph shape language
 - [three-tier-architecture.md](REFERENCES/gds-kernel/three-tier-architecture.md) — Core Kernel, SemDataset discourse platform, and RealityFabric delivery layer
+- [sprint-to-adi.md](REFERENCES/gds-kernel/sprint-to-adi.md) — Get-something-working sprint path to Artificial Dataset Intelligence
 
 ### Philosophy
 

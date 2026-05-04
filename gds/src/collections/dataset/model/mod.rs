@@ -1,6 +1,6 @@
 //! `Model` — partial valuations against a Feature schema (R4 in the doctrine).
 //!
-//! See `gds/doc/SEMANTIC-DATASET-FIVE-FOLD.md` (Five-Fold Synthesis), Root
+//! See `gds/doc/SEMANTIC-DATASET.md` (Five-Fold Synthesis), Root
 //! Object **R4** and Principle **P3** (`Model:Feature`). NLTK Ch9 / Ch10 are
 //! the reference texts; the DRS, the FeatStruct, and the Valuation are all
 //! Models in this sense.

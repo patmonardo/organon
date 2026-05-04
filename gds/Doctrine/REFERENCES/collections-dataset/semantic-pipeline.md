@@ -22,6 +22,11 @@ It pairs:
 - `LM`: intensional distribution fitted over that evidence
 - `SemForm`: Form Program Features parsed into logical expressions
 
+Internally, `LM` may be read as **Learning Module**. Technically it remains the
+LanguageModel parameter of `SemDataset<L>`, but doctrinally its role is the Model
+in training: the learning organ working underneath SemDataset, fitted over Corpus
+evidence and then governed by Shell traceability on the return to PureForm.
+
 This is not a replacement for DataFrame. It is the Dataset-level controller above DataFrame.
 
 ---
@@ -107,6 +112,17 @@ In current implementation terms:
 - `ShellLearningReport` names what the Dataset has learned on the way to SemDataset:
     gained principles/concepts/procedures, unresolved forms, KG/NLP/logic readiness,
     and a readiness score.
+- `GdsShell::materialize_semdataset_from_texts()` explicitly connects Shell to real
+    Corpus production by turning caller-provided texts into `Corpus -> MLE -> SemDataset`.
+- `ShellCorpusReport` names the materialized corpus state: document count, LM order,
+    vocabulary size, SemForm count, and parsed logical-form count.
+- `ShellCapabilityMap` names platform capability states across immediate, mediation,
+    and recursive bands, including DataPipeline, progress tracking, memory estimation,
+    concurrency runtime, Pregel runtime, DefaultGraphStore, Corpus materialization,
+    SemDataset learning, and mathematical logic readiness.
+- `GdsShell::pipeline_progress_tracker()` and `GdsShell::estimate_pipeline_memory()`
+    expose the kernel progress-tracker and memory-estimation infrastructure as
+    common, reusable Shell pipeline tooling.
 
 Together these make the evolution auditable rather than implicit.
 
@@ -190,6 +206,9 @@ This principle is machine-checkable in runtime through:
 - `GdsShell::validate_projection_trace() -> ShellProjectionTraceValidation`
 - `GdsShell::is_projection_trace_valid() -> bool`
 - `GdsShell::learning_report() -> ShellLearningReport`
+- `GdsShell::materialize_semdataset_from_texts() -> Result<GdsShell, ShellCorpusError>`
+- `GdsShell::corpus_report() -> Option<ShellCorpusReport>`
+- `GdsShell::capability_map() -> ShellCapabilityMap`
 
 ### Doctrine Rule
 

@@ -10,5 +10,5 @@
 pub mod semdataset;
 pub mod semform;
 
-pub use semdataset::{SemDataset, SemError};
-pub use semform::SemForm;
+pub use semdataset::*;
+pub use semform::*;

@@ -23,6 +23,11 @@ Role:
 This tier defines validity and method discipline. It is the rational system for
 working with Collections.
 
+The Shell also exposes a Capability Map for this tier. It reports immediate,
+mediation, and recursive capability states so the kernel can see DataPipeline,
+progress, memory, concurrency, graph, Corpus, SemDataset, and logic readiness
+without confusing capability awareness with execution dispatch.
+
 ---
 
 ## Tier 2: SemDataset Discourse Platform (NLP-First)
@@ -37,6 +42,7 @@ Role:
 
 - Home base for discourse, interpretation, and provenance-bearing semantics
 - NLTK-inspired semantic processing (token/parse/form) inside typed Dataset surfaces
+- LM as Learning Module: the LanguageModel in training beneath SemDataset
 - Mathematical logic entry through ProgramFeature commitments and SemForm parsing
 
 This tier is where "Dataset learns something" and becomes SemDataset.

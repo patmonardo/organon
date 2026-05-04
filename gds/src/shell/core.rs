@@ -1,11 +1,19 @@
 //! Core GDS Shell state.
 
+use std::fmt;
+
 use polars::prelude::DataType;
 
 use crate::collections::dataframe::GDSDataFrame;
+use crate::collections::dataset::corpus::CorpusError;
 use crate::collections::dataset::frame::DatasetDataFrameNameSpace;
-use crate::collections::dataset::{Dataset, DatasetPipeline};
+use crate::collections::dataset::{
+    Corpus, Dataset, DatasetPipeline, LanguageModel, SemDataset, SemError, WhitespaceTokenizer, MLE,
+};
+use crate::core::graph_dimensions::ConcreteGraphDimensions;
+use crate::core::utils::progress::{TaskProgressTracker, Tasks};
 use crate::form::{ProgramFeatureKind, ProgramFeatures};
+use crate::mem::{MemoryEstimations, MemoryRange, MemoryTree};
 
 use super::{
     ShellAddress, ShellAlgebra, ShellMoment, ShellPipeline, ShellPipelineDescriptor, ShellProgram,
@@ -477,6 +485,361 @@ impl ShellLearningReport {
     }
 }
 
+/// Runtime report for an explicitly materialized Corpus -> SemDataset path.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ShellCorpusReport {
+    materialized: bool,
+    document_count: usize,
+    lm_order: usize,
+    lm_vocab_size: usize,
+    semform_count: usize,
+    parsed_form_count: usize,
+}
+
+impl ShellCorpusReport {
+    fn from_semdataset(semdataset: &SemDataset<MLE>) -> Self {
+        Self {
+            materialized: true,
+            document_count: semdataset.corpus().document_count(),
+            lm_order: semdataset.lm().order(),
+            lm_vocab_size: semdataset.lm().vocab().len(),
+            semform_count: semdataset.forms().len(),
+            parsed_form_count: semdataset
+                .forms()
+                .iter()
+                .filter(|form| form.parsed())
+                .count(),
+        }
+    }
+
+    pub fn materialized(&self) -> bool {
+        self.materialized
+    }
+
+    pub fn document_count(&self) -> usize {
+        self.document_count
+    }
+
+    pub fn lm_order(&self) -> usize {
+        self.lm_order
+    }
+
+    pub fn lm_vocab_size(&self) -> usize {
+        self.lm_vocab_size
+    }
+
+    pub fn semform_count(&self) -> usize {
+        self.semform_count
+    }
+
+    pub fn parsed_form_count(&self) -> usize {
+        self.parsed_form_count
+    }
+}
+
+/// Errors raised while explicitly materializing Corpus -> SemDataset in Shell.
+#[derive(Debug)]
+pub enum ShellCorpusError {
+    Corpus(CorpusError),
+    Sem(SemError),
+}
+
+impl From<CorpusError> for ShellCorpusError {
+    fn from(error: CorpusError) -> Self {
+        Self::Corpus(error)
+    }
+}
+
+impl From<SemError> for ShellCorpusError {
+    fn from(error: SemError) -> Self {
+        Self::Sem(error)
+    }
+}
+
+impl fmt::Display for ShellCorpusError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Corpus(error) => write!(formatter, "corpus materialization error: {error}"),
+            Self::Sem(error) => write!(formatter, "semantic materialization error: {error}"),
+        }
+    }
+}
+
+impl std::error::Error for ShellCorpusError {}
+
+/// Memory-estimation report for a Shell pipeline instance.
+#[derive(Debug, Clone)]
+pub struct ShellMemoryEstimate {
+    concurrency: usize,
+    node_count: usize,
+    relationship_count: usize,
+    memory_range: MemoryRange,
+    memory_tree: MemoryTree,
+}
+
+impl ShellMemoryEstimate {
+    fn new(
+        concurrency: usize,
+        node_count: usize,
+        relationship_count: usize,
+        memory_range: MemoryRange,
+        memory_tree: MemoryTree,
+    ) -> Self {
+        Self {
+            concurrency,
+            node_count,
+            relationship_count,
+            memory_range,
+            memory_tree,
+        }
+    }
+
+    pub fn concurrency(&self) -> usize {
+        self.concurrency
+    }
+
+    pub fn node_count(&self) -> usize {
+        self.node_count
+    }
+
+    pub fn relationship_count(&self) -> usize {
+        self.relationship_count
+    }
+
+    pub fn memory_range(&self) -> &MemoryRange {
+        &self.memory_range
+    }
+
+    pub fn memory_tree(&self) -> &MemoryTree {
+        &self.memory_tree
+    }
+
+    pub fn render_tree(&self) -> String {
+        self.memory_tree.render()
+    }
+}
+
+/// Capability bands that let Shell read the whole platform without executing it.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum ShellCapabilityBand {
+    Immediate,
+    Mediation,
+    Recursive,
+}
+
+impl ShellCapabilityBand {
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Immediate => "immediate",
+            Self::Mediation => "mediation",
+            Self::Recursive => "recursive",
+        }
+    }
+}
+
+/// Platform capabilities visible to the Shell.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum ShellPlatformCapability {
+    FrameRegister,
+    DataPipeline,
+    PureFormReturn,
+    ModelFeaturePlan,
+    ProgressTracking,
+    MemoryEstimation,
+    ConcurrencyRuntime,
+    PregelRuntime,
+    DefaultGraphStore,
+    CorpusMaterialization,
+    SemDatasetLearning,
+    MathematicalLogicReadiness,
+}
+
+impl ShellPlatformCapability {
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::FrameRegister => "frame-register",
+            Self::DataPipeline => "data-pipeline",
+            Self::PureFormReturn => "pureform-return",
+            Self::ModelFeaturePlan => "model-feature-plan",
+            Self::ProgressTracking => "progress-tracking",
+            Self::MemoryEstimation => "memory-estimation",
+            Self::ConcurrencyRuntime => "concurrency-runtime",
+            Self::PregelRuntime => "pregel-runtime",
+            Self::DefaultGraphStore => "default-graph-store",
+            Self::CorpusMaterialization => "corpus-materialization",
+            Self::SemDatasetLearning => "semdataset-learning",
+            Self::MathematicalLogicReadiness => "mathematical-logic-readiness",
+        }
+    }
+}
+
+/// One Shell-visible capability with availability and activation state.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ShellCapabilityState {
+    band: ShellCapabilityBand,
+    capability: ShellPlatformCapability,
+    available: bool,
+    active: bool,
+}
+
+impl ShellCapabilityState {
+    fn new(
+        band: ShellCapabilityBand,
+        capability: ShellPlatformCapability,
+        available: bool,
+        active: bool,
+    ) -> Self {
+        Self {
+            band,
+            capability,
+            available,
+            active,
+        }
+    }
+
+    pub fn band(&self) -> ShellCapabilityBand {
+        self.band
+    }
+
+    pub fn capability(&self) -> ShellPlatformCapability {
+        self.capability
+    }
+
+    pub fn available(&self) -> bool {
+        self.available
+    }
+
+    pub fn active(&self) -> bool {
+        self.active
+    }
+}
+
+/// Read-only map of what the Shell can see and what this instance has activated.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ShellCapabilityMap {
+    address: ShellAddress,
+    states: Vec<ShellCapabilityState>,
+}
+
+impl ShellCapabilityMap {
+    fn from_shell(shell: &GdsShell) -> Self {
+        let descriptor = shell.descriptor();
+        let semantic = shell.semantic_pipeline_knowledge();
+        let learning = shell.learning_report();
+        let projection_valid = shell.is_projection_trace_valid();
+        let semdataset_materialized = shell.semdataset().is_some();
+
+        let states = vec![
+            ShellCapabilityState::new(
+                ShellCapabilityBand::Immediate,
+                ShellPlatformCapability::FrameRegister,
+                true,
+                shell.dataframe().is_some(),
+            ),
+            ShellCapabilityState::new(
+                ShellCapabilityBand::Immediate,
+                ShellPlatformCapability::DataPipeline,
+                true,
+                shell.dataset_pipeline().is_some(),
+            ),
+            ShellCapabilityState::new(
+                ShellCapabilityBand::Immediate,
+                ShellPlatformCapability::PureFormReturn,
+                true,
+                descriptor.has_metapipeline(),
+            ),
+            ShellCapabilityState::new(
+                ShellCapabilityBand::Mediation,
+                ShellPlatformCapability::ModelFeaturePlan,
+                true,
+                shell.model_feature_plan_knowledge().is_some(),
+            ),
+            ShellCapabilityState::new(
+                ShellCapabilityBand::Mediation,
+                ShellPlatformCapability::ProgressTracking,
+                true,
+                shell.dataset_pipeline().is_some(),
+            ),
+            ShellCapabilityState::new(
+                ShellCapabilityBand::Mediation,
+                ShellPlatformCapability::MemoryEstimation,
+                true,
+                shell.dataset_pipeline().is_some(),
+            ),
+            ShellCapabilityState::new(
+                ShellCapabilityBand::Mediation,
+                ShellPlatformCapability::ConcurrencyRuntime,
+                true,
+                projection_valid,
+            ),
+            ShellCapabilityState::new(
+                ShellCapabilityBand::Recursive,
+                ShellPlatformCapability::PregelRuntime,
+                true,
+                semdataset_materialized,
+            ),
+            ShellCapabilityState::new(
+                ShellCapabilityBand::Recursive,
+                ShellPlatformCapability::DefaultGraphStore,
+                true,
+                semdataset_materialized,
+            ),
+            ShellCapabilityState::new(
+                ShellCapabilityBand::Recursive,
+                ShellPlatformCapability::CorpusMaterialization,
+                true,
+                semdataset_materialized,
+            ),
+            ShellCapabilityState::new(
+                ShellCapabilityBand::Recursive,
+                ShellPlatformCapability::SemDatasetLearning,
+                true,
+                semantic.semdataset_ready(),
+            ),
+            ShellCapabilityState::new(
+                ShellCapabilityBand::Recursive,
+                ShellPlatformCapability::MathematicalLogicReadiness,
+                true,
+                learning.mathematical_logic_ready(),
+            ),
+        ];
+
+        Self {
+            address: shell.address(),
+            states,
+        }
+    }
+
+    pub fn address(&self) -> ShellAddress {
+        self.address
+    }
+
+    pub fn states(&self) -> &[ShellCapabilityState] {
+        &self.states
+    }
+
+    pub fn band(&self, band: ShellCapabilityBand) -> Vec<&ShellCapabilityState> {
+        self.states
+            .iter()
+            .filter(|state| state.band() == band)
+            .collect()
+    }
+
+    pub fn active_capabilities(&self) -> Vec<ShellPlatformCapability> {
+        self.states
+            .iter()
+            .filter(|state| state.active())
+            .map(ShellCapabilityState::capability)
+            .collect()
+    }
+
+    pub fn has_active(&self, capability: ShellPlatformCapability) -> bool {
+        self.states
+            .iter()
+            .any(|state| state.capability() == capability && state.active())
+    }
+}
+
 fn features_by_kind(program: Option<&ShellProgram>, kind: ProgramFeatureKind) -> Vec<String> {
     program
         .map(|program| {
@@ -536,6 +899,7 @@ pub struct GdsShell {
     dataset: Option<Dataset>,
     program: Option<ShellProgram>,
     seed: Option<ShellSeed>,
+    semdataset: Option<SemDataset<MLE>>,
 }
 
 impl GdsShell {
@@ -557,6 +921,7 @@ impl GdsShell {
             dataset: None,
             program: None,
             seed: Some(seed),
+            semdataset: None,
         }
     }
 
@@ -568,6 +933,7 @@ impl GdsShell {
             dataset: Some(dataset),
             program: None,
             seed: Some(seed),
+            semdataset: None,
         }
     }
 
@@ -577,6 +943,7 @@ impl GdsShell {
             program = program.with_schema(seed.schema().clone());
         }
         self.program = Some(program);
+        self.semdataset = None;
         self
     }
 
@@ -591,6 +958,7 @@ impl GdsShell {
             program
         };
         self.program = Some(program);
+        self.semdataset = None;
         self
     }
 
@@ -612,6 +980,86 @@ impl GdsShell {
 
     pub fn seed(&self) -> Option<&ShellSeed> {
         self.seed.as_ref()
+    }
+
+    pub fn semdataset(&self) -> Option<&SemDataset<MLE>> {
+        self.semdataset.as_ref()
+    }
+
+    pub fn materialize_semdataset_from_texts<T>(
+        mut self,
+        texts: &[T],
+    ) -> Result<Self, ShellCorpusError>
+    where
+        T: AsRef<str>,
+    {
+        let corpus = Corpus::from_texts(texts)?;
+        let mut semdataset = SemDataset::fit(corpus, MLE::new(2), &WhitespaceTokenizer)?;
+        if let Some(program) = &self.program {
+            semdataset.ingest_forms(program.features().features.clone());
+            semdataset.parse_forms();
+        }
+        self.semdataset = Some(semdataset);
+        Ok(self)
+    }
+
+    pub fn corpus_report(&self) -> Option<ShellCorpusReport> {
+        self.semdataset
+            .as_ref()
+            .map(ShellCorpusReport::from_semdataset)
+    }
+
+    pub fn capability_map(&self) -> ShellCapabilityMap {
+        ShellCapabilityMap::from_shell(self)
+    }
+
+    /// Build a request-local progress tracker for this shell pipeline.
+    pub fn pipeline_progress_tracker(&self) -> TaskProgressTracker {
+        let description = format!("shell.pipeline::{:?}", self.pipeline());
+        let leaf = Tasks::leaf_with_volume(description, self.estimated_pipeline_volume());
+        TaskProgressTracker::new(leaf)
+    }
+
+    /// Estimate memory for this shell pipeline using kernel memory-estimation machinery.
+    pub fn estimate_pipeline_memory(&self, concurrency: usize) -> ShellMemoryEstimate {
+        let concurrency = concurrency.max(1);
+        let dimensions = self.estimated_graph_dimensions();
+
+        let per_node_bytes = self
+            .seed
+            .as_ref()
+            .map(|seed| seed.column_count().max(1) * 64)
+            .unwrap_or(128);
+        let feature_bytes = self
+            .program
+            .as_ref()
+            .map(|program| program.feature_count() * 96)
+            .unwrap_or(0);
+        let semantic_form_bytes = self
+            .semdataset
+            .as_ref()
+            .map(|semdataset| semdataset.forms().len() * 128)
+            .unwrap_or(0);
+
+        let estimation = MemoryEstimations::builder("shell.pipeline")
+            .fixed("pipeline.overhead", 1024)
+            .range_per_graph_dimension("frame.seed-buffer", move |dim, _| {
+                let base = dim.node_count().saturating_mul(per_node_bytes);
+                MemoryRange::of_range(base, base.saturating_mul(2))
+            })
+            .fixed("program.features", feature_bytes)
+            .fixed("semantic.forms", semantic_form_bytes)
+            .build();
+
+        let memory_tree = estimation.estimate(&dimensions, concurrency);
+
+        ShellMemoryEstimate::new(
+            concurrency,
+            dimensions.node_count,
+            dimensions.relationship_count,
+            *memory_tree.memory_usage(),
+            memory_tree,
+        )
     }
 
     pub fn dataframe_knowledge(&self) -> Option<ShellDataFrameKnowledge> {
@@ -853,5 +1301,37 @@ impl GdsShell {
         } else {
             self.dataframe.map(Dataset::new)
         }
+    }
+
+    fn estimated_pipeline_volume(&self) -> usize {
+        let frame_volume = self.seed.as_ref().map_or(1, |seed| seed.row_count().max(1));
+        let feature_volume = self.program.as_ref().map_or(0, ShellProgram::feature_count);
+        let semantic_volume = self
+            .semdataset
+            .as_ref()
+            .map_or(0, |semdataset| semdataset.forms().len());
+
+        frame_volume
+            .saturating_add(feature_volume)
+            .saturating_add(semantic_volume)
+            .max(1)
+    }
+
+    fn estimated_graph_dimensions(&self) -> ConcreteGraphDimensions {
+        let node_count = self.seed.as_ref().map_or(1, |seed| seed.row_count().max(1));
+        let relationship_count = self
+            .seed
+            .as_ref()
+            .map_or(0, |seed| {
+                seed.row_count().saturating_mul(seed.column_count().max(1))
+            })
+            .saturating_add(self.program.as_ref().map_or(0, ShellProgram::feature_count))
+            .saturating_add(
+                self.semdataset
+                    .as_ref()
+                    .map_or(0, |semdataset| semdataset.forms().len()),
+            );
+
+        ConcreteGraphDimensions::of(node_count, relationship_count)
     }
 }
