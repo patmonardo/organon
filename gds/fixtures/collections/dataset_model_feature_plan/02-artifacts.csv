@@ -1,0 +1,18 @@
+artifact_id,label,primary_kind,facets
+image:ontology-image_rustscript.dataset.model_feature_plan,ontology-image:rustscript.dataset.model_feature_plan image,program-image,dataset-node-kind:image|entrypoint
+img.feature:0:pf_0_rustscript.dataset.model_feature_plan,rustscript.dataset.model_feature_plan,feature-map,dataset-node-kind:feature
+img.feature:10:pf_10_judgment__model-feature-plan-derive-together,judgment::model-feature-plan-derive-together,feature-map,dataset-node-kind:feature
+img.feature:11:pf_11_middle__frame-as-essentialbeing,middle::frame-as-essentialbeing,feature-map,dataset-node-kind:feature
+img.feature:12:pf_12_infer__semantic-readiness,infer::semantic-readiness,feature-map,dataset-node-kind:feature
+img.feature:13:pf_13_procedure__persist-model-feature-plan-artifacts,procedure::persist-model-feature-plan-artifacts,feature-map,dataset-node-kind:feature
+img.feature:1:pf_1_source__frame,source::frame,feature-map,dataset-node-kind:feature
+img.feature:2:pf_2_observation__term_id,observation::term_id,feature-map,dataset-node-kind:feature
+img.feature:3:pf_3_retain__fields,retain::fields,feature-map,dataset-node-kind:feature
+img.feature:4:pf_4_reflection__model-feature-plan-middle,reflection::model-feature-plan-middle,feature-map,dataset-node-kind:feature
+img.feature:5:pf_5_mark__model,mark::model,feature-map,dataset-node-kind:feature
+img.feature:6:pf_6_mark__feature,mark::feature,feature-map,dataset-node-kind:feature
+img.feature:7:pf_7_mark__plan,mark::plan,feature-map,dataset-node-kind:feature
+img.feature:8:pf_8_concept__modelfeatureplanmiddle,concept::modelfeatureplanmiddle,feature-map,dataset-node-kind:feature
+img.feature:9:pf_9_principle__essence-middle-requires-mutual-ground,principle::essence-middle-requires-mutual-ground,feature-map,dataset-node-kind:feature
+img.model:0:modelfeatureplanmiddle,ModelFeaturePlanMiddle,model-view,dataset-node-kind:model
+img.provenance:0:rustscript.dataset.model_feature_plan,rustscript.dataset.model_feature_plan,table,dataset-node-kind:frame

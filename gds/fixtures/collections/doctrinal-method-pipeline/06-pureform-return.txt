@@ -1,0 +1,6 @@
+address: ShellAddress { register: Unified, pipeline: ModelFeaturePlan, algebra: ProgramFeature }
+required_trace: ["Frame", "Model:Feature::Plan", "SemDataset", "PureForm return"]
+observed_trace: ["Frame", "Model:Feature::Plan", "SemDataset", "PureForm return"]
+trace_valid: true
+fields: ["artifact", "exposition", "moment", "term", "term_id"]
+strategy: gds-shell.compute-graph

@@ -1,0 +1,4 @@
+lm_order: 2
+vocab_size: 10
+forms: 9
+parsed: 2

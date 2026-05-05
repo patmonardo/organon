@@ -1,0 +1,5 @@
+row_id,subject,score,sphere,double_score,surface
+1,frame,10,being,20,frame-surface
+2,series,20,being,40,frame-surface
+3,expr,30,being,60,frame-surface
+4,lazy,40,deferred,80,frame-surface

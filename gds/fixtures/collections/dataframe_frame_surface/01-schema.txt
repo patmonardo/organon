@@ -1,0 +1,5 @@
+columns: ["row_id", "subject", "score", "sphere"]
+dtypes: [Int64, String, Int64, String]
+shape: (4, 4)
+estimated_size: 106
+chunks: 1

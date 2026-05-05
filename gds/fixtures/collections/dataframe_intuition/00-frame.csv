@@ -1,0 +1,4 @@
+row_id,series,channel,expr_hint
+1,sensation,text,select
+2,trace,text,filter
+3,return,text,project

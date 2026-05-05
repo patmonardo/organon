@@ -1,0 +1,4 @@
+row_id,subject,double_score,surface
+2,series,40,frame-surface
+3,expr,60,frame-surface
+4,lazy,80,frame-surface

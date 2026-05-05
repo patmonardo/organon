@@ -1,0 +1,4 @@
+row_id,term,phase,score_plus_one,valuation
+3,expr,judgment,26,lazy-valuation
+4,lazy,deferred,36,lazy-valuation
+5,plan,essence,46,lazy-valuation

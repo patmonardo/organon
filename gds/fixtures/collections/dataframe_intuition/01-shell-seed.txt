@@ -1,0 +1,4 @@
+columns: ["row_id", "series", "channel", "expr_hint"]
+dtypes: [Int64, String, String, String]
+row_count: 3
+column_count: 4

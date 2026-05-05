@@ -1,0 +1,4 @@
+plan: Some("frame-series-expr.preview")
+steps: 2
+planned_columns: None
+observed_columns: Some(["row_id", "series", "channel", "expr_hint", "sphere", "item"])

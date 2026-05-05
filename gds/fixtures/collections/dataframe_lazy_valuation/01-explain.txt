@@ -1,0 +1,15 @@
+unoptimized:
+SELECT [col("row_id"), col("term"), col("phase"), col("score_plus_one"), col("valuation")]
+  FILTER [(col("score_plus_one")) > (20)]
+  FROM
+     WITH_COLUMNS:
+     [[(col("score")) + (1)].alias("score_plus_one"), "lazy-valuation".alias("valuation")] 
+      DF ["row_id", "term", "score", "phase"]; PROJECT */4 COLUMNS
+
+optimized:
+simple π 5/5 ["row_id", "term", "phase", ... 2 other columns]
+  FILTER [(col("score_plus_one")) > (20)]
+  FROM
+     WITH_COLUMNS:
+     [[(col("score")) + (1)].alias("score_plus_one"), "lazy-valuation".alias("valuation")] 
+      DF ["row_id", "term", "score", "phase"]; PROJECT["row_id", "term", "phase", "score"] 4/4 COLUMNS

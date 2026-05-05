@@ -1,0 +1,18 @@
+specification-binding error [specification::rustscript.dataset.sem_meta_pipeline]
+  error: unexpected trailing token Dot (at position 10)
+source error [source::corpus::fixtures-collections-dataset_sem_meta_pipeline-00-corpus.csv]
+  error: unexpected character ':' (at position 6)
+subfeature error [subfeature::tokenizer]
+  error: unexpected character ':' (at position 10)
+subfeature error [subfeature::language-model]
+  error: unexpected character ':' (at position 10)
+concept error [concept::corpuslmsemdataset]
+  error: unexpected character ':' (at position 7)
+principle error [principle::concept-return-requires-corpus-and-lm]
+  error: unexpected character ':' (at position 9)
+judgment parsed [doctrine://dataset-sem-meta-pipeline/judgment]
+  expr: all x.(human(x) -> mortal(x))
+inference parsed [doctrine://dataset-sem-meta-pipeline/inference]
+  expr: (human(socrates) -> mortal(socrates))
+procedure error [procedure::persist-semdataset-artifacts]
+  error: unexpected character ':' (at position 9)

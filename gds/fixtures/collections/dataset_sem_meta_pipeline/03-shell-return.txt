@@ -1,0 +1,4 @@
+semdataset_ready: true
+pureform_return_ready: true
+readiness: 100
+trace_valid: true

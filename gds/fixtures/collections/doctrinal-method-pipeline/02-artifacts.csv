@@ -1,0 +1,19 @@
+artifact_id,label,primary_kind,facets
+image:ontology-image_rustscript.doctrinal_method.semantic_dataset,ontology-image:rustscript.doctrinal_method.semantic_dataset image,program-image,dataset-node-kind:image|entrypoint
+img.feature:0:pf_0_rustscript.doctrinal_method.semantic_dataset,rustscript.doctrinal_method.semantic_dataset,feature-map,dataset-node-kind:feature
+img.feature:10:pf_10_identity__term_id,identity::term_id,feature-map,dataset-node-kind:feature
+img.feature:11:pf_11_principle__doctrinal-method-governs-return,principle::doctrinal-method-governs-return,feature-map,dataset-node-kind:feature
+img.feature:12:pf_12_judgment__feature-structs-compile-into-lm-applications,judgment::feature-structs-compile-into-lm-applications,feature-map,dataset-node-kind:feature
+img.feature:13:pf_13_infer__semantic-readiness,infer::semantic-readiness,feature-map,dataset-node-kind:feature
+img.feature:14:pf_14_procedure__persist-doctrinal-pipeline-artifacts,procedure::persist-doctrinal-pipeline-artifacts,feature-map,dataset-node-kind:feature
+img.feature:1:pf_1_source__doctrinal_frame,source::doctrinal_frame,feature-map,dataset-node-kind:feature
+img.feature:2:pf_2_observation__term_id,observation::term_id,feature-map,dataset-node-kind:feature
+img.feature:3:pf_3_retain__fields,retain::fields,feature-map,dataset-node-kind:feature
+img.feature:4:pf_4_logogenesis__feature-struct-algebra,logogenesis::feature-struct-algebra,feature-map,dataset-node-kind:feature
+img.feature:5:pf_5_subfeature__tokenizer,subfeature::tokenizer,feature-map,dataset-node-kind:feature
+img.feature:6:pf_6_subfeature__tagger,subfeature::tagger,feature-map,dataset-node-kind:feature
+img.feature:7:pf_7_subfeature__parser,subfeature::parser,feature-map,dataset-node-kind:feature
+img.feature:8:pf_8_subfeature__semantic-application,subfeature::semantic-application,feature-map,dataset-node-kind:feature
+img.feature:9:pf_9_concept__doctrinalmethodsemdataset,concept::doctrinalmethodsemdataset,feature-map,dataset-node-kind:feature
+img.model:0:doctrinalmethodsemdataset,DoctrinalMethodSemDataset,model-view,dataset-node-kind:model
+img.provenance:0:rustscript.doctrinal_method.semantic_dataset,rustscript.doctrinal_method.semantic_dataset,table,dataset-node-kind:frame

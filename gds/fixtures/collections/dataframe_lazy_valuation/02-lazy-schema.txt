@@ -1,0 +1,1 @@
+schema: Schema { fields: {"row_id": Int64, "term": String, "phase": String, "score_plus_one": Int64, "valuation": String}, metadata: () }
