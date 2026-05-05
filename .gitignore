@@ -69,3 +69,5 @@ reality/src/logos/open-logic
 logic/src/compiler.old
 gds/nltk
 gds/nltk-book
+gds/examples.old
+./gds/examples.old
