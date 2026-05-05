@@ -1,0 +1,4 @@
+imdb/train: /home/pat/VSCode/organon/gds/fixtures/collections/dataset/dataset_io_catalog_extensible/registry/imdb
+imdb/test:  /home/pat/VSCode/organon/gds/fixtures/collections/dataset/dataset_io_catalog_extensible/registry/imdb
+ptb/val:    /home/pat/VSCode/organon/gds/fixtures/collections/dataset/dataset_io_catalog_extensible/registry/ptb
+conll/all:  /home/pat/VSCode/organon/gds/fixtures/collections/dataset/dataset_io_catalog_extensible/registry/conll2003

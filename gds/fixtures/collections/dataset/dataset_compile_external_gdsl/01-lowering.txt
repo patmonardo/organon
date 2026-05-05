@@ -1,0 +1,5 @@
+program: org.hegel.epistemology.absolute_concept.scientific_inference
+selected_forms: ["AppearanceObject"]
+feature_count: 62
+nodes: 65
+entrypoints: 1

@@ -8,7 +8,7 @@ The `/gds/doc` directory has become a scattered archive of working notes, propos
 
 This Doctrine reconstruction rests on a single high principle:
 
-**The examples are the canonical exposition of the system. All other documentation serves the examples.**
+**The exemplars are the canonical exposition of the system. Runnable examples and fixtures are their executable evidence.**
 
 This is not inverted. The examples are not decorative. They are constitutional. Every reader should be able to learn the entire system by studying the examples in sequence and consulting the reference docs only when needed.
 
@@ -25,31 +25,31 @@ gds/
     PRINCIPLE-FOUNDATION.md      ← The high principle (Reflection→Principle→Concept→Procedure)
 
     EXEMPLARS/
-      001-frame-dsl.md           ← What this example teaches
-      002-corpus-readers.md      ← What this example teaches
-      003-tree-structures.md
-      ...
-      (41 exemplars, each with a .md companion)
+      form/                      ← PureForm and return shape
+      shell/                     ← Runtime connection and program envelope
+      dataframe/                 ← Immediate Frame:Series::Expr body
+      dataset/                   ← Mediated Dataset artifacts and semantics
 
     REFERENCES/
-      collections-dataset/
+      form/
+        pureform.md              ← Reference: Form/Context/Morph
+        seven-moments.md         ← Reference: Reflection sequence
+
+      shell/
+        program-features.md      ← Reference: runtime feature envelope
+        grammar.md               ← Reference: external Shell program syntax
+
+      dataframe/
+        dataframe.md             ← Reference: immediate tabular body
+        frame-dsl.md             ← Reference: RustScript DataFrame surface
+
+      dataset/
         core-concepts.md         ← Reference: what is a Dataset?
         artifact-kinds.md        ← Reference: what are artifact kinds?
         marks-and-features.md    ← Reference: mark semantics
         feature-structures.md    ← Reference: FeatStruct algebra
 
-      form-processor/
-        relative-reflection.md   ← Reference: 6 RelativeReflection moments
-        absolute-reflection.md   ← Reference: 7th moment, the threshold
-        principle-evaluation.md  ← Reference: nomological gate
-        concept-emergence.md     ← Reference: post-Principle objects
-
-      gdsl/
-        program-features.md      ← Reference: feature kind taxonomy
-        grammar.md               ← Reference: GDSL syntax
-
       gds-kernel/
-        pureform.md              ← Reference: Form/Context/Morph
         zeroCopy-boundary.md     ← Reference: kernel-agent contract
 
       philosophy/
@@ -74,7 +74,7 @@ Each exemplar `.md` companion file answers four questions:
 Example template:
 
 ```markdown
-# Collections Dataset: Frame DSL (`collections_dataset_frame_dsl.rs`)
+# Collections Dataset: Frame DSL (`dataset_frame_dsl.rs`)
 
 ## Principle
 This example teaches the modern DataFrame DSL surface: how to name a Dataset,
@@ -91,7 +91,7 @@ This is **Stage 1 in the Knowledge Agent pipeline**: Source → Observation.
 The example shows the ergonomic surface where users begin authoring semantic programs.
 
 ## Next
-Study `collections_dataset_corpus_readers.rs` to see how Observation moves from
+Study `dataset_source_corpus.rs` to see how Observation moves from
 immediate data loading into semantic corpus marking.
 ```
 
@@ -103,7 +103,7 @@ Reference docs are consulted, not read. They are organized by topic:
 
 - **`core-concepts.md`**: What is Dataset? What is DataFrame? What is a mark?
 - **`relative-reflection.md`**: What are the 6 moments? How do they sequence?
-- **`program-features.md`**: All 16 feature kinds; when to use each.
+- **`program-features.md`**: The Shell-readable feature envelope; when to use each kind.
 - **`zeroCopy-boundary.md`**: The kernel-agent contract at Absolute Reflection.
 
 Reference docs are:

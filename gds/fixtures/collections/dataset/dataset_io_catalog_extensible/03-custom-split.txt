@@ -1,0 +1,3 @@
+dataset: squad
+split: adversarial
+path: /home/pat/VSCode/organon/gds/fixtures/collections/dataset/dataset_io_catalog_extensible/registry/squad

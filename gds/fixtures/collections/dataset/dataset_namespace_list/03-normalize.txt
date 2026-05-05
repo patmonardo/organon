@@ -1,0 +1,32 @@
+unique
+shape: (5,)
+Series: 'span' [list[i64]]
+[
+	[1, 2, 3]
+	[4, 5]
+	[6]
+	[2]
+	[9, 8, … 6]
+]
+
+n_unique
+shape: (5,)
+Series: 'span' [u32]
+[
+	3
+	2
+	1
+	1
+	4
+]
+
+reverse
+shape: (5,)
+Series: 'span' [list[i64]]
+[
+	[3, 2, 1]
+	[5, 4]
+	[6]
+	[2, 2, 2]
+	[6, 7, … 9]
+]

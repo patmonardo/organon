@@ -43,7 +43,7 @@ Example:
 State canonical module homes when naming code surfaces. Prefer canonical paths over compatibility shims unless the exemplar is explicitly teaching backwards compatibility.
 
 Reference:
-- `Doctrine/REFERENCES/collections-dataset/namespace-invariants.md`
+- `Doctrine/REFERENCES/dataset/namespace-invariants.md`
 
 Example:
 > Canonical path: `dataset::model::prep`.
@@ -55,16 +55,16 @@ Example:
 List 3-5 terms this exemplar teaches. Each term links to a reference doc.
 
 Example:
-- Dataset (see REFERENCES/collections-dataset/core-concepts.md)
-- DatasetPipeline (see REFERENCES/collections-dataset/core-concepts.md#DatasetPipeline)
-- Namespace access pattern (see REFERENCES/collections-dataset/frame-dsl.md)
+- Dataset (see REFERENCES/dataset/core-concepts.md)
+- DatasetPipeline (see REFERENCES/dataset/core-concepts.md#DatasetPipeline)
+- Namespace access pattern (see REFERENCES/dataframe/frame-dsl.md)
 
 ## Next Exemplar
 
 Name the exemplar the reader should study next, and why.
 
 Example:
-> **Next**: `collections_dataset_corpus_readers.rs`
+> **Next**: `dataset_source_corpus.rs`
 >
 > This exemplar shows how Observation moves from simple DataFrame loading into semantic
 > corpus marking. You'll see how sources become named corpus objects that carry semantic intent.

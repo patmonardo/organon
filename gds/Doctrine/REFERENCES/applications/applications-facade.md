@@ -15,7 +15,7 @@ The service layer is responsible for:
 - schema and preview responses
 - feature evaluation
 - attention reports
-- GDSL compilation
+- external `.gdsl` artifact compilation through the Shell feature envelope
 - materialization of Dataset artifacts
 
 ---
@@ -40,4 +40,4 @@ Typical operations:
 
 ## Doctrine Rule
 
-Applications does not invent semantic meaning. Dataset and GDSL own the meaning. Applications makes it serviceable.
+Applications does not invent semantic meaning. Dataset owns the mediated semantic image; Shell owns the runtime program envelope. Applications makes both serviceable.

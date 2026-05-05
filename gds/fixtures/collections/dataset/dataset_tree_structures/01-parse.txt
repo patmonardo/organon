@@ -1,0 +1,4 @@
+input: (S (NP (DT The) (NN dog)) (VP (VBZ runs) (ADVP (RB quickly))))
+roundtrip: (S (NP (DT The) (NN dog)) (VP (VBZ runs) (ADVP (RB quickly))))
+leaves: 4
+height: 5

@@ -1,0 +1,6 @@
+plan_batch_size: 4
+batches: 3
+batch_shapes:
+  0: 4r x 2c
+  1: 4r x 2c
+  2: 2r x 2c

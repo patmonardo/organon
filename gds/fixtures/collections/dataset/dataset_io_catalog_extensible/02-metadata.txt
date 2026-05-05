@@ -1,0 +1,4 @@
+name: glue
+desc: General Language Understanding Evaluation benchmark.
+tags: nlp, benchmark, classification
+homepage: https://gluebenchmark.com

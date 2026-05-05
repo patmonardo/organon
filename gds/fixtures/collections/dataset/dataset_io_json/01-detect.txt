@@ -1,0 +1,3 @@
+json=Json
+ndjson=Json
+csv=Csv

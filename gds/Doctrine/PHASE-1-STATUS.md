@@ -12,23 +12,23 @@ gds/
     INDEX.md                    ← Navigation hub
     FOUNDING-CHARTER.md         ← Why this exists
     PRINCIPLE-FOUNDATION.md     ← The high principle
-    EXEMPLARS/                  ← Canonical texts
+    EXEMPLARS/                  ← Canonical texts by fold
       TEMPLATE.md               ← What an exemplar looks like
-      001-frame-dsl.md
-      002-corpus-readers.md
-      003-tree-structures.md
-      004-featstruct-model.md
-      005-compile-ir.md
-      ...
-      025-graphframe-catalog-write.md
-      026-semantic-meta-pipeline.md
-      027-model-feature-plan-middle.md
-      028-dataframe-intuition.md
+      form/
+      shell/
+      dataframe/
+      dataset/
     REFERENCES/                 ← Consulted docs
-      collections-dataset/
-        core-concepts.md
-      form-processor/
+      form/
+        pureform.md
         seven-moments.md
+      shell/
+        program-features.md
+        grammar.md
+      dataframe/
+        dataframe.md
+      dataset/
+        core-concepts.md
       gds-kernel/
         zeroCopy-boundary.md
 ```
@@ -46,7 +46,7 @@ gds/
 3. 003-tree-structures.md — Syntactic and semantic structure
 4. 004-featstruct-model.md — Essence preparation and marking
 5. 005-compile-ir.md — Compiler-visible IR
-6. 006-gdsl-absolute-concept.md — Whole-arc GDSL specimen
+6. 006-external-shell-program-artifact.md — External Shell program artifact specimen
 7. 007-applications-expository.md — Dataset-first Applications service boundary
 8. 008-stdlib-resources.md — Curated resources as source commitments
 9. 009-json-semantic-form.md — JSON as observed semantic form
@@ -83,11 +83,11 @@ Each exemplar:
 - **core-concepts.md**: Dataset, DataFrame, Mark, Feature, Pipeline, Compilation, Artifact, Provenance
 - **seven-moments.md**: The 7-moment Reflection sequence and the Absolute Reflection threshold
 - **zeroCopy-boundary.md**: The kernel-agent contract at Principle evaluation
-- **program-features.md / grammar.md**: GDSL taxonomy and canonical reading rule
+- **program-features.md / grammar.md**: Shell program envelope and external artifact reading rule
 - **principle-evaluation.md / concept-emergence.md**: Principle-before-Concept doctrine
 - **hegel-objectivity.md**: Procedure as Process
 - **applications-facade.md**: Dataset-first service boundary
-- **collections-dataset references**: frame DSL, corpus, readers, provenance, structured sources, stdlib resources, tree structures, feature structures, unification, modality, ontology images, compilation, materialization, and attention reports
+- **dataframe / dataset references**: immediate DataFrame body, frame DSL, corpus, readers, provenance, structured sources, stdlib resources, tree structures, feature structures, unification, modality, ontology images, compilation, materialization, and attention reports
 - **semantic-pipeline.md**: SemDataset as the Semantic Graph Meta Pipeline
 - **model-feature-plan.md**: Model:Feature::Plan as the Essence Middle
 - **dataframe-intuition.md**: DataFrame as Intuition and first formed body

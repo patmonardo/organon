@@ -62,7 +62,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .facet("doctrine:027-model-feature-plan-middle")
         .facet("internal-dsl")
         .source_io(io_path(
-            "fixtures/collections/dataset_model_feature_plan/00-frame.csv",
+            "fixtures/collections/dataset/dataset_model_feature_plan/00-frame.csv",
         ));
     println!("artifact: DatasetDataFrameNameSpace");
     println!("meaning: DataFrame execution remains intact while Dataset starts mediation.");
@@ -79,7 +79,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         [
             program_source(
                 "frame",
-                "fixtures/collections/dataset_model_feature_plan/00-frame.csv",
+                "fixtures/collections/dataset/dataset_model_feature_plan/00-frame.csv",
             ),
             program_observation("term_id"),
             program_retain("term_id-term-moment-role-exposition"),
@@ -194,7 +194,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 fn fixture_root() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .join("fixtures/collections/dataset_model_feature_plan")
+        .join("fixtures/collections/dataset/dataset_model_feature_plan")
 }
 
 fn persist_dataset(
@@ -216,7 +216,7 @@ fn fixture_path(path: &Path) -> String {
         .file_name()
         .map(|name| name.to_string_lossy().into_owned())
         .unwrap_or_else(|| path.to_string_lossy().into_owned());
-    format!("fixtures/collections/dataset_model_feature_plan/{file_name}")
+    format!("fixtures/collections/dataset/dataset_model_feature_plan/{file_name}")
 }
 
 fn manifest(

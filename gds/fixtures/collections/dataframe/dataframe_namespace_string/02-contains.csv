@@ -1,0 +1,9 @@
+token,has_dash,has_parse
+pre-processing,true,false
+tokenization,false,false
+post-lemmatization,true,false
+stemming,false,false
+part-of-speech,true,false
+named-entity,true,false
+dependency-parse,true,true
+coreference,false,false

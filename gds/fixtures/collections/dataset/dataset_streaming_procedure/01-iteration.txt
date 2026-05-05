@@ -1,0 +1,9 @@
+batch_size: 3
+source_rows: 10
+batches: 4
+total_batched: 10
+batch_shapes:
+  0: 3r x 2c
+  1: 3r x 2c
+  2: 3r x 2c
+  3: 1r x 2c

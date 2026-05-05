@@ -105,7 +105,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 }
 
 fn fixture_root() -> PathBuf {
-    PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("fixtures/collections/dataframe_frame_surface")
+    PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("fixtures/collections/dataframe/dataframe_frame_surface")
 }
 
 fn persist_frame(
@@ -127,7 +128,7 @@ fn fixture_path(path: &Path) -> String {
         .file_name()
         .map(|name| name.to_string_lossy().into_owned())
         .unwrap_or_else(|| path.to_string_lossy().into_owned());
-    format!("fixtures/collections/dataframe_frame_surface/{file_name}")
+    format!("fixtures/collections/dataframe/dataframe_frame_surface/{file_name}")
 }
 
 fn manifest(

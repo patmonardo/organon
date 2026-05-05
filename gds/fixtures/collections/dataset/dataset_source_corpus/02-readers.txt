@@ -1,0 +1,2 @@
+plaintext_word_count: 17
+wordlist_count: 2

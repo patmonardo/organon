@@ -1,0 +1,11 @@
+artifact_id,label,primary_kind,facets
+image:ontology-image_rustscript.dataset.compile_ir,ontology-image:rustscript.dataset.compile_ir image,program-image,dataset-node-kind:image|entrypoint
+img.feature:0:pf_0_rustscript.dataset.compile_ir,rustscript.dataset.compile_ir,feature-map,dataset-node-kind:feature
+img.feature:1:pf_1_source__frame,source::frame,feature-map,dataset-node-kind:feature
+img.feature:2:pf_2_observation__term_id,observation::term_id,feature-map,dataset-node-kind:feature
+img.feature:3:pf_3_reflection__compile-ir-observation,reflection::compile-ir-observation,feature-map,dataset-node-kind:feature
+img.feature:4:pf_4_concept__compileirimage,concept::compileirimage,feature-map,dataset-node-kind:feature
+img.feature:5:pf_5_principle__program-features-compile-to-artifacts,principle::program-features-compile-to-artifacts,feature-map,dataset-node-kind:feature
+img.feature:6:pf_6_procedure__persist-compile-ir-artifacts,procedure::persist-compile-ir-artifacts,feature-map,dataset-node-kind:feature
+img.model:0:compileirimage,CompileIRImage,model-view,dataset-node-kind:model
+img.provenance:0:rustscript.dataset.compile_ir,rustscript.dataset.compile_ir,table,dataset-node-kind:frame

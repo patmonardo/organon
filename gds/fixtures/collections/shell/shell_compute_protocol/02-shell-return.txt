@@ -1,0 +1,7 @@
+address: ShellAddress { register: Unified, pipeline: ModelFeaturePlan, algebra: ProgramFeature }
+register: Unified
+pipeline: ModelFeaturePlan
+trace_valid: true
+semdataset_ready: true
+pureform_return_ready: true
+readiness_score: 100

@@ -15,6 +15,12 @@ Allowed top-level prefixes:
 - `dataframe`
 - `dataset`
 
+These are also the top-level fixture and Doctrine roots, in order:
+
+```text
+form -> shell -> dataframe -> dataset
+```
+
 Allowed Dataset subdomain prefixes:
 
 - `dataset_source`
@@ -38,7 +44,10 @@ string is external DSL even when it is loaded from Rust.
 
 Every new example must use a durable fixture root:
 
-`gds/fixtures/collections/<example-stem>/`
+`gds/fixtures/collections/<root>/<example-stem>/`
+
+The `<root>` must match the example prefix: `form`, `shell`, `dataframe`, or
+`dataset`.
 
 Generated manifests should use fixture-relative paths, not local absolute paths.
 Temporary scratch output belongs in `target`, but canonical example artifacts do
@@ -53,7 +62,7 @@ not.
 | 003-tree-structures | `dataset_tree_structures.rs` | `examples.old/collections_dataset_tree.rs` |
 | 004-featstruct-model | `dataset_feature_structures.rs` | `examples.old/collections_dataset_featstruct_model.rs` |
 | 005-compile-ir | `dataset_compile_ir.rs` | `examples.old/collections_dataset_compile_ir.rs` |
-| 006-gdsl-absolute-concept | `dataset_compile_external_gdsl.rs` | `examples.old/collections_dataset_gdsl_absolute_concept.rs` |
+| 006-external-shell-program-artifact | `dataset_compile_external_gdsl.rs` | `examples.old/collections_dataset_gdsl_absolute_concept.rs` |
 | 007-applications-expository | `form_applications_expository.rs` | `examples.old/collections_dataset_applications_expository.rs` |
 | 008-stdlib-resources | `dataset_source_stdlib.rs` | `examples.old/collections_dataset_stdlib.rs` |
 | 009-json-semantic-form | `dataset_io_json.rs` | `examples.old/collections_dataset_json.rs` |
@@ -105,35 +114,47 @@ Initial covered spine:
 
 | Namespace Fold | Example | Fixture Root | State |
 |---|---|---|---|
-| `Frame:Series::Expr` | `dataframe_intuition.rs` | `fixtures/collections/dataframe_intuition` | `covered` |
-| `Model:Feature::Plan` | `dataset_model_feature_plan.rs` | `fixtures/collections/dataset_model_feature_plan` | `covered` |
-| `Corpus:LM::SemDataset` | `dataset_sem_meta_pipeline.rs` | `fixtures/collections/dataset_sem_meta_pipeline` | `covered` |
+| `Frame:Series::Expr` | `dataframe_intuition.rs` | `fixtures/collections/dataframe/dataframe_intuition` | `covered` |
+| `Model:Feature::Plan` | `dataset_model_feature_plan.rs` | `fixtures/collections/dataset/dataset_model_feature_plan` | `covered` |
+| `Corpus:LM::SemDataset` | `dataset_sem_meta_pipeline.rs` | `fixtures/collections/dataset/dataset_sem_meta_pipeline` | `covered` |
+
+Form namespace coverage:
+
+| Namespace | Example | Fixture Root | State |
+|---|---|---|---|
+| `form::framing_chunking` | `form_framing_chunking.rs` | `fixtures/collections/form/form_framing_chunking` | `covered` |
+
+Shell namespace coverage:
+
+| Namespace | Example | Fixture Root | State |
+|---|---|---|---|
+| `shell::compute` | `shell_compute_protocol.rs` | `fixtures/collections/shell/shell_compute_protocol` | `covered` |
 
 Planned DataFrame namespace examples:
 
 | Namespace | Example | State |
 |---|---|---|
-| `dataframe::series` | `dataframe_series_concept.rs` | `planned` |
-| `dataframe::expr` | `dataframe_expr_basic.rs`, `dataframe_expr_pipeline.rs` | `planned` |
+| `dataframe::series` | `dataframe_series_concept.rs` | `covered` |
+| `dataframe::expr` | `dataframe_expr_basic.rs`, `dataframe_expr_pipeline.rs` | `covered` |
 | `dataframe::frame` | `dataframe_frame_surface.rs` | `covered` |
 | `dataframe::lazy` | `dataframe_lazy_valuation.rs` | `covered` |
-| `dataframe::selectors` | `dataframe_select_filter.rs` | `planned` |
-| `dataframe::macros` | `dataframe_macros_reflection.rs` | `planned` |
+| `dataframe::selectors` | `dataframe_select_filter.rs` | `covered` |
+| `dataframe::macros` | `dataframe_macros_reflection.rs` | `covered` |
 | `dataframe::namespaces::structure` | `dataframe_structure_projection.rs` | `planned` |
 
 Planned Dataset support namespace examples:
 
 | Namespace | Example | State |
 |---|---|---|
-| `dataset::source` | `dataset_source_corpus.rs` | `planned` |
+| `dataset::source` | `dataset_source_corpus.rs` | `covered` |
 | `dataset::stdlib` | `dataset_source_stdlib.rs` | `planned` |
 | `dataset::io` | `dataset_io_json.rs`, `dataset_io_xml_html.rs` | `planned` |
 | `dataset::tree` | `dataset_tree_structures.rs` | `planned` |
 | `dataset::feature::featstruct` | `dataset_feature_structures.rs` | `planned` |
-| `dataset::compile` | `dataset_compile_ir.rs` | `planned` |
+| `dataset::compile` | `dataset_compile_ir.rs` | `covered` |
 | `dataset::functions::program` | `dataset_model_feature_plan.rs` | `covered` |
-| `dataset::functions::shell` | `dataset_frame_dsl.rs` | `planned` |
-| `dataset::macro` | `dataset_frame_dsl.rs` | `planned` |
+| `dataset::functions::shell` | `dataset_frame_dsl.rs` | `covered` |
+| `dataset::macro` | `dataset_frame_dsl.rs` | `covered` |
 | `dataset::registry` | `dataset_io_catalog_extensible.rs` | `planned` |
 | `dataset::streaming` | `dataset_streaming_procedure.rs`, `dataset_streaming_lazy.rs` | `planned` |
-| `dataset::toolchain` | `dataset_compile_ir.rs`, `dataset_compile_external_gdsl.rs` | `planned` / `external` |
+| `dataset::toolchain` | `dataset_compile_ir.rs`, `dataset_compile_external_gdsl.rs` | `covered` / `external` |

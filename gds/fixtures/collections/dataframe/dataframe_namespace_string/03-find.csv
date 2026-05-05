@@ -1,0 +1,9 @@
+token,dash_offset
+pre-processing,3
+tokenization,
+post-lemmatization,4
+stemming,
+part-of-speech,4
+named-entity,5
+dependency-parse,10
+coreference,

@@ -1,0 +1,4 @@
+left: [cat=NP]
+right: [cat=NP, num=pl]
+unified: [cat=NP, num=pl]
+conflict NP/VP: FAIL

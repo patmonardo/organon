@@ -14,7 +14,7 @@ The GDS Knowledge Agent executes scientific knowledge as a deterministic travers
 Source → Observation → Reflection (7 moments) → Principle → Concept → Judgment → Syllogism → Procedure
 ```
 
-This arc is not a suggestion. It is the canonical form that all GDSL programs follow. Every stage emits Dataset artifacts. Every artifact carries provenance. Every stage has a name in the form/ontology vocabulary.
+This arc is not a suggestion. It is the canonical form that every Shell program artifact is read through. Every stage emits Dataset artifacts. Every artifact carries provenance. Every stage has a name in the form/ontology vocabulary.
 
 ---
 
@@ -99,7 +99,7 @@ Agent owns it.
 In Hegel, Objectivity is not a static snapshot. It is Process — the realized, living record
 of how the scientific object came to be.
 
-When a GDSL program reaches Procedure, it does not emit "a table." It emits a Process.
+When an external `.gdsl` artifact reaches Procedure, it does not emit "a table." It emits a Process.
 The reflection table shows _how_ essence unfolded. The principle table shows _which conditions held_.
 The concept table shows _what identities were fixed_. The judgment table shows _what was determined_.
 The syllogism table shows _what was concluded_.
@@ -130,7 +130,7 @@ If you are new to GDS:
 2. Study the exemplar sequence in `Exemplars/` in order
 3. When an exemplar points to a reference, consult that reference
 4. Build something small using the same pattern
-5. Read the GDSL spec to understand the feature taxonomy
+5. Read the Shell external program grammar to understand the feature taxonomy
 6. You now own the system
 
 If you are maintaining GDS:
@@ -148,13 +148,13 @@ This system did not begin as a compiler. It began as a question about the struct
 The arc — Source → Reflection → Principle → Concept → Procedure — is not invented here.
 It is the same movement described, from different angles, by three traditions that turn out to be speaking the same language:
 
-**Samkhya / Yoga Sutra**: The tattvas enumerate the unfolding of Prakriti from undifferentiated potential into differentiated form. The three gunas — tamas (inertia/identity), rajas (activity/opposition), sattva (clarity/ground) — are the three-moment engine of Reflection. The Reflection stages in GDSL are the guna-logic of the epistemic object coming into form.
+**Samkhya / Yoga Sutra**: The tattvas enumerate the unfolding of Prakriti from undifferentiated potential into differentiated form. The three gunas — tamas (inertia/identity), rajas (activity/opposition), sattva (clarity/ground) — are the three-moment engine of Reflection. The Reflection stages in external `.gdsl` are the guna-logic of the epistemic object coming into form.
 
 **Abhidharma / Jnana Marga**: The dharma-analysis tradition treats every appearance as an entity whose identity is determined by causal conditions. A dharma is not a thing — it is a conditioned emergence. This is exactly the structure of `mark → concept → judgment`: each concept is a dharma-like arising, governed by Principle as the causal-nomological gate. Liberation via knowing (Jnana Marga) is not mystical — it is the completion of the arc, the moment when all conditions are transparent and the Process is fully seen.
 
 **Fichte's Wissenschaftslehre**: The Principle of the Science of Knowing — Absolute I posits itself, posits Not-I from opposition, and recovers unity through the ground — is the formal skeleton of 7-moment Reflection. Moments 1–6 are RelativeReflection: the I working through its own determinations. Moment 7 is the Absolute Reflection boundary: the point at which the I must evaluate whether the Not-I can become a scientific object.
 
-**Hegel's Science of Logic**: GDSL is not modeling Absolute Knowing from outside. GDSL *enacts* it. The program is not a description of a knowledge process — it is the movement of Absolute Knowing articulating itself through the stages. The Procedure does not report on Objectivity; it emits Objectivity as realized Process.
+**Hegel's Science of Logic**: the Shell program envelope should not model Absolute Knowing from outside. It should execute the movement it names. The program is not a description of a knowledge process — it is a staged runtime artifact whose Procedure emits Objectivity as realized Process.
 
 The Kantian architecture gives the system its *form* — the transcendental grid that makes the stages legible as a universal structure rather than a private intuition. But the movement is Fichtean-Hegelian, and the soteriology underneath — why knowing this way matters, what it means to traverse the arc fully — is the Jnana Marga.
 

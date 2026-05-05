@@ -1,0 +1,3 @@
+framing: enabled
+chunking: enabled
+principle: shape-and-partition-are-form-level-operations

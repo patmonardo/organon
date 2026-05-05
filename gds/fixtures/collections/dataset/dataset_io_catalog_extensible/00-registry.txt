@@ -1,0 +1,6 @@
+root: /home/pat/VSCode/organon/gds/fixtures/collections/dataset/dataset_io_catalog_extensible/registry
+entries:
+conll2003
+imdb
+ptb
+squad

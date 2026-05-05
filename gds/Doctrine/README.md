@@ -1,6 +1,6 @@
 # Welcome to GDS Doctrine
 
-**The examples are the canonical exposition. All other documentation serves the examples.**
+**The exemplars are the canonical exposition. Runnable examples and fixtures are their executable evidence.**
 
 This is the constitution of the GDS Knowledge Agent system. It is not scattered working notes.
 It is Doctrine.
@@ -16,28 +16,20 @@ gds/Doctrine/
   ├── PRINCIPLE-FOUNDATION.md     ← The high principle: Source → Observation → Reflection → Principle → Concept → Judgment → Syllogism → Procedure
   ├── PHASE-1-STATUS.md           ← What's done, what remains
   │
-  ├── EXEMPLARS/                  ← Canonical texts (28/42 written, 14 to come)
+    ├── EXEMPLARS/                  ← Canonical texts grouped by kernel fold
   │   ├── TEMPLATE.md             ← How to write an exemplar
-  │   ├── 001-frame-dsl.md        ← Stage 1: The DSL surface
-  │   ├── 002-corpus-readers.md   ← Stage 1-2: Sources and corpus
-  │   ├── 003-tree-structures.md  ← Stage 2: Syntactic/semantic structure
-  │   ├── 004-featstruct-model.md ← Stage 2-3: Essence preparation
-  │   ├── 005-compile-ir.md       ← Bridge: Compiler view
-  │   ├── 006-gdsl-absolute-concept.md
-  │   ├── 007-applications-expository.md
-  │   ├── 008-stdlib-resources.md
-  │   ├── 009-json-semantic-form.md
-  │   ├── 010-xml-html-semantic-form.md
-  │   └── ... through 028-dataframe-intuition.md
+    │   ├── form/                   ← PureForm and principle-gated return
+    │   ├── shell/                  ← Runtime connector and DataPipeline protocol
+    │   ├── dataframe/              ← Immediate Frame:Series::Expr body
+    │   └── dataset/                ← Mediated Model:Feature::Plan and SemDataset
   │
-  └── REFERENCES/                 ← Consulted definitions (31 written)
-      ├── collections-dataset/
-      │   └── core-concepts.md    ← Dataset, DataFrame, Mark, Feature, Pipeline
-      ├── form-processor/
-      │   └── seven-moments.md    ← The 7 moments of Reflection
+    └── REFERENCES/                 ← Consulted definitions by the same roots
+      ├── form/                   ← PureForm and reflection/principle concepts
+      ├── shell/                  ← Runtime program grammar and feature envelope
+      ├── dataframe/              ← Immediate tabular body and expression surface
+      ├── dataset/                ← Mediated semantic controller and artifacts
       ├── gds-kernel/
       │   └── zeroCopy-boundary.md← Kernel-agent contract at Principle
-      ├── gdsl/
       ├── philosophy/
       └── (more to come)
 ```
@@ -48,7 +40,7 @@ gds/Doctrine/
 
 1. **[INDEX.md](INDEX.md)** (5 min) — Navigation and quick reference
 2. **[PRINCIPLE-FOUNDATION.md](PRINCIPLE-FOUNDATION.md)** (10 min) — The one-page high principle
-3. **[EXEMPLARS/001-frame-dsl.md](EXEMPLARS/001-frame-dsl.md)** (15 min) — Start the exemplar sequence
+3. **[EXEMPLARS/001-frame-dsl.md](EXEMPLARS/dataset/001-frame-dsl.md)** (15 min) — Start the exemplar sequence
 
 Then continue through the current exemplar sequence in order.
 
@@ -60,9 +52,18 @@ Then continue through the current exemplar sequence in order.
 Source → Observation → Reflection (7 moments) → Principle → Concept → Judgment → Syllogism → Procedure
 ```
 
-Every GDSL program follows this arc.
+Every Shell program artifact is read through this arc.
 Every Dataset artifact embodies this arc.
 Every exemplar teaches one stage of this arc.
+
+The top-level fold is fixed everywhere:
+
+```text
+form -> shell -> dataframe -> dataset
+```
+
+Form names the PureForm return. Shell connects the runtime. DataFrame supplies
+the immediate body. Dataset supplies the mediated semantic controller.
 
 ---
 
@@ -75,14 +76,26 @@ Every exemplar teaches one stage of this arc.
 - No single voice
 - No clear entry point
 
-**New Doctrine** (Index → Exemplars → References):
-- Examples are the texts; everything else serves them
+**New Doctrine** (Index -> Exemplars -> References -> executable fixtures):
+- Exemplars are the texts; runnable examples and fixtures prove them
 - One canonical sequence (the arc)
 - Consistent voice
 - Clear entry points
 - All references tied to principles
 
-This is higher principle at play. The docs are no longer randoms.
+This is higher principle at play. The docs are no longer scattered notes.
+
+---
+
+## Doctrine Hygiene
+
+The Doctrine must keep three layers distinct:
+
+1. **Exemplars** explain a settled doctrinal moment.
+2. **Runnable examples** execute that moment through the internal Rust DSL unless explicitly marked external.
+3. **Fixtures** persist the generated artifact evidence.
+
+Do not let an exemplar become a scratch note, a fixture manifest become the doctrine, or an external program artifact masquerade as the internal RustScript surface. When a runnable example is renamed, update the exemplar source line, [INDEX.md](INDEX.md), and any namespace registry in the same change.
 
 ---
 
@@ -100,9 +113,9 @@ This is higher principle at play. The docs are no longer randoms.
 - **Navigation**: [INDEX.md](INDEX.md)
 - **High Principle**: [PRINCIPLE-FOUNDATION.md](PRINCIPLE-FOUNDATION.md)
 - **Exemplar Template**: [EXEMPLARS/TEMPLATE.md](EXEMPLARS/TEMPLATE.md)
-- **First Exemplar**: [EXEMPLARS/001-frame-dsl.md](EXEMPLARS/001-frame-dsl.md)
-- **Full GDSL Specimen**: [EXEMPLARS/006-gdsl-absolute-concept.md](EXEMPLARS/006-gdsl-absolute-concept.md)
-- **Applications Surface**: [EXEMPLARS/007-applications-expository.md](EXEMPLARS/007-applications-expository.md)
+- **First Exemplar**: [EXEMPLARS/001-frame-dsl.md](EXEMPLARS/dataset/001-frame-dsl.md)
+- **External Shell Program Artifact**: [EXEMPLARS/006-external-shell-program-artifact.md](EXEMPLARS/shell/006-external-shell-program-artifact.md)
+- **Applications Surface**: [EXEMPLARS/007-applications-expository.md](EXEMPLARS/form/007-applications-expository.md)
 - **Status**: [PHASE-1-STATUS.md](PHASE-1-STATUS.md)
 
 ---

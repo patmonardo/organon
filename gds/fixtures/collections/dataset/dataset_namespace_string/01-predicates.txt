@@ -1,0 +1,41 @@
+starts_with_pre
+shape: (8,)
+Series: 'token' [bool]
+[
+	true
+	false
+	false
+	false
+	false
+	false
+	false
+	false
+]
+
+ends_with_tion
+shape: (8,)
+Series: 'token' [bool]
+[
+	false
+	true
+	true
+	false
+	false
+	false
+	false
+	false
+]
+
+contains_dash
+shape: (8,)
+Series: 'token' [bool]
+[
+	true
+	false
+	true
+	false
+	true
+	true
+	true
+	false
+]

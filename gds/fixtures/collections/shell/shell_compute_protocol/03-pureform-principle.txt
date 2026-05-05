@@ -1,0 +1,4 @@
+required_fields: ["moment", "term", "term_id"]
+runtime_strategy: gds-shell.compute-graph
+execution_order: ["dataframe.seed", "dataset.mediate", "shell.schema", "shell.program", "pureform.principle"]
+patterns: ["shell.compute_graph"]

@@ -1,0 +1,9 @@
+GDSSeries { series: shape: (5,)
+Series: 'span' [list[i64]]
+[
+	[1, 2, 3]
+	[4, 5]
+	[6]
+	[2, 2, 2]
+	[9, 8, … 6]
+] }

@@ -58,7 +58,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         [
             program_source(
                 "corpus",
-                "fixtures/collections/dataset_sem_meta_pipeline/00-corpus.csv",
+                "fixtures/collections/dataset/dataset_sem_meta_pipeline/00-corpus.csv",
             ),
             program_subfeature("tokenizer"),
             program_subfeature("language-model"),
@@ -125,7 +125,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .artifact_kind(DatasetArtifactKind::ProgramImage)
         .facet("doctrine:026-semantic-meta-pipeline")
         .source_io(io_path(
-            "fixtures/collections/dataset_sem_meta_pipeline/00-corpus.csv",
+            "fixtures/collections/dataset/dataset_sem_meta_pipeline/00-corpus.csv",
         ))
         .into_shell_with_program_features(program)
         .materialize_semdataset_from_texts(&texts)?;
@@ -162,7 +162,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 }
 
 fn fixture_root() -> PathBuf {
-    PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("fixtures/collections/dataset_sem_meta_pipeline")
+    PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("fixtures/collections/dataset/dataset_sem_meta_pipeline")
 }
 
 fn path_string(path: &Path) -> String {
@@ -174,7 +175,7 @@ fn fixture_path(path: &Path) -> String {
         .file_name()
         .map(|name| name.to_string_lossy().into_owned())
         .unwrap_or_else(|| path.to_string_lossy().into_owned());
-    format!("fixtures/collections/dataset_sem_meta_pipeline/{file_name}")
+    format!("fixtures/collections/dataset/dataset_sem_meta_pipeline/{file_name}")
 }
 
 fn semform_report(sem: &SemDataset<MLE>) -> String {

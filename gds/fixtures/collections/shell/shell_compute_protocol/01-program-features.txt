@@ -1,0 +1,3 @@
+program: rustscript.shell.compute_protocol
+selected_forms: ["ShellComputeProtocol"]
+feature_count: 8

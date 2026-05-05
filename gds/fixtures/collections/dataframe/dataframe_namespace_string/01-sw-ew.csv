@@ -1,0 +1,9 @@
+token,starts_pre,ends_tion
+pre-processing,true,false
+tokenization,false,true
+post-lemmatization,false,true
+stemming,false,false
+part-of-speech,false,false
+named-entity,false,false
+dependency-parse,false,false
+coreference,false,false

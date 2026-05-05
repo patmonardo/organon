@@ -1,0 +1,2 @@
+input: [cat='NP', num='pl', agr=[num='pl', per=3]]
+roundtrip: [agr=[num=pl, per=3], cat=NP, num=pl]

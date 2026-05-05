@@ -1,0 +1,7 @@
+original trees: 2
+normalized:
+(S (NP (DT The) (NN cat)) (VP (VBZ sat) (PP (IN on) (NP (DT the) (NN mat)))))
+(S (NP (DT The) (NN dog)) (VP (VBZ runs) (ADVP (RB quickly))))
+chomsky normal form:
+(S (NP (DT The) (NN cat)) (VP (VBZ sat) (PP (IN on) (NP (DT the) (NN mat)))))
+(S (NP (DT The) (NN dog)) (VP (VBZ runs) (ADVP (RB quickly))))

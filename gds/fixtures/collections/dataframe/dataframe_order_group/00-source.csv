@@ -1,0 +1,7 @@
+region,product,units,price
+West,A,10,1.5
+East,B,20,2.0
+West,A,15,1.5
+East,A,5,2.0
+West,B,8,2.5
+East,B,30,2.0

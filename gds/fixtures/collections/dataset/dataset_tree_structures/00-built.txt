@@ -1,0 +1,20 @@
+leaves: 6
+height: 6
+bracketed: (S (NP (DT The) (NN cat)) (VP (VBZ sat) (PP (IN on) (NP (DT the) (NN mat)))))
+pretty:
+(S
+    (NP
+        (DT The)
+        (NN cat)
+  )
+    (VP
+        (VBZ sat)
+        (PP
+            (IN on)
+            (NP
+                (DT the)
+                (NN mat)
+      )
+    )
+  )
+)

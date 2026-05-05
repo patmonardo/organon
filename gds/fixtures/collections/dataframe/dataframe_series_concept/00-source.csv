@@ -1,0 +1,5 @@
+values,weights,mask
+-3,0.5,true
+-1,1.0,false
+2,1.5,true
+4,2.0,true

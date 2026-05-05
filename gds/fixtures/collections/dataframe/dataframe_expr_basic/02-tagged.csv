@@ -1,0 +1,6 @@
+id,score,is_high
+1,10.0,false
+2,25.0,true
+3,40.0,true
+4,15.0,false
+5,30.0,true

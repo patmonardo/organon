@@ -1,0 +1,4 @@
+general: [cat=NP]
+specific: [cat=NP, num=sg]
+general subsumes specific: true
+specific subsumes general: false

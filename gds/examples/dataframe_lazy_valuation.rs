@@ -60,7 +60,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let explain_path = fixture_root.join("01-explain.txt");
     fs::write(
         &explain_path,
-        format!("unoptimized:\n{unoptimized}\n\noptimized:\n{optimized}\n"),
+        format!(
+            "unoptimized:\n{}\n\noptimized:\n{}\n",
+            trim_trailing_whitespace(&unoptimized),
+            trim_trailing_whitespace(&optimized)
+        ),
     )?;
     println!("artifact: LazyFrame logical plan");
     println!("persisted: {}", fixture_path(&explain_path));
@@ -101,7 +105,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 }
 
 fn fixture_root() -> PathBuf {
-    PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("fixtures/collections/dataframe_lazy_valuation")
+    PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("fixtures/collections/dataframe/dataframe_lazy_valuation")
 }
 
 fn persist_frame(
@@ -123,7 +128,15 @@ fn fixture_path(path: &Path) -> String {
         .file_name()
         .map(|name| name.to_string_lossy().into_owned())
         .unwrap_or_else(|| path.to_string_lossy().into_owned());
-    format!("fixtures/collections/dataframe_lazy_valuation/{file_name}")
+    format!("fixtures/collections/dataframe/dataframe_lazy_valuation/{file_name}")
+}
+
+fn trim_trailing_whitespace(value: &str) -> String {
+    value
+        .lines()
+        .map(str::trim_end)
+        .collect::<Vec<_>>()
+        .join("\n")
 }
 
 fn manifest(

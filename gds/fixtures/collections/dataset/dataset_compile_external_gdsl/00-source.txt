@@ -1,0 +1,1 @@
+gdsl_path: /home/pat/VSCode/organon/gds/fixtures/shell.old/absolute-concept-scientific-inference.gdsl

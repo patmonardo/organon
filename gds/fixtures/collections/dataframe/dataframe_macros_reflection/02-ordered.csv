@@ -1,0 +1,4 @@
+id,score,cohort,score_x2,passed,honors
+5,97.0,A,194.0,true,true
+3,91.0,B,182.0,true,true
+4,88.0,B,176.0,true,false

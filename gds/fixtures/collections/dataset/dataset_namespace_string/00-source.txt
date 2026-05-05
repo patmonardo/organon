@@ -1,0 +1,12 @@
+GDSSeries { series: shape: (8,)
+Series: 'token' [str]
+[
+	"pre-processing"
+	"tokenization"
+	"post-lemmatization"
+	"stemming"
+	"part-of-speech"
+	"named-entity"
+	"dependency-parse"
+	"coreference"
+] }

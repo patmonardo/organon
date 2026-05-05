@@ -1,0 +1,9 @@
+token,prefix
+pre-processing,pre
+tokenization,tokenization
+post-lemmatization,post
+stemming,stemming
+part-of-speech,part
+named-entity,named
+dependency-parse,dependency
+coreference,coreference

@@ -1,0 +1,27 @@
+find_dash
+shape: (8,)
+Series: 'token' [u32]
+[
+	3
+	null
+	4
+	null
+	4
+	5
+	10
+	null
+]
+
+prefix
+shape: (8,)
+Series: 'token' [str]
+[
+	"pre"
+	"tokenization"
+	"post"
+	"stemming"
+	"part"
+	"named"
+	"dependency"
+	"coreference"
+]
