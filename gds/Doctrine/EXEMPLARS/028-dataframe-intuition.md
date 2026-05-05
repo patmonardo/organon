@@ -11,6 +11,10 @@
 
 The first moment of the Dataset pipeline is the DataFrame itself. Raw contents become available to the system when they are gathered into a tabular body. This is Intuition: not yet Essence, not yet Semantics, but already formed enough to appear.
 
+Read from the Dataset side, the same moment is EssentialBeing: immediate
+determinacy that mediation must receive before it can become
+`Model:Feature::Plan`.
+
 ---
 
 ## What This Example Does
@@ -41,6 +45,10 @@ Raw contents
 ```
 
 The DataFrame is the beginning that `Model:Feature::Plan` reflects. It is not bypassed by Doctrine. Doctrine begins where the system first has a formed body.
+
+This is why the asymmetry matters in this exemplar: Dataset depends on the
+Frame, while the Frame remains operational without Dataset awareness. Mediation
+is therefore a higher-order reading, not a property injected into the Frame.
 
 The Shell confirms this placement. When `GdsShell` reads the same DataFrame body, it does
 not ask the DataFrame to become Dataset. It seeds from the body: columns, dtypes, rows,
@@ -102,6 +110,7 @@ and program identity when present.
 
 - Do not treat the DataFrame as a mere implementation detail. It is the first formed appearance of contents.
 - The DataFrame is still extensional. Essence begins only when Frame, Series, and Expr are reflected as Model, Feature, and Plan.
+- In doctrinal terms, this first appearance is EssentialBeing: immediate content available for mediation.
 - The Shell knows the DataFrame first as schema seed and immediate body. That is enough to begin the passage toward PureForm.
 - This exemplar deliberately comes after 026 and 027 because the system has learned its Beginning from its Middle and End.
 - In science terms: the Program begins as One, differentiates into the triadic Many, and returns as One. `form/program` is the return path through `collections/{dataframe,dataset}`.

@@ -18,6 +18,11 @@ This is not a new runtime beside Polars. It is the Dataset client SDK over Polar
 
 DataFrame executes. `Model:Feature::Plan` mediates.
 
+Generated GDS models must pass through this middle. External model forms,
+including published NLP parsers, taggers, and language models, are useful only
+after their commitments can be located as Model, Feature, and Plan and then
+returned through `Corpus:LM::SemDataset`.
+
 ---
 
 ## Doctrine
@@ -28,6 +33,10 @@ Beginning and End are simple.
 - End: `SemDataset`, Corpus:LM gathered as Concept
 - Middle: `Model:Feature::Plan`, Essence as mediation
 
+More precisely, the Beginning appears to the Middle as EssentialBeing:
+`Frame:Series::Expr` already determined enough to be mediated, but not yet
+named as model commitments.
+
 The Middle is difficult because it must do three things at once:
 
 1. preserve the executable DataFrame body
@@ -35,6 +44,9 @@ The Middle is difficult because it must do three things at once:
 3. prepare the model under principle, mark, and modality
 
 This is why Plan belongs in Dataset, not DataFrame. A DataFrame plan is physical or lazy execution. A Dataset Plan is a Meta Plan: a semantic wrapper over the runtime plan.
+
+This is also why the Frame does not become "Dataset-aware." The Frame executes
+as itself; Dataset mediation interprets and organizes it.
 
 ---
 
@@ -126,3 +138,6 @@ A Dataset Plan is the Middle Layer of the semantic system. It must answer:
 5. Which provenance row records the decision?
 
 If these questions are invisible, the change belongs in DataFrame, not in Dataset.
+
+For the ordinary Polars-facing doctrine of `Plan` as deferred reflection over
+DataFrame immediacy, see [Doctrine of the Plan](plan.md).

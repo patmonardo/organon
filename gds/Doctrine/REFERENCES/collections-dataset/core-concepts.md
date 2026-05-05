@@ -29,6 +29,22 @@ that will be compiled into artifact records.
 
 **Do not use for**: Direct Polars operations. For raw frame manipulation, use DataFrame directly.
 
+### Dataset View Of Frame (EssentialBeing)
+
+From the Dataset point of view, `Frame` is not merely tabular storage. It is
+the immediate beginning that makes mediation possible.
+
+Compactly:
+
+`Frame as EssentialBeing = immediate determinacy available for Dataset mediation`
+
+The asymmetry is required:
+- Dataset depends on Frame as its runtime body.
+- Frame does not depend on Dataset to exist or execute.
+
+So Dataset reads Frame as the first present body of evidence and then mediates
+that body into `Model:Feature::Plan`.
+
 ---
 
 ## DataFrame
@@ -48,6 +64,13 @@ When Dataset says "I want this marked," DataFrame executes the mark derivation.
 results.
 
 **Do not use for**: Semantic naming. Dataset names; DataFrame executes.
+
+From a Dataset perspective, DataFrame behavior is therefore double:
+- in itself: executable frame/series/expr substrate
+- for Dataset: immediate field of determination to be reflected into mediation
+
+For the fuller ordinary and doctrinal account, see
+[Doctrine of the DataFrame](dataframe.md).
 
 ---
 
@@ -213,6 +236,10 @@ The three layers work together:
 5. **Compilation** makes the program structure visible
 6. **Artifacts** record what was produced
 7. **Provenance** traces the lineage
+
+For stage-by-stage doctrinal placement of abstract terms in concrete software
+surfaces, see the Analytical Path Stages section in
+`REFERENCES/collections-dataset/semantic-pipeline.md`.
 
 Learn this order. Use Dataset for intent. Use DataFrame for execution. Use marks for semantic tokens.
 Use provenance for traceability. Use artifacts for results.

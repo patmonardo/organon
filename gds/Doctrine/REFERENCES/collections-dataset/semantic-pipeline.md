@@ -27,6 +27,13 @@ LanguageModel parameter of `SemDataset<L>`, but doctrinally its role is the Mode
 in training: the learning organ working underneath SemDataset, fitted over Corpus
 evidence and then governed by Shell traceability on the return to PureForm.
 
+GDS may use published linguistic model forms such as tokenizers, taggers,
+parsers, and language models, but the system is not governed by linguistics as
+an external discipline. These tools become conformant only when adapted into the
+Dataset grammar:
+
+`Model:Feature::Plan -> Corpus:LM::SemDataset`
+
 This is not a replacement for DataFrame. It is the Dataset-level controller above DataFrame.
 
 ---
@@ -78,7 +85,185 @@ Reading:
 4. `Corpus:LM` is the end-view: evidence and meaning paired.
 5. `SemDataset` receives Form Program Features and parses them into logical form.
 
+From the Dataset perspective, step 1 is EssentialBeing: immediate determinacy
+(`Frame:Series::Expr`) that mediation must receive. The DataFrame does not
+become Dataset-aware; Dataset mediation reads and organizes the DataFrame body.
+
 This is why Plan belongs in Dataset, not DataFrame. DataFrame executes. Dataset governs.
+
+---
+
+## Analytical Path Stages (Term Locator)
+
+This section fixes abstract terms to software locations. The point is not to
+invent new vocabulary, but to force every major term to have a precise runtime
+home.
+
+| Stage | Doctrinal Name | Abstract Function | Software Surface | Shell Check Surface |
+|---|---|---|---|---|
+| 0 | Immediate Beginning | EssentialBeing | `Frame:Series::Expr` over `GDSDataFrame` | `ShellDataFrameKnowledge` |
+| 1 | First Mediation | Named body | `Dataset { name, frame, artifact_profile }` | `ShellModelFeaturePlanKnowledge` (model identity) |
+| 2 | Essence Middle | Determinate mediation | `Model:Feature::Plan` and three boxes (`prepare_model`, `execute_essence`, `realize_image`) | `ShellModelFeaturePlanKnowledge` |
+| 3 | Program Commitment | Logical self-declaration | `ProgramFeature` / `ShellProgram` commitments | `ShellSemanticPipelineKnowledge` + `ShellLearningReport` |
+| 4 | Concept Formation | Evidence-meaning pairing | `Corpus + LanguageModel` | `ShellCorpusReport` |
+| 5 | Concept Return | Semantic object | `SemDataset<L>` with `SemForm` parse state | `ShellSemanticPipelineKnowledge` |
+| 6 | Principle-Gated Return | Unified protocol return | `ShellPipelineDescriptor -> ShellPureFormReturn -> PureFormPrinciple` | `validate_projection_trace`, `is_projection_trace_valid` |
+
+### Reading Rule
+
+If a term cannot be pointed to one stage and one software surface, it is still
+speculative. Keep it out of normative doctrine until it acquires a location.
+
+### Asymmetry Rule
+
+At stages 0-2 the asymmetry must remain explicit:
+
+- DataFrame can exist and execute without Dataset-awareness.
+- Dataset cannot mediate without DataFrame immediacy.
+
+This preserves the architecture: mediation is a higher-order reading of the
+same body, not a second body.
+
+---
+
+## Path Axioms
+
+These axioms are normative rules for the Dataset Meta Pipeline. They are meant
+to be short, checkable, and reusable in reviews.
+
+1. **Immediacy Axiom**
+    The first object of the path is always a DataFrame body (`Frame:Series::Expr`).
+    No doctrine may insert a prior pipeline object before this beginning.
+
+2. **EssentialBeing Axiom**
+    From the Dataset perspective, the immediate DataFrame is EssentialBeing:
+    determinate enough to mediate, not yet mediated enough to count as
+    `Model:Feature::Plan`.
+
+3. **Asymmetry Axiom**
+    DataFrame can execute without Dataset-awareness. Dataset cannot mediate
+    without DataFrame immediacy.
+
+4. **Mediation Axiom**
+    Dataset mediation must be locatable as `Model:Feature::Plan` and remain
+    distinguishable from raw DataFrame execution.
+
+5. **Commitment Axiom**
+    Program commitments (`ProgramFeature`/`ShellProgram`) must be explicit and
+    inspectable. Implicit semantic commitments are invalid for normative doctrine.
+
+6. **Concept Axiom**
+    Semantic end-state must be materialized as `Corpus + LanguageModel -> SemDataset`
+    with visible `SemForm` success/failure state.
+
+7. **Return Axiom**
+    A projection is doctrinally valid only when Shell can trace and report a
+    principle-gated return:
+
+    `Frame -> Model:Feature::Plan -> SemDataset -> PureForm return`.
+
+### Audit Use
+
+For any new feature, answer these seven axioms in order. A missing answer marks
+the feature as exploratory rather than doctrinally integrated.
+
+---
+
+## Plan As Reflective Control (Not Total Sensation Capture)
+
+Your reading is correct: EssentialBeing does not disappear by magic, but it does
+empty itself into mediated form through Plan. In that passage, Plan becomes the
+controlling notion of Essence.
+
+That control has a strict boundary:
+
+- Plan is a reflective selector and organizer.
+- Plan is not the totality of sensation carried by live DataFrame body.
+
+So the passage should be read as a change of sphere:
+
+- Being sphere: rows/columns/expressions behave as immediate, extensional,
+    runtime variation.
+- Essence sphere: that variation is held up for reflection, typed, ordered, and
+    constrained by `Model:Feature::Plan` commitments.
+
+In compact form:
+
+`Plan governs what is retained for mediation; it does not claim to exhaust all immediate variation.`
+
+### Practical Doctrine Rule
+
+When introducing or reviewing a Plan, verify all three conditions:
+
+1. The Plan states what it retains from the immediate body (selection/projection).
+2. The Plan states what it excludes or defers (unmediated residual variation).
+3. The Shell trace can still point back to DataFrame immediacy as source body.
+
+If (1) and (2) are not explicit, Plan has become vague. If (3) fails, mediation
+has become detached from its own beginning.
+
+---
+
+## LM As Compilation Point (Feature Algebra Into Application)
+
+LanguageModel is not merely a type parameter in `SemDataset<L>`. It is the
+Concept-fold moment where the Essence algebra of `Feature` and `FeatStruct` is
+compiled into an actual deployable application.
+
+The distinction matters:
+
+- `Model:Feature::Plan` is the Essence algebra. It names, binds, and orders.
+  It produces well-known Feature forms and FeatStruct structures. But it does not
+  yet execute as an application a caller can deploy.
+- `Corpus:LM::SemDataset` is the Concept return. `LM` is the point where those
+  Feature/FeatStruct commitments are compiled and fitted into something that
+  runs — a real Learning Module, a tokenizer pipeline, a semantic parser, or
+  any other deployable model form.
+
+Compactly:
+
+`LM = compilation of Feature/FeatStruct algebra into a deployable application`
+
+This changes how we read the Concept fold:
+
+| Moment | Role |
+|---|---|
+| `Corpus` | extensional evidence: documents, sources, annotations — what LM is fitted over |
+| `LM` | intensional application: the compiled model, fitted and deployable |
+| `SemDataset` | the end-view that holds both: evidence + application + logical form state |
+
+### Why This Is The Right Reading
+
+Feature and FeatStruct define the well-known semantic roles the system
+recognizes: tokenization contracts, parsing roles, annotation schemes, feature
+vectors, modality declarations. These are the algebra of what can be committed
+to semantically.
+
+But algebra is not execution. A deployed tokenizer is not just a FeatStruct. A
+deployed NLP parser is not just a Feature declaration. They are those
+commitments compiled into a running form over actual evidence.
+
+LM is where the algebra becomes an application. Corpus is what the application
+runs over. SemDataset is the result of that running — the Concept that carries
+evidence, application, and parsed SemForm state together.
+
+### Practical Consequence
+
+This means building out `LM` is not downstream detail work. It is the act that
+closes the Concept fold. Without a real compiled LM, the path stops at Essence.
+
+For the current phase the canonical way to seed LM is:
+
+```text
+ProgramFeature subfeature declarations (GDSL)
+  -> lowered to ProgramFeatureKind::Subfeature
+  -> materialized in SemDataset runtime as the LM body
+```
+
+New LM applications — deployed taggers, parsers, retrieval models,
+embedding engines — should be introduced as ProgramFeature subfeature
+declarations or as explicit FeatStruct-backed model wrappers, not as raw
+third-party dependencies that bypass the Essence middle.
 
 ---
 

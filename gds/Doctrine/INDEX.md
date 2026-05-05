@@ -216,9 +216,12 @@ References are organized by topic, not by project.
 - [modality.md](REFERENCES/collections-dataset/modality.md) — Execution status of marks/features
 - [ontology-images.md](REFERENCES/collections-dataset/ontology-images.md) — Runtime-readable images of semantic intent
 - [compilation.md](REFERENCES/collections-dataset/compilation.md) — DatasetCompilation as compiler graph
+- [dataframe.md](REFERENCES/collections-dataset/dataframe.md) — DataFrame as ordinary Polars-facing analytic body and immediate triad
 - [dataframe-intuition.md](REFERENCES/collections-dataset/dataframe-intuition.md) — DataFrame as Intuition and first formed body
 - [semantic-pipeline.md](REFERENCES/collections-dataset/semantic-pipeline.md) — SemDataset as the Semantic Graph Meta Pipeline
+- [modeling-credos.md](REFERENCES/collections-dataset/modeling-credos.md) — Best-practice credos for DataFrame/Dataset model creation across tabular, relational, and graph projections
 - [model-feature-plan.md](REFERENCES/collections-dataset/model-feature-plan.md) — Model:Feature::Plan as the Essence Middle
+- [plan.md](REFERENCES/collections-dataset/plan.md) — Plan as deferred Polars-facing reflection over DataFrame immediacy
 - [artifact-materialization.md](REFERENCES/collections-dataset/artifact-materialization.md) — Records, relations, properties, provenance
 - [attention-reports.md](REFERENCES/collections-dataset/attention-reports.md) — Feature evaluation inspection records
 

@@ -1,6 +1,9 @@
-# DataFrame as Intuition
+# DataFrame as Intuition (EssentialBeing)
 
 `DataFrame` is the first moment of the Dataset Meta Pipeline. It is not a pre-semantic `Source` placeholder and not a recurrence mechanism. It is the first formed body: raw contents gathered into tabular intuition.
+
+For the ordinary Polars-facing account of DataFrame before this doctrinal
+reading, see [Doctrine of the DataFrame](dataframe.md).
 
 ---
 
@@ -16,6 +19,16 @@ The Beginning has three immediate terms:
 
 This is the sphere of Being for the Dataset pipeline.
 
+From the Dataset side, this first sphere is also EssentialBeing: immediate
+determinacy that has not yet been mediated as `Model:Feature::Plan`.
+
+The asymmetry is deliberate:
+- `Dataset` needs `DataFrame` to mediate anything at all.
+- `DataFrame` does not need `Dataset` in order to operate.
+
+So the beginning of mediation is not a second runtime. It is the Dataset
+reading of the same immediate body.
+
 ---
 
 ## Passage Into Essence
@@ -27,6 +40,18 @@ Frame  -> Model
 Series -> Feature
 Expr   -> Plan
 ```
+
+In strict middle reading, these terms no longer stand as immediate terms.
+`Frame:Series::Expr` exists there only as mediated determination:
+
+```text
+Frame  as Model
+Series as Feature
+Expr   as Plan
+```
+
+This is the vanishing rule of the beginning: Being does not remain as an
+independent sphere inside Essence; it persists only through mediated form.
 
 The DataFrame is not discarded. It becomes readable.
 
@@ -59,6 +84,9 @@ The Model has its body as Corpus. The Feature reflects that body as Language. Th
 Do not search before the DataFrame for the first pipeline object.
 
 The first moment of the Dataset pipeline is the DataFrame itself: Intuition as tabular consciousness, the immediate body in which raw contents become available for essential mediation.
+
+If that immediate body is absent, Dataset mediation has no object. If it is
+present but unread, mediation has no determinate content.
 
 ---
 
