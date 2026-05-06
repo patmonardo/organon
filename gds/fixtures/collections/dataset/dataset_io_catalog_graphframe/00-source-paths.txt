@@ -1,0 +1,2 @@
+nodes=/home/pat/VSCode/organon/gds/fixtures/collections/dataset/dataset_io_catalog_graphframe/catalog/data/nodes.csv
+edges=/home/pat/VSCode/organon/gds/fixtures/collections/dataset/dataset_io_catalog_graphframe/catalog/data/edges.csv

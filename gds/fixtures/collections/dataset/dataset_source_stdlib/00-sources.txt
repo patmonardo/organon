@@ -1,0 +1,4 @@
+source/doc1.txt
+source/doc2.txt
+source/words.txt
+source/sample.xml

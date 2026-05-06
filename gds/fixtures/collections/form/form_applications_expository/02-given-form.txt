@@ -1,0 +1,4 @@
+stage_order=[GdslPrinciple, SdslPrincipledEffect, Eval]
+entity=entity::centrality
+property=property::centrality
+aspect=aspect::graph=organon

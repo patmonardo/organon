@@ -1,0 +1,29 @@
+first
+shape: (4,)
+Series: 'vals' [i64]
+[
+	1
+	4
+	2
+	9
+]
+
+last
+shape: (4,)
+Series: 'vals' [i64]
+[
+	3
+	6
+	2
+	7
+]
+
+get(1)
+shape: (4,)
+Series: 'vals' [i64]
+[
+	2
+	5
+	2
+	8
+]

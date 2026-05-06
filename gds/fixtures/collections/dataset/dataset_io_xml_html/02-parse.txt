@@ -1,0 +1,4 @@
+xml_bracketed=(DOC (doc (title Logic) (p Form becomes concept.)))
+html_bracketed=(DOC (html (body (h1 Organon) (p Dataset semantic pipeline.))))
+xml_height=4
+html_height=5

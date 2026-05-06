@@ -6,7 +6,7 @@ Purpose: execute only what is missing across form -> shell -> dataframe -> datas
 
 Do not upgrade already covered paths unless they block a missing path.
 
-## Current Reality (2026-05-05)
+## Current Reality (2026-05-06)
 
 Covered runnable examples:
 - form_framing_chunking.rs
@@ -34,15 +34,16 @@ Covered runnable examples:
 - dataframe_join_operations.rs
 - dataset_namespace_list.rs
 - dataset_namespace_string.rs
+- dataset_namespace_array.rs
+- dataset_io_xml_html.rs
+- dataset_source_stdlib.rs
+- dataset_streaming_lazy.rs
+- form_applications_expository.rs
+- dataset_io_catalog_graphframe.rs
 - dataframe_namespace_string.rs (supplemental)
 
 Missing runnable examples from mapped curriculum:
-- form_applications_expository.rs
-- dataset_source_stdlib.rs
-- dataset_io_xml_html.rs
-- dataset_streaming_lazy.rs
-- dataset_namespace_array.rs
-- dataset_io_catalog_graphframe.rs
+- none
 
 ## Fourfold Missingness
 
@@ -66,21 +67,13 @@ Dataset:
 - Middle and semantic pipeline are covered.
 - Intake and compile lanes are covered by `dataset_frame_dsl.rs`, `dataset_source_corpus.rs`, `dataset_compile_ir.rs`, and `dataset_compile_external_gdsl.rs`.
 - Structure/feature/registry/streaming lanes are now covered by `dataset_tree_structures.rs`, `dataset_feature_structures.rs`, `dataset_io_catalog_extensible.rs`, and `dataset_streaming_procedure.rs`.
-- IO xml/html lane and namespace array lane remain planned.
+- IO xml/html lane is covered by `dataset_io_xml_html.rs`.
+- Namespace array lane is covered by `dataset_namespace_array.rs`.
 
 ## Sequencing (Lack-First)
 
-1. Close Dataset IO format deficits:
-- dataset_io_xml_html.rs
-
-2. Close Dataset namespace deficits:
-- dataset_namespace_array.rs
-
-3. Low-priority deferred:
-- dataset_streaming_lazy.rs
-- dataset_source_stdlib.rs
-- form_applications_expository.rs
-- dataset_io_catalog_graphframe.rs
+1. Low-priority deferred:
+- none
 
 ## Done Criteria
 

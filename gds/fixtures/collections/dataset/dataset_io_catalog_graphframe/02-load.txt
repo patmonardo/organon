@@ -1,0 +1,2 @@
+nodes_rows=4 nodes_cols=3
+edges_rows=3 edges_cols=3

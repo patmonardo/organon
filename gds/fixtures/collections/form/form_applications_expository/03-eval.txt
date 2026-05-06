@@ -1,0 +1,3 @@
+selected_forms=["centrality"]
+patterns=["base.normalize", "algo.pagerank"]
+pre_eval_given_forms=1

@@ -1,0 +1,3 @@
+gdsl=gdsl.applications.expository
+application_forms=["centrality", "community"]
+selected_forms=["centrality"]

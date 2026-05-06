@@ -1,0 +1,3 @@
+batch_size=3
+row_count=8
+transform=with_columns+filter+select

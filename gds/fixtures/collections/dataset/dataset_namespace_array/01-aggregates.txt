@@ -1,0 +1,29 @@
+len
+shape: (4,)
+Series: 'vals' [u32]
+[
+	3
+	3
+	3
+	3
+]
+
+sum
+shape: (4,)
+Series: 'vals' [i64]
+[
+	6
+	15
+	6
+	24
+]
+
+max
+shape: (4,)
+Series: 'vals' [i64]
+[
+	3
+	6
+	2
+	9
+]

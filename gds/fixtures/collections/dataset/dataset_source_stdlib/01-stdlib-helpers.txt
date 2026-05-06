@@ -1,0 +1,7 @@
+resource_count=15
+first_resources=["bike_sharing", "california_housing", "country_happiness", "credit_fraud", "drug_directory"]
+data_home=/home/pat/VSCode/organon/gds/fixtures/collections/dataset/dataset_source_stdlib/data_home
+file_proto=("file", "/tmp/demo.txt")
+nltk_proto=("nltk", "corpora/treebank")
+normalized_file=file:///tmp/demo.txt
+normalized_nltk=nltk:corpora/treebank

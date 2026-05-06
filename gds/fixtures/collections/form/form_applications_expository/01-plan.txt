@@ -1,0 +1,3 @@
+selected_forms=["centrality"]
+patterns=["base.normalize", "algo.pagerank"]
+feature_count=4

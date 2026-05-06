@@ -1,0 +1,4 @@
+plaintext_word_count=15
+wordlist_count=3
+xml_word_count=5
+wordlist=["alpha", "beta", "gamma"]

@@ -1,0 +1,2 @@
+nodes_entry=graph_nodes format=Csv schema_source=catalog
+edges_entry=graph_edges format=Csv schema_source=catalog
