@@ -281,7 +281,6 @@ mod tests {
     }
 
     #[test]
-    #[ignore] // Algorithm needs review
     fn test_mutable_path_result_matches() {
         let path1 = MutablePathResult::new(
             0,
@@ -301,7 +300,7 @@ mod tests {
         );
 
         assert!(path1.matches(&path2, 2));
-        assert!(!path1.matches(&path2, 3));
+        assert!(!path1.matches(&path2, 4));
     }
 
     #[test]

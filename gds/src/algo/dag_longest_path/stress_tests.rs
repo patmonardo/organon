@@ -47,7 +47,7 @@ mod stress {
                 };
 
                 let mut runtime = DagLongestPathComputationRuntime::new(n);
-                let result = runtime.compute(n, get_neighbors);
+                let result = runtime.compute(n, get_neighbors).unwrap();
 
                 // For each node, compare distances
                 for row in result.paths.iter() {
@@ -88,7 +88,7 @@ mod stress {
             };
 
             let mut runtime = DagLongestPathComputationRuntime::new(3);
-            let result = runtime.compute(3, get_neighbors);
+            let result = runtime.compute(3, get_neighbors).unwrap();
 
             let path_to_2 = result.paths.iter().find(|p| p.target_node == 2).unwrap();
             assert!((path_to_2.total_cost - expected[2]).abs() < 1e-8);

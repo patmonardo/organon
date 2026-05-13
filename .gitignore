@@ -71,3 +71,5 @@ gds/nltk
 gds/nltk-book
 gds/examples.old
 ./gds/examples.old
+gds/neo4j
+gds/rust-clrs

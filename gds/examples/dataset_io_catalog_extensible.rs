@@ -36,7 +36,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let listing_path = fixture_root.join("00-registry.txt");
     fs::write(
         &listing_path,
-        format!("root: {}\nentries:\n{}\n", registry_root.display(), listing.join("\n")),
+        format!(
+            "root: {}\nentries:\n{}\n",
+            registry_root.display(),
+            listing.join("\n")
+        ),
     )?;
     println!("persisted: {}", fixture_path(&listing_path));
     println!();
@@ -86,7 +90,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut meta = DatasetMetadata::new("glue");
     meta.description = Some("General Language Understanding Evaluation benchmark.".to_string());
     meta.homepage = Some("https://gluebenchmark.com".to_string());
-    meta.tags = vec!["nlp".to_string(), "benchmark".to_string(), "classification".to_string()];
+    meta.tags = vec![
+        "nlp".to_string(),
+        "benchmark".to_string(),
+        "classification".to_string(),
+    ];
     registry2.register(meta);
 
     let glue_meta = registry2.get("glue").unwrap();
@@ -114,10 +122,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         "DatasetSplit::Custom supports project-specific partitions.",
     );
 
-    let custom_artifact = registry.dataset_artifact(
-        "squad",
-        DatasetSplit::Custom("adversarial".to_string()),
-    );
+    let custom_artifact =
+        registry.dataset_artifact("squad", DatasetSplit::Custom("adversarial".to_string()));
     println!("custom split path: {}", custom_artifact.path.display());
 
     let custom_path = fixture_root.join("03-custom-split.txt");

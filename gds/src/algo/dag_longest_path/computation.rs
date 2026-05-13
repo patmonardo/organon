@@ -6,6 +6,8 @@
 
 use super::spec::{DagLongestPathResult, PathRow};
 use super::DagLongestPathStorageRuntime;
+use crate::algo::algorithms::Result;
+use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::NodeId;
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::Arc;
@@ -93,7 +95,7 @@ impl DagLongestPathComputationRuntime {
         &mut self,
         node_count: usize,
         get_neighbors: impl Fn(NodeId) -> Vec<(NodeId, f64)> + Send + Sync + 'static,
-    ) -> DagLongestPathResult {
+    ) -> Result<DagLongestPathResult> {
         // Reset storage each run so repeated invocations on the same runtime do not carry
         // over in-degree, distance, or predecessor state from prior graphs.
         self.storage = Arc::new(DagLongestPathStorageRuntime::new(node_count));
@@ -102,24 +104,11 @@ impl DagLongestPathComputationRuntime {
 
         // Phase 1: Initialize in-degrees
         for node_id in 0..(node_count as i64) {
-            for (target, _) in get_neighbors(node_id) {
+            for (target, weight) in get_neighbors(node_id) {
+                validate_neighbor(node_count, node_id, target)?;
+                validate_weight(node_id, target, weight)?;
                 self.storage.in_degrees[target as usize].fetch_add(1, Ordering::SeqCst);
             }
-        }
-
-        #[cfg(test)]
-        {
-            // Debug: expose in-degrees during tests to help track intermittent failures
-            let indeg: Vec<usize> = self
-                .storage
-                .in_degrees
-                .iter()
-                .map(|a| a.load(Ordering::SeqCst))
-                .collect();
-            eprintln!(
-                "[dag_longest_path debug] in_degrees after init: {:?}",
-                indeg
-            );
         }
 
         // Phase 2: Create tasks for source nodes (in-degree 0)
@@ -169,7 +158,7 @@ impl DagLongestPathComputationRuntime {
         }
 
         // Phase 3: Build path results
-        self.build_paths(node_count)
+        Ok(self.build_paths(node_count))
     }
 
     fn build_paths(&self, node_count: usize) -> DagLongestPathResult {
@@ -220,4 +209,24 @@ impl DagLongestPathComputationRuntime {
 
         DagLongestPathResult { paths }
     }
+}
+
+fn validate_neighbor(node_count: usize, source: NodeId, target: NodeId) -> Result<()> {
+    if target < 0 || target as usize >= node_count {
+        return Err(AlgorithmError::InvalidGraph(format!(
+            "edge from node {source} points to out-of-range target {target} for graph with {node_count} nodes"
+        )));
+    }
+
+    Ok(())
+}
+
+fn validate_weight(source: NodeId, target: NodeId, weight: f64) -> Result<()> {
+    if !weight.is_finite() {
+        return Err(AlgorithmError::InvalidGraph(format!(
+            "edge from node {source} to {target} has non-finite weight {weight}"
+        )));
+    }
+
+    Ok(())
 }

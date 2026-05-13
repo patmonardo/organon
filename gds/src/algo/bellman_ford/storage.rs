@@ -75,6 +75,7 @@ impl BellmanFordStorageRuntime {
         let result = (|| {
             // Initialize computation runtime
             let node_count = graph.map(|g| g.node_count()).unwrap_or(100);
+            Self::validate_node_in_graph(self.source_node, node_count, "source")?;
             computation.initialize(
                 self.source_node,
                 self.track_negative_cycles,
@@ -101,7 +102,7 @@ impl BellmanFordStorageRuntime {
                 // Process all nodes in current frontier
                 while let Some(node_id) = frontier.pop_front() {
                     // Relax edges from this node according to direction
-                    let neighbors = self.get_neighbors_with_weights(graph, node_id, direction);
+                    let neighbors = self.get_neighbors_with_weights(graph, node_id, direction)?;
                     scanned_relationships = scanned_relationships.saturating_add(neighbors.len());
                     if scanned_relationships >= LOG_BATCH {
                         progress_tracker.log_progress(scanned_relationships);
@@ -109,8 +110,16 @@ impl BellmanFordStorageRuntime {
                     }
 
                     for (neighbor, weight) in neighbors {
+                        Self::validate_node_in_graph(neighbor, node_count, "target")?;
+                        Self::validate_edge_weight(node_id, neighbor, weight)?;
+
                         let current_distance = computation.distance(node_id);
                         let new_distance = current_distance + weight;
+                        if !new_distance.is_finite() {
+                            return Err(AlgorithmError::InvalidGraph(format!(
+                                "Bellman-Ford path cost overflowed for edge {node_id}->{neighbor}"
+                            )));
+                        }
 
                         if new_distance < computation.distance(neighbor) {
                             computation.set_distance(neighbor, new_distance);
@@ -309,7 +318,7 @@ impl BellmanFordStorageRuntime {
         graph: Option<&dyn Graph>,
         node_id: NodeId,
         direction: u8,
-    ) -> Vec<(NodeId, f64)> {
+    ) -> Result<Vec<(NodeId, f64)>, AlgorithmError> {
         if let Some(g) = graph {
             let fallback: f64 = 1.0;
             let iter: Box<dyn Iterator<Item = RelationshipCursorBox> + Send> = if direction == 1 {
@@ -317,19 +326,48 @@ impl BellmanFordStorageRuntime {
             } else {
                 g.stream_relationships(node_id, fallback)
             };
-            iter.into_iter()
+            Ok(iter
                 .map(|cursor| (cursor.target_id(), cursor.property()))
-                .collect()
+                .collect())
         } else {
             // Mock implementation for tests
-            match node_id {
+            Ok(match node_id {
                 0 => vec![(1, 1.0), (2, 4.0)],
                 1 => vec![(2, 2.0), (3, 5.0)],
                 2 => vec![(3, 1.0), (4, 3.0)],
                 3 => vec![(4, 2.0)],
                 _ => vec![],
-            }
+            })
         }
+    }
+
+    fn validate_node_in_graph(
+        node_id: NodeId,
+        node_count: usize,
+        role: &str,
+    ) -> Result<(), AlgorithmError> {
+        let node_index = usize::try_from(node_id).map_err(|_| {
+            AlgorithmError::InvalidGraph(format!("Invalid {role} node id: {node_id}"))
+        })?;
+        if node_index >= node_count {
+            return Err(AlgorithmError::InvalidGraph(format!(
+                "{role} node id out of range: {node_id} (node_count={node_count})"
+            )));
+        }
+        Ok(())
+    }
+
+    fn validate_edge_weight(
+        source_node: NodeId,
+        target_node: NodeId,
+        weight: f64,
+    ) -> Result<(), AlgorithmError> {
+        if !weight.is_finite() {
+            return Err(AlgorithmError::InvalidGraph(format!(
+                "Bellman-Ford requires finite edge weights; edge {source_node}->{target_node} has weight {weight}"
+            )));
+        }
+        Ok(())
     }
 }
 
@@ -381,12 +419,53 @@ mod tests {
     fn test_neighbors_with_weights() {
         let storage = BellmanFordStorageRuntime::new(0, true, true, 4);
 
-        let neighbors = storage.get_neighbors_with_weights(None, 0, 0);
+        let neighbors = storage.get_neighbors_with_weights(None, 0, 0).unwrap();
         assert_eq!(neighbors.len(), 2);
         assert_eq!(neighbors[0], (1, 1.0));
         assert_eq!(neighbors[1], (2, 4.0));
 
-        let neighbors_empty = storage.get_neighbors_with_weights(None, 99, 0);
+        let neighbors_empty = storage.get_neighbors_with_weights(None, 99, 0).unwrap();
         assert!(neighbors_empty.is_empty());
+    }
+
+    #[test]
+    fn computes_expected_mock_shortest_paths() {
+        let mut storage = BellmanFordStorageRuntime::new(0, true, true, 4);
+        let mut computation = BellmanFordComputationRuntime::new(0, true, true, 4);
+        let mut progress_tracker =
+            TaskProgressTracker::new(Tasks::leaf("bellman_ford".to_string()));
+
+        let result = storage
+            .compute_bellman_ford(&mut computation, None, 0, &mut progress_tracker)
+            .unwrap();
+
+        let path_to_three = result
+            .shortest_paths
+            .iter()
+            .find(|path| path.target_node == 3)
+            .expect("expected path to node 3");
+        assert_eq!(path_to_three.node_ids, vec![0, 1, 2, 3]);
+        assert_eq!(path_to_three.costs, vec![0.0, 1.0, 3.0, 4.0]);
+        assert_eq!(path_to_three.total_cost, 4.0);
+    }
+
+    #[test]
+    fn rejects_source_node_outside_graph_hint() {
+        let mut storage = BellmanFordStorageRuntime::new(101, true, true, 4);
+        let mut computation = BellmanFordComputationRuntime::new(101, true, true, 4);
+        let mut progress_tracker =
+            TaskProgressTracker::new(Tasks::leaf("bellman_ford".to_string()));
+
+        let result = storage.compute_bellman_ford(&mut computation, None, 0, &mut progress_tracker);
+
+        assert!(matches!(result, Err(AlgorithmError::InvalidGraph(_))));
+    }
+
+    #[test]
+    fn allows_negative_but_rejects_non_finite_weights() {
+        assert!(BellmanFordStorageRuntime::validate_edge_weight(0, 1, -1.0).is_ok());
+        assert!(BellmanFordStorageRuntime::validate_edge_weight(0, 1, 0.0).is_ok());
+        assert!(BellmanFordStorageRuntime::validate_edge_weight(0, 1, f64::NAN).is_err());
+        assert!(BellmanFordStorageRuntime::validate_edge_weight(0, 1, f64::INFINITY).is_err());
     }
 }

@@ -79,6 +79,7 @@ impl DeltaSteppingStorageRuntime {
         let result = (|| {
             // Initialize computation runtime
             let node_count = graph.map(|g| g.node_count()).unwrap_or(100);
+            Self::validate_node_in_graph(self.source_node, node_count, "source")?;
             computation.initialize(
                 self.source_node,
                 self.delta,
@@ -108,9 +109,12 @@ impl DeltaSteppingStorageRuntime {
                 while let Some(node_id) = frontier.pop_front() {
                     // Check if node is in current bin
                     let node_distance = computation.distance(node_id);
-                    if node_distance >= self.delta * current_bin as f64 {
+                    let bin_start = self.delta * current_bin as f64;
+                    let bin_end = bin_start + self.delta;
+                    if node_distance >= bin_start && node_distance < bin_end {
                         // Relax all outgoing edges from this node
-                        let neighbors = self.get_neighbors_with_weights(graph, node_id, direction);
+                        let neighbors =
+                            self.get_neighbors_with_weights(graph, node_id, direction)?;
 
                         scanned_relationships =
                             scanned_relationships.saturating_add(neighbors.len());
@@ -120,8 +124,16 @@ impl DeltaSteppingStorageRuntime {
                         }
 
                         for (neighbor, weight) in neighbors {
+                            Self::validate_node_in_graph(neighbor, node_count, "target")?;
+                            Self::validate_edge_weight(node_id, neighbor, weight)?;
+
                             let current_distance = computation.distance(node_id);
                             let new_distance = current_distance + weight;
+                            if !new_distance.is_finite() {
+                                return Err(AlgorithmError::InvalidGraph(format!(
+                                    "Delta Stepping path cost overflowed for edge {node_id}->{neighbor}"
+                                )));
+                            }
 
                             if new_distance < computation.distance(neighbor) {
                                 computation.set_distance(neighbor, new_distance);
@@ -143,18 +155,20 @@ impl DeltaSteppingStorageRuntime {
                 }
 
                 // Phase 2: Sync and find next bin
-                frontier = next_frontier;
+                if !next_frontier.is_empty() {
+                    frontier = next_frontier;
+                } else {
+                    // Find the next non-empty bin
+                    current_bin = computation.find_next_non_empty_bin(current_bin + 1);
+                    if current_bin == usize::MAX {
+                        break; // No more bins to process
+                    }
 
-                // Find the next non-empty bin
-                current_bin = computation.find_next_non_empty_bin(current_bin);
-                if current_bin == usize::MAX {
-                    break; // No more bins to process
-                }
-
-                // Move nodes from next bin to frontier
-                let bin_nodes = computation.get_bin_nodes(current_bin);
-                for node_id in bin_nodes {
-                    frontier.push_back(node_id);
+                    // Move nodes from next bin to frontier
+                    let bin_nodes = computation.get_bin_nodes(current_bin);
+                    for node_id in bin_nodes {
+                        frontier.push_back(node_id);
+                    }
                 }
 
                 iteration += 1;
@@ -261,7 +275,7 @@ impl DeltaSteppingStorageRuntime {
         graph: Option<&dyn Graph>,
         node_id: NodeId,
         direction: u8,
-    ) -> Vec<(NodeId, f64)> {
+    ) -> Result<Vec<(NodeId, f64)>, AlgorithmError> {
         if let Some(g) = graph {
             let fallback: f64 = 1.0;
             let iter: Box<dyn Iterator<Item = RelationshipCursorBox> + Send> = if direction == 1 {
@@ -269,19 +283,48 @@ impl DeltaSteppingStorageRuntime {
             } else {
                 g.stream_relationships(node_id, fallback)
             };
-            iter.into_iter()
+            Ok(iter
                 .map(|cursor| (cursor.target_id(), cursor.property()))
-                .collect()
+                .collect())
         } else {
             // Mock implementation for tests
-            match node_id {
+            Ok(match node_id {
                 0 => vec![(1, 1.0), (2, 4.0)],
                 1 => vec![(2, 2.0), (3, 5.0)],
                 2 => vec![(3, 1.0), (4, 3.0)],
                 3 => vec![(4, 2.0)],
                 _ => vec![],
-            }
+            })
         }
+    }
+
+    fn validate_node_in_graph(
+        node_id: NodeId,
+        node_count: usize,
+        role: &str,
+    ) -> Result<(), AlgorithmError> {
+        let node_index = usize::try_from(node_id).map_err(|_| {
+            AlgorithmError::InvalidGraph(format!("Invalid {role} node id: {node_id}"))
+        })?;
+        if node_index >= node_count {
+            return Err(AlgorithmError::InvalidGraph(format!(
+                "{role} node id out of range: {node_id} (node_count={node_count})"
+            )));
+        }
+        Ok(())
+    }
+
+    fn validate_edge_weight(
+        source_node: NodeId,
+        target_node: NodeId,
+        weight: f64,
+    ) -> Result<(), AlgorithmError> {
+        if !weight.is_finite() || weight < 0.0 {
+            return Err(AlgorithmError::InvalidGraph(format!(
+                "Delta Stepping requires non-negative finite edge weights; edge {source_node}->{target_node} has weight {weight}"
+            )));
+        }
+        Ok(())
     }
 }
 
@@ -333,12 +376,53 @@ mod tests {
     fn test_neighbors_with_weights() {
         let storage = DeltaSteppingStorageRuntime::new(0, 1.0, 4, true);
 
-        let neighbors = storage.get_neighbors_with_weights(None, 0, 0);
+        let neighbors = storage.get_neighbors_with_weights(None, 0, 0).unwrap();
         assert_eq!(neighbors.len(), 2);
         assert_eq!(neighbors[0], (1, 1.0));
         assert_eq!(neighbors[1], (2, 4.0));
 
-        let neighbors_empty = storage.get_neighbors_with_weights(None, 99, 0);
+        let neighbors_empty = storage.get_neighbors_with_weights(None, 99, 0).unwrap();
         assert!(neighbors_empty.is_empty());
+    }
+
+    #[test]
+    fn computes_expected_mock_shortest_paths() {
+        let mut storage = DeltaSteppingStorageRuntime::new(0, 1.0, 4, true);
+        let mut computation = DeltaSteppingComputationRuntime::new(0, 1.0, 4, true);
+        let mut progress_tracker =
+            TaskProgressTracker::new(Tasks::leaf("delta_stepping".to_string()));
+
+        let result = storage
+            .compute_delta_stepping(&mut computation, None, 0, &mut progress_tracker)
+            .unwrap();
+
+        let path_to_three = result
+            .shortest_paths
+            .iter()
+            .find(|path| path.target_node == 3)
+            .expect("expected path to node 3");
+        assert_eq!(path_to_three.node_ids, vec![0, 1, 2, 3]);
+        assert_eq!(path_to_three.costs, vec![0.0, 1.0, 3.0, 4.0]);
+    }
+
+    #[test]
+    fn rejects_source_node_outside_graph_hint() {
+        let mut storage = DeltaSteppingStorageRuntime::new(101, 1.0, 4, true);
+        let mut computation = DeltaSteppingComputationRuntime::new(101, 1.0, 4, true);
+        let mut progress_tracker =
+            TaskProgressTracker::new(Tasks::leaf("delta_stepping".to_string()));
+
+        let result =
+            storage.compute_delta_stepping(&mut computation, None, 0, &mut progress_tracker);
+
+        assert!(matches!(result, Err(AlgorithmError::InvalidGraph(_))));
+    }
+
+    #[test]
+    fn rejects_negative_or_non_finite_weights() {
+        assert!(DeltaSteppingStorageRuntime::validate_edge_weight(0, 1, -1.0).is_err());
+        assert!(DeltaSteppingStorageRuntime::validate_edge_weight(0, 1, f64::NAN).is_err());
+        assert!(DeltaSteppingStorageRuntime::validate_edge_weight(0, 1, f64::INFINITY).is_err());
+        assert!(DeltaSteppingStorageRuntime::validate_edge_weight(0, 1, 0.0).is_ok());
     }
 }

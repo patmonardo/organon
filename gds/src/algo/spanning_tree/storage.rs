@@ -9,6 +9,7 @@ use super::{SpanningTree, SpanningTreeComputationRuntime};
 use crate::core::utils::progress::ProgressTracker;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::Graph;
+use crate::types::graph::NodeId;
 
 /// Spanning Tree Storage Runtime
 ///
@@ -86,6 +87,8 @@ impl SpanningTreeStorageRuntime {
                 return Ok(computation.build_result(0));
             }
 
+            self.validate(node_count)?;
+
             // Initialize computation runtime
             computation.initialize(self.start_node_id);
 
@@ -113,8 +116,12 @@ impl SpanningTreeStorageRuntime {
 
                 // Process neighbors via graph interface
                 if let Some(graph) = graph {
-                    let neighbors = self.get_neighbors_from_graph(graph, current_node, direction);
+                    let neighbors =
+                        self.get_neighbors_from_graph(graph, current_node, direction)?;
                     for (neighbor, weight) in neighbors {
+                        Self::validate_node_in_graph(neighbor, node_count, "neighbor")?;
+                        Self::validate_edge_weight(current_node, neighbor, weight)?;
+
                         // Skip if neighbor already visited
                         if computation.is_visited(neighbor) {
                             continue;
@@ -184,30 +191,42 @@ impl SpanningTreeStorageRuntime {
         graph: &dyn Graph,
         node_id: u32,
         direction: u8,
-    ) -> Vec<(u32, f64)> {
+    ) -> Result<Vec<(u32, f64)>, AlgorithmError> {
         let fallback: f64 = 1.0;
+        let mut out = Vec::new();
+
+        let mut push_cursor = |target_id: NodeId, weight: f64| -> Result<(), AlgorithmError> {
+            let target = u32::try_from(target_id).map_err(|_| {
+                AlgorithmError::InvalidGraph(format!("Invalid neighbor node id: {target_id}"))
+            })?;
+            out.push((target, weight));
+            Ok(())
+        };
+
         match direction {
-            1 => graph
-                .stream_inverse_relationships_weighted(node_id as i64, fallback)
-                .map(|cursor| (cursor.target_id() as u32, cursor.weight()))
-                .collect(),
-            2 => {
-                let mut out: Vec<(u32, f64)> = graph
-                    .stream_relationships_weighted(node_id as i64, fallback)
-                    .map(|cursor| (cursor.target_id() as u32, cursor.weight()))
-                    .collect();
-                out.extend(
-                    graph
-                        .stream_inverse_relationships_weighted(node_id as i64, fallback)
-                        .map(|cursor| (cursor.target_id() as u32, cursor.weight())),
-                );
-                out
+            1 => {
+                for cursor in graph.stream_inverse_relationships_weighted(node_id as i64, fallback)
+                {
+                    push_cursor(cursor.target_id(), cursor.weight())?;
+                }
             }
-            _ => graph
-                .stream_relationships_weighted(node_id as i64, fallback)
-                .map(|cursor| (cursor.target_id() as u32, cursor.weight()))
-                .collect(),
+            2 => {
+                for cursor in graph.stream_relationships_weighted(node_id as i64, fallback) {
+                    push_cursor(cursor.target_id(), cursor.weight())?;
+                }
+                for cursor in graph.stream_inverse_relationships_weighted(node_id as i64, fallback)
+                {
+                    push_cursor(cursor.target_id(), cursor.weight())?;
+                }
+            }
+            _ => {
+                for cursor in graph.stream_relationships_weighted(node_id as i64, fallback) {
+                    push_cursor(cursor.target_id(), cursor.weight())?;
+                }
+            }
         }
+
+        Ok(out)
     }
 
     /// Get neighbors of a node (mock implementation for testing).
@@ -252,41 +271,116 @@ impl SpanningTreeStorageRuntime {
     pub fn compute_spanning_tree_mock(
         &self,
         node_count: u32,
-        _progress_tracker: &mut dyn ProgressTracker,
+        progress_tracker: &mut dyn ProgressTracker,
     ) -> Result<SpanningTree, AlgorithmError> {
-        if node_count == 0 {
-            return Ok(SpanningTree::new(
+        progress_tracker.begin_subtask_with_volume(node_count as usize);
+
+        let result = (|| {
+            if node_count == 0 {
+                return Ok(SpanningTree::new(
+                    self.start_node_id,
+                    0,
+                    0,
+                    Vec::new(),
+                    Vec::new(),
+                    0.0,
+                ));
+            }
+
+            self.validate(node_count)?;
+
+            let mut computation = SpanningTreeComputationRuntime::new(
                 self.start_node_id,
-                0,
-                0,
-                Vec::new(),
-                Vec::new(),
-                0.0,
-            ));
-        }
+                self.compute_minimum,
+                node_count,
+                self.concurrency,
+            );
+            computation.initialize(self.start_node_id);
 
-        // For testing, create a simple mock spanning tree
-        let mut parent = vec![-1i32; node_count as usize];
-        let mut cost_to_parent = vec![0.0f64; node_count as usize];
+            while !computation.is_queue_empty() {
+                let (current_node, current_cost) = match computation.pop_from_queue() {
+                    Some(entry) => entry,
+                    None => break,
+                };
 
-        // Simple star topology from start node
-        for i in 0..node_count as usize {
-            if i != self.start_node_id as usize {
-                parent[i] = self.start_node_id as i32;
-                cost_to_parent[i] = 1.0;
+                if computation.is_visited(current_node) {
+                    continue;
+                }
+
+                computation.mark_visited(current_node, current_cost);
+                progress_tracker.log_progress(1);
+
+                for (neighbor, weight) in self.get_neighbors(current_node) {
+                    if neighbor >= node_count {
+                        continue;
+                    }
+                    Self::validate_node_in_graph(neighbor, node_count, "neighbor")?;
+                    Self::validate_edge_weight(current_node, neighbor, weight)?;
+
+                    if computation.is_visited(neighbor) {
+                        continue;
+                    }
+
+                    let transformed_weight = computation.transform_weight(weight);
+                    let current_parent = computation.parent(neighbor);
+                    let current_cost_to_parent = computation.cost_to_parent(neighbor);
+
+                    if current_parent == -1 {
+                        computation.add_to_queue(neighbor, transformed_weight, current_node);
+                    } else if transformed_weight < current_cost_to_parent {
+                        computation.update_cost(neighbor, transformed_weight, current_node);
+                    }
+                }
+            }
+
+            Ok(computation.build_result(node_count))
+        })();
+
+        match result {
+            Ok(value) => {
+                progress_tracker.end_subtask();
+                Ok(value)
+            }
+            Err(error) => {
+                progress_tracker.end_subtask_with_failure();
+                Err(error)
             }
         }
+    }
 
-        let total_weight = (node_count as f64 - 1.0) * 1.0;
+    fn validate(&self, node_count: u32) -> Result<(), AlgorithmError> {
+        if self.concurrency == 0 {
+            return Err(AlgorithmError::InvalidGraph(
+                "Spanning tree requires concurrency > 0".to_string(),
+            ));
+        }
+        Self::validate_node_in_graph(self.start_node_id, node_count, "start")
+    }
 
-        Ok(SpanningTree::new(
-            self.start_node_id,
-            node_count,
-            node_count,
-            parent,
-            cost_to_parent,
-            total_weight,
-        ))
+    fn validate_node_in_graph(
+        node_id: u32,
+        node_count: u32,
+        role: &str,
+    ) -> Result<(), AlgorithmError> {
+        if node_id >= node_count {
+            return Err(AlgorithmError::InvalidGraph(format!(
+                "{role} node id out of range: {node_id} (node_count={node_count})"
+            )));
+        }
+        Ok(())
+    }
+
+    fn validate_edge_weight(
+        source_node: u32,
+        target_node: u32,
+        weight: f64,
+    ) -> Result<(), AlgorithmError> {
+        if !weight.is_finite() {
+            return Err(AlgorithmError::InvalidGraph(format!(
+                "Spanning tree requires finite edge weights; edge {source_node}->{target_node} has weight {weight}"
+            )));
+        }
+        Ok(())
     }
 }
 
@@ -316,7 +410,7 @@ mod tests {
         // Verify basic properties
         assert_eq!(result.head(0), 0);
         assert_eq!(result.effective_node_count(), 4);
-        assert!(result.total_weight() > 0.0);
+        assert_eq!(result.total_weight(), 3.5);
 
         // Verify tree structure (all nodes should be connected)
         assert_eq!(result.parent(0), -1); // Root has no parent
@@ -337,7 +431,7 @@ mod tests {
         // Verify basic properties
         assert_eq!(result.head(0), 0);
         assert_eq!(result.effective_node_count(), 4);
-        assert!(result.total_weight() > 0.0);
+        assert_eq!(result.total_weight(), 6.0);
 
         // Verify tree structure
         assert_eq!(result.parent(0), -1); // Root has no parent
@@ -424,5 +518,21 @@ mod tests {
         assert_eq!(result.effective_node_count(), 1);
         assert_eq!(result.total_weight(), 0.0);
         assert_eq!(result.parent(0), -1); // Root has no parent
+    }
+
+    #[test]
+    fn test_storage_rejects_invalid_contracts() {
+        assert!(matches!(
+            SpanningTreeStorageRuntime::new(4, true, 1).validate(4),
+            Err(AlgorithmError::InvalidGraph(_))
+        ));
+        assert!(matches!(
+            SpanningTreeStorageRuntime::new(0, true, 0).validate(4),
+            Err(AlgorithmError::InvalidGraph(_))
+        ));
+        assert!(SpanningTreeStorageRuntime::validate_edge_weight(0, 1, 1.0).is_ok());
+        assert!(SpanningTreeStorageRuntime::validate_edge_weight(0, 1, -1.0).is_ok());
+        assert!(SpanningTreeStorageRuntime::validate_edge_weight(0, 1, f64::NAN).is_err());
+        assert!(SpanningTreeStorageRuntime::validate_edge_weight(0, 1, f64::INFINITY).is_err());
     }
 }

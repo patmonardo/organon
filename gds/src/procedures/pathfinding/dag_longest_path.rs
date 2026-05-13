@@ -121,7 +121,7 @@ impl DagLongestPathBuilder {
         };
 
         let mut runtime = DagLongestPathComputationRuntime::new(node_count);
-        let result = runtime.compute(node_count, get_neighbors);
+        let result = runtime.compute(node_count, get_neighbors)?;
 
         progress_tracker.log_progress(node_count);
         progress_tracker.end_subtask();

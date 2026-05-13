@@ -21,7 +21,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!();
 
     // ------------------------------------------------------------------ Stage 0
-    stage(0, "Hand-Built Tree", "TreeValue::node / leaf construct a concrete syntax tree.");
+    stage(
+        0,
+        "Hand-Built Tree",
+        "TreeValue::node / leaf construct a concrete syntax tree.",
+    );
 
     let tree = TreeValue::node(
         "S",
@@ -40,10 +44,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     TreeValue::node(
                         "PP",
                         vec![
-                            TreeValue::node(
-                                "IN",
-                                vec![TreeValue::leaf(TreeLeafValue::text("on"))],
-                            ),
+                            TreeValue::node("IN", vec![TreeValue::leaf(TreeLeafValue::text("on"))]),
                             TreeValue::node(
                                 "NP",
                                 vec![
@@ -167,10 +168,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let parented = ParentedTree::from_tree(&tree);
     let root = parented.root();
-    let root_label = parented
-        .get(root)
-        .and_then(|n| n.label())
-        .unwrap_or("?");
+    let root_label = parented.get(root).and_then(|n| n.label()).unwrap_or("?");
     let child_count = parented
         .get(root)
         .and_then(|n| n.children())
@@ -183,10 +181,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let parented_path = fixture_root.join("03-parented.txt");
     fs::write(
         &parented_path,
-        format!(
-            "root: {}\nroot children: {}\n",
-            root_label, child_count,
-        ),
+        format!("root: {}\nroot children: {}\n", root_label, child_count,),
     )?;
     println!("persisted: {}", fixture_path(&parented_path));
 

@@ -25,6 +25,9 @@ pub struct BellmanFordComputationRuntime {
     /// Nodes involved in negative cycles
     negative_cycle_nodes: Vec<NodeId>,
 
+    /// Whether any negative cycle was detected, independent of path tracking.
+    contains_negative_cycle: bool,
+
     /// Source node
     source_node: NodeId,
 
@@ -54,6 +57,7 @@ impl BellmanFordComputationRuntime {
             predecessors: HashMap::new(),
             lengths: HashMap::new(),
             negative_cycle_nodes: Vec::new(),
+            contains_negative_cycle: false,
             source_node,
             track_negative_cycles,
             track_paths,
@@ -80,6 +84,7 @@ impl BellmanFordComputationRuntime {
         self.predecessors.clear();
         self.lengths.clear();
         self.negative_cycle_nodes.clear();
+        self.contains_negative_cycle = false;
 
         // Initialize with infinite distances
         for node_id in 0..node_count {
@@ -139,6 +144,7 @@ impl BellmanFordComputationRuntime {
     ///
     /// Translation of: `processNegativeCycle()` method (lines 152-162)
     pub fn add_negative_cycle_node(&mut self, node_id: NodeId) {
+        self.contains_negative_cycle = true;
         if self.track_negative_cycles && !self.negative_cycle_nodes.contains(&node_id) {
             self.negative_cycle_nodes.push(node_id);
         }
@@ -148,7 +154,7 @@ impl BellmanFordComputationRuntime {
     ///
     /// Translation of: `containsNegativeCycle` check (line 122)
     pub fn has_negative_cycles(&self) -> bool {
-        !self.negative_cycle_nodes.is_empty()
+        self.contains_negative_cycle
     }
 
     /// Get all negative cycle nodes
@@ -236,6 +242,17 @@ mod tests {
         runtime.initialize(0, true, true, 100);
 
         assert!(!runtime.has_negative_cycles());
+        assert!(runtime.get_negative_cycle_nodes().is_empty());
+    }
+
+    #[test]
+    fn negative_cycle_detection_is_independent_of_cycle_path_tracking() {
+        let mut runtime = BellmanFordComputationRuntime::new(0, false, true, 4);
+        runtime.initialize(0, false, true, 100);
+
+        runtime.add_negative_cycle_node(3);
+
+        assert!(runtime.has_negative_cycles());
         assert!(runtime.get_negative_cycle_nodes().is_empty());
     }
 

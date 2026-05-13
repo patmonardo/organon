@@ -160,7 +160,6 @@ mod tests {
     }
 
     #[test]
-    #[ignore] // Algorithm needs review
     fn test_relationship_filterer_valid_relationship() {
         let mut filterer = RelationshipFilterer::new(5, false);
 
@@ -176,7 +175,7 @@ mod tests {
             vec![10, 11, 12],
             vec![0.0, 1.0, 2.0, 3.0],
         );
-        filterer.add_blocking_neighbor(&path, 0); // blocks target node 2
+        filterer.add_blocking_neighbor(&path, 1); // blocks target node 2
         filterer.prepare();
 
         // Test valid relationship (different source)

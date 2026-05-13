@@ -6,6 +6,8 @@
 
 use super::spec::TopologicalSortResult;
 use super::TopologicalSortStorageRuntime;
+use crate::algo::algorithms::Result;
+use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::Graph;
 use crate::types::graph::NodeId;
 use std::collections::VecDeque;
@@ -13,12 +15,14 @@ use std::sync::atomic::Ordering;
 
 pub struct TopologicalSortComputationRuntime {
     storage: TopologicalSortStorageRuntime,
+    compute_max_distance: bool,
 }
 
 impl TopologicalSortComputationRuntime {
     pub fn new(node_count: usize, compute_max_distance: bool) -> Self {
         Self {
             storage: TopologicalSortStorageRuntime::new(node_count, compute_max_distance),
+            compute_max_distance,
         }
     }
 
@@ -27,10 +31,16 @@ impl TopologicalSortComputationRuntime {
         &mut self,
         node_count: usize,
         get_neighbors: impl Fn(NodeId) -> Vec<(NodeId, f64)>, // (neighbor, weight)
-    ) -> TopologicalSortResult {
+    ) -> Result<TopologicalSortResult> {
+        self.storage = TopologicalSortStorageRuntime::new(node_count, self.compute_max_distance);
+
         // Phase 1: Initialize in-degrees
         for node_id in 0..(node_count as i64) {
-            for (target, _) in get_neighbors(node_id) {
+            for (target, weight) in get_neighbors(node_id) {
+                validate_neighbor(node_count, node_id, target)?;
+                if self.compute_max_distance {
+                    validate_weight(node_id, target, weight)?;
+                }
                 self.storage.in_degrees[target as usize].fetch_add(1, Ordering::SeqCst);
             }
         }
@@ -60,6 +70,9 @@ impl TopologicalSortComputationRuntime {
             };
 
             for (target, weight) in get_neighbors(source) {
+                validate_neighbor(node_count, source, target)?;
+                validate_weight(source, target, weight)?;
+
                 // Update longest path distance if computing
                 if let Some(ref distances) = self.storage.max_source_distances {
                     loop {
@@ -114,14 +127,14 @@ impl TopologicalSortComputationRuntime {
                 .collect()
         });
 
-        TopologicalSortResult {
+        Ok(TopologicalSortResult {
             sorted_nodes,
             max_source_distances,
-        }
+        })
     }
 
     /// Compute topological sort using a graph for neighbor access
-    pub fn compute_with_graph(&mut self, graph: &dyn Graph) -> TopologicalSortResult {
+    pub fn compute_with_graph(&mut self, graph: &dyn Graph) -> Result<TopologicalSortResult> {
         let node_count = graph.node_count() as usize;
         let fallback = graph.default_property_value();
 
@@ -141,4 +154,24 @@ impl TopologicalSortComputationRuntime {
 
         self.compute(node_count, get_neighbors)
     }
+}
+
+fn validate_neighbor(node_count: usize, source: NodeId, target: NodeId) -> Result<()> {
+    if target < 0 || target as usize >= node_count {
+        return Err(AlgorithmError::InvalidGraph(format!(
+            "edge from node {source} points to out-of-range target {target} for graph with {node_count} nodes"
+        )));
+    }
+
+    Ok(())
+}
+
+fn validate_weight(source: NodeId, target: NodeId, weight: f64) -> Result<()> {
+    if !weight.is_finite() {
+        return Err(AlgorithmError::InvalidGraph(format!(
+            "edge from node {source} to {target} has non-finite weight {weight}"
+        )));
+    }
+
+    Ok(())
 }

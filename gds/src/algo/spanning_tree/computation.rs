@@ -615,12 +615,21 @@ impl SpanningTreeComputationRuntime {
     ///
     /// The completed `SpanningTree` result.
     pub fn build_result(&self, node_count: u32) -> SpanningTree {
+        let cost_to_parent = if self.compute_minimum {
+            self.cost_to_parent.clone()
+        } else {
+            self.cost_to_parent
+                .iter()
+                .map(|cost| if *cost == 0.0 { 0.0 } else { -*cost })
+                .collect()
+        };
+
         SpanningTree::new(
             self.start_node_id,
             node_count,
             self.effective_node_count,
             self.parent.clone(),
-            self.cost_to_parent.clone(),
+            cost_to_parent,
             self.total_weight,
         )
     }
@@ -719,6 +728,22 @@ mod computation_tests {
         assert_eq!(result.total_weight(), 1.0);
         assert_eq!(result.parent(1), 0);
         assert_eq!(result.cost_to_parent(1), 1.0);
+    }
+
+    #[test]
+    fn maximum_tree_result_reports_original_edge_costs() {
+        let mut runtime = SpanningTreeComputationRuntime::new(0, false, 4, 1);
+        runtime.initialize(0);
+
+        runtime.mark_visited(0, 0.0);
+        runtime.mark_visited(1, -3.0);
+        runtime.parent[1] = 0;
+        runtime.cost_to_parent[1] = -3.0;
+
+        let result = runtime.build_result(4);
+
+        assert_eq!(result.total_weight(), 3.0);
+        assert_eq!(result.cost_to_parent(1), 3.0);
     }
 }
 

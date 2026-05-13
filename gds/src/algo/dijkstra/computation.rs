@@ -172,6 +172,11 @@ impl DijkstraComputationRuntime {
         self.costs.get(&node_id).copied().unwrap_or(f64::INFINITY)
     }
 
+    /// Check whether a popped queue entry has been superseded by a lower cost.
+    pub fn is_stale_queue_entry(&self, node_id: NodeId, popped_cost: f64) -> bool {
+        popped_cost > self.get_cost(node_id)
+    }
+
     /// Update the cost of a node in the queue
     ///
     /// Translation of: `queue.set()` method (line 235)
@@ -357,6 +362,8 @@ mod tests {
 
         runtime.update_queue_cost(1, 3.0);
         assert_eq!(runtime.get_cost(1), 3.0);
+        assert!(runtime.is_stale_queue_entry(1, 5.0));
+        assert!(!runtime.is_stale_queue_entry(1, 3.0));
     }
 
     #[test]

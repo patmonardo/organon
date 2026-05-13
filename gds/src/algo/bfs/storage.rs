@@ -11,6 +11,7 @@ use crate::core::utils::progress::{ProgressTracker, UNKNOWN_VOLUME};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::Graph;
 use crate::types::graph::NodeId;
+use std::collections::HashSet;
 
 /// BFS Storage Runtime - handles persistent data access and algorithm orchestration
 ///
@@ -64,43 +65,57 @@ impl BfsStorageRuntime {
             progress_tracker.begin_subtask_with_volume(volume);
         }
 
-        let node_count = graph.map(|g| g.node_count()).unwrap_or(1000) as usize;
-        computation.initialize(self.source_node, self.max_depth, node_count);
+        let result = (|| {
+            let node_count = graph.map(|g| g.node_count()).unwrap_or(1000) as usize;
+            Self::validate_node_in_graph(self.source_node, node_count, "source")?;
+            for target_node in &self.target_nodes {
+                Self::validate_node_in_graph(*target_node, node_count, "target")?;
+            }
 
-        // BFS queue (node, depth)
-        let mut queue: std::collections::VecDeque<(NodeId, u32)> =
-            std::collections::VecDeque::new();
-        computation.set_visited(self.source_node);
-        queue.push_back((self.source_node, 0));
+            computation.initialize(self.source_node, self.max_depth, node_count);
+            let targets: HashSet<NodeId> = self.target_nodes.iter().copied().collect();
 
-        let mut result = Vec::new();
+            // BFS queue (node, depth)
+            let mut queue: std::collections::VecDeque<(NodeId, u32)> =
+                std::collections::VecDeque::new();
+            computation.set_visited(self.source_node);
+            queue.push_back((self.source_node, 0));
 
-        while let Some((current_node, depth)) = queue.pop_front() {
-            result.push(current_node);
+            let mut result = Vec::new();
 
-            // Get neighbors
-            let neighbors = self.get_neighbors(graph, current_node);
-            progress_tracker.log_progress(neighbors.len());
+            while let Some((current_node, depth)) = queue.pop_front() {
+                result.push(current_node);
 
-            // Respect max depth: only expand when `depth < max_depth`
-            if computation.check_max_depth(depth as f64) {
-                for neighbor in neighbors {
-                    if !computation.is_visited(neighbor) {
-                        computation.set_visited(neighbor);
-                        queue.push_back((neighbor, depth.saturating_add(1)));
+                if targets.contains(&current_node) {
+                    break;
+                }
+
+                // Get neighbors
+                let neighbors = self.get_neighbors(graph, current_node);
+                progress_tracker.log_progress(neighbors.len());
+
+                // Respect max depth: only expand when `depth < max_depth`
+                if computation.check_max_depth(depth as f64) {
+                    for neighbor in neighbors {
+                        Self::validate_node_in_graph(neighbor, node_count, "neighbor")?;
+                        if !computation.is_visited(neighbor) {
+                            computation.set_visited(neighbor);
+                            queue.push_back((neighbor, depth.saturating_add(1)));
+                        }
                     }
                 }
             }
-        }
 
-        let computation_time = start_time.elapsed().as_millis() as u64;
+            let computation_time = start_time.elapsed().as_millis() as u64;
+
+            Ok(BfsResult {
+                visited_nodes: result,
+                computation_time_ms: computation_time,
+            })
+        })();
 
         progress_tracker.end_subtask();
-
-        Ok(BfsResult {
-            visited_nodes: result,
-            computation_time_ms: computation_time,
-        })
+        result
     }
 
     /// Get neighbors of a node (graph-backed when available; mock fallback)
@@ -118,6 +133,22 @@ impl BfsStorageRuntime {
                 _ => vec![],
             }
         }
+    }
+
+    fn validate_node_in_graph(
+        node_id: NodeId,
+        node_count: usize,
+        role: &str,
+    ) -> Result<(), AlgorithmError> {
+        let node_index = usize::try_from(node_id).map_err(|_| {
+            AlgorithmError::InvalidGraph(format!("Invalid {role} node id: {node_id}"))
+        })?;
+        if node_index >= node_count {
+            return Err(AlgorithmError::InvalidGraph(format!(
+                "{role} node id out of range: {node_id} (node_count={node_count})"
+            )));
+        }
+        Ok(())
     }
 }
 
@@ -150,6 +181,20 @@ mod tests {
     }
 
     #[test]
+    fn test_bfs_stops_when_target_reached() {
+        let storage = BfsStorageRuntime::new(0, vec![1], None, true);
+        let mut computation = BfsComputationRuntime::new(0, true, 1, 10);
+
+        let mut progress_tracker = TaskProgressTracker::new(Tasks::leaf("BFS".to_string()));
+
+        let result = storage
+            .compute_bfs(&mut computation, None, &mut progress_tracker)
+            .unwrap();
+
+        assert_eq!(result.visited_nodes, vec![0, 1]);
+    }
+
+    #[test]
     fn test_bfs_path_same_source_target() {
         let storage = BfsStorageRuntime::new(0, vec![0], None, true);
         let mut computation = BfsComputationRuntime::new(0, true, 1, 10);
@@ -176,5 +221,29 @@ mod tests {
 
         // With max_depth=1, we should only visit nodes at distance 0 and 1
         assert!(result.visited_nodes.len() <= 3); // Source + immediate neighbors
+    }
+
+    #[test]
+    fn test_bfs_rejects_out_of_range_source() {
+        let storage = BfsStorageRuntime::new(1000, vec![], None, false);
+        let mut computation = BfsComputationRuntime::new(0, false, 1, 10);
+
+        let mut progress_tracker = TaskProgressTracker::new(Tasks::leaf("BFS".to_string()));
+
+        let result = storage.compute_bfs(&mut computation, None, &mut progress_tracker);
+
+        assert!(matches!(result, Err(AlgorithmError::InvalidGraph(_))));
+    }
+
+    #[test]
+    fn test_bfs_rejects_out_of_range_target() {
+        let storage = BfsStorageRuntime::new(0, vec![1000], None, false);
+        let mut computation = BfsComputationRuntime::new(0, false, 1, 10);
+
+        let mut progress_tracker = TaskProgressTracker::new(Tasks::leaf("BFS".to_string()));
+
+        let result = storage.compute_bfs(&mut computation, None, &mut progress_tracker);
+
+        assert!(matches!(result, Err(AlgorithmError::InvalidGraph(_))));
     }
 }

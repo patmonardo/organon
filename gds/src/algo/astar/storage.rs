@@ -88,6 +88,9 @@ impl AStarStorageRuntime {
         }
 
         let result = (|| {
+            Self::validate_node_id(self.source_node, "source")?;
+            Self::validate_node_id(self.target_node, "target")?;
+
             // If no graph given, keep placeholder behavior for tests
             if graph.is_none() {
                 let mut path = Vec::new();
@@ -112,6 +115,8 @@ impl AStarStorageRuntime {
             }
 
             let g = graph.unwrap();
+            Self::validate_node_in_graph(self.source_node, g.node_count(), "source")?;
+            Self::validate_node_in_graph(self.target_node, g.node_count(), "target")?;
             computation.initialize(self.source_node, self.target_node);
 
             // Initialize heuristic for source
@@ -161,17 +166,23 @@ impl AStarStorageRuntime {
                     }
 
                     let neighbor: NodeId = cursor.target_id();
+                    Self::validate_node_in_graph(neighbor, g.node_count(), "target")?;
+                    let weight = cursor.property();
+                    Self::validate_edge_weight(current, neighbor, weight)?;
                     if computation.is_visited(neighbor) {
                         continue;
                     }
 
-                    let tentative_g = computation.get_g_cost(current) + cursor.property();
+                    let tentative_g = computation.get_g_cost(current) + weight;
+                    if !tentative_g.is_finite() {
+                        return Err(format!(
+                            "A* path cost overflowed for edge {current}->{neighbor}"
+                        ));
+                    }
                     if tentative_g < computation.get_g_cost(neighbor) {
                         computation.set_parent(neighbor, current);
                         computation.update_g_cost(neighbor, tentative_g);
-                        let h = self
-                            .compute_haversine_distance(neighbor, self.target_node)
-                            .unwrap_or(0.0);
+                        let h = self.compute_haversine_distance(neighbor, self.target_node)?;
                         computation.update_f_cost(neighbor, tentative_g + h);
                         computation.add_to_open_set(neighbor);
                     }
@@ -243,8 +254,51 @@ impl AStarStorageRuntime {
             let lon = (idx as f64) * 0.01;
             (lat, lon)
         };
+        Self::validate_coordinates(node_id, coords)?;
         self.coordinate_cache.insert(node_id, coords);
         Ok(coords)
+    }
+
+    fn validate_node_id(node_id: NodeId, role: &str) -> Result<(), String> {
+        if node_id < 0 {
+            return Err(format!("invalid {role} node id: {node_id}"));
+        }
+        Ok(())
+    }
+
+    fn validate_node_in_graph(
+        node_id: NodeId,
+        node_count: usize,
+        role: &str,
+    ) -> Result<(), String> {
+        Self::validate_node_id(node_id, role)?;
+        let node_index =
+            usize::try_from(node_id).map_err(|_| format!("invalid {role} node id: {node_id}"))?;
+        if node_index >= node_count {
+            return Err(format!(
+                "{role} node id out of range: {node_id} (node_count={node_count})"
+            ));
+        }
+        Ok(())
+    }
+
+    fn validate_edge_weight(source: NodeId, target: NodeId, weight: f64) -> Result<(), String> {
+        if !weight.is_finite() || weight < 0.0 {
+            return Err(format!(
+                "A* requires non-negative finite edge weights; edge {source}->{target} has weight {weight}"
+            ));
+        }
+        Ok(())
+    }
+
+    fn validate_coordinates(node_id: NodeId, coords: (f64, f64)) -> Result<(), String> {
+        let (latitude, longitude) = coords;
+        if !latitude.is_finite() || !longitude.is_finite() {
+            return Err(format!(
+                "A* requires finite coordinates for node {node_id}; got ({latitude}, {longitude})"
+            ));
+        }
+        Ok(())
     }
 
     /// Haversine distance calculation
@@ -393,5 +447,22 @@ mod tests {
         assert_eq!(result.path.as_ref().unwrap()[0], 5);
         assert_eq!(result.total_cost, 0.0);
         assert_eq!(result.nodes_explored, 1);
+    }
+
+    #[test]
+    fn rejects_invalid_node_ids_and_weights() {
+        assert!(AStarStorageRuntime::validate_node_id(-1, "source").is_err());
+        assert!(AStarStorageRuntime::validate_node_id(0, "source").is_ok());
+        assert!(AStarStorageRuntime::validate_edge_weight(0, 1, -1.0).is_err());
+        assert!(AStarStorageRuntime::validate_edge_weight(0, 1, f64::NAN).is_err());
+        assert!(AStarStorageRuntime::validate_edge_weight(0, 1, f64::INFINITY).is_err());
+        assert!(AStarStorageRuntime::validate_edge_weight(0, 1, 0.0).is_ok());
+    }
+
+    #[test]
+    fn rejects_non_finite_coordinates() {
+        assert!(AStarStorageRuntime::validate_coordinates(0, (f64::NAN, 0.0)).is_err());
+        assert!(AStarStorageRuntime::validate_coordinates(0, (0.0, f64::INFINITY)).is_err());
+        assert!(AStarStorageRuntime::validate_coordinates(0, (0.0, 0.0)).is_ok());
     }
 }

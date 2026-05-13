@@ -173,7 +173,7 @@ impl TopologicalSortFacade {
             node_count,
             self.config.compute_max_distance_from_source,
         );
-        let result = runtime.compute(node_count, get_neighbors);
+        let result = runtime.compute(node_count, get_neighbors)?;
 
         progress_tracker.log_progress(node_count);
         progress_tracker.end_subtask();

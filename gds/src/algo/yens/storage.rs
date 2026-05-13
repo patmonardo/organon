@@ -68,6 +68,9 @@ impl YensStorageRuntime {
         progress_tracker.begin_subtask_with_volume(self.k);
 
         let result = (|| {
+            let node_count = graph.map(|g| g.node_count()).unwrap_or(100);
+            self.validate(node_count)?;
+
             // Initialize computation runtime
             computation.initialize(
                 self.source_node,
@@ -92,8 +95,8 @@ impl YensStorageRuntime {
             let candidate_queue = CandidatePathsPriorityQueue::new();
 
             // Main Yen's algorithm loop
-            for i in 1..self.k {
-                if let Some(prev_path) = k_shortest_paths.get(i - 1) {
+            for solution_index in 1..self.k {
+                if let Some(prev_path) = k_shortest_paths.get(solution_index - 1) {
                     // Generate candidate paths from previous path
                     let candidates =
                         self.generate_candidates(prev_path, &k_shortest_paths, graph, direction)?;
@@ -152,6 +155,43 @@ impl YensStorageRuntime {
                 Err(e)
             }
         }
+    }
+
+    fn validate(&self, node_count: usize) -> Result<(), AlgorithmError> {
+        if self.k == 0 {
+            return Err(AlgorithmError::InvalidGraph(
+                "Yen's algorithm requires k > 0".to_string(),
+            ));
+        }
+        if self.concurrency == 0 {
+            return Err(AlgorithmError::InvalidGraph(
+                "Yen's algorithm requires concurrency > 0".to_string(),
+            ));
+        }
+        if self.source_node == self.target_node {
+            return Err(AlgorithmError::InvalidGraph(
+                "Yen's algorithm requires distinct source and target nodes".to_string(),
+            ));
+        }
+        Self::validate_node_in_graph(self.source_node, node_count, "source")?;
+        Self::validate_node_in_graph(self.target_node, node_count, "target")?;
+        Ok(())
+    }
+
+    fn validate_node_in_graph(
+        node_id: NodeId,
+        node_count: usize,
+        role: &str,
+    ) -> Result<(), AlgorithmError> {
+        let node_index = usize::try_from(node_id).map_err(|_| {
+            AlgorithmError::InvalidGraph(format!("Invalid {role} node id: {node_id}"))
+        })?;
+        if node_index >= node_count {
+            return Err(AlgorithmError::InvalidGraph(format!(
+                "{role} node id out of range: {node_id} (node_count={node_count})"
+            )));
+        }
+        Ok(())
     }
 
     /// Find the first shortest path using Dijkstra
@@ -239,8 +279,10 @@ impl YensStorageRuntime {
             return Ok(candidates);
         }
 
-        // Standard Yen: for each spur node along the previous shortest path...
-        for spur_index in 0..(prev_path.node_ids.len() - 1) {
+        // Standard Yen plus Lawler's modification: selected candidate paths carry
+        // the spur index where their next expansion may begin.
+        let start_spur_index = prev_path.index as usize;
+        for spur_index in start_spur_index..(prev_path.node_ids.len() - 1) {
             let spur_node = prev_path.node_ids[spur_index];
 
             // Root path = prefix up to and including the spur node.
@@ -255,28 +297,39 @@ impl YensStorageRuntime {
                 .collect();
 
             // Remove edges that would recreate previously-found paths with the same root.
-            let mut blocked_next_hops: HashSet<NodeId> = HashSet::new();
+            let mut blocked_identifiers: HashSet<NodeId> = HashSet::new();
             for p in k_shortest_paths {
-                if p.matches(prev_path, spur_index + 1) {
-                    if let Some(next) = p.node_ids.get(spur_index + 1).copied() {
-                        blocked_next_hops.insert(next);
+                if p.matches_exactly(prev_path, spur_index + 1) {
+                    let blocked = if self.track_relationships {
+                        p.relationship_ids.get(spur_index).copied()
+                    } else {
+                        p.node_ids.get(spur_index + 1).copied()
+                    };
+                    if let Some(blocked) = blocked {
+                        blocked_identifiers.insert(blocked);
                     }
                 }
             }
 
             let filter_spur = spur_node;
             let filter_removed_nodes = removed_nodes.clone();
-            let filter_blocked = blocked_next_hops.clone();
+            let filter_blocked = blocked_identifiers.clone();
+            let track_relationships = self.track_relationships;
 
             let filter: Box<dyn Fn(NodeId, NodeId, NodeId) -> bool + Send + Sync> =
-                Box::new(move |source, target, _relationship_id| {
+                Box::new(move |source, target, relationship_id| {
                     if filter_removed_nodes.contains(&source)
                         || filter_removed_nodes.contains(&target)
                     {
                         return false;
                     }
 
-                    if source == filter_spur && filter_blocked.contains(&target) {
+                    let blocked_identifier = if track_relationships {
+                        relationship_id
+                    } else {
+                        target
+                    };
+                    if source == filter_spur && filter_blocked.contains(&blocked_identifier) {
                         return false;
                     }
 
@@ -294,6 +347,8 @@ impl YensStorageRuntime {
             } else {
                 root_path.append_without_relationship_ids(&spur_path);
             }
+
+            root_path.index = spur_index as u32;
 
             // Ensure the path is still source->target.
             root_path.source_node = self.source_node;
@@ -359,5 +414,69 @@ mod tests {
         let unique: std::collections::HashSet<Vec<NodeId>> =
             result.paths.iter().map(|p| p.node_ids.clone()).collect();
         assert_eq!(unique.len(), result.paths.len());
+    }
+
+    #[test]
+    fn computes_ordered_mock_k_shortest_paths() {
+        let storage = YensStorageRuntime::new(0, 3, 3, false, 1);
+        let mut computation = YensComputationRuntime::new(0, 3, 3, false, 1);
+
+        let mut progress_tracker = TaskProgressTracker::with_concurrency(
+            Tasks::leaf_with_volume("yens".to_string(), 3),
+            1,
+        );
+
+        let result = storage
+            .compute_yens(&mut computation, None, 0, &mut progress_tracker)
+            .unwrap();
+
+        assert_eq!(result.path_count, 3);
+        assert_eq!(result.paths[0].node_ids, vec![0, 1, 2, 3]);
+        assert_eq!(result.paths[0].total_cost, 4.0);
+        assert_eq!(result.paths[1].node_ids, vec![0, 2, 3]);
+        assert_eq!(result.paths[1].total_cost, 5.0);
+        assert_eq!(result.paths[2].node_ids, vec![0, 1, 3]);
+        assert_eq!(result.paths[2].total_cost, 6.0);
+    }
+
+    #[test]
+    fn rejects_invalid_storage_contracts() {
+        assert!(matches!(
+            YensStorageRuntime::new(0, 3, 0, false, 1).validate(100),
+            Err(AlgorithmError::InvalidGraph(_))
+        ));
+        assert!(matches!(
+            YensStorageRuntime::new(0, 3, 3, false, 0).validate(100),
+            Err(AlgorithmError::InvalidGraph(_))
+        ));
+        assert!(matches!(
+            YensStorageRuntime::new(3, 3, 3, false, 1).validate(100),
+            Err(AlgorithmError::InvalidGraph(_))
+        ));
+        assert!(matches!(
+            YensStorageRuntime::new(100, 3, 3, false, 1).validate(100),
+            Err(AlgorithmError::InvalidGraph(_))
+        ));
+        assert!(matches!(
+            YensStorageRuntime::new(0, 100, 3, false, 1).validate(100),
+            Err(AlgorithmError::InvalidGraph(_))
+        ));
+    }
+
+    #[test]
+    fn lawler_spur_index_skips_earlier_candidates() {
+        let storage = YensStorageRuntime::new(0, 3, 3, false, 1);
+        let previous =
+            MutablePathResult::new(1, 0, 3, vec![0, 1, 2, 3], vec![], vec![0.0, 1.0, 3.0, 4.0]);
+
+        let candidates = storage
+            .generate_candidates(&previous, &[previous.clone()], None, 0)
+            .unwrap();
+
+        let candidate_nodes: std::collections::HashSet<Vec<NodeId>> =
+            candidates.into_iter().map(|path| path.node_ids).collect();
+
+        assert!(!candidate_nodes.contains(&vec![0, 2, 3]));
+        assert!(candidate_nodes.contains(&vec![0, 1, 3]));
     }
 }

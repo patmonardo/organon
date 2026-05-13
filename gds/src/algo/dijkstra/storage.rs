@@ -100,6 +100,7 @@ impl DijkstraStorageRuntime {
             // Initialize computation runtime
             // Bind to actual node count from a Graph view when available
             let node_count = graph.map(|g| g.node_count()).unwrap_or(100);
+            Self::validate_node_in_graph(self.source_node, node_count, "source")?;
             computation.initialize(
                 self.source_node,
                 self.track_relationships,
@@ -117,6 +118,12 @@ impl DijkstraStorageRuntime {
             while !computation.is_queue_empty() {
                 // Get node with minimum cost
                 let (current_node, current_cost) = computation.pop_from_queue();
+
+                if computation.is_visited(current_node)
+                    || computation.is_stale_queue_entry(current_node, current_cost)
+                {
+                    continue;
+                }
 
                 // Mark node as visited
                 computation.mark_visited(current_node);
@@ -142,6 +149,7 @@ impl DijkstraStorageRuntime {
                     current_cost,
                     graph,
                     direction,
+                    node_count,
                     progress_tracker,
                 )?;
             }
@@ -179,6 +187,7 @@ impl DijkstraStorageRuntime {
         source_cost: f64,
         graph: Option<&dyn Graph>,
         direction: u8,
+        node_count: usize,
         progress_tracker: &mut dyn ProgressTracker,
     ) -> Result<(), AlgorithmError> {
         // Get neighbors with weights for the source node
@@ -188,6 +197,9 @@ impl DijkstraStorageRuntime {
         progress_tracker.log_progress(neighbors.len());
 
         for (target_node, weight, relationship_id) in neighbors {
+            Self::validate_node_in_graph(target_node, node_count, "target")?;
+            Self::validate_edge_weight(source_node, target_node, weight)?;
+
             // Skip if target is already visited
             if computation.is_visited(target_node) {
                 continue;
@@ -199,6 +211,11 @@ impl DijkstraStorageRuntime {
             }
 
             let new_cost = source_cost + weight;
+            if !new_cost.is_finite() {
+                return Err(AlgorithmError::InvalidGraph(format!(
+                    "Dijkstra path cost overflowed for edge {source_node}->{target_node}"
+                )));
+            }
 
             if !computation.is_in_queue(target_node) {
                 // First time seeing this node
@@ -217,6 +234,35 @@ impl DijkstraStorageRuntime {
             }
         }
 
+        Ok(())
+    }
+
+    fn validate_node_in_graph(
+        node_id: NodeId,
+        node_count: usize,
+        role: &str,
+    ) -> Result<(), AlgorithmError> {
+        let node_index = usize::try_from(node_id).map_err(|_| {
+            AlgorithmError::InvalidGraph(format!("Invalid {role} node id: {node_id}"))
+        })?;
+        if node_index >= node_count {
+            return Err(AlgorithmError::InvalidGraph(format!(
+                "{role} node id out of range: {node_id} (node_count={node_count})"
+            )));
+        }
+        Ok(())
+    }
+
+    fn validate_edge_weight(
+        source_node: NodeId,
+        target_node: NodeId,
+        weight: f64,
+    ) -> Result<(), AlgorithmError> {
+        if !weight.is_finite() || weight < 0.0 {
+            return Err(AlgorithmError::InvalidGraph(format!(
+                "Dijkstra requires non-negative finite edge weights; edge {source_node}->{target_node} has weight {weight}"
+            )));
+        }
         Ok(())
     }
 
@@ -418,5 +464,43 @@ mod tests {
         // - for 0->2 on node 0, that's index 1
         // - for 2->3 on node 2, that's index 0
         assert_eq!(first.relationship_ids, vec![1, 0]);
+    }
+
+    #[test]
+    fn stale_queue_entries_do_not_emit_or_lock_in_old_paths() {
+        let mut storage = DijkstraStorageRuntime::new(0, false, 4, false);
+        let mut computation = DijkstraComputationRuntime::new(0, false, 4, false);
+        let targets = Box::new(SingleTarget::new(3));
+        let mut progress_tracker = TaskProgressTracker::new(Tasks::leaf("dijkstra".to_string()));
+
+        let result = storage
+            .compute_dijkstra(&mut computation, targets, None, 0, &mut progress_tracker)
+            .unwrap();
+        let mut paths = result.path_finding_result.clone();
+        let first = paths.find_first().expect("expected target path");
+
+        assert_eq!(first.node_ids, vec![0, 1, 2, 3]);
+        assert_eq!(first.costs, vec![0.0, 1.0, 3.0, 4.0]);
+    }
+
+    #[test]
+    fn rejects_source_node_outside_graph_hint() {
+        let mut storage = DijkstraStorageRuntime::new(101, false, 4, false);
+        let mut computation = DijkstraComputationRuntime::new(101, false, 4, false);
+        let targets = Box::new(AllTargets::new());
+        let mut progress_tracker = TaskProgressTracker::new(Tasks::leaf("dijkstra".to_string()));
+
+        let result =
+            storage.compute_dijkstra(&mut computation, targets, None, 0, &mut progress_tracker);
+
+        assert!(matches!(result, Err(AlgorithmError::InvalidGraph(_))));
+    }
+
+    #[test]
+    fn rejects_negative_or_non_finite_weights() {
+        assert!(DijkstraStorageRuntime::validate_edge_weight(0, 1, -1.0).is_err());
+        assert!(DijkstraStorageRuntime::validate_edge_weight(0, 1, f64::NAN).is_err());
+        assert!(DijkstraStorageRuntime::validate_edge_weight(0, 1, f64::INFINITY).is_err());
+        assert!(DijkstraStorageRuntime::validate_edge_weight(0, 1, 0.0).is_ok());
     }
 }
