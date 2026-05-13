@@ -420,3 +420,274 @@ fn shell_materializes_corpus_into_semdataset() -> Result<(), Box<dyn std::error:
 
     Ok(())
 }
+
+#[test]
+fn shell_model_moment_knowledge_descends_to_dataset_model_example(
+) -> Result<(), Box<dyn std::error::Error>> {
+    let table = tbl_def!(
+        (term_id: i64 => [1, 2]),
+        (term: ["being", "essence"]),
+        (moment: ["immediate", "mediated"]),
+    )?;
+
+    let program = program_features(
+        "gdsl.shell.self",
+        ["ShellModelMoment"],
+        [
+            program_source("dataframe", "immediate-register"),
+            program_reflection("dataset-mediated-register"),
+            program_principle("shell-knows-itself-through-doctrine"),
+            program_concept("ShellModelMoment"),
+            program_procedure("publish-shell-self-report"),
+        ],
+    );
+
+    let shell = ds_frame(table)
+        .named("shell-self-knowledge")
+        .artifact_kind(DatasetArtifactKind::ProgramImage)
+        .facet("shell")
+        .source_io(io_path("memory://shell-self-knowledge"))
+        .into_shell_with_program_features(program);
+
+    let knowledge = shell.model_moment_knowledge();
+    assert_eq!(knowledge.address().register, ShellRegister::Unified);
+    assert_eq!(
+        knowledge.doctrine_resource(),
+        "shell::help::model-feature-plan/model"
+    );
+    assert_eq!(knowledge.fold(), ShellFold::ModelFeaturePlan);
+    assert_eq!(knowledge.moment(), ShellMomentKind::Model);
+    assert_eq!(knowledge.algebra(), ShellAlgebra::ProgramFeature);
+    assert_eq!(knowledge.dataset_name(), Some("shell-self-knowledge"));
+    assert_eq!(knowledge.program_name(), Some("gdsl.shell.self"));
+    assert_eq!(knowledge.selected_forms(), &["ShellModelMoment"]);
+    assert!(knowledge.model_vocab_entries() > 0);
+    assert!(knowledge.model_topics().contains(&"ds".to_string()));
+    assert_eq!(
+        knowledge.descends_to_example(),
+        "gds/examples/dataset_model_feature_plan.rs"
+    );
+    assert!(knowledge.ai_assistance_presupposed());
+
+    let prompt = shell.model_help_prompt();
+    assert!(prompt.contains("Shell Model moment"));
+    assert!(prompt.contains("fold: Model:Feature::Plan"));
+    assert!(prompt.contains("descends to: gds/examples/dataset_model_feature_plan.rs"));
+    assert!(prompt.contains("ai assistance presupposed: true"));
+
+    Ok(())
+}
+
+#[test]
+fn shell_model_genesis_three_fold() -> Result<(), Box<dyn std::error::Error>> {
+    let table = tbl_def!(
+        (term_id: i64 => [1, 2, 3]),
+        (term: ["principle", "concept", "procedure"]),
+        (moment: ["identity", "difference", "ground"]),
+    )?;
+
+    let program = program_features(
+        "gdsl.shell.genesis",
+        ["ModelGenesis"],
+        [
+            program_source("dataframe", "immediate-register"),
+            program_reflection("dataset-mediated-register"),
+            program_principle("model-is-three-fold"),
+            program_concept("ModelGenesis"),
+            program_procedure("realize-image"),
+        ],
+    );
+
+    let shell = ds_frame(table)
+        .named("shell-model-genesis")
+        .artifact_kind(DatasetArtifactKind::ProgramImage)
+        .facet("shell")
+        .source_io(io_path("memory://shell-model-genesis"))
+        .into_shell_with_program_features(program);
+
+    let genesis = shell.model_genesis_knowledge();
+
+    // Fold and moment
+    assert_eq!(genesis.fold(), ShellFold::ModelFeaturePlan);
+    assert_eq!(genesis.moment(), ShellMomentKind::Model);
+    assert_eq!(
+        genesis.doctrine_resource(),
+        "shell::help::model-genesis/prep-exec-image"
+    );
+
+    // Three genesis moments
+    assert_eq!(genesis.genesis_moments().len(), 3);
+    let moments = genesis.genesis_moments();
+    assert_eq!(moments[0].box_number, 1);
+    assert_eq!(moments[0].name, "Preparation");
+    assert_eq!(moments[0].essence_role, "Identity");
+    assert_eq!(moments[0].entry_fn, "prepare_model");
+    assert_eq!(moments[1].box_number, 2);
+    assert_eq!(moments[1].name, "Execution");
+    assert_eq!(moments[1].essence_role, "Difference");
+    assert_eq!(moments[1].entry_fn, "execute_essence");
+    assert_eq!(moments[2].box_number, 3);
+    assert_eq!(moments[2].name, "Image");
+    assert_eq!(moments[2].essence_role, "Ground");
+    assert_eq!(moments[2].entry_fn, "realize_from_essence");
+
+    // ProgramFeature law — the compulsory arc
+    let law = genesis.program_feature_law();
+    assert_eq!(law.len(), 12);
+    assert_eq!(law[0], "Source");
+    assert!(law.contains(&"Principle"));
+    assert!(law.contains(&"Concept"));
+    assert!(law.contains(&"Judgment"));
+    assert!(law.contains(&"Syllogism"));
+    assert!(law.contains(&"Procedure"));
+    assert_eq!(law[law.len() - 1], "Procedure");
+
+    // Genesis prompt
+    let prompt = shell.model_genesis_prompt();
+    assert!(prompt.contains("Shell Model genesis"));
+    assert!(prompt.contains("Source → Observation"));
+    assert!(prompt.contains("Box 1 — Preparation (Identity)"));
+    assert!(prompt.contains("Box 3 — Image (Ground)"));
+    assert!(prompt.contains("realize_from_essence"));
+    assert!(prompt.contains("descends to: gds/examples/dataset_model_feature_plan.rs"));
+
+    assert!(genesis.ai_assistance_presupposed());
+    assert_eq!(
+        genesis.descends_to_example(),
+        "gds/examples/dataset_model_feature_plan.rs"
+    );
+
+    Ok(())
+}
+
+#[test]
+fn shell_feature_moment_companion_and_dragons() -> Result<(), Box<dyn std::error::Error>> {
+    let table = tbl_def!(
+        (term_id: i64 => [1, 2, 3]),
+        (term: ["feature", "featstruct", "unify"]),
+        (moment: ["model-companion", "dragon-zone", "resolution"]),
+    )?;
+
+    let program = program_features(
+        "gdsl.shell.feature",
+        ["ShellFeatureMoment"],
+        [
+            program_source("dataframe", "immediate-register"),
+            program_reflection("dataset-mediated-register"),
+            program_principle("feature-companions-model"),
+            program_concept("ShellFeatureMoment"),
+            program_procedure("descend-to-featstruct"),
+        ],
+    );
+
+    let shell = ds_frame(table)
+        .named("shell-feature-knowledge")
+        .artifact_kind(DatasetArtifactKind::ProgramImage)
+        .facet("shell")
+        .source_io(io_path("memory://shell-feature-knowledge"))
+        .into_shell_with_program_features(program);
+
+    let feature = shell.feature_moment_knowledge();
+    assert_eq!(feature.address().register, ShellRegister::Unified);
+    assert_eq!(
+        feature.doctrine_resource(),
+        "shell::help::model-feature-plan/feature"
+    );
+    assert_eq!(feature.fold(), ShellFold::ModelFeaturePlan);
+    assert_eq!(feature.moment(), ShellMomentKind::Feature);
+    assert_eq!(feature.companion_moment(), ShellMomentKind::Model);
+    assert_eq!(feature.algebra(), ShellAlgebra::ProgramFeature);
+    assert!(feature.feature_vocab_entries() > 0);
+    assert!(feature.feature_topics().contains(&"fspec".to_string()));
+    assert!(feature.feature_topics().contains(&"fexpr".to_string()));
+    assert!(feature
+        .featstruct_primitives()
+        .contains(&"parse_featstruct"));
+    assert!(feature
+        .featstruct_primitives()
+        .contains(&"unify_featstruct"));
+    assert!(feature
+        .featstruct_primitives()
+        .contains(&"subsumes_featstruct"));
+    assert!(feature
+        .dragon_zone_note()
+        .contains("structural magic layer"));
+    assert!(feature.ai_assistance_presupposed());
+
+    let law = feature.program_feature_law();
+    assert_eq!(law.len(), 12);
+    assert_eq!(law[0], "Source");
+    assert_eq!(law[law.len() - 1], "Procedure");
+
+    let prompt = shell.feature_help_prompt();
+    assert!(prompt.contains("Shell Feature moment"));
+    assert!(prompt.contains("companion moment: Model"));
+    assert!(prompt.contains("featstruct primitives:"));
+    assert!(prompt.contains("unify_featstruct"));
+    assert!(prompt.contains("descends to: gds/examples/dataset_model_feature_plan.rs"));
+
+    Ok(())
+}
+
+#[test]
+fn shell_plan_moment_execution_surface() -> Result<(), Box<dyn std::error::Error>> {
+    let table = tbl_def!(
+        (term_id: i64 => [1, 2, 3]),
+        (term: ["pipeline", "plan", "dop"]),
+        (moment: ["declare", "order", "operate"]),
+    )?;
+
+    let program = program_features(
+        "gdsl.shell.plan",
+        ["ShellPlanMoment"],
+        [
+            program_source("dataframe", "immediate-register"),
+            program_reflection("dataset-mediated-register"),
+            program_principle("plan-realizes-concept"),
+            program_concept("ShellPlanMoment"),
+            program_procedure("execute-middle-order"),
+        ],
+    );
+
+    let shell = ds_frame(table)
+        .named("shell-plan-knowledge")
+        .artifact_kind(DatasetArtifactKind::ProgramImage)
+        .facet("shell")
+        .source_io(io_path("memory://shell-plan-knowledge"))
+        .into_shell_with_program_features(program);
+
+    let plan = shell.plan_moment_knowledge();
+    assert_eq!(plan.address().register, ShellRegister::Unified);
+    assert_eq!(
+        plan.doctrine_resource(),
+        "shell::help::model-feature-plan/plan"
+    );
+    assert_eq!(plan.fold(), ShellFold::ModelFeaturePlan);
+    assert_eq!(plan.moment(), ShellMomentKind::Plan);
+    assert_eq!(plan.algebra(), ShellAlgebra::ProgramFeature);
+    assert!(plan.plan_vocab_entries() > 0);
+    assert!(plan.plan_topics().contains(&"pipeline".to_string()));
+    assert!(plan.plan_topics().contains(&"plan".to_string()));
+    assert!(plan.plan_topics().contains(&"dop".to_string()));
+    assert!(plan
+        .plan_runtime_surfaces()
+        .contains(&"pipeline_progress_tracker"));
+    assert!(plan
+        .plan_runtime_surfaces()
+        .contains(&"estimate_pipeline_memory"));
+    assert!(plan.plan_runtime_surfaces().contains(&"capability_map"));
+    assert_eq!(plan.pipeline_axis(), ShellPipeline::ModelFeaturePlan);
+    assert!(plan.has_dataset_pipeline());
+    assert!(plan.has_metapipeline());
+    assert!(plan.ai_assistance_presupposed());
+
+    let prompt = shell.plan_help_prompt();
+    assert!(prompt.contains("Shell Plan moment"));
+    assert!(prompt.contains("plan topics: pipeline, plan, dop"));
+    assert!(prompt.contains("runtime surfaces: pipeline_progress_tracker"));
+    assert!(prompt.contains("dataset pipeline active: true"));
+    assert!(prompt.contains("metapipeline active: true"));
+    assert!(prompt.contains("descends to: gds/examples/dataset_model_feature_plan.rs"));
+
+    Ok(())
+}

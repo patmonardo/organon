@@ -1,0 +1,4 @@
+term_id,term,role
+1,pipeline,order
+2,plan,coordination
+3,dop,operation

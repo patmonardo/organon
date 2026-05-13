@@ -65,7 +65,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let manifest_path = fixture_root.join("README.txt");
     fs::write(
         &manifest_path,
-        manifest(&source_path, &selected_path, &filtered_path, &projected_path),
+        manifest(
+            &source_path,
+            &selected_path,
+            &filtered_path,
+            &projected_path,
+        ),
     )?;
     println!("manifest: {}", fixture_path(&manifest_path));
 

@@ -1,0 +1,12 @@
+arc: Model:Feature::Plan | Model:Feature::Plan | Model:Feature::Plan
+model_fold: Model:Feature::Plan | feature_fold: Model:Feature::Plan | plan_fold: Model:Feature::Plan
+model_moment: Model | feature_moment: Feature | plan_moment: Plan
+
+Model names the mediated body.
+Feature provides the predicates and structures Model can evaluate.
+Plan coordinates execution: pipeline -> plan -> dop.
+
+feature_law: Source -> Observation -> Reflection -> Logogenesis -> Principle -> Condition -> Concept -> Judgment -> Syllogism -> Inference -> Query -> Procedure
+plan_surfaces: pipeline_progress_tracker, estimate_pipeline_memory, capability_map
+
+All three moments descend to: gds/examples/dataset_model_feature_plan.rs

@@ -1,0 +1,11 @@
+Shell Model genesis
+resource: shell::help::model-genesis/prep-exec-image
+fold: Model:Feature::Plan
+moment: Model
+program feature law: Source → Observation → Reflection → Logogenesis → Principle → Condition → Concept → Judgment → Syllogism → Inference → Query → Procedure
+genesis:
+  Box 1 — Preparation (Identity): ModelSpec + feature marks → ModelEssence + PreparationReport  [prepare_model]
+  Box 2 — Execution (Difference): ModelEssence + MarkedFeatures → Execution (LazyFrame Expr)  [execute_essence]
+  Box 3 — Image (Ground): Execution results → OntologyDataFrameImage + Provenance  [realize_from_essence]
+descends to: gds/examples/dataset_model_feature_plan.rs
+ai assistance presupposed: true

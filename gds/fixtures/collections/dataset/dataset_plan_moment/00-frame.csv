@@ -1,0 +1,6 @@
+term_id,token,pos,role,score
+1,concept,noun,subject,10
+2,judgment,noun,predicate,20
+3,syllogism,noun,ground,30
+4,inference,noun,consequence,40
+5,procedure,noun,operation,50

@@ -87,6 +87,7 @@ not.
 | 028-dataframe-intuition | `dataframe_intuition.rs` | `examples.old/collections_dataframe_intuition.rs` |
 | 029-shell-compute-protocol | `shell_compute_protocol.rs` | `examples.old/collections_gds_shell.rs` |
 | 030-ideal-dataframe-dsl | design-only for now | none |
+| 031-shell-model-first | `shell_model_first.rs` | none |
 
 ## Batch 1 Spine
 
@@ -98,6 +99,7 @@ Start with a small executable spine before rebuilding the whole curriculum:
 4. `dataset_model_feature_plan.rs`
 5. `dataset_sem_meta_pipeline.rs`
 6. `shell_compute_protocol.rs`
+7. `shell_model_first.rs`
 
 ## Namespace Coverage
 
@@ -128,6 +130,7 @@ Shell namespace coverage:
 
 | Namespace | Example | Fixture Root | State |
 |---|---|---|---|
+| `shell::model` | `shell_model_first.rs` | `fixtures/collections/shell/shell_model_first` | `covered` |
 | `shell::compute` | `shell_compute_protocol.rs` | `fixtures/collections/shell/shell_compute_protocol` | `covered` |
 
 Planned DataFrame namespace examples:

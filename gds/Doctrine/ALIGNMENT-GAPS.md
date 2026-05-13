@@ -41,6 +41,7 @@ Covered runnable examples:
 - form_applications_expository.rs
 - dataset_io_catalog_graphframe.rs
 - dataframe_namespace_string.rs (supplemental)
+- shell_model_first.rs
 
 Missing runnable examples from mapped curriculum:
 - none
@@ -52,6 +53,7 @@ Form:
 - Additional form namespaces are still pending.
 
 Shell:
+- `shell::model` is covered by `shell_model_first.rs` — Shell-first Model moment before Dataset descent.
 - `shell::compute` is covered by `shell_compute_protocol.rs`.
 - Additional shell namespaces are still pending.
 

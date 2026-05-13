@@ -1,0 +1,4 @@
+term_id,term,essence_role,entry_fn
+1,preparation,identity,prepare_model
+2,execution,difference,execute_essence
+3,image,ground,realize_from_essence

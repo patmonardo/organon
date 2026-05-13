@@ -1,0 +1,9 @@
+resource: shell::help::model-feature-plan/model
+fold: Model:Feature::Plan
+moment: Model
+algebra: ProgramFeature
+dataset: Some("shell-trilogy")
+program: Some("rustscript.shell.trilogy")
+selected_forms: ["ShellTrilogy"]
+model_topics: ["ds", "td", "io", "get"]
+ai_assistance_presupposed: true

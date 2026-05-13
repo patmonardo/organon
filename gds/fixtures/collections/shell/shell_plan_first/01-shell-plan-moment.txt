@@ -1,0 +1,11 @@
+resource: shell::help::model-feature-plan/plan
+address: ShellAddress { register: Unified, pipeline: ModelFeaturePlan, algebra: ProgramFeature }
+fold: Model:Feature::Plan
+moment: Plan
+algebra: ProgramFeature
+plan_topics: ["pipeline", "plan", "dop"]
+runtime_surfaces: ["pipeline_progress_tracker", "estimate_pipeline_memory", "capability_map"]
+pipeline_axis: ModelFeaturePlan
+dataset_pipeline_active: true
+metapipeline_active: true
+ai_assistance_presupposed: true

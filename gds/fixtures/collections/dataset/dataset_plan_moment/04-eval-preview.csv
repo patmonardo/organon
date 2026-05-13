@@ -1,0 +1,5 @@
+term_id,token,role,score,label,item
+2,judgment,predicate,20,doctrine,judgment
+3,syllogism,ground,30,doctrine,syllogism
+4,inference,consequence,40,doctrine,inference
+5,procedure,operation,50,doctrine,procedure

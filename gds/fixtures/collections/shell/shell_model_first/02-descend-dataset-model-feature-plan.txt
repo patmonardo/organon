@@ -1,0 +1,3 @@
+next_example: gds/examples/dataset_model_feature_plan.rs
+doctrine: gds/Doctrine/EXEMPLARS/dataset/027-model-feature-plan-middle.md
+method: Shell starts with Model; Dataset expands Model:Feature::Plan.

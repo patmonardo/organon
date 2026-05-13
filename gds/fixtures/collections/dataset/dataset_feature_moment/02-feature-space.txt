@@ -1,0 +1,3 @@
+FeatureSpace (count: 2)
+  role: Projection
+  token: Projection

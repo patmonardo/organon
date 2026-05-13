@@ -1,0 +1,14 @@
+executable: 3
+impossible: 1
+accumulated: [pos=noun]
+
+steps:
+  term_id | Contingent | no mark — contingent column
+  token | Necessary | mark entailed by accumulated essence
+  pos | Necessary | mark entailed by accumulated essence
+  role | Impossible | mark contradicts accumulated essence
+
+modality summary:
+  Contingent: 1
+  Impossible: 1
+  Necessary: 2

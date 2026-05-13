@@ -1,0 +1,10 @@
+resource: shell::help::model-feature-plan/model
+address: ShellAddress { register: Unified, pipeline: ModelFeaturePlan, algebra: ProgramFeature }
+fold: Model:Feature::Plan
+moment: Model
+algebra: ProgramFeature
+dataset: Some("shell-model-first")
+program: Some("rustscript.shell.model_first")
+selected_forms: ["ShellModelFirst"]
+model_topics: ["ds", "td", "io", "get"]
+ai_assistance_presupposed: true

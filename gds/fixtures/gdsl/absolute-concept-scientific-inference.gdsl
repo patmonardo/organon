@@ -1,0 +1,82 @@
+module org.hegel.epistemology.absolute_concept.scientific_inference;
+
+use std.dataset;
+use std.logic;
+use std.dialectic;
+
+source sensation perception_stream : parquet("fixtures/data/perception_stream.parquet");
+
+appearance empirical_appearance from perception_stream {
+  key observation_id;
+  retain observation_id, timestamp, modality, intensity, note;
+  derive immediacy = present(modality, intensity);
+  derive persistence = persists(note);
+  derive determinacy = classify(modality, intensity);
+}
+
+reflection essence_path for empirical_appearance {
+  preserve being;
+  stage identity;
+  stage opposition;
+  stage contradiction;
+  stage ground;
+  stage condition;
+  culminate mark;
+}
+
+logogenesis scientific_genesis for empirical_appearance {
+  from essence_path;
+  unfold thing;
+  unfold law;
+  unfold essential_relation;
+  preserve dharma_path;
+}
+
+mark quality on empirical_appearance := determine_quality(modality, intensity);
+mark measure on empirical_appearance := determine_measure(intensity);
+mark ground on empirical_appearance := ground_of_cognition(quality, measure, persistence);
+
+concept AppearanceObject from empirical_appearance {
+  identity observation_id;
+  mark quality;
+  mark measure;
+  mark ground;
+  mark determinacy;
+}
+
+judgment determinate_appearance for AppearanceObject {
+  infer singular when observation_id != null;
+  infer stable when persistence == true;
+  infer grounded when ground != null;
+}
+
+syllogism scientific_inference for AppearanceObject {
+  middle ground;
+  conclude knowable when singular and stable and grounded;
+  conclude lawful when knowable and determinacy != null;
+}
+
+principle absolute_concept for AppearanceObject {
+  require lawful;
+  unify concept, judgment, syllogism;
+  infer scientific_object when lawful;
+}
+
+query scientific_objects :=
+  select observation_id, quality, measure, lawful
+  from AppearanceObject
+  where scientific_object;
+
+procedure compile_absolute_concept {
+  emit sensation dataset;
+  emit appearance dataset;
+  emit reflection dataset;
+  emit logogenesis dataset;
+  emit mark dataset;
+  emit concept dataset;
+  emit judgment dataset;
+  emit syllogism dataset;
+  emit principle dataset;
+  emit absolute concept manifest;
+  emit dataset artifacts;
+}

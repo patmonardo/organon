@@ -1,0 +1,7 @@
+Executable features (Necessary + Contingent):
+  "term_id"  Contingent
+  "token"  Necessary
+  "pos"  Necessary
+
+Impossible features (Box 3 records as contradictions):
+  "role"  Impossible  mark: [pos=verb]

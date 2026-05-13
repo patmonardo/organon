@@ -1,0 +1,3 @@
+chained: Some("pos")
+steps: 3
+method: pos enriches → token narrows (chain composes)

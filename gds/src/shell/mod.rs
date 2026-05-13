@@ -7,6 +7,7 @@
 //! moments through framework metadata and ProgramFeatures.
 
 mod core;
+mod help;
 mod moments;
 mod pipeline;
 mod program;
@@ -16,10 +17,13 @@ pub use crate::dsl::*;
 
 pub use core::{
     GdsShell, ShellCapabilityBand, ShellCapabilityMap, ShellCapabilityState, ShellCorpusError,
-    ShellCorpusReport, ShellDataFrameKnowledge, ShellLearningReport, ShellMemoryEstimate,
-    ShellModelFeaturePlanKnowledge, ShellPlatformCapability, ShellProjectionTraceValidation,
-    ShellSeed, ShellSemanticCapability, ShellSemanticPipelineKnowledge,
+    ShellCorpusReport, ShellDataFrameKnowledge, ShellFeatureMomentKnowledge, ShellLearningReport,
+    ShellMemoryEstimate, ShellModelFeaturePlanKnowledge, ShellModelGenesisKnowledge,
+    ShellModelGenesisMoment, ShellModelMomentKnowledge, ShellPlanMomentKnowledge,
+    ShellPlatformCapability, ShellProjectionTraceValidation, ShellSeed, ShellSemanticCapability,
+    ShellSemanticPipelineKnowledge,
 };
+pub use help::{ShellFold, ShellHelp, ShellHelpEntry, ShellMomentKind, ShellVocabKind};
 pub use moments::{ShellAddress, ShellAlgebra, ShellMoment, ShellPipeline, ShellRegister};
 pub use pipeline::{ShellPipelineDescriptor, ShellPipelineKind, ShellPureFormReturn};
 pub use program::ShellProgram;

@@ -1,0 +1,4 @@
+fold: Model:Feature::Plan
+moment: Model
+law (12 kinds):
+  Source → Observation → Reflection → Logogenesis → Principle → Condition → Concept → Judgment → Syllogism → Inference → Query → Procedure

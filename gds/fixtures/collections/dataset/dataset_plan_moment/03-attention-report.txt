@@ -1,0 +1,13 @@
+plan: "doctrine-plan"
+mode: Preview
+source: {"dataset":"plan-moment-frame","rows":5,"cols":5}
+steps: 5
+planned_cols: ["term_id", "token", "role", "score"]
+batch_hint: Some(100)
+
+steps:
+  [0] filter  {"roots":["score"]}
+  [1] select  {"expr_count":4,"outputs":["term_id","token","role","score"]}
+  [2] with_columns  {"expr_count":1,"outputs":["label"]}
+  [3] batch  {"size":100}
+  [4] item  {"column":"item","roots":["token"]}

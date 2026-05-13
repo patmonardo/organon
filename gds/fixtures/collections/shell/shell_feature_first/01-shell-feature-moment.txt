@@ -1,0 +1,11 @@
+resource: shell::help::model-feature-plan/feature
+address: ShellAddress { register: Unified, pipeline: ModelFeaturePlan, algebra: ProgramFeature }
+fold: Model:Feature::Plan
+moment: Feature
+companion: Model
+algebra: ProgramFeature
+feature_topics: ["fspec", "fspec_tree", "fpos", "frange", "fcond", "ftemplate", "fexpr", "tree", "tleaf"]
+program_feature_law: Source -> Observation -> Reflection -> Logogenesis -> Principle -> Condition -> Concept -> Judgment -> Syllogism -> Inference -> Query -> Procedure
+featstruct_primitives: ["parse_featstruct", "parse_featvalue", "format_featstruct", "unify_featstruct", "subsumes_featstruct", "cyclic_featstruct"]
+dragon_note: FeatStruct is the structural magic layer: unification, subsumption, reentrance, and contradiction edges live here.
+ai_assistance_presupposed: true

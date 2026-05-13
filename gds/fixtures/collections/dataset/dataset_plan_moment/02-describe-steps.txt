@@ -1,0 +1,7 @@
+plan: doctrine-plan
+source dataset(plan-moment-frame)
+  0: filter
+  1: select [4 exprs]
+  2: with_columns [1 exprs]
+  3: batch(100)
+  4: item

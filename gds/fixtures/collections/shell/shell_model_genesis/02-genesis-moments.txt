@@ -1,0 +1,18 @@
+Box 1 — Preparation (Identity)
+  input:  ModelSpec + feature marks
+  output: ModelEssence + PreparationReport
+  fn:     prepare_model
+  note:   Model establishes its essential relations; each feature receives a Modality (Necessary / Contingent / Possible / Impossible / Unknown). Contradictions are detected here — not resolved.
+
+Box 2 — Execution (Difference)
+  input:  ModelEssence + MarkedFeatures
+  output: Execution (LazyFrame Expr)
+  fn:     execute_essence
+  note:   Model goes out into the field of data; features become executable Polars expressions. Impossible features are skipped; their contradiction is deferred to Box 3.
+
+Box 3 — Image (Ground)
+  input:  Execution results
+  output: OntologyDataFrameImage + Provenance
+  fn:     realize_from_essence
+  note:   Model returns to itself as a concrete realized artifact. Provenance records what was Necessary, Contingent, or Impossible — the model's full self-knowledge.
+

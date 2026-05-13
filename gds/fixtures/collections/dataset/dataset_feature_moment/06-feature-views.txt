@@ -1,0 +1,3 @@
+token_view: feature=token view=projection
+role_view:  feature=role view=projection
+note: FeatureView resolves via space.eval_view(feature, schema, view, env, mode)

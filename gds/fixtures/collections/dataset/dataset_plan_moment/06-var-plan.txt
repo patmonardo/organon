@@ -1,0 +1,4 @@
+plan: Some("var-plan")
+source: {"var":"terms"}
+rows: 5
+cols: ["token", "score"]

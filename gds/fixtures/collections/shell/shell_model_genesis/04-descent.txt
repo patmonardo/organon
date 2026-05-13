@@ -1,0 +1,4 @@
+descends to: gds/examples/dataset_model_feature_plan.rs
+  Box 1 — Identity:    dataset::model::prep::prepare_model
+  Box 2 — Difference:  dataset::model::exec::execute_essence
+  Box 3 — Ground:      dataset::model::image::realize_from_essence

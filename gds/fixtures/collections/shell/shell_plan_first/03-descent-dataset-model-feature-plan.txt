@@ -1,0 +1,2 @@
+next_example: gds/examples/dataset_model_feature_plan.rs
+method: Plan orders Model and Feature surfaces into executable middle operations.

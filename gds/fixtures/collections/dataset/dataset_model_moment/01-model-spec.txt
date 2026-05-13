@@ -1,0 +1,5 @@
+id: doctrine.dataset.model_moment.tagger
+kind: Tagger
+input: Tokens
+output: Tags
+description: POS tagger model: tokens → tags with role marks.

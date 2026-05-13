@@ -77,7 +77,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let materialized = compilation.materialize_artifact_datasets(&features.program_name)?;
     let artifacts_path = persist_dataset(&materialized.artifacts, &fixture_root, "02-artifacts")?;
     let relations_path = persist_dataset(&materialized.relations, &fixture_root, "02-relations")?;
-    let properties_path = persist_dataset(&materialized.properties, &fixture_root, "02-properties")?;
+    let properties_path =
+        persist_dataset(&materialized.properties, &fixture_root, "02-properties")?;
     println!("artifact rows: {}", materialized.artifacts.row_count());
     println!("relation rows: {}", materialized.relations.row_count());
     println!("property rows: {}", materialized.properties.row_count());

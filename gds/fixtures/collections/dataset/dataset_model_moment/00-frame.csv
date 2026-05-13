@@ -1,0 +1,6 @@
+term_id,token,pos,role
+1,concept,noun,subject
+2,judgment,noun,predicate
+3,syllogism,noun,ground
+4,inference,noun,consequence
+5,procedure,noun,operation

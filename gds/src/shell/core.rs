@@ -16,8 +16,8 @@ use crate::form::{ProgramFeatureKind, ProgramFeatures};
 use crate::mem::{MemoryEstimations, MemoryRange, MemoryTree};
 
 use super::{
-    ShellAddress, ShellAlgebra, ShellMoment, ShellPipeline, ShellPipelineDescriptor, ShellProgram,
-    ShellRegister, ShellSchema,
+    ShellAddress, ShellAlgebra, ShellFold, ShellHelp, ShellMoment, ShellMomentKind, ShellPipeline,
+    ShellPipelineDescriptor, ShellProgram, ShellRegister, ShellSchema,
 };
 
 /// Lightweight seed extracted from the immediate DataFrame body.
@@ -721,6 +721,485 @@ pub struct ShellCapabilityMap {
     states: Vec<ShellCapabilityState>,
 }
 
+/// Shell-readable report for the Model moment of Model:Feature::Plan.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ShellModelMomentKnowledge {
+    address: ShellAddress,
+    doctrine_resource: &'static str,
+    moment: ShellMomentKind,
+    fold: ShellFold,
+    algebra: ShellAlgebra,
+    dataset_name: Option<String>,
+    model_artifact_kind: Option<String>,
+    program_name: Option<String>,
+    selected_forms: Vec<String>,
+    model_vocab_entries: usize,
+    model_topics: Vec<String>,
+    descends_to_example: &'static str,
+    ai_assistance_presupposed: bool,
+}
+
+impl ShellModelMomentKnowledge {
+    fn from_shell(shell: &GdsShell) -> Self {
+        let help = ShellHelp::new();
+        let moment = ShellMomentKind::Model;
+        let middle = shell.model_feature_plan_knowledge();
+
+        let model_topics = help
+            .for_moment(moment)
+            .into_iter()
+            .map(|entry| entry.name.to_string())
+            .collect();
+
+        Self {
+            address: shell.address(),
+            doctrine_resource: "shell::help::model-feature-plan/model",
+            moment,
+            fold: ShellFold::ModelFeaturePlan,
+            algebra: shell.algebra(),
+            dataset_name: middle
+                .as_ref()
+                .and_then(|knowledge| knowledge.model_name().map(ToOwned::to_owned)),
+            model_artifact_kind: middle
+                .as_ref()
+                .and_then(|knowledge| knowledge.model_artifact_kind().map(ToOwned::to_owned)),
+            program_name: middle
+                .as_ref()
+                .and_then(|knowledge| knowledge.program_name().map(ToOwned::to_owned)),
+            selected_forms: middle
+                .as_ref()
+                .map(|knowledge| knowledge.selected_forms().to_vec())
+                .unwrap_or_default(),
+            model_vocab_entries: help.for_moment(moment).len(),
+            model_topics,
+            descends_to_example: "gds/examples/dataset_model_feature_plan.rs",
+            ai_assistance_presupposed: true,
+        }
+    }
+
+    pub fn address(&self) -> ShellAddress {
+        self.address
+    }
+
+    pub fn doctrine_resource(&self) -> &'static str {
+        self.doctrine_resource
+    }
+
+    pub fn moment(&self) -> ShellMomentKind {
+        self.moment
+    }
+
+    pub fn fold(&self) -> ShellFold {
+        self.fold
+    }
+
+    pub fn algebra(&self) -> ShellAlgebra {
+        self.algebra
+    }
+
+    pub fn dataset_name(&self) -> Option<&str> {
+        self.dataset_name.as_deref()
+    }
+
+    pub fn model_artifact_kind(&self) -> Option<&str> {
+        self.model_artifact_kind.as_deref()
+    }
+
+    pub fn program_name(&self) -> Option<&str> {
+        self.program_name.as_deref()
+    }
+
+    pub fn selected_forms(&self) -> &[String] {
+        &self.selected_forms
+    }
+
+    pub fn model_vocab_entries(&self) -> usize {
+        self.model_vocab_entries
+    }
+
+    pub fn model_topics(&self) -> &[String] {
+        &self.model_topics
+    }
+
+    pub fn descends_to_example(&self) -> &'static str {
+        self.descends_to_example
+    }
+
+    pub fn ai_assistance_presupposed(&self) -> bool {
+        self.ai_assistance_presupposed
+    }
+}
+
+/// Shell-readable report for the Feature moment of Model:Feature::Plan.
+///
+/// Feature is the companion of Model: Model establishes essential commitments,
+/// Feature supplies the structured predicates those commitments act upon.
+///
+/// This is also where FeatStruct operations live. It is the primary
+/// "dragon zone" of structural unification and subsumption.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ShellFeatureMomentKnowledge {
+    address: ShellAddress,
+    doctrine_resource: &'static str,
+    moment: ShellMomentKind,
+    companion_moment: ShellMomentKind,
+    fold: ShellFold,
+    algebra: ShellAlgebra,
+    feature_vocab_entries: usize,
+    feature_topics: Vec<String>,
+    program_feature_law: Vec<&'static str>,
+    featstruct_primitives: Vec<&'static str>,
+    dragon_zone_note: &'static str,
+    descends_to_example: &'static str,
+    ai_assistance_presupposed: bool,
+}
+
+impl ShellFeatureMomentKnowledge {
+    fn from_shell(shell: &GdsShell) -> Self {
+        let help = ShellHelp::new();
+        let moment = ShellMomentKind::Feature;
+        let feature_topics = help
+            .for_moment(moment)
+            .into_iter()
+            .map(|entry| entry.name.to_string())
+            .collect();
+
+        Self {
+            address: shell.address(),
+            doctrine_resource: "shell::help::model-feature-plan/feature",
+            moment,
+            companion_moment: ShellMomentKind::Model,
+            fold: ShellFold::ModelFeaturePlan,
+            algebra: shell.algebra(),
+            feature_vocab_entries: help.for_moment(moment).len(),
+            feature_topics,
+            program_feature_law: vec![
+                "Source",
+                "Observation",
+                "Reflection",
+                "Logogenesis",
+                "Principle",
+                "Condition",
+                "Concept",
+                "Judgment",
+                "Syllogism",
+                "Inference",
+                "Query",
+                "Procedure",
+            ],
+            featstruct_primitives: vec![
+                "parse_featstruct",
+                "parse_featvalue",
+                "format_featstruct",
+                "unify_featstruct",
+                "subsumes_featstruct",
+                "cyclic_featstruct",
+            ],
+            dragon_zone_note:
+                "FeatStruct is the structural magic layer: unification, subsumption, reentrance, and contradiction edges live here.",
+            descends_to_example: "gds/examples/dataset_model_feature_plan.rs",
+            ai_assistance_presupposed: true,
+        }
+    }
+
+    pub fn address(&self) -> ShellAddress {
+        self.address
+    }
+
+    pub fn doctrine_resource(&self) -> &'static str {
+        self.doctrine_resource
+    }
+
+    pub fn moment(&self) -> ShellMomentKind {
+        self.moment
+    }
+
+    pub fn companion_moment(&self) -> ShellMomentKind {
+        self.companion_moment
+    }
+
+    pub fn fold(&self) -> ShellFold {
+        self.fold
+    }
+
+    pub fn algebra(&self) -> ShellAlgebra {
+        self.algebra
+    }
+
+    pub fn feature_vocab_entries(&self) -> usize {
+        self.feature_vocab_entries
+    }
+
+    pub fn feature_topics(&self) -> &[String] {
+        &self.feature_topics
+    }
+
+    pub fn program_feature_law(&self) -> &[&'static str] {
+        &self.program_feature_law
+    }
+
+    pub fn featstruct_primitives(&self) -> &[&'static str] {
+        &self.featstruct_primitives
+    }
+
+    pub fn dragon_zone_note(&self) -> &'static str {
+        self.dragon_zone_note
+    }
+
+    pub fn descends_to_example(&self) -> &'static str {
+        self.descends_to_example
+    }
+
+    pub fn ai_assistance_presupposed(&self) -> bool {
+        self.ai_assistance_presupposed
+    }
+}
+
+/// Shell-readable report for the Plan moment of Model:Feature::Plan.
+///
+/// Plan is where the Principle/Concept content becomes executable ordering:
+/// pipeline declarations, operation steps, and runtime readiness surfaces.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ShellPlanMomentKnowledge {
+    address: ShellAddress,
+    doctrine_resource: &'static str,
+    moment: ShellMomentKind,
+    fold: ShellFold,
+    algebra: ShellAlgebra,
+    plan_vocab_entries: usize,
+    plan_topics: Vec<String>,
+    plan_runtime_surfaces: Vec<&'static str>,
+    pipeline_axis: ShellPipeline,
+    has_dataset_pipeline: bool,
+    has_metapipeline: bool,
+    descends_to_example: &'static str,
+    ai_assistance_presupposed: bool,
+}
+
+impl ShellPlanMomentKnowledge {
+    fn from_shell(shell: &GdsShell) -> Self {
+        let help = ShellHelp::new();
+        let moment = ShellMomentKind::Plan;
+        let plan_topics = help
+            .for_moment(moment)
+            .into_iter()
+            .map(|entry| entry.name.to_string())
+            .collect();
+
+        Self {
+            address: shell.address(),
+            doctrine_resource: "shell::help::model-feature-plan/plan",
+            moment,
+            fold: ShellFold::ModelFeaturePlan,
+            algebra: shell.algebra(),
+            plan_vocab_entries: help.for_moment(moment).len(),
+            plan_topics,
+            plan_runtime_surfaces: vec![
+                "pipeline_progress_tracker",
+                "estimate_pipeline_memory",
+                "capability_map",
+            ],
+            pipeline_axis: shell.pipeline_axis(),
+            has_dataset_pipeline: shell.dataset_pipeline().is_some(),
+            has_metapipeline: shell.descriptor().has_metapipeline(),
+            descends_to_example: "gds/examples/dataset_model_feature_plan.rs",
+            ai_assistance_presupposed: true,
+        }
+    }
+
+    pub fn address(&self) -> ShellAddress {
+        self.address
+    }
+
+    pub fn doctrine_resource(&self) -> &'static str {
+        self.doctrine_resource
+    }
+
+    pub fn moment(&self) -> ShellMomentKind {
+        self.moment
+    }
+
+    pub fn fold(&self) -> ShellFold {
+        self.fold
+    }
+
+    pub fn algebra(&self) -> ShellAlgebra {
+        self.algebra
+    }
+
+    pub fn plan_vocab_entries(&self) -> usize {
+        self.plan_vocab_entries
+    }
+
+    pub fn plan_topics(&self) -> &[String] {
+        &self.plan_topics
+    }
+
+    pub fn plan_runtime_surfaces(&self) -> &[&'static str] {
+        &self.plan_runtime_surfaces
+    }
+
+    pub fn pipeline_axis(&self) -> ShellPipeline {
+        self.pipeline_axis
+    }
+
+    pub fn has_dataset_pipeline(&self) -> bool {
+        self.has_dataset_pipeline
+    }
+
+    pub fn has_metapipeline(&self) -> bool {
+        self.has_metapipeline
+    }
+
+    pub fn descends_to_example(&self) -> &'static str {
+        self.descends_to_example
+    }
+
+    pub fn ai_assistance_presupposed(&self) -> bool {
+        self.ai_assistance_presupposed
+    }
+}
+
+/// One moment of the three-fold Model genesis (Preparation / Execution / Image).
+///
+/// These map to the three primitive operations the Dataset substrate owes the kernel:
+/// unify, subsumes, extend — reflected as Box 1 (Identity), Box 2 (Difference),
+/// Box 3 (Ground) in Essence logic.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ShellModelGenesisMoment {
+    pub box_number: u8,
+    pub name: &'static str,
+    /// Essence-logic role: "Identity", "Difference", or "Ground".
+    pub essence_role: &'static str,
+    pub primary_input: &'static str,
+    pub primary_output: &'static str,
+    /// Entry function from `dataset::model`.
+    pub entry_fn: &'static str,
+    pub doctrine_note: &'static str,
+}
+
+/// Shell-readable account of the three-fold genesis of a Model.
+///
+/// The Model moment of Model:Feature::Plan is internally triadic:
+///
+/// ```text
+/// Box 1 — Preparation (Identity)
+///   ModelSpec + feature marks → ModelEssence + PreparationReport
+///   prepare_model stamps each feature with Modality.
+///
+/// Box 2 — Execution (Difference)
+///   ModelEssence + MarkedFeatures → Execution (LazyFrame Expr)
+///   execute_essence lowers features into Polars expressions.
+///
+/// Box 3 — Image (Ground)
+///   Execution results → OntologyDataFrameImage + Provenance
+///   realize_from_essence returns the model to itself as concrete artifact.
+/// ```
+///
+/// `program_feature_law` names the compulsory ProgramFeatureKind arc — the
+/// grammar of any scientific language that runs through the Shell.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ShellModelGenesisKnowledge {
+    address: ShellAddress,
+    fold: ShellFold,
+    moment: ShellMomentKind,
+    doctrine_resource: &'static str,
+    /// The compulsory arc: every scientific language program must declare its
+    /// feature kinds in this sequence to be evaluable by the Shell.
+    program_feature_law: Vec<&'static str>,
+    genesis_moments: Vec<ShellModelGenesisMoment>,
+    descends_to_example: &'static str,
+    ai_assistance_presupposed: bool,
+}
+
+impl ShellModelGenesisKnowledge {
+    fn new(shell: &GdsShell) -> Self {
+        Self {
+            address: shell.address(),
+            fold: ShellFold::ModelFeaturePlan,
+            moment: ShellMomentKind::Model,
+            doctrine_resource: "shell::help::model-genesis/prep-exec-image",
+            program_feature_law: vec![
+                "Source",
+                "Observation",
+                "Reflection",
+                "Logogenesis",
+                "Principle",
+                "Condition",
+                "Concept",
+                "Judgment",
+                "Syllogism",
+                "Inference",
+                "Query",
+                "Procedure",
+            ],
+            genesis_moments: vec![
+                ShellModelGenesisMoment {
+                    box_number: 1,
+                    name: "Preparation",
+                    essence_role: "Identity",
+                    primary_input: "ModelSpec + feature marks",
+                    primary_output: "ModelEssence + PreparationReport",
+                    entry_fn: "prepare_model",
+                    doctrine_note: "Model establishes its essential relations; each feature receives a Modality (Necessary / Contingent / Possible / Impossible / Unknown). Contradictions are detected here — not resolved.",
+                },
+                ShellModelGenesisMoment {
+                    box_number: 2,
+                    name: "Execution",
+                    essence_role: "Difference",
+                    primary_input: "ModelEssence + MarkedFeatures",
+                    primary_output: "Execution (LazyFrame Expr)",
+                    entry_fn: "execute_essence",
+                    doctrine_note: "Model goes out into the field of data; features become executable Polars expressions. Impossible features are skipped; their contradiction is deferred to Box 3.",
+                },
+                ShellModelGenesisMoment {
+                    box_number: 3,
+                    name: "Image",
+                    essence_role: "Ground",
+                    primary_input: "Execution results",
+                    primary_output: "OntologyDataFrameImage + Provenance",
+                    entry_fn: "realize_from_essence",
+                    doctrine_note: "Model returns to itself as a concrete realized artifact. Provenance records what was Necessary, Contingent, or Impossible — the model's full self-knowledge.",
+                },
+            ],
+            descends_to_example: "gds/examples/dataset_model_feature_plan.rs",
+            ai_assistance_presupposed: true,
+        }
+    }
+
+    pub fn address(&self) -> ShellAddress {
+        self.address
+    }
+
+    pub fn fold(&self) -> ShellFold {
+        self.fold
+    }
+
+    pub fn moment(&self) -> ShellMomentKind {
+        self.moment
+    }
+
+    pub fn doctrine_resource(&self) -> &'static str {
+        self.doctrine_resource
+    }
+
+    pub fn program_feature_law(&self) -> &[&'static str] {
+        &self.program_feature_law
+    }
+
+    pub fn genesis_moments(&self) -> &[ShellModelGenesisMoment] {
+        &self.genesis_moments
+    }
+
+    pub fn descends_to_example(&self) -> &'static str {
+        self.descends_to_example
+    }
+
+    pub fn ai_assistance_presupposed(&self) -> bool {
+        self.ai_assistance_presupposed
+    }
+}
+
 impl ShellCapabilityMap {
     fn from_shell(shell: &GdsShell) -> Self {
         let descriptor = shell.descriptor();
@@ -1011,6 +1490,123 @@ impl GdsShell {
 
     pub fn capability_map(&self) -> ShellCapabilityMap {
         ShellCapabilityMap::from_shell(self)
+    }
+
+    /// Return the first Shell-first report for Model:Feature::Plan: the Model moment.
+    pub fn model_moment_knowledge(&self) -> ShellModelMomentKnowledge {
+        ShellModelMomentKnowledge::from_shell(self)
+    }
+
+    /// Build a short prompt for an AI-assisted pass over the Shell Model moment.
+    pub fn model_help_prompt(&self) -> String {
+        let knowledge = self.model_moment_knowledge();
+        format!(
+            "Shell Model moment\nresource: {}\naddress: {:?}\nfold: {}\nmoment: {}\nalgebra: {:?}\ndataset: {:?}\nprogram: {:?}\nselected forms: {:?}\nmodel vocabulary entries: {}\nmodel topics: {}\ndescends to: {}\nai assistance presupposed: {}",
+            knowledge.doctrine_resource(),
+            knowledge.address(),
+            knowledge.fold(),
+            knowledge.moment(),
+            knowledge.algebra(),
+            knowledge.dataset_name(),
+            knowledge.program_name(),
+            knowledge.selected_forms(),
+            knowledge.model_vocab_entries(),
+            knowledge.model_topics().join(", "),
+            knowledge.descends_to_example(),
+            knowledge.ai_assistance_presupposed(),
+        )
+    }
+
+    /// Return the Shell-first report for the Feature companion moment.
+    pub fn feature_moment_knowledge(&self) -> ShellFeatureMomentKnowledge {
+        ShellFeatureMomentKnowledge::from_shell(self)
+    }
+
+    /// Build a short prompt for an AI-assisted pass over the Shell Feature moment.
+    pub fn feature_help_prompt(&self) -> String {
+        let knowledge = self.feature_moment_knowledge();
+        format!(
+            "Shell Feature moment\nresource: {}\naddress: {:?}\nfold: {}\nmoment: {}\ncompanion moment: {}\nalgebra: {:?}\nfeature vocabulary entries: {}\nfeature topics: {}\nprogram feature law: {}\nfeatstruct primitives: {}\ndragon note: {}\ndescends to: {}\nai assistance presupposed: {}",
+            knowledge.doctrine_resource(),
+            knowledge.address(),
+            knowledge.fold(),
+            knowledge.moment(),
+            knowledge.companion_moment(),
+            knowledge.algebra(),
+            knowledge.feature_vocab_entries(),
+            knowledge.feature_topics().join(", "),
+            knowledge.program_feature_law().join(" -> "),
+            knowledge.featstruct_primitives().join(", "),
+            knowledge.dragon_zone_note(),
+            knowledge.descends_to_example(),
+            knowledge.ai_assistance_presupposed(),
+        )
+    }
+
+    /// Return the Shell-first report for the Plan moment.
+    pub fn plan_moment_knowledge(&self) -> ShellPlanMomentKnowledge {
+        ShellPlanMomentKnowledge::from_shell(self)
+    }
+
+    /// Build a short prompt for an AI-assisted pass over the Shell Plan moment.
+    pub fn plan_help_prompt(&self) -> String {
+        let knowledge = self.plan_moment_knowledge();
+        format!(
+            "Shell Plan moment\nresource: {}\naddress: {:?}\nfold: {}\nmoment: {}\nalgebra: {:?}\nplan vocabulary entries: {}\nplan topics: {}\nruntime surfaces: {}\npipeline axis: {:?}\ndataset pipeline active: {}\nmetapipeline active: {}\ndescends to: {}\nai assistance presupposed: {}",
+            knowledge.doctrine_resource(),
+            knowledge.address(),
+            knowledge.fold(),
+            knowledge.moment(),
+            knowledge.algebra(),
+            knowledge.plan_vocab_entries(),
+            knowledge.plan_topics().join(", "),
+            knowledge.plan_runtime_surfaces().join(", "),
+            knowledge.pipeline_axis(),
+            knowledge.has_dataset_pipeline(),
+            knowledge.has_metapipeline(),
+            knowledge.descends_to_example(),
+            knowledge.ai_assistance_presupposed(),
+        )
+    }
+
+    /// Build a request-local progress tracker for this shell pipeline.
+    /// Return the three-fold genesis account of the Model moment.
+    ///
+    /// Box 1 (Preparation / Identity) → Box 2 (Execution / Difference)
+    /// → Box 3 (Image / Ground). These are the three primitive ops that
+    /// constitute a Model coming into being in the Dataset substrate.
+    pub fn model_genesis_knowledge(&self) -> ShellModelGenesisKnowledge {
+        ShellModelGenesisKnowledge::new(self)
+    }
+
+    /// Build a short prompt for an AI-assisted pass over the Model genesis arc.
+    pub fn model_genesis_prompt(&self) -> String {
+        let g = self.model_genesis_knowledge();
+        let moments: Vec<String> = g
+            .genesis_moments()
+            .iter()
+            .map(|m| {
+                format!(
+                    "  Box {} — {} ({}): {} → {}  [{}]",
+                    m.box_number,
+                    m.name,
+                    m.essence_role,
+                    m.primary_input,
+                    m.primary_output,
+                    m.entry_fn
+                )
+            })
+            .collect();
+        format!(
+                "Shell Model genesis\nresource: {}\nfold: {}\nmoment: {:?}\nprogram feature law: {}\ngenesis:\n{}\ndescends to: {}\nai assistance presupposed: {}",
+                g.doctrine_resource(),
+                g.fold(),
+                g.moment(),
+                g.program_feature_law().join(" → "),
+                moments.join("\n"),
+                g.descends_to_example(),
+                g.ai_assistance_presupposed(),
+            )
     }
 
     /// Build a request-local progress tracker for this shell pipeline.

@@ -1,0 +1,14 @@
+f_token report:
+  mode: Preview
+  steps: 1
+  planned_cols: ["term_id", "token"]
+
+f_role report:
+  mode: Preview
+  steps: 1
+  planned_cols: ["term_id", "role"]
+
+f_chain report:
+  mode: Preview
+  steps: 3
+  planned_cols: ["term_id", "token"]

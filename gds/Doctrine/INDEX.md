@@ -199,6 +199,10 @@ that shows what a stage of the arc teaches.
    File: *(design fiction — no source file)*
    Teaches: What the ideal DataFrame DSL would look like if designed from the Shell's perspective downward — the negative space the Shell leaves and the register contract it implies.
 
+31. **[031-shell-model-first.md](EXEMPLARS/shell/031-shell-model-first.md)**
+   File: `gds/examples/shell_model_first.rs`
+   Teaches: Shell-first entry into the Model moment before descending into `dataset_model_feature_plan.rs`.
+
 ---
 
 ## The References

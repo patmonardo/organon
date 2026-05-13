@@ -1,0 +1,2 @@
+note: FeatStruct is the structural magic layer: unification, subsumption, reentrance, and contradiction edges live here.
+primitives: parse_featstruct, parse_featvalue, format_featstruct, unify_featstruct, subsumes_featstruct, cyclic_featstruct

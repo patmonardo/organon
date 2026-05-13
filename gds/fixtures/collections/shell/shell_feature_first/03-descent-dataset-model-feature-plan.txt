@@ -1,0 +1,2 @@
+next_example: gds/examples/dataset_model_feature_plan.rs
+method: Feature companions Model; FeatStruct provides structural operations before Plan execution.
