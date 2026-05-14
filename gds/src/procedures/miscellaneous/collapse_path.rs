@@ -10,8 +10,10 @@ use crate::algo::walking::{
     CollapsePathComputationRuntime, CollapsePathConfig, CollapsePathStats,
     CollapsePathStorageRuntime,
 };
+use crate::concurrency::TerminationFlag;
+use crate::core::utils::progress::{TaskProgressTracker, Tasks};
 use crate::projection::eval::algorithm::AlgorithmError;
-use crate::types::prelude::{DefaultGraphStore, GraphStore};
+use crate::types::prelude::DefaultGraphStore;
 use std::sync::Arc;
 
 pub struct CollapsePathFacade {
@@ -68,37 +70,79 @@ impl CollapsePathFacade {
         self
     }
 
-    /// Produce a new graph store with collapsed paths.
-    pub fn to_store(&self, graph_name: &str) -> Result<DefaultGraphStore> {
-        if self.path_templates.is_empty() {
+    fn config_for_graph(&self, graph_name: impl Into<String>) -> CollapsePathConfig {
+        CollapsePathConfig {
+            path_templates: self.path_templates.clone(),
+            mutate_relationship_type: self.mutate_relationship_type.clone(),
+            mutate_graph_name: graph_name.into(),
+            allow_self_loops: self.allow_self_loops,
+            concurrency: self.concurrency,
+        }
+    }
+
+    fn validate_config(&self, config: &CollapsePathConfig) -> Result<()> {
+        if config.path_templates.is_empty() {
             return Err(AlgorithmError::Execution(
                 "pathTemplates must be provided".to_string(),
             ));
         }
+        if config.mutate_relationship_type.is_empty() {
+            return Err(AlgorithmError::Execution(
+                "mutateRelationshipType must be provided".to_string(),
+            ));
+        }
+        if config.mutate_graph_name.is_empty() {
+            return Err(AlgorithmError::Execution(
+                "mutateGraphName must be provided".to_string(),
+            ));
+        }
+        if config.concurrency == 0 {
+            return Err(AlgorithmError::Execution(
+                "concurrency must be greater than zero".to_string(),
+            ));
+        }
+        Ok(())
+    }
 
-        let mut computation = CollapsePathComputationRuntime::new(self.allow_self_loops);
-        let storage = CollapsePathStorageRuntime::new(self.concurrency);
-        let config = CollapsePathConfig {
-            path_templates: self.path_templates.clone(),
-            mutate_relationship_type: self.mutate_relationship_type.clone(),
-            mutate_graph_name: graph_name.to_string(),
-            allow_self_loops: self.allow_self_loops,
-            concurrency: self.concurrency,
-        };
+    fn execute(
+        &self,
+        config: &CollapsePathConfig,
+    ) -> Result<crate::algo::walking::CollapsePathResult> {
+        self.validate_config(config)?;
+
+        let mut computation = CollapsePathComputationRuntime::new(config.allow_self_loops);
+        let storage = CollapsePathStorageRuntime::new(config.concurrency);
+        let termination = TerminationFlag::running_true();
+        let mut progress_tracker = TaskProgressTracker::with_concurrency(
+            Tasks::leaf_with_volume("collapse_path".to_string(), 0),
+            config.concurrency,
+        );
 
         storage
-            .compute(&self.graph_store, &config, &mut computation)
-            .map(|r| r.graph_store)
+            .compute_with_controls(
+                &self.graph_store,
+                config,
+                &mut computation,
+                &termination,
+                &mut progress_tracker,
+            )
             .map_err(AlgorithmError::Execution)
     }
 
+    /// Produce a new graph store with collapsed paths.
+    pub fn to_store(&self, graph_name: &str) -> Result<DefaultGraphStore> {
+        let config = self.config_for_graph(graph_name);
+        self.execute(&config).map(|r| r.graph_store)
+    }
+
     pub fn stats(&self, graph_name: &str) -> Result<CollapsePathStats> {
-        let store = self.to_store(graph_name)?;
+        let config = self.config_for_graph(graph_name);
+        let result = self.execute(&config)?;
         Ok(CollapsePathStats {
             graph_name: graph_name.to_string(),
             mutate_relationship_type: self.mutate_relationship_type.clone(),
-            node_count: store.node_count() as u64,
-            relationship_count: store.relationship_count() as u64,
+            node_count: result.node_count,
+            relationship_count: result.relationship_count,
         })
     }
 

@@ -2,8 +2,47 @@
 //!
 //! Translation source: `org.neo4j.gds.undirected.ToUndirectedConfig`.
 
+use crate::core::Aggregation;
 use crate::types::prelude::DefaultGraphStore;
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
+
+/// Aggregation overrides for creating an undirected projection.
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+pub struct ToUndirectedAggregations {
+    /// Default aggregation to apply to all relationship properties unless overridden.
+    pub global: Option<Aggregation>,
+    /// Per-property aggregation overrides keyed by relationship property name.
+    pub properties: HashMap<String, Aggregation>,
+}
+
+impl ToUndirectedAggregations {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn with_global(mut self, aggregation: Aggregation) -> Self {
+        self.global = Some(aggregation);
+        self
+    }
+
+    pub fn with_property(
+        mut self,
+        property_key: impl Into<String>,
+        aggregation: Aggregation,
+    ) -> Self {
+        self.properties.insert(property_key.into(), aggregation);
+        self
+    }
+
+    pub fn global_aggregation(&self) -> Option<Aggregation> {
+        self.global
+    }
+
+    pub fn local_aggregation(&self, property_key: &str) -> Option<Aggregation> {
+        self.properties.get(property_key).copied().or(self.global)
+    }
+}
 
 /// Configuration for creating an undirected projection from a single relationship type.
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -16,6 +55,8 @@ pub struct ToUndirectedConfig {
     pub mutate_relationship_type: String,
     /// Concurrency hint (currently unused by the sequential runtime).
     pub concurrency: usize,
+    /// Optional global and per-property aggregation overrides.
+    pub aggregation: Option<ToUndirectedAggregations>,
 }
 
 impl Default for ToUndirectedConfig {
@@ -25,6 +66,7 @@ impl Default for ToUndirectedConfig {
             mutate_graph_name: "to_undirected".to_string(),
             mutate_relationship_type: "undirected".to_string(),
             concurrency: 4,
+            aggregation: None,
         }
     }
 }

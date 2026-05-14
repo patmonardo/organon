@@ -5,6 +5,8 @@
 
 use crate::algo::algorithms::scaling::Scaler;
 use crate::algo::scale_properties::spec::ScalePropertiesResult;
+use crate::concurrency::TerminationFlag;
+use crate::projection::eval::algorithm::AlgorithmError;
 use std::collections::HashMap;
 use std::sync::Arc;
 
@@ -74,6 +76,19 @@ impl ScalePropertiesComputationRuntime {
     }
 
     pub fn compute(&self, plan: ScalePropertiesPlan) -> ScalePropertiesResult {
+        self.compute_with_controls(plan, &TerminationFlag::running_true(), |_| {})
+            .unwrap_or_else(|_| ScalePropertiesResult {
+                scaled_properties: Vec::new(),
+                scaler_statistics: HashMap::new(),
+            })
+    }
+
+    pub fn compute_with_controls(
+        &self,
+        plan: ScalePropertiesPlan,
+        termination_flag: &TerminationFlag,
+        mut on_scaled: impl FnMut(usize),
+    ) -> Result<ScalePropertiesResult, AlgorithmError> {
         let total_dimension: usize = plan.property_scalers.iter().map(|p| p.dimension()).sum();
 
         let mut scaled_properties = vec![vec![0.0; total_dimension]; plan.node_count];
@@ -82,16 +97,22 @@ impl ScalePropertiesComputationRuntime {
         let mut offset = 0;
         for property_scaler in &plan.property_scalers {
             for (node_idx, row) in scaled_properties.iter_mut().enumerate() {
+                if !termination_flag.running() {
+                    return Err(AlgorithmError::Execution(
+                        "ScaleProperties terminated".to_string(),
+                    ));
+                }
                 property_scaler.scale_into(node_idx as u64, row, offset);
+                on_scaled(property_scaler.dimension());
             }
             offset += property_scaler.dimension();
 
             scaler_statistics.insert(property_scaler.name.clone(), property_scaler.statistics());
         }
 
-        ScalePropertiesResult {
+        Ok(ScalePropertiesResult {
             scaled_properties,
             scaler_statistics,
-        }
+        })
     }
 }

@@ -4,9 +4,12 @@
 
 use crate::algo::algorithms::Result;
 use crate::algo::undirected::{
-    ToUndirectedComputationRuntime, ToUndirectedConfig, ToUndirectedStats,
-    ToUndirectedStorageRuntime,
+    ToUndirectedAggregations, ToUndirectedComputationRuntime, ToUndirectedConfig,
+    ToUndirectedStats, ToUndirectedStorageRuntime,
 };
+use crate::concurrency::TerminationFlag;
+use crate::core::utils::progress::{TaskProgressTracker, Tasks};
+use crate::core::Aggregation;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::prelude::DefaultGraphStore;
 use std::sync::Arc;
@@ -44,6 +47,32 @@ impl ToUndirectedFacade {
         self
     }
 
+    pub fn aggregation(mut self, aggregation: Aggregation) -> Self {
+        let aggregations = self
+            .config
+            .aggregation
+            .take()
+            .unwrap_or_else(ToUndirectedAggregations::new)
+            .with_global(aggregation);
+        self.config.aggregation = Some(aggregations);
+        self
+    }
+
+    pub fn property_aggregation(
+        mut self,
+        property_key: impl Into<String>,
+        aggregation: Aggregation,
+    ) -> Self {
+        let aggregations = self
+            .config
+            .aggregation
+            .take()
+            .unwrap_or_else(ToUndirectedAggregations::new)
+            .with_property(property_key, aggregation);
+        self.config.aggregation = Some(aggregations);
+        self
+    }
+
     fn validate_config(&self, config: &ToUndirectedConfig) -> Result<()> {
         if config.relationship_type.is_empty() {
             return Err(AlgorithmError::Execution(
@@ -60,29 +89,47 @@ impl ToUndirectedFacade {
                 "mutateGraphName must be provided".to_string(),
             ));
         }
+        if config.concurrency == 0 {
+            return Err(AlgorithmError::Execution(
+                "concurrency must be greater than zero".to_string(),
+            ));
+        }
         Ok(())
+    }
+
+    fn execute(
+        &self,
+        config: &ToUndirectedConfig,
+    ) -> Result<crate::algo::undirected::ToUndirectedResult> {
+        let mut computation = ToUndirectedComputationRuntime::new();
+        let storage = ToUndirectedStorageRuntime::new(config.concurrency);
+        let termination = TerminationFlag::running_true();
+        let mut progress_tracker = TaskProgressTracker::with_concurrency(
+            Tasks::leaf_with_volume("to_undirected".to_string(), 0),
+            config.concurrency,
+        );
+
+        self.validate_config(config)?;
+        storage
+            .compute_with_controls(
+                &self.graph_store,
+                config,
+                &mut computation,
+                &termination,
+                &mut progress_tracker,
+            )
+            .map_err(AlgorithmError::Execution)
     }
 
     /// Produce a new graph store with an undirected relationship type added.
     pub fn to_store(&self, graph_name: &str) -> Result<DefaultGraphStore> {
-        let mut computation = ToUndirectedComputationRuntime::new();
-        let storage = ToUndirectedStorageRuntime::new(self.config.concurrency);
         let mut config = self.config.clone();
         config.mutate_graph_name = graph_name.to_string();
-        self.validate_config(&config)?;
-        storage
-            .compute(&self.graph_store, &config, &mut computation)
-            .map(|r| r.graph_store)
-            .map_err(AlgorithmError::Execution)
+        self.execute(&config).map(|r| r.graph_store)
     }
 
     pub fn stats(&self) -> Result<ToUndirectedStats> {
-        let mut computation = ToUndirectedComputationRuntime::new();
-        let storage = ToUndirectedStorageRuntime::new(self.config.concurrency);
-        self.validate_config(&self.config)?;
-        let result = storage
-            .compute(&self.graph_store, &self.config, &mut computation)
-            .map_err(AlgorithmError::Execution)?;
+        let result = self.execute(&self.config)?;
         Ok(ToUndirectedStats {
             graph_name: result.graph_name,
             mutate_relationship_type: result.mutate_relationship_type,

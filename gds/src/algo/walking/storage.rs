@@ -7,6 +7,8 @@
 
 use super::spec::{CollapsePathConfig, CollapsePathResult};
 use super::CollapsePathComputationRuntime;
+use crate::concurrency::TerminationFlag;
+use crate::core::utils::progress::ProgressTracker;
 use crate::projection::{Orientation, RelationshipType};
 use crate::types::graph::Graph;
 use crate::types::graph::MappedNodeId;
@@ -31,8 +33,69 @@ impl CollapsePathStorageRuntime {
         config: &CollapsePathConfig,
         computation: &mut CollapsePathComputationRuntime,
     ) -> Result<CollapsePathResult, String> {
+        let termination_flag = TerminationFlag::running_true();
+        let mut progress_tracker = crate::core::utils::progress::NoopProgressTracker;
+        self.compute_with_controls(
+            graph_store,
+            config,
+            computation,
+            &termination_flag,
+            &mut progress_tracker,
+        )
+    }
+
+    pub fn compute_with_controls(
+        &self,
+        graph_store: &DefaultGraphStore,
+        config: &CollapsePathConfig,
+        computation: &mut CollapsePathComputationRuntime,
+        termination_flag: &TerminationFlag,
+        progress_tracker: &mut dyn ProgressTracker,
+    ) -> Result<CollapsePathResult, String> {
+        if self.concurrency == 0 || config.concurrency == 0 {
+            return Err("concurrency must be greater than zero".to_string());
+        }
         if config.path_templates.is_empty() {
             return Err("pathTemplates must be non-empty".to_string());
+        }
+        if config.mutate_relationship_type.is_empty() {
+            return Err("mutateRelationshipType must be provided".to_string());
+        }
+        if config.mutate_graph_name.is_empty() {
+            return Err("mutateGraphName must be provided".to_string());
+        }
+
+        let progress_volume = graph_store
+            .node_count()
+            .saturating_mul(config.path_templates.len());
+        progress_tracker.begin_subtask_with_volume(progress_volume);
+
+        let result = self.compute_inner(
+            graph_store,
+            config,
+            computation,
+            termination_flag,
+            progress_tracker,
+        );
+
+        match &result {
+            Ok(_) => progress_tracker.end_subtask(),
+            Err(_) => progress_tracker.end_subtask_with_failure(),
+        }
+
+        result
+    }
+
+    fn compute_inner(
+        &self,
+        graph_store: &DefaultGraphStore,
+        config: &CollapsePathConfig,
+        computation: &mut CollapsePathComputationRuntime,
+        termination_flag: &TerminationFlag,
+        progress_tracker: &mut dyn ProgressTracker,
+    ) -> Result<CollapsePathResult, String> {
+        if !termination_flag.running() {
+            return Err("CollapsePath terminated".to_string());
         }
 
         let mut path_template_graphs: Vec<Vec<Arc<dyn Graph>>> = Vec::new();
@@ -75,7 +138,10 @@ impl CollapsePathStorageRuntime {
             path_template_graphs.push(graphs_for_path);
         }
 
-        let edges = computation.compute(&path_template_graphs);
+        let edges =
+            computation.compute_with_controls(&path_template_graphs, termination_flag, |done| {
+                progress_tracker.log_progress(done)
+            })?;
         let outgoing = build_outgoing(graph_store.node_count(), edges)?;
         let edges_for_result: Vec<(u64, u64)> = outgoing
             .iter()
@@ -214,5 +280,63 @@ mod tests {
         }
 
         assert_eq!(edges, vec![(0, 2)]);
+    }
+
+    #[test]
+    fn rejects_zero_concurrency() {
+        let store = build_store();
+        let mut computation = CollapsePathComputationRuntime::new(false);
+        let runtime = CollapsePathStorageRuntime::new(0);
+        let mut progress_tracker = crate::core::utils::progress::NoopProgressTracker;
+        let termination = TerminationFlag::running_true();
+
+        let config = CollapsePathConfig {
+            path_templates: vec![vec!["R1".to_string(), "R1".to_string()]],
+            mutate_relationship_type: "C".to_string(),
+            mutate_graph_name: "g_collapsed".to_string(),
+            allow_self_loops: false,
+            concurrency: 0,
+        };
+
+        let error = runtime
+            .compute_with_controls(
+                &store,
+                &config,
+                &mut computation,
+                &termination,
+                &mut progress_tracker,
+            )
+            .expect_err("zero concurrency should be rejected");
+
+        assert!(error.contains("concurrency"));
+    }
+
+    #[test]
+    fn controlled_compute_honors_termination() {
+        let store = build_store();
+        let mut computation = CollapsePathComputationRuntime::new(false);
+        let runtime = CollapsePathStorageRuntime::new(1);
+        let mut progress_tracker = crate::core::utils::progress::NoopProgressTracker;
+        let termination = TerminationFlag::stop_running();
+
+        let config = CollapsePathConfig {
+            path_templates: vec![vec!["R1".to_string(), "R1".to_string()]],
+            mutate_relationship_type: "C".to_string(),
+            mutate_graph_name: "g_collapsed".to_string(),
+            allow_self_loops: false,
+            concurrency: 1,
+        };
+
+        let error = runtime
+            .compute_with_controls(
+                &store,
+                &config,
+                &mut computation,
+                &termination,
+                &mut progress_tracker,
+            )
+            .expect_err("terminated computation should fail");
+
+        assert!(error.contains("terminated"));
     }
 }

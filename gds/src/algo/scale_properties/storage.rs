@@ -14,6 +14,8 @@ use crate::algo::algorithms::scaling::{
     CenterScaler, LogScaler, MaxScaler, MeanScaler, MinMaxScaler, NoneScaler, Scaler,
     StdScoreScaler,
 };
+use crate::concurrency::TerminationFlag;
+use crate::core::utils::progress::ProgressTracker;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::IdMap;
 use crate::types::prelude::GraphStore;
@@ -37,6 +39,25 @@ impl ScalePropertiesStorageRuntime {
         config: &ScalePropertiesConfig,
         computation: &mut ScalePropertiesComputationRuntime,
     ) -> Result<ScalePropertiesResult, AlgorithmError> {
+        let termination_flag = TerminationFlag::running_true();
+        let mut progress_tracker = crate::core::utils::progress::NoopProgressTracker;
+        self.compute_with_controls(
+            graph_store,
+            config,
+            computation,
+            &termination_flag,
+            &mut progress_tracker,
+        )
+    }
+
+    pub fn compute_with_controls(
+        &self,
+        graph_store: &impl GraphStore,
+        config: &ScalePropertiesConfig,
+        computation: &mut ScalePropertiesComputationRuntime,
+        termination_flag: &TerminationFlag,
+        progress_tracker: &mut dyn ProgressTracker,
+    ) -> Result<ScalePropertiesResult, AlgorithmError> {
         if config.node_properties.is_empty() {
             return Err(AlgorithmError::Execution(
                 "node_properties must not be empty".to_string(),
@@ -50,9 +71,50 @@ impl ScalePropertiesStorageRuntime {
 
         let node_count = graph_store.node_count();
         let id_map = graph_store.nodes();
+        progress_tracker.begin_subtask_unknown();
+
+        let result = self.compute_inner(
+            graph_store,
+            config,
+            computation,
+            termination_flag,
+            progress_tracker,
+            node_count,
+            &id_map,
+        );
+
+        match &result {
+            Ok(_) => progress_tracker.end_subtask(),
+            Err(_) => progress_tracker.end_subtask_with_failure(),
+        }
+
+        result
+    }
+
+    fn compute_inner(
+        &self,
+        graph_store: &impl GraphStore,
+        config: &ScalePropertiesConfig,
+        computation: &mut ScalePropertiesComputationRuntime,
+        termination_flag: &TerminationFlag,
+        progress_tracker: &mut dyn ProgressTracker,
+        node_count: usize,
+        id_map: &Arc<dyn IdMap>,
+    ) -> Result<ScalePropertiesResult, AlgorithmError> {
+        if !termination_flag.running() {
+            return Err(AlgorithmError::Execution(
+                "ScaleProperties terminated".to_string(),
+            ));
+        }
 
         let mut property_scalers = Vec::with_capacity(config.node_properties.len());
         for property_name in &config.node_properties {
+            if !termination_flag.running() {
+                return Err(AlgorithmError::Execution(
+                    "ScaleProperties terminated".to_string(),
+                ));
+            }
+
             let values = graph_store
                 .node_property_values(property_name)
                 .map_err(|e| {
@@ -105,15 +167,22 @@ impl ScalePropertiesStorageRuntime {
                 }
             };
 
+            let prepared_dimension = property_scaler.dimension();
+            progress_tracker.log_progress(node_count.saturating_mul(prepared_dimension));
             property_scalers.push(property_scaler);
         }
+
+        let total_dimension: usize = property_scalers.iter().map(|p| p.dimension()).sum();
+        progress_tracker.set_volume(node_count.saturating_mul(total_dimension).saturating_mul(2));
 
         let plan = ScalePropertiesPlan {
             node_count,
             property_scalers,
         };
 
-        Ok(computation.compute(plan))
+        computation.compute_with_controls(plan, termination_flag, |done| {
+            progress_tracker.log_progress(done)
+        })
     }
 }
 
@@ -340,5 +409,124 @@ fn create_scaler(
         }
         ScalePropertiesScaler::Log => LogScaler::create(0.0),
         ScalePropertiesScaler::None => NoneScaler::create(),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::config::GraphStoreConfig;
+    use crate::projection::RelationshipType;
+    use crate::types::graph::{RelationshipTopology, SimpleIdMap};
+    use crate::types::graph_store::{
+        Capabilities, DatabaseId, DatabaseInfo, DatabaseLocation, GraphName,
+    };
+    use crate::types::schema::{GraphSchema, MutableGraphSchema, NodeLabel};
+    use std::collections::HashMap;
+
+    fn build_store() -> crate::types::prelude::DefaultGraphStore {
+        let cfg = GraphStoreConfig::default();
+        let graph_name = GraphName::new("g");
+        let db_info = DatabaseInfo::new(
+            DatabaseId::new("test-db"),
+            DatabaseLocation::remote("localhost", 7687, None, None),
+        );
+        let capabilities = Capabilities::default();
+
+        let mut schema = MutableGraphSchema::empty();
+        schema.node_schema_mut().add_label(NodeLabel::all_nodes());
+        let schema: GraphSchema = schema.build();
+
+        let id_map = SimpleIdMap::from_original_ids([0, 1, 2]);
+        let topologies: HashMap<RelationshipType, RelationshipTopology> = HashMap::new();
+
+        let mut store = crate::types::prelude::DefaultGraphStore::new(
+            cfg,
+            graph_name,
+            db_info,
+            schema,
+            capabilities,
+            id_map,
+            topologies,
+        );
+        store
+            .add_node_property_f64("score".to_string(), vec![1.0, 2.0, 3.0])
+            .expect("add score property");
+        store
+    }
+
+    fn config(concurrency: usize) -> ScalePropertiesConfig {
+        ScalePropertiesConfig {
+            node_properties: vec!["score".to_string()],
+            scaler: ScalePropertiesScaler::None,
+            concurrency,
+        }
+    }
+
+    #[test]
+    fn controlled_compute_scales_property() {
+        let store = build_store();
+        let mut computation = ScalePropertiesComputationRuntime::new();
+        let storage = ScalePropertiesStorageRuntime::new();
+        let mut progress_tracker = crate::core::utils::progress::NoopProgressTracker;
+        let termination = TerminationFlag::running_true();
+
+        let result = storage
+            .compute_with_controls(
+                &store,
+                &config(1),
+                &mut computation,
+                &termination,
+                &mut progress_tracker,
+            )
+            .expect("scale properties");
+
+        assert_eq!(
+            result.scaled_properties,
+            vec![vec![1.0], vec![2.0], vec![3.0]]
+        );
+        assert!(result.scaler_statistics.contains_key("score"));
+    }
+
+    #[test]
+    fn controlled_compute_rejects_zero_concurrency() {
+        let store = build_store();
+        let mut computation = ScalePropertiesComputationRuntime::new();
+        let storage = ScalePropertiesStorageRuntime::new();
+        let mut progress_tracker = crate::core::utils::progress::NoopProgressTracker;
+        let termination = TerminationFlag::running_true();
+
+        let error = storage
+            .compute_with_controls(
+                &store,
+                &config(0),
+                &mut computation,
+                &termination,
+                &mut progress_tracker,
+            )
+            .expect_err("zero concurrency should be rejected");
+
+        assert!(format!("{error}").contains("concurrency"));
+    }
+
+    #[test]
+    fn controlled_compute_honors_termination() {
+        let store = build_store();
+        let mut computation = ScalePropertiesComputationRuntime::new();
+        let storage = ScalePropertiesStorageRuntime::new();
+        let mut progress_tracker = crate::core::utils::progress::NoopProgressTracker;
+        let termination = TerminationFlag::stop_running();
+
+        let error = storage
+            .compute_with_controls(
+                &store,
+                &config(1),
+                &mut computation,
+                &termination,
+                &mut progress_tracker,
+            )
+            .expect_err("terminated computation should fail");
+
+        assert!(format!("{error}").contains("terminated"));
     }
 }

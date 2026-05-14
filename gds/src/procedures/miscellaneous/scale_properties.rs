@@ -11,6 +11,8 @@ use crate::algo::scale_properties::{
     ScalePropertiesStorageRuntime, ScalePropertiesStreamRow, ScalePropertiesWriteSummary,
 };
 use crate::collections::backends::vec::VecDoubleArray;
+use crate::concurrency::TerminationFlag;
+use crate::core::utils::progress::{TaskProgressTracker, Tasks};
 use crate::mem::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::NodeLabel;
@@ -62,27 +64,49 @@ impl ScalePropertiesFacade {
     }
 
     fn validate(&self) -> Result<()> {
-        if self.node_properties.is_empty() {
+        self.validate_config(&self.config())
+    }
+
+    fn config(&self) -> ScalePropertiesConfig {
+        ScalePropertiesConfig {
+            node_properties: self.node_properties.clone(),
+            scaler: self.scaler.clone(),
+            concurrency: self.concurrency,
+        }
+    }
+
+    fn validate_config(&self, config: &ScalePropertiesConfig) -> Result<()> {
+        if config.node_properties.is_empty() {
             return Err(AlgorithmError::Execution(
                 "node_properties must not be empty".to_string(),
             ));
         }
-        ConfigValidator::in_range(self.concurrency as f64, 1.0, 1_000_000.0, "concurrency")?;
+        ConfigValidator::in_range(config.concurrency as f64, 1.0, 1_000_000.0, "concurrency")?;
         Ok(())
     }
 
-    fn compute(&self) -> Result<ScalePropertiesResult> {
-        self.validate()?;
-
-        let config = ScalePropertiesConfig {
-            node_properties: self.node_properties.clone(),
-            scaler: self.scaler.clone(),
-            concurrency: self.concurrency,
-        };
-
+    fn execute(&self, config: &ScalePropertiesConfig) -> Result<ScalePropertiesResult> {
+        self.validate_config(config)?;
         let mut computation = ScalePropertiesComputationRuntime::new();
         let storage = ScalePropertiesStorageRuntime::new();
-        storage.compute(self.graph_store.as_ref(), &config, &mut computation)
+        let termination = TerminationFlag::running_true();
+        let mut progress_tracker = TaskProgressTracker::with_concurrency(
+            Tasks::leaf_with_volume("scale_properties".to_string(), 0),
+            config.concurrency,
+        );
+
+        storage.compute_with_controls(
+            self.graph_store.as_ref(),
+            config,
+            &mut computation,
+            &termination,
+            &mut progress_tracker,
+        )
+    }
+
+    fn compute(&self) -> Result<ScalePropertiesResult> {
+        let config = self.config();
+        self.execute(&config)
     }
 
     pub fn stream(&self) -> Result<Box<dyn Iterator<Item = ScalePropertiesStreamRow>>> {

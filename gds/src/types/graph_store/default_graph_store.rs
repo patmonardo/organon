@@ -43,8 +43,8 @@ use crate::types::properties::relationship::{
     RelationshipPropertyStore, RelationshipPropertyStoreBuilder,
 };
 use crate::types::schema::{
-    Direction, GraphSchema, MutableGraphSchema, PropertySchemaTrait, RelationshipSchema,
-    RelationshipSchemaEntry,
+    Direction, GraphSchema, MutableGraphSchema, PropertySchemaTrait, RelationshipPropertySchema,
+    RelationshipSchema, RelationshipSchemaEntry,
 };
 use crate::types::PropertyState;
 use crate::types::ValueType;
@@ -309,6 +309,23 @@ impl DefaultGraphStore {
         outgoing: Vec<Vec<MappedNodeId>>,
         direction: Direction,
     ) -> GraphStoreResult<DefaultGraphStore> {
+        self.with_added_relationship_type_and_properties(
+            graph_name,
+            rel_type,
+            outgoing,
+            direction,
+            Vec::new(),
+        )
+    }
+
+    pub(crate) fn with_added_relationship_type_and_properties(
+        &self,
+        graph_name: GraphName,
+        rel_type: RelationshipType,
+        outgoing: Vec<Vec<MappedNodeId>>,
+        direction: Direction,
+        property_schemas: Vec<RelationshipPropertySchema>,
+    ) -> GraphStoreResult<DefaultGraphStore> {
         let node_count = self.node_count();
         if outgoing.len() != node_count {
             return Err(GraphStoreError::InvalidOperation(format!(
@@ -324,9 +341,12 @@ impl DefaultGraphStore {
         );
 
         let mut schema = MutableGraphSchema::from_schema(&self.schema);
-        schema
+        let entry = schema
             .relationship_schema_mut()
-            .add_relationship_type(rel_type.clone(), direction);
+            .get_or_create_type(rel_type.clone(), direction);
+        for property_schema in property_schemas {
+            entry.add_property_schema(property_schema);
+        }
         let schema = Arc::new(schema.build());
 
         let mut store = self.clone();
