@@ -2,6 +2,9 @@
 
 Date: 2026-01-03
 
+For subsystem-level architecture and completion mechanics, see:
+- gds/doc/PROCEDURES_SUBSYSTEM_DEVELOPMENT_GUIDE.md
+
 This document inventories the execution **modes** exposed by the Rust `gds` *procedure/facade* layer. The intent is to support the next workstream: improving/implementing **Stats** and **Mutate/Write** behaviors with a consistent “standard pipeline architecture”.
 
 ## What “modes” mean in this repo
@@ -80,18 +83,18 @@ This document inventories the execution **modes** exposed by the Rust `gds` *pro
 **Community**
 - `stream`: 13 ok (all ok)
 - `stats`: 13 ok (all ok)
-- `run`: 8 ok (5 missing)
-- `mutate`: 0 ok (12 stub, 1 missing)
-- `write`: 0 ok (10 stub, 2 wraps-stub-mutate, 1 missing)
-- `estimate_memory`: 12 ok (1 missing)
+- `run`: 9 ok (4 missing)
+- `mutate`: 2 ok (11 stub)
+- `write`: 2 ok (9 stub, 2 wraps-stub-mutate)
+- `estimate_memory`: 13 ok (all ok)
 
 | Procedure | stream | stats | run | mutate | write | estimate_memory |
 |---|---:|---:|---:|---:|---:|---:|
-| gds/src/procedures/community/approx_max_kcut.rs | ok | ok | — | stub | stub | ok |
+| gds/src/procedures/community/approx_max_kcut.rs | ok | ok | ok | ok | ok | ok |
 | gds/src/procedures/community/conductance.rs | ok | ok | — | stub | stub | ok |
 | gds/src/procedures/community/k1coloring.rs | ok | ok | ok | stub | stub | ok |
 | gds/src/procedures/community/kcore.rs | ok | ok | ok | stub | stub | ok |
-| gds/src/procedures/community/kmeans.rs | ok | ok | ok | — | — | — |
+| gds/src/procedures/community/kmeans.rs | ok | ok | ok | ok | ok | ok |
 | gds/src/procedures/community/label_propagation.rs | ok | ok | ok | stub | stub | ok |
 | gds/src/procedures/community/leiden.rs | ok | ok | — | stub | stub | ok |
 | gds/src/procedures/community/local_clustering_coefficient.rs | ok | ok | — | stub | stub | ok |

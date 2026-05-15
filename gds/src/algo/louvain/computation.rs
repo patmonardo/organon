@@ -41,6 +41,7 @@ impl LouvainComputationRuntime {
             max_iterations: 20,
             tolerance: self.tolerance,
             gamma: self.gamma,
+            ..ModularityOptimizationConfig::default()
         };
 
         for _level in 0..self.max_levels {

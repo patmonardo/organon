@@ -20,30 +20,32 @@ This document mirrors the Procedure-First Controller Pattern checklist used for 
 
 ---
 
-## approx_max_kcut - ✅ Architecturally Sound
+## approx_max_kcut - ✅ Controller-Backed, Java-Shaped Parity In Progress
 
 ### Layered Architecture
-- **1. Procedure Layer** ([gds/src/procedures/community/approx_max_kcut.rs](gds/src/procedures/community/approx_max_kcut.rs)): validates config, creates the task progress tracker, spawns `TerminationFlag`, instantiates storage + computation runtimes, and delegates to storage.
-- **2. Storage Runtime** ([gds/src/algo/approx_max_kcut/storage.rs](gds/src/algo/approx_max_kcut/storage.rs)): controller now obtains the natural view, materializes weighted adjacency once (weight fallback respects the `has_relationship_weight_property` flag), logs progress, honors `TerminationFlag`, and calls computation with a neighbor provider.
-- **3. Computation Runtime** ([gds/src/algo/approx_max_kcut/computation.rs](gds/src/algo/approx_max_kcut/computation.rs)): unchanged pure state; builds adjacency caches, enforces min community sizes, and runs GRASP-style local search / randomized restarts to produce communities + cut cost.
+- **1. Procedure Layer** ([gds/src/procedures/community/approx_max_kcut.rs](gds/src/procedures/community/approx_max_kcut.rs)): validates config, creates the Java-shaped task progress tracker, spawns `TerminationFlag`, instantiates storage + computation runtimes, exposes stream/stats/run/mutate/write/estimate modes, and delegates to storage.
+- **2. Storage Runtime** ([gds/src/algo/approx_max_kcut/storage.rs](gds/src/algo/approx_max_kcut/storage.rs)): controller obtains the natural view, validates node-count-dependent min community sizes, materializes weighted adjacency once (weight fallback respects the `has_relationship_weight_property` flag), drives Java-named progress phases, honors `TerminationFlag`, and calls computation with a neighbor provider.
+- **3. Computation Runtime** ([gds/src/algo/approx_max_kcut/computation.rs](gds/src/algo/approx_max_kcut/computation.rs)): pure state; builds adjacency/reverse caches, enforces min community sizes, and runs GRASP-style randomized restarts plus a contained serial VNS pass when `vns_max_neighborhood_order > 0`.
 
 ### Pattern Compliance
 - Fully aligned: procedure wires runtimes, storage owns graph access + progress/termination, computation remains graph-free.
 
 ### Key Notes
-- Storage currently reports progress for adjacency build and iterations; computation remains deterministic/pure aside from RNG seed.
+- Config now includes Java-shaped `min_batch_size` and `vns_max_neighborhood_order`; the application layer passes both through the procedure facade.
+- Memory estimation is component-shaped after Java's candidate/workspace/improvement-cache/swap-status/VNS candidate model, with Rust-specific eager adjacency materialization included.
+- Full Java parallel local search remains deferred: Rust does not yet implement degree partitions, atomic node-to-community weight caches, swap-status conflict control, or executor-backed per-partition tasks.
 
 ---
 
 ## conductance - ✅ Architecturally Sound
 
 ### Layered Architecture
-- **1. Procedure Layer** ([gds/src/procedures/community/conductance.rs](gds/src/procedures/community/conductance.rs)): builds `ConductanceConfig`, spins up a progress tracker keyed on node count, and instantiates the storage + computation runtimes with a termination flag.
-- **2. Storage Runtime** ([gds/src/algo/conductance/storage.rs](gds/src/algo/conductance/storage.rs)): obtains the natural-orientation graph view, validates the community property, drives three well-defined phases (count relationships, accumulate counts, compute conductances) while logging progress, and passes per-phase results into the computation runtime. It enforces the `TerminationFlag` and reports phase-level progress.
-- **3. Computation Runtime** ([gds/src/algo/conductance/computation.rs](gds/src/algo/conductance/computation.rs)): purely stateful; it partitions nodes by degree, counts internal/external weights per community, accumulates totals, and finally computes conductance scores without touching the graph.
+- **1. Procedure Layer** ([gds/src/procedures/community/conductance.rs](gds/src/procedures/community/conductance.rs)): builds `ConductanceConfig`, creates the Java-shaped `Conductance` progress task, exposes stream/stats/mutate/write, and instantiates the storage + computation runtimes with a termination flag.
+- **2. Storage Runtime** ([gds/src/algo/conductance/storage.rs](gds/src/algo/conductance/storage.rs)): obtains the natural-orientation graph view, validates the community property, drives three well-defined phases (count relationships, accumulate counts, compute conductances) while logging node/community-capacity progress, and passes per-phase results into the computation runtime. It enforces the `TerminationFlag` and reports phase-level progress.
+- **3. Computation Runtime** ([gds/src/algo/conductance/computation.rs](gds/src/algo/conductance/computation.rs)): purely stateful; it partitions nodes by degree, counts internal/external weights per community with Java-aligned default weighting, accumulates totals, and finally computes conductance scores without touching the graph.
 
 ### Pattern Compliance
-- Storage is the controller (graph access, progress, termination) and delegates all state management to computation. Procedure only wires the two runtimes together.
+- Storage is the controller (graph access, progress, termination) and delegates all state management to computation. Procedure only wires the two runtimes together and reports a component-shaped memory estimate for local counts, accumulated counts, conductances, and result materialization.
 
 ---
 
@@ -74,15 +76,20 @@ This document mirrors the Procedure-First Controller Pattern checklist used for 
 
 ---
 
-## kmeans - ✅ Architecturally Sound
+## kmeans - ✅ Controller-Backed, Java-Shaped Parity In Progress
 
 ### Layered Architecture
-- **1. Procedure Layer** ([gds/src/procedures/community/kmeans.rs](gds/src/procedures/community/kmeans.rs)): validates numeric config, wires the task progress tracker and termination flag, instantiates storage + computation runtimes, and delegates to storage.
-- **2. Storage Runtime** ([gds/src/algo/kmeans/storage.rs](gds/src/algo/kmeans/storage.rs)): owns the undirected graph view, validates presence/dimensions of the feature property (plus seeded centroid shapes), materializes per-node feature vectors with progress + termination, then calls computation.
+- **1. Procedure Layer** ([gds/src/procedures/community/kmeans.rs](gds/src/procedures/community/kmeans.rs)): validates numeric config, builds the KMeans progress task, wires the termination flag, exposes stream/stats/run/mutate/write/estimate modes, instantiates storage + computation runtimes, and delegates to storage.
+- **2. Storage Runtime** ([gds/src/algo/kmeans/storage.rs](gds/src/algo/kmeans/storage.rs)): owns the undirected graph view, validates presence/dimensions/NaN-free feature values (plus seeded centroid shapes), materializes per-node feature vectors with progress + termination, then calls computation.
 - **3. Computation Runtime** ([gds/src/algo/kmeans/computation.rs](gds/src/algo/kmeans/computation.rs)): remains pure; handles sampling (uniform/KMeans++), swaps-based iteration with delta threshold, seeded centroid fast-path, optional silhouettes, and multi-restart selection without graph access.
 
 ### Pattern Compliance
 - Storage now acts as the controller (graph/property access, progress, termination) and feeds the pure computation runtime; the procedure only wires runtimes together.
+
+### Key Notes
+- Application dispatch now passes `deltaThreshold` and `numberOfRestarts` through the procedure facade and preserves optional `randomSeed` semantics.
+- Memory estimation is component-shaped after Java's best-community, centroid, distance, cluster-manager, per-task, silhouette, and seeded-centroid components, with Rust's materialized feature vectors included.
+- Current progress is phase-level (`read feature properties`, `KMeans iteration`, optional `Silhouette`) because the pure computation runtime does not expose Java's per-partition task callbacks.
 
 ---
 
@@ -113,12 +120,25 @@ This document mirrors the Procedure-First Controller Pattern checklist used for 
 ## modularity - ✅ Architecturally Sound
 
 ### Layered Architecture
-- **1. Procedure Layer** ([gds/src/procedures/community/modularity.rs](gds/src/procedures/community/modularity.rs)): validates the community property, builds a task progress tracker, spawns a `TerminationFlag`, instantiates storage + computation runtimes, and delegates to storage.
-- **2. Storage Runtime** ([gds/src/algo/modularity/storage.rs](gds/src/algo/modularity/storage.rs)): owns the undirected graph view, validates the community property, materializes per-node community labels with termination checks, streams weighted neighbors with fallback weights, logs progress, and calls computation.
+- **1. Procedure Layer** ([gds/src/procedures/community/modularity.rs](gds/src/procedures/community/modularity.rs)): validates the community property and concurrency, builds a task progress tracker, exposes stream/stats/run/mutate/write, spawns a `TerminationFlag`, instantiates storage + computation runtimes, and delegates to storage.
+- **2. Storage Runtime** ([gds/src/algo/modularity/storage.rs](gds/src/algo/modularity/storage.rs)): owns the undirected graph view, validates the community property, materializes per-node community labels with termination checks, streams weighted neighbors with Java-aligned fallback weight `1.0`, logs progress, and calls computation.
 - **3. Computation Runtime** ([gds/src/algo/modularity/computation.rs](gds/src/algo/modularity/computation.rs)): pure state; densifies community ids, aggregates inside weight and degree totals, and computes per-community modularity plus the overall score without graph access.
 
 ### Pattern Compliance
-- Fully aligned: storage controls graph/property access and progress/termination; computation remains graph-free; procedure only wires the runtimes together.
+- Fully aligned: storage controls graph/property access and progress/termination; computation remains graph-free; procedure wires the runtimes together and reports a Java-shaped memory estimate for community mapping, relationship accumulators, result objects, and per-thread collectors.
+
+---
+
+## modularity_optimization - ✅ Controller-Backed, Parity In Progress
+
+### Layered Architecture
+- **1. Procedure Layer** ([gds/src/procedures/community/modularity_optimization.rs](gds/src/procedures/community/modularity_optimization.rs)): exposes the assignment-producing stream/stats/run/mutate/write modes, validates local-moving config, builds the Java-shaped progress task, and writes community IDs as node properties for mutate/write.
+- **2. Storage Runtime** ([gds/src/algo/modularity_optimization/storage.rs](gds/src/algo/modularity_optimization/storage.rs)): owns the undirected graph view, optional relationship-weight selector, adjacency materialization, progress, and termination checks before invoking pure computation.
+- **3. Computation Runtime** ([gds/src/algo/modularity_optimization/computation.rs](gds/src/algo/modularity_optimization/computation.rs)): remains graph-free and performs the current deterministic local-moving modularity optimization over `ModularityOptimizationInput`.
+
+### Pattern Compliance
+- The module now has the same Procedure -> Storage -> Computation boundary as the rest of the Community family while preserving Louvain's existing dependency on the pure computation runtime.
+- Full Java K1-colored parallel optimization, seed-property reversal, and exact per-color progress remain follow-up parity work rather than being folded into this controller-first slice.
 
 ---
 

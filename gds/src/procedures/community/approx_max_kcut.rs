@@ -6,15 +6,16 @@
 use crate::algo::algorithms::Result;
 use crate::algo::algorithms::{ConfigValidator, WriteResult};
 use crate::algo::approx_max_kcut::spec::{
-    ApproxMaxKCutConfig, ApproxMaxKCutMutateResult, ApproxMaxKCutMutationSummary,
-    ApproxMaxKCutResult, ApproxMaxKCutResultBuilder, ApproxMaxKCutStats,
+    approx_max_kcut_progress_task, ApproxMaxKCutConfig, ApproxMaxKCutMutateResult,
+    ApproxMaxKCutMutationSummary, ApproxMaxKCutResult, ApproxMaxKCutResultBuilder,
+    ApproxMaxKCutStats,
 };
 use crate::algo::approx_max_kcut::storage::ApproxMaxKCutStorageRuntime;
 use crate::algo::approx_max_kcut::ApproxMaxKCutComputationRuntime;
 use crate::collections::backends::vec::VecLong;
 use crate::concurrency::TerminationFlag;
-use crate::core::utils::progress::{TaskRegistry, Tasks};
-use crate::mem::MemoryRange;
+use crate::core::utils::progress::TaskRegistry;
+use crate::mem::{Estimate, MemoryRange};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use crate::types::properties::node::DefaultLongNodePropertyValues;
@@ -127,6 +128,16 @@ impl ApproxMaxKCutFacade {
         self
     }
 
+    pub fn min_batch_size(mut self, min_batch_size: usize) -> Self {
+        self.config.min_batch_size = min_batch_size;
+        self
+    }
+
+    pub fn vns_max_neighborhood_order(mut self, order: usize) -> Self {
+        self.config.vns_max_neighborhood_order = order;
+        self
+    }
+
     fn validate(&self) -> Result<()> {
         self.config
             .validate()
@@ -137,6 +148,10 @@ impl ApproxMaxKCutFacade {
         self.validate()?;
         let start = Instant::now();
         let node_count = self.graph_store.node_count();
+        self.config
+            .validate_for_node_count(node_count)
+            .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
+
         if node_count == 0 {
             return Ok(ApproxMaxKCutResult {
                 communities: Vec::new(),
@@ -147,11 +162,13 @@ impl ApproxMaxKCutFacade {
             });
         }
 
-        let mut progress_tracker = super::progress_tracker(
-            Tasks::leaf_with_volume(
-                "approx_max_kcut".to_string(),
-                node_count.saturating_add(self.config.iterations),
-            ),
+        let progress_task = approx_max_kcut_progress_task(
+            node_count,
+            self.config.iterations,
+            self.config.vns_max_neighborhood_order,
+        );
+        let mut progress_tracker = super::progress_tracker_for_task(
+            progress_task,
             self.config.concurrency,
             self.task_registry.as_ref(),
         );
@@ -196,6 +213,11 @@ impl ApproxMaxKCutFacade {
     pub fn stats(&self) -> Result<ApproxMaxKCutStats> {
         let result = self.compute()?;
         Ok(ApproxMaxKCutResultBuilder::new(result).stats())
+    }
+
+    /// Run mode: returns the full algorithm result.
+    pub fn run(&self) -> Result<ApproxMaxKCutResult> {
+        self.compute()
     }
 
     /// Mutate mode: writes labels back to the graph store.
@@ -248,24 +270,40 @@ impl ApproxMaxKCutFacade {
 
     /// Estimate memory usage.
     pub fn estimate_memory(&self) -> Result<MemoryRange> {
-        // ApproxMaxKCut builds adjacency + reverse adjacency in the computation runtime.
-        // Rough estimate (bytes):
-        // - communities (u8) + a few per-node arrays: O(n)
-        // - adjacency + reverse adjacency: O(m)
         let node_count = self.graph_store.node_count();
         let relationship_count = self.graph_store.relationship_count();
+        self.config
+            .validate_for_node_count(node_count)
+            .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
 
-        // Per node: labels + bookkeeping + Vec headers (conservative).
-        let per_node = 96usize;
-        // Per relationship: store (usize,f64) pairs in adjacency and reverse (two copies).
-        let per_relationship = 48usize;
+        let k = self.config.k as usize;
+        let candidate_bytes = Estimate::size_of_byte_array(node_count);
+        let solution_workspace = Estimate::size_of_byte_array(node_count);
+        let improvement_costs = Estimate::size_of_double_array(node_count.saturating_mul(k));
+        let swap_status = Estimate::size_of_byte_array(node_count);
+        let vns_candidate = if self.config.vns_max_neighborhood_order > 0 {
+            Estimate::size_of_byte_array(node_count)
+        } else {
+            0
+        };
+        let cardinalities = Estimate::size_of_long_array(k);
+        let adjacency_vec_headers = Estimate::size_of_object_array(node_count).saturating_mul(2);
+        let adjacency_pairs =
+            relationship_count.saturating_mul(std::mem::size_of::<(usize, f64)>());
+        let adjacency = adjacency_vec_headers.saturating_add(adjacency_pairs.saturating_mul(2));
 
-        let base: usize = 64 * 1024; // fixed overhead
-        let total = base
-            .saturating_add(node_count.saturating_mul(per_node))
-            .saturating_add(relationship_count.saturating_mul(per_relationship));
+        let java_shaped = candidate_bytes
+            .saturating_add(solution_workspace)
+            .saturating_add(improvement_costs)
+            .saturating_add(swap_status)
+            .saturating_add(vns_candidate)
+            .saturating_add(cardinalities);
+        let total = java_shaped.saturating_add(adjacency);
 
-        Ok(MemoryRange::of_range(total, total.saturating_mul(3)))
+        Ok(MemoryRange::of_range(
+            total,
+            total.saturating_add(adjacency),
+        ))
     }
 }
 
@@ -374,6 +412,25 @@ mod tests {
     }
 
     #[test]
+    fn facade_builder_accepts_java_shaped_config() {
+        let store = store_from_edges(4, &[(0, 1), (1, 2), (2, 3)]);
+        let graph = GraphFacade::new(Arc::new(store));
+
+        let result = graph
+            .approx_max_kcut()
+            .k(2)
+            .iterations(3)
+            .min_batch_size(2)
+            .vns_max_neighborhood_order(2)
+            .run()
+            .unwrap();
+
+        assert_eq!(result.node_count, 4);
+        assert_eq!(result.k, 2);
+        assert_eq!(result.communities.len(), 4);
+    }
+
+    #[test]
     fn facade_mutates_store_with_property() {
         let store = store_from_edges(
             4,
@@ -405,5 +462,22 @@ mod tests {
         assert_eq!(mutation_result.summary.nodes_updated, 4);
         assert_eq!(mutation_result.summary.property_name, "community");
         assert!(mutation_result.updated_store.has_node_property("community"));
+    }
+
+    #[test]
+    fn facade_write_and_estimate_memory() {
+        let store = store_from_edges(4, &[(0, 1), (1, 2), (2, 3)]);
+        let graph = GraphFacade::new(Arc::new(store));
+
+        let memory = graph.approx_max_kcut().k(2).estimate_memory().unwrap();
+        assert!(memory.max() >= memory.min());
+
+        let write_result = graph
+            .approx_max_kcut()
+            .k(2)
+            .iterations(3)
+            .write("community")
+            .unwrap();
+        assert_eq!(write_result.nodes_written, 4);
     }
 }

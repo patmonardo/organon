@@ -9,6 +9,7 @@ fn modopt_empty_ok() {
     let result = rt.compute(&input, &cfg);
     assert!(result.communities.is_empty());
     assert_eq!(result.modularity, 0.0);
+    assert_eq!(result.node_count, 0);
 }
 
 #[test]
@@ -20,6 +21,16 @@ fn modopt_separates_isolated_node() {
     let result = rt.compute(&input, &cfg);
 
     assert_eq!(result.communities.len(), 3);
+    assert_eq!(result.node_count, 3);
     assert_eq!(result.communities[0], result.communities[1]);
     assert_ne!(result.communities[2], result.communities[0]);
+}
+
+#[test]
+fn modopt_rejects_invalid_config() {
+    let cfg = ModularityOptimizationConfig {
+        max_iterations: 0,
+        ..ModularityOptimizationConfig::default()
+    };
+    assert!(cfg.validate().is_err());
 }

@@ -65,3 +65,87 @@ fn kmeans_seeded_centroids_respected() {
     // The two ends should likely be split.
     assert_ne!(result.communities[0], result.communities[2]);
 }
+
+#[test]
+fn kmeans_rejects_invalid_config() {
+    let mut config = KMeansConfig::default();
+    config.node_property = "p".to_string();
+
+    config.k = 0;
+    assert!(config.validate().is_err());
+
+    config = KMeansConfig::default();
+    config.node_property = "p".to_string();
+    config.max_iterations = 0;
+    assert!(config.validate().is_err());
+
+    config = KMeansConfig::default();
+    config.node_property = "p".to_string();
+    config.delta_threshold = 1.1;
+    assert!(config.validate().is_err());
+
+    config = KMeansConfig::default();
+    config.node_property = "p".to_string();
+    config.number_of_restarts = 0;
+    assert!(config.validate().is_err());
+
+    config = KMeansConfig::default();
+    config.node_property = "p".to_string();
+    config.concurrency = 0;
+    assert!(config.validate().is_err());
+
+    config = KMeansConfig::default();
+    config.node_property.clear();
+    assert!(config.validate().is_err());
+}
+
+#[test]
+fn kmeans_more_clusters_than_nodes_returns_node_centers() {
+    let points = vec![vec![0.0, 0.0], vec![10.0, 10.0]];
+    let config = KMeansConfig {
+        k: 4,
+        max_iterations: 10,
+        delta_threshold: 0.0,
+        number_of_restarts: 1,
+        compute_silhouette: false,
+        concurrency: 2,
+        node_property: "p".to_string(),
+        sampler_type: KMeansSamplerType::KmeansPlusPlus,
+        seed_centroids: Vec::new(),
+        random_seed: Some(42),
+    };
+
+    let mut runtime = KMeansComputationRuntime::new();
+    let result = runtime.compute(&points, &config);
+
+    assert_eq!(result.centers.len(), points.len());
+    assert_eq!(result.distance_from_center, vec![0.0, 0.0]);
+}
+
+#[test]
+fn kmeans_restarts_report_configured_count() {
+    let points = vec![
+        vec![0.0, 0.0],
+        vec![0.1, 0.0],
+        vec![10.0, 10.0],
+        vec![10.1, 10.0],
+    ];
+    let config = KMeansConfig {
+        k: 2,
+        max_iterations: 10,
+        delta_threshold: 0.0,
+        number_of_restarts: 3,
+        compute_silhouette: false,
+        concurrency: 2,
+        node_property: "p".to_string(),
+        sampler_type: KMeansSamplerType::Uniform,
+        seed_centroids: Vec::new(),
+        random_seed: Some(7),
+    };
+
+    let mut runtime = KMeansComputationRuntime::new();
+    let result = runtime.compute(&points, &config);
+
+    assert_eq!(result.restarts, 3);
+    assert_eq!(result.communities.len(), points.len());
+}

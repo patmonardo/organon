@@ -75,7 +75,23 @@ impl ApproxMaxKCutComputationRuntime {
                 &mut sizes,
             );
 
-            let cost = cut_cost(&adjacency, &communities);
+            let mut cost = cut_cost(&adjacency, &communities);
+            if self.config.vns_max_neighborhood_order > 0 {
+                let improved = variable_neighborhood_search(
+                    &adjacency,
+                    &reverse,
+                    &min_sizes,
+                    self.config.minimize,
+                    self.config.vns_max_neighborhood_order,
+                    &mut rng,
+                    &communities,
+                    &sizes,
+                    cost,
+                );
+                communities = improved.communities;
+                cost = improved.cost;
+            }
+
             let is_better = if self.config.minimize {
                 cost < best_cost
             } else {
@@ -95,6 +111,115 @@ impl ApproxMaxKCutComputationRuntime {
             node_count,
             execution_time: Duration::default(),
         }
+    }
+}
+
+struct CandidateSolution {
+    communities: Vec<u8>,
+    sizes: Vec<usize>,
+    cost: f64,
+}
+
+fn variable_neighborhood_search(
+    adjacency: &[Vec<(usize, f64)>],
+    reverse: &[Vec<(usize, f64)>],
+    min_sizes: &[usize],
+    minimize: bool,
+    max_neighborhood_order: usize,
+    rng: &mut StdRng,
+    communities: &[u8],
+    sizes: &[usize],
+    cost: f64,
+) -> CandidateSolution {
+    let mut best = CandidateSolution {
+        communities: communities.to_vec(),
+        sizes: sizes.to_vec(),
+        cost,
+    };
+    let mut current_order = 0;
+
+    while current_order < max_neighborhood_order {
+        let mut neighbor_communities = best.communities.clone();
+        let mut neighbor_sizes = best.sizes.clone();
+        let mut perturb_success = true;
+
+        for order in 0..current_order {
+            perturb_success = perturb_solution(
+                &mut neighbor_communities,
+                &mut neighbor_sizes,
+                min_sizes,
+                rng,
+            );
+            if !perturb_success {
+                if order == 0 {
+                    return best;
+                }
+                break;
+            }
+        }
+
+        local_search(
+            adjacency,
+            reverse,
+            min_sizes,
+            minimize,
+            &mut neighbor_communities,
+            &mut neighbor_sizes,
+        );
+        let neighbor_cost = cut_cost(adjacency, &neighbor_communities);
+
+        if is_better(neighbor_cost, best.cost, minimize) {
+            best = CandidateSolution {
+                communities: neighbor_communities,
+                sizes: neighbor_sizes,
+                cost: neighbor_cost,
+            };
+            current_order = 0;
+        } else if !perturb_success {
+            break;
+        } else {
+            current_order += 1;
+        }
+    }
+
+    best
+}
+
+fn perturb_solution(
+    communities: &mut [u8],
+    sizes: &mut [usize],
+    min_sizes: &[usize],
+    rng: &mut StdRng,
+) -> bool {
+    const MAX_RETRIES: usize = 100;
+
+    if communities.is_empty() || sizes.len() < 2 {
+        return false;
+    }
+
+    for _ in 0..MAX_RETRIES {
+        let node = rng.gen_range(0..communities.len());
+        let current = communities[node] as usize;
+
+        if current >= sizes.len() || sizes[current] <= min_sizes[current] {
+            continue;
+        }
+
+        let next = (current + rng.gen_range(1..sizes.len())) % sizes.len();
+        communities[node] = next as u8;
+        sizes[current] -= 1;
+        sizes[next] += 1;
+        return true;
+    }
+
+    false
+}
+
+fn is_better(lhs: f64, rhs: f64, minimize: bool) -> bool {
+    if minimize {
+        lhs < rhs
+    } else {
+        lhs > rhs
     }
 }
 

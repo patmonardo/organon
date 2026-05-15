@@ -35,6 +35,10 @@ impl ApproxMaxKCutStorageRuntime {
             .map_err(|e| format!("failed to build graph view: {e}"))?;
 
         let node_count = graph_view.node_count();
+        config
+            .validate_for_node_count(node_count)
+            .map_err(|e| format!("invalid config: {e}"))?;
+
         if node_count == 0 {
             return Ok(ApproxMaxKCutResult {
                 communities: Vec::new(),
@@ -51,7 +55,9 @@ impl ApproxMaxKCutStorageRuntime {
             1.0
         };
 
-        progress_tracker.begin_subtask_with_volume(node_count + config.iterations);
+        progress_tracker.begin_subtask_with_description("ApproxMaxKCut");
+        progress_tracker
+            .begin_subtask_with_description_and_volume("place nodes randomly", node_count);
         let mut adjacency: Vec<Vec<(usize, f64)>> = vec![Vec::new(); node_count];
         for node_id in 0..node_count {
             termination_flag.assert_running();
@@ -73,12 +79,22 @@ impl ApproxMaxKCutStorageRuntime {
 
             progress_tracker.log_progress(1);
         }
-        // log iterations as remaining volume
+        progress_tracker.end_subtask_with_description("place nodes randomly");
+
         let get_neighbors =
             |node: usize| -> Vec<(usize, f64)> { adjacency.get(node).cloned().unwrap_or_default() };
+
+        let search_description = if config.vns_max_neighborhood_order > 0 {
+            "variable neighborhood search"
+        } else {
+            "local search"
+        };
+        progress_tracker.begin_subtask_with_description_and_volume(search_description, node_count);
         let result = computation.compute(node_count, get_neighbors);
-        progress_tracker.log_progress(config.iterations);
-        progress_tracker.end_subtask();
+        termination_flag.assert_running();
+        progress_tracker.log_progress(node_count);
+        progress_tracker.end_subtask_with_description(search_description);
+        progress_tracker.end_subtask_with_description("ApproxMaxKCut");
 
         Ok(result)
     }

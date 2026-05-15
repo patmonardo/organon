@@ -69,16 +69,24 @@ impl ConductanceStorageRuntime {
         progress_tracker.log_progress(node_count);
         progress_tracker.end_subtask_with_description("count relationships");
 
+        let community_capacity = computation.community_capacity(&locals);
+
         // 2) Accumulate counts
-        progress_tracker.begin_subtask_with_description("accumulate counts");
+        progress_tracker
+            .begin_subtask_with_description_and_volume("accumulate counts", community_capacity);
         let counts = computation.accumulate_counts(locals);
+        progress_tracker.log_progress(community_capacity);
         progress_tracker.end_subtask_with_description("accumulate counts");
 
         // 3) Compute conductances
-        progress_tracker.begin_subtask_with_description("perform conductance computations");
+        progress_tracker.begin_subtask_with_description_and_volume(
+            "perform conductance computations",
+            community_capacity,
+        );
         let mut result = computation.compute_conductances(counts);
         result.node_count = node_count;
         result.community_count = result.community_conductances.len();
+        progress_tracker.log_progress(community_capacity);
         progress_tracker.end_subtask_with_description("perform conductance computations");
 
         progress_tracker.end_subtask_with_description("Conductance");

@@ -6,16 +6,14 @@
 use crate::algo::algorithms::Result;
 use crate::algo::algorithms::{ConfigValidator, WriteResult};
 use crate::algo::conductance::{
-    ConductanceComputationRuntime, ConductanceConfig, ConductanceMutateResult,
-    ConductanceMutationSummary, ConductanceResult, ConductanceResultBuilder, ConductanceStats,
-    ConductanceStorageRuntime,
+    conductance_progress_task, ConductanceComputationRuntime, ConductanceConfig,
+    ConductanceMutateResult, ConductanceMutationSummary, ConductanceResult,
+    ConductanceResultBuilder, ConductanceStats, ConductanceStorageRuntime,
 };
 use crate::collections::backends::vec::VecDouble;
-use crate::concurrency::{Concurrency, TerminationFlag};
-use crate::core::utils::progress::{
-    EmptyTaskRegistryFactory, JobId, TaskProgressTracker, TaskRegistry, TaskRegistryFactory,
-};
-use crate::mem::MemoryRange;
+use crate::concurrency::TerminationFlag;
+use crate::core::utils::progress::TaskRegistry;
+use crate::mem::{Estimate, MemoryRange};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use crate::types::properties::node::DefaultDoubleNodePropertyValues;
@@ -132,18 +130,11 @@ impl ConductanceFacade {
 
         let config = self.config.clone();
 
-        let base_task = crate::core::utils::progress::Tasks::leaf_with_volume(
-            "conductance".to_string(),
-            node_count,
-        )
-        .base()
-        .clone();
-        let registry_factory = self.registry_factory();
-        let mut progress_tracker = TaskProgressTracker::with_registry(
+        let base_task = conductance_progress_task(node_count);
+        let mut progress_tracker = super::progress_tracker_for_task(
             base_task,
-            Concurrency::of(self.config.concurrency.max(1)),
-            JobId::new(),
-            registry_factory.as_ref(),
+            self.config.concurrency,
+            self.task_registry.as_ref(),
         );
 
         let termination_flag = TerminationFlag::default();
@@ -163,22 +154,6 @@ impl ConductanceFacade {
             execution_time: start.elapsed(),
             ..result
         })
-    }
-
-    fn registry_factory(&self) -> Box<dyn TaskRegistryFactory> {
-        struct PrebuiltTaskRegistryFactory(TaskRegistry);
-
-        impl TaskRegistryFactory for PrebuiltTaskRegistryFactory {
-            fn new_instance(&self, _job_id: JobId) -> TaskRegistry {
-                self.0.clone()
-            }
-        }
-
-        if let Some(registry) = &self.task_registry {
-            Box::new(PrebuiltTaskRegistryFactory(registry.clone()))
-        } else {
-            Box::new(EmptyTaskRegistryFactory)
-        }
     }
 
     /// Stream mode: yields conductance per community
@@ -281,22 +256,24 @@ impl ConductanceFacade {
 
     /// Estimate memory usage.
     pub fn estimate_memory(&self) -> Result<MemoryRange> {
-        // Conductance keeps per-node community ids and accumulators per community.
-        // Dominant memory is linear in node count; relationship count influences traversal overhead.
         let node_count = self.graph_store.node_count();
-        let relationship_count = self.graph_store.relationship_count();
+        let concurrency = self.config.concurrency.max(1);
 
-        // Per node: community id + temporary sums.
-        let per_node = 64usize;
-        // Per relationship: traversal bookkeeping (very conservative).
-        let per_relationship = 8usize;
+        let local_counts = Estimate::size_of_long_double_hash_map(node_count)
+            .saturating_mul(2)
+            .saturating_mul(concurrency);
+        let accumulated_counts =
+            Estimate::size_of_long_double_hash_map(node_count).saturating_mul(2);
+        let conductances = Estimate::size_of_long_double_hash_map(node_count);
+        let result_map = Estimate::size_of_long_double_hash_map(node_count);
 
-        let base: usize = 32 * 1024;
-        let total = base
-            .saturating_add(node_count.saturating_mul(per_node))
-            .saturating_add(relationship_count.saturating_mul(per_relationship));
+        let total = Estimate::BYTES_OBJECT_HEADER
+            .saturating_add(local_counts)
+            .saturating_add(accumulated_counts)
+            .saturating_add(conductances)
+            .saturating_add(result_map);
 
-        Ok(MemoryRange::of_range(total, total.saturating_mul(2)))
+        Ok(MemoryRange::of(total))
     }
 }
 

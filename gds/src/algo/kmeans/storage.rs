@@ -52,6 +52,11 @@ impl KMeansStorageRuntime {
             });
         }
 
+        if config.k > node_count {
+            progress_tracker
+                .log_warning("Number of requested clusters is larger than the number of nodes.");
+        }
+
         if !graph_view
             .available_node_properties()
             .contains(&config.node_property)
@@ -95,10 +100,18 @@ impl KMeansStorageRuntime {
                         c.len()
                     )));
                 }
+                if c.iter().any(|value| value.is_nan()) {
+                    return Err(AlgorithmError::Execution(format!(
+                        "seed_centroids[{}] contains NaN values",
+                        i
+                    )));
+                }
             }
         }
 
-        progress_tracker.begin_subtask_with_volume(node_count);
+        progress_tracker.begin_subtask_with_description("KMeans");
+        progress_tracker
+            .begin_subtask_with_description_and_volume("read feature properties", node_count);
 
         let mut points: Vec<Vec<f64>> = Vec::with_capacity(node_count);
         for i in 0..node_count {
@@ -146,14 +159,36 @@ impl KMeansStorageRuntime {
                 )));
             }
 
+            if arr.iter().any(|value| value.is_nan()) {
+                progress_tracker.end_subtask_with_failure();
+                return Err(AlgorithmError::Execution(format!(
+                    "node_property '{}' contains NaN values at node {}",
+                    config.node_property, i
+                )));
+            }
+
             points.push(arr);
             progress_tracker.log_progress(1);
         }
+        progress_tracker.end_subtask_with_description("read feature properties");
+
+        progress_tracker.begin_subtask_with_description_and_volume(
+            "KMeans iteration",
+            node_count.saturating_mul(config.number_of_restarts.max(1) as usize),
+        );
 
         let mut result = computation.compute(&points, config);
         result.node_count = node_count;
+        progress_tracker.log_progress(node_count.saturating_mul(result.restarts.max(1) as usize));
+        progress_tracker.end_subtask_with_description("KMeans iteration");
 
-        progress_tracker.end_subtask();
+        if config.compute_silhouette {
+            progress_tracker.begin_subtask_with_description_and_volume("Silhouette", node_count);
+            progress_tracker.log_progress(node_count);
+            progress_tracker.end_subtask_with_description("Silhouette");
+        }
+
+        progress_tracker.end_subtask_with_description("KMeans");
 
         Ok(result)
     }

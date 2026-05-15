@@ -48,10 +48,17 @@ pub fn handle_kmeans(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value {
         .and_then(|v| v.as_u64())
         .unwrap_or(10) as u32;
 
-    let random_seed = request
-        .get("randomSeed")
+    let delta_threshold = request
+        .get("deltaThreshold")
+        .and_then(|v| v.as_f64())
+        .unwrap_or(0.0);
+
+    let number_of_restarts = request
+        .get("numberOfRestarts")
         .and_then(|v| v.as_u64())
-        .unwrap_or(0);
+        .unwrap_or(1) as u32;
+
+    let random_seed = request.get("randomSeed").and_then(|v| v.as_u64());
 
     let compute_silhouette = request
         .get("computeSilhouette")
@@ -61,7 +68,7 @@ pub fn handle_kmeans(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value {
     let sampler_type = request
         .get("samplerType")
         .and_then(|v| v.as_str())
-        .unwrap_or("UNIFORM");
+        .unwrap_or("KMEANSPP");
 
     let sampler = match sampler_type {
         "KMEANSPP" => KMeansSamplerType::KmeansPlusPlus,
@@ -126,9 +133,14 @@ pub fn handle_kmeans(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value {
                     .node_property(property.as_str())
                     .concurrency(concurrency_value)
                     .max_iterations(max_iterations)
-                    .random_seed(random_seed)
+                    .delta_threshold(delta_threshold)
+                    .number_of_restarts(number_of_restarts)
                     .compute_silhouette(compute_silhouette)
                     .sampler_type(sampler_type);
+
+                if let Some(seed) = random_seed {
+                    builder = builder.random_seed(seed);
+                }
 
                 if let Some(centroids) = seeds.clone() {
                     builder = builder.seed_centroids(centroids);
@@ -187,9 +199,14 @@ pub fn handle_kmeans(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value {
                     .node_property(property.as_str())
                     .concurrency(concurrency_value)
                     .max_iterations(max_iterations)
-                    .random_seed(random_seed)
+                    .delta_threshold(delta_threshold)
+                    .number_of_restarts(number_of_restarts)
                     .compute_silhouette(compute_silhouette)
                     .sampler_type(sampler_type);
+
+                if let Some(seed) = random_seed {
+                    builder = builder.random_seed(seed);
+                }
 
                 if let Some(centroids) = seeds.clone() {
                     builder = builder.seed_centroids(centroids);
@@ -234,9 +251,14 @@ pub fn handle_kmeans(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value {
                 .node_property(node_property.as_str())
                 .concurrency(concurrency_value)
                 .max_iterations(max_iterations)
-                .random_seed(random_seed)
+                .delta_threshold(delta_threshold)
+                .number_of_restarts(number_of_restarts)
                 .compute_silhouette(compute_silhouette)
                 .sampler_type(sampler);
+
+            if let Some(seed) = random_seed {
+                facade = facade.random_seed(seed);
+            }
 
             if let Some(centroids) = seed_centroids.clone() {
                 facade = facade.seed_centroids(centroids);
@@ -276,9 +298,14 @@ pub fn handle_kmeans(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value {
                 .node_property(node_property.as_str())
                 .concurrency(concurrency_value)
                 .max_iterations(max_iterations)
-                .random_seed(random_seed)
+                .delta_threshold(delta_threshold)
+                .number_of_restarts(number_of_restarts)
                 .compute_silhouette(compute_silhouette)
                 .sampler_type(sampler);
+
+            if let Some(seed) = random_seed {
+                facade = facade.random_seed(seed);
+            }
 
             if let Some(centroids) = seed_centroids.clone() {
                 facade = facade.seed_centroids(centroids);
@@ -299,9 +326,14 @@ pub fn handle_kmeans(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value {
                 .node_property(node_property.as_str())
                 .concurrency(concurrency_value)
                 .max_iterations(max_iterations)
-                .random_seed(random_seed)
+                .delta_threshold(delta_threshold)
+                .number_of_restarts(number_of_restarts)
                 .compute_silhouette(compute_silhouette)
                 .sampler_type(sampler);
+
+            if let Some(seed) = random_seed {
+                facade = facade.random_seed(seed);
+            }
 
             if let Some(centroids) = seed_centroids {
                 facade = facade.seed_centroids(centroids);

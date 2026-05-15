@@ -1,6 +1,7 @@
 //! ApproxMaxKCut algorithm specification.
 
 use crate::config::validation::ConfigError;
+use crate::core::utils::progress::{Task, Tasks};
 use std::sync::Arc;
 use std::time::Duration;
 
@@ -21,6 +22,13 @@ pub struct ApproxMaxKCutConfig {
     pub min_community_sizes: Vec<usize>,
     #[serde(default = "default_concurrency")]
     pub concurrency: usize,
+    #[serde(default = "default_min_batch_size", alias = "minBatchSize")]
+    pub min_batch_size: usize,
+    #[serde(
+        default = "default_vns_max_neighborhood_order",
+        alias = "vnsMaxNeighborhoodOrder"
+    )]
+    pub vns_max_neighborhood_order: usize,
 }
 
 fn default_k() -> u8 {
@@ -51,6 +59,14 @@ fn default_concurrency() -> usize {
     4
 }
 
+fn default_min_batch_size() -> usize {
+    crate::core::utils::partition::DEFAULT_BATCH_SIZE
+}
+
+fn default_vns_max_neighborhood_order() -> usize {
+    0
+}
+
 impl Default for ApproxMaxKCutConfig {
     fn default() -> Self {
         Self {
@@ -61,6 +77,8 @@ impl Default for ApproxMaxKCutConfig {
             has_relationship_weight_property: default_has_relationship_weight_property(),
             min_community_sizes: default_min_community_sizes(),
             concurrency: default_concurrency(),
+            min_batch_size: default_min_batch_size(),
+            vns_max_neighborhood_order: default_vns_max_neighborhood_order(),
         }
     }
 }
@@ -85,6 +103,12 @@ impl ApproxMaxKCutConfig {
                 reason: "concurrency must be between 1 and 1024".to_string(),
             });
         }
+        if self.min_batch_size == 0 {
+            return Err(ConfigError::InvalidParameter {
+                parameter: "minBatchSize".to_string(),
+                reason: "min_batch_size must be positive".to_string(),
+            });
+        }
         if self.min_community_sizes.len() != self.k as usize {
             return Err(ConfigError::InvalidParameter {
                 parameter: "minCommunitySizes".to_string(),
@@ -97,12 +121,57 @@ impl ApproxMaxKCutConfig {
         }
         Ok(())
     }
+
+    pub fn validate_for_node_count(&self, node_count: usize) -> Result<(), ConfigError> {
+        self.validate()?;
+        let total_min: usize = self.min_community_sizes.iter().sum();
+        if total_min > node_count {
+            return Err(ConfigError::InvalidParameter {
+                parameter: "minCommunitySizes".to_string(),
+                reason: format!(
+                    "sum of min_community_sizes ({total_min}) must not exceed node count ({node_count})"
+                ),
+            });
+        }
+        Ok(())
+    }
 }
 
 impl crate::config::ValidatedConfig for ApproxMaxKCutConfig {
     fn validate(&self) -> Result<(), ConfigError> {
         ApproxMaxKCutConfig::validate(self)
     }
+}
+
+pub fn approx_max_kcut_progress_task(
+    node_count: usize,
+    iterations: usize,
+    vns_max_neighborhood_order: usize,
+) -> Task {
+    let iteration_supplier = Arc::new(move || {
+        let search_description = if vns_max_neighborhood_order > 0 {
+            "variable neighborhood search"
+        } else {
+            "local search"
+        };
+
+        vec![
+            Arc::new(
+                Tasks::leaf_with_volume("place nodes randomly".to_string(), node_count)
+                    .base()
+                    .clone(),
+            ),
+            Arc::new(
+                Tasks::leaf_with_volume(search_description.to_string(), node_count)
+                    .base()
+                    .clone(),
+            ),
+        ]
+    });
+
+    Tasks::iterative_fixed("ApproxMaxKCut".to_string(), iteration_supplier, iterations)
+        .base()
+        .clone()
 }
 
 /// Result for approx max k-cut computation.

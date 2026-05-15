@@ -1,3 +1,4 @@
+use super::spec::conductance_progress_task;
 use super::spec::ConductanceConfig;
 use super::ConductanceComputationRuntime;
 use super::ConductanceStorageRuntime;
@@ -73,28 +74,7 @@ fn conductance_matches_expected_small_graph() {
     let storage = ConductanceStorageRuntime::new();
     let mut runtime = ConductanceComputationRuntime::new();
 
-    use crate::core::utils::progress::tasks::{Task, Tasks};
-    use std::sync::Arc;
-
-    // Construct a hierarchical base task matching the expected subtasks that
-    // `compute_conductance` drives. The previous helper that did this was
-    // removed during cleanups; recreate the minimal structure here.
-    let count_task = Arc::new(Task::leaf(
-        "count relationships".to_string(),
-        store.node_count(),
-    ));
-    let accumulate_task = Arc::new(Task::new("accumulate counts".to_string(), vec![]));
-    let compute_task = Arc::new(Task::new(
-        "perform conductance computations".to_string(),
-        vec![],
-    ));
-
-    let base = Tasks::task(
-        "Conductance".to_string(),
-        vec![count_task, accumulate_task, compute_task],
-    );
-
-    let base_task = base;
+    let base_task = conductance_progress_task(store.node_count());
     let registry_factory = EmptyTaskRegistryFactory;
     let mut progress = TaskProgressTracker::with_registry(
         base_task,

@@ -5,13 +5,21 @@ use std::time::Duration;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ModularityConfig {
+    #[serde(default = "default_concurrency")]
+    pub concurrency: usize,
+
     #[serde(default, rename = "communityProperty")]
     pub community_property: String,
+}
+
+fn default_concurrency() -> usize {
+    4
 }
 
 impl Default for ModularityConfig {
     fn default() -> Self {
         Self {
+            concurrency: default_concurrency(),
             community_property: String::new(),
         }
     }
@@ -19,6 +27,12 @@ impl Default for ModularityConfig {
 
 impl ModularityConfig {
     pub fn validate(&self) -> Result<(), ConfigError> {
+        if self.concurrency == 0 {
+            return Err(ConfigError::InvalidParameter {
+                parameter: "concurrency".to_string(),
+                reason: "concurrency must be positive".to_string(),
+            });
+        }
         if self.community_property.trim().is_empty() {
             return Err(ConfigError::InvalidParameter {
                 parameter: "communityProperty".to_string(),

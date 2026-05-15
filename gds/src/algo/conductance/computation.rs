@@ -50,7 +50,7 @@ impl ConductanceComputationRuntime {
         );
 
         let has_weights = config.has_relationship_weight_property;
-        let fallback = graph.default_property_value();
+        let fallback = 0.0;
 
         let tasks: Vec<Box<dyn FnOnce() + Send>> = degree_partitions
             .into_iter()
@@ -190,6 +190,16 @@ impl ConductanceComputationRuntime {
             node_count: 0,
             execution_time: Duration::default(),
         }
+    }
+
+    pub fn community_capacity(&self, locals: &[LocalCounts]) -> usize {
+        locals
+            .iter()
+            .flat_map(|local| local.internal.keys().chain(local.external.keys()))
+            .copied()
+            .max()
+            .map(|community| community as usize + 1)
+            .unwrap_or(0)
     }
 }
 

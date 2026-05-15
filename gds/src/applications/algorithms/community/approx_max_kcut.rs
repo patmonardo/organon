@@ -64,6 +64,17 @@ pub fn handle_approx_max_kcut(request: &Value, catalog: Arc<dyn GraphCatalog>) -
         })
         .unwrap_or_else(|| vec![0; k as usize]);
 
+    let min_batch_size = request
+        .get("minBatchSize")
+        .and_then(|v| v.as_u64())
+        .unwrap_or(crate::core::utils::partition::DEFAULT_BATCH_SIZE as u64)
+        as usize;
+
+    let vns_max_neighborhood_order = request
+        .get("vnsMaxNeighborhoodOrder")
+        .and_then(|v| v.as_u64())
+        .unwrap_or(0) as usize;
+
     let concurrency_value = request
         .get("concurrency")
         .and_then(|v| v.as_u64())
@@ -112,7 +123,10 @@ pub fn handle_approx_max_kcut(request: &Value, catalog: Arc<dyn GraphCatalog>) -
                     .iterations(iterations)
                     .random_seed(random_seed)
                     .minimize(minimize)
-                    .relationship_weight_property(relationship_weight_property);
+                    .relationship_weight_property(relationship_weight_property)
+                    .concurrency(concurrency_value)
+                    .min_batch_size(min_batch_size)
+                    .vns_max_neighborhood_order(vns_max_neighborhood_order);
 
                 if !min_sizes.is_empty() {
                     builder = builder.min_community_sizes(min_sizes.clone());
@@ -175,7 +189,10 @@ pub fn handle_approx_max_kcut(request: &Value, catalog: Arc<dyn GraphCatalog>) -
                     .iterations(iterations)
                     .random_seed(random_seed)
                     .minimize(minimize)
-                    .relationship_weight_property(relationship_weight_property);
+                    .relationship_weight_property(relationship_weight_property)
+                    .concurrency(concurrency_value)
+                    .min_batch_size(min_batch_size)
+                    .vns_max_neighborhood_order(vns_max_neighborhood_order);
 
                 if !min_sizes.is_empty() {
                     builder = builder.min_community_sizes(min_sizes.clone());
@@ -226,7 +243,9 @@ pub fn handle_approx_max_kcut(request: &Value, catalog: Arc<dyn GraphCatalog>) -
                 .minimize(minimize)
                 .relationship_weight_property(relationship_weight_property)
                 .min_community_sizes(min_community_sizes)
-                .concurrency(concurrency_value);
+                .concurrency(concurrency_value)
+                .min_batch_size(min_batch_size)
+                .vns_max_neighborhood_order(vns_max_neighborhood_order);
 
             match facade.mutate(&property_name) {
                 Ok(result) => {
@@ -264,7 +283,9 @@ pub fn handle_approx_max_kcut(request: &Value, catalog: Arc<dyn GraphCatalog>) -
                 .minimize(minimize)
                 .relationship_weight_property(relationship_weight_property)
                 .min_community_sizes(min_community_sizes)
-                .concurrency(concurrency_value);
+                .concurrency(concurrency_value)
+                .min_batch_size(min_batch_size)
+                .vns_max_neighborhood_order(vns_max_neighborhood_order);
 
             match facade.write(&property_name) {
                 Ok(result) => json!({"ok": true, "op": op, "data": result}),
@@ -283,7 +304,9 @@ pub fn handle_approx_max_kcut(request: &Value, catalog: Arc<dyn GraphCatalog>) -
                 .minimize(minimize)
                 .relationship_weight_property(relationship_weight_property)
                 .min_community_sizes(min_community_sizes)
-                .concurrency(concurrency_value);
+                .concurrency(concurrency_value)
+                .min_batch_size(min_batch_size)
+                .vns_max_neighborhood_order(vns_max_neighborhood_order);
 
             match facade.estimate_memory() {
                 Ok(range) => json!({"ok": true, "op": op, "data": range}),

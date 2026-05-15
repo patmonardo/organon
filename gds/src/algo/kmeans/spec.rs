@@ -1,6 +1,7 @@
 //! K-Means config + result types.
 
 use crate::config::validation::ConfigError;
+use crate::core::utils::progress::{Task, Tasks};
 use std::sync::Arc;
 use std::time::Duration;
 
@@ -118,6 +119,38 @@ impl crate::config::ValidatedConfig for KMeansConfig {
     fn validate(&self) -> Result<(), ConfigError> {
         KMeansConfig::validate(self)
     }
+}
+
+pub fn kmeans_progress_task(
+    node_count: usize,
+    number_of_restarts: u32,
+    compute_silhouette: bool,
+) -> Task {
+    let mut children = vec![
+        Arc::new(
+            Tasks::leaf_with_volume("read feature properties".to_string(), node_count)
+                .base()
+                .clone(),
+        ),
+        Arc::new(
+            Tasks::leaf_with_volume(
+                "KMeans iteration".to_string(),
+                node_count.saturating_mul(number_of_restarts.max(1) as usize),
+            )
+            .base()
+            .clone(),
+        ),
+    ];
+
+    if compute_silhouette {
+        children.push(Arc::new(
+            Tasks::leaf_with_volume("Silhouette".to_string(), node_count)
+                .base()
+                .clone(),
+        ));
+    }
+
+    Tasks::task("KMeans".to_string(), children)
 }
 
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]

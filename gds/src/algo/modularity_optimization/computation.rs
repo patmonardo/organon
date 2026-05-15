@@ -1,5 +1,6 @@
 use super::spec::{ModularityOptimizationConfig, ModularityOptimizationResult};
 use std::collections::HashMap;
+use std::time::Duration;
 
 #[derive(Debug, Clone)]
 pub struct ModularityOptimizationInput {
@@ -47,6 +48,8 @@ impl ModularityOptimizationComputationRuntime {
                 modularity: 0.0,
                 ran_iterations: 0,
                 did_converge: true,
+                node_count: 0,
+                execution_time: Duration::default(),
             };
         }
 
@@ -58,6 +61,8 @@ impl ModularityOptimizationComputationRuntime {
                 modularity: 0.0,
                 ran_iterations: 0,
                 did_converge: true,
+                node_count: input.node_count,
+                execution_time: Duration::default(),
             };
         }
 
@@ -122,6 +127,8 @@ impl ModularityOptimizationComputationRuntime {
             modularity,
             ran_iterations,
             did_converge,
+            node_count: input.node_count,
+            execution_time: Duration::default(),
         }
     }
 }

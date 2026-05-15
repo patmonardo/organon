@@ -18,13 +18,13 @@ use crate::algo::algorithms::Result;
 use crate::algo::algorithms::{ConfigValidator, WriteResult};
 pub use crate::algo::kmeans::KMeansSamplerType;
 use crate::algo::kmeans::{
-    KMeansComputationRuntime, KMeansConfig, KMeansMutateResult, KMeansMutationSummary,
-    KMeansResult, KMeansResultBuilder, KMeansStats, KMeansStorageRuntime,
+    kmeans_progress_task, KMeansComputationRuntime, KMeansConfig, KMeansMutateResult,
+    KMeansMutationSummary, KMeansResult, KMeansResultBuilder, KMeansStats, KMeansStorageRuntime,
 };
 use crate::collections::backends::vec::VecLong;
 use crate::concurrency::TerminationFlag;
-use crate::core::utils::progress::{TaskRegistry, Tasks};
-use crate::mem::MemoryRange;
+use crate::core::utils::progress::TaskRegistry;
+use crate::mem::{Estimate, MemoryRange};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use crate::types::properties::node::DefaultLongNodePropertyValues;
@@ -182,8 +182,13 @@ impl KMeansFacade {
         let config = self.config.clone();
         let node_count = self.graph_store.node_count();
 
-        let mut progress_tracker = super::progress_tracker(
-            Tasks::leaf_with_volume("kmeans".to_string(), node_count),
+        let progress_task = kmeans_progress_task(
+            node_count,
+            config.number_of_restarts,
+            config.compute_silhouette,
+        );
+        let mut progress_tracker = super::progress_tracker_for_task(
+            progress_task,
             config.concurrency,
             self.task_registry.as_ref(),
         );
@@ -278,23 +283,152 @@ impl KMeansFacade {
         self.validate_basic()?;
 
         let node_count = self.graph_store.node_count();
-        let relationship_count = self.graph_store.relationship_count();
+        let k = self.config.k.max(1);
+        let dimensions = 128;
 
-        // Per node: feature vector + community assignments + distance tracking.
-        let per_node = 192usize;
-        // Per relationship: traversal overhead (small).
-        let per_relationship = 8usize;
+        let best_communities = Estimate::size_of_int_array(node_count);
+        let best_centroids = Estimate::size_of_object_array(k)
+            .saturating_add(k.saturating_mul(Estimate::size_of_double_array(dimensions)));
+        let nodes_in_cluster = Estimate::size_of_long_array(k);
+        let distance_from_centroid = Estimate::size_of_double_array(node_count);
+        let cluster_manager = nodes_in_cluster.saturating_add(best_centroids);
+        let task_memory = self.config.concurrency.max(1).saturating_mul(
+            Estimate::size_of_long_array(k)
+                .saturating_add(k.saturating_mul(Estimate::size_of_double_array(dimensions))),
+        );
+        let silhouette = if self.config.compute_silhouette {
+            Estimate::size_of_double_array(node_count)
+        } else {
+            0
+        };
+        let seeded_centroids = if self.config.seed_centroids.is_empty() {
+            0
+        } else {
+            Estimate::size_of_object_array(self.config.seed_centroids.len()).saturating_add(
+                self.config
+                    .seed_centroids
+                    .iter()
+                    .map(|centroid| Estimate::size_of_double_array(centroid.len()))
+                    .sum::<usize>(),
+            )
+        };
+        let materialized_points = Estimate::size_of_object_array(node_count)
+            .saturating_add(node_count.saturating_mul(Estimate::size_of_double_array(dimensions)));
 
-        let base: usize = 64 * 1024;
-        let total = base
-            .saturating_add(node_count.saturating_mul(per_node))
-            .saturating_add(relationship_count.saturating_mul(per_relationship));
+        let total = best_communities
+            .saturating_add(best_centroids)
+            .saturating_add(nodes_in_cluster)
+            .saturating_add(distance_from_centroid)
+            .saturating_add(cluster_manager)
+            .saturating_add(task_memory)
+            .saturating_add(silhouette)
+            .saturating_add(seeded_centroids)
+            .saturating_add(materialized_points);
 
-        Ok(MemoryRange::of_range(total, total.saturating_mul(3)))
+        Ok(MemoryRange::of_range(
+            total,
+            total.saturating_add(task_memory),
+        ))
     }
 
     pub fn run(&self) -> Result<KMeansResult> {
         let result = self.compute()?;
         Ok(result)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::collections::backends::vec::VecDoubleArray;
+    use crate::config::GraphStoreConfig;
+    use crate::procedures::GraphFacade;
+    use crate::types::graph::SimpleIdMap;
+    use crate::types::graph_store::{
+        Capabilities, DatabaseId, DatabaseInfo, DatabaseLocation, DefaultGraphStore, GraphName,
+    };
+    use crate::types::properties::node::DefaultDoubleArrayNodePropertyValues;
+    use crate::types::schema::MutableGraphSchema;
+    use std::collections::HashMap;
+
+    fn store_from_points(points: Vec<Vec<f64>>) -> DefaultGraphStore {
+        let node_count = points.len();
+        let schema = MutableGraphSchema::empty().build();
+        let original_ids: Vec<i64> = (0..node_count as i64).collect();
+        let id_map = SimpleIdMap::from_original_ids(original_ids);
+
+        let mut store = DefaultGraphStore::new(
+            GraphStoreConfig::default(),
+            GraphName::new("g"),
+            DatabaseInfo::new(
+                DatabaseId::new("db"),
+                DatabaseLocation::remote("localhost", 7687, None, None),
+            ),
+            schema,
+            Capabilities::default(),
+            id_map,
+            HashMap::new(),
+        );
+
+        let dense = points.into_iter().map(Some).collect::<Vec<_>>();
+        let values = DefaultDoubleArrayNodePropertyValues::<VecDoubleArray>::from_collection(
+            VecDoubleArray::from(dense),
+            node_count,
+        );
+        let values: Arc<dyn NodePropertyValues> = Arc::new(values);
+        store
+            .add_node_property(store.node_labels(), "p".to_string(), values)
+            .unwrap();
+        store
+    }
+
+    #[test]
+    fn facade_modes_on_small_points() {
+        let store = store_from_points(vec![
+            vec![0.0, 0.0],
+            vec![0.1, 0.0],
+            vec![10.0, 10.0],
+            vec![10.1, 10.0],
+        ]);
+        let graph = GraphFacade::new(Arc::new(store));
+
+        let rows: Vec<_> = graph
+            .kmeans()
+            .k(2)
+            .node_property("p")
+            .max_iterations(10)
+            .number_of_restarts(2)
+            .random_seed(42)
+            .stream()
+            .unwrap()
+            .collect();
+        assert_eq!(rows.len(), 4);
+
+        let stats = graph
+            .kmeans()
+            .k(2)
+            .node_property("p")
+            .max_iterations(10)
+            .stats()
+            .unwrap();
+        assert_eq!(stats.k, 2);
+
+        let memory = graph
+            .kmeans()
+            .k(2)
+            .node_property("p")
+            .estimate_memory()
+            .unwrap();
+        assert!(memory.max() >= memory.min());
+
+        let mutation = graph
+            .kmeans()
+            .k(2)
+            .node_property("p")
+            .max_iterations(10)
+            .mutate("community")
+            .unwrap();
+        assert_eq!(mutation.summary.nodes_updated, 4);
+        assert!(mutation.updated_store.has_node_property("community"));
     }
 }

@@ -13,7 +13,7 @@ use crate::algo::modularity::{
 use crate::collections::backends::vec::VecDouble;
 use crate::concurrency::TerminationFlag;
 use crate::core::utils::progress::{TaskRegistry, Tasks};
-use crate::mem::MemoryRange;
+use crate::mem::{Estimate, MemoryRange};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use crate::types::properties::node::DefaultDoubleNodePropertyValues;
@@ -88,6 +88,11 @@ impl ModularityFacade {
         Ok(self)
     }
 
+    pub fn concurrency(mut self, concurrency: usize) -> Self {
+        self.config.concurrency = concurrency;
+        self
+    }
+
     pub fn task_registry(mut self, task_registry: TaskRegistry) -> Self {
         self.task_registry = Some(task_registry);
         self
@@ -109,7 +114,7 @@ impl ModularityFacade {
 
         let mut progress_tracker = super::progress_tracker(
             Tasks::leaf_with_volume("modularity".to_string(), storage.node_count()),
-            1,
+            self.config.concurrency,
             self.task_registry.as_ref(),
         );
 
@@ -229,23 +234,37 @@ impl ModularityFacade {
         ))
     }
 
+    /// Full result: returns per-community modularity scores and the total score.
+    pub fn run(&self) -> Result<ModularityResult> {
+        self.compute()
+    }
+
     /// Estimate memory usage.
     pub fn estimate_memory(&self) -> Result<MemoryRange> {
-        // Modularity reads community labels and aggregates per-community totals.
         let node_count = self.graph_store.node_count();
-        let relationship_count = self.graph_store.relationship_count();
+        let concurrency = self.config.concurrency.max(1);
 
-        // Per node: community id + temporary weight sums.
-        let per_node = 64usize;
-        // Per relationship: one pass to aggregate contributions.
-        let per_relationship = 8usize;
+        let community_mapper = Estimate::size_of_long_hash_set(node_count)
+            .saturating_add(Estimate::size_of_long_array(node_count));
+        let inside_relationships = Estimate::size_of_double_array(node_count);
+        let total_community_relationships = Estimate::size_of_double_array(node_count);
+        let community_modularities = Estimate::size_of_object_array(node_count).saturating_add(
+            node_count.saturating_mul(
+                Estimate::BYTES_OBJECT_HEADER
+                    .saturating_add(std::mem::size_of::<u64>())
+                    .saturating_add(std::mem::size_of::<f64>()),
+            ),
+        );
+        let relationship_collectors = Estimate::BYTES_OBJECT_HEADER.saturating_mul(concurrency);
 
-        let base: usize = 32 * 1024;
-        let total = base
-            .saturating_add(node_count.saturating_mul(per_node))
-            .saturating_add(relationship_count.saturating_mul(per_relationship));
+        let total = Estimate::BYTES_OBJECT_HEADER
+            .saturating_add(community_mapper)
+            .saturating_add(inside_relationships)
+            .saturating_add(total_community_relationships)
+            .saturating_add(community_modularities)
+            .saturating_add(relationship_collectors);
 
-        Ok(MemoryRange::of_range(total, total.saturating_mul(2)))
+        Ok(MemoryRange::of(total))
     }
 }
 

@@ -1,4 +1,5 @@
 use crate::config::validation::ConfigError;
+use crate::core::utils::progress::{Task, Tasks};
 use std::collections::HashMap;
 use std::sync::Arc;
 use std::time::Duration;
@@ -61,6 +62,26 @@ impl crate::config::ValidatedConfig for ConductanceConfig {
     fn validate(&self) -> Result<(), ConfigError> {
         ConductanceConfig::validate(self)
     }
+}
+
+/// Java-shaped progress task for conductance.
+pub fn conductance_progress_task(node_count: usize) -> Task {
+    Tasks::task(
+        "Conductance".to_string(),
+        vec![
+            Arc::new(
+                Tasks::leaf_with_volume("count relationships".to_string(), node_count)
+                    .base()
+                    .clone(),
+            ),
+            Arc::new(Tasks::leaf("accumulate counts".to_string()).base().clone()),
+            Arc::new(
+                Tasks::leaf("perform conductance computations".to_string())
+                    .base()
+                    .clone(),
+            ),
+        ],
+    )
 }
 
 /// Result of conductance computation.

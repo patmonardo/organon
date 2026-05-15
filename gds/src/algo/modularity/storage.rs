@@ -54,7 +54,7 @@ impl ModularityStorageRuntime {
                 ))
             })?;
 
-        let weight_fallback = self.graph.default_property_value();
+        let weight_fallback = 1.0;
 
         let communities: Vec<Option<u64>> = (0..node_count)
             .map(|node_idx| {
