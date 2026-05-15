@@ -15,6 +15,7 @@ use crate::core::utils::paged::dss::{DisjointSetStruct, HugeAtomicDisjointSetStr
 use crate::core::utils::partition::{Partition, PartitionUtils, DEFAULT_BATCH_SIZE};
 use crate::core::utils::progress::ProgressTracker;
 use crate::types::graph::Graph;
+use crate::types::properties::node::NodePropertyValues;
 use std::collections::HashMap;
 use std::sync::Arc;
 
@@ -27,7 +28,9 @@ pub struct WccComputationResult {
 
 pub struct WccComputationRuntime {
     concurrency: usize,
+    min_batch_size: usize,
     threshold: Option<f64>,
+    seed_property_values: Option<Arc<dyn NodePropertyValues>>,
 }
 
 impl Default for WccComputationRuntime {
@@ -40,7 +43,9 @@ impl WccComputationRuntime {
     pub fn new() -> Self {
         Self {
             concurrency: 4,
+            min_batch_size: DEFAULT_BATCH_SIZE,
             threshold: None,
+            seed_property_values: None,
         }
     }
 
@@ -51,6 +56,19 @@ impl WccComputationRuntime {
 
     pub fn threshold(mut self, threshold: Option<f64>) -> Self {
         self.threshold = threshold;
+        self
+    }
+
+    pub fn min_batch_size(mut self, min_batch_size: usize) -> Self {
+        self.min_batch_size = min_batch_size.max(1);
+        self
+    }
+
+    pub fn seed_property_values(
+        mut self,
+        seed_property_values: Arc<dyn NodePropertyValues>,
+    ) -> Self {
+        self.seed_property_values = Some(seed_property_values);
         self
     }
 
@@ -68,9 +86,21 @@ impl WccComputationRuntime {
             });
         }
 
-        let dss = Arc::new(HugeAtomicDisjointSetStruct::new(node_count));
+        let dss = Arc::new(match self.seed_property_values.clone() {
+            Some(seed_values) => {
+                HugeAtomicDisjointSetStruct::with_communities(node_count, |node| {
+                    if seed_values.has_value(node as u64) {
+                        seed_values.long_value(node as u64).unwrap_or(-1)
+                    } else {
+                        -1
+                    }
+                })
+            }
+            None => HugeAtomicDisjointSetStruct::new(node_count),
+        });
         let threshold = self.threshold;
         let concurrency = self.concurrency;
+        let min_batch_size = self.min_batch_size;
 
         let characteristics = graph.characteristics();
         if characteristics.is_undirected() || characteristics.is_inverse_indexed() {
@@ -87,6 +117,7 @@ impl WccComputationRuntime {
                 graph,
                 &dss,
                 concurrency,
+                min_batch_size,
                 threshold,
                 progress_tracker,
                 termination_flag,
@@ -159,7 +190,7 @@ fn sampled_strategy(
                     }
                 }
 
-                processed += g.degree(node as i64);
+                processed += NEIGHBOR_ROUNDS.min(g.degree(node as i64));
             }
 
             processed
@@ -177,8 +208,7 @@ fn sampled_strategy(
             let partition = partitions[idx];
             let g = Graph::concurrent_copy(graph);
             let fallback = g.default_property_value();
-            let use_inverse =
-                g.characteristics().is_inverse_indexed() || g.characteristics().is_undirected();
+            let use_inverse = g.characteristics().is_inverse_indexed();
 
             let mut processed: usize = 0;
             for node in partition.iter() {
@@ -190,16 +220,39 @@ fn sampled_strategy(
                     continue;
                 }
 
-                if let Some(t) = threshold {
-                    for cursor in g.stream_relationships(node as i64, t + 1.0) {
-                        if cursor.property() > t {
-                            let target = cursor.target_id();
-                            if target >= 0 {
-                                dss.union(node, target as usize);
+                let degree = g.degree(node as i64);
+                if degree > NEIGHBOR_ROUNDS {
+                    if let Some(t) = threshold {
+                        let mut skipped = 0usize;
+                        for cursor in g.stream_relationships(node as i64, t + 1.0) {
+                            if cursor.property() > t {
+                                skipped += 1;
+                                if skipped > NEIGHBOR_ROUNDS {
+                                    let target = cursor.target_id();
+                                    if target >= 0 {
+                                        dss.union(node, target as usize);
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        let mut skipped = 0usize;
+                        for cursor in g.stream_relationships(node as i64, fallback) {
+                            skipped += 1;
+                            if skipped > NEIGHBOR_ROUNDS {
+                                let target = cursor.target_id();
+                                if target >= 0 {
+                                    dss.union(node, target as usize);
+                                }
                             }
                         }
                     }
-                    if use_inverse {
+
+                    processed += degree.saturating_sub(NEIGHBOR_ROUNDS);
+                }
+
+                if use_inverse {
+                    if let Some(t) = threshold {
                         for cursor in g.stream_inverse_relationships(node as i64, t + 1.0) {
                             if cursor.property() > t {
                                 let src = cursor.source_id();
@@ -208,15 +261,7 @@ fn sampled_strategy(
                                 }
                             }
                         }
-                    }
-                } else {
-                    for cursor in g.stream_relationships(node as i64, fallback) {
-                        let target = cursor.target_id();
-                        if target >= 0 {
-                            dss.union(node, target as usize);
-                        }
-                    }
-                    if use_inverse {
+                    } else {
                         for cursor in g.stream_inverse_relationships(node as i64, fallback) {
                             let src = cursor.source_id();
                             if src >= 0 {
@@ -225,8 +270,6 @@ fn sampled_strategy(
                         }
                     }
                 }
-
-                processed += g.degree(node as i64);
             }
 
             processed
@@ -242,6 +285,7 @@ fn unsampled_strategy(
     graph: &dyn Graph,
     dss: &Arc<HugeAtomicDisjointSetStruct>,
     concurrency: usize,
+    min_batch_size: usize,
     threshold: Option<f64>,
     progress_tracker: &mut dyn ProgressTracker,
     termination_flag: &TerminationFlag,
@@ -249,7 +293,7 @@ fn unsampled_strategy(
     let node_count = graph.node_count();
 
     let partitions: Vec<Partition> =
-        PartitionUtils::range_partition(concurrency, node_count, |p| p, Some(DEFAULT_BATCH_SIZE));
+        PartitionUtils::range_partition(concurrency, node_count, |p| p, Some(min_batch_size));
 
     let executor = Executor::new(Concurrency::of(concurrency));
     let processed: Vec<usize> = executor

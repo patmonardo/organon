@@ -68,9 +68,10 @@ impl KCoreStorageRuntime {
                 .collect()
         };
 
-        let result = computation.compute(node_count, neighbors);
+        let result = computation
+            .compute_with_controls(node_count, neighbors, progress_tracker, termination_flag)
+            .map_err(AlgorithmError::Execution)?;
 
-        progress_tracker.log_progress(node_count);
         progress_tracker.end_subtask();
 
         Ok(result)

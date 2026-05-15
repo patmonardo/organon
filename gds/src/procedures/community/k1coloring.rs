@@ -3,21 +3,21 @@
 //! Greedy iterative graph coloring.
 //!
 //! Parameters (Java GDS aligned):
-//! - `concurrency`: accepted for parity; currently unused.
+//! - `concurrency`: controls the Rayon worker pool used by coloring/validation.
 //! - `max_iterations`: maximum number of coloring/validation iterations (must be >= 1).
-//! - `batch_size`: accepted for parity; currently unused.
+//! - `batch_size`: accepted for parity; degree-aware partitioning is deferred.
 
 use crate::algo::algorithms::Result;
 use crate::algo::algorithms::{ConfigValidator, WriteResult};
 use crate::algo::k1coloring::{
-    K1ColoringComputationRuntime, K1ColoringConfig, K1ColoringMutateResult,
-    K1ColoringMutationSummary, K1ColoringResult, K1ColoringResultBuilder, K1ColoringStats,
-    K1ColoringStorageRuntime,
+    k1coloring_progress_task, K1ColoringComputationRuntime, K1ColoringConfig,
+    K1ColoringMutateResult, K1ColoringMutationSummary, K1ColoringResult, K1ColoringResultBuilder,
+    K1ColoringStats, K1ColoringStorageRuntime, INITIAL_FORBIDDEN_COLORS,
 };
 use crate::collections::backends::vec::VecLong;
 use crate::concurrency::TerminationFlag;
-use crate::core::utils::progress::{TaskProgressTracker, TaskRegistry, Tasks};
-use crate::mem::MemoryRange;
+use crate::core::utils::progress::TaskRegistry;
+use crate::mem::{Estimate, MemoryRange};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use crate::types::properties::node::DefaultLongNodePropertyValues;
@@ -130,12 +130,12 @@ impl K1ColoringFacade {
             });
         }
 
-        let base_task = Tasks::leaf_with_volume(
-            "k1coloring".to_string(),
-            self.config.max_iterations as usize,
+        let base_task = k1coloring_progress_task(node_count, self.config.max_iterations);
+        let mut progress_tracker = super::progress_tracker_for_task(
+            base_task,
+            self.config.concurrency,
+            self.task_registry.as_ref(),
         );
-        let mut progress_tracker =
-            TaskProgressTracker::with_concurrency(base_task, self.config.concurrency);
 
         let termination_flag = TerminationFlag::default();
 
@@ -219,21 +219,20 @@ impl K1ColoringFacade {
 
     /// Estimate memory usage.
     pub fn estimate_memory(&self) -> Result<MemoryRange> {
-        // K1Coloring maintains a color assignment per node and iterates neighbors.
         let node_count = GraphStore::node_count(self.graph_store.as_ref());
-        let relationship_count = GraphStore::relationship_count(self.graph_store.as_ref());
+        let concurrency = self.config.concurrency.max(1);
 
-        // Per node: u64 color + temporary neighbor set buffers.
-        let per_node = 80usize;
-        // Per relationship: transient traversal, usually streamed from store.
-        let per_relationship = 8usize;
+        let colors = Estimate::size_of_long_array(node_count);
+        let nodes_to_color = Estimate::size_of_bitset(node_count).saturating_mul(2);
+        let forbidden_colors =
+            Estimate::size_of_bitset(INITIAL_FORBIDDEN_COLORS).saturating_mul(concurrency);
 
-        let base: usize = 32 * 1024;
-        let total = base
-            .saturating_add(node_count.saturating_mul(per_node))
-            .saturating_add(relationship_count.saturating_mul(per_relationship));
+        let total = Estimate::BYTES_OBJECT_HEADER
+            .saturating_add(colors)
+            .saturating_add(nodes_to_color)
+            .saturating_add(forbidden_colors);
 
-        Ok(MemoryRange::of_range(total, total.saturating_mul(2)))
+        Ok(MemoryRange::of(total))
     }
 
     /// Full result: returns the procedure-level K1Coloring result.

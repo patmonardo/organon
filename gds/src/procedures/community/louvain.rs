@@ -19,7 +19,7 @@ use crate::algo::louvain::{
 use crate::collections::backends::vec::VecLong;
 use crate::concurrency::TerminationFlag;
 use crate::config::config_trait::ValidatedConfig;
-use crate::core::utils::progress::{TaskProgressTracker, TaskRegistry, Tasks};
+use crate::core::utils::progress::{TaskRegistry, Tasks};
 use crate::mem::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
@@ -102,7 +102,7 @@ impl LouvainFacade {
         self
     }
 
-    pub fn stream(self) -> Result<Box<dyn Iterator<Item = LouvainRow>>> {
+    pub fn stream(&self) -> Result<Box<dyn Iterator<Item = LouvainRow>>> {
         let result = self.compute()?;
         let iter = result
             .data
@@ -115,7 +115,7 @@ impl LouvainFacade {
         Ok(Box::new(iter))
     }
 
-    pub fn stats(self) -> Result<LouvainStats> {
+    pub fn stats(&self) -> Result<LouvainStats> {
         let result = self.compute()?;
         Ok(LouvainResultBuilder::new(result).stats())
     }
@@ -194,9 +194,10 @@ impl LouvainFacade {
         let mut computation = LouvainComputationRuntime::new();
         let termination_flag = TerminationFlag::default();
 
-        let mut progress_tracker = TaskProgressTracker::with_concurrency(
+        let mut progress_tracker = super::progress_tracker(
             Tasks::leaf_with_volume("louvain".to_string(), storage.node_count()),
             self.config.concurrency,
+            self.task_registry.as_ref(),
         );
 
         let result =

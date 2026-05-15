@@ -125,4 +125,30 @@ mod tests {
         assert_eq!(result.component_count, 0);
         assert!(result.components.is_empty());
     }
+
+    #[test]
+    fn scc_mixed_component_shapes() {
+        // (0 <-> 1), (2 -> 3 -> 4 -> 2), and 5 isolated.
+        let store = store_from_outgoing(vec![vec![1], vec![0], vec![3], vec![4], vec![2], vec![]]);
+        let graph = GraphFacade::new(Arc::new(store));
+
+        let result = graph.scc().run().unwrap();
+        assert_eq!(result.component_count, 3);
+        assert_eq!(result.components[0], result.components[1]);
+        assert_eq!(result.components[2], result.components[3]);
+        assert_eq!(result.components[3], result.components[4]);
+        assert_ne!(result.components[0], result.components[2]);
+        assert_ne!(result.components[0], result.components[5]);
+        assert_ne!(result.components[2], result.components[5]);
+    }
+
+    #[test]
+    fn scc_many_isolated_nodes_each_form_component() {
+        let store = store_from_outgoing(vec![vec![]; 1_000]);
+        let graph = GraphFacade::new(Arc::new(store));
+
+        let result = graph.scc().run().unwrap();
+        assert_eq!(result.component_count, 1_000);
+        assert_eq!(result.components.len(), 1_000);
+    }
 }

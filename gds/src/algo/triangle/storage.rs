@@ -57,15 +57,20 @@ impl TriangleStorageRuntime {
             neighbors.sort_unstable();
             neighbors.dedup();
             adj[node] = neighbors;
-
-            progress_tracker.log_progress(1);
         }
-
-        progress_tracker.end_subtask();
 
         let max_degree = config.max_degree;
         let get_neighbors = |node: usize| -> Vec<usize> { adj[node].clone() };
-        Ok(computation.compute_with_max_degree(node_count, get_neighbors, max_degree))
+        let result = computation.compute_with_controls(
+            node_count,
+            get_neighbors,
+            max_degree,
+            progress_tracker,
+            termination_flag,
+        )?;
+
+        progress_tracker.end_subtask();
+        Ok(result)
     }
 }
 

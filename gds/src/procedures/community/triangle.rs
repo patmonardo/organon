@@ -3,8 +3,8 @@
 //! Counts triangles in an undirected graph and returns per-node and global counts.
 //!
 //! Parameters (Java GDS aligned):
-//! - `concurrency`: reserved for future parallel implementation
-//! - `max_degree`: filter to skip high-degree nodes (performance / approximation)
+//! - `concurrency`: accepted for API/progress alignment
+//! - `max_degree`: filter to exclude high-degree nodes, reported as -1
 
 use crate::algo::algorithms::Result;
 use crate::algo::algorithms::{ConfigValidator, WriteResult};
@@ -13,10 +13,8 @@ use crate::algo::triangle::{
     TriangleResult, TriangleResultBuilder, TriangleStats, TriangleStorageRuntime,
 };
 use crate::collections::backends::vec::VecLong;
-use crate::concurrency::{Concurrency, TerminationFlag};
-use crate::core::utils::progress::{
-    EmptyTaskRegistryFactory, JobId, LeafTask, ProgressTracker, TaskProgressTracker, Tasks,
-};
+use crate::concurrency::TerminationFlag;
+use crate::core::utils::progress::{ProgressTracker, TaskRegistry, Tasks};
 use crate::mem::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
@@ -31,7 +29,7 @@ use std::time::Instant;
 #[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize)]
 pub struct TriangleRow {
     pub node_id: u64,
-    pub triangles: u64,
+    pub triangles: i64,
 }
 
 /// Triangle algorithm facade.
@@ -39,6 +37,7 @@ pub struct TriangleRow {
 pub struct TriangleFacade {
     graph_store: Arc<DefaultGraphStore>,
     config: TriangleConfig,
+    task_registry: Option<TaskRegistry>,
 }
 
 impl TriangleFacade {
@@ -47,6 +46,7 @@ impl TriangleFacade {
         Self {
             graph_store,
             config: TriangleConfig::default(),
+            task_registry: None,
         }
     }
 
@@ -62,6 +62,7 @@ impl TriangleFacade {
         Ok(Self {
             graph_store,
             config,
+            task_registry: None,
         })
     }
 
@@ -84,7 +85,7 @@ impl TriangleFacade {
         Ok(self)
     }
 
-    /// Concurrency hint (reserved for future parallel implementation).
+    /// Concurrency hint accepted for Java GDS API alignment.
     pub fn concurrency(mut self, concurrency: usize) -> Self {
         self.config.concurrency = concurrency;
         self
@@ -93,6 +94,11 @@ impl TriangleFacade {
     /// Skip nodes with degree > max_degree.
     pub fn max_degree(mut self, max_degree: u64) -> Self {
         self.config.max_degree = max_degree;
+        self
+    }
+
+    pub fn task_registry(mut self, task_registry: TaskRegistry) -> Self {
+        self.task_registry = Some(task_registry);
         self
     }
 
@@ -116,16 +122,11 @@ impl TriangleFacade {
             });
         }
 
-        let leaf: LeafTask = Tasks::leaf_with_volume("triangle".to_string(), node_count);
-        let base_task = leaf.base().clone();
-        let registry_factory = EmptyTaskRegistryFactory;
-        let mut progress_tracker: Box<dyn ProgressTracker> =
-            Box::new(TaskProgressTracker::with_registry(
-                base_task,
-                Concurrency::of(self.config.concurrency.max(1)),
-                JobId::new(),
-                &registry_factory,
-            ));
+        let mut progress_tracker: Box<dyn ProgressTracker> = Box::new(super::progress_tracker(
+            Tasks::leaf_with_volume("triangle".to_string(), node_count),
+            self.config.concurrency,
+            self.task_registry.as_ref(),
+        ));
 
         let config = self.config.clone();
 
@@ -181,9 +182,7 @@ impl TriangleFacade {
         let node_count = self.graph_store.node_count();
         let nodes_updated = node_count as u64;
 
-        // Convert u64 counts to i64 backend
-        let longs: Vec<i64> = local.into_iter().map(|v| v as i64).collect();
-        let backend = VecLong::from(longs);
+        let backend = VecLong::from(local);
         let values = DefaultLongNodePropertyValues::from_collection(backend, node_count);
         let values: Arc<dyn NodePropertyValues> = Arc::new(values);
 
@@ -225,21 +224,19 @@ impl TriangleFacade {
 
     /// Estimate memory usage.
     pub fn estimate_memory(&self) -> Result<MemoryRange> {
-        // Triangle count stores per-node local counts and uses neighbor traversal.
-        // Some implementations keep adjacency lists; we estimate proportional to (n + m).
         let node_count = self.graph_store.node_count();
         let relationship_count = self.graph_store.relationship_count();
 
-        // Per node: u64 local triangle count + temporary counters.
-        let per_node = 64usize;
-        // Per relationship: potential adjacency materialization (conservative).
-        let per_relationship = 24usize;
+        let local_counts = node_count.saturating_mul(8);
+        let adjacency_vec_headers = node_count.saturating_mul(24);
+        let adjacency_entries = relationship_count.saturating_mul(std::mem::size_of::<usize>());
 
         let base: usize = 64 * 1024;
         let total = base
-            .saturating_add(node_count.saturating_mul(per_node))
-            .saturating_add(relationship_count.saturating_mul(per_relationship));
+            .saturating_add(local_counts)
+            .saturating_add(adjacency_vec_headers)
+            .saturating_add(adjacency_entries);
 
-        Ok(MemoryRange::of_range(total, total.saturating_mul(3)))
+        Ok(MemoryRange::of_range(total, total.saturating_mul(2)))
     }
 }

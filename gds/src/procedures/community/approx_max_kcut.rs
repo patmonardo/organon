@@ -13,7 +13,7 @@ use crate::algo::approx_max_kcut::storage::ApproxMaxKCutStorageRuntime;
 use crate::algo::approx_max_kcut::ApproxMaxKCutComputationRuntime;
 use crate::collections::backends::vec::VecLong;
 use crate::concurrency::TerminationFlag;
-use crate::core::utils::progress::{TaskProgressTracker, TaskRegistry, Tasks};
+use crate::core::utils::progress::{TaskRegistry, Tasks};
 use crate::mem::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
@@ -147,12 +147,13 @@ impl ApproxMaxKCutFacade {
             });
         }
 
-        let mut progress_tracker = TaskProgressTracker::with_concurrency(
+        let mut progress_tracker = super::progress_tracker(
             Tasks::leaf_with_volume(
                 "approx_max_kcut".to_string(),
                 node_count.saturating_add(self.config.iterations),
             ),
             self.config.concurrency,
+            self.task_registry.as_ref(),
         );
         let termination_flag = TerminationFlag::default();
 

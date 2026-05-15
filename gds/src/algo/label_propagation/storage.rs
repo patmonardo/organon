@@ -11,7 +11,8 @@ use crate::projection::Orientation;
 use crate::projection::RelationshipType;
 use crate::types::default_value::LONG_DEFAULT_FALLBACK;
 use crate::types::prelude::GraphStore;
-use std::collections::HashSet;
+use crate::types::properties::node::NodePropertyValues;
+use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
 
 use crate::types::graph::Graph;
@@ -19,15 +20,26 @@ use crate::types::graph::Graph;
 #[derive(Clone)]
 pub struct LabelPropStorageRuntime {
     graph: Arc<dyn Graph>,
+    node_properties: HashMap<String, Arc<dyn NodePropertyValues>>,
 }
 
 impl LabelPropStorageRuntime {
     pub fn new<G: GraphStore>(graph_store: &G) -> Result<Self, AlgorithmError> {
+        let mut node_properties = HashMap::new();
+        for key in graph_store.node_property_keys() {
+            if let Ok(values) = graph_store.node_property_values(&key) {
+                node_properties.insert(key, values);
+            }
+        }
+
         let rel_types: HashSet<RelationshipType> = HashSet::new();
         let graph = graph_store
             .get_graph_with_types_and_orientation(&rel_types, Orientation::Undirected)
             .map_err(|e| AlgorithmError::Graph(e.to_string()))?;
-        Ok(Self { graph })
+        Ok(Self {
+            graph,
+            node_properties,
+        })
     }
 
     pub fn graph(&self) -> Arc<dyn Graph> {
@@ -59,21 +71,15 @@ impl LabelPropStorageRuntime {
         termination_flag.assert_running();
 
         let weights: Vec<f64> = match &config.node_weight_property {
-            Some(key) if self.graph.available_node_properties().contains(key) => {
-                let pv = self.graph.node_properties(key).ok_or_else(|| {
-                    AlgorithmError::Execution(format!(
-                        "node_weight_property '{}' not available",
-                        key
-                    ))
-                })?;
-
-                (0..node_count)
+            Some(key) => match self.node_properties.get(key) {
+                Some(pv) => (0..node_count)
                     .map(|i| {
                         termination_flag.assert_running();
                         pv.double_value(i as u64).unwrap_or(1.0)
                     })
-                    .collect()
-            }
+                    .collect(),
+                None => vec![1.0; node_count],
+            },
             _ => vec![1.0; node_count],
         };
 
@@ -84,13 +90,10 @@ impl LabelPropStorageRuntime {
         progress_tracker
             .begin_subtask_with_volume(node_count.saturating_add(config.max_iterations as usize));
 
-        let seed_pv = config.seed_property.as_ref().and_then(|key| {
-            if self.graph.available_node_properties().contains(key) {
-                self.graph.node_properties(key)
-            } else {
-                None
-            }
-        });
+        let seed_pv = config
+            .seed_property
+            .as_ref()
+            .and_then(|key| self.node_properties.get(key).cloned());
 
         let max_label_id: i64 = seed_pv
             .as_deref()
@@ -115,7 +118,7 @@ impl LabelPropStorageRuntime {
             progress_tracker.log_progress(1);
         }
 
-        let fallback = self.graph.default_property_value();
+        let fallback = 1.0;
         let graph = Arc::clone(&self.graph);
         let neighbors = move |node_idx: usize| -> Vec<(usize, f64)> {
             graph
@@ -129,8 +132,13 @@ impl LabelPropStorageRuntime {
         let result = computation
             .with_weights(weights)
             .with_seeds(seeds)
-            .compute(node_count as u64, neighbors);
-        progress_tracker.log_progress(result.ran_iterations as usize);
+            .compute_with_controls(
+                node_count as u64,
+                neighbors,
+                progress_tracker,
+                termination_flag,
+            )
+            .map_err(AlgorithmError::Execution)?;
         progress_tracker.end_subtask();
 
         Ok(result)

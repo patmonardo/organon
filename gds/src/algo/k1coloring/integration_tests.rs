@@ -105,4 +105,42 @@ mod tests {
         let used: std::collections::HashSet<u64> = result.colors.iter().copied().collect();
         assert!(!used.is_empty());
     }
+
+    #[test]
+    fn k1coloring_isolated_nodes_converge_to_single_color() {
+        let outgoing = vec![vec![], vec![], vec![], vec![]];
+        let store = store_from_outgoing(outgoing.clone());
+        let graph = GraphFacade::new(Arc::new(store));
+
+        let result = graph.k1coloring().max_iterations(3).run().unwrap();
+        assert!(result.did_converge);
+        assert_eq!(result.ran_iterations, 1);
+        assert_eq!(result.colors, vec![0, 0, 0, 0]);
+        assert_valid_coloring(&outgoing, &result.colors);
+    }
+
+    #[test]
+    fn k1coloring_empty_graph_converges_without_iterations() {
+        let outgoing = Vec::new();
+        let store = store_from_outgoing(outgoing);
+        let graph = GraphFacade::new(Arc::new(store));
+
+        let result = graph.k1coloring().run().unwrap();
+        assert!(result.did_converge);
+        assert_eq!(result.ran_iterations, 0);
+        assert!(result.colors.is_empty());
+    }
+
+    #[test]
+    fn k1coloring_memory_estimate_tracks_concurrency() {
+        let outgoing = vec![vec![1], vec![0]];
+        let store = store_from_outgoing(outgoing);
+        let graph = GraphFacade::new(Arc::new(store));
+
+        let single = graph.k1coloring().concurrency(1).estimate_memory().unwrap();
+        let parallel = graph.k1coloring().concurrency(4).estimate_memory().unwrap();
+
+        assert!(parallel.min() > single.min());
+        assert_eq!(parallel.min(), parallel.max());
+    }
 }

@@ -136,4 +136,45 @@ mod tests {
         assert_eq!(result.degeneracy, 0);
         assert_eq!(result.core_values, vec![0]);
     }
+
+    #[test]
+    fn kcore_mixed_component_shapes() {
+        let outgoing = vec![vec![1], vec![0], vec![3, 4], vec![2, 4], vec![2, 3], vec![]];
+        let store = store_from_outgoing(outgoing);
+        let graph = GraphFacade::new(Arc::new(store));
+
+        let result = graph.kcore().run().unwrap();
+
+        assert_eq!(result.degeneracy, 2);
+        assert_eq!(result.core_values, vec![1, 1, 2, 2, 2, 0]);
+    }
+
+    #[test]
+    fn kcore_large_sparse_graph_with_dense_tail() {
+        let sparse_count = 500usize;
+        let clique_size = 10usize;
+        let node_count = sparse_count + clique_size;
+        let mut outgoing = vec![Vec::new(); node_count];
+
+        for source in sparse_count..node_count {
+            for target in sparse_count..node_count {
+                if source != target {
+                    outgoing[source].push(target as i64);
+                }
+            }
+        }
+
+        let store = store_from_outgoing(outgoing);
+        let graph = GraphFacade::new(Arc::new(store));
+
+        let result = graph.kcore().run().unwrap();
+
+        assert_eq!(result.degeneracy, 9);
+        for node in 0..sparse_count {
+            assert_eq!(result.core_values[node], 0);
+        }
+        for node in sparse_count..node_count {
+            assert_eq!(result.core_values[node], 9);
+        }
+    }
 }

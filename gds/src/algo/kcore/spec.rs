@@ -14,6 +14,7 @@ use super::KCoreStorageRuntime;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct KCoreConfig {
+    /// Parallel worker count for scan/act phases.
     #[serde(default = "default_concurrency")]
     pub concurrency: usize,
 }

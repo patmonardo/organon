@@ -190,41 +190,17 @@ This section is intentionally redundant with the tables above, but grouped by th
 
 ### Community
 
-**Missing `mutate(...)` (no method present)**
-- gds/src/procedures/community/kmeans.rs
+**Current facade mode surface**
+- The active community facades expose `stream`, `stats`, `mutate`, `write`, and `estimate_memory` surfaces where applicable.
+- `mutate(...)` writes node properties to an updated `DefaultGraphStore` for the active assignment/score-producing facades.
+- `write(...)` is currently a facade-level write summary that delegates through the mutate-style node-property path for these store-backed procedures.
 
-**Missing `write(...)` (no method present)**
-- gds/src/procedures/community/kmeans.rs
+**Compatibility aliases retained**
+- gds/src/procedures/community/kcore.rs: `mutate_with_store(...)` delegates to `mutate(...)`.
+- gds/src/procedures/community/wcc.rs: `mutate_with_store(...)` delegates to `mutate(...)`.
 
-**Stubbed `mutate(...)` (explicit “not implemented”)**
-- gds/src/procedures/community/approx_max_kcut.rs
-- gds/src/procedures/community/conductance.rs
-- gds/src/procedures/community/k1coloring.rs
-- gds/src/procedures/community/kcore.rs
-- gds/src/procedures/community/label_propagation.rs
-- gds/src/procedures/community/leiden.rs
-- gds/src/procedures/community/local_clustering_coefficient.rs
-- gds/src/procedures/community/louvain.rs
-- gds/src/procedures/community/modularity.rs
-- gds/src/procedures/community/scc.rs
-- gds/src/procedures/community/triangle_count.rs
-- gds/src/procedures/community/wcc.rs
-
-**Stubbed `write(...)` (explicit “not implemented”)**
-- gds/src/procedures/community/approx_max_kcut.rs
-- gds/src/procedures/community/conductance.rs
-- gds/src/procedures/community/k1coloring.rs
-- gds/src/procedures/community/kcore.rs
-- gds/src/procedures/community/label_propagation.rs
-- gds/src/procedures/community/leiden.rs
-- gds/src/procedures/community/local_clustering_coefficient.rs
-- gds/src/procedures/community/modularity.rs
-- gds/src/procedures/community/scc.rs
-- gds/src/procedures/community/triangle_count.rs
-
-**`write(...)` wraps a stubbed `mutate(...)`**
-- gds/src/procedures/community/louvain.rs
-- gds/src/procedures/community/wcc.rs
+**Known algorithm-depth caveat**
+- gds/src/procedures/community/louvain.rs: facade modes are wired, but the underlying Louvain runtime is still documented as placeholder-level and needs an algorithm parity pass.
 
 ### Similarity
 

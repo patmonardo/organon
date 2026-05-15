@@ -99,4 +99,65 @@ mod tests {
         let result = graph.label_propagation().max_iterations(1).run().unwrap();
         assert_eq!(result.labels[0], 1);
     }
+
+    #[test]
+    fn label_propagation_respects_seed_property_on_isolated_nodes() {
+        let mut store = store_from_outgoing(vec![vec![], vec![], vec![]]);
+        store
+            .add_node_property_i64("seed".to_string(), vec![42, 42, 99])
+            .unwrap();
+        let graph = GraphFacade::new(Arc::new(store));
+
+        let result = graph
+            .label_propagation()
+            .seed_property("seed")
+            .max_iterations(5)
+            .run()
+            .unwrap();
+
+        assert!(result.did_converge);
+        assert_eq!(result.ran_iterations, 1);
+        assert_eq!(result.labels, vec![42, 42, 99]);
+    }
+
+    #[test]
+    fn label_propagation_node_weights_influence_voting() {
+        let mut store = store_from_outgoing(vec![
+            vec![(1, 1.0), (2, 1.0)],
+            vec![(0, 1.0)],
+            vec![(0, 1.0)],
+        ]);
+        store
+            .add_node_property_i64("seed".to_string(), vec![100, 10, 20])
+            .unwrap();
+        store
+            .add_node_property_f64("weight".to_string(), vec![1.0, 1.0, 10.0])
+            .unwrap();
+        let graph = GraphFacade::new(Arc::new(store));
+
+        let result = graph
+            .label_propagation()
+            .seed_property("seed")
+            .node_weight_property("weight")
+            .max_iterations(1)
+            .run()
+            .unwrap();
+
+        assert_eq!(result.labels[0], 20);
+    }
+
+    #[test]
+    fn label_propagation_isolated_nodes_retain_unique_labels() {
+        let store = store_from_outgoing(vec![vec![]; 100]);
+        let graph = GraphFacade::new(Arc::new(store));
+
+        let result = graph.label_propagation().max_iterations(10).run().unwrap();
+
+        assert!(result.did_converge);
+        assert_eq!(result.ran_iterations, 1);
+        assert_eq!(result.labels.len(), 100);
+        for (node_id, label) in result.labels.iter().copied().enumerate() {
+            assert_eq!(label, node_id as u64);
+        }
+    }
 }

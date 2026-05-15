@@ -12,7 +12,7 @@ use crate::algo::modularity::{
 };
 use crate::collections::backends::vec::VecDouble;
 use crate::concurrency::TerminationFlag;
-use crate::core::utils::progress::{TaskProgressTracker, TaskRegistry, Tasks};
+use crate::core::utils::progress::{TaskRegistry, Tasks};
 use crate::mem::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
@@ -107,10 +107,11 @@ impl ModularityFacade {
         let computation = ModularityComputationRuntime::new();
         let termination_flag = TerminationFlag::default();
 
-        let mut progress_tracker = TaskProgressTracker::new(Tasks::leaf_with_volume(
-            "modularity".to_string(),
-            storage.node_count(),
-        ));
+        let mut progress_tracker = super::progress_tracker(
+            Tasks::leaf_with_volume("modularity".to_string(), storage.node_count()),
+            1,
+            self.task_registry.as_ref(),
+        );
 
         let result = storage.compute_modularity(
             &computation,

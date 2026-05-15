@@ -4,7 +4,7 @@
 //! that provides neighbor iteration helpers.
 
 use super::spec::{K1ColoringConfig, K1ColoringResult};
-use super::{K1ColoringComputationRuntime, K1IterationProgress};
+use super::K1ColoringComputationRuntime;
 use crate::concurrency::TerminationFlag;
 use crate::core::utils::progress::ProgressTracker;
 use crate::projection::eval::algorithm::AlgorithmError;
@@ -57,7 +57,7 @@ impl K1ColoringStorageRuntime {
             });
         }
 
-        progress_tracker.begin_subtask_with_volume(_config.max_iterations as usize);
+        progress_tracker.begin_subtask();
 
         let fallback = self.graph.default_property_value();
         let graph = Arc::clone(&self.graph);
@@ -70,15 +70,20 @@ impl K1ColoringStorageRuntime {
                 .collect()
         };
 
-        let run = computation.compute(
-            node_count,
-            neighbors,
-            termination_flag,
-            |_step: K1IterationProgress| {
-                // Track one unit per iteration (post-validation).
-                progress_tracker.log_progress(1);
-            },
-        );
+        let run = computation.compute(node_count, neighbors, termination_flag, |step| {
+            if step.colored > 0 {
+                progress_tracker
+                    .begin_subtask_with_description_and_volume("color nodes", step.colored);
+                progress_tracker.log_progress(step.colored);
+                progress_tracker.end_subtask_with_description("color nodes");
+            }
+            if step.validated > 0 {
+                progress_tracker
+                    .begin_subtask_with_description_and_volume("validate nodes", step.validated);
+                progress_tracker.log_progress(step.validated);
+                progress_tracker.end_subtask_with_description("validate nodes");
+            }
+        });
 
         progress_tracker.end_subtask();
 

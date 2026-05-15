@@ -18,7 +18,7 @@ use crate::algo::leiden::{
 };
 use crate::collections::backends::vec::VecLong;
 use crate::concurrency::TerminationFlag;
-use crate::core::utils::progress::{TaskProgressTracker, TaskRegistry, Tasks};
+use crate::core::utils::progress::{TaskRegistry, Tasks};
 use crate::mem::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
@@ -154,7 +154,8 @@ impl LeidenFacade {
             "leiden".to_string(),
             node_count.saturating_add(self.config.max_iterations),
         );
-        let mut progress_tracker = TaskProgressTracker::new(base_task);
+        let mut progress_tracker =
+            super::progress_tracker(base_task, 1, self.task_registry.as_ref());
 
         let termination_flag = TerminationFlag::default();
 

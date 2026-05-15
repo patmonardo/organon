@@ -1,20 +1,21 @@
 //! Label Propagation algorithm specification (executor integration)
 
+use crate::concurrency::TerminationFlag;
 use crate::config::validation::ConfigError;
-use crate::core::utils::progress::{ProgressTracker, TaskProgressTracker, Tasks};
+use crate::core::utils::progress::{TaskProgressTracker, Tasks};
 use crate::define_algorithm_spec;
 use crate::projection::eval::algorithm::AlgorithmError;
-use crate::projection::Orientation;
-use crate::projection::RelationshipType;
 use serde::{Deserialize, Serialize};
-use std::collections::HashSet;
 use std::sync::Arc;
 use std::time::{Duration, Instant};
 
 use super::LabelPropComputationRuntime;
+use super::LabelPropStorageRuntime;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct LabelPropConfig {
+    /// Concurrency hint accepted for Java GDS API alignment.
+    /// Current Rust computation keeps deterministic sequential update order.
     #[serde(default = "default_concurrency")]
     pub concurrency: usize,
 
@@ -177,53 +178,27 @@ define_algorithm_spec! {
             .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
 
         let start = Instant::now();
-
-        let rel_types: HashSet<RelationshipType> = HashSet::new();
-        let graph_view = graph_store
-            .get_graph_with_types_and_orientation(&rel_types, Orientation::Undirected)
-            .map_err(|e| AlgorithmError::Graph(e.to_string()))?;
-
-        let node_count = graph_view.node_count() as usize;
+        let storage = LabelPropStorageRuntime::new(graph_store)?;
+        let node_count = storage.node_count();
 
         let mut progress = TaskProgressTracker::with_concurrency(
-            Tasks::leaf_with_volume("label_propagation".to_string(), parsed.max_iterations as usize),
+            Tasks::leaf_with_volume(
+                "label_propagation".to_string(),
+                node_count.saturating_add(parsed.max_iterations as usize),
+            ),
             parsed.concurrency,
         );
-        progress.begin_subtask_with_volume(parsed.max_iterations as usize);
+        let termination_flag = TerminationFlag::default();
 
-        // Default: weight 1.0 for all nodes
-        let mut weights = vec![1.0f64; node_count];
-        if let Some(key) = &parsed.node_weight_property {
-            if graph_view.available_node_properties().contains(key) {
-                if let Some(pv) = graph_view.node_properties(key) {
-                    for i in 0..node_count {
-                        weights[i] = pv.double_value(i as u64).unwrap_or(1.0);
-                    }
-                }
-            }
-        }
+        let runtime = LabelPropComputationRuntime::new(node_count, parsed.max_iterations)
+            .concurrency(parsed.concurrency);
 
-        // Default initial labels: identity; executor spec does not implement full Java seed shifting.
-        // The procedure facade layer provides Java-exact initialization.
-
-        let fallback = graph_view.default_property_value();
-        let neighbors = |node_idx: usize| -> Vec<(usize, f64)> {
-            graph_view
-                .stream_relationships_weighted(node_idx as i64, fallback)
-                .map(|cursor| (cursor.target_id(), cursor.weight()))
-                .filter(|(t, _)| *t >= 0)
-                .map(|(t, w)| (t as usize, w))
-                .collect()
-        };
-
-        let mut runtime = LabelPropComputationRuntime::new(node_count, parsed.max_iterations)
-            .concurrency(parsed.concurrency)
-            .with_weights(weights);
-
-        let run = runtime.compute(node_count as u64, neighbors);
-
-        progress.log_progress(parsed.max_iterations as usize);
-        progress.end_subtask();
+        let run = storage.compute_label_propagation(
+            runtime,
+            &parsed,
+            &mut progress,
+            &termination_flag,
+        )?;
 
         Ok(LabelPropResult {
             labels: run.labels,

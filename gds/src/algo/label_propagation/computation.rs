@@ -10,7 +10,8 @@
 //! - Voting is weighted by relationship weight * target-node weight.
 //! - Tie-breaker matches Java: smallest label ID wins when weights equal.
 
-use crate::concurrency::{install_with_concurrency, Concurrency};
+use crate::concurrency::{install_with_concurrency, Concurrency, TerminationFlag};
+use crate::core::utils::progress::{NoopProgressTracker, ProgressTracker};
 use std::collections::HashMap;
 use std::sync::atomic::{AtomicBool, Ordering};
 
@@ -67,13 +68,34 @@ impl LabelPropComputationRuntime {
     where
         F: Fn(usize) -> Vec<(usize, f64)> + Sync,
     {
+        let mut progress_tracker = NoopProgressTracker;
+        let termination_flag = TerminationFlag::default();
+        self.compute_with_controls(
+            node_count,
+            neighbors,
+            &mut progress_tracker,
+            &termination_flag,
+        )
+        .expect("default label propagation computation should not terminate")
+    }
+
+    pub fn compute_with_controls<F>(
+        &mut self,
+        node_count: u64,
+        neighbors: F,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<LabelPropResult, String>
+    where
+        F: Fn(usize) -> Vec<(usize, f64)> + Sync,
+    {
         let node_count = node_count as usize;
         if node_count == 0 {
-            return LabelPropResult {
+            return Ok(LabelPropResult {
                 labels: Vec::new(),
                 did_converge: true,
                 ran_iterations: 0,
-            };
+            });
         }
 
         // Init step (either provided labels or identity labels).
@@ -89,6 +111,7 @@ impl LabelPropComputationRuntime {
         let mut did_converge = false;
 
         while ran_iterations < self.max_iterations {
+            termination_flag.assert_running();
             let any_changed = AtomicBool::new(false);
 
             // Deterministic in-place update in node order.
@@ -97,6 +120,7 @@ impl LabelPropComputationRuntime {
                 let mut tally = VoteTally::new();
 
                 for node_id in 0..node_count {
+                    termination_flag.assert_running();
                     tally.clear();
 
                     let current_label = labels[node_id];
@@ -125,17 +149,18 @@ impl LabelPropComputationRuntime {
             });
 
             ran_iterations += 1;
+            progress_tracker.log_progress(1);
             if !any_changed.load(Ordering::Relaxed) {
                 did_converge = true;
                 break;
             }
         }
 
-        LabelPropResult {
+        Ok(LabelPropResult {
             labels,
             did_converge,
             ran_iterations,
-        }
+        })
     }
 }
 

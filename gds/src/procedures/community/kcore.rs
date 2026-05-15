@@ -3,17 +3,17 @@
 //! Finds the k-core values for each node in an undirected graph.
 //!
 //! Parameters (Java GDS aligned):
-//! - `concurrency`: accepted for parity; currently unused.
+//! - `concurrency`: parallel worker count for scan/act phases.
 
 use crate::algo::algorithms::Result;
-use crate::algo::algorithms::{ConfigValidator, MutationResult, WriteResult};
+use crate::algo::algorithms::{ConfigValidator, WriteResult};
 use crate::algo::kcore::{
     KCoreComputationResult, KCoreComputationRuntime, KCoreConfig, KCoreMutateResult,
     KCoreMutationSummary, KCoreResult, KCoreResultBuilder, KCoreStats, KCoreStorageRuntime,
 };
 use crate::collections::backends::vec::VecLong;
 use crate::concurrency::TerminationFlag;
-use crate::core::utils::progress::{TaskProgressTracker, TaskRegistry, Tasks};
+use crate::core::utils::progress::{TaskRegistry, Tasks};
 use crate::mem::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
@@ -117,8 +117,11 @@ impl KCoreFacade {
         }
 
         let base_task = Tasks::leaf_with_volume("kcore".to_string(), node_count);
-        let mut progress_tracker =
-            TaskProgressTracker::with_concurrency(base_task, self.config.concurrency);
+        let mut progress_tracker = super::progress_tracker(
+            base_task,
+            self.config.concurrency,
+            self.task_registry.as_ref(),
+        );
 
         let termination_flag = TerminationFlag::default();
 
@@ -159,28 +162,7 @@ impl KCoreFacade {
     }
 
     /// Mutate mode: writes core values back to the graph store.
-    pub fn mutate(self) -> Result<MutationResult> {
-        // Implement mutate returning updated store
-        Err(AlgorithmError::Execution(
-            "Use mutate_with_store() for KCore (internal)".to_string(),
-        ))
-    }
-
-    /// Write mode: writes core values to a new graph.
-    pub fn write(self) -> Result<WriteResult> {
-        // Note: write logic is deferred.
-        let result = self.compute()?;
-        let node_count = self.graph_store.node_count();
-        let nodes_written = node_count as u64;
-        Ok(WriteResult::new(
-            nodes_written,
-            "core_value".to_string(),
-            result.execution_time,
-        ))
-    }
-
-    /// Mutate mode: compute core values and add as a node property, returning updated store
-    pub fn mutate_with_store(self, property_name: &str) -> Result<KCoreMutateResult> {
+    pub fn mutate(self, property_name: &str) -> Result<KCoreMutateResult> {
         self.validate()?;
         ConfigValidator::non_empty_string(property_name, "property_name")?;
 
@@ -214,23 +196,43 @@ impl KCoreFacade {
         })
     }
 
+    /// Compatibility alias for older application code.
+    pub fn mutate_with_store(self, property_name: &str) -> Result<KCoreMutateResult> {
+        self.mutate(property_name)
+    }
+
+    /// Write mode: writes core values to a new graph/store surface.
+    pub fn write(self, property_name: &str) -> Result<WriteResult> {
+        let res = self.mutate(property_name)?;
+        Ok(WriteResult::new(
+            res.summary.nodes_updated,
+            property_name.to_string(),
+            std::time::Duration::from_millis(res.summary.execution_time_ms),
+        ))
+    }
+
     /// Estimate memory usage.
     pub fn estimate_memory(&self) -> Result<MemoryRange> {
-        // K-Core keeps per-node degree/core arrays and uses relationship streaming.
         let node_count = GraphStore::node_count(self.graph_store.as_ref());
-        let relationship_count = GraphStore::relationship_count(self.graph_store.as_ref());
+        let concurrency = self.config.concurrency.max(1);
 
-        // Per node: degree (usize) + core (u64) + bucket/work queues.
-        let per_node = 96usize;
-        // Per relationship: one pass over edges.
-        let per_relationship = 8usize;
+        let current_degrees_bytes = node_count.saturating_mul(8);
+        let core_bytes = node_count.saturating_mul(8);
+        let per_thread_examination_stack = node_count.saturating_mul(8).saturating_mul(concurrency);
+        let rebuild_nodes =
+            ((node_count as f64 * crate::algo::kcore::REBUILD_CONSTANT).ceil() as usize).max(1);
+        let rebuild_array = rebuild_nodes.saturating_mul(8);
+        let rebuild_queues = rebuild_nodes.saturating_mul(8).saturating_mul(concurrency);
 
         let base: usize = 32 * 1024;
         let total = base
-            .saturating_add(node_count.saturating_mul(per_node))
-            .saturating_add(relationship_count.saturating_mul(per_relationship));
+            .saturating_add(current_degrees_bytes)
+            .saturating_add(core_bytes)
+            .saturating_add(per_thread_examination_stack)
+            .saturating_add(rebuild_array)
+            .saturating_add(rebuild_queues);
 
-        Ok(MemoryRange::of_range(total, total.saturating_mul(2)))
+        Ok(MemoryRange::of(total))
     }
 
     /// Full result: returns the procedure-level k-core result.

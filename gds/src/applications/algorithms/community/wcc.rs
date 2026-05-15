@@ -36,6 +36,21 @@ pub fn handle_wcc(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value {
         .and_then(|v| v.as_u64())
         .unwrap_or(1) as usize;
 
+    let min_batch_size = request
+        .get("minBatchSize")
+        .or_else(|| request.get("min_batch_size"))
+        .and_then(|v| v.as_u64())
+        .unwrap_or(crate::core::utils::partition::DEFAULT_BATCH_SIZE as u64)
+        as usize;
+
+    let threshold = request.get("threshold").and_then(|v| v.as_f64());
+
+    let seed_property = request
+        .get("seedProperty")
+        .or_else(|| request.get("seed_property"))
+        .and_then(|v| v.as_str())
+        .map(|s| s.to_string());
+
     let mutate_property = request
         .get("mutateProperty")
         .and_then(|v| v.as_str())
@@ -74,17 +89,20 @@ pub fn handle_wcc(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value {
     match mode {
         "stream" => {
             let task = Tasks::leaf("wcc::stream".to_string()).base().clone();
+            let seed_property = seed_property.clone();
 
             let compute = move |gr: &GraphResources,
                                 _tracker: &mut dyn ProgressTracker,
                                 _termination: &TerminationFlag|
                   -> Result<Option<Vec<Value>>, String> {
-                let iter = gr
-                    .facade()
-                    .wcc()
-                    .concurrency(concurrency_value)
-                    .stream()
-                    .map_err(|e| e.to_string())?;
+                let facade = configure_facade(
+                    gr.facade().wcc(),
+                    concurrency_value,
+                    min_batch_size,
+                    threshold,
+                    seed_property.as_deref(),
+                );
+                let iter = facade.stream().map_err(|e| e.to_string())?;
                 let rows = iter
                     .map(|row| serde_json::to_value(row).map_err(|e| e.to_string()))
                     .collect::<Result<Vec<_>, _>>()?;
@@ -122,17 +140,20 @@ pub fn handle_wcc(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value {
         }
         "stats" => {
             let task = Tasks::leaf("wcc::stats".to_string()).base().clone();
+            let seed_property = seed_property.clone();
 
             let compute = move |gr: &GraphResources,
                                 _tracker: &mut dyn ProgressTracker,
                                 _termination: &TerminationFlag|
                   -> Result<Option<Value>, String> {
-                let stats = gr
-                    .facade()
-                    .wcc()
-                    .concurrency(concurrency_value)
-                    .stats()
-                    .map_err(|e| e.to_string())?;
+                let facade = configure_facade(
+                    gr.facade().wcc(),
+                    concurrency_value,
+                    min_batch_size,
+                    threshold,
+                    seed_property.as_deref(),
+                );
+                let stats = facade.stats().map_err(|e| e.to_string())?;
                 let stats_value = serde_json::to_value(stats).map_err(|e| e.to_string())?;
                 Ok(Some(stats_value))
             };
@@ -165,9 +186,14 @@ pub fn handle_wcc(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value {
                 }
             };
 
-            let facade =
-                WccFacade::new(Arc::clone(graph_resources.store())).concurrency(concurrency_value);
-            match facade.mutate_with_store(&property_name) {
+            let facade = configure_facade(
+                WccFacade::new(Arc::clone(graph_resources.store())),
+                concurrency_value,
+                min_batch_size,
+                threshold,
+                seed_property.as_deref(),
+            );
+            match facade.mutate(&property_name) {
                 Ok(result) => {
                     catalog.set(graph_name, result.updated_store);
                     json!({"ok": true, "op": op, "data": {
@@ -195,16 +221,26 @@ pub fn handle_wcc(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value {
                 }
             };
 
-            let facade =
-                WccFacade::new(Arc::clone(graph_resources.store())).concurrency(concurrency_value);
+            let facade = configure_facade(
+                WccFacade::new(Arc::clone(graph_resources.store())),
+                concurrency_value,
+                min_batch_size,
+                threshold,
+                seed_property.as_deref(),
+            );
             match facade.write(&property_name) {
                 Ok(result) => json!({"ok": true, "op": op, "data": result}),
                 Err(e) => err(op, "EXECUTION_ERROR", &format!("WCC write failed: {:?}", e)),
             }
         }
         "estimate" => {
-            let facade =
-                WccFacade::new(Arc::clone(graph_resources.store())).concurrency(concurrency_value);
+            let facade = configure_facade(
+                WccFacade::new(Arc::clone(graph_resources.store())),
+                concurrency_value,
+                min_batch_size,
+                threshold,
+                seed_property.as_deref(),
+            );
             let memory = facade.estimate_memory();
             json!({
                 "ok": true,
@@ -214,4 +250,26 @@ pub fn handle_wcc(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value {
         }
         _ => err(op, "INVALID_REQUEST", "Invalid mode"),
     }
+}
+
+fn configure_facade(
+    mut facade: WccFacade,
+    concurrency: usize,
+    min_batch_size: usize,
+    threshold: Option<f64>,
+    seed_property: Option<&str>,
+) -> WccFacade {
+    facade = facade
+        .concurrency(concurrency)
+        .min_batch_size(min_batch_size);
+
+    if let Some(threshold) = threshold {
+        facade = facade.threshold(threshold);
+    }
+
+    if let Some(seed_property) = seed_property {
+        facade = facade.seed_property(seed_property);
+    }
+
+    facade
 }

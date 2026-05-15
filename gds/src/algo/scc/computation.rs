@@ -53,9 +53,6 @@ impl SccComputationRuntime {
         let mut next_index: i64 = 0;
         let mut next_component_id: i64 = 0;
 
-        const NODES_LOG_BATCH: usize = 256;
-        let mut logged_batch: usize = 0;
-
         #[derive(Debug)]
         struct Frame {
             node: usize,
@@ -75,7 +72,6 @@ impl SccComputationRuntime {
             next_index += 1;
             stack.push(start_node as i64);
             boundaries.push(index.get(start_node));
-            logged_batch += 1;
 
             let neighbors: Vec<usize> = graph
                 .stream_relationships(start_node as i64, fallback)
@@ -94,11 +90,6 @@ impl SccComputationRuntime {
                     return Err("terminated".to_string());
                 }
 
-                if logged_batch >= NODES_LOG_BATCH {
-                    progress_tracker.log_progress(logged_batch);
-                    logged_batch = 0;
-                }
-
                 let Some(top) = frames.last_mut() else {
                     break;
                 };
@@ -113,7 +104,6 @@ impl SccComputationRuntime {
                         next_index += 1;
                         stack.push(w as i64);
                         boundaries.push(index.get(w));
-                        logged_batch += 1;
 
                         let w_neighbors: Vec<usize> = graph
                             .stream_relationships(w as i64, fallback)
@@ -158,12 +148,9 @@ impl SccComputationRuntime {
                     next_component_id += 1;
                 }
 
+                progress_tracker.log_progress(1);
                 frames.pop();
             }
-        }
-
-        if logged_batch > 0 {
-            progress_tracker.log_progress(logged_batch);
         }
 
         let mut components: Vec<u64> = vec![0u64; node_count];

@@ -17,21 +17,35 @@ pub struct WccConfig {
     #[serde(default = "default_concurrency")]
     pub concurrency: usize,
 
+    /// Minimum batch size for range partitioning in the unsampled strategy.
+    #[serde(default = "default_min_batch_size", alias = "minBatchSize")]
+    pub min_batch_size: usize,
+
     /// Optional threshold over relationship property values.
     /// Only relationships with `property > threshold` are considered.
-    #[serde(default)]
+    #[serde(default, alias = "threshold")]
     pub threshold: Option<f64>,
+
+    /// Optional node property containing initial component ids.
+    #[serde(default, alias = "seedProperty")]
+    pub seed_property: Option<String>,
 }
 
 fn default_concurrency() -> usize {
     4
 }
 
+fn default_min_batch_size() -> usize {
+    crate::core::utils::partition::DEFAULT_BATCH_SIZE
+}
+
 impl Default for WccConfig {
     fn default() -> Self {
         Self {
             concurrency: default_concurrency(),
+            min_batch_size: default_min_batch_size(),
             threshold: None,
+            seed_property: None,
         }
     }
 }
@@ -42,6 +56,22 @@ impl WccConfig {
             return Err(ConfigError::InvalidParameter {
                 parameter: "concurrency".to_string(),
                 reason: "concurrency must be > 0".to_string(),
+            });
+        }
+        if self.min_batch_size == 0 {
+            return Err(ConfigError::InvalidParameter {
+                parameter: "min_batch_size".to_string(),
+                reason: "min_batch_size must be > 0".to_string(),
+            });
+        }
+        if self
+            .seed_property
+            .as_ref()
+            .is_some_and(|property| property.trim().is_empty())
+        {
+            return Err(ConfigError::InvalidParameter {
+                parameter: "seed_property".to_string(),
+                reason: "seed_property must be non-empty".to_string(),
             });
         }
         Ok(())
@@ -131,7 +161,18 @@ define_algorithm_spec! {
         let storage = WccStorageRuntime::new(parsed_config.concurrency);
         let mut computation = WccComputationRuntime::new()
             .concurrency(parsed_config.concurrency)
+            .min_batch_size(parsed_config.min_batch_size)
             .threshold(parsed_config.threshold);
+
+        if let Some(seed_property) = &parsed_config.seed_property {
+            let seed_values = graph_store
+                .node_property_values(seed_property)
+                .map_err(|e| AlgorithmError::Execution(format!(
+                    "WCC seed property `{}` not found in graph store: {}",
+                    seed_property, e
+                )))?;
+            computation = computation.seed_property_values(seed_values);
+        }
 
         let start = std::time::Instant::now();
 

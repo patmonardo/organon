@@ -7,9 +7,10 @@
 //! - `org.neo4j.gds.kcore.NodeProvider`
 
 use crate::collections::HugeAtomicLongArray;
-use crate::concurrency::{install_with_concurrency, Concurrency};
+use crate::concurrency::{install_with_concurrency, Concurrency, TerminationFlag};
 use crate::core::utils::paged::{HugeLongArrayQueue, HugeLongArrayStack};
 use crate::core::utils::partition::{Partition, PartitionUtils};
+use crate::core::utils::progress::{NoopProgressTracker, ProgressTracker};
 use rayon::prelude::*;
 use std::cmp;
 use std::sync::atomic::{AtomicIsize, AtomicUsize, Ordering};
@@ -64,16 +65,37 @@ impl KCoreComputationRuntime {
     where
         F: Fn(usize) -> Vec<usize> + Sync,
     {
+        let mut progress_tracker = NoopProgressTracker;
+        let termination_flag = TerminationFlag::default();
+        self.compute_with_controls(
+            node_count,
+            neighbors,
+            &mut progress_tracker,
+            &termination_flag,
+        )
+        .expect("default K-Core computation should not terminate")
+    }
+
+    pub fn compute_with_controls<F>(
+        &mut self,
+        node_count: usize,
+        neighbors: F,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<KCoreComputationResult, String>
+    where
+        F: Fn(usize) -> Vec<usize> + Sync,
+    {
         #[cfg(test)]
         {
             self.rebuild_count = 0;
         }
 
         if node_count == 0 {
-            return KCoreComputationResult {
+            return Ok(KCoreComputationResult {
                 core_values: Vec::new(),
                 degeneracy: 0,
-            };
+            });
         }
 
         let concurrency = Concurrency::from_usize(self.concurrency);
@@ -99,6 +121,7 @@ impl KCoreComputationRuntime {
         let rebuild_limit = ((REBUILD_CONSTANT * node_count as f64).ceil() as usize).max(1);
         let remaining_nodes =
             AtomicIsize::new((node_count - degree_zero.load(Ordering::Relaxed)) as isize);
+        progress_tracker.log_progress(degree_zero.load(Ordering::Relaxed));
 
         let node_index = Arc::new(AtomicUsize::new(0));
         let remaining_nodes_arc = Arc::new(remaining_nodes);
@@ -126,6 +149,8 @@ impl KCoreComputationRuntime {
         let mut has_rebuild = false;
 
         while remaining_nodes_arc.load(Ordering::Relaxed) > 0 {
+            termination_flag.assert_running();
+
             let remaining_now = remaining_nodes_arc.load(Ordering::Relaxed) as usize;
             if !has_rebuild && remaining_now < rebuild_limit {
                 node_provider = Arc::new(rebuild(
@@ -168,6 +193,7 @@ impl KCoreComputationRuntime {
                 }
 
                 run_tasks(&mut tasks, concurrency, &neighbors);
+                progress_tracker.log_progress(tasks.iter().map(KCoreTask::last_act_count).sum());
                 scanning_degree += 1;
             } else if next_scanning_degree > -1 {
                 scanning_degree = next_scanning_degree;
@@ -182,10 +208,10 @@ impl KCoreComputationRuntime {
             out.push(core.get(i) as i32);
         }
 
-        KCoreComputationResult {
+        Ok(KCoreComputationResult {
             core_values: out,
             degeneracy,
-        }
+        })
     }
 }
 
@@ -250,6 +276,7 @@ struct KCoreTask {
     phase: KCorePhase,
     node_provider: Arc<NodeProvider>,
     chunk_size: usize,
+    last_act_count: usize,
 }
 
 impl KCoreTask {
@@ -273,6 +300,7 @@ impl KCoreTask {
             phase: KCorePhase::Scan,
             node_provider,
             chunk_size,
+            last_act_count: 0,
         }
     }
 
@@ -293,6 +321,10 @@ impl KCoreTask {
         self.smallest_active_degree
     }
 
+    fn last_act_count(&self) -> usize {
+        self.last_act_count
+    }
+
     fn run<F>(&mut self, neighbors: &F)
     where
         F: Fn(usize) -> Vec<usize> + Sync,
@@ -306,6 +338,7 @@ impl KCoreTask {
     fn scan(&mut self) {
         let upper_bound = self.node_provider.size();
         self.smallest_active_degree = -1;
+        self.last_act_count = 0;
         self.examination_stack.clear();
 
         loop {
@@ -353,6 +386,7 @@ impl KCoreTask {
             self.remaining_nodes
                 .fetch_sub(nodes_examined, Ordering::Relaxed);
         }
+        self.last_act_count = nodes_examined as usize;
     }
 
     fn relax<F>(&mut self, node_id: usize, neighbors: &F)

@@ -3,7 +3,7 @@
 //! Community detection by iterative label voting.
 //!
 //! Parameters (Java GDS aligned):
-//! - `concurrency`: accepted for parity; currently unused.
+//! - `concurrency`: accepted for API/progress alignment; computation keeps deterministic update order.
 //! - `max_iterations`: max number of propagation iterations (must be >= 1).
 //! - `node_weight_property`: optional node weight property (defaults to 1.0).
 //! - `seed_property`: optional seed labels property.
@@ -18,7 +18,7 @@ use crate::algo::label_propagation::spec::{
 use crate::algo::label_propagation::storage::LabelPropStorageRuntime;
 use crate::collections::backends::vec::VecLong;
 use crate::concurrency::TerminationFlag;
-use crate::core::utils::progress::{TaskProgressTracker, TaskRegistry, Tasks};
+use crate::core::utils::progress::{TaskRegistry, Tasks};
 use crate::mem::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
@@ -132,8 +132,11 @@ impl LabelPropagationFacade {
             "label_propagation".to_string(),
             node_count.saturating_add(self.config.max_iterations as usize),
         );
-        let mut progress_tracker =
-            TaskProgressTracker::with_concurrency(base_task, self.config.concurrency);
+        let mut progress_tracker = super::progress_tracker(
+            base_task,
+            self.config.concurrency,
+            self.task_registry.as_ref(),
+        );
 
         let termination_flag = TerminationFlag::default();
 
@@ -225,21 +228,20 @@ impl LabelPropagationFacade {
 
     /// Estimate memory usage.
     pub fn estimate_memory(&self) -> Result<MemoryRange> {
-        // Label Propagation keeps two label buffers and scans relationships for message passing.
         let node_count = self.graph_store.node_count();
-        let relationship_count = self.graph_store.relationship_count();
+        let concurrency = self.config.concurrency.max(1);
 
-        // Per node: current+next labels (u64) + convergence bookkeeping.
-        let per_node = 96usize;
-        // Per relationship: transient accumulation while streaming.
-        let per_relationship = 8usize;
+        let labels_bytes = node_count.saturating_mul(8);
+        let min_vote_tally = 64usize;
+        let max_vote_tally = node_count.saturating_mul(16).max(min_vote_tally);
 
         let base: usize = 64 * 1024;
-        let total = base
-            .saturating_add(node_count.saturating_mul(per_node))
-            .saturating_add(relationship_count.saturating_mul(per_relationship));
+        let fixed = base.saturating_add(labels_bytes);
 
-        Ok(MemoryRange::of_range(total, total.saturating_mul(2)))
+        Ok(MemoryRange::of_range(
+            fixed.saturating_add(min_vote_tally.saturating_mul(concurrency)),
+            fixed.saturating_add(max_vote_tally.saturating_mul(concurrency)),
+        ))
     }
 
     /// Full result: returns the procedure-level Label Propagation result.

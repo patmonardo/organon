@@ -113,4 +113,18 @@ mod tests {
         assert_eq!(result.component_count, 0);
         assert!(result.components.is_empty());
     }
+
+    #[test]
+    fn wcc_seed_property_initializes_components() {
+        let mut store = store_from_outgoing(vec![vec![], vec![], vec![]]);
+        store
+            .add_node_property_i64("seed".to_string(), vec![7, 7, 9])
+            .unwrap();
+        let graph = GraphFacade::new(Arc::new(store));
+
+        let result = graph.wcc().seed_property("seed").run().unwrap();
+        assert_eq!(result.component_count, 2);
+        assert_eq!(result.components[0], result.components[1]);
+        assert_ne!(result.components[0], result.components[2]);
+    }
 }

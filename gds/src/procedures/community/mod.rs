@@ -11,6 +11,12 @@ pub mod scc;
 pub mod triangle;
 pub mod wcc;
 
+use crate::concurrency::Concurrency;
+use crate::core::utils::progress::{
+    EmptyTaskRegistryFactory, JobId, LeafTask, Task, TaskProgressTracker, TaskRegistry,
+    TaskRegistryFactory,
+};
+
 pub use approx_max_kcut::*;
 pub use conductance::*;
 pub use k1coloring::*;
@@ -23,3 +29,35 @@ pub use modularity::*;
 pub use scc::*;
 pub use triangle::*;
 pub use wcc::*;
+
+pub(crate) fn progress_tracker(
+    task: LeafTask,
+    concurrency: usize,
+    task_registry: Option<&TaskRegistry>,
+) -> TaskProgressTracker {
+    progress_tracker_for_task(task.base().clone(), concurrency, task_registry)
+}
+
+pub(crate) fn progress_tracker_for_task(
+    base_task: Task,
+    concurrency: usize,
+    task_registry: Option<&TaskRegistry>,
+) -> TaskProgressTracker {
+    struct PrebuiltTaskRegistryFactory(TaskRegistry);
+
+    impl TaskRegistryFactory for PrebuiltTaskRegistryFactory {
+        fn new_instance(&self, _job_id: JobId) -> TaskRegistry {
+            self.0.clone()
+        }
+    }
+
+    let concurrency = Concurrency::of(concurrency.max(1));
+
+    if let Some(registry) = task_registry {
+        let registry_factory = PrebuiltTaskRegistryFactory(registry.clone());
+        TaskProgressTracker::with_registry(base_task, concurrency, JobId::new(), &registry_factory)
+    } else {
+        let registry_factory = EmptyTaskRegistryFactory;
+        TaskProgressTracker::with_registry(base_task, concurrency, JobId::new(), &registry_factory)
+    }
+}

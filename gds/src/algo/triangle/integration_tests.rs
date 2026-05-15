@@ -40,3 +40,19 @@ fn triangle_two_share_edge() {
     assert_eq!(result.global_triangles, 2);
     assert_eq!(result.local_triangles, vec![2, 2, 1, 1]);
 }
+
+#[test]
+fn triangle_max_degree_marks_excluded_nodes() {
+    let mut rt = TriangleComputationRuntime::new();
+    let neighbors = |n: usize| match n {
+        0 => vec![1, 2, 3],
+        1 => vec![0, 2, 3],
+        2 => vec![0, 1],
+        3 => vec![0, 1],
+        _ => vec![],
+    };
+    let result = rt.compute_with_max_degree(4, neighbors, 2);
+
+    assert_eq!(result.global_triangles, 0);
+    assert_eq!(result.local_triangles, vec![-1, -1, 0, 0]);
+}

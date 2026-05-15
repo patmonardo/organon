@@ -3,12 +3,24 @@ use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use std::time::Duration;
 
+pub const EXCLUDED_NODE_TRIANGLE_COUNT: i64 = -1;
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TriangleConfig {
-    /// Reserved for future parallel implementation.
+    /// Concurrency hint accepted for Java GDS API alignment.
+    #[serde(default = "default_concurrency")]
     pub concurrency: usize,
     /// Skip nodes with degree > max_degree (performance / approximation).
+    #[serde(default = "default_max_degree", alias = "maxDegree")]
     pub max_degree: u64,
+}
+
+fn default_concurrency() -> usize {
+    4
+}
+
+fn default_max_degree() -> u64 {
+    u64::MAX
 }
 
 impl TriangleConfig {
@@ -32,15 +44,15 @@ impl crate::config::ValidatedConfig for TriangleConfig {
 impl Default for TriangleConfig {
     fn default() -> Self {
         Self {
-            concurrency: 4,
-            max_degree: u64::MAX,
+            concurrency: default_concurrency(),
+            max_degree: default_max_degree(),
         }
     }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TriangleResult {
-    pub local_triangles: Vec<u64>,
+    pub local_triangles: Vec<i64>,
     pub global_triangles: u64,
     pub node_count: usize,
     pub execution_time: Duration,

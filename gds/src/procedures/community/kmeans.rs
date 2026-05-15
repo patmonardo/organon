@@ -23,7 +23,7 @@ use crate::algo::kmeans::{
 };
 use crate::collections::backends::vec::VecLong;
 use crate::concurrency::TerminationFlag;
-use crate::core::utils::progress::{TaskProgressTracker, TaskRegistry, Tasks};
+use crate::core::utils::progress::{TaskRegistry, Tasks};
 use crate::mem::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
@@ -182,9 +182,10 @@ impl KMeansFacade {
         let config = self.config.clone();
         let node_count = self.graph_store.node_count();
 
-        let mut progress_tracker = TaskProgressTracker::with_concurrency(
+        let mut progress_tracker = super::progress_tracker(
             Tasks::leaf_with_volume("kmeans".to_string(), node_count),
             config.concurrency,
+            self.task_registry.as_ref(),
         );
 
         let termination_flag = TerminationFlag::default();

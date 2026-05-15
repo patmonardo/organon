@@ -2,9 +2,13 @@
 
 use crate::algo::k1coloring::K1ColoringComputationRuntime;
 use crate::algo::k1coloring::K1ColoringStorageRuntime;
+use crate::concurrency::Concurrency;
 use crate::concurrency::TerminationFlag;
 use crate::config::validation::ConfigError;
 use crate::core::utils::partition::DEFAULT_BATCH_SIZE;
+use crate::core::utils::progress::EmptyTaskRegistryFactory;
+use crate::core::utils::progress::JobId;
+use crate::core::utils::progress::Task;
 use crate::core::utils::progress::TaskProgressTracker;
 use crate::core::utils::progress::Tasks;
 use crate::define_algorithm_spec;
@@ -75,6 +79,27 @@ impl crate::config::ValidatedConfig for K1ColoringConfig {
     fn validate(&self) -> Result<(), ConfigError> {
         K1ColoringConfig::validate(self)
     }
+}
+
+pub fn k1coloring_progress_task(node_count: usize, max_iterations: u64) -> Task {
+    let supplier = Arc::new(move || {
+        vec![
+            Arc::new(
+                Tasks::leaf_with_volume("color nodes".to_string(), node_count)
+                    .base()
+                    .clone(),
+            ),
+            Arc::new(
+                Tasks::leaf_with_volume("validate nodes".to_string(), node_count)
+                    .base()
+                    .clone(),
+            ),
+        ]
+    });
+
+    Tasks::iterative_dynamic("k1coloring".to_string(), supplier, max_iterations as usize)
+        .base()
+        .clone()
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -168,9 +193,14 @@ define_algorithm_spec! {
         let storage = K1ColoringStorageRuntime::new(graph_store)?;
         let node_count = storage.node_count();
 
-        let task = Tasks::leaf_with_volume("k1coloring".to_string(), parsed.max_iterations as usize);
-
-        let mut progress = TaskProgressTracker::with_concurrency(task, parsed.concurrency);
+        let task = k1coloring_progress_task(node_count, parsed.max_iterations);
+        let registry_factory = EmptyTaskRegistryFactory;
+        let mut progress = TaskProgressTracker::with_registry(
+            task,
+            Concurrency::of(parsed.concurrency.max(1)),
+            JobId::new(),
+            &registry_factory,
+        );
         let termination_flag = TerminationFlag::default();
 
         let mut runtime = K1ColoringComputationRuntime::new(node_count as usize, parsed.max_iterations)

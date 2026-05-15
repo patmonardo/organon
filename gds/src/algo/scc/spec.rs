@@ -13,8 +13,14 @@ use std::time::Duration;
 use super::SccComputationRuntime;
 use super::SccStorageRuntime;
 
+/// SCC algorithm configuration.
+///
+/// SCC follows the Java GDS sequential path-based traversal. `concurrency` is
+/// accepted for API and Pipeline compatibility, but it does not make the
+/// computation itself parallel.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SccConfig {
+    /// Concurrency hint used by surrounding task/progress plumbing.
     #[serde(default = "default_concurrency")]
     pub concurrency: usize,
 }
