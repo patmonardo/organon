@@ -73,3 +73,4 @@ gds/examples.old
 ./gds/examples.old
 gds/neo4j
 gds/rust-clrs
+gds/py-polars
