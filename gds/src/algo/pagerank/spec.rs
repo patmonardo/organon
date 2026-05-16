@@ -2,7 +2,7 @@
 
 use crate::collections::backends::vec::VecDouble;
 use crate::config::validation::ConfigError;
-use crate::core::utils::progress::{ProgressTracker, TaskProgressTracker, Tasks};
+use crate::core::utils::progress::{LeafTask, ProgressTracker, TaskProgressTracker, Tasks};
 use crate::define_algorithm_spec;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::NodeLabel;
@@ -236,6 +236,10 @@ pub fn parse_pagerank_orientation(direction: &str) -> Result<Orientation, Algori
     }
 }
 
+pub fn pagerank_progress_task(max_iterations: usize) -> LeafTask {
+    Tasks::leaf_with_volume("PageRank".to_string(), max_iterations)
+}
+
 define_algorithm_spec! {
     name: "pagerank",
     output_type: PageRankResult,
@@ -267,7 +271,7 @@ define_algorithm_spec! {
 
         // Lightweight progress hook (executor can override/ignore).
         let mut progress = TaskProgressTracker::with_concurrency(
-            Tasks::leaf_with_volume("pagerank".to_string(), parsed.max_iterations),
+            pagerank_progress_task(parsed.max_iterations),
             parsed.concurrency,
         );
         progress.begin_subtask_with_volume(parsed.max_iterations);

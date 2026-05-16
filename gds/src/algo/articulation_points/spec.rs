@@ -1,7 +1,7 @@
 //! Articulation Points Algorithm Specification
 
 use crate::config::validation::ConfigError;
-use crate::core::utils::progress::{ProgressTracker, TaskProgressTracker, Tasks};
+use crate::core::utils::progress::{LeafTask, ProgressTracker, TaskProgressTracker, Tasks};
 use crate::core::LogLevel;
 use crate::define_algorithm_spec;
 use crate::projection::eval::algorithm::AlgorithmError;
@@ -127,6 +127,10 @@ impl ArticulationPointsResultBuilder {
     }
 }
 
+pub fn articulation_points_progress_task(node_count: usize) -> LeafTask {
+    Tasks::leaf_with_volume("ArticulationPoints".to_string(), node_count)
+}
+
 define_algorithm_spec! {
     name: "articulation_points",
     output_type: ArticulationPointsResult,
@@ -156,7 +160,7 @@ define_algorithm_spec! {
 
         // Java parity: a single leaf task sized by node_count.
         let tracker = Arc::new(Mutex::new(TaskProgressTracker::with_concurrency(
-            Tasks::leaf_with_volume("ArticulationPoints".to_string(), node_count),
+            articulation_points_progress_task(node_count),
             parsed_config.concurrency,
         )));
         tracker.lock().unwrap().begin_subtask_with_volume(node_count);

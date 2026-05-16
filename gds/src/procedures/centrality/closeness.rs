@@ -187,7 +187,6 @@ impl ClosenessCentralityFacade {
 
         // End root.
         progress_tracker.end_subtask();
-        progress_tracker.release();
 
         Ok(ClosenessCentralityResult {
             centralities,

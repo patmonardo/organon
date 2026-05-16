@@ -29,15 +29,15 @@ use crate::algo::algorithms::{CentralityScore, Result};
 use crate::algo::algorithms::{ConfigValidator, WriteResult};
 pub use crate::algo::degree_centrality::storage::Orientation;
 use crate::algo::degree_centrality::{
-    parse_degree_orientation, DegreeCentralityComputationRuntime, DegreeCentralityConfig,
-    DegreeCentralityMutateResult, DegreeCentralityMutationSummary, DegreeCentralityResult,
-    DegreeCentralityResultBuilder, DegreeCentralityStats, DegreeCentralityStorageRuntime,
+    degree_centrality_progress_task, parse_degree_orientation, DegreeCentralityComputationRuntime,
+    DegreeCentralityConfig, DegreeCentralityMutateResult, DegreeCentralityMutationSummary,
+    DegreeCentralityResult, DegreeCentralityResultBuilder, DegreeCentralityStats,
+    DegreeCentralityStorageRuntime,
 };
 use crate::collections::backends::vec::VecDouble;
 use crate::concurrency::{Concurrency, TerminationFlag};
 use crate::core::utils::progress::{
     EmptyTaskRegistryFactory, JobId, ProgressTracker, TaskProgressTracker, TaskRegistryFactory,
-    Tasks,
 };
 use crate::mem::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
@@ -136,7 +136,7 @@ impl DegreeCentralityFacade {
         self
     }
 
-    /// Set task registry factory for progress tracking
+    /// Compatibility alias for older builder call sites; prefer `task_registry`.
     pub fn task_registry_factory(mut self, factory: Box<dyn TaskRegistryFactory>) -> Self {
         self.task_registry = factory.into();
         self
@@ -175,9 +175,7 @@ impl DegreeCentralityFacade {
         let node_count = storage.node_count();
 
         let mut progress_tracker = TaskProgressTracker::with_registry(
-            Tasks::leaf_with_volume("DegreeCentrality".to_string(), node_count)
-                .base()
-                .clone(),
+            degree_centrality_progress_task(node_count).base().clone(),
             Concurrency::of(self.config.concurrency.max(1)),
             JobId::new(),
             self.task_registry.as_ref(),
@@ -240,7 +238,7 @@ impl DegreeCentralityFacade {
     ///     }
     /// }
     /// ```
-    pub fn stream(self) -> Result<Box<dyn Iterator<Item = CentralityScore>>> {
+    pub fn stream(&self) -> Result<Box<dyn Iterator<Item = CentralityScore>>> {
         let result = self.compute()?;
         let iter = result
             .centralities
@@ -270,7 +268,7 @@ impl DegreeCentralityFacade {
     /// println!("Max degree (highest hub): {}", stats.max);
     /// println!("Isolated nodes: {}", stats.isolated_nodes);
     /// ```
-    pub fn stats(self) -> Result<DegreeCentralityStats> {
+    pub fn stats(&self) -> Result<DegreeCentralityStats> {
         let result = self.compute()?;
         Ok(DegreeCentralityResultBuilder::new(result).stats())
     }

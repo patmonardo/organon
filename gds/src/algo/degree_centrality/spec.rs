@@ -7,7 +7,7 @@ use crate::algo::degree_centrality::{DegreeCentralityStorageRuntime, Orientation
 use crate::collections::backends::vec::VecDouble;
 use crate::concurrency::TerminationFlag;
 use crate::config::validation::ConfigError;
-use crate::core::utils::progress::{ProgressTracker, TaskProgressTracker, Tasks};
+use crate::core::utils::progress::{LeafTask, ProgressTracker, TaskProgressTracker, Tasks};
 use crate::define_algorithm_spec;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::NodeLabel;
@@ -205,6 +205,10 @@ pub fn parse_degree_orientation(value: &str) -> Result<Orientation, AlgorithmErr
     }
 }
 
+pub fn degree_centrality_progress_task(node_count: usize) -> LeafTask {
+    Tasks::leaf_with_volume("DegreeCentrality".to_string(), node_count)
+}
+
 define_algorithm_spec! {
     name: "degree_centrality",
     output_type: DegreeCentralityResult,
@@ -230,7 +234,7 @@ define_algorithm_spec! {
         let node_count = storage.node_count();
 
         let tracker = Arc::new(Mutex::new(TaskProgressTracker::with_concurrency(
-            Tasks::leaf_with_volume("DegreeCentrality".to_string(), node_count),
+            degree_centrality_progress_task(node_count),
             parsed.concurrency,
         )));
         tracker.lock().unwrap().begin_subtask_with_volume(node_count);

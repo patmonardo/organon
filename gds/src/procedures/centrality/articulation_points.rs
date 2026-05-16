@@ -10,16 +10,16 @@ use crate::algo::algorithms::{AlgorithmRunner, Result};
 use crate::algo::algorithms::{ConfigValidator, WriteResult};
 use crate::algo::articulation_points::storage::ArticulationPointsStorageRuntime;
 use crate::algo::articulation_points::{
-    ArticulationPointRow, ArticulationPointsComputationRuntime, ArticulationPointsConfig,
-    ArticulationPointsMutateResult, ArticulationPointsMutationSummary, ArticulationPointsResult,
-    ArticulationPointsResultBuilder, ArticulationPointsStats, STACK_EVENT_SIZE_BYTES,
+    articulation_points_progress_task, ArticulationPointRow, ArticulationPointsComputationRuntime,
+    ArticulationPointsConfig, ArticulationPointsMutateResult, ArticulationPointsMutationSummary,
+    ArticulationPointsResult, ArticulationPointsResultBuilder, ArticulationPointsStats,
+    STACK_EVENT_SIZE_BYTES,
 };
 use crate::collections::backends::vec::VecDouble;
 use crate::collections::BitSet;
 use crate::concurrency::Concurrency;
 use crate::core::utils::progress::{
     EmptyTaskRegistryFactory, JobId, ProgressTracker, TaskProgressTracker, TaskRegistryFactory,
-    Tasks,
 };
 use crate::mem::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
@@ -163,9 +163,7 @@ impl ArticulationPointsFacade {
         }
 
         let mut progress_tracker = TaskProgressTracker::with_registry(
-            Tasks::leaf_with_volume("ArticulationPoints".to_string(), node_count)
-                .base()
-                .clone(),
+            articulation_points_progress_task(node_count).base().clone(),
             Concurrency::of(self.config.concurrency.max(1)),
             JobId::new(),
             self.task_registry.as_ref(),

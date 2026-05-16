@@ -31,7 +31,7 @@ use crate::algo::algorithms::{CentralityScore, Result};
 use crate::algo::algorithms::{ConfigValidator, WriteResult};
 use crate::algo::pagerank::{
     computation::{PageRankComputationRuntime, PageRankMemoryEstimation},
-    parse_pagerank_orientation,
+    pagerank_progress_task, parse_pagerank_orientation,
     storage::PageRankStorageRuntime,
     PageRankConfig, PageRankMutateResult, PageRankMutationSummary, PageRankResult,
     PageRankResultBuilder, PageRankStats,
@@ -41,7 +41,7 @@ use crate::concurrency::Concurrency;
 use crate::core::graph_dimensions::ConcreteGraphDimensions;
 use crate::core::utils::progress::ProgressTracker;
 use crate::core::utils::progress::{
-    EmptyTaskRegistryFactory, JobId, TaskProgressTracker, TaskRegistryFactory, Tasks,
+    EmptyTaskRegistryFactory, JobId, TaskProgressTracker, TaskRegistryFactory,
 };
 use crate::mem::{MemoryEstimation, MemoryRange};
 use crate::projection::eval::algorithm::AlgorithmError;
@@ -235,7 +235,7 @@ impl PageRankFacade {
         );
 
         let mut progress_tracker = TaskProgressTracker::with_registry(
-            Tasks::leaf_with_volume("pagerank".to_string(), self.config.max_iterations)
+            pagerank_progress_task(self.config.max_iterations)
                 .base()
                 .clone(),
             Concurrency::of(self.config.concurrency.max(1)),
@@ -271,7 +271,7 @@ impl PageRankFacade {
     ///     println!("Node {} has score {}", score.node_id, score.score);
     /// }
     /// ```
-    pub fn stream(self) -> Result<Box<dyn Iterator<Item = CentralityScore>>> {
+    pub fn stream(&self) -> Result<Box<dyn Iterator<Item = CentralityScore>>> {
         let result = self.compute()?;
         let iter = result
             .scores
@@ -297,7 +297,7 @@ impl PageRankFacade {
     /// let stats = builder.stats()?;
     /// println!("Converged: {}, Iterations: {}", stats.converged, stats.iterations_ran);
     /// ```
-    pub fn stats(self) -> Result<PageRankStats> {
+    pub fn stats(&self) -> Result<PageRankStats> {
         let result = self.compute()?;
         Ok(PageRankResultBuilder::new(result).stats())
     }
