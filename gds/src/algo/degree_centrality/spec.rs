@@ -59,10 +59,10 @@ impl DegreeCentralityConfig {
                 reason: "concurrency must be positive".to_string(),
             });
         }
-        if self.orientation.trim().is_empty() {
+        if parse_degree_orientation(&self.orientation).is_err() {
             return Err(ConfigError::InvalidParameter {
                 parameter: "orientation".to_string(),
-                reason: "orientation must be non-empty".to_string(),
+                reason: "orientation must be one of natural, reverse, or undirected".to_string(),
             });
         }
         Ok(())
@@ -194,8 +194,8 @@ impl DegreeCentralityResultBuilder {
     }
 }
 
-fn parse_orientation(value: &str) -> Result<Orientation, AlgorithmError> {
-    match value.to_lowercase().as_str() {
+pub fn parse_degree_orientation(value: &str) -> Result<Orientation, AlgorithmError> {
+    match value.trim().to_lowercase().as_str() {
         "natural" | "outgoing" => Ok(Orientation::Natural),
         "reverse" | "incoming" => Ok(Orientation::Reverse),
         "undirected" | "both" => Ok(Orientation::Undirected),
@@ -219,7 +219,7 @@ define_algorithm_spec! {
             .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
 
         let start = Instant::now();
-        let orientation = parse_orientation(&parsed.orientation)?;
+        let orientation = parse_degree_orientation(&parsed.orientation)?;
 
         let storage = DegreeCentralityStorageRuntime::with_settings(
             graph_store,
@@ -230,7 +230,7 @@ define_algorithm_spec! {
         let node_count = storage.node_count();
 
         let tracker = Arc::new(Mutex::new(TaskProgressTracker::with_concurrency(
-            Tasks::leaf_with_volume("degree_centrality".to_string(), node_count),
+            Tasks::leaf_with_volume("DegreeCentrality".to_string(), node_count),
             parsed.concurrency,
         )));
         tracker.lock().unwrap().begin_subtask_with_volume(node_count);

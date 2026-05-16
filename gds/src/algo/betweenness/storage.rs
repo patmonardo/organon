@@ -13,7 +13,8 @@ use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
 
 use crate::algo::betweenness::{
-    BetweennessCentralityComputationResult, BetweennessCentralityComputationRuntime,
+    parse_betweenness_sampling_strategy, BetweennessCentralityComputationResult,
+    BetweennessCentralityComputationRuntime, BetweennessSamplingStrategy,
 };
 
 pub struct BetweennessCentralityStorageRuntime<'a, G: GraphStore> {
@@ -121,7 +122,7 @@ impl<'a, G: GraphStore> BetweennessCentralityStorageRuntime<'a, G> {
         strategy: &str,
         sampling_size: Option<usize>,
         seed: u64,
-    ) -> Vec<usize> {
+    ) -> Result<Vec<usize>, AlgorithmError> {
         use rand::SeedableRng;
         use rand_chacha::ChaCha8Rng;
         use std::cmp::Ordering;
@@ -129,17 +130,16 @@ impl<'a, G: GraphStore> BetweennessCentralityStorageRuntime<'a, G> {
 
         let node_count = self.node_count();
         if node_count == 0 {
-            return Vec::new();
+            return Ok(Vec::new());
         }
 
         let requested = sampling_size.unwrap_or(node_count).min(node_count).max(1);
         if requested == node_count {
-            return (0..node_count).collect();
+            return Ok((0..node_count).collect());
         }
 
-        let strat = strategy.to_lowercase().replace('_', "").replace('-', "");
-        if strat != "randomdegree" {
-            return (0..requested).collect();
+        if parse_betweenness_sampling_strategy(strategy)? == BetweennessSamplingStrategy::All {
+            return Ok((0..requested).collect());
         }
 
         #[derive(Debug, Clone)]
@@ -186,7 +186,7 @@ impl<'a, G: GraphStore> BetweennessCentralityStorageRuntime<'a, G> {
 
         let mut sources: Vec<usize> = heap.into_iter().map(|s| s.node).collect();
         sources.sort_unstable();
-        sources
+        Ok(sources)
     }
 
     /// Execute betweenness centrality for the given sources, dispatching to weighted/unweighted.

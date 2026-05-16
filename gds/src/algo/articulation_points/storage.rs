@@ -64,7 +64,6 @@ impl<'a, G: GraphStore> ArticulationPointsStorageRuntime<'a, G> {
     pub fn compute_articulation_points(
         &self,
         computation: &mut ArticulationPointsComputationRuntime,
-        _graph: Option<&dyn Graph>,
         progress_tracker: &mut dyn ProgressTracker,
     ) -> Result<ArticulationPointsComputationResult, AlgorithmError> {
         let node_count = self.graph.node_count();
@@ -104,6 +103,7 @@ impl<'a, G: GraphStore> ArticulationPointsStorageRuntime<'a, G> {
         } else {
             computation.clear_articulation_point(root);
         }
+        progress_tracker.log_progress(1);
     }
 
     fn visit_event(

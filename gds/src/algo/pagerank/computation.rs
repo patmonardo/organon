@@ -50,24 +50,40 @@ impl PageRankComputationRuntime {
         self.max_iterations
     }
 
-    fn teleport_probability(&self, node_id: usize, node_count: usize) -> f64 {
+    fn teleport_distribution(&self, node_count: usize) -> Vec<f64> {
+        if node_count == 0 {
+            return Vec::new();
+        }
+
         match &self.source_nodes {
-            None => 1.0 / node_count as f64,
-            Some(s) if s.is_empty() => 1.0 / node_count as f64,
-            Some(s) => {
-                if s.contains(&(node_id as u64)) {
-                    1.0 / s.len() as f64
-                } else {
-                    0.0
+            None => vec![1.0 / node_count as f64; node_count],
+            Some(s) if s.is_empty() => vec![1.0 / node_count as f64; node_count],
+            Some(source_nodes) => {
+                let valid_source_count = source_nodes
+                    .iter()
+                    .filter(|node_id| (**node_id as usize) < node_count)
+                    .count();
+
+                if valid_source_count == 0 {
+                    return vec![1.0 / node_count as f64; node_count];
                 }
+
+                let source_probability = 1.0 / valid_source_count as f64;
+                (0..node_count)
+                    .map(|node_id| {
+                        if source_nodes.contains(&(node_id as u64)) {
+                            source_probability
+                        } else {
+                            0.0
+                        }
+                    })
+                    .collect()
             }
         }
     }
 
     fn initial_rank(&self, node_count: usize) -> Vec<f64> {
-        (0..node_count)
-            .map(|i| self.teleport_probability(i, node_count))
-            .collect()
+        self.teleport_distribution(node_count)
     }
 
     pub fn run(
@@ -76,6 +92,23 @@ impl PageRankComputationRuntime {
         out_degree: &[usize],
         concurrency: usize,
         stream_neighbors: &(impl Fn(usize, &mut dyn FnMut(usize)) + Sync),
+    ) -> PageRankRunResult {
+        self.run_with_progress(
+            node_count,
+            out_degree,
+            concurrency,
+            stream_neighbors,
+            |_| {},
+        )
+    }
+
+    pub fn run_with_progress(
+        &self,
+        node_count: usize,
+        out_degree: &[usize],
+        concurrency: usize,
+        stream_neighbors: &(impl Fn(usize, &mut dyn FnMut(usize)) + Sync),
+        mut on_iteration_complete: impl FnMut(usize),
     ) -> PageRankRunResult {
         if node_count == 0 {
             return PageRankRunResult {
@@ -89,7 +122,8 @@ impl PageRankComputationRuntime {
         let tolerance = self.tolerance;
         let max_iterations = self.max_iterations;
 
-        let mut rank: Vec<f64> = self.initial_rank(node_count);
+        let teleport_distribution = self.initial_rank(node_count);
+        let mut rank = teleport_distribution.clone();
 
         let concurrency = Concurrency::from_usize(concurrency.max(1));
 
@@ -107,7 +141,7 @@ impl PageRankComputationRuntime {
 
             let next = HugeAtomicDoubleArray::new(node_count);
             for i in 0..node_count {
-                let p_i = self.teleport_probability(i, node_count);
+                let p_i = teleport_distribution[i];
                 let base = (1.0 - damping) * p_i + damping * dangling_mass * p_i;
                 next.set(i, base);
             }
@@ -139,6 +173,7 @@ impl PageRankComputationRuntime {
                 .fold(0.0, f64::max);
 
             rank = next_rank;
+            on_iteration_complete(1);
 
             if max_delta < tolerance {
                 did_converge = true;

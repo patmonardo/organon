@@ -3,13 +3,14 @@
 use crate::algo::algorithms::{CentralityScore, Result};
 use crate::algo::algorithms::{ConfigValidator, WriteResult};
 use crate::algo::hits::{
-    computation::HitsComputationRuntime, HitsCentralityMutateResult, HitsCentralityMutationSummary,
-    HitsCentralityStats, HitsConfig, HitsResult, HitsResultBuilder, HitsStorageRuntime,
+    computation::HitsComputationRuntime, hits_progress_task, HitsCentralityMutateResult,
+    HitsCentralityMutationSummary, HitsCentralityStats, HitsConfig, HitsResult, HitsResultBuilder,
+    HitsStorageRuntime,
 };
 use crate::collections::backends::vec::VecDouble;
 use crate::concurrency::Concurrency;
 use crate::core::utils::progress::{
-    EmptyTaskRegistryFactory, JobId, TaskProgressTracker, TaskRegistryFactory, Tasks,
+    EmptyTaskRegistryFactory, JobId, TaskProgressTracker, TaskRegistryFactory,
 };
 use crate::mem::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
@@ -118,7 +119,7 @@ impl HitsCentralityFacade {
         let computation = HitsComputationRuntime::new(self.config.tolerance);
 
         let mut progress_tracker = TaskProgressTracker::with_registry(
-            Tasks::leaf_with_volume("hits".to_string(), self.config.max_iterations)
+            hits_progress_task(storage.graph().node_count(), self.config.max_iterations)
                 .base()
                 .clone(),
             Concurrency::of(self.config.concurrency.max(1)),
@@ -262,18 +263,26 @@ impl HitsCentralityFacade {
     /// ```
     pub fn estimate_memory(&self) -> MemoryRange {
         let node_count = self.graph_store.node_count();
+        let concurrency = self.config.concurrency.max(1);
 
-        // Memory for hub and authority scores (two f64 per node)
-        let scores_memory = node_count * std::mem::size_of::<f64>() * 2;
+        let public_scores_memory = node_count
+            .saturating_mul(std::mem::size_of::<f64>())
+            .saturating_mul(2);
+        let rust_pregel_state_memory = node_count
+            .saturating_mul(std::mem::size_of::<f64>())
+            .saturating_mul(7);
+        let vote_bits_memory = node_count.saturating_add(7) / 8;
+        let sync_queue_memory = node_count
+            .saturating_mul(std::mem::size_of::<f64>())
+            .saturating_mul(concurrency);
+        let executor_overhead = concurrency.saturating_mul(64 * 1024);
 
-        // Memory for HITS algorithm structures (iteration tracking, convergence checking)
-        let hits_memory = node_count * 8; // Rough estimate for algorithm structures
-
-        // Additional overhead for computation (temporary vectors, etc.)
-        let computation_overhead = 1024 * 1024; // 1MB for temporary structures
-
-        let total_memory = scores_memory + hits_memory + computation_overhead;
-        let total_with_overhead = total_memory + (total_memory / 5); // Add 20% overhead
+        let total_memory = public_scores_memory
+            .saturating_add(rust_pregel_state_memory)
+            .saturating_add(vote_bits_memory)
+            .saturating_add(sync_queue_memory)
+            .saturating_add(executor_overhead);
+        let total_with_overhead = total_memory.saturating_add(total_memory / 5);
 
         MemoryRange::of_range(total_memory, total_with_overhead)
     }
@@ -306,5 +315,34 @@ mod tests {
             .unwrap();
 
         assert_eq!(values.element_count(), 6);
+    }
+
+    #[test]
+    fn stream_returns_node_count_rows() {
+        let facade = HitsCentralityFacade::new(store());
+        let rows: Vec<_> = facade.stream().unwrap().collect();
+        assert_eq!(rows.len(), 6);
+    }
+
+    #[test]
+    fn mutate_validates_property_name() {
+        let facade = HitsCentralityFacade::new(store());
+        assert!(facade.mutate("").is_err());
+    }
+
+    #[test]
+    fn invalid_config_fails_fast() {
+        let facade = HitsCentralityFacade::new(store()).max_iterations(0);
+        assert!(facade.stream().is_err());
+
+        let facade = HitsCentralityFacade::new(store()).tolerance(0.0);
+        assert!(facade.stream().is_err());
+    }
+
+    #[test]
+    fn memory_estimate_has_range() {
+        let facade = HitsCentralityFacade::new(store()).concurrency(2);
+        let memory = facade.estimate_memory();
+        assert!(memory.max() >= memory.min());
     }
 }

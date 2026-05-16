@@ -123,8 +123,8 @@ impl<'a, G: GraphStore> HitsStorageRuntime<'a, G> {
         .with_master_compute_fn(master_compute_fn)
         .run();
 
-        progress_tracker.log_progress(max_iterations);
-
-        computation.finalize(&result, self.graph.node_count())
+        let run = computation.finalize(&result, self.graph.node_count());
+        progress_tracker.log_progress(run.iterations_ran.min(max_iterations));
+        run
     }
 }

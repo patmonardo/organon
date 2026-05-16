@@ -30,17 +30,20 @@
 use crate::algo::algorithms::{CentralityScore, Result};
 use crate::algo::algorithms::{ConfigValidator, WriteResult};
 use crate::algo::pagerank::{
-    computation::PageRankComputationRuntime, storage::PageRankStorageRuntime, PageRankConfig,
-    PageRankMutateResult, PageRankMutationSummary, PageRankResult, PageRankResultBuilder,
-    PageRankStats,
+    computation::{PageRankComputationRuntime, PageRankMemoryEstimation},
+    parse_pagerank_orientation,
+    storage::PageRankStorageRuntime,
+    PageRankConfig, PageRankMutateResult, PageRankMutationSummary, PageRankResult,
+    PageRankResultBuilder, PageRankStats,
 };
 use crate::collections::backends::vec::VecDouble;
 use crate::concurrency::Concurrency;
+use crate::core::graph_dimensions::ConcreteGraphDimensions;
 use crate::core::utils::progress::ProgressTracker;
 use crate::core::utils::progress::{
     EmptyTaskRegistryFactory, JobId, TaskProgressTracker, TaskRegistryFactory, Tasks,
 };
-use crate::mem::MemoryRange;
+use crate::mem::{MemoryEstimation, MemoryRange};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::Orientation;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
@@ -205,12 +208,8 @@ impl PageRankFacade {
             .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))
     }
 
-    fn orientation(&self) -> Orientation {
-        match self.config.direction.as_str() {
-            "incoming" => Orientation::Reverse,
-            "outgoing" => Orientation::Natural,
-            _ => Orientation::Undirected,
-        }
+    fn orientation(&self) -> Result<Orientation> {
+        parse_pagerank_orientation(&self.config.direction)
     }
 
     fn compute(&self) -> Result<PageRankResult> {
@@ -219,7 +218,7 @@ impl PageRankFacade {
 
         let storage = PageRankStorageRuntime::with_orientation(
             self.graph_store.as_ref(),
-            self.orientation(),
+            self.orientation()?,
         )?;
 
         let source_set = self
@@ -247,7 +246,6 @@ impl PageRankFacade {
 
         let run = storage.run(&computation, self.config.concurrency, &mut progress_tracker);
 
-        progress_tracker.log_progress(self.config.max_iterations);
         progress_tracker.end_subtask();
 
         Ok(PageRankResult {
@@ -404,25 +402,10 @@ impl PageRankFacade {
     /// println!("Will use between {} and {} bytes", memory.min(), memory.max());
     /// ```
     pub fn estimate_memory(&self) -> MemoryRange {
-        let node_count = self.graph_store.node_count();
-
-        // Memory for PageRank scores (one f64 per node)
-        let scores_memory = node_count * std::mem::size_of::<f64>();
-
-        // Memory for previous iteration scores (double buffering)
-        let prev_scores_memory = scores_memory;
-
-        // Memory for convergence tracking
-        let convergence_memory = scores_memory;
-
-        // Additional overhead for computation (temporary vectors, etc.)
-        let computation_overhead = 1024 * 1024; // 1MB for temporary structures
-
-        let total_memory =
-            scores_memory + prev_scores_memory + convergence_memory + computation_overhead;
-        let total_with_overhead = total_memory + (total_memory / 5); // Add 20% overhead
-
-        MemoryRange::of_range(total_memory, total_with_overhead)
+        let dimensions = ConcreteGraphDimensions::of(self.graph_store.node_count(), 0);
+        *PageRankMemoryEstimation
+            .estimate(&dimensions, self.config.concurrency)
+            .memory_usage()
     }
 }
 
@@ -494,6 +477,15 @@ mod tests {
 
         let facade = PageRankFacade::new(store()).tolerance(1e-4);
         assert!(facade.validate().is_ok()); // positive is valid
+    }
+
+    #[test]
+    fn test_validate_direction() {
+        let facade = PageRankFacade::new(store()).direction("sideways");
+        assert!(facade.validate().is_err());
+
+        let facade = PageRankFacade::new(store()).direction("incoming");
+        assert!(facade.validate().is_ok());
     }
 
     #[test]

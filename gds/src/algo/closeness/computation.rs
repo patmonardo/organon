@@ -67,11 +67,10 @@ impl ClosenessCentralityComputationRuntime {
 
                         farness.get_and_add(node_id, far_delta);
                         component.get_and_add(node_id, len);
+                        (on_sources_done.as_ref())(len as usize);
                     },
                 );
             });
-
-            (on_sources_done.as_ref())(source_len);
         })?;
 
         let mut farness_out = vec![0u64; node_count];

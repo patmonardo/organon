@@ -2,16 +2,18 @@
 //!
 //! Live wiring for Cost-Effective Lazy Forward influence maximization.
 
-use crate::algo::algorithms::WriteResult;
 use crate::algo::algorithms::{AlgorithmRunner, Result};
+use crate::algo::algorithms::{ConfigValidator, WriteResult};
 use crate::algo::celf::storage::CELFStorageRuntime;
 use crate::algo::celf::{
-    CELFComputationRuntime, CELFConfig, CELFMutateResult, CELFMutationSummary, CELFResult,
-    CELFResultBuilder, CELFRow, CELFStats,
+    celf_progress_task, CELFComputationRuntime, CELFConfig, CELFMutateResult, CELFMutationSummary,
+    CELFResult, CELFResultBuilder, CELFRow, CELFStats,
 };
 use crate::collections::backends::vec::VecDouble;
-use crate::concurrency::TerminationFlag;
-use crate::core::utils::progress::{ProgressTracker, TaskProgressTracker, TaskRegistry, Tasks};
+use crate::concurrency::{Concurrency, TerminationFlag};
+use crate::core::utils::progress::{
+    EmptyTaskRegistryFactory, JobId, ProgressTracker, TaskProgressTracker, TaskRegistryFactory,
+};
 use crate::mem::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph_store::GraphStore;
@@ -28,7 +30,7 @@ use std::time::Instant;
 pub struct CELFFacade {
     graph_store: Arc<DefaultGraphStore>,
     config: CELFConfig,
-    task_registry: Option<TaskRegistry>,
+    task_registry: Arc<dyn TaskRegistryFactory>,
 }
 
 impl CELFFacade {
@@ -36,7 +38,7 @@ impl CELFFacade {
         Self {
             graph_store,
             config: CELFConfig::default(),
-            task_registry: None,
+            task_registry: Arc::new(EmptyTaskRegistryFactory),
         }
     }
 
@@ -52,7 +54,7 @@ impl CELFFacade {
         Ok(Self {
             graph_store,
             config,
-            task_registry: None,
+            task_registry: Arc::new(EmptyTaskRegistryFactory),
         })
     }
 
@@ -110,8 +112,8 @@ impl CELFFacade {
         self
     }
 
-    pub fn task_registry(mut self, task_registry: TaskRegistry) -> Self {
-        self.task_registry = Some(task_registry);
+    pub fn task_registry(mut self, task_registry: Arc<dyn TaskRegistryFactory>) -> Self {
+        self.task_registry = task_registry;
         self
     }
 
@@ -132,20 +134,38 @@ impl CELFFacade {
             ));
         }
 
-        let mut progress_tracker = TaskProgressTracker::with_concurrency(
-            Tasks::leaf_with_volume("celf".to_string(), self.config.seed_set_size),
-            self.config.concurrency,
+        let seed_set_size = self.config.seed_set_size.min(node_count);
+        let mut progress_tracker = TaskProgressTracker::with_registry(
+            celf_progress_task(node_count, seed_set_size).base().clone(),
+            Concurrency::of(self.config.concurrency.max(1)),
+            JobId::new(),
+            self.task_registry.as_ref(),
         );
-        progress_tracker.begin_subtask_with_volume(self.config.seed_set_size);
+        progress_tracker
+            .begin_subtask_with_volume(node_count.saturating_add(seed_set_size.saturating_sub(1)));
 
         let runtime = CELFComputationRuntime::new(self.config.clone(), node_count);
         let termination = TerminationFlag::running_true();
+        let greedy_progress = progress_tracker.clone();
+        let on_greedy_node_done = move || {
+            let mut tracker = greedy_progress.clone();
+            tracker.log_progress(1);
+        };
+        let seed_progress = progress_tracker.clone();
+        let on_seed_selected = move || {
+            let mut tracker = seed_progress.clone();
+            tracker.log_progress(1);
+        };
 
         let seed_set = storage
-            .compute_celf(&runtime, &termination)
+            .compute_celf_with_progress(
+                &runtime,
+                &termination,
+                on_greedy_node_done,
+                on_seed_selected,
+            )
             .map_err(|e| AlgorithmError::Execution(format!("CELF terminated: {e}")))?;
 
-        progress_tracker.log_progress(self.config.seed_set_size);
         progress_tracker.end_subtask();
 
         Ok((
@@ -168,6 +188,7 @@ impl CELFFacade {
     }
 
     pub fn mutate(self, property_name: &str) -> Result<CELFMutateResult> {
+        ConfigValidator::non_empty_string(property_name, "property_name")?;
         let (result, elapsed) = self.compute_seed_set()?;
         let seed_set = result.seed_set_nodes.clone();
         let builder = CELFResultBuilder::new(result, elapsed);
@@ -208,6 +229,7 @@ impl CELFFacade {
     }
 
     pub fn write(self, property_name: &str) -> Result<WriteResult> {
+        ConfigValidator::non_empty_string(property_name, "property_name")?;
         let _ = self.compute_seed_set()?;
         let node_count = self.graph_store.node_count();
         let nodes_written = node_count as u64;
@@ -219,17 +241,41 @@ impl CELFFacade {
     }
 
     pub fn estimate_memory(&self) -> MemoryRange {
-        // Estimate memory for CELF computation
-        // - HashMap for seed set: seed_set_size * (8 + 8) bytes
-        // - Monte Carlo simulations: monte_carlo_simulations * node_count * 8 bytes
-        // - Graph view overhead: roughly node_count * 16 bytes
-        let seed_set_memory = self.config.seed_set_size * 16;
-        let simulation_memory =
-            self.config.monte_carlo_simulations * self.graph_store.node_count() * 8;
-        let graph_memory = self.graph_store.node_count() * 16;
+        let node_count = self.graph_store.node_count();
+        let seed_set_size = self.config.seed_set_size.min(node_count).max(1);
+        let batch_size = self.config.batch_size.max(1);
+        let concurrency = self.config.concurrency.max(1);
+        let bitset_bytes = (node_count + 7) / 8;
+        let stack_bytes = node_count.saturating_mul(std::mem::size_of::<usize>());
 
-        let total = seed_set_memory + simulation_memory + graph_memory;
-        MemoryRange::of_range(total, total * 2) // Conservative upper bound
+        let seed_set = seed_set_size.saturating_mul(16);
+        let first_k = batch_size.saturating_mul(std::mem::size_of::<usize>());
+        let spread_priority_queue = node_count.saturating_mul(
+            std::mem::size_of::<usize>()
+                + std::mem::size_of::<usize>()
+                + std::mem::size_of::<f64>(),
+        );
+        let single_spread_array = node_count.saturating_mul(std::mem::size_of::<f64>());
+
+        let ic_init_per_thread = bitset_bytes.saturating_add(stack_bytes);
+        let lazy_spread = batch_size.saturating_mul(std::mem::size_of::<f64>());
+        let lazy_forward = bitset_bytes
+            .saturating_mul(2)
+            .saturating_add(batch_size.saturating_mul(std::mem::size_of::<f64>()))
+            .saturating_add(batch_size.saturating_mul(std::mem::size_of::<usize>()))
+            .saturating_add(seed_set_size.saturating_mul(std::mem::size_of::<usize>()))
+            .saturating_add(stack_bytes);
+
+        let total = seed_set
+            .saturating_add(first_k)
+            .saturating_add(spread_priority_queue)
+            .saturating_add(single_spread_array)
+            .saturating_add(concurrency.saturating_mul(ic_init_per_thread))
+            .saturating_add(lazy_spread)
+            .saturating_add(lazy_forward)
+            .saturating_add(1024 * 1024);
+
+        MemoryRange::of_range(total, total.saturating_add(total / 5))
     }
 }
 
@@ -358,5 +404,32 @@ mod tests {
         assert_eq!(values.double_value(1).unwrap(), 0.0);
         assert_eq!(values.double_value(2).unwrap(), 0.0);
         assert_eq!(values.double_value(3).unwrap(), 0.0);
+    }
+
+    #[test]
+    fn invalid_config_fails_fast() {
+        let store = store_from_directed_edges(4, &[(0, 1), (0, 2), (0, 3)]);
+        let graph = GraphFacade::new(Arc::new(store));
+
+        assert!(graph.celf().seed_set_size(0).stream().is_err());
+        assert!(graph.celf().propagation_probability(1.5).stream().is_err());
+        assert!(graph.celf().concurrency(0).stream().is_err());
+    }
+
+    #[test]
+    fn mutate_validates_property_name() {
+        let store = store_from_directed_edges(4, &[(0, 1), (0, 2), (0, 3)]);
+        let graph = GraphFacade::new(Arc::new(store));
+
+        assert!(graph.celf().mutate("").is_err());
+    }
+
+    #[test]
+    fn memory_estimate_has_range() {
+        let store = store_from_directed_edges(4, &[(0, 1), (0, 2), (0, 3)]);
+        let graph = GraphFacade::new(Arc::new(store));
+        let memory = graph.celf().estimate_memory();
+
+        assert!(memory.max() >= memory.min());
     }
 }

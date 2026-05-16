@@ -4,7 +4,7 @@ use crate::algo::hits::HitsComputationRuntime;
 use crate::algo::hits::HitsStorageRuntime;
 use crate::collections::backends::vec::VecDouble;
 use crate::config::validation::ConfigError;
-use crate::core::utils::progress::{ProgressTracker, TaskProgressTracker, Tasks};
+use crate::core::utils::progress::{LeafTask, ProgressTracker, TaskProgressTracker, Tasks};
 use crate::define_algorithm_spec;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::NodeLabel;
@@ -140,6 +140,10 @@ impl HitsResultBuilder {
     }
 }
 
+pub fn hits_progress_task(_node_count: usize, max_iterations: usize) -> LeafTask {
+    Tasks::leaf_with_volume("Hits".to_string(), max_iterations)
+}
+
 define_algorithm_spec! {
     name: "hits",
     output_type: HitsResult,
@@ -159,7 +163,7 @@ define_algorithm_spec! {
         let computation = HitsComputationRuntime::new(parsed.tolerance);
 
         let mut tracker = TaskProgressTracker::with_concurrency(
-            Tasks::leaf_with_volume("hits".to_string(), parsed.max_iterations),
+            hits_progress_task(graph_store.node_count(), parsed.max_iterations),
             parsed.concurrency,
         );
 

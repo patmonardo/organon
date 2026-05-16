@@ -4,6 +4,7 @@
 //! Finds k seed nodes that maximize expected spread via Monte Carlo simulation.
 
 use crate::config::validation::ConfigError;
+use crate::core::utils::progress::{LeafTask, Tasks};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::Arc;
@@ -91,6 +92,11 @@ impl crate::config::ValidatedConfig for CELFConfig {
     fn validate(&self) -> Result<(), ConfigError> {
         CELFConfig::validate(self)
     }
+}
+
+pub fn celf_progress_task(node_count: usize, seed_set_size: usize) -> LeafTask {
+    let volume = node_count.saturating_add(seed_set_size.saturating_sub(1));
+    Tasks::leaf_with_volume("CELF".to_string(), volume)
 }
 
 /// Result of CELF computation

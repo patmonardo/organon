@@ -13,20 +13,19 @@ use crate::algo::algorithms::{CentralityScore, Result};
 use crate::algo::algorithms::{ConfigValidator, WriteResult};
 use crate::algo::closeness::ClosenessCentralityStorageRuntime;
 use crate::algo::closeness::{
-    ClosenessCentralityComputationRuntime, ClosenessCentralityConfig,
-    ClosenessCentralityMutateResult, ClosenessCentralityMutationSummary, ClosenessCentralityResult,
-    ClosenessCentralityResultBuilder, ClosenessCentralityStats,
+    closeness_progress_task, parse_closeness_orientation, ClosenessCentralityComputationRuntime,
+    ClosenessCentralityConfig, ClosenessCentralityMutateResult, ClosenessCentralityMutationSummary,
+    ClosenessCentralityResult, ClosenessCentralityResultBuilder, ClosenessCentralityStats,
 };
 use crate::collections::backends::vec::VecDouble;
 use crate::concurrency::{Concurrency, TerminationFlag};
 use crate::core::utils::progress::ProgressTracker;
 use crate::core::utils::progress::{
-    EmptyTaskRegistryFactory, JobId, Task, TaskProgressTracker, TaskRegistryFactory, Tasks,
+    EmptyTaskRegistryFactory, JobId, TaskProgressTracker, TaskRegistryFactory,
 };
 use crate::mem::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::NodeLabel;
-use crate::projection::Orientation;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use crate::types::properties::node::DefaultDoubleNodePropertyValues;
 use crate::types::properties::node::NodePropertyValues;
@@ -110,12 +109,8 @@ impl ClosenessCentralityFacade {
         self
     }
 
-    fn orientation(&self) -> Orientation {
-        match self.config.direction.as_str() {
-            "incoming" => Orientation::Reverse,
-            "outgoing" => Orientation::Natural,
-            _ => Orientation::Undirected,
-        }
+    fn orientation(&self) -> Result<crate::projection::Orientation> {
+        parse_closeness_orientation(&self.config.direction)
     }
 
     /// Validate the facade configuration.
@@ -135,7 +130,7 @@ impl ClosenessCentralityFacade {
         let start = Instant::now();
 
         let storage =
-            ClosenessCentralityStorageRuntime::new(self.graph_store.as_ref(), self.orientation())?;
+            ClosenessCentralityStorageRuntime::new(self.graph_store.as_ref(), self.orientation()?)?;
         let node_count = storage.node_count();
         if node_count == 0 {
             return Ok(ClosenessCentralityResult {
@@ -147,14 +142,8 @@ impl ClosenessCentralityFacade {
 
         let computation = ClosenessCentralityComputationRuntime::new();
 
-        let farness_task =
-            std::sync::Arc::new(Task::leaf("Farness computation".to_string(), node_count));
-        let closeness_task =
-            std::sync::Arc::new(Task::leaf("Closeness computation".to_string(), node_count));
-        let root_task = Tasks::task("closeness".to_string(), vec![farness_task, closeness_task]);
-
         let mut progress_tracker = TaskProgressTracker::with_registry(
-            root_task,
+            closeness_progress_task(node_count),
             Concurrency::of(self.config.concurrency.max(1)),
             JobId::new(),
             self.task_registry.as_ref(),
@@ -162,8 +151,10 @@ impl ClosenessCentralityFacade {
 
         // Start root then the farness leaf.
         progress_tracker.begin_subtask();
-        progress_tracker
-            .begin_subtask_with_description_and_volume("Farness computation", node_count);
+        progress_tracker.begin_subtask_with_description_and_volume(
+            "Farness computation",
+            node_count.saturating_mul(node_count),
+        );
 
         let termination = TerminationFlag::running_true();
 
@@ -352,5 +343,18 @@ mod tests {
         let mutation_result = result.unwrap();
         assert_eq!(mutation_result.summary.property_name, "closeness");
         assert!(mutation_result.updated_store.has_node_property("closeness"));
+    }
+
+    #[test]
+    fn test_invalid_direction_fails_fast() {
+        let facade = ClosenessCentralityFacade::new(store()).direction("sideways");
+        assert!(facade.stream().is_err());
+    }
+
+    #[test]
+    fn test_memory_estimate_has_range() {
+        let facade = ClosenessCentralityFacade::new(store()).concurrency(2);
+        let memory = facade.estimate_memory();
+        assert!(memory.max() >= memory.min());
     }
 }

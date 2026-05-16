@@ -231,10 +231,29 @@ impl<'a, G: GraphStore> CELFStorageRuntime<'a, G> {
         computation: &CELFComputationRuntime,
         termination: &TerminationFlag,
     ) -> Result<HashMap<u64, f64>, TerminatedException> {
+        self.compute_celf_with_progress(computation, termination, || {}, || {})
+    }
+
+    pub fn compute_celf_with_progress<GreedyProgress, LazyProgress>(
+        &self,
+        computation: &CELFComputationRuntime,
+        termination: &TerminationFlag,
+        on_greedy_node_done: GreedyProgress,
+        on_seed_selected: LazyProgress,
+    ) -> Result<HashMap<u64, f64>, TerminatedException>
+    where
+        GreedyProgress: Fn() + Send + Sync,
+        LazyProgress: Fn() + Send + Sync,
+    {
         // compute() uses parallel executors that obey the provided termination flag.
         // No additional controller-side loops here; storage owns graph access and neighbors.
         let neighbors = |n: usize| self.neighbors(n);
-        Ok(computation.compute(neighbors, termination))
+        Ok(computation.compute_with_progress(
+            neighbors,
+            termination,
+            on_greedy_node_done,
+            on_seed_selected,
+        ))
     }
 }
 /// Storage for Independent Cascade simulation state

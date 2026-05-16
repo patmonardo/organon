@@ -29,9 +29,9 @@ use crate::algo::algorithms::{CentralityScore, Result};
 use crate::algo::algorithms::{ConfigValidator, WriteResult};
 pub use crate::algo::degree_centrality::storage::Orientation;
 use crate::algo::degree_centrality::{
-    DegreeCentralityComputationRuntime, DegreeCentralityConfig, DegreeCentralityMutateResult,
-    DegreeCentralityMutationSummary, DegreeCentralityResult, DegreeCentralityResultBuilder,
-    DegreeCentralityStats, DegreeCentralityStorageRuntime,
+    parse_degree_orientation, DegreeCentralityComputationRuntime, DegreeCentralityConfig,
+    DegreeCentralityMutateResult, DegreeCentralityMutationSummary, DegreeCentralityResult,
+    DegreeCentralityResultBuilder, DegreeCentralityStats, DegreeCentralityStorageRuntime,
 };
 use crate::collections::backends::vec::VecDouble;
 use crate::concurrency::{Concurrency, TerminationFlag};
@@ -57,9 +57,7 @@ use std::time::Instant;
 pub struct DegreeCentralityFacade {
     graph_store: Arc<DefaultGraphStore>,
     config: DegreeCentralityConfig,
-    /// Progress tracking components
-    task_registry_factory: Option<Box<dyn TaskRegistryFactory>>,
-    user_log_registry_factory: Option<Box<dyn TaskRegistryFactory>>, // Placeholder for now
+    task_registry: Arc<dyn TaskRegistryFactory>,
 }
 
 impl DegreeCentralityFacade {
@@ -68,8 +66,7 @@ impl DegreeCentralityFacade {
         Self {
             graph_store,
             config: DegreeCentralityConfig::default(),
-            task_registry_factory: None,
-            user_log_registry_factory: None,
+            task_registry: Arc::new(EmptyTaskRegistryFactory),
         }
     }
 
@@ -85,8 +82,7 @@ impl DegreeCentralityFacade {
         Ok(Self {
             graph_store,
             config,
-            task_registry_factory: None,
-            user_log_registry_factory: None,
+            task_registry: Arc::new(EmptyTaskRegistryFactory),
         })
     }
 
@@ -142,13 +138,18 @@ impl DegreeCentralityFacade {
 
     /// Set task registry factory for progress tracking
     pub fn task_registry_factory(mut self, factory: Box<dyn TaskRegistryFactory>) -> Self {
-        self.task_registry_factory = Some(factory);
+        self.task_registry = factory.into();
         self
     }
 
-    /// Set user log registry factory for progress tracking
-    pub fn user_log_registry_factory(mut self, factory: Box<dyn TaskRegistryFactory>) -> Self {
-        self.user_log_registry_factory = Some(factory);
+    /// Set task registry factory for progress tracking.
+    pub fn task_registry(mut self, task_registry: Arc<dyn TaskRegistryFactory>) -> Self {
+        self.task_registry = task_registry;
+        self
+    }
+
+    /// Kept for compatibility with older pathfinding-style builders.
+    pub fn user_log_registry_factory(self, _factory: Box<dyn TaskRegistryFactory>) -> Self {
         self
     }
 
@@ -163,16 +164,7 @@ impl DegreeCentralityFacade {
 
         let start = Instant::now();
 
-        let orientation = match self.config.orientation.to_lowercase().as_str() {
-            "natural" | "outgoing" => Orientation::Natural,
-            "reverse" | "incoming" => Orientation::Reverse,
-            "undirected" | "both" => Orientation::Undirected,
-            other => {
-                return Err(AlgorithmError::Execution(format!(
-                    "Invalid orientation '{other}'. Use 'natural', 'reverse', or 'undirected'"
-                )))
-            }
-        };
+        let orientation = parse_degree_orientation(&self.config.orientation)?;
 
         let storage = DegreeCentralityStorageRuntime::with_settings(
             self.graph_store.as_ref(),
@@ -182,20 +174,13 @@ impl DegreeCentralityFacade {
 
         let node_count = storage.node_count();
 
-        let empty_factory = EmptyTaskRegistryFactory;
-        let registry_factory: &dyn TaskRegistryFactory = match self.task_registry_factory.as_deref()
-        {
-            Some(factory) => factory,
-            None => &empty_factory,
-        };
-
         let mut progress_tracker = TaskProgressTracker::with_registry(
-            Tasks::leaf_with_volume("degree_centrality".to_string(), node_count)
+            Tasks::leaf_with_volume("DegreeCentrality".to_string(), node_count)
                 .base()
                 .clone(),
             Concurrency::of(self.config.concurrency.max(1)),
             JobId::new(),
-            registry_factory,
+            self.task_registry.as_ref(),
         );
         progress_tracker.begin_subtask_with_volume(node_count);
 
@@ -417,7 +402,18 @@ impl DegreeCentralityFacade {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::config::GraphStoreConfig;
+    use crate::projection::RelationshipType;
+    use crate::types::graph::{RelationshipTopology, SimpleIdMap};
+    use crate::types::graph_store::{
+        Capabilities, DatabaseId, DatabaseInfo, DatabaseLocation, DefaultGraphStore, GraphName,
+    };
+    use crate::types::properties::relationship::{
+        DefaultRelationshipPropertyValues, RelationshipPropertyValues,
+    };
     use crate::types::random::{RandomGraphConfig, RandomRelationshipConfig};
+    use crate::types::schema::{Direction, MutableGraphSchema};
+    use std::collections::HashMap;
 
     fn store() -> Arc<DefaultGraphStore> {
         let config = RandomGraphConfig {
@@ -427,6 +423,61 @@ mod tests {
             ..RandomGraphConfig::default()
         };
         Arc::new(DefaultGraphStore::random(&config).unwrap())
+    }
+
+    fn weighted_store_from_outgoing(
+        outgoing: Vec<Vec<i64>>,
+        weights: Vec<f64>,
+    ) -> Arc<DefaultGraphStore> {
+        let node_count = outgoing.len();
+        let mut incoming: Vec<Vec<i64>> = vec![Vec::new(); node_count];
+        for (source, targets) in outgoing.iter().enumerate() {
+            for &target in targets {
+                if target >= 0 && (target as usize) < node_count {
+                    incoming[target as usize].push(source as i64);
+                }
+            }
+        }
+
+        let rel_type = RelationshipType::of("REL");
+
+        let mut schema_builder = MutableGraphSchema::empty();
+        schema_builder
+            .relationship_schema_mut()
+            .add_relationship_type(rel_type.clone(), Direction::Directed);
+        let schema = schema_builder.build();
+
+        let mut relationship_topologies = HashMap::new();
+        relationship_topologies.insert(
+            rel_type.clone(),
+            RelationshipTopology::new(outgoing, Some(incoming)),
+        );
+
+        let original_ids: Vec<i64> = (0..node_count as i64).collect();
+        let id_map = SimpleIdMap::from_original_ids(original_ids);
+
+        let mut store = DefaultGraphStore::new(
+            GraphStoreConfig::default(),
+            GraphName::new("g"),
+            DatabaseInfo::new(
+                DatabaseId::new("db"),
+                DatabaseLocation::remote("localhost", 7687, None, None),
+            ),
+            schema,
+            Capabilities::default(),
+            id_map,
+            relationship_topologies,
+        );
+
+        let element_count = weights.len();
+        let values: Arc<dyn RelationshipPropertyValues> = Arc::new(
+            DefaultRelationshipPropertyValues::with_values(weights, 0.0, element_count),
+        );
+        store
+            .add_relationship_property(rel_type, "weight", values)
+            .unwrap();
+
+        Arc::new(store)
     }
 
     #[test]
@@ -464,5 +515,31 @@ mod tests {
         let mutation_result = result.unwrap();
         assert_eq!(mutation_result.summary.property_name, "degree");
         assert!(mutation_result.updated_store.has_node_property("degree"));
+    }
+
+    #[test]
+    fn test_invalid_orientation_fails_fast() {
+        let facade =
+            DegreeCentralityFacade::new(store()).with_spec_config(DegreeCentralityConfig {
+                orientation: "sideways".to_string(),
+                ..DegreeCentralityConfig::default()
+            });
+
+        assert!(facade.is_err());
+    }
+
+    #[test]
+    fn weighted_degree_ignores_non_positive_weights() {
+        let store =
+            weighted_store_from_outgoing(vec![vec![1, 2], vec![2], vec![]], vec![2.0, -3.0, 0.0]);
+
+        let scores: Vec<_> = DegreeCentralityFacade::new(store)
+            .weighted(true)
+            .stream()
+            .unwrap()
+            .map(|row| row.score)
+            .collect();
+
+        assert_eq!(scores, vec![2.0, 0.0, 0.0]);
     }
 }

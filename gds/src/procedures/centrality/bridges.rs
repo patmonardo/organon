@@ -6,13 +6,14 @@ use crate::algo::algorithms::{AlgorithmRunner, Result};
 use crate::algo::algorithms::{ConfigValidator, WriteResult};
 use crate::algo::bridges::storage::BridgesStorageRuntime;
 use crate::algo::bridges::{
-    Bridge, BridgesComputationRuntime, BridgesConfig, BridgesMutateResult, BridgesMutationSummary,
-    BridgesResult, BridgesResultBuilder, BridgesRow, BridgesStats,
+    bridges_progress_task, Bridge, BridgesComputationRuntime, BridgesConfig, BridgesMutateResult,
+    BridgesMutationSummary, BridgesResult, BridgesResultBuilder, BridgesRow, BridgesStats,
+    STACK_EVENT_SIZE_BYTES,
 };
 use crate::concurrency::{Concurrency, TerminationFlag};
 use crate::core::utils::progress::ProgressTracker;
 use crate::core::utils::progress::{
-    EmptyTaskRegistryFactory, JobId, TaskProgressTracker, TaskRegistryFactory, Tasks,
+    EmptyTaskRegistryFactory, JobId, TaskProgressTracker, TaskRegistryFactory,
 };
 use crate::mem::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
@@ -102,44 +103,9 @@ impl BridgesFacade {
 
     /// Run the algorithm and return the bridges
     pub fn run(&self) -> Result<Vec<Bridge>> {
-        // Create both runtimes (factory pattern)
-        let storage = BridgesStorageRuntime::new(&*self.graph_store)?;
-        let mut computation = BridgesComputationRuntime::new_with_stack_capacity(
-            storage.node_count(),
-            storage.relationship_count(),
-        );
-
-        let node_count = storage.node_count();
-        if node_count == 0 {
-            return Ok(Vec::new());
-        }
-
-        let mut progress_tracker = TaskProgressTracker::with_registry(
-            Tasks::leaf_with_volume("bridges".to_string(), node_count)
-                .base()
-                .clone(),
-            Concurrency::of(self.config.concurrency.max(1)),
-            JobId::new(),
-            self.task_registry.as_ref(),
-        );
-        progress_tracker.begin_subtask_with_volume(node_count);
-
-        let termination = TerminationFlag::running_true();
-        let progress_handle = progress_tracker.clone();
-        let on_node_scanned = Arc::new(move || {
-            let mut tracker = progress_handle.clone();
-            tracker.log_progress(1);
-        });
-
-        // Call storage.compute_bridges() - Applications talk only to procedures
-        let result = storage
-            .compute_bridges(&mut computation, &termination, on_node_scanned)
-            .map_err(|e| AlgorithmError::Execution(format!("Bridges terminated: {e}")))?;
-
-        progress_tracker.log_progress(node_count);
-        progress_tracker.end_subtask();
-
-        Ok(result.bridges)
+        self.validate()?;
+        let (bridges, _) = self.compute_bridges()?;
+        Ok(bridges)
     }
 
     /// Stream mode: Get bridges for each edge
@@ -289,18 +255,22 @@ impl BridgesFacade {
     /// ```
     pub fn estimate_memory(&self) -> MemoryRange {
         let node_count = self.graph_store.node_count();
+        let relationship_count = self.graph_store.relationship_count();
 
-        // Memory for bridges vector (each bridge is 2 u64s)
-        let bridges_memory = node_count * 16; // Rough estimate for bridge storage
+        let bitset_bytes = (node_count + 7) / 8;
+        let tin_bytes = node_count.saturating_mul(8);
+        let low_bytes = node_count.saturating_mul(8);
+        let visited_bytes = bitset_bytes;
+        let bridge_bytes = node_count.saturating_mul(std::mem::size_of::<Bridge>());
+        let stack_bytes = relationship_count.saturating_mul(STACK_EVENT_SIZE_BYTES);
 
-        // Memory for DFS stack and discovery arrays in bridges algorithm
-        let dfs_memory = node_count * 12; // Rough estimate: 3 integers per node (discovery, low, parent)
+        let total_memory = tin_bytes
+            .saturating_add(low_bytes)
+            .saturating_add(visited_bytes)
+            .saturating_add(bridge_bytes)
+            .saturating_add(stack_bytes);
 
-        // Additional overhead for computation (temporary vectors, etc.)
-        let computation_overhead = 1024 * 1024; // 1MB for temporary structures
-
-        let total_memory = bridges_memory + dfs_memory + computation_overhead;
-        let total_with_overhead = total_memory + (total_memory / 5); // Add 20% overhead
+        let total_with_overhead = total_memory.saturating_add(total_memory / 5);
 
         MemoryRange::of_range(total_memory, total_with_overhead)
     }
@@ -321,9 +291,7 @@ impl BridgesFacade {
         }
 
         let mut progress_tracker = TaskProgressTracker::with_registry(
-            Tasks::leaf_with_volume("bridges".to_string(), node_count)
-                .base()
-                .clone(),
+            bridges_progress_task(node_count).base().clone(),
             Concurrency::of(self.config.concurrency.max(1)),
             JobId::new(),
             self.task_registry.as_ref(),
@@ -332,17 +300,16 @@ impl BridgesFacade {
 
         let termination = TerminationFlag::running_true();
         let progress_handle = progress_tracker.clone();
-        let on_node_scanned = Arc::new(move || {
+        let on_progress = Arc::new(move || {
             let mut tracker = progress_handle.clone();
             tracker.log_progress(1);
         });
 
         // Call storage.compute_bridges() - Applications talk only to procedures
         let result = storage
-            .compute_bridges(&mut computation, &termination, on_node_scanned)
+            .compute_bridges(&mut computation, &termination, on_progress)
             .map_err(|e| AlgorithmError::Execution(format!("Bridges terminated: {e}")))?;
 
-        progress_tracker.log_progress(node_count);
         progress_tracker.end_subtask();
 
         Ok((result.bridges, start.elapsed()))

@@ -10,7 +10,7 @@
 use crate::collections::backends::vec::VecDouble;
 use crate::concurrency::TerminationFlag;
 use crate::config::validation::ConfigError;
-use crate::core::utils::progress::{ProgressTracker, TaskProgressTracker, Tasks};
+use crate::core::utils::progress::{LeafTask, ProgressTracker, TaskProgressTracker, Tasks};
 use crate::core::LogLevel;
 use crate::define_algorithm_spec;
 use crate::projection::eval::algorithm::AlgorithmError;
@@ -30,6 +30,8 @@ pub enum HarmonicDirection {
     Incoming,
     Outgoing,
     Both,
+    #[serde(other)]
+    Invalid,
 }
 
 impl Default for HarmonicDirection {
@@ -65,6 +67,12 @@ impl HarmonicConfig {
             return Err(ConfigError::InvalidParameter {
                 parameter: "concurrency".to_string(),
                 reason: "concurrency must be positive".to_string(),
+            });
+        }
+        if self.direction == HarmonicDirection::Invalid {
+            return Err(ConfigError::InvalidParameter {
+                parameter: "direction".to_string(),
+                reason: "direction must be one of outgoing, incoming, or both".to_string(),
             });
         }
         Ok(())
@@ -187,12 +195,30 @@ impl HarmonicResultBuilder {
     }
 }
 
-fn orientation_from_direction(direction: HarmonicDirection) -> Orientation {
-    match direction {
-        HarmonicDirection::Incoming => Orientation::Reverse,
-        HarmonicDirection::Outgoing => Orientation::Natural,
-        HarmonicDirection::Both => Orientation::Undirected,
+pub fn parse_harmonic_direction(direction: &str) -> Result<HarmonicDirection, AlgorithmError> {
+    match direction.trim().to_lowercase().as_str() {
+        "outgoing" | "natural" => Ok(HarmonicDirection::Outgoing),
+        "incoming" | "reverse" => Ok(HarmonicDirection::Incoming),
+        "both" | "undirected" => Ok(HarmonicDirection::Both),
+        other => Err(AlgorithmError::Execution(format!(
+            "Invalid Harmonic direction '{other}'. Use 'outgoing', 'incoming', or 'both'"
+        ))),
     }
+}
+
+pub fn harmonic_orientation(direction: HarmonicDirection) -> Result<Orientation, AlgorithmError> {
+    match direction {
+        HarmonicDirection::Incoming => Ok(Orientation::Reverse),
+        HarmonicDirection::Outgoing => Ok(Orientation::Natural),
+        HarmonicDirection::Both => Ok(Orientation::Undirected),
+        HarmonicDirection::Invalid => Err(AlgorithmError::Execution(
+            "Invalid Harmonic direction. Use 'outgoing', 'incoming', or 'both'".to_string(),
+        )),
+    }
+}
+
+pub fn harmonic_progress_task(node_count: usize) -> LeafTask {
+    Tasks::leaf_with_volume("HarmonicCentrality".to_string(), node_count)
 }
 
 define_algorithm_spec! {
@@ -211,7 +237,7 @@ define_algorithm_spec! {
         let start = Instant::now();
 
         let concurrency = parsed_config.concurrency;
-        let orientation = orientation_from_direction(parsed_config.direction);
+        let orientation = harmonic_orientation(parsed_config.direction)?;
         let node_count = graph_store.node_count();
 
         context.log(
@@ -228,7 +254,7 @@ define_algorithm_spec! {
         let computation = HarmonicComputationRuntime::new(storage.node_count());
 
         let tracker = Arc::new(Mutex::new(TaskProgressTracker::with_concurrency(
-            Tasks::leaf_with_volume("harmonic".to_string(), node_count),
+            harmonic_progress_task(node_count),
             concurrency,
         )));
         tracker.lock().unwrap().begin_subtask_with_volume(node_count);

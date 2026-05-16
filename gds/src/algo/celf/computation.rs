@@ -32,6 +32,21 @@ impl CELFComputationRuntime {
     where
         F: Fn(usize) -> Vec<usize> + Send + Sync,
     {
+        self.compute_with_progress(get_neighbors, termination, || {}, || {})
+    }
+
+    pub fn compute_with_progress<F, G, L>(
+        &self,
+        get_neighbors: F,
+        termination: &TerminationFlag,
+        on_greedy_node_done: G,
+        on_seed_selected: L,
+    ) -> HashMap<u64, f64>
+    where
+        F: Fn(usize) -> Vec<usize> + Send + Sync,
+        G: Fn() + Send + Sync,
+        L: Fn() + Send + Sync,
+    {
         if self.node_count == 0 || self.config.seed_set_size == 0 {
             return HashMap::new();
         }
@@ -40,7 +55,7 @@ impl CELFComputationRuntime {
 
         // Phase 1: Greedy initialization - find first seed node
         let (first_seed, mut spreads_queue, mut gain) =
-            self.greedy_init(&get_neighbors, termination);
+            self.greedy_init(&get_neighbors, termination, &on_greedy_node_done);
 
         let mut seed_set = SeedSetBuilder::new();
         seed_set.add_seed(first_seed, gain);
@@ -58,6 +73,7 @@ impl CELFComputationRuntime {
             &mut gain,
             seed_set_size,
             termination,
+            &on_seed_selected,
         );
 
         seed_set.build()
@@ -68,6 +84,7 @@ impl CELFComputationRuntime {
         &self,
         get_neighbors: &F,
         termination: &TerminationFlag,
+        on_greedy_node_done: &(impl Fn() + Send + Sync),
     ) -> (usize, SpreadPriorityQueue, f64)
     where
         F: Fn(usize) -> Vec<usize> + Send + Sync,
@@ -93,6 +110,7 @@ impl CELFComputationRuntime {
             storage.with(|s| {
                 let spread = s.compute_single_node_spread(node_id, get_neighbors, p, mc, base_seed);
                 single_spread.set(node_id, spread);
+                on_greedy_node_done();
             });
         });
 
@@ -118,6 +136,7 @@ impl CELFComputationRuntime {
         cumulative_gain: &mut f64,
         seed_set_size: usize,
         termination: &TerminationFlag,
+        on_seed_selected: &(impl Fn() + Send + Sync),
     ) where
         F: Fn(usize) -> Vec<usize> + Send + Sync,
     {
@@ -226,6 +245,7 @@ impl CELFComputationRuntime {
             seed_nodes.push(best_seed);
             seed_set.add_seed(best_seed, marginal_spread);
             *cumulative_gain += marginal_spread;
+            on_seed_selected();
         }
     }
 }

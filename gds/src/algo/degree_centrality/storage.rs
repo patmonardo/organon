@@ -114,6 +114,7 @@ impl<'a, G: GraphStore> DegreeCentralityStorageRuntime<'a, G> {
         self.graph
             .stream_relationships(node_id, fallback)
             .map(|cursor| cursor.property())
+            .filter(|weight| *weight > 0.0)
             .sum::<f64>()
     }
 

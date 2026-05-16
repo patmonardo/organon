@@ -65,13 +65,13 @@ impl<'a, G: GraphStore> BridgesStorageRuntime<'a, G> {
     /// This method owns:
     /// - iteration over all nodes
     /// - termination checks
-    /// - progress callback semantics
+    /// - Java-style progress callback semantics
     /// - stack sizing (uses `relationship_count()` for Java parity)
     pub fn compute_parallel(
         &self,
         concurrency: usize,
         termination: &TerminationFlag,
-        on_node_scanned: Arc<dyn Fn() + Send + Sync>,
+        on_progress: Arc<dyn Fn() + Send + Sync>,
     ) -> Result<Vec<Bridge>, TerminatedException> {
         let _ = concurrency; // Bridges is currently single-threaded.
         let mut computation = BridgesComputationRuntime::new_with_stack_capacity(
@@ -79,7 +79,7 @@ impl<'a, G: GraphStore> BridgesStorageRuntime<'a, G> {
             self.relationship_count(),
         );
 
-        self.compute_bridges(&mut computation, termination, on_node_scanned)
+        self.compute_bridges(&mut computation, termination, on_progress)
             .map(|result| result.bridges)
     }
 
@@ -91,7 +91,7 @@ impl<'a, G: GraphStore> BridgesStorageRuntime<'a, G> {
         &self,
         computation: &mut BridgesComputationRuntime,
         termination: &TerminationFlag,
-        on_node_scanned: Arc<dyn Fn() + Send + Sync>,
+        on_progress: Arc<dyn Fn() + Send + Sync>,
     ) -> Result<BridgesComputationResult, TerminatedException> {
         let node_count = self.node_count();
         if node_count == 0 {
@@ -111,10 +111,11 @@ impl<'a, G: GraphStore> BridgesStorageRuntime<'a, G> {
             }
 
             if !computation.is_visited(i) {
-                computation.dfs_component(i, &neighbors, &mut bridges);
+                let progress = Arc::clone(&on_progress);
+                computation.dfs_component_with_progress(i, &neighbors, &mut bridges, move || {
+                    (progress.as_ref())();
+                });
             }
-
-            (on_node_scanned.as_ref())();
         }
 
         Ok(BridgesComputationResult { bridges })

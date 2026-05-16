@@ -95,6 +95,12 @@ impl PageRankConfig {
                 reason: "dampingFactor must be between 0 and 1".to_string(),
             });
         }
+        if parse_pagerank_orientation(&self.direction).is_err() {
+            return Err(ConfigError::InvalidParameter {
+                parameter: "direction".to_string(),
+                reason: "direction must be one of outgoing, incoming, or both".to_string(),
+            });
+        }
         Ok(())
     }
 }
@@ -219,11 +225,14 @@ impl PageRankResultBuilder {
     }
 }
 
-fn orientation(direction: &str) -> Orientation {
-    match direction {
-        "incoming" => Orientation::Reverse,
-        "outgoing" => Orientation::Natural,
-        _ => Orientation::Undirected,
+pub fn parse_pagerank_orientation(direction: &str) -> Result<Orientation, AlgorithmError> {
+    match direction.trim().to_lowercase().as_str() {
+        "outgoing" | "natural" => Ok(Orientation::Natural),
+        "incoming" | "reverse" => Ok(Orientation::Reverse),
+        "both" | "undirected" => Ok(Orientation::Undirected),
+        other => Err(AlgorithmError::Execution(format!(
+            "Invalid PageRank direction '{other}'. Use 'outgoing', 'incoming', or 'both'"
+        ))),
     }
 }
 
@@ -244,7 +253,7 @@ define_algorithm_spec! {
 
         let storage = PageRankStorageRuntime::with_orientation(
             graph_store,
-            orientation(&parsed.direction),
+            parse_pagerank_orientation(&parsed.direction)?,
         )?;
 
         let sources = parsed.source_nodes.clone().map(|v| v.into_iter().collect());
@@ -265,7 +274,6 @@ define_algorithm_spec! {
 
         let run = storage.run(&computation, parsed.concurrency, &mut progress);
 
-        progress.log_progress(parsed.max_iterations);
         progress.end_subtask();
 
         Ok(PageRankResult {

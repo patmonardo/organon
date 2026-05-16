@@ -144,7 +144,6 @@ define_algorithm_spec! {
 
         let storage = ArticulationPointsStorageRuntime::new(graph_store)?;
         let node_count = storage.node_count();
-        let relationship_count = storage.relationship_count();
 
         context.log(
             LogLevel::Info,
@@ -162,9 +161,8 @@ define_algorithm_spec! {
         )));
         tracker.lock().unwrap().begin_subtask_with_volume(node_count);
 
-        let neighbors = |n: usize| storage.neighbors(n);
         let mut runtime = ArticulationPointsComputationRuntime::new(node_count);
-        let result = runtime.compute_with_relationship_count(node_count, relationship_count, neighbors);
+        let result = storage.compute_articulation_points(&mut runtime, &mut *tracker.lock().unwrap())?;
 
         let mut points: Vec<u64> = Vec::new();
         let mut idx = result.articulation_points.next_set_bit(0);
@@ -173,7 +171,6 @@ define_algorithm_spec! {
             idx = result.articulation_points.next_set_bit(i + 1);
         }
 
-        tracker.lock().unwrap().log_progress(node_count);
         tracker.lock().unwrap().end_subtask();
 
         Ok(ArticulationPointsResult {

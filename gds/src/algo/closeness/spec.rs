@@ -4,9 +4,11 @@
 //! - `org.neo4j.gds.closeness.ClosenessCentrality`
 //! - `org.neo4j.gds.closeness.ClosenessCentralityAlgorithmFactory` (progress task layout)
 
-use crate::concurrency::TerminationFlag;
+use crate::concurrency::{Concurrency, TerminationFlag};
 use crate::config::validation::ConfigError;
-use crate::core::utils::progress::{ProgressTracker, TaskProgressTracker, Tasks};
+use crate::core::utils::progress::{
+    EmptyTaskRegistryFactory, JobId, ProgressTracker, Task, TaskProgressTracker, Tasks,
+};
 use crate::define_algorithm_spec;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::Orientation;
@@ -52,6 +54,12 @@ impl ClosenessCentralityConfig {
             return Err(ConfigError::InvalidParameter {
                 parameter: "concurrency".to_string(),
                 reason: "concurrency must be positive".to_string(),
+            });
+        }
+        if parse_closeness_orientation(&self.direction).is_err() {
+            return Err(ConfigError::InvalidParameter {
+                parameter: "direction".to_string(),
+                reason: "direction must be one of outgoing, incoming, or both".to_string(),
             });
         }
         Ok(())
@@ -174,12 +182,28 @@ impl ClosenessCentralityResultBuilder {
     }
 }
 
-fn orientation(direction: &str) -> Orientation {
-    match direction {
-        "incoming" => Orientation::Reverse,
-        "outgoing" => Orientation::Natural,
-        _ => Orientation::Undirected,
+pub fn parse_closeness_orientation(direction: &str) -> Result<Orientation, AlgorithmError> {
+    match direction.trim().to_lowercase().as_str() {
+        "outgoing" | "natural" => Ok(Orientation::Natural),
+        "incoming" | "reverse" => Ok(Orientation::Reverse),
+        "both" | "undirected" => Ok(Orientation::Undirected),
+        other => Err(AlgorithmError::Execution(format!(
+            "Invalid Closeness direction '{other}'. Use 'outgoing', 'incoming', or 'both'"
+        ))),
     }
+}
+
+pub fn closeness_progress_task(node_count: usize) -> Task {
+    Tasks::task(
+        "ClosenessCentrality".to_string(),
+        vec![
+            Arc::new(Task::leaf(
+                "Farness computation".to_string(),
+                node_count.saturating_mul(node_count),
+            )),
+            Arc::new(Task::leaf("Closeness computation".to_string(), node_count)),
+        ],
+    )
 }
 
 define_algorithm_spec! {
@@ -197,21 +221,28 @@ define_algorithm_spec! {
 
         let start = Instant::now();
 
-        let storage = ClosenessCentralityStorageRuntime::new(graph_store, orientation(&parsed.direction))?;
+        let storage = ClosenessCentralityStorageRuntime::new(
+            graph_store,
+            parse_closeness_orientation(&parsed.direction)?,
+        )?;
         let node_count = storage.node_count();
         let computation = ClosenessCentralityComputationRuntime::new();
 
-        // Storage owns the pipeline; we track it as one leaf task.
-        // Java parity uses a 2-phase task tree; we collapse into a single leaf here.
-        let total_volume = node_count
-            .saturating_mul(node_count)
-            .saturating_add(node_count);
-
-        let tracker = Arc::new(Mutex::new(TaskProgressTracker::with_concurrency(
-            Tasks::leaf_with_volume("closeness".to_string(), total_volume),
-            parsed.concurrency,
+        let registry_factory = EmptyTaskRegistryFactory;
+        let tracker = Arc::new(Mutex::new(TaskProgressTracker::with_registry(
+            closeness_progress_task(node_count),
+            Concurrency::of(parsed.concurrency.max(1)),
+            JobId::new(),
+            &registry_factory,
         )));
-        tracker.lock().unwrap().begin_subtask_with_volume(total_volume);
+        tracker.lock().unwrap().begin_subtask();
+        tracker
+            .lock()
+            .unwrap()
+            .begin_subtask_with_description_and_volume(
+                "Farness computation",
+                node_count.saturating_mul(node_count),
+            );
 
         let on_farness = {
             let tracker = Arc::clone(&tracker);
@@ -220,12 +251,7 @@ define_algorithm_spec! {
             })
         };
 
-        let on_closeness = {
-            let tracker = Arc::clone(&tracker);
-            Arc::new(move |nodes_done: usize| {
-                tracker.lock().unwrap().log_progress(nodes_done);
-            })
-        };
+        let on_closeness = Arc::new(|_nodes_done: usize| {});
 
         let termination = TerminationFlag::running_true();
         let centralities = storage
@@ -239,6 +265,19 @@ define_algorithm_spec! {
             )
             .map_err(|e| AlgorithmError::Execution(format!("Closeness terminated: {e}")))?;
 
+        tracker
+            .lock()
+            .unwrap()
+            .end_subtask_with_description("Farness computation");
+        tracker
+            .lock()
+            .unwrap()
+            .begin_subtask_with_description_and_volume("Closeness computation", node_count);
+        tracker.lock().unwrap().log_progress(node_count);
+        tracker
+            .lock()
+            .unwrap()
+            .end_subtask_with_description("Closeness computation");
         tracker.lock().unwrap().end_subtask();
 
         Ok(ClosenessCentralityResult {

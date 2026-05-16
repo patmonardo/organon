@@ -4,7 +4,7 @@
 
 use crate::concurrency::TerminationFlag;
 use crate::config::validation::ConfigError;
-use crate::core::utils::progress::{ProgressTracker, TaskProgressTracker, Tasks};
+use crate::core::utils::progress::{LeafTask, ProgressTracker, TaskProgressTracker, Tasks};
 use crate::core::LogLevel;
 use crate::define_algorithm_spec;
 use crate::projection::eval::algorithm::AlgorithmError;
@@ -48,6 +48,10 @@ impl crate::config::ValidatedConfig for BridgesConfig {
     fn validate(&self) -> Result<(), ConfigError> {
         BridgesConfig::validate(self)
     }
+}
+
+pub fn bridges_progress_task(node_count: usize) -> LeafTask {
+    Tasks::leaf_with_volume("Bridges".to_string(), node_count)
 }
 
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
@@ -159,12 +163,12 @@ define_algorithm_spec! {
         );
 
         let tracker = Arc::new(Mutex::new(TaskProgressTracker::with_concurrency(
-            Tasks::leaf_with_volume("bridges".to_string(), node_count),
+            bridges_progress_task(node_count),
             parsed_config.concurrency,
         )));
         tracker.lock().unwrap().begin_subtask_with_volume(node_count);
 
-        let on_node_scanned = {
+        let on_progress = {
             let tracker = Arc::clone(&tracker);
             Arc::new(move || {
                 tracker.lock().unwrap().log_progress(1);
@@ -179,7 +183,7 @@ define_algorithm_spec! {
         );
 
         let bridges = storage
-            .compute_bridges(&mut computation, &termination, on_node_scanned)
+            .compute_bridges(&mut computation, &termination, on_progress)
             .map_err(|e| AlgorithmError::Execution(format!("Bridges terminated: {e}")))?
             .bridges;
 

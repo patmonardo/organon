@@ -2,7 +2,9 @@
 
 use crate::algo::betweenness::BetweennessCentralityComputationRuntime;
 use crate::concurrency::TerminationFlag;
+use crate::config::config_trait::ValidatedConfig;
 use crate::config::validation::ConfigError;
+use crate::core::utils::progress::LeafTask;
 use crate::core::utils::progress::ProgressTracker;
 use crate::core::utils::progress::TaskProgressTracker;
 use crate::core::utils::progress::Tasks;
@@ -77,6 +79,18 @@ impl crate::config::ValidatedConfig for BetweennessCentralityConfig {
         crate::config::validate_positive(self.concurrency as f64, "concurrency")?;
         if let Some(size) = self.sampling_size {
             crate::config::validate_positive(size as f64, "samplingSize")?;
+        }
+        if parse_betweenness_orientation(&self.direction).is_err() {
+            return Err(ConfigError::InvalidParameter {
+                parameter: "direction".to_string(),
+                reason: "direction must be one of outgoing, incoming, or both".to_string(),
+            });
+        }
+        if parse_betweenness_sampling_strategy(&self.sampling_strategy).is_err() {
+            return Err(ConfigError::InvalidParameter {
+                parameter: "samplingStrategy".to_string(),
+                reason: "samplingStrategy must be one of all or random_degree".to_string(),
+            });
         }
         Ok(())
     }
@@ -204,12 +218,43 @@ impl BetweennessCentralityResultBuilder {
     }
 }
 
-fn orientation(direction: &str) -> Orientation {
-    match direction {
-        "incoming" => Orientation::Reverse,
-        "outgoing" => Orientation::Natural,
-        _ => Orientation::Undirected,
+pub fn parse_betweenness_orientation(direction: &str) -> Result<Orientation, AlgorithmError> {
+    match direction.trim().to_lowercase().as_str() {
+        "outgoing" | "natural" => Ok(Orientation::Natural),
+        "incoming" | "reverse" => Ok(Orientation::Reverse),
+        "both" | "undirected" => Ok(Orientation::Undirected),
+        other => Err(AlgorithmError::Execution(format!(
+            "Invalid Betweenness direction '{other}'. Use 'outgoing', 'incoming', or 'both'"
+        ))),
     }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum BetweennessSamplingStrategy {
+    All,
+    RandomDegree,
+}
+
+pub fn parse_betweenness_sampling_strategy(
+    strategy: &str,
+) -> Result<BetweennessSamplingStrategy, AlgorithmError> {
+    match strategy
+        .trim()
+        .to_lowercase()
+        .replace('_', "")
+        .replace('-', "")
+        .as_str()
+    {
+        "all" => Ok(BetweennessSamplingStrategy::All),
+        "randomdegree" => Ok(BetweennessSamplingStrategy::RandomDegree),
+        other => Err(AlgorithmError::Execution(format!(
+            "Invalid Betweenness sampling strategy '{other}'. Use 'all' or 'random_degree'"
+        ))),
+    }
+}
+
+pub fn betweenness_progress_task(source_count: usize) -> LeafTask {
+    Tasks::leaf_with_volume("BetweennessCentrality".to_string(), source_count)
 }
 
 define_algorithm_spec! {
@@ -221,19 +266,13 @@ define_algorithm_spec! {
     execute: |_self, graph_store, config, _context| {
         let parsed: BetweennessCentralityConfig = serde_json::from_value(config.clone())
             .map_err(|e| AlgorithmError::Execution(format!("Config parsing failed: {}", e)))?;
-
-        if parsed.concurrency == 0 {
-            return Err(AlgorithmError::Execution("concurrency must be positive".into()));
-        }
-        if let Some(sz) = parsed.sampling_size {
-            if sz == 0 {
-                return Err(AlgorithmError::Execution("sampling_size must be positive".into()));
-            }
-        }
+        parsed
+            .validate()
+            .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
 
         let start = Instant::now();
 
-        let orientation = orientation(&parsed.direction);
+        let orientation = parse_betweenness_orientation(&parsed.direction)?;
         let storage = BetweennessCentralityStorageRuntime::new(
             graph_store,
             orientation,
@@ -245,13 +284,13 @@ define_algorithm_spec! {
             &parsed.sampling_strategy,
             parsed.sampling_size,
             parsed.random_seed,
-        );
+        )?;
         let divisor = if orientation == Orientation::Undirected { 2.0 } else { 1.0 };
 
         let mut computation = BetweennessCentralityComputationRuntime::new(node_count);
 
         let tracker = Arc::new(Mutex::new(TaskProgressTracker::with_concurrency(
-            Tasks::leaf_with_volume("betweenness".to_string(), sources.len()),
+            betweenness_progress_task(sources.len()),
             parsed.concurrency,
         )));
         tracker.lock().unwrap().begin_subtask_with_volume(sources.len());

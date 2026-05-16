@@ -450,4 +450,42 @@ mod tests {
         assert!(result.centralities[0] >= 0.0);
         assert!(result.centralities[2] >= 0.0);
     }
+
+    #[test]
+    fn uniform_weighted_matches_unweighted() {
+        let node_count = 4;
+        let adj = undirected_adj(&[(0, 1), (1, 2), (2, 3)], node_count);
+        let weighted_adj: Vec<Vec<(usize, f64)>> = adj
+            .iter()
+            .map(|neighbors| neighbors.iter().map(|node| (*node, 1.0)).collect())
+            .collect();
+
+        let termination = TerminationFlag::running_true();
+        let noop = Arc::new(|| {});
+        let unweighted = BetweennessCentralityComputationRuntime::new(node_count);
+        unweighted
+            .compute_parallel_unweighted(&[0, 1, 2, 3], 2.0, 2, &termination, noop, &|n| {
+                adj[n].clone()
+            })
+            .unwrap();
+
+        let termination = TerminationFlag::running_true();
+        let noop = Arc::new(|| {});
+        let weighted = BetweennessCentralityComputationRuntime::new(node_count);
+        weighted
+            .compute_parallel_weighted(&[0, 1, 2, 3], 2.0, 2, &termination, noop, &|n| {
+                weighted_adj[n].clone()
+            })
+            .unwrap();
+
+        let unweighted_result = unweighted.finalize_result();
+        let weighted_result = weighted.finalize_result();
+        for (left, right) in unweighted_result
+            .centralities
+            .iter()
+            .zip(weighted_result.centralities.iter())
+        {
+            assert!((left - right).abs() < 1e-9);
+        }
+    }
 }

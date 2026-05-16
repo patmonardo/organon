@@ -32,6 +32,7 @@ use crate::algo::algorithms::{CentralityScore, Result};
 use crate::algo::algorithms::{ConfigValidator, WriteResult};
 use crate::algo::betweenness::storage::BetweennessCentralityStorageRuntime;
 use crate::algo::betweenness::{
+    betweenness_progress_task, parse_betweenness_orientation,
     BetweennessCentralityComputationRuntime, BetweennessCentralityConfig,
     BetweennessCentralityMutateResult, BetweennessCentralityMutationSummary,
     BetweennessCentralityResult, BetweennessCentralityResultBuilder, BetweennessCentralityStats,
@@ -41,17 +42,15 @@ use crate::concurrency::{Concurrency, TerminationFlag};
 use crate::config::config_trait::ValidatedConfig;
 use crate::core::utils::progress::ProgressTracker;
 use crate::core::utils::progress::{
-    EmptyTaskRegistryFactory, JobId, TaskProgressTracker, TaskRegistryFactory, Tasks,
+    EmptyTaskRegistryFactory, JobId, TaskProgressTracker, TaskRegistryFactory,
 };
 use crate::mem::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::NodeLabel;
 use crate::projection::Orientation;
-use crate::projection::RelationshipType;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use crate::types::properties::node::DefaultDoubleNodePropertyValues;
 use crate::types::properties::node::NodePropertyValues;
-use std::collections::HashMap;
 use std::collections::HashSet;
 use std::sync::Arc;
 use std::time::Instant;
@@ -158,12 +157,8 @@ impl BetweennessCentralityFacade {
         self
     }
 
-    fn orientation(&self) -> Orientation {
-        match self.config.direction.as_str() {
-            "incoming" => Orientation::Reverse,
-            "outgoing" => Orientation::Natural,
-            _ => Orientation::Undirected,
-        }
+    fn orientation(&self) -> Result<Orientation> {
+        parse_betweenness_orientation(&self.config.direction)
     }
 
     /// Validate the facade configuration.
@@ -181,28 +176,14 @@ impl BetweennessCentralityFacade {
 
     fn compute(&self) -> Result<BetweennessCentralityResult> {
         let start = Instant::now();
+        let orientation = self.orientation()?;
 
-        // For weighted traversal, we must select the relationship property across all rel types.
-        let rel_types: HashSet<RelationshipType> = self.graph_store.relationship_types();
-        let graph_view = if let Some(weight_prop) = &self.config.relationship_weight_property {
-            let selectors: HashMap<RelationshipType, String> = rel_types
-                .iter()
-                .map(|t| (t.clone(), weight_prop.clone()))
-                .collect();
-            self.graph_store
-                .get_graph_with_types_selectors_and_orientation(
-                    &rel_types,
-                    &selectors,
-                    self.orientation(),
-                )
-                .map_err(|e| AlgorithmError::Graph(e.to_string()))?
-        } else {
-            self.graph_store
-                .get_graph_with_types_and_orientation(&rel_types, self.orientation())
-                .map_err(|e| AlgorithmError::Graph(e.to_string()))?
-        };
-
-        let node_count = graph_view.node_count();
+        let storage = BetweennessCentralityStorageRuntime::new(
+            &*self.graph_store,
+            orientation,
+            self.config.relationship_weight_property.as_deref(),
+        )?;
+        let node_count = storage.node_count();
         if node_count == 0 {
             return Ok(BetweennessCentralityResult {
                 centralities: Vec::new(),
@@ -211,12 +192,6 @@ impl BetweennessCentralityFacade {
             });
         }
 
-        // Create storage and computation runtimes
-        let storage = BetweennessCentralityStorageRuntime::new(
-            &*self.graph_store,
-            self.orientation(),
-            self.config.relationship_weight_property.as_deref(),
-        )?;
         let mut computation = BetweennessCentralityComputationRuntime::new(node_count);
 
         let sources: Vec<usize> = {
@@ -229,20 +204,18 @@ impl BetweennessCentralityFacade {
                 &self.config.sampling_strategy,
                 Some(requested),
                 self.config.random_seed,
-            )
+            )?
         };
 
         let mut progress_tracker = TaskProgressTracker::with_registry(
-            Tasks::leaf_with_volume("betweenness".to_string(), sources.len())
-                .base()
-                .clone(),
+            betweenness_progress_task(sources.len()).base().clone(),
             Concurrency::of(self.config.concurrency.max(1)),
             JobId::new(),
             self.task_registry.as_ref(),
         );
         progress_tracker.begin_subtask_with_volume(sources.len());
 
-        let divisor = if self.orientation() == Orientation::Undirected {
+        let divisor = if orientation == Orientation::Undirected {
             2.0
         } else {
             1.0
@@ -405,36 +378,48 @@ impl BetweennessCentralityFacade {
     /// ```
     pub fn estimate_memory(&self) -> MemoryRange {
         let node_count = self.graph_store.node_count();
-
-        // Global scores (atomic f64 per node).
-        let scores_memory = node_count * std::mem::size_of::<f64>();
-
-        // Per-worker state (approx):
-        // - sigma: u64 per node
-        // - delta: f64 per node
-        // - distance: i32 per node (unweighted) or f64 per node (weighted)
-        // - stack/queue/visited: usize per node
-        // - predecessors: worst-case proportional to relationships (very graph dependent)
-        let per_node_base = std::mem::size_of::<u64>()
-            + std::mem::size_of::<f64>()
-            + if self.config.relationship_weight_property.is_some() {
-                std::mem::size_of::<f64>()
-            } else {
-                std::mem::size_of::<i32>()
-            };
-        let per_node_worklists = 3 * std::mem::size_of::<usize>();
-
-        let per_worker = node_count * (per_node_base + per_node_worklists);
+        let relationship_count = self.graph_store.relationship_count();
         let workers = self.config.concurrency.max(1);
+        let bitset_bytes = (node_count + 7) / 8;
 
-        // Predecessors are the dominant cost in dense graphs; approximate it using relationship count.
-        let preds_estimate = self.graph_store.relationship_count() * std::mem::size_of::<usize>();
+        let centrality_scores = node_count.saturating_mul(std::mem::size_of::<f64>());
 
-        // Add fixed overhead.
-        let overhead = 1024 * 1024;
+        let average_degree = if node_count == 0 {
+            0
+        } else {
+            relationship_count.div_ceil(node_count).max(1)
+        };
+        let predecessors = node_count
+            .saturating_mul(average_degree)
+            .saturating_mul(std::mem::size_of::<usize>());
+        let backward_nodes = node_count.saturating_mul(std::mem::size_of::<usize>());
+        let deltas = node_count.saturating_mul(std::mem::size_of::<f64>());
+        let sigmas = node_count.saturating_mul(std::mem::size_of::<u64>());
 
-        let min = scores_memory + workers * per_worker + overhead;
-        let max = min + preds_estimate + (min / 5);
+        let forward_traverser = if self.config.relationship_weight_property.is_some() {
+            node_count
+                .saturating_mul(2)
+                .saturating_mul(std::mem::size_of::<usize>())
+                .saturating_add(bitset_bytes)
+        } else {
+            node_count
+                .saturating_mul(std::mem::size_of::<i32>())
+                .saturating_add(node_count.saturating_mul(std::mem::size_of::<usize>()))
+        };
+
+        let per_worker = predecessors
+            .saturating_add(backward_nodes)
+            .saturating_add(deltas)
+            .saturating_add(sigmas)
+            .saturating_add(forward_traverser);
+
+        let min = centrality_scores.saturating_add(workers.saturating_mul(per_worker));
+
+        let overhead = min
+            .saturating_div(5)
+            .saturating_add(relationship_count.saturating_mul(std::mem::size_of::<usize>()))
+            .saturating_add(1024 * 1024);
+        let max = min.saturating_add(overhead);
 
         MemoryRange::of_range(min, max)
     }
@@ -487,5 +472,24 @@ mod tests {
         assert!(mutation_result
             .updated_store
             .has_node_property("betweenness"));
+    }
+
+    #[test]
+    fn test_invalid_direction_fails_fast() {
+        let facade = BetweennessCentralityFacade::new(store()).direction("sideways");
+        assert!(facade.stream().is_err());
+    }
+
+    #[test]
+    fn test_invalid_sampling_strategy_fails_fast() {
+        let facade = BetweennessCentralityFacade::new(store()).sampling_strategy("largest_first");
+        assert!(facade.stream().is_err());
+    }
+
+    #[test]
+    fn test_memory_estimate_has_range() {
+        let facade = BetweennessCentralityFacade::new(store()).concurrency(2);
+        let memory = facade.estimate_memory();
+        assert!(memory.max() >= memory.min());
     }
 }

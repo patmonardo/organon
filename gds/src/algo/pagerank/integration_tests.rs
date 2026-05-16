@@ -117,4 +117,23 @@ mod tests {
         let sum: f64 = scores.iter().sum();
         assert!((sum - 1.0).abs() < 1e-6);
     }
+
+    #[test]
+    fn pagerank_out_of_range_sources_fall_back_to_uniform() {
+        let store = store_from_outgoing(vec![vec![1], vec![2], vec![]]);
+        let graph = GraphFacade::new(Arc::new(store));
+
+        let scores: Vec<f64> = graph
+            .pagerank()
+            .source_nodes(vec![99])
+            .iterations(10)
+            .stream()
+            .unwrap()
+            .map(|x| x.score)
+            .collect();
+
+        let sum: f64 = scores.iter().sum();
+        assert!((sum - 1.0).abs() < 1e-6);
+        assert!(scores.iter().all(|score| *score > 0.0));
+    }
 }

@@ -23,9 +23,6 @@ use crate::core::utils::progress::{
 };
 use crate::mem::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
-use crate::projection::Orientation;
-use crate::projection::RelationshipType;
-use crate::types::graph::id_map::NodeId;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use crate::types::properties::node::DefaultDoubleNodePropertyValues;
 use crate::types::properties::node::NodePropertyValues;
@@ -113,44 +110,9 @@ impl ArticulationPointsFacade {
 
     /// Run the algorithm and return the articulation points as a bitset
     pub fn run(&self) -> Result<BitSet> {
-        // Articulation points are defined on undirected connectivity.
-        let rel_types: HashSet<RelationshipType> = HashSet::new();
-        let graph_view = self
-            .graph_store
-            .get_graph_with_types_and_orientation(&rel_types, Orientation::Undirected)
-            .map_err(|e| AlgorithmError::Graph(e.to_string()))?;
-
-        let node_count = graph_view.node_count();
-        let _relationship_count = graph_view.relationship_count();
-        if node_count == 0 {
-            return Ok(BitSet::new(0));
-        }
-
-        let mut progress_tracker = TaskProgressTracker::with_registry(
-            Tasks::leaf_with_volume("articulation_points".to_string(), node_count)
-                .base()
-                .clone(),
-            Concurrency::of(self.config.concurrency.max(1)),
-            JobId::new(),
-            self.task_registry.as_ref(),
-        );
-        progress_tracker.begin_subtask_with_volume(node_count);
-
-        // Create both runtimes (factory pattern)
-        let storage = ArticulationPointsStorageRuntime::new(&*self.graph_store)?;
-        let mut computation = ArticulationPointsComputationRuntime::new(node_count);
-
-        // Call storage.compute_articulation_points - Applications talk only to procedures
-        let result = storage.compute_articulation_points(
-            &mut computation,
-            Some(graph_view.as_ref()),
-            &mut progress_tracker,
-        )?;
-
-        progress_tracker.log_progress(node_count);
-        progress_tracker.end_subtask();
-
-        Ok(result.articulation_points)
+        self.validate()?;
+        let (bitset, _) = self.compute_bitset()?;
+        Ok(bitset)
     }
 
     /// Estimate memory requirements for articulation points computation.
@@ -191,30 +153,17 @@ impl ArticulationPointsFacade {
         MemoryRange::of_range(total_memory, total_with_overhead)
     }
 
-    fn checked_node_id(value: usize) -> Result<NodeId> {
-        NodeId::try_from(value as i64).map_err(|_| {
-            AlgorithmError::Execution(format!("node_id must fit into i64 (got {})", value))
-        })
-    }
-
     fn compute_bitset(&self) -> Result<(BitSet, std::time::Duration)> {
         let start = Instant::now();
 
-        // Articulation points are defined on undirected connectivity.
-        let rel_types: HashSet<RelationshipType> = HashSet::new();
-        let graph_view = self
-            .graph_store
-            .get_graph_with_types_and_orientation(&rel_types, Orientation::Undirected)
-            .map_err(|e| AlgorithmError::Graph(e.to_string()))?;
-
-        let node_count = graph_view.node_count();
-        let relationship_count = graph_view.relationship_count();
+        let storage = ArticulationPointsStorageRuntime::new(&*self.graph_store)?;
+        let node_count = storage.node_count();
         if node_count == 0 {
             return Ok((BitSet::new(0), start.elapsed()));
         }
 
         let mut progress_tracker = TaskProgressTracker::with_registry(
-            Tasks::leaf_with_volume("articulation_points".to_string(), node_count)
+            Tasks::leaf_with_volume("ArticulationPoints".to_string(), node_count)
                 .base()
                 .clone(),
             Concurrency::of(self.config.concurrency.max(1)),
@@ -223,26 +172,10 @@ impl ArticulationPointsFacade {
         );
         progress_tracker.begin_subtask_with_volume(node_count);
 
-        let fallback = graph_view.default_property_value();
-        let get_neighbors = |node_idx: usize| -> Vec<usize> {
-            let node_id = match Self::checked_node_id(node_idx) {
-                Ok(value) => value,
-                Err(_) => return Vec::new(),
-            };
-
-            graph_view
-                .stream_relationships(node_id, fallback)
-                .map(|cursor| cursor.target_id())
-                .filter(|target| *target >= 0)
-                .map(|target| target as usize)
-                .collect()
-        };
-
-        let mut runtime = ArticulationPointsComputationRuntime::new(node_count);
+        let mut computation = ArticulationPointsComputationRuntime::new(node_count);
         let result =
-            runtime.compute_with_relationship_count(node_count, relationship_count, get_neighbors);
+            storage.compute_articulation_points(&mut computation, &mut progress_tracker)?;
 
-        progress_tracker.log_progress(node_count);
         progress_tracker.end_subtask();
 
         Ok((result.articulation_points, start.elapsed()))

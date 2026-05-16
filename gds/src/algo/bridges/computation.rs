@@ -7,6 +7,8 @@
 
 use crate::collections::{BitSet, HugeLongArray};
 
+pub const STACK_EVENT_SIZE_BYTES: usize = std::mem::size_of::<StackEvent>();
+
 /// A bridge edge as `(min(from,to), max(from,to))`.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub struct Bridge {
@@ -127,6 +129,16 @@ impl BridgesComputationRuntime {
         get_neighbors: &impl Fn(usize) -> Vec<usize>,
         bridges: &mut Vec<Bridge>,
     ) {
+        self.dfs_component_with_progress(start_node, get_neighbors, bridges, || {});
+    }
+
+    pub fn dfs_component_with_progress(
+        &mut self,
+        start_node: usize,
+        get_neighbors: &impl Fn(usize) -> Vec<usize>,
+        bridges: &mut Vec<Bridge>,
+        on_progress: impl Fn(),
+    ) {
         self.stack.clear();
         self.stack
             .push(StackEvent::upcoming_visit(start_node, None));
@@ -148,6 +160,8 @@ impl BridgesComputationRuntime {
                 if low_to > tin_v {
                     bridges.push(Bridge::create(v, to));
                 }
+
+                on_progress();
 
                 continue;
             }
@@ -183,6 +197,8 @@ impl BridgesComputationRuntime {
                 self.low.set(v, std::cmp::min(low_v, tin_to));
             }
         }
+
+        on_progress();
     }
 }
 

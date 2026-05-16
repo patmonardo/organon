@@ -65,10 +65,12 @@ impl<'a, G: GraphStore> PageRankStorageRuntime<'a, G> {
             }
         };
 
-        let result = computation.run(node_count, &out_degree, concurrency, &stream_neighbors);
-
-        progress_tracker.log_progress(computation.max_iterations());
-
-        result
+        computation.run_with_progress(
+            node_count,
+            &out_degree,
+            concurrency,
+            &stream_neighbors,
+            |iterations_completed| progress_tracker.log_progress(iterations_completed),
+        )
     }
 }

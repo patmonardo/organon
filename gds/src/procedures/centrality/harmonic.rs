@@ -13,6 +13,7 @@
 use crate::algo::algorithms::{CentralityScore, Result};
 use crate::algo::algorithms::{ConfigValidator, WriteResult};
 use crate::algo::harmonic::{
+    harmonic_orientation, harmonic_progress_task, parse_harmonic_direction,
     HarmonicCentralityMutateResult, HarmonicCentralityMutationSummary, HarmonicCentralityStats,
     HarmonicComputationRuntime, HarmonicConfig, HarmonicDirection, HarmonicResult,
     HarmonicResultBuilder, HarmonicStorageRuntime,
@@ -21,7 +22,7 @@ use crate::collections::backends::vec::VecDouble;
 use crate::concurrency::{Concurrency, TerminationFlag};
 use crate::core::utils::progress::ProgressTracker;
 use crate::core::utils::progress::{
-    EmptyTaskRegistryFactory, JobId, TaskProgressTracker, TaskRegistryFactory, Tasks,
+    EmptyTaskRegistryFactory, JobId, TaskProgressTracker, TaskRegistryFactory,
 };
 use crate::mem::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
@@ -88,11 +89,8 @@ impl HarmonicCentralityFacade {
 
     /// Direction of traversal: "outgoing", "incoming", or "both".
     pub fn direction(mut self, direction: &str) -> Self {
-        self.config.direction = match direction.to_lowercase().as_str() {
-            "incoming" => HarmonicDirection::Incoming,
-            "outgoing" => HarmonicDirection::Outgoing,
-            _ => HarmonicDirection::Both,
-        };
+        self.config.direction =
+            parse_harmonic_direction(direction).unwrap_or(HarmonicDirection::Invalid);
         self
     }
 
@@ -108,12 +106,8 @@ impl HarmonicCentralityFacade {
         self
     }
 
-    fn orientation(&self) -> Orientation {
-        match self.config.direction {
-            HarmonicDirection::Incoming => Orientation::Reverse,
-            HarmonicDirection::Outgoing => Orientation::Natural,
-            HarmonicDirection::Both => Orientation::Undirected,
-        }
+    fn orientation(&self) -> Result<Orientation> {
+        harmonic_orientation(self.config.direction)
     }
 
     /// Validate the facade configuration.
@@ -134,7 +128,7 @@ impl HarmonicCentralityFacade {
 
         let storage = HarmonicStorageRuntime::with_orientation(
             self.graph_store.as_ref(),
-            self.orientation(),
+            self.orientation()?,
         )?;
 
         let node_count = storage.node_count();
@@ -147,9 +141,7 @@ impl HarmonicCentralityFacade {
         }
 
         let mut progress_tracker = TaskProgressTracker::with_registry(
-            Tasks::leaf_with_volume("harmonic".to_string(), node_count)
-                .base()
-                .clone(),
+            harmonic_progress_task(node_count).base().clone(),
             Concurrency::of(self.config.concurrency.max(1)),
             JobId::new(),
             self.task_registry.as_ref(),
@@ -272,18 +264,20 @@ impl HarmonicCentralityFacade {
     /// ```
     pub fn estimate_memory(&self) -> MemoryRange {
         let node_count = self.graph_store.node_count();
+        let concurrency = self.config.concurrency.max(1);
 
-        // Memory for harmonic centrality scores (one f64 per node)
-        let scores_memory = node_count * std::mem::size_of::<f64>();
+        let inverse_farness_memory = node_count.saturating_mul(std::mem::size_of::<f64>());
+        let scores_memory = node_count.saturating_mul(std::mem::size_of::<f64>());
+        let msbfs_worker_memory = node_count
+            .saturating_mul(std::mem::size_of::<u64>())
+            .saturating_mul(concurrency);
+        let executor_overhead = concurrency.saturating_mul(64 * 1024);
 
-        // Memory for MSBFS processing
-        let msbfs_memory = node_count * 8; // Rough estimate for MSBFS structures
-
-        // Additional overhead for computation (temporary vectors, etc.)
-        let computation_overhead = 1024 * 1024; // 1MB for temporary structures
-
-        let total_memory = scores_memory + msbfs_memory + computation_overhead;
-        let total_with_overhead = total_memory + (total_memory / 5); // Add 20% overhead
+        let total_memory = inverse_farness_memory
+            .saturating_add(scores_memory)
+            .saturating_add(msbfs_worker_memory)
+            .saturating_add(executor_overhead);
+        let total_with_overhead = total_memory.saturating_add(total_memory / 5);
 
         MemoryRange::of_range(total_memory, total_with_overhead)
     }
@@ -327,5 +321,18 @@ mod tests {
         let mutation_result = result.unwrap();
         assert_eq!(mutation_result.summary.property_name, "harmonic");
         assert!(mutation_result.updated_store.has_node_property("harmonic"));
+    }
+
+    #[test]
+    fn test_invalid_direction_fails_fast() {
+        let facade = HarmonicCentralityFacade::new(store()).direction("sideways");
+        assert!(facade.stream().is_err());
+    }
+
+    #[test]
+    fn test_memory_estimate_has_range() {
+        let facade = HarmonicCentralityFacade::new(store()).concurrency(2);
+        let memory = facade.estimate_memory();
+        assert!(memory.max() >= memory.min());
     }
 }
