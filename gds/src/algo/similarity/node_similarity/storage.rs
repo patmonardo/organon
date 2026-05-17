@@ -1,7 +1,12 @@
+use crate::concurrency::{
+    install_with_concurrency, Concurrency, TerminatedException, TerminationFlag,
+};
 use crate::types::graph::graph::Graph;
 use crate::types::graph::MappedNodeId;
+use parking_lot::Mutex;
 use rayon::prelude::*;
 use std::collections::HashSet;
+use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::Arc;
 
 use super::{NodeSimilarityComputationResult, NodeSimilarityComputationRuntime};
@@ -20,10 +25,21 @@ impl NodeSimilarityStorageRuntime {
         computation: &NodeSimilarityComputationRuntime,
         graph: &dyn Graph,
         config: &super::spec::NodeSimilarityConfig,
-    ) -> Vec<NodeSimilarityComputationResult> {
+        termination: &TerminationFlag,
+        on_sources_done: Arc<dyn Fn(usize) + Send + Sync>,
+    ) -> Result<Vec<NodeSimilarityComputationResult>, TerminatedException> {
         let node_count = graph.node_count();
         let sources: Vec<u64> = (0..node_count as u64).collect();
-        self.compute_with_filters(computation, graph, config, sources, None, true)
+        self.compute_with_filters(
+            computation,
+            graph,
+            config,
+            sources,
+            None,
+            true,
+            termination,
+            on_sources_done,
+        )
     }
 
     pub fn compute_with_filters(
@@ -34,69 +50,81 @@ impl NodeSimilarityStorageRuntime {
         sources: Vec<u64>,
         target_mask: Option<Vec<bool>>,
         enforce_ordering: bool,
-    ) -> Vec<NodeSimilarityComputationResult> {
-        let thread_count = self.concurrency.max(1);
-        let pool = rayon::ThreadPoolBuilder::new()
-            .num_threads(thread_count)
-            .build();
-
-        let run = || {
-            self.compute_inner(
-                computation,
-                graph,
-                config,
-                sources,
-                target_mask.as_deref(),
-                enforce_ordering,
-            )
-        };
-
-        match pool {
-            Ok(pool) => pool.install(run),
-            Err(_) => run(),
+        termination: &TerminationFlag,
+        on_sources_done: Arc<dyn Fn(usize) + Send + Sync>,
+    ) -> Result<Vec<NodeSimilarityComputationResult>, TerminatedException> {
+        if !termination.running() {
+            return Err(TerminatedException);
         }
-    }
 
-    fn compute_inner(
-        &self,
-        computation: &NodeSimilarityComputationRuntime,
-        graph: &dyn Graph,
-        config: &super::spec::NodeSimilarityConfig,
-        sources: Vec<u64>,
-        target_mask: Option<&[bool]>,
-        enforce_ordering: bool,
-    ) -> Vec<NodeSimilarityComputationResult> {
         let node_count = graph.node_count();
-
         let metric = Arc::from(config.similarity_metric.create(config.similarity_cutoff));
 
         let use_weights = config.weight_property.is_some();
         let (vectors, weights) = build_vectors(graph, node_count, use_weights);
         let weights_ref = weights.as_deref();
 
-        let results: Vec<NodeSimilarityComputationResult> = sources
-            .par_iter()
-            .flat_map(|&source| {
-                let source_vec = &vectors[source as usize];
-                if source_vec.is_empty() {
-                    return Vec::new();
-                }
+        let target_mask_ref = target_mask.as_deref();
+        let worker_count = self.concurrency.max(1);
+        let source_counter = AtomicUsize::new(0);
+        let worker_results: Arc<Mutex<Vec<Vec<NodeSimilarityComputationResult>>>> =
+            Arc::new(Mutex::new(Vec::with_capacity(worker_count)));
 
-                let candidates =
-                    enumerate_candidates(graph, source, source_vec, target_mask, enforce_ordering);
+        install_with_concurrency(Concurrency::of(worker_count), || {
+            (0..worker_count)
+                .into_par_iter()
+                .try_for_each(|_| -> Result<(), TerminatedException> {
+                    let mut local = Vec::new();
 
-                computation.score_source_from_candidates(
-                    source,
-                    candidates,
-                    &vectors,
-                    weights_ref,
-                    &metric,
-                    config.top_k,
-                )
-            })
-            .collect();
+                    loop {
+                        if !termination.running() {
+                            return Err(TerminatedException);
+                        }
 
-        computation.select_top_n(results, config.top_n)
+                        let idx = source_counter.fetch_add(1, Ordering::Relaxed);
+                        if idx >= sources.len() {
+                            break;
+                        }
+
+                        let source = sources[idx];
+                        let source_vec = &vectors[source as usize];
+
+                        if source_vec.is_empty() {
+                            (on_sources_done.as_ref())(1);
+                            continue;
+                        }
+
+                        let candidates = enumerate_candidates(
+                            graph,
+                            source,
+                            source_vec,
+                            target_mask_ref,
+                            enforce_ordering,
+                        );
+
+                        local.extend(computation.score_source_from_candidates(
+                            source,
+                            candidates,
+                            &vectors,
+                            weights_ref,
+                            &metric,
+                            config.top_k,
+                        ));
+
+                        (on_sources_done.as_ref())(1);
+                    }
+
+                    worker_results.lock().push(local);
+                    Ok(())
+                })
+        })?;
+
+        let mut merged = Vec::new();
+        for mut part in worker_results.lock().drain(..) {
+            merged.append(&mut part);
+        }
+
+        Ok(computation.select_top_n(merged, config.top_n))
     }
 }
 
@@ -121,12 +149,12 @@ fn build_vectors(
                 pairs.sort_unstable_by_key(|(t, _)| *t);
 
                 let mut neighbors = Vec::with_capacity(pairs.len());
-                let mut weights = Vec::with_capacity(pairs.len());
+                let mut node_weights = Vec::with_capacity(pairs.len());
                 for (t, w) in pairs {
                     neighbors.push(t);
-                    weights.push(w);
+                    node_weights.push(w);
                 }
-                (neighbors, weights)
+                (neighbors, node_weights)
             })
             .collect();
 
@@ -169,7 +197,7 @@ fn enumerate_candidates(
     let mut candidates: HashSet<u64> = HashSet::new();
 
     // Inverse traversal for each neighbor to find nodes that share that neighbor.
-    // (This matches the classic “two-hop” candidate enumeration used by Node Similarity.)
+    // (This matches the classic two-hop candidate enumeration in Node Similarity.)
     for &neighbor in source_vector {
         let inverse = graph.stream_inverse_relationships(neighbor as MappedNodeId, fallback_weight);
         for inv_rel in inverse {

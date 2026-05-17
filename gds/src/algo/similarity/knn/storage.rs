@@ -1,5 +1,6 @@
 use super::metrics::{KnnNodePropertySpec, SimilarityComputer, SimilarityMetric};
 use super::{KnnComputationResult, KnnComputationRuntime, KnnNnDescentConfig, KnnNnDescentStats};
+use crate::concurrency::{install_with_concurrency, Concurrency};
 use crate::core::utils::progress::ProgressTracker;
 use crate::ml::core::samplers::RandomWalkSampler;
 use crate::projection::eval::algorithm::AlgorithmError;
@@ -25,21 +26,6 @@ pub struct KnnStorageRuntime {
 impl KnnStorageRuntime {
     pub fn new(concurrency: usize) -> Self {
         Self { concurrency }
-    }
-
-    fn with_thread_pool<T>(&self, f: impl FnOnce() -> T + Send) -> T
-    where
-        T: Send,
-    {
-        let thread_count = self.concurrency.max(1);
-        let pool = rayon::ThreadPoolBuilder::new()
-            .num_threads(thread_count)
-            .build();
-
-        match pool {
-            Ok(pool) => pool.install(f),
-            Err(_) => f(),
-        }
     }
 
     pub fn compute_single(
@@ -98,7 +84,7 @@ impl KnnStorageRuntime {
         progress_tracker: &mut dyn ProgressTracker,
     ) -> Result<(Vec<KnnComputationResult>, KnnNnDescentStats), AlgorithmError> {
         let node_count = graph_store.node_count();
-        progress_tracker.begin_subtask_with_volume(node_count);
+        progress_tracker.begin_subtask_with_volume(max_iterations.max(1));
 
         let result = (|| {
             let values = graph_store
@@ -130,21 +116,24 @@ impl KnnStorageRuntime {
                 random_seed: random_seed.unwrap_or(0),
             };
 
-            Ok(self.with_thread_pool(|| {
-                computation.compute_nn_descent(
-                    node_count,
-                    initial_neighbors,
-                    cfg,
-                    similarity,
-                    None,
-                    None,
-                )
-            }))
+            Ok(install_with_concurrency(
+                Concurrency::of(self.concurrency.max(1)),
+                || {
+                    computation.compute_nn_descent(
+                        node_count,
+                        initial_neighbors,
+                        cfg,
+                        similarity,
+                        None,
+                        None,
+                    )
+                },
+            ))
         })();
 
         match result {
             Ok(value) => {
-                progress_tracker.log_progress(node_count);
+                progress_tracker.log_progress(value.1.ran_iterations.max(1));
                 progress_tracker.end_subtask();
                 Ok(value)
             }
@@ -208,7 +197,7 @@ impl KnnStorageRuntime {
         progress_tracker: &mut dyn ProgressTracker,
     ) -> Result<(Vec<KnnComputationResult>, KnnNnDescentStats), AlgorithmError> {
         let node_count = graph_store.node_count();
-        progress_tracker.begin_subtask_with_volume(node_count);
+        progress_tracker.begin_subtask_with_volume(max_iterations.max(1));
 
         let result = (|| {
             if node_properties.is_empty() {
@@ -257,21 +246,24 @@ impl KnnStorageRuntime {
                 random_seed: random_seed.unwrap_or(0),
             };
 
-            Ok(self.with_thread_pool(|| {
-                computation.compute_nn_descent(
-                    node_count,
-                    initial_neighbors,
-                    cfg,
-                    similarity,
-                    None,
-                    None,
-                )
-            }))
+            Ok(install_with_concurrency(
+                Concurrency::of(self.concurrency.max(1)),
+                || {
+                    computation.compute_nn_descent(
+                        node_count,
+                        initial_neighbors,
+                        cfg,
+                        similarity,
+                        None,
+                        None,
+                    )
+                },
+            ))
         })();
 
         match result {
             Ok(value) => {
-                progress_tracker.log_progress(node_count);
+                progress_tracker.log_progress(value.1.ran_iterations.max(1));
                 progress_tracker.end_subtask();
                 Ok(value)
             }

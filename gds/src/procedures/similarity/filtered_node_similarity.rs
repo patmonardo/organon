@@ -9,6 +9,7 @@ use crate::algo::similarity::filtered_node_similarity::{
 use crate::algo::similarity::node_similarity::{
     NodeSimilarityConfig, NodeSimilarityMetric, NodeSimilarityResult,
 };
+use crate::concurrency::TerminationFlag;
 use crate::core::utils::progress::{ProgressTracker, Tasks};
 use crate::mem::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
@@ -197,14 +198,26 @@ impl FilteredNodeSimilarityFacade {
         }
 
         let config = self.build_config();
+        let termination = TerminationFlag::running_true();
+
+        let progress_handle = progress_tracker.clone();
+        let on_sources_done = Arc::new(move |n: usize| {
+            let mut tracker = progress_handle.clone();
+            tracker.log_progress(n);
+        });
+
         let results = compute_filtered_node_similarity(
             graph.as_ref(),
             &config,
             source_nodes.as_ref(),
             target_nodes.as_ref(),
-        );
+            &termination,
+            on_sources_done,
+        )
+        .map_err(|e| {
+            AlgorithmError::Execution(format!("Filtered node similarity terminated: {e}"))
+        })?;
 
-        progress_tracker.log_progress(graph.node_count());
         progress_tracker.end_subtask();
 
         Ok(results)
@@ -287,6 +300,7 @@ impl FilteredNodeSimilarityFacade {
 mod tests {
     use super::*;
 
+    use crate::algo::similarity::node_similarity::NodeSimilarityResult;
     use crate::config::GraphStoreConfig;
     use crate::types::graph::id_map::IdMap;
     use crate::types::graph::id_map::SimpleIdMap;
@@ -296,6 +310,23 @@ mod tests {
     use crate::types::prelude::GraphStore;
     use crate::types::random::RandomGraphConfig;
     use crate::types::schema::{Direction, GraphSchema, MutableGraphSchema};
+    use std::cmp::Ordering;
+
+    fn sort_results(mut rows: Vec<NodeSimilarityResult>) -> Vec<(u64, u64, f64)> {
+        rows.sort_by(|a, b| {
+            a.source
+                .cmp(&b.source)
+                .then_with(|| a.target.cmp(&b.target))
+                .then_with(|| {
+                    a.similarity
+                        .partial_cmp(&b.similarity)
+                        .unwrap_or(Ordering::Equal)
+                })
+        });
+        rows.into_iter()
+            .map(|r| (r.source, r.target, r.similarity))
+            .collect()
+    }
 
     #[test]
     fn filtered_node_similarity_filters_to_label_pair_space() {
@@ -387,5 +418,33 @@ mod tests {
             .updated_store
             .relationship_property_values(&rel_type, "sim_score")
             .unwrap();
+    }
+
+    #[test]
+    fn filtered_stream_parallel_matches_single_worker() {
+        let config = RandomGraphConfig {
+            node_count: 14,
+            seed: Some(19),
+            ..RandomGraphConfig::default()
+        };
+        let store = Arc::new(DefaultGraphStore::random(&config).unwrap());
+
+        let single = FilteredNodeSimilarityFacade::new(Arc::clone(&store))
+            .similarity_cutoff(0.0)
+            .top_k(4)
+            .concurrency(1)
+            .stream()
+            .unwrap()
+            .collect::<Vec<_>>();
+
+        let parallel = FilteredNodeSimilarityFacade::new(store)
+            .similarity_cutoff(0.0)
+            .top_k(4)
+            .concurrency(4)
+            .stream()
+            .unwrap()
+            .collect::<Vec<_>>();
+
+        assert_eq!(sort_results(single), sort_results(parallel));
     }
 }

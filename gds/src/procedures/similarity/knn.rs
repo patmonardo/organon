@@ -293,6 +293,23 @@ mod tests {
     use crate::types::prelude::DefaultGraphStore;
     use crate::types::prelude::GraphStore;
     use crate::types::random::RandomGraphConfig;
+    use std::cmp::Ordering;
+
+    fn sort_rows(mut rows: Vec<KnnResultRow>) -> Vec<(u64, u64, f64)> {
+        rows.sort_by(|a, b| {
+            a.source
+                .cmp(&b.source)
+                .then_with(|| a.target.cmp(&b.target))
+                .then_with(|| {
+                    a.similarity
+                        .partial_cmp(&b.similarity)
+                        .unwrap_or(Ordering::Equal)
+                })
+        });
+        rows.into_iter()
+            .map(|r| (r.source, r.target, r.similarity))
+            .collect()
+    }
 
     #[test]
     fn multi_property_mode_includes_primary_property() {
@@ -362,5 +379,37 @@ mod tests {
             .updated_store
             .relationship_property_values(&rel_type, "sim_score")
             .unwrap();
+    }
+
+    #[test]
+    fn stream_parallel_matches_single_worker() {
+        let config = RandomGraphConfig {
+            node_count: 22,
+            seed: Some(77),
+            ..RandomGraphConfig::default()
+        };
+        let store = Arc::new(DefaultGraphStore::random(&config).unwrap());
+
+        let single = KnnFacade::new(Arc::clone(&store), "random_score")
+            .k(5)
+            .sampled_k(3)
+            .max_iterations(4)
+            .similarity_cutoff(0.0)
+            .concurrency(1)
+            .stream()
+            .unwrap()
+            .collect::<Vec<_>>();
+
+        let parallel = KnnFacade::new(store, "random_score")
+            .k(5)
+            .sampled_k(3)
+            .max_iterations(4)
+            .similarity_cutoff(0.0)
+            .concurrency(4)
+            .stream()
+            .unwrap()
+            .collect::<Vec<_>>();
+
+        assert_eq!(sort_rows(single), sort_rows(parallel));
     }
 }

@@ -3,6 +3,7 @@ use super::NodeSimilarityStorageRuntime;
 use super::{NodeSimilarityComputationResult, NodeSimilarityComputationRuntime};
 use crate::algo::algorithms::pathfinding::PathResult;
 use crate::algo::algorithms::similarity::similarity_stats;
+use crate::concurrency::TerminationFlag;
 use crate::config::validation::ConfigError;
 use crate::define_algorithm_spec;
 use crate::projection::eval::algorithm::AlgorithmError;
@@ -251,7 +252,16 @@ define_algorithm_spec! {
                 })?
         };
 
-        let results = storage.compute(&computation, graph_view.as_ref(), &parsed_config);
+        let termination = TerminationFlag::running_true();
+        let results = storage
+            .compute(
+                &computation,
+                graph_view.as_ref(),
+                &parsed_config,
+                &termination,
+                Arc::new(|_| {}),
+            )
+            .map_err(|e| AlgorithmError::Execution(format!("Node similarity terminated: {e}")))?;
 
         // Convert to result type
         let mapped_results: Vec<NodeSimilarityResult> = results.into_iter().map(NodeSimilarityResult::from).collect();

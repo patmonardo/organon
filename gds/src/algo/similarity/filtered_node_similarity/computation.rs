@@ -2,9 +2,11 @@ use crate::algo::similarity::node_similarity::{
     NodeSimilarityComputationRuntime, NodeSimilarityConfig, NodeSimilarityResult,
     NodeSimilarityStorageRuntime,
 };
+use crate::concurrency::{TerminatedException, TerminationFlag};
 use crate::types::graph::graph::Graph;
 use crate::types::graph::MappedNodeId;
 use std::collections::HashSet;
+use std::sync::Arc;
 
 /// Compute node similarity restricted by optional source/target node sets.
 /// This is a thin wrapper that constructs the computation + storage runtimes and
@@ -14,7 +16,9 @@ pub fn compute_filtered_node_similarity(
     config: &NodeSimilarityConfig,
     sources: Option<&HashSet<MappedNodeId>>,
     targets: Option<&HashSet<MappedNodeId>>,
-) -> Vec<NodeSimilarityResult> {
+    termination: &TerminationFlag,
+    on_sources_done: Arc<dyn Fn(usize) + Send + Sync>,
+) -> Result<Vec<NodeSimilarityResult>, TerminatedException> {
     let computation = NodeSimilarityComputationRuntime::new();
     let storage = NodeSimilarityStorageRuntime::new(config.concurrency);
 
@@ -41,10 +45,19 @@ pub fn compute_filtered_node_similarity(
         None
     };
 
-    let results =
-        storage.compute_with_filters(&computation, graph, config, sources_vec, target_mask, true);
-    results
+    let results = storage.compute_with_filters(
+        &computation,
+        graph,
+        config,
+        sources_vec,
+        target_mask,
+        true,
+        termination,
+        on_sources_done,
+    )?;
+
+    Ok(results
         .into_iter()
         .map(NodeSimilarityResult::from)
-        .collect()
+        .collect())
 }
