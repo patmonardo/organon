@@ -157,6 +157,17 @@ impl BetweennessCentralityFacade {
         self
     }
 
+    /// Compatibility alias for older builder call sites; prefer `task_registry`.
+    pub fn task_registry_factory(mut self, factory: Box<dyn TaskRegistryFactory>) -> Self {
+        self.task_registry = factory.into();
+        self
+    }
+
+    /// Kept for compatibility with older pathfinding-style builders.
+    pub fn user_log_registry_factory(self, _factory: Box<dyn TaskRegistryFactory>) -> Self {
+        self
+    }
+
     fn orientation(&self) -> Result<Orientation> {
         parse_betweenness_orientation(&self.config.direction)
     }
@@ -175,6 +186,8 @@ impl BetweennessCentralityFacade {
     }
 
     fn compute(&self) -> Result<BetweennessCentralityResult> {
+        self.validate()?;
+
         let start = Instant::now();
         let orientation = self.orientation()?;
 
@@ -220,6 +233,7 @@ impl BetweennessCentralityFacade {
         } else {
             1.0
         };
+        let concurrency = Concurrency::of(self.config.concurrency.max(1));
 
         let progress_handle = progress_tracker.clone();
         let on_source_done = Arc::new(move || {
@@ -235,7 +249,7 @@ impl BetweennessCentralityFacade {
                 &mut computation,
                 &sources,
                 divisor,
-                self.config.concurrency,
+                concurrency,
                 &termination,
                 on_source_done,
             )
@@ -259,11 +273,12 @@ impl BetweennessCentralityFacade {
     ///
     /// ## Example
     /// ```rust,no_run
-    /// # use gds::Graph;
-    /// # let graph = Graph::default();
-    /// # use gds::procedures::centrality::BetweenessBuilder;
-    /// let builder = BetweenessBuilder::new();
-    /// for score in builder.stream()? {
+    /// # use std::sync::Arc;
+    /// # use gds::types::prelude::DefaultGraphStore;
+    /// # let graph = Arc::new(DefaultGraphStore::empty());
+    /// # use gds::procedures::centrality::BetweennessCentralityFacade;
+    /// let facade = BetweennessCentralityFacade::new(graph);
+    /// for score in facade.stream()? {
     ///     if score.score > 0.1 {
     ///         println!("Bridge node: {} (betweenness: {:.4})", score.node_id, score.score);
     ///     }
@@ -290,11 +305,12 @@ impl BetweennessCentralityFacade {
     ///
     /// ## Example
     /// ```rust,no_run
-    /// # use gds::Graph;
-    /// # let graph = Graph::default();
-    /// # use gds::procedures::centrality::BetweenessBuilder;
-    /// let builder = BetweenessBuilder::new();
-    /// let stats = builder.stats()?;
+    /// # use std::sync::Arc;
+    /// # use gds::types::prelude::DefaultGraphStore;
+    /// # let graph = Arc::new(DefaultGraphStore::empty());
+    /// # use gds::procedures::centrality::BetweennessCentralityFacade;
+    /// let facade = BetweennessCentralityFacade::new(graph);
+    /// let stats = facade.stats()?;
     /// println!("Found {} bridge nodes", stats.bridge_nodes);
     /// println!("Execution took {}ms", stats.execution_time_ms);
     /// ```
@@ -311,11 +327,12 @@ impl BetweennessCentralityFacade {
     ///
     /// ## Example
     /// ```rust,no_run
-    /// # use gds::Graph;
-    /// # let graph = Graph::default();
-    /// # use gds::procedures::centrality::BetweenessBuilder;
-    /// let builder = BetweenessBuilder::new();
-    /// let result = builder.mutate("betweenness")?;
+    /// # use std::sync::Arc;
+    /// # use gds::types::prelude::DefaultGraphStore;
+    /// # let graph = Arc::new(DefaultGraphStore::empty());
+    /// # use gds::procedures::centrality::BetweennessCentralityFacade;
+    /// let facade = BetweennessCentralityFacade::new(graph);
+    /// let result = facade.mutate("betweenness")?;
     /// println!("Computed and stored for {} nodes", result.nodes_updated);
     /// ```
     pub fn mutate(self, property_name: &str) -> Result<BetweennessCentralityMutateResult> {
@@ -357,9 +374,14 @@ impl BetweennessCentralityFacade {
     pub fn write(self, property_name: &str) -> Result<WriteResult> {
         self.validate()?;
         ConfigValidator::non_empty_string(property_name, "property_name")?;
+        let result = self.compute()?;
+        let nodes_written = result.centralities.len() as u64;
+        let execution_time = result.execution_time;
 
-        Err(AlgorithmError::Execution(
-            "BetweennessCentrality mutate/write is not implemented yet".to_string(),
+        Ok(WriteResult::new(
+            nodes_written,
+            property_name.to_string(),
+            execution_time,
         ))
     }
 
@@ -370,7 +392,9 @@ impl BetweennessCentralityFacade {
     ///
     /// # Example
     /// ```ignore
-    /// # let graph = Graph::default();
+    /// # use std::sync::Arc;
+    /// # use gds::types::prelude::DefaultGraphStore;
+    /// # let graph = Arc::new(DefaultGraphStore::empty());
     /// # use gds::procedures::centrality::BetweennessCentralityFacade;
     /// let facade = BetweennessCentralityFacade::new(graph);
     /// let memory = facade.estimate_memory();

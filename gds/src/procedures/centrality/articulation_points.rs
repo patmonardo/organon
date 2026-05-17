@@ -95,6 +95,17 @@ impl ArticulationPointsFacade {
         self
     }
 
+    /// Compatibility alias for older builder call sites; prefer `task_registry`.
+    pub fn task_registry_factory(mut self, factory: Box<dyn TaskRegistryFactory>) -> Self {
+        self.task_registry = factory.into();
+        self
+    }
+
+    /// Kept for compatibility with older pathfinding-style builders.
+    pub fn user_log_registry_factory(self, _factory: Box<dyn TaskRegistryFactory>) -> Self {
+        self
+    }
+
     /// Validate the facade configuration.
     ///
     /// # Returns
@@ -122,7 +133,9 @@ impl ArticulationPointsFacade {
     ///
     /// # Example
     /// ```ignore
-    /// # let graph = Graph::default();
+    /// # use std::sync::Arc;
+    /// # use gds::types::prelude::DefaultGraphStore;
+    /// # let graph = Arc::new(DefaultGraphStore::empty());
     /// # use gds::procedures::centrality::ArticulationPointsFacade;
     /// let facade = ArticulationPointsFacade::new(graph);
     /// let memory = facade.estimate_memory();
@@ -154,6 +167,8 @@ impl ArticulationPointsFacade {
     }
 
     fn compute_bitset(&self) -> Result<(BitSet, std::time::Duration)> {
+        self.validate()?;
+
         let start = Instant::now();
 
         let storage = ArticulationPointsStorageRuntime::new(&*self.graph_store)?;
@@ -162,9 +177,11 @@ impl ArticulationPointsFacade {
             return Ok((BitSet::new(0), start.elapsed()));
         }
 
+        let concurrency = Concurrency::of(self.config.concurrency.max(1));
+
         let mut progress_tracker = TaskProgressTracker::with_registry(
             articulation_points_progress_task(node_count).base().clone(),
-            Concurrency::of(self.config.concurrency.max(1)),
+            concurrency,
             JobId::new(),
             self.task_registry.as_ref(),
         );
@@ -201,9 +218,11 @@ impl ArticulationPointsFacade {
     ///
     /// ## Example
     /// ```rust,no_run
-    /// # use gds::Graph;
-    /// # let graph = Graph::default();
-    /// let results = graph.articulation_points().stream()?.collect::<Vec<_>>();
+    /// # use std::sync::Arc;
+    /// # use gds::types::prelude::DefaultGraphStore;
+    /// # let graph = Arc::new(DefaultGraphStore::empty());
+    /// # use gds::procedures::centrality::ArticulationPointsFacade;
+    /// let results = ArticulationPointsFacade::new(graph).stream()?.collect::<Vec<_>>();
     /// ```
     pub fn stream(&self) -> Result<Box<dyn Iterator<Item = ArticulationPointRow>>> {
         self.validate()?;
@@ -218,9 +237,11 @@ impl ArticulationPointsFacade {
     ///
     /// ## Example
     /// ```rust,no_run
-    /// # use gds::Graph;
-    /// # let graph = Graph::default();
-    /// let stats = graph.articulation_points().stats()?;
+    /// # use std::sync::Arc;
+    /// # use gds::types::prelude::DefaultGraphStore;
+    /// # let graph = Arc::new(DefaultGraphStore::empty());
+    /// # use gds::procedures::centrality::ArticulationPointsFacade;
+    /// let stats = ArticulationPointsFacade::new(graph).stats()?;
     /// println!("Found {} articulation points", stats.articulation_point_count);
     /// ```
     pub fn stats(&self) -> Result<ArticulationPointsStats> {
@@ -235,9 +256,11 @@ impl ArticulationPointsFacade {
     ///
     /// ## Example
     /// ```rust,no_run
-    /// # use gds::Graph;
-    /// # let graph = Graph::default();
-    /// let result = graph.articulation_points().mutate("is_articulation_point")?;
+    /// # use std::sync::Arc;
+    /// # use gds::types::prelude::DefaultGraphStore;
+    /// # let graph = Arc::new(DefaultGraphStore::empty());
+    /// # use gds::procedures::centrality::ArticulationPointsFacade;
+    /// let result = ArticulationPointsFacade::new(graph).mutate("is_articulation_point")?;
     /// println!("Computed and stored for {} nodes", result.summary.nodes_updated);
     /// ```
     pub fn mutate(self, property_name: &str) -> Result<ArticulationPointsMutateResult> {
@@ -287,8 +310,14 @@ impl ArticulationPointsFacade {
         self.validate()?;
         ConfigValidator::non_empty_string(property_name, "property_name")?;
 
-        Err(AlgorithmError::Execution(
-            "Articulation Points mutate/write is not implemented yet".to_string(),
+        let result = self.compute()?;
+        let nodes_written = result.node_count as u64;
+        let execution_time = result.execution_time;
+
+        Ok(WriteResult::new(
+            nodes_written,
+            property_name.to_string(),
+            execution_time,
         ))
     }
 }

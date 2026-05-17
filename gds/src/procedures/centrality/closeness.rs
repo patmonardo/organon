@@ -109,6 +109,17 @@ impl ClosenessCentralityFacade {
         self
     }
 
+    /// Compatibility alias for older builder call sites; prefer `task_registry`.
+    pub fn task_registry_factory(mut self, factory: Box<dyn TaskRegistryFactory>) -> Self {
+        self.task_registry = factory.into();
+        self
+    }
+
+    /// Kept for compatibility with older pathfinding-style builders.
+    pub fn user_log_registry_factory(self, _factory: Box<dyn TaskRegistryFactory>) -> Self {
+        self
+    }
+
     fn orientation(&self) -> Result<crate::projection::Orientation> {
         parse_closeness_orientation(&self.config.direction)
     }
@@ -127,6 +138,8 @@ impl ClosenessCentralityFacade {
     }
 
     fn compute(&self) -> Result<ClosenessCentralityResult> {
+        self.validate()?;
+
         let start = Instant::now();
 
         let storage =
@@ -140,11 +153,12 @@ impl ClosenessCentralityFacade {
             });
         }
 
+        let concurrency = Concurrency::of(self.config.concurrency.max(1));
         let computation = ClosenessCentralityComputationRuntime::new();
 
         let mut progress_tracker = TaskProgressTracker::with_registry(
             closeness_progress_task(node_count),
-            Concurrency::of(self.config.concurrency.max(1)),
+            concurrency,
             JobId::new(),
             self.task_registry.as_ref(),
         );
@@ -170,7 +184,7 @@ impl ClosenessCentralityFacade {
             .compute_parallel(
                 &computation,
                 self.config.wasserman_faust,
-                self.config.concurrency,
+                concurrency,
                 &termination,
                 on_sources_done,
                 on_closeness_done,

@@ -6,6 +6,7 @@
 //! - (eventually) termination and progress bridging
 
 use crate::algo::hits::HitsComputationRuntime;
+use crate::concurrency::Concurrency;
 use crate::config::{ConcurrencyConfig, Config, IterationsConfig, PregelRuntimeConfig};
 use crate::core::utils::partition::Partitioning;
 use crate::core::utils::progress::ProgressTracker;
@@ -94,13 +95,13 @@ impl<'a, G: GraphStore> HitsStorageRuntime<'a, G> {
         &self,
         computation: &HitsComputationRuntime,
         max_iterations: usize,
-        concurrency: usize,
+        concurrency: Concurrency,
         progress_tracker: &mut dyn ProgressTracker,
     ) -> HitsRunResult {
         let supersteps = 1usize.saturating_add(max_iterations.saturating_mul(4));
 
         let config = HitsPregelRuntimeConfig {
-            concurrency: concurrency.max(1),
+            concurrency: concurrency.value(),
             max_iterations: supersteps,
         };
 

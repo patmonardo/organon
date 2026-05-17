@@ -7,7 +7,7 @@
 //! - Provide neighbor access
 //! - Own the top-level pipeline (farness -> closeness)
 
-use crate::concurrency::{TerminatedException, TerminationFlag};
+use crate::concurrency::{Concurrency, TerminatedException, TerminationFlag};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::{Orientation, RelationshipType};
 use crate::types::graph::Graph;
@@ -65,7 +65,7 @@ impl<'a, G: GraphStore> ClosenessCentralityStorageRuntime<'a, G> {
         &self,
         computation: &ClosenessCentralityComputationRuntime,
         wasserman_faust: bool,
-        concurrency: usize,
+        concurrency: Concurrency,
         termination: &TerminationFlag,
         on_farness_sources_done: Arc<dyn Fn(usize) + Send + Sync>,
         on_closeness_nodes_done: Arc<dyn Fn(usize) + Send + Sync>,
@@ -79,7 +79,7 @@ impl<'a, G: GraphStore> ClosenessCentralityStorageRuntime<'a, G> {
 
         let (farness, component) = computation.compute_farness_parallel(
             node_count,
-            concurrency,
+            concurrency.value(),
             termination,
             on_farness_sources_done,
             &neighbors,
@@ -88,7 +88,7 @@ impl<'a, G: GraphStore> ClosenessCentralityStorageRuntime<'a, G> {
         computation.compute_closeness_parallel(
             node_count,
             wasserman_faust,
-            concurrency,
+            concurrency.value(),
             termination,
             &farness,
             &component,

@@ -1,6 +1,7 @@
 //! PageRank algorithm specification (executor integration)
 
 use crate::collections::backends::vec::VecDouble;
+use crate::concurrency::Concurrency;
 use crate::config::validation::ConfigError;
 use crate::core::utils::progress::{LeafTask, ProgressTracker, TaskProgressTracker, Tasks};
 use crate::define_algorithm_spec;
@@ -268,15 +269,16 @@ define_algorithm_spec! {
             parsed.tolerance,
             sources,
         );
+        let concurrency = Concurrency::of(parsed.concurrency.max(1));
 
         // Lightweight progress hook (executor can override/ignore).
         let mut progress = TaskProgressTracker::with_concurrency(
             pagerank_progress_task(parsed.max_iterations),
-            parsed.concurrency,
+            concurrency.value(),
         );
         progress.begin_subtask_with_volume(parsed.max_iterations);
 
-        let run = storage.run(&computation, parsed.concurrency, &mut progress);
+        let run = storage.run(&computation, concurrency, &mut progress);
 
         progress.end_subtask();
 

@@ -8,7 +8,7 @@ use crate::core::utils::progress::{LeafTask, ProgressTracker, TaskProgressTracke
 use crate::core::LogLevel;
 use crate::define_algorithm_spec;
 use crate::projection::eval::algorithm::AlgorithmError;
-use std::sync::{Arc, Mutex};
+use std::sync::Arc;
 use std::time::{Duration, Instant};
 
 use super::BridgesStorageRuntime;
@@ -162,16 +162,17 @@ define_algorithm_spec! {
             ),
         );
 
-        let tracker = Arc::new(Mutex::new(TaskProgressTracker::with_concurrency(
+        let mut tracker = TaskProgressTracker::with_concurrency(
             bridges_progress_task(node_count),
             parsed_config.concurrency,
-        )));
-        tracker.lock().unwrap().begin_subtask_with_volume(node_count);
+        );
+        tracker.begin_subtask_with_volume(node_count);
 
         let on_progress = {
-            let tracker = Arc::clone(&tracker);
+            let tracker = tracker.clone();
             Arc::new(move || {
-                tracker.lock().unwrap().log_progress(1);
+                let mut progress = tracker.clone();
+                progress.log_progress(1);
             })
         };
 
@@ -187,7 +188,7 @@ define_algorithm_spec! {
             .map_err(|e| AlgorithmError::Execution(format!("Bridges terminated: {e}")))?
             .bridges;
 
-        tracker.lock().unwrap().end_subtask();
+        tracker.end_subtask();
 
         Ok(BridgesResult {
             bridges,

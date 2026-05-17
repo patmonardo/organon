@@ -32,7 +32,7 @@ use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use crate::types::properties::node::DefaultDoubleNodePropertyValues;
 use crate::types::properties::node::NodePropertyValues;
 use std::collections::HashSet;
-use std::sync::{Arc, Mutex};
+use std::sync::Arc;
 use std::time::Instant;
 
 /// Harmonic centrality facade/builder bound to a live graph store.
@@ -106,6 +106,17 @@ impl HarmonicCentralityFacade {
         self
     }
 
+    /// Compatibility alias for older builder call sites; prefer `task_registry`.
+    pub fn task_registry_factory(mut self, factory: Box<dyn TaskRegistryFactory>) -> Self {
+        self.task_registry = factory.into();
+        self
+    }
+
+    /// Kept for compatibility with older pathfinding-style builders.
+    pub fn user_log_registry_factory(self, _factory: Box<dyn TaskRegistryFactory>) -> Self {
+        self
+    }
+
     fn orientation(&self) -> Result<Orientation> {
         harmonic_orientation(self.config.direction)
     }
@@ -124,6 +135,8 @@ impl HarmonicCentralityFacade {
     }
 
     fn compute(&self) -> Result<HarmonicResult> {
+        self.validate()?;
+
         let start = Instant::now();
 
         let storage = HarmonicStorageRuntime::with_orientation(
@@ -140,41 +153,41 @@ impl HarmonicCentralityFacade {
             });
         }
 
+        let concurrency = Concurrency::of(self.config.concurrency.max(1));
+
         let mut progress_tracker = TaskProgressTracker::with_registry(
             harmonic_progress_task(node_count).base().clone(),
-            Concurrency::of(self.config.concurrency.max(1)),
+            concurrency,
             JobId::new(),
             self.task_registry.as_ref(),
         );
         progress_tracker.begin_subtask_with_volume(node_count);
 
         let computation = HarmonicComputationRuntime::new(node_count);
-        let termination = TerminationFlag::default();
+        let termination = TerminationFlag::running_true();
 
-        let tracker = Arc::new(Mutex::new(progress_tracker));
-        let on_sources_done = {
-            let tracker = Arc::clone(&tracker);
-            Arc::new(move |n: usize| {
-                tracker.lock().unwrap().log_progress(n);
-            })
-        };
+        let progress_handle = progress_tracker.clone();
+        let on_sources_done = Arc::new(move |n: usize| {
+            let mut tracker = progress_handle.clone();
+            tracker.log_progress(n);
+        });
 
         let scores = match storage.compute_parallel(
             &computation,
-            self.config.concurrency,
+            concurrency,
             &termination,
             on_sources_done,
         ) {
             Ok(scores) => scores,
             Err(e) => {
-                tracker.lock().unwrap().end_subtask_with_failure();
+                progress_tracker.end_subtask_with_failure();
                 return Err(AlgorithmError::Execution(format!(
                     "Harmonic terminated: {e}"
                 )));
             }
         };
 
-        tracker.lock().unwrap().end_subtask();
+        progress_tracker.end_subtask();
 
         Ok(HarmonicResult {
             centralities: scores,
@@ -243,9 +256,14 @@ impl HarmonicCentralityFacade {
     pub fn write(self, property_name: &str) -> Result<WriteResult> {
         self.validate()?;
         ConfigValidator::non_empty_string(property_name, "property_name")?;
+        let result = self.compute()?;
+        let nodes_written = result.centralities.len() as u64;
+        let execution_time = result.execution_time;
 
-        Err(AlgorithmError::Execution(
-            "HarmonicCentrality mutate/write is not implemented yet".to_string(),
+        Ok(WriteResult::new(
+            nodes_written,
+            property_name.to_string(),
+            execution_time,
         ))
     }
 
@@ -256,7 +274,9 @@ impl HarmonicCentralityFacade {
     ///
     /// # Example
     /// ```ignore
-    /// # let graph = Graph::default();
+    /// # use std::sync::Arc;
+    /// # use gds::types::prelude::DefaultGraphStore;
+    /// # let graph = Arc::new(DefaultGraphStore::empty());
     /// # use gds::procedures::centrality::HarmonicCentralityFacade;
     /// let facade = HarmonicCentralityFacade::new(graph);
     /// let memory = facade.estimate_memory();

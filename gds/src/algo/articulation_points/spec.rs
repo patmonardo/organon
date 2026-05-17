@@ -5,7 +5,7 @@ use crate::core::utils::progress::{LeafTask, ProgressTracker, TaskProgressTracke
 use crate::core::LogLevel;
 use crate::define_algorithm_spec;
 use crate::projection::eval::algorithm::AlgorithmError;
-use std::sync::{Arc, Mutex};
+use std::sync::Arc;
 use std::time::{Duration, Instant};
 
 use super::ArticulationPointsComputationRuntime;
@@ -159,14 +159,14 @@ define_algorithm_spec! {
         );
 
         // Java parity: a single leaf task sized by node_count.
-        let tracker = Arc::new(Mutex::new(TaskProgressTracker::with_concurrency(
+        let mut tracker = TaskProgressTracker::with_concurrency(
             articulation_points_progress_task(node_count),
             parsed_config.concurrency,
-        )));
-        tracker.lock().unwrap().begin_subtask_with_volume(node_count);
+        );
+        tracker.begin_subtask_with_volume(node_count);
 
         let mut runtime = ArticulationPointsComputationRuntime::new(node_count);
-        let result = storage.compute_articulation_points(&mut runtime, &mut *tracker.lock().unwrap())?;
+        let result = storage.compute_articulation_points(&mut runtime, &mut tracker)?;
 
         let mut points: Vec<u64> = Vec::new();
         let mut idx = result.articulation_points.next_set_bit(0);
@@ -175,7 +175,7 @@ define_algorithm_spec! {
             idx = result.articulation_points.next_set_bit(i + 1);
         }
 
-        tracker.lock().unwrap().end_subtask();
+        tracker.end_subtask();
 
         Ok(ArticulationPointsResult {
             articulation_points: points,

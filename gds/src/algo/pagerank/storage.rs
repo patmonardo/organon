@@ -3,6 +3,7 @@
 //! Storage owns graph access and orchestration; computation remains pure state.
 
 use crate::algo::pagerank::{PageRankComputationRuntime, PageRankRunResult};
+use crate::concurrency::Concurrency;
 use crate::core::utils::progress::ProgressTracker;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::{Orientation, RelationshipType};
@@ -48,7 +49,7 @@ impl<'a, G: GraphStore> PageRankStorageRuntime<'a, G> {
     pub fn run(
         &self,
         computation: &PageRankComputationRuntime,
-        concurrency: usize,
+        concurrency: Concurrency,
         progress_tracker: &mut dyn ProgressTracker,
     ) -> PageRankRunResult {
         let node_count = self.graph.node_count() as usize;
@@ -68,7 +69,7 @@ impl<'a, G: GraphStore> PageRankStorageRuntime<'a, G> {
         computation.run_with_progress(
             node_count,
             &out_degree,
-            concurrency,
+            concurrency.value(),
             &stream_neighbors,
             |iterations_completed| progress_tracker.log_progress(iterations_completed),
         )

@@ -70,10 +70,11 @@ use std::time::Instant;
 ///
 /// ## Example
 /// ```rust,no_run
-/// # use gds::Graph;
-/// # let graph = Graph::default();
+/// # use std::sync::Arc;
+/// # use gds::types::prelude::DefaultGraphStore;
+/// # let graph = Arc::new(DefaultGraphStore::empty());
 /// # use gds::procedures::centrality::PageRankFacade;
-/// let facade = PageRankFacade::new()
+/// let facade = PageRankFacade::new(graph)
 ///     .iterations(30)
 ///     .damping_factor(0.85)
 ///     .tolerance(1e-5);
@@ -147,6 +148,17 @@ impl PageRankFacade {
     /// Set task registry factory for progress tracking
     pub fn task_registry(mut self, task_registry: Arc<dyn TaskRegistryFactory>) -> Self {
         self.task_registry = task_registry;
+        self
+    }
+
+    /// Compatibility alias for older builder call sites; prefer `task_registry`.
+    pub fn task_registry_factory(mut self, factory: Box<dyn TaskRegistryFactory>) -> Self {
+        self.task_registry = factory.into();
+        self
+    }
+
+    /// Kept for compatibility with older pathfinding-style builders.
+    pub fn user_log_registry_factory(self, _factory: Box<dyn TaskRegistryFactory>) -> Self {
         self
     }
 
@@ -233,18 +245,19 @@ impl PageRankFacade {
             self.config.tolerance,
             source_set,
         );
+        let concurrency = Concurrency::of(self.config.concurrency.max(1));
 
         let mut progress_tracker = TaskProgressTracker::with_registry(
             pagerank_progress_task(self.config.max_iterations)
                 .base()
                 .clone(),
-            Concurrency::of(self.config.concurrency.max(1)),
+            concurrency,
             JobId::new(),
             self.task_registry.as_ref(),
         );
         progress_tracker.begin_subtask_with_volume(self.config.max_iterations);
 
-        let run = storage.run(&computation, self.config.concurrency, &mut progress_tracker);
+        let run = storage.run(&computation, concurrency, &mut progress_tracker);
 
         progress_tracker.end_subtask();
 
@@ -263,10 +276,11 @@ impl PageRankFacade {
     ///
     /// Use this when you want individual results, e.g.:
     /// ```rust,no_run
-    /// # use gds::Graph;
-    /// # let graph = Graph::default();
+    /// # use std::sync::Arc;
+    /// # use gds::types::prelude::DefaultGraphStore;
+    /// # let graph = Arc::new(DefaultGraphStore::empty());
     /// # use gds::procedures::centrality::PageRankFacade;
-    /// let builder = PageRankFacade::new();
+    /// let builder = PageRankFacade::new(graph);
     /// for score in builder.stream()? {
     ///     println!("Node {} has score {}", score.node_id, score.score);
     /// }
@@ -290,10 +304,11 @@ impl PageRankFacade {
     ///
     /// Use this when you want overview statistics:
     /// ```rust,no_run
-    /// # use gds::Graph;
-    /// # let graph = Graph::default();
-    /// # use gds::procedures::centrality::PageRankBuilder;
-    /// let builder = PageRankFacade::new();
+    /// # use std::sync::Arc;
+    /// # use gds::types::prelude::DefaultGraphStore;
+    /// # let graph = Arc::new(DefaultGraphStore::empty());
+    /// # use gds::procedures::centrality::PageRankFacade;
+    /// let builder = PageRankFacade::new(graph);
     /// let stats = builder.stats()?;
     /// println!("Converged: {}, Iterations: {}", stats.converged, stats.iterations_ran);
     /// ```
@@ -307,10 +322,11 @@ impl PageRankFacade {
     /// Stores PageRank scores as a node property for use by other algorithms.
     ///
     /// ```rust,no_run
-    /// # use gds::Graph;
-    /// # let graph = Graph::default();
+    /// # use std::sync::Arc;
+    /// # use gds::types::prelude::DefaultGraphStore;
+    /// # let graph = Arc::new(DefaultGraphStore::empty());
     /// # use gds::procedures::centrality::PageRankFacade;
-    /// let facade = PageRankFacade::new().damping_factor(0.85);
+    /// let facade = PageRankFacade::new(graph).damping_factor(0.85);
     /// let result = facade.mutate("pagerank")?;
     /// println!("Updated {} nodes", result.summary.nodes_updated);
     /// ```
@@ -360,9 +376,11 @@ impl PageRankFacade {
     ///
     /// # Example
     /// ```ignore
-    /// # let graph = Graph::default();
+    /// # use std::sync::Arc;
+    /// # use gds::types::prelude::DefaultGraphStore;
+    /// # let graph = Arc::new(DefaultGraphStore::empty());
     /// # use gds::procedures::centrality::PageRankFacade;
-    /// let facade = PageRankFacade::new();
+    /// let facade = PageRankFacade::new(graph);
     /// let result = facade.write("pagerank")?;
     /// println!("Wrote {} records", result.records_written);
     /// ```
@@ -395,9 +413,11 @@ impl PageRankFacade {
     ///
     /// # Example
     /// ```ignore
-    /// # let graph = Graph::default();
+    /// # use std::sync::Arc;
+    /// # use gds::types::prelude::DefaultGraphStore;
+    /// # let graph = Arc::new(DefaultGraphStore::empty());
     /// # use gds::procedures::centrality::PageRankFacade;
-    /// let facade = PageRankFacade::new();
+    /// let facade = PageRankFacade::new(graph);
     /// let memory = facade.estimate_memory();
     /// println!("Will use between {} and {} bytes", memory.min(), memory.max());
     /// ```

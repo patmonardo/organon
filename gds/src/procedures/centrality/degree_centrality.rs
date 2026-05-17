@@ -46,7 +46,7 @@ use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use crate::types::properties::node::DefaultDoubleNodePropertyValues;
 use crate::types::properties::node::NodePropertyValues;
 use std::collections::HashSet;
-use std::sync::{Arc, Mutex};
+use std::sync::Arc;
 use std::time::Instant;
 
 // ============================================================================
@@ -54,6 +54,7 @@ use std::time::Instant;
 // ============================================================================
 
 /// DegreeCentrality algorithm facade/builder bound to a live graph store.
+#[derive(Clone)]
 pub struct DegreeCentralityFacade {
     graph_store: Arc<DefaultGraphStore>,
     config: DegreeCentralityConfig,
@@ -153,7 +154,7 @@ impl DegreeCentralityFacade {
         self
     }
 
-    fn validate(&self) -> Result<()> {
+    pub fn validate(&self) -> Result<()> {
         self.config
             .validate()
             .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))
@@ -173,35 +174,42 @@ impl DegreeCentralityFacade {
         )?;
 
         let node_count = storage.node_count();
+        if node_count == 0 {
+            return Ok(DegreeCentralityResult {
+                centralities: Vec::new(),
+                node_count,
+                execution_time: start.elapsed(),
+            });
+        }
+
+        let concurrency = Concurrency::of(self.config.concurrency.max(1));
+        let computation = DegreeCentralityComputationRuntime::new();
 
         let mut progress_tracker = TaskProgressTracker::with_registry(
             degree_centrality_progress_task(node_count).base().clone(),
-            Concurrency::of(self.config.concurrency.max(1)),
+            concurrency,
             JobId::new(),
             self.task_registry.as_ref(),
         );
         progress_tracker.begin_subtask_with_volume(node_count);
 
-        let tracker = Arc::new(Mutex::new(progress_tracker));
-        let on_nodes_done = {
-            let tracker = Arc::clone(&tracker);
-            Arc::new(move |n: usize| {
-                tracker.lock().unwrap().log_progress(n);
-            })
-        };
+        let progress_handle = progress_tracker.clone();
+        let on_nodes_done = Arc::new(move |n: usize| {
+            let mut tracker = progress_handle.clone();
+            tracker.log_progress(n);
+        });
 
-        let termination = TerminationFlag::default();
-        let computation = DegreeCentralityComputationRuntime::new();
+        let termination = TerminationFlag::running_true();
 
         let mut scores = match storage.compute_parallel(
             &computation,
-            self.config.concurrency,
+            concurrency,
             &termination,
             on_nodes_done,
         ) {
             Ok(scores) => scores,
             Err(e) => {
-                tracker.lock().unwrap().end_subtask_with_failure();
+                progress_tracker.end_subtask_with_failure();
                 return Err(AlgorithmError::Execution(format!(
                     "Degree centrality terminated: {e}"
                 )));
@@ -212,7 +220,7 @@ impl DegreeCentralityFacade {
             computation.normalize_scores(&mut scores);
         }
 
-        tracker.lock().unwrap().end_subtask();
+        progress_tracker.end_subtask();
 
         Ok(DegreeCentralityResult {
             centralities: scores,
@@ -229,9 +237,11 @@ impl DegreeCentralityFacade {
     /// ## Example
     /// ```rust,no_run
     /// # use gds::Graph;
-    /// # let graph = Graph::default();
+    /// # use std::sync::Arc;
+    /// # use gds::types::prelude::DefaultGraphStore;
+    /// # let graph = Arc::new(DefaultGraphStore::empty());
     /// # use gds::procedures::centrality::DegreeCentralityFacade;
-    /// let facade = DegreeCentralityFacade::new();
+    /// let facade = DegreeCentralityFacade::new(graph);
     /// for (node_id, degree) in facade.stream()? {
     ///     if degree > 100.0 {
     ///         println!("Hub: node {} has {} connections", node_id, degree);
@@ -260,15 +270,18 @@ impl DegreeCentralityFacade {
     /// ## Example
     /// ```rust,no_run
     /// # use gds::Graph;
-    /// # let graph = Graph::default();
+    /// # use std::sync::Arc;
+    /// # use gds::types::prelude::DefaultGraphStore;
+    /// # let graph = Arc::new(DefaultGraphStore::empty());
     /// # use gds::procedures::centrality::DegreeCentralityFacade;
-    /// let facade = DegreeCentralityFacade::new();
+    /// let facade = DegreeCentralityFacade::new(graph);
     /// let stats = facade.stats()?;
     /// println!("Graph has average degree: {}", stats.mean);
     /// println!("Max degree (highest hub): {}", stats.max);
     /// println!("Isolated nodes: {}", stats.isolated_nodes);
     /// ```
     pub fn stats(&self) -> Result<DegreeCentralityStats> {
+        self.validate()?;
         let result = self.compute()?;
         Ok(DegreeCentralityResultBuilder::new(result).stats())
     }
@@ -281,9 +294,11 @@ impl DegreeCentralityFacade {
     /// ## Example
     /// ```rust,no_run
     /// # use gds::Graph;
-    /// # let graph = Graph::default();
+    /// # use std::sync::Arc;
+    /// # use gds::types::prelude::DefaultGraphStore;
+    /// # let graph = Arc::new(DefaultGraphStore::empty());
     /// # use gds::procedures::centrality::DegreeCentralityFacade;
-    /// let facade = DegreeCentralityFacade::new();
+    /// let facade = DegreeCentralityFacade::new(graph);
     /// let result = facade.mutate("degree")?;
     /// println!("Updated {} nodes", result.nodes_updated);
     /// ```
@@ -338,8 +353,11 @@ impl DegreeCentralityFacade {
     /// # Example
     /// ```ignore
     /// # let graph = Graph::default();
+    /// # use std::sync::Arc;
+    /// # use gds::types::prelude::DefaultGraphStore;
+    /// # let graph = Arc::new(DefaultGraphStore::empty());
     /// # use gds::procedures::centrality::DegreeCentralityFacade;
-    /// let facade = DegreeCentralityFacade::new();
+    /// let facade = DegreeCentralityFacade::new(graph);
     /// let result = facade.write("degree_centrality")?;
     /// println!("Wrote {} records", result.records_written);
     /// ```
@@ -372,22 +390,29 @@ impl DegreeCentralityFacade {
     /// # Example
     /// ```ignore
     /// # let graph = Graph::default();
+    /// # use std::sync::Arc;
+    /// # use gds::types::prelude::DefaultGraphStore;
+    /// # let graph = Arc::new(DefaultGraphStore::empty());
     /// # use gds::procedures::centrality::DegreeCentralityFacade;
-    /// let facade = DegreeCentralityFacade::new();
+    /// let facade = DegreeCentralityFacade::new(graph);
     /// let memory = facade.estimate_memory();
     /// println!("Will use between {} and {} bytes", memory.min_bytes, memory.max_bytes);
     /// ```
     pub fn estimate_memory(&self) -> MemoryRange {
         let node_count = self.graph_store.node_count();
+        let concurrency = self.config.concurrency.max(1);
 
-        // Memory for centrality scores (one f64 per node)
-        let scores_memory = node_count * std::mem::size_of::<f64>();
+        // One atomic score buffer during computation plus the materialized result vector.
+        let scores_memory = node_count * std::mem::size_of::<f64>() * 2;
 
-        // Additional overhead for computation
-        let computation_overhead = 1024 * 1024; // 1MB for temporary structures
+        // Executor and per-worker batching overhead.
+        let executor_memory = concurrency * 64 * 1024;
 
-        let total_memory = scores_memory + computation_overhead;
-        let total_with_overhead = total_memory + (total_memory / 5); // Add 20% overhead
+        // Additional overhead for graph cursors and temporary structures.
+        let computation_overhead = 1024 * 1024;
+
+        let total_memory = scores_memory + executor_memory + computation_overhead;
+        let total_with_overhead = total_memory + (total_memory / 5);
 
         MemoryRange::of_range(total_memory, total_with_overhead)
     }
@@ -489,6 +514,13 @@ mod tests {
         let facade = DegreeCentralityFacade::new(store());
         let result = facade.stream();
         assert!(result.is_ok());
+    }
+
+    #[test]
+    fn test_memory_estimate_has_range() {
+        let facade = DegreeCentralityFacade::new(store()).concurrency(2);
+        let memory = facade.estimate_memory();
+        assert!(memory.max() >= memory.min());
     }
 
     #[test]

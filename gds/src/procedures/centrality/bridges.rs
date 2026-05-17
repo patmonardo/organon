@@ -88,6 +88,17 @@ impl BridgesFacade {
         self
     }
 
+    /// Compatibility alias for older builder call sites; prefer `task_registry`.
+    pub fn task_registry_factory(mut self, factory: Box<dyn TaskRegistryFactory>) -> Self {
+        self.task_registry = factory.into();
+        self
+    }
+
+    /// Kept for compatibility with older pathfinding-style builders.
+    pub fn user_log_registry_factory(self, _factory: Box<dyn TaskRegistryFactory>) -> Self {
+        self
+    }
+
     /// Validate the facade configuration.
     ///
     /// # Returns
@@ -114,9 +125,11 @@ impl BridgesFacade {
     ///
     /// ## Example
     /// ```rust,no_run
-    /// # use gds::Graph;
-    /// # let graph = Graph::default();
-    /// let results = graph.bridges().stream()?.collect::<Vec<_>>();
+    /// # use std::sync::Arc;
+    /// # use gds::types::prelude::DefaultGraphStore;
+    /// # let graph = Arc::new(DefaultGraphStore::empty());
+    /// # use gds::procedures::centrality::BridgesFacade;
+    /// let results = BridgesFacade::new(graph).stream()?.collect::<Vec<_>>();
     /// ```
     pub fn stream(&self) -> Result<Box<dyn Iterator<Item = BridgesRow>>> {
         self.validate()?;
@@ -131,9 +144,11 @@ impl BridgesFacade {
     ///
     /// ## Example
     /// ```rust,no_run
-    /// # use gds::Graph;
-    /// # let graph = Graph::default();
-    /// let stats = graph.bridges().stats()?;
+    /// # use std::sync::Arc;
+    /// # use gds::types::prelude::DefaultGraphStore;
+    /// # let graph = Arc::new(DefaultGraphStore::empty());
+    /// # use gds::procedures::centrality::BridgesFacade;
+    /// let stats = BridgesFacade::new(graph).stats()?;
     /// println!("Found {} bridges", stats.bridge_count);
     /// ```
     pub fn stats(&self) -> Result<BridgesStats> {
@@ -148,9 +163,11 @@ impl BridgesFacade {
     ///
     /// ## Example
     /// ```rust,no_run
-    /// # use gds::Graph;
-    /// # let graph = Graph::default();
-    /// let result = graph.bridges().mutate("is_bridge")?;
+    /// # use std::sync::Arc;
+    /// # use gds::types::prelude::DefaultGraphStore;
+    /// # let graph = Arc::new(DefaultGraphStore::empty());
+    /// # use gds::procedures::centrality::BridgesFacade;
+    /// let result = BridgesFacade::new(graph).mutate("is_bridge")?;
     /// println!("Computed and stored for {} edges", result.summary.edges_updated);
     /// ```
     pub fn mutate(self, property_name: &str) -> Result<BridgesMutateResult> {
@@ -235,8 +252,14 @@ impl BridgesFacade {
         self.validate()?;
         ConfigValidator::non_empty_string(property_name, "property_name")?;
 
-        Err(AlgorithmError::Execution(
-            "Bridges mutate/write is not implemented yet".to_string(),
+        let result = self.compute()?;
+        let edges_written = result.bridges.len() as u64;
+        let execution_time = result.execution_time;
+
+        Ok(WriteResult::new(
+            edges_written,
+            property_name.to_string(),
+            execution_time,
         ))
     }
 
@@ -247,7 +270,9 @@ impl BridgesFacade {
     ///
     /// # Example
     /// ```ignore
-    /// # let graph = Graph::default();
+    /// # use std::sync::Arc;
+    /// # use gds::types::prelude::DefaultGraphStore;
+    /// # let graph = Arc::new(DefaultGraphStore::empty());
     /// # use gds::procedures::centrality::BridgesFacade;
     /// let facade = BridgesFacade::new(graph);
     /// let memory = facade.estimate_memory();
@@ -276,6 +301,8 @@ impl BridgesFacade {
     }
 
     fn compute_bridges(&self) -> Result<(Vec<Bridge>, std::time::Duration)> {
+        self.validate()?;
+
         let start = Instant::now();
 
         // Create both runtimes (factory pattern)
@@ -290,9 +317,11 @@ impl BridgesFacade {
             return Ok((Vec::new(), start.elapsed()));
         }
 
+        let concurrency = Concurrency::of(self.config.concurrency.max(1));
+
         let mut progress_tracker = TaskProgressTracker::with_registry(
             bridges_progress_task(node_count).base().clone(),
-            Concurrency::of(self.config.concurrency.max(1)),
+            concurrency,
             JobId::new(),
             self.task_registry.as_ref(),
         );

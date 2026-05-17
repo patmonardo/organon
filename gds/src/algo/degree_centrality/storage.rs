@@ -121,7 +121,7 @@ impl<'a, G: GraphStore> DegreeCentralityStorageRuntime<'a, G> {
     pub fn compute_parallel(
         &self,
         computation: &DegreeCentralityComputationRuntime,
-        concurrency: usize,
+        concurrency: Concurrency,
         termination: &TerminationFlag,
         on_nodes_done: Arc<dyn Fn(usize) + Send + Sync>,
     ) -> Result<Vec<f64>, TerminatedException> {
@@ -130,7 +130,7 @@ impl<'a, G: GraphStore> DegreeCentralityStorageRuntime<'a, G> {
             return Ok(Vec::new());
         }
 
-        let concurrency = concurrency.max(1);
+        let concurrency = concurrency.value();
         let out = HugeAtomicDoubleArray::new(node_count);
 
         let target_batches = concurrency * 8;

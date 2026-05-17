@@ -1,7 +1,7 @@
 //! Betweenness Centrality specification
 
 use crate::algo::betweenness::BetweennessCentralityComputationRuntime;
-use crate::concurrency::TerminationFlag;
+use crate::concurrency::{Concurrency, TerminationFlag};
 use crate::config::config_trait::ValidatedConfig;
 use crate::config::validation::ConfigError;
 use crate::core::utils::progress::LeafTask;
@@ -12,7 +12,6 @@ use crate::define_algorithm_spec;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::Orientation;
 use std::sync::Arc;
-use std::sync::Mutex;
 use std::time::{Duration, Instant};
 
 use super::BetweennessCentralityStorageRuntime;
@@ -286,20 +285,22 @@ define_algorithm_spec! {
             parsed.random_seed,
         )?;
         let divisor = if orientation == Orientation::Undirected { 2.0 } else { 1.0 };
+        let concurrency = Concurrency::of(parsed.concurrency.max(1));
 
         let mut computation = BetweennessCentralityComputationRuntime::new(node_count);
 
-        let tracker = Arc::new(Mutex::new(TaskProgressTracker::with_concurrency(
+        let mut tracker = TaskProgressTracker::with_concurrency(
             betweenness_progress_task(sources.len()),
-            parsed.concurrency,
-        )));
-        tracker.lock().unwrap().begin_subtask_with_volume(sources.len());
+            concurrency.value(),
+        );
+        tracker.begin_subtask_with_volume(sources.len());
 
-        let termination = TerminationFlag::default();
+        let termination = TerminationFlag::running_true();
         let on_done = {
-            let tracker = Arc::clone(&tracker);
+            let tracker = tracker.clone();
             Arc::new(move || {
-                tracker.lock().unwrap().log_progress(1);
+                let mut progress = tracker.clone();
+                progress.log_progress(1);
             })
         };
 
@@ -308,13 +309,13 @@ define_algorithm_spec! {
                 &mut computation,
                 &sources,
                 divisor,
-                parsed.concurrency,
+                concurrency,
                 &termination,
                 on_done,
             )
             .map_err(|e| AlgorithmError::Execution(format!("terminated: {e}")))?;
 
-        tracker.lock().unwrap().end_subtask();
+        tracker.end_subtask();
 
         Ok(BetweennessCentralityResult {
             centralities: result.centralities,

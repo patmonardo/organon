@@ -117,10 +117,25 @@ impl CELFFacade {
         self
     }
 
-    fn compute_seed_set(&self) -> Result<(CELFResult, std::time::Duration)> {
+    /// Compatibility alias for older builder call sites; prefer `task_registry`.
+    pub fn task_registry_factory(mut self, factory: Box<dyn TaskRegistryFactory>) -> Self {
+        self.task_registry = factory.into();
+        self
+    }
+
+    /// Kept for compatibility with older pathfinding-style builders.
+    pub fn user_log_registry_factory(self, _factory: Box<dyn TaskRegistryFactory>) -> Self {
+        self
+    }
+
+    pub fn validate(&self) -> Result<()> {
         self.config
             .validate()
-            .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
+            .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))
+    }
+
+    fn compute_seed_set(&self) -> Result<(CELFResult, std::time::Duration)> {
+        self.validate()?;
         let start = Instant::now();
 
         let storage = CELFStorageRuntime::new(&*self.graph_store)?;
@@ -135,9 +150,10 @@ impl CELFFacade {
         }
 
         let seed_set_size = self.config.seed_set_size.min(node_count);
+        let concurrency = Concurrency::of(self.config.concurrency.max(1));
         let mut progress_tracker = TaskProgressTracker::with_registry(
             celf_progress_task(node_count, seed_set_size).base().clone(),
-            Concurrency::of(self.config.concurrency.max(1)),
+            concurrency,
             JobId::new(),
             self.task_registry.as_ref(),
         );
@@ -188,6 +204,7 @@ impl CELFFacade {
     }
 
     pub fn mutate(self, property_name: &str) -> Result<CELFMutateResult> {
+        self.validate()?;
         ConfigValidator::non_empty_string(property_name, "property_name")?;
         let (result, elapsed) = self.compute_seed_set()?;
         let seed_set = result.seed_set_nodes.clone();
@@ -229,14 +246,14 @@ impl CELFFacade {
     }
 
     pub fn write(self, property_name: &str) -> Result<WriteResult> {
+        self.validate()?;
         ConfigValidator::non_empty_string(property_name, "property_name")?;
-        let _ = self.compute_seed_set()?;
-        let node_count = self.graph_store.node_count();
-        let nodes_written = node_count as u64;
+        let (result, execution_time) = self.compute_seed_set()?;
+        let nodes_written = result.seed_set_nodes.len() as u64;
         Ok(WriteResult::new(
             nodes_written,
             property_name.to_string(),
-            std::time::Duration::from_millis(0),
+            execution_time,
         ))
     }
 

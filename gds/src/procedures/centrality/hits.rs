@@ -98,6 +98,17 @@ impl HitsCentralityFacade {
         self
     }
 
+    /// Compatibility alias for older builder call sites; prefer `task_registry`.
+    pub fn task_registry_factory(mut self, factory: Box<dyn TaskRegistryFactory>) -> Self {
+        self.task_registry = factory.into();
+        self
+    }
+
+    /// Kept for compatibility with older pathfinding-style builders.
+    pub fn user_log_registry_factory(self, _factory: Box<dyn TaskRegistryFactory>) -> Self {
+        self
+    }
+
     /// Validate the facade configuration.
     ///
     /// # Returns
@@ -117,12 +128,13 @@ impl HitsCentralityFacade {
 
         let storage = HitsStorageRuntime::with_default_projection(self.graph_store.as_ref())?;
         let computation = HitsComputationRuntime::new(self.config.tolerance);
+        let concurrency = Concurrency::of(self.config.concurrency.max(1));
 
         let mut progress_tracker = TaskProgressTracker::with_registry(
             hits_progress_task(storage.graph().node_count(), self.config.max_iterations)
                 .base()
                 .clone(),
-            Concurrency::of(self.config.concurrency.max(1)),
+            concurrency,
             JobId::new(),
             self.task_registry.as_ref(),
         );
@@ -130,7 +142,7 @@ impl HitsCentralityFacade {
         let result = storage.run(
             &computation,
             self.config.max_iterations,
-            self.config.concurrency,
+            concurrency,
             &mut progress_tracker,
         );
 
@@ -151,9 +163,11 @@ impl HitsCentralityFacade {
     ///
     /// ## Example
     /// ```rust,no_run
-    /// # use gds::Graph;
-    /// # let graph = Graph::default();
-    /// let results = graph.hits().stream()?.collect::<Vec<_>>();
+    /// # use std::sync::Arc;
+    /// # use gds::types::graph_store::DefaultGraphStore;
+    /// # let graph = Arc::new(DefaultGraphStore::empty());
+    /// # use gds::procedures::centrality::HitsCentralityFacade;
+    /// let results = HitsCentralityFacade::new(graph).stream()?.collect::<Vec<_>>();
     /// ```
     pub fn stream(&self) -> Result<Box<dyn Iterator<Item = CentralityScore>>> {
         let result = self.compute()?;
@@ -174,9 +188,11 @@ impl HitsCentralityFacade {
     ///
     /// ## Example
     /// ```rust,no_run
-    /// # use gds::Graph;
-    /// # let graph = Graph::default();
-    /// let stats = graph.hits().stats()?;
+    /// # use std::sync::Arc;
+    /// # use gds::types::graph_store::DefaultGraphStore;
+    /// # let graph = Arc::new(DefaultGraphStore::empty());
+    /// # use gds::procedures::centrality::HitsCentralityFacade;
+    /// let stats = HitsCentralityFacade::new(graph).stats()?;
     /// println!("Converged in {} iterations", stats.iterations);
     /// ```
     pub fn stats(&self) -> Result<HitsCentralityStats> {
@@ -197,9 +213,11 @@ impl HitsCentralityFacade {
     ///
     /// ## Example
     /// ```rust,no_run
-    /// # use gds::Graph;
-    /// # let graph = Graph::default();
-    /// let result = graph.hits().mutate("hits_hub")?;
+    /// # use std::sync::Arc;
+    /// # use gds::types::graph_store::DefaultGraphStore;
+    /// # let graph = Arc::new(DefaultGraphStore::empty());
+    /// # use gds::procedures::centrality::HitsCentralityFacade;
+    /// let result = HitsCentralityFacade::new(graph).mutate("hits_hub")?;
     /// println!("Computed and stored for {} nodes", result.summary.nodes_updated);
     /// ```
     pub fn mutate(self, property_name: &str) -> Result<HitsCentralityMutateResult> {
@@ -255,7 +273,9 @@ impl HitsCentralityFacade {
     ///
     /// # Example
     /// ```ignore
-    /// # let graph = Graph::default();
+    /// # use std::sync::Arc;
+    /// # use gds::types::graph_store::DefaultGraphStore;
+    /// # let graph = Arc::new(DefaultGraphStore::empty());
     /// # use gds::procedures::centrality::HitsCentralityFacade;
     /// let facade = HitsCentralityFacade::new(graph);
     /// let memory = facade.estimate_memory();

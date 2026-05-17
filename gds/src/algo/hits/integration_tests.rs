@@ -7,6 +7,7 @@ mod tests {
 
     use crate::algo::hits::HitsComputationRuntime;
     use crate::algo::hits::HitsStorageRuntime;
+    use crate::concurrency::Concurrency;
     use crate::config::GraphStoreConfig;
     use crate::core::utils::progress::tasks::NoopProgressTracker;
     use crate::types::graph::RelationshipTopology;
@@ -70,7 +71,7 @@ mod tests {
         let computation = HitsComputationRuntime::new(1e-8);
 
         let mut tracker = NoopProgressTracker;
-        let result = storage.run(&computation, 25, 1, &mut tracker);
+        let result = storage.run(&computation, 25, Concurrency::of(1), &mut tracker);
 
         // Expect clear extremes:
         // - Node 3 is the best authority (many incoming links)

@@ -3,6 +3,7 @@
 use crate::algo::hits::HitsComputationRuntime;
 use crate::algo::hits::HitsStorageRuntime;
 use crate::collections::backends::vec::VecDouble;
+use crate::concurrency::Concurrency;
 use crate::config::validation::ConfigError;
 use crate::core::utils::progress::{LeafTask, ProgressTracker, TaskProgressTracker, Tasks};
 use crate::define_algorithm_spec;
@@ -161,15 +162,16 @@ define_algorithm_spec! {
 
         let storage = HitsStorageRuntime::with_default_projection(graph_store)?;
         let computation = HitsComputationRuntime::new(parsed.tolerance);
+        let concurrency = Concurrency::of(parsed.concurrency.max(1));
 
         let mut tracker = TaskProgressTracker::with_concurrency(
             hits_progress_task(graph_store.node_count(), parsed.max_iterations),
-            parsed.concurrency,
+            concurrency.value(),
         );
 
         tracker.begin_subtask_with_volume(parsed.max_iterations);
 
-        let run = storage.run(&computation, parsed.max_iterations, parsed.concurrency, &mut tracker);
+        let run = storage.run(&computation, parsed.max_iterations, concurrency, &mut tracker);
 
         tracker.end_subtask();
 

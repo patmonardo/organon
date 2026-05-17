@@ -8,7 +8,7 @@
 //! - Normalizes by `(nodeCount - 1)`.
 
 use crate::collections::backends::vec::VecDouble;
-use crate::concurrency::TerminationFlag;
+use crate::concurrency::{Concurrency, TerminationFlag};
 use crate::config::validation::ConfigError;
 use crate::core::utils::progress::{LeafTask, ProgressTracker, TaskProgressTracker, Tasks};
 use crate::core::LogLevel;
@@ -18,7 +18,7 @@ use crate::projection::NodeLabel;
 use crate::projection::Orientation;
 use crate::types::properties::node::{DefaultDoubleNodePropertyValues, NodePropertyValues};
 use std::collections::HashSet;
-use std::sync::{Arc, Mutex};
+use std::sync::Arc;
 use std::time::{Duration, Instant};
 
 use super::HarmonicComputationRuntime;
@@ -236,7 +236,7 @@ define_algorithm_spec! {
 
         let start = Instant::now();
 
-        let concurrency = parsed_config.concurrency;
+        let concurrency = Concurrency::of(parsed_config.concurrency.max(1));
         let orientation = harmonic_orientation(parsed_config.direction)?;
         let node_count = graph_store.node_count();
 
@@ -245,7 +245,7 @@ define_algorithm_spec! {
             &format!(
                 "Computing harmonic centrality (direction={:?}, concurrency={}) on graph with {} nodes",
                 parsed_config.direction,
-                concurrency,
+                concurrency.value(),
                 node_count
             ),
         );
@@ -253,25 +253,26 @@ define_algorithm_spec! {
         let storage = HarmonicStorageRuntime::with_orientation(graph_store, orientation)?;
         let computation = HarmonicComputationRuntime::new(storage.node_count());
 
-        let tracker = Arc::new(Mutex::new(TaskProgressTracker::with_concurrency(
+        let mut tracker = TaskProgressTracker::with_concurrency(
             harmonic_progress_task(node_count),
-            concurrency,
-        )));
-        tracker.lock().unwrap().begin_subtask_with_volume(node_count);
+            concurrency.value(),
+        );
+        tracker.begin_subtask_with_volume(node_count);
 
         let on_sources_done = {
-            let tracker = Arc::clone(&tracker);
+            let tracker = tracker.clone();
             Arc::new(move |n: usize| {
-                tracker.lock().unwrap().log_progress(n);
+                let mut progress = tracker.clone();
+                progress.log_progress(n);
             })
         };
 
-        let termination = TerminationFlag::default();
+        let termination = TerminationFlag::running_true();
         let centralities = storage
             .compute_parallel(&computation, concurrency, &termination, on_sources_done)
             .map_err(|e| AlgorithmError::Execution(format!("Harmonic terminated: {}", e)))?;
 
-        tracker.lock().unwrap().end_subtask();
+        tracker.end_subtask();
 
         Ok(HarmonicResult {
             centralities,

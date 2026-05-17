@@ -12,7 +12,7 @@ use crate::core::utils::progress::{
 use crate::define_algorithm_spec;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::Orientation;
-use std::sync::{Arc, Mutex};
+use std::sync::Arc;
 use std::time::{Duration, Instant};
 
 use super::ClosenessCentralityComputationRuntime;
@@ -227,27 +227,26 @@ define_algorithm_spec! {
         )?;
         let node_count = storage.node_count();
         let computation = ClosenessCentralityComputationRuntime::new();
+        let concurrency = Concurrency::of(parsed.concurrency.max(1));
 
         let registry_factory = EmptyTaskRegistryFactory;
-        let tracker = Arc::new(Mutex::new(TaskProgressTracker::with_registry(
+        let mut tracker = TaskProgressTracker::with_registry(
             closeness_progress_task(node_count),
-            Concurrency::of(parsed.concurrency.max(1)),
+            concurrency,
             JobId::new(),
             &registry_factory,
-        )));
-        tracker.lock().unwrap().begin_subtask();
-        tracker
-            .lock()
-            .unwrap()
-            .begin_subtask_with_description_and_volume(
-                "Farness computation",
-                node_count.saturating_mul(node_count),
-            );
+        );
+        tracker.begin_subtask();
+        tracker.begin_subtask_with_description_and_volume(
+            "Farness computation",
+            node_count.saturating_mul(node_count),
+        );
 
         let on_farness = {
-            let tracker = Arc::clone(&tracker);
+            let tracker = tracker.clone();
             Arc::new(move |sources_done: usize| {
-                tracker.lock().unwrap().log_progress(sources_done);
+                let mut progress = tracker.clone();
+                progress.log_progress(sources_done);
             })
         };
 
@@ -258,27 +257,18 @@ define_algorithm_spec! {
             .compute_parallel(
                 &computation,
                 parsed.wasserman_faust,
-                parsed.concurrency,
+                concurrency,
                 &termination,
                 on_farness,
                 on_closeness,
             )
             .map_err(|e| AlgorithmError::Execution(format!("Closeness terminated: {e}")))?;
 
-        tracker
-            .lock()
-            .unwrap()
-            .end_subtask_with_description("Farness computation");
-        tracker
-            .lock()
-            .unwrap()
-            .begin_subtask_with_description_and_volume("Closeness computation", node_count);
-        tracker.lock().unwrap().log_progress(node_count);
-        tracker
-            .lock()
-            .unwrap()
-            .end_subtask_with_description("Closeness computation");
-        tracker.lock().unwrap().end_subtask();
+        tracker.end_subtask_with_description("Farness computation");
+        tracker.begin_subtask_with_description_and_volume("Closeness computation", node_count);
+        tracker.log_progress(node_count);
+        tracker.end_subtask_with_description("Closeness computation");
+        tracker.end_subtask();
 
         Ok(ClosenessCentralityResult {
             centralities,

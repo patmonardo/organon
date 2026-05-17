@@ -3,7 +3,7 @@
 //! Responsible for building a graph view from a GraphStore with the correct
 //! orientation and optional relationship weight property.
 
-use crate::concurrency::{TerminatedException, TerminationFlag};
+use crate::concurrency::{Concurrency, TerminatedException, TerminationFlag};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::{Orientation, RelationshipType};
 use crate::types::graph::Graph;
@@ -195,7 +195,7 @@ impl<'a, G: GraphStore> BetweennessCentralityStorageRuntime<'a, G> {
         computation: &mut BetweennessCentralityComputationRuntime,
         sources: &[usize],
         divisor: f64,
-        concurrency: usize,
+        concurrency: Concurrency,
         termination: &TerminationFlag,
         on_source_done: Arc<dyn Fn() + Send + Sync>,
     ) -> Result<BetweennessCentralityComputationResult, TerminatedException> {
@@ -204,7 +204,7 @@ impl<'a, G: GraphStore> BetweennessCentralityStorageRuntime<'a, G> {
             computation.compute_parallel_weighted(
                 sources,
                 divisor,
-                concurrency,
+                concurrency.value(),
                 termination,
                 on_source_done,
                 &neigh,
@@ -214,7 +214,7 @@ impl<'a, G: GraphStore> BetweennessCentralityStorageRuntime<'a, G> {
             computation.compute_parallel_unweighted(
                 sources,
                 divisor,
-                concurrency,
+                concurrency.value(),
                 termination,
                 on_source_done,
                 &neigh,
