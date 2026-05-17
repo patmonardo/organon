@@ -6,11 +6,16 @@
 //! **Translation Source**: `org.neo4j.gds.allshortestpaths.MSBFSAllShortestPaths` and `WeightedAllShortestPaths`
 //! **Key Features**: Multi-source parallelization, weighted/unweighted support, streaming results
 
+use crate::algo::msbfs::{AggregatedNeighborProcessingMsBfs, OMEGA};
+use crate::concurrency::{install_with_concurrency, Concurrency, TerminationFlag};
 use crate::core::utils::progress::ProgressTracker;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::Graph;
 use crate::types::graph::NodeId;
+use parking_lot::Mutex;
+use rayon::prelude::*;
 use std::sync::mpsc;
+use std::sync::Arc;
 
 use super::AllShortestPathsComputationRuntime;
 
@@ -128,6 +133,7 @@ impl<'a> AllShortestPathsStorageRuntime<'a> {
         let results = distances
             .into_iter()
             .enumerate()
+            .filter(|(target, distance)| *target != source_index && *distance != f64::INFINITY)
             .map(|(target, distance)| ShortestPathResult {
                 source: source_node,
                 target: target as NodeId,
@@ -144,6 +150,13 @@ impl<'a> AllShortestPathsStorageRuntime<'a> {
         source_node: NodeId,
         direction: u8,
     ) -> Result<Vec<ShortestPathResult>, AlgorithmError> {
+        if !self.graph.has_relationship_property() {
+            return Err(AlgorithmError::Execution(
+                "WeightedAllShortestPaths is not supported on graphs without a weight property"
+                    .to_string(),
+            ));
+        }
+
         use std::cmp::Ordering;
         use std::collections::BinaryHeap;
 
@@ -234,6 +247,7 @@ impl<'a> AllShortestPathsStorageRuntime<'a> {
         let results = distances
             .into_iter()
             .enumerate()
+            .filter(|(_, distance)| *distance != f64::INFINITY)
             .map(|(target, distance)| ShortestPathResult {
                 source: source_node,
                 target: target as NodeId,
@@ -319,47 +333,27 @@ impl<'a> AllShortestPathsStorageRuntime<'a> {
         let node_count = self.graph.node_count();
         progress_tracker.begin_subtask_with_volume(node_count);
 
-        let mut processed_sources: usize = 0;
-        const LOG_BATCH: usize = 16;
-
         let result = (|| {
             let (sender, receiver) = mpsc::channel::<ShortestPathResult>();
 
-            let mut receiver_dropped = false;
-
-            // For now, process sequentially to avoid lifetime issues
-            // Note: parallel processing with more precise lifetime management is deferred.
-            for source_node in 0..node_count as NodeId {
-                let results = self.compute_shortest_paths(source_node, direction)?;
-
-                // Send results to stream
-                for result in results {
-                    computation.add_result(result.clone());
-
-                    if sender.send(result).is_err() {
-                        // Receiver was dropped; stop processing early to avoid wasted work.
-                        receiver_dropped = true;
-                        break;
-                    }
+            match self.algorithm_type {
+                AlgorithmType::Unweighted => {
+                    self.compute_unweighted_all_shortest_paths_streaming(
+                        computation,
+                        direction,
+                        progress_tracker,
+                        sender,
+                    )?;
                 }
-
-                if receiver_dropped {
-                    break;
-                }
-
-                processed_sources += 1;
-                if processed_sources >= LOG_BATCH {
-                    progress_tracker.log_progress(processed_sources);
-                    processed_sources = 0;
+                AlgorithmType::Weighted => {
+                    self.compute_weighted_all_shortest_paths_streaming(
+                        computation,
+                        direction,
+                        progress_tracker,
+                        sender,
+                    )?;
                 }
             }
-
-            if processed_sources > 0 {
-                progress_tracker.log_progress(processed_sources);
-            }
-
-            // Drop the sender to signal completion
-            drop(sender);
 
             Ok(receiver)
         })();
@@ -374,6 +368,269 @@ impl<'a> AllShortestPathsStorageRuntime<'a> {
                 Err(e)
             }
         }
+    }
+
+    fn compute_unweighted_all_shortest_paths_streaming(
+        &self,
+        computation: &mut AllShortestPathsComputationRuntime,
+        direction: u8,
+        progress_tracker: &mut dyn ProgressTracker,
+        sender: mpsc::Sender<ShortestPathResult>,
+    ) -> Result<(), AlgorithmError> {
+        let node_count = self.graph.node_count();
+        let mut msbfs = AggregatedNeighborProcessingMsBfs::new(node_count);
+        let mut receiver_dropped = false;
+
+        for source_offset in (0..node_count).step_by(OMEGA) {
+            if receiver_dropped {
+                break;
+            }
+
+            let source_len = (source_offset + OMEGA).min(node_count) - source_offset;
+            msbfs.run(
+                source_offset,
+                source_len,
+                false,
+                |node| {
+                    self.get_neighbors(node as NodeId, direction)
+                        .into_iter()
+                        .filter_map(|neighbor| usize::try_from(neighbor).ok())
+                        .collect()
+                },
+                |target, distance, source_mask| {
+                    if receiver_dropped {
+                        return;
+                    }
+
+                    for source in
+                        AggregatedNeighborProcessingMsBfs::iter_sources(source_mask, source_offset)
+                    {
+                        let result = ShortestPathResult {
+                            source: source as NodeId,
+                            target: target as NodeId,
+                            distance: f64::from(distance),
+                        };
+
+                        computation.add_result(result.clone());
+                        if sender.send(result).is_err() {
+                            receiver_dropped = true;
+                            break;
+                        }
+                    }
+                },
+            );
+
+            for _ in 0..source_len {
+                computation.record_source_processed();
+            }
+            progress_tracker.log_progress(source_len);
+        }
+
+        Ok(())
+    }
+
+    fn compute_weighted_all_shortest_paths_streaming(
+        &self,
+        computation: &mut AllShortestPathsComputationRuntime,
+        direction: u8,
+        progress_tracker: &mut dyn ProgressTracker,
+        sender: mpsc::Sender<ShortestPathResult>,
+    ) -> Result<(), AlgorithmError> {
+        if !self.graph.has_relationship_property() {
+            return Err(AlgorithmError::Execution(
+                "WeightedAllShortestPaths is not supported on graphs without a weight property"
+                    .to_string(),
+            ));
+        }
+
+        let node_count = self.graph.node_count();
+        let concurrency = self.concurrency.max(1);
+
+        // AtomicUsize counter: mirrors Java's AtomicInteger in WeightedAllShortestPaths.
+        // Each worker increments to claim the next source node.
+        let counter = Arc::new(std::sync::atomic::AtomicUsize::new(0));
+        let termination = TerminationFlag::running_true();
+
+        // Shared sender so all workers push into the same channel.
+        // Mutex is cheap here — contention is only on send, not on Dijkstra itself.
+        let shared_sender = Arc::new(Mutex::new(sender));
+
+        // Shared accumulated computation state — merged after all workers finish.
+        // Each worker holds its own local AllShortestPathsComputationRuntime so there
+        // is zero lock contention on statistics during the compute phase.
+        let local_computations: Arc<Mutex<Vec<AllShortestPathsComputationRuntime>>> =
+            Arc::new(Mutex::new(Vec::with_capacity(concurrency)));
+
+        // Shared progress accumulator — progress_tracker is &mut dyn so cannot cross threads;
+        // we collect raw counts and flush after the parallel section.
+        let progress_counts = Arc::new(std::sync::atomic::AtomicUsize::new(0));
+
+        // Spawn `concurrency` worker tasks, each competing for source nodes via the counter.
+        // This mirrors Java's `for (int i = 0; i < concurrency.value(); i++) executorService.submit(new ShortestPathTask())`
+        let worker_result: Result<(), AlgorithmError> =
+            install_with_concurrency(Concurrency::of(concurrency), || {
+                (0..concurrency)
+                    .into_par_iter()
+                    .map(|_| -> Result<(), AlgorithmError> {
+                        // Each worker gets its own thread-local graph copy (mirrors Java's `graph.concurrentCopy()`).
+                        let local_graph =
+                            crate::types::graph::graph::Graph::concurrent_copy(self.graph);
+
+                        // Worker-local Dijkstra state — reused across sources (reset via fill).
+                        let mut distances = vec![f64::INFINITY; node_count];
+                        let mut local_computation = AllShortestPathsComputationRuntime::new();
+
+                        loop {
+                            if !termination.running() {
+                                break;
+                            }
+
+                            // Claim the next source node atomically.
+                            let source_idx =
+                                counter.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+                            if source_idx >= node_count {
+                                break;
+                            }
+
+                            let source_node = source_idx as NodeId;
+
+                            // Reset distances for this source.
+                            distances.fill(f64::INFINITY);
+                            distances[source_idx] = 0.0;
+
+                            // Min-heap Dijkstra — identical logic to compute_weighted_shortest_paths
+                            // but using the worker-local graph copy.
+                            {
+                                use std::cmp::Ordering;
+                                use std::collections::BinaryHeap;
+
+                                #[derive(Debug, Clone, Copy)]
+                                struct State {
+                                    cost: f64,
+                                    node: NodeId,
+                                }
+                                impl PartialEq for State {
+                                    fn eq(&self, other: &Self) -> bool {
+                                        self.cost == other.cost && self.node == other.node
+                                    }
+                                }
+                                impl Eq for State {}
+                                impl PartialOrd for State {
+                                    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+                                        Some(self.cmp(other))
+                                    }
+                                }
+                                impl Ord for State {
+                                    fn cmp(&self, other: &Self) -> Ordering {
+                                        match other.cost.partial_cmp(&self.cost) {
+                                            Some(ord) => ord,
+                                            None => other.node.cmp(&self.node),
+                                        }
+                                    }
+                                }
+
+                                let mut heap = BinaryHeap::new();
+                                heap.push(State {
+                                    cost: 0.0,
+                                    node: source_node,
+                                });
+
+                                let fallback = 1.0f64;
+                                while let Some(State { cost, node }) = heap.pop() {
+                                    let node_idx = node as usize;
+                                    if node_idx >= node_count {
+                                        continue;
+                                    }
+                                    if cost > distances[node_idx] {
+                                        continue;
+                                    }
+
+                                    let neighbors: Vec<(NodeId, f64)> = match direction {
+                                        1 => local_graph
+                                            .stream_inverse_relationships_weighted(node, fallback)
+                                            .map(|c| (c.target_id(), c.weight()))
+                                            .collect(),
+                                        2 => {
+                                            let mut v: Vec<(NodeId, f64)> = local_graph
+                                                .stream_relationships_weighted(node, fallback)
+                                                .map(|c| (c.target_id(), c.weight()))
+                                                .collect();
+                                            v.extend(
+                                                local_graph
+                                                    .stream_inverse_relationships_weighted(
+                                                        node, fallback,
+                                                    )
+                                                    .map(|c| (c.target_id(), c.weight())),
+                                            );
+                                            v
+                                        }
+                                        _ => local_graph
+                                            .stream_relationships_weighted(node, fallback)
+                                            .map(|c| (c.target_id(), c.weight()))
+                                            .collect(),
+                                    };
+
+                                    for (neighbor, weight) in neighbors {
+                                        let nb_idx = neighbor as usize;
+                                        if nb_idx >= node_count {
+                                            continue;
+                                        }
+                                        let next_cost = cost + weight;
+                                        if next_cost < distances[nb_idx] {
+                                            distances[nb_idx] = next_cost;
+                                            heap.push(State {
+                                                cost: next_cost,
+                                                node: neighbor,
+                                            });
+                                        }
+                                    }
+                                }
+                            }
+
+                            // Emit results — filter Infinity (Java parity: stream filters POSITIVE_INFINITY).
+                            let sender_guard = shared_sender.lock();
+                            for (target_idx, &dist) in distances.iter().enumerate() {
+                                if dist == f64::INFINITY {
+                                    continue;
+                                }
+                                let result = ShortestPathResult {
+                                    source: source_node,
+                                    target: target_idx as NodeId,
+                                    distance: dist,
+                                };
+                                local_computation.add_result(result.clone());
+                                // Channel closed means downstream consumer stopped — not an error.
+                                let _ = sender_guard.send(result);
+                            }
+                            drop(sender_guard);
+
+                            local_computation.record_source_processed();
+                            progress_counts.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+                        }
+
+                        local_computations.lock().push(local_computation);
+                        Ok(())
+                    })
+                    .reduce(|| Ok(()), |acc, res| acc.and(res))
+            });
+
+        worker_result?;
+
+        // Merge worker-local computation state back into the caller's mutable runtime.
+        let computations = Arc::try_unwrap(local_computations)
+            .map(|mutex| mutex.into_inner())
+            .unwrap_or_else(|arc| std::mem::take(&mut *arc.lock()));
+        for local in computations {
+            computation.merge_from(local);
+        }
+
+        // Flush accumulated progress to the tracker now that we're back on the single-threaded path.
+        let total = progress_counts.load(std::sync::atomic::Ordering::Relaxed);
+        if total > 0 {
+            progress_tracker.log_progress(total);
+        }
+
+        Ok(())
     }
 
     /// Get total number of nodes
@@ -401,4 +658,195 @@ pub struct ShortestPathResult {
     pub target: NodeId,
     /// Shortest path distance
     pub distance: f64,
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::config::GraphStoreConfig;
+    use crate::core::utils::progress::{TaskProgressTracker, Tasks};
+    use crate::projection::RelationshipType;
+    use crate::types::graph::{
+        DefaultGraph, GraphCharacteristicsBuilder, RelationshipTopology, SimpleIdMap,
+    };
+    use crate::types::schema::GraphSchema;
+    use std::collections::{HashMap, HashSet};
+    use std::sync::Arc;
+
+    fn graph_from_outgoing(outgoing: Vec<Vec<NodeId>>) -> DefaultGraph {
+        let schema = Arc::new(GraphSchema::empty());
+        let node_count = outgoing.len();
+        let id_map = Arc::new(SimpleIdMap::from_original_ids(
+            (0..node_count as NodeId).collect::<Vec<_>>(),
+        ));
+
+        let topology = RelationshipTopology::new(outgoing, None);
+        let relationship_count = topology.relationship_count();
+        let has_parallel_edges = topology.has_parallel_edges();
+
+        let rel_type = RelationshipType::of("REL");
+        let mut topologies = HashMap::new();
+        topologies.insert(rel_type.clone(), Arc::new(topology));
+
+        DefaultGraph::new(
+            Arc::new(GraphStoreConfig::default()),
+            schema,
+            id_map,
+            GraphCharacteristicsBuilder::new().directed().build(),
+            topologies,
+            vec![rel_type],
+            HashSet::new(),
+            relationship_count,
+            has_parallel_edges,
+            HashMap::new(),
+            HashMap::new(),
+            HashMap::new(),
+        )
+    }
+
+    #[test]
+    fn unweighted_streaming_uses_reachable_non_self_pairs() {
+        let graph = graph_from_outgoing(vec![vec![1], vec![2], vec![], vec![]]);
+        let storage =
+            AllShortestPathsStorageRuntime::with_settings(&graph, AlgorithmType::Unweighted, 1);
+        let mut computation = AllShortestPathsComputationRuntime::new();
+        let mut progress_tracker =
+            TaskProgressTracker::new(Tasks::leaf("all_shortest_paths".to_string()));
+
+        let receiver = storage
+            .compute_all_shortest_paths_streaming(&mut computation, 0, &mut progress_tracker)
+            .unwrap();
+        let mut rows: Vec<_> = receiver.into_iter().collect();
+        rows.sort_by(|a, b| (a.source, a.target).cmp(&(b.source, b.target)));
+
+        assert_eq!(computation.node_count(), 4);
+        assert_eq!(computation.infinite_distances(), 0);
+        assert!(rows.iter().all(|row| row.source != row.target));
+        assert_eq!(
+            rows.iter()
+                .map(|row| (row.source, row.target, row.distance))
+                .collect::<Vec<_>>(),
+            vec![(0, 1, 1.0), (0, 2, 2.0), (1, 2, 1.0)]
+        );
+    }
+
+    #[test]
+    fn weighted_parallel_matches_sequential() {
+        use crate::types::graph_store::GraphStore as _;
+        use crate::types::graph_store::{
+            Capabilities, DatabaseId, DatabaseInfo, DatabaseLocation, DefaultGraphStore, GraphName,
+        };
+        use crate::types::properties::relationship::{
+            DefaultRelationshipPropertyValues, RelationshipPropertyValues,
+        };
+        use crate::types::schema::Direction;
+
+        // 4-node chain: 0→1 (w=1.0), 1→2 (w=2.0), 2→3 (w=3.0), plus 0→3 (w=10.0)
+        let outgoing: Vec<Vec<NodeId>> = vec![vec![1, 3], vec![2], vec![3], vec![]];
+        let incoming: Vec<Vec<NodeId>> = vec![vec![], vec![0], vec![1], vec![2, 0]];
+
+        let rel_type = RelationshipType::of("REL");
+        let mut schema_builder = crate::types::schema::MutableGraphSchema::empty();
+        schema_builder
+            .relationship_schema_mut()
+            .add_relationship_type(rel_type.clone(), Direction::Directed);
+        let schema = schema_builder.build();
+
+        let mut topologies = HashMap::new();
+        topologies.insert(
+            rel_type.clone(),
+            RelationshipTopology::new(outgoing, Some(incoming)),
+        );
+
+        let original_ids: Vec<NodeId> = (0..4i64).collect();
+        let id_map = SimpleIdMap::from_original_ids(original_ids);
+
+        let mut store = DefaultGraphStore::new(
+            GraphStoreConfig::default(),
+            GraphName::new("g"),
+            DatabaseInfo::new(
+                DatabaseId::new("db"),
+                DatabaseLocation::remote("localhost", 7687, None, None),
+            ),
+            schema,
+            Capabilities::default(),
+            id_map,
+            topologies,
+        );
+
+        // weights order: edges in topology order — 0→1, 0→3, 1→2, 2→3
+        let weights = vec![1.0f64, 10.0, 2.0, 3.0];
+        let values: Arc<dyn RelationshipPropertyValues> = Arc::new(
+            DefaultRelationshipPropertyValues::with_values(weights, 0.0, 4),
+        );
+        store
+            .add_relationship_property(rel_type.clone(), "weight", values)
+            .unwrap();
+
+        let store = Arc::new(store);
+
+        let run = |concurrency: usize| -> Vec<(NodeId, NodeId, f64)> {
+            let rel_types: HashSet<RelationshipType> = store.relationship_types();
+            let selectors: HashMap<RelationshipType, String> = rel_types
+                .iter()
+                .map(|t| (t.clone(), "weight".to_string()))
+                .collect();
+            let graph_view = store
+                .get_graph_with_types_selectors_and_orientation(
+                    &rel_types,
+                    &selectors,
+                    crate::projection::Orientation::Natural,
+                )
+                .unwrap();
+
+            let storage = AllShortestPathsStorageRuntime::with_settings(
+                graph_view.as_ref(),
+                AlgorithmType::Weighted,
+                concurrency,
+            );
+            let mut computation = AllShortestPathsComputationRuntime::new();
+            let mut tracker = TaskProgressTracker::new(Tasks::leaf("asp".to_string()));
+
+            let receiver = storage
+                .compute_all_shortest_paths_streaming(&mut computation, 0, &mut tracker)
+                .unwrap();
+
+            let mut rows: Vec<_> = receiver
+                .into_iter()
+                .map(|r| (r.source, r.target, r.distance))
+                .collect();
+            rows.sort_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal));
+            rows
+        };
+
+        let sequential = run(1);
+        let parallel = run(4);
+
+        assert!(
+            !sequential.is_empty(),
+            "weighted ASP should produce results"
+        );
+        assert_eq!(
+            sequential, parallel,
+            "parallel result must match sequential"
+        );
+    }
+
+    #[test]
+    fn weighted_streaming_requires_relationship_property() {
+        let graph = graph_from_outgoing(vec![vec![1], vec![]]);
+        let storage =
+            AllShortestPathsStorageRuntime::with_settings(&graph, AlgorithmType::Weighted, 1);
+        let mut computation = AllShortestPathsComputationRuntime::new();
+        let mut progress_tracker =
+            TaskProgressTracker::new(Tasks::leaf("all_shortest_paths".to_string()));
+
+        let result = storage.compute_all_shortest_paths_streaming(
+            &mut computation,
+            0,
+            &mut progress_tracker,
+        );
+
+        assert!(matches!(result, Err(AlgorithmError::Execution(_))));
+    }
 }

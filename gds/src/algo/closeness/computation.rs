@@ -8,8 +8,11 @@
 
 use crate::algo::msbfs::{AggregatedNeighborProcessingMsBfs, OMEGA};
 use crate::collections::{HugeAtomicDoubleArray, HugeAtomicLongArray};
-use crate::concurrency::virtual_threads::{Executor, WorkerContext};
-use crate::concurrency::{Concurrency, TerminatedException, TerminationFlag};
+use crate::concurrency::{
+    install_with_concurrency, Concurrency, TerminatedException, TerminationFlag,
+};
+use rayon::prelude::*;
+use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::Arc;
 
 /// Computation runtime for closeness centrality (state-only, no graph access)
@@ -35,42 +38,57 @@ impl ClosenessCentralityComputationRuntime {
 
         let farness = HugeAtomicLongArray::new(node_count);
         let component = HugeAtomicLongArray::new(node_count);
-
-        let executor = Executor::new(Concurrency::of(concurrency.max(1)));
-        let msbfs_state =
-            WorkerContext::new(move || AggregatedNeighborProcessingMsBfs::new(node_count));
-
+        let concurrency = concurrency.max(1);
         let batch_count = (node_count + OMEGA - 1) / OMEGA;
-        executor.parallel_for(0, batch_count, termination, |batch_idx| {
-            if !termination.running() {
-                return;
-            }
+        let counter = AtomicUsize::new(0);
 
-            let source_offset = batch_idx * OMEGA;
-            let source_len = (source_offset + OMEGA).min(node_count) - source_offset;
+        install_with_concurrency(Concurrency::of(concurrency), || {
+            (0..concurrency)
+                .into_par_iter()
+                .try_for_each(|_| -> Result<(), TerminatedException> {
+                    let mut msbfs = AggregatedNeighborProcessingMsBfs::new(node_count);
 
-            msbfs_state.with(|msbfs| {
-                msbfs.run_with_termination(
-                    source_offset,
-                    source_len,
-                    false,
-                    Some(termination),
-                    |n| (get_neighbors)(n),
-                    |node_id, depth, sources_mask| {
-                        if depth == 0 {
-                            return;
+                    loop {
+                        if !termination.running() {
+                            return Err(TerminatedException);
                         }
 
-                        let len = sources_mask.count_ones() as i64;
-                        let d = depth as i64;
-                        let far_delta = len.saturating_mul(d);
+                        let batch_idx = counter.fetch_add(1, Ordering::Relaxed);
+                        if batch_idx >= batch_count {
+                            break;
+                        }
 
-                        farness.get_and_add(node_id, far_delta);
-                        component.get_and_add(node_id, len);
-                        (on_sources_done.as_ref())(len as usize);
-                    },
-                );
-            });
+                        let source_offset = batch_idx * OMEGA;
+                        let source_len = (source_offset + OMEGA).min(node_count) - source_offset;
+
+                        msbfs.run_with_termination(
+                            source_offset,
+                            source_len,
+                            false,
+                            Some(termination),
+                            |n| (get_neighbors)(n),
+                            |node_id, depth, sources_mask| {
+                                if depth == 0 {
+                                    return;
+                                }
+
+                                let len = sources_mask.count_ones() as i64;
+                                let d = depth as i64;
+                                let far_delta = len.saturating_mul(d);
+
+                                farness.get_and_add(node_id, far_delta);
+                                component.get_and_add(node_id, len);
+                                (on_sources_done.as_ref())(len as usize);
+                            },
+                        );
+
+                        if !termination.running() {
+                            return Err(TerminatedException);
+                        }
+                    }
+
+                    Ok(())
+                })
         })?;
 
         let mut farness_out = vec![0u64; node_count];
@@ -100,39 +118,61 @@ impl ClosenessCentralityComputationRuntime {
             return Ok(Vec::new());
         }
 
-        let executor = Executor::new(Concurrency::of(concurrency.max(1)));
+        let concurrency = concurrency.max(1);
         let scores = HugeAtomicDoubleArray::new(node_count);
+        let counter = AtomicUsize::new(0);
 
-        executor.parallel_for(0, node_count, termination, |i| {
-            if !termination.running() {
-                return;
-            }
+        install_with_concurrency(Concurrency::of(concurrency), || {
+            (0..concurrency)
+                .into_par_iter()
+                .try_for_each(|_| -> Result<(), TerminatedException> {
+                    let mut completed = 0usize;
 
-            let far = farness[i];
-            if far == 0 {
-                scores.set(i, 0.0);
-                return;
-            }
+                    loop {
+                        if !termination.running() {
+                            if completed > 0 {
+                                (on_nodes_done.as_ref())(completed);
+                            }
+                            return Err(TerminatedException);
+                        }
 
-            let comp = component[i] as f64;
-            let base = comp / (far as f64);
+                        let i = counter.fetch_add(1, Ordering::Relaxed);
+                        if i >= node_count {
+                            break;
+                        }
 
-            let value = if wasserman_faust {
-                if node_count <= 1 {
-                    0.0
-                } else {
-                    // Java: (comp/far) * (comp/(nodeCount-1))
-                    base * (comp / (node_count as f64 - 1.0))
-                }
-            } else {
-                base
-            };
+                        let far = farness[i];
+                        if far == 0 {
+                            scores.set(i, 0.0);
+                            completed += 1;
+                            continue;
+                        }
 
-            scores.set(i, value);
+                        let comp = component[i] as f64;
+                        let base = comp / (far as f64);
+
+                        let value = if wasserman_faust {
+                            if node_count <= 1 {
+                                0.0
+                            } else {
+                                // Java: (comp/far) * (comp/(nodeCount-1))
+                                base * (comp / (node_count as f64 - 1.0))
+                            }
+                        } else {
+                            base
+                        };
+
+                        scores.set(i, value);
+                        completed += 1;
+                    }
+
+                    if completed > 0 {
+                        (on_nodes_done.as_ref())(completed);
+                    }
+
+                    Ok(())
+                })
         })?;
-
-        // Report progress as one chunk for the whole phase.
-        (on_nodes_done.as_ref())(node_count);
 
         let mut out = vec![0.0f64; node_count];
         for i in 0..node_count {
@@ -162,6 +202,16 @@ mod tests {
         adj
     }
 
+    fn assert_scores_close(left: &[f64], right: &[f64]) {
+        assert_eq!(left.len(), right.len());
+        for (idx, (left_score, right_score)) in left.iter().zip(right.iter()).enumerate() {
+            assert!(
+                (left_score - right_score).abs() < 1e-9,
+                "score mismatch at node {idx}: {left_score} != {right_score}"
+            );
+        }
+    }
+
     #[test]
     fn farness_and_scores_are_deterministic() {
         let node_count = 6;
@@ -176,7 +226,7 @@ mod tests {
         let (f1, c1) = runtime
             .compute_farness_parallel(
                 node_count,
-                2,
+                1,
                 &termination,
                 noop_sources.clone(),
                 &neighbors,
@@ -211,5 +261,145 @@ mod tests {
         for (base, wf) in s1.iter().zip(s2.iter()) {
             assert!(*wf <= *base + 1e-12 || node_count <= 1);
         }
+    }
+
+    #[test]
+    fn path_graph_scores_match_formula() {
+        let node_count = 3;
+        let adj = undirected_adj(&[(0, 1), (1, 2)], node_count);
+        let runtime = ClosenessCentralityComputationRuntime::new();
+        let termination = TerminationFlag::running_true();
+
+        let (farness, component) = runtime
+            .compute_farness_parallel(
+                node_count,
+                4,
+                &termination,
+                Arc::new(|_n: usize| {}),
+                &|n| adj[n].clone(),
+            )
+            .unwrap();
+
+        assert_eq!(farness, vec![3, 2, 3]);
+        assert_eq!(component, vec![2, 2, 2]);
+
+        let scores = runtime
+            .compute_closeness_parallel(
+                node_count,
+                false,
+                4,
+                &termination,
+                &farness,
+                &component,
+                Arc::new(|_n: usize| {}),
+            )
+            .unwrap();
+
+        assert_scores_close(&scores, &[2.0 / 3.0, 1.0, 2.0 / 3.0]);
+    }
+
+    #[test]
+    fn disconnected_graph_uses_component_size_and_wasserman_faust() {
+        let node_count = 3;
+        let adj = undirected_adj(&[(0, 1)], node_count);
+        let runtime = ClosenessCentralityComputationRuntime::new();
+        let termination = TerminationFlag::running_true();
+
+        let (farness, component) = runtime
+            .compute_farness_parallel(
+                node_count,
+                4,
+                &termination,
+                Arc::new(|_n: usize| {}),
+                &|n| adj[n].clone(),
+            )
+            .unwrap();
+
+        assert_eq!(farness, vec![1, 1, 0]);
+        assert_eq!(component, vec![1, 1, 0]);
+
+        let base = runtime
+            .compute_closeness_parallel(
+                node_count,
+                false,
+                4,
+                &termination,
+                &farness,
+                &component,
+                Arc::new(|_n: usize| {}),
+            )
+            .unwrap();
+        let wf = runtime
+            .compute_closeness_parallel(
+                node_count,
+                true,
+                4,
+                &termination,
+                &farness,
+                &component,
+                Arc::new(|_n: usize| {}),
+            )
+            .unwrap();
+
+        assert_scores_close(&base, &[1.0, 1.0, 0.0]);
+        assert_scores_close(&wf, &[0.5, 0.5, 0.0]);
+    }
+
+    #[test]
+    fn closeness_parallel_matches_single_worker() {
+        let node_count = 7;
+        let adj = undirected_adj(
+            &[(0, 1), (1, 2), (2, 3), (1, 4), (4, 5), (5, 6), (2, 6)],
+            node_count,
+        );
+        let runtime = ClosenessCentralityComputationRuntime::new();
+        let termination = TerminationFlag::running_true();
+
+        let (single_farness, single_component) = runtime
+            .compute_farness_parallel(
+                node_count,
+                1,
+                &termination,
+                Arc::new(|_n: usize| {}),
+                &|n| adj[n].clone(),
+            )
+            .unwrap();
+        let single_scores = runtime
+            .compute_closeness_parallel(
+                node_count,
+                true,
+                1,
+                &termination,
+                &single_farness,
+                &single_component,
+                Arc::new(|_n: usize| {}),
+            )
+            .unwrap();
+
+        let termination = TerminationFlag::running_true();
+        let (parallel_farness, parallel_component) = runtime
+            .compute_farness_parallel(
+                node_count,
+                4,
+                &termination,
+                Arc::new(|_n: usize| {}),
+                &|n| adj[n].clone(),
+            )
+            .unwrap();
+        let parallel_scores = runtime
+            .compute_closeness_parallel(
+                node_count,
+                true,
+                4,
+                &termination,
+                &parallel_farness,
+                &parallel_component,
+                Arc::new(|_n: usize| {}),
+            )
+            .unwrap();
+
+        assert_eq!(single_farness, parallel_farness);
+        assert_eq!(single_component, parallel_component);
+        assert_scores_close(&single_scores, &parallel_scores);
     }
 }

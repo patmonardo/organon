@@ -7,11 +7,14 @@
 
 use super::spec::DfsResult;
 use super::DfsComputationRuntime;
+use crate::algo::traversal::{
+    Aggregator, ExitPredicate, ExitPredicateResult, FollowExitPredicate, OneHopAggregator,
+    TargetExitPredicate,
+};
 use crate::core::utils::progress::{ProgressTracker, UNKNOWN_VOLUME};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::Graph;
 use crate::types::graph::NodeId;
-use std::collections::HashSet;
 use std::collections::VecDeque;
 
 /// DFS Storage Runtime - handles persistent data access and algorithm orchestration
@@ -59,6 +62,37 @@ impl DfsStorageRuntime {
         graph: Option<&dyn Graph>,
         progress_tracker: &mut dyn ProgressTracker,
     ) -> Result<DfsResult, AlgorithmError> {
+        let aggregator = OneHopAggregator;
+        if self.target_nodes.is_empty() {
+            let exit_predicate = FollowExitPredicate;
+            self.compute_dfs_with_traversal(
+                computation,
+                graph,
+                progress_tracker,
+                &aggregator,
+                &exit_predicate,
+            )
+        } else {
+            let exit_predicate = TargetExitPredicate::new(self.target_nodes.clone());
+            self.compute_dfs_with_traversal(
+                computation,
+                graph,
+                progress_tracker,
+                &aggregator,
+                &exit_predicate,
+            )
+        }
+    }
+
+    /// Compute DFS traversal with explicit Java GDS traversal hooks.
+    pub fn compute_dfs_with_traversal(
+        &self,
+        computation: &mut DfsComputationRuntime,
+        graph: Option<&dyn Graph>,
+        progress_tracker: &mut dyn ProgressTracker,
+        aggregator: &dyn Aggregator,
+        exit_predicate: &dyn ExitPredicate,
+    ) -> Result<DfsResult, AlgorithmError> {
         let start_time = std::time::Instant::now();
 
         let volume = graph
@@ -78,7 +112,6 @@ impl DfsStorageRuntime {
             }
 
             computation.initialize(self.source_node, self.max_depth, node_count);
-            let targets: HashSet<NodeId> = self.target_nodes.iter().copied().collect();
 
             // DFS stacks for depth-first traversal
             let mut nodes: VecDeque<NodeId> = VecDeque::new();
@@ -92,13 +125,16 @@ impl DfsStorageRuntime {
             let mut result = Vec::new();
 
             // Main DFS loop
-            while let (Some(node), Some(_source), Some(weight)) =
+            while let (Some(node), Some(source), Some(weight)) =
                 (nodes.pop_back(), sources.pop_back(), weights.pop_back())
             {
-                result.push(node);
-
-                if targets.contains(&node) {
-                    break;
+                match exit_predicate.test(source, node, weight) {
+                    ExitPredicateResult::Continue => continue,
+                    ExitPredicateResult::Break => {
+                        result.push(node);
+                        break;
+                    }
+                    ExitPredicateResult::Follow => result.push(node),
                 }
 
                 // Progress is tracked in terms of relationships examined.
@@ -113,7 +149,7 @@ impl DfsStorageRuntime {
                             computation.set_visited(neighbor);
                             sources.push_back(node);
                             nodes.push_back(neighbor);
-                            weights.push_back(weight + 1.0);
+                            weights.push_back(aggregator.apply(node, neighbor, weight));
                         }
                     }
                 }
@@ -168,7 +204,33 @@ impl DfsStorageRuntime {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::algo::traversal::{ExitPredicateResult, FollowExitPredicate};
     use crate::core::utils::progress::{TaskProgressTracker, Tasks};
+
+    struct ContinueOnTwo;
+
+    impl ExitPredicate for ContinueOnTwo {
+        fn test(
+            &self,
+            _source_node: NodeId,
+            current_node: NodeId,
+            _weight_at_source: f64,
+        ) -> ExitPredicateResult {
+            if current_node == 2 {
+                ExitPredicateResult::Continue
+            } else {
+                ExitPredicateResult::Follow
+            }
+        }
+    }
+
+    struct DoubleHopAggregator;
+
+    impl Aggregator for DoubleHopAggregator {
+        fn apply(&self, _source_node: NodeId, _current_node: NodeId, weight_at_source: f64) -> f64 {
+            weight_at_source + 2.0
+        }
+    }
 
     #[test]
     fn test_dfs_storage_runtime_creation() {
@@ -222,6 +284,51 @@ mod tests {
             .unwrap();
 
         assert_eq!(result.visited_nodes, vec![0, 2]);
+    }
+
+    #[test]
+    fn test_dfs_honors_continue_exit_predicate() {
+        let storage = DfsStorageRuntime::new(0, vec![], None, false, 1);
+        let mut computation = DfsComputationRuntime::new(0, false, 1, 10);
+        let aggregator = OneHopAggregator;
+        let exit_predicate = ContinueOnTwo;
+
+        let mut progress_tracker = TaskProgressTracker::new(Tasks::leaf("DFS".to_string()));
+
+        let result = storage
+            .compute_dfs_with_traversal(
+                &mut computation,
+                None,
+                &mut progress_tracker,
+                &aggregator,
+                &exit_predicate,
+            )
+            .unwrap();
+
+        assert!(!result.visited_nodes.contains(&2));
+        assert_eq!(result.visited_nodes, vec![0, 1, 3]);
+    }
+
+    #[test]
+    fn test_dfs_honors_custom_aggregator_for_depth() {
+        let storage = DfsStorageRuntime::new(0, vec![], Some(2), false, 1);
+        let mut computation = DfsComputationRuntime::new(0, false, 1, 10);
+        let aggregator = DoubleHopAggregator;
+        let exit_predicate = FollowExitPredicate;
+
+        let mut progress_tracker = TaskProgressTracker::new(Tasks::leaf("DFS".to_string()));
+
+        let result = storage
+            .compute_dfs_with_traversal(
+                &mut computation,
+                None,
+                &mut progress_tracker,
+                &aggregator,
+                &exit_predicate,
+            )
+            .unwrap();
+
+        assert_eq!(result.visited_nodes, vec![0, 2, 1]);
     }
 
     #[test]

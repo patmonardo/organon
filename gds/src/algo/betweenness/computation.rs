@@ -6,10 +6,13 @@
 //! neighbor accessors. This module focuses on compute + parallel execution.
 
 use crate::collections::HugeAtomicDoubleArray;
-use crate::concurrency::virtual_threads::{Executor, WorkerContext};
-use crate::concurrency::{Concurrency, TerminatedException, TerminationFlag};
+use crate::concurrency::{
+    install_with_concurrency, Concurrency, TerminatedException, TerminationFlag,
+};
+use rayon::prelude::*;
 use std::cmp::Ordering;
 use std::collections::{BinaryHeap, VecDeque};
+use std::sync::atomic::{AtomicUsize, Ordering as AtomicOrdering};
 use std::sync::Arc;
 
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
@@ -47,26 +50,41 @@ impl BetweennessCentralityComputationRuntime {
         get_neighbors: &(impl Fn(usize) -> Vec<usize> + Send + Sync),
     ) -> Result<(), TerminatedException> {
         let node_count = self.node_count;
-        let executor = Executor::new(Concurrency::of(concurrency.max(1)));
-        let state = WorkerContext::new(move || UnweightedState::new(node_count));
+        let concurrency = concurrency.max(1);
+        let counter = AtomicUsize::new(0);
 
-        executor.parallel_for(0, sources.len(), termination, |idx| {
-            if !termination.running() {
-                return;
-            }
+        install_with_concurrency(Concurrency::of(concurrency), || {
+            (0..concurrency)
+                .into_par_iter()
+                .try_for_each(|_| -> Result<(), TerminatedException> {
+                    let mut state = UnweightedState::new(node_count);
 
-            let source = sources[idx];
-            state.with(|st| {
-                st.compute_source(
-                    source,
-                    divisor,
-                    &self.centrality,
-                    termination,
-                    get_neighbors,
-                );
-            });
+                    loop {
+                        if !termination.running() {
+                            return Err(TerminatedException);
+                        }
 
-            (on_source_done.as_ref())();
+                        let idx = counter.fetch_add(1, AtomicOrdering::Relaxed);
+                        if idx >= sources.len() {
+                            break;
+                        }
+
+                        let source = sources[idx];
+                        if !state.compute_source(
+                            source,
+                            divisor,
+                            &self.centrality,
+                            termination,
+                            get_neighbors,
+                        ) {
+                            return Err(TerminatedException);
+                        }
+
+                        (on_source_done.as_ref())();
+                    }
+
+                    Ok(())
+                })
         })?;
 
         Ok(())
@@ -82,26 +100,41 @@ impl BetweennessCentralityComputationRuntime {
         get_neighbors_weighted: &(impl Fn(usize) -> Vec<(usize, f64)> + Send + Sync),
     ) -> Result<(), TerminatedException> {
         let node_count = self.node_count;
-        let executor = Executor::new(Concurrency::of(concurrency.max(1)));
-        let state = WorkerContext::new(move || WeightedState::new(node_count));
+        let concurrency = concurrency.max(1);
+        let counter = AtomicUsize::new(0);
 
-        executor.parallel_for(0, sources.len(), termination, |idx| {
-            if !termination.running() {
-                return;
-            }
+        install_with_concurrency(Concurrency::of(concurrency), || {
+            (0..concurrency)
+                .into_par_iter()
+                .try_for_each(|_| -> Result<(), TerminatedException> {
+                    let mut state = WeightedState::new(node_count);
 
-            let source = sources[idx];
-            state.with(|st| {
-                st.compute_source(
-                    source,
-                    divisor,
-                    &self.centrality,
-                    termination,
-                    get_neighbors_weighted,
-                );
-            });
+                    loop {
+                        if !termination.running() {
+                            return Err(TerminatedException);
+                        }
 
-            (on_source_done.as_ref())();
+                        let idx = counter.fetch_add(1, AtomicOrdering::Relaxed);
+                        if idx >= sources.len() {
+                            break;
+                        }
+
+                        let source = sources[idx];
+                        if !state.compute_source(
+                            source,
+                            divisor,
+                            &self.centrality,
+                            termination,
+                            get_neighbors_weighted,
+                        ) {
+                            return Err(TerminatedException);
+                        }
+
+                        (on_source_done.as_ref())();
+                    }
+
+                    Ok(())
+                })
         })?;
 
         Ok(())
@@ -160,7 +193,7 @@ impl UnweightedState {
         centrality: &HugeAtomicDoubleArray,
         termination: &TerminationFlag,
         get_neighbors: &(impl Fn(usize) -> Vec<usize> + Send + Sync),
-    ) {
+    ) -> bool {
         self.reset();
 
         self.dist[source] = 0;
@@ -170,7 +203,7 @@ impl UnweightedState {
 
         while let Some(v) = self.queue.pop_front() {
             if !termination.running() {
-                return;
+                return false;
             }
 
             self.stack.push(v);
@@ -193,7 +226,7 @@ impl UnweightedState {
 
         while let Some(w) = self.stack.pop() {
             if !termination.running() {
-                return;
+                return false;
             }
 
             let sigma_w = self.sigma[w] as f64;
@@ -211,6 +244,8 @@ impl UnweightedState {
                 centrality.get_and_add(w, self.delta[w] / divisor);
             }
         }
+
+        true
     }
 }
 
@@ -290,7 +325,7 @@ impl WeightedState {
         centrality: &HugeAtomicDoubleArray,
         termination: &TerminationFlag,
         get_neighbors: &(impl Fn(usize) -> Vec<(usize, f64)> + Send + Sync),
-    ) {
+    ) -> bool {
         self.reset();
 
         self.dist[source] = 0.0;
@@ -307,7 +342,7 @@ impl WeightedState {
         }) = self.heap.pop()
         {
             if !termination.running() {
-                return;
+                return false;
             }
 
             if cost_v != self.dist[v] {
@@ -342,7 +377,7 @@ impl WeightedState {
 
         while let Some(w) = self.stack.pop() {
             if !termination.running() {
-                return;
+                return false;
             }
 
             let sigma_w = self.sigma[w] as f64;
@@ -360,6 +395,8 @@ impl WeightedState {
                 centrality.get_and_add(w, self.delta[w] / divisor);
             }
         }
+
+        true
     }
 }
 
@@ -380,6 +417,16 @@ mod tests {
             v.dedup();
         }
         adj
+    }
+
+    fn assert_scores_close(left: &[f64], right: &[f64]) {
+        assert_eq!(left.len(), right.len());
+        for (idx, (left_score, right_score)) in left.iter().zip(right.iter()).enumerate() {
+            assert!(
+                (left_score - right_score).abs() < 1e-9,
+                "score mismatch at node {idx}: {left_score} != {right_score}"
+            );
+        }
     }
 
     #[test]
@@ -424,6 +471,37 @@ mod tests {
     }
 
     #[test]
+    fn unweighted_parallel_matches_single_worker() {
+        let node_count = 6;
+        let adj = undirected_adj(
+            &[(0, 1), (1, 2), (2, 3), (1, 4), (4, 5), (2, 5)],
+            node_count,
+        );
+        let sources: Vec<usize> = (0..node_count).collect();
+
+        let termination = TerminationFlag::running_true();
+        let single = BetweennessCentralityComputationRuntime::new(node_count);
+        single
+            .compute_parallel_unweighted(&sources, 2.0, 1, &termination, Arc::new(|| {}), &|n| {
+                adj[n].clone()
+            })
+            .unwrap();
+
+        let termination = TerminationFlag::running_true();
+        let parallel = BetweennessCentralityComputationRuntime::new(node_count);
+        parallel
+            .compute_parallel_unweighted(&sources, 2.0, 4, &termination, Arc::new(|| {}), &|n| {
+                adj[n].clone()
+            })
+            .unwrap();
+
+        assert_scores_close(
+            &single.finalize_result().centralities,
+            &parallel.finalize_result().centralities,
+        );
+    }
+
+    #[test]
     fn weighted_prefers_unique_shortest_path() {
         // 0-1-2 (weight 1 each), 0-2 direct weight 10.
         // Unique shortest path between 0 and 2 goes through 1.
@@ -449,6 +527,46 @@ mod tests {
         assert!(result.centralities[1] > 0.0);
         assert!(result.centralities[0] >= 0.0);
         assert!(result.centralities[2] >= 0.0);
+    }
+
+    #[test]
+    fn weighted_parallel_matches_single_worker_with_equal_paths() {
+        let node_count = 5;
+        let mut adj = vec![Vec::<(usize, f64)>::new(); node_count];
+        let mut add_edge = |source: usize, target: usize, weight: f64| {
+            adj[source].push((target, weight));
+            adj[target].push((source, weight));
+        };
+
+        add_edge(0, 1, 1.0);
+        add_edge(1, 3, 1.0);
+        add_edge(0, 2, 1.0);
+        add_edge(2, 3, 1.0);
+        add_edge(3, 4, 1.0);
+        add_edge(1, 2, 2.0);
+
+        let sources: Vec<usize> = (0..node_count).collect();
+
+        let termination = TerminationFlag::running_true();
+        let single = BetweennessCentralityComputationRuntime::new(node_count);
+        single
+            .compute_parallel_weighted(&sources, 2.0, 1, &termination, Arc::new(|| {}), &|n| {
+                adj[n].clone()
+            })
+            .unwrap();
+
+        let termination = TerminationFlag::running_true();
+        let parallel = BetweennessCentralityComputationRuntime::new(node_count);
+        parallel
+            .compute_parallel_weighted(&sources, 2.0, 4, &termination, Arc::new(|| {}), &|n| {
+                adj[n].clone()
+            })
+            .unwrap();
+
+        assert_scores_close(
+            &single.finalize_result().centralities,
+            &parallel.finalize_result().centralities,
+        );
     }
 
     #[test]

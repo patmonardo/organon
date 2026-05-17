@@ -84,6 +84,11 @@ impl AllShortestPathsComputationRuntime {
         }
     }
 
+    /// Record that a source node has completed processing in streaming mode.
+    pub fn record_source_processed(&mut self) {
+        self.node_count += 1;
+    }
+
     /// Get all results
     pub fn get_results(&self) -> &Vec<ShortestPathResult> {
         &self.results
@@ -160,6 +165,22 @@ impl AllShortestPathsComputationRuntime {
             let sum: f64 = finite_results.iter().map(|r| r.distance).sum();
             sum / finite_results.len() as f64
         }
+    }
+
+    /// Merge statistics from a parallel worker into this runtime.
+    ///
+    /// Workers accumulate stats locally (no lock contention) then merge at the end.
+    /// The `results` Vec from the worker is appended; statistics are folded in.
+    pub fn merge_from(&mut self, other: AllShortestPathsComputationRuntime) {
+        self.node_count += other.node_count;
+        self.infinite_distances += other.infinite_distances;
+        if other.max_distance > self.max_distance {
+            self.max_distance = other.max_distance;
+        }
+        if other.min_distance < self.min_distance {
+            self.min_distance = other.min_distance;
+        }
+        self.results.extend(other.results);
     }
 
     /// Clear all results

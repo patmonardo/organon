@@ -7,11 +7,14 @@
 
 use super::spec::BfsResult;
 use super::BfsComputationRuntime;
+use crate::algo::traversal::{
+    Aggregator, ExitPredicate, ExitPredicateResult, FollowExitPredicate, OneHopAggregator,
+    TargetExitPredicate,
+};
 use crate::core::utils::progress::{ProgressTracker, UNKNOWN_VOLUME};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::Graph;
 use crate::types::graph::NodeId;
-use std::collections::HashSet;
 
 /// BFS Storage Runtime - handles persistent data access and algorithm orchestration
 ///
@@ -54,6 +57,37 @@ impl BfsStorageRuntime {
         graph: Option<&dyn Graph>,
         progress_tracker: &mut dyn ProgressTracker,
     ) -> Result<BfsResult, AlgorithmError> {
+        let aggregator = OneHopAggregator;
+        if self.target_nodes.is_empty() {
+            let exit_predicate = FollowExitPredicate;
+            self.compute_bfs_with_traversal(
+                computation,
+                graph,
+                progress_tracker,
+                &aggregator,
+                &exit_predicate,
+            )
+        } else {
+            let exit_predicate = TargetExitPredicate::new(self.target_nodes.clone());
+            self.compute_bfs_with_traversal(
+                computation,
+                graph,
+                progress_tracker,
+                &aggregator,
+                &exit_predicate,
+            )
+        }
+    }
+
+    /// Compute BFS traversal with explicit Java GDS traversal hooks.
+    pub fn compute_bfs_with_traversal(
+        &self,
+        computation: &mut BfsComputationRuntime,
+        graph: Option<&dyn Graph>,
+        progress_tracker: &mut dyn ProgressTracker,
+        aggregator: &dyn Aggregator,
+        exit_predicate: &dyn ExitPredicate,
+    ) -> Result<BfsResult, AlgorithmError> {
         let start_time = std::time::Instant::now();
 
         let volume = graph
@@ -73,34 +107,37 @@ impl BfsStorageRuntime {
             }
 
             computation.initialize(self.source_node, self.max_depth, node_count);
-            let targets: HashSet<NodeId> = self.target_nodes.iter().copied().collect();
 
-            // BFS queue (node, depth)
-            let mut queue: std::collections::VecDeque<(NodeId, u32)> =
+            // BFS queue (source, node, aggregated weight)
+            let mut queue: std::collections::VecDeque<(NodeId, NodeId, f64)> =
                 std::collections::VecDeque::new();
             computation.set_visited(self.source_node);
-            queue.push_back((self.source_node, 0));
+            queue.push_back((self.source_node, self.source_node, 0.0));
 
             let mut result = Vec::new();
 
-            while let Some((current_node, depth)) = queue.pop_front() {
-                result.push(current_node);
-
-                if targets.contains(&current_node) {
-                    break;
+            while let Some((source_node, current_node, weight)) = queue.pop_front() {
+                match exit_predicate.test(source_node, current_node, weight) {
+                    ExitPredicateResult::Continue => continue,
+                    ExitPredicateResult::Break => {
+                        result.push(current_node);
+                        break;
+                    }
+                    ExitPredicateResult::Follow => result.push(current_node),
                 }
 
                 // Get neighbors
                 let neighbors = self.get_neighbors(graph, current_node);
                 progress_tracker.log_progress(neighbors.len());
 
-                // Respect max depth: only expand when `depth < max_depth`
-                if computation.check_max_depth(depth as f64) {
+                // Respect max depth: only expand when the aggregated weight is below max depth.
+                if computation.check_max_depth(weight) {
                     for neighbor in neighbors {
                         Self::validate_node_in_graph(neighbor, node_count, "neighbor")?;
                         if !computation.is_visited(neighbor) {
                             computation.set_visited(neighbor);
-                            queue.push_back((neighbor, depth.saturating_add(1)));
+                            let next_weight = aggregator.apply(current_node, neighbor, weight);
+                            queue.push_back((current_node, neighbor, next_weight));
                         }
                     }
                 }
@@ -155,7 +192,33 @@ impl BfsStorageRuntime {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::algo::traversal::{ExitPredicateResult, FollowExitPredicate};
     use crate::core::utils::progress::{TaskProgressTracker, Tasks};
+
+    struct ContinueOnOne;
+
+    impl ExitPredicate for ContinueOnOne {
+        fn test(
+            &self,
+            _source_node: NodeId,
+            current_node: NodeId,
+            _weight_at_source: f64,
+        ) -> ExitPredicateResult {
+            if current_node == 1 {
+                ExitPredicateResult::Continue
+            } else {
+                ExitPredicateResult::Follow
+            }
+        }
+    }
+
+    struct DoubleHopAggregator;
+
+    impl Aggregator for DoubleHopAggregator {
+        fn apply(&self, _source_node: NodeId, _current_node: NodeId, weight_at_source: f64) -> f64 {
+            weight_at_source + 2.0
+        }
+    }
 
     #[test]
     fn test_bfs_storage_runtime_creation() {
@@ -192,6 +255,51 @@ mod tests {
             .unwrap();
 
         assert_eq!(result.visited_nodes, vec![0, 1]);
+    }
+
+    #[test]
+    fn test_bfs_honors_continue_exit_predicate() {
+        let storage = BfsStorageRuntime::new(0, vec![], None, false);
+        let mut computation = BfsComputationRuntime::new(0, false, 1, 10);
+        let aggregator = OneHopAggregator;
+        let exit_predicate = ContinueOnOne;
+
+        let mut progress_tracker = TaskProgressTracker::new(Tasks::leaf("BFS".to_string()));
+
+        let result = storage
+            .compute_bfs_with_traversal(
+                &mut computation,
+                None,
+                &mut progress_tracker,
+                &aggregator,
+                &exit_predicate,
+            )
+            .unwrap();
+
+        assert!(!result.visited_nodes.contains(&1));
+        assert_eq!(result.visited_nodes, vec![0, 2, 3]);
+    }
+
+    #[test]
+    fn test_bfs_honors_custom_aggregator_for_depth() {
+        let storage = BfsStorageRuntime::new(0, vec![], Some(2), false);
+        let mut computation = BfsComputationRuntime::new(0, false, 1, 10);
+        let aggregator = DoubleHopAggregator;
+        let exit_predicate = FollowExitPredicate;
+
+        let mut progress_tracker = TaskProgressTracker::new(Tasks::leaf("BFS".to_string()));
+
+        let result = storage
+            .compute_bfs_with_traversal(
+                &mut computation,
+                None,
+                &mut progress_tracker,
+                &aggregator,
+                &exit_predicate,
+            )
+            .unwrap();
+
+        assert_eq!(result.visited_nodes, vec![0, 1, 2]);
     }
 
     #[test]
