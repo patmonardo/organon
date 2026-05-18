@@ -4,6 +4,7 @@ use crate::algo::algorithms::similarity::similarity_stats;
 use crate::algo::similarity::knn::metrics::{KnnNodePropertySpec, SimilarityMetric};
 use crate::algo::similarity::knn::KnnNnDescentStats;
 use crate::algo::similarity::knn::KnnSamplerType;
+use crate::concurrency::TerminationFlag;
 use crate::core::utils::progress::TaskProgressTracker;
 use crate::core::utils::progress::Tasks;
 use crate::define_algorithm_spec;
@@ -222,6 +223,10 @@ impl<'a> FilteredKnnResultBuilder<'a> {
     }
 
     pub fn stats(&self) -> FilteredKnnStats {
+        self.stats_with_nodes_compared(self.rows.len() as u64)
+    }
+
+    pub fn stats_with_nodes_compared(&self, nodes_compared: u64) -> FilteredKnnStats {
         let mut sources = HashSet::new();
         let tuples: Vec<(u64, u64, f64)> = self
             .rows
@@ -235,7 +240,7 @@ impl<'a> FilteredKnnResultBuilder<'a> {
         let stats = similarity_stats(|| tuples.into_iter(), true);
 
         FilteredKnnStats {
-            nodes_compared: sources.len() as u64,
+            nodes_compared,
             ran_iterations: self.nn_stats.ran_iterations as u64,
             did_converge: self.nn_stats.did_converge,
             node_pairs_considered: self.nn_stats.node_pairs_considered,
@@ -291,6 +296,7 @@ define_algorithm_spec! {
             Tasks::leaf_with_volume("filteredknn".to_string(), graph_store.node_count()),
             parsed.concurrency,
         );
+        let termination = TerminationFlag::running_true();
 
         let results = if parsed.node_properties.is_empty() {
             storage.compute_single(
@@ -313,6 +319,7 @@ define_algorithm_spec! {
                 &parsed.source_node_labels,
                 &parsed.target_node_labels,
                 &mut progress_tracker,
+                &termination,
             )?
         } else {
             storage.compute_multi(
@@ -334,6 +341,7 @@ define_algorithm_spec! {
                 &parsed.source_node_labels,
                 &parsed.target_node_labels,
                 &mut progress_tracker,
+                &termination,
             )?
         };
 

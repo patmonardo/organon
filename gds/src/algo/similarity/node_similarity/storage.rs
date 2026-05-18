@@ -1,15 +1,15 @@
-use crate::concurrency::{
-    install_with_concurrency, Concurrency, TerminatedException, TerminationFlag,
-};
+use crate::concurrency::virtual_threads::{Executor, WorkerContext};
+use crate::concurrency::{Concurrency, TerminatedException, TerminationFlag};
 use crate::types::graph::graph::Graph;
 use crate::types::graph::MappedNodeId;
-use parking_lot::Mutex;
-use rayon::prelude::*;
 use std::collections::HashSet;
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::Arc;
 
-use super::{NodeSimilarityComputationResult, NodeSimilarityComputationRuntime};
+use super::{
+    NodeSimilarityComputationReport, NodeSimilarityComputationResult,
+    NodeSimilarityComputationRuntime,
+};
 
 pub struct NodeSimilarityStorageRuntime {
     concurrency: usize,
@@ -28,9 +28,22 @@ impl NodeSimilarityStorageRuntime {
         termination: &TerminationFlag,
         on_sources_done: Arc<dyn Fn(usize) + Send + Sync>,
     ) -> Result<Vec<NodeSimilarityComputationResult>, TerminatedException> {
+        Ok(self
+            .compute_report(computation, graph, config, termination, on_sources_done)?
+            .results)
+    }
+
+    pub fn compute_report(
+        &self,
+        computation: &NodeSimilarityComputationRuntime,
+        graph: &dyn Graph,
+        config: &super::spec::NodeSimilarityConfig,
+        termination: &TerminationFlag,
+        on_sources_done: Arc<dyn Fn(usize) + Send + Sync>,
+    ) -> Result<NodeSimilarityComputationReport, TerminatedException> {
         let node_count = graph.node_count();
         let sources: Vec<u64> = (0..node_count as u64).collect();
-        self.compute_with_filters(
+        self.compute_with_filters_report(
             computation,
             graph,
             config,
@@ -53,32 +66,61 @@ impl NodeSimilarityStorageRuntime {
         termination: &TerminationFlag,
         on_sources_done: Arc<dyn Fn(usize) + Send + Sync>,
     ) -> Result<Vec<NodeSimilarityComputationResult>, TerminatedException> {
+        Ok(self
+            .compute_with_filters_report(
+                computation,
+                graph,
+                config,
+                sources,
+                target_mask,
+                enforce_ordering,
+                termination,
+                on_sources_done,
+            )?
+            .results)
+    }
+
+    pub fn compute_with_filters_report(
+        &self,
+        computation: &NodeSimilarityComputationRuntime,
+        graph: &dyn Graph,
+        config: &super::spec::NodeSimilarityConfig,
+        sources: Vec<u64>,
+        target_mask: Option<Vec<bool>>,
+        enforce_ordering: bool,
+        termination: &TerminationFlag,
+        on_sources_done: Arc<dyn Fn(usize) + Send + Sync>,
+    ) -> Result<NodeSimilarityComputationReport, TerminatedException> {
         if !termination.running() {
             return Err(TerminatedException);
         }
 
         let node_count = graph.node_count();
         let metric = Arc::from(config.similarity_metric.create(config.similarity_cutoff));
+        let worker_count = self.concurrency.max(1);
+        let executor = Executor::new(Concurrency::of(worker_count));
 
         let use_weights = config.weight_property.is_some();
-        let (vectors, weights) = build_vectors(graph, node_count, use_weights);
+        let (vectors, weights) =
+            build_vectors(graph, node_count, use_weights, &executor, termination)?;
         let weights_ref = weights.as_deref();
 
         let target_mask_ref = target_mask.as_deref();
-        let worker_count = self.concurrency.max(1);
+        let compared_nodes = sources.len() as u64;
         let source_counter = AtomicUsize::new(0);
-        let worker_results: Arc<Mutex<Vec<Vec<NodeSimilarityComputationResult>>>> =
-            Arc::new(Mutex::new(Vec::with_capacity(worker_count)));
+        let completed_sources = AtomicUsize::new(0);
+        let worker_results = WorkerContext::new(Vec::<NodeSimilarityComputationResult>::new);
 
-        install_with_concurrency(Concurrency::of(worker_count), || {
-            (0..worker_count)
-                .into_par_iter()
-                .try_for_each(|_| -> Result<(), TerminatedException> {
-                    let mut local = Vec::new();
+        executor.scope(termination, |scope| {
+            scope.spawn_many(worker_count, |_| {
+                worker_results.with(|local| {
+                    if !termination.running() {
+                        return;
+                    }
 
                     loop {
                         if !termination.running() {
-                            return Err(TerminatedException);
+                            break;
                         }
 
                         let idx = source_counter.fetch_add(1, Ordering::Relaxed);
@@ -91,6 +133,7 @@ impl NodeSimilarityStorageRuntime {
 
                         if source_vec.is_empty() {
                             (on_sources_done.as_ref())(1);
+                            completed_sources.fetch_add(1, Ordering::Relaxed);
                             continue;
                         }
 
@@ -112,19 +155,22 @@ impl NodeSimilarityStorageRuntime {
                         ));
 
                         (on_sources_done.as_ref())(1);
+                        completed_sources.fetch_add(1, Ordering::Relaxed);
                     }
-
-                    worker_results.lock().push(local);
-                    Ok(())
-                })
+                });
+            });
         })?;
 
         let mut merged = Vec::new();
-        for mut part in worker_results.lock().drain(..) {
+        for mut part in worker_results.collect() {
             merged.append(&mut part);
         }
 
-        Ok(computation.select_top_n(merged, config.top_n))
+        Ok(NodeSimilarityComputationReport {
+            results: computation.select_top_n(merged, config.top_n),
+            compared_nodes,
+            completed_sources: completed_sources.load(Ordering::Relaxed),
+        })
     }
 }
 
@@ -132,14 +178,23 @@ fn build_vectors(
     graph: &dyn Graph,
     node_count: usize,
     with_weights: bool,
-) -> (Vec<Vec<u64>>, Option<Vec<Vec<f64>>>) {
+    executor: &Executor,
+    termination: &TerminationFlag,
+) -> Result<(Vec<Vec<u64>>, Option<Vec<Vec<f64>>>), TerminatedException> {
     // Use 1.0 as the fallback weight so missing/unselected properties behave as unweighted.
     let fallback_weight = 1.0;
 
     if with_weights {
-        let pairs: Vec<(Vec<u64>, Vec<f64>)> = (0..node_count)
-            .into_par_iter()
-            .map(|node| {
+        let slots: Vec<parking_lot::Mutex<Option<(Vec<u64>, Vec<f64>)>>> = (0..node_count)
+            .map(|_| parking_lot::Mutex::new(None))
+            .collect();
+
+        executor.scope(termination, |scope| {
+            scope.spawn_many(node_count, |node| {
+                if !termination.running() {
+                    return;
+                }
+
                 let node_id = node as MappedNodeId;
                 let mut pairs: Vec<(u64, f64)> = graph
                     .stream_relationships(node_id, fallback_weight)
@@ -154,33 +209,46 @@ fn build_vectors(
                     neighbors.push(t);
                     node_weights.push(w);
                 }
-                (neighbors, node_weights)
-            })
-            .collect();
+                *slots[node].lock() = Some((neighbors, node_weights));
+            });
+        })?;
 
         let mut vectors = Vec::with_capacity(node_count);
         let mut weights = Vec::with_capacity(node_count);
-        for (v, w) in pairs {
+        for slot in slots {
+            let (v, w) = slot.into_inner().unwrap_or_default();
             vectors.push(v);
             weights.push(w);
         }
 
-        (vectors, Some(weights))
+        Ok((vectors, Some(weights)))
     } else {
-        let vectors: Vec<Vec<u64>> = (0..node_count)
-            .into_par_iter()
-            .map(|node| {
+        let slots: Vec<parking_lot::Mutex<Option<Vec<u64>>>> = (0..node_count)
+            .map(|_| parking_lot::Mutex::new(None))
+            .collect();
+
+        executor.scope(termination, |scope| {
+            scope.spawn_many(node_count, |node| {
+                if !termination.running() {
+                    return;
+                }
+
                 let node_id = node as MappedNodeId;
                 let mut neighbors: Vec<u64> = graph
                     .stream_relationships(node_id, fallback_weight)
                     .map(|cursor| cursor.target_id() as u64)
                     .collect();
                 neighbors.sort_unstable();
-                neighbors
-            })
+                *slots[node].lock() = Some(neighbors);
+            });
+        })?;
+
+        let vectors: Vec<Vec<u64>> = slots
+            .into_iter()
+            .map(|slot| slot.into_inner().unwrap_or_default())
             .collect();
 
-        (vectors, None)
+        Ok((vectors, None))
     }
 }
 

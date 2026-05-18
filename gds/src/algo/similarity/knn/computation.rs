@@ -1,8 +1,9 @@
 use super::metrics::SimilarityComputer;
+use crate::concurrency::virtual_threads::{Executor, WorkerContext};
+use crate::concurrency::{TerminatedException, TerminationFlag};
 use rand::Rng;
 use rand::SeedableRng;
 use rand_chacha::ChaCha8Rng;
-use rayon::prelude::*;
 use std::collections::HashSet;
 use std::sync::Arc;
 use std::sync::Mutex;
@@ -170,9 +171,15 @@ impl KnnComputationRuntime {
         similarity: Arc<dyn SimilarityComputer>,
         source_allowed: Option<Arc<Vec<bool>>>,
         target_allowed: Option<Arc<Vec<bool>>>,
-    ) -> (Vec<KnnComputationResult>, KnnNnDescentStats) {
+        executor: &Executor,
+        termination: &TerminationFlag,
+    ) -> Result<(Vec<KnnComputationResult>, KnnNnDescentStats), TerminatedException> {
+        if !termination.running() {
+            return Err(TerminatedException);
+        }
+
         if node_count == 0 || cfg.k == 0 {
-            return (Vec::new(), KnnNnDescentStats::default());
+            return Ok((Vec::new(), KnnNnDescentStats::default()));
         }
 
         let cutoff = cfg.similarity_cutoff.max(0.0);
@@ -225,19 +232,41 @@ impl KnnComputationRuntime {
         let mut stats = KnnNnDescentStats::default();
 
         for iter in 0..max_iterations {
+            if !termination.running() {
+                return Err(TerminatedException);
+            }
+
             // Split old/new for each node and build reverse lists.
-            let old_new: Vec<(Vec<u64>, Vec<u64>)> = (0..node_count)
-                .into_par_iter()
-                .map(|node| {
+            let old_new_slots: Vec<Mutex<Option<(Vec<u64>, Vec<u64>)>>> =
+                (0..node_count).map(|_| Mutex::new(None)).collect();
+
+            executor.scope(termination, |scope| {
+                scope.spawn_many(node_count, |node| {
+                    if !termination.running() {
+                        return;
+                    }
+
                     let mut rng = ChaCha8Rng::seed_from_u64(
                         cfg.random_seed
                             .wrapping_add(node as u64)
                             .wrapping_add((iter as u64) << 32),
                     );
                     let mut guard = lists[node].lock().expect("neighbor list lock");
-                    guard.split_old_new(sampled_k, &mut rng)
-                })
+                    let split = guard.split_old_new(sampled_k, &mut rng);
+                    if let Ok(mut slot) = old_new_slots[node].lock() {
+                        *slot = Some(split);
+                    }
+                });
+            })?;
+
+            let old_new: Vec<(Vec<u64>, Vec<u64>)> = old_new_slots
+                .into_iter()
+                .map(|slot| slot.into_inner().ok().flatten().unwrap_or_default())
                 .collect();
+
+            if !termination.running() {
+                return Err(TerminatedException);
+            }
 
             let mut reverse_old: Vec<Vec<u64>> = vec![Vec::new(); node_count];
             let mut reverse_new: Vec<Vec<u64>> = vec![Vec::new(); node_count];
@@ -257,12 +286,17 @@ impl KnnComputationRuntime {
                 }
             }
 
-            let (iteration_updates, iteration_considered): (u64, u64) = (0..node_count)
-                .into_par_iter()
-                .map(|v| {
+            let counters = WorkerContext::new(|| (0u64, 0u64));
+
+            executor.scope(termination, |scope| {
+                scope.spawn_many(node_count, |v| {
+                    if !termination.running() {
+                        return;
+                    }
+
                     if let Some(allowed) = source_allowed.as_ref() {
                         if !allowed[v] {
-                            return (0u64, 0u64);
+                            return;
                         }
                     }
 
@@ -354,19 +388,35 @@ impl KnnComputationRuntime {
                         );
                     }
 
-                    (updates, considered)
-                })
-                .reduce(
-                    || (0u64, 0u64),
-                    |a, b| (a.0.saturating_add(b.0), a.1.saturating_add(b.1)),
-                );
+                    counters.with(|local| {
+                        local.0 = local.0.saturating_add(updates);
+                        local.1 = local.1.saturating_add(considered);
+                    });
+                });
+            })?;
+
+            let (iteration_updates, iteration_considered) = counters
+                .collect()
+                .into_iter()
+                .fold((0u64, 0u64), |acc, item| {
+                    (acc.0.saturating_add(item.0), acc.1.saturating_add(item.1))
+                });
+
+            if !termination.running() {
+                return Err(TerminatedException);
+            }
 
             // Prune below cutoff and keep top-k per node.
-            (0..node_count).into_par_iter().for_each(|node| {
-                let mut guard = lists[node].lock().expect("neighbor list lock");
-                guard.prune_below_cutoff(cutoff);
-                guard.sort_and_truncate();
-            });
+            executor.scope(termination, |scope| {
+                scope.spawn_many(node_count, |node| {
+                    if !termination.running() {
+                        return;
+                    }
+                    let mut guard = lists[node].lock().expect("neighbor list lock");
+                    guard.prune_below_cutoff(cutoff);
+                    guard.sort_and_truncate();
+                });
+            })?;
 
             stats.ran_iterations = iter + 1;
             stats.node_pairs_considered = stats
@@ -380,17 +430,26 @@ impl KnnComputationRuntime {
             }
         }
 
+        if !termination.running() {
+            return Err(TerminatedException);
+        }
+
         // Collect results (top-k per source).
-        let rows: Vec<KnnComputationResult> = (0..node_count)
-            .into_par_iter()
-            .flat_map_iter(|source| {
+        let row_context = WorkerContext::new(Vec::<KnnComputationResult>::new);
+
+        executor.scope(termination, |scope| {
+            scope.spawn_many(node_count, |source| {
+                if !termination.running() {
+                    return;
+                }
+
                 if let Some(allowed) = source_allowed.as_ref() {
                     if !allowed[source] {
-                        return Vec::new();
+                        return;
                     }
                 }
                 let guard = lists[source].lock().expect("neighbor list lock");
-                guard
+                let rows = guard
                     .entries
                     .iter()
                     .filter(|e| {
@@ -410,11 +469,18 @@ impl KnnComputationRuntime {
                         target: e.target,
                         similarity: e.similarity,
                     })
-                    .collect::<Vec<_>>()
-            })
-            .collect();
+                    .collect::<Vec<_>>();
 
-        (rows, stats)
+                row_context.with(|local| local.extend(rows));
+            });
+        })?;
+
+        let mut rows = Vec::new();
+        for mut part in row_context.collect() {
+            rows.append(&mut part);
+        }
+
+        Ok((rows, stats))
     }
 }
 

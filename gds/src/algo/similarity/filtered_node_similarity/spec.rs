@@ -67,6 +67,14 @@ impl<'a> FilteredNodeSimilarityResultBuilder<'a> {
 
     pub fn stats(&self) -> FilteredNodeSimilarityStats {
         let mut sources = HashSet::new();
+        for r in self.results {
+            sources.insert(r.source);
+        }
+        self.stats_with_nodes_compared(sources.len() as u64)
+    }
+
+    pub fn stats_with_nodes_compared(&self, nodes_compared: u64) -> FilteredNodeSimilarityStats {
+        let mut sources = HashSet::new();
         let tuples: Vec<(u64, u64, f64)> = self
             .results
             .iter()
@@ -79,7 +87,7 @@ impl<'a> FilteredNodeSimilarityResultBuilder<'a> {
         let stats = similarity_stats(|| tuples.into_iter(), true);
 
         FilteredNodeSimilarityStats {
-            nodes_compared: sources.len() as u64,
+            nodes_compared,
             similarity_pairs: self.results.len() as u64,
             similarity_distribution: stats.summary(),
             compute_millis: stats.compute_millis,

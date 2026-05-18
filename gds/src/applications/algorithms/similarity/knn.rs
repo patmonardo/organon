@@ -119,8 +119,8 @@ pub fn handle_knn(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value {
 
             let node_properties = node_properties.clone();
             let compute = move |gr: &GraphResources,
-                                _tracker: &mut dyn ProgressTracker,
-                                _termination: &TerminationFlag|
+                                tracker: &mut dyn ProgressTracker,
+                                termination: &TerminationFlag|
                   -> Result<Option<Vec<KnnResultRow>>, String> {
                 let (primary_name, primary_metric) = node_properties
                     .first()
@@ -139,8 +139,10 @@ pub fn handle_knn(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value {
                     }
                 }
 
-                let iter = builder.stream().map_err(|e| e.to_string())?;
-                Ok(Some(iter.collect()))
+                let rows = builder
+                    .stream_with_context(tracker, termination)
+                    .map_err(|e| e.to_string())?;
+                Ok(Some(rows))
             };
 
             let builder = FnStatsResultBuilder(
@@ -171,8 +173,8 @@ pub fn handle_knn(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value {
 
             let node_properties = node_properties.clone();
             let compute = move |gr: &GraphResources,
-                                _tracker: &mut dyn ProgressTracker,
-                                _termination: &TerminationFlag|
+                                tracker: &mut dyn ProgressTracker,
+                                termination: &TerminationFlag|
                   -> Result<Option<KnnStats>, String> {
                 let (primary_name, primary_metric) = node_properties
                     .first()
@@ -191,7 +193,9 @@ pub fn handle_knn(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value {
                     }
                 }
 
-                let stats = builder.stats().map_err(|e| e.to_string())?;
+                let stats = builder
+                    .stats_with_context(tracker, termination)
+                    .map_err(|e| e.to_string())?;
                 Ok(Some(stats))
             };
 

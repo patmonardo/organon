@@ -84,6 +84,13 @@ pub struct NodeSimilarityResult {
     pub similarity: f64,
 }
 
+#[derive(Debug, Clone)]
+pub struct NodeSimilarityComputationReport {
+    pub results: Vec<NodeSimilarityComputationResult>,
+    pub compared_nodes: u64,
+    pub completed_sources: usize,
+}
+
 impl From<NodeSimilarityComputationResult> for NodeSimilarityResult {
     fn from(r: NodeSimilarityComputationResult) -> Self {
         Self {
@@ -155,6 +162,14 @@ impl<'a> NodeSimilarityResultBuilder<'a> {
 
     pub fn stats(&self) -> NodeSimilarityStats {
         let mut sources = HashSet::new();
+        for r in self.results {
+            sources.insert(r.source);
+        }
+        self.stats_with_nodes_compared(sources.len() as u64)
+    }
+
+    pub fn stats_with_nodes_compared(&self, nodes_compared: u64) -> NodeSimilarityStats {
+        let mut sources = HashSet::new();
         let tuples: Vec<(u64, u64, f64)> = self
             .results
             .iter()
@@ -167,7 +182,7 @@ impl<'a> NodeSimilarityResultBuilder<'a> {
         let stats = similarity_stats(|| tuples.into_iter(), true);
 
         NodeSimilarityStats {
-            nodes_compared: sources.len() as u64,
+            nodes_compared,
             similarity_pairs: self.results.len() as u64,
             similarity_distribution: stats.summary(),
             compute_millis: stats.compute_millis,

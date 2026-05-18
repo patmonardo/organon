@@ -8,6 +8,12 @@ use crate::types::graph::MappedNodeId;
 use std::collections::HashSet;
 use std::sync::Arc;
 
+pub struct FilteredNodeSimilarityComputationReport {
+    pub results: Vec<NodeSimilarityResult>,
+    pub compared_nodes: u64,
+    pub completed_sources: usize,
+}
+
 /// Compute node similarity restricted by optional source/target node sets.
 /// This is a thin wrapper that constructs the computation + storage runtimes and
 /// delegates to `NodeSimilarityStorageRuntime::compute_with_filters`.
@@ -18,7 +24,7 @@ pub fn compute_filtered_node_similarity(
     targets: Option<&HashSet<MappedNodeId>>,
     termination: &TerminationFlag,
     on_sources_done: Arc<dyn Fn(usize) + Send + Sync>,
-) -> Result<Vec<NodeSimilarityResult>, TerminatedException> {
+) -> Result<FilteredNodeSimilarityComputationReport, TerminatedException> {
     let computation = NodeSimilarityComputationRuntime::new();
     let storage = NodeSimilarityStorageRuntime::new(config.concurrency);
 
@@ -45,7 +51,7 @@ pub fn compute_filtered_node_similarity(
         None
     };
 
-    let results = storage.compute_with_filters(
+    let report = storage.compute_with_filters_report(
         &computation,
         graph,
         config,
@@ -56,8 +62,13 @@ pub fn compute_filtered_node_similarity(
         on_sources_done,
     )?;
 
-    Ok(results
-        .into_iter()
-        .map(NodeSimilarityResult::from)
-        .collect())
+    Ok(FilteredNodeSimilarityComputationReport {
+        results: report
+            .results
+            .into_iter()
+            .map(NodeSimilarityResult::from)
+            .collect(),
+        compared_nodes: report.compared_nodes,
+        completed_sources: report.completed_sources,
+    })
 }

@@ -2,6 +2,8 @@ use crate::algo::similarity::knn::metrics::SimilarityComputer;
 use crate::algo::similarity::knn::KnnComputationRuntime;
 use crate::algo::similarity::knn::KnnNnDescentConfig;
 use crate::algo::similarity::knn::KnnNnDescentStats;
+use crate::concurrency::virtual_threads::Executor;
+use crate::concurrency::{TerminatedException, TerminationFlag};
 use std::sync::Arc;
 
 #[derive(Debug, Clone)]
@@ -27,7 +29,9 @@ impl FilteredKnnComputationRuntime {
         similarity: Arc<dyn SimilarityComputer>,
         source_allowed: Option<Arc<Vec<bool>>>,
         target_allowed: Option<Arc<Vec<bool>>>,
-    ) -> Vec<FilteredKnnComputationResult> {
+        executor: &Executor,
+        termination: &TerminationFlag,
+    ) -> Result<Vec<FilteredKnnComputationResult>, TerminatedException> {
         self.compute_nn_descent_with_stats(
             node_count,
             initial_neighbors,
@@ -35,8 +39,10 @@ impl FilteredKnnComputationRuntime {
             similarity,
             source_allowed,
             target_allowed,
+            executor,
+            termination,
         )
-        .0
+        .map(|result| result.0)
     }
 
     pub fn compute_nn_descent_with_stats(
@@ -47,7 +53,9 @@ impl FilteredKnnComputationRuntime {
         similarity: Arc<dyn SimilarityComputer>,
         source_allowed: Option<Arc<Vec<bool>>>,
         target_allowed: Option<Arc<Vec<bool>>>,
-    ) -> (Vec<FilteredKnnComputationResult>, KnnNnDescentStats) {
+        executor: &Executor,
+        termination: &TerminationFlag,
+    ) -> Result<(Vec<FilteredKnnComputationResult>, KnnNnDescentStats), TerminatedException> {
         let engine = KnnComputationRuntime::new();
         let (rows, stats) = engine.compute_nn_descent(
             node_count,
@@ -56,7 +64,9 @@ impl FilteredKnnComputationRuntime {
             similarity,
             source_allowed,
             target_allowed,
-        );
+            executor,
+            termination,
+        )?;
 
         let mapped = rows
             .into_iter()
@@ -67,6 +77,6 @@ impl FilteredKnnComputationRuntime {
             })
             .collect();
 
-        (mapped, stats)
+        Ok((mapped, stats))
     }
 }

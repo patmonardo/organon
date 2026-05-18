@@ -71,8 +71,8 @@ pub fn handle_node_similarity(request: &Value, catalog: Arc<dyn GraphCatalog>) -
 
             let weight_property = weight_property.clone();
             let compute = move |gr: &GraphResources,
-                                _tracker: &mut dyn ProgressTracker,
-                                _termination: &TerminationFlag|
+                                tracker: &mut dyn ProgressTracker,
+                                termination: &TerminationFlag|
                   -> Result<Option<Vec<NodeSimilarityResult>>, String> {
                 let mut builder = NodeSimilarityFacade::new(Arc::clone(gr.store()))
                     .metric(metric)
@@ -85,8 +85,10 @@ pub fn handle_node_similarity(request: &Value, catalog: Arc<dyn GraphCatalog>) -
                     builder = builder.weight_property(property.clone());
                 }
 
-                let iter = builder.stream().map_err(|e| e.to_string())?;
-                Ok(Some(iter.collect()))
+                let rows = builder
+                    .stream_with_context(tracker, termination)
+                    .map_err(|e| e.to_string())?;
+                Ok(Some(rows))
             };
 
             let builder = FnStatsResultBuilder(
@@ -123,8 +125,8 @@ pub fn handle_node_similarity(request: &Value, catalog: Arc<dyn GraphCatalog>) -
 
             let weight_property = weight_property.clone();
             let compute = move |gr: &GraphResources,
-                                _tracker: &mut dyn ProgressTracker,
-                                _termination: &TerminationFlag|
+                                tracker: &mut dyn ProgressTracker,
+                                termination: &TerminationFlag|
                   -> Result<Option<NodeSimilarityStats>, String> {
                 let mut builder = NodeSimilarityFacade::new(Arc::clone(gr.store()))
                     .metric(metric)
@@ -137,7 +139,9 @@ pub fn handle_node_similarity(request: &Value, catalog: Arc<dyn GraphCatalog>) -
                     builder = builder.weight_property(property.clone());
                 }
 
-                let stats = builder.stats().map_err(|e| e.to_string())?;
+                let stats = builder
+                    .stats_with_context(tracker, termination)
+                    .map_err(|e| e.to_string())?;
                 Ok(Some(stats))
             };
 

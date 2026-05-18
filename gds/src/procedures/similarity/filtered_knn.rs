@@ -11,7 +11,8 @@ use crate::algo::similarity::filtered_knn::{
 use crate::algo::similarity::knn::metrics::{KnnNodePropertySpec, SimilarityMetric};
 use crate::algo::similarity::knn::storage::KnnSamplerType;
 use crate::algo::similarity::knn::KnnNnDescentStats;
-use crate::core::utils::progress::Tasks;
+use crate::concurrency::TerminationFlag;
+use crate::core::utils::progress::{ProgressTracker, Tasks};
 use crate::mem::MemoryRange;
 use crate::projection::NodeLabel;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
@@ -162,14 +163,22 @@ impl FilteredKnnFacade {
     }
 
     fn compute_rows_and_nn_stats(self) -> Result<(Vec<FilteredKnnResultRow>, KnnNnDescentStats)> {
+        let mut progress_tracker = TaskProgressTracker::with_concurrency(
+            Tasks::leaf_with_volume("filteredknn".to_string(), self.graph_store.node_count()),
+            self.concurrency,
+        );
+        let termination = TerminationFlag::running_true();
+        self.compute_rows_and_nn_stats_with_context(&mut progress_tracker, &termination)
+    }
+
+    pub fn compute_rows_and_nn_stats_with_context(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination: &TerminationFlag,
+    ) -> Result<(Vec<FilteredKnnResultRow>, KnnNnDescentStats)> {
         let config = self.build_config();
         let computation = FilteredKnnComputationRuntime::new();
         let storage = FilteredKnnStorageRuntime::new(config.concurrency);
-
-        let mut progress_tracker = TaskProgressTracker::with_concurrency(
-            Tasks::leaf_with_volume("filteredknn".to_string(), self.graph_store.node_count()),
-            config.concurrency,
-        );
 
         let (results, nn_stats) = if config.node_properties.is_empty() {
             storage.compute_single_with_stats(
@@ -191,7 +200,8 @@ impl FilteredKnnFacade {
                 config.initial_sampler,
                 &config.source_node_labels,
                 &config.target_node_labels,
-                &mut progress_tracker,
+                progress_tracker,
+                termination,
             )?
         } else {
             // Multi-property mode should include the primary property passed to `new(...)`.
@@ -222,7 +232,8 @@ impl FilteredKnnFacade {
                 config.initial_sampler,
                 &config.source_node_labels,
                 &config.target_node_labels,
-                &mut progress_tracker,
+                progress_tracker,
+                termination,
             )?
         };
 
@@ -244,19 +255,44 @@ impl FilteredKnnFacade {
         Ok(Box::new(rows.into_iter()))
     }
 
+    pub fn stream_with_context(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination: &TerminationFlag,
+    ) -> Result<Vec<FilteredKnnResultRow>> {
+        Ok(self
+            .compute_rows_and_nn_stats_with_context(progress_tracker, termination)?
+            .0)
+    }
+
     pub fn stats(self) -> Result<FilteredKnnStats> {
+        let nodes_compared = self.source_node_count() as u64;
         let (rows, nn_stats) = self.compute_rows_and_nn_stats()?;
-        Ok(FilteredKnnResultBuilder::new(&rows, &nn_stats).stats())
+        Ok(FilteredKnnResultBuilder::new(&rows, &nn_stats)
+            .stats_with_nodes_compared(nodes_compared))
+    }
+
+    pub fn stats_with_context(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination: &TerminationFlag,
+    ) -> Result<FilteredKnnStats> {
+        let nodes_compared = self.source_node_count() as u64;
+        let (rows, nn_stats) =
+            self.compute_rows_and_nn_stats_with_context(progress_tracker, termination)?;
+        Ok(FilteredKnnResultBuilder::new(&rows, &nn_stats)
+            .stats_with_nodes_compared(nodes_compared))
     }
 
     pub fn mutate(self, property_name: &str) -> Result<FilteredKnnMutateResult> {
         ConfigValidator::non_empty_string(property_name, "property_name")?;
 
         let graph_store = Arc::clone(&self.graph_store);
+        let nodes_compared = self.source_node_count() as u64;
         let start = std::time::Instant::now();
         let (rows, nn_stats) = self.compute_rows_and_nn_stats()?;
         let builder = FilteredKnnResultBuilder::new(&rows, &nn_stats);
-        let stats = builder.stats();
+        let stats = builder.stats_with_nodes_compared(nodes_compared);
 
         let pairs: Vec<(u64, u64, f64)> = rows
             .iter()
@@ -266,7 +302,7 @@ impl FilteredKnnFacade {
         let updated_store =
             build_similarity_relationship_store(graph_store.as_ref(), property_name, &pairs)?;
 
-        let relationships_updated = graph_store.relationship_count() as u64;
+        let relationships_updated = pairs.len() as u64;
         let summary =
             builder.mutation_summary(property_name, relationships_updated, start.elapsed());
 
@@ -311,6 +347,27 @@ impl FilteredKnnFacade {
         let total = results_memory + per_node_scratch + per_property_scratch + label_filter_memory;
         let overhead = total / 5;
         MemoryRange::of_range(total, total + overhead)
+    }
+
+    fn source_node_count(&self) -> usize {
+        if self.source_node_labels.is_empty()
+            || self
+                .source_node_labels
+                .iter()
+                .any(|label| label.is_all_nodes())
+        {
+            return self.graph_store.node_count();
+        }
+
+        let id_map = self.graph_store.nodes();
+        (0..self.graph_store.node_count())
+            .filter(|mapped| {
+                let mapped_i64 = *mapped as i64;
+                self.source_node_labels
+                    .iter()
+                    .any(|label| id_map.has_label(mapped_i64, label))
+            })
+            .count()
     }
 }
 

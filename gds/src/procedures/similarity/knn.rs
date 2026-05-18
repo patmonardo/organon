@@ -7,7 +7,8 @@ use crate::algo::similarity::knn::{
     KnnResultRow, KnnStats, KnnStorageRuntime,
 };
 use crate::algo::similarity::knn::{KnnNodePropertySpec, SimilarityMetric};
-use crate::core::utils::progress::Tasks;
+use crate::concurrency::TerminationFlag;
+use crate::core::utils::progress::{ProgressTracker, Tasks};
 use crate::mem::MemoryRange;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use std::sync::Arc;
@@ -141,14 +142,22 @@ impl KnnFacade {
     }
 
     fn compute_rows_and_nn_stats(self) -> Result<(Vec<KnnResultRow>, KnnNnDescentStats)> {
+        let mut progress_tracker = TaskProgressTracker::with_concurrency(
+            Tasks::leaf_with_volume("knn".to_string(), self.graph_store.node_count()),
+            self.concurrency,
+        );
+        let termination = TerminationFlag::running_true();
+        self.compute_rows_and_nn_stats_with_context(&mut progress_tracker, &termination)
+    }
+
+    pub fn compute_rows_and_nn_stats_with_context(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination: &TerminationFlag,
+    ) -> Result<(Vec<KnnResultRow>, KnnNnDescentStats)> {
         let config = self.build_config();
         let computation = KnnComputationRuntime::new();
         let storage = KnnStorageRuntime::new(config.concurrency);
-
-        let mut progress_tracker = TaskProgressTracker::with_concurrency(
-            Tasks::leaf_with_volume("knn".to_string(), self.graph_store.node_count()),
-            config.concurrency,
-        );
 
         let (results, nn_stats) = if config.node_properties.is_empty() {
             storage.compute_single_with_stats(
@@ -168,7 +177,8 @@ impl KnnFacade {
                 config.update_threshold,
                 config.random_seed,
                 config.initial_sampler,
-                &mut progress_tracker,
+                progress_tracker,
+                termination,
             )?
         } else {
             // Multi-property mode should include the primary property passed to `new(...)`.
@@ -198,7 +208,8 @@ impl KnnFacade {
                 config.update_threshold,
                 config.random_seed,
                 config.initial_sampler,
-                &mut progress_tracker,
+                progress_tracker,
+                termination,
             )?
         };
 
@@ -217,19 +228,42 @@ impl KnnFacade {
         Ok(Box::new(rows.into_iter()))
     }
 
+    pub fn stream_with_context(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination: &TerminationFlag,
+    ) -> Result<Vec<KnnResultRow>> {
+        Ok(self
+            .compute_rows_and_nn_stats_with_context(progress_tracker, termination)?
+            .0)
+    }
+
     pub fn stats(self) -> Result<KnnStats> {
+        let node_count = self.graph_store.node_count() as u64;
         let (rows, nn_stats) = self.compute_rows_and_nn_stats()?;
-        Ok(KnnResultBuilder::new(&rows, &nn_stats).stats())
+        Ok(KnnResultBuilder::new(&rows, &nn_stats).stats_with_nodes_compared(node_count))
+    }
+
+    pub fn stats_with_context(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination: &TerminationFlag,
+    ) -> Result<KnnStats> {
+        let node_count = self.graph_store.node_count() as u64;
+        let (rows, nn_stats) =
+            self.compute_rows_and_nn_stats_with_context(progress_tracker, termination)?;
+        Ok(KnnResultBuilder::new(&rows, &nn_stats).stats_with_nodes_compared(node_count))
     }
 
     pub fn mutate(self, property_name: &str) -> Result<KnnMutateResult> {
         ConfigValidator::non_empty_string(property_name, "property_name")?;
 
         let graph_store = Arc::clone(&self.graph_store);
+        let node_count = self.graph_store.node_count() as u64;
         let start = std::time::Instant::now();
         let (rows, nn_stats) = self.compute_rows_and_nn_stats()?;
         let builder = KnnResultBuilder::new(&rows, &nn_stats);
-        let stats = builder.stats();
+        let stats = builder.stats_with_nodes_compared(node_count);
 
         let pairs: Vec<(u64, u64, f64)> = rows
             .iter()
@@ -239,7 +273,7 @@ impl KnnFacade {
         let updated_store =
             build_similarity_relationship_store(graph_store.as_ref(), property_name, &pairs)?;
 
-        let relationships_updated = graph_store.relationship_count() as u64;
+        let relationships_updated = pairs.len() as u64;
         let summary =
             builder.mutation_summary(property_name, relationships_updated, start.elapsed());
 

@@ -3,6 +3,7 @@ use std::cmp::Reverse;
 use std::collections::BinaryHeap;
 use std::sync::Arc;
 
+#[derive(Debug, Clone)]
 pub struct NodeSimilarityComputationResult {
     pub source: u64,
     pub target: u64,

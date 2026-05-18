@@ -132,6 +132,24 @@ impl FilteredNodeSimilarityFacade {
     }
 
     fn compute_results(&self) -> Result<Vec<NodeSimilarityResult>> {
+        let mut progress_tracker = TaskProgressTracker::with_concurrency(
+            Tasks::leaf_with_volume(
+                "filtered_node_similarity".to_string(),
+                self.graph_store.node_count(),
+            ),
+            self.concurrency,
+        );
+        let termination = TerminationFlag::running_true();
+        Ok(self
+            .compute_results_with_context(&mut progress_tracker, &termination)?
+            .0)
+    }
+
+    fn compute_results_with_context(
+        &self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination: &TerminationFlag,
+    ) -> Result<(Vec<NodeSimilarityResult>, u64)> {
         self.validate()?;
 
         let rel_types: HashSet<RelationshipType> = self.graph_store.relationship_types();
@@ -155,10 +173,6 @@ impl FilteredNodeSimilarityFacade {
                 .map_err(|e| AlgorithmError::InvalidGraph(e.to_string()))?
         };
 
-        let mut progress_tracker = TaskProgressTracker::with_concurrency(
-            Tasks::leaf_with_volume("filtered_node_similarity".to_string(), graph.node_count()),
-            self.concurrency,
-        );
         progress_tracker.begin_subtask_with_volume(graph.node_count());
 
         let id_map = GraphStore::nodes(self.graph_store.as_ref());
@@ -198,29 +212,30 @@ impl FilteredNodeSimilarityFacade {
         }
 
         let config = self.build_config();
-        let termination = TerminationFlag::running_true();
+        let on_sources_done = Arc::new(|_n: usize| {});
 
-        let progress_handle = progress_tracker.clone();
-        let on_sources_done = Arc::new(move |n: usize| {
-            let mut tracker = progress_handle.clone();
-            tracker.log_progress(n);
-        });
-
-        let results = compute_filtered_node_similarity(
+        let report = match compute_filtered_node_similarity(
             graph.as_ref(),
             &config,
             source_nodes.as_ref(),
             target_nodes.as_ref(),
-            &termination,
+            termination,
             on_sources_done,
-        )
-        .map_err(|e| {
-            AlgorithmError::Execution(format!("Filtered node similarity terminated: {e}"))
-        })?;
+        ) {
+            Ok(report) => report,
+            Err(e) => {
+                progress_tracker.end_subtask_with_failure();
+                return Err(AlgorithmError::Execution(format!(
+                    "Filtered node similarity terminated: {e}"
+                )));
+            }
+        };
+
+        progress_tracker.log_progress(report.completed_sources);
 
         progress_tracker.end_subtask();
 
-        Ok(results)
+        Ok((report.results, report.compared_nodes))
     }
 
     pub fn stream(self) -> Result<Box<dyn Iterator<Item = NodeSimilarityResult>>> {
@@ -228,9 +243,43 @@ impl FilteredNodeSimilarityFacade {
         Ok(Box::new(results.into_iter()))
     }
 
+    pub fn stream_with_context(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination: &TerminationFlag,
+    ) -> Result<Vec<NodeSimilarityResult>> {
+        Ok(self
+            .compute_results_with_context(progress_tracker, termination)?
+            .0)
+    }
+
     pub fn stats(self) -> Result<FilteredNodeSimilarityStats> {
-        let results = self.compute_results()?;
-        Ok(FilteredNodeSimilarityResultBuilder::new(&results).stats())
+        let (results, compared_nodes) = self.compute_results_with_internal_context()?;
+        Ok(FilteredNodeSimilarityResultBuilder::new(&results)
+            .stats_with_nodes_compared(compared_nodes))
+    }
+
+    fn compute_results_with_internal_context(&self) -> Result<(Vec<NodeSimilarityResult>, u64)> {
+        let mut progress_tracker = TaskProgressTracker::with_concurrency(
+            Tasks::leaf_with_volume(
+                "filtered_node_similarity".to_string(),
+                self.graph_store.node_count(),
+            ),
+            self.concurrency,
+        );
+        let termination = TerminationFlag::running_true();
+        self.compute_results_with_context(&mut progress_tracker, &termination)
+    }
+
+    pub fn stats_with_context(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination: &TerminationFlag,
+    ) -> Result<FilteredNodeSimilarityStats> {
+        let (results, compared_nodes) =
+            self.compute_results_with_context(progress_tracker, termination)?;
+        Ok(FilteredNodeSimilarityResultBuilder::new(&results)
+            .stats_with_nodes_compared(compared_nodes))
     }
 
     pub fn mutate(self, property: &str) -> Result<FilteredNodeSimilarityMutateResult> {
@@ -239,9 +288,9 @@ impl FilteredNodeSimilarityFacade {
 
         let graph_store = Arc::clone(&self.graph_store);
         let start = std::time::Instant::now();
-        let results = self.compute_results()?;
+        let (results, compared_nodes) = self.compute_results_with_internal_context()?;
         let builder = FilteredNodeSimilarityResultBuilder::new(&results);
-        let stats = builder.stats();
+        let stats = builder.stats_with_nodes_compared(compared_nodes);
 
         let pairs: Vec<(u64, u64, f64)> = results
             .iter()
@@ -251,7 +300,7 @@ impl FilteredNodeSimilarityFacade {
         let updated_store =
             build_similarity_relationship_store(graph_store.as_ref(), property, &pairs)?;
 
-        let relationships_updated = graph_store.relationship_count() as u64;
+        let relationships_updated = pairs.len() as u64;
         let summary = builder.mutation_summary(property, relationships_updated, start.elapsed());
 
         Ok(FilteredNodeSimilarityMutateResult {

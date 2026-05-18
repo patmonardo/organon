@@ -107,12 +107,14 @@ pub fn handle_filtered_node_similarity(request: &Value, catalog: Arc<dyn GraphCa
 
             let request = parsed.clone();
             let compute = move |gr: &GraphResources,
-                                _tracker: &mut dyn ProgressTracker,
-                                _termination: &TerminationFlag|
+                                tracker: &mut dyn ProgressTracker,
+                                termination: &TerminationFlag|
                   -> Result<Option<Vec<NodeSimilarityResult>>, String> {
                 let builder = configure_builder(gr, &request);
-                let iter = builder.stream().map_err(|e| e.to_string())?;
-                Ok(Some(iter.collect()))
+                let rows = builder
+                    .stream_with_context(tracker, termination)
+                    .map_err(|e| e.to_string())?;
+                Ok(Some(rows))
             };
 
             let builder = FnStatsResultBuilder(
@@ -149,11 +151,13 @@ pub fn handle_filtered_node_similarity(request: &Value, catalog: Arc<dyn GraphCa
 
             let request = parsed.clone();
             let compute = move |gr: &GraphResources,
-                                _tracker: &mut dyn ProgressTracker,
-                                _termination: &TerminationFlag|
+                                tracker: &mut dyn ProgressTracker,
+                                termination: &TerminationFlag|
                   -> Result<Option<FilteredNodeSimilarityStats>, String> {
                 let builder = configure_builder(gr, &request);
-                let stats = builder.stats().map_err(|e| e.to_string())?;
+                let stats = builder
+                    .stats_with_context(tracker, termination)
+                    .map_err(|e| e.to_string())?;
                 Ok(Some(stats))
             };
 

@@ -1,6 +1,7 @@
 use super::metrics::{KnnNodePropertySpec, SimilarityComputer, SimilarityMetric};
 use super::{KnnComputationResult, KnnComputationRuntime, KnnNnDescentConfig, KnnNnDescentStats};
-use crate::concurrency::{install_with_concurrency, Concurrency};
+use crate::concurrency::virtual_threads::Executor;
+use crate::concurrency::{Concurrency, TerminationFlag};
 use crate::core::utils::progress::ProgressTracker;
 use crate::ml::core::samplers::RandomWalkSampler;
 use crate::projection::eval::algorithm::AlgorithmError;
@@ -44,6 +45,7 @@ impl KnnStorageRuntime {
         random_seed: Option<u64>,
         initial_sampler: KnnSamplerType,
         progress_tracker: &mut dyn ProgressTracker,
+        termination: &TerminationFlag,
     ) -> Result<Vec<KnnComputationResult>, AlgorithmError> {
         Ok(self
             .compute_single_with_stats(
@@ -61,6 +63,7 @@ impl KnnStorageRuntime {
                 random_seed,
                 initial_sampler,
                 progress_tracker,
+                termination,
             )?
             .0)
     }
@@ -82,6 +85,7 @@ impl KnnStorageRuntime {
         random_seed: Option<u64>,
         initial_sampler: KnnSamplerType,
         progress_tracker: &mut dyn ProgressTracker,
+        termination: &TerminationFlag,
     ) -> Result<(Vec<KnnComputationResult>, KnnNnDescentStats), AlgorithmError> {
         let node_count = graph_store.node_count();
         progress_tracker.begin_subtask_with_volume(max_iterations.max(1));
@@ -116,19 +120,19 @@ impl KnnStorageRuntime {
                 random_seed: random_seed.unwrap_or(0),
             };
 
-            Ok(install_with_concurrency(
-                Concurrency::of(self.concurrency.max(1)),
-                || {
-                    computation.compute_nn_descent(
-                        node_count,
-                        initial_neighbors,
-                        cfg,
-                        similarity,
-                        None,
-                        None,
-                    )
-                },
-            ))
+            let executor = Executor::new(Concurrency::of(self.concurrency.max(1)));
+            computation
+                .compute_nn_descent(
+                    node_count,
+                    initial_neighbors,
+                    cfg,
+                    similarity,
+                    None,
+                    None,
+                    &executor,
+                    termination,
+                )
+                .map_err(|e| AlgorithmError::Execution(format!("KNN terminated: {e}")))
         })();
 
         match result {
@@ -159,6 +163,7 @@ impl KnnStorageRuntime {
         random_seed: Option<u64>,
         initial_sampler: KnnSamplerType,
         progress_tracker: &mut dyn ProgressTracker,
+        termination: &TerminationFlag,
     ) -> Result<Vec<KnnComputationResult>, AlgorithmError> {
         Ok(self
             .compute_multi_with_stats(
@@ -175,6 +180,7 @@ impl KnnStorageRuntime {
                 random_seed,
                 initial_sampler,
                 progress_tracker,
+                termination,
             )?
             .0)
     }
@@ -195,6 +201,7 @@ impl KnnStorageRuntime {
         random_seed: Option<u64>,
         initial_sampler: KnnSamplerType,
         progress_tracker: &mut dyn ProgressTracker,
+        termination: &TerminationFlag,
     ) -> Result<(Vec<KnnComputationResult>, KnnNnDescentStats), AlgorithmError> {
         let node_count = graph_store.node_count();
         progress_tracker.begin_subtask_with_volume(max_iterations.max(1));
@@ -246,19 +253,19 @@ impl KnnStorageRuntime {
                 random_seed: random_seed.unwrap_or(0),
             };
 
-            Ok(install_with_concurrency(
-                Concurrency::of(self.concurrency.max(1)),
-                || {
-                    computation.compute_nn_descent(
-                        node_count,
-                        initial_neighbors,
-                        cfg,
-                        similarity,
-                        None,
-                        None,
-                    )
-                },
-            ))
+            let executor = Executor::new(Concurrency::of(self.concurrency.max(1)));
+            computation
+                .compute_nn_descent(
+                    node_count,
+                    initial_neighbors,
+                    cfg,
+                    similarity,
+                    None,
+                    None,
+                    &executor,
+                    termination,
+                )
+                .map_err(|e| AlgorithmError::Execution(format!("KNN terminated: {e}")))
         })();
 
         match result {
