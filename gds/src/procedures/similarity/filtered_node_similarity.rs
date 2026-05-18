@@ -31,8 +31,8 @@ pub struct FilteredNodeSimilarityFacade {
     top_n: usize,
     concurrency: usize,
     weight_property: Option<String>,
-    source_node_label: Option<NodeLabel>,
-    target_node_label: Option<NodeLabel>,
+    source_node_labels: Vec<NodeLabel>,
+    target_node_labels: Vec<NodeLabel>,
 }
 
 impl FilteredNodeSimilarityFacade {
@@ -45,8 +45,8 @@ impl FilteredNodeSimilarityFacade {
             top_n: 0,
             concurrency: 4,
             weight_property: None,
-            source_node_label: None,
-            target_node_label: None,
+            source_node_labels: Vec::new(),
+            target_node_labels: Vec::new(),
         }
     }
 
@@ -80,13 +80,13 @@ impl FilteredNodeSimilarityFacade {
         self
     }
 
-    pub fn source_node_label(mut self, label: NodeLabel) -> Self {
-        self.source_node_label = Some(label);
+    pub fn source_labels(mut self, labels: Vec<NodeLabel>) -> Self {
+        self.source_node_labels = labels;
         self
     }
 
-    pub fn target_node_label(mut self, label: NodeLabel) -> Self {
-        self.target_node_label = Some(label);
+    pub fn target_labels(mut self, labels: Vec<NodeLabel>) -> Self {
+        self.target_node_labels = labels;
         self
     }
 
@@ -99,19 +99,19 @@ impl FilteredNodeSimilarityFacade {
             ConfigValidator::non_empty_string(prop, "weight_property")?;
         }
 
-        if let Some(label) = &self.source_node_label {
+        for label in &self.source_node_labels {
             if !GraphStore::has_node_label(self.graph_store.as_ref(), label) {
                 return Err(AlgorithmError::Execution(format!(
-                    "Unknown sourceNodeLabel '{}'",
+                    "Unknown sourceLabels entry '{}'",
                     label.name()
                 )));
             }
         }
 
-        if let Some(label) = &self.target_node_label {
+        for label in &self.target_node_labels {
             if !GraphStore::has_node_label(self.graph_store.as_ref(), label) {
                 return Err(AlgorithmError::Execution(format!(
-                    "Unknown targetNodeLabel '{}'",
+                    "Unknown targetLabels entry '{}'",
                     label.name()
                 )));
             }
@@ -177,28 +177,30 @@ impl FilteredNodeSimilarityFacade {
 
         let id_map = GraphStore::nodes(self.graph_store.as_ref());
 
-        let mut source_nodes: Option<HashSet<MappedNodeId>> =
-            self.source_node_label.as_ref().map(|label| {
-                let mut labels = HashSet::new();
-                labels.insert(label.clone());
-                id_map.iter_with_labels(&labels).collect()
-            });
+        let mut source_nodes: Option<HashSet<MappedNodeId>> = if self.source_node_labels.is_empty()
+        {
+            None
+        } else {
+            let labels: HashSet<NodeLabel> = self.source_node_labels.iter().cloned().collect();
+            Some(id_map.iter_with_labels(&labels).collect())
+        };
 
-        let mut target_nodes: Option<HashSet<MappedNodeId>> =
-            self.target_node_label.as_ref().map(|label| {
-                let mut labels = HashSet::new();
-                labels.insert(label.clone());
-                id_map.iter_with_labels(&labels).collect()
-            });
+        let mut target_nodes: Option<HashSet<MappedNodeId>> = if self.target_node_labels.is_empty()
+        {
+            None
+        } else {
+            let labels: HashSet<NodeLabel> = self.target_node_labels.iter().cloned().collect();
+            Some(id_map.iter_with_labels(&labels).collect())
+        };
 
         if source_nodes.as_ref().is_some_and(|nodes| nodes.is_empty()) {
             return Err(AlgorithmError::Execution(
-                "sourceNodeLabel selection is empty".to_string(),
+                "sourceLabels selection is empty".to_string(),
             ));
         }
         if target_nodes.as_ref().is_some_and(|nodes| nodes.is_empty()) {
             return Err(AlgorithmError::Execution(
-                "targetNodeLabel selection is empty".to_string(),
+                "targetLabels selection is empty".to_string(),
             ));
         }
 
@@ -425,8 +427,8 @@ mod tests {
         ));
 
         let results: Vec<_> = FilteredNodeSimilarityFacade::new(Arc::clone(&store))
-            .source_node_label(label_a.clone())
-            .target_node_label(label_a)
+            .source_labels(vec![label_a.clone()])
+            .target_labels(vec![label_a])
             .similarity_cutoff(0.0)
             .top_k(10)
             .concurrency(1)

@@ -24,8 +24,8 @@ pub struct FilteredNodeSimilarityRequest {
     pub top_k: usize,
     pub top_n: usize,
     pub weight_property: Option<String>,
-    pub source_node_label: Option<NodeLabel>,
-    pub target_node_label: Option<NodeLabel>,
+    pub source_node_labels: Vec<NodeLabel>,
+    pub target_node_labels: Vec<NodeLabel>,
 }
 
 fn parse_metric(raw: &str) -> Result<NodeSimilarityMetric, String> {
@@ -55,13 +55,15 @@ impl FilteredNodeSimilarityRequest {
             .or_else(|| get_str(request, "weight_property"))
             .map(|s| s.to_string());
 
-        let source_node_label = get_str(request, "sourceNodeLabel")
+        let source_node_labels = get_str(request, "sourceNodeLabel")
             .or_else(|| get_str(request, "source_node_label"))
-            .map(|s| NodeLabel::of(s));
+            .map(|s| vec![NodeLabel::of(s)])
+            .unwrap_or_default();
 
-        let target_node_label = get_str(request, "targetNodeLabel")
+        let target_node_labels = get_str(request, "targetNodeLabel")
             .or_else(|| get_str(request, "target_node_label"))
-            .map(|s| NodeLabel::of(s));
+            .map(|s| vec![NodeLabel::of(s)])
+            .unwrap_or_default();
 
         Ok(Self {
             common,
@@ -70,8 +72,8 @@ impl FilteredNodeSimilarityRequest {
             top_k,
             top_n,
             weight_property,
-            source_node_label,
-            target_node_label,
+            source_node_labels,
+            target_node_labels,
         })
     }
 }
@@ -294,12 +296,12 @@ fn configure_builder(
         builder = builder.weight_property(property.clone());
     }
 
-    if let Some(ref label) = request.source_node_label {
-        builder = builder.source_node_label(label.clone());
+    if !request.source_node_labels.is_empty() {
+        builder = builder.source_labels(request.source_node_labels.clone());
     }
 
-    if let Some(ref label) = request.target_node_label {
-        builder = builder.target_node_label(label.clone());
+    if !request.target_node_labels.is_empty() {
+        builder = builder.target_labels(request.target_node_labels.clone());
     }
 
     builder

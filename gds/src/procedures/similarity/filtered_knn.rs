@@ -171,7 +171,7 @@ impl FilteredKnnFacade {
         self.compute_rows_and_nn_stats_with_context(&mut progress_tracker, &termination)
     }
 
-    pub fn compute_rows_and_nn_stats_with_context(
+    fn compute_rows_and_nn_stats_with_context(
         self,
         progress_tracker: &mut dyn ProgressTracker,
         termination: &TerminationFlag,
