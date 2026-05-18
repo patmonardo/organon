@@ -7,9 +7,9 @@
 
 use crate::collections::HugeAtomicDoubleArray;
 use crate::concurrency::{
-    install_with_concurrency, Concurrency, TerminatedException, TerminationFlag,
+    virtual_threads::{Executor, WorkerContext},
+    Concurrency, TerminatedException, TerminationFlag,
 };
-use rayon::prelude::*;
 use std::cmp::Ordering;
 use std::collections::{BinaryHeap, VecDeque};
 use std::sync::atomic::{AtomicUsize, Ordering as AtomicOrdering};
@@ -51,40 +51,36 @@ impl BetweennessCentralityComputationRuntime {
     ) -> Result<(), TerminatedException> {
         let node_count = self.node_count;
         let concurrency = concurrency.max(1);
-        let counter = AtomicUsize::new(0);
+        let counter = Arc::new(AtomicUsize::new(0));
+        let executor = Executor::new(Concurrency::of(concurrency));
+        let worker_states = WorkerContext::new(move || UnweightedState::new(node_count));
 
-        install_with_concurrency(Concurrency::of(concurrency), || {
-            (0..concurrency)
-                .into_par_iter()
-                .try_for_each(|_| -> Result<(), TerminatedException> {
-                    let mut state = UnweightedState::new(node_count);
-
-                    loop {
-                        if !termination.running() {
-                            return Err(TerminatedException);
-                        }
-
-                        let idx = counter.fetch_add(1, AtomicOrdering::Relaxed);
-                        if idx >= sources.len() {
-                            break;
-                        }
-
-                        let source = sources[idx];
-                        if !state.compute_source(
-                            source,
-                            divisor,
-                            &self.centrality,
-                            termination,
-                            get_neighbors,
-                        ) {
-                            return Err(TerminatedException);
-                        }
-
-                        (on_source_done.as_ref())();
+        executor.scope(termination, |scope| {
+            scope.spawn_many(concurrency, |_worker_id| {
+                worker_states.with(|state| loop {
+                    if !termination.running() {
+                        return;
                     }
 
-                    Ok(())
-                })
+                    let idx = counter.fetch_add(1, AtomicOrdering::Relaxed);
+                    if idx >= sources.len() {
+                        break;
+                    }
+
+                    let source = sources[idx];
+                    if !state.compute_source(
+                        source,
+                        divisor,
+                        &self.centrality,
+                        termination,
+                        get_neighbors,
+                    ) {
+                        return;
+                    }
+
+                    (on_source_done.as_ref())();
+                });
+            });
         })?;
 
         Ok(())
@@ -101,40 +97,36 @@ impl BetweennessCentralityComputationRuntime {
     ) -> Result<(), TerminatedException> {
         let node_count = self.node_count;
         let concurrency = concurrency.max(1);
-        let counter = AtomicUsize::new(0);
+        let counter = Arc::new(AtomicUsize::new(0));
+        let executor = Executor::new(Concurrency::of(concurrency));
+        let worker_states = WorkerContext::new(move || WeightedState::new(node_count));
 
-        install_with_concurrency(Concurrency::of(concurrency), || {
-            (0..concurrency)
-                .into_par_iter()
-                .try_for_each(|_| -> Result<(), TerminatedException> {
-                    let mut state = WeightedState::new(node_count);
-
-                    loop {
-                        if !termination.running() {
-                            return Err(TerminatedException);
-                        }
-
-                        let idx = counter.fetch_add(1, AtomicOrdering::Relaxed);
-                        if idx >= sources.len() {
-                            break;
-                        }
-
-                        let source = sources[idx];
-                        if !state.compute_source(
-                            source,
-                            divisor,
-                            &self.centrality,
-                            termination,
-                            get_neighbors_weighted,
-                        ) {
-                            return Err(TerminatedException);
-                        }
-
-                        (on_source_done.as_ref())();
+        executor.scope(termination, |scope| {
+            scope.spawn_many(concurrency, |_worker_id| {
+                worker_states.with(|state| loop {
+                    if !termination.running() {
+                        return;
                     }
 
-                    Ok(())
-                })
+                    let idx = counter.fetch_add(1, AtomicOrdering::Relaxed);
+                    if idx >= sources.len() {
+                        break;
+                    }
+
+                    let source = sources[idx];
+                    if !state.compute_source(
+                        source,
+                        divisor,
+                        &self.centrality,
+                        termination,
+                        get_neighbors_weighted,
+                    ) {
+                        return;
+                    }
+
+                    (on_source_done.as_ref())();
+                });
+            });
         })?;
 
         Ok(())

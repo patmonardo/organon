@@ -9,9 +9,9 @@
 use crate::algo::msbfs::{AggregatedNeighborProcessingMsBfs, OMEGA};
 use crate::collections::{HugeAtomicDoubleArray, HugeAtomicLongArray};
 use crate::concurrency::{
-    install_with_concurrency, Concurrency, TerminatedException, TerminationFlag,
+    virtual_threads::{Executor, WorkerContext},
+    Concurrency, TerminatedException, TerminationFlag,
 };
-use rayon::prelude::*;
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::Arc;
 
@@ -40,55 +40,52 @@ impl ClosenessCentralityComputationRuntime {
         let component = HugeAtomicLongArray::new(node_count);
         let concurrency = concurrency.max(1);
         let batch_count = (node_count + OMEGA - 1) / OMEGA;
-        let counter = AtomicUsize::new(0);
+        let counter = std::sync::Arc::new(AtomicUsize::new(0));
+        let executor = Executor::new(Concurrency::of(concurrency));
+        let worker_states =
+            WorkerContext::new(move || AggregatedNeighborProcessingMsBfs::new(node_count));
 
-        install_with_concurrency(Concurrency::of(concurrency), || {
-            (0..concurrency)
-                .into_par_iter()
-                .try_for_each(|_| -> Result<(), TerminatedException> {
-                    let mut msbfs = AggregatedNeighborProcessingMsBfs::new(node_count);
-
-                    loop {
-                        if !termination.running() {
-                            return Err(TerminatedException);
-                        }
-
-                        let batch_idx = counter.fetch_add(1, Ordering::Relaxed);
-                        if batch_idx >= batch_count {
-                            break;
-                        }
-
-                        let source_offset = batch_idx * OMEGA;
-                        let source_len = (source_offset + OMEGA).min(node_count) - source_offset;
-
-                        msbfs.run_with_termination(
-                            source_offset,
-                            source_len,
-                            false,
-                            Some(termination),
-                            |n| (get_neighbors)(n),
-                            |node_id, depth, sources_mask| {
-                                if depth == 0 {
-                                    return;
-                                }
-
-                                let len = sources_mask.count_ones() as i64;
-                                let d = depth as i64;
-                                let far_delta = len.saturating_mul(d);
-
-                                farness.get_and_add(node_id, far_delta);
-                                component.get_and_add(node_id, len);
-                                (on_sources_done.as_ref())(len as usize);
-                            },
-                        );
-
-                        if !termination.running() {
-                            return Err(TerminatedException);
-                        }
+        executor.scope(termination, |scope| {
+            scope.spawn_many(concurrency, |_worker_id| {
+                worker_states.with(|msbfs| loop {
+                    if !termination.running() {
+                        return;
                     }
 
-                    Ok(())
-                })
+                    let batch_idx = counter.fetch_add(1, Ordering::Relaxed);
+                    if batch_idx >= batch_count {
+                        break;
+                    }
+
+                    let source_offset = batch_idx * OMEGA;
+                    let source_len = (source_offset + OMEGA).min(node_count) - source_offset;
+
+                    msbfs.run_with_termination(
+                        source_offset,
+                        source_len,
+                        false,
+                        Some(termination),
+                        |n| (get_neighbors)(n),
+                        |node_id, depth, sources_mask| {
+                            if depth == 0 {
+                                return;
+                            }
+
+                            let len = sources_mask.count_ones() as i64;
+                            let d = depth as i64;
+                            let far_delta = len.saturating_mul(d);
+
+                            farness.get_and_add(node_id, far_delta);
+                            component.get_and_add(node_id, len);
+                            (on_sources_done.as_ref())(len as usize);
+                        },
+                    );
+
+                    if !termination.running() {
+                        return;
+                    }
+                });
+            });
         })?;
 
         let mut farness_out = vec![0u64; node_count];
@@ -120,58 +117,55 @@ impl ClosenessCentralityComputationRuntime {
 
         let concurrency = concurrency.max(1);
         let scores = HugeAtomicDoubleArray::new(node_count);
-        let counter = AtomicUsize::new(0);
+        let counter = std::sync::Arc::new(AtomicUsize::new(0));
+        let executor = Executor::new(Concurrency::of(concurrency));
 
-        install_with_concurrency(Concurrency::of(concurrency), || {
-            (0..concurrency)
-                .into_par_iter()
-                .try_for_each(|_| -> Result<(), TerminatedException> {
-                    let mut completed = 0usize;
+        executor.scope(termination, |scope| {
+            scope.spawn_many(concurrency, |_worker_id| {
+                let mut completed = 0usize;
 
-                    loop {
-                        if !termination.running() {
-                            if completed > 0 {
-                                (on_nodes_done.as_ref())(completed);
-                            }
-                            return Err(TerminatedException);
+                loop {
+                    if !termination.running() {
+                        if completed > 0 {
+                            (on_nodes_done.as_ref())(completed);
                         }
+                        return;
+                    }
 
-                        let i = counter.fetch_add(1, Ordering::Relaxed);
-                        if i >= node_count {
-                            break;
-                        }
+                    let i = counter.fetch_add(1, Ordering::Relaxed);
+                    if i >= node_count {
+                        break;
+                    }
 
-                        let far = farness[i];
-                        if far == 0 {
-                            scores.set(i, 0.0);
-                            completed += 1;
-                            continue;
-                        }
-
-                        let comp = component[i] as f64;
-                        let base = comp / (far as f64);
-
-                        let value = if wasserman_faust {
-                            if node_count <= 1 {
-                                0.0
-                            } else {
-                                // Java: (comp/far) * (comp/(nodeCount-1))
-                                base * (comp / (node_count as f64 - 1.0))
-                            }
-                        } else {
-                            base
-                        };
-
-                        scores.set(i, value);
+                    let far = farness[i];
+                    if far == 0 {
+                        scores.set(i, 0.0);
                         completed += 1;
+                        continue;
                     }
 
-                    if completed > 0 {
-                        (on_nodes_done.as_ref())(completed);
-                    }
+                    let comp = component[i] as f64;
+                    let base = comp / (far as f64);
 
-                    Ok(())
-                })
+                    let value = if wasserman_faust {
+                        if node_count <= 1 {
+                            0.0
+                        } else {
+                            // Java: (comp/far) * (comp/(nodeCount-1))
+                            base * (comp / (node_count as f64 - 1.0))
+                        }
+                    } else {
+                        base
+                    };
+
+                    scores.set(i, value);
+                    completed += 1;
+                }
+
+                if completed > 0 {
+                    (on_nodes_done.as_ref())(completed);
+                }
+            });
         })?;
 
         let mut out = vec![0.0f64; node_count];

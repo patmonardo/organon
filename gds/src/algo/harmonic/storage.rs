@@ -6,14 +6,14 @@
 use crate::algo::harmonic::HarmonicComputationRuntime;
 use crate::algo::msbfs::{AggregatedNeighborProcessingMsBfs, OMEGA};
 use crate::concurrency::{
-    install_with_concurrency, Concurrency, TerminatedException, TerminationFlag,
+    virtual_threads::{Executor, WorkerContext},
+    Concurrency, TerminatedException, TerminationFlag,
 };
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::{Orientation, RelationshipType};
 use crate::types::graph::Graph;
 use crate::types::graph::NodeId;
 use crate::types::prelude::GraphStore;
-use rayon::prelude::*;
 use std::collections::HashSet;
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::Arc;
@@ -81,45 +81,42 @@ impl<'a, G: GraphStore> HarmonicStorageRuntime<'a, G> {
         let neighbors = |n: usize| self.neighbors(n);
 
         let batch_count = (node_count + OMEGA - 1) / OMEGA;
-        let counter = AtomicUsize::new(0);
+        let counter = Arc::new(AtomicUsize::new(0));
         let concurrency = concurrency.value().max(1);
+        let executor = Executor::new(Concurrency::of(concurrency));
+        let worker_states =
+            WorkerContext::new(move || AggregatedNeighborProcessingMsBfs::new(node_count));
 
-        install_with_concurrency(Concurrency::of(concurrency), || {
-            (0..concurrency)
-                .into_par_iter()
-                .try_for_each(|_| -> Result<(), TerminatedException> {
-                    let mut msbfs = AggregatedNeighborProcessingMsBfs::new(node_count);
-
-                    loop {
-                        if !termination.running() {
-                            return Err(TerminatedException);
-                        }
-
-                        let batch_idx = counter.fetch_add(1, Ordering::Relaxed);
-                        if batch_idx >= batch_count {
-                            break;
-                        }
-
-                        let source_offset = batch_idx * OMEGA;
-                        let source_len = (source_offset + OMEGA).min(node_count) - source_offset;
-
-                        computation.run_batch_with_termination(
-                            &mut msbfs,
-                            source_offset,
-                            source_len,
-                            termination,
-                            &neighbors,
-                        );
-
-                        if !termination.running() {
-                            return Err(TerminatedException);
-                        }
-
-                        (on_sources_done.as_ref())(source_len);
+        executor.scope(termination, |scope| {
+            scope.spawn_many(concurrency, |_worker_id| {
+                worker_states.with(|msbfs| loop {
+                    if !termination.running() {
+                        return;
                     }
 
-                    Ok(())
-                })
+                    let batch_idx = counter.fetch_add(1, Ordering::Relaxed);
+                    if batch_idx >= batch_count {
+                        break;
+                    }
+
+                    let source_offset = batch_idx * OMEGA;
+                    let source_len = (source_offset + OMEGA).min(node_count) - source_offset;
+
+                    computation.run_batch_with_termination(
+                        msbfs,
+                        source_offset,
+                        source_len,
+                        termination,
+                        &neighbors,
+                    );
+
+                    if !termination.running() {
+                        return;
+                    }
+
+                    (on_sources_done.as_ref())(source_len);
+                });
+            });
         })?;
 
         Ok(computation.finalize())
