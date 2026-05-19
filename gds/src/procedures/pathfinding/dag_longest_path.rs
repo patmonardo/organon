@@ -8,12 +8,12 @@ use crate::algo::algorithms::{ConfigValidator, WriteResult};
 use crate::algo::dag_longest_path::{
     DagLongestPathComputationRuntime, DagLongestPathMutateResult, DagLongestPathResult,
     DagLongestPathResultBuilder, DagLongestPathRow, DagLongestPathStats,
+    DagLongestPathStorageRuntime,
 };
 use crate::mem::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
-use crate::types::graph::id_map::NodeId;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use std::collections::HashSet;
 use std::sync::Arc;
@@ -21,9 +21,8 @@ use std::time::Instant;
 
 // Import upgraded systems
 use crate::algo::algorithms::pathfinding::PathResult;
-use crate::core::utils::progress::{
-    ProgressTracker, TaskProgressTracker, TaskRegistryFactory, Tasks,
-};
+use crate::concurrency::TerminationFlag;
+use crate::core::utils::progress::{TaskProgressTracker, TaskRegistryFactory, Tasks};
 
 /// DAG Longest Path algorithm builder
 pub struct DagLongestPathBuilder {
@@ -96,35 +95,18 @@ impl DagLongestPathBuilder {
             Tasks::leaf_with_volume("dag_longest_path".to_string(), node_count),
             self.concurrency,
         );
-        progress_tracker.begin_subtask_with_volume(node_count);
-
-        let fallback = graph_view.default_property_value();
-
-        // Get neighbors with weights
-        let get_neighbors = move |node_idx: NodeId| -> Vec<(NodeId, f64)> {
-            let node_id = match NodeId::try_from(node_idx) {
-                Ok(value) => value,
-                Err(_) => return Vec::new(),
-            };
-
-            graph_view
-                .stream_relationships(node_id, fallback)
-                .filter_map(|cursor| {
-                    let target = cursor.target_id();
-                    if target < 0 {
-                        return None;
-                    }
-                    let weight = cursor.property();
-                    Some((target, weight))
-                })
-                .collect()
-        };
-
+        let termination = TerminationFlag::running_true();
+        let storage = DagLongestPathStorageRuntime::new(node_count);
         let mut runtime = DagLongestPathComputationRuntime::new(node_count);
-        let result = runtime.compute(node_count, get_neighbors)?;
-
-        progress_tracker.log_progress(node_count);
-        progress_tracker.end_subtask();
+        let result = storage
+            .compute_dag_longest_path(
+                &mut runtime,
+                graph_view.as_ref(),
+                &mut progress_tracker,
+                self.concurrency,
+                &termination,
+            )
+            .map_err(|e| AlgorithmError::Execution(format!("DAG longest path terminated: {e}")))?;
 
         Ok((result, start.elapsed()))
     }

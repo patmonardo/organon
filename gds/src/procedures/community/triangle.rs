@@ -130,11 +130,11 @@ impl TriangleFacade {
 
         let config = self.config.clone();
 
-        let termination_flag = TerminationFlag::default();
+        let termination_flag = TerminationFlag::running_true();
         let storage = TriangleStorageRuntime::new();
         let mut runtime = TriangleComputationRuntime::new();
         let result = storage
-            .compute(
+            .compute_triangle(
                 &mut runtime,
                 self.graph_store.as_ref(),
                 &config,

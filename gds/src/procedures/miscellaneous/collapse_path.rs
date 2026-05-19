@@ -80,7 +80,7 @@ impl CollapsePathFacade {
         }
     }
 
-    fn validate_config(&self, config: &CollapsePathConfig) -> Result<()> {
+    fn validate(&self, config: &CollapsePathConfig) -> Result<()> {
         if config.path_templates.is_empty() {
             return Err(AlgorithmError::Execution(
                 "pathTemplates must be provided".to_string(),
@@ -104,11 +104,11 @@ impl CollapsePathFacade {
         Ok(())
     }
 
-    fn execute(
+    fn compute(
         &self,
         config: &CollapsePathConfig,
     ) -> Result<crate::algo::walking::CollapsePathResult> {
-        self.validate_config(config)?;
+        self.validate(config)?;
 
         let mut computation = CollapsePathComputationRuntime::new(config.allow_self_loops);
         let storage = CollapsePathStorageRuntime::new(config.concurrency);
@@ -132,12 +132,12 @@ impl CollapsePathFacade {
     /// Produce a new graph store with collapsed paths.
     pub fn to_store(&self, graph_name: &str) -> Result<DefaultGraphStore> {
         let config = self.config_for_graph(graph_name);
-        self.execute(&config).map(|r| r.graph_store)
+        self.compute(&config).map(|r| r.graph_store)
     }
 
     pub fn stats(&self, graph_name: &str) -> Result<CollapsePathStats> {
         let config = self.config_for_graph(graph_name);
-        let result = self.execute(&config)?;
+        let result = self.compute(&config)?;
         Ok(CollapsePathStats {
             graph_name: graph_name.to_string(),
             mutate_relationship_type: self.mutate_relationship_type.clone(),

@@ -138,7 +138,7 @@ impl LabelPropagationFacade {
             self.task_registry.as_ref(),
         );
 
-        let termination_flag = TerminationFlag::default();
+        let termination_flag = TerminationFlag::running_true();
 
         let runtime = LabelPropComputationRuntime::new(node_count, self.config.max_iterations)
             .concurrency(self.config.concurrency);

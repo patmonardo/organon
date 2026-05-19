@@ -37,8 +37,8 @@ This document reviews the similarity procedures under `gds/src/procedures/simila
 
 **Layering**
 - Procedure: [gds/src/procedures/similarity/filtered_node_similarity.rs](gds/src/procedures/similarity/filtered_node_similarity.rs) validates label filters, projects the graph, and delegates to the filtered-node-similarity helper.
-- Helper: [gds/src/algo/similarity/filtered_node_similarity/mod.rs](gds/src/algo/similarity/filtered_node_similarity/mod.rs) builds the source list + target mask, then invokes `NodeSimilarityStorageRuntime::compute_with_filters(...)`.
-- Storage Runtime: graph-access controller (vector materialization, candidate enumeration, concurrency control).
+- Filtered Storage Runtime: [gds/src/algo/similarity/filtered_node_similarity/storage.rs](gds/src/algo/similarity/filtered_node_similarity/storage.rs) builds the source list + target mask, then delegates to the base node-similarity storage controller.
+- Base Storage Runtime: graph-access controller (vector materialization, candidate enumeration, concurrency control).
 - Computation Runtime: graph-free scoring using the configured metric (weighted or unweighted).
 
 **Notes**

@@ -8,8 +8,10 @@ use crate::algo::algorithms::Result;
 use crate::algo::topological_sort::{
     TopologicalSortComputationRuntime, TopologicalSortConfig, TopologicalSortMutateResult,
     TopologicalSortMutationSummary, TopologicalSortResult, TopologicalSortResultBuilder,
-    TopologicalSortRow, TopologicalSortStats, TopologicalSortWriteSummary,
+    TopologicalSortRow, TopologicalSortStats, TopologicalSortStorageRuntime,
+    TopologicalSortWriteSummary,
 };
+use crate::concurrency::TerminationFlag;
 use crate::mem::MemoryRange;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
@@ -20,9 +22,7 @@ use std::time::Instant;
 
 // Import upgraded systems
 use crate::core::utils::progress::TaskProgressTracker;
-use crate::core::utils::progress::{
-    EmptyTaskRegistryFactory, ProgressTracker, TaskRegistryFactory, Tasks,
-};
+use crate::core::utils::progress::{EmptyTaskRegistryFactory, TaskRegistryFactory, Tasks};
 use crate::projection::eval::algorithm::AlgorithmError;
 
 /// Topological Sort algorithm facade
@@ -150,33 +150,22 @@ impl TopologicalSortFacade {
             Tasks::leaf_with_volume("topological_sort".to_string(), node_count),
             self.config.concurrency,
         );
-        progress_tracker.begin_subtask_with_volume(node_count);
-
-        let fallback = graph_view.default_property_value();
-
-        // Get neighbors with weights
-        let get_neighbors = |node_idx: i64| -> Vec<(i64, f64)> {
-            graph_view
-                .stream_relationships(node_idx, fallback)
-                .filter_map(|cursor| {
-                    let target = cursor.target_id();
-                    if target < 0 {
-                        return None;
-                    }
-                    let weight = cursor.property();
-                    Some((target, weight))
-                })
-                .collect()
-        };
-
+        let storage = TopologicalSortStorageRuntime::new(
+            node_count,
+            self.config.compute_max_distance_from_source,
+        );
         let mut runtime = TopologicalSortComputationRuntime::new(
             node_count,
             self.config.compute_max_distance_from_source,
         );
-        let result = runtime.compute(node_count, get_neighbors)?;
-
-        progress_tracker.log_progress(node_count);
-        progress_tracker.end_subtask();
+        let termination = TerminationFlag::running_true();
+        let result = storage.compute_topological_sort_with_concurrency(
+            &mut runtime,
+            graph_view.as_ref(),
+            &mut progress_tracker,
+            self.config.concurrency,
+            &termination,
+        )?;
 
         Ok((result, start.elapsed()))
     }

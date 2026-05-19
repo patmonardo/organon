@@ -11,12 +11,12 @@ This document reviews the architectural compliance of pathfinding algorithms wit
 ## Current Status Summary
 
 **Total Pathfinding Algorithms**: 15
-- ✅ **Fully Architecturally Sound** (9 algorithms): BFS, DFS, A*, Bellman-Ford, Dijkstra, Delta Stepping, Yen's, steiner_tree, prize_collecting_steiner_tree
-- ⚠️ **Partially Compliant** (3 algorithms): all_shortest_paths, kspanningtree, spanning_tree (have compute_ methods but don't use computation runtime properly)
-- ❌ **Non-Compliant** (3 algorithms): dag_longest_path, random_walk, topological_sort
+- ✅ **Fully Architecturally Sound** (15 algorithms): BFS, DFS, A*, Bellman-Ford, Dijkstra, Delta Stepping, Yen's, steiner_tree, prize_collecting_steiner_tree, all_shortest_paths, kspanningtree, spanning_tree, dag_longest_path, random_walk, topological_sort
+- ⚠️ **Partially Compliant** (0 algorithms)
+- ❌ **Non-Compliant** (0 algorithms)
 
-**Reviewed**: 9/9 fully compliant algorithms (100% complete)
-**Remaining Issues**: 3 partially compliant + 3 non-compliant algorithms to address
+**Reviewed**: 15/15 algorithms (100% complete)
+**Remaining Issues**: none for the procedure-first storage/controller boundary
 
 ## BFS Algorithm - ✅ **Architecturally Sound**
 
@@ -377,22 +377,21 @@ pub fn compute_yens(
 - **Candidate Elimination**: Removes invalid path extensions
 - **Complexity**: O(K * Dijkstra) where K is number of paths requested
 
-## Partially Compliant Algorithms ⚠️
+## Former Gaps Now Closed ✅
 
-### Issues Found
+### Source-Verified Updates
 
-**all_shortest_paths**: Has `compute_shortest_paths` and `compute_all_shortest_paths_streaming` methods, but procedure only creates storage runtime and calls streaming method without computation runtime parameter.
+**all_shortest_paths**: Procedure creates `AllShortestPathsStorageRuntime` and `AllShortestPathsComputationRuntime`, then calls `storage.compute_all_shortest_paths_streaming(&mut computation, ...)`.
 
-**kspanningtree**: Has `compute_kspanningtree` method, but procedure calls `computation.compute()` directly instead of `storage.compute_kspanningtree(&mut computation)`.
+**kspanningtree**: Procedure creates `KSpanningTreeStorageRuntime` and `KSpanningTreeComputationRuntime`, then calls `storage.compute_kspanningtree(&mut computation, ...)`.
 
-**spanning_tree**: Has multiple `compute_spanning_tree*` methods, but procedure only creates storage runtime without separate computation runtime.
+**spanning_tree**: Storage exposes `compute_spanning_tree(...)` and `compute_spanning_tree_with_graph(...)`; the graph-backed entrypoint creates the computation runtime and delegates through the storage controller.
 
-## Non-Compliant Algorithms ❌
+**dag_longest_path**: Storage now exposes `compute_dag_longest_path(...)`, owns graph neighbor materialization/progress, and calls the graph-free computation runtime.
 
-### Missing compute_{algo} Methods
-- `dag_longest_path/storage.rs` - no compute_ methods
-- `random_walk/storage.rs` - no compute_ methods
-- `topological_sort/storage.rs` - no compute_ methods
+**random_walk**: Storage now exposes `compute_random_walk(...)`, owns graph neighbor access/progress, and calls the walk computation runtime.
+
+**topological_sort**: Storage now exposes `compute_topological_sort(...)`, owns graph neighbor access/progress, and calls the graph-free computation runtime.
 
 ## Universal Pattern Summary
 

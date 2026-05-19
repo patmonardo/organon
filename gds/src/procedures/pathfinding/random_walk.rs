@@ -8,8 +8,9 @@ use crate::algo::algorithms::Result;
 use crate::algo::random_walk::{
     RandomWalkComputationRuntime, RandomWalkConfig, RandomWalkMutateResult,
     RandomWalkMutationSummary, RandomWalkResult, RandomWalkResultBuilder, RandomWalkRow,
-    RandomWalkStats, RandomWalkWriteSummary,
+    RandomWalkStats, RandomWalkStorageRuntime, RandomWalkWriteSummary,
 };
+use crate::concurrency::TerminationFlag;
 use crate::mem::MemoryRange;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
@@ -20,9 +21,7 @@ use std::time::Instant;
 
 // Import upgraded systems
 use crate::core::utils::progress::TaskProgressTracker;
-use crate::core::utils::progress::{
-    EmptyTaskRegistryFactory, ProgressTracker, TaskRegistryFactory, Tasks,
-};
+use crate::core::utils::progress::{EmptyTaskRegistryFactory, TaskRegistryFactory, Tasks};
 use crate::projection::eval::algorithm::AlgorithmError;
 
 /// Random Walk algorithm facade
@@ -169,10 +168,6 @@ impl RandomWalkFacade {
             Tasks::leaf_with_volume("random_walk".to_string(), node_count),
             self.config.concurrency,
         );
-        progress_tracker.begin_subtask_with_volume(node_count);
-
-        let fallback = graph_view.default_property_value();
-
         // Convert source nodes to internal IDs
         let source_nodes_internal: Vec<usize> = self
             .config
@@ -182,21 +177,6 @@ impl RandomWalkFacade {
             .map(|n| n as usize)
             .collect();
 
-        // Get neighbors
-        let get_neighbors = |node_idx: usize| -> Vec<usize> {
-            graph_view
-                .stream_relationships(node_idx as i64, fallback)
-                .filter_map(|cursor| {
-                    let target = cursor.target_id();
-                    if target >= 0 {
-                        Some(target as usize)
-                    } else {
-                        None
-                    }
-                })
-                .collect()
-        };
-
         let seed = self.config.random_seed.unwrap_or_else(|| {
             use std::time::SystemTime;
             SystemTime::now()
@@ -205,6 +185,8 @@ impl RandomWalkFacade {
                 .as_secs()
         });
 
+        let termination = TerminationFlag::running_true();
+        let storage = RandomWalkStorageRuntime::new();
         let runtime = RandomWalkComputationRuntime::new(
             self.config.walks_per_node,
             self.config.walk_length,
@@ -214,10 +196,15 @@ impl RandomWalkFacade {
             seed,
         );
 
-        let result = runtime.compute(node_count, get_neighbors);
-
-        progress_tracker.log_progress(node_count);
-        progress_tracker.end_subtask();
+        let result = storage
+            .compute_random_walk_with_concurrency(
+                &runtime,
+                graph_view.as_ref(),
+                &mut progress_tracker,
+                self.config.concurrency,
+                &termination,
+            )
+            .map_err(|e| AlgorithmError::Execution(format!("Random walk terminated: {e}")))?;
 
         Ok((result, start.elapsed()))
     }

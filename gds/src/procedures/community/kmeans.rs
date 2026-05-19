@@ -150,7 +150,7 @@ impl KMeansFacade {
         self
     }
 
-    fn validate_basic(&self) -> Result<()> {
+    fn validate(&self) -> Result<()> {
         ConfigValidator::in_range(
             self.config.concurrency as f64,
             1.0,
@@ -176,7 +176,7 @@ impl KMeansFacade {
     }
 
     fn compute(&self) -> Result<KMeansResult> {
-        self.validate_basic()?;
+        self.validate()?;
         let start = Instant::now();
 
         let config = self.config.clone();
@@ -193,7 +193,7 @@ impl KMeansFacade {
             self.task_registry.as_ref(),
         );
 
-        let termination_flag = TerminationFlag::default();
+        let termination_flag = TerminationFlag::running_true();
         let storage = KMeansStorageRuntime::new();
         let mut runtime = KMeansComputationRuntime::new();
 
@@ -235,7 +235,7 @@ impl KMeansFacade {
 
     /// Mutate mode: writes community assignments back to the graph store.
     pub fn mutate(self, property_name: &str) -> Result<KMeansMutateResult> {
-        self.validate_basic()?;
+        self.validate()?;
         ConfigValidator::non_empty_string(property_name, "property_name")?;
 
         let result = self.compute()?;
@@ -280,7 +280,7 @@ impl KMeansFacade {
 
     /// Estimate memory usage.
     pub fn estimate_memory(&self) -> Result<MemoryRange> {
-        self.validate_basic()?;
+        self.validate()?;
 
         let node_count = self.graph_store.node_count();
         let k = self.config.k.max(1);

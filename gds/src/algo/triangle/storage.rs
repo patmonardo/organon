@@ -14,7 +14,7 @@ impl TriangleStorageRuntime {
         Self {}
     }
 
-    pub fn compute(
+    pub fn compute_triangle(
         &self,
         computation: &mut TriangleComputationRuntime,
         graph_store: &impl GraphStore,
@@ -71,6 +71,23 @@ impl TriangleStorageRuntime {
 
         progress_tracker.end_subtask();
         Ok(result)
+    }
+
+    pub fn compute(
+        &self,
+        computation: &mut TriangleComputationRuntime,
+        graph_store: &impl GraphStore,
+        config: &TriangleConfig,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<TriangleResult, String> {
+        self.compute_triangle(
+            computation,
+            graph_store,
+            config,
+            progress_tracker,
+            termination_flag,
+        )
     }
 }
 

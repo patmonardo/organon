@@ -123,7 +123,7 @@ impl KCoreFacade {
             self.task_registry.as_ref(),
         );
 
-        let termination_flag = TerminationFlag::default();
+        let termination_flag = TerminationFlag::running_true();
 
         let mut runtime = KCoreComputationRuntime::new().concurrency(self.config.concurrency);
         let result = storage.compute_kcore(

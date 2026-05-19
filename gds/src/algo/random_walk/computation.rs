@@ -6,6 +6,7 @@
 
 use super::spec::RandomWalkResult;
 use super::RandomWalkStorageRuntime;
+use crate::concurrency::{Concurrency, Executor, TerminatedException, TerminationFlag};
 use rand::rngs::StdRng;
 use rand::{Rng, SeedableRng};
 use std::sync::atomic::{AtomicUsize, Ordering};
@@ -41,27 +42,20 @@ impl RandomWalkComputationRuntime {
         }
     }
 
-    /// Compute random walks
+    /// Compute random walks.
     pub fn compute(
         &self,
         node_count: usize,
         get_neighbors: impl Fn(usize) -> Vec<usize> + Send + Sync,
     ) -> RandomWalkResult {
         let get_neighbors = Arc::new(get_neighbors);
-
-        // Determine which nodes to walk from
         let nodes_to_walk: Vec<usize> = if self.source_nodes.is_empty() {
             (0..node_count).collect()
         } else {
             self.source_nodes.clone()
         };
 
-        let node_index = AtomicUsize::new(0);
-        let total_nodes = nodes_to_walk.len();
-
-        // Process walks in parallel using rayon or similar
-        // For now, simple sequential implementation
-        while let Some(start_node) = self.get_next_node(&nodes_to_walk, &node_index, total_nodes) {
+        for start_node in nodes_to_walk {
             let mut rng = StdRng::seed_from_u64(self.random_seed.wrapping_add(start_node as u64));
 
             for _ in 0..self.walks_per_node {
@@ -75,13 +69,51 @@ impl RandomWalkComputationRuntime {
         }
     }
 
-    fn get_next_node(&self, nodes: &[usize], index: &AtomicUsize, total: usize) -> Option<usize> {
-        let idx = index.fetch_add(1, Ordering::SeqCst);
-        if idx < total {
-            Some(nodes[idx])
+    pub fn compute_with_concurrency(
+        &self,
+        node_count: usize,
+        concurrency: usize,
+        termination: &TerminationFlag,
+        get_neighbors: impl Fn(usize) -> Vec<usize> + Send + Sync + 'static,
+    ) -> Result<RandomWalkResult, TerminatedException> {
+        let get_neighbors = Arc::new(get_neighbors);
+        let nodes_to_walk: Vec<usize> = if self.source_nodes.is_empty() {
+            (0..node_count).collect()
         } else {
-            None
-        }
+            self.source_nodes.clone()
+        };
+
+        let concurrency = concurrency.max(1);
+        let executor = Executor::new(Concurrency::of(concurrency));
+        let nodes_to_walk = Arc::new(nodes_to_walk);
+        let node_index = AtomicUsize::new(0);
+        let total_nodes = nodes_to_walk.len();
+
+        executor.scope(termination, |scope| {
+            scope.spawn_many(concurrency, |_worker_id| loop {
+                if !termination.running() {
+                    return;
+                }
+
+                let idx = node_index.fetch_add(1, Ordering::SeqCst);
+                if idx >= total_nodes {
+                    break;
+                }
+
+                let start_node = nodes_to_walk[idx];
+                let mut rng =
+                    StdRng::seed_from_u64(self.random_seed.wrapping_add(start_node as u64));
+
+                for _ in 0..self.walks_per_node {
+                    let walk = self.perform_walk(start_node, &get_neighbors, &mut rng);
+                    self.storage.add_walk(walk);
+                }
+            });
+        })?;
+
+        Ok(RandomWalkResult {
+            walks: self.storage.take_walks(),
+        })
     }
 
     fn perform_walk(
@@ -103,8 +135,7 @@ impl RandomWalkComputationRuntime {
                 break;
             }
 
-            // node2vec biased sampling
-            let next = self.sample_next_node(current, previous, &neighbors, rng);
+            let next = self.sample_next_node(previous, &neighbors, rng);
 
             walk.push(next as u64);
             previous = Some(current);
@@ -116,7 +147,6 @@ impl RandomWalkComputationRuntime {
 
     fn sample_next_node(
         &self,
-        _current: usize,
         previous: Option<usize>,
         neighbors: &[usize],
         rng: &mut StdRng,
@@ -125,26 +155,21 @@ impl RandomWalkComputationRuntime {
             return neighbors[0];
         }
 
-        // Calculate weights for biased sampling (node2vec style)
         let weights: Vec<f64> = neighbors
             .iter()
             .map(|&neighbor| {
                 if let Some(prev) = previous {
                     if neighbor == prev {
-                        // Return to previous node
                         1.0 / self.return_factor
                     } else {
-                        // Check if neighbor is connected to previous
-                        // For simplicity, assume it's a new node (in-out exploration)
                         1.0 / self.in_out_factor
                     }
                 } else {
-                    1.0 // First step, uniform probability
+                    1.0
                 }
             })
             .collect();
 
-        // Sample based on weights
         let total_weight: f64 = weights.iter().sum();
         let mut threshold = rng.gen::<f64>() * total_weight;
 
@@ -155,7 +180,6 @@ impl RandomWalkComputationRuntime {
             }
         }
 
-        // Fallback to last neighbor
         neighbors[neighbors.len() - 1]
     }
 }

@@ -73,7 +73,7 @@ impl ToUndirectedFacade {
         self
     }
 
-    fn validate_config(&self, config: &ToUndirectedConfig) -> Result<()> {
+    fn validate(&self, config: &ToUndirectedConfig) -> Result<()> {
         if config.relationship_type.is_empty() {
             return Err(AlgorithmError::Execution(
                 "relationshipType must be provided".to_string(),
@@ -97,7 +97,7 @@ impl ToUndirectedFacade {
         Ok(())
     }
 
-    fn execute(
+    fn compute(
         &self,
         config: &ToUndirectedConfig,
     ) -> Result<crate::algo::undirected::ToUndirectedResult> {
@@ -109,7 +109,7 @@ impl ToUndirectedFacade {
             config.concurrency,
         );
 
-        self.validate_config(config)?;
+        self.validate(config)?;
         storage
             .compute_with_controls(
                 &self.graph_store,
@@ -125,11 +125,11 @@ impl ToUndirectedFacade {
     pub fn to_store(&self, graph_name: &str) -> Result<DefaultGraphStore> {
         let mut config = self.config.clone();
         config.mutate_graph_name = graph_name.to_string();
-        self.execute(&config).map(|r| r.graph_store)
+        self.compute(&config).map(|r| r.graph_store)
     }
 
     pub fn stats(&self) -> Result<ToUndirectedStats> {
-        let result = self.execute(&self.config)?;
+        let result = self.compute(&self.config)?;
         Ok(ToUndirectedStats {
             graph_name: result.graph_name,
             mutate_relationship_type: result.mutate_relationship_type,

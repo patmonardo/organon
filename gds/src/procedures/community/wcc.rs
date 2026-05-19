@@ -228,7 +228,7 @@ impl WccFacade {
         let mut progress_tracker =
             super::progress_tracker(leaf, config.concurrency, self.task_registry.as_ref());
 
-        let termination_flag = TerminationFlag::default();
+        let termination_flag = TerminationFlag::running_true();
 
         let result = storage
             .compute_wcc(

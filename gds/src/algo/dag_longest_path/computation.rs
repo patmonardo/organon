@@ -2,82 +2,17 @@
 //!
 //! **Translation Source**: `org.neo4j.gds.dag.longestPath.DagLongestPath`
 //!
-//! Finds longest paths in a DAG using parallel topological traversal with ForkJoin-like tasks.
+//! Finds longest paths in a DAG using parallel topological traversal with Executor-based work-stealing.
 
 use super::spec::{DagLongestPathResult, PathRow};
 use super::DagLongestPathStorageRuntime;
-use crate::algo::algorithms::Result;
+use crate::concurrency::{
+    virtual_threads::Executor, Concurrency, TerminatedException, TerminationFlag,
+};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::NodeId;
 use std::sync::atomic::{AtomicUsize, Ordering};
-use std::sync::Arc;
-use std::thread;
-
-/// Parallel task for longest path computation
-struct LongestPathTask {
-    source_id: NodeId,
-    get_neighbors: Arc<dyn Fn(NodeId) -> Vec<(NodeId, f64)> + Send + Sync>,
-    storage: Arc<DagLongestPathStorageRuntime>,
-    pending_tasks: Arc<AtomicUsize>,
-}
-
-impl LongestPathTask {
-    fn new(
-        source_id: NodeId,
-        get_neighbors: Arc<dyn Fn(NodeId) -> Vec<(NodeId, f64)> + Send + Sync>,
-        storage: Arc<DagLongestPathStorageRuntime>,
-        pending_tasks: Arc<AtomicUsize>,
-    ) -> Self {
-        Self {
-            source_id,
-            get_neighbors,
-            storage,
-            pending_tasks,
-        }
-    }
-
-    fn execute(self) {
-        // Process all relationships from this source node
-        for (target, weight) in (self.get_neighbors)(self.source_id) {
-            self.longest_path_traverse(self.source_id, target, weight);
-
-            // Decrement in-degree
-            let prev_degree =
-                self.storage.in_degrees[target as usize].fetch_sub(1, Ordering::SeqCst);
-
-            // If this was the last incoming edge, fork a new task
-            if prev_degree == 1_usize {
-                self.pending_tasks.fetch_add(1, Ordering::SeqCst);
-
-                let new_task = LongestPathTask::new(
-                    target,
-                    Arc::clone(&self.get_neighbors)
-                        as Arc<dyn Fn(NodeId) -> Vec<(NodeId, f64)> + Send + Sync>,
-                    Arc::clone(&self.storage),
-                    Arc::clone(&self.pending_tasks),
-                );
-
-                // Execute synchronously to maintain correctness.
-                new_task.execute();
-            }
-        }
-
-        // Decrement pending tasks
-        self.pending_tasks.fetch_sub(1, Ordering::SeqCst);
-    }
-
-    fn longest_path_traverse(&self, source: NodeId, target: NodeId, weight: f64) {
-        let source_distance = self.storage.get_distance(source as usize);
-        let potential_distance = source_distance + weight;
-
-        // Try to update the target distance if we found a longer path
-        self.storage.compare_and_update_distance(
-            target as usize,
-            potential_distance,
-            source as usize,
-        );
-    }
-}
+use std::sync::{Arc, Mutex};
 
 pub struct DagLongestPathComputationRuntime {
     storage: Arc<DagLongestPathStorageRuntime>,
@@ -90,74 +25,115 @@ impl DagLongestPathComputationRuntime {
         }
     }
 
-    /// Compute longest paths in DAG using parallel topological traversal
+    /// Compute longest paths in DAG using parallel topological traversal with Executor
     pub fn compute(
         &mut self,
         node_count: usize,
         get_neighbors: impl Fn(NodeId) -> Vec<(NodeId, f64)> + Send + Sync + 'static,
-    ) -> Result<DagLongestPathResult> {
-        // Reset storage each run so repeated invocations on the same runtime do not carry
-        // over in-degree, distance, or predecessor state from prior graphs.
-        self.storage = Arc::new(DagLongestPathStorageRuntime::new(node_count));
+    ) -> Result<DagLongestPathResult, TerminatedException> {
+        self.compute_with_concurrency(
+            node_count,
+            4,
+            &TerminationFlag::running_true(),
+            get_neighbors,
+        )
+    }
 
+    pub fn compute_with_concurrency(
+        &mut self,
+        node_count: usize,
+        concurrency: usize,
+        termination: &TerminationFlag,
+        get_neighbors: impl Fn(NodeId) -> Vec<(NodeId, f64)> + Send + Sync + 'static,
+    ) -> Result<DagLongestPathResult, TerminatedException> {
+        self.storage = Arc::new(DagLongestPathStorageRuntime::new(node_count));
         let get_neighbors = Arc::new(get_neighbors);
 
         // Phase 1: Initialize in-degrees
         for node_id in 0..(node_count as i64) {
             for (target, weight) in get_neighbors(node_id) {
-                validate_neighbor(node_count, node_id, target)?;
-                validate_weight(node_id, target, weight)?;
+                validate_neighbor(node_count, node_id, target).map_err(|_| TerminatedException)?;
+                validate_weight(node_id, target, weight).map_err(|_| TerminatedException)?;
                 self.storage.in_degrees[target as usize].fetch_add(1, Ordering::SeqCst);
             }
         }
 
-        // Phase 2: Create tasks for source nodes (in-degree 0)
-        // Collect source nodes first to avoid race where worker threads decrement
-        // in-degrees before the main thread has inspected all nodes.
-        let pending_tasks = Arc::new(AtomicUsize::new(0));
-        let mut task_handles = Vec::new();
-        let mut source_nodes: Vec<i64> = Vec::new();
-
+        // Phase 2: Collect initial ready nodes (in-degree 0)
+        let ready_nodes = Arc::new(Mutex::new(Vec::new()));
         for node_id in 0..(node_count as i64) {
-            if self.storage.in_degrees[node_id as usize].load(Ordering::SeqCst) == 0_usize {
-                source_nodes.push(node_id);
+            if self.storage.in_degrees[node_id as usize].load(Ordering::SeqCst) == 0 {
+                ready_nodes.lock().unwrap().push(node_id);
+                // Initialize source node distance
+                self.storage.set_distance(node_id as usize, 0.0);
+                self.storage
+                    .set_predecessor(node_id as usize, node_id as usize);
             }
         }
 
-        for node_id in source_nodes {
-            // Initialize source node distance
-            self.storage
-                .set_distance_tag(node_id as usize, 0.0, "source_init");
-            self.storage
-                .set_predecessor_tag(node_id as usize, node_id as usize, "source_init");
+        // Phase 3: Process nodes in parallel using work-stealing pattern
+        let concurrency = concurrency.max(1);
+        let executor = Executor::new(Concurrency::of(concurrency));
+        let counter = Arc::new(AtomicUsize::new(0));
+        let ready_nodes_copy = Arc::clone(&ready_nodes);
 
-            // Create and spawn task
-            pending_tasks.fetch_add(1, Ordering::SeqCst);
-            let task = LongestPathTask::new(
-                node_id,
-                Arc::clone(&get_neighbors)
-                    as Arc<dyn Fn(NodeId) -> Vec<(NodeId, f64)> + Send + Sync>,
-                Arc::clone(&self.storage),
-                Arc::clone(&pending_tasks),
-            );
+        executor.scope(termination, |scope| {
+            scope.spawn_many(concurrency, |_worker_id| {
+                loop {
+                    if !termination.running() {
+                        return;
+                    }
 
-            let handle = thread::spawn(move || {
-                task.execute();
+                    let node_id = {
+                        let mut ready = ready_nodes_copy.lock().unwrap();
+                        if ready.is_empty() {
+                            // Check if there are any pending nodes being processed
+                            let processed = counter.load(Ordering::SeqCst);
+                            if processed == 0 {
+                                None
+                            } else {
+                                // Other workers might be adding nodes; spin briefly
+                                drop(ready);
+                                std::thread::yield_now();
+                                None
+                            }
+                        } else {
+                            Some(ready.pop().unwrap())
+                        }
+                    };
+
+                    if let Some(node_id) = node_id {
+                        counter.fetch_add(1, Ordering::SeqCst);
+
+                        // Process all neighbors
+                        for (target, weight) in get_neighbors(node_id) {
+                            let source_distance = self.storage.get_distance(node_id as usize);
+                            let potential_distance = source_distance + weight;
+                            self.storage.compare_and_update_distance(
+                                target as usize,
+                                potential_distance,
+                                node_id as usize,
+                            );
+
+                            // Decrement in-degree
+                            let prev_degree = self.storage.in_degrees[target as usize]
+                                .fetch_sub(1, Ordering::SeqCst);
+
+                            // If in-degree reaches 0, add to ready queue
+                            if prev_degree == 1 {
+                                ready_nodes_copy.lock().unwrap().push(target);
+                            }
+                        }
+
+                        counter.fetch_sub(1, Ordering::SeqCst);
+                    } else if counter.load(Ordering::SeqCst) == 0 {
+                        // No nodes ready and no nodes being processed; we're done
+                        break;
+                    }
+                }
             });
-            task_handles.push(handle);
-        }
+        })?;
 
-        // Wait for all tasks to complete
-        for handle in task_handles {
-            let _ = handle.join();
-        }
-
-        // Wait for all pending tasks to complete
-        while pending_tasks.load(Ordering::SeqCst) > 0 {
-            thread::yield_now();
-        }
-
-        // Phase 3: Build path results
+        // Phase 4: Build path results
         Ok(self.build_paths(node_count))
     }
 
@@ -211,7 +187,11 @@ impl DagLongestPathComputationRuntime {
     }
 }
 
-fn validate_neighbor(node_count: usize, source: NodeId, target: NodeId) -> Result<()> {
+fn validate_neighbor(
+    node_count: usize,
+    source: NodeId,
+    target: NodeId,
+) -> std::result::Result<(), AlgorithmError> {
     if target < 0 || target as usize >= node_count {
         return Err(AlgorithmError::InvalidGraph(format!(
             "edge from node {source} points to out-of-range target {target} for graph with {node_count} nodes"
@@ -221,7 +201,11 @@ fn validate_neighbor(node_count: usize, source: NodeId, target: NodeId) -> Resul
     Ok(())
 }
 
-fn validate_weight(source: NodeId, target: NodeId, weight: f64) -> Result<()> {
+fn validate_weight(
+    source: NodeId,
+    target: NodeId,
+    weight: f64,
+) -> std::result::Result<(), AlgorithmError> {
     if !weight.is_finite() {
         return Err(AlgorithmError::InvalidGraph(format!(
             "edge from node {source} to {target} has non-finite weight {weight}"

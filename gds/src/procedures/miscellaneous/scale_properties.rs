@@ -85,8 +85,9 @@ impl ScalePropertiesFacade {
         Ok(())
     }
 
-    fn execute(&self, config: &ScalePropertiesConfig) -> Result<ScalePropertiesResult> {
-        self.validate_config(config)?;
+    fn compute(&self) -> Result<ScalePropertiesResult> {
+        let config = self.config();
+        self.validate_config(&config)?;
         let mut computation = ScalePropertiesComputationRuntime::new();
         let storage = ScalePropertiesStorageRuntime::new();
         let termination = TerminationFlag::running_true();
@@ -97,16 +98,11 @@ impl ScalePropertiesFacade {
 
         storage.compute_with_controls(
             self.graph_store.as_ref(),
-            config,
+            &config,
             &mut computation,
             &termination,
             &mut progress_tracker,
         )
-    }
-
-    fn compute(&self) -> Result<ScalePropertiesResult> {
-        let config = self.config();
-        self.execute(&config)
     }
 
     pub fn stream(&self) -> Result<Box<dyn Iterator<Item = ScalePropertiesStreamRow>>> {

@@ -2,6 +2,11 @@
 //!
 //! Stores tentative distances and predecessors for longest path computation.
 
+use super::computation::DagLongestPathComputationRuntime;
+use super::spec::DagLongestPathResult;
+use crate::concurrency::TerminatedException;
+use crate::core::utils::progress::ProgressTracker;
+use crate::types::graph::{Graph, NodeId};
 use std::sync::atomic::{AtomicI64, AtomicUsize, Ordering};
 
 /// Storage for dag longest path computation
@@ -89,5 +94,62 @@ impl DagLongestPathStorageRuntime {
 
     pub fn set_predecessor_tag(&self, node: usize, predecessor: usize, _tag: &'static str) {
         self.predecessors[node].store(predecessor as i64, Ordering::SeqCst);
+    }
+
+    pub fn compute_dag_longest_path(
+        &self,
+        computation: &mut DagLongestPathComputationRuntime,
+        graph: &dyn Graph,
+        progress_tracker: &mut dyn ProgressTracker,
+        concurrency: usize,
+        termination: &crate::concurrency::TerminationFlag,
+    ) -> Result<DagLongestPathResult, TerminatedException> {
+        let node_count = graph.node_count();
+        progress_tracker.begin_subtask_with_volume(node_count);
+
+        let result = (|| {
+            let fallback = graph.default_property_value();
+            let mut adjacency: Vec<Vec<(NodeId, f64)>> = Vec::with_capacity(node_count);
+
+            for node_id in 0..node_count {
+                let neighbors = graph
+                    .stream_relationships(node_id as NodeId, fallback)
+                    .filter_map(|cursor| {
+                        let target = cursor.target_id();
+                        if target < 0 {
+                            return None;
+                        }
+                        Some((target, cursor.property()))
+                    })
+                    .collect();
+                adjacency.push(neighbors);
+            }
+
+            let result = computation.compute_with_concurrency(
+                node_count,
+                concurrency,
+                termination,
+                move |node_id| {
+                    usize::try_from(node_id)
+                        .ok()
+                        .and_then(|idx| adjacency.get(idx).cloned())
+                        .unwrap_or_default()
+                },
+            )?;
+
+            progress_tracker.log_progress(node_count);
+            Ok(result)
+        })();
+
+        match result {
+            Ok(result) => {
+                progress_tracker.end_subtask();
+                Ok(result)
+            }
+            Err(err) => {
+                progress_tracker.end_subtask_with_failure();
+                Err(err)
+            }
+        }
     }
 }
