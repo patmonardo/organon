@@ -8,8 +8,8 @@
 use super::spec::BfsResult;
 use super::BfsComputationRuntime;
 use crate::algo::traversal::{
-    Aggregator, ExitPredicate, ExitPredicateResult, FollowExitPredicate, OneHopAggregator,
-    TargetExitPredicate,
+    run_parallel_bfs, Aggregator, ExitPredicate, ExitPredicateResult, FollowExitPredicate,
+    OneHopAggregator, ParallelBfsConfig, TargetExitPredicate,
 };
 use crate::core::utils::progress::{ProgressTracker, UNKNOWN_VOLUME};
 use crate::projection::eval::algorithm::AlgorithmError;
@@ -29,7 +29,11 @@ pub struct BfsStorageRuntime {
     pub max_depth: Option<u32>,
     /// Whether to track paths during traversal
     pub track_paths: bool,
+    /// Chunk size used by parallel frontier expansion.
+    pub delta: usize,
 }
+
+const DEFAULT_DELTA: usize = 64;
 
 impl BfsStorageRuntime {
     /// Create new BFS storage runtime
@@ -44,7 +48,14 @@ impl BfsStorageRuntime {
             target_nodes,
             max_depth,
             track_paths,
+            delta: DEFAULT_DELTA,
         }
+    }
+
+    /// Override chunk size used by parallel frontier expansion.
+    pub fn with_delta(mut self, delta: usize) -> Self {
+        self.delta = delta.max(1);
+        self
     }
 
     /// Compute BFS traversal
@@ -106,6 +117,20 @@ impl BfsStorageRuntime {
                 Self::validate_node_in_graph(*target_node, node_count, "target")?;
             }
 
+            if computation.concurrency > 1 {
+                if let Some(graph_ref) = graph {
+                    return self.compute_bfs_parallel(
+                        computation,
+                        graph_ref,
+                        node_count,
+                        progress_tracker,
+                        aggregator,
+                        exit_predicate,
+                        start_time,
+                    );
+                }
+            }
+
             computation.initialize(self.source_node, self.max_depth, node_count);
 
             // BFS queue (source, node, aggregated weight)
@@ -155,6 +180,38 @@ impl BfsStorageRuntime {
         result
     }
 
+    fn compute_bfs_parallel(
+        &self,
+        computation: &mut BfsComputationRuntime,
+        graph: &dyn Graph,
+        node_count: usize,
+        progress_tracker: &mut dyn ProgressTracker,
+        aggregator: &dyn Aggregator,
+        exit_predicate: &dyn ExitPredicate,
+        start_time: std::time::Instant,
+    ) -> Result<BfsResult, AlgorithmError> {
+        computation.initialize(self.source_node, self.max_depth, node_count);
+        let result = run_parallel_bfs(
+            graph,
+            ParallelBfsConfig {
+                source_node: self.source_node,
+                node_count,
+                max_depth: self.max_depth,
+                concurrency: computation.concurrency,
+                delta: self.delta,
+            },
+            aggregator,
+            exit_predicate,
+        )?;
+
+        progress_tracker.log_progress(result.relationships_examined);
+
+        Ok(BfsResult {
+            visited_nodes: result.visited_nodes,
+            computation_time_ms: start_time.elapsed().as_millis() as u64,
+        })
+    }
+
     /// Get neighbors of a node (graph-backed when available; mock fallback)
     fn get_neighbors(&self, graph: Option<&dyn Graph>, node: NodeId) -> Vec<NodeId> {
         if let Some(g) = graph {
@@ -177,15 +234,22 @@ impl BfsStorageRuntime {
         node_count: usize,
         role: &str,
     ) -> Result<(), AlgorithmError> {
-        let node_index = usize::try_from(node_id).map_err(|_| {
-            AlgorithmError::InvalidGraph(format!("Invalid {role} node id: {node_id}"))
-        })?;
+        let node_index = Self::node_index_in_graph(node_id, node_count, role)?;
         if node_index >= node_count {
             return Err(AlgorithmError::InvalidGraph(format!(
                 "{role} node id out of range: {node_id} (node_count={node_count})"
             )));
         }
         Ok(())
+    }
+
+    fn node_index_in_graph(
+        node_id: NodeId,
+        _node_count: usize,
+        role: &str,
+    ) -> Result<usize, AlgorithmError> {
+        usize::try_from(node_id)
+            .map_err(|_| AlgorithmError::InvalidGraph(format!("Invalid {role} node id: {node_id}")))
     }
 }
 
@@ -227,6 +291,7 @@ mod tests {
         assert_eq!(storage.target_nodes, vec![3]);
         assert_eq!(storage.max_depth, Some(5));
         assert!(storage.track_paths);
+        assert_eq!(storage.delta, DEFAULT_DELTA);
     }
 
     #[test]
@@ -300,6 +365,42 @@ mod tests {
             .unwrap();
 
         assert_eq!(result.visited_nodes, vec![0, 1, 2]);
+    }
+
+    #[test]
+    fn test_bfs_parallel_matches_single_thread_order() {
+        let storage = BfsStorageRuntime::new(0, vec![], None, false);
+        let aggregator = OneHopAggregator;
+        let exit_predicate = FollowExitPredicate;
+
+        let mut sequential = BfsComputationRuntime::new(0, false, 1, 10);
+        let mut sequential_progress = TaskProgressTracker::new(Tasks::leaf("BFS-seq".to_string()));
+        let sequential_result = storage
+            .compute_bfs_with_traversal(
+                &mut sequential,
+                None,
+                &mut sequential_progress,
+                &aggregator,
+                &exit_predicate,
+            )
+            .unwrap();
+
+        let mut parallel = BfsComputationRuntime::new(0, false, 4, 10);
+        let mut parallel_progress = TaskProgressTracker::new(Tasks::leaf("BFS-par".to_string()));
+        let parallel_result = storage
+            .compute_bfs_with_traversal(
+                &mut parallel,
+                None,
+                &mut parallel_progress,
+                &aggregator,
+                &exit_predicate,
+            )
+            .unwrap();
+
+        assert_eq!(
+            sequential_result.visited_nodes,
+            parallel_result.visited_nodes
+        );
     }
 
     #[test]

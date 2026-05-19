@@ -20,7 +20,7 @@ pub enum ExitPredicateResult {
 ///
 /// Translation of: `ExitPredicate.java` (lines 22-52)
 /// Called once for each accepted node during traversal
-pub trait ExitPredicate {
+pub trait ExitPredicate: Send + Sync {
     /// Test whether to continue traversal from current node
     ///
     /// # Arguments

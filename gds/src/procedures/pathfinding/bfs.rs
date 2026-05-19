@@ -219,7 +219,8 @@ impl BfsFacade {
             target_nodes.clone(),
             self.config.max_depth,
             self.config.track_paths,
-        );
+        )
+        .with_delta(self.config.delta);
 
         let rel_types: HashSet<RelationshipType> = HashSet::new();
         let graph_view = self

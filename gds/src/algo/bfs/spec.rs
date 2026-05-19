@@ -313,7 +313,8 @@ define_algorithm_spec! {
             parsed_config.target_nodes.clone(),
             parsed_config.max_depth,
             parsed_config.track_paths,
-        );
+        )
+        .with_delta(parsed_config.delta);
 
         // Execute BFS algorithm with a filtered/oriented view (defaults: all types, NATURAL)
         let rel_types: std::collections::HashSet<RelationshipType> = std::collections::HashSet::new();

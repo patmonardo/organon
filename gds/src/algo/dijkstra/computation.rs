@@ -15,11 +15,12 @@ use std::collections::{BinaryHeap, HashMap, HashSet};
 struct QueueItem {
     node_id: NodeId,
     cost: f64,
+    priority: f64,
 }
 
 impl PartialEq for QueueItem {
     fn eq(&self, other: &Self) -> bool {
-        self.cost == other.cost && self.node_id == other.node_id
+        self.priority == other.priority && self.cost == other.cost && self.node_id == other.node_id
     }
 }
 
@@ -33,11 +34,28 @@ impl PartialOrd for QueueItem {
 
 impl Ord for QueueItem {
     fn cmp(&self, other: &Self) -> Ordering {
-        // Reverse ordering for min-heap (lower cost = higher priority)
+        // Reverse ordering for min-heap (lower priority = higher priority in BinaryHeap).
         other
-            .cost
-            .partial_cmp(&self.cost)
+            .priority
+            .partial_cmp(&self.priority)
             .unwrap_or(Ordering::Equal)
+            .then_with(|| {
+                other
+                    .cost
+                    .partial_cmp(&self.cost)
+                    .unwrap_or(Ordering::Equal)
+            })
+            .then_with(|| other.node_id.cmp(&self.node_id))
+    }
+}
+
+impl QueueItem {
+    fn new(node_id: NodeId, cost: f64, priority: f64) -> Self {
+        Self {
+            node_id,
+            cost,
+            priority,
+        }
     }
 }
 
@@ -134,8 +152,17 @@ impl DijkstraComputationRuntime {
     ///
     /// Translation of: `queue.add()` calls (lines 173, 228)
     pub fn add_to_queue(&mut self, node_id: NodeId, cost: f64) {
+        self.add_to_queue_with_priority(node_id, cost, cost);
+    }
+
+    /// Add a node to the priority queue with a separate ordering priority.
+    ///
+    /// Java A* parity: queue ordering may use `cost + heuristic(node)` while
+    /// `queue.cost(node)` remains the true path cost.
+    pub fn add_to_queue_with_priority(&mut self, node_id: NodeId, cost: f64, priority: f64) {
         self.costs.insert(node_id, cost);
-        self.priority_queue.push(QueueItem { node_id, cost });
+        self.priority_queue
+            .push(QueueItem::new(node_id, cost, priority));
     }
 
     /// Pop the node with minimum cost from the queue
@@ -181,13 +208,21 @@ impl DijkstraComputationRuntime {
     ///
     /// Translation of: `queue.set()` method (line 235)
     pub fn update_queue_cost(&mut self, node_id: NodeId, new_cost: f64) {
+        self.update_queue_cost_with_priority(node_id, new_cost, new_cost);
+    }
+
+    /// Update a queue cost with a separate ordering priority.
+    pub fn update_queue_cost_with_priority(
+        &mut self,
+        node_id: NodeId,
+        new_cost: f64,
+        priority: f64,
+    ) {
         self.costs.insert(node_id, new_cost);
         // Note: In a real implementation, we'd need to update the priority queue
         // For now, we'll add a new item (the old one will be ignored when visited)
-        self.priority_queue.push(QueueItem {
-            node_id,
-            cost: new_cost,
-        });
+        self.priority_queue
+            .push(QueueItem::new(node_id, new_cost, priority));
     }
 
     /// Mark a node as visited
@@ -384,5 +419,20 @@ mod tests {
         assert_eq!(cost1, 5.0);
         assert_eq!(cost2, 10.0);
         assert_eq!(cost3, 15.0);
+    }
+
+    #[test]
+    fn test_dijkstra_computation_runtime_heuristic_priority_order() {
+        let mut runtime = DijkstraComputationRuntime::new(0, false, 4, true);
+        runtime.initialize(0, false, true, 100);
+
+        runtime.add_to_queue_with_priority(1, 1.0, 101.0);
+        runtime.add_to_queue_with_priority(2, 4.0, 4.0);
+
+        let (node, cost) = runtime.pop_from_queue();
+        assert_eq!(node, 2);
+        assert_eq!(cost, 4.0);
+        assert_eq!(runtime.get_cost(1), 1.0);
+        assert_eq!(runtime.get_cost(2), 4.0);
     }
 }

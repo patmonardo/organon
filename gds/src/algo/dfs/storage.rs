@@ -8,14 +8,13 @@
 use super::spec::DfsResult;
 use super::DfsComputationRuntime;
 use crate::algo::traversal::{
-    Aggregator, ExitPredicate, ExitPredicateResult, FollowExitPredicate, OneHopAggregator,
-    TargetExitPredicate,
+    run_sequential_dfs, Aggregator, ExitPredicate, FollowExitPredicate, OneHopAggregator,
+    SequentialDfsConfig, TargetExitPredicate,
 };
 use crate::core::utils::progress::{ProgressTracker, UNKNOWN_VOLUME};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::Graph;
 use crate::types::graph::NodeId;
-use std::collections::VecDeque;
 
 /// DFS Storage Runtime - handles persistent data access and algorithm orchestration
 ///
@@ -112,53 +111,23 @@ impl DfsStorageRuntime {
             }
 
             computation.initialize(self.source_node, self.max_depth, node_count);
+            let result = run_sequential_dfs(
+                SequentialDfsConfig {
+                    source_node: self.source_node,
+                    node_count,
+                    max_depth: self.max_depth,
+                },
+                aggregator,
+                exit_predicate,
+                |node| self.get_neighbors(graph, node),
+            )?;
 
-            // DFS stacks for depth-first traversal
-            let mut nodes: VecDeque<NodeId> = VecDeque::new();
-            let mut sources: VecDeque<NodeId> = VecDeque::new();
-            let mut weights: VecDeque<f64> = VecDeque::new();
-
-            nodes.push_back(self.source_node);
-            sources.push_back(self.source_node);
-            weights.push_back(0.0);
-
-            let mut result = Vec::new();
-
-            // Main DFS loop
-            while let (Some(node), Some(source), Some(weight)) =
-                (nodes.pop_back(), sources.pop_back(), weights.pop_back())
-            {
-                match exit_predicate.test(source, node, weight) {
-                    ExitPredicateResult::Continue => continue,
-                    ExitPredicateResult::Break => {
-                        result.push(node);
-                        break;
-                    }
-                    ExitPredicateResult::Follow => result.push(node),
-                }
-
-                // Progress is tracked in terms of relationships examined.
-                let neighbors = self.get_neighbors(graph, node);
-                progress_tracker.log_progress(neighbors.len());
-
-                // Check max depth
-                if computation.check_max_depth(weight) {
-                    for neighbor in neighbors {
-                        Self::validate_node_in_graph(neighbor, node_count, "neighbor")?;
-                        if !computation.is_visited(neighbor) {
-                            computation.set_visited(neighbor);
-                            sources.push_back(node);
-                            nodes.push_back(neighbor);
-                            weights.push_back(aggregator.apply(node, neighbor, weight));
-                        }
-                    }
-                }
-            }
+            progress_tracker.log_progress(result.relationships_examined);
 
             let computation_time = start_time.elapsed().as_millis() as u64;
 
             Ok(DfsResult {
-                visited_nodes: result,
+                visited_nodes: result.visited_nodes,
                 computation_time_ms: computation_time,
             })
         })();

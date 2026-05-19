@@ -4,7 +4,7 @@ use crate::types::graph::NodeId;
 ///
 /// Translation of: `Aggregator.java` (lines 22-35)
 /// Aggregates weight between source and current node
-pub trait Aggregator {
+pub trait Aggregator: Send + Sync {
     /// Apply aggregation function
     ///
     /// # Arguments

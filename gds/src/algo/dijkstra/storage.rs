@@ -15,6 +15,8 @@ use crate::types::graph::Graph;
 use crate::types::graph::NodeId;
 use std::time::Instant;
 
+type HeuristicFunction = Box<dyn Fn(NodeId) -> f64 + Send + Sync>;
+
 /// Dijkstra Storage Runtime
 ///
 /// Translation of: Main `Dijkstra` class (lines 45-309)
@@ -39,6 +41,9 @@ pub struct DijkstraStorageRuntime {
     /// Note: `relationship_id` follows Java GDS semantics here: index within the
     /// enumerated adjacency stream for the current source node.
     relationship_filter: Box<dyn Fn(NodeId, NodeId, NodeId) -> bool + Send + Sync>,
+
+    /// Optional A* style heuristic used only to order the priority queue.
+    heuristic_function: Option<HeuristicFunction>,
 }
 
 impl DijkstraStorageRuntime {
@@ -57,6 +62,7 @@ impl DijkstraStorageRuntime {
             concurrency,
             use_heuristic,
             relationship_filter: Box::new(|_, _, _| true),
+            heuristic_function: None,
         }
     }
 
@@ -71,6 +77,19 @@ impl DijkstraStorageRuntime {
         self.relationship_filter = Box::new(move |source, target, relationship_id| {
             previous(source, target, relationship_id) && filter(source, target, relationship_id)
         });
+        self
+    }
+
+    /// Set an optional heuristic function for Java A* parity.
+    ///
+    /// The function affects queue priority as `cost + heuristic(node)`; stored
+    /// path costs remain the true Dijkstra distance from the source.
+    pub fn with_heuristic_function<F>(mut self, heuristic_function: F) -> Self
+    where
+        F: Fn(NodeId) -> f64 + Send + Sync + 'static,
+    {
+        self.use_heuristic = true;
+        self.heuristic_function = Some(Box::new(heuristic_function));
         self
     }
 
@@ -109,7 +128,7 @@ impl DijkstraStorageRuntime {
             );
 
             // Initialize priority queue with source node
-            computation.add_to_queue(self.source_node, 0.0);
+            self.add_to_queue(computation, self.source_node, 0.0)?;
 
             let mut paths = Vec::new();
             let mut path_index = 0u64;
@@ -125,22 +144,7 @@ impl DijkstraStorageRuntime {
                     continue;
                 }
 
-                // Mark node as visited
                 computation.mark_visited(current_node);
-
-                // Check if we should emit a result for this node
-                let traversal_state = targets.apply(current_node);
-
-                if traversal_state.should_emit() {
-                    // Reconstruct and emit path
-                    let path = self.reconstruct_path(computation, current_node, path_index)?;
-                    paths.push(path);
-                    path_index += 1;
-
-                    if traversal_state.should_stop() {
-                        break;
-                    }
-                }
 
                 // Relax all outgoing edges using graph-backed neighbor streaming when available
                 self.relax_edges(
@@ -152,6 +156,19 @@ impl DijkstraStorageRuntime {
                     node_count,
                     progress_tracker,
                 )?;
+
+                // Java GDS applies target state after relaxing the current node.
+                let traversal_state = targets.apply(current_node);
+
+                if traversal_state.should_emit() {
+                    let path = self.reconstruct_path(computation, current_node, path_index)?;
+                    paths.push(path);
+                    path_index += 1;
+
+                    if traversal_state.should_stop() {
+                        break;
+                    }
+                }
             }
 
             let computation_time_ms = start_time.elapsed().as_millis() as u64;
@@ -219,14 +236,14 @@ impl DijkstraStorageRuntime {
 
             if !computation.is_in_queue(target_node) {
                 // First time seeing this node
-                computation.add_to_queue(target_node, new_cost);
+                self.add_to_queue(computation, target_node, new_cost)?;
                 computation.set_predecessor(target_node, Some(source_node));
                 if self.track_relationships {
                     computation.set_relationship_id(target_node, Some(relationship_id));
                 }
             } else if new_cost < computation.get_cost(target_node) {
                 // Found a shorter path
-                computation.update_queue_cost(target_node, new_cost);
+                self.update_queue_cost(computation, target_node, new_cost)?;
                 computation.set_predecessor(target_node, Some(source_node));
                 if self.track_relationships {
                     computation.set_relationship_id(target_node, Some(relationship_id));
@@ -235,6 +252,43 @@ impl DijkstraStorageRuntime {
         }
 
         Ok(())
+    }
+
+    fn add_to_queue(
+        &self,
+        computation: &mut DijkstraComputationRuntime,
+        node_id: NodeId,
+        cost: f64,
+    ) -> Result<(), AlgorithmError> {
+        let priority = self.queue_priority(node_id, cost)?;
+        computation.add_to_queue_with_priority(node_id, cost, priority);
+        Ok(())
+    }
+
+    fn update_queue_cost(
+        &self,
+        computation: &mut DijkstraComputationRuntime,
+        node_id: NodeId,
+        cost: f64,
+    ) -> Result<(), AlgorithmError> {
+        let priority = self.queue_priority(node_id, cost)?;
+        computation.update_queue_cost_with_priority(node_id, cost, priority);
+        Ok(())
+    }
+
+    fn queue_priority(&self, node_id: NodeId, cost: f64) -> Result<f64, AlgorithmError> {
+        let heuristic = self
+            .heuristic_function
+            .as_ref()
+            .map(|heuristic| heuristic(node_id))
+            .unwrap_or(0.0);
+        let priority = cost + heuristic;
+        if !priority.is_finite() {
+            return Err(AlgorithmError::InvalidGraph(format!(
+                "Dijkstra queue priority overflowed for node {node_id}"
+            )));
+        }
+        Ok(priority)
     }
 
     fn validate_node_in_graph(
@@ -481,6 +535,24 @@ mod tests {
 
         assert_eq!(first.node_ids, vec![0, 1, 2, 3]);
         assert_eq!(first.costs, vec![0.0, 1.0, 3.0, 4.0]);
+    }
+
+    #[test]
+    fn heuristic_function_orders_queue_without_changing_path_costs() {
+        let mut storage = DijkstraStorageRuntime::new(0, false, 4, true)
+            .with_heuristic_function(|node| if node == 1 { 100.0 } else { 0.0 });
+        let mut computation = DijkstraComputationRuntime::new(0, false, 4, true);
+        let targets = Box::new(AllTargets::new());
+        let mut progress_tracker = TaskProgressTracker::new(Tasks::leaf("dijkstra".to_string()));
+
+        let result = storage
+            .compute_dijkstra(&mut computation, targets, None, 0, &mut progress_tracker)
+            .unwrap();
+        let paths: Vec<_> = result.path_finding_result.paths().cloned().collect();
+
+        assert_eq!(paths[0].target_node, 0);
+        assert_eq!(paths[1].target_node, 2);
+        assert_eq!(paths[1].costs.last().copied(), Some(4.0));
     }
 
     #[test]
