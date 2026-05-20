@@ -44,13 +44,20 @@ impl LeidenStorageRuntime {
         termination_flag: &TerminationFlag,
     ) -> Result<LeidenResult, AlgorithmError> {
         let node_count = self.graph.node_count();
+        config
+            .validate_for_node_count(node_count)
+            .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
         if node_count == 0 {
             return Ok(LeidenResult {
                 communities: Vec::new(),
                 community_count: 0,
                 modularity: 0.0,
                 levels: 0,
+                ran_levels: 0,
                 converged: true,
+                did_converge: true,
+                modularities: Vec::new(),
+                intermediate_communities: config.include_intermediate_communities.then(Vec::new),
                 node_count: 0,
                 execution_time: std::time::Duration::default(),
             });

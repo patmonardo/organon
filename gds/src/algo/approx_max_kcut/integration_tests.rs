@@ -55,6 +55,11 @@ fn rejects_invalid_config() {
     config = ApproxMaxKCutConfig::default();
     config.min_community_sizes = vec![3, 2];
     assert!(config.validate_for_node_count(4).is_err());
+
+    config = ApproxMaxKCutConfig::default();
+    config.k = 3;
+    config.min_community_sizes = vec![0, 0, 0];
+    assert!(config.validate_for_node_count(2).is_err());
 }
 
 #[test]
@@ -120,6 +125,23 @@ fn computes_weighted_cut_cost() {
     let result = runtime.compute(2, |node| adjacency[node].clone());
 
     assert_eq!(result.cut_cost, 12.0);
+}
+
+#[test]
+fn preserves_negative_minimized_cut_cost() {
+    let config = ApproxMaxKCutConfig {
+        iterations: 3,
+        random_seed: 21,
+        minimize: true,
+        min_batch_size: 1,
+        ..ApproxMaxKCutConfig::default()
+    };
+    let runtime = ApproxMaxKCutComputationRuntime::new(config);
+    let adjacency = vec![vec![(1, -5.0)], vec![(0, -7.0)]];
+
+    let result = runtime.compute(2, |node| adjacency[node].clone());
+
+    assert_eq!(result.cut_cost, -12.0);
 }
 
 #[test]

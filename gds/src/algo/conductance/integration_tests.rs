@@ -99,3 +99,44 @@ fn conductance_matches_expected_small_graph() {
     // Global avg: (0.5 + 1.0) / 2 = 0.75
     assert!((result.global_average_conductance - 0.75).abs() < 1e-12);
 }
+
+#[test]
+fn negative_target_community_counts_as_external() {
+    let mut store = make_store(vec![vec![1], vec![]]);
+
+    store
+        .add_node_property_i64("community".to_string(), vec![0, -1])
+        .expect("add community property");
+
+    let config = ConductanceConfig {
+        concurrency: 2,
+        min_batch_size: 1,
+        has_relationship_weight_property: false,
+        community_property: "community".to_string(),
+    };
+
+    let storage = ConductanceStorageRuntime::new();
+    let mut runtime = ConductanceComputationRuntime::new();
+
+    let base_task = conductance_progress_task(store.node_count());
+    let registry_factory = EmptyTaskRegistryFactory;
+    let mut progress = TaskProgressTracker::with_registry(
+        base_task,
+        Concurrency::of(config.concurrency.max(1)),
+        JobId::new(),
+        &registry_factory,
+    );
+    let result = storage
+        .compute_conductance(
+            &mut runtime,
+            &store,
+            &config,
+            &mut progress,
+            &TerminationFlag::default(),
+        )
+        .expect("compute conductance");
+
+    assert_eq!(result.community_count, 1);
+    assert_eq!(result.community_conductances.get(&0).copied(), Some(1.0));
+    assert_eq!(result.global_average_conductance, 1.0);
+}

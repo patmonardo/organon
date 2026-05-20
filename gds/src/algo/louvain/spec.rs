@@ -1,4 +1,11 @@
+use super::LouvainComputationRuntime;
+use super::LouvainStorageRuntime;
+use crate::concurrency::TerminationFlag;
 use crate::config::validation::ConfigError;
+use crate::core::utils::progress::TaskProgressTracker;
+use crate::core::utils::progress::Tasks;
+use crate::define_algorithm_spec;
+use crate::projection::eval::algorithm::AlgorithmError;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use std::time::Duration;
@@ -8,15 +15,18 @@ pub struct LouvainConfig {
     #[serde(default = "default_concurrency")]
     pub concurrency: usize,
 
-    #[serde(default = "default_max_iterations", rename = "maxIterations")]
+    #[serde(default = "default_max_iterations", alias = "maxIterations")]
     pub max_iterations: usize,
+
+    #[serde(default = "default_max_levels", alias = "maxLevels")]
+    pub max_levels: usize,
 
     #[serde(default = "default_tolerance")]
     pub tolerance: f64,
 
     #[serde(
         default = "default_include_intermediate_communities",
-        rename = "includeIntermediateCommunities"
+        alias = "includeIntermediateCommunities"
     )]
     pub include_intermediate_communities: bool,
 
@@ -31,6 +41,10 @@ pub struct LouvainConfig {
 }
 
 fn default_max_iterations() -> usize {
+    10
+}
+
+fn default_max_levels() -> usize {
     10
 }
 
@@ -59,6 +73,7 @@ impl Default for LouvainConfig {
         Self {
             concurrency: default_concurrency(),
             max_iterations: default_max_iterations(),
+            max_levels: default_max_levels(),
             tolerance: default_tolerance(),
             include_intermediate_communities: default_include_intermediate_communities(),
             seed_property: None,
@@ -68,10 +83,11 @@ impl Default for LouvainConfig {
     }
 }
 
-impl crate::config::ValidatedConfig for LouvainConfig {
-    fn validate(&self) -> Result<(), ConfigError> {
+impl LouvainConfig {
+    pub fn validate(&self) -> Result<(), ConfigError> {
         crate::config::validate_positive(self.concurrency as f64, "concurrency")?;
         crate::config::validate_positive(self.max_iterations as f64, "maxIterations")?;
+        crate::config::validate_positive(self.max_levels as f64, "maxLevels")?;
         crate::config::validate_positive(self.tolerance, "tolerance")?;
         crate::config::validate_range(self.gamma, 0.0, 10.0, "gamma")?;
         crate::config::validate_range(self.theta, 0.0, 1.0, "theta")?;
@@ -79,17 +95,46 @@ impl crate::config::ValidatedConfig for LouvainConfig {
     }
 }
 
+impl crate::config::ValidatedConfig for LouvainConfig {
+    fn validate(&self) -> Result<(), ConfigError> {
+        LouvainConfig::validate(self)
+    }
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct LouvainResult {
     pub data: Vec<u64>,
+    pub ran_levels: usize,
+    pub modularities: Vec<f64>,
+    pub modularity: f64,
+    pub intermediate_communities: Option<Vec<Vec<u64>>>,
     pub node_count: usize,
     pub execution_time: Duration,
+}
+
+impl LouvainResult {
+    pub fn community(&self, node_id: usize) -> Option<u64> {
+        self.data.get(node_id).copied()
+    }
+
+    pub fn intermediate_communities(&self, node_id: usize) -> Vec<u64> {
+        match &self.intermediate_communities {
+            Some(levels) => levels
+                .iter()
+                .filter_map(|level| level.get(node_id).copied())
+                .collect(),
+            None => self.community(node_id).into_iter().collect(),
+        }
+    }
 }
 
 /// Aggregated Louvain stats.
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
 pub struct LouvainStats {
+    pub node_count: usize,
     pub community_count: usize,
+    pub ran_levels: usize,
+    pub modularity: f64,
     pub execution_time_ms: u64,
 }
 
@@ -136,7 +181,10 @@ impl LouvainResultBuilder {
             .len();
 
         LouvainStats {
+            node_count: self.result.node_count,
             community_count,
+            ran_levels: self.result.ran_levels,
+            modularity: self.result.modularity,
             execution_time_ms: self.result.execution_time.as_millis() as u64,
         }
     }
@@ -157,5 +205,41 @@ impl LouvainAlgorithmSpec {
 
     pub fn graph_name(&self) -> &str {
         &self.graph_name
+    }
+}
+
+define_algorithm_spec! {
+    name: "louvain",
+    output_type: LouvainResult,
+    projection_hint: Dense,
+    modes: [Stream, Stats, MutateNodeProperty, WriteNodeProperty],
+
+    execute: |_self, graph_store, config, _context| {
+        let parsed: LouvainConfig = serde_json::from_value(config.clone())
+            .map_err(|e| AlgorithmError::Execution(format!("Config parsing failed: {e}")))?;
+        parsed
+            .validate()
+            .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
+
+        let start = std::time::Instant::now();
+        let storage = LouvainStorageRuntime::new(graph_store, parsed.concurrency)?;
+        let mut computation = LouvainComputationRuntime::new();
+        let termination_flag = TerminationFlag::default();
+        let mut progress = TaskProgressTracker::with_concurrency(
+            Tasks::leaf_with_volume("louvain".to_string(), storage.node_count()),
+            parsed.concurrency,
+        );
+
+        let result = storage.compute_louvain(
+            &mut computation,
+            &parsed,
+            &mut progress,
+            &termination_flag,
+        )?;
+
+        Ok(LouvainResult {
+            execution_time: start.elapsed(),
+            ..result
+        })
     }
 }

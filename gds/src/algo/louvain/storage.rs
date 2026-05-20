@@ -9,7 +9,7 @@ use crate::types::prelude::GraphStore;
 use std::collections::HashSet;
 use std::sync::Arc;
 
-use super::spec::LouvainResult;
+use super::spec::{LouvainConfig, LouvainResult};
 use super::LouvainComputationRuntime;
 
 #[derive(Clone)]
@@ -35,6 +35,7 @@ impl LouvainStorageRuntime {
     pub fn compute_louvain(
         &self,
         computation: &mut LouvainComputationRuntime,
+        config: &LouvainConfig,
         progress_tracker: &mut dyn ProgressTracker,
         termination_flag: &TerminationFlag,
     ) -> Result<LouvainResult, AlgorithmError> {
@@ -42,6 +43,10 @@ impl LouvainStorageRuntime {
         if node_count == 0 {
             return Ok(LouvainResult {
                 data: Vec::new(),
+                ran_levels: 0,
+                modularities: Vec::new(),
+                modularity: 0.0,
+                intermediate_communities: config.include_intermediate_communities.then(Vec::new),
                 node_count: 0,
                 execution_time: std::time::Duration::default(),
             });
@@ -68,7 +73,8 @@ impl LouvainStorageRuntime {
         }
 
         let input = ModularityOptimizationInput::new(node_count, adj);
-        let result = computation.compute(&input);
+        *computation = std::mem::take(computation).with_config(config);
+        let result = computation.compute(&input, config);
 
         progress_tracker.log_progress(1);
         progress_tracker.end_subtask();

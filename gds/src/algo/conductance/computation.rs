@@ -92,21 +92,14 @@ impl ConductanceComputationRuntime {
                             if target < 0 {
                                 continue;
                             }
-                            let target_idx = target as usize;
-
-                            let Ok(target_community_raw) =
-                                community_properties.long_value(target_idx as u64)
-                            else {
-                                continue;
-                            };
-                            if target_community_raw < 0 {
-                                continue;
-                            }
-                            let target_community = target_community_raw as u64;
-
                             let weight = if has_weights { cursor.property() } else { 1.0 };
 
-                            if source_community == target_community {
+                            let target_community_raw =
+                                community_properties.long_value(target as u64).unwrap_or(-1);
+
+                            if target_community_raw >= 0
+                                && source_community == target_community_raw as u64
+                            {
                                 *local_internal.entry(source_community).or_insert(0.0) += weight;
                             } else {
                                 *local_external.entry(source_community).or_insert(0.0) += weight;
@@ -169,12 +162,7 @@ impl ConductanceComputationRuntime {
                 continue;
             };
 
-            let denom = external + internal;
-            if denom <= 0.0 {
-                continue;
-            }
-
-            let conductance = external / denom;
+            let conductance = external / (external + internal);
 
             community_conductances.insert(*community, conductance);
             sum += conductance;
@@ -221,4 +209,22 @@ pub struct LocalCounts {
 pub struct RelationshipCounts {
     internal: HashMap<u64, f64>,
     external: HashMap<u64, f64>,
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn zero_denominator_preserves_java_nan() {
+        let mut runtime = ConductanceComputationRuntime::new();
+        let result = runtime.compute_conductances(RelationshipCounts {
+            internal: HashMap::from([(0, 0.0)]),
+            external: HashMap::from([(0, 0.0)]),
+        });
+
+        assert_eq!(result.community_count, 1);
+        assert!(result.community_conductances.get(&0).unwrap().is_nan());
+        assert!(result.global_average_conductance.is_nan());
+    }
 }

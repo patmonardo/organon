@@ -41,6 +41,20 @@ pub struct LeidenComputationResult {
     pub modularity: f64,
     pub levels: usize,
     pub converged: bool,
+    pub modularities: Vec<f64>,
+    pub intermediate_communities: Option<Vec<Vec<u64>>>,
+}
+
+impl LeidenComputationResult {
+    pub fn intermediate_communities(&self, node_id: usize) -> Vec<u64> {
+        match &self.intermediate_communities {
+            Some(levels) => levels
+                .iter()
+                .filter_map(|level| level.get(node_id).copied())
+                .collect(),
+            None => self.communities.get(node_id).copied().into_iter().collect(),
+        }
+    }
 }
 
 pub struct LeidenComputationRuntime {}
@@ -63,19 +77,27 @@ impl LeidenComputationRuntime {
                 modularity: 0.0,
                 levels: 0,
                 converged: true,
+                modularities: Vec::new(),
+                intermediate_communities: config.include_intermediate_communities.then(Vec::new),
             });
         }
+
+        let seed_mapper = SeedCommunityMapper::new(n, config);
 
         // === Init volumes ===
         // Total edge weight `m` changes after aggregation, so we treat it as a per-level value.
         let mut m = graph.total_edge_weight();
         if m <= 0.0 {
-            let communities = renumber_communities(starting_communities(n, config));
+            let communities = seed_mapper.map_assignments(&starting_communities(n, config));
             return Ok(LeidenComputationResult {
+                intermediate_communities: config
+                    .include_intermediate_communities
+                    .then(|| vec![communities.clone()]),
                 communities,
                 modularity: 0.0,
                 levels: 0,
                 converged: true,
+                modularities: vec![0.0],
             });
         }
 
@@ -87,13 +109,16 @@ impl LeidenComputationRuntime {
 
         // Working graph + assignments at current level.
         let mut working_graph = graph.clone();
-        let mut working_communities: Vec<u64> =
-            renumber_communities(starting_communities(n, config));
+        let mut working_communities: Vec<u64> = starting_communities(n, config);
 
         // Output communities over original nodes; updated after each level.
-        let mut output_communities = working_communities.clone();
+        let mut output_communities = seed_mapper.map_assignments(&working_communities);
 
         let mut last_modularity = modularity(&working_graph, &working_communities, m, config.gamma);
+        let mut modularities = vec![last_modularity];
+        let mut dendrogram = config
+            .include_intermediate_communities
+            .then(|| vec![output_communities.clone()]);
         let mut levels = 0usize;
         let mut converged = false;
 
@@ -111,7 +136,7 @@ impl LeidenComputationRuntime {
             let node_volumes = node_volumes_for(&working_graph);
 
             // Local move (queue-based) + refinement on the current working graph.
-            local_move_phase(
+            let swaps = local_move_phase(
                 &working_graph,
                 &mut working_communities,
                 &node_volumes,
@@ -133,15 +158,28 @@ impl LeidenComputationRuntime {
 
             let new_modularity = modularity(&working_graph, &working_communities, m, config.gamma);
             let improvement = new_modularity - last_modularity;
-            last_modularity = new_modularity;
 
             // Lift community ids back to original nodes.
-            output_communities = vec![0u64; n];
+            let previous_output = output_communities.clone();
+            let mut next_output_communities = vec![0u64; n];
             for (original, &working_node) in original_to_working.iter().enumerate() {
-                output_communities[original] = working_communities[working_node];
+                next_output_communities[original] = working_communities[working_node];
+            }
+            next_output_communities = seed_mapper.map_assignments(&next_output_communities);
+
+            if improvement < 0.0 {
+                output_communities = previous_output;
+                break;
             }
 
-            if improvement.abs() < config.tolerance {
+            last_modularity = new_modularity;
+            modularities.push(new_modularity);
+            output_communities = next_output_communities;
+            if let Some(levels) = &mut dendrogram {
+                levels.push(output_communities.clone());
+            }
+
+            if swaps == 0 || improvement <= config.tolerance {
                 converged = true;
                 break;
             }
@@ -171,6 +209,8 @@ impl LeidenComputationRuntime {
             modularity: final_modularity,
             levels,
             converged,
+            modularities,
+            intermediate_communities: dendrogram,
         })
     }
 
@@ -182,7 +222,11 @@ impl LeidenComputationRuntime {
             community_count,
             modularity: result.modularity,
             levels: result.levels,
+            ran_levels: result.levels,
             converged: result.converged,
+            did_converge: result.converged,
+            modularities: result.modularities,
+            intermediate_communities: result.intermediate_communities,
             node_count,
             execution_time: Duration::default(),
         }
@@ -202,13 +246,63 @@ fn node_volumes_for(graph: &AdjacencyGraph) -> Vec<f64> {
 fn starting_communities(node_count: usize, config: &LeidenConfig) -> Vec<u64> {
     if let Some(seeds) = &config.seed_communities {
         if seeds.len() == node_count {
-            return seeds.clone();
+            let mut ids = seeds.clone();
+            ids.sort_unstable();
+            ids.dedup();
+
+            let mut map: HashMap<u64, u64> = HashMap::with_capacity(ids.len());
+            for (new, old) in ids.into_iter().enumerate() {
+                map.insert(old, new as u64);
+            }
+
+            return seeds.iter().map(|seed| map[seed]).collect();
         }
         if seeds.is_empty() {
             // Treat empty as "no seeds".
         }
     }
     (0..node_count as u64).collect()
+}
+
+struct SeedCommunityMapper {
+    reverse: HashMap<u64, u64>,
+}
+
+impl SeedCommunityMapper {
+    fn new(node_count: usize, config: &LeidenConfig) -> Self {
+        let Some(seeds) = &config.seed_communities else {
+            return Self {
+                reverse: HashMap::new(),
+            };
+        };
+        if seeds.len() != node_count {
+            return Self {
+                reverse: HashMap::new(),
+            };
+        }
+
+        let mut ids = seeds.clone();
+        ids.sort_unstable();
+        ids.dedup();
+
+        let reverse = ids
+            .into_iter()
+            .enumerate()
+            .map(|(internal, seed)| (internal as u64, seed))
+            .collect();
+
+        Self { reverse }
+    }
+
+    fn map_assignments(&self, communities: &[u64]) -> Vec<u64> {
+        if self.reverse.is_empty() {
+            return communities.to_vec();
+        }
+        communities
+            .iter()
+            .map(|community| self.reverse.get(community).copied().unwrap_or(*community))
+            .collect()
+    }
 }
 
 fn local_move_phase(
@@ -218,7 +312,7 @@ fn local_move_phase(
     m: f64,
     gamma: f64,
     termination_flag: &TerminationFlag,
-) -> Result<(), String> {
+) -> Result<usize, String> {
     let n = graph.node_count;
 
     // Community total volume (sum of node volumes).
@@ -229,6 +323,7 @@ fn local_move_phase(
 
     let mut in_queue = vec![true; n];
     let mut queue: VecDeque<usize> = (0..n).collect();
+    let mut swaps = 0usize;
 
     while let Some(node) = queue.pop_front() {
         termination_flag.assert_running();
@@ -275,6 +370,7 @@ fn local_move_phase(
 
             *community_totals.entry(current).or_insert(0.0) -= k_i;
             *community_totals.entry(best).or_insert(0.0) += k_i;
+            swaps += 1;
 
             // Add neighbors to queue.
             for (nbr, _) in &graph.adj[node] {
@@ -286,7 +382,7 @@ fn local_move_phase(
         }
     }
 
-    Ok(())
+    Ok(swaps)
 }
 
 fn refinement_phase(

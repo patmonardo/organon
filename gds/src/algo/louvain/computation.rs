@@ -1,4 +1,4 @@
-use super::spec::LouvainResult;
+use super::spec::{LouvainConfig, LouvainResult};
 use crate::algo::modularity_optimization::{
     ModularityOptimizationComputationRuntime, ModularityOptimizationConfig,
     ModularityOptimizationInput,
@@ -21,10 +21,28 @@ impl LouvainComputationRuntime {
         }
     }
 
-    pub fn compute(&mut self, input: &ModularityOptimizationInput) -> LouvainResult {
+    pub fn with_config(mut self, config: &LouvainConfig) -> Self {
+        self.max_levels = config.max_iterations;
+        if config.max_levels > 0 {
+            self.max_levels = config.max_levels;
+        }
+        self.tolerance = config.tolerance;
+        self.gamma = config.gamma;
+        self
+    }
+
+    pub fn compute(
+        &mut self,
+        input: &ModularityOptimizationInput,
+        config: &LouvainConfig,
+    ) -> LouvainResult {
         if input.node_count == 0 {
             return LouvainResult {
                 data: Vec::new(),
+                ran_levels: 0,
+                modularities: Vec::new(),
+                modularity: 0.0,
+                intermediate_communities: config.include_intermediate_communities.then(Vec::new),
                 node_count: 0,
                 execution_time: Duration::default(),
             };
@@ -35,10 +53,15 @@ impl LouvainComputationRuntime {
 
         let mut working_graph = input.clone();
         let mut last_modularity = f64::NEG_INFINITY;
+        let mut modularities = Vec::new();
+        let mut ran_levels = 0usize;
+        let mut dendrogram = config
+            .include_intermediate_communities
+            .then(|| vec![mapping.iter().map(|node| *node as u64).collect::<Vec<_>>()]);
 
         let mut modopt = ModularityOptimizationComputationRuntime::new();
         let modopt_config = ModularityOptimizationConfig {
-            max_iterations: 20,
+            max_iterations: config.max_iterations,
             tolerance: self.tolerance,
             gamma: self.gamma,
             ..ModularityOptimizationConfig::default()
@@ -54,6 +77,14 @@ impl LouvainComputationRuntime {
                 }
                 return LouvainResult {
                     data,
+                    ran_levels,
+                    modularities,
+                    modularity: if last_modularity.is_finite() {
+                        last_modularity
+                    } else {
+                        0.0
+                    },
+                    intermediate_communities: dendrogram,
                     node_count: original_node_count,
                     execution_time: Duration::default(),
                 };
@@ -78,9 +109,18 @@ impl LouvainComputationRuntime {
 
             let improvement = modularity_now - last_modularity;
             last_modularity = modularity_now;
+            modularities.push(modularity_now);
+            ran_levels += 1;
+
+            if let Some(levels) = &mut dendrogram {
+                levels.push(mapping.iter().map(|node| *node as u64).collect());
+            }
 
             // Stop if no improvement or no aggregation possible.
-            if improvement.abs() <= self.tolerance || new_node_count == working_graph.node_count {
+            if ran_levels > 1 && improvement <= self.tolerance {
+                break;
+            }
+            if new_node_count == working_graph.node_count {
                 break;
             }
 
@@ -94,6 +134,10 @@ impl LouvainComputationRuntime {
         }
         LouvainResult {
             data,
+            ran_levels,
+            modularity: modularities.last().copied().unwrap_or(0.0),
+            modularities,
+            intermediate_communities: dendrogram,
             node_count: original_node_count,
             execution_time: Duration::default(),
         }

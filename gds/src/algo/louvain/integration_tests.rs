@@ -75,6 +75,7 @@ mod tests {
         assert_ne!(result.data[2], result.data[0]);
 
         let stats = graph.louvain().stats().unwrap();
+        assert_eq!(stats.node_count, 3);
         assert_eq!(stats.community_count, 2);
     }
 
@@ -87,6 +88,65 @@ mod tests {
         assert!(result.data.is_empty());
 
         let stats = graph.louvain().stats().unwrap();
+        assert_eq!(stats.node_count, 0);
         assert_eq!(stats.community_count, 0);
+    }
+
+    #[test]
+    fn louvain_stats_include_node_count() {
+        let stats =
+            crate::algo::louvain::LouvainResultBuilder::new(crate::algo::louvain::LouvainResult {
+                data: vec![1, 1, 2],
+                ran_levels: 1,
+                modularities: vec![0.25],
+                modularity: 0.25,
+                intermediate_communities: None,
+                node_count: 3,
+                execution_time: std::time::Duration::default(),
+            })
+            .stats();
+
+        assert_eq!(stats.node_count, 3);
+        assert_eq!(stats.community_count, 2);
+        assert_eq!(stats.ran_levels, 1);
+        assert_eq!(stats.modularity, 0.25);
+    }
+
+    #[test]
+    fn louvain_tracks_intermediate_communities_when_enabled() {
+        let store = store_from_outgoing(vec![vec![1], vec![0], vec![]]);
+        let graph = GraphFacade::new(Arc::new(store));
+
+        let result = graph
+            .louvain()
+            .with_spec_config(crate::algo::louvain::LouvainConfig {
+                include_intermediate_communities: true,
+                ..crate::algo::louvain::LouvainConfig::default()
+            })
+            .unwrap()
+            .run()
+            .unwrap();
+
+        let levels = result.intermediate_communities.as_ref().unwrap();
+        assert!(!levels.is_empty());
+        assert!(levels.iter().all(|level| level.len() == 3));
+        assert_eq!(result.intermediate_communities(0).len(), levels.len());
+        assert_eq!(result.community(0), Some(result.data[0]));
+    }
+
+    #[test]
+    fn louvain_result_intermediate_falls_back_to_final_assignment() {
+        let result = crate::algo::louvain::LouvainResult {
+            data: vec![4, 4, 7],
+            ran_levels: 1,
+            modularities: vec![0.0],
+            modularity: 0.0,
+            intermediate_communities: None,
+            node_count: 3,
+            execution_time: std::time::Duration::default(),
+        };
+
+        assert_eq!(result.community(2), Some(7));
+        assert_eq!(result.intermediate_communities(2), vec![7]);
     }
 }

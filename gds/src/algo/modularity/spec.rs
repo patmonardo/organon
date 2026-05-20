@@ -1,4 +1,11 @@
+use super::ModularityComputationRuntime;
+use super::ModularityStorageRuntime;
+use crate::concurrency::TerminationFlag;
 use crate::config::validation::ConfigError;
+use crate::core::utils::progress::TaskProgressTracker;
+use crate::core::utils::progress::Tasks;
+use crate::define_algorithm_spec;
+use crate::projection::eval::algorithm::AlgorithmError;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use std::time::Duration;
@@ -69,6 +76,7 @@ pub struct ModularityResult {
 /// Statistics for modularity computation
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ModularityStats {
+    pub node_count: usize,
     pub total_modularity: f64,
     pub community_count: usize,
     pub execution_time_ms: u64,
@@ -109,6 +117,7 @@ impl ModularityResultBuilder {
 
     pub fn stats(&self) -> ModularityStats {
         ModularityStats {
+            node_count: self.result.node_count,
             total_modularity: self.result.total_modularity,
             community_count: self.result.community_count,
             execution_time_ms: self.result.execution_time.as_millis() as u64,
@@ -117,5 +126,41 @@ impl ModularityResultBuilder {
 
     pub fn execution_time_ms(&self) -> u64 {
         self.result.execution_time.as_millis() as u64
+    }
+}
+
+define_algorithm_spec! {
+    name: "modularity",
+    output_type: ModularityResult,
+    projection_hint: Dense,
+    modes: [Stream, Stats, MutateNodeProperty, WriteNodeProperty],
+
+    execute: |_self, graph_store, config, _context| {
+        let parsed: ModularityConfig = serde_json::from_value(config.clone())
+            .map_err(|e| AlgorithmError::Execution(format!("Config parsing failed: {e}")))?;
+        parsed
+            .validate()
+            .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
+
+        let start = std::time::Instant::now();
+        let storage = ModularityStorageRuntime::new(graph_store)?;
+        let computation = ModularityComputationRuntime::new();
+        let termination_flag = TerminationFlag::default();
+        let mut progress = TaskProgressTracker::with_concurrency(
+            Tasks::leaf_with_volume("modularity".to_string(), storage.node_count()),
+            parsed.concurrency,
+        );
+
+        let result = storage.compute_modularity(
+            &computation,
+            &parsed,
+            &mut progress,
+            &termination_flag,
+        )?;
+
+        Ok(ModularityResult {
+            execution_time: start.elapsed(),
+            ..result
+        })
     }
 }

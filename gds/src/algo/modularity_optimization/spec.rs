@@ -1,5 +1,15 @@
+use super::ModularityOptimizationComputationRuntime;
+use super::ModularityOptimizationStorageRuntime;
+use crate::concurrency::Concurrency;
+use crate::concurrency::TerminationFlag;
 use crate::config::validation::ConfigError;
-use crate::core::utils::progress::{Task, Tasks};
+use crate::core::utils::progress::EmptyTaskRegistryFactory;
+use crate::core::utils::progress::JobId;
+use crate::core::utils::progress::Task;
+use crate::core::utils::progress::TaskProgressTracker;
+use crate::core::utils::progress::Tasks;
+use crate::define_algorithm_spec;
+use crate::projection::eval::algorithm::AlgorithmError;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use std::time::Duration;
@@ -154,6 +164,7 @@ pub struct ModularityOptimizationResult {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ModularityOptimizationStats {
+    pub node_count: usize,
     pub modularity: f64,
     pub community_count: usize,
     pub ran_iterations: usize,
@@ -193,11 +204,57 @@ impl ModularityOptimizationResultBuilder {
             .len();
 
         ModularityOptimizationStats {
+            node_count: self.result.node_count,
             modularity: self.result.modularity,
             community_count,
             ran_iterations: self.result.ran_iterations,
             did_converge: self.result.did_converge,
             execution_time_ms: self.result.execution_time.as_millis() as u64,
         }
+    }
+}
+
+define_algorithm_spec! {
+    name: "modularity_optimization",
+    output_type: ModularityOptimizationResult,
+    projection_hint: Dense,
+    modes: [Stream, Stats, MutateNodeProperty, WriteNodeProperty],
+
+    execute: |_self, graph_store, config, _context| {
+        let parsed: ModularityOptimizationConfig = serde_json::from_value(config.clone())
+            .map_err(|e| AlgorithmError::Execution(format!("Config parsing failed: {e}")))?;
+        parsed
+            .validate()
+            .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
+
+        let start = std::time::Instant::now();
+        let storage = ModularityOptimizationStorageRuntime::new(graph_store, &parsed)?;
+        let mut computation = ModularityOptimizationComputationRuntime::new();
+        let termination_flag = TerminationFlag::default();
+        let base_task = modularity_optimization_progress_task(
+            storage.node_count(),
+            storage.relationship_count(),
+            parsed.max_iterations,
+        );
+        let registry_factory = EmptyTaskRegistryFactory;
+        let mut progress = TaskProgressTracker::with_registry(
+            base_task,
+            Concurrency::of(parsed.concurrency.max(1)),
+            JobId::new(),
+            &registry_factory,
+        );
+
+        let result = storage.compute_modularity_optimization(
+            &mut computation,
+            &parsed,
+            &mut progress,
+            &termination_flag,
+        )?;
+
+        Ok(ModularityOptimizationResult {
+            node_count: storage.node_count(),
+            execution_time: start.elapsed(),
+            ..result
+        })
     }
 }

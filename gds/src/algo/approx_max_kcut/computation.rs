@@ -106,7 +106,7 @@ impl ApproxMaxKCutComputationRuntime {
 
         ApproxMaxKCutResult {
             communities: best_communities,
-            cut_cost: best_cost.max(0.0),
+            cut_cost: best_cost,
             k: self.config.k,
             node_count,
             execution_time: Duration::default(),

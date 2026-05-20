@@ -18,7 +18,6 @@ use crate::algo::louvain::{
 };
 use crate::collections::backends::vec::VecLong;
 use crate::concurrency::TerminationFlag;
-use crate::config::config_trait::ValidatedConfig;
 use crate::core::utils::progress::{TaskRegistry, Tasks};
 use crate::mem::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
@@ -94,6 +93,44 @@ impl LouvainFacade {
 
     pub fn concurrency(mut self, concurrency: usize) -> Self {
         self.config.concurrency = concurrency;
+        self
+    }
+
+    pub fn max_iterations(mut self, max_iterations: usize) -> Self {
+        self.config.max_iterations = max_iterations;
+        self
+    }
+
+    pub fn max_levels(mut self, max_levels: usize) -> Self {
+        self.config.max_levels = max_levels;
+        self
+    }
+
+    pub fn tolerance(mut self, tolerance: f64) -> Self {
+        self.config.tolerance = tolerance;
+        self
+    }
+
+    pub fn gamma(mut self, gamma: f64) -> Self {
+        self.config.gamma = gamma;
+        self
+    }
+
+    pub fn theta(mut self, theta: f64) -> Self {
+        self.config.theta = theta;
+        self
+    }
+
+    pub fn include_intermediate_communities(
+        mut self,
+        include_intermediate_communities: bool,
+    ) -> Self {
+        self.config.include_intermediate_communities = include_intermediate_communities;
+        self
+    }
+
+    pub fn seed_property(mut self, seed_property: impl Into<String>) -> Self {
+        self.config.seed_property = Some(seed_property.into());
         self
     }
 
@@ -174,8 +211,15 @@ impl LouvainFacade {
         let assignment_memory = node_count * 8;
         let modularity_memory = node_count * 8;
         let graph_memory = node_count * 16;
+        let dendrogram_memory = if self.config.include_intermediate_communities {
+            node_count
+                .saturating_mul(self.config.max_levels)
+                .saturating_mul(8)
+        } else {
+            node_count.saturating_mul(16)
+        };
 
-        let total = assignment_memory + modularity_memory + graph_memory;
+        let total = assignment_memory + modularity_memory + graph_memory + dendrogram_memory;
         MemoryRange::of_range(total, total * 2) // Conservative upper bound
     }
 
@@ -200,8 +244,12 @@ impl LouvainFacade {
             self.task_registry.as_ref(),
         );
 
-        let result =
-            storage.compute_louvain(&mut computation, &mut progress_tracker, &termination_flag)?;
+        let result = storage.compute_louvain(
+            &mut computation,
+            &self.config,
+            &mut progress_tracker,
+            &termination_flag,
+        )?;
         Ok(LouvainResult {
             execution_time: start.elapsed(),
             ..result

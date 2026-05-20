@@ -118,12 +118,11 @@ impl ModularityOptimizationComputationRuntime {
             }
         }
 
-        let (compressed, _) = compress_assignment(&assignment);
         let modularity =
-            modularity_from_assignment(input, &compressed, &degrees, two_m, config.gamma);
+            modularity_from_assignment(input, &assignment, &degrees, two_m, config.gamma);
 
         ModularityOptimizationResult {
-            communities: compressed.into_iter().map(|c| c as u64).collect(),
+            communities: assignment.into_iter().map(|c| c as u64).collect(),
             modularity,
             ran_iterations,
             did_converge,
@@ -131,21 +130,6 @@ impl ModularityOptimizationComputationRuntime {
             execution_time: Duration::default(),
         }
     }
-}
-
-fn compress_assignment(assignment: &[usize]) -> (Vec<usize>, usize) {
-    let mut map: HashMap<usize, usize> = HashMap::new();
-    let mut next = 0usize;
-    let mut out = Vec::with_capacity(assignment.len());
-    for &c in assignment {
-        let id = *map.entry(c).or_insert_with(|| {
-            let v = next;
-            next += 1;
-            v
-        });
-        out.push(id);
-    }
-    (out, next)
 }
 
 fn modularity_from_assignment(

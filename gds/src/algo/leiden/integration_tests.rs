@@ -39,6 +39,53 @@ fn leiden_isolated_nodes_each_community() {
 }
 
 #[test]
+fn leiden_isolated_seeded_nodes_preserve_seed_labels() {
+    let graph = build_adj(3, &[]);
+    let config = LeidenConfig {
+        seed_communities: Some(vec![10, 10, 20]),
+        ..LeidenConfig::default()
+    };
+    let mut runtime = LeidenComputationRuntime::new();
+    let result = runtime
+        .compute(&graph, &config, &TerminationFlag::default())
+        .unwrap();
+
+    assert_eq!(result.communities, vec![10, 10, 20]);
+}
+
+#[test]
+fn leiden_rejects_mismatched_seed_length() {
+    let config = LeidenConfig {
+        seed_communities: Some(vec![0, 1]),
+        ..LeidenConfig::default()
+    };
+
+    assert!(config.validate_for_node_count(3).is_err());
+}
+
+#[test]
+fn leiden_stats_include_node_count() {
+    let stats = super::spec::LeidenResultBuilder::new(super::spec::LeidenResult {
+        communities: vec![10, 10, 20],
+        community_count: 2,
+        modularity: 0.5,
+        levels: 1,
+        ran_levels: 1,
+        converged: true,
+        did_converge: true,
+        modularities: vec![0.5],
+        intermediate_communities: None,
+        node_count: 3,
+        execution_time: std::time::Duration::default(),
+    })
+    .stats();
+
+    assert_eq!(stats.node_count, 3);
+    assert_eq!(stats.community_count, 2);
+    assert!(stats.converged);
+}
+
+#[test]
 fn leiden_two_components_stay_separate() {
     // Component A: 0-1-2 ; Component B: 3-4
     let graph = build_adj(5, &[(0, 1, 1.0), (1, 2, 1.0), (3, 4, 1.0)]);
@@ -86,4 +133,40 @@ fn leiden_refinement_splits_disconnected_seeded_community() {
     assert_ne!(result.communities[0], result.communities[2]);
     assert_eq!(result.communities[0], result.communities[1]);
     assert_eq!(result.communities[2], result.communities[3]);
+}
+
+#[test]
+fn leiden_tracks_intermediate_communities_when_enabled() {
+    let graph = build_adj(3, &[(0, 1, 1.0)]);
+    let config = LeidenConfig {
+        include_intermediate_communities: true,
+        max_iterations: 2,
+        ..LeidenConfig::default()
+    };
+
+    let mut runtime = LeidenComputationRuntime::new();
+    let result = runtime
+        .compute(&graph, &config, &TerminationFlag::default())
+        .unwrap();
+
+    let levels = result.intermediate_communities.as_ref().unwrap();
+    assert!(!levels.is_empty());
+    assert!(levels.iter().all(|level| level.len() == 3));
+    assert_eq!(result.intermediate_communities(0).len(), levels.len());
+    assert!(!result.modularities.is_empty());
+}
+
+#[test]
+fn leiden_intermediate_falls_back_to_final_assignment() {
+    let graph = build_adj(2, &[(0, 1, 1.0)]);
+    let config = LeidenConfig::default();
+    let mut runtime = LeidenComputationRuntime::new();
+    let result = runtime
+        .compute(&graph, &config, &TerminationFlag::default())
+        .unwrap();
+
+    assert_eq!(
+        result.intermediate_communities(0),
+        vec![result.communities[0]]
+    );
 }

@@ -90,23 +90,6 @@ impl ModularityComputationRuntime {
             total_relationship_weight += node_degree;
         }
 
-        if total_relationship_weight == 0.0 {
-            return ModularityResult {
-                node_count,
-                total_relationship_weight,
-                total_modularity: 0.0,
-                community_count,
-                community_modularities: index_to_community
-                    .into_iter()
-                    .map(|community_id| CommunityModularity {
-                        community_id,
-                        modularity: 0.0,
-                    })
-                    .collect(),
-                execution_time: Duration::default(),
-            };
-        }
-
         // Using the standard modularity decomposition:
         // Q = sum_c ( e_c - a_c^2 ) where
         // e_c = (sum_{i,j in c} A_ij) / (2m) and a_c = (sum_{i in c} k_i) / (2m)

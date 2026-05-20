@@ -124,11 +124,24 @@ impl LeidenFacade {
         self
     }
 
+    pub fn include_intermediate_communities(
+        mut self,
+        include_intermediate_communities: bool,
+    ) -> Self {
+        self.config.include_intermediate_communities = include_intermediate_communities;
+        self
+    }
+
     /// Set random seed for reproducibility
     ///
     /// Default: 42
     pub fn random_seed(mut self, seed: u64) -> Self {
         self.config.random_seed = seed;
+        self
+    }
+
+    pub fn concurrency(mut self, concurrency: usize) -> Self {
+        self.config.concurrency = concurrency;
         self
     }
 
@@ -154,8 +167,11 @@ impl LeidenFacade {
             "leiden".to_string(),
             node_count.saturating_add(self.config.max_iterations),
         );
-        let mut progress_tracker =
-            super::progress_tracker(base_task, 1, self.task_registry.as_ref());
+        let mut progress_tracker = super::progress_tracker(
+            base_task,
+            self.config.concurrency,
+            self.task_registry.as_ref(),
+        );
 
         let termination_flag = TerminationFlag::default();
 
@@ -247,7 +263,11 @@ impl LeidenFacade {
         let relationship_count = self.graph_store.relationship_count();
 
         // Per node: community id + per-level bookkeeping (conservative).
-        let per_node = 128usize;
+        let per_node = if self.config.include_intermediate_communities {
+            128usize.saturating_add(self.config.max_iterations.saturating_mul(8))
+        } else {
+            128usize
+        };
         // Per relationship: scan/aggregation.
         let per_relationship = 8usize;
 
@@ -268,10 +288,12 @@ mod tests {
     fn test_leiden_builder() {
         // Test that builder creates correct config (without graph store for now)
         let config = LeidenConfig {
+            concurrency: 4,
             gamma: 1.5,
             theta: 0.05,
             tolerance: 0.001,
             max_iterations: 20,
+            include_intermediate_communities: false,
             random_seed: 123,
             seed_communities: None,
         };
