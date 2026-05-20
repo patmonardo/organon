@@ -73,6 +73,7 @@ mod tests {
         let result = graph.wcc().run().unwrap();
         assert_eq!(result.component_count, 1);
         assert_eq!(result.components.len(), 4);
+        assert_eq!(result.components, vec![0, 0, 0, 0]);
         assert_eq!(result.components[0], result.components[1]);
         assert_eq!(result.components[1], result.components[2]);
         assert_eq!(result.components[2], result.components[3]);
@@ -87,6 +88,7 @@ mod tests {
         let result = graph.wcc().run().unwrap();
         assert_eq!(result.component_count, 2);
         assert_eq!(result.components.len(), 4);
+        assert_eq!(result.components, vec![0, 0, 2, 2]);
         assert_eq!(result.components[0], result.components[1]);
         assert_eq!(result.components[2], result.components[3]);
         assert_ne!(result.components[0], result.components[2]);
@@ -100,6 +102,7 @@ mod tests {
         let result = graph.wcc().run().unwrap();
         assert_eq!(result.component_count, 3);
         assert_eq!(result.components.len(), 3);
+        assert_eq!(result.components, vec![0, 1, 2]);
         assert_ne!(result.components[0], result.components[1]);
         assert_ne!(result.components[1], result.components[2]);
     }
@@ -124,7 +127,18 @@ mod tests {
 
         let result = graph.wcc().seed_property("seed").run().unwrap();
         assert_eq!(result.component_count, 2);
+        assert_eq!(result.components, vec![7, 7, 9]);
         assert_eq!(result.components[0], result.components[1]);
         assert_ne!(result.components[0], result.components[2]);
+    }
+
+    #[test]
+    fn wcc_stats_include_node_count() {
+        let store = store_from_outgoing(vec![vec![1], vec![], vec![3], vec![]]);
+        let graph = GraphFacade::new(Arc::new(store));
+
+        let stats = graph.wcc().stats().unwrap();
+        assert_eq!(stats.node_count, 4);
+        assert_eq!(stats.component_count, 2);
     }
 }

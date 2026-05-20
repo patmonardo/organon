@@ -95,6 +95,7 @@ pub struct WccResult {
 /// Aggregated WCC stats.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub struct WccStats {
+    pub node_count: usize,
     pub component_count: usize,
     pub execution_time_ms: u64,
 }
@@ -134,6 +135,7 @@ impl WccResultBuilder {
 
     pub fn stats(&self) -> WccStats {
         WccStats {
+            node_count: self.result.node_count,
             component_count: self.result.component_count,
             execution_time_ms: self.result.execution_time.as_millis() as u64,
         }
@@ -148,7 +150,7 @@ define_algorithm_spec! {
     name: "wcc",
     output_type: WccResult,
     projection_hint: Dense,
-    modes: [Stream, Stats],
+    modes: [Stream, Stats, MutateNodeProperty, WriteNodeProperty],
 
     execute: |_self, graph_store, config_input, _context| {
         let parsed_config: WccConfig = serde_json::from_value(config_input.clone())

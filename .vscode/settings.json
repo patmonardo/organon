@@ -17,5 +17,12 @@
   },
   "chat.tools.terminal.autoApprove": {
     "cargo run": true
-  }
+  },
+  "python-envs.pythonProjects": [
+    {
+      "path": "gds/src/algo/wcc",
+      "envManager": "ms-python.python:venv",
+      "packageManager": "ms-python.python:pip"
+    }
+  ]
 }

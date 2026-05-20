@@ -8,13 +8,33 @@
 
 use super::spec::{DeltaSteppingPathResult, DeltaSteppingResult};
 use super::DeltaSteppingComputationRuntime;
+use crate::concurrency::{install_with_concurrency, Concurrency};
 use crate::core::utils::progress::{ProgressTracker, UNKNOWN_VOLUME};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::Graph;
 use crate::types::graph::NodeId;
 use crate::types::properties::relationship::RelationshipCursorBox;
-use std::collections::VecDeque;
+use rayon::prelude::*;
+use std::collections::HashMap;
+use std::collections::HashSet;
 use std::time::Instant;
+
+const FRONTIER_BATCH_SIZE: usize = 64;
+const NO_BIN: usize = usize::MAX;
+
+#[derive(Debug, Clone)]
+struct RelaxationCandidate {
+    source_node: NodeId,
+    target_node: NodeId,
+    new_distance: f64,
+    dest_bin: usize,
+}
+
+#[derive(Debug, Clone)]
+struct BinExpansion {
+    candidates: Vec<RelaxationCandidate>,
+    scanned_relationships: usize,
+}
 
 /// Delta Stepping Storage Runtime
 ///
@@ -72,7 +92,6 @@ impl DeltaSteppingStorageRuntime {
         }
 
         let mut scanned_relationships: usize = 0;
-        const LOG_BATCH: usize = 256;
 
         let start_time = Instant::now();
 
@@ -87,91 +106,28 @@ impl DeltaSteppingStorageRuntime {
                 node_count,
             );
 
-            // Initialize frontier with source node
-            let mut frontier = VecDeque::new();
-            frontier.push_back(self.source_node);
-
             // Initialize distances
             computation.set_distance(self.source_node, 0.0);
             if self.store_predecessors {
                 computation.set_predecessor(self.source_node, None);
             }
 
-            // Main Delta Stepping loop
-            let mut current_bin = 0;
-            let max_iterations = node_count; // Safety limit
-            let mut iteration = 0;
-
-            while !frontier.is_empty() && iteration < max_iterations {
-                // Phase 1: Relax nodes in current bin
-                let mut next_frontier = VecDeque::new();
-
-                while let Some(node_id) = frontier.pop_front() {
-                    // Check if node is in current bin
-                    let node_distance = computation.distance(node_id);
-                    let bin_start = self.delta * current_bin as f64;
-                    let bin_end = bin_start + self.delta;
-                    if node_distance >= bin_start && node_distance < bin_end {
-                        // Relax all outgoing edges from this node
-                        let neighbors =
-                            self.get_neighbors_with_weights(graph, node_id, direction)?;
-
-                        scanned_relationships =
-                            scanned_relationships.saturating_add(neighbors.len());
-                        if scanned_relationships >= LOG_BATCH {
-                            progress_tracker.log_progress(scanned_relationships);
-                            scanned_relationships = 0;
-                        }
-
-                        for (neighbor, weight) in neighbors {
-                            Self::validate_node_in_graph(neighbor, node_count, "target")?;
-                            Self::validate_edge_weight(node_id, neighbor, weight)?;
-
-                            let current_distance = computation.distance(node_id);
-                            let new_distance = current_distance + weight;
-                            if !new_distance.is_finite() {
-                                return Err(AlgorithmError::InvalidGraph(format!(
-                                    "Delta Stepping path cost overflowed for edge {node_id}->{neighbor}"
-                                )));
-                            }
-
-                            if new_distance < computation.distance(neighbor) {
-                                computation.set_distance(neighbor, new_distance);
-                                if self.store_predecessors {
-                                    computation.set_predecessor(neighbor, Some(node_id));
-                                }
-
-                                // Determine which bin this node belongs to
-                                let dest_bin = (new_distance / self.delta) as usize;
-                                if dest_bin == current_bin {
-                                    next_frontier.push_back(neighbor);
-                                } else {
-                                    // Add to appropriate bin for future processing
-                                    computation.add_to_bin(neighbor, dest_bin);
-                                }
-                            }
-                        }
-                    }
-                }
-
-                // Phase 2: Sync and find next bin
-                if !next_frontier.is_empty() {
-                    frontier = next_frontier;
-                } else {
-                    // Find the next non-empty bin
-                    current_bin = computation.find_next_non_empty_bin(current_bin + 1);
-                    if current_bin == usize::MAX {
-                        break; // No more bins to process
-                    }
-
-                    // Move nodes from next bin to frontier
-                    let bin_nodes = computation.get_bin_nodes(current_bin);
-                    for node_id in bin_nodes {
-                        frontier.push_back(node_id);
-                    }
-                }
-
-                iteration += 1;
+            if let Some(graph) = graph {
+                scanned_relationships = self.compute_parallel_bins(
+                    computation,
+                    graph,
+                    direction,
+                    node_count,
+                    progress_tracker,
+                )?;
+            } else {
+                scanned_relationships = self.compute_sequential_bins(
+                    computation,
+                    graph,
+                    direction,
+                    node_count,
+                    progress_tracker,
+                )?;
             }
 
             if scanned_relationships > 0 {
@@ -224,6 +180,242 @@ impl DeltaSteppingStorageRuntime {
         }
 
         Ok(paths)
+    }
+
+    fn compute_sequential_bins(
+        &self,
+        computation: &mut DeltaSteppingComputationRuntime,
+        graph: Option<&dyn Graph>,
+        direction: u8,
+        node_count: usize,
+        progress_tracker: &mut dyn ProgressTracker,
+    ) -> Result<usize, AlgorithmError> {
+        let mut scanned_relationships = 0usize;
+        const LOG_BATCH: usize = 256;
+
+        let mut current_bin = 0usize;
+        let mut frontier = vec![self.source_node];
+
+        while current_bin != NO_BIN {
+            loop {
+                let mut next_local_frontier = Vec::new();
+
+                for node_id in frontier.drain(..) {
+                    if self.bin_index(computation.distance(node_id)) != current_bin {
+                        continue;
+                    }
+
+                    let neighbors = self.get_neighbors_with_weights(graph, node_id, direction)?;
+                    scanned_relationships = scanned_relationships.saturating_add(neighbors.len());
+                    if scanned_relationships >= LOG_BATCH {
+                        progress_tracker.log_progress(scanned_relationships);
+                        scanned_relationships = 0;
+                    }
+
+                    for (neighbor, weight) in neighbors {
+                        Self::validate_node_in_graph(neighbor, node_count, "target")?;
+                        Self::validate_edge_weight(node_id, neighbor, weight)?;
+
+                        let new_distance = computation.distance(node_id) + weight;
+                        Self::validate_path_cost(node_id, neighbor, new_distance)?;
+                        if new_distance < computation.distance(neighbor) {
+                            computation.set_distance(neighbor, new_distance);
+                            if self.store_predecessors {
+                                computation.set_predecessor(neighbor, Some(node_id));
+                            }
+
+                            let dest_bin = self.bin_index(new_distance);
+                            if dest_bin == current_bin {
+                                next_local_frontier.push(neighbor);
+                            } else {
+                                computation.add_to_bin(neighbor, dest_bin);
+                            }
+                        }
+                    }
+                }
+
+                if next_local_frontier.is_empty() {
+                    break;
+                }
+                frontier = next_local_frontier;
+            }
+
+            current_bin = computation.find_next_non_empty_bin(current_bin + 1);
+            if current_bin == NO_BIN {
+                break;
+            }
+            frontier = computation.get_bin_nodes(current_bin);
+        }
+
+        Ok(scanned_relationships)
+    }
+
+    fn compute_parallel_bins(
+        &self,
+        computation: &mut DeltaSteppingComputationRuntime,
+        graph: &dyn Graph,
+        direction: u8,
+        node_count: usize,
+        progress_tracker: &mut dyn ProgressTracker,
+    ) -> Result<usize, AlgorithmError> {
+        let concurrency = Concurrency::from_usize(self.concurrency.max(1));
+        let mut scanned_relationships = 0usize;
+        let mut current_bin = 0usize;
+        let mut frontier = vec![self.source_node];
+
+        while current_bin != NO_BIN {
+            loop {
+                let expansions = self.expand_frontier_parallel(
+                    graph,
+                    computation,
+                    &frontier,
+                    current_bin,
+                    direction,
+                    node_count,
+                    concurrency,
+                )?;
+
+                let mut candidates_by_target: HashMap<NodeId, RelaxationCandidate> = HashMap::new();
+                for expansion in expansions {
+                    scanned_relationships =
+                        scanned_relationships.saturating_add(expansion.scanned_relationships);
+                    for candidate in expansion.candidates {
+                        candidates_by_target
+                            .entry(candidate.target_node)
+                            .and_modify(|existing| {
+                                if candidate.new_distance < existing.new_distance {
+                                    *existing = candidate.clone();
+                                }
+                            })
+                            .or_insert(candidate);
+                    }
+                }
+
+                if scanned_relationships > 0 {
+                    progress_tracker.log_progress(scanned_relationships);
+                    scanned_relationships = 0;
+                }
+
+                let mut next_local_frontier = Vec::new();
+                let mut queued_local = HashSet::new();
+                let mut candidates: Vec<_> = candidates_by_target.into_values().collect();
+                candidates.sort_by_key(|candidate| candidate.target_node);
+
+                for candidate in candidates {
+                    if candidate.new_distance < computation.distance(candidate.target_node) {
+                        computation.set_distance(candidate.target_node, candidate.new_distance);
+                        if self.store_predecessors {
+                            computation.set_predecessor(
+                                candidate.target_node,
+                                Some(candidate.source_node),
+                            );
+                        }
+
+                        if candidate.dest_bin == current_bin {
+                            if queued_local.insert(candidate.target_node) {
+                                next_local_frontier.push(candidate.target_node);
+                            }
+                        } else {
+                            computation.add_to_bin(candidate.target_node, candidate.dest_bin);
+                        }
+                    }
+                }
+
+                if next_local_frontier.is_empty() {
+                    break;
+                }
+                frontier = next_local_frontier;
+            }
+
+            current_bin = computation.find_next_non_empty_bin(current_bin + 1);
+            if current_bin == NO_BIN {
+                break;
+            }
+            frontier = computation.get_bin_nodes(current_bin);
+        }
+
+        Ok(scanned_relationships)
+    }
+
+    fn expand_frontier_parallel(
+        &self,
+        graph: &dyn Graph,
+        computation: &DeltaSteppingComputationRuntime,
+        frontier: &[NodeId],
+        current_bin: usize,
+        direction: u8,
+        node_count: usize,
+        concurrency: Concurrency,
+    ) -> Result<Vec<BinExpansion>, AlgorithmError> {
+        let chunk_count = frontier.len().div_ceil(FRONTIER_BATCH_SIZE);
+        install_with_concurrency(concurrency, || {
+            (0..chunk_count)
+                .into_par_iter()
+                .map(|chunk_idx| {
+                    let start = chunk_idx * FRONTIER_BATCH_SIZE;
+                    let end = (start + FRONTIER_BATCH_SIZE).min(frontier.len());
+                    self.expand_frontier_chunk(
+                        graph,
+                        computation,
+                        &frontier[start..end],
+                        current_bin,
+                        direction,
+                        node_count,
+                    )
+                })
+                .collect::<Result<Vec<_>, _>>()
+        })
+    }
+
+    fn expand_frontier_chunk(
+        &self,
+        graph: &dyn Graph,
+        computation: &DeltaSteppingComputationRuntime,
+        frontier: &[NodeId],
+        current_bin: usize,
+        direction: u8,
+        node_count: usize,
+    ) -> Result<BinExpansion, AlgorithmError> {
+        let worker_graph = Graph::concurrent_copy(graph);
+        let fallback = worker_graph.default_property_value();
+        let mut candidates = Vec::new();
+        let mut scanned_relationships = 0usize;
+
+        for node_id in frontier {
+            if self.bin_index(computation.distance(*node_id)) != current_bin {
+                continue;
+            }
+
+            let stream = if direction == 1 {
+                worker_graph.stream_inverse_relationships(*node_id, fallback)
+            } else {
+                worker_graph.stream_relationships(*node_id, fallback)
+            };
+
+            for cursor in stream {
+                scanned_relationships += 1;
+                let neighbor = cursor.target_id();
+                let weight = cursor.property();
+                Self::validate_node_in_graph(neighbor, node_count, "target")?;
+                Self::validate_edge_weight(*node_id, neighbor, weight)?;
+
+                let new_distance = computation.distance(*node_id) + weight;
+                Self::validate_path_cost(*node_id, neighbor, new_distance)?;
+                if new_distance < computation.distance(neighbor) {
+                    candidates.push(RelaxationCandidate {
+                        source_node: *node_id,
+                        target_node: neighbor,
+                        new_distance,
+                        dest_bin: self.bin_index(new_distance),
+                    });
+                }
+            }
+        }
+
+        Ok(BinExpansion {
+            candidates,
+            scanned_relationships,
+        })
     }
 
     /// Reconstruct a path from source to target
@@ -326,12 +518,33 @@ impl DeltaSteppingStorageRuntime {
         }
         Ok(())
     }
+
+    fn validate_path_cost(
+        source_node: NodeId,
+        target_node: NodeId,
+        cost: f64,
+    ) -> Result<(), AlgorithmError> {
+        if !cost.is_finite() {
+            return Err(AlgorithmError::InvalidGraph(format!(
+                "Delta Stepping path cost overflowed for edge {source_node}->{target_node}"
+            )));
+        }
+        Ok(())
+    }
+
+    fn bin_index(&self, distance: f64) -> usize {
+        (distance / self.delta) as usize
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
     use crate::core::utils::progress::{TaskProgressTracker, Tasks};
+    use crate::projection::Orientation;
+    use crate::types::graph_store::{DefaultGraphStore, GraphStore};
+    use crate::types::random::{RandomGraphConfig, RandomRelationshipConfig};
+    use std::collections::HashSet;
 
     #[test]
     fn test_delta_stepping_storage_runtime_creation() {
@@ -403,6 +616,62 @@ mod tests {
             .expect("expected path to node 3");
         assert_eq!(path_to_three.node_ids, vec![0, 1, 2, 3]);
         assert_eq!(path_to_three.costs, vec![0.0, 1.0, 3.0, 4.0]);
+    }
+
+    #[test]
+    fn graph_backed_parallel_matches_single_threaded_costs() {
+        let config = RandomGraphConfig {
+            seed: Some(99),
+            node_count: 12,
+            relationships: vec![RandomRelationshipConfig::new("REL", 0.6)],
+            ..RandomGraphConfig::default()
+        };
+        let store = DefaultGraphStore::random(&config).unwrap();
+        let rel_types = HashSet::new();
+        let graph = store
+            .get_graph_with_types_and_orientation(&rel_types, Orientation::Natural)
+            .unwrap();
+
+        let mut single_storage = DeltaSteppingStorageRuntime::new(0, 1.0, 1, true);
+        let mut single_computation = DeltaSteppingComputationRuntime::new(0, 1.0, 1, true);
+        let mut single_progress =
+            TaskProgressTracker::new(Tasks::leaf("delta_stepping".to_string()));
+        let single = single_storage
+            .compute_delta_stepping(
+                &mut single_computation,
+                Some(graph.as_ref()),
+                0,
+                &mut single_progress,
+            )
+            .unwrap();
+
+        let mut parallel_storage = DeltaSteppingStorageRuntime::new(0, 1.0, 4, true);
+        let mut parallel_computation = DeltaSteppingComputationRuntime::new(0, 1.0, 4, true);
+        let mut parallel_progress =
+            TaskProgressTracker::new(Tasks::leaf("delta_stepping".to_string()));
+        let parallel = parallel_storage
+            .compute_delta_stepping(
+                &mut parallel_computation,
+                Some(graph.as_ref()),
+                0,
+                &mut parallel_progress,
+            )
+            .unwrap();
+
+        let mut single_costs: Vec<_> = single
+            .shortest_paths
+            .iter()
+            .map(|path| (path.target_node, path.costs.last().copied().unwrap_or(0.0)))
+            .collect();
+        let mut parallel_costs: Vec<_> = parallel
+            .shortest_paths
+            .iter()
+            .map(|path| (path.target_node, path.costs.last().copied().unwrap_or(0.0)))
+            .collect();
+        single_costs.sort_by_key(|(target_node, _)| *target_node);
+        parallel_costs.sort_by_key(|(target_node, _)| *target_node);
+
+        assert_eq!(parallel_costs, single_costs);
     }
 
     #[test]

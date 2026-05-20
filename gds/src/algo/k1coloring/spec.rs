@@ -114,6 +114,7 @@ pub struct K1ColoringResult {
 /// Aggregated K1-Coloring stats.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub struct K1ColoringStats {
+    pub node_count: usize,
     pub did_converge: bool,
     pub ran_iterations: u64,
     pub color_count: usize,
@@ -163,6 +164,7 @@ impl K1ColoringResultBuilder {
             .len();
 
         K1ColoringStats {
+            node_count: self.result.node_count,
             did_converge: self.result.did_converge,
             ran_iterations: self.result.ran_iterations,
             color_count,
@@ -179,7 +181,7 @@ define_algorithm_spec! {
     name: "k1coloring",
     output_type: K1ColoringResult,
     projection_hint: Dense,
-    modes: [Stream, Stats],
+    modes: [Stream, Stats, MutateNodeProperty, WriteNodeProperty],
 
     execute: |_self, graph_store, config, _context| {
         let parsed: K1ColoringConfig = serde_json::from_value(config.clone())

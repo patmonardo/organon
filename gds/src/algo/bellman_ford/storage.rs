@@ -7,12 +7,33 @@
 
 use super::spec::{BellmanFordPathResult, BellmanFordResult};
 use super::BellmanFordComputationRuntime;
+use crate::concurrency::{install_with_concurrency, Concurrency};
 use crate::core::utils::progress::{ProgressTracker, UNKNOWN_VOLUME};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::Graph;
 use crate::types::graph::NodeId;
 use crate::types::properties::relationship::RelationshipCursorBox;
+use rayon::prelude::*;
+use std::collections::HashMap;
+use std::collections::HashSet;
 use std::collections::VecDeque;
+
+const FRONTIER_CHUNK_SIZE: usize = 64;
+
+#[derive(Debug, Clone)]
+struct RelaxationCandidate {
+    source_node: NodeId,
+    target_node: NodeId,
+    new_distance: f64,
+    new_length: u32,
+}
+
+#[derive(Debug, Clone)]
+struct FrontierExpansion {
+    candidates: Vec<RelaxationCandidate>,
+    negative_cycle_nodes: Vec<NodeId>,
+    scanned_relationships: usize,
+}
 
 /// Bellman-Ford Storage Runtime
 ///
@@ -70,7 +91,6 @@ impl BellmanFordStorageRuntime {
         }
 
         let mut scanned_relationships: usize = 0;
-        const LOG_BATCH: usize = 256;
 
         let result = (|| {
             // Initialize computation runtime
@@ -83,61 +103,27 @@ impl BellmanFordStorageRuntime {
                 node_count,
             );
 
-            // Initialize frontier with source node
-            let mut frontier = VecDeque::new();
-            frontier.push_back(self.source_node);
-
             // Initialize distances
             computation.set_distance(self.source_node, 0.0);
             computation.set_predecessor(self.source_node, None);
             computation.set_length(self.source_node, 0);
 
-            // Main Bellman-Ford loop
-            let mut iteration = 0;
-            let max_iterations = node_count; // Bellman-Ford converges in at most V-1 iterations
-
-            while !frontier.is_empty() && iteration < max_iterations {
-                let mut next_frontier = VecDeque::new();
-
-                // Process all nodes in current frontier
-                while let Some(node_id) = frontier.pop_front() {
-                    // Relax edges from this node according to direction
-                    let neighbors = self.get_neighbors_with_weights(graph, node_id, direction)?;
-                    scanned_relationships = scanned_relationships.saturating_add(neighbors.len());
-                    if scanned_relationships >= LOG_BATCH {
-                        progress_tracker.log_progress(scanned_relationships);
-                        scanned_relationships = 0;
-                    }
-
-                    for (neighbor, weight) in neighbors {
-                        Self::validate_node_in_graph(neighbor, node_count, "target")?;
-                        Self::validate_edge_weight(node_id, neighbor, weight)?;
-
-                        let current_distance = computation.distance(node_id);
-                        let new_distance = current_distance + weight;
-                        if !new_distance.is_finite() {
-                            return Err(AlgorithmError::InvalidGraph(format!(
-                                "Bellman-Ford path cost overflowed for edge {node_id}->{neighbor}"
-                            )));
-                        }
-
-                        if new_distance < computation.distance(neighbor) {
-                            computation.set_distance(neighbor, new_distance);
-                            computation.set_predecessor(neighbor, Some(node_id));
-                            computation.set_length(neighbor, computation.length(node_id) + 1);
-
-                            // Check for negative cycle (path length > V)
-                            if computation.length(neighbor) > node_count as u32 {
-                                computation.add_negative_cycle_node(neighbor);
-                            }
-
-                            next_frontier.push_back(neighbor);
-                        }
-                    }
-                }
-
-                frontier = next_frontier;
-                iteration += 1;
+            if let Some(graph) = graph {
+                scanned_relationships = self.compute_parallel_frontier(
+                    computation,
+                    graph,
+                    direction,
+                    node_count,
+                    progress_tracker,
+                )?;
+            } else {
+                scanned_relationships = self.compute_sequential_frontier(
+                    computation,
+                    graph,
+                    direction,
+                    node_count,
+                    progress_tracker,
+                )?;
             }
 
             if scanned_relationships > 0 {
@@ -198,6 +184,207 @@ impl BellmanFordStorageRuntime {
         }
 
         Ok(paths)
+    }
+
+    fn compute_sequential_frontier(
+        &self,
+        computation: &mut BellmanFordComputationRuntime,
+        graph: Option<&dyn Graph>,
+        direction: u8,
+        node_count: usize,
+        progress_tracker: &mut dyn ProgressTracker,
+    ) -> Result<usize, AlgorithmError> {
+        let mut scanned_relationships = 0usize;
+        const LOG_BATCH: usize = 256;
+
+        let mut frontier = VecDeque::new();
+        frontier.push_back(self.source_node);
+
+        while let Some(node_id) = frontier.pop_front() {
+            if computation.length(node_id) as usize >= node_count + 1 {
+                computation.add_negative_cycle_node(node_id);
+                if !self.track_negative_cycles {
+                    break;
+                }
+                continue;
+            }
+
+            let neighbors = self.get_neighbors_with_weights(graph, node_id, direction)?;
+            scanned_relationships = scanned_relationships.saturating_add(neighbors.len());
+            if scanned_relationships >= LOG_BATCH {
+                progress_tracker.log_progress(scanned_relationships);
+                scanned_relationships = 0;
+            }
+
+            for (neighbor, weight) in neighbors {
+                Self::validate_node_in_graph(neighbor, node_count, "target")?;
+                Self::validate_edge_weight(node_id, neighbor, weight)?;
+
+                let current_distance = computation.distance(node_id);
+                let new_distance = current_distance + weight;
+                Self::validate_path_cost(node_id, neighbor, new_distance)?;
+
+                if new_distance < computation.distance(neighbor) {
+                    let new_length = computation.length(node_id).saturating_add(1);
+                    computation.set_distance(neighbor, new_distance);
+                    computation.set_predecessor(neighbor, Some(node_id));
+                    computation.set_length(neighbor, new_length);
+
+                    if new_length as usize >= node_count + 1 {
+                        computation.add_negative_cycle_node(neighbor);
+                        if !self.track_negative_cycles {
+                            return Ok(scanned_relationships);
+                        }
+                    } else {
+                        frontier.push_back(neighbor);
+                    }
+                }
+            }
+        }
+
+        Ok(scanned_relationships)
+    }
+
+    fn compute_parallel_frontier(
+        &self,
+        computation: &mut BellmanFordComputationRuntime,
+        graph: &dyn Graph,
+        direction: u8,
+        node_count: usize,
+        progress_tracker: &mut dyn ProgressTracker,
+    ) -> Result<usize, AlgorithmError> {
+        let mut frontier = vec![self.source_node];
+        let mut scanned_relationships = 0usize;
+        let concurrency = Concurrency::from_usize(self.concurrency.max(1));
+
+        while !frontier.is_empty() {
+            let chunk_count = frontier.len().div_ceil(FRONTIER_CHUNK_SIZE);
+            let expansions: Vec<FrontierExpansion> = install_with_concurrency(concurrency, || {
+                (0..chunk_count)
+                    .into_par_iter()
+                    .map(|chunk_idx| {
+                        let start = chunk_idx * FRONTIER_CHUNK_SIZE;
+                        let end = (start + FRONTIER_CHUNK_SIZE).min(frontier.len());
+                        self.expand_frontier_chunk(
+                            graph,
+                            computation,
+                            &frontier[start..end],
+                            direction,
+                            node_count,
+                        )
+                    })
+                    .collect::<Result<Vec<_>, _>>()
+            })?;
+
+            let mut candidates_by_target: HashMap<NodeId, RelaxationCandidate> = HashMap::new();
+            for expansion in expansions {
+                scanned_relationships =
+                    scanned_relationships.saturating_add(expansion.scanned_relationships);
+                for node_id in expansion.negative_cycle_nodes {
+                    computation.add_negative_cycle_node(node_id);
+                }
+                for candidate in expansion.candidates {
+                    candidates_by_target
+                        .entry(candidate.target_node)
+                        .and_modify(|existing| {
+                            if candidate.new_distance < existing.new_distance {
+                                *existing = candidate.clone();
+                            }
+                        })
+                        .or_insert(candidate);
+                }
+            }
+
+            if scanned_relationships > 0 {
+                progress_tracker.log_progress(scanned_relationships);
+                scanned_relationships = 0;
+            }
+
+            if computation.has_negative_cycles() && !self.track_negative_cycles {
+                break;
+            }
+
+            let mut next_frontier = Vec::new();
+            let mut queued = HashSet::new();
+            let mut candidates: Vec<_> = candidates_by_target.into_values().collect();
+            candidates.sort_by_key(|candidate| candidate.target_node);
+
+            for candidate in candidates {
+                if candidate.new_distance < computation.distance(candidate.target_node) {
+                    computation.set_distance(candidate.target_node, candidate.new_distance);
+                    computation.set_predecessor(candidate.target_node, Some(candidate.source_node));
+                    computation.set_length(candidate.target_node, candidate.new_length);
+
+                    if candidate.new_length as usize >= node_count + 1 {
+                        computation.add_negative_cycle_node(candidate.target_node);
+                        if !self.track_negative_cycles {
+                            next_frontier.clear();
+                            break;
+                        }
+                    } else if queued.insert(candidate.target_node) {
+                        next_frontier.push(candidate.target_node);
+                    }
+                }
+            }
+
+            frontier = next_frontier;
+        }
+
+        Ok(scanned_relationships)
+    }
+
+    fn expand_frontier_chunk(
+        &self,
+        graph: &dyn Graph,
+        computation: &BellmanFordComputationRuntime,
+        frontier: &[NodeId],
+        direction: u8,
+        node_count: usize,
+    ) -> Result<FrontierExpansion, AlgorithmError> {
+        let worker_graph = Graph::concurrent_copy(graph);
+        let fallback = worker_graph.default_property_value();
+        let mut candidates = Vec::new();
+        let mut negative_cycle_nodes = Vec::new();
+        let mut scanned_relationships = 0usize;
+
+        for node_id in frontier {
+            let source_length = computation.length(*node_id);
+            if source_length as usize >= node_count + 1 {
+                negative_cycle_nodes.push(*node_id);
+                continue;
+            }
+
+            let stream = if direction == 1 {
+                worker_graph.stream_inverse_relationships(*node_id, fallback)
+            } else {
+                worker_graph.stream_relationships(*node_id, fallback)
+            };
+
+            for cursor in stream {
+                scanned_relationships += 1;
+                let neighbor = cursor.target_id();
+                let weight = cursor.property();
+                Self::validate_node_in_graph(neighbor, node_count, "target")?;
+                Self::validate_edge_weight(*node_id, neighbor, weight)?;
+
+                let new_distance = computation.distance(*node_id) + weight;
+                Self::validate_path_cost(*node_id, neighbor, new_distance)?;
+                if new_distance < computation.distance(neighbor) {
+                    candidates.push(RelaxationCandidate {
+                        source_node: *node_id,
+                        target_node: neighbor,
+                        new_distance,
+                        new_length: source_length.saturating_add(1),
+                    });
+                }
+            }
+        }
+
+        Ok(FrontierExpansion {
+            candidates,
+            negative_cycle_nodes,
+            scanned_relationships,
+        })
     }
 
     /// Generate negative cycle paths
@@ -369,12 +556,29 @@ impl BellmanFordStorageRuntime {
         }
         Ok(())
     }
+
+    fn validate_path_cost(
+        source_node: NodeId,
+        target_node: NodeId,
+        cost: f64,
+    ) -> Result<(), AlgorithmError> {
+        if !cost.is_finite() {
+            return Err(AlgorithmError::InvalidGraph(format!(
+                "Bellman-Ford path cost overflowed for edge {source_node}->{target_node}"
+            )));
+        }
+        Ok(())
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
     use crate::core::utils::progress::{TaskProgressTracker, Tasks};
+    use crate::projection::Orientation;
+    use crate::types::graph_store::{DefaultGraphStore, GraphStore};
+    use crate::types::random::{RandomGraphConfig, RandomRelationshipConfig};
+    use std::collections::HashSet;
 
     #[test]
     fn test_bellman_ford_storage_runtime_creation() {
@@ -447,6 +651,65 @@ mod tests {
         assert_eq!(path_to_three.node_ids, vec![0, 1, 2, 3]);
         assert_eq!(path_to_three.costs, vec![0.0, 1.0, 3.0, 4.0]);
         assert_eq!(path_to_three.total_cost, 4.0);
+    }
+
+    #[test]
+    fn graph_backed_parallel_matches_single_threaded_costs() {
+        let config = RandomGraphConfig {
+            seed: Some(42),
+            node_count: 12,
+            relationships: vec![RandomRelationshipConfig::new("REL", 0.6)],
+            ..RandomGraphConfig::default()
+        };
+        let store = DefaultGraphStore::random(&config).unwrap();
+        let rel_types = HashSet::new();
+        let graph = store
+            .get_graph_with_types_and_orientation(&rel_types, Orientation::Natural)
+            .unwrap();
+
+        let mut single_storage = BellmanFordStorageRuntime::new(0, true, true, 1);
+        let mut single_computation = BellmanFordComputationRuntime::new(0, true, true, 1);
+        let mut single_progress = TaskProgressTracker::new(Tasks::leaf("bellman_ford".to_string()));
+        let single = single_storage
+            .compute_bellman_ford(
+                &mut single_computation,
+                Some(graph.as_ref()),
+                0,
+                &mut single_progress,
+            )
+            .unwrap();
+
+        let mut parallel_storage = BellmanFordStorageRuntime::new(0, true, true, 4);
+        let mut parallel_computation = BellmanFordComputationRuntime::new(0, true, true, 4);
+        let mut parallel_progress =
+            TaskProgressTracker::new(Tasks::leaf("bellman_ford".to_string()));
+        let parallel = parallel_storage
+            .compute_bellman_ford(
+                &mut parallel_computation,
+                Some(graph.as_ref()),
+                0,
+                &mut parallel_progress,
+            )
+            .unwrap();
+
+        let mut single_costs: Vec<_> = single
+            .shortest_paths
+            .iter()
+            .map(|path| (path.target_node, path.total_cost))
+            .collect();
+        let mut parallel_costs: Vec<_> = parallel
+            .shortest_paths
+            .iter()
+            .map(|path| (path.target_node, path.total_cost))
+            .collect();
+        single_costs.sort_by_key(|(target_node, _)| *target_node);
+        parallel_costs.sort_by_key(|(target_node, _)| *target_node);
+
+        assert_eq!(
+            parallel.contains_negative_cycle,
+            single.contains_negative_cycle
+        );
+        assert_eq!(parallel_costs, single_costs);
     }
 
     #[test]

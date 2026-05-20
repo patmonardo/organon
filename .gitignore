@@ -67,10 +67,10 @@ gds/src/litdata
 gds/src/pytorch_geometric
 reality/src/logos/open-logic
 logic/src/compiler.old
-gds/nltk
-gds/nltk-book
 gds/examples.old
 ./gds/examples.old
-gds/neo4j
-gds/rust-clrs
-gds/py-polars
+ref/nltk
+ref/nltk-book
+ref/neo4j
+ref/rust-clrs
+ref/py-polars

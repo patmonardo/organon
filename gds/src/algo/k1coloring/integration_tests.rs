@@ -120,6 +120,19 @@ mod tests {
     }
 
     #[test]
+    fn k1coloring_final_iteration_convergence_reports_non_converged() {
+        let outgoing = vec![vec![], vec![], vec![], vec![]];
+        let store = store_from_outgoing(outgoing.clone());
+        let graph = GraphFacade::new(Arc::new(store));
+
+        let result = graph.k1coloring().max_iterations(1).run().unwrap();
+        assert!(!result.did_converge);
+        assert_eq!(result.ran_iterations, 1);
+        assert_eq!(result.colors, vec![0, 0, 0, 0]);
+        assert_valid_coloring(&outgoing, &result.colors);
+    }
+
+    #[test]
     fn k1coloring_empty_graph_converges_without_iterations() {
         let outgoing = Vec::new();
         let store = store_from_outgoing(outgoing);
@@ -142,5 +155,18 @@ mod tests {
 
         assert!(parallel.min() > single.min());
         assert_eq!(parallel.min(), parallel.max());
+    }
+
+    #[test]
+    fn k1coloring_stats_include_node_count() {
+        let outgoing = vec![vec![1], vec![0, 2], vec![1]];
+        let store = store_from_outgoing(outgoing);
+        let graph = GraphFacade::new(Arc::new(store));
+
+        let stats = graph.k1coloring().max_iterations(20).stats().unwrap();
+        assert_eq!(stats.node_count, 3);
+        assert!(stats.did_converge);
+        assert!(stats.ran_iterations > 0);
+        assert!(stats.color_count > 0);
     }
 }

@@ -5,7 +5,9 @@
 //! This module implements the storage runtime for A* algorithm - the "Gross pole" for persistent data access.
 
 use super::AStarComputationResult;
-use crate::core::utils::progress::{ProgressTracker, UNKNOWN_VOLUME};
+use crate::algo::dijkstra::{DijkstraComputationRuntime, DijkstraStorageRuntime, SingleTarget};
+use crate::core::utils::progress::ProgressTracker;
+use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::Graph;
 use crate::types::graph::NodeId;
 use crate::types::properties::node::NodePropertyValues;
@@ -68,31 +70,22 @@ impl AStarStorageRuntime {
         }
     }
 
-    /// Compute A* path using Haversine heuristic
+    /// Compute A* path using Dijkstra with a Haversine heuristic.
     ///
     /// Translation of: `AStar.compute()` (lines 92-94) and `HaversineHeuristic`
     pub fn compute_astar_path(
         &mut self,
-        computation: &mut super::AStarComputationRuntime,
+        _computation: &mut super::AStarComputationRuntime,
         graph: Option<&dyn Graph>,
         direction: u8,
         progress_tracker: &mut dyn ProgressTracker,
     ) -> Result<AStarComputationResult, String> {
-        let volume = graph
-            .map(|g| g.relationship_count())
-            .unwrap_or(UNKNOWN_VOLUME);
-        if volume == UNKNOWN_VOLUME {
+        Self::validate_node_id(self.source_node, "source")?;
+        Self::validate_node_id(self.target_node, "target")?;
+
+        if graph.is_none() {
             progress_tracker.begin_subtask_unknown();
-        } else {
-            progress_tracker.begin_subtask_with_volume(volume);
-        }
-
-        let result = (|| {
-            Self::validate_node_id(self.source_node, "source")?;
-            Self::validate_node_id(self.target_node, "target")?;
-
-            // If no graph given, keep placeholder behavior for tests
-            if graph.is_none() {
+            let result = (|| {
                 let mut path = Vec::new();
                 let total_cost;
                 let nodes_explored;
@@ -112,104 +105,57 @@ impl AStarStorageRuntime {
                     total_cost,
                     nodes_explored,
                 ));
-            }
+            })();
 
-            let g = graph.unwrap();
-            Self::validate_node_in_graph(self.source_node, g.node_count(), "source")?;
-            Self::validate_node_in_graph(self.target_node, g.node_count(), "target")?;
-            computation.initialize(self.source_node, self.target_node);
-
-            // Initialize heuristic for source
-            let h0 = self.compute_haversine_distance(self.source_node, self.target_node)?;
-            computation.update_f_cost(self.source_node, h0);
-
-            // Work unit: edges scanned in neighbor expansion.
-            let mut edges_scanned_batch: usize = 0;
-            const EDGES_SCAN_LOG_BATCH: usize = 256;
-
-            while !computation.is_open_set_empty() {
-                let current = match computation.get_lowest_f_cost_node() {
-                    Some(n) => n,
-                    None => break,
-                };
-                computation.remove_from_open_set(current);
-                computation.mark_visited(current);
-
-                if current == self.target_node {
-                    if edges_scanned_batch > 0 {
-                        progress_tracker.log_progress(edges_scanned_batch);
-                    }
-
-                    let path = computation.reconstruct_path(self.source_node, self.target_node);
-                    let total_cost = computation.get_total_cost(self.target_node);
-                    return Ok(AStarComputationResult::new(
-                        path,
-                        total_cost,
-                        computation.nodes_explored(),
-                    ));
+            return match result {
+                Ok(v) => {
+                    progress_tracker.end_subtask();
+                    Ok(v)
                 }
-
-                // Expand neighbors via relationship streams
-                let fallback: f64 = 1.0;
-                let source_mapped = current;
-                let stream = if direction == 1 {
-                    g.stream_inverse_relationships(source_mapped, fallback)
-                } else {
-                    g.stream_relationships(source_mapped, fallback)
-                };
-
-                for cursor in stream {
-                    edges_scanned_batch += 1;
-                    if edges_scanned_batch >= EDGES_SCAN_LOG_BATCH {
-                        progress_tracker.log_progress(edges_scanned_batch);
-                        edges_scanned_batch = 0;
-                    }
-
-                    let neighbor: NodeId = cursor.target_id();
-                    Self::validate_node_in_graph(neighbor, g.node_count(), "target")?;
-                    let weight = cursor.property();
-                    Self::validate_edge_weight(current, neighbor, weight)?;
-                    if computation.is_visited(neighbor) {
-                        continue;
-                    }
-
-                    let tentative_g = computation.get_g_cost(current) + weight;
-                    if !tentative_g.is_finite() {
-                        return Err(format!(
-                            "A* path cost overflowed for edge {current}->{neighbor}"
-                        ));
-                    }
-                    if tentative_g < computation.get_g_cost(neighbor) {
-                        computation.set_parent(neighbor, current);
-                        computation.update_g_cost(neighbor, tentative_g);
-                        let h = self.compute_haversine_distance(neighbor, self.target_node)?;
-                        computation.update_f_cost(neighbor, tentative_g + h);
-                        computation.add_to_open_set(neighbor);
-                    }
+                Err(e) => {
+                    progress_tracker.end_subtask_with_failure();
+                    Err(e)
                 }
-            }
+            };
+        }
 
-            if edges_scanned_batch > 0 {
-                progress_tracker.log_progress(edges_scanned_batch);
-            }
+        let g = graph.unwrap();
+        Self::validate_node_in_graph(self.source_node, g.node_count(), "source")?;
+        Self::validate_node_in_graph(self.target_node, g.node_count(), "target")?;
 
-            // No path found
+        let heuristic = self.haversine_heuristic()?;
+        let mut dijkstra_storage = DijkstraStorageRuntime::new(self.source_node, false, 1, true)
+            .with_heuristic_function(heuristic);
+        let mut dijkstra_computation =
+            DijkstraComputationRuntime::new(self.source_node, false, 1, true);
+        let targets = Box::new(SingleTarget::new(self.target_node));
+
+        let dijkstra_result = dijkstra_storage
+            .compute_dijkstra(
+                &mut dijkstra_computation,
+                targets,
+                graph,
+                direction,
+                progress_tracker,
+            )
+            .map_err(Self::algorithm_error_to_string)?;
+
+        let path = dijkstra_result.path_finding_result.paths().next().cloned();
+        let nodes_explored = dijkstra_computation.visited_count();
+
+        if let Some(path) = path {
+            let total_cost = path.costs.last().copied().unwrap_or(0.0);
+            Ok(AStarComputationResult::new(
+                Some(path.node_ids),
+                total_cost,
+                nodes_explored,
+            ))
+        } else {
             Ok(AStarComputationResult::new(
                 None,
                 f64::INFINITY,
-                computation.nodes_explored(),
+                nodes_explored,
             ))
-        })();
-
-        match result {
-            Ok(v) => {
-                progress_tracker.end_subtask();
-                Ok(v)
-            }
-            Err(e) => {
-                progress_tracker.end_subtask_with_failure();
-                Err(e)
-            }
         }
     }
 
@@ -227,6 +173,59 @@ impl AStarStorageRuntime {
         Ok(Self::haversine_distance(
             source_lat, source_lon, target_lat, target_lon,
         ))
+    }
+
+    fn haversine_heuristic(
+        &self,
+    ) -> Result<impl Fn(NodeId) -> f64 + Send + Sync + 'static, String> {
+        let Some(lat_values) = self.lat_values.as_ref().cloned() else {
+            return Err(format!(
+                "The property `{}` has not been loaded",
+                self.latitude_property
+            ));
+        };
+        let Some(lon_values) = self.lon_values.as_ref().cloned() else {
+            return Err(format!(
+                "The property `{}` has not been loaded",
+                self.longitude_property
+            ));
+        };
+
+        let target_index = u64::try_from(self.target_node).map_err(|_| {
+            format!(
+                "invalid target node id for property lookup: {}",
+                self.target_node
+            )
+        })?;
+        let target_latitude = lat_values
+            .double_value(target_index)
+            .map_err(|e| format!("lat read error: {e}"))?;
+        let target_longitude = lon_values
+            .double_value(target_index)
+            .map_err(|e| format!("lon read error: {e}"))?;
+        Self::validate_coordinates(self.target_node, (target_latitude, target_longitude))?;
+
+        Ok(move |source| {
+            let Ok(source_index) = u64::try_from(source) else {
+                return f64::NAN;
+            };
+            let Ok(source_latitude) = lat_values.double_value(source_index) else {
+                return f64::NAN;
+            };
+            let Ok(source_longitude) = lon_values.double_value(source_index) else {
+                return f64::NAN;
+            };
+            AStarStorageRuntime::haversine_distance(
+                source_latitude,
+                source_longitude,
+                target_latitude,
+                target_longitude,
+            )
+        })
+    }
+
+    fn algorithm_error_to_string(error: AlgorithmError) -> String {
+        error.to_string()
     }
 
     /// Get coordinates for a node (with caching)
@@ -282,6 +281,7 @@ impl AStarStorageRuntime {
         Ok(())
     }
 
+    #[cfg(test)]
     fn validate_edge_weight(source: NodeId, target: NodeId, weight: f64) -> Result<(), String> {
         if !weight.is_finite() || weight < 0.0 {
             return Err(format!(

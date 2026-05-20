@@ -9,6 +9,7 @@
 //!   This avoids oscillations on bipartite components while preserving a stable tie-break.
 //! - Voting is weighted by relationship weight * target-node weight.
 //! - Tie-breaker matches Java: smallest label ID wins when weights equal.
+//! - Sequential iteration is required for proper convergence (Gauss-Seidel vs Jacobi).
 
 use crate::concurrency::{install_with_concurrency, Concurrency, TerminationFlag};
 use crate::core::utils::progress::{NoopProgressTracker, ProgressTracker};
@@ -114,8 +115,9 @@ impl LabelPropComputationRuntime {
             termination_flag.assert_running();
             let any_changed = AtomicBool::new(false);
 
-            // Deterministic in-place update in node order.
-            // Concurrency is currently not used; we keep the install wrapper to match runtime setup.
+            // Deterministic in-place update in node order (Gauss-Seidel).
+            // Sequential iteration ensures proper convergence on bipartite graphs.
+            // Concurrency config is accepted for API consistency.
             install_with_concurrency(concurrency, || {
                 let mut tally = VoteTally::new();
 

@@ -8,7 +8,7 @@
 //! - `delta_threshold`
 //! - `number_of_restarts`
 //! - `compute_silhouette`
-//! - `concurrency`: accepted for parity; current runtime is single-threaded.
+//! - `concurrency`: parallel worker count (KMeans++ sampling + assignment + silhouette all run in parallel).
 //! - `node_property`
 //! - `sampler_type` (UNIFORM, KMEANSPP)
 //! - `seed_centroids`
@@ -151,28 +151,9 @@ impl KMeansFacade {
     }
 
     fn validate(&self) -> Result<()> {
-        ConfigValidator::in_range(
-            self.config.concurrency as f64,
-            1.0,
-            1_000_000.0,
-            "concurrency",
-        )?;
-        ConfigValidator::in_range(self.config.k as f64, 1.0, 1_000_000.0, "k")?;
-        ConfigValidator::in_range(
-            self.config.max_iterations as f64,
-            1.0,
-            1_000_000_000.0,
-            "max_iterations",
-        )?;
-        ConfigValidator::in_range(
-            self.config.number_of_restarts as f64,
-            1.0,
-            1_000_000_000.0,
-            "number_of_restarts",
-        )?;
-        ConfigValidator::in_range(self.config.delta_threshold, 0.0, 1.0, "delta_threshold")?;
-        ConfigValidator::non_empty_string(&self.config.node_property, "node_property")?;
-        Ok(())
+        self.config
+            .validate()
+            .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))
     }
 
     fn compute(&self) -> Result<KMeansResult> {

@@ -16,7 +16,7 @@ use crate::core::utils::partition::{Partition, PartitionUtils, DEFAULT_BATCH_SIZ
 use crate::core::utils::progress::ProgressTracker;
 use crate::types::graph::Graph;
 use crate::types::properties::node::NodePropertyValues;
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
 
 /// WCC computation result.
@@ -343,20 +343,15 @@ fn components_from_dss(
     dss: &Arc<HugeAtomicDisjointSetStruct>,
 ) -> (Vec<u64>, usize) {
     let mut components = vec![0u64; node_count];
-    let mut map: HashMap<usize, usize> = HashMap::new();
-    let mut next = 0usize;
+    let mut unique_components: HashSet<usize> = HashSet::new();
 
     for i in 0..node_count {
         let root = dss.set_id_of(i);
-        let id = *map.entry(root).or_insert_with(|| {
-            let id = next;
-            next += 1;
-            id
-        });
-        components[i] = id as u64;
+        unique_components.insert(root);
+        components[i] = root as u64;
     }
 
-    (components, next)
+    (components, unique_components.len())
 }
 
 fn find_largest_component(node_count: usize, dss: &Arc<HugeAtomicDisjointSetStruct>) -> usize {

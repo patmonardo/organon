@@ -51,7 +51,7 @@ impl SccComputationRuntime {
         let fallback = graph.default_property_value();
 
         let mut next_index: i64 = 0;
-        let mut next_component_id: i64 = 0;
+        let mut component_count: usize = 0;
 
         #[derive(Debug)]
         struct Frame {
@@ -137,15 +137,16 @@ impl SccComputationRuntime {
 
                 if !boundaries.is_empty() && boundaries.peek() == v_index {
                     boundaries.pop();
+                    let component_id = v as i64;
 
                     loop {
                         let w = stack.pop() as usize;
-                        component.set(w, next_component_id);
+                        component.set(w, component_id);
                         if w == v {
                             break;
                         }
                     }
-                    next_component_id += 1;
+                    component_count += 1;
                 }
 
                 progress_tracker.log_progress(1);
@@ -164,6 +165,6 @@ impl SccComputationRuntime {
             components[i] = c as u64;
         }
 
-        Ok((components, next_component_id as usize))
+        Ok((components, component_count))
     }
 }

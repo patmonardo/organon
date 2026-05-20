@@ -65,6 +65,7 @@ impl TriangleStorageRuntime {
             node_count,
             get_neighbors,
             max_degree,
+            config.concurrency,
             progress_tracker,
             termination_flag,
         )?;

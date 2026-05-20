@@ -1,4 +1,11 @@
+use super::TriangleComputationRuntime;
+use super::TriangleStorageRuntime;
+use crate::concurrency::TerminationFlag;
 use crate::config::validation::ConfigError;
+use crate::core::utils::progress::TaskProgressTracker;
+use crate::core::utils::progress::Tasks;
+use crate::define_algorithm_spec;
+use crate::projection::eval::algorithm::AlgorithmError;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use std::time::Duration;
@@ -61,6 +68,7 @@ pub struct TriangleResult {
 /// Aggregated triangle count statistics.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub struct TriangleStats {
+    pub node_count: usize,
     pub global_triangles: u64,
     pub execution_time_ms: u64,
 }
@@ -100,6 +108,7 @@ impl TriangleResultBuilder {
 
     pub fn stats(&self) -> TriangleStats {
         TriangleStats {
+            node_count: self.result.node_count,
             global_triangles: self.result.global_triangles,
             execution_time_ms: self.result.execution_time.as_millis() as u64,
         }
@@ -121,5 +130,45 @@ impl TriangleAlgorithmSpec {
 
     pub fn graph_name(&self) -> &str {
         &self.graph_name
+    }
+}
+
+define_algorithm_spec! {
+    name: "triangle",
+    output_type: TriangleResult,
+    projection_hint: Dense,
+    modes: [Stream, Stats, MutateNodeProperty, WriteNodeProperty],
+
+    execute: |_self, graph_store, config_input, _context| {
+        let parsed_config: TriangleConfig = serde_json::from_value(config_input.clone())
+            .map_err(|e| AlgorithmError::InvalidGraph(format!("Failed to parse config: {}", e)))?;
+
+        parsed_config
+            .validate()
+            .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
+
+        let start = std::time::Instant::now();
+        let storage = TriangleStorageRuntime::new();
+        let mut computation = TriangleComputationRuntime::new();
+        let mut progress_tracker = TaskProgressTracker::with_concurrency(
+            Tasks::leaf_with_volume("triangle".to_string(), graph_store.node_count()),
+            parsed_config.concurrency,
+        );
+        let termination_flag = TerminationFlag::default();
+
+        let result = storage
+            .compute_triangle(
+                &mut computation,
+                graph_store,
+                &parsed_config,
+                &mut progress_tracker,
+                &termination_flag,
+            )
+            .map_err(AlgorithmError::Execution)?;
+
+        Ok(TriangleResult {
+            execution_time: start.elapsed(),
+            ..result
+        })
     }
 }

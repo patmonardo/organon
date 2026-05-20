@@ -58,7 +58,9 @@ impl KMeansComputationRuntime {
             );
             let avg_dist = average(&distances);
             let (silhouette, avg_sil) = if config.compute_silhouette {
-                let s = silhouette_centroid(points, &centers, &communities);
+                let nodes_in_cluster = compute_nodes_in_cluster(&communities, k);
+                let s =
+                    silhouette_pairwise(points, &communities, &nodes_in_cluster, k, concurrency);
                 let a = average(&s);
                 (Some(s), a)
             } else {
@@ -79,6 +81,34 @@ impl KMeansComputationRuntime {
             };
         }
 
+        // Java parity: when k >= n, each node is its own cluster.
+        if config.k >= n {
+            let communities: Vec<u64> = (0..n as u64).collect();
+            let distances = vec![0.0f64; n];
+            let centers: Vec<Vec<f64>> = points.to_vec();
+            let (silhouette, avg_sil) = if config.compute_silhouette {
+                let nodes_in_cluster: Vec<usize> = vec![1; n];
+                let s =
+                    silhouette_pairwise(points, &communities, &nodes_in_cluster, n, concurrency);
+                let a = average(&s);
+                (Some(s), a)
+            } else {
+                (None, 0.0)
+            };
+            return KMeansResult {
+                communities,
+                distance_from_center: distances,
+                centers,
+                average_distance_to_centroid: 0.0,
+                silhouette,
+                average_silhouette: avg_sil,
+                ran_iterations: 0,
+                restarts: 1,
+                node_count: n,
+                execution_time: Duration::default(),
+            };
+        }
+
         let restarts = config.number_of_restarts.max(1);
         let mut best: Option<(Vec<u64>, Vec<f64>, Vec<Vec<f64>>, f64, u32)> = None;
 
@@ -91,7 +121,9 @@ impl KMeansComputationRuntime {
 
             let mut centers = match config.sampler_type {
                 KMeansSamplerType::Uniform => sample_uniform(points, k, &mut rng),
-                KMeansSamplerType::KmeansPlusPlus => sample_kmeanspp(points, k, &mut rng),
+                KMeansSamplerType::KmeansPlusPlus => {
+                    sample_kmeanspp(points, k, &mut rng, concurrency)
+                }
             };
             if centers.is_empty() {
                 continue;
@@ -134,7 +166,8 @@ impl KMeansComputationRuntime {
             });
 
         let (silhouette, avg_sil) = if config.compute_silhouette {
-            let s = silhouette_centroid(points, &centers, &communities);
+            let nodes_in_cluster = compute_nodes_in_cluster(&communities, k);
+            let s = silhouette_pairwise(points, &communities, &nodes_in_cluster, k, concurrency);
             let a = average(&s);
             (Some(s), a)
         } else {
@@ -286,24 +319,36 @@ fn sample_uniform(points: &[Vec<f64>], k: usize, rng: &mut impl Rng) -> Vec<Vec<
     indices.into_iter().map(|i| points[i].clone()).collect()
 }
 
-fn sample_kmeanspp(points: &[Vec<f64>], k: usize, rng: &mut impl Rng) -> Vec<Vec<f64>> {
+fn sample_kmeanspp(
+    points: &[Vec<f64>],
+    k: usize,
+    rng: &mut impl Rng,
+    concurrency: Concurrency,
+) -> Vec<Vec<f64>> {
     let n = points.len();
     if k >= n {
         return points.to_vec();
     }
 
     let mut centers: Vec<Vec<f64>> = Vec::with_capacity(k);
-    centers.push(points[rng.gen_range(0..n)].clone());
+    let first = points[rng.gen_range(0..n)].clone();
+    centers.push(first);
 
-    let mut min_d2: Vec<f64> = vec![0.0; n];
+    // Incremental min-squared-distance: start at infinity, update only with the
+    // most recently added center (Java parity: parallel distance tasks).
+    let mut min_d2: Vec<f64> = vec![f64::INFINITY; n];
 
     while centers.len() < k {
-        for (i, p) in points.iter().enumerate() {
-            min_d2[i] = centers
-                .iter()
-                .map(|c| squared_euclidean(p, c))
-                .fold(f64::INFINITY, f64::min);
-        }
+        // Parallel update: for each point, keep min distance to any selected center.
+        let last = centers.last().unwrap().clone();
+        install_with_concurrency(concurrency, || {
+            min_d2.par_iter_mut().enumerate().for_each(|(i, d)| {
+                let dist = squared_euclidean(&points[i], &last);
+                if dist < *d {
+                    *d = dist;
+                }
+            });
+        });
 
         let total: f64 = min_d2.iter().sum();
         if !total.is_finite() || total <= 0.0 {
@@ -312,8 +357,9 @@ fn sample_kmeanspp(points: &[Vec<f64>], k: usize, rng: &mut impl Rng) -> Vec<Vec
             break;
         }
 
+        // Weighted random selection proportional to d².
         let mut threshold = rng.gen::<f64>() * total;
-        let mut chosen = 0usize;
+        let mut chosen = n - 1; // fallback to last if threshold never drops to 0
         for (i, w) in min_d2.iter().enumerate() {
             threshold -= *w;
             if threshold <= 0.0 {
@@ -368,34 +414,73 @@ fn average(values: &[f64]) -> f64 {
     values.iter().sum::<f64>() / values.len() as f64
 }
 
-fn silhouette_centroid(points: &[Vec<f64>], centers: &[Vec<f64>], communities: &[u64]) -> Vec<f64> {
+/// True pairwise silhouette (Java parity: SilhouetteTask).
+///
+/// For each node i:
+///   a(i) = mean distance to all other nodes in the same cluster.
+///   b(i) = min over c != cluster(i) of mean distance to all nodes in cluster c.
+///   s(i) = (b(i) - a(i)) / max(a(i), b(i)).
+///
+/// Runs as parallel partitions via Rayon (Java runs SilhouetteTask in parallel).
+fn silhouette_pairwise(
+    points: &[Vec<f64>],
+    communities: &[u64],
+    nodes_in_cluster: &[usize],
+    k: usize,
+    concurrency: Concurrency,
+) -> Vec<f64> {
     let n = points.len();
-    if n == 0 {
-        return Vec::new();
-    }
-    if centers.len() <= 1 {
+    if n == 0 || k <= 1 {
         return vec![0.0; n];
     }
 
-    let mut out = vec![0.0f64; n];
-    for i in 0..n {
-        let ci = communities[i] as usize;
-        let a = squared_euclidean(&points[i], &centers[ci]).sqrt();
+    install_with_concurrency(concurrency, || {
+        (0..n)
+            .into_par_iter()
+            .map(|i| {
+                let ci = communities[i] as usize;
+                let cluster_size = nodes_in_cluster.get(ci).copied().unwrap_or(0);
+                if cluster_size <= 1 {
+                    return 0.0;
+                }
 
-        let mut b = f64::INFINITY;
-        for (cj, c) in centers.iter().enumerate() {
-            if cj == ci {
-                continue;
-            }
-            let d = squared_euclidean(&points[i], c).sqrt();
-            if d < b {
-                b = d;
-            }
-        }
+                // Accumulate distances per cluster.
+                let mut cluster_dist = vec![0.0f64; k];
+                for j in 0..n {
+                    if j == i {
+                        continue;
+                    }
+                    let d = squared_euclidean(&points[i], &points[j]).sqrt();
+                    let cj = (communities[j] as usize).min(k - 1);
+                    cluster_dist[cj] += d;
+                }
 
-        let denom = a.max(b);
-        out[i] = if denom > 0.0 { (b - a) / denom } else { 0.0 };
+                // a(i): mean distance to own cluster.
+                let ai = cluster_dist[ci] / (cluster_size as f64 - 1.0);
+
+                // b(i): min mean distance to any other non-empty cluster.
+                let bi = (0..k)
+                    .filter(|&c| c != ci && nodes_in_cluster.get(c).copied().unwrap_or(0) > 0)
+                    .map(|c| cluster_dist[c] / nodes_in_cluster[c] as f64)
+                    .fold(f64::INFINITY, f64::min);
+
+                let denom = ai.max(bi);
+                if denom > 0.0 {
+                    (bi - ai) / denom
+                } else {
+                    0.0
+                }
+            })
+            .collect()
+    })
+}
+
+/// Count how many nodes belong to each cluster.
+fn compute_nodes_in_cluster(communities: &[u64], k: usize) -> Vec<usize> {
+    let mut counts = vec![0usize; k];
+    for &c in communities {
+        let idx = (c as usize).min(k - 1);
+        counts[idx] += 1;
     }
-
-    out
+    counts
 }

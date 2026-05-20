@@ -72,6 +72,7 @@ mod tests {
         let result = graph.scc().run().unwrap();
         assert_eq!(result.component_count, 1);
         assert_eq!(result.components.len(), 3);
+        assert_eq!(result.components, vec![0, 0, 0]);
         assert_eq!(result.components[0], result.components[1]);
         assert_eq!(result.components[1], result.components[2]);
     }
@@ -85,6 +86,7 @@ mod tests {
         let result = graph.scc().run().unwrap();
         assert_eq!(result.component_count, 2);
         assert_eq!(result.components.len(), 4);
+        assert_eq!(result.components, vec![0, 0, 2, 2]);
         assert_eq!(result.components[0], result.components[1]);
         assert_eq!(result.components[2], result.components[3]);
         assert_ne!(result.components[0], result.components[2]);
@@ -99,6 +101,7 @@ mod tests {
         let result = graph.scc().run().unwrap();
         assert_eq!(result.component_count, 4);
         assert_eq!(result.components.len(), 4);
+        assert_eq!(result.components, vec![0, 1, 2, 3]);
         assert_ne!(result.components[0], result.components[1]);
         assert_ne!(result.components[1], result.components[2]);
         assert_ne!(result.components[2], result.components[3]);
@@ -112,6 +115,7 @@ mod tests {
         let result = graph.scc().run().unwrap();
         assert_eq!(result.component_count, 3);
         assert_eq!(result.components.len(), 3);
+        assert_eq!(result.components, vec![0, 1, 2]);
         assert_ne!(result.components[0], result.components[1]);
         assert_ne!(result.components[1], result.components[2]);
     }
@@ -134,6 +138,7 @@ mod tests {
 
         let result = graph.scc().run().unwrap();
         assert_eq!(result.component_count, 3);
+        assert_eq!(result.components, vec![0, 0, 2, 2, 2, 5]);
         assert_eq!(result.components[0], result.components[1]);
         assert_eq!(result.components[2], result.components[3]);
         assert_eq!(result.components[3], result.components[4]);
@@ -150,5 +155,17 @@ mod tests {
         let result = graph.scc().run().unwrap();
         assert_eq!(result.component_count, 1_000);
         assert_eq!(result.components.len(), 1_000);
+        assert_eq!(result.components[0], 0);
+        assert_eq!(result.components[999], 999);
+    }
+
+    #[test]
+    fn scc_stats_include_node_count() {
+        let store = store_from_outgoing(vec![vec![1], vec![2], vec![0], vec![]]);
+        let graph = GraphFacade::new(Arc::new(store));
+
+        let stats = graph.scc().stats().unwrap();
+        assert_eq!(stats.node_count, 4);
+        assert_eq!(stats.component_count, 2);
     }
 }

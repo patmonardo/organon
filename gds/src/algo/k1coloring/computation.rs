@@ -135,7 +135,7 @@ impl K1ColoringComputationRuntime {
             std::mem::swap(&mut current_nodes, &mut next_nodes);
         }
 
-        let did_converge = termination_flag.running() && current_nodes.is_empty();
+        let did_converge = termination_flag.running() && ran_iterations < self.max_iterations;
 
         let mut out = vec![0u64; node_count];
         for i in 0..node_count {
