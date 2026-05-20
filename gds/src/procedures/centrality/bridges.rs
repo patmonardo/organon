@@ -455,6 +455,60 @@ mod tests {
     }
 
     #[test]
+    fn facade_parallel_edges_are_not_bridges() {
+        let store = store_from_undirected_edges(2, &[(0, 1), (0, 1)]);
+        let graph = GraphFacade::new(Arc::new(store));
+
+        let rows: Vec<_> = graph.bridges().stream().unwrap().collect();
+
+        assert!(rows.is_empty());
+    }
+
+    #[test]
+    fn facade_treats_directed_projection_as_undirected_connectivity() {
+        let mut outgoing: Vec<Vec<i64>> = vec![Vec::new(); 4];
+        let mut incoming: Vec<Vec<i64>> = vec![Vec::new(); 4];
+        for (source, target) in [(0usize, 1usize), (1, 2), (2, 3)] {
+            outgoing[source].push(target as i64);
+            incoming[target].push(source as i64);
+        }
+
+        let rel_type = RelationshipType::of("REL");
+        let mut schema_builder = MutableGraphSchema::empty();
+        schema_builder
+            .relationship_schema_mut()
+            .add_relationship_type(rel_type.clone(), Direction::Directed);
+        let schema = schema_builder.build();
+
+        let mut relationship_topologies = HashMap::new();
+        relationship_topologies.insert(
+            rel_type,
+            RelationshipTopology::new(outgoing, Some(incoming)),
+        );
+
+        let store = DefaultGraphStore::new(
+            GraphStoreConfig::default(),
+            GraphName::new("g"),
+            DatabaseInfo::new(
+                DatabaseId::new("db"),
+                DatabaseLocation::remote("localhost", 7687, None, None),
+            ),
+            schema,
+            Capabilities::default(),
+            SimpleIdMap::from_original_ids(0..4),
+            relationship_topologies,
+        );
+        let graph = GraphFacade::new(Arc::new(store));
+
+        let rows: Vec<_> = graph.bridges().stream().unwrap().collect();
+
+        assert_eq!(rows.len(), 3);
+        assert!(rows.iter().any(|r| r.from == 0 && r.to == 1));
+        assert!(rows.iter().any(|r| r.from == 1 && r.to == 2));
+        assert!(rows.iter().any(|r| r.from == 2 && r.to == 3));
+    }
+
+    #[test]
     fn facade_bridge_connects_cycles() {
         // Two cycles connected by a bridge: 0-1-2-0 and 3-4-5-3, connected by 2-3
         let store = store_from_undirected_edges(
@@ -486,5 +540,16 @@ mod tests {
         for idx in 0..values.element_count() {
             assert_eq!(values.double_value(idx as u64).unwrap(), 1.0);
         }
+    }
+
+    #[test]
+    fn stats_include_node_count() {
+        let store = store_from_undirected_edges(4, &[(0, 1), (1, 2), (2, 3)]);
+        let graph = GraphFacade::new(Arc::new(store));
+
+        let stats = graph.bridges().stats().unwrap();
+
+        assert_eq!(stats.node_count, 4);
+        assert_eq!(stats.bridge_count, 3);
     }
 }

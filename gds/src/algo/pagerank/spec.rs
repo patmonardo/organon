@@ -16,25 +16,55 @@ use std::time::{Duration, Instant};
 use super::PageRankComputationRuntime;
 use super::PageRankStorageRuntime;
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub enum PageRankVariant {
+    PageRank,
+    ArticleRank,
+    Eigenvector,
+}
+
+impl Default for PageRankVariant {
+    fn default() -> Self {
+        Self::PageRank
+    }
+}
+
+impl PageRankVariant {
+    pub fn task_name(self) -> &'static str {
+        match self {
+            Self::PageRank => "PageRank",
+            Self::ArticleRank => "ArticleRank",
+            Self::Eigenvector => "EigenVector",
+        }
+    }
+}
+
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub struct PageRankConfig {
     #[serde(default = "default_direction")]
     pub direction: String,
 
+    #[serde(default, alias = "pageRankVariant")]
+    pub variant: PageRankVariant,
+
     #[serde(default = "default_concurrency")]
     pub concurrency: usize,
 
-    #[serde(default = "default_max_iterations", rename = "maxIterations")]
+    #[serde(default = "default_max_iterations", alias = "maxIterations")]
     pub max_iterations: usize,
 
     #[serde(default = "default_tolerance")]
     pub tolerance: f64,
 
-    #[serde(default = "default_damping_factor", rename = "dampingFactor")]
+    #[serde(default = "default_damping_factor", alias = "dampingFactor")]
     pub damping_factor: f64,
 
-    #[serde(default, rename = "sourceNodes")]
+    #[serde(default, alias = "sourceNodes")]
     pub source_nodes: Option<Vec<u64>>,
+
+    #[serde(default, alias = "relationshipWeightProperty")]
+    pub relationship_weight_property: Option<String>,
 }
 
 fn default_direction() -> String {
@@ -61,11 +91,13 @@ impl Default for PageRankConfig {
     fn default() -> Self {
         Self {
             direction: default_direction(),
+            variant: PageRankVariant::default(),
             concurrency: default_concurrency(),
             max_iterations: default_max_iterations(),
             tolerance: default_tolerance(),
             damping_factor: default_damping_factor(),
             source_nodes: None,
+            relationship_weight_property: None,
         }
     }
 }
@@ -124,6 +156,7 @@ pub struct PageRankResult {
 /// Statistics about PageRank computation
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub struct PageRankStats {
+    pub node_count: usize,
     pub min: f64,
     pub max: f64,
     pub mean: f64,
@@ -180,6 +213,7 @@ impl PageRankResultBuilder {
                 p50: 0.0,
                 p90: 0.0,
                 p99: 0.0,
+                node_count: self.result.node_count,
                 iterations_ran: self.result.ran_iterations,
                 converged: self.result.did_converge,
                 execution_time_ms: self.result.execution_time.as_millis() as u64,
@@ -215,6 +249,7 @@ impl PageRankResultBuilder {
             p50: percentile(50.0),
             p90: percentile(90.0),
             p99: percentile(99.0),
+            node_count: self.result.node_count,
             iterations_ran: self.result.ran_iterations,
             converged: self.result.did_converge,
             execution_time_ms: self.result.execution_time.as_millis() as u64,
@@ -256,9 +291,10 @@ define_algorithm_spec! {
 
         let start = Instant::now();
 
-        let storage = PageRankStorageRuntime::with_orientation(
+        let storage = PageRankStorageRuntime::new(
             graph_store,
             parse_pagerank_orientation(&parsed.direction)?,
+            parsed.relationship_weight_property.as_deref(),
         )?;
 
         let sources = parsed.source_nodes.clone().map(|v| v.into_iter().collect());
@@ -268,6 +304,7 @@ define_algorithm_spec! {
             parsed.damping_factor,
             parsed.tolerance,
             sources,
+            parsed.variant,
         );
         let concurrency = Concurrency::of(parsed.concurrency.max(1));
 

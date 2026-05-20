@@ -59,6 +59,10 @@ pub fn handle_degree_centrality(request: &Value, catalog: Arc<dyn GraphCatalog>)
         .and_then(|v| v.as_bool())
         .unwrap_or(false);
 
+    let relationship_weight_property = request
+        .get("relationshipWeightProperty")
+        .and_then(|v| v.as_str());
+
     let estimate_submode = request.get("submode").and_then(|v| v.as_str());
 
     let concurrency_value = request
@@ -103,15 +107,17 @@ pub fn handle_degree_centrality(request: &Value, catalog: Arc<dyn GraphCatalog>)
                                 _tracker: &mut dyn ProgressTracker,
                                 _termination: &TerminationFlag|
                   -> Result<Option<Vec<Value>>, String> {
-                let iter = gr
+                let mut facade = gr
                     .facade()
                     .degree_centrality()
                     .normalize(normalize)
                     .orientation(stream_orientation)
                     .weighted(weighted)
-                    .concurrency(concurrency_value)
-                    .stream()
-                    .map_err(|e| e.to_string())?;
+                    .concurrency(concurrency_value);
+                if let Some(property) = relationship_weight_property {
+                    facade = facade.relationship_weight_property(property);
+                }
+                let iter = facade.stream().map_err(|e| e.to_string())?;
                 let rows = iter
                     .map(|row| serde_json::to_value(row).map_err(|e| e.to_string()))
                     .collect::<Result<Vec<_>, _>>()?;
@@ -162,15 +168,17 @@ pub fn handle_degree_centrality(request: &Value, catalog: Arc<dyn GraphCatalog>)
                                 _tracker: &mut dyn ProgressTracker,
                                 _termination: &TerminationFlag|
                   -> Result<Option<Value>, String> {
-                let stats = gr
+                let mut facade = gr
                     .facade()
                     .degree_centrality()
                     .normalize(normalize)
                     .orientation(stats_orientation)
                     .weighted(weighted)
-                    .concurrency(concurrency_value)
-                    .stats()
-                    .map_err(|e| e.to_string())?;
+                    .concurrency(concurrency_value);
+                if let Some(property) = relationship_weight_property {
+                    facade = facade.relationship_weight_property(property);
+                }
+                let stats = facade.stats().map_err(|e| e.to_string())?;
                 let stats_value = serde_json::to_value(stats).map_err(|e| e.to_string())?;
                 Ok(Some(stats_value))
             };
@@ -206,11 +214,14 @@ pub fn handle_degree_centrality(request: &Value, catalog: Arc<dyn GraphCatalog>)
                     )
                 }
             };
-            let facade = DegreeCentralityFacade::new(Arc::clone(graph_resources.store()))
+            let mut facade = DegreeCentralityFacade::new(Arc::clone(graph_resources.store()))
                 .normalize(normalize)
                 .orientation(orientation)
                 .weighted(weighted)
                 .concurrency(concurrency_value);
+            if let Some(property) = relationship_weight_property {
+                facade = facade.relationship_weight_property(property);
+            }
             match facade.mutate(property_name) {
                 Ok(result) => {
                     // Replace in catalog with updated store from facade
@@ -244,11 +255,14 @@ pub fn handle_degree_centrality(request: &Value, catalog: Arc<dyn GraphCatalog>)
                     )
                 }
             };
-            let facade = DegreeCentralityFacade::new(Arc::clone(graph_resources.store()))
+            let mut facade = DegreeCentralityFacade::new(Arc::clone(graph_resources.store()))
                 .normalize(normalize)
                 .orientation(orientation)
                 .weighted(weighted)
                 .concurrency(concurrency_value);
+            if let Some(property) = relationship_weight_property {
+                facade = facade.relationship_weight_property(property);
+            }
             match facade.write(property_name) {
                 Ok(result) => json!({
                     "ok": true,
@@ -264,11 +278,14 @@ pub fn handle_degree_centrality(request: &Value, catalog: Arc<dyn GraphCatalog>)
         }
         "estimate" => match estimate_submode {
             Some("memory") => {
-                let facade = DegreeCentralityFacade::new(Arc::clone(graph_resources.store()))
+                let mut facade = DegreeCentralityFacade::new(Arc::clone(graph_resources.store()))
                     .normalize(normalize)
                     .orientation(orientation)
                     .weighted(weighted)
                     .concurrency(concurrency_value);
+                if let Some(property) = relationship_weight_property {
+                    facade = facade.relationship_weight_property(property);
+                }
                 let memory = facade.estimate_memory();
                 json!({
                     "ok": true,

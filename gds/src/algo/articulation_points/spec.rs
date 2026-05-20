@@ -65,6 +65,7 @@ pub struct ArticulationPointRow {
 /// Statistics for articulation points computation.
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub struct ArticulationPointsStats {
+    pub node_count: usize,
     pub articulation_point_count: u64,
     pub execution_time_ms: u64,
 }
@@ -117,6 +118,7 @@ impl ArticulationPointsResultBuilder {
 
     pub fn stats(&self) -> ArticulationPointsStats {
         ArticulationPointsStats {
+            node_count: self.result.node_count,
             articulation_point_count: self.result.articulation_points.len() as u64,
             execution_time_ms: self.result.execution_time.as_millis() as u64,
         }

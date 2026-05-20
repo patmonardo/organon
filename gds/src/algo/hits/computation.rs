@@ -9,23 +9,11 @@ use super::{HitsPregelRuntimeConfig, HitsRunResult};
 
 const HUB_KEY: &str = "hub";
 const AUTH_KEY: &str = "authority";
-const HUB_TMP_KEY: &str = "hub_tmp";
-const AUTH_TMP_KEY: &str = "authority_tmp";
-const HUB_PREV_KEY: &str = "hub_prev";
-const AUTH_PREV_KEY: &str = "authority_prev";
 
-fn hits_schema() -> PregelSchema {
+fn hits_schema(hub_property: &str, auth_property: &str) -> PregelSchema {
     PregelSchemaBuilder::new()
-        .add_with_default(HUB_KEY, DefaultValue::Double(1.0), Visibility::Public)
-        .add_with_default(AUTH_KEY, DefaultValue::Double(1.0), Visibility::Public)
-        .add_with_default(HUB_TMP_KEY, DefaultValue::Double(0.0), Visibility::Private)
-        .add_with_default(AUTH_TMP_KEY, DefaultValue::Double(0.0), Visibility::Private)
-        .add_with_default(HUB_PREV_KEY, DefaultValue::Double(1.0), Visibility::Private)
-        .add_with_default(
-            AUTH_PREV_KEY,
-            DefaultValue::Double(1.0),
-            Visibility::Private,
-        )
+        .add_with_default(hub_property, DefaultValue::Double(1.0), Visibility::Public)
+        .add_with_default(auth_property, DefaultValue::Double(1.0), Visibility::Public)
         // Keep a canonical node value as well (some infrastructure expects one)
         .add_public("value", ValueType::Double)
         .build()
@@ -39,26 +27,33 @@ fn hits_schema() -> PregelSchema {
 /// access or execution orchestration.
 #[derive(Clone, Debug)]
 pub struct HitsComputationRuntime {
-    tolerance: f64,
+    hub_property: String,
+    auth_property: String,
 }
 
 impl HitsComputationRuntime {
-    pub fn new(tolerance: f64) -> Self {
-        Self { tolerance }
+    pub fn new(_tolerance: f64) -> Self {
+        Self::with_properties(_tolerance, HUB_KEY.to_string(), AUTH_KEY.to_string())
+    }
+
+    pub fn with_properties(_tolerance: f64, hub_property: String, auth_property: String) -> Self {
+        Self {
+            hub_property,
+            auth_property,
+        }
     }
 
     pub fn schema(&self) -> PregelSchema {
-        hits_schema()
+        hits_schema(&self.hub_property, &self.auth_property)
     }
 
     pub fn init_fn(&self) -> Arc<dyn Fn(&mut InitContext<HitsPregelRuntimeConfig>) + Send + Sync> {
-        Arc::new(|context: &mut InitContext<HitsPregelRuntimeConfig>| {
-            context.set_node_value(HUB_KEY, 1.0);
-            context.set_node_value(AUTH_KEY, 1.0);
-            context.set_node_value(HUB_PREV_KEY, 1.0);
-            context.set_node_value(AUTH_PREV_KEY, 1.0);
-            context.set_node_value(HUB_TMP_KEY, 0.0);
-            context.set_node_value(AUTH_TMP_KEY, 0.0);
+        let hub_property = self.hub_property.clone();
+        let auth_property = self.auth_property.clone();
+
+        Arc::new(move |context: &mut InitContext<HitsPregelRuntimeConfig>| {
+            context.set_node_value(&hub_property, 1.0);
+            context.set_node_value(&auth_property, 1.0);
             context.set_node_value("value", 0.0);
         })
     }
@@ -72,43 +67,48 @@ impl HitsComputationRuntime {
             ) + Send
             + Sync,
     > {
+        let hub_property = self.hub_property.clone();
+        let auth_property = self.auth_property.clone();
+
         Arc::new(
-            |context: &mut ComputeContext<HitsPregelRuntimeConfig, SyncQueueMessageIterator>,
-             messages: &mut Messages<SyncQueueMessageIterator>| {
+            move |context: &mut ComputeContext<
+                HitsPregelRuntimeConfig,
+                SyncQueueMessageIterator,
+            >,
+                  messages: &mut Messages<SyncQueueMessageIterator>| {
                 let superstep = context.superstep();
 
-                // Superstep 0: seed by sending hubs along outgoing edges.
                 if superstep == 0 {
-                    let hub = context.double_node_value(HUB_KEY);
-                    context.send_to_neighbors(hub);
+                    let auth = context.incoming_degree() as f64;
+                    context.set_node_value(&auth_property, auth);
                     return;
                 }
 
-                match (superstep - 1) % 4 {
-                    // CALC_AUTHS: sum incoming hubs
+                match superstep % 4 {
+                    // CALCULATE_AUTHS: sum incoming hub messages.
                     0 => {
                         let mut sum = 0.0f64;
                         for m in messages.by_ref() {
                             sum += m;
                         }
-                        context.set_node_value(AUTH_TMP_KEY, sum);
+                        context.set_node_value(&auth_property, sum);
                     }
-                    // SEND_AUTHS: send (normalized) authority backwards (to incoming neighbors)
+                    // NORMALIZE_AUTHS: master normalized the authority value; send it backwards.
                     1 => {
-                        let auth = context.double_node_value(AUTH_KEY);
+                        let auth = context.double_node_value(&auth_property);
                         context.send_to_incoming_neighbors(auth);
                     }
-                    // CALC_HUBS: sum incoming authorities
+                    // CALCULATE_HUBS: sum authority messages.
                     2 => {
                         let mut sum = 0.0f64;
                         for m in messages.by_ref() {
                             sum += m;
                         }
-                        context.set_node_value(HUB_TMP_KEY, sum);
+                        context.set_node_value(&hub_property, sum);
                     }
-                    // SEND_HUBS: send (normalized) hubs along outgoing edges
+                    // NORMALIZE_HUBS: master normalized the hub value; send it forwards.
                     _ => {
-                        let hub = context.double_node_value(HUB_KEY);
+                        let hub = context.double_node_value(&hub_property);
                         context.send_to_neighbors(hub);
                     }
                 }
@@ -120,69 +120,25 @@ impl HitsComputationRuntime {
         &self,
     ) -> impl Fn(&mut MasterComputeContext<HitsPregelRuntimeConfig>) -> bool + Send + Sync + 'static
     {
-        let tolerance = self.tolerance;
+        let hub_property = self.hub_property.clone();
+        let auth_property = self.auth_property.clone();
 
         move |context: &mut MasterComputeContext<HitsPregelRuntimeConfig>| {
             let superstep = context.superstep();
-            if superstep == 0 {
-                return false;
-            }
 
-            match (superstep - 1) % 4 {
+            match superstep % 4 {
                 // NORMALIZE_AUTHS
                 0 => {
-                    let mut sum_sq = 0.0f64;
-                    let node_count = context.node_count();
-                    for node_id in 0..node_count {
-                        let v = context.double_node_value(node_id, AUTH_TMP_KEY);
-                        sum_sq += v * v;
-                    }
-
-                    let norm = sum_sq.sqrt();
-                    let denom = if norm > 0.0 { norm } else { 1.0 };
-
-                    for node_id in 0..node_count {
-                        let prev = context.double_node_value(node_id, AUTH_KEY);
-                        let next = context.double_node_value(node_id, AUTH_TMP_KEY) / denom;
-
-                        context.set_double_node_value(node_id, AUTH_PREV_KEY, prev);
-                        context.set_double_node_value(node_id, AUTH_KEY, next);
-                    }
-
-                    false
+                    normalize_property(context, &auth_property);
                 }
                 // NORMALIZE_HUBS + convergence check
                 2 => {
-                    let mut sum_sq = 0.0f64;
-                    let node_count = context.node_count();
-                    for node_id in 0..node_count {
-                        let v = context.double_node_value(node_id, HUB_TMP_KEY);
-                        sum_sq += v * v;
-                    }
-
-                    let norm = sum_sq.sqrt();
-                    let denom = if norm > 0.0 { norm } else { 1.0 };
-
-                    let mut max_delta = 0.0f64;
-                    for node_id in 0..node_count {
-                        let prev_hub = context.double_node_value(node_id, HUB_KEY);
-                        let next_hub = context.double_node_value(node_id, HUB_TMP_KEY) / denom;
-
-                        let prev_auth = context.double_node_value(node_id, AUTH_PREV_KEY);
-                        let next_auth = context.double_node_value(node_id, AUTH_KEY);
-
-                        let d_hub = (prev_hub - next_hub).abs();
-                        let d_auth = (prev_auth - next_auth).abs();
-                        max_delta = max_delta.max(d_hub.max(d_auth));
-
-                        context.set_double_node_value(node_id, HUB_PREV_KEY, prev_hub);
-                        context.set_double_node_value(node_id, HUB_KEY, next_hub);
-                    }
-
-                    max_delta <= tolerance
+                    normalize_property(context, &hub_property);
                 }
-                _ => false,
+                _ => {}
             }
+
+            false
         }
     }
 
@@ -193,8 +149,8 @@ impl HitsComputationRuntime {
         let mut auths = vec![0.0f64; node_count];
 
         for node_id in 0..node_count {
-            hubs[node_id] = node_values.double_value(HUB_KEY, node_id);
-            auths[node_id] = node_values.double_value(AUTH_KEY, node_id);
+            hubs[node_id] = node_values.double_value(&self.hub_property, node_id);
+            auths[node_id] = node_values.double_value(&self.auth_property, node_id);
         }
 
         // Translate pregel supersteps back into algorithm iterations.
@@ -212,5 +168,27 @@ impl HitsComputationRuntime {
             iterations_ran: ran_iterations,
             did_converge: result.did_converge,
         }
+    }
+}
+
+fn normalize_property(context: &mut MasterComputeContext<HitsPregelRuntimeConfig>, property: &str) {
+    let mut sum_sq = 0.0f64;
+    let node_count = context.node_count();
+
+    for node_id in 0..node_count {
+        let value = context.double_node_value(node_id, property);
+        sum_sq += value * value;
+    }
+
+    let norm = sum_sq.sqrt();
+    let denom = if norm > 0.0 && norm.is_finite() {
+        norm
+    } else {
+        1.0
+    };
+
+    for node_id in 0..node_count {
+        let normalized = context.double_node_value(node_id, property) / denom;
+        context.set_double_node_value(node_id, property, normalized);
     }
 }

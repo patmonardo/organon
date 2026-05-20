@@ -71,6 +71,7 @@ pub struct BridgesRow {
 /// Statistics for bridges computation
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub struct BridgesStats {
+    pub node_count: usize,
     pub bridge_count: usize,
     pub execution_time_ms: u64,
 }
@@ -125,6 +126,7 @@ impl BridgesResultBuilder {
 
     pub fn stats(&self) -> BridgesStats {
         BridgesStats {
+            node_count: self.result.node_count,
             bridge_count: self.result.bridges.len(),
             execution_time_ms: self.result.execution_time.as_millis() as u64,
         }

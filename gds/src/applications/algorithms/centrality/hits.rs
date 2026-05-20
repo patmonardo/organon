@@ -46,6 +46,16 @@ pub fn handle_hits(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value {
         .and_then(|v| v.as_u64())
         .unwrap_or(1) as usize;
 
+    let hub_property = request
+        .get("hubProperty")
+        .and_then(|v| v.as_str())
+        .unwrap_or("hub");
+
+    let auth_property = request
+        .get("authProperty")
+        .and_then(|v| v.as_str())
+        .unwrap_or("authority");
+
     let concurrency = match Concurrency::new(concurrency_value) {
         Some(value) => value,
         None => {
@@ -86,6 +96,8 @@ pub fn handle_hits(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value {
                     .hits()
                     .max_iterations(max_iterations)
                     .tolerance(tolerance)
+                    .hub_property(hub_property)
+                    .auth_property(auth_property)
                     .concurrency(concurrency_value)
                     .stream()
                     .map_err(|e| e.to_string())?;
@@ -140,6 +152,8 @@ pub fn handle_hits(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value {
                     .hits()
                     .max_iterations(max_iterations)
                     .tolerance(tolerance)
+                    .hub_property(hub_property)
+                    .auth_property(auth_property)
                     .concurrency(concurrency_value)
                     .stats()
                     .map_err(|e| e.to_string())?;
@@ -171,6 +185,8 @@ pub fn handle_hits(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value {
             let facade = HitsCentralityFacade::new(Arc::clone(graph_resources.store()))
                 .max_iterations(max_iterations)
                 .tolerance(tolerance)
+                .hub_property(hub_property)
+                .auth_property(auth_property)
                 .concurrency(concurrency_value);
             match facade.mutate(property_name) {
                 Ok(result) => {
@@ -201,6 +217,8 @@ pub fn handle_hits(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value {
             let facade = HitsCentralityFacade::new(Arc::clone(graph_resources.store()))
                 .max_iterations(max_iterations)
                 .tolerance(tolerance)
+                .hub_property(hub_property)
+                .auth_property(auth_property)
                 .concurrency(concurrency_value);
             match facade.write(property_name) {
                 Ok(result) => json!({
@@ -220,6 +238,8 @@ pub fn handle_hits(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value {
                 let facade = HitsCentralityFacade::new(Arc::clone(graph_resources.store()))
                     .max_iterations(max_iterations)
                     .tolerance(tolerance)
+                    .hub_property(hub_property)
+                    .auth_property(auth_property)
                     .concurrency(concurrency_value);
                 let memory = facade.estimate_memory();
                 json!({

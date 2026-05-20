@@ -16,7 +16,7 @@ use std::time::{Duration, Instant};
 
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub struct HitsConfig {
-    #[serde(default = "default_max_iterations")]
+    #[serde(default = "default_max_iterations", alias = "maxIterations")]
     pub max_iterations: usize,
 
     #[serde(default = "default_tolerance")]
@@ -24,6 +24,12 @@ pub struct HitsConfig {
 
     #[serde(default = "default_concurrency")]
     pub concurrency: usize,
+
+    #[serde(default = "default_hub_property", alias = "hubProperty")]
+    pub hub_property: String,
+
+    #[serde(default = "default_auth_property", alias = "authProperty")]
+    pub auth_property: String,
 }
 
 fn default_max_iterations() -> usize {
@@ -38,12 +44,22 @@ fn default_concurrency() -> usize {
     4
 }
 
+fn default_hub_property() -> String {
+    "hub".to_string()
+}
+
+fn default_auth_property() -> String {
+    "authority".to_string()
+}
+
 impl Default for HitsConfig {
     fn default() -> Self {
         Self {
             max_iterations: default_max_iterations(),
             tolerance: default_tolerance(),
             concurrency: default_concurrency(),
+            hub_property: default_hub_property(),
+            auth_property: default_auth_property(),
         }
     }
 }
@@ -68,6 +84,24 @@ impl HitsConfig {
                 reason: "tolerance must be positive".to_string(),
             });
         }
+        if self.hub_property.trim().is_empty() {
+            return Err(ConfigError::InvalidParameter {
+                parameter: "hubProperty".to_string(),
+                reason: "hubProperty must be non-empty".to_string(),
+            });
+        }
+        if self.auth_property.trim().is_empty() {
+            return Err(ConfigError::InvalidParameter {
+                parameter: "authProperty".to_string(),
+                reason: "authProperty must be non-empty".to_string(),
+            });
+        }
+        if self.hub_property == self.auth_property {
+            return Err(ConfigError::InvalidParameter {
+                parameter: "authProperty".to_string(),
+                reason: "authProperty must differ from hubProperty".to_string(),
+            });
+        }
         Ok(())
     }
 }
@@ -82,6 +116,9 @@ impl crate::config::ValidatedConfig for HitsConfig {
 pub struct HitsResult {
     pub hub_scores: Vec<f64>,
     pub authority_scores: Vec<f64>,
+    pub hub_property: String,
+    pub auth_property: String,
+    pub node_count: usize,
     pub iterations: usize,
     pub converged: bool,
     pub execution_time: Duration,
@@ -90,6 +127,9 @@ pub struct HitsResult {
 /// Statistics for HITS algorithm
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub struct HitsCentralityStats {
+    pub node_count: usize,
+    pub hub_property: String,
+    pub auth_property: String,
     pub iterations: usize,
     pub converged: bool,
     pub execution_time_ms: u64,
@@ -130,6 +170,9 @@ impl HitsResultBuilder {
 
     pub fn stats(&self) -> HitsCentralityStats {
         HitsCentralityStats {
+            node_count: self.result.node_count,
+            hub_property: self.result.hub_property.clone(),
+            auth_property: self.result.auth_property.clone(),
             iterations: self.result.iterations,
             converged: self.result.converged,
             execution_time_ms: self.result.execution_time.as_millis() as u64,
@@ -161,7 +204,11 @@ define_algorithm_spec! {
         let start = Instant::now();
 
         let storage = HitsStorageRuntime::with_default_projection(graph_store)?;
-        let computation = HitsComputationRuntime::new(parsed.tolerance);
+        let computation = HitsComputationRuntime::with_properties(
+            parsed.tolerance,
+            parsed.hub_property.clone(),
+            parsed.auth_property.clone(),
+        );
         let concurrency = Concurrency::of(parsed.concurrency.max(1));
 
         let mut tracker = TaskProgressTracker::with_concurrency(
@@ -178,6 +225,9 @@ define_algorithm_spec! {
         Ok(HitsResult {
             hub_scores: run.hub_scores,
             authority_scores: run.authority_scores,
+            hub_property: parsed.hub_property,
+            auth_property: parsed.auth_property,
+            node_count: graph_store.node_count(),
             iterations: run.iterations_ran,
             converged: run.did_converge,
             execution_time: start.elapsed(),

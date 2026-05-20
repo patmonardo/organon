@@ -20,6 +20,7 @@ use crate::algo::betweenness::{
 pub struct BetweennessCentralityStorageRuntime<'a, G: GraphStore> {
     graph_store: &'a G,
     graph: Arc<dyn Graph>,
+    orientation: Orientation,
     has_weights: bool,
 }
 
@@ -51,6 +52,7 @@ impl<'a, G: GraphStore> BetweennessCentralityStorageRuntime<'a, G> {
         Ok(Self {
             graph_store,
             graph,
+            orientation,
             has_weights,
         })
     }
@@ -90,12 +92,43 @@ impl<'a, G: GraphStore> BetweennessCentralityStorageRuntime<'a, G> {
         };
 
         let fallback = self.graph.default_property_value();
-        self.graph
-            .stream_relationships(node_id, fallback)
-            .map(|cursor| cursor.target_id())
-            .filter(|target| *target >= 0)
-            .map(|target| target as usize)
-            .collect()
+        match self.orientation {
+            Orientation::Natural => self
+                .graph
+                .stream_relationships(node_id, fallback)
+                .map(|cursor| cursor.target_id())
+                .filter(|target| *target >= 0)
+                .map(|target| target as usize)
+                .collect(),
+            Orientation::Reverse => self
+                .graph
+                .stream_inverse_relationships(node_id, fallback)
+                .map(|cursor| cursor.source_id())
+                .filter(|source| *source >= 0)
+                .map(|source| source as usize)
+                .collect(),
+            Orientation::Undirected => {
+                let mut neighbors = Vec::new();
+                let mut outgoing_targets = HashSet::new();
+
+                for cursor in self.graph.stream_relationships(node_id, fallback) {
+                    let target = cursor.target_id();
+                    if target >= 0 {
+                        outgoing_targets.insert(target);
+                        neighbors.push(target as usize);
+                    }
+                }
+
+                for cursor in self.graph.stream_inverse_relationships(node_id, fallback) {
+                    let source = cursor.source_id();
+                    if source >= 0 && !outgoing_targets.contains(&source) {
+                        neighbors.push(source as usize);
+                    }
+                }
+
+                neighbors
+            }
+        }
     }
 
     pub fn neighbors_weighted(&self, node_idx: usize) -> Vec<(usize, f64)> {
@@ -105,12 +138,43 @@ impl<'a, G: GraphStore> BetweennessCentralityStorageRuntime<'a, G> {
         };
 
         let fallback = self.graph.default_property_value();
-        self.graph
-            .stream_relationships(node_id, fallback)
-            .map(|cursor| (cursor.target_id(), cursor.property()))
-            .filter(|(target, _w)| *target >= 0)
-            .map(|(target, w)| (target as usize, w))
-            .collect()
+        match self.orientation {
+            Orientation::Natural => self
+                .graph
+                .stream_relationships(node_id, fallback)
+                .map(|cursor| (cursor.target_id(), cursor.property()))
+                .filter(|(target, _w)| *target >= 0)
+                .map(|(target, weight)| (target as usize, weight))
+                .collect(),
+            Orientation::Reverse => self
+                .graph
+                .stream_inverse_relationships(node_id, fallback)
+                .map(|cursor| (cursor.source_id(), cursor.property()))
+                .filter(|(source, _w)| *source >= 0)
+                .map(|(source, weight)| (source as usize, weight))
+                .collect(),
+            Orientation::Undirected => {
+                let mut neighbors = Vec::new();
+                let mut outgoing_targets = HashSet::new();
+
+                for cursor in self.graph.stream_relationships(node_id, fallback) {
+                    let target = cursor.target_id();
+                    if target >= 0 {
+                        outgoing_targets.insert(target);
+                        neighbors.push((target as usize, cursor.property()));
+                    }
+                }
+
+                for cursor in self.graph.stream_inverse_relationships(node_id, fallback) {
+                    let source = cursor.source_id();
+                    if source >= 0 && !outgoing_targets.contains(&source) {
+                        neighbors.push((source as usize, cursor.property()));
+                    }
+                }
+
+                neighbors
+            }
+        }
     }
 
     /// Select source nodes for Brandes traversal.

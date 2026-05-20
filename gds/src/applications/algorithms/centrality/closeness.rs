@@ -38,7 +38,9 @@ pub fn handle_closeness(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Valu
         .to_string();
 
     let wasserman_faust = request
-        .get("useWasserman")
+        .get("useWassermanFaust")
+        .or_else(|| request.get("useWasserman"))
+        .or_else(|| request.get("wassermanFaust"))
         .and_then(|v| v.as_bool())
         .unwrap_or(false);
 

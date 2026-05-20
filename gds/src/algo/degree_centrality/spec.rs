@@ -29,6 +29,9 @@ pub struct DegreeCentralityConfig {
     #[serde(default)]
     pub weighted: bool,
 
+    #[serde(default, alias = "relationshipWeightProperty")]
+    pub relationship_weight_property: Option<String>,
+
     #[serde(default = "default_concurrency")]
     pub concurrency: usize,
 }
@@ -47,6 +50,7 @@ impl Default for DegreeCentralityConfig {
             normalize: false,
             orientation: default_orientation(),
             weighted: false,
+            relationship_weight_property: None,
             concurrency: default_concurrency(),
         }
     }
@@ -64,6 +68,16 @@ impl DegreeCentralityConfig {
             return Err(ConfigError::InvalidParameter {
                 parameter: "orientation".to_string(),
                 reason: "orientation must be one of natural, reverse, or undirected".to_string(),
+            });
+        }
+        if self
+            .relationship_weight_property
+            .as_deref()
+            .is_some_and(|property| property.trim().is_empty())
+        {
+            return Err(ConfigError::InvalidParameter {
+                parameter: "relationshipWeightProperty".to_string(),
+                reason: "relationshipWeightProperty must be non-empty".to_string(),
             });
         }
         Ok(())
@@ -86,6 +100,8 @@ pub struct DegreeCentralityResult {
 /// Statistics about degree distribution in the graph
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub struct DegreeCentralityStats {
+    /// Number of nodes scored
+    pub node_count: usize,
     /// Minimum degree found
     pub min: f64,
     /// Maximum degree found
@@ -150,6 +166,7 @@ impl DegreeCentralityResultBuilder {
                 p50: 0.0,
                 p90: 0.0,
                 p99: 0.0,
+                node_count: self.result.node_count,
                 isolated_nodes: 0,
                 execution_time_ms: self.result.execution_time.as_millis() as u64,
             };
@@ -185,6 +202,7 @@ impl DegreeCentralityResultBuilder {
             p50: percentile(50.0),
             p90: percentile(90.0),
             p99: percentile(99.0),
+            node_count: self.result.node_count,
             isolated_nodes,
             execution_time_ms: self.result.execution_time.as_millis() as u64,
         }
@@ -226,10 +244,13 @@ define_algorithm_spec! {
         let start = Instant::now();
         let orientation = parse_degree_orientation(&parsed.orientation)?;
 
-        let storage = DegreeCentralityStorageRuntime::with_settings(
+        let storage = DegreeCentralityStorageRuntime::with_relationship_weight_property(
             graph_store,
             orientation,
-            parsed.weighted,
+            parsed
+                .relationship_weight_property
+                .as_deref()
+                .or(parsed.weighted.then_some("weight")),
         )?;
 
         let node_count = storage.node_count();

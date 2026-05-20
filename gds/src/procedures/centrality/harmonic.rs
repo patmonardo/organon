@@ -330,6 +330,7 @@ mod tests {
         let facade = HarmonicCentralityFacade::new(store());
         let stats = facade.stats().unwrap();
         assert!(stats.max >= stats.min);
+        assert_eq!(stats.node_count, 8);
     }
 
     #[test]

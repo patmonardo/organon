@@ -196,7 +196,7 @@ pub struct CELFStorageRuntime<'a, G: GraphStore> {
 
 impl<'a, G: GraphStore> CELFStorageRuntime<'a, G> {
     pub fn new(graph_store: &'a G) -> Result<Self, AlgorithmError> {
-        let rel_types: HashSet<RelationshipType> = HashSet::new();
+        let rel_types: HashSet<RelationshipType> = graph_store.relationship_types();
         let graph = graph_store
             .get_graph_with_types_and_orientation(&rel_types, Orientation::Natural)
             .map_err(|e| AlgorithmError::Graph(e.to_string()))?;

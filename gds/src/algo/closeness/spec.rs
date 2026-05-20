@@ -20,7 +20,12 @@ use super::ClosenessCentralityStorageRuntime;
 
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub struct ClosenessCentralityConfig {
-    #[serde(default)]
+    #[serde(
+        default,
+        alias = "useWassermanFaust",
+        alias = "useWasserman",
+        alias = "wassermanFaust"
+    )]
     pub wasserman_faust: bool,
 
     #[serde(default = "default_direction")]
@@ -82,6 +87,7 @@ pub struct ClosenessCentralityResult {
 /// Statistics about closeness centrality.
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub struct ClosenessCentralityStats {
+    pub node_count: usize,
     pub min: f64,
     pub max: f64,
     pub mean: f64,
@@ -130,6 +136,7 @@ impl ClosenessCentralityResultBuilder {
         let scores = &self.result.centralities;
         if scores.is_empty() {
             return ClosenessCentralityStats {
+                node_count: self.result.node_count,
                 min: 0.0,
                 max: 0.0,
                 mean: 0.0,
@@ -165,6 +172,7 @@ impl ClosenessCentralityResultBuilder {
         };
 
         ClosenessCentralityStats {
+            node_count: self.result.node_count,
             min,
             max,
             mean,

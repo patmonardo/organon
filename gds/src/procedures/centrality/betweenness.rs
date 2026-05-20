@@ -483,6 +483,7 @@ mod tests {
         let facade = BetweennessCentralityFacade::new(store());
         let stats = facade.stats().unwrap();
         assert!(stats.max >= stats.min);
+        assert_eq!(stats.node_count, 8);
     }
 
     #[test]
@@ -508,6 +509,16 @@ mod tests {
     fn test_invalid_sampling_strategy_fails_fast() {
         let facade = BetweennessCentralityFacade::new(store()).sampling_strategy("largest_first");
         assert!(facade.stream().is_err());
+    }
+
+    #[test]
+    fn test_empty_relationship_weight_property_fails_fast() {
+        let config = BetweennessCentralityConfig {
+            relationship_weight_property: Some("   ".to_string()),
+            ..BetweennessCentralityConfig::default()
+        };
+
+        assert!(BetweennessCentralityFacade::from_spec_config(store(), config).is_err());
     }
 
     #[test]

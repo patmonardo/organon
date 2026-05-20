@@ -128,6 +128,13 @@ impl DegreeCentralityFacade {
         self
     }
 
+    /// Select a relationship weight property and compute degree as sum of positive weights.
+    pub fn relationship_weight_property(mut self, property_name: impl Into<String>) -> Self {
+        self.config.relationship_weight_property = Some(property_name.into());
+        self.config.weighted = true;
+        self
+    }
+
     /// Set concurrency level
     ///
     /// Number of parallel threads to use.
@@ -167,10 +174,13 @@ impl DegreeCentralityFacade {
 
         let orientation = parse_degree_orientation(&self.config.orientation)?;
 
-        let storage = DegreeCentralityStorageRuntime::with_settings(
+        let storage = DegreeCentralityStorageRuntime::with_relationship_weight_property(
             self.graph_store.as_ref(),
             orientation,
-            self.config.weighted,
+            self.config
+                .relationship_weight_property
+                .as_deref()
+                .or(self.config.weighted.then_some("weight")),
         )?;
 
         let node_count = storage.node_count();
@@ -452,6 +462,14 @@ mod tests {
         outgoing: Vec<Vec<i64>>,
         weights: Vec<f64>,
     ) -> Arc<DefaultGraphStore> {
+        weighted_store_from_outgoing_with_property(outgoing, weights, "weight")
+    }
+
+    fn weighted_store_from_outgoing_with_property(
+        outgoing: Vec<Vec<i64>>,
+        weights: Vec<f64>,
+        property_name: &str,
+    ) -> Arc<DefaultGraphStore> {
         let node_count = outgoing.len();
         let mut incoming: Vec<Vec<i64>> = vec![Vec::new(); node_count];
         for (source, targets) in outgoing.iter().enumerate() {
@@ -497,7 +515,7 @@ mod tests {
             DefaultRelationshipPropertyValues::with_values(weights, 0.0, element_count),
         );
         store
-            .add_relationship_property(rel_type, "weight", values)
+            .add_relationship_property(rel_type, property_name, values)
             .unwrap();
 
         Arc::new(store)
@@ -528,6 +546,7 @@ mod tests {
         let facade = DegreeCentralityFacade::new(store());
         let stats = facade.stats().unwrap();
         assert!(stats.max >= stats.min);
+        assert_eq!(stats.node_count, 8);
     }
 
     #[test]
@@ -571,5 +590,84 @@ mod tests {
             .collect();
 
         assert_eq!(scores, vec![2.0, 0.0, 0.0]);
+    }
+
+    #[test]
+    fn degree_orientation_matches_java_natural_reverse_undirected() {
+        let store =
+            weighted_store_from_outgoing(vec![vec![1, 2], vec![2], vec![]], vec![2.0, 3.0, 5.0]);
+
+        let natural: Vec<_> = DegreeCentralityFacade::new(Arc::clone(&store))
+            .orientation(Orientation::Natural)
+            .stream()
+            .unwrap()
+            .map(|row| row.score)
+            .collect();
+        let reverse: Vec<_> = DegreeCentralityFacade::new(Arc::clone(&store))
+            .orientation(Orientation::Reverse)
+            .stream()
+            .unwrap()
+            .map(|row| row.score)
+            .collect();
+        let undirected: Vec<_> = DegreeCentralityFacade::new(store)
+            .orientation(Orientation::Undirected)
+            .stream()
+            .unwrap()
+            .map(|row| row.score)
+            .collect();
+
+        assert_eq!(natural, vec![2.0, 1.0, 0.0]);
+        assert_eq!(reverse, vec![0.0, 1.0, 2.0]);
+        assert_eq!(undirected, vec![2.0, 2.0, 2.0]);
+    }
+
+    #[test]
+    fn weighted_degree_orientation_matches_java_weight_sums() {
+        let store =
+            weighted_store_from_outgoing(vec![vec![1, 2], vec![2], vec![]], vec![2.0, 3.0, 5.0]);
+
+        let natural: Vec<_> = DegreeCentralityFacade::new(Arc::clone(&store))
+            .weighted(true)
+            .orientation(Orientation::Natural)
+            .stream()
+            .unwrap()
+            .map(|row| row.score)
+            .collect();
+        let reverse: Vec<_> = DegreeCentralityFacade::new(Arc::clone(&store))
+            .weighted(true)
+            .orientation(Orientation::Reverse)
+            .stream()
+            .unwrap()
+            .map(|row| row.score)
+            .collect();
+        let undirected: Vec<_> = DegreeCentralityFacade::new(store)
+            .weighted(true)
+            .orientation(Orientation::Undirected)
+            .stream()
+            .unwrap()
+            .map(|row| row.score)
+            .collect();
+
+        assert_eq!(natural, vec![5.0, 5.0, 0.0]);
+        assert_eq!(reverse, vec![0.0, 2.0, 8.0]);
+        assert_eq!(undirected, vec![5.0, 7.0, 8.0]);
+    }
+
+    #[test]
+    fn relationship_weight_property_selects_named_property() {
+        let store = weighted_store_from_outgoing_with_property(
+            vec![vec![1, 2], vec![2], vec![]],
+            vec![7.0, 11.0, 13.0],
+            "cost",
+        );
+
+        let scores: Vec<_> = DegreeCentralityFacade::new(store)
+            .relationship_weight_property("cost")
+            .stream()
+            .unwrap()
+            .map(|row| row.score)
+            .collect();
+
+        assert_eq!(scores, vec![18.0, 13.0, 0.0]);
     }
 }

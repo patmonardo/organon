@@ -144,6 +144,7 @@ impl CELFFacade {
             return Ok((
                 CELFResult {
                     seed_set_nodes: HashMap::new(),
+                    node_count,
                 },
                 start.elapsed(),
             ));
@@ -187,6 +188,7 @@ impl CELFFacade {
         Ok((
             CELFResult {
                 seed_set_nodes: seed_set,
+                node_count,
             },
             start.elapsed(),
         ))
@@ -439,6 +441,86 @@ mod tests {
         let graph = GraphFacade::new(Arc::new(store));
 
         assert!(graph.celf().mutate("").is_err());
+    }
+
+    #[test]
+    fn stats_include_node_count_and_seed_count() {
+        let store = store_from_directed_edges(4, &[(0, 1), (0, 2), (0, 3)]);
+        let graph = GraphFacade::new(Arc::new(store));
+
+        let stats = graph
+            .celf()
+            .seed_set_size(1)
+            .monte_carlo_simulations(10)
+            .propagation_probability(1.0)
+            .stats()
+            .unwrap();
+
+        assert_eq!(stats.node_count, 4);
+        assert_eq!(stats.seed_count, 1);
+        assert!(stats.total_spread > 0.0);
+    }
+
+    #[test]
+    fn facade_uses_natural_outgoing_propagation() {
+        let store = store_from_directed_edges(4, &[(1, 0), (2, 0), (3, 0)]);
+        let graph = GraphFacade::new(Arc::new(store));
+
+        let rows: Vec<_> = graph
+            .celf()
+            .seed_set_size(1)
+            .monte_carlo_simulations(10)
+            .propagation_probability(1.0)
+            .random_seed(42)
+            .stream()
+            .unwrap()
+            .collect();
+
+        assert_eq!(rows.len(), 1);
+        assert_eq!(rows[0].node_id, 1);
+        assert!(rows[0].spread > 1.0);
+    }
+
+    #[test]
+    fn config_accepts_java_style_aliases() {
+        let config: CELFConfig = serde_json::from_value(serde_json::json!({
+            "seedSetSize": 2,
+            "monteCarloSimulations": 5,
+            "propagationProbability": 0.25,
+            "batchSize": 3,
+            "randomSeed": 9,
+            "concurrency": 1
+        }))
+        .unwrap();
+
+        assert_eq!(config.seed_set_size, 2);
+        assert_eq!(config.monte_carlo_simulations, 5);
+        assert_eq!(config.propagation_probability, 0.25);
+        assert_eq!(config.batch_size, 3);
+        assert_eq!(config.random_seed, 9);
+        assert_eq!(config.concurrency, 1);
+    }
+
+    #[test]
+    fn partial_config_uses_defaults() {
+        let config: CELFConfig = serde_json::from_value(serde_json::json!({
+            "seedSetSize": 2
+        }))
+        .unwrap();
+        let defaults = CELFConfig::default();
+
+        assert_eq!(config.seed_set_size, 2);
+        assert_eq!(
+            config.monte_carlo_simulations,
+            defaults.monte_carlo_simulations
+        );
+        assert_eq!(
+            config.propagation_probability,
+            defaults.propagation_probability
+        );
+        assert_eq!(config.batch_size, defaults.batch_size);
+        assert_eq!(config.random_seed, defaults.random_seed);
+        assert_eq!(config.concurrency, defaults.concurrency);
     }
 
     #[test]

@@ -61,7 +61,7 @@ mod tests {
     }
 
     #[test]
-    fn pagerank_empty_edges_is_uniform_and_converges() {
+    fn pagerank_empty_edges_keeps_java_alpha_seed_and_converges() {
         let store = store_from_outgoing(vec![vec![], vec![], vec![]]);
         let graph = GraphFacade::new(Arc::new(store));
 
@@ -76,7 +76,7 @@ mod tests {
         assert!(stats.converged);
         assert!(stats.iterations_ran <= 50);
 
-        // Uniform distribution.
+        // Java's Pregel PageRank seeds each active node with alpha, not a normalized 1/N mass.
         let scores: Vec<f64> = graph
             .pagerank()
             .iterations(1)
@@ -88,9 +88,9 @@ mod tests {
             .collect();
 
         let sum: f64 = scores.iter().sum();
-        assert!((sum - 1.0).abs() < 1e-9);
+        assert!((sum - 0.45).abs() < 1e-9);
         for &s in &scores {
-            assert!((s - (1.0 / 3.0)).abs() < 1e-6);
+            assert!((s - 0.15).abs() < 1e-6);
         }
     }
 
@@ -113,13 +113,10 @@ mod tests {
         assert_eq!(scores.len(), 3);
         assert!(scores[2] > scores[1]);
         assert!(scores[1] > scores[0]);
-
-        let sum: f64 = scores.iter().sum();
-        assert!((sum - 1.0).abs() < 1e-6);
     }
 
     #[test]
-    fn pagerank_out_of_range_sources_fall_back_to_uniform() {
+    fn pagerank_out_of_range_sources_fall_back_to_all_nodes() {
         let store = store_from_outgoing(vec![vec![1], vec![2], vec![]]);
         let graph = GraphFacade::new(Arc::new(store));
 
@@ -133,7 +130,58 @@ mod tests {
             .collect();
 
         let sum: f64 = scores.iter().sum();
-        assert!((sum - 1.0).abs() < 1e-6);
+        assert!(sum > 0.45);
+        assert!(scores.iter().all(|score| *score > 0.0));
+    }
+
+    #[test]
+    fn article_rank_uses_degree_smoothed_denominator() {
+        let store = Arc::new(store_from_outgoing(vec![vec![1], vec![2], vec![]]));
+        let graph = GraphFacade::new(Arc::clone(&store));
+
+        let pagerank_scores: Vec<f64> = graph
+            .pagerank()
+            .iterations(20)
+            .tolerance(1e-12)
+            .stream()
+            .unwrap()
+            .map(|x| x.score)
+            .collect();
+
+        let article_scores: Vec<f64> = GraphFacade::new(store)
+            .pagerank()
+            .article_rank()
+            .iterations(20)
+            .tolerance(1e-12)
+            .stream()
+            .unwrap()
+            .map(|x| x.score)
+            .collect();
+
+        assert_eq!(pagerank_scores.len(), article_scores.len());
+        assert!(pagerank_scores
+            .iter()
+            .zip(article_scores.iter())
+            .any(|(left, right)| (left - right).abs() > 1e-9));
+    }
+
+    #[test]
+    fn eigenvector_scores_are_l2_normalized() {
+        let store = store_from_outgoing(vec![vec![1], vec![2], vec![0]]);
+        let graph = GraphFacade::new(Arc::new(store));
+
+        let scores: Vec<f64> = graph
+            .pagerank()
+            .eigenvector()
+            .iterations(20)
+            .tolerance(1e-12)
+            .stream()
+            .unwrap()
+            .map(|x| x.score)
+            .collect();
+
+        let norm = scores.iter().map(|score| score * score).sum::<f64>().sqrt();
+        assert!((norm - 1.0).abs() < 1e-9);
         assert!(scores.iter().all(|score| *score > 0.0));
     }
 }

@@ -45,6 +45,7 @@ impl Orientation {
 pub struct DegreeCentralityStorageRuntime<'a, G: GraphStore> {
     graph_store: &'a G,
     graph: Arc<dyn Graph>,
+    orientation: Orientation,
     weighted: bool,
 }
 
@@ -54,13 +55,24 @@ impl<'a, G: GraphStore> DegreeCentralityStorageRuntime<'a, G> {
         orientation: Orientation,
         weighted: bool,
     ) -> Result<Self, AlgorithmError> {
+        Self::with_relationship_weight_property(
+            graph_store,
+            orientation,
+            weighted.then_some("weight"),
+        )
+    }
+
+    pub fn with_relationship_weight_property(
+        graph_store: &'a G,
+        orientation: Orientation,
+        relationship_weight_property: Option<&str>,
+    ) -> Result<Self, AlgorithmError> {
         let rel_types: HashSet<RelationshipType> = graph_store.relationship_types();
 
-        let graph = if weighted {
-            // Java parity default weight property name.
+        let graph = if let Some(weight_property) = relationship_weight_property {
             let selectors: HashMap<RelationshipType, String> = rel_types
                 .iter()
-                .map(|t| (t.clone(), "weight".to_string()))
+                .map(|t| (t.clone(), weight_property.to_string()))
                 .collect();
 
             graph_store
@@ -79,7 +91,8 @@ impl<'a, G: GraphStore> DegreeCentralityStorageRuntime<'a, G> {
         Ok(Self {
             graph_store,
             graph,
-            weighted,
+            orientation,
+            weighted: relationship_weight_property.is_some(),
         })
     }
 
@@ -100,7 +113,22 @@ impl<'a, G: GraphStore> DegreeCentralityStorageRuntime<'a, G> {
             Ok(id) => id,
             Err(_) => return 0.0,
         };
-        self.graph.degree(node_id) as f64
+
+        match self.orientation {
+            Orientation::Natural => self.graph.degree(node_id) as f64,
+            Orientation::Reverse => self
+                .graph
+                .stream_inverse_relationships(node_id, 0.0)
+                .count() as f64,
+            Orientation::Undirected => {
+                let outgoing = self.graph.degree(node_id) as f64;
+                let incoming = self
+                    .graph
+                    .stream_inverse_relationships(node_id, 0.0)
+                    .count() as f64;
+                outgoing + incoming
+            }
+        }
     }
 
     fn degree_weighted(&self, node_idx: usize) -> f64 {
@@ -109,13 +137,18 @@ impl<'a, G: GraphStore> DegreeCentralityStorageRuntime<'a, G> {
             Err(_) => return 0.0,
         };
 
-        // Java parity default: missing weight => 0.0.
-        let fallback = 0.0;
-        self.graph
-            .stream_relationships(node_id, fallback)
-            .map(|cursor| cursor.property())
-            .filter(|weight| *weight > 0.0)
-            .sum::<f64>()
+        match self.orientation {
+            Orientation::Natural => {
+                positive_weight_sum(self.graph.stream_relationships(node_id, 0.0))
+            }
+            Orientation::Reverse => {
+                positive_weight_sum(self.graph.stream_inverse_relationships(node_id, 0.0))
+            }
+            Orientation::Undirected => {
+                positive_weight_sum(self.graph.stream_relationships(node_id, 0.0))
+                    + positive_weight_sum(self.graph.stream_inverse_relationships(node_id, 0.0))
+            }
+        }
     }
 
     pub fn compute_parallel(
@@ -176,4 +209,13 @@ impl<'a, G: GraphStore> DegreeCentralityStorageRuntime<'a, G> {
 
         Ok(result)
     }
+}
+
+fn positive_weight_sum(
+    relationships: crate::types::properties::relationship::RelationshipStream<'_>,
+) -> f64 {
+    relationships
+        .map(|cursor| cursor.property())
+        .filter(|weight| *weight > 0.0)
+        .sum::<f64>()
 }

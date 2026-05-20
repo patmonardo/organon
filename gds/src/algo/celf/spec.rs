@@ -12,30 +12,25 @@ use std::time::Duration;
 
 /// Configuration for CELF algorithm
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(default)]
 pub struct CELFConfig {
     /// Number of seed nodes to select
+    #[serde(alias = "seedSetSize")]
     pub seed_set_size: usize,
     /// Number of Monte Carlo simulations per evaluation
+    #[serde(alias = "monteCarloSimulations")]
     pub monte_carlo_simulations: usize,
     /// Edge propagation probability for Independent Cascade model
+    #[serde(alias = "propagationProbability")]
     pub propagation_probability: f64,
     /// Batch size for lazy forward evaluation (trade-off between accuracy and speed)
-    #[serde(default = "default_batch_size")]
+    #[serde(alias = "batchSize")]
     pub batch_size: usize,
     /// Random seed for reproducibility
-    #[serde(default)]
+    #[serde(alias = "randomSeed")]
     pub random_seed: u64,
     /// Concurrency level
-    #[serde(default = "default_concurrency")]
     pub concurrency: usize,
-}
-
-fn default_batch_size() -> usize {
-    10
-}
-
-fn default_concurrency() -> usize {
-    4
 }
 
 impl Default for CELFConfig {
@@ -104,6 +99,7 @@ pub fn celf_progress_task(node_count: usize, seed_set_size: usize) -> LeafTask {
 pub struct CELFResult {
     /// Map of seed node IDs to their spread values
     pub seed_set_nodes: HashMap<u64, f64>,
+    pub node_count: usize,
 }
 
 impl CELFResult {
@@ -128,6 +124,7 @@ pub struct CELFRow {
 /// Statistics for CELF computation
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct CELFStats {
+    pub node_count: usize,
     pub seed_count: usize,
     pub total_spread: f64,
     pub execution_time_ms: u64,
@@ -194,6 +191,7 @@ impl CELFResultBuilder {
 
     pub fn stats(&self) -> CELFStats {
         CELFStats {
+            node_count: self.result.node_count,
             seed_count: self.result.seed_set_nodes.len(),
             total_spread: self.result.total_spread(),
             execution_time_ms: self.execution_time.as_millis() as u64,

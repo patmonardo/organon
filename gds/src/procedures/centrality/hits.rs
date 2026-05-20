@@ -92,6 +92,18 @@ impl HitsCentralityFacade {
         self
     }
 
+    /// Set the public Pregel hub score property name.
+    pub fn hub_property(mut self, property_name: impl Into<String>) -> Self {
+        self.config.hub_property = property_name.into();
+        self
+    }
+
+    /// Set the public Pregel authority score property name.
+    pub fn auth_property(mut self, property_name: impl Into<String>) -> Self {
+        self.config.auth_property = property_name.into();
+        self
+    }
+
     /// Set the task registry factory for progress tracking and concurrency control.
     pub fn task_registry(mut self, task_registry: Arc<dyn TaskRegistryFactory>) -> Self {
         self.task_registry = task_registry;
@@ -127,7 +139,11 @@ impl HitsCentralityFacade {
         let start = Instant::now();
 
         let storage = HitsStorageRuntime::with_default_projection(self.graph_store.as_ref())?;
-        let computation = HitsComputationRuntime::new(self.config.tolerance);
+        let computation = HitsComputationRuntime::with_properties(
+            self.config.tolerance,
+            self.config.hub_property.clone(),
+            self.config.auth_property.clone(),
+        );
         let concurrency = Concurrency::of(self.config.concurrency.max(1));
 
         let mut progress_tracker = TaskProgressTracker::with_registry(
@@ -149,6 +165,9 @@ impl HitsCentralityFacade {
         Ok(HitsResult {
             hub_scores: result.hub_scores,
             authority_scores: result.authority_scores,
+            hub_property: self.config.hub_property.clone(),
+            auth_property: self.config.auth_property.clone(),
+            node_count: self.graph_store.node_count(),
             iterations: result.iterations_ran,
             converged: result.did_converge,
             execution_time: start.elapsed(),
@@ -357,6 +376,27 @@ mod tests {
 
         let facade = HitsCentralityFacade::new(store()).tolerance(0.0);
         assert!(facade.stream().is_err());
+
+        let facade = HitsCentralityFacade::new(store()).hub_property("");
+        assert!(facade.stream().is_err());
+
+        let facade = HitsCentralityFacade::new(store())
+            .hub_property("score")
+            .auth_property("score");
+        assert!(facade.stream().is_err());
+    }
+
+    #[test]
+    fn custom_hub_and_auth_properties_are_reported() {
+        let stats = HitsCentralityFacade::new(store())
+            .hub_property("custom_hub")
+            .auth_property("custom_auth")
+            .stats()
+            .unwrap();
+
+        assert_eq!(stats.node_count, 6);
+        assert_eq!(stats.hub_property, "custom_hub");
+        assert_eq!(stats.auth_property, "custom_auth");
     }
 
     #[test]

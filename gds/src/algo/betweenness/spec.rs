@@ -28,19 +28,19 @@ pub struct BetweennessCentralityConfig {
     pub concurrency: usize,
 
     /// Optional relationship weight property.
-    #[serde(default)]
+    #[serde(default, alias = "relationshipWeightProperty")]
     pub relationship_weight_property: Option<String>,
 
     /// Sampling strategy: "all" or "random_degree".
-    #[serde(default = "default_sampling_strategy")]
+    #[serde(default = "default_sampling_strategy", alias = "samplingStrategy")]
     pub sampling_strategy: String,
 
     /// Optional number of sources to process (<= node_count).
-    #[serde(default)]
+    #[serde(default, alias = "samplingSize")]
     pub sampling_size: Option<usize>,
 
     /// RNG seed for sampling.
-    #[serde(default = "default_random_seed")]
+    #[serde(default = "default_random_seed", alias = "randomSeed")]
     pub random_seed: u64,
 }
 
@@ -79,6 +79,14 @@ impl crate::config::ValidatedConfig for BetweennessCentralityConfig {
         if let Some(size) = self.sampling_size {
             crate::config::validate_positive(size as f64, "samplingSize")?;
         }
+        if let Some(property) = &self.relationship_weight_property {
+            if property.trim().is_empty() {
+                return Err(ConfigError::InvalidParameter {
+                    parameter: "relationshipWeightProperty".to_string(),
+                    reason: "relationshipWeightProperty must be non-empty".to_string(),
+                });
+            }
+        }
         if parse_betweenness_orientation(&self.direction).is_err() {
             return Err(ConfigError::InvalidParameter {
                 parameter: "direction".to_string(),
@@ -106,6 +114,8 @@ pub struct BetweennessCentralityResult {
 /// Statistics about betweenness centrality in the graph.
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub struct BetweennessCentralityStats {
+    /// Number of nodes scored
+    pub node_count: usize,
     /// Minimum betweenness score
     pub min: f64,
     /// Maximum betweenness score
@@ -163,6 +173,7 @@ impl BetweennessCentralityResultBuilder {
         let scores = &self.result.centralities;
         if scores.is_empty() {
             return BetweennessCentralityStats {
+                node_count: self.result.node_count,
                 min: 0.0,
                 max: 0.0,
                 mean: 0.0,
@@ -200,6 +211,7 @@ impl BetweennessCentralityResultBuilder {
         let bridge_nodes = scores.iter().filter(|v| **v > threshold).count() as u64;
 
         BetweennessCentralityStats {
+            node_count: self.result.node_count,
             min,
             max,
             mean,

@@ -14,6 +14,10 @@ mod tests {
     use crate::types::graph_store::{
         Capabilities, DatabaseId, DatabaseInfo, DatabaseLocation, DefaultGraphStore, GraphName,
     };
+    use crate::types::prelude::GraphStore;
+    use crate::types::properties::relationship::{
+        DefaultRelationshipPropertyValues, RelationshipPropertyValues,
+    };
     use crate::types::schema::{Direction, MutableGraphSchema};
 
     fn store_from_undirected_edges(
@@ -101,6 +105,62 @@ mod tests {
         )
     }
 
+    fn store_from_weighted_directed_edges(
+        node_count: usize,
+        edges: &[(usize, usize, f64)],
+        property_name: &str,
+    ) -> DefaultGraphStore {
+        let mut outgoing: Vec<Vec<i64>> = vec![Vec::new(); node_count];
+        let mut incoming: Vec<Vec<i64>> = vec![Vec::new(); node_count];
+        let mut weights = Vec::with_capacity(edges.len());
+
+        for &(source, target, weight) in edges {
+            outgoing[source].push(target as i64);
+            incoming[target].push(source as i64);
+            weights.push(weight);
+        }
+
+        let rel_type = RelationshipType::of("REL");
+
+        let mut schema_builder = MutableGraphSchema::empty();
+        schema_builder
+            .relationship_schema_mut()
+            .add_relationship_type(rel_type.clone(), Direction::Directed);
+        let schema = schema_builder.build();
+
+        let mut relationship_topologies = HashMap::new();
+        relationship_topologies.insert(
+            rel_type.clone(),
+            RelationshipTopology::new(outgoing, Some(incoming)),
+        );
+
+        let original_ids: Vec<i64> = (0..node_count as i64).collect();
+        let id_map = SimpleIdMap::from_original_ids(original_ids);
+
+        let mut store = DefaultGraphStore::new(
+            GraphStoreConfig::default(),
+            GraphName::new("g"),
+            DatabaseInfo::new(
+                DatabaseId::new("db"),
+                DatabaseLocation::remote("localhost", 7687, None, None),
+            ),
+            schema,
+            Capabilities::default(),
+            id_map,
+            relationship_topologies,
+        );
+
+        let element_count = weights.len();
+        let property_values: Arc<dyn RelationshipPropertyValues> = Arc::new(
+            DefaultRelationshipPropertyValues::with_values(weights, 0.0, element_count),
+        );
+        store
+            .add_relationship_property(rel_type, property_name, property_values)
+            .unwrap();
+
+        store
+    }
+
     #[test]
     fn path_graph_middle_is_bridge_node() {
         // 0-1-2
@@ -177,5 +237,89 @@ mod tests {
             .collect();
 
         assert_ne!(outgoing, both);
+    }
+
+    #[test]
+    fn incoming_direction_uses_inverse_relationships() {
+        let store = store_from_directed_edges(3, &[(0, 1), (1, 2)]);
+        let graph = GraphFacade::new(Arc::new(store));
+
+        let incoming: Vec<_> = graph
+            .betweenness()
+            .direction("incoming")
+            .stream()
+            .unwrap()
+            .map(|row| row.score)
+            .collect();
+
+        assert!((incoming[1] - 1.0).abs() < 1e-9);
+        assert!(incoming[0].abs() < 1e-9);
+        assert!(incoming[2].abs() < 1e-9);
+    }
+
+    #[test]
+    fn undirected_direction_adds_missing_inverse_relationships() {
+        let store = store_from_directed_edges(3, &[(0, 1), (1, 2)]);
+        let graph = GraphFacade::new(Arc::new(store));
+
+        let both: Vec<_> = graph
+            .betweenness()
+            .direction("both")
+            .stream()
+            .unwrap()
+            .map(|row| row.score)
+            .collect();
+
+        assert!((both[1] - 1.0).abs() < 1e-9);
+        assert!(both[0].abs() < 1e-9);
+        assert!(both[2].abs() < 1e-9);
+    }
+
+    #[test]
+    fn weighted_relationship_property_selects_dijkstra_traversal() {
+        let store = store_from_weighted_directed_edges(
+            3,
+            &[(0, 2, 10.0), (0, 1, 1.0), (1, 2, 1.0)],
+            "cost",
+        );
+        let graph = GraphFacade::new(Arc::new(store));
+
+        let unweighted: Vec<_> = graph
+            .betweenness()
+            .direction("outgoing")
+            .stream()
+            .unwrap()
+            .map(|row| row.score)
+            .collect();
+        let weighted: Vec<_> = graph
+            .betweenness()
+            .direction("outgoing")
+            .relationship_weight_property(Some("cost".to_string()))
+            .stream()
+            .unwrap()
+            .map(|row| row.score)
+            .collect();
+
+        assert!(unweighted[1].abs() < 1e-9);
+        assert!((weighted[1] - 1.0).abs() < 1e-9);
+    }
+
+    #[test]
+    fn config_accepts_java_style_aliases() {
+        let config: crate::algo::betweenness::BetweennessCentralityConfig =
+            serde_json::from_value(serde_json::json!({
+                "direction": "outgoing",
+                "relationshipWeightProperty": "cost",
+                "samplingStrategy": "randomDegree",
+                "samplingSize": 2,
+                "randomSeed": 7,
+                "concurrency": 1
+            }))
+            .unwrap();
+
+        assert_eq!(config.relationship_weight_property.as_deref(), Some("cost"));
+        assert_eq!(config.sampling_strategy, "randomDegree");
+        assert_eq!(config.sampling_size, Some(2));
+        assert_eq!(config.random_seed, 7);
     }
 }

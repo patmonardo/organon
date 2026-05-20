@@ -34,7 +34,7 @@ use crate::algo::pagerank::{
     pagerank_progress_task, parse_pagerank_orientation,
     storage::PageRankStorageRuntime,
     PageRankConfig, PageRankMutateResult, PageRankMutationSummary, PageRankResult,
-    PageRankResultBuilder, PageRankStats,
+    PageRankResultBuilder, PageRankStats, PageRankVariant,
 };
 use crate::collections::backends::vec::VecDouble;
 use crate::concurrency::Concurrency;
@@ -177,6 +177,33 @@ impl PageRankFacade {
         self
     }
 
+    /// Select the PageRank-family variant.
+    pub fn variant(mut self, variant: PageRankVariant) -> Self {
+        self.config.variant = variant;
+        self
+    }
+
+    /// Use standard PageRank semantics.
+    pub fn page_rank(self) -> Self {
+        self.variant(PageRankVariant::PageRank)
+    }
+
+    /// Use ArticleRank's degree-smoothed propagation denominator.
+    pub fn article_rank(self) -> Self {
+        self.variant(PageRankVariant::ArticleRank)
+    }
+
+    /// Use the Eigenvector centrality variant with L2-normalized power iteration.
+    pub fn eigenvector(self) -> Self {
+        self.variant(PageRankVariant::Eigenvector)
+    }
+
+    /// Select a relationship weight property for weighted PageRank-family runs.
+    pub fn relationship_weight_property(mut self, property_name: impl Into<String>) -> Self {
+        self.config.relationship_weight_property = Some(property_name.into());
+        self
+    }
+
     /// Set maximum iterations
     ///
     /// The algorithm will stop after this many iterations or when converged,
@@ -228,9 +255,10 @@ impl PageRankFacade {
         self.validate()?;
         let start = Instant::now();
 
-        let storage = PageRankStorageRuntime::with_orientation(
+        let storage = PageRankStorageRuntime::new(
             self.graph_store.as_ref(),
             self.orientation()?,
+            self.config.relationship_weight_property.as_deref(),
         )?;
 
         let source_set = self
@@ -244,6 +272,7 @@ impl PageRankFacade {
             self.config.damping_factor,
             self.config.tolerance,
             source_set,
+            self.config.variant,
         );
         let concurrency = Concurrency::of(self.config.concurrency.max(1));
 
@@ -455,6 +484,7 @@ mod tests {
         assert_eq!(facade.config.max_iterations, 20);
         assert_eq!(facade.config.damping_factor, 0.85);
         assert_eq!(facade.config.tolerance, 1e-4);
+        assert_eq!(facade.config.variant, PageRankVariant::PageRank);
     }
 
     #[test]
@@ -467,6 +497,21 @@ mod tests {
         assert_eq!(facade.config.max_iterations, 30);
         assert_eq!(facade.config.damping_factor, 0.90);
         assert_eq!(facade.config.tolerance, 1e-5);
+    }
+
+    #[test]
+    fn test_variant_builders() {
+        let facade = PageRankFacade::new(store()).article_rank();
+        assert_eq!(facade.config.variant, PageRankVariant::ArticleRank);
+
+        let facade = PageRankFacade::new(store()).eigenvector();
+        assert_eq!(facade.config.variant, PageRankVariant::Eigenvector);
+
+        let facade = PageRankFacade::new(store()).relationship_weight_property("weight");
+        assert_eq!(
+            facade.config.relationship_weight_property.as_deref(),
+            Some("weight")
+        );
     }
 
     #[test]

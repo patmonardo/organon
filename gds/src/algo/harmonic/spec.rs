@@ -27,8 +27,11 @@ use super::HarmonicStorageRuntime;
 #[derive(Debug, Clone, Copy, serde::Serialize, serde::Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "lowercase")]
 pub enum HarmonicDirection {
+    #[serde(alias = "reverse")]
     Incoming,
+    #[serde(alias = "natural")]
     Outgoing,
+    #[serde(alias = "undirected")]
     Both,
     #[serde(other)]
     Invalid,
@@ -95,6 +98,7 @@ pub struct HarmonicResult {
 /// Statistics about harmonic centrality.
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub struct HarmonicCentralityStats {
+    pub node_count: usize,
     pub min: f64,
     pub max: f64,
     pub mean: f64,
@@ -143,6 +147,7 @@ impl HarmonicResultBuilder {
         let scores = &self.result.centralities;
         if scores.is_empty() {
             return HarmonicCentralityStats {
+                node_count: self.result.node_count,
                 min: 0.0,
                 max: 0.0,
                 mean: 0.0,
@@ -178,6 +183,7 @@ impl HarmonicResultBuilder {
         };
 
         HarmonicCentralityStats {
+            node_count: self.result.node_count,
             min,
             max,
             mean,

@@ -419,6 +419,48 @@ mod tests {
     }
 
     #[test]
+    fn facade_treats_directed_projection_as_undirected_connectivity() {
+        let mut outgoing: Vec<Vec<i64>> = vec![Vec::new(); 5];
+        let mut incoming: Vec<Vec<i64>> = vec![Vec::new(); 5];
+        for (source, target) in [(0usize, 1usize), (1, 2), (2, 3), (3, 4)] {
+            outgoing[source].push(target as i64);
+            incoming[target].push(source as i64);
+        }
+
+        let rel_type = RelationshipType::of("REL");
+        let mut schema_builder = MutableGraphSchema::empty();
+        schema_builder
+            .relationship_schema_mut()
+            .add_relationship_type(rel_type.clone(), Direction::Directed);
+        let schema = schema_builder.build();
+
+        let mut relationship_topologies = HashMap::new();
+        relationship_topologies.insert(
+            rel_type,
+            RelationshipTopology::new(outgoing, Some(incoming)),
+        );
+
+        let store = DefaultGraphStore::new(
+            GraphStoreConfig::default(),
+            GraphName::new("g"),
+            DatabaseInfo::new(
+                DatabaseId::new("db"),
+                DatabaseLocation::remote("localhost", 7687, None, None),
+            ),
+            schema,
+            Capabilities::default(),
+            SimpleIdMap::from_original_ids(0..5),
+            relationship_topologies,
+        );
+        let graph = GraphFacade::new(Arc::new(store));
+
+        let rows: Vec<_> = graph.articulation_points().stream().unwrap().collect();
+        let ids: Vec<u64> = rows.into_iter().map(|r| r.node_id).collect();
+
+        assert_eq!(ids, vec![1, 2, 3]);
+    }
+
+    #[test]
     fn mutate_adds_articulation_point_property() {
         let store = store_from_undirected_edges(5, &[(0, 1), (1, 2), (2, 3), (3, 4)]);
         let graph = GraphFacade::new(Arc::new(store));
@@ -439,5 +481,16 @@ mod tests {
         assert_eq!(values.double_value(2).unwrap(), 1.0);
         assert_eq!(values.double_value(3).unwrap(), 1.0);
         assert_eq!(values.double_value(4).unwrap(), 0.0);
+    }
+
+    #[test]
+    fn stats_include_node_count() {
+        let store = store_from_undirected_edges(5, &[(0, 1), (1, 2), (2, 3), (3, 4)]);
+        let graph = GraphFacade::new(Arc::new(store));
+
+        let stats = graph.articulation_points().stats().unwrap();
+
+        assert_eq!(stats.node_count, 5);
+        assert_eq!(stats.articulation_point_count, 3);
     }
 }

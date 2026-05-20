@@ -100,4 +100,19 @@ mod tests {
         assert!(auth1 >= auth0 - eps);
         assert!(auth2 >= auth0 - eps);
     }
+
+    #[test]
+    fn hits_schema_uses_configured_public_property_names() {
+        let computation = HitsComputationRuntime::with_properties(
+            1e-4,
+            "my_hub".to_string(),
+            "my_auth".to_string(),
+        );
+        let schema = computation.schema();
+
+        assert!(schema.has_property("my_hub"));
+        assert!(schema.has_property("my_auth"));
+        assert!(!schema.has_property("hub"));
+        assert!(!schema.has_property("authority"));
+    }
 }

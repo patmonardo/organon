@@ -22,7 +22,7 @@ pub struct ArticulationPointsStorageRuntime<'a, G: GraphStore> {
 
 impl<'a, G: GraphStore> ArticulationPointsStorageRuntime<'a, G> {
     pub fn new(graph_store: &'a G) -> Result<Self, AlgorithmError> {
-        let rel_types: HashSet<RelationshipType> = HashSet::new();
+        let rel_types: HashSet<RelationshipType> = graph_store.relationship_types();
         let graph = graph_store
             .get_graph_with_types_and_orientation(&rel_types, Orientation::Undirected)
             .map_err(|e| AlgorithmError::Graph(e.to_string()))?;
@@ -53,12 +53,24 @@ impl<'a, G: GraphStore> ArticulationPointsStorageRuntime<'a, G> {
         };
 
         let fallback = self.graph.default_property_value();
-        self.graph
-            .stream_relationships(node_id, fallback)
-            .map(|cursor| cursor.target_id())
-            .filter(|target| *target >= 0)
-            .map(|target| target as usize)
-            .collect()
+        let mut neighbors = Vec::new();
+        let mut seen = HashSet::new();
+
+        for cursor in self.graph.stream_relationships(node_id, fallback) {
+            let target = cursor.target_id();
+            if target >= 0 && seen.insert(target) {
+                neighbors.push(target as usize);
+            }
+        }
+
+        for cursor in self.graph.stream_inverse_relationships(node_id, fallback) {
+            let source = cursor.source_id();
+            if source >= 0 && seen.insert(source) {
+                neighbors.push(source as usize);
+            }
+        }
+
+        neighbors
     }
 
     pub fn compute_articulation_points(
