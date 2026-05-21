@@ -70,8 +70,8 @@ impl DeltaSteppingFacade {
 
         Ok(Self {
             graph_store,
+            weight_property: config.weight_property.clone(),
             config,
-            weight_property: "weight".to_string(),
             task_registry_factory: None,
             user_log_registry_factory: None,
         })
@@ -92,6 +92,7 @@ impl DeltaSteppingFacade {
         config
             .validate()
             .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
+        self.weight_property = config.weight_property.clone();
         self.config = config;
         Ok(self)
     }
@@ -108,6 +109,7 @@ impl DeltaSteppingFacade {
 
     pub fn weight_property(mut self, property: &str) -> Self {
         self.weight_property = property.to_string();
+        self.config.weight_property = property.to_string();
         self
     }
 
@@ -148,7 +150,7 @@ impl DeltaSteppingFacade {
             .validate()
             .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
 
-        if self.weight_property.is_empty() {
+        if self.weight_property.trim().is_empty() {
             return Err(AlgorithmError::Execution(
                 "weight_property cannot be empty".to_string(),
             ));
@@ -326,5 +328,62 @@ impl DeltaSteppingFacade {
         let total_memory = bucket_memory + distance_memory + predecessor_memory + graph_overhead;
         let overhead = total_memory / 5;
         MemoryRange::of_range(total_memory, total_memory + overhead)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::types::random::{RandomGraphConfig, RandomRelationshipConfig};
+
+    fn store() -> Arc<DefaultGraphStore> {
+        let config = RandomGraphConfig {
+            seed: Some(17),
+            node_count: 8,
+            relationships: vec![RandomRelationshipConfig::new("REL", 1.0)],
+            ..RandomGraphConfig::default()
+        };
+
+        Arc::new(DefaultGraphStore::random(&config).unwrap())
+    }
+
+    #[test]
+    fn builder_weight_property_syncs_config() {
+        let builder = DeltaSteppingBuilder::new(store()).weight_property("cost");
+
+        assert_eq!(builder.weight_property, "cost");
+        assert_eq!(builder.config.weight_property, "cost");
+    }
+
+    #[test]
+    fn spec_config_syncs_weight_property() {
+        let raw_config = serde_json::json!({
+            "sourceNode": 0,
+            "relationshipWeightProperty": "distance",
+            "delta": 1.0,
+            "concurrency": 4,
+            "storePredecessors": true
+        });
+
+        let builder = DeltaSteppingBuilder::from_spec_json(store(), &raw_config).unwrap();
+
+        assert_eq!(builder.weight_property, "distance");
+        assert_eq!(builder.config.weight_property, "distance");
+
+        let updated = DeltaSteppingConfig {
+            weight_property: "duration".to_string(),
+            ..builder.config.clone()
+        };
+        let builder = builder.with_spec_config(updated).unwrap();
+
+        assert_eq!(builder.weight_property, "duration");
+        assert_eq!(builder.config.weight_property, "duration");
+    }
+
+    #[test]
+    fn validate_rejects_blank_weight_property() {
+        let builder = DeltaSteppingBuilder::new(store()).weight_property("   ");
+
+        assert!(builder.validate().is_err());
     }
 }

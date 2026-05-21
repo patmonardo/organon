@@ -89,6 +89,11 @@ impl AllShortestPathsComputationRuntime {
         self.node_count += 1;
     }
 
+    /// Record unreachable target count for a processed source without storing rows.
+    pub fn record_unreachable_targets(&mut self, count: usize) {
+        self.infinite_distances += count;
+    }
+
     /// Get all results
     pub fn get_results(&self) -> &Vec<ShortestPathResult> {
         &self.results

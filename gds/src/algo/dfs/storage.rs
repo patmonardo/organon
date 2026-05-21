@@ -128,6 +128,7 @@ impl DfsStorageRuntime {
 
             Ok(DfsResult {
                 visited_nodes: result.visited_nodes,
+                visited_depths: result.visited_depths,
                 computation_time_ms: computation_time,
             })
         })();

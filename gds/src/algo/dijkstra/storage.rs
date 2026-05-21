@@ -129,6 +129,9 @@ impl DijkstraStorageRuntime {
 
             // Initialize priority queue with source node
             self.add_to_queue(computation, self.source_node, 0.0)?;
+            let mut nodes_expanded = 0u64;
+            let mut edges_considered = 0u64;
+            let mut max_queue_size = computation.queue_size() as u64;
 
             let mut paths = Vec::new();
             let mut path_index = 0u64;
@@ -145,9 +148,10 @@ impl DijkstraStorageRuntime {
                 }
 
                 computation.mark_visited(current_node);
+                nodes_expanded += 1;
 
                 // Relax all outgoing edges using graph-backed neighbor streaming when available
-                self.relax_edges(
+                edges_considered += self.relax_edges(
                     computation,
                     current_node,
                     current_cost,
@@ -155,7 +159,8 @@ impl DijkstraStorageRuntime {
                     direction,
                     node_count,
                     progress_tracker,
-                )?;
+                )? as u64;
+                max_queue_size = max_queue_size.max(computation.queue_size() as u64);
 
                 // Java GDS applies target state after relaxing the current node.
                 let traversal_state = targets.apply(current_node);
@@ -179,6 +184,9 @@ impl DijkstraStorageRuntime {
             Ok(DijkstraResult {
                 path_finding_result,
                 computation_time_ms,
+                nodes_expanded,
+                edges_considered,
+                max_queue_size,
             })
         })();
 
@@ -206,12 +214,13 @@ impl DijkstraStorageRuntime {
         direction: u8,
         node_count: usize,
         progress_tracker: &mut dyn ProgressTracker,
-    ) -> Result<(), AlgorithmError> {
+    ) -> Result<usize, AlgorithmError> {
         // Get neighbors with weights for the source node
         let neighbors = self.get_neighbors_with_weights(graph, source_node, direction)?;
+        let neighbor_count = neighbors.len();
 
         // Work unit: edges scanned during relaxation.
-        progress_tracker.log_progress(neighbors.len());
+        progress_tracker.log_progress(neighbor_count);
 
         for (target_node, weight, relationship_id) in neighbors {
             Self::validate_node_in_graph(target_node, node_count, "target")?;
@@ -251,7 +260,7 @@ impl DijkstraStorageRuntime {
             }
         }
 
-        Ok(())
+        Ok(neighbor_count)
     }
 
     fn add_to_queue(

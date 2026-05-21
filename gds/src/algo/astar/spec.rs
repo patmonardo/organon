@@ -19,23 +19,41 @@ use serde::{Deserialize, Serialize};
 use std::collections::{HashMap, HashSet};
 use std::time::Duration;
 
+fn default_weight_property() -> String {
+    "weight".to_string()
+}
+
 /// A* algorithm configuration
 ///
 /// Translation of: `org.neo4j.gds.paths.astar.config.ShortestPathAStarBaseConfig`
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AStarConfig {
     /// Source node ID
+    #[serde(alias = "sourceNode")]
     pub source_node: NodeId,
     /// Target node ID
+    #[serde(alias = "targetNode")]
     pub target_node: NodeId,
+    /// Relationship property used as edge weight.
+    #[serde(
+        default = "default_weight_property",
+        alias = "relationshipWeightProperty",
+        alias = "relationship_weight_property",
+        alias = "weightProperty",
+        alias = "weight_property"
+    )]
+    pub weight_property: String,
     /// Latitude property name
+    #[serde(alias = "latitudeProperty")]
     pub latitude_property: String,
     /// Longitude property name
+    #[serde(alias = "longitudeProperty")]
     pub longitude_property: String,
     /// Concurrency level
     pub concurrency: usize,
     /// Optional relationship types to include (empty means all types)
     #[serde(default)]
+    #[serde(alias = "relationshipTypes")]
     pub relationship_types: Vec<String>,
     /// Direction for traversal ("outgoing" or "incoming")
     #[serde(default = "AStarDirection::default_as_str")]
@@ -47,6 +65,7 @@ impl Default for AStarConfig {
         Self {
             source_node: 0,
             target_node: 1,
+            weight_property: default_weight_property(),
             latitude_property: "latitude".to_string(),
             longitude_property: "longitude".to_string(),
             concurrency: 4,
@@ -104,6 +123,13 @@ impl AStarConfig {
             });
         }
 
+        if self.weight_property.trim().is_empty() {
+            return Err(ConfigError::InvalidParameter {
+                parameter: "relationshipWeightProperty".to_string(),
+                reason: "Must not be empty".to_string(),
+            });
+        }
+
         if self.latitude_property.is_empty() {
             return Err(ConfigError::RequiredParameter {
                 name: "latitude_property".to_string(),
@@ -149,6 +175,12 @@ pub struct AStarResult {
     pub execution_time_ms: u64,
     /// Number of nodes explored
     pub nodes_explored: usize,
+    /// Number of edges considered by the delegated Dijkstra driver
+    #[serde(default)]
+    pub edges_considered: u64,
+    /// Maximum priority queue size observed by the delegated Dijkstra driver
+    #[serde(default)]
+    pub max_queue_size: u64,
 }
 
 impl AStarResult {
@@ -159,11 +191,25 @@ impl AStarResult {
         execution_time_ms: u64,
         nodes_explored: usize,
     ) -> Self {
+        Self::new_with_metrics(path, total_cost, execution_time_ms, nodes_explored, 0, 0)
+    }
+
+    /// Create a new A* result with delegated driver metrics
+    pub fn new_with_metrics(
+        path: Option<Vec<NodeId>>,
+        total_cost: f64,
+        execution_time_ms: u64,
+        nodes_explored: usize,
+        edges_considered: u64,
+        max_queue_size: u64,
+    ) -> Self {
         Self {
             path,
             total_cost,
             execution_time_ms,
             nodes_explored,
+            edges_considered,
+            max_queue_size,
         }
     }
 
@@ -311,6 +357,12 @@ impl AStarResultBuilder {
             .entry("nodes_visited".to_string())
             .or_insert_with(|| nodes_visited.to_string());
         self.additional
+            .entry("edges_considered".to_string())
+            .or_insert_with(|| self.result.edges_considered.to_string());
+        self.additional
+            .entry("max_queue_size".to_string())
+            .or_insert_with(|| self.result.max_queue_size.to_string());
+        self.additional
             .entry("targets_found".to_string())
             .or_insert_with(|| targets_found.to_string());
         self.additional
@@ -354,16 +406,21 @@ define_algorithm_spec! {
         parsed_config.validate()
             .map_err(|e| AlgorithmError::Execution(e.to_string()))?;
 
-        // Build filtered/oriented graph view via overloads
-        let rel_types: HashSet<RelationshipType> = if !parsed_config.relationship_types.is_empty() {
+        let rel_types: HashSet<RelationshipType> = if parsed_config.relationship_types.is_empty() {
+            graph_store.relationship_types()
+        } else {
             RelationshipType::list_of(parsed_config.relationship_types.clone()).into_iter().collect()
-        } else { HashSet::new() };
+        };
+        let selectors: HashMap<RelationshipType, String> = rel_types
+            .iter()
+            .map(|t| (t.clone(), parsed_config.weight_property.clone()))
+            .collect();
         let orientation = match AStarDirection::from_str(&parsed_config.direction) {
             AStarDirection::Outgoing => Orientation::Natural,
             AStarDirection::Incoming => Orientation::Reverse,
         };
         let graph = graph_store
-            .get_graph_with_types_and_orientation(&rel_types, orientation)
+            .get_graph_with_types_selectors_and_orientation(&rel_types, &selectors, orientation)
             .map_err(|e| AlgorithmError::Execution(e.to_string()))?;
         let lat_values = graph.node_properties(&parsed_config.latitude_property);
         let lon_values = graph.node_properties(&parsed_config.longitude_property);
@@ -410,11 +467,13 @@ define_algorithm_spec! {
 
         let execution_time = start_time.elapsed().as_millis() as u64;
 
-        Ok(AStarResult::new(
+        Ok(AStarResult::new_with_metrics(
             result.path,
             result.total_cost,
             execution_time,
             result.nodes_explored,
+            result.edges_considered,
+            result.max_queue_size,
         ))
     }
 }
@@ -430,6 +489,7 @@ mod tests {
         let config = AStarConfig::default();
         assert_eq!(config.source_node, 0);
         assert_eq!(config.target_node, 1);
+        assert_eq!(config.weight_property, "weight");
         assert_eq!(config.latitude_property, "latitude");
         assert_eq!(config.longitude_property, "longitude");
         assert_eq!(config.concurrency, 4);
@@ -448,6 +508,11 @@ mod tests {
 
         // Invalid latitude property
         config.concurrency = 4;
+        config.weight_property = String::new();
+        assert!(config.validate().is_err());
+
+        // Invalid latitude property
+        config.weight_property = "weight".to_string();
         config.latitude_property = String::new();
         assert!(config.validate().is_err());
 
@@ -467,10 +532,32 @@ mod tests {
         assert_eq!(result.total_cost, 10.5);
         assert_eq!(result.execution_time_ms, 100);
         assert_eq!(result.nodes_explored, 5);
+        assert_eq!(result.edges_considered, 0);
+        assert_eq!(result.max_queue_size, 0);
+
+        let metered_result = AStarResult::new_with_metrics(path.clone(), 10.5, 100, 5, 8, 3);
+        assert_eq!(metered_result.edges_considered, 8);
+        assert_eq!(metered_result.max_queue_size, 3);
 
         let no_path_result = AStarResult::new(None, f64::INFINITY, 50, 3);
         assert!(!no_path_result.has_path());
         assert_eq!(no_path_result.path_length(), 0);
+    }
+
+    #[test]
+    fn test_astar_result_builder_metadata_includes_metrics() {
+        let result = AStarResult::new_with_metrics(Some(vec![0, 1, 2]), 3.0, 10, 4, 7, 2);
+        let path_result =
+            AStarResultBuilder::result(result, Duration::from_millis(10), 0, 2).unwrap();
+
+        assert_eq!(
+            path_result.metadata.additional.get("edges_considered"),
+            Some(&"7".to_string())
+        );
+        assert_eq!(
+            path_result.metadata.additional.get("max_queue_size"),
+            Some(&"2".to_string())
+        );
     }
 
     #[test]
@@ -494,12 +581,37 @@ mod tests {
         let config_input = r#"{
             "source_node": 0,
             "target_node": 1,
+            "weight_property": "cost",
             "latitude_property": "lat",
             "longitude_property": "lon",
             "concurrency": 4
         }"#;
 
         let config: AStarConfig = serde_json::from_str(config_input).unwrap();
+        assert!(config.validate().is_ok());
+        assert_eq!(config.weight_property, "cost");
+    }
+
+    #[test]
+    fn test_astar_java_aliases() {
+        let config: AStarConfig = serde_json::from_value(json!({
+            "sourceNode": 7,
+            "targetNode": 11,
+            "relationshipWeightProperty": "travelTime",
+            "latitudeProperty": "lat",
+            "longitudeProperty": "lon",
+            "relationshipTypes": ["ROAD"],
+            "concurrency": 2
+        }))
+        .unwrap();
+
+        assert_eq!(config.source_node, 7);
+        assert_eq!(config.target_node, 11);
+        assert_eq!(config.weight_property, "travelTime");
+        assert_eq!(config.latitude_property, "lat");
+        assert_eq!(config.longitude_property, "lon");
+        assert_eq!(config.relationship_types, vec!["ROAD".to_string()]);
+        assert_eq!(config.concurrency, 2);
         assert!(config.validate().is_ok());
     }
 

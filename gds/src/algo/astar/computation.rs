@@ -15,15 +15,32 @@ pub struct AStarComputationResult {
     pub total_cost: f64,
     /// Number of nodes explored
     pub nodes_explored: usize,
+    /// Number of edges considered by the delegated driver
+    pub edges_considered: u64,
+    /// Maximum priority queue size observed by the delegated driver
+    pub max_queue_size: u64,
 }
 
 impl AStarComputationResult {
     /// Create a new A* computation result
     pub fn new(path: Option<Vec<NodeId>>, total_cost: f64, nodes_explored: usize) -> Self {
+        Self::new_with_metrics(path, total_cost, nodes_explored, 0, 0)
+    }
+
+    /// Create a new A* computation result with delegated driver metrics
+    pub fn new_with_metrics(
+        path: Option<Vec<NodeId>>,
+        total_cost: f64,
+        nodes_explored: usize,
+        edges_considered: u64,
+        max_queue_size: u64,
+    ) -> Self {
         Self {
             path,
             total_cost,
             nodes_explored,
+            edges_considered,
+            max_queue_size,
         }
     }
 

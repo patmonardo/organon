@@ -25,28 +25,47 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 use std::time::Duration;
 
+fn default_weight_property() -> String {
+    "weight".to_string()
+}
+
 /// Dijkstra algorithm configuration
 ///
 /// Translation of: Constructor parameters from `Dijkstra.java` (lines 118-140)
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct DijkstraConfig {
     /// Source node for shortest path computation
+    #[serde(alias = "sourceNode")]
     pub source_node: NodeId,
 
     /// Target nodes (empty = all targets, single = single target, multiple = many targets)
+    #[serde(alias = "targetNodes")]
     pub target_nodes: Vec<NodeId>,
 
+    /// Relationship property used as edge weight.
+    #[serde(
+        default = "default_weight_property",
+        alias = "relationshipWeightProperty",
+        alias = "relationship_weight_property",
+        alias = "weightProperty",
+        alias = "weight_property"
+    )]
+    pub weight_property: String,
+
     /// Whether to track relationship IDs
+    #[serde(alias = "trackRelationships")]
     pub track_relationships: bool,
 
     /// Concurrency level for parallel processing
     pub concurrency: usize,
 
     /// Whether to use heuristic function (for A* behavior)
+    #[serde(alias = "useHeuristic")]
     pub use_heuristic: bool,
 
     /// Optional relationship types to include (empty means all types)
     #[serde(default)]
+    #[serde(alias = "relationshipTypes")]
     pub relationship_types: Vec<String>,
 
     /// Direction for traversal ("outgoing" or "incoming")
@@ -59,6 +78,7 @@ impl Default for DijkstraConfig {
         Self {
             source_node: 0,
             target_nodes: vec![],
+            weight_property: default_weight_property(),
             track_relationships: false,
             concurrency: 4,
             use_heuristic: false,
@@ -119,6 +139,13 @@ impl DijkstraConfig {
             });
         }
 
+        if self.weight_property.trim().is_empty() {
+            return Err(ConfigError::InvalidParameter {
+                parameter: "relationshipWeightProperty".to_string(),
+                reason: "Must not be empty".to_string(),
+            });
+        }
+
         match self.direction.to_ascii_lowercase().as_str() {
             "outgoing" | "incoming" | "both" => {}
             other => {
@@ -149,6 +176,18 @@ pub struct DijkstraResult {
 
     /// Total computation time in milliseconds
     pub computation_time_ms: u64,
+
+    /// Number of settled nodes expanded by the driver loop.
+    #[serde(default)]
+    pub nodes_expanded: u64,
+
+    /// Number of relationships scanned during relaxation.
+    #[serde(default)]
+    pub edges_considered: u64,
+
+    /// Maximum priority-queue size observed during execution.
+    #[serde(default)]
+    pub max_queue_size: u64,
 }
 
 /// Individual path result for Dijkstra
@@ -272,7 +311,24 @@ impl DijkstraResultBuilder {
             execution_time: self.execution_time,
             iterations: None,
             converged: None,
-            additional: std::collections::HashMap::new(),
+            additional: std::collections::HashMap::from([
+                (
+                    "computation_time_ms".to_string(),
+                    self.result.computation_time_ms.to_string(),
+                ),
+                (
+                    "nodes_expanded".to_string(),
+                    self.result.nodes_expanded.to_string(),
+                ),
+                (
+                    "edges_considered".to_string(),
+                    self.result.edges_considered.to_string(),
+                ),
+                (
+                    "max_queue_size".to_string(),
+                    self.result.max_queue_size.to_string(),
+                ),
+            ]),
         };
 
         PathFindingResultBuilder::new()
@@ -339,8 +395,13 @@ define_algorithm_spec! {
         let rel_types: HashSet<RelationshipType> = if !config.relationship_types.is_empty() {
             RelationshipType::list_of(config.relationship_types.clone()).into_iter().collect()
         } else {
-            HashSet::new()
+            graph_store.relationship_types()
         };
+
+        let selectors: std::collections::HashMap<RelationshipType, String> = rel_types
+            .iter()
+            .map(|relationship_type| (relationship_type.clone(), config.weight_property.clone()))
+            .collect();
 
         let orientation = match DijkstraDirection::from_str(&config.direction) {
             DijkstraDirection::Outgoing => Orientation::Natural,
@@ -349,7 +410,7 @@ define_algorithm_spec! {
         };
 
         let graph = graph_store
-            .get_graph_with_types_and_orientation(&rel_types, orientation)
+            .get_graph_with_types_selectors_and_orientation(&rel_types, &selectors, orientation)
             .map_err(|e| AlgorithmError::InvalidGraph(
                 format!("Failed to obtain graph view: {}", e)
             ))?;
@@ -429,6 +490,9 @@ mod tests {
         let result = DijkstraResult {
             path_finding_result,
             computation_time_ms: 100,
+            nodes_expanded: 4,
+            edges_considered: 3,
+            max_queue_size: 2,
         };
 
         assert_eq!(result.path_finding_result.path_count(), 1);
@@ -501,6 +565,7 @@ mod tests {
         let invalid_config = DijkstraConfig {
             source_node: 0,
             target_nodes: vec![],
+            weight_property: default_weight_property(),
             track_relationships: false,
             concurrency: 0,
             use_heuristic: false,
@@ -524,5 +589,37 @@ mod tests {
         assert_eq!(config.source_node, 0);
         assert!(config.target_nodes.is_empty());
         assert!(!config.track_relationships);
+    }
+
+    #[test]
+    fn test_dijkstra_config_accepts_java_aliases() {
+        let config: DijkstraConfig = serde_json::from_value(json!({
+            "sourceNode": 0,
+            "targetNodes": [5, 7],
+            "relationshipWeightProperty": "cost",
+            "trackRelationships": true,
+            "useHeuristic": false,
+            "relationshipTypes": ["ROAD"],
+            "direction": "incoming",
+            "concurrency": 2
+        }))
+        .unwrap();
+
+        assert_eq!(config.source_node, 0);
+        assert_eq!(config.target_nodes, vec![5, 7]);
+        assert_eq!(config.weight_property, "cost");
+        assert!(config.track_relationships);
+        assert_eq!(config.relationship_types, vec!["ROAD"]);
+        assert_eq!(config.direction, "incoming");
+    }
+
+    #[test]
+    fn test_dijkstra_rejects_blank_weight_property() {
+        let config = DijkstraConfig {
+            weight_property: " ".to_string(),
+            ..Default::default()
+        };
+
+        assert!(config.validate().is_err());
     }
 }

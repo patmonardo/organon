@@ -17,6 +17,7 @@ pub struct ParallelBfsConfig {
 #[derive(Debug, Clone)]
 pub struct ParallelBfsResult {
     pub visited_nodes: Vec<NodeId>,
+    pub visited_depths: Vec<f64>,
     pub relationships_examined: usize,
 }
 
@@ -43,6 +44,7 @@ pub fn run_parallel_bfs(
     let mut frontier: Vec<(NodeId, NodeId, f64)> =
         vec![(config.source_node, config.source_node, 0.0)];
     let mut result = Vec::new();
+    let mut result_depths = Vec::new();
     let mut relationships_examined = 0usize;
 
     while !frontier.is_empty() {
@@ -53,13 +55,16 @@ pub fn run_parallel_bfs(
                 ExitPredicateResult::Continue => continue,
                 ExitPredicateResult::Break => {
                     result.push(current_node);
+                    result_depths.push(weight);
                     return Ok(ParallelBfsResult {
                         visited_nodes: result,
+                        visited_depths: result_depths,
                         relationships_examined,
                     });
                 }
                 ExitPredicateResult::Follow => {
                     result.push(current_node);
+                    result_depths.push(weight);
                     if check_max_depth(config.max_depth, weight) {
                         expandable.push((source_node, current_node, weight));
                     }
@@ -120,6 +125,7 @@ pub fn run_parallel_bfs(
 
     Ok(ParallelBfsResult {
         visited_nodes: result,
+        visited_depths: result_depths,
         relationships_examined,
     })
 }

@@ -145,16 +145,20 @@ impl AStarStorageRuntime {
 
         if let Some(path) = path {
             let total_cost = path.costs.last().copied().unwrap_or(0.0);
-            Ok(AStarComputationResult::new(
+            Ok(AStarComputationResult::new_with_metrics(
                 Some(path.node_ids),
                 total_cost,
                 nodes_explored,
+                dijkstra_result.edges_considered,
+                dijkstra_result.max_queue_size,
             ))
         } else {
-            Ok(AStarComputationResult::new(
+            Ok(AStarComputationResult::new_with_metrics(
                 None,
                 f64::INFINITY,
                 nodes_explored,
+                dijkstra_result.edges_considered,
+                dijkstra_result.max_queue_size,
             ))
         }
     }

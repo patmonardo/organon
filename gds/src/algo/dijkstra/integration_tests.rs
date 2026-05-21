@@ -50,6 +50,7 @@ fn test_dijkstra_config_validation() {
     let invalid_config = DijkstraConfig {
         source_node: 0,
         target_nodes: vec![],
+        weight_property: "weight".to_string(),
         track_relationships: false,
         concurrency: 0,
         use_heuristic: false,
@@ -188,6 +189,28 @@ fn test_dijkstra_focused_macro_integration() {
 }
 
 #[test]
+fn test_dijkstra_config_accepts_java_aliases() {
+    let config: DijkstraConfig = serde_json::from_value(json!({
+        "sourceNode": 0,
+        "targetNodes": [5, 7],
+        "relationshipWeightProperty": "cost",
+        "trackRelationships": true,
+        "useHeuristic": false,
+        "relationshipTypes": ["ROAD"],
+        "direction": "both",
+        "concurrency": 4
+    }))
+    .unwrap();
+
+    assert_eq!(config.source_node, 0);
+    assert_eq!(config.target_nodes, vec![5, 7]);
+    assert_eq!(config.weight_property, "cost");
+    assert!(config.track_relationships);
+    assert_eq!(config.relationship_types, vec!["ROAD"]);
+    assert_eq!(config.direction, "both");
+}
+
+#[test]
 fn test_dijkstra_algorithm_completeness() {
     let spec = DIJKSTRAAlgorithmSpec::new("test_graph".to_string());
 
@@ -233,6 +256,9 @@ fn test_dijkstra_result_serialization() {
     let result = DijkstraResult {
         path_finding_result,
         computation_time_ms: 100,
+        nodes_expanded: 4,
+        edges_considered: 3,
+        max_queue_size: 2,
     };
 
     // Test serialization
@@ -242,6 +268,9 @@ fn test_dijkstra_result_serialization() {
     // Test deserialization
     let deserialized: DijkstraResult = serde_json::from_value(json).unwrap();
     assert_eq!(deserialized.computation_time_ms, 100);
+    assert_eq!(deserialized.nodes_expanded, 4);
+    assert_eq!(deserialized.edges_considered, 3);
+    assert_eq!(deserialized.max_queue_size, 2);
 }
 
 #[test]

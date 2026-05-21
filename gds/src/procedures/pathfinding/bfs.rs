@@ -261,9 +261,9 @@ impl BfsFacade {
     /// ```
     pub fn stream(self) -> Result<Box<dyn Iterator<Item = PathResult>>> {
         let source_node = self.config.source_node;
-        let target_count = self.config.target_nodes.len();
+        let target_nodes = self.config.target_nodes.clone();
         let (result, elapsed) = self.compute()?;
-        let paths = BfsResultBuilder::new(result, elapsed, source_node, target_count).paths();
+        let paths = BfsResultBuilder::new(result, elapsed, source_node, target_nodes).paths();
         Ok(Box::new(paths.into_iter()))
     }
 
@@ -282,9 +282,9 @@ impl BfsFacade {
     /// ```
     pub fn stats(self) -> Result<BfsStats> {
         let source_node = self.config.source_node;
-        let target_count = self.config.target_nodes.len();
+        let target_nodes = self.config.target_nodes.clone();
         let (result, elapsed) = self.compute()?;
-        Ok(BfsResultBuilder::new(result, elapsed, source_node, target_count).stats())
+        Ok(BfsResultBuilder::new(result, elapsed, source_node, target_nodes).stats())
     }
 
     /// Mutate mode: Compute and store as node property
@@ -304,9 +304,9 @@ impl BfsFacade {
         ConfigValidator::non_empty_string(property_name, "property_name")?;
         let graph_store = Arc::clone(&self.graph_store);
         let source_node = self.config.source_node;
-        let target_count = self.config.target_nodes.len();
+        let target_nodes = self.config.target_nodes.clone();
         let (result, elapsed) = self.compute()?;
-        let builder = BfsResultBuilder::new(result, elapsed, source_node, target_count);
+        let builder = BfsResultBuilder::new(result, elapsed, source_node, target_nodes);
         let paths = builder.paths();
 
         let updated_store = crate::algo::algorithms::pathfinding::build_path_relationship_store(

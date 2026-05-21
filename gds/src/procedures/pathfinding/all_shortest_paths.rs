@@ -367,23 +367,23 @@ impl AllShortestPathsBuilder {
     /// ```
     pub fn estimate_memory(&self) -> MemoryRange {
         let node_count = self.graph_store.node_count();
+        let relationship_count = self.graph_store.relationship_count();
+        let workers = self.concurrency.max(1);
 
         // Distance matrix: node_count² * 8 bytes (f64 per pair)
         let distance_matrix_memory = node_count * node_count * 8;
 
-        // Priority queues for weighted algorithm (worst case)
-        let priority_queue_memory = if self.weighted {
-            node_count * 32 // Similar to Dijkstra
+        // Per-worker frontier/queue state; weighted adds Dijkstra heap entries.
+        let worker_state_memory = if self.weighted {
+            node_count * 32 * workers
         } else {
-            0
+            node_count * 16 * workers
         };
 
-        // Graph structure overhead (adjacency lists, etc.)
-        let avg_degree = 10.0; // Conservative estimate
-        let relationship_count = (node_count as f64 * avg_degree) as usize;
-        let graph_overhead = relationship_count * 16; // ~16 bytes per relationship
+        // Graph structure overhead (adjacency lists, ids, weights/selectors).
+        let graph_overhead = relationship_count * if self.weighted { 24 } else { 16 };
 
-        let total_memory = distance_matrix_memory + priority_queue_memory + graph_overhead;
+        let total_memory = distance_matrix_memory + worker_state_memory + graph_overhead;
 
         // Add 20% overhead for algorithm-specific structures
         let overhead = total_memory / 5;

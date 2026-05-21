@@ -30,6 +30,7 @@ fn test_delta_stepping_config_validation() {
     // Test valid configuration
     let valid_config = json!({
         "source_node": 0,
+        "weight_property": "weight",
         "delta": 1.0,
         "concurrency": 4,
         "store_predecessors": true
@@ -44,6 +45,7 @@ fn test_delta_stepping_config_validation() {
     // so we'll test the config validation directly instead
     let invalid_config = DeltaSteppingConfig {
         source_node: 0,
+        weight_property: "weight".to_string(),
         delta: 0.0,
         concurrency: 4,
         store_predecessors: true,
@@ -52,6 +54,41 @@ fn test_delta_stepping_config_validation() {
     };
 
     assert!(invalid_config.validate().is_err());
+}
+
+#[test]
+fn test_delta_stepping_java_config_aliases() {
+    let config: DeltaSteppingConfig = serde_json::from_value(json!({
+        "sourceNode": 4,
+        "relationshipWeightProperty": "travelTime",
+        "delta": 3.0,
+        "concurrency": 2,
+        "storePredecessors": false,
+        "relationshipTypes": ["ROAD"]
+    }))
+    .unwrap();
+
+    assert_eq!(config.source_node, 4);
+    assert_eq!(config.weight_property, "travelTime");
+    assert_eq!(config.delta, 3.0);
+    assert_eq!(config.concurrency, 2);
+    assert!(!config.store_predecessors);
+    assert_eq!(config.relationship_types, vec!["ROAD".to_string()]);
+    assert!(config.validate().is_ok());
+}
+
+#[test]
+fn test_delta_stepping_blank_weight_property_rejected() {
+    let config: DeltaSteppingConfig = serde_json::from_value(json!({
+        "sourceNode": 0,
+        "relationshipWeightProperty": "   ",
+        "delta": 1.0,
+        "concurrency": 4,
+        "storePredecessors": true
+    }))
+    .unwrap();
+
+    assert!(config.validate().is_err());
 }
 
 #[test]

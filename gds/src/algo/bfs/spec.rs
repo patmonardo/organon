@@ -29,12 +29,16 @@ use std::time::Duration;
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BfsConfig {
     /// Source node for BFS traversal
+    #[serde(alias = "sourceNode")]
     pub source_node: NodeId,
     /// Target nodes to find (empty means find all reachable)
+    #[serde(alias = "targetNodes")]
     pub target_nodes: Vec<NodeId>,
     /// Maximum depth to traverse (None means unlimited)
+    #[serde(alias = "maxDepth")]
     pub max_depth: Option<u32>,
     /// Whether to track paths during traversal
+    #[serde(alias = "trackPaths")]
     pub track_paths: bool,
     /// Concurrency level for parallel processing
     pub concurrency: usize,
@@ -111,6 +115,9 @@ impl crate::config::ValidatedConfig for BfsConfig {
 pub struct BfsResult {
     /// Visited nodes in traversal order
     pub visited_nodes: Vec<NodeId>,
+    /// Aggregated traversal depth for each visited node, aligned with visited_nodes.
+    #[serde(default)]
+    pub visited_depths: Vec<f64>,
     /// Computation time in milliseconds
     pub computation_time_ms: u64,
 }
@@ -172,13 +179,13 @@ fn checked_u64(value: NodeId) -> u64 {
     u64::try_from(value).unwrap_or(0)
 }
 
-fn spec_path_to_core(source: NodeId, target: NodeId, index: usize) -> PathResult {
+fn spec_path_to_core(source: NodeId, target: NodeId, depth: f64) -> PathResult {
     let target_u64 = checked_u64(target);
     PathResult {
         source: checked_u64(source),
         target: target_u64,
         path: vec![target_u64],
-        cost: index as f64,
+        cost: depth,
     }
 }
 
@@ -188,7 +195,14 @@ fn result_paths(result: &BfsResult, source_node: NodeId) -> Vec<PathResult> {
         .iter()
         .copied()
         .enumerate()
-        .map(|(index, node_id)| spec_path_to_core(source_node, node_id, index))
+        .map(|(index, node_id)| {
+            let depth = result
+                .visited_depths
+                .get(index)
+                .copied()
+                .unwrap_or(index as f64);
+            spec_path_to_core(source_node, node_id, depth)
+        })
         .collect()
 }
 
@@ -197,7 +211,7 @@ pub struct BfsResultBuilder {
     result: BfsResult,
     execution_time: Duration,
     source_node: NodeId,
-    target_count: usize,
+    target_nodes: Vec<NodeId>,
 }
 
 impl BfsResultBuilder {
@@ -205,13 +219,13 @@ impl BfsResultBuilder {
         result: BfsResult,
         execution_time: Duration,
         source_node: NodeId,
-        target_count: usize,
+        target_nodes: Vec<NodeId>,
     ) -> Self {
         Self {
             result,
             execution_time,
             source_node,
-            target_count,
+            target_nodes,
         }
     }
 
@@ -219,9 +233,9 @@ impl BfsResultBuilder {
         result: BfsResult,
         execution_time: Duration,
         source_node: NodeId,
-        target_count: usize,
+        target_nodes: Vec<NodeId>,
     ) -> Result<PathFindingResult, AlgorithmError> {
-        Self::new(result, execution_time, source_node, target_count).build_pathfinding_result()
+        Self::new(result, execution_time, source_node, target_nodes).build_pathfinding_result()
     }
 
     pub fn build_pathfinding_result(self) -> Result<PathFindingResult, AlgorithmError> {
@@ -232,7 +246,7 @@ impl BfsResultBuilder {
             "computation_time_ms".to_string(),
             self.result.computation_time_ms.to_string(),
         );
-        additional.insert("targets".to_string(), self.target_count.to_string());
+        additional.insert("targets".to_string(), self.target_nodes.len().to_string());
 
         let metadata = ExecutionMetadata {
             execution_time: self.execution_time,
@@ -254,17 +268,27 @@ impl BfsResultBuilder {
 
     pub fn stats(&self) -> BfsStats {
         let nodes_visited = self.result.visited_nodes.len() as u64;
-        let targets = self.target_count as u64;
-        let targets_found = if targets == 0 {
+        let targets = self.target_nodes.len() as u64;
+        let targets_found = if self.target_nodes.is_empty() {
             0
         } else {
-            nodes_visited.min(targets)
+            self.target_nodes
+                .iter()
+                .filter(|target| self.result.visited_nodes.contains(target))
+                .count() as u64
         };
         let all_targets_reached = targets > 0 && targets_found == targets;
+        let max_depth_reached = self
+            .result
+            .visited_depths
+            .iter()
+            .copied()
+            .fold(0.0_f64, f64::max)
+            .floor() as u64;
 
         BfsStats {
             nodes_visited,
-            max_depth_reached: 0,
+            max_depth_reached,
             execution_time_ms: self.execution_time.as_millis() as u64,
             targets_found,
             all_targets_reached,
@@ -353,6 +377,7 @@ mod tests {
         let result = BfsResult {
             computation_time_ms: 5,
             visited_nodes: vec![0, 1, 2],
+            visited_depths: vec![0.0, 1.0, 1.0],
         };
 
         assert_eq!(result.visited_nodes.len(), 3);
@@ -421,6 +446,39 @@ mod tests {
             ..Default::default()
         };
         assert!(invalid_config.validate().is_err());
+    }
+
+    #[test]
+    fn test_bfs_config_accepts_java_aliases() {
+        let config: BfsConfig = serde_json::from_value(serde_json::json!({
+            "sourceNode": 0,
+            "targetNodes": [2, 3],
+            "maxDepth": 4,
+            "trackPaths": true,
+            "concurrency": 2,
+            "delta": 64
+        }))
+        .unwrap();
+
+        assert_eq!(config.source_node, 0);
+        assert_eq!(config.target_nodes, vec![2, 3]);
+        assert_eq!(config.max_depth, Some(4));
+        assert!(config.track_paths);
+    }
+
+    #[test]
+    fn test_bfs_paths_use_depth_as_cost() {
+        let result = BfsResult {
+            computation_time_ms: 5,
+            visited_nodes: vec![0, 1, 3],
+            visited_depths: vec![0.0, 1.0, 2.0],
+        };
+
+        let paths = BfsResultBuilder::new(result, Duration::from_millis(5), 0, vec![3]).paths();
+
+        assert_eq!(paths[0].cost, 0.0);
+        assert_eq!(paths[1].cost, 1.0);
+        assert_eq!(paths[2].cost, 2.0);
     }
 
     #[test]

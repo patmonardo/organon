@@ -12,6 +12,7 @@ use crate::types::graph::NodeId;
 ///
 /// Translation of: `RelationshipFilterer.java` (lines 25-83)
 /// Filters relationships to avoid cycles and duplicate paths
+#[derive(Clone)]
 pub struct RelationshipFilterer {
     /// Neighbors to avoid
     neighbors: Vec<NodeId>,
@@ -19,8 +20,6 @@ pub struct RelationshipFilterer {
     filtering_spur_node: NodeId,
     /// Number of neighbors to avoid
     all_neighbors: usize,
-    /// Current neighbor index for binary search
-    neighbor_index: usize,
     /// Whether to track relationships
     track_relationships: bool,
 }
@@ -34,7 +33,6 @@ impl RelationshipFilterer {
             neighbors: vec![0; k],
             filtering_spur_node: 0,
             all_neighbors: 0,
-            neighbor_index: 0,
             track_relationships,
         }
     }
@@ -60,7 +58,6 @@ impl RelationshipFilterer {
     /// Translation of: `setFilter()` method (lines 52-56)
     pub fn set_filter(&mut self, filtering_spur_node: NodeId) {
         self.filtering_spur_node = filtering_spur_node;
-        self.neighbor_index = 0;
         self.all_neighbors = 0;
     }
 
@@ -75,7 +72,7 @@ impl RelationshipFilterer {
     ///
     /// Translation of: `validRelationship()` method (lines 60-80)
     pub fn valid_relationship(
-        &mut self,
+        &self,
         source: NodeId,
         target: NodeId,
         relationship_id: NodeId,
@@ -87,22 +84,9 @@ impl RelationshipFilterer {
                 target
             };
 
-            if self.neighbor_index == self.all_neighbors {
-                return true;
-            }
-
-            // Binary search for forbidden value
-            while self.neighbor_index < self.all_neighbors
-                && self.neighbors[self.neighbor_index] < forbidden
-            {
-                self.neighbor_index += 1;
-            }
-
-            if self.neighbor_index == self.all_neighbors {
-                return true;
-            }
-
-            return self.neighbors[self.neighbor_index] != forbidden;
+            return self.neighbors[..self.all_neighbors]
+                .binary_search(&forbidden)
+                .is_err();
         }
 
         true
@@ -112,7 +96,6 @@ impl RelationshipFilterer {
     pub fn reset(&mut self) {
         self.filtering_spur_node = 0;
         self.all_neighbors = 0;
-        self.neighbor_index = 0;
     }
 
     /// Get the number of blocked neighbors
@@ -210,5 +193,27 @@ mod tests {
 
         // Test valid relationship (different relationship)
         assert!(filterer.valid_relationship(1, 2, 15));
+    }
+
+    #[test]
+    fn test_relationship_filterer_is_order_independent() {
+        let mut filterer = RelationshipFilterer::new(5, false);
+        filterer.set_filter(1);
+
+        let path = MutablePathResult::new(
+            0,
+            0,
+            4,
+            vec![0, 1, 2, 3, 4],
+            vec![10, 11, 12, 13],
+            vec![0.0, 1.0, 2.0, 3.0, 4.0],
+        );
+        filterer.add_blocking_neighbor(&path, 1);
+        filterer.add_blocking_neighbor(&path, 2);
+        filterer.prepare();
+
+        assert!(filterer.valid_relationship(1, 4, 20));
+        assert!(!filterer.valid_relationship(1, 2, 10));
+        assert!(!filterer.valid_relationship(1, 3, 11));
     }
 }

@@ -6,7 +6,7 @@ use crate::applications::algorithms::machinery::{
     FnStatsResultBuilder, FnStreamResultBuilder, ProgressTrackerCreator, RequestScopedDependencies,
 };
 use crate::applications::algorithms::pathfinding::{
-    err, get_str, get_u64, get_usize, timings_json,
+    err, get_bool, get_str, get_u64, get_usize, timings_json,
 };
 use crate::concurrency::{Concurrency, TerminationFlag};
 use crate::core::loading::{CatalogLoader, GraphResources};
@@ -73,6 +73,11 @@ pub fn handle_yens(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value {
         .unwrap_or("outgoing")
         .to_string();
 
+    let track_relationships = get_bool(request, "trackRelationships")
+        .or_else(|| get_bool(request, "track_relationships"))
+        .or_else(|| get_bool(request, "trackPaths"))
+        .unwrap_or(false);
+
     let relationship_types: Vec<String> = request
         .get("relationshipTypes")
         .and_then(|v| v.as_array())
@@ -114,6 +119,7 @@ pub fn handle_yens(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value {
                     .k(k)
                     .weight_property(&weight_property)
                     .direction(&direction)
+                    .track_relationships(track_relationships)
                     .concurrency(concurrency_value);
 
                 if !relationship_types.is_empty() {
@@ -174,6 +180,7 @@ pub fn handle_yens(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value {
                     .k(k)
                     .weight_property(&weight_property)
                     .direction(&direction)
+                    .track_relationships(track_relationships)
                     .concurrency(concurrency_value);
 
                 if !relationship_types.is_empty() {
@@ -210,6 +217,7 @@ pub fn handle_yens(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value {
                     .k(k)
                     .weight_property(&weight_property)
                     .direction(&direction)
+                    .track_relationships(track_relationships)
                     .concurrency(concurrency_value);
 
                 if !relationship_types.is_empty() {
@@ -252,6 +260,7 @@ pub fn handle_yens(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value {
                 .k(k)
                 .weight_property(&weight_property)
                 .direction(&direction)
+                .track_relationships(track_relationships)
                 .concurrency(concurrency_value);
 
             if !relationship_types.is_empty() {
@@ -298,6 +307,7 @@ pub fn handle_yens(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value {
                 .k(k)
                 .weight_property(&weight_property)
                 .direction(&direction)
+                .track_relationships(track_relationships)
                 .concurrency(concurrency_value);
 
             if !relationship_types.is_empty() {

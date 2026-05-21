@@ -20,9 +20,13 @@ use crate::projection::relationship_type::RelationshipType;
 use crate::projection::Orientation;
 use crate::types::graph::NodeId;
 use serde::{Deserialize, Serialize};
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
 use std::time::Duration;
+
+fn default_weight_property() -> String {
+    "weight".to_string()
+}
 
 /// Delta Stepping algorithm configuration
 ///
@@ -30,7 +34,18 @@ use std::time::Duration;
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct DeltaSteppingConfig {
     /// Source node for shortest path computation
+    #[serde(alias = "sourceNode")]
     pub source_node: NodeId,
+
+    /// Relationship property used as edge weight.
+    #[serde(
+        default = "default_weight_property",
+        alias = "relationshipWeightProperty",
+        alias = "relationship_weight_property",
+        alias = "weightProperty",
+        alias = "weight_property"
+    )]
+    pub weight_property: String,
 
     /// Delta parameter for binning strategy
     pub delta: f64,
@@ -39,9 +54,11 @@ pub struct DeltaSteppingConfig {
     pub concurrency: usize,
 
     /// Whether to store predecessors for path reconstruction
+    #[serde(alias = "storePredecessors")]
     pub store_predecessors: bool,
     /// Optional relationship types to include (empty means all types)
     #[serde(default)]
+    #[serde(alias = "relationshipTypes")]
     pub relationship_types: Vec<String>,
     /// Direction for traversal ("outgoing" or "incoming")
     #[serde(default = "DeltaDirection::default_as_str")]
@@ -52,6 +69,7 @@ impl Default for DeltaSteppingConfig {
     fn default() -> Self {
         Self {
             source_node: 0,
+            weight_property: default_weight_property(),
             delta: 1.0,
             concurrency: 4,
             store_predecessors: true,
@@ -99,6 +117,13 @@ impl DeltaSteppingConfig {
             return Err(ConfigError::MustBePositive {
                 name: "concurrency".to_string(),
                 value: self.concurrency as f64,
+            });
+        }
+
+        if self.weight_property.trim().is_empty() {
+            return Err(ConfigError::InvalidParameter {
+                parameter: "relationshipWeightProperty".to_string(),
+                reason: "Must not be empty".to_string(),
             });
         }
 
@@ -314,15 +339,21 @@ define_algorithm_spec! {
         );
 
         // Execute with filtered/oriented graph view
-        let rel_types: HashSet<RelationshipType> = if !config.relationship_types.is_empty() {
+        let rel_types: HashSet<RelationshipType> = if config.relationship_types.is_empty() {
+            graph_store.relationship_types()
+        } else {
             RelationshipType::list_of(config.relationship_types.clone()).into_iter().collect()
-        } else { HashSet::new() };
+        };
+        let selectors: HashMap<RelationshipType, String> = rel_types
+            .iter()
+            .map(|t| (t.clone(), config.weight_property.clone()))
+            .collect();
         let orientation = match DeltaDirection::from_str(&config.direction) {
             DeltaDirection::Outgoing => Orientation::Natural,
             DeltaDirection::Incoming => Orientation::Reverse,
         };
         let graph = graph_store
-            .get_graph_with_types_and_orientation(&rel_types, orientation)
+            .get_graph_with_types_selectors_and_orientation(&rel_types, &selectors, orientation)
             .map_err(|e| AlgorithmError::InvalidGraph(
                 format!("Failed to obtain graph view: {}", e)
             ))?;
@@ -358,6 +389,7 @@ mod tests {
     fn test_delta_stepping_config_default() {
         let config = DeltaSteppingConfig::default();
         assert_eq!(config.source_node, 0);
+        assert_eq!(config.weight_property, "weight");
         assert_eq!(config.delta, 1.0);
         assert_eq!(config.concurrency, 4);
         assert!(config.store_predecessors);
@@ -372,6 +404,10 @@ mod tests {
         assert!(config.validate().is_err());
 
         config.concurrency = 4;
+        config.weight_property = "   ".to_string();
+        assert!(config.validate().is_err());
+
+        config.weight_property = "weight".to_string();
         config.delta = 0.0;
         assert!(config.validate().is_err());
 
@@ -438,6 +474,7 @@ mod tests {
         // Test with valid config
         let valid_config = json!({
             "source_node": 0,
+            "weight_property": "cost",
             "delta": 1.0,
             "concurrency": 4,
             "store_predecessors": true
@@ -452,6 +489,7 @@ mod tests {
         // so we'll test the config validation directly instead
         let invalid_config = DeltaSteppingConfig {
             source_node: 0,
+            weight_property: "weight".to_string(),
             delta: 0.0,
             concurrency: 4,
             store_predecessors: true,
@@ -474,5 +512,42 @@ mod tests {
         let config = DeltaSteppingConfig::default();
         assert_eq!(config.source_node, 0);
         assert_eq!(config.delta, 1.0);
+    }
+
+    #[test]
+    fn test_delta_stepping_java_aliases() {
+        let config: DeltaSteppingConfig = serde_json::from_value(json!({
+            "sourceNode": 3,
+            "relationshipWeightProperty": "distance",
+            "delta": 2.5,
+            "concurrency": 8,
+            "storePredecessors": false,
+            "relationshipTypes": ["ROAD"]
+        }))
+        .unwrap();
+
+        assert_eq!(config.source_node, 3);
+        assert_eq!(config.weight_property, "distance");
+        assert_eq!(config.delta, 2.5);
+        assert_eq!(config.concurrency, 8);
+        assert!(!config.store_predecessors);
+        assert_eq!(config.relationship_types, vec!["ROAD".to_string()]);
+        assert!(config.validate().is_ok());
+    }
+
+    #[test]
+    fn test_delta_stepping_result_builder_metadata() {
+        let result = DeltaSteppingResult {
+            shortest_paths: vec![],
+            computation_time_ms: 42,
+        };
+
+        let path_result =
+            DeltaSteppingResultBuilder::result(result, Duration::from_millis(7)).unwrap();
+
+        assert_eq!(
+            path_result.metadata.additional.get("computation_time_ms"),
+            Some(&"42".to_string())
+        );
     }
 }

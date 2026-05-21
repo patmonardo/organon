@@ -171,8 +171,8 @@ impl AStarFacade {
 
         Ok(Self {
             graph_store,
+            weight_property: config.weight_property.clone(),
             config,
-            weight_property: "weight".to_string(),
             heuristic: Heuristic::Manhattan,
             task_registry_factory: None,
             user_log_registry_factory: None,
@@ -194,6 +194,7 @@ impl AStarFacade {
         config
             .validate()
             .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
+        self.weight_property = config.weight_property.clone();
         self.config = config;
         Ok(self)
     }
@@ -243,6 +244,7 @@ impl AStarFacade {
     /// Default: "weight"
     pub fn weight_property(mut self, property: &str) -> Self {
         self.weight_property = property.to_string();
+        self.config.weight_property = property.to_string();
         self
     }
 
@@ -395,11 +397,13 @@ impl AStarFacade {
             .map_err(AlgorithmError::Execution)?;
 
         let execution_time_ms = start_time.elapsed().as_millis() as u64;
-        let result = AStarResult::new(
+        let result = AStarResult::new_with_metrics(
             result.path,
             result.total_cost,
             execution_time_ms,
             result.nodes_explored,
+            result.edges_considered,
+            result.max_queue_size,
         );
 
         let heuristic_accuracy = match self.heuristic {
@@ -495,11 +499,17 @@ impl AStarFacade {
             .get("heuristic_evaluations")
             .and_then(|s| s.parse::<u64>().ok())
             .unwrap_or(0);
+        let max_queue_size = result
+            .metadata
+            .additional
+            .get("max_queue_size")
+            .and_then(|s| s.parse::<u64>().ok())
+            .unwrap_or(0);
 
         Ok(AStarStats {
             nodes_visited,
             final_queue_size: 0,
-            max_queue_size: 0,
+            max_queue_size,
             execution_time_ms: result.metadata.execution_time.as_millis() as u64,
             targets_found,
             all_targets_reached,
@@ -688,10 +698,37 @@ mod tests {
         assert_eq!(builder.config.source_node, 42);
         assert_eq!(builder.config.target_node, 99);
         assert_eq!(builder.weight_property, "cost");
+        assert_eq!(builder.config.weight_property, "cost");
         assert_eq!(builder.config.relationship_types, vec!["REL".to_string()]);
         assert_eq!(builder.config.direction, "incoming");
         assert!(matches!(builder.heuristic, Heuristic::Euclidean));
         assert_eq!(builder.config.concurrency, 8);
+    }
+
+    #[test]
+    fn test_spec_config_syncs_weight_property() {
+        let raw_config = serde_json::json!({
+            "sourceNode": 0,
+            "targetNode": 1,
+            "relationshipWeightProperty": "distance",
+            "latitudeProperty": "latitude",
+            "longitudeProperty": "longitude",
+            "concurrency": 4
+        });
+
+        let builder = AStarBuilder::from_spec_json(store(), &raw_config).unwrap();
+
+        assert_eq!(builder.weight_property, "distance");
+        assert_eq!(builder.config.weight_property, "distance");
+
+        let updated = AStarConfig {
+            weight_property: "duration".to_string(),
+            ..builder.config.clone()
+        };
+        let builder = builder.with_spec_config(updated).unwrap();
+
+        assert_eq!(builder.weight_property, "duration");
+        assert_eq!(builder.config.weight_property, "duration");
     }
 
     #[test]
@@ -834,6 +871,7 @@ mod tests {
             .heuristic(Heuristic::Manhattan);
         let stats = builder.stats().unwrap();
         assert_eq!(stats.heuristic_accuracy, 1.2); // Manhattan is less accurate
+        assert!(stats.max_queue_size > 0);
 
         // Test Euclidean heuristic
         let builder = AStarBuilder::new(store())

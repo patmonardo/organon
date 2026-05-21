@@ -89,6 +89,7 @@ fn test_bfs_storage_computation_integration() {
 fn test_bfs_result_serialization() {
     let result = BfsResult {
         visited_nodes: vec![0, 1, 2, 3],
+        visited_depths: vec![0.0, 1.0, 1.0, 2.0],
         computation_time_ms: 5,
     };
 
@@ -100,7 +101,28 @@ fn test_bfs_result_serialization() {
     // Test deserialization
     let deserialized: BfsResult = serde_json::from_str(&json).unwrap();
     assert_eq!(deserialized.visited_nodes.len(), 4);
+    assert_eq!(deserialized.visited_depths, vec![0.0, 1.0, 1.0, 2.0]);
     assert_eq!(deserialized.computation_time_ms, 5);
+}
+
+#[test]
+fn test_bfs_config_accepts_java_aliases() {
+    let config: BfsConfig = serde_json::from_value(json!({
+        "sourceNode": 0,
+        "targetNodes": [1, 2],
+        "maxDepth": 5,
+        "trackPaths": true,
+        "concurrency": 4,
+        "delta": 64
+    }))
+    .unwrap();
+
+    assert_eq!(config.source_node, 0);
+    assert_eq!(config.target_nodes, vec![1, 2]);
+    assert_eq!(config.max_depth, Some(5));
+    assert!(config.track_paths);
+    assert_eq!(config.concurrency, 4);
+    assert_eq!(config.delta, 64);
 }
 
 #[test]

@@ -33,6 +33,12 @@ pub struct YensComputationRuntime {
     relationship_filterer: RelationshipFilterer,
     /// Visited nodes for cycle avoidance
     visited_nodes: HashMap<NodeId, bool>,
+    /// Number of spur searches attempted in this computation.
+    spur_searches: usize,
+    /// Number of candidate paths generated in this computation.
+    candidates_generated: usize,
+    /// Number of accepted shortest paths found in this computation.
+    paths_found: usize,
 }
 
 impl YensComputationRuntime {
@@ -52,6 +58,9 @@ impl YensComputationRuntime {
             concurrency,
             relationship_filterer: RelationshipFilterer::new(k, track_relationships),
             visited_nodes: HashMap::new(),
+            spur_searches: 0,
+            candidates_generated: 0,
+            paths_found: 0,
         }
     }
 
@@ -71,24 +80,57 @@ impl YensComputationRuntime {
         self.k = k;
         self.track_relationships = track_relationships;
         self.visited_nodes.clear();
-        self.relationship_filterer.reset();
+        self.relationship_filterer = RelationshipFilterer::new(k, track_relationships);
+        self.spur_searches = 0;
+        self.candidates_generated = 0;
+        self.paths_found = 0;
     }
 
-    /// Process a spur node to generate candidate paths
-    ///
-    /// Translation of: `YensTask.process()` (lines 100-112)
-    /// This processes a single spur node to find alternative paths
-    pub fn process_spur_node(
+    /// Prepare a filter for one spur-node Dijkstra search.
+    pub fn prepare_relationship_filter(
         &mut self,
         spur_node: NodeId,
-        _root_path: &MutablePathResult,
-    ) -> Result<Option<MutablePathResult>, String> {
-        // Set up relationship filter
+        prev_path: &MutablePathResult,
+        k_shortest_paths: &[MutablePathResult],
+        spur_index: usize,
+    ) -> RelationshipFilterer {
+        self.relationship_filterer =
+            RelationshipFilterer::new(k_shortest_paths.len().max(1), self.track_relationships);
         self.relationship_filterer.set_filter(spur_node);
 
-        // Note: spur path computation via Dijkstra is deferred.
-        // For now, return None (no spur path found)
-        Ok(None)
+        for path in k_shortest_paths {
+            if path.matches_exactly(prev_path, spur_index + 1) {
+                self.relationship_filterer
+                    .add_blocking_neighbor(path, spur_index);
+            }
+        }
+
+        self.relationship_filterer.prepare();
+        self.relationship_filterer.clone()
+    }
+
+    pub fn record_spur_search(&mut self) {
+        self.spur_searches += 1;
+    }
+
+    pub fn record_candidate_generated(&mut self) {
+        self.candidates_generated += 1;
+    }
+
+    pub fn record_path_found(&mut self) {
+        self.paths_found += 1;
+    }
+
+    pub fn spur_search_count(&self) -> usize {
+        self.spur_searches
+    }
+
+    pub fn candidates_generated_count(&self) -> usize {
+        self.candidates_generated
+    }
+
+    pub fn paths_found_count(&self) -> usize {
+        self.paths_found
     }
 
     /// Add a visited node to avoid cycles
@@ -151,6 +193,8 @@ impl YensComputationRuntime {
                     paths: vec![],
                     path_count: 0,
                     computation_time_ms: 0,
+                    spur_searches: 0,
+                    candidates_generated: 0,
                 }
             })
     }
@@ -174,6 +218,10 @@ mod tests {
     #[test]
     fn test_yens_computation_runtime_initialization() {
         let mut runtime = YensComputationRuntime::new(0, 3, 5, true, 1);
+        runtime.record_spur_search();
+        runtime.record_candidate_generated();
+        runtime.record_path_found();
+
         runtime.initialize(1, 4, 3, false);
 
         assert_eq!(runtime.source_node, 1);
@@ -181,6 +229,9 @@ mod tests {
         assert_eq!(runtime.k, 3);
         assert!(!runtime.track_relationships);
         assert_eq!(runtime.visited_count(), 0);
+        assert_eq!(runtime.spur_search_count(), 0);
+        assert_eq!(runtime.candidates_generated_count(), 0);
+        assert_eq!(runtime.paths_found_count(), 0);
     }
 
     #[test]
@@ -195,5 +246,16 @@ mod tests {
         runtime.reset_visited();
         assert!(!runtime.is_visited(1));
         assert_eq!(runtime.visited_count(), 0);
+    }
+
+    #[test]
+    fn test_prepare_relationship_filter_blocks_same_root() {
+        let mut runtime = YensComputationRuntime::new(0, 3, 3, false, 1);
+        let previous =
+            MutablePathResult::new(0, 0, 3, vec![0, 1, 2, 3], vec![], vec![0.0, 1.0, 3.0, 4.0]);
+        let filter = runtime.prepare_relationship_filter(1, &previous, &[previous.clone()], 1);
+
+        assert!(!filter.valid_relationship(1, 2, 10));
+        assert!(filter.valid_relationship(1, 3, 11));
     }
 }

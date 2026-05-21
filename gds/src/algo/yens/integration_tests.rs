@@ -113,6 +113,8 @@ mod tests {
             paths: vec![],
             path_count: 0,
             computation_time_ms: 5,
+            spur_searches: 0,
+            candidates_generated: 0,
         };
 
         let json = serde_json::to_string(&result).unwrap();
@@ -120,6 +122,8 @@ mod tests {
 
         assert_eq!(deserialized.path_count, 0);
         assert_eq!(deserialized.computation_time_ms, 5);
+        assert_eq!(deserialized.spur_searches, 0);
+        assert_eq!(deserialized.candidates_generated, 0);
     }
 
     #[test]

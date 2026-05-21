@@ -144,6 +144,27 @@ impl<'a> AllShortestPathsStorageRuntime<'a> {
         Ok(results)
     }
 
+    fn unreachable_non_self_count(distances: &[f64], source_index: usize) -> usize {
+        distances
+            .iter()
+            .enumerate()
+            .filter(|(target, distance)| *target != source_index && **distance == f64::INFINITY)
+            .count()
+    }
+
+    fn validate_edge_weight(
+        source_node: NodeId,
+        target_node: NodeId,
+        weight: f64,
+    ) -> Result<(), AlgorithmError> {
+        if !weight.is_finite() || weight < 0.0 {
+            return Err(AlgorithmError::Execution(format!(
+                "WeightedAllShortestPaths requires non-negative finite edge weights; edge {source_node}->{target_node} has weight {weight}"
+            )));
+        }
+        Ok(())
+    }
+
     /// Compute weighted shortest paths using Dijkstra
     fn compute_weighted_shortest_paths(
         &self,
@@ -231,8 +252,14 @@ impl<'a> AllShortestPathsStorageRuntime<'a> {
                 if neighbor_index >= node_count {
                     continue;
                 }
+                Self::validate_edge_weight(node, neighbor, weight)?;
 
                 let next_cost = cost + weight;
+                if !next_cost.is_finite() {
+                    return Err(AlgorithmError::Execution(format!(
+                        "WeightedAllShortestPaths cost overflow while relaxing edge {node}->{neighbor}"
+                    )));
+                }
                 if next_cost < distances[neighbor_index] {
                     distances[neighbor_index] = next_cost;
                     heap.push(State {
@@ -420,6 +447,18 @@ impl<'a> AllShortestPathsStorageRuntime<'a> {
                 },
             );
 
+            for source in source_offset..(source_offset + source_len) {
+                let reached = (0..node_count)
+                    .filter(|target| *target != source)
+                    .filter(|target| {
+                        let mask = 1u64 << (source - source_offset);
+                        msbfs.has_seen(*target, mask)
+                    })
+                    .count();
+                let unreachable = node_count.saturating_sub(1).saturating_sub(reached);
+                computation.record_unreachable_targets(unreachable);
+            }
+
             for _ in 0..source_len {
                 computation.record_source_processed();
             }
@@ -467,8 +506,9 @@ impl<'a> AllShortestPathsStorageRuntime<'a> {
 
         // Spawn `concurrency` worker tasks, each competing for source nodes via the counter.
         // This mirrors Java's `for (int i = 0; i < concurrency.value(); i++) executorService.submit(new ShortestPathTask())`
-        let worker_result: Result<(), AlgorithmError> =
-            install_with_concurrency(Concurrency::of(concurrency), || {
+        let worker_result: Result<(), AlgorithmError> = install_with_concurrency(
+            Concurrency::of(concurrency),
+            || {
                 (0..concurrency)
                     .into_par_iter()
                     .map(|_| -> Result<(), AlgorithmError> {
@@ -575,7 +615,13 @@ impl<'a> AllShortestPathsStorageRuntime<'a> {
                                         if nb_idx >= node_count {
                                             continue;
                                         }
+                                        Self::validate_edge_weight(node, neighbor, weight)?;
                                         let next_cost = cost + weight;
+                                        if !next_cost.is_finite() {
+                                            return Err(AlgorithmError::Execution(format!(
+                                                "WeightedAllShortestPaths cost overflow while relaxing edge {node}->{neighbor}"
+                                            )));
+                                        }
                                         if next_cost < distances[nb_idx] {
                                             distances[nb_idx] = next_cost;
                                             heap.push(State {
@@ -604,6 +650,10 @@ impl<'a> AllShortestPathsStorageRuntime<'a> {
                             }
                             drop(sender_guard);
 
+                            local_computation.record_unreachable_targets(
+                                Self::unreachable_non_self_count(&distances, source_idx),
+                            );
+
                             local_computation.record_source_processed();
                             progress_counts.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
                         }
@@ -612,7 +662,8 @@ impl<'a> AllShortestPathsStorageRuntime<'a> {
                         Ok(())
                     })
                     .reduce(|| Ok(()), |acc, res| acc.and(res))
-            });
+            },
+        );
 
         worker_result?;
 
@@ -720,7 +771,7 @@ mod tests {
         rows.sort_by(|a, b| (a.source, a.target).cmp(&(b.source, b.target)));
 
         assert_eq!(computation.node_count(), 4);
-        assert_eq!(computation.infinite_distances(), 0);
+        assert_eq!(computation.infinite_distances(), 9);
         assert!(rows.iter().all(|row| row.source != row.target));
         assert_eq!(
             rows.iter()
@@ -848,5 +899,17 @@ mod tests {
         );
 
         assert!(matches!(result, Err(AlgorithmError::Execution(_))));
+    }
+
+    #[test]
+    fn weighted_validation_rejects_negative_and_non_finite_weights() {
+        assert!(AllShortestPathsStorageRuntime::validate_edge_weight(0, 1, 0.0).is_ok());
+        assert!(AllShortestPathsStorageRuntime::validate_edge_weight(0, 1, 2.5).is_ok());
+
+        for weight in [-1.0, f64::INFINITY, f64::NEG_INFINITY, f64::NAN] {
+            let err = AllShortestPathsStorageRuntime::validate_edge_weight(0, 1, weight)
+                .expect_err("invalid weight should be rejected");
+            assert!(matches!(err, AlgorithmError::Execution(_)));
+        }
     }
 }

@@ -32,6 +32,7 @@ fn test_astar_config_validation() {
     let config_input = r#"{
         "source_node": 0,
         "target_node": 1,
+        "weight_property": "weight",
         "latitude_property": "latitude",
         "longitude_property": "longitude",
         "concurrency": 4
@@ -44,6 +45,7 @@ fn test_astar_config_validation() {
     let invalid_config_input = r#"{
         "source_node": 0,
         "target_node": 1,
+        "weight_property": "",
         "latitude_property": "",
         "longitude_property": "longitude",
         "concurrency": 0
@@ -51,6 +53,43 @@ fn test_astar_config_validation() {
 
     let invalid_config: AStarConfig = serde_json::from_str(invalid_config_input).unwrap();
     assert!(invalid_config.validate().is_err());
+}
+
+#[test]
+fn test_astar_java_config_aliases() {
+    let config: AStarConfig = serde_json::from_value(json!({
+        "sourceNode": 3,
+        "targetNode": 6,
+        "relationshipWeightProperty": "distance",
+        "latitudeProperty": "lat",
+        "longitudeProperty": "lon",
+        "relationshipTypes": ["ROAD"],
+        "concurrency": 4
+    }))
+    .unwrap();
+
+    assert_eq!(config.source_node, 3);
+    assert_eq!(config.target_node, 6);
+    assert_eq!(config.weight_property, "distance");
+    assert_eq!(config.latitude_property, "lat");
+    assert_eq!(config.longitude_property, "lon");
+    assert_eq!(config.relationship_types, vec!["ROAD".to_string()]);
+    assert!(config.validate().is_ok());
+}
+
+#[test]
+fn test_astar_blank_weight_property_rejected() {
+    let config: AStarConfig = serde_json::from_value(json!({
+        "sourceNode": 0,
+        "targetNode": 1,
+        "relationshipWeightProperty": "   ",
+        "latitudeProperty": "latitude",
+        "longitudeProperty": "longitude",
+        "concurrency": 4
+    }))
+    .unwrap();
+
+    assert!(config.validate().is_err());
 }
 
 #[test]
@@ -144,6 +183,7 @@ fn test_astar_result_serialization() {
     let config = AStarConfig {
         source_node: 0,
         target_node: 1,
+        weight_property: "weight".to_string(),
         latitude_property: "lat".to_string(),
         longitude_property: "lon".to_string(),
         concurrency: 4,
@@ -155,6 +195,7 @@ fn test_astar_result_serialization() {
     let json = serde_json::to_string(&config).unwrap();
     assert!(json.contains("source_node"));
     assert!(json.contains("target_node"));
+    assert!(json.contains("weight_property"));
     assert!(json.contains("latitude_property"));
     assert!(json.contains("longitude_property"));
     assert!(json.contains("concurrency"));
@@ -163,6 +204,7 @@ fn test_astar_result_serialization() {
     let deserialized: AStarConfig = serde_json::from_str(&json).unwrap();
     assert_eq!(deserialized.source_node, config.source_node);
     assert_eq!(deserialized.target_node, config.target_node);
+    assert_eq!(deserialized.weight_property, config.weight_property);
     assert_eq!(deserialized.latitude_property, config.latitude_property);
     assert_eq!(deserialized.longitude_property, config.longitude_property);
     assert_eq!(deserialized.concurrency, config.concurrency);

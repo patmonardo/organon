@@ -62,8 +62,8 @@ impl YensFacade {
 
         Ok(Self {
             graph_store,
+            concurrency: config.concurrency,
             config,
-            concurrency: 1,
         })
     }
 
@@ -82,6 +82,7 @@ impl YensFacade {
         config
             .validate()
             .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
+        self.concurrency = config.concurrency;
         self.config = config;
         Ok(self)
     }
@@ -218,11 +219,25 @@ impl YensFacade {
             .get("computation_time_ms")
             .and_then(|s| s.parse::<u64>().ok())
             .unwrap_or(0);
+        let spur_searches = result
+            .metadata
+            .additional
+            .get("spur_searches")
+            .and_then(|s| s.parse::<u64>().ok())
+            .unwrap_or(0);
+        let candidates_generated = result
+            .metadata
+            .additional
+            .get("candidates_generated")
+            .and_then(|s| s.parse::<u64>().ok())
+            .unwrap_or(0);
 
         Ok(YensStats {
             paths_found: result.paths.len() as u64,
             computation_time_ms,
             execution_time_ms: result.metadata.execution_time.as_millis() as u64,
+            spur_searches,
+            candidates_generated,
         })
     }
 
@@ -274,25 +289,53 @@ impl YensFacade {
     pub fn estimate_memory(&self) -> MemoryRange {
         let node_count = self.graph_store.node_count();
         let k = self.config.k;
+        let concurrency = self.config.concurrency.max(1);
+        let relationship_count = self.graph_store.relationship_count();
 
-        // Priority queue for candidate paths (can grow large)
-        let queue_memory = k * node_count * 16; // path + cost per candidate
+        let node_id_bytes = std::mem::size_of::<NodeId>();
+        let cost_bytes = std::mem::size_of::<f64>();
+        let path_entry_bytes = node_id_bytes.saturating_add(cost_bytes).saturating_add(
+            if self.config.track_relationships {
+                node_id_bytes
+            } else {
+                0
+            },
+        );
 
-        // Path storage (storing k shortest paths)
-        let path_storage_memory = k * node_count * 8; // worst case: full paths
+        let accepted_paths_memory = k
+            .saturating_mul(node_count)
+            .saturating_mul(path_entry_bytes);
 
-        // Distance arrays for each candidate path computation
-        let distance_arrays_memory = k * node_count * 8;
+        let candidate_paths_memory = k
+            .saturating_mul(k.max(concurrency))
+            .saturating_mul(node_count)
+            .saturating_mul(path_entry_bytes);
 
-        // Graph structure overhead
-        let avg_degree = 10.0;
-        let relationship_count = (node_count as f64 * avg_degree) as usize;
-        let graph_overhead = relationship_count * 16;
+        let dijkstra_worker_memory = node_count.saturating_mul(
+            cost_bytes
+                .saturating_add(node_id_bytes)
+                .saturating_add(1)
+                .saturating_add(if self.config.track_relationships {
+                    node_id_bytes
+                } else {
+                    0
+                }),
+        );
+        let relationship_filter_memory = concurrency
+            .saturating_mul(k.max(1))
+            .saturating_mul(node_id_bytes);
+        let graph_cursor_memory =
+            relationship_count.saturating_mul(node_id_bytes.saturating_add(cost_bytes));
 
-        let total_memory =
-            queue_memory + path_storage_memory + distance_arrays_memory + graph_overhead;
-        let overhead = total_memory / 5;
-        MemoryRange::of_range(total_memory, total_memory + overhead)
+        let min_memory = accepted_paths_memory
+            .saturating_add(dijkstra_worker_memory)
+            .saturating_add(relationship_filter_memory);
+        let max_memory = min_memory
+            .saturating_add(candidate_paths_memory)
+            .saturating_add(dijkstra_worker_memory.saturating_mul(concurrency.saturating_sub(1)))
+            .saturating_add(graph_cursor_memory);
+
+        MemoryRange::of_range(min_memory, max_memory.max(min_memory))
     }
 }
 
@@ -301,17 +344,22 @@ mod tests {
     use super::*;
     use crate::procedures::GraphFacade;
     use crate::types::random::{RandomGraphConfig, RandomRelationshipConfig};
+    use serde_json::json;
 
-    #[test]
-    fn test_builder_validation() {
+    fn random_store(seed: u64) -> Arc<DefaultGraphStore> {
         let config = RandomGraphConfig {
-            seed: Some(99),
+            seed: Some(seed),
             node_count: 8,
             relationships: vec![RandomRelationshipConfig::new("REL", 0.7)],
             ..RandomGraphConfig::default()
         };
 
-        let store = Arc::new(DefaultGraphStore::random(&config).unwrap());
+        Arc::new(DefaultGraphStore::random(&config).unwrap())
+    }
+
+    #[test]
+    fn test_builder_validation() {
+        let store = random_store(99);
 
         assert!(YensBuilder::new(Arc::clone(&store))
             .source_node(-1)
@@ -330,6 +378,100 @@ mod tests {
             .config
             .validate()
             .is_err());
+    }
+
+    #[test]
+    fn test_from_spec_json_accepts_java_aliases() {
+        let store = random_store(102);
+        let facade = YensFacade::from_spec_json(
+            Arc::clone(&store),
+            &json!({
+                "sourceNode": 0,
+                "targetNode": 3,
+                "k": 5,
+                "relationshipWeightProperty": "travelTime",
+                "relationshipTypes": ["REL"],
+                "trackRelationships": true,
+                "concurrency": 4
+            }),
+        )
+        .unwrap();
+
+        assert_eq!(facade.config.source_node, 0);
+        assert_eq!(facade.config.target_node, 3);
+        assert_eq!(facade.config.k, 5);
+        assert_eq!(facade.config.weight_property, "travelTime");
+        assert_eq!(facade.config.relationship_types, vec!["REL"]);
+        assert!(facade.config.track_relationships);
+        assert_eq!(facade.config.concurrency, 4);
+        assert_eq!(facade.concurrency, 4);
+    }
+
+    #[test]
+    fn test_with_spec_config_syncs_facade_state() {
+        let store = random_store(103);
+        let config = YensConfig {
+            source_node: 0,
+            target_node: 3,
+            k: 2,
+            weight_property: "cost".to_string(),
+            relationship_types: vec!["REL".to_string()],
+            direction: "outgoing".to_string(),
+            track_relationships: true,
+            concurrency: 3,
+        };
+
+        let facade = YensFacade::new(store).with_spec_config(config).unwrap();
+
+        assert_eq!(facade.config.weight_property, "cost");
+        assert_eq!(facade.config.relationship_types, vec!["REL"]);
+        assert!(facade.config.track_relationships);
+        assert_eq!(facade.config.concurrency, 3);
+        assert_eq!(facade.concurrency, 3);
+    }
+
+    #[test]
+    fn test_builder_methods_sync_spec_config() {
+        let store = random_store(104);
+        let facade = YensFacade::new(store)
+            .source(1)
+            .target(4)
+            .k(6)
+            .weight_property("latency")
+            .relationship_types(vec!["REL".to_string()])
+            .track_relationships(true)
+            .concurrency(2);
+
+        assert_eq!(facade.config.source_node, 1);
+        assert_eq!(facade.config.target_node, 4);
+        assert_eq!(facade.config.k, 6);
+        assert_eq!(facade.config.weight_property, "latency");
+        assert_eq!(facade.config.relationship_types, vec!["REL"]);
+        assert!(facade.config.track_relationships);
+        assert_eq!(facade.config.concurrency, 2);
+        assert_eq!(facade.concurrency, 2);
+    }
+
+    #[test]
+    fn test_estimate_memory_scales_with_k_and_concurrency() {
+        let store = random_store(105);
+        let small = YensFacade::new(Arc::clone(&store))
+            .source(0)
+            .target(3)
+            .k(1)
+            .concurrency(1)
+            .estimate_memory();
+        let larger = YensFacade::new(store)
+            .source(0)
+            .target(3)
+            .k(5)
+            .track_relationships(true)
+            .concurrency(4)
+            .estimate_memory();
+
+        assert!(larger.min() > small.min());
+        assert!(larger.max() > small.max());
+        assert!(larger.max() >= larger.min());
     }
 
     #[test]

@@ -12,6 +12,7 @@ pub struct SequentialDfsConfig {
 #[derive(Debug, Clone)]
 pub struct SequentialDfsResult {
     pub visited_nodes: Vec<NodeId>,
+    pub visited_depths: Vec<f64>,
     pub relationships_examined: usize,
 }
 
@@ -32,6 +33,7 @@ where
 
     let mut stack = vec![(config.source_node, config.source_node, 0.0)];
     let mut result = Vec::new();
+    let mut result_depths = Vec::new();
     let mut relationships_examined = 0usize;
 
     while let Some((source_node, current_node, weight)) = stack.pop() {
@@ -39,9 +41,13 @@ where
             ExitPredicateResult::Continue => continue,
             ExitPredicateResult::Break => {
                 result.push(current_node);
+                result_depths.push(weight);
                 break;
             }
-            ExitPredicateResult::Follow => result.push(current_node),
+            ExitPredicateResult::Follow => {
+                result.push(current_node);
+                result_depths.push(weight);
+            }
         }
 
         let neighbors = get_neighbors(current_node);
@@ -65,6 +71,7 @@ where
 
     Ok(SequentialDfsResult {
         visited_nodes: result,
+        visited_depths: result_depths,
         relationships_examined,
     })
 }
@@ -121,6 +128,7 @@ mod tests {
         .unwrap();
 
         assert_eq!(result.visited_nodes, vec![0, 2, 1, 3]);
+        assert_eq!(result.visited_depths, vec![0.0, 1.0, 1.0, 2.0]);
         assert_eq!(result.relationships_examined, 3);
     }
 

@@ -183,7 +183,7 @@ impl DfsFacade {
             Some(graph_view.as_ref()),
             &mut progress_tracker,
         )?;
-        DfsResultBuilder::result(result, start.elapsed(), source_node, target_nodes.len())
+        DfsResultBuilder::result(result, start.elapsed(), source_node, target_nodes)
     }
 
     /// Set source node
@@ -281,7 +281,7 @@ impl DfsFacade {
     /// println!("Visited {} nodes, backtracked {} times", stats.nodes_visited, stats.backtrack_operations);
     /// ```
     pub fn stats(self) -> Result<DfsStats> {
-        let targets = self.config.target_nodes.len() as u64;
+        let target_nodes = self.config.target_nodes.clone();
         let result = self.compute()?;
         let nodes_visited = result.paths.len() as u64;
         let max_depth_reached = result
@@ -290,11 +290,16 @@ impl DfsFacade {
             .get("max_depth_reached")
             .and_then(|s| s.parse::<u64>().ok())
             .unwrap_or(0);
-        let targets_found = if targets == 0 {
+        let targets_found = if target_nodes.is_empty() {
             0
         } else {
-            nodes_visited.min(targets)
+            target_nodes
+                .iter()
+                .filter_map(|target| u64::try_from(*target).ok())
+                .filter(|target| result.paths.iter().any(|path| path.target == *target))
+                .count() as u64
         };
+        let targets = target_nodes.len() as u64;
         let all_targets_reached = targets > 0 && targets_found == targets;
 
         Ok(DfsStats {

@@ -121,8 +121,8 @@ impl DijkstraFacade {
 
         Ok(Self {
             graph_store,
+            weight_property: config.weight_property.clone(),
             config,
-            weight_property: "weight".to_string(),
             task_registry_factory: None,
             user_log_registry_factory: None,
         })
@@ -143,6 +143,7 @@ impl DijkstraFacade {
         config
             .validate()
             .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
+        self.weight_property = config.weight_property.clone();
         self.config = config;
         Ok(self)
     }
@@ -266,6 +267,7 @@ impl DijkstraFacade {
     /// Default: "weight"
     pub fn weight_property(mut self, property: &str) -> Self {
         self.weight_property = property.to_string();
+        self.config.weight_property = property.to_string();
         self
     }
 
@@ -355,12 +357,30 @@ impl DijkstraFacade {
     pub fn stats(self) -> Result<DijkstraStats> {
         let has_targets = !self.config.target_nodes.is_empty();
         let result = self.compute()?;
+        let nodes_expanded = result
+            .metadata
+            .additional
+            .get("nodes_expanded")
+            .and_then(|value| value.parse::<u64>().ok())
+            .unwrap_or(0);
+        let edges_considered = result
+            .metadata
+            .additional
+            .get("edges_considered")
+            .and_then(|value| value.parse::<u64>().ok())
+            .unwrap_or(0);
+        let max_queue_size = result
+            .metadata
+            .additional
+            .get("max_queue_size")
+            .and_then(|value| value.parse::<u64>().ok())
+            .unwrap_or(0);
         Ok(DijkstraStats {
             paths_found: result.paths.len() as u64,
             execution_time_ms: result.metadata.execution_time.as_millis() as u64,
-            nodes_expanded: 0,   // Note: extract from metadata when available.
-            edges_considered: 0, // Note: extract from metadata when available.
-            max_queue_size: 0,   // Note: extract from metadata when available.
+            nodes_expanded,
+            edges_considered,
+            max_queue_size,
             target_reached: !result.paths.is_empty() && has_targets,
         })
     }

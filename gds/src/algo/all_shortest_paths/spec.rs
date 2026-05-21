@@ -32,16 +32,19 @@ use super::{AlgorithmType, AllShortestPathsStorageRuntime, ShortestPathResult};
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub struct AllShortestPathsConfig {
     /// Algorithm type (weighted vs unweighted)
+    #[serde(alias = "algorithmType")]
     pub algorithm_type: AlgorithmType,
     /// Number of parallel workers
     pub concurrency: usize,
     /// Whether to stream results (avoid O(V²) memory)
+    #[serde(alias = "streamResults")]
     pub stream_results: bool,
     /// Maximum number of results to return (for memory control)
+    #[serde(alias = "maxResults")]
     pub max_results: Option<usize>,
 
     /// Optional relationship types to include (empty means all types)
-    #[serde(default)]
+    #[serde(default, alias = "relationshipTypes")]
     pub relationship_types: Vec<String>,
 
     /// Direction to traverse edges: "outgoing", "incoming", or "undirected"
@@ -49,7 +52,13 @@ pub struct AllShortestPathsConfig {
     pub direction: String,
 
     /// Relationship weight property to use (only relevant for weighted runs)
-    #[serde(default = "AllShortestPathsConfig::default_weight_property")]
+    #[serde(
+        default = "AllShortestPathsConfig::default_weight_property",
+        alias = "relationshipWeightProperty",
+        alias = "relationship_weight_property",
+        alias = "weightProperty",
+        alias = "weight_property"
+    )]
     pub weight_property: String,
 }
 
@@ -95,11 +104,16 @@ impl AllShortestPathsConfig {
             }
         }
 
-        if self.direction.trim().is_empty() {
-            return Err(ConfigError::InvalidParameter {
-                parameter: "direction".to_string(),
-                reason: "Direction must be non-empty".to_string(),
-            });
+        match self.direction.to_ascii_lowercase().as_str() {
+            "outgoing" | "incoming" | "undirected" => {}
+            other => {
+                return Err(ConfigError::InvalidParameter {
+                    parameter: "direction".to_string(),
+                    reason: format!(
+                        "Direction must be 'outgoing', 'incoming', or 'undirected' (got '{other}')"
+                    ),
+                });
+            }
         }
 
         if self.weight_property.trim().is_empty() {
@@ -388,6 +402,34 @@ mod tests {
             ..Default::default()
         };
         assert!(invalid_config.validate().is_err());
+
+        let invalid_direction = AllShortestPathsConfig {
+            direction: "sideways".to_string(),
+            ..Default::default()
+        };
+        assert!(invalid_direction.validate().is_err());
+    }
+
+    #[test]
+    fn test_all_shortest_paths_config_java_aliases() {
+        let config: AllShortestPathsConfig = serde_json::from_value(serde_json::json!({
+            "algorithmType": "Weighted",
+            "concurrency": 2,
+            "streamResults": false,
+            "maxResults": 10,
+            "relationshipTypes": ["ROAD"],
+            "direction": "incoming",
+            "relationshipWeightProperty": "cost"
+        }))
+        .unwrap();
+
+        assert_eq!(config.algorithm_type, AlgorithmType::Weighted);
+        assert_eq!(config.concurrency, 2);
+        assert!(!config.stream_results);
+        assert_eq!(config.max_results, Some(10));
+        assert_eq!(config.relationship_types, vec!["ROAD"]);
+        assert_eq!(config.direction, "incoming");
+        assert_eq!(config.weight_property, "cost");
     }
 
     #[test]

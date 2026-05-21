@@ -62,9 +62,23 @@ impl Ord for PathWrapper {
         }
 
         // Tie-breaker: fewer nodes first (also reversed for BinaryHeap).
-        self.path
+        let node_count_cmp = self
+            .path
             .node_count()
             .cmp(&other.path.node_count())
+            .reverse();
+        if node_count_cmp != Ordering::Equal {
+            return node_count_cmp;
+        }
+
+        let node_ids_cmp = self.path.node_ids.cmp(&other.path.node_ids).reverse();
+        if node_ids_cmp != Ordering::Equal {
+            return node_ids_cmp;
+        }
+
+        self.path
+            .relationship_ids
+            .cmp(&other.path.relationship_ids)
             .reverse()
     }
 }
@@ -214,5 +228,21 @@ mod tests {
         let second = queue.pop().unwrap();
         assert_eq!(second.total_cost(), 4.0);
         assert_eq!(second.node_count(), 5);
+    }
+
+    #[test]
+    fn test_candidate_queue_deterministic_tie_breaking() {
+        let queue = CandidatePathsPriorityQueue::new();
+
+        let path_b =
+            MutablePathResult::new(0, 0, 3, vec![0, 2, 3], vec![20, 23], vec![0.0, 1.0, 2.0]);
+        let path_a =
+            MutablePathResult::new(0, 0, 3, vec![0, 1, 3], vec![10, 13], vec![0.0, 1.0, 2.0]);
+
+        queue.add_path(path_b);
+        queue.add_path(path_a);
+
+        assert_eq!(queue.pop().unwrap().node_ids, vec![0, 1, 3]);
+        assert_eq!(queue.pop().unwrap().node_ids, vec![0, 2, 3]);
     }
 }

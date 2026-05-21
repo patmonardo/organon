@@ -140,15 +140,20 @@ impl BfsStorageRuntime {
             queue.push_back((self.source_node, self.source_node, 0.0));
 
             let mut result = Vec::new();
+            let mut result_depths = Vec::new();
 
             while let Some((source_node, current_node, weight)) = queue.pop_front() {
                 match exit_predicate.test(source_node, current_node, weight) {
                     ExitPredicateResult::Continue => continue,
                     ExitPredicateResult::Break => {
                         result.push(current_node);
+                        result_depths.push(weight);
                         break;
                     }
-                    ExitPredicateResult::Follow => result.push(current_node),
+                    ExitPredicateResult::Follow => {
+                        result.push(current_node);
+                        result_depths.push(weight);
+                    }
                 }
 
                 // Get neighbors
@@ -172,6 +177,7 @@ impl BfsStorageRuntime {
 
             Ok(BfsResult {
                 visited_nodes: result,
+                visited_depths: result_depths,
                 computation_time_ms: computation_time,
             })
         })();
@@ -208,6 +214,7 @@ impl BfsStorageRuntime {
 
         Ok(BfsResult {
             visited_nodes: result.visited_nodes,
+            visited_depths: result.visited_depths,
             computation_time_ms: start_time.elapsed().as_millis() as u64,
         })
     }

@@ -43,6 +43,10 @@ impl AggregatedNeighborProcessingMsBfs {
         self.seen.fill(0);
     }
 
+    pub fn has_seen(&self, node_id: usize, source_mask: u64) -> bool {
+        node_id < self.node_count && (self.seen[node_id] & source_mask) != 0
+    }
+
     pub fn run<G, F>(
         &mut self,
         source_offset: usize,
@@ -282,5 +286,23 @@ mod tests {
         let mask = 0b1010u64; // bits 1 and 3
         let sources: Vec<_> = AggregatedNeighborProcessingMsBfs::iter_sources(mask, 10).collect();
         assert_eq!(sources, vec![11, 13]);
+    }
+
+    #[test]
+    fn has_seen_tracks_source_reachability() {
+        let graph = create_graph(vec![(0, 1)], 3);
+        let mut msbfs = AggregatedNeighborProcessingMsBfs::new(3);
+
+        msbfs.run(
+            0,
+            1,
+            false,
+            |n| graph.get(&n).cloned().unwrap_or_default(),
+            |_node_id, _depth, _mask| {},
+        );
+
+        assert!(msbfs.has_seen(0, 1));
+        assert!(msbfs.has_seen(1, 1));
+        assert!(!msbfs.has_seen(2, 1));
     }
 }

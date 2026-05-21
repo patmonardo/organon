@@ -29,21 +29,29 @@ use std::time::Duration;
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct YensConfig {
     /// Source node for path finding
+    #[serde(alias = "sourceNode")]
     pub source_node: NodeId,
     /// Target node for path finding
+    #[serde(alias = "targetNode")]
     pub target_node: NodeId,
     /// Number of shortest paths to find (K)
     pub k: usize,
     /// Property name for relationship weights
-    #[serde(default = "YensConfig::default_weight_property")]
+    #[serde(
+        default = "YensConfig::default_weight_property",
+        alias = "relationshipWeightProperty",
+        alias = "relationship_weight_property",
+        alias = "weightProperty"
+    )]
     pub weight_property: String,
     /// Optional relationship types to include (empty means all types)
-    #[serde(default)]
+    #[serde(default, alias = "relationshipTypes")]
     pub relationship_types: Vec<String>,
     /// Direction for traversal ("outgoing" or "incoming")
     #[serde(default = "YensConfig::default_direction")]
     pub direction: String,
     /// Whether to track relationships
+    #[serde(alias = "trackRelationships")]
     pub track_relationships: bool,
     /// Concurrency level for parallel processing
     pub concurrency: usize,
@@ -144,6 +152,12 @@ pub struct YensResult {
     pub path_count: usize,
     /// Computation time in milliseconds
     pub computation_time_ms: u64,
+    /// Number of spur-node shortest path searches attempted
+    #[serde(default)]
+    pub spur_searches: u64,
+    /// Number of candidate paths generated
+    #[serde(default)]
+    pub candidates_generated: u64,
 }
 
 /// Individual path result from Yen's algorithm
@@ -171,6 +185,8 @@ pub struct YensStats {
     pub paths_found: u64,
     pub computation_time_ms: u64,
     pub execution_time_ms: u64,
+    pub spur_searches: u64,
+    pub candidates_generated: u64,
 }
 
 /// Summary of a mutate operation
@@ -263,6 +279,14 @@ impl YensResultBuilder {
             (
                 "track_relationships".to_string(),
                 self.track_relationships.to_string(),
+            ),
+            (
+                "spur_searches".to_string(),
+                self.result.spur_searches.to_string(),
+            ),
+            (
+                "candidates_generated".to_string(),
+                self.result.candidates_generated.to_string(),
             ),
         ]);
 
@@ -371,11 +395,15 @@ mod tests {
             }],
             path_count: 1,
             computation_time_ms: 5,
+            spur_searches: 2,
+            candidates_generated: 1,
         };
 
         assert_eq!(result.paths.len(), 1);
         assert_eq!(result.path_count, 1);
         assert_eq!(result.computation_time_ms, 5);
+        assert_eq!(result.spur_searches, 2);
+        assert_eq!(result.candidates_generated, 1);
     }
 
     #[test]
@@ -425,6 +453,84 @@ mod tests {
         config.k = 3;
         config.target_node = config.source_node;
         assert!(config.validate().is_err());
+    }
+
+    #[test]
+    fn test_yens_config_accepts_java_aliases() {
+        let config: YensConfig = serde_json::from_value(json!({
+            "sourceNode": 2,
+            "targetNode": 7,
+            "k": 4,
+            "relationshipWeightProperty": "travelTime",
+            "relationshipTypes": ["ROAD", "RAIL"],
+            "direction": "incoming",
+            "trackRelationships": true,
+            "concurrency": 3
+        }))
+        .unwrap();
+
+        assert_eq!(config.source_node, 2);
+        assert_eq!(config.target_node, 7);
+        assert_eq!(config.k, 4);
+        assert_eq!(config.weight_property, "travelTime");
+        assert_eq!(config.relationship_types, vec!["ROAD", "RAIL"]);
+        assert_eq!(config.direction, "incoming");
+        assert!(config.track_relationships);
+        assert_eq!(config.concurrency, 3);
+        assert!(config.validate().is_ok());
+    }
+
+    #[test]
+    fn test_yens_result_builder_metadata() {
+        let result = YensResult {
+            paths: vec![YensPathResult {
+                index: 0,
+                source_node: 0,
+                target_node: 3,
+                node_ids: vec![0, 1, 3],
+                relationship_ids: vec![10, 13],
+                costs: vec![0.0, 1.0, 2.0],
+                total_cost: 2.0,
+            }],
+            path_count: 1,
+            computation_time_ms: 12,
+            spur_searches: 3,
+            candidates_generated: 2,
+        };
+
+        let pathfinding_result =
+            YensResultBuilder::result(result, Duration::from_millis(5), 4, true).unwrap();
+
+        assert_eq!(pathfinding_result.paths.len(), 1);
+        assert_eq!(
+            pathfinding_result
+                .metadata
+                .additional
+                .get("computation_time_ms"),
+            Some(&"12".to_string())
+        );
+        assert_eq!(
+            pathfinding_result.metadata.additional.get("k"),
+            Some(&"4".to_string())
+        );
+        assert_eq!(
+            pathfinding_result
+                .metadata
+                .additional
+                .get("track_relationships"),
+            Some(&"true".to_string())
+        );
+        assert_eq!(
+            pathfinding_result.metadata.additional.get("spur_searches"),
+            Some(&"3".to_string())
+        );
+        assert_eq!(
+            pathfinding_result
+                .metadata
+                .additional
+                .get("candidates_generated"),
+            Some(&"2".to_string())
+        );
     }
 
     #[test]
