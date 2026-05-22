@@ -41,7 +41,7 @@ export function bfsStreamDemo(): void {
       databaseId,
       graphName,
       sourceNode: 0,
-      targetNodes: [3],
+      targets: [3],
       maxDepth: 10,
       trackPaths: true,
       concurrency: 1,
@@ -53,7 +53,7 @@ export function bfsStreamDemo(): void {
   // eslint-disable-next-line no-console
   console.log('batch.response:', resp);
 
-  const rows = resp?.[1]?.data?.rows ?? [];
+  const rows = resp?.[1]?.data ?? [];
   // eslint-disable-next-line no-console
   console.dir({ graphName, rows }, { depth: null });
 }

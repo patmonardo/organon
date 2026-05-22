@@ -47,6 +47,11 @@ export function astarStreamDemo(): void {
           { type: 'ROAD', source: 3, target: 4, properties: { weight: 1.0 } },
           { type: 'ROAD', source: 4, target: 5, properties: { weight: 1.0 } },
         ],
+        // Current A* stream/stats path uses Haversine internally, so include coords.
+        nodeProperties: {
+          latitude: [37.78, 37.79, 37.8, 37.78, 37.79, 37.8],
+          longitude: [-122.42, -122.41, -122.4, -122.43, -122.42, -122.41],
+        },
       },
     },
     {
@@ -60,7 +65,7 @@ export function astarStreamDemo(): void {
       sourceNode: 0,
       targetNode: 5,
       weightProperty: 'weight',
-      heuristic: 'manhattan',
+      heuristic: 'haversine',
       direction: 'outgoing',
       concurrency: 1,
     },

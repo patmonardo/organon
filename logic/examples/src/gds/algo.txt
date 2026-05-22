@@ -1,0 +1,1185 @@
+gds-astar-stream.ts:
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.19s
+     Running `/home/pat/VSCode/organon/target/debug/tsjson_cli '[{"kind":"ApplicationForm","facade":"graph_store","op":"put","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"astar-1779464502984","snapshot":{"nodes":[0,1,2,3,4,5],"relationships":[{"type":"ROAD","source":0,"target":1,"properties":{"weight":1}},{"type":"ROAD","source":1,"target":2,"properties":{"weight":1}},{"type":"ROAD","source":0,"target":3,"properties":{"weight":2}},{"type":"ROAD","source":1,"target":4,"properties":{"weight":2}},{"type":"ROAD","source":2,"target":5,"properties":{"weight":2}},{"type":"ROAD","source":3,"target":4,"properties":{"weight":1}},{"type":"ROAD","source":4,"target":5,"properties":{"weight":1}}],"nodeProperties":{"latitude":[37.78,37.79,37.8,37.78,37.79,37.8],"longitude":[-122.42,-122.41,-122.4,-122.43,-122.42,-122.41]}}},{"kind":"ApplicationForm","facade":"algorithms","op":"astar","mode":"stream","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"astar-1779464502984","sourceNode":0,"targetNode":5,"weightProperty":"weight","heuristic":"haversine","direction":"outgoing","concurrency":1}]'`
+[INFO] astar::stream - Start
+[INFO] astar - Start
+[PROGRESS] 28% - astar
+[PROGRESS] 57% - astar
+[PROGRESS] 71% - astar
+[PROGRESS] 85% - astar
+[PROGRESS] 100% - astar
+[PROGRESS] 100% - astar
+[INFO] astar - Finished
+[PROGRESS] 100% - astar::stream
+[INFO] astar::stream - Finished
+batch.response: [
+  {
+    ok: true,
+    op: 'put',
+    data: {
+      graphName: 'astar-1779464502984',
+      nodeCount: 6,
+      relationshipCount: 7
+    }
+  },
+  { ok: true, op: 'astar', data: [ [Object] ] }
+]
+[ { source: 0, target: 5, path: [ 0, 1, 2, 5 ], cost: 4 } ]
+gds-bellman-ford-estimate.ts:
+Bellman-Ford Estimate Request:
+{
+  "kind": "ApplicationForm",
+  "facade": "algorithms",
+  "op": "bellman_ford",
+  "mode": "estimate",
+  "user": {
+    "username": "alice",
+    "isAdmin": true
+  },
+  "databaseId": "db1",
+  "graphName": "bellman-ford-estimate-1779464503747",
+  "sourceNode": 0,
+  "weightProperty": "weight",
+  "concurrency": 1
+}
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.19s
+     Running `/home/pat/VSCode/organon/target/debug/tsjson_cli '[{"kind":"ApplicationForm","facade":"graph_store","op":"put","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"bellman-ford-estimate-1779464503747","snapshot":{"nodes":[0,1,2,3,4],"relationships":[{"type":"CONNECTS","source":0,"target":1,"properties":{"weight":1}},{"type":"CONNECTS","source":1,"target":2,"properties":{"weight":2}},{"type":"CONNECTS","source":2,"target":3,"properties":{"weight":1}},{"type":"CONNECTS","source":1,"target":3,"properties":{"weight":4}},{"type":"CONNECTS","source":3,"target":4,"properties":{"weight":2}},{"type":"CONNECTS","source":0,"target":4,"properties":{"weight":5}}]}},{"kind":"ApplicationForm","facade":"algorithms","op":"bellman_ford","mode":"estimate","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"bellman-ford-estimate-1779464503747","sourceNode":0,"weightProperty":"weight","concurrency":1}]'`
+
+Bellman-Ford Estimate Response:
+{
+  "minBytes": 920,
+  "maxBytes": 1104
+}
+gds-bellman-ford-stats.ts:
+Bellman-Ford Stats Request:
+{
+  "kind": "ApplicationForm",
+  "facade": "algorithms",
+  "op": "bellman_ford",
+  "mode": "stats",
+  "user": {
+    "username": "alice",
+    "isAdmin": true
+  },
+  "databaseId": "db1",
+  "graphName": "bellman-ford-stats-1779464504498",
+  "sourceNode": 0,
+  "weightProperty": "weight",
+  "concurrency": 1
+}
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.19s
+     Running `/home/pat/VSCode/organon/target/debug/tsjson_cli '[{"kind":"ApplicationForm","facade":"graph_store","op":"put","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"bellman-ford-stats-1779464504498","snapshot":{"nodes":[0,1,2,3,4],"relationships":[{"type":"CONNECTS","source":0,"target":1,"properties":{"weight":1}},{"type":"CONNECTS","source":1,"target":2,"properties":{"weight":2}},{"type":"CONNECTS","source":2,"target":3,"properties":{"weight":1}},{"type":"CONNECTS","source":1,"target":3,"properties":{"weight":4}},{"type":"CONNECTS","source":3,"target":4,"properties":{"weight":2}},{"type":"CONNECTS","source":0,"target":4,"properties":{"weight":5}}]}},{"kind":"ApplicationForm","facade":"algorithms","op":"bellman_ford","mode":"stats","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"bellman-ford-stats-1779464504498","sourceNode":0,"weightProperty":"weight","concurrency":1}]'`
+[INFO] bellman_ford::stats - Start
+[INFO] bellman_ford - Start
+[PROGRESS] 33% - bellman_ford
+[PROGRESS] 66% - bellman_ford
+[PROGRESS] 100% - bellman_ford
+[PROGRESS] 116% - bellman_ford
+[PROGRESS] 100% - bellman_ford
+[INFO] bellman_ford - Finished
+[PROGRESS] 100% - bellman_ford::stats
+[INFO] bellman_ford::stats - Finished
+
+Bellman-Ford Stats Response:
+{
+  "paths_found": 4,
+  "negative_cycles_found": 0,
+  "contains_negative_cycle": false,
+  "execution_time_ms": 0
+}
+gds-bellman-ford-stream.ts:
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.19s
+     Running `/home/pat/VSCode/organon/target/debug/tsjson_cli '[{"kind":"ApplicationForm","facade":"graph_store","op":"put","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"bellman-ford-1779464505249","snapshot":{"nodes":[0,1,2,3],"relationships":[{"type":"ROAD","source":0,"target":1,"properties":{"weight":1}},{"type":"ROAD","source":1,"target":2,"properties":{"weight":-2}},{"type":"ROAD","source":2,"target":3,"properties":{"weight":1}}]}},{"kind":"ApplicationForm","facade":"algorithms","op":"bellman_ford","mode":"stream","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"bellman-ford-1779464505249","sourceNode":0,"weightProperty":"weight","direction":"outgoing","trackNegativeCycles":true,"trackPaths":true,"concurrency":1}]'`
+[INFO] bellman_ford::stream - Start
+[INFO] bellman_ford - Start
+[PROGRESS] 33% - bellman_ford
+[PROGRESS] 66% - bellman_ford
+[PROGRESS] 100% - bellman_ford
+[PROGRESS] 100% - bellman_ford
+[INFO] bellman_ford - Finished
+[PROGRESS] 100% - bellman_ford::stream
+[INFO] bellman_ford::stream - Finished
+batch.response: [
+  {
+    ok: true,
+    op: 'put',
+    data: {
+      graphName: 'bellman-ford-1779464505249',
+      nodeCount: 4,
+      relationshipCount: 3
+    }
+  },
+  {
+    ok: true,
+    op: 'bellman_ford',
+    data: [ [Object], [Object], [Object] ]
+  }
+]
+[
+  { source: 0, target: 1, path: [ 0, 1 ], cost: 1 },
+  { source: 0, target: 2, path: [ 0, 1, 2 ], cost: -1 },
+  { source: 0, target: 3, path: [ 0, 1, 2, 3 ], cost: 0 }
+]
+gds-betweenness-centrality-estimate.ts:
+Betweenness Centrality Estimate Request:
+{
+  "kind": "ApplicationForm",
+  "facade": "algorithms",
+  "op": "betweenness",
+  "mode": "estimate",
+  "submode": "memory",
+  "user": {
+    "username": "alice",
+    "isAdmin": true
+  },
+  "databaseId": "db1",
+  "graphName": "betweenness-estimate-1779464506025",
+  "concurrency": 1
+}
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.19s
+     Running `/home/pat/VSCode/organon/target/debug/tsjson_cli '[{"kind":"ApplicationForm","facade":"graph_store","op":"put","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"betweenness-estimate-1779464506025","snapshot":{"nodes":[0,1,2,3,4],"relationships":[{"type":"CONNECTS","source":0,"target":1},{"type":"CONNECTS","source":1,"target":2},{"type":"CONNECTS","source":2,"target":3},{"type":"CONNECTS","source":1,"target":3},{"type":"CONNECTS","source":3,"target":4},{"type":"CONNECTS","source":0,"target":4}]}},{"kind":"ApplicationForm","facade":"algorithms","op":"betweenness","mode":"estimate","submode":"memory","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"betweenness-estimate-1779464506025","concurrency":1}]'`
+
+Betweenness Centrality Estimate Response:
+{
+  "min": 300,
+  "max": 1048984
+}
+gds-betweenness-centrality-stats.ts:
+Betweenness Centrality Stats Request:
+{
+  "kind": "ApplicationForm",
+  "facade": "algorithms",
+  "op": "betweenness",
+  "mode": "stats",
+  "user": {
+    "username": "alice",
+    "isAdmin": true
+  },
+  "databaseId": "db1",
+  "graphName": "betweenness-stats-1779464506794",
+  "concurrency": 1
+}
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.21s
+     Running `/home/pat/VSCode/organon/target/debug/tsjson_cli '[{"kind":"ApplicationForm","facade":"graph_store","op":"put","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"betweenness-stats-1779464506794","snapshot":{"nodes":[0,1,2,3,4],"relationships":[{"type":"CONNECTS","source":0,"target":1},{"type":"CONNECTS","source":1,"target":2},{"type":"CONNECTS","source":2,"target":3},{"type":"CONNECTS","source":1,"target":3},{"type":"CONNECTS","source":3,"target":4},{"type":"CONNECTS","source":0,"target":4}]}},{"kind":"ApplicationForm","facade":"algorithms","op":"betweenness","mode":"stats","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"betweenness-stats-1779464506794","concurrency":1}]'`
+[INFO] betweenness::stats - Start
+[INFO] BetweennessCentrality - Start
+[PROGRESS] 20% - BetweennessCentrality
+[PROGRESS] 40% - BetweennessCentrality
+[PROGRESS] 60% - BetweennessCentrality
+[PROGRESS] 80% - BetweennessCentrality
+[PROGRESS] 100% - BetweennessCentrality
+[PROGRESS] 100% - BetweennessCentrality
+[INFO] BetweennessCentrality - Finished
+[PROGRESS] 100% - betweenness::stats
+[INFO] betweenness::stats - Finished
+
+Betweenness Centrality Stats Response:
+{
+  "node_count": 5,
+  "min": 0,
+  "max": 1,
+  "mean": 0.4,
+  "stddev": 0.48989794855663565,
+  "p50": 0,
+  "p90": 1,
+  "p99": 1,
+  "bridge_nodes": 2,
+  "execution_time_ms": 0
+}
+gds-bfs-estimate.ts:
+BFS Estimate Request:
+{
+  "kind": "ApplicationForm",
+  "facade": "algorithms",
+  "op": "bfs",
+  "mode": "estimate",
+  "user": {
+    "username": "alice",
+    "isAdmin": true
+  },
+  "databaseId": "db1",
+  "graphName": "bfs-estimate-1779464507594",
+  "sourceNode": 0,
+  "targets": [
+    3
+  ],
+  "maxDepth": 10,
+  "trackPaths": true,
+  "concurrency": 1
+}
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.19s
+     Running `/home/pat/VSCode/organon/target/debug/tsjson_cli '[{"kind":"ApplicationForm","facade":"graph_store","op":"put","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"bfs-estimate-1779464507594","snapshot":{"nodes":[0,1,2,3,4],"relationships":[{"type":"REL","source":0,"target":1},{"type":"REL","source":1,"target":2},{"type":"REL","source":2,"target":3},{"type":"REL","source":1,"target":4}]}},{"kind":"ApplicationForm","facade":"algorithms","op":"bfs","mode":"estimate","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"bfs-estimate-1779464507594","sourceNode":0,"targets":[3],"maxDepth":10,"trackPaths":true,"concurrency":1}]'`
+
+BFS Estimate Response:
+{
+  "minBytes": 149,
+  "maxBytes": 178
+}
+gds-bfs-stats.ts:
+BFS Stats Request:
+{
+  "kind": "ApplicationForm",
+  "facade": "algorithms",
+  "op": "bfs",
+  "mode": "stats",
+  "user": {
+    "username": "alice",
+    "isAdmin": true
+  },
+  "databaseId": "db1",
+  "graphName": "bfs-stats-1779464508380",
+  "sourceNode": 0,
+  "targets": [
+    3
+  ],
+  "maxDepth": 10,
+  "trackPaths": true,
+  "concurrency": 1
+}
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.19s
+     Running `/home/pat/VSCode/organon/target/debug/tsjson_cli '[{"kind":"ApplicationForm","facade":"graph_store","op":"put","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"bfs-stats-1779464508380","snapshot":{"nodes":[0,1,2,3,4],"relationships":[{"type":"REL","source":0,"target":1},{"type":"REL","source":1,"target":2},{"type":"REL","source":2,"target":3},{"type":"REL","source":1,"target":4}]}},{"kind":"ApplicationForm","facade":"algorithms","op":"bfs","mode":"stats","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"bfs-stats-1779464508380","sourceNode":0,"targets":[3],"maxDepth":10,"trackPaths":true,"concurrency":1}]'`
+[INFO] bfs::stats - Start
+[INFO] BFS - Start
+[PROGRESS] 25% - BFS
+[PROGRESS] 75% - BFS
+[PROGRESS] 100% - BFS
+[PROGRESS] 100% - BFS
+[INFO] BFS - Finished
+[PROGRESS] 100% - bfs::stats
+[INFO] bfs::stats - Finished
+
+BFS Stats Response:
+{
+  "nodes_visited": 5,
+  "max_depth_reached": 3,
+  "execution_time_ms": 0,
+  "targets_found": 1,
+  "all_targets_reached": true,
+  "avg_branching_factor": 0
+}
+gds-bfs-stream.ts:
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.19s
+     Running `/home/pat/VSCode/organon/target/debug/tsjson_cli '[{"kind":"ApplicationForm","facade":"graph_store","op":"put","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"bfs-1779464509143","snapshot":{"nodes":[0,1,2,3,4],"relationships":[{"type":"REL","source":0,"target":1},{"type":"REL","source":1,"target":2},{"type":"REL","source":2,"target":3},{"type":"REL","source":1,"target":4}]}},{"kind":"ApplicationForm","facade":"algorithms","op":"bfs","mode":"stream","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"bfs-1779464509143","sourceNode":0,"targets":[3],"maxDepth":10,"trackPaths":true,"concurrency":1,"delta":64}]'`
+[INFO] bfs::stream - Start
+[INFO] BFS - Start
+[PROGRESS] 25% - BFS
+[PROGRESS] 75% - BFS
+[PROGRESS] 100% - BFS
+[PROGRESS] 100% - BFS
+[INFO] BFS - Finished
+[PROGRESS] 100% - bfs::stream
+[INFO] bfs::stream - Finished
+batch.response: [
+  {
+    ok: true,
+    op: 'put',
+    data: {
+      graphName: 'bfs-1779464509143',
+      nodeCount: 5,
+      relationshipCount: 4
+    }
+  },
+  {
+    ok: true,
+    op: 'bfs',
+    data: [ [Object], [Object], [Object], [Object], [Object] ]
+  }
+]
+{
+  graphName: 'bfs-1779464509143',
+  rows: [
+    { source: 0, target: 0, path: [ 0 ], cost: 0 },
+    { source: 0, target: 1, path: [ 1 ], cost: 1 },
+    { source: 0, target: 2, path: [ 2 ], cost: 2 },
+    { source: 0, target: 4, path: [ 4 ], cost: 2 },
+    { source: 0, target: 3, path: [ 3 ], cost: 3 }
+  ]
+}
+gds-closeness-centrality-estimate.ts:
+Closeness Centrality Estimate Request:
+{
+  "kind": "ApplicationForm",
+  "facade": "algorithms",
+  "op": "closeness",
+  "mode": "estimate",
+  "submode": "memory",
+  "user": {
+    "username": "alice",
+    "isAdmin": true
+  },
+  "databaseId": "db1",
+  "graphName": "closeness-estimate-1779464509899",
+  "concurrency": 1
+}
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.20s
+     Running `/home/pat/VSCode/organon/target/debug/tsjson_cli '[{"kind":"ApplicationForm","facade":"graph_store","op":"put","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"closeness-estimate-1779464509899","snapshot":{"nodes":[0,1,2,3,4],"relationships":[{"type":"CONNECTS","source":0,"target":1},{"type":"CONNECTS","source":1,"target":2},{"type":"CONNECTS","source":2,"target":3},{"type":"CONNECTS","source":1,"target":3},{"type":"CONNECTS","source":3,"target":4},{"type":"CONNECTS","source":0,"target":4}]}},{"kind":"ApplicationForm","facade":"algorithms","op":"closeness","mode":"estimate","submode":"memory","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"closeness-estimate-1779464509899","concurrency":1}]'`
+
+Closeness Centrality Estimate Response:
+{
+  "min": 1048816,
+  "max": 1258579
+}
+gds-closeness-centrality-stats.ts:
+Closeness Centrality Stats Request:
+{
+  "kind": "ApplicationForm",
+  "facade": "algorithms",
+  "op": "closeness",
+  "mode": "stats",
+  "user": {
+    "username": "alice",
+    "isAdmin": true
+  },
+  "databaseId": "db1",
+  "graphName": "closeness-stats-1779464510659",
+  "concurrency": 1
+}
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.19s
+     Running `/home/pat/VSCode/organon/target/debug/tsjson_cli '[{"kind":"ApplicationForm","facade":"graph_store","op":"put","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"closeness-stats-1779464510659","snapshot":{"nodes":[0,1,2,3,4],"relationships":[{"type":"CONNECTS","source":0,"target":1},{"type":"CONNECTS","source":1,"target":2},{"type":"CONNECTS","source":2,"target":3},{"type":"CONNECTS","source":1,"target":3},{"type":"CONNECTS","source":3,"target":4},{"type":"CONNECTS","source":0,"target":4}]}},{"kind":"ApplicationForm","facade":"algorithms","op":"closeness","mode":"stats","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"closeness-stats-1779464510659","concurrency":1}]'`
+[INFO] closeness::stats - Start
+[INFO] ClosenessCentrality - Start
+[INFO] ClosenessCentrality - Farness computation :: Start
+[PROGRESS] 4% - ClosenessCentrality
+[PROGRESS] 8% - ClosenessCentrality
+[PROGRESS] 16% - ClosenessCentrality
+[PROGRESS] 24% - ClosenessCentrality
+[PROGRESS] 28% - ClosenessCentrality
+[PROGRESS] 32% - ClosenessCentrality
+[PROGRESS] 40% - ClosenessCentrality
+[PROGRESS] 100% - ClosenessCentrality
+[INFO] ClosenessCentrality - Finished
+[INFO] ClosenessCentrality - Closeness computation :: Start
+[PROGRESS] 100% - ClosenessCentrality
+[PROGRESS] 100% - ClosenessCentrality
+[INFO] ClosenessCentrality - Finished
+[INFO] ClosenessCentrality - Finished
+[PROGRESS] 100% - closeness::stats
+[INFO] closeness::stats - Finished
+
+Closeness Centrality Stats Response:
+{
+  "node_count": 5,
+  "min": 0,
+  "max": 1,
+  "mean": 0.6166666666666666,
+  "stddev": 0.33166247903554,
+  "p50": 0.6666666666666666,
+  "p90": 1,
+  "p99": 1,
+  "isolated_nodes": 1,
+  "execution_time_ms": 0
+}
+gds-degree-centrality-estimate.ts:
+Degree Centrality Estimate Request:
+{
+  "kind": "ApplicationForm",
+  "facade": "algorithms",
+  "op": "degree_centrality",
+  "mode": "estimate",
+  "submode": "memory",
+  "user": {
+    "username": "alice",
+    "isAdmin": true
+  },
+  "databaseId": "db1",
+  "graphName": "degree-estimate-1779464511418",
+  "orientation": "undirected",
+  "concurrency": 1
+}
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.20s
+     Running `/home/pat/VSCode/organon/target/debug/tsjson_cli '[{"kind":"ApplicationForm","facade":"graph_store","op":"put","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"degree-estimate-1779464511418","snapshot":{"nodes":[0,1,2,3,4],"relationships":[{"type":"CONNECTS","source":0,"target":1},{"type":"CONNECTS","source":1,"target":2},{"type":"CONNECTS","source":2,"target":3},{"type":"CONNECTS","source":1,"target":3},{"type":"CONNECTS","source":3,"target":4},{"type":"CONNECTS","source":0,"target":4}]}},{"kind":"ApplicationForm","facade":"algorithms","op":"degree_centrality","mode":"estimate","submode":"memory","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"degree-estimate-1779464511418","orientation":"undirected","concurrency":1}]'`
+
+Degree Centrality Estimate Response:
+{
+  "min_bytes": 1114192,
+  "max_bytes": 1337030
+}
+gds-degree-centrality-mutate.ts:
+Degree Centrality Mutate Request:
+{
+  "kind": "ApplicationForm",
+  "facade": "algorithms",
+  "op": "degree_centrality",
+  "mode": "mutate",
+  "mutateProperty": "degree_score",
+  "user": {
+    "username": "alice",
+    "isAdmin": true
+  },
+  "databaseId": "db1",
+  "graphName": "degree-mutate-1779464512174",
+  "orientation": "undirected",
+  "concurrency": 1
+}
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.19s
+     Running `/home/pat/VSCode/organon/target/debug/tsjson_cli '[{"kind":"ApplicationForm","facade":"graph_store","op":"put","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"degree-mutate-1779464512174","snapshot":{"nodes":[0,1,2,3,4],"relationships":[{"type":"CONNECTS","source":0,"target":1},{"type":"CONNECTS","source":1,"target":2},{"type":"CONNECTS","source":2,"target":3},{"type":"CONNECTS","source":1,"target":3},{"type":"CONNECTS","source":3,"target":4},{"type":"CONNECTS","source":0,"target":4}]}},{"kind":"ApplicationForm","facade":"algorithms","op":"degree_centrality","mode":"mutate","mutateProperty":"degree_score","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"degree-mutate-1779464512174","orientation":"undirected","concurrency":1}]'`
+[INFO] DegreeCentrality - Start
+[PROGRESS] 20% - DegreeCentrality
+[PROGRESS] 40% - DegreeCentrality
+[PROGRESS] 60% - DegreeCentrality
+[PROGRESS] 80% - DegreeCentrality
+[PROGRESS] 100% - DegreeCentrality
+[PROGRESS] 100% - DegreeCentrality
+[INFO] DegreeCentrality - Finished
+
+Degree Centrality Mutate Response:
+{
+  "nodes_updated": 5,
+  "property_name": "degree_score",
+  "execution_time_ms": 0
+}
+gds-degree-centrality-stats.ts:
+Degree Centrality Stats Request:
+{
+  "kind": "ApplicationForm",
+  "facade": "algorithms",
+  "op": "degree_centrality",
+  "mode": "stats",
+  "user": {
+    "username": "alice",
+    "isAdmin": true
+  },
+  "databaseId": "db1",
+  "graphName": "degree-stats-1779464512928",
+  "orientation": "undirected",
+  "concurrency": 1
+}
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.19s
+     Running `/home/pat/VSCode/organon/target/debug/tsjson_cli '[{"kind":"ApplicationForm","facade":"graph_store","op":"put","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"degree-stats-1779464512928","snapshot":{"nodes":[0,1,2,3,4],"relationships":[{"type":"CONNECTS","source":0,"target":1},{"type":"CONNECTS","source":1,"target":2},{"type":"CONNECTS","source":2,"target":3},{"type":"CONNECTS","source":1,"target":3},{"type":"CONNECTS","source":3,"target":4},{"type":"CONNECTS","source":0,"target":4}]}},{"kind":"ApplicationForm","facade":"algorithms","op":"degree_centrality","mode":"stats","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"degree-stats-1779464512928","orientation":"undirected","concurrency":1}]'`
+[INFO] degree_centrality::stats - Start
+[INFO] DegreeCentrality - Start
+[PROGRESS] 20% - DegreeCentrality
+[PROGRESS] 40% - DegreeCentrality
+[PROGRESS] 60% - DegreeCentrality
+[PROGRESS] 80% - DegreeCentrality
+[PROGRESS] 100% - DegreeCentrality
+[PROGRESS] 100% - DegreeCentrality
+[INFO] DegreeCentrality - Finished
+[PROGRESS] 100% - degree_centrality::stats
+[INFO] degree_centrality::stats - Finished
+
+Degree Centrality Stats Response:
+{
+  "node_count": 5,
+  "min": 0,
+  "max": 2,
+  "mean": 1.2,
+  "stddev": 0.7483314773547883,
+  "p50": 1,
+  "p90": 2,
+  "p99": 2,
+  "isolated_nodes": 1,
+  "execution_time_ms": 0
+}
+gds-dfs-stream.ts:
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.19s
+     Running `/home/pat/VSCode/organon/target/debug/tsjson_cli '[{"kind":"ApplicationForm","facade":"graph_store","op":"put","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"dfs-1779464513683","snapshot":{"nodes":[0,1,2,3,4],"relationships":[{"type":"REL","source":0,"target":1},{"type":"REL","source":1,"target":2},{"type":"REL","source":2,"target":3},{"type":"REL","source":1,"target":4}]}},{"kind":"ApplicationForm","facade":"algorithms","op":"dfs","mode":"stream","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"dfs-1779464513683","sourceNode":0,"targets":[3],"maxDepth":10,"trackPaths":true,"concurrency":1}]'`
+[INFO] dfs::stream - Start
+[INFO] DFS - Start
+[PROGRESS] 100% - DFS
+[PROGRESS] 100% - DFS
+[INFO] DFS - Finished
+[PROGRESS] 100% - dfs::stream
+[INFO] dfs::stream - Finished
+batch.response: [
+  {
+    ok: true,
+    op: 'put',
+    data: {
+      graphName: 'dfs-1779464513683',
+      nodeCount: 5,
+      relationshipCount: 4
+    }
+  },
+  {
+    ok: true,
+    op: 'dfs',
+    data: [ [Object], [Object], [Object], [Object], [Object] ]
+  }
+]
+{
+  graphName: 'dfs-1779464513683',
+  rows: [
+    { source: 0, target: 0, path: [ 0 ], cost: 0 },
+    { source: 0, target: 1, path: [ 1 ], cost: 1 },
+    { source: 0, target: 4, path: [ 4 ], cost: 2 },
+    { source: 0, target: 2, path: [ 2 ], cost: 2 },
+    { source: 0, target: 3, path: [ 3 ], cost: 3 }
+  ]
+}
+gds-dijkstra-estimate.ts:
+Dijkstra Estimate Request:
+{
+  "kind": "ApplicationForm",
+  "facade": "algorithms",
+  "op": "dijkstra",
+  "mode": "estimate",
+  "user": {
+    "username": "alice",
+    "isAdmin": true
+  },
+  "databaseId": "db1",
+  "graphName": "dijkstra-estimate-1779464514440",
+  "sourceNode": 0,
+  "weightProperty": "weight",
+  "concurrency": 1
+}
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.19s
+     Running `/home/pat/VSCode/organon/target/debug/tsjson_cli '[{"kind":"ApplicationForm","facade":"graph_store","op":"put","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"dijkstra-estimate-1779464514440","snapshot":{"nodes":[0,1,2,3,4],"relationships":[{"type":"CONNECTS","source":0,"target":1,"properties":{"weight":1}},{"type":"CONNECTS","source":1,"target":2,"properties":{"weight":2}},{"type":"CONNECTS","source":2,"target":3,"properties":{"weight":1}},{"type":"CONNECTS","source":1,"target":3,"properties":{"weight":4}},{"type":"CONNECTS","source":3,"target":4,"properties":{"weight":2}},{"type":"CONNECTS","source":0,"target":4,"properties":{"weight":5}}]}},{"kind":"ApplicationForm","facade":"algorithms","op":"dijkstra","mode":"estimate","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"dijkstra-estimate-1779464514440","sourceNode":0,"weightProperty":"weight","concurrency":1}]'`
+
+Dijkstra Estimate Response:
+{
+  "minBytes": 1000,
+  "maxBytes": 1200
+}
+gds-dijkstra-stats.ts:
+Dijkstra Stats Request:
+{
+  "kind": "ApplicationForm",
+  "facade": "algorithms",
+  "op": "dijkstra",
+  "mode": "stats",
+  "user": {
+    "username": "alice",
+    "isAdmin": true
+  },
+  "databaseId": "db1",
+  "graphName": "dijkstra-stats-1779464515194",
+  "sourceNode": 0,
+  "weightProperty": "weight",
+  "concurrency": 1
+}
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.19s
+     Running `/home/pat/VSCode/organon/target/debug/tsjson_cli '[{"kind":"ApplicationForm","facade":"graph_store","op":"put","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"dijkstra-stats-1779464515194","snapshot":{"nodes":[0,1,2,3,4],"relationships":[{"type":"CONNECTS","source":0,"target":1,"properties":{"weight":1}},{"type":"CONNECTS","source":1,"target":2,"properties":{"weight":2}},{"type":"CONNECTS","source":2,"target":3,"properties":{"weight":1}},{"type":"CONNECTS","source":1,"target":3,"properties":{"weight":4}},{"type":"CONNECTS","source":3,"target":4,"properties":{"weight":2}},{"type":"CONNECTS","source":0,"target":4,"properties":{"weight":5}}]}},{"kind":"ApplicationForm","facade":"algorithms","op":"dijkstra","mode":"stats","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"dijkstra-stats-1779464515194","sourceNode":0,"weightProperty":"weight","concurrency":1}]'`
+[INFO] dijkstra::stats - Start
+[INFO] dijkstra - Start
+[PROGRESS] 33% - dijkstra
+[PROGRESS] 66% - dijkstra
+[PROGRESS] 83% - dijkstra
+[PROGRESS] 100% - dijkstra
+[PROGRESS] 100% - dijkstra
+[INFO] dijkstra - Finished
+[PROGRESS] 100% - dijkstra::stats
+[INFO] dijkstra::stats - Finished
+
+Dijkstra Stats Response:
+{
+  "paths_found": 5,
+  "execution_time_ms": 0,
+  "nodes_expanded": 5,
+  "edges_considered": 6,
+  "max_queue_size": 3,
+  "target_reached": false
+}
+gds-dijkstra-stream.ts:
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.19s
+     Running `/home/pat/VSCode/organon/target/debug/tsjson_cli '[{"kind":"ApplicationForm","facade":"graph_store","op":"put","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"dijkstra-1779464515957","snapshot":{"nodes":[0,1,2,3,4],"relationships":[{"type":"ROAD","source":0,"target":1,"properties":{"weight":1}},{"type":"ROAD","source":1,"target":3,"properties":{"weight":2}},{"type":"ROAD","source":0,"target":2,"properties":{"weight":5}},{"type":"ROAD","source":1,"target":4,"properties":{"weight":1}},{"type":"ROAD","source":2,"target":4,"properties":{"weight":1}}]}},{"kind":"ApplicationForm","facade":"algorithms","op":"dijkstra","mode":"stream","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"dijkstra-1779464515957","sourceNode":0,"targetNode":3,"weightProperty":"weight","direction":"outgoing","concurrency":1}]'`
+[INFO] dijkstra::stream - Start
+[INFO] dijkstra - Start
+[PROGRESS] 40% - dijkstra
+[PROGRESS] 80% - dijkstra
+[PROGRESS] 100% - dijkstra
+[INFO] dijkstra - Finished
+[PROGRESS] 100% - dijkstra::stream
+[INFO] dijkstra::stream - Finished
+batch.response: [
+  {
+    ok: true,
+    op: 'put',
+    data: {
+      graphName: 'dijkstra-1779464515957',
+      nodeCount: 5,
+      relationshipCount: 5
+    }
+  },
+  { ok: true, op: 'dijkstra', data: [ [Object] ] }
+]
+[ { source: 0, target: 3, path: [ 0, 1, 3 ], cost: 3 } ]
+gds-graph-exists.ts:
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.19s
+     Running `/home/pat/VSCode/organon/target/debug/tsjson_cli '[{"kind":"ApplicationForm","facade":"graph_store_catalog","op":"graphExists","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"exists-1779464516711"},{"kind":"ApplicationForm","facade":"graph_store","op":"put","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"exists-1779464516711","snapshot":{"nodes":[0,1],"relationships":[{"type":"KNOWS","source":0,"target":1}]}},{"kind":"ApplicationForm","facade":"graph_store_catalog","op":"graphExists","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"exists-1779464516711"}]'`
+{
+  before: {
+    ok: true,
+    op: 'graphExists',
+    data: { graphName: 'exists-1779464516711', exists: false }
+  },
+  put: {
+    ok: true,
+    op: 'put',
+    data: {
+      graphName: 'exists-1779464516711',
+      nodeCount: 2,
+      relationshipCount: 1
+    }
+  },
+  after: {
+    ok: true,
+    op: 'graphExists',
+    data: { graphName: 'exists-1779464516711', exists: true }
+  }
+}
+gds-list-graphs-admin-scope.ts:
+batch.request: [
+  {
+    kind: 'ApplicationForm',
+    facade: 'graph_store',
+    op: 'put',
+    user: { username: 'alice', isAdmin: false },
+    databaseId: 'db1',
+    graphName: 'alice-1779464517456',
+    snapshot: { nodes: [Array], relationships: [Array] }
+  },
+  {
+    kind: 'ApplicationForm',
+    facade: 'graph_store',
+    op: 'put',
+    user: { username: 'bob', isAdmin: false },
+    databaseId: 'db1',
+    graphName: 'bob-1779464517456',
+    snapshot: { nodes: [Array], relationships: [Array] }
+  },
+  {
+    kind: 'ApplicationForm',
+    facade: 'graph_store_catalog',
+    op: 'listGraphs',
+    user: { username: 'alice', isAdmin: false },
+    databaseId: 'db1'
+  },
+  {
+    kind: 'ApplicationForm',
+    facade: 'graph_store_catalog',
+    op: 'listGraphs',
+    user: { username: 'bob', isAdmin: false },
+    databaseId: 'db1'
+  },
+  {
+    kind: 'ApplicationForm',
+    facade: 'graph_store_catalog',
+    op: 'listGraphs',
+    user: { username: 'root', isAdmin: true },
+    databaseId: 'db1'
+  }
+]
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.20s
+     Running `/home/pat/VSCode/organon/target/debug/tsjson_cli '[{"kind":"ApplicationForm","facade":"graph_store","op":"put","user":{"username":"alice","isAdmin":false},"databaseId":"db1","graphName":"alice-1779464517456","snapshot":{"nodes":[0,1],"relationships":[{"type":"KNOWS","source":0,"target":1}]}},{"kind":"ApplicationForm","facade":"graph_store","op":"put","user":{"username":"bob","isAdmin":false},"databaseId":"db1","graphName":"bob-1779464517456","snapshot":{"nodes":[0,1,2],"relationships":[{"type":"KNOWS","source":0,"target":1}]}},{"kind":"ApplicationForm","facade":"graph_store_catalog","op":"listGraphs","user":{"username":"alice","isAdmin":false},"databaseId":"db1"},{"kind":"ApplicationForm","facade":"graph_store_catalog","op":"listGraphs","user":{"username":"bob","isAdmin":false},"databaseId":"db1"},{"kind":"ApplicationForm","facade":"graph_store_catalog","op":"listGraphs","user":{"username":"root","isAdmin":true},"databaseId":"db1"}]'`
+batch.response: [
+  {
+    ok: true,
+    op: 'put',
+    data: {
+      graphName: 'alice-1779464517456',
+      nodeCount: 2,
+      relationshipCount: 1
+    }
+  },
+  {
+    ok: true,
+    op: 'put',
+    data: {
+      graphName: 'bob-1779464517456',
+      nodeCount: 3,
+      relationshipCount: 1
+    }
+  },
+  { ok: true, op: 'listGraphs', data: { entries: [Array] } },
+  { ok: true, op: 'listGraphs', data: { entries: [Array] } },
+  { ok: true, op: 'listGraphs', data: { entries: [Array] } }
+]
+{
+  aliceEntries: [ 'alice-1779464517456' ],
+  bobEntries: [ 'bob-1779464517456' ],
+  adminEntries: [ 'bob-1779464517456', 'alice-1779464517456' ]
+}
+gds-list-graphs.ts:
+batch.request: [
+  {
+    kind: 'ApplicationForm',
+    facade: 'graph_store',
+    op: 'put',
+    user: { username: 'alice', isAdmin: true },
+    databaseId: 'db1',
+    graphName: 'demo-1779464518212',
+    snapshot: { nodes: [Array], relationships: [Array] }
+  },
+  {
+    kind: 'ApplicationForm',
+    facade: 'graph_store_catalog',
+    op: 'listGraphs',
+    user: { username: 'alice', isAdmin: true },
+    databaseId: 'db1',
+    graphName: 'demo-1779464518212',
+    includeDegreeDistribution: true
+  }
+]
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.19s
+     Running `/home/pat/VSCode/organon/target/debug/tsjson_cli '[{"kind":"ApplicationForm","facade":"graph_store","op":"put","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"demo-1779464518212","snapshot":{"nodes":[0,1,2],"relationships":[{"type":"KNOWS","source":0,"target":1},{"type":"KNOWS","source":1,"target":2}]}},{"kind":"ApplicationForm","facade":"graph_store_catalog","op":"listGraphs","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"demo-1779464518212","includeDegreeDistribution":true}]'`
+batch.response: [
+  {
+    ok: true,
+    op: 'put',
+    data: {
+      graphName: 'demo-1779464518212',
+      nodeCount: 3,
+      relationshipCount: 2
+    }
+  },
+  { ok: true, op: 'listGraphs', data: { entries: [Array] } }
+]
+{
+  entries: [
+    {
+      name: 'demo-1779464518212',
+      nodeCount: 3,
+      relationshipCount: 2,
+      degreeDistribution: { '0': 1, '1': 2 }
+    }
+  ]
+}
+gds-pagerank-estimate.ts:
+PageRank Estimate Request:
+{
+  "kind": "ApplicationForm",
+  "facade": "algorithms",
+  "op": "pagerank",
+  "mode": "estimate",
+  "submode": "memory",
+  "user": {
+    "username": "alice",
+    "isAdmin": true
+  },
+  "databaseId": "db1",
+  "graphName": "pagerank-estimate-1779464518949",
+  "maxIterations": 20,
+  "dampingFactor": 0.85,
+  "tolerance": 0.0001,
+  "concurrency": 1
+}
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.19s
+     Running `/home/pat/VSCode/organon/target/debug/tsjson_cli '[{"kind":"ApplicationForm","facade":"graph_store","op":"put","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"pagerank-estimate-1779464518949","snapshot":{"nodes":[0,1,2,3],"relationships":[{"type":"FOLLOWS","source":0,"target":1},{"type":"FOLLOWS","source":1,"target":2},{"type":"FOLLOWS","source":2,"target":0},{"type":"FOLLOWS","source":1,"target":3},{"type":"FOLLOWS","source":3,"target":2}]}},{"kind":"ApplicationForm","facade":"algorithms","op":"pagerank","mode":"estimate","submode":"memory","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"pagerank-estimate-1779464518949","maxIterations":20,"dampingFactor":0.85,"tolerance":0.0001,"concurrency":1}]'`
+
+PageRank Estimate Response:
+{
+  "min_bytes": 168,
+  "max_bytes": 168
+}
+gds-pagerank-stats.ts:
+PageRank Stats Request:
+{
+  "kind": "ApplicationForm",
+  "facade": "algorithms",
+  "op": "pagerank",
+  "mode": "stats",
+  "user": {
+    "username": "alice",
+    "isAdmin": true
+  },
+  "databaseId": "db1",
+  "graphName": "pagerank-stats-1779464519701",
+  "maxIterations": 20,
+  "dampingFactor": 0.85,
+  "tolerance": 0.0001,
+  "concurrency": 1
+}
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.20s
+     Running `/home/pat/VSCode/organon/target/debug/tsjson_cli '[{"kind":"ApplicationForm","facade":"graph_store","op":"put","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"pagerank-stats-1779464519701","snapshot":{"nodes":[0,1,2,3],"relationships":[{"type":"FOLLOWS","source":0,"target":1},{"type":"FOLLOWS","source":1,"target":2},{"type":"FOLLOWS","source":2,"target":0},{"type":"FOLLOWS","source":1,"target":3},{"type":"FOLLOWS","source":3,"target":2}]}},{"kind":"ApplicationForm","facade":"algorithms","op":"pagerank","mode":"stats","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"pagerank-stats-1779464519701","maxIterations":20,"dampingFactor":0.85,"tolerance":0.0001,"concurrency":1}]'`
+[INFO] pagerank::stats - Start
+[INFO] PageRank - Start
+[PROGRESS] 5% - PageRank
+[PROGRESS] 10% - PageRank
+[PROGRESS] 15% - PageRank
+[PROGRESS] 20% - PageRank
+[PROGRESS] 25% - PageRank
+[PROGRESS] 30% - PageRank
+[PROGRESS] 35% - PageRank
+[PROGRESS] 40% - PageRank
+[PROGRESS] 45% - PageRank
+[PROGRESS] 50% - PageRank
+[PROGRESS] 55% - PageRank
+[PROGRESS] 60% - PageRank
+[PROGRESS] 65% - PageRank
+[PROGRESS] 70% - PageRank
+[PROGRESS] 75% - PageRank
+[PROGRESS] 80% - PageRank
+[PROGRESS] 85% - PageRank
+[PROGRESS] 90% - PageRank
+[PROGRESS] 95% - PageRank
+[PROGRESS] 100% - PageRank
+[PROGRESS] 100% - PageRank
+[INFO] PageRank - Finished
+[PROGRESS] 100% - pagerank::stats
+[INFO] pagerank::stats - Finished
+
+PageRank Stats Response:
+{
+  "node_count": 4,
+  "min": 0.6014467628233566,
+  "max": 1.1099353342299088,
+  "mean": 0.9670543985781628,
+  "stddev": 0.211581409762017,
+  "p50": 1.0878854638554876,
+  "p90": 1.1099353342299088,
+  "p99": 1.1099353342299088,
+  "iterations_ran": 20,
+  "converged": false,
+  "execution_time_ms": 0
+}
+gds-pagerank-stream.ts:
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.19s
+     Running `/home/pat/VSCode/organon/target/debug/tsjson_cli '[{"kind":"ApplicationForm","facade":"graph_store","op":"put","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"pr-1779464520467","snapshot":{"nodes":[1,2,3],"relationships":[{"type":"KNOWS","source":1,"target":2,"properties":{"weight":1}},{"type":"KNOWS","source":2,"target":3,"properties":{"weight":1}},{"type":"KNOWS","source":3,"target":1,"properties":{"weight":1}}]}},{"kind":"ApplicationForm","facade":"algorithms","op":"pagerank","mode":"stream","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"pr-1779464520467","relationshipTypes":["KNOWS"],"weightProperty":"weight","config":{"maxIterations":20,"dampingFactor":0.85,"tolerance":1e-9}}]'`
+[INFO] pagerank::stream - Start
+[INFO] PageRank - Start
+[PROGRESS] 5% - PageRank
+[PROGRESS] 10% - PageRank
+[PROGRESS] 15% - PageRank
+[PROGRESS] 20% - PageRank
+[PROGRESS] 25% - PageRank
+[PROGRESS] 30% - PageRank
+[PROGRESS] 35% - PageRank
+[PROGRESS] 40% - PageRank
+[PROGRESS] 45% - PageRank
+[PROGRESS] 50% - PageRank
+[PROGRESS] 55% - PageRank
+[PROGRESS] 60% - PageRank
+[PROGRESS] 65% - PageRank
+[PROGRESS] 70% - PageRank
+[PROGRESS] 75% - PageRank
+[PROGRESS] 80% - PageRank
+[PROGRESS] 85% - PageRank
+[PROGRESS] 90% - PageRank
+[PROGRESS] 95% - PageRank
+[PROGRESS] 100% - PageRank
+[PROGRESS] 100% - PageRank
+[INFO] PageRank - Finished
+[PROGRESS] 100% - pagerank::stream
+[INFO] pagerank::stream - Finished
+batch.response: [
+  {
+    ok: true,
+    op: 'put',
+    data: {
+      graphName: 'pr-1779464520467',
+      nodeCount: 3,
+      relationshipCount: 3
+    }
+  },
+  { ok: true, op: 'pagerank', data: [ [Object], [Object], [Object] ] }
+]
+{
+  graphName: 'pr-1779464520467',
+  rows: [
+    { node_id: 0, score: 0.9670543985781628 },
+    { node_id: 1, score: 0.9670543985781628 },
+    { node_id: 2, score: 0.9670543985781628 }
+  ]
+}
+gds-ping.ts:
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.19s
+     Running `/home/pat/VSCode/organon/target/debug/tsjson_cli '{"op":"ping","nonce":"n-1779464521230"}'`
+request: { op: 'ping', nonce: 'n-1779464521230' }
+response: { ok: true, op: 'ping', data: { nonce: 'n-1779464521230' } }
+gds-project-native-prune-properties.ts:
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.19s
+     Running `/home/pat/VSCode/organon/target/debug/tsjson_cli '[{"kind":"ApplicationForm","facade":"graph_store","op":"put","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"srcprops-1779464522009","snapshot":{"nodes":[10,11,12],"relationships":[{"type":"KNOWS","source":10,"target":11,"properties":{"weight":1.5,"hops":1}},{"type":"KNOWS","source":11,"target":12,"properties":{"weight":2.25,"hops":2}}],"nodeProperties":{"score":[1,2,3],"weight":[0.1,0.2,0.3]}}},{"kind":"ApplicationForm","facade":"graph_store_catalog","op":"subGraphProject","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"projprops-1779464522009","originGraphName":"srcprops-1779464522009","nodeFilter":"*","relationshipFilter":"KNOWS","configuration":{}},{"kind":"ApplicationForm","facade":"graph_store_catalog","op":"streamNodeProperties","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"projprops-1779464522009","nodeProperties":["score","weight"],"listNodeLabels":false,"nodeLabels":["*"]},{"kind":"ApplicationForm","facade":"graph_store_catalog","op":"streamRelationshipProperties","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"projprops-1779464522009","relationshipTypes":["KNOWS"],"relationshipProperties":["weight","hops"]}]'`
+batch.response: [
+  {
+    ok: true,
+    op: 'put',
+    data: {
+      graphName: 'srcprops-1779464522009',
+      nodeCount: 3,
+      relationshipCount: 2
+    }
+  },
+  {
+    ok: true,
+    op: 'subGraphProject',
+    data: {
+      graphName: 'projprops-1779464522009',
+      fromGraphName: 'srcprops-1779464522009',
+      nodeFilter: '*',
+      relationshipFilter: 'KNOWS',
+      nodeCount: 3,
+      relationshipCount: 2,
+      filterMillis: 0
+    }
+  },
+  {
+    ok: true,
+    op: 'streamNodeProperties',
+    data: { graphName: 'projprops-1779464522009', results: [Array] }
+  },
+  {
+    ok: true,
+    op: 'streamRelationshipProperties',
+    data: { graphName: 'projprops-1779464522009', results: [Array] }
+  }
+]
+{
+  sourceGraphName: 'srcprops-1779464522009',
+  projectedGraphName: 'projprops-1779464522009',
+  nodeRows: [
+    {
+      node_id: 10,
+      node_property: 'score',
+      property_value: 1,
+      node_labels: []
+    },
+    {
+      node_id: 10,
+      node_property: 'weight',
+      property_value: 0.1,
+      node_labels: []
+    },
+    {
+      node_id: 11,
+      node_property: 'score',
+      property_value: 2,
+      node_labels: []
+    },
+    {
+      node_id: 11,
+      node_property: 'weight',
+      property_value: 0.2,
+      node_labels: []
+    },
+    {
+      node_id: 12,
+      node_property: 'score',
+      property_value: 3,
+      node_labels: []
+    },
+    {
+      node_id: 12,
+      node_property: 'weight',
+      property_value: 0.3,
+      node_labels: []
+    }
+  ],
+  relRows: [
+    {
+      source_node_id: 10,
+      target_node_id: 11,
+      relationship_type: 'KNOWS',
+      relationship_property: 'weight',
+      property_value: 1.5
+    },
+    {
+      source_node_id: 11,
+      target_node_id: 12,
+      relationship_type: 'KNOWS',
+      relationship_property: 'weight',
+      property_value: 2.25
+    },
+    {
+      source_node_id: 10,
+      target_node_id: 11,
+      relationship_type: 'KNOWS',
+      relationship_property: 'hops',
+      property_value: 1
+    },
+    {
+      source_node_id: 11,
+      target_node_id: 12,
+      relationship_type: 'KNOWS',
+      relationship_property: 'hops',
+      property_value: 2
+    }
+  ]
+}
+gds-project-native.ts:
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.20s
+     Running `/home/pat/VSCode/organon/target/debug/tsjson_cli '[{"kind":"ApplicationForm","facade":"graph_store","op":"put","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"src-1779464522772","snapshot":{"nodes":[1,2,3],"relationships":[{"type":"KNOWS","source":1,"target":2},{"type":"LIKES","source":2,"target":3}]}},{"kind":"ApplicationForm","facade":"graph_store_catalog","op":"subGraphProject","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"proj-1779464522772","originGraphName":"src-1779464522772","nodeFilter":"*","relationshipFilter":"KNOWS","configuration":{}},{"kind":"ApplicationForm","facade":"graph_store_catalog","op":"listGraphs","user":{"username":"alice","isAdmin":true},"databaseId":"db1","includeDegreeDistribution":false}]'`
+batch.response: [
+  {
+    ok: true,
+    op: 'put',
+    data: {
+      graphName: 'src-1779464522772',
+      nodeCount: 3,
+      relationshipCount: 2
+    }
+  },
+  {
+    ok: true,
+    op: 'subGraphProject',
+    data: {
+      graphName: 'proj-1779464522772',
+      fromGraphName: 'src-1779464522772',
+      nodeFilter: '*',
+      relationshipFilter: 'KNOWS',
+      nodeCount: 3,
+      relationshipCount: 2,
+      filterMillis: 0
+    }
+  },
+  { ok: true, op: 'listGraphs', data: { entries: [Array] } }
+]
+{
+  sourceGraphName: 'src-1779464522772',
+  projectedGraphName: 'proj-1779464522772',
+  project: {
+    graphName: 'proj-1779464522772',
+    fromGraphName: 'src-1779464522772',
+    nodeFilter: '*',
+    relationshipFilter: 'KNOWS',
+    nodeCount: 3,
+    relationshipCount: 2,
+    filterMillis: 0
+  },
+  entries: [
+    { name: 'src-1779464522772', nodeCount: 3, relationshipCount: 2 },
+    { name: 'proj-1779464522772', nodeCount: 3, relationshipCount: 2 }
+  ]
+}
+gds-stream-node-properties.ts:
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.19s
+     Running `/home/pat/VSCode/organon/target/debug/tsjson_cli '[{"kind":"ApplicationForm","facade":"graph_store","op":"put","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"nodeprops-1779464523556","snapshot":{"nodes":[100,101,102],"relationships":[{"type":"KNOWS","source":100,"target":101}],"nodeProperties":{"score":[1,2,3],"weight":[0.1,0.2,0.3]}}},{"kind":"ApplicationForm","facade":"graph_store_catalog","op":"streamNodeProperties","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"nodeprops-1779464523556","nodeProperties":["score","weight"]}]'`
+batch.response: [
+  {
+    ok: true,
+    op: 'put',
+    data: {
+      graphName: 'nodeprops-1779464523556',
+      nodeCount: 3,
+      relationshipCount: 1
+    }
+  },
+  {
+    ok: true,
+    op: 'streamNodeProperties',
+    data: { graphName: 'nodeprops-1779464523556', results: [Array] }
+  }
+]
+{
+  graphName: 'nodeprops-1779464523556',
+  rows: [
+    {
+      node_id: 100,
+      node_property: 'score',
+      property_value: 1,
+      node_labels: []
+    },
+    {
+      node_id: 100,
+      node_property: 'weight',
+      property_value: 0.1,
+      node_labels: []
+    },
+    {
+      node_id: 101,
+      node_property: 'score',
+      property_value: 2,
+      node_labels: []
+    },
+    {
+      node_id: 101,
+      node_property: 'weight',
+      property_value: 0.2,
+      node_labels: []
+    },
+    {
+      node_id: 102,
+      node_property: 'score',
+      property_value: 3,
+      node_labels: []
+    },
+    {
+      node_id: 102,
+      node_property: 'weight',
+      property_value: 0.3,
+      node_labels: []
+    }
+  ]
+}
+gds-stream-relationship-properties.ts:
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.20s
+     Running `/home/pat/VSCode/organon/target/debug/tsjson_cli '[{"kind":"ApplicationForm","facade":"graph_store","op":"put","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"relprops-1779464524335","snapshot":{"nodes":[0,1,2],"relationships":[{"type":"KNOWS","source":0,"target":1,"properties":{"weight":1.5,"hops":1}},{"type":"KNOWS","source":1,"target":2,"properties":{"weight":2.25,"hops":2}},{"type":"LIKES","source":0,"target":2,"properties":{"weight":0.5,"hops":1}}]}},{"kind":"ApplicationForm","facade":"graph_store_catalog","op":"streamRelationshipProperties","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"relprops-1779464524335","relationshipTypes":["KNOWS"],"relationshipProperties":["weight","hops"]}]'`
+batch.response: [
+  {
+    ok: true,
+    op: 'put',
+    data: {
+      graphName: 'relprops-1779464524335',
+      nodeCount: 3,
+      relationshipCount: 3
+    }
+  },
+  {
+    ok: true,
+    op: 'streamRelationshipProperties',
+    data: { graphName: 'relprops-1779464524335', results: [Array] }
+  }
+]
+{
+  graphName: 'relprops-1779464524335',
+  rows: [
+    {
+      source_node_id: 0,
+      target_node_id: 1,
+      relationship_type: 'KNOWS',
+      relationship_property: 'weight',
+      property_value: 1.5
+    },
+    {
+      source_node_id: 1,
+      target_node_id: 2,
+      relationship_type: 'KNOWS',
+      relationship_property: 'weight',
+      property_value: 2.25
+    },
+    {
+      source_node_id: 0,
+      target_node_id: 1,
+      relationship_type: 'KNOWS',
+      relationship_property: 'hops',
+      property_value: 1
+    },
+    {
+      source_node_id: 1,
+      target_node_id: 2,
+      relationship_type: 'KNOWS',
+      relationship_property: 'hops',
+      property_value: 2
+    }
+  ]
+}
+gds-stream-relationships.ts:
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.19s
+     Running `/home/pat/VSCode/organon/target/debug/tsjson_cli '[{"kind":"ApplicationForm","facade":"graph_store","op":"put","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"stream-1779464525125","snapshot":{"nodes":[10,11,12],"relationships":[{"type":"KNOWS","source":10,"target":11},{"type":"KNOWS","source":11,"target":12},{"type":"LIKES","source":10,"target":12}]}},{"kind":"ApplicationForm","facade":"graph_store_catalog","op":"streamRelationships","user":{"username":"alice","isAdmin":true},"databaseId":"db1","graphName":"stream-1779464525125","relationshipTypes":["KNOWS"]}]'`
+batch.response: [
+  {
+    ok: true,
+    op: 'put',
+    data: {
+      graphName: 'stream-1779464525125',
+      nodeCount: 3,
+      relationshipCount: 3
+    }
+  },
+  {
+    ok: true,
+    op: 'streamRelationships',
+    data: { graphName: 'stream-1779464525125', results: [Array] }
+  }
+]
+{
+  graphName: 'stream-1779464525125',
+  rows: [
+    {
+      source_node_id: 10,
+      target_node_id: 11,
+      relationship_type: 'KNOWS'
+    },
+    {
+      source_node_id: 11,
+      target_node_id: 12,
+      relationship_type: 'KNOWS'
+    }
+  ]
+}
+gds-version.ts:
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.19s
+     Running `/home/pat/VSCode/organon/target/debug/tsjson_cli '{"op":"version"}'`
+request: { op: 'version' }
+response: { ok: true, op: 'version', data: { crate: 'gds', version: '0.1.0' } }

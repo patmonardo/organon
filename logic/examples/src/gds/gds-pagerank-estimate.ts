@@ -37,7 +37,7 @@ export function pagerankEstimateDemo(): void {
       facade: 'algorithms',
       op: 'pagerank',
       mode: 'estimate',
-      estimateSubmode: 'memory',
+      submode: 'memory',
       user,
       databaseId,
       graphName,

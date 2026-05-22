@@ -82,8 +82,8 @@ export function projectNativePrunePropertiesDemo(): void {
   // eslint-disable-next-line no-console
   console.log('batch.response:', resp);
 
-  const nodeRows = resp?.[2]?.data?.rows ?? [];
-  const relRows = resp?.[3]?.data?.rows ?? [];
+  const nodeRows = resp?.[2]?.data?.results ?? [];
+  const relRows = resp?.[3]?.data?.results ?? [];
   // eslint-disable-next-line no-console
   console.dir(
     { sourceGraphName, projectedGraphName, nodeRows, relRows },

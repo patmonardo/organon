@@ -38,7 +38,7 @@ export function closenessCentralityEstimateDemo(): void {
       facade: 'algorithms',
       op: 'closeness',
       mode: 'estimate',
-      estimateSubmode: 'memory',
+      submode: 'memory',
       user,
       databaseId,
       graphName,

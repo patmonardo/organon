@@ -1,12 +1,12 @@
 /**
- * Example: GraphStore Catalog facade (list_graphs)
+ * Example: GraphStore Catalog facade (listGraphs)
  *
  * This stays **Rajasic / GDS-L**: we exercise a single real facade op using the
  * TS-JSON boundary against the Rust kernel CLI (`tsjson_cli`).
  *
  * Flow:
  * - graph_store.put (seed a tiny graph into the shared catalog)
- * - graph_store_catalog.list_graphs (observe the catalog entries)
+ * - graph_store_catalog.listGraphs (observe the catalog entries)
  */
 
 /// <reference types="node" />

@@ -44,7 +44,7 @@ export function streamNodePropertiesDemo(): void {
   // eslint-disable-next-line no-console
   console.log('batch.response:', resp);
 
-  const rows = resp?.[1]?.data?.rows ?? [];
+  const rows = resp?.[1]?.data?.results ?? [];
   // eslint-disable-next-line no-console
   console.dir({ graphName, rows }, { depth: null });
 }

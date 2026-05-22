@@ -38,7 +38,7 @@ export function betweennessCentralityEstimateDemo(): void {
       facade: 'algorithms',
       op: 'betweenness',
       mode: 'estimate',
-      estimateSubmode: 'memory',
+      submode: 'memory',
       user,
       databaseId,
       graphName,

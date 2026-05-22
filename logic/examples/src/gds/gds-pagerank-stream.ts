@@ -51,7 +51,7 @@ export function pagerankStreamDemo(): void {
   // eslint-disable-next-line no-console
   console.log('batch.response:', resp);
 
-  const rows = resp?.[1]?.data?.rows ?? [];
+  const rows = resp?.[1]?.data ?? [];
   // eslint-disable-next-line no-console
   console.dir({ graphName, rows }, { depth: null });
 }

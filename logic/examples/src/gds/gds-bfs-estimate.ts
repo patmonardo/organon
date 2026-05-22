@@ -41,7 +41,7 @@ export function bfsEstimateDemo(): void {
       databaseId,
       graphName,
       sourceNode: 0,
-      targetNodes: [3],
+      targets: [3],
       maxDepth: 10,
       trackPaths: true,
       concurrency: 1,

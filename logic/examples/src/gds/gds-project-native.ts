@@ -49,7 +49,7 @@ export function projectNativeDemo(): void {
     {
       kind: 'ApplicationForm',
       facade: 'graph_store_catalog',
-      op: 'list_graphs',
+      op: 'listGraphs',
       user,
       databaseId,
       includeDegreeDistribution: false,

@@ -44,7 +44,7 @@ export function streamRelationshipsDemo(): void {
   // eslint-disable-next-line no-console
   console.log('batch.response:', resp);
 
-  const rows = resp?.[1]?.data?.relationships ?? [];
+  const rows = resp?.[1]?.data?.results ?? [];
   // eslint-disable-next-line no-console
   console.dir({ graphName, rows }, { depth: null });
 }

@@ -37,6 +37,10 @@ function buildGraphPut(graphName: string): Request {
         { type: 'ROAD', source: 0, target: 4, properties: { weight: 2.0 } },
         { type: 'ROAD', source: 4, target: 3, properties: { weight: 2.0 } },
       ],
+      nodeProperties: {
+        latitude: [37.78, 37.79, 37.8, 37.81, 37.785],
+        longitude: [-122.42, -122.41, -122.4, -122.39, -122.425],
+      },
     },
   };
 }
@@ -83,7 +87,7 @@ function buildPathfindingRequests(graphName: string): AlgoRequest[] {
         target: 3,
         weightProperty: 'weight',
         direction: 'outgoing',
-        heuristic: 'manhattan',
+        heuristic: 'haversine',
       },
     },
     {
