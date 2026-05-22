@@ -13,7 +13,7 @@ use crate::algo::kspanningtree::{
     KSpanningTreeResultBuilder, KSpanningTreeRow, KSpanningTreeStats,
 };
 use crate::concurrency::TerminationFlag;
-use crate::core::utils::progress::Tasks;
+use crate::core::utils::progress::{EmptyTaskRegistryFactory, TaskRegistryFactory, Tasks};
 use crate::mem::MemoryRange;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
@@ -22,15 +22,15 @@ use std::collections::HashSet;
 use std::sync::Arc;
 use std::time::Instant;
 
-// Additional imports for error handling and progress tracking
 use crate::core::utils::progress::TaskProgressTracker;
 use crate::projection::eval::algorithm::AlgorithmError;
 
 /// K-Spanning Tree algorithm builder
-#[derive(Clone)]
 pub struct KSpanningTreeBuilder {
     graph_store: Arc<DefaultGraphStore>,
     config: KSpanningTreeConfig,
+    task_registry_factory: Option<Box<dyn TaskRegistryFactory>>,
+    user_log_registry_factory: Option<Box<dyn TaskRegistryFactory>>, // Placeholder for now
 }
 
 impl KSpanningTreeBuilder {
@@ -38,6 +38,8 @@ impl KSpanningTreeBuilder {
         Self {
             graph_store,
             config: KSpanningTreeConfig::default(),
+            task_registry_factory: None,
+            user_log_registry_factory: None,
         }
     }
 
@@ -53,6 +55,8 @@ impl KSpanningTreeBuilder {
         Ok(Self {
             graph_store,
             config,
+            task_registry_factory: None,
+            user_log_registry_factory: None,
         })
     }
 
@@ -95,15 +99,34 @@ impl KSpanningTreeBuilder {
         self
     }
 
-    fn validate(&self) -> Result<()> {
-        self.config
-            .validate()
-            .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))
+    /// Set task registry factory for progress tracking
+    pub fn task_registry_factory(mut self, factory: Box<dyn TaskRegistryFactory>) -> Self {
+        self.task_registry_factory = Some(factory);
+        self
+    }
+
+    /// Set user log registry factory for progress tracking
+    pub fn user_log_registry_factory(mut self, factory: Box<dyn TaskRegistryFactory>) -> Self {
+        self.user_log_registry_factory = Some(factory);
+        self
     }
 
     #[allow(clippy::type_complexity)]
     fn compute(&self) -> Result<(KSpanningTreeResult, std::time::Duration)> {
-        self.validate()?;
+        self.config
+            .validate()
+            .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
+
+        // Touch optional factories to keep facade ergonomics aligned with peers.
+        let _task_registry_factory = self
+            .task_registry_factory
+            .as_deref()
+            .unwrap_or(&EmptyTaskRegistryFactory);
+        let _user_log_registry_factory = self
+            .user_log_registry_factory
+            .as_deref()
+            .unwrap_or(&EmptyTaskRegistryFactory);
+
         let start = Instant::now();
         let source = self.config.source_node;
 
@@ -164,21 +187,23 @@ impl KSpanningTreeBuilder {
     }
 
     /// Stream mode: yields (node_id, parent_id, cost) for each node in the tree
-    pub fn stream(&self) -> Result<Box<dyn Iterator<Item = KSpanningTreeRow>>> {
+    pub fn stream(self) -> Result<Box<dyn Iterator<Item = KSpanningTreeRow>>> {
         let (result, elapsed) = self.compute()?;
         let rows = KSpanningTreeResultBuilder::new(result, elapsed).rows();
         Ok(Box::new(rows.into_iter()))
     }
 
     /// Stats mode: returns aggregated statistics
-    pub fn stats(&self) -> Result<KSpanningTreeStats> {
+    pub fn stats(self) -> Result<KSpanningTreeStats> {
         let (result, elapsed) = self.compute()?;
         Ok(KSpanningTreeResultBuilder::new(result, elapsed).stats())
     }
 
     /// Mutate mode: writes results back to the graph store
-    pub fn mutate(&self, property_name: &str) -> Result<KSpanningTreeMutateResult> {
-        self.validate()?;
+    pub fn mutate(self, property_name: &str) -> Result<KSpanningTreeMutateResult> {
+        self.config
+            .validate()
+            .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
         ConfigValidator::non_empty_string(property_name, "property_name")?;
         let (result, elapsed) = self.compute()?;
         let builder = KSpanningTreeResultBuilder::new(result, elapsed);
@@ -199,8 +224,10 @@ impl KSpanningTreeBuilder {
     }
 
     /// Write mode: writes results to external storage
-    pub fn write(&self, property_name: &str) -> Result<WriteResult> {
-        self.validate()?;
+    pub fn write(self, property_name: &str) -> Result<WriteResult> {
+        self.config
+            .validate()
+            .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
         ConfigValidator::non_empty_string(property_name, "property_name")?;
         let res = self.mutate(property_name)?;
         Ok(WriteResult::new(

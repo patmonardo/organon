@@ -160,14 +160,14 @@ impl DagLongestPathBuilder {
     }
 
     /// Estimate memory usage for the computation
-    pub fn estimate_memory(&self) -> Result<MemoryRange> {
+    pub fn estimate_memory(&self) -> MemoryRange {
         let node_count = self.graph_store.node_count();
         let relationship_count = self.graph_store.relationship_count();
         let per_node = node_count * (std::mem::size_of::<f64>() + std::mem::size_of::<i64>() * 2);
         let graph_overhead = relationship_count * 16;
         let worker_state = node_count * std::mem::size_of::<usize>() * self.concurrency.max(1);
         let total = per_node + graph_overhead + worker_state;
-        Ok(MemoryRange::of_range(total, total + total / 5))
+        MemoryRange::of_range(total, total + total / 5)
     }
 }
 
@@ -276,9 +276,7 @@ mod tests {
     fn estimate_memory_uses_actual_relationship_count() {
         let store = Arc::new(store_from_directed_edges(4, &[(0, 1), (1, 2), (2, 3)]));
         let relationship_count = store.relationship_count();
-        let estimate = DagLongestPathBuilder::new(Arc::clone(&store))
-            .estimate_memory()
-            .unwrap();
+        let estimate = DagLongestPathBuilder::new(Arc::clone(&store)).estimate_memory();
 
         let node_count = store.node_count();
         let expected_min = node_count

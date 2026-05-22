@@ -203,21 +203,15 @@ pub fn handle_steiner_tree(request: &Value, catalog: Arc<dyn GraphCatalog>) -> V
                     builder = builder.relationship_weight_property(prop);
                 }
 
-                match builder.estimate_memory().map_err(|e| e.to_string()) {
-                    Ok(memory) => json!({
-                        "ok": true,
-                        "op": op,
-                        "data": {
-                            "minBytes": memory.min(),
-                            "maxBytes": memory.max()
-                        }
-                    }),
-                    Err(e) => err(
-                        op,
-                        "EXECUTION_ERROR",
-                        &format!("SteinerTree estimate failed: {e}"),
-                    ),
-                }
+                let memory = builder.estimate_memory();
+                json!({
+                    "ok": true,
+                    "op": op,
+                    "data": {
+                        "minBytes": memory.min(),
+                        "maxBytes": memory.max()
+                    }
+                })
             }
             Some(other) => err(
                 op,

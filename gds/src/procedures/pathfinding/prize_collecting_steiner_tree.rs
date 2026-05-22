@@ -218,7 +218,7 @@ impl PCSTreeBuilder {
     }
 
     /// Estimate memory usage for the computation
-    pub fn estimate_memory(&self) -> Result<MemoryRange> {
+    pub fn estimate_memory(&self) -> MemoryRange {
         let node_count = self.graph_store.node_count();
         let relationship_count = self.graph_store.relationship_count();
         let per_node = node_count
@@ -228,7 +228,7 @@ impl PCSTreeBuilder {
         let frontier =
             relationship_count * (std::mem::size_of::<i64>() * 2 + std::mem::size_of::<f64>() * 2);
         let total = per_node + frontier;
-        Ok(MemoryRange::of_range(total, total + total / 5))
+        MemoryRange::of_range(total, total + total / 5)
     }
 }
 
@@ -284,9 +284,7 @@ mod tests {
         let store = store();
         let node_count = store.node_count();
         let relationship_count = store.relationship_count();
-        let estimate = PCSTreeBuilder::new(Arc::clone(&store))
-            .estimate_memory()
-            .unwrap();
+        let estimate = PCSTreeBuilder::new(Arc::clone(&store)).estimate_memory();
 
         let expected_min = node_count
             * (std::mem::size_of::<f64>() * 4

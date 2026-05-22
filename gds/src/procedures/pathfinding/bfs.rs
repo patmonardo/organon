@@ -34,7 +34,9 @@ use crate::algo::bfs::{
     BfsComputationRuntime, BfsConfig, BfsMutateResult, BfsResult, BfsResultBuilder, BfsStats,
     BfsStorageRuntime, BfsWriteSummary,
 };
-use crate::core::utils::progress::{TaskProgressTracker, Tasks};
+use crate::core::utils::progress::{
+    EmptyTaskRegistryFactory, TaskProgressTracker, TaskRegistryFactory, Tasks,
+};
 use crate::mem::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::Orientation;
@@ -74,6 +76,8 @@ use std::sync::Arc;
 pub struct BfsFacade {
     graph_store: Arc<DefaultGraphStore>,
     config: BfsConfig,
+    task_registry_factory: Option<Box<dyn TaskRegistryFactory>>,
+    user_log_registry_factory: Option<Box<dyn TaskRegistryFactory>>, // Placeholder for now
 }
 
 /// Backwards-compatible alias (builder-style naming).
@@ -93,6 +97,8 @@ impl BfsFacade {
         Self {
             graph_store,
             config: BfsConfig::default(),
+            task_registry_factory: None,
+            user_log_registry_factory: None,
         }
     }
 
@@ -108,6 +114,8 @@ impl BfsFacade {
         Ok(Self {
             graph_store,
             config,
+            task_registry_factory: None,
+            user_log_registry_factory: None,
         })
     }
 
@@ -191,6 +199,18 @@ impl BfsFacade {
         self
     }
 
+    /// Set task registry factory for progress tracking
+    pub fn task_registry_factory(mut self, factory: Box<dyn TaskRegistryFactory>) -> Self {
+        self.task_registry_factory = Some(factory);
+        self
+    }
+
+    /// Set user log registry factory for progress tracking
+    pub fn user_log_registry_factory(mut self, factory: Box<dyn TaskRegistryFactory>) -> Self {
+        self.user_log_registry_factory = Some(factory);
+        self
+    }
+
     /// Set delta parameter for chunking
     ///
     /// Affects internal chunking strategy.
@@ -204,6 +224,14 @@ impl BfsFacade {
         self.config
             .validate()
             .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
+
+        // Set up progress tracking placeholders for API consistency with other facades.
+        let _task_registry_factory = self
+            .task_registry_factory
+            .unwrap_or_else(|| Box::new(EmptyTaskRegistryFactory));
+        let _user_log_registry_factory = self
+            .user_log_registry_factory
+            .unwrap_or_else(|| Box::new(EmptyTaskRegistryFactory));
 
         // Create progress tracker for BFS execution.
         // We track progress in terms of relationships examined.

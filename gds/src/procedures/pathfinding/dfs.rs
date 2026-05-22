@@ -137,55 +137,6 @@ impl DfsFacade {
         Ok(self)
     }
 
-    fn compute(self) -> Result<PathFindingResult> {
-        self.config
-            .validate()
-            .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
-
-        // Set up progress tracking
-        let _task_registry_factory = self.task_registry_factory;
-
-        // Create progress tracker for DFS execution.
-        // We track progress in terms of relationships examined.
-        let task = Tasks::leaf("DFS".to_string());
-        let mut progress_tracker =
-            TaskProgressTracker::with_concurrency(task, self.config.concurrency);
-
-        let source_node = self.config.source_node;
-        let target_nodes = self.config.target_nodes.clone();
-
-        let storage = DfsStorageRuntime::new(
-            source_node,
-            target_nodes.clone(),
-            self.config.max_depth,
-            self.config.track_paths,
-            self.config.concurrency,
-        );
-
-        let rel_types: HashSet<RelationshipType> = HashSet::new();
-        let graph_view = self
-            .graph_store
-            .get_graph_with_types_and_orientation(&rel_types, Orientation::Natural)
-            .map_err(|e| AlgorithmError::Graph(e.to_string()))?;
-
-        let node_count = graph_view.node_count() as usize;
-
-        let mut computation = DfsComputationRuntime::new(
-            source_node,
-            self.config.track_paths,
-            self.config.concurrency,
-            node_count,
-        );
-
-        let start = std::time::Instant::now();
-        let result = storage.compute_dfs(
-            &mut computation,
-            Some(graph_view.as_ref()),
-            &mut progress_tracker,
-        )?;
-        DfsResultBuilder::result(result, start.elapsed(), source_node, target_nodes)
-    }
-
     /// Set source node
     ///
     /// The algorithm starts traversal from this node.
@@ -246,6 +197,55 @@ impl DfsFacade {
     pub fn concurrency(mut self, concurrency: usize) -> Self {
         self.config.concurrency = concurrency;
         self
+    }
+
+    fn compute(self) -> Result<PathFindingResult> {
+        self.config
+            .validate()
+            .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
+
+        // Set up progress tracking
+        let _task_registry_factory = self.task_registry_factory;
+
+        // Create progress tracker for DFS execution.
+        // We track progress in terms of relationships examined.
+        let task = Tasks::leaf("DFS".to_string());
+        let mut progress_tracker =
+            TaskProgressTracker::with_concurrency(task, self.config.concurrency);
+
+        let source_node = self.config.source_node;
+        let target_nodes = self.config.target_nodes.clone();
+
+        let storage = DfsStorageRuntime::new(
+            source_node,
+            target_nodes.clone(),
+            self.config.max_depth,
+            self.config.track_paths,
+            self.config.concurrency,
+        );
+
+        let rel_types: HashSet<RelationshipType> = HashSet::new();
+        let graph_view = self
+            .graph_store
+            .get_graph_with_types_and_orientation(&rel_types, Orientation::Natural)
+            .map_err(|e| AlgorithmError::Graph(e.to_string()))?;
+
+        let node_count = graph_view.node_count() as usize;
+
+        let mut computation = DfsComputationRuntime::new(
+            source_node,
+            self.config.track_paths,
+            self.config.concurrency,
+            node_count,
+        );
+
+        let start = std::time::Instant::now();
+        let result = storage.compute_dfs(
+            &mut computation,
+            Some(graph_view.as_ref()),
+            &mut progress_tracker,
+        )?;
+        DfsResultBuilder::result(result, start.elapsed(), source_node, target_nodes)
     }
 
     /// Execute the algorithm and return iterator over traversal results

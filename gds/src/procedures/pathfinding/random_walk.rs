@@ -133,14 +133,10 @@ impl RandomWalkFacade {
         self
     }
 
-    fn validate(&self) -> Result<()> {
+    fn compute(self) -> Result<(RandomWalkResult, std::time::Duration)> {
         self.config
             .validate()
-            .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))
-    }
-
-    fn compute(self) -> Result<(RandomWalkResult, std::time::Duration)> {
-        self.validate()?;
+            .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
 
         // Set up progress tracking
         let _task_registry_factory = self
@@ -235,7 +231,9 @@ impl RandomWalkFacade {
     /// println!("Updated {} nodes", result.nodes_updated);
     /// ```
     pub fn mutate(self, property_name: &str) -> Result<RandomWalkMutateResult> {
-        self.validate()?;
+        self.config
+            .validate()
+            .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
         if property_name.is_empty() {
             return Err(AlgorithmError::Execution(
                 "property_name cannot be empty".to_string(),
@@ -276,7 +274,9 @@ impl RandomWalkFacade {
     /// println!("Wrote {} nodes", result.nodes_written);
     /// ```
     pub fn write(self, property_name: &str) -> Result<RandomWalkWriteSummary> {
-        self.validate()?;
+        self.config
+            .validate()
+            .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
         if property_name.is_empty() {
             return Err(AlgorithmError::Execution(
                 "property_name cannot be empty".to_string(),

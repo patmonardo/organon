@@ -252,7 +252,7 @@ impl SteinerTreeBuilder {
     }
 
     /// Estimate memory usage for the computation
-    pub fn estimate_memory(&self) -> Result<MemoryRange> {
+    pub fn estimate_memory(&self) -> MemoryRange {
         let node_count = self.graph_store.node_count();
         let relationship_count = self.graph_store.relationship_count();
         let per_node = node_count
@@ -262,7 +262,7 @@ impl SteinerTreeBuilder {
         let frontier = node_count * std::mem::size_of::<usize>() * self.concurrency.max(1);
         let graph_overhead = relationship_count * 16;
         let total = per_node + frontier + graph_overhead;
-        Ok(MemoryRange::of_range(total, total + total / 5))
+        MemoryRange::of_range(total, total + total / 5)
     }
 }
 
@@ -324,9 +324,7 @@ mod tests {
         let store = store();
         let node_count = store.node_count();
         let relationship_count = store.relationship_count();
-        let estimate = SteinerTreeBuilder::new(Arc::clone(&store))
-            .estimate_memory()
-            .unwrap();
+        let estimate = SteinerTreeBuilder::new(Arc::clone(&store)).estimate_memory();
 
         let expected_min = node_count
             * (std::mem::size_of::<f64>() * 3

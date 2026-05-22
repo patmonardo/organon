@@ -144,21 +144,14 @@ pub fn handle_dag_longest_path(request: &Value, catalog: Arc<dyn GraphCatalog>) 
                     .concurrency(common.concurrency.value())
                     .estimate_memory();
 
-                match memory {
-                    Ok(memory) => json!({
-                        "ok": true,
-                        "op": op,
-                        "data": {
-                            "minBytes": memory.min(),
-                            "maxBytes": memory.max()
-                        }
-                    }),
-                    Err(e) => err(
-                        op,
-                        "EXECUTION_ERROR",
-                        &format!("DagLongestPath estimate failed: {e}"),
-                    ),
-                }
+                json!({
+                    "ok": true,
+                    "op": op,
+                    "data": {
+                        "minBytes": memory.min(),
+                        "maxBytes": memory.max()
+                    }
+                })
             }
             Some(other) => err(
                 op,

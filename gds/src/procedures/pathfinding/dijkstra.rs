@@ -148,84 +148,6 @@ impl DijkstraFacade {
         Ok(self)
     }
 
-    fn compute(self) -> Result<PathFindingResult> {
-        self.config
-            .validate()
-            .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
-
-        if self.weight_property.is_empty() {
-            return Err(AlgorithmError::Execution(
-                "weight_property cannot be empty".to_string(),
-            ));
-        }
-
-        // Set up progress tracking
-        let _task_registry_factory = self
-            .task_registry_factory
-            .unwrap_or_else(|| Box::new(EmptyTaskRegistryFactory));
-        let _user_log_registry_factory = self
-            .user_log_registry_factory
-            .unwrap_or_else(|| Box::new(EmptyTaskRegistryFactory));
-
-        // Progress tracker is best-effort; the driver loop in storage owns begin/log/end.
-
-        let source_node = self.config.source_node;
-        let targets = create_targets(self.config.target_nodes.clone());
-
-        let mut storage = DijkstraStorageRuntime::new(
-            source_node,
-            self.config.track_relationships,
-            self.config.concurrency,
-            self.config.use_heuristic,
-        );
-
-        let mut computation = DijkstraComputationRuntime::new(
-            source_node,
-            self.config.track_relationships,
-            self.config.concurrency,
-            self.config.use_heuristic,
-        );
-
-        // Use selectors so the algorithm consumes the requested weight property.
-        // (If no selector is provided, DefaultGraph may auto-select only when exactly one exists.)
-        let rel_types: HashSet<RelationshipType> = if self.config.relationship_types.is_empty() {
-            self.graph_store.relationship_types()
-        } else {
-            RelationshipType::list_of(self.config.relationship_types.clone())
-                .into_iter()
-                .collect()
-        };
-        let selectors: HashMap<RelationshipType, String> = rel_types
-            .iter()
-            .map(|t| (t.clone(), self.weight_property.clone()))
-            .collect();
-        let (orientation, direction_byte) = match self.config.direction.as_str() {
-            "incoming" => (Orientation::Reverse, 1u8),
-            "both" => (Orientation::Undirected, 0u8),
-            _ => (Orientation::Natural, 0u8),
-        };
-
-        let graph_view = self
-            .graph_store
-            .get_graph_with_types_selectors_and_orientation(&rel_types, &selectors, orientation)
-            .map_err(|e| AlgorithmError::Graph(e.to_string()))?;
-
-        let mut progress_tracker = TaskProgressTracker::with_concurrency(
-            Tasks::leaf_with_volume("dijkstra".to_string(), graph_view.relationship_count()),
-            self.config.concurrency,
-        );
-
-        let start = std::time::Instant::now();
-        let result: DijkstraResult = storage.compute_dijkstra(
-            &mut computation,
-            targets,
-            Some(graph_view.as_ref()),
-            direction_byte,
-            &mut progress_tracker,
-        )?;
-        DijkstraResultBuilder::result(result, start.elapsed())
-    }
-
     /// Set source node (NodeId)
     pub fn source_node(mut self, source: NodeId) -> Self {
         self.config.source_node = source;
@@ -320,6 +242,84 @@ impl DijkstraFacade {
     pub fn user_log_registry_factory(mut self, factory: Box<dyn TaskRegistryFactory>) -> Self {
         self.user_log_registry_factory = Some(factory);
         self
+    }
+
+    fn compute(self) -> Result<PathFindingResult> {
+        self.config
+            .validate()
+            .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
+
+        if self.weight_property.is_empty() {
+            return Err(AlgorithmError::Execution(
+                "weight_property cannot be empty".to_string(),
+            ));
+        }
+
+        // Set up progress tracking
+        let _task_registry_factory = self
+            .task_registry_factory
+            .unwrap_or_else(|| Box::new(EmptyTaskRegistryFactory));
+        let _user_log_registry_factory = self
+            .user_log_registry_factory
+            .unwrap_or_else(|| Box::new(EmptyTaskRegistryFactory));
+
+        // Progress tracker is best-effort; the driver loop in storage owns begin/log/end.
+
+        let source_node = self.config.source_node;
+        let targets = create_targets(self.config.target_nodes.clone());
+
+        let mut storage = DijkstraStorageRuntime::new(
+            source_node,
+            self.config.track_relationships,
+            self.config.concurrency,
+            self.config.use_heuristic,
+        );
+
+        let mut computation = DijkstraComputationRuntime::new(
+            source_node,
+            self.config.track_relationships,
+            self.config.concurrency,
+            self.config.use_heuristic,
+        );
+
+        // Use selectors so the algorithm consumes the requested weight property.
+        // (If no selector is provided, DefaultGraph may auto-select only when exactly one exists.)
+        let rel_types: HashSet<RelationshipType> = if self.config.relationship_types.is_empty() {
+            self.graph_store.relationship_types()
+        } else {
+            RelationshipType::list_of(self.config.relationship_types.clone())
+                .into_iter()
+                .collect()
+        };
+        let selectors: HashMap<RelationshipType, String> = rel_types
+            .iter()
+            .map(|t| (t.clone(), self.weight_property.clone()))
+            .collect();
+        let (orientation, direction_byte) = match self.config.direction.as_str() {
+            "incoming" => (Orientation::Reverse, 1u8),
+            "both" => (Orientation::Undirected, 0u8),
+            _ => (Orientation::Natural, 0u8),
+        };
+
+        let graph_view = self
+            .graph_store
+            .get_graph_with_types_selectors_and_orientation(&rel_types, &selectors, orientation)
+            .map_err(|e| AlgorithmError::Graph(e.to_string()))?;
+
+        let mut progress_tracker = TaskProgressTracker::with_concurrency(
+            Tasks::leaf_with_volume("dijkstra".to_string(), graph_view.relationship_count()),
+            self.config.concurrency,
+        );
+
+        let start = std::time::Instant::now();
+        let result: DijkstraResult = storage.compute_dijkstra(
+            &mut computation,
+            targets,
+            Some(graph_view.as_ref()),
+            direction_byte,
+            &mut progress_tracker,
+        )?;
+        DijkstraResultBuilder::result(result, start.elapsed())
     }
 
     /// Execute the algorithm and return iterator over path results

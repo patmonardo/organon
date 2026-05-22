@@ -109,14 +109,10 @@ impl TopologicalSortFacade {
         self
     }
 
-    fn validate(&self) -> Result<()> {
+    fn compute(self) -> Result<(TopologicalSortResult, std::time::Duration)> {
         self.config
             .validate()
-            .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))
-    }
-
-    fn compute(self) -> Result<(TopologicalSortResult, std::time::Duration)> {
-        self.validate()?;
+            .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
 
         // Set up progress tracking
         let _task_registry_factory = self
@@ -196,7 +192,9 @@ impl TopologicalSortFacade {
     /// println!("Updated {} nodes", result.nodes_updated);
     /// ```
     pub fn mutate(self, property_name: &str) -> Result<TopologicalSortMutateResult> {
-        self.validate()?;
+        self.config
+            .validate()
+            .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
         if property_name.is_empty() {
             return Err(AlgorithmError::Execution(
                 "property_name cannot be empty".to_string(),
@@ -237,7 +235,9 @@ impl TopologicalSortFacade {
     /// println!("Wrote {} nodes", result.nodes_written);
     /// ```
     pub fn write(self, property_name: &str) -> Result<TopologicalSortWriteSummary> {
-        self.validate()?;
+        self.config
+            .validate()
+            .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
         if property_name.is_empty() {
             return Err(AlgorithmError::Execution(
                 "property_name cannot be empty".to_string(),

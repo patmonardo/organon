@@ -10,7 +10,9 @@ use crate::algo::yens::{
     YensComputationRuntime, YensConfig, YensMutateResult, YensMutationSummary, YensResult,
     YensResultBuilder, YensStats, YensStorageRuntime, YensWriteSummary,
 };
-use crate::core::utils::progress::{TaskProgressTracker, Tasks};
+use crate::core::utils::progress::{
+    EmptyTaskRegistryFactory, TaskProgressTracker, TaskRegistryFactory, Tasks,
+};
 use crate::mem::MemoryRange;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
@@ -27,6 +29,8 @@ pub struct YensFacade {
     graph_store: Arc<DefaultGraphStore>,
     config: YensConfig,
     concurrency: usize,
+    task_registry_factory: Option<Box<dyn TaskRegistryFactory>>,
+    user_log_registry_factory: Option<Box<dyn TaskRegistryFactory>>, // Placeholder for now
 }
 
 /// Backwards-compatible alias (builder-style naming).
@@ -48,6 +52,8 @@ impl YensFacade {
             graph_store,
             config: YensConfig::default(),
             concurrency: 1,
+            task_registry_factory: None,
+            user_log_registry_factory: None,
         }
     }
 
@@ -64,6 +70,8 @@ impl YensFacade {
             graph_store,
             concurrency: config.concurrency,
             config,
+            task_registry_factory: None,
+            user_log_registry_factory: None,
         })
     }
 
@@ -138,10 +146,30 @@ impl YensFacade {
         self
     }
 
+    /// Set task registry factory for progress tracking
+    pub fn task_registry_factory(mut self, factory: Box<dyn TaskRegistryFactory>) -> Self {
+        self.task_registry_factory = Some(factory);
+        self
+    }
+
+    /// Set user log registry factory for progress tracking
+    pub fn user_log_registry_factory(mut self, factory: Box<dyn TaskRegistryFactory>) -> Self {
+        self.user_log_registry_factory = Some(factory);
+        self
+    }
+
     fn compute(self) -> Result<PathFindingResult> {
         self.config
             .validate()
             .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
+
+        // Set up progress tracking placeholders for API consistency with other facades.
+        let _task_registry_factory = self
+            .task_registry_factory
+            .unwrap_or_else(|| Box::new(EmptyTaskRegistryFactory));
+        let _user_log_registry_factory = self
+            .user_log_registry_factory
+            .unwrap_or_else(|| Box::new(EmptyTaskRegistryFactory));
 
         let source_node = self.config.source_node;
         let target_node = self.config.target_node;
