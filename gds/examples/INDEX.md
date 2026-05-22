@@ -49,12 +49,14 @@ string is external DSL even when it is loaded from Rust.
 
 ## Fixture Rule
 
-Every new example must use a durable fixture root:
+Every new example must use a durable fixture root under the corresponding
+Doctrine-style fixture family:
 
-`gds/fixtures/collections/<root>/<example-stem>/`
+`gds/fixtures/<family>/<doctrine-stem>/`
 
-The `<root>` must match the example prefix: `form`, `shell`, `dataframe`, or
-`dataset`.
+The `<family>` should follow the `Doctrine/EXEMPLARS` and `Doctrine/REFERENCES`
+families where possible, such as `procedures`, `algorithms`, `dataset`,
+`dataframe`, `form`, or `shell`. Retire new uses of `fixtures/collections/proc`.
 
 Generated manifests should use fixture-relative paths, not local absolute paths.
 Temporary scratch output belongs in `target`, but canonical example artifacts do
@@ -96,6 +98,7 @@ not.
 | 030-ideal-dataframe-dsl | design-only for now | none |
 | 031-shell-model-first | `shell_model_first.rs` | none |
 | 032-pathfinding-procedure-facade | `proc_pathfinding_procedure.rs` | none |
+| 033-bfs-dfs-traversal-workbook | `proc_pathfinding_procedure.rs` | none |
 
 ## Batch 1 Spine
 
@@ -145,13 +148,14 @@ Procedure namespace coverage:
 
 | Namespace | Example | Fixture Root | State |
 |---|---|---|---|
-| `proc::pathfinding` | `proc_pathfinding_procedure.rs` | `fixtures/collections/proc/proc_pathfinding_procedure` | `covered` |
+| `proc::pathfinding` | `proc_pathfinding_procedure.rs` | `fixtures/procedures/032-pathfinding-procedure-facade` | `covered` |
 
 Algorithm-internal namespace coverage:
 
 | Namespace | Example | Fixture Root | State |
 |---|---|---|---|
-| `algo::pathfinding` | `algo_pathfinding_storage_computation.rs` | `fixtures/collections/algo/algo_pathfinding_storage_computation` | `planned` |
+| `algo::pathfinding::traversal` | `proc_pathfinding_procedure.rs` | `fixtures/procedures/032-pathfinding-procedure-facade` | `covered through procedure route` |
+| `algo::pathfinding::storage_computation` | `algo_pathfinding_storage_computation.rs` | `fixtures/collections/algo/algo_pathfinding_storage_computation` | `planned` |
 
 Planned DataFrame namespace examples:
 

@@ -385,6 +385,7 @@ impl DfsFacade {
     /// Returns a memory range estimate based on stack storage, visited tracking, and path storage.
     pub fn estimate_memory(&self) -> MemoryRange {
         let node_count = self.graph_store.node_count();
+        let relationship_count = self.graph_store.relationship_count();
 
         // Stack storage (for DFS recursion/iteration)
         let stack_memory = node_count * 8; // node_id per entry
@@ -400,8 +401,6 @@ impl DfsFacade {
         };
 
         // Graph structure overhead
-        let avg_degree = 10.0;
-        let relationship_count = (node_count as f64 * avg_degree) as usize;
         let graph_overhead = relationship_count * 16;
 
         let total_memory = stack_memory + visited_memory + path_memory + graph_overhead;
@@ -511,6 +510,41 @@ mod tests {
     fn test_write_validates_property_name() {
         let builder = DfsBuilder::new(store()).source(0);
         assert!(builder.write("dfs_results").is_ok());
+    }
+
+    #[test]
+    fn test_from_spec_json_accepts_aliases_and_defaults() {
+        let facade = DfsFacade::from_spec_json(
+            store(),
+            &serde_json::json!({
+                "sourceNode": 0,
+                "targetNodes": [3],
+                "maxDepth": 4,
+                "trackPaths": true
+            }),
+        )
+        .unwrap();
+
+        assert_eq!(facade.config.source_node, 0);
+        assert_eq!(facade.config.target_nodes, vec![3]);
+        assert_eq!(facade.config.max_depth, Some(4));
+        assert!(facade.config.track_paths);
+        assert_eq!(facade.config.concurrency, DfsConfig::default().concurrency);
+    }
+
+    #[test]
+    fn test_estimate_memory_uses_actual_relationship_count() {
+        let store = store();
+        let node_count = store.node_count();
+        let relationship_count = store.relationship_count();
+        let estimate = DfsFacade::new(Arc::clone(&store))
+            .track_paths(true)
+            .estimate_memory();
+
+        let expected_min = node_count * 8 + node_count + node_count * 8 + relationship_count * 16;
+
+        assert_eq!(estimate.min(), expected_min);
+        assert_eq!(estimate.max(), expected_min + expected_min / 5);
     }
 
     #[test]

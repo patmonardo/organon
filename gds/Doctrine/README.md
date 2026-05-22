@@ -21,6 +21,7 @@ gds/Doctrine/
     │   ├── form/                   ← PureForm and principle-gated return
     │   ├── shell/                  ← Runtime connector and DataPipeline protocol
     │   ├── procedures/             ← Public operation routes and facade exemplars
+    │   ├── algorithms/             ← Algorithm workbooks and internal descent exemplars
     │   ├── dataframe/              ← Immediate Frame:Series::Expr body
     │   └── dataset/                ← Mediated Model:Feature::Plan and SemDataset
   │
@@ -30,6 +31,7 @@ gds/Doctrine/
       ├── dataframe/              ← Immediate tabular body and expression surface
       ├── dataset/                ← Mediated semantic controller and artifacts
       ├── procedures/             ← Public procedure route contracts
+      ├── algorithms/             ← Algorithm workbook references
       ├── gds-kernel/
       │   └── zeroCopy-boundary.md← Kernel-agent contract at Principle
       ├── philosophy/

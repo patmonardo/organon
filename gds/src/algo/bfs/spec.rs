@@ -29,20 +29,22 @@ use std::time::Duration;
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BfsConfig {
     /// Source node for BFS traversal
-    #[serde(alias = "sourceNode")]
+    #[serde(default, alias = "sourceNode")]
     pub source_node: NodeId,
     /// Target nodes to find (empty means find all reachable)
-    #[serde(alias = "targetNodes")]
+    #[serde(default, alias = "targetNodes")]
     pub target_nodes: Vec<NodeId>,
     /// Maximum depth to traverse (None means unlimited)
-    #[serde(alias = "maxDepth")]
+    #[serde(default, alias = "maxDepth")]
     pub max_depth: Option<u32>,
     /// Whether to track paths during traversal
-    #[serde(alias = "trackPaths")]
+    #[serde(default, alias = "trackPaths")]
     pub track_paths: bool,
     /// Concurrency level for parallel processing
+    #[serde(default = "BfsConfig::default_concurrency")]
     pub concurrency: usize,
     /// Delta parameter for chunking (default 64)
+    #[serde(default = "BfsConfig::default_delta")]
     pub delta: usize,
 }
 
@@ -53,13 +55,21 @@ impl Default for BfsConfig {
             target_nodes: Vec::new(),
             max_depth: None,
             track_paths: false,
-            concurrency: 1,
-            delta: 64, // Default delta from Java BFS
+            concurrency: Self::default_concurrency(),
+            delta: Self::default_delta(),
         }
     }
 }
 
 impl BfsConfig {
+    fn default_concurrency() -> usize {
+        1
+    }
+
+    fn default_delta() -> usize {
+        64
+    }
+
     /// Validate configuration parameters
     pub fn validate(&self) -> Result<(), ConfigError> {
         if self.source_node < 0 {

@@ -29,18 +29,19 @@ use std::time::Duration;
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct DfsConfig {
     /// Source node for DFS traversal
-    #[serde(alias = "sourceNode")]
+    #[serde(default, alias = "sourceNode")]
     pub source_node: NodeId,
     /// Target nodes to find (empty means find all reachable)
-    #[serde(alias = "targetNodes")]
+    #[serde(default, alias = "targetNodes")]
     pub target_nodes: Vec<NodeId>,
     /// Maximum depth to traverse (None means unlimited)
-    #[serde(alias = "maxDepth")]
+    #[serde(default, alias = "maxDepth")]
     pub max_depth: Option<u32>,
     /// Whether to track paths during traversal
-    #[serde(alias = "trackPaths")]
+    #[serde(default, alias = "trackPaths")]
     pub track_paths: bool,
     /// Concurrency level for parallel processing
+    #[serde(default = "DfsConfig::default_concurrency")]
     pub concurrency: usize,
 }
 
@@ -51,12 +52,16 @@ impl Default for DfsConfig {
             target_nodes: Vec::new(),
             max_depth: None,
             track_paths: false,
-            concurrency: 1,
+            concurrency: Self::default_concurrency(),
         }
     }
 }
 
 impl DfsConfig {
+    fn default_concurrency() -> usize {
+        1
+    }
+
     /// Validate configuration parameters
     pub fn validate(&self) -> Result<(), ConfigError> {
         if self.source_node < 0 {

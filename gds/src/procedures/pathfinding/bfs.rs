@@ -350,6 +350,7 @@ impl BfsFacade {
     /// Returns a memory range estimate based on queue storage, visited tracking, and path storage.
     pub fn estimate_memory(&self) -> MemoryRange {
         let node_count = self.graph_store.node_count();
+        let relationship_count = self.graph_store.relationship_count();
 
         // Queue storage (FIFO queue for BFS)
         let queue_memory = node_count * 8; // node_id per entry
@@ -365,8 +366,6 @@ impl BfsFacade {
         };
 
         // Graph structure overhead
-        let avg_degree = 10.0;
-        let relationship_count = (node_count as f64 * avg_degree) as usize;
         let graph_overhead = relationship_count * 16;
 
         let total_memory = queue_memory + visited_memory + path_memory + graph_overhead;
@@ -546,6 +545,55 @@ mod tests {
         let store = Arc::new(DefaultGraphStore::random(&config).unwrap());
         let builder = BfsBuilder::new(store).source(0);
         assert!(builder.write("bfs_results").is_ok());
+    }
+
+    #[test]
+    fn test_from_spec_json_accepts_aliases_and_defaults() {
+        let config = RandomGraphConfig {
+            seed: Some(1),
+            node_count: 8,
+            relationships: vec![RandomRelationshipConfig::new("REL", 1.0)],
+            ..RandomGraphConfig::default()
+        };
+        let store = Arc::new(DefaultGraphStore::random(&config).unwrap());
+        let facade = BfsFacade::from_spec_json(
+            store,
+            &serde_json::json!({
+                "sourceNode": 0,
+                "targetNodes": [3],
+                "maxDepth": 4,
+                "trackPaths": true
+            }),
+        )
+        .unwrap();
+
+        assert_eq!(facade.config.source_node, 0);
+        assert_eq!(facade.config.target_nodes, vec![3]);
+        assert_eq!(facade.config.max_depth, Some(4));
+        assert!(facade.config.track_paths);
+        assert_eq!(facade.config.concurrency, BfsConfig::default().concurrency);
+        assert_eq!(facade.config.delta, BfsConfig::default().delta);
+    }
+
+    #[test]
+    fn test_estimate_memory_uses_actual_relationship_count() {
+        let config = RandomGraphConfig {
+            seed: Some(1),
+            node_count: 8,
+            relationships: vec![RandomRelationshipConfig::new("REL", 1.0)],
+            ..RandomGraphConfig::default()
+        };
+        let store = Arc::new(DefaultGraphStore::random(&config).unwrap());
+        let node_count = store.node_count();
+        let relationship_count = store.relationship_count();
+        let estimate = BfsFacade::new(Arc::clone(&store))
+            .track_paths(true)
+            .estimate_memory();
+
+        let expected_min = node_count * 8 + node_count + node_count * 8 + relationship_count * 16;
+
+        assert_eq!(estimate.min(), expected_min);
+        assert_eq!(estimate.max(), expected_min + expected_min / 5);
     }
 
     #[test]

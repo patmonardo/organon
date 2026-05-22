@@ -1,7 +1,7 @@
 # Exemplar 032 — Pathfinding Procedure Facade as Routing Doctrine
 
 File: `gds/examples/proc_pathfinding_procedure.rs`
-Fixture root: `gds/fixtures/collections/proc/proc_pathfinding_procedure/`
+Fixture root: `gds/fixtures/procedures/032-pathfinding-procedure-facade/`
 
 ## Principle
 
@@ -13,11 +13,11 @@ The method is facade first. The application sees a stable procedure. The storage
 
 1. Builds a small directed graph as an in-memory `DefaultGraphStore`
 2. Wraps that store with `GraphFacade`
-3. Calls `GraphFacade::random_walk()` through procedure modes only
-4. Emits stream rows, stats, and memory estimate artifacts
+3. Calls `GraphFacade::bfs()` and `GraphFacade::dfs()` through procedure modes only
+4. Emits BFS rows, DFS rows, stats, and memory estimate artifacts
 5. Persists a fixture manifest that records the procedure route
 
-The example deliberately does not call `::algo::random_walk` directly. It proves the routing law: application code enters through the procedure facade.
+The example deliberately does not call `::algo::bfs` or `::algo::dfs` directly. It proves the routing law: application code enters through the procedure facade.
 
 ## The Arc
 
@@ -46,7 +46,7 @@ Procedure examples use the `proc_` prefix and fixture root:
 
 ```text
 gds/examples/proc_pathfinding_procedure.rs
-gds/fixtures/collections/proc/proc_pathfinding_procedure/
+gds/fixtures/procedures/032-pathfinding-procedure-facade/
 ```
 
 Algorithm-internal examples use the `algo_` prefix. They are internal architecture material, not application guidance.
@@ -57,20 +57,21 @@ The procedure law is strict: application-facing examples call `GraphFacade` and 
 
 - **Procedure Facade** — The public route from application code into a graph algorithm. See [Pathfinding Procedure Facade](../../REFERENCES/procedures/pathfinding-procedure-facade.md).
 - **GraphFacade** — The application-facing graph handle that exposes procedure builders.
+- **Traversal Pair** — BFS and DFS as the first workbook contrast in Pathfinding. See [BFS/DFS Traversal](../../REFERENCES/algorithms/pathfinding-bfs-dfs-traversal.md).
 - **Mode** — A procedure emission form such as `stream`, `stats`, `mutate`, `write`, or `estimate_memory`.
 - **Storage Runtime** — The controller that owns graph access, progress, termination, and algorithm loop orchestration.
 - **Computation Runtime** — The pure algorithm state holder, without graph access.
 
 ## Next Exemplar
 
-Next: `algo_pathfinding_storage_computation.rs` when it exists.
+Next: [Exemplar 033 — BFS and DFS as Traversal Workbook](../algorithms/033-bfs-dfs-traversal-workbook.md).
 
-That exemplar should descend one level. It should show how a procedure route hands control to storage, and how storage delegates only state operations to computation. Dijkstra is the recommended first algorithm because its priority-search split is compact and canonical.
+That exemplar descends one level. It shows how the procedure route hands control to traversal storage, and how queue versus stack control sets the first tonal contrast for Pathfinding Algorithm Doctrine.
 
 ## Notes for Students
 
 Watch for the shape of the call, not only the result. The output rows and stats are ordinary Rust values, but the important doctrine is the route that produced them.
 
-Try this: change the exemplar from Random Walk to Dijkstra or Spanning Tree while preserving the same rule. If you need to import `gds::algo::*` in the application example, the exemplar has left Procedure Doctrine and entered Algorithm Doctrine.
+Try this: change the exemplar from BFS/DFS to Dijkstra or Spanning Tree while preserving the same rule. If you need to import `gds::algo::*` in the application example, the exemplar has left Procedure Doctrine and entered Algorithm Doctrine.
 
 Remember: a procedure facade is a man page in code. It tells the caller what can be done; it does not expose the machinery by which the algorithm does it.

@@ -32,15 +32,15 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         "Application code enters Pathfinding through GraphFacade procedures.",
     );
     let store = Arc::new(store_from_directed_edges(
-        4,
-        &[(0, 1), (1, 2), (2, 3), (0, 2)],
+        5,
+        &[(0, 1), (0, 2), (1, 3), (2, 4), (3, 4)],
     ));
     let graph = GraphFacade::new(Arc::clone(&store));
     let graph_path = fixture_root.join("00-graph.txt");
     fs::write(
         &graph_path,
         format!(
-            "nodes: {}\nrelationships: {}\nentrypoint: GraphFacade::random_walk\n",
+            "nodes: {}\nrelationships: {}\nentrypoint: GraphFacade::bfs / GraphFacade::dfs\n",
             store.node_count(),
             store.relationship_count(),
         ),
@@ -52,70 +52,97 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     stage(
         1,
-        "Stream Mode",
-        "The facade returns public rows without exposing storage or computation runtimes.",
+        "BFS Stream Mode",
+        "Breadth-first search emits the level-order procedure view.",
     );
-    let rows: Vec<_> = graph
-        .random_walk()
-        .walks_per_node(2)
-        .walk_length(4)
-        .source_nodes(vec![0])
-        .random_seed(7)
+    let bfs_rows: Vec<_> = graph
+        .bfs()
+        .source(0)
+        .max_depth(3)
+        .track_paths(true)
         .stream()?
         .collect();
-    let stream_path = fixture_root.join("01-stream.txt");
-    fs::write(&stream_path, format!("walks: {:?}\n", rows))?;
-    println!("walk count: {}", rows.len());
-    println!("persisted: {}", fixture_path(&stream_path));
+    let bfs_path = fixture_root.join("01-bfs-stream.txt");
+    fs::write(&bfs_path, format!("bfs_rows: {:?}\n", bfs_rows))?;
+    println!("bfs row count: {}", bfs_rows.len());
+    println!("persisted: {}", fixture_path(&bfs_path));
     println!();
 
     stage(
         2,
-        "Stats Mode",
-        "Stats mode exposes aggregate procedure results from the same facade surface.",
+        "DFS Stream Mode",
+        "Depth-first search emits the branch-first procedure view.",
     );
-    let stats = graph
-        .random_walk()
-        .walks_per_node(2)
-        .walk_length(4)
-        .source_nodes(vec![0])
-        .random_seed(7)
-        .stats()?;
-    let stats_path = fixture_root.join("02-stats.txt");
-    fs::write(
-        &stats_path,
-        format!(
-            "walk_count: {}\nexecution_time_ms: {}\n",
-            stats.walk_count, stats.execution_time_ms,
-        ),
-    )?;
-    println!("walk count: {}", stats.walk_count);
-    println!("persisted: {}", fixture_path(&stats_path));
+    let dfs_rows: Vec<_> = graph
+        .dfs()
+        .source(0)
+        .max_depth(4)
+        .track_paths(true)
+        .stream()?
+        .collect();
+    let dfs_path = fixture_root.join("02-dfs-stream.txt");
+    fs::write(&dfs_path, format!("dfs_rows: {:?}\n", dfs_rows))?;
+    println!("dfs row count: {}", dfs_rows.len());
+    println!("persisted: {}", fixture_path(&dfs_path));
     println!();
 
     stage(
         3,
-        "Estimate Mode",
-        "Memory estimation belongs to the procedure contract and uses graph size.",
+        "Stats Mode",
+        "Stats mode exposes traversal aggregates from the same procedure surface.",
     );
-    let memory = graph
-        .random_walk()
-        .walks_per_node(2)
-        .walk_length(4)
-        .source_nodes(vec![0])
-        .estimate_memory();
-    let memory_path = fixture_root.join("03-memory.txt");
+    let bfs_stats = graph.bfs().source(0).max_depth(3).stats()?;
+    let dfs_stats = graph.dfs().source(0).max_depth(4).stats()?;
+    let stats_path = fixture_root.join("03-stats.txt");
+    fs::write(
+        &stats_path,
+        format!(
+            "bfs_nodes_visited: {}\nbfs_max_depth_reached: {}\ndfs_nodes_visited: {}\ndfs_max_depth_reached: {}\n",
+            bfs_stats.nodes_visited,
+            bfs_stats.max_depth_reached,
+            dfs_stats.nodes_visited,
+            dfs_stats.max_depth_reached,
+        ),
+    )?;
+    println!("bfs nodes visited: {}", bfs_stats.nodes_visited);
+    println!("dfs nodes visited: {}", dfs_stats.nodes_visited);
+    println!("persisted: {}", fixture_path(&stats_path));
+    println!();
+
+    stage(
+        4,
+        "Estimate Mode",
+        "Memory estimation belongs to the procedure contract and uses traversal graph size.",
+    );
+    let bfs_memory = graph.bfs().source(0).track_paths(true).estimate_memory();
+    let dfs_memory = graph.dfs().source(0).track_paths(true).estimate_memory();
+    let memory_path = fixture_root.join("04-memory.txt");
     fs::write(
         &memory_path,
-        format!("min_bytes: {}\nmax_bytes: {}\n", memory.min(), memory.max()),
+        format!(
+            "bfs_min_bytes: {}\nbfs_max_bytes: {}\ndfs_min_bytes: {}\ndfs_max_bytes: {}\n",
+            bfs_memory.min(),
+            bfs_memory.max(),
+            dfs_memory.min(),
+            dfs_memory.max(),
+        ),
     )?;
-    println!("memory: {}..{} bytes", memory.min(), memory.max());
+    println!(
+        "bfs memory: {}..{} bytes",
+        bfs_memory.min(),
+        bfs_memory.max()
+    );
+    println!(
+        "dfs memory: {}..{} bytes",
+        dfs_memory.min(),
+        dfs_memory.max()
+    );
     println!("persisted: {}", fixture_path(&memory_path));
 
     let manifest_path = fixture_root.join("README.txt");
     fs::write(
         &manifest_path,
-        manifest(&graph_path, &stream_path, &stats_path, &memory_path),
+        manifest(&graph_path, &bfs_path, &dfs_path, &stats_path, &memory_path),
     )?;
     println!("manifest: {}", fixture_path(&manifest_path));
 
@@ -164,7 +191,7 @@ fn store_from_directed_edges(node_count: usize, edges: &[(usize, usize)]) -> Def
 
 fn fixture_root() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .join("fixtures/collections/proc/proc_pathfinding_procedure")
+        .join("fixtures/procedures/032-pathfinding-procedure-facade")
 }
 
 fn fixture_path(path: &Path) -> String {
@@ -172,32 +199,37 @@ fn fixture_path(path: &Path) -> String {
         .file_name()
         .map(|name| name.to_string_lossy().into_owned())
         .unwrap_or_else(|| path.to_string_lossy().into_owned());
-    format!("fixtures/collections/proc/proc_pathfinding_procedure/{file_name}")
+    format!("fixtures/procedures/032-pathfinding-procedure-facade/{file_name}")
 }
 
 fn manifest(
     graph_path: &Path,
-    stream_path: &Path,
+    bfs_path: &Path,
+    dfs_path: &Path,
     stats_path: &Path,
     memory_path: &Path,
 ) -> String {
     format!(
         "Pathfinding Procedure Facade Fixture\n\n\
-         Namespace: proc::pathfinding\n\n\
+         Namespace: procedures::pathfinding\n\n\
          00 Graph\n\
          artifact: {}\n\
          meaning: in-memory graph store wrapped by GraphFacade.\n\n\
-         01 Stream\n\
+         01 BFS Stream\n\
          artifact: {}\n\
-         meaning: public random-walk rows produced by the procedure facade.\n\n\
-         02 Stats\n\
+         meaning: breadth-first rows produced by the procedure facade.\n\n\
+         02 DFS Stream\n\
          artifact: {}\n\
-         meaning: aggregate result returned by stats mode.\n\n\
-         03 Memory\n\
+         meaning: depth-first rows produced by the procedure facade.\n\n\
+         03 Stats\n\
          artifact: {}\n\
-         meaning: procedure-level memory estimate using graph size and walk storage.\n",
+         meaning: aggregate traversal results returned by stats mode.\n\n\
+         04 Memory\n\
+         artifact: {}\n\
+         meaning: procedure-level BFS/DFS memory estimates using graph size.\n",
         fixture_path(graph_path),
-        fixture_path(stream_path),
+        fixture_path(bfs_path),
+        fixture_path(dfs_path),
         fixture_path(stats_path),
         fixture_path(memory_path),
     )

@@ -12,4 +12,4 @@ Canonical locations:
 Related implementation evidence:
 
 - `gds/examples/proc_pathfinding_procedure.rs`
-- `gds/fixtures/collections/proc/proc_pathfinding_procedure/`
+- `gds/fixtures/procedures/032-pathfinding-procedure-facade/`

@@ -1,0 +1,4 @@
+bfs_nodes_visited: 5
+bfs_max_depth_reached: 2
+dfs_nodes_visited: 5
+dfs_max_depth_reached: 2

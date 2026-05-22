@@ -209,6 +209,12 @@ that shows what a stage of the arc teaches.
    File: `gds/examples/proc_pathfinding_procedure.rs`
    Teaches: Pathfinding Procedure as the public routing form: application -> facade -> storage -> computation.
 
+### Algorithm Workbooks
+
+33. **[033-bfs-dfs-traversal-workbook.md](EXEMPLARS/algorithms/033-bfs-dfs-traversal-workbook.md)**
+   File: `gds/examples/proc_pathfinding_procedure.rs`
+   Teaches: BFS and DFS as the first Pathfinding workbook pair: frontier-level traversal and branch-first traversal.
+
 ---
 
 ## The References
@@ -268,6 +274,10 @@ References are organized by topic, not by project.
 ### Procedures
 
 - [pathfinding-procedure-facade.md](REFERENCES/procedures/pathfinding-procedure-facade.md) — Procedure routing contract for Pathfinding facades
+
+### Algorithms
+
+- [pathfinding-bfs-dfs-traversal.md](REFERENCES/algorithms/pathfinding-bfs-dfs-traversal.md) — BFS/DFS traversal pair as the first Pathfinding workbook reference
 
 ### Philosophy
 

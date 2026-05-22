@@ -1,0 +1,3 @@
+nodes: 5
+relationships: 5
+entrypoint: GraphFacade::bfs / GraphFacade::dfs

@@ -1,1 +1,0 @@
-walks: [RandomWalkRow { path: [0, 1, 2, 3] }, RandomWalkRow { path: [0, 1, 2, 3] }]
