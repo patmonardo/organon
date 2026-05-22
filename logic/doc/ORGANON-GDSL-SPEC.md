@@ -20,7 +20,8 @@ Each compiler module in `logic/src/relative/core/compiler` translates a dialecti
 
 ## 3. FormDB Architecture
 
-- **FactStore**: stores the canonical `ProgramFeature` records (PureForm or GivenForm) that describe how a FormEval run should proceed. Each record includes the `ProgramFeature` id, metadata, the requested `GraphAlgo` target, and any input/output bindings.
+- **Kernel GivenForm vs TS GivenForm**: in the Rust kernel, the full program object `ProgramSpec` is the GivenForm proper: the accepted `program ... end` specification. In the TS agent/service layer, `GivenForm` can reappear as a corresponding service/schema concept without needing to be the exact same concrete type as the Rust struct.
+- **FactStore**: stores the canonical `ProgramFeature` records unfolded from the GivenForm and used to describe how a FormEval run should proceed. Each record includes the `ProgramFeature` id, metadata, the requested `GraphAlgo` target, and any input/output bindings.
 - **ProgramFeature**: the GDSL contract executed by FormEval. It does not require a separate SDSL; it _is_ the GDSL program spec. At minimum, a ProgramFeature holds:
   - `featureId` (e.g. `program-feat:grounding`)
   - `type` (`pure` | `given`)

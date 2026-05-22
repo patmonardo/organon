@@ -389,7 +389,13 @@ pub enum PerfectedGivenFormLayer {
     EvaluationMonadic,
 }
 
-/// Full Given Form envelope used prior to evaluation.
+/// Applied projection of the already-given program form used prior to evaluation.
+///
+/// `ProgramSpec` is the GivenForm proper: the full `program ... end` object,
+/// whether authored externally as textual specification or internally as Rust-side
+/// structured data. `GivenFormEnvelope` is the staged applied moment derived from
+/// that given program when the PureForm principle is projected through a selected
+/// Application Form and optional appearance.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct GivenFormEnvelope {
     pub principle: PureFormPrinciple,
@@ -479,12 +485,19 @@ impl ApplicationForm {
 
 /// Program-level FormDB projection used by the Rust kernel.
 ///
+/// This program object is itself the GivenForm: the complete `program ... end`
+/// specification as accepted by the compiler boundary, whether it arrived from
+/// external text, Rust functional macros, or JSON-backed structured construction.
+/// The TypeScript agent/service layer can eventually carry a corresponding
+/// GivenForm representation, but that cross-layer identity does not require the
+/// Rust kernel and TS layer to share one concrete in-memory type.
+///
 /// `form` is the stable evaluator payload.
 /// `gdsl` and `sdsl` carry canonical/specification metadata.
 /// `application_forms` and `selected_forms` model the feature suite projected into execution.
 ///
 /// Design note:
-/// - Compiler concern: produce a stable Program Compile-IR from a ProgramSpec.
+/// - Compiler concern: accept the GivenForm and produce a stable Program Compile-IR.
 /// - Evaluator concern: execute/interpret that IR inside a projection world.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct ProgramSpec {
@@ -527,10 +540,47 @@ impl ProgramSpec {
         Ok(ProgramCompileIr::from_features(features))
     }
 
-    /// Define canonical Program Features before compiler artifacts are constructed.
+    /// Compile the kernel-facing dataset mediation surface for agents.
+    ///
+    /// This API treats datasets as semantic objects and provides deterministic
+    /// bindings into FactStore and KnowledgeStore facilities.
+    pub fn compile_kernel_dataset_api(&self) -> Result<KernelDatasetApi, ProgramSpecError> {
+        let features = self.define_features()?;
+        Ok(KernelDatasetApi::from_features(features))
+    }
+
+    /// Compile a shell-level mediation plan from Program semantics.
+    ///
+    /// Shell remains the top-level mediator: dataset semantics first,
+    /// store construction second, execution opcodes last.
+    pub fn compile_shell_execution_plan(&self) -> Result<ShellExecutionPlan, ProgramSpecError> {
+        let features = self.define_features()?;
+        let ir = ProgramCompileIr::from_features(features.clone());
+        let dataset_api = KernelDatasetApi::from_features(features.clone());
+        let soul = ProgramFeatureSoul::from_features(features);
+        Ok(ShellExecutionPlan::from_kernel_surfaces(
+            dataset_api,
+            soul,
+            ir,
+        ))
+    }
+
+    /// Compile the ProgramFeature soul projection that bridges:
+    /// - DataFrame UML-like semantics
+    /// - Shell procedure/pipeline execution routes
+    /// - Agent workflow and reflective features
+    pub fn compile_feature_soul(&self) -> Result<ProgramFeatureSoul, ProgramSpecError> {
+        let features = self.define_features()?;
+        Ok(ProgramFeatureSoul::from_features(features))
+    }
+
+    /// Define canonical Program Features unfolded from the GivenForm before compiler
+    /// artifacts are constructed.
     ///
     /// This feature surface is the intended composition boundary for Dataset/DataFrame
     /// systems and acts as the semantic contract that compiler outputs must conform to.
+    /// The program itself remains the GivenForm; these features are its articulated
+    /// determinations for downstream compilation and mediation.
     pub fn define_features(&self) -> Result<ProgramFeatures, ProgramSpecError> {
         let plan = self.compile_execution_plan()?;
         let mut features = Vec::new();
@@ -580,9 +630,12 @@ impl ProgramSpec {
         ))
     }
 
-    /// Build Given Form envelopes for each selected Application Form.
+    /// Project the already-given program form into applied staging envelopes for each
+    /// selected Application Form.
     ///
-    /// This models the pre-eval bridge:
+    /// This does not create the GivenForm itself. The `ProgramSpec` is already that
+    /// GivenForm. This method derives per-application projections that model the
+    /// pre-eval bridge:
     /// 1) PureForm principle (GDSL moment)
     /// 2) Principled-effect in appearance (SDSL moment)
     /// 3) Eval unification moment
@@ -697,6 +750,118 @@ impl ProgramFeatureKind {
     pub fn is_operator_pattern(&self) -> bool {
         matches!(self, Self::OperatorPattern)
     }
+
+    pub fn is_fact_store_candidate(&self) -> bool {
+        matches!(
+            self,
+            Self::Source
+                | Self::Observation
+                | Self::Logogenesis
+                | Self::Subfeature
+                | Self::Condition
+                | Self::Mark
+                | Self::Concept
+                | Self::ApplicationForm
+                | Self::OperatorPattern
+        )
+    }
+
+    pub fn is_knowledge_store_candidate(&self) -> bool {
+        matches!(
+            self,
+            Self::Import
+                | Self::Reflection
+                | Self::Principle
+                | Self::Judgment
+                | Self::Syllogism
+                | Self::Inference
+                | Self::Query
+                | Self::Procedure
+                | Self::SpecificationBinding
+        )
+    }
+
+    pub fn is_dataframe_entity_candidate(&self) -> bool {
+        matches!(
+            self,
+            Self::ApplicationForm | Self::Procedure | Self::SpecificationBinding
+        )
+    }
+
+    pub fn is_dataframe_attribute_candidate(&self) -> bool {
+        matches!(
+            self,
+            Self::Source
+                | Self::Observation
+                | Self::Subfeature
+                | Self::Condition
+                | Self::Mark
+                | Self::Concept
+        )
+    }
+
+    pub fn is_dataframe_relation_candidate(&self) -> bool {
+        matches!(
+            self,
+            Self::Import
+                | Self::Reflection
+                | Self::Logogenesis
+                | Self::Principle
+                | Self::Judgment
+                | Self::Syllogism
+                | Self::Inference
+                | Self::Query
+                | Self::OperatorPattern
+        )
+    }
+
+    pub fn is_procedure_binding_candidate(&self) -> bool {
+        matches!(
+            self,
+            Self::Procedure | Self::Principle | Self::Inference | Self::Query
+        )
+    }
+
+    pub fn is_pipeline_binding_candidate(&self) -> bool {
+        matches!(
+            self,
+            Self::Source
+                | Self::Observation
+                | Self::Condition
+                | Self::Subfeature
+                | Self::Mark
+                | Self::Concept
+                | Self::OperatorPattern
+                | Self::ApplicationForm
+        )
+    }
+
+    pub fn is_workflow_plan_candidate(&self) -> bool {
+        matches!(
+            self,
+            Self::Condition
+                | Self::Reflection
+                | Self::Logogenesis
+                | Self::Principle
+                | Self::Judgment
+                | Self::Syllogism
+                | Self::Inference
+                | Self::Query
+                | Self::Procedure
+        )
+    }
+
+    pub fn is_agential_reflection_candidate(&self) -> bool {
+        matches!(
+            self,
+            Self::Reflection
+                | Self::Logogenesis
+                | Self::Principle
+                | Self::Concept
+                | Self::Judgment
+                | Self::Inference
+        )
+    }
 }
 
 /// Atomic program feature used by Dataset/DataFrame composition and compiler inputs.
@@ -777,6 +942,277 @@ impl ProgramCompileIr {
             program_name: features.program_name,
             selected_forms: features.selected_forms,
             opcodes,
+        }
+    }
+}
+
+/// Kernel-facing semantic Dataset API for agent execution.
+///
+/// This keeps agent input shape dataset-first while carrying deterministic
+/// projections into FactStore and KnowledgeStore construction.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct KernelDatasetApi {
+    pub program_name: String,
+    pub selected_forms: Vec<String>,
+    pub semantic_artifacts: Vec<String>,
+    pub fact_store_bindings: Vec<String>,
+    pub knowledge_store_bindings: Vec<String>,
+}
+
+impl KernelDatasetApi {
+    pub fn new(
+        program_name: String,
+        selected_forms: Vec<String>,
+        semantic_artifacts: Vec<String>,
+        fact_store_bindings: Vec<String>,
+        knowledge_store_bindings: Vec<String>,
+    ) -> Self {
+        Self {
+            program_name,
+            selected_forms,
+            semantic_artifacts,
+            fact_store_bindings,
+            knowledge_store_bindings,
+        }
+    }
+
+    pub fn from_features(features: ProgramFeatures) -> Self {
+        let mut semantic_artifacts = Vec::with_capacity(features.features.len());
+        let mut fact_store_bindings = Vec::new();
+        let mut knowledge_store_bindings = Vec::new();
+
+        for feature in &features.features {
+            let binding = format!(
+                "{}:{}@{}",
+                feature.kind.as_str(),
+                feature.value,
+                feature.source
+            );
+            semantic_artifacts.push(binding.clone());
+
+            if feature.kind.is_fact_store_candidate() {
+                fact_store_bindings.push(binding.clone());
+            }
+
+            if feature.kind.is_knowledge_store_candidate() {
+                knowledge_store_bindings.push(binding);
+            }
+        }
+
+        Self {
+            program_name: features.program_name,
+            selected_forms: features.selected_forms,
+            semantic_artifacts,
+            fact_store_bindings,
+            knowledge_store_bindings,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct DataFrameUmlProjection {
+    pub entities: Vec<String>,
+    pub attributes: Vec<String>,
+    pub relations: Vec<String>,
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct ProgramWorkflowPlan {
+    pub planning_steps: Vec<String>,
+    pub feature_steps: Vec<String>,
+    pub reflection_steps: Vec<String>,
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct ProgramFeatureSoul {
+    pub program_name: String,
+    pub selected_forms: Vec<String>,
+    pub dataframe: DataFrameUmlProjection,
+    pub workflow: ProgramWorkflowPlan,
+    pub procedure_bindings: Vec<String>,
+    pub pipeline_bindings: Vec<String>,
+    pub agential_reflection_bindings: Vec<String>,
+}
+
+impl ProgramFeatureSoul {
+    pub fn from_features(features: ProgramFeatures) -> Self {
+        let mut dataframe_entities = Vec::new();
+        let mut dataframe_attributes = Vec::new();
+        let mut dataframe_relations = Vec::new();
+
+        let mut workflow_planning = Vec::new();
+        let mut workflow_features = Vec::new();
+        let mut workflow_reflections = Vec::new();
+
+        let mut procedure_bindings = Vec::new();
+        let mut pipeline_bindings = Vec::new();
+        let mut agential_reflection_bindings = Vec::new();
+
+        for feature in &features.features {
+            let binding = format!(
+                "{}:{}@{}",
+                feature.kind.as_str(),
+                feature.value,
+                feature.source
+            );
+
+            if feature.kind.is_dataframe_entity_candidate() {
+                dataframe_entities.push(binding.clone());
+            }
+
+            if feature.kind.is_dataframe_attribute_candidate() {
+                dataframe_attributes.push(binding.clone());
+                workflow_features.push(binding.clone());
+            }
+
+            if feature.kind.is_dataframe_relation_candidate() {
+                dataframe_relations.push(binding.clone());
+            }
+
+            if feature.kind.is_workflow_plan_candidate() {
+                workflow_planning.push(binding.clone());
+            }
+
+            if feature.kind.is_procedure_binding_candidate() {
+                procedure_bindings.push(binding.clone());
+            }
+
+            if feature.kind.is_pipeline_binding_candidate() {
+                pipeline_bindings.push(binding.clone());
+            }
+
+            if feature.kind.is_agential_reflection_candidate() {
+                workflow_reflections.push(binding.clone());
+                agential_reflection_bindings.push(binding);
+            }
+        }
+
+        Self {
+            program_name: features.program_name,
+            selected_forms: features.selected_forms,
+            dataframe: DataFrameUmlProjection {
+                entities: dataframe_entities,
+                attributes: dataframe_attributes,
+                relations: dataframe_relations,
+            },
+            workflow: ProgramWorkflowPlan {
+                planning_steps: workflow_planning,
+                feature_steps: workflow_features,
+                reflection_steps: workflow_reflections,
+            },
+            procedure_bindings,
+            pipeline_bindings,
+            agential_reflection_bindings,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum ShellExecutionStep {
+    MaterializeDatasetArtifact(String),
+    BuildFactStoreBinding(String),
+    BuildKnowledgeStoreBinding(String),
+    ExecuteProcedureBinding(String),
+    ExecutePipelineBinding(String),
+    ExecuteWorkflowStep(String),
+    ReflectAgentialFeature(String),
+    ExecuteOpcode(String),
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct ShellExecutionPlan {
+    pub program_name: String,
+    pub selected_forms: Vec<String>,
+    pub steps: Vec<ShellExecutionStep>,
+}
+
+impl ShellExecutionPlan {
+    pub fn new(
+        program_name: String,
+        selected_forms: Vec<String>,
+        steps: Vec<ShellExecutionStep>,
+    ) -> Self {
+        Self {
+            program_name,
+            selected_forms,
+            steps,
+        }
+    }
+
+    pub fn from_dataset_api_and_ir(dataset_api: KernelDatasetApi, ir: ProgramCompileIr) -> Self {
+        Self::from_kernel_surfaces(dataset_api, ProgramFeatureSoul::default(), ir)
+    }
+
+    pub fn from_kernel_surfaces(
+        dataset_api: KernelDatasetApi,
+        soul: ProgramFeatureSoul,
+        ir: ProgramCompileIr,
+    ) -> Self {
+        let mut steps = Vec::new();
+
+        steps.extend(
+            dataset_api
+                .semantic_artifacts
+                .into_iter()
+                .map(ShellExecutionStep::MaterializeDatasetArtifact),
+        );
+
+        steps.extend(
+            dataset_api
+                .fact_store_bindings
+                .into_iter()
+                .map(ShellExecutionStep::BuildFactStoreBinding),
+        );
+
+        steps.extend(
+            dataset_api
+                .knowledge_store_bindings
+                .into_iter()
+                .map(ShellExecutionStep::BuildKnowledgeStoreBinding),
+        );
+
+        steps.extend(
+            soul.procedure_bindings
+                .into_iter()
+                .map(ShellExecutionStep::ExecuteProcedureBinding),
+        );
+
+        steps.extend(
+            soul.pipeline_bindings
+                .into_iter()
+                .map(ShellExecutionStep::ExecutePipelineBinding),
+        );
+
+        steps.extend(
+            soul.workflow
+                .planning_steps
+                .into_iter()
+                .map(ShellExecutionStep::ExecuteWorkflowStep),
+        );
+
+        steps.extend(
+            soul.workflow
+                .feature_steps
+                .into_iter()
+                .map(ShellExecutionStep::ExecuteWorkflowStep),
+        );
+
+        steps.extend(
+            soul.agential_reflection_bindings
+                .into_iter()
+                .map(ShellExecutionStep::ReflectAgentialFeature),
+        );
+
+        steps.extend(
+            ir.opcodes
+                .into_iter()
+                .map(ShellExecutionStep::ExecuteOpcode),
+        );
+
+        Self {
+            program_name: ir.program_name,
+            selected_forms: ir.selected_forms,
+            steps,
         }
     }
 }
@@ -1045,6 +1481,154 @@ mod tests {
         assert_eq!(ir.program_name, features.program_name);
         assert_eq!(ir.selected_forms, features.selected_forms);
         assert_eq!(ir.opcodes, features.opcodes());
+    }
+
+    #[test]
+    fn compiles_kernel_dataset_api_for_agent_mediation() {
+        let program = ProgramSpec::new(
+            FormShape::new(
+                Shape::default(),
+                Context::new(
+                    vec!["crate::dataset::nlp".to_string()],
+                    vec![],
+                    "kernel".to_string(),
+                    vec!["dataset.semantic".to_string()],
+                ),
+                Morph::new(vec!["base.normalize".to_string()]),
+            ),
+            Specification::new("gdsl.analytics".to_string(), None, HashMap::new()),
+            vec![],
+            vec![app_form("centrality", "algo.pagerank")],
+            vec!["centrality".to_string()],
+        );
+
+        let dataset_api = program
+            .compile_kernel_dataset_api()
+            .expect("kernel dataset api should compile");
+
+        assert_eq!(dataset_api.program_name, "gdsl.analytics");
+        assert_eq!(dataset_api.selected_forms, vec!["centrality"]);
+        assert!(dataset_api
+            .semantic_artifacts
+            .iter()
+            .any(|binding| binding.contains("application-form:centrality")));
+        assert!(dataset_api
+            .semantic_artifacts
+            .iter()
+            .any(|binding| binding.contains("operator-pattern:algo.pagerank")));
+        assert!(dataset_api
+            .fact_store_bindings
+            .iter()
+            .any(|binding| binding.contains("application-form:centrality")));
+        assert!(dataset_api
+            .knowledge_store_bindings
+            .iter()
+            .any(|binding| binding.contains("import:crate::dataset::nlp")));
+        assert!(dataset_api
+            .knowledge_store_bindings
+            .iter()
+            .any(|binding| binding.contains("specification-binding:gdsl.analytics")));
+    }
+
+    #[test]
+    fn compiles_shell_execution_plan_with_dataset_and_store_staging() {
+        let program = ProgramSpec::new(
+            FormShape::new(
+                Shape::default(),
+                Context::new(
+                    vec!["crate::dataset::nlp".to_string()],
+                    vec![],
+                    "kernel".to_string(),
+                    vec!["dataset.semantic".to_string()],
+                ),
+                Morph::new(vec!["base.normalize".to_string()]),
+            ),
+            Specification::new("gdsl.analytics".to_string(), None, HashMap::new()),
+            vec![],
+            vec![app_form("centrality", "algo.pagerank")],
+            vec!["centrality".to_string()],
+        );
+
+        let shell_plan = program
+            .compile_shell_execution_plan()
+            .expect("shell execution plan should compile");
+
+        assert_eq!(shell_plan.program_name, "gdsl.analytics");
+        assert_eq!(shell_plan.selected_forms, vec!["centrality"]);
+        assert!(matches!(
+            shell_plan.steps.first(),
+            Some(ShellExecutionStep::MaterializeDatasetArtifact(_))
+        ));
+        assert!(shell_plan
+            .steps
+            .iter()
+            .any(|step| matches!(step, ShellExecutionStep::BuildFactStoreBinding(_))));
+        assert!(shell_plan
+            .steps
+            .iter()
+            .any(|step| matches!(step, ShellExecutionStep::BuildKnowledgeStoreBinding(_))));
+        assert!(shell_plan
+            .steps
+            .iter()
+            .any(|step| matches!(step, ShellExecutionStep::ExecutePipelineBinding(_))));
+        assert!(shell_plan
+            .steps
+            .iter()
+            .any(|step| matches!(step, ShellExecutionStep::ExecuteWorkflowStep(_))));
+        assert!(matches!(
+            shell_plan.steps.last(),
+            Some(ShellExecutionStep::ExecuteOpcode(opcode)) if opcode == "algo.pagerank"
+        ));
+    }
+
+    #[test]
+    fn compiles_feature_soul_for_dataframe_workflow_and_reflection() {
+        let program = ProgramSpec::new(
+            FormShape::new(
+                Shape::default(),
+                Context::new(
+                    vec!["crate::dataset::nlp".to_string()],
+                    vec![],
+                    "kernel".to_string(),
+                    vec!["dataset.semantic".to_string()],
+                ),
+                Morph::new(vec!["base.normalize".to_string()]),
+            ),
+            Specification::new("gdsl.analytics".to_string(), None, HashMap::new()),
+            vec![],
+            vec![app_form("centrality", "algo.pagerank")],
+            vec!["centrality".to_string()],
+        );
+
+        let soul = program
+            .compile_feature_soul()
+            .expect("feature soul should compile");
+
+        assert_eq!(soul.program_name, "gdsl.analytics");
+        assert!(soul
+            .dataframe
+            .entities
+            .iter()
+            .any(|binding| binding.contains("application-form:centrality")));
+        assert!(soul
+            .dataframe
+            .attributes
+            .iter()
+            .any(|binding| binding.contains("condition:dataset.semantic")));
+        assert!(soul
+            .dataframe
+            .relations
+            .iter()
+            .any(|binding| binding.contains("operator-pattern:algo.pagerank")));
+        assert!(soul
+            .pipeline_bindings
+            .iter()
+            .any(|binding| binding.contains("operator-pattern:base.normalize")));
+        assert!(soul
+            .workflow
+            .planning_steps
+            .iter()
+            .any(|binding| binding.contains("condition:dataset.semantic")));
     }
 
     #[test]

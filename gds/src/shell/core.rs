@@ -17,7 +17,7 @@ use crate::mem::{MemoryEstimations, MemoryRange, MemoryTree};
 
 use super::{
     ShellAddress, ShellAlgebra, ShellFold, ShellHelp, ShellMoment, ShellMomentKind, ShellPipeline,
-    ShellPipelineDescriptor, ShellProgram, ShellRegister, ShellSchema,
+    ShellPipelineDescriptor, ShellPipelineFacade, ShellProgram, ShellRegister, ShellSchema,
 };
 
 /// Lightweight seed extracted from the immediate DataFrame body.
@@ -1872,6 +1872,10 @@ impl GdsShell {
             descriptor = descriptor.with_mediated_body();
         }
         descriptor
+    }
+
+    pub fn pipeline_facade(&self) -> ShellPipelineFacade {
+        ShellPipelineFacade::from_shell(self)
     }
 
     fn concept_return_plan_steps(&self) -> Vec<String> {
