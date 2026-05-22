@@ -7,6 +7,7 @@
 
 use super::SpanningTreeStorageRuntime;
 use crate::algo::algorithms::pathfinding::PathResult;
+use crate::concurrency::TerminationFlag;
 use crate::config::validation::ConfigError;
 use crate::define_algorithm_spec;
 use crate::projection::eval::algorithm::AlgorithmError;
@@ -23,19 +24,27 @@ use std::sync::Arc;
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SpanningTreeConfig {
     /// Starting node for the spanning tree
+    #[serde(alias = "startNode", alias = "startNodeId", alias = "start_node")]
     pub start_node_id: u32,
 
     /// Whether to compute minimum (true) or maximum (false) spanning tree
+    #[serde(alias = "computeMinimum")]
     pub compute_minimum: bool,
 
     /// Concurrency level
     pub concurrency: usize,
     /// Optional relationship types to include (empty means all types)
-    #[serde(default)]
+    #[serde(default, alias = "relationshipTypes")]
     pub relationship_types: Vec<String>,
 
     /// Relationship weight property to use
-    #[serde(default = "SpanningTreeConfig::default_weight_property")]
+    #[serde(
+        default = "SpanningTreeConfig::default_weight_property",
+        alias = "relationshipWeightProperty",
+        alias = "relationship_weight_property",
+        alias = "weightProperty",
+        alias = "weight_property"
+    )]
     pub weight_property: String,
 
     /// Direction to traverse edges: "outgoing", "incoming", or "undirected".
@@ -367,9 +376,15 @@ define_algorithm_spec! {
             Tasks::leaf_with_volume("spanning_tree".to_string(), graph.relationship_count()),
             config.concurrency,
         );
+        let termination = TerminationFlag::running_true();
 
         let spanning_tree = storage
-            .compute_spanning_tree_with_graph(graph.as_ref(), direction_byte, &mut progress_tracker)
+            .compute_spanning_tree_with_graph_and_termination(
+                graph.as_ref(),
+                direction_byte,
+                &mut progress_tracker,
+                &termination,
+            )
             .map_err(|e| AlgorithmError::Execution(format!("Spanning tree computation failed: {}", e)))?;
 
         // Calculate computation time
@@ -413,6 +428,26 @@ mod tests {
         // Invalid concurrency should fail
         config.concurrency = 0;
         assert!(config.validate().is_err());
+    }
+
+    #[test]
+    fn test_spanning_tree_config_java_aliases() {
+        let config: SpanningTreeConfig = serde_json::from_value(json!({
+            "startNodeId": 3,
+            "computeMinimum": false,
+            "concurrency": 2,
+            "relationshipTypes": ["ROAD"],
+            "relationshipWeightProperty": "cost",
+            "direction": "incoming"
+        }))
+        .unwrap();
+
+        assert_eq!(config.start_node_id, 3);
+        assert!(!config.compute_minimum);
+        assert_eq!(config.concurrency, 2);
+        assert_eq!(config.relationship_types, vec!["ROAD"]);
+        assert_eq!(config.weight_property, "cost");
+        assert_eq!(config.direction, "incoming");
     }
 
     #[test]

@@ -4,6 +4,7 @@ use crate::algo::prize_collecting_steiner_tree::{
     PCSTreeComputationRuntime, PCSTreeConfig, PCSTreeMutateResult, PCSTreeResult,
     PCSTreeResultBuilder, PCSTreeRow, PCSTreeStats, PCSTreeStorageRuntime,
 };
+use crate::concurrency::TerminationFlag;
 use crate::mem::MemoryRange;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
@@ -158,10 +159,12 @@ impl PCSTreeBuilder {
         };
         let storage = PCSTreeStorageRuntime::new(config, self.concurrency);
         let mut computation = PCSTreeComputationRuntime::new(prizes, node_count);
-        let result = storage.compute_prize_collecting_steiner_tree(
+        let termination = TerminationFlag::running_true();
+        let result = storage.compute_prize_collecting_steiner_tree_with_termination(
             &mut computation,
             Some(graph_view.as_ref()),
             &mut progress_tracker,
+            &termination,
         )?;
         Ok((result, start.elapsed()))
     }
@@ -216,13 +219,16 @@ impl PCSTreeBuilder {
 
     /// Estimate memory usage for the computation
     pub fn estimate_memory(&self) -> Result<MemoryRange> {
-        // Estimate based on node count and expected tree structure
         let node_count = self.graph_store.node_count();
-        let estimated_bytes = node_count * std::mem::size_of::<f64>() * 4; // prizes, costs, parents, etc.
-        Ok(MemoryRange::of_range(
-            estimated_bytes / 2,
-            estimated_bytes * 2,
-        ))
+        let relationship_count = self.graph_store.relationship_count();
+        let per_node = node_count
+            * (std::mem::size_of::<f64>() * 4
+                + std::mem::size_of::<i64>() * 2
+                + std::mem::size_of::<bool>());
+        let frontier =
+            relationship_count * (std::mem::size_of::<i64>() * 2 + std::mem::size_of::<f64>() * 2);
+        let total = per_node + frontier;
+        Ok(MemoryRange::of_range(total, total + total / 5))
     }
 }
 
@@ -271,5 +277,25 @@ mod tests {
 
         // Should fail validation
         assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_estimate_memory_scales_with_graph_size() {
+        let store = store();
+        let node_count = store.node_count();
+        let relationship_count = store.relationship_count();
+        let estimate = PCSTreeBuilder::new(Arc::clone(&store))
+            .estimate_memory()
+            .unwrap();
+
+        let expected_min = node_count
+            * (std::mem::size_of::<f64>() * 4
+                + std::mem::size_of::<i64>() * 2
+                + std::mem::size_of::<bool>())
+            + relationship_count
+                * (std::mem::size_of::<i64>() * 2 + std::mem::size_of::<f64>() * 2);
+
+        assert_eq!(estimate.min(), expected_min);
+        assert_eq!(estimate.max(), expected_min + expected_min / 5);
     }
 }

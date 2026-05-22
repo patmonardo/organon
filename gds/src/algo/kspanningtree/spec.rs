@@ -11,13 +11,20 @@ use std::time::Duration;
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct KSpanningTreeConfig {
     /// Source node to start spanning tree from
+    #[serde(alias = "sourceNode", alias = "sourceNodeId", alias = "source_node_id")]
     pub source_node: u64,
     /// Number of spanning trees to create (k)
     pub k: u64,
     /// Objective: "min" for minimum spanning tree, "max" for maximum
     pub objective: String,
     /// Optional relationship weight property
-    #[serde(default = "default_weight_property")]
+    #[serde(
+        default = "default_weight_property",
+        alias = "relationshipWeightProperty",
+        alias = "relationship_weight_property",
+        alias = "weightProperty",
+        alias = "weight_property"
+    )]
     pub weight_property: Option<String>,
 }
 

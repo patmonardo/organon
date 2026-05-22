@@ -267,9 +267,13 @@ impl TopologicalSortFacade {
     /// ```
     pub fn estimate_memory(&self) -> MemoryRange {
         let node_count = self.graph_store.node_count();
+        let relationship_count = self.graph_store.relationship_count();
 
         // Node ordering array: node_count * 8 bytes (u64 per node)
         let ordering_memory = node_count * 8;
+
+        // In-degree array used by Kahn traversal.
+        let in_degree_memory = node_count * 8;
 
         // Distance array: node_count * 8 bytes (f64 per node, if computing distances)
         let distance_memory = if self.config.compute_max_distance_from_source {
@@ -279,11 +283,9 @@ impl TopologicalSortFacade {
         };
 
         // Graph structure overhead (adjacency lists, etc.)
-        let avg_degree = 10.0; // Conservative estimate
-        let relationship_count = (node_count as f64 * avg_degree) as usize;
         let graph_overhead = relationship_count * 16; // ~16 bytes per relationship
 
-        let total_memory = ordering_memory + distance_memory + graph_overhead;
+        let total_memory = ordering_memory + in_degree_memory + distance_memory + graph_overhead;
 
         // Add 20% overhead for algorithm-specific structures
         let overhead = total_memory / 5;
@@ -393,5 +395,37 @@ mod tests {
         // Node 0 (source) should have distance 0
         let node_0 = rows.iter().find(|r| r.node_id == 0).unwrap();
         assert_eq!(node_0.max_distance, Some(0.0));
+    }
+
+    #[test]
+    fn from_spec_json_accepts_compute_max_distance_alias() {
+        let store = Arc::new(store_from_directed_edges(3, &[(0, 1), (1, 2)]));
+        let facade = TopologicalSortFacade::from_spec_json(
+            store,
+            &serde_json::json!({
+                "computeMaxDistanceFromSource": true,
+                "concurrency": 2
+            }),
+        )
+        .unwrap();
+
+        assert!(facade.config.compute_max_distance_from_source);
+        assert_eq!(facade.config.concurrency, 2);
+    }
+
+    #[test]
+    fn estimate_memory_uses_actual_relationship_count() {
+        let store = Arc::new(store_from_directed_edges(4, &[(0, 1), (1, 2), (2, 3)]));
+        let relationship_count = store.relationship_count();
+        let estimate = TopologicalSortFacade::new(Arc::clone(&store))
+            .compute_max_distance(true)
+            .estimate_memory();
+
+        let node_count = store.node_count();
+        let expected_min =
+            node_count * 8 + node_count * 8 + node_count * 8 + relationship_count * 16;
+
+        assert_eq!(estimate.min(), expected_min);
+        assert_eq!(estimate.max(), expected_min + expected_min / 5);
     }
 }

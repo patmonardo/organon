@@ -2,6 +2,7 @@
 
 use super::computation::KSpanningTreeComputationRuntime;
 use super::spec::KSpanningTreeResult;
+use crate::concurrency::TerminationFlag;
 use crate::core::utils::progress::ProgressTracker;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::Graph;
@@ -50,6 +51,22 @@ impl KSpanningTreeStorageRuntime {
         graph: Option<&dyn Graph>,
         progress_tracker: &mut dyn ProgressTracker,
     ) -> Result<KSpanningTreeResult, AlgorithmError> {
+        self.compute_kspanningtree_with_termination(
+            computation,
+            graph,
+            progress_tracker,
+            &TerminationFlag::running_true(),
+        )
+    }
+
+    /// Compute k-spanning tree using controller pattern with request termination support.
+    pub fn compute_kspanningtree_with_termination(
+        &self,
+        computation: &mut KSpanningTreeComputationRuntime,
+        graph: Option<&dyn Graph>,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination: &TerminationFlag,
+    ) -> Result<KSpanningTreeResult, AlgorithmError> {
         let graph = graph.ok_or_else(|| {
             AlgorithmError::Execution("Graph interface required for k-spanning tree".to_string())
         })?;
@@ -62,7 +79,8 @@ impl KSpanningTreeStorageRuntime {
         // attempt to restart the same leaf task and panic. The spanning tree implementation
         // manages its own begin/end calls.
         let is_min = self.objective == "min";
-        let mst_result = self.compute_mst_using_prim(graph, is_min, progress_tracker)?;
+        let mst_result =
+            self.compute_mst_using_prim(graph, is_min, progress_tracker, termination)?;
 
         // Step 2: Initialize computation runtime with MST data
         computation.initialize_from_mst(
@@ -108,6 +126,7 @@ impl KSpanningTreeStorageRuntime {
         graph: &dyn Graph,
         is_min: bool,
         progress_tracker: &mut dyn ProgressTracker,
+        termination: &TerminationFlag,
     ) -> Result<super::super::spanning_tree::SpanningTree, AlgorithmError> {
         use crate::algo::spanning_tree::{
             SpanningTreeComputationRuntime, SpanningTreeStorageRuntime,
@@ -127,11 +146,12 @@ impl KSpanningTreeStorageRuntime {
         );
 
         // Compute MST
-        spanning_tree_storage.compute_spanning_tree(
+        spanning_tree_storage.compute_spanning_tree_with_termination(
             &mut spanning_tree_computation,
             Some(graph),
             2, // undirected
             progress_tracker,
+            termination,
         )
     }
 

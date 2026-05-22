@@ -12,6 +12,7 @@ use crate::algo::kspanningtree::{
     KSpanningTreeConfig, KSpanningTreeMutateResult, KSpanningTreeResult,
     KSpanningTreeResultBuilder, KSpanningTreeRow, KSpanningTreeStats,
 };
+use crate::concurrency::TerminationFlag;
 use crate::core::utils::progress::Tasks;
 use crate::mem::MemoryRange;
 use crate::projection::Orientation;
@@ -149,12 +150,14 @@ impl KSpanningTreeBuilder {
 
         // Create computation runtime (Subtle pole - state management)
         let mut computation = KSpanningTreeComputationRuntime::new(node_count);
+        let termination = TerminationFlag::running_true();
 
         // Call storage.compute_kspanningtree() - Applications never call ::algo:: directly
-        let result = storage.compute_kspanningtree(
+        let result = storage.compute_kspanningtree_with_termination(
             &mut computation,
             Some(graph_view.as_ref()),
             &mut progress_tracker,
+            &termination,
         )?;
 
         Ok((result, start.elapsed()))
@@ -215,6 +218,7 @@ impl KSpanningTreeBuilder {
     /// - graph structure overhead
     pub fn estimate_memory(&self) -> MemoryRange {
         let node_count = self.graph_store.node_count();
+        let relationship_count = self.graph_store.relationship_count();
 
         // parent: i64, cost: f64
         let arrays = node_count * (std::mem::size_of::<i64>() + std::mem::size_of::<f64>());
@@ -223,8 +227,6 @@ impl KSpanningTreeBuilder {
         let working = node_count * 32;
 
         // Graph structure overhead (adjacency lists, etc.)
-        let avg_degree = 10.0;
-        let relationship_count = (node_count as f64 * avg_degree) as usize;
         let graph_overhead = relationship_count * 16;
 
         let total = arrays + working + graph_overhead;
@@ -325,5 +327,40 @@ mod tests {
 
         // Should have at most 3 nodes
         assert!(rows.len() <= 3);
+    }
+
+    #[test]
+    fn facade_from_spec_json_accepts_java_aliases() {
+        let store = store_from_undirected_edges(4, &[(0, 1), (1, 2), (2, 3)]);
+        let builder = KSpanningTreeBuilder::from_spec_json(
+            Arc::new(store),
+            &serde_json::json!({
+                "sourceNode": 1,
+                "k": 3,
+                "objective": "max",
+                "relationshipWeightProperty": "weight"
+            }),
+        )
+        .unwrap();
+
+        assert_eq!(builder.config.source_node, 1);
+        assert_eq!(builder.config.k, 3);
+        assert_eq!(builder.config.objective, "max");
+        assert_eq!(builder.config.weight_property, Some("weight".to_string()));
+    }
+
+    #[test]
+    fn estimate_memory_uses_actual_relationship_count() {
+        let store = Arc::new(store_from_undirected_edges(4, &[(0, 1), (1, 2), (2, 3)]));
+        let relationship_count = store.relationship_count();
+        let estimate = KSpanningTreeBuilder::new(Arc::clone(&store)).estimate_memory();
+
+        let node_count = store.node_count();
+        let expected_min = node_count * (std::mem::size_of::<i64>() + std::mem::size_of::<f64>())
+            + node_count * 32
+            + relationship_count * 16;
+
+        assert_eq!(estimate.min(), expected_min);
+        assert_eq!(estimate.max(), expected_min + expected_min / 5);
     }
 }

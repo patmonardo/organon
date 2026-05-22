@@ -12,7 +12,11 @@ use std::time::Duration;
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TopologicalSortConfig {
     /// Whether to compute maximum distance from source nodes
-    #[serde(default = "default_compute_max_distance")]
+    #[serde(
+        default = "default_compute_max_distance",
+        alias = "computeMaxDistanceFromSource",
+        alias = "computeMaxDistance"
+    )]
     pub compute_max_distance_from_source: bool,
     /// Concurrency level
     pub concurrency: usize,

@@ -1,5 +1,6 @@
 use crate::algo::prize_collecting_steiner_tree::spec::{PCSTreeConfig, PCSTreeResult, PRUNED};
 use crate::algo::prize_collecting_steiner_tree::PCSTreeComputationRuntime;
+use crate::concurrency::TerminationFlag;
 use crate::core::utils::progress::{ProgressTracker, UNKNOWN_VOLUME};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::Graph;
@@ -64,6 +65,21 @@ impl PCSTreeStorageRuntime {
         graph: Option<&dyn Graph>,
         progress_tracker: &mut dyn ProgressTracker,
     ) -> Result<PCSTreeResult, AlgorithmError> {
+        self.compute_prize_collecting_steiner_tree_with_termination(
+            computation,
+            graph,
+            progress_tracker,
+            &TerminationFlag::running_true(),
+        )
+    }
+
+    pub fn compute_prize_collecting_steiner_tree_with_termination(
+        &self,
+        computation: &mut PCSTreeComputationRuntime,
+        graph: Option<&dyn Graph>,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination: &TerminationFlag,
+    ) -> Result<PCSTreeResult, AlgorithmError> {
         let volume = graph
             .map(|g| g.relationship_count())
             .unwrap_or(UNKNOWN_VOLUME);
@@ -78,7 +94,13 @@ impl PCSTreeStorageRuntime {
         let neighbor_fn =
             |node: NodeId| -> Vec<(NodeId, f64)> { self.get_neighbors_with_weights(graph, node) };
 
-        let result = self.compute_core(computation, node_count, &neighbor_fn, progress_tracker);
+        let result = self.compute_core(
+            computation,
+            node_count,
+            &neighbor_fn,
+            progress_tracker,
+            termination,
+        );
 
         match result {
             Ok(ok) => {
@@ -107,7 +129,14 @@ impl PCSTreeStorageRuntime {
     {
         progress_tracker.begin_subtask_unknown();
         let start = Instant::now();
-        let out = self.compute_core(computation, node_count, get_neighbors, progress_tracker);
+        let termination = TerminationFlag::running_true();
+        let out = self.compute_core(
+            computation,
+            node_count,
+            get_neighbors,
+            progress_tracker,
+            &termination,
+        );
         match out {
             Ok(v) => {
                 let _elapsed = start.elapsed();
@@ -127,6 +156,7 @@ impl PCSTreeStorageRuntime {
         node_count: usize,
         get_neighbors: &F,
         progress_tracker: &mut dyn ProgressTracker,
+        termination: &TerminationFlag,
     ) -> Result<PCSTreeResult, AlgorithmError>
     where
         F: Fn(NodeId) -> Vec<(NodeId, f64)>,
@@ -166,6 +196,11 @@ impl PCSTreeStorageRuntime {
 
         let mut heap = BinaryHeap::new();
         for (nbr, weight) in get_neighbors(root) {
+            if !termination.running() {
+                return Err(AlgorithmError::Execution(
+                    "Prize-collecting Steiner tree computation terminated".to_string(),
+                ));
+            }
             scanned_relationships = scanned_relationships.saturating_add(1);
             if scanned_relationships >= LOG_BATCH {
                 progress_tracker.log_progress(scanned_relationships);
@@ -187,6 +222,12 @@ impl PCSTreeStorageRuntime {
         }
 
         while let Some(entry) = heap.pop() {
+            if !termination.running() {
+                return Err(AlgorithmError::Execution(
+                    "Prize-collecting Steiner tree computation terminated".to_string(),
+                ));
+            }
+
             if computation.is_in_tree(entry.node) {
                 continue;
             }

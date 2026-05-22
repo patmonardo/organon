@@ -9,6 +9,7 @@ use crate::algo::spanning_tree::{
     SpanningTreeResultBuilder, SpanningTreeRow, SpanningTreeStats, SpanningTreeStorageRuntime,
     SpanningTreeWriteSummary,
 };
+use crate::concurrency::TerminationFlag;
 use crate::mem::MemoryRange;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
@@ -222,12 +223,14 @@ impl SpanningTreeFacade {
         );
 
         let start = Instant::now();
+        let termination = TerminationFlag::running_true();
 
         let tree = storage
-            .compute_spanning_tree_with_graph(
+            .compute_spanning_tree_with_graph_and_termination(
                 graph_view.as_ref(),
                 direction_byte,
                 &mut progress_tracker,
+                &termination,
             )
             .map_err(|e| {
                 AlgorithmError::Execution(format!("Spanning tree computation failed: {e}"))
@@ -310,6 +313,7 @@ impl SpanningTreeFacade {
     /// ```
     pub fn estimate_memory(&self) -> MemoryRange {
         let node_count = self.graph_store.node_count();
+        let relationship_count = self.graph_store.relationship_count();
 
         // Priority queue (open set) - worst case: all nodes in queue
         // Each entry: node_id (8 bytes) + cost (8 bytes) + heap overhead (16 bytes) = 32 bytes
@@ -318,12 +322,10 @@ impl SpanningTreeFacade {
         // Tree storage: parent array (8 bytes per node) + cost array (8 bytes per node)
         let tree_storage_memory = node_count * 8 * 2;
 
-        // Visited set: bit vector or hash set (~1 byte per node)
-        let visited_memory = node_count;
+        // Java memory model includes a visited bitset; round up to whole bytes.
+        let visited_memory = node_count.div_ceil(8);
 
-        // Graph structure overhead (adjacency lists, etc.)
-        let avg_degree = 10.0; // Conservative estimate
-        let relationship_count = (node_count as f64 * avg_degree) as usize;
+        // Graph adjacency/selector overhead is proportional to actual projected relationships.
         let graph_overhead = relationship_count * 16; // ~16 bytes per relationship
 
         let total_memory =
@@ -389,5 +391,42 @@ mod tests {
             .unwrap();
 
         assert!(stats.effective_node_count > 0);
+    }
+
+    #[test]
+    fn test_from_spec_json_accepts_java_aliases() {
+        let store = store();
+        let facade = SpanningTreeFacade::from_spec_json(
+            store,
+            &serde_json::json!({
+                "startNodeId": 0,
+                "computeMinimum": false,
+                "concurrency": 2,
+                "relationshipTypes": ["REL"],
+                "weightProperty": "weight",
+                "direction": "undirected"
+            }),
+        )
+        .unwrap();
+
+        assert_eq!(facade.config.start_node_id, 0);
+        assert!(!facade.config.compute_minimum);
+        assert_eq!(facade.config.concurrency, 2);
+        assert_eq!(facade.config.relationship_types, vec!["REL"]);
+        assert_eq!(facade.config.weight_property, "weight");
+    }
+
+    #[test]
+    fn test_estimate_memory_uses_actual_relationship_count() {
+        let store = store();
+        let relationship_count = store.relationship_count();
+        let estimate = SpanningTreeFacade::new(store.clone()).estimate_memory();
+
+        let node_count = store.node_count();
+        let expected_min =
+            node_count * 32 + node_count * 8 * 2 + node_count.div_ceil(8) + relationship_count * 16;
+
+        assert_eq!(estimate.min(), expected_min);
+        assert_eq!(estimate.max(), expected_min + expected_min / 5);
     }
 }

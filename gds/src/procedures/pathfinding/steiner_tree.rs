@@ -9,6 +9,7 @@ use crate::algo::steiner_tree::{
     SteinerTreeComputationRuntime, SteinerTreeConfig, SteinerTreeMutateResult, SteinerTreeResult,
     SteinerTreeResultBuilder, SteinerTreeRow, SteinerTreeStats, SteinerTreeStorageRuntime,
 };
+use crate::concurrency::TerminationFlag;
 use crate::mem::MemoryRange;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
@@ -192,10 +193,12 @@ impl SteinerTreeBuilder {
 
         let storage = SteinerTreeStorageRuntime::new(config, self.concurrency);
         let mut computation = SteinerTreeComputationRuntime::new(self.delta, node_count);
-        let result = storage.compute_steiner_tree(
+        let termination = TerminationFlag::running_true();
+        let result = storage.compute_steiner_tree_with_termination(
             &mut computation,
             Some(graph_view.as_ref()),
             &mut progress_tracker,
+            &termination,
         )?;
         Ok((result, start.elapsed()))
     }
@@ -250,13 +253,16 @@ impl SteinerTreeBuilder {
 
     /// Estimate memory usage for the computation
     pub fn estimate_memory(&self) -> Result<MemoryRange> {
-        // Estimate based on node count and expected tree structure
         let node_count = self.graph_store.node_count();
-        let estimated_bytes = node_count * std::mem::size_of::<f64>() * 3; // distances, parents, costs
-        Ok(MemoryRange::of_range(
-            estimated_bytes / 2,
-            estimated_bytes * 2,
-        ))
+        let relationship_count = self.graph_store.relationship_count();
+        let per_node = node_count
+            * (std::mem::size_of::<f64>() * 3
+                + std::mem::size_of::<i64>() * 2
+                + std::mem::size_of::<bool>());
+        let frontier = node_count * std::mem::size_of::<usize>() * self.concurrency.max(1);
+        let graph_overhead = relationship_count * 16;
+        let total = per_node + frontier + graph_overhead;
+        Ok(MemoryRange::of_range(total, total + total / 5))
     }
 }
 
@@ -311,5 +317,25 @@ mod tests {
             .unwrap();
 
         assert!(stats.effective_target_nodes_count > 0);
+    }
+
+    #[test]
+    fn test_estimate_memory_scales_with_graph_size() {
+        let store = store();
+        let node_count = store.node_count();
+        let relationship_count = store.relationship_count();
+        let estimate = SteinerTreeBuilder::new(Arc::clone(&store))
+            .estimate_memory()
+            .unwrap();
+
+        let expected_min = node_count
+            * (std::mem::size_of::<f64>() * 3
+                + std::mem::size_of::<i64>() * 2
+                + std::mem::size_of::<bool>())
+            + node_count * std::mem::size_of::<usize>() * 4
+            + relationship_count * 16;
+
+        assert_eq!(estimate.min(), expected_min);
+        assert_eq!(estimate.max(), expected_min + expected_min / 5);
     }
 }

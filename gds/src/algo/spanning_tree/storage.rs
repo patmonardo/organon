@@ -6,6 +6,7 @@
 //! handling persistent data access and orchestrating the Prim's algorithm execution.
 
 use super::{SpanningTree, SpanningTreeComputationRuntime};
+use crate::concurrency::TerminationFlag;
 use crate::core::utils::progress::ProgressTracker;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::Graph;
@@ -74,12 +75,30 @@ impl SpanningTreeStorageRuntime {
         direction: u8,
         progress_tracker: &mut dyn ProgressTracker,
     ) -> Result<SpanningTree, AlgorithmError> {
+        self.compute_spanning_tree_with_termination(
+            computation,
+            graph,
+            direction,
+            progress_tracker,
+            &TerminationFlag::running_true(),
+        )
+    }
+
+    /// Compute the spanning tree using Prim's algorithm with request termination support.
+    pub fn compute_spanning_tree_with_termination(
+        &self,
+        computation: &mut SpanningTreeComputationRuntime,
+        graph: Option<&dyn Graph>,
+        direction: u8,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination: &TerminationFlag,
+    ) -> Result<SpanningTree, AlgorithmError> {
         let node_count = graph.map(|g| g.node_count() as u32).unwrap_or(0);
+        let progress_volume = graph
+            .map(|g| g.relationship_count())
+            .unwrap_or(node_count as usize);
 
-        progress_tracker.begin_subtask_with_volume(node_count as usize);
-
-        let mut processed_nodes: usize = 0;
-        const LOG_BATCH: usize = 256;
+        progress_tracker.begin_subtask_with_volume(progress_volume);
 
         let result = (|| {
             // Handle empty graph upfront
@@ -94,6 +113,12 @@ impl SpanningTreeStorageRuntime {
 
             // Main Prim's algorithm loop
             while !computation.is_queue_empty() {
+                if !termination.running() {
+                    return Err(AlgorithmError::Execution(
+                        "Spanning tree computation terminated".to_string(),
+                    ));
+                }
+
                 // Get next node from priority queue
                 let (current_node, current_cost) = match computation.pop_from_queue() {
                     Some((node, cost)) => (node, cost),
@@ -107,17 +132,12 @@ impl SpanningTreeStorageRuntime {
 
                 // Mark as visited and update progress
                 computation.mark_visited(current_node, current_cost);
-                processed_nodes += 1;
-
-                if processed_nodes >= LOG_BATCH {
-                    progress_tracker.log_progress(processed_nodes);
-                    processed_nodes = 0;
-                }
 
                 // Process neighbors via graph interface
                 if let Some(graph) = graph {
                     let neighbors =
                         self.get_neighbors_from_graph(graph, current_node, direction)?;
+                    progress_tracker.log_progress(neighbors.len());
                     for (neighbor, weight) in neighbors {
                         Self::validate_node_in_graph(neighbor, node_count, "neighbor")?;
                         Self::validate_edge_weight(current_node, neighbor, weight)?;
@@ -145,10 +165,6 @@ impl SpanningTreeStorageRuntime {
                 }
             }
 
-            if processed_nodes > 0 {
-                progress_tracker.log_progress(processed_nodes);
-            }
-
             // Build and return result
             Ok(computation.build_result(node_count))
         })();
@@ -172,6 +188,22 @@ impl SpanningTreeStorageRuntime {
         direction: u8,
         progress_tracker: &mut dyn ProgressTracker,
     ) -> Result<SpanningTree, AlgorithmError> {
+        self.compute_spanning_tree_with_graph_and_termination(
+            graph,
+            direction,
+            progress_tracker,
+            &TerminationFlag::running_true(),
+        )
+    }
+
+    /// Compute the spanning tree using a bound Graph and request termination support.
+    pub fn compute_spanning_tree_with_graph_and_termination(
+        &self,
+        graph: &dyn Graph,
+        direction: u8,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination: &TerminationFlag,
+    ) -> Result<SpanningTree, AlgorithmError> {
         let node_count = graph.node_count() as u32;
 
         // Create computation runtime for this operation
@@ -182,7 +214,13 @@ impl SpanningTreeStorageRuntime {
             self.concurrency,
         );
 
-        self.compute_spanning_tree(&mut computation, Some(graph), direction, progress_tracker)
+        self.compute_spanning_tree_with_termination(
+            &mut computation,
+            Some(graph),
+            direction,
+            progress_tracker,
+            termination,
+        )
     }
 
     /// Neighbor retrieval backed by Graph::stream_relationships (outgoing edges), with numeric fallback.

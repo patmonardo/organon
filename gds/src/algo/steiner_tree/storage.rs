@@ -1,5 +1,6 @@
 use crate::algo::steiner_tree::spec::{SteinerTreeConfig, SteinerTreeResult, PRUNED};
 use crate::algo::steiner_tree::SteinerTreeComputationRuntime;
+use crate::concurrency::TerminationFlag;
 use crate::core::utils::progress::{ProgressTracker, UNKNOWN_VOLUME};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::Graph;
@@ -31,6 +32,21 @@ impl SteinerTreeStorageRuntime {
         graph: Option<&dyn Graph>,
         progress_tracker: &mut dyn ProgressTracker,
     ) -> Result<SteinerTreeResult, AlgorithmError> {
+        self.compute_steiner_tree_with_termination(
+            computation,
+            graph,
+            progress_tracker,
+            &TerminationFlag::running_true(),
+        )
+    }
+
+    pub fn compute_steiner_tree_with_termination(
+        &self,
+        computation: &mut SteinerTreeComputationRuntime,
+        graph: Option<&dyn Graph>,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination: &TerminationFlag,
+    ) -> Result<SteinerTreeResult, AlgorithmError> {
         let volume = graph
             .map(|g| g.relationship_count())
             .unwrap_or(UNKNOWN_VOLUME);
@@ -46,7 +62,13 @@ impl SteinerTreeStorageRuntime {
         let neighbor_fn =
             |node: NodeId| -> Vec<(NodeId, f64)> { self.get_neighbors_with_weights(graph, node) };
 
-        let result = self.compute_core(computation, node_count, &neighbor_fn, progress_tracker);
+        let result = self.compute_core(
+            computation,
+            node_count,
+            &neighbor_fn,
+            progress_tracker,
+            termination,
+        );
 
         match result {
             Ok(ok) => {
@@ -75,7 +97,14 @@ impl SteinerTreeStorageRuntime {
     {
         progress_tracker.begin_subtask_unknown();
         let start = Instant::now();
-        let out = self.compute_core(computation, node_count, get_neighbors, progress_tracker);
+        let termination = TerminationFlag::running_true();
+        let out = self.compute_core(
+            computation,
+            node_count,
+            get_neighbors,
+            progress_tracker,
+            &termination,
+        );
         match out {
             Ok(v) => {
                 let _elapsed = start.elapsed();
@@ -95,6 +124,7 @@ impl SteinerTreeStorageRuntime {
         node_count: usize,
         get_neighbors: &F,
         progress_tracker: &mut dyn ProgressTracker,
+        termination: &TerminationFlag,
     ) -> Result<SteinerTreeResult, AlgorithmError>
     where
         F: Fn(NodeId) -> Vec<(NodeId, f64)>,
@@ -153,12 +183,19 @@ impl SteinerTreeStorageRuntime {
         let mut remaining: Vec<NodeId> = terminals.into_iter().filter(|&t| t != source).collect();
 
         while !remaining.is_empty() {
+            if !termination.running() {
+                return Err(AlgorithmError::Execution(
+                    "Steiner tree computation terminated".to_string(),
+                ));
+            }
+
             self.run_multi_source_delta_stepping(
                 computation,
                 &merged_to_source,
                 get_neighbors,
                 progress_tracker,
-            );
+                termination,
+            )?;
 
             // Choose closest reachable terminal.
             let mut best_idx: Option<usize> = None;
@@ -221,7 +258,9 @@ impl SteinerTreeStorageRuntime {
         merged_to_source: &[bool],
         get_neighbors: &F,
         progress_tracker: &mut dyn ProgressTracker,
-    ) where
+        termination: &TerminationFlag,
+    ) -> Result<(), AlgorithmError>
+    where
         F: Fn(NodeId) -> Vec<(NodeId, f64)>,
     {
         let mut scanned_relationships: usize = 0;
@@ -234,6 +273,12 @@ impl SteinerTreeStorageRuntime {
         let mut iteration = 0usize;
 
         while !frontier.is_empty() && iteration < max_iterations {
+            if !termination.running() {
+                return Err(AlgorithmError::Execution(
+                    "Steiner tree computation terminated".to_string(),
+                ));
+            }
+
             let mut next_frontier = std::collections::VecDeque::new();
 
             while let Some(node) = frontier.pop_front() {
@@ -281,6 +326,8 @@ impl SteinerTreeStorageRuntime {
         if scanned_relationships > 0 {
             progress_tracker.log_progress(scanned_relationships);
         }
+
+        Ok(())
     }
 
     fn get_neighbors_with_weights(
