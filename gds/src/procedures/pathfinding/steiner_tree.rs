@@ -101,23 +101,23 @@ impl SteinerTreeBuilder {
     }
 
     fn validate(&self) -> Result<()> {
-        if self.target_nodes.is_empty() {
-            return Err(AlgorithmError::Execution(
-                "target_nodes must not be empty".to_string(),
-            ));
-        }
+        let config = SteinerTreeConfig {
+            source_node: self.source_node as NodeId,
+            target_nodes: self.target_nodes.iter().map(|&n| n as NodeId).collect(),
+            relationship_weight_property: self.relationship_weight_property.clone(),
+            delta: self.delta,
+            apply_rerouting: self.apply_rerouting,
+        };
+
+        config
+            .validate()
+            .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
 
         if self.concurrency == 0 {
             return Err(AlgorithmError::Execution(
                 "concurrency must be > 0".to_string(),
             ));
         }
-
-        if self.delta <= 0.0 {
-            return Err(AlgorithmError::Execution("delta must be > 0".to_string()));
-        }
-
-        ConfigValidator::in_range(self.delta, 0.0, 100.0, "delta")?;
 
         Ok(())
     }

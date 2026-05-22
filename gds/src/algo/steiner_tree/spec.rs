@@ -1,4 +1,5 @@
 use crate::algo::algorithms::pathfinding::PathResult;
+use crate::config::validation::ConfigError;
 use crate::types::graph::NodeId;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
@@ -37,6 +38,41 @@ fn default_delta() -> f64 {
 
 fn default_apply_rerouting() -> bool {
     true
+}
+
+impl SteinerTreeConfig {
+    pub fn validate(&self) -> Result<(), ConfigError> {
+        if self.target_nodes.is_empty() {
+            return Err(ConfigError::InvalidParameter {
+                parameter: "target_nodes".to_string(),
+                reason: "target_nodes must not be empty".to_string(),
+            });
+        }
+
+        if self.delta <= 0.0 || self.delta > 100.0 {
+            return Err(ConfigError::InvalidParameter {
+                parameter: "delta".to_string(),
+                reason: "delta must be in (0.0, 100.0]".to_string(),
+            });
+        }
+
+        if let Some(prop) = &self.relationship_weight_property {
+            if prop.trim().is_empty() {
+                return Err(ConfigError::InvalidParameter {
+                    parameter: "relationship_weight_property".to_string(),
+                    reason: "relationship_weight_property cannot be empty".to_string(),
+                });
+            }
+        }
+
+        Ok(())
+    }
+}
+
+impl crate::config::ValidatedConfig for SteinerTreeConfig {
+    fn validate(&self) -> Result<(), ConfigError> {
+        SteinerTreeConfig::validate(self)
+    }
 }
 
 /// Result of Steiner Tree computation

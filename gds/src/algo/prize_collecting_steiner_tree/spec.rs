@@ -1,4 +1,5 @@
 use crate::algo::algorithms::pathfinding::PathResult;
+use crate::config::validation::ConfigError;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use std::time::Duration;
@@ -16,6 +17,34 @@ pub struct PCSTreeConfig {
     /// Optional relationship weight property name
     #[serde(skip_serializing_if = "Option::is_none")]
     pub relationship_weight_property: Option<String>,
+}
+
+impl PCSTreeConfig {
+    pub fn validate(&self) -> Result<(), ConfigError> {
+        if self.prizes.is_empty() {
+            return Err(ConfigError::InvalidParameter {
+                parameter: "prizes".to_string(),
+                reason: "prizes must be provided and non-empty".to_string(),
+            });
+        }
+
+        if let Some(prop) = &self.relationship_weight_property {
+            if prop.trim().is_empty() {
+                return Err(ConfigError::InvalidParameter {
+                    parameter: "relationship_weight_property".to_string(),
+                    reason: "relationship_weight_property cannot be empty".to_string(),
+                });
+            }
+        }
+
+        Ok(())
+    }
+}
+
+impl crate::config::ValidatedConfig for PCSTreeConfig {
+    fn validate(&self) -> Result<(), ConfigError> {
+        PCSTreeConfig::validate(self)
+    }
 }
 
 /// Result of Prize-Collecting Steiner Tree computation

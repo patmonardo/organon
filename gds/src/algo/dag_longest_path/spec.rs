@@ -3,6 +3,7 @@
 //! **Translation Source**: `org.neo4j.gds.dag.longestPath.DagLongestPathBaseConfig`
 
 use crate::algo::algorithms::pathfinding::PathResult;
+use crate::config::validation::ConfigError;
 use crate::types::graph::NodeId;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
@@ -11,6 +12,18 @@ use std::time::Duration;
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct DagLongestPathConfig {
     // No specific configuration needed beyond base algorithm settings
+}
+
+impl DagLongestPathConfig {
+    pub fn validate(&self) -> Result<(), ConfigError> {
+        Ok(())
+    }
+}
+
+impl crate::config::ValidatedConfig for DagLongestPathConfig {
+    fn validate(&self) -> Result<(), ConfigError> {
+        DagLongestPathConfig::validate(self)
+    }
 }
 
 /// Result row for longest path streaming

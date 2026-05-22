@@ -91,3 +91,17 @@ Before merging a facade change:
 4. Progress/task setter consistency is preserved.
 5. Focused tests for touched algorithm pass.
 6. `cargo check -p gds` passes.
+
+## 8) Execute Routing Rule
+
+For application-layer execute handlers under `gds/src/applications/algorithms/pathfinding/*.rs`:
+
+- Parse base request fields through `CommonRequest::parse(...)`.
+- Route operation flow through `Mode` enum variants (`Mode::Stream`, `Mode::Stats`, `Mode::Estimate`, `Mode::Mutate`, `Mode::Write`).
+- Do not hand-parse `mode`, `concurrency`, `submode`, or `graphName` ad hoc in individual handlers.
+
+Rationale:
+
+- Shell/Pipeline/Eval entrypoints depend on stable request semantics.
+- Shared parsing keeps error messages and boundary checks consistent.
+- Centralized routing reduces drift across per-algorithm handlers.

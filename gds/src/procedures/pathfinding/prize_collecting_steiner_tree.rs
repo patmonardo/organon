@@ -80,11 +80,14 @@ impl PCSTreeBuilder {
         self
     }
     fn validate(&self) -> Result<()> {
-        if self.prizes.is_empty() {
-            return Err(AlgorithmError::Execution(
-                "prizes must be provided and non-empty".to_string(),
-            ));
-        }
+        let config = PCSTreeConfig {
+            prizes: self.prizes.clone(),
+            relationship_weight_property: self.relationship_weight_property.clone(),
+        };
+
+        config
+            .validate()
+            .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
 
         if self.concurrency == 0 {
             return Err(AlgorithmError::Execution(

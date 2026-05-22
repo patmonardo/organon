@@ -5,8 +5,10 @@ use crate::applications::algorithms::machinery::{
     AlgorithmProcessingTemplateConvenience, DefaultAlgorithmProcessingTemplate,
     FnStatsResultBuilder, FnStreamResultBuilder, ProgressTrackerCreator, RequestScopedDependencies,
 };
-use crate::applications::algorithms::pathfinding::{err, get_str, get_u64, timings_json};
-use crate::concurrency::{Concurrency, TerminationFlag};
+use crate::applications::algorithms::pathfinding::{
+    err, get_str, get_u64, timings_json, CommonRequest, Mode,
+};
+use crate::concurrency::TerminationFlag;
 use crate::core::loading::{CatalogLoader, GraphResources};
 use crate::core::utils::progress::{JobId, ProgressTracker, TaskRegistryFactories, Tasks};
 use crate::types::catalog::GraphCatalog;
@@ -16,33 +18,13 @@ use std::sync::Arc;
 pub fn handle_delta_stepping(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value {
     let op = "delta_stepping";
 
-    let graph_name = match request.get("graphName").and_then(|v| v.as_str()) {
-        Some(name) => name,
-        None => return err(op, "INVALID_REQUEST", "Missing 'graphName' parameter"),
+    let common = match CommonRequest::parse(request) {
+        Ok(common) => common,
+        Err(e) => return err(op, "INVALID_REQUEST", &e),
     };
-
-    let mode = request
-        .get("mode")
-        .and_then(|v| v.as_str())
-        .unwrap_or("stream");
-
-    let concurrency_value = request
-        .get("concurrency")
-        .and_then(|v| v.as_u64())
-        .unwrap_or(1) as usize;
-
-    let concurrency = match Concurrency::new(concurrency_value) {
-        Some(value) => value,
-        None => {
-            return err(
-                op,
-                "INVALID_REQUEST",
-                "concurrency must be greater than zero",
-            )
-        }
-    };
-
-    let estimate_submode = request.get("submode").and_then(|v| v.as_str());
+    let graph_name = common.graph_name.as_str();
+    let concurrency = common.concurrency;
+    let concurrency_value = common.concurrency.value();
 
     let source = match get_u64(request, "source").or_else(|| get_u64(request, "sourceNode")) {
         Some(s) => s,
@@ -93,8 +75,8 @@ pub fn handle_delta_stepping(request: &Value, catalog: Arc<dyn GraphCatalog>) ->
     let template = DefaultAlgorithmProcessingTemplate::new(creator);
     let convenience = AlgorithmProcessingTemplateConvenience::new(template);
 
-    match mode {
-        "stream" => {
+    match common.mode {
+        Mode::Stream => {
             let task = Tasks::leaf("delta_stepping::stream".to_string())
                 .base()
                 .clone();
@@ -158,7 +140,7 @@ pub fn handle_delta_stepping(request: &Value, catalog: Arc<dyn GraphCatalog>) ->
                 ),
             }
         }
-        "stats" => {
+        Mode::Stats => {
             let task = Tasks::leaf("delta_stepping::stats".to_string())
                 .base()
                 .clone();
@@ -207,7 +189,7 @@ pub fn handle_delta_stepping(request: &Value, catalog: Arc<dyn GraphCatalog>) ->
                 ),
             }
         }
-        "estimate" => match estimate_submode {
+        Mode::Estimate => match common.estimate_submode.as_deref() {
             Some("memory") | None => {
                 let mut builder = graph_resources
                     .facade()
@@ -239,7 +221,7 @@ pub fn handle_delta_stepping(request: &Value, catalog: Arc<dyn GraphCatalog>) ->
                 &format!("Invalid estimate submode '{other}'. Use 'memory'"),
             ),
         },
-        "mutate" => {
+        Mode::Mutate => {
             let property_name = match request.get("mutateProperty").and_then(|v| v.as_str()) {
                 Some(name) => name,
                 None => {
@@ -285,7 +267,7 @@ pub fn handle_delta_stepping(request: &Value, catalog: Arc<dyn GraphCatalog>) ->
                 ),
             }
         }
-        "write" => {
+        Mode::Write => {
             let property_name = match request.get("writeProperty").and_then(|v| v.as_str()) {
                 Some(name) => name,
                 None => {
@@ -324,6 +306,5 @@ pub fn handle_delta_stepping(request: &Value, catalog: Arc<dyn GraphCatalog>) ->
                 ),
             }
         }
-        _ => err(op, "INVALID_REQUEST", "Invalid mode"),
     }
 }

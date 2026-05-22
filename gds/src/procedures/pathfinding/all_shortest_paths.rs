@@ -7,8 +7,8 @@ use crate::algo::algorithms::pathfinding::PathResult as ProcedurePathResult;
 use crate::algo::algorithms::Result;
 use crate::algo::algorithms::{ConfigValidator, WriteResult};
 use crate::algo::all_shortest_paths::{
-    AlgorithmType, AllShortestPathsComputationRuntime, AllShortestPathsMutationSummary,
-    AllShortestPathsStats, AllShortestPathsStorageRuntime,
+    AlgorithmType, AllShortestPathsComputationRuntime, AllShortestPathsConfig,
+    AllShortestPathsMutationSummary, AllShortestPathsStats, AllShortestPathsStorageRuntime,
 };
 use crate::mem::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
@@ -149,30 +149,23 @@ impl AllShortestPathsBuilder {
     }
 
     fn validate(&self) -> Result<()> {
-        if self.concurrency == 0 {
-            return Err(AlgorithmError::Execution(
-                "concurrency must be > 0".to_string(),
-            ));
-        }
+        let config = AllShortestPathsConfig {
+            algorithm_type: if self.weighted {
+                AlgorithmType::Weighted
+            } else {
+                AlgorithmType::Unweighted
+            },
+            concurrency: self.concurrency,
+            stream_results: true,
+            max_results: self.max_results,
+            relationship_types: self.relationship_types.clone(),
+            direction: self.direction.clone(),
+            weight_property: self.weight_property.clone(),
+        };
 
-        match self.direction.to_ascii_lowercase().as_str() {
-            "outgoing" | "incoming" | "undirected" => {}
-            other => {
-                return Err(AlgorithmError::Execution(format!(
-                    "direction must be 'outgoing', 'incoming', or 'undirected' (got '{other}')"
-                )));
-            }
-        }
-
-        ConfigValidator::non_empty_string(&self.weight_property, "weight_property")?;
-        if let Some(max) = self.max_results {
-            if max == 0 {
-                return Err(AlgorithmError::Execution(
-                    "max_results must be > 0".to_string(),
-                ));
-            }
-        }
-        Ok(())
+        config
+            .validate()
+            .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))
     }
 
     fn compute(self) -> Result<(Vec<AllShortestPathsRow>, AllShortestPathsStats)> {

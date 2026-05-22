@@ -6,8 +6,8 @@
 use crate::algo::algorithms::Result;
 use crate::algo::algorithms::{ConfigValidator, WriteResult};
 use crate::algo::dag_longest_path::{
-    DagLongestPathComputationRuntime, DagLongestPathMutateResult, DagLongestPathResult,
-    DagLongestPathResultBuilder, DagLongestPathRow, DagLongestPathStats,
+    DagLongestPathComputationRuntime, DagLongestPathConfig, DagLongestPathMutateResult,
+    DagLongestPathResult, DagLongestPathResultBuilder, DagLongestPathRow, DagLongestPathStats,
     DagLongestPathStorageRuntime,
 };
 use crate::mem::MemoryRange;
@@ -65,6 +65,10 @@ impl DagLongestPathBuilder {
     }
 
     fn validate(&self) -> Result<()> {
+        DagLongestPathConfig::default()
+            .validate()
+            .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
+
         if self.concurrency == 0 {
             return Err(AlgorithmError::Execution(
                 "concurrency must be > 0".to_string(),
