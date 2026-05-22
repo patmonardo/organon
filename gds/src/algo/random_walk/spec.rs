@@ -11,36 +11,75 @@ use std::time::Duration;
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct RandomWalkConfig {
     /// Number of walks to perform per node
+    #[serde(
+        default = "RandomWalkConfig::default_walks_per_node",
+        alias = "walksPerNode"
+    )]
     pub walks_per_node: usize,
     /// Length of each walk (number of steps)
+    #[serde(
+        default = "RandomWalkConfig::default_walk_length",
+        alias = "walkLength"
+    )]
     pub walk_length: usize,
     /// Return factor for node2vec (probability to return to previous node)
+    #[serde(
+        default = "RandomWalkConfig::default_return_factor",
+        alias = "returnFactor"
+    )]
     pub return_factor: f64,
     /// In-out factor for node2vec (probability to explore vs exploit)
+    #[serde(
+        default = "RandomWalkConfig::default_in_out_factor",
+        alias = "inOutFactor"
+    )]
     pub in_out_factor: f64,
     /// Optional list of source nodes (if empty, walks from all nodes)
+    #[serde(default, alias = "sourceNodes")]
     pub source_nodes: Vec<u64>,
     /// Random seed for reproducibility
+    #[serde(default, alias = "randomSeed")]
     pub random_seed: Option<u64>,
     /// Concurrency level
+    #[serde(default = "RandomWalkConfig::default_concurrency")]
     pub concurrency: usize,
 }
 
 impl Default for RandomWalkConfig {
     fn default() -> Self {
         Self {
-            walks_per_node: 10,
-            walk_length: 80,
-            return_factor: 1.0,
-            in_out_factor: 1.0,
+            walks_per_node: Self::default_walks_per_node(),
+            walk_length: Self::default_walk_length(),
+            return_factor: Self::default_return_factor(),
+            in_out_factor: Self::default_in_out_factor(),
             source_nodes: Vec::new(),
             random_seed: None,
-            concurrency: 4,
+            concurrency: Self::default_concurrency(),
         }
     }
 }
 
 impl RandomWalkConfig {
+    fn default_walks_per_node() -> usize {
+        10
+    }
+
+    fn default_walk_length() -> usize {
+        80
+    }
+
+    fn default_return_factor() -> f64 {
+        1.0
+    }
+
+    fn default_in_out_factor() -> f64 {
+        1.0
+    }
+
+    fn default_concurrency() -> usize {
+        4
+    }
+
     /// Validate configuration parameters
     pub fn validate(&self) -> Result<(), ConfigError> {
         if self.concurrency == 0 {

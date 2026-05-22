@@ -167,5 +167,7 @@ For each target algorithm:
 - gds/doc/COMMUNITY-ARCHITECTURAL-REVIEW.md
 - gds/doc/CENTRALITY-ARCHITECTURAL-REVIEW.md
 - gds/doc/PATHFINDING-ARCHITECTURAL-REVIEW.md
+- gds/Doctrine/EXEMPLARS/procedures/032-pathfinding-procedure-facade.md
+- gds/Doctrine/REFERENCES/procedures/pathfinding-procedure-facade.md
 - gds/doc/SIMILARITY_ARCHITECTURAL_REVIEW.md
 - gds/doc/PIPELINE_FACADE_ARCH_NOTE.md

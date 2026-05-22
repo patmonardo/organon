@@ -10,16 +10,23 @@ New examples use short Doctrine names. Do not use the old `collections_` prefix.
 
 Allowed top-level prefixes:
 
+- `proc`
+- `algo`
 - `form`
 - `shell`
 - `dataframe`
 - `dataset`
 
-These are also the top-level fixture and Doctrine roots, in order:
+The historical Doctrine roots remain, in order:
 
 ```text
 form -> shell -> dataframe -> dataset
 ```
+
+Procedure examples use `proc_` and algorithm-internal examples use `algo_`.
+Their fixture roots are `proc` and `algo`, respectively. Application-facing
+examples must prefer `proc_` and call procedure facades instead of `::algo::`
+modules directly.
 
 Allowed Dataset subdomain prefixes:
 
@@ -88,6 +95,7 @@ not.
 | 029-shell-compute-protocol | `shell_compute_protocol.rs` | `examples.old/collections_gds_shell.rs` |
 | 030-ideal-dataframe-dsl | design-only for now | none |
 | 031-shell-model-first | `shell_model_first.rs` | none |
+| 032-pathfinding-procedure-facade | `proc_pathfinding_procedure.rs` | none |
 
 ## Batch 1 Spine
 
@@ -132,6 +140,18 @@ Shell namespace coverage:
 |---|---|---|---|
 | `shell::model` | `shell_model_first.rs` | `fixtures/collections/shell/shell_model_first` | `covered` |
 | `shell::compute` | `shell_compute_protocol.rs` | `fixtures/collections/shell/shell_compute_protocol` | `covered` |
+
+Procedure namespace coverage:
+
+| Namespace | Example | Fixture Root | State |
+|---|---|---|---|
+| `proc::pathfinding` | `proc_pathfinding_procedure.rs` | `fixtures/collections/proc/proc_pathfinding_procedure` | `covered` |
+
+Algorithm-internal namespace coverage:
+
+| Namespace | Example | Fixture Root | State |
+|---|---|---|---|
+| `algo::pathfinding` | `algo_pathfinding_storage_computation.rs` | `fixtures/collections/algo/algo_pathfinding_storage_computation` | `planned` |
 
 Planned DataFrame namespace examples:
 

@@ -1,0 +1,3 @@
+nodes: 4
+relationships: 4
+entrypoint: GraphFacade::random_walk

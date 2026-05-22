@@ -294,7 +294,7 @@ impl RandomWalkFacade {
     ///
     /// Returns a memory range estimate based on:
     /// - Walk storage (walks_per_node * walk_length * node_count)
-    /// - Graph structure overhead
+    /// - Graph structure overhead from the actual projection relationship count
     ///
     /// ```rust,no_run
     /// # use gds::Graph;
@@ -305,6 +305,7 @@ impl RandomWalkFacade {
     /// ```
     pub fn estimate_memory(&self) -> MemoryRange {
         let node_count = self.graph_store.node_count();
+        let relationship_count = self.graph_store.relationship_count();
 
         // Walk storage: each walk is walk_length * 8 bytes (u64 per node)
         // Total walks: walks_per_node * source_nodes.len() or node_count if empty
@@ -317,8 +318,6 @@ impl RandomWalkFacade {
         let walk_storage = total_walks * self.config.walk_length * 8;
 
         // Graph structure overhead (adjacency lists, etc.)
-        let avg_degree = 10.0; // Conservative estimate
-        let relationship_count = (node_count as f64 * avg_degree) as usize;
         let graph_overhead = relationship_count * 16; // ~16 bytes per relationship
 
         let total_memory = walk_storage + graph_overhead;
@@ -437,5 +436,49 @@ mod tests {
 
         // 3 nodes * 2 walks per node = 6 walks
         assert_eq!(stats.walk_count, 6);
+    }
+
+    #[test]
+    fn from_spec_json_accepts_java_aliases_and_defaults() {
+        let store = Arc::new(store_from_directed_edges(3, &[(0, 1), (1, 2)]));
+        let facade = RandomWalkFacade::from_spec_json(
+            store,
+            &serde_json::json!({
+                "walksPerNode": 2,
+                "walkLength": 4,
+                "returnFactor": 1.5,
+                "inOutFactor": 0.5,
+                "sourceNodes": [0],
+                "randomSeed": 42
+            }),
+        )
+        .unwrap();
+
+        assert_eq!(facade.config.walks_per_node, 2);
+        assert_eq!(facade.config.walk_length, 4);
+        assert_eq!(facade.config.return_factor, 1.5);
+        assert_eq!(facade.config.in_out_factor, 0.5);
+        assert_eq!(facade.config.source_nodes, vec![0]);
+        assert_eq!(facade.config.random_seed, Some(42));
+        assert_eq!(
+            facade.config.concurrency,
+            RandomWalkConfig::default().concurrency
+        );
+    }
+
+    #[test]
+    fn estimate_memory_uses_actual_relationship_count() {
+        let store = Arc::new(store_from_directed_edges(4, &[(0, 1), (1, 2), (2, 3)]));
+        let relationship_count = store.relationship_count();
+        let estimate = RandomWalkFacade::new(Arc::clone(&store))
+            .walks_per_node(2)
+            .walk_length(5)
+            .source_nodes(vec![0, 1])
+            .estimate_memory();
+
+        let expected_min = 2 * 2 * 5 * 8 + relationship_count * 16;
+
+        assert_eq!(estimate.min(), expected_min);
+        assert_eq!(estimate.max(), expected_min + expected_min / 5);
     }
 }

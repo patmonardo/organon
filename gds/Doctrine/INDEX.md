@@ -203,6 +203,12 @@ that shows what a stage of the arc teaches.
    File: `gds/examples/shell_model_first.rs`
    Teaches: Shell-first entry into the Model moment before descending into `dataset_model_feature_plan.rs`.
 
+### Procedure Doctrine
+
+32. **[032-pathfinding-procedure-facade.md](EXEMPLARS/procedures/032-pathfinding-procedure-facade.md)**
+   File: `gds/examples/proc_pathfinding_procedure.rs`
+   Teaches: Pathfinding Procedure as the public routing form: application -> facade -> storage -> computation.
+
 ---
 
 ## The References
@@ -258,6 +264,10 @@ References are organized by topic, not by project.
 - [zeroCopy-boundary.md](REFERENCES/gds-kernel/zeroCopy-boundary.md) — The kernel-agent contract at Absolute Reflection
 - [three-tier-architecture.md](REFERENCES/gds-kernel/three-tier-architecture.md) — Core Kernel, SemDataset discourse platform, and RealityFabric delivery layer
 - [sprint-to-adi.md](REFERENCES/gds-kernel/sprint-to-adi.md) — Get-something-working sprint path to Artificial Dataset Intelligence
+
+### Procedures
+
+- [pathfinding-procedure-facade.md](REFERENCES/procedures/pathfinding-procedure-facade.md) — Procedure routing contract for Pathfinding facades
 
 ### Philosophy
 

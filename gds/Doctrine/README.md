@@ -20,6 +20,7 @@ gds/Doctrine/
   │   ├── TEMPLATE.md             ← How to write an exemplar
     │   ├── form/                   ← PureForm and principle-gated return
     │   ├── shell/                  ← Runtime connector and DataPipeline protocol
+    │   ├── procedures/             ← Public operation routes and facade exemplars
     │   ├── dataframe/              ← Immediate Frame:Series::Expr body
     │   └── dataset/                ← Mediated Model:Feature::Plan and SemDataset
   │
@@ -28,6 +29,7 @@ gds/Doctrine/
       ├── shell/                  ← Runtime program grammar and feature envelope
       ├── dataframe/              ← Immediate tabular body and expression surface
       ├── dataset/                ← Mediated semantic controller and artifacts
+      ├── procedures/             ← Public procedure route contracts
       ├── gds-kernel/
       │   └── zeroCopy-boundary.md← Kernel-agent contract at Principle
       ├── philosophy/
