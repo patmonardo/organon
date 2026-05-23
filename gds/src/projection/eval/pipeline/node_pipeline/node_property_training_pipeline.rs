@@ -1,5 +1,6 @@
 use super::node_property_prediction_split_config::NodePropertyPredictionSplitConfig;
 use crate::projection::eval::pipeline::training_pipeline::TrainingPipeline;
+use serde_json::Value;
 use std::collections::HashMap;
 
 /// Abstract base for node property training pipelines.
@@ -46,9 +47,12 @@ pub trait NodePropertyTrainingPipeline: TrainingPipeline {
     }
 
     /// Returns additional entries for pipeline serialization.
-    fn additional_entries(&self) -> HashMap<String, HashMap<String, String>> {
+    fn additional_entries(&self) -> HashMap<String, Value> {
         let mut entries = HashMap::new();
-        entries.insert("splitConfig".to_string(), self.split_config().to_map());
+        entries.insert(
+            "splitConfig".to_string(),
+            serde_json::json!(self.split_config().to_map()),
+        );
         entries
     }
 }
@@ -63,7 +67,6 @@ mod tests {
         ExecutableNodePropertyStep, FeatureStep, Pipeline, TrainingMethod,
     };
     use crate::types::graph_store::DefaultGraphStore;
-    use serde_json::Value;
 
     // Mock feature step for testing
     #[derive(Clone, Debug)]
@@ -225,7 +228,13 @@ mod tests {
 
         let entries = pipeline.additional_entries();
         assert!(entries.contains_key("splitConfig"));
-        let split_map = entries.get("splitConfig").unwrap();
-        assert_eq!(split_map.get("testFraction"), Some(&"0.25".to_string()));
+        let split_map = entries
+            .get("splitConfig")
+            .and_then(Value::as_object)
+            .expect("splitConfig should serialize as an object");
+        assert_eq!(
+            split_map.get("testFraction"),
+            Some(&Value::String("0.25".to_string()))
+        );
     }
 }

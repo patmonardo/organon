@@ -42,7 +42,15 @@ impl LabelsAndClassCountsExtractor {
         target_node_property: &dyn NodePropertyValues,
         node_count: u64,
     ) -> LabelsAndClassCounts {
-        let class_counts = Self::extract_class_counts(target_node_property, node_count);
+        let node_ids = (0..node_count).collect::<Vec<_>>();
+        Self::extract_labels_and_class_counts_for_node_ids(target_node_property, &node_ids)
+    }
+
+    pub fn extract_labels_and_class_counts_for_node_ids(
+        target_node_property: &dyn NodePropertyValues,
+        node_ids: &[u64],
+    ) -> LabelsAndClassCounts {
+        let class_counts = Self::extract_class_counts_for_node_ids(target_node_property, node_ids);
 
         // Get unique class IDs and sort them for deterministic mapping
         let class_ids_i64 = class_counts.keys();
@@ -59,16 +67,16 @@ impl LabelsAndClassCountsExtractor {
         let mut local_id_map = LocalIdMap::of_sorted(&class_ids);
 
         // Create labels array
-        let mut labels = HugeIntArray::new(node_count as usize);
+        let mut labels = HugeIntArray::new(node_ids.len());
 
         // Map each node's class ID to local ID
-        for node_id in 0..node_count {
+        for (row_id, node_id) in node_ids.iter().enumerate() {
             let class_id = target_node_property
-                .long_value(node_id as u64)
+                .long_value(*node_id)
                 .expect("Failed to get long value for node property")
                 as u64;
             let mapped_id = local_id_map.to_mapped(class_id) as i32;
-            labels.set(node_id as usize, mapped_id);
+            labels.set(row_id, mapped_id);
         }
 
         LabelsAndClassCounts::new(labels, class_counts)
@@ -81,10 +89,18 @@ impl LabelsAndClassCountsExtractor {
         target_node_property: &dyn NodePropertyValues,
         node_count: u64,
     ) -> LongMultiSet {
+        let node_ids = (0..node_count).collect::<Vec<_>>();
+        Self::extract_class_counts_for_node_ids(target_node_property, &node_ids)
+    }
+
+    pub fn extract_class_counts_for_node_ids(
+        target_node_property: &dyn NodePropertyValues,
+        node_ids: &[u64],
+    ) -> LongMultiSet {
         let mut class_counts = LongMultiSet::new();
-        for node_id in 0..node_count {
+        for node_id in node_ids {
             let class_id = target_node_property
-                .long_value(node_id)
+                .long_value(*node_id)
                 .expect("Failed to get long value for node property");
             class_counts.add(class_id);
         }
@@ -154,6 +170,26 @@ mod tests {
         // Class counts: 5 appears 1 time, 10 appears 2 times, 15 appears 1 time
         assert_eq!(result.class_counts().count(5), 1);
         assert_eq!(result.class_counts().count(10), 2);
+        assert_eq!(result.class_counts().count(15), 1);
+    }
+
+    #[test]
+    fn test_extract_labels_and_class_counts_for_node_ids() {
+        let backend = VecLong::from(vec![10, 5, 10, 15, 5]);
+        let target_property = DefaultLongNodePropertyValues::from_collection(backend, 5);
+        let node_ids = vec![1, 3, 4];
+
+        let result = LabelsAndClassCountsExtractor::extract_labels_and_class_counts_for_node_ids(
+            &target_property,
+            &node_ids,
+        );
+
+        // Target rows use the explicit node order: node 1 => 5, node 3 => 15, node 4 => 5.
+        assert_eq!(result.labels().size(), 3);
+        assert_eq!(result.labels().get(0), 0);
+        assert_eq!(result.labels().get(1), 1);
+        assert_eq!(result.labels().get(2), 0);
+        assert_eq!(result.class_counts().count(5), 2);
         assert_eq!(result.class_counts().count(15), 1);
     }
 

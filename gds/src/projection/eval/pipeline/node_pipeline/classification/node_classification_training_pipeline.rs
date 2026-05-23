@@ -94,7 +94,9 @@ impl NodeClassificationTrainingPipeline {
     /// as it requires all features to be computed upfront.
     pub fn require_eager_features(&self) -> bool {
         self.training_parameter_space
-            .contains_key(&TrainingMethod::RandomForestClassification)
+            .get(&TrainingMethod::RandomForestClassification)
+            .map(|configs| !configs.is_empty())
+            .unwrap_or(false)
     }
 }
 

@@ -1,7 +1,7 @@
 use crate::collections::HugeObjectArray;
 use crate::ml::core::features::{
-    extract, extract_graph, feature_count, property_extractors, AnyFeatureExtractor,
-    FeatureConsumer,
+    extract, extract_graph, feature_count, property_extractors, property_extractors_with_init,
+    AnyFeatureExtractor, FeatureConsumer, HugeObjectArrayFeatureConsumer,
 };
 use crate::ml::core::tensor::Vector;
 use crate::types::graph::Graph;
@@ -237,6 +237,28 @@ impl FeaturesFactory {
         ))
     }
 
+    /// Extract lazy features from graph properties for an explicit node list.
+    pub fn extract_lazy_features_for_node_ids(
+        graph: Arc<dyn Graph>,
+        feature_properties: &[String],
+        node_ids: Vec<u64>,
+    ) -> Box<dyn Features> {
+        if node_ids.is_empty() {
+            return Box::new(DenseFeatures::new(Vec::new()));
+        }
+
+        let init_node_id = node_ids[0];
+        let extractors = property_extractors_with_init(&*graph, feature_properties, init_node_id);
+        let feature_dimension = feature_count(&extractors);
+        Self::wrap_lazy(node_ids.len(), feature_dimension, move |row_id| {
+            let node_id = node_ids[row_id];
+            let mut features = vec![0.0f64; feature_dimension];
+            let mut consumer = VecFeatureConsumer::new(&mut features);
+            extract(node_id, row_id as u64, &extractors, &mut consumer);
+            features
+        })
+    }
+
     /// Extract eager features from graph properties.
     /// 1:1 with FeaturesFactory.extractEagerFeatures(Graph, List<String>) in Java
     pub fn extract_eager_features(
@@ -247,6 +269,32 @@ impl FeaturesFactory {
         let features_array = HugeObjectArray::new(graph.node_count());
         let features_array = extract_graph(&*graph, &extractors, features_array);
         Box::new(HugeArrayFeatures::new(features_array))
+    }
+
+    /// Extract eager features from graph properties for an explicit node list.
+    pub fn extract_eager_features_for_node_ids(
+        graph: Arc<dyn Graph>,
+        feature_properties: &[String],
+        node_ids: Vec<u64>,
+    ) -> Box<dyn Features> {
+        if node_ids.is_empty() {
+            return Box::new(DenseFeatures::new(Vec::new()));
+        }
+
+        let init_node_id = node_ids[0];
+        let extractors = property_extractors_with_init(&*graph, feature_properties, init_node_id);
+        let feature_dim = feature_count(&extractors);
+        let features_array = HugeObjectArray::new(node_ids.len());
+        let mut consumer = HugeObjectArrayFeatureConsumer::new(features_array);
+        consumer
+            .features_mut()
+            .set_all(|_| vec![0.0f64; feature_dim]);
+
+        for (row_id, node_id) in node_ids.into_iter().enumerate() {
+            extract(node_id, row_id as u64, &extractors, &mut consumer);
+        }
+
+        Box::new(HugeArrayFeatures::new(consumer.into_inner()))
     }
 
     // extractLazyFeatures and extractEagerFeatures methods implemented above

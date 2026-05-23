@@ -13,6 +13,7 @@ use crate::projection::eval::pipeline::node_pipeline::NodeFeatureProducer;
 use crate::projection::eval::pipeline::pipeline_trait::Pipeline;
 use crate::projection::eval::pipeline::PipelineCatalog;
 use crate::types::graph_store::DefaultGraphStore;
+use crate::types::prelude::GraphStore;
 use std::sync::Arc;
 
 /// Factory for creating NodeClassificationTrainAlgorithm instances.
@@ -60,7 +61,10 @@ impl NodeClassificationTrainPipelineAlgorithmFactory {
     ) -> NodeClassificationTrainAlgorithm {
         let pipeline = self
             .pipeline_catalog
-            .get_typed::<NodeClassificationTrainingPipeline>("", configuration.pipeline())
+            .get_typed::<NodeClassificationTrainingPipeline>(
+                configuration.username(),
+                configuration.pipeline(),
+            )
             .unwrap_or_else(|_| Arc::new(NodeClassificationTrainingPipeline::new()));
 
         self.build_with_pipeline(
@@ -112,25 +116,22 @@ impl NodeClassificationTrainPipelineAlgorithmFactory {
     /// Estimate memory requirements for training.
     pub fn memory_estimation(
         &self,
-        _configuration: &NodeClassificationPipelineTrainConfig,
+        configuration: &NodeClassificationPipelineTrainConfig,
     ) -> Box<dyn MemoryEstimation> {
-        // Note: Implement once MemoryEstimations and NodeClassificationTrain are translated.
-        // let pipeline = PipelineCatalog::get_typed::<NodeClassificationTrainingPipeline>(
-        //     configuration.username(),
-        //     configuration.pipeline(),
-        // );
-        //
-        // MemoryEstimations::builder("NodeClassificationTrain")
-        //     .add(NodeClassificationTrain::estimate(
-        //         &pipeline,
-        //         configuration,
-        //         &self.execution_context.model_catalog(),
-        //         &self.execution_context.algorithms_procedure_facade(),
-        //     ))
-        //     .build()
+        let pipeline = self
+            .pipeline_catalog
+            .get_typed::<NodeClassificationTrainingPipeline>(
+                configuration.username(),
+                configuration.pipeline(),
+            )
+            .unwrap_or_else(|_| Arc::new(NodeClassificationTrainingPipeline::new()));
 
-        // Placeholder
-        MemoryEstimations::empty()
+        MemoryEstimations::builder("NodeClassificationTrain")
+            .add(NodeClassificationTrain::estimate_pipeline(
+                &pipeline,
+                configuration,
+            ))
+            .build()
     }
 
     /// Get task name for progress tracking.
@@ -141,36 +142,31 @@ impl NodeClassificationTrainPipelineAlgorithmFactory {
     /// Create progress task for training.
     pub fn progress_task(
         &self,
-        _graph_store: &DefaultGraphStore,
-        _config: &NodeClassificationPipelineTrainConfig,
+        graph_store: &DefaultGraphStore,
+        config: &NodeClassificationPipelineTrainConfig,
     ) -> Task {
-        // Note: Implement once Task and NodeClassificationTrain are translated.
-        // let pipeline = PipelineCatalog::get_typed::<NodeClassificationTrainingPipeline>(
-        //     config.username(),
-        //     config.pipeline(),
-        // );
-        // Self::progress_task_with_pipeline(graph_store, &pipeline)
+        let pipeline = self
+            .pipeline_catalog
+            .get_typed::<NodeClassificationTrainingPipeline>(config.username(), config.pipeline())
+            .unwrap_or_else(|_| Arc::new(NodeClassificationTrainingPipeline::new()));
 
-        // Placeholder
-        Task::new("Node Classification Train Pipeline".to_string(), vec![])
+        Self::progress_task_with_pipeline(graph_store, &pipeline)
     }
 
     /// Create progress task with explicit pipeline.
     pub fn progress_task_with_pipeline(
-        _graph_store: &DefaultGraphStore,
-        _pipeline: &NodeClassificationTrainingPipeline,
+        graph_store: &DefaultGraphStore,
+        pipeline: &NodeClassificationTrainingPipeline,
     ) -> Task {
-        // Note: Implement once Task and NodeClassificationTrain are translated.
-        // NodeClassificationTrain::progress_task(pipeline, graph_store.node_count())
-
-        // Placeholder
-        Task::new("Node Classification Train Pipeline".to_string(), vec![])
+        NodeClassificationTrain::progress_task(pipeline, graph_store.node_count() as u64)
     }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::projection::eval::pipeline::node_pipeline::node_property_prediction_split_config::NodePropertyPredictionSplitConfig;
+    use crate::projection::eval::pipeline::node_pipeline::node_property_training_pipeline::NodePropertyTrainingPipeline;
     use crate::types::graph_store::DefaultGraphStore;
     use crate::types::random::RandomGraphConfig;
 
@@ -221,10 +217,19 @@ mod tests {
 
     #[test]
     fn test_progress_task() {
+        let pipeline_catalog = Arc::new(PipelineCatalog::new());
+        let mut pipeline = NodeClassificationTrainingPipeline::new();
+        pipeline.set_split_config(
+            NodePropertyPredictionSplitConfig::new(0.2, 5).expect("valid split config"),
+        );
+        pipeline_catalog
+            .set("alice", "user-pipeline", Arc::new(pipeline))
+            .expect("pipeline should be cataloged");
+
         let factory = NodeClassificationTrainPipelineAlgorithmFactory::new(
             ExecutionContext::empty(),
             "2.5.0".to_string(),
-            Arc::new(PipelineCatalog::new()),
+            pipeline_catalog,
         );
         let config = RandomGraphConfig {
             node_count: 10,
@@ -233,10 +238,21 @@ mod tests {
         };
         let graph_store =
             DefaultGraphStore::random(&config).expect("Failed to generate random graph");
-        let train_config = NodeClassificationPipelineTrainConfig::default();
+        let train_config = NodeClassificationPipelineTrainConfig::new_with_username(
+            "alice".to_string(),
+            "user-pipeline".to_string(),
+            vec!["*".to_string()],
+            "target".to_string(),
+            Some(42),
+            vec![],
+        );
 
-        // Should return placeholder for now
-        factory.progress_task(&graph_store, &train_config);
+        let task = factory.progress_task(&graph_store, &train_config);
+
+        assert_eq!(
+            task.sub_tasks()[1].description(),
+            "Cross-validation (5 folds, 0 trials)"
+        );
     }
 
     #[test]

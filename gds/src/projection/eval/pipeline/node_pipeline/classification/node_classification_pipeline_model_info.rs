@@ -118,8 +118,32 @@ impl NodeClassificationPipelineModelInfo {
 
     /// Get optional training method.
     pub fn optional_trainer_method(&self) -> Option<TrainingMethod> {
-        // TrainerConfig decoding is not yet wired; return None for now.
-        None
+        method_name_from_best_parameters(&self.best_parameters).and_then(parse_training_method)
+    }
+}
+
+fn method_name_from_best_parameters(best_parameters: &Value) -> Option<&str> {
+    best_parameters
+        .get("method")
+        .or_else(|| best_parameters.get("methodName"))
+        .or_else(|| best_parameters.get("trainerMethod"))
+        .and_then(Value::as_str)
+}
+
+fn parse_training_method(method: &str) -> Option<TrainingMethod> {
+    match method {
+        "LogisticRegression" | "logisticRegression" => Some(TrainingMethod::LogisticRegression),
+        "RandomForestClassification" | "randomForestClassification" | "RandomForest" => {
+            Some(TrainingMethod::RandomForestClassification)
+        }
+        "MLPClassification" | "mlpClassification" | "MultilayerPerceptron" => {
+            Some(TrainingMethod::MLPClassification)
+        }
+        "LinearRegression" | "linearRegression" => Some(TrainingMethod::LinearRegression),
+        "RandomForestRegression" | "randomForestRegression" => {
+            Some(TrainingMethod::RandomForestRegression)
+        }
+        _ => None,
     }
 }
 
@@ -225,13 +249,30 @@ mod tests {
     #[test]
     fn test_optional_trainer_method() {
         let info = NodeClassificationPipelineModelInfo::new(
-            json!({}),
+            json!({ "method": "logisticRegression" }),
             HashMap::new(),
             NodePropertyPredictPipeline::empty(),
             vec![0, 1],
         );
 
-        // Should return None until TrainerConfig is implemented
-        assert!(info.optional_trainer_method().is_none());
+        assert_eq!(
+            info.optional_trainer_method(),
+            Some(TrainingMethod::LogisticRegression)
+        );
+    }
+
+    #[test]
+    fn test_optional_trainer_method_accepts_method_name_key() {
+        let info = NodeClassificationPipelineModelInfo::new(
+            json!({ "methodName": "RandomForestClassification" }),
+            HashMap::new(),
+            NodePropertyPredictPipeline::empty(),
+            vec![0, 1],
+        );
+
+        assert_eq!(
+            info.optional_trainer_method(),
+            Some(TrainingMethod::RandomForestClassification)
+        );
     }
 }

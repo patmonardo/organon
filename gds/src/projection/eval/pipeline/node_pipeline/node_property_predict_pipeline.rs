@@ -48,6 +48,18 @@ impl NodePropertyPredictPipeline {
         Self::new(node_property_steps, feature_steps)
     }
 
+    /// Creates a predict pipeline from step iterators, matching Java's stream factory.
+    pub fn from_steps<N, F>(node_property_steps: N, feature_steps: F) -> Self
+    where
+        N: IntoIterator<Item = Box<dyn ExecutableNodePropertyStep>>,
+        F: IntoIterator<Item = NodeFeatureStep>,
+    {
+        Self::new(
+            node_property_steps.into_iter().collect(),
+            feature_steps.into_iter().collect(),
+        )
+    }
+
     /// Returns the list of feature properties used by this pipeline.
     pub fn feature_properties(&self) -> Vec<String> {
         use crate::projection::eval::pipeline::FeatureStep;
@@ -130,6 +142,17 @@ mod tests {
 
         assert_eq!(pipeline.node_property_steps().len(), 0);
         assert_eq!(pipeline.feature_steps().len(), 1);
+    }
+
+    #[test]
+    fn test_from_steps() {
+        let pipeline = NodePropertyPredictPipeline::from_steps(
+            Vec::<Box<dyn ExecutableNodePropertyStep>>::new(),
+            vec![NodeFeatureStep::of("age"), NodeFeatureStep::of("income")],
+        );
+
+        assert_eq!(pipeline.node_property_steps().len(), 0);
+        assert_eq!(pipeline.feature_steps().len(), 2);
     }
 
     #[test]

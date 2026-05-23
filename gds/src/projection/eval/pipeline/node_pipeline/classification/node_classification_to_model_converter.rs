@@ -36,7 +36,7 @@ impl NodeClassificationToModelConverter {
     pub fn to_model(
         &self,
         result: NodeClassificationTrainResult,
-        _original_schema: &GraphSchema,
+        original_schema: &GraphSchema,
     ) -> NodeClassificationModelResult {
         let training_statistics = result.training_statistics().clone();
         let model_info = NodeClassificationPipelineModelInfo::of(
@@ -52,7 +52,10 @@ impl NodeClassificationToModelConverter {
                 .collect(),
         );
 
-        NodeClassificationModelResult::new(
+        NodeClassificationModelResult::new_with_metadata(
+            env!("CARGO_PKG_VERSION").to_string(),
+            NodeClassificationTrainingPipeline::MODEL_TYPE.to_string(),
+            original_schema.clone(),
             result.into_classifier(),
             self.config.clone(),
             model_info,
@@ -72,13 +75,6 @@ impl ResultToModelConverter<NodeClassificationModelResult, NodeClassificationTra
         self.to_model(result, original_schema)
     }
 }
-
-// Note: Implement ResultToModelConverter trait once it is translated.
-// impl ResultToModelConverter<NodeClassificationModelResult, NodeClassificationTrainResult> for NodeClassificationToModelConverter {
-//     fn to_model(&self, result: &NodeClassificationTrainResult, original_schema: &GraphSchema) -> NodeClassificationModelResult {
-//         self.to_model(result, original_schema)
-//     }
-// }
 
 #[cfg(test)]
 mod tests {
@@ -190,6 +186,19 @@ mod tests {
         // Verify result was created
         let _classifier = model_result.classifier();
         let _stats = model_result.training_statistics();
+        assert_eq!(
+            model_result.model_type(),
+            NodeClassificationTrainingPipeline::MODEL_TYPE
+        );
+        assert_eq!(model_result.gds_version(), env!("CARGO_PKG_VERSION"));
+        assert_eq!(
+            model_result
+                .graph_schema()
+                .node_schema()
+                .available_labels()
+                .len(),
+            0
+        );
     }
 
     #[test]

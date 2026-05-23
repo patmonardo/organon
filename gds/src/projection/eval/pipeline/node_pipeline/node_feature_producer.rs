@@ -137,26 +137,41 @@ impl<C: NodePropertyPipelineBaseTrainConfig> NodeFeatureProducer<C> {
         }
 
         // Get target node labels
-        let mut target_node_labels: Vec<String> = self
+        let target_node_label_set = self
             .train_config
-            .target_node_label_identifiers(&self.graph_store)
+            .validate_target_node_label_identifiers(&self.graph_store)
+            .map_err(|e| NodeFeatureProducerError::TargetLabelValidationFailed(e.to_string()))?;
+        let mut target_node_labels: Vec<String> = target_node_label_set
             .into_iter()
             .map(|l| l.name().to_string())
             .collect();
         target_node_labels.sort();
+        let target_node_label_set = target_node_labels
+            .iter()
+            .map(|label| crate::types::schema::NodeLabel::of(label.as_str()))
+            .collect();
 
         pipeline
             .validate_feature_properties(&self.graph_store, &target_node_labels)
             .map_err(|e| NodeFeatureProducerError::FeatureValidationFailed(e.to_string()))?;
 
-        // Extract features (eager or lazy).
-        // Note: label-filtered graph views are not yet available in GraphStore;
-        // we currently extract from the full graph.
         let target_graph = self.graph_store.get_graph();
+        let target_node_ids = target_graph
+            .iter_with_labels(&target_node_label_set)
+            .map(|node_id| node_id as u64)
+            .collect::<Vec<_>>();
         let features = if pipeline.require_eager_features() {
-            FeaturesFactory::extract_eager_features(target_graph, &pipeline.feature_properties())
+            FeaturesFactory::extract_eager_features_for_node_ids(
+                target_graph,
+                &pipeline.feature_properties(),
+                target_node_ids,
+            )
         } else {
-            FeaturesFactory::extract_lazy_features(target_graph, &pipeline.feature_properties())
+            FeaturesFactory::extract_lazy_features_for_node_ids(
+                target_graph,
+                &pipeline.feature_properties(),
+                target_node_ids,
+            )
         };
 
         // Cleanup intermediate properties (only if steps executed)
@@ -194,6 +209,8 @@ impl<C: NodePropertyPipelineBaseTrainConfig> NodeFeatureProducer<C> {
 pub enum NodeFeatureProducerError {
     /// Error executing node property steps
     StepExecutionFailed(NodePropertyStepExecutorError),
+    /// Error validating target labels
+    TargetLabelValidationFailed(String),
     /// Error validating feature properties
     FeatureValidationFailed(String),
     /// Error filtering graph by node labels
@@ -209,6 +226,9 @@ impl std::fmt::Display for NodeFeatureProducerError {
         match self {
             Self::StepExecutionFailed(e) => {
                 write!(f, "Failed to execute node property steps: {}", e)
+            }
+            Self::TargetLabelValidationFailed(msg) => {
+                write!(f, "Target label validation failed: {}", msg)
             }
             Self::FeatureValidationFailed(msg) => write!(f, "Feature validation failed: {}", msg),
             Self::GraphFilterFailed(msg) => write!(f, "Failed to filter graph: {}", msg),
@@ -264,7 +284,15 @@ impl NodeFeatureProducer<PlaceholderNodePropertyConfig> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::projection::eval::pipeline::auto_tuning_config::AutoTuningConfig;
+    use crate::projection::eval::pipeline::node_pipeline::{
+        NodeFeatureStep, NodePropertyPredictionSplitConfig,
+    };
+    use crate::projection::eval::pipeline::training_pipeline::TunableTrainerConfig;
+    use crate::projection::eval::pipeline::{Pipeline, PipelineValidationError, TrainingMethod};
     use crate::types::random::RandomGraphConfig;
+    use serde_json::Value;
+    use std::collections::HashMap;
     use std::sync::Arc;
 
     // Mock config for testing
@@ -289,6 +317,91 @@ mod tests {
 
         fn random_seed(&self) -> Option<u64> {
             Some(42)
+        }
+    }
+
+    struct FeatureOnlyPipeline {
+        feature_steps: Vec<NodeFeatureStep>,
+        split_config: NodePropertyPredictionSplitConfig,
+        training_parameter_space: HashMap<TrainingMethod, Vec<Box<dyn TunableTrainerConfig>>>,
+        auto_tuning_config: AutoTuningConfig,
+        eager_features: bool,
+    }
+
+    impl FeatureOnlyPipeline {
+        fn new(feature_property: &str, eager_features: bool) -> Self {
+            Self {
+                feature_steps: vec![NodeFeatureStep::of(feature_property)],
+                split_config: NodePropertyPredictionSplitConfig::default(),
+                training_parameter_space: HashMap::new(),
+                auto_tuning_config: AutoTuningConfig::default(),
+                eager_features,
+            }
+        }
+    }
+
+    impl Pipeline for FeatureOnlyPipeline {
+        type FeatureStep = NodeFeatureStep;
+
+        fn to_map(&self) -> HashMap<String, Value> {
+            HashMap::new()
+        }
+
+        fn node_property_steps(&self) -> &[Box<dyn ExecutableNodePropertyStep>] {
+            &[]
+        }
+
+        fn feature_steps(&self) -> &[Self::FeatureStep] {
+            &self.feature_steps
+        }
+
+        fn specific_validate_before_execution(
+            &self,
+            _graph_store: &DefaultGraphStore,
+        ) -> Result<(), PipelineValidationError> {
+            Ok(())
+        }
+    }
+
+    impl crate::projection::eval::pipeline::training_pipeline::TrainingPipeline
+        for FeatureOnlyPipeline
+    {
+        fn pipeline_type(&self) -> &str {
+            "feature-only"
+        }
+
+        fn training_parameter_space(
+            &self,
+        ) -> &HashMap<TrainingMethod, Vec<Box<dyn TunableTrainerConfig>>> {
+            &self.training_parameter_space
+        }
+
+        fn training_parameter_space_mut(
+            &mut self,
+        ) -> &mut HashMap<TrainingMethod, Vec<Box<dyn TunableTrainerConfig>>> {
+            &mut self.training_parameter_space
+        }
+
+        fn auto_tuning_config(&self) -> &AutoTuningConfig {
+            &self.auto_tuning_config
+        }
+
+        fn set_auto_tuning_config(&mut self, config: AutoTuningConfig) {
+            self.auto_tuning_config = config;
+        }
+    }
+
+    impl NodePropertyTrainingPipeline for FeatureOnlyPipeline {
+        fn split_config(&self) -> &NodePropertyPredictionSplitConfig {
+            &self.split_config
+        }
+
+        fn set_split_config(&mut self, split_config: NodePropertyPredictionSplitConfig) {
+            self.split_config = split_config;
+        }
+
+        fn require_eager_features(&self) -> bool {
+            self.eager_features
         }
     }
 
@@ -352,5 +465,41 @@ mod tests {
         assert!(producer
             .validate_node_property_steps_context_configs(&steps)
             .is_ok());
+    }
+
+    #[test]
+    fn test_procedure_features_filters_to_target_node_labels() {
+        let graph_store = Arc::new(
+            DefaultGraphStore::random(&RandomGraphConfig {
+                seed: Some(42),
+                node_count: 200,
+                node_labels: vec!["Person".to_string(), "Company".to_string()],
+                ..RandomGraphConfig::default()
+            })
+            .expect("random graph"),
+        );
+
+        let target_label = graph_store
+            .node_labels()
+            .into_iter()
+            .find(|label| {
+                let count = graph_store.node_count_for_label(label);
+                count > 0 && count < graph_store.node_count()
+            })
+            .expect("expected at least one proper target label subset");
+        let target_count = graph_store.node_count_for_label(&target_label);
+        let config = MockTrainConfig {
+            pipeline_name: "test-pipeline".to_string(),
+            target_labels: vec![target_label.name().to_string()],
+            target_prop: "label".to_string(),
+        };
+        let pipeline = FeatureOnlyPipeline::new("random_score", true);
+
+        let mut producer = NodeFeatureProducer::create(graph_store, config);
+        let features = producer
+            .procedure_features(&pipeline)
+            .expect("features should extract for target labels");
+
+        assert_eq!(features.size(), target_count);
     }
 }

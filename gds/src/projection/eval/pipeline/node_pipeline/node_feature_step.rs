@@ -29,11 +29,16 @@ impl Hash for NodeFeatureStep {
     }
 }
 impl NodeFeatureStep {
+    pub const NODE_PROPERTY_KEY: &'static str = "nodeProperty";
+
     /// Factory method to create a new NodeFeatureStep.
     pub fn of(node_property: impl Into<String>) -> Self {
         let prop = node_property.into();
         let mut configuration = HashMap::new();
-        configuration.insert("nodeProperty".to_string(), Value::String(prop.clone()));
+        configuration.insert(
+            Self::NODE_PROPERTY_KEY.to_string(),
+            Value::String(prop.clone()),
+        );
 
         Self {
             input_properties: vec![prop.clone()],
@@ -100,7 +105,7 @@ mod tests {
         let step = NodeFeatureStep::of("age");
         let config = step.configuration();
         assert_eq!(
-            config.get("nodeProperty"),
+            config.get(NodeFeatureStep::NODE_PROPERTY_KEY),
             Some(&Value::String("age".to_string()))
         );
     }

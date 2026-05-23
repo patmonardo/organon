@@ -28,7 +28,7 @@ use crate::types::schema::GraphSchema;
 /// - Model info (custom metadata, feature importance)
 #[derive(Debug, Clone)]
 pub struct NodeRegressionToModelConverter {
-    _pipeline: NodeRegressionTrainingPipeline,
+    pipeline: NodeRegressionTrainingPipeline,
     config: NodeRegressionPipelineTrainConfig,
 }
 
@@ -37,10 +37,7 @@ impl NodeRegressionToModelConverter {
         pipeline: NodeRegressionTrainingPipeline,
         config: NodeRegressionPipelineTrainConfig,
     ) -> Self {
-        Self {
-            _pipeline: pipeline,
-            config,
-        }
+        Self { pipeline, config }
     }
 
     /// Convert training result to catalog model.
@@ -63,17 +60,20 @@ impl NodeRegressionToModelConverter {
     pub fn to_model(
         &self,
         train_result: NodeRegressionTrainResult,
-        _original_schema: &GraphSchema,
+        original_schema: &GraphSchema,
     ) -> NodeRegressionTrainPipelineResult {
         let training_statistics = train_result.training_statistics().clone();
         let model_info = NodeRegressionPipelineModelInfo::of(
             training_statistics.winning_model_test_metrics(),
             training_statistics.winning_model_outer_train_metrics(),
             training_statistics.best_candidate(),
-            NodePropertyPredictPipeline::from_pipeline(&self._pipeline),
+            NodePropertyPredictPipeline::from_pipeline(&self.pipeline),
         );
 
-        NodeRegressionTrainPipelineResult::new(
+        NodeRegressionTrainPipelineResult::new_with_metadata(
+            env!("CARGO_PKG_VERSION").to_string(),
+            NodeRegressionTrainingPipeline::MODEL_TYPE.to_string(),
+            original_schema.clone(),
             train_result.into_regressor(),
             self.config.clone(),
             model_info,
@@ -170,9 +170,17 @@ mod tests {
         ));
         let train_result = NodeRegressionTrainResult::new(regressor, stats);
         let schema = GraphSchema::empty();
-        let _model = converter.to_model(train_result, &schema);
+        let model = converter.to_model(train_result, &schema);
 
-        // Verify converter produces model (when Model system is complete, add assertions)
+        assert_eq!(
+            model.model_type(),
+            NodeRegressionTrainingPipeline::MODEL_TYPE
+        );
+        assert_eq!(model.gds_version(), env!("CARGO_PKG_VERSION"));
+        assert_eq!(
+            model.graph_schema().node_schema().available_labels().len(),
+            0
+        );
     }
 
     #[test]

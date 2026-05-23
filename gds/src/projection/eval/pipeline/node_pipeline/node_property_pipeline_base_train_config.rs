@@ -33,17 +33,45 @@ pub trait NodePropertyPipelineBaseTrainConfig {
         &self,
         graph_store: &Arc<DefaultGraphStore>,
     ) -> HashSet<NodeLabel> {
+        self.validate_target_node_label_identifiers(graph_store)
+            .unwrap_or_else(|_| {
+                self.target_node_labels()
+                    .iter()
+                    .map(|label| NodeLabel::of(label.as_str()))
+                    .collect()
+            })
+    }
+
+    /// Resolves and validates target node labels from the graph store.
+    fn validate_target_node_label_identifiers(
+        &self,
+        graph_store: &Arc<DefaultGraphStore>,
+    ) -> Result<HashSet<NodeLabel>, NodePropertyPipelineConfigError> {
         let target_labels = self.target_node_labels();
 
         if target_labels.len() == 1 && target_labels[0] == "*" {
             // Project all node labels
-            graph_store.node_labels()
+            Ok(graph_store.node_labels())
         } else {
             // Convert specified labels
-            target_labels
+            let labels = target_labels
                 .iter()
                 .map(|label| NodeLabel::of(label.as_str()))
-                .collect()
+                .collect::<HashSet<_>>();
+
+            let missing_labels = labels
+                .iter()
+                .filter(|label| !graph_store.has_node_label(label))
+                .map(|label| label.name().to_string())
+                .collect::<Vec<_>>();
+
+            if missing_labels.is_empty() {
+                Ok(labels)
+            } else {
+                Err(NodePropertyPipelineConfigError::MissingNodeLabels {
+                    labels: missing_labels,
+                })
+            }
         }
     }
 
@@ -52,6 +80,27 @@ pub trait NodePropertyPipelineBaseTrainConfig {
         self.target_node_labels()
     }
 }
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum NodePropertyPipelineConfigError {
+    MissingNodeLabels { labels: Vec<String> },
+}
+
+impl std::fmt::Display for NodePropertyPipelineConfigError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::MissingNodeLabels { labels } => {
+                write!(
+                    f,
+                    "Target node labels do not exist in the graph: {:?}",
+                    labels
+                )
+            }
+        }
+    }
+}
+
+impl std::error::Error for NodePropertyPipelineConfigError {}
 
 #[cfg(test)]
 mod tests {
@@ -142,6 +191,63 @@ mod tests {
         };
 
         assert_eq!(config.random_seed(), Some(12345));
+    }
+
+    #[test]
+    fn test_validate_target_labels_with_wildcard_returns_graph_labels() {
+        use crate::types::random::RandomGraphConfig;
+
+        let graph_store = Arc::new(
+            DefaultGraphStore::random(&RandomGraphConfig {
+                seed: Some(42),
+                node_count: 50,
+                ..RandomGraphConfig::default()
+            })
+            .expect("random graph"),
+        );
+        let config = MockTrainConfig {
+            pipeline_name: "test-pipeline".to_string(),
+            target_labels: vec!["*".to_string()],
+            target_prop: "label".to_string(),
+            seed: Some(42),
+        };
+
+        let labels = config
+            .validate_target_node_label_identifiers(&graph_store)
+            .expect("wildcard labels should resolve");
+
+        assert_eq!(labels, graph_store.node_labels());
+    }
+
+    #[test]
+    fn test_validate_target_labels_errors_for_missing_label() {
+        use crate::types::random::RandomGraphConfig;
+
+        let graph_store = Arc::new(
+            DefaultGraphStore::random(&RandomGraphConfig {
+                seed: Some(42),
+                node_count: 50,
+                ..RandomGraphConfig::default()
+            })
+            .expect("random graph"),
+        );
+        let config = MockTrainConfig {
+            pipeline_name: "test-pipeline".to_string(),
+            target_labels: vec!["__MissingLabel__".to_string()],
+            target_prop: "label".to_string(),
+            seed: Some(42),
+        };
+
+        let err = config
+            .validate_target_node_label_identifiers(&graph_store)
+            .expect_err("missing labels should fail validation");
+
+        assert_eq!(
+            err,
+            NodePropertyPipelineConfigError::MissingNodeLabels {
+                labels: vec!["__MissingLabel__".to_string()]
+            }
+        );
     }
 
     #[test]

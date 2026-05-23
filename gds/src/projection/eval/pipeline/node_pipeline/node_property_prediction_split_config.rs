@@ -147,6 +147,9 @@ impl NodePropertyPredictionSplitConfig {
     /// Returns the test set size for a single fold in cross-validation.
     pub fn fold_test_set_size(&self, node_count: usize) -> usize {
         let train_size = self.train_set_size(node_count);
+        // The Java reference currently uses `trainSetSize(nodeCount) * (1 / validationFolds())`,
+        // which truncates `1 / validationFolds()` to zero for the default folds. Preserve the
+        // intended split arithmetic here rather than matching that bug.
         train_size / self.validation_folds
     }
 }
@@ -225,6 +228,14 @@ mod tests {
     fn test_fold_test_set_size() {
         let config = NodePropertyPredictionSplitConfig::new(0.3, 3).unwrap();
         // Train set = 700, fold test = 700 / 3 = 233
+        assert_eq!(config.fold_test_set_size(1000), 233);
+    }
+
+    #[test]
+    fn test_fold_test_set_size_preserves_intended_split_arithmetic() {
+        let config = NodePropertyPredictionSplitConfig::default();
+
+        assert_ne!(config.fold_test_set_size(1000), 0);
         assert_eq!(config.fold_test_set_size(1000), 233);
     }
 

@@ -9,6 +9,7 @@ use crate::projection::eval::pipeline::node_pipeline::NodePropertyPipelineBaseTr
 /// Extends the base training configuration with classification-specific metrics.
 #[derive(Debug, Clone)]
 pub struct NodeClassificationPipelineTrainConfig {
+    username: String,
     pipeline_name: String,
     target_labels: Vec<String>,
     target_property: String,
@@ -24,13 +25,41 @@ impl NodeClassificationPipelineTrainConfig {
         random_seed: Option<u64>,
         metrics: Vec<ClassificationMetricSpecification>,
     ) -> Self {
+        Self::new_with_username(
+            String::new(),
+            pipeline_name,
+            target_labels,
+            target_property,
+            random_seed,
+            metrics,
+        )
+    }
+
+    pub fn new_with_username(
+        username: String,
+        pipeline_name: String,
+        target_labels: Vec<String>,
+        target_property: String,
+        random_seed: Option<u64>,
+        metrics: Vec<ClassificationMetricSpecification>,
+    ) -> Self {
         Self {
+            username,
             pipeline_name,
             target_labels,
             target_property,
             random_seed,
             metrics,
         }
+    }
+
+    pub fn username(&self) -> &str {
+        &self.username
+    }
+
+    pub fn with_username(mut self, username: impl Into<String>) -> Self {
+        self.username = username.into();
+        self
     }
 
     pub fn metrics_specs(&self) -> &[ClassificationMetricSpecification] {
@@ -113,15 +142,32 @@ mod tests {
             vec![],
         );
         assert_eq!(config.metrics_specs().len(), 0);
+        assert_eq!(config.username(), "");
         assert_eq!(config.pipeline(), "test_pipeline");
         assert_eq!(config.target_property(), "target_property");
         assert_eq!(config.random_seed(), Some(42));
     }
 
     #[test]
+    fn test_new_config_with_username() {
+        let config = NodeClassificationPipelineTrainConfig::new_with_username(
+            "alice".to_string(),
+            "test_pipeline".to_string(),
+            vec!["Label1".to_string()],
+            "target_property".to_string(),
+            Some(42),
+            vec![],
+        );
+
+        assert_eq!(config.username(), "alice");
+        assert_eq!(config.pipeline(), "test_pipeline");
+    }
+
+    #[test]
     fn test_default_config() {
         let config = NodeClassificationPipelineTrainConfig::default();
         assert_eq!(config.metrics_specs().len(), 0);
+        assert_eq!(config.username(), "");
         assert_eq!(config.pipeline(), "default_pipeline");
         assert_eq!(config.target_node_labels(), vec!["*"]);
         assert_eq!(config.target_property(), "target");

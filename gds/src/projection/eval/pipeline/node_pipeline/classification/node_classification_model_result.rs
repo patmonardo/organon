@@ -1,12 +1,18 @@
 use super::node_classification_pipeline_model_info::NodeClassificationPipelineModelInfo;
 use super::node_classification_pipeline_train_config::NodeClassificationPipelineTrainConfig;
+use crate::ml::models::base::ClassifierData;
 use crate::ml::models::Classifier;
 use crate::ml::training::statistics::TrainingStatistics;
+use crate::projection::eval::pipeline::node_pipeline::classification::NodeClassificationTrainingPipeline;
+use crate::types::schema::GraphSchema;
 
 /// Result of node classification model creation containing the catalog model and training statistics.
 ///
 /// This is a value class that wraps the model catalog entry with training statistics.
 pub struct NodeClassificationModelResult {
+    gds_version: String,
+    model_type: String,
+    graph_schema: GraphSchema,
     classifier: Box<dyn Classifier>,
     train_config: NodeClassificationPipelineTrainConfig,
     model_info: NodeClassificationPipelineModelInfo,
@@ -20,7 +26,31 @@ impl NodeClassificationModelResult {
         model_info: NodeClassificationPipelineModelInfo,
         training_statistics: TrainingStatistics,
     ) -> Self {
+        Self::new_with_metadata(
+            env!("CARGO_PKG_VERSION").to_string(),
+            NodeClassificationTrainingPipeline::MODEL_TYPE.to_string(),
+            GraphSchema::empty(),
+            classifier,
+            train_config,
+            model_info,
+            training_statistics,
+        )
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    pub fn new_with_metadata(
+        gds_version: String,
+        model_type: String,
+        graph_schema: GraphSchema,
+        classifier: Box<dyn Classifier>,
+        train_config: NodeClassificationPipelineTrainConfig,
+        model_info: NodeClassificationPipelineModelInfo,
+        training_statistics: TrainingStatistics,
+    ) -> Self {
         Self {
+            gds_version,
+            model_type,
+            graph_schema,
             classifier,
             train_config,
             model_info,
@@ -28,8 +58,24 @@ impl NodeClassificationModelResult {
         }
     }
 
+    pub fn gds_version(&self) -> &str {
+        &self.gds_version
+    }
+
+    pub fn model_type(&self) -> &str {
+        &self.model_type
+    }
+
+    pub fn graph_schema(&self) -> &GraphSchema {
+        &self.graph_schema
+    }
+
     pub fn classifier(&self) -> &dyn Classifier {
         &*self.classifier
+    }
+
+    pub fn classifier_data(&self) -> &dyn ClassifierData {
+        self.classifier.data()
     }
 
     pub fn train_config(&self) -> &NodeClassificationPipelineTrainConfig {
@@ -48,12 +94,12 @@ impl NodeClassificationModelResult {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::ml::metrics::classification::GlobalAccuracy;
-    use crate::ml::models::Features;
     use crate::ml::core::tensor::Matrix;
+    use crate::ml::metrics::classification::GlobalAccuracy;
     use crate::ml::metrics::Metric;
     use crate::ml::models::base::{BaseModelData, ClassifierData};
     use crate::ml::models::training_method::TrainingMethod;
+    use crate::ml::models::Features;
     use crate::projection::eval::pipeline::node_pipeline::node_property_pipeline_base_train_config::NodePropertyPipelineBaseTrainConfig;
     use crate::projection::eval::pipeline::node_pipeline::NodePropertyPredictPipeline;
     use std::any::Any;
@@ -117,7 +163,13 @@ mod tests {
 
         // Verify accessors work
         let _model = result.classifier();
+        let _data = result.classifier_data();
         let _stats = result.training_statistics();
+        assert_eq!(
+            result.model_type(),
+            NodeClassificationTrainingPipeline::MODEL_TYPE
+        );
+        assert_eq!(result.gds_version(), env!("CARGO_PKG_VERSION"));
     }
 
     #[test]
@@ -138,5 +190,9 @@ mod tests {
 
         assert_eq!(result.train_config().pipeline(), "default_pipeline");
         assert!(result.model_info().classes().is_empty());
+        assert_eq!(
+            result.graph_schema().node_schema().available_labels().len(),
+            0
+        );
     }
 }

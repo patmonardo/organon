@@ -1,7 +1,9 @@
 use super::node_regression_pipeline_model_info::NodeRegressionPipelineModelInfo;
 use super::NodeRegressionPipelineTrainConfig;
-use crate::ml::models::base::Regressor;
+use super::NodeRegressionTrainingPipeline;
+use crate::ml::models::base::{Regressor, RegressorData};
 use crate::ml::training::statistics::TrainingStatistics;
+use crate::types::schema::GraphSchema;
 
 /// Result of training a node regression pipeline.
 ///
@@ -52,6 +54,9 @@ impl NodeRegressionTrainResult {
 /// - `INFO`: NodeRegressionPipelineModelInfo - custom metadata (feature importance, splits)
 #[derive(Debug)]
 pub struct NodeRegressionTrainPipelineResult {
+    gds_version: String,
+    model_type: String,
+    graph_schema: GraphSchema,
     regressor: Box<dyn Regressor>,
     train_config: NodeRegressionPipelineTrainConfig,
     model_info: NodeRegressionPipelineModelInfo,
@@ -67,7 +72,31 @@ impl NodeRegressionTrainPipelineResult {
         model_info: NodeRegressionPipelineModelInfo,
         training_statistics: TrainingStatistics,
     ) -> Self {
+        Self::new_with_metadata(
+            env!("CARGO_PKG_VERSION").to_string(),
+            NodeRegressionTrainingPipeline::MODEL_TYPE.to_string(),
+            GraphSchema::empty(),
+            regressor,
+            train_config,
+            model_info,
+            training_statistics,
+        )
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    pub fn new_with_metadata(
+        gds_version: String,
+        model_type: String,
+        graph_schema: GraphSchema,
+        regressor: Box<dyn Regressor>,
+        train_config: NodeRegressionPipelineTrainConfig,
+        model_info: NodeRegressionPipelineModelInfo,
+        training_statistics: TrainingStatistics,
+    ) -> Self {
         Self {
+            gds_version,
+            model_type,
+            graph_schema,
             regressor,
             train_config,
             model_info,
@@ -75,9 +104,25 @@ impl NodeRegressionTrainPipelineResult {
         }
     }
 
+    pub fn gds_version(&self) -> &str {
+        &self.gds_version
+    }
+
+    pub fn model_type(&self) -> &str {
+        &self.model_type
+    }
+
+    pub fn graph_schema(&self) -> &GraphSchema {
+        &self.graph_schema
+    }
+
     /// Returns the trained regressor model.
     pub fn regressor(&self) -> &dyn Regressor {
         &*self.regressor
+    }
+
+    pub fn regressor_data(&self) -> &dyn RegressorData {
+        self.regressor.data()
     }
 
     /// Returns the training configuration used.
@@ -173,6 +218,12 @@ mod tests {
         );
 
         assert!(std::ptr::eq(result.regressor().data(), &TestRegressorData));
+        assert!(std::ptr::eq(result.regressor_data(), &TestRegressorData));
+        assert_eq!(
+            result.model_type(),
+            NodeRegressionTrainingPipeline::MODEL_TYPE
+        );
+        assert_eq!(result.gds_version(), env!("CARGO_PKG_VERSION"));
     }
 
     #[test]
@@ -197,6 +248,10 @@ mod tests {
         assert_eq!(
             result.train_config().target_property(),
             config.target_property()
+        );
+        assert_eq!(
+            result.graph_schema().node_schema().available_labels().len(),
+            0
         );
     }
 }
