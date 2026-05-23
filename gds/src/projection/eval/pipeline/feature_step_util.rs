@@ -7,8 +7,30 @@
 //! - Validating computed features for NaN values
 //! - Formatting error messages for invalid features
 
+use crate::types::graph::Graph;
 use crate::types::properties::node::NodePropertyValues;
 use crate::types::ValueType;
+
+/// Compute the dimension of a node property exposed by a graph.
+///
+/// # Java Source
+/// ```java
+/// public static int propertyDimension(Graph graph, String nodeProperty) {
+///     return propertyDimension(graph.nodeProperties(nodeProperty), nodeProperty);
+/// }
+/// ```
+pub fn property_dimension_for_graph(
+    graph: &dyn Graph,
+    node_property: &str,
+) -> Result<usize, FeatureStepError> {
+    let node_properties = graph.node_properties(node_property).ok_or_else(|| {
+        FeatureStepError::MissingNodeProperty {
+            property: node_property.to_string(),
+        }
+    })?;
+
+    property_dimension(&*node_properties, node_property)
+}
 
 /// Compute the dimension (feature count) of a node property.
 ///
@@ -161,6 +183,12 @@ pub fn throw_nan_error(
 /// Errors that can occur during feature step operations.
 #[derive(Debug, Clone, PartialEq)]
 pub enum FeatureStepError {
+    /// A requested node property is not present on the graph
+    MissingNodeProperty {
+        /// Name of the missing property
+        property: String,
+    },
+
     /// Unknown or unsupported value type for a property
     UnknownValueType {
         /// Name of the property with unknown type
@@ -191,6 +219,9 @@ pub enum FeatureStepError {
 impl std::fmt::Display for FeatureStepError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
+            FeatureStepError::MissingNodeProperty { property } => {
+                write!(f, "Property '{}' not found in graph", property)
+            }
             FeatureStepError::UnknownValueType { property } => {
                 write!(f, "Unknown ValueType for property: {}", property)
             }
@@ -218,3 +249,135 @@ impl std::fmt::Display for FeatureStepError {
 }
 
 impl std::error::Error for FeatureStepError {}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::types::properties::{PropertyValues, PropertyValuesError, PropertyValuesResult};
+
+    #[derive(Debug)]
+    struct TestNodePropertyValues {
+        value_type: ValueType,
+        dimension: Option<usize>,
+    }
+
+    impl PropertyValues for TestNodePropertyValues {
+        fn value_type(&self) -> ValueType {
+            self.value_type
+        }
+
+        fn element_count(&self) -> usize {
+            1
+        }
+    }
+
+    impl NodePropertyValues for TestNodePropertyValues {
+        fn double_value(&self, _node_id: u64) -> PropertyValuesResult<f64> {
+            Ok(1.0)
+        }
+
+        fn long_value(&self, _node_id: u64) -> PropertyValuesResult<i64> {
+            Ok(1)
+        }
+
+        fn double_array_value(&self, _node_id: u64) -> PropertyValuesResult<Vec<f64>> {
+            Ok(vec![1.0, 2.0, 3.0])
+        }
+
+        fn float_array_value(&self, _node_id: u64) -> PropertyValuesResult<Vec<f32>> {
+            Ok(vec![1.0, 2.0])
+        }
+
+        fn long_array_value(&self, _node_id: u64) -> PropertyValuesResult<Vec<i64>> {
+            Ok(vec![1, 2, 3, 4])
+        }
+
+        fn get_object(&self, _node_id: u64) -> PropertyValuesResult<Box<dyn std::any::Any>> {
+            Err(PropertyValuesError::UnsupportedOperation(
+                "object access not used in feature util tests".to_string(),
+            ))
+        }
+
+        fn dimension(&self) -> Option<usize> {
+            self.dimension
+        }
+
+        fn get_max_long_property_value(&self) -> Option<i64> {
+            None
+        }
+
+        fn get_max_double_property_value(&self) -> Option<f64> {
+            None
+        }
+
+        fn has_value(&self, node_id: u64) -> bool {
+            node_id == 0
+        }
+    }
+
+    #[test]
+    fn test_property_dimension_scalar() {
+        let values = TestNodePropertyValues {
+            value_type: ValueType::Double,
+            dimension: None,
+        };
+
+        assert_eq!(property_dimension(&values, "score").unwrap(), 1);
+    }
+
+    #[test]
+    fn test_property_dimension_array_uses_first_value_when_no_dimension() {
+        let values = TestNodePropertyValues {
+            value_type: ValueType::DoubleArray,
+            dimension: None,
+        };
+
+        assert_eq!(property_dimension(&values, "embedding").unwrap(), 3);
+    }
+
+    #[test]
+    fn test_property_dimension_prefers_declared_dimension() {
+        let values = TestNodePropertyValues {
+            value_type: ValueType::DoubleArray,
+            dimension: Some(8),
+        };
+
+        assert_eq!(property_dimension(&values, "embedding").unwrap(), 8);
+    }
+
+    #[test]
+    fn test_validate_computed_features_detects_nan() {
+        let mut called = false;
+
+        validate_computed_features(&[1.0, f64::NAN, 3.0], 0, 3, || {
+            called = true;
+        });
+
+        assert!(called);
+    }
+
+    #[test]
+    fn test_throw_nan_error_message_matches_java_shape() {
+        let error = throw_nan_error(
+            "hadamard",
+            &["embedding".to_string(), "pagerank".to_string()],
+            12,
+            34,
+        );
+        let message = error.to_string();
+
+        assert!(message.contains("Encountered NaN"));
+        assert!(message.contains("embedding, pagerank"));
+        assert!(message.contains("(12, 34)"));
+        assert!(message.contains("hadamard"));
+    }
+
+    #[test]
+    fn test_missing_node_property_message() {
+        let error = FeatureStepError::MissingNodeProperty {
+            property: "embedding".to_string(),
+        };
+
+        assert_eq!(error.to_string(), "Property 'embedding' not found in graph");
+    }
+}

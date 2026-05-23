@@ -9,6 +9,8 @@
 
 use std::collections::HashMap;
 
+use crate::projection::eval::pipeline::{TrainingMethod, TrainingPipeline, TunableTrainerConfig};
+
 /// Anonymous graph name used when operating on in-memory graphs without a catalog entry.
 ///
 /// # Java Source
@@ -89,7 +91,9 @@ pub fn validate_main_metric(
     if main_metric == OUT_OF_BAG_ERROR {
         let non_rf_methods: Vec<String> = training_methods
             .iter()
-            .filter(|method| !method.contains("RandomForest"))
+            .filter(|method| {
+                method.as_str() != TrainingMethod::RandomForestClassification.to_string()
+            })
             .cloned()
             .collect();
 
@@ -102,6 +106,45 @@ pub fn validate_main_metric(
     }
 
     Ok(())
+}
+
+/// Validate the main metric against the actual training parameter space.
+///
+/// This mirrors Java `PipelineCompanion.validateMainMetric`: only non-empty
+/// model-candidate entries are considered, and `OUT_OF_BAG_ERROR` is allowed
+/// only with `RandomForestClassification` candidates.
+pub fn validate_main_metric_for_pipeline<P: TrainingPipeline + ?Sized>(
+    pipeline: &P,
+    main_metric: &str,
+) -> Result<(), PipelineCompanionError> {
+    validate_main_metric_for_parameter_space(main_metric, pipeline.training_parameter_space())
+}
+
+pub fn validate_main_metric_for_parameter_space(
+    main_metric: &str,
+    training_parameter_space: &HashMap<TrainingMethod, Vec<Box<dyn TunableTrainerConfig>>>,
+) -> Result<(), PipelineCompanionError> {
+    if main_metric != OUT_OF_BAG_ERROR {
+        return Ok(());
+    }
+
+    let mut non_rf_methods: Vec<String> = training_parameter_space
+        .iter()
+        .filter(|(method, configs)| {
+            **method != TrainingMethod::RandomForestClassification && !configs.is_empty()
+        })
+        .map(|(method, _)| method.to_string())
+        .collect();
+    non_rf_methods.sort();
+
+    if non_rf_methods.is_empty() {
+        return Ok(());
+    }
+
+    Err(PipelineCompanionError::IncompatibleMetric {
+        metric: OUT_OF_BAG_ERROR.to_string(),
+        incompatible_methods: non_rf_methods,
+    })
 }
 
 /// Errors that can occur in pipeline companion operations.
@@ -140,6 +183,26 @@ impl std::error::Error for PipelineCompanionError {}
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::projection::eval::pipeline::TunableTrainerConfig;
+
+    #[derive(Clone)]
+    struct TestTrainerConfig {
+        method: TrainingMethod,
+    }
+
+    impl TunableTrainerConfig for TestTrainerConfig {
+        fn training_method(&self) -> TrainingMethod {
+            self.method
+        }
+
+        fn is_concrete(&self) -> bool {
+            true
+        }
+
+        fn to_map(&self) -> HashMap<String, serde_json::Value> {
+            HashMap::new()
+        }
+    }
 
     #[test]
     fn test_prepare_pipeline_config_with_name() {
@@ -207,5 +270,50 @@ mod tests {
         let methods = vec!["LogisticRegression".to_string()];
         let result = validate_main_metric("ACCURACY", &methods);
         assert!(result.is_ok());
+    }
+
+    #[test]
+    fn test_validate_main_metric_parameter_space_ignores_empty_non_rf_methods() {
+        let mut parameter_space: HashMap<TrainingMethod, Vec<Box<dyn TunableTrainerConfig>>> =
+            HashMap::new();
+        parameter_space.insert(TrainingMethod::LogisticRegression, Vec::new());
+        parameter_space.insert(
+            TrainingMethod::RandomForestClassification,
+            vec![Box::new(TestTrainerConfig {
+                method: TrainingMethod::RandomForestClassification,
+            })],
+        );
+
+        let result = validate_main_metric_for_parameter_space(OUT_OF_BAG_ERROR, &parameter_space);
+        assert!(result.is_ok());
+    }
+
+    #[test]
+    fn test_validate_main_metric_parameter_space_rejects_non_empty_non_rf_methods() {
+        let mut parameter_space: HashMap<TrainingMethod, Vec<Box<dyn TunableTrainerConfig>>> =
+            HashMap::new();
+        parameter_space.insert(
+            TrainingMethod::LogisticRegression,
+            vec![Box::new(TestTrainerConfig {
+                method: TrainingMethod::LogisticRegression,
+            })],
+        );
+        parameter_space.insert(
+            TrainingMethod::RandomForestClassification,
+            vec![Box::new(TestTrainerConfig {
+                method: TrainingMethod::RandomForestClassification,
+            })],
+        );
+
+        let err = validate_main_metric_for_parameter_space(OUT_OF_BAG_ERROR, &parameter_space)
+            .expect_err("expected incompatible metric");
+
+        assert_eq!(
+            err,
+            PipelineCompanionError::IncompatibleMetric {
+                metric: OUT_OF_BAG_ERROR.to_string(),
+                incompatible_methods: vec!["LogisticRegression".to_string()],
+            }
+        );
     }
 }

@@ -44,11 +44,32 @@ impl PipelineGraphFilter {
         }
     }
 
+    /// Borrow the node labels included in the filtered graph.
+    pub fn node_labels(&self) -> &[String] {
+        &self.node_labels
+    }
+
+    /// Borrow the relationship types included in the filtered graph.
+    pub fn relationship_types(&self) -> &[String] {
+        &self.relationship_types
+    }
+
     /// Create a filter with only node labels (no relationship type filtering).
     pub fn with_node_labels(node_labels: Vec<String>) -> Self {
         Self {
             node_labels,
             relationship_types: Vec::new(),
+        }
+    }
+
+    /// Create a filter with node labels and relationship types.
+    pub fn with_relationship_types(
+        node_labels: Vec<String>,
+        relationship_types: Vec<String>,
+    ) -> Self {
+        Self {
+            node_labels,
+            relationship_types,
         }
     }
 }
@@ -80,5 +101,27 @@ mod tests {
 
         assert_eq!(filter.node_labels, vec!["Person"]);
         assert!(filter.relationship_types.is_empty());
+    }
+
+    #[test]
+    fn test_accessors() {
+        let filter = PipelineGraphFilter::with_relationship_types(
+            vec!["Person".to_string()],
+            vec!["KNOWS".to_string()],
+        );
+
+        assert_eq!(filter.node_labels(), ["Person"]);
+        assert_eq!(filter.relationship_types(), ["KNOWS"]);
+    }
+
+    #[test]
+    fn test_with_relationship_types() {
+        let filter = PipelineGraphFilter::with_relationship_types(
+            vec!["Person".to_string()],
+            vec!["KNOWS".to_string()],
+        );
+
+        assert_eq!(filter.node_labels, vec!["Person"]);
+        assert_eq!(filter.relationship_types, vec!["KNOWS"]);
     }
 }

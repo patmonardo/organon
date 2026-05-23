@@ -19,6 +19,12 @@ use std::error::Error as StdError;
 /// Configuration key for the mutate property name.
 pub const MUTATE_PROPERTY_KEY: &str = "mutateProperty";
 
+/// Configuration key for execution node labels.
+pub const NODE_LABELS_KEY: &str = "nodeLabels";
+
+/// Configuration key for execution relationship types.
+pub const RELATIONSHIP_TYPES_KEY: &str = "relationshipTypes";
+
 /// A minimal built-in algorithm used for smoke tests.
 ///
 /// This is intentionally simple: it writes a constant `f64` node property.
@@ -131,7 +137,7 @@ impl ExecutableNodePropertyStep for NodePropertyStep {
         // Build execution configuration
         let mut exec_config = self.config.clone();
         exec_config.insert(
-            "nodeLabels".to_string(),
+            NODE_LABELS_KEY.to_string(),
             serde_json::Value::Array(
                 node_labels
                     .iter()
@@ -140,7 +146,7 @@ impl ExecutableNodePropertyStep for NodePropertyStep {
             ),
         );
         exec_config.insert(
-            "relationshipTypes".to_string(),
+            RELATIONSHIP_TYPES_KEY.to_string(),
             serde_json::Value::Array(
                 relationship_types
                     .iter()
@@ -229,10 +235,7 @@ impl ExecutableNodePropertyStep for NodePropertyStep {
             "name".to_string(),
             serde_json::Value::String(self.algorithm_name.clone()),
         );
-        result.insert(
-            "config".to_string(),
-            serde_json::to_value(config_with_context).unwrap(),
-        );
+        result.insert("config".to_string(), serde_json::json!(config_with_context));
 
         result
     }

@@ -86,6 +86,18 @@ impl PipelineRepository {
         .unwrap_or_else(|e| panic!("{e}"))
     }
 
+    pub fn try_drop(
+        &self,
+        user: &User,
+        pipeline_name: &PipelineName,
+    ) -> Result<PipelineCatalogEntry, String> {
+        PipelineCatalog::drop(
+            self.pipeline_catalog.as_ref(),
+            user.username(),
+            pipeline_name.as_str(),
+        )
+    }
+
     pub fn exists(&self, user: &User, pipeline_name: &PipelineName) -> bool {
         self.pipeline_catalog
             .exists(user.username(), pipeline_name.as_str())
@@ -99,6 +111,15 @@ impl PipelineRepository {
         self.pipeline_catalog
             .get(user.username(), pipeline_name.as_str())
             .unwrap_or_else(|e| panic!("{e}"))
+    }
+
+    pub fn try_get_entry(
+        &self,
+        user: &User,
+        pipeline_name: &PipelineName,
+    ) -> Result<PipelineCatalogEntry, String> {
+        self.pipeline_catalog
+            .get(user.username(), pipeline_name.as_str())
     }
 
     pub fn get_link_prediction_training_pipeline(

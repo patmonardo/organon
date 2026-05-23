@@ -324,6 +324,10 @@ impl NodeClassificationTrain {
 impl PipelineTrainer for NodeClassificationTrain {
     type Result = NodeClassificationTrainResult;
 
+    fn set_termination_flag(&mut self, termination_flag: TerminationFlag) {
+        NodeClassificationTrain::set_termination_flag(self, termination_flag);
+    }
+
     fn run(&mut self) -> Result<Self::Result, Box<dyn std::error::Error + Send + Sync>> {
         self.run()
     }

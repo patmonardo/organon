@@ -68,11 +68,11 @@ impl NodePropertyStepExecutor {
         for step in steps {
             // Validate context node labels
             let context_node_labels = step.context_node_labels();
-            self.validate_node_labels(graph_store, context_node_labels, step.proc_name())?;
+            self.resolve_node_labels(graph_store, context_node_labels, step.proc_name())?;
 
             // Validate context relationship types
             let context_rel_types = step.context_relationship_types();
-            self.validate_relationship_types(graph_store, context_rel_types, step.proc_name())?;
+            self.resolve_relationship_types(graph_store, context_rel_types, step.proc_name())?;
         }
 
         Ok(())
@@ -101,9 +101,10 @@ impl NodePropertyStepExecutor {
 
         for (i, step) in steps.iter().enumerate() {
             // Resolve feature input labels/types using step context and pipeline defaults.
-            let feature_input_node_labels = self.feature_input_node_labels(step.as_ref());
+            let feature_input_node_labels =
+                self.feature_input_node_labels(graph_store, step.as_ref())?;
             let feature_input_relationship_types =
-                self.feature_input_relationship_types(step.as_ref());
+                self.feature_input_relationship_types(graph_store, step.as_ref())?;
 
             step.execute(
                 graph_store,
@@ -180,46 +181,98 @@ impl NodePropertyStepExecutor {
         Ok(())
     }
 
-    fn feature_input_node_labels(&self, step: &dyn ExecutableNodePropertyStep) -> Vec<String> {
-        if step.context_node_labels().is_empty() {
-            return self.node_labels.clone();
-        }
-
+    fn feature_input_node_labels(
+        &self,
+        graph_store: &DefaultGraphStore,
+        step: &dyn ExecutableNodePropertyStep,
+    ) -> Result<Vec<String>, NodePropertyStepExecutorError> {
         let mut labels = self.node_labels.clone();
-        for label in step.context_node_labels() {
-            if !labels.iter().any(|existing| existing == label) {
-                labels.push(label.clone());
+        for label in
+            self.resolve_node_labels(graph_store, step.context_node_labels(), step.proc_name())?
+        {
+            if !labels.iter().any(|existing| existing == &label) {
+                labels.push(label);
             }
         }
 
-        labels
+        Ok(labels)
     }
 
     fn feature_input_relationship_types(
         &self,
+        graph_store: &DefaultGraphStore,
         step: &dyn ExecutableNodePropertyStep,
-    ) -> Vec<String> {
-        let base_types: Vec<String> = if step.context_relationship_types().is_empty() {
-            self.relationship_types.clone()
-        } else {
-            step.context_relationship_types().to_vec()
-        };
+    ) -> Result<Vec<String>, NodePropertyStepExecutorError> {
+        let mut relationship_types = self.relationship_types.clone();
+        let context_relationship_types = self.resolve_relationship_types(
+            graph_store,
+            step.context_relationship_types(),
+            step.proc_name(),
+        )?;
 
-        if self
-            .available_relationship_types_for_node_properties
-            .is_empty()
-        {
-            return base_types;
+        for rel_type in context_relationship_types.into_iter().filter(|rel_type| {
+            self.available_relationship_types_for_node_properties
+                .contains(rel_type)
+        }) {
+            if !relationship_types
+                .iter()
+                .any(|existing| existing == &rel_type)
+            {
+                relationship_types.push(rel_type);
+            }
         }
 
-        base_types
-            .into_iter()
-            .filter(|rel_type| {
-                self.available_relationship_types_for_node_properties
-                    .contains(rel_type)
-            })
-            .collect()
+        Ok(relationship_types)
     }
+
+    fn resolve_node_labels(
+        &self,
+        graph_store: &DefaultGraphStore,
+        labels: &[String],
+        step_name: &str,
+    ) -> Result<Vec<String>, NodePropertyStepExecutorError> {
+        if labels.iter().any(|label| is_wildcard(label)) {
+            let mut resolved: Vec<String> = graph_store
+                .node_labels()
+                .into_iter()
+                .map(|label| label.name().to_string())
+                .collect();
+            resolved.sort();
+            return Ok(resolved);
+        }
+
+        self.validate_node_labels(graph_store, labels, step_name)?;
+        Ok(labels.to_vec())
+    }
+
+    fn resolve_relationship_types(
+        &self,
+        graph_store: &DefaultGraphStore,
+        relationship_types: &[String],
+        step_name: &str,
+    ) -> Result<Vec<String>, NodePropertyStepExecutorError> {
+        if relationship_types
+            .iter()
+            .any(|rel_type| is_wildcard(rel_type))
+        {
+            let mut resolved: Vec<String> = graph_store
+                .relationship_types()
+                .into_iter()
+                .map(|rel_type| rel_type.name().to_string())
+                .collect();
+            resolved.sort();
+            return Ok(resolved);
+        }
+
+        self.validate_relationship_types(graph_store, relationship_types, step_name)?;
+        Ok(relationship_types.to_vec())
+    }
+}
+
+fn is_wildcard(value: &str) -> bool {
+    value == "*"
+        || value == NodeLabel::ALL_NODES_NAME
+        || value == RelationshipType::ALL_RELATIONSHIPS_NAME
 }
 
 // Note: Memory estimation and task creation are omitted in direct integration.
@@ -308,6 +361,48 @@ mod tests {
     use crate::types::random::RandomGraphConfig;
     use std::collections::HashMap;
     use std::sync::Mutex;
+
+    #[derive(Clone)]
+    struct CaptureStep {
+        context_labels: Vec<String>,
+        context_rel_types: Vec<String>,
+        config: HashMap<String, serde_json::Value>,
+        captured: Arc<Mutex<Option<(Vec<String>, Vec<String>)>>>,
+    }
+
+    impl ExecutableNodePropertyStep for CaptureStep {
+        fn execute(
+            &self,
+            _graph_store: &mut DefaultGraphStore,
+            node_labels: &[String],
+            relationship_types: &[String],
+            _concurrency: usize,
+        ) -> Result<(), Box<dyn StdError + Send + Sync>> {
+            let mut guard = self.captured.lock().expect("capture lock");
+            *guard = Some((node_labels.to_vec(), relationship_types.to_vec()));
+            Ok(())
+        }
+
+        fn config(&self) -> &HashMap<String, serde_json::Value> {
+            &self.config
+        }
+
+        fn context_node_labels(&self) -> &[String] {
+            &self.context_labels
+        }
+
+        fn context_relationship_types(&self) -> &[String] {
+            &self.context_rel_types
+        }
+
+        fn proc_name(&self) -> &str {
+            "capture.step"
+        }
+
+        fn mutate_node_property(&self) -> &str {
+            "captured"
+        }
+    }
 
     fn create_test_graph_store() -> Arc<DefaultGraphStore> {
         let config = RandomGraphConfig {
@@ -465,60 +560,26 @@ mod tests {
 
     #[test]
     fn test_feature_input_resolution_uses_context_and_available_rel_types() {
-        #[derive(Clone)]
-        struct CaptureStep {
-            context_labels: Vec<String>,
-            context_rel_types: Vec<String>,
-            config: HashMap<String, serde_json::Value>,
-            captured: Arc<Mutex<Option<(Vec<String>, Vec<String>)>>>,
-        }
-
-        impl ExecutableNodePropertyStep for CaptureStep {
-            fn execute(
-                &self,
-                _graph_store: &mut DefaultGraphStore,
-                node_labels: &[String],
-                relationship_types: &[String],
-                _concurrency: usize,
-            ) -> Result<(), Box<dyn StdError + Send + Sync>> {
-                let mut guard = self.captured.lock().expect("capture lock");
-                *guard = Some((node_labels.to_vec(), relationship_types.to_vec()));
-                Ok(())
-            }
-
-            fn config(&self) -> &HashMap<String, serde_json::Value> {
-                &self.config
-            }
-
-            fn context_node_labels(&self) -> &[String] {
-                &self.context_labels
-            }
-
-            fn context_relationship_types(&self) -> &[String] {
-                &self.context_rel_types
-            }
-
-            fn proc_name(&self) -> &str {
-                "capture.step"
-            }
-
-            fn mutate_node_property(&self) -> &str {
-                "captured"
-            }
-        }
-
         let mut graph_store = create_test_graph_store();
+        let graph_rel_type = graph_store
+            .relationship_types()
+            .into_iter()
+            .next()
+            .expect("random graph relationship type")
+            .name()
+            .to_string();
         let node_labels = vec!["Node".to_string()];
-        let relationship_types = vec!["REL".to_string(), "REL2".to_string()];
-        let available_rel_types: HashSet<String> = vec!["REL2".to_string()].into_iter().collect();
+        let relationship_types = vec!["BASE_REL".to_string()];
+        let available_rel_types: HashSet<String> =
+            vec![graph_rel_type.clone()].into_iter().collect();
 
         let mut executor =
             NodePropertyStepExecutor::new(node_labels, relationship_types, available_rel_types, 2);
 
         let captured = Arc::new(Mutex::new(None));
         let step = CaptureStep {
-            context_labels: vec!["Context".to_string()],
-            context_rel_types: vec![],
+            context_labels: vec![],
+            context_rel_types: vec![graph_rel_type.clone()],
             config: HashMap::new(),
             captured: Arc::clone(&captured),
         };
@@ -529,8 +590,76 @@ mod tests {
 
         let captured = captured.lock().expect("capture lock");
         let (labels, rel_types) = captured.clone().expect("captured inputs");
-        assert_eq!(labels, vec!["Node".to_string(), "Context".to_string()]);
-        assert_eq!(rel_types, vec!["REL2".to_string()]);
+        assert_eq!(labels, vec!["Node".to_string()]);
+        assert_eq!(rel_types, vec!["BASE_REL".to_string(), graph_rel_type]);
+    }
+
+    #[test]
+    fn test_context_relationship_types_are_filtered_without_dropping_base_types() {
+        let mut graph_store = create_test_graph_store();
+        let graph_rel_type = graph_store
+            .relationship_types()
+            .into_iter()
+            .next()
+            .expect("random graph relationship type")
+            .name()
+            .to_string();
+        let mut executor = NodePropertyStepExecutor::new(
+            vec!["Node".to_string()],
+            vec!["BASE_REL".to_string()],
+            HashSet::new(),
+            2,
+        );
+
+        let captured = Arc::new(Mutex::new(None));
+        let step = CaptureStep {
+            context_labels: vec![],
+            context_rel_types: vec![graph_rel_type],
+            config: HashMap::new(),
+            captured: Arc::clone(&captured),
+        };
+
+        executor
+            .execute_node_property_steps(&mut graph_store, &[Box::new(step)])
+            .expect("execute should succeed");
+
+        let captured = captured.lock().expect("capture lock");
+        let (_, rel_types) = captured.clone().expect("captured inputs");
+        assert_eq!(rel_types, vec!["BASE_REL".to_string()]);
+    }
+
+    #[test]
+    fn test_context_wildcard_relationship_types_expand_through_available_filter() {
+        let mut graph_store = create_test_graph_store();
+        let graph_rel_type = graph_store
+            .relationship_types()
+            .into_iter()
+            .next()
+            .expect("random graph relationship type")
+            .name()
+            .to_string();
+        let mut executor = NodePropertyStepExecutor::new(
+            vec!["Node".to_string()],
+            vec!["BASE_REL".to_string()],
+            vec![graph_rel_type.clone()].into_iter().collect(),
+            2,
+        );
+
+        let captured = Arc::new(Mutex::new(None));
+        let step = CaptureStep {
+            context_labels: vec![],
+            context_rel_types: vec!["*".to_string()],
+            config: HashMap::new(),
+            captured: Arc::clone(&captured),
+        };
+
+        executor
+            .execute_node_property_steps(&mut graph_store, &[Box::new(step)])
+            .expect("execute should succeed");
+
+        let captured = captured.lock().expect("capture lock");
+        let (_, rel_types) = captured.clone().expect("captured inputs");
+        assert_eq!(rel_types, vec!["BASE_REL".to_string(), graph_rel_type]);
     }
 
     #[test]

@@ -3,7 +3,9 @@ use std::sync::Arc;
 
 use serde_json::Value;
 
+use crate::mem::MemoryEstimationResult;
 use crate::projection::eval::pipeline::link_pipeline::LinkFeatureStepFactory;
+use crate::projection::eval::pipeline::link_pipeline::LinkPredictionSplitConfig;
 use crate::projection::eval::pipeline::link_pipeline::LinkPredictionTrainingPipeline;
 use crate::projection::eval::pipeline::node_pipeline::classification::node_classification_training_pipeline::NodeClassificationTrainingPipeline;
 use crate::projection::eval::pipeline::node_pipeline::node_feature_step::NodeFeatureStep;
@@ -23,9 +25,19 @@ use super::pipeline_catalog_result_transformer::create_pipeline_catalog_result;
 use super::pipeline_info_result_transformer::create_pipeline_info_result;
 use super::{PipelineName, PipelineRepository};
 use crate::procedures::pipelines::types::{
-    NodePipelineInfoResult, PipelineCatalogResult, PipelineExistsResult, PipelineInfoResult,
+    AnyMap, LinkPredictionTrainResult, MutateResult, NodeClassificationPipelineTrainResult,
+    NodeClassificationStreamResult, NodePipelineInfoResult, NodeRegressionPipelineTrainResult,
+    NodeRegressionStreamResult, PipelineCatalogResult, PipelineExistsResult, PipelineInfoResult,
+    PredictMutateResult, StreamResult, WriteResult,
 };
 
+fn executor_backed_pipeline_application_not_wired<T>(procedure: &str) -> Vec<T> {
+    panic!(
+        "{procedure} is an executor-backed pipeline procedure and PipelineApplications is not wired with graph/model processing dependencies yet"
+    );
+}
+
+#[derive(Clone)]
 pub struct PipelineApplications {
     user: User,
     pipeline_repository: PipelineRepository,
@@ -111,6 +123,65 @@ impl PipelineApplications {
         next.validate_unique_mutate_property(step_box.as_ref())
             .unwrap_or_else(|e| panic!("{e}"));
         next.add_node_property_step(step_box);
+
+        let next = Arc::new(next);
+        self.pipeline_repository
+            .replace(&self.user, pipeline_name, Arc::clone(&next));
+
+        create_pipeline_info_result(pipeline_name.as_str(), next.as_ref())
+    }
+
+    pub fn configure_link_prediction_split(
+        &self,
+        pipeline_name: &PipelineName,
+        split_config: LinkPredictionSplitConfig,
+    ) -> PipelineInfoResult {
+        let existing = self
+            .pipeline_repository
+            .get_link_prediction_training_pipeline(&self.user, pipeline_name);
+
+        let mut next = (*existing).clone();
+        next.set_split_config(split_config);
+
+        let next = Arc::new(next);
+        self.pipeline_repository
+            .replace(&self.user, pipeline_name, Arc::clone(&next));
+
+        create_pipeline_info_result(pipeline_name.as_str(), next.as_ref())
+    }
+
+    pub fn configure_link_prediction_auto_tuning(
+        &self,
+        pipeline_name: &PipelineName,
+        auto_tuning_config: AutoTuningConfig,
+    ) -> PipelineInfoResult {
+        let existing = self
+            .pipeline_repository
+            .get_link_prediction_training_pipeline(&self.user, pipeline_name);
+
+        let mut next = (*existing).clone();
+        next.set_auto_tuning_config(auto_tuning_config);
+
+        let next = Arc::new(next);
+        self.pipeline_repository
+            .replace(&self.user, pipeline_name, Arc::clone(&next));
+
+        create_pipeline_info_result(pipeline_name.as_str(), next.as_ref())
+    }
+
+    pub fn add_training_method_to_link_prediction_pipeline(
+        &self,
+        pipeline_name: &PipelineName,
+        method: TrainingMethod,
+    ) -> PipelineInfoResult {
+        let existing = self
+            .pipeline_repository
+            .get_link_prediction_training_pipeline(&self.user, pipeline_name);
+
+        let mut next = (*existing).clone();
+        next.training_parameter_space_mut()
+            .entry(method)
+            .or_default();
 
         let next = Arc::new(next);
         self.pipeline_repository
@@ -294,12 +365,158 @@ impl PipelineApplications {
         }
     }
 
+    pub fn link_prediction_mutate(
+        &self,
+        _graph_name: &str,
+        _configuration: AnyMap,
+    ) -> Vec<MutateResult> {
+        executor_backed_pipeline_application_not_wired("linkPrediction.mutate")
+    }
+
+    pub fn link_prediction_mutate_estimate(
+        &self,
+        _graph_name_or_configuration: Value,
+        _raw_configuration: AnyMap,
+    ) -> Vec<MemoryEstimationResult> {
+        executor_backed_pipeline_application_not_wired("linkPrediction.mutateEstimate")
+    }
+
+    pub fn link_prediction_stream(
+        &self,
+        _graph_name: &str,
+        _configuration: AnyMap,
+    ) -> Vec<StreamResult> {
+        executor_backed_pipeline_application_not_wired("linkPrediction.stream")
+    }
+
+    pub fn link_prediction_stream_estimate(
+        &self,
+        _graph_name_or_configuration: Value,
+        _raw_configuration: AnyMap,
+    ) -> Vec<MemoryEstimationResult> {
+        executor_backed_pipeline_application_not_wired("linkPrediction.streamEstimate")
+    }
+
+    pub fn link_prediction_train(
+        &self,
+        _graph_name: &str,
+        _configuration: AnyMap,
+    ) -> Vec<LinkPredictionTrainResult> {
+        executor_backed_pipeline_application_not_wired("linkPrediction.train")
+    }
+
+    pub fn link_prediction_train_estimate(
+        &self,
+        _graph_name_or_configuration: Value,
+        _raw_configuration: AnyMap,
+    ) -> Vec<MemoryEstimationResult> {
+        executor_backed_pipeline_application_not_wired("linkPrediction.trainEstimate")
+    }
+
+    pub fn node_classification_predict_mutate(
+        &self,
+        _graph_name: &str,
+        _configuration: AnyMap,
+    ) -> Vec<PredictMutateResult> {
+        executor_backed_pipeline_application_not_wired("nodeClassification.mutate")
+    }
+
+    pub fn node_classification_predict_mutate_estimate(
+        &self,
+        _graph_name_or_configuration: Value,
+        _raw_configuration: AnyMap,
+    ) -> Vec<MemoryEstimationResult> {
+        executor_backed_pipeline_application_not_wired("nodeClassification.mutateEstimate")
+    }
+
+    pub fn node_classification_predict_stream(
+        &self,
+        _graph_name: &str,
+        _configuration: AnyMap,
+    ) -> Vec<NodeClassificationStreamResult> {
+        executor_backed_pipeline_application_not_wired("nodeClassification.stream")
+    }
+
+    pub fn node_classification_predict_stream_estimate(
+        &self,
+        _graph_name_or_configuration: Value,
+        _raw_configuration: AnyMap,
+    ) -> Vec<MemoryEstimationResult> {
+        executor_backed_pipeline_application_not_wired("nodeClassification.streamEstimate")
+    }
+
+    pub fn node_classification_train(
+        &self,
+        _graph_name: &str,
+        _configuration: AnyMap,
+    ) -> Vec<NodeClassificationPipelineTrainResult> {
+        executor_backed_pipeline_application_not_wired("nodeClassification.train")
+    }
+
+    pub fn node_classification_train_estimate(
+        &self,
+        _graph_name_or_configuration: Value,
+        _raw_configuration: AnyMap,
+    ) -> Vec<MemoryEstimationResult> {
+        executor_backed_pipeline_application_not_wired("nodeClassification.trainEstimate")
+    }
+
+    pub fn node_classification_predict_write(
+        &self,
+        _graph_name: &str,
+        _configuration: AnyMap,
+    ) -> Vec<WriteResult> {
+        executor_backed_pipeline_application_not_wired("nodeClassification.write")
+    }
+
+    pub fn node_classification_predict_write_estimate(
+        &self,
+        _graph_name_or_configuration: Value,
+        _raw_configuration: AnyMap,
+    ) -> Vec<MemoryEstimationResult> {
+        executor_backed_pipeline_application_not_wired("nodeClassification.writeEstimate")
+    }
+
+    pub fn node_regression_predict_mutate(
+        &self,
+        _graph_name: &str,
+        _configuration: AnyMap,
+    ) -> Vec<PredictMutateResult> {
+        executor_backed_pipeline_application_not_wired("nodeRegression.mutate")
+    }
+
+    pub fn node_regression_predict_stream(
+        &self,
+        _graph_name: &str,
+        _configuration: AnyMap,
+    ) -> Vec<NodeRegressionStreamResult> {
+        executor_backed_pipeline_application_not_wired("nodeRegression.stream")
+    }
+
+    pub fn node_regression_train(
+        &self,
+        _graph_name: &str,
+        _configuration: AnyMap,
+    ) -> Vec<NodeRegressionPipelineTrainResult> {
+        executor_backed_pipeline_application_not_wired("nodeRegression.train")
+    }
+
     pub fn list(&self) -> Vec<PipelineCatalogResult> {
-        self.pipeline_repository
+        let mut results: Vec<_> = self
+            .pipeline_repository
             .get_all(&self.user)
             .into_iter()
             .map(|entry| pipeline_catalog_entry_to_result(entry))
-            .collect()
+            .collect();
+        results.sort_by(|a, b| a.pipeline_name.cmp(&b.pipeline_name));
+        results
+    }
+
+    pub fn get_single(&self, pipeline_name: &PipelineName) -> Option<PipelineCatalogResult> {
+        self.pipeline_repository
+            .try_get_entry(&self.user, pipeline_name)
+            .ok()
+            .map(pipeline_catalog_entry_to_result)
     }
 
     pub fn exists(&self, pipeline_name: &PipelineName) -> PipelineExistsResult {
@@ -321,6 +538,16 @@ impl PipelineApplications {
     pub fn drop(&self, pipeline_name: &PipelineName) -> PipelineCatalogResult {
         let entry = self.pipeline_repository.drop(&self.user, pipeline_name);
         pipeline_catalog_entry_to_result(entry)
+    }
+
+    pub fn drop_silencing_failure(
+        &self,
+        pipeline_name: &PipelineName,
+    ) -> Option<PipelineCatalogResult> {
+        self.pipeline_repository
+            .try_drop(&self.user, pipeline_name)
+            .ok()
+            .map(pipeline_catalog_entry_to_result)
     }
 }
 

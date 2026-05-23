@@ -191,6 +191,10 @@ impl NodeRegressionTrain {
 impl PipelineTrainer for NodeRegressionTrain {
     type Result = NodeRegressionTrainResult;
 
+    fn set_termination_flag(&mut self, termination_flag: TerminationFlag) {
+        NodeRegressionTrain::set_termination_flag(self, termination_flag);
+    }
+
     fn run(&mut self) -> Result<Self::Result, Box<dyn std::error::Error + Send + Sync>> {
         self.run()
     }

@@ -2,6 +2,7 @@
 // https://github.com/neo4j/graph-data-science
 // pipeline/src/main/java/org/neo4j/gds/ml/pipeline/PipelineTrainer.java
 
+use crate::concurrency::TerminationFlag;
 use std::error::Error as StdError;
 
 /// Trainer for ML pipelines with termination support.
@@ -23,6 +24,11 @@ use std::error::Error as StdError;
 pub trait PipelineTrainer {
     /// The result type produced by training.
     type Result;
+
+    /// Set the termination flag used by this trainer.
+    ///
+    /// Java: `void setTerminationFlag(TerminationFlag terminationFlag)`
+    fn set_termination_flag(&mut self, _termination_flag: TerminationFlag) {}
 
     /// Run the training process.
     ///
@@ -49,11 +55,15 @@ mod tests {
 
     struct MockTrainer {
         result: String,
-        terminated: bool,
+        termination_flag: TerminationFlag,
     }
 
     impl PipelineTrainer for MockTrainer {
         type Result = String;
+
+        fn set_termination_flag(&mut self, termination_flag: TerminationFlag) {
+            self.termination_flag = termination_flag;
+        }
 
         fn run(&mut self) -> Result<Self::Result, Box<dyn StdError + Send + Sync>> {
             if self.is_terminated() {
@@ -63,7 +73,7 @@ mod tests {
         }
 
         fn is_terminated(&self) -> bool {
-            self.terminated
+            !self.termination_flag.running()
         }
     }
 
@@ -71,7 +81,7 @@ mod tests {
     fn test_pipeline_trainer_run() {
         let mut trainer = MockTrainer {
             result: "trained model".to_string(),
-            terminated: false,
+            termination_flag: TerminationFlag::running_true(),
         };
 
         let result = trainer.run();
@@ -83,10 +93,22 @@ mod tests {
     fn test_pipeline_trainer_terminated() {
         let mut trainer = MockTrainer {
             result: "trained model".to_string(),
-            terminated: true,
+            termination_flag: TerminationFlag::stop_running(),
         };
 
         let result = trainer.run();
         assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_pipeline_trainer_set_termination_flag() {
+        let mut trainer = MockTrainer {
+            result: "trained model".to_string(),
+            termination_flag: TerminationFlag::running_true(),
+        };
+
+        trainer.set_termination_flag(TerminationFlag::stop_running());
+
+        assert!(trainer.is_terminated());
     }
 }

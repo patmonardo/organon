@@ -12,6 +12,7 @@ use crate::types::graph_store::GraphStore;
 
 use super::executable_node_property_step::ExecutableNodePropertyStep;
 use super::feature_step::FeatureStep;
+use super::node_property_step::MUTATE_PROPERTY_KEY;
 
 /// Base Pipeline trait.
 ///
@@ -102,7 +103,7 @@ pub trait Pipeline {
 
         // Remove properties that will be created by node property steps
         for step in self.node_property_steps() {
-            if let Some(mutate_key) = step.config().get("mutateProperty") {
+            if let Some(mutate_key) = step.config().get(MUTATE_PROPERTY_KEY) {
                 if let Some(prop_name) = mutate_key.as_str() {
                     invalid_properties.remove(prop_name);
                 }

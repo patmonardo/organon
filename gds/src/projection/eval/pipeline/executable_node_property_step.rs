@@ -19,8 +19,9 @@ use std::error::Error as StdError;
 /// - FastRP → `embedding` property
 /// - Louvain → `community` property
 ///
-/// **Note on Rust Design**: Uses concrete `DefaultGraphStore` for dyn-compatibility.
-/// Java uses dependency injection via `Stub` interface; we use direct type reference.
+/// **Note on Rust Design**: Java injects a `Stub` to adapt procedure calls.
+/// Rust keeps the pipeline step as IR: implementations pass the procedure name
+/// to `ProcedureRegistry`, which selects a Rust algorithm spec for execution.
 ///
 /// ```java
 /// public interface ExecutableNodePropertyStep extends ToMapConvertible {
@@ -40,8 +41,8 @@ pub trait ExecutableNodePropertyStep: DynClone + Send + Sync {
     ///
     /// **Java**: `void execute(ExecutionContext, String graphName, ...)`
     ///
-    /// **Rust Adaptation**: Uses `&mut DefaultGraphStore` directly instead of
-    /// ExecutionContext + graphName + Stub pattern.
+    /// **Rust Adaptation**: Uses `&mut DefaultGraphStore` directly; concrete
+    /// steps resolve procedure names through `ProcedureRegistry` instead of Java stubs.
     fn execute(
         &self,
         graph_store: &mut DefaultGraphStore,

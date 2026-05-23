@@ -17,6 +17,7 @@ use crate::projection::eval::pipeline::TrainingPipeline;
 pub struct PipelineCatalogEntry {
     pipeline_name: String,
     pipeline_type: String,
+    pipeline_map: HashMap<String, serde_json::Value>,
     // Store as Any to avoid associated type issues
     // Implementers can downcast to specific pipeline types
     pipeline: Arc<dyn std::any::Any + Send + Sync>,
@@ -28,9 +29,11 @@ impl PipelineCatalogEntry {
         pipeline: Arc<P>,
     ) -> Self {
         let pipeline_type = pipeline.pipeline_type().to_string();
+        let pipeline_map = pipeline.to_map();
         Self {
             pipeline_name,
             pipeline_type,
+            pipeline_map,
             pipeline: pipeline as Arc<dyn std::any::Any + Send + Sync>,
         }
     }
@@ -41,6 +44,32 @@ impl PipelineCatalogEntry {
 
     pub fn pipeline_type(&self) -> &str {
         &self.pipeline_type
+    }
+
+    /// Serialized pipeline IR snapshot captured when the pipeline was cataloged.
+    ///
+    /// This is intentionally independent of the erased runtime pipeline handle;
+    /// it gives future catalog backends a stable payload to persist.
+    pub fn pipeline_map(&self) -> &HashMap<String, serde_json::Value> {
+        &self.pipeline_map
+    }
+
+    /// Convert this catalog entry to a metadata + IR map for listing or persistence.
+    pub fn to_map(&self) -> HashMap<String, serde_json::Value> {
+        let mut map = HashMap::new();
+        map.insert(
+            "pipelineName".to_string(),
+            serde_json::Value::String(self.pipeline_name.clone()),
+        );
+        map.insert(
+            "pipelineType".to_string(),
+            serde_json::Value::String(self.pipeline_type.clone()),
+        );
+        map.insert(
+            "pipeline".to_string(),
+            serde_json::Value::Object(self.pipeline_map.clone().into_iter().collect()),
+        );
+        map
     }
 
     /// Downcast the pipeline to a specific type.
@@ -111,8 +140,10 @@ impl PipelineUserCatalog {
         self.pipelines_by_name.remove(pipeline_name)
     }
 
-    fn iter(&self) -> impl Iterator<Item = PipelineCatalogEntry> + '_ {
-        self.pipelines_by_name.values().cloned()
+    fn entries(&self) -> Vec<PipelineCatalogEntry> {
+        let mut entries: Vec<_> = self.pipelines_by_name.values().cloned().collect();
+        entries.sort_by(|a, b| a.pipeline_name.cmp(&b.pipeline_name));
+        entries
     }
 }
 
@@ -120,6 +151,10 @@ impl PipelineUserCatalog {
 ///
 /// Provides thread-safe storage and retrieval of training pipelines.
 /// Each user has their own isolated catalog.
+///
+/// This is the current in-memory catalog backend. `PipelineCatalogEntry` also
+/// stores a pipeline IR snapshot so a future dataset-backed catalog can persist
+/// the same symbol-table payload without changing callers that run pipelines.
 ///
 /// # Java Source (PipelineCatalog.java)
 /// ```java
@@ -312,7 +347,7 @@ impl PipelineCatalog {
 
         catalogs
             .get(user)
-            .map(|catalog| catalog.iter().collect())
+            .map(PipelineUserCatalog::entries)
             .unwrap_or_default()
     }
 
@@ -512,6 +547,38 @@ mod tests {
     }
 
     #[test]
+    fn test_catalog_entry_captures_pipeline_ir_snapshot() {
+        let catalog = PipelineCatalog::new();
+        let pipeline = Arc::new(MockPipeline {
+            name: "snapshot_pipeline".to_string(),
+        });
+
+        catalog.set("alice", "snapshot", pipeline).unwrap();
+
+        let entry = catalog.get("alice", "snapshot").unwrap();
+        assert_eq!(
+            entry.pipeline_map().get("name"),
+            Some(&serde_json::json!("snapshot_pipeline"))
+        );
+
+        let entry_map = entry.to_map();
+        assert_eq!(
+            entry_map.get("pipelineName"),
+            Some(&serde_json::json!("snapshot"))
+        );
+        assert_eq!(
+            entry_map.get("pipelineType"),
+            Some(&serde_json::json!("snapshot_pipeline"))
+        );
+        assert_eq!(
+            entry_map
+                .get("pipeline")
+                .and_then(|value| value.get("name")),
+            Some(&serde_json::json!("snapshot_pipeline"))
+        );
+    }
+
+    #[test]
     fn test_duplicate_pipeline_error() {
         let catalog = PipelineCatalog::new();
         let pipeline = Arc::new(MockPipeline {
@@ -632,8 +699,7 @@ mod tests {
             .iter()
             .map(|entry| entry.pipeline_name())
             .collect();
-        assert!(names.contains(&"p1"));
-        assert!(names.contains(&"p2"));
+        assert_eq!(names, vec!["p1", "p2"]);
     }
 
     #[test]

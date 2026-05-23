@@ -69,6 +69,7 @@ reality/src/logos/open-logic
 logic/src/compiler.old
 gds/examples.old
 ./gds/examples.old
+ref/algo-specs
 ref/nltk
 ref/nltk-book
 ref/neo4j

@@ -203,21 +203,23 @@ pub trait PipelineExecutor<PIPELINE: Pipeline, RESULT> {
         // 5. Split datasets
         self.split_datasets()?;
 
-        // 6. Execute node property steps (scoped to avoid overlapping borrows on `self`)
-        {
-            let (pipeline, graph_store) = self.pipeline_and_graph_store_mut();
-            node_property_step_executor
-                .execute_node_property_steps(graph_store, pipeline.node_property_steps())
-                .map_err(|e| PipelineExecutorError::StepExecutionFailed(Box::new(e)))?;
-        }
+        // 6-8. Execute steps, validate features, then execute the algorithm.
+        // Java wraps this phase in `finally`; keep the result as data so cleanup
+        // also runs when step execution or feature validation fails.
+        let result: Result<RESULT, PipelineExecutorError> = (|| {
+            {
+                let (pipeline, graph_store) = self.pipeline_and_graph_store_mut();
+                node_property_step_executor
+                    .execute_node_property_steps(graph_store, pipeline.node_property_steps())
+                    .map_err(|e| PipelineExecutorError::StepExecutionFailed(Box::new(e)))?;
+            }
 
-        // 7. Validate feature properties
-        self.pipeline()
-            .validate_feature_properties(self.graph_store(), self.node_labels())
-            .map_err(|e| PipelineExecutorError::FeatureValidationFailed(Box::new(e)))?;
+            self.pipeline()
+                .validate_feature_properties(self.graph_store(), self.node_labels())
+                .map_err(|e| PipelineExecutorError::FeatureValidationFailed(Box::new(e)))?;
 
-        // 8. Execute algorithm
-        let result: Result<RESULT, PipelineExecutorError> = self.execute(&data_split_graph_filters);
+            self.execute(&data_split_graph_filters)
+        })();
 
         // 9. Cleanup (always runs, even if error occurred)
         let cleanup_result = (|| -> Result<(), PipelineExecutorError> {
@@ -420,9 +422,12 @@ impl StdError for PipelineExecutorError {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::projection::eval::pipeline::node_property_step::DEBUG_WRITE_CONSTANT_DOUBLE_MUTATE;
+    use crate::projection::eval::pipeline::MUTATE_PROPERTY_KEY;
     use crate::projection::eval::pipeline::{
-        ExecutableNodePropertyStep, FeatureStep, PipelineValidationError,
+        ExecutableNodePropertyStep, FeatureStep, NodePropertyStep, PipelineValidationError,
     };
+    use crate::projection::NodeLabel;
 
     #[test]
     fn test_dataset_splits_enum() {
@@ -687,5 +692,208 @@ mod tests {
         assert!(filters.contains_key(&DatasetSplits::Train));
         assert!(filters.contains_key(&DatasetSplits::Test));
         assert_ne!(DatasetSplits::Train, DatasetSplits::Test);
+    }
+
+    #[test]
+    fn test_compute_cleans_intermediate_properties_after_step_failure() {
+        use crate::types::graph_store::DefaultGraphStore;
+        use crate::types::random::random_graph::RandomGraphConfig;
+
+        #[derive(Clone)]
+        struct MockFeatureStep;
+        impl FeatureStep for MockFeatureStep {
+            fn name(&self) -> &str {
+                "mock"
+            }
+            fn input_node_properties(&self) -> &[String] {
+                &[]
+            }
+            fn configuration(&self) -> &HashMap<String, serde_json::Value> {
+                use std::sync::OnceLock;
+                static CONFIG: OnceLock<HashMap<String, serde_json::Value>> = OnceLock::new();
+                CONFIG.get_or_init(HashMap::new)
+            }
+            fn to_map(&self) -> HashMap<String, serde_json::Value> {
+                HashMap::new()
+            }
+        }
+
+        #[derive(Clone)]
+        struct FailingStep {
+            config: HashMap<String, serde_json::Value>,
+        }
+
+        impl ExecutableNodePropertyStep for FailingStep {
+            fn execute(
+                &self,
+                _graph_store: &mut DefaultGraphStore,
+                _node_labels: &[String],
+                _relationship_types: &[String],
+                _concurrency: usize,
+            ) -> Result<(), Box<dyn StdError + Send + Sync>> {
+                Err("step failed".into())
+            }
+
+            fn config(&self) -> &HashMap<String, serde_json::Value> {
+                &self.config
+            }
+
+            fn proc_name(&self) -> &str {
+                "failing.step"
+            }
+
+            fn mutate_node_property(&self) -> &str {
+                self.config
+                    .get(MUTATE_PROPERTY_KEY)
+                    .and_then(|value| value.as_str())
+                    .expect("mutate property")
+            }
+        }
+
+        struct CleanupPipeline {
+            steps: Vec<Box<dyn ExecutableNodePropertyStep>>,
+        }
+
+        impl Pipeline for CleanupPipeline {
+            type FeatureStep = MockFeatureStep;
+
+            fn node_property_steps(&self) -> &[Box<dyn ExecutableNodePropertyStep>] {
+                &self.steps
+            }
+
+            fn feature_steps(&self) -> &[Self::FeatureStep] {
+                &[]
+            }
+
+            fn specific_validate_before_execution(
+                &self,
+                _graph_store: &DefaultGraphStore,
+            ) -> Result<(), PipelineValidationError> {
+                Ok(())
+            }
+
+            fn to_map(&self) -> HashMap<String, serde_json::Value> {
+                HashMap::new()
+            }
+        }
+
+        struct CleanupExecutor {
+            pipeline: CleanupPipeline,
+            graph_store: Arc<DefaultGraphStore>,
+            node_labels: Vec<String>,
+            relationship_types: Vec<String>,
+        }
+
+        impl PipelineExecutor<CleanupPipeline, ()> for CleanupExecutor {
+            fn pipeline(&self) -> &CleanupPipeline {
+                &self.pipeline
+            }
+
+            fn pipeline_and_graph_store_mut(
+                &mut self,
+            ) -> (&CleanupPipeline, &mut Arc<DefaultGraphStore>) {
+                (&self.pipeline, &mut self.graph_store)
+            }
+
+            fn graph_store_mut(&mut self) -> &mut Arc<DefaultGraphStore> {
+                &mut self.graph_store
+            }
+
+            fn graph_store(&self) -> &Arc<DefaultGraphStore> {
+                &self.graph_store
+            }
+
+            fn schema_before_steps(&self) -> &GraphSchema {
+                self.graph_store.schema()
+            }
+
+            fn node_labels(&self) -> &[String] {
+                &self.node_labels
+            }
+
+            fn relationship_types(&self) -> &[String] {
+                &self.relationship_types
+            }
+
+            fn concurrency(&self) -> usize {
+                1
+            }
+
+            fn generate_dataset_split_graph_filters(
+                &self,
+            ) -> HashMap<DatasetSplits, PipelineGraphFilter> {
+                let filter = PipelineGraphFilter::new(
+                    self.node_labels.clone(),
+                    Some(self.relationship_types.clone()),
+                );
+                HashMap::from([
+                    (DatasetSplits::Train, filter.clone()),
+                    (DatasetSplits::Test, filter.clone()),
+                    (DatasetSplits::TestComplement, filter.clone()),
+                    (DatasetSplits::FeatureInput, filter),
+                ])
+            }
+
+            fn split_datasets(&mut self) -> Result<(), PipelineExecutorError> {
+                Ok(())
+            }
+
+            fn execute(
+                &mut self,
+                _data_splits: &HashMap<DatasetSplits, PipelineGraphFilter>,
+            ) -> Result<(), PipelineExecutorError> {
+                Ok(())
+            }
+
+            fn get_available_rel_types_for_node_property_steps(&self) -> HashSet<String> {
+                self.relationship_types.iter().cloned().collect()
+            }
+        }
+
+        let config = RandomGraphConfig::default().with_seed(17);
+        let mut graph_store = DefaultGraphStore::random(&config).unwrap();
+        graph_store
+            .add_node_label(NodeLabel::of("Node"))
+            .expect("add node label");
+
+        let mut first_config = HashMap::new();
+        first_config.insert(
+            MUTATE_PROPERTY_KEY.to_string(),
+            serde_json::Value::String("temporaryFeature".to_string()),
+        );
+        first_config.insert("value".to_string(), serde_json::json!(3.0));
+
+        let mut failing_config = HashMap::new();
+        failing_config.insert(
+            MUTATE_PROPERTY_KEY.to_string(),
+            serde_json::Value::String("failedFeature".to_string()),
+        );
+
+        let pipeline = CleanupPipeline {
+            steps: vec![
+                Box::new(NodePropertyStep::new(
+                    DEBUG_WRITE_CONSTANT_DOUBLE_MUTATE.to_string(),
+                    first_config,
+                )),
+                Box::new(FailingStep {
+                    config: failing_config,
+                }),
+            ],
+        };
+
+        let mut executor = CleanupExecutor {
+            pipeline,
+            graph_store: Arc::new(graph_store),
+            node_labels: vec!["Node".to_string()],
+            relationship_types: Vec::new(),
+        };
+
+        let result = executor.compute();
+
+        assert!(matches!(
+            result,
+            Err(PipelineExecutorError::StepExecutionFailed(_))
+        ));
+        assert!(!executor.graph_store().has_node_property("temporaryFeature"));
     }
 }

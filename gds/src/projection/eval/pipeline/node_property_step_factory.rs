@@ -8,22 +8,22 @@
 //! - Normalizing algorithm names (e.g., "pagerank" → "gds.pagerank.mutate")
 //! - Creating NodePropertyStep instances
 //!
-//! **Rust Simplification**: This is a simplified direct-integration version without the Java
-//! Stub factory infrastructure. Algorithm validation happens via basic checks rather than
-//! the full Java GdsCallableFinder/AlgoConfigParser system.
+//! **Rust Adaptation**: Java discovers mutate procedures through callable/stub infrastructure.
+//! Rust validates against `ProcedureRegistry`; execution later resolves the same procedure name
+//! to a Rust algorithm spec and runs it through `ProcedureExecutor`.
 
 use crate::projection::eval::pipeline::{
     ExecutableNodePropertyStep, NodePropertyStep, NodePropertyStepContextConfig,
 };
 use std::collections::HashMap;
 
-use super::node_property_step::MUTATE_PROPERTY_KEY;
+use super::node_property_step::{MUTATE_PROPERTY_KEY, NODE_LABELS_KEY, RELATIONSHIP_TYPES_KEY};
 use super::procedure_registry::ProcedureRegistry;
 
 /// Reserved configuration keys that cannot be set in individual node property steps.
 ///
 /// These are set by the pipeline executor based on the current execution context.
-const RESERVED_CONFIG_KEYS: &[&str] = &["nodeLabels", "relationshipTypes"];
+const RESERVED_CONFIG_KEYS: &[&str] = &[NODE_LABELS_KEY, RELATIONSHIP_TYPES_KEY];
 
 /// Create a node property step from a task name and configuration map.
 ///
@@ -45,36 +45,17 @@ pub fn create_node_property_step(
     task_name: &str,
     config_map: HashMap<String, serde_json::Value>,
 ) -> Result<Box<dyn ExecutableNodePropertyStep>, NodePropertyStepFactoryError> {
-    let mut proc_config = config_map.clone();
+    let context_config = NodePropertyStepContextConfig::from_map(&config_map);
 
-    // Extract context configuration
-    let context_node_labels = proc_config
-        .remove(NodePropertyStepContextConfig::CONTEXT_NODE_LABELS)
-        .and_then(|v| {
-            v.as_array().map(|arr| {
-                arr.iter()
-                    .filter_map(|v| v.as_str().map(String::from))
-                    .collect()
-            })
-        })
-        .unwrap_or_default();
-
-    let context_relationship_types = proc_config
-        .remove(NodePropertyStepContextConfig::CONTEXT_RELATIONSHIP_TYPES)
-        .and_then(|v| {
-            v.as_array().map(|arr| {
-                arr.iter()
-                    .filter_map(|v| v.as_str().map(String::from))
-                    .collect()
-            })
-        })
-        .unwrap_or_default();
+    let mut proc_config = config_map;
+    proc_config.remove(NodePropertyStepContextConfig::CONTEXT_NODE_LABELS);
+    proc_config.remove(NodePropertyStepContextConfig::CONTEXT_RELATIONSHIP_TYPES);
 
     create_node_property_step_with_context(
         task_name,
         proc_config,
-        context_node_labels,
-        context_relationship_types,
+        context_config.context_node_labels().to_vec(),
+        context_config.context_relationship_types().to_vec(),
     )
 }
 
@@ -103,9 +84,9 @@ pub fn create_node_property_step_with_context(
     // Normalize algorithm name
     let normalized_name = normalize_name(task_name);
 
-    // Minimal validation:
+    // Minimal registry-backed validation:
     // - Ensure required mutate property exists (avoids downstream panics)
-    // - Ensure algorithm exists in the current direct-integration registry
+    // - Ensure algorithm exists in the current procedure registry
     validate_node_property_step_config(&normalized_name, &proc_config_map)?;
 
     // Create the step
@@ -191,17 +172,7 @@ fn validate_reserved_config_keys(
 /// }
 /// ```
 fn normalize_name(input: &str) -> String {
-    let mut result = input.to_lowercase();
-
-    if !result.starts_with("gds.") {
-        result = format!("gds.{}", result);
-    }
-
-    if !result.ends_with(".mutate") {
-        result = format!("{}.mutate", result);
-    }
-
-    result
+    ProcedureRegistry::canonical_mutate_name(input)
 }
 
 /// Errors that can occur during node property step factory operations.
@@ -299,6 +270,12 @@ mod tests {
     #[test]
     fn test_normalize_name_full() {
         assert_eq!(normalize_name("gds.pagerank.mutate"), "gds.pagerank.mutate");
+    }
+
+    #[test]
+    fn test_normalize_name_strips_tier_prefixes() {
+        assert_eq!(normalize_name("gds.beta.pageRank"), "gds.pagerank.mutate");
+        assert_eq!(normalize_name("gds.alpha.fastRP"), "gds.fastrp.mutate");
     }
 
     #[test]
