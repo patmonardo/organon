@@ -4,8 +4,8 @@ use super::node_regression_training_pipeline::NodeRegressionTrainingPipeline;
 use crate::collections::HugeDoubleArray;
 use crate::concurrency::{Concurrency, TerminationFlag};
 use crate::core::model::ModelCatalog;
-use crate::core::utils::progress::{LeafTask, ProgressTracker, Task, TaskProgressTracker};
-use crate::mem::{MemoryEstimation, MemoryEstimations};
+use crate::core::utils::progress::{LeafTask, ProgressTracker, Task, TaskProgressTracker, Tasks};
+use crate::mem::{Estimate, MemoryEstimation, MemoryEstimations, MemoryRange};
 use crate::ml::metrics::regression::RegressionMetric;
 use crate::ml::metrics::{Metric, ModelCandidateStats};
 use crate::ml::models::linear_regression::LinearRegressionTrainConfig;
@@ -17,7 +17,9 @@ use crate::procedures::AlgorithmsProcedureFacade;
 use crate::projection::eval::pipeline::node_pipeline::node_property_pipeline_base_train_config::NodePropertyPipelineBaseTrainConfig;
 use crate::projection::eval::pipeline::node_pipeline::node_property_training_pipeline::NodePropertyTrainingPipeline;
 use crate::projection::eval::pipeline::node_pipeline::NodeFeatureProducer;
+use crate::projection::eval::pipeline::pipeline_trait::Pipeline;
 use crate::projection::eval::pipeline::PipelineTrainer;
+use crate::projection::eval::pipeline::TrainingPipeline;
 use crate::types::graph::Graph;
 use crate::types::graph_store::DefaultGraphStore;
 use crate::types::prelude::GraphStore;
@@ -37,6 +39,7 @@ pub struct NodeRegressionTrain {
     train_config: NodeRegressionPipelineTrainConfig,
     targets: HugeDoubleArray,
     node_graph: Arc<dyn Graph>,
+    target_node_ids: Arc<Vec<u64>>,
     node_feature_producer: NodeFeatureProducer<NodeRegressionPipelineTrainConfig>,
     progress_tracker: Box<dyn ProgressTracker>,
     termination_flag: TerminationFlag,
@@ -45,19 +48,81 @@ pub struct NodeRegressionTrain {
 impl NodeRegressionTrain {
     /// Estimate memory requirements for training.
     pub fn estimate(
-        _pipeline: &NodeRegressionTrainingPipeline,
-        _configuration: &NodeRegressionPipelineTrainConfig,
+        pipeline: &NodeRegressionTrainingPipeline,
+        configuration: &NodeRegressionPipelineTrainConfig,
         _model_catalog: &impl ModelCatalog,
         _algorithms_procedure_facade: &AlgorithmsProcedureFacade,
     ) -> Box<dyn MemoryEstimation> {
-        // Note: Implement once memory estimation infrastructure is translated.
-        MemoryEstimations::empty()
+        Self::estimate_pipeline(pipeline, configuration)
+    }
+
+    pub fn estimate_pipeline(
+        pipeline: &NodeRegressionTrainingPipeline,
+        configuration: &NodeRegressionPipelineTrainConfig,
+    ) -> Box<dyn MemoryEstimation> {
+        let node_property_steps =
+            estimate_node_property_steps(pipeline.node_property_steps().len());
+        let training = MemoryEstimations::builder("Training")
+            .add(estimate_excluding_node_property_steps(
+                configuration.metrics().len(),
+                pipeline,
+            ))
+            .build();
+
+        MemoryEstimations::max_estimation_named(
+            "Node Regression Train Pipeline",
+            vec![node_property_steps, training],
+        )
     }
 
     /// Create progress task for training.
-    pub fn progress_task(_pipeline: &NodeRegressionTrainingPipeline, _node_count: u64) -> Task {
-        // Note: Implement once the Tasks API is translated.
-        Task::new("Node Regression Train Pipeline".to_string(), vec![])
+    pub fn progress_task(pipeline: &NodeRegressionTrainingPipeline, node_count: u64) -> Task {
+        let split_config = pipeline.split_config();
+        let train_set_size = split_config.train_set_size(node_count as usize);
+        let test_set_size = split_config.test_set_size(node_count as usize);
+        let validation_folds = split_config.validation_folds();
+        let trials = pipeline.number_of_model_selection_trials();
+
+        let mut tasks = Vec::new();
+        let node_property_step_volume = pipeline
+            .node_property_steps()
+            .len()
+            .saturating_mul(node_count as usize);
+        tasks.push(Arc::new(
+            Tasks::leaf_with_volume("Node property steps".to_string(), node_property_step_volume)
+                .base()
+                .clone(),
+        ));
+
+        let cv_volume = train_set_size
+            .saturating_mul(validation_folds)
+            .saturating_mul(trials);
+        tasks.push(Arc::new(
+            Tasks::leaf_with_volume(
+                format!("Cross-validation ({validation_folds} folds, {trials} trials)"),
+                cv_volume,
+            )
+            .base()
+            .clone(),
+        ));
+
+        tasks.push(Arc::new(
+            Tasks::leaf_with_volume("Train best model".to_string(), 5 * train_set_size)
+                .base()
+                .clone(),
+        ));
+        tasks.push(Arc::new(
+            Tasks::leaf_with_volume("Evaluate on test data".to_string(), test_set_size)
+                .base()
+                .clone(),
+        ));
+        tasks.push(Arc::new(
+            Tasks::leaf_with_volume("Retrain best model".to_string(), 5 * node_count as usize)
+                .base()
+                .clone(),
+        ));
+
+        Tasks::task("Node Regression Train Pipeline".to_string(), tasks)
     }
 
     /// Create a new NodeRegressionTrain instance.
@@ -69,33 +134,47 @@ impl NodeRegressionTrain {
         progress_tracker: Box<dyn ProgressTracker>,
     ) -> Self {
         let node_graph = graph_store.get_graph();
+        let target_node_labels = config
+            .validate_target_node_label_identifiers(&graph_store)
+            .expect("Invalid target node labels for regression");
+        let target_node_ids = node_graph
+            .iter_with_labels(&target_node_labels)
+            .map(|node_id| node_id as u64)
+            .collect::<Vec<_>>();
+
         pipeline
             .split_config()
-            .validate_min_num_nodes_in_split_sets(node_graph.node_count())
+            .validate_min_num_nodes_in_split_sets(target_node_ids.len())
             .expect("Invalid split configuration for node count");
 
         let target_node_property = node_graph
             .node_properties(config.target_property())
             .expect("Missing target node property for regression");
 
-        let mut targets = HugeDoubleArray::new(node_graph.node_count());
-        for i in 0..node_graph.node_count() {
-            let value = target_node_property.double_value(i as u64).unwrap_or(0.0);
+        let mut targets = HugeDoubleArray::new(target_node_ids.len());
+        for (target_idx, root_node_id) in target_node_ids.iter().enumerate() {
+            let value = target_node_property
+                .double_value(*root_node_id)
+                .unwrap_or(0.0);
             if value.is_nan() {
                 panic!(
                     "Node with id {} has `{}` target property value `NaN`",
-                    node_graph.to_original_node_id(i as i64).unwrap_or(i as i64),
+                    node_graph
+                        .to_original_node_id(*root_node_id as i64)
+                        .unwrap_or(*root_node_id as i64),
                     config.target_property()
                 );
             }
             if value.is_infinite() {
                 panic!(
                     "Node with id {} has infinite `{}` target property value",
-                    node_graph.to_original_node_id(i as i64).unwrap_or(i as i64),
+                    node_graph
+                        .to_original_node_id(*root_node_id as i64)
+                        .unwrap_or(*root_node_id as i64),
                     config.target_property()
                 );
             }
-            targets.set(i, value);
+            targets.set(target_idx, value);
         }
 
         let termination_flag = TerminationFlag::running_true();
@@ -105,6 +184,7 @@ impl NodeRegressionTrain {
             train_config: config,
             targets,
             node_graph,
+            target_node_ids: Arc::new(target_node_ids),
             node_feature_producer,
             progress_tracker,
             termination_flag,
@@ -123,21 +203,39 @@ impl NodeRegressionTrain {
         self.progress_tracker.begin_subtask();
 
         let split_config = self.pipeline.split_config();
-        let node_count = self.node_graph.node_count();
+        let node_count = self.target_node_ids.len();
+        let root_to_target_index = Arc::new(
+            self.target_node_ids
+                .iter()
+                .enumerate()
+                .map(|(target_id, root_node_id)| (*root_node_id, target_id))
+                .collect::<HashMap<_, _>>(),
+        );
 
         let node_splitter = NodeSplitter::new(
             Concurrency::available_cores(),
             node_count,
             Arc::new({
                 let graph = Arc::clone(&self.node_graph);
-                move |id| graph.to_original_node_id(id as i64).unwrap_or(id as i64)
+                let target_node_ids = Arc::clone(&self.target_node_ids);
+                move |id| {
+                    let root_node_id = target_node_ids[id] as i64;
+                    graph
+                        .to_original_node_id(root_node_id)
+                        .unwrap_or(root_node_id)
+                }
             }),
             Arc::new({
                 let graph = Arc::clone(&self.node_graph);
+                let root_to_target_index = Arc::clone(&root_to_target_index);
                 move |id| {
-                    graph
+                    let root_node_id = graph
                         .to_mapped_node_id(id)
-                        .expect("Mapped node id not found") as usize
+                        .expect("Mapped node id not found")
+                        as u64;
+                    *root_to_target_index
+                        .get(&root_node_id)
+                        .expect("Mapped node id not found in target label set")
                 }
             }),
         );
@@ -291,6 +389,122 @@ fn to_u64_arc(values: Arc<Vec<i64>>) -> Arc<Vec<u64>> {
     Arc::new(values.iter().map(|v| *v as u64).collect())
 }
 
+fn estimate_node_property_steps(step_count: usize) -> Box<dyn MemoryEstimation> {
+    MemoryEstimations::of_resident("Node property steps", move |dim, _| {
+        MemoryRange::of(
+            step_count
+                .saturating_mul(dim.node_count())
+                .saturating_mul(Estimate::BYTES_OBJECT_REF),
+        )
+    })
+}
+
+fn estimate_excluding_node_property_steps(
+    metrics_size: usize,
+    pipeline: &NodeRegressionTrainingPipeline,
+) -> Box<dyn MemoryEstimation> {
+    const FUDGED_FEATURE_COUNT: usize = 500;
+
+    let split_config = pipeline.split_config().clone();
+    let validation_folds = split_config.validation_folds();
+    let test_fraction = split_config.test_fraction();
+    let number_of_model_candidates = pipeline.number_of_model_selection_trials();
+    let needs_cached_features = pipeline.require_eager_features();
+
+    let model_selection = model_train_and_evaluate_memory_usage(
+        "model selection",
+        {
+            let split_config = split_config.clone();
+            move |node_count| split_config.fold_train_set_size(node_count as usize) as u64
+        },
+        {
+            let split_config = split_config.clone();
+            move |node_count| split_config.fold_test_set_size(node_count as usize) as u64
+        },
+    );
+    let best_model_evaluation = MemoryEstimations::delegate_estimation(
+        model_train_and_evaluate_memory_usage(
+            "model evaluation",
+            {
+                let split_config = split_config.clone();
+                move |node_count| split_config.train_set_size(node_count as usize) as u64
+            },
+            move |node_count| split_config.test_set_size(node_count as usize) as u64,
+        ),
+        "best model evaluation",
+    );
+    let model_training_estimation =
+        MemoryEstimations::max_estimation(vec![model_selection, best_model_evaluation]);
+
+    let mut builder = MemoryEstimations::builder("Training without node property steps")
+        .range_per_graph_dimension("global targets", |dim, _| {
+            MemoryRange::of(Estimate::size_of_double_array(dim.node_count()))
+        })
+        .range_per_graph_dimension("outer split", move |dim, _| {
+            let train_size = ((1.0 - test_fraction) * dim.node_count() as f64) as usize;
+            MemoryRange::of(Estimate::size_of_long_array(train_size))
+        })
+        .range_per_graph_dimension("inner split", move |dim, _| {
+            let train_size = ((1.0 - test_fraction) * dim.node_count() as f64) as usize;
+            MemoryRange::of(
+                Estimate::size_of_int_array(train_size).saturating_mul(validation_folds),
+            )
+        })
+        .fixed_range(
+            "stats map train",
+            estimate_stats_map(metrics_size, number_of_model_candidates),
+        )
+        .fixed_range(
+            "stats map validation",
+            estimate_stats_map(metrics_size, number_of_model_candidates),
+        )
+        .add_as(
+            "max of model selection and best model evaluation",
+            model_training_estimation,
+        );
+
+    if needs_cached_features {
+        builder = builder.range_per_graph_dimension("cached feature vectors", |dim, _| {
+            let node_count = dim.node_count();
+            let object_refs = Estimate::size_of_object_array(node_count);
+            let min = object_refs
+                .saturating_add(node_count.saturating_mul(Estimate::size_of_double_array(10)));
+            let max = object_refs.saturating_add(
+                node_count.saturating_mul(Estimate::size_of_double_array(FUDGED_FEATURE_COUNT)),
+            );
+            MemoryRange::of_range(min, max)
+        });
+    }
+
+    builder.build()
+}
+
+fn model_train_and_evaluate_memory_usage(
+    description: &'static str,
+    train_set_size: impl Fn(u64) -> u64 + Send + Sync + 'static,
+    test_set_size: impl Fn(u64) -> u64 + Send + Sync + 'static,
+) -> Box<dyn MemoryEstimation> {
+    MemoryEstimations::builder(description)
+        .range_per_graph_dimension("training data", move |dim, _| {
+            let rows = train_set_size(dim.node_count() as u64) as usize;
+            MemoryRange::of(Estimate::size_of_double_array(rows.saturating_mul(500)))
+        })
+        .range_per_graph_dimension("evaluation data", move |dim, _| {
+            let rows = test_set_size(dim.node_count() as u64) as usize;
+            MemoryRange::of(Estimate::size_of_double_array(rows.saturating_mul(500)))
+        })
+        .build()
+}
+
+fn estimate_stats_map(metrics_size: usize, number_of_model_candidates: usize) -> MemoryRange {
+    let entries = metrics_size.saturating_mul(number_of_model_candidates);
+    let min_entries = entries.max(1);
+    MemoryRange::of_range(
+        Estimate::size_of_double_array(min_entries),
+        Estimate::size_of_double_array(min_entries.saturating_mul(3)),
+    )
+}
+
 fn evaluate_metrics(
     eval_ids: &Arc<Vec<i64>>,
     features: &Box<dyn Features>,
@@ -325,8 +539,10 @@ fn evaluate_metrics(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::collections::backends::vec::VecDouble;
     use crate::core::model::EmptyModelCatalog;
     use crate::core::utils::progress::NoopProgressTracker;
+    use crate::types::properties::node::DefaultDoubleNodePropertyValues;
     use crate::types::random::RandomGraphConfig;
 
     #[test]
@@ -375,6 +591,60 @@ mod tests {
 
         let _est =
             NodeRegressionTrain::estimate(&pipeline, &config, &model_catalog, &algorithms_facade);
+    }
+
+    #[test]
+    fn test_create_uses_target_label_node_universe() {
+        let mut graph_store = DefaultGraphStore::random(&RandomGraphConfig {
+            seed: Some(42),
+            node_count: 200,
+            node_labels: vec!["Person".to_string(), "Company".to_string()],
+            ..RandomGraphConfig::default()
+        })
+        .expect("random graph");
+
+        let target_label = graph_store
+            .node_labels()
+            .into_iter()
+            .find(|label| {
+                let count = graph_store.node_count_for_label(label);
+                count > 0 && count < graph_store.node_count()
+            })
+            .expect("expected a non-empty proper target label subset");
+        let target_count = graph_store.node_count_for_label(&target_label);
+        let property_values = Arc::new(DefaultDoubleNodePropertyValues::from_collection(
+            VecDouble::from(
+                (0..graph_store.node_count())
+                    .map(|node_id| node_id as f64)
+                    .collect::<Vec<_>>(),
+            ),
+            graph_store.node_count(),
+        ));
+        graph_store
+            .add_node_property(graph_store.node_labels(), "target", property_values)
+            .expect("target property should be added");
+
+        let graph_store = Arc::new(graph_store);
+        let train_config = NodeRegressionPipelineTrainConfig::new(
+            "test-pipeline".to_string(),
+            vec![target_label.name().to_string()],
+            "target".to_string(),
+            Some(42),
+            vec![RegressionMetric::MeanSquaredError],
+        );
+        let node_feature_producer =
+            NodeFeatureProducer::create(graph_store.clone(), train_config.clone());
+
+        let trainer = NodeRegressionTrain::create(
+            graph_store,
+            NodeRegressionTrainingPipeline::new(),
+            train_config,
+            node_feature_producer,
+            Box::new(NoopProgressTracker),
+        );
+
+        assert_eq!(trainer.target_node_ids.len(), target_count);
+        assert_eq!(trainer.targets.size(), target_count);
     }
 
     #[test]

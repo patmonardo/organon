@@ -40,7 +40,7 @@ use super::{
 pub struct NodeRegressionTrainAlgorithm {
     pipeline_trainer: Box<dyn PipelineTrainer<Result = NodeRegressionTrainResult>>,
     pipeline: NodeRegressionTrainingPipeline,
-    model_converter: NodeRegressionToModelConverter,
+    converter: NodeRegressionToModelConverter,
     graph_store: Arc<DefaultGraphStore>,
     config: NodeRegressionPipelineTrainConfig,
     progress_tracker: Box<dyn ProgressTracker>,
@@ -68,14 +68,14 @@ impl NodeRegressionTrainAlgorithm {
         config: NodeRegressionPipelineTrainConfig,
         progress_tracker: Box<dyn ProgressTracker>,
     ) -> Self {
-        let model_converter = NodeRegressionToModelConverter::new(pipeline.clone(), config.clone());
+        let converter = NodeRegressionToModelConverter::new(pipeline.clone(), config.clone());
         let node_labels = config.node_labels();
         let relationship_types = Vec::new();
 
         Self {
             pipeline_trainer,
             pipeline,
-            model_converter,
+            converter,
             graph_store,
             config,
             progress_tracker,
@@ -84,9 +84,17 @@ impl NodeRegressionTrainAlgorithm {
         }
     }
 
+    pub fn pipeline_trainer(&self) -> &dyn PipelineTrainer<Result = NodeRegressionTrainResult> {
+        self.pipeline_trainer.as_ref()
+    }
+
     /// Returns the pipeline being trained.
     pub fn pipeline(&self) -> &NodeRegressionTrainingPipeline {
         &self.pipeline
+    }
+
+    pub fn converter(&self) -> &NodeRegressionToModelConverter {
+        &self.converter
     }
 
     /// Returns the training configuration.
@@ -101,7 +109,7 @@ impl NodeRegressionTrainAlgorithm {
 
     /// Returns the model converter.
     pub fn model_converter(&self) -> &NodeRegressionToModelConverter {
-        &self.model_converter
+        self.converter()
     }
 
     pub fn progress_tracker(&self) -> &dyn ProgressTracker {
@@ -148,20 +156,9 @@ impl
         &self,
     ) -> &dyn ResultToModelConverter<NodeRegressionTrainPipelineResult, NodeRegressionTrainResult>
     {
-        &self.model_converter
+        &self.converter
     }
 }
-
-// Note: implementing the Algorithm trait is deferred until the broader
-// algorithm/task framework is wired into this crate.
-// impl Algorithm for NodeRegressionTrainAlgorithm {
-//     type Result = NodeRegressionTrainPipelineResult;
-//
-//     fn run(&mut self) -> Self::Result {
-//         let train_result = self.pipeline_trainer.run();
-//         self.model_converter.to_model(train_result, self.graph_store.schema())
-//     }
-// }
 
 #[cfg(test)]
 mod tests {
@@ -241,8 +238,10 @@ mod tests {
             pipeline.pipeline_type()
         );
         // Config and graph_store accessors work
+        let _ = algorithm.pipeline_trainer();
         let _ = algorithm.config();
         let _ = algorithm.graph_store();
+        let _ = algorithm.converter();
         let _ = algorithm.model_converter();
     }
 }

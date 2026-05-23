@@ -57,6 +57,11 @@ impl NodeRegressionTrainingPipeline {
         self.feature_steps.push(step);
     }
 
+    /// Replace all feature steps in the pipeline.
+    pub fn set_feature_steps(&mut self, steps: Vec<NodeFeatureStep>) {
+        self.feature_steps = steps;
+    }
+
     /// Get the pipeline type.
     pub fn pipeline_type(&self) -> &'static str {
         Self::PIPELINE_TYPE
@@ -88,7 +93,9 @@ impl NodeRegressionTrainingPipeline {
     /// as it requires all features to be computed upfront.
     pub fn require_eager_features(&self) -> bool {
         self.training_parameter_space
-            .contains_key(&TrainingMethod::RandomForestRegression)
+            .get(&TrainingMethod::RandomForestRegression)
+            .map(|configs| !configs.is_empty())
+            .unwrap_or(false)
     }
 }
 
@@ -269,6 +276,16 @@ mod tests {
     fn test_require_eager_features_default() {
         let pipeline = NodeRegressionTrainingPipeline::new();
         // Without RandomForestRegression in parameter space, should return false
+        assert!(!pipeline.require_eager_features());
+    }
+
+    #[test]
+    fn test_require_eager_features_ignores_empty_random_forest_space() {
+        let mut pipeline = NodeRegressionTrainingPipeline::new();
+        pipeline
+            .training_parameter_space_mut()
+            .insert(TrainingMethod::RandomForestRegression, Vec::new());
+
         assert!(!pipeline.require_eager_features());
     }
 

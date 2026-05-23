@@ -9,6 +9,7 @@ use crate::projection::eval::pipeline::node_pipeline::NodeFeatureProducer;
 use crate::projection::eval::pipeline::pipeline_trait::Pipeline;
 use crate::projection::eval::pipeline::PipelineCatalog;
 use crate::types::graph_store::DefaultGraphStore;
+use crate::types::prelude::GraphStore;
 use std::sync::Arc;
 
 use super::{
@@ -85,7 +86,10 @@ impl NodeRegressionTrainPipelineAlgorithmFactory {
     ) -> NodeRegressionTrainAlgorithm {
         let pipeline = self
             .pipeline_catalog
-            .get_typed::<NodeRegressionTrainingPipeline>("", configuration.pipeline())
+            .get_typed::<NodeRegressionTrainingPipeline>(
+                configuration.username(),
+                configuration.pipeline(),
+            )
             .unwrap_or_else(|_| Arc::new(NodeRegressionTrainingPipeline::new()));
 
         self.build_with_pipeline(
@@ -168,10 +172,22 @@ impl NodeRegressionTrainPipelineAlgorithmFactory {
     /// Estimate memory requirements for training.
     pub fn memory_estimation(
         &self,
-        _configuration: &NodeRegressionPipelineTrainConfig,
+        configuration: &NodeRegressionPipelineTrainConfig,
     ) -> Box<dyn MemoryEstimation> {
-        // Placeholder until memory estimations are translated.
-        MemoryEstimations::empty()
+        let pipeline = self
+            .pipeline_catalog
+            .get_typed::<NodeRegressionTrainingPipeline>(
+                configuration.username(),
+                configuration.pipeline(),
+            )
+            .unwrap_or_else(|_| Arc::new(NodeRegressionTrainingPipeline::new()));
+
+        MemoryEstimations::builder("NodeRegressionTrain")
+            .add(NodeRegressionTrain::estimate_pipeline(
+                &pipeline,
+                configuration,
+            ))
+            .build()
     }
 
     /// Creates a progress task for pipeline training.
@@ -179,11 +195,15 @@ impl NodeRegressionTrainPipelineAlgorithmFactory {
     /// Java source: `progressTask(GraphStore, Config)`
     pub fn progress_task(
         &self,
-        _graph_store: &DefaultGraphStore,
-        _config: &NodeRegressionPipelineTrainConfig,
+        graph_store: &DefaultGraphStore,
+        config: &NodeRegressionPipelineTrainConfig,
     ) -> Task {
-        // Task/progress plumbing is not wired yet in direct integration.
-        Task::new("Node Regression Train Pipeline".to_string(), vec![])
+        let pipeline = self
+            .pipeline_catalog
+            .get_typed::<NodeRegressionTrainingPipeline>(config.username(), config.pipeline())
+            .unwrap_or_else(|_| Arc::new(NodeRegressionTrainingPipeline::new()));
+
+        Self::progress_task_for_pipeline(&pipeline, graph_store.node_count() as u64)
     }
 
     /// Creates a progress task for a specific pipeline.
@@ -195,11 +215,10 @@ impl NodeRegressionTrainPipelineAlgorithmFactory {
     /// }
     /// ```
     pub fn progress_task_for_pipeline(
-        _pipeline: &NodeRegressionTrainingPipeline,
-        _node_count: u64,
+        pipeline: &NodeRegressionTrainingPipeline,
+        node_count: u64,
     ) -> Task {
-        // Task/progress plumbing is not wired yet in direct integration.
-        Task::new("Node Regression Train Pipeline".to_string(), vec![])
+        NodeRegressionTrain::progress_task(pipeline, node_count)
     }
 
     /// Validates that the main metric is supported by the pipeline.
@@ -227,6 +246,8 @@ impl NodeRegressionTrainPipelineAlgorithmFactory {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::projection::eval::pipeline::node_pipeline::node_property_prediction_split_config::NodePropertyPredictionSplitConfig;
+    use crate::projection::eval::pipeline::node_pipeline::node_property_training_pipeline::NodePropertyTrainingPipeline;
     use crate::types::random::RandomGraphConfig;
 
     #[test]
@@ -279,6 +300,46 @@ mod tests {
         let pipeline = NodeRegressionTrainingPipeline::new();
         NodeRegressionTrainPipelineAlgorithmFactory::progress_task_for_pipeline(
             &pipeline, 1000, // node_count
+        );
+    }
+
+    #[test]
+    fn test_progress_task_uses_user_scoped_pipeline() {
+        let pipeline_catalog = Arc::new(PipelineCatalog::new());
+        let mut pipeline = NodeRegressionTrainingPipeline::new();
+        pipeline.set_split_config(
+            NodePropertyPredictionSplitConfig::new(0.2, 5).expect("valid split config"),
+        );
+        pipeline_catalog
+            .set("alice", "user-pipeline", Arc::new(pipeline))
+            .expect("pipeline should be cataloged");
+
+        let factory = NodeRegressionTrainPipelineAlgorithmFactory::new(
+            ExecutionContext::empty(),
+            "2.5.0".to_string(),
+            pipeline_catalog,
+        );
+        let config = RandomGraphConfig {
+            node_count: 10,
+            seed: Some(42),
+            ..RandomGraphConfig::default()
+        };
+        let graph_store =
+            DefaultGraphStore::random(&config).expect("Failed to generate random graph");
+        let train_config = NodeRegressionPipelineTrainConfig::new_with_username(
+            "alice".to_string(),
+            "user-pipeline".to_string(),
+            vec!["*".to_string()],
+            "target".to_string(),
+            Some(42),
+            vec![super::super::RegressionMetrics::MeanSquaredError],
+        );
+
+        let task = factory.progress_task(&graph_store, &train_config);
+
+        assert_eq!(
+            task.sub_tasks()[1].description(),
+            "Cross-validation (5 folds, 0 trials)"
         );
     }
 }

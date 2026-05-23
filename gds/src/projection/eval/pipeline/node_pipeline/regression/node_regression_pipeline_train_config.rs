@@ -11,6 +11,7 @@ pub type RegressionMetrics = RegressionMetric;
 /// Java source: `NodeRegressionPipelineTrainConfig.java`
 #[derive(Debug, Clone)]
 pub struct NodeRegressionPipelineTrainConfig {
+    username: String,
     pipeline_name: String,
     target_labels: Vec<String>,
     target_property: String,
@@ -26,13 +27,41 @@ impl NodeRegressionPipelineTrainConfig {
         random_seed: Option<u64>,
         metrics: Vec<RegressionMetrics>,
     ) -> Self {
+        Self::new_with_username(
+            String::new(),
+            pipeline_name,
+            target_labels,
+            target_property,
+            random_seed,
+            metrics,
+        )
+    }
+
+    pub fn new_with_username(
+        username: String,
+        pipeline_name: String,
+        target_labels: Vec<String>,
+        target_property: String,
+        random_seed: Option<u64>,
+        metrics: Vec<RegressionMetrics>,
+    ) -> Self {
         Self {
+            username,
             pipeline_name,
             target_labels,
             target_property,
             random_seed,
             metrics,
         }
+    }
+
+    pub fn username(&self) -> &str {
+        &self.username
+    }
+
+    pub fn with_username(mut self, username: impl Into<String>) -> Self {
+        self.username = username.into();
+        self
     }
 
     /// Returns the configured regression metrics.
@@ -113,6 +142,7 @@ mod tests {
         );
 
         assert_eq!(config.pipeline(), "test_pipeline");
+        assert_eq!(config.username(), "");
         assert_eq!(config.target_node_labels(), vec!["Label1".to_string()]);
         assert_eq!(config.target_property(), "target_property");
         assert_eq!(config.random_seed(), Some(42));
@@ -120,9 +150,25 @@ mod tests {
     }
 
     #[test]
+    fn test_new_config_with_username() {
+        let config = NodeRegressionPipelineTrainConfig::new_with_username(
+            "alice".to_string(),
+            "test_pipeline".to_string(),
+            vec!["Label1".to_string()],
+            "target_property".to_string(),
+            Some(42),
+            vec![RegressionMetric::MeanSquaredError],
+        );
+
+        assert_eq!(config.username(), "alice");
+        assert_eq!(config.pipeline(), "test_pipeline");
+    }
+
+    #[test]
     fn test_default_config() {
         let config = NodeRegressionPipelineTrainConfig::default();
 
+        assert_eq!(config.username(), "");
         assert_eq!(config.pipeline(), "default_pipeline");
         assert_eq!(config.target_node_labels(), vec!["*".to_string()]);
         assert_eq!(config.target_property(), "target");

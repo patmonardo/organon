@@ -74,8 +74,7 @@ impl NodeRegressionPipelineModelInfo {
     ///
     /// Java: `Optional<TrainingMethod> optionalTrainerMethod()`
     pub fn optional_trainer_method(&self) -> Option<TrainingMethod> {
-        // This will be populated once ModelCandidateStats and TrainerConfig are available.
-        None
+        method_name_from_best_parameters(&self.best_parameters).and_then(parse_training_method)
     }
 
     /// Convert model info to map for serialization.
@@ -233,6 +232,31 @@ fn append_additional_metrics(
     }
 }
 
+fn method_name_from_best_parameters(best_parameters: &Value) -> Option<&str> {
+    best_parameters
+        .get("method")
+        .or_else(|| best_parameters.get("methodName"))
+        .or_else(|| best_parameters.get("trainerMethod"))
+        .and_then(Value::as_str)
+}
+
+fn parse_training_method(method: &str) -> Option<TrainingMethod> {
+    match method {
+        "LinearRegression" | "linearRegression" => Some(TrainingMethod::LinearRegression),
+        "RandomForestRegression" | "randomForestRegression" | "RandomForest" => {
+            Some(TrainingMethod::RandomForestRegression)
+        }
+        "LogisticRegression" | "logisticRegression" => Some(TrainingMethod::LogisticRegression),
+        "RandomForestClassification" | "randomForestClassification" => {
+            Some(TrainingMethod::RandomForestClassification)
+        }
+        "MLPClassification" | "mlpClassification" | "MultilayerPerceptron" => {
+            Some(TrainingMethod::MLPClassification)
+        }
+        _ => None,
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -288,5 +312,33 @@ mod tests {
         assert!(map.contains_key("pipeline"));
         assert!(map.contains_key("nodePropertySteps"));
         assert!(map.contains_key("featureProperties"));
+    }
+
+    #[test]
+    fn test_optional_trainer_method() {
+        let info = NodeRegressionPipelineModelInfo::new(
+            serde_json::json!({ "method": "linearRegression" }),
+            HashMap::new(),
+            NodePropertyPredictPipeline::empty(),
+        );
+
+        assert_eq!(
+            info.optional_trainer_method(),
+            Some(TrainingMethod::LinearRegression)
+        );
+    }
+
+    #[test]
+    fn test_optional_trainer_method_accepts_method_name_key() {
+        let info = NodeRegressionPipelineModelInfo::new(
+            serde_json::json!({ "methodName": "randomForestRegression" }),
+            HashMap::new(),
+            NodePropertyPredictPipeline::empty(),
+        );
+
+        assert_eq!(
+            info.optional_trainer_method(),
+            Some(TrainingMethod::RandomForestRegression)
+        );
     }
 }

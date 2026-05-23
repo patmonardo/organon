@@ -219,6 +219,7 @@ mod tests {
 
         assert!(std::ptr::eq(result.regressor().data(), &TestRegressorData));
         assert!(std::ptr::eq(result.regressor_data(), &TestRegressorData));
+        assert!(result.model_info().metrics().is_empty());
         assert_eq!(
             result.model_type(),
             NodeRegressionTrainingPipeline::MODEL_TYPE
