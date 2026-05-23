@@ -35,6 +35,10 @@ impl NodeClassificationPredictComputation {
         &self,
         graph_store: Arc<DefaultGraphStore>,
     ) -> Result<NodeClassificationPipelineResult, PredictPipelineExecutorError> {
+        let configuration = self
+            .configuration
+            .clone()
+            .with_train_config_defaults(self.model.train_config());
         let model_info = self.model.model_info();
         let class_ids: Vec<u64> = model_info.classes().iter().map(|id| *id as u64).collect();
         let class_id_map = LocalIdMap::of(&class_ids);
@@ -45,7 +49,7 @@ impl NodeClassificationPredictComputation {
         );
         let tracker = TaskProgressTracker::with_registry(
             task,
-            Concurrency::of(self.configuration.concurrency()),
+            Concurrency::of(configuration.concurrency()),
             JobId::new(),
             &EmptyTaskRegistryFactory,
         );
@@ -54,7 +58,7 @@ impl NodeClassificationPredictComputation {
 
         let mut executor = NodeClassificationPredictPipelineExecutor::new(
             model_info.pipeline(),
-            &self.configuration,
+            &configuration,
             graph_store,
             tracker,
             classifier_data,

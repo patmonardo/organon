@@ -63,6 +63,16 @@ fn render_train_config(result: &NodeRegressionTrainPipelineResult) -> HashMap<St
         ),
     );
     map.insert(
+        "relationshipTypes".to_string(),
+        Value::Array(
+            config
+                .relationship_types()
+                .into_iter()
+                .map(Value::String)
+                .collect(),
+        ),
+    );
+    map.insert(
         "targetProperty".to_string(),
         Value::String(config.target_property().to_string()),
     );
@@ -72,6 +82,10 @@ fn render_train_config(result: &NodeRegressionTrainPipelineResult) -> HashMap<St
             .random_seed()
             .map(|seed| Value::Number(serde_json::Number::from(seed)))
             .unwrap_or(Value::Null),
+    );
+    map.insert(
+        "concurrency".to_string(),
+        Value::Number(serde_json::Number::from(config.concurrency() as i64)),
     );
     map.insert(
         "metrics".to_string(),

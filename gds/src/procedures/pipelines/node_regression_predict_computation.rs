@@ -1,6 +1,5 @@
 use std::sync::Arc;
 
-use crate::collections::HugeDoubleArray;
 use crate::concurrency::{Concurrency, TerminationFlag};
 use crate::core::utils::progress::{EmptyTaskRegistryFactory, JobId, TaskProgressTracker};
 use crate::ml::models::Regressor;
@@ -9,8 +8,8 @@ use crate::projection::eval::pipeline::{PredictPipelineExecutor, PredictPipeline
 use crate::types::graph_store::DefaultGraphStore;
 
 use super::{
-    NodeRegressionPredictPipelineBaseConfig, NodeRegressionPredictPipelineConfig,
-    NodeRegressionPredictPipelineExecutor,
+    NodeRegressionPipelineResult, NodeRegressionPredictPipelineBaseConfig,
+    NodeRegressionPredictPipelineConfig, NodeRegressionPredictPipelineExecutor,
 };
 
 pub struct NodeRegressionPredictComputation {
@@ -38,7 +37,7 @@ impl NodeRegressionPredictComputation {
     pub fn compute(
         &self,
         graph_store: Arc<DefaultGraphStore>,
-    ) -> Result<HugeDoubleArray, PredictPipelineExecutorError> {
+    ) -> Result<NodeRegressionPipelineResult, PredictPipelineExecutorError> {
         let task =
             NodeRegressionPredictPipelineExecutor::progress_task(&self.label, graph_store.as_ref());
         let tracker = TaskProgressTracker::with_registry(

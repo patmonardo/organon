@@ -330,8 +330,10 @@ mod tests {
             "alice".to_string(),
             "user-pipeline".to_string(),
             vec!["*".to_string()],
+            vec![],
             "target".to_string(),
             Some(42),
+            num_cpus::get(),
             vec![super::super::RegressionMetrics::MeanSquaredError],
         );
 

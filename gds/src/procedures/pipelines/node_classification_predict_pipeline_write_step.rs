@@ -53,7 +53,7 @@ impl WriteStep<NodeClassificationPipelineResult, GraphStoreNodePropertiesWritten
     fn execute(
         &self,
         graph: &GraphFacade,
-        graph_store: &DefaultGraphStore,
+        _graph_store: &DefaultGraphStore,
         result_store: Option<&dyn ResultStore>,
         result: &NodeClassificationPipelineResult,
         job_id: &JobId,
@@ -70,6 +70,6 @@ impl WriteStep<NodeClassificationPipelineResult, GraphStoreNodePropertiesWritten
             self.configuration.predicted_probability_property(),
         );
 
-        GraphStoreNodePropertiesWritten(node_properties.len() * graph_store.node_count())
+        GraphStoreNodePropertiesWritten(node_properties.len() * result.predicted_node_count())
     }
 }

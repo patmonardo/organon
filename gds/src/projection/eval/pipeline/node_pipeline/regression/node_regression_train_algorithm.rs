@@ -70,7 +70,7 @@ impl NodeRegressionTrainAlgorithm {
     ) -> Self {
         let converter = NodeRegressionToModelConverter::new(pipeline.clone(), config.clone());
         let node_labels = config.node_labels();
-        let relationship_types = Vec::new();
+        let relationship_types = config.relationship_types();
 
         Self {
             pipeline_trainer,
@@ -197,6 +197,44 @@ mod tests {
             config,
             Box::new(NoopProgressTracker),
         );
+    }
+
+    #[test]
+    fn test_algorithm_preserves_relationship_types() {
+        use crate::core::utils::progress::tasks::progress_tracker::NoopProgressTracker;
+        use crate::types::graph_store::DefaultGraphStore;
+        use crate::types::random::random_graph::RandomGraphConfig;
+
+        struct MockTrainer;
+
+        impl PipelineTrainer for MockTrainer {
+            type Result = NodeRegressionTrainResult;
+
+            fn run(&mut self) -> Result<Self::Result, Box<dyn std::error::Error + Send + Sync>> {
+                Err("not implemented".into())
+            }
+        }
+
+        let pipeline = NodeRegressionTrainingPipeline::new();
+        let config = NodeRegressionPipelineTrainConfig::default()
+            .with_relationship_types(vec!["KNOWS".to_string()]);
+        let random_config = RandomGraphConfig {
+            node_count: 10,
+            seed: Some(42),
+            ..RandomGraphConfig::default()
+        };
+        let graph_store =
+            Arc::new(DefaultGraphStore::random(&random_config).expect("random graph"));
+
+        let algorithm = NodeRegressionTrainAlgorithm::new(
+            Box::new(MockTrainer),
+            pipeline,
+            graph_store,
+            config,
+            Box::new(NoopProgressTracker),
+        );
+
+        assert_eq!(algorithm.relationship_types(), &["KNOWS".to_string()]);
     }
 
     #[test]

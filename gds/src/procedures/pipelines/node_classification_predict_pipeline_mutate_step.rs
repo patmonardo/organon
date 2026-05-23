@@ -63,6 +63,8 @@ impl MutateStep<NodeClassificationPipelineResult, GraphStoreNodePropertiesWritte
 
         self.graph_store_service
             .add_node_properties(graph_store_mut, labels_to_update, &node_properties)
-            .unwrap_or_else(|e| panic!("Failed to add node properties: {e}"))
+            .unwrap_or_else(|e| panic!("Failed to add node properties: {e}"));
+
+        GraphStoreNodePropertiesWritten(node_properties.len() * result.predicted_node_count())
     }
 }

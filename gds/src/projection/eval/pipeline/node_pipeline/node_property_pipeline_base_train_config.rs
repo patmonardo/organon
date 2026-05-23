@@ -19,6 +19,13 @@ pub trait NodePropertyPipelineBaseTrainConfig {
         vec!["*".to_string()]
     }
 
+    /// Returns the relationship types used for training.
+    ///
+    /// Empty means all relationship types, matching Java's default predict/train config semantics.
+    fn relationship_types(&self) -> Vec<String> {
+        Vec::new()
+    }
+
     /// Returns the target property to predict.
     fn target_property(&self) -> &str;
 
@@ -155,6 +162,18 @@ mod tests {
 
         let labels = config.node_labels();
         assert_eq!(labels, vec!["Person", "Company"]);
+    }
+
+    #[test]
+    fn test_default_relationship_types_is_empty() {
+        let config = MockTrainConfig {
+            pipeline_name: "test-pipeline".to_string(),
+            target_labels: vec!["*".to_string()],
+            target_prop: "label".to_string(),
+            seed: Some(42),
+        };
+
+        assert!(config.relationship_types().is_empty());
     }
 
     #[test]

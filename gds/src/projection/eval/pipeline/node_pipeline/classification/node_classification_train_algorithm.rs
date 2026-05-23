@@ -38,7 +38,7 @@ impl NodeClassificationTrainAlgorithm {
     ) -> Self {
         let converter = NodeClassificationToModelConverter::new(pipeline.clone(), config.clone());
         let node_labels = config.node_labels();
-        let relationship_types = Vec::new();
+        let relationship_types = config.relationship_types();
 
         Self {
             pipeline_trainer,
@@ -167,5 +167,31 @@ mod tests {
         let _store = algorithm.graph_store();
         let _config = algorithm.config();
         let _tracker = algorithm.progress_tracker();
+    }
+
+    #[test]
+    fn test_new_train_algorithm_preserves_relationship_types() {
+        let config = RandomGraphConfig {
+            node_count: 10,
+            seed: Some(42),
+            ..RandomGraphConfig::default()
+        };
+        let graph_store =
+            Arc::new(DefaultGraphStore::random(&config).expect("Failed to generate random graph"));
+        let pipeline_trainer = Box::new(MockTrainer);
+        let pipeline = NodeClassificationTrainingPipeline::new();
+        let train_config = NodeClassificationPipelineTrainConfig::default()
+            .with_relationship_types(vec!["KNOWS".to_string()]);
+        let progress_tracker = Box::new(NoopProgressTracker);
+
+        let algorithm = NodeClassificationTrainAlgorithm::new(
+            pipeline_trainer,
+            pipeline,
+            graph_store,
+            train_config,
+            progress_tracker,
+        );
+
+        assert_eq!(algorithm.relationship_types(), &["KNOWS".to_string()]);
     }
 }

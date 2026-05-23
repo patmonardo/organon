@@ -5,14 +5,16 @@ use crate::applications::algorithms::machinery::{
     GraphStoreNodePropertiesWritten, GraphStoreService, MutateStep, NodeProperty,
 };
 use crate::collections::backends::vec::VecDouble;
-use crate::collections::HugeDoubleArray;
 use crate::core::loading::GraphResources;
 use crate::projection::NodeLabel;
 use crate::types::graph_store::{DefaultGraphStore, GraphStore};
 use crate::types::properties::node::DefaultDoubleNodePropertyValues;
 use crate::types::properties::node::NodePropertyValues;
 
-use super::{NodeRegressionPredictPipelineConfig, NodeRegressionPredictPipelineMutateConfig};
+use super::{
+    NodeRegressionPipelineResult, NodeRegressionPredictPipelineConfig,
+    NodeRegressionPredictPipelineMutateConfig,
+};
 
 pub struct NodeRegressionPredictPipelineMutateStep {
     graph_store_service: GraphStoreService,
@@ -43,23 +45,30 @@ impl NodeRegressionPredictPipelineMutateStep {
     }
 }
 
-impl MutateStep<HugeDoubleArray, GraphStoreNodePropertiesWritten>
+impl MutateStep<NodeRegressionPipelineResult, GraphStoreNodePropertiesWritten>
     for NodeRegressionPredictPipelineMutateStep
 {
     fn execute(
         &self,
         graph_resources: &GraphResources,
-        result: &HugeDoubleArray,
+        result: &NodeRegressionPipelineResult,
     ) -> GraphStoreNodePropertiesWritten {
         let mut graph_store = Arc::clone(&graph_resources.graph_store);
         let graph_store_mut = Arc::get_mut(&mut graph_store)
             .expect("Graph store is shared; cannot mutate predicted properties");
 
         let labels_to_update = self.resolve_target_labels(graph_store_mut);
-        let node_count = result.size();
-        let mut values_vec = Vec::with_capacity(node_count);
-        for idx in 0..node_count {
-            values_vec.push(result.get(idx));
+        let predicted = result.predicted_values();
+        let node_count = result.root_node_count();
+        let mut values_vec = vec![0.0; node_count];
+        if let Some(node_ids) = result.predicted_node_ids() {
+            for (row_id, node_id) in node_ids.iter().enumerate() {
+                values_vec[*node_id as usize] = predicted.get(row_id);
+            }
+        } else {
+            for node_id in 0..node_count {
+                values_vec[node_id] = predicted.get(node_id);
+            }
         }
 
         let values: Arc<dyn NodePropertyValues> = Arc::new(DefaultDoubleNodePropertyValues::<
@@ -76,6 +85,8 @@ impl MutateStep<HugeDoubleArray, GraphStoreNodePropertiesWritten>
 
         self.graph_store_service
             .add_node_properties(graph_store_mut, labels_to_update, &node_properties)
-            .unwrap_or_else(|e| panic!("Failed to add node properties: {e}"))
+            .unwrap_or_else(|e| panic!("Failed to add node properties: {e}"));
+
+        GraphStoreNodePropertiesWritten(node_properties.len() * result.predicted_node_count())
     }
 }

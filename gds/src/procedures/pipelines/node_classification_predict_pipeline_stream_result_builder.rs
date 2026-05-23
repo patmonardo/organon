@@ -36,13 +36,22 @@ impl StreamResultBuilder<NodeClassificationPipelineResult, NodeClassificationStr
         let predicted_classes = result.predicted_classes();
         let predicted_probabilities = result.predicted_probabilities();
 
-        let mut rows = Vec::with_capacity(graph.node_count());
-        for node_id in 0..graph.node_count() {
+        let node_ids: Vec<u64> = result
+            .predicted_node_ids()
+            .map(|node_ids| node_ids.to_vec())
+            .unwrap_or_else(|| {
+                (0..graph.node_count())
+                    .map(|node_id| node_id as u64)
+                    .collect()
+            });
+
+        let mut rows = Vec::with_capacity(node_ids.len());
+        for (row_id, node_id) in node_ids.into_iter().enumerate() {
             let original = graph
                 .to_original_node_id(node_id as i64)
                 .unwrap_or(node_id as i64);
-            let predicted = predicted_classes.get(node_id) as i64;
-            let probs = predicted_probabilities.map(|p| p.get(node_id).clone());
+            let predicted = predicted_classes.get(row_id) as i64;
+            let probs = predicted_probabilities.map(|p| p.get(row_id).clone());
 
             rows.push(NodeClassificationStreamResult {
                 node_id: original as i64,

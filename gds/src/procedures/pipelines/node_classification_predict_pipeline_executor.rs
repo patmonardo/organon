@@ -1,3 +1,4 @@
+use std::collections::HashSet;
 use std::sync::Arc;
 
 use crate::concurrency::{Concurrency, TerminationFlag};
@@ -9,6 +10,7 @@ use crate::projection::eval::pipeline::{
     node_pipeline::NodePropertyPredictPipeline, PipelineGraphFilter, PredictPipelineExecutor,
     PredictPipelineExecutorError,
 };
+use crate::projection::NodeLabel;
 use crate::types::graph_store::{DefaultGraphStore, GraphStore};
 
 use super::{
@@ -52,6 +54,39 @@ impl<'a> NodeClassificationPredictPipelineExecutor<'a> {
             .base()
             .clone()
     }
+
+    fn resolved_node_labels(&self) -> Vec<String> {
+        let labels = self.configuration.node_labels();
+        if labels.is_empty() || (labels.len() == 1 && labels[0] == "*") {
+            let mut labels: Vec<String> = self
+                .graph_store
+                .node_labels()
+                .into_iter()
+                .map(|label| label.name().to_string())
+                .collect();
+            labels.sort();
+            labels
+        } else {
+            labels.to_vec()
+        }
+    }
+
+    fn prediction_node_ids(&self, graph: &Arc<dyn crate::types::graph::Graph>) -> Vec<u64> {
+        let labels = self.resolved_node_labels();
+        if labels.is_empty() {
+            return graph.iter().map(|node_id| node_id as u64).collect();
+        }
+
+        let label_set: HashSet<NodeLabel> = labels
+            .iter()
+            .map(|label| NodeLabel::of(label.as_str()))
+            .collect();
+
+        graph
+            .iter_with_labels(&label_set)
+            .map(|node_id| node_id as u64)
+            .collect()
+    }
 }
 
 impl<'a> PredictPipelineExecutor<NodePropertyPredictPipeline, NodeClassificationPipelineResult>
@@ -91,8 +126,13 @@ impl<'a> PredictPipelineExecutor<NodePropertyPredictPipeline, NodeClassification
         &mut self,
     ) -> Result<NodeClassificationPipelineResult, PredictPipelineExecutorError> {
         let graph = self.graph_store.get_graph();
-        let features =
-            FeaturesFactory::extract_lazy_features(graph, &self.pipeline.feature_properties());
+        let root_node_count = graph.node_count();
+        let prediction_node_ids = self.prediction_node_ids(&graph);
+        let features = FeaturesFactory::extract_lazy_features_for_node_ids(
+            Arc::clone(&graph),
+            &self.pipeline.feature_properties(),
+            prediction_node_ids.clone(),
+        );
 
         let classifier = ClassifierFactory::create(self.classifier_data);
 
@@ -119,15 +159,17 @@ impl<'a> PredictPipelineExecutor<NodePropertyPredictPipeline, NodeClassification
         );
 
         let result = predict.compute();
-        Ok(NodeClassificationPipelineResult::of(
+        Ok(NodeClassificationPipelineResult::of_for_node_ids(
             &result,
             &self.class_id_map,
+            prediction_node_ids,
+            root_node_count,
         ))
     }
 
     fn node_property_step_filter(&self) -> PipelineGraphFilter {
         PipelineGraphFilter::new(
-            self.configuration.node_labels().to_vec(),
+            self.resolved_node_labels(),
             Some(self.configuration.relationship_types().to_vec()),
         )
     }

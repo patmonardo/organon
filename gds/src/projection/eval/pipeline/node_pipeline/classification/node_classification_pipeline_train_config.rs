@@ -12,8 +12,10 @@ pub struct NodeClassificationPipelineTrainConfig {
     username: String,
     pipeline_name: String,
     target_labels: Vec<String>,
+    relationship_types: Vec<String>,
     target_property: String,
     random_seed: Option<u64>,
+    concurrency: usize,
     metrics: Vec<ClassificationMetricSpecification>,
 }
 
@@ -29,8 +31,10 @@ impl NodeClassificationPipelineTrainConfig {
             String::new(),
             pipeline_name,
             target_labels,
+            Vec::new(),
             target_property,
             random_seed,
+            num_cpus::get(),
             metrics,
         )
     }
@@ -39,18 +43,32 @@ impl NodeClassificationPipelineTrainConfig {
         username: String,
         pipeline_name: String,
         target_labels: Vec<String>,
+        relationship_types: Vec<String>,
         target_property: String,
         random_seed: Option<u64>,
+        concurrency: usize,
         metrics: Vec<ClassificationMetricSpecification>,
     ) -> Self {
         Self {
             username,
             pipeline_name,
             target_labels,
+            relationship_types,
             target_property,
             random_seed,
+            concurrency,
             metrics,
         }
+    }
+
+    pub fn with_relationship_types(mut self, relationship_types: Vec<String>) -> Self {
+        self.relationship_types = relationship_types;
+        self
+    }
+
+    pub fn with_concurrency(mut self, concurrency: usize) -> Self {
+        self.concurrency = concurrency;
+        self
     }
 
     pub fn username(&self) -> &str {
@@ -64,6 +82,10 @@ impl NodeClassificationPipelineTrainConfig {
 
     pub fn metrics_specs(&self) -> &[ClassificationMetricSpecification] {
         &self.metrics
+    }
+
+    pub fn concurrency(&self) -> usize {
+        self.concurrency
     }
 
     /// Create concrete metrics from specifications given class ID map and class counts.
@@ -107,6 +129,10 @@ impl NodePropertyPipelineBaseTrainConfig for NodeClassificationPipelineTrainConf
 
     fn target_node_labels(&self) -> Vec<String> {
         self.target_labels.clone()
+    }
+
+    fn relationship_types(&self) -> Vec<String> {
+        self.relationship_types.clone()
     }
 
     fn target_property(&self) -> &str {
@@ -154,8 +180,10 @@ mod tests {
             "alice".to_string(),
             "test_pipeline".to_string(),
             vec!["Label1".to_string()],
+            vec![],
             "target_property".to_string(),
             Some(42),
+            num_cpus::get(),
             vec![],
         );
 
@@ -170,8 +198,25 @@ mod tests {
         assert_eq!(config.username(), "");
         assert_eq!(config.pipeline(), "default_pipeline");
         assert_eq!(config.target_node_labels(), vec!["*"]);
+        assert!(config.relationship_types().is_empty());
         assert_eq!(config.target_property(), "target");
         assert_eq!(config.random_seed(), Some(42));
+        assert_eq!(config.concurrency(), num_cpus::get());
+    }
+
+    #[test]
+    fn test_with_relationship_types() {
+        let config = NodeClassificationPipelineTrainConfig::default()
+            .with_relationship_types(vec!["KNOWS".to_string()]);
+
+        assert_eq!(config.relationship_types(), vec!["KNOWS".to_string()]);
+    }
+
+    #[test]
+    fn test_with_concurrency() {
+        let config = NodeClassificationPipelineTrainConfig::default().with_concurrency(4);
+
+        assert_eq!(config.concurrency(), 4);
     }
 
     #[test]

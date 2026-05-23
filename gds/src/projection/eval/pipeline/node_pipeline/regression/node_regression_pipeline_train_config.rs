@@ -14,8 +14,10 @@ pub struct NodeRegressionPipelineTrainConfig {
     username: String,
     pipeline_name: String,
     target_labels: Vec<String>,
+    relationship_types: Vec<String>,
     target_property: String,
     random_seed: Option<u64>,
+    concurrency: usize,
     metrics: Vec<RegressionMetrics>,
 }
 
@@ -31,8 +33,10 @@ impl NodeRegressionPipelineTrainConfig {
             String::new(),
             pipeline_name,
             target_labels,
+            Vec::new(),
             target_property,
             random_seed,
+            num_cpus::get(),
             metrics,
         )
     }
@@ -41,16 +45,20 @@ impl NodeRegressionPipelineTrainConfig {
         username: String,
         pipeline_name: String,
         target_labels: Vec<String>,
+        relationship_types: Vec<String>,
         target_property: String,
         random_seed: Option<u64>,
+        concurrency: usize,
         metrics: Vec<RegressionMetrics>,
     ) -> Self {
         Self {
             username,
             pipeline_name,
             target_labels,
+            relationship_types,
             target_property,
             random_seed,
+            concurrency,
             metrics,
         }
     }
@@ -64,9 +72,23 @@ impl NodeRegressionPipelineTrainConfig {
         self
     }
 
+    pub fn with_relationship_types(mut self, relationship_types: Vec<String>) -> Self {
+        self.relationship_types = relationship_types;
+        self
+    }
+
+    pub fn with_concurrency(mut self, concurrency: usize) -> Self {
+        self.concurrency = concurrency;
+        self
+    }
+
     /// Returns the configured regression metrics.
     pub fn metrics(&self) -> &[RegressionMetrics] {
         &self.metrics
+    }
+
+    pub fn concurrency(&self) -> usize {
+        self.concurrency
     }
 
     /// Validates that at least one metric is specified.
@@ -103,6 +125,10 @@ impl NodePropertyPipelineBaseTrainConfig for NodeRegressionPipelineTrainConfig {
 
     fn target_node_labels(&self) -> Vec<String> {
         self.target_labels.clone()
+    }
+
+    fn relationship_types(&self) -> Vec<String> {
+        self.relationship_types.clone()
     }
 
     fn target_property(&self) -> &str {
@@ -155,8 +181,10 @@ mod tests {
             "alice".to_string(),
             "test_pipeline".to_string(),
             vec!["Label1".to_string()],
+            vec![],
             "target_property".to_string(),
             Some(42),
+            num_cpus::get(),
             vec![RegressionMetric::MeanSquaredError],
         );
 
@@ -171,9 +199,26 @@ mod tests {
         assert_eq!(config.username(), "");
         assert_eq!(config.pipeline(), "default_pipeline");
         assert_eq!(config.target_node_labels(), vec!["*".to_string()]);
+        assert!(config.relationship_types().is_empty());
         assert_eq!(config.target_property(), "target");
         assert_eq!(config.random_seed(), Some(42));
+        assert_eq!(config.concurrency(), num_cpus::get());
         assert!(config.metrics().is_empty());
+    }
+
+    #[test]
+    fn test_with_relationship_types() {
+        let config = NodeRegressionPipelineTrainConfig::default()
+            .with_relationship_types(vec!["KNOWS".to_string()]);
+
+        assert_eq!(config.relationship_types(), vec!["KNOWS".to_string()]);
+    }
+
+    #[test]
+    fn test_with_concurrency() {
+        let config = NodeRegressionPipelineTrainConfig::default().with_concurrency(4);
+
+        assert_eq!(config.concurrency(), 4);
     }
 
     #[test]

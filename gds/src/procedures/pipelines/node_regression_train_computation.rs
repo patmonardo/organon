@@ -85,7 +85,7 @@ impl NodeRegressionTrainComputation {
         AlgorithmMachinery::run_algorithms_and_manage_progress_tracker(
             &mut progress_tracker,
             true,
-            Concurrency::available_cores(),
+            Concurrency::of(self.configuration.concurrency()),
             |_| algorithm.compute(),
         )
     }
