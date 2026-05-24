@@ -1,0 +1,95 @@
+{
+  "logisticRegression": [
+    {
+      "name": "nc_demo",
+      "nodePropertySteps": [
+        {
+          "name": "gds.debug.writeConstantDouble.mutate",
+          "config": {
+            "mutateProperty": "pagerank",
+            "value": 1.0,
+            "contextRelationshipTypes": [],
+            "contextNodeLabels": []
+          }
+        }
+      ],
+      "featureProperties": [
+        "pagerank",
+        "age"
+      ],
+      "splitConfig": {
+        "testFraction": "0.2",
+        "validationFolds": "5"
+      },
+      "autoTuningConfig": {
+        "maxTrials": 12
+      },
+      "parameterSpace": {
+        "LogisticRegression": []
+      }
+    }
+  ],
+  "randomForest": [
+    {
+      "name": "nc_demo",
+      "nodePropertySteps": [
+        {
+          "config": {
+            "mutateProperty": "pagerank",
+            "value": 1.0,
+            "contextRelationshipTypes": [],
+            "contextNodeLabels": []
+          },
+          "name": "gds.debug.writeConstantDouble.mutate"
+        }
+      ],
+      "featureProperties": [
+        "pagerank",
+        "age"
+      ],
+      "splitConfig": {
+        "validationFolds": "5",
+        "testFraction": "0.2"
+      },
+      "autoTuningConfig": {
+        "maxTrials": 12
+      },
+      "parameterSpace": {
+        "RandomForestClassification": [],
+        "LogisticRegression": []
+      }
+    }
+  ],
+  "mlp": [
+    {
+      "name": "nc_demo",
+      "nodePropertySteps": [
+        {
+          "name": "gds.debug.writeConstantDouble.mutate",
+          "config": {
+            "mutateProperty": "pagerank",
+            "value": 1.0,
+            "contextRelationshipTypes": [],
+            "contextNodeLabels": []
+          }
+        }
+      ],
+      "featureProperties": [
+        "pagerank",
+        "age"
+      ],
+      "splitConfig": {
+        "validationFolds": "5",
+        "testFraction": "0.2"
+      },
+      "autoTuningConfig": {
+        "maxTrials": 12
+      },
+      "parameterSpace": {
+        "LogisticRegression": [],
+        "RandomForestClassification": [],
+        "MLPClassification": []
+      }
+    }
+  ]
+}

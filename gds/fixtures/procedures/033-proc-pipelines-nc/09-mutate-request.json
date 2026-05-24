@@ -1,0 +1,8 @@
+{
+  "graphName": "demo-graph",
+  "writeConcurrency": 4,
+  "mutateProperty": "predictedClass",
+  "modelUser": "alice",
+  "modelName": "nc_demo_model",
+  "predictedProbabilityProperty": "predictedProbability"
+}

@@ -1,0 +1,15 @@
+[
+  {
+    "name": "nc_demo",
+    "nodePropertySteps": [],
+    "featureProperties": [],
+    "splitConfig": {
+      "validationFolds": "5",
+      "testFraction": "0.2"
+    },
+    "autoTuningConfig": {
+      "maxTrials": 12
+    },
+    "parameterSpace": {}
+  }
+]

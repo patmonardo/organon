@@ -1,0 +1,28 @@
+[
+  {
+    "name": "nc_demo",
+    "nodePropertySteps": [
+      {
+        "name": "gds.debug.writeConstantDouble.mutate",
+        "config": {
+          "mutateProperty": "pagerank",
+          "value": 1.0,
+          "contextRelationshipTypes": [],
+          "contextNodeLabels": []
+        }
+      }
+    ],
+    "featureProperties": [
+      "pagerank",
+      "age"
+    ],
+    "splitConfig": {
+      "testFraction": "0.2",
+      "validationFolds": "5"
+    },
+    "autoTuningConfig": {
+      "maxTrials": 12
+    },
+    "parameterSpace": {}
+  }
+]

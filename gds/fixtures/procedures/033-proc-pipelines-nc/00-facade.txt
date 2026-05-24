@@ -1,0 +1,3 @@
+entrypoint: LocalPipelinesProcedureFacade::node_classification
+scope: procedures::pipelines
+purpose: create and configure a node classification pipeline before training or prediction.
