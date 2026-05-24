@@ -1,4 +1,4 @@
-pub mod facade;
+pub mod facades;
 pub mod link_prediction;
 pub mod link_prediction_computation;
 pub mod link_prediction_mutate_metadata;
@@ -62,7 +62,7 @@ pub mod trained_nc_pipeline_model;
 pub mod trained_nr_pipeline_model;
 pub mod types;
 
-pub use facade::*;
+pub use facades::*;
 pub use link_prediction::*;
 pub use link_prediction_computation::*;
 pub use link_prediction_mutate_metadata::*;

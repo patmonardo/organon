@@ -1,5 +1,9 @@
 use crate::applications::services::logging::Log;
-use crate::core::model::{Model, ModelCatalog, ModelCatalogCustomInfo, ModelConfig, ModelData};
+use crate::core::model::Model;
+use crate::core::model::ModelCatalog;
+use crate::core::model::ModelCatalogCustomInfo;
+use crate::core::model::ModelConfig;
+use crate::core::model::ModelData;
 use crate::procedures::model_catalog::ModelCatalogFacade;
 
 pub struct ModelPersister {
