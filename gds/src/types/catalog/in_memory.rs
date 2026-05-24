@@ -29,6 +29,21 @@ impl GraphCatalog for InMemoryGraphCatalog {
         map.get(name).cloned()
     }
 
+    fn with_store_mut(
+        &self,
+        name: &str,
+        mutator: &mut dyn FnMut(&mut DefaultGraphStore),
+    ) -> Result<(), CatalogError> {
+        let mut map = self.entries.write().expect("catalog poisoned");
+        let store = map
+            .get_mut(name)
+            .ok_or_else(|| CatalogError::NotFound(name.to_string()))?;
+        let store =
+            Arc::get_mut(store).ok_or_else(|| CatalogError::GraphInUse(name.to_string()))?;
+        mutator(store);
+        Ok(())
+    }
+
     fn drop(&self, names: &[&str], fail_if_missing: bool) -> Result<Vec<Dropped>, CatalogError> {
         let mut map = self.entries.write().expect("catalog poisoned");
         let mut dropped = Vec::with_capacity(names.len());

@@ -9,6 +9,8 @@ pub enum CatalogError {
     NotFound(String),
     #[error("Graph already exists: {0}")]
     AlreadyExists(String),
+    #[error("Graph is currently shared and cannot be mutated in place: {0}")]
+    GraphInUse(String),
 }
 
 #[derive(Clone, Debug)]
@@ -40,6 +42,13 @@ pub trait GraphCatalog: Send + Sync {
 
     /// Get a graph store by name
     fn get(&self, name: &str) -> Option<Arc<DefaultGraphStore>>;
+
+    /// Mutate a graph store in place when the catalog owns it uniquely.
+    fn with_store_mut(
+        &self,
+        name: &str,
+        mutator: &mut dyn FnMut(&mut DefaultGraphStore),
+    ) -> Result<(), CatalogError>;
 
     /// Drop graphs by names
     fn drop(&self, names: &[&str], fail_if_missing: bool) -> Result<Vec<Dropped>, CatalogError>;

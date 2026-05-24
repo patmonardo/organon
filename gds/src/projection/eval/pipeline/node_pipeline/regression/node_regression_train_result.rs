@@ -139,6 +139,22 @@ impl NodeRegressionTrainPipelineResult {
     pub fn training_statistics(&self) -> &TrainingStatistics {
         &self.training_statistics
     }
+
+    pub fn into_parts(
+        self,
+    ) -> (
+        Box<dyn Regressor>,
+        NodeRegressionPipelineTrainConfig,
+        NodeRegressionPipelineModelInfo,
+        TrainingStatistics,
+    ) {
+        (
+            self.regressor,
+            self.train_config,
+            self.model_info,
+            self.training_statistics,
+        )
+    }
 }
 
 #[cfg(test)]

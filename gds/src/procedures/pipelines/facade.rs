@@ -15,6 +15,7 @@ use crate::projection::eval::pipeline::node_pipeline::{
 use crate::projection::eval::pipeline::AutoTuningConfig;
 use crate::projection::eval::pipeline::PipelineCatalog;
 use crate::projection::eval::pipeline::TrainingMethod;
+use crate::types::catalog::{GraphCatalog, InMemoryGraphCatalog};
 use crate::types::user::User;
 
 use super::types::*;
@@ -250,11 +251,19 @@ pub trait PipelinesProcedureFacade {
 /// Request scoped dependencies for pipeline procedures.
 pub struct RequestScopedDependencies {
     pub user: User,
+    pub graph_catalog: Arc<dyn GraphCatalog>,
 }
 
 impl RequestScopedDependencies {
     pub fn new(user: User) -> Self {
-        Self { user }
+        Self::with_graph_catalog(user, shared_in_memory_graph_catalog())
+    }
+
+    pub fn with_graph_catalog(user: User, graph_catalog: Arc<dyn GraphCatalog>) -> Self {
+        Self {
+            user,
+            graph_catalog,
+        }
     }
 }
 
@@ -268,6 +277,11 @@ pub struct LocalPipelinesProcedureFacade {
 fn shared_in_memory_pipeline_catalog() -> Arc<PipelineCatalog> {
     static CATALOG: OnceLock<Arc<PipelineCatalog>> = OnceLock::new();
     Arc::clone(CATALOG.get_or_init(|| Arc::new(PipelineCatalog::new())))
+}
+
+fn shared_in_memory_graph_catalog() -> Arc<dyn GraphCatalog> {
+    static CATALOG: OnceLock<Arc<dyn GraphCatalog>> = OnceLock::new();
+    Arc::clone(CATALOG.get_or_init(|| Arc::new(InMemoryGraphCatalog::new())))
 }
 
 impl Default for LocalPipelinesProcedureFacade {
@@ -285,9 +299,10 @@ impl LocalPipelinesProcedureFacade {
         pipeline_catalog: Arc<PipelineCatalog>,
     ) -> Self {
         let pipeline_repository = PipelineRepository::new(Arc::clone(&pipeline_catalog));
-        let pipeline_applications = PipelineApplications::new(
+        let pipeline_applications = PipelineApplications::new_with_graph_catalog(
             request_scoped_dependencies.user.clone(),
             pipeline_repository,
+            Arc::clone(&request_scoped_dependencies.graph_catalog),
         );
         Self {
             pipeline_applications: pipeline_applications.clone(),
@@ -1026,7 +1041,7 @@ mod executor_backed_facade_tests {
     }
 
     #[test]
-    #[should_panic(expected = "nodeClassification.stream is an executor-backed pipeline procedure")]
+    #[should_panic(expected = "Graph not found")]
     fn node_classification_stream_fails_fast_until_wired() {
         let catalog = Arc::new(PipelineCatalog::new());
         let facade = LocalPipelinesProcedureFacade::new(
@@ -1038,7 +1053,43 @@ mod executor_backed_facade_tests {
     }
 
     #[test]
-    #[should_panic(expected = "nodeRegression.mutate is an executor-backed pipeline procedure")]
+    #[should_panic(expected = "Graph not found")]
+    fn node_classification_mutate_fails_on_missing_graph() {
+        let catalog = Arc::new(PipelineCatalog::new());
+        let facade = LocalPipelinesProcedureFacade::new(
+            RequestScopedDependencies::new(User::from("alice")),
+            Arc::clone(&catalog),
+        );
+
+        facade.node_classification().mutate(
+            "graph",
+            AnyMap::from([(
+                "mutateProperty".to_string(),
+                Value::String("pred".to_string()),
+            )]),
+        );
+    }
+
+    #[test]
+    #[should_panic(expected = "Graph not found")]
+    fn node_classification_write_fails_on_missing_graph() {
+        let catalog = Arc::new(PipelineCatalog::new());
+        let facade = LocalPipelinesProcedureFacade::new(
+            RequestScopedDependencies::new(User::from("alice")),
+            Arc::clone(&catalog),
+        );
+
+        facade.node_classification().write(
+            "graph",
+            AnyMap::from([(
+                "writeProperty".to_string(),
+                Value::String("pred".to_string()),
+            )]),
+        );
+    }
+
+    #[test]
+    #[should_panic(expected = "Graph not found")]
     fn node_regression_mutate_fails_fast_until_wired() {
         let catalog = Arc::new(PipelineCatalog::new());
         let facade = LocalPipelinesProcedureFacade::new(
@@ -1047,6 +1098,18 @@ mod executor_backed_facade_tests {
         );
 
         facade.node_regression().mutate("graph", AnyMap::new());
+    }
+
+    #[test]
+    #[should_panic(expected = "Graph not found")]
+    fn node_regression_stream_fails_on_missing_graph() {
+        let catalog = Arc::new(PipelineCatalog::new());
+        let facade = LocalPipelinesProcedureFacade::new(
+            RequestScopedDependencies::new(User::from("alice")),
+            Arc::clone(&catalog),
+        );
+
+        facade.node_regression().stream("graph", AnyMap::new());
     }
 }
 

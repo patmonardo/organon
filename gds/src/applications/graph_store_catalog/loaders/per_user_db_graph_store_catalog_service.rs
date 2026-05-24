@@ -119,6 +119,25 @@ impl GraphCatalog for MergedDbCatalog {
         None
     }
 
+    fn with_store_mut(
+        &self,
+        name: &str,
+        mutator: &mut dyn FnMut(&mut DefaultGraphStore),
+    ) -> Result<(), CatalogError> {
+        let map = self.catalogs.read().expect("catalogs poisoned");
+        for ((_, db), catalog) in map.iter() {
+            if db.as_str() != self.database_id.database_name() {
+                continue;
+            }
+
+            if catalog.get(name).is_some() {
+                return GraphCatalog::with_store_mut(catalog.as_ref(), name, mutator);
+            }
+        }
+
+        Err(CatalogError::NotFound(name.to_string()))
+    }
+
     fn drop(&self, names: &[&str], fail_if_missing: bool) -> Result<Vec<Dropped>, CatalogError> {
         let map = self.catalogs.read().expect("catalogs poisoned");
         let catalogs_for_db: Vec<Arc<InMemoryGraphCatalog>> = map

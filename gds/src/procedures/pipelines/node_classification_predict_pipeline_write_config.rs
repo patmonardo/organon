@@ -39,6 +39,10 @@ impl NodeClassificationPredictPipelineWriteConfig {
         self.base.predicted_probability_property()
     }
 
+    pub fn base(&self) -> &NodeClassificationPredictPipelineMutateOrWriteConfig {
+        &self.base
+    }
+
     pub fn to_map(&self) -> AnyMap {
         let mut map = self.base.to_map();
         map.insert(
