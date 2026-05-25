@@ -6,12 +6,10 @@ use std::sync::Arc;
 type ReadOnlyHugeLongArray = Arc<Vec<u64>>;
 
 /// Utility for bootstrapping training datasets in random forests.
-/// 1:1 translation of DatasetBootstrapper.java from Java GDS.
 pub struct DatasetBootstrapper;
 
 impl DatasetBootstrapper {
     /// Bootstrap a training set by sampling with replacement.
-    /// 1:1 translation of DatasetBootstrapper.bootstrap() from Java GDS.
     ///
     /// # Arguments
     /// * `rng` - Random number generator

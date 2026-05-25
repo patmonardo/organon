@@ -14,12 +14,10 @@ use parking_lot::RwLock;
 use std::sync::Arc;
 
 /// Factory for creating classifier trainers from configuration.
-/// 1:1 translation of ClassifierTrainerFactory.java from Java GDS.
 pub struct ClassifierTrainerFactory;
 
 impl ClassifierTrainerFactory {
     /// Create a classifier trainer from configuration.
-    /// 1:1 with ClassifierTrainerFactory.create() in Java
     #[allow(clippy::too_many_arguments)]
     pub fn create(
         config: &dyn TrainerConfigTrait,

@@ -8,7 +8,6 @@ use crate::types::graph::Graph;
 use once_cell::sync::OnceCell;
 use std::sync::Arc;
 
-/// Features trait - 1:1 with Features.java
 /// This trait is implemented in base.rs as well, keeping this for re-export
 pub use super::base::Features;
 
@@ -40,7 +39,6 @@ impl Features for DenseFeatures {
 }
 
 /// Features backed by a HugeObjectArray of feature vectors.
-/// 1:1 with the anonymous Features class in FeaturesFactory.wrap(HugeObjectArray<double[]>)
 pub struct HugeArrayFeatures {
     features: HugeObjectArray<Vec<f64>>,
 }
@@ -78,7 +76,6 @@ pub struct LazyFeatures {
 }
 
 /// Lazy feature extraction from graph node properties.
-/// 1:1 with the anonymous Features class in FeaturesFactory.extractLazyFeatures()
 pub struct LazyExtractedFeatures {
     graph: Arc<dyn Graph>,
     extractors: Vec<AnyFeatureExtractor>,
@@ -192,24 +189,20 @@ impl Features for LazyFeatures {
     }
 }
 
-/// Features factory - 1:1 with FeaturesFactory.java
 pub struct FeaturesFactory;
 
 impl FeaturesFactory {
     /// Wrap a HugeObjectArray of feature vectors
-    /// 1:1 with wrap(HugeObjectArray<double[]>) in Java
     pub fn wrap_huge_array(features: HugeObjectArray<Vec<f64>>) -> Box<dyn Features> {
         Box::new(HugeArrayFeatures::new(features))
     }
 
     /// Wrap a single feature vector
-    /// 1:1 with wrap(double[]) in Java
     pub fn wrap_single(features: Vec<f64>) -> Box<dyn Features> {
         Box::new(DenseFeatures::new(vec![features]))
     }
 
     /// Wrap a list of feature vectors
-    /// 1:1 with wrap(List<double[]>) in Java
     pub fn wrap_list(features: Vec<Vec<f64>>) -> Box<dyn Features> {
         Box::new(DenseFeatures::new(features))
     }
@@ -223,7 +216,6 @@ impl FeaturesFactory {
     }
 
     /// Extract lazy features from graph properties.
-    /// 1:1 with FeaturesFactory.extractLazyFeatures(Graph, List<String>) in Java
     pub fn extract_lazy_features(
         graph: Arc<dyn Graph>,
         feature_properties: &[String],
@@ -260,7 +252,6 @@ impl FeaturesFactory {
     }
 
     /// Extract eager features from graph properties.
-    /// 1:1 with FeaturesFactory.extractEagerFeatures(Graph, List<String>) in Java
     pub fn extract_eager_features(
         graph: Arc<dyn Graph>,
         feature_properties: &[String],
@@ -296,8 +287,6 @@ impl FeaturesFactory {
 
         Box::new(HugeArrayFeatures::new(consumer.into_inner()))
     }
-
-    // extractLazyFeatures and extractEagerFeatures methods implemented above
 }
 
 #[cfg(test)]

@@ -1,4 +1,3 @@
-//! Java GDS: pipeline/src/main/java/org/neo4j/gds/ml/pipeline/PipelineCompanion.java
 //!
 //! Companion utilities for ML pipeline configuration and validation.
 //!

@@ -1,6 +1,5 @@
 //! Linear Regression objective function.
 //!
-//! Literal translation of `LinearRegressionObjective.java` from Java GDS.
 
 use crate::collections::HugeDoubleArray;
 use crate::ml::core::functions::{

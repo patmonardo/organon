@@ -14,7 +14,6 @@ pub trait TrainerConfigTrait: Send + Sync + std::any::Any {
     fn to_map(&self) -> std::collections::HashMap<String, serde_json::Value>;
 }
 
-/// Base model data trait - 1:1 with BaseModelData.java
 /// All model data must implement this to specify training method and feature dimension
 pub trait BaseModelData: Send + Sync + Debug {
     /// Get the training method used to create this model
@@ -28,17 +27,14 @@ pub trait BaseModelData: Send + Sync + Debug {
 }
 
 /// Classifier data trait - extends BaseModelData
-/// 1:1 with Classifier.ClassifierData in Java
 pub trait ClassifierData: BaseModelData {
     /// Get the number of classes in the classification problem
     fn number_of_classes(&self) -> usize;
 }
 
 /// Regressor data trait - extends BaseModelData
-/// 1:1 with Regressor.RegressorData in Java
 pub trait RegressorData: BaseModelData {}
 
-/// Core classifier trait - 1:1 with Classifier.java
 pub trait Classifier: Send + Sync + Debug {
     /// Get classifier data
     fn data(&self) -> &dyn ClassifierData;
@@ -58,7 +54,6 @@ pub trait Classifier: Send + Sync + Debug {
     fn predict_probabilities_batch(&self, batch: &[usize], features: &dyn Features) -> Matrix;
 }
 
-/// Core regressor trait - 1:1 with Regressor.java
 pub trait Regressor: Send + Sync + Debug {
     /// Get regressor data
     fn data(&self) -> &dyn RegressorData;
@@ -70,7 +65,6 @@ pub trait Regressor: Send + Sync + Debug {
     fn as_any(&self) -> &dyn std::any::Any;
 }
 
-/// Features trait - 1:1 with Features.java
 pub trait Features: Send + Sync {
     /// Total number of feature vectors
     fn size(&self) -> usize;
@@ -102,7 +96,6 @@ pub trait ModelData: Send + Sync + Debug {
     fn num_features(&self) -> usize;
 }
 
-/// Classifier trainer trait - 1:1 with ClassifierTrainer.java
 pub trait ClassifierTrainer: Send + Sync {
     /// Train a classifier
     /// features: feature store
@@ -116,7 +109,6 @@ pub trait ClassifierTrainer: Send + Sync {
     ) -> Box<dyn Classifier>;
 }
 
-/// Regressor trainer trait - 1:1 with RegressorTrainer.java
 pub trait RegressorTrainer: Send + Sync {
     /// Train a regressor
     /// features: feature store

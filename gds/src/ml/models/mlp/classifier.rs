@@ -1,6 +1,5 @@
 //! MLP Classifier
 //!
-//! Translated from `MLPClassifier.java` from Java GDS.
 
 use super::data::MLPClassifierData;
 use crate::ml::core::{

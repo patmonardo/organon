@@ -1,7 +1,3 @@
-// Translated from Neo4j Graph Data Science:
-// https://github.com/neo4j/graph-data-science
-// pipeline/src/main/java/org/neo4j/gds/ml/pipeline/ResultToModelConverter.java
-
 use crate::types::schema::GraphSchema;
 
 /// Converter from training results to catalog models.
@@ -14,7 +10,6 @@ use crate::types::schema::GraphSchema;
 /// * `MODEL` - The catalog model container type
 /// * `RESULT` - The training result type
 ///
-/// # Java Source (ResultToModelConverter.java)
 pub trait ResultToModelConverter<MODEL, RESULT> {
     /// Convert training result to a catalog model.
     ///

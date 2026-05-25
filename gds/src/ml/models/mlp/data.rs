@@ -1,6 +1,5 @@
 //! MLP Classifier Data
 //!
-//! Translated from `MLPClassifierData.java` from Java GDS.
 
 use crate::ml::core::Matrix;
 use crate::ml::core::Variable;

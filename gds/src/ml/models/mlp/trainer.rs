@@ -1,6 +1,5 @@
 //! MLP Classifier Trainer
 //!
-//! Translated from `MLPClassifierTrainer.java` from Java GDS.
 
 use crate::collections::HugeIntArray;
 use crate::ml::core::batch::from_array;

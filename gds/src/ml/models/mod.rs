@@ -10,6 +10,7 @@ pub mod mlp;
 pub mod random_forest;
 pub mod regression_trainer_factory;
 pub mod training_method;
+pub mod workbench;
 
 pub use base::*;
 pub use classifier_factory::*;

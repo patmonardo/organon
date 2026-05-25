@@ -15,7 +15,6 @@ pub trait HyperParameterOptimizer: Iterator<Item = Box<dyn TrainerConfig>> {}
 
 /// A basic implementation of random search through a hyperparameter space
 ///
-/// 1:1 with RandomSearch.java
 pub struct RandomSearch {
     concrete_configs: Vec<TunableTrainerConfig>,
     tunable_configs: Vec<TunableTrainerConfig>,

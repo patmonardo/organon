@@ -11,12 +11,10 @@ use parking_lot::RwLock;
 use std::sync::Arc;
 
 /// Factory for creating regression trainers from configuration.
-/// 1:1 translation of RegressionTrainerFactory.java from Java GDS.
 pub struct RegressionTrainerFactory;
 
 impl RegressionTrainerFactory {
     /// Create a regression trainer from configuration.
-    /// 1:1 with RegressionTrainerFactory.create() in Java
     pub fn create(
         config: &dyn TrainerConfigTrait,
         termination_flag: &TerminationFlag,

@@ -9,7 +9,6 @@ use std::collections::HashMap;
 /// Shared configuration for random forest models
 /// Note: `max_depth == 0` means "unlimited" for consistency with DecisionTree
 /// trainer semantics; this file's defaults and validation follow that convention.
-/// 1:1 with RandomForestTrainerConfig.java interface from Java GDS
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct RandomForestConfig {
     /// Maximum ratio of features to consider for splits
@@ -39,7 +38,6 @@ pub struct RandomForestConfig {
 
 impl RandomForestConfig {
     /// Get max features ratio with default based on feature dimension
-    /// 1:1 with maxFeaturesRatio(int featureDimension) in Java
     pub fn max_features_ratio(&self, feature_dimension: usize) -> f64 {
         self.max_features_ratio
             .unwrap_or_else(|| 1.0 / (feature_dimension as f64).sqrt())
@@ -148,7 +146,6 @@ fn default_min_samples_leaf() -> usize {
 }
 
 /// Configuration for random forest classifier trainer
-/// 1:1 with RandomForestClassifierTrainerConfig.java from Java GDS
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct RandomForestClassifierTrainerConfig {
     #[serde(flatten)]
@@ -209,7 +206,6 @@ impl crate::config::ValidatedConfig for RandomForestClassifierTrainerConfig {
 }
 
 /// Configuration for random forest regressor trainer
-/// 1:1 with RandomForestRegressorTrainerConfig.java from Java GDS
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct RandomForestRegressorTrainerConfig {
     #[serde(flatten)]

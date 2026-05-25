@@ -31,7 +31,6 @@ use rand::SeedableRng;
 use std::sync::Arc;
 
 /// Random Forest Classifier Trainer.
-/// 1:1 translation of RandomForestClassifierTrainer.java from Java GDS.
 #[allow(dead_code)]
 pub struct RandomForestClassifierTrainer {
     number_of_classes: usize,
@@ -45,7 +44,6 @@ pub struct RandomForestClassifierTrainer {
 
 impl RandomForestClassifierTrainer {
     /// Create a new Random Forest Classifier Trainer.
-    /// 1:1 with RandomForestClassifierTrainer constructor in Java.
     pub fn new(
         concurrency: Concurrency,
         number_of_classes: usize,
@@ -179,7 +177,6 @@ impl RandomForestClassifierTrainer {
     }
 
     /// Train the random forest classifier.
-    /// 1:1 with train() method in Java.
     fn train_internal(
         &self,
         features: &dyn Features,
@@ -344,7 +341,6 @@ impl RandomForestClassifierTrainer {
 
 impl ClassifierTrainer for RandomForestClassifierTrainer {
     /// Train a random forest classifier.
-    /// 1:1 with ClassifierTrainer.train() in Java.
     fn train(
         &self,
         features: &dyn Features,

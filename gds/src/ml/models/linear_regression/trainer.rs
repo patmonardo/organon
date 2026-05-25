@@ -1,6 +1,5 @@
 //! Linear Regression trainer implementation.
 //!
-//! Direct translation of `LinearRegressionTrainer.java` from Java GDS.
 
 use crate::collections::HugeDoubleArray;
 use crate::ml::core::batch::from_array;

@@ -10,7 +10,6 @@ use std::fmt;
 use super::config::RandomForestConfig;
 
 /// Random forest regressor model.
-/// 1:1 translation of RandomForestRegressor.java from Java GDS.
 pub struct RandomForestRegressor {
     data: RandomForestRegressorData,
 }
@@ -31,7 +30,6 @@ impl Regressor for RandomForestRegressor {
     }
 
     /// Predict a single value for given features
-    /// 1:1 with Regressor.predict(double[] features) in Java
     fn predict(&self, features: &[f64]) -> f64 {
         let number_of_decision_trees = self.data.decision_trees.len();
         if number_of_decision_trees == 0 {
@@ -52,7 +50,6 @@ impl Regressor for RandomForestRegressor {
 }
 
 /// Random Forest Regressor Data.
-/// 1:1 translation of RandomForestRegressorData.java from Java GDS.
 pub struct RandomForestRegressorData {
     pub decision_trees: Vec<Box<DecisionTreePredictor<f64>>>,
     pub num_features: usize,

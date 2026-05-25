@@ -1,7 +1,3 @@
-// Translated from Neo4j Graph Data Science:
-// https://github.com/neo4j/graph-data-science
-// pipeline/src/main/java/org/neo4j/gds/ml/pipeline/PipelineCatalog.java
-
 use std::collections::HashMap;
 use std::sync::{Arc, RwLock};
 

@@ -65,7 +65,6 @@ impl Default for PenaltyConfig {
 }
 
 /// Additional config for trainers that require class info
-/// 1:1 with ClassAwareTrainerConfig.java
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct ClassAwareTrainerConfig {
     #[serde(flatten)]
@@ -82,7 +81,6 @@ pub struct ClassAwareTrainerConfig {
 
 impl ClassAwareTrainerConfig {
     /// Initialize class weights based on number of classes
-    /// 1:1 with initializeClassWeights() in Java
     pub fn initialize_class_weights(&self, number_of_classes: usize) -> Vec<f64> {
         if self.class_weights.is_empty() {
             vec![1.0; number_of_classes]

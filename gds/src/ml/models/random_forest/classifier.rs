@@ -13,7 +13,6 @@ use std::sync::Arc;
 use super::config::RandomForestConfig;
 
 /// Random forest classifier model.
-/// 1:1 translation of RandomForestClassifier.java from Java GDS.
 pub struct RandomForestClassifier {
     data: RandomForestClassifierData,
 }
@@ -28,7 +27,6 @@ impl RandomForestClassifier {
     }
 
     /// Helper method to gather tree predictions (votes per class)
-    /// 1:1 with gatherTreePredictions() in Java
     fn gather_tree_predictions(&self, features: &[f64]) -> Vec<i32> {
         let mut predictions_per_class = vec![0i32; self.data.number_of_classes()];
 
@@ -49,7 +47,6 @@ impl Classifier for RandomForestClassifier {
     }
 
     /// Predict class probabilities for a single feature vector
-    /// 1:1 with predictProbabilities(double[] features) in Java
     fn predict_probabilities(&self, features: &[f64]) -> Vec<f64> {
         if self.data.decision_trees.is_empty() {
             return vec![0.0; self.data.number_of_classes()];
@@ -67,7 +64,6 @@ impl Classifier for RandomForestClassifier {
     }
 
     /// Predict class probabilities for a batch of features
-    /// 1:1 with predictProbabilities(Batch batch, Features features) in Java
     fn predict_probabilities_batch(&self, batch: &[usize], features: &dyn Features) -> Matrix {
         let mut predicted_probabilities = Matrix::zeros(batch.len(), self.data.number_of_classes());
 
@@ -84,7 +80,6 @@ impl Classifier for RandomForestClassifier {
 }
 
 /// Random Forest Classifier Data.
-/// 1:1 translation of RandomForestClassifierData.java from Java GDS.
 ///
 /// NOTE: Serialization deferred - trait objects require special handling
 #[derive(Clone)]

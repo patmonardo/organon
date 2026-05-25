@@ -1,6 +1,5 @@
 //! Linear Regression model data structure.
 //!
-//! 1:1 translation of `LinearRegressionData.java` from Java GDS.
 
 use crate::ml::core::functions::Weights;
 use crate::ml::core::tensor::Matrix;

@@ -1,6 +1,5 @@
 //! MLP Classifier Objective
 //!
-//! Translated from `MLPClassifierObjective.java` from Java GDS.
 
 use super::classifier::MLPClassifier;
 use super::data::MLPClassifierData;

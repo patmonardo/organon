@@ -1,6 +1,5 @@
 //! MLP Classifier Training Configuration
 //!
-//! Translated from `MLPClassifierTrainConfig.java` from Java GDS.
 
 use crate::config::validation::ConfigError;
 use crate::ml::models::base::TrainerConfigTrait;

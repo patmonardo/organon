@@ -26,7 +26,6 @@ use rand::SeedableRng;
 use std::sync::Arc;
 
 /// Random Forest Regressor Trainer.
-/// 1:1 translation of RandomForestRegressorTrainer.java from Java GDS.
 #[allow(dead_code)]
 pub struct RandomForestRegressorTrainer {
     config: RandomForestRegressorTrainerConfig,
@@ -38,7 +37,6 @@ pub struct RandomForestRegressorTrainer {
 
 impl RandomForestRegressorTrainer {
     /// Create a new Random Forest Regressor Trainer.
-    /// 1:1 with RandomForestRegressorTrainer constructor in Java.
     pub fn new(
         concurrency: Concurrency,
         config: RandomForestRegressorTrainerConfig,
@@ -57,7 +55,6 @@ impl RandomForestRegressorTrainer {
     }
 
     /// Train the random forest regressor.
-    /// 1:1 with train() method in Java.
     fn train_internal(
         &self,
         features: &dyn Features,
@@ -232,7 +229,6 @@ impl RandomForestRegressorTrainer {
 
 impl RegressorTrainer for RandomForestRegressorTrainer {
     /// Train a random forest regressor.
-    /// 1:1 with RegressorTrainer.train() in Java.
     fn train(
         &self,
         features: &dyn Features,

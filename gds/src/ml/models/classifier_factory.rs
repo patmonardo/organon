@@ -12,12 +12,10 @@ use crate::ml::models::random_forest::{RandomForestClassifier, RandomForestClass
 use crate::ml::models::{Classifier, ClassifierData, TrainingMethod};
 
 /// Factory for creating classifiers from trained model data.
-/// 1:1 translation of ClassifierFactory.java from Java GDS.
 pub struct ClassifierFactory;
 
 impl ClassifierFactory {
     /// Create a classifier from trained model data.
-    /// 1:1 with ClassifierFactory.create(Classifier.ClassifierData) in Java
     pub fn create(classifier_data: &dyn ClassifierData) -> Box<dyn Classifier> {
         match classifier_data.trainer_method() {
             TrainingMethod::LogisticRegression => {
@@ -52,7 +50,6 @@ impl ClassifierFactory {
     }
 
     /// Estimate runtime memory overhead for predictions.
-    /// 1:1 with ClassifierFactory.runtimeOverheadMemoryEstimation() in Java
     pub fn runtime_overhead_memory_estimation(
         method: TrainingMethod,
         _batch_size: usize,
@@ -86,7 +83,6 @@ impl ClassifierFactory {
     }
 
     /// Estimate memory for trained model data.
-    /// 1:1 with ClassifierFactory.dataMemoryEstimation() in Java
     pub fn data_memory_estimation(
         trainer_config: &dyn TrainerConfigTrait,
         _number_of_training_samples: impl Fn(u64) -> u64 + Send + Sync + 'static,

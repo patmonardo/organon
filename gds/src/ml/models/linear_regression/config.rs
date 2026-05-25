@@ -59,7 +59,6 @@ impl LinearRegressionTrainConfig {
         self.penalty = penalty;
     }
 
-    /// Convenience re-export of the learning rate for 1:1 parity with Java config.
     pub fn learning_rate(&self) -> f64 {
         self.gradient.learning_rate()
     }
