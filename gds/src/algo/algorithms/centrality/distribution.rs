@@ -16,12 +16,6 @@ use std::collections::HashMap;
 ///
 /// ## Java GDS Source
 ///
-/// ```java
-/// public class PageRankDistribution {
-///     public final Map<String, Object> centralitySummary;
-///     public final long postProcessingMillis;
-/// }
-/// ```
 #[derive(Debug, Clone)]
 pub struct PageRankDistribution {
     /// Centrality statistics summary
@@ -55,17 +49,6 @@ impl PageRankDistribution {
 ///
 /// ## Java GDS Source
 ///
-/// ```java
-/// public static PageRankDistribution computeDistribution(
-///     PageRankResult result,
-///     RankConfig configuration,
-///     boolean shouldComputeCentralityDistribution
-/// ) {
-///     // Compute centrality statistics using CentralityStatistics.centralityStatistics()
-///     // Handle LOG scaler case with error message
-///     // Return PageRankDistribution with summary and timing
-/// }
-/// ```
 pub struct PageRankDistributionComputer;
 
 impl PageRankDistributionComputer {

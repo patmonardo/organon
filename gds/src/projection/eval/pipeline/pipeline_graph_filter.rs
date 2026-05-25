@@ -10,18 +10,6 @@
 /// Specifies which node labels and relationship types should be included
 /// when creating filtered graph views for training, testing, or feature input.
 ///
-/// # Java Source
-/// ```java
-/// @ValueClass
-/// public interface PipelineGraphFilter {
-///     Collection<NodeLabel> nodeLabels();
-///
-///     @Value.Default
-///     default Collection<RelationshipType> relationshipTypes() {
-///         return List.of();
-///     }
-/// }
-/// ```
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 pub struct PipelineGraphFilter {
     /// Node labels to include in the filtered graph

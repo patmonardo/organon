@@ -24,17 +24,6 @@ pub const MIN_TEST_COMPLEMENT_SET_SIZE: usize = 3;
 
 /// Validate that a node set has sufficient size.
 ///
-/// # Java Source
-/// ```java
-/// public static void validateNodeSetSize(
-///     long numberNodesInSet,
-///     long minNumberNodes,
-///     String setName,
-///     String parameterName
-/// ) {
-///     validateElementSetIsNotEmpty(numberNodesInSet, minNumberNodes, setName, parameterName, "node(s)");
-/// }
-/// ```
 pub fn validate_node_set_size(
     number_nodes_in_set: usize,
     min_number_nodes: usize,
@@ -52,17 +41,6 @@ pub fn validate_node_set_size(
 
 /// Validate that a relationship set has sufficient size.
 ///
-/// # Java Source
-/// ```java
-/// public static void validateRelSetSize(
-///     long numberNodesInSet,
-///     long minNumberNodes,
-///     String errorDesc,
-///     String parameterName
-/// ) {
-///     validateElementSetIsNotEmpty(numberNodesInSet, minNumberNodes, errorDesc, parameterName, "relationship(s)");
-/// }
-/// ```
 pub fn validate_rel_set_size(
     number_rels_in_set: usize,
     min_number_rels: usize,
@@ -80,25 +58,6 @@ pub fn validate_rel_set_size(
 
 /// Internal helper to validate element set size.
 ///
-/// # Java Source
-/// ```java
-/// private static void validateElementSetIsNotEmpty(
-///     long elementsInSet,
-///     long expectedMinNumberOfElements,
-///     String errorDesc,
-///     String parameterName,
-///     String elementType
-/// ) {
-///     if (elementsInSet < expectedMinNumberOfElements) {
-///         throw new IllegalArgumentException(formatWithLocale(
-///             "The specified %s for the current graph. " +
-///             "The %s set would have %d %s " +
-///             "but it must have at least %d.",
-///             parameterName, errorDesc, elementsInSet, elementType, expectedMinNumberOfElements
-///         ));
-///     }
-/// }
-/// ```
 fn validate_element_set_is_not_empty(
     elements_in_set: usize,
     expected_min_number_of_elements: usize,

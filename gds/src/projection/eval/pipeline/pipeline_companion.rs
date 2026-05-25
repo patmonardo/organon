@@ -13,10 +13,6 @@ use crate::projection::eval::pipeline::{TrainingMethod, TrainingPipeline, Tunabl
 
 /// Anonymous graph name used when operating on in-memory graphs without a catalog entry.
 ///
-/// # Java Source
-/// ```java
-/// public static final String ANONYMOUS_GRAPH = "__ANONYMOUS_GRAPH__";
-/// ```
 pub const ANONYMOUS_GRAPH: &str = "__ANONYMOUS_GRAPH__";
 
 /// Name of the Out-of-Bag Error metric (specific to Random Forest).
@@ -29,19 +25,6 @@ pub const OUT_OF_BAG_ERROR: &str = "OUT_OF_BAG_ERROR";
 /// If `graph_name_or_configuration` is a string, it's used as the graph name.
 /// Otherwise, the anonymous graph name is used.
 ///
-/// # Java Source
-/// ```java
-/// public static void preparePipelineConfig(
-///     Object graphNameOrConfiguration,
-///     Map<String, Object> algoConfiguration
-/// ) {
-///     if (graphNameOrConfiguration instanceof String) {
-///         algoConfiguration.put("graphName", graphNameOrConfiguration);
-///     } else {
-///         algoConfiguration.put("graphName", ANONYMOUS_GRAPH);
-///     }
-/// }
-/// ```
 ///
 /// # Note
 /// In Java GDS, this is used to handle the case where node property steps
@@ -64,26 +47,6 @@ pub fn prepare_pipeline_config(
 /// If OUT_OF_BAG_ERROR is used as the main metric, only Random Forest model
 /// candidates are allowed.
 ///
-/// # Java Source
-/// ```java
-/// public static void validateMainMetric(TrainingPipeline<?> pipeline, String mainMetric) {
-///     if (mainMetric.equals(OUT_OF_BAG_ERROR.name())) {
-///         var nonRFMethods = pipeline.trainingParameterSpace().entrySet().stream()
-///             .filter(entry -> entry.getKey() != TrainingMethod.RandomForestClassification && !entry.getValue().isEmpty() )
-///             .map(Map.Entry::getKey)
-///             .map(Enum::toString)
-///             .collect(Collectors.toSet());
-///         if (!nonRFMethods.isEmpty()) {
-///             throw new IllegalArgumentException(formatWithLocale(
-///                 "If %s is used as the main metric (the first one), then only RandomForest model candidates are allowed." +
-///                 " Incompatible training methods used are: %s.",
-///                 OUT_OF_BAG_ERROR.name(),
-///                 StringJoining.join(nonRFMethods)
-///             ));
-///         }
-///     }
-/// }
-/// ```
 pub fn validate_main_metric(
     main_metric: &str,
     training_methods: &[String],

@@ -12,18 +12,6 @@ pub const DEFAULT_VALUE: f64 = 1.0;
 /// allowing different implementations (graph-backed, cached, computed, etc.)
 ///
 /// Java equivalent:
-/// ```java
-/// public interface RelationshipWeights {
-///     double DEFAULT_VALUE = 1.0D;
-///     RelationshipWeights UNWEIGHTED = (source, target, defaultValue) -> DEFAULT_VALUE;
-///     
-///     default double weight(long source, long target) {
-///         return weight(source, target, DEFAULT_VALUE);
-///     }
-///     
-///     double weight(long source, long target, double defaultValue);
-/// }
-/// ```
 pub trait RelationshipWeights: Send + Sync {
     /// Get the weight of the relationship from source to target.
     ///

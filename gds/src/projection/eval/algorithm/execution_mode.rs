@@ -1,8 +1,5 @@
 //! Execution Mode - How to return procedure results
 //!
-//! Translated from: `org.neo4j.gds.executor.ExecutionMode`
-//! Source: ExecutionMode.java (30 lines)
-//!
 //! This enum defines how the executor should return results from algorithm execution.
 
 /// Execution Mode - How to return procedure results

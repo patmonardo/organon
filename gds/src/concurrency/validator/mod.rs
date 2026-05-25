@@ -18,13 +18,6 @@ pub use super::pool::LicenseState;
 /// Service singleton for validator access (Java compatibility).
 ///
 /// In Java GDS:
-/// ```java
-/// public final class ConcurrencyValidatorService {
-///     private static ConcurrencyValidator instance = new OpenGdsConcurrencyValidator();
-///     public static void validator(ConcurrencyValidator v) { instance = v; }
-///     public static ConcurrencyValidator validator() { return instance; }
-/// }
-/// ```
 ///
 /// In Rust: We provide the same API but recommend using the types directly.
 ///

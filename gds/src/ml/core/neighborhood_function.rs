@@ -9,12 +9,6 @@
 /// graph neural networks. Given a node ID, it returns a stream of sampled neighbor IDs.
 ///
 /// Java equivalent:
-/// ```java
-/// @FunctionalInterface
-/// public interface NeighborhoodFunction {
-///     LongStream sample(long nodeId);
-/// }
-/// ```
 ///
 /// Rust uses a trait instead of a functional interface, and returns an iterator
 /// instead of a stream.

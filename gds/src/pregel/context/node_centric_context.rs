@@ -23,9 +23,6 @@ use std::sync::Arc;
 /// # Translation from Java/TS
 ///
 /// Follows Java `NodeCentricContext` constructor:
-/// ```java
-/// NodeCentricContext(Graph graph, CONFIG config, NodeValue nodeValue, ProgressTracker progressTracker)
-/// ```
 ///
 /// Rust ownership model: contexts borrow Graph and NodeValue to allow concurrent access.
 pub struct NodeCentricContext<C: PregelRuntimeConfig> {

@@ -1,4 +1,3 @@
-//! Java GDS: pipeline/src/main/java/org/neo4j/gds/ml/pipeline/FeatureStepUtil.java
 //!
 //! Utility functions for feature step operations in ML pipelines.
 //!

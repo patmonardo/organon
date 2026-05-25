@@ -140,25 +140,6 @@ impl LongNodePropertyValues for CommunitySizeFilter {
 ///
 /// ## Java GDS Source
 ///
-/// ```java
-/// public final class CommunityCompanion {
-///     public static NodePropertyValues nodePropertyValues(
-///         boolean consecutiveIds,
-///         LongNodePropertyValues nodeProperties
-///     ) { /* ... */ }
-///
-///     public static NodePropertyValues nodePropertyValues(
-///         boolean incremental,
-///         String resultProperty,
-///         String seedProperty,
-///         boolean consecutiveIds,
-///         LongNodePropertyValues nodeProperties,
-///         Optional<Long> minCommunitySize,
-///         Concurrency concurrency,
-///         Supplier<NodeProperty> seedPropertySupplier
-///     ) { /* ... */ }
-/// }
-/// ```
 pub struct CommunityCompanion;
 
 impl CommunityCompanion {

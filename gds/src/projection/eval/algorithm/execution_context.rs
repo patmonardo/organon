@@ -1,8 +1,5 @@
 //! Execution Context - Runtime environment for procedure execution
 //!
-//! Translated from: `org.neo4j.gds.executor.ExecutionContext`
-//! Source: ExecutionContext.java (187 lines)
-//!
 //! Simplified for rust-gds:
 //! - No Neo4j-specific types (DatabaseId, DependencyResolver, NodeLookup)
 //! - No model catalog yet (future work)
@@ -24,7 +21,6 @@ use std::sync::Arc;
 /// - Metrics collection
 /// - Configuration overrides
 ///
-/// **Simplified from Java GDS**:
 /// - No dependency injection (direct ownership)
 /// - No Neo4j database integration
 /// - No model catalog yet (future work)

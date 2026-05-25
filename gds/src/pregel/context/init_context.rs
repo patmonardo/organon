@@ -23,9 +23,6 @@ use std::sync::Arc;
 /// # Translation from Java/TS
 ///
 /// Follows Java constructor:
-/// ```java
-/// InitContext(Graph graph, CONFIG config, NodeValue nodeValue, ProgressTracker progressTracker)
-/// ```
 pub struct InitContext<C: PregelRuntimeConfig> {
     base: super::NodeCentricContext<C>,
 }

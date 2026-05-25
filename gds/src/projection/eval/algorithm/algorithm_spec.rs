@@ -1,8 +1,5 @@
 //! Algorithm Specification - Contract for algorithm implementations
 //!
-//! Translated from: `org.neo4j.gds.executor.AlgorithmSpec`
-//! Source: AlgorithmSpec.java (~60 lines)
-//!
 //! This trait defines the interface that all algorithms must implement
 //! to work with the ProcedureExecutor (GDSL Runtime).
 //!

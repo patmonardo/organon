@@ -1,16 +1,5 @@
 //! Result Consumer - Result processing and consumption helpers
 //!
-//! Translated from: `org.neo4j.gds.executor.ComputationResultConsumer`
-//! Source: ComputationResultConsumer.java (25 lines)
-//!
-//! **Java GDS Pattern**:
-//! - FunctionalInterface: RESULT consume(ComputationResult<...>, ExecutionContext)
-//! - Separate consumer implementations for different execution modes
-//!
-//! **rust-gds Pattern**:
-//! - Helper functions for common consumption patterns
-//! - Mode-based consumption routing
-//! - Simplified without separate consumer trait
 
 use super::{ComputationResult, ConsumerError, ExecutionMode};
 

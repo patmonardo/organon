@@ -25,7 +25,6 @@ use super::{
 /// - Validation of node property steps
 /// - Progress task construction
 ///
-/// Java source: `NodeRegressionTrainPipelineAlgorithmFactory.java`
 pub struct NodeRegressionTrainPipelineAlgorithmFactory {
     execution_context: ExecutionContext,
     gds_version: String,
@@ -35,12 +34,7 @@ pub struct NodeRegressionTrainPipelineAlgorithmFactory {
 impl NodeRegressionTrainPipelineAlgorithmFactory {
     /// Creates a new factory with the given execution context.
     ///
-    /// Java source: Constructor
-    /// ```java
-    /// public NodeRegressionTrainPipelineAlgorithmFactory(ExecutionContext executionContext) {
-    ///     this.executionContext = executionContext;
-    /// }
-    /// ```
+
     pub fn new(
         execution_context: ExecutionContext,
         gds_version: String,

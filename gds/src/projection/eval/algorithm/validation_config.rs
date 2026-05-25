@@ -1,12 +1,5 @@
 //! Validation Configuration - Two-phase validation system
 //!
-//! Translated from: Java GDS validation package
-//! Sources:
-//! - ValidationConfiguration.java (~40 lines)
-//! - BeforeLoadValidation.java (~30 lines)
-//! - AfterLoadValidation.java (~30 lines)
-//! - Validator.java (~60 lines)
-//!
 //! Merges all 4 validation files into a single module.
 
 use crate::types::prelude::{DefaultGraphStore, GraphStore};

@@ -157,19 +157,6 @@ impl PipelineUserCatalog {
 /// the same symbol-table payload without changing callers that run pipelines.
 ///
 /// # Java Source (PipelineCatalog.java)
-/// ```java
-/// public final class PipelineCatalog {
-///     private static final ConcurrentHashMap<String, PipelineUserCatalog> userCatalogs = new ConcurrentHashMap<>();
-///
-///     public static void set(String user, String pipelineName, TrainingPipeline<?> pipeline) { /* ... */ }
-///     public static boolean exists(String user, String pipelineName) { /* ... */ }
-///     public static TrainingPipeline<?> get(String user, String pipelineName) { /* ... */ }
-///     public static <PIPELINE extends TrainingPipeline<?>> PIPELINE getTyped(...) { /* ... */ }
-///     public static TrainingPipeline<?> drop(String user, String pipelineName) { /* ... */ }
-///     public static void removeAll() { /* ... */ }
-///     public static Stream<PipelineCatalogEntry> getAllPipelines(String user) { /* ... */ }
-/// }
-/// ```
 pub struct PipelineCatalog {
     user_catalogs: Arc<RwLock<HashMap<String, PipelineUserCatalog>>>,
 }

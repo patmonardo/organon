@@ -12,12 +12,6 @@ use crate::types::schema::GraphSchema;
 /// Takes a `NodeRegressionTrainResult` (trained regressor + statistics) and
 /// produces a `NodeRegressionTrainPipelineResult` (catalog-ready model).
 ///
-/// Java source: `NodeRegressionToModelConverter.java`
-///
-/// # Model Creation Pattern
-/// ```text
-/// TrainResult → ModelConverter → CatalogModel
-/// ```
 ///
 /// The converter calls `Model.of(...)` with:
 /// - GDS version
@@ -42,21 +36,6 @@ impl NodeRegressionToModelConverter {
 
     /// Convert training result to catalog model.
     ///
-    /// Java source: `toModel(NodeRegressionTrainResult, GraphSchema)`
-    ///
-    /// This is the key method that creates a `Model<RegressorData, TrainConfig, ModelInfo>`
-    /// from training artifacts. The Model structure is:
-    ///
-    /// ```text
-    /// Model<DATA, CONFIG, INFO> {
-    ///     gds_version: String,           // e.g., "2.5.0"
-    ///     model_type: String,            // "NodeRegression"
-    ///     graph_schema: GraphSchema,     // Node labels, property types
-    ///     data: RegressorData,           // Trained weights/trees
-    ///     train_config: CONFIG,          // Training configuration
-    ///     custom_info: INFO,             // ModelInfo with metrics/features
-    /// }
-    /// ```
     pub fn to_model(
         &self,
         train_result: NodeRegressionTrainResult,

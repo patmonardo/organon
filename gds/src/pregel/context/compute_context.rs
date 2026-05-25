@@ -36,12 +36,6 @@ use std::sync::Arc;
 /// # Translation from Java/TS
 ///
 /// Follows Java constructor:
-/// ```java
-/// ComputeContext(Graph graph, CONFIG config, BasePregelComputation computation,
-///                NodeValue nodeValue, Messenger<?> messenger, HugeAtomicBitSet voteBits,
-///                MutableInt iteration, Optional<MutableBoolean> hasSendMessage,
-///                ProgressTracker progressTracker)
-/// ```
 pub struct ComputeContext<C: PregelRuntimeConfig, I: MessageIterator> {
     base: super::NodeCentricContext<C>,
     iteration: usize,

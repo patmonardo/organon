@@ -14,24 +14,6 @@ use crate::types::ValueType;
 ///
 /// ## Java GDS Source
 ///
-/// ```java
-/// public final class LongIfChangedNodePropertyValues implements LongNodePropertyValues, FilteredNodePropertyValuesMarker {
-///     private final NodePropertyValues seedProperties;
-///     private final NodePropertyValues newProperties;
-///
-///     public static LongNodePropertyValues of(NodeProperty seedProperty, LongNodePropertyValues newProperties) {
-///         // Check if seed property is persistent
-///         // Return LongIfChangedNodePropertyValues or newProperties based on property state
-///     }
-///
-///     @Override
-///     public long longValue(long nodeId) {
-///         var seedValue = seedProperties.longValue(nodeId);
-///         var writeValue = newProperties.longValue(nodeId);
-///         return (seedValue != writeValue) ? writeValue : Long.MIN_VALUE;
-///     }
-/// }
-/// ```
 ///
 /// ## Purpose
 ///

@@ -29,18 +29,6 @@ const RESERVED_CONFIG_KEYS: &[&str] = &[NODE_LABELS_KEY, RELATIONSHIP_TYPES_KEY]
 ///
 /// This is the primary entry point for creating steps from user configuration.
 ///
-/// # Java Source
-/// ```java
-/// public static ExecutableNodePropertyStep createNodePropertyStep(
-///     String taskName,
-///     Map<String, Object> configMap
-/// ) {
-///     var procConfigMap = new HashMap<>(configMap);
-///     var contextNodeLabels = procConfigMap.remove(CONTEXT_NODE_LABELS);
-///     var contextRelationshipTypes = procConfigMap.remove(CONTEXT_RELATIONSHIP_TYPES);
-///     // ... creates context config and delegates
-/// }
-/// ```
 pub fn create_node_property_step(
     task_name: &str,
     config_map: HashMap<String, serde_json::Value>,
@@ -61,17 +49,6 @@ pub fn create_node_property_step(
 
 /// Create a node property step with explicit context configuration.
 ///
-/// # Java Source
-/// ```java
-/// public static ExecutableNodePropertyStep createNodePropertyStep(
-///     String taskName,
-///     Map<String, Object> procConfigMap,
-///     List<String> contextNodeLabels,
-///     List<String> contextRelationshipTypes
-/// ) {
-///     return createNodePropertyStep(procConfigMap, taskName, contextNodeLabels, contextRelationshipTypes);
-/// }
-/// ```
 pub fn create_node_property_step_with_context(
     task_name: &str,
     proc_config_map: HashMap<String, serde_json::Value>,
@@ -124,17 +101,6 @@ fn validate_node_property_step_config(
 
 /// Validate that procedure configuration doesn't contain reserved keys.
 ///
-/// # Java Source
-/// ```java
-/// private static void validateReservedConfigKeys(Map<String, Object> procedureConfig) {
-///     if (RESERVED_CONFIG_KEYS.stream().anyMatch(procedureConfig::containsKey)) {
-///         throw new IllegalArgumentException(formatWithLocale(
-///             "Cannot configure %s for an individual node property step.",
-///             StringJoining.join(RESERVED_CONFIG_KEYS)
-///         ));
-///     }
-/// }
-/// ```
 fn validate_reserved_config_keys(
     procedure_config: &HashMap<String, serde_json::Value>,
 ) -> Result<(), NodePropertyStepFactoryError> {
@@ -162,15 +128,6 @@ fn validate_reserved_config_keys(
 /// - "gds.fastRP" → "gds.fastrp.mutate"
 /// - "gds.pagerank.mutate" → "gds.pagerank.mutate"
 ///
-/// # Java Source
-/// ```java
-/// private static String normalizeName(String input) {
-///     input = input.toLowerCase(Locale.ROOT);
-///     input = !input.startsWith("gds.") ? formatWithLocale("gds.%s", input) : input;
-///     input = !input.endsWith(".mutate") ? formatWithLocale("%s.mutate", input) : input;
-///     return input;
-/// }
-/// ```
 fn normalize_name(input: &str) -> String {
     ProcedureRegistry::canonical_mutate_name(input)
 }

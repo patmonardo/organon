@@ -8,9 +8,6 @@ use std::num::NonZeroUsize;
 /// `BatchSize` record. It provides type safety for batch size parameters.
 ///
 /// In Java GDS:
-/// ```java
-/// public record BatchSize(int value) {}
-/// ```
 ///
 /// # Examples
 ///

@@ -88,21 +88,6 @@ dyn_clone::clone_trait_object!(TunableTrainerConfig);
 /// - Model selection trials
 ///
 /// # Java Source (TrainingPipeline.java)
-/// ```java
-/// public abstract class TrainingPipeline<FEATURE_STEP extends FeatureStep>
-///     implements Pipeline<FEATURE_STEP> {
-///     protected final List<ExecutableNodePropertyStep> nodePropertySteps;
-///     protected final List<FEATURE_STEP> featureSteps;
-///     private final ZonedDateTime creationTime;
-///     protected Map<TrainingMethod, List<TunableTrainerConfig>> trainingParameterSpace;
-///     protected AutoTuningConfig autoTuningConfig;
-///
-///     public abstract String type();
-///     public int numberOfModelSelectionTrials() { /* ... */ }
-///     public void addTrainerConfig(TunableTrainerConfig) { /* ... */ }
-///     public void validateTrainingParameterSpace() { /* ... */ }
-/// }
-/// ```
 pub trait TrainingPipeline: Pipeline {
     /// Get the pipeline type (e.g., "Node classification training pipeline").
     fn pipeline_type(&self) -> &str;

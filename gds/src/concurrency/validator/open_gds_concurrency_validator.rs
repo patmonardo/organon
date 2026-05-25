@@ -5,19 +5,6 @@ use super::{ConcurrencyValidator, ConcurrencyValidatorError, LicenseState};
 /// Enforces the simple rule: requested <= limit.
 ///
 /// In Java GDS:
-/// ```java
-/// public class OpenGdsConcurrencyValidator implements ConcurrencyValidator {
-///     @Override
-///     public void validate(int requested, String key, int limit) {
-///         if (requested > limit) {
-///             throw new IllegalArgumentException(formatWithLocale(
-///                 "Community users cannot exceed %1$s=%2$d (you configured %1$s=%3$d)",
-///                 key, limit, requested
-///             ));
-///         }
-///     }
-/// }
-/// ```
 ///
 /// # Examples
 ///
@@ -57,15 +44,6 @@ impl ConcurrencyValidator for OpenGdsConcurrencyValidator {
 /// Builder for OpenGdsConcurrencyValidator (enterprise pattern compatibility).
 ///
 /// In Java GDS:
-/// ```java
-/// @ServiceProvider
-/// public class OpenGdsConcurrencyValidatorBuilder implements ConcurrencyValidatorBuilder {
-///     @Override public ConcurrencyValidator build(LicenseState s) {
-///         return new OpenGdsConcurrencyValidator();
-///     }
-///     @Override public int priority() { return Integer.MIN_VALUE; }
-/// }
-/// ```
 ///
 /// In Rust: We skip the @ServiceProvider madness, but provide the same API.
 ///

@@ -15,11 +15,6 @@ use crate::types::schema::GraphSchema;
 /// * `RESULT` - The training result type
 ///
 /// # Java Source (ResultToModelConverter.java)
-/// ```java
-/// public interface ResultToModelConverter<MODEL, RESULT> {
-///     MODEL toModel(RESULT result, GraphSchema originalSchema);
-/// }
-/// ```
 pub trait ResultToModelConverter<MODEL, RESULT> {
     /// Convert training result to a catalog model.
     ///

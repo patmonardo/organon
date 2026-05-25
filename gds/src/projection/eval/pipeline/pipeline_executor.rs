@@ -13,14 +13,6 @@ use crate::types::schema::GraphSchema;
 /// Dataset split types for training and evaluation pipelines.
 ///
 /// Java GDS defines this as a nested enum inside PipelineExecutor:
-/// ```java
-/// public enum DatasetSplits {
-///     TRAIN,
-///     TEST,
-///     TEST_COMPLEMENT,
-///     FEATURE_INPUT
-/// }
-/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum DatasetSplits {
     /// Training dataset split.
@@ -50,27 +42,6 @@ pub enum DatasetSplits {
 /// * `RESULT` - The result type (e.g., classification predictions)
 ///
 /// # Java Source (PipelineExecutor.java)
-/// ```java
-/// public abstract class PipelineExecutor<
-///     PIPELINE_CONFIG extends AlgoBaseConfig & GraphNameConfig,
-///     PIPELINE extends Pipeline<?>,
-///     RESULT
-/// > extends Algorithm<RESULT> {
-///     protected final PIPELINE pipeline;
-///     protected final PIPELINE_CONFIG config;
-///     protected final ExecutionContext executionContext;
-///     protected final GraphStore graphStore;
-///     protected final GraphSchema schemaBeforeSteps;
-///
-///     public abstract Map<DatasetSplits, PipelineGraphFilter> generateDatasetSplitGraphFilters();
-///     public abstract void splitDatasets();
-///     protected abstract RESULT execute(Map<DatasetSplits, PipelineGraphFilter> dataSplits);
-///     protected abstract Set<RelationshipType> getAvailableRelTypesForNodePropertySteps();
-///
-///     @Override
-///     public RESULT compute() { /* template method */ }
-/// }
-/// ```
 pub trait PipelineExecutor<PIPELINE: Pipeline, RESULT> {
     /// Access the pipeline being executed.
     fn pipeline(&self) -> &PIPELINE;

@@ -10,7 +10,6 @@ use crate::types::schema::GraphSchema;
 /// Contains the trained regressor model and associated training statistics
 /// (cross-validation scores, best parameters, etc.).
 ///
-/// Java source: `NodeRegressionTrainResult.java` (Immutables @ValueClass)
 #[derive(Debug)]
 pub struct NodeRegressionTrainResult {
     regressor: Box<dyn Regressor>,
@@ -44,8 +43,6 @@ impl NodeRegressionTrainResult {
 ///
 /// Extends the basic train result with model catalog metadata.
 /// This is what gets stored in ModelCatalog after training.
-///
-/// Java source: `NodeRegressionTrainPipelineResult` (nested @ValueClass)
 ///
 /// # Generic Parameters
 /// This implements the `CatalogModelContainer<DATA, CONFIG, INFO>` pattern:

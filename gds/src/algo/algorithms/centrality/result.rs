@@ -18,12 +18,6 @@ use std::time::Duration;
 ///
 /// ## Java GDS Source
 ///
-/// ```java
-/// public interface CentralityAlgorithmResult {
-///     NodePropertyValues nodePropertyValues();
-///     LongToDoubleFunction centralityScoreProvider();
-/// }
-/// ```
 ///
 /// ## Usage
 ///

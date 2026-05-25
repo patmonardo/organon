@@ -15,22 +15,6 @@ use std::collections::HashMap;
 /// when running a node property computation algorithm (e.g., centrality measures,
 /// community detection) as part of pipeline feature extraction.
 ///
-/// # Java Source
-/// ```java
-/// @Configuration
-/// public interface NodePropertyStepContextConfig {
-///     String CONTEXT_NODE_LABELS = "contextNodeLabels";
-///     String CONTEXT_RELATIONSHIP_TYPES = "contextRelationshipTypes";
-///
-///     default List<String> contextNodeLabels() { return List.of(); }
-///     default List<String> contextRelationshipTypes() { return List.of(); }
-///
-///     static NodePropertyStepContextConfig of(Map<String, Object> contextConfigMap) {
-///         var cypherMapWrapper = CypherMapWrapper.create(contextConfigMap);
-///         return new NodePropertyStepContextConfigImpl(cypherMapWrapper);
-///     }
-/// }
-/// ```
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 pub struct NodePropertyStepContextConfig {
     /// Node labels to include in the context (defaults to empty = all labels)

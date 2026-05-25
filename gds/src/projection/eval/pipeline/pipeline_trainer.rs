@@ -15,12 +15,6 @@ use std::error::Error as StdError;
 /// * `RESULT` - The training result type (e.g., trained model, metrics)
 ///
 /// # Java Source (PipelineTrainer.java)
-/// ```java
-/// public interface PipelineTrainer<RESULT> {
-///     void setTerminationFlag(TerminationFlag terminationFlag);
-///     RESULT run();
-/// }
-/// ```
 pub trait PipelineTrainer {
     /// The result type produced by training.
     type Result;

@@ -15,19 +15,6 @@ use std::collections::HashMap;
 ///
 /// ## Java GDS Source
 ///
-/// ```java
-/// public class ConsecutiveLongNodePropertyValues implements LongNodePropertyValues, FilteredNodePropertyValuesMarker {
-///     private static final long MAPPING_SIZE_QUOTIENT = 10L;
-///     private static final long NO_VALUE = -1L;
-///
-///     private final HugeLongArray communities;
-///
-///     public ConsecutiveLongNodePropertyValues(LongNodePropertyValues inputProperties) {
-///         // Build mapping from original IDs to consecutive IDs
-///         // Store remapped values in communities array
-///     }
-/// }
-/// ```
 ///
 /// ## Purpose
 ///

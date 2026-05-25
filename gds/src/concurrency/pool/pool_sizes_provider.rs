@@ -31,15 +31,6 @@ pub enum LicenseState {
 /// construct and use a provider directly.
 ///
 /// In Java GDS:
-/// ```java
-/// @ServiceProvider
-/// public class OpenGdsPoolSizesProvider implements PoolSizesProvider {
-///     @Override public PoolSizes get(LicenseState licenseState) {
-///         return new OpenGdsPoolSizes();
-///     }
-///     @Override public int priority() { return Integer.MIN_VALUE; }
-/// }
-/// ```
 ///
 /// In Rust: construct a provider and call `get`.
 ///
@@ -95,13 +86,6 @@ impl PoolSizesProvider {
 /// Global singleton for pool sizes service (Java compatibility).
 ///
 /// In Java GDS:
-/// ```java
-/// public final class PoolSizesService {
-///     private static PoolSizes instance = new OpenGdsPoolSizes();
-///     public static void poolSizes(PoolSizes poolSizes) { instance = poolSizes; }
-///     public static PoolSizes poolSizes() { return Objects.requireNonNull(instance); }
-/// }
-/// ```
 ///
 /// In Rust: We provide the same API but recommend just using the types directly.
 /// This exists primarily for Java/TS compatibility.

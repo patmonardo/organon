@@ -24,24 +24,6 @@ use crate::types::graph_store::{DefaultGraphStore, GraphStore};
 /// * `RESULT` - The prediction result type
 ///
 /// # Java Source (PredictPipelineExecutor.java)
-/// ```java
-/// public abstract class PredictPipelineExecutor<
-///     PIPELINE_CONFIG extends AlgoBaseConfig & GraphNameConfig,
-///     PIPELINE extends Pipeline<?>,
-///     RESULT
-/// > extends Algorithm<RESULT> {
-///     protected final PIPELINE pipeline;
-///     protected final PIPELINE_CONFIG config;
-///     protected final ExecutionContext executionContext;
-///     protected final GraphStore graphStore;
-///
-///     protected abstract RESULT execute();
-///     protected abstract PipelineGraphFilter nodePropertyStepFilter();
-///
-///     @Override
-///     public RESULT compute() { /* template method */ }
-/// }
-/// ```
 pub trait PredictPipelineExecutor<PIPELINE: Pipeline, RESULT> {
     /// Access the pipeline being executed.
     fn pipeline(&self) -> &PIPELINE;

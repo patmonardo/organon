@@ -40,8 +40,6 @@ use super::{
 
 /// Procedure Executor - GDSL Runtime for algorithm execution
 ///
-/// Translated from: `ProcedureExecutor<ALGO, ALGO_RESULT, CONFIG, RESULT>`
-///
 /// **The Fixed GDSL Runtime**:
 /// - Part of `src/projection/eval/procedure/` (GDSL Runtime)
 /// - NOT part of `src/procedure/` (algorithm implementations)
@@ -77,24 +75,6 @@ impl ProcedureExecutor {
 
     /// Execute an algorithm following the complete procedure lifecycle
     ///
-    /// Translated from: `RESULT compute(String graphName, Map<String, Object> configuration)`
-    ///
-    /// **Java GDS Flow**:
-    /// ```java
-    /// public RESULT compute(String graphName, Map<String, Object> configuration) {
-    ///     algoSpec.preProcessConfig(configuration, executionContext);
-    ///     CONFIG config = executorSpec.configParser(...).processInput(configuration);
-    ///     var validator = executorSpec.validator(algoSpec.validationConfig(...));
-    ///     validator.validateConfigsBeforeLoad(graphProjectConfig, config);
-    ///     graphStore = graphCreation.graphStore();
-    ///     validator.validateConfigWithGraphStore(graphStore, graphProjectConfig, config);
-    ///     ALGO algo = newAlgorithm(graph, graphStore, config);
-    ///     ALGO_RESULT result = executeAlgorithm(builder, algo, ...);
-    ///     return algoSpec.computationResultConsumer().consume(computationResult, ...);
-    /// }
-    /// ```
-    ///
-    /// **rust-gds Simplification**:
     /// - Single generic parameter `A: AlgorithmSpec`
     /// - Direct execution without factory/visitor
     /// - Result-based error handling

@@ -21,14 +21,6 @@ use super::{
 /// Java source: `NodeRegressionTrainAlgorithm.java`
 ///
 /// # Generic Parameters (from Java)
-/// ```java
-/// class NodeRegressionTrainAlgorithm extends PipelineTrainAlgorithm<
-///     NodeRegressionTrainResult,           // Training result type
-///     NodeRegressionTrainPipelineResult,   // Catalog model result type
-///     NodeRegressionPipelineTrainConfig,   // Configuration type
-///     NodeFeatureStep                      // Feature step type
-/// >
-/// ```
 ///
 /// # Design Pattern
 /// This is a thin wrapper that:
@@ -51,16 +43,7 @@ pub struct NodeRegressionTrainAlgorithm {
 impl NodeRegressionTrainAlgorithm {
     /// Creates a new node regression training algorithm.
     ///
-    /// Java source: Constructor
-    /// ```java
-    /// public NodeRegressionTrainAlgorithm(
-    ///     PipelineTrainer<NodeRegressionTrainResult> pipelineTrainer,
-    ///     NodeRegressionTrainingPipeline pipeline,
-    ///     GraphStore graphStore,
-    ///     NodeRegressionPipelineTrainConfig config,
-    ///     ProgressTracker progressTracker
-    /// )
-    /// ```
+
     pub fn new(
         pipeline_trainer: Box<dyn PipelineTrainer<Result = NodeRegressionTrainResult>>,
         pipeline: NodeRegressionTrainingPipeline,

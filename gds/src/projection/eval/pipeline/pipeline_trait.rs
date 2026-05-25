@@ -1,6 +1,5 @@
 //! Pipeline trait
 //!
-//! Direct 1:1 translation of Java `org.neo4j.gds.ml.pipeline.Pipeline<FEATURE_STEP>`.
 
 use std::collections::{HashMap, HashSet};
 use std::error::Error as StdError;
@@ -16,10 +15,6 @@ use super::node_property_step::MUTATE_PROPERTY_KEY;
 
 /// Base Pipeline trait.
 ///
-/// **Java Source**: `org.neo4j.gds.ml.pipeline.Pipeline<FEATURE_STEP>`
-///
-/// Direct translation of Java `Pipeline<FEATURE_STEP extends FeatureStep>` interface.
-///
 /// **Design Philosophy**:
 /// Pipeline is a 2-stage process:
 /// 1. **Node Property Steps** - Execute graph algorithms to compute node properties
@@ -28,17 +23,6 @@ use super::node_property_step::MUTATE_PROPERTY_KEY;
 /// **Type Parameter**:
 /// `FeatureStep` - Associated type determining whether this is a Node or Link pipeline
 ///
-/// ```java
-/// public interface Pipeline<FEATURE_STEP extends FeatureStep> extends ToMapConvertible {
-///     List<ExecutableNodePropertyStep> nodePropertySteps();
-///     List<FEATURE_STEP> featureSteps();
-///     default List<String> featureProperties() { ... }
-///     default void validateBeforeExecution(GraphStore, Collection<NodeLabel>) { ... }
-///     void specificValidateBeforeExecution(GraphStore);
-///     default void validateFeatureProperties(GraphStore, Collection<NodeLabel>) { ... }
-///     default Set<String> featurePropertiesMissingFromGraph(...) { ... }
-/// }
-/// ```
 pub trait Pipeline {
     /// Associated feature step type.
     ///
@@ -205,14 +189,6 @@ pub trait Pipeline {
 /// **Java**: Translates Java exceptions thrown from Pipeline validation methods.
 ///
 /// **Java Source**: Various `IllegalArgumentException` from `Pipeline.java`:
-/// ```java
-/// static IllegalArgumentException missingNodePropertiesFromFeatureSteps(Set<String> invalidProperties) {
-///     return new IllegalArgumentException(formatWithLocale(
-///         "Node properties %s defined in the feature steps do not exist in the graph or part of the pipeline",
-///         invalidProperties.stream().sorted().collect(Collectors.toList())
-///     ));
-/// }
-/// ```
 #[derive(Debug, Clone)]
 pub enum PipelineValidationError {
     /// Missing node properties from feature steps.

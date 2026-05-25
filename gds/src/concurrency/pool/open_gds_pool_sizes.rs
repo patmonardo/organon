@@ -7,13 +7,6 @@ use crate::concurrency::OPEN_GDS_DEFAULT_CONCURRENCY;
 /// This is the "official" default for Open GDS, matching the Java/TS behavior.
 ///
 /// In Java GDS:
-/// ```java
-/// // Note: think how to make the magic numbers less magic
-/// public class OpenGdsPoolSizes implements PoolSizes {
-///     @Override public int corePoolSize() { return 4; }
-///     @Override public int maxPoolSize() { return 4; }
-/// }
-/// ```
 ///
 /// **They're not magic anymore - they're the official defaults!** 🎉
 ///

@@ -34,23 +34,6 @@ use crate::types::graph_store::{DefaultGraphStore, GraphStore};
 /// * `FEATURE_STEP` - Feature step type (e.g., NodeFeatureStep)
 ///
 /// # Java Source (PipelineTrainAlgorithm.java)
-/// ```java
-/// public abstract class PipelineTrainAlgorithm<
-///     RESULT,
-///     MODEL_RESULT extends CatalogModelContainer<?, CONFIG, ?>,
-///     CONFIG extends AlgoBaseConfig & ModelConfig,
-///     FEATURE_STEP extends FeatureStep
-/// > extends Algorithm<MODEL_RESULT> {
-///     protected final TrainingPipeline<FEATURE_STEP> pipeline;
-///     protected final GraphStore graphStore;
-///     protected final CONFIG config;
-///     private final PipelineTrainer<RESULT> pipelineTrainer;
-///     private final ResultToModelConverter<MODEL_RESULT, RESULT> toCatalogModelConverter;
-///
-///     @Override
-///     public MODEL_RESULT compute() { /* ... */ }
-/// }
-/// ```
 pub trait PipelineTrainAlgorithm<RESULT, MODEL, P: TrainingPipeline + ?Sized> {
     /// Access the training pipeline.
     fn pipeline(&self) -> &P;

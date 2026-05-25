@@ -1,8 +1,5 @@
 //! Computation Result - Algorithm output with metadata
 //!
-//! Translated from: `org.neo4j.gds.executor.ComputationResult`
-//! Source: ComputationResult.java (60 lines)
-//!
 //! Wraps algorithm results with timing information and metadata.
 
 use serde_json::Value as JsonValue;

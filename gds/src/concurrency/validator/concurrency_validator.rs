@@ -7,11 +7,6 @@ use std::fmt;
 /// if requested > limit - but we package it in a trait for extensibility.
 ///
 /// In Java GDS:
-/// ```java
-/// public interface ConcurrencyValidator {
-///     void validate(int requested, String key, int limit) throws IllegalArgumentException;
-/// }
-/// ```
 ///
 /// # Examples
 ///
