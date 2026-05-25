@@ -19,7 +19,6 @@ use std::fmt;
 use std::sync::Arc;
 
 /// Result of node classification prediction
-/// 1:1 with NodeClassificationResult in Java
 pub struct NodeClassificationPredictResult {
     predicted_classes: Arc<HugeLongArray>,
     predicted_probabilities: Option<Arc<HugeObjectArray<Vec<f64>>>>,
@@ -61,7 +60,6 @@ impl NodeClassificationPredictResult {
 }
 
 /// Node classification prediction algorithm
-/// 1:1 translation of NodeClassificationPredict.java
 pub struct NodeClassificationPredict {
     classifier: Arc<dyn Classifier>,
     features: Arc<dyn Features>,
@@ -96,7 +94,6 @@ impl NodeClassificationPredict {
     }
 
     /// Computes predictions for all nodes
-    /// 1:1 with compute() in Java
     pub fn compute(&self) -> NodeClassificationPredictResult {
         let node_count = self.features.size();
 
@@ -135,7 +132,6 @@ impl NodeClassificationPredict {
 }
 
 /// Memory estimation for node classification prediction
-/// 1:1 with memoryEstimation() in Java
 pub fn estimate_predict_memory(
     produce_probabilities: bool,
     batch_size: usize,

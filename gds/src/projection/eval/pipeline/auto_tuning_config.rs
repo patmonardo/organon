@@ -13,22 +13,6 @@ use std::collections::HashMap;
 /// Specifies how many trials (different parameter combinations) should be
 /// evaluated when searching for optimal model hyperparameters.
 ///
-/// # Java Source
-/// ```java
-/// @Configuration
-/// public interface AutoTuningConfig extends ToMapConvertible {
-///     int MAX_TRIALS = 10;
-///
-///     @Configuration.IntegerRange(min = 1)
-///     default int maxTrials() {
-///         return MAX_TRIALS;
-///     }
-///
-///     @Override
-///     @Configuration.ToMap
-///     Map<String, Object> toMap();
-/// }
-/// ```
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct AutoTuningConfig {
     /// Maximum number of hyperparameter combinations to try (must be >= 1)

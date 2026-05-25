@@ -1,4 +1,3 @@
-//! Java GDS: pipeline/src/main/java/org/neo4j/gds/ml/pipeline/NodePropertyStep.java
 //!
 //! Concrete implementation of a node property step in an ML pipeline.
 //!
@@ -51,26 +50,6 @@ pub const HARMONIC_MUTATE: &str = "gds.harmonic.mutate";
 
 /// Node property step that executes an algorithm to compute node properties.
 ///
-/// # Java Source (NodePropertyStep.java)
-/// ```java
-/// public final class NodePropertyStep implements ExecutableNodePropertyStep {
-///     private final GdsCallableFinder.GdsCallableDefinition callableDefinition;
-///     private final Map<String, Object> config;
-///     private final List<String> contextNodeLabels;
-///     private final List<String> contextRelationshipTypes;
-///
-///     public void execute(
-///         ExecutionContext executionContext,
-///         String graphName,
-///         Collection<NodeLabel> nodeLabels,
-///         Collection<RelationshipType> relTypes,
-///         Concurrency trainConcurrency,
-///         Stub stub
-///     ) {
-///         // ... builds config and executes via ProcedureExecutor
-///     }
-/// }
-/// ```
 #[derive(Debug, Clone)]
 pub struct NodePropertyStep {
     /// Name of the algorithm to execute (e.g., "gds.pagerank.mutate", "gds.fastRP.mutate")

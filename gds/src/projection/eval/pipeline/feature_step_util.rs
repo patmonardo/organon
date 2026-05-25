@@ -13,12 +13,6 @@ use crate::types::ValueType;
 
 /// Compute the dimension of a node property exposed by a graph.
 ///
-/// # Java Source
-/// ```java
-/// public static int propertyDimension(Graph graph, String nodeProperty) {
-///     return propertyDimension(graph.nodeProperties(nodeProperty), nodeProperty);
-/// }
-/// ```
 pub fn property_dimension_for_graph(
     graph: &dyn Graph,
     node_property: &str,
@@ -38,28 +32,6 @@ pub fn property_dimension_for_graph(
 /// - Scalar properties (Long, Double): dimension = 1
 /// - Array properties (DoubleArray, FloatArray, LongArray): dimension = array length
 ///
-/// # Java Source
-/// ```java
-/// public static int propertyDimension(NodePropertyValues nodeProperties, String propertyName) {
-///     int dimension = 0;
-///     switch (nodeProperties.valueType()) {
-///         case LONG:
-///         case DOUBLE:
-///             dimension = 1;
-///             break;
-///         case DOUBLE_ARRAY:
-///         case FLOAT_ARRAY:
-///             dimension = nodeProperties.doubleArrayValue(0).length;
-///             break;
-///         case LONG_ARRAY:
-///             dimension = nodeProperties.longArrayValue(0).length;
-///             break;
-///         case UNKNOWN:
-///             throw new IllegalStateException(formatWithLocale("Unknown ValueType %s", propertyName));
-///     }
-///     return dimension;
-/// }
-/// ```
 pub fn property_dimension(
     node_properties: &dyn NodePropertyValues,
     property_name: &str,
@@ -115,21 +87,6 @@ pub fn property_dimension(
 /// Checks a slice of the feature vector for NaN values and runs the provided
 /// error callback if any are found.
 ///
-/// # Java Source
-/// ```java
-/// public static void validateComputedFeatures(
-///     double[] linkFeatures,
-///     int startOffset,
-///     int endOffset,
-///     Runnable throwError
-/// ) {
-///     for (int offset = startOffset; offset < endOffset; offset++) {
-///         if (Double.isNaN(linkFeatures[offset])) {
-///             throwError.run();
-///         }
-///     }
-/// }
-/// ```
 pub fn validate_computed_features<F>(
     link_features: &[f64],
     start_offset: usize,
@@ -148,24 +105,6 @@ pub fn validate_computed_features<F>(
 
 /// Create an error for NaN values in computed features.
 ///
-/// # Java Source
-/// ```java
-/// public static void throwNanError(
-///     String featureStep,
-///     Collection<String> nodeProperties,
-///     long source,
-///     long target
-/// ) {
-///     throw new IllegalArgumentException(formatWithLocale(
-///         "Encountered NaN when combining the nodeProperties %s for the node pair (%d, %d) when computing the %s feature vector. " +
-///         "Either define a default value if its a stored property or check the nodePropertyStep.",
-///         StringJoining.join(nodeProperties),
-///         source,
-///         target,
-///         featureStep
-///     ));
-/// }
-/// ```
 pub fn throw_nan_error(
     feature_step: &str,
     node_properties: &[String],
