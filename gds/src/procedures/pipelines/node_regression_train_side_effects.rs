@@ -1,7 +1,7 @@
 use crate::applications::algorithms::machinery::SideEffect;
 use crate::core::loading::GraphResources;
-use crate::projection::eval::pipeline::node_pipeline::regression::node_regression_pipeline_train_config::NodeRegressionPipelineTrainConfig;
-use crate::projection::eval::pipeline::node_pipeline::regression::node_regression_train_result::NodeRegressionTrainPipelineResult;
+use crate::projection::eval::pipeline::node_pipeline::NodeRegressionPipelineTrainConfig;
+use crate::projection::eval::pipeline::node_pipeline::NodeRegressionTrainPipelineResult;
 
 pub struct NodeRegressionTrainSideEffects {
     #[allow(dead_code)]

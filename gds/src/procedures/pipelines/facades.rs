@@ -1,4 +1,4 @@
-//! Trait surface for the Pipelines Procedure Facade.
+//! Trait surface for the Pipelines Procedure Facades.
 //!
 //! This is intentionally "ceremonial" and Java-shaped.
 

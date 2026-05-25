@@ -9,20 +9,10 @@
   "vitest.disableWorkspaceWarning": true,
   "editor.formatOnSave": true,
   "files.trimTrailingWhitespace": true,
-  "editor.rulers": [
-    80
-  ],
   "[rust]": {
     "editor.defaultFormatter": "rust-lang.rust-analyzer"
   },
   "chat.tools.terminal.autoApprove": {
     "cargo run": true
   },
-  "python-envs.pythonProjects": [
-    {
-      "path": "gds/src/algo/wcc",
-      "envManager": "ms-python.python:venv",
-      "packageManager": "ms-python.python:pip"
-    }
-  ]
 }

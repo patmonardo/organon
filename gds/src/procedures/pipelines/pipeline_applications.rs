@@ -17,17 +17,17 @@ use crate::ml::models::Regressor;
 use crate::projection::eval::pipeline::link_pipeline::LinkFeatureStepFactory;
 use crate::projection::eval::pipeline::link_pipeline::LinkPredictionSplitConfig;
 use crate::projection::eval::pipeline::link_pipeline::LinkPredictionTrainingPipeline;
-use crate::projection::eval::pipeline::node_pipeline::classification::node_classification_model_result::NodeClassificationModelResult;
-use crate::projection::eval::pipeline::node_pipeline::classification::node_classification_training_pipeline::NodeClassificationTrainingPipeline;
-use crate::projection::eval::pipeline::node_pipeline::classification::NodeClassificationPipelineTrainConfig;
-use crate::projection::eval::pipeline::node_pipeline::node_feature_step::NodeFeatureStep;
-use crate::projection::eval::pipeline::node_pipeline::node_property_predict_pipeline::NodePropertyPredictPipeline;
-use crate::projection::eval::pipeline::node_pipeline::node_property_pipeline_base_train_config::NodePropertyPipelineBaseTrainConfig;
-use crate::projection::eval::pipeline::node_pipeline::node_property_prediction_split_config::NodePropertyPredictionSplitConfig;
-use crate::projection::eval::pipeline::node_pipeline::node_property_training_pipeline::NodePropertyTrainingPipeline;
-use crate::projection::eval::pipeline::node_pipeline::regression::NodeRegressionPipelineTrainConfig;
-use crate::projection::eval::pipeline::node_pipeline::regression::node_regression_pipeline_model_info::NodeRegressionPipelineModelInfo;
-use crate::projection::eval::pipeline::node_pipeline::regression::node_regression_training_pipeline::NodeRegressionTrainingPipeline;
+use crate::projection::eval::pipeline::node_pipeline::NodeClassificationModelResult;
+use crate::projection::eval::pipeline::node_pipeline::NodeClassificationPipelineTrainConfig;
+use crate::projection::eval::pipeline::node_pipeline::NodeClassificationTrainingPipeline;
+use crate::projection::eval::pipeline::node_pipeline::NodeFeatureStep;
+use crate::projection::eval::pipeline::node_pipeline::NodePropertyPipelineBaseTrainConfig;
+use crate::projection::eval::pipeline::node_pipeline::NodePropertyPredictPipeline;
+use crate::projection::eval::pipeline::node_pipeline::NodePropertyPredictionSplitConfig;
+use crate::projection::eval::pipeline::node_pipeline::NodePropertyTrainingPipeline;
+use crate::projection::eval::pipeline::node_pipeline::NodeRegressionPipelineModelInfo;
+use crate::projection::eval::pipeline::node_pipeline::NodeRegressionPipelineTrainConfig;
+use crate::projection::eval::pipeline::node_pipeline::NodeRegressionTrainingPipeline;
 use crate::projection::eval::pipeline::{
     AutoTuningConfig, ExecutableNodePropertyStep, Pipeline, TrainingMethod, TrainingPipeline,
 };
