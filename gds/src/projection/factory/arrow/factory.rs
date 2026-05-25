@@ -154,23 +154,6 @@ impl GraphStoreFactory for ArrowNativeFactory {
     ///
     /// # Translation from Java
     ///
-    /// ```java
-    /// // Java GDS NativeFactory.build()
-    /// public CSRGraphStore build() {
-    ///     validate(dimensions, storeConfig);
-    ///     var concurrency = graphProjectConfig.readConcurrency();
-    ///     try {
-    ///         progressTracker.beginSubTask();
-    ///         Nodes nodes = loadNodes(concurrency);
-    ///         RelationshipImportResult relationships = loadRelationships(nodes.idMap(), concurrency);
-    ///         CSRGraphStore graphStore = createGraphStore(nodes, relationships);
-    ///         logLoadingSummary(graphStore);
-    ///         return graphStore;
-    ///     } finally {
-    ///         progressTracker.endSubTask();
-    ///     }
-    /// }
-    /// ```
     fn build_graph_store(&self, config: &Self::Config) -> Result<DefaultGraphStore, Self::Error> {
         // Phase 1: Validate config at least
         config.validate()?;

@@ -58,20 +58,6 @@ impl NodeRegressionTrainPipelineAlgorithmFactory {
     /// Builds a training algorithm by retrieving the pipeline from the catalog.
     ///
     /// Java source: `build(GraphStore, Config, ProgressTracker)`
-    /// ```java
-    /// public NodeRegressionTrainAlgorithm build(
-    ///     GraphStore graphStore,
-    ///     NodeRegressionPipelineTrainConfig configuration,
-    ///     ProgressTracker progressTracker
-    /// ) {
-    ///     var pipeline = PipelineCatalog.getTyped(
-    ///         configuration.username(),
-    ///         configuration.pipeline(),
-    ///         NodeRegressionTrainingPipeline.class
-    ///     );
-    ///     return build(graphStore, configuration, pipeline, progressTracker);
-    /// }
-    /// ```
     pub fn build(
         &self,
         graph_store: Arc<DefaultGraphStore>,
@@ -97,29 +83,6 @@ impl NodeRegressionTrainPipelineAlgorithmFactory {
     /// Builds a training algorithm with an explicitly provided pipeline.
     ///
     /// Java source: Second `build(...)` overload
-    /// ```java
-    /// public NodeRegressionTrainAlgorithm build(
-    ///     GraphStore graphStore,
-    ///     NodeRegressionPipelineTrainConfig configuration,
-    ///     NodeRegressionTrainingPipeline pipeline,
-    ///     ProgressTracker progressTracker
-    /// ) {
-    ///     validateMainMetric(pipeline, configuration.metrics().get(0).toString());
-    ///
-    ///     var nodeFeatureProducer = NodeFeatureProducer.create(
-    ///         graphStore, configuration, executionContext, progressTracker
-    ///     );
-    ///     nodeFeatureProducer.validateNodePropertyStepsContextConfigs(pipeline.nodePropertySteps());
-    ///
-    ///     return new NodeRegressionTrainAlgorithm(
-    ///         NodeRegressionTrain.create(graphStore, pipeline, configuration, nodeFeatureProducer, progressTracker),
-    ///         pipeline,
-    ///         graphStore,
-    ///         configuration,
-    ///         progressTracker
-    ///     );
-    /// }
-    /// ```
     pub fn build_with_pipeline(
         &self,
         graph_store: Arc<DefaultGraphStore>,
@@ -203,11 +166,6 @@ impl NodeRegressionTrainPipelineAlgorithmFactory {
     /// Creates a progress task for a specific pipeline.
     ///
     /// Java source: Static `progressTask(Pipeline, nodeCount)`
-    /// ```java
-    /// public static Task progressTask(NodeRegressionTrainingPipeline pipeline, long nodeCount) {
-    ///     return NodeRegressionTrain.progressTask(pipeline, nodeCount);
-    /// }
-    /// ```
     pub fn progress_task_for_pipeline(
         pipeline: &NodeRegressionTrainingPipeline,
         node_count: u64,

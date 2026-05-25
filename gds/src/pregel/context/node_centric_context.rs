@@ -44,9 +44,6 @@ impl<C: PregelRuntimeConfig> NodeCentricContext<C> {
     /// # Translation from Java
     ///
     /// Maps directly to Java constructor:
-    /// ```java
-    /// NodeCentricContext(Graph graph, CONFIG config, NodeValue nodeValue, ProgressTracker progressTracker)
-    /// ```
     pub fn new(graph: Arc<dyn Graph>, config: C, node_value: Arc<RwLock<NodeValue>>) -> Self {
         Self {
             node_id: 0,
@@ -63,9 +60,6 @@ impl<C: PregelRuntimeConfig> NodeCentricContext<C> {
     ///
     /// # Java equivalent
     ///
-    /// ```java
-    /// void setNodeId(long nodeId)
-    /// ```
     pub fn set_node_id(&mut self, node_id: u64) {
         self.node_id = node_id;
     }
@@ -74,9 +68,6 @@ impl<C: PregelRuntimeConfig> NodeCentricContext<C> {
     ///
     /// # Java equivalent
     ///
-    /// ```java
-    /// long nodeId()
-    /// ```
     pub fn node_id(&self) -> u64 {
         self.node_id
     }
@@ -90,9 +81,6 @@ impl<C: PregelRuntimeConfig> NodeCentricContext<C> {
     ///
     /// # Java equivalent
     ///
-    /// ```java
-    /// CONFIG config()
-    /// ```
     pub fn config(&self) -> &C {
         &self.config
     }
@@ -106,9 +94,6 @@ impl<C: PregelRuntimeConfig> NodeCentricContext<C> {
     ///
     /// # Java equivalent
     ///
-    /// ```java
-    /// boolean isMultiGraph()
-    /// ```
     pub fn is_multi_graph(&self) -> bool {
         self.graph.is_multi_graph()
     }
@@ -117,9 +102,6 @@ impl<C: PregelRuntimeConfig> NodeCentricContext<C> {
     ///
     /// # Java equivalent
     ///
-    /// ```java
-    /// long nodeCount()
-    /// ```
     pub fn node_count(&self) -> u64 {
         self.graph.node_count() as u64
     }
@@ -128,9 +110,6 @@ impl<C: PregelRuntimeConfig> NodeCentricContext<C> {
     ///
     /// # Java equivalent
     ///
-    /// ```java
-    /// long relationshipCount()
-    /// ```
     pub fn relationship_count(&self) -> u64 {
         self.graph.relationship_count() as u64
     }
@@ -144,9 +123,6 @@ impl<C: PregelRuntimeConfig> NodeCentricContext<C> {
     ///
     /// # Java equivalent
     ///
-    /// ```java
-    /// void setNodeValue(String key, double value)
-    /// ```
     pub fn set_node_value(&mut self, key: &str, value: f64) {
         self.node_value
             .write()
@@ -157,9 +133,6 @@ impl<C: PregelRuntimeConfig> NodeCentricContext<C> {
     ///
     /// # Java equivalent
     ///
-    /// ```java
-    /// void setNodeValue(String key, long value)
-    /// ```
     pub fn set_node_value_long(&mut self, key: &str, value: i64) {
         self.node_value
             .write()
@@ -170,9 +143,6 @@ impl<C: PregelRuntimeConfig> NodeCentricContext<C> {
     ///
     /// # Java equivalent
     ///
-    /// ```java
-    /// void setNodeValue(String key, long[] value)
-    /// ```
     pub fn set_node_value_long_array(&mut self, key: &str, value: Vec<i64>) {
         self.node_value
             .write()
@@ -183,9 +153,6 @@ impl<C: PregelRuntimeConfig> NodeCentricContext<C> {
     ///
     /// # Java equivalent
     ///
-    /// ```java
-    /// void setNodeValue(String key, double[] value)
-    /// ```
     pub fn set_node_value_double_array(&mut self, key: &str, value: Vec<f64>) {
         self.node_value
             .write()
@@ -210,9 +177,6 @@ impl<C: PregelRuntimeConfig> NodeCentricContext<C> {
     ///
     /// # Java equivalent
     ///
-    /// ```java
-    /// int degree()
-    /// ```
     pub fn degree(&self) -> usize {
         self.graph.degree(self.node_id as i64)
     }
@@ -221,9 +185,6 @@ impl<C: PregelRuntimeConfig> NodeCentricContext<C> {
     ///
     /// # Java equivalent
     ///
-    /// ```java
-    /// int incomingDegree()
-    /// ```
     pub fn incoming_degree(&self) -> usize {
         // For now, return the same as degree
         // Proper implementation would use topology.incoming(node_id).len()
@@ -235,9 +196,6 @@ impl<C: PregelRuntimeConfig> NodeCentricContext<C> {
     ///
     /// # Java equivalent
     ///
-    /// ```java
-    /// long toOriginalId()
-    /// ```
     pub fn to_original_id(&self) -> i64 {
         self.graph
             .to_original_node_id(self.node_id as i64)
@@ -248,9 +206,6 @@ impl<C: PregelRuntimeConfig> NodeCentricContext<C> {
     ///
     /// # Java equivalent
     ///
-    /// ```java
-    /// long toOriginalId(long internalNodeId)
-    /// ```
     pub fn to_original_id_of(&self, internal_node_id: u64) -> i64 {
         self.graph
             .to_original_node_id(internal_node_id as i64)
@@ -261,9 +216,6 @@ impl<C: PregelRuntimeConfig> NodeCentricContext<C> {
     ///
     /// # Java equivalent
     ///
-    /// ```java
-    /// long toInternalId(long originalNodeId)
-    /// ```
     pub fn to_internal_id(&self, original_node_id: i64) -> u64 {
         self.graph
             .to_mapped_node_id(original_node_id)
@@ -274,9 +226,6 @@ impl<C: PregelRuntimeConfig> NodeCentricContext<C> {
     ///
     /// # Java equivalent
     ///
-    /// ```java
-    /// void forEachNeighbor(LongConsumer targetConsumer)
-    /// ```
     pub fn for_each_neighbor<F>(&self, mut consumer: F)
     where
         F: FnMut(u64),
@@ -294,9 +243,6 @@ impl<C: PregelRuntimeConfig> NodeCentricContext<C> {
     ///
     /// # Java equivalent
     ///
-    /// ```java
-    /// void forEachIncomingNeighbor(LongConsumer sourceConsumer)
-    /// ```
     pub fn for_each_incoming_neighbor<F>(&self, mut consumer: F)
     where
         F: FnMut(u64),
@@ -326,9 +272,6 @@ impl<C: PregelRuntimeConfig> NodeCentricContext<C> {
     ///
     /// # Java equivalent
     ///
-    /// ```java
-    /// void forEachNeighbor(long nodeId, LongConsumer targetConsumer)
-    /// ```
     pub fn for_each_neighbor_of<F>(&self, node_id: u64, mut consumer: F)
     where
         F: FnMut(u64),

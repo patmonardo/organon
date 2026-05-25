@@ -27,7 +27,6 @@ pub struct NodeFeatureProducer<C: NodePropertyPipelineBaseTrainConfig> {
 impl<C: NodePropertyPipelineBaseTrainConfig> NodeFeatureProducer<C> {
     /// Creates a new NodeFeatureProducer.
     ///
-    /// **Java**: Private constructor
     fn new(
         step_executor: NodePropertyStepExecutor,
         graph_store: Arc<DefaultGraphStore>,
@@ -42,16 +41,6 @@ impl<C: NodePropertyPipelineBaseTrainConfig> NodeFeatureProducer<C> {
 
     /// Factory method to create a NodeFeatureProducer.
     ///
-    /// **Java**:
-    /// ```java
-    /// public static <PIPELINE_CONFIG extends NodePropertyPipelineBaseTrainConfig>
-    /// NodeFeatureProducer<PIPELINE_CONFIG> create(
-    ///     GraphStore graphStore,
-    ///     PIPELINE_CONFIG config,
-    ///     ExecutionContext executionContext,
-    ///     ProgressTracker progressTracker
-    /// )
-    /// ```
     ///
     /// **Note**: This simplified version removes ExecutionContext and ProgressTracker
     /// following the Direct Integration pattern.
@@ -104,25 +93,6 @@ impl<C: NodePropertyPipelineBaseTrainConfig> NodeFeatureProducer<C> {
     /// 4. Extracts features (eager or lazy depending on pipeline requirements)
     /// 5. Cleans up intermediate properties (in finally block)
     ///
-    /// **Java**:
-    /// ```java
-    /// public Features procedureFeatures(NodePropertyTrainingPipeline pipeline) {
-    ///     try {
-    ///         stepExecutor.executeNodePropertySteps(pipeline.nodePropertySteps());
-    ///         Collection<NodeLabel> targetNodeLabels = trainConfig.nodeLabelIdentifiers(graphStore);
-    ///         pipeline.validateFeatureProperties(graphStore, targetNodeLabels);
-    ///
-    ///         var targetNodeLabelGraph = graphStore.getGraph(targetNodeLabels);
-    ///         if (pipeline.requireEagerFeatures()) {
-    ///             return FeaturesFactory.extractEagerFeatures(targetNodeLabelGraph, pipeline.featureProperties());
-    ///         } else {
-    ///             return FeaturesFactory.extractLazyFeatures(targetNodeLabelGraph, pipeline.featureProperties());
-    ///         }
-    ///     } finally {
-    ///         stepExecutor.cleanupIntermediateProperties(pipeline.nodePropertySteps());
-    ///     }
-    /// }
-    /// ```
     pub fn procedure_features<P: NodePropertyTrainingPipeline>(
         &mut self,
         pipeline: &P,
@@ -189,12 +159,6 @@ impl<C: NodePropertyPipelineBaseTrainConfig> NodeFeatureProducer<C> {
 
     /// Validates node property step context configurations.
     ///
-    /// **Java**:
-    /// ```java
-    /// public void validateNodePropertyStepsContextConfigs(List<ExecutableNodePropertyStep> steps) {
-    ///     stepExecutor.validNodePropertyStepsContextConfigs(steps);
-    /// }
-    /// ```
     pub fn validate_node_property_steps_context_configs(
         &self,
         steps: &[Box<dyn ExecutableNodePropertyStep>],

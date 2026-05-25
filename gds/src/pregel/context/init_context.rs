@@ -82,9 +82,6 @@ impl<C: PregelRuntimeConfig> InitContext<C> {
     ///
     /// # Java equivalent
     ///
-    /// ```java
-    /// void setNodeValue(String key, double value)
-    /// ```
     pub fn set_node_value(&mut self, key: &str, value: f64) {
         self.base.set_node_value(key, value);
     }
@@ -93,9 +90,6 @@ impl<C: PregelRuntimeConfig> InitContext<C> {
     ///
     /// # Java equivalent
     ///
-    /// ```java
-    /// void setNodeValue(String key, long value)
-    /// ```
     pub fn set_node_value_long(&mut self, key: &str, value: i64) {
         self.base.set_node_value_long(key, value);
     }
@@ -104,9 +98,6 @@ impl<C: PregelRuntimeConfig> InitContext<C> {
     ///
     /// # Java equivalent
     ///
-    /// ```java
-    /// void setNodeValue(String key, long[] value)
-    /// ```
     pub fn set_node_value_long_array(&mut self, key: &str, value: Vec<i64>) {
         self.base.set_node_value_long_array(key, value);
     }
@@ -115,9 +106,6 @@ impl<C: PregelRuntimeConfig> InitContext<C> {
     ///
     /// # Java equivalent
     ///
-    /// ```java
-    /// void setNodeValue(String key, double[] value)
-    /// ```
     pub fn set_node_value_double_array(&mut self, key: &str, value: Vec<f64>) {
         self.base.set_node_value_double_array(key, value);
     }

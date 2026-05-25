@@ -135,9 +135,6 @@ impl<C: PregelRuntimeConfig, I: MessageIterator> ComputeContext<C, I> {
     ///
     /// # Java equivalent
     ///
-    /// ```java
-    /// double doubleNodeValue(String key)
-    /// ```
     pub fn double_node_value(&self, key: &str) -> f64 {
         self.base.double_node_value(key)
     }
@@ -146,9 +143,6 @@ impl<C: PregelRuntimeConfig, I: MessageIterator> ComputeContext<C, I> {
     ///
     /// # Java equivalent
     ///
-    /// ```java
-    /// long longNodeValue(String key)
-    /// ```
     pub fn long_node_value(&self, key: &str) -> i64 {
         self.base.long_node_value(key)
     }
@@ -157,9 +151,6 @@ impl<C: PregelRuntimeConfig, I: MessageIterator> ComputeContext<C, I> {
     ///
     /// # Java equivalent
     ///
-    /// ```java
-    /// void setNodeValue(String key, double value)
-    /// ```
     pub fn set_node_value(&mut self, key: &str, value: f64) {
         self.base.set_node_value(key, value);
     }
@@ -168,9 +159,6 @@ impl<C: PregelRuntimeConfig, I: MessageIterator> ComputeContext<C, I> {
     ///
     /// # Java equivalent
     ///
-    /// ```java
-    /// void setNodeValue(String key, long value)
-    /// ```
     pub fn set_node_value_long(&mut self, key: &str, value: i64) {
         self.base.set_node_value_long(key, value);
     }
@@ -187,9 +175,6 @@ impl<C: PregelRuntimeConfig, I: MessageIterator> ComputeContext<C, I> {
     ///
     /// # Java equivalent
     ///
-    /// ```java
-    /// void sendToNeighbors(double message)
-    /// ```
     pub fn send_to_neighbors(&self, message: f64) {
         let source = self.base.node_id();
         let mut sent_any = false;
@@ -212,9 +197,6 @@ impl<C: PregelRuntimeConfig, I: MessageIterator> ComputeContext<C, I> {
     ///
     /// # Java equivalent
     ///
-    /// ```java
-    /// void sendToIncomingNeighbors(double message)
-    /// ```
     pub fn send_to_incoming_neighbors(&self, message: f64) {
         let source = self.base.node_id();
         let mut sent_any = false;
@@ -234,9 +216,6 @@ impl<C: PregelRuntimeConfig, I: MessageIterator> ComputeContext<C, I> {
     ///
     /// # Java equivalent
     ///
-    /// ```java
-    /// int incomingDegree()
-    /// ```
     pub fn incoming_degree(&self) -> usize {
         self.base.incoming_degree()
     }
@@ -245,9 +224,6 @@ impl<C: PregelRuntimeConfig, I: MessageIterator> ComputeContext<C, I> {
     ///
     /// # Java equivalent
     ///
-    /// ```java
-    /// void sendTo(long targetNodeId, double message)
-    /// ```
     pub fn send_to(&self, target: u64, message: f64) {
         let source = self.base.node_id();
         self.messenger.send_to(source, target, message);
@@ -262,9 +238,6 @@ impl<C: PregelRuntimeConfig, I: MessageIterator> ComputeContext<C, I> {
     ///
     /// # Java equivalent
     ///
-    /// ```java
-    /// void voteToHalt()
-    /// ```
     pub fn vote_to_halt(&self) {
         let node_id = self.base.node_id();
         self.vote_bits.set(node_id as usize);

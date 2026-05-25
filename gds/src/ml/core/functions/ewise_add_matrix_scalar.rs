@@ -4,38 +4,6 @@
 //! This is a literal 1:1 translation following repository translation policy.
 //!
 //! Java source:
-//! ```java
-//! /**
-//!  * Corresponds to: result[i, j] = matrix[i, j] + scalar
-//!  */
-//! public class EWiseAddMatrixScalar extends AbstractVariable<Matrix> {
-//!     private final Variable<Matrix> matrixVariable;
-//!     private final Variable<Scalar> scalarVariable;
-//!
-//!     public EWiseAddMatrixScalar(Variable<Matrix> matrixVariable, Variable<Scalar> scalarVariable) {
-//!         super(List.of(matrixVariable, scalarVariable), matrixVariable.dimensions());
-//!         this.matrixVariable = matrixVariable;
-//!         this.scalarVariable = scalarVariable;
-//!     }
-//!
-//!     @Override
-//!     public Matrix apply(ComputationContext ctx) {
-//!         var matrix = ctx.data(matrixVariable);
-//!         double scalarValue = ctx.data(scalarVariable).value();
-//!         return matrix.map(v -> v + scalarValue);
-//!     }
-//!
-//!     @Override
-//!     public Tensor<?> gradient(Variable<?> parent, ComputationContext ctx) {
-//!         Matrix selfGradient = ctx.gradient(this);
-//!         if (parent == matrixVariable) {
-//!             return selfGradient;
-//!         } else {
-//!             return new Scalar(selfGradient.aggregateSum());
-//!         }
-//!     }
-//! }
-//! ```
 
 use crate::ml::core::functions::Weights;
 use crate::ml::core::AbstractVariable;
@@ -77,13 +45,6 @@ impl EWiseAddMatrixScalar {
     ///
     /// # Java equivalent
     ///
-    /// ```java
-    /// public EWiseAddMatrixScalar(Variable<Matrix> matrixVariable, Variable<Scalar> scalarVariable) {
-    ///     super(List.of(matrixVariable, scalarVariable), matrixVariable.dimensions());
-    ///     this.matrixVariable = matrixVariable;
-    ///     this.scalarVariable = scalarVariable;
-    /// }
-    /// ```
     pub fn new(matrix_variable: Box<dyn Variable>, scalar_variable: Box<dyn Variable>) -> Self {
         Self::new_ref(matrix_variable.into(), scalar_variable.into())
     }
@@ -115,14 +76,6 @@ impl Variable for EWiseAddMatrixScalar {
     ///
     /// # Java equivalent
     ///
-    /// ```java
-    /// @Override
-    /// public Matrix apply(ComputationContext ctx) {
-    ///     var matrix = ctx.data(matrixVariable);
-    ///     double scalarValue = ctx.data(scalarVariable).value();
-    ///     return matrix.map(v -> v + scalarValue);
-    /// }
-    /// ```
     fn apply(&self, ctx: &ComputationContext) -> Box<dyn Tensor> {
         let matrix = ctx
             .data(self.matrix_variable())
@@ -178,17 +131,6 @@ impl Variable for EWiseAddMatrixScalar {
     ///
     /// # Java equivalent
     ///
-    /// ```java
-    /// @Override
-    /// public Tensor<?> gradient(Variable<?> parent, ComputationContext ctx) {
-    ///     Matrix selfGradient = ctx.gradient(this);
-    ///     if (parent == matrixVariable) {
-    ///         return selfGradient;
-    ///     } else {
-    ///         return new Scalar(selfGradient.aggregateSum());
-    ///     }
-    /// }
-    /// ```
     fn gradient(&self, parent: &dyn Variable, ctx: &ComputationContext) -> Box<dyn Tensor> {
         let self_gradient = ctx.gradient(self).expect("Self gradient not computed");
 

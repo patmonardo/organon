@@ -115,11 +115,6 @@ pub trait AlgorithmSpec: Send + Sync {
     /// Translated from: Algorithm execution through AlgorithmFactory + Algorithm.compute()
     ///
     /// **Java GDS Pattern**:
-    /// ```java
-    /// ALGO_FACTORY factory = algorithmFactory(context);
-    /// ALGO algo = factory.build(graph, config, ...);
-    /// ALGO_RESULT result = algo.compute();
-    /// ```
     ///
     /// **rust-gds Pattern**: Direct execution method
     fn execute<G: GraphStore>(

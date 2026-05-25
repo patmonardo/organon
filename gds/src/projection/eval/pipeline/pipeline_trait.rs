@@ -26,30 +26,18 @@ use super::node_property_step::MUTATE_PROPERTY_KEY;
 pub trait Pipeline {
     /// Associated feature step type.
     ///
-    /// **Java**: Generic parameter `FEATURE_STEP extends FeatureStep`
     type FeatureStep: FeatureStep;
 
     /// Node property computation steps (graph algorithms).
     ///
-    /// **Java**: `List<ExecutableNodePropertyStep> nodePropertySteps()`
     fn node_property_steps(&self) -> &[Box<dyn ExecutableNodePropertyStep>];
 
     /// Feature extraction steps.
     ///
-    /// **Java**: `List<FEATURE_STEP> featureSteps()`
     fn feature_steps(&self) -> &[Self::FeatureStep];
 
     /// Feature properties required for ML (derived from feature steps).
     ///
-    /// **Java**:
-    /// ```java
-    /// default List<String> featureProperties() {
-    ///     return featureSteps()
-    ///         .stream()
-    ///         .flatMap(step -> step.inputNodeProperties().stream())
-    ///         .collect(Collectors.toList());
-    /// }
-    /// ```
     fn feature_properties(&self) -> Vec<String> {
         self.feature_steps()
             .iter()
@@ -60,23 +48,6 @@ pub trait Pipeline {
 
     /// Validate pipeline before execution.
     ///
-    /// **Java**:
-    /// ```java
-    /// default void validateBeforeExecution(GraphStore graphStore, Collection<NodeLabel> nodeLabels) {
-    ///     Set<String> invalidProperties = featurePropertiesMissingFromGraph(graphStore, nodeLabels);
-    ///
-    ///     // Remove properties that will be created by node property steps
-    ///     nodePropertySteps().stream()
-    ///         .flatMap(step -> Stream.ofNullable((String) step.config().get(MUTATE_PROPERTY_KEY)))
-    ///         .forEach(invalidProperties::remove);
-    ///
-    ///     if (!invalidProperties.isEmpty()) {
-    ///         throw Pipeline.missingNodePropertiesFromFeatureSteps(invalidProperties);
-    ///     }
-    ///
-    ///     specificValidateBeforeExecution(graphStore);
-    /// }
-    /// ```
     fn validate_before_execution(
         &self,
         graph_store: &DefaultGraphStore,
@@ -107,7 +78,6 @@ pub trait Pipeline {
 
     /// Pipeline-specific validation (overridable).
     ///
-    /// **Java**: `void specificValidateBeforeExecution(GraphStore graphStore)`
     fn specific_validate_before_execution(
         &self,
         graph_store: &DefaultGraphStore,
@@ -117,16 +87,6 @@ pub trait Pipeline {
     ///
     /// **Called after** node property steps have executed.
     ///
-    /// **Java**:
-    /// ```java
-    /// default void validateFeatureProperties(GraphStore graphStore, Collection<NodeLabel> nodeLabels) {
-    ///     Set<String> invalidProperties = featurePropertiesMissingFromGraph(graphStore, nodeLabels);
-    ///
-    ///     if (!invalidProperties.isEmpty()) {
-    ///         throw missingNodePropertiesFromFeatureSteps(invalidProperties);
-    ///     }
-    /// }
-    /// ```
     fn validate_feature_properties(
         &self,
         graph_store: &DefaultGraphStore,
@@ -146,18 +106,6 @@ pub trait Pipeline {
 
     /// Find feature properties that are missing from the graph.
     ///
-    /// **Java**:
-    /// ```java
-    /// default Set<String> featurePropertiesMissingFromGraph(GraphStore graphStore, Collection<NodeLabel> nodeLabels) {
-    ///     var graphProperties = graphStore.nodePropertyKeys(nodeLabels);
-    ///
-    ///     return featureSteps()
-    ///         .stream()
-    ///         .flatMap(step -> step.inputNodeProperties().stream())
-    ///         .filter(property -> !graphProperties.contains(property))
-    ///         .collect(Collectors.toSet());
-    /// }
-    /// ```
     fn feature_properties_missing_from_graph(
         &self,
         graph_store: &DefaultGraphStore,
@@ -180,20 +128,17 @@ pub trait Pipeline {
 
     /// Convert pipeline to map for serialization (ToMapConvertible).
     ///
-    /// **Java**: Inherited from `ToMapConvertible` interface
     fn to_map(&self) -> HashMap<String, serde_json::Value>;
 }
 
 /// Pipeline validation error.
 ///
-/// **Java**: Translates Java exceptions thrown from Pipeline validation methods.
 ///
 /// **Java Source**: Various `IllegalArgumentException` from `Pipeline.java`:
 #[derive(Debug, Clone)]
 pub enum PipelineValidationError {
     /// Missing node properties from feature steps.
     ///
-    /// **Java**: `Pipeline.missingNodePropertiesFromFeatureSteps(Set<String>)`
     MissingNodeProperties { properties: Vec<String> },
 
     /// Graph structure invalid.
