@@ -171,7 +171,6 @@ impl GraphSageModelTrainer {
         }
     }
 
-    /// Java: `train(Graph graph, HugeObjectArray<double[]> features)`
     pub fn train(
         &self,
         graph: Arc<dyn Graph>,

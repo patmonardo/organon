@@ -9,7 +9,6 @@ use std::sync::Arc;
 
 use super::hash_gnn_parameters::GenerateFeaturesConfig;
 
-/// Java: `GenerateFeaturesTask implements Runnable`
 pub struct GenerateFeaturesTask {
     partition: Partition,
     graph: Arc<dyn Graph>,

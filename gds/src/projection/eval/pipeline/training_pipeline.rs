@@ -21,7 +21,6 @@ pub enum TrainingType {
 impl TrainingType {
     /// Get supported training methods for this training type.
     ///
-    /// Java: `abstract List<TrainingMethod> supportedMethods()`
     pub fn supported_methods(&self) -> Vec<TrainingMethod> {
         match self {
             TrainingType::Classification => vec![
@@ -97,7 +96,6 @@ pub trait TrainingPipeline: Pipeline {
     /// This is a map from training method to list of model candidates.
     /// Each candidate can be concrete or tunable.
     ///
-    /// Java: `Map<TrainingMethod, List<TunableTrainerConfig>> trainingParameterSpace()`
     fn training_parameter_space(
         &self,
     ) -> &HashMap<TrainingMethod, Vec<Box<dyn TunableTrainerConfig>>>;
@@ -109,17 +107,14 @@ pub trait TrainingPipeline: Pipeline {
 
     /// Get the AutoML tuning configuration.
     ///
-    /// Java: `AutoTuningConfig autoTuningConfig()`
     fn auto_tuning_config(&self) -> &AutoTuningConfig;
 
     /// Set the AutoML tuning configuration.
     ///
-    /// Java: `void setAutoTuningConfig(AutoTuningConfig)`
     fn set_auto_tuning_config(&mut self, config: AutoTuningConfig);
 
     /// Add a trainer configuration to the parameter space.
     ///
-    /// Java: `void addTrainerConfig(TunableTrainerConfig)`
     fn add_trainer_config(&mut self, config: Box<dyn TunableTrainerConfig>) {
         let method = config.training_method();
         self.training_parameter_space_mut()
@@ -134,7 +129,6 @@ pub trait TrainingPipeline: Pipeline {
     /// - Concrete configs (evaluated directly)
     /// - Tunable configs (AutoML trials)
     ///
-    /// Java: `int numberOfModelSelectionTrials()`
     fn number_of_model_selection_trials(&self) -> usize {
         let total_configs = self.number_of_trainer_configs();
         let concrete_configs = self.concrete_trainer_configs_count();
@@ -152,7 +146,6 @@ pub trait TrainingPipeline: Pipeline {
     ///
     /// Ensures at least one model candidate exists for training.
     ///
-    /// Java: `void validateTrainingParameterSpace()`
     fn validate_training_parameter_space(&self) -> Result<(), Box<dyn StdError + Send + Sync>> {
         if self.number_of_model_selection_trials() == 0 {
             return Err("Need at least one model candidate for training.".into());
@@ -164,7 +157,6 @@ pub trait TrainingPipeline: Pipeline {
     ///
     /// Ensures no duplicate property names are created by steps.
     ///
-    /// Java: `private void validateUniqueMutateProperty(ExecutableNodePropertyStep)`
     fn validate_unique_mutate_property(
         &self,
         step: &dyn ExecutableNodePropertyStep,
@@ -188,7 +180,6 @@ pub trait TrainingPipeline: Pipeline {
 
     /// Convert training parameter space to map for serialization.
     ///
-    /// Java: `static Map<String, List<Map<String, Object>>> toMapParameterSpace(...)`
     fn parameter_space_to_map(&self) -> HashMap<String, Vec<HashMap<String, serde_json::Value>>> {
         self.training_parameter_space()
             .iter()

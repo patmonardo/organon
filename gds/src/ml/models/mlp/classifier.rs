@@ -32,14 +32,12 @@ pub struct MLPClassifier {
 impl MLPClassifier {
     /// Create a new MLP classifier
     ///
-    /// Java: `public MLPClassifier(MLPClassifierData data) {this.data = data;}`
     pub fn new(data: MLPClassifierData) -> Self {
         Self { data }
     }
 
     /// Predict probabilities for a single feature vector
     ///
-    /// Java: `public double[] predictProbabilities(double[] features)`
     pub fn predict_probabilities(&self, features: &[f64]) -> Vec<f64> {
         let ctx = ComputationContext::new();
         let features_matrix = Matrix::new(features.to_vec(), 1, features.len());
@@ -54,7 +52,6 @@ impl MLPClassifier {
 
     /// Predict probabilities for a batch
     ///
-    /// Java: `public Matrix predictProbabilities(Batch batch, Features features)`
     pub fn predict_probabilities_batch<B: Batch>(
         &self,
         batch: &B,
@@ -73,7 +70,6 @@ impl MLPClassifier {
 
     /// Build the computation graph for predictions
     ///
-    /// Java: `Variable<Matrix> predictionsVariable(Constant<Matrix> batchFeatures)`
     pub fn predictions_variable(&self, batch_features: VariableRef) -> VariableRef {
         let mut input_to_next_layer = batch_features;
 
@@ -104,7 +100,6 @@ impl MLPClassifier {
 
     /// Get the classifier data
     ///
-    /// Java: `public MLPClassifierData data() {return data;}`
     pub fn data(&self) -> &MLPClassifierData {
         &self.data
     }

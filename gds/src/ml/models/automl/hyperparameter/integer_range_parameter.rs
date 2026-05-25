@@ -5,7 +5,6 @@ use std::collections::HashMap;
 
 /// Integer range parameter
 ///
-/// Java: `interface IntegerRangeParameter extends NumericalRangeParameter<Integer>`
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct IntegerRangeParameter {
     min: i32,
@@ -15,7 +14,6 @@ pub struct IntegerRangeParameter {
 impl IntegerRangeParameter {
     /// Create a new IntegerRangeParameter
     ///
-    /// Java: `static IntegerRangeParameter of(int min, int max)`
     pub fn of(min: i32, max: i32) -> Self {
         Self { min, max }
     }

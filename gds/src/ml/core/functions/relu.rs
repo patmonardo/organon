@@ -54,7 +54,6 @@ impl Relu {
     // ========================================================================
 
     /// Create new leaky ReLU with custom alpha.
-    /// Java: `public Relu(Variable<T> parent, double alpha) { super(parent, parent.dimensions()); this.alpha = alpha; }`
     pub fn new(parent: Box<dyn Variable>, alpha: f64) -> Self {
         Self::new_ref(parent.into(), alpha)
     }
@@ -71,7 +70,6 @@ impl Relu {
     }
 
     /// Create leaky ReLU with default alpha (0.01).
-    /// Java: `public Relu(Variable<T> parent) { this(parent, ALPHA); }`
     pub fn with_default_alpha(parent: Box<dyn Variable>) -> Self {
         Self::new(parent, ALPHA)
     }
@@ -91,7 +89,6 @@ impl Relu {
     // ========================================================================
 
     /// Compute gradient with respect to parent.
-    /// Java: `public T gradientForParent(ComputationContext ctx)`
     /// Gradient: f'(x) = 1 if x > 0, else α
     fn gradient_for_parent(&self, ctx: &ComputationContext) -> Box<dyn Tensor> {
         let alpha = self.alpha;
@@ -131,7 +128,6 @@ impl Relu {
 
 impl Variable for Relu {
     /// Apply leaky ReLU activation element-wise.
-    /// Java: `public T apply(ComputationContext ctx) { return ctx.data(parent).map(value -> (value > 0) ? value : (alpha * value)); }`
     fn apply(&self, ctx: &ComputationContext) -> Box<dyn Tensor> {
         let alpha = self.alpha;
         let parent_data = ctx.data(self.parent()).expect("Parent data not computed");
@@ -155,7 +151,6 @@ impl Variable for Relu {
     }
 
     /// Compute gradient with respect to parent.
-    /// Java: Delegates to `gradientForParent(ctx)` from SingleParentVariable
     fn gradient(&self, parent: &dyn Variable, ctx: &ComputationContext) -> Box<dyn Tensor> {
         assert!(
             std::ptr::eq(parent, self.parent()),
@@ -169,19 +164,16 @@ impl Variable for Relu {
     // ========================================================================
 
     /// Check if gradient is required.
-    /// Java: Inherited from `super(parent, ...)`
     fn require_gradient(&self) -> bool {
         self.base.require_gradient()
     }
 
     /// Get parent variables.
-    /// Java: Inherited from `super(parent, ...)`
     fn parents(&self) -> &[VariableRef] {
         self.base.parents()
     }
 
     /// Get output dimensions (same as input).
-    /// Java: Inherited from `super(..., parent.dimensions())`
     fn dimensions(&self) -> &[usize] {
         self.base.dimensions()
     }

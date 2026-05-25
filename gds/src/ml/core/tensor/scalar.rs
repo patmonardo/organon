@@ -21,7 +21,6 @@ impl Scalar {
     /// Create scalar from value.
     ///
     /// Note: Scalars are 1D tensors with dimensions [1], not vectors of length 1.
-    /// Java: `public Scalar(double value)`
     pub fn new(value: f64) -> Self {
         let data = vec![value];
         let dimensions = dimensions::scalar();
@@ -33,19 +32,16 @@ impl Scalar {
     // ========================================================================
 
     /// Get scalar value.
-    /// Java: `public double value()`
     pub fn value(&self) -> f64 {
         self.data[0]
     }
 
     /// Set scalar value.
-    /// Java: `public void setValue(double value)`
     pub fn set_value(&mut self, value: f64) {
         self.data[0] = value;
     }
 
     /// Calculate size in bytes for scalar.
-    /// Java: `public static long sizeInBytes()`
     pub fn size_in_bytes() -> usize {
         size_in_bytes(&dimensions::scalar())
     }

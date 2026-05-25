@@ -19,39 +19,31 @@ pub trait Tensor: fmt::Debug + fmt::Display + Send + Sync {
     /// Mutable downcast support for dynamic tensor types.
     fn as_any_mut(&mut self) -> &mut dyn Any;
     /// Get the dimensions of this tensor.
-    /// Java: `public int[] dimensions()`
     fn dimensions(&self) -> &[usize];
 
     /// Get the raw data array.
-    /// Java: `protected double[] data`
     fn data(&self) -> &[f64];
 
     /// Get value at flat index.
-    /// Java: `public double dataAt(int idx)`
     fn data_at(&self, idx: usize) -> f64;
 
     /// Get a specific dimension by index.
-    /// Java: `public int dimension(int dimensionIndex)`
     fn dimension(&self, dimension_index: usize) -> usize;
 
     /// Calculate total size (product of all dimensions).
-    /// Java: `public int totalSize()`
     fn total_size(&self) -> usize {
         self.dimensions().iter().product()
     }
 
     /// Sum all elements in the tensor.
-    /// Java: `public double aggregateSum()`
     fn aggregate_sum(&self) -> f64 {
         self.data().iter().sum()
     }
 
     /// Check equality with tolerance.
-    /// Java: `public boolean equals(Tensor<?> other, double tolerance)`
     fn equals(&self, other: &dyn Tensor, tolerance: f64) -> bool;
 
     /// Get short description for display.
-    /// Java: `protected abstract String shortDescription()`
     fn short_description(&self) -> String;
 
     /// Clone this tensor as a boxed trait object.
@@ -81,7 +73,6 @@ pub trait Tensor: fmt::Debug + fmt::Display + Send + Sync {
 }
 
 /// Helper function to calculate size in bytes.
-/// Java: `public static long sizeInBytes(int[] dimensions)`
 pub fn size_in_bytes(dimensions: &[usize]) -> usize {
     let total_elements: usize = dimensions.iter().product();
     total_elements * std::mem::size_of::<f64>()

@@ -25,7 +25,6 @@ impl Matrix {
     // ========================================================================
 
     /// Create matrix from data array and dimensions.
-    /// Java: `public Matrix(double[] data, int rows, int cols)`
     pub fn new(data: Vec<f64>, rows: usize, cols: usize) -> Self {
         let dimensions = dimensions::matrix(rows, cols);
         assert_eq!(data.len(), rows * cols, "Data length must match dimensions");
@@ -38,27 +37,23 @@ impl Matrix {
     }
 
     /// Create matrix with given dimensions, filled with zeros.
-    /// Java: `public Matrix(int rows, int cols)`
     pub fn with_dimensions(rows: usize, cols: usize) -> Self {
         let data = vec![0.0; rows * cols];
         Self::new(data, rows, cols)
     }
 
     /// Create matrix filled with a constant value.
-    /// Java: `public static Matrix create(double v, int rows, int cols)`
     pub fn create(value: f64, rows: usize, cols: usize) -> Self {
         let data = vec![value; rows * cols];
         Self::new(data, rows, cols)
     }
 
     /// Create matrix filled with zeros.
-    /// Java: `public static Matrix zeros(int rows, int cols)`
     pub fn zeros(rows: usize, cols: usize) -> Self {
         Self::with_dimensions(rows, cols)
     }
 
     /// Calculate size in bytes for matrix.
-    /// Java: `public static long sizeInBytes(int rows, int cols)`
     pub fn size_in_bytes(rows: usize, cols: usize) -> usize {
         size_in_bytes(&[rows, cols])
     }
@@ -76,37 +71,31 @@ impl Matrix {
     }
 
     /// Get value at (row, col) position.
-    /// Java: `public double dataAt(int row, int col)`
     pub fn data_at(&self, row: usize, col: usize) -> f64 {
         self.data[row * self.cols + col]
     }
 
     /// Set value at (row, col) position.
-    /// Java: `public void setDataAt(int row, int column, double newValue)`
     pub fn set_data_at(&mut self, row: usize, col: usize, value: f64) {
         self.data[row * self.cols + col] = value;
     }
 
     /// Set value at flat index position.
-    /// Java: `public void setDataAtFlat(int index, double newValue)`
     pub fn set_data_at_flat(&mut self, index: usize, value: f64) {
         self.data[index] = value;
     }
 
     /// Get value at flat index position.
-    /// Java: `public double dataAtFlat(int index)`
     pub fn data_at_flat(&self, index: usize) -> f64 {
         self.data[index]
     }
 
     /// Add to value at (row, col) position.
-    /// Java: `public void addDataAt(int row, int column, double newValue)`
     pub fn add_data_at(&mut self, row: usize, col: usize, value: f64) {
         self.data[row * self.cols + col] += value;
     }
 
     /// Set a row from values array.
-    /// Java: `public void setRow(int row, double[] values)`
     pub fn set_row(&mut self, row: usize, values: &[f64]) {
         if values.len() != self.cols {
             panic!(
@@ -120,20 +109,17 @@ impl Matrix {
     }
 
     /// Get a row as a slice.
-    /// Java: `public double[] getRow(int rowIdx)`
     pub fn get_row(&self, row_idx: usize) -> &[f64] {
         let start = row_idx * self.cols;
         &self.data[start..start + self.cols]
     }
 
     /// Get a row as a slice (alias for get_row).
-    /// Java: `public double[] getRow(int rowIdx)`
     pub fn row(&self, row_idx: usize) -> &[f64] {
         self.get_row(row_idx)
     }
 
     /// Update data at (row, col) using a function.
-    /// Java: `public void updateDataAt(int row, int column, DoubleUnaryOperator updater)`
     pub fn update_data_at<F>(&mut self, row: usize, col: usize, updater: F)
     where
         F: FnOnce(f64) -> f64,
@@ -147,7 +133,6 @@ impl Matrix {
     // ========================================================================
 
     /// Standard matrix multiplication: C = self × other
-    /// Java: `public Matrix multiply(Matrix other)`
     pub fn multiply(&self, other: &Matrix) -> Matrix {
         assert_eq!(
             self.cols, other.rows,
@@ -169,7 +154,6 @@ impl Matrix {
     }
 
     /// Matrix multiplication with second operand transposed: C = self × other^T
-    /// Java: `public Matrix multiplyTransB(Matrix other)`
     pub fn multiply_trans_b(&self, other: &Matrix) -> Matrix {
         assert_eq!(
             self.cols, other.cols,
@@ -191,7 +175,6 @@ impl Matrix {
     }
 
     /// Matrix multiplication with first operand transposed: C = self^T × other
-    /// Java: `public Matrix multiplyTransA(Matrix other)`
     pub fn multiply_trans_a(&self, other: &Matrix) -> Matrix {
         let mut result = Matrix::with_dimensions(self.cols, other.cols);
         for i in 0..self.cols {
@@ -207,7 +190,6 @@ impl Matrix {
     }
 
     /// Add vector to each row of matrix (broadcast column-wise).
-    /// Java: `public Matrix sumBroadcastColumnWise(Vector vector)`
     pub fn sum_broadcast_column_wise(&self, vector: &Vector) -> Matrix {
         let mut result = self.clone();
         for row in 0..self.rows {
@@ -220,7 +202,6 @@ impl Matrix {
     }
 
     /// Sum each column to create a vector.
-    /// Java: `public Vector sumPerColumn()`
     pub fn sum_per_column(&self) -> Vector {
         let mut column_sums = vec![0.0; self.cols];
         for (col, sum) in column_sums.iter_mut().enumerate() {
@@ -232,7 +213,6 @@ impl Matrix {
     }
 
     /// Copy a row from source matrix into this matrix.
-    /// Java: `public void setRow(int rowIdx, Matrix input, int inputRowIdx)`
     pub fn set_row_from_matrix(
         &mut self,
         target_row: usize,
@@ -252,7 +232,6 @@ impl Matrix {
     }
 
     /// Check if this matrix is actually a vector.
-    /// Java: `public boolean isVector()`
     pub fn is_vector(&self) -> bool {
         dimensions::is_vector(&self.dimensions)
     }

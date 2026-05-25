@@ -40,7 +40,6 @@ impl ConcreteParameterValue {
 
 /// Trait for concrete parameter values
 ///
-/// Java: `interface ConcreteParameter<T> { T value(); }`
 pub trait ConcreteParameter: DynClone + Send + Sync {
     fn value(&self) -> ConcreteParameterValue;
 }

@@ -9,7 +9,6 @@ use std::sync::Arc;
 const SPARSITY: usize = 3;
 const ENTRY_PROBABILITY: f64 = 1.0 / (2.0 * SPARSITY as f64);
 
-/// Java: `DensifyTask implements Runnable`
 pub struct DensifyTask;
 
 impl DensifyTask {

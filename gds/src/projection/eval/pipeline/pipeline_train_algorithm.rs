@@ -70,7 +70,6 @@ pub trait PipelineTrainAlgorithm<RESULT, MODEL, P: TrainingPipeline + ?Sized> {
     /// 4. Run pipeline trainer (model selection + training)
     /// 5. Convert result to catalog model
     ///
-    /// Java: `@Override public MODEL_RESULT compute()`
     fn compute(&mut self) -> Result<MODEL, PipelineTrainAlgorithmError> {
         // 1. Propagate termination into the trainer, matching Java PipelineTrainAlgorithm.
         let termination_flag = self.termination_flag();

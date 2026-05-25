@@ -5,7 +5,6 @@ use crate::mem::MemoryEstimations;
 use crate::mem::MemoryRange;
 use crate::mem::MemoryTree;
 
-/// Java: `SplitRelationshipsEstimateDefinition`.
 #[derive(Debug, Clone)]
 pub struct SplitRelationshipsEstimateDefinition {
     estimate_parameters: SplitRelationshipsEstimateParameters,

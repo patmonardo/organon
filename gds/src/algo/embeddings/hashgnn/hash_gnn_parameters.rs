@@ -16,7 +16,6 @@ pub struct BinarizeFeaturesConfig {
 
 /// Parameters for HashGNN.
 ///
-/// Java: `record HashGNNParameters(Concurrency concurrency, int iterations, int embeddingDensity, double neighborInfluence, List<String> featureProperties, boolean heterogeneous, Optional<Integer> outputDimension, Optional<BinarizeFeaturesConfig> binarizeFeatures, Optional<GenerateFeaturesConfig> generateFeatures, Optional<Long> randomSeed)`
 #[derive(Debug, Clone)]
 pub struct HashGNNParameters {
     pub concurrency: Concurrency,

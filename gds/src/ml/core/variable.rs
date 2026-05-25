@@ -26,27 +26,21 @@ use std::sync::Arc;
 /// Extends Any for downcasting and pointer-based keying.
 pub trait Variable: fmt::Display + Any + Send + Sync {
     /// Apply this variable to get its tensor value.
-    /// Java: `T apply(ComputationContext ctx)`
     fn apply(&self, ctx: &ComputationContext) -> Box<dyn Tensor>;
 
     /// Compute gradient with respect to a parent variable.
-    /// Java: `Tensor<?> gradient(Variable<?> parent, ComputationContext ctx)`
     fn gradient(&self, parent: &dyn Variable, ctx: &ComputationContext) -> Box<dyn Tensor>;
 
     /// Whether this variable requires gradient computation.
-    /// Java: `boolean requireGradient()`
     fn require_gradient(&self) -> bool;
 
     /// Get parent variables.
-    /// Java: `Iterable<? extends Variable<?>> parents()`
     fn parents(&self) -> &[VariableRef];
 
     /// Get dimensions of this variable's output tensor.
-    /// Java: `int[] dimensions()`
     fn dimensions(&self) -> &[usize];
 
     /// Get a specific dimension by index.
-    /// Java: `int dimension(int i)`
     fn dimension(&self, i: usize) -> usize {
         self.dimensions()[i]
     }

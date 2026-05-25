@@ -83,7 +83,6 @@ fn is_prime(n: i32) -> bool {
     true
 }
 
-/// Java: `record HashTriple(int a,int b,int c)`
 #[derive(Debug, Clone, Copy)]
 pub struct HashTriple {
     pub a: i32,

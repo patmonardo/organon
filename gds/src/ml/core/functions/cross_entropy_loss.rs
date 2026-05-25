@@ -39,7 +39,6 @@ impl CrossEntropyLoss {
     // ========================================================================
 
     /// Create new cross entropy loss.
-    /// Java: `public CrossEntropyLoss(Variable<Matrix> predictions, Variable<Vector> targets, double[] classWeights)`
     pub fn new(
         predictions: Box<dyn Variable>,
         targets: Box<dyn Variable>,
@@ -78,7 +77,6 @@ impl CrossEntropyLoss {
     // ========================================================================
 
     /// Calculate size in bytes for scalar loss output.
-    /// Java: `public static long sizeInBytes()`
     pub fn size_in_bytes() -> usize {
         size_in_bytes(&[1])
     }
@@ -88,7 +86,6 @@ impl CrossEntropyLoss {
     // ========================================================================
 
     /// Compute loss for a single example.
-    /// Java: `double computeIndividualLoss(double predictedProbabilityForTrueClass, int trueClass)`
     /// Protected in Java - FocalLoss overrides this
     pub(crate) fn compute_individual_loss(
         &self,
@@ -99,7 +96,6 @@ impl CrossEntropyLoss {
     }
 
     /// Compute gradient contribution for a single example.
-    /// Java: `double computeErrorPerExample(int numberOfExamples, double predictedProbabilityForTrueClass, int trueClass)`
     /// Protected in Java - FocalLoss overrides this
     pub(crate) fn compute_error_per_example(
         &self,
@@ -116,7 +112,6 @@ impl CrossEntropyLoss {
     // ========================================================================
 
     /// Compute gradient with respect to predictions.
-    /// Java: Called from `gradient(Variable<?> parent, ...)` when parent == predictions
     fn gradient_for_predictions(&self, ctx: &ComputationContext) -> Box<dyn Tensor> {
         let predictions_data = ctx
             .data(self.predictions())
@@ -172,7 +167,6 @@ impl CrossEntropyLoss {
 
 impl Variable for CrossEntropyLoss {
     /// Compute cross entropy loss.
-    /// Java: `public Scalar apply(ComputationContext ctx)`
     /// L = -1/n * Σ w_c * log(p_c)
     fn apply(&self, ctx: &ComputationContext) -> Box<dyn Tensor> {
         let predictions_data = ctx
@@ -204,7 +198,6 @@ impl Variable for CrossEntropyLoss {
     }
 
     /// Compute gradient with respect to parent (predictions only).
-    /// Java: `public Tensor<?> gradient(Variable<?> parent, ComputationContext ctx)`
     fn gradient(&self, parent: &dyn Variable, ctx: &ComputationContext) -> Box<dyn Tensor> {
         if std::ptr::eq(parent, self.predictions()) {
             self.gradient_for_predictions(ctx)
@@ -221,19 +214,16 @@ impl Variable for CrossEntropyLoss {
     // ========================================================================
 
     /// Check if gradient is required.
-    /// Java: Inherited from `super(List.of(predictions, targets), ...)`
     fn require_gradient(&self) -> bool {
         self.base.require_gradient()
     }
 
     /// Get parent variables (predictions, targets).
-    /// Java: Inherited from `super(List.of(predictions, targets), ...)`
     fn parents(&self) -> &[VariableRef] {
         self.base.parents()
     }
 
     /// Get output dimensions (scalar).
-    /// Java: Inherited from `super(..., Dimensions.scalar())`
     fn dimensions(&self) -> &[usize] {
         self.base.dimensions()
     }

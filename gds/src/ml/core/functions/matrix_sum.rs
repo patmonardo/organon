@@ -32,7 +32,6 @@ impl MatrixSum {
     // ========================================================================
 
     /// Create new matrix sum from multiple parent matrices.
-    /// Java: `public MatrixSum(List<Variable<Matrix>> parents) { super(parents, validatedDimensions(parents)); }`
     pub fn new(parents: Vec<Box<dyn Variable>>) -> Self {
         let parents: Vec<VariableRef> = parents.into_iter().map(Into::into).collect();
         Self::new_ref(parents)
@@ -50,7 +49,6 @@ impl MatrixSum {
     // ========================================================================
 
     /// Validate that all parents have the same dimensions.
-    /// Java: `private static int[] validatedDimensions(List<Variable<Matrix>> parents)`
     fn validated_dimensions(parents: &[VariableRef]) -> Vec<usize> {
         assert!(
             !parents.is_empty(),
@@ -81,7 +79,6 @@ impl MatrixSum {
 
 impl Variable for MatrixSum {
     /// Sum all parent matrices element-wise.
-    /// Java: `public Matrix apply(ComputationContext ctx)`
     fn apply(&self, ctx: &ComputationContext) -> Box<dyn Tensor> {
         let rows = self.base.dimension(ROWS_INDEX);
         let cols = self.base.dimension(COLUMNS_INDEX);
@@ -102,7 +99,6 @@ impl Variable for MatrixSum {
     }
 
     /// Gradient for sum is just the gradient passed through.
-    /// Java: `public Tensor<?> gradient(Variable<?> parent, ComputationContext ctx) { return ctx.gradient(this); }`
     fn gradient(&self, _parent: &dyn Variable, ctx: &ComputationContext) -> Box<dyn Tensor> {
         ctx.gradient(self).expect("Gradient not computed")
     }
@@ -112,19 +108,16 @@ impl Variable for MatrixSum {
     // ========================================================================
 
     /// Check if gradient is required.
-    /// Java: Inherited from `super(parents, ...)`
     fn require_gradient(&self) -> bool {
         self.base.require_gradient()
     }
 
     /// Get parent variables.
-    /// Java: Inherited from `super(parents, ...)`
     fn parents(&self) -> &[VariableRef] {
         self.base.parents()
     }
 
     /// Get result dimensions.
-    /// Java: Inherited from `super(..., validatedDimensions(...))`
     fn dimensions(&self) -> &[usize] {
         self.base.dimensions()
     }

@@ -23,7 +23,6 @@ pub struct SingleParentVariable {
 
 impl SingleParentVariable {
     /// Create a new single parent variable.
-    /// Java: `public SingleParentVariable(Variable<P> parent, int[] dimensions)`
     pub fn new(parent: Box<dyn Variable>, dimensions: Vec<usize>) -> Self {
         let parent: VariableRef = parent.into();
         let require_gradient = parent.require_gradient();
@@ -36,13 +35,11 @@ impl SingleParentVariable {
     }
 
     /// Get the parent variable.
-    /// Java: `protected final Variable<P> parent`
     pub fn parent(&self) -> &dyn Variable {
         self.parent.as_ref()
     }
 
     /// Validate that the given variable is our parent.
-    /// Java: `private void validateParent(Variable<?> variable)`
     pub fn validate_parent(&self, variable: &dyn Variable) {
         if !std::ptr::eq::<dyn Variable>(self.parent.as_ref(), variable) {
             panic!("Calling gradient with a `parent` that was not expected");
@@ -50,7 +47,6 @@ impl SingleParentVariable {
     }
 
     /// Template method for gradient computation.
-    /// Java: `protected abstract P gradientForParent(ComputationContext ctx);`
     ///
     /// Concrete implementations must override this method.
     pub fn gradient_for_parent(&self, _ctx: &ComputationContext) -> Box<dyn Tensor> {
@@ -62,13 +58,11 @@ impl SingleParentVariable {
 
 impl Variable for SingleParentVariable {
     /// Apply: Must be implemented by concrete subclasses.
-    /// Java: `public abstract T apply(ComputationContext ctx);`
     fn apply(&self, _ctx: &ComputationContext) -> Box<dyn Tensor> {
         panic!("SingleParentVariable is abstract; implement apply() in a concrete type")
     }
 
     /// Gradient: Template method that validates parent and calls gradient_for_parent.
-    /// Java: `public final Tensor<?> gradient(Variable<?> variable, ComputationContext ctx)`
     fn gradient(&self, parent: &dyn Variable, ctx: &ComputationContext) -> Box<dyn Tensor> {
         self.validate_parent(parent);
         self.gradient_for_parent(ctx)

@@ -45,7 +45,6 @@ impl Weights {
     // ========================================================================
 
     /// Create weights from any tensor.
-    /// Java: `public Weights(T data) { super(List.of(), data.dimensions()); this.data = data; }`
     pub fn new(data: Box<dyn Tensor>) -> Self {
         Self::from_tensor(data)
     }
@@ -55,19 +54,16 @@ impl Weights {
     // ========================================================================
 
     /// Create matrix weights.
-    /// Java: `public static Weights<Matrix> ofMatrix(int rows, int cols)`
     pub fn of_matrix(rows: usize, cols: usize) -> Self {
         Self::from_tensor(Box::new(Matrix::with_dimensions(rows, cols)))
     }
 
     /// Create vector weights from values.
-    /// Java: `public static Weights<Vector> ofVector(double... values)`
     pub fn of_vector(values: Vec<f64>) -> Self {
         Self::from_tensor(Box::new(Vector::new(values)))
     }
 
     /// Create scalar weights.
-    /// Java: `public static Weights<Scalar> ofScalar(double value)`
     pub fn of_scalar(value: f64) -> Self {
         Self::from_tensor(Box::new(Scalar::new(value)))
     }
@@ -92,7 +88,6 @@ impl Weights {
     }
 
     /// Calculate size in bytes for matrix weights.
-    /// Java: `public static long sizeInBytes(int rows, int cols)`
     pub fn size_in_bytes(rows: usize, cols: usize) -> usize {
         size_in_bytes(&[rows, cols])
     }
@@ -198,13 +193,11 @@ impl Clone for Weights {
 
 impl Variable for Weights {
     /// Return the stored data.
-    /// Java: `public T apply(ComputationContext ctx) { return data; }`
     fn apply(&self, _ctx: &ComputationContext) -> Box<dyn Tensor> {
         self.data.read().clone_box()
     }
 
     /// Weights are leaf variables - gradient() should never be called.
-    /// Java: `public Tensor<?> gradient(Variable<?> parent, ComputationContext ctx) { throw new NotAFunctionException(); }`
     fn gradient(&self, _parent: &dyn Variable, _ctx: &ComputationContext) -> Box<dyn Tensor> {
         panic!("{}", NotAFunctionException);
     }
@@ -214,19 +207,16 @@ impl Variable for Weights {
     // ========================================================================
 
     /// Weights always require gradients (trainable parameters).
-    /// Java: `public boolean requireGradient() { return true; }` (overrides AbstractVariable)
     fn require_gradient(&self) -> bool {
         true
     }
 
     /// Weights have no parents (leaf variables).
-    /// Java: Inherited from `super(List.of(), ...)`
     fn parents(&self) -> &[VariableRef] {
         self.base.parents()
     }
 
     /// Get dimensions.
-    /// Java: Inherited from `super(..., data.dimensions())`
     fn dimensions(&self) -> &[usize] {
         self.base.dimensions()
     }

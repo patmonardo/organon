@@ -34,7 +34,6 @@ impl MatrixVectorSum {
     // ========================================================================
 
     /// Create new matrix-vector sum (broadcast addition).
-    /// Java: `public MatrixVectorSum(Variable<Matrix> matrix, Variable<Vector> vector)`
     pub fn new(matrix: Box<dyn Variable>, vector: Box<dyn Variable>) -> Self {
         Self::new_ref(matrix.into(), vector.into())
     }
@@ -77,7 +76,6 @@ impl MatrixVectorSum {
 
 impl Variable for MatrixVectorSum {
     /// Broadcast vector addition to matrix.
-    /// Java: `public Matrix apply(ComputationContext ctx) { return ctx.data(matrix).sumBroadcastColumnWise(ctx.data(vector)); }`
     fn apply(&self, ctx: &ComputationContext) -> Box<dyn Tensor> {
         let matrix_tensor = ctx.data(self.matrix()).expect("Matrix data not computed");
         let matrix_data = matrix_tensor
@@ -95,7 +93,6 @@ impl Variable for MatrixVectorSum {
     }
 
     /// Compute gradient with respect to parent (matrix or vector).
-    /// Java: `public Tensor<?> gradient(Variable<?> parent, ComputationContext ctx)`
     fn gradient(&self, parent: &dyn Variable, ctx: &ComputationContext) -> Box<dyn Tensor> {
         if std::ptr::eq(parent, self.matrix()) {
             // Gradient for matrix: pass through
@@ -125,19 +122,16 @@ impl Variable for MatrixVectorSum {
     // ========================================================================
 
     /// Check if gradient is required.
-    /// Java: Inherited from `super(List.of(matrix, vector), ...)`
     fn require_gradient(&self) -> bool {
         self.base.require_gradient()
     }
 
     /// Get parent variables.
-    /// Java: Inherited from `super(List.of(matrix, vector), ...)`
     fn parents(&self) -> &[VariableRef] {
         self.base.parents()
     }
 
     /// Get result dimensions (same as matrix dimensions).
-    /// Java: Inherited from `super(..., matrix.dimensions())`
     fn dimensions(&self) -> &[usize] {
         self.base.dimensions()
     }

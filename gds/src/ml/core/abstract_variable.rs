@@ -41,7 +41,6 @@ impl fmt::Debug for AbstractVariable {
 }
 
 impl AbstractVariable {
-    /// Java: `protected AbstractVariable(List<? extends Variable<?>> parents, int[] dimensions)`
     pub fn new(parents: Vec<VariableRef>, dimensions: Vec<usize>) -> Self {
         let require_gradient = Self::any_parent_requires_gradient(&parents);
         Self {
@@ -64,22 +63,18 @@ impl AbstractVariable {
         }
     }
 
-    /// Java: `public List<? extends Variable<?>> parents()`
     pub fn parents(&self) -> &[VariableRef] {
         &self.parents
     }
 
-    /// Java: `public int[] dimensions()`
     pub fn dimensions(&self) -> &[usize] {
         &self.dimensions
     }
 
-    /// Java: `public int dimension(int dimensionIndex)`
     pub fn dimension(&self, dimension_index: usize) -> usize {
         self.dimensions[dimension_index]
     }
 
-    /// Java: `public boolean requireGradient()`
     pub fn require_gradient(&self) -> bool {
         self.require_gradient
     }

@@ -1,5 +1,3 @@
-//! Java GDS: pipeline/src/main/java/org/neo4j/gds/ml/pipeline/AutoTuningConfig.java
-//!
 //! Configuration for hyperparameter auto-tuning during model training.
 //!
 //! Controls how many different parameter combinations should be tried

@@ -33,7 +33,6 @@ pub struct LayerConfig {
     pub activation_function: ActivationFunctionType,
 }
 
-/// Java: `GraphSageTrainConfig` (lives in `...graphsage.algo` in Java).
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct GraphSageTrainConfig {
     pub model_user: String,
@@ -145,7 +144,6 @@ impl crate::config::ValidatedConfig for GraphSageTrainConfig {
     }
 }
 
-/// Java: `GraphSageTrainParameters` (derived from config).
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct GraphSageTrainParameters {
     pub concurrency: Concurrency,
@@ -191,7 +189,6 @@ impl GraphSageTrainParameters {
     }
 }
 
-/// Java: `GraphSageTrainMemoryEstimateParameters`.
 #[derive(Debug, Clone)]
 pub struct GraphSageTrainMemoryEstimateParameters {
     pub layer_configs: Vec<LayerConfig>,

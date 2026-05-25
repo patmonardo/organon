@@ -11,7 +11,6 @@ use std::collections::HashMap;
 
 /// HyperParameterOptimizer defines a strategy for searching through a hyperparameter space
 ///
-/// Java: `interface HyperParameterOptimizer extends Iterator<TrainerConfig>`
 pub trait HyperParameterOptimizer: Iterator<Item = Box<dyn TrainerConfig>> {}
 
 /// A basic implementation of random search through a hyperparameter space

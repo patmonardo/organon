@@ -9,7 +9,6 @@ use crate::projection::eval::pipeline::TrainingPipeline;
 
 /// Entry in the pipeline catalog associating a name with a pipeline.
 ///
-/// Java: `PipelineCatalogEntry` value class
 ///
 /// Note: Uses Box<dyn std::any::Any> for type erasure since TrainingPipeline
 /// has an associated type (FeatureStep) that prevents direct trait object usage.
@@ -82,7 +81,6 @@ impl PipelineCatalogEntry {
 ///
 /// Manages pipeline storage for a single user.
 ///
-/// Java: `PipelineUserCatalog` inner class
 struct PipelineUserCatalog {
     pipelines_by_name: HashMap<String, PipelineCatalogEntry>,
 }
@@ -171,7 +169,6 @@ impl PipelineCatalog {
 
     /// Store a pipeline in the catalog.
     ///
-    /// Java: `public static void set(String user, String pipelineName, TrainingPipeline<?> pipeline)`
     ///
     /// # Errors
     ///
@@ -228,7 +225,6 @@ impl PipelineCatalog {
 
     /// Check if a pipeline exists in the catalog.
     ///
-    /// Java: `public static boolean exists(String user, String pipelineName)`
     pub fn exists(&self, user: &str, pipeline_name: &str) -> bool {
         let catalogs = self.user_catalogs.read().unwrap_or_else(|e| e.into_inner());
 
@@ -240,7 +236,6 @@ impl PipelineCatalog {
 
     /// Retrieve a pipeline entry from the catalog.
     ///
-    /// Java: `public static TrainingPipeline<?> get(String user, String pipelineName)`
     ///
     /// # Errors
     ///
@@ -261,7 +256,6 @@ impl PipelineCatalog {
 
     /// Retrieve a typed pipeline from the catalog.
     ///
-    /// Java: `public static <PIPELINE extends TrainingPipeline<?>> PIPELINE getTyped(...)`
     ///
     /// # Type Safety
     ///
@@ -293,7 +287,6 @@ impl PipelineCatalog {
 
     /// Remove a pipeline from the catalog.
     ///
-    /// Java: `public static TrainingPipeline<?> drop(String user, String pipelineName)`
     ///
     /// # Errors
     ///
@@ -317,7 +310,6 @@ impl PipelineCatalog {
 
     /// Remove all pipelines from the catalog (all users).
     ///
-    /// Java: `public static void removeAll()`
     pub fn remove_all(&self) {
         let mut catalogs = self
             .user_catalogs
@@ -328,7 +320,6 @@ impl PipelineCatalog {
 
     /// Get all pipelines for a user.
     ///
-    /// Java: `public static Stream<PipelineCatalogEntry> getAllPipelines(String user)`
     pub fn get_all_pipelines(&self, user: &str) -> Vec<PipelineCatalogEntry> {
         let catalogs = self.user_catalogs.read().unwrap_or_else(|e| e.into_inner());
 

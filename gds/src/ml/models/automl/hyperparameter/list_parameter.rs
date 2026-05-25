@@ -5,7 +5,6 @@ use serde::Serialize;
 
 /// List parameter value (for integer or double lists)
 ///
-/// Java: `interface ListParameter extends ConcreteParameter<List<Integer>>`
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum ListParameterValue {
     Int(Vec<i32>),
@@ -18,7 +17,6 @@ pub struct ListParameter(pub ListParameterValue);
 impl ListParameter {
     /// Create a new ListParameter
     ///
-    /// Java: `static ListParameter of(List value)`
     pub fn of(value: ListParameterValue) -> Self {
         Self(value)
     }
@@ -33,7 +31,6 @@ impl ListParameter {
 
     /// Get the value
     ///
-    /// Java: `List<Integer> value()` (from ConcreteParameter)
     pub fn value(&self) -> &ListParameterValue {
         &self.0
     }

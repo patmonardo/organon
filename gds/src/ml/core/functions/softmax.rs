@@ -31,7 +31,6 @@ impl Softmax {
     // ========================================================================
 
     /// Create new softmax activation.
-    /// Java: `public Softmax(Variable<Matrix> parent) { super(parent, parent.dimensions()); }`
     pub fn new(parent: Box<dyn Variable>) -> Self {
         Self::new_ref(parent.into())
     }
@@ -56,13 +55,11 @@ impl Softmax {
     // ========================================================================
 
     /// Calculate size in bytes for matrix softmax output.
-    /// Java: `public static long sizeInBytes(int rows, int cols)`
     pub fn size_in_bytes(rows: usize, cols: usize) -> usize {
         size_in_bytes(&[rows, cols])
     }
 
     /// Rescale softmax output to ensure numerical stability.
-    /// Java: `private static void rescale(Matrix result)`
     fn rescale(result: &mut Matrix) {
         let rows = result.rows();
         let cols = result.cols();
@@ -85,7 +82,6 @@ impl Softmax {
     // ========================================================================
 
     /// Compute gradient with respect to parent.
-    /// Java: `public Matrix gradientForParent(ComputationContext ctx)`
     /// Uses Jacobian of softmax: ∂softmax_i/∂x_j = softmax_i * (δ_ij - softmax_j)
     fn gradient_for_parent(&self, ctx: &ComputationContext) -> Box<dyn Tensor> {
         let self_data_box = ctx.data(self).expect("Self data not computed");
@@ -134,7 +130,6 @@ impl Softmax {
 
 impl Variable for Softmax {
     /// Apply softmax activation row-wise.
-    /// Java: `public Matrix apply(ComputationContext ctx)`
     fn apply(&self, ctx: &ComputationContext) -> Box<dyn Tensor> {
         let data_box = ctx.data(self.parent()).expect("Parent data not computed");
         let data = data_box
@@ -177,7 +172,6 @@ impl Variable for Softmax {
     }
 
     /// Compute gradient with respect to parent.
-    /// Java: Delegates to `gradientForParent(ctx)` from SingleParentVariable
     fn gradient(&self, parent: &dyn Variable, ctx: &ComputationContext) -> Box<dyn Tensor> {
         assert!(
             std::ptr::eq(parent, self.parent()),
@@ -191,19 +185,16 @@ impl Variable for Softmax {
     // ========================================================================
 
     /// Check if gradient is required.
-    /// Java: Inherited from `super(parent, ...)`
     fn require_gradient(&self) -> bool {
         self.base.require_gradient()
     }
 
     /// Get parent variables.
-    /// Java: Inherited from `super(parent, ...)`
     fn parents(&self) -> &[VariableRef] {
         self.base.parents()
     }
 
     /// Get output dimensions (same as input).
-    /// Java: Inherited from `super(..., parent.dimensions())`
     fn dimensions(&self) -> &[usize] {
         self.base.dimensions()
     }

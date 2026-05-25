@@ -36,7 +36,6 @@ pub struct MLPClassifierObjective<'a> {
 impl<'a> MLPClassifierObjective<'a> {
     /// Create a new MLP classifier objective
     ///
-    /// Java: `public MLPClassifierObjective(MLPClassifier classifier, Features features, HugeIntArray labels, double penalty, double focusWeight, double[] classWeights)`
     pub fn new(
         classifier: MLPClassifier,
         features: &'a dyn Features,
@@ -57,7 +56,6 @@ impl<'a> MLPClassifierObjective<'a> {
 
     /// Compute cross-entropy loss for a batch
     ///
-    /// Java: `CrossEntropyLoss crossEntropyLoss(Batch batch)`
     fn cross_entropy_loss<B: Batch>(&self, batch: &B) -> VariableRef {
         let batch_labels = self.batch_label_vector(batch);
         let batch_features: VariableRef = Arc::new(batch_feature_matrix(batch, self.features));
@@ -81,7 +79,6 @@ impl<'a> MLPClassifierObjective<'a> {
 
     /// Compute L2 penalty for a batch
     ///
-    /// Java: `ConstantScale<Scalar> penaltyForBatch(Batch batch, long trainSize)`
     fn penalty_for_batch<B: Batch>(&self, batch: &B, train_size: usize) -> VariableRef {
         let l2_norms: Vec<VariableRef> = self
             .classifier
@@ -102,7 +99,6 @@ impl<'a> MLPClassifierObjective<'a> {
 
     /// Create batch label vector
     ///
-    /// Java: `Constant<Vector> batchLabelVector(Batch batch)`
     fn batch_label_vector<B: Batch>(&self, batch: &B) -> VariableRef {
         let mut batched_labels = Vec::with_capacity(batch.size());
 
@@ -120,7 +116,6 @@ impl<'a> Objective for MLPClassifierObjective<'a> {
 
     /// Get all weights used in the computation graph
     ///
-    /// Java: `public List<Weights<? extends Tensor<?>>> weights()`
     fn weights(&self) -> Vec<Arc<Weights>> {
         let mut combined_weights = Vec::new();
 
@@ -139,7 +134,6 @@ impl<'a> Objective for MLPClassifierObjective<'a> {
 
     /// Compute loss for a batch
     ///
-    /// Java: `public Variable<Scalar> loss(Batch batch, long trainSize)`
     fn loss<B: Batch>(&self, batch: &B, train_size: usize) -> VariableRef {
         let cross_entropy_loss = self.cross_entropy_loss(batch);
         let penalty = self.penalty_for_batch(batch, train_size);
@@ -149,7 +143,6 @@ impl<'a> Objective for MLPClassifierObjective<'a> {
 
     /// Get the model data
     ///
-    /// Java: `public MLPClassifierData modelData() {return classifier.data();}`
     fn model_data(&self) -> &Self::ModelData {
         self.classifier.data()
     }

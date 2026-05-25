@@ -81,7 +81,6 @@ pub trait PipelineExecutor<PIPELINE: Pipeline, RESULT> {
     /// - TEST_COMPLEMENT: All nodes not in test set
     /// - FEATURE_INPUT: All nodes used for feature extraction (train+test+context)
     ///
-    /// Java: `abstract Map<DatasetSplits, PipelineGraphFilter> generateDatasetSplitGraphFilters()`
     fn generate_dataset_split_graph_filters(&self) -> HashMap<DatasetSplits, PipelineGraphFilter>;
 
     /// Split the dataset into train/test partitions.
@@ -89,7 +88,6 @@ pub trait PipelineExecutor<PIPELINE: Pipeline, RESULT> {
     /// This may create properties or modify graph state to mark splits.
     /// Called after filters are generated but before step execution.
     ///
-    /// Java: `abstract void splitDatasets()`
     fn split_datasets(&mut self) -> Result<(), PipelineExecutorError>;
 
     /// Execute the pipeline algorithm on the split datasets.
@@ -99,7 +97,6 @@ pub trait PipelineExecutor<PIPELINE: Pipeline, RESULT> {
     /// - Node property steps are executed
     /// - Feature properties are validated
     ///
-    /// Java: `abstract RESULT execute(Map<DatasetSplits, PipelineGraphFilter> dataSplits)`
     fn execute(
         &mut self,
         data_splits: &HashMap<DatasetSplits, PipelineGraphFilter>,
@@ -110,7 +107,6 @@ pub trait PipelineExecutor<PIPELINE: Pipeline, RESULT> {
     /// This determines which relationship types can be used by algorithms
     /// during feature extraction.
     ///
-    /// Java: `abstract Set<RelationshipType> getAvailableRelTypesForNodePropertySteps()`
     fn get_available_rel_types_for_node_property_steps(&self) -> HashSet<String>;
 
     /// Additional graph store cleanup after execution.
@@ -118,7 +114,6 @@ pub trait PipelineExecutor<PIPELINE: Pipeline, RESULT> {
     /// Override to clean up temporary properties or state after pipeline runs.
     /// Default implementation does nothing.
     ///
-    /// Java: `protected void additionalGraphStoreCleanup(Map<DatasetSplits, PipelineGraphFilter> datasets)`
     fn additional_graph_store_cleanup(
         &mut self,
         _datasets: &HashMap<DatasetSplits, PipelineGraphFilter>,
@@ -139,7 +134,6 @@ pub trait PipelineExecutor<PIPELINE: Pipeline, RESULT> {
     /// 8. Execute algorithm (train/test/predict)
     /// 9. Cleanup intermediate properties
     ///
-    /// Java: `@Override public RESULT compute()`
     fn compute(&mut self) -> Result<RESULT, PipelineExecutorError> {
         // 1. Generate dataset split filters
         let data_split_graph_filters = self.generate_dataset_split_graph_filters();

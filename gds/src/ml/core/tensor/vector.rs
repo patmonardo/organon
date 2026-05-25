@@ -20,7 +20,6 @@ impl Vector {
     // ========================================================================
 
     /// Create vector from data array.
-    /// Java: `public Vector(double... elements)`
     pub fn new(data: Vec<f64>) -> Self {
         let len = data.len();
         let dimensions = dimensions::vector(len);
@@ -28,14 +27,12 @@ impl Vector {
     }
 
     /// Create vector with given size, filled with zeros.
-    /// Java: `public Vector(int size)`
     pub fn with_size(size: usize) -> Self {
         let data = vec![0.0; size];
         Self::new(data)
     }
 
     /// Create vector filled with a constant value.
-    /// Java: `public static Vector create(double v, int size)`
     pub fn create(value: f64, size: usize) -> Self {
         let data = vec![value; size];
         Self::new(data)
@@ -46,7 +43,6 @@ impl Vector {
     // ========================================================================
 
     /// Get vector length.
-    /// Java: `public int length()`
     pub fn length(&self) -> usize {
         self.data.len()
     }
@@ -62,13 +58,11 @@ impl Vector {
     }
 
     /// Get value at index.
-    /// Java: `public double dataAt(int idx)`
     pub fn data_at(&self, index: usize) -> f64 {
         self.data[index]
     }
 
     /// Set value at index.
-    /// Java: `public void setDataAt(int idx, double value)`
     pub fn set_data_at(&mut self, index: usize, value: f64) {
         self.data[index] = value;
     }

@@ -9,7 +9,6 @@ use super::hash_gnn::MinAndArgmin;
 use super::hash_gnn_companion::HashGNNCompanion;
 use super::hash_task::Hashes;
 
-/// Java: `MinHashTask implements Runnable`
 pub struct MinHashTask;
 
 impl MinHashTask {

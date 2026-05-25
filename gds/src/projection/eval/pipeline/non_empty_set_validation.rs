@@ -1,4 +1,3 @@
-//! Java GDS: pipeline/src/main/java/org/neo4j/gds/ml/pipeline/NonEmptySetValidation.java
 //!
 //! Validation utilities for ensuring dataset splits have sufficient elements.
 //!

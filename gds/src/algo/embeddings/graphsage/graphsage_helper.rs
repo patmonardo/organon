@@ -20,7 +20,6 @@ use std::sync::Arc;
 use super::layer::Layer;
 use super::types::{ActivationFunctionType, AggregatorType, LayerConfig};
 
-/// Java: `GraphSageHelper.embeddingsComputationGraph(...)`
 pub fn embeddings_computation_graph(
     sub_graphs: &[SubGraph],
     layers: &[Arc<dyn Layer>],
@@ -44,7 +43,6 @@ pub fn embeddings_computation_graph(
     Arc::new(NormalizeRows::new_ref(previous_layer))
 }
 
-/// Java: `GraphSageHelper.subGraphsPerLayer(...)`
 pub fn sub_graphs_per_layer(
     graph: Arc<dyn Graph>,
     node_ids: &[u64],
@@ -71,7 +69,6 @@ pub fn sub_graphs_per_layer(
     SubGraph::build_sub_graphs(node_ids, &samplers, weight_function, weighted)
 }
 
-/// Java: `GraphSageHelper.initializeSingleLabelFeatures(...)`
 pub fn initialize_single_label_features(
     graph: &dyn Graph,
     feature_properties: &[String],
@@ -81,13 +78,11 @@ pub fn initialize_single_label_features(
     features::extract_graph(graph, &extractors, features)
 }
 
-/// Java: `GraphSageHelper.multiLabelFeatureExtractors(...)`
 pub struct MultiLabelFeatureExtractors {
     pub feature_count_per_label: HashMap<NodeLabel, usize>,
     pub extractors_per_label: HashMap<NodeLabel, Vec<features::AnyFeatureExtractor>>,
 }
 
-/// Java: `GraphSageHelper.initializeMultiLabelFeatures(...)`
 pub fn initialize_multi_label_features(
     graph: &dyn Graph,
     feature_properties: &[String],
@@ -201,7 +196,6 @@ fn label_of(graph: &dyn Graph, node_id: u64) -> NodeLabel {
     label_ref.expect("label missing")
 }
 
-/// Java: `GraphSageHelper.layerConfigs(...)`
 pub fn layer_configs(
     feature_dimension: usize,
     sample_sizes: &[usize],

@@ -35,7 +35,6 @@ pub struct MLPClassifierTrainer {
 impl MLPClassifierTrainer {
     /// Create a new MLP classifier trainer
     ///
-    /// Java: `public MLPClassifierTrainer(int numberOfClasses, MLPClassifierTrainConfig trainConfig, Optional<Long> randomSeed, ...)`
     pub fn new(
         number_of_classes: usize,
         train_config: MLPClassifierTrainConfig,
@@ -51,7 +50,6 @@ impl MLPClassifierTrainer {
         }
     }
     ///
-    /// Java: `public MLPClassifier train(Features features, HugeIntArray labels, ReadOnlyHugeLongArray trainSet)`
     pub fn train(
         &mut self,
         features: &dyn Features,

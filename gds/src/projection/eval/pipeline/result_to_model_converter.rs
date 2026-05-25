@@ -23,7 +23,6 @@ pub trait ResultToModelConverter<MODEL, RESULT> {
     /// * `result` - The training result (trained model, metrics, etc.)
     /// * `original_schema` - The graph schema before node property steps
     ///
-    /// Java: `MODEL toModel(RESULT result, GraphSchema originalSchema)`
     fn to_model(&self, result: RESULT, original_schema: &GraphSchema) -> MODEL;
 }
 

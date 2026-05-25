@@ -53,7 +53,6 @@ pub trait PredictPipelineExecutor<PIPELINE: Pipeline, RESULT> {
     ///
     /// Called after node property steps are executed and features are validated.
     ///
-    /// Java: `abstract RESULT execute()`
     fn execute(&mut self) -> Result<RESULT, PredictPipelineExecutorError>;
 
     /// Get the graph filter for node property steps.
@@ -62,7 +61,6 @@ pub trait PredictPipelineExecutor<PIPELINE: Pipeline, RESULT> {
     /// In prediction, this typically includes all nodes to predict on plus
     /// any context nodes needed for algorithms.
     ///
-    /// Java: `abstract PipelineGraphFilter nodePropertyStepFilter()`
     fn node_property_step_filter(&self) -> PipelineGraphFilter;
 
     /// Execute the complete prediction pipeline (template method).
@@ -76,7 +74,6 @@ pub trait PredictPipelineExecutor<PIPELINE: Pipeline, RESULT> {
     /// 6. Execute prediction
     /// 7. Cleanup intermediate properties
     ///
-    /// Java: `@Override public RESULT compute()`
     fn compute(&mut self) -> Result<RESULT, PredictPipelineExecutorError> {
         // 1. Get node property step filter
         let node_property_step_filter = self.node_property_step_filter();

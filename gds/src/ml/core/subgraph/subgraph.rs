@@ -121,7 +121,6 @@ impl SubGraph {
         self.weighted
     }
 
-    /// Java: SubGraph.relationshipWeightFunction(Graph graph)
     pub fn relationship_weight_function(graph: &dyn Graph) -> (Arc<dyn RelationshipWeights>, bool) {
         if graph.has_relationship_property() {
             let g = Graph::concurrent_copy(graph);

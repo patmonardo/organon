@@ -8,7 +8,6 @@ use super::hash_gnn_companion::{next_prime, HashTriple};
 const MAX_FINAL_INFLUENCE: f64 = 1e4;
 const PRIME_LOWER_BOUND: i32 = 50_000;
 
-/// Java: `HashTask implements Runnable`
 pub struct HashTask {
     embedding_dimension: usize,
     scaled_neighbor_influence: f64,
@@ -19,7 +18,6 @@ pub struct HashTask {
     pre_aggregation_hashes: Vec<Vec<i32>>,
 }
 
-/// Java: `record Hashes(...)`
 #[derive(Debug, Clone)]
 pub struct Hashes {
     pub neighbors_aggregation_hashes: Vec<i32>,

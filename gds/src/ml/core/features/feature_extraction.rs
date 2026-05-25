@@ -80,7 +80,6 @@ pub fn extract(
 
 /// Extract features for a batch into a constant matrix.
 ///
-/// Java: `FeatureExtraction.extract(Batch batch, List<FeatureExtractor> extractors)`
 pub fn extract_batch<B: Batch>(batch: &B, extractors: &[AnyFeatureExtractor]) -> Constant {
     let feature_dim = feature_count(extractors);
     let mut matrix = Matrix::with_dimensions(batch.size(), feature_dim);
@@ -115,7 +114,6 @@ pub fn extract_batch<B: Batch>(batch: &B, extractors: &[AnyFeatureExtractor]) ->
 
 /// Extract features for all nodes in a graph into a HugeObjectArray of `Vec<f64>`.
 ///
-/// Java: `FeatureExtraction.extract(Graph graph, List<FeatureExtractor> extractors, HugeObjectArray<double[]> features)`
 pub fn extract_graph(
     graph: &dyn Graph,
     extractors: &[AnyFeatureExtractor],
@@ -220,7 +218,6 @@ pub fn feature_count_from_graph(graph: &dyn Graph, feature_properties: &[String]
 
 /// Compute feature count including a bias feature.
 ///
-/// Java: `FeatureExtraction.featureCountWithBias(graph, featureProperties)`
 pub fn feature_count_with_bias(graph: &dyn Graph, feature_properties: &[String]) -> usize {
     let mut feature_extractors = property_extractors(graph, feature_properties);
     feature_extractors.push(AnyFeatureExtractor::Scalar(Box::new(BiasFeature)));
@@ -229,7 +226,6 @@ pub fn feature_count_with_bias(graph: &dyn Graph, feature_properties: &[String])
 
 /// Estimate memory usage for feature extractors.
 ///
-/// Java: `FeatureExtraction.memoryUsageInBytes(int numberOfFeatures)`
 pub fn memory_usage_in_bytes(number_of_features: usize) -> usize {
     let size_if_all_scalars =
         number_of_features * Estimate::size_of_instance("ScalarPropertyExtractor");

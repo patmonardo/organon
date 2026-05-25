@@ -72,7 +72,6 @@ impl NodeRegressionPipelineModelInfo {
 
     /// Returns the training method of the best model.
     ///
-    /// Java: `Optional<TrainingMethod> optionalTrainerMethod()`
     pub fn optional_trainer_method(&self) -> Option<TrainingMethod> {
         method_name_from_best_parameters(&self.best_parameters).and_then(parse_training_method)
     }
@@ -128,7 +127,6 @@ impl NodeRegressionPipelineModelInfo {
 
 /// Builder for NodeRegressionPipelineModelInfo.
 ///
-/// Java: `ImmutableNodeRegressionPipelineModelInfo.builder()`
 #[derive(Default)]
 pub struct NodeRegressionPipelineModelInfoBuilder {
     test_metrics: Option<HashMap<String, f64>>,

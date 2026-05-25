@@ -30,7 +30,6 @@ impl NeighborhoodSampler {
 
     /// Sample up to `sample_size` neighbors of `node_id` uniformly without replacement.
     ///
-    /// Java: `NeighborhoodSampler.sample(Graph graph, long nodeId, int sampleSize)`
     pub fn sample(&self, graph: &dyn Graph, node_id: u64, sample_size: usize) -> Vec<u64> {
         let degree = graph.degree(node_id as i64);
         if degree == 0 || sample_size == 0 {

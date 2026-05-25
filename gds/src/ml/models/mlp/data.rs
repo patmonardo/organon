@@ -117,21 +117,18 @@ impl MLPClassifierData {
 
     /// Get the depth of the network (number of layers)
     ///
-    /// Java: `default int depth() {return biases().size() + 1;}`
     pub fn depth(&self) -> usize {
         self.biases.len() + 1
     }
 
     /// Get the number of classes (output dimension)
     ///
-    /// Java: `default int numberOfClasses() {return biases().get(biases().size()-1).dimension(0);}`
     pub fn number_of_classes(&self) -> usize {
         self.number_of_classes
     }
 
     /// Get the feature dimension (input dimension)
     ///
-    /// Java: `default int featureDimension() {return weights().get(0).dimension(Dimensions.COLUMNS_INDEX);}`
     pub fn feature_dimension(&self) -> usize {
         // The first weight matrix has feature_count columns
         if let Some(first_weight) = self.weights.first() {
@@ -143,14 +140,12 @@ impl MLPClassifierData {
 
     /// Get weight matrices
     ///
-    /// Java: `List<Weights<Matrix>> weights()`
     pub fn weights(&self) -> &Vec<Arc<Weights>> {
         &self.weights
     }
 
     /// Get bias vectors
     ///
-    /// Java: `List<Weights<Vector>> biases()`
     pub fn biases(&self) -> &Vec<Arc<Weights>> {
         &self.biases
     }

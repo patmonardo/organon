@@ -81,14 +81,12 @@ impl MLPClassifierTrainConfig {
 
     /// Get hidden layer sizes
     ///
-    /// Java: `default List<Integer> hiddenLayerSizes() {return List.of(100);}`
     pub fn hidden_layer_sizes(&self) -> &Vec<usize> {
         &self.hidden_layer_sizes
     }
 
     /// Initialize class weights based on number of classes
     ///
-    /// Java: `default double[] initializeClassWeights(int numberOfClasses)`
     /// Matches ClassAwareTrainerConfig.initializeClassWeights()
     pub fn initialize_class_weights(&self, number_of_classes: usize) -> Vec<f64> {
         if self.class_weights.is_empty() {

@@ -8,7 +8,6 @@
 
 /// Marker trait for exporter context.
 ///
-/// Java: `ExporterContext`.
 pub trait ExporterContext: Send + Sync {}
 
 pub trait NodeLabelExporterBuilder: Send + Sync {}
@@ -19,7 +18,6 @@ pub trait RelationshipStreamExporterBuilder: Send + Sync {}
 
 /// Provider for exporter builders.
 ///
-/// Java: `ExportBuildersProvider`.
 pub trait ExportBuildersProvider: Send + Sync {
     fn node_label_exporter_builder(
         &self,
@@ -49,7 +47,6 @@ pub trait ExportBuildersProvider: Send + Sync {
 
 /// The parameter object for all things write.
 ///
-/// Java: `record WriteContext(...)`.
 pub struct WriteContext {
     pub node_label_exporter_builder: Box<dyn NodeLabelExporterBuilder>,
     pub node_property_exporter_builder: Box<dyn NodePropertyExporterBuilder>,

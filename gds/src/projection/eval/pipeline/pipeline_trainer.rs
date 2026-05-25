@@ -1,7 +1,3 @@
-// Translated from Neo4j Graph Data Science:
-// https://github.com/neo4j/graph-data-science
-// pipeline/src/main/java/org/neo4j/gds/ml/pipeline/PipelineTrainer.java
-
 use crate::concurrency::TerminationFlag;
 use std::error::Error as StdError;
 
@@ -14,14 +10,12 @@ use std::error::Error as StdError;
 ///
 /// * `RESULT` - The training result type (e.g., trained model, metrics)
 ///
-/// # Java Source (PipelineTrainer.java)
 pub trait PipelineTrainer {
     /// The result type produced by training.
     type Result;
 
     /// Set the termination flag used by this trainer.
     ///
-    /// Java: `void setTerminationFlag(TerminationFlag terminationFlag)`
     fn set_termination_flag(&mut self, _termination_flag: TerminationFlag) {}
 
     /// Run the training process.
@@ -29,7 +23,6 @@ pub trait PipelineTrainer {
     /// This executes model selection, hyperparameter tuning, and training
     /// to produce a trained model and metrics.
     ///
-    /// Java: `RESULT run()`
     fn run(&mut self) -> Result<Self::Result, Box<dyn StdError + Send + Sync>>;
 
     /// Check if training has been terminated.
@@ -37,7 +30,6 @@ pub trait PipelineTrainer {
     /// Training can be stopped early via termination signals.
     /// Implementations should check this periodically during training.
     ///
-    /// Java: Uses TerminationFlag for external termination
     fn is_terminated(&self) -> bool {
         false // Default: no termination
     }

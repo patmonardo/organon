@@ -15,7 +15,6 @@ pub enum HashGNNEmbeddings {
 
 /// HashGNN result wrapper.
 ///
-/// Java: `record HashGNNResult(NodePropertyValues embeddings) {}`
 pub struct HashGNNResult {
     pub embeddings: HashGNNEmbeddings,
 }

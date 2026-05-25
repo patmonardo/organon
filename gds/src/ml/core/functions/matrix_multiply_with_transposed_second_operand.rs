@@ -36,7 +36,6 @@ impl MatrixMultiplyWithTransposedSecondOperand {
     // ========================================================================
 
     /// Create new matrix multiplication A * B^T.
-    /// Java: `public MatrixMultiplyWithTransposedSecondOperand(Variable<Matrix> A, Variable<Matrix> B)`
     pub fn new(a: Box<dyn Variable>, b: Box<dyn Variable>) -> Self {
         Self::new_ref(a.into(), b.into())
     }
@@ -62,7 +61,6 @@ impl MatrixMultiplyWithTransposedSecondOperand {
     }
 
     /// Factory method.
-    /// Java: `public static MatrixMultiplyWithTransposedSecondOperand of(Variable<Matrix> A, Variable<Matrix> B)`
     pub fn of(a: Box<dyn Variable>, b: Box<dyn Variable>) -> Self {
         Self::new(a, b)
     }
@@ -77,13 +75,11 @@ impl MatrixMultiplyWithTransposedSecondOperand {
     // ========================================================================
 
     /// Calculate size in bytes for result matrix.
-    /// Java: `public static long sizeInBytes(int leftMatrixNumRows, int rightMatrixNumRows)`
     pub fn size_in_bytes(left_matrix_num_rows: usize, right_matrix_num_rows: usize) -> usize {
         size_in_bytes(&[left_matrix_num_rows, right_matrix_num_rows])
     }
 
     /// Validate that matrices can be multiplied with transpose.
-    /// Java: `private void assertDimensions(Variable<Matrix> A, Variable<Matrix> B)`
     fn assert_dimensions(a: &dyn Variable, b: &dyn Variable) {
         assert_eq!(
             a.dimension(COLUMNS_INDEX),
@@ -101,7 +97,6 @@ impl MatrixMultiplyWithTransposedSecondOperand {
     // ========================================================================
 
     /// Gradient with respect to A.
-    /// Java: `if (parent == A) return gradient.multiply(ctx.data(B));`
     fn gradient_for_a(&self, ctx: &ComputationContext) -> Box<dyn Tensor> {
         let gradient_data = ctx.gradient(self).expect("Gradient not computed");
         let gradient = gradient_data
@@ -119,7 +114,6 @@ impl MatrixMultiplyWithTransposedSecondOperand {
     }
 
     /// Gradient with respect to B.
-    /// Java: `else return gradient.multiplyTransA(ctx.data(A));`
     fn gradient_for_b(&self, ctx: &ComputationContext) -> Box<dyn Tensor> {
         let gradient_data = ctx.gradient(self).expect("Gradient not computed");
         let gradient = gradient_data
@@ -148,7 +142,6 @@ impl MatrixMultiplyWithTransposedSecondOperand {
 
 impl Variable for MatrixMultiplyWithTransposedSecondOperand {
     /// Compute A * B^T.
-    /// Java: `public Matrix apply(ComputationContext ctx) { return ctx.data(A).multiplyTransB(ctx.data(B)); }`
     fn apply(&self, ctx: &ComputationContext) -> Box<dyn Tensor> {
         let a_tensor = ctx.data(self.a()).expect("A data not computed");
         let a_matrix = a_tensor
@@ -166,7 +159,6 @@ impl Variable for MatrixMultiplyWithTransposedSecondOperand {
     }
 
     /// Compute gradient with respect to parent (A or B).
-    /// Java: `public Matrix gradient(Variable<?> parent, ComputationContext ctx)`
     fn gradient(&self, parent: &dyn Variable, ctx: &ComputationContext) -> Box<dyn Tensor> {
         if std::ptr::eq(parent, self.a()) {
             self.gradient_for_a(ctx)
@@ -182,19 +174,16 @@ impl Variable for MatrixMultiplyWithTransposedSecondOperand {
     // ========================================================================
 
     /// Check if gradient is required.
-    /// Java: Inherited from `super(List.of(A, B), ...)` which computes requireGradient from parents
     fn require_gradient(&self) -> bool {
         self.base.require_gradient()
     }
 
     /// Get parent variables.
-    /// Java: Inherited from `super(List.of(A, B), ...)`
     fn parents(&self) -> &[VariableRef] {
         self.base.parents()
     }
 
     /// Get result dimensions.
-    /// Java: Inherited from `super(..., Dimensions.matrix(...))`
     fn dimensions(&self) -> &[usize] {
         self.base.dimensions()
     }

@@ -15,14 +15,12 @@ use super::hash_gnn_result::HashGNNResult;
 use super::hash_task::HashTask;
 use super::min_hash_task::MinHashTask;
 
-/// Java: `HashGNN.MinAndArgmin`
 #[derive(Debug, Default, Clone, Copy)]
 pub struct MinAndArgmin {
     pub min: i32,
     pub arg_min: i32,
 }
 
-/// Java: `HashGNN extends Algorithm<HashGNNResult>`
 pub struct HashGNN {
     graph: Arc<dyn Graph>,
     parameters: HashGNNParameters,
