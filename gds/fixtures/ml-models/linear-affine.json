@@ -1,0 +1,18 @@
+{
+  "id": "linear-affine",
+  "name": "Affine Regression Line",
+  "task": "regression",
+  "feature_names": ["x", "intercept"],
+  "features": [
+    [-3.0, 1.0],
+    [-2.0, 1.0],
+    [-1.0, 1.0],
+    [0.0, 1.0],
+    [1.0, 1.0],
+    [2.0, 1.0],
+    [3.0, 1.0],
+    [4.0, 1.0]
+  ],
+  "targets": [-5.0, -3.0, -1.0, 1.0, 3.0, 5.0, 7.0, 9.0],
+  "sample_rows": [0, 3, 4, 7]
+}

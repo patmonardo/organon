@@ -10,3 +10,4 @@ pub mod node_prediction;
 pub mod sampling;
 pub mod splitting;
 pub mod training;
+pub mod workbench;
