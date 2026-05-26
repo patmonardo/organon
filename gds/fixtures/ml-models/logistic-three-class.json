@@ -1,0 +1,22 @@
+{
+  "id": "logistic-three-class",
+  "name": "Three-Class Spiral Classification",
+  "task": "classification",
+  "feature_names": ["x", "y"],
+  "features": [
+    [-3.0, -2.5],
+    [-2.7, -2.1],
+    [-2.4, -1.8],
+    [-2.1, -1.4],
+    [0.0, 2.8],
+    [0.3, 2.4],
+    [0.6, 2.1],
+    [0.9, 1.7],
+    [2.7, -0.2],
+    [3.0, 0.2],
+    [3.3, 0.6],
+    [3.6, 1.0]
+  ],
+  "labels": [0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2],
+  "sample_rows": [0, 3, 4, 7, 8, 11]
+}

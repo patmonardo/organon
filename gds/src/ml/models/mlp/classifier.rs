@@ -71,12 +71,12 @@ impl MLPClassifier {
     ///
     pub fn predictions_variable(&self, batch_features: VariableRef) -> VariableRef {
         let mut input_to_next_layer = batch_features;
+        let layer_count = self.data.weights().len();
 
-        // Hidden layers with ReLU activation
-        for i in 0..self.data.depth() - 1 {
+        // Hidden layers use ReLU, output layer remains linear before Softmax.
+        for i in 0..layer_count {
             let output_from_prev_layer = input_to_next_layer;
 
-            // Matrix multiplication: input * weights^T
             let weights_var: VariableRef = self.data.weights()[i].clone();
             let weighted_features: VariableRef =
                 Arc::new(MatrixMultiplyWithTransposedSecondOperand::new_ref(
@@ -84,16 +84,17 @@ impl MLPClassifier {
                     weights_var,
                 ));
 
-            // Add bias: weighted_features + bias
             let bias_var: VariableRef = self.data.biases()[i].clone();
             let biased_features: VariableRef =
                 Arc::new(MatrixVectorSum::new_ref(weighted_features, bias_var));
 
-            // Apply ReLU activation
-            input_to_next_layer = Arc::new(Relu::new_ref(biased_features, 0.0));
+            input_to_next_layer = if i + 1 < layer_count {
+                Arc::new(Relu::new_ref(biased_features, 0.0))
+            } else {
+                biased_features
+            };
         }
 
-        // Output layer with Softmax activation
         Arc::new(Softmax::new_ref(input_to_next_layer))
     }
 

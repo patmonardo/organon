@@ -8,7 +8,6 @@ use crate::ml::splitting::TrainingExamplesSplit;
 use std::sync::Arc;
 
 /// Result of splitting nodes into training and test sets
-/// 1:1 with NodeSplits interface in Java
 #[derive(Debug, Clone)]
 pub struct NodeSplits {
     all_training_examples: Arc<Vec<i64>>,
@@ -33,7 +32,6 @@ impl NodeSplits {
 }
 
 /// Splits nodes into training and test sets
-/// 1:1 with NodeSplitter.java
 pub struct NodeSplitter {
     concurrency: Concurrency,
     number_of_examples: usize,
@@ -58,7 +56,6 @@ impl NodeSplitter {
     }
 
     /// Splits nodes into train/test sets
-    /// 1:1 with split() in Java
     pub fn split(
         &self,
         test_fraction: f64,
@@ -103,7 +100,6 @@ impl NodeSplitter {
     }
 
     /// Warns if training or test sets are too small
-    /// 1:1 with warnForSmallNodeSets in Java
     fn warn_for_small_node_sets(
         &self,
         train_size: usize,

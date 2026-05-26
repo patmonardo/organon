@@ -15,7 +15,6 @@ use std::sync::Arc;
 use std::sync::Mutex;
 
 /// Performs regression prediction on nodes
-/// 1:1 with NodeRegressionPredict.java
 pub struct NodeRegressionPredict {
     regressor: Arc<dyn Regressor>,
     features: Arc<dyn Features>,
