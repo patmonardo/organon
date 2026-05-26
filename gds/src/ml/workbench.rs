@@ -6,7 +6,13 @@ use crate::concurrency::TerminationFlag;
 use crate::core::utils::progress::NoopProgressTracker;
 use crate::core::utils::progress::TaskProgressTracker;
 use crate::ml::gradient_descent::GradientDescentConfig;
+use crate::ml::metrics::Accuracy;
+use crate::ml::metrics::ClassificationMetric;
+use crate::ml::metrics::F1Score;
 use crate::ml::metrics::GlobalAccuracy;
+use crate::ml::metrics::Precision;
+use crate::ml::metrics::Recall;
+use crate::ml::metrics::RegressionMetric;
 use crate::ml::models::features::DenseFeatures;
 use crate::ml::models::linear_regression::LinearRegressionTrainConfig;
 use crate::ml::models::linear_regression::LinearRegressionTrainer;
@@ -39,6 +45,29 @@ pub struct FixtureSummary {
     pub name: &'static str,
     pub task: &'static str,
     pub source_path: &'static str,
+}
+
+#[derive(Clone, Debug, Serialize)]
+pub struct NodeClassificationMetricsReport {
+    pub experiment: &'static str,
+    pub fixture: FixtureReport,
+    pub samples: usize,
+    pub number_of_classes: usize,
+    pub metrics: Vec<MetricScore>,
+    pub confusion: Vec<ConfusionCell>,
+}
+
+#[derive(Clone, Debug, Serialize)]
+pub struct MetricScore {
+    pub name: String,
+    pub value: f64,
+}
+
+#[derive(Clone, Debug, Serialize)]
+pub struct ConfusionCell {
+    pub actual: i64,
+    pub predicted: i64,
+    pub count: usize,
 }
 
 #[derive(Clone, Debug, Serialize)]
@@ -111,6 +140,23 @@ pub struct NodeRegressionPreviewReport {
 }
 
 #[derive(Clone, Debug, Serialize)]
+pub struct NodeRegressionMetricsReport {
+    pub experiment: &'static str,
+    pub fixture: FixtureReport,
+    pub samples: usize,
+    pub metrics: Vec<MetricScore>,
+    pub residuals_sample: Vec<ResidualSample>,
+}
+
+#[derive(Clone, Debug, Serialize)]
+pub struct ResidualSample {
+    pub row: usize,
+    pub target: f64,
+    pub prediction: f64,
+    pub residual: f64,
+}
+
+#[derive(Clone, Debug, Serialize)]
 pub struct FixtureReport {
     pub id: String,
     pub name: String,
@@ -164,8 +210,10 @@ pub fn available_experiments() -> &'static [&'static str] {
         "logistic-sweep",
         "linear-sweep",
         "node-classification-preview",
+        "node-classification-metrics",
         "node-prediction-split-preview",
         "node-regression-preview",
+        "node-regression-metrics",
     ]
 }
 
@@ -369,6 +417,88 @@ pub fn run_node_classification_preview() -> NodeClassificationPreviewReport {
     }
 }
 
+pub fn run_node_classification_metrics() -> NodeClassificationMetricsReport {
+    let fixture = logistic_fixture();
+    let features: Arc<dyn Features> = Arc::new(DenseFeatures::new(fixture.features.clone()));
+    let labels_for_training = HugeIntArray::from_vec(fixture.labels.clone());
+    let train_set = Arc::new((0..features.size() as u64).collect::<Vec<u64>>());
+    let number_of_classes = fixture
+        .labels
+        .iter()
+        .copied()
+        .max()
+        .map(|class_id| class_id as usize + 1)
+        .unwrap_or(0);
+
+    let trainer = LogisticRegressionTrainer::new(
+        LogisticRegressionTrainConfig {
+            batch_size: 2,
+            learning_rate: 0.05,
+            max_epochs: 150,
+            tolerance: 1e-6,
+            ..Default::default()
+        },
+        number_of_classes,
+        false,
+        Arc::new(RwLock::new(false)),
+        1,
+    );
+    let classifier = Arc::from(trainer.train(features.as_ref(), &labels_for_training, &train_set));
+
+    let predictor = NodeClassificationPredict::new(
+        classifier,
+        Arc::clone(&features),
+        2,
+        false,
+        Concurrency::single_threaded(),
+        TerminationFlag::default(),
+        TaskProgressTracker::new(NodeClassificationPredict::progress_task(
+            features.size() as u64
+        )),
+    );
+    let prediction_result = predictor.compute();
+    let labels = HugeLongArray::from_vec(
+        fixture
+            .labels
+            .iter()
+            .map(|&label| label as i64)
+            .collect::<Vec<i64>>(),
+    );
+    let metric_computer = ClassificationMetricComputer::new(
+        Arc::clone(prediction_result.predicted_classes()),
+        Arc::new(labels.clone()),
+    );
+
+    let mut metrics = vec![score_metric(&metric_computer, &GlobalAccuracy::new())];
+    for class_id in 0..number_of_classes as i64 {
+        metrics.push(score_metric(
+            &metric_computer,
+            &Accuracy::new(class_id, class_id),
+        ));
+        metrics.push(score_metric(
+            &metric_computer,
+            &Precision::new(class_id, class_id),
+        ));
+        metrics.push(score_metric(
+            &metric_computer,
+            &Recall::new(class_id, class_id),
+        ));
+        metrics.push(score_metric(
+            &metric_computer,
+            &F1Score::new(class_id, class_id),
+        ));
+    }
+
+    NodeClassificationMetricsReport {
+        experiment: "node-classification-metrics",
+        fixture: fixture.report(),
+        samples: features.size(),
+        number_of_classes,
+        metrics,
+        confusion: confusion_cells(&labels, prediction_result.predicted_classes()),
+    }
+}
+
 pub fn run_node_prediction_split_preview() -> NodePredictionSplitPreviewReport {
     let fixture = linear_fixture();
     let total_examples = fixture.features.len();
@@ -449,6 +579,70 @@ pub fn run_node_regression_preview() -> NodeRegressionPreviewReport {
         samples: features.size(),
         mean_absolute_error: total_absolute_error / features.size() as f64,
         sample_predictions,
+    }
+}
+
+pub fn run_node_regression_metrics() -> NodeRegressionMetricsReport {
+    let fixture = linear_fixture();
+    let features: Arc<dyn Features> = Arc::new(DenseFeatures::new(fixture.features.clone()));
+    let targets = HugeDoubleArray::from_vec(fixture.targets.clone());
+    let train_set = Arc::new((0..features.size() as u64).collect::<Vec<u64>>());
+
+    let gradient = GradientDescentConfig::builder()
+        .batch_size(2)
+        .learning_rate(0.03)
+        .max_epochs(300)
+        .tolerance(1e-7)
+        .build()
+        .expect("node regression metric gradient config should be valid");
+    let trainer = LinearRegressionTrainer::new(
+        1,
+        LinearRegressionTrainConfig::new(gradient, 0.0),
+        Arc::new(RwLock::new(false)),
+    );
+    let regressor = Arc::from(trainer.train(features.as_ref(), &targets, &train_set));
+
+    let predictor = NodeRegressionPredict::new(
+        Arc::clone(&regressor),
+        Arc::clone(&features),
+        Concurrency::single_threaded(),
+        TaskProgressTracker::new(NodeRegressionPredict::progress_task(features.size() as u64)),
+        TerminationFlag::default(),
+    );
+    let predictions = predictor.compute();
+    let metrics = [
+        RegressionMetric::MeanSquaredError,
+        RegressionMetric::RootMeanSquaredError,
+        RegressionMetric::MeanAbsoluteError,
+    ]
+    .iter()
+    .map(|metric| MetricScore {
+        name: metric.to_string(),
+        value: metric.compute(&targets, &predictions),
+    })
+    .collect::<Vec<MetricScore>>();
+
+    let residuals_sample = fixture
+        .sample_rows
+        .iter()
+        .map(|&row| {
+            let target = targets.get(row);
+            let prediction = predictions.get(row);
+            ResidualSample {
+                row,
+                target,
+                prediction,
+                residual: prediction - target,
+            }
+        })
+        .collect::<Vec<ResidualSample>>();
+
+    NodeRegressionMetricsReport {
+        experiment: "node-regression-metrics",
+        fixture: fixture.report(),
+        samples: features.size(),
+        metrics,
+        residuals_sample,
     }
 }
 
@@ -588,6 +782,40 @@ fn sample_i64(values: &[i64], limit: usize) -> Vec<i64> {
     values.iter().take(limit).copied().collect::<Vec<i64>>()
 }
 
+fn score_metric<M>(metric_computer: &ClassificationMetricComputer, metric: &M) -> MetricScore
+where
+    M: ClassificationMetric,
+{
+    MetricScore {
+        name: metric.name().to_string(),
+        value: metric_computer.score(metric),
+    }
+}
+
+fn confusion_cells(labels: &HugeLongArray, predictions: &HugeLongArray) -> Vec<ConfusionCell> {
+    let mut cells = Vec::new();
+
+    for index in 0..labels.size() {
+        let actual = labels.get(index);
+        let predicted = predictions.get(index);
+        if let Some(cell) = cells
+            .iter_mut()
+            .find(|cell: &&mut ConfusionCell| cell.actual == actual && cell.predicted == predicted)
+        {
+            cell.count += 1;
+        } else {
+            cells.push(ConfusionCell {
+                actual,
+                predicted,
+                count: 1,
+            });
+        }
+    }
+
+    cells.sort_by_key(|cell| (cell.actual, cell.predicted));
+    cells
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -628,18 +856,28 @@ mod tests {
     #[test]
     fn node_oriented_previews_execute() {
         let classification = run_node_classification_preview();
+        let metrics = run_node_classification_metrics();
         let split = run_node_prediction_split_preview();
         let regression = run_node_regression_preview();
+        let regression_metrics = run_node_regression_metrics();
 
         assert_eq!(classification.samples, 8);
         assert_eq!(classification.number_of_classes, 2);
         assert!(classification.global_accuracy >= 0.75);
         assert!(!classification.sample_probabilities.is_empty());
 
+        assert_eq!(metrics.samples, 8);
+        assert!(metrics.metrics.len() >= 5);
+        assert!(!metrics.confusion.is_empty());
+
         assert_eq!(split.total_examples, 8);
         assert_eq!(split.train_size + split.test_size, 8);
 
         assert_eq!(regression.samples, 8);
         assert!(regression.mean_absolute_error < 1.0);
+
+        assert_eq!(regression_metrics.samples, 8);
+        assert_eq!(regression_metrics.metrics.len(), 3);
+        assert_eq!(regression_metrics.residuals_sample.len(), 4);
     }
 }

@@ -13,10 +13,12 @@ fn main() {
         "logistic-sweep" => print_json(&workbench::run_logistic_sweep()),
         "linear-sweep" => print_json(&workbench::run_linear_sweep()),
         "node-classification-preview" => print_json(&workbench::run_node_classification_preview()),
+        "node-classification-metrics" => print_json(&workbench::run_node_classification_metrics()),
         "node-prediction-split-preview" => {
             print_json(&workbench::run_node_prediction_split_preview())
         }
         "node-regression-preview" => print_json(&workbench::run_node_regression_preview()),
+        "node-regression-metrics" => print_json(&workbench::run_node_regression_metrics()),
         "help" | "--help" | "-h" => print_help(),
         other => {
             eprintln!("unknown command: {other}");
@@ -48,6 +50,8 @@ fn print_help() {
     println!("  logistic-sweep Compare logistic regression learning settings");
     println!("  linear-sweep   Compare linear regression learning settings");
     println!("  node-classification-preview  Run node classification preview over model fixtures");
+    println!("  node-classification-metrics  Run node classification metric suite");
     println!("  node-prediction-split-preview Run node prediction split preview over fixture ids");
     println!("  node-regression-preview      Run node regression predictor over model fixtures");
+    println!("  node-regression-metrics      Run node regression metric suite");
 }
