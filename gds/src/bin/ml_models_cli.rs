@@ -33,7 +33,6 @@ fn main() {
             print_json(run_large_logistic_benchmark_with_verbose(verbose))
         }
         "large-linear-benchmark" => print_json(run_large_linear_benchmark_with_verbose(verbose)),
-        "semantic-projection-preview" => print_json(run_semantic_projection_preview()),
         "help" | "--help" | "-h" => print_help(),
         other => {
             eprintln!("unknown command: {other}");
@@ -177,5 +176,4 @@ fn print_help() {
     println!("  node-regression-metrics      Run node regression metric suite");
     println!("  large-logistic-benchmark     Benchmark logistic regression on a 1k fixture (supports --verbose)");
     println!("  large-linear-benchmark       Benchmark linear regression on a 1k fixture (supports --verbose)");
-    println!("  semantic-projection-preview  Preview semantic-sidecar to numeric projection");
 }

@@ -373,7 +373,6 @@ pub fn available_experiments() -> &'static [&'static str] {
         "node-regression-metrics",
         "large-logistic-benchmark",
         "large-linear-benchmark",
-        "semantic-projection-preview",
     ]
 }
 

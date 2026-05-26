@@ -1,6 +1,6 @@
 use gds::ml::workbench::nlp::available_experiments;
+use gds::ml::workbench::nlp::run_inference_preview;
 use gds::ml::workbench::nlp::run_logic_preview;
-use gds::ml::workbench::nlp::run_semantic_boundary_preview;
 
 fn main() {
     let mut args = std::env::args().skip(1);
@@ -8,8 +8,8 @@ fn main() {
 
     match command.as_str() {
         "list" => print_json(available_experiments()),
-        "semantic-boundary-preview" => print_json(run_semantic_boundary_preview()),
         "logic-preview" => print_json(run_logic_preview()),
+        "inference-preview" => print_json(run_inference_preview()),
         "help" | "--help" | "-h" => print_help(),
         other => {
             eprintln!("unknown command: {other}");
@@ -36,7 +36,7 @@ fn print_help() {
     println!("  cargo run -p gds --bin ml_nlp_cli -- <command>");
     println!();
     println!("Commands:");
-    println!("  list                     Show available NLP workbench experiments");
-    println!("  semantic-boundary-preview  Show semantic vs numeric module boundary preview");
-    println!("  logic-preview            Parse and evaluate a small first-order logic example");
+    println!("  list              Show available NLP workbench experiments");
+    println!("  logic-preview     Parse, evaluate and skolemize first-order logic");
+    println!("  inference-preview Resolution proof of classic syllogisms");
 }
