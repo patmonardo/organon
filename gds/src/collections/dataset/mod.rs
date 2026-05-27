@@ -73,7 +73,7 @@ pub mod graph;
 pub mod io;
 pub mod lazy;
 pub mod lm;
-pub mod r#macro;
+pub mod macros;
 pub mod metrics;
 pub mod model;
 pub mod model_exec;
