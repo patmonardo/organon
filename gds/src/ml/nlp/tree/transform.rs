@@ -3,7 +3,7 @@
 //! Provides parity for operations like `un_chomsky_normal_form`,
 //! and Markov smoothing / Parent annotation.
 
-use crate::collections::dataset::tree::TreeValue;
+use crate::collections::dataset::lm::tree::TreeValue;
 
 pub trait TransformTreeExt {
     /// Undo Chomsky Normal Form (CNF) binarization.

@@ -18,7 +18,7 @@
 //!   3. **Reentrancy** — addresses two paths and binds them to the same
 //!      cell (anaphora; AVM coreference).
 //!   4. **Annotation** — addresses a Document, codomain is a value plus a
-//!      mandatory provenance tuple. See `crate::collections::dataset::annotation`.
+//!      mandatory provenance tuple. See `crate::collections::dataset::corpus::annotation`.
 //! - Each Feature instance must declare which role(s) it is playing. The
 //!   four roles are *projections of one definition*, not four parallel types.
 //! - The lattice is part of the Feature's identity, not an op chosen at the

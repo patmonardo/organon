@@ -7,7 +7,7 @@
 //!   (port of `nltk/sem/evaluate.py`).
 //!
 //! Companion data layer lives in
-//! [`crate::collections::dataset::featstruct`] (NLTK
+//! [`crate::collections::dataset::feature::featstruct`] (NLTK
 //! `nltk/featstruct.py`). Note the deliberate naming overlap with
 //! [`crate::collections::dataset::valuation`]: that module is the
 //! row-shaped R4 access object (Feature → cell), whereas

@@ -1,4 +1,4 @@
-use crate::collections::dataset::token::{Token, TokenKind, TokenSpan};
+use crate::collections::dataset::lm::token::{Token, TokenKind, TokenSpan};
 use crate::ml::nlp::parse::cfg::ParseError;
 
 use super::{DependencyEdge, DependencyGraph};

@@ -2,7 +2,7 @@
 //!
 //! These are pure transforms over concrete tree values.
 
-use crate::collections::dataset::tree::{TreeLeafValue, TreeNode, TreeValue};
+use crate::collections::dataset::lm::tree::{TreeLeafValue, TreeNode, TreeValue};
 
 const DEFAULT_UNARY_JOIN: &str = "+";
 const DEFAULT_CNF_CHILD_JOIN: &str = "-";
@@ -287,7 +287,7 @@ fn merge_meta(source: &TreeNode, mut target: TreeNode) -> TreeNode {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::collections::dataset::tree::TreeLeafValue;
+    use crate::collections::dataset::lm::tree::TreeLeafValue;
 
     fn leaf_text(value: &str) -> TreeValue {
         TreeValue::leaf(TreeLeafValue::text(value))

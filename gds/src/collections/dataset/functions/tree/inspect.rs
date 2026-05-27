@@ -1,7 +1,7 @@
 //! Tree inspection helpers.
 
 use crate::collections::dataset::expressions::tree::TreePos;
-use crate::collections::dataset::tree::{TreeLeafValue, TreeValue};
+use crate::collections::dataset::lm::tree::{TreeLeafValue, TreeValue};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum TreeTraversal {
@@ -127,7 +127,7 @@ pub fn treeposition_spanning_leaves(tree: &TreeValue, start: usize, end: usize) 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::collections::dataset::tree::TreeValue;
+    use crate::collections::dataset::lm::tree::TreeValue;
 
     #[test]
     fn treepositions_preorder_includes_root() {

@@ -36,7 +36,7 @@
 //!   is a policy decision that belongs higher up (eventually in the
 //!   `ToolChain` / Agent layer).
 
-use crate::collections::dataset::featstruct::{unify_featstruct, FeatBindings, FeatStruct};
+use crate::collections::dataset::feature::featstruct::{unify_featstruct, FeatBindings, FeatStruct};
 use crate::collections::dataset::feature::Feature;
 use crate::collections::dataset::model::ModelSpec;
 
@@ -364,7 +364,7 @@ impl<M: crate::collections::dataset::model::Model + ?Sized> ModelPrepExt for M {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::collections::dataset::featstruct::{FeatDict, FeatStruct, FeatValue};
+    use crate::collections::dataset::feature::featstruct::{FeatDict, FeatStruct, FeatValue};
     use crate::collections::dataset::model::{ModelId, ModelKind, ModelView};
     use crate::collections::dataset::plan::{Plan, Source};
 

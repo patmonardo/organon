@@ -37,9 +37,6 @@
 //! - [`annotation`] — annotation records and annotation frames;
 //! - [`source`] — source identity, content hashes, and media types.
 //!
-//! Top-level `dataset::document`, `dataset::annotation`, and `dataset::source`
-//! remain compatibility shims for existing callers and prelude exports.
-
 pub mod annotation;
 pub mod document;
 pub mod source;
@@ -52,22 +49,22 @@ use polars::prelude::{NamedFrom, PlSmallStr, PolarsError, Series};
 use sha2::{Digest, Sha256};
 
 use crate::collections::dataframe::{GDSDataFrame, GDSFrameError};
-use crate::collections::dataset::annotation::{
+use crate::collections::dataset::artifact::DatasetArtifactKind;
+use crate::collections::dataset::corpus::annotation::{
     columns as anncols, AnnotationFrame, AnnotationRecord,
 };
-use crate::collections::dataset::artifact::DatasetArtifactKind;
+use crate::collections::dataset::corpus::document::{columns as doccols, DocumentFrame, SpanUnit};
+use crate::collections::dataset::corpus::source::{ContentHash, Source, SourceFrame};
 use crate::collections::dataset::dataset::Dataset;
-use crate::collections::dataset::document::{columns as doccols, DocumentFrame, SpanUnit};
 use crate::collections::dataset::feature::role::Provenance;
-use crate::collections::dataset::parse::ParseForest;
-use crate::collections::dataset::parser::Parser;
-use crate::collections::dataset::source::{ContentHash, Source, SourceFrame};
-use crate::collections::dataset::stem::Stem;
-use crate::collections::dataset::stemmer::Stemmer;
-use crate::collections::dataset::tag::Tag;
-use crate::collections::dataset::tagger::Tagger;
-use crate::collections::dataset::token::{Token, TokenSpan};
-use crate::collections::dataset::tokenizer::Tokenizer;
+use crate::collections::dataset::lm::parse::ParseForest;
+use crate::collections::dataset::lm::parser::Parser;
+use crate::collections::dataset::lm::stem::Stem;
+use crate::collections::dataset::lm::stemmer::Stemmer;
+use crate::collections::dataset::lm::tag::Tag;
+use crate::collections::dataset::lm::tagger::Tagger;
+use crate::collections::dataset::lm::token::{Token, TokenSpan};
+use crate::collections::dataset::lm::tokenizer::Tokenizer;
 
 /// Errors raised when constructing or querying a `Corpus`.
 #[derive(Debug)]
@@ -405,7 +402,7 @@ impl Corpus {
                     span.start() as u64,
                     span.end() as u64,
                     SpanUnit::Byte,
-                    crate::collections::dataset::tag::tuple2str((tag.text(), Some(tag.tag())), "/"),
+                    crate::collections::dataset::lm::tag::tuple2str((tag.text(), Some(tag.tag())), "/"),
                     provenance,
                 ));
             }
@@ -504,9 +501,9 @@ fn sha256_hex(bytes: &[u8]) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::collections::dataset::parser::FlatParser;
-    use crate::collections::dataset::tagger::DefaultTagger;
-    use crate::collections::dataset::tokenizer::WhitespaceTokenizer;
+    use crate::collections::dataset::lm::parser::FlatParser;
+    use crate::collections::dataset::lm::tagger::DefaultTagger;
+    use crate::collections::dataset::lm::tokenizer::WhitespaceTokenizer;
 
     fn provenance(layer: &str) -> Provenance {
         Provenance::new(layer, "dataset", "v1", "automatic")

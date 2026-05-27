@@ -18,7 +18,7 @@
 //! - The full type system (`Type`, `ComplexType`, `typecheck`).
 //! - Skolemization (own module: `sem::skolemize`).
 //! - `SubstituteBindingsI` integration with
-//!   [`crate::collections::dataset::featstruct::FeatBindings`].
+//!   [`crate::collections::dataset::feature::featstruct::FeatBindings`].
 //! - Quote-character handling in the parser
 //!   (NLTK `LogicParser.quote_chars`).
 

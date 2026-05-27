@@ -1,7 +1,7 @@
 use std::error::Error;
 use std::fmt;
 
-use crate::collections::dataset::token::Token;
+use crate::collections::dataset::lm::token::Token;
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub enum GrammarSymbol {

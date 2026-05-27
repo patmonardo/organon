@@ -2,7 +2,7 @@
 //!
 //! Provides parity with `nltk.tree.Tree.subtrees()`.
 
-use crate::collections::dataset::tree::TreeValue;
+use crate::collections::dataset::lm::tree::TreeValue;
 
 pub trait QueryTreeExt {
     /// Return a sequence of all subtrees of this tree.

@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use crate::collections::dataset::tree::TreeValue;
+use crate::collections::dataset::lm::tree::TreeValue;
 
 use super::cfg::{Cfg, GrammarSymbol, ParseError, Production};
 
@@ -93,7 +93,7 @@ impl RecursiveDescentParser {
 
     pub fn parse_tokens(
         &self,
-        tokens: &[crate::collections::dataset::token::Token],
+        tokens: &[crate::collections::dataset::lm::token::Token],
     ) -> Result<Vec<TreeValue>, ParseError> {
         self.parse_token_texts(tokens.iter().map(|token| token.text().to_string()))
     }

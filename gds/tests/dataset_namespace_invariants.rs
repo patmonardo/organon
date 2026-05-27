@@ -10,42 +10,21 @@ fn canonical_beginning_modules_export_expected_types() {
 }
 
 #[test]
-fn canonical_and_shim_essence_paths_are_type_equivalent() {
-    assert_eq!(
-        TypeId::of::<ds::model::prep::ModelEssence>(),
-        TypeId::of::<ds::model_prep::ModelEssence>()
-    );
-    assert_eq!(
-        TypeId::of::<ds::model::exec::Execution>(),
-        TypeId::of::<ds::model_exec::Execution>()
-    );
-    assert_eq!(
-        TypeId::of::<ds::model::image::ImageOptions>(),
-        TypeId::of::<ds::model_image::ImageOptions>()
-    );
-    assert_eq!(
-        TypeId::of::<ds::feature::featstruct::FeatStruct>(),
-        TypeId::of::<ds::featstruct::FeatStruct>()
-    );
-    assert_eq!(
-        TypeId::of::<ds::feature::role::FeatureFrame>(),
-        TypeId::of::<ds::feature_role::FeatureFrame>()
-    );
+fn canonical_essence_modules_export_expected_types() {
+    let _: Option<ds::model::prep::ModelEssence> = None;
+    let _: Option<ds::model::exec::Execution> = None;
+    let _: Option<ds::model::image::ImageOptions> = None;
+    let _: Option<ds::feature::featstruct::FeatStruct> = None;
+    let _: Option<ds::feature::role::FeatureFrame> = None;
 }
 
 #[test]
-fn canonical_and_shim_concept_paths_are_type_equivalent() {
+fn canonical_concept_return_exports_expected_types() {
     type DefaultLm = ds::lm::MLE;
     assert_eq!(
         TypeId::of::<ds::sem::SemDataset<DefaultLm>>(),
-        TypeId::of::<ds::semantic::SemDataset<DefaultLm>>()
+        TypeId::of::<ds::SemDataset<DefaultLm>>()
     );
-    assert_eq!(
-        TypeId::of::<ds::sem::SemForm>(),
-        TypeId::of::<ds::semantic::SemForm>()
-    );
-    assert_eq!(
-        TypeId::of::<ds::sem::SemError>(),
-        TypeId::of::<ds::semantic::SemError>()
-    );
+    assert_eq!(TypeId::of::<ds::sem::SemForm>(), TypeId::of::<ds::SemForm>());
+    assert_eq!(TypeId::of::<ds::sem::SemError>(), TypeId::of::<ds::SemError>());
 }

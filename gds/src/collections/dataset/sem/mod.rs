@@ -5,8 +5,6 @@
 //! `SemDataset`: `Corpus`, `LanguageModel`, and semantic forms gathered as the
 //! returned Dataset end-view.
 //!
-//! The older top-level `dataset::semantic` path remains a compatibility shim.
-
 pub mod semdataset;
 pub mod semform;
 

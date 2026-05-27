@@ -11,7 +11,7 @@
 //! - [`ProbabilisticProduction`] and [`PCFG`] — with probability sums
 //!   verified to 1.0 within tolerance.
 //! - [`FeatStructNonterminal`] and [`FeatureGrammar`] — feature-based
-//!   nonterminals (uses [`crate::collections::dataset::featstruct`]).
+//!   nonterminals (uses [`crate::collections::dataset::feature::featstruct`]).
 //! - [`induce_pcfg`] — count productions and normalize per-LHS.
 //! - [`read_grammar`] — small text reader for the standard NLTK
 //!   grammar format (`S -> NP VP`, `'word' | DET N`, optional
@@ -31,7 +31,7 @@
 use std::collections::BTreeMap;
 use std::fmt;
 
-use crate::collections::dataset::featstruct::{
+use crate::collections::dataset::feature::featstruct::{
     parse_featstruct, FeatStruct, FeatStructParseError, FeatValue,
 };
 

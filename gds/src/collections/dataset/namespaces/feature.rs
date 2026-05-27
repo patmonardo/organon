@@ -8,7 +8,7 @@ use crate::collections::dataset::expressions::feature::{
     FeatureTemplate, FeatureValue,
 };
 use crate::collections::dataset::expressions::tree::TreePos;
-use crate::collections::dataset::featstruct::FeatStruct;
+use crate::collections::dataset::feature::featstruct::FeatStruct;
 use crate::collections::dataset::functions::feature as feature_fn;
 use crate::collections::dataset::plan::PlanError;
 

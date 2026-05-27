@@ -27,13 +27,9 @@
 //!    `catalog`, `registry`, `io`, `stdlib`) — compilation, resource access,
 //!    namespace builders, and GDSL/SDSL authoring support.
 //!
-//! Compatibility note: top-level modules such as `token`, `stemmer`,
-//! `document`, `source`, `model_prep`, `featstruct`, and `semantic` are
-//! intentionally kept as shim modules. The canonical homes are `lm::*` for
-//! LanguageModel SubFeatures, `corpus::*` for Corpus SubFeatures,
-//! `model::*`/`feature::*`/`plan::*` for the Essence fold, and `sem::*` for
-//! the SemDataset return fold, but the old paths remain prelude-friendly while
-//! the SDK namespace settles.
+//! Canonical module homes: `lm::*` for LanguageModel SubFeatures,
+//! `corpus::*` for Corpus SubFeatures, `model::*`/`feature::*`/`plan::*` for
+//! the Essence fold, and `sem::*` for the SemDataset return fold.
 //!
 //! Boundary notes:
 //! - GUI workflow adaptation (GDSL → TS-JSON → React/Next MVC) is a
@@ -51,7 +47,6 @@
 //! - The top-level modules read like a compiler: catalog/registry, schema,
 //!   plans, features, models, and the DSL namespaces that bind it together.
 
-pub mod annotation;
 pub mod artifact;
 pub mod catalog;
 pub mod codegen;
@@ -59,13 +54,10 @@ pub mod collocations;
 pub mod compile;
 pub mod corpus;
 pub mod dataset;
-pub mod document;
 pub mod error;
 pub mod expr;
 pub mod expressions;
-pub mod featstruct;
 pub mod feature;
-pub mod feature_role;
 pub mod frame;
 pub mod functions;
 pub mod grammar;
@@ -76,34 +68,20 @@ pub mod lm;
 pub mod macros;
 pub mod metrics;
 pub mod model;
-pub mod model_exec;
-pub mod model_image;
-pub mod model_prep;
 pub mod namespace;
 pub mod namespaces;
-pub mod parse;
-pub mod parser;
 pub mod plan;
 pub mod prelude;
 pub mod probability;
 pub mod registry;
 pub mod schema;
 pub mod sem;
-pub mod semantic;
 pub mod series;
-pub mod source;
 pub mod stdlib;
-pub mod stem;
-pub mod stemmer;
 pub mod streaming;
-pub mod tag;
-pub mod tagger;
 pub mod text;
 pub mod tgrep;
-pub mod token;
-pub mod tokenizer;
 pub mod toolchain;
-pub mod tree;
 pub mod utils;
 pub mod valuation;
 
@@ -111,10 +89,8 @@ pub mod valuation;
 // Public surface
 // =============================================================================
 //
-// Exports below keep the nine-moment SDK readable while preserving old public
-// paths. New implementation modules should prefer the canonical `corpus::*`,
-// `lm::*`, and `sem::*` homes; top-level linguistic, evidentiary, and semantic
-// modules are compatibility shims for existing callers and the curated prelude.
+// Exports below keep the nine-moment SDK readable at the crate root. Prefer
+// `corpus::*`, `lm::*`, `feature::*`, `model::*`, and `sem::*` in new code.
 
 // -----------------------------------------------------------------------------
 // (1) DSL shell — dataset-side 2×2 matrix and namespace registry.
@@ -245,21 +221,21 @@ pub use utils::extract::{extract_archive, ExtractReport};
 //     tokenize, tree, language models).
 // -----------------------------------------------------------------------------
 
-pub use parse::{Parse, ParseForest, ParseKind};
-pub use parser::{BracketedParser, DependencyParser, FlatParser, JsonParser, MarkupParser, Parser};
-pub use stem::{Stem, StemKind};
-pub use stemmer::{IdentityStemmer, LowercaseStemmer, SimpleSuffixStemmer, Stemmer};
-pub use tag::{str2tuple, tuple2str, untag, Tag};
-pub use tagger::{DefaultTagger, LookupTagger, RegexTagger, Tagger, UnigramTagger};
-pub use token::{Token, TokenKind, TokenSpan};
-pub use tokenizer::{
+pub use lm::parse::{Parse, ParseForest, ParseKind};
+pub use lm::parser::{BracketedParser, DependencyParser, FlatParser, JsonParser, MarkupParser, Parser};
+pub use lm::stem::{Stem, StemKind};
+pub use lm::stemmer::{IdentityStemmer, LowercaseStemmer, SimpleSuffixStemmer, Stemmer};
+pub use lm::tag::{str2tuple, tuple2str, untag, Tag};
+pub use lm::tagger::{DefaultTagger, LookupTagger, RegexTagger, Tagger, UnigramTagger};
+pub use lm::token::{Token, TokenKind, TokenSpan};
+pub use lm::tokenizer::{
     align_token_texts, align_tokens, blankline_tokenize, line_tokenize, regexp_span_tokenize,
     regexp_tokenize, spans_to_relative, string_span_tokenize, wordpunct_tokenize,
     BlanklineTokenizer, CharTokenizer, JsonTokenizer, LineBlankMode, LineTokenizer, MWETokenizer,
     MarkupTokenizer, RegexpTokenizer, SExprTokenizer, SpaceTokenizer, StringSplitTokenizer,
     TabTokenizer, Tokenizer, WhitespaceTokenizer, WordPunctTokenizer,
 };
-pub use tree::{
+pub use lm::tree::{
     format_bracketed, format_pretty, parse_bracketed, MultiParentedIndex, MultiParentedNode,
     MultiParentedTree, MultiParentedValue, ParentedIndex, ParentedNode, ParentedTree,
     ParentedValue, ProbabilisticTree, TreeCollection, TreeExpr, TreeId, TreeIndex, TreeLeafExpr,

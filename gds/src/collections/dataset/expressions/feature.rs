@@ -4,7 +4,7 @@
 //! templates, and rule conditions (NLTK TBL inspired).
 
 use crate::collections::dataset::expressions::tree::TreePos;
-use crate::collections::dataset::featstruct::FeatStruct;
+use crate::collections::dataset::feature::featstruct::FeatStruct;
 use crate::collections::dataset::plan::PlanError;
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -385,7 +385,7 @@ impl From<FeatStruct> for FeatureExpr {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::collections::dataset::featstruct::{FeatDict, FeatValue};
+    use crate::collections::dataset::feature::featstruct::{FeatDict, FeatValue};
 
     fn dict(pairs: &[(&str, FeatValue)]) -> FeatStruct {
         let mut d = FeatDict::new();

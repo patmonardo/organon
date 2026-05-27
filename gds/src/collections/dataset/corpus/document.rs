@@ -43,7 +43,7 @@
 use polars::prelude::{DataFrame, NamedFrom, PolarsError, Series};
 
 use crate::collections::dataframe::GDSDataFrame;
-use crate::collections::dataset::source::ContentHash;
+use crate::collections::dataset::corpus::source::ContentHash;
 
 /// The unit a `Span` is measured in. Documents declare which unit applies
 /// to a given offset column; mixing units in one column is an error a later

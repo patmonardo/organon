@@ -3,8 +3,8 @@
 use polars::prelude::{lit, AnyValue, DataType, Expr, LiteralValue, Scalar};
 
 use crate::collections::dataframe::record;
-use crate::collections::dataset::token::TokenSpan;
-use crate::collections::dataset::tree::TreeValue;
+use crate::collections::dataset::lm::token::TokenSpan;
+use crate::collections::dataset::lm::tree::TreeValue;
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub enum ParseKind {

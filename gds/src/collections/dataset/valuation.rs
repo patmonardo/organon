@@ -42,11 +42,11 @@ use std::collections::BTreeMap;
 use polars::prelude::PolarsError;
 
 use crate::collections::dataframe::GDSDataFrame;
-use crate::collections::dataset::document::{DocumentFrame, Span};
+use crate::collections::dataset::corpus::document::{DocumentFrame, Span};
+use crate::collections::dataset::corpus::source::ContentHash;
 use crate::collections::dataset::feature::role::{
     FeatureDType, FeatureDescriptor, FeatureName, FeatureRole,
 };
-use crate::collections::dataset::source::ContentHash;
 
 /// Errors raised when constructing or pairing Valuations with schemas.
 #[derive(Debug)]
@@ -217,14 +217,14 @@ impl ValuationFrame {
 
     /// True iff the schema declares a Feature whose `dtype` is
     /// [`FeatureDType::Source`] and whose name matches the
-    /// [`crate::collections::dataset::document::columns::SOURCE`] convention.
+    /// [`crate::collections::dataset::corpus::document::columns::SOURCE`] convention.
     /// This is the doctrinal test for "is this Valuation evidentiary."
     pub fn is_evidentiary(&self) -> bool {
         self.evidentiary_feature().is_some()
     }
 
     fn evidentiary_feature(&self) -> Option<&FeatureDescriptor> {
-        use crate::collections::dataset::document::columns as doccols;
+        use crate::collections::dataset::corpus::document::columns as doccols;
         self.schema.iter().find(|d| {
             d.dtype == FeatureDType::Source
                 && d.name.as_str() == doccols::SOURCE
@@ -259,10 +259,10 @@ impl DocumentFrame {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::collections::dataset::document::SpanUnit;
+    use crate::collections::dataset::corpus::document::SpanUnit;
 
     fn source_feature() -> FeatureDescriptor {
-        use crate::collections::dataset::document::columns as doccols;
+        use crate::collections::dataset::corpus::document::columns as doccols;
         FeatureDescriptor::projection(doccols::SOURCE, FeatureDType::Source)
     }
 

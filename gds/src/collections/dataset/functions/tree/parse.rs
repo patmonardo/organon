@@ -1,6 +1,6 @@
 //! Bracketed tree parsing helpers.
 
-use crate::collections::dataset::tree::{TreeLeafValue, TreeValue};
+use crate::collections::dataset::lm::tree::{TreeLeafValue, TreeValue};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum TreeParseError {

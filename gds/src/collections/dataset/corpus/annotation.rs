@@ -44,7 +44,7 @@
 use polars::prelude::{DataFrame, NamedFrom, PolarsError, Series};
 
 use crate::collections::dataframe::GDSDataFrame;
-use crate::collections::dataset::document::SpanUnit;
+use crate::collections::dataset::corpus::document::SpanUnit;
 use crate::collections::dataset::feature::role::{
     FeatureDType, FeatureDescriptor, FeatureName, FeatureRole, Provenance,
 };

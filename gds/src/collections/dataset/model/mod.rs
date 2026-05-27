@@ -60,11 +60,11 @@ pub use prep::{
 
 use std::collections::BTreeMap;
 
-use crate::collections::dataset::featstruct::{FeatPath, FeatStruct, FeatStructSet, FeatValue};
-use crate::collections::dataset::parse::Parse;
+use crate::collections::dataset::feature::featstruct::{FeatPath, FeatStruct, FeatStructSet, FeatValue};
+use crate::collections::dataset::lm::parse::Parse;
 use crate::collections::dataset::schema::{ModelSchema, SymbolTable};
-use crate::collections::dataset::tag::Tag;
-use crate::collections::dataset::tree::TreeValue;
+use crate::collections::dataset::lm::tag::Tag;
+use crate::collections::dataset::lm::tree::TreeValue;
 use crate::collections::dataset::Dataset;
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash, PartialOrd, Ord)]

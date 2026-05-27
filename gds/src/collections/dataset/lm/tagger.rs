@@ -4,8 +4,8 @@ use std::collections::HashMap;
 
 use regex::Regex;
 
-use crate::collections::dataset::tag::Tag;
-use crate::collections::dataset::token::{Token, TokenKind};
+use crate::collections::dataset::lm::tag::Tag;
+use crate::collections::dataset::lm::token::{Token, TokenKind};
 
 /// Pluggable tagger trait.
 pub trait Tagger {
@@ -207,7 +207,7 @@ impl Tagger for UnigramTagger {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::collections::dataset::token::{TokenKind, TokenSpan};
+    use crate::collections::dataset::lm::token::{TokenKind, TokenSpan};
 
     #[test]
     fn default_tagger_assigns_constant_tag() {
