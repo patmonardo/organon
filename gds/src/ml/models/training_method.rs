@@ -19,6 +19,9 @@ pub enum TrainingMethod {
     /// Random forest regressor.
     RandomForestRegression,
 
+    /// Support vector machine classifier.
+    SVMClassification,
+
     /// MLP classifier for neural network classification.
     #[default]
     MLPClassification,
@@ -31,6 +34,7 @@ impl fmt::Display for TrainingMethod {
             TrainingMethod::LinearRegression => write!(f, "LinearRegression"),
             TrainingMethod::RandomForestClassification => write!(f, "RandomForest"),
             TrainingMethod::RandomForestRegression => write!(f, "RandomForest"),
+            TrainingMethod::SVMClassification => write!(f, "SupportVectorMachine"),
             TrainingMethod::MLPClassification => write!(f, "MultilayerPerceptron"),
         }
     }
@@ -43,6 +47,7 @@ impl TrainingMethod {
             self,
             TrainingMethod::LogisticRegression
                 | TrainingMethod::RandomForestClassification
+                | TrainingMethod::SVMClassification
                 | TrainingMethod::MLPClassification
         )
     }
@@ -66,6 +71,11 @@ impl TrainingMethod {
     /// Check if this is a neural network method.
     pub fn is_neural_network(&self) -> bool {
         matches!(self, TrainingMethod::MLPClassification)
+    }
+
+    /// Check if this is a support vector machine method.
+    pub fn is_support_vector_machine(&self) -> bool {
+        matches!(self, TrainingMethod::SVMClassification)
     }
 }
 
@@ -114,9 +124,18 @@ mod tests {
     }
 
     #[test]
+    fn test_display_svm_classification() {
+        assert_eq!(
+            TrainingMethod::SVMClassification.to_string(),
+            "SupportVectorMachine"
+        );
+    }
+
+    #[test]
     fn test_is_classification() {
         assert!(TrainingMethod::LogisticRegression.is_classification());
         assert!(TrainingMethod::RandomForestClassification.is_classification());
+        assert!(TrainingMethod::SVMClassification.is_classification());
         assert!(TrainingMethod::MLPClassification.is_classification());
         assert!(!TrainingMethod::LinearRegression.is_classification());
         assert!(!TrainingMethod::RandomForestRegression.is_classification());
@@ -147,6 +166,16 @@ mod tests {
         assert!(!TrainingMethod::LinearRegression.is_neural_network());
         assert!(!TrainingMethod::RandomForestClassification.is_neural_network());
         assert!(!TrainingMethod::RandomForestRegression.is_neural_network());
+    }
+
+    #[test]
+    fn test_is_support_vector_machine() {
+        assert!(TrainingMethod::SVMClassification.is_support_vector_machine());
+        assert!(!TrainingMethod::LogisticRegression.is_support_vector_machine());
+        assert!(!TrainingMethod::LinearRegression.is_support_vector_machine());
+        assert!(!TrainingMethod::RandomForestClassification.is_support_vector_machine());
+        assert!(!TrainingMethod::RandomForestRegression.is_support_vector_machine());
+        assert!(!TrainingMethod::MLPClassification.is_support_vector_machine());
     }
 
     #[test]

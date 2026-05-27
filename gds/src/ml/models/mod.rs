@@ -9,6 +9,7 @@ pub mod logistic_regression;
 pub mod mlp;
 pub mod random_forest;
 pub mod regression_trainer_factory;
+pub mod svm;
 pub mod training_method;
 
 pub use base::*;

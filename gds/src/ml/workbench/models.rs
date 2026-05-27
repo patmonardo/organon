@@ -26,6 +26,10 @@ use crate::ml::models::mlp::MLPClassifierTrainer;
 use crate::ml::models::random_forest::RandomForestClassifierTrainer;
 use crate::ml::models::random_forest::RandomForestClassifierTrainerConfig;
 use crate::ml::models::random_forest::RandomForestConfig;
+use crate::ml::models::svm::SVMClassifierTrainConfig;
+use crate::ml::models::svm::SVMClassifierTrainer;
+use crate::ml::models::svm::SVMKernelType;
+use crate::ml::models::Classifier;
 use crate::ml::models::ClassifierTrainer;
 use crate::ml::models::Features;
 use crate::ml::models::RegressorTrainer;
@@ -70,6 +74,10 @@ const LINEAR_AFFINE_LARGE_FIXTURE: &str = include_str!(concat!(
 const SEMANTIC_LOGISTIC_PROTOTYPE_FIXTURE: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/fixtures/ml-models/semantic-logistic-prototype.json"
+));
+const NONLINEAR_XOR_FIXTURE: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/fixtures/ml-models/nonlinear-xor.json"
 ));
 
 #[derive(Clone, Debug, Serialize)]
@@ -337,6 +345,60 @@ pub struct TreeForestComparisonRow {
     pub random_forest_probabilities: Vec<f64>,
 }
 
+#[derive(Clone, Debug, Serialize)]
+pub struct SVMDemoReport {
+    pub experiment: &'static str,
+    pub fixture: FixtureReport,
+    pub samples: usize,
+    pub feature_dimension: usize,
+    pub number_of_classes: usize,
+    pub accuracy: f64,
+    pub sample_probabilities: Vec<SampleProbabilities>,
+}
+
+#[derive(Clone, Debug, Serialize)]
+pub struct SVMKernelComparisonReport {
+    pub experiment: &'static str,
+    pub fixture: FixtureReport,
+    pub samples: usize,
+    pub train_size: usize,
+    pub test_size: usize,
+    pub split_seed: u64,
+    pub linear: ModelScore,
+    pub rbf: ModelScore,
+    pub accuracy_delta: f64,
+    pub sample_rows: Vec<SVMKernelComparisonRow>,
+}
+
+#[derive(Clone, Debug, Serialize)]
+pub struct SVMKernelComparisonRow {
+    pub row: usize,
+    pub label: i32,
+    pub linear_predicted_class: usize,
+    pub linear_probabilities: Vec<f64>,
+    pub rbf_predicted_class: usize,
+    pub rbf_probabilities: Vec<f64>,
+}
+
+#[derive(Clone, Debug, Serialize)]
+pub struct SVMSweepReport {
+    pub experiment: &'static str,
+    pub fixture: FixtureReport,
+    pub samples: usize,
+    pub train_size: usize,
+    pub test_size: usize,
+    pub split_seed: u64,
+    pub runs: Vec<SVMSweepRun>,
+}
+
+#[derive(Clone, Debug, Serialize)]
+pub struct SVMSweepRun {
+    pub gamma: f64,
+    pub c: f64,
+    pub accuracy: f64,
+    pub runtime_millis: u128,
+}
+
 #[derive(Clone, Debug, Deserialize)]
 struct ClassificationFixture {
     id: String,
@@ -393,6 +455,10 @@ pub fn available_experiments() -> &'static [&'static str] {
         "mlp-three-class-large-demo",
         "logistic-vs-mlp-overlap-comparison",
         "tree-vs-random-forest-demo",
+        "svm-demo",
+        "svm-linear-vs-rbf-comparison",
+        "svm-nonlinear-comparison",
+        "svm-rbf-sweep",
         "mlp-three-class-sweep",
         "linear-demo",
         "logistic-sweep",
@@ -456,6 +522,12 @@ pub fn fixture_catalog() -> &'static [FixtureSummary] {
             name: "Semantic Sidecar Binary Classification Prototype",
             task: "classification",
             source_path: "gds/fixtures/ml-models/semantic-logistic-prototype.json",
+        },
+        FixtureSummary {
+            id: "nonlinear-xor",
+            name: "Nonlinear XOR Classification",
+            task: "classification",
+            source_path: "gds/fixtures/ml-models/nonlinear-xor.json",
         },
     ]
 }
@@ -811,6 +883,316 @@ pub fn run_tree_vs_random_forest_demo() -> TreeForestComparisonReport {
         accuracy_delta: random_forest_accuracy - decision_tree_accuracy,
         sample_rows,
     }
+}
+
+pub fn run_svm_demo() -> SVMDemoReport {
+    let fixture = logistic_three_class_overlap_fixture();
+    let features = DenseFeatures::new(fixture.features.clone());
+    let labels = HugeIntArray::from_vec(fixture.labels.clone());
+    let train_set = Arc::new((0..features.size() as u64).collect::<Vec<u64>>());
+    let number_of_classes = fixture
+        .labels
+        .iter()
+        .copied()
+        .max()
+        .map(|class_id| class_id as usize + 1)
+        .unwrap_or(0);
+
+    let trainer = SVMClassifierTrainer::new(number_of_classes, SVMClassifierTrainConfig::default());
+    let classifier = trainer.train(&features, &labels, &train_set);
+
+    let mut correct = 0usize;
+    let mut sample_probabilities = Vec::new();
+
+    for (row, label) in fixture.labels.iter().copied().enumerate() {
+        let probabilities = classifier.predict_probabilities(features.get(row));
+        let predicted_class = argmax(&probabilities);
+        if predicted_class as i32 == label {
+            correct += 1;
+        }
+        if fixture.sample_rows.contains(&row) {
+            sample_probabilities.push(SampleProbabilities {
+                row,
+                label,
+                probabilities,
+                predicted_class,
+            });
+        }
+    }
+
+    SVMDemoReport {
+        experiment: "svm-demo",
+        fixture: fixture.report(),
+        samples: features.size(),
+        feature_dimension: classifier.data().feature_dimension(),
+        number_of_classes: classifier.number_of_classes(),
+        accuracy: correct as f64 / features.size() as f64,
+        sample_probabilities,
+    }
+}
+
+pub fn run_svm_linear_vs_rbf_comparison() -> SVMKernelComparisonReport {
+    let fixture = logistic_three_class_overlap_fixture();
+    let split_seed = 4242;
+
+    let features = DenseFeatures::new(fixture.features.clone());
+    let labels = HugeIntArray::from_vec(fixture.labels.clone());
+    let (train_set, test_set) = split_train_test_indices(features.size(), 0.25, split_seed);
+    let number_of_classes = fixture
+        .labels
+        .iter()
+        .copied()
+        .max()
+        .map(|class_id| class_id as usize + 1)
+        .unwrap_or(0);
+
+    let linear_config = SVMClassifierTrainConfig {
+        kernel: SVMKernelType::Linear,
+        max_passes: 10,
+        max_iterations: 1500,
+        ..Default::default()
+    };
+    let (linear_classifier, linear) = run_svm_with_config(
+        &features,
+        &labels,
+        &fixture,
+        &train_set,
+        &test_set,
+        number_of_classes,
+        linear_config,
+    );
+
+    let rbf_config = SVMClassifierTrainConfig {
+        kernel: SVMKernelType::Rbf { gamma: 0.75 },
+        c: 2.0,
+        max_passes: 12,
+        max_iterations: 2000,
+        ..Default::default()
+    };
+    let (rbf_classifier, rbf) = run_svm_with_config(
+        &features,
+        &labels,
+        &fixture,
+        &train_set,
+        &test_set,
+        number_of_classes,
+        rbf_config,
+    );
+
+    let sample_rows = fixture
+        .sample_rows
+        .iter()
+        .map(|&row| {
+            let linear_probabilities = linear_classifier.predict_probabilities(features.get(row));
+            let rbf_probabilities = rbf_classifier.predict_probabilities(features.get(row));
+
+            SVMKernelComparisonRow {
+                row,
+                label: fixture.labels[row],
+                linear_predicted_class: argmax(&linear_probabilities),
+                linear_probabilities,
+                rbf_predicted_class: argmax(&rbf_probabilities),
+                rbf_probabilities,
+            }
+        })
+        .collect::<Vec<SVMKernelComparisonRow>>();
+
+    SVMKernelComparisonReport {
+        experiment: "svm-linear-vs-rbf-comparison",
+        fixture: fixture.report(),
+        samples: features.size(),
+        train_size: train_set.len(),
+        test_size: test_set.len(),
+        split_seed,
+        linear: linear.clone(),
+        rbf: rbf.clone(),
+        accuracy_delta: rbf.accuracy - linear.accuracy,
+        sample_rows,
+    }
+}
+
+pub fn run_svm_nonlinear_comparison() -> SVMKernelComparisonReport {
+    let fixture = nonlinear_xor_fixture();
+    let split_seed = 4242;
+
+    let features = DenseFeatures::new(fixture.features.clone());
+    let labels = HugeIntArray::from_vec(fixture.labels.clone());
+    let (train_set, test_set) = split_train_test_indices(features.size(), 0.33, split_seed);
+    let number_of_classes = fixture
+        .labels
+        .iter()
+        .copied()
+        .max()
+        .map(|class_id| class_id as usize + 1)
+        .unwrap_or(0);
+
+    let linear_config = SVMClassifierTrainConfig {
+        kernel: SVMKernelType::Linear,
+        c: 1.0,
+        max_passes: 10,
+        max_iterations: 1500,
+        ..Default::default()
+    };
+    let (linear_classifier, linear) = run_svm_with_config(
+        &features,
+        &labels,
+        &fixture,
+        &train_set,
+        &test_set,
+        number_of_classes,
+        linear_config,
+    );
+
+    let rbf_config = SVMClassifierTrainConfig {
+        kernel: SVMKernelType::Rbf { gamma: 1.5 },
+        c: 2.0,
+        max_passes: 14,
+        max_iterations: 2500,
+        ..Default::default()
+    };
+    let (rbf_classifier, rbf) = run_svm_with_config(
+        &features,
+        &labels,
+        &fixture,
+        &train_set,
+        &test_set,
+        number_of_classes,
+        rbf_config,
+    );
+
+    let sample_rows = fixture
+        .sample_rows
+        .iter()
+        .map(|&row| {
+            let linear_probabilities = linear_classifier.predict_probabilities(features.get(row));
+            let rbf_probabilities = rbf_classifier.predict_probabilities(features.get(row));
+
+            SVMKernelComparisonRow {
+                row,
+                label: fixture.labels[row],
+                linear_predicted_class: argmax(&linear_probabilities),
+                linear_probabilities,
+                rbf_predicted_class: argmax(&rbf_probabilities),
+                rbf_probabilities,
+            }
+        })
+        .collect::<Vec<SVMKernelComparisonRow>>();
+
+    SVMKernelComparisonReport {
+        experiment: "svm-nonlinear-comparison",
+        fixture: fixture.report(),
+        samples: features.size(),
+        train_size: train_set.len(),
+        test_size: test_set.len(),
+        split_seed,
+        linear: linear.clone(),
+        rbf: rbf.clone(),
+        accuracy_delta: rbf.accuracy - linear.accuracy,
+        sample_rows,
+    }
+}
+
+pub fn run_svm_rbf_sweep() -> SVMSweepReport {
+    let fixture = logistic_three_class_overlap_fixture();
+    let split_seed = 4242;
+
+    let features = DenseFeatures::new(fixture.features.clone());
+    let labels = HugeIntArray::from_vec(fixture.labels.clone());
+    let (train_set, test_set) = split_train_test_indices(features.size(), 0.25, split_seed);
+    let number_of_classes = fixture
+        .labels
+        .iter()
+        .copied()
+        .max()
+        .map(|class_id| class_id as usize + 1)
+        .unwrap_or(0);
+
+    let configs = [(0.25, 1.0), (0.5, 1.0), (0.75, 2.0), (1.0, 2.0)];
+
+    let runs = configs
+        .into_iter()
+        .map(|(gamma, c)| {
+            let config = SVMClassifierTrainConfig {
+                kernel: SVMKernelType::Rbf { gamma },
+                c,
+                max_passes: 12,
+                max_iterations: 2000,
+                ..Default::default()
+            };
+            let (_, score) = run_svm_with_config(
+                &features,
+                &labels,
+                &fixture,
+                &train_set,
+                &test_set,
+                number_of_classes,
+                config,
+            );
+
+            SVMSweepRun {
+                gamma,
+                c,
+                accuracy: score.accuracy,
+                runtime_millis: score.runtime_millis,
+            }
+        })
+        .collect::<Vec<SVMSweepRun>>();
+
+    SVMSweepReport {
+        experiment: "svm-rbf-sweep",
+        fixture: fixture.report(),
+        samples: features.size(),
+        train_size: train_set.len(),
+        test_size: test_set.len(),
+        split_seed,
+        runs,
+    }
+}
+
+fn run_svm_with_config(
+    features: &DenseFeatures,
+    labels: &HugeIntArray,
+    fixture: &ClassificationFixture,
+    train_set: &[u64],
+    test_set: &[u64],
+    number_of_classes: usize,
+    config: SVMClassifierTrainConfig,
+) -> (Box<dyn Classifier>, ModelScore) {
+    let runtime_start = Instant::now();
+    let trainer = SVMClassifierTrainer::new(number_of_classes, config);
+    let classifier = trainer.train(features, labels, &Arc::new(train_set.to_vec()));
+    let runtime_millis = runtime_start.elapsed().as_millis();
+    let accuracy = accuracy_on_test_set(classifier.as_ref(), features, fixture, test_set);
+
+    (
+        classifier,
+        ModelScore {
+            accuracy,
+            runtime_millis,
+        },
+    )
+}
+
+fn accuracy_on_test_set(
+    classifier: &dyn Classifier,
+    features: &DenseFeatures,
+    fixture: &ClassificationFixture,
+    test_set: &[u64],
+) -> f64 {
+    if test_set.is_empty() {
+        return 0.0;
+    }
+
+    let correct = test_set
+        .iter()
+        .filter(|&&index| {
+            let row = index as usize;
+            argmax(&classifier.predict_probabilities(features.get(row))) as i32
+                == fixture.labels[row]
+        })
+        .count();
+
+    correct as f64 / test_set.len() as f64
 }
 
 pub fn run_mlp_three_class_sweep() -> SweepReport {
@@ -1632,6 +2014,10 @@ fn semantic_logistic_fixture() -> ClassificationFixture {
         .expect("semantic-logistic-prototype fixture should be valid JSON")
 }
 
+fn nonlinear_xor_fixture() -> ClassificationFixture {
+    serde_json::from_str(NONLINEAR_XOR_FIXTURE).expect("nonlinear-xor fixture should be valid JSON")
+}
+
 impl ClassificationFixture {
     fn report(&self) -> FixtureReport {
         FixtureReport {
@@ -2040,6 +2426,60 @@ mod tests {
     }
 
     #[test]
+    fn svm_demo_trains_classifier() {
+        let report = run_svm_demo();
+
+        assert_eq!(report.fixture.id, "logistic-three-class-overlap");
+        assert_eq!(report.samples, 60);
+        assert_eq!(report.feature_dimension, 2);
+        assert_eq!(report.number_of_classes, 3);
+        assert!(report.accuracy >= 0.45, "accuracy={}", report.accuracy);
+        assert_eq!(report.sample_probabilities.len(), 7);
+    }
+
+    #[test]
+    fn svm_linear_vs_rbf_comparison_reports_both_kernels() {
+        let report = run_svm_linear_vs_rbf_comparison();
+
+        assert_eq!(report.fixture.id, "logistic-three-class-overlap");
+        assert_eq!(report.samples, 60);
+        assert_eq!(report.train_size + report.test_size, report.samples);
+        assert_eq!(report.split_seed, 4242);
+        assert_eq!(report.sample_rows.len(), 7);
+        assert!((0.0..=1.0).contains(&report.linear.accuracy));
+        assert!((0.0..=1.0).contains(&report.rbf.accuracy));
+    }
+
+    #[test]
+    fn svm_nonlinear_comparison_reports_both_kernels() {
+        let report = run_svm_nonlinear_comparison();
+
+        assert_eq!(report.fixture.id, "nonlinear-xor");
+        assert_eq!(report.samples, 24);
+        assert_eq!(report.train_size + report.test_size, report.samples);
+        assert_eq!(report.split_seed, 4242);
+        assert_eq!(report.sample_rows.len(), 6);
+        assert!((0.0..=1.0).contains(&report.linear.accuracy));
+        assert!((0.0..=1.0).contains(&report.rbf.accuracy));
+    }
+
+    #[test]
+    fn svm_rbf_sweep_reports_multiple_runs() {
+        let report = run_svm_rbf_sweep();
+
+        assert_eq!(report.fixture.id, "logistic-three-class-overlap");
+        assert_eq!(report.samples, 60);
+        assert_eq!(report.train_size + report.test_size, report.samples);
+        assert_eq!(report.split_seed, 4242);
+        assert_eq!(report.runs.len(), 4);
+        assert!(report.runs.iter().all(|run| run.gamma > 0.0));
+        assert!(report
+            .runs
+            .iter()
+            .all(|run| (0.0..=1.0).contains(&run.accuracy)));
+    }
+
+    #[test]
     fn linear_demo_trains_regressor() {
         let report = run_linear_demo();
 
@@ -2146,5 +2586,18 @@ mod tests {
         assert_eq!(fixture.features.len(), 180);
         assert_eq!(fixture.labels.len(), 180);
         assert_eq!(fixture.sample_rows.len(), 8);
+    }
+
+    #[test]
+    fn nonlinear_xor_fixture_loads() {
+        let fixture: ClassificationFixture = serde_json::from_str(include_str!(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/fixtures/ml-models/nonlinear-xor.json"
+        )))
+        .expect("nonlinear-xor fixture should be valid JSON");
+        assert_eq!(fixture.id, "nonlinear-xor");
+        assert_eq!(fixture.features.len(), 24);
+        assert_eq!(fixture.labels.len(), 24);
+        assert_eq!(fixture.sample_rows.len(), 6);
     }
 }

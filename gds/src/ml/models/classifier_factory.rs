@@ -9,6 +9,7 @@ use crate::ml::models::mlp::MLPClassifierTrainConfig;
 use crate::ml::models::mlp::{MLPClassifier, MLPClassifierData};
 use crate::ml::models::random_forest::RandomForestClassifierTrainerConfig;
 use crate::ml::models::random_forest::{RandomForestClassifier, RandomForestClassifierData};
+use crate::ml::models::svm::{SVMClassifier, SVMClassifierData};
 use crate::ml::models::{Classifier, ClassifierData, TrainingMethod};
 
 /// Factory for creating classifiers from trained model data.
@@ -41,6 +42,13 @@ impl ClassifierFactory {
                     .downcast_ref::<MLPClassifierData>()
                     .expect("Invalid ClassifierData type for MLPClassification");
                 Box::new(MLPClassifier::new(mlp_data.clone()))
+            }
+            TrainingMethod::SVMClassification => {
+                let svm_data = classifier_data
+                    .as_any()
+                    .downcast_ref::<SVMClassifierData>()
+                    .expect("Invalid ClassifierData type for SVMClassification");
+                Box::new(SVMClassifier::new(svm_data.clone()))
             }
             _ => panic!(
                 "No such classifier for training method: {:?}",
@@ -75,6 +83,10 @@ impl ClassifierFactory {
                 MemoryRange::of(probs)
             }
             TrainingMethod::MLPClassification => {
+                let probs = Estimate::size_of_double_array(_batch_size * _number_of_classes.max(1));
+                MemoryRange::of(probs)
+            }
+            TrainingMethod::SVMClassification => {
                 let probs = Estimate::size_of_double_array(_batch_size * _number_of_classes.max(1));
                 MemoryRange::of(probs)
             }
@@ -167,6 +179,9 @@ impl ClassifierFactory {
                         first_layer_max.saturating_add(fixed_bytes),
                     ),
                 )
+            }
+            TrainingMethod::SVMClassification => {
+                MemoryEstimations::empty()
             }
             _ => panic!(
                 "No such classifier for training method: {:?}",

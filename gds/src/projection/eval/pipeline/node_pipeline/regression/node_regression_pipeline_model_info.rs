@@ -248,6 +248,9 @@ fn parse_training_method(method: &str) -> Option<TrainingMethod> {
         "RandomForestClassification" | "randomForestClassification" => {
             Some(TrainingMethod::RandomForestClassification)
         }
+        "SVMClassification" | "svmClassification" | "SupportVectorMachine" => {
+            Some(TrainingMethod::SVMClassification)
+        }
         "MLPClassification" | "mlpClassification" | "MultilayerPerceptron" => {
             Some(TrainingMethod::MLPClassification)
         }

@@ -21,6 +21,10 @@ fn main() {
             print_json(run_logistic_vs_mlp_overlap_comparison())
         }
         "tree-vs-random-forest-demo" => print_json(run_tree_vs_random_forest_demo()),
+        "svm-demo" => print_json(run_svm_demo()),
+        "svm-linear-vs-rbf-comparison" => print_json(run_svm_linear_vs_rbf_comparison()),
+        "svm-nonlinear-comparison" => print_json(run_svm_nonlinear_comparison()),
+        "svm-rbf-sweep" => print_json(run_svm_rbf_sweep()),
         "mlp-three-class-sweep" => print_json(run_mlp_three_class_sweep()),
         "linear-demo" => print_json(run_linear_demo()),
         "logistic-sweep" => print_json(run_logistic_sweep()),
@@ -169,6 +173,14 @@ fn print_help() {
     println!(
         "  tree-vs-random-forest-demo Compare single-tree baseline and Random Forest on binary fixture"
     );
+    println!("  svm-demo       Train/evaluate an SVM classifier on harder 3-class fixture");
+    println!(
+        "  svm-linear-vs-rbf-comparison Compare linear and RBF SVM kernels on a held-out split"
+    );
+    println!(
+        "  svm-nonlinear-comparison Compare linear and RBF SVM kernels on nonlinear XOR fixture"
+    );
+    println!("  svm-rbf-sweep  Sweep RBF gamma/C settings on a held-out split");
     println!("  mlp-three-class-sweep Compare MLP learning settings on 3-class fixture");
     println!("  linear-demo    Train/evaluate a dense linear regression fixture");
     println!("  logistic-sweep Compare logistic regression learning settings");

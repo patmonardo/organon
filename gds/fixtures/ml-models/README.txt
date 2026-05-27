@@ -7,3 +7,4 @@ targets, train sets, trainers, classifiers, and regressors are the object of stu
 Files:
 - logistic-separated.json: small binary classification fixture for logistic regression.
 - linear-affine.json: small affine regression fixture for linear regression.
+- nonlinear-xor.json: small nonlinear binary fixture where XOR structure favors kernel methods.

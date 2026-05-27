@@ -12,6 +12,7 @@ use crate::ml::models::mlp::MLPClassifierTrainConfig;
 use crate::ml::models::random_forest::{
     RandomForestClassifierTrainerConfig, RandomForestConfig, RandomForestRegressorTrainerConfig,
 };
+use crate::ml::models::svm::SVMClassifierTrainConfig;
 use crate::ml::models::{TrainerConfig, TrainingMethod};
 use std::collections::{HashMap, HashSet};
 
@@ -192,6 +193,7 @@ fn training_method_name(method: TrainingMethod) -> &'static str {
     match method {
         TrainingMethod::LogisticRegression => "LogisticRegression",
         TrainingMethod::RandomForestClassification => "RandomForestClassification",
+        TrainingMethod::SVMClassification => "SVMClassification",
         TrainingMethod::MLPClassification => "MLPClassification",
         TrainingMethod::LinearRegression => "LinearRegression",
         TrainingMethod::RandomForestRegression => "RandomForestRegression",
@@ -207,6 +209,7 @@ pub fn create_trainer_config_from_map(
         TrainingMethod::RandomForestClassification => {
             Box::new(random_forest_classifier_from_map(&config_map))
         }
+        TrainingMethod::SVMClassification => Box::new(svm_classifier_from_map(&config_map)),
         TrainingMethod::MLPClassification => Box::new(mlp_classifier_from_map(&config_map)),
         TrainingMethod::LinearRegression => Box::new(linear_regression_from_map(&config_map)),
         TrainingMethod::RandomForestRegression => {
@@ -240,6 +243,25 @@ fn logistic_regression_from_map(
     if let Some(values) = get_vec_f64(map, &["classWeights", "class_weights"]) {
         config.class_weights = Some(values);
     }
+    config
+}
+
+fn svm_classifier_from_map(map: &HashMap<String, serde_json::Value>) -> SVMClassifierTrainConfig {
+    let mut config = SVMClassifierTrainConfig::default();
+
+    if let Some(value) = get_f64(map, &["c"]) {
+        config.c = value;
+    }
+    if let Some(value) = get_f64(map, &["tolerance"]) {
+        config.tolerance = value;
+    }
+    if let Some(value) = get_usize(map, &["maxPasses", "max_passes"]) {
+        config.max_passes = value;
+    }
+    if let Some(value) = get_usize(map, &["maxIterations", "max_iterations"]) {
+        config.max_iterations = value;
+    }
+
     config
 }
 

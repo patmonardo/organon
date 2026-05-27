@@ -26,6 +26,7 @@ impl TrainingType {
             TrainingType::Classification => vec![
                 TrainingMethod::LogisticRegression,
                 TrainingMethod::RandomForestClassification,
+                TrainingMethod::SVMClassification,
                 TrainingMethod::MLPClassification,
             ],
             TrainingType::Regression => vec![
@@ -43,6 +44,7 @@ impl TrainingType {
 pub enum TrainingMethod {
     LogisticRegression,
     RandomForestClassification,
+    SVMClassification,
     MLPClassification,
     LinearRegression,
     RandomForestRegression,
@@ -53,6 +55,7 @@ impl std::fmt::Display for TrainingMethod {
         match self {
             Self::LogisticRegression => write!(f, "LogisticRegression"),
             Self::RandomForestClassification => write!(f, "RandomForestClassification"),
+            Self::SVMClassification => write!(f, "SVMClassification"),
             Self::MLPClassification => write!(f, "MLPClassification"),
             Self::LinearRegression => write!(f, "LinearRegression"),
             Self::RandomForestRegression => write!(f, "RandomForestRegression"),

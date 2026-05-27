@@ -9,6 +9,7 @@ use crate::ml::models::mlp::{MLPClassifierTrainConfig, MLPClassifierTrainer};
 use crate::ml::models::random_forest::{
     RandomForestClassifierTrainer, RandomForestClassifierTrainerConfig,
 };
+use crate::ml::models::svm::{SVMClassifierTrainConfig, SVMClassifierTrainer};
 use crate::ml::models::{base::TrainerConfigTrait, ClassifierTrainer, TrainingMethod};
 use parking_lot::RwLock;
 use std::sync::Arc;
@@ -74,6 +75,12 @@ impl ClassifierTrainerFactory {
                     random_seed,
                     concurrency.value(),
                 ))
+            }
+            TrainingMethod::SVMClassification => {
+                let svm_config = (config as &dyn std::any::Any)
+                    .downcast_ref::<SVMClassifierTrainConfig>()
+                    .expect("Invalid config type for SVMClassification");
+                Box::new(SVMClassifierTrainer::new(number_of_classes, svm_config.clone()))
             }
             _ => panic!(
                 "No such training method for classifier: {:?}",
