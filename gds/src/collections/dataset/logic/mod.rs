@@ -1,12 +1,12 @@
-//! `sem` — the SemDataset Concept-return fold.
+//! `logic` — the LogicFrame Concept-return fold.
 //!
 //! Dataset is the master client of DataFrame: evidence, model, and plan in one
 //! surface. This module implements the universal Collections/kernel aspect of
-//! `SemDataset`: `Corpus`, `LanguageModel`, and semantic forms gathered as the
+//! `LogicFrame`: `Corpus`, `LanguageModel`, and semantic forms gathered as the
 //! returned Dataset end-view.
 //!
-pub mod semdataset;
-pub mod semform;
+pub mod logic_form;
+pub mod logic_frame;
 
-pub use semdataset::*;
-pub use semform::*;
+pub use logic_form::*;
+pub use logic_frame::*;

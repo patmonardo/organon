@@ -8,7 +8,7 @@ use crate::collections::dataframe::GDSDataFrame;
 use crate::collections::dataset::corpus::CorpusError;
 use crate::collections::dataset::frame::DatasetDataFrameNameSpace;
 use crate::collections::dataset::{
-    Corpus, Dataset, DatasetPipeline, LanguageModel, SemDataset, SemError, WhitespaceTokenizer, MLE,
+    Corpus, Dataset, DatasetPipeline, LanguageModel, LogicFrame, LogicError, WhitespaceTokenizer, MLE,
 };
 use crate::core::graph_dimensions::ConcreteGraphDimensions;
 use crate::core::utils::progress::{TaskProgressTracker, Tasks};
@@ -263,7 +263,7 @@ impl ShellModelFeaturePlanKnowledge {
     }
 }
 
-/// Semantic capability classes exposed by the Shell for SemDataset evolution.
+/// Semantic capability classes exposed by the Shell for LogicFrame evolution.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum ShellSemanticCapability {
     FormIngestion,
@@ -285,13 +285,13 @@ impl ShellSemanticCapability {
     }
 }
 
-/// Shell-readable account of semantic-pipeline evolution toward SemDataset.
+/// Shell-readable account of semantic-pipeline evolution toward LogicFrame.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ShellSemanticPipelineKnowledge {
     address: ShellAddress,
     frame_ready: bool,
     middle_ready: bool,
-    semdataset_ready: bool,
+    logic_frame_ready: bool,
     pureform_return_ready: bool,
     semantic_feature_count: usize,
     semantic_feature_kinds: Vec<String>,
@@ -311,8 +311,8 @@ impl ShellSemanticPipelineKnowledge {
             .iter()
             .any(|kind| kind == "principle");
 
-        let semdataset_ready = middle_ready && semantic_feature_count > 0 && has_concept;
-        let pureform_return_ready = semdataset_ready && shell.program().is_some();
+        let logic_frame_ready = middle_ready && semantic_feature_count > 0 && has_concept;
+        let pureform_return_ready = logic_frame_ready && shell.program().is_some();
 
         let mut capabilities = Vec::new();
         if semantic_feature_count > 0 {
@@ -334,8 +334,8 @@ impl ShellSemanticPipelineKnowledge {
         if middle_ready {
             evolution_path.push("middle.model-feature-plan.ready".to_string());
         }
-        if semdataset_ready {
-            evolution_path.push("semdataset.ready".to_string());
+        if logic_frame_ready {
+            evolution_path.push("logic_frame.ready".to_string());
         }
         if pureform_return_ready {
             evolution_path.push("pureform.return.ready".to_string());
@@ -345,7 +345,7 @@ impl ShellSemanticPipelineKnowledge {
             address: shell.address(),
             frame_ready,
             middle_ready,
-            semdataset_ready,
+            logic_frame_ready,
             pureform_return_ready,
             semantic_feature_count,
             semantic_feature_kinds,
@@ -366,8 +366,8 @@ impl ShellSemanticPipelineKnowledge {
         self.middle_ready
     }
 
-    pub fn semdataset_ready(&self) -> bool {
-        self.semdataset_ready
+    pub fn logic_frame_ready(&self) -> bool {
+        self.logic_frame_ready
     }
 
     pub fn pureform_return_ready(&self) -> bool {
@@ -418,7 +418,7 @@ impl ShellProjectionTraceValidation {
     }
 }
 
-/// Personal learning report for Dataset -> SemDataset progression.
+/// Personal learning report for Dataset -> LogicFrame progression.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ShellLearningReport {
     address: ShellAddress,
@@ -485,26 +485,26 @@ impl ShellLearningReport {
     }
 }
 
-/// Runtime report for an explicitly materialized Corpus -> SemDataset path.
+/// Runtime report for an explicitly materialized Corpus -> LogicFrame path.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ShellCorpusReport {
     materialized: bool,
     document_count: usize,
     lm_order: usize,
     lm_vocab_size: usize,
-    semform_count: usize,
+    logic_form_count: usize,
     parsed_form_count: usize,
 }
 
 impl ShellCorpusReport {
-    fn from_semdataset(semdataset: &SemDataset<MLE>) -> Self {
+    fn from_logic_frame(logic_frame: &LogicFrame<MLE>) -> Self {
         Self {
             materialized: true,
-            document_count: semdataset.corpus().document_count(),
-            lm_order: semdataset.lm().order(),
-            lm_vocab_size: semdataset.lm().vocab().len(),
-            semform_count: semdataset.forms().len(),
-            parsed_form_count: semdataset
+            document_count: logic_frame.corpus().document_count(),
+            lm_order: logic_frame.lm().order(),
+            lm_vocab_size: logic_frame.lm().vocab().len(),
+            logic_form_count: logic_frame.forms().len(),
+            parsed_form_count: logic_frame
                 .forms()
                 .iter()
                 .filter(|form| form.parsed())
@@ -528,8 +528,8 @@ impl ShellCorpusReport {
         self.lm_vocab_size
     }
 
-    pub fn semform_count(&self) -> usize {
-        self.semform_count
+    pub fn logic_form_count(&self) -> usize {
+        self.logic_form_count
     }
 
     pub fn parsed_form_count(&self) -> usize {
@@ -537,11 +537,11 @@ impl ShellCorpusReport {
     }
 }
 
-/// Errors raised while explicitly materializing Corpus -> SemDataset in Shell.
+/// Errors raised while explicitly materializing Corpus -> LogicFrame in Shell.
 #[derive(Debug)]
 pub enum ShellCorpusError {
     Corpus(CorpusError),
-    Sem(SemError),
+    Sem(LogicError),
 }
 
 impl From<CorpusError> for ShellCorpusError {
@@ -550,8 +550,8 @@ impl From<CorpusError> for ShellCorpusError {
     }
 }
 
-impl From<SemError> for ShellCorpusError {
-    fn from(error: SemError) -> Self {
+impl From<LogicError> for ShellCorpusError {
+    fn from(error: LogicError) -> Self {
         Self::Sem(error)
     }
 }
@@ -650,7 +650,7 @@ pub enum ShellPlatformCapability {
     PregelRuntime,
     DefaultGraphStore,
     CorpusMaterialization,
-    SemDatasetLearning,
+    LogicFrameLearning,
     MathematicalLogicReadiness,
 }
 
@@ -667,7 +667,7 @@ impl ShellPlatformCapability {
             Self::PregelRuntime => "pregel-runtime",
             Self::DefaultGraphStore => "default-graph-store",
             Self::CorpusMaterialization => "corpus-materialization",
-            Self::SemDatasetLearning => "semdataset-learning",
+            Self::LogicFrameLearning => "logic_frame-learning",
             Self::MathematicalLogicReadiness => "mathematical-logic-readiness",
         }
     }
@@ -1206,7 +1206,7 @@ impl ShellCapabilityMap {
         let semantic = shell.semantic_pipeline_knowledge();
         let learning = shell.learning_report();
         let projection_valid = shell.is_projection_trace_valid();
-        let semdataset_materialized = shell.semdataset().is_some();
+        let logic_frame_materialized = shell.logic_frame().is_some();
 
         let states = vec![
             ShellCapabilityState::new(
@@ -1255,25 +1255,25 @@ impl ShellCapabilityMap {
                 ShellCapabilityBand::Recursive,
                 ShellPlatformCapability::PregelRuntime,
                 true,
-                semdataset_materialized,
+                logic_frame_materialized,
             ),
             ShellCapabilityState::new(
                 ShellCapabilityBand::Recursive,
                 ShellPlatformCapability::DefaultGraphStore,
                 true,
-                semdataset_materialized,
+                logic_frame_materialized,
             ),
             ShellCapabilityState::new(
                 ShellCapabilityBand::Recursive,
                 ShellPlatformCapability::CorpusMaterialization,
                 true,
-                semdataset_materialized,
+                logic_frame_materialized,
             ),
             ShellCapabilityState::new(
                 ShellCapabilityBand::Recursive,
-                ShellPlatformCapability::SemDatasetLearning,
+                ShellPlatformCapability::LogicFrameLearning,
                 true,
-                semantic.semdataset_ready(),
+                semantic.logic_frame_ready(),
             ),
             ShellCapabilityState::new(
                 ShellCapabilityBand::Recursive,
@@ -1378,14 +1378,14 @@ pub struct GdsShell {
     dataset: Option<Dataset>,
     program: Option<ShellProgram>,
     seed: Option<ShellSeed>,
-    semdataset: Option<SemDataset<MLE>>,
+    logic_frame: Option<LogicFrame<MLE>>,
 }
 
 impl GdsShell {
     const CANONICAL_PROJECTION_TRACE: [&'static str; 4] = [
         "Frame",
         "Model:Feature::Plan",
-        "SemDataset",
+        "LogicFrame",
         "PureForm return",
     ];
 
@@ -1400,7 +1400,7 @@ impl GdsShell {
             dataset: None,
             program: None,
             seed: Some(seed),
-            semdataset: None,
+            logic_frame: None,
         }
     }
 
@@ -1412,7 +1412,7 @@ impl GdsShell {
             dataset: Some(dataset),
             program: None,
             seed: Some(seed),
-            semdataset: None,
+            logic_frame: None,
         }
     }
 
@@ -1422,7 +1422,7 @@ impl GdsShell {
             program = program.with_schema(seed.schema().clone());
         }
         self.program = Some(program);
-        self.semdataset = None;
+        self.logic_frame = None;
         self
     }
 
@@ -1437,7 +1437,7 @@ impl GdsShell {
             program
         };
         self.program = Some(program);
-        self.semdataset = None;
+        self.logic_frame = None;
         self
     }
 
@@ -1461,11 +1461,11 @@ impl GdsShell {
         self.seed.as_ref()
     }
 
-    pub fn semdataset(&self) -> Option<&SemDataset<MLE>> {
-        self.semdataset.as_ref()
+    pub fn logic_frame(&self) -> Option<&LogicFrame<MLE>> {
+        self.logic_frame.as_ref()
     }
 
-    pub fn materialize_semdataset_from_texts<T>(
+    pub fn materialize_logic_frame_from_texts<T>(
         mut self,
         texts: &[T],
     ) -> Result<Self, ShellCorpusError>
@@ -1473,19 +1473,19 @@ impl GdsShell {
         T: AsRef<str>,
     {
         let corpus = Corpus::from_texts(texts)?;
-        let mut semdataset = SemDataset::fit(corpus, MLE::new(2), &WhitespaceTokenizer)?;
+        let mut logic_frame = LogicFrame::fit(corpus, MLE::new(2), &WhitespaceTokenizer)?;
         if let Some(program) = &self.program {
-            semdataset.ingest_forms(program.features().features.clone());
-            semdataset.parse_forms();
+            logic_frame.ingest_forms(program.features().features.clone());
+            logic_frame.parse_forms();
         }
-        self.semdataset = Some(semdataset);
+        self.logic_frame = Some(logic_frame);
         Ok(self)
     }
 
     pub fn corpus_report(&self) -> Option<ShellCorpusReport> {
-        self.semdataset
+        self.logic_frame
             .as_ref()
-            .map(ShellCorpusReport::from_semdataset)
+            .map(ShellCorpusReport::from_logic_frame)
     }
 
     pub fn capability_map(&self) -> ShellCapabilityMap {
@@ -1632,9 +1632,9 @@ impl GdsShell {
             .map(|program| program.feature_count() * 96)
             .unwrap_or(0);
         let semantic_form_bytes = self
-            .semdataset
+            .logic_frame
             .as_ref()
-            .map(|semdataset| semdataset.forms().len() * 128)
+            .map(|logic_frame| logic_frame.forms().len() * 128)
             .unwrap_or(0);
 
         let estimation = MemoryEstimations::builder("shell.pipeline")
@@ -1682,8 +1682,8 @@ impl GdsShell {
         if semantic.middle_ready() {
             observed_trace.push("Model:Feature::Plan".to_string());
         }
-        if semantic.semdataset_ready() {
-            observed_trace.push("SemDataset".to_string());
+        if semantic.logic_frame_ready() {
+            observed_trace.push("LogicFrame".to_string());
         }
         if semantic.pureform_return_ready() {
             observed_trace.push("PureForm return".to_string());
@@ -1757,12 +1757,12 @@ impl GdsShell {
         .all(|capability| semantic.capabilities().contains(capability));
 
         let mathematical_logic_ready = !logical_feature_kinds.is_empty();
-        let kg_ready = semantic.semdataset_ready() && unresolved_forms.is_empty();
+        let kg_ready = semantic.logic_frame_ready() && unresolved_forms.is_empty();
 
         let readiness_score = [
             semantic.frame_ready(),
             semantic.middle_ready(),
-            semantic.semdataset_ready(),
+            semantic.logic_frame_ready(),
             semantic.pureform_return_ready(),
         ]
         .into_iter()
@@ -1907,9 +1907,9 @@ impl GdsShell {
         let frame_volume = self.seed.as_ref().map_or(1, |seed| seed.row_count().max(1));
         let feature_volume = self.program.as_ref().map_or(0, ShellProgram::feature_count);
         let semantic_volume = self
-            .semdataset
+            .logic_frame
             .as_ref()
-            .map_or(0, |semdataset| semdataset.forms().len());
+            .map_or(0, |logic_frame| logic_frame.forms().len());
 
         frame_volume
             .saturating_add(feature_volume)
@@ -1927,9 +1927,9 @@ impl GdsShell {
             })
             .saturating_add(self.program.as_ref().map_or(0, ShellProgram::feature_count))
             .saturating_add(
-                self.semdataset
+                self.logic_frame
                     .as_ref()
-                    .map_or(0, |semdataset| semdataset.forms().len()),
+                    .map_or(0, |logic_frame| logic_frame.forms().len()),
             );
 
         ConcreteGraphDimensions::of(node_count, relationship_count)

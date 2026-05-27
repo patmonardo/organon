@@ -48,8 +48,17 @@ pub struct DatasetCompileGdslSourceConfig {
 #[serde(rename_all = "camelCase")]
 pub struct DatasetMaterializeCompilationConfig {
     pub base_name: String,
+    /// When true, materialization emits only the manifest artifact dataset.
+    /// This keeps speculative sessions compact and avoids relation/property
+    /// artifact proliferation.
+    #[serde(default = "default_speculation_mode")]
+    pub speculation_mode: bool,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub compilation_name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub compilation: Option<serde_json::Value>,
+}
+
+fn default_speculation_mode() -> bool {
+    true
 }

@@ -348,16 +348,13 @@ impl DatasetCompilation {
         compilation
     }
 
-    /// Materialize the compilation graph into generic Dataset artifacts.
-    ///
-    /// This preserves a generic substrate: models, features, dependency-style
-    /// relations, and program/image nodes are emitted as rows in shared artifact
-    /// tables rather than as bespoke interface types.
-    pub fn materialize_artifact_datasets(
+    fn collect_materialization_rows(
         &self,
-        base_name: impl AsRef<str>,
-    ) -> Result<DatasetCompilationArtifacts, GDSFrameError> {
-        let base_name = base_name.as_ref();
+    ) -> (
+        Vec<DatasetArtifactRecord>,
+        Vec<DatasetArtifactRelationRecord>,
+        Vec<DatasetArtifactPropertyRecord>,
+    ) {
         let mut artifact_rows = Vec::with_capacity(self.nodes.len());
         let mut relation_rows = Vec::new();
         let mut property_rows = Vec::new();
@@ -400,6 +397,45 @@ impl DatasetCompilation {
                 ));
             }
         }
+
+        (artifact_rows, relation_rows, property_rows)
+    }
+
+    /// Materialize only the manifest dataset for speculative workflows.
+    ///
+    /// This intentionally avoids creating relation/property side datasets so
+    /// speculative sessions do not proliferate artifacts.
+    pub fn materialize_artifact_manifest_dataset(
+        &self,
+        base_name: impl AsRef<str>,
+    ) -> Result<Dataset, GDSFrameError> {
+        let base_name = base_name.as_ref();
+        let (artifact_rows, _, _) = self.collect_materialization_rows();
+
+        let artifacts = Dataset::named(
+            format!("{base_name}.artifacts"),
+            build_artifact_records_table(&artifact_rows)?,
+        )
+        .with_artifact_profile(
+            DatasetArtifactProfile::new(DatasetArtifactKind::Table)
+                .with_facet("artifact-manifest")
+                .with_facet("dataset-compilation")
+                .with_facet("speculation-pruned"),
+        );
+        Ok(artifacts)
+    }
+
+    /// Materialize the compilation graph into generic Dataset artifacts.
+    ///
+    /// This preserves a generic substrate: models, features, dependency-style
+    /// relations, and program/image nodes are emitted as rows in shared artifact
+    /// tables rather than as bespoke interface types.
+    pub fn materialize_artifact_datasets(
+        &self,
+        base_name: impl AsRef<str>,
+    ) -> Result<DatasetCompilationArtifacts, GDSFrameError> {
+        let base_name = base_name.as_ref();
+        let (artifact_rows, relation_rows, property_rows) = self.collect_materialization_rows();
 
         let artifacts = Dataset::named(
             format!("{base_name}.artifacts"),
@@ -653,5 +689,28 @@ mod tests {
             .has_artifact_facet("artifact-manifest"));
         assert_eq!(materialized.artifacts.row_count(), compilation.nodes.len());
         assert!(!materialized.properties.is_empty());
+    }
+
+    #[test]
+    fn compilation_materializes_manifest_only_for_speculation() {
+        let features = ProgramFeatures::new(
+            "gdsl.analytics".to_string(),
+            vec!["centrality".to_string()],
+            vec![ProgramFeature::new(
+                ProgramFeatureKind::Procedure,
+                "procedure::emit_centrality".to_string(),
+                "procedure emit_centrality".to_string(),
+            )],
+        );
+
+        let compilation = DatasetCompilation::from_program_features(&features);
+        let manifest = compilation
+            .materialize_artifact_manifest_dataset("gdsl.analytics")
+            .expect("manifest dataset should materialize");
+
+        assert_eq!(manifest.artifact_kind(), &DatasetArtifactKind::Table);
+        assert!(manifest.has_artifact_facet("artifact-manifest"));
+        assert!(manifest.has_artifact_facet("speculation-pruned"));
+        assert_eq!(manifest.row_count(), compilation.nodes.len());
     }
 }

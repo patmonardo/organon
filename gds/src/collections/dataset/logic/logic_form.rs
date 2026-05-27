@@ -1,10 +1,10 @@
-//! Semantic forms received by the SemDataset fold.
+//! Semantic forms received by the LogicFrame fold.
 
 use crate::form::program::{ProgramFeature, ProgramFeatureKind};
 use crate::ml::nlp::sem::logic::Expression;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct SemForm {
+pub struct LogicForm {
     pub kind: ProgramFeatureKind,
     pub text: String,
     pub source: String,
@@ -12,7 +12,7 @@ pub struct SemForm {
     pub error: Option<String>,
 }
 
-impl SemForm {
+impl LogicForm {
     pub fn new(
         kind: ProgramFeatureKind,
         text: impl Into<String>,
@@ -32,7 +32,7 @@ impl SemForm {
     }
 }
 
-impl From<ProgramFeature> for SemForm {
+impl From<ProgramFeature> for LogicForm {
     fn from(feature: ProgramFeature) -> Self {
         Self::new(feature.kind, feature.value, feature.source)
     }

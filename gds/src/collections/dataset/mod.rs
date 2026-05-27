@@ -21,7 +21,7 @@
 //!    `namespace`) — the Dataset-facing view of the Polars-shaped body.
 //! 2. **Essence middle** (`model`, `feature`, `plan`) — semantic addresses,
 //!    deferred Meta Plans, model preparation, execution, and ontology images.
-//! 3. **Concept return** (`corpus`, `lm`, `sem`) — evidence, language,
+//! 3. **Concept return** (`corpus`, `lm`, `logic`) — evidence, language,
 //!    and semantic forms gathered into end-stage Dataset objects.
 //! 4. **SDK services** (`toolchain`, `compile`, `expressions`, `functions`,
 //!    `catalog`, `registry`, `io`, `stdlib`) — compilation, resource access,
@@ -29,7 +29,7 @@
 //!
 //! Canonical module homes: `language::*` for LanguageModel SubFeatures,
 //! `corpus::*` for Corpus SubFeatures, `model::*`/`feature::*`/`plan::*` for
-//! the Essence fold, and `sem::*` for the SemDataset return fold.
+//! the Essence fold, and `logic::*` for the LogicFrame return fold.
 //!
 //! Boundary notes:
 //! - GUI workflow adaptation (GDSL → TS-JSON → React/Next MVC) is a
@@ -90,7 +90,7 @@ pub mod valuation;
 // =============================================================================
 //
 // Exports below keep the nine-moment SDK readable at the crate root. Prefer
-// `corpus::*`, `language::*`, `feature::*`, `model::*`, and `sem::*` in new code.
+// `corpus::*`, `language::*`, `feature::*`, `model::*`, and `logic::*` in new code.
 
 // -----------------------------------------------------------------------------
 // (1) DSL shell — dataset-side 2×2 matrix and namespace registry.
@@ -122,7 +122,7 @@ pub use namespaces::tree::TreeNs;
 // -----------------------------------------------------------------------------
 
 pub use dataset::Dataset;
-pub use logic::{SemDataset, SemError, SemForm};
+pub use logic::{LogicError, LogicForm, LogicFrame};
 pub use plan::{EvalMode as DatasetEvalMode, Plan as DatasetPlan, PlanEnv, PlanError};
 
 pub use feature::featstruct::{

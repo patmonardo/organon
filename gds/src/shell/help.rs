@@ -586,7 +586,7 @@ static CATALOG: &[ShellHelpEntry] = &[
         "Maximum-likelihood estimation over a token corpus.",
         r#"let mle = MLE::new(); let freq = mle.freq_dist(&tokens);"#,
     ),
-    // Semantics — SemDataset and mediated Concept return
+    // Semantics — LogicFrame and mediated Concept return
     ShellHelpEntry::new(
         "stream",
         ShellVocabKind::Macro,
@@ -595,11 +595,11 @@ static CATALOG: &[ShellHelpEntry] = &[
         r#"let iter = stream!(ds, batch_size: 32);"#,
     ),
     ShellHelpEntry::new(
-        "SemDataset",
+        "LogicFrame",
         ShellVocabKind::Type,
         ShellMomentKind::Semantics,
         "Semantically mediated dataset — Concept-return unification.",
-        r#"let sem = SemDataset::from_texts(&["Being is Essence."])?;"#,
+        r#"let sem = LogicFrame::from_texts(&["Being is Essence."])?;"#,
     ),
     ShellHelpEntry::new(
         "StreamingDataset",

@@ -11,7 +11,7 @@
 pub use crate::collections::dataset::catalog::DatasetCatalog;
 pub use crate::collections::dataset::corpus::Corpus;
 pub use crate::collections::dataset::dataset::Dataset;
-pub use crate::collections::dataset::logic::{SemDataset, SemError, SemForm};
+pub use crate::collections::dataset::logic::{LogicFrame, LogicError, LogicForm};
 pub use crate::collections::dataset::{DatasetArtifactKind, DatasetArtifactProfile};
 
 // Language fold: LanguageModel and statistical LM helpers

@@ -128,19 +128,36 @@ pub(crate) fn handle_materialize_compilation(ctx: &CollectionsContext, request: 
         }
     };
 
-    let artifacts = match compilation.materialize_artifact_datasets(&cfg.base_name) {
-        Ok(a) => a,
-        Err(e) => return err(op, "COMPILATION_ERROR", e.to_string()),
-    };
+    let summary = if cfg.speculation_mode {
+        let artifacts = match compilation.materialize_artifact_manifest_dataset(&cfg.base_name) {
+            Ok(a) => a,
+            Err(e) => return err(op, "COMPILATION_ERROR", e.to_string()),
+        };
 
-    let summary = MaterializationSummary {
-        base_name: cfg.base_name.clone(),
-        artifacts_dataset: artifacts.artifacts.name().map(str::to_string),
-        relations_dataset: artifacts.relations.name().map(str::to_string),
-        properties_dataset: artifacts.properties.name().map(str::to_string),
-        artifact_row_count: Some(artifacts.artifacts.row_count() as u64),
-        relation_row_count: Some(artifacts.relations.row_count() as u64),
-        property_row_count: Some(artifacts.properties.row_count() as u64),
+        MaterializationSummary {
+            base_name: cfg.base_name.clone(),
+            artifacts_dataset: artifacts.name().map(str::to_string),
+            relations_dataset: None,
+            properties_dataset: None,
+            artifact_row_count: Some(artifacts.row_count() as u64),
+            relation_row_count: None,
+            property_row_count: None,
+        }
+    } else {
+        let artifacts = match compilation.materialize_artifact_datasets(&cfg.base_name) {
+            Ok(a) => a,
+            Err(e) => return err(op, "COMPILATION_ERROR", e.to_string()),
+        };
+
+        MaterializationSummary {
+            base_name: cfg.base_name.clone(),
+            artifacts_dataset: artifacts.artifacts.name().map(str::to_string),
+            relations_dataset: artifacts.relations.name().map(str::to_string),
+            properties_dataset: artifacts.properties.name().map(str::to_string),
+            artifact_row_count: Some(artifacts.artifacts.row_count() as u64),
+            relation_row_count: Some(artifacts.relations.row_count() as u64),
+            property_row_count: Some(artifacts.properties.row_count() as u64),
+        }
     };
 
     match serde_json::to_value(summary) {
