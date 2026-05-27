@@ -1,7 +1,5 @@
 //! Splitter for finding optimal decision tree splits.
 //!
-//! Translated from Java GDS ml-algo Splitter.java.
-//! This is a literal 1:1 translation following repository translation policy.
 
 use crate::collections::HugeLongArray;
 use crate::core::utils::paged::HugeSerialIndirectMergeSort;
@@ -118,6 +116,15 @@ impl<'a> Splitter<'a> {
                     self.right_impurity_data.as_mut(),
                 );
 
+                // A split is only realizable when adjacent sorted values differ.
+                // Using a midpoint threshold avoids train/infer mismatch on ties.
+                let current_value = self.features.get(splitting_feature_vector_idx)[feature_idx];
+                let next_feature_vector_idx = right_child_array.get(left_group_size) as usize;
+                let next_value = self.features.get(next_feature_vector_idx)[feature_idx];
+                if (current_value - next_value).abs() <= f64::EPSILON {
+                    continue;
+                }
+
                 let combined_impurity = self.impurity_criterion.combined_impurity(
                     left_impurity_data.as_ref(),
                     self.right_impurity_data.as_ref(),
@@ -126,7 +133,7 @@ impl<'a> Splitter<'a> {
                 if combined_impurity < best_impurity {
                     found_improvement_with_idx = true;
                     best_idx = feature_idx as i32;
-                    best_value = self.features.get(splitting_feature_vector_idx)[feature_idx];
+                    best_value = 0.5 * (current_value + next_value);
                     best_impurity = combined_impurity;
                     best_left_group_size = left_group_size;
                     left_impurity_data.copy_to(best_left_impurity_data.as_mut());
@@ -139,6 +146,26 @@ impl<'a> Splitter<'a> {
                 std::mem::swap(&mut best_right_child_array, &mut right_child_array);
                 std::mem::swap(&mut best_left_child_array, &mut left_child_array);
             }
+        }
+
+        if best_idx < 0 {
+            let mut all_left = HugeLongArray::new(group.size());
+            for idx in 0..group.size() {
+                all_left.set(idx, group.array().get(group.start_idx() + idx));
+            }
+            let left_impurity = self
+                .impurity_criterion
+                .group_impurity(&all_left, 0, group.size());
+            let empty_right = HugeLongArray::new(0);
+            let right_impurity = self.impurity_criterion.group_impurity(&empty_right, 0, 0);
+            return Split::new(
+                0,
+                0.0,
+                Groups::new(
+                    Group::new(all_left, 0, group.size(), left_impurity),
+                    Group::new(empty_right, 0, 0, right_impurity),
+                ),
+            );
         }
 
         Split::new(

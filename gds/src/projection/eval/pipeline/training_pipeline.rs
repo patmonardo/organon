@@ -248,9 +248,10 @@ mod tests {
     #[test]
     fn test_training_type_classification_methods() {
         let methods = TrainingType::Classification.supported_methods();
-        assert_eq!(methods.len(), 3);
+        assert_eq!(methods.len(), 4);
         assert!(methods.contains(&TrainingMethod::LogisticRegression));
         assert!(methods.contains(&TrainingMethod::RandomForestClassification));
+        assert!(methods.contains(&TrainingMethod::SVMClassification));
         assert!(methods.contains(&TrainingMethod::MLPClassification));
     }
 

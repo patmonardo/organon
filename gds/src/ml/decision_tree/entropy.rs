@@ -1,7 +1,5 @@
 //! Entropy impurity criterion for classification.
 //!
-//! Translated from Java GDS ml-algo Entropy.java.
-//! This is a literal 1:1 translation following repository translation policy.
 
 use crate::collections::{HugeIntArray, HugeLongArray};
 use crate::mem::Estimate;

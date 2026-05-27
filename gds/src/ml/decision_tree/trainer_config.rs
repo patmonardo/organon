@@ -4,8 +4,6 @@
 //! harmonized with `RandomForestConfig` semantics and reflected across validation
 //! and runtime logic in the repository.
 //!
-//! Translated from Java GDS ml-algo DecisionTreeTrainerConfig.java.
-//! This is a literal 1:1 translation following repository translation policy.
 
 use crate::config::validation::ConfigError;
 

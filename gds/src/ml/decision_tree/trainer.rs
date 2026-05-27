@@ -4,8 +4,6 @@
 //! matches the convention used by `RandomForest` configs and is used by the
 //! estimation and training logic.
 //!
-//! Translated from Java GDS ml-algo DecisionTreeTrainer.java.
-//! This is a literal 1:1 translation following repository translation policy.
 
 use crate::collections::HugeLongArray;
 use crate::mem::Estimate;

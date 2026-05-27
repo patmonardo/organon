@@ -1,7 +1,5 @@
 //! Impurity criterion trait for decision trees.
 //!
-//! Translated from Java GDS ml-algo ImpurityCriterion.java.
-//! This is a literal 1:1 translation following repository translation policy.
 
 use crate::collections::HugeLongArray;
 use std::any::Any;

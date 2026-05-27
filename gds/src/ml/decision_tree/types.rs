@@ -1,7 +1,5 @@
 //! Type definitions for decision tree algorithms.
 //!
-//! Translated from Java GDS ml-algo Group.java, Groups.java, Split.java interfaces.
-//! This is a literal 1:1 translation following repository translation policy.
 
 use crate::collections::HugeLongArray;
 use crate::ml::decision_tree::{ImpurityData, TreeNode};

@@ -1,7 +1,5 @@
 //! Split mean squared error impurity criterion for regression.
 //!
-//! Translated from Java GDS ml-algo SplitMeanSquaredError.java.
-//! This is a literal 1:1 translation following repository translation policy.
 
 use crate::collections::{HugeDoubleArray, HugeLongArray};
 use crate::mem::Estimate;

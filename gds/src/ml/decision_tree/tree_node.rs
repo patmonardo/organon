@@ -1,7 +1,5 @@
 //! Tree node for decision trees in GDS.
 //!
-//! Translated from Java GDS ml-algo TreeNode.java.
-//! This is a literal 1:1 translation following repository translation policy.
 
 use std::fmt;
 

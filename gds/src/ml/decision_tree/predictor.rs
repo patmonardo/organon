@@ -1,7 +1,5 @@
 //! Decision tree predictor.
 //!
-//! Translated from Java GDS ml-algo DecisionTreePredictor.java.
-//! This is a literal 1:1 translation following repository translation policy.
 
 use crate::ml::decision_tree::TreeNode;
 

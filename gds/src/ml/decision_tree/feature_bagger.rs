@@ -1,7 +1,5 @@
 //! Feature bagger for random feature selection in decision trees.
 //!
-//! Translated from Java GDS ml-algo FeatureBagger.java.
-//! This is a literal 1:1 translation following repository translation policy.
 
 use crate::mem::{Estimate, MemoryRange};
 use crate::ml::core::samplers::IntUniformSamplerFromRange;

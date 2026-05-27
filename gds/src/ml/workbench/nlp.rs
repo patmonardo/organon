@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::sync::Arc;
 
 use crate::collections::dataset::feature::featstruct::format_featstruct;
 use crate::collections::dataset::feature::featstruct::parse_featstruct;
@@ -7,6 +8,19 @@ use crate::collections::dataset::feature::featstruct::unify_featstruct;
 use crate::collections::dataset::feature::featstruct::FeatBindings;
 use crate::collections::dataset::feature::featstruct::FeatStruct;
 use crate::collections::dataset::feature::featstruct::FeatValue;
+use crate::collections::HugeIntArray;
+use crate::concurrency::Concurrency;
+use crate::concurrency::TerminationFlag;
+use crate::core::utils::progress::TaskProgressTracker;
+use crate::core::utils::progress::Tasks;
+use crate::ml::decision_tree::ClassifierImpurityCriterionType;
+use crate::ml::metrics::ModelSpecificMetricsHandler;
+use crate::ml::models::features::DenseFeatures;
+use crate::ml::models::random_forest::RandomForestClassifierTrainer;
+use crate::ml::models::random_forest::RandomForestClassifierTrainerConfig;
+use crate::ml::models::random_forest::RandomForestConfig;
+use crate::ml::models::ClassifierTrainer;
+use crate::ml::models::Features;
 use crate::ml::nlp::classify::classify::Classifier;
 use crate::ml::nlp::classify::decision_tree::DecisionTreeClassifier;
 use crate::ml::nlp::classify::naive_bayes::NaiveBayesClassifier;
@@ -76,6 +90,11 @@ pub fn available_experiments() -> &'static [NlpWorkbenchExperiment] {
             id: "classify-preview",
             name: "NLP Classify FeatureSet Preview",
             focus: "classify::util + naive_bayes + decision_tree",
+        },
+        NlpWorkbenchExperiment {
+            id: "decision-tree-experiment",
+            name: "NLP vs ML Decision Tree Experiment",
+            focus: "classify methods + dense projection + ml::decision_tree baseline",
         },
         NlpWorkbenchExperiment {
             id: "logic-processor-preview",
@@ -396,6 +415,84 @@ pub struct ClassifyPreviewReport {
     pub cases: Vec<ClassifyCase>,
 }
 
+#[derive(Clone, Debug, Serialize)]
+pub struct DecisionTreeExperimentCase {
+    pub text: String,
+    pub expected: String,
+    pub projected_vector: Vec<f64>,
+    pub naive_bayes_predicted: String,
+    pub nlp_decision_tree_classify: String,
+    pub nlp_decision_tree_classify_many: String,
+    pub nlp_decision_tree_prob_top: LabelScore,
+    pub ml_decision_tree_predicted: String,
+    pub ml_decision_tree_probabilities: Vec<f64>,
+}
+
+#[derive(Clone, Debug, Serialize)]
+pub struct MlDecisionTreeTrainCase {
+    pub text: String,
+    pub expected: String,
+    pub projected_vector: Vec<f64>,
+    pub ml_decision_tree_predicted: String,
+    pub ml_decision_tree_probabilities: Vec<f64>,
+}
+
+#[derive(Clone, Debug, Serialize)]
+pub struct MlDecisionTreeDiagnostics {
+    pub projected_feature_names: Vec<String>,
+    pub train_cases: Vec<MlDecisionTreeTrainCase>,
+    pub train_accuracy: f64,
+    pub predicted_label_counts: Vec<LabelCount>,
+    pub predicts_single_label_on_train: bool,
+}
+
+#[derive(Clone, Debug, Serialize)]
+pub struct MlGmlDecisionTreeSweepRun {
+    pub id: String,
+    pub max_features_ratio: f64,
+    pub num_samples_ratio: f64,
+    pub max_depth: usize,
+    pub min_samples_split: usize,
+    pub min_samples_leaf: usize,
+    pub seed: u64,
+    pub train_accuracy: f64,
+    pub test_accuracy: f64,
+    pub predicted_label_counts: Vec<LabelCount>,
+    pub predicts_single_label_on_train: bool,
+}
+
+#[derive(Clone, Debug, Serialize)]
+pub struct LabelCount {
+    pub label: String,
+    pub count: usize,
+}
+
+#[derive(Clone, Debug, Serialize)]
+pub struct FixtureCompatibilityReport {
+    pub nlp_fixture_shape: &'static str,
+    pub ml_fixture_shape: &'static str,
+    pub can_share_raw_fixture: bool,
+    pub projected_fixture_shape: &'static str,
+    pub can_share_via_projection: bool,
+    pub notes: Vec<String>,
+}
+
+#[derive(Clone, Debug, Serialize)]
+pub struct DecisionTreeExperimentReport {
+    pub experiment: &'static str,
+    pub labels: Vec<&'static str>,
+    pub train_size: usize,
+    pub test_size: usize,
+    pub token_vocabulary: Vec<&'static str>,
+    pub naive_bayes_accuracy: f64,
+    pub nlp_decision_tree_accuracy: f64,
+    pub ml_decision_tree_accuracy: f64,
+    pub fixture_compatibility: FixtureCompatibilityReport,
+    pub ml_decision_tree_diagnostics: MlDecisionTreeDiagnostics,
+    pub ml_gml_decision_tree_sweep: Vec<MlGmlDecisionTreeSweepRun>,
+    pub cases: Vec<DecisionTreeExperimentCase>,
+}
+
 pub fn run_classify_preview() -> ClassifyPreviewReport {
     let train_specs: &[(&str, &str)] = &[
         ("goal team win stadium", "sports"),
@@ -481,6 +578,287 @@ pub fn run_classify_preview() -> ClassifyPreviewReport {
     }
 }
 
+pub fn run_decision_tree_experiment() -> DecisionTreeExperimentReport {
+    let train_specs: &[(&str, &str)] = &[
+        ("goal team win stadium", "sports"),
+        ("coach team match season", "sports"),
+        ("stock market bond trade", "finance"),
+        ("bank credit market loan", "finance"),
+        ("player score team", "sports"),
+        ("fund profit investor", "finance"),
+    ];
+    let test_specs: &[(&str, &str)] = &[
+        ("team goal player", "sports"),
+        ("market stock investor", "finance"),
+        ("coach trade stadium", "sports"),
+    ];
+
+    let train_nlp: Vec<(HashMap<String, FeatureValue>, &'static str)> = train_specs
+        .iter()
+        .map(|(text, label)| (topic_features(text), *label))
+        .collect();
+    let test_nlp: Vec<(HashMap<String, FeatureValue>, &'static str)> = test_specs
+        .iter()
+        .map(|(text, label)| (topic_features(text), *label))
+        .collect();
+    let test_nlp_features: Vec<HashMap<String, FeatureValue>> = test_nlp
+        .iter()
+        .map(|(features, _)| features.clone())
+        .collect();
+
+    let naive_bayes = NaiveBayesClassifier::train(&train_nlp, 1.0);
+    let nlp_tree = DecisionTreeClassifier::train(&train_nlp, 0.0, 3, 0);
+    let nb_predictions = naive_bayes.classify_many(&test_nlp_features);
+    let nlp_tree_predictions_many = nlp_tree.classify_many(&test_nlp_features);
+    let nlp_tree_probs = nlp_tree.prob_classify_many(&test_nlp_features);
+
+    let train_dense = DenseFeatures::new(
+        train_specs
+            .iter()
+            .map(|(text, _)| topic_vector(text))
+            .collect::<Vec<_>>(),
+    );
+    let train_labels = HugeIntArray::from_vec(
+        train_specs
+            .iter()
+            .map(|(_, label)| topic_label_to_class(label))
+            .collect::<Vec<_>>(),
+    );
+    let train_set = Arc::new((0..train_dense.size() as u64).collect::<Vec<u64>>());
+
+    let tree_like_trainer = RandomForestClassifierTrainer::new(
+        Concurrency::single_threaded(),
+        2,
+        RandomForestClassifierTrainerConfig {
+            forest: RandomForestConfig {
+                max_features_ratio: Some(1.0),
+                num_samples_ratio: 0.0,
+                num_decision_trees: 1,
+                max_depth: 8,
+                min_samples_split: 2,
+                min_samples_leaf: 1,
+            },
+            criterion: ClassifierImpurityCriterionType::Gini,
+        },
+        Some(4242),
+        TaskProgressTracker::new(Tasks::leaf("nlp-decision-tree-experiment".to_string())),
+        TerminationFlag::default(),
+        Arc::new(ModelSpecificMetricsHandler::noop()),
+    );
+    let ml_tree_like = tree_like_trainer.train(&train_dense, &train_labels, &train_set);
+
+    let test_dense = test_specs
+        .iter()
+        .map(|(text, _)| topic_vector(text))
+        .collect::<Vec<_>>();
+
+    let train_predictions = train_specs
+        .iter()
+        .enumerate()
+        .map(|(index, (_, expected))| {
+            let probabilities = ml_tree_like.predict_probabilities(train_dense.get(index));
+            let predicted = class_to_topic_label(argmax_index(&probabilities));
+            (
+                (*expected).to_string(),
+                predicted.to_string(),
+                probabilities,
+            )
+        })
+        .collect::<Vec<_>>();
+
+    let ml_train_correct = train_predictions
+        .iter()
+        .filter(|(expected, predicted, _)| expected == predicted)
+        .count();
+
+    let predicted_label_counts = label_counts(
+        &train_predictions
+            .iter()
+            .map(|(_, predicted, _)| predicted.clone())
+            .collect::<Vec<_>>(),
+    );
+
+    let train_cases = train_specs
+        .iter()
+        .enumerate()
+        .map(|(index, (text, expected))| MlDecisionTreeTrainCase {
+            text: (*text).to_string(),
+            expected: (*expected).to_string(),
+            projected_vector: train_dense.get(index).to_vec(),
+            ml_decision_tree_predicted: train_predictions[index].1.clone(),
+            ml_decision_tree_probabilities: train_predictions[index].2.clone(),
+        })
+        .collect::<Vec<_>>();
+
+    let ml_tree_probs = test_dense
+        .iter()
+        .map(|row| ml_tree_like.predict_probabilities(row))
+        .collect::<Vec<_>>();
+    let ml_tree_predictions = ml_tree_probs
+        .iter()
+        .map(|probs| class_to_topic_label(argmax_index(probs)).to_string())
+        .collect::<Vec<_>>();
+
+    let ml_correct = ml_tree_predictions
+        .iter()
+        .zip(test_specs.iter())
+        .filter(|(predicted, (_, expected))| predicted.as_str() == *expected)
+        .count();
+
+    let sweep_specs: &[(&str, f64, f64, usize, usize, usize, u64)] = &[
+        ("baseline", 1.0, 0.0, 8, 2, 1, 4242),
+        ("bootstrap", 1.0, 0.8, 8, 2, 1, 4242),
+        ("feature-bagged", 0.5, 0.8, 8, 2, 1, 4242),
+        ("shallow", 1.0, 0.8, 3, 2, 1, 4242),
+        ("alt-seed", 1.0, 0.8, 8, 2, 1, 7),
+    ];
+    let ml_gml_decision_tree_sweep = sweep_specs
+        .iter()
+        .map(
+            |(
+                id,
+                max_features_ratio,
+                num_samples_ratio,
+                max_depth,
+                min_samples_split,
+                min_samples_leaf,
+                seed,
+            )| {
+                let trainer = RandomForestClassifierTrainer::new(
+                    Concurrency::single_threaded(),
+                    2,
+                    RandomForestClassifierTrainerConfig {
+                        forest: RandomForestConfig {
+                            max_features_ratio: Some(*max_features_ratio),
+                            num_samples_ratio: *num_samples_ratio,
+                            num_decision_trees: 1,
+                            max_depth: *max_depth,
+                            min_samples_split: *min_samples_split,
+                            min_samples_leaf: *min_samples_leaf,
+                        },
+                        criterion: ClassifierImpurityCriterionType::Gini,
+                    },
+                    Some(*seed),
+                    TaskProgressTracker::new(Tasks::leaf(format!(
+                        "nlp-decision-tree-experiment-sweep-{id}"
+                    ))),
+                    TerminationFlag::default(),
+                    Arc::new(ModelSpecificMetricsHandler::noop()),
+                );
+                let model = trainer.train(&train_dense, &train_labels, &train_set);
+
+                let train_predictions = (0..train_dense.size())
+                    .map(|index| {
+                        class_to_topic_label(argmax_index(
+                            &model.predict_probabilities(train_dense.get(index)),
+                        ))
+                        .to_string()
+                    })
+                    .collect::<Vec<_>>();
+                let test_predictions = test_dense
+                    .iter()
+                    .map(|row| {
+                        class_to_topic_label(argmax_index(&model.predict_probabilities(row)))
+                    })
+                    .collect::<Vec<_>>();
+
+                let train_correct = train_predictions
+                    .iter()
+                    .zip(train_specs.iter())
+                    .filter(|(predicted, (_, expected))| predicted.as_str() == *expected)
+                    .count();
+                let test_correct = test_predictions
+                    .iter()
+                    .zip(test_specs.iter())
+                    .filter(|(predicted, (_, expected))| **predicted == *expected)
+                    .count();
+
+                let counts = label_counts(&train_predictions);
+                MlGmlDecisionTreeSweepRun {
+                    id: (*id).to_string(),
+                    max_features_ratio: *max_features_ratio,
+                    num_samples_ratio: *num_samples_ratio,
+                    max_depth: *max_depth,
+                    min_samples_split: *min_samples_split,
+                    min_samples_leaf: *min_samples_leaf,
+                    seed: *seed,
+                    train_accuracy: train_correct as f64 / train_specs.len() as f64,
+                    test_accuracy: test_correct as f64 / test_specs.len() as f64,
+                    predicts_single_label_on_train: counts.len() == 1,
+                    predicted_label_counts: counts,
+                }
+            },
+        )
+        .collect::<Vec<_>>();
+
+    let cases = test_specs
+        .iter()
+        .enumerate()
+        .map(|(index, (text, expected))| {
+            let single_prediction = nlp_tree.classify(&test_nlp_features[index]);
+            let top_label = nlp_tree_probs[index]
+                .max()
+                .unwrap_or_else(|| nlp_tree_predictions_many[index]);
+            DecisionTreeExperimentCase {
+                text: (*text).to_string(),
+                expected: (*expected).to_string(),
+                projected_vector: test_dense[index].clone(),
+                naive_bayes_predicted: nb_predictions[index].to_string(),
+                nlp_decision_tree_classify: single_prediction.to_string(),
+                nlp_decision_tree_classify_many: nlp_tree_predictions_many[index].to_string(),
+                nlp_decision_tree_prob_top: LabelScore {
+                    label: top_label.to_string(),
+                    prob: *nlp_tree_probs[index]
+                        .as_map()
+                        .get(top_label)
+                        .unwrap_or(&0.0),
+                },
+                ml_decision_tree_predicted: ml_tree_predictions[index].clone(),
+                ml_decision_tree_probabilities: ml_tree_probs[index].clone(),
+            }
+        })
+        .collect::<Vec<_>>();
+
+    DecisionTreeExperimentReport {
+        experiment: "decision-tree-experiment",
+        labels: vec!["sports", "finance"],
+        train_size: train_specs.len(),
+        test_size: test_specs.len(),
+        token_vocabulary: TOPIC_TOKENS.to_vec(),
+        naive_bayes_accuracy: accuracy(&naive_bayes, &test_nlp),
+        nlp_decision_tree_accuracy: accuracy(&nlp_tree, &test_nlp),
+        ml_decision_tree_accuracy: ml_correct as f64 / test_specs.len() as f64,
+        fixture_compatibility: FixtureCompatibilityReport {
+            nlp_fixture_shape: "Vec<(HashMap<String, FeatureValue>, &str)>",
+            ml_fixture_shape: "DenseFeatures(Vec<Vec<f64>>) + HugeIntArray(Vec<i32>)",
+            can_share_raw_fixture: false,
+            projected_fixture_shape: "Vec<Vec<f64>> projection from NLP FeatureValue map",
+            can_share_via_projection: true,
+            notes: vec![
+                "NLP classifiers consume typed sparse feature maps keyed by strings.".to_string(),
+                "ML/GML (GDS ML) decision_tree path consumes dense numeric vectors plus integer class ids."
+                    .to_string(),
+                "A deterministic feature projection lets both stacks evaluate equivalent cases."
+                    .to_string(),
+            ],
+        },
+        ml_decision_tree_diagnostics: MlDecisionTreeDiagnostics {
+            projected_feature_names: projected_feature_names(),
+            train_cases,
+            train_accuracy: ml_train_correct as f64 / train_specs.len() as f64,
+            predicts_single_label_on_train: predicted_label_counts.len() == 1,
+            predicted_label_counts,
+        },
+        ml_gml_decision_tree_sweep,
+        cases,
+    }
+}
+
+const TOPIC_TOKENS: [&str; 16] = [
+    "goal", "team", "player", "coach", "stadium", "score", "market", "stock", "bank", "bond",
+    "fund", "investor", "trade", "profit", "credit", "loan",
+];
+
 fn topic_features(text: &str) -> HashMap<String, FeatureValue> {
     let mut map = HashMap::new();
     let lower = text.to_lowercase();
@@ -491,10 +869,7 @@ fn topic_features(text: &str) -> HashMap<String, FeatureValue> {
         FeatureValue::Int(lower.split_whitespace().count() as i64),
     );
 
-    for token in [
-        "goal", "team", "player", "coach", "stadium", "score", "market", "stock", "bank", "bond",
-        "fund", "investor", "trade", "profit", "credit", "loan",
-    ] {
+    for token in TOPIC_TOKENS {
         map.insert(
             format!("contains({token})"),
             FeatureValue::Bool(lower.contains(token)),
@@ -502,6 +877,69 @@ fn topic_features(text: &str) -> HashMap<String, FeatureValue> {
     }
 
     map
+}
+
+fn topic_vector(text: &str) -> Vec<f64> {
+    let lower = text.to_lowercase();
+    let mut vector = Vec::with_capacity(TOPIC_TOKENS.len() + 1);
+    vector.push(lower.split_whitespace().count() as f64);
+    for token in TOPIC_TOKENS {
+        vector.push(if lower.contains(token) { 1.0 } else { 0.0 });
+    }
+    vector
+}
+
+fn topic_label_to_class(label: &str) -> i32 {
+    match label {
+        "sports" => 0,
+        "finance" => 1,
+        _ => 0,
+    }
+}
+
+fn class_to_topic_label(class: usize) -> &'static str {
+    match class {
+        0 => "sports",
+        1 => "finance",
+        _ => "sports",
+    }
+}
+
+fn argmax_index(values: &[f64]) -> usize {
+    values
+        .iter()
+        .enumerate()
+        .fold((0usize, f64::NEG_INFINITY), |best, (index, value)| {
+            if *value > best.1 {
+                (index, *value)
+            } else {
+                best
+            }
+        })
+        .0
+}
+
+fn projected_feature_names() -> Vec<String> {
+    let mut names = vec!["len_tokens".to_string()];
+    names.extend(
+        TOPIC_TOKENS
+            .iter()
+            .map(|token| format!("contains({token})")),
+    );
+    names
+}
+
+fn label_counts(predictions: &[String]) -> Vec<LabelCount> {
+    let mut counts = HashMap::<String, usize>::new();
+    for predicted in predictions {
+        *counts.entry(predicted.clone()).or_insert(0) += 1;
+    }
+    let mut counts = counts
+        .into_iter()
+        .map(|(label, count)| LabelCount { label, count })
+        .collect::<Vec<_>>();
+    counts.sort_by(|left, right| right.count.cmp(&left.count));
+    counts
 }
 
 fn feature_value_sample(name: &str) -> Vec<String> {
@@ -747,6 +1185,9 @@ mod tests {
         assert!(experiments.iter().any(|item| item.id == "classify-preview"));
         assert!(experiments
             .iter()
+            .any(|item| item.id == "decision-tree-experiment"));
+        assert!(experiments
+            .iter()
             .any(|item| item.id == "logic-processor-preview"));
     }
 
@@ -851,6 +1292,51 @@ mod tests {
                 .any(|entry| entry.starts_with("alwayson=")),
             "names demo sample should include alwayson"
         );
+    }
+
+    #[test]
+    fn decision_tree_experiment_runs_and_reports_fixture_compatibility() {
+        let report = run_decision_tree_experiment();
+
+        assert_eq!(report.experiment, "decision-tree-experiment");
+        assert_eq!(report.train_size, 6);
+        assert_eq!(report.test_size, 3);
+        assert_eq!(report.cases.len(), 3);
+        assert!(!report.fixture_compatibility.can_share_raw_fixture);
+        assert!(report.fixture_compatibility.can_share_via_projection);
+        assert_eq!(report.ml_decision_tree_diagnostics.train_cases.len(), 6);
+        assert_eq!(
+            report
+                .ml_decision_tree_diagnostics
+                .projected_feature_names
+                .len(),
+            17
+        );
+        assert!(
+            !report
+                .ml_decision_tree_diagnostics
+                .predicts_single_label_on_train,
+            "ML/GML baseline should not collapse to a single class on train"
+        );
+        assert!(report.cases.iter().all(|case| {
+            case.nlp_decision_tree_classify == case.nlp_decision_tree_classify_many
+        }));
+        assert_eq!(report.ml_gml_decision_tree_sweep.len(), 5);
+        assert!(report.ml_gml_decision_tree_sweep.iter().all(|run| {
+            run.predicted_label_counts
+                .iter()
+                .map(|item| item.count)
+                .sum::<usize>()
+                == 6
+        }));
+        assert!(report
+            .ml_gml_decision_tree_sweep
+            .iter()
+            .all(|run| !run.predicts_single_label_on_train));
+        assert!(report
+            .cases
+            .iter()
+            .all(|case| case.projected_vector.len() == 17));
     }
 
     #[test]

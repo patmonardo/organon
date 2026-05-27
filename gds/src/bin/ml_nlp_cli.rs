@@ -1,5 +1,6 @@
 use gds::ml::workbench::nlp::available_experiments;
 use gds::ml::workbench::nlp::run_classify_preview;
+use gds::ml::workbench::nlp::run_decision_tree_experiment;
 use gds::ml::workbench::nlp::run_featstruct_preview;
 use gds::ml::workbench::nlp::run_inference_preview;
 use gds::ml::workbench::nlp::run_logic_preview;
@@ -15,6 +16,7 @@ fn main() {
         "inference-preview" => print_json(run_inference_preview()),
         "featstruct-preview" => print_json(run_featstruct_preview()),
         "classify-preview" => print_json(run_classify_preview()),
+        "decision-tree-experiment" => print_json(run_decision_tree_experiment()),
         "logic-processor-preview" => print_json(run_logic_processor_preview()),
         "help" | "--help" | "-h" => print_help(),
         other => {
@@ -47,5 +49,6 @@ fn print_help() {
     println!("  inference-preview Resolution proof of classic syllogisms");
     println!("  featstruct-preview Feature structure unification and subsumption algebra");
     println!("  classify-preview  Naive Bayes + Decision Tree over NLP FeatureSets");
+    println!("  decision-tree-experiment Compare NLP classify methods with ml decision-tree fixture shape");
     println!("  logic-processor-preview FeatStruct semantics into entailment-style classify");
 }

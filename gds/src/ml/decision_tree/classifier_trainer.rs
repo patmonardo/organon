@@ -1,7 +1,5 @@
 //! Decision tree classifier trainer.
 //!
-//! Translated from Java GDS ml-algo DecisionTreeClassifierTrainer.java.
-//! This is a literal 1:1 translation following repository translation policy.
 
 use crate::collections::HugeIntArray;
 use crate::mem::Estimate;
