@@ -1,6 +1,6 @@
-use crate::collections::dataset::lm::stem::{Stem, StemKind};
-use crate::collections::dataset::lm::stemmer::{suffix_replace, Stemmer};
-use crate::collections::dataset::lm::token::Token;
+use crate::collections::dataset::language::stem::{Stem, StemKind};
+use crate::collections::dataset::language::stemmer::{suffix_replace, Stemmer};
+use crate::collections::dataset::language::token::Token;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum PorterMode {

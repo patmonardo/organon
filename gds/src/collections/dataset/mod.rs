@@ -27,7 +27,7 @@
 //!    `catalog`, `registry`, `io`, `stdlib`) — compilation, resource access,
 //!    namespace builders, and GDSL/SDSL authoring support.
 //!
-//! Canonical module homes: `lm::*` for LanguageModel SubFeatures,
+//! Canonical module homes: `language::*` for LanguageModel SubFeatures,
 //! `corpus::*` for Corpus SubFeatures, `model::*`/`feature::*`/`plan::*` for
 //! the Essence fold, and `sem::*` for the SemDataset return fold.
 //!
@@ -63,8 +63,9 @@ pub mod functions;
 pub mod grammar;
 pub mod graph;
 pub mod io;
+pub mod language;
 pub mod lazy;
-pub mod lm;
+pub mod logic;
 pub mod macros;
 pub mod metrics;
 pub mod model;
@@ -75,7 +76,6 @@ pub mod prelude;
 pub mod probability;
 pub mod registry;
 pub mod schema;
-pub mod sem;
 pub mod series;
 pub mod stdlib;
 pub mod streaming;
@@ -90,7 +90,7 @@ pub mod valuation;
 // =============================================================================
 //
 // Exports below keep the nine-moment SDK readable at the crate root. Prefer
-// `corpus::*`, `lm::*`, `feature::*`, `model::*`, and `sem::*` in new code.
+// `corpus::*`, `language::*`, `feature::*`, `model::*`, and `sem::*` in new code.
 
 // -----------------------------------------------------------------------------
 // (1) DSL shell — dataset-side 2×2 matrix and namespace registry.
@@ -122,8 +122,8 @@ pub use namespaces::tree::TreeNs;
 // -----------------------------------------------------------------------------
 
 pub use dataset::Dataset;
+pub use logic::{SemDataset, SemError, SemForm};
 pub use plan::{EvalMode as DatasetEvalMode, Plan as DatasetPlan, PlanEnv, PlanError};
-pub use sem::{SemDataset, SemError, SemForm};
 
 pub use feature::featstruct::{
     format_featstruct, parse_featstruct, parse_featvalue, subsumes_featstruct, unify_featstruct,
@@ -151,7 +151,7 @@ pub use model::{
 };
 pub use schema::{FeatureSchema, ModelSchema, SymbolDef, SymbolTable};
 
-pub use lm::*;
+pub use language::*;
 
 pub use toolchain::{
     DatasetPipeline, DatasetPipelineArtifacts, DatasetToolChain, GdslSourceLoweringError,
@@ -215,33 +215,6 @@ pub use utils::download::{
     DownloadReport,
 };
 pub use utils::extract::{extract_archive, ExtractReport};
-
-// -----------------------------------------------------------------------------
-// (4) Linguistic stdlib — NLTK-flavored building blocks (parse, tag, stem,
-//     tokenize, tree, language models).
-// -----------------------------------------------------------------------------
-
-pub use lm::parse::{Parse, ParseForest, ParseKind};
-pub use lm::parser::{BracketedParser, DependencyParser, FlatParser, JsonParser, MarkupParser, Parser};
-pub use lm::stem::{Stem, StemKind};
-pub use lm::stemmer::{IdentityStemmer, LowercaseStemmer, SimpleSuffixStemmer, Stemmer};
-pub use lm::tag::{str2tuple, tuple2str, untag, Tag};
-pub use lm::tagger::{DefaultTagger, LookupTagger, RegexTagger, Tagger, UnigramTagger};
-pub use lm::token::{Token, TokenKind, TokenSpan};
-pub use lm::tokenizer::{
-    align_token_texts, align_tokens, blankline_tokenize, line_tokenize, regexp_span_tokenize,
-    regexp_tokenize, spans_to_relative, string_span_tokenize, wordpunct_tokenize,
-    BlanklineTokenizer, CharTokenizer, JsonTokenizer, LineBlankMode, LineTokenizer, MWETokenizer,
-    MarkupTokenizer, RegexpTokenizer, SExprTokenizer, SpaceTokenizer, StringSplitTokenizer,
-    TabTokenizer, Tokenizer, WhitespaceTokenizer, WordPunctTokenizer,
-};
-pub use lm::tree::{
-    format_bracketed, format_pretty, parse_bracketed, MultiParentedIndex, MultiParentedNode,
-    MultiParentedTree, MultiParentedValue, ParentedIndex, ParentedNode, ParentedTree,
-    ParentedValue, ProbabilisticTree, TreeCollection, TreeExpr, TreeId, TreeIndex, TreeLeafExpr,
-    TreeLeafValue, TreeNamespace, TreeNode, TreeOp, TreeParseError, TreePos, TreeSeries,
-    TreeSeriesNameSpace, TreeSpan, TreeTraversal, TreeValue,
-};
 
 pub use functions::model::preprocessing::{
     everygrams, ngrams, pad_both_ends, pad_both_ends_default, padded_everygram_pipeline,

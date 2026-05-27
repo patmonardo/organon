@@ -7,7 +7,12 @@ use regex::Regex;
 
 use crate::collections::dataset::error::DatasetIoError;
 use crate::collections::dataset::functions::tree::parse::parse_bracketed;
-use crate::collections::dataset::lm::parse::{Parse, ParseForest, ParseKind};
+use crate::collections::dataset::language::parse::{Parse, ParseForest, ParseKind};
+use crate::collections::dataset::language::token::Token;
+use crate::collections::dataset::language::tokenizer::{
+    LineBlankMode, LineTokenizer, Tokenizer, WordPunctTokenizer,
+};
+use crate::collections::dataset::language::tree::TreeValue;
 use crate::collections::dataset::stdlib::corpus_util::{
     concat as corpus_concat, read_blankline_block, read_line_block, read_markup_text_block,
     read_sexpr_block_default, read_wordpunct_block, BlockReader, ConcatenatedCorpusView,
@@ -16,11 +21,6 @@ use crate::collections::dataset::stdlib::corpus_util::{
 use crate::collections::dataset::stdlib::resources::{
     fetch_resource, list_resources, DatasetResource,
 };
-use crate::collections::dataset::lm::token::Token;
-use crate::collections::dataset::lm::tokenizer::{
-    LineBlankMode, LineTokenizer, Tokenizer, WordPunctTokenizer,
-};
-use crate::collections::dataset::lm::tree::TreeValue;
 
 #[derive(Debug, Clone)]
 pub struct CorpusFiles {

@@ -1,7 +1,7 @@
 //! Stemmer trait and default implementations.
 
-use crate::collections::dataset::lm::stem::{Stem, StemKind};
-use crate::collections::dataset::lm::token::Token;
+use crate::collections::dataset::language::stem::{Stem, StemKind};
+use crate::collections::dataset::language::token::Token;
 
 /// Pluggable stemmer trait.
 pub trait Stemmer {
@@ -110,7 +110,7 @@ pub fn prefix_replace(original: &str, old: &str, new: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::collections::dataset::lm::token::{TokenKind, TokenSpan};
+    use crate::collections::dataset::language::token::{TokenKind, TokenSpan};
 
     #[test]
     fn identity_stemmer_keeps_text() {

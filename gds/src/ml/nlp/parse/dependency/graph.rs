@@ -6,8 +6,8 @@ use polars::prelude::{lit, Expr, NamedFrom, PlSmallStr, Series};
 
 use crate::collections::dataframe::record;
 use crate::collections::dataframe::{GDSDataFrame, GDSFrameError};
-use crate::collections::dataset::lm::token::{Token, TokenSpan};
-use crate::collections::dataset::lm::tree::TreeValue;
+use crate::collections::dataset::language::token::{Token, TokenSpan};
+use crate::collections::dataset::language::tree::TreeValue;
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct DependencyNode {
@@ -341,7 +341,7 @@ impl DependencyGraph {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::collections::dataset::lm::token::{TokenKind, TokenSpan};
+    use crate::collections::dataset::language::token::{TokenKind, TokenSpan};
 
     #[test]
     fn dependency_graph_from_tokens() {

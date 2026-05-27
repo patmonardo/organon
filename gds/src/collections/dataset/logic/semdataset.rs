@@ -5,9 +5,9 @@ use std::fmt;
 use crate::collections::dataframe::GDSFrameError;
 use crate::collections::dataset::corpus::Corpus;
 use crate::collections::dataset::functions::model::preprocessing::padded_everygram_pipeline;
-use crate::collections::dataset::lm::{LanguageModel, LmError};
-use crate::collections::dataset::sem::SemForm;
-use crate::collections::dataset::lm::tokenizer::Tokenizer;
+use crate::collections::dataset::language::tokenizer::Tokenizer;
+use crate::collections::dataset::language::{LanguageModel, LmError};
+use crate::collections::dataset::logic::SemForm;
 use crate::form::program::ProgramFeature;
 use crate::ml::nlp::sem::logic::{LogicParseError, LogicParser};
 
@@ -154,8 +154,8 @@ fn fit_lm<L: LanguageModel, T: Tokenizer>(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::collections::dataset::lm::MLE;
-    use crate::collections::dataset::lm::tokenizer::WhitespaceTokenizer;
+    use crate::collections::dataset::language::tokenizer::WhitespaceTokenizer;
+    use crate::collections::dataset::language::MLE;
     use crate::form::program::ProgramFeatureKind;
 
     #[test]

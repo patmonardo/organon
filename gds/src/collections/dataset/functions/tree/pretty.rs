@@ -1,6 +1,6 @@
 //! Tree pretty-printer utilities.
 
-use crate::collections::dataset::lm::tree::{TreeLeafValue, TreeValue};
+use crate::collections::dataset::language::tree::{TreeLeafValue, TreeValue};
 
 #[derive(Debug, Clone, Copy)]
 pub struct PrettyOptions {
@@ -85,7 +85,7 @@ fn leaf_label(value: &TreeLeafValue) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::collections::dataset::lm::tree::TreeValue;
+    use crate::collections::dataset::language::tree::TreeValue;
 
     #[test]
     fn pretty_print_includes_root_label() {

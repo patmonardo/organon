@@ -1,6 +1,6 @@
 //! Tree formatting helpers.
 
-use crate::collections::dataset::lm::tree::{TreeLeafValue, TreeValue};
+use crate::collections::dataset::language::tree::{TreeLeafValue, TreeValue};
 
 pub fn format_bracketed(tree: &TreeValue) -> String {
     match tree {
@@ -89,7 +89,7 @@ fn format_token(value: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::collections::dataset::lm::tree::{TreeLeafValue, TreeValue};
+    use crate::collections::dataset::language::tree::{TreeLeafValue, TreeValue};
 
     #[test]
     fn format_bracketed_round_trip() {

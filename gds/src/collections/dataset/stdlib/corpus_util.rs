@@ -7,7 +7,9 @@ use std::path::{Path, PathBuf};
 use regex::Regex;
 
 use crate::collections::dataset::error::DatasetIoError;
-use crate::collections::dataset::lm::tokenizer::{MarkupTokenizer, Tokenizer, WordPunctTokenizer};
+use crate::collections::dataset::language::tokenizer::{
+    MarkupTokenizer, Tokenizer, WordPunctTokenizer,
+};
 
 pub type BlockReader<T> = fn(&mut BufReader<File>) -> Result<Vec<T>, DatasetIoError>;
 

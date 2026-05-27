@@ -1,4 +1,4 @@
-use crate::collections::dataset::lm::token::{Token, TokenKind, TokenSpan};
+use crate::collections::dataset::language::token::{Token, TokenKind, TokenSpan};
 
 use super::{DependencyEdge, DependencyGraph};
 

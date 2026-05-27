@@ -22,9 +22,15 @@ fn canonical_essence_modules_export_expected_types() {
 fn canonical_concept_return_exports_expected_types() {
     type DefaultLm = ds::lm::MLE;
     assert_eq!(
-        TypeId::of::<ds::sem::SemDataset<DefaultLm>>(),
+        TypeId::of::<ds::logic::SemDataset<DefaultLm>>(),
         TypeId::of::<ds::SemDataset<DefaultLm>>()
     );
-    assert_eq!(TypeId::of::<ds::sem::SemForm>(), TypeId::of::<ds::SemForm>());
-    assert_eq!(TypeId::of::<ds::sem::SemError>(), TypeId::of::<ds::SemError>());
+    assert_eq!(
+        TypeId::of::<ds::logic::SemForm>(),
+        TypeId::of::<ds::SemForm>()
+    );
+    assert_eq!(
+        TypeId::of::<ds::logic::SemError>(),
+        TypeId::of::<ds::SemError>()
+    );
 }

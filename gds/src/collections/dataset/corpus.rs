@@ -25,7 +25,7 @@
 //! - `Corpus::from_frames` lets callers assemble a corpus from
 //!   pre-built frames (e.g. when annotations already exist).
 //!
-//! The `LanguageModel` (in [`crate::collections::dataset::lm`]) is the
+//! The `LanguageModel` (in [`crate::collections::dataset::language`]) is the
 //! intensional counterpart to a `Corpus`. A semantic dataset in use is a
 //! `Corpus` paired with a `LanguageModel`: evidence on one side,
 //! meaning on the other.
@@ -57,14 +57,14 @@ use crate::collections::dataset::corpus::document::{columns as doccols, Document
 use crate::collections::dataset::corpus::source::{ContentHash, Source, SourceFrame};
 use crate::collections::dataset::dataset::Dataset;
 use crate::collections::dataset::feature::role::Provenance;
-use crate::collections::dataset::lm::parse::ParseForest;
-use crate::collections::dataset::lm::parser::Parser;
-use crate::collections::dataset::lm::stem::Stem;
-use crate::collections::dataset::lm::stemmer::Stemmer;
-use crate::collections::dataset::lm::tag::Tag;
-use crate::collections::dataset::lm::tagger::Tagger;
-use crate::collections::dataset::lm::token::{Token, TokenSpan};
-use crate::collections::dataset::lm::tokenizer::Tokenizer;
+use crate::collections::dataset::language::parse::ParseForest;
+use crate::collections::dataset::language::parser::Parser;
+use crate::collections::dataset::language::stem::Stem;
+use crate::collections::dataset::language::stemmer::Stemmer;
+use crate::collections::dataset::language::tag::Tag;
+use crate::collections::dataset::language::tagger::Tagger;
+use crate::collections::dataset::language::token::{Token, TokenSpan};
+use crate::collections::dataset::language::tokenizer::Tokenizer;
 
 /// Errors raised when constructing or querying a `Corpus`.
 #[derive(Debug)]
@@ -402,7 +402,10 @@ impl Corpus {
                     span.start() as u64,
                     span.end() as u64,
                     SpanUnit::Byte,
-                    crate::collections::dataset::lm::tag::tuple2str((tag.text(), Some(tag.tag())), "/"),
+                    crate::collections::dataset::language::tag::tuple2str(
+                        (tag.text(), Some(tag.tag())),
+                        "/",
+                    ),
                     provenance,
                 ));
             }
@@ -501,9 +504,9 @@ fn sha256_hex(bytes: &[u8]) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::collections::dataset::lm::parser::FlatParser;
-    use crate::collections::dataset::lm::tagger::DefaultTagger;
-    use crate::collections::dataset::lm::tokenizer::WhitespaceTokenizer;
+    use crate::collections::dataset::language::parser::FlatParser;
+    use crate::collections::dataset::language::tagger::DefaultTagger;
+    use crate::collections::dataset::language::tokenizer::WhitespaceTokenizer;
 
     fn provenance(layer: &str) -> Provenance {
         Provenance::new(layer, "dataset", "v1", "automatic")

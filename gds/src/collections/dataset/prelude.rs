@@ -11,11 +11,11 @@
 pub use crate::collections::dataset::catalog::DatasetCatalog;
 pub use crate::collections::dataset::corpus::Corpus;
 pub use crate::collections::dataset::dataset::Dataset;
-pub use crate::collections::dataset::sem::{SemDataset, SemError, SemForm};
+pub use crate::collections::dataset::logic::{SemDataset, SemError, SemForm};
 pub use crate::collections::dataset::{DatasetArtifactKind, DatasetArtifactProfile};
 
 // Language fold: LanguageModel and statistical LM helpers
-pub use crate::collections::dataset::lm::{
+pub use crate::collections::dataset::language::{
     AbsoluteDiscountingInterpolated, KneserNeyInterpolated, LanguageModel, Laplace, Lidstone,
     LmBase, LmError, NgramCounter, StupidBackoff, Vocabulary, WittenBellInterpolated, MLE,
 };
@@ -57,13 +57,13 @@ pub use crate::collections::dataset::schema::FeatureSchema;
 // Streaming convenience types
 pub use crate::collections::dataset::streaming::{StreamingBatchIter, StreamingDataset};
 
-// LanguageModel SubFeatures and value forms (`lm::*`).
-pub use crate::collections::dataset::lm::stem::{Stem, StemKind};
-pub use crate::collections::dataset::lm::stemmer::{
+// LanguageModel SubFeatures and value forms (`language::*`).
+pub use crate::collections::dataset::language::stem::{Stem, StemKind};
+pub use crate::collections::dataset::language::stemmer::{
     IdentityStemmer, LowercaseStemmer, SimpleSuffixStemmer, Stemmer,
 };
-pub use crate::collections::dataset::lm::token::{Token, TokenKind, TokenSpan};
-pub use crate::collections::dataset::lm::tokenizer::{
+pub use crate::collections::dataset::language::token::{Token, TokenKind, TokenSpan};
+pub use crate::collections::dataset::language::tokenizer::{
     align_token_texts, align_tokens, blankline_tokenize, line_tokenize, regexp_span_tokenize,
     regexp_tokenize, spans_to_relative, string_span_tokenize, wordpunct_tokenize,
     BlanklineTokenizer, CharTokenizer, JsonTokenizer, LineBlankMode, LineTokenizer, MWETokenizer,
@@ -71,8 +71,8 @@ pub use crate::collections::dataset::lm::tokenizer::{
     TabTokenizer, Tokenizer, WhitespaceTokenizer, WordPunctTokenizer,
 };
 
-pub use crate::collections::dataset::lm::parse::{Parse, ParseForest, ParseKind};
-pub use crate::collections::dataset::lm::parser::{
+pub use crate::collections::dataset::language::parse::{Parse, ParseForest, ParseKind};
+pub use crate::collections::dataset::language::parser::{
     BracketedParser, DependencyParser, FlatParser, JsonParser, MarkupParser, Parser,
 };
 
@@ -84,11 +84,11 @@ pub use crate::collections::dataset::feature::featstruct::{
 };
 
 // Tag surface
-pub use crate::collections::dataset::lm::tag::Tag;
-pub use crate::collections::dataset::lm::tag::{str2tuple, tuple2str, untag};
+pub use crate::collections::dataset::language::tag::Tag;
+pub use crate::collections::dataset::language::tag::{str2tuple, tuple2str, untag};
 
 // Tagger surface
-pub use crate::collections::dataset::lm::tagger::{
+pub use crate::collections::dataset::language::tagger::{
     DefaultTagger, LookupTagger, RegexTagger, Tagger, UnigramTagger,
 };
 
@@ -102,7 +102,7 @@ pub use crate::collections::dataset::stdlib::{
 };
 
 // Tree surface (namespace + collection)
-pub use crate::collections::dataset::lm::tree::{
+pub use crate::collections::dataset::language::tree::{
     format_bracketed, format_pretty, parse_bracketed, pretty_print, MultiParentedIndex,
     MultiParentedNode, MultiParentedTree, MultiParentedValue, ParentedIndex, ParentedNode,
     ParentedTree, ParentedValue, PrettyOptions, ProbabilisticTree, TreeCollection, TreeNamespace,

@@ -2,9 +2,9 @@ use std::collections::HashMap;
 
 use regex::Regex;
 
-use crate::collections::dataset::lm::stem::{Stem, StemKind};
-use crate::collections::dataset::lm::stemmer::Stemmer;
-use crate::collections::dataset::lm::token::Token;
+use crate::collections::dataset::language::stem::{Stem, StemKind};
+use crate::collections::dataset::language::stemmer::Stemmer;
+use crate::collections::dataset::language::token::Token;
 
 #[derive(Debug, Clone)]
 pub struct LancasterStemmer {

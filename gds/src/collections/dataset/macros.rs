@@ -154,7 +154,7 @@ macro_rules! get {
 #[macro_export]
 macro_rules! tree {
     ($label:expr => [ $( $child:expr ),* $(,)? ]) => {
-        $crate::collections::dataset::lm::tree::node_expr($label, vec![ $( $child ),* ])
+        $crate::collections::dataset::language::tree::node_expr($label, vec![ $( $child ),* ])
     };
 }
 
@@ -162,7 +162,7 @@ macro_rules! tree {
 #[macro_export]
 macro_rules! tleaf {
     ($value:expr) => {
-        $crate::collections::dataset::lm::tree::leaf_expr($value)
+        $crate::collections::dataset::language::tree::leaf_expr($value)
     };
 }
 
@@ -170,7 +170,7 @@ macro_rules! tleaf {
 #[macro_export]
 macro_rules! tpos {
     ( $( $idx:expr ),+ $(,)? ) => {
-        $crate::collections::dataset::lm::tree::pos_expr(vec![ $( $idx as usize ),+ ])
+        $crate::collections::dataset::language::tree::pos_expr(vec![ $( $idx as usize ),+ ])
     };
 }
 
@@ -178,7 +178,7 @@ macro_rules! tpos {
 #[macro_export]
 macro_rules! troot {
     () => {
-        $crate::collections::dataset::lm::tree::pos_expr(Vec::<usize>::new())
+        $crate::collections::dataset::language::tree::pos_expr(Vec::<usize>::new())
     };
 }
 
@@ -186,7 +186,7 @@ macro_rules! troot {
 #[macro_export]
 macro_rules! tspan {
     ($start:expr, $end:expr $(,)?) => {
-        $crate::collections::dataset::lm::tree::span_expr($start as usize, $end as usize)
+        $crate::collections::dataset::language::tree::span_expr($start as usize, $end as usize)
     };
 }
 
@@ -194,7 +194,7 @@ macro_rules! tspan {
 #[macro_export]
 macro_rules! ttransform {
     ($input:expr, $op:expr $(,)?) => {
-        $crate::collections::dataset::lm::tree::transform_expr($input, $op)
+        $crate::collections::dataset::language::tree::transform_expr($input, $op)
     };
 }
 

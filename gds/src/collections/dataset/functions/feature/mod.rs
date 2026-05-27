@@ -10,7 +10,7 @@ use crate::collections::dataset::expressions::feature::{
 };
 use crate::collections::dataset::expressions::tree::TreePos;
 use crate::collections::dataset::plan::PlanError;
-use crate::collections::dataset::lm::tree::{TreeLeafValue, TreeValue};
+use crate::collections::dataset::language::tree::{TreeLeafValue, TreeValue};
 
 pub fn expand_specs(
     property: impl Into<String>,
@@ -217,7 +217,7 @@ mod tests {
     #[test]
     fn extract_tree_feature_reads_leaf() {
         let tree = TreeValue::node("S", vec![TreeValue::leaf(TreeLeafValue::text("Mary"))]);
-        let pos = crate::collections::dataset::lm::tree::TreePos::new(vec![0]);
+        let pos = crate::collections::dataset::language::tree::TreePos::new(vec![0]);
         let spec = FeatureSpec::new_tree("word", pos);
         let value = extract_tree_feature(&spec, &tree).unwrap();
 
@@ -227,7 +227,7 @@ mod tests {
     #[test]
     fn extract_tree_feature_reads_node_label() {
         let tree = TreeValue::node("S", vec![TreeValue::node("NP", vec![TreeValue::leaf("x")])]);
-        let pos = crate::collections::dataset::lm::tree::TreePos::new(vec![0]);
+        let pos = crate::collections::dataset::language::tree::TreePos::new(vec![0]);
         let spec = FeatureSpec::new_tree("label", pos);
         let value = extract_tree_feature(&spec, &tree).unwrap();
 

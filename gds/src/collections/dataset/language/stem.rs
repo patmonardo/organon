@@ -3,7 +3,7 @@
 use polars::prelude::{lit, Expr};
 
 use crate::collections::dataframe::record;
-use crate::collections::dataset::lm::token::TokenSpan;
+use crate::collections::dataset::language::token::TokenSpan;
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub enum StemKind {

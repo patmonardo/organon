@@ -2,7 +2,7 @@
 //!
 //! Provides parity with `nltk.tree.Tree.fromstring()`.
 
-use crate::collections::dataset::lm::tree::{TreeLeafValue, TreeValue};
+use crate::collections::dataset::language::tree::{TreeLeafValue, TreeValue};
 
 pub trait ParseTreeExt {
     /// Parse a bracketed tree string (e.g. Penn Treebank format) into a `TreeValue`.

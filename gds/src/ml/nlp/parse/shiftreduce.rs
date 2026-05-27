@@ -1,5 +1,5 @@
-use crate::collections::dataset::lm::token::Token;
-use crate::collections::dataset::lm::tree::TreeValue;
+use crate::collections::dataset::language::token::Token;
+use crate::collections::dataset::language::tree::TreeValue;
 
 use super::cfg::{Cfg, GrammarSymbol, ParseError, Production};
 
@@ -305,7 +305,7 @@ impl SteppingShiftReduceParser {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::collections::dataset::lm::token::{TokenKind, TokenSpan};
+    use crate::collections::dataset::language::token::{TokenKind, TokenSpan};
 
     fn grammar() -> Cfg {
         Cfg::new(

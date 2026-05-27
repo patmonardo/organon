@@ -14,7 +14,7 @@ pub use parse::*;
 pub use query::*;
 pub use transform::*;
 
-use crate::collections::dataset::lm::tree::{TreeLeafValue, TreeValue};
+use crate::collections::dataset::language::tree::{TreeLeafValue, TreeValue};
 
 /// The main extension trait that provides NLTK-like capabilities to the base `TreeValue`.
 pub trait NlpTree {

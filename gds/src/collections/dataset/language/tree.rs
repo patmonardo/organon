@@ -9,8 +9,8 @@ use crate::collections::dataset::expressions::tree as tree_expr;
 use crate::collections::dataset::feature::featstruct::FeatStruct;
 use crate::collections::dataset::functions::tree::{format, inspect, pretty, transform};
 use crate::collections::dataset::namespaces::tree::TreeNs;
-use crate::collections::dataset::lm::tag::Tag;
-use crate::collections::dataset::lm::token::TokenSpan;
+use crate::collections::dataset::language::tag::Tag;
+use crate::collections::dataset::language::token::TokenSpan;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct TreeId(pub u64);

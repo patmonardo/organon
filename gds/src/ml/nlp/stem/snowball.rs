@@ -1,6 +1,6 @@
-use crate::collections::dataset::lm::stem::{Stem, StemKind};
-use crate::collections::dataset::lm::stemmer::{suffix_replace, Stemmer};
-use crate::collections::dataset::lm::token::Token;
+use crate::collections::dataset::language::stem::{Stem, StemKind};
+use crate::collections::dataset::language::stemmer::{suffix_replace, Stemmer};
+use crate::collections::dataset::language::token::Token;
 
 use super::porter::{PorterMode, PorterStemmer};
 

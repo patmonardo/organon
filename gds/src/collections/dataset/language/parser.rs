@@ -5,9 +5,9 @@ use serde_json::Value as JsonValue;
 
 use crate::collections::dataset::feature::featstruct::{FeatDict, FeatStruct, FeatValue};
 use crate::collections::dataset::functions::tree::parse::parse_bracketed;
-use crate::collections::dataset::lm::parse::{Parse, ParseForest, ParseKind};
-use crate::collections::dataset::lm::token::{Token, TokenSpan};
-use crate::collections::dataset::lm::tree::{TreeNode, TreeValue};
+use crate::collections::dataset::language::parse::{Parse, ParseForest, ParseKind};
+use crate::collections::dataset::language::token::{Token, TokenSpan};
+use crate::collections::dataset::language::tree::{TreeNode, TreeValue};
 
 /// Pluggable parser trait.
 pub trait Parser {
@@ -325,7 +325,7 @@ fn json_to_tree(value: &JsonValue) -> TreeValue {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::collections::dataset::lm::token::{TokenKind, TokenSpan};
+    use crate::collections::dataset::language::token::{TokenKind, TokenSpan};
 
     #[test]
     fn flat_parser_returns_single_root_parse() {

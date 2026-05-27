@@ -34,16 +34,6 @@
 //!
 //! [`Corpus`]: crate::collections::dataset::corpus::Corpus
 
-pub mod parse;
-pub mod parser;
-pub mod stem;
-pub mod stemmer;
-pub mod tag;
-pub mod tagger;
-pub mod token;
-pub mod tokenizer;
-pub mod tree;
-
 use rand::distributions::WeightedIndex;
 use rand::prelude::{Distribution, SeedableRng, StdRng};
 use std::collections::HashMap;

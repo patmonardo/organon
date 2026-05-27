@@ -1,7 +1,7 @@
 //! Grammar concepts such as Productions and Nonterminals,
 //! designed for parity with `nltk.grammar`.
 
-use crate::collections::dataset::lm::tree::TreeValue;
+use crate::collections::dataset::language::tree::TreeValue;
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct Nonterminal(pub String);
@@ -85,7 +85,7 @@ fn collect_productions(tree: &TreeValue, prods: &mut Vec<Production>) {
                 TreeValue::Leaf(leaf) => {
                     // Extract a string representation for the terminal
                     let t_val = match leaf {
-                        crate::collections::dataset::lm::tree::TreeLeafValue::Text(t) => t.clone(),
+                        crate::collections::dataset::language::tree::TreeLeafValue::Text(t) => t.clone(),
                         _ => format!("{:?}", leaf), // Fallback for other leaf types
                     };
                     rhs.push(ProductionRhs::Terminal(t_val));
