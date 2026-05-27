@@ -20,6 +20,7 @@ fn main() {
         "logistic-vs-mlp-overlap-comparison" => {
             print_json(run_logistic_vs_mlp_overlap_comparison())
         }
+        "tree-vs-random-forest-demo" => print_json(run_tree_vs_random_forest_demo()),
         "mlp-three-class-sweep" => print_json(run_mlp_three_class_sweep()),
         "linear-demo" => print_json(run_linear_demo()),
         "logistic-sweep" => print_json(run_logistic_sweep()),
@@ -164,6 +165,9 @@ fn print_help() {
     );
     println!(
         "  logistic-vs-mlp-overlap-comparison Compare logistic and MLP side-by-side on harder 3-class fixture"
+    );
+    println!(
+        "  tree-vs-random-forest-demo Compare single-tree baseline and Random Forest on binary fixture"
     );
     println!("  mlp-three-class-sweep Compare MLP learning settings on 3-class fixture");
     println!("  linear-demo    Train/evaluate a dense linear regression fixture");

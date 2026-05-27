@@ -5,11 +5,14 @@ use crate::concurrency::Concurrency;
 use crate::concurrency::TerminationFlag;
 use crate::core::utils::progress::NoopProgressTracker;
 use crate::core::utils::progress::TaskProgressTracker;
+use crate::core::utils::progress::Tasks;
+use crate::ml::decision_tree::ClassifierImpurityCriterionType;
 use crate::ml::gradient_descent::GradientDescentConfig;
 use crate::ml::metrics::Accuracy;
 use crate::ml::metrics::ClassificationMetric;
 use crate::ml::metrics::F1Score;
 use crate::ml::metrics::GlobalAccuracy;
+use crate::ml::metrics::ModelSpecificMetricsHandler;
 use crate::ml::metrics::Precision;
 use crate::ml::metrics::Recall;
 use crate::ml::metrics::RegressionMetric;
@@ -20,6 +23,9 @@ use crate::ml::models::logistic_regression::LogisticRegressionTrainConfig;
 use crate::ml::models::logistic_regression::LogisticRegressionTrainer;
 use crate::ml::models::mlp::MLPClassifierTrainConfig;
 use crate::ml::models::mlp::MLPClassifierTrainer;
+use crate::ml::models::random_forest::RandomForestClassifierTrainer;
+use crate::ml::models::random_forest::RandomForestClassifierTrainerConfig;
+use crate::ml::models::random_forest::RandomForestConfig;
 use crate::ml::models::ClassifierTrainer;
 use crate::ml::models::Features;
 use crate::ml::models::RegressorTrainer;
@@ -307,6 +313,30 @@ pub struct ModelComparisonRow {
     pub mlp_probabilities: Vec<f64>,
 }
 
+#[derive(Clone, Debug, Serialize)]
+pub struct TreeForestComparisonReport {
+    pub experiment: &'static str,
+    pub fixture: FixtureReport,
+    pub samples: usize,
+    pub train_size: usize,
+    pub test_size: usize,
+    pub split_seed: u64,
+    pub evaluation_status: &'static str,
+    pub decision_tree: ModelScore,
+    pub random_forest: ModelScore,
+    pub accuracy_delta: f64,
+    pub sample_rows: Vec<TreeForestComparisonRow>,
+}
+
+#[derive(Clone, Debug, Serialize)]
+pub struct TreeForestComparisonRow {
+    pub row: usize,
+    pub label: i32,
+    pub decision_tree_predicted_class: usize,
+    pub random_forest_predicted_class: usize,
+    pub random_forest_probabilities: Vec<f64>,
+}
+
 #[derive(Clone, Debug, Deserialize)]
 struct ClassificationFixture {
     id: String,
@@ -362,6 +392,7 @@ pub fn available_experiments() -> &'static [&'static str] {
         "mlp-three-class-overlap-demo",
         "mlp-three-class-large-demo",
         "logistic-vs-mlp-overlap-comparison",
+        "tree-vs-random-forest-demo",
         "mlp-three-class-sweep",
         "linear-demo",
         "logistic-sweep",
@@ -655,6 +686,129 @@ pub fn run_logistic_vs_mlp_overlap_comparison() -> ModelComparisonReport {
             runtime_millis: mlp_runtime,
         },
         accuracy_delta: mlp_accuracy - logistic_accuracy,
+        sample_rows,
+    }
+}
+
+pub fn run_tree_vs_random_forest_demo() -> TreeForestComparisonReport {
+    let fixture = logistic_three_class_overlap_fixture();
+    let split_seed = 4242;
+
+    let features = DenseFeatures::new(fixture.features.clone());
+    let labels = HugeIntArray::from_vec(fixture.labels.clone());
+    let (train_set, test_set) = split_train_test_indices(features.size(), 0.25, split_seed);
+    let train_set_arc = Arc::new(train_set.clone());
+    let number_of_classes = fixture
+        .labels
+        .iter()
+        .copied()
+        .max()
+        .map(|class_id| class_id as usize + 1)
+        .unwrap_or(0);
+
+    let decision_tree_start = Instant::now();
+    let decision_tree_like_trainer = RandomForestClassifierTrainer::new(
+        Concurrency::single_threaded(),
+        number_of_classes,
+        RandomForestClassifierTrainerConfig {
+            forest: RandomForestConfig {
+                max_features_ratio: Some(1.0),
+                num_samples_ratio: 0.0,
+                num_decision_trees: 1,
+                max_depth: 8,
+                min_samples_split: 2,
+                min_samples_leaf: 1,
+            },
+            criterion: ClassifierImpurityCriterionType::Gini,
+        },
+        Some(4242),
+        TaskProgressTracker::new(Tasks::leaf(
+            "tree-vs-random-forest-demo-baseline".to_string(),
+        )),
+        TerminationFlag::default(),
+        Arc::new(ModelSpecificMetricsHandler::noop()),
+    );
+    let decision_tree_like = decision_tree_like_trainer.train(&features, &labels, &train_set_arc);
+    let decision_tree_runtime = decision_tree_start.elapsed().as_millis();
+
+    let decision_tree_correct = test_set
+        .iter()
+        .filter(|&&index| {
+            let row = index as usize;
+            argmax(&decision_tree_like.predict_probabilities(features.get(row))) as i32
+                == fixture.labels[row]
+        })
+        .count();
+    let decision_tree_accuracy = decision_tree_correct as f64 / test_set.len() as f64;
+
+    let random_forest_start = Instant::now();
+    let random_forest_trainer = RandomForestClassifierTrainer::new(
+        Concurrency::single_threaded(),
+        number_of_classes,
+        RandomForestClassifierTrainerConfig {
+            forest: RandomForestConfig {
+                max_features_ratio: Some(0.5),
+                num_samples_ratio: 0.8,
+                num_decision_trees: 96,
+                max_depth: 0,
+                min_samples_split: 2,
+                min_samples_leaf: 1,
+            },
+            criterion: ClassifierImpurityCriterionType::Gini,
+        },
+        Some(4242),
+        TaskProgressTracker::new(Tasks::leaf("tree-vs-random-forest-demo".to_string())),
+        TerminationFlag::default(),
+        Arc::new(ModelSpecificMetricsHandler::noop()),
+    );
+    let random_forest = random_forest_trainer.train(&features, &labels, &train_set_arc);
+    let random_forest_runtime = random_forest_start.elapsed().as_millis();
+
+    let random_forest_correct = test_set
+        .iter()
+        .filter(|&&index| {
+            let row = index as usize;
+            argmax(&random_forest.predict_probabilities(features.get(row))) as i32
+                == fixture.labels[row]
+        })
+        .count();
+    let random_forest_accuracy = random_forest_correct as f64 / test_set.len() as f64;
+
+    let sample_rows = fixture
+        .sample_rows
+        .iter()
+        .map(|&row| {
+            let random_forest_probabilities =
+                random_forest.predict_probabilities(features.get(row));
+            let decision_tree_probabilities =
+                decision_tree_like.predict_probabilities(features.get(row));
+            TreeForestComparisonRow {
+                row,
+                label: fixture.labels[row],
+                decision_tree_predicted_class: argmax(&decision_tree_probabilities),
+                random_forest_predicted_class: argmax(&random_forest_probabilities),
+                random_forest_probabilities,
+            }
+        })
+        .collect::<Vec<TreeForestComparisonRow>>();
+
+    TreeForestComparisonReport {
+        experiment: "tree-vs-random-forest-demo",
+        fixture: fixture.report(),
+        samples: features.size(),
+        train_size: train_set.len(),
+        test_size: test_set.len(),
+        split_seed,
+        evaluation_status: "evaluated",
+        decision_tree: ModelScore {
+            accuracy: decision_tree_accuracy,
+            runtime_millis: decision_tree_runtime,
+        },
+        random_forest: ModelScore {
+            accuracy: random_forest_accuracy,
+            runtime_millis: random_forest_runtime,
+        },
+        accuracy_delta: random_forest_accuracy - decision_tree_accuracy,
         sample_rows,
     }
 }
@@ -1869,6 +2023,20 @@ mod tests {
         assert_eq!(report.sample_rows.len(), 7);
         assert!((0.0..=1.0).contains(&report.logistic.accuracy));
         assert!((0.0..=1.0).contains(&report.mlp.accuracy));
+    }
+
+    #[test]
+    fn tree_vs_random_forest_demo_reports_both_models() {
+        let report = run_tree_vs_random_forest_demo();
+
+        assert_eq!(report.fixture.id, "logistic-three-class-overlap");
+        assert_eq!(report.samples, 60);
+        assert_eq!(report.train_size + report.test_size, report.samples);
+        assert_eq!(report.split_seed, 4242);
+        assert_eq!(report.sample_rows.len(), 7);
+        assert_eq!(report.evaluation_status, "evaluated");
+        assert!((0.0..=1.0).contains(&report.decision_tree.accuracy));
+        assert!((0.0..=1.0).contains(&report.random_forest.accuracy));
     }
 
     #[test]

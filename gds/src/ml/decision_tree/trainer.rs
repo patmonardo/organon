@@ -14,7 +14,6 @@ use crate::ml::decision_tree::{
     ImpurityCriterion, Splitter, StackRecord, TreeNode,
 };
 use crate::ml::models::Features;
-use std::collections::VecDeque;
 
 pub trait DecisionTreeTrainer<P: Clone> {
     fn impurity_criterion(&self) -> Box<dyn ImpurityCriterion>;
@@ -87,75 +86,28 @@ pub trait DecisionTreeTrainer<P: Clone> {
             self.config().min_leaf_size(),
         );
 
-        let mut stack = VecDeque::new();
-        let root: TreeNode<P>;
-
-        {
-            let mut mutable_train_set_indices = HugeLongArray::new(train_set_indices.len());
-            for (i, &val) in train_set_indices.iter().enumerate() {
-                mutable_train_set_indices.set(i, val);
-            }
-
-            let impurity_data = self.impurity_criterion().group_impurity(
-                &mutable_train_set_indices,
-                0,
-                mutable_train_set_indices.size(),
-            );
-
-            root = self.split_and_push(
-                &mut stack,
-                &mut splitter,
-                &Group::new(
-                    mutable_train_set_indices,
-                    0,
-                    train_set_indices.len(),
-                    impurity_data,
-                ),
-                1,
-            );
+        let mut mutable_train_set_indices = HugeLongArray::new(train_set_indices.len());
+        for (i, &val) in train_set_indices.iter().enumerate() {
+            mutable_train_set_indices.set(i, val);
         }
 
-        let max_depth = self.config().max_depth();
-        let min_split_size = self.config().min_split_size();
+        let impurity_data = self.impurity_criterion().group_impurity(
+            &mutable_train_set_indices,
+            0,
+            mutable_train_set_indices.size(),
+        );
+        let root_group = Group::new(
+            mutable_train_set_indices,
+            0,
+            train_set_indices.len(),
+            impurity_data,
+        );
 
-        while let Some(mut record) = stack.pop_front() {
-            let depth = record.depth();
-            let split = record.split_owned();
-            let groups = split.into_groups();
-            let (left_group, right_group) = groups.into_parts();
-
-            let left_child = if (!crate::ml::decision_tree::is_unlimited_depth(max_depth)
-                && depth >= max_depth)
-                || left_group.size() < min_split_size
-            {
-                TreeNode::new_leaf(self.to_terminal(&left_group))
-            } else {
-                self.split_and_push(&mut stack, &mut splitter, &left_group, depth + 1)
-            };
-
-            let right_child = if (!crate::ml::decision_tree::is_unlimited_depth(max_depth)
-                && depth >= max_depth)
-                || right_group.size() < min_split_size
-            {
-                TreeNode::new_leaf(self.to_terminal(&right_group))
-            } else {
-                self.split_and_push(&mut stack, &mut splitter, &right_group, depth + 1)
-            };
-
-            record.node_mut().set_left_child(left_child);
-            record.node_mut().set_right_child(right_child);
-        }
-
+        let root = self.build_subtree(&mut splitter, &root_group, 1);
         DecisionTreePredictor::new(root)
     }
 
-    fn split_and_push(
-        &self,
-        stack: &mut VecDeque<StackRecord<P>>,
-        splitter: &mut Splitter,
-        group: &Group,
-        depth: usize,
-    ) -> TreeNode<P> {
+    fn build_subtree(&self, splitter: &mut Splitter, group: &Group, depth: usize) -> TreeNode<P> {
         assert!(group.size() > 0);
         assert!(depth >= 1);
 
@@ -174,9 +126,32 @@ pub trait DecisionTreeTrainer<P: Clone> {
             return TreeNode::new_leaf(self.to_terminal(&right_group));
         }
 
-        let node = TreeNode::new_split(split.index(), split.value());
-        stack.push_back(StackRecord::new(node.clone(), split, depth));
+        let max_depth = self.config().max_depth();
+        let min_split_size = self.config().min_split_size();
+        let mut node = TreeNode::new_split(split.index(), split.value());
+        let groups = split.into_groups();
+        let (left_group, right_group) = groups.into_parts();
 
+        let left_child = if (!crate::ml::decision_tree::is_unlimited_depth(max_depth)
+            && depth >= max_depth)
+            || left_group.size() < min_split_size
+        {
+            TreeNode::new_leaf(self.to_terminal(&left_group))
+        } else {
+            self.build_subtree(splitter, &left_group, depth + 1)
+        };
+
+        let right_child = if (!crate::ml::decision_tree::is_unlimited_depth(max_depth)
+            && depth >= max_depth)
+            || right_group.size() < min_split_size
+        {
+            TreeNode::new_leaf(self.to_terminal(&right_group))
+        } else {
+            self.build_subtree(splitter, &right_group, depth + 1)
+        };
+
+        node.set_left_child(left_child);
+        node.set_right_child(right_child);
         node
     }
 }
