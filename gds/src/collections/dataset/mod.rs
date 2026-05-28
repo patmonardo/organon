@@ -47,7 +47,6 @@
 //! - The root should read like an organism, not like an implementation dump:
 //!   `core`, `dsl`, domain folds, and a small `lab` for speculative machinery.
 
-pub mod catalog;
 pub mod core;
 pub mod corpus;
 pub mod dsl;
@@ -66,7 +65,6 @@ pub mod prelude;
 //
 // Exports below use module-level glob re-exports for a uniform surface.
 
-pub use catalog::*;
 pub use core::*;
 pub use corpus::*;
 pub use dsl::namespaces::dataop::DataOpNs;

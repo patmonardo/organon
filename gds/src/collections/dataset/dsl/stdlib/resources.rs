@@ -10,7 +10,7 @@ use zip::ZipArchive;
 
 use crate::collections::catalog::CatalogError;
 use crate::collections::catalog::CollectionsCatalogDiskEntry;
-use crate::collections::dataset::catalog::DatasetCatalog;
+use crate::collections::dataset::core::catalog::DatasetCatalog;
 use crate::collections::dataset::core::error::DatasetIoError;
 use crate::collections::dataset::core::io::detect_format_from_path;
 use crate::collections::dataset::core::utils::download::{copy_local, download_url, DownloadReport};

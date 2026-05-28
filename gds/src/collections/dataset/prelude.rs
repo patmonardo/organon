@@ -8,9 +8,9 @@
 //! ```
 
 // Core SDK and Concept-return types
-pub use crate::collections::dataset::catalog::DatasetCatalog;
-pub use crate::collections::dataset::corpus::Corpus;
+pub use crate::collections::dataset::core::catalog::DatasetCatalog;
 pub use crate::collections::dataset::core::dataset::Dataset;
+pub use crate::collections::dataset::corpus::Corpus;
 pub use crate::collections::dataset::logic::{LogicError, LogicForm, LogicFrame};
 pub use crate::collections::dataset::{DatasetArtifactKind, DatasetArtifactProfile};
 
@@ -111,9 +111,9 @@ pub use crate::collections::dataset::language::tree::{
 
 // Tabular DSL matrix: extension traits
 pub use crate::collections::dataset::frame::expr::ExprDatasetExt;
-pub use crate::collections::dataset::frame::DataFrameDatasetExt;
 pub use crate::collections::dataset::frame::lazy::LazyFrameDatasetExt;
 pub use crate::collections::dataset::frame::series::SeriesDatasetExt;
+pub use crate::collections::dataset::frame::DataFrameDatasetExt;
 
 // Dataset expression namespace
 pub use crate::collections::dataset::dsl::namespaces::dataop::DataOpNs;
@@ -154,7 +154,7 @@ pub use crate::collections::dataset::dsl::functions::{
 };
 
 // Registry types
-pub use crate::collections::dataset::catalog::{
+pub use crate::collections::dataset::core::catalog::{
     DatasetArtifact, DatasetMetadata, DatasetRegistry, DatasetSplit,
 };
 

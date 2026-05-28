@@ -15,7 +15,7 @@ use std::path::PathBuf;
 use std::sync::{Arc, RwLock};
 
 use crate::collections::catalog::CatalogError;
-use crate::collections::dataset::catalog::DatasetCatalog;
+use crate::collections::dataset::core::catalog::DatasetCatalog;
 use crate::collections::dataset::lab::compile::DatasetCompilation;
 use crate::core::User;
 use crate::types::graph_store::DatabaseId;

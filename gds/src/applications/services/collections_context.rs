@@ -14,7 +14,7 @@ use crate::applications::collections::loaders::{
 };
 use crate::applications::collections::services::dataset_catalog_service::DatasetCatalogService;
 use crate::collections::catalog::CatalogError;
-use crate::collections::dataset::catalog::DatasetCatalog;
+use crate::collections::dataset::core::catalog::DatasetCatalog;
 use crate::core::User;
 use crate::types::graph_store::DatabaseId;
 

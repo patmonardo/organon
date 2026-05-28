@@ -5,6 +5,7 @@
 //! durable public types; implementation modules stay grouped under `core`.
 
 pub mod artifact;
+pub mod catalog;
 pub mod dataset;
 pub mod error;
 pub mod graph;
@@ -15,6 +16,7 @@ pub mod utils;
 pub mod valuation;
 
 pub use artifact::*;
+pub use catalog::*;
 pub use dataset::*;
 pub use error::*;
 pub use graph::*;

@@ -9,7 +9,7 @@
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use gds::collections::dataset::catalog::DatasetCatalog;
+use gds::collections::dataset::core::catalog::DatasetCatalog;
 use gds::collections::dataset::prelude::*;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
