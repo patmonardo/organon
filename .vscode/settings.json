@@ -12,6 +12,7 @@
   "[rust]": {
     "editor.defaultFormatter": "rust-lang.rust-analyzer"
   },
+  "rust-analyzer.cargo.allTargets": false,
   "chat.tools.terminal.autoApprove": {
     "cargo run": true
   },

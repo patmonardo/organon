@@ -75,7 +75,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         "Expr is executable operation still in the sphere of Being.",
     );
     let env = PlanEnv::new().bind_dataset("intuition", dataset);
-    let plan = Plan::new(Source::Var("intuition".to_string()))
+    let plan = Plan::new(PlanSource::Var("intuition".to_string()))
         .named("frame-series-expr.preview")
         .push_step(Step::WithColumns(vec![lit("being").alias("sphere")]))
         .project_item(

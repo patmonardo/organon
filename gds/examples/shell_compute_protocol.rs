@@ -94,7 +94,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             "fixtures/collections/shell/shell_compute_protocol/00-frame.csv",
         ))
         .into_shell_with_program_features(program)
-        .materialize_semdataset_from_texts(&[
+        .materialize_logic_frame_from_texts(&[
             "Socrates is human.",
             "All humans are mortal.",
             "Socrates is mortal.",

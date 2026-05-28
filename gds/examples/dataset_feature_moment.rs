@@ -68,7 +68,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Feature 1: select the token column
     let f_token = Feature::new(
-        Plan::new(Source::Value(ds.clone()))
+        Plan::new(PlanSource::Value(ds.clone()))
             .named("token-projection")
             .push_step(Step::Select(vec![
                 polars::prelude::col("term_id"),
@@ -79,7 +79,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Feature 2: select the role column
     let f_role = Feature::new(
-        Plan::new(Source::Value(ds.clone()))
+        Plan::new(PlanSource::Value(ds.clone()))
             .named("role-projection")
             .push_step(Step::Select(vec![
                 polars::prelude::col("term_id"),

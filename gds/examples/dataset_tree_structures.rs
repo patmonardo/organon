@@ -9,7 +9,7 @@
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use gds::collections::dataset::lm::tree::{TreeLeafValue, TreeValue};
+use gds::collections::dataset::language::tree::{TreeLeafValue, TreeValue};
 use gds::collections::dataset::prelude::*;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -216,7 +216,7 @@ fn manifest(
 ) -> String {
     format!(
         "Dataset Tree Structures Fixture\n\n\
-         Namespace: dataset::lm::tree (dataset::tree shim)\n\n\
+         Namespace: dataset::language::tree\n\n\
          00 Hand-Built\n\
          artifact: {}\n\
          meaning: direct TreeValue::node/leaf construction, leaves, height, pretty.\n\n\

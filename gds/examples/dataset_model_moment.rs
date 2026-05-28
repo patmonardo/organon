@@ -125,7 +125,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Feature 1: no mark → always Contingent (predicate-free)
     let f_term = Feature::new(
-        Plan::new(Source::Value(ds.clone()))
+        Plan::new(PlanSource::Value(ds.clone()))
             .named("term-id")
             .push_step(Step::Select(vec![polars::prelude::col("term_id")])),
     )
@@ -133,7 +133,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Feature 2: optional mark {pos: noun} → unifies with seed, Contingent (optional)
     let f_token = Feature::new(
-        Plan::new(Source::Value(ds.clone()))
+        Plan::new(PlanSource::Value(ds.clone()))
             .named("token")
             .push_step(Step::Select(vec![polars::prelude::col("token")])),
     )
@@ -141,7 +141,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Feature 3: required mark {pos: noun} → unifies with seed, Necessary
     let f_pos = Feature::new(
-        Plan::new(Source::Value(ds.clone()))
+        Plan::new(PlanSource::Value(ds.clone()))
             .named("pos")
             .push_step(Step::Select(vec![polars::prelude::col("pos")])),
     )
@@ -149,7 +149,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Feature 4: required mark {pos: verb} → FAILS to unify with {pos: noun} seed → Impossible
     let f_role = Feature::new(
-        Plan::new(Source::Value(ds.clone()))
+        Plan::new(PlanSource::Value(ds.clone()))
             .named("role")
             .push_step(Step::Select(vec![polars::prelude::col("role")])),
     )

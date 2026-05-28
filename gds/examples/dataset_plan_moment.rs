@@ -64,7 +64,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         "Plan construction",
         "Plan::new(source) + step-by-step: Filter, Select, WithColumns, Item.",
     );
-    let plan = Plan::new(Source::Value(ds.clone()))
+    let plan = Plan::new(PlanSource::Value(ds.clone()))
         .named("doctrine-plan")
         .push_step(Step::Filter(
             polars::prelude::col("score").gt_eq(polars::prelude::lit(20i64)),

@@ -56,7 +56,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         "First Mediation",
         "Dataset gives the same body a name, artifact profile, and fixture address.",
     );
-    let ds_frame = ds_frame(table)
+    let mut ds_frame = ds_frame(table)
         .named("dataset-model-feature-plan")
         .artifact_kind(DatasetArtifactKind::ProgramImage)
         .facet("doctrine:027-model-feature-plan-middle")

@@ -77,7 +77,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             program_procedure("persist-semdataset-artifacts"),
         ],
     );
-    let mut sem = SemDataset::fit(corpus, MLE::new(2), &WhitespaceTokenizer)?;
+    let mut sem = LogicFrame::fit(corpus, MLE::new(2), &WhitespaceTokenizer)?;
     sem.ingest_forms(program.features.clone());
     let parsed = sem.parse_forms();
     let lm_path = fixture_root.join("01-lm-report.txt");
@@ -128,7 +128,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             "fixtures/collections/dataset/dataset_sem_meta_pipeline/00-corpus.csv",
         ))
         .into_shell_with_program_features(program)
-        .materialize_semdataset_from_texts(&texts)?;
+        .materialize_logic_frame_from_texts(&texts)?;
     let semantic = shell.semantic_pipeline_knowledge();
     let learning = shell.learning_report();
     let trace = shell.validate_projection_trace();
@@ -178,7 +178,7 @@ fn fixture_path(path: &Path) -> String {
     format!("fixtures/collections/dataset/dataset_sem_meta_pipeline/{file_name}")
 }
 
-fn semform_report(sem: &SemDataset<MLE>) -> String {
+fn semform_report(sem: &LogicFrame<MLE>) -> String {
     let mut report = String::new();
     for form in sem.forms() {
         let status = if form.parsed() { "parsed" } else { "error" };
