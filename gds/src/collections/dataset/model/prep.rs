@@ -36,7 +36,9 @@
 //!   is a policy decision that belongs higher up (eventually in the
 //!   `ToolChain` / Agent layer).
 
-use crate::collections::dataset::feature::featstruct::{unify_featstruct, FeatBindings, FeatStruct};
+use crate::collections::dataset::feature::featstruct::{
+    unify_featstruct, FeatBindings, FeatStruct,
+};
 use crate::collections::dataset::feature::Feature;
 use crate::collections::dataset::model::ModelSpec;
 

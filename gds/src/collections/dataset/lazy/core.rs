@@ -119,9 +119,12 @@ impl LazyFrameDatasetExt for polars::prelude::LazyFrame {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::collections::dataset::expr::ExprDatasetExt;
     use crate::collections::dataset::namespaces::dataop::DataOpNs;
     use crate::collections::dataset::namespaces::dataset::DatasetNs;
+    use crate::collections::dataset::plan::EvalMode;
     use crate::collections::dataset::protocol::projection::DatasetProjectionKind;
+    use crate::collections::dataset::DatasetSplit;
     use polars::df;
     use polars::prelude::{col, lit, IntoLazy};
 
@@ -180,6 +183,50 @@ mod tests {
         assert_eq!(
             projection.columns(),
             ["id".to_string(), "text_norm".to_string()].as_slice()
+        );
+    }
+
+    #[test]
+    fn test_plan_lazy_expr_spine_keeps_authoring_control_and_execution_separate() {
+        let df = df!(
+            "id" => &[1i32, 2, 3],
+            "text" => &["Alpha Beta", "Gamma Delta", "Epsilon Zeta"]
+        )
+        .unwrap();
+
+        let ns = DatasetLazyFrameNameSpace::new(GDSLazyFrame::from_dataframe(df));
+        let text_lower = col("text").ds().text().lowercase().alias("text_lower");
+        let text_encode = DataOpNs::text_encode("normalize");
+
+        let plan = Plan::from_var("ds")
+            .named("lazy-expr-spine")
+            .dataop(text_encode)
+            .batch(64)
+            .split(DatasetSplit::Train)
+            .with_columns([text_lower])
+            .filter(col("id").gt(lit(1i32)))
+            .select([col("id"), col("text_lower")]);
+
+        let report = plan.attention_report(None, EvalMode::Preview);
+        assert_eq!(report.plan_name.as_deref(), Some("lazy-expr-spine"));
+        assert_eq!(report.batch_hint, Some(64));
+        assert_eq!(report.split_hint.as_deref(), Some("Train"));
+        assert_eq!(
+            report.planned_columns,
+            Some(vec!["id".to_string(), "text_lower".to_string()])
+        );
+
+        let out = ns.with_plan(&plan).into_lazyframe().collect().unwrap();
+        assert_eq!(out.shape(), (2, 2));
+        assert_eq!(out.get_column_names(), ["id", "text_lower"]);
+
+        let ids = out.column("id").unwrap().i32().unwrap();
+        assert_eq!(ids.into_no_null_iter().collect::<Vec<_>>(), vec![2, 3]);
+
+        let text_lower = out.column("text_lower").unwrap().str().unwrap();
+        assert_eq!(
+            text_lower.into_no_null_iter().collect::<Vec<_>>(),
+            vec!["gamma delta", "epsilon zeta"]
         );
     }
 }

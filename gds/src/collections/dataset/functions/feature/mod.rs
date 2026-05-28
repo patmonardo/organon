@@ -9,8 +9,8 @@ use crate::collections::dataset::expressions::feature::{
     FeaturePath, FeaturePosition, FeatureSpec, FeatureTemplate, FeatureValue,
 };
 use crate::collections::dataset::expressions::tree::TreePos;
-use crate::collections::dataset::plan::PlanError;
 use crate::collections::dataset::language::tree::{TreeLeafValue, TreeValue};
+use crate::collections::dataset::plan::PlanError;
 
 pub fn expand_specs(
     property: impl Into<String>,

@@ -1,10 +1,10 @@
 use crate::ml::core::tensor::Matrix;
-use crate::ml::models::Classifier;
-use crate::ml::models::ClassifierData;
-use crate::ml::models::Features;
 use crate::ml::models::svm::compute;
 use crate::ml::models::svm::SVMClassifierData;
 use crate::ml::models::svm::SVMOneVsRestModel;
+use crate::ml::models::Classifier;
+use crate::ml::models::ClassifierData;
+use crate::ml::models::Features;
 
 #[derive(Clone)]
 pub struct SVMClassifier {
@@ -62,7 +62,11 @@ impl Classifier for SVMClassifier {
             .data
             .models()
             .iter()
-            .map(|model| model.platt_scaler.calibrate(Self::decision_value(model, features)))
+            .map(|model| {
+                model
+                    .platt_scaler
+                    .calibrate(Self::decision_value(model, features))
+            })
             .collect::<Vec<f64>>();
 
         Self::normalize(&probabilities)

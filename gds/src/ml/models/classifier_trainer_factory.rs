@@ -80,7 +80,10 @@ impl ClassifierTrainerFactory {
                 let svm_config = (config as &dyn std::any::Any)
                     .downcast_ref::<SVMClassifierTrainConfig>()
                     .expect("Invalid config type for SVMClassification");
-                Box::new(SVMClassifierTrainer::new(number_of_classes, svm_config.clone()))
+                Box::new(SVMClassifierTrainer::new(
+                    number_of_classes,
+                    svm_config.clone(),
+                ))
             }
             _ => panic!(
                 "No such training method for classifier: {:?}",

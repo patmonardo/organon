@@ -25,6 +25,8 @@ pub use core::{
 };
 pub use help::{ShellFold, ShellHelp, ShellHelpEntry, ShellMomentKind, ShellVocabKind};
 pub use moments::{ShellAddress, ShellAlgebra, ShellMoment, ShellPipeline, ShellRegister};
-pub use pipeline::{ShellPipelineDescriptor, ShellPipelineFacade, ShellPipelineKind, ShellPureFormReturn};
+pub use pipeline::{
+    ShellPipelineDescriptor, ShellPipelineFacade, ShellPipelineKind, ShellPureFormReturn,
+};
 pub use program::ShellProgram;
 pub use schema::ShellSchema;

@@ -78,10 +78,7 @@ impl TrainerConfig for SVMClassifierTrainConfig {
             SVMKernelType::Linear => "linear".to_string(),
             SVMKernelType::Rbf { .. } => "rbf".to_string(),
         };
-        map.insert(
-            "kernel".to_string(),
-            serde_json::Value::String(kernel_name),
-        );
+        map.insert("kernel".to_string(), serde_json::Value::String(kernel_name));
 
         if let SVMKernelType::Rbf { gamma } = self.kernel {
             map.insert(

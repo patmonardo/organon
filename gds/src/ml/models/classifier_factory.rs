@@ -180,9 +180,7 @@ impl ClassifierFactory {
                     ),
                 )
             }
-            TrainingMethod::SVMClassification => {
-                MemoryEstimations::empty()
-            }
+            TrainingMethod::SVMClassification => MemoryEstimations::empty(),
             _ => panic!(
                 "No such classifier for training method: {:?}",
                 trainer_config.method()

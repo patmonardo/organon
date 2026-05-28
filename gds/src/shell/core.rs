@@ -8,7 +8,8 @@ use crate::collections::dataframe::GDSDataFrame;
 use crate::collections::dataset::corpus::CorpusError;
 use crate::collections::dataset::frame::DatasetDataFrameNameSpace;
 use crate::collections::dataset::{
-    Corpus, Dataset, DatasetPipeline, LanguageModel, LogicFrame, LogicError, WhitespaceTokenizer, MLE,
+    Corpus, Dataset, DatasetPipeline, LanguageModel, LogicError, LogicFrame, WhitespaceTokenizer,
+    MLE,
 };
 use crate::core::graph_dimensions::ConcreteGraphDimensions;
 use crate::core::utils::progress::{TaskProgressTracker, Tasks};

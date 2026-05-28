@@ -430,7 +430,8 @@ pub fn run_cluster_preview() -> ClusterPreviewReport {
 
     for left in 0..samples.len() {
         for right in (left + 1)..samples.len() {
-            let (weight, mut shared) = jaccard_with_shared_tokens(&tokenized[left], &tokenized[right]);
+            let (weight, mut shared) =
+                jaccard_with_shared_tokens(&tokenized[left], &tokenized[right]);
             if weight >= threshold {
                 neighbors[left].push(right);
                 neighbors[right].push(left);
@@ -1009,8 +1010,14 @@ fn tokenize_cluster_text(text: &str) -> Vec<String> {
 }
 
 fn jaccard_with_shared_tokens(left: &[String], right: &[String]) -> (f64, Vec<String>) {
-    let left_set = left.iter().cloned().collect::<std::collections::BTreeSet<_>>();
-    let right_set = right.iter().cloned().collect::<std::collections::BTreeSet<_>>();
+    let left_set = left
+        .iter()
+        .cloned()
+        .collect::<std::collections::BTreeSet<_>>();
+    let right_set = right
+        .iter()
+        .cloned()
+        .collect::<std::collections::BTreeSet<_>>();
 
     let shared = left_set
         .intersection(&right_set)
@@ -1429,7 +1436,10 @@ mod tests {
         assert_eq!(report.experiment, "cluster-preview");
         assert_eq!(report.cases.len(), 7);
         assert!(report.cluster_count >= 3);
-        assert!(report.edges.iter().all(|edge| edge.weight >= report.threshold));
+        assert!(report
+            .edges
+            .iter()
+            .all(|edge| edge.weight >= report.threshold));
         assert!(report
             .edges
             .iter()

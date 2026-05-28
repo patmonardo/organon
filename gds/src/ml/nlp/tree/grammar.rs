@@ -85,7 +85,9 @@ fn collect_productions(tree: &TreeValue, prods: &mut Vec<Production>) {
                 TreeValue::Leaf(leaf) => {
                     // Extract a string representation for the terminal
                     let t_val = match leaf {
-                        crate::collections::dataset::language::tree::TreeLeafValue::Text(t) => t.clone(),
+                        crate::collections::dataset::language::tree::TreeLeafValue::Text(t) => {
+                            t.clone()
+                        }
                         _ => format!("{:?}", leaf), // Fallback for other leaf types
                     };
                     rhs.push(ProductionRhs::Terminal(t_val));
