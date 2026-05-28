@@ -92,6 +92,11 @@ pub fn available_experiments() -> &'static [NlpWorkbenchExperiment] {
             focus: "classify::util + naive_bayes + decision_tree",
         },
         NlpWorkbenchExperiment {
+            id: "cluster-preview",
+            name: "NLP Token Similarity Cluster Preview",
+            focus: "small-text DAG-ish affinity clusters",
+        },
+        NlpWorkbenchExperiment {
             id: "decision-tree-experiment",
             name: "NLP vs ML Decision Tree Experiment",
             focus: "classify methods + dense projection + ml::decision_tree baseline",
@@ -296,6 +301,30 @@ pub struct FeatStructPreviewReport {
     pub subsumptions: Vec<SubsumeProbe>,
 }
 
+#[derive(Clone, Debug, Serialize)]
+pub struct ClusterCase {
+    pub text: String,
+    pub token_count: usize,
+    pub cluster_id: usize,
+}
+
+#[derive(Clone, Debug, Serialize)]
+pub struct ClusterEdge {
+    pub left: String,
+    pub right: String,
+    pub shared_tokens: Vec<String>,
+    pub weight: f64,
+}
+
+#[derive(Clone, Debug, Serialize)]
+pub struct ClusterPreviewReport {
+    pub experiment: &'static str,
+    pub threshold: f64,
+    pub cluster_count: usize,
+    pub cases: Vec<ClusterCase>,
+    pub edges: Vec<ClusterEdge>,
+}
+
 pub fn run_featstruct_preview() -> FeatStructPreviewReport {
     // --- parse/format round-trips ---
     let struct_specs: &[(&'static str, &str)] = &[
@@ -376,6 +405,81 @@ pub fn run_featstruct_preview() -> FeatStructPreviewReport {
         structures,
         unifications,
         subsumptions,
+    }
+}
+
+pub fn run_cluster_preview() -> ClusterPreviewReport {
+    let samples: &[&str] = &[
+        "dog chases cat in garden",
+        "cat sleeps in sunny garden",
+        "bird flies over mountain ridge",
+        "eagle glides above mountain sky",
+        "bank stock market rally",
+        "investor studies stock market trends",
+        "goal team wins stadium match",
+    ];
+    let threshold = 0.20;
+
+    let tokenized = samples
+        .iter()
+        .map(|text| tokenize_cluster_text(text))
+        .collect::<Vec<_>>();
+
+    let mut neighbors = vec![Vec::<usize>::new(); samples.len()];
+    let mut edges = Vec::<ClusterEdge>::new();
+
+    for left in 0..samples.len() {
+        for right in (left + 1)..samples.len() {
+            let (weight, mut shared) = jaccard_with_shared_tokens(&tokenized[left], &tokenized[right]);
+            if weight >= threshold {
+                neighbors[left].push(right);
+                neighbors[right].push(left);
+                shared.sort();
+                edges.push(ClusterEdge {
+                    left: samples[left].to_string(),
+                    right: samples[right].to_string(),
+                    shared_tokens: shared,
+                    weight,
+                });
+            }
+        }
+    }
+
+    let mut cluster_ids = vec![usize::MAX; samples.len()];
+    let mut next_cluster_id = 0usize;
+    for start in 0..samples.len() {
+        if cluster_ids[start] != usize::MAX {
+            continue;
+        }
+        let mut stack = vec![start];
+        cluster_ids[start] = next_cluster_id;
+        while let Some(node) = stack.pop() {
+            for neighbor in &neighbors[node] {
+                if cluster_ids[*neighbor] == usize::MAX {
+                    cluster_ids[*neighbor] = next_cluster_id;
+                    stack.push(*neighbor);
+                }
+            }
+        }
+        next_cluster_id += 1;
+    }
+
+    let cases = samples
+        .iter()
+        .enumerate()
+        .map(|(index, text)| ClusterCase {
+            text: (*text).to_string(),
+            token_count: tokenized[index].len(),
+            cluster_id: cluster_ids[index],
+        })
+        .collect::<Vec<_>>();
+
+    ClusterPreviewReport {
+        experiment: "cluster-preview",
+        threshold,
+        cluster_count: next_cluster_id,
+        cases,
+        edges,
     }
 }
 
@@ -897,6 +1001,29 @@ fn topic_label_to_class(label: &str) -> i32 {
     }
 }
 
+fn tokenize_cluster_text(text: &str) -> Vec<String> {
+    text.to_lowercase()
+        .split_whitespace()
+        .map(|token| token.to_string())
+        .collect()
+}
+
+fn jaccard_with_shared_tokens(left: &[String], right: &[String]) -> (f64, Vec<String>) {
+    let left_set = left.iter().cloned().collect::<std::collections::BTreeSet<_>>();
+    let right_set = right.iter().cloned().collect::<std::collections::BTreeSet<_>>();
+
+    let shared = left_set
+        .intersection(&right_set)
+        .cloned()
+        .collect::<Vec<_>>();
+    let union_size = left_set.union(&right_set).count();
+
+    if union_size == 0 {
+        return (0.0, shared);
+    }
+    (shared.len() as f64 / union_size as f64, shared)
+}
+
 fn class_to_topic_label(class: usize) -> &'static str {
     match class {
         0 => "sports",
@@ -1183,6 +1310,7 @@ mod tests {
         let experiments = available_experiments();
         assert!(experiments.iter().any(|item| item.id == "logic-preview"));
         assert!(experiments.iter().any(|item| item.id == "classify-preview"));
+        assert!(experiments.iter().any(|item| item.id == "cluster-preview"));
         assert!(experiments
             .iter()
             .any(|item| item.id == "decision-tree-experiment"));
@@ -1292,6 +1420,20 @@ mod tests {
                 .any(|entry| entry.starts_with("alwayson=")),
             "names demo sample should include alwayson"
         );
+    }
+
+    #[test]
+    fn cluster_preview_runs_and_reports_clusters() {
+        let report = run_cluster_preview();
+
+        assert_eq!(report.experiment, "cluster-preview");
+        assert_eq!(report.cases.len(), 7);
+        assert!(report.cluster_count >= 3);
+        assert!(report.edges.iter().all(|edge| edge.weight >= report.threshold));
+        assert!(report
+            .edges
+            .iter()
+            .any(|edge| edge.shared_tokens.iter().any(|token| token == "market")));
     }
 
     #[test]

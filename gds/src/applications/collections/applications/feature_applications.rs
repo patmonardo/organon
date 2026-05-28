@@ -17,7 +17,7 @@ use crate::applications::collections::results::{
 use crate::applications::services::collections_context::CollectionsContext;
 use crate::collections::catalog::CatalogError;
 use crate::collections::dataset::feature::Feature;
-use crate::collections::dataset::plan::{EvalMode, Plan, PlanEnv, Source};
+use crate::collections::dataset::plan::{EvalMode, Plan, PlanEnv, PlanSource};
 
 fn ok(op: &str, data: Value) -> Value {
     json!({ "ok": true, "op": op, "data": data })
@@ -66,7 +66,7 @@ fn parse_eval_mode(op: &str, raw: Option<&str>) -> Result<EvalMode, Value> {
 fn feature_from_spec(op: &str, spec: &FeatureSpec, dataset_var: &str) -> Result<Feature, Value> {
     match spec.kind.as_str() {
         "identity" => {
-            let mut plan = Plan::new(Source::Var(dataset_var.to_string()));
+            let mut plan = Plan::new(PlanSource::Var(dataset_var.to_string()));
             if let Some(name) = &spec.name {
                 plan = plan.named(name.clone());
             }

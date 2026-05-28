@@ -217,17 +217,17 @@ impl ValuationFrame {
 
     /// True iff the schema declares a Feature whose `dtype` is
     /// [`FeatureDType::Source`] and whose name matches the
-    /// [`crate::collections::dataset::corpus::document::columns::SOURCE`] convention.
+    /// [`crate::collections::dataset::corpus::document::DOCUMENT_COL_SOURCE`] convention.
     /// This is the doctrinal test for "is this Valuation evidentiary."
     pub fn is_evidentiary(&self) -> bool {
         self.evidentiary_feature().is_some()
     }
 
     fn evidentiary_feature(&self) -> Option<&FeatureDescriptor> {
-        use crate::collections::dataset::corpus::document::columns as doccols;
+        use crate::collections::dataset::corpus::document::DOCUMENT_COL_SOURCE;
         self.schema.iter().find(|d| {
             d.dtype == FeatureDType::Source
-                && d.name.as_str() == doccols::SOURCE
+                && d.name.as_str() == DOCUMENT_COL_SOURCE
                 && matches!(d.role, FeatureRole::Projection)
         })
     }
@@ -262,8 +262,8 @@ mod tests {
     use crate::collections::dataset::corpus::document::SpanUnit;
 
     fn source_feature() -> FeatureDescriptor {
-        use crate::collections::dataset::corpus::document::columns as doccols;
-        FeatureDescriptor::projection(doccols::SOURCE, FeatureDType::Source)
+        use crate::collections::dataset::corpus::document::DOCUMENT_COL_SOURCE;
+        FeatureDescriptor::projection(DOCUMENT_COL_SOURCE, FeatureDType::Source)
     }
 
     #[test]

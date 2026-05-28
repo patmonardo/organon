@@ -6,7 +6,7 @@ use std::path::{Path, PathBuf};
 use regex::Regex;
 
 use crate::collections::dataset::error::DatasetIoError;
-use crate::collections::dataset::functions::tree::parse::parse_bracketed;
+use crate::collections::dataset::functions::treefn::parse::parse_bracketed;
 use crate::collections::dataset::language::parse::{Parse, ParseForest, ParseKind};
 use crate::collections::dataset::language::token::Token;
 use crate::collections::dataset::language::tokenizer::{

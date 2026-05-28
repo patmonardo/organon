@@ -34,7 +34,7 @@ pub mod dataop;
 pub mod dataset;
 pub mod feature;
 pub mod text;
-pub mod tree;
+pub mod tree_ns;
 
 /// Errors raised during namespace registration.
 #[derive(Debug, Clone, PartialEq, Eq)]

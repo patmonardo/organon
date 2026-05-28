@@ -31,7 +31,7 @@ use crate::collections::dataset::namespaces;
 use crate::collections::dataset::namespaces::dataset::DatasetNs;
 use crate::collections::dataset::namespaces::feature::FeatureNs;
 use crate::collections::dataset::namespaces::text::TextNs;
-use crate::collections::dataset::namespaces::tree::TreeNs;
+use crate::collections::dataset::namespaces::tree_ns::TreeNs;
 use crate::form::{ProgramFeature, ProgramFeatureKind, ProgramFeatures};
 use polars::prelude::{col, Expr};
 

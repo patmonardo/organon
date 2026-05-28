@@ -144,17 +144,15 @@ fn span_unit_str(unit: SpanUnit) -> &'static str {
 }
 
 /// Canonical column names for an [`AnnotationFrame`].
-pub mod columns {
-    pub const DOCUMENT: &str = "document";
-    pub const SPAN_START: &str = "span_start";
-    pub const SPAN_END: &str = "span_end";
-    pub const SPAN_UNIT: &str = "span_unit";
-    pub const VALUE: &str = "value";
-    pub const LAYER: &str = "layer";
-    pub const ANNOTATOR: &str = "annotator";
-    pub const GUIDELINE_VERSION: &str = "guideline_version";
-    pub const DERIVATION: &str = "derivation";
-}
+pub const ANNOTATION_COL_DOCUMENT: &str = "document";
+pub const ANNOTATION_COL_SPAN_START: &str = "span_start";
+pub const ANNOTATION_COL_SPAN_END: &str = "span_end";
+pub const ANNOTATION_COL_SPAN_UNIT: &str = "span_unit";
+pub const ANNOTATION_COL_VALUE: &str = "value";
+pub const ANNOTATION_COL_LAYER: &str = "layer";
+pub const ANNOTATION_COL_ANNOTATOR: &str = "annotator";
+pub const ANNOTATION_COL_GUIDELINE_VERSION: &str = "guideline_version";
+pub const ANNOTATION_COL_DERIVATION: &str = "derivation";
 
 /// Frame-level access object for annotation records.
 ///
@@ -170,15 +168,15 @@ impl AnnotationFrame {
     pub fn from_dataframe(df: GDSDataFrame) -> Result<Self, PolarsError> {
         let names: std::collections::HashSet<String> = df.column_names().into_iter().collect();
         for required in [
-            columns::DOCUMENT,
-            columns::SPAN_START,
-            columns::SPAN_END,
-            columns::SPAN_UNIT,
-            columns::VALUE,
-            columns::LAYER,
-            columns::ANNOTATOR,
-            columns::GUIDELINE_VERSION,
-            columns::DERIVATION,
+            ANNOTATION_COL_DOCUMENT,
+            ANNOTATION_COL_SPAN_START,
+            ANNOTATION_COL_SPAN_END,
+            ANNOTATION_COL_SPAN_UNIT,
+            ANNOTATION_COL_VALUE,
+            ANNOTATION_COL_LAYER,
+            ANNOTATION_COL_ANNOTATOR,
+            ANNOTATION_COL_GUIDELINE_VERSION,
+            ANNOTATION_COL_DERIVATION,
         ] {
             if !names.contains(required) {
                 return Err(PolarsError::ColumnNotFound(required.into()));
@@ -214,15 +212,15 @@ impl AnnotationFrame {
         }
 
         let df = DataFrame::new_infer_height(vec![
-            Series::new(columns::DOCUMENT.into(), document).into(),
-            Series::new(columns::SPAN_START.into(), span_start).into(),
-            Series::new(columns::SPAN_END.into(), span_end).into(),
-            Series::new(columns::SPAN_UNIT.into(), span_unit).into(),
-            Series::new(columns::VALUE.into(), value).into(),
-            Series::new(columns::LAYER.into(), layer).into(),
-            Series::new(columns::ANNOTATOR.into(), annotator).into(),
-            Series::new(columns::GUIDELINE_VERSION.into(), guideline_version).into(),
-            Series::new(columns::DERIVATION.into(), derivation).into(),
+            Series::new(ANNOTATION_COL_DOCUMENT.into(), document).into(),
+            Series::new(ANNOTATION_COL_SPAN_START.into(), span_start).into(),
+            Series::new(ANNOTATION_COL_SPAN_END.into(), span_end).into(),
+            Series::new(ANNOTATION_COL_SPAN_UNIT.into(), span_unit).into(),
+            Series::new(ANNOTATION_COL_VALUE.into(), value).into(),
+            Series::new(ANNOTATION_COL_LAYER.into(), layer).into(),
+            Series::new(ANNOTATION_COL_ANNOTATOR.into(), annotator).into(),
+            Series::new(ANNOTATION_COL_GUIDELINE_VERSION.into(), guideline_version).into(),
+            Series::new(ANNOTATION_COL_DERIVATION.into(), derivation).into(),
         ])?;
 
         Ok(Self {
@@ -287,11 +285,11 @@ mod tests {
         let cols: std::collections::HashSet<String> =
             frame.dataframe().column_names().into_iter().collect();
         for c in [
-            columns::DOCUMENT,
-            columns::LAYER,
-            columns::ANNOTATOR,
-            columns::GUIDELINE_VERSION,
-            columns::SPAN_UNIT,
+            ANNOTATION_COL_DOCUMENT,
+            ANNOTATION_COL_LAYER,
+            ANNOTATION_COL_ANNOTATOR,
+            ANNOTATION_COL_GUIDELINE_VERSION,
+            ANNOTATION_COL_SPAN_UNIT,
         ] {
             assert!(cols.contains(c), "missing column {c}");
         }

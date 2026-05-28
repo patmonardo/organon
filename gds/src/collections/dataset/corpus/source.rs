@@ -83,20 +83,18 @@ impl Source {
 }
 
 /// Canonical column names for a `SourceFrame`.
-pub mod columns {
-    pub const URI: &str = "uri";
-    pub const HASH: &str = "hash";
-    pub const MEDIA_TYPE: &str = "media_type";
-    pub const LEN: &str = "len";
-}
+pub const SOURCE_COL_URI: &str = "uri";
+pub const SOURCE_COL_HASH: &str = "hash";
+pub const SOURCE_COL_MEDIA_TYPE: &str = "media_type";
+pub const SOURCE_COL_LEN: &str = "len";
 
 /// The canonical Polars schema for a `SourceFrame`.
 pub fn source_schema() -> Schema {
     Schema::from_iter(vec![
-        Field::new(columns::URI.into(), DataType::String),
-        Field::new(columns::HASH.into(), DataType::String),
-        Field::new(columns::MEDIA_TYPE.into(), DataType::String),
-        Field::new(columns::LEN.into(), DataType::UInt64),
+        Field::new(SOURCE_COL_URI.into(), DataType::String),
+        Field::new(SOURCE_COL_HASH.into(), DataType::String),
+        Field::new(SOURCE_COL_MEDIA_TYPE.into(), DataType::String),
+        Field::new(SOURCE_COL_LEN.into(), DataType::UInt64),
     ])
 }
 
@@ -117,10 +115,10 @@ impl SourceFrame {
     pub fn from_dataframe(df: GDSDataFrame) -> Result<Self, PolarsError> {
         let names: std::collections::HashSet<String> = df.column_names().into_iter().collect();
         for required in [
-            columns::URI,
-            columns::HASH,
-            columns::MEDIA_TYPE,
-            columns::LEN,
+            SOURCE_COL_URI,
+            SOURCE_COL_HASH,
+            SOURCE_COL_MEDIA_TYPE,
+            SOURCE_COL_LEN,
         ] {
             if !names.contains(required) {
                 return Err(PolarsError::ColumnNotFound(required.into()));
@@ -145,10 +143,10 @@ impl SourceFrame {
             lens.push(row.len);
         }
         let df = DataFrame::new_infer_height(vec![
-            Series::new(columns::URI.into(), uris).into(),
-            Series::new(columns::HASH.into(), hashes).into(),
-            Series::new(columns::MEDIA_TYPE.into(), mimes).into(),
-            Series::new(columns::LEN.into(), lens).into(),
+            Series::new(SOURCE_COL_URI.into(), uris).into(),
+            Series::new(SOURCE_COL_HASH.into(), hashes).into(),
+            Series::new(SOURCE_COL_MEDIA_TYPE.into(), mimes).into(),
+            Series::new(SOURCE_COL_LEN.into(), lens).into(),
         ])?;
         Ok(Self {
             df: GDSDataFrame::new(df),
@@ -190,10 +188,10 @@ mod tests {
         let cols: std::collections::HashSet<String> =
             frame.dataframe().column_names().into_iter().collect();
         for c in [
-            columns::URI,
-            columns::HASH,
-            columns::MEDIA_TYPE,
-            columns::LEN,
+            SOURCE_COL_URI,
+            SOURCE_COL_HASH,
+            SOURCE_COL_MEDIA_TYPE,
+            SOURCE_COL_LEN,
         ] {
             assert!(cols.contains(c), "missing column {c}");
         }
@@ -212,7 +210,7 @@ mod tests {
     fn schema_declares_canonical_columns() {
         let schema = source_schema();
         assert_eq!(schema.len(), 4);
-        assert_eq!(schema.get(columns::LEN), Some(&DataType::UInt64));
+        assert_eq!(schema.get(SOURCE_COL_LEN), Some(&DataType::UInt64));
     }
 
     #[test]

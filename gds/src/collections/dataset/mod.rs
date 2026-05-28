@@ -89,134 +89,45 @@ pub mod valuation;
 // Public surface
 // =============================================================================
 //
-// Exports below keep the nine-moment SDK readable at the crate root. Prefer
-// `corpus::*`, `language::*`, `feature::*`, `model::*`, and `logic::*` in new code.
+// Exports below use module-level glob re-exports for a uniform surface.
 
-// -----------------------------------------------------------------------------
-// (1) DSL shell — dataset-side 2×2 matrix and namespace registry.
-// -----------------------------------------------------------------------------
-
-pub use expr::{DatasetExprNameSpace, ExprDatasetExt};
-pub use frame::{DataFrameDatasetExt, DatasetDataFrameNameSpace};
-pub use lazy::{
-    DatasetLazyFrameNameSpace, FeatureLazyFrameNameSpace, LazyFrameDatasetExt,
-    TreeLazyFrameNameSpace,
-};
-pub use series::{DatasetSeriesNameSpace, SeriesDatasetExt};
-
-// Dataset-side namespace registry (distinct from the DataFrame registry).
-pub use namespaces::{
-    is_dataset_namespace_registered, register_corpus_namespace, register_dataset_namespace,
-};
-
-// Built-in dataset namespace builders surfaced at the top level.
-pub use namespaces::dataop::DataOpNs;
-pub use namespaces::dataset::DatasetNs;
-pub use namespaces::feature::{FeatureExprNameSpace, FeatureNs};
-pub use namespaces::text::TextNs;
-pub use namespaces::tree::TreeNs;
-
-// -----------------------------------------------------------------------------
-// (2) Semantic / compiler surfaces — Dataset, Plan, Feature, Model, ToolChain,
-//     compile IR, and the dataset expression algebra.
-// -----------------------------------------------------------------------------
-
-pub use dataset::Dataset;
-pub use logic::{LogicError, LogicForm, LogicFrame};
-pub use plan::{EvalMode as DatasetEvalMode, Plan as DatasetPlan, PlanEnv, PlanError};
-
-pub use feature::featstruct::{
-    format_featstruct, parse_featstruct, parse_featvalue, subsumes_featstruct, unify_featstruct,
-    FeatBindings, FeatDict, FeatList, FeatPath, FeatPathSegment, FeatReentranceId, FeatStruct,
-    FeatStructParseError, FeatStructSet, FeatValue,
-};
-pub use feature::{Feature, FeatureSpace, FeatureView};
-pub use feature::{
-    FeatureCondition, FeatureExpr, FeatureNamespace, FeaturePath, FeaturePosition, FeatureRule,
-    FeatureSeries, FeatureSeriesNameSpace, FeatureSpec, FeatureTemplate, FeatureValue,
-};
-
-pub use model::exec::{
-    execute_essence, execute_feature, execute_marked, ExecutedFeature, Execution, ExecutionAction,
-};
-pub use model::image::{realize_from_essence, realize_image, ImageOptions};
-pub use model::prep::{
-    prepare_model, FeatureMark, MarkRequirement, MarkedFeature, Modality, ModelEssence,
-    ModelPrepExt, PreparationError, PreparationReport, PreparationStep,
-};
-pub use model::{
-    Model, ModelAttributeUpdate, ModelContext, ModelDelta, ModelId, ModelKind, ModelReport,
-    ModelResult, ModelScore, ModelSpace, ModelSpec, ModelState, ModelView, NoOpLanguageModel,
-    NoOpParser, NoOpTagger,
-};
-pub use schema::{FeatureSchema, ModelSchema, SymbolDef, SymbolTable};
-
+pub use artifact::*;
+pub use catalog::*;
+pub use codegen::*;
+pub use collocations::*;
+pub use compile::*;
+pub use corpus::*;
+pub use dataset::*;
+pub use error::*;
+pub use expr::*;
+pub use expressions::dataop::*;
+pub use expressions::io::*;
+pub use expressions::metadata::*;
+pub use expressions::projection::*;
+pub use expressions::registry::*;
+pub use expressions::reporting::*;
+pub use feature::*;
+pub use frame::*;
+pub use functions::*;
+pub use grammar::*;
+pub use graph::*;
+pub use io::*;
 pub use language::*;
-
-pub use toolchain::{
-    DatasetPipeline, DatasetPipelineArtifacts, DatasetToolChain, GdslSourceLoweringError,
-    GenusSpecies, LogicalEngineIntent, ModelSpecRef, MvcEngineIntent, SdslSpecification,
-};
-
-pub use codegen::{render_rust_dsl_module, DslCodegenOptions};
-pub use compile::{
-    ontology_image_from_program_features, DatasetCompilation, DatasetCompilationArtifacts,
-    DatasetNode, DatasetNodeKind, OntologyDataFrameImage, OntologyDataFrameImageTables,
-    OntologyImageConstraintRow, OntologyImageFeatureRow, OntologyImageModelRow,
-    OntologyImageProvenanceRow, OntologyImageQueryRow, OntologyRuntimeMode,
-};
-
-pub use expressions::dataop::{
-    DataFrameLoweringArtifact, DatasetAspectArtifact, DatasetDataOp, DatasetDataOpExpr,
-};
-pub use expressions::io::{DatasetIoExpr, DatasetSource};
-pub use expressions::metadata::DatasetMetadataExpr;
-pub use expressions::projection::{DatasetProjectionExpr, DatasetProjectionKind};
-pub use expressions::registry::DatasetRegistryExpr;
-pub use expressions::reporting::{DatasetReportExpr, DatasetReportKind};
-
-pub use functions::program::{
-    program_appearance, program_concept, program_conclude, program_culminate, program_derive,
-    program_emit, program_feature, program_features, program_from, program_identity,
-    program_import, program_infer, program_judgment, program_key, program_logogenesis,
-    program_mark, program_middle, program_observation, program_principle, program_procedure,
-    program_query, program_reflection, program_require, program_retain, program_source,
-    program_stage, program_subfeature, program_syllogism, program_unfold, program_unify,
-};
-pub use functions::shell::{ds_col, ds_expr, ds_frame, ds_lazy, ds_series};
-pub use functions::{
-    dataop_decode, dataop_encode, dataop_input, dataop_output, dataop_transform, io_path, io_url,
-    metadata, pipeline, project_corpus, project_graph, project_text, registry, registry_versioned,
-    report_profile, report_summary, scan_text_dir, text_decode, text_encode, text_input,
-    text_lifecycle, text_output, text_transform,
-};
-
-pub use metrics::{BinaryMetrics, MetricError};
-
-// -----------------------------------------------------------------------------
-// (3) Catalog, IO, registry, and stdlib resources.
-// -----------------------------------------------------------------------------
-
-pub use artifact::{DatasetArtifactKind, DatasetArtifactProfile};
-pub use catalog::{DatasetCatalog, DatasetCatalogIndex};
-pub use corpus::{AnnotatorEffort, Corpus, CorpusError};
-pub use error::DatasetIoError;
-pub use registry::{DatasetArtifact, DatasetMetadata, DatasetRegistry, DatasetSplit};
-pub use streaming::{StreamingBatchIter, StreamingDataset};
-
-pub use stdlib::{
-    catalog_resource_tables, data_home, data_home_with, fetch_resource, list_resources,
-    resource_dir, BracketedCorpusReader, ConcatenatedCorpusView, CorpusFiles, CorpusReader,
-    CorpusResource, DatasetResource, DatasetResourceReport, PlaintextCorpusReader,
-    StreamBackedCorpusView, WordListCorpusReader, XmlCorpusReader,
-};
-pub use utils::download::{
-    copy_local, download_if_missing, download_to_dir, download_url, stream_to_writer,
-    DownloadReport,
-};
-pub use utils::extract::{extract_archive, ExtractReport};
-
-pub use functions::model::preprocessing::{
-    everygrams, ngrams, pad_both_ends, pad_both_ends_default, padded_everygram_pipeline,
-    padded_everygrams,
-};
+pub use lazy::*;
+pub use logic::*;
+pub use metrics::*;
+pub use model::*;
+pub use namespace::*;
+pub use namespaces::*;
+pub use plan::*;
+pub use probability::*;
+pub use registry::*;
+pub use schema::*;
+pub use series::*;
+pub use stdlib::*;
+pub use streaming::*;
+pub use text::*;
+pub use tgrep::*;
+pub use toolchain::*;
+pub use utils::*;
+pub use valuation::*;

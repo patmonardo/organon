@@ -11,7 +11,7 @@
 pub use crate::collections::dataset::catalog::DatasetCatalog;
 pub use crate::collections::dataset::corpus::Corpus;
 pub use crate::collections::dataset::dataset::Dataset;
-pub use crate::collections::dataset::logic::{LogicFrame, LogicError, LogicForm};
+pub use crate::collections::dataset::logic::{LogicError, LogicForm, LogicFrame};
 pub use crate::collections::dataset::{DatasetArtifactKind, DatasetArtifactProfile};
 
 // Language fold: LanguageModel and statistical LM helpers
@@ -21,7 +21,7 @@ pub use crate::collections::dataset::language::{
 };
 
 // Essence middle: Model:Feature::Plan
-pub use crate::collections::dataset::plan::{EvalMode, Plan, PlanEnv, PlanError, Source, Step};
+pub use crate::collections::dataset::plan::{EvalMode, Plan, PlanEnv, PlanError, PlanSource, Step};
 
 pub use crate::collections::dataset::feature::{
     Feature, FeatureExpr, FeatureExprNameSpace, FeatureNamespace, FeatureSpace, FeatureView,
@@ -120,7 +120,7 @@ pub use crate::collections::dataset::namespaces::dataop::DataOpNs;
 pub use crate::collections::dataset::namespaces::dataset::DatasetNs;
 pub use crate::collections::dataset::namespaces::feature::FeatureNs;
 pub use crate::collections::dataset::namespaces::text::TextNs;
-pub use crate::collections::dataset::namespaces::tree::TreeNs;
+pub use crate::collections::dataset::namespaces::tree_ns::TreeNs;
 pub use crate::collections::dataset::{
     is_dataset_namespace_registered, register_corpus_namespace, register_dataset_namespace,
 };

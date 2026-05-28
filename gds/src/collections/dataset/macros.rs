@@ -304,14 +304,14 @@ macro_rules! pipeline {
 macro_rules! plan {
     (-> $src:ident $( ( $op:ident $($args:tt)* ) )* $(,)?) => {{
         let mut __p = $crate::collections::dataset::plan::Plan::new(
-            $crate::collections::dataset::plan::Source::Var(stringify!($src).to_string()),
+            $crate::collections::dataset::plan::PlanSource::Var(stringify!($src).to_string()),
         );
         $( __p = $crate::plan!(@step __p, $op $($args)*); )*
         __p
     }};
     (-> ( $src:expr ) $( ( $op:ident $($args:tt)* ) )* $(,)?) => {{
         let mut __p = $crate::collections::dataset::plan::Plan::new(
-            $crate::collections::dataset::plan::Source::Value($src),
+            $crate::collections::dataset::plan::PlanSource::Value($src),
         );
         $( __p = $crate::plan!(@step __p, $op $($args)*); )*
         __p

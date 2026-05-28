@@ -24,7 +24,7 @@ pub mod feature;
 pub mod model;
 pub mod program;
 pub mod shell;
-pub mod tree;
+pub mod treefn;
 
 /// Start an empty semantic Dataset pipeline.
 pub fn pipeline() -> DatasetPipeline {

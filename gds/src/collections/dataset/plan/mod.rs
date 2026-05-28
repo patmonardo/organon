@@ -135,7 +135,7 @@ impl PlanEnv {
 }
 
 #[derive(Debug, Clone)]
-pub enum Source {
+pub enum PlanSource {
     Var(String),
     Value(Dataset),
 }
@@ -164,12 +164,12 @@ pub enum Step {
 #[derive(Debug, Clone)]
 pub struct Plan {
     name: Option<String>,
-    source: Source,
+    source: PlanSource,
     steps: Vec<Step>,
 }
 
 impl Plan {
-    pub fn new(source: Source) -> Self {
+    pub fn new(source: PlanSource) -> Self {
         Self {
             name: None,
             source,
@@ -186,7 +186,7 @@ impl Plan {
         self.name.as_deref()
     }
 
-    pub fn source(&self) -> &Source {
+    pub fn source(&self) -> &PlanSource {
         &self.source
     }
 
@@ -232,8 +232,8 @@ impl Plan {
         }
 
         let src = match &self.source {
-            Source::Var(v) => format!("source var({v})"),
-            Source::Value(ds) => ds
+            PlanSource::Var(v) => format!("source var({v})"),
+            PlanSource::Value(ds) => ds
                 .name()
                 .map(|n| format!("source dataset({n})"))
                 .unwrap_or_else(|| "source dataset(<unnamed>)".to_string()),
@@ -258,11 +258,11 @@ impl Plan {
 
     pub fn eval_dataset(&self, env: &PlanEnv, mode: EvalMode) -> Result<Dataset, PlanError> {
         let mut ds = match &self.source {
-            Source::Var(name) => env
+            PlanSource::Var(name) => env
                 .get_dataset(name)
                 .cloned()
                 .ok_or_else(|| PlanError::Message(format!("unbound dataset var: {name}")))?,
-            Source::Value(ds) => ds.clone(),
+            PlanSource::Value(ds) => ds.clone(),
         };
 
         if mode == EvalMode::Preview {
@@ -321,8 +321,8 @@ impl Plan {
 
     pub fn attention_report(&self, env: Option<&PlanEnv>, mode: EvalMode) -> PlanAttentionReport {
         let source = match &self.source {
-            Source::Var(name) => serde_json::json!({"var": name}),
-            Source::Value(ds) => serde_json::json!({
+            PlanSource::Var(name) => serde_json::json!({"var": name}),
+            PlanSource::Value(ds) => serde_json::json!({
                 "dataset": ds.name().unwrap_or("<unnamed>"),
                 "rows": ds.row_count(),
                 "cols": ds.column_count(),

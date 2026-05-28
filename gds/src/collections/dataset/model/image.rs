@@ -283,7 +283,7 @@ mod tests {
     use crate::collections::dataset::feature::Feature;
     use crate::collections::dataset::model::prep::{prepare_model, FeatureMark};
     use crate::collections::dataset::model::{ModelId, ModelKind, ModelSpec, ModelView};
-    use crate::collections::dataset::plan::{Plan, Source};
+    use crate::collections::dataset::plan::{Plan, PlanSource};
     use polars::prelude::{df, IntoLazy};
 
     fn spec() -> ModelSpec {
@@ -297,7 +297,7 @@ mod tests {
     }
 
     fn feature(name: &str) -> Feature {
-        Feature::new(Plan::new(Source::Var("x".to_string()))).named(name)
+        Feature::new(Plan::new(PlanSource::Var("x".to_string()))).named(name)
     }
 
     fn dict(pairs: &[(&str, FeatValue)]) -> FeatStruct {

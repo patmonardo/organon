@@ -80,12 +80,9 @@ impl Span {
     }
 }
 
-/// Canonical column names for a `DocumentFrame`.
-pub mod columns {
-    /// The distinguished Feature `source : Source` — required on every
-    /// `DocumentFrame`. Stored as the source's `ContentHash` string.
-    pub const SOURCE: &str = "source";
-}
+/// The distinguished Feature `source : Source` — required on every
+/// `DocumentFrame`. Stored as the source's `ContentHash` string.
+pub const DOCUMENT_COL_SOURCE: &str = "source";
 
 /// Frame-level access object for a table of `Document` rows. Each row is
 /// one Document; the distinguished `source` column pins it to a `Source`
@@ -101,8 +98,8 @@ impl DocumentFrame {
     /// `source` column is present.
     pub fn from_dataframe(df: GDSDataFrame) -> Result<Self, PolarsError> {
         let names: std::collections::HashSet<String> = df.column_names().into_iter().collect();
-        if !names.contains(columns::SOURCE) {
-            return Err(PolarsError::ColumnNotFound(columns::SOURCE.into()));
+        if !names.contains(DOCUMENT_COL_SOURCE) {
+            return Err(PolarsError::ColumnNotFound(DOCUMENT_COL_SOURCE.into()));
         }
         Ok(Self { df })
     }
@@ -116,7 +113,9 @@ impl DocumentFrame {
     {
         let strs: Vec<String> = hashes.into_iter().map(|h| h.0).collect();
         let df =
-            DataFrame::new_infer_height(vec![Series::new(columns::SOURCE.into(), strs).into()])?;
+            DataFrame::new_infer_height(
+                vec![Series::new(DOCUMENT_COL_SOURCE.into(), strs).into()],
+            )?;
         Ok(Self {
             df: GDSDataFrame::new(df),
         })
@@ -178,6 +177,6 @@ mod tests {
             .dataframe()
             .column_names()
             .iter()
-            .any(|c| c == columns::SOURCE));
+            .any(|c| c == DOCUMENT_COL_SOURCE));
     }
 }

@@ -366,7 +366,7 @@ mod tests {
     use super::*;
     use crate::collections::dataset::feature::featstruct::{FeatDict, FeatStruct, FeatValue};
     use crate::collections::dataset::model::{ModelId, ModelKind, ModelView};
-    use crate::collections::dataset::plan::{Plan, Source};
+    use crate::collections::dataset::plan::{Plan, PlanSource};
 
     fn spec() -> ModelSpec {
         ModelSpec {
@@ -379,7 +379,7 @@ mod tests {
     }
 
     fn feature(name: &str) -> Feature {
-        Feature::new(Plan::new(Source::Var("x".to_string()))).named(name)
+        Feature::new(Plan::new(PlanSource::Var("x".to_string()))).named(name)
     }
 
     fn dict(pairs: &[(&str, FeatValue)]) -> FeatStruct {

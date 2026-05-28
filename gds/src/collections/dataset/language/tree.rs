@@ -7,10 +7,10 @@ use std::collections::BTreeMap;
 
 use crate::collections::dataset::expressions::tree as tree_expr;
 use crate::collections::dataset::feature::featstruct::FeatStruct;
-use crate::collections::dataset::functions::tree::{format, inspect, pretty, transform};
-use crate::collections::dataset::namespaces::tree::TreeNs;
+use crate::collections::dataset::functions::treefn::{format, inspect, pretty, transform};
 use crate::collections::dataset::language::tag::Tag;
 use crate::collections::dataset::language::token::TokenSpan;
+use crate::collections::dataset::namespaces::tree_ns::TreeNs;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct TreeId(pub u64);
@@ -848,12 +848,12 @@ pub fn transform_named_expr(
 pub use crate::collections::dataset::expressions::tree::{
     TreeExpr, TreeLabel, TreeLeafExpr, TreeOp, TreePos, TreeSpan,
 };
-pub use crate::collections::dataset::functions::tree as tree_fn;
-pub use crate::collections::dataset::functions::tree::format::{format_bracketed, format_pretty};
-pub use crate::collections::dataset::functions::tree::inspect::TreeTraversal;
-pub use crate::collections::dataset::functions::tree::parse::{parse_bracketed, TreeParseError};
-pub use crate::collections::dataset::functions::tree::pretty::{pretty_print, PrettyOptions};
-pub use crate::collections::dataset::namespaces::tree::TreeNs as TreeNamespace;
+pub use crate::collections::dataset::functions::treefn as tree_fn;
+pub use crate::collections::dataset::functions::treefn::format::{format_bracketed, format_pretty};
+pub use crate::collections::dataset::functions::treefn::inspect::TreeTraversal;
+pub use crate::collections::dataset::functions::treefn::parse::{parse_bracketed, TreeParseError};
+pub use crate::collections::dataset::functions::treefn::pretty::{pretty_print, PrettyOptions};
+pub use crate::collections::dataset::namespaces::tree_ns::TreeNs as TreeNamespace;
 
 #[cfg(test)]
 mod tests {

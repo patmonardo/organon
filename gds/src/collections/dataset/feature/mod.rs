@@ -577,10 +577,10 @@ impl FeatureSeriesNameSpace {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::collections::dataset::plan::Source;
+    use crate::collections::dataset::plan::PlanSource;
 
     fn feature_named(name: &str) -> Feature {
-        Feature::new(Plan::new(Source::Var("ds".to_string()))).named(name)
+        Feature::new(Plan::new(PlanSource::Var("ds".to_string()))).named(name)
     }
 
     #[test]

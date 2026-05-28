@@ -37,10 +37,6 @@
 //! - [`annotation`] — annotation records and annotation frames;
 //! - [`source`] — source identity, content hashes, and media types.
 //!
-pub mod annotation;
-pub mod document;
-pub mod source;
-
 use std::collections::BTreeSet;
 use std::fs::read_to_string;
 use std::path::Path;
@@ -50,10 +46,14 @@ use sha2::{Digest, Sha256};
 
 use crate::collections::dataframe::{GDSDataFrame, GDSFrameError};
 use crate::collections::dataset::artifact::DatasetArtifactKind;
-use crate::collections::dataset::corpus::annotation::{
-    columns as anncols, AnnotationFrame, AnnotationRecord,
-};
-use crate::collections::dataset::corpus::document::{columns as doccols, DocumentFrame, SpanUnit};
+use crate::collections::dataset::corpus::annotation::AnnotationFrame;
+use crate::collections::dataset::corpus::annotation::AnnotationRecord;
+use crate::collections::dataset::corpus::annotation::ANNOTATION_COL_ANNOTATOR;
+use crate::collections::dataset::corpus::annotation::ANNOTATION_COL_GUIDELINE_VERSION;
+use crate::collections::dataset::corpus::annotation::ANNOTATION_COL_LAYER;
+use crate::collections::dataset::corpus::document::DocumentFrame;
+use crate::collections::dataset::corpus::document::SpanUnit;
+use crate::collections::dataset::corpus::document::DOCUMENT_COL_SOURCE;
 use crate::collections::dataset::corpus::source::{ContentHash, Source, SourceFrame};
 use crate::collections::dataset::dataset::Dataset;
 use crate::collections::dataset::feature::role::Provenance;
@@ -281,9 +281,9 @@ impl Corpus {
             return Ok(BTreeSet::new());
         }
 
-        let layer = df.column(anncols::LAYER)?.str()?.clone();
-        let annotator = df.column(anncols::ANNOTATOR)?.str()?.clone();
-        let guideline = df.column(anncols::GUIDELINE_VERSION)?.str()?.clone();
+        let layer = df.column(ANNOTATION_COL_LAYER)?.str()?.clone();
+        let annotator = df.column(ANNOTATION_COL_ANNOTATOR)?.str()?.clone();
+        let guideline = df.column(ANNOTATION_COL_GUIDELINE_VERSION)?.str()?.clone();
 
         let mut out = BTreeSet::new();
         for i in 0..df.height() {
@@ -461,7 +461,7 @@ impl Corpus {
 
     fn document_hashes(&self) -> Result<Vec<String>, CorpusError> {
         let df = self.documents.dataframe().dataframe().clone();
-        let series = df.column(doccols::SOURCE)?.as_materialized_series();
+        let series = df.column(DOCUMENT_COL_SOURCE)?.as_materialized_series();
         let mut out = Vec::with_capacity(series.len());
         for i in 0..series.len() {
             out.push(series.get(i)?.to_string());
