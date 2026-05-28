@@ -87,3 +87,53 @@ Suggested future split under `macros/`:
 - Module root remains thin.
 - No new ambiguous glob re-export warnings.
 - Public API names remain stable unless explicitly renamed in the same PR.
+
+## Job One: Frame Upgrade Program (Step One)
+
+Frame upgrade is the initial priority. In Dataset terms, this means upgrading
+these surfaces together as one compatibility unit:
+
+- `frame`
+- `lazy`
+- `series`
+- `expr`
+- `namespaces`
+- `functions`
+
+### Architectural intent
+
+- DataFrame is the UR DSL and remains isomorphic to the Polars Python DSL.
+- Dataset must stay compatible with DataFrame semantics while adding higher
+	semantic layers.
+- GDSL can be treated as a language that composes these surfaces, not a
+	replacement for them.
+
+### Non-negotiable invariants
+
+- Dataset `Expr/LazyFrame/DataFrame/Series` `.ds()` pathways preserve DataFrame
+	meaning for equivalent operations.
+- Namespace builders are thin and deterministic; no hidden semantic mutation.
+- Functions are not speculative wrappers; each function must map to a known
+	lazy/dataframe execution model.
+
+### Immediate work order
+
+1. Define a Frame compatibility matrix for `expr/lazy/frame/series`:
+	 operation name, DataFrame meaning, Dataset meaning, parity status.
+2. Audit `functions` against lazy execution reality:
+	 classify each function as `parity`, `semantic extension`, or `speculative`.
+3. Rewrite speculative functions toward explicit lazy semantics or remove.
+4. Add parity tests that compare Dataset and DataFrame outcomes for shared ops.
+5. Only after parity is stable, proceed with higher semantic/compiler expansion.
+
+### Completion signal for Step One
+
+- Frame/Lazy/Series/Expr/Namespaces/Functions are coherent as one substrate.
+- Dataset behavior is explainable as DataFrame-compatible plus explicit semantic
+	extension.
+- New GDSL work can target a stable execution substrate rather than
+	speculative wrappers.
+
+Reference artifact:
+
+- `FRAME-COMPATIBILITY-MATRIX.md`

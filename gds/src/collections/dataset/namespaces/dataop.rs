@@ -1,6 +1,7 @@
 //! DataOp namespace for dataset-level SDSL pipeline authoring.
 
-use crate::collections::dataset::expressions::dataop::{
+use crate::collections::dataset::functions;
+use crate::collections::dataset::protocol::dataop::{
     DataFrameLoweringArtifact, DatasetAspectArtifact, DatasetDataOpExpr,
 };
 use polars::prelude::Expr;
@@ -10,43 +11,43 @@ pub struct DataOpNs;
 
 impl DataOpNs {
     pub fn input(name: impl Into<String>) -> DatasetDataOpExpr {
-        DatasetDataOpExpr::input(name)
+        functions::dataop_input(name)
     }
 
     pub fn encode(name: impl Into<String>) -> DatasetDataOpExpr {
-        DatasetDataOpExpr::encode(name)
+        functions::dataop_encode(name)
     }
 
     pub fn transform(name: impl Into<String>) -> DatasetDataOpExpr {
-        DatasetDataOpExpr::transform(name)
+        functions::dataop_transform(name)
     }
 
     pub fn decode(name: impl Into<String>) -> DatasetDataOpExpr {
-        DatasetDataOpExpr::decode(name)
+        functions::dataop_decode(name)
     }
 
     pub fn output(name: impl Into<String>) -> DatasetDataOpExpr {
-        DatasetDataOpExpr::output(name)
+        functions::dataop_output(name)
     }
 
     pub fn text_input(name: impl Into<String>) -> DatasetDataOpExpr {
-        DatasetDataOpExpr::text_input(name)
+        functions::text_input(name)
     }
 
     pub fn text_encode(name: impl Into<String>) -> DatasetDataOpExpr {
-        DatasetDataOpExpr::text_encode(name)
+        functions::text_encode(name)
     }
 
     pub fn text_transform(name: impl Into<String>) -> DatasetDataOpExpr {
-        DatasetDataOpExpr::text_transform(name)
+        functions::text_transform(name)
     }
 
     pub fn text_decode(name: impl Into<String>) -> DatasetDataOpExpr {
-        DatasetDataOpExpr::text_decode(name)
+        functions::text_decode(name)
     }
 
     pub fn text_output(name: impl Into<String>) -> DatasetDataOpExpr {
-        DatasetDataOpExpr::text_output(name)
+        functions::text_output(name)
     }
 
     pub fn lower_expr(dataop: &DatasetDataOpExpr, input_expr: Expr) -> Expr {
@@ -66,5 +67,33 @@ impl DataOpNs {
         input_column: &str,
     ) -> DataFrameLoweringArtifact {
         dataop.lower_to_dataframe_artifact(input_column)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use polars::prelude::col;
+
+    #[test]
+    fn test_dataop_ns_text_ops_and_artifacts_are_stable() {
+        let op = DataOpNs::text_transform("tok");
+        assert_eq!(op.stage(), "transform");
+        assert_eq!(op.name(), "tok");
+        assert_eq!(op.domain(), Some("text"));
+
+        let lowered = DataOpNs::lower_expr(&op, col("text"));
+        let dbg = format!("{lowered:?}");
+        assert!(!dbg.is_empty());
+
+        let aspect = DataOpNs::aspect_artifact(&op);
+        assert_eq!(aspect.stage, "transform");
+        assert_eq!(aspect.op_name, "tok");
+
+        let artifact = DataOpNs::dataframe_artifact(&op, "text");
+        assert_eq!(artifact.stage, "transform");
+        assert_eq!(artifact.op_name, "tok");
+        assert_eq!(artifact.input_column, "text");
+        assert_eq!(artifact.domain.as_deref(), Some("text"));
     }
 }

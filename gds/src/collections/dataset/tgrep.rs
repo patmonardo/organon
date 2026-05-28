@@ -44,7 +44,7 @@ use std::sync::Arc;
 
 use regex::Regex;
 
-use crate::collections::dataset::expressions::tree::TreePos;
+use crate::collections::dataset::algebra::tree::TreePos;
 use crate::collections::dataset::language::tree::{TreeLeafValue, TreeNode, TreeValue};
 
 // ===========================================================================

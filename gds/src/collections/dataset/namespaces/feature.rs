@@ -3,11 +3,11 @@
 //! Builders here are thin constructors for Feature expressions and
 //! delegate to feature functionals when expansion is requested.
 
-use crate::collections::dataset::expressions::feature::{
+use crate::collections::dataset::algebra::feature::{
     FeatureCondition, FeatureExpr, FeaturePath, FeaturePosition, FeatureRule, FeatureSpec,
     FeatureTemplate, FeatureValue,
 };
-use crate::collections::dataset::expressions::tree::TreePos;
+use crate::collections::dataset::algebra::tree::TreePos;
 use crate::collections::dataset::feature::featstruct::FeatStruct;
 use crate::collections::dataset::functions::feature as feature_fn;
 use crate::collections::dataset::plan::PlanError;

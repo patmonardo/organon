@@ -17,8 +17,8 @@
 //!
 //! Public surface (read this before adding new exports):
 //!
-//! 1. **DataFrame shell** (`frame`, `series`, `expr`, plus `lazy`,
-//!    `namespace`) — the Dataset-facing view of the Polars-shaped body.
+//! 1. **DataFrame shell** (`frame`, `series`, `expr`, plus `lazy`) — the
+//!    Dataset-facing view of the Polars-shaped body.
 //! 2. **Essence middle** (`model`, `feature`, `plan`) — semantic addresses,
 //!    deferred Meta Plans, model preparation, execution, and ontology images.
 //! 3. **Concept return** (`corpus`, `lm`, `logic`) — evidence, language,
@@ -47,6 +47,7 @@
 //! - The top-level modules read like a compiler: catalog/registry, schema,
 //!   plans, features, models, and the DSL namespaces that bind it together.
 
+pub mod algebra;
 pub mod artifact;
 pub mod catalog;
 pub mod codegen;
@@ -69,11 +70,11 @@ pub mod logic;
 pub mod macros;
 pub mod metrics;
 pub mod model;
-pub mod namespace;
 pub mod namespaces;
 pub mod plan;
 pub mod prelude;
 pub mod probability;
+pub mod protocol;
 pub mod registry;
 pub mod schema;
 pub mod series;
@@ -100,12 +101,6 @@ pub use corpus::*;
 pub use dataset::*;
 pub use error::*;
 pub use expr::*;
-pub use expressions::dataop::*;
-pub use expressions::io::*;
-pub use expressions::metadata::*;
-pub use expressions::projection::*;
-pub use expressions::registry::*;
-pub use expressions::reporting::*;
 pub use feature::*;
 pub use frame::*;
 pub use functions::*;
@@ -117,10 +112,15 @@ pub use lazy::*;
 pub use logic::*;
 pub use metrics::*;
 pub use model::*;
-pub use namespace::*;
 pub use namespaces::*;
 pub use plan::*;
 pub use probability::*;
+pub use protocol::dataop::*;
+pub use protocol::io::*;
+pub use protocol::metadata::*;
+pub use protocol::projection::*;
+pub use protocol::registry::*;
+pub use protocol::reporting::*;
 pub use registry::*;
 pub use schema::*;
 pub use series::*;

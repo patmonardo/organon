@@ -6,7 +6,7 @@
 //! methods; for non-text stages, lowering helpers, or artifact accessors,
 //! reach for [`super::dataop::DataOpNs`] directly.
 
-use crate::collections::dataset::expressions::dataop::DatasetDataOpExpr;
+use crate::collections::dataset::protocol::dataop::DatasetDataOpExpr;
 
 #[derive(Debug, Clone, Default)]
 pub struct TextNs;

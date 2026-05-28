@@ -2,6 +2,11 @@
 //!
 //! These are declarative data structures that describe feature paths,
 //! templates, and rule conditions (NLTK TBL inspired).
+//!
+//! Phase A note:
+//! - Canonical module home is `crate::collections::dataset::algebra::feature`.
+//! - This module remains as a compatibility path and source of truth during
+//!   migration.
 
 use crate::collections::dataset::expressions::tree::TreePos;
 use crate::collections::dataset::feature::featstruct::FeatStruct;

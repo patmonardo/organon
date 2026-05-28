@@ -19,19 +19,19 @@ use crate::collections::dataset::compile::{
     ontology_image_from_program_features, DatasetCompilation, DatasetNode, DatasetNodeKind,
     OntologyDataFrameImage,
 };
-use crate::collections::dataset::expressions::dataop::{
-    DataFrameLoweringArtifact, DatasetAspectArtifact, DatasetDataOpExpr,
-};
-use crate::collections::dataset::expressions::io::DatasetIoExpr;
-use crate::collections::dataset::expressions::metadata::DatasetMetadataExpr;
-use crate::collections::dataset::expressions::projection::DatasetProjectionExpr;
-use crate::collections::dataset::expressions::registry::DatasetRegistryExpr;
-use crate::collections::dataset::expressions::reporting::DatasetReportExpr;
 use crate::collections::dataset::namespaces;
 use crate::collections::dataset::namespaces::dataset::DatasetNs;
 use crate::collections::dataset::namespaces::feature::FeatureNs;
 use crate::collections::dataset::namespaces::text::TextNs;
-use crate::collections::dataset::namespaces::tree_ns::TreeNs;
+use crate::collections::dataset::namespaces::tree::TreeNs;
+use crate::collections::dataset::protocol::dataop::{
+    DataFrameLoweringArtifact, DatasetAspectArtifact, DatasetDataOpExpr,
+};
+use crate::collections::dataset::protocol::io::DatasetIoExpr;
+use crate::collections::dataset::protocol::metadata::DatasetMetadataExpr;
+use crate::collections::dataset::protocol::projection::DatasetProjectionExpr;
+use crate::collections::dataset::protocol::registry::DatasetRegistryExpr;
+use crate::collections::dataset::protocol::reporting::DatasetReportExpr;
 use crate::form::{ProgramFeature, ProgramFeatureKind, ProgramFeatures};
 use polars::prelude::{col, Expr};
 

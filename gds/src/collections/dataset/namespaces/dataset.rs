@@ -17,11 +17,12 @@
 //!
 //! Keep this struct narrowly scoped to dataset-level orchestration concerns.
 
-use crate::collections::dataset::expressions::io::DatasetIoExpr;
-use crate::collections::dataset::expressions::metadata::DatasetMetadataExpr;
-use crate::collections::dataset::expressions::projection::DatasetProjectionExpr;
-use crate::collections::dataset::expressions::registry::DatasetRegistryExpr;
-use crate::collections::dataset::expressions::reporting::DatasetReportExpr;
+use crate::collections::dataset::functions;
+use crate::collections::dataset::protocol::io::DatasetIoExpr;
+use crate::collections::dataset::protocol::metadata::DatasetMetadataExpr;
+use crate::collections::dataset::protocol::projection::DatasetProjectionExpr;
+use crate::collections::dataset::protocol::registry::DatasetRegistryExpr;
+use crate::collections::dataset::protocol::reporting::DatasetReportExpr;
 
 #[derive(Debug, Clone, Default)]
 pub struct DatasetNs;
@@ -30,24 +31,24 @@ impl DatasetNs {
     // ---- Registry ----------------------------------------------------------
 
     pub fn registry(name: impl Into<String>) -> DatasetRegistryExpr {
-        DatasetRegistryExpr::new(name)
+        functions::registry(name)
     }
 
     pub fn registry_versioned(
         name: impl Into<String>,
         version: impl Into<String>,
     ) -> DatasetRegistryExpr {
-        DatasetRegistryExpr::versioned(name, version)
+        functions::registry_versioned(name, version)
     }
 
     // ---- IO ----------------------------------------------------------------
 
     pub fn io_path(path: impl Into<String>) -> DatasetIoExpr {
-        DatasetIoExpr::from_path(path)
+        functions::io_path(path)
     }
 
     pub fn io_url(url: impl Into<String>) -> DatasetIoExpr {
-        DatasetIoExpr::from_url(url)
+        functions::io_url(url)
     }
 
     // ---- Metadata ----------------------------------------------------------
@@ -56,30 +57,58 @@ impl DatasetNs {
         key: impl Into<String>,
         value: impl Into<serde_json::Value>,
     ) -> DatasetMetadataExpr {
-        DatasetMetadataExpr::new(key, value)
+        functions::metadata(key, value)
     }
 
     // ---- Projection --------------------------------------------------------
 
     pub fn project_text(columns: Vec<String>) -> DatasetProjectionExpr {
-        DatasetProjectionExpr::text(columns)
+        functions::project_text(columns)
     }
 
     pub fn project_corpus(columns: Vec<String>) -> DatasetProjectionExpr {
-        DatasetProjectionExpr::corpus(columns)
+        functions::project_corpus(columns)
     }
 
     pub fn project_graph(columns: Vec<String>) -> DatasetProjectionExpr {
-        DatasetProjectionExpr::graph(columns)
+        functions::project_graph(columns)
     }
 
     // ---- Reporting ---------------------------------------------------------
 
     pub fn report_summary() -> DatasetReportExpr {
-        DatasetReportExpr::summary()
+        functions::report_summary()
     }
 
     pub fn report_profile() -> DatasetReportExpr {
-        DatasetReportExpr::profile()
+        functions::report_profile()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::collections::dataset::protocol::io::DatasetSource;
+    use crate::collections::dataset::protocol::projection::DatasetProjectionKind;
+    use crate::collections::dataset::protocol::reporting::DatasetReportKind;
+
+    #[test]
+    fn test_dataset_ns_builders_match_expected_shapes() {
+        let reg = DatasetNs::registry_versioned("main", "v1");
+        assert_eq!(reg.name(), "main");
+        assert_eq!(reg.version(), Some("v1"));
+
+        let io = DatasetNs::io_path("/tmp/corpus.txt");
+        assert!(matches!(io.source(), DatasetSource::Path(path) if path == "/tmp/corpus.txt"));
+
+        let meta = DatasetNs::metadata("k", serde_json::json!("v"));
+        assert_eq!(meta.key(), "k");
+
+        let proj = DatasetNs::project_text(vec!["text".to_string(), "tokens".to_string()]);
+        assert!(matches!(proj.kind(), DatasetProjectionKind::TextToFrame));
+        assert_eq!(proj.columns().len(), 2);
+
+        let report = DatasetNs::report_summary();
+        assert!(matches!(report.kind(), DatasetReportKind::Summary));
     }
 }

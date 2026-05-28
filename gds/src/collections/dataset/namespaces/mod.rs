@@ -1,10 +1,10 @@
 //! Dataset DSL namespace builders and registry.
 //!
 //! This module hosts the concrete dataset namespace builders surfaced from the
-//! top-level Dataset DSL shell ([`crate::collections::dataset::namespace`]).
+//! dataset DSL surface exported by [`crate::collections::dataset`].
 //! It also owns the dataset-side namespace registry, which is intentionally
 //! distinct from the DataFrame namespace registry in
-//! [`crate::collections::dataframe::namespace`].
+//! [`crate::collections::dataframe::namespaces::core`].
 //!
 //! Layering of the namespace builders (do not duplicate across layers):
 //!
@@ -34,7 +34,7 @@ pub mod dataop;
 pub mod dataset;
 pub mod feature;
 pub mod text;
-pub mod tree_ns;
+pub mod tree;
 
 /// Errors raised during namespace registration.
 #[derive(Debug, Clone, PartialEq, Eq)]

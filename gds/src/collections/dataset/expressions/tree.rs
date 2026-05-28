@@ -1,6 +1,11 @@
 //! Tree expressions for dataset-level DSL.
 //!
 //! This module defines the Tree expression AST used by the Tree namespace.
+//!
+//! Phase A note:
+//! - Canonical module home is `crate::collections::dataset::algebra::tree`.
+//! - This module remains as a compatibility path and source of truth during
+//!   migration.
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum TreeExpr {

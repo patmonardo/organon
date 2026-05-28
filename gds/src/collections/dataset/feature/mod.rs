@@ -46,7 +46,7 @@ use crate::collections::dataset::streaming::StreamingDataset;
 use crate::collections::dataset::Dataset;
 use crate::prints::{PrintEnvelope, PrintKind, PrintProvenance};
 
-pub use crate::collections::dataset::expressions::feature::{
+pub use crate::collections::dataset::algebra::feature::{
     FeatureCondition, FeatureExpr, FeaturePath, FeaturePosition, FeatureRule, FeatureSpec,
     FeatureTemplate, FeatureValue,
 };

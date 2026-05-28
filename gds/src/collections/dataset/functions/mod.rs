@@ -12,14 +12,15 @@ use serde_json::Value as JsonValue;
 
 use crate::collections::dataframe::GDSFrameError;
 use crate::collections::dataset::corpus::{Corpus, CorpusError};
-use crate::collections::dataset::expressions::dataop::DatasetDataOpExpr;
-use crate::collections::dataset::expressions::io::DatasetIoExpr;
-use crate::collections::dataset::expressions::metadata::DatasetMetadataExpr;
-use crate::collections::dataset::expressions::projection::DatasetProjectionExpr;
-use crate::collections::dataset::expressions::registry::DatasetRegistryExpr;
-use crate::collections::dataset::expressions::reporting::DatasetReportExpr;
+use crate::collections::dataset::protocol::dataop::DatasetDataOpExpr;
+use crate::collections::dataset::protocol::io::DatasetIoExpr;
+use crate::collections::dataset::protocol::metadata::DatasetMetadataExpr;
+use crate::collections::dataset::protocol::projection::DatasetProjectionExpr;
+use crate::collections::dataset::protocol::registry::DatasetRegistryExpr;
+use crate::collections::dataset::protocol::reporting::DatasetReportExpr;
 use crate::collections::dataset::toolchain::DatasetPipeline;
 
+pub mod expr;
 pub mod feature;
 pub mod model;
 pub mod program;
