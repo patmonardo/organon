@@ -120,7 +120,7 @@ pub use crate::collections::dataset::namespaces::dataop::DataOpNs;
 pub use crate::collections::dataset::namespaces::dataset::DatasetNs;
 pub use crate::collections::dataset::namespaces::feature::FeatureNs;
 pub use crate::collections::dataset::namespaces::text::TextNs;
-pub use crate::collections::dataset::namespaces::tree::TreeNs;
+pub use crate::collections::dataset::namespaces::treens::TreeNs;
 pub use crate::collections::dataset::{
     is_dataset_namespace_registered, register_corpus_namespace, register_dataset_namespace,
 };

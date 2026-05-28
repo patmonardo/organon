@@ -20,7 +20,7 @@
 //! 4. **Feature algebra** — [`feature::FeatureNs`] and
 //!    [`feature::FeatureExprNameSpace`]: positions, paths, specs, conditions,
 //!    rules, templates, and the symbolic `FeatureExpr` algebra.
-//! 5. **Tree algebra** — [`tree::TreeNs`]: nodes, leaves, positions, spans,
+//! 5. **Tree algebra** — [`treens::TreeNs`]: nodes, leaves, positions, spans,
 //!    and tree transforms used by parse/AST flows.
 //!
 //! Reserved namespace names recognised by the registry are listed in
@@ -34,7 +34,7 @@ pub mod dataop;
 pub mod dataset;
 pub mod feature;
 pub mod text;
-pub mod tree;
+pub mod treens;
 
 /// Errors raised during namespace registration.
 #[derive(Debug, Clone, PartialEq, Eq)]

@@ -10,7 +10,7 @@ use crate::collections::dataset::feature::featstruct::FeatStruct;
 use crate::collections::dataset::functions::treefn::{format, inspect, pretty, transform};
 use crate::collections::dataset::language::tag::Tag;
 use crate::collections::dataset::language::token::TokenSpan;
-use crate::collections::dataset::namespaces::tree::TreeNs;
+use crate::collections::dataset::namespaces::treens::TreeNs;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct TreeId(pub u64);
@@ -853,7 +853,7 @@ pub use crate::collections::dataset::functions::treefn::format::{format_brackete
 pub use crate::collections::dataset::functions::treefn::inspect::TreeTraversal;
 pub use crate::collections::dataset::functions::treefn::parse::{parse_bracketed, TreeParseError};
 pub use crate::collections::dataset::functions::treefn::pretty::{pretty_print, PrettyOptions};
-pub use crate::collections::dataset::namespaces::tree::TreeNs as TreeNamespace;
+pub use crate::collections::dataset::namespaces::treens::TreeNs as TreeNamespace;
 
 #[cfg(test)]
 mod tests {

@@ -10,7 +10,7 @@
 //!   text-domain alias [`super::text::TextNs`]).
 //! - **Feature algebra** lives in [`super::feature::FeatureNs`] and
 //!   [`super::feature::FeatureExprNameSpace`].
-//! - **Tree algebra** lives in [`super::tree_ns::TreeNs`].
+//! - **Tree algebra** lives in [`super::treens::TreeNs`].
 //! - **Per-column text expressions** (tokenize / lowercase / token-count)
 //!   live on the dataset DSL shell at
 //!   [`crate::collections::dataset::expr::DatasetExprNameSpace::text`].
