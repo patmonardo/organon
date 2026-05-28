@@ -29,7 +29,7 @@
 //!
 //! Design notes:
 //! - [`Modality`] lives on the [`MarkedFeature`] *wrapper*, not on
-//!   [`crate::collections::dataset::expressions::feature::FeatureExpr`].
+//!   [`crate::collections::dataset::dsl::expressions::feature::FeatureExpr`].
 //!   The IR describes *what* to compute; modality describes *whether* to
 //!   compute it under the model's essential relations.
 //! - This pass detects contradictions; it does not resolve them. Resolution
@@ -68,7 +68,7 @@ pub enum Modality {
 }
 
 /// Outcome of a single feature's preparation step, recorded for Box 3 to
-/// surface in the [`crate::collections::dataset::compile::OntologyDataFrameImage`]
+/// surface in the [`crate::collections::dataset::lab::compile::OntologyDataFrameImage`]
 /// provenance and constraint tables.
 #[derive(Debug, Clone)]
 pub struct PreparationStep {
@@ -124,16 +124,16 @@ pub struct MarkedFeature {
 
 impl MarkedFeature {
     /// Lift this feature's mark (if any) into a
-    /// [`crate::collections::dataset::expressions::feature::FeatureExpr::Mark`]
+    /// [`crate::collections::dataset::dsl::expressions::feature::FeatureExpr::Mark`]
     /// node so downstream IR walkers can see the essence-level commitment as a
     /// first-class symbolic expression rather than reaching into the wrapper.
     ///
     /// Returns `None` if the feature carries no mark.
     pub fn mark_expr(
         &self,
-    ) -> Option<crate::collections::dataset::expressions::feature::FeatureExpr> {
+    ) -> Option<crate::collections::dataset::dsl::expressions::feature::FeatureExpr> {
         self.mark.as_ref().map(|fs| {
-            crate::collections::dataset::expressions::feature::FeatureExpr::Mark(fs.clone())
+            crate::collections::dataset::dsl::expressions::feature::FeatureExpr::Mark(fs.clone())
         })
     }
 }
@@ -510,7 +510,7 @@ mod tests {
 
     #[test]
     fn marked_feature_lifts_mark_into_feature_expr() {
-        use crate::collections::dataset::expressions::feature::FeatureExpr;
+        use crate::collections::dataset::dsl::expressions::feature::FeatureExpr;
 
         let m = dict(&[("pos", FeatValue::text("noun"))]);
         let essence = prepare_model(

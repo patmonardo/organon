@@ -179,8 +179,8 @@ Planned Dataset support namespace examples:
 | `dataset::tree` | `dataset_tree_structures.rs` | `planned` |
 | `dataset::feature::featstruct` | `dataset_feature_structures.rs` | `planned` |
 | `dataset::compile` | `dataset_compile_ir.rs` | `covered` |
-| `dataset::functions::program` | `dataset_model_feature_plan.rs` | `covered` |
-| `dataset::functions::shell` | `dataset_frame_dsl.rs` | `covered` |
+| `dataset::dsl::functions::program` | `dataset_model_feature_plan.rs` | `covered` |
+| `dataset::dsl::functions::shell` | `dataset_frame_dsl.rs` | `covered` |
 | `dataset::macro` | `dataset_frame_dsl.rs` | `covered` |
 | `dataset::registry` | `dataset_io_catalog_extensible.rs` | `planned` |
 | `dataset::streaming` | `dataset_streaming_procedure.rs`, `dataset_streaming_lazy.rs` | `planned` |

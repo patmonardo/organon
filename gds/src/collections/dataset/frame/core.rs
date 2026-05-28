@@ -11,15 +11,15 @@
 //! point for the GDS Shell protocol, plus the [`DataFrameDatasetExt`] trait
 //! that attaches `.ds()` onto `GDSDataFrame`. The eager frame is the first
 //! semantic shell over the DataFrame body: it carries dataset identity/profile
-//! context, can realize a [`crate::collections::dataset::dataset::Dataset`],
+//! context, can realize a [`crate::collections::dataset::core::dataset::Dataset`],
 //! and seeds central pipeline architecture.
 
 use crate::collections::dataframe::{GDSDataFrame, GDSLazyFrame};
-use crate::collections::dataset::artifact::{DatasetArtifactKind, DatasetArtifactProfile};
-use crate::collections::dataset::dataset::Dataset;
-use crate::collections::dataset::lazy::DatasetLazyFrameNameSpace;
-use crate::collections::dataset::protocol::io::DatasetIoExpr;
-use crate::collections::dataset::toolchain::DatasetPipeline;
+use crate::collections::dataset::core::artifact::{DatasetArtifactKind, DatasetArtifactProfile};
+use crate::collections::dataset::core::dataset::Dataset;
+use crate::collections::dataset::frame::lazy::DatasetLazyFrameNameSpace;
+use crate::collections::dataset::lab::protocol::io::DatasetIoExpr;
+use crate::collections::dataset::lab::toolchain::DatasetPipeline;
 use crate::form::ProgramFeatures;
 use crate::shell::{GdsShell, ShellProgram};
 

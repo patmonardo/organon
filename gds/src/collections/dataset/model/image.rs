@@ -41,7 +41,7 @@
 //! data. Callers who want a materialized DataFrame can collect
 //! [`Execution::lazyframe`] separately.
 
-use crate::collections::dataset::compile::{
+use crate::collections::dataset::lab::compile::{
     OntologyDataFrameImage, OntologyDataFrameImageTables, OntologyImageConstraintRow,
     OntologyImageFeatureRow, OntologyImageModelRow, OntologyImageProvenanceRow,
     OntologyRuntimeMode,

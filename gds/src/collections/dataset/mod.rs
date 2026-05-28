@@ -44,47 +44,21 @@
 //!   graph-analytic entities from a GraphFrame layer.
 //!
 //! Dragon Seed note:
-//! - The top-level modules read like a compiler: catalog/registry, schema,
-//!   plans, features, models, and the DSL namespaces that bind it together.
+//! - The root should read like an organism, not like an implementation dump:
+//!   `core`, `dsl`, domain folds, and a small `lab` for speculative machinery.
 
-pub mod algebra;
-pub mod artifact;
 pub mod catalog;
-pub mod codegen;
-pub mod collocations;
-pub mod compile;
+pub mod core;
 pub mod corpus;
-pub mod dataset;
-pub mod error;
-pub mod expr;
-pub mod expressions;
+pub mod dsl;
 pub mod feature;
 pub mod frame;
-pub mod functions;
-pub mod grammar;
-pub mod graph;
-pub mod io;
+pub mod lab;
 pub mod language;
-pub mod lazy;
 pub mod logic;
-pub mod macros;
-pub mod metrics;
 pub mod model;
-pub mod namespaces;
 pub mod plan;
 pub mod prelude;
-pub mod probability;
-pub mod protocol;
-pub mod registry;
-pub mod schema;
-pub mod series;
-pub mod stdlib;
-pub mod streaming;
-pub mod text;
-pub mod tgrep;
-pub mod toolchain;
-pub mod utils;
-pub mod valuation;
 
 // =============================================================================
 // Public surface
@@ -92,42 +66,41 @@ pub mod valuation;
 //
 // Exports below use module-level glob re-exports for a uniform surface.
 
-pub use artifact::*;
 pub use catalog::*;
-pub use codegen::*;
-pub use collocations::*;
-pub use compile::*;
+pub use core::*;
 pub use corpus::*;
-pub use dataset::*;
-pub use error::*;
-pub use expr::*;
+pub use dsl::namespaces::dataop::DataOpNs;
+pub use dsl::namespaces::dataset::DatasetNs;
+pub use dsl::namespaces::feature::{FeatureExprNameSpace, FeatureNs};
+pub use dsl::namespaces::text::TextNs;
+pub use dsl::namespaces::treens::TreeNs;
+pub use dsl::namespaces::{
+    is_dataset_namespace_registered, register_corpus_namespace, register_dataset_namespace,
+    NameSpaceError,
+};
 pub use feature::*;
 pub use frame::*;
-pub use functions::*;
-pub use grammar::*;
-pub use graph::*;
-pub use io::*;
+pub use lab::compile::{
+    ontology_image_from_program_features, render_rust_dsl_module, DatasetCompilation,
+    DatasetCompilationArtifacts, DatasetCompilationIndex, DatasetNode, DatasetNodeKind,
+    DslCodegenOptions, OntologyDataFrameImage, OntologyDataFrameImageTables,
+    OntologyImageConstraintRow, OntologyImageFeatureRow, OntologyImageModelRow,
+    OntologyImageProvenanceRow, OntologyImageQueryRow, OntologyRuntimeMode,
+};
+pub use lab::protocol::dataop::{
+    DataFrameLoweringArtifact, DatasetAspectArtifact, DatasetDataOp, DatasetDataOpExpr,
+};
+pub use lab::protocol::io::{DatasetIoExpr, DatasetSource};
+pub use lab::protocol::metadata::DatasetMetadataExpr;
+pub use lab::protocol::projection::{DatasetProjectionExpr, DatasetProjectionKind};
+pub use lab::protocol::registry::DatasetRegistryExpr;
+pub use lab::protocol::reporting::{DatasetReportExpr, DatasetReportKind};
+pub use lab::toolchain::{
+    DatasetPipeline, DatasetPipelineArtifacts, DatasetToolChain, FeatureSpecRef,
+    GdslSourceLoweringError, GenusSpecies, LogicalEngineIntent, ModelSpecRef, MvcEngineIntent,
+    SdslSpecification,
+};
 pub use language::*;
-pub use lazy::*;
 pub use logic::*;
-pub use metrics::*;
 pub use model::*;
-pub use namespaces::*;
 pub use plan::*;
-pub use probability::*;
-pub use protocol::dataop::*;
-pub use protocol::io::*;
-pub use protocol::metadata::*;
-pub use protocol::projection::*;
-pub use protocol::registry::*;
-pub use protocol::reporting::*;
-pub use registry::*;
-pub use schema::*;
-pub use series::*;
-pub use stdlib::*;
-pub use streaming::*;
-pub use text::*;
-pub use tgrep::*;
-pub use toolchain::*;
-pub use utils::*;
-pub use valuation::*;

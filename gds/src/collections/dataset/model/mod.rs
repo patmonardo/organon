@@ -11,8 +11,8 @@
 //!    Segmenter / …). A *transform* that consumes a `Dataset` and produces
 //!    a `ModelDelta`. This is the legacy/runtime sense.
 //! 2. **R4 Model = Valuation** —
-//!    [`crate::collections::dataset::valuation::Valuation`] and
-//!    [`crate::collections::dataset::valuation::ValuationFrame`]. A *partial
+//!    [`crate::collections::dataset::core::valuation::Valuation`] and
+//!    [`crate::collections::dataset::core::valuation::ValuationFrame`]. A *partial
 //!    map* from Feature names to values, considered as satisfying a Feature
 //!    schema. This is what doctrine R4 names. Has no `apply` method;
 //!    carries data, not behavior.
@@ -66,7 +66,7 @@ use crate::collections::dataset::feature::featstruct::{
 use crate::collections::dataset::language::parse::Parse;
 use crate::collections::dataset::language::tag::Tag;
 use crate::collections::dataset::language::tree::TreeValue;
-use crate::collections::dataset::schema::{ModelSchema, SymbolTable};
+use crate::collections::dataset::core::schema::{ModelSchema, SymbolTable};
 use crate::collections::dataset::Dataset;
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash, PartialOrd, Ord)]

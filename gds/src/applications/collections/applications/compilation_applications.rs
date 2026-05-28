@@ -13,8 +13,8 @@ use crate::applications::collections::configs::{
 };
 use crate::applications::collections::results::{CompilationSummary, MaterializationSummary};
 use crate::applications::services::collections_context::CollectionsContext;
-use crate::collections::dataset::compile::DatasetCompilation;
-use crate::collections::dataset::toolchain::DatasetToolChain;
+use crate::collections::dataset::lab::compile::DatasetCompilation;
+use crate::collections::dataset::lab::toolchain::DatasetToolChain;
 
 fn ok(op: &str, data: Value) -> Value {
     json!({ "ok": true, "op": op, "data": data })

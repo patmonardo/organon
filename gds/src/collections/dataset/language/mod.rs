@@ -1,21 +1,27 @@
+pub mod grammar;
 pub mod lm;
 pub mod parse;
 pub mod parser;
+pub mod stats;
 pub mod stem;
 pub mod stemmer;
 pub mod tag;
 pub mod tagger;
+pub mod text;
 pub mod token;
 pub mod tokenizer;
 pub mod tree;
 
+pub use grammar::*;
 pub use lm::*;
 pub use parse::*;
 pub use parser::*;
+pub use stats::*;
 pub use stem::*;
 pub use stemmer::*;
 pub use tag::*;
 pub use tagger::*;
+pub use text::*;
 pub use token::*;
 pub use tokenizer::*;
 pub use tree::*;

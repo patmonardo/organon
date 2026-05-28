@@ -40,17 +40,17 @@ use std::collections::BTreeMap;
 use polars::prelude::{Expr, LazyFrame};
 
 use crate::collections::dataframe::Selector;
+use crate::collections::dataset::core::schema::{FeatureSchema, SymbolTable};
+use crate::collections::dataset::frame::streaming::StreamingDataset;
 use crate::collections::dataset::plan::{EvalMode, Plan, PlanAttentionReport, PlanEnv, PlanError};
-use crate::collections::dataset::schema::{FeatureSchema, SymbolTable};
-use crate::collections::dataset::streaming::StreamingDataset;
 use crate::collections::dataset::Dataset;
 use crate::prints::{PrintEnvelope, PrintKind, PrintProvenance};
 
-pub use crate::collections::dataset::algebra::feature::{
+pub use crate::collections::dataset::dsl::expressions::feature::{
     FeatureCondition, FeatureExpr, FeaturePath, FeaturePosition, FeatureRule, FeatureSpec,
     FeatureTemplate, FeatureValue,
 };
-pub use crate::collections::dataset::namespaces::feature::{
+pub use crate::collections::dataset::dsl::namespaces::feature::{
     FeatureExprNameSpace, FeatureNs as FeatureNamespace,
 };
 
@@ -538,8 +538,10 @@ impl FeatureSeriesNameSpace {
         Self { space }
     }
 
-    pub fn expr(&self) -> crate::collections::dataset::namespaces::feature::FeatureExprNameSpace {
-        crate::collections::dataset::namespaces::feature::FeatureExprNameSpace::new()
+    pub fn expr(
+        &self,
+    ) -> crate::collections::dataset::dsl::namespaces::feature::FeatureExprNameSpace {
+        crate::collections::dataset::dsl::namespaces::feature::FeatureExprNameSpace::new()
     }
 
     pub fn union(&self, other: FeatureSpace) -> FeatureSeries {

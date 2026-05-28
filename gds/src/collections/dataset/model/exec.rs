@@ -109,7 +109,7 @@ impl ExecutionAction {
 ///
 /// Holds the post-lowering `LazyFrame` plus a per-feature [`ExecutedFeature`]
 /// trace. Box 3 consumes this to materialize the
-/// [`crate::collections::dataset::compile::OntologyDataFrameImage`].
+/// [`crate::collections::dataset::lab::compile::OntologyDataFrameImage`].
 #[derive(Clone)]
 pub struct Execution {
     /// The `LazyFrame` after all applicable features have been lowered.

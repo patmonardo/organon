@@ -9,7 +9,7 @@
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use gds::collections::dataset::io::detect_format_from_path;
+use gds::collections::dataset::core::io::detect_format_from_path;
 use gds::collections::dataset::prelude::*;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -154,7 +154,7 @@ fn stage(n: u32, name: &str, doctrine: &str) {
 fn manifest(json: &Path, ndjson: &Path, detect: &Path, loaded: &Path, ns: &Path) -> String {
     format!(
         "Dataset IO JSON Fixture\n\n\
-         Namespace: dataset::io + dataset::namespaces::dataset\n\n\
+         Namespace: dataset::io + dataset::dsl::namespaces::dataset\n\n\
          00 Source JSON\n\
          artifacts: {}, {}\n\
          meaning: Same table written in JSON and NDJSON formats.\n\n\

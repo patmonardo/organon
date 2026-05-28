@@ -167,7 +167,7 @@ fn manifest(
 ) -> String {
     format!(
         "Dataset IO Catalog (Extensible) Fixture\n\n\
-         Namespace: dataset::registry\n\n\
+         Namespace: dataset::catalog\n\n\
          00 Registry\n\
          artifact: {}\n\
          meaning: DatasetRegistry bootstrap with named entries.\n\n\

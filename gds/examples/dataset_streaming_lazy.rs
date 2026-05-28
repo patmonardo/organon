@@ -124,7 +124,7 @@ fn path_string(path: &Path) -> String {
 fn manifest(source_path: &Path, transform_path: &Path, collect_path: &Path) -> String {
     format!(
         "Dataset Streaming Lazy Fixture\n\n\
-         Namespace: dataset::streaming::lazy\n\n\
+         Namespace: dataset::frame::streaming::lazy\n\n\
          00 Source\n\
          artifact: {}\n\
          meaning: source dataset for batch-wise lazy evaluation.\n\n\

@@ -1,0 +1,929 @@
+//! Compilation IR for Dataset DSL generation.
+//!
+//! The IR models stored SDSL/GDSL plans as executable images and program
+//! artifacts. It is intentionally plan-centric: Dataset compilation captures
+//! ontological and epistemological programs first, with DataFrame tables acting
+//! as lowerings of those artifacts rather than as the primary semantic object.
+
+use std::collections::{BTreeMap, BTreeSet};
+
+use serde::{Deserialize, Serialize};
+
+use crate::collections::dataframe::table::TableBuilder;
+use crate::collections::dataframe::{GDSDataFrame, GDSFrameError};
+use crate::collections::dataset::core::artifact::{
+    DatasetArtifactKind, DatasetArtifactProfile, DatasetArtifactPropertyRecord,
+    DatasetArtifactRecord, DatasetArtifactRelationRecord,
+};
+use crate::collections::dataset::core::dataset::Dataset;
+use crate::form::ProgramFeatures;
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum OntologyRuntimeMode {
+    TranscendentalLogic,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct OntologyImageModelRow {
+    pub model_id: String,
+    pub label: String,
+    pub kind: String,
+    pub ontology_ids: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct OntologyImageFeatureRow {
+    pub feature_id: String,
+    pub model_id: Option<String>,
+    pub label: String,
+    pub kind: String,
+    pub ontology_ids: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct OntologyImageConstraintRow {
+    pub ontology_id: String,
+    pub constraint_id: String,
+    pub language: String,
+    pub text: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct OntologyImageQueryRow {
+    pub ontology_id: String,
+    pub query_id: String,
+    pub language: String,
+    pub text: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct OntologyImageProvenanceRow {
+    pub source: String,
+    pub specification_id: String,
+    pub runtime_mode: OntologyRuntimeMode,
+    pub substrate: String,
+    pub generated_at_unix_ms: u64,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct OntologyDataFrameImageTables {
+    pub models: Vec<OntologyImageModelRow>,
+    pub features: Vec<OntologyImageFeatureRow>,
+    pub constraints: Vec<OntologyImageConstraintRow>,
+    pub queries: Vec<OntologyImageQueryRow>,
+    pub provenance: Vec<OntologyImageProvenanceRow>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct OntologyDataFrameImage {
+    pub image_id: String,
+    pub engine: String,
+    pub tables: OntologyDataFrameImageTables,
+}
+
+/// High-level kind classification for LM-first compilation graph nodes.
+///
+/// These nodes classify pieces of a stored plan/program image rather than a
+/// GraphFrame-style entity graph.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub enum DatasetNodeKind {
+    Image,
+    Model,
+    Feature,
+    Frame,
+    Series,
+    Expr,
+    Function,
+    Macro,
+}
+
+/// A single node in the dataset compilation graph.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DatasetNode {
+    pub id: String,
+    pub name: String,
+    pub kind: DatasetNodeKind,
+    pub depends_on: BTreeSet<String>,
+    pub metadata: BTreeMap<String, String>,
+}
+
+impl DatasetNode {
+    pub fn new(id: impl Into<String>, name: impl Into<String>, kind: DatasetNodeKind) -> Self {
+        Self {
+            id: id.into(),
+            name: name.into(),
+            kind,
+            depends_on: BTreeSet::new(),
+            metadata: BTreeMap::new(),
+        }
+    }
+
+    pub fn with_dep(mut self, dependency_id: impl Into<String>) -> Self {
+        self.depends_on.insert(dependency_id.into());
+        self
+    }
+
+    pub fn with_meta(mut self, key: impl Into<String>, value: impl Into<String>) -> Self {
+        self.metadata.insert(key.into(), value.into());
+        self
+    }
+}
+
+/// Full compilation payload to drive indexing/codegen for stored plan artifacts.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct DatasetCompilation {
+    pub nodes: BTreeMap<String, DatasetNode>,
+    pub entrypoints: BTreeSet<String>,
+}
+
+#[derive(Debug, Clone)]
+pub struct DatasetCompilationArtifacts {
+    pub artifacts: Dataset,
+    pub relations: Dataset,
+    pub properties: Dataset,
+}
+
+/// Derived index over compilation nodes to support multi-pass exploration.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct DatasetCompilationIndex {
+    by_kind: BTreeMap<DatasetNodeKind, BTreeSet<String>>,
+    reverse_deps: BTreeMap<String, BTreeSet<String>>,
+}
+
+impl DatasetCompilationIndex {
+    pub fn from_compilation(compilation: &DatasetCompilation) -> Self {
+        let mut index = Self::default();
+
+        for (node_id, node) in &compilation.nodes {
+            index
+                .by_kind
+                .entry(node.kind)
+                .or_default()
+                .insert(node_id.clone());
+
+            for dep in &node.depends_on {
+                index
+                    .reverse_deps
+                    .entry(dep.clone())
+                    .or_default()
+                    .insert(node_id.clone());
+            }
+        }
+
+        index
+    }
+
+    pub fn nodes_of_kind<'a>(
+        &'a self,
+        compilation: &'a DatasetCompilation,
+        kind: DatasetNodeKind,
+    ) -> Vec<&'a DatasetNode> {
+        self.by_kind
+            .get(&kind)
+            .into_iter()
+            .flat_map(|ids| ids.iter())
+            .filter_map(|node_id| compilation.nodes.get(node_id))
+            .collect()
+    }
+
+    pub fn dependents_of<'a>(
+        &'a self,
+        compilation: &'a DatasetCompilation,
+        node_id: &str,
+    ) -> Vec<&'a DatasetNode> {
+        self.reverse_deps
+            .get(node_id)
+            .into_iter()
+            .flat_map(|ids| ids.iter())
+            .filter_map(|id| compilation.nodes.get(id))
+            .collect()
+    }
+
+    pub fn all_kinds(&self) -> Vec<DatasetNodeKind> {
+        self.by_kind.keys().copied().collect()
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct DslCodegenOptions {
+    pub module_name: String,
+    pub include_public_exports: bool,
+}
+
+impl Default for DslCodegenOptions {
+    fn default() -> Self {
+        Self {
+            module_name: "generated_dataset_dsl".to_string(),
+            include_public_exports: true,
+        }
+    }
+}
+
+impl DatasetCompilation {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn add_node(&mut self, node: DatasetNode) -> Option<DatasetNode> {
+        self.nodes.insert(node.id.clone(), node)
+    }
+
+    pub fn add_entrypoint(&mut self, node_id: impl Into<String>) {
+        self.entrypoints.insert(node_id.into());
+    }
+
+    pub fn merge(&mut self, other: DatasetCompilation) {
+        self.nodes.extend(other.nodes);
+        self.entrypoints.extend(other.entrypoints);
+    }
+
+    pub fn add_dependency(
+        &mut self,
+        node_id: impl AsRef<str>,
+        dependency_id: impl Into<String>,
+    ) -> bool {
+        if let Some(node) = self.nodes.get_mut(node_id.as_ref()) {
+            node.depends_on.insert(dependency_id.into());
+            true
+        } else {
+            false
+        }
+    }
+
+    pub fn node(&self, node_id: impl AsRef<str>) -> Option<&DatasetNode> {
+        self.nodes.get(node_id.as_ref())
+    }
+
+    pub fn validate(&self) -> Result<(), String> {
+        for (node_id, node) in &self.nodes {
+            for dependency_id in &node.depends_on {
+                if !self.nodes.contains_key(dependency_id) {
+                    return Err(format!(
+                        "node '{node_id}' depends on missing node '{dependency_id}'"
+                    ));
+                }
+                if dependency_id == node_id {
+                    return Err(format!("node '{node_id}' depends on itself"));
+                }
+            }
+        }
+
+        for entrypoint in &self.entrypoints {
+            if !self.nodes.contains_key(entrypoint) {
+                return Err(format!(
+                    "entrypoint '{entrypoint}' is missing from compilation"
+                ));
+            }
+        }
+
+        Ok(())
+    }
+
+    /// Build a Dataset compilation graph from Program Features as an executable image.
+    ///
+    /// Routes through [`OntologyDataFrameImage`] as the canonical compilation IR:
+    /// program features are first lowered to an ontology image manifest, then
+    /// the manifest is lowered to compilation nodes via [`Self::from_ontology_image`].
+    /// This keeps a single image-to-graph lowering and avoids parallel direct
+    /// paths that can drift apart.
+    pub fn from_program_features(features: &ProgramFeatures) -> Self {
+        Self::from_ontology_image(&ontology_image_from_program_features(features))
+    }
+
+    /// Build a Dataset compilation graph from an Ontology DataFrame Image manifest.
+    pub fn from_ontology_image(image: &OntologyDataFrameImage) -> Self {
+        let mut compilation = Self::new();
+        let root_id = format!("image:{}", sanitize_id_segment(&image.image_id));
+        let mut model_node_ids = BTreeMap::new();
+
+        let mut root = DatasetNode::new(
+            &root_id,
+            format!("{} image", image.image_id),
+            DatasetNodeKind::Image,
+        )
+        .with_meta("image.kind", "ontology-dataframe-image")
+        .with_meta("image.engine", image.engine.clone());
+
+        for (index, model) in image.tables.models.iter().enumerate() {
+            let node_id = format!(
+                "img.model:{}:{}",
+                index,
+                sanitize_id_segment(&model.model_id)
+            );
+            let node = DatasetNode::new(&node_id, model.label.clone(), DatasetNodeKind::Model)
+                .with_dep(&root_id)
+                .with_meta("model.id", model.model_id.clone())
+                .with_meta("model.kind", model.kind.clone())
+                .with_meta("model.ontology_ids", model.ontology_ids.join(","));
+
+            root = root.with_dep(&node_id);
+            compilation.add_node(node);
+            model_node_ids.insert(model.model_id.clone(), node_id);
+        }
+
+        for (index, feature) in image.tables.features.iter().enumerate() {
+            let node_id = format!(
+                "img.feature:{}:{}",
+                index,
+                sanitize_id_segment(&feature.feature_id)
+            );
+            let mut node =
+                DatasetNode::new(&node_id, feature.label.clone(), DatasetNodeKind::Feature)
+                    .with_dep(&root_id)
+                    .with_meta("feature.id", feature.feature_id.clone())
+                    .with_meta("feature.kind", feature.kind.clone())
+                    .with_meta("feature.ontology_ids", feature.ontology_ids.join(","));
+
+            if let Some(model_id) = &feature.model_id {
+                if let Some(model_node_id) = model_node_ids.get(model_id) {
+                    node = node.with_dep(model_node_id.clone());
+                }
+                node = node.with_meta("feature.model_id", model_id.clone());
+            }
+
+            root = root.with_dep(&node_id);
+            compilation.add_node(node);
+        }
+
+        for (index, constraint) in image.tables.constraints.iter().enumerate() {
+            let node_id = format!(
+                "img.constraint:{}:{}",
+                index,
+                sanitize_id_segment(&constraint.constraint_id)
+            );
+            let node = DatasetNode::new(
+                &node_id,
+                constraint.constraint_id.clone(),
+                DatasetNodeKind::Macro,
+            )
+            .with_dep(&root_id)
+            .with_meta("constraint.ontology_id", constraint.ontology_id.clone())
+            .with_meta("constraint.language", constraint.language.clone())
+            .with_meta("constraint.text", constraint.text.clone());
+
+            root = root.with_dep(&node_id);
+            compilation.add_node(node);
+        }
+
+        for (index, query) in image.tables.queries.iter().enumerate() {
+            let node_id = format!(
+                "img.query:{}:{}",
+                index,
+                sanitize_id_segment(&query.query_id)
+            );
+            let node =
+                DatasetNode::new(&node_id, query.query_id.clone(), DatasetNodeKind::Function)
+                    .with_dep(&root_id)
+                    .with_meta("query.ontology_id", query.ontology_id.clone())
+                    .with_meta("query.language", query.language.clone())
+                    .with_meta("query.text", query.text.clone());
+
+            root = root.with_dep(&node_id);
+            compilation.add_node(node);
+        }
+
+        for (index, provenance) in image.tables.provenance.iter().enumerate() {
+            let node_id = format!(
+                "img.provenance:{}:{}",
+                index,
+                sanitize_id_segment(&provenance.specification_id)
+            );
+            let node = DatasetNode::new(
+                &node_id,
+                provenance.specification_id.clone(),
+                DatasetNodeKind::Frame,
+            )
+            .with_dep(&root_id)
+            .with_meta("provenance.source", provenance.source.clone())
+            .with_meta(
+                "provenance.runtime_mode",
+                match provenance.runtime_mode {
+                    OntologyRuntimeMode::TranscendentalLogic => "transcendental-logic",
+                },
+            )
+            .with_meta("provenance.substrate", provenance.substrate.clone())
+            .with_meta(
+                "provenance.generated_at_unix_ms",
+                provenance.generated_at_unix_ms.to_string(),
+            );
+
+            root = root.with_dep(&node_id);
+            compilation.add_node(node);
+        }
+
+        compilation.add_node(root);
+        compilation.add_entrypoint(root_id);
+        compilation
+    }
+
+    fn collect_materialization_rows(
+        &self,
+    ) -> (
+        Vec<DatasetArtifactRecord>,
+        Vec<DatasetArtifactRelationRecord>,
+        Vec<DatasetArtifactPropertyRecord>,
+    ) {
+        let mut artifact_rows = Vec::with_capacity(self.nodes.len());
+        let mut relation_rows = Vec::new();
+        let mut property_rows = Vec::new();
+
+        for (node_id, node) in &self.nodes {
+            let mut profile = DatasetArtifactProfile::new(node_kind_to_artifact_kind(node.kind))
+                .with_facet(format!("dataset-node-kind:{}", node.kind.as_str()));
+
+            if self.entrypoints.contains(node_id) {
+                profile = profile.with_facet("entrypoint");
+            }
+
+            artifact_rows.push(DatasetArtifactRecord::new(
+                node_id.clone(),
+                node.name.clone(),
+                profile,
+            ));
+
+            for dependency_id in &node.depends_on {
+                relation_rows.push(DatasetArtifactRelationRecord::new(
+                    node_id.clone(),
+                    "depends-on",
+                    dependency_id.clone(),
+                ));
+            }
+
+            if self.entrypoints.contains(node_id) {
+                property_rows.push(DatasetArtifactPropertyRecord::new(
+                    node_id.clone(),
+                    "compilation.entrypoint",
+                    "true",
+                ));
+            }
+
+            for (key, value) in &node.metadata {
+                property_rows.push(DatasetArtifactPropertyRecord::new(
+                    node_id.clone(),
+                    key.clone(),
+                    value.clone(),
+                ));
+            }
+        }
+
+        (artifact_rows, relation_rows, property_rows)
+    }
+
+    /// Materialize only the manifest dataset for speculative workflows.
+    ///
+    /// This intentionally avoids creating relation/property side datasets so
+    /// speculative sessions do not proliferate artifacts.
+    pub fn materialize_artifact_manifest_dataset(
+        &self,
+        base_name: impl AsRef<str>,
+    ) -> Result<Dataset, GDSFrameError> {
+        let base_name = base_name.as_ref();
+        let (artifact_rows, _, _) = self.collect_materialization_rows();
+
+        let artifacts = Dataset::named(
+            format!("{base_name}.artifacts"),
+            build_artifact_records_table(&artifact_rows)?,
+        )
+        .with_artifact_profile(
+            DatasetArtifactProfile::new(DatasetArtifactKind::Table)
+                .with_facet("artifact-manifest")
+                .with_facet("dataset-compilation")
+                .with_facet("speculation-pruned"),
+        );
+        Ok(artifacts)
+    }
+
+    /// Materialize the compilation graph into generic Dataset artifacts.
+    ///
+    /// This preserves a generic substrate: models, features, dependency-style
+    /// relations, and program/image nodes are emitted as rows in shared artifact
+    /// tables rather than as bespoke interface types.
+    pub fn materialize_artifact_datasets(
+        &self,
+        base_name: impl AsRef<str>,
+    ) -> Result<DatasetCompilationArtifacts, GDSFrameError> {
+        let base_name = base_name.as_ref();
+        let (artifact_rows, relation_rows, property_rows) = self.collect_materialization_rows();
+
+        let artifacts = Dataset::named(
+            format!("{base_name}.artifacts"),
+            build_artifact_records_table(&artifact_rows)?,
+        )
+        .with_artifact_profile(
+            DatasetArtifactProfile::new(DatasetArtifactKind::Table)
+                .with_facet("artifact-manifest")
+                .with_facet("dataset-compilation"),
+        );
+
+        let relations = Dataset::named(
+            format!("{base_name}.relations"),
+            build_artifact_relations_table(&relation_rows)?,
+        )
+        .with_artifact_profile(
+            DatasetArtifactProfile::new(DatasetArtifactKind::SemanticSubgraph)
+                .with_facet("artifact-relations")
+                .with_facet("dataset-compilation"),
+        );
+
+        let properties = Dataset::named(
+            format!("{base_name}.properties"),
+            build_artifact_properties_table(&property_rows)?,
+        )
+        .with_artifact_profile(
+            DatasetArtifactProfile::new(DatasetArtifactKind::Table)
+                .with_facet("artifact-properties")
+                .with_facet("dataset-compilation"),
+        );
+
+        Ok(DatasetCompilationArtifacts {
+            artifacts,
+            relations,
+            properties,
+        })
+    }
+}
+
+pub fn ontology_image_from_program_features(features: &ProgramFeatures) -> OntologyDataFrameImage {
+    let ontology_ids = vec![features.program_name.clone()];
+    let runtime_mode = OntologyRuntimeMode::TranscendentalLogic;
+
+    let models = features
+        .selected_forms
+        .iter()
+        .map(|name| OntologyImageModelRow {
+            model_id: name.clone(),
+            label: name.clone(),
+            kind: "model".to_string(),
+            ontology_ids: ontology_ids.clone(),
+        })
+        .collect::<Vec<_>>();
+
+    let feature_rows = features
+        .features
+        .iter()
+        .enumerate()
+        .map(|(index, feature)| OntologyImageFeatureRow {
+            feature_id: format!("pf:{}:{}", index, sanitize_id_segment(&feature.value)),
+            model_id: None,
+            label: feature.value.clone(),
+            kind: feature.kind.as_str().to_string(),
+            ontology_ids: ontology_ids.clone(),
+        })
+        .collect::<Vec<_>>();
+
+    OntologyDataFrameImage {
+        image_id: format!("ontology-image:{}", features.program_name),
+        engine: "polars".to_string(),
+        tables: OntologyDataFrameImageTables {
+            models,
+            features: feature_rows,
+            constraints: Vec::new(),
+            queries: Vec::new(),
+            provenance: vec![OntologyImageProvenanceRow {
+                source: "gdsl/sdsl".to_string(),
+                specification_id: features.program_name.clone(),
+                runtime_mode,
+                substrate: "dataframe/dataset".to_string(),
+                generated_at_unix_ms: 0,
+            }],
+        },
+    }
+}
+
+fn sanitize_id_segment(value: &str) -> String {
+    let mut out = String::with_capacity(value.len());
+    for ch in value.chars() {
+        if ch.is_ascii_alphanumeric() || matches!(ch, '-' | '_' | '.') {
+            out.push(ch.to_ascii_lowercase());
+        } else {
+            out.push('_');
+        }
+    }
+
+    if out.is_empty() {
+        "unnamed".to_string()
+    } else {
+        out
+    }
+}
+
+fn node_kind_to_artifact_kind(kind: DatasetNodeKind) -> DatasetArtifactKind {
+    match kind {
+        DatasetNodeKind::Image => DatasetArtifactKind::ProgramImage,
+        DatasetNodeKind::Model => DatasetArtifactKind::ModelView,
+        DatasetNodeKind::Feature => DatasetArtifactKind::FeatureMap,
+        DatasetNodeKind::Frame | DatasetNodeKind::Series => DatasetArtifactKind::Table,
+        DatasetNodeKind::Expr | DatasetNodeKind::Function | DatasetNodeKind::Macro => {
+            DatasetArtifactKind::ProgramPlan
+        }
+    }
+}
+
+impl DatasetNodeKind {
+    pub fn as_str(&self) -> &str {
+        match self {
+            Self::Image => "image",
+            Self::Model => "model",
+            Self::Feature => "feature",
+            Self::Frame => "frame",
+            Self::Series => "series",
+            Self::Expr => "expr",
+            Self::Function => "function",
+            Self::Macro => "macro",
+        }
+    }
+}
+
+fn build_artifact_records_table(
+    rows: &[DatasetArtifactRecord],
+) -> Result<GDSDataFrame, GDSFrameError> {
+    let artifact_ids = rows
+        .iter()
+        .map(|row| row.artifact_id.clone())
+        .collect::<Vec<_>>();
+    let labels = rows.iter().map(|row| row.label.clone()).collect::<Vec<_>>();
+    let primary_kinds = rows
+        .iter()
+        .map(|row| row.profile.primary_kind().to_string())
+        .collect::<Vec<_>>();
+    let facets = rows
+        .iter()
+        .map(|row| row.profile.facets_csv())
+        .collect::<Vec<_>>();
+
+    TableBuilder::new()
+        .with_string_column("artifact_id", &artifact_ids)
+        .with_string_column("label", &labels)
+        .with_string_column("primary_kind", &primary_kinds)
+        .with_string_column("facets", &facets)
+        .build()
+        .map_err(GDSFrameError::from)
+}
+
+fn build_artifact_relations_table(
+    rows: &[DatasetArtifactRelationRecord],
+) -> Result<GDSDataFrame, GDSFrameError> {
+    let artifact_ids = rows
+        .iter()
+        .map(|row| row.artifact_id.clone())
+        .collect::<Vec<_>>();
+    let relations = rows
+        .iter()
+        .map(|row| row.relation.clone())
+        .collect::<Vec<_>>();
+    let target_ids = rows
+        .iter()
+        .map(|row| row.target_id.clone())
+        .collect::<Vec<_>>();
+
+    TableBuilder::new()
+        .with_string_column("artifact_id", &artifact_ids)
+        .with_string_column("relation", &relations)
+        .with_string_column("target_id", &target_ids)
+        .build()
+        .map_err(GDSFrameError::from)
+}
+
+fn build_artifact_properties_table(
+    rows: &[DatasetArtifactPropertyRecord],
+) -> Result<GDSDataFrame, GDSFrameError> {
+    let artifact_ids = rows
+        .iter()
+        .map(|row| row.artifact_id.clone())
+        .collect::<Vec<_>>();
+    let keys = rows.iter().map(|row| row.key.clone()).collect::<Vec<_>>();
+    let values = rows.iter().map(|row| row.value.clone()).collect::<Vec<_>>();
+
+    TableBuilder::new()
+        .with_string_column("artifact_id", &artifact_ids)
+        .with_string_column("key", &keys)
+        .with_string_column("value", &values)
+        .build()
+        .map_err(GDSFrameError::from)
+}
+
+pub fn render_rust_dsl_module(
+    compilation: &DatasetCompilation,
+    index: &DatasetCompilationIndex,
+    options: &DslCodegenOptions,
+) -> String {
+    let mut out = String::new();
+
+    out.push_str("// @generated by dataset DSL compiler utilities\n");
+    out.push_str(
+        "// This file is intended as a deterministic scaffold for iterative refinement.\n\n",
+    );
+    out.push_str(&format!("pub mod {} {{\n", options.module_name));
+    out.push_str("    #[derive(Debug, Clone)]\n");
+    out.push_str("    pub struct NodeSpec {\n");
+    out.push_str("        pub id: &'static str,\n");
+    out.push_str("        pub name: &'static str,\n");
+    out.push_str("        pub kind: &'static str,\n");
+    out.push_str("        pub depends_on: &'static [&'static str],\n");
+    out.push_str("    }\n\n");
+
+    out.push_str("    pub const NODES: &[NodeSpec] = &[\n");
+    for node in compilation.nodes.values() {
+        out.push_str("        NodeSpec {\n");
+        out.push_str(&format!("            id: \"{}\",\n", node.id));
+        out.push_str(&format!("            name: \"{}\",\n", node.name));
+        out.push_str(&format!("            kind: \"{}\",\n", node.kind.as_str()));
+        out.push_str("            depends_on: &[");
+        for (idx, dep) in node.depends_on.iter().enumerate() {
+            if idx > 0 {
+                out.push_str(", ");
+            }
+            out.push_str(&format!("\"{}\"", dep));
+        }
+        out.push_str("],\n");
+        out.push_str("        },\n");
+    }
+    out.push_str("    ];\n\n");
+
+    out.push_str("    pub const ENTRYPOINTS: &[&str] = &[");
+    for (idx, entrypoint) in compilation.entrypoints.iter().enumerate() {
+        if idx > 0 {
+            out.push_str(", ");
+        }
+        out.push_str(&format!("\"{}\"", entrypoint));
+    }
+    out.push_str("];\n\n");
+
+    out.push_str("    pub fn node_count() -> usize { NODES.len() }\n");
+    out.push_str("    pub fn entrypoint_count() -> usize { ENTRYPOINTS.len() }\n");
+
+    if options.include_public_exports {
+        out.push_str("\n    pub fn groups() -> &'static [(&'static str, usize)] {\n");
+        out.push_str("        &[\n");
+        for kind in index.all_kinds() {
+            let count = index.nodes_of_kind(compilation, kind).len();
+            out.push_str(&format!(
+                "            (\"{}\", {}),\n",
+                kind.as_str(),
+                count
+            ));
+        }
+        out.push_str("        ]\n");
+        out.push_str("    }\n");
+    }
+
+    out.push_str("}\n");
+    out
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    use crate::collections::dataset::DatasetArtifactKind;
+    use crate::form::{ProgramFeature, ProgramFeatureKind};
+
+    #[test]
+    fn ontology_image_converts_to_valid_compilation() {
+        let image = OntologyDataFrameImage {
+            image_id: "ontology-image:science".to_string(),
+            engine: "polars".to_string(),
+            tables: OntologyDataFrameImageTables {
+                models: vec![OntologyImageModelRow {
+                    model_id: "kernel-model".to_string(),
+                    label: "Kernel Model".to_string(),
+                    kind: "domain-model".to_string(),
+                    ontology_ids: vec!["science-ontology".to_string()],
+                }],
+                features: vec![OntologyImageFeatureRow {
+                    feature_id: "signal-feature".to_string(),
+                    model_id: Some("kernel-model".to_string()),
+                    label: "Signal Feature".to_string(),
+                    kind: "analytic-feature".to_string(),
+                    ontology_ids: vec!["science-ontology".to_string()],
+                }],
+                constraints: vec![OntologyImageConstraintRow {
+                    ontology_id: "science-ontology".to_string(),
+                    constraint_id: "c-signal-shape".to_string(),
+                    language: "shacl".to_string(),
+                    text: "shape".to_string(),
+                }],
+                queries: vec![OntologyImageQueryRow {
+                    ontology_id: "science-ontology".to_string(),
+                    query_id: "q-signal-evidence".to_string(),
+                    language: "sparql".to_string(),
+                    text: "select".to_string(),
+                }],
+                provenance: vec![OntologyImageProvenanceRow {
+                    source: "gdsl/sdsl".to_string(),
+                    specification_id: "spec-1".to_string(),
+                    runtime_mode: OntologyRuntimeMode::TranscendentalLogic,
+                    substrate: "dataframe/dataset".to_string(),
+                    generated_at_unix_ms: 1,
+                }],
+            },
+        };
+
+        let compilation = DatasetCompilation::from_ontology_image(&image);
+        assert!(compilation
+            .entrypoints
+            .iter()
+            .any(|entry| entry.starts_with("image:")));
+        assert!(compilation.validate().is_ok());
+    }
+
+    #[test]
+    fn program_features_mirror_to_ontology_image() {
+        let features = ProgramFeatures::new(
+            "gdsl.analytics".to_string(),
+            vec!["centrality".to_string()],
+            vec![
+                ProgramFeature::new(
+                    ProgramFeatureKind::SpecificationBinding,
+                    "gdsl.analytics".to_string(),
+                    "specification::gdsl.analytics".to_string(),
+                ),
+                ProgramFeature::new(
+                    ProgramFeatureKind::Principle,
+                    "principle::centrality_admissible".to_string(),
+                    "principle centrality_admissible for graph".to_string(),
+                ),
+            ],
+        );
+
+        let image = ontology_image_from_program_features(&features);
+        assert_eq!(image.engine, "polars");
+        assert_eq!(image.tables.models.len(), 1);
+        assert_eq!(image.tables.features.len(), 2);
+        assert!(image
+            .tables
+            .features
+            .iter()
+            .any(|feature| feature.kind == "principle"));
+        assert_eq!(
+            image.tables.provenance[0].runtime_mode,
+            OntologyRuntimeMode::TranscendentalLogic
+        );
+    }
+
+    #[test]
+    fn compilation_materializes_generic_artifact_datasets() {
+        let features = ProgramFeatures::new(
+            "gdsl.analytics".to_string(),
+            vec!["centrality".to_string()],
+            vec![
+                ProgramFeature::new(
+                    ProgramFeatureKind::SpecificationBinding,
+                    "gdsl.analytics".to_string(),
+                    "specification::gdsl.analytics".to_string(),
+                ),
+                ProgramFeature::new(
+                    ProgramFeatureKind::Procedure,
+                    "procedure::emit_centrality".to_string(),
+                    "procedure emit_centrality".to_string(),
+                ),
+            ],
+        );
+
+        let compilation = DatasetCompilation::from_program_features(&features);
+        let materialized = compilation
+            .materialize_artifact_datasets("gdsl.analytics")
+            .expect("artifact datasets should materialize");
+
+        assert_eq!(
+            materialized.artifacts.artifact_kind(),
+            &DatasetArtifactKind::Table
+        );
+        assert!(materialized
+            .artifacts
+            .has_artifact_facet("artifact-manifest"));
+        assert_eq!(materialized.artifacts.row_count(), compilation.nodes.len());
+        assert!(!materialized.properties.is_empty());
+    }
+
+    #[test]
+    fn compilation_materializes_manifest_only_for_speculation() {
+        let features = ProgramFeatures::new(
+            "gdsl.analytics".to_string(),
+            vec!["centrality".to_string()],
+            vec![ProgramFeature::new(
+                ProgramFeatureKind::Procedure,
+                "procedure::emit_centrality".to_string(),
+                "procedure emit_centrality".to_string(),
+            )],
+        );
+
+        let compilation = DatasetCompilation::from_program_features(&features);
+        let manifest = compilation
+            .materialize_artifact_manifest_dataset("gdsl.analytics")
+            .expect("manifest dataset should materialize");
+
+        assert_eq!(manifest.artifact_kind(), &DatasetArtifactKind::Table);
+        assert!(manifest.has_artifact_facet("artifact-manifest"));
+        assert!(manifest.has_artifact_facet("speculation-pruned"));
+        assert_eq!(manifest.row_count(), compilation.nodes.len());
+    }
+}

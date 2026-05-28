@@ -4,7 +4,7 @@ use std::fmt;
 
 use crate::collections::dataframe::GDSFrameError;
 use crate::collections::dataset::corpus::Corpus;
-use crate::collections::dataset::functions::model::preprocessing::padded_everygram_pipeline;
+use crate::collections::dataset::dsl::functions::model::preprocessing::padded_everygram_pipeline;
 use crate::collections::dataset::language::tokenizer::Tokenizer;
 use crate::collections::dataset::language::{LanguageModel, LmError};
 use crate::collections::dataset::logic::LogicForm;

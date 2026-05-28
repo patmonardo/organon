@@ -37,7 +37,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::Value as JsonValue;
 
 use crate::collections::dataframe::GDSFrameError;
-use crate::collections::dataset::protocol::dataop::{DatasetDataOp, DatasetDataOpExpr};
+use crate::collections::dataset::lab::protocol::dataop::{DatasetDataOp, DatasetDataOpExpr};
 use crate::collections::dataset::{Dataset, DatasetSplit};
 use crate::prints::{PrintEnvelope, PrintKind, PrintProvenance};
 

@@ -9,7 +9,7 @@
 //!
 //! This crate has **two** valuation types and they are not the same:
 //!
-//! - [`crate::collections::dataset::valuation::Valuation`] — row-shaped,
+//! - [`crate::collections::dataset::core::valuation::Valuation`] — row-shaped,
 //!   `FeatureName → ValuationCell`. The R4 access object on the
 //!   intensional side of the Five-Fold Synthesis.
 //! - [`Valuation`] (this module) — symbol-table-shaped, `String →

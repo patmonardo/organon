@@ -126,7 +126,7 @@ fn fixture_path(path: &Path) -> String {
 fn manifest(frame_path: &Path, pipeline_path: &Path, compile_path: &Path) -> String {
     format!(
         "Dataset Frame DSL Fixture\n\n\
-         Namespace: dataset::functions::shell / dataset::macro\n\n\
+         Namespace: dataset::dsl::functions::shell / dataset::macro\n\n\
          00 Frame\n\
          artifact: {}\n\
          meaning: DataFrame body named for dataset-side intake.\n\n\

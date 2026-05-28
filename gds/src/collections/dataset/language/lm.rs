@@ -936,7 +936,7 @@ impl LanguageModel for KneserNeyInterpolated {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::collections::dataset::functions::model::preprocessing::padded_everygram_pipeline;
+    use crate::collections::dataset::dsl::functions::model::preprocessing::padded_everygram_pipeline;
 
     fn to_text(input: &[&[&str]]) -> Vec<Vec<String>> {
         input
