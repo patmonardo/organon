@@ -6,6 +6,14 @@ use std::path::{Path, PathBuf};
 use regex::Regex;
 
 use crate::collections::dataset::core::error::DatasetIoError;
+use crate::collections::dataset::core::stdlib::corpus_util::{
+    concat as corpus_concat, read_blankline_block, read_line_block, read_markup_text_block,
+    read_sexpr_block_default, read_wordpunct_block, BlockReader, ConcatenatedCorpusView,
+    StreamBackedCorpusView,
+};
+use crate::collections::dataset::core::stdlib::resources::{
+    fetch_resource, list_resources, DatasetResource,
+};
 use crate::collections::dataset::dsl::functions::treefn::parse::parse_bracketed;
 use crate::collections::dataset::language::parse::{Parse, ParseForest, ParseKind};
 use crate::collections::dataset::language::token::Token;
@@ -13,14 +21,6 @@ use crate::collections::dataset::language::tokenizer::{
     LineBlankMode, LineTokenizer, Tokenizer, WordPunctTokenizer,
 };
 use crate::collections::dataset::language::tree::TreeValue;
-use crate::collections::dataset::dsl::stdlib::corpus_util::{
-    concat as corpus_concat, read_blankline_block, read_line_block, read_markup_text_block,
-    read_sexpr_block_default, read_wordpunct_block, BlockReader, ConcatenatedCorpusView,
-    StreamBackedCorpusView,
-};
-use crate::collections::dataset::dsl::stdlib::resources::{
-    fetch_resource, list_resources, DatasetResource,
-};
 
 #[derive(Debug, Clone)]
 pub struct CorpusFiles {

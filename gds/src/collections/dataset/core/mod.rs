@@ -12,6 +12,7 @@ pub mod graph;
 pub mod io;
 pub mod metrics;
 pub mod schema;
+pub mod stdlib;
 pub mod utils;
 
 pub use artifact::*;
@@ -22,3 +23,4 @@ pub use graph::*;
 pub use io::*;
 pub use metrics::*;
 pub use schema::*;
+pub use stdlib::*;

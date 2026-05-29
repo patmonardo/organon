@@ -93,7 +93,7 @@ pub use crate::collections::dataset::language::tagger::{
 };
 
 // Dataset stdlib resources
-pub use crate::collections::dataset::dsl::stdlib::{
+pub use crate::collections::dataset::core::stdlib::{
     catalog_resource_tables, data_home, data_home_with, fetch_resource, list_resources,
     normalize_resource_name, normalize_resource_url, resource_dir, split_resource_url,
     BracketedCorpusReader, ConcatenatedCorpusView, CorpusFiles, CorpusReader, CorpusResource,

@@ -24,8 +24,10 @@
 //! 3. **Concept return** (`corpus`, `lm`, `logic`) — evidence, language,
 //!    and semantic forms gathered into end-stage Dataset objects.
 //! 4. **SDK services** (`toolchain`, `compile`, `expressions`, `functions`,
-//!    `catalog`, `registry`, `io`, `stdlib`) — compilation, resource access,
+//!    `catalog`, `registry`, `io`) — compilation, resource access,
 //!    namespace builders, and GDSL/SDSL authoring support.
+//! 5. **Core substrate services** (`core::stdlib`) — resource download/cache,
+//!    corpus readers, and low-level dataset utilities outside DSL protocol.
 //!
 //! Canonical module homes: `language::*` for LanguageModel SubFeatures,
 //! `corpus::*` for Corpus SubFeatures, `model::*`/`feature::*`/`plan::*` for
