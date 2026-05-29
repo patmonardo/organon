@@ -11,6 +11,20 @@ use std::path::{Path, PathBuf};
 
 use gds::collections::dataframe::GDSSeries;
 
+const TOKENS: &[&str] = &[
+    "pre-processing",
+    "tokenization",
+    "post-lemmatization",
+    "stemming",
+    "part-of-speech",
+    "named-entity",
+    "dependency-parse",
+    "coreference",
+];
+const LITERAL_MATCH: bool = true;
+const STRICT_MODE: bool = false;
+const PREFIX_CAPTURE_GROUP: usize = 1;
+
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("== Dataset Namespace String ==");
 
@@ -19,80 +33,46 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("fixture root: {}", fixture_root.display());
     println!();
 
-    // ------------------------------------------------------------------ Stage 0
-    stage(
-        0,
-        "Source String Series",
-        "Construct a string series with NLP-oriented tokens.",
-    );
-
-    let values: Vec<&str> = vec![
-        "pre-processing",
-        "tokenization",
-        "post-lemmatization",
-        "stemming",
-        "part-of-speech",
-        "named-entity",
-        "dependency-parse",
-        "coreference",
-    ];
-    let series = GDSSeries::from("token", &values);
+    let series = GDSSeries::from("token", TOKENS);
     let str_ns = series.str();
 
-    println!("source series: {:?}", series);
+    println!("source series (token): {:?}", series);
     let src_path = fixture_root.join("00-source.txt");
     fs::write(&src_path, format!("{:?}\n", series))?;
     println!("persisted: {}", fixture_path(&src_path));
     println!();
 
-    // ------------------------------------------------------------------ Stage 1
-    stage(
-        1,
-        "starts_with / ends_with / contains",
-        "Core boolean string predicates over each token row.",
-    );
+    println!("-- Predicates --");
+    println!("best practice: bind namespace once, reuse it for related operations");
 
     let starts_pre = str_ns.starts_with("pre")?;
     let ends_tion = str_ns.ends_with("tion")?;
-    let has_dash = str_ns.contains("-", true, false)?;
-
-    println!("starts_with('pre'): {:?}", starts_pre);
-    println!("ends_with('tion') : {:?}", ends_tion);
-    println!("contains('-')     : {:?}", has_dash);
+    let has_dash = str_ns.contains("-", LITERAL_MATCH, STRICT_MODE)?;
 
     let pred_path = fixture_root.join("01-predicates.txt");
-    fs::write(
+    report_and_persist(
         &pred_path,
-        format!(
-            "starts_with_pre\n{:?}\n\nends_with_tion\n{:?}\n\ncontains_dash\n{:?}\n",
-            starts_pre, ends_tion, has_dash
-        ),
+        &[
+            ("starts_with('pre')", format!("{:?}", starts_pre)),
+            ("ends_with('tion')", format!("{:?}", ends_tion)),
+            ("contains('-')", format!("{:?}", has_dash)),
+        ],
     )?;
-    println!("persisted: {}", fixture_path(&pred_path));
-    println!();
 
-    // ------------------------------------------------------------------ Stage 2
-    stage(
-        2,
-        "find / extract",
-        "Index and capture-based extraction from token strings.",
-    );
+    println!("-- Find + Extract --");
 
-    let find_dash = str_ns.find("-", true, false)?;
-    let prefix = str_ns.extract(r"^([a-z]+)", 1)?;
-
-    println!("find('-'): {:?}", find_dash);
-    println!("extract(^([a-z]+),1): {:?}", prefix);
+    let find_dash = str_ns.find("-", LITERAL_MATCH, STRICT_MODE)?;
+    let prefix = str_ns.extract(r"^([a-z]+)", PREFIX_CAPTURE_GROUP)?;
 
     let extract_path = fixture_root.join("02-extract.txt");
-    fs::write(
+    report_and_persist(
         &extract_path,
-        format!("find_dash\n{:?}\n\nprefix\n{:?}\n", find_dash, prefix),
+        &[
+            ("find('-')", format!("{:?}", find_dash)),
+            ("extract(^([a-z]+), 1)", format!("{:?}", prefix)),
+        ],
     )?;
-    println!("persisted: {}", fixture_path(&extract_path));
-    println!();
 
-    // ------------------------------------------------------------------ README
     let manifest_path = fixture_root.join("README.txt");
     fs::write(
         &manifest_path,
@@ -116,10 +96,22 @@ fn fixture_path(path: &Path) -> String {
     format!("fixtures/collections/dataset/dataset_namespace_string/{file_name}")
 }
 
-fn stage(n: u32, name: &str, doctrine: &str) {
-    println!("── Stage {n}: {name} ──────────────────────────────────────────");
-    println!("   {doctrine}");
+fn report_and_persist(
+    path: &Path,
+    entries: &[(&str, String)],
+) -> Result<(), Box<dyn std::error::Error>> {
+    let mut out = String::new();
+    for (name, value) in entries {
+        println!("{name}: {value}");
+        out.push_str(name);
+        out.push('\n');
+        out.push_str(value);
+        out.push_str("\n\n");
+    }
+    fs::write(path, out)?;
+    println!("persisted: {}", fixture_path(path));
     println!();
+    Ok(())
 }
 
 fn manifest(src: &Path, pred: &Path, ext: &Path) -> String {

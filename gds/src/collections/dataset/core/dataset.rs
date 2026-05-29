@@ -9,8 +9,8 @@ use polars::prelude::{Expr, SortMultipleOptions};
 
 use crate::collections::dataframe::selectors::Selector;
 use crate::collections::dataframe::table::TableBuilder;
-use crate::collections::dataframe::GDSDataFrame;
 use crate::collections::dataframe::GDSFrameError;
+use crate::collections::dataframe::{GDSDataFrame, GDSLazyFrame};
 use crate::collections::dataset::core::artifact::{DatasetArtifactKind, DatasetArtifactProfile};
 use crate::collections::io::{csv, ipc, json, parquet};
 
@@ -112,6 +112,11 @@ impl Dataset {
 
     pub fn into_table(self) -> GDSDataFrame {
         self.table
+    }
+
+    /// Build a lazy query graph from this dataset's semantic table.
+    pub fn lazy(&self) -> GDSLazyFrame {
+        self.table.lazy()
     }
 
     pub fn row_count(&self) -> usize {

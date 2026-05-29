@@ -11,6 +11,17 @@ use std::path::{Path, PathBuf};
 
 use gds::collections::dataframe::GDSSeries;
 
+const TOKENS: &[&str] = &[
+    "pre-processing",
+    "tokenization",
+    "post-lemmatization",
+    "stemming",
+    "part-of-speech",
+    "named-entity",
+    "dependency-parse",
+    "coreference",
+];
+
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("== DataFrame String Namespace ==");
 
@@ -26,33 +37,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         "A mixed token corpus as the string series under test.",
     );
 
-    let tokens: Vec<&str> = vec![
-        "pre-processing",
-        "tokenization",
-        "post-lemmatization",
-        "stemming",
-        "part-of-speech",
-        "named-entity",
-        "dependency-parse",
-        "coreference",
-    ];
-    let series = GDSSeries::from("token", &tokens);
-    let table = gds::tbl_def!(
-        (token: [
-            "pre-processing",
-            "tokenization",
-            "post-lemmatization",
-            "stemming",
-            "part-of-speech",
-            "named-entity",
-            "dependency-parse",
-            "coreference"
-        ]),
-    )?;
+    let series = GDSSeries::from("token", TOKENS);
+    let token_table = build_token_table()?;
 
-    println!("tokens: {}", tokens.len());
-    println!("{}", table.fmt_table());
-    let src_path = persist_csv(&table, &fixture_root, "00-source")?;
+    println!("tokens: {}", TOKENS.len());
+    println!("{}", token_table.fmt_table());
+    let src_path = persist_csv(&token_table, &fixture_root, "00-source")?;
     println!("persisted: {}", fixture_path(&src_path));
     println!();
 
@@ -70,19 +60,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("starts_with('pre'): {:?}", bool_vec(&has_pre));
     println!("ends_with('tion'):  {:?}", bool_vec(&has_tion));
 
-    let sw_table = gds::tbl_def!(
-        (token: [
-            "pre-processing",
-            "tokenization",
-            "post-lemmatization",
-            "stemming",
-            "part-of-speech",
-            "named-entity",
-            "dependency-parse",
-            "coreference"
-        ]),
-    )?;
-    let sw_with_flags = sw_table.with_columns(&[
+    let sw_with_flags = build_token_table()?.with_columns(&[
         gds::col!("token")
             .str()
             .starts_with(gds::lit!("pre"))
@@ -109,7 +87,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("contains('-'):     {:?}", bool_vec(&has_dash));
     println!("contains('parse'): {:?}", bool_vec(&has_parse));
 
-    let cnt_table = sw_table.with_columns(&[
+    let cnt_table = build_token_table()?.with_columns(&[
         gds::col!("token")
             .str()
             .contains(gds::lit!("-"), true)
@@ -134,7 +112,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let find_dash = str_ns.find("-", true, false)?;
     println!("find('-') offsets: {:?}", opt_i32_vec(&find_dash));
 
-    let find_table = sw_table.with_columns(&[gds::col!("token")
+    let find_table = build_token_table()?.with_columns(&[gds::col!("token")
         .str()
         .find(gds::lit!("-"), true)
         .alias("dash_offset")])?;
@@ -154,7 +132,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let prefix = str_ns.extract(r"^([a-z]+)", 1)?;
     println!("extract('^([a-z]+)', 1): {:?}", str_opt_vec(&prefix));
 
-    let ext_table = sw_table.with_columns(&[gds::col!("token")
+    let ext_table = build_token_table()?.with_columns(&[gds::col!("token")
         .str()
         .extract(gds::lit!(r"^([a-z]+)"), 1)
         .alias("prefix")])?;
@@ -226,6 +204,20 @@ fn persist_csv(
     let path = root.join(format!("{stem}.csv"));
     frame.write_csv(&path_string(&path))?;
     Ok(path)
+}
+
+fn build_token_table(
+) -> Result<gds::collections::dataframe::GDSDataFrame, Box<dyn std::error::Error>> {
+    Ok(gds::tbl_def!((token: [
+        "pre-processing",
+        "tokenization",
+        "post-lemmatization",
+        "stemming",
+        "part-of-speech",
+        "named-entity",
+        "dependency-parse",
+        "coreference"
+    ]),)?)
 }
 
 fn stage(n: u32, name: &str, doctrine: &str) {

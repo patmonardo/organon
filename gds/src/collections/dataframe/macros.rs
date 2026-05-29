@@ -111,69 +111,78 @@ macro_rules! when {
 /// - `name: ["a", "b"]` for string columns (literals converted via `to_string()`)
 /// - `name: i64 => [1, 2, 3]` for integer columns
 /// - `name: f64 => [1.0, 2.0]` for float columns
-/// `name` can be an identifier or a string literal. Columns are comma-separated.
+/// `name` can be an identifier or a string literal.
+/// Preferred form uses parenthesized column specs so mixed column shapes are unambiguous.
 /// The macro expands to a `TableBuilder::new()... .build()` expression returning `Result<_, _>`.
+#[doc(hidden)]
+#[macro_export]
+macro_rules! __tbl_col {
+    // String column, ident
+    ($builder:ident; $name:ident : [ $($s:literal),* ]) => {{
+        $builder = $builder.with_string_column(stringify!($name), &[$($s.to_string()),*]);
+    }};
+
+    // String column, literal
+    ($builder:ident; $name:literal : [ $($s:literal),* ]) => {{
+        $builder = $builder.with_string_column($name, &[$($s.to_string()),*]);
+    }};
+
+    // i64 column, ident
+    ($builder:ident; $name:ident : i64 => [ $($v:expr),* ]) => {{
+        $builder = $builder.with_i64_column(stringify!($name), &[$($v),*]);
+    }};
+
+    // i64 column, literal
+    ($builder:ident; $name:literal : i64 => [ $($v:expr),* ]) => {{
+        $builder = $builder.with_i64_column($name, &[$($v),*]);
+    }};
+
+    // f64 column, ident
+    ($builder:ident; $name:ident : f64 => [ $($v:expr),* ]) => {{
+        $builder = $builder.with_f64_column(stringify!($name), &[$($v),*]);
+    }};
+
+    // f64 column, literal
+    ($builder:ident; $name:literal : f64 => [ $($v:expr),* ]) => {{
+        $builder = $builder.with_f64_column($name, &[$($v),*]);
+    }};
+
+    // Fallback to provide better error message
+    ($builder:ident; $($tok:tt)+) => {{
+        compile_error!("invalid tbl! column specification")
+    }};
+}
+
 #[macro_export]
 macro_rules! tbl {
+    // Preferred mixed-column form: tbl!((id: i64 => [1, 2]), (label: ["a", "b"]))
+    ( $( ( $name:tt : $( $body:tt )+ ) ),* $(,)? ) => {{
+        let mut builder = $crate::collections::dataframe::TableBuilder::new();
+        $( $crate::__tbl_col!(builder; $name : $($body)+); )*
+        builder.build()
+    }};
+
     // Entry point: capture comma-separated column specs as `name: body` pairs
     ( $( $name:ident : $( $body:tt )+ ),* $(,)? ) => {{
         let mut builder = $crate::collections::dataframe::TableBuilder::new();
-        $( tbl!(@col builder; $name : $($body)+); )*
+        $( $crate::__tbl_col!(builder; $name : $($body)+); )*
         builder.build()
     }};
 
     // Support literal column names
     ( $( $name:literal : $( $body:tt )+ ),* $(,)? ) => {{
         let mut builder = $crate::collections::dataframe::TableBuilder::new();
-        $( tbl!(@col builder; $name : $($body)+); )*
+        $( $crate::__tbl_col!(builder; $name : $($body)+); )*
         builder.build()
-    }};
-
-    // String column, ident
-    (@col $builder:ident; $name:ident : [ $($s:literal),* ]) => {{
-        $builder = $builder.with_string_column(stringify!($name), &[$($s.to_string()),*]);
-    }};
-
-    // String column, literal
-    (@col $builder:ident; $name:literal : [ $($s:literal),* ]) => {{
-        $builder = $builder.with_string_column($name, &[$($s.to_string()),*]);
-    }};
-
-    // i64 column, ident
-    (@col $builder:ident; $name:ident : i64 => [ $($v:expr),* ]) => {{
-        $builder = $builder.with_i64_column(stringify!($name), &[$($v),*]);
-    }};
-
-    // i64 column, literal
-    (@col $builder:ident; $name:literal : i64 => [ $($v:expr),* ]) => {{
-        $builder = $builder.with_i64_column($name, &[$($v),*]);
-    }};
-
-    // f64 column, ident
-    (@col $builder:ident; $name:ident : f64 => [ $($v:expr),* ]) => {{
-        $builder = $builder.with_f64_column(stringify!($name), &[$($v),*]);
-    }};
-
-    // f64 column, literal
-    (@col $builder:ident; $name:literal : f64 => [ $($v:expr),* ]) => {{
-        $builder = $builder.with_f64_column($name, &[$($v),*]);
-    }};
-
-    // Fallback to provide better error message
-    (@col $builder:ident; $($tok:tt)+) => {{
-        compile_error!("invalid tbl! column specification")
     }};
 }
 
 #[macro_export]
 macro_rules! tbl_def {
-    // Accept mixed identifier and literal column names by matching a token tree
-    // for the column name and delegating to the `tbl!` helper which handles
-    // ident vs literal cases.
+    // Explicit-schema alias retained for compatibility; delegates to tbl!'s
+    // parenthesized form.
     ( $( ( $name:tt : $( $body:tt )+ ) ),* $(,)? ) => {{
-        let mut builder = $crate::collections::dataframe::TableBuilder::new();
-        $( $crate::tbl!(@col builder; $name : $($body)+); )*
-        builder.build()
+        $crate::tbl!($(($name : $($body)+)),*)
     }};
 }
 

@@ -91,6 +91,17 @@ macro_rules! ds {
     };
 }
 
+/// Explicit dataset constructor alias.
+///
+/// This alias keeps constructor intent clear in call sites while preserving
+/// the compact `ds!` shorthand for back-compat.
+#[macro_export]
+macro_rules! dataset {
+    ($($tt:tt)+) => {
+        $crate::ds!($($tt)+)
+    };
+}
+
 /// TypedDict-like record (Polars `Struct`) expression builder.
 ///
 /// This macro builds a single `polars::Expr` whose output is a Struct/record.

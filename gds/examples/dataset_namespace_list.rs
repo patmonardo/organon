@@ -11,6 +11,10 @@ use std::path::{Path, PathBuf};
 
 use gds::collections::dataframe::GDSSeries;
 
+const LIST_VALUES: &[&[i64]] = &[&[1, 2, 3], &[4, 5], &[6], &[2, 2, 2], &[9, 8, 7, 6]];
+const POSITION_INDEX: i64 = 1;
+const NULL_ON_OOB: bool = true;
+
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("== Dataset Namespace List ==");
 
@@ -19,20 +23,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("fixture root: {}", fixture_root.display());
     println!();
 
-    // ------------------------------------------------------------------ Stage 0
-    stage(
-        0,
-        "Source List Series",
-        "Construct a list-typed series from integer token spans.",
-    );
-
-    let values: Vec<Vec<i64>> = vec![
-        vec![1, 2, 3],
-        vec![4, 5],
-        vec![6],
-        vec![2, 2, 2],
-        vec![9, 8, 7, 6],
-    ];
+    let values: Vec<Vec<i64>> = LIST_VALUES.iter().map(|row| row.to_vec()).collect();
     let series = GDSSeries::from_list_i64("span", &values);
     let list_ns = series.list();
 
@@ -42,82 +33,55 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("persisted: {}", fixture_path(&src_path));
     println!();
 
-    // ------------------------------------------------------------------ Stage 1
-    stage(
-        1,
-        "len / sum / max",
-        "Per-row list aggregate operations over list elements.",
-    );
+    println!("-- Aggregates --");
+    println!("best practice: group related namespace calls by operation family");
 
     let lens = list_ns.len()?;
     let sums = list_ns.sum()?;
     let maxs = list_ns.max()?;
 
-    println!("len : {:?}", lens);
-    println!("sum : {:?}", sums);
-    println!("max : {:?}", maxs);
-
     let agg_path = fixture_root.join("01-aggregates.txt");
-    fs::write(
+    report_and_persist(
         &agg_path,
-        format!("len\n{:?}\n\nsum\n{:?}\n\nmax\n{:?}\n", lens, sums, maxs),
+        &[
+            ("len", format!("{:?}", lens)),
+            ("sum", format!("{:?}", sums)),
+            ("max", format!("{:?}", maxs)),
+        ],
     )?;
-    println!("persisted: {}", fixture_path(&agg_path));
-    println!();
 
-    // ------------------------------------------------------------------ Stage 2
-    stage(
-        2,
-        "first / last / get",
-        "Positional list extraction from each row list.",
-    );
+    println!("-- Positional --");
 
     let first = list_ns.first()?;
     let last = list_ns.last()?;
-    let second = list_ns.get(1, true)?;
-
-    println!("first : {:?}", first);
-    println!("last  : {:?}", last);
-    println!("get(1): {:?}", second);
+    let second = list_ns.get(POSITION_INDEX, NULL_ON_OOB)?;
 
     let pos_path = fixture_root.join("02-positional.txt");
-    fs::write(
+    report_and_persist(
         &pos_path,
-        format!(
-            "first\n{:?}\n\nlast\n{:?}\n\nget(1)\n{:?}\n",
-            first, last, second
-        ),
+        &[
+            ("first", format!("{:?}", first)),
+            ("last", format!("{:?}", last)),
+            ("get(POSITION_INDEX)", format!("{:?}", second)),
+        ],
     )?;
-    println!("persisted: {}", fixture_path(&pos_path));
-    println!();
 
-    // ------------------------------------------------------------------ Stage 3
-    stage(
-        3,
-        "unique / n_unique / reverse",
-        "List normalization operations inside each row-list.",
-    );
+    println!("-- Normalize --");
 
     let unique = list_ns.unique(true)?;
     let n_unique = list_ns.n_unique()?;
     let reversed = list_ns.reverse()?;
 
-    println!("unique  : {:?}", unique);
-    println!("n_unique: {:?}", n_unique);
-    println!("reverse : {:?}", reversed);
-
     let norm_path = fixture_root.join("03-normalize.txt");
-    fs::write(
+    report_and_persist(
         &norm_path,
-        format!(
-            "unique\n{:?}\n\nn_unique\n{:?}\n\nreverse\n{:?}\n",
-            unique, n_unique, reversed
-        ),
+        &[
+            ("unique", format!("{:?}", unique)),
+            ("n_unique", format!("{:?}", n_unique)),
+            ("reverse", format!("{:?}", reversed)),
+        ],
     )?;
-    println!("persisted: {}", fixture_path(&norm_path));
-    println!();
 
-    // ------------------------------------------------------------------ README
     let manifest_path = fixture_root.join("README.txt");
     fs::write(
         &manifest_path,
@@ -141,10 +105,22 @@ fn fixture_path(path: &Path) -> String {
     format!("fixtures/collections/dataset/dataset_namespace_list/{file_name}")
 }
 
-fn stage(n: u32, name: &str, doctrine: &str) {
-    println!("── Stage {n}: {name} ──────────────────────────────────────────");
-    println!("   {doctrine}");
+fn report_and_persist(
+    path: &Path,
+    entries: &[(&str, String)],
+) -> Result<(), Box<dyn std::error::Error>> {
+    let mut out = String::new();
+    for (name, value) in entries {
+        println!("{name}: {value}");
+        out.push_str(name);
+        out.push('\n');
+        out.push_str(value);
+        out.push_str("\n\n");
+    }
+    fs::write(path, out)?;
+    println!("persisted: {}", fixture_path(path));
     println!();
+    Ok(())
 }
 
 fn manifest(src: &Path, agg: &Path, pos: &Path, norm: &Path) -> String {

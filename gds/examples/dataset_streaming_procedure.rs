@@ -92,7 +92,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     );
 
     // Build a Plan that carries a Batch(4) hint — with_plan extracts it.
-    let plan = Plan::new(Source::Value(dataset.clone())).push_step(Step::Batch(4));
+    let plan = Plan::new(PlanSource::Value(dataset.clone())).push_step(Step::Batch(4));
 
     let planned = StreamingDataset::new(dataset.clone(), 3).with_plan(&plan);
     println!("batch size (plan hint): {}", planned.batch_size());

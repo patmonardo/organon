@@ -6,15 +6,16 @@
 
 use polars::prelude::Expr;
 
+use crate::collections::dataframe::col;
 use crate::collections::dataframe::{GDSDataFrame, GDSLazyFrame, GDSSeries};
-use crate::collections::dataset::frame::expr::DatasetExprNameSpace;
-use crate::collections::dataset::frame::DatasetDataFrameNameSpace;
+use crate::collections::dataset::frame::expr::{DatasetExprNameSpace, ExprDatasetExt};
 use crate::collections::dataset::frame::lazy::DatasetLazyFrameNameSpace;
 use crate::collections::dataset::frame::series::DatasetSeriesNameSpace;
+use crate::collections::dataset::frame::DatasetDataFrameNameSpace;
 
 /// Enter the Dataset Expr namespace from a column name.
 pub fn ds_col(name: impl AsRef<str>) -> DatasetExprNameSpace {
-    DatasetExprNameSpace::col(name.as_ref())
+    col(name.as_ref()).ds()
 }
 
 /// Enter the Dataset Expr namespace from an existing expression.

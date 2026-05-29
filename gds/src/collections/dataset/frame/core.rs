@@ -9,7 +9,7 @@
 //!
 //! This module provides [`DatasetDataFrameNameSpace`], the eager-frame entry
 //! point for the GDS Shell protocol, plus the [`DataFrameDatasetExt`] trait
-//! that attaches `.ds()` onto `GDSDataFrame`. The eager frame is the first
+//! that attaches `.ds()` and `.dataset()` onto `GDSDataFrame`. The eager frame is the first
 //! semantic shell over the DataFrame body: it carries dataset identity/profile
 //! context, can realize a [`crate::collections::dataset::core::dataset::Dataset`],
 //! and seeds central pipeline architecture.
@@ -121,10 +121,35 @@ impl DatasetDataFrameNameSpace {
 
 pub trait DataFrameDatasetExt {
     fn ds(self) -> DatasetDataFrameNameSpace;
+    fn dataset(self) -> DatasetDataFrameNameSpace;
 }
 
 impl DataFrameDatasetExt for GDSDataFrame {
     fn ds(self) -> DatasetDataFrameNameSpace {
         DatasetDataFrameNameSpace::new(self)
+    }
+
+    fn dataset(self) -> DatasetDataFrameNameSpace {
+        DatasetDataFrameNameSpace::new(self)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::tbl;
+    use std::error::Error;
+
+    #[test]
+    fn test_dataframe_extension_alias_matches_short_form() -> Result<(), Box<dyn Error>> {
+        let df_left = tbl!((x: i64 => [1, 2, 3]))?;
+        let df_right = tbl!((x: i64 => [1, 2, 3]))?;
+
+        let left = df_left.ds().into_dataset();
+        let right = df_right.dataset().into_dataset();
+
+        assert_eq!(left.row_count(), right.row_count());
+        assert_eq!(left.column_names(), right.column_names());
+        Ok(())
     }
 }

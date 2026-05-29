@@ -8,7 +8,7 @@
 //! | frame  | `LazyFrame` | `DataFrame`  |
 //!
 //! This module provides [`DatasetExprNameSpace`], the lazy-scalar entry point,
-//! plus the [`ExprDatasetExt`] trait that attaches `.ds()` onto Polars `Expr`.
+//! plus the [`ExprDatasetExt`] trait that attaches `.ds()` and `.dataset()` onto Polars `Expr`.
 //!
 //! Most dataset logic flows through this surface because it composes cleanly
 //! into [`crate::collections::dataset::frame::lazy::DatasetLazyFrameNameSpace`]
@@ -16,7 +16,7 @@
 //! `stem`) are thin facades over the lower-level expression builders in
 //! [`crate::collections::dataset::expressions`].
 
-use polars::prelude::{col, Expr};
+use polars::prelude::Expr;
 
 use crate::collections::dataset::dsl::expressions::binary::binary_contains_expr_from;
 use crate::collections::dataset::dsl::expressions::binary::binary_contains_literal_from;
@@ -65,10 +65,6 @@ impl DatasetExprNameSpace {
         Self { expr }
     }
 
-    pub fn col(name: &str) -> Self {
-        Self::new(col(name))
-    }
-
     pub fn expr(&self) -> Expr {
         self.expr.clone()
     }
@@ -100,10 +96,15 @@ impl DatasetExprNameSpace {
 
 pub trait ExprDatasetExt {
     fn ds(self) -> DatasetExprNameSpace;
+    fn dataset(self) -> DatasetExprNameSpace;
 }
 
 impl ExprDatasetExt for Expr {
     fn ds(self) -> DatasetExprNameSpace {
+        DatasetExprNameSpace::new(self)
+    }
+
+    fn dataset(self) -> DatasetExprNameSpace {
         DatasetExprNameSpace::new(self)
     }
 }
@@ -310,5 +311,40 @@ impl DatasetExprBinary {
 
     pub fn size(&self, unit: BinarySizeUnit) -> Expr {
         binary_size_from(self.expr.clone(), unit)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    use crate::collections::dataframe::col;
+
+    #[test]
+    fn test_expr_extension_alias_matches_short_form() {
+        let short = col("text").ds().text().lowercase();
+        let explicit = col("text").dataset().text().lowercase();
+
+        assert_eq!(format!("{short:?}"), format!("{explicit:?}"));
+    }
+
+    #[test]
+    fn test_direct_expr_str_namespace_access() {
+        let df = crate::tbl_def!(
+            (language: ["English", "Dutch", "Portuguese", "Finish"]),
+            (fruit: ["pear", "peer", "pêra", "päärynä"]),
+        )
+        .expect("table construction should succeed");
+
+        let result = df
+            .with_columns(&[
+                col("fruit").str().len_bytes().alias("byte_count"),
+                col("fruit").str().len_chars().alias("letter_count"),
+            ])
+            .expect("with_columns should succeed");
+
+        assert_eq!(result.height(), 4);
+        assert!(result.get_column("byte_count").is_ok());
+        assert!(result.get_column("letter_count").is_ok());
     }
 }

@@ -148,7 +148,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // To chain meaningfully, the second feature must read from a var that
     // binds the first feature's output. We demonstrate the shape of chaining here.
     let f_pos = Feature::new(
-        Plan::new(Source::Value(ds.clone()))
+        Plan::new(PlanSource::Value(ds.clone()))
             .named("pos-projection")
             .push_step(Step::Select(vec![
                 polars::prelude::col("term_id"),

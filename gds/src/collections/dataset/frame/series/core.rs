@@ -8,8 +8,8 @@
 //! | frame  | `LazyFrame` | `DataFrame`  |
 //!
 //! This module provides [`DatasetSeriesNameSpace`], the eager-scalar entry
-//! point, plus the [`SeriesDatasetExt`] trait that attaches `.ds()` onto
-//! `GDSSeries`.
+//! point, plus the [`SeriesDatasetExt`] trait that attaches `.ds()` and
+//! `.dataset()` onto `GDSSeries`.
 //!
 //! Practically, dataset logic is *mostly* expressed via `Expr` (lazy-friendly),
 //! but this small eager bridge is useful for tests and one-off eager
@@ -18,8 +18,8 @@
 
 use polars::prelude::{Expr, PolarsResult, Series};
 
-use crate::collections::dataframe::{series_expr, GDSSeries};
-use crate::collections::dataset::frame::expr::DatasetExprNameSpace;
+use crate::collections::dataframe::{col, series_expr, GDSSeries};
+use crate::collections::dataset::frame::expr::{DatasetExprNameSpace, ExprDatasetExt};
 
 #[derive(Debug, Clone)]
 pub struct DatasetSeriesNameSpace {
@@ -49,7 +49,7 @@ impl DatasetSeriesNameSpace {
     where
         F: FnOnce(DatasetExprNameSpace) -> Expr,
     {
-        let root = DatasetExprNameSpace::col(self.series.name());
+        let root = col(self.series.name()).ds();
         let expr = f(root);
         self.eval_expr(expr)
     }
@@ -57,10 +57,36 @@ impl DatasetSeriesNameSpace {
 
 pub trait SeriesDatasetExt {
     fn ds(self) -> DatasetSeriesNameSpace;
+    fn dataset(self) -> DatasetSeriesNameSpace;
 }
 
 impl SeriesDatasetExt for GDSSeries {
     fn ds(self) -> DatasetSeriesNameSpace {
         DatasetSeriesNameSpace::new(self)
+    }
+
+    fn dataset(self) -> DatasetSeriesNameSpace {
+        DatasetSeriesNameSpace::new(self)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_series_extension_alias_matches_short_form() {
+        let short = GDSSeries::from("x", [1i64, 2, 3])
+            .ds()
+            .series()
+            .name()
+            .to_string();
+        let explicit = GDSSeries::from("x", [1i64, 2, 3])
+            .dataset()
+            .series()
+            .name()
+            .to_string();
+
+        assert_eq!(short, explicit);
     }
 }

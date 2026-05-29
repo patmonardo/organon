@@ -212,15 +212,15 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!();
 
     // -------------------------------------------------------------------
-    // Stage 6: Minimal plan — Source::Var with PlanEnv binding
+    // Stage 6: Minimal plan — PlanSource::Var with PlanEnv binding
     // Plans can also take a Var source resolved at eval time via PlanEnv.
     // -------------------------------------------------------------------
     stage(
         6,
         "Source::Var + PlanEnv binding",
-        "Plan(Source::Var) resolves at eval time; PlanEnv binds the dataset by name.",
+        "Plan(PlanSource::Var) resolves at eval time; PlanEnv binds the dataset by name.",
     );
-    let plan_var = Plan::new(Source::Var("terms".to_string()))
+    let plan_var = Plan::new(PlanSource::Var("terms".to_string()))
         .named("var-plan")
         .push_step(Step::Select(vec![
             polars::prelude::col("token"),
