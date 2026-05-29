@@ -1,0 +1,7 @@
+node_id,label,node_id_ext_f64,node_id_storage
+1,S,1.0,1
+2,NP,2.0,2
+3,VP,3.0,3
+4,PP,4.0,4
+5,NN,5.0,5
+6,VBZ,6.0,6

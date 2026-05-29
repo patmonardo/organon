@@ -8,8 +8,8 @@ use crate::collections::dataset::dsl::expressions::feature::{
     FeatureTemplate, FeatureValue,
 };
 use crate::collections::dataset::dsl::expressions::tree::TreePos;
-use crate::collections::dataset::feature::featstruct::FeatStruct;
 use crate::collections::dataset::dsl::functions::feature as feature_fn;
+use crate::collections::dataset::feature::featstruct::FeatStruct;
 use crate::collections::dataset::plan::PlanError;
 
 #[derive(Debug, Clone, Default)]

@@ -1,6 +1,8 @@
 //! Extension namespace for expressions (py-polars inspired).
 
-use polars::prelude::{DataTypeExpr, Expr};
+use polars::prelude::Expr;
+
+use crate::collections::dataframe::GDSDataTypeExprInput;
 
 #[derive(Debug, Clone)]
 pub struct ExprExt {
@@ -21,8 +23,8 @@ impl ExprExt {
     }
 
     /// Convert to an extension `dtype` (seed pass: cast to dtype expr).
-    pub fn to(&self, dtype: impl Into<DataTypeExpr>) -> Expr {
-        self.expr.clone().cast(dtype.into())
+    pub fn to(&self, dtype: impl Into<GDSDataTypeExprInput>) -> Expr {
+        self.expr.clone().cast(dtype.into().into_polars_expr())
     }
 
     /// Get the storage values of an extension dtype (seed pass: identity).

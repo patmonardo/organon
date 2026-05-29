@@ -46,6 +46,7 @@ use sha2::{Digest, Sha256};
 
 use crate::collections::dataframe::{GDSDataFrame, GDSFrameError};
 use crate::collections::dataset::core::artifact::DatasetArtifactKind;
+use crate::collections::dataset::core::dataset::Dataset;
 use crate::collections::dataset::corpus::annotation::AnnotationFrame;
 use crate::collections::dataset::corpus::annotation::AnnotationRecord;
 use crate::collections::dataset::corpus::annotation::ANNOTATION_COL_ANNOTATOR;
@@ -55,7 +56,6 @@ use crate::collections::dataset::corpus::document::DocumentFrame;
 use crate::collections::dataset::corpus::document::SpanUnit;
 use crate::collections::dataset::corpus::document::DOCUMENT_COL_SOURCE;
 use crate::collections::dataset::corpus::source::{ContentHash, Source, SourceFrame};
-use crate::collections::dataset::core::dataset::Dataset;
 use crate::collections::dataset::feature::role::Provenance;
 use crate::collections::dataset::language::parse::ParseForest;
 use crate::collections::dataset::language::parser::Parser;

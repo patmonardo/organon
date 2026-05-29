@@ -1,0 +1,2 @@
+gds.tree => Some(Class("TreeClass"))
+gds.tree.storage => Some(Storage)

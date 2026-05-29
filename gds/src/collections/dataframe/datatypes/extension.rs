@@ -1,6 +1,7 @@
 //! Extension type registry (seed pass), inspired by polars.datatypes.extension.
 
 use std::collections::HashMap;
+use std::fmt;
 use std::sync::{OnceLock, RwLock};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -15,6 +16,22 @@ pub enum ExtensionRegistryError {
     NotRegistered(String),
     InvalidArguments(String),
 }
+
+impl fmt::Display for ExtensionRegistryError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::AlreadyRegistered(name) => {
+                write!(f, "extension type '{name}' is already registered")
+            }
+            Self::NotRegistered(name) => write!(f, "extension type '{name}' is not registered"),
+            Self::InvalidArguments(message) => {
+                write!(f, "invalid extension registry arguments: {message}")
+            }
+        }
+    }
+}
+
+impl std::error::Error for ExtensionRegistryError {}
 
 fn registry() -> &'static RwLock<HashMap<String, ExtensionType>> {
     static REGISTRY: OnceLock<RwLock<HashMap<String, ExtensionType>>> = OnceLock::new();

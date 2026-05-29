@@ -3,19 +3,26 @@
 use polars::polars_utils::pl_str::PlSmallStr;
 use polars::prelude::{DataTypeExpr, Expr};
 
-pub fn dtype_of(expr: Expr) -> DataTypeExpr {
-    DataTypeExpr::OfExpr(Box::new(expr))
+use crate::collections::dataframe::{GDSDataTypeExpr, GDSDataTypeExprInput};
+
+pub fn dtype_of(expr: Expr) -> GDSDataTypeExpr {
+    GDSDataTypeExpr::of_expr(expr)
 }
 
-pub fn self_dtype() -> DataTypeExpr {
-    DataTypeExpr::SelfDtype
+pub fn self_dtype() -> GDSDataTypeExpr {
+    GDSDataTypeExpr::self_dtype()
 }
 
-pub fn struct_with_fields(fields: &[(impl AsRef<str>, DataTypeExpr)]) -> DataTypeExpr {
-    DataTypeExpr::StructWithFields(
+pub fn struct_with_fields(fields: &[(impl AsRef<str>, GDSDataTypeExprInput)]) -> GDSDataTypeExpr {
+    GDSDataTypeExpr::new(DataTypeExpr::StructWithFields(
         fields
             .iter()
-            .map(|(name, dtype)| (PlSmallStr::from(name.as_ref()), dtype.clone()))
+            .map(|(name, dtype)| {
+                (
+                    PlSmallStr::from(name.as_ref()),
+                    dtype.clone().into_polars_expr(),
+                )
+            })
             .collect(),
-    )
+    ))
 }

@@ -41,12 +41,12 @@
 //! data. Callers who want a materialized DataFrame can collect
 //! [`Execution::lazyframe`] separately.
 
+use crate::collections::dataset::feature::featstruct::{format_featstruct, FeatStruct};
 use crate::collections::dataset::lab::compile::{
     OntologyDataFrameImage, OntologyDataFrameImageTables, OntologyImageConstraintRow,
     OntologyImageFeatureRow, OntologyImageModelRow, OntologyImageProvenanceRow,
     OntologyRuntimeMode,
 };
-use crate::collections::dataset::feature::featstruct::{format_featstruct, FeatStruct};
 
 use super::exec::{execute_essence, ExecutedFeature, Execution, ExecutionAction};
 use super::prep::{Modality, ModelEssence};

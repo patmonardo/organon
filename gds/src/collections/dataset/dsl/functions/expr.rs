@@ -56,7 +56,9 @@ pub fn expr_stem_field_from(expr: Expr, field: &str) -> Expr {
 }
 
 pub fn expr_bin_contains(expr: Expr, literal: &[u8]) -> Expr {
-    crate::collections::dataset::dsl::expressions::binary::binary_contains_literal_from(expr, literal)
+    crate::collections::dataset::dsl::expressions::binary::binary_contains_literal_from(
+        expr, literal,
+    )
 }
 
 pub fn expr_bin_contains_expr(expr: Expr, literal: Expr) -> Expr {
@@ -64,15 +66,21 @@ pub fn expr_bin_contains_expr(expr: Expr, literal: Expr) -> Expr {
 }
 
 pub fn expr_bin_starts_with(expr: Expr, prefix: &[u8]) -> Expr {
-    crate::collections::dataset::dsl::expressions::binary::binary_starts_with_literal_from(expr, prefix)
+    crate::collections::dataset::dsl::expressions::binary::binary_starts_with_literal_from(
+        expr, prefix,
+    )
 }
 
 pub fn expr_bin_starts_with_expr(expr: Expr, prefix: Expr) -> Expr {
-    crate::collections::dataset::dsl::expressions::binary::binary_starts_with_expr_from(expr, prefix)
+    crate::collections::dataset::dsl::expressions::binary::binary_starts_with_expr_from(
+        expr, prefix,
+    )
 }
 
 pub fn expr_bin_ends_with(expr: Expr, suffix: &[u8]) -> Expr {
-    crate::collections::dataset::dsl::expressions::binary::binary_ends_with_literal_from(expr, suffix)
+    crate::collections::dataset::dsl::expressions::binary::binary_ends_with_literal_from(
+        expr, suffix,
+    )
 }
 
 pub fn expr_bin_ends_with_expr(expr: Expr, suffix: Expr) -> Expr {
@@ -84,7 +92,9 @@ pub fn expr_bin_encode(expr: Expr, encoding: BinaryEncoding) -> Expr {
 }
 
 pub fn expr_bin_decode(expr: Expr, encoding: BinaryEncoding, strict: bool) -> Expr {
-    crate::collections::dataset::dsl::expressions::binary::binary_decode_from(expr, encoding, strict)
+    crate::collections::dataset::dsl::expressions::binary::binary_decode_from(
+        expr, encoding, strict,
+    )
 }
 
 pub fn expr_bin_size_bytes(expr: Expr) -> Expr {

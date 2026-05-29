@@ -2,6 +2,8 @@
 
 use polars::prelude::{DataType, DataTypeExpr, DataTypeSelector, Expr, PolarsResult, Schema};
 
+use crate::collections::dataframe::datatypes::GDSDataType;
+
 use super::array::DataTypeExprArrNameSpace;
 use super::list::DataTypeExprListNameSpace;
 use super::structure::DataTypeExprStructNameSpace;
@@ -11,9 +13,56 @@ pub struct GDSDataTypeExpr {
     expr: DataTypeExpr,
 }
 
+#[derive(Debug, Clone)]
+pub enum GDSDataTypeExprInput {
+    GDS(GDSDataTypeExpr),
+    DataType(GDSDataType),
+    Polars(DataTypeExpr),
+}
+
+impl GDSDataTypeExprInput {
+    pub fn into_polars_expr(self) -> DataTypeExpr {
+        match self {
+            Self::GDS(expr) => expr.into_inner(),
+            Self::DataType(dtype) => DataTypeExpr::Literal(dtype),
+            Self::Polars(expr) => expr,
+        }
+    }
+}
+
+impl From<GDSDataTypeExpr> for GDSDataTypeExprInput {
+    fn from(value: GDSDataTypeExpr) -> Self {
+        Self::GDS(value)
+    }
+}
+
+impl From<GDSDataType> for GDSDataTypeExprInput {
+    fn from(value: GDSDataType) -> Self {
+        Self::DataType(value)
+    }
+}
+
+impl From<DataTypeExpr> for GDSDataTypeExprInput {
+    fn from(value: DataTypeExpr) -> Self {
+        Self::Polars(value)
+    }
+}
+
 impl GDSDataTypeExpr {
     pub fn new(expr: DataTypeExpr) -> Self {
         Self { expr }
+    }
+
+    pub fn literal(dtype: GDSDataType) -> Self {
+        Self::new(DataTypeExpr::Literal(dtype))
+    }
+
+    pub fn of_expr(expr: Expr) -> Self {
+        Self::new(DataTypeExpr::OfExpr(Box::new(expr)))
+    }
+
+    pub fn self_dtype() -> Self {
+        Self::new(DataTypeExpr::SelfDtype)
     }
 
     pub fn expr(&self) -> &DataTypeExpr {
