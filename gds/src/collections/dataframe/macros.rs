@@ -767,36 +767,130 @@ macro_rules! arrange {
 /// ```rust
 /// let out = join!(left, right, on=[id], how=left)?;
 /// let out = join!(left, right, on=["id"], how=inner)?;
+/// let out = join!(left, right, on="id", how="full", coalesce=true)?;
+/// let out = join!(left, right, left_on=["lhs_id"], right_on=["rhs_id"], how="left")?;
 /// ```
+#[doc(hidden)]
+#[macro_export]
+macro_rules! __join_how {
+    (inner) => { polars::prelude::JoinType::Inner };
+    (left) => { polars::prelude::JoinType::Left };
+    (right) => { polars::prelude::JoinType::Right };
+    (full) => { polars::prelude::JoinType::Full };
+
+    ("inner") => { polars::prelude::JoinType::Inner };
+    ("left") => { polars::prelude::JoinType::Left };
+    ("right") => { polars::prelude::JoinType::Right };
+    ("full") => { polars::prelude::JoinType::Full };
+
+    ($other:tt) => {
+        compile_error!("join!: unsupported `how`; use inner|left|right|full or \"inner\"|\"left\"|\"right\"|\"full\"")
+    };
+}
+
+#[doc(hidden)]
+#[macro_export]
+macro_rules! __join_coalesce {
+    (true) => {
+        polars::prelude::JoinCoalesce::CoalesceColumns
+    };
+    (false) => {
+        polars::prelude::JoinCoalesce::KeepColumns
+    };
+    ($other:tt) => {
+        compile_error!("join!: `coalesce` must be `true` or `false`")
+    };
+}
+
 #[macro_export]
 macro_rules! join {
-    ($left:expr, $right:expr, on=[ $($key:ident),* $(,)? ], how=inner) => {
-        $left.join_on(&$right, &[ $( stringify!($key) ),* ], polars::prelude::JoinType::Inner, None)
+    // Single-key convenience forms.
+    ($left:expr, $right:expr, on=$key:ident, how=$how:tt $(, coalesce=$coalesce:tt)? ) => {
+        $crate::join!($left, $right, on=[ $key ], how=$how $(, coalesce=$coalesce)? )
     };
-    ($left:expr, $right:expr, on=[ $($key:literal),* $(,)? ], how=inner) => {
-        $left.join_on(&$right, &[ $( $key ),* ], polars::prelude::JoinType::Inner, None)
-    };
-
-    ($left:expr, $right:expr, on=[ $($key:ident),* $(,)? ], how=left) => {
-        $left.join_on(&$right, &[ $( stringify!($key) ),* ], polars::prelude::JoinType::Left, None)
-    };
-    ($left:expr, $right:expr, on=[ $($key:literal),* $(,)? ], how=left) => {
-        $left.join_on(&$right, &[ $( $key ),* ], polars::prelude::JoinType::Left, None)
+    ($left:expr, $right:expr, on=$key:literal, how=$how:tt $(, coalesce=$coalesce:tt)? ) => {
+        $crate::join!($left, $right, on=[ $key ], how=$how $(, coalesce=$coalesce)? )
     };
 
-    ($left:expr, $right:expr, on=[ $($key:ident),* $(,)? ], how=right) => {
-        $left.join_on(&$right, &[ $( stringify!($key) ),* ], polars::prelude::JoinType::Right, None)
+    // Same-key join list forms.
+    ($left:expr, $right:expr, on=[ $($key:ident),* $(,)? ], how=$how:tt) => {
+        $left.join_on(&$right, &[ $( stringify!($key) ),* ], $crate::__join_how!($how), None)
     };
-    ($left:expr, $right:expr, on=[ $($key:literal),* $(,)? ], how=right) => {
-        $left.join_on(&$right, &[ $( $key ),* ], polars::prelude::JoinType::Right, None)
+    ($left:expr, $right:expr, on=[ $($key:literal),* $(,)? ], how=$how:tt) => {
+        $left.join_on(&$right, &[ $( $key ),* ], $crate::__join_how!($how), None)
     };
 
-    ($left:expr, $right:expr, on=[ $($key:ident),* $(,)? ], how=full) => {
-        $left.join_on(&$right, &[ $( stringify!($key) ),* ], polars::prelude::JoinType::Full, None)
+    // Same-key join list forms with explicit coalesce behavior.
+    ($left:expr, $right:expr, on=[ $($key:ident),* $(,)? ], how=$how:tt, coalesce=$coalesce:tt) => {{
+        let __args = polars::prelude::JoinArgs::new($crate::__join_how!($how))
+            .with_coalesce($crate::__join_coalesce!($coalesce));
+        $left.join(
+            &$right,
+            &[ $( stringify!($key) ),* ],
+            &[ $( stringify!($key) ),* ],
+            __args,
+            None,
+        )
+    }};
+    ($left:expr, $right:expr, on=[ $($key:literal),* $(,)? ], how=$how:tt, coalesce=$coalesce:tt) => {{
+        let __args = polars::prelude::JoinArgs::new($crate::__join_how!($how))
+            .with_coalesce($crate::__join_coalesce!($coalesce));
+        $left.join(
+            &$right,
+            &[ $( $key ),* ],
+            &[ $( $key ),* ],
+            __args,
+            None,
+        )
+    }};
+
+    // Single explicit key per side.
+    ($left:expr, $right:expr, left_on=$left_on:ident, right_on=$right_on:ident, how=$how:tt $(, coalesce=$coalesce:tt)? ) => {
+        $crate::join!($left, $right, left_on=[ $left_on ], right_on=[ $right_on ], how=$how $(, coalesce=$coalesce)? )
     };
-    ($left:expr, $right:expr, on=[ $($key:literal),* $(,)? ], how=full) => {
-        $left.join_on(&$right, &[ $( $key ),* ], polars::prelude::JoinType::Full, None)
+    ($left:expr, $right:expr, left_on=$left_on:literal, right_on=$right_on:literal, how=$how:tt $(, coalesce=$coalesce:tt)? ) => {
+        $crate::join!($left, $right, left_on=[ $left_on ], right_on=[ $right_on ], how=$how $(, coalesce=$coalesce)? )
     };
+
+    // Explicit left/right key lists.
+    ($left:expr, $right:expr, left_on=[ $($left_key:ident),* $(,)? ], right_on=[ $($right_key:ident),* $(,)? ], how=$how:tt) => {{
+        let __args = polars::prelude::JoinArgs::new($crate::__join_how!($how));
+        $left.join(
+            &$right,
+            &[ $( stringify!($left_key) ),* ],
+            &[ $( stringify!($right_key) ),* ],
+            __args,
+            None,
+        )
+    }};
+    ($left:expr, $right:expr, left_on=[ $($left_key:literal),* $(,)? ], right_on=[ $($right_key:literal),* $(,)? ], how=$how:tt) => {{
+        let __args = polars::prelude::JoinArgs::new($crate::__join_how!($how));
+        $left.join(&$right, &[ $( $left_key ),* ], &[ $( $right_key ),* ], __args, None)
+    }};
+
+    // Explicit left/right key lists with coalesce behavior.
+    ($left:expr, $right:expr, left_on=[ $($left_key:ident),* $(,)? ], right_on=[ $($right_key:ident),* $(,)? ], how=$how:tt, coalesce=$coalesce:tt) => {{
+        let __args = polars::prelude::JoinArgs::new($crate::__join_how!($how))
+            .with_coalesce($crate::__join_coalesce!($coalesce));
+        $left.join(
+            &$right,
+            &[ $( stringify!($left_key) ),* ],
+            &[ $( stringify!($right_key) ),* ],
+            __args,
+            None,
+        )
+    }};
+    ($left:expr, $right:expr, left_on=[ $($left_key:literal),* $(,)? ], right_on=[ $($right_key:literal),* $(,)? ], how=$how:tt, coalesce=$coalesce:tt) => {{
+        let __args = polars::prelude::JoinArgs::new($crate::__join_how!($how))
+            .with_coalesce($crate::__join_coalesce!($coalesce));
+        $left.join(
+            &$right,
+            &[ $( $left_key ),* ],
+            &[ $( $right_key ),* ],
+            __args,
+            None,
+        )
+    }};
 }
 
 /// Generic method-chaining pipeline helper.

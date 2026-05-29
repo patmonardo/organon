@@ -221,8 +221,8 @@ fn build_token_table(
 }
 
 fn stage(n: u32, name: &str, doctrine: &str) {
-    println!("── Stage {n}: {name} ──────────────────────────────────────────");
-    println!("   {doctrine}");
+    println!("-- Stage {n}: {name} --");
+    println!("doctrine: {doctrine}");
     println!();
 }
 

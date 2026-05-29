@@ -6,10 +6,9 @@
 //! Run with:
 //!   cargo run -p gds --example dataframe_join_operations
 
+use polars::prelude::JoinType;
 use std::fs;
 use std::path::{Path, PathBuf};
-
-use polars::prelude::{JoinArgs, JoinType};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("== DataFrame Join Operations ==");
@@ -58,13 +57,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         "Only rows whose product_id exists in both tables are retained.",
     );
 
-    let inner = orders.join(
-        &products,
-        &["product_id"],
-        &["product_id"],
-        JoinArgs::new(JoinType::Inner),
-        None,
-    )?;
+    let inner = gds::join!(orders, products, on = "product_id", how = "inner")?;
     println!("inner join (orders ⋈ products on product_id):");
     println!("{}", inner.fmt_table());
     println!(
@@ -83,13 +76,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         "All orders retained; product columns null for unknown product_id=5.",
     );
 
-    let left = orders.join(
-        &products,
-        &["product_id"],
-        &["product_id"],
-        JoinArgs::new(JoinType::Left),
-        None,
-    )?;
+    let left = gds::join!(orders, products, on = "product_id", how = "left")?;
     println!("left join (orders LEFT JOIN products on product_id):");
     println!("{}", left.fmt_table());
     println!("rows: {} (all orders present)", left.height());
@@ -105,12 +92,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         "All rows from both tables; nulls fill missing sides.",
     );
 
-    let full = orders.join(
-        &products,
-        &["product_id"],
-        &["product_id"],
-        JoinArgs::new(JoinType::Full),
-        None,
+    let full = gds::join!(
+        orders,
+        products,
+        on = "product_id",
+        how = "full",
+        coalesce = true
     )?;
     println!("full outer join:");
     println!("{}", full.fmt_table());
@@ -189,8 +176,8 @@ fn persist_csv(
 }
 
 fn stage(n: u32, name: &str, doctrine: &str) {
-    println!("── Stage {n}: {name} ──────────────────────────────────────────");
-    println!("   {doctrine}");
+    println!("-- Stage {n}: {name} --");
+    println!("doctrine: {doctrine}");
     println!();
 }
 

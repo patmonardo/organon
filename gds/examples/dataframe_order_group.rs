@@ -189,8 +189,8 @@ fn persist_csv(
 }
 
 fn stage(n: u32, name: &str, doctrine: &str) {
-    println!("── Stage {n}: {name} ──────────────────────────────────────────");
-    println!("   {doctrine}");
+    println!("-- Stage {n}: {name} --");
+    println!("doctrine: {doctrine}");
     println!();
 }
 
