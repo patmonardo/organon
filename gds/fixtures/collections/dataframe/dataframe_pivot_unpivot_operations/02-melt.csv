@@ -1,0 +1,11 @@
+customer_id,segment,feature,score
+1,enterprise,qty,3.0
+1,enterprise,qty,1.0
+2,startup,qty,2.0
+2,startup,qty,4.0
+3,public,qty,5.0
+1,enterprise,revenue,60.0
+1,enterprise,revenue,20.0
+2,startup,revenue,80.0
+2,startup,revenue,120.0
+3,public,revenue,200.0

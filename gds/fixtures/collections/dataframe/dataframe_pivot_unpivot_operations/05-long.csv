@@ -1,0 +1,15 @@
+customer_id,segment,metric,value
+1,enterprise,qty,3.0
+2,startup,qty,1.0
+2,startup,qty,5.0
+3,enterprise,qty,2.0
+8,,qty,4.0
+4,public,qty,2.0
+1,enterprise,qty,1.0
+1,enterprise,revenue,60.0
+2,startup,revenue,30.0
+2,startup,revenue,100.0
+3,enterprise,revenue,80.0
+8,,revenue,
+4,public,revenue,60.0
+1,enterprise,revenue,12.5

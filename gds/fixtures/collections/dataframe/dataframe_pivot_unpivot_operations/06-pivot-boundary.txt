@@ -1,0 +1,2 @@
+expected eager pivot boundary: pivot is not available as an eager DataFrame wrapper yet
+expected lazy pivot boundary: lazy pivot is not available in this Rust wrapper path yet; use eager DataFrame pivot fallback

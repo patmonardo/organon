@@ -99,6 +99,9 @@ not.
 | 031-shell-model-first | `shell_model_first.rs` | none |
 | 032-pathfinding-procedure-facade | `proc_pathfinding_procedure.rs` | none |
 | 033-bfs-dfs-traversal-workbook | `proc_pathfinding_procedure.rs` | none |
+| 034-dataframe-transformations-workbook | `dataframe_transformations.rs` | none |
+| 035-dataframe-pivot-unpivot-operations | `dataframe_pivot_unpivot_operations.rs` | none |
+| 036-dataframe-concatenations-workbook | `dataframe_concatenations.rs` | none |
 
 ## Batch 1 Spine
 
@@ -167,6 +170,9 @@ Planned DataFrame namespace examples:
 | `dataframe::lazy` | `dataframe_lazy_valuation.rs` | `covered` |
 | `dataframe::selectors` | `dataframe_select_filter.rs` | `covered` |
 | `dataframe::macros` | `dataframe_macros_reflection.rs` | `covered` |
+| `dataframe::transformations` | `dataframe_transformations.rs` | `covered` |
+| `dataframe::concatenations` | `dataframe_concatenations.rs` | `covered` |
+| `dataframe::reshape` | `dataframe_pivot_unpivot_operations.rs` | `covered` |
 | `dataframe::namespaces::structure` | `dataframe_structure_projection.rs` | `planned` |
 
 Planned Dataset support namespace examples:

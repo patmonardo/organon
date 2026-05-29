@@ -1,12 +1,241 @@
 use gds::ml::workbench::models::*;
 use serde_json::Value;
+use std::collections::BTreeSet;
+use std::io::{self, Write};
+
+#[derive(Clone, Copy)]
+struct ModelWorkbenchCommand {
+    id: &'static str,
+    group: &'static str,
+    title: &'static str,
+}
+
+const MODEL_COMMANDS: &[ModelWorkbenchCommand] = &[
+    ModelWorkbenchCommand {
+        id: "fixtures",
+        group: "Catalog",
+        title: "Show shared fixtures",
+    },
+    ModelWorkbenchCommand {
+        id: "logistic-demo",
+        group: "Classification",
+        title: "Binary logistic baseline",
+    },
+    ModelWorkbenchCommand {
+        id: "logistic-three-class-demo",
+        group: "Classification",
+        title: "Three-class logistic",
+    },
+    ModelWorkbenchCommand {
+        id: "logistic-three-class-overlap-demo",
+        group: "Classification",
+        title: "Three-class overlap logistic",
+    },
+    ModelWorkbenchCommand {
+        id: "logistic-three-class-large-demo",
+        group: "Classification",
+        title: "Large noisy three-class logistic",
+    },
+    ModelWorkbenchCommand {
+        id: "mlp-demo",
+        group: "Classification",
+        title: "MLP binary classifier",
+    },
+    ModelWorkbenchCommand {
+        id: "mlp-three-class-demo",
+        group: "Classification",
+        title: "MLP three-class",
+    },
+    ModelWorkbenchCommand {
+        id: "mlp-three-class-overlap-demo",
+        group: "Classification",
+        title: "MLP three-class overlap",
+    },
+    ModelWorkbenchCommand {
+        id: "mlp-three-class-large-demo",
+        group: "Classification",
+        title: "MLP three-class large",
+    },
+    ModelWorkbenchCommand {
+        id: "logistic-vs-mlp-overlap-comparison",
+        group: "Comparisons",
+        title: "Logistic vs MLP overlap",
+    },
+    ModelWorkbenchCommand {
+        id: "tree-vs-random-forest-demo",
+        group: "Comparisons",
+        title: "Tree vs Random Forest",
+    },
+    ModelWorkbenchCommand {
+        id: "svm-demo",
+        group: "SVM",
+        title: "SVM demo",
+    },
+    ModelWorkbenchCommand {
+        id: "svm-linear-vs-rbf-comparison",
+        group: "SVM",
+        title: "Linear vs RBF SVM",
+    },
+    ModelWorkbenchCommand {
+        id: "svm-nonlinear-comparison",
+        group: "SVM",
+        title: "Nonlinear XOR SVM comparison",
+    },
+    ModelWorkbenchCommand {
+        id: "svm-rbf-sweep",
+        group: "SVM",
+        title: "RBF sweep",
+    },
+    ModelWorkbenchCommand {
+        id: "mlp-three-class-sweep",
+        group: "Sweeps",
+        title: "MLP three-class sweep",
+    },
+    ModelWorkbenchCommand {
+        id: "logistic-sweep",
+        group: "Sweeps",
+        title: "Logistic sweep",
+    },
+    ModelWorkbenchCommand {
+        id: "linear-sweep",
+        group: "Sweeps",
+        title: "Linear sweep",
+    },
+    ModelWorkbenchCommand {
+        id: "linear-demo",
+        group: "Regression",
+        title: "Linear regression demo",
+    },
+    ModelWorkbenchCommand {
+        id: "node-classification-preview",
+        group: "Node Tasks",
+        title: "Node classification preview",
+    },
+    ModelWorkbenchCommand {
+        id: "node-classification-metrics",
+        group: "Node Tasks",
+        title: "Node classification metrics",
+    },
+    ModelWorkbenchCommand {
+        id: "node-prediction-split-preview",
+        group: "Node Tasks",
+        title: "Node prediction split preview",
+    },
+    ModelWorkbenchCommand {
+        id: "node-regression-preview",
+        group: "Node Tasks",
+        title: "Node regression preview",
+    },
+    ModelWorkbenchCommand {
+        id: "node-regression-metrics",
+        group: "Node Tasks",
+        title: "Node regression metrics",
+    },
+    ModelWorkbenchCommand {
+        id: "large-logistic-benchmark",
+        group: "Benchmarks",
+        title: "Large logistic benchmark",
+    },
+    ModelWorkbenchCommand {
+        id: "large-linear-benchmark",
+        group: "Benchmarks",
+        title: "Large linear benchmark",
+    },
+];
 
 fn main() {
     let mut args = std::env::args().skip(1);
-    let command = args.next().unwrap_or_else(|| "help".to_string());
+    let command = args.next().unwrap_or_else(|| "menu".to_string());
     let verbose = args.any(|arg| arg == "--verbose" || arg == "-v");
 
     match command.as_str() {
+        "menu" => run_interactive_menu(verbose),
+        "run" => {
+            if let Some(selection) = std::env::args().nth(2) {
+                run_selection_expr(&selection, verbose);
+            } else {
+                eprintln!("missing selection");
+                print_help();
+                std::process::exit(2);
+            }
+        }
+        "help" | "--help" | "-h" => print_help(),
+        other => {
+            if !dispatch_command(other, verbose) {
+                eprintln!("unknown command: {other}");
+                print_help();
+                std::process::exit(2);
+            }
+        }
+    }
+}
+
+fn run_interactive_menu(verbose: bool) {
+    loop {
+        println!("ML Models Workbench");
+        println!();
+        print_command_menu();
+        println!();
+        println!("Select number/id, batch (1,3-5), or ids (a,b). Commands: l=list, q=quit");
+        print!("> ");
+        let _ = io::stdout().flush();
+
+        let mut input = String::new();
+        if io::stdin().read_line(&mut input).is_err() {
+            eprintln!("failed to read selection");
+            std::process::exit(2);
+        }
+
+        let input = input.trim();
+        if input.is_empty() {
+            continue;
+        }
+
+        if input.eq_ignore_ascii_case("q") || input.eq_ignore_ascii_case("quit") {
+            println!("bye");
+            break;
+        }
+
+        if input.eq_ignore_ascii_case("l") || input.eq_ignore_ascii_case("list") {
+            continue;
+        }
+
+        run_selection_expr(input, verbose);
+    }
+}
+
+fn print_command_menu() {
+    println!("Commands:");
+    for (index, cmd) in MODEL_COMMANDS.iter().enumerate() {
+        println!("  {}. {} [{}]", index + 1, cmd.title, cmd.id);
+        println!("     group: {}", cmd.group);
+    }
+}
+
+fn run_selection_expr(selection: &str, verbose: bool) {
+    if let Some(indices) = parse_index_selection(selection, MODEL_COMMANDS.len()) {
+        for index in indices {
+            run_command(MODEL_COMMANDS[index - 1].id, verbose);
+        }
+        return;
+    }
+
+    for token in split_tokens(selection) {
+        run_command(token, verbose);
+    }
+}
+
+fn run_command(command: &str, verbose: bool) {
+    println!();
+    println!("running: {command}");
+    if !dispatch_command(command, verbose) {
+        eprintln!("unknown command: {command}");
+    }
+    println!();
+}
+
+fn dispatch_command(command: &str, verbose: bool) -> bool {
+    match command {
         "list" => print_json(available_experiments()),
         "fixtures" => print_json(fixture_catalog()),
         "logistic-demo" => print_json(run_logistic_demo()),
@@ -38,13 +267,47 @@ fn main() {
             print_json(run_large_logistic_benchmark_with_verbose(verbose))
         }
         "large-linear-benchmark" => print_json(run_large_linear_benchmark_with_verbose(verbose)),
-        "help" | "--help" | "-h" => print_help(),
-        other => {
-            eprintln!("unknown command: {other}");
-            print_help();
-            std::process::exit(2);
+        _ => return false,
+    }
+
+    true
+}
+
+fn split_tokens(input: &str) -> Vec<&str> {
+    input
+        .split(',')
+        .map(str::trim)
+        .filter(|token| !token.is_empty())
+        .collect()
+}
+
+fn parse_index_selection(input: &str, max: usize) -> Option<Vec<usize>> {
+    let tokens = split_tokens(input);
+    if tokens.is_empty() {
+        return None;
+    }
+
+    let mut selected = BTreeSet::new();
+    for token in tokens {
+        if let Some((left, right)) = token.split_once('-') {
+            let start = left.trim().parse::<usize>().ok()?;
+            let end = right.trim().parse::<usize>().ok()?;
+            if start == 0 || end == 0 || start > max || end > max {
+                return None;
+            }
+            let (lo, hi) = if start <= end { (start, end) } else { (end, start) };
+            for value in lo..=hi {
+                selected.insert(value);
+            }
+        } else {
+            let index = token.parse::<usize>().ok()?;
+            if index == 0 || index > max {
+                return None;
+            }
+            selected.insert(index);
         }
     }
+    Some(selected.into_iter().collect())
 }
 
 fn print_json<T>(value: T)
@@ -146,9 +409,11 @@ fn print_help() {
     println!("ML Models Workbench");
     println!();
     println!("Usage:");
-    println!("  cargo run -p gds --bin ml_models_cli -- <command> [--verbose|-v]");
+    println!("  cargo run -p gds --bin ml_models_cli -- [menu|run <selection>|<command>] [--verbose|-v]");
     println!();
     println!("Commands:");
+    println!("  menu           Interactive command selection");
+    println!("  run <selection> Run by number/id/list/range (e.g., 1,3-4)");
     println!("  list           Show available experiments");
     println!("  fixtures       Show shared ML model fixtures");
     println!("  logistic-demo  Train/evaluate a dense logistic regression fixture");

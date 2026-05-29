@@ -1,0 +1,4 @@
+doc_id,domain,split,metric_a,metric_b,quality,weighted,confidence
+105.0,legal,train,0.88,0.55,0.84,0.34979999999999994,84.0
+102.0,biomed,train,0.91,0.51,0.88,0.3441,88.0
+100.0,news,train,0.81,0.42,0.92,0.2961,92.0

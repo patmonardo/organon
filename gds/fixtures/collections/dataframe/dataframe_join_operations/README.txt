@@ -1,6 +1,6 @@
 DataFrame Join Operations Fixture
 
-Namespace: dataframe::frame (join / join_on)
+Namespace: dataframe::frame (join macros)
 
 00 Source Tables
 artifacts: fixtures/collections/dataframe/dataframe_join_operations/00-products.csv, fixtures/collections/dataframe/dataframe_join_operations/00-orders.csv
@@ -18,6 +18,11 @@ meaning: All orders retained; product cols null for unknown product_id=5.
 artifact: fixtures/collections/dataframe/dataframe_join_operations/03-full.csv
 meaning: All rows from both sides; nulls fill missing keys.
 
-04 join_on
-artifact: fixtures/collections/dataframe/dataframe_join_operations/04-join-on.csv
-meaning: Convenience same-key join; products LEFT JOIN inventory on product_id.
+04 Semi/Anti
+semi: fixtures/collections/dataframe/dataframe_join_operations/04-semi.csv
+anti: fixtures/collections/dataframe/dataframe_join_operations/04-anti.csv
+meaning: existence filtering joins on the left frame.
+
+05 Explicit Keys
+artifact: fixtures/collections/dataframe/dataframe_join_operations/05-explicit-keys.csv
+meaning: Left join across different key names via join! (product_id -> sku_id).

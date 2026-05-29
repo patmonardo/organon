@@ -1,0 +1,4 @@
+order_id,region,channel,amount
+1001,north,web,120.0
+1002,north,store,80.0
+1003,west,web,65.0

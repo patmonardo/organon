@@ -1,0 +1,6 @@
+customer_id,segment,qty_total,revenue_total
+8,,4.0,0.0
+2,startup,6.0,130.0
+1,enterprise,4.0,72.5
+4,public,2.0,60.0
+3,enterprise,2.0,80.0

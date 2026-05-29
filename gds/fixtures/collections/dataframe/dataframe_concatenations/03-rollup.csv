@@ -1,0 +1,7 @@
+route,amount_total,rows
+north::store,220.0,2
+west::web,160.0,2
+north::web,120.0,1
+south::store,110.0,1
+south::web,90.0,1
+west::store,75.0,1

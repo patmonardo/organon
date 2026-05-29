@@ -10,7 +10,7 @@
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use polars::prelude::{col, SortMultipleOptions};
+use polars::prelude::SortMultipleOptions;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("== DataFrame Order and Group ==");
@@ -40,22 +40,16 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     stage(
         1,
         "Sort Ascending / Descending",
-        "order_by_columns with SortMultipleOptions controls direction per column.",
+        "arrange! macro controls direction per selected columns.",
     );
 
     // Sort by units ascending
-    let sorted_asc = table.order_by_columns(
-        &["units"],
-        SortMultipleOptions::default().with_order_descending(false),
-    )?;
+    let sorted_asc = gds::arrange!(table, [units], asc)?;
     println!("sorted by units ASC:");
     println!("{}", sorted_asc.fmt_table());
 
     // Sort by region asc, then units desc
-    let sorted_multi = table.order_by_columns(
-        &["region", "units"],
-        SortMultipleOptions::default().with_order_descending_multi([false, true]),
-    )?;
+    let sorted_multi = gds::arrange!(table, [(region, asc), (units, desc)])?;
     println!("sorted by region ASC / units DESC:");
     println!("{}", sorted_multi.fmt_table());
 
@@ -67,7 +61,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     stage(
         2,
         "Group Count and Sum",
-        "group_by_count and group_by_sum aggregate by region.",
+        "group_by_count plus group_by!/agg! summarize by region.",
     );
 
     // Row count per region
@@ -76,12 +70,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("{}", counts.fmt_table());
 
     // Sum numeric columns per region (explicit — avoids summing string cols)
-    let sums = table.group_by_columns(
-        &["region"],
-        &[
-            col("units").sum().alias("total_units"),
-            col("price").sum().alias("total_price"),
-        ],
+    let sums = gds::group_by!(
+        table,
+        [region],
+        [
+            gds::agg!(units.sum => "total_units"),
+            gds::agg!(price.sum => "total_price")
+        ]
     )?;
     println!("group_by sum by region:");
     println!("{}", sums.fmt_table());
@@ -95,15 +90,16 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     stage(
         3,
         "Group Expression API",
-        "group_by_columns with explicit Expr aggregations: mean price per product.",
+        "group_by! + agg! with explicit mean/sum metrics per product.",
     );
 
-    let product_mean = table.group_by_columns(
-        &["product"],
-        &[
-            col("price").mean().alias("mean_price"),
-            col("units").sum().alias("total_units"),
-        ],
+    let product_mean = gds::group_by!(
+        table,
+        [product],
+        [
+            gds::agg!(price.mean => "mean_price"),
+            gds::agg!(units.sum => "total_units")
+        ]
     )?;
     println!("mean price + total units by product:");
     println!("{}", product_mean.fmt_table());
@@ -122,7 +118,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // top_k with descending=false picks the k largest values
     let top3 = table.top_k(
         3,
-        &[col("units")],
+        &[gds::col!(units)],
         SortMultipleOptions::default().with_order_descending(false),
     )?;
     println!("top 3 by units (largest):");
@@ -131,7 +127,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // bottom_k with descending=false picks the k smallest values
     let bot3 = table.bottom_k(
         3,
-        &[col("units")],
+        &[gds::col!(units)],
         SortMultipleOptions::default().with_order_descending(false),
     )?;
     println!("bottom 3 by units (smallest):");

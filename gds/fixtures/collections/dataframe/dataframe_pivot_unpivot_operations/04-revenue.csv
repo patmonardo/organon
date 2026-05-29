@@ -1,0 +1,8 @@
+order_id,customer_id,product_id,qty,segment,product,price,revenue
+10,1,100,3,enterprise,Parser,20.0,60.0
+11,2,101,1,startup,Indexer,30.0,30.0
+12,2,100,5,startup,Parser,20.0,100.0
+13,3,103,2,enterprise,Router,40.0,80.0
+14,8,104,4,,,,
+15,4,101,2,public,Indexer,30.0,60.0
+16,1,102,1,enterprise,Ranker,12.5,12.5

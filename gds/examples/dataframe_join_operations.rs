@@ -1,12 +1,11 @@
 //! DataFrame Join Operations walkthrough.
 //!
-//! Exercises the join surface on GDSDataFrame: inner join, left join,
-//! full outer join (cross-key), and join_on (same key column on both sides).
+//! Exercises the join macro surface on GDSDataFrame: inner/left/full joins,
+//! semi/anti filtering joins, and explicit left/right key mapping.
 //!
 //! Run with:
 //!   cargo run -p gds --example dataframe_join_operations
 
-use polars::prelude::JoinType;
 use std::fs;
 use std::path::{Path, PathBuf};
 
@@ -110,21 +109,45 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // ------------------------------------------------------------------ Stage 4
     stage(
         4,
-        "join_on (same-key convenience)",
-        "join_on uses the same column name on both sides — no duplication.",
+        "Semi + Anti",
+        "Semi keeps matching left rows; Anti keeps non-matching left rows.",
     );
 
-    // Re-create a small inventory table sharing product_id name
+    let semi = gds::join!(orders, products, on = "product_id", how = "semi")?;
+    let anti = gds::join!(orders, products, on = "product_id", how = "anti")?;
+
+    println!("semi rows: {}", semi.height());
+    println!("anti rows: {}", anti.height());
+    println!("anti table:\n{}", anti.fmt_table());
+
+    let semi_path = persist_csv(&semi, &fixture_root, "04-semi")?;
+    let anti_path = persist_csv(&anti, &fixture_root, "04-anti")?;
+    println!("persisted: {}", fixture_path(&anti_path));
+    println!();
+
+    // ------------------------------------------------------------------ Stage 5
+    stage(
+        5,
+        "Explicit Key Mapping",
+        "Join with different key names (product_id -> sku_id) using join!.",
+    );
+
     let inventory = gds::tbl_def!(
-        (product_id: i64 => [1, 2, 3]),
+        (sku_id: i64 => [1, 2, 3]),
         (stock: i64 => [100, 50, 0]),
     )?;
 
-    let with_stock = products.join_on(&inventory, &["product_id"], JoinType::Left, None)?;
-    println!("products LEFT JOIN inventory ON product_id:");
+    let with_stock = gds::join!(
+        products,
+        inventory,
+        left_on = [product_id],
+        right_on = [sku_id],
+        how = "left"
+    )?;
+    println!("products LEFT JOIN inventory ON product_id=sku_id:");
     println!("{}", with_stock.fmt_table());
 
-    let stock_path = persist_csv(&with_stock, &fixture_root, "04-join-on")?;
+    let stock_path = persist_csv(&with_stock, &fixture_root, "05-explicit-keys")?;
     println!("persisted: {}", fixture_path(&stock_path));
     println!();
 
@@ -138,6 +161,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             &inner_path,
             &left_path,
             &full_path,
+            &semi_path,
+            &anti_path,
             &stock_path,
         ),
     )?;
@@ -187,11 +212,13 @@ fn manifest(
     inner: &Path,
     left: &Path,
     full: &Path,
+    semi: &Path,
+    anti: &Path,
     stock: &Path,
 ) -> String {
     format!(
         "DataFrame Join Operations Fixture\n\n\
-         Namespace: dataframe::frame (join / join_on)\n\n\
+         Namespace: dataframe::frame (join macros)\n\n\
          00 Source Tables\n\
          artifacts: {}, {}\n\
          meaning: Products (4 rows) and Orders (5 rows) tables.\n\n\
@@ -204,14 +231,20 @@ fn manifest(
          03 Full Outer Join\n\
          artifact: {}\n\
          meaning: All rows from both sides; nulls fill missing keys.\n\n\
-         04 join_on\n\
+         04 Semi/Anti\n\
+         semi: {}\n\
+         anti: {}\n\
+         meaning: existence filtering joins on the left frame.\n\n\
+         05 Explicit Keys\n\
          artifact: {}\n\
-         meaning: Convenience same-key join; products LEFT JOIN inventory on product_id.\n",
+         meaning: Left join across different key names via join! (product_id -> sku_id).\n",
         fixture_path(prod),
         fixture_path(ord),
         fixture_path(inner),
         fixture_path(left),
         fixture_path(full),
+        fixture_path(semi),
+        fixture_path(anti),
         fixture_path(stock),
     )
 }

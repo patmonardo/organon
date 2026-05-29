@@ -1,6 +1,6 @@
 Dataset Frame DSL Fixture
 
-Namespace: dataset::functions::shell / dataset::macro
+Namespace: dataset::dsl::functions::shell / dataset::macro
 
 00 Frame
 artifact: fixtures/collections/dataset/dataset_frame_dsl/00-frame.csv

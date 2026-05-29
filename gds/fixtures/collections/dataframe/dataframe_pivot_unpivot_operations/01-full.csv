@@ -1,0 +1,9 @@
+order_id,customer_id,product_id,qty,segment
+10,1,100,3,enterprise
+11,2,101,1,startup
+12,2,100,5,startup
+13,3,103,2,enterprise
+14,8,104,4,
+15,4,101,2,public
+16,1,102,1,enterprise
+,5,,,startup

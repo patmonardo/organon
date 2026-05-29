@@ -20,6 +20,7 @@ pub mod series;
 pub mod streaming;
 pub mod table;
 pub mod utils;
+pub mod workbench;
 
 pub mod macros;
 pub mod prelude;
@@ -43,6 +44,7 @@ pub use selectors::{
 pub use series::*;
 pub use streaming::*;
 pub use table::*;
+pub use workbench::*;
 
 pub type PolarsSortMultipleOptions = polars::prelude::SortMultipleOptions;
 pub type JoinType = polars::prelude::JoinType;

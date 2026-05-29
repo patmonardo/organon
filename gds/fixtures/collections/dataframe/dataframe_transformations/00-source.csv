@@ -1,0 +1,9 @@
+doc_id,domain,split,metric_a,metric_b,quality
+100,news,train,0.81,0.42,0.92
+101,news,train,0.72,0.33,NaN
+102,biomed,train,0.91,0.51,0.88
+103,biomed,dev,0.65,0.48,0.71
+104,news,dev,0.79,0.39,NaN
+105,legal,train,0.88,0.55,0.84
+106,legal,dev,0.61,0.28,0.63
+107,news,dev,0.79,0.39,0.76

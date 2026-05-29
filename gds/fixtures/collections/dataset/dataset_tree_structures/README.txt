@@ -1,6 +1,6 @@
 Dataset Tree Structures Fixture
 
-Namespace: dataset::lm::tree (dataset::tree shim)
+Namespace: dataset::language::tree
 
 00 Hand-Built
 artifact: fixtures/collections/dataset/dataset_tree_structures/00-built.txt

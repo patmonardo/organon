@@ -60,6 +60,7 @@ pub mod logic;
 pub mod model;
 pub mod plan;
 pub mod prelude;
+pub mod workbench;
 
 // =============================================================================
 // Public surface
@@ -104,3 +105,6 @@ pub use language::*;
 pub use logic::*;
 pub use model::*;
 pub use plan::*;
+pub use workbench::catalog::dataset_workbench_track;
+pub use workbench::catalog::dataset_workbench_tracks;
+pub use workbench::catalog::DatasetWorkbenchTrack;

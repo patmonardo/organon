@@ -1,0 +1,5 @@
+product_id,product,price,family
+100,Parser,20.0,A
+101,Indexer,30.0,A
+102,Ranker,12.5,B
+103,Router,40.0,C

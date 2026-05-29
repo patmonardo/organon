@@ -1,0 +1,1 @@
+expected boundary: pivot is not available as an eager DataFrame wrapper yet

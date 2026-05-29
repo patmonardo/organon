@@ -777,14 +777,18 @@ macro_rules! __join_how {
     (left) => { polars::prelude::JoinType::Left };
     (right) => { polars::prelude::JoinType::Right };
     (full) => { polars::prelude::JoinType::Full };
+    (semi) => { polars::prelude::JoinType::Semi };
+    (anti) => { polars::prelude::JoinType::Anti };
 
     ("inner") => { polars::prelude::JoinType::Inner };
     ("left") => { polars::prelude::JoinType::Left };
     ("right") => { polars::prelude::JoinType::Right };
     ("full") => { polars::prelude::JoinType::Full };
+    ("semi") => { polars::prelude::JoinType::Semi };
+    ("anti") => { polars::prelude::JoinType::Anti };
 
     ($other:tt) => {
-        compile_error!("join!: unsupported `how`; use inner|left|right|full or \"inner\"|\"left\"|\"right\"|\"full\"")
+        compile_error!("join!: unsupported `how`; use inner|left|right|full|semi|anti or \"inner\"|\"left\"|\"right\"|\"full\"|\"semi\"|\"anti\"")
     };
 }
 
@@ -891,6 +895,112 @@ macro_rules! join {
             None,
         )
     }};
+}
+
+/// Concatenate multiple frames vertically using successive `vstack`.
+///
+/// Examples:
+/// ```rust
+/// let out = concat_rows!(a, b)?;
+/// let out = concat_rows!(a, b, c)?;
+/// ```
+#[macro_export]
+macro_rules! concat_rows {
+    ($first:expr, $second:expr $(, $rest:expr)* $(,)?) => {{
+        let mut __out = ($first).clone();
+        __out = __out.vstack(&($second))?;
+        $(
+            __out = __out.vstack(&($rest))?;
+        )*
+        Ok::<_, polars::error::PolarsError>(__out)
+    }};
+}
+
+/// Unpivot shorthand to keep reshape pipelines in macro space.
+///
+/// Examples:
+/// ```rust
+/// let long = unpivot!(table, on=[metric_a, metric_b], index=[id, group])?;
+/// let long = unpivot!(table, on=[metric_a, metric_b], index=[id], variable="metric", value="value")?;
+/// ```
+#[macro_export]
+macro_rules! unpivot {
+    ($table:expr, on=[ $($on:ident),* $(,)? ], index=[ $($idx:ident),* $(,)? ]) => {
+        $table.unpivot(
+            &[ $( stringify!($on) ),* ],
+            &[ $( stringify!($idx) ),* ],
+            None,
+            None,
+        )
+    };
+    ($table:expr, on=[ $($on:literal),* $(,)? ], index=[ $($idx:literal),* $(,)? ]) => {
+        $table.unpivot(&[ $( $on ),* ], &[ $( $idx ),* ], None, None)
+    };
+    ($table:expr, on=[ $($on:ident),* $(,)? ], index=[ $($idx:ident),* $(,)? ], variable=$variable:expr, value=$value:expr) => {
+        $table.unpivot(
+            &[ $( stringify!($on) ),* ],
+            &[ $( stringify!($idx) ),* ],
+            Some($variable),
+            Some($value),
+        )
+    };
+    ($table:expr, on=[ $($on:literal),* $(,)? ], index=[ $($idx:literal),* $(,)? ], variable=$variable:expr, value=$value:expr) => {
+        $table.unpivot(
+            &[ $( $on ),* ],
+            &[ $( $idx ),* ],
+            Some($variable),
+            Some($value),
+        )
+    };
+}
+
+/// Melt shorthand aligned with Python terms (`id` + `values`).
+///
+/// Examples:
+/// ```rust
+/// let melted = melt!(table, id=[id, group], values=[metric_a, metric_b])?;
+/// let melted = melt!(table, id=[id], values=[metric_a], variable="feature", value="score")?;
+/// ```
+#[macro_export]
+macro_rules! melt {
+    ($table:expr, id=[ $($id:ident),* $(,)? ], values=[ $($val:ident),* $(,)? ]) => {
+        $table.melt(
+            &[ $( stringify!($id) ),* ],
+            &[ $( stringify!($val) ),* ],
+            None,
+            None,
+            false,
+        )
+    };
+    ($table:expr, id=[ $($id:literal),* $(,)? ], values=[ $($val:literal),* $(,)? ]) => {
+        $table.melt(&[ $( $id ),* ], &[ $( $val ),* ], None, None, false)
+    };
+    ($table:expr, id=[ $($id:ident),* $(,)? ], values=[ $($val:ident),* $(,)? ], variable=$variable:expr, value=$value:expr) => {
+        $table.melt(
+            &[ $( stringify!($id) ),* ],
+            &[ $( stringify!($val) ),* ],
+            Some($variable),
+            Some($value),
+            false,
+        )
+    };
+    ($table:expr, id=[ $($id:literal),* $(,)? ], values=[ $($val:literal),* $(,)? ], variable=$variable:expr, value=$value:expr) => {
+        $table.melt(
+            &[ $( $id ),* ],
+            &[ $( $val ),* ],
+            Some($variable),
+            Some($value),
+            false,
+        )
+    };
+}
+
+/// Pivot shorthand for boundary-aware calls.
+#[macro_export]
+macro_rules! pivot {
+    ($table:expr) => {
+        $table.pivot()
+    };
 }
 
 /// Generic method-chaining pipeline helper.
