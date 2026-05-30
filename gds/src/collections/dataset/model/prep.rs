@@ -133,7 +133,9 @@ impl MarkedFeature {
         &self,
     ) -> Option<crate::collections::dataset::dsl::expressions::feature::FeatureExpr> {
         self.mark.as_ref().map(|fs| {
-            crate::collections::dataset::dsl::expressions::feature::FeatureExpr::Mark(fs.clone())
+            crate::collections::dataset::dsl::expressions::feature::FeatureExpr::Mark(format!(
+                "{fs:?}"
+            ))
         })
     }
 }
@@ -522,7 +524,7 @@ mod tests {
 
         let lifted = essence.features[0].mark_expr().unwrap();
         match &lifted {
-            FeatureExpr::Mark(fs) => assert_eq!(fs, &m),
+            FeatureExpr::Mark(mark) => assert_eq!(mark, &format!("{m:?}")),
             other => panic!("expected FeatureExpr::Mark, got {other:?}"),
         }
 

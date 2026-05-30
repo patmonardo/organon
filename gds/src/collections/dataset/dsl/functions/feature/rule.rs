@@ -1,9 +1,9 @@
 //! Feature rule executor for tagged token sequences.
 
-use crate::collections::dataset::dsl::expressions::feature::{
+use crate::collections::dataset::dsl::functions::feature::token::{extract_at, TaggedToken};
+use crate::collections::dataset::feature::{
     FeatureCondition, FeaturePath, FeatureRule, FeatureSpec, FeatureValue,
 };
-use crate::collections::dataset::dsl::functions::feature::token::{extract_at, TaggedToken};
 
 pub fn apply_rule(rule: &FeatureRule, tokens: &mut [TaggedToken]) -> Vec<usize> {
     apply_rule_at(rule, tokens, None)
@@ -83,9 +83,7 @@ fn match_offset(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::collections::dataset::dsl::expressions::feature::{
-        FeatureCondition, FeaturePosition, FeatureSpec,
-    };
+    use crate::collections::dataset::feature::{FeatureCondition, FeaturePosition, FeatureSpec};
 
     #[test]
     fn apply_rule_changes_tag() {

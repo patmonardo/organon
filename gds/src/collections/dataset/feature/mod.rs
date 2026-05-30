@@ -5,5 +5,7 @@
 pub mod core;
 pub mod featstruct;
 pub mod role;
+pub mod spec;
 
 pub use core::*;
+pub use spec::*;

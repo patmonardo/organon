@@ -1,6 +1,6 @@
 //! Token/tag feature extractors.
 
-use crate::collections::dataset::dsl::expressions::feature::FeatureValue;
+use crate::collections::dataset::feature::FeatureValue;
 
 pub type TaggedToken = (String, String);
 

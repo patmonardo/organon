@@ -5,6 +5,19 @@
 //! the reference texts; the DRS, the FeatStruct, and the Valuation are all
 //! Models in this sense.
 //!
+//! ## Current working Concept
+//!
+//! `Model` is the dialectical middle between raw Dataset evidence and named
+//! Features. The DSL should let an agent read this world once: a Model says
+//! what kind of interpretive machine or valuation is being used, what view it
+//! consumes, what view it produces, and what state/report/result objects are
+//! available around that act.
+//!
+//! The Component surface is therefore concrete and scriptable: `ModelId`,
+//! `ModelKind`, `ModelView`, `ModelSpec`, `ModelContext`, `ModelState`,
+//! `ModelScore`, `ModelReport`. The deeper dialectical machinery remains here,
+//! not in the DSL expression wrappers.
+//!
 //! ## Two senses of "Model" live in this crate
 //!
 //! 1. **Compute Model** — the [`Model`] trait below (Tagger / Parser /

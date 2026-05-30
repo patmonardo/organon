@@ -15,6 +15,8 @@
 use std::fs::read_to_string;
 use std::path::Path;
 
+use crate::collections::dataframe::col;
+use crate::collections::dataframe::GDSExpr as Expr;
 use crate::collections::dataset::dsl::namespaces;
 use crate::collections::dataset::dsl::namespaces::dataset::DatasetNs;
 use crate::collections::dataset::dsl::namespaces::feature::FeatureNs;
@@ -33,8 +35,6 @@ use crate::collections::dataset::lab::protocol::projection::DatasetProjectionExp
 use crate::collections::dataset::lab::protocol::registry::DatasetRegistryExpr;
 use crate::collections::dataset::lab::protocol::reporting::DatasetReportExpr;
 use crate::form::{ProgramFeature, ProgramFeatureKind, ProgramFeatures};
-use crate::collections::dataframe::col;
-use crate::collections::dataframe::GDSExpr as Expr;
 
 /// Ancient-science-style specification marker for SDSL artifacts.
 #[derive(Debug, Clone, PartialEq, Eq)]

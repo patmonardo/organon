@@ -31,6 +31,10 @@
 //! Recasting status: the existing `Feature = Plan-wrapper` becomes
 //! `Feature` in its **Projection** role specifically. Binder / Reentrancy /
 //! Annotation roles are doctrine commitments not yet typed.
+//!
+//! Active recast note: structural Feature matching vocabulary lives in the
+//! Feature module machinery, while `dsl::expressions::feature` remains a small
+//! script-facing Component.
 
 use std::collections::BTreeMap;
 
@@ -44,12 +48,13 @@ use crate::collections::dataset::plan::{EvalMode, Plan, PlanAttentionReport, Pla
 use crate::collections::dataset::Dataset;
 use crate::prints::{PrintEnvelope, PrintKind, PrintProvenance};
 
-pub use crate::collections::dataset::dsl::expressions::feature::{
-    FeatureCondition, FeatureExpr, FeaturePath, FeaturePosition, FeatureRule, FeatureSpec,
-    FeatureTemplate, FeatureValue,
-};
+pub use crate::collections::dataset::dsl::expressions::feature::FeatureExpr;
 pub use crate::collections::dataset::dsl::namespaces::feature::{
     FeatureExprNs, FeatureNs as FeatureNamespace,
+};
+pub use crate::collections::dataset::feature::spec::{
+    FeatureCondition, FeaturePath, FeaturePosition, FeatureRule, FeatureSpec, FeatureTemplate,
+    FeatureValue,
 };
 
 #[derive(Debug, Clone)]

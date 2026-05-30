@@ -17,8 +17,8 @@
 //!
 //! Public surface (read this before adding new exports):
 //!
-//! 1. **DataFrame shell** (`frame`, `series`, `expr`, plus `lazy`) — the
-//!    Dataset-facing view of the Polars-shaped body.
+//! 1. **Initial Dataset shell** (`dsl`, `frame`, `series`, `expr`, `lazy`) —
+//!    the first Component-facing authoring and runtime view of the body.
 //! 2. **Essence middle** (`model`, `feature`, `plan`) — semantic addresses,
 //!    deferred Meta Plans, model preparation, execution, and ontology images.
 //! 3. **Concept return** (`corpus`, `lm`, `logic`) — evidence, language,

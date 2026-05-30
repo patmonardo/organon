@@ -1,18 +1,15 @@
 //! Feature namespace for dataset-level DSL.
 //!
-//! Builders here are thin constructors for Feature expressions and
-//! delegate to feature functionals when expansion is requested.
+//! This is the high-level Feature authoring surface. It keeps scripts close to
+//! named features, slots, rules, and spaces instead of exposing the full
+//! structural matching vocabulary as the primary interface.
 
 use crate::collections::dataset::dsl::expressions::feature::{
-    FeatureCondition, FeatureExpr, FeaturePath, FeaturePosition, FeatureRule, FeatureSpec,
-    FeatureTemplate, FeatureValue,
+    FeatureExpr, FeatureRef, FeatureRuleExpr, FeatureSlot,
 };
-use crate::collections::dataset::dsl::expressions::tree::TreePos;
-use crate::collections::dataset::dsl::functions::feature as feature_fn;
 use crate::collections::dataset::feature::Feature;
 use crate::collections::dataset::feature::FeatureSpace;
 use crate::collections::dataset::feature::FeatureView;
-use crate::collections::dataset::feature::featstruct::FeatStruct;
 use crate::collections::dataset::plan::Plan;
 use crate::collections::dataset::plan::PlanError;
 
@@ -40,65 +37,20 @@ impl FeatureNs {
         space.insert(name, feature)
     }
 
-    pub fn pos(positions: impl Into<Vec<i32>>) -> Result<FeaturePosition, PlanError> {
-        FeaturePosition::new(positions)
+    pub fn feature(name: impl Into<String>) -> FeatureRef {
+        FeatureRef::new(name)
     }
 
-    pub fn range(start: i32, end: i32) -> Result<FeaturePosition, PlanError> {
-        FeaturePosition::from_range(start, end)
+    pub fn slot(feature: impl Into<String>) -> FeatureSlot {
+        FeatureSlot::new(feature)
     }
 
-    pub fn path_offsets(positions: FeaturePosition) -> FeaturePath {
-        FeaturePath::offsets(positions)
+    pub fn slot_view(feature: impl Into<String>, view: impl Into<String>) -> FeatureSlot {
+        FeatureSlot::new(feature).viewed(view)
     }
 
-    pub fn path_tree(pos: TreePos) -> FeaturePath {
-        FeaturePath::tree(pos)
-    }
-
-    pub fn spec(property: impl Into<String>, positions: FeaturePosition) -> FeatureSpec {
-        FeatureSpec::new(property, positions)
-    }
-
-    pub fn spec_tree(property: impl Into<String>, pos: TreePos) -> FeatureSpec {
-        FeatureSpec::new_tree(property, pos)
-    }
-
-    pub fn spec_path(property: impl Into<String>, path: FeaturePath) -> FeatureSpec {
-        FeatureSpec::new_path(property, path)
-    }
-
-    pub fn condition(feature: FeatureSpec, value: impl Into<FeatureValue>) -> FeatureCondition {
-        FeatureCondition::new(feature, value)
-    }
-
-    pub fn rule(
-        original: impl Into<String>,
-        replacement: impl Into<String>,
-        conditions: Vec<FeatureCondition>,
-    ) -> FeatureRule {
-        FeatureRule::new(original, replacement, conditions)
-    }
-
-    pub fn template(features: Vec<FeatureSpec>) -> FeatureTemplate {
-        FeatureTemplate::new(features)
-    }
-
-    pub fn expand_specs(
-        property: impl Into<String>,
-        starts: &[i32],
-        winlens: &[i32],
-        exclude_zero: bool,
-    ) -> Result<Vec<FeatureSpec>, PlanError> {
-        feature_fn::expand_specs(property, starts, winlens, exclude_zero)
-    }
-
-    pub fn expand_templates(
-        feature_lists: &[Vec<FeatureSpec>],
-        combinations: Option<(usize, usize)>,
-        skip_intersecting: bool,
-    ) -> Vec<FeatureTemplate> {
-        feature_fn::expand_templates(feature_lists, combinations, skip_intersecting)
+    pub fn rule_expr(name: impl Into<String>) -> FeatureRuleExpr {
+        FeatureRuleExpr::new(name)
     }
 }
 
@@ -110,39 +62,24 @@ impl FeatureExprNs {
         Self
     }
 
-    pub fn value(value: impl Into<FeatureValue>) -> FeatureExpr {
-        FeatureExpr::Value(value.into())
+    pub fn feature(name: impl Into<String>) -> FeatureExpr {
+        FeatureExpr::Ref(FeatureRef::new(name))
     }
 
-    pub fn position(positions: FeaturePosition) -> FeatureExpr {
-        FeatureExpr::Position(positions)
+    pub fn slot(feature: impl Into<String>) -> FeatureExpr {
+        FeatureExpr::Slot(FeatureSlot::new(feature))
     }
 
-    pub fn path(path: FeaturePath) -> FeatureExpr {
-        FeatureExpr::Path(path)
+    pub fn slot_view(feature: impl Into<String>, view: impl Into<String>) -> FeatureExpr {
+        FeatureExpr::Slot(FeatureSlot::new(feature).viewed(view))
     }
 
-    pub fn spec(spec: FeatureSpec) -> FeatureExpr {
-        FeatureExpr::Spec(spec)
-    }
-
-    pub fn condition(condition: FeatureCondition) -> FeatureExpr {
-        FeatureExpr::Condition(condition)
-    }
-
-    pub fn rule(rule: FeatureRule) -> FeatureExpr {
+    pub fn rule(rule: FeatureRuleExpr) -> FeatureExpr {
         FeatureExpr::Rule(rule)
     }
 
-    pub fn template(template: FeatureTemplate) -> FeatureExpr {
-        FeatureExpr::Template(template)
-    }
-
-    /// Lift an essence-level [`FeatStruct`] mark into a [`FeatureExpr::Mark`]
-    /// node, making it visible to IR walkers alongside the structural
-    /// expression variants.
-    pub fn mark(fs: FeatStruct) -> FeatureExpr {
-        FeatureExpr::Mark(fs)
+    pub fn mark(mark: impl Into<String>) -> FeatureExpr {
+        FeatureExpr::Mark(mark.into())
     }
 }
 
@@ -161,7 +98,7 @@ mod tests {
 
         assert_eq!(space.len(), 1);
 
-        let expr = FeatureExprNs::value("nominal");
-        assert!(matches!(expr, FeatureExpr::Value(_)));
+        let expr = FeatureExprNs::slot_view("lemma", "token");
+        assert!(matches!(expr, FeatureExpr::Slot(_)));
     }
 }

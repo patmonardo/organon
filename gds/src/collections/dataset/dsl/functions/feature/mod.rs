@@ -5,10 +5,10 @@
 pub mod rule;
 pub mod token;
 
-use crate::collections::dataset::dsl::expressions::feature::{
+use crate::collections::dataset::dsl::expressions::tree::TreePos;
+use crate::collections::dataset::feature::{
     FeaturePath, FeaturePosition, FeatureSpec, FeatureTemplate, FeatureValue,
 };
-use crate::collections::dataset::dsl::expressions::tree::TreePos;
 use crate::collections::dataset::language::tree::{TreeLeafValue, TreeValue};
 use crate::collections::dataset::plan::PlanError;
 

@@ -296,7 +296,11 @@ mod tests {
 
         let plan = PlanNs::from_var("ds")
             .with_columns([text_lower, token_count])
-            .select([ExprNs::col("id"), ExprNs::col("text_lower"), ExprNs::col("token_count")]);
+            .select([
+                ExprNs::col("id"),
+                ExprNs::col("text_lower"),
+                ExprNs::col("token_count"),
+            ]);
 
         let out = GDSDataFrame::new(ns.with_plan(&plan).into_lazyframe().collect()?);
 

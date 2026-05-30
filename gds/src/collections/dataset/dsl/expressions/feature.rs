@@ -1,420 +1,180 @@
-//! Feature expressions for dataset-level DSL.
+//! Feature expressions for dataset-level DSL automation.
 //!
-//! These are declarative data structures that describe feature paths,
-//! templates, and rule conditions (NLTK TBL inspired).
+//! This module defines expression data only. Namespaces and functions may make
+//! these expressions convenient to construct, but this module should not become
+//! a factory surface or dialectical Feature machinery.
 
-use crate::collections::dataset::dsl::expressions::tree::TreePos;
-use crate::collections::dataset::feature::featstruct::FeatStruct;
-use crate::collections::dataset::plan::PlanError;
-
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub enum FeatureValue {
-    Text(String),
-    TokenIndex(i32),
-    Number(i64),
-    Bool(bool),
-    BytesRange { start: usize, end: usize },
-    Empty,
-}
-
-impl FeatureValue {
-    pub fn text(value: impl Into<String>) -> Self {
-        FeatureValue::Text(value.into())
-    }
-
-    pub fn token_index(index: i32) -> Self {
-        FeatureValue::TokenIndex(index)
-    }
-
-    pub fn bytes_range(start: usize, end: usize) -> Self {
-        FeatureValue::BytesRange { start, end }
-    }
-}
-
-impl From<String> for FeatureValue {
-    fn from(value: String) -> Self {
-        FeatureValue::Text(value)
-    }
-}
-
-impl From<&str> for FeatureValue {
-    fn from(value: &str) -> Self {
-        FeatureValue::Text(value.to_string())
-    }
-}
-
-impl From<i32> for FeatureValue {
-    fn from(value: i32) -> Self {
-        FeatureValue::TokenIndex(value)
-    }
-}
-
-impl From<i64> for FeatureValue {
-    fn from(value: i64) -> Self {
-        FeatureValue::Number(value)
-    }
-}
-
-impl From<bool> for FeatureValue {
-    fn from(value: bool) -> Self {
-        FeatureValue::Bool(value)
-    }
-}
+use std::collections::BTreeMap;
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub struct FeaturePosition {
-    positions: Vec<i32>,
+pub struct FeatureRef {
+    name: String,
 }
 
-impl FeaturePosition {
-    pub fn new(positions: impl Into<Vec<i32>>) -> Result<Self, PlanError> {
-        let mut positions = positions.into();
-        positions.sort();
-        positions.dedup();
-        if positions.is_empty() {
-            return Err(PlanError::Message(
-                "feature positions cannot be empty".to_string(),
-            ));
-        }
-        Ok(Self { positions })
+impl FeatureRef {
+    pub fn new(name: impl Into<String>) -> Self {
+        Self { name: name.into() }
     }
 
-    pub fn from_range(start: i32, end: i32) -> Result<Self, PlanError> {
-        if start > end {
-            return Err(PlanError::Message(format!(
-                "illegal interval specification: (start={start}, end={end})"
-            )));
-        }
-        Ok(Self {
-            positions: (start..=end).collect(),
-        })
-    }
-
-    pub fn positions(&self) -> &[i32] {
-        &self.positions
-    }
-
-    pub fn contains_zero(&self) -> bool {
-        self.positions.iter().any(|p| *p == 0)
-    }
-
-    pub fn issuperset(&self, other: &FeaturePosition) -> bool {
-        other.positions.iter().all(|p| self.positions.contains(p))
-    }
-
-    pub fn intersects(&self, other: &FeaturePosition) -> bool {
-        other.positions.iter().any(|p| self.positions.contains(p))
-    }
-}
-
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub enum FeaturePath {
-    Offsets(FeaturePosition),
-    Tree(TreePos),
-}
-
-impl FeaturePath {
-    pub fn offsets(positions: FeaturePosition) -> Self {
-        FeaturePath::Offsets(positions)
-    }
-
-    pub fn tree(pos: TreePos) -> Self {
-        FeaturePath::Tree(pos)
-    }
-
-    pub fn as_offsets(&self) -> Option<&FeaturePosition> {
-        if let FeaturePath::Offsets(positions) = self {
-            Some(positions)
-        } else {
-            None
-        }
-    }
-
-    pub fn as_tree(&self) -> Option<&TreePos> {
-        if let FeaturePath::Tree(pos) = self {
-            Some(pos)
-        } else {
-            None
-        }
-    }
-}
-
-impl From<FeaturePosition> for FeaturePath {
-    fn from(positions: FeaturePosition) -> Self {
-        FeaturePath::Offsets(positions)
-    }
-}
-
-impl From<TreePos> for FeaturePath {
-    fn from(pos: TreePos) -> Self {
-        FeaturePath::Tree(pos)
-    }
-}
-
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub struct FeatureSpec {
-    property: String,
-    path: FeaturePath,
-}
-
-impl FeatureSpec {
-    pub fn new(property: impl Into<String>, positions: FeaturePosition) -> Self {
-        Self {
-            property: property.into(),
-            path: FeaturePath::offsets(positions),
-        }
-    }
-
-    pub fn new_tree(property: impl Into<String>, pos: TreePos) -> Self {
-        Self {
-            property: property.into(),
-            path: FeaturePath::tree(pos),
-        }
-    }
-
-    pub fn new_path(property: impl Into<String>, path: FeaturePath) -> Self {
-        Self {
-            property: property.into(),
-            path,
-        }
-    }
-
-    pub fn property(&self) -> &str {
-        &self.property
-    }
-
-    pub fn path(&self) -> &FeaturePath {
-        &self.path
-    }
-
-    pub fn positions(&self) -> Option<&FeaturePosition> {
-        self.path.as_offsets()
-    }
-
-    pub fn tree_pos(&self) -> Option<&TreePos> {
-        self.path.as_tree()
-    }
-
-    pub fn issuperset(&self, other: &FeatureSpec) -> bool {
-        if self.property != other.property {
-            return false;
-        }
-        match (&self.path, &other.path) {
-            (FeaturePath::Offsets(a), FeaturePath::Offsets(b)) => a.issuperset(b),
-            (FeaturePath::Tree(a), FeaturePath::Tree(b)) => a == b,
-            _ => false,
-        }
-    }
-
-    pub fn intersects(&self, other: &FeatureSpec) -> bool {
-        if self.property != other.property {
-            return false;
-        }
-        match (&self.path, &other.path) {
-            (FeaturePath::Offsets(a), FeaturePath::Offsets(b)) => a.intersects(b),
-            (FeaturePath::Tree(a), FeaturePath::Tree(b)) => a == b,
-            _ => false,
-        }
+    pub fn name(&self) -> &str {
+        &self.name
     }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct FeatureCondition {
-    feature: FeatureSpec,
-    value: FeatureValue,
+pub struct FeatureSlot {
+    feature: FeatureRef,
+    view: Option<String>,
 }
 
-impl FeatureCondition {
-    pub fn new(feature: FeatureSpec, value: impl Into<FeatureValue>) -> Self {
+impl FeatureSlot {
+    pub fn new(feature: impl Into<String>) -> Self {
         Self {
-            feature,
-            value: value.into(),
+            feature: FeatureRef::new(feature),
+            view: None,
         }
     }
 
-    pub fn feature(&self) -> &FeatureSpec {
-        &self.feature
-    }
-
-    pub fn value(&self) -> &FeatureValue {
-        &self.value
-    }
-}
-
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct FeatureRule {
-    original: String,
-    replacement: String,
-    template_id: Option<String>,
-    conditions: Vec<FeatureCondition>,
-}
-
-impl FeatureRule {
-    pub fn new(
-        original: impl Into<String>,
-        replacement: impl Into<String>,
-        conditions: Vec<FeatureCondition>,
-    ) -> Self {
-        Self {
-            original: original.into(),
-            replacement: replacement.into(),
-            template_id: None,
-            conditions,
-        }
-    }
-
-    pub fn with_template_id(mut self, template_id: impl Into<String>) -> Self {
-        self.template_id = Some(template_id.into());
+    pub fn viewed(mut self, view: impl Into<String>) -> Self {
+        self.view = Some(view.into());
         self
     }
 
-    pub fn original(&self) -> &str {
-        &self.original
+    pub fn feature(&self) -> &FeatureRef {
+        &self.feature
     }
 
-    pub fn replacement(&self) -> &str {
-        &self.replacement
-    }
-
-    pub fn conditions(&self) -> &[FeatureCondition] {
-        &self.conditions
+    pub fn view(&self) -> Option<&str> {
+        self.view.as_deref()
     }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct FeatureTemplate {
-    features: Vec<FeatureSpec>,
+pub struct FeatureRuleExpr {
+    name: String,
+    when: BTreeMap<String, String>,
+    then: BTreeMap<String, String>,
 }
 
-impl FeatureTemplate {
-    pub fn new(features: Vec<FeatureSpec>) -> Self {
-        Self { features }
+impl FeatureRuleExpr {
+    pub fn new(name: impl Into<String>) -> Self {
+        Self {
+            name: name.into(),
+            when: BTreeMap::new(),
+            then: BTreeMap::new(),
+        }
     }
 
-    pub fn features(&self) -> &[FeatureSpec] {
-        &self.features
+    pub fn when(mut self, key: impl Into<String>, value: impl Into<String>) -> Self {
+        self.when.insert(key.into(), value.into());
+        self
+    }
+
+    pub fn then(mut self, key: impl Into<String>, value: impl Into<String>) -> Self {
+        self.then.insert(key.into(), value.into());
+        self
+    }
+
+    pub fn name(&self) -> &str {
+        &self.name
+    }
+
+    pub fn conditions(&self) -> &BTreeMap<String, String> {
+        &self.when
+    }
+
+    pub fn outputs(&self) -> &BTreeMap<String, String> {
+        &self.then
     }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum FeatureExpr {
-    Value(FeatureValue),
-    Position(FeaturePosition),
-    Path(FeaturePath),
-    Spec(FeatureSpec),
-    Condition(FeatureCondition),
-    Rule(FeatureRule),
-    Template(FeatureTemplate),
-    /// Essence-level mark carried as a [`FeatStruct`].
-    ///
-    /// This is the IR-level bridge for the wrapper-side
-    /// [`crate::collections::dataset::model::prep::MarkedFeature::mark`].
-    /// Lifting the mark into [`FeatureExpr`] lets downstream IR walkers
-    /// (codegen, image realization, eval) see the model's essence-level
-    /// commitment as a first-class symbolic node rather than reaching into
-    /// the preparation wrapper. Box 2's predicate lowering still happens at
-    /// the wrapper level (where modality is known); this variant is the
-    /// *visible* form of that same mark inside the algebra.
-    Mark(FeatStruct),
+    Ref(FeatureRef),
+    Slot(FeatureSlot),
+    Rule(FeatureRuleExpr),
+    Mark(String),
 }
 
 impl FeatureExpr {
-    /// Borrow the inner [`FeatStruct`] if this expression is a [`Self::Mark`].
-    pub fn as_mark(&self) -> Option<&FeatStruct> {
-        if let FeatureExpr::Mark(fs) = self {
-            Some(fs)
+    pub fn as_ref_expr(&self) -> Option<&FeatureRef> {
+        if let FeatureExpr::Ref(feature) = self {
+            Some(feature)
         } else {
             None
         }
     }
 
-    /// Convenience constructor for [`Self::Mark`].
-    pub fn mark(fs: FeatStruct) -> Self {
-        FeatureExpr::Mark(fs)
+    pub fn as_slot(&self) -> Option<&FeatureSlot> {
+        if let FeatureExpr::Slot(slot) = self {
+            Some(slot)
+        } else {
+            None
+        }
+    }
+
+    pub fn as_rule(&self) -> Option<&FeatureRuleExpr> {
+        if let FeatureExpr::Rule(rule) = self {
+            Some(rule)
+        } else {
+            None
+        }
+    }
+
+    pub fn as_mark(&self) -> Option<&str> {
+        if let FeatureExpr::Mark(mark) = self {
+            Some(mark)
+        } else {
+            None
+        }
     }
 }
 
-impl From<FeatureValue> for FeatureExpr {
-    fn from(value: FeatureValue) -> Self {
-        FeatureExpr::Value(value)
+impl From<FeatureRef> for FeatureExpr {
+    fn from(value: FeatureRef) -> Self {
+        Self::Ref(value)
     }
 }
 
-impl From<FeaturePosition> for FeatureExpr {
-    fn from(value: FeaturePosition) -> Self {
-        FeatureExpr::Position(value)
+impl From<FeatureSlot> for FeatureExpr {
+    fn from(value: FeatureSlot) -> Self {
+        Self::Slot(value)
     }
 }
 
-impl From<FeaturePath> for FeatureExpr {
-    fn from(value: FeaturePath) -> Self {
-        FeatureExpr::Path(value)
-    }
-}
-
-impl From<FeatureSpec> for FeatureExpr {
-    fn from(value: FeatureSpec) -> Self {
-        FeatureExpr::Spec(value)
-    }
-}
-
-impl From<FeatureCondition> for FeatureExpr {
-    fn from(value: FeatureCondition) -> Self {
-        FeatureExpr::Condition(value)
-    }
-}
-
-impl From<FeatureRule> for FeatureExpr {
-    fn from(value: FeatureRule) -> Self {
-        FeatureExpr::Rule(value)
-    }
-}
-
-impl From<FeatureTemplate> for FeatureExpr {
-    fn from(value: FeatureTemplate) -> Self {
-        FeatureExpr::Template(value)
-    }
-}
-
-impl From<FeatStruct> for FeatureExpr {
-    fn from(value: FeatStruct) -> Self {
-        FeatureExpr::Mark(value)
+impl From<FeatureRuleExpr> for FeatureExpr {
+    fn from(value: FeatureRuleExpr) -> Self {
+        Self::Rule(value)
     }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::collections::dataset::feature::featstruct::{FeatDict, FeatValue};
 
-    fn dict(pairs: &[(&str, FeatValue)]) -> FeatStruct {
-        let mut d = FeatDict::new();
-        for (k, v) in pairs {
-            d.insert((*k).to_string(), v.clone());
-        }
-        FeatStruct::Dict(d)
+    #[test]
+    fn feature_slot_names_view_without_core_objects() {
+        let slot = FeatureSlot::new("lemma").viewed("token");
+
+        assert_eq!(slot.feature().name(), "lemma");
+        assert_eq!(slot.view(), Some("token"));
     }
 
     #[test]
-    fn mark_variant_round_trips_through_from_and_accessor() {
-        let fs = dict(&[("pos", FeatValue::text("noun"))]);
-        let expr: FeatureExpr = fs.clone().into();
-        match &expr {
-            FeatureExpr::Mark(inner) => assert_eq!(inner, &fs),
-            other => panic!("expected Mark, got {other:?}"),
-        }
-        assert_eq!(expr.as_mark(), Some(&fs));
+    fn feature_rule_expr_is_script_facing() {
+        let rule = FeatureRuleExpr::new("proper-noun")
+            .when("pos", "NN")
+            .then("pos", "NNP");
+
+        assert_eq!(rule.name(), "proper-noun");
+        assert_eq!(rule.conditions().get("pos"), Some(&"NN".to_string()));
+        assert_eq!(rule.outputs().get("pos"), Some(&"NNP".to_string()));
     }
 
     #[test]
-    fn non_mark_variant_returns_none_for_as_mark() {
-        let v = FeatureExpr::Value(FeatureValue::text("x"));
-        assert!(v.as_mark().is_none());
-    }
-
-    #[test]
-    fn mark_constructor_matches_from_impl() {
-        let fs = dict(&[("num", FeatValue::text("sg"))]);
-        assert_eq!(FeatureExpr::mark(fs.clone()), FeatureExpr::from(fs));
+    fn feature_expr_accessors_keep_module_expression_only() {
+        let expr = FeatureExpr::Slot(FeatureSlot::new("lemma"));
+        assert!(expr.as_slot().is_some());
+        assert!(expr.as_rule().is_none());
     }
 }

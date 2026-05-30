@@ -1,100 +1,21 @@
 //! Dataset DSL namespace builders and registry.
 //!
-//! This module hosts the concrete dataset namespace builders surfaced from the
-//! dataset DSL surface exported by [`crate::collections::dataset`].
-//! It also owns the dataset-side namespace registry, which is intentionally
-//! distinct from the DataFrame namespace registry in
-//! [`crate::collections::dataframe::namespaces::core`].
-//!
-//! Dialectical namespace map (do not duplicate behavior across layers):
-//!
-//! 1. **Orchestration** — [`dataset::DatasetNs`]: registry, IO, metadata,
-//!    projection, reporting. Dataset-level "what/where/how described".
-//! 2. **Data-op authoring** — [`dataop::DataOpNs`]: input / encode /
-//!    transform / decode / output stages, plus their text-domain variants and
-//!    DataFrame lowering helpers. The canonical place to build a
-//!    `DatasetDataOpExpr`.
-//! 3. **Text-domain alias** — [`text::TextNs`]: a thin alias over the
-//!    `text_*` family in `DataOpNs`, kept so toolchain code can spell
-//!    text-only stages without prefixing every call.
-//! 4. **Expression authoring** — [`expr::ExprNs`]: expression builders for
-//!    lazy DataFrame paths mediated through Dataset.
-//! 5. **Essence middle** — [`model::ModelNs`], [`feature::FeatureNs`], and
-//!    [`plan::PlanNs`]: model specs, feature algebra, and deferred lazy plans.
-//! 6. **Tree algebra** — [`treens::TreeNs`]: nodes, leaves, positions, spans,
-//!    and tree transforms used by parse/AST flows.
-//!
-//! Reserved namespace names recognised by the registry are listed in
-//! [`RESERVED_DATASET_NAMESPACES`].
+//! `core` carries the registry and reserved-name rules; `mode` carries the
+//! Component-facing namespace surfaces.
 
-use once_cell::sync::Lazy;
-use std::collections::HashSet;
-use std::sync::RwLock;
-
+pub mod core;
 pub mod dataop;
 pub mod dataset;
 pub mod expr;
 pub mod feature;
+pub mod mode;
 pub mod model;
 pub mod plan;
 pub mod text;
 pub mod treens;
 
-/// Errors raised during namespace registration.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub enum NameSpaceError {
-    Reserved { name: String },
-}
-
-#[derive(Default)]
-struct NameSpaceRegistry {
-    dataset: HashSet<String>,
-}
-
-impl NameSpaceRegistry {
-    fn dataset_mut(&mut self) -> &mut HashSet<String> {
-        &mut self.dataset
-    }
-}
-
-static DATASET_NAMESPACE_REGISTRY: Lazy<RwLock<NameSpaceRegistry>> =
-    Lazy::new(|| RwLock::new(NameSpaceRegistry::default()));
-
-const RESERVED_DATASET_NAMESPACES: &[&str] =
-    &["corpus", "text", "image", "audio", "tabular", "tree"];
-
-/// Helper to register the canonical `corpus` namespace.
-pub fn register_corpus_namespace() -> Result<(), NameSpaceError> {
-    register_dataset_namespace("corpus")
-}
-
-/// Register a custom namespace for datasets.
-pub fn register_dataset_namespace(name: &str) -> Result<(), NameSpaceError> {
-    if RESERVED_DATASET_NAMESPACES
-        .iter()
-        .any(|reserved| *reserved == name)
-    {
-        return Err(NameSpaceError::Reserved {
-            name: name.to_string(),
-        });
-    }
-    let mut registry = DATASET_NAMESPACE_REGISTRY
-        .write()
-        .expect("dataset namespace registry poisoned");
-    let set = registry.dataset_mut();
-    if set.contains(name) {
-        // already registered: quietly succeed
-        Ok(())
-    } else {
-        set.insert(name.to_string());
-        Ok(())
-    }
-}
-
-/// Check whether a namespace is registered.
-pub fn is_dataset_namespace_registered(name: &str) -> bool {
-    let registry = DATASET_NAMESPACE_REGISTRY
-        .read()
-        .expect("dataset namespace registry poisoned");
-    registry.dataset.contains(name)
-}
+pub use core::{
+    is_dataset_namespace_registered, register_corpus_namespace, register_dataset_namespace,
+    NameSpaceError,
+};
+pub use mode::{DatasetNs, ExprNs, FeatureExprNs, FeatureNs, ModelNs, PlanNs, TextNs, TreeNs};
