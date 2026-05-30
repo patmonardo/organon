@@ -1,0 +1,13 @@
+[build]
+jobs = 1
+
+[env]
+# Keep cargo/rustc work serialized unless explicitly overridden.
+CARGO_BUILD_JOBS = "1"
+
+# Keep Rust test harness single-threaded by default.
+RUST_TEST_THREADS = "1"
+
+# Common internal thread pools used by this repo stack.
+RAYON_NUM_THREADS = "1"
+POLARS_MAX_THREADS = "1"

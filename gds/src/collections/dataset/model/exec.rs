@@ -60,6 +60,7 @@ use crate::collections::dataframe::lit;
 use polars::prelude::LazyFrame;
 
 use crate::collections::dataset::feature::featstruct::{FeatStruct, FeatValue};
+use crate::collections::dataset::feature::mediator::MediatorProvenance;
 use crate::collections::dataset::feature::Feature;
 use crate::collections::dataset::model::prep::{
     MarkedFeature, Modality, ModelEssence, PreparationStep,
@@ -83,6 +84,8 @@ pub struct ExecutedFeature {
     pub applied: bool,
     /// Box 1's preparation step (carried through for Box 3 provenance).
     pub derivation: PreparationStep,
+    /// Optional mediator provenance carried from Box 1 for later manifests.
+    pub provenance: Option<MediatorProvenance>,
     /// Human-readable note for what Box 2 chose to do.
     pub action: ExecutionAction,
 }
@@ -171,6 +174,7 @@ pub fn execute_marked(lf: LazyFrame, marked: &MarkedFeature) -> (LazyFrame, Exec
     let mark = marked.mark.clone();
     let modality = marked.modality;
     let derivation = marked.derivation.clone();
+    let provenance = marked.provenance.clone();
 
     let (next_lf, applied, action) = match modality {
         Modality::Necessary => {
@@ -197,6 +201,7 @@ pub fn execute_marked(lf: LazyFrame, marked: &MarkedFeature) -> (LazyFrame, Exec
             modality,
             applied,
             derivation,
+            provenance,
             action,
         },
     )
@@ -280,6 +285,7 @@ pub fn execute_feature(lf: LazyFrame, feature: &Feature) -> Execution {
             modality: Modality::Contingent,
             note: "executed without preparation — contingent by default".to_string(),
         },
+        provenance: None,
         action: ExecutionAction::AppliedContingent,
     };
     Execution {
@@ -291,12 +297,12 @@ pub fn execute_feature(lf: LazyFrame, feature: &Feature) -> Execution {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::collections::dataframe::df;
     use crate::collections::dataset::feature::featstruct::{FeatDict, FeatStruct, FeatValue};
+    use crate::collections::dataset::feature::mediator::{MediatorId, MediatorProvenance};
     use crate::collections::dataset::model::prep::{prepare_model, FeatureMark};
     use crate::collections::dataset::model::{ModelId, ModelKind, ModelSpec, ModelView};
     use crate::collections::dataset::plan::{Plan, PlanSource};
-    use polars::prelude::IntoLazy;
+    use crate::tbl;
 
     fn spec() -> ModelSpec {
         ModelSpec {
@@ -320,8 +326,12 @@ mod tests {
         FeatStruct::Dict(d)
     }
 
+    fn provenance(id: &str) -> MediatorProvenance {
+        MediatorProvenance::new(MediatorId::feature(id), "feature", "test", "v1", "unit")
+    }
+
     fn lf() -> LazyFrame {
-        df!("a" => &[1i64, 2, 3]).unwrap().lazy()
+        tbl!((a: i64 => [1, 2, 3])).unwrap().lazy().into()
     }
 
     #[test]
@@ -382,6 +392,21 @@ mod tests {
     }
 
     #[test]
+    fn mediator_provenance_survives_execution() {
+        let provenance = provenance("feature:solo");
+        let essence = prepare_model(
+            spec(),
+            None,
+            vec![FeatureMark::contingent(feature("solo")).with_provenance(provenance.clone())],
+        )
+        .unwrap();
+
+        let exec = execute_essence(&essence, lf());
+
+        assert_eq!(exec.features[0].provenance.as_ref(), Some(&provenance));
+    }
+
+    #[test]
     fn empty_essence_returns_unchanged_lazyframe_and_empty_receipt() {
         let essence = prepare_model(spec(), None, vec![]).unwrap();
         let exec = execute_essence(&essence, lf());
@@ -391,12 +416,13 @@ mod tests {
 
     #[test]
     fn necessary_text_mark_filters_rows_on_matching_column() {
-        let frame = df!(
-            "pos" => &["noun", "verb", "noun"],
-            "n"   => &[1i64, 2, 3],
+        let frame = tbl!(
+            (pos: ["noun", "verb", "noun"]),
+            (n: i64 => [1, 2, 3]),
         )
         .unwrap()
-        .lazy();
+        .lazy()
+        .into();
 
         let m = dict(&[("pos", FeatValue::text("noun"))]);
         let essence =
@@ -411,12 +437,13 @@ mod tests {
 
     #[test]
     fn necessary_int_and_bool_marks_chain_filters() {
-        let frame = df!(
-            "k"   => &[1i64, 1, 2, 1],
-            "ok"  => &[true, false, true, true],
+        let frame = tbl!(
+            (k: i64 => [1, 1, 2, 1]),
+            (ok: [true, false, true, true]),
         )
         .unwrap()
-        .lazy();
+        .lazy()
+        .into();
 
         let m = dict(&[("k", FeatValue::Number(1)), ("ok", FeatValue::Bool(true))]);
         let essence =
@@ -429,7 +456,7 @@ mod tests {
 
     #[test]
     fn necessary_mark_with_unknown_column_does_not_filter() {
-        let frame = df!("a" => &[1i64, 2, 3]).unwrap().lazy();
+        let frame = tbl!((a: i64 => [1, 2, 3])).unwrap().lazy().into();
 
         // mark targets `pos`, which does not exist in the frame schema.
         let m = dict(&[("pos", FeatValue::text("noun"))]);
@@ -447,7 +474,7 @@ mod tests {
 
     #[test]
     fn necessary_mark_with_structural_value_is_left_symbolic() {
-        let frame = df!("pos" => &["noun", "verb"]).unwrap().lazy();
+        let frame = tbl!((pos: ["noun", "verb"])).unwrap().lazy().into();
 
         // Struct-valued mark entry has no scalar lowering; should not filter.
         let nested = dict(&[("inner", FeatValue::text("x"))]);
@@ -465,11 +492,7 @@ mod tests {
 
     #[test]
     fn contingent_mark_does_not_filter() {
-        let frame = df!(
-            "pos" => &["noun", "verb", "noun"],
-        )
-        .unwrap()
-        .lazy();
+        let frame = tbl!((pos: ["noun", "verb", "noun"])).unwrap().lazy().into();
 
         let m = dict(&[("pos", FeatValue::text("noun"))]);
         // optional => Contingent (not Necessary), so no enforcement.

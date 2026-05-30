@@ -42,6 +42,7 @@
 //! [`Execution::lazyframe`] separately.
 
 use crate::collections::dataset::feature::featstruct::{format_featstruct, FeatStruct};
+use crate::collections::dataset::feature::mediator::MediatorProvenance;
 use crate::collections::dataset::lab::compile::{
     OntologyDataFrameImage, OntologyDataFrameImageTables, OntologyImageConstraintRow,
     OntologyImageFeatureRow, OntologyImageModelRow, OntologyImageProvenanceRow,
@@ -137,11 +138,21 @@ pub fn realize_image(
         }
     }
 
-    let provenance = execution
+    let mut provenance = execution
         .features
         .iter()
         .map(|ef| provenance_row(&model_id, ef, opts))
         .collect::<Vec<_>>();
+    if let Some(model_provenance) = &essence.model_provenance {
+        provenance.push(mediator_provenance_row(model_provenance, opts));
+    }
+    provenance.extend(
+        execution
+            .features
+            .iter()
+            .filter_map(|ef| ef.provenance.as_ref())
+            .map(|feature_provenance| mediator_provenance_row(feature_provenance, opts)),
+    );
 
     OntologyDataFrameImage {
         image_id: format!("ontology-image:{}", model_id),
@@ -260,6 +271,35 @@ fn provenance_row(
     }
 }
 
+fn mediator_provenance_row(
+    provenance: &MediatorProvenance,
+    opts: &ImageOptions,
+) -> OntologyImageProvenanceRow {
+    let mediator_id = provenance.mediator_id();
+    let binding = provenance
+        .binding_id()
+        .map(|id| sanitize(id.as_str()))
+        .unwrap_or_else(|| "unbound".to_string());
+    let artifact = provenance
+        .artifact_kind()
+        .map(|kind| kind.as_str().to_string())
+        .unwrap_or_else(|| "unspecified".to_string());
+    OntologyImageProvenanceRow {
+        source: provenance.source().to_string(),
+        specification_id: format!(
+            "mediator::{kind}::{id}::binding::{binding}::artifact::{artifact}::layer::{layer}::version::{version}::derivation::{derivation}",
+            kind = mediator_id.kind().as_str(),
+            id = sanitize(mediator_id.value()),
+            layer = sanitize(provenance.layer()),
+            version = sanitize(provenance.version()),
+            derivation = sanitize(provenance.derivation()),
+        ),
+        runtime_mode: opts.runtime_mode,
+        substrate: opts.substrate.clone(),
+        generated_at_unix_ms: opts.generated_at_unix_ms.unwrap_or(0),
+    }
+}
+
 fn sanitize(value: &str) -> String {
     let mut out = String::with_capacity(value.len());
     for ch in value.chars() {
@@ -279,13 +319,17 @@ fn sanitize(value: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::collections::dataframe::df;
     use crate::collections::dataset::feature::featstruct::{FeatDict, FeatStruct, FeatValue};
+    use crate::collections::dataset::feature::mediator::{
+        ArtifactKind, MediatorId, MediatorProvenance,
+    };
     use crate::collections::dataset::feature::Feature;
-    use crate::collections::dataset::model::prep::{prepare_model, FeatureMark};
+    use crate::collections::dataset::model::prep::{
+        prepare_model, prepare_model_with_provenance, FeatureMark,
+    };
     use crate::collections::dataset::model::{ModelId, ModelKind, ModelSpec, ModelView};
     use crate::collections::dataset::plan::{Plan, PlanSource};
-    use polars::prelude::IntoLazy;
+    use crate::tbl;
 
     fn spec() -> ModelSpec {
         ModelSpec {
@@ -316,10 +360,19 @@ mod tests {
         }
     }
 
+    fn feature_provenance(id: &str) -> MediatorProvenance {
+        MediatorProvenance::new(MediatorId::feature(id), "feature", "test", "v1", "unit")
+            .with_artifact_kind(ArtifactKind::Language)
+    }
+
+    fn model_provenance(id: &str) -> MediatorProvenance {
+        MediatorProvenance::new(MediatorId::model(id), "model", "test", "v1", "unit")
+    }
+
     #[test]
     fn image_has_one_model_row_keyed_to_essence_id() {
         let essence = prepare_model(spec(), None, vec![]).unwrap();
-        let lf = df!("a" => &[1i64]).unwrap().lazy();
+        let lf = tbl!((a: i64 => [1])).unwrap().lazy().into();
         let exec = execute_essence(&essence, lf);
         let image = realize_image(&essence, &exec, &opts());
         assert_eq!(image.tables.models.len(), 1);
@@ -344,7 +397,7 @@ mod tests {
             ],
         )
         .unwrap();
-        let lf = df!("a" => &[1i64]).unwrap().lazy();
+        let lf = tbl!((a: i64 => [1])).unwrap().lazy().into();
         let exec = execute_essence(&essence, lf);
         let image = realize_image(&essence, &exec, &opts());
 
@@ -381,7 +434,7 @@ mod tests {
             vec![FeatureMark::required(feature("clash"), bad)],
         )
         .unwrap();
-        let lf = df!("a" => &[1i64]).unwrap().lazy();
+        let lf = tbl!((a: i64 => [1])).unwrap().lazy().into();
         let exec = execute_essence(&essence, lf);
         let image = realize_image(&essence, &exec, &opts());
 
@@ -405,7 +458,7 @@ mod tests {
     #[test]
     fn empty_essence_produces_minimal_image() {
         let essence = prepare_model(spec(), None, vec![]).unwrap();
-        let lf = df!("a" => &[1i64]).unwrap().lazy();
+        let lf = tbl!((a: i64 => [1])).unwrap().lazy().into();
         let exec = execute_essence(&essence, lf);
         let image = realize_image(&essence, &exec, &opts());
 
@@ -421,10 +474,36 @@ mod tests {
         let m = dict(&[("pos", FeatValue::text("noun"))]);
         let essence =
             prepare_model(spec(), None, vec![FeatureMark::required(feature("a"), m)]).unwrap();
-        let lf = df!("a" => &[1i64]).unwrap().lazy();
+        let lf = tbl!((a: i64 => [1])).unwrap().lazy().into();
         let (image, exec) = realize_from_essence(&essence, lf, &opts());
         assert_eq!(image.tables.features.len(), 1);
         assert_eq!(image.tables.features[0].kind, "applied-required");
         assert_eq!(exec.applied().count(), 1);
+    }
+
+    #[test]
+    fn realize_image_includes_mediator_provenance_rows() {
+        let model_provenance = model_provenance("model:m");
+        let feature_provenance = feature_provenance("feature:a");
+        let essence = prepare_model_with_provenance(
+            spec(),
+            None,
+            vec![FeatureMark::contingent(feature("a")).with_provenance(feature_provenance)],
+            model_provenance,
+        )
+        .unwrap();
+        let lf = tbl!((a: i64 => [1])).unwrap().lazy().into();
+        let exec = execute_essence(&essence, lf);
+        let image = realize_image(&essence, &exec, &opts());
+
+        assert_eq!(image.tables.provenance.len(), 3);
+        assert!(image
+            .tables
+            .provenance
+            .iter()
+            .any(|row| row.specification_id.starts_with("mediator::model::model_m")));
+        assert!(image.tables.provenance.iter().any(|row| row
+            .specification_id
+            .starts_with("mediator::feature::feature_a")));
     }
 }

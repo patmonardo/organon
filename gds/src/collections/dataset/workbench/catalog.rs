@@ -13,7 +13,21 @@ pub struct DatasetWorkbenchTrack {
     pub status: &'static str,
 }
 
-const DATASET_TRACKS: [DatasetWorkbenchTrack; 7] = [
+const DATASET_TRACKS: [DatasetWorkbenchTrack; 9] = [
+    DatasetWorkbenchTrack {
+        id: "ds-create-sem-dataset",
+        title: "Create Semantic Dataset",
+        focus: "initialize dataset folder layout, semantic frame, and catalog frame",
+        exemplar: "examples/dataset_create_sem_dataset.rs",
+        status: "core",
+    },
+    DatasetWorkbenchTrack {
+        id: "ds-download-unzip-archive",
+        title: "Download and Unzip Archive",
+        focus: "stage archive bytes, cache source, and extract into raw storage",
+        exemplar: "examples/dataset_io_download_archive.rs",
+        status: "core",
+    },
     DatasetWorkbenchTrack {
         id: "ds-frame-dsl",
         title: "Frame DSL",
@@ -39,7 +53,7 @@ const DATASET_TRACKS: [DatasetWorkbenchTrack; 7] = [
         id: "ds-model-plan",
         title: "Model Feature Plan",
         focus: "middle-fold modeling and plan semantics",
-        exemplar: "examples/dataset_model_feature_plan.rs",
+        exemplar: "examples/dataset_plan_moment.rs",
         status: "covered",
     },
     DatasetWorkbenchTrack {

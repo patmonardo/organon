@@ -1,0 +1,9 @@
+{
+  "dataset": "demo_archive_dataset",
+  "principle": "model-feature-plan",
+  "law": "corpus-language-logic",
+  "pairs": {
+    "rational": "Model-Feature-Plan",
+    "empirical": "Corpus-Language-Logic"
+  }
+}

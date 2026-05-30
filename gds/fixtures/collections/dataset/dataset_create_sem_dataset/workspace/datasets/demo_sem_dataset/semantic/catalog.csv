@@ -1,0 +1,8 @@
+dataset,entry_id,kind,name,path,status,description
+demo_sem_dataset,semantic_frame,semantic,frame.json,/home/pat/VSCode/organon/gds/fixtures/collections/dataset/dataset_create_sem_dataset/workspace/datasets/demo_sem_dataset/semantic/frame.json,created,principle-law seed frame
+demo_sem_dataset,catalog_frame,semantic,catalog.csv,/home/pat/VSCode/organon/gds/fixtures/collections/dataset/dataset_create_sem_dataset/workspace/datasets/demo_sem_dataset/semantic/catalog.csv,created,schema catalog frame
+demo_sem_dataset,corpus_dir,corpus,folder,/home/pat/VSCode/organon/gds/fixtures/collections/dataset/dataset_create_sem_dataset/workspace/datasets/demo_sem_dataset/corpus,created,corpus persistence root
+demo_sem_dataset,language_dir,language,folder,/home/pat/VSCode/organon/gds/fixtures/collections/dataset/dataset_create_sem_dataset/workspace/datasets/demo_sem_dataset/language,created,language persistence root
+demo_sem_dataset,logic_dir,logic,folder,/home/pat/VSCode/organon/gds/fixtures/collections/dataset/dataset_create_sem_dataset/workspace/datasets/demo_sem_dataset/logic,created,logic persistence root
+demo_sem_dataset,raw_dir,raw,folder,/home/pat/VSCode/organon/gds/fixtures/collections/dataset/dataset_create_sem_dataset/workspace/datasets/demo_sem_dataset/raw,created,raw archive extraction root
+demo_sem_dataset,artifacts_dir,artifacts,folder,/home/pat/VSCode/organon/gds/fixtures/collections/dataset/dataset_create_sem_dataset/workspace/datasets/demo_sem_dataset/artifacts,created,generated artifacts root

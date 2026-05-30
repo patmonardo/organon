@@ -1,0 +1,1 @@
+archive intake should stay source-shaped

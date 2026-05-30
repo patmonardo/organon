@@ -4,8 +4,10 @@
 
 pub mod core;
 pub mod featstruct;
+pub mod mediator;
 pub mod role;
 pub mod spec;
 
 pub use core::*;
+pub use mediator::*;
 pub use spec::*;

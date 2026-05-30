@@ -13,6 +13,6 @@ pub use exec::{
 };
 pub use image::{realize_from_essence, realize_image, ImageOptions};
 pub use prep::{
-    prepare_model, FeatureMark, MarkRequirement, MarkedFeature, Modality, ModelEssence,
-    ModelPrepExt, PreparationError, PreparationReport, PreparationStep,
+    prepare_model, prepare_model_with_provenance, FeatureMark, MarkRequirement, MarkedFeature,
+    Modality, ModelEssence, ModelPrepExt, PreparationError, PreparationReport, PreparationStep,
 };

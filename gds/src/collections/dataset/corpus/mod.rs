@@ -6,9 +6,11 @@
 pub mod annotation;
 pub mod core;
 pub mod document;
+mod manifest;
 pub mod source;
 
 pub use annotation::*;
 pub use core::*;
 pub use document::*;
+pub use manifest::*;
 pub use source::*;

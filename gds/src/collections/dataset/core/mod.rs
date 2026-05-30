@@ -14,6 +14,7 @@ pub mod metrics;
 pub mod schema;
 pub mod stdlib;
 pub mod utils;
+pub mod workspace;
 
 pub use artifact::*;
 pub use catalog::*;
@@ -24,3 +25,4 @@ pub use io::*;
 pub use metrics::*;
 pub use schema::*;
 pub use stdlib::*;
+pub use workspace::*;

@@ -7,6 +7,8 @@
 //!
 pub mod logic_form;
 pub mod logic_frame;
+mod manifest;
 
 pub use logic_form::*;
 pub use logic_frame::*;
+pub use manifest::*;

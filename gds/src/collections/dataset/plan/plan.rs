@@ -1,198 +1,24 @@
-//! `Plan` — deferred Polars-side recipes (R6 in the doctrine).
-//!
-//! See `gds/doc/SEMANTIC-DATASET-FIVE-FOLD.md` (Five-Fold Synthesis), Root
-//! Object **R6**.
-//!
-//! `Plan` is the **deferred form of `Frame:Series`** — a lazily described
-//! transformation from a `Dataset` source, a thin sugar over Polars
-//! `LazyFrame` / `Expr`. It stays in the Polars world. The canonical
-//! row/record artifact is a Polars `Struct` field named `item`.
-//!
-//! There is **no `FeaturePlan`**. Earlier drafts of the doctrine named the
-//! intensional-deferred cell `Plan:FeaturePlan` and that was wrong:
-//! `Model:Feature` is a *client SDK* over Polars, not a parallel runtime.
-//! The deferred-intensional cell is the **Binder / Reentrancy roles of
-//! `Feature`** (R5), bound by `LanguageModel` (R8) contexts — not by a
-//! second flavor of `Plan`. Admissibility predicates (`consistent`,
-//! `informative`, `derivable_from`) live on `LanguageModel`, not here.
-//!
-//! Contract this module owes the kernel:
-//!
-//! - `Plan` produces a `Frame:Series` value when run. It does not produce
-//!   `Model`s, bind `Feature`s, or evaluate admissibility.
-//! - `Plan` exposes evaluation modes (preview / fit) and emits a structured
-//!   attention report.
-//! - Long-term intent is to compile tabular-only subgraphs to Polars
-//!   `LazyFrame` plans, while keeping unstructured/streaming nodes in a
-//!   higher-level IR. Both stay extensional.
-//!
-//! User surface: a `Corpus` or a `LanguageModel` *runs* `Plan`s; users
-//! reach for `Plan` when they want a Polars-flavored lazy compute over
-//! either Synthetic Product.
-
-use std::collections::BTreeMap;
-
 use crate::collections::dataframe::GDSExpr as Expr;
+use crate::collections::dataset::lab::protocol::dataop::{DatasetDataOp, DatasetDataOpExpr};
+use crate::collections::dataset::Dataset;
+use crate::prints::{PrintEnvelope, PrintKind, PrintProvenance};
 use polars::prelude::LazyFrame;
-use serde::{Deserialize, Serialize};
 use serde_json::Value as JsonValue;
 
-use crate::collections::dataframe::GDSFrameError;
-use crate::collections::dataset::lab::protocol::dataop::{DatasetDataOp, DatasetDataOpExpr};
-use crate::collections::dataset::{Dataset, DatasetSplit};
-use crate::prints::{PrintEnvelope, PrintKind, PrintProvenance};
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum EvalMode {
-    Preview,
-    Fit,
-}
-
-#[derive(Debug, thiserror::Error)]
-pub enum PlanError {
-    #[error("plan error: {0}")]
-    Message(String),
-
-    #[error(transparent)]
-    Frame(#[from] GDSFrameError),
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PlanStepReport {
-    pub index: usize,
-    pub op: String,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub detail: Option<JsonValue>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PlanAttentionReport {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub plan_name: Option<String>,
-
-    pub mode: String,
-
-    pub source: JsonValue,
-
-    pub steps: Vec<PlanStepReport>,
-
-    /// Best-effort planned output columns inferred from expressions.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub planned_columns: Option<Vec<String>>,
-
-    /// Observed output columns after evaluation (if available).
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub observed_columns: Option<Vec<String>>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub row_count: Option<usize>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub column_count: Option<usize>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub batch_hint: Option<usize>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub split_hint: Option<String>,
-}
-
-#[derive(Debug, Clone)]
-pub struct PlanEnv {
-    datasets: BTreeMap<String, Dataset>,
-    preview_rows: usize,
-}
-
-impl Default for PlanEnv {
-    fn default() -> Self {
-        Self {
-            datasets: BTreeMap::new(),
-            preview_rows: 1_000,
-        }
-    }
-}
-
-impl PlanEnv {
-    pub fn new() -> Self {
-        Self::default()
-    }
-
-    pub fn with_preview_rows(mut self, n: usize) -> Self {
-        self.preview_rows = n.max(1);
-        self
-    }
-
-    pub fn bind_dataset(mut self, name: impl Into<String>, ds: Dataset) -> Self {
-        self.datasets.insert(name.into(), ds);
-        self
-    }
-
-    pub fn get_dataset(&self, name: &str) -> Option<&Dataset> {
-        self.datasets.get(name)
-    }
-
-    pub fn preview_rows(&self) -> usize {
-        self.preview_rows
-    }
-}
-
-#[derive(Debug, Clone)]
-pub enum PlanSource {
-    Var(String),
-    Value(Dataset),
-}
-
-impl PlanSource {
-    pub fn var(name: impl Into<String>) -> Self {
-        Self::Var(name.into())
-    }
-
-    pub fn value(dataset: Dataset) -> Self {
-        Self::Value(dataset)
-    }
-}
-
-#[derive(Debug, Clone)]
-pub enum Step {
-    Filter(Expr),
-    Select(Vec<Expr>),
-    WithColumns(Vec<Expr>),
-
-    /// Canonical record column construction.
-    ///
-    /// Convention: the output is aliased to the `item` column.
-    Item(Expr),
-
-    /// Logical split label (does not change the data by itself).
-    Split(DatasetSplit),
-
-    /// Hint for downstream evaluation (batching / streaming).
-    Batch(usize),
-
-    /// Dataset data-op step (Input/Encode/Transform/Decode/Output).
-    DataOp(DatasetDataOpExpr),
-}
-
-impl Step {
-    /// Steps that lower directly to Polars `LazyFrame` operators.
-    pub fn is_tabular_kernel_step(&self) -> bool {
-        matches!(
-            self,
-            Step::Filter(_) | Step::Select(_) | Step::WithColumns(_) | Step::Item(_)
-        )
-    }
-
-    /// Steps that are semantic/control-plane hints and do not directly lower
-    /// to tabular kernels.
-    pub fn is_control_plane_step(&self) -> bool {
-        matches!(self, Step::Split(_) | Step::Batch(_) | Step::DataOp(_))
-    }
-}
+use super::concept::{
+    CognitionMode, ConceptTriad, LawOfAppearance, PlanPrinciple, PlanPrincipleReport,
+    PlanSynthesis, PlanSynthesisReport,
+};
+use super::report::{PlanAttentionReport, PlanStepReport};
+use super::runtime::{EvalMode, PlanEnv, PlanError, PlanSource, Step};
 
 #[derive(Debug, Clone)]
 pub struct Plan {
     name: Option<String>,
     source: PlanSource,
     steps: Vec<Step>,
+    synthesis: PlanSynthesis,
+    principle: Option<PlanPrinciple>,
 }
 
 impl Plan {
@@ -209,6 +35,8 @@ impl Plan {
             name: None,
             source,
             steps: Vec::new(),
+            synthesis: PlanSynthesis::default(),
+            principle: None,
         }
     }
 
@@ -229,25 +57,119 @@ impl Plan {
         &self.steps
     }
 
-    /// Whether this plan ends with an `item` projection step.
+    pub fn synthesis(&self) -> &PlanSynthesis {
+        &self.synthesis
+    }
+
+    pub fn with_model_anchor(mut self, model_anchor: impl Into<String>) -> Self {
+        self.synthesis = self.synthesis.with_model_anchor(model_anchor);
+        self
+    }
+
+    pub fn with_image_anchor(mut self, image_anchor: impl Into<String>) -> Self {
+        self.synthesis = self.synthesis.with_image_anchor(image_anchor);
+        self
+    }
+
+    pub fn with_feature_anchor(mut self, feature_anchor: impl Into<String>) -> Self {
+        self.synthesis = self.synthesis.with_feature_anchor(feature_anchor);
+        self
+    }
+
+    pub fn with_feature_anchors<I>(mut self, feature_anchors: I) -> Self
+    where
+        I: IntoIterator,
+        I::Item: Into<String>,
+    {
+        for feature_anchor in feature_anchors {
+            self.synthesis = self.synthesis.with_feature_anchor(feature_anchor);
+        }
+        self
+    }
+
+    pub fn is_unified_image_feature_plan(&self) -> bool {
+        self.synthesis.is_unified()
+    }
+
+    pub fn principle(&self) -> Option<&PlanPrinciple> {
+        self.principle.as_ref()
+    }
+
+    pub fn with_principle_triad(mut self, triad: ConceptTriad) -> Self {
+        let mut principle = self
+            .principle
+            .take()
+            .unwrap_or_else(|| PlanPrinciple::rational(triad));
+        principle.triad = triad;
+        if principle
+            .law_of_appearance
+            .as_ref()
+            .is_some_and(|law| !law.is_empty())
+        {
+            principle.mode = CognitionMode::Empirical;
+        } else {
+            principle.mode = CognitionMode::Rational;
+            principle.law_of_appearance = None;
+        }
+        self.principle = Some(principle);
+        self
+    }
+
+    pub fn with_mock_law_of_appearance<I>(mut self, feature_anchors: I) -> Self
+    where
+        I: IntoIterator,
+        I::Item: Into<String>,
+    {
+        let law = LawOfAppearance::mock_from_feature_anchors(feature_anchors);
+        let triad = self
+            .principle
+            .as_ref()
+            .map(|p| p.triad)
+            .unwrap_or(ConceptTriad::ModelFeaturePlan);
+        let principle = self
+            .principle
+            .take()
+            .unwrap_or_else(|| PlanPrinciple::rational(triad))
+            .with_law_of_appearance(law);
+        self.principle = Some(principle);
+        self
+    }
+
+    pub fn with_empirical_observation(
+        mut self,
+        feature_anchor: impl Into<String>,
+        evidence: impl Into<String>,
+    ) -> Self {
+        let triad = self
+            .principle
+            .as_ref()
+            .map(|p| p.triad)
+            .unwrap_or(ConceptTriad::ModelFeaturePlan);
+        let law = self
+            .principle
+            .as_ref()
+            .and_then(|p| p.law_of_appearance.clone())
+            .unwrap_or_default()
+            .add_observation(feature_anchor, evidence);
+        self.principle = Some(
+            self.principle
+                .take()
+                .unwrap_or_else(|| PlanPrinciple::rational(triad))
+                .with_law_of_appearance(law),
+        );
+        self
+    }
+
     pub fn ends_with_item(&self) -> bool {
         self.steps
             .last()
             .is_some_and(|s| matches!(s, Step::Item(_)))
     }
 
-    /// Whether this plan contains any `item` projection step.
     pub fn has_item(&self) -> bool {
         self.steps.iter().any(|s| matches!(s, Step::Item(_)))
     }
 
-    /// Append an `item` projection step.
-    ///
-    /// This expresses the idea that `item`/Struct is an *idealization* (a canonical
-    /// feature-map artifact) that you can project into when you want to compile
-    /// or interop with well-known DataFrame processing.
-    ///
-    /// Convention: `item_expr` should already be aliased to the `item` column.
     pub fn project_item(mut self, item_expr: Expr) -> Self {
         self.steps.push(Step::Item(item_expr));
         self
@@ -276,7 +198,7 @@ impl Plan {
         self.push_step(Step::WithColumns(exprs.into_iter().collect()))
     }
 
-    pub fn split(self, split: DatasetSplit) -> Self {
+    pub fn split(self, split: crate::collections::dataset::DatasetSplit) -> Self {
         self.push_step(Step::Split(split))
     }
 
@@ -346,18 +268,11 @@ impl Plan {
                     ds = ds.with_columns(exprs)?;
                 }
                 Step::Item(item_expr) => {
-                    // Convention: item_expr should already be aliased to "item".
                     ds = ds.with_columns(&[item_expr.clone()])?;
                 }
-                Step::Split(_) => {
-                    // Label-only for now.
-                }
-                Step::Batch(_) => {
-                    // Hint-only for now; streaming evaluation will consume this later.
-                }
-                Step::DataOp(_) => {
-                    // Dataset-level data-op: eval handled by higher-level adapters.
-                }
+                Step::Split(_) => {}
+                Step::Batch(_) => {}
+                Step::DataOp(_) => {}
             }
         }
 
@@ -365,10 +280,6 @@ impl Plan {
     }
 
     fn planned_output_columns(&self) -> Option<Vec<String>> {
-        // Heuristic:
-        // - If there is at least one Select step, the *last* Select defines the outputs.
-        // - Otherwise, we cannot know without schema execution; return None.
-        // (We will still include item/with_columns hints in step detail.)
         let last_select = self.steps.iter().rev().find_map(|s| match s {
             Step::Select(exprs) => Some(exprs),
             _ => None,
@@ -378,7 +289,6 @@ impl Plan {
         if names.is_empty() {
             return None;
         }
-        // Deduplicate while preserving order.
         let mut seen = std::collections::BTreeSet::new();
         names.retain(|n| seen.insert(n.clone()));
         Some(names)
@@ -443,7 +353,6 @@ impl Plan {
             steps.push(PlanStepReport { index, op, detail });
         }
 
-        // Optionally compute observed columns by evaluating preview.
         let mut observed_columns = None;
         let mut row_count = None;
         let mut column_count = None;
@@ -466,6 +375,9 @@ impl Plan {
             column_count,
             batch_hint,
             split_hint,
+            synthesis: (!self.synthesis.is_empty())
+                .then(|| PlanSynthesisReport::from(&self.synthesis)),
+            principle: self.principle.as_ref().map(PlanPrincipleReport::from),
         }
     }
 
@@ -501,28 +413,33 @@ impl Plan {
         Ok((ds, print))
     }
 
-    /// Compose this plan with another plan by appending the other's steps.
-    ///
-    /// Semantics:
-    /// - Keeps `self`'s source.
-    /// - Appends `next`'s steps (cloned) to `self`.
-    /// - If `self` has no name but `next` does, adopts `next`'s name.
     pub fn chain(mut self, next: &Plan) -> Self {
         if self.name.is_none() {
             self.name = next.name.clone();
         }
 
+        if self.synthesis.model_anchor.is_none() {
+            self.synthesis.model_anchor = next.synthesis.model_anchor.clone();
+        }
+        if self.synthesis.image_anchor.is_none() {
+            self.synthesis.image_anchor = next.synthesis.image_anchor.clone();
+        }
+        for feature_anchor in &next.synthesis.feature_anchors {
+            if !self
+                .synthesis
+                .feature_anchors
+                .iter()
+                .any(|existing| existing == feature_anchor)
+            {
+                self.synthesis.feature_anchors.push(feature_anchor.clone());
+            }
+        }
+
+        self.principle = self.principle.or_else(|| next.principle.clone());
         self.steps.extend(next.steps.iter().cloned());
         self
     }
 
-    /// Apply the plan's tabular steps to a Polars `LazyFrame`.
-    ///
-    /// This is the bridge that lets Plans act like "models" over streaming
-    /// batches: each batch is represented as a `LazyFrame` and we apply the
-    /// same feature/selection steps.
-    ///
-    /// Non-tabular control steps (`Split`, `Batch`) are ignored.
     pub fn apply_to_lazyframe(&self, mut lf: LazyFrame) -> LazyFrame {
         for step in &self.steps {
             match step {
@@ -538,17 +455,12 @@ impl Plan {
                 Step::Item(item_expr) => {
                     lf = lf.with_columns([item_expr.clone()]);
                 }
-                Step::Split(_) | Step::Batch(_) | Step::DataOp(_) => {
-                    // Control-plane only.
-                }
+                Step::Split(_) | Step::Batch(_) | Step::DataOp(_) => {}
             }
         }
         lf
     }
 
-    /// Convert this Plan into a reusable streaming transform.
-    ///
-    /// The returned closure is suitable for `StreamingDataset::with_transform`.
     pub fn to_streaming_transform(&self) -> Box<dyn Fn(LazyFrame) -> LazyFrame + Send + Sync> {
         let steps = self.steps.clone();
         Box::new(move |mut lf: LazyFrame| {
@@ -620,4 +532,60 @@ fn expr_output_names(exprs: &[Expr]) -> Vec<String> {
         .filter_map(|expr| expr.clone().meta().output_name().ok())
         .map(|s| s.to_string())
         .collect()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn plan_synthesis_unifies_image_and_features() {
+        let plan = Plan::from_var("ds")
+            .with_model_anchor("model:tagger:v1")
+            .with_image_anchor("ontology-image:model:tagger:v1")
+            .with_feature_anchor("feature:token")
+            .with_feature_anchor("feature:lemma");
+
+        assert!(plan.is_unified_image_feature_plan());
+        assert_eq!(
+            plan.synthesis().model_anchor.as_deref(),
+            Some("model:tagger:v1")
+        );
+        assert_eq!(plan.synthesis().feature_anchors.len(), 2);
+    }
+
+    #[test]
+    fn attention_report_includes_synthesis_when_present() {
+        let plan = Plan::from_var("ds")
+            .with_image_anchor("ontology-image:model:1")
+            .with_feature_anchors(["feature:a", "feature:b"]);
+
+        let report = plan.attention_report(None, EvalMode::Preview);
+        assert!(report.synthesis.is_some());
+        assert!(report.synthesis.expect("synthesis").unified);
+    }
+
+    #[test]
+    fn mock_law_of_appearance_marks_empirical_transition() {
+        let plan = Plan::from_var("ds")
+            .with_principle_triad(ConceptTriad::ModelFeaturePlan)
+            .with_mock_law_of_appearance(["feature:token", "feature:lemma"]);
+
+        let principle = plan.principle().expect("principle");
+        assert!(principle.is_empirical_transition());
+        assert_eq!(principle.mode, CognitionMode::Empirical);
+    }
+
+    #[test]
+    fn attention_report_includes_principle_when_present() {
+        let plan = Plan::from_var("ds")
+            .with_principle_triad(ConceptTriad::EntityPropertyRelation)
+            .with_empirical_observation("feature:cursor-move", "mock-observation:cursor");
+
+        let report = plan.attention_report(None, EvalMode::Preview);
+        let principle = report.principle.expect("principle");
+        assert_eq!(principle.triad, "entity-property-relation");
+        assert!(principle.empirical_transition);
+        assert_eq!(principle.observation_count, 1);
+    }
 }

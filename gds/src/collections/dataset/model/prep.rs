@@ -39,6 +39,7 @@
 use crate::collections::dataset::feature::featstruct::{
     unify_featstruct, FeatBindings, FeatStruct,
 };
+use crate::collections::dataset::feature::mediator::MediatorProvenance;
 use crate::collections::dataset::feature::Feature;
 use crate::collections::dataset::model::ModelSpec;
 
@@ -120,6 +121,7 @@ pub struct MarkedFeature {
     pub mark: Option<FeatStruct>,
     pub modality: Modality,
     pub derivation: PreparationStep,
+    pub provenance: Option<MediatorProvenance>,
 }
 
 impl MarkedFeature {
@@ -151,6 +153,7 @@ pub struct ModelEssence {
     pub accumulated: Option<FeatStruct>,
     pub features: Vec<MarkedFeature>,
     pub report: PreparationReport,
+    pub model_provenance: Option<MediatorProvenance>,
 }
 
 impl ModelEssence {
@@ -198,6 +201,7 @@ pub struct FeatureMark {
     pub feature: Feature,
     pub mark: Option<FeatStruct>,
     pub requirement: MarkRequirement,
+    pub provenance: Option<MediatorProvenance>,
 }
 
 impl FeatureMark {
@@ -206,6 +210,7 @@ impl FeatureMark {
             feature,
             mark: None,
             requirement: MarkRequirement::Optional,
+            provenance: None,
         }
     }
 
@@ -214,6 +219,7 @@ impl FeatureMark {
             feature,
             mark: Some(mark),
             requirement: MarkRequirement::Optional,
+            provenance: None,
         }
     }
 
@@ -222,7 +228,13 @@ impl FeatureMark {
             feature,
             mark: Some(mark),
             requirement: MarkRequirement::Required,
+            provenance: None,
         }
+    }
+
+    pub fn with_provenance(mut self, provenance: MediatorProvenance) -> Self {
+        self.provenance = Some(provenance);
+        self
     }
 }
 
@@ -247,6 +259,24 @@ pub fn prepare_model(
     seed_constraints: Option<FeatStruct>,
     features: Vec<FeatureMark>,
 ) -> Result<ModelEssence, PreparationError> {
+    prepare_model_inner(spec, seed_constraints, features, None)
+}
+
+pub fn prepare_model_with_provenance(
+    spec: ModelSpec,
+    seed_constraints: Option<FeatStruct>,
+    features: Vec<FeatureMark>,
+    model_provenance: MediatorProvenance,
+) -> Result<ModelEssence, PreparationError> {
+    prepare_model_inner(spec, seed_constraints, features, Some(model_provenance))
+}
+
+fn prepare_model_inner(
+    spec: ModelSpec,
+    seed_constraints: Option<FeatStruct>,
+    features: Vec<FeatureMark>,
+    model_provenance: Option<MediatorProvenance>,
+) -> Result<ModelEssence, PreparationError> {
     let mut accumulated = seed_constraints;
     let mut report = PreparationReport::new();
     let mut marked = Vec::with_capacity(features.len());
@@ -256,6 +286,7 @@ pub fn prepare_model(
             feature,
             mark,
             requirement,
+            provenance,
         } = fm;
         let feature_name = feature.name().map(|s| s.to_string());
 
@@ -322,6 +353,7 @@ pub fn prepare_model(
             mark,
             modality,
             derivation,
+            provenance,
         });
     }
 
@@ -330,6 +362,7 @@ pub fn prepare_model(
         accumulated,
         features: marked,
         report,
+        model_provenance,
     })
 }
 
@@ -369,6 +402,9 @@ impl<M: crate::collections::dataset::model::Model + ?Sized> ModelPrepExt for M {
 mod tests {
     use super::*;
     use crate::collections::dataset::feature::featstruct::{FeatDict, FeatStruct, FeatValue};
+    use crate::collections::dataset::feature::mediator::{
+        ArtifactKind, MediatorId, MediatorProvenance,
+    };
     use crate::collections::dataset::model::{ModelId, ModelKind, ModelView};
     use crate::collections::dataset::plan::{Plan, PlanSource};
 
@@ -394,6 +430,15 @@ mod tests {
         FeatStruct::Dict(d)
     }
 
+    fn feature_provenance(id: &str) -> MediatorProvenance {
+        MediatorProvenance::new(MediatorId::feature(id), "feature", "test", "v1", "unit")
+            .with_artifact_kind(ArtifactKind::Language)
+    }
+
+    fn model_provenance(id: &str) -> MediatorProvenance {
+        MediatorProvenance::new(MediatorId::model(id), "model", "test", "v1", "unit")
+    }
+
     #[test]
     fn no_mark_is_contingent() {
         let essence =
@@ -414,6 +459,30 @@ mod tests {
         .unwrap();
         assert_eq!(essence.features[0].modality, Modality::Necessary);
         assert_eq!(essence.accumulated.as_ref(), Some(&m));
+    }
+
+    #[test]
+    fn feature_provenance_survives_prepare_model() {
+        let provenance = feature_provenance("feature:pos");
+        let essence = prepare_model(
+            spec(),
+            None,
+            vec![FeatureMark::contingent(feature("pos")).with_provenance(provenance.clone())],
+        )
+        .unwrap();
+
+        assert_eq!(essence.features[0].provenance.as_ref(), Some(&provenance));
+        assert!(essence.model_provenance.is_none());
+    }
+
+    #[test]
+    fn model_provenance_survives_prepare_model_with_provenance() {
+        let provenance = model_provenance("model:test");
+        let essence =
+            prepare_model_with_provenance(spec(), None, vec![], provenance.clone()).unwrap();
+
+        assert_eq!(essence.model_provenance.as_ref(), Some(&provenance));
+        assert!(essence.features.is_empty());
     }
 
     #[test]

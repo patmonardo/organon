@@ -1,0 +1,3 @@
+dataset,relative_path,extension,bytes
+demo_archive_dataset,docs/doc1.txt,txt,41
+demo_archive_dataset,tables/seeds.csv,csv,24

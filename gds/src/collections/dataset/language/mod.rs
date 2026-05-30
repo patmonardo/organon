@@ -1,5 +1,6 @@
 pub mod grammar;
 pub mod lm;
+mod manifest;
 pub mod parse;
 pub mod parser;
 pub mod stats;
@@ -14,6 +15,7 @@ pub mod tree;
 
 pub use grammar::*;
 pub use lm::*;
+pub use manifest::*;
 pub use parse::*;
 pub use parser::*;
 pub use stats::*;

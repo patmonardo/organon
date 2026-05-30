@@ -43,6 +43,7 @@ use polars::prelude::LazyFrame;
 
 use crate::collections::dataframe::Selector;
 use crate::collections::dataset::core::schema::{FeatureSchema, SymbolTable};
+use crate::collections::dataset::feature::mediator::FeatureId;
 use crate::collections::dataset::frame::streaming::StreamingDataset;
 use crate::collections::dataset::plan::{EvalMode, Plan, PlanAttentionReport, PlanEnv, PlanError};
 use crate::collections::dataset::Dataset;
@@ -60,6 +61,7 @@ pub use crate::collections::dataset::feature::spec::{
 #[derive(Debug, Clone)]
 pub struct Feature {
     plan: Plan,
+    id: Option<FeatureId>,
 }
 
 /// First-class schema view over a named feature.
@@ -105,7 +107,20 @@ impl Feature {
     /// This does not enforce any particular output shape. If you want the
     /// canonical `item`-producing contract, use `Feature::requiring_item(plan)`.
     pub fn new(plan: Plan) -> Self {
-        Self { plan }
+        Self { plan, id: None }
+    }
+
+    pub fn id(&self) -> Option<&FeatureId> {
+        self.id.as_ref()
+    }
+
+    pub fn with_id(mut self, id: impl Into<FeatureId>) -> Self {
+        self.id = Some(id.into());
+        self
+    }
+
+    pub fn identified(self, id: impl Into<FeatureId>) -> Self {
+        self.with_id(id)
     }
 
     /// Set the feature's name (delegates to the underlying plan name).
@@ -116,7 +131,10 @@ impl Feature {
 
     /// A borrowed variant of `named`.
     pub fn with_name(&self, name: impl Into<String>) -> Self {
-        Self::new(self.plan.clone().named(name))
+        Self {
+            plan: self.plan.clone().named(name),
+            id: self.id.clone(),
+        }
     }
 
     /// Create a `Feature` and enforce that the plan ends in an `item` step.
@@ -128,7 +146,7 @@ impl Feature {
             ));
         }
 
-        Ok(Self { plan })
+        Ok(Self { plan, id: None })
     }
 
     pub fn plan(&self) -> &Plan {
@@ -146,7 +164,10 @@ impl Feature {
 
     /// A borrowed variant of `project_item`.
     pub fn projected_item(&self, item_expr: Expr) -> Feature {
-        Feature::new(self.plan.clone().project_item(item_expr))
+        Feature {
+            plan: self.plan.clone().project_item(item_expr),
+            id: self.id.clone(),
+        }
     }
 
     /// Compose two feature pipelines by chaining their underlying plans.
@@ -584,6 +605,15 @@ mod tests {
 
     fn feature_named(name: &str) -> Feature {
         Feature::new(Plan::new(PlanSource::Var("ds".to_string()))).named(name)
+    }
+
+    #[test]
+    fn feature_id_round_trip() {
+        let feature = feature_named("tokens").with_id("feature:tokens");
+
+        assert_eq!(feature.id().map(FeatureId::as_str), Some("feature:tokens"));
+        assert_eq!(feature.with_name("renamed").id(), feature.id());
+        assert!(feature.chained(&feature_named("next")).id().is_none());
     }
 
     #[test]
