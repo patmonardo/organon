@@ -1,7 +1,6 @@
 //! Streaming Dataset: DataFrame-first batching over a Dataset.
 
-use crate::collections::dataframe::DataFrame;
-use crate::collections::dataframe::LazyFrame;
+use polars::prelude::{DataFrame, LazyFrame};
 
 use crate::collections::dataframe::GDSStreamingFrame;
 use crate::collections::dataset::feature::Feature;

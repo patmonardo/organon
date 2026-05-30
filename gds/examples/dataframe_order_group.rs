@@ -10,7 +10,7 @@
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use polars::prelude::SortMultipleOptions;
+use gds::collections::dataframe::PolarsSortMultipleOptions;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("== DataFrame Order and Group ==");
@@ -119,7 +119,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let top3 = table.top_k(
         3,
         &[gds::col!(units)],
-        SortMultipleOptions::default().with_order_descending(false),
+        PolarsSortMultipleOptions::default().with_order_descending(false),
     )?;
     println!("top 3 by units (largest):");
     println!("{}", top3.fmt_table());
@@ -128,7 +128,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let bot3 = table.bottom_k(
         3,
         &[gds::col!(units)],
-        SortMultipleOptions::default().with_order_descending(false),
+        PolarsSortMultipleOptions::default().with_order_descending(false),
     )?;
     println!("bottom 3 by units (smallest):");
     println!("{}", bot3.fmt_table());

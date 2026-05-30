@@ -29,13 +29,9 @@
 //! schema-shape. See `SEMANTIC-DATASET-FIVE-FOLD.md` §"What this note
 //! commits to" for what is and is not decided.
 
-use crate::collections::dataframe::DataFrame;
-use crate::collections::dataframe::DataType;
-use crate::collections::dataframe::Field;
-use crate::collections::dataframe::NamedFrom;
-use crate::collections::dataframe::PolarsError;
-use crate::collections::dataframe::Schema;
-use crate::collections::dataframe::Series;
+use polars::prelude::{
+    DataFrame, DataType, Field, NamedFrom, PolarsError, Schema as PolarsSchema, Series,
+};
 
 use crate::collections::dataframe::GDSDataFrame;
 
@@ -95,8 +91,8 @@ pub const SOURCE_COL_MEDIA_TYPE: &str = "media_type";
 pub const SOURCE_COL_LEN: &str = "len";
 
 /// The canonical Polars schema for a `SourceFrame`.
-pub fn source_schema() -> Schema {
-    Schema::from_iter(vec![
+pub fn source_schema() -> PolarsSchema {
+    PolarsSchema::from_iter(vec![
         Field::new(SOURCE_COL_URI.into(), DataType::String),
         Field::new(SOURCE_COL_HASH.into(), DataType::String),
         Field::new(SOURCE_COL_MEDIA_TYPE.into(), DataType::String),

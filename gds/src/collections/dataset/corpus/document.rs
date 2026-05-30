@@ -40,10 +40,7 @@
 //! Offset columns and per-document Feature decoding come in later phases.
 //! See `SEMANTIC-DATASET-FIVE-FOLD.md` §"Document / Model meeting-point".
 
-use crate::collections::dataframe::DataFrame;
-use crate::collections::dataframe::NamedFrom;
-use crate::collections::dataframe::PolarsError;
-use crate::collections::dataframe::Series;
+use polars::prelude::{DataFrame, NamedFrom, PolarsError, Series};
 
 use crate::collections::dataframe::GDSDataFrame;
 use crate::collections::dataset::corpus::source::ContentHash;

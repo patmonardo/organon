@@ -46,23 +46,9 @@ pub use streaming::*;
 pub use table::*;
 pub use workbench::*;
 
-pub use polars::df;
-pub use polars::prelude::AnyValue;
-pub use polars::prelude::DataFrame;
-pub use polars::prelude::DataType;
-pub use polars::prelude::Field;
-pub use polars::prelude::IntoLazy;
-pub use polars::prelude::LazyFrame;
-pub use polars::prelude::LiteralValue;
-pub use polars::prelude::NamedFrom;
-pub use polars::prelude::PlSmallStr;
-pub use polars::prelude::PolarsError;
-pub use polars::prelude::PolarsResult;
-pub use polars::prelude::Scalar;
-pub use polars::prelude::Schema;
-pub use polars::prelude::Series;
-
 pub type GDSExpr = polars::prelude::Expr;
+pub type FillNullStrategy = polars::prelude::FillNullStrategy;
 pub type PolarsSortMultipleOptions = polars::prelude::SortMultipleOptions;
+pub type UniqueKeepStrategy = polars::prelude::UniqueKeepStrategy;
 pub type JoinType = polars::prelude::JoinType;
 pub use errors::GDSFrameError;

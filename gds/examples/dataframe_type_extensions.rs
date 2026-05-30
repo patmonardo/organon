@@ -6,13 +6,14 @@
 use std::fs;
 use std::path::{Path, PathBuf};
 
+use gds::collections::dataframe::col;
 use gds::collections::dataframe::datatypes::{
     get_extension_type, register_extension_type, BaseExtension, Extension, ExtensionType,
     Field as GDSField, GDSDataType, Struct as GDSStruct,
 };
 use gds::collections::dataframe::expressions::ext::ExprExt;
 use gds::collections::dataframe::functions::datatype::struct_with_fields;
-use gds::collections::dataframe::{col, Schema};
+use gds::collections::dataframe::schema::Schema;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("== DataFrame Type Extensions ==");

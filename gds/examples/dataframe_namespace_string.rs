@@ -9,7 +9,7 @@
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use gds::collections::dataframe::GDSSeries;
+use gds::collections::dataframe::{GDSDataType, GDSSeries};
 
 const TOKENS: &[&str] = &[
     "pre-processing",
@@ -57,8 +57,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let has_pre = str_ns.starts_with("pre")?;
     let has_tion = str_ns.ends_with("tion")?;
 
-    println!("starts_with('pre'): {:?}", bool_vec(&has_pre));
-    println!("ends_with('tion'):  {:?}", bool_vec(&has_tion));
+    println!(
+        "starts_with('pre'): {:?}",
+        bool_vec(&GDSSeries::new(has_pre.clone()))
+    );
+    println!(
+        "ends_with('tion'):  {:?}",
+        bool_vec(&GDSSeries::new(has_tion.clone()))
+    );
 
     let sw_with_flags = build_token_table()?.with_columns(&[
         gds::col!("token")
@@ -84,8 +90,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let has_dash = str_ns.contains("-", true, false)?; // literal '-'
     let has_parse = str_ns.contains("parse", true, false)?;
-    println!("contains('-'):     {:?}", bool_vec(&has_dash));
-    println!("contains('parse'): {:?}", bool_vec(&has_parse));
+    println!(
+        "contains('-'):     {:?}",
+        bool_vec(&GDSSeries::new(has_dash.clone()))
+    );
+    println!(
+        "contains('parse'): {:?}",
+        bool_vec(&GDSSeries::new(has_parse.clone()))
+    );
 
     let cnt_table = build_token_table()?.with_columns(&[
         gds::col!("token")
@@ -110,7 +122,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     );
 
     let find_dash = str_ns.find("-", true, false)?;
-    println!("find('-') offsets: {:?}", opt_i32_vec(&find_dash));
+    println!(
+        "find('-') offsets: {:?}",
+        opt_u32_vec(&GDSSeries::new(find_dash.clone()))
+    );
 
     let find_table = build_token_table()?.with_columns(&[gds::col!("token")
         .str()
@@ -130,7 +145,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Capture the first word before a dash (group 1)
     let prefix = str_ns.extract(r"^([a-z]+)", 1)?;
-    println!("extract('^([a-z]+)', 1): {:?}", str_opt_vec(&prefix));
+    println!(
+        "extract('^([a-z]+)', 1): {:?}",
+        str_opt_vec(&GDSSeries::new(prefix.clone()))
+    );
 
     let ext_table = build_token_table()?.with_columns(&[gds::col!("token")
         .str()
@@ -154,22 +172,24 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 // ── display helpers ───────────────────────────────────────────────────────────
 
-fn bool_vec(series: &polars::prelude::Series) -> Vec<Option<bool>> {
-    series.bool().unwrap().into_iter().collect()
+fn bool_vec(series: &GDSSeries) -> Vec<Option<bool>> {
+    series.series().bool().unwrap().into_iter().collect()
 }
 
-fn opt_i32_vec(series: &polars::prelude::Series) -> Vec<Option<i32>> {
+fn opt_u32_vec(series: &GDSSeries) -> Vec<Option<u32>> {
     series
-        .cast(&polars::prelude::DataType::Int32)
+        .series()
+        .cast(&GDSDataType::UInt32)
         .unwrap()
-        .i32()
+        .u32()
         .unwrap()
         .into_iter()
         .collect()
 }
 
-fn str_opt_vec(series: &polars::prelude::Series) -> Vec<Option<String>> {
+fn str_opt_vec(series: &GDSSeries) -> Vec<Option<String>> {
     series
+        .series()
         .str()
         .unwrap()
         .into_iter()

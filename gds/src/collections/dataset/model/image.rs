@@ -279,13 +279,13 @@ fn sanitize(value: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::collections::dataframe::df;
     use crate::collections::dataset::feature::featstruct::{FeatDict, FeatStruct, FeatValue};
     use crate::collections::dataset::feature::Feature;
     use crate::collections::dataset::model::prep::{prepare_model, FeatureMark};
     use crate::collections::dataset::model::{ModelId, ModelKind, ModelSpec, ModelView};
     use crate::collections::dataset::plan::{Plan, PlanSource};
-    use crate::collections::dataframe::df;
-    use crate::collections::dataframe::IntoLazy;
+    use polars::prelude::IntoLazy;
 
     fn spec() -> ModelSpec {
         ModelSpec {

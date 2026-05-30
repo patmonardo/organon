@@ -35,7 +35,7 @@
 use std::collections::BTreeMap;
 
 use crate::collections::dataframe::GDSExpr as Expr;
-use crate::collections::dataframe::LazyFrame;
+use polars::prelude::LazyFrame;
 
 use crate::collections::dataframe::Selector;
 use crate::collections::dataset::core::schema::{FeatureSchema, SymbolTable};

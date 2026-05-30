@@ -8,7 +8,7 @@ meaning: tree-node source frame used for extension namespace walkthrough.
 
 01 Registry
 artifact: fixtures/collections/dataframe/dataframe_namespace_ext/01-registry.txt
-meaning: extension registration state for Class and Storage variants.
+meaning: frame namespace registration + extension Class/Storage state.
 
 02 GDSSeries.ext
 artifact: fixtures/collections/dataframe/dataframe_namespace_ext/02-series-ext.txt

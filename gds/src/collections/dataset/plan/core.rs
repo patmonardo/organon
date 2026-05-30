@@ -33,7 +33,7 @@
 use std::collections::BTreeMap;
 
 use crate::collections::dataframe::GDSExpr as Expr;
-use crate::collections::dataframe::LazyFrame;
+use polars::prelude::LazyFrame;
 use serde::{Deserialize, Serialize};
 use serde_json::Value as JsonValue;
 

@@ -40,6 +40,15 @@ impl NameSpaceRegistry {
             NameSpaceTarget::Series => &mut self.series,
         }
     }
+
+    fn set(&self, target: NameSpaceTarget) -> &HashSet<String> {
+        match target {
+            NameSpaceTarget::Expr => &self.expr,
+            NameSpaceTarget::DataFrame => &self.dataframe,
+            NameSpaceTarget::LazyFrame => &self.lazyframe,
+            NameSpaceTarget::Series => &self.series,
+        }
+    }
 }
 
 static NAMESPACE_REGISTRY: Lazy<RwLock<NameSpaceRegistry>> =
@@ -105,4 +114,31 @@ pub fn register_lazyframe_namespace(name: &str) -> Result<(), NameSpaceError> {
 /// Register a custom namespace for Series.
 pub fn register_series_namespace(name: &str) -> Result<(), NameSpaceError> {
     register_namespace(NameSpaceTarget::Series, name)
+}
+
+fn is_namespace_registered(target: NameSpaceTarget, name: &str) -> bool {
+    let registry = NAMESPACE_REGISTRY
+        .read()
+        .expect("namespace registry lock poisoned");
+    registry.set(target).contains(name)
+}
+
+/// Check whether an Expr namespace is registered.
+pub fn is_expr_namespace_registered(name: &str) -> bool {
+    is_namespace_registered(NameSpaceTarget::Expr, name)
+}
+
+/// Check whether a DataFrame namespace is registered.
+pub fn is_dataframe_namespace_registered(name: &str) -> bool {
+    is_namespace_registered(NameSpaceTarget::DataFrame, name)
+}
+
+/// Check whether a LazyFrame namespace is registered.
+pub fn is_lazyframe_namespace_registered(name: &str) -> bool {
+    is_namespace_registered(NameSpaceTarget::LazyFrame, name)
+}
+
+/// Check whether a Series namespace is registered.
+pub fn is_series_namespace_registered(name: &str) -> bool {
+    is_namespace_registered(NameSpaceTarget::Series, name)
 }

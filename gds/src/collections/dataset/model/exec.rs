@@ -57,7 +57,7 @@
 
 use crate::collections::dataframe::col;
 use crate::collections::dataframe::lit;
-use crate::collections::dataframe::LazyFrame;
+use polars::prelude::LazyFrame;
 
 use crate::collections::dataset::feature::featstruct::{FeatStruct, FeatValue};
 use crate::collections::dataset::feature::Feature;
@@ -292,11 +292,11 @@ pub fn execute_feature(lf: LazyFrame, feature: &Feature) -> Execution {
 mod tests {
     use super::*;
     use crate::collections::dataframe::df;
-    use crate::collections::dataframe::IntoLazy;
     use crate::collections::dataset::feature::featstruct::{FeatDict, FeatStruct, FeatValue};
     use crate::collections::dataset::model::prep::{prepare_model, FeatureMark};
     use crate::collections::dataset::model::{ModelId, ModelKind, ModelSpec, ModelView};
     use crate::collections::dataset::plan::{Plan, PlanSource};
+    use polars::prelude::IntoLazy;
 
     fn spec() -> ModelSpec {
         ModelSpec {

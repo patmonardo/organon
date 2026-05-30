@@ -15,6 +15,12 @@ use gds::collections::dataframe::datatypes::{
     get_extension_type, register_extension_type, unregister_extension_type, GDSDataType,
 };
 use gds::collections::dataframe::expressions::expr::ExprNamespace;
+use gds::collections::dataframe::namespaces::{
+    is_dataframe_namespace_registered, is_expr_namespace_registered,
+    is_lazyframe_namespace_registered, is_series_namespace_registered,
+    register_dataframe_namespace, register_expr_namespace, register_lazyframe_namespace,
+    register_series_namespace,
+};
 use gds::collections::dataframe::GDSSeries;
 
 const NODE_IDS: &[i64] = &[1, 2, 3, 4, 5, 6];
@@ -44,7 +50,24 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     stage(
         1,
         "Registry",
-        "Register semantic extension names (Class and Storage variants).",
+        "Register Framing namespace surfaces and semantic type extensions.",
+    );
+
+    register_dataframe_namespace("frame")
+        .map_err(|e| format!("failed to register dataframe namespace 'frame': {e:?}"))?;
+    register_lazyframe_namespace("frame")
+        .map_err(|e| format!("failed to register lazyframe namespace 'frame': {e:?}"))?;
+    register_series_namespace("frame")
+        .map_err(|e| format!("failed to register series namespace 'frame': {e:?}"))?;
+    register_expr_namespace("frame")
+        .map_err(|e| format!("failed to register expr namespace 'frame': {e:?}"))?;
+
+    println!(
+        "namespace frame [df/lf/s/expr]: [{}/{}/{}/{}]",
+        is_dataframe_namespace_registered("frame"),
+        is_lazyframe_namespace_registered("frame"),
+        is_series_namespace_registered("frame"),
+        is_expr_namespace_registered("frame"),
     );
 
     let _ = unregister_extension_type("gds.tree");
@@ -62,8 +85,15 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     fs::write(
         &reg_path,
         format!(
-            "gds.tree => {:?}\ngds.tree.storage => {:?}\n",
-            class_reg, storage_reg,
+            "namespace frame [df/lf/s/expr] => [{}/{}/{}/{}]\n\
+             gds.tree => {:?}\n\
+             gds.tree.storage => {:?}\n",
+            is_dataframe_namespace_registered("frame"),
+            is_lazyframe_namespace_registered("frame"),
+            is_series_namespace_registered("frame"),
+            is_expr_namespace_registered("frame"),
+            class_reg,
+            storage_reg,
         ),
     )?;
     println!("persisted: {}", fixture_path(&reg_path));
@@ -84,8 +114,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("source dtype:  {:?}", node_ids.dtype());
     println!("casted dtype:  {:?}", casted.dtype());
     println!("storage dtype: {:?}", storage.dtype());
-    println!("casted values: {:?}", f64_opt_vec(&casted));
-    println!("storage values:{:?}", i64_opt_vec(&storage));
+    println!(
+        "casted values: {:?}",
+        f64_opt_vec(&GDSSeries::new(casted.clone()))
+    );
+    println!(
+        "storage values:{:?}",
+        i64_opt_vec(&GDSSeries::new(storage.clone()))
+    );
 
     let series_path = fixture_root.join("02-series-ext.txt");
     fs::write(
@@ -95,8 +131,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             node_ids.dtype(),
             casted.dtype(),
             storage.dtype(),
-            f64_opt_vec(&casted),
-            i64_opt_vec(&storage),
+            f64_opt_vec(&GDSSeries::new(casted.clone())),
+            i64_opt_vec(&GDSSeries::new(storage.clone())),
         ),
     )?;
     println!("persisted: {}", fixture_path(&series_path));
@@ -138,9 +174,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 // ── display helpers ───────────────────────────────────────────────────────────
 
-fn i64_opt_vec(series: &polars::prelude::Series) -> Vec<Option<i64>> {
+fn i64_opt_vec(series: &GDSSeries) -> Vec<Option<i64>> {
     series
-        .cast(&polars::prelude::DataType::Int64)
+        .series()
+        .cast(&GDSDataType::Int64)
         .unwrap()
         .i64()
         .unwrap()
@@ -148,9 +185,10 @@ fn i64_opt_vec(series: &polars::prelude::Series) -> Vec<Option<i64>> {
         .collect()
 }
 
-fn f64_opt_vec(series: &polars::prelude::Series) -> Vec<Option<f64>> {
+fn f64_opt_vec(series: &GDSSeries) -> Vec<Option<f64>> {
     series
-        .cast(&polars::prelude::DataType::Float64)
+        .series()
+        .cast(&GDSDataType::Float64)
         .unwrap()
         .f64()
         .unwrap()
@@ -190,7 +228,7 @@ fn persist_csv(
 fn build_node_table(
 ) -> Result<gds::collections::dataframe::GDSDataFrame, Box<dyn std::error::Error>> {
     Ok(gds::tbl_def!(
-        (node_id: [1, 2, 3, 4, 5, 6]),
+        (node_id: i64 => [1, 2, 3, 4, 5, 6]),
         (label: ["S", "NP", "VP", "PP", "NN", "VBZ"])
     )?)
 }
@@ -210,7 +248,7 @@ fn manifest(src: &Path, reg: &Path, ser: &Path, expr: &Path) -> String {
          meaning: tree-node source frame used for extension namespace walkthrough.\n\n\
          01 Registry\n\
          artifact: {}\n\
-         meaning: extension registration state for Class and Storage variants.\n\n\
+         meaning: frame namespace registration + extension Class/Storage state.\n\n\
          02 GDSSeries.ext\n\
          artifact: {}\n\
          meaning: ext.to cast and ext.storage identity on a series.\n\n\

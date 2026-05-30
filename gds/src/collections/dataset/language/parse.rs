@@ -1,11 +1,8 @@
 //! Parse DSL core types.
 
 use crate::collections::dataframe::lit;
-use crate::collections::dataframe::AnyValue;
-use crate::collections::dataframe::DataType;
 use crate::collections::dataframe::GDSExpr as Expr;
-use crate::collections::dataframe::LiteralValue;
-use crate::collections::dataframe::Scalar;
+use polars::prelude::{AnyValue, DataType, LiteralValue, Scalar};
 
 use crate::collections::dataframe::record;
 use crate::collections::dataset::language::token::TokenSpan;

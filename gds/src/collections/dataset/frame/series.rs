@@ -17,8 +17,7 @@
 //! against the underlying Polars `Series`.
 
 use crate::collections::dataframe::GDSExpr as Expr;
-use crate::collections::dataframe::PolarsResult;
-use crate::collections::dataframe::Series;
+use polars::prelude::{PolarsResult, Series};
 
 use crate::collections::dataframe::{col, series_expr, GDSSeries};
 use crate::collections::dataset::frame::expr::{DatasetExprNs, ExprDatasetExt};

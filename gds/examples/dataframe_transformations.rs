@@ -10,7 +10,9 @@
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use polars::prelude::{col, FillNullStrategy, SortMultipleOptions, UniqueKeepStrategy};
+use gds::collections::dataframe::{
+    col, FillNullStrategy, PolarsSortMultipleOptions, UniqueKeepStrategy,
+};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("== DataFrame Transformations ==");
@@ -160,12 +162,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let top3 = cleaned.top_k(
         3,
         &[col("weighted")],
-        SortMultipleOptions::default().with_order_descending(false),
+        PolarsSortMultipleOptions::default().with_order_descending(false),
     )?;
     let bottom3 = cleaned.bottom_k(
         3,
         &[col("weighted")],
-        SortMultipleOptions::default().with_order_descending(false),
+        PolarsSortMultipleOptions::default().with_order_descending(false),
     )?;
 
     println!("top3:");

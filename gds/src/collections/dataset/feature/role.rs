@@ -15,10 +15,7 @@
 //! Status: **Phase 2**. Role enum + descriptor + descriptor-frame only.
 //! No lattice ops, no execution, no Polars-dtype mapping for `FeatureDType`.
 
-use crate::collections::dataframe::DataFrame;
-use crate::collections::dataframe::NamedFrom;
-use crate::collections::dataframe::PolarsError;
-use crate::collections::dataframe::Series;
+use polars::prelude::{DataFrame, NamedFrom, PolarsError, Series};
 
 use crate::collections::dataframe::GDSDataFrame;
 
