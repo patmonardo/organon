@@ -1,7 +1,7 @@
 domain,split,mean_weighted,mean_quality,rows
 biomed,dev,0.28049999999999997,0.71,1
-legal,train,0.34979999999999994,0.84,1
 news,dev,0.2829,0.38,2
-legal,dev,0.2121,0.63,1
 biomed,train,0.3441,0.88,1
+legal,train,0.34979999999999994,0.84,1
+legal,dev,0.2121,0.63,1
 news,train,0.27315,0.46,2
