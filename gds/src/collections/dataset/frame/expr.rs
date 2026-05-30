@@ -7,16 +7,16 @@
 //! | scalar | `Expr`      | `Series`     |
 //! | frame  | `LazyFrame` | `DataFrame`  |
 //!
-//! This module provides [`DatasetExprNameSpace`], the lazy-scalar entry point,
+//! This module provides [`DatasetExprNs`], the lazy-scalar entry point,
 //! plus the [`ExprDatasetExt`] trait that attaches `.ds()` and `.dataset()` onto Polars `Expr`.
 //!
 //! Most dataset logic flows through this surface because it composes cleanly
-//! into [`crate::collections::dataset::frame::lazy::DatasetLazyFrameNameSpace`]
+//! into [`crate::collections::dataset::frame::lazy::DatasetLazyFrameNs`]
 //! pipelines. Concrete sub-namespaces (`text`, `token`, `parse`, `tag`,
 //! `stem`) are thin facades over the lower-level expression builders in
 //! [`crate::collections::dataset::expressions`].
 
-use polars::prelude::Expr;
+use crate::collections::dataframe::GDSExpr as Expr;
 
 use crate::collections::dataset::dsl::expressions::binary::binary_contains_expr_from;
 use crate::collections::dataset::dsl::expressions::binary::binary_contains_literal_from;
@@ -56,11 +56,11 @@ use crate::collections::dataset::dsl::expressions::token::TOKEN_START_FIELD;
 use crate::collections::dataset::dsl::expressions::token::TOKEN_TEXT_FIELD;
 
 #[derive(Debug, Clone)]
-pub struct DatasetExprNameSpace {
+pub struct DatasetExprNs {
     expr: Expr,
 }
 
-impl DatasetExprNameSpace {
+impl DatasetExprNs {
     pub fn new(expr: Expr) -> Self {
         Self { expr }
     }
@@ -95,17 +95,17 @@ impl DatasetExprNameSpace {
 }
 
 pub trait ExprDatasetExt {
-    fn ds(self) -> DatasetExprNameSpace;
-    fn dataset(self) -> DatasetExprNameSpace;
+    fn ds(self) -> DatasetExprNs;
+    fn dataset(self) -> DatasetExprNs;
 }
 
 impl ExprDatasetExt for Expr {
-    fn ds(self) -> DatasetExprNameSpace {
-        DatasetExprNameSpace::new(self)
+    fn ds(self) -> DatasetExprNs {
+        DatasetExprNs::new(self)
     }
 
-    fn dataset(self) -> DatasetExprNameSpace {
-        DatasetExprNameSpace::new(self)
+    fn dataset(self) -> DatasetExprNs {
+        DatasetExprNs::new(self)
     }
 }
 

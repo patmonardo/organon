@@ -14,7 +14,8 @@
 
 use serde_json::{json, Value as JsonValue};
 
-use polars::prelude::{col, Expr};
+use crate::collections::dataframe::col;
+use crate::collections::dataframe::GDSExpr as Expr;
 
 use crate::collections::dataset::dsl::expressions::text::{
     lowercase_expr_from, token_count_expr_from, tokenize_expr_from,

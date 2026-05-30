@@ -284,7 +284,8 @@ mod tests {
     use crate::collections::dataset::model::prep::{prepare_model, FeatureMark};
     use crate::collections::dataset::model::{ModelId, ModelKind, ModelSpec, ModelView};
     use crate::collections::dataset::plan::{Plan, PlanSource};
-    use polars::prelude::{df, IntoLazy};
+    use crate::collections::dataframe::df;
+    use crate::collections::dataframe::IntoLazy;
 
     fn spec() -> ModelSpec {
         ModelSpec {

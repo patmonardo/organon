@@ -63,7 +63,6 @@ pub mod prelude;
 pub mod workbench;
 
 // =============================================================================
-// Public surface
 // =============================================================================
 //
 // Exports below use module-level glob re-exports for a uniform surface.
@@ -72,7 +71,10 @@ pub use core::*;
 pub use corpus::*;
 pub use dsl::namespaces::dataop::DataOpNs;
 pub use dsl::namespaces::dataset::DatasetNs;
-pub use dsl::namespaces::feature::{FeatureExprNameSpace, FeatureNs};
+pub use dsl::namespaces::expr::ExprNs;
+pub use dsl::namespaces::feature::{FeatureExprNs, FeatureNs};
+pub use dsl::namespaces::model::ModelNs;
+pub use dsl::namespaces::plan::PlanNs;
 pub use dsl::namespaces::text::TextNs;
 pub use dsl::namespaces::treens::TreeNs;
 pub use dsl::namespaces::{

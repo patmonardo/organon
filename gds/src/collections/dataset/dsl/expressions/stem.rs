@@ -6,7 +6,8 @@
 //! - end: UInt64
 //! - kind: String
 
-use polars::prelude::{col, Expr};
+use crate::collections::dataframe::col;
+use crate::collections::dataframe::GDSExpr as Expr;
 
 pub const STEM_TEXT_FIELD: &str = "text";
 pub const STEM_START_FIELD: &str = "start";

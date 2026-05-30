@@ -7,26 +7,28 @@
 //! | scalar | `Expr`      | `Series`     |
 //! | frame  | `LazyFrame` | `DataFrame`  |
 //!
-//! This module provides [`DatasetSeriesNameSpace`], the eager-scalar entry
+//! This module provides [`DatasetSeriesNs`], the eager-scalar entry
 //! point, plus the [`SeriesDatasetExt`] trait that attaches `.ds()` and
 //! `.dataset()` onto `GDSSeries`.
 //!
 //! Practically, dataset logic is *mostly* expressed via `Expr` (lazy-friendly),
 //! but this small eager bridge is useful for tests and one-off eager
-//! transforms. It evaluates a [`DatasetExprNameSpace`]-built expression
+//! transforms. It evaluates a [`DatasetExprNs`]-built expression
 //! against the underlying Polars `Series`.
 
-use polars::prelude::{Expr, PolarsResult, Series};
+use crate::collections::dataframe::GDSExpr as Expr;
+use crate::collections::dataframe::PolarsResult;
+use crate::collections::dataframe::Series;
 
 use crate::collections::dataframe::{col, series_expr, GDSSeries};
-use crate::collections::dataset::frame::expr::{DatasetExprNameSpace, ExprDatasetExt};
+use crate::collections::dataset::frame::expr::{DatasetExprNs, ExprDatasetExt};
 
 #[derive(Debug, Clone)]
-pub struct DatasetSeriesNameSpace {
+pub struct DatasetSeriesNs {
     series: GDSSeries,
 }
 
-impl DatasetSeriesNameSpace {
+impl DatasetSeriesNs {
     pub fn new(series: GDSSeries) -> Self {
         Self { series }
     }
@@ -47,7 +49,7 @@ impl DatasetSeriesNameSpace {
     /// Build an expression rooted at this Series' column name and evaluate it.
     pub fn apply<F>(&self, f: F) -> PolarsResult<Series>
     where
-        F: FnOnce(DatasetExprNameSpace) -> Expr,
+        F: FnOnce(DatasetExprNs) -> Expr,
     {
         let root = col(self.series.name()).ds();
         let expr = f(root);
@@ -56,17 +58,17 @@ impl DatasetSeriesNameSpace {
 }
 
 pub trait SeriesDatasetExt {
-    fn ds(self) -> DatasetSeriesNameSpace;
-    fn dataset(self) -> DatasetSeriesNameSpace;
+    fn ds(self) -> DatasetSeriesNs;
+    fn dataset(self) -> DatasetSeriesNs;
 }
 
 impl SeriesDatasetExt for GDSSeries {
-    fn ds(self) -> DatasetSeriesNameSpace {
-        DatasetSeriesNameSpace::new(self)
+    fn ds(self) -> DatasetSeriesNs {
+        DatasetSeriesNs::new(self)
     }
 
-    fn dataset(self) -> DatasetSeriesNameSpace {
-        DatasetSeriesNameSpace::new(self)
+    fn dataset(self) -> DatasetSeriesNs {
+        DatasetSeriesNs::new(self)
     }
 }
 

@@ -6,7 +6,8 @@
 //! - start: UInt64
 //! - end: UInt64
 
-use polars::prelude::{col, Expr};
+use crate::collections::dataframe::col;
+use crate::collections::dataframe::GDSExpr as Expr;
 
 pub const TAG_TEXT_FIELD: &str = "text";
 pub const TAG_TAG_FIELD: &str = "tag";

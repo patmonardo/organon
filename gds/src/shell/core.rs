@@ -6,7 +6,7 @@ use polars::prelude::DataType;
 
 use crate::collections::dataframe::GDSDataFrame;
 use crate::collections::dataset::corpus::CorpusError;
-use crate::collections::dataset::frame::DatasetDataFrameNameSpace;
+use crate::collections::dataset::frame::DatasetDataFrameNs;
 use crate::collections::dataset::{
     Corpus, Dataset, DatasetPipeline, LanguageModel, LogicError, LogicFrame, WhitespaceTokenizer,
     MLE,
@@ -1835,23 +1835,15 @@ impl GdsShell {
         }
     }
 
-    pub fn dataset_frame(&self) -> Option<DatasetDataFrameNameSpace> {
+    pub fn dataset_frame(&self) -> Option<DatasetDataFrameNs> {
         if let Some(dataset) = &self.dataset {
-            let mut ds_frame = DatasetDataFrameNameSpace::new(dataset.table().clone())
-                .artifact_kind(dataset.artifact_kind().clone());
-            if let Some(name) = dataset.name() {
-                ds_frame = ds_frame.named(name);
-            }
-            for facet in dataset.artifact_profile().facets() {
-                ds_frame = ds_frame.facet(facet.clone());
-            }
-            return Some(ds_frame);
+            return Some(dataset.frame());
         }
 
         self.dataframe
             .as_ref()
             .cloned()
-            .map(DatasetDataFrameNameSpace::new)
+            .map(DatasetDataFrameNs::new)
     }
 
     pub fn dataset_pipeline(&self) -> Option<DatasetPipeline> {

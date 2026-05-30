@@ -9,13 +9,37 @@ use crate::collections::dataset::dsl::expressions::feature::{
 };
 use crate::collections::dataset::dsl::expressions::tree::TreePos;
 use crate::collections::dataset::dsl::functions::feature as feature_fn;
+use crate::collections::dataset::feature::Feature;
+use crate::collections::dataset::feature::FeatureSpace;
+use crate::collections::dataset::feature::FeatureView;
 use crate::collections::dataset::feature::featstruct::FeatStruct;
+use crate::collections::dataset::plan::Plan;
 use crate::collections::dataset::plan::PlanError;
 
 #[derive(Debug, Clone, Default)]
 pub struct FeatureNs;
 
 impl FeatureNs {
+    pub fn from_plan(plan: Plan) -> Feature {
+        Feature::new(plan)
+    }
+
+    pub fn requiring_item(plan: Plan) -> Result<Feature, PlanError> {
+        Feature::requiring_item(plan)
+    }
+
+    pub fn view(feature: impl Into<String>, view: impl Into<String>) -> FeatureView {
+        FeatureView::new(feature, view)
+    }
+
+    pub fn space() -> FeatureSpace {
+        FeatureSpace::new()
+    }
+
+    pub fn insert(space: FeatureSpace, name: impl Into<String>, feature: Feature) -> FeatureSpace {
+        space.insert(name, feature)
+    }
+
     pub fn pos(positions: impl Into<Vec<i32>>) -> Result<FeaturePosition, PlanError> {
         FeaturePosition::new(positions)
     }
@@ -79,9 +103,9 @@ impl FeatureNs {
 }
 
 #[derive(Debug, Clone, Default)]
-pub struct FeatureExprNameSpace;
+pub struct FeatureExprNs;
 
-impl FeatureExprNameSpace {
+impl FeatureExprNs {
     pub fn new() -> Self {
         Self
     }
@@ -119,5 +143,25 @@ impl FeatureExprNameSpace {
     /// expression variants.
     pub fn mark(fs: FeatStruct) -> FeatureExpr {
         FeatureExpr::Mark(fs)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    use crate::collections::dataframe::col;
+    use crate::collections::dataset::plan::Plan;
+
+    #[test]
+    fn test_feature_ns_builds_feature_space_and_exprs() {
+        let plan = Plan::from_var("ds").project_item(col("text").alias("item"));
+        let feature = FeatureNs::requiring_item(plan).expect("item feature should be accepted");
+        let space = FeatureNs::insert(FeatureNs::space(), "text_item", feature);
+
+        assert_eq!(space.len(), 1);
+
+        let expr = FeatureExprNs::value("nominal");
+        assert!(matches!(expr, FeatureExpr::Value(_)));
     }
 }

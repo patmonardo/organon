@@ -39,7 +39,7 @@
 
 use std::collections::BTreeMap;
 
-use polars::prelude::PolarsError;
+use crate::collections::dataframe::PolarsError;
 
 use crate::collections::dataframe::GDSDataFrame;
 use crate::collections::dataset::corpus::document::{DocumentFrame, Span};

@@ -3,7 +3,7 @@
 //! This module is part of the Dataset expressions layer and mirrors the
 //! binary Expr surface used by DataFrame/Polars.
 
-use polars::prelude::Expr;
+use crate::collections::dataframe::GDSExpr as Expr;
 
 pub use crate::collections::dataframe::expressions::binary::BinaryEncoding;
 pub use crate::collections::dataframe::expressions::binary::BinaryEndianness;

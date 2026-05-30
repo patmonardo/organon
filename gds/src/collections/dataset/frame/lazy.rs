@@ -7,12 +7,12 @@
 //! | scalar | `Expr`      | `Series`     |
 //! | frame  | `LazyFrame` | `DataFrame`  |
 //!
-//! This file provides [`DatasetLazyFrameNameSpace`], the lazy-frame entry
+//! This file provides [`DatasetLazyFrameNs`], the lazy-frame entry
 //! point, plus the [`LazyFrameDatasetExt`] trait that attaches `.ds()` and
 //! `.dataset()` onto `GDSLazyFrame`.
 //!
 //! From here you reach the dataset-flavored sub-namespaces
-//! [`FeatureLazyFrameNameSpace`] and [`TreeLazyFrameNameSpace`], which are
+//! [`FeatureLazyFrameNs`] and [`TreeLazyFrameNs`], which are
 //! the lazy-frame side of feature/tree pipelines.
 
 use crate::collections::dataframe::GDSLazyFrame;
@@ -20,11 +20,53 @@ use crate::collections::dataset::feature::Feature;
 use crate::collections::dataset::plan::Plan;
 
 #[derive(Clone)]
-pub struct DatasetLazyFrameNameSpace {
+pub struct DatasetLazyFrameNs {
     lf: GDSLazyFrame,
 }
 
-impl DatasetLazyFrameNameSpace {
+impl DatasetLazyFrameNs {
+    pub fn new(lf: GDSLazyFrame) -> Self {
+        Self { lf }
+    }
+
+    pub fn storage_runtime(&self) -> DatasetLazyFrameStorageRuntime {
+        DatasetLazyFrameStorageRuntime::new(self.lf.clone())
+    }
+
+    pub fn lazyframe(&self) -> &GDSLazyFrame {
+        &self.lf
+    }
+
+    pub fn into_lazyframe(self) -> GDSLazyFrame {
+        self.lf
+    }
+
+    pub fn feature(&self) -> FeatureLazyFrameNs {
+        FeatureLazyFrameNs::new(self.lf.clone())
+    }
+
+    pub fn tree(&self) -> TreeLazyFrameNs {
+        TreeLazyFrameNs::new(self.lf.clone())
+    }
+
+    /// Apply a deferred Dataset plan to this lazy frame.
+    pub fn apply_plan(&self, plan: &Plan) -> Self {
+        self.storage_runtime()
+            .compute_plan(DatasetLazyFrameComputationRuntime::new(plan))
+    }
+
+    /// Alias for `apply_plan` to support fluent pipeline style.
+    pub fn with_plan(&self, plan: &Plan) -> Self {
+        self.apply_plan(plan)
+    }
+}
+
+#[derive(Clone)]
+pub struct DatasetLazyFrameStorageRuntime {
+    lf: GDSLazyFrame,
+}
+
+impl DatasetLazyFrameStorageRuntime {
     pub fn new(lf: GDSLazyFrame) -> Self {
         Self { lf }
     }
@@ -37,32 +79,35 @@ impl DatasetLazyFrameNameSpace {
         self.lf
     }
 
-    pub fn feature(&self) -> FeatureLazyFrameNameSpace {
-        FeatureLazyFrameNameSpace::new(self.lf.clone())
+    pub fn compute_plan(
+        &self,
+        computation: DatasetLazyFrameComputationRuntime<'_>,
+    ) -> DatasetLazyFrameNs {
+        DatasetLazyFrameNs::new(computation.apply_to(self.lf.clone()))
+    }
+}
+
+pub struct DatasetLazyFrameComputationRuntime<'a> {
+    plan: &'a Plan,
+}
+
+impl<'a> DatasetLazyFrameComputationRuntime<'a> {
+    pub fn new(plan: &'a Plan) -> Self {
+        Self { plan }
     }
 
-    pub fn tree(&self) -> TreeLazyFrameNameSpace {
-        TreeLazyFrameNameSpace::new(self.lf.clone())
-    }
-
-    /// Apply a deferred Dataset plan to this lazy frame.
-    pub fn apply_plan(&self, plan: &Plan) -> Self {
-        let lf = plan.apply_to_lazyframe(self.lf.clone().into_lazyframe());
-        Self::new(GDSLazyFrame::new(lf))
-    }
-
-    /// Alias for `apply_plan` to support fluent pipeline style.
-    pub fn with_plan(&self, plan: &Plan) -> Self {
-        self.apply_plan(plan)
+    pub fn apply_to(&self, lf: GDSLazyFrame) -> GDSLazyFrame {
+        let lf = self.plan.apply_to_lazyframe(lf.into_lazyframe());
+        GDSLazyFrame::new(lf)
     }
 }
 
 #[derive(Clone)]
-pub struct FeatureLazyFrameNameSpace {
+pub struct FeatureLazyFrameNs {
     lf: GDSLazyFrame,
 }
 
-impl FeatureLazyFrameNameSpace {
+impl FeatureLazyFrameNs {
     pub fn new(lf: GDSLazyFrame) -> Self {
         Self { lf }
     }
@@ -82,11 +127,11 @@ impl FeatureLazyFrameNameSpace {
 }
 
 #[derive(Clone)]
-pub struct TreeLazyFrameNameSpace {
+pub struct TreeLazyFrameNs {
     lf: GDSLazyFrame,
 }
 
-impl TreeLazyFrameNameSpace {
+impl TreeLazyFrameNs {
     pub fn new(lf: GDSLazyFrame) -> Self {
         Self { lf }
     }
@@ -101,17 +146,17 @@ impl TreeLazyFrameNameSpace {
 }
 
 pub trait LazyFrameDatasetExt {
-    fn ds(self) -> DatasetLazyFrameNameSpace;
-    fn dataset(self) -> DatasetLazyFrameNameSpace;
+    fn ds(self) -> DatasetLazyFrameNs;
+    fn dataset(self) -> DatasetLazyFrameNs;
 }
 
 impl LazyFrameDatasetExt for GDSLazyFrame {
-    fn ds(self) -> DatasetLazyFrameNameSpace {
-        DatasetLazyFrameNameSpace::new(self)
+    fn ds(self) -> DatasetLazyFrameNs {
+        DatasetLazyFrameNs::new(self)
     }
 
-    fn dataset(self) -> DatasetLazyFrameNameSpace {
-        DatasetLazyFrameNameSpace::new(self)
+    fn dataset(self) -> DatasetLazyFrameNs {
+        DatasetLazyFrameNs::new(self)
     }
 }
 
@@ -121,6 +166,8 @@ mod tests {
     use crate::collections::dataframe::{col, lit, GDSDataFrame, RowValue};
     use crate::collections::dataset::dsl::namespaces::dataop::DataOpNs;
     use crate::collections::dataset::dsl::namespaces::dataset::DatasetNs;
+    use crate::collections::dataset::dsl::namespaces::expr::ExprNs;
+    use crate::collections::dataset::dsl::namespaces::plan::PlanNs;
     use crate::collections::dataset::frame::expr::ExprDatasetExt;
     use crate::collections::dataset::lab::protocol::projection::DatasetProjectionKind;
     use crate::collections::dataset::plan::EvalMode;
@@ -131,7 +178,7 @@ mod tests {
     #[test]
     fn test_apply_plan_and_with_plan_are_equivalent_for_empty_plan() -> Result<(), Box<dyn Error>> {
         let df = tbl!((x: i64 => [1, 2, 3]))?;
-        let ns = DatasetLazyFrameNameSpace::new(df.lazy());
+        let ns = DatasetLazyFrameNs::new(df.lazy());
         let plan = Plan::from_var("ds");
 
         let out_apply = GDSDataFrame::new(ns.apply_plan(&plan).into_lazyframe().collect()?);
@@ -154,7 +201,7 @@ mod tests {
     fn test_phase_b_integration_lazy_plan_namespace_flow() -> Result<(), Box<dyn Error>> {
         let df = tbl!((id: i64 => [1, 2]), (text: ["A B", "C D"]))?;
 
-        let ns = DatasetLazyFrameNameSpace::new(df.lazy());
+        let ns = DatasetLazyFrameNs::new(df.lazy());
 
         let text_encode = DataOpNs::text_encode("normalize");
         let text_norm_expr = DataOpNs::lower_column(&text_encode, "text").alias("text_norm");
@@ -193,7 +240,7 @@ mod tests {
         let df =
             tbl!((id: i64 => [1, 2, 3]), (text: ["Alpha Beta", "Gamma Delta", "Epsilon Zeta"]))?;
 
-        let ns = DatasetLazyFrameNameSpace::new(df.lazy());
+        let ns = DatasetLazyFrameNs::new(df.lazy());
         let text_lower = col("text").dataset().text().lowercase().alias("text_lower");
         let text_encode = DataOpNs::text_encode("normalize");
 
@@ -235,6 +282,32 @@ mod tests {
         assert_eq!(
             text_lower,
             vec!["gamma delta".to_string(), "epsilon zeta".to_string()]
+        );
+        Ok(())
+    }
+
+    #[test]
+    fn test_expr_ns_plan_ns_flow_through_lazyframe_namespace() -> Result<(), Box<dyn Error>> {
+        let df = tbl!((id: i64 => [1, 2]), (text: ["Alpha Beta", "Gamma Delta"]))?;
+
+        let ns = DatasetLazyFrameNs::new(df.lazy());
+        let text_lower = ExprNs::text_lowercase(ExprNs::col("text")).alias("text_lower");
+        let token_count = ExprNs::text_token_count_ws(ExprNs::col("text")).alias("token_count");
+
+        let plan = PlanNs::from_var("ds")
+            .with_columns([text_lower, token_count])
+            .select([ExprNs::col("id"), ExprNs::col("text_lower"), ExprNs::col("token_count")]);
+
+        let out = GDSDataFrame::new(ns.with_plan(&plan).into_lazyframe().collect()?);
+
+        assert_eq!(out.shape(), (2, 3));
+        assert_eq!(
+            out.column_names(),
+            vec![
+                "id".to_string(),
+                "text_lower".to_string(),
+                "token_count".to_string()
+            ]
         );
         Ok(())
     }

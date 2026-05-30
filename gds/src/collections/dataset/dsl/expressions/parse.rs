@@ -7,7 +7,8 @@
 //! - end: UInt64 (optional span)
 //! - score: Float64 (optional score)
 
-use polars::prelude::{col, Expr};
+use crate::collections::dataframe::col;
+use crate::collections::dataframe::GDSExpr as Expr;
 
 pub const PARSE_TREE_FIELD: &str = "tree";
 pub const PARSE_KIND_FIELD: &str = "kind";

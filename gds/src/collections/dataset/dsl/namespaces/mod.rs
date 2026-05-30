@@ -6,7 +6,7 @@
 //! distinct from the DataFrame namespace registry in
 //! [`crate::collections::dataframe::namespaces::core`].
 //!
-//! Layering of the namespace builders (do not duplicate across layers):
+//! Dialectical namespace map (do not duplicate behavior across layers):
 //!
 //! 1. **Orchestration** — [`dataset::DatasetNs`]: registry, IO, metadata,
 //!    projection, reporting. Dataset-level "what/where/how described".
@@ -17,10 +17,11 @@
 //! 3. **Text-domain alias** — [`text::TextNs`]: a thin alias over the
 //!    `text_*` family in `DataOpNs`, kept so toolchain code can spell
 //!    text-only stages without prefixing every call.
-//! 4. **Feature algebra** — [`feature::FeatureNs`] and
-//!    [`feature::FeatureExprNameSpace`]: positions, paths, specs, conditions,
-//!    rules, templates, and the symbolic `FeatureExpr` algebra.
-//! 5. **Tree algebra** — [`treens::TreeNs`]: nodes, leaves, positions, spans,
+//! 4. **Expression authoring** — [`expr::ExprNs`]: expression builders for
+//!    lazy DataFrame paths mediated through Dataset.
+//! 5. **Essence middle** — [`model::ModelNs`], [`feature::FeatureNs`], and
+//!    [`plan::PlanNs`]: model specs, feature algebra, and deferred lazy plans.
+//! 6. **Tree algebra** — [`treens::TreeNs`]: nodes, leaves, positions, spans,
 //!    and tree transforms used by parse/AST flows.
 //!
 //! Reserved namespace names recognised by the registry are listed in
@@ -32,7 +33,10 @@ use std::sync::RwLock;
 
 pub mod dataop;
 pub mod dataset;
+pub mod expr;
 pub mod feature;
+pub mod model;
+pub mod plan;
 pub mod text;
 pub mod treens;
 

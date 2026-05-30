@@ -41,7 +41,10 @@ use std::collections::BTreeSet;
 use std::fs::read_to_string;
 use std::path::Path;
 
-use polars::prelude::{NamedFrom, PlSmallStr, PolarsError, Series};
+use crate::collections::dataframe::NamedFrom;
+use crate::collections::dataframe::PlSmallStr;
+use crate::collections::dataframe::PolarsError;
+use crate::collections::dataframe::Series;
 use sha2::{Digest, Sha256};
 
 use crate::collections::dataframe::{GDSDataFrame, GDSFrameError};

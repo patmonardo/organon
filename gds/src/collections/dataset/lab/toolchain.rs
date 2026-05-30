@@ -33,7 +33,8 @@ use crate::collections::dataset::lab::protocol::projection::DatasetProjectionExp
 use crate::collections::dataset::lab::protocol::registry::DatasetRegistryExpr;
 use crate::collections::dataset::lab::protocol::reporting::DatasetReportExpr;
 use crate::form::{ProgramFeature, ProgramFeatureKind, ProgramFeatures};
-use polars::prelude::{col, Expr};
+use crate::collections::dataframe::col;
+use crate::collections::dataframe::GDSExpr as Expr;
 
 /// Ancient-science-style specification marker for SDSL artifacts.
 #[derive(Debug, Clone, PartialEq, Eq)]

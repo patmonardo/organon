@@ -7,7 +7,7 @@
 //! | scalar | `Expr`      | `Series`     |
 //! | frame  | `LazyFrame` | `DataFrame`  |
 //!
-//! This module provides [`DatasetDataFrameNameSpace`], the eager-frame entry
+//! This module provides [`DatasetDataFrameNs`], the eager-frame entry
 //! point for the GDS Shell protocol, plus the [`DataFrameDatasetExt`] trait
 //! that attaches `.ds()` and `.dataset()` onto `GDSDataFrame`. The eager frame is the first
 //! semantic shell over the DataFrame body: it carries dataset identity/profile
@@ -17,21 +17,21 @@
 use crate::collections::dataframe::{GDSDataFrame, GDSLazyFrame};
 use crate::collections::dataset::core::artifact::{DatasetArtifactKind, DatasetArtifactProfile};
 use crate::collections::dataset::core::dataset::Dataset;
-use crate::collections::dataset::frame::lazy::DatasetLazyFrameNameSpace;
+use crate::collections::dataset::frame::lazy::DatasetLazyFrameNs;
 use crate::collections::dataset::lab::protocol::io::DatasetIoExpr;
 use crate::collections::dataset::lab::toolchain::DatasetPipeline;
 use crate::form::ProgramFeatures;
 use crate::shell::{GdsShell, ShellProgram};
 
 #[derive(Debug, Clone)]
-pub struct DatasetDataFrameNameSpace {
+pub struct DatasetDataFrameNs {
     df: GDSDataFrame,
     name: Option<String>,
     artifact_profile: DatasetArtifactProfile,
     source: Option<DatasetIoExpr>,
 }
 
-impl DatasetDataFrameNameSpace {
+impl DatasetDataFrameNs {
     pub fn new(df: GDSDataFrame) -> Self {
         Self {
             df,
@@ -113,24 +113,24 @@ impl DatasetDataFrameNameSpace {
     }
 
     /// Convert this DataFrame into a LazyFrame and enter the dataset lazy namespace.
-    pub fn lazy(&self) -> DatasetLazyFrameNameSpace {
+    pub fn lazy(&self) -> DatasetLazyFrameNs {
         let lf = GDSLazyFrame::from(self.df.dataframe().clone());
-        DatasetLazyFrameNameSpace::new(lf)
+        DatasetLazyFrameNs::new(lf)
     }
 }
 
 pub trait DataFrameDatasetExt {
-    fn ds(self) -> DatasetDataFrameNameSpace;
-    fn dataset(self) -> DatasetDataFrameNameSpace;
+    fn ds(self) -> DatasetDataFrameNs;
+    fn dataset(self) -> DatasetDataFrameNs;
 }
 
 impl DataFrameDatasetExt for GDSDataFrame {
-    fn ds(self) -> DatasetDataFrameNameSpace {
-        DatasetDataFrameNameSpace::new(self)
+    fn ds(self) -> DatasetDataFrameNs {
+        DatasetDataFrameNs::new(self)
     }
 
-    fn dataset(self) -> DatasetDataFrameNameSpace {
-        DatasetDataFrameNameSpace::new(self)
+    fn dataset(self) -> DatasetDataFrameNs {
+        DatasetDataFrameNs::new(self)
     }
 }
 

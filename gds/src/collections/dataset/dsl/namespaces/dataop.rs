@@ -1,10 +1,10 @@
 //! DataOp namespace for dataset-level SDSL pipeline authoring.
 
+use crate::collections::dataframe::GDSExpr as Expr;
 use crate::collections::dataset::dsl::functions;
 use crate::collections::dataset::lab::protocol::dataop::{
     DataFrameLoweringArtifact, DatasetAspectArtifact, DatasetDataOpExpr,
 };
-use polars::prelude::Expr;
 
 #[derive(Debug, Clone, Default)]
 pub struct DataOpNs;
@@ -73,7 +73,7 @@ impl DataOpNs {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use polars::prelude::col;
+    use crate::collections::dataframe::col;
 
     #[test]
     fn test_dataop_ns_text_ops_and_artifacts_are_stable() {

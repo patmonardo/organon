@@ -4,7 +4,7 @@
 //! The canonical protocol surface is the Dataset `expr` + `expressions`
 //! layers; this module is intentionally downstream.
 
-use polars::prelude::Expr;
+use crate::collections::dataframe::GDSExpr as Expr;
 
 pub use crate::collections::dataset::dsl::expressions::binary::BinaryEncoding;
 pub use crate::collections::dataset::dsl::expressions::binary::BinaryEndianness;

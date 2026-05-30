@@ -6,7 +6,8 @@
 //! - end: UInt64
 //! - kind: String
 
-use polars::prelude::{col, Expr};
+use crate::collections::dataframe::col;
+use crate::collections::dataframe::GDSExpr as Expr;
 
 pub const TOKEN_TEXT_FIELD: &str = "text";
 pub const TOKEN_START_FIELD: &str = "start";

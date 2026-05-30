@@ -41,7 +41,10 @@
 //! holds annotation *records* — the rows that a `Corpus` groups by
 //! `(layer, annotator, guideline_version)` for agreement scoring.
 
-use polars::prelude::{DataFrame, NamedFrom, PolarsError, Series};
+use crate::collections::dataframe::DataFrame;
+use crate::collections::dataframe::NamedFrom;
+use crate::collections::dataframe::PolarsError;
+use crate::collections::dataframe::Series;
 
 use crate::collections::dataframe::GDSDataFrame;
 use crate::collections::dataset::corpus::document::SpanUnit;

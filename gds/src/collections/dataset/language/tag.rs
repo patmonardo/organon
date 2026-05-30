@@ -1,6 +1,7 @@
 //! Tag DSL core types.
 
-use polars::prelude::{lit, Expr};
+use crate::collections::dataframe::lit;
+use crate::collections::dataframe::GDSExpr as Expr;
 
 use crate::collections::dataframe::record;
 use crate::collections::dataset::language::token::TokenSpan;

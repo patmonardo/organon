@@ -24,7 +24,7 @@ pub use crate::collections::dataset::language::{
 pub use crate::collections::dataset::plan::{EvalMode, Plan, PlanEnv, PlanError, PlanSource, Step};
 
 pub use crate::collections::dataset::feature::{
-    Feature, FeatureExpr, FeatureExprNameSpace, FeatureNamespace, FeatureSpace, FeatureView,
+    Feature, FeatureExpr, FeatureExprNs, FeatureNamespace, FeatureSpace, FeatureView,
 };
 
 pub use crate::collections::dataset::model::exec::{
@@ -42,6 +42,7 @@ pub use crate::collections::dataset::model::{
     ModelResult, ModelScore, ModelSpec, ModelState, ModelView, NoOpLanguageModel, NoOpParser,
     NoOpTagger,
 };
+pub use crate::collections::dataset::{ModelNs, PlanNs};
 
 // Metrics
 pub use crate::collections::dataset::core::metrics::{BinaryMetrics, MetricError};

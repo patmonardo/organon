@@ -8,6 +8,11 @@ pub mod functions;
 pub mod macros;
 pub mod namespaces;
 
+pub use namespaces::expr::ExprNs;
+pub use namespaces::feature::FeatureExprNs;
+pub use namespaces::feature::FeatureNs;
+pub use namespaces::model::ModelNs;
+pub use namespaces::plan::PlanNs;
 pub use namespaces::{
     is_dataset_namespace_registered, register_corpus_namespace, register_dataset_namespace,
     NameSpaceError,

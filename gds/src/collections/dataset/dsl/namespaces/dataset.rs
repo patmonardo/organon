@@ -8,12 +8,12 @@
 //!
 //! - **Data-op authoring** lives in [`super::dataop::DataOpNs`] (and its
 //!   text-domain alias [`super::text::TextNs`]).
-//! - **Feature algebra** lives in [`super::feature::FeatureNs`] and
-//!   [`super::feature::FeatureExprNameSpace`].
+//! - **Essence authoring** lives in [`super::model::ModelNs`],
+//!   [`super::feature::FeatureNs`], and [`super::plan::PlanNs`].
 //! - **Tree algebra** lives in [`super::treens::TreeNs`].
 //! - **Per-column text expressions** (tokenize / lowercase / token-count)
 //!   live on the dataset DSL shell at
-//!   [`crate::collections::dataset::frame::expr::DatasetExprNameSpace::text`].
+//!   [`crate::collections::dataset::frame::expr::DatasetExprNs::text`].
 //!
 //! Keep this struct narrowly scoped to dataset-level orchestration concerns.
 

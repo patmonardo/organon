@@ -29,7 +29,13 @@
 //! schema-shape. See `SEMANTIC-DATASET-FIVE-FOLD.md` §"What this note
 //! commits to" for what is and is not decided.
 
-use polars::prelude::{DataFrame, DataType, Field, NamedFrom, PolarsError, Schema, Series};
+use crate::collections::dataframe::DataFrame;
+use crate::collections::dataframe::DataType;
+use crate::collections::dataframe::Field;
+use crate::collections::dataframe::NamedFrom;
+use crate::collections::dataframe::PolarsError;
+use crate::collections::dataframe::Schema;
+use crate::collections::dataframe::Series;
 
 use crate::collections::dataframe::GDSDataFrame;
 

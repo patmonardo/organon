@@ -34,7 +34,8 @@
 
 use std::collections::BTreeMap;
 
-use polars::prelude::{Expr, LazyFrame};
+use crate::collections::dataframe::GDSExpr as Expr;
+use crate::collections::dataframe::LazyFrame;
 
 use crate::collections::dataframe::Selector;
 use crate::collections::dataset::core::schema::{FeatureSchema, SymbolTable};
@@ -48,7 +49,7 @@ pub use crate::collections::dataset::dsl::expressions::feature::{
     FeatureTemplate, FeatureValue,
 };
 pub use crate::collections::dataset::dsl::namespaces::feature::{
-    FeatureExprNameSpace, FeatureNs as FeatureNamespace,
+    FeatureExprNs, FeatureNs as FeatureNamespace,
 };
 
 #[derive(Debug, Clone)]
@@ -535,10 +536,8 @@ impl FeatureSeriesNameSpace {
         Self { space }
     }
 
-    pub fn expr(
-        &self,
-    ) -> crate::collections::dataset::dsl::namespaces::feature::FeatureExprNameSpace {
-        crate::collections::dataset::dsl::namespaces::feature::FeatureExprNameSpace::new()
+    pub fn expr(&self) -> crate::collections::dataset::dsl::namespaces::feature::FeatureExprNs {
+        crate::collections::dataset::dsl::namespaces::feature::FeatureExprNs::new()
     }
 
     pub fn union(&self, other: FeatureSpace) -> FeatureSeries {

@@ -5,13 +5,19 @@
 
 use std::path::Path;
 
-use polars::prelude::{Expr, SortMultipleOptions};
+use crate::collections::dataframe::GDSExpr as Expr;
+use crate::collections::dataframe::PolarsSortMultipleOptions as SortMultipleOptions;
 
 use crate::collections::dataframe::selectors::Selector;
 use crate::collections::dataframe::table::TableBuilder;
 use crate::collections::dataframe::GDSFrameError;
 use crate::collections::dataframe::{GDSDataFrame, GDSLazyFrame};
 use crate::collections::dataset::core::artifact::{DatasetArtifactKind, DatasetArtifactProfile};
+use crate::collections::dataset::dsl::namespaces::is_dataset_namespace_registered;
+use crate::collections::dataset::dsl::namespaces::register_corpus_namespace as register_corpus_ns;
+use crate::collections::dataset::dsl::namespaces::register_dataset_namespace;
+use crate::collections::dataset::dsl::namespaces::NameSpaceError;
+use crate::collections::dataset::frame::DatasetDataFrameNs;
 use crate::collections::io::{csv, ipc, json, parquet};
 
 /// Minimal dataset wrapper (Polars-backed).
@@ -68,6 +74,21 @@ impl Dataset {
         self.name.as_deref()
     }
 
+    /// Register a custom dataset namespace from the root Dataset API.
+    pub fn register_namespace(name: &str) -> Result<(), NameSpaceError> {
+        register_dataset_namespace(name)
+    }
+
+    /// Register the canonical dataset `corpus` namespace from the root API.
+    pub fn register_corpus_namespace() -> Result<(), NameSpaceError> {
+        register_corpus_ns()
+    }
+
+    /// Check dataset namespace registration via the root API.
+    pub fn is_namespace_registered(name: &str) -> bool {
+        is_dataset_namespace_registered(name)
+    }
+
     pub fn artifact_profile(&self) -> &DatasetArtifactProfile {
         &self.artifact_profile
     }
@@ -112,6 +133,19 @@ impl Dataset {
 
     pub fn into_table(self) -> GDSDataFrame {
         self.table
+    }
+
+    /// Enter the focused DataFrame control namespace for this Dataset body.
+    pub fn frame(&self) -> DatasetDataFrameNs {
+        let mut frame =
+            DatasetDataFrameNs::new(self.table.clone()).artifact_kind(self.artifact_kind().clone());
+        if let Some(name) = self.name() {
+            frame = frame.named(name);
+        }
+        for facet in self.artifact_profile().facets() {
+            frame = frame.facet(facet.clone());
+        }
+        frame
     }
 
     /// Build a lazy query graph from this dataset's semantic table.
@@ -306,5 +340,27 @@ impl Dataset {
     pub fn to_json(&self, path: impl AsRef<Path>) -> Result<(), GDSFrameError> {
         json::write_table(path.as_ref(), &self.table, json::JsonWriteConfig::default())?;
         Ok(())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_dataset_root_namespace_registration_bridge() {
+        let ns = "dataset-root-test-ns";
+
+        Dataset::register_namespace(ns).expect("custom namespace registration should succeed");
+
+        assert!(Dataset::is_namespace_registered(ns));
+    }
+
+    #[test]
+    fn test_dataset_root_reserved_namespace_is_rejected() {
+        let err = Dataset::register_corpus_namespace()
+            .expect_err("reserved corpus namespace should be rejected by dataset registry");
+
+        assert!(matches!(err, NameSpaceError::Reserved { .. }));
     }
 }
