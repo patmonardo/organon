@@ -131,6 +131,12 @@ pub struct CorpusArtifactFrame {
     df: GDSDataFrame,
 }
 
+/// Corpus-scoped dataset artifact frame.
+///
+/// This alias preserves the established `CorpusArtifactFrame` implementation
+/// while exposing the database-facing name used by persistence planning notes.
+pub type DatasetArtifactFrame = CorpusArtifactFrame;
+
 impl CorpusArtifactFrame {
     pub fn from_dataframe(df: GDSDataFrame) -> Result<Self, PolarsError> {
         let names: std::collections::HashSet<String> = df.column_names().into_iter().collect();

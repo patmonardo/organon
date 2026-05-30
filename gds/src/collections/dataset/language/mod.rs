@@ -1,3 +1,4 @@
+mod frames;
 pub mod grammar;
 pub mod lm;
 mod manifest;
@@ -13,6 +14,7 @@ pub mod token;
 pub mod tokenizer;
 pub mod tree;
 
+pub use frames::*;
 pub use grammar::*;
 pub use lm::*;
 pub use manifest::*;

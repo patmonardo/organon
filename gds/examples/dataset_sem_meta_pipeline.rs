@@ -136,14 +136,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     fs::write(
         &shell_path,
         format!(
-            "semdataset_ready: {}\npureform_return_ready: {}\nreadiness: {}\ntrace_valid: {}\n",
-            semantic.semdataset_ready(),
+            "logic_frame_ready: {}\npureform_return_ready: {}\nreadiness: {}\ntrace_valid: {}\n",
+            semantic.logic_frame_ready(),
             semantic.pureform_return_ready(),
             learning.readiness_score(),
             trace.is_valid(),
         ),
     )?;
-    println!("semdataset ready: {}", semantic.semdataset_ready());
+    println!("logic frame ready: {}", semantic.logic_frame_ready());
     println!(
         "pureform return ready: {}",
         semantic.pureform_return_ready()

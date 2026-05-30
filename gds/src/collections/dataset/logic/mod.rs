@@ -5,10 +5,12 @@
 //! `LogicFrame`: `Corpus`, `LanguageModel`, and semantic forms gathered as the
 //! returned Dataset end-view.
 //!
+mod frames;
 pub mod logic_form;
 pub mod logic_frame;
 mod manifest;
 
+pub use frames::*;
 pub use logic_form::*;
 pub use logic_frame::*;
 pub use manifest::*;

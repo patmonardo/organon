@@ -45,6 +45,44 @@ impl MediatorKind {
             Self::Plan => "plan",
         }
     }
+
+    /// Dialectical ordinal of mediator evolution: Model -> Feature -> Plan.
+    pub fn stage(self) -> u8 {
+        match self {
+            Self::Model => 0,
+            Self::Feature => 1,
+            Self::Plan => 2,
+        }
+    }
+
+    /// Immediate next mediator stage in the rational evolution.
+    pub fn next(self) -> Option<Self> {
+        match self {
+            Self::Model => Some(Self::Feature),
+            Self::Feature => Some(Self::Plan),
+            Self::Plan => None,
+        }
+    }
+
+    /// Immediate previous mediator stage in the rational evolution.
+    pub fn previous(self) -> Option<Self> {
+        match self {
+            Self::Model => None,
+            Self::Feature => Some(Self::Model),
+            Self::Plan => Some(Self::Feature),
+        }
+    }
+
+    /// Canonical evolution path from this stage up to Plan.
+    pub fn evolution_path_from(self) -> Vec<Self> {
+        let mut out = vec![self];
+        let mut cursor = self;
+        while let Some(next) = cursor.next() {
+            out.push(next);
+            cursor = next;
+        }
+        out
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash, PartialOrd, Ord)]
@@ -205,5 +243,330 @@ impl MediatorProvenance {
 
     pub fn derivation(&self) -> &str {
         &self.derivation
+    }
+}
+
+/// Binding relation on the rational mediator side.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub enum DialecticalBindingRelation {
+    Conditions,
+    Realizes,
+    Projects,
+    Synthesizes,
+    Grounds,
+    Other,
+}
+
+impl DialecticalBindingRelation {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Conditions => "conditions",
+            Self::Realizes => "realizes",
+            Self::Projects => "projects",
+            Self::Synthesizes => "synthesizes",
+            Self::Grounds => "grounds",
+            Self::Other => "other",
+        }
+    }
+}
+
+/// Rational-side binding record between mediator moments.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct DialecticalBinding {
+    pub from: MediatorId,
+    pub to: MediatorId,
+    pub relation: DialecticalBindingRelation,
+    pub label: Option<String>,
+}
+
+impl DialecticalBinding {
+    pub fn new(from: MediatorId, to: MediatorId, relation: DialecticalBindingRelation) -> Self {
+        Self {
+            from,
+            to,
+            relation,
+            label: None,
+        }
+    }
+
+    pub fn with_label(mut self, label: impl Into<String>) -> Self {
+        self.label = Some(label.into());
+        self
+    }
+}
+
+/// Frame-level container for rational mediation records.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct RationalMediatingFrame {
+    bindings: Vec<DialecticalBinding>,
+    provenance: Vec<MediatorProvenance>,
+}
+
+impl RationalMediatingFrame {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn with_binding(mut self, binding: DialecticalBinding) -> Self {
+        self.bindings.push(binding);
+        self
+    }
+
+    pub fn with_provenance(mut self, provenance: MediatorProvenance) -> Self {
+        self.provenance.push(provenance);
+        self
+    }
+
+    pub fn bindings(&self) -> &[DialecticalBinding] {
+        &self.bindings
+    }
+
+    pub fn provenance(&self) -> &[MediatorProvenance] {
+        &self.provenance
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.bindings.is_empty() && self.provenance.is_empty()
+    }
+}
+
+/// Binding concept levels across the staged rational arc.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub enum BindingConceptLevel {
+    Model,
+    Feature,
+    Plan,
+}
+
+impl BindingConceptLevel {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Model => "model",
+            Self::Feature => "feature",
+            Self::Plan => "plan",
+        }
+    }
+}
+
+/// Manifest-side record that materializes mediation into artifacts.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct ManifestBindingRecord {
+    pub artifact_kind: ArtifactKind,
+    pub artifact_id: String,
+    pub relation: DialecticalBindingRelation,
+}
+
+impl ManifestBindingRecord {
+    pub fn new(
+        artifact_kind: ArtifactKind,
+        artifact_id: impl Into<String>,
+        relation: DialecticalBindingRelation,
+    ) -> Self {
+        Self {
+            artifact_kind,
+            artifact_id: artifact_id.into(),
+            relation,
+        }
+    }
+}
+
+/// Manifesting-side frame: where rational bindings appear as persisted artifacts.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct ManifestingFrame {
+    records: Vec<ManifestBindingRecord>,
+}
+
+impl ManifestingFrame {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn with_record(mut self, record: ManifestBindingRecord) -> Self {
+        self.records.push(record);
+        self
+    }
+
+    pub fn records(&self) -> &[ManifestBindingRecord] {
+        &self.records
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.records.is_empty()
+    }
+}
+
+/// Third moment: scientific learning as unity of mediating + manifesting framings.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ScientificLearningFrame {
+    level: BindingConceptLevel,
+    mediating: RationalMediatingFrame,
+    manifesting: ManifestingFrame,
+}
+
+impl ScientificLearningFrame {
+    pub fn new(level: BindingConceptLevel) -> Self {
+        Self {
+            level,
+            mediating: RationalMediatingFrame::new(),
+            manifesting: ManifestingFrame::new(),
+        }
+    }
+
+    pub fn with_mediating_binding(mut self, binding: DialecticalBinding) -> Self {
+        self.mediating = self.mediating.with_binding(binding);
+        self
+    }
+
+    pub fn with_manifest_record(mut self, record: ManifestBindingRecord) -> Self {
+        self.manifesting = self.manifesting.with_record(record);
+        self
+    }
+
+    pub fn level(&self) -> BindingConceptLevel {
+        self.level
+    }
+
+    pub fn mediating(&self) -> &RationalMediatingFrame {
+        &self.mediating
+    }
+
+    pub fn manifesting(&self) -> &ManifestingFrame {
+        &self.manifesting
+    }
+
+    pub fn is_scientific_learning(&self) -> bool {
+        !self.mediating.is_empty() && !self.manifesting.is_empty()
+    }
+}
+
+/// Feature-stage mediation (middle rational moment).
+///
+/// Feature mediation receives conditioning from Model and projects toward Plan.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct FeatureMediationMoment {
+    pub feature_id: FeatureId,
+    pub grammar_anchor: Option<String>,
+    pub bindings: Vec<DialecticalBinding>,
+}
+
+impl FeatureMediationMoment {
+    pub fn new(feature_id: impl Into<FeatureId>) -> Self {
+        Self {
+            feature_id: feature_id.into(),
+            grammar_anchor: None,
+            bindings: Vec::new(),
+        }
+    }
+
+    pub fn with_grammar_anchor(mut self, grammar_anchor: impl Into<String>) -> Self {
+        self.grammar_anchor = Some(grammar_anchor.into());
+        self
+    }
+
+    pub fn mediator_id(&self) -> MediatorId {
+        MediatorId::feature(self.feature_id.0.clone())
+    }
+
+    pub fn conditioned_by_model(mut self, model_id: impl Into<String>) -> Self {
+        self.bindings.push(DialecticalBinding::new(
+            MediatorId::model(model_id),
+            self.mediator_id(),
+            DialecticalBindingRelation::Conditions,
+        ));
+        self
+    }
+
+    pub fn project_to_plan(mut self, plan_id: impl Into<String>) -> Self {
+        self.bindings.push(DialecticalBinding::new(
+            self.mediator_id(),
+            MediatorId::plan(plan_id),
+            DialecticalBindingRelation::Projects,
+        ));
+        self
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn mediator_kind_exposes_dialectical_evolution_path() {
+        let path = MediatorKind::Model.evolution_path_from();
+        assert_eq!(
+            path,
+            vec![
+                MediatorKind::Model,
+                MediatorKind::Feature,
+                MediatorKind::Plan
+            ]
+        );
+        assert_eq!(MediatorKind::Feature.previous(), Some(MediatorKind::Model));
+        assert_eq!(MediatorKind::Plan.next(), None);
+    }
+
+    #[test]
+    fn rational_mediating_frame_collects_bindings_and_provenance() {
+        let binding = DialecticalBinding::new(
+            MediatorId::model("model:1"),
+            MediatorId::feature("feature:1"),
+            DialecticalBindingRelation::Realizes,
+        )
+        .with_label("box1");
+
+        let provenance = MediatorProvenance::new(
+            MediatorId::plan("plan:1"),
+            "rational",
+            "unit-test",
+            "v1",
+            "fixture",
+        )
+        .with_artifact_kind(ArtifactKind::Logic);
+
+        let frame = RationalMediatingFrame::new()
+            .with_binding(binding)
+            .with_provenance(provenance);
+
+        assert_eq!(frame.bindings().len(), 1);
+        assert_eq!(frame.provenance().len(), 1);
+        assert!(!frame.is_empty());
+    }
+
+    #[test]
+    fn feature_mediation_is_middle_moment() {
+        let mediation = FeatureMediationMoment::new("feature:agreement")
+            .with_grammar_anchor("grammar:featstruct")
+            .conditioned_by_model("model:syntax")
+            .project_to_plan("plan:inference");
+
+        assert_eq!(mediation.bindings.len(), 2);
+        assert_eq!(
+            mediation.bindings[0].relation,
+            DialecticalBindingRelation::Conditions
+        );
+        assert_eq!(
+            mediation.bindings[1].relation,
+            DialecticalBindingRelation::Projects
+        );
+    }
+
+    #[test]
+    fn scientific_learning_requires_both_sides() {
+        let learning = ScientificLearningFrame::new(BindingConceptLevel::Plan)
+            .with_mediating_binding(DialecticalBinding::new(
+                MediatorId::feature("feature:agreement"),
+                MediatorId::plan("plan:inference"),
+                DialecticalBindingRelation::Synthesizes,
+            ))
+            .with_manifest_record(ManifestBindingRecord::new(
+                ArtifactKind::Logic,
+                "artifact:logic:inference-trace",
+                DialecticalBindingRelation::Grounds,
+            ));
+
+        assert!(learning.is_scientific_learning());
+        assert_eq!(learning.level(), BindingConceptLevel::Plan);
+        assert_eq!(learning.mediating().bindings().len(), 1);
+        assert_eq!(learning.manifesting().records().len(), 1);
     }
 }
