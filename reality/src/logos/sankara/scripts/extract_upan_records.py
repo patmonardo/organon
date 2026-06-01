@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import argparse
 import fnmatch
+import glob
 import hashlib
 import html
 import json
@@ -47,6 +48,40 @@ TEXT_CODE_RE = re.compile(r"^([A-Za-z]+)_C(\d+)(?:_S(\d+))?", re.IGNORECASE)
 
 # Extract text name from an HTML witness directory name
 TEXT_NAME_DIR_RE = re.compile(r"display_bhashya_([A-Za-z_]+)_devanagari_")
+
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+SANKARA_DIR = SCRIPT_DIR.parent
+
+
+def resolve_default_path(value: str | Path, *base_dirs: Path) -> Path:
+    path = Path(value)
+    if path.is_absolute():
+        return path
+    for base_dir in base_dirs:
+        candidate = (base_dir / path).resolve()
+        if candidate.exists() or candidate.parent.exists():
+            return candidate
+    return (Path.cwd() / path).resolve()
+
+
+def resolve_glob_pattern(pattern: str, *base_dirs: Path) -> str:
+    path = Path(pattern)
+    if path.is_absolute():
+        return str(path)
+
+    wildcard_chars = "*?["
+    anchor_parts: list[str] = []
+    for part in path.parts:
+        if any(ch in part for ch in wildcard_chars):
+            break
+        anchor_parts.append(part)
+    anchor = Path(*anchor_parts) if anchor_parts else Path(".")
+
+    for base_dir in base_dirs:
+        if (base_dir / anchor).exists():
+            return str((base_dir / path).resolve())
+    return str((Path.cwd() / path).resolve())
 
 
 def text_name_from_path(html_file: Path) -> str:
@@ -252,7 +287,11 @@ def main() -> int:
     )
     parser.add_argument(
         "--html-glob",
-        default="ref/sankara/raw/pages/*display_bhashya_*_devanagari_*/index.html",
+        default=resolve_glob_pattern(
+            "raw/pages/*display_bhashya_*_devanagari_*/index.html",
+            SANKARA_DIR,
+            SCRIPT_DIR,
+        ),
         help="Glob for Upanishad HTML witnesses (excludes Gita/BS by default if --exclude is set)",
     )
     parser.add_argument(
@@ -263,7 +302,7 @@ def main() -> int:
     parser.add_argument(
         "--out-file",
         type=Path,
-        default=Path("ref/sankara/derived/Upan/Upan.json"),
+        default=resolve_default_path("derived/Upan/Upan.json", SANKARA_DIR, SCRIPT_DIR),
         help="Output aggregate path base (extension overridden by --emit)",
     )
     parser.add_argument(
@@ -280,7 +319,7 @@ def main() -> int:
     args = parser.parse_args()
 
     exclude_patterns = [p.strip() for p in args.exclude_glob.split(",") if p.strip()]
-    all_files = sorted(Path(".").glob(args.html_glob))
+    all_files = sorted(Path(p) for p in glob.glob(args.html_glob))
     html_files = [
         f for f in all_files
         if not any(fnmatch.fnmatch(str(f), f"*{pat}*") or fnmatch.fnmatch(f.parent.name, pat) for pat in exclude_patterns)
@@ -320,7 +359,10 @@ def main() -> int:
         if tname:
             by_text[tname].append(row)
 
-    derived_root = args.out_file.parent.parent
+    if args.out_file.parent.name.lower() == "upan":
+        derived_root = args.out_file.parent.parent
+    else:
+        derived_root = args.out_file.parent
 
     outputs: list[str] = []
     for fmt in emission_formats(args.emit):

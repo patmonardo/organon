@@ -393,7 +393,16 @@ def download_urls(
     manifest = out_dir / "manifest.jsonl"
     pages_dir.mkdir(parents=True, exist_ok=True)
 
-    for i, url in enumerate(urls, start=1):
+    prepared_urls: list[tuple[str, str]] = []
+    seen_prepared: set[str] = set()
+    for raw_url in urls:
+        normalized_url = normalize_seed_url(raw_url)
+        if normalized_url in seen_prepared:
+            continue
+        seen_prepared.add(normalized_url)
+        prepared_urls.append((raw_url, normalized_url))
+
+    for i, (seed_url, url) in enumerate(prepared_urls, start=1):
         ts = datetime.now(timezone.utc).isoformat()
         slug = safe_slug(url)
         page_dir = pages_dir / slug
@@ -403,8 +412,9 @@ def download_urls(
         record = {
             "timestamp_utc": ts,
             "url": url,
+            "seed_url": seed_url,
             "slug": slug,
-            "html_path": str(html_path),
+            "html_path": str(html_path.resolve()),
             "status": "error",
             "mode": "seed_only",
         }
@@ -499,7 +509,7 @@ def crawl_urls(
             "mode": "recursive",
             "url": url,
             "slug": slug,
-            "html_path": str(html_path),
+            "html_path": str(html_path.resolve()),
             "status": "error",
             "depth": depth,
             "parent_url": parent_url,

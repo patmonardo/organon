@@ -10,6 +10,7 @@ Outputs aggregate and split records in configurable formats (JSON, JSONL, XML):
 from __future__ import annotations
 
 import argparse
+import glob
 import hashlib
 import html
 import json
@@ -36,6 +37,40 @@ QUOTE_RE = re.compile(
 HREF_RE = re.compile(r'href="([^"]+)"', re.IGNORECASE)
 CHAPTER_RE = re.compile(r"(BS_C\d+)")
 SECTION_RE = re.compile(r"(BS_C\d+_S\d+)")
+
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+SANKARA_DIR = SCRIPT_DIR.parent
+
+
+def resolve_default_path(value: str | Path, *base_dirs: Path) -> Path:
+    path = Path(value)
+    if path.is_absolute():
+        return path
+    for base_dir in base_dirs:
+        candidate = (base_dir / path).resolve()
+        if candidate.exists() or candidate.parent.exists():
+            return candidate
+    return (Path.cwd() / path).resolve()
+
+
+def resolve_glob_pattern(pattern: str, *base_dirs: Path) -> str:
+    path = Path(pattern)
+    if path.is_absolute():
+        return str(path)
+
+    wildcard_chars = "*?["
+    anchor_parts: list[str] = []
+    for part in path.parts:
+        if any(ch in part for ch in wildcard_chars):
+            break
+        anchor_parts.append(part)
+    anchor = Path(*anchor_parts) if anchor_parts else Path(".")
+
+    for base_dir in base_dirs:
+        if (base_dir / anchor).exists():
+            return str((base_dir / path).resolve())
+    return str((Path.cwd() / path).resolve())
 
 
 def normalize_text(raw: str) -> str:
@@ -234,13 +269,17 @@ def main() -> int:
     )
     parser.add_argument(
         "--html-glob",
-        default="ref/sankara/raw/pages/*display_bhashya_BS_devanagari_*/index.html",
+        default=resolve_glob_pattern(
+            "raw/pages/*display_bhashya_BS_devanagari_*/index.html",
+            SANKARA_DIR,
+            SCRIPT_DIR,
+        ),
         help="Glob for BS HTML witnesses used when --html-file is not provided",
     )
     parser.add_argument(
         "--out-file",
         type=Path,
-        default=Path("ref/sankara/derived/BS/BS.json"),
+        default=resolve_default_path("derived/BS/BS.json", SANKARA_DIR, SCRIPT_DIR),
         help="Output aggregate path base (extension overridden by --emit)",
     )
     parser.add_argument(
@@ -261,7 +300,7 @@ def main() -> int:
             raise SystemExit(f"HTML file not found: {args.html_file}")
         html_files = [args.html_file]
     else:
-        html_files = sorted(Path(".").glob(args.html_glob))
+        html_files = sorted(Path(p) for p in glob.glob(args.html_glob))
         if not html_files:
             raise SystemExit(f"No HTML files matched glob: {args.html_glob}")
 

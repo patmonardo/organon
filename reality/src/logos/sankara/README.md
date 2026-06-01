@@ -32,18 +32,18 @@ Goal:
 2. Download source pages:
 
 ```bash
-python3 ref/sankara/scripts/download_corpus.py \
-  --url-file ref/sankara/sources/seed_urls.txt
+python3 scripts/download_corpus.py \
+  --url-file sources/seed_urls.txt
 ```
 
-`ref/sankara/raw` is cumulative: repeated runs append newly fetched URLs and keep
+`raw/` is cumulative: repeated runs append newly fetched URLs and keep
 previously fetched pages unless you explicitly delete the output folder.
 
 3. For recursive corpus crawl from seeds:
 
 ```bash
-python3 ref/sankara/scripts/download_corpus.py \
-  --url-file ref/sankara/sources/seed_urls.txt \
+python3 scripts/download_corpus.py \
+  --url-file sources/seed_urls.txt \
   --recursive \
   --max-pages 6000 \
   --max-depth 8 \
@@ -66,8 +66,8 @@ For Brahma Sutra, use:
 4. Extract Gita records:
 
 ```bash
-python3 ref/sankara/scripts/extract_gita_records.py \
-  --out-file ref/sankara/derived/Gita/BG.json \
+python3 scripts/extract_gita_records.py \
+  --out-file derived/Gita/BG.json \
   --emit all
 ```
 
@@ -78,8 +78,8 @@ This emits:
 5. Extract Brahma Sutra records:
 
 ```bash
-python3 ref/sankara/scripts/extract_bs_records.py \
-  --out-file ref/sankara/derived/BS/BS.json \
+python3 scripts/extract_bs_records.py \
+  --out-file derived/BS/BS.json \
   --emit all
 ```
 
@@ -91,8 +91,8 @@ This emits:
 6. Extract Upanishad records (all texts in one pass):
 
 ```bash
-python3 ref/sankara/scripts/extract_upan_records.py \
-  --out-file ref/sankara/derived/Upan/Upan.json \
+python3 scripts/extract_upan_records.py \
+  --out-file derived/Upan/Upan.json \
   --emit all
 ```
 

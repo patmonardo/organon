@@ -8,6 +8,7 @@ Outputs aggregate and chapter-split records in configurable formats
 from __future__ import annotations
 
 import argparse
+import glob
 import hashlib
 import html
 import json
@@ -30,6 +31,40 @@ QUOTE_RE = re.compile(
     re.IGNORECASE | re.DOTALL,
 )
 HREF_RE = re.compile(r'href="([^"]+)"', re.IGNORECASE)
+
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+SANKARA_DIR = SCRIPT_DIR.parent
+
+
+def resolve_default_path(value: str | Path, *base_dirs: Path) -> Path:
+    path = Path(value)
+    if path.is_absolute():
+        return path
+    for base_dir in base_dirs:
+        candidate = (base_dir / path).resolve()
+        if candidate.exists() or candidate.parent.exists():
+            return candidate
+    return (Path.cwd() / path).resolve()
+
+
+def resolve_glob_pattern(pattern: str, *base_dirs: Path) -> str:
+    path = Path(pattern)
+    if path.is_absolute():
+        return str(path)
+
+    wildcard_chars = "*?["
+    anchor_parts: list[str] = []
+    for part in path.parts:
+        if any(ch in part for ch in wildcard_chars):
+            break
+        anchor_parts.append(part)
+    anchor = Path(*anchor_parts) if anchor_parts else Path(".")
+
+    for base_dir in base_dirs:
+        if (base_dir / anchor).exists():
+            return str((base_dir / path).resolve())
+    return str((Path.cwd() / path).resolve())
 
 
 def normalize_text(raw: str) -> str:
@@ -236,13 +271,17 @@ def main() -> int:
     )
     parser.add_argument(
         "--html-glob",
-        default="ref/sankara/raw/pages/*display_bhashya_Gita_devanagari_*/index.html",
+        default=resolve_glob_pattern(
+            "raw/pages/*display_bhashya_Gita_devanagari_*/index.html",
+            SANKARA_DIR,
+            SCRIPT_DIR,
+        ),
         help="Glob for Gita HTML witnesses used when --html-file is not provided",
     )
     parser.add_argument(
         "--out-file",
         type=Path,
-        default=Path("ref/sankara/derived/Gita/BG.json"),
+        default=resolve_default_path("derived/Gita/BG.json", SANKARA_DIR, SCRIPT_DIR),
         help="Output aggregate JSON path",
     )
     parser.add_argument(
@@ -264,7 +303,7 @@ def main() -> int:
             raise SystemExit(f"HTML file not found: {args.html_file}")
         html_files = [args.html_file]
     else:
-        html_files = sorted(Path(".").glob(args.html_glob))
+        html_files = sorted(Path(p) for p in glob.glob(args.html_glob))
         if not html_files:
             raise SystemExit(f"No HTML files matched glob: {args.html_glob}")
 

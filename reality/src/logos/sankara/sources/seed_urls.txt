@@ -2,4 +2,16 @@
 # Default working seeds: Bhagavad Gita listing plus Brahma Sutra bhashya root.
 # `ref/sankara/raw` is cumulative; runs append newly discovered URLs and keep
 # prior pages unless you explicitly remove the directory yourself.
-https://advaitasharada.sringeri.net/display/prakarana/vivekachudamani/devanagari
+https://advaitasharada.sringeri.net/display/bhashya/Mandukya/devanagari#MK_C01
+https://advaitasharada.sringeri.net/display/bhashya/Mandukya/devanagari#MK_C02
+https://advaitasharada.sringeri.net/display/bhashya/Mandukya/devanagari#MK_C03
+https://advaitasharada.sringeri.net/display/bhashya/Mandukya/devanagari#MK_C04
+https://advaitasharada.sringeri.net/display/bhashya/Kena_pada/devanagari#KP_C01
+https://advaitasharada.sringeri.net/display/bhashya/Kena_pada/devanagari#KP_C02
+https://advaitasharada.sringeri.net/display/bhashya/Kena_pada/devanagari#KP_C03
+https://advaitasharada.sringeri.net/display/bhashya/Kena_pada/devanagari#KP_C04
+https://advaitasharada.sringeri.net/display/bhashya/Kena_vakya/devanagari#KV_C01
+https://advaitasharada.sringeri.net/display/bhashya/Kena_vakya/devanagari#KV_C02
+https://advaitasharada.sringeri.net/display/bhashya/Kena_vakya/devanagari#KV_C03
+https://advaitasharada.sringeri.net/display/bhashya/Kena_vakya/devanagari#KV_C04
+
