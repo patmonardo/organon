@@ -1,0 +1,51 @@
+{
+  "record_id": "SKR.BS.1.1.013",
+  "work_code": "BS",
+  "section_code": "1.1",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Auto-extracted draft from Sringeri HTML witness"
+  },
+  "text": {
+    "source_text": "जन्म उत्पत्तिः आदिः अस्य — इति तद्गुणसंविज्ञानो बहुव्रीहिः । जन्मस्थिति भङ्गं समासार्थः । जन्मनश्चा दित्वं श्रुतिनिर्देशापेक्षं वस्तु वृत्तापेक्षं च । श्रुति निर्देशस्तावत् — ‘ यतो वा इमानि भूतानि जायन्ते ’ (तै. उ. ३ । १ । १) इति , अस्मिन्वाक्ये जन्मस्थितिप्रलयानां क्रमदर्शनात् । वस्तु वृत्तमपि — जन्मना लब्धसत्ताकस्य धर्मिणः स्थितिप्रलयसम्भवात् । अस्ये ति प्रत्यक्षादिसन्निधापितस्य धर्मिण इदमा निर्देशः । षष्ठी जन्मादिधर्मसम्बन्धार्था । यत इति कारणनिर्देशः । अस्य जगतो नाम रूपाभ्यां व्याकृतस्य अनेक कर्तृभोक्तृसंयुक्तस्य प्रतिनियत देशकालनिमित्तक्रियाफलाश्रयस्य मनसा प्यचिन्त्यरचनारूपस्य जन्मस्थितिभङ्गं यतः सर्वज्ञा त्सर्वशक्तेः कारणाद्भवति , तद्ब्रह्मेति वाक्यशेषः । अन्येषाम पि भावविकाराणां त्रिष्वेवान्तर्भाव इति जन्मस्थितिनाशानामिह ग्रहणम् । यास्क परिपठितानां तु ‘ जायतेऽस्ति ’ इत्यादीनां ग्रहणे तेषां जगतः स्थितिकाले सम्भाव्यमानत्वान्मूलकारणादुत्पत्तिस्थितिनाशा जगतो न गृहीताः स्युरित्याशङ्क्येत । तन्मा शङ्कि ; इति या उत्पत्तिर्ब्रह्मणः , तत्रैव स्थितिः प्रलयश्च , त एव गृह्यन्ते । न यथोक्त विशेषणस्य जगतो यथोक्तविशेषण मीश्वरं मुक्त्वा , अन्यतः प्रधानादचेतनात् अणुभ्यः अभावात् संसारिणो वा उत्पत्त्यादि सम्भावयितुं शक्यम् । न च स्वभावतः , विशिष्ट देशकालनिमित्तानामिहोपादानात् । एतदेवा नुमानं संसारिव्यतिरिक्तेश्वरास्तित्वादिसाधनं मन्यन्ते ईश्वरकारणवादिनः ॥",
+    "transliteration_iast": "",
+    "segmentation_note": "Auto-segmented from HTML block id=BS_C01_S01_V02_B1 class=bhashya"
+  },
+  "translation": {
+    "literal_translation": "DRAFT literal translation pending philological pass.",
+    "technical_translation": "DRAFT technical translation pending doctrinal terminology review.",
+    "interpretive_note": ""
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "todo-term",
+        "gloss": "pending",
+        "contextual_sense": "Add lexical analysis during translation pass.",
+        "grammatical_role": "unknown",
+        "alternate_glosses": []
+      }
+    ],
+    "argument_tags": [
+      "definition"
+    ]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-01T11:27:43.626182Z",
+    "extractor_version": "generate_bs_draft_records.py@0.1",
+    "translator_version": "human+llm@draft",
+    "reviewer_version": "pending",
+    "source_manifest_path": "ref/sankara/raw_full_safe/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.25,
+    "uncertainty_notes": [
+      "Auto-generated from BS_C01_S01_V02_B1; translation not started.",
+      "Source witness should be cross-checked against critical edition before approval."
+    ]
+  }
+}

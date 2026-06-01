@@ -1,0 +1,138 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://organon.local/sankara/schemas/passage_record.schema.json",
+  "title": "Sankara Passage Record",
+  "type": "object",
+  "required": [
+    "record_id",
+    "work_code",
+    "source",
+    "text",
+    "translation",
+    "analysis",
+    "provenance",
+    "qa"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "record_id": {
+      "type": "string",
+      "pattern": "^SKR\\.[A-Z0-9_]+\\.[A-Za-z0-9_.-]+\\.[0-9]{3,}$"
+    },
+    "work_code": {
+      "type": "string",
+      "minLength": 1
+    },
+    "section_code": {
+      "type": "string"
+    },
+    "source": {
+      "type": "object",
+      "required": ["source_url", "source_sha256", "language", "script"],
+      "additionalProperties": false,
+      "properties": {
+        "source_url": { "type": "string", "format": "uri" },
+        "source_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "language": { "type": "string" },
+        "script": { "type": "string" },
+        "edition_note": { "type": "string" }
+      }
+    },
+    "text": {
+      "type": "object",
+      "required": ["source_text"],
+      "additionalProperties": false,
+      "properties": {
+        "source_text": { "type": "string", "minLength": 1 },
+        "transliteration_iast": { "type": "string" },
+        "segmentation_note": { "type": "string" }
+      }
+    },
+    "translation": {
+      "type": "object",
+      "required": ["literal_translation", "technical_translation"],
+      "additionalProperties": false,
+      "properties": {
+        "literal_translation": { "type": "string", "minLength": 1 },
+        "technical_translation": { "type": "string", "minLength": 1 },
+        "interpretive_note": { "type": "string" }
+      }
+    },
+    "analysis": {
+      "type": "object",
+      "required": ["lexical_notes", "argument_tags"],
+      "additionalProperties": false,
+      "properties": {
+        "lexical_notes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["headword_iast", "gloss", "contextual_sense"],
+            "additionalProperties": false,
+            "properties": {
+              "headword_iast": { "type": "string", "minLength": 1 },
+              "gloss": { "type": "string", "minLength": 1 },
+              "contextual_sense": { "type": "string", "minLength": 1 },
+              "grammatical_role": { "type": "string" },
+              "alternate_glosses": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            }
+          }
+        },
+        "argument_tags": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "thesis",
+              "objection",
+              "response",
+              "resolution",
+              "definition",
+              "example"
+            ]
+          }
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "required": [
+        "extraction_timestamp_utc",
+        "extractor_version",
+        "translator_version",
+        "reviewer_version"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "extraction_timestamp_utc": { "type": "string", "format": "date-time" },
+        "extractor_version": { "type": "string", "minLength": 1 },
+        "translator_version": { "type": "string", "minLength": 1 },
+        "reviewer_version": { "type": "string", "minLength": 1 },
+        "source_manifest_path": { "type": "string" }
+      }
+    },
+    "qa": {
+      "type": "object",
+      "required": ["status", "confidence"],
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["draft", "reviewed", "approved", "needs_revision"]
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "uncertainty_notes": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}

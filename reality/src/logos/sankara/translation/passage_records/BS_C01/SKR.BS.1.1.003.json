@@ -1,0 +1,51 @@
+{
+  "record_id": "SKR.BS.1.1.003",
+  "work_code": "BS",
+  "section_code": "1.1",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Auto-extracted draft from Sringeri HTML witness"
+  },
+  "text": {
+    "source_text": "कथं पुनः प्रत्यगात्म न्य विषये अध्यासो विषयतद्धर्माणाम् ? सर्वो हि पुरोऽवस्थित एव विषये विषयान्तरमध्यस्यति ; युष्म त्प्रत्ययापेतस्य च प्रत्यगात्मनः अविषयत्वं ब्रवीषि । उच्यते — न ताव द यमेकान्तेनाविषयः , अस्म त्प्रत्ययविषयत्वात् अपरोक्षत्वाच्च प्रत्यगा त्मप्रसिद्धेः । न चा य मस्ति नियमः — पुरोऽवस्थित एव विषये विषयान्तरमध्यसितव्यमिति । अप्रत्यक्षेऽपि ह्याकाशे बालाः तलमलिनतादि अध्यस्यन्ति । एवम विरुद्धः प्रत्यगात्मन्यपि अनात्माध्यासः ॥",
+    "transliteration_iast": "",
+    "segmentation_note": "Auto-segmented from HTML block id=BS_C01_S01_I03 class=intro_bhashya"
+  },
+  "translation": {
+    "literal_translation": "DRAFT literal translation pending philological pass.",
+    "technical_translation": "DRAFT technical translation pending doctrinal terminology review.",
+    "interpretive_note": ""
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "todo-term",
+        "gloss": "pending",
+        "contextual_sense": "Add lexical analysis during translation pass.",
+        "grammatical_role": "unknown",
+        "alternate_glosses": []
+      }
+    ],
+    "argument_tags": [
+      "definition"
+    ]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-01T11:27:43.626182Z",
+    "extractor_version": "generate_bs_draft_records.py@0.1",
+    "translator_version": "human+llm@draft",
+    "reviewer_version": "pending",
+    "source_manifest_path": "ref/sankara/raw_full_safe/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.25,
+    "uncertainty_notes": [
+      "Auto-generated from BS_C01_S01_I03; translation not started.",
+      "Source witness should be cross-checked against critical edition before approval."
+    ]
+  }
+}

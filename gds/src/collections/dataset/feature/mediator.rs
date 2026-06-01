@@ -1,8 +1,9 @@
-//! Descriptive mediator vocabulary for Model/Feature realization.
+//! Feature-stage mediation and neutral identifiers for Dialectical Learning.
 //!
-//! These types name the unmanifest mediator layer without changing execution.
-//! Corpora, language, and logic can carry these records as provenance when
-//! they persist model, feature, and logical-plan artifact capacities.
+//! Feature is the middle mediation moment: it receives conditioning from Model
+//! and transforms it toward Plan. The neutral identifiers in this file are used
+//! by the three mediator modules, but the layer-specific binding logic remains
+//! in Model, Feature, and Plan rather than in a single shared mediator base.
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct FeatureId(pub String);
@@ -348,6 +349,42 @@ impl BindingConceptLevel {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub enum FeatureBindingOrientation {
+    FromModel,
+    TowardPlan,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct FeatureMediatingBinding {
+    pub binding: DialecticalBinding,
+    pub orientation: FeatureBindingOrientation,
+}
+
+impl FeatureMediatingBinding {
+    pub fn from_model(model_id: MediatorId, feature_id: MediatorId) -> Self {
+        Self {
+            binding: DialecticalBinding::new(
+                model_id,
+                feature_id,
+                DialecticalBindingRelation::Conditions,
+            ),
+            orientation: FeatureBindingOrientation::FromModel,
+        }
+    }
+
+    pub fn toward_plan(feature_id: MediatorId, plan_id: MediatorId) -> Self {
+        Self {
+            binding: DialecticalBinding::new(
+                feature_id,
+                plan_id,
+                DialecticalBindingRelation::Projects,
+            ),
+            orientation: FeatureBindingOrientation::TowardPlan,
+        }
+    }
+}
+
 /// Manifest-side record that materializes mediation into artifacts.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct ManifestBindingRecord {
@@ -447,6 +484,7 @@ pub struct FeatureMediationMoment {
     pub feature_id: FeatureId,
     pub grammar_anchor: Option<String>,
     pub bindings: Vec<DialecticalBinding>,
+    pub mediating_bindings: Vec<FeatureMediatingBinding>,
 }
 
 impl FeatureMediationMoment {
@@ -455,6 +493,7 @@ impl FeatureMediationMoment {
             feature_id: feature_id.into(),
             grammar_anchor: None,
             bindings: Vec::new(),
+            mediating_bindings: Vec::new(),
         }
     }
 
@@ -468,20 +507,18 @@ impl FeatureMediationMoment {
     }
 
     pub fn conditioned_by_model(mut self, model_id: impl Into<String>) -> Self {
-        self.bindings.push(DialecticalBinding::new(
-            MediatorId::model(model_id),
-            self.mediator_id(),
-            DialecticalBindingRelation::Conditions,
-        ));
+        let binding =
+            FeatureMediatingBinding::from_model(MediatorId::model(model_id), self.mediator_id());
+        self.bindings.push(binding.binding.clone());
+        self.mediating_bindings.push(binding);
         self
     }
 
     pub fn project_to_plan(mut self, plan_id: impl Into<String>) -> Self {
-        self.bindings.push(DialecticalBinding::new(
-            self.mediator_id(),
-            MediatorId::plan(plan_id),
-            DialecticalBindingRelation::Projects,
-        ));
+        let binding =
+            FeatureMediatingBinding::toward_plan(self.mediator_id(), MediatorId::plan(plan_id));
+        self.bindings.push(binding.binding.clone());
+        self.mediating_bindings.push(binding);
         self
     }
 }
@@ -489,6 +526,8 @@ impl FeatureMediationMoment {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::collections::dataset::model::{ModelBindingNature, ModelMediationMoment};
+    use crate::collections::dataset::plan::{PlanBindingAxis, PlanMediationMoment};
 
     #[test]
     fn mediator_kind_exposes_dialectical_evolution_path() {
@@ -548,6 +587,14 @@ mod tests {
             mediation.bindings[1].relation,
             DialecticalBindingRelation::Projects
         );
+        assert_eq!(
+            mediation.mediating_bindings[0].orientation,
+            FeatureBindingOrientation::FromModel
+        );
+        assert_eq!(
+            mediation.mediating_bindings[1].orientation,
+            FeatureBindingOrientation::TowardPlan
+        );
     }
 
     #[test]
@@ -568,5 +615,45 @@ mod tests {
         assert_eq!(learning.level(), BindingConceptLevel::Plan);
         assert_eq!(learning.mediating().bindings().len(), 1);
         assert_eq!(learning.manifesting().records().len(), 1);
+    }
+
+    #[test]
+    fn dialectical_learning_uses_three_distinct_mediator_modules() {
+        let model = ModelMediationMoment::new("model:syntax")
+            .with_schema_anchor("schema:agreement")
+            .condition_feature("feature:agreement");
+        let feature = FeatureMediationMoment::new("feature:agreement")
+            .with_grammar_anchor("grammar:featstruct")
+            .conditioned_by_model("model:syntax")
+            .project_to_plan("plan:agreement-logic");
+        let plan = PlanMediationMoment::new("plan:agreement-logic")
+            .with_principle_anchor("principle:model-feature-plan")
+            .synthesize_feature("feature:agreement")
+            .manifest_logic("logic:rule:agreement", DialecticalBindingRelation::Grounds);
+
+        assert_eq!(
+            model.feature_bindings[0].nature,
+            ModelBindingNature::ConditionsFeature
+        );
+        assert_eq!(
+            feature.mediating_bindings[0].orientation,
+            FeatureBindingOrientation::FromModel
+        );
+        assert_eq!(
+            feature.mediating_bindings[1].orientation,
+            FeatureBindingOrientation::TowardPlan
+        );
+        assert_eq!(
+            plan.feature_bindings[0].axis,
+            PlanBindingAxis::VerticalFeature
+        );
+        assert_eq!(
+            plan.logic_bindings[0].axis,
+            PlanBindingAxis::HorizontalLogic
+        );
+        assert_eq!(
+            plan.logic_bindings[0].record.artifact_kind,
+            ArtifactKind::Logic
+        );
     }
 }

@@ -2,6 +2,13 @@
 
 A compact map of how training and prediction work in this codebase, where ProcedureExecutor is used, and what is needed for continual-learning loops.
 
+## Terminology Guardrail
+
+- Pipeline is the ML execution carrier (training or prediction orchestration).
+- Plan is the semantic commitment layer (dataset semantics, form commitments, provenance-bearing intent).
+- This document is runtime-engineering focused: it describes Pipeline behavior, not Plan semantics.
+- When both appear in architecture discussions, treat Pipeline as one implementation surface that may execute parts of a Plan, but never as a synonym for Plan.
+
 ## 1) Train Execution Path
 
 Training is model production. The orchestrator is PipelineTrainAlgorithm plus a concrete PipelineTrainer implementation.

@@ -1,0 +1,46 @@
+{
+  "record_id": "SKR.BS.1.1.001",
+  "work_code": "BS",
+  "section_code": "1.1",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Populate with edition context when known"
+  },
+  "text": {
+    "source_text": "Replace with source passage text.",
+    "transliteration_iast": "Replace with IAST transliteration when available.",
+    "segmentation_note": "Passage boundary rationale"
+  },
+  "translation": {
+    "literal_translation": "Replace with literal translation.",
+    "technical_translation": "Replace with technical translation preserving doctrinal vocabulary.",
+    "interpretive_note": "Optional interpretive note."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "adhyasa",
+        "gloss": "superimposition",
+        "contextual_sense": "Erroneous attribution of properties between self and non-self",
+        "grammatical_role": "noun",
+        "alternate_glosses": ["misattribution", "cognitive overlay"]
+      }
+    ],
+    "argument_tags": ["definition", "thesis"]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-01T00:00:00Z",
+    "extractor_version": "download_corpus.py@0.2",
+    "translator_version": "human+llm@draft",
+    "reviewer_version": "pending",
+    "source_manifest_path": "ref/sankara/raw_full_safe/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.5,
+    "uncertainty_notes": ["Need term-level review against critical edition"]
+  }
+}
