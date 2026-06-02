@@ -1,0 +1,41 @@
+[
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "da4b3f336a559abc83134e13ff041ac6cc2a8dc54a531b6b8153d2b6f7704b12",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C04",
+    "section_id": "Ch_C04_S12",
+    "verse_id": "Ch_C04_S12_V01",
+    "block_id": "Ch_C04_S12_V01_VERSETEXT_01",
+    "block_type": "versetext",
+    "text": "अथ हैनमन्वाहार्यपचनोऽनुशशासापो दिशो नक्षत्राणि चन्द्रमा इति य एष चन्द्रमसि पुरुषो दृश्यते सोऽहमस्मि स एवाहमस्मीति ॥ १ ॥",
+    "citations": []
+  },
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "da4b3f336a559abc83134e13ff041ac6cc2a8dc54a531b6b8153d2b6f7704b12",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C04",
+    "section_id": "Ch_C04_S12",
+    "verse_id": "Ch_C04_S12_V02",
+    "block_id": "Ch_C04_S12_V02_B01",
+    "block_type": "bhashya",
+    "text": "अथ ह एनम् अन्वाहार्यपचनः अनुशशास दक्षिणाग्निः — आपो दिशो नक्षत्राणि चन्द्रमा इत्येता मम चतस्रस्तनवः चतुर्धा अहमन्वाहार्यपचने आत्मानं प्रविभज्यावस्थितः । तत्र य एष चन्द्रमसि पुरुषो दृश्यते, सोऽहमस्मि, स एवाहमस्मीति पूर्ववत् । अन्नसम्बन्धाज्ज्योतिष्ट्वसामान्याच्च अन्वाहार्यपचनचन्द्रमसोरेकत्वं दक्षिणदिक्सम्बन्धाच्च । अपां नक्षत्राणां च पूर्ववदन्नत्वेनैव सम्बन्धः, नक्षत्राणां चन्द्रमसो भोग्यत्वप्रसिद्धेः । अपामन्नोत्पादकत्वादन्नत्वं दक्षिणाग्नेः — पृथिवीवद्गार्हपत्यस्य । समानमन्यत् ॥",
+    "citations": []
+  },
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "da4b3f336a559abc83134e13ff041ac6cc2a8dc54a531b6b8153d2b6f7704b12",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C04",
+    "section_id": "Ch_C04_S12",
+    "verse_id": "Ch_C04_S12_V02",
+    "block_id": "Ch_C04_S12_V02_VERSETEXT_01",
+    "block_type": "versetext",
+    "text": "स य एतमेवं विद्वानुपास्तेऽपहते पापकृत्यां लोकी भवति सर्वमायुरेति ज्योग्जीवति नास्यावरपुरुषाः क्षीयन्त उप वयं तं भुञ्जामोऽस्मिꣳश्च लोकेऽमुष्मिꣳश्च य एतमेवं विद्वानुपास्ते ॥ २ ॥",
+    "citations": []
+  }
+]

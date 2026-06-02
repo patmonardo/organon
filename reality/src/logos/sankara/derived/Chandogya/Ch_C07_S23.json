@@ -1,0 +1,28 @@
+[
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "6f622df9fb9d6cc6d7d8d2f70b063b04fb4053cf1c1822042b989578a63d96b2",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C07",
+    "section_id": "Ch_C07_S23",
+    "verse_id": "Ch_C07_S23_V01",
+    "block_id": "Ch_C07_S23_V01_B01",
+    "block_type": "bhashya",
+    "text": "यो वै भूमा महत् निरतिशयं बह्विति पर्यायाः, तत्सुखम् । ततोऽर्वाक्सातिशयत्वादल्पम् । अतस्तस्मिन्नल्पे सुखं नास्ति, अल्पस्याधिकतृष्णाहेतुत्वात् । तृष्णा च दुःखबीजम् । न हि दुःखबीजं सुखं दृष्टं ज्वरादि लोके । तस्माद्युक्तं नाल्पे सुखमस्तीति । अतो भूमैव सुखम् । तृष्णादिदुःखबीजत्वासम्भवाद्भूम्नः ॥",
+    "citations": []
+  },
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "6f622df9fb9d6cc6d7d8d2f70b063b04fb4053cf1c1822042b989578a63d96b2",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C07",
+    "section_id": "Ch_C07_S23",
+    "verse_id": "Ch_C07_S23_V01",
+    "block_id": "Ch_C07_S23_V01_VERSETEXT_01",
+    "block_type": "versetext",
+    "text": "यो वै भूमा तत्सुखं नाल्पे सुखमस्ति भूमैव सुखं भूमा त्वेव विजिज्ञासितव्य इति भूमानं भगवो विजिज्ञास इति ॥ १ ॥",
+    "citations": []
+  }
+]

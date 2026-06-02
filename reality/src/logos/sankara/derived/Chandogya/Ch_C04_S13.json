@@ -1,0 +1,41 @@
+[
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "da4b3f336a559abc83134e13ff041ac6cc2a8dc54a531b6b8153d2b6f7704b12",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C04",
+    "section_id": "Ch_C04_S13",
+    "verse_id": "Ch_C04_S13_V01",
+    "block_id": "Ch_C04_S13_V01_VERSETEXT_01",
+    "block_type": "versetext",
+    "text": "अथ हैनमाहवनीयोऽनुशशास प्राण आकाशो द्यौर्विद्युदिति य एष विद्युति पुरुषो दृश्यते सोऽहमस्मि स एवाहमस्मीति ॥ १ ॥",
+    "citations": []
+  },
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "da4b3f336a559abc83134e13ff041ac6cc2a8dc54a531b6b8153d2b6f7704b12",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C04",
+    "section_id": "Ch_C04_S13",
+    "verse_id": "Ch_C04_S13_V02",
+    "block_id": "Ch_C04_S13_V02_B01",
+    "block_type": "bhashya",
+    "text": "अथ ह एनमाहवनीयोऽनुशशास — प्राण आकाशो द्यौर्विद्युदिति ममाप्येताश्चतस्रस्तनवः । य एष विद्युति पुरुषो दृश्यते, सोऽहमस्मीत्यादि पूर्ववत् सामान्यात् । द्य्वाकाशयोः स्वाश्रयत्वात् विद्युदाहवनीययोः भोग्यत्वेनैव सम्बन्धः । समानमन्यत् ॥",
+    "citations": []
+  },
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "da4b3f336a559abc83134e13ff041ac6cc2a8dc54a531b6b8153d2b6f7704b12",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C04",
+    "section_id": "Ch_C04_S13",
+    "verse_id": "Ch_C04_S13_V02",
+    "block_id": "Ch_C04_S13_V02_VERSETEXT_01",
+    "block_type": "versetext",
+    "text": "स य एतमेवं विद्वानुपास्तेऽपहते पापकृत्यां लोकी भवति सर्वमायुरेति ज्योग्जीवति नास्यावरपुरुषाः क्षीयन्त उप वयं तं भुञ्जामोऽस्मिꣳश्च लोकेऽमुष्मिꣳश्च य एतमेवं विद्वानुपास्ते ॥ २ ॥",
+    "citations": []
+  }
+]

@@ -1,0 +1,54 @@
+[
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "92ff589da76db5fc6138ac7bbbece4e460e491fbd7b0702954bf39e45a308e08",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C02",
+    "section_id": "Ch_C02_S17",
+    "verse_id": "Ch_C02_S17_V01",
+    "block_id": "Ch_C02_S17_V01_B01",
+    "block_type": "bhashya",
+    "text": "पृथिवी हिङ्कार इत्यादि पूर्ववत् । शक्वर्य इति नित्यं बहुवचनं रेवत्य इव । लोकेषु प्रोताः ॥",
+    "citations": []
+  },
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "92ff589da76db5fc6138ac7bbbece4e460e491fbd7b0702954bf39e45a308e08",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C02",
+    "section_id": "Ch_C02_S17",
+    "verse_id": "Ch_C02_S17_V01",
+    "block_id": "Ch_C02_S17_V01_VERSETEXT_01",
+    "block_type": "versetext",
+    "text": "पृथिवी हिङ्कारोऽन्तरिक्षं प्रस्तावो द्यौरुद्गीथो दिशः प्रतिहारः समुद्रो निधनमेताः शक्वर्यो लोकेषु प्रोताः ॥ १ ॥",
+    "citations": []
+  },
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "92ff589da76db5fc6138ac7bbbece4e460e491fbd7b0702954bf39e45a308e08",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C02",
+    "section_id": "Ch_C02_S17",
+    "verse_id": "Ch_C02_S17_V02",
+    "block_id": "Ch_C02_S17_V02_B01",
+    "block_type": "bhashya",
+    "text": "लोकी भवति लोकफलेन युज्यत इत्यर्थः । लोकान्न निन्देत् , तद्व्रतम् ॥",
+    "citations": []
+  },
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "92ff589da76db5fc6138ac7bbbece4e460e491fbd7b0702954bf39e45a308e08",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C02",
+    "section_id": "Ch_C02_S17",
+    "verse_id": "Ch_C02_S17_V02",
+    "block_id": "Ch_C02_S17_V02_VERSETEXT_01",
+    "block_type": "versetext",
+    "text": "स य एवमेताः शक्वर्यो लोकेषु प्रोता वेद लोकी भवति सर्वमायुरेति ज्योग्जीवति महान्प्रजया पशुभिर्भवति महान्कीर्त्या लोकान्न निन्देत्तद्व्रतम् ॥ २ ॥",
+    "citations": []
+  }
+]

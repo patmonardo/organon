@@ -1,0 +1,73 @@
+{
+  "record_id": "SKR.BS.1.1.005",
+  "work_code": "BS",
+  "section_code": "1.1",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Auto-extracted draft from Sringeri HTML witness"
+  },
+  "text": {
+    "source_text": "अथातो ब्रह्मजिज्ञासा ॥ १ ॥",
+    "transliteration_iast": "athato brahmajijnasa",
+    "segmentation_note": "Primary sutra line from HTML block id=BS_C01_S01_V01_SUTRA (versetext); punctuation markers removed in transliteration."
+  },
+  "translation": {
+    "literal_translation": "Now, therefore, the desire to know Brahman.",
+    "technical_translation": "Therefore, following the requisite preparation, inquiry into Brahman is to be undertaken.",
+    "interpretive_note": "The compact opening supports two linked readings: (1) a strict nominal reading (brahma-jijnasa as desire/inquiry regarding Brahman), and (2) a procedural reading in which atha/atah signals qualified transition into Vedanta inquiry."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "atha",
+        "gloss": "now; then (opening particle)",
+        "contextual_sense": "Marks formal commencement and transition into the Brahma inquiry section.",
+        "grammatical_role": "indeclinable particle",
+        "alternate_glosses": [
+          "auspicious opening marker",
+          "subsequent transition"
+        ]
+      },
+      {
+        "headword_iast": "atah",
+        "gloss": "therefore; from this",
+        "contextual_sense": "Signals inferential or consequential force: the inquiry follows from prior qualification and discernment.",
+        "grammatical_role": "indeclinable adverbial form",
+        "alternate_glosses": ["hence", "for this reason"]
+      },
+      {
+        "headword_iast": "brahman",
+        "gloss": "Brahman, the absolute reality",
+        "contextual_sense": "Object of inquiry in the opening adhikarana; later specified through causal-lakshana in the next sutra.",
+        "grammatical_role": "nominal stem (target of compound relation)",
+        "alternate_glosses": ["the absolute", "ultimate reality"]
+      },
+      {
+        "headword_iast": "jijnasa",
+        "gloss": "desire to know; inquiry",
+        "contextual_sense": "Not mere curiosity; a disciplined epistemic undertaking directed toward Brahman.",
+        "grammatical_role": "feminine abstract noun",
+        "alternate_glosses": ["investigation", "philosophical inquiry"]
+      }
+    ],
+    "argument_tags": ["initiation", "thesis", "method-entry"]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-01T11:27:43.626182Z",
+    "extractor_version": "generate_bs_draft_records.py@0.1",
+    "translator_version": "human+llm@pilot-bs-1.1.1",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.79,
+    "uncertainty_notes": [
+      "Atha/atah force can be distributed differently across literal vs technical renderings.",
+      "Final publication pass should verify sandhi resolution and punctuation against a critical print edition."
+    ]
+  }
+}

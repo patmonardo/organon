@@ -1,0 +1,28 @@
+[
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "6f622df9fb9d6cc6d7d8d2f70b063b04fb4053cf1c1822042b989578a63d96b2",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C07",
+    "section_id": "Ch_C07_S20",
+    "verse_id": "Ch_C07_S20_V01",
+    "block_id": "Ch_C07_S20_V01_B01",
+    "block_type": "bhashya",
+    "text": "निष्ठा गुरुशुश्रूषादितत्परत्वं ब्रह्मविज्ञानाय ॥",
+    "citations": []
+  },
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "6f622df9fb9d6cc6d7d8d2f70b063b04fb4053cf1c1822042b989578a63d96b2",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C07",
+    "section_id": "Ch_C07_S20",
+    "verse_id": "Ch_C07_S20_V01",
+    "block_id": "Ch_C07_S20_V01_VERSETEXT_01",
+    "block_type": "versetext",
+    "text": "यदा वै निस्तिष्ठत्यथ श्रद्दधाति नानिस्तिष्ठञ्छ्रद्दधाति निस्तिष्ठन्नेव श्रद्दधाति निष्ठा त्वेव विजिज्ञासितव्येति निष्ठां भगवो विजिज्ञास इति ॥ १ ॥",
+    "citations": []
+  }
+]

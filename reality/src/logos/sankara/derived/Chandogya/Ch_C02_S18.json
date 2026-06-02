@@ -1,0 +1,54 @@
+[
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "92ff589da76db5fc6138ac7bbbece4e460e491fbd7b0702954bf39e45a308e08",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C02",
+    "section_id": "Ch_C02_S18",
+    "verse_id": "Ch_C02_S18_V01",
+    "block_id": "Ch_C02_S18_V01_B01",
+    "block_type": "bhashya",
+    "text": "अजा हिङ्कार इत्यादि पूर्ववत् । पशुषु प्रोताः ॥",
+    "citations": []
+  },
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "92ff589da76db5fc6138ac7bbbece4e460e491fbd7b0702954bf39e45a308e08",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C02",
+    "section_id": "Ch_C02_S18",
+    "verse_id": "Ch_C02_S18_V01",
+    "block_id": "Ch_C02_S18_V01_VERSETEXT_01",
+    "block_type": "versetext",
+    "text": "अजा हिङ्कारोऽवयः प्रस्तावो गाव उद्गीथोऽश्वाः प्रतिहारः पुरुषो निधनमेता रेवत्यः पशुषु प्रोताः ॥ १ ॥",
+    "citations": []
+  },
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "92ff589da76db5fc6138ac7bbbece4e460e491fbd7b0702954bf39e45a308e08",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C02",
+    "section_id": "Ch_C02_S18",
+    "verse_id": "Ch_C02_S18_V02",
+    "block_id": "Ch_C02_S18_V02_B01",
+    "block_type": "bhashya",
+    "text": "पशून् न निन्देत् , तद्व्रतम् ॥",
+    "citations": []
+  },
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "92ff589da76db5fc6138ac7bbbece4e460e491fbd7b0702954bf39e45a308e08",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C02",
+    "section_id": "Ch_C02_S18",
+    "verse_id": "Ch_C02_S18_V02",
+    "block_id": "Ch_C02_S18_V02_VERSETEXT_01",
+    "block_type": "versetext",
+    "text": "स य एवमेता रेवत्यः पशुषु प्रोता वेद पशुमान्भवति सर्वमायुरेति ज्योग्जीवति महान्प्रजया पशुभिर्भवति महान्कीर्त्या पशून्न निन्देत्तद्व्रतम् ॥ २ ॥",
+    "citations": []
+  }
+]

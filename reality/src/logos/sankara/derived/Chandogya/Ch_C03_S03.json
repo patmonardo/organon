@@ -1,0 +1,54 @@
+[
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "2107a377e63a204aadcc9b3260bfbb4eab339811cd0bfbd42da480fa30d3e1be",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C03",
+    "section_id": "Ch_C03_S03",
+    "verse_id": "Ch_C03_S03_V01",
+    "block_id": "Ch_C03_S03_V01_VERSETEXT_01",
+    "block_type": "versetext",
+    "text": "अथ येऽस्य प्रत्यञ्चो रश्मयस्ता एवास्य प्रतीच्यो मधुनाड्यः सामान्येव मधुकृतः सामवेद एव पुष्पं ता अमृता आपः ॥ १ ॥",
+    "citations": []
+  },
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "2107a377e63a204aadcc9b3260bfbb4eab339811cd0bfbd42da480fa30d3e1be",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C03",
+    "section_id": "Ch_C03_S03",
+    "verse_id": "Ch_C03_S03_V02",
+    "block_id": "Ch_C03_S03_V02_VERSETEXT_01",
+    "block_type": "versetext",
+    "text": "तानि वा एतानि सामान्येतं सामवेदमभ्यतपंस्तस्याभितप्तस्य यशस्तेज इन्द्रियं वीर्यमन्नाद्यꣳ रसोऽजायत ॥ २ ॥",
+    "citations": []
+  },
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "2107a377e63a204aadcc9b3260bfbb4eab339811cd0bfbd42da480fa30d3e1be",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C03",
+    "section_id": "Ch_C03_S03",
+    "verse_id": "Ch_C03_S03_V03",
+    "block_id": "Ch_C03_S03_V03_B01",
+    "block_type": "bhashya",
+    "text": "अथ येऽस्य प्रत्यञ्चो रश्मय इत्यादि समानम् । तथा साम्नां मधु, एतदादित्यस्य कृष्णं रूपम् ॥",
+    "citations": []
+  },
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "2107a377e63a204aadcc9b3260bfbb4eab339811cd0bfbd42da480fa30d3e1be",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C03",
+    "section_id": "Ch_C03_S03",
+    "verse_id": "Ch_C03_S03_V03",
+    "block_id": "Ch_C03_S03_V03_VERSETEXT_01",
+    "block_type": "versetext",
+    "text": "तद्व्यक्षरत्तदादित्यमभितोऽश्रयत्तद्वा एतद्यदेतदादित्यस्य कृष्णꣳ रूपम् ॥ ३ ॥",
+    "citations": []
+  }
+]

@@ -1,0 +1,54 @@
+[
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "92ff589da76db5fc6138ac7bbbece4e460e491fbd7b0702954bf39e45a308e08",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C02",
+    "section_id": "Ch_C02_S15",
+    "verse_id": "Ch_C02_S15_V01",
+    "block_id": "Ch_C02_S15_V01_B01",
+    "block_type": "bhashya",
+    "text": "अभ्राणि अब्भरणात् । मेघः उदकसेक्तृत्वात् । उक्तार्थमन्यत् । एतद्वैरूपं नाम साम पर्जन्ये प्रोतम् । अनेकरूपत्वात् अभ्रादिभिः पर्जन्यस्य, वैरूप्यम् ॥",
+    "citations": []
+  },
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "92ff589da76db5fc6138ac7bbbece4e460e491fbd7b0702954bf39e45a308e08",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C02",
+    "section_id": "Ch_C02_S15",
+    "verse_id": "Ch_C02_S15_V01",
+    "block_id": "Ch_C02_S15_V01_VERSETEXT_01",
+    "block_type": "versetext",
+    "text": "अभ्राणि सम्प्लवन्ते स हिङ्कारो मेघो जायते स प्रस्तावो वर्षति स उद्गीथो विद्योतते स्तनयति स प्रतिहार उद्गृह्णाति तन्निधनमेतद्वैरूपं पर्जन्ये प्रोतम् ॥ १ ॥",
+    "citations": []
+  },
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "92ff589da76db5fc6138ac7bbbece4e460e491fbd7b0702954bf39e45a308e08",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C02",
+    "section_id": "Ch_C02_S15",
+    "verse_id": "Ch_C02_S15_V02",
+    "block_id": "Ch_C02_S15_V02_B01",
+    "block_type": "bhashya",
+    "text": "विरूपांश्च सुरूपांश्चाजाविप्रभृतीन्पशूनवरुन्धे प्राप्नोतीत्यर्थः । वर्षन्तं न निन्देत् तद्व्रतम् ॥",
+    "citations": []
+  },
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "92ff589da76db5fc6138ac7bbbece4e460e491fbd7b0702954bf39e45a308e08",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C02",
+    "section_id": "Ch_C02_S15",
+    "verse_id": "Ch_C02_S15_V02",
+    "block_id": "Ch_C02_S15_V02_VERSETEXT_01",
+    "block_type": "versetext",
+    "text": "स य एवमेतद्वैरूपं पर्जन्ये प्रोतं वेद विरूपाꣳश्च सुरूपाꣳश्च पशूनवरुन्धे सर्वमायुरेति ज्योग्जीवति महान्प्रजया पशुभिर्भवति महान्कीर्त्या वर्षन्तं न निन्देत्तद्ब्रतम् ॥ २ ॥",
+    "citations": []
+  }
+]

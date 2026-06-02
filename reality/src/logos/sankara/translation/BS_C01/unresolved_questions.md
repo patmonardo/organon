@@ -1,6 +1,5 @@
-# Unresolved Questions
+# Unresolved Questions (Zero State)
 
-1. Confirm canonical passage boundary policy between intro_bhashya and leading_bhashya blocks.
-2. Decide transliteration source of truth (generated or imported).
-3. Define rule for argument_tags beyond placeholder defaults.
-4. Validate whether all BS_C01 IDs in source HTML are textually complete in current crawl witness.
+1. Confirm final passage boundary for BS_C01_S01_I01.
+2. Confirm transliteration policy before first record entry.
+3. Confirm reviewer gate for approving record 001.

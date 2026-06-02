@@ -1,0 +1,54 @@
+[
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "92ff589da76db5fc6138ac7bbbece4e460e491fbd7b0702954bf39e45a308e08",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C02",
+    "section_id": "Ch_C02_S04",
+    "verse_id": "Ch_C02_S04_V01",
+    "block_id": "Ch_C02_S04_V01_B01",
+    "block_type": "bhashya",
+    "text": "सर्वास्वप्सु पञ्चविधं साम उपासीत । वृष्टिपूर्वकत्वात्सर्वासामपामानन्तर्यम् । मेघो यत्सम्प्लवते एकीभावेनेतरेतरं घनीभवति मेघः यदा उन्नतः, तदा सम्प्लवते इत्युच्यते, तदा अपामारभ्भः स हिङ्कारः ; यद्वर्षति स प्रस्तावः ; आपः सर्वतो व्याप्तुं प्रस्तुताः । याः प्राच्यः स्यन्दन्ते स उद्गीथः, श्रौष्ठ्यात् ; याः प्रतीच्यः स प्रतिहारः, प्रतिशब्दसामान्यात् ; समुद्रो निधनम् , तन्निधनत्वादपाम् ॥",
+    "citations": []
+  },
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "92ff589da76db5fc6138ac7bbbece4e460e491fbd7b0702954bf39e45a308e08",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C02",
+    "section_id": "Ch_C02_S04",
+    "verse_id": "Ch_C02_S04_V01",
+    "block_id": "Ch_C02_S04_V01_VERSETEXT_01",
+    "block_type": "versetext",
+    "text": "सर्वास्वप्सु पञ्चविधꣳ सामोपासीत मेघो यत्सम्प्लवते स हिङ्कारो यद्वर्षति स प्रस्तावो याः प्राच्यः स्यन्दन्ते स उद्गीथो याः प्रतीच्यः स प्रतिहारः समुद्रो निधनम् ॥ १ ॥",
+    "citations": []
+  },
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "92ff589da76db5fc6138ac7bbbece4e460e491fbd7b0702954bf39e45a308e08",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C02",
+    "section_id": "Ch_C02_S04",
+    "verse_id": "Ch_C02_S04_V02",
+    "block_id": "Ch_C02_S04_V02_B01",
+    "block_type": "bhashya",
+    "text": "न ह अप्सु प्रैतिं । नेच्छति चेत् । अप्सुमान् अंमान्भवति फलम् ॥",
+    "citations": []
+  },
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "92ff589da76db5fc6138ac7bbbece4e460e491fbd7b0702954bf39e45a308e08",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C02",
+    "section_id": "Ch_C02_S04",
+    "verse_id": "Ch_C02_S04_V02",
+    "block_id": "Ch_C02_S04_V02_VERSETEXT_01",
+    "block_type": "versetext",
+    "text": "न हाप्सु पॆत्यप्सुमान्भवति य एतदेवं विद्वान्सर्वास्वप्सु पञ्चविधꣳ सामोपास्ते ॥ २ ॥",
+    "citations": []
+  }
+]

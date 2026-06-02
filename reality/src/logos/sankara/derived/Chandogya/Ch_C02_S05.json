@@ -1,0 +1,54 @@
+[
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "92ff589da76db5fc6138ac7bbbece4e460e491fbd7b0702954bf39e45a308e08",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C02",
+    "section_id": "Ch_C02_S05",
+    "verse_id": "Ch_C02_S05_V01",
+    "block_id": "Ch_C02_S05_V01_B01",
+    "block_type": "bhashya",
+    "text": "ऋतुषु पञ्चविधं साम उपासीत । ऋतुव्यवस्थाया यथोक्ताम्बुनिमित्तत्वादानन्तर्यम् । वसन्तो हिङ्कारः, प्राथम्यात् ; ग्रीष्मः प्रस्तावः ; यवादिसङ्ग्रहः प्रस्तूयते हि प्रावृडर्थम् ; वर्षा उद्गीथः, प्राधान्यात् ; शरत् प्रतिहारः, रोगिणां मृतानां च प्रतिहरणात् ; हेमन्तो निधनम् , निवाते निधनात्प्राणिनाम् ॥",
+    "citations": []
+  },
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "92ff589da76db5fc6138ac7bbbece4e460e491fbd7b0702954bf39e45a308e08",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C02",
+    "section_id": "Ch_C02_S05",
+    "verse_id": "Ch_C02_S05_V01",
+    "block_id": "Ch_C02_S05_V01_VERSETEXT_01",
+    "block_type": "versetext",
+    "text": "ऋतुषु पञ्चविधꣳ सामोपासीत वसन्तो हिङ्कारो ग्रीष्मः प्रस्तावो वर्षा उद्गीथः शरत्प्रतिहारो हेमन्तो निधनम् ॥ १ ॥",
+    "citations": []
+  },
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "92ff589da76db5fc6138ac7bbbece4e460e491fbd7b0702954bf39e45a308e08",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C02",
+    "section_id": "Ch_C02_S05",
+    "verse_id": "Ch_C02_S05_V02",
+    "block_id": "Ch_C02_S05_V02_B01",
+    "block_type": "bhashya",
+    "text": "फलम् — कल्पन्ते ह ऋतुव्यवस्थानुरूपं भोग्यत्वेनास्मै उपासकाय ऋतवः । ऋतुमान् आर्तवैर्भोगैश्च सम्पन्नो भवतीत्यर्थः ॥",
+    "citations": []
+  },
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "92ff589da76db5fc6138ac7bbbece4e460e491fbd7b0702954bf39e45a308e08",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C02",
+    "section_id": "Ch_C02_S05",
+    "verse_id": "Ch_C02_S05_V02",
+    "block_id": "Ch_C02_S05_V02_VERSETEXT_01",
+    "block_type": "versetext",
+    "text": "कल्पन्ते हास्मा ॠतव ॠतुमान्भवति य एतदेवं विद्वानृतुषु पञ्चविधꣳ सामोपास्ते ॥ २ ॥",
+    "citations": []
+  }
+]

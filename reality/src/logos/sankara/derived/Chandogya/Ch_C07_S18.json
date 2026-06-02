@@ -1,0 +1,28 @@
+[
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "6f622df9fb9d6cc6d7d8d2f70b063b04fb4053cf1c1822042b989578a63d96b2",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C07",
+    "section_id": "Ch_C07_S18",
+    "verse_id": "Ch_C07_S18_V01",
+    "block_id": "Ch_C07_S18_V01_B01",
+    "block_type": "bhashya",
+    "text": "यदा वै मनुत इति । मतिः मननं तर्कः ॥",
+    "citations": []
+  },
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "6f622df9fb9d6cc6d7d8d2f70b063b04fb4053cf1c1822042b989578a63d96b2",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C07",
+    "section_id": "Ch_C07_S18",
+    "verse_id": "Ch_C07_S18_V01",
+    "block_id": "Ch_C07_S18_V01_VERSETEXT_01",
+    "block_type": "versetext",
+    "text": "यदा वै मनुतेऽथ विजानाति नामत्वा विजानाति मत्वैव विजानाति मतिस्त्वेव विजिज्ञासितव्येति मतिं भगवो विजिज्ञास इति ॥ १ ॥",
+    "citations": []
+  }
+]

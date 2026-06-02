@@ -1,0 +1,80 @@
+[
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "2107a377e63a204aadcc9b3260bfbb4eab339811cd0bfbd42da480fa30d3e1be",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C03",
+    "section_id": "Ch_C03_S07",
+    "verse_id": "Ch_C03_S07_V01",
+    "block_id": "Ch_C03_S07_V01_VERSETEXT_01",
+    "block_type": "versetext",
+    "text": "अथ यद्द्वितीयममृतं तद्रुद्रा उपजीवन्तीन्द्रेण मुखेन न वै देवा अश्नन्ति न पिबन्त्येतदेवामृतं दृष्ट्वा तृप्यन्ति ॥ १ ॥",
+    "citations": []
+  },
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "2107a377e63a204aadcc9b3260bfbb4eab339811cd0bfbd42da480fa30d3e1be",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C03",
+    "section_id": "Ch_C03_S07",
+    "verse_id": "Ch_C03_S07_V02",
+    "block_id": "Ch_C03_S07_V02_VERSETEXT_01",
+    "block_type": "versetext",
+    "text": "त एतदेव रूपमभिसंविशन्त्येतस्माद्रूपादुद्यन्ति ॥ २ ॥",
+    "citations": []
+  },
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "2107a377e63a204aadcc9b3260bfbb4eab339811cd0bfbd42da480fa30d3e1be",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C03",
+    "section_id": "Ch_C03_S07",
+    "verse_id": "Ch_C03_S07_V03",
+    "block_id": "Ch_C03_S07_V03_B01",
+    "block_type": "bhashya",
+    "text": "अथ यद्द्वितीयममृतं तद्रुद्रा उपजीवन्तीत्यादि समानम् ॥",
+    "citations": []
+  },
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "2107a377e63a204aadcc9b3260bfbb4eab339811cd0bfbd42da480fa30d3e1be",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C03",
+    "section_id": "Ch_C03_S07",
+    "verse_id": "Ch_C03_S07_V03",
+    "block_id": "Ch_C03_S07_V03_VERSETEXT_01",
+    "block_type": "versetext",
+    "text": "स य एतदेवममृतं वेद रुद्राणामेवैको भूत्वेन्द्रेणैव मुखेनैतदेवामृतं दृष्ट्वा तृप्यति स एतदेव रूपमभिसंविशत्येतस्माद्रूपादुदेति ॥ ३ ॥",
+    "citations": []
+  },
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "2107a377e63a204aadcc9b3260bfbb4eab339811cd0bfbd42da480fa30d3e1be",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C03",
+    "section_id": "Ch_C03_S07",
+    "verse_id": "Ch_C03_S07_V04",
+    "block_id": "Ch_C03_S07_V04_B01",
+    "block_type": "bhashya",
+    "text": "स यावदादित्यः पुरस्तादुदेता पश्चादस्तमेता द्विस्तावत् ततो द्विगुणं कालं दक्षिणत उदेता उत्तरतोऽस्तमेता रुद्राणां तावद्भोगकालः ॥",
+    "citations": []
+  },
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "2107a377e63a204aadcc9b3260bfbb4eab339811cd0bfbd42da480fa30d3e1be",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C03",
+    "section_id": "Ch_C03_S07",
+    "verse_id": "Ch_C03_S07_V04",
+    "block_id": "Ch_C03_S07_V04_VERSETEXT_01",
+    "block_type": "versetext",
+    "text": "स यावदादित्यः पुरस्तादुदेता पश्चादस्तमेता द्विस्तावद्दक्षिणत उदेतोत्तरतोऽस्तमेता रुद्राणामेव तावदाधिपत्यꣳ स्वाराज्यं पर्येता ॥ ४ ॥",
+    "citations": []
+  }
+]

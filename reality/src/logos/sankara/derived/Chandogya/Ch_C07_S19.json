@@ -1,0 +1,28 @@
+[
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "6f622df9fb9d6cc6d7d8d2f70b063b04fb4053cf1c1822042b989578a63d96b2",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C07",
+    "section_id": "Ch_C07_S19",
+    "verse_id": "Ch_C07_S19_V01",
+    "block_id": "Ch_C07_S19_V01_B01",
+    "block_type": "bhashya",
+    "text": "मन्तव्यविषये आदरः आस्तिक्यबुद्धिः श्रद्धा ॥",
+    "citations": []
+  },
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "6f622df9fb9d6cc6d7d8d2f70b063b04fb4053cf1c1822042b989578a63d96b2",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C07",
+    "section_id": "Ch_C07_S19",
+    "verse_id": "Ch_C07_S19_V01",
+    "block_id": "Ch_C07_S19_V01_VERSETEXT_01",
+    "block_type": "versetext",
+    "text": "यदा वै श्रद्दधात्यथ मनुते नाश्रद्दधन्मनुते श्रद्दधदेव मनुते श्रद्धा त्वेव विजिज्ञासितव्येति श्रद्धां भगवो विजिज्ञास इति ॥ १ ॥",
+    "citations": []
+  }
+]

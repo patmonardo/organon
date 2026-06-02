@@ -76,11 +76,15 @@ def read_url_file(path: Path) -> list[str]:
 
 def safe_slug(url: str) -> str:
     parsed = urlparse(url)
-    base = f"{parsed.netloc}{parsed.path}"
+    parts = [parsed.netloc, *[piece for piece in parsed.path.split("/") if piece]]
+    query_pairs = parse_qsl(parsed.query, keep_blank_values=True)
+    if query_pairs:
+        parts.extend(f"{key}-{value}" for key, value in query_pairs)
+    if parsed.fragment:
+        parts.append(parsed.fragment)
+    base = "_".join(parts)
     base = re.sub(r"[^a-zA-Z0-9._-]+", "_", base).strip("_")
-    digest = hashlib.sha256(url.encode("utf-8")).hexdigest()[:12]
-    short = base[:80] if base else "url"
-    return f"{short}_{digest}"
+    return base[:160] if base else "url"
 
 
 def fetch(url: str, timeout_sec: int, user_agent: str) -> tuple[bytes, str, str]:

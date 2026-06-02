@@ -1,0 +1,80 @@
+[
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "92ff589da76db5fc6138ac7bbbece4e460e491fbd7b0702954bf39e45a308e08",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C02",
+    "section_id": "Ch_C02_S08",
+    "verse_id": "Ch_C02_S08_V01",
+    "block_id": "Ch_C02_S08_V01_B01",
+    "block_type": "bhashya",
+    "text": "अथ अनन्तरं सप्तविधस्य समस्तस्य साम्न उपासनं साध्विदमारभ्यते । वाचि इति सप्तमी पूर्ववत् , वाग्दृष्टिविशिष्टं सप्तविधं सामोपासीतेत्यर्थः । यत्किञ्च वाचः शब्दस्य हुमिति यो विशेषः स हिङ्कारः, हकारसामान्यात् । यत्प्रेति शब्दरूपं स प्रस्तावः, प्र - सामान्यात् । यत् आ इति स आदिः, आकारसामान्यात् । आदिरित्योङ्कारः, सर्वादित्वात् ॥",
+    "citations": []
+  },
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "92ff589da76db5fc6138ac7bbbece4e460e491fbd7b0702954bf39e45a308e08",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C02",
+    "section_id": "Ch_C02_S08",
+    "verse_id": "Ch_C02_S08_V01",
+    "block_id": "Ch_C02_S08_V01_VERSETEXT_01",
+    "block_type": "versetext",
+    "text": "अथ सप्तविधस्य वाचि सप्तविधꣳ सामोपासीत यत्किञ्च वाचो हुमिति स हिङ्कारो युत्प्रेति स प्रस्तावो यदेति स आदिः ॥ १ ॥",
+    "citations": []
+  },
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "92ff589da76db5fc6138ac7bbbece4e460e491fbd7b0702954bf39e45a308e08",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C02",
+    "section_id": "Ch_C02_S08",
+    "verse_id": "Ch_C02_S08_V02",
+    "block_id": "Ch_C02_S08_V02_B01",
+    "block_type": "bhashya",
+    "text": "यदुदिति स उद्गीथः, उत्पूर्वत्वादुद्गीथस्य ; यत्प्रतीति स प्रतिहारः, प्रतिसामान्यात् ; यदुपेति स उपद्रवः, उपोपक्रमत्वादुपद्रवस्य ; यन्नीति तन्निधनम् , नि - शब्दसामान्यात् ॥",
+    "citations": []
+  },
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "92ff589da76db5fc6138ac7bbbece4e460e491fbd7b0702954bf39e45a308e08",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C02",
+    "section_id": "Ch_C02_S08",
+    "verse_id": "Ch_C02_S08_V02",
+    "block_id": "Ch_C02_S08_V02_VERSETEXT_01",
+    "block_type": "versetext",
+    "text": "यदुदिति स उद्गीथो यत्प्रतीति स प्रतिहारो यदुपेति स उपद्रवो यन्नीति तन्निधनम् ॥ २ ॥",
+    "citations": []
+  },
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "92ff589da76db5fc6138ac7bbbece4e460e491fbd7b0702954bf39e45a308e08",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C02",
+    "section_id": "Ch_C02_S08",
+    "verse_id": "Ch_C02_S08_V03",
+    "block_id": "Ch_C02_S08_V03_B01",
+    "block_type": "bhashya",
+    "text": "दुग्धेऽस्मै इत्याद्युक्तार्थम् ॥",
+    "citations": []
+  },
+  {
+    "text_name": "Chandogya",
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya",
+    "source_sha256": "92ff589da76db5fc6138ac7bbbece4e460e491fbd7b0702954bf39e45a308e08",
+    "text_id": "Ch",
+    "chapter_id": "Ch_C02",
+    "section_id": "Ch_C02_S08",
+    "verse_id": "Ch_C02_S08_V03",
+    "block_id": "Ch_C02_S08_V03_VERSETEXT_01",
+    "block_type": "versetext",
+    "text": "दुग्धेऽस्मै वाग्दोहं यो वाचो दोहोऽन्नवानन्नादो भवति य एतदेवं विद्वान्वाचि सप्तविधꣳ सामोपास्ते ॥ ३ ॥",
+    "citations": []
+  }
+]

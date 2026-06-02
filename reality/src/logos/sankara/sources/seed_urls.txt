@@ -1,17 +1,97 @@
 # One URL per line; lines starting with # are ignored.
-# Default working seeds: Bhagavad Gita listing plus Brahma Sutra bhashya root.
-# `ref/sankara/raw` is cumulative; runs append newly discovered URLs and keep
-# prior pages unless you explicitly remove the directory yourself.
-https://advaitasharada.sringeri.net/display/bhashya/Mandukya/devanagari#MK_C01
-https://advaitasharada.sringeri.net/display/bhashya/Mandukya/devanagari#MK_C02
-https://advaitasharada.sringeri.net/display/bhashya/Mandukya/devanagari#MK_C03
-https://advaitasharada.sringeri.net/display/bhashya/Mandukya/devanagari#MK_C04
+# Each URL targets one chapter of one bhashya work on advaitasharada.sringeri.net.
+# URL pattern: /display/bhashya/{Work}/devanagari#{PREFIX}_C{N}
+# raw/pages downloads are cumulative; remove the directory yourself to re-fetch.
+
+# Brahma Sutra Bhashya (BS) — 4 adhyayas
+https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari#BS_C01
+https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari#BS_C02
+https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari#BS_C03
+https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari#BS_C04
+
+# Bhagavad Gita Bhashya (BG) — 18 chapters
+https://advaitasharada.sringeri.net/display/bhashya/Gita/devanagari#BG_C01
+https://advaitasharada.sringeri.net/display/bhashya/Gita/devanagari#BG_C02
+https://advaitasharada.sringeri.net/display/bhashya/Gita/devanagari#BG_C03
+https://advaitasharada.sringeri.net/display/bhashya/Gita/devanagari#BG_C04
+https://advaitasharada.sringeri.net/display/bhashya/Gita/devanagari#BG_C05
+https://advaitasharada.sringeri.net/display/bhashya/Gita/devanagari#BG_C06
+https://advaitasharada.sringeri.net/display/bhashya/Gita/devanagari#BG_C07
+https://advaitasharada.sringeri.net/display/bhashya/Gita/devanagari#BG_C08
+https://advaitasharada.sringeri.net/display/bhashya/Gita/devanagari#BG_C09
+https://advaitasharada.sringeri.net/display/bhashya/Gita/devanagari#BG_C10
+https://advaitasharada.sringeri.net/display/bhashya/Gita/devanagari#BG_C11
+https://advaitasharada.sringeri.net/display/bhashya/Gita/devanagari#BG_C12
+https://advaitasharada.sringeri.net/display/bhashya/Gita/devanagari#BG_C13
+https://advaitasharada.sringeri.net/display/bhashya/Gita/devanagari#BG_C14
+https://advaitasharada.sringeri.net/display/bhashya/Gita/devanagari#BG_C15
+https://advaitasharada.sringeri.net/display/bhashya/Gita/devanagari#BG_C16
+https://advaitasharada.sringeri.net/display/bhashya/Gita/devanagari#BG_C17
+https://advaitasharada.sringeri.net/display/bhashya/Gita/devanagari#BG_C18
+
+# Aitareya Upanishad Bhashya (AI) — 3 adhyayas
+https://advaitasharada.sringeri.net/display/bhashya/Aitareya/devanagari#AI_C01
+https://advaitasharada.sringeri.net/display/bhashya/Aitareya/devanagari#AI_C02
+https://advaitasharada.sringeri.net/display/bhashya/Aitareya/devanagari#AI_C03
+
+# Brhadaranyaka Upanishad Bhashya (BR) — 6 adhyayas
+https://advaitasharada.sringeri.net/display/bhashya/Brha/devanagari#BR_C01
+https://advaitasharada.sringeri.net/display/bhashya/Brha/devanagari#BR_C02
+https://advaitasharada.sringeri.net/display/bhashya/Brha/devanagari#BR_C03
+https://advaitasharada.sringeri.net/display/bhashya/Brha/devanagari#BR_C04
+https://advaitasharada.sringeri.net/display/bhashya/Brha/devanagari#BR_C05
+https://advaitasharada.sringeri.net/display/bhashya/Brha/devanagari#BR_C06
+
+# Chandogya Upanishad Bhashya (Ch) — 8 adhyayas
+https://advaitasharada.sringeri.net/display/bhashya/Chandogya/devanagari#Ch_C01
+https://advaitasharada.sringeri.net/display/bhashya/Chandogya/devanagari#Ch_C02
+https://advaitasharada.sringeri.net/display/bhashya/Chandogya/devanagari#Ch_C03
+https://advaitasharada.sringeri.net/display/bhashya/Chandogya/devanagari#Ch_C04
+https://advaitasharada.sringeri.net/display/bhashya/Chandogya/devanagari#Ch_C05
+https://advaitasharada.sringeri.net/display/bhashya/Chandogya/devanagari#Ch_C06
+https://advaitasharada.sringeri.net/display/bhashya/Chandogya/devanagari#Ch_C07
+https://advaitasharada.sringeri.net/display/bhashya/Chandogya/devanagari#Ch_C08
+
+# Isha Upanishad Bhashya (IS) — 1 adhyaya
+https://advaitasharada.sringeri.net/display/bhashya/Isha/devanagari#IS_C01
+
+# Katha Upanishad Bhashya (Ka) — 2 adhyayas
+https://advaitasharada.sringeri.net/display/bhashya/Kathaka/devanagari#Ka_C01
+https://advaitasharada.sringeri.net/display/bhashya/Kathaka/devanagari#Ka_C02
+
+# Kena Upanishad Bhashya — pada section (KP) — 4 khandas
 https://advaitasharada.sringeri.net/display/bhashya/Kena_pada/devanagari#KP_C01
 https://advaitasharada.sringeri.net/display/bhashya/Kena_pada/devanagari#KP_C02
 https://advaitasharada.sringeri.net/display/bhashya/Kena_pada/devanagari#KP_C03
 https://advaitasharada.sringeri.net/display/bhashya/Kena_pada/devanagari#KP_C04
+
+# Kena Upanishad Bhashya — vakya section (KV) — 4 khandas
 https://advaitasharada.sringeri.net/display/bhashya/Kena_vakya/devanagari#KV_C01
 https://advaitasharada.sringeri.net/display/bhashya/Kena_vakya/devanagari#KV_C02
 https://advaitasharada.sringeri.net/display/bhashya/Kena_vakya/devanagari#KV_C03
 https://advaitasharada.sringeri.net/display/bhashya/Kena_vakya/devanagari#KV_C04
+
+# Mandukya Karika Bhashya (MK) — 4 prakaranas
+https://advaitasharada.sringeri.net/display/bhashya/Mandukya/devanagari#MK_C01
+https://advaitasharada.sringeri.net/display/bhashya/Mandukya/devanagari#MK_C02
+https://advaitasharada.sringeri.net/display/bhashya/Mandukya/devanagari#MK_C03
+https://advaitasharada.sringeri.net/display/bhashya/Mandukya/devanagari#MK_C04
+
+# Mundaka Upanishad Bhashya (MD) — 3 mundakas
+https://advaitasharada.sringeri.net/display/bhashya/Mundaka/devanagari#MD_C01
+https://advaitasharada.sringeri.net/display/bhashya/Mundaka/devanagari#MD_C02
+https://advaitasharada.sringeri.net/display/bhashya/Mundaka/devanagari#MD_C03
+
+# Prashna Upanishad Bhashya (PR) — 6 prasnas
+https://advaitasharada.sringeri.net/display/bhashya/Prashna/devanagari#PR_C01
+https://advaitasharada.sringeri.net/display/bhashya/Prashna/devanagari#PR_C02
+https://advaitasharada.sringeri.net/display/bhashya/Prashna/devanagari#PR_C03
+https://advaitasharada.sringeri.net/display/bhashya/Prashna/devanagari#PR_C04
+https://advaitasharada.sringeri.net/display/bhashya/Prashna/devanagari#PR_C05
+https://advaitasharada.sringeri.net/display/bhashya/Prashna/devanagari#PR_C06
+
+# Taitiriya Upanishad Bhashya (TU) — 3 vallis
+https://advaitasharada.sringeri.net/display/bhashya/Taitiriya/devanagari#T_C01
+https://advaitasharada.sringeri.net/display/bhashya/Taitiriya/devanagari#T_C02
+https://advaitasharada.sringeri.net/display/bhashya/Taitiriya/devanagari#T_C03
 
