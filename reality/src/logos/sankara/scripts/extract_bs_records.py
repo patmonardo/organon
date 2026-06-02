@@ -27,6 +27,10 @@ VERSE_OPEN_RE = re.compile(
     r'<div\s+class="verse"[^>]*\sid="(BS_C\d+_S\d+_[^"]+)"[^>]*>',
     re.IGNORECASE,
 )
+SECTION_OPEN_RE = re.compile(
+    r'<div\s+class="section"[^>]*\sid="(BS_C\d+_S\d+)"[^>]*>',
+    re.IGNORECASE,
+)
 DIV_TOKEN_RE = re.compile(r"<div\b[^>]*>|</div>", re.IGNORECASE)
 ID_ATTR_RE = re.compile(r'\sid="([^"]+)"', re.IGNORECASE)
 TAG_RE = re.compile(r"<[^>]+>", re.DOTALL)
@@ -150,33 +154,71 @@ def section_from_id(bs_id: str) -> str:
 def extract_records(html_text: str) -> list[dict[str, Any]]:
     records: list[dict[str, Any]] = []
     block_classes = ("versetext", "intro_bhashya", "leading_bhashya", "bhashya")
+    block_open_re = re.compile(
+        r'<div\s+class="(verse|versetext|intro_bhashya|leading_bhashya|bhashya)"([^>]*)>',
+        re.IGNORECASE,
+    )
 
-    for vm in VERSE_OPEN_RE.finditer(html_text):
-        verse_id = vm.group(1)
-        chapter_id = chapter_from_id(verse_id)
-        section_id = section_from_id(verse_id)
-
-        verse_html = extract_balanced_div(html_text, vm.start())
-        if not verse_html:
+    for sm in SECTION_OPEN_RE.finditer(html_text):
+        section_id = sm.group(1)
+        chapter_id = chapter_from_id(section_id)
+        section_html = extract_balanced_div(html_text, sm.start())
+        if not section_html:
             continue
 
-        for block_type in block_classes:
-            blocks = parse_blocks(verse_html, block_type)
-            for i, block in enumerate(blocks, start=1):
-                block_id = str(block.get("id", "")).strip()
-                if not block_id:
-                    block_id = f"{verse_id}_{block_type.upper()}_{i:02d}"
-                records.append(
-                    {
-                        "chapter_id": chapter_id,
-                        "section_id": section_id,
-                        "verse_id": verse_id,
-                        "block_id": block_id,
-                        "block_type": block_type,
-                        "text": block["text"],
-                        "citations": block["citations"],
-                    }
-                )
+        current_verse_id = ""
+        block_counters: dict[tuple[str, str], int] = defaultdict(int)
+
+        for dm in block_open_re.finditer(section_html):
+            class_name = dm.group(1).lower()
+            attrs = dm.group(2) or ""
+
+            if class_name == "verse":
+                id_match = ID_ATTR_RE.search(attrs)
+                current_verse_id = id_match.group(1) if id_match else ""
+                continue
+
+            block_html = extract_balanced_div(section_html, dm.start())
+            if not block_html:
+                continue
+
+            body_match = re.search(
+                rf'<div\s+class="{class_name}"[^>]*>(.*?)</div>',
+                block_html,
+                re.IGNORECASE | re.DOTALL,
+            )
+            if not body_match:
+                continue
+
+            body = body_match.group(1) or ""
+            text = normalize_text(body)
+            if not text:
+                continue
+
+            id_match = ID_ATTR_RE.search(attrs)
+            block_id = id_match.group(1) if id_match else ""
+            verse_id = current_verse_id
+
+            # Section-level intro blocks appear before the first sutra verse and form the preamble.
+            if class_name == "intro_bhashya" and not verse_id:
+                verse_id = f"{section_id}_PRE"
+
+            if not block_id:
+                block_key = (verse_id or section_id, class_name)
+                block_counters[block_key] += 1
+                block_id = f"{block_key[0]}_{class_name.upper()}_{block_counters[block_key]:02d}"
+
+            records.append(
+                {
+                    "chapter_id": chapter_id,
+                    "section_id": section_id,
+                    "verse_id": verse_id,
+                    "block_id": block_id,
+                    "block_type": class_name,
+                    "text": text,
+                    "citations": parse_citations(body),
+                }
+            )
 
     return records
 

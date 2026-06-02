@@ -4,6 +4,17 @@
     "source_sha256": "8cd2e362b8e88c815ef67dcf8d92c4418bae26b8ac49041fbc7d7b3e803e2d6a",
     "chapter_id": "BS_C04",
     "section_id": "BS_C04_S02",
+    "verse_id": "BS_C04_S02_PRE",
+    "block_id": "BS_C04_S02_I01",
+    "block_type": "intro_bhashya",
+    "text": "अथ अपरासु विद्यासु फलप्राप्तये देवयानं पन्थानमवतारयिष्यन् प्रथमं तावत् यथाशास्त्रमुत्क्रान्तिक्रममन्वाचष्टे । समाना हि विद्वदविदुषोरुत्क्रान्तिरिति वक्ष्यति —",
+    "citations": []
+  },
+  {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari",
+    "source_sha256": "8cd2e362b8e88c815ef67dcf8d92c4418bae26b8ac49041fbc7d7b3e803e2d6a",
+    "chapter_id": "BS_C04",
+    "section_id": "BS_C04_S02",
     "verse_id": "BS_C04_S02_V01",
     "block_id": "BS_C04_S02_V01_B1",
     "block_type": "bhashya",

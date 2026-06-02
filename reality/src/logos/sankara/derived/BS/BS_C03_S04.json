@@ -4,6 +4,17 @@
     "source_sha256": "7cf3bb59f76a984d3495a5b85b95f8b2d645028fab543754e65b085aace6e0a5",
     "chapter_id": "BS_C03",
     "section_id": "BS_C03_S04",
+    "verse_id": "BS_C03_S04_PRE",
+    "block_id": "BS_C03_S04_I01",
+    "block_type": "intro_bhashya",
+    "text": "अथे दानीम् औपनिषदमात्मज्ञानं किमधिकारिद्वारेण कर्मण्येवानुप्रविशति , आहोस्वित् स्वतन्त्रमेव पुरुषार्थसाधनं भवतीति मीमांसमानः , सिद्धान्तेनैव तावदुपक्रमते —",
+    "citations": []
+  },
+  {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari",
+    "source_sha256": "7cf3bb59f76a984d3495a5b85b95f8b2d645028fab543754e65b085aace6e0a5",
+    "chapter_id": "BS_C03",
+    "section_id": "BS_C03_S04",
     "verse_id": "BS_C03_S04_V01",
     "block_id": "BS_C03_S04_V01_B1",
     "block_type": "bhashya",

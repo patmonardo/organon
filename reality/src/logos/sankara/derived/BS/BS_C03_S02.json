@@ -4,6 +4,22 @@
     "source_sha256": "7cf3bb59f76a984d3495a5b85b95f8b2d645028fab543754e65b085aace6e0a5",
     "chapter_id": "BS_C03",
     "section_id": "BS_C03_S02",
+    "verse_id": "BS_C03_S02_PRE",
+    "block_id": "BS_C03_S02_I01",
+    "block_type": "intro_bhashya",
+    "text": "अतिक्रान्ते पादे पञ्चाग्निविद्यामुदाहृत्य जीवस्य संसारगतिप्रभेदः प्रपञ्चितः । इदानीं तस्यैवावस्थाभेदः प्रपञ्च्यते । इदमामनन्ति — ‘ स यत्र प्रस्वपिति ’ (बृ. उ. ४ । ३ । ९) इत्युपक्रम्य ‘ न तत्र रथा न रथयोगा न पन्थानो भवन्त्यथ रथान्रथयोगान्पथः सृजते ’ इत्यादि । तत्र संशयः — किं प्रबोधे इव स्वप्नेऽपि पारमार्थिकी सृष्टिः , आहोस्विन्मायामयीति । तत्र तावत्प्रतिपाद्यते —",
+    "citations": [
+      {
+        "href": "Brha?id=BR_C04_S03_V09",
+        "text": "‘ स"
+      }
+    ]
+  },
+  {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari",
+    "source_sha256": "7cf3bb59f76a984d3495a5b85b95f8b2d645028fab543754e65b085aace6e0a5",
+    "chapter_id": "BS_C03",
+    "section_id": "BS_C03_S02",
     "verse_id": "BS_C03_S02_V01",
     "block_id": "BS_C03_S02_V01_B1",
     "block_type": "bhashya",

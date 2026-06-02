@@ -4,6 +4,17 @@
     "source_sha256": "8cd2e362b8e88c815ef67dcf8d92c4418bae26b8ac49041fbc7d7b3e803e2d6a",
     "chapter_id": "BS_C04",
     "section_id": "BS_C04_S01",
+    "verse_id": "BS_C04_S01_PRE",
+    "block_id": "BS_C04_S01_I01",
+    "block_type": "intro_bhashya",
+    "text": "तृतीये ऽध्याये परापरासु विद्यासु साधनाश्रयो विचारः प्रायेण अत्यगात् । अथेह चतुर्थे फलाश्रय आगमिष्यति । प्रसङ्गा गतं च अन्यदपि किञ्चिच्चिन्तयिष्यते । प्रथमं तावत् कतिभिश्चिदधिकरणैः साधनाश्रयविचारशेषमेवानुसरामः —",
+    "citations": []
+  },
+  {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari",
+    "source_sha256": "8cd2e362b8e88c815ef67dcf8d92c4418bae26b8ac49041fbc7d7b3e803e2d6a",
+    "chapter_id": "BS_C04",
+    "section_id": "BS_C04_S01",
     "verse_id": "BS_C04_S01_V01",
     "block_id": "BS_C04_S01_V01_B1",
     "block_type": "bhashya",
@@ -870,6 +881,17 @@
     "source_sha256": "8cd2e362b8e88c815ef67dcf8d92c4418bae26b8ac49041fbc7d7b3e803e2d6a",
     "chapter_id": "BS_C04",
     "section_id": "BS_C04_S02",
+    "verse_id": "BS_C04_S02_PRE",
+    "block_id": "BS_C04_S02_I01",
+    "block_type": "intro_bhashya",
+    "text": "अथ अपरासु विद्यासु फलप्राप्तये देवयानं पन्थानमवतारयिष्यन् प्रथमं तावत् यथाशास्त्रमुत्क्रान्तिक्रममन्वाचष्टे । समाना हि विद्वदविदुषोरुत्क्रान्तिरिति वक्ष्यति —",
+    "citations": []
+  },
+  {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari",
+    "source_sha256": "8cd2e362b8e88c815ef67dcf8d92c4418bae26b8ac49041fbc7d7b3e803e2d6a",
+    "chapter_id": "BS_C04",
+    "section_id": "BS_C04_S02",
     "verse_id": "BS_C04_S02_V01",
     "block_id": "BS_C04_S02_V01_B1",
     "block_type": "bhashya",
@@ -1606,6 +1628,46 @@
     "block_type": "versetext",
     "text": "योगिनः प्रति च स्मर्यते स्मार्ते चैते ॥ २१ ॥",
     "citations": []
+  },
+  {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari",
+    "source_sha256": "8cd2e362b8e88c815ef67dcf8d92c4418bae26b8ac49041fbc7d7b3e803e2d6a",
+    "chapter_id": "BS_C04",
+    "section_id": "BS_C04_S03",
+    "verse_id": "BS_C04_S03_PRE",
+    "block_id": "BS_C04_S03_I01",
+    "block_type": "intro_bhashya",
+    "text": "आसृत्यु पक्रमात् समानोत्क्रान्तिरित्युक्तम् । सृतिस्तु श्रुत्यन्तरेष्वनेकधा श्रूयते — नाडीरश्मिसम्बन्धेनैका ‘ अथैतैरेव रश्मिभिरूर्ध्वमाक्रमते ’ (छा. उ. ८ । ६ । ५) इति । अर्चिरादिकैका ‘ तेऽर्चिषमभिसम्भवन्त्यर्चिषोऽहः ’ (बृ. उ. ६ । २ । १५) इति । ‘ स एतं देवयानं पन्थानमापद्याग्निलोकमागच्छति ’ (कौ. उ. १ । ३) इत्यन्या । ‘ यदा वै पुरुषोऽस्माल्लोकात्प्रैति स वायुमागच्छति ’ (बृ. उ. ५ । १० । १) इत्यपरा । ‘ सूर्यद्वारेण ते विरजाः प्रयान्ति ’ (मु. उ. १ । २ । ११) इति च अपरा । तत्र संशयः — किं परस्परं भिन्ना एताः सृतयः , किं वा एकैव अनेकविशेषणेति । तत्र प्राप्तं तावत् — भिन्ना एताः सृतय इति , भिन्नप्रकरणत्वात् , भिन्नोपासनाशेषत्वाच्च । अपि च ‘ अथैतैरेव रश्मिभिः ’ (छा. उ. ८ । ६ । ५) इत्यवधारणम् अर्चिराद्यपेक्षायाम् उपरुध्येत , त्वरावचनं च पीड्येत — ‘ स यावत्क्षिप्येन्मनस्तावदादित्यं गच्छति ’ (छा. उ. ८ । ६ । ५) इति । तस्मादन्योन्यभिन्ना एवैते पन्थान इति । एवं प्राप्ते , अभिदध्महे —",
+    "citations": [
+      {
+        "href": "Chandogya?id=Ch_C08_S06_V05",
+        "text": "‘ अथैतैरेव"
+      },
+      {
+        "href": "Brha?id=BR_C06_S02_V15",
+        "text": "‘ तेऽर्चिषमभिसम्भवन्त्यर्चिषोऽहः"
+      },
+      {
+        "href": "kst?id=KT_C01_V03",
+        "text": "‘ स"
+      },
+      {
+        "href": "Brha?id=BR_C05_S10_V01",
+        "text": "‘ यदा"
+      },
+      {
+        "href": "Mundaka?id=MD_C01_S02_V11",
+        "text": "‘ सूर्यद्वारेण"
+      },
+      {
+        "href": "Chandogya?id=Ch_C08_S06_V05",
+        "text": "‘ अथैतैरेव"
+      },
+      {
+        "href": "Chandogya?id=Ch_C08_S06_V05",
+        "text": "‘ स"
+      }
+    ]
   },
   {
     "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari",
@@ -2394,6 +2456,17 @@
     "block_id": "BS_C04_S03_V16_VERSETEXT_01",
     "block_type": "versetext",
     "text": "विशेषं च दर्शयति ॥ १६ ॥",
+    "citations": []
+  },
+  {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari",
+    "source_sha256": "8cd2e362b8e88c815ef67dcf8d92c4418bae26b8ac49041fbc7d7b3e803e2d6a",
+    "chapter_id": "BS_C04",
+    "section_id": "BS_C04_S04",
+    "verse_id": "BS_C04_S04_PRE",
+    "block_id": "BS_C04_S04_I01",
+    "block_type": "intro_bhashya",
+    "text": "‘ एवमे वैष सम्प्रसादोऽस्माच्छरीरात्समुत्थाय परं ज्योतिरुपसम्पद्य स्वेन रूपेणाभिनिष्पद्यते ’ इति श्रूयते । तत्र संशयः — किं देवलोकाद्युपभोगस्थानेष्विव आगन्तुकेन केनचिद्विशेषेण अभिनिष्पद्यते , आहोस्वित् आत्ममात्रेणेति । किं तावत्प्राप्तम् ? स्थानान्तरेष्विव आगन्तुकेन केनचिद्रूपेण अभिनिष्पत्तिः स्यात् , मोक्षस्यापि फलत्वप्रसिद्धेः , अभिनिष्पद्यत इति च उत्पत्तिपर्यायत्वात् । स्वरूपमात्रेण चेदभिनिष्पत्तिः , पूर्वास्वप्यवस्थासु स्वरूपानपायात् विभाव्येत । तस्मात् विशेषेण केनचिदभिनिष्पद्यत इति । एवं प्राप्ते , ब्रूमः —",
     "citations": []
   },
   {
