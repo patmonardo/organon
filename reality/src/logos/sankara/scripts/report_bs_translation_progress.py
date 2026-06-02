@@ -19,7 +19,7 @@ def iter_json_files(path: Path):
         yield path
         return
     if path.is_dir():
-        for p in sorted(path.glob("*.json")):
+        for p in sorted(path.rglob("*.json")):
             if p.is_file():
                 yield p
 
@@ -29,7 +29,7 @@ def main() -> int:
     parser.add_argument(
         "--path",
         type=Path,
-        default=Path("reality/src/logos/sankara/translation/passage_records/BS_C01"),
+        default=Path("reality/src/logos/sankara/translation/passage_records"),
         help="Directory (or single file) of passage record JSON files",
     )
     args = parser.parse_args()

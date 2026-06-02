@@ -1,0 +1,49 @@
+{
+  "record_id": "SKR.BS.1.4.049",
+  "work_code": "BS",
+  "section_code": "1.4",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Draft block record from BS_C01_S04.json::BS_C01_S04_V18_VERSETEXT_01 (versetext)."
+  },
+  "text": {
+    "source_text": "अन्यार्थं तु जैमिनिः प्रश्नव्याख्यानाभ्यामपि चैवमेके ॥ १८ ॥",
+    "transliteration_iast": "anyārthaṃ tu jaiminiḥ praśnavyākhyānābhyāmapi caivameke || 18 ||",
+    "segmentation_note": "Block-level extraction from BS_C01_S04_V18/BS_C01_S04_V18_VERSETEXT_01."
+  },
+  "translation": {
+    "literal_translation": "But, for another purpose, says Jaimini - because of question and explanation; and so (teach) some recensions as well. (18)",
+    "technical_translation": "Sutra 1.4.18: Jaimini interprets jiva-reference as instrumental to a different aim (Brahman-realization), supported by the question-answer structure and by certain recensional readings.",
+    "interpretive_note": "Jaimini-nyaya sutra: auxiliary jiva mention within a Brahman-oriented teaching arc."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "adhikaraṇa",
+        "gloss": "topical unit of argument",
+        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "grammatical_role": "noun",
+        "alternate_glosses": ["topic-unit", "argument node"]
+      }
+    ],
+    "argument_tags": ["resolution"]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-s04-curation-pass-5",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.86,
+    "uncertainty_notes": [
+      "Literal keeps sutra compactness with explicit Jaimini attribution.",
+      "Technical summary depends on the surrounding bhashya unpacking of anyartham."
+    ]
+  }
+}

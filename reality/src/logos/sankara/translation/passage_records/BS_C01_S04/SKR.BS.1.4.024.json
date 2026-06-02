@@ -1,0 +1,49 @@
+{
+  "record_id": "SKR.BS.1.4.024",
+  "work_code": "BS",
+  "section_code": "1.4",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Draft block record from BS_C01_S04.json::BS_C01_S04_V09_VERSETEXT_01 (versetext)."
+  },
+  "text": {
+    "source_text": "ज्योतिरुपक्रमा तु तथा ह्यधीयत एके ॥ ९ ॥",
+    "transliteration_iast": "jyotirupakramā tu tathā hyadhīyata eke || 9 ||",
+    "segmentation_note": "Block-level extraction from BS_C01_S04_V09/BS_C01_S04_V09_VERSETEXT_01."
+  },
+  "translation": {
+    "literal_translation": "But (it is) one whose opening is from light; for thus some recensions read. (9)",
+    "technical_translation": "Sutra 1.4.9: the aja passage should be read in line with recensional evidence that begins from jyotis/tejas, supporting an elemental-cosmic sequence rather than Sankhya pradhana semantics.",
+    "interpretive_note": "Textual-variant support is used as a hermeneutic discriminator."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "adhikaraṇa",
+        "gloss": "topical unit of argument",
+        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "grammatical_role": "noun",
+        "alternate_glosses": ["topic-unit", "argument node"]
+      }
+    ],
+    "argument_tags": ["thesis", "resolution"]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-s04-curation-pass-3",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.75,
+    "uncertainty_notes": [
+      "Literal preserves compact sutra structure and may be further polished for idiom.",
+      "Technical line assumes the recension note is text-critically accepted."
+    ]
+  }
+}

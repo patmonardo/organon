@@ -1,0 +1,49 @@
+{
+  "record_id": "SKR.BS.1.4.054",
+  "work_code": "BS",
+  "section_code": "1.4",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Draft block record from BS_C01_S04.json::BS_C01_S04_V20_I01 (leading_bhashya)."
+  },
+  "text": {
+    "source_text": "यत्पुनरुक्तं प्रियसंसूचितोपक्रमाद्विज्ञानात्मन एवायं दर्शनाद्युपदेश इति , अत्र ब्रूमः —",
+    "transliteration_iast": "yatpunaruktaṃ priyasaṃsūcitopakramādvijñānātmana evāyaṃ darśanādyupadeśa iti , atra brūmaḥ —",
+    "segmentation_note": "Block-level extraction from BS_C01_S04_V20/BS_C01_S04_V20_I01."
+  },
+  "translation": {
+    "literal_translation": "As for what was said - that because of the opening marked by dearness, the injunction to see and hear concerns only the empirical conscious self - to that we reply as follows.",
+    "technical_translation": "Transition into Ashmarathya rebuttal: restates the priya-upakrama objection before replacing it with a pratijna-siddhi-based reading.",
+    "interpretive_note": "Formal objection restatement preceding doctrinal correction."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "adhikaraṇa",
+        "gloss": "topical unit of argument",
+        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "grammatical_role": "noun",
+        "alternate_glosses": ["topic-unit", "argument node"]
+      }
+    ],
+    "argument_tags": ["objection"]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-s04-curation-pass-6",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.83,
+    "uncertainty_notes": [
+      "This is a brief pivot line; style may be merged with neighboring record in final polish.",
+      "Term choice 'empirical conscious self' can be normalized with your fixed vijñanatman vocabulary."
+    ]
+  }
+}

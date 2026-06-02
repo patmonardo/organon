@@ -1,0 +1,49 @@
+{
+  "record_id": "SKR.BS.1.4.035",
+  "work_code": "BS",
+  "section_code": "1.4",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Draft block record from BS_C01_S04.json::BS_C01_S04_V13_I01 (leading_bhashya)."
+  },
+  "text": {
+    "source_text": "भवेयु स्तावत्प्राणादयः पञ्चजना माध्यन्दिनानाम् , येऽन्नं प्राणादिष्वामनन्ति । काण्वानां तु कथं प्राणादयः पञ्चजना भवेयुः , येऽन्नं प्राणादिषु नामनन्तीति — अत उत्तरं पठति —",
+    "transliteration_iast": "bhaveyu stāvatprāṇādayaḥ pañcajanā mādhyandinānām , ye'nnaṃ prāṇādiṣvāmananti | kāṇvānāṃ tu kathaṃ prāṇādayaḥ pañcajanā bhaveyuḥ , ye'nnaṃ prāṇādiṣu nāmanantīti — ata uttaraṃ paṭhati —",
+    "segmentation_note": "Block-level extraction from BS_C01_S04_V13/BS_C01_S04_V13_I01."
+  },
+  "translation": {
+    "literal_translation": "For the Madhyandinas who read 'food' among the prana-group, the fivefold designation is straightforward. But how will it hold for the Kanvas who do not read 'food' there? To answer that, the next statement is read.",
+    "technical_translation": "Lead-in framing the recension-sensitive problem: preserve pentadic integrity across variant textual enumerations without abandoning context-driven interpretation.",
+    "interpretive_note": "Sets up the jyotis substitution logic of the following sutra."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "adhikaraṇa",
+        "gloss": "topical unit of argument",
+        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "grammatical_role": "noun",
+        "alternate_glosses": ["topic-unit", "argument node"]
+      }
+    ],
+    "argument_tags": ["objection"]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-s04-curation-pass-4",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.81,
+    "uncertainty_notes": [
+      "Rendered as a concise transitional objection.",
+      "Recensional naming can be normalized to your preferred style guide in a later polish pass."
+    ]
+  }
+}

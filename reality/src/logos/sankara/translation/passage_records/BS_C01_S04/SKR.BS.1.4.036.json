@@ -1,0 +1,49 @@
+{
+  "record_id": "SKR.BS.1.4.036",
+  "work_code": "BS",
+  "section_code": "1.4",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Draft block record from BS_C01_S04.json::BS_C01_S04_V13_VERSETEXT_01 (versetext)."
+  },
+  "text": {
+    "source_text": "ज्योतिषैकेषामसत्यन्ने ॥ १३ ॥",
+    "transliteration_iast": "jyotiṣaikeṣāmasatyanne || 13 ||",
+    "segmentation_note": "Block-level extraction from BS_C01_S04_V13/BS_C01_S04_V13_VERSETEXT_01."
+  },
+  "translation": {
+    "literal_translation": "For some, by 'light,' when 'food' is absent. (13)",
+    "technical_translation": "Sutra 1.4.13: in recensions where anna is not read, jyotis supplies the fifth member, preserving the intended pentadic structure.",
+    "interpretive_note": "Recensional repair clause for pentad consistency."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "adhikaraṇa",
+        "gloss": "topical unit of argument",
+        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "grammatical_role": "noun",
+        "alternate_glosses": ["topic-unit", "argument node"]
+      }
+    ],
+    "argument_tags": ["resolution"]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-s04-curation-pass-4",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.85,
+    "uncertainty_notes": [
+      "Very compressed sutra retained with minimal interpretive expansion.",
+      "Depends on preceding recensional discussion for full semantic force."
+    ]
+  }
+}

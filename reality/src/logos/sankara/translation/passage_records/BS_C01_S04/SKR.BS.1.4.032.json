@@ -1,0 +1,49 @@
+{
+  "record_id": "SKR.BS.1.4.032",
+  "work_code": "BS",
+  "section_code": "1.4",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Draft block record from BS_C01_S04.json::BS_C01_S04_V12_I01 (leading_bhashya)."
+  },
+  "text": {
+    "source_text": "के पुनस्ते पञ्चजना नामेति , तदुच्यते —",
+    "transliteration_iast": "ke punaste pañcajanā nāmeti , taducyate —",
+    "segmentation_note": "Block-level extraction from BS_C01_S04_V12/BS_C01_S04_V12_I01."
+  },
+  "translation": {
+    "literal_translation": "But then, who are these so-called five persons? That is now explained.",
+    "technical_translation": "Lead-in to the identification clause: the text explicitly announces interpretive resolution of panca-jana by contextual specification.",
+    "interpretive_note": "Transition line from question to determinate mapping."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "adhikaraṇa",
+        "gloss": "topical unit of argument",
+        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "grammatical_role": "noun",
+        "alternate_glosses": ["topic-unit", "argument node"]
+      }
+    ],
+    "argument_tags": ["definition"]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-s04-curation-pass-4",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.82,
+    "uncertainty_notes": [
+      "Brief transition rendered with minimal expansion.",
+      "May be merged stylistically with adjacent record in later editorial pass."
+    ]
+  }
+}

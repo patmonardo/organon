@@ -142,7 +142,7 @@ def main() -> int:
     parser.add_argument(
         "--records-path",
         type=Path,
-        default=Path("ref/sankara/translation/passage_records/BS_C01"),
+        default=Path("reality/src/logos/sankara/translation/passage_records"),
         help="Path to record JSON file or directory",
     )
     parser.add_argument(

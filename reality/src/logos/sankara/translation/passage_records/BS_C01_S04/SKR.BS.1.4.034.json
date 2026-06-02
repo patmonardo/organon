@@ -1,0 +1,49 @@
+{
+  "record_id": "SKR.BS.1.4.034",
+  "work_code": "BS",
+  "section_code": "1.4",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Draft block record from BS_C01_S04.json::BS_C01_S04_V13_B1 (bhashya)."
+  },
+  "text": {
+    "source_text": "असत्यपि काण्वानामन्ने ज्योतिषा तेषां पञ्चसंख्या पूर्येत । तेऽपि हि ‘ यस्मिन्पञ्च पञ्चजनाः ’ इत्यतः पूर्वस्मिन्मन्त्रे ब्रह्मस्वरूपनिरूपणायैव ज्योतिरधीयते ‘ तद्देवा ज्योतिषां ज्योतिः ’ इति । कथं पुन रुभयेषामपि तुल्यवदिदं ज्योतिः पठ्यमानं समानमन्त्रगतया पञ्चसंख्यया केषाञ्चिद्गृह्यते केषाञ्चिन्नेति — अपे क्षाभेदादित्याह — माध्यन्दिनानां हि समानमन्त्रपठितप्राणादिपञ्चजनलाभान्नास्मिन्मन्त्रान्तरपठिते ज्योतिष्यपेक्षा भवति । तदलाभात्तु काण्वानां भवत्यपेक्षा । अपेक्षाभेदाच्च समानेऽपि मन्त्रे ज्योतिषो ग्रहणाग्रहणे । यथा समानेऽप्यतिरात्रे वचनभेदात्षोडशिनो ग्रहणाग्रहणे , तद्वत् । तदेवं न तावच्छ्रुतिप्रसिद्धिः काचित्प्रधानविषयास्ति । स्मृति न्यायप्रसिद्धी तु परिहरिष्येते ॥ १३ ॥",
+    "transliteration_iast": "asatyapi kāṇvānāmanne jyotiṣā teṣāṃ pañcasaṃkhyā pūryeta | te'pi hi ‘ yasminpañca pañcajanāḥ ’ ityataḥ pūrvasminmantre brahmasvarūpanirūpaṇāyaiva jyotiradhīyate ‘ taddevā jyotiṣāṃ jyotiḥ ’ iti | kathaṃ puna rubhayeṣāmapi tulyavadidaṃ jyotiḥ paṭhyamānaṃ samānamantragatayā pañcasaṃkhyayā keṣāñcidgṛhyate keṣāñcinneti — ape kṣābhedādityāha — mādhyandinānāṃ hi samānamantrapaṭhitaprāṇādipañcajanalābhānnāsminmantrāntarapaṭhite jyotiṣyapekṣā bhavati | tadalābhāttu kāṇvānāṃ bhavatyapekṣā | apekṣābhedācca samāne'pi mantre jyotiṣo grahaṇāgrahaṇe | yathā samāne'pyatirātre vacanabhedātṣoḍaśino grahaṇāgrahaṇe , tadvat | tadevaṃ na tāvacchrutiprasiddhiḥ kācitpradhānaviṣayāsti | smṛti nyāyaprasiddhī tu parihariṣyete || 13 ||",
+    "segmentation_note": "Block-level extraction from BS_C01_S04_V13/BS_C01_S04_V13_B1."
+  },
+  "translation": {
+    "literal_translation": "Even where some recensions do not include 'food' in that specific place, the required pentadic count is still completed by 'light.' For those recensions too, the mantra 'that, the light of lights' is read in the immediately prior Brahman-defining context. Therefore the intended fivefold set is preserved in both traditions without appealing to Sankhya counting.",
+    "technical_translation": "Cross-recensional reconciliation: Madhyandina and Kanva reading differences are harmonized by allowing jyotis to function as the fifth member where anna is absent. The doctrinal point remains unchanged: panca-jana is contextually derived within Upanisadic discourse, not numerologically imported from external tattva systems.",
+    "interpretive_note": "Recensional variance is resolved internally, not by changing ontology."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "adhikaraṇa",
+        "gloss": "topical unit of argument",
+        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "grammatical_role": "noun",
+        "alternate_glosses": ["topic-unit", "argument node"]
+      }
+    ],
+    "argument_tags": ["response", "resolution"]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-s04-curation-pass-4",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.73,
+    "uncertainty_notes": [
+      "Recensional labels are rendered functionally and may need stricter philological formatting.",
+      "J yotis-as-fifth interpretation should be checked against your edition's exact mantra sequence."
+    ]
+  }
+}

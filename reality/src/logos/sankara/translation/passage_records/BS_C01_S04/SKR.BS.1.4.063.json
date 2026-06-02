@@ -1,0 +1,54 @@
+{
+  "record_id": "SKR.BS.1.4.063",
+  "work_code": "BS",
+  "section_code": "1.4",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Draft block record from BS_C01_S04.json::BS_C01_S04_V23_VERSETEXT_01 (versetext)."
+  },
+  "text": {
+    "source_text": "प्रकृतिश्च प्रतिज्ञादृष्टान्तानुपरोधात् ॥ २३ ॥",
+    "transliteration_iast": "prakṛtiśca pratijñādṛṣṭāntānuparodhāt || 23 ||",
+    "segmentation_note": "Block-level extraction from BS_C01_S04_V23/BS_C01_S04_V23_VERSETEXT_01."
+  },
+  "translation": {
+    "literal_translation": "And Brahman is the material cause, because otherwise proposition and example would be obstructed. (23)",
+    "technical_translation": "Sutra 1.4.23: Brahman must be read as material cause as well, else key scriptural proposition and illustrative reasoning fail.",
+    "interpretive_note": "Sutra condensation of the upadana argument."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "adhikaraṇa",
+        "gloss": "topical unit of argument",
+        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "grammatical_role": "noun",
+        "alternate_glosses": [
+          "topic-unit",
+          "argument node"
+        ]
+      }
+    ],
+    "argument_tags": [
+      "resolution"
+    ]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-s04-curation-pass-7",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.88,
+    "uncertainty_notes": [
+      "Draft translation prioritized doctrinal continuity within the local adhikarana sequence.",
+      "Final philological pass should tighten citation-level granularity and preferred Sanskrit term retention."
+    ]
+  }
+}
