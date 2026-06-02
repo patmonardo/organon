@@ -1,0 +1,56 @@
+{
+  "record_id": "SKR.BS.1.2.044",
+  "work_code": "BS",
+  "section_code": "1.2",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Draft block record from BS_C01_S02.json::BS_C01_S02_V18_B1 (bhashya)."
+  },
+  "text": {
+    "source_text": "‘ य इमं च लोकं परं च लोकं सर्वाणि च भूतानि योऽन्तरो यमयति ’ (बृ. उ. ३ । ७ । १) इत्युपक्रम्य श्रूयते — ‘ यः पृथिव्यां तिष्ठन्पृथिव्या अन्तरो यं पृथिवी न वेद यस्य पृथिवी शरीरं यः पृथिवीमन्तरो यमयत्येष त आत्मान्तर्याम्यमृतः ’ (बृ. उ. ३ । ७ । ३) इत्यादि । अ त्रा धिदैवतमधिलोकमधिवेदमधियज्ञमधिभूतमध्यात्मं च कश्चिदन्तरवस्थितो यमयिता अन्तर्यामीति श्रूयते । स किमधिदैवाद्यभिमानी देवतात्मा कश्चित् , किं वा प्राप्ताणिमाद्यैश्वर्यः कश्चिद्योगी , किं वा परमात्मा , किं वार्थान्तरं किञ्चित् , इत्यपूर्वसंज्ञादर्शनात्संशयः । किं तावन्नः प्रतिभाति ? संज्ञाया अप्रसिद्धत्वात्संज्ञिनाप्यप्रसिद्धेनार्थान्तरेण केनचिद्भवितव्यमिति । अथवा नानिरूपितरूपमर्थान्तरं शक्यमस्त्यभ्युपगन्तुम् । अन्तर्यामिशब्दश्चान्तर्यमनयोगेन प्रवृत्तो नात्यन्तमप्रसिद्धः । तस्मात्पृथिव्याद्यभिमानी कश्चिद्देवोऽन्तर्यामी स्यात् । तथा च श्रूयते — ‘ पृथिव्येव यस्यायतनमग्निर्लोको मनो ज्योतिः ’ (बृ. उ. ३ । ९ । १०) इत्यादि । स च कार्यकरणवत्त्वात्पृथिव्यादीनन्तस्तिष्ठन्यमयतीति युक्तं देवतात्मनो यमयितृत्वम् । योगिनो वा कस्यचित्सिद्धस्य सर्वानुप्रवेशेन यमयितृत्वं स्यात् । न तु परमात्मा प्रतीयेत , अकार्यकरणत्वात् — इ त्येवं प्राप्ते इदमुच्यते —",
+    "transliteration_iast": "‘ ya imaṃ ca lokaṃ paraṃ ca lokaṃ sarvāṇi ca bhūtāni yo'ntaro yamayati ’ (bṛ. u. 3 | 7 | 1) ityupakramya śrūyate — ‘ yaḥ pṛthivyāṃ tiṣṭhanpṛthivyā antaro yaṃ pṛthivī na veda yasya pṛthivī śarīraṃ yaḥ pṛthivīmantaro yamayatyeṣa ta ātmāntaryāmyamṛtaḥ ’ (bṛ. u. 3 | 7 | 3) ityādi | a trā dhidaivatamadhilokamadhivedamadhiyajñamadhibhūtamadhyātmaṃ ca kaścidantaravasthito yamayitā antaryāmīti śrūyate | sa kimadhidaivādyabhimānī devatātmā kaścit , kiṃ vā prāptāṇimādyaiśvaryaḥ kaścidyogī , kiṃ vā paramātmā , kiṃ vārthāntaraṃ kiñcit , ityapūrvasaṃjñādarśanātsaṃśayaḥ | kiṃ tāvannaḥ pratibhāti ? saṃjñāyā aprasiddhatvātsaṃjñināpyaprasiddhenārthāntareṇa kenacidbhavitavyamiti | athavā nānirūpitarūpamarthāntaraṃ śakyamastyabhyupagantum | antaryāmiśabdaścāntaryamanayogena pravṛtto nātyantamaprasiddhaḥ | tasmātpṛthivyādyabhimānī kaściddevo'ntaryāmī syāt | tathā ca śrūyate — ‘ pṛthivyeva yasyāyatanamagnirloko mano jyotiḥ ’ (bṛ. u. 3 | 9 | 10) ityādi | sa ca kāryakaraṇavattvātpṛthivyādīnantastiṣṭhanyamayatīti yuktaṃ devatātmano yamayitṛtvam | yogino vā kasyacitsiddhasya sarvānupraveśena yamayitṛtvaṃ syāt | na tu paramātmā pratīyeta , akāryakaraṇatvāt — i tyevaṃ prāpte idamucyate —",
+    "segmentation_note": "Block-level extraction from BS_C01_S02_V18/BS_C01_S02_V18_B1."
+  },
+  "translation": {
+    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S02_V18_B1.",
+    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S02_V18_B1; preserve adhikarana vocabulary and inference structure.",
+    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "adhikaraṇa",
+        "gloss": "topical unit of argument",
+        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "grammatical_role": "noun",
+        "alternate_glosses": [
+          "topic-unit",
+          "argument node"
+        ]
+      }
+    ],
+    "argument_tags": [
+      "draft",
+      "block-by-block",
+      "bhashya"
+    ]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.45,
+    "uncertainty_notes": [
+      "Scaffold generated automatically for full BS_C01 block coverage.",
+      "Literal and technical translations are placeholders pending manual curation."
+    ]
+  }
+}

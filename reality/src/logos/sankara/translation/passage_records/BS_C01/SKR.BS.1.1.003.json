@@ -1,0 +1,56 @@
+{
+  "record_id": "SKR.BS.1.1.003",
+  "work_code": "BS",
+  "section_code": "1.1",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Draft block record from BS_C01_S01.json::BS_C01_S01_I03 (intro_bhashya)."
+  },
+  "text": {
+    "source_text": "कथं पुनः प्रत्यगात्म न्य विषये अध्यासो विषयतद्धर्माणाम् ? सर्वो हि पुरोऽवस्थित एव विषये विषयान्तरमध्यस्यति ; युष्म त्प्रत्ययापेतस्य च प्रत्यगात्मनः अविषयत्वं ब्रवीषि । उच्यते — न ताव द यमेकान्तेनाविषयः , अस्म त्प्रत्ययविषयत्वात् अपरोक्षत्वाच्च प्रत्यगा त्मप्रसिद्धेः । न चा य मस्ति नियमः — पुरोऽवस्थित एव विषये विषयान्तरमध्यसितव्यमिति । अप्रत्यक्षेऽपि ह्याकाशे बालाः तलमलिनतादि अध्यस्यन्ति । एवम विरुद्धः प्रत्यगात्मन्यपि अनात्माध्यासः ॥",
+    "transliteration_iast": "kathaṃ punaḥ pratyagātma nya viṣaye adhyāso viṣayataddharmāṇām ? sarvo hi puro'vasthita eva viṣaye viṣayāntaramadhyasyati ; yuṣma tpratyayāpetasya ca pratyagātmanaḥ aviṣayatvaṃ bravīṣi | ucyate — na tāva da yamekāntenāviṣayaḥ , asma tpratyayaviṣayatvāt aparokṣatvācca pratyagā tmaprasiddheḥ | na cā ya masti niyamaḥ — puro'vasthita eva viṣaye viṣayāntaramadhyasitavyamiti | apratyakṣe'pi hyākāśe bālāḥ talamalinatādi adhyasyanti | evama viruddhaḥ pratyagātmanyapi anātmādhyāsaḥ ||",
+    "segmentation_note": "Block-level extraction from BS_C01_S01_PRE/BS_C01_S01_I03."
+  },
+  "translation": {
+    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_I03.",
+    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_I03; preserve adhikarana vocabulary and inference structure.",
+    "interpretive_note": "Auto-generated scaffold record for intro_bhashya; replace with curated doctrinal note."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "adhikaraṇa",
+        "gloss": "topical unit of argument",
+        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "grammatical_role": "noun",
+        "alternate_glosses": [
+          "topic-unit",
+          "argument node"
+        ]
+      }
+    ],
+    "argument_tags": [
+      "draft",
+      "block-by-block",
+      "intro_bhashya"
+    ]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.45,
+    "uncertainty_notes": [
+      "Scaffold generated automatically for full BS_C01 block coverage.",
+      "Literal and technical translations are placeholders pending manual curation."
+    ]
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "record_id": "SKR.BS.1.4.073",
+  "work_code": "BS",
+  "section_code": "1.4",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Draft block record from BS_C01_S04.json::BS_C01_S04_V28_B1 (bhashya)."
+  },
+  "text": {
+    "source_text": "‘ ईक्षते र्नाशब्दम् ’ (ब्र. सू. १ । १ । ५) इत्यारभ्य प्रधानकारणवादः सूत्रैरेव पुनः पुनराशङ्क्य निराकृतः — तस्य हि पक्षस्योपोद्बलकानि कानिचिल्लिङ्गाभासानि वेदान्तेष्वापातेन मन्दमतीन्प्रति भान्तीति । स च कार्यकारणानन्यत्वाभ्युपगमात्प्रत्यासन्नो वेदान्तवादस्य देवलप्रभृतिभिश्च कैश्चिद्धर्मसूत्रकारैः स्वग्रन्थेष्वाश्रितः । तेन तत्प्रतिषेधे यत्नोऽतीव कृतः , नाण्वादिकारणवादप्रतिषेधे । तेऽपि तु ब्रह्मकारणवादपक्षस्य प्रतिपक्षत्वात्प्रतिषेद्धव्याः । तेषा मप्युपोद्बलकं वैदिकं किञ्चिल्लिङ्गमापातेन मन्दमतीन्प्रति भायादिति । अतः प्रधानमल्लनिबर्हणन्यायेनातिदिशति — एतेन प्रधानकारणवादप्रतिषेधन्यायकलापेन सर्वेऽण्वादिकारणवादा अपि प्रतिषिद्धतया व्याख्याता वेदितव्याः । तेषामपि प्रधानवदशब्दत्वाच्छब्दविरोधित्वाच्चेति । व्याख्याता व्याख्याता इति पदाभ्यासोऽध्यायपरिसमाप्तिं द्योतयति ॥ २८ ॥",
+    "transliteration_iast": "‘ īkṣate rnāśabdam ’ (bra. sū. 1 | 1 | 5) ityārabhya pradhānakāraṇavādaḥ sūtraireva punaḥ punarāśaṅkya nirākṛtaḥ — tasya hi pakṣasyopodbalakāni kānicilliṅgābhāsāni vedānteṣvāpātena mandamatīnprati bhāntīti | sa ca kāryakāraṇānanyatvābhyupagamātpratyāsanno vedāntavādasya devalaprabhṛtibhiśca kaiściddharmasūtrakāraiḥ svagrantheṣvāśritaḥ | tena tatpratiṣedhe yatno'tīva kṛtaḥ , nāṇvādikāraṇavādapratiṣedhe | te'pi tu brahmakāraṇavādapakṣasya pratipakṣatvātpratiṣeddhavyāḥ | teṣā mapyupodbalakaṃ vaidikaṃ kiñcilliṅgamāpātena mandamatīnprati bhāyāditi | ataḥ pradhānamallanibarhaṇanyāyenātidiśati — etena pradhānakāraṇavādapratiṣedhanyāyakalāpena sarve'ṇvādikāraṇavādā api pratiṣiddhatayā vyākhyātā veditavyāḥ | teṣāmapi pradhānavadaśabdatvācchabdavirodhitvācceti | vyākhyātā vyākhyātā iti padābhyāso'dhyāyaparisamāptiṃ dyotayati || 28 ||",
+    "segmentation_note": "Block-level extraction from BS_C01_S04_V28/BS_C01_S04_V28_B1."
+  },
+  "translation": {
+    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S04_V28_B1.",
+    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S04_V28_B1; preserve adhikarana vocabulary and inference structure.",
+    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "adhikaraṇa",
+        "gloss": "topical unit of argument",
+        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "grammatical_role": "noun",
+        "alternate_glosses": [
+          "topic-unit",
+          "argument node"
+        ]
+      }
+    ],
+    "argument_tags": [
+      "draft",
+      "block-by-block",
+      "bhashya"
+    ]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.45,
+    "uncertainty_notes": [
+      "Scaffold generated automatically for full BS_C01 block coverage.",
+      "Literal and technical translations are placeholders pending manual curation."
+    ]
+  }
+}

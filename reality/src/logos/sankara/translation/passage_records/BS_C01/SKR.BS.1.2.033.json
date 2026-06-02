@@ -1,0 +1,56 @@
+{
+  "record_id": "SKR.BS.1.2.033",
+  "work_code": "BS",
+  "section_code": "1.2",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Draft block record from BS_C01_S02.json::BS_C01_S02_V13_B1 (bhashya)."
+  },
+  "text": {
+    "source_text": "‘ य एषोऽक्षिणि पुरुषो दृश्यत एष आत्मेति होवाचैतदमृतमभयमेतद्ब्रह्मेति । तद्यद्यप्यस्मिन्सर्पिर्वोदकं वा सिञ्चति वर्त्मनी एव गच्छति ’ (छा. उ. ४ । १५ । १) इत्यादि श्रूयते । तत्र संशयः — किमयं प्रतिबिम्बात्माक्ष्यधिकरणो निर्दिश्यते , अथ विज्ञानात्मा , उत देवतात्मेन्द्रियस्याधिष्ठाता , अथवेश्वर इति । किं तावत्प्राप्तम् ? छायात्मा पुरुषप्रतिरूप इति । कुतः ? तस्य दृश्यमानत्वप्रसिद्धेः , ‘ य एषोऽक्षिणि पुरुषो दृश्यते ’ इति च प्रसिद्धव दु पदेशात् । विज्ञानात्मनो वायं निर्देश इति युक्तम् । स हि चक्षुषा रूपं पश्यंश्चक्षुषि सन्निहितो भवति । आत्मशब्दश्चास्मिन्पक्षेऽनुकूलो भवति । आदित्यपुरुषो वा चक्षुषोऽनुग्राहकः प्रतीयते — ‘ रश्मिभिरेषोऽस्मिन्प्रतिष्ठितः ’ (बृ. उ. ५ । ५ । २) इति श्रुतेः , अमृतत्वादीनां च देवतात्मन्यपि कथञ्चित्सम्भवात् । नेश्वरः , स्थानविशेषनिर्देशात् — इत्येवं प्राप्ते ब्रूमः —",
+    "transliteration_iast": "‘ ya eṣo'kṣiṇi puruṣo dṛśyata eṣa ātmeti hovācaitadamṛtamabhayametadbrahmeti | tadyadyapyasminsarpirvodakaṃ vā siñcati vartmanī eva gacchati ’ (chā. u. 4 | 15 | 1) ityādi śrūyate | tatra saṃśayaḥ — kimayaṃ pratibimbātmākṣyadhikaraṇo nirdiśyate , atha vijñānātmā , uta devatātmendriyasyādhiṣṭhātā , athaveśvara iti | kiṃ tāvatprāptam ? chāyātmā puruṣapratirūpa iti | kutaḥ ? tasya dṛśyamānatvaprasiddheḥ , ‘ ya eṣo'kṣiṇi puruṣo dṛśyate ’ iti ca prasiddhava du padeśāt | vijñānātmano vāyaṃ nirdeśa iti yuktam | sa hi cakṣuṣā rūpaṃ paśyaṃścakṣuṣi sannihito bhavati | ātmaśabdaścāsminpakṣe'nukūlo bhavati | ādityapuruṣo vā cakṣuṣo'nugrāhakaḥ pratīyate — ‘ raśmibhireṣo'sminpratiṣṭhitaḥ ’ (bṛ. u. 5 | 5 | 2) iti śruteḥ , amṛtatvādīnāṃ ca devatātmanyapi kathañcitsambhavāt | neśvaraḥ , sthānaviśeṣanirdeśāt — ityevaṃ prāpte brūmaḥ —",
+    "segmentation_note": "Block-level extraction from BS_C01_S02_V13/BS_C01_S02_V13_B1."
+  },
+  "translation": {
+    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S02_V13_B1.",
+    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S02_V13_B1; preserve adhikarana vocabulary and inference structure.",
+    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "adhikaraṇa",
+        "gloss": "topical unit of argument",
+        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "grammatical_role": "noun",
+        "alternate_glosses": [
+          "topic-unit",
+          "argument node"
+        ]
+      }
+    ],
+    "argument_tags": [
+      "draft",
+      "block-by-block",
+      "bhashya"
+    ]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.45,
+    "uncertainty_notes": [
+      "Scaffold generated automatically for full BS_C01 block coverage.",
+      "Literal and technical translations are placeholders pending manual curation."
+    ]
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "record_id": "SKR.BS.1.1.029",
+  "work_code": "BS",
+  "section_code": "1.1",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Draft block record from BS_C01_S01.json::BS_C01_S01_V05_B2 (bhashya)."
+  },
+  "text": {
+    "source_text": "यत्तूक्तं सत्त्वधर्मेण ज्ञानेन सर्वज्ञं प्रधानं भविष्यतीति , तन्नोपपद्यते । न हि प्रधानावस्थायां गुणसाम्यात्सत्त्वधर्मो ज्ञानं सम्भवति । ननूक्तं सर्वज्ञानशक्तिमत्त्वेन सर्वज्ञं भविष्यतीति ; तदपि नोपपद्यते । यदि गुणसाम्ये सति सत्त्वव्यपाश्रयां ज्ञानशक्तिमाश्रित्य सर्वज्ञं प्रधानमुच्येत , कामं रजस्तमोव्यपाश्रयामपि ज्ञानप्रतिबन्धकशक्तिमाश्रित्य किञ्चिज्ज्ञमुच्येत । अपि च नासाक्षिका सत्त्ववृत्तिर्जानातिना अभिधीयते । न चाचेतनस्य प्रधानस्य साक्षित्वमस्ति । तस्मादनुपपन्नं प्रधानस्य सर्वज्ञत्वम् । योगिनां तु चेतनत्वात्सत्त्वोत्कर्षनिमित्तं सर्वज्ञत्वमुपपन्नमित्यनुदाहरणम् । अथ पुनः साक्षिनिमित्तमीक्षितृत्वं प्रधानस्य कल्प्येत , यथाग्निनिमित्तमयःपिण्डादेर्दग्धृत्वम् । तथा सति यन्निमित्तमीक्षितृत्वं प्रधानस्य , तदेव सर्वज्ञं ब्रह्म मुख्यं जगतः कारणमिति युक्तम् । यत्पुनरुक्तं ब्रह्मणोऽपि न मुख्यं सर्वज्ञत्वमुपपद्यते , नित्यज्ञानक्रियत्वे ज्ञानक्रियां प्रति स्वातन्त्र्यासम्भवादिति । अत्रोच्यते — इदं ताव द्भवान्प्रष्टव्यः — कथं नित्यज्ञानक्रियत्वे सर्वज्ञत्वहानिरिति । यस्य हि सर्वविषयावभासनक्षमं ज्ञानं नित्यमस्ति , सोऽसर्वज्ञ इति विप्रतिषिद्धम् । अनित्यत्वे हि ज्ञानस्य , कदाचिज्जानाति कदाचिन्न जानातीत्यसर्वज्ञत्वमपि स्यात् ।",
+    "transliteration_iast": "yattūktaṃ sattvadharmeṇa jñānena sarvajñaṃ pradhānaṃ bhaviṣyatīti , tannopapadyate | na hi pradhānāvasthāyāṃ guṇasāmyātsattvadharmo jñānaṃ sambhavati | nanūktaṃ sarvajñānaśaktimattvena sarvajñaṃ bhaviṣyatīti ; tadapi nopapadyate | yadi guṇasāmye sati sattvavyapāśrayāṃ jñānaśaktimāśritya sarvajñaṃ pradhānamucyeta , kāmaṃ rajastamovyapāśrayāmapi jñānapratibandhakaśaktimāśritya kiñcijjñamucyeta | api ca nāsākṣikā sattvavṛttirjānātinā abhidhīyate | na cācetanasya pradhānasya sākṣitvamasti | tasmādanupapannaṃ pradhānasya sarvajñatvam | yogināṃ tu cetanatvātsattvotkarṣanimittaṃ sarvajñatvamupapannamityanudāharaṇam | atha punaḥ sākṣinimittamīkṣitṛtvaṃ pradhānasya kalpyeta , yathāgninimittamayaḥpiṇḍāderdagdhṛtvam | tathā sati yannimittamīkṣitṛtvaṃ pradhānasya , tadeva sarvajñaṃ brahma mukhyaṃ jagataḥ kāraṇamiti yuktam | yatpunaruktaṃ brahmaṇo'pi na mukhyaṃ sarvajñatvamupapadyate , nityajñānakriyatve jñānakriyāṃ prati svātantryāsambhavāditi | atrocyate — idaṃ tāva dbhavānpraṣṭavyaḥ — kathaṃ nityajñānakriyatve sarvajñatvahāniriti | yasya hi sarvaviṣayāvabhāsanakṣamaṃ jñānaṃ nityamasti , so'sarvajña iti vipratiṣiddham | anityatve hi jñānasya , kadācijjānāti kadācinna jānātītyasarvajñatvamapi syāt |",
+    "segmentation_note": "Block-level extraction from BS_C01_S01_V05/BS_C01_S01_V05_B2."
+  },
+  "translation": {
+    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V05_B2.",
+    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V05_B2; preserve adhikarana vocabulary and inference structure.",
+    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "adhikaraṇa",
+        "gloss": "topical unit of argument",
+        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "grammatical_role": "noun",
+        "alternate_glosses": [
+          "topic-unit",
+          "argument node"
+        ]
+      }
+    ],
+    "argument_tags": [
+      "draft",
+      "block-by-block",
+      "bhashya"
+    ]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.45,
+    "uncertainty_notes": [
+      "Scaffold generated automatically for full BS_C01 block coverage.",
+      "Literal and technical translations are placeholders pending manual curation."
+    ]
+  }
+}

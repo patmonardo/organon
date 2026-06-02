@@ -1,0 +1,56 @@
+{
+  "record_id": "SKR.BS.1.3.039",
+  "work_code": "BS",
+  "section_code": "1.3",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Draft block record from BS_C01_S03.json::BS_C01_S03_V16_B1 (bhashya)."
+  },
+  "text": {
+    "source_text": "धृते श्च हेतोः परमेश्वर एवायं दहरः । कथम् ? ‘ दहरोऽस्मि न्नन्तराकाशः ’ इति हि प्रकृत्य आकाशौपम्यपूर्वकं तस्मिन्सर्वसमाधानमुक्त्वा तस्मिन्नेव चात्मशब्दं प्रयुज्यापहतपाप्मत्वादिगुणयोगं चोपदिश्य तमेवानतिवृत्तप्रकरणं निर्दिशति — ‘ अथ य आत्मा स सेतुर्विधृतिरेषां लोकानामसम्भेदाय ’ (छा. उ. ८ । ४ । १) इति । तत्र विधृतिरित्यात्मशब्दसामानाधिकरण्याद्विधारयितोच्यते ; क्तिचः कर्तरि स्मरणात् । यथोदक सन्तानस्य विधारयिता लोके सेतुः क्षेत्रसम्पदामसम्भेदाय , एवमयमात्मा एषामध्यात्मादिभेदभिन्नानां लोकानां वर्णाश्रमादीनां च विधारयिता सेतुः , असम्भेदाय असङ्करायेति । एवमिह प्रकृते दहरे विधारणलक्षणं महिमानं दर्शयति । अयं च महिमा परमेश्वर एव श्रुत्यन्तरादुपलभ्यते — ‘ एतस्य वा अक्षरस्य प्रशासने गार्गि सूर्याचन्द्रमसौ विधृतौ तिष्ठतः ’ इत्यादेः । त थान्यत्रापि निश्चिते परमेश्वरवाक्ये श्रूयते — ‘ एष सर्वेश्वर एष भूताधिपतिरेष भूतपाल एष सेतुर्विधरण एषां लोकानामसम्भेदाय ’ इति । एवं धृतेश्च हेतोः परमेश्वर एवायं दहरः ॥ १६ ॥",
+    "transliteration_iast": "dhṛte śca hetoḥ parameśvara evāyaṃ daharaḥ | katham ? ‘ daharo'smi nnantarākāśaḥ ’ iti hi prakṛtya ākāśaupamyapūrvakaṃ tasminsarvasamādhānamuktvā tasminneva cātmaśabdaṃ prayujyāpahatapāpmatvādiguṇayogaṃ copadiśya tamevānativṛttaprakaraṇaṃ nirdiśati — ‘ atha ya ātmā sa seturvidhṛtireṣāṃ lokānāmasambhedāya ’ (chā. u. 8 | 4 | 1) iti | tatra vidhṛtirityātmaśabdasāmānādhikaraṇyādvidhārayitocyate ; kticaḥ kartari smaraṇāt | yathodaka santānasya vidhārayitā loke setuḥ kṣetrasampadāmasambhedāya , evamayamātmā eṣāmadhyātmādibhedabhinnānāṃ lokānāṃ varṇāśramādīnāṃ ca vidhārayitā setuḥ , asambhedāya asaṅkarāyeti | evamiha prakṛte dahare vidhāraṇalakṣaṇaṃ mahimānaṃ darśayati | ayaṃ ca mahimā parameśvara eva śrutyantarādupalabhyate — ‘ etasya vā akṣarasya praśāsane gārgi sūryācandramasau vidhṛtau tiṣṭhataḥ ’ ityādeḥ | ta thānyatrāpi niścite parameśvaravākye śrūyate — ‘ eṣa sarveśvara eṣa bhūtādhipatireṣa bhūtapāla eṣa seturvidharaṇa eṣāṃ lokānāmasambhedāya ’ iti | evaṃ dhṛteśca hetoḥ parameśvara evāyaṃ daharaḥ || 16 ||",
+    "segmentation_note": "Block-level extraction from BS_C01_S03_V16/BS_C01_S03_V16_B1."
+  },
+  "translation": {
+    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S03_V16_B1.",
+    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S03_V16_B1; preserve adhikarana vocabulary and inference structure.",
+    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "adhikaraṇa",
+        "gloss": "topical unit of argument",
+        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "grammatical_role": "noun",
+        "alternate_glosses": [
+          "topic-unit",
+          "argument node"
+        ]
+      }
+    ],
+    "argument_tags": [
+      "draft",
+      "block-by-block",
+      "bhashya"
+    ]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.45,
+    "uncertainty_notes": [
+      "Scaffold generated automatically for full BS_C01 block coverage.",
+      "Literal and technical translations are placeholders pending manual curation."
+    ]
+  }
+}

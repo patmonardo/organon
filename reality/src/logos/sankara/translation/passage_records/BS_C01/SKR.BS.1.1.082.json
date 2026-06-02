@@ -1,0 +1,56 @@
+{
+  "record_id": "SKR.BS.1.1.082",
+  "work_code": "BS",
+  "section_code": "1.1",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Draft block record from BS_C01_S01.json::BS_C01_S01_V23_B3 (bhashya)."
+  },
+  "text": {
+    "source_text": "अत्र केचिदुदाहरन्ति — ‘ प्राणस्य प्राणम् ’ ‘ प्राणबन्धनं हि सोम्य मनः ’ इति च । तदयुक्तम् ; शब्दभेदात्प्रकरणाच्च संशयानुपपत्तेः । यथा पितुः पितेति प्रयोगे , अन्यः पिता षष्ठीनिर्दिष्टात् प्रथमानिर्दिष्टः , पितुः पिता इति गम्यते । तद्वत् ‘ प्राणस्य प्राणम् ’ इति शब्दभेदात्प्रसिद्धात्प्राणात् अन्यः प्राणस्य प्राण इति निश्चीयते । न हि स एव तस्येति भेदनिर्देशार्हो भवति । यस्य च प्रकरणे यो निर्दिश्यते नामान्तरेणापि स एव तत्र प्रकरणी निर्दिष्ट इति गम्यते ; यथा ज्योतिष्टोमाधिकारे ‘ वसन्ते वसन्ते ज्योतिषा यजेत ’ इत्यत्र ज्योतिःशब्दो ज्योतिष्टोमविषयो भवति , तथा परस्य ब्रह्मणः प्रकरणे ‘ प्राणबन्धनं हि सोम्य मनः ’ इति श्रुतः प्राणशब्दो वायुविकारमात्रं कथमवगमयेत् । अतः संशयाविषयत्वान्नैतदुदाहरणं युक्तम् । प्रस्तावदेवतायां तु प्राणे संशयपूर्वपक्षनिर्णया उपपादिताः ॥ २३ ॥",
+    "transliteration_iast": "atra kecidudāharanti — ‘ prāṇasya prāṇam ’ ‘ prāṇabandhanaṃ hi somya manaḥ ’ iti ca | tadayuktam ; śabdabhedātprakaraṇācca saṃśayānupapatteḥ | yathā pituḥ piteti prayoge , anyaḥ pitā ṣaṣṭhīnirdiṣṭāt prathamānirdiṣṭaḥ , pituḥ pitā iti gamyate | tadvat ‘ prāṇasya prāṇam ’ iti śabdabhedātprasiddhātprāṇāt anyaḥ prāṇasya prāṇa iti niścīyate | na hi sa eva tasyeti bhedanirdeśārho bhavati | yasya ca prakaraṇe yo nirdiśyate nāmāntareṇāpi sa eva tatra prakaraṇī nirdiṣṭa iti gamyate ; yathā jyotiṣṭomādhikāre ‘ vasante vasante jyotiṣā yajeta ’ ityatra jyotiḥśabdo jyotiṣṭomaviṣayo bhavati , tathā parasya brahmaṇaḥ prakaraṇe ‘ prāṇabandhanaṃ hi somya manaḥ ’ iti śrutaḥ prāṇaśabdo vāyuvikāramātraṃ kathamavagamayet | ataḥ saṃśayāviṣayatvānnaitadudāharaṇaṃ yuktam | prastāvadevatāyāṃ tu prāṇe saṃśayapūrvapakṣanirṇayā upapāditāḥ || 23 ||",
+    "segmentation_note": "Block-level extraction from BS_C01_S01_V23/BS_C01_S01_V23_B3."
+  },
+  "translation": {
+    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V23_B3.",
+    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V23_B3; preserve adhikarana vocabulary and inference structure.",
+    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "adhikaraṇa",
+        "gloss": "topical unit of argument",
+        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "grammatical_role": "noun",
+        "alternate_glosses": [
+          "topic-unit",
+          "argument node"
+        ]
+      }
+    ],
+    "argument_tags": [
+      "draft",
+      "block-by-block",
+      "bhashya"
+    ]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.45,
+    "uncertainty_notes": [
+      "Scaffold generated automatically for full BS_C01 block coverage.",
+      "Literal and technical translations are placeholders pending manual curation."
+    ]
+  }
+}

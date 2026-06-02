@@ -1,0 +1,56 @@
+{
+  "record_id": "SKR.BS.1.2.078",
+  "work_code": "BS",
+  "section_code": "1.2",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Draft block record from BS_C01_S02.json::BS_C01_S02_V31_B1 (bhashya)."
+  },
+  "text": {
+    "source_text": "सम्पत्तिनिमित्ता वा स्यात्प्रादेशमात्रश्रुतिः । कुतः ? तथाहि समानप्रकरणं वाजसनेयिब्राह्मणं द्युप्रभृतीन्पृथिवीपर्यन्तांस्त्रैलोक्यात्मनो वैश्वानरस्यावयवानध्यात्ममूर्धप्रभृतिषु चुबुकपर्यन्तेषु देहावयवेषु सम्पादयत्प्रादेशमात्रसम्पत्तिं परमेश्वरस्य दर्शयति — ‘ प्रादेशमात्रमिव ह वै देवाः सुविदिता अभिसम्पन्नास्तथा नु व एतान्वक्ष्यामि यथा प्रादेशमात्रमेवाभिसम्पादयिष्यामीति । स होवाच मूर्धानमुपदिशन्नुवाचैष वा अतिष्ठा वैश्वानर इति । चक्षुषी उपदिशन्नुवाचैष वै सुतेजा वैश्वानर इति । नासिके उपदिशन्नुवाचैष वै पृथग्वर्त्मात्मा वैश्वानर इति । मुख्यमाकाशमुपदिशन्नुवाचैष वै बहुलो वैश्वानर इति । मुख्या अप उपदिशन्नुवाचैष वै रयिर्वैश्वानर इति । चुबुकमुपदिशन्नुवाचैष वै प्रतिष्ठा वैश्वानरः ’ इति । चुबुकमित्यधरं मुखफलकमुच्यते । यद्यपि वाजसनेयके द्यौरतिष्ठात्वगुणा समाम्नायते , आदित्यश्च सुतेजस्त्वगुणः , छान्दोग्ये पुनः द्यौः सुतेजस्त्वगुणा समाम्नायते , आदित्यश्च विश्वरूपत्वगुणः ; तथापि नैतावता विशेषेण किञ्चिद्धीयते , प्रादेशमात्रश्रुतेरविशेषात् , सर्वशाखाप्रत्ययत्वाच्च । सम्पत्तिनिमित्तां प्रादेशमात्रश्रुतिं युक्ततरां जैमिनिराचार्यो मन्यते ॥ ३१ ॥",
+    "transliteration_iast": "sampattinimittā vā syātprādeśamātraśrutiḥ | kutaḥ ? tathāhi samānaprakaraṇaṃ vājasaneyibrāhmaṇaṃ dyuprabhṛtīnpṛthivīparyantāṃstrailokyātmano vaiśvānarasyāvayavānadhyātmamūrdhaprabhṛtiṣu cubukaparyanteṣu dehāvayaveṣu sampādayatprādeśamātrasampattiṃ parameśvarasya darśayati — ‘ prādeśamātramiva ha vai devāḥ suviditā abhisampannāstathā nu va etānvakṣyāmi yathā prādeśamātramevābhisampādayiṣyāmīti | sa hovāca mūrdhānamupadiśannuvācaiṣa vā atiṣṭhā vaiśvānara iti | cakṣuṣī upadiśannuvācaiṣa vai sutejā vaiśvānara iti | nāsike upadiśannuvācaiṣa vai pṛthagvartmātmā vaiśvānara iti | mukhyamākāśamupadiśannuvācaiṣa vai bahulo vaiśvānara iti | mukhyā apa upadiśannuvācaiṣa vai rayirvaiśvānara iti | cubukamupadiśannuvācaiṣa vai pratiṣṭhā vaiśvānaraḥ ’ iti | cubukamityadharaṃ mukhaphalakamucyate | yadyapi vājasaneyake dyauratiṣṭhātvaguṇā samāmnāyate , ādityaśca sutejastvaguṇaḥ , chāndogye punaḥ dyauḥ sutejastvaguṇā samāmnāyate , ādityaśca viśvarūpatvaguṇaḥ ; tathāpi naitāvatā viśeṣeṇa kiñciddhīyate , prādeśamātraśruteraviśeṣāt , sarvaśākhāpratyayatvācca | sampattinimittāṃ prādeśamātraśrutiṃ yuktatarāṃ jaiminirācāryo manyate || 31 ||",
+    "segmentation_note": "Block-level extraction from BS_C01_S02_V31/BS_C01_S02_V31_B1."
+  },
+  "translation": {
+    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S02_V31_B1.",
+    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S02_V31_B1; preserve adhikarana vocabulary and inference structure.",
+    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "adhikaraṇa",
+        "gloss": "topical unit of argument",
+        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "grammatical_role": "noun",
+        "alternate_glosses": [
+          "topic-unit",
+          "argument node"
+        ]
+      }
+    ],
+    "argument_tags": [
+      "draft",
+      "block-by-block",
+      "bhashya"
+    ]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.45,
+    "uncertainty_notes": [
+      "Scaffold generated automatically for full BS_C01 block coverage.",
+      "Literal and technical translations are placeholders pending manual curation."
+    ]
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "record_id": "SKR.BS.1.2.064",
+  "work_code": "BS",
+  "section_code": "1.2",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Draft block record from BS_C01_S02.json::BS_C01_S02_V25_B1 (bhashya)."
+  },
+  "text": {
+    "source_text": "इतश्च परमेश्वर एव वैश्वानरः ; यस्मात्परमेश्वरस्यैव ‘ अग्निरास्यं द्यौर्मूर्धा ’ इतीदृशं त्रैलोक्यात्मकं रूपं स्मर्यते — ‘ यस्याग्निरास्यं द्यौर्मूर्धा खं नाभिश्चरणौ क्षितिः । सूर्यश्चक्षुर्दिशः श्रोत्रं तस्मै लोकात्मने नमः ’ इति । एतत्स्मर्यमाणं रूपं मूलभूतां श्रुतिमनुमापयदस्य वैश्वानरशब्दस्य परमेश्वरपरत्वे अनुमानं लिङ्गं गमकं स्यादित्यर्थः । इतिशब्दो हेत्वर्थे — यस्मादिदं गमकम् , तस्मादपि वैश्वानरः परमात्मैवेत्यर्थः । यद्यपि स्तुति रि यम् — ‘ तस्मै लोकात्मने नमः ’ इति , तथापि स्तुतित्वमपि नासति मूलभूते वेदवाक्ये सम्यक् ईदृशेन रूपेण सम्भवति । ‘ द्यां मूर्धानं यस्य विप्रा वदन्ति खं वै नाभिं चन्द्रसूर्यौ च नेत्रे । दिशः श्रोत्रे विद्धि पादौ क्षितिं च सोऽचिन्त्यात्मा सर्वभूतप्रणेता ’ इत्येवंजातीयका च स्मृतिरिहोदाहर्तव्या ॥ २५ ॥",
+    "transliteration_iast": "itaśca parameśvara eva vaiśvānaraḥ ; yasmātparameśvarasyaiva ‘ agnirāsyaṃ dyaurmūrdhā ’ itīdṛśaṃ trailokyātmakaṃ rūpaṃ smaryate — ‘ yasyāgnirāsyaṃ dyaurmūrdhā khaṃ nābhiścaraṇau kṣitiḥ | sūryaścakṣurdiśaḥ śrotraṃ tasmai lokātmane namaḥ ’ iti | etatsmaryamāṇaṃ rūpaṃ mūlabhūtāṃ śrutimanumāpayadasya vaiśvānaraśabdasya parameśvaraparatve anumānaṃ liṅgaṃ gamakaṃ syādityarthaḥ | itiśabdo hetvarthe — yasmādidaṃ gamakam , tasmādapi vaiśvānaraḥ paramātmaivetyarthaḥ | yadyapi stuti ri yam — ‘ tasmai lokātmane namaḥ ’ iti , tathāpi stutitvamapi nāsati mūlabhūte vedavākye samyak īdṛśena rūpeṇa sambhavati | ‘ dyāṃ mūrdhānaṃ yasya viprā vadanti khaṃ vai nābhiṃ candrasūryau ca netre | diśaḥ śrotre viddhi pādau kṣitiṃ ca so'cintyātmā sarvabhūtapraṇetā ’ ityevaṃjātīyakā ca smṛtirihodāhartavyā || 25 ||",
+    "segmentation_note": "Block-level extraction from BS_C01_S02_V25/BS_C01_S02_V25_B1."
+  },
+  "translation": {
+    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S02_V25_B1.",
+    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S02_V25_B1; preserve adhikarana vocabulary and inference structure.",
+    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "adhikaraṇa",
+        "gloss": "topical unit of argument",
+        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "grammatical_role": "noun",
+        "alternate_glosses": [
+          "topic-unit",
+          "argument node"
+        ]
+      }
+    ],
+    "argument_tags": [
+      "draft",
+      "block-by-block",
+      "bhashya"
+    ]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.45,
+    "uncertainty_notes": [
+      "Scaffold generated automatically for full BS_C01 block coverage.",
+      "Literal and technical translations are placeholders pending manual curation."
+    ]
+  }
+}

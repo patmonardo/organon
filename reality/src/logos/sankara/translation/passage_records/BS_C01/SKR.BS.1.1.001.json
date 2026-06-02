@@ -1,0 +1,56 @@
+{
+  "record_id": "SKR.BS.1.1.001",
+  "work_code": "BS",
+  "section_code": "1.1",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?page=1&id=BS_C01",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Sutra text unit from BS_C01_S01_V01_VERSETEXT_01 witness."
+  },
+  "text": {
+    "source_text": "अथातो ब्रह्मजिज्ञासा ॥ १ ॥",
+    "transliteration_iast": "athato brahmajijñāsā || 1 ||",
+    "segmentation_note": "Core sutra line for BS 1.1.1, separated from extended bhashya prose blocks."
+  },
+  "translation": {
+    "literal_translation": "Then, therefore, the inquiry into Brahman.",
+    "technical_translation": "Given the required preparatory discipline, the proper undertaking at this juncture is Brahma-jijnasa: systematic inquiry into Brahman.",
+    "interpretive_note": "Athah is treated in the bhashya as signaling qualified sequence and rationale, not merely a decorative opening particle."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "atha",
+        "gloss": "then; now",
+        "contextual_sense": "Signals commencement under a qualified antecedent condition",
+        "grammatical_role": "indeclinable particle",
+        "alternate_glosses": ["thereafter", "at this juncture"]
+      },
+      {
+        "headword_iast": "brahma-jijñāsā",
+        "gloss": "inquiry into Brahman",
+        "contextual_sense": "Normative launch of Vedantic investigation into ultimate reality",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": ["Brahman-inquiry", "investigation of Brahman"]
+      }
+    ],
+    "argument_tags": ["adhikarana-opening", "injunction-context", "method"]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:12:01Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-s01-pass-1",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.8,
+    "uncertainty_notes": [
+      "Literal translation keeps the terseness of the sutra and leaves atha/atah exegesis to the bhashya layer.",
+      "Technical translation assumes the standard fourfold qualification context and should be checked against your house glossing policy."
+    ]
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "record_id": "SKR.BS.1.1.060",
+  "work_code": "BS",
+  "section_code": "1.1",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Draft block record from BS_C01_S01.json::BS_C01_S01_V15_B1 (bhashya)."
+  },
+  "text": {
+    "source_text": "इतश्चानन्दमयः पर एवात्मा ; यस्मात् ‘ ब्रह्मविदाप्नोति परम् ’ (तै. उ. २ । १ । १) इत्युपक्रम्य , ‘ सत्यं ज्ञानमनन्तं ब्रह्म ’ (तै. उ. २ । १ । १) इत्यस्मिन्मन्त्रे यत् प्रकृतं ब्रह्म सत्यज्ञानानन्तविशेषणैर्निर्धारितम् , यस्मादाकाशादिक्रमेण स्थावरजङ्गमानि भूतान्यजायन्त , यच्च भूतानि सृष्ट्वा तान्यनुप्रविश्य गुहायामवस्थितं सर्वान्तरम् , यस्य विज्ञानाय ‘ अन्योऽन्तर आत्मा ’ ‘ अन्योऽन्तर आत्मा ’ इति प्रक्रान्तम् , तन्मान्त्रवर्णिकमेव ब्रह्मेह गीयते — ‘ अन्योऽन्तर आत्मानन्दमयः ’ (तै. उ. २ । ५ । १) इति । मन्त्र ब्राह्मणयोश्चैकार्थत्वं युक्तम् , अविरोधात् । अन्यथा हि प्रकृतहानाप्रकृतप्रक्रिये स्याताम् । न चा न्नमयादिभ्य इवानन्दमयादन्योऽन्तर आत्माभिधीयते । एतन्निष्ठैव च ‘ सैषा भार्गवी वारुणी विद्या ’ (तै. उ. ३ । ६ । १) — ‘ आनन्दो ब्रह्मेति व्यजानात् ’ (तै. उ. ३ । ६ । १) इति । तस्मादानन्दमयः पर एवात्मा ॥ १५ ॥",
+    "transliteration_iast": "itaścānandamayaḥ para evātmā ; yasmāt ‘ brahmavidāpnoti param ’ (tai. u. 2 | 1 | 1) ityupakramya , ‘ satyaṃ jñānamanantaṃ brahma ’ (tai. u. 2 | 1 | 1) ityasminmantre yat prakṛtaṃ brahma satyajñānānantaviśeṣaṇairnirdhāritam , yasmādākāśādikrameṇa sthāvarajaṅgamāni bhūtānyajāyanta , yacca bhūtāni sṛṣṭvā tānyanupraviśya guhāyāmavasthitaṃ sarvāntaram , yasya vijñānāya ‘ anyo'ntara ātmā ’ ‘ anyo'ntara ātmā ’ iti prakrāntam , tanmāntravarṇikameva brahmeha gīyate — ‘ anyo'ntara ātmānandamayaḥ ’ (tai. u. 2 | 5 | 1) iti | mantra brāhmaṇayoścaikārthatvaṃ yuktam , avirodhāt | anyathā hi prakṛtahānāprakṛtaprakriye syātām | na cā nnamayādibhya ivānandamayādanyo'ntara ātmābhidhīyate | etanniṣṭhaiva ca ‘ saiṣā bhārgavī vāruṇī vidyā ’ (tai. u. 3 | 6 | 1) — ‘ ānando brahmeti vyajānāt ’ (tai. u. 3 | 6 | 1) iti | tasmādānandamayaḥ para evātmā || 15 ||",
+    "segmentation_note": "Block-level extraction from BS_C01_S01_V15/BS_C01_S01_V15_B1."
+  },
+  "translation": {
+    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V15_B1.",
+    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V15_B1; preserve adhikarana vocabulary and inference structure.",
+    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "adhikaraṇa",
+        "gloss": "topical unit of argument",
+        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "grammatical_role": "noun",
+        "alternate_glosses": [
+          "topic-unit",
+          "argument node"
+        ]
+      }
+    ],
+    "argument_tags": [
+      "draft",
+      "block-by-block",
+      "bhashya"
+    ]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.45,
+    "uncertainty_notes": [
+      "Scaffold generated automatically for full BS_C01 block coverage.",
+      "Literal and technical translations are placeholders pending manual curation."
+    ]
+  }
+}

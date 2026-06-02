@@ -1,0 +1,56 @@
+{
+  "record_id": "SKR.BS.1.3.097",
+  "work_code": "BS",
+  "section_code": "1.3",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Draft block record from BS_C01_S03.json::BS_C01_S03_V39_B1 (bhashya)."
+  },
+  "text": {
+    "source_text": "अवसितः प्रासङ्गिकोऽधिकारविचारः । प्रकृतामेवेदानीं वाक्यार्थविचारणां प्रवर्तयिष्यामः । ‘ यदिदं किञ्च जगत्सर्वं प्राण एजति निःसृतम् । महद्भयं वज्र मुद्यतं य एत द्विदुरमृतास्ते भवन्ति ’ (क. उ. २ । ३ । २) इति एतद्वाक्यम् ‘ एजृ कम्पने ’ इति धात्वर्थानुगमाल्लक्षितम् । अस्मिन्वाक्ये सर्वमिदं जगत् प्राणाश्रयं स्पन्दते , महच्च किञ्चिद्भयकारणं वज्रशब्दितमुद्यतम् , तद्विज्ञानाच्चामृतत्वप्राप्तिरिति श्रूयते । तत्र , कोऽसौ प्राणः , किं तद्भयानकं वज्रम् , इत्यप्रतिपत्तेर्विचारे क्रियमाणे , प्राप्तं तावत् — प्रसिद्धेः पञ्चवृत्ति र्वायुः प्राण इति । प्रसिद्धेरेव चाशनिर्वज्रं स्यात् । वायो श्चेदं माहात्म्यं सङ्कीर्त्यते । कथम् ? सर्वमिदं जगत् पञ्चवृत्तौ वायौ प्राणशब्दिते प्रतिष्ठाय एजति । वायु निमित्तमेव च महद्भयानकं वज्रमुद्यम्यते । वायौ हि पर्जन्यभावेन विवर्तमाने विद्युत्स्तनयित्नुवृष्ट्यशनयो विवर्तन्त इत्याचक्षते । वायुविज्ञानादेव चेदममृतत्वम् । तथा हि श्रुत्यन्तरम् — ‘ वायुरेव व्यष्टिर्वायुः समष्टिरप पुनर्मृत्युं जयति य एवं वेद ’ इति । तस्माद्वायुरयमिह प्रतिपत्तव्यः इत्येवं प्राप्ते ब्रूमः —",
+    "transliteration_iast": "avasitaḥ prāsaṅgiko'dhikāravicāraḥ | prakṛtāmevedānīṃ vākyārthavicāraṇāṃ pravartayiṣyāmaḥ | ‘ yadidaṃ kiñca jagatsarvaṃ prāṇa ejati niḥsṛtam | mahadbhayaṃ vajra mudyataṃ ya eta dviduramṛtāste bhavanti ’ (ka. u. 2 | 3 | 2) iti etadvākyam ‘ ejṛ kampane ’ iti dhātvarthānugamāllakṣitam | asminvākye sarvamidaṃ jagat prāṇāśrayaṃ spandate , mahacca kiñcidbhayakāraṇaṃ vajraśabditamudyatam , tadvijñānāccāmṛtatvaprāptiriti śrūyate | tatra , ko'sau prāṇaḥ , kiṃ tadbhayānakaṃ vajram , ityapratipattervicāre kriyamāṇe , prāptaṃ tāvat — prasiddheḥ pañcavṛtti rvāyuḥ prāṇa iti | prasiddhereva cāśanirvajraṃ syāt | vāyo ścedaṃ māhātmyaṃ saṅkīrtyate | katham ? sarvamidaṃ jagat pañcavṛttau vāyau prāṇaśabdite pratiṣṭhāya ejati | vāyu nimittameva ca mahadbhayānakaṃ vajramudyamyate | vāyau hi parjanyabhāvena vivartamāne vidyutstanayitnuvṛṣṭyaśanayo vivartanta ityācakṣate | vāyuvijñānādeva cedamamṛtatvam | tathā hi śrutyantaram — ‘ vāyureva vyaṣṭirvāyuḥ samaṣṭirapa punarmṛtyuṃ jayati ya evaṃ veda ’ iti | tasmādvāyurayamiha pratipattavyaḥ ityevaṃ prāpte brūmaḥ —",
+    "segmentation_note": "Block-level extraction from BS_C01_S03_V39/BS_C01_S03_V39_B1."
+  },
+  "translation": {
+    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S03_V39_B1.",
+    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S03_V39_B1; preserve adhikarana vocabulary and inference structure.",
+    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "adhikaraṇa",
+        "gloss": "topical unit of argument",
+        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "grammatical_role": "noun",
+        "alternate_glosses": [
+          "topic-unit",
+          "argument node"
+        ]
+      }
+    ],
+    "argument_tags": [
+      "draft",
+      "block-by-block",
+      "bhashya"
+    ]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.45,
+    "uncertainty_notes": [
+      "Scaffold generated automatically for full BS_C01 block coverage.",
+      "Literal and technical translations are placeholders pending manual curation."
+    ]
+  }
+}

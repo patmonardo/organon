@@ -1,0 +1,56 @@
+{
+  "record_id": "SKR.BS.1.4.028",
+  "work_code": "BS",
+  "section_code": "1.4",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Draft block record from BS_C01_S04.json::BS_C01_S04_V11_B1 (bhashya)."
+  },
+  "text": {
+    "source_text": "एवं परिहृतेऽप्यजामन्त्रे पुनरन्यस्मान्मन्त्रात्साङ्ख्यः प्रत्यवतिष्ठते — ‘ यस्मिन्पञ्च पञ्चजना आकाशश्च प्रतिष्ठितः । तमेव मन्य आत्मानं विद्वान्ब्रह्मामृतोऽमृतम् ’ (बृ. उ. ४ । ४ । १७) इति । अस्मिन्मन्त्रे पञ्च पञ्चजना इति पञ्चसंख्याविषया अपरा पञ्चसंख्या श्रूयते , पञ्चशब्दद्वयदर्शनात् । त एते पञ्च पञ्चकाः पञ्चविंशतिः सम्पद्यन्ते । तया च पञ्चविंशतिसंख्यया यावन्तः संख्येया आकाङ्क्ष्यन्ते तावन्त्येव च तत्त्वानि साङ्ख्यैः संख्यायन्ते — ‘ मूलप्रकृतिरविकृतिर्महदाद्याः प्रकृतिविकृतयः सप्त । षोडशकश्च विकारो न प्रकृतिर्न विकृतिः पुरुषः ’ इति । तया श्रुतिप्रसिद्धया पञ्चविंशतिसंख्यया तेषां स्मृतिप्रसिद्धानां पञ्चविंशतितत्त्वानामुपसङ्ग्रहात्प्राप्तं पुनः श्रुतिमत्त्वमेव प्रधानादीनाम् ॥",
+    "transliteration_iast": "evaṃ parihṛte'pyajāmantre punaranyasmānmantrātsāṅkhyaḥ pratyavatiṣṭhate — ‘ yasminpañca pañcajanā ākāśaśca pratiṣṭhitaḥ | tameva manya ātmānaṃ vidvānbrahmāmṛto'mṛtam ’ (bṛ. u. 4 | 4 | 17) iti | asminmantre pañca pañcajanā iti pañcasaṃkhyāviṣayā aparā pañcasaṃkhyā śrūyate , pañcaśabdadvayadarśanāt | ta ete pañca pañcakāḥ pañcaviṃśatiḥ sampadyante | tayā ca pañcaviṃśatisaṃkhyayā yāvantaḥ saṃkhyeyā ākāṅkṣyante tāvantyeva ca tattvāni sāṅkhyaiḥ saṃkhyāyante — ‘ mūlaprakṛtiravikṛtirmahadādyāḥ prakṛtivikṛtayaḥ sapta | ṣoḍaśakaśca vikāro na prakṛtirna vikṛtiḥ puruṣaḥ ’ iti | tayā śrutiprasiddhayā pañcaviṃśatisaṃkhyayā teṣāṃ smṛtiprasiddhānāṃ pañcaviṃśatitattvānāmupasaṅgrahātprāptaṃ punaḥ śrutimattvameva pradhānādīnām ||",
+    "segmentation_note": "Block-level extraction from BS_C01_S04_V11/BS_C01_S04_V11_B1."
+  },
+  "translation": {
+    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S04_V11_B1.",
+    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S04_V11_B1; preserve adhikarana vocabulary and inference structure.",
+    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "adhikaraṇa",
+        "gloss": "topical unit of argument",
+        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "grammatical_role": "noun",
+        "alternate_glosses": [
+          "topic-unit",
+          "argument node"
+        ]
+      }
+    ],
+    "argument_tags": [
+      "draft",
+      "block-by-block",
+      "bhashya"
+    ]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.45,
+    "uncertainty_notes": [
+      "Scaffold generated automatically for full BS_C01 block coverage.",
+      "Literal and technical translations are placeholders pending manual curation."
+    ]
+  }
+}

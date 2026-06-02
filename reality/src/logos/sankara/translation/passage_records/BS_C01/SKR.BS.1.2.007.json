@@ -1,0 +1,56 @@
+{
+  "record_id": "SKR.BS.1.2.007",
+  "work_code": "BS",
+  "section_code": "1.2",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Draft block record from BS_C01_S02.json::BS_C01_S02_V03_B1 (bhashya)."
+  },
+  "text": {
+    "source_text": "पूर्वेण सूत्रेण ब्रह्मणि विवक्षितानां गुणानामुपपत्तिरुक्ता । अनेन शारीरे तेषामनुपपत्तिरुच्यते । तुशब्दोऽवधारणार्थः । ब्रह्मैवोक्तेन न्यायेन मनोमयत्वादिगुणम् ; न तु शारीरो जीवो मनोमयत्वादिगुणः ; यत्कारणम् — ‘ सत्यसङ्कल्पः ’ ‘ आकाशात्मा ’ ‘ अवाकी ’ ‘ अनादरः ’ ‘ ज्यायान्पृथिव्याः ’ इति चैवंजातीयका गुणा न शारीरे आञ्जस्येनोपपद्यन्ते । शारीर इति शरीरे भव इत्यर्थः । नन्वीश्वरोऽपि शरीरे भवति । सत्यम् , शरीरे भवति ; न तु शरीर एव भवति ; ‘ ज्यायान्पृथिव्या ज्यायानन्तरिक्षात् ’ ‘ आकाशवत्सर्वगतश्च नित्यः ’ (शत. ब्रा. १० । ६ । ३ । २) इति च व्यापित्वश्रवणात् । जीवस्तु शरीर एव भवति , तस्य भोगाधिष्ठानाच्छरीरादन्यत्र वृत्त्यभावात् ॥ ३ ॥",
+    "transliteration_iast": "pūrveṇa sūtreṇa brahmaṇi vivakṣitānāṃ guṇānāmupapattiruktā | anena śārīre teṣāmanupapattirucyate | tuśabdo'vadhāraṇārthaḥ | brahmaivoktena nyāyena manomayatvādiguṇam ; na tu śārīro jīvo manomayatvādiguṇaḥ ; yatkāraṇam — ‘ satyasaṅkalpaḥ ’ ‘ ākāśātmā ’ ‘ avākī ’ ‘ anādaraḥ ’ ‘ jyāyānpṛthivyāḥ ’ iti caivaṃjātīyakā guṇā na śārīre āñjasyenopapadyante | śārīra iti śarīre bhava ityarthaḥ | nanvīśvaro'pi śarīre bhavati | satyam , śarīre bhavati ; na tu śarīra eva bhavati ; ‘ jyāyānpṛthivyā jyāyānantarikṣāt ’ ‘ ākāśavatsarvagataśca nityaḥ ’ (śata. brā. 10 | 6 | 3 | 2) iti ca vyāpitvaśravaṇāt | jīvastu śarīra eva bhavati , tasya bhogādhiṣṭhānāccharīrādanyatra vṛttyabhāvāt || 3 ||",
+    "segmentation_note": "Block-level extraction from BS_C01_S02_V03/BS_C01_S02_V03_B1."
+  },
+  "translation": {
+    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S02_V03_B1.",
+    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S02_V03_B1; preserve adhikarana vocabulary and inference structure.",
+    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "adhikaraṇa",
+        "gloss": "topical unit of argument",
+        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "grammatical_role": "noun",
+        "alternate_glosses": [
+          "topic-unit",
+          "argument node"
+        ]
+      }
+    ],
+    "argument_tags": [
+      "draft",
+      "block-by-block",
+      "bhashya"
+    ]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.45,
+    "uncertainty_notes": [
+      "Scaffold generated automatically for full BS_C01 block coverage.",
+      "Literal and technical translations are placeholders pending manual curation."
+    ]
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "record_id": "SKR.BS.1.4.014",
+  "work_code": "BS",
+  "section_code": "1.4",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Draft block record from BS_C01_S04.json::BS_C01_S04_V06_B2 (bhashya)."
+  },
+  "text": {
+    "source_text": "अत्राह — योऽयमात्मविषयः प्रश्नः — ‘ येयं प्रेते विचिकित्सा मनुष्येऽस्ति ’ इति , किं स एवायम् ‘ अन्यत्र धर्मादन्यत्राधर्मात् ’ इति पुनरनुकृष्यते , किं वा ततोऽन्योऽयमपूर्वः प्रश्न उत्थाप्यत इति । किं चातः ? स ए वायं प्रश्नः पुनरनुकृष्यत इति यद्युच्येत , तदा द्वयोरात्मविषययोः प्रश्नयोरेकतापत्तेरग्निविषय आत्मविषयश्च द्वावेव प्रश्नावित्यतो न वक्तव्यं त्रयाणां प्रश्नोपन्यासाविति । अथान्योऽयमपूर्वः प्रश्न उत्थाप्यत इत्युच्येत , ततो यथैव वरप्रदानव्यतिरेकेण प्रश्नकल्पनायामदोषः ; एवं प्रश्नव्यतिरेकेणापि प्रधानोपन्यासकल्पनायामदोषः स्यादिति ॥",
+    "transliteration_iast": "atrāha — yo'yamātmaviṣayaḥ praśnaḥ — ‘ yeyaṃ prete vicikitsā manuṣye'sti ’ iti , kiṃ sa evāyam ‘ anyatra dharmādanyatrādharmāt ’ iti punaranukṛṣyate , kiṃ vā tato'nyo'yamapūrvaḥ praśna utthāpyata iti | kiṃ cātaḥ ? sa e vāyaṃ praśnaḥ punaranukṛṣyata iti yadyucyeta , tadā dvayorātmaviṣayayoḥ praśnayorekatāpatteragniviṣaya ātmaviṣayaśca dvāveva praśnāvityato na vaktavyaṃ trayāṇāṃ praśnopanyāsāviti | athānyo'yamapūrvaḥ praśna utthāpyata ityucyeta , tato yathaiva varapradānavyatirekeṇa praśnakalpanāyāmadoṣaḥ ; evaṃ praśnavyatirekeṇāpi pradhānopanyāsakalpanāyāmadoṣaḥ syāditi ||",
+    "segmentation_note": "Block-level extraction from BS_C01_S04_V06/BS_C01_S04_V06_B2."
+  },
+  "translation": {
+    "literal_translation": "An objection is raised: regarding the self-related question 'this doubt when a person has died,' is that very question drawn forward again in 'beyond dharma, beyond adharma,' or is this a different, previously unraised question? What follows from this? If the same question is repeated, then two self-questions collapse into one, leaving only two questions total (fire and self), so it is improper to speak of three question-expositions. If, however, this is a new and different question, then just as there is no fault in positing a question outside strict boon-allocation, there would likewise be no fault in positing an independent mention of pradhana even apart from an explicit question.",
+    "technical_translation": "Purvapaksha presses a structural dilemma: either the later 'anyatra dharmat...' query is anukarsa (continuation) of the earlier post-mortem self-doubt, or it is an apurva-praśna (new question). On the first horn, the triadic question-count collapses; on the second, the interpretive gatekeeping principle ('only explicitly asked topics may be taught') weakens, reopening room for a pradhana insertion. The objection thus targets the consistency of the tri-question constraint used against Sankhya import.",
+    "interpretive_note": "Dialectical pressure point: if question-boundary is unstable, topic-boundary is unstable."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "adhikaraṇa",
+        "gloss": "topical unit of argument",
+        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "grammatical_role": "noun",
+        "alternate_glosses": ["topic-unit", "argument node"]
+      }
+    ],
+    "argument_tags": ["objection"]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-s04-curation-pass-2",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.7,
+    "uncertainty_notes": [
+      "This block is intentionally rendered as an argumentative dilemma rather than a settled claim.",
+      "Terms like anukarsa/apurva are translated functionally; you may prefer explicit Sanskrit retention in final curation."
+    ]
+  }
+}

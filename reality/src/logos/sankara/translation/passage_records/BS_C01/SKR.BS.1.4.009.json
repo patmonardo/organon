@@ -1,0 +1,56 @@
+{
+  "record_id": "SKR.BS.1.4.009",
+  "work_code": "BS",
+  "section_code": "1.4",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Draft block record from BS_C01_S04.json::BS_C01_S04_V04_B1 (bhashya)."
+  },
+  "text": {
+    "source_text": "ज्ञेयत्वेन च साङ्ख्यैः प्रधानं स्मर्यते , गुणपुरुषान्तरज्ञानात्कैवल्यमिति वदद्भिः — न हि गुणस्वरूपमज्ञात्वा गुणेभ्यः पुरुषस्यान्तरं शक्यं ज्ञातुमिति । क्वचिच्च विभूतिविशेषप्राप्तये प्रधानं ज्ञेयमिति स्मरन्ति । न चेदमिहाव्यक्तं ज्ञेयत्वेनोच्यते । पदमात्रं ह्यव्यक्तशब्दः , नेहाव्यक्तं ज्ञातव्यमुपासितव्यं चेति वाक्यमस्ति । न चानुपदिष्टं पदार्थज्ञानं पुरुषार्थमिति शक्यं प्रतिपत्तुम् । तस्मा दपि नाव्यक्तशब्देन प्रधानमभिधीयते । अस्माकं तु रथरूपककॢप्तशरीराद्यनुसरणेन विष्णोरेव परमं पदं दर्शयितुमयमुपन्यास इत्यनवद्यम् ॥ ४ ॥",
+    "transliteration_iast": "jñeyatvena ca sāṅkhyaiḥ pradhānaṃ smaryate , guṇapuruṣāntarajñānātkaivalyamiti vadadbhiḥ — na hi guṇasvarūpamajñātvā guṇebhyaḥ puruṣasyāntaraṃ śakyaṃ jñātumiti | kvacicca vibhūtiviśeṣaprāptaye pradhānaṃ jñeyamiti smaranti | na cedamihāvyaktaṃ jñeyatvenocyate | padamātraṃ hyavyaktaśabdaḥ , nehāvyaktaṃ jñātavyamupāsitavyaṃ ceti vākyamasti | na cānupadiṣṭaṃ padārthajñānaṃ puruṣārthamiti śakyaṃ pratipattum | tasmā dapi nāvyaktaśabdena pradhānamabhidhīyate | asmākaṃ tu ratharūpakakḷptaśarīrādyanusaraṇena viṣṇoreva paramaṃ padaṃ darśayitumayamupanyāsa ityanavadyam || 4 ||",
+    "segmentation_note": "Block-level extraction from BS_C01_S04_V04/BS_C01_S04_V04_B1."
+  },
+  "translation": {
+    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S04_V04_B1.",
+    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S04_V04_B1; preserve adhikarana vocabulary and inference structure.",
+    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "adhikaraṇa",
+        "gloss": "topical unit of argument",
+        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "grammatical_role": "noun",
+        "alternate_glosses": [
+          "topic-unit",
+          "argument node"
+        ]
+      }
+    ],
+    "argument_tags": [
+      "draft",
+      "block-by-block",
+      "bhashya"
+    ]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.45,
+    "uncertainty_notes": [
+      "Scaffold generated automatically for full BS_C01 block coverage.",
+      "Literal and technical translations are placeholders pending manual curation."
+    ]
+  }
+}

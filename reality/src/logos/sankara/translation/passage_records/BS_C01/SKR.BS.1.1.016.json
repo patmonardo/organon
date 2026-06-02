@@ -1,0 +1,56 @@
+{
+  "record_id": "SKR.BS.1.1.016",
+  "work_code": "BS",
+  "section_code": "1.1",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Draft block record from BS_C01_S01.json::BS_C01_S01_V03_B2 (bhashya)."
+  },
+  "text": {
+    "source_text": "अथवा यथोक्त मृ ग्वेदादिशास्त्रं योनिः कारणं प्रमाण मस्य ब्रह्मणो यथावत्स्वरूपाधिगमे । शास्त्रा देव प्रमाणात् जगतो जन्मादिकारणं ब्रह्माधिगम्यत इत्यभिप्रायः । शास्त्र मु दाहृतं पूर्वसूत्रे — ‘ यतो वा इमानि भूतानि जायन्ते ’ (तै. उ. ३ । १ । १) इत्यादि । किमर्थं तर्हीदं सूत्रम् , यावता पूर्वसूत्र एव एवंजातीयकं शास्त्रमुदाहरता शास्त्रयोनित्वं ब्रह्मणो दर्शितम् । उच्यते — तत्र सूत्राक्षरेण स्पष्टं शास्त्रस्यानुपादानाज्जन्मादिसूत्रेण केवलमनुमानमुपन्यस्तमित्याशङ्क्येत ; तामाशङ्कां निवर्तयितुमिदं सूत्रं प्रववृते — ‘ शास्त्रयोनित्वात् ’ इति ॥ ३ ॥",
+    "transliteration_iast": "athavā yathokta mṛ gvedādiśāstraṃ yoniḥ kāraṇaṃ pramāṇa masya brahmaṇo yathāvatsvarūpādhigame | śāstrā deva pramāṇāt jagato janmādikāraṇaṃ brahmādhigamyata ityabhiprāyaḥ | śāstra mu dāhṛtaṃ pūrvasūtre — ‘ yato vā imāni bhūtāni jāyante ’ (tai. u. 3 | 1 | 1) ityādi | kimarthaṃ tarhīdaṃ sūtram , yāvatā pūrvasūtra eva evaṃjātīyakaṃ śāstramudāharatā śāstrayonitvaṃ brahmaṇo darśitam | ucyate — tatra sūtrākṣareṇa spaṣṭaṃ śāstrasyānupādānājjanmādisūtreṇa kevalamanumānamupanyastamityāśaṅkyeta ; tāmāśaṅkāṃ nivartayitumidaṃ sūtraṃ pravavṛte — ‘ śāstrayonitvāt ’ iti || 3 ||",
+    "segmentation_note": "Block-level extraction from BS_C01_S01_V03/BS_C01_S01_V03_B2."
+  },
+  "translation": {
+    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V03_B2.",
+    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V03_B2; preserve adhikarana vocabulary and inference structure.",
+    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "adhikaraṇa",
+        "gloss": "topical unit of argument",
+        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "grammatical_role": "noun",
+        "alternate_glosses": [
+          "topic-unit",
+          "argument node"
+        ]
+      }
+    ],
+    "argument_tags": [
+      "draft",
+      "block-by-block",
+      "bhashya"
+    ]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.45,
+    "uncertainty_notes": [
+      "Scaffold generated automatically for full BS_C01 block coverage.",
+      "Literal and technical translations are placeholders pending manual curation."
+    ]
+  }
+}

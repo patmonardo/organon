@@ -1,0 +1,56 @@
+{
+  "record_id": "SKR.BS.1.3.095",
+  "work_code": "BS",
+  "section_code": "1.3",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Draft block record from BS_C01_S03.json::BS_C01_S03_V38_B1 (bhashya)."
+  },
+  "text": {
+    "source_text": "इतश्च न शूद्रस्याधिकारः ; यदस्य स्मृतेः श्रवणाध्ययनार्थप्रतिषेधो भवति । वेदश्रवणप्रतिषेधः , वेदाध्ययनप्रतिषेधः , तदर्थज्ञानानुष्ठानयोश्च प्रतिषेधः शूद्रस्य स्मर्यते । श्रवणप्रतिषेधस्तावत् — ‘ अथ हास्य वेदमुपशृण्वतस्त्रपुजतुभ्यां श्रोत्रप्रतिपूरणम् ’ इति ; ‘ पद्यु ह वा एतच्छ्मशानं यच्छूद्रस्तस्माच्छूद्रसमीपे नाध्येतव्यम् ’ इति च । अत एवाध्ययनप्रतिषेधः । यस्य हि समीपेऽपि नाध्येतव्यं भवति , स कथमश्रुतमधीयीत । भवति च ‘ वेदोच्चारणे जिह्वाच्छेदः , धारणे शरीरभेद ’(गौ॰ध॰सू॰ २-३-४) इति । अत एव चार्थादर्थज्ञानानुष्ठानयोः प्रतिषेधो भवति — ‘ न शूद्राय मतिं दद्यात् ’(म॰स्मृ॰ ४-८०) इति , ‘ द्विजातीनामध्ययनमिज्या दानम् ’(गौ॰ध॰सू॰ २-१-१) इति च । येषां पुनः पूर्वकृतसंस्कारवशाद्विदुरधर्मव्याधप्रभृतीनां ज्ञानोत्पत्तिः , तेषां न शक्यते फलप्राप्तिः प्रतिषेद्धुम् , ज्ञानस्यैकान्तिकफलत्वात् । ‘ श्रावये च्चतुरो वर्णान् ’(म॰भा॰ १२-३२७-४९) इति चेतिहासपुराणाधिगमे चातुर्वर्ण्यस्याधिकारस्मरणात् । वेदपूर्वकस्तु नास्त्यधिकारः शूद्राणामिति स्थितम् ॥ ३८ ॥",
+    "transliteration_iast": "itaśca na śūdrasyādhikāraḥ ; yadasya smṛteḥ śravaṇādhyayanārthapratiṣedho bhavati | vedaśravaṇapratiṣedhaḥ , vedādhyayanapratiṣedhaḥ , tadarthajñānānuṣṭhānayośca pratiṣedhaḥ śūdrasya smaryate | śravaṇapratiṣedhastāvat — ‘ atha hāsya vedamupaśṛṇvatastrapujatubhyāṃ śrotrapratipūraṇam ’ iti ; ‘ padyu ha vā etacchmaśānaṃ yacchūdrastasmācchūdrasamīpe nādhyetavyam ’ iti ca | ata evādhyayanapratiṣedhaḥ | yasya hi samīpe'pi nādhyetavyaṃ bhavati , sa kathamaśrutamadhīyīta | bhavati ca ‘ vedoccāraṇe jihvācchedaḥ , dhāraṇe śarīrabheda ’(gau॰dha॰sū॰ 2-3-4) iti | ata eva cārthādarthajñānānuṣṭhānayoḥ pratiṣedho bhavati — ‘ na śūdrāya matiṃ dadyāt ’(ma॰smṛ॰ 4-80) iti , ‘ dvijātīnāmadhyayanamijyā dānam ’(gau॰dha॰sū॰ 2-1-1) iti ca | yeṣāṃ punaḥ pūrvakṛtasaṃskāravaśādviduradharmavyādhaprabhṛtīnāṃ jñānotpattiḥ , teṣāṃ na śakyate phalaprāptiḥ pratiṣeddhum , jñānasyaikāntikaphalatvāt | ‘ śrāvaye ccaturo varṇān ’(ma॰bhā॰ 12-327-49) iti cetihāsapurāṇādhigame cāturvarṇyasyādhikārasmaraṇāt | vedapūrvakastu nāstyadhikāraḥ śūdrāṇāmiti sthitam || 38 ||",
+    "segmentation_note": "Block-level extraction from BS_C01_S03_V38/BS_C01_S03_V38_B1."
+  },
+  "translation": {
+    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S03_V38_B1.",
+    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S03_V38_B1; preserve adhikarana vocabulary and inference structure.",
+    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "adhikaraṇa",
+        "gloss": "topical unit of argument",
+        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "grammatical_role": "noun",
+        "alternate_glosses": [
+          "topic-unit",
+          "argument node"
+        ]
+      }
+    ],
+    "argument_tags": [
+      "draft",
+      "block-by-block",
+      "bhashya"
+    ]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.45,
+    "uncertainty_notes": [
+      "Scaffold generated automatically for full BS_C01 block coverage.",
+      "Literal and technical translations are placeholders pending manual curation."
+    ]
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "record_id": "SKR.BS.1.3.051",
+  "work_code": "BS",
+  "section_code": "1.3",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Draft block record from BS_C01_S03.json::BS_C01_S03_V22_B1 (bhashya)."
+  },
+  "text": {
+    "source_text": "‘ न तत्र सूर्यो भाति न चन्द्रतारकं नेमा विद्युतो भान्ति कुतो ऽयमग्निः । तमेव भान्तमनुभाति सर्वं तस्य भासा सर्वमिदं विभाति ’ (मु. उ. २ । २ । ११) इति समामनन्ति । तत्र यं भान्तमनुभाति सर्वं यस्य च भासा सर्वमिदं विभाति , स किं तेजोधातुः कश्चित् , उत प्राज्ञ आत्मेति विचिकित्सायां तेजोधातुरिति तावत्प्राप्तम् । कुतः ? तेजोधातूना मेव सूर्यादीनां भानप्रतिषेधात् । तेजःस्वभावकं हि चन्द्रतारकादि तेजःस्वभावक एव सूर्ये भासमाने अहनि न भासत इति प्रसिद्धम् । तथा सह सूर्येण सर्वमिदं चन्द्रतारकादि यस्मिन्न भासते , सोऽपि तेजःस्वभाव एव कश्चिदित्यवगम्यते । अनुभान मपि तेजःस्वभावक एवोपपद्यते , समानस्वभावकेष्वनुकारदर्शनात् ; ‘ गच्छन्तमनुगच्छति ’ इतिवत् । तस्मात्तेजोधातुः कश्चिदित्येवं प्राप्ते ब्रूमः —",
+    "transliteration_iast": "‘ na tatra sūryo bhāti na candratārakaṃ nemā vidyuto bhānti kuto 'yamagniḥ | tameva bhāntamanubhāti sarvaṃ tasya bhāsā sarvamidaṃ vibhāti ’ (mu. u. 2 | 2 | 11) iti samāmananti | tatra yaṃ bhāntamanubhāti sarvaṃ yasya ca bhāsā sarvamidaṃ vibhāti , sa kiṃ tejodhātuḥ kaścit , uta prājña ātmeti vicikitsāyāṃ tejodhāturiti tāvatprāptam | kutaḥ ? tejodhātūnā meva sūryādīnāṃ bhānapratiṣedhāt | tejaḥsvabhāvakaṃ hi candratārakādi tejaḥsvabhāvaka eva sūrye bhāsamāne ahani na bhāsata iti prasiddham | tathā saha sūryeṇa sarvamidaṃ candratārakādi yasminna bhāsate , so'pi tejaḥsvabhāva eva kaścidityavagamyate | anubhāna mapi tejaḥsvabhāvaka evopapadyate , samānasvabhāvakeṣvanukāradarśanāt ; ‘ gacchantamanugacchati ’ itivat | tasmāttejodhātuḥ kaścidityevaṃ prāpte brūmaḥ —",
+    "segmentation_note": "Block-level extraction from BS_C01_S03_V22/BS_C01_S03_V22_B1."
+  },
+  "translation": {
+    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S03_V22_B1.",
+    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S03_V22_B1; preserve adhikarana vocabulary and inference structure.",
+    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "adhikaraṇa",
+        "gloss": "topical unit of argument",
+        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "grammatical_role": "noun",
+        "alternate_glosses": [
+          "topic-unit",
+          "argument node"
+        ]
+      }
+    ],
+    "argument_tags": [
+      "draft",
+      "block-by-block",
+      "bhashya"
+    ]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.45,
+    "uncertainty_notes": [
+      "Scaffold generated automatically for full BS_C01 block coverage.",
+      "Literal and technical translations are placeholders pending manual curation."
+    ]
+  }
+}

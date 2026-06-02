@@ -1,0 +1,56 @@
+{
+  "record_id": "SKR.BS.1.3.022",
+  "work_code": "BS",
+  "section_code": "1.3",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Draft block record from BS_C01_S03.json::BS_C01_S03_V09_B1 (bhashya)."
+  },
+  "text": {
+    "source_text": "अपि च ये भूम्नि श्रूयन्ते धर्माः , ते परमात्मन्युपपद्यन्ते । ‘ यत्र नान्यत्पश्यति नान्यच्छृणोति नान्यद्विजानाति स भूमा ’ इति दर्शनादिव्यवहाराभावं भूमनि अवगमयति । परमात्मनि चायं दर्शनादिव्यवहाराभावोऽवगतः — ‘ यत्र त्वस्य सर्वमात्मैवाभूत्तत्केन कं पश्येत् ’ (बृ. उ. ४ । ५ । १५) इत्यादिश्रुत्यन्तरात् । योऽप्यसौ सुषुप्तावस्थायां दर्शनादिव्यवहाराभाव उक्तः , सोऽप्यात्मन एवासङ्गत्वविवक्षयोक्तः , न प्राणस्वभावविवक्षया , परमात्मप्रकरणात् । यदपि तस्यामवस्थायां सुखमुक्तम् , तदप्यात्मन एव सुखरूपत्वविवक्षयोक्तम् ; यत आह — ‘ एषोऽस्य परम आनन्द एतस्यैवानन्दस्यान्यानि भूतानि मात्रामुपजीवन्ति ’ (बृ. उ. ४ । ३ । ३२) इति । इहापि ‘ यो वै भूमा तत्सुखं नाल्पे सुखमस्ति भूमैव सुखम् ’ इति सामयसुखनिराकरणेन ब्रह्मैव सुखं भूमानं दर्शयति । ‘ यो वै भूमा तदमृतम् ’ इत्यमृतत्वमपीह श्रूयमाणं परमकारणं गमयति । विकाराणाममृतत्वस्यापेक्षिकत्वात् , ‘ अतोऽन्यदार्तम् ’ (बृ. उ. ३ । ४ । २) इति च श्रुत्यन्तरात् । तथा च सत्यत्वं स्वमहिमप्रतिष्ठितत्वं सर्वगतत्वं सर्वात्मत्वमिति चैते धर्माः श्रूयमाणाः परमात्मन्येवोपपद्यन्ते , नान्यत्र । तस्माद्भूमा परमात्मेति सिद्धम् ॥ ९ ॥",
+    "transliteration_iast": "api ca ye bhūmni śrūyante dharmāḥ , te paramātmanyupapadyante | ‘ yatra nānyatpaśyati nānyacchṛṇoti nānyadvijānāti sa bhūmā ’ iti darśanādivyavahārābhāvaṃ bhūmani avagamayati | paramātmani cāyaṃ darśanādivyavahārābhāvo'vagataḥ — ‘ yatra tvasya sarvamātmaivābhūttatkena kaṃ paśyet ’ (bṛ. u. 4 | 5 | 15) ityādiśrutyantarāt | yo'pyasau suṣuptāvasthāyāṃ darśanādivyavahārābhāva uktaḥ , so'pyātmana evāsaṅgatvavivakṣayoktaḥ , na prāṇasvabhāvavivakṣayā , paramātmaprakaraṇāt | yadapi tasyāmavasthāyāṃ sukhamuktam , tadapyātmana eva sukharūpatvavivakṣayoktam ; yata āha — ‘ eṣo'sya parama ānanda etasyaivānandasyānyāni bhūtāni mātrāmupajīvanti ’ (bṛ. u. 4 | 3 | 32) iti | ihāpi ‘ yo vai bhūmā tatsukhaṃ nālpe sukhamasti bhūmaiva sukham ’ iti sāmayasukhanirākaraṇena brahmaiva sukhaṃ bhūmānaṃ darśayati | ‘ yo vai bhūmā tadamṛtam ’ ityamṛtatvamapīha śrūyamāṇaṃ paramakāraṇaṃ gamayati | vikārāṇāmamṛtatvasyāpekṣikatvāt , ‘ ato'nyadārtam ’ (bṛ. u. 3 | 4 | 2) iti ca śrutyantarāt | tathā ca satyatvaṃ svamahimapratiṣṭhitatvaṃ sarvagatatvaṃ sarvātmatvamiti caite dharmāḥ śrūyamāṇāḥ paramātmanyevopapadyante , nānyatra | tasmādbhūmā paramātmeti siddham || 9 ||",
+    "segmentation_note": "Block-level extraction from BS_C01_S03_V09/BS_C01_S03_V09_B1."
+  },
+  "translation": {
+    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S03_V09_B1.",
+    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S03_V09_B1; preserve adhikarana vocabulary and inference structure.",
+    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "adhikaraṇa",
+        "gloss": "topical unit of argument",
+        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "grammatical_role": "noun",
+        "alternate_glosses": [
+          "topic-unit",
+          "argument node"
+        ]
+      }
+    ],
+    "argument_tags": [
+      "draft",
+      "block-by-block",
+      "bhashya"
+    ]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.45,
+    "uncertainty_notes": [
+      "Scaffold generated automatically for full BS_C01 block coverage.",
+      "Literal and technical translations are placeholders pending manual curation."
+    ]
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "record_id": "SKR.BS.1.3.066",
+  "work_code": "BS",
+  "section_code": "1.3",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Draft block record from BS_C01_S03.json::BS_C01_S03_V28_B1 (bhashya)."
+  },
+  "text": {
+    "source_text": "मा नाम विग्रहवत्त्वे देवादीनामभ्युपगम्यमाने कर्मणि कश्चिद्विरोधः प्रसञ्जि । शब्दे तु विरोधः प्रसज्येत । कथम् ? औत्पत्तिकं हि शब्दस्यार्थेन सम्बन्धमाश्रित्य ‘ अनपेक्षत्वात् ’ इति वेदस्य प्रामाण्यं स्थापितम् । इदानीं तु विग्रहवती देवताभ्युपगम्यमाना यद्यप्यैश्वर्ययोगाद्युगपदनेककर्मसम्बन्धीनि हवींषि भुञ्जीत , तथापि विग्रहयोगादस्मदादिवज्जननमरणवती सेति , नित्यस्य शब्दस्य नित्येनार्थेन नित्ये सम्बन्धे प्रतीयमाने यद्वैदिके शब्दे प्रामाण्यं स्थितम् , तस्य विरोधः स्यादिति चेत् , नायम प्यस्ति विरोधः । कस्मात् ? अतः प्रभवात् । अत एव हि वैदिकाच्छब्दाद्देवादिकं जगत्प्रभवति ॥",
+    "transliteration_iast": "mā nāma vigrahavattve devādīnāmabhyupagamyamāne karmaṇi kaścidvirodhaḥ prasañji | śabde tu virodhaḥ prasajyeta | katham ? autpattikaṃ hi śabdasyārthena sambandhamāśritya ‘ anapekṣatvāt ’ iti vedasya prāmāṇyaṃ sthāpitam | idānīṃ tu vigrahavatī devatābhyupagamyamānā yadyapyaiśvaryayogādyugapadanekakarmasambandhīni havīṃṣi bhuñjīta , tathāpi vigrahayogādasmadādivajjananamaraṇavatī seti , nityasya śabdasya nityenārthena nitye sambandhe pratīyamāne yadvaidike śabde prāmāṇyaṃ sthitam , tasya virodhaḥ syāditi cet , nāyama pyasti virodhaḥ | kasmāt ? ataḥ prabhavāt | ata eva hi vaidikācchabdāddevādikaṃ jagatprabhavati ||",
+    "segmentation_note": "Block-level extraction from BS_C01_S03_V28/BS_C01_S03_V28_B1."
+  },
+  "translation": {
+    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S03_V28_B1.",
+    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S03_V28_B1; preserve adhikarana vocabulary and inference structure.",
+    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "adhikaraṇa",
+        "gloss": "topical unit of argument",
+        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "grammatical_role": "noun",
+        "alternate_glosses": [
+          "topic-unit",
+          "argument node"
+        ]
+      }
+    ],
+    "argument_tags": [
+      "draft",
+      "block-by-block",
+      "bhashya"
+    ]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.45,
+    "uncertainty_notes": [
+      "Scaffold generated automatically for full BS_C01 block coverage.",
+      "Literal and technical translations are placeholders pending manual curation."
+    ]
+  }
+}

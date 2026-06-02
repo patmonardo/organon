@@ -1,0 +1,56 @@
+{
+  "record_id": "SKR.BS.1.2.006",
+  "work_code": "BS",
+  "section_code": "1.2",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Draft passage record derived from BS_C01_S02::BS_C01_S02_V02_VERSETEXT_01."
+  },
+  "text": {
+    "source_text": "विवक्षितगुणोपपत्तेश्च ॥ २ ॥",
+    "transliteration_iast": "vivakṣitaguṇopapatteśca || 2 ||",
+    "segmentation_note": "Block-level extraction from BS_C01_S02_V02_VERSETEXT_01 (versetext)."
+  },
+  "translation": {
+    "literal_translation": "And because the intended qualities are tenable. (2)",
+    "technical_translation": "Sutra 1.2.2: Brahman is the referent since the meditation-relevant predicates are coherently applicable there.",
+    "interpretive_note": "Sutra statement keyed to vivaksita-guna hermeneutics."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "brahman",
+        "gloss": "ultimate reality",
+        "contextual_sense": "Primary interpretive referent under adjudication in this adhikarana",
+        "grammatical_role": "noun",
+        "alternate_glosses": [
+          "absolute",
+          "supreme principle"
+        ]
+      }
+    ],
+    "argument_tags": [
+      "adhikarana",
+      "brahman-reference",
+      "versetext"
+    ]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:22:48Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-s02-block-pass-1",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.74,
+    "uncertainty_notes": [
+      "Long bhashya blocks translated as draft prose and require line-level philological curation.",
+      "Terminology retained in mixed transliteration/English where doctrinal precision is required."
+    ]
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "record_id": "SKR.BS.1.2.058",
+  "work_code": "BS",
+  "section_code": "1.2",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Draft block record from BS_C01_S02.json::BS_C01_S02_V23_B2 (bhashya)."
+  },
+  "text": {
+    "source_text": "अन्ये पुन र्मन्यन्ते — नायं भूतयोनेः रूपोपन्यासः , जायमानत्वेनोपन्यासात् । ‘ एतस्माज्जायते प्राणो मनः सर्वेन्द्रियाणि च । खं वायुर्ज्योतिरापः पृथिवी विश्वस्य धारिणी ’ इति हि पूर्वत्र प्राणादि पृथिव्यन्तं तत्त्वजातं जायमानत्वेन निरदिक्षत् । उत्तरत्रापि च ‘ तस्मादग्निः समिधो यस्य सूर्यः ’ इत्येवमादि ‘ अतश्च सर्वा ओषधयो रसश्च ’ इत्येवमन्तं जायमानत्वेनैव निर्देक्ष्यति । इहैव कथमकस्मादन्तराले भूतयोनेः रूपमुपन्यसेत् ? सर्वात्मत्वमपि सृष्टिं परिसमाप्योपदेक्ष्यति — ‘ पुरुष एवेदं विश्वं कर्म ’ (मु. उ. २ । १ । १०) इत्यादिना । श्रुति स्मृत्योश्च त्रैलोक्यशरीरस्य प्रजापतेर्जन्मादि निर्दिश्यमानमुपलभामहे — ‘ हिरण्यगर्भः समवर्तताग्रे भूतस्य जातः पतिरेक आसीत् । स दाधार पृथिवीं द्यामुतेमां कस्मै देवाय हविषा विधेम ’ (ऋ. सं. १० । १२१ । १) इति ; समवर्ततेति अजायतेत्यर्थः — तथा , ‘ स वै शरीरी प्रथमः स वै पुरुष उच्यते । आदिकर्ता स भूतानां ब्रह्माग्रे समवर्तत ’ इति च । विकार पुरुषस्यापि सर्वभूतान्तरात्मत्वं सम्भवति , प्राणात्मना सर्वभूतानामध्यात्ममवस्थानात् । अस्मिन्पक्षे ‘ पुरुष एवेदं विश्वं कर्म ’ इत्यादिसर्वरूपोपन्यासः परमेश्वरप्रतिपत्तिहेतुरिति व्याख्येयम् ॥ २३ ॥",
+    "transliteration_iast": "anye puna rmanyante — nāyaṃ bhūtayoneḥ rūpopanyāsaḥ , jāyamānatvenopanyāsāt | ‘ etasmājjāyate prāṇo manaḥ sarvendriyāṇi ca | khaṃ vāyurjyotirāpaḥ pṛthivī viśvasya dhāriṇī ’ iti hi pūrvatra prāṇādi pṛthivyantaṃ tattvajātaṃ jāyamānatvena niradikṣat | uttaratrāpi ca ‘ tasmādagniḥ samidho yasya sūryaḥ ’ ityevamādi ‘ ataśca sarvā oṣadhayo rasaśca ’ ityevamantaṃ jāyamānatvenaiva nirdekṣyati | ihaiva kathamakasmādantarāle bhūtayoneḥ rūpamupanyaset ? sarvātmatvamapi sṛṣṭiṃ parisamāpyopadekṣyati — ‘ puruṣa evedaṃ viśvaṃ karma ’ (mu. u. 2 | 1 | 10) ityādinā | śruti smṛtyośca trailokyaśarīrasya prajāpaterjanmādi nirdiśyamānamupalabhāmahe — ‘ hiraṇyagarbhaḥ samavartatāgre bhūtasya jātaḥ patireka āsīt | sa dādhāra pṛthivīṃ dyāmutemāṃ kasmai devāya haviṣā vidhema ’ (ṛ. saṃ. 10 | 121 | 1) iti ; samavartateti ajāyatetyarthaḥ — tathā , ‘ sa vai śarīrī prathamaḥ sa vai puruṣa ucyate | ādikartā sa bhūtānāṃ brahmāgre samavartata ’ iti ca | vikāra puruṣasyāpi sarvabhūtāntarātmatvaṃ sambhavati , prāṇātmanā sarvabhūtānāmadhyātmamavasthānāt | asminpakṣe ‘ puruṣa evedaṃ viśvaṃ karma ’ ityādisarvarūpopanyāsaḥ parameśvarapratipattiheturiti vyākhyeyam || 23 ||",
+    "segmentation_note": "Block-level extraction from BS_C01_S02_V23/BS_C01_S02_V23_B2."
+  },
+  "translation": {
+    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S02_V23_B2.",
+    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S02_V23_B2; preserve adhikarana vocabulary and inference structure.",
+    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "adhikaraṇa",
+        "gloss": "topical unit of argument",
+        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "grammatical_role": "noun",
+        "alternate_glosses": [
+          "topic-unit",
+          "argument node"
+        ]
+      }
+    ],
+    "argument_tags": [
+      "draft",
+      "block-by-block",
+      "bhashya"
+    ]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.45,
+    "uncertainty_notes": [
+      "Scaffold generated automatically for full BS_C01 block coverage.",
+      "Literal and technical translations are placeholders pending manual curation."
+    ]
+  }
+}

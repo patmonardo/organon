@@ -1,0 +1,56 @@
+{
+  "record_id": "SKR.BS.1.2.026",
+  "work_code": "BS",
+  "section_code": "1.2",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Draft block record from BS_C01_S02.json::BS_C01_S02_V11_B2 (bhashya)."
+  },
+  "text": {
+    "source_text": "किं ताव त्प्राप्तम् ? बुद्धिक्षेत्रज्ञाविति । कुतः ? ‘ गुहां प्रविष्टौ ’ इति विशेषणात् । यदि शरीरं गुहा , यदि वा हृदयम् , उभयथापि बुद्धिक्षेत्रज्ञौ गुहां प्रविष्टावुपपद्येते । न च सति सम्भवे सर्वगतस्य ब्रह्मणो विशिष्टदेशत्वं युक्तं कल्पयितुम् । ‘ सुकृतस्य लोके ’ इति च कर्मगोचरानतिक्रमं दर्शयति । परमात्मा तु न सुकृतस्य वा दुष्कृतस्य वा गोचरे वर्तते , ‘ न कर्मणा वर्धते नो कनीयान् ’ (बृ. उ. ४ । ४ । २३) इति श्रुतेः । ‘ छायातपौ ’ इति च चेतनाचेतनयोर्निर्देश उपपद्यते , छायातपवत्परस्परविलक्षणत्वात् । तस्माद्बुद्धिक्षेत्रज्ञाविहोच्येयातामित्येवं प्राप्ते ब्रूमः —",
+    "transliteration_iast": "kiṃ tāva tprāptam ? buddhikṣetrajñāviti | kutaḥ ? ‘ guhāṃ praviṣṭau ’ iti viśeṣaṇāt | yadi śarīraṃ guhā , yadi vā hṛdayam , ubhayathāpi buddhikṣetrajñau guhāṃ praviṣṭāvupapadyete | na ca sati sambhave sarvagatasya brahmaṇo viśiṣṭadeśatvaṃ yuktaṃ kalpayitum | ‘ sukṛtasya loke ’ iti ca karmagocarānatikramaṃ darśayati | paramātmā tu na sukṛtasya vā duṣkṛtasya vā gocare vartate , ‘ na karmaṇā vardhate no kanīyān ’ (bṛ. u. 4 | 4 | 23) iti śruteḥ | ‘ chāyātapau ’ iti ca cetanācetanayornirdeśa upapadyate , chāyātapavatparasparavilakṣaṇatvāt | tasmādbuddhikṣetrajñāvihocyeyātāmityevaṃ prāpte brūmaḥ —",
+    "segmentation_note": "Block-level extraction from BS_C01_S02_V11/BS_C01_S02_V11_B2."
+  },
+  "translation": {
+    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S02_V11_B2.",
+    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S02_V11_B2; preserve adhikarana vocabulary and inference structure.",
+    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "adhikaraṇa",
+        "gloss": "topical unit of argument",
+        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "grammatical_role": "noun",
+        "alternate_glosses": [
+          "topic-unit",
+          "argument node"
+        ]
+      }
+    ],
+    "argument_tags": [
+      "draft",
+      "block-by-block",
+      "bhashya"
+    ]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.45,
+    "uncertainty_notes": [
+      "Scaffold generated automatically for full BS_C01 block coverage.",
+      "Literal and technical translations are placeholders pending manual curation."
+    ]
+  }
+}

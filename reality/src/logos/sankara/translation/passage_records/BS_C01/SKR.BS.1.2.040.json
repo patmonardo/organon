@@ -1,0 +1,56 @@
+{
+  "record_id": "SKR.BS.1.2.040",
+  "work_code": "BS",
+  "section_code": "1.2",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Draft block record from BS_C01_S02.json::BS_C01_S02_V16_B1 (bhashya)."
+  },
+  "text": {
+    "source_text": "इत श्चा क्षिस्थानः पुरुषः परमेश्वरः , यस्माच्छ्रुतोपनिषत्कस्य श्रुतरहस्यविज्ञानस्य ब्रह्मविदो या गतिर्देवयानाख्या प्रसिद्धा श्रुतौ — ‘ अ थो त्तरेण तपसा ब्रह्मचर्येण श्रद्धया विद्ययात्मानमन्विष्यादित्यमभिजयन्ते । एतद्वै प्राणानामायतनमेतदमृतमभयमेतत्परायणमेतस्मान्न पुनरावर्तन्ते ’ (प्र. उ. १ । १०) इति , स्मृतावपि — ‘ अग्निर्ज्योतिरहः शुक्लः षण्मासा उत्तरायणम् । तत्र प्रयाता गच्छन्ति ब्रह्म ब्रह्मविदो जनाः ’ (भ. गी. ८ । २४) इति , सैवेहाक्षिपुरुषविदोऽभिधीयमाना दृश्यते । ‘ अथ यदु चैवास्मिञ्छव्यं कुर्वन्ति यदि च नार्चिषमेवाभिसम्भवन्ति ’ इत्युपक्रम्य ‘ आदित्याच्चन्द्रमसं चन्द्रमसो विद्युतं तत्पुरुषोऽमानवः स एनान्ब्रह्म गमयत्येष देवपथो ब्रह्मपथ एतेन प्रतिपद्यमाना इमं मानवमावर्तं नावर्तन्ते ’ (छा. उ. ४ । १५ । ५) इति । तदिह ब्रह्मविद्विषयया प्रसिद्धया गत्या अक्षिस्थानस्य ब्रह्मत्वं निश्चीयते ॥ १६ ॥",
+    "transliteration_iast": "ita ścā kṣisthānaḥ puruṣaḥ parameśvaraḥ , yasmācchrutopaniṣatkasya śrutarahasyavijñānasya brahmavido yā gatirdevayānākhyā prasiddhā śrutau — ‘ a tho ttareṇa tapasā brahmacaryeṇa śraddhayā vidyayātmānamanviṣyādityamabhijayante | etadvai prāṇānāmāyatanametadamṛtamabhayametatparāyaṇametasmānna punarāvartante ’ (pra. u. 1 | 10) iti , smṛtāvapi — ‘ agnirjyotirahaḥ śuklaḥ ṣaṇmāsā uttarāyaṇam | tatra prayātā gacchanti brahma brahmavido janāḥ ’ (bha. gī. 8 | 24) iti , saivehākṣipuruṣavido'bhidhīyamānā dṛśyate | ‘ atha yadu caivāsmiñchavyaṃ kurvanti yadi ca nārciṣamevābhisambhavanti ’ ityupakramya ‘ ādityāccandramasaṃ candramaso vidyutaṃ tatpuruṣo'mānavaḥ sa enānbrahma gamayatyeṣa devapatho brahmapatha etena pratipadyamānā imaṃ mānavamāvartaṃ nāvartante ’ (chā. u. 4 | 15 | 5) iti | tadiha brahmavidviṣayayā prasiddhayā gatyā akṣisthānasya brahmatvaṃ niścīyate || 16 ||",
+    "segmentation_note": "Block-level extraction from BS_C01_S02_V16/BS_C01_S02_V16_B1."
+  },
+  "translation": {
+    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S02_V16_B1.",
+    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S02_V16_B1; preserve adhikarana vocabulary and inference structure.",
+    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "adhikaraṇa",
+        "gloss": "topical unit of argument",
+        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "grammatical_role": "noun",
+        "alternate_glosses": [
+          "topic-unit",
+          "argument node"
+        ]
+      }
+    ],
+    "argument_tags": [
+      "draft",
+      "block-by-block",
+      "bhashya"
+    ]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.45,
+    "uncertainty_notes": [
+      "Scaffold generated automatically for full BS_C01 block coverage.",
+      "Literal and technical translations are placeholders pending manual curation."
+    ]
+  }
+}

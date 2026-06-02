@@ -1,0 +1,56 @@
+{
+  "record_id": "SKR.BS.1.3.106",
+  "work_code": "BS",
+  "section_code": "1.3",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Draft block record from BS_C01_S03.json::BS_C01_S03_V42_B1 (bhashya)."
+  },
+  "text": {
+    "source_text": "व्यपदेशादित्यनुवर्तते । बृहदारण्यके षष्ठे प्रपाठके ‘ कतम आत्मेति योऽयं विज्ञानमयः प्राणेषु हृ द्यन्तर्ज्योतिः पुरुषः ’ (बृ. उ. ४ । ३ । ७) इत्युपक्रम्य भूयानात्मविषयः प्रपञ्चः कृतः । तत्किं संसारिस्वरूपमात्रान्वाख्यानपरं वाक्यम् , उतासंसारिस्वरूपप्रतिपादनपरमिति संशयः । किं तावत्प्राप्तम् ? संसारिस्वरूपमात्रविषयमेवेति । कुतः ? उपक्रमोपसंहाराभ्याम् । उपक्रमे ‘ योऽयं विज्ञानमयः प्राणेषु ’ इति शारीरलिङ्गात् । उपसंहारे च ‘ स वा एष महानज आत्मा योऽयं विज्ञानमयः प्राणेषु ’ (बृ. उ. ४ । ४ । २२) इति तदपरित्यागात् । मध्येऽपि बुद्धान्ताद्यवस्थोपन्यासेन तस्यैव प्रपञ्चनादित्येवं प्राप्ते ब्रूमः —",
+    "transliteration_iast": "vyapadeśādityanuvartate | bṛhadāraṇyake ṣaṣṭhe prapāṭhake ‘ katama ātmeti yo'yaṃ vijñānamayaḥ prāṇeṣu hṛ dyantarjyotiḥ puruṣaḥ ’ (bṛ. u. 4 | 3 | 7) ityupakramya bhūyānātmaviṣayaḥ prapañcaḥ kṛtaḥ | tatkiṃ saṃsārisvarūpamātrānvākhyānaparaṃ vākyam , utāsaṃsārisvarūpapratipādanaparamiti saṃśayaḥ | kiṃ tāvatprāptam ? saṃsārisvarūpamātraviṣayameveti | kutaḥ ? upakramopasaṃhārābhyām | upakrame ‘ yo'yaṃ vijñānamayaḥ prāṇeṣu ’ iti śārīraliṅgāt | upasaṃhāre ca ‘ sa vā eṣa mahānaja ātmā yo'yaṃ vijñānamayaḥ prāṇeṣu ’ (bṛ. u. 4 | 4 | 22) iti tadaparityāgāt | madhye'pi buddhāntādyavasthopanyāsena tasyaiva prapañcanādityevaṃ prāpte brūmaḥ —",
+    "segmentation_note": "Block-level extraction from BS_C01_S03_V42/BS_C01_S03_V42_B1."
+  },
+  "translation": {
+    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S03_V42_B1.",
+    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S03_V42_B1; preserve adhikarana vocabulary and inference structure.",
+    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "adhikaraṇa",
+        "gloss": "topical unit of argument",
+        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "grammatical_role": "noun",
+        "alternate_glosses": [
+          "topic-unit",
+          "argument node"
+        ]
+      }
+    ],
+    "argument_tags": [
+      "draft",
+      "block-by-block",
+      "bhashya"
+    ]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.45,
+    "uncertainty_notes": [
+      "Scaffold generated automatically for full BS_C01 block coverage.",
+      "Literal and technical translations are placeholders pending manual curation."
+    ]
+  }
+}

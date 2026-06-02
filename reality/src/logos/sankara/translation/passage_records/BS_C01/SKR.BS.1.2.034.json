@@ -1,0 +1,56 @@
+{
+  "record_id": "SKR.BS.1.2.034",
+  "work_code": "BS",
+  "section_code": "1.2",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Draft block record from BS_C01_S02.json::BS_C01_S02_V13_B2 (bhashya)."
+  },
+  "text": {
+    "source_text": "परमेश्वर ए वा क्षिण्यभ्यन्तरः पुरुष इहोपदिष्ट इति । कस्मात् ? उपपत्तेः । उपपद्यते हि परमेश्वरे गुणजातमिहोपदिश्यमानम् । आत्मत्वं तावन्मुख्यया वृत्त्या परमेश्वरे उपपद्यते , ‘ स आत्मा तत्त्वमसि ’ इति श्रुतेः । अमृतत्वाभयत्वे च तस्मिन्नसकृच्छ्रुतौ श्रूयेते । तथा परमेश्वरानुरूपमेतदक्षिस्थानम् । यथा हि परमेश्वरः सर्वदोषैरलिप्तः , अपहतपाप्मत्वादिश्रवणात् ; तथाक्षिस्थानं सर्वलेपरहितमुपदिष्टम् ‘ तद्यद्यप्यस्मिन्सर्पिर्वोदकं वा सिञ्चति , वर्त्मनी एव गच्छति ’ इति श्रुतेः । संयद्वामत्वादिगुणोपदेशश्च तस्मिन्नवकल्पते । ‘ एतं संयद्वाम इत्याचक्षते । एतं हि सर्वाणि वामान्यभिसंयन्ति’ , (छा. उ. ४ । १५ । २) ‘ एष उ एव वामनी रे ष हि सर्वाणि वामानि नयति ।’ (छा. उ. ४ । १५ । ३) ‘ एष उ एव भामनी रे ष हि सर्वेषु लोकेषु भाति ’ (छा. उ. ४ । १५ । ४) इति च । अत उपपत्तेरन्तरः परमेश्वरः ॥ १३ ॥",
+    "transliteration_iast": "parameśvara e vā kṣiṇyabhyantaraḥ puruṣa ihopadiṣṭa iti | kasmāt ? upapatteḥ | upapadyate hi parameśvare guṇajātamihopadiśyamānam | ātmatvaṃ tāvanmukhyayā vṛttyā parameśvare upapadyate , ‘ sa ātmā tattvamasi ’ iti śruteḥ | amṛtatvābhayatve ca tasminnasakṛcchrutau śrūyete | tathā parameśvarānurūpametadakṣisthānam | yathā hi parameśvaraḥ sarvadoṣairaliptaḥ , apahatapāpmatvādiśravaṇāt ; tathākṣisthānaṃ sarvaleparahitamupadiṣṭam ‘ tadyadyapyasminsarpirvodakaṃ vā siñcati , vartmanī eva gacchati ’ iti śruteḥ | saṃyadvāmatvādiguṇopadeśaśca tasminnavakalpate | ‘ etaṃ saṃyadvāma ityācakṣate | etaṃ hi sarvāṇi vāmānyabhisaṃyanti’ , (chā. u. 4 | 15 | 2) ‘ eṣa u eva vāmanī re ṣa hi sarvāṇi vāmāni nayati |’ (chā. u. 4 | 15 | 3) ‘ eṣa u eva bhāmanī re ṣa hi sarveṣu lokeṣu bhāti ’ (chā. u. 4 | 15 | 4) iti ca | ata upapatterantaraḥ parameśvaraḥ || 13 ||",
+    "segmentation_note": "Block-level extraction from BS_C01_S02_V13/BS_C01_S02_V13_B2."
+  },
+  "translation": {
+    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S02_V13_B2.",
+    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S02_V13_B2; preserve adhikarana vocabulary and inference structure.",
+    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "adhikaraṇa",
+        "gloss": "topical unit of argument",
+        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "grammatical_role": "noun",
+        "alternate_glosses": [
+          "topic-unit",
+          "argument node"
+        ]
+      }
+    ],
+    "argument_tags": [
+      "draft",
+      "block-by-block",
+      "bhashya"
+    ]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.45,
+    "uncertainty_notes": [
+      "Scaffold generated automatically for full BS_C01 block coverage.",
+      "Literal and technical translations are placeholders pending manual curation."
+    ]
+  }
+}

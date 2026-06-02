@@ -1,0 +1,56 @@
+{
+  "record_id": "SKR.BS.1.2.062",
+  "work_code": "BS",
+  "section_code": "1.2",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Draft block record from BS_C01_S02.json::BS_C01_S02_V24_B2 (bhashya)."
+  },
+  "text": {
+    "source_text": "इद मुच्यते — वैश्वानरः परमात्मा भवितुमर्हति । कुतः ? साधारणशब्दविशेषात् । साधारणशब्दयोर्विशेषः साधारणशब्दविशेषः । यद्यप्येतावुभावप्यात्मवैश्वानरशब्दौ साधारणशब्दौ — वैश्वानरशब्दस्तु त्रयस्य साधारणः , आत्मशब्दश्च द्वयस्य , तथापि विशेषो दृश्यते , येन परमेश्वरपरत्वं तयोरभ्युपगम्यते — ‘ तस्य ह वा एतस्यात्मनो वैश्वानरस्य मूर्धैव सुतेजाः ’ इत्यादिः । अत्र हि परमेश्वर एव द्युमूर्धत्वादिविशिष्टोऽवस्थान्तरगतः प्रत्यगात्मत्वेनोपन्यस्त आध्यानायेति गम्यते , कारणत्वात् । कारणस्य हि सर्वाभिः कार्यगताभिरवस्थाभिरवस्थावत्त्वात् द्युलोकाद्यवयवत्वमुपपद्यते । ‘ स सर्वेषु लोकेषु सर्वेषु भूतेषु सर्वेष्वात्मस्वन्नमत्ति ’ इति च सर्वलोकाद्याश्रयं फलं श्रूयमाणं परमकारणपरिग्रहे सम्भवति , ‘ एवं हास्य सर्वे पाप्मानः प्रदूयन्ते ’ (छा. उ. ५ । २४ । ३) इति च तद्विदः सर्वपाप्मप्रदाहश्रवणम् , ‘ को न आत्मा किं ब्रह्म ’ इति चात्मब्रह्मशब्दाभ्यामुपक्रमः ; — इत्येवमेतानि लिङ्गानि परमेश्वरमेव गमयन्ति । तस्मात्परमेश्वर एव वैश्वानरः ॥ २४ ॥",
+    "transliteration_iast": "ida mucyate — vaiśvānaraḥ paramātmā bhavitumarhati | kutaḥ ? sādhāraṇaśabdaviśeṣāt | sādhāraṇaśabdayorviśeṣaḥ sādhāraṇaśabdaviśeṣaḥ | yadyapyetāvubhāvapyātmavaiśvānaraśabdau sādhāraṇaśabdau — vaiśvānaraśabdastu trayasya sādhāraṇaḥ , ātmaśabdaśca dvayasya , tathāpi viśeṣo dṛśyate , yena parameśvaraparatvaṃ tayorabhyupagamyate — ‘ tasya ha vā etasyātmano vaiśvānarasya mūrdhaiva sutejāḥ ’ ityādiḥ | atra hi parameśvara eva dyumūrdhatvādiviśiṣṭo'vasthāntaragataḥ pratyagātmatvenopanyasta ādhyānāyeti gamyate , kāraṇatvāt | kāraṇasya hi sarvābhiḥ kāryagatābhiravasthābhiravasthāvattvāt dyulokādyavayavatvamupapadyate | ‘ sa sarveṣu lokeṣu sarveṣu bhūteṣu sarveṣvātmasvannamatti ’ iti ca sarvalokādyāśrayaṃ phalaṃ śrūyamāṇaṃ paramakāraṇaparigrahe sambhavati , ‘ evaṃ hāsya sarve pāpmānaḥ pradūyante ’ (chā. u. 5 | 24 | 3) iti ca tadvidaḥ sarvapāpmapradāhaśravaṇam , ‘ ko na ātmā kiṃ brahma ’ iti cātmabrahmaśabdābhyāmupakramaḥ ; — ityevametāni liṅgāni parameśvarameva gamayanti | tasmātparameśvara eva vaiśvānaraḥ || 24 ||",
+    "segmentation_note": "Block-level extraction from BS_C01_S02_V24/BS_C01_S02_V24_B2."
+  },
+  "translation": {
+    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S02_V24_B2.",
+    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S02_V24_B2; preserve adhikarana vocabulary and inference structure.",
+    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "adhikaraṇa",
+        "gloss": "topical unit of argument",
+        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "grammatical_role": "noun",
+        "alternate_glosses": [
+          "topic-unit",
+          "argument node"
+        ]
+      }
+    ],
+    "argument_tags": [
+      "draft",
+      "block-by-block",
+      "bhashya"
+    ]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.45,
+    "uncertainty_notes": [
+      "Scaffold generated automatically for full BS_C01 block coverage.",
+      "Literal and technical translations are placeholders pending manual curation."
+    ]
+  }
+}

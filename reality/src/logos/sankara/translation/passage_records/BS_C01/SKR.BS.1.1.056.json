@@ -1,0 +1,56 @@
+{
+  "record_id": "SKR.BS.1.1.056",
+  "work_code": "BS",
+  "section_code": "1.1",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Draft block record from BS_C01_S01.json::BS_C01_S01_V13_B1 (bhashya)."
+  },
+  "text": {
+    "source_text": "अत्राह — नानन्दमयः पर आत्मा भवितुमर्हति ; कस्मात् ? विकारशब्दात् । प्रकृतवचनादयमन्यः शब्दो विकारवचनः समधिगतः ‘ आनन्दमयः ’ इति , मयटो विकारार्थत्वात् । तस्मादन्नमयादिशब्दवद्विकारविषय एवानन्दमयशब्द इति चेत् , न ; प्राचुर्यार्थेऽपि मयटः स्मरणात् । ‘ तत्प्रकृतवचने मयट् ’ (पा. सू. ५ । ४ । २) इति हि प्रचुरतायामपि मयट् स्मर्यते ; यथा ‘ अन्नमयो यज्ञः ’ इत्यन्नप्रचुर उच्यते , एवमानन्दप्रचुरं ब्रह्मानन्दमयमुच्यते । आनन्दप्रचुरत्वं च ब्रह्मणो मनुष्यत्वादारभ्योत्तरस्मिन्नुत्तरस्मिन्स्थाने शतगुण आनन्द इत्युक्त्वा ब्रह्मानन्दस्य निरतिशयत्वावधारणात् । तस्मात्प्राचुर्यार्थे मयट् ॥ १३ ॥",
+    "transliteration_iast": "atrāha — nānandamayaḥ para ātmā bhavitumarhati ; kasmāt ? vikāraśabdāt | prakṛtavacanādayamanyaḥ śabdo vikāravacanaḥ samadhigataḥ ‘ ānandamayaḥ ’ iti , mayaṭo vikārārthatvāt | tasmādannamayādiśabdavadvikāraviṣaya evānandamayaśabda iti cet , na ; prācuryārthe'pi mayaṭaḥ smaraṇāt | ‘ tatprakṛtavacane mayaṭ ’ (pā. sū. 5 | 4 | 2) iti hi pracuratāyāmapi mayaṭ smaryate ; yathā ‘ annamayo yajñaḥ ’ ityannapracura ucyate , evamānandapracuraṃ brahmānandamayamucyate | ānandapracuratvaṃ ca brahmaṇo manuṣyatvādārabhyottarasminnuttarasminsthāne śataguṇa ānanda ityuktvā brahmānandasya niratiśayatvāvadhāraṇāt | tasmātprācuryārthe mayaṭ || 13 ||",
+    "segmentation_note": "Block-level extraction from BS_C01_S01_V13/BS_C01_S01_V13_B1."
+  },
+  "translation": {
+    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V13_B1.",
+    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V13_B1; preserve adhikarana vocabulary and inference structure.",
+    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "adhikaraṇa",
+        "gloss": "topical unit of argument",
+        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "grammatical_role": "noun",
+        "alternate_glosses": [
+          "topic-unit",
+          "argument node"
+        ]
+      }
+    ],
+    "argument_tags": [
+      "draft",
+      "block-by-block",
+      "bhashya"
+    ]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.45,
+    "uncertainty_notes": [
+      "Scaffold generated automatically for full BS_C01 block coverage.",
+      "Literal and technical translations are placeholders pending manual curation."
+    ]
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "record_id": "SKR.BS.1.2.055",
+  "work_code": "BS",
+  "section_code": "1.2",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Draft block record from BS_C01_S02.json::BS_C01_S02_V22_B1 (bhashya)."
+  },
+  "text": {
+    "source_text": "इतश्च परमेश्वर एव भूतयोनिः , नेतरौ — शारीरः प्रधानं वा । कस्मात् ? विशेषणभेदव्यपदेशाभ्याम् । विशिनष्टि हि प्रकृतं भूतयोनिं शारीराद्विलक्षणत्वेन — ‘ दिव्यो ह्यमूर्तः पुरुषः सबाह्याभ्यन्तरो ह्यजः । अप्राणो ह्यमनाः शुभ्रः ’ (मु. उ. २ । १ । २) इति । न ह्येतद्दिव्यत्वादिविशेषणम् अविद्याप्रत्युपस्थापितनामरूपपरिच्छेदाभिमानिनः तद्धर्मान्स्वात्मनि कल्पयतः शारीरस्योपपद्यते । तस्मात्साक्षादौपनिषदः पुरुष इहोच्यते । तथा प्रधानादपि प्रकृतं भूतयोनिं भेदेन व्यपदिशति — ‘ अक्षरात्परतः परः ’ इति । अक्षरमव्याकृतं नामरूपबीजशक्तिरूपं भूतसूक्ष्ममीश्वराश्रयं तस्यैवोपाधिभूतम् , सर्वस्माद्विकारात्परो यो ऽविकारः , तस्मात्परतः परः इति भेदेन व्यपदिशन् परमात्मानमिह विवक्षितं दर्शयति । नात्र प्रधानं नाम किञ्चित्स्वतन्त्रं तत्त्वमभ्युपगम्य , तस्माद्भेदव्यपदेश उच्यते । किं तर्हि ? यदि प्रधानमपि कल्प्यमानं श्रुत्यविरोधेनाव्याकृतादिशब्दवाच्यं भूतसूक्ष्मं परिकल्प्येत , परिकल्प्यताम् । तस्माद्भेदव्यपदेशात् परमेश्वरो भूतयोनिरित्येतदिह प्रतिपाद्यते ॥ २२ ॥",
+    "transliteration_iast": "itaśca parameśvara eva bhūtayoniḥ , netarau — śārīraḥ pradhānaṃ vā | kasmāt ? viśeṣaṇabhedavyapadeśābhyām | viśinaṣṭi hi prakṛtaṃ bhūtayoniṃ śārīrādvilakṣaṇatvena — ‘ divyo hyamūrtaḥ puruṣaḥ sabāhyābhyantaro hyajaḥ | aprāṇo hyamanāḥ śubhraḥ ’ (mu. u. 2 | 1 | 2) iti | na hyetaddivyatvādiviśeṣaṇam avidyāpratyupasthāpitanāmarūpaparicchedābhimāninaḥ taddharmānsvātmani kalpayataḥ śārīrasyopapadyate | tasmātsākṣādaupaniṣadaḥ puruṣa ihocyate | tathā pradhānādapi prakṛtaṃ bhūtayoniṃ bhedena vyapadiśati — ‘ akṣarātparataḥ paraḥ ’ iti | akṣaramavyākṛtaṃ nāmarūpabījaśaktirūpaṃ bhūtasūkṣmamīśvarāśrayaṃ tasyaivopādhibhūtam , sarvasmādvikārātparo yo 'vikāraḥ , tasmātparataḥ paraḥ iti bhedena vyapadiśan paramātmānamiha vivakṣitaṃ darśayati | nātra pradhānaṃ nāma kiñcitsvatantraṃ tattvamabhyupagamya , tasmādbhedavyapadeśa ucyate | kiṃ tarhi ? yadi pradhānamapi kalpyamānaṃ śrutyavirodhenāvyākṛtādiśabdavācyaṃ bhūtasūkṣmaṃ parikalpyeta , parikalpyatām | tasmādbhedavyapadeśāt parameśvaro bhūtayonirityetadiha pratipādyate || 22 ||",
+    "segmentation_note": "Block-level extraction from BS_C01_S02_V22/BS_C01_S02_V22_B1."
+  },
+  "translation": {
+    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S02_V22_B1.",
+    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S02_V22_B1; preserve adhikarana vocabulary and inference structure.",
+    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "adhikaraṇa",
+        "gloss": "topical unit of argument",
+        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "grammatical_role": "noun",
+        "alternate_glosses": [
+          "topic-unit",
+          "argument node"
+        ]
+      }
+    ],
+    "argument_tags": [
+      "draft",
+      "block-by-block",
+      "bhashya"
+    ]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.45,
+    "uncertainty_notes": [
+      "Scaffold generated automatically for full BS_C01 block coverage.",
+      "Literal and technical translations are placeholders pending manual curation."
+    ]
+  }
+}

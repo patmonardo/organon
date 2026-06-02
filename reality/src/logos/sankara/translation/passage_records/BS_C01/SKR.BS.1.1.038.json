@@ -1,0 +1,56 @@
+{
+  "record_id": "SKR.BS.1.1.038",
+  "work_code": "BS",
+  "section_code": "1.1",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Draft block record from BS_C01_S01.json::BS_C01_S01_V07_I01 (leading_bhashya)."
+  },
+  "text": {
+    "source_text": "अथो च्येत — अचेतनेऽपि प्रधाने भवत्यात्मशब्दः , आत्मनः सर्वार्थकारित्वात् ; यथा राज्ञः सर्वार्थकारिणि भृत्ये भवत्यात्मशब्दः ‘ ममात्मा भद्रसेनः ’ इति । प्रधानं हि पुरुषस्यात्मनो भोगापवर्गौ कुर्वदुपकरोति , राज्ञ इव भृत्यः सन्धिविग्रहादिषु वर्तमानः । अथ वै क एवात्मशब्दश्चेतनाचेतनविषयो भविष्यति , ‘ भूतात्मा ’ ‘ इन्द्रियात्मा ’ इति च प्रयोगदर्शनात् ; य थै क एव ज्योतिःशब्दः क्रतुज्वलनविषयः । तत्र कुत एतदात्मशब्दादीक्षतेरगौणत्वमित्यत उत्तरं पठति —",
+    "transliteration_iast": "atho cyeta — acetane'pi pradhāne bhavatyātmaśabdaḥ , ātmanaḥ sarvārthakāritvāt ; yathā rājñaḥ sarvārthakāriṇi bhṛtye bhavatyātmaśabdaḥ ‘ mamātmā bhadrasenaḥ ’ iti | pradhānaṃ hi puruṣasyātmano bhogāpavargau kurvadupakaroti , rājña iva bhṛtyaḥ sandhivigrahādiṣu vartamānaḥ | atha vai ka evātmaśabdaścetanācetanaviṣayo bhaviṣyati , ‘ bhūtātmā ’ ‘ indriyātmā ’ iti ca prayogadarśanāt ; ya thai ka eva jyotiḥśabdaḥ kratujvalanaviṣayaḥ | tatra kuta etadātmaśabdādīkṣateragauṇatvamityata uttaraṃ paṭhati —",
+    "segmentation_note": "Block-level extraction from BS_C01_S01_V07/BS_C01_S01_V07_I01."
+  },
+  "translation": {
+    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V07_I01.",
+    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V07_I01; preserve adhikarana vocabulary and inference structure.",
+    "interpretive_note": "Auto-generated scaffold record for leading_bhashya; replace with curated doctrinal note."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "adhikaraṇa",
+        "gloss": "topical unit of argument",
+        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "grammatical_role": "noun",
+        "alternate_glosses": [
+          "topic-unit",
+          "argument node"
+        ]
+      }
+    ],
+    "argument_tags": [
+      "draft",
+      "block-by-block",
+      "leading_bhashya"
+    ]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.45,
+    "uncertainty_notes": [
+      "Scaffold generated automatically for full BS_C01 block coverage.",
+      "Literal and technical translations are placeholders pending manual curation."
+    ]
+  }
+}

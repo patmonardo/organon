@@ -1,0 +1,56 @@
+{
+  "record_id": "SKR.BS.1.1.098",
+  "work_code": "BS",
+  "section_code": "1.1",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Draft block record from BS_C01_S01.json::BS_C01_S01_V30_B1 (bhashya)."
+  },
+  "text": {
+    "source_text": "इन्द्रो नाम देवतात्मा स्वमात्मानं परमात्मत्वेन ‘ अहमेव परं ब्रह्म ’ इत्यार्षेण दर्शनेन यथाशास्त्रं पश्यन् उपदिशति स्म — ‘ मामेव विजानीहि ’ इति । यथा ‘ तद्धैतत्पश्यन्नृषिर्वामदेवः प्रतिपेदेऽहं मनुरभवꣳ सूर्यश्च ’ इति , तद्वत् ; ‘ तद्यो यो देवानां प्रत्यबुध्यत स एव तदभवत् ’ (बृ. उ. १ । ४ । १०) इति श्रुतेः । यत्पुनरुक्तम् — ‘ मामेव विजानीहि ’ इत्युक्त्वा , विग्रहधर्मैरिन्द्रः आत्मानं तुष्टाव त्वाष्ट्रवधादिभिरिति , तत्परिहर्तव्यम् ; अत्रोच्यते — न त्वाष्ट्रवधादीनां विज्ञेयेन्द्रस्तुत्यर्थत्वेनोपन्यासः — ‘ यस्मादेवंकर्माहम् , तस्मान्मां विजानीहि ’ इति । कथं तर्हि ? विज्ञान स्तुत्यर्थत्वेन ; य त्का रणं त्वाष्ट्रवधादीनि साहसान्युपन्यस्य परेण विज्ञानस्तुतिमनुसन्दधाति — ‘ तस्य मे तत्र लोम च न मीयते स यो मां वेद न ह वै तस्य केन च कर्मणा लोको मीयते ’ इत्यादिना । एतदुक्तं भवति — यस्मादीदृशान्यपि क्रूराणि कर्माणि कृतवतो मम ब्रह्मभूतस्य लोमापि न हिंस्यते , स योऽन्योऽपि मां वेद , न तस्य केनचिदपि कर्मणा लोको हिंस्यत इति । विज्ञेयं तु ब्रह्मैव ‘ प्राणोऽस्मि प्रज्ञात्मा ’ इति वक्ष्यमाणम् । तस्माद्ब्रह्मवाक्यमेतत् ॥ ३० ॥",
+    "transliteration_iast": "indro nāma devatātmā svamātmānaṃ paramātmatvena ‘ ahameva paraṃ brahma ’ ityārṣeṇa darśanena yathāśāstraṃ paśyan upadiśati sma — ‘ māmeva vijānīhi ’ iti | yathā ‘ taddhaitatpaśyannṛṣirvāmadevaḥ pratipede'haṃ manurabhavam̐ sūryaśca ’ iti , tadvat ; ‘ tadyo yo devānāṃ pratyabudhyata sa eva tadabhavat ’ (bṛ. u. 1 | 4 | 10) iti śruteḥ | yatpunaruktam — ‘ māmeva vijānīhi ’ ityuktvā , vigrahadharmairindraḥ ātmānaṃ tuṣṭāva tvāṣṭravadhādibhiriti , tatparihartavyam ; atrocyate — na tvāṣṭravadhādīnāṃ vijñeyendrastutyarthatvenopanyāsaḥ — ‘ yasmādevaṃkarmāham , tasmānmāṃ vijānīhi ’ iti | kathaṃ tarhi ? vijñāna stutyarthatvena ; ya tkā raṇaṃ tvāṣṭravadhādīni sāhasānyupanyasya pareṇa vijñānastutimanusandadhāti — ‘ tasya me tatra loma ca na mīyate sa yo māṃ veda na ha vai tasya kena ca karmaṇā loko mīyate ’ ityādinā | etaduktaṃ bhavati — yasmādīdṛśānyapi krūrāṇi karmāṇi kṛtavato mama brahmabhūtasya lomāpi na hiṃsyate , sa yo'nyo'pi māṃ veda , na tasya kenacidapi karmaṇā loko hiṃsyata iti | vijñeyaṃ tu brahmaiva ‘ prāṇo'smi prajñātmā ’ iti vakṣyamāṇam | tasmādbrahmavākyametat || 30 ||",
+    "segmentation_note": "Block-level extraction from BS_C01_S01_V30/BS_C01_S01_V30_B1."
+  },
+  "translation": {
+    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V30_B1.",
+    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V30_B1; preserve adhikarana vocabulary and inference structure.",
+    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "adhikaraṇa",
+        "gloss": "topical unit of argument",
+        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "grammatical_role": "noun",
+        "alternate_glosses": [
+          "topic-unit",
+          "argument node"
+        ]
+      }
+    ],
+    "argument_tags": [
+      "draft",
+      "block-by-block",
+      "bhashya"
+    ]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.45,
+    "uncertainty_notes": [
+      "Scaffold generated automatically for full BS_C01 block coverage.",
+      "Literal and technical translations are placeholders pending manual curation."
+    ]
+  }
+}

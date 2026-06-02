@@ -1,0 +1,56 @@
+{
+  "record_id": "SKR.BS.1.1.028",
+  "work_code": "BS",
+  "section_code": "1.1",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Draft block record from BS_C01_S01.json::BS_C01_S01_V05_B1 (bhashya)."
+  },
+  "text": {
+    "source_text": "न साङ्ख्यपरिकल्पितमचेतनं प्रधानं जगतः कारणं शक्यं वेदान्तेष्वाश्रयितुम् । अशब्दं हि तत् । कथमशब्दत्वम् ? ईक्षतेः ईक्षितृत्वश्रवणात्कारणस्य । कथम् ? एवं हि श्रूयते — ‘ सदेव सोम्येदमग्र आसीदेकमेवाद्वितीयम् ’ (छा. उ. ६ । २ । १) इत्युपक्रम्य ‘ तदैक्षत बहु स्यां प्रजा येयेति त त्तेजोऽसृजत ’ (छा. उ. ६ । २ । ३) इति । तत्र इदंशब्दवाच्यं नामरूपव्याकृतं जगत् प्रागुत्पत्तेः सदात्मनावधार्य , तस्यैव प्रकृतस्य सच्छब्दवाच्यस्येक्षणपूर्वकं तेजःप्रभृतेः स्रष्टृत्वं दर्शयति । तथान्यत्र — ‘ आत्मा वा इदमेक एवाग्र आसीत् । नान्यत्किञ्चन मिषत् । स ईक्षत लोकान्नु सृजा इति ।’ (ऐ. उ. १ । १ । १) ‘ स इमाँल्लोकानसृजत ’ (ऐ. उ. १ । १ । २) इतीक्षापूर्विकामेव सृष्टिमाचष्टे । क्वचिच्च षोडशकलं पुरुषं प्रस्तुत्याह — ‘ स ईक्षाञ्चक्रे ’ (प्र. उ. ६ । ३) , ‘ स प्राणमसृजत ’ (प्र. उ. ६ । ४) इति । ईक्षतेरिति च धात्वर्थनिर्देशोऽभिप्रेतः , यजतेरितिवत् , न धातुनिर्देशः । तेन ‘ यः सर्वज्ञः सर्वविद्यस्य ज्ञानमयं तपः । तस्मा दे तद्ब्रह्म नाम रूपमन्नं च जायते ’ (मु. उ. १ । १ । ९) इत्येवमादीन्यपि सर्वज्ञेश्वरकारणपराणि वाक्यान्युदाहर्तव्यानि ॥",
+    "transliteration_iast": "na sāṅkhyaparikalpitamacetanaṃ pradhānaṃ jagataḥ kāraṇaṃ śakyaṃ vedānteṣvāśrayitum | aśabdaṃ hi tat | kathamaśabdatvam ? īkṣateḥ īkṣitṛtvaśravaṇātkāraṇasya | katham ? evaṃ hi śrūyate — ‘ sadeva somyedamagra āsīdekamevādvitīyam ’ (chā. u. 6 | 2 | 1) ityupakramya ‘ tadaikṣata bahu syāṃ prajā yeyeti ta ttejo'sṛjata ’ (chā. u. 6 | 2 | 3) iti | tatra idaṃśabdavācyaṃ nāmarūpavyākṛtaṃ jagat prāgutpatteḥ sadātmanāvadhārya , tasyaiva prakṛtasya sacchabdavācyasyekṣaṇapūrvakaṃ tejaḥprabhṛteḥ sraṣṭṛtvaṃ darśayati | tathānyatra — ‘ ātmā vā idameka evāgra āsīt | nānyatkiñcana miṣat | sa īkṣata lokānnu sṛjā iti |’ (ai. u. 1 | 1 | 1) ‘ sa imā~llokānasṛjata ’ (ai. u. 1 | 1 | 2) itīkṣāpūrvikāmeva sṛṣṭimācaṣṭe | kvacicca ṣoḍaśakalaṃ puruṣaṃ prastutyāha — ‘ sa īkṣāñcakre ’ (pra. u. 6 | 3) , ‘ sa prāṇamasṛjata ’ (pra. u. 6 | 4) iti | īkṣateriti ca dhātvarthanirdeśo'bhipretaḥ , yajateritivat , na dhātunirdeśaḥ | tena ‘ yaḥ sarvajñaḥ sarvavidyasya jñānamayaṃ tapaḥ | tasmā de tadbrahma nāma rūpamannaṃ ca jāyate ’ (mu. u. 1 | 1 | 9) ityevamādīnyapi sarvajñeśvarakāraṇaparāṇi vākyānyudāhartavyāni ||",
+    "segmentation_note": "Block-level extraction from BS_C01_S01_V05/BS_C01_S01_V05_B1."
+  },
+  "translation": {
+    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V05_B1.",
+    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V05_B1; preserve adhikarana vocabulary and inference structure.",
+    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "adhikaraṇa",
+        "gloss": "topical unit of argument",
+        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "grammatical_role": "noun",
+        "alternate_glosses": [
+          "topic-unit",
+          "argument node"
+        ]
+      }
+    ],
+    "argument_tags": [
+      "draft",
+      "block-by-block",
+      "bhashya"
+    ]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.45,
+    "uncertainty_notes": [
+      "Scaffold generated automatically for full BS_C01 block coverage.",
+      "Literal and technical translations are placeholders pending manual curation."
+    ]
+  }
+}

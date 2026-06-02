@@ -1,0 +1,49 @@
+{
+  "record_id": "SKR.BS.1.4.018",
+  "work_code": "BS",
+  "section_code": "1.4",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Draft block record from BS_C01_S04.json::BS_C01_S04_V07_VERSETEXT_01 (versetext)."
+  },
+  "text": {
+    "source_text": "महद्वच्च ॥ ७ ॥",
+    "transliteration_iast": "mahadvacca || 7 ||",
+    "segmentation_note": "Block-level extraction from BS_C01_S04_V07/BS_C01_S04_V07_VERSETEXT_01."
+  },
+  "translation": {
+    "literal_translation": "And as in the case of 'mahat.' (7)",
+    "technical_translation": "Sutra 1.4.7: avyakta cannot be forced to mean Sankhya pradhana, by the same reasoning used for terms like mahat whose Vedic denotation is contextually different.",
+    "interpretive_note": "Compressed analogy-sutra: lexical transfer from Sankhya to Vedanta is not automatic."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "adhikaraṇa",
+        "gloss": "topical unit of argument",
+        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "grammatical_role": "noun",
+        "alternate_glosses": ["topic-unit", "argument node"]
+      }
+    ],
+    "argument_tags": ["resolution"]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-s04-curation-pass-2",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.79,
+    "uncertainty_notes": [
+      "This sutra depends on the immediately preceding lexical argument for full force.",
+      "Literal keeps minimal style; technical line expands argumentative import."
+    ]
+  }
+}

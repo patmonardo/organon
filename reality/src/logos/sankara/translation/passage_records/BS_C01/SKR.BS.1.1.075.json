@@ -1,0 +1,56 @@
+{
+  "record_id": "SKR.BS.1.1.075",
+  "work_code": "BS",
+  "section_code": "1.1",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Draft block record from BS_C01_S01.json::BS_C01_S01_V21_B1 (bhashya)."
+  },
+  "text": {
+    "source_text": "अस्ति चादित्यादिशरीराभिमानिभ्यो जीवेभ्योऽन्य ईश्वरोऽन्तर्यामी — ‘ य आदित्ये तिष्ठन्नादित्यादन्तरो य मा दित्यो न वेद य स्या दित्यः शरीरं य आदित्यमन्तरो यमय त्येष त आत्मान्तर्याम्यमृतः ’ (बृ. उ. ३ । ७ । ९) इति श्रुत्यन्तरे भेदव्यपदेशात् । तत्र हि ‘ आदित्यादन्तरो यमादित्यो न वेद ’ इति वेदितुरादित्याद्विज्ञानात्मनोऽन्योऽन्तर्यामी स्पष्टं निर्दिश्यते । स एवेहाप्यन्तरादित्ये पुरुषो भवितुमर्हति , श्रुतिसामान्यात् । तस्मात्परमेश्वर एवेहोपदिश्यत इति सिद्धम् ॥ २१ ॥",
+    "transliteration_iast": "asti cādityādiśarīrābhimānibhyo jīvebhyo'nya īśvaro'ntaryāmī — ‘ ya āditye tiṣṭhannādityādantaro ya mā dityo na veda ya syā dityaḥ śarīraṃ ya ādityamantaro yamaya tyeṣa ta ātmāntaryāmyamṛtaḥ ’ (bṛ. u. 3 | 7 | 9) iti śrutyantare bhedavyapadeśāt | tatra hi ‘ ādityādantaro yamādityo na veda ’ iti vediturādityādvijñānātmano'nyo'ntaryāmī spaṣṭaṃ nirdiśyate | sa evehāpyantarāditye puruṣo bhavitumarhati , śrutisāmānyāt | tasmātparameśvara evehopadiśyata iti siddham || 21 ||",
+    "segmentation_note": "Block-level extraction from BS_C01_S01_V21/BS_C01_S01_V21_B1."
+  },
+  "translation": {
+    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V21_B1.",
+    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V21_B1; preserve adhikarana vocabulary and inference structure.",
+    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "adhikaraṇa",
+        "gloss": "topical unit of argument",
+        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "grammatical_role": "noun",
+        "alternate_glosses": [
+          "topic-unit",
+          "argument node"
+        ]
+      }
+    ],
+    "argument_tags": [
+      "draft",
+      "block-by-block",
+      "bhashya"
+    ]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.45,
+    "uncertainty_notes": [
+      "Scaffold generated automatically for full BS_C01 block coverage.",
+      "Literal and technical translations are placeholders pending manual curation."
+    ]
+  }
+}

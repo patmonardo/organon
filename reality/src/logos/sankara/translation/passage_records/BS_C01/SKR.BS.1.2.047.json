@@ -1,0 +1,56 @@
+{
+  "record_id": "SKR.BS.1.2.047",
+  "work_code": "BS",
+  "section_code": "1.2",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Draft block record from BS_C01_S02.json::BS_C01_S02_V19_B1 (bhashya)."
+  },
+  "text": {
+    "source_text": "स्यादेतत् — अदृष्टत्वादयो धर्माः साङ्ख्यस्मृतिकल्पितस्य प्रधानस्याप्युपपद्यन्ते , रूपादिहीनतया तस्य तैरभ्युपगमात् । ‘ अप्रतर्क्य म विज्ञेयं प्रसुप्तमिव सर्वतः ’ (मनु. १ । ५) इति हि स्मरन्ति । तस्यापि नियन्तृत्वं सर्वविकारकारणत्वादुपपद्यते । तस्मात्प्रधानमन्तर्यामिशब्दं स्यात् । ‘ ईक्षतेर्नाशब्दम् ’ (ब्र. सू. १ । १ । ५) इत्यत्र निराकृतमपि सत् प्रधानमिहादृष्टत्वादिव्यपदेशसम्भवेन पुनराशङ्क्यते । अत उत्तरमुच्यते — न च स्मार्तं प्रधानमन्तर्यामिशब्दं भवितुमर्हति । कस्मात् ? अतद्धर्माभिलापात् । यद्यप्यदृष्टत्वादिव्यपदेशः प्रधानस्य सम्भवति , तथापि न द्रष्टृत्वादिव्यपदेशः सम्भवति , प्रधानस्याचेतनत्वेन तैरभ्युपगमात् । ‘ अदृष्टो द्रष्टाश्रुतः श्रोतामतो मन्ताविज्ञातो विज्ञाता ’ (बृ. उ. ३ । ७ । २३) इति हि वाक्यशेष इह भवति । आत्मत्वमपि न प्रधानस्योपपद्यते ॥ १९ ॥",
+    "transliteration_iast": "syādetat — adṛṣṭatvādayo dharmāḥ sāṅkhyasmṛtikalpitasya pradhānasyāpyupapadyante , rūpādihīnatayā tasya tairabhyupagamāt | ‘ apratarkya ma vijñeyaṃ prasuptamiva sarvataḥ ’ (manu. 1 | 5) iti hi smaranti | tasyāpi niyantṛtvaṃ sarvavikārakāraṇatvādupapadyate | tasmātpradhānamantaryāmiśabdaṃ syāt | ‘ īkṣaternāśabdam ’ (bra. sū. 1 | 1 | 5) ityatra nirākṛtamapi sat pradhānamihādṛṣṭatvādivyapadeśasambhavena punarāśaṅkyate | ata uttaramucyate — na ca smārtaṃ pradhānamantaryāmiśabdaṃ bhavitumarhati | kasmāt ? ataddharmābhilāpāt | yadyapyadṛṣṭatvādivyapadeśaḥ pradhānasya sambhavati , tathāpi na draṣṭṛtvādivyapadeśaḥ sambhavati , pradhānasyācetanatvena tairabhyupagamāt | ‘ adṛṣṭo draṣṭāśrutaḥ śrotāmato mantāvijñāto vijñātā ’ (bṛ. u. 3 | 7 | 23) iti hi vākyaśeṣa iha bhavati | ātmatvamapi na pradhānasyopapadyate || 19 ||",
+    "segmentation_note": "Block-level extraction from BS_C01_S02_V19/BS_C01_S02_V19_B1."
+  },
+  "translation": {
+    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S02_V19_B1.",
+    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S02_V19_B1; preserve adhikarana vocabulary and inference structure.",
+    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "adhikaraṇa",
+        "gloss": "topical unit of argument",
+        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "grammatical_role": "noun",
+        "alternate_glosses": [
+          "topic-unit",
+          "argument node"
+        ]
+      }
+    ],
+    "argument_tags": [
+      "draft",
+      "block-by-block",
+      "bhashya"
+    ]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.45,
+    "uncertainty_notes": [
+      "Scaffold generated automatically for full BS_C01 block coverage.",
+      "Literal and technical translations are placeholders pending manual curation."
+    ]
+  }
+}

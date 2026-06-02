@@ -1,0 +1,56 @@
+{
+  "record_id": "SKR.BS.1.2.050",
+  "work_code": "BS",
+  "section_code": "1.2",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Draft block record from BS_C01_S02.json::BS_C01_S02_V20_I01 (leading_bhashya)."
+  },
+  "text": {
+    "source_text": "यदि प्रधान मा त्मत्वद्रष्टृत्वाद्यसम्भवान्नान्तर्याम्यभ्युपगम्यते , शारीरस्तर्ह्यन्तर्यामी भवतु । शारीरो हि चेतनत्वाद्द्रष्टा श्रोता मन्ता विज्ञाता च भवति , आत्मा च प्रत्यक्त्वात् । अमृतश्च , धर्माधर्मफलोपभोगोपपत्तेः । अदृष्टत्वादयश्च धर्माः शारीरे प्रसिद्धाः । दर्शनादिक्रियायाः कर्तरि प्रवृत्तिविरोधात् । ‘ न दृष्टेर्द्रष्टारं पश्येः ’ (बृ. उ. ३ । ४ । २) इत्यादिश्रुतिभ्यश्च । तस्य च कार्यकरणसङ्घातमन्तर्यमयितुं शीलम् , भोक्तृत्वात् । तस्माच्छारीरोऽन्तर्यामीत्यत उत्तरं पठति —",
+    "transliteration_iast": "yadi pradhāna mā tmatvadraṣṭṛtvādyasambhavānnāntaryāmyabhyupagamyate , śārīrastarhyantaryāmī bhavatu | śārīro hi cetanatvāddraṣṭā śrotā mantā vijñātā ca bhavati , ātmā ca pratyaktvāt | amṛtaśca , dharmādharmaphalopabhogopapatteḥ | adṛṣṭatvādayaśca dharmāḥ śārīre prasiddhāḥ | darśanādikriyāyāḥ kartari pravṛttivirodhāt | ‘ na dṛṣṭerdraṣṭāraṃ paśyeḥ ’ (bṛ. u. 3 | 4 | 2) ityādiśrutibhyaśca | tasya ca kāryakaraṇasaṅghātamantaryamayituṃ śīlam , bhoktṛtvāt | tasmācchārīro'ntaryāmītyata uttaraṃ paṭhati —",
+    "segmentation_note": "Block-level extraction from BS_C01_S02_V20/BS_C01_S02_V20_I01."
+  },
+  "translation": {
+    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S02_V20_I01.",
+    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S02_V20_I01; preserve adhikarana vocabulary and inference structure.",
+    "interpretive_note": "Auto-generated scaffold record for leading_bhashya; replace with curated doctrinal note."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "adhikaraṇa",
+        "gloss": "topical unit of argument",
+        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "grammatical_role": "noun",
+        "alternate_glosses": [
+          "topic-unit",
+          "argument node"
+        ]
+      }
+    ],
+    "argument_tags": [
+      "draft",
+      "block-by-block",
+      "leading_bhashya"
+    ]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.45,
+    "uncertainty_notes": [
+      "Scaffold generated automatically for full BS_C01 block coverage.",
+      "Literal and technical translations are placeholders pending manual curation."
+    ]
+  }
+}

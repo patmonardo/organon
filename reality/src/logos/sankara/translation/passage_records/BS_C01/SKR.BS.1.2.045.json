@@ -1,0 +1,56 @@
+{
+  "record_id": "SKR.BS.1.2.045",
+  "work_code": "BS",
+  "section_code": "1.2",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Draft block record from BS_C01_S02.json::BS_C01_S02_V18_B2 (bhashya)."
+  },
+  "text": {
+    "source_text": "योऽन्तर्याम्यधिदैवादिषु श्रूयते , स परमात्मैव स्यात् , नान्य इति । कुतः ? तद्धर्मव्यपदेशात् । तस्य हि परमात्मनो धर्मा इह निर्दिश्यमाना दृश्यन्ते । पृथिव्यादि तावदधिदैवादिभेदभिन्नं समस्तं विकारजातमन्तस्तिष्ठन्यमयतीति परमात्मनो यमयितृत्वं धर्म उपपद्यते । सर्वविकारकारणत्वे सति सर्वशक्त्युपपत्तेः । ‘ एष त आत्मान्तर्याम्यमृतः ’ इति चात्मत्वामृतत्वे मुख्ये परमात्मन उपपद्येते । ‘ यं पृथिवी न वेद ’ इति च पृथिवीदेवताया अविज्ञेयमन्तर्यामिणं ब्रुवन्देवतात्मनोऽन्यमन्तर्यामिणं दर्शयति । पृथिवी देवता ह्यहमस्मि पृथिवीत्यात्मानं विजानीयात् । तथा ‘ अदृष्टोऽश्रुतः ’ इत्यादिव्यपदेशो रूपादिविहीनत्वात्परमात्मन उपपद्यत इति । यत्त्वकार्यकरणस्य परमात्मनो यमयितृत्वं नोपपद्यत इति , नैष दोषः ; यान्नियच्छति तत्कार्यकरणैरेव तस्य कार्यकरणवत्त्वोपपत्तेः । तस्या प्य न्यो नियन्तेत्यनवस्थादोषश्च न सम्भवति , भेदाभावात् । भेदे हि सत्यनवस्थादोषोपपत्तिः । तस्मात्परमात्मैवान्तर्यामी ॥ १८ ॥",
+    "transliteration_iast": "yo'ntaryāmyadhidaivādiṣu śrūyate , sa paramātmaiva syāt , nānya iti | kutaḥ ? taddharmavyapadeśāt | tasya hi paramātmano dharmā iha nirdiśyamānā dṛśyante | pṛthivyādi tāvadadhidaivādibhedabhinnaṃ samastaṃ vikārajātamantastiṣṭhanyamayatīti paramātmano yamayitṛtvaṃ dharma upapadyate | sarvavikārakāraṇatve sati sarvaśaktyupapatteḥ | ‘ eṣa ta ātmāntaryāmyamṛtaḥ ’ iti cātmatvāmṛtatve mukhye paramātmana upapadyete | ‘ yaṃ pṛthivī na veda ’ iti ca pṛthivīdevatāyā avijñeyamantaryāmiṇaṃ bruvandevatātmano'nyamantaryāmiṇaṃ darśayati | pṛthivī devatā hyahamasmi pṛthivītyātmānaṃ vijānīyāt | tathā ‘ adṛṣṭo'śrutaḥ ’ ityādivyapadeśo rūpādivihīnatvātparamātmana upapadyata iti | yattvakāryakaraṇasya paramātmano yamayitṛtvaṃ nopapadyata iti , naiṣa doṣaḥ ; yānniyacchati tatkāryakaraṇaireva tasya kāryakaraṇavattvopapatteḥ | tasyā pya nyo niyantetyanavasthādoṣaśca na sambhavati , bhedābhāvāt | bhede hi satyanavasthādoṣopapattiḥ | tasmātparamātmaivāntaryāmī || 18 ||",
+    "segmentation_note": "Block-level extraction from BS_C01_S02_V18/BS_C01_S02_V18_B2."
+  },
+  "translation": {
+    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S02_V18_B2.",
+    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S02_V18_B2; preserve adhikarana vocabulary and inference structure.",
+    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "adhikaraṇa",
+        "gloss": "topical unit of argument",
+        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "grammatical_role": "noun",
+        "alternate_glosses": [
+          "topic-unit",
+          "argument node"
+        ]
+      }
+    ],
+    "argument_tags": [
+      "draft",
+      "block-by-block",
+      "bhashya"
+    ]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.45,
+    "uncertainty_notes": [
+      "Scaffold generated automatically for full BS_C01 block coverage.",
+      "Literal and technical translations are placeholders pending manual curation."
+    ]
+  }
+}

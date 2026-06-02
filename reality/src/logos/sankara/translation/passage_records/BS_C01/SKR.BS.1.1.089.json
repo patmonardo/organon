@@ -1,0 +1,56 @@
+{
+  "record_id": "SKR.BS.1.1.089",
+  "work_code": "BS",
+  "section_code": "1.1",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Draft block record from BS_C01_S01.json::BS_C01_S01_V26_B1 (bhashya)."
+  },
+  "text": {
+    "source_text": "इत श्चै वमभ्युपगन्तव्यमस्ति पूर्वस्मिन्वाक्ये प्रकृतं ब्रह्मेति ; यतो भूतादीन्पादान् व्यपदिशति श्रुतिः । भूतपृथिवी शरीरहृदयानि हि निर्दिश्याह — ‘ सैषा चतुष्पदा षड्विधा गायत्री ’ (छा. उ. ३ । १२ । ५) इति । न हि ब्रह्मानाश्रयणे केवलस्य च्छन्दसो भूतादयः पादा उपपद्यन्ते । अपि च ब्रह्मानाश्रयणे नेयमृक् सम्बध्येत — ‘ तावानस्य महिमा ’ इति । अनया हि ऋचा स्वरसेन ब्रह्मैवाभिधीयते , ‘ पादोऽस्य सर्वा भूतानि त्रिपादस्यामृतं दिवि ’ (छा. उ. ३ । १२ । ६) इति सर्वात्मत्वोपपत्तेः । पुरुष सूक्तेऽपीयमृक् ब्रह्मपरतयैव समाम्नायते । स्मृतिश्च ब्रह्मण एवंरूपतां दर्शयति — ‘ विष्टभ्याहमिदं कृत्स्नमेकांशेन स्थितो जगत् ’ (भ. गी. १० । ४२) इति । ‘ यद्वै तद्ब्रह्म ’ (छा. उ. ३ । १२ । ७) इति च निर्देश एवं सति मुख्यार्थ उपपद्यते । ‘ ते वा एते पञ्च ब्रह्म पुरुषाः ’ (छा. उ. ३ । १३ । ६) इति च हृदयसुषिषु ब्रह्मपुरुषश्रुतिर्ब्रह्मसम्बन्धितायां विवक्षितायां सम्भवति । तस्मादस्ति पूर्वस्मिन्वाक्ये ब्रह्म प्रकृतम् । तदेव ब्रह्म ज्योतिर्वाक्ये द्युसम्बन्धात्प्रत्यभिज्ञायमानं परामृश्यत इति स्थितम् ॥ २६ ॥",
+    "transliteration_iast": "ita ścai vamabhyupagantavyamasti pūrvasminvākye prakṛtaṃ brahmeti ; yato bhūtādīnpādān vyapadiśati śrutiḥ | bhūtapṛthivī śarīrahṛdayāni hi nirdiśyāha — ‘ saiṣā catuṣpadā ṣaḍvidhā gāyatrī ’ (chā. u. 3 | 12 | 5) iti | na hi brahmānāśrayaṇe kevalasya cchandaso bhūtādayaḥ pādā upapadyante | api ca brahmānāśrayaṇe neyamṛk sambadhyeta — ‘ tāvānasya mahimā ’ iti | anayā hi ṛcā svarasena brahmaivābhidhīyate , ‘ pādo'sya sarvā bhūtāni tripādasyāmṛtaṃ divi ’ (chā. u. 3 | 12 | 6) iti sarvātmatvopapatteḥ | puruṣa sūkte'pīyamṛk brahmaparatayaiva samāmnāyate | smṛtiśca brahmaṇa evaṃrūpatāṃ darśayati — ‘ viṣṭabhyāhamidaṃ kṛtsnamekāṃśena sthito jagat ’ (bha. gī. 10 | 42) iti | ‘ yadvai tadbrahma ’ (chā. u. 3 | 12 | 7) iti ca nirdeśa evaṃ sati mukhyārtha upapadyate | ‘ te vā ete pañca brahma puruṣāḥ ’ (chā. u. 3 | 13 | 6) iti ca hṛdayasuṣiṣu brahmapuruṣaśrutirbrahmasambandhitāyāṃ vivakṣitāyāṃ sambhavati | tasmādasti pūrvasminvākye brahma prakṛtam | tadeva brahma jyotirvākye dyusambandhātpratyabhijñāyamānaṃ parāmṛśyata iti sthitam || 26 ||",
+    "segmentation_note": "Block-level extraction from BS_C01_S01_V26/BS_C01_S01_V26_B1."
+  },
+  "translation": {
+    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V26_B1.",
+    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V26_B1; preserve adhikarana vocabulary and inference structure.",
+    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "adhikaraṇa",
+        "gloss": "topical unit of argument",
+        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "grammatical_role": "noun",
+        "alternate_glosses": [
+          "topic-unit",
+          "argument node"
+        ]
+      }
+    ],
+    "argument_tags": [
+      "draft",
+      "block-by-block",
+      "bhashya"
+    ]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.45,
+    "uncertainty_notes": [
+      "Scaffold generated automatically for full BS_C01 block coverage.",
+      "Literal and technical translations are placeholders pending manual curation."
+    ]
+  }
+}

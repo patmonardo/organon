@@ -1,0 +1,56 @@
+{
+  "record_id": "SKR.BS.1.3.006",
+  "work_code": "BS",
+  "section_code": "1.3",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Draft block record from BS_C01_S03.json::BS_C01_S03_V03_B1 (bhashya)."
+  },
+  "text": {
+    "source_text": "यथा ब्रह्मणः प्रतिपादको वैशेषिको हेतुरुक्तः , नैवमर्थान्तरस्य वैशेषिको हेतुः प्रतिपादकोऽस्तीत्याह । नानुमानं साङ्ख्यस्मृतिपरिकल्पितं प्रधानम् इह द्युभ्वाद्यायतनत्वेन प्रतिपत्तव्यम् । कस्मात् ? अतच्छब्दात् । तस्याचेतनस्य प्रधानस्य प्रतिपादकः शब्दः तच्छब्दः , न तच्छब्दः अतच्छब्दः । न ह्यत्राचेतनस्य प्रधानस्य प्रतिपादकः कश्चिच्छब्दोऽस्ति , येनाचेतनं प्रधानं कारणत्वेनायतनत्वेन वावगम्येत । तद्विपरीतस्य चेतनस्य प्रतिपादकशब्दोऽत्रास्ति — ‘ यः सर्वज्ञः सर्ववित् ’ (मु. उ. १ । १ । ९) इत्यादिः । अत एव न वायुरपीह द्युभ्वाद्यायतनत्वेनाश्रीयते ॥ ३ ॥",
+    "transliteration_iast": "yathā brahmaṇaḥ pratipādako vaiśeṣiko heturuktaḥ , naivamarthāntarasya vaiśeṣiko hetuḥ pratipādako'stītyāha | nānumānaṃ sāṅkhyasmṛtiparikalpitaṃ pradhānam iha dyubhvādyāyatanatvena pratipattavyam | kasmāt ? atacchabdāt | tasyācetanasya pradhānasya pratipādakaḥ śabdaḥ tacchabdaḥ , na tacchabdaḥ atacchabdaḥ | na hyatrācetanasya pradhānasya pratipādakaḥ kaścicchabdo'sti , yenācetanaṃ pradhānaṃ kāraṇatvenāyatanatvena vāvagamyeta | tadviparītasya cetanasya pratipādakaśabdo'trāsti — ‘ yaḥ sarvajñaḥ sarvavit ’ (mu. u. 1 | 1 | 9) ityādiḥ | ata eva na vāyurapīha dyubhvādyāyatanatvenāśrīyate || 3 ||",
+    "segmentation_note": "Block-level extraction from BS_C01_S03_V03/BS_C01_S03_V03_B1."
+  },
+  "translation": {
+    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S03_V03_B1.",
+    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S03_V03_B1; preserve adhikarana vocabulary and inference structure.",
+    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "adhikaraṇa",
+        "gloss": "topical unit of argument",
+        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "grammatical_role": "noun",
+        "alternate_glosses": [
+          "topic-unit",
+          "argument node"
+        ]
+      }
+    ],
+    "argument_tags": [
+      "draft",
+      "block-by-block",
+      "bhashya"
+    ]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.45,
+    "uncertainty_notes": [
+      "Scaffold generated automatically for full BS_C01 block coverage.",
+      "Literal and technical translations are placeholders pending manual curation."
+    ]
+  }
+}

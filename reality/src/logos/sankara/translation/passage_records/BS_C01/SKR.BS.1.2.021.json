@@ -1,0 +1,56 @@
+{
+  "record_id": "SKR.BS.1.2.021",
+  "work_code": "BS",
+  "section_code": "1.2",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Draft block record from BS_C01_S02.json::BS_C01_S02_V09_B2 (bhashya)."
+  },
+  "text": {
+    "source_text": "अत्तात्र परमात्मा भवितुमर्हति । कुतः ? चराचरग्रहणात् । चराचरं हि स्थावरजङ्गमं मृत्यूपसेचनमिहाद्यत्वेन प्रतीयते । तादृशस्य चाद्यस्य न परमात्मनोऽन्यः कार्त्स्न्येनात्ता सम्भवति । परमात्मा तु विकारजातं संहरन्सर्वमत्तीत्युपपद्यते । नन्विह चराचरग्रहणं नोपलभ्यते , कथं सिद्धवच्चराचरग्रहणं हेतुत्वेनोपादीयते ? नैष दोषः , मृत्यूपसेचनत्वेनेहाद्यत्वेन सर्वस्य प्राणिनिकायस्य प्रतीयमानत्वात् , ब्रह्मक्षत्रयोश्च प्राधान्यात्प्रदर्शनार्थत्वोपपत्तेः । यत्तु परमात्मनोऽपि नात्तृत्वं सम्भवति ‘ अनश्नन्नन्योऽभिचाकशीति ’ इति दर्शनादिति , अत्रोच्यते — कर्मफलभोगस्य प्रतिषेधकमेतद्दर्शनम् , तस्य सन्निहितत्वात् । न विकारसंहारस्य प्रतिषेधकम् , सर्ववेदान्तेषु सृष्टिस्थितिसंहारकारणत्वेन ब्रह्मणः प्रसिद्धत्वात् । तस्मात्परमात्मैवेहात्ता भवितुमर्हति ॥ ९ ॥",
+    "transliteration_iast": "attātra paramātmā bhavitumarhati | kutaḥ ? carācaragrahaṇāt | carācaraṃ hi sthāvarajaṅgamaṃ mṛtyūpasecanamihādyatvena pratīyate | tādṛśasya cādyasya na paramātmano'nyaḥ kārtsnyenāttā sambhavati | paramātmā tu vikārajātaṃ saṃharansarvamattītyupapadyate | nanviha carācaragrahaṇaṃ nopalabhyate , kathaṃ siddhavaccarācaragrahaṇaṃ hetutvenopādīyate ? naiṣa doṣaḥ , mṛtyūpasecanatvenehādyatvena sarvasya prāṇinikāyasya pratīyamānatvāt , brahmakṣatrayośca prādhānyātpradarśanārthatvopapatteḥ | yattu paramātmano'pi nāttṛtvaṃ sambhavati ‘ anaśnannanyo'bhicākaśīti ’ iti darśanāditi , atrocyate — karmaphalabhogasya pratiṣedhakametaddarśanam , tasya sannihitatvāt | na vikārasaṃhārasya pratiṣedhakam , sarvavedānteṣu sṛṣṭisthitisaṃhārakāraṇatvena brahmaṇaḥ prasiddhatvāt | tasmātparamātmaivehāttā bhavitumarhati || 9 ||",
+    "segmentation_note": "Block-level extraction from BS_C01_S02_V09/BS_C01_S02_V09_B2."
+  },
+  "translation": {
+    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S02_V09_B2.",
+    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S02_V09_B2; preserve adhikarana vocabulary and inference structure.",
+    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "adhikaraṇa",
+        "gloss": "topical unit of argument",
+        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "grammatical_role": "noun",
+        "alternate_glosses": [
+          "topic-unit",
+          "argument node"
+        ]
+      }
+    ],
+    "argument_tags": [
+      "draft",
+      "block-by-block",
+      "bhashya"
+    ]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.45,
+    "uncertainty_notes": [
+      "Scaffold generated automatically for full BS_C01 block coverage.",
+      "Literal and technical translations are placeholders pending manual curation."
+    ]
+  }
+}

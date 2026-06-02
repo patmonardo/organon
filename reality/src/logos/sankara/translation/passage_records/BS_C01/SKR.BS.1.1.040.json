@@ -1,0 +1,56 @@
+{
+  "record_id": "SKR.BS.1.1.040",
+  "work_code": "BS",
+  "section_code": "1.1",
+  "source": {
+    "source_url": "https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1",
+    "source_sha256": "3e25449a44a0e912318db91030eb2e604e0c4eb2f8b5ceaa4ff4f92ae5e5bb80",
+    "language": "sa",
+    "script": "Devanagari",
+    "edition_note": "Draft block record from BS_C01_S01.json::BS_C01_S01_V08_B1 (bhashya)."
+  },
+  "text": {
+    "source_text": "यद्यनात्मैव प्रधानं सच्छब्दवाच्यम् ‘ स आत्मा तत्त्वमसि ’ इतीहोपदिष्टं स्यात् ; स तदुपदेशश्रवणादनात्मज्ञतया तन्निष्ठो मा भूदिति , मुख्यमात्मानमुपदिदिक्षु शास्त्रं तस्य हेयत्वं ब्रूयात् । यथारुन्धतीं दिदर्शयिषुस्तत्समीपस्थां स्थूलां ताराममुख्यां प्रथममरुन्धतीति ग्राहयित्वा , तां प्रत्याख्याय , पश्चादरुन्धतीमेव ग्राहयति ; तद्वन्नायमात्मेति ब्रूयात् । न चैवमवोचत् । सन्मात्रात्मावगतिनिष्ठैव हि षष्ठप्रपाठकपरिसमाप्तिर्दृश्यते । चशब्दः प्रतिज्ञाविरोधाभ्युच्चयप्रदर्शनार्थः । सत्यपि हेयत्ववचने प्रतिज्ञाविरोधः प्रसज्येत । कारणविज्ञानाद्धि सर्वं विज्ञातमिति प्रतिज्ञातम् — ‘ उत तमादेशमप्राक्ष्यो येनाश्रुतꣳ श्रुतं भवत्यमतं मतमविज्ञातं विज्ञातमिति ; कथं नु भगवः स आदेशो भवतीति ’ (छा. उ. ६ । १ । ३) ; ‘ यथा सोम्यैकेन मृत्पिण्डेन सर्वं मृन्मयं विज्ञातं स्या द्वाचा रम्भणं विकारो नामधेयं मृत्तिके त्येव सत्यम् ’ (छा. उ. ६ । १ । ४) ‘ एवं सोम्य स आदेशो भवति ’ (छा. उ. ६ । १ । ६) इति वाक्योपक्रमे श्रवणात् । न च सच्छब्दवाच्ये प्रधाने भोग्यवर्गकारणे हेयत्वेनाहेयत्वेन वा विज्ञाते भोक्तृवर्गो विज्ञातो भवति , अप्रधानविकारत्वाद्भोक्तृवर्गस्य । तस्मान्न प्रधानं सच्छब्दवाच्यम् ॥ ८ ॥",
+    "transliteration_iast": "yadyanātmaiva pradhānaṃ sacchabdavācyam ‘ sa ātmā tattvamasi ’ itīhopadiṣṭaṃ syāt ; sa tadupadeśaśravaṇādanātmajñatayā tanniṣṭho mā bhūditi , mukhyamātmānamupadidikṣu śāstraṃ tasya heyatvaṃ brūyāt | yathārundhatīṃ didarśayiṣustatsamīpasthāṃ sthūlāṃ tārāmamukhyāṃ prathamamarundhatīti grāhayitvā , tāṃ pratyākhyāya , paścādarundhatīmeva grāhayati ; tadvannāyamātmeti brūyāt | na caivamavocat | sanmātrātmāvagatiniṣṭhaiva hi ṣaṣṭhaprapāṭhakaparisamāptirdṛśyate | caśabdaḥ pratijñāvirodhābhyuccayapradarśanārthaḥ | satyapi heyatvavacane pratijñāvirodhaḥ prasajyeta | kāraṇavijñānāddhi sarvaṃ vijñātamiti pratijñātam — ‘ uta tamādeśamaprākṣyo yenāśrutam̐ śrutaṃ bhavatyamataṃ matamavijñātaṃ vijñātamiti ; kathaṃ nu bhagavaḥ sa ādeśo bhavatīti ’ (chā. u. 6 | 1 | 3) ; ‘ yathā somyaikena mṛtpiṇḍena sarvaṃ mṛnmayaṃ vijñātaṃ syā dvācā rambhaṇaṃ vikāro nāmadheyaṃ mṛttike tyeva satyam ’ (chā. u. 6 | 1 | 4) ‘ evaṃ somya sa ādeśo bhavati ’ (chā. u. 6 | 1 | 6) iti vākyopakrame śravaṇāt | na ca sacchabdavācye pradhāne bhogyavargakāraṇe heyatvenāheyatvena vā vijñāte bhoktṛvargo vijñāto bhavati , apradhānavikāratvādbhoktṛvargasya | tasmānna pradhānaṃ sacchabdavācyam || 8 ||",
+    "segmentation_note": "Block-level extraction from BS_C01_S01_V08/BS_C01_S01_V08_B1."
+  },
+  "translation": {
+    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V08_B1.",
+    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V08_B1; preserve adhikarana vocabulary and inference structure.",
+    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+  },
+  "analysis": {
+    "lexical_notes": [
+      {
+        "headword_iast": "adhikaraṇa",
+        "gloss": "topical unit of argument",
+        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "grammatical_role": "noun",
+        "alternate_glosses": [
+          "topic-unit",
+          "argument node"
+        ]
+      }
+    ],
+    "argument_tags": [
+      "draft",
+      "block-by-block",
+      "bhashya"
+    ]
+  },
+  "provenance": {
+    "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
+    "extractor_version": "extract_bs_records.py@0.1",
+    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "reviewer_version": "pending",
+    "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
+  },
+  "qa": {
+    "status": "draft",
+    "confidence": 0.45,
+    "uncertainty_notes": [
+      "Scaffold generated automatically for full BS_C01 block coverage.",
+      "Literal and technical translations are placeholders pending manual curation."
+    ]
+  }
+}
