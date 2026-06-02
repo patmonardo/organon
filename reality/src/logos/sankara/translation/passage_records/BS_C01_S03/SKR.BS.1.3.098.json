@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S03_V39/BS_C01_S03_V39_B2."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S03_V39_B2.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S03_V39_B2; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "What is to be understood here is Brahman alone. Why? From examining what comes before and after. In both adjacent portions of the text, Brahman is what is taught; why should we abruptly read mere air in between? Earlier the text says 'that alone is the pure, that is Brahman, that is called immortal; all worlds rest in it; none passes beyond it.' By proximity, the same is intended here too; and from recognition of being the support of worlds in 'the whole world trembles in prana.' This word prana is also used for the Supreme Self elsewhere ('the prana of prana'). This power of making all tremble fits the Supreme, not air alone; as taught, mortals do not live by inhalation/exhalation themselves but by that on which both depend. Later too, 'from fear of Him fire burns, from fear the sun shines, from fear Indra and Vayu, and death as fifth run' points to Brahman, not Vayu, since the whole world including Vayu is said to stand in fear. Hence by proximity, 'great fear, upraised thunderbolt' likewise refers to that same cause of fear. 'Thunderbolt' here is used by similarity as fear-cause: just as people obey a king out of fear of an upraised thunderbolt-like punishment, so fire, wind, sun, etc. proceed in ordered function out of fear of Brahman; thus Brahman is figuratively likened to a terrifying thunderbolt. Another text supports this: from His dread wind blows, sun rises, fire and Indra act, death runs fifth. Hearing immortality as fruit also indicates Brahman, since immortality comes from Brahman-knowledge ('knowing Him alone one crosses death'). Where immortality is sometimes stated from knowledge of Vayu, that is relative, as shown where after distinguishing the Supreme, Vayu etc. are said to be afflicted. The section-context too fixes the Supreme, because what was asked was that beyond dharma/adharma, beyond done/undone, beyond past/future.",
+    "technical_translation": "Bhashya on 1.3.39 resolves prana/vajra as Brahman through contextual continuity, semantic recognition, fear-causality hierarchy, and moksha-fruit criteria; vayu-reading is downgraded to secondary/relative contexts.",
+    "interpretive_note": "Context-primacy over lexical default: neighboring Brahman-teaching governs term interpretation."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,25 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "example",
+      "definition"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s03-curation-pass-13",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.76,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S03 pass with stable cadence and inferential-tag schema.",
+      "A later philological pass should revisit para-jyotis and akasha technical term choices in records 1.3.100-1.3.104."
     ]
   }
 }

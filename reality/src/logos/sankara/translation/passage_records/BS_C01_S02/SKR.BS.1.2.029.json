@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S02_V12/BS_C01_S02_V12_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S02_V12_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S02_V12_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "And the qualifying context also fits only knowing self and Supreme Self. The subsequent text, with the chariot metaphor ('know the self as rider, body as chariot'), presents the knowing self as traveler through samsara and liberation; and 'he reaches the far end of the path, that highest station of Vishnu' presents the Supreme as the goal. Earlier too ('that difficult-to-see, hidden, cave-seated ancient one; knowing that deity through inward yoga, the wise one gives up joy and sorrow') these two are marked as knower and known. The overall section concerns the Supreme, and the special mention 'knowers of Brahman say' is apt when the Supreme is included. The same reasoning applies to 'two birds, united friends': there too, in an inward-self context, the two are not ordinary birds. From 'one eats the sweet fruit' the knower-self is identified; from 'the other does not eat, but looks on' the Supreme is identified by non-eating witness-consciousness. The next mantra clarifies the same two as seer and seen: on the same tree, the deluded one grieves; when he beholds the other Lord and His greatness, he becomes free of sorrow.",
+    "technical_translation": "Bhashya continuation supports sutra 1.2.11 with extended intertextual mapping (Katha + Mundaka) of bhokta-sakshi dyad as jiva-paramatma.",
+    "interpretive_note": "Adhyatma framing and seer-seen structure determine the pair."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,24 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s02-curation-pass-4",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.84,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S02 pass with stable cadence and inferential-tag schema.",
+      "A later philological pass should revisit sattva-kshetrajna and bhoktrtva figurative-usage choices in records 1.2.025-1.2.030."
     ]
   }
 }

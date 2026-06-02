@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_V28/BS_C01_S01_V28_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V28_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V28_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "There is the Kausitaki narrative of Indra and Pratardana, beginning 'Pratardana, son of Divodasa, came to Indra's beloved abode by battle and valor.' There it is heard: 'I am prana, the conscious self; worship me as life and immortality.' Later too: 'this very prana, conscious self, taking hold of this body raises it'; also 'do not seek speech, know the speaker'; and at the end: 'this very prana, conscious self, blissful, ageless, immortal.' Here doubt arises: does prana denote mere air, deity-self, jiva, or Supreme Brahman? One may ask: was not prana's Brahman-reference already established in 'for that very reason, prana'? And here too Brahman-indicators appear ('blissful, ageless, immortal'). How then doubt again? Because multiple indicators appear. Not only Brahman-indicators are present: 'know me alone' spoken by Indra indicates deity-self; 'raises this body' indicates vital air; 'know the speaker, not speech' indicates jiva. Therefore doubt is reasonable. In that situation, given lexical familiarity, one may first take prana as air -",
+    "technical_translation": "Opening purvapaksha for 1.1.28: Kausitaki prana is ambiguous due to overlapping linga sets (deity, vital force, jiva, Brahman), requiring higher-order textual integration.",
+    "interpretive_note": "This marks a multi-indicator adjudication case, not a simple lexical one."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,23 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "objection",
+      "definition"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-12",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.88,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 pass with stable inferential-tag schema.",
+      "A later philological pass should revisit truncated source lines and precise phrasing in the jyotis/gayatri bridge and Kausitaki prana section (1.1.084-1.1.095)."
     ]
   }
 }

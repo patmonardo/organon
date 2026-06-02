@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S02_V11/BS_C01_S02_V11_B3."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S02_V11_B3.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S02_V11_B3; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "The two taught here should be the knowing self and the Supreme Self. Why? Both are selves, conscious, and same in kind; in ordinary usage, when two are mentioned, the second is expected from same class. If told 'find a second cow for this cow,' one seeks another cow, not a horse or person. Here, once one member is fixed as conscious knower by the sign of drinking, the second is naturally grasped as another conscious same-kind reality, namely the Supreme. Objection: cave-entry shows it is not Supreme. Reply: cave-reference itself supports Supreme, since shruti and smriti repeatedly describe the Supreme as cave-seated ('hidden in the cave,' 'deposited in the cave in highest ether,' 'seek the self entered into the cave'). Also, teaching a particular locus for realizing even all-pervasive Brahman is non-contradictory, as already explained. Residence in merit-world can be understood for both as in cases like umbrella-designation. 'Shadow and light' too is consistent: samsaric and non-samsaric are mutually distinct like shadow and sunlight; samsaric status is ignorance-made, while non-samsaric status is ultimate. Therefore the pair entered in the cave should be taken as knowing self and Supreme Self. (11)",
+    "technical_translation": "Bhashya on 1.2.11 establishes jiva-paramatma pairing via same-class dual reference principle, guhahita scriptural support, and qualified interpretation of sukrita/chaya-tapa descriptors.",
+    "interpretive_note": "Converts each purvapaksha indicator into a pro-Brahman indicator by hermeneutic re-weighting."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,25 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "definition",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s02-curation-pass-4",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.81,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S02 pass with stable cadence and inferential-tag schema.",
+      "A later philological pass should revisit sattva-kshetrajna and bhoktrtva figurative-usage choices in records 1.2.025-1.2.030."
     ]
   }
 }

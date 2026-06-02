@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_V31/BS_C01_S01_V31_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V31_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V31_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "Even granting adhyatma predominance, one may still object this cannot be Brahman-teaching, because jiva-indicators and primary-prana-indicators appear. Jiva-indicator is explicit: 'do not seek speech; know the speaker' - this points to the agent who operates through speech and other instruments. Primary-prana-indicator appears in 'this prana-conscious self takes up this body and raises it,' since body-sustaining is main-prana's function, as heard in prana-dialogue texts. Some read 'taking this body'; then it may be explained as taking this jiva or sense-group and raising body. Pragnatman-status also can fit jiva by consciousness, and even primary prana by being support for knowing-faculties. If jiva/main-prana are taken, then identity-statements can be read both as co-functioning non-difference ('who is prana, that is cognition') and as difference in essence ('they dwell and depart together'). But if Brahman is taken, what differentiates from what? Therefore one might conclude either jiva, or main-prana, or both, but not Brahman. Reply: not so, because then triple upasana would result - jiva upasana, main-prana upasana, and Brahman upasana - which is not proper in a single sentence-flow. Beginning and ending show unity: 'know me alone... I am prana-conscious self...' and at end 'this very prana-conscious self is blissful, ageless, immortal.' Hence single meaning should be accepted. Brahman-lingas cannot be forced into other referents, because ten object-units and ten cognition-units cannot coherently terminate in anything but Brahman. Also elsewhere, where supported by linga, prana-word takes Brahman-sense; here too highest-good opening and related Brahman-lingas are present. So this is Brahman-teaching. As for the main-prana linga ('raises this body'), that too is not decisive, since prana-function itself depends on Supreme Self and can be secondarily ascribed to It. (truncated in source output)",
+    "technical_translation": "Purvapaksha and initial siddhanta movement for 1.1.31: competing jiva/mukhya-prana lingas are acknowledged, then constrained by vakya-ekatva and stronger Brahman-linga integration.",
+    "interpretive_note": "The argument pivots on preserving single coherent upasya across upakrama-upasamhara."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,25 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "objection",
+      "response",
+      "resolution",
+      "definition"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-13",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.78,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 pass with stable inferential-tag schema.",
+      "A later philological pass should revisit truncated Kausitaki argument lines and detailed phrasing around upasa-traividhya in records 1.1.101-1.1.103."
     ]
   }
 }

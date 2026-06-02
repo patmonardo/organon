@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_V23/BS_C01_S01_V23_B2."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V23_B2.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V23_B2; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "'For that very reason, prana (is Brahman).' The prior sutra referred to 'because of that indicator'; by that same indicator, the word prana here too can denote Supreme Brahman. For Brahman-indicator is heard with prana: 'all these beings enter into prana and rise from prana.' Universal origination and dissolution in relation to prana indicate Brahmanhood. Objection: this can still fit primary prana, as seen in sleep and waking. Reply: there only sense-functions alone are seen to enter and emerge from prana, not all beings. Here the text says 'all these beings' - embodied, sense-equipped, jiva-inhabited entities. Even if 'beings' is taken as great elements, Brahman-indicator remains unopposed. In passages where sleep/wake with senses and objects are said to merge into prana, that prana too is Brahman by contextual indicator. Objection from nearby mention of food and sun fails: once sentence-end strongly indicates Brahman for prana, mere proximity is weak. Lexical predominance of prana for fivefold vital air is answered as in the akasha case. Therefore it is established that prana, deity of prastava, is Brahman.",
+    "technical_translation": "Bhashya on 1.1.23 applies taddlinga method: universal srishti-laya language outweighs lexical familiarity and adjacency, yielding Brahman-reference for prastava-prana.",
+    "interpretive_note": "Sentence-end force (vakya-shesha-bala) controls interpretation over local lexical defaults."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,24 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "definition"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-11",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.89,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 pass with stable inferential-tag schema.",
+      "A later philological pass should revisit truncated source lines and detailed jyotis/gayatri technical phrasing in records 1.1.084-1.1.087."
     ]
   }
 }

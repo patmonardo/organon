@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S02_V26/BS_C01_S02_V26_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S02_V26_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S02_V26_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "Here one may object: Vaishvanara cannot be the Supreme Lord. Why? Because of word-usage and related indicators, and because of inner-location. First, the word 'Vaishvanara' is established in other senses, not in the Supreme; likewise 'agni' in 'this indeed is the Vaishvanara fire.' Also by 'and so on': the triple-fire construction such as 'the heart is Garhapatya,' and statements about offering life-breath oblations beginning 'whatever food first arrives is fit for oblation.' From these reasons one should understand digestive fire as Vaishvanara. Further, inner-location is heard: 'know it as established within the person,' which fits digestive fire. As for your claim that specifications like 'heaven is head' require causal Supreme Self, we reply: how is it decided that, though specification appears possible both ways, the specification must be taken as belonging to the Supreme and not to digestive fire? Or the designation might refer to elemental fire present both within and without. Its relation to heaven and so on is also known from mantras. Or perhaps the deity whose body is that fire, by possessing lordly powers, could have heaven and other cosmic limbs. Therefore Vaishvanara is not the Supreme Lord.",
+    "technical_translation": "Purvapaksha before 1.2.26 argues jatharagni primacy from lexical convention, ritual-fire correspondences, and antah-pratisthana, while offering bhutagni/devata alternatives for cosmic-limb predicates.",
+    "interpretive_note": "Objection stacks lexical, ritual, and locative evidence against Ishvara reading."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,24 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "objection",
+      "definition",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s02-curation-pass-9",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.84,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S02 pass with stable cadence and inferential-tag schema.",
+      "A later philological pass should revisit vaisvanara lexical-rhetorical pivots and drsti-upadesa framing in records 1.2.063-1.2.070."
     ]
   }
 }

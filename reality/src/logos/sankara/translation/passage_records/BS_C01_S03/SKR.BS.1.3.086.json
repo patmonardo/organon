@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S03_V34/BS_C01_S03_V34_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S03_V34_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S03_V34_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "Just as the rule limiting eligibility to humans was set aside and gods were granted eligibility in vidya, one might similarly suspect that by setting aside a twice-born-only rule even the Shudra would be eligible. To remove that doubt this adhikarana begins. At first glance, Shudra eligibility seems arguable: desire and capacity may be present; and while there is an explicit prohibition like 'therefore the Shudra is not fit for sacrifice,' no similarly explicit prohibition for vidya is heard. The reason for ineligibility in karma - lack of sacred fires - does not by itself negate eligibility in vidya, since knowing vidya does not require ahavaniya etc. There also appears to be scriptural support: in Samvarga-vidya Janashruti Pautrayana seeking instruction is addressed with the word 'Shudra.' And figures like Vidura, though born in Shudra lineage, are remembered as possessing exceptional knowledge. Therefore one might conclude: the Shudra is eligible for vidyas. In response we say -",
+    "technical_translation": "Opening of 1.3.34 frames prima facie argument for shudra-adhikara in brahma-vidya from desire/capacity and selected textual indicators, preparing formal refutation.",
+    "interpretive_note": "Sets up the next adhikarana through a strong purvapaksha staging."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,24 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "objection",
+      "definition",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s03-curation-pass-11",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.78,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S03 pass with stable cadence and inferential-tag schema.",
+      "A later philological pass should revisit adhikara and varna terminology choices in records 1.3.086-1.3.088."
     ]
   }
 }

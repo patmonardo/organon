@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S02_V30/BS_C01_S02_V30_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S02_V30_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S02_V30_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "Or this one is mentally recollected as established in the span-sized heart-region; therefore it is called 'span-sized,' just as barley measured by a prastha is called a prastha. Though in barley an internal measure is manifested through relation to the measuring vessel, here in the Supreme there is no intrinsic measure manifested by relation to heart. Still, since sruti has employed the expression 'span-sized,' one must allow some mode of recollective support. Thus the non-span-sized Supreme is to be recollected as span-sized for meaningfulness of the sruti statement. Therefore, according to Acarya Badari, the span-measure statement regarding the Supreme is based on recollection. (30)",
+    "technical_translation": "Bhashya on 1.2.30 (Badari) grounds pradesa-matra in anusmrti-nimitta: pedagogical recollection-support, not real dimensional predicate of Brahman.",
+    "interpretive_note": "Measure-language functions as meditative aid through intentional cognitive framing."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,25 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "definition",
+      "example",
+      "resolution"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s02-curation-pass-10",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.87,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S02 pass with stable cadence and inferential-tag schema.",
+      "A later philological pass should revisit pradesa-matra, sampatti, and recensional lexical correspondences in records 1.2.071-1.2.078."
     ]
   }
 }

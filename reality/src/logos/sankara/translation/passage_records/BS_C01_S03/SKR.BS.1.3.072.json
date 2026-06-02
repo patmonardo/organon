@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S03_V29/BS_C01_S03_V29_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S03_V29_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S03_V29_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "Having accepted Veda's eternality on grounds such as non-remembrance of any independent author, and after removing the possible contradiction from admitting production of divine individuals through 'from that arises,' the text now strengthens that same established Veda-eternality: 'and therefore also eternality.' Precisely because the world of gods and others of determinate forms arises from Vedic word, eternality of Vedic word should also be understood. The mantra line 'by sacrifice they followed the track of speech and found her entered into the seers' shows speech as already existing and then discovered. Vyasa too recalls this: at the end of the age, when Vedas and Itihasas were hidden, great seers regained them through tapas, permitted by the Self-born. (29)",
+    "technical_translation": "Transition to 1.3.29: argument tightens from shabda-prabhava to explicit veda-nityatva, supported by recovered-not-produced speech motif in shruti and smriti.",
+    "interpretive_note": "Moves from defensive compatibility argument to affirmative eternality thesis."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,24 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s03-curation-pass-9",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.83,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S03 pass with stable cadence and inferential-tag schema.",
+      "A later philological pass should revisit technical choices around sphota/varna vocabulary in records 1.3.068 and 1.3.069."
     ]
   }
 }

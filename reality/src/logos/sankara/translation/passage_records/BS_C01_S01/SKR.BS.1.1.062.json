@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_V16/BS_C01_S01_V16_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V16_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V16_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "And for this reason too anandamaya is the Supreme Self, not the other; 'the other' means the transmigrating individual self distinct from Ishvara. The jiva is not denoted by anandamaya. Why? Because it is untenable. For after introducing anandamaya, scripture says: 'He desired: may I become many, may I be born; He performed tapas; having done tapas He created all this, whatever there is.' Here intentional resolve prior to body-production, non-difference from the entities to be produced, and creation of all modifications are intelligible only in the Supreme Self, not in another.",
+    "technical_translation": "Bhashya on 1.1.16 excludes jiva-reading: pre-cosmic willing, total creation, and causal non-difference predicates fit only Ishvara/Brahman.",
+    "interpretive_note": "Creative intentionality is used to distinguish Supreme Self from bound individual self."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,24 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "definition"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-8",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.92,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 pass with stable inferential-tag schema.",
+      "A later philological pass should revisit mayat suffix semantics and anandamaya mantra-brahmana continuity framing in records 1.1.056-1.1.063."
     ]
   }
 }

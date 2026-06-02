@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S02_V18/BS_C01_S02_V18_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S02_V18_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S02_V18_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "The text begins: 'He who, within this world, the other world, and all beings, rules from within,' and then says, 'He who stands in earth, within earth, whom earth does not know, whose body is earth, who rules earth from within - He is your Self, the inner controller, immortal,' and so on. Here, across deity, world, Veda, sacrifice, beings, and inner-self domains, a certain inward ruler is taught. Doubt arises: is this some deity-self presiding over those domains, or some yogin with attained subtle powers, or the Supreme Self, or some other previously unknown referent? Because an unprecedented designation is seen, uncertainty arises. One thought is: since the term is unfamiliar, perhaps a distinct unfamiliar entity is meant. Or, since an entirely undefined new entity is difficult to accept, perhaps 'inner-controller' by derivation points to some known inner-regulator, such as a domain-deity. Texts about domain deities are cited; and because such a deity has causal instruments, its inner regulating role may seem plausible. Or perhaps a perfected yogin with pervasive entry could regulate. Not the Supreme, one may say, since He has no action-instruments. In this prima facie state, it is said -",
+    "technical_translation": "Opening purvapaksha for 1.2.18 sets multiple antaryamin candidates (deity/yogin/Brahman/other) based on term novelty and functional control considerations.",
+    "interpretive_note": "Introduces the antaryamin inquiry through semantic novelty and agency questions."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,23 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "objection",
+      "definition"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s02-curation-pass-6",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.84,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S02 pass with stable cadence and inferential-tag schema.",
+      "A later philological pass should revisit antaryamin technical vocabulary and akshi-purusha predicate nuances in records 1.2.040-1.2.046."
     ]
   }
 }

@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_PRE/BS_C01_S01_I02."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_I02.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_I02; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for intro_bhashya; replace with curated doctrinal note."
+    "literal_translation": "One asks: what is this adhyasa? It is answered: it is of the nature of memory, an appearance elsewhere of something previously seen. Some define it as superimposition of one thing's properties on another. Others say it is error, grounded in failure to discriminate, wherever one thing is superimposed on another. Others describe it as imagining contrary properties of that very thing upon it. In any case, the appearance of another with another's properties is invariable. Common experience confirms this: nacre appears as silver, and one moon appears as if two.",
+    "technical_translation": "Adhyasa is provisionally characterized through rival formulations but unified by para-dharma-avabhasa: mislocated appearance of alien properties under non-discrimination.",
+    "interpretive_note": "Shankara permits definitional variation while preserving the phenomenological core of error."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,23 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "intro_bhashya"
+      "definition",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-1",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.9,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 opening pass with stable inferential-tag schema.",
+      "A later philological pass should revisit dense adhyasa technical vocabulary and karmani-sasthi grammatical framing in PRE-1.1.007."
     ]
   }
 }

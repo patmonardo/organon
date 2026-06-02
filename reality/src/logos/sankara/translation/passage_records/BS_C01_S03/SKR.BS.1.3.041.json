@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S03_V17/BS_C01_S03_V17_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S03_V17_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S03_V17_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "Further, it is the supreme Lord alone that is called 'the small inner space,' because the word akasha is well-established for the supreme Lord, as seen in usages such as 'Akasha is the bearer of name and form' and 'all beings arise from Akasha.' But nowhere do we see akasha used for the individual soul. As for elemental space: even if that word is commonly used there, it cannot be taken here because features like comparison structure and the rest are impossible for that reading, as already explained.",
+    "technical_translation": "Sutra 1.3.17 bhashya: lexical prasiddhi of akasha in Brahman-sense, plus prior impossibility arguments against bhutakasha, secures dahara as Ishvara.",
+    "interpretive_note": "Word-usage precedence is made explicit as a supporting pramana."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,23 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s03-curation-pass-6",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.88,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S03 pass with consistent S04-style inferential framing.",
+      "A later philological pass should tighten nuance in long non-dual interpretive paragraphs (1.3.045 especially)."
     ]
   }
 }

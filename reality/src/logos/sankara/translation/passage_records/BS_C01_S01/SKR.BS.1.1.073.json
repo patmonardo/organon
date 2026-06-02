@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_V20/BS_C01_S01_V20_B2."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V20_B2.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V20_B2; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "'Inner - because attributes of that are taught.' The person heard as 'within the sun' and 'within the eye' is indeed the Supreme Lord, not a transmigrating being. Why? Because attributes of that Supreme are taught here. For example, after giving the name Udita, scripture explains it through freedom from all sin: 'he rises above all sins'; and the same interpreted name is extended to the eye-person. Freedom from all sin is heard of the Supreme Self ('the self free from sin'). Likewise for the eye-person it determines identity with Rk, Sama, Uktha, Yajus, Brahman - fitting only the Supreme, since as cause of all He can be all-formed. After listing adhidaivata correspondences in earth/fire etc. and adhyatma correspondences in speech/prana etc., it says both are his song-components; this too is coherent only with total selfhood. It also says even in worldly songs this very one is sung; that fits only if taken as Supreme, as seen in Gita ('whatever is glorious... know that as from My splendor'). Unrestricted lordship over world-desires likewise indicates Supreme Lord. As for the objection from golden-bearded form, we reply: the Supreme too may assume maya-formed appearances by will for grace to worshipers; tradition supports this. Where scripture intends the attributeless transcendent form, it teaches as such ('formless, etc.'); elsewhere, because He is cause of all, He is taught as qualified by various manifested attributes for worship ('all actions, all desires...'). Thus golden-form description is also possible. As for support-location, even one established in His own greatness may be taught in specific loci for upasana. Since Brahman is all-pervasive like space, inner-presence in sun and eye is coherent.",
+    "technical_translation": "Bhashya on 1.1.20 resolves antaraditya ambiguity via taddharmopadesha: sinlessness, Vedic-totality, and universal lordship mark Ishvara; form/location become upasana-oriented manifestations.",
+    "interpretive_note": "Distinguishes nirvisesa teaching from saguna-upasana presentation without contradiction."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,25 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "definition",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-10",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.83,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 pass with stable inferential-tag schema.",
+      "A later philological pass should revisit antaraditya imagery and akasha lexical-paradigmatic nuances in records 1.1.072-1.1.079."
     ]
   }
 }

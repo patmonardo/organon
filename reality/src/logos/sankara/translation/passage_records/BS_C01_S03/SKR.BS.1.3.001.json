@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S03_V01/BS_C01_S03_V01_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S03_V01_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S03_V01_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "This is heard: 'In whom heaven, earth, and mid-space are woven, together with mind and all the vital forces, know that one alone as the Self; abandon other speech; this is the bridge to immortality.' Here, from the statement that heaven and the rest are woven in it, some support is understood. Is that the supreme Brahman, or something else? At first one may think it is some other support, because of hearing 'this is the bridge of immortality.' In common usage a bridge has a farther side, and that cannot be admitted for supreme Brahman, since scripture declares it infinite and shoreless. If one takes an alternative support, one might adopt the Smriti-known Pradhana, since as cause it can be treated as support; or one might take Vayu, because scripture speaks of its holding function; or the embodied self, because as enjoyer it can be treated as the support of the enjoyed world. With this prima facie view, the sutra begins.",
+    "technical_translation": "Opening of dyubhvady-adhikarana: the bhashya poses whether the Muṇḍaka support-term denotes Brahman or an alternative entity (Pradhana, Vayu, jiva). The setu-phrase is treated as the key ambiguity driving the purvapaksha.",
+    "interpretive_note": "Sets up candidate referents and frames the bridge-metaphor objection."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,24 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "objection",
+      "definition",
+      "thesis"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s03-curation-pass-1",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.8,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated to match S04 style: doctrinal continuity plus explicit inferential tagging.",
+      "A later philological pass may tighten lexical precision for setu/ayatana/atacchabda terminology."
     ]
   }
 }

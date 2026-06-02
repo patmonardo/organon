@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_V03/BS_C01_S01_V03_B2."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V03_B2.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V03_B2; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "Or, the previously described scripture beginning with the Rgveda is the source - the means of valid knowledge - for proper realization of this Brahman. The intent is: Brahman as the cause of origination and so on of the world is known from scripture. That scripture was already cited in the previous sutra ('from which indeed these beings are born,' etc.). Then why this sutra, if the prior birth-etc. sutra had already displayed Brahman's scriptural sourcehood? Reply: because in the birth-etc. sutra scripture was not explicitly named in the sutra wording, one might suspect that only inference was being presented. To remove that doubt this sutra is introduced: 'because of scriptural sourcehood.' (3)",
+    "technical_translation": "Bhashya on 1.1.3 clarifies shastra-yonitvat as explicit anti-misreading: janmadi-sutra is not bare anumana but Vedanta-vakya grounded.",
+    "interpretive_note": "This is a methodological safeguard against reducing Vedanta to independent inference."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,25 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "objection",
+      "response",
+      "resolution",
+      "definition"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-3",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.9,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 pass with stable inferential-tag schema.",
+      "A later philological pass should revisit condensed Mimamsa technical vocabulary and long polemical sentence boundaries in records 1.1.016-1.1.023."
     ]
   }
 }

@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S02_V08/BS_C01_S02_V08_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S02_V08_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S02_V08_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "If Brahman is all-pervasive like space, then because it is related to all hearts and not different from embodied self as consciousness, enjoyment of pleasure and pain would also become non-differentiated. And by non-duality there is no other transmigrating self apart from the Supreme ('there is no other knower than this'). So it would follow that Brahman itself undergoes experience. Reply: no, because of distinction. Mere relation to all hearts does not entail embodied-style enjoyment for Brahman; there is a specific difference between embodied self and Supreme Lord: one is doer/enjoyer, conditioned by dharma-adharma and subject to pleasure/pain; the other is opposite, qualified by freedom from evil and related attributes. Because of this difference, experience belongs to one, not the other. If mere spatial proximity, without regard to entity-nature, were enough for functional transfer, then space too would burn when near fire. The same objection and reply also apply against theorists of many all-pervasive selves. As for the non-duality argument - since no other self exists, experience of the embodied would become Brahman's - first ask: how have you settled this non-otherness? If from scriptures like 'That thou art,' 'I am Brahman,' 'there is no other knower,' then scriptural meaning must be received as taught, not half-parsed. Scripture, teaching Brahman with qualifiers like freedom from evil as the self of the embodied, first negates enjoyership as ultimate for the embodied itself; why then impose enjoyership on Brahman through that relation? If identity has not yet been realized, embodied enjoyment is due to ignorance and does not touch Brahman in its reality - just as imagined dirt at the edge of sky does not make real sky dirty. Thus, even with non-duality, embodied enjoyment does not transfer to Brahman, because there is distinction between ignorance-cognition and true knowledge: enjoyment is ignorance-imagined; identity is known in true knowledge; the ignorance-imagined cannot contaminate what true knowledge reveals. Therefore not even a trace of enjoyment can be attributed to Isvara.",
+    "technical_translation": "Bhashya on 1.2.8 answers bhoga-transfer objection through vaiśeṣya (jiva-Ishvara functional distinction) plus two-level epistemology: mithyajñāna-vyavahara cannot affect samyagjñāna-established Brahman.",
+    "interpretive_note": "Sharp separation between empirical enjoyment and ultimate non-dual realization."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,26 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "objection",
+      "response",
+      "resolution",
+      "definition",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s02-curation-pass-3",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.72,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S02 pass with stable cadence and inferential-tag schema.",
+      "A later philological pass should revisit upadhi/vyavahara terminology and atta-grahana technical choices in records 1.2.016-1.2.022."
     ]
   }
 }

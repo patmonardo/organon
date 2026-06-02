@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S03_V35/BS_C01_S03_V35_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S03_V35_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S03_V35_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "And for this reason too Janashruti is not a Shudra by birth: his Kshatriya status is inferred from contextual analysis and from the marker of his later joint mention with the Kshatriya Abhipratarin, descendant of Chaitraratha. In the later continuation of the Samvarga-vidya, Abhipratarin Chaitrarathi is named ('then, as Shaunaka Kapeya and Abhipratarin Kakshaseni were being served, a brahmacarin sought alms'). Abhipratarin's Chaitraratha linkage is known through his Kapeya connection, and that Kapeya connection is known for Chitraratha in other Vedic references. Those who share ritual lineage generally have officiants of similar lineage. A text also notes a Chaitrarathi as a Kshatrapati, indicating Kshatriya status. Janashruti being named in the same vidya-context with that Kshatriya Abhipratarin indicates Janashruti too is Kshatriya; generally, co-mention occurs among social equals. Janashruti's royal powers (sending attendants and the like) also indicate Kshatriya status. Therefore there is no eligibility here for the Shudra.",
+    "technical_translation": "Bhashya on 1.3.35 adduces contextual-linga evidence to reclassify Janashruti as Kshatriya, preserving the prior anadhikara argument for birth-Shudra in Veda-based vidya.",
+    "interpretive_note": "Uses intra-textual social and lineage markers to block counterexample from the Janashruti episode."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,25 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "example",
+      "definition"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s03-curation-pass-12",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.77,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S03 pass with stable cadence and inferential-tag schema.",
+      "A later philological pass should revisit social-category and adhikara terminology choices in records 1.3.089-1.3.096."
     ]
   }
 }

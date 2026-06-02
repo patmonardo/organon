@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S02_V31/BS_C01_S02_V31_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S02_V31_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S02_V31_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "Or the span-measure statement may be due to 'integration' (sampatti). Why? The parallel Vajasaneyi Brahmana passage maps cosmic limbs of Vaishvanara-from heaven down to earth-onto bodily limbs from head down to chin, thereby showing a span-measure integration of the Supreme: 'the gods, though well knowing, became as if span-sized... I will explain how I shall render these as span-sized...'; then identifying head, eyes, nostrils, inner space of mouth, waters in mouth, and chin as specific Vaishvanara aspects. (Chin means lower jaw.) Though Vajasaneyi and Chandogya differ in assigning certain predicates (e.g., heaven/solar qualifiers), no decisive loss follows from such variation, since the span-measure teaching is not sect-specific and is accepted across recensions. Jaimini considers this sampatti-based explanation of pradesa-matra the more fitting one. (31)",
+    "technical_translation": "Bhashya on 1.2.31 advances sampatti-nimitta (macrocosm-microcosm integration) for pradesa-matra, and Jaimini prefers this as the strongest harmonization across recensional variants.",
+    "interpretive_note": "Cosmic-to-bodily correspondential superimposition supplies the most robust account of finite-measure language."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,25 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "definition",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s02-curation-pass-10",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.85,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S02 pass with stable cadence and inferential-tag schema.",
+      "A later philological pass should revisit pradesa-matra, sampatti, and recensional lexical correspondences in records 1.2.071-1.2.078."
     ]
   }
 }

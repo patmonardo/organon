@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_V01/BS_C01_S01_V01_B3."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V01_B3.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V01_B3; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "'Brahman-inquiry' means inquiry into Brahman. Brahman is what will be defined as 'that from which are birth and so on of this (world).' Therefore one should not suspect that the term Brahman here means class or some other sense. The genitive in 'of Brahman' is objective (karmani), not merely relational, because inquiry depends on an object-to-be-inquired. Scripture too directly presents Brahman as the object of inquiry ('that from which these beings are born... seek to know that; that is Brahman'). Even if one tried to retain a relational genitive and derive objecthood indirectly, that would be needless when direct objecthood is available. Nor is it required to make the phrase cover every Brahman-related investigation explicitly; once Brahman as principal object is taken, subordinate inquiries required for that inquiry are already implied, just as saying 'the king goes' includes his retinue. Hence in the sutra, the genitive is objective: inquiry has Brahman as its direct object.",
+    "technical_translation": "Bhashya on 1.1.1 secures brahmanah as karmani-sasthi and fixes Brahman as principal visaya of jijnasa, with supporting sruti continuity and implied sub-inquiries.",
+    "interpretive_note": "Grammatical decision safeguards the directness and scope of Vedantic inquiry."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,25 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "definition",
+      "response",
+      "resolution",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-1",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.9,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 opening pass with stable inferential-tag schema.",
+      "A later philological pass should revisit dense adhyasa technical vocabulary and karmani-sasthi grammatical framing in PRE-1.1.007."
     ]
   }
 }

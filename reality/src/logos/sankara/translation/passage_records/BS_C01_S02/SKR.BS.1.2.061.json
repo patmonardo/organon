@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S02_V24/BS_C01_S02_V24_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S02_V24_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S02_V24_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "Beginning with 'Who is our self? what is Brahman?' and 'You are now inquiring of me about this self, the Vaishvanara; tell us that very one,' scripture teaches that heaven, sun, wind, space, water, and earth become head and other limbs of Vaishvanara, while criticizing one-sided meditations on each as merely possessing qualities like bright radiance. It says: 'who worships this Vaishvanara self as of measure of a span and inwardly apprehended, he eats food in all worlds, all beings, all selves'; and again, 'of this Vaishvanara self, heaven indeed is head, sun eye, wind breath, space trunk, waters bladder, earth feet, chest altar, hairs sacred grass, heart garhapatya fire, mind anvaharyapacana, mouth ahavaniya,' etc. Doubt arises: does 'Vaishvanara' here denote digestive fire, elemental fire, the presiding deity, the embodied self, or the Supreme Lord? Why doubt? Because 'Vaishvanara' is commonly used for digestive/elemental/deity fire, while 'self' is common to embodied self and Supreme. Which should be retained and which abandoned is uncertain. Prima facie, digestive fire seems likely: texts specifically use it ('this fire within man by which food is cooked'). Or perhaps fire in general, from general usage ('the gods made Agni Vaishvanara'). Or the fire-deity, since usages support that and lordly traits may fit deity. And if one pushes by self-word apposition and opening line 'Who is our self? what is Brahman?,' still perhaps embodied self: as enjoyer it is near Vaishvanara, and the qualifier 'measure of a span' can fit an adjunct-limited self. So it seems Vaishvanara is not Ishvara; then -",
+    "technical_translation": "Purvapaksha setup for 1.2.24 maps lexical polysemy of Vaishvanara/atman across jatharagni, bhutagni, devata, jiva, and Brahman, arguing initially for non-Ishvara readings.",
+    "interpretive_note": "A lexical-ritual ambiguity frame precedes the Vedantic determination."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,24 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "objection",
+      "definition",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s02-curation-pass-8",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.84,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S02 pass with stable cadence and inferential-tag schema.",
+      "A later philological pass should revisit akshara/avyakrta and vaisvanara lexical decisions in records 1.2.055-1.2.062."
     ]
   }
 }

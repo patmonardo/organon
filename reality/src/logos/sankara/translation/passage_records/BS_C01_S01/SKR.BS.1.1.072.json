@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_V20/BS_C01_S01_V20_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V20_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V20_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "It is taught: 'this golden person seen within the sun, golden beard, golden hair, wholly golden to the nails... his name is Udita; he rises above all sins for one who knows thus... this as adhidaivata... and as adhyatma ... this person seen within the eye,' etc. There doubt arises: is the one taught as worship-worthy in sun and eye some transmigrating being elevated by excellence of knowledge/ritual, or the eternally accomplished Supreme Lord? Prima facie: transmigrating being. Why? Because form is heard. For the solar person is described as golden-bearded etc.; and by transference the eye-person gets the same form ('his form is that very form of the other'). But formfulness does not fit Supreme Lord, according to texts such as 'soundless, touchless, formless, undecaying.' Also because support-location is heard ('within the sun,' 'within the eye'); the all-pervasive, self-grounded Lord should not be assigned a support. Your own cited texts say He is established in His own greatness and all-pervasive like space. Further, limited scope of lordship is heard: the solar person rules worlds above and divine desires; the ocular person rules worlds below and human desires. Such bounded lordship does not fit Supreme Lord, for scripture states universal sovereignty without limitation. Therefore one may conclude the inner sun/eye person is not Supreme Lord. In this obtained position, we say -",
+    "technical_translation": "Purvapaksha before 1.1.20 reads antaraditya/antarakshi purusha as an exalted samsarin, based on form, locative conditioning, and apparently bounded sovereignty predicates.",
+    "interpretive_note": "This sets up a classic dispute between symbolic local manifestation and absolute divinity."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,24 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "objection",
+      "definition",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-10",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.86,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 pass with stable inferential-tag schema.",
+      "A later philological pass should revisit antaraditya imagery and akasha lexical-paradigmatic nuances in records 1.1.072-1.1.079."
     ]
   }
 }

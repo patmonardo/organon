@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_V01/BS_C01_S01_V01_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V01_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V01_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "Here the word 'atha' is taken in the sense of sequence (after), not eligibility, because Brahman-inquiry is not restricted by ritual qualification in that way. Nor does it function as mere auspicious opening, since that does not coherently enter the sentence-meaning; it yields auspiciousness only when used for another semantic purpose. Given this sequential meaning, as dharma-inquiry necessarily presupposes prior Veda-study, one must state what prior condition Brahman-inquiry necessarily presupposes. Mere succession to scriptural study is common, and succession merely to karma-understanding is not decisive, since one who has already studied Vedanta can undertake Brahman-inquiry even before dharma-inquiry. Nor is there a strict ritual-order compulsion here as in heart-cutting and similar acts, because no proof establishes a principal-subsidiary or mandated sequence relation between dharma-inquiry and Brahman-inquiry. Their object and fruit differ: dharma-knowledge yields worldly elevation and depends on performance; Brahman-knowledge yields highest good and does not depend on further performance. Dharma to be done is future and action-dependent; Brahman to be known is already existent, eternal, and not produced by action. The corresponding injunctions also differ: injunction concerning dharma impels action, while Brahman-statements only disclose reality. As perception arises from sense-object contact without an injunction to cognize, so Brahman-knowledge is disclosure, not commanded production. Therefore one must specify what 'after' means here: discrimination between eternal and non-eternal, dispassion toward enjoyments here and hereafter, the wealth of disciplines such as calmness and self-control, and desire for liberation. When these are present, one can inquire into and know Brahman - whether before or after dharma-inquiry; not otherwise. Hence 'atha' here indicates sequence after such preparatory qualifications.",
+    "technical_translation": "Bhashya on 1.1.1 parses 'atha' as sadhana-sampatti-anantarya, not ritual adhikara or mere mangala, differentiating Brahma-jijnasa from dharma-jijnasa in object, fruit, and mode of scriptural function.",
+    "interpretive_note": "Establishes the classic adhikari profile for Vedanta without subordinating Brahman inquiry to ritual sequence."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,24 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "definition",
+      "resolution"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-1",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.87,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 opening pass with stable inferential-tag schema.",
+      "A later philological pass should revisit dense adhyasa technical vocabulary and karmani-sasthi grammatical framing in PRE-1.1.007."
     ]
   }
 }

@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_V04/BS_C01_S01_V04_B2."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V04_B2.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V04_B2; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "Here others object: even if Brahman is scripturally known, scripture presents it only as subordinate to injunction. Just as extraordinary entities like sacrificial posts and hearths are taught as limbs of injunction, so too Brahman. Why? Because scripture is meaningful only by serving injunction and prohibition. Thus exegetes of scriptural intention say scripture's function is to disclose action; injunction is speech impelling action; recitation serves action; and what is not action-related is meaningless. Hence scripture is meaningful when it impels toward one object or restrains from another, while other material is useful only as subsidiary. By that general rule Vedanta too should be meaningful only likewise. Then, as Agnihotra is enjoined for one desiring heaven, so Brahman-knowledge would be enjoined for one desiring immortality. If one replies that earlier a distinction was made - dharma inquiry concerns to-be-done dharma while here inquiry concerns already existent eternal Brahman - they deny this, holding Brahman still presented only as something required by injunction. They cite texts such as 'the self should be seen,' 'that self should be sought and known,' 'one should meditate on self alone,' and 'the knower of Brahman becomes Brahman.' In context of the question 'what is that self? what is Brahman?' all Vedanta sentences describing eternal, omniscient Brahman are then taken as supplying content for mandated meditation, with liberation as scripturally produced seen/unseen result. Otherwise, if no injunction enters and only object-description remains, Vedanta sentences would be meaningless like bare statements such as 'the earth has seven continents' or 'the king goes.' If one says object-description can still remove error (like 'this is a rope, not a snake'), so too teaching non-samsarin self removes samsara-error and is meaningful, the opponent initially concedes but continues the dispute.",
+    "technical_translation": "Purvapaksha to 1.1.4 presses strict kriyarthatva hermeneutic (Jaimini-style) to subsume Vedanta under vidhi-sesha structure, treating Brahman passages as meditation-enjoining supports.",
+    "interpretive_note": "This is the major Mimamsa challenge: preserve scriptural meaningfulness by reducing all text to action-function."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,24 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "objection",
+      "definition",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-3",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.78,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 pass with stable inferential-tag schema.",
+      "A later philological pass should revisit condensed Mimamsa technical vocabulary and long polemical sentence boundaries in records 1.1.016-1.1.023."
     ]
   }
 }

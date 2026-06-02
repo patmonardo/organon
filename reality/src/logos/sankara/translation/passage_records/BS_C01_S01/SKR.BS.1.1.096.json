@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_V29/BS_C01_S01_V29_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V29_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V29_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "The claim 'prana here is Brahman' is challenged: prana does not denote Supreme Brahman. Why? Because the speaker teaches his own self. The speaker is Indra, a particular embodied deity, and he taught his own self to Pratardana, beginning 'know me alone' and saying 'I am prana, conscious self' in first-person mode. How can this prana, taught as the speaker's own self, be Brahman? For Brahman cannot literally be a speaking agent, as texts say 'without speech, without mind.' He also praised himself with body-related deeds inapplicable to Brahman (slaying Tvastar's son etc.). Indra's being prana is plausible because of strength ('prana indeed is strength'), and Indra is known as deity of strength. Pragnatman-status also fits deity-self due to unobstructed knowledge traditionally ascribed to gods. Once deity-self teaching is fixed, statements like highest good should be fitted there as far as possible. Thus from speaker-Indra self-teaching, prana is not Brahman. Reply: 'because predominance of adhyatma relation in this chapter.' Here relation to inner self is overwhelmingly present: as long as prana resides in this body there is life; scripture shows this inner prana-conscious self as independently governing life's beginning/end, not some externally located deity. It shows inner sensory-grounded prana as supreme among faculties; 'this very prana-conscious self takes hold of this body and raises it'; and beginning 'do not seek speech, know the speaker,' it concludes by gathering object-sense transactions into the inner self ('as spokes in hub...') and ends 'this very prana-conscious self is blissful, ageless, immortal.' The final statement 'know Him as my self' is proper only if inner self is intended, not external deity. Other sruti too says 'this self is Brahman, all-experience.' Therefore, due to predominance of adhyatma relation, this is Brahman-teaching, not deity-self teaching. (29)",
+    "technical_translation": "Bhashya on 1.1.29 states and rebuts vaktr-atmopadesha objection: despite Indra's first-person language, the chapter's overwhelming adhyatma orientation and upasamhara establish Brahman-reference.",
+    "interpretive_note": "Narrative voice is subordinated to chapter-wide inner-self hermeneutics."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,25 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "objection",
+      "response",
+      "resolution",
+      "definition"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-13",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.84,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 pass with stable inferential-tag schema.",
+      "A later philological pass should revisit truncated Kausitaki argument lines and detailed phrasing around upasa-traividhya in records 1.1.101-1.1.103."
     ]
   }
 }

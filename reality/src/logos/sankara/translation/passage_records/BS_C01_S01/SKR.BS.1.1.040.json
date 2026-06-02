@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_V08/BS_C01_S01_V08_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V08_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V08_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "If non-self Pradhana denoted by sat were what is taught in 'that self, thou art,' then after hearing that instruction the seeker might wrongly become established in non-self cognition. In that case scripture, intending to teach the true primary self, should declare that taught item rejectable - like one showing Arundhati first points to a nearby large star, then rejects it and finally indicates Arundhati. It should have said, 'this is not the self.' But it does not. Rather the sixth chapter clearly ends in establishment in self-as-sat alone. Also, even if one tried to add a rejectability statement, contradiction with the chapter's initial pledge would arise: by knowing the cause, all is known ('did you ask for that instruction by which the unheard becomes heard...'; 'by one lump of clay all made of clay is known...'). If sat meant Pradhana as cause of the enjoyables, then whether known as rejectable or non-rejectable, the enjoyer-class would still remain unknown, since enjoyers are not modifications of Pradhana in that sense. Therefore Pradhana is not what sat denotes. (8)",
+    "technical_translation": "Bhashya on 1.1.8 argues from absence of heya-vacana and from ekavijnanena sarvavijnana pratijna coherence: sat in tat tvam asi cannot be Pradhana.",
+    "interpretive_note": "Pedagogical structure and opening promise jointly rule out Pradhana reading."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,25 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "definition",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-6",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.87,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 pass with stable inferential-tag schema.",
+      "A later philological pass should revisit svapya etymological nuances and gati-samanya phrasing in records 1.1.040-1.1.047."
     ]
   }
 }

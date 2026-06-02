@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S03_V14/BS_C01_S03_V14_B2."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S03_V14_B2.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S03_V14_B2; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "To this we reply: here the small space must be the supreme Lord, not elemental space and not jiva. Why? From reasons found in the subsequent text. The passage first raises the query about the space to be sought and known, then responds: 'as vast as this outer space is this inner-heart space; heaven and earth are contained within it,' etc. By comparing it with known space, the text removes the merely smallness obtained from lotus-enclosure and thereby negates elemental-space reading in that limited sense. Though the word akasha is conventionally used for elemental space, that very comparison shows a deeper referent. The attempt to treat one space as externally/internal by imagined division is a forced move; even then, the inner divided segment could not bear true parity with outer immensity. Nor is the passage intending literal equal-size assertion; it removes enclosure-smallness. Also, in an imagined confined segment, inclusion of heaven and earth is impossible. Further, the text applies qualities such as being the Self, free from sin, free from old age and death, free from sorrow, free from hunger and thirst, true in desire and resolve; these cannot fit elemental space. Though Self-language can apply to jiva, other reasons remove jiva too: one cannot cancel adjunct-based smallness in a jiva limited by upadhis. If one insists jiva's all-pervasiveness is intended by non-difference with Brahman, it is better to take Brahman directly, where all-pervasiveness is primary. As for brahmapura being city of jiva like a king's city: we reply body is called city of Brahman primarily because brahman-word is primary there. Brahman indeed has relation to this city as the ground of manifestation, as other texts say the Person dwelling in the city. Or, as Vishnu is said to be present in salagrama, Brahman is indicated as present in this jiva-city. Again, after stating karmic worlds are perishable, the text says those who know this Self and these true desires gain free movement in all worlds; such infinite fruit indicates this subject is supreme Self. Against the claim that only what is inside is to be known, not the small space itself: if space were not itself the knowable, the explicit display of its nature ('as vast as outer space...') would be pointless. If one says that display only serves to show inner contents, then what is gathered there - heaven, earth, etc. - would itself become the primary knowable, which the remainder of the passage does not support. Instead the sequel resumes the very same support-space and then, by conjunctive linkage, teaches both the Self and true desires resting in it as knowables. Therefore even at the opening, the small space in the heart-lotus, together with what is gathered in it and the true desires, is taught as knowable; and by the stated reasons that small space is the supreme Lord.",
+    "technical_translation": "Siddhanta for sutra 1.3.14: uttara-vakya and vakyasesa markers override lexical default, establishing dahara-akasha as paramatma. Upadhi-limited jiva and bhutakasha fail attribute-fit, fruit-scale, and discourse-coherence tests.",
+    "interpretive_note": "Major resolution block: subsequent-context hermeneutic defeats both space and jiva readings."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,23 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s03-curation-pass-5",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.72,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S03 pass with stable section-04 style criteria.",
+      "A later philological pass may refine compound parsing and samasa-level nuance in long bhashya segments."
     ]
   }
 }

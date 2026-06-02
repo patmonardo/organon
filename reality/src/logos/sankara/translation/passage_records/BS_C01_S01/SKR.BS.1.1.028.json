@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_V05/BS_C01_S01_V05_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V05_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V05_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "The non-conscious Pradhana imagined by Sankhya cannot be taken as world-cause in Vedanta. It is asabda - not scripturally denoted. Why asabda? Because the cause is heard as seeing/thinking (ikshateh). Scripture says: 'Being alone was this in the beginning, one without a second,' and then, 'it saw: may I become many, may I be born; it created fire.' Here the manifest world denoted by 'this' is first resolved into sat before creation, and that very sat, now the topic, is shown as creator of fire etc. preceded by seeing. Elsewhere too: 'Self alone was this in the beginning... it saw: let me create worlds... it created these worlds' - again creation preceded by seeing. Elsewhere a sixteen-part purusha is introduced and said 'he deliberated' and 'he created prana.' The reference to ikshateh is to the verbal sense (not merely root citation), as in ritual examples. Therefore other statements like 'he who is all-knowing, all-wise, whose tapas is knowledge - from him are born name, form, food' should also be cited as indicating omniscient Ishvara as cause.",
+    "technical_translation": "Bhashya on 1.1.5 uses ikshateh as conscious-intent marker to exclude acaitanya Pradhana and secure sentient Brahman/Ishvara causality.",
+    "interpretive_note": "Intentional creation language is the decisive anti-Pradhana lever."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,25 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "definition",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-4",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.9,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 pass with stable inferential-tag schema.",
+      "A later philological pass should revisit long compound argument boundaries and technical Mimamsa-Sankhya polemic vocabulary in records 1.1.024-1.1.031."
     ]
   }
 }

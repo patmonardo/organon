@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_V09/BS_C01_S01_V09_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V09_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V09_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "That same sat-denoted cause is heard again in the sleep teaching: 'when this person is said to sleep, then, dear one, he has become united with sat; he has gone to his own; therefore they call it sleep, for he has gone to his own.' This scripture etymologizes the common term sleep. Here 'sva' means self. The person has gone to that sat which is the topic; that is, he has merged into it. The root i with api-prefix is well known in the sense of dissolution, as in usages of origination and dissolution. In waking, the jiva associated with the mind's outgoing function grasps sense-objects and appears so qualified; in dream, conditioned by those traces, he becomes what is denoted by mind. When both these adjunct-states cease in deep sleep, that adjunct-made differentiation is absent, and he is as though dissolved in his own self; hence 'he has gone to his own.' As sruti also explains derivations like hrdaya and asanaya/udanya by etymological teaching, so here too by deriving 'sleep' it teaches this meaning: one has gone to one's own self, denoted by sat. A conscious self cannot attain a non-conscious Pradhana as its own essential nature. Even if one says Pradhana is called 'one's own' merely by belongingness, contradiction remains: a conscious being would be said to merge into the non-conscious. Another sruti says, in deep sleep, embraced by the intelligent self one knows neither external nor internal. Therefore that into which all conscious beings dissolve must itself be conscious, and that sat-denoted conscious principle is world-cause, not Pradhana. (9)",
+    "technical_translation": "Bhashya on 1.1.9 uses svapya-śruti (sushupti-laya) to infer conscious causal ground: dissolution of conscious jiva presupposes conscious sat, excluding acaitanya Pradhana.",
+    "interpretive_note": "Deep sleep phenomenology becomes a causal-identification argument."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,25 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "definition",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-6",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.88,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 pass with stable inferential-tag schema.",
+      "A later philological pass should revisit svapya etymological nuances and gati-samanya phrasing in records 1.1.040-1.1.047."
     ]
   }
 }

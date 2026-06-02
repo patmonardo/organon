@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_V24/BS_C01_S01_V24_B2."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V24_B2.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V24_B2; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "Here light should be understood as Brahman. Why? Because of mention of a quarter (carana/pada). In the preceding passage, four-footed Brahman was stated by the mantra 'so great is His glory... one quarter are all beings, three quarters are immortal in heaven.' The heavenly-related form of that four-footed Brahman is recognized here through the heaven-related expression. Abandoning that and imagining ordinary light would cause abandonment of topic and introduction of a non-topic. This Brahman-continuity extends into the following Sandilya-vidya too. Therefore here 'jyotis' is to be known as Brahman. Objection: words like 'shines' and 'light' are commonly for effect-light. Reply: no defect - once context establishes Brahman, these words need not be restrictive; they can apply to Brahman marked through manifest light ('by whom the sun burns'). Also, jyotis is not confined to sensory light alone: scripture uses it for speech, mind, and whatever illuminates. Thus Brahman, as consciousness-illuminer of the whole world, rightly receives the term jyotis, supported by texts like 'by whose shining all shines.' Objection from spatial delimitation ('beyond heaven') also fails: even all-pervasive Brahman may be taken with specific locus for upasana through adjunct relation, as in sun, eye, heart contemplations. Multiple supports are similarly explained. And identifying higher light with abdominal light can be symbolic-pratika upasana, as with name-symbols, not proof of non-Brahman referent. (text truncated in source output)",
+    "technical_translation": "Bhashya on 1.1.24 defends Brahman-jyotis via pada mention continuity, broadened jyotis semantics (illumination generally), and upasana-locus/pratika interpretation.",
+    "interpretive_note": "Contextual carryover and semantic expansion override purely physical-light default."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,25 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "definition",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-11",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.82,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 pass with stable inferential-tag schema.",
+      "A later philological pass should revisit truncated source lines and detailed jyotis/gayatri technical phrasing in records 1.1.084-1.1.087."
     ]
   }
 }

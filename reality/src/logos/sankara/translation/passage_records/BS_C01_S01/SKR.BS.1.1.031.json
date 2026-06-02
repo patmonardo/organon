@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_V05/BS_C01_S01_V05_I01."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V05_I01.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V05_I01; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for leading_bhashya; replace with curated doctrinal note."
+    "literal_translation": "Thus far it has been shown that Vedanta sentences aimed at realization of Brahman-self culminate in Brahman even without insertion into action-framework; and Brahman has been stated as omniscient, omnipotent cause of world's origination, maintenance, and dissolution. Sankhya and others, however, holding that an established reality must be known by other pramanas, infer alternative causes such as Pradhana and then force Vedanta sentences into that direction. In all Vedanta creation-passages they seek to indicate cause from effect by inference alone. Sankhyas infer eternal conjunction of Pradhana and Purusha; Vaisesikas infer from those same passages Ishvara as efficient cause and atoms as material cause; other logicians too, relying on pseudo-textual and pseudo-reasoning supports, arise here as purvapaksha positions. Therefore, by the teacher skilled in word-sentence-pramana, these seeming textual and logical supports are first presented as opposing views and then refuted, in order to establish that Vedanta sentences are for realization of Brahman-self.",
+    "technical_translation": "Introductory framing for subsequent refutations: competing inferential cosmologies are staged as purvapaksha so Vedantic samanvaya toward Brahman-atman realization can be defended.",
+    "interpretive_note": "Meta-hermeneutic transition from foundational method to structured polemic against rival causal systems."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,24 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "leading_bhashya"
+      "definition",
+      "objection",
+      "resolution"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-4",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.89,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 pass with stable inferential-tag schema.",
+      "A later philological pass should revisit long compound argument boundaries and technical Mimamsa-Sankhya polemic vocabulary in records 1.1.024-1.1.031."
     ]
   }
 }

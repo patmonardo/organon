@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_V04/BS_C01_S01_V04_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V04_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V04_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "The word 'tu' excludes a prior view. That Brahman - omniscient, omnipotent, cause of the world's origination, maintenance, and dissolution - is known from Vedanta scripture alone. How? Through harmonization. Across all Vedantas, the sentences converge in intention upon this meaning: 'Being alone was this in the beginning, one without a second'; 'Self alone was this in the beginning'; 'that Brahman was before, without after, without inside/outside; this self is Brahman, all-experience'; 'Brahman alone is this immortal before.' Once the terms in those passages are ascertained as concerning Brahman's nature, constructing some other meaning is improper, else heard meaning would be abandoned and unheard meaning imagined. Nor can these passages be reduced to teaching agent/deity structures, because sruti negates action-agent-result structures ('by what should one see whom?'). Even though Brahman is an established reality, it is not an object of perception etc., since identity statements like 'That thou art' are not knowable apart from scripture. If one says teaching is pointless because Brahman is beyond acceptance/rejection, this is no defect: knowing Brahman as self, free of acceptance/rejection, removes all affliction and fulfills human purpose. Deity-focused passages may still serve meditation in their own contexts; no contradiction there. But Brahman cannot be merely a subsidiary of meditation injunction, because nondual realization sublates dual cognition of action, agent, and instrument; once true unity-knowledge arises, the dual framework for injunction cannot stand. Though elsewhere Vedic sentences are usually taken as authoritative in relation to injunction, one cannot deny authority of scripture here because self-knowledge itself is fruit-complete. Nor is scriptural authority for this inferable from some external model requiring analogy. Therefore it is established that Brahman is known by scriptural pramana.",
+    "technical_translation": "Bhashya on 1.1.4 argues samanvaya: Vedanta mahavakya convergence fixes Brahman as nondual scriptural object; vidhi-sesha reduction is rejected by kriya-karaka-phala sublation in atmaikatva-jnana.",
+    "interpretive_note": "Central hermeneutic claim: Vedanta has autonomous revelatory force about Brahman, with tarka supportive but subordinate."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,25 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "definition",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-3",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.84,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 pass with stable inferential-tag schema.",
+      "A later philological pass should revisit condensed Mimamsa technical vocabulary and long polemical sentence boundaries in records 1.1.016-1.1.023."
     ]
   }
 }

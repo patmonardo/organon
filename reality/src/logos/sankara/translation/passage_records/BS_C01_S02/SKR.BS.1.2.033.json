@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S02_V13/BS_C01_S02_V13_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S02_V13_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S02_V13_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "It is heard: 'The person seen in the eye - this is the Self, this is immortal, fearless, this is Brahman; and even if ghee or water is poured into this eye, it goes only to the eyelids.' Doubt arises: is this the reflected self located in the eye, or the knowing self, or the presiding deity of the sense-organ, or the Lord? Prima facie, one may take it as reflected image, since that is visibly seen and the wording seems to teach something familiar as though established. Or it may be the knowing self, since seeing forms through the eye, it is associated with the eye; the word atma also seems favorable there. Or it may be the solar deity aiding vision, as scripture links rays to the eye, and immortality-like predicates may in some manner fit a deity-self. Not the Lord, due to the specification of a particular location. To this we reply -",
+    "technical_translation": "Opening purvapaksha for 1.2.13 enumerates four candidates for the akshini-purusha (reflection, jiva, devata, Ishvara) with lexical and contextual support.",
+    "interpretive_note": "Careful candidate-screen before applying predicate-fit to settle the referent."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,23 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "objection",
+      "definition"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s02-curation-pass-5",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.84,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S02 pass with stable cadence and inferential-tag schema.",
+      "A later philological pass should revisit ka/kha lexical interpretation and eye-person technical terminology in records 1.2.033-1.2.038."
     ]
   }
 }

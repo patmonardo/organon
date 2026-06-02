@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_V31/BS_C01_S01_V31_B2."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V31_B2.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V31_B2; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "Or the sutra may be read this way: even in Brahman-teaching, jiva/main-prana indicators are not contradictory. How? Because of threefold upasana. Here a threefold meditation on Brahman is intended - via prana-dharma, via prajna-dharma, and via Brahman's own dharma. Prana-dharma appears in statements like 'worship me as life and immortality,' 'this body is upheld and raised,' and related uktha-upasana lines. Prajna-dharma appears where, after introducing the relation of this prajna, speech and other faculties are described as functions coordinated through prajna. Brahma-dharma appears where object-units and cognition-units are gathered and culminated in prana/prajna identity leading to the blissful ageless immortal conclusion. Thus one and the same Brahman is intended, with two adjunct-dharmas plus own-dharma, yielding one upasana expressed in three modes. Elsewhere too Brahman-upasana through adjunct-dharmas is seen ('mind-made, prana-bodied...'). So here too it is fitting, since beginning and ending establish one meaning and prana-prajna-brahman indicators are all present. Therefore this is indeed Brahman-text. (31)",
+    "technical_translation": "Bhashya on 1.1.31 reconciles mixed lingas via upasa-traividhya: one Brahman meditated under prana and prajna upadhis plus intrinsic form, preserving vakya-ekatva.",
+    "interpretive_note": "Rather than competing referents, indicators are layered modes of a single contemplative target."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,25 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "definition",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-13",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.86,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 pass with stable inferential-tag schema.",
+      "A later philological pass should revisit truncated Kausitaki argument lines and detailed phrasing around upasa-traividhya in records 1.1.101-1.1.103."
     ]
   }
 }

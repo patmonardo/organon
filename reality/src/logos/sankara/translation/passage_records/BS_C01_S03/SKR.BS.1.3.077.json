@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S03_V31/BS_C01_S03_V31_VERSETEXT_01."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S03_V31_VERSETEXT_01.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S03_V31_VERSETEXT_01; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for versetext; replace with curated doctrinal note."
+    "literal_translation": "Because of impossibility in meditations like Madhu and others, Jaimini (holds) non-eligibility. (31)",
+    "technical_translation": "Sutra 1.3.31: Jaimini denies deva-adhikara on upasana-structure impossibility grounds.",
+    "interpretive_note": "Sutra marker for the Jaimini turn."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,22 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "versetext"
+      "resolution"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s03-curation-pass-10",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.93,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S03 pass with stable cadence and inferential-tag schema.",
+      "A later philological pass should revisit pramana and upasana technical vocabulary in records 1.3.076-1.3.079."
     ]
   }
 }

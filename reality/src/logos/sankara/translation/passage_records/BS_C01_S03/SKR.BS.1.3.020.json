@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S03_V08/BS_C01_S03_V08_B2."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S03_V08_B2.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S03_V08_B2; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "To this it is said: here Bhuman must be the supreme Self, not prana. Why? Because of instruction beyond samprasada. 'Samprasada' denotes the deep-sleep condition, so called because there one becomes fully tranquil; and in other scripture this state is taught along with waking and dream. Since in that state prana is said to remain active, the term here can indicate prana-associated samprasada. The key point is that Bhuman is taught above that level. If prana itself were Bhuman, teaching it again as beyond would be incoherent. Just as 'greater than name' does not teach name itself again but something other, namely speech, and similarly each subsequent step teaches something distinct, so too what is taught above prana must be distinct from prana. Objection: there is no explicit question-answer, 'is there something greater than prana?' and the ativadin thread appears to continue as prana-topic in 'he truly over-speaks who over-speaks by truth.' Reply: that cannot be reduced to the same prana-topic because the text adds a differentiating qualifier, 'by truth.' If one says this is merely like calling an agnihotrin truthful (a secondary qualifier), we reject that: such reading abandons the direct scriptural sense, which presents over-speaking through truth itself. Prana-knowledge is not repeated there directly; forcing it only by context would discard explicit wording. Also the particle tu marks exclusion from what was previously taken. The imperative 'truth indeed is to be sought' signals intention toward a distinct referent. As in praising one Veda and then saying a four-Veda scholar is the greater brahmana, a distinct higher item can be introduced without strict question-answer form. Sanatkumara, seeing Narada silent after the prana-portion, himself instructs that over-speaking based on mutable/untrue content is not genuine over-speaking; true over-speaking is by satya. Here satya means supreme Brahman, as ultimate reality, corroborated by 'Brahman is truth, knowledge, infinity.' Then to Narada prepared with 'May I over-speak by truth,' he teaches Bhuman through a sequence of means. Thus what was promised as beyond prana, namely satya, is what is here called Bhuman. Therefore there is instruction of Bhuman above prana, and Bhuman must be supreme Self distinct from prana. This also preserves the chapter's opening intent of self-knowledge removing sorrow. Prana cannot be primary Self in this strict sense, and elsewhere only knowledge of supreme Self removes sorrow: there is no other path. The chapter begins with the plea to cross sorrow and ends with Sanatkumara showing the far shore of darkness to one with purified stains; darkness means ignorance, source of sorrow. Even where prana appears near the chapter end, it is subordinated ('prana from Self'). And because discussion pulls Bhuman forward until section-end ('in its own greatness it stands'), Bhuman cannot collapse into prana. As plenitude and causal totality, Bhuman most properly belongs to the supreme Self.",
+    "technical_translation": "Siddhanta for sutra 1.3.8: adhyupadesa beyond samprasada/prana, tu-exclusion, satya re-centering, and chapter-level sorrow-transcendence teleology together establish bhuma = paramatma. Prana readouts are pedagogical stations, not terminal referent.",
+    "interpretive_note": "Decisive reversal: Bhuman is Brahman, with prana treated as intermediate rung."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,23 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s03-curation-pass-3",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.7,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S03 pass with consistent inferential labeling and S04-style structure.",
+      "A later philological sweep should revisit bhuma/samprasada nuance and long-compound Sanskrit segmentation."
     ]
   }
 }

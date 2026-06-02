@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_V17/BS_C01_S01_V17_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V17_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V17_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "And for this reason too, anandamaya is not the transmigrating self: in the anandamaya section scripture distinguishes jiva and anandamaya by saying, 'He indeed is rasa; having attained that rasa, this one becomes blissful.' The attained cannot itself be the attainer. How then with texts saying self is to be sought, and that nothing is higher than self-attainment, if the attained is already attained? Granted - even so, though self never departs from itself, due to non-apprehension of truth there is worldly false certainty of selfhood in body and other non-selfs. Therefore distinctions like un-sought to be sought, unattained to be attained, unheard to be heard, unreflected to be reflected, unknown to be known become intelligible. Ultimately, however, scripture denies any seer/hearer other than the all-knowing Supreme ('there is no other seer than this'). The Supreme Lord is distinct from the embodied doer/enjoyer called vijnanatman, which is ignorance-projected. Like a magician distinct from the sword-and-hide figure projected into the sky, or like unconditioned space distinct from pot-space, so too this distinction grounds statements such as 'not the other due to impossibility' and 'because of declaration of difference.' (17)",
+    "technical_translation": "Bhashya on 1.1.17 reinforces jiva-Brahman distinction at vyavahara level via rasa-attainer duality and ignorance-projected embodiment, while preserving ultimate non-dual seer doctrine.",
+    "interpretive_note": "Attainment language is explained as removal of false identification, not production of a new self."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,25 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "definition",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-9",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.84,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 pass with stable inferential-tag schema.",
+      "A later philological pass should revisit tadyoga nuance and the heavily compressed debate text in records 1.1.069-1.1.071."
     ]
   }
 }

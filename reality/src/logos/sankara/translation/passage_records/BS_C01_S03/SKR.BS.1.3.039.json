@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S03_V16/BS_C01_S03_V16_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S03_V16_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S03_V16_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "And from the reason of support, this small one is the supreme Lord. How? Beginning with 'small space within the heart,' after comparing with space and stating all is gathered there, the text applies the word Self and qualities like freedom from sin, then without leaving the topic again states: 'this Self is the bridge, the support of these worlds, for non-confusion.' There 'support' stands in apposition with Self and means supporter. As in ordinary life a bridge supports streams so fields do not mix, so this Self supports worlds differentiated as inner and outer domains, and social orders too, preventing confusion. Thus, in the present dahara topic, the greatness marked by supporting power is shown. This greatness is known elsewhere of the supreme Lord alone, as in 'under the command of this Imperishable sun and moon stand held.' Elsewhere too in a settled Lord-passage: 'this is the Lord of all, ruler of beings, protector of beings, the bridge and support of these worlds for non-confusion.' Therefore from support as reason, this small one is the supreme Lord.",
+    "technical_translation": "Sutra 1.3.16: dhriti-mahima in the dahara section is read as explicit Ishvara-function (world-order maintenance), with cross-upanishadic corroboration; hence dahara cannot be finite locus or inert substrate.",
+    "interpretive_note": "Support-function argument seals the dahara interpretation."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,23 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s03-curation-pass-5",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.87,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S03 pass with stable section-04 style criteria.",
+      "A later philological pass may refine compound parsing and samasa-level nuance in long bhashya segments."
     ]
   }
 }

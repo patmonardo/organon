@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_V04/BS_C01_S01_V04_B5."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V04_B5.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V04_B5; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "And the cited exegetical maxim - 'its purpose is known as disclosing action,' etc. - should be understood as concerning dharma-inquiry and scriptures of injunction/prohibition. Further, those who accept without qualification the claim 'since recited text is for action, non-action content is meaningless' face absurdity: what of teachings about existent realities? If they allow existent object-teaching only as serving future action, why deny teaching of immutable eternal reality? Even when an object is taught for action, it is still genuinely taught as an object possessing capacity for action-effect; action-orientation is only its purpose, not negation of objecthood. Likewise teaching the as-yet-unrealized self-object can be meaningful: by realizing it, false cognition - cause of samsara - is removed; thus it has practical purposiveness comparable in meaningfulness to teaching action-supporting objects. Also, prohibitions such as 'a brahmana is not to be killed' are taught; these are not positive actions nor instruments of action. If all non-action teaching were meaningless, such prohibitions would become meaningless, which is unacceptable. Nor can one force the negative particle into some hidden positive action-function in every case; its natural function is to convey absence/non-doing, yielding withdrawal from the act. Therefore we take prohibitions primarily as producing cessation/indifference toward a prompted act (with limited special exceptions), and similarly claims of meaninglessness must be restricted to purposeless narrative material not connected to human ends - not to all statements of reality.",
+    "technical_translation": "Bhashya narrows Mimamsa kriyarthatva thesis: even where action-purpose exists, vastu-upadesha remains real; nivrtti-vakyas and atma-vastu teaching demonstrate non-reducibility to pravrtti-vidhi.",
+    "interpretive_note": "Concludes by preserving both purposiveness and truth-disclosure without collapsing all Veda into injunction mechanics."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,25 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "definition",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-3",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.82,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 pass with stable inferential-tag schema.",
+      "A later philological pass should revisit condensed Mimamsa technical vocabulary and long polemical sentence boundaries in records 1.1.016-1.1.023."
     ]
   }
 }

@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S03_V02/BS_C01_S03_V02_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S03_V02_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S03_V02_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "Further, that support must be supreme Brahman because it is stated as attained by the liberated. What is reached by the liberated is called 'that which is approached by the free.' Ignorance is taking non-self such as body as self; from that come attachment, aversion, fear, and delusion, producing endless suffering known directly to all. Opposite to that, this reality is described as reached by those free from ignorance and its defects. How? After saying 'the knot of the heart is cut, all doubts are cut, his karmas are exhausted when That is seen,' scripture says: 'thus the knower, freed from name and form, reaches the supreme shining Person beyond the beyond.' Scripture is well known for Brahman as what the liberated attain: when all desires lodged in the heart are released, the mortal becomes immortal and attains Brahman here. No such liberated-attainability is established for Pradhana and the like. Also the knowability of this support is taught together with release from distracting speech, and this pattern is seen elsewhere in Brahman-teaching: knowing That, the wise should cultivate understanding and not brood on many words. Therefore too the support of heaven and earth is supreme Brahman.",
+    "technical_translation": "Argument from muktopasrpyavyapadesa: the text links the referent to liberation-fruits (knot-cutting, doubt-destruction, karma-exhaustion, name-form transcendence), which are canonical Brahman markers and unavailable to Pradhana alternatives.",
+    "interpretive_note": "Liberation-teleology is used as decisive referent filter."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,23 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s03-curation-pass-1",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.82,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated to match S04 style: doctrinal continuity plus explicit inferential tagging.",
+      "A later philological pass may tighten lexical precision for setu/ayatana/atacchabda terminology."
     ]
   }
 }

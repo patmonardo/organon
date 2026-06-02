@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_V26/BS_C01_S01_V26_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V26_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V26_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "And for this reason too one must accept that Brahman is the topic in the prior passage: scripture assigns elements and the like as quarters - after naming beings, earth, body, heart, it says 'this Gayatri is four-footed and sixfold.' Without taking Brahman as basis, such element-quarters cannot fit mere meter. Nor would the verse 'so great is His glory' connect in that case, for by its own force it denotes Brahman: 'all beings are one quarter of Him; three quarters are immortal in heaven,' which coheres with all-selfhood. In the Purusha-sukta too this verse is recited with Brahmanic intent. Smrti similarly states this form of Brahman ('I stand pervading this whole world with one portion'). And when read this way, the statement 'that indeed is Brahman' has a proper primary sense. Likewise the hearing of Brahma-persons in the heart-cavities is coherent when Brahman-related intent is assumed. Therefore Brahman is indeed the topic in the prior sentence; that same Brahman is recognized in the jyotis sentence by relation to heaven and is recalled there. (26)",
+    "technical_translation": "Bhashya on 1.1.26 strengthens prior determination: bhutadi-pada assignment, Purusha-verse linkage, and explicit brahma-nirdesha make Gayatri section Brahman-topic, enabling jyotis-pratyabhijna.",
+    "interpretive_note": "Contextual continuity from Gayatri section to jyotis section is explicitly defended."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,25 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "definition",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-12",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.9,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 pass with stable inferential-tag schema.",
+      "A later philological pass should revisit truncated source lines and precise phrasing in the jyotis/gayatri bridge and Kausitaki prana section (1.1.084-1.1.095)."
     ]
   }
 }

@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S02_V09/BS_C01_S02_V09_B2."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S02_V09_B2.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S02_V09_B2; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "The eater here must be the Supreme Self. Why? Because what is taken as eaten is the moving and unmoving whole. The entire stationary and moving cosmos, with death as condiment, is implied as food here. For such an object, no one other than the Supreme can be total eater in full extent. The Supreme, as dissolver of all modifications, is coherently said to eat all. Objection: explicit moving-unmoving language is not directly present; how then is this reason treated as established? No fault: since death as condiment and food-status implies the total aggregate of beings, and brahmana-kshatra are shown as principal exemplars. Objection again: even for Supreme, eaterhood is impossible due to texts saying 'the other does not eat but only looks on.' Reply: that statement negates karmic-fruit enjoyment in that context, not cosmic dissolution. It cannot negate dissolution, since all Vedanta establishes Brahman as cause of creation, maintenance, and dissolution. Therefore here the eater is the Supreme Self alone. (9)",
+    "technical_translation": "Bhashya on 1.2.9 determines attā as Brahman via caracara-totality and saṃhāra-function, while restricting 'non-eating witness' texts to karma-bhoga contexts.",
+    "interpretive_note": "Interprets 'eating' as total withdrawal/dissolution, not sensory consumption."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,24 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "definition"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s02-curation-pass-3",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.83,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S02 pass with stable cadence and inferential-tag schema.",
+      "A later philological pass should revisit upadhi/vyavahara terminology and atta-grahana technical choices in records 1.2.016-1.2.022."
     ]
   }
 }

@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_V02/BS_C01_S01_V02_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V02_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V02_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "'Birth' means origination; and by 'and so on' are included subsistence and dissolution - this is a bahuvrihi compound indicating those attributes. The priority of birth is based both on scriptural sequence and on the nature of things. Scriptural sequence: 'from which indeed these beings are born' etc. shows birth, maintenance, and dissolution in order. Natural sequence: only what has first attained being through birth can then have persistence and dissolution. 'Of this' points to the substratum presented through perception etc.; the genitive indicates relation to the properties birth etc.; 'from which' indicates cause. Thus: that from which originate, endure, and dissolve this world - differentiated by name and form, populated by many agents and enjoyers, ordered by determinate place, time, causes, actions, and fruits, and of structure inconceivable even to mind - from that omniscient, omnipotent cause, that is Brahman. Other modes of change are included within these three. If one instead lists all six changes ('is born, exists...' etc.), one might wrongly exclude origination/maintenance/destruction of the world from a root cause by treating those as merely during already-given existence; avoid that confusion - what is meant here are precisely origination, maintenance, and dissolution from Brahman. For no entity other than Ishvara with these characteristics - not inert Pradhana, not atoms, not non-being, not a bound soul - can account for the world's origination etc. Nor can it be by mere nature, since specific place-time-causal conditions are observed. This itself is taken by Ishvara-causal theorists as an inference for existence of a Lord distinct from transmigrating selves.",
+    "technical_translation": "Bhashya on 1.1.2 glosses janmadi as sristi-sthiti-laya lakshana and fixes Brahman as omniscient/omnipotent jagat-karana, excluding rival causal candidates.",
+    "interpretive_note": "Provides the operative laksana for Brahman by cosmological causality under scriptural control."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,25 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "definition",
+      "resolution",
+      "response",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-2",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.87,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 pass with stable inferential-tag schema.",
+      "A later philological pass should revisit janmadi-lakshana and sastra-yonitva technical compression in records 1.1.008-1.1.015."
     ]
   }
 }

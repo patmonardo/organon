@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_V18/BS_C01_S01_V18_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V18_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V18_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "And in the anandamaya section too, because there is mention of willing ('He desired: may I become many, may I be born'), one should not rely even on inferentially imagined Sankhya non-conscious Pradhana as anandamaya or as cause. Though Pradhana was already rejected by 'because of seeing, not from word,' it is rejected again here on account of the willing-text cited in the previous sutra, to further elaborate the common-drift argument. (18)",
+    "technical_translation": "Bhashya on 1.1.18 re-applies anti-Pradhana reasoning in anandamaya context: kama/intentional willing marks conscious cause and blocks anumana-based Pradhana import.",
+    "interpretive_note": "Rejection is reiterated to secure consistency across all relevant passages."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,24 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "definition"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-9",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.9,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 pass with stable inferential-tag schema.",
+      "A later philological pass should revisit tadyoga nuance and the heavily compressed debate text in records 1.1.069-1.1.071."
     ]
   }
 }

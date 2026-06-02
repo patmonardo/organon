@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S03_V13/BS_C01_S03_V13_B2."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S03_V13_B2.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S03_V13_B2; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "It is taught here that supreme Brahman alone is to be meditated on. Why? Because it is designated as the object of seeing. Seeing is direct realization, and what is pervaded by such seeing is called its object. In the sentence continuation this meditated Person is designated as object of seeing: 'From this mass of living principle he sees the Person higher than the high, dwelling in the city.' In meditation one may take even an imagined object, but in seeing, in ordinary usage, the object is something real. Therefore this one, designated as object of true seeing, is understood to be the supreme Self. The same one is recognized as the meditated object through the words 'supreme' and 'Person.' If one objects that meditation says 'supreme Person' whereas seeing says 'higher than the high,' how are they recognized as one? Reply: both expressions are common markers here; moreover, the term jivaghana does not indicate a different principal object from which another would be higher, but serves as an upadhi-index (or, by another reading, indicates Brahma-loka as aggregate of embodied beings), from which the supreme is distinguished. Thus the very one who is object in seeing is object in meditation. Also the qualifier 'supreme Person' properly fits only supreme Self, since nothing is beyond that; other scripture says nothing is beyond the Person. Since the text first divides Om as related to higher and lower Brahman, then immediately prescribes meditation on the supreme Person through Om, it points to supreme Brahman. Further, fruit-statements such as release from sin indicate this higher aim. As for the objection that supreme-Brahman meditation should not have spatially delimited fruit: the reply is that with the three-matra Om as support, the fruit can be Brahma-loka attainment followed by progressive rise to right realization; this is intended as gradual liberation, so there is no defect.",
+    "technical_translation": "Siddhanta for sutra 1.3.13: iksati-karma designation and para-purusa continuity establish the upasya as para-brahman; finite intermediate fruit is interpreted under krama-mukti framework, not as proof of apara object.",
+    "interpretive_note": "Resolution: Om-meditation can target supreme Brahman with staged fruition."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,23 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s03-curation-pass-4",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.74,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S03 pass with stable S04-style schema semantics.",
+      "A later philological pass should tighten technical terms in the akshara and pranava subsections."
     ]
   }
 }

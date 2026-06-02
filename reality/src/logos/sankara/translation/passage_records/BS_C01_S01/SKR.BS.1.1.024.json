@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_V04/BS_C01_S01_V04_B6."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V04_B6.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V04_B6; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "As for what was said - that without entry into injunction to act, mere statement of an existent thing would be meaningless like 'the earth has seven continents' - this has been answered. Even mere object-statement is meaningful, as in 'this is a rope, not a snake,' where purpose is directly seen. If one says that even after hearing Brahman one still sees samsara as before, so unlike rope-cognition no practical effect follows, reply: once Brahman-self identity is understood, prior samsaric self-identification cannot stand, because it is opposed by knowledge generated from Vedic pramana. One cannot say that because the body-identified person had fear and sorrow, the same continues after that identification is removed by Brahman-knowledge. Just as grief from loss of wealth belongs to one who identifies with wealth, not to a renunciate free of that identification; and pleasure from wearing ornaments does not belong to one who has no ornament-identification. Thus sruti says: 'the bodiless is not touched by pleasant and unpleasant.' If one says bodilessness comes only after physical death, not while living, no - because embodiedness is rooted in false cognition. Apart from mistaken self-identification with body, embodiedness cannot be coherently posited for self. We have already said bodilessness is eternal, not produced by karma. If one says embodiedness is produced by dharma/adharma, this fails: relation to body is itself unproven, so actions ascribed to self are unproven; and making body-relation caused by dharma/adharma while dharma/adharma depend on that relation leads to mutual dependence and beginningless blind regress. Also self's agency is untenable due to lack of action-inherence. If one says kings are agents by mere presence, that works only because of servitor relations established through transactions like payment; no such ownership relation can be shown for self and body. False identification alone is the evident cause of relation. By this, yajamana-status attribution to self is explained. If one says identification of self with body etc. is figurative, not false, no: figurative usage presupposes established distinction between two known entities. Here that supposed relation is error-driven, not a stable primary-secondary semantic transfer.",
+    "technical_translation": "Bhashya deepens anti-kriyarthatva defense via rope-snake model, arguing sasariratva as avidya-nimitta and exposing karmic body-relation theories to anyonyashraya/anavastha problems.",
+    "interpretive_note": "This section ties liberation-effect directly to de-identification rather than ritual production."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,25 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "definition",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-4",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.81,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 pass with stable inferential-tag schema.",
+      "A later philological pass should revisit long compound argument boundaries and technical Mimamsa-Sankhya polemic vocabulary in records 1.1.024-1.1.031."
     ]
   }
 }

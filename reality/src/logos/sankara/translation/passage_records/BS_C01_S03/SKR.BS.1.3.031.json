@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S03_V13/BS_C01_S03_V13_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S03_V13_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S03_V13_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "After introducing 'This Om indeed, O Satyakama, is both higher and lower Brahman; by this support the knower reaches either of the two,' scripture continues, 'He who meditates by this very imperishable Om in three measures on the supreme Person.' In this sentence, is meditation taught on supreme Brahman or on lower? Since the context mentioned both higher and lower attainable through this support, doubt arises. Prima facie, this is lower Brahman. Why? Because the fruits spoken of for this knower are spatially delimited: becoming merged in the light of the sun and being led by Sama hymns to Brahma-loka. It is not fitting that a knower of supreme Brahman should attain a spatially bounded fruit, since supreme Brahman is all-pervasive. One might object that the qualifier 'supreme Person' would then be unsuitable; reply: not necessarily, as prana too can be called superior relative to the body. Thus the prima facie reading stands until answered.",
+    "technical_translation": "Purvapaksha of pranava-upasana section: despite para-purusa language, finite phala descriptions (solar path/Brahma-loka ascent) motivate reading the object as apara-brahman.",
+    "interpretive_note": "Sets up para-vs-apara dispute in Om-based meditation teaching."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,23 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "objection",
+      "thesis"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s03-curation-pass-4",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.8,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S03 pass with stable S04-style schema semantics.",
+      "A later philological pass should tighten technical terms in the akshara and pranava subsections."
     ]
   }
 }

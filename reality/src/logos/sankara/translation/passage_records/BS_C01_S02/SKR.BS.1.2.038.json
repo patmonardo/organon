@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S02_V15/BS_C01_S02_V15_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S02_V15_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S02_V15_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "Further, there should be no dispute here over whether Brahman is taught in this sentence or not. Brahmanhood is established simply from being taught as qualified by bliss. The bliss-qualified Brahman introduced earlier ('prana is Brahman; ka is Brahman; kha is Brahman') is what is taught here, since taking the topic already in progress is methodologically proper, and because the pledge 'your teacher will tell you the path' indicates only path-exposition, not a new topic. How is bliss-qualified Brahman known there? After hearing the fires say 'prana is Brahman, ka is Brahman, kha is Brahman,' Upakosala says: I know prana as Brahman, but I do not know ka and kha. The reply: what is ka is indeed kha; what is kha is indeed ka. In common usage kha is fixed for physical space. If ka (bliss-signifying) were not taken as qualifier, one might think only physical space is intended and Brahman-word is used symbolically like in name-symbol meditations. Conversely, ka is also known for sensory pleasure; if not qualified by kha, one may think ordinary pleasure is Brahman. But mutually qualifying ka and kha indicate bliss-natured Brahman. If the second Brahman-word were omitted ('ka kha Brahman'), ka would function merely as qualifier and bliss as a quality alone might become the meditated object; to avoid that, both ka and kha are each crowned with Brahman ('ka Brahman, kha Brahman'). It is desirable that even a quality such as bliss be meditated as inseparable from its possessor. Thus at the section-opening bliss-qualified Brahman is taught. And each sacred fire, after teaching its own glory, concludes 'this, dear one, is our knowledge and the Self-knowledge,' indicating that Brahman was already taught earlier. The statement 'the teacher will tell you the path' also blocks intention of a different subject. And saying that for one who knows the person in the eye sin does not cling establishes that the person in the eye is Brahman. Therefore, after stating eye-location and samyadvama-like qualities of the already introduced Brahman, the text proceeds to teach the path of one who knows that Brahman, beginning: 'the person seen in the eye - this is the Self.' (15)",
+    "technical_translation": "Bhashya on 1.2.15 secures continuity of the Upakosala section: ka/kha reinterpretation yields sukha-visista Brahman, and eye-person plus path teaching are read as downstream unfoldings of that single Brahman topic.",
+    "interpretive_note": "Strong topic-continuity argument integrating lexical clarification and pedagogical sequence."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,25 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "definition",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s02-curation-pass-5",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.77,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S02 pass with stable cadence and inferential-tag schema.",
+      "A later philological pass should revisit ka/kha lexical interpretation and eye-person technical terminology in records 1.2.033-1.2.038."
     ]
   }
 }

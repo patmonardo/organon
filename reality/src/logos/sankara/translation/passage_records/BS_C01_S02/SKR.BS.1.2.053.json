@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S02_V21/BS_C01_S02_V21_B2."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S02_V21_B2.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S02_V21_B2; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "This source of beings characterized by invisibility and the like is the Supreme Lord alone, not another. How is this known? Because the declared attribute belongs to Him. For the attribute stated here - 'who is all-knowing, all-wise' - is seen to belong to the Supreme. Neither inert Pradhana nor the embodied self, whose cognition is adjunct-delimited, can possess omniscience and all-comprehension. If one says that omniscience belongs only to what is beyond the imperishable source, not to the source itself, reply: this is untenable. For after introducing the source as that from which the universe arises, the text immediately describes the all-knowing in the same productive-causal role: 'whose tapas is knowledge; from Him arise Brahman, name, form, and food.' By sameness of indication and recognition of the same referent, omniscience and all-comprehension are taught of that very previously introduced imperishable source. Even in 'higher than the imperishable is the highest,' no other entity beyond the introduced imperishable source is intended. How known? Because the text had pledged to teach that very imperishable source with invisibility and related traits: 'the one who knows that imperishable person truly taught that Brahma-vidya.' Then why is it spoken as 'higher than the imperishable'? We will explain this in the next sutra. Also, two knowledges are declared: lower and higher. After stating lower knowledge as Rgveda etc., it says, 'now the higher by which that imperishable is known'; thus imperishable is heard as the object of higher knowledge. If one imagined another imperishable with such traits, distinct from the Supreme, this would not be higher knowledge. The lower-higher split is construed as worldly prosperity versus liberation; no one accepts Pradhana-knowledge as liberating. On your view three knowledges would be required, since a Supreme beyond the imperishable source would still need teaching; but only two are taught. And the request 'what, when known, makes all this known?' is coherent when Brahman, the self of all, is intended - not with inert Pradhana or a non-total enjoyer. Further, the text begins by foregrounding Brahma-vidya, then via lower/higher division presents higher knowledge as leading to the imperishable, showing it as Brahma-vidya; that title would collapse if the knowable imperishable were non-Brahman. Lower knowledge (Rgveda etc.) is introduced within a Brahma-vidya opening to praise Brahma-vidya, as shown by later censure of ritual rafts and return to old age and death. Having criticized lower knowledge, it grants eligibility for higher knowledge to the dispassionate seeker who approaches a teacher. As for the claim that because examples like earth are non-conscious, the illustrated source must be non-conscious: not valid, since strict identity between example and exemplified is not required. And because gross entities like earth are cited as examples, one does not infer the source must be gross. Therefore the source of beings marked by invisibility and related traits is the Supreme Lord alone. (21)",
+    "technical_translation": "Bhashya on 1.2.21 identifies Mundaka bhuta-yoni as Brahman by dharma-ukti (sarvajna/sarvavit), referential continuity across cause-statements, two-vidya architecture, and liberation-oriented epistemic framing; Pradhana/jiva readings collapse textual economy.",
+    "interpretive_note": "A large integrative rebuttal: semantics, pedagogy, and soteriology converge on Brahman as akshara-bhuta-yoni."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,25 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "definition",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s02-curation-pass-7",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.82,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S02 pass with stable cadence and inferential-tag schema.",
+      "A later philological pass should revisit antaryamin and akshara-bhuta-yoni terminology in records 1.2.047-1.2.054."
     ]
   }
 }

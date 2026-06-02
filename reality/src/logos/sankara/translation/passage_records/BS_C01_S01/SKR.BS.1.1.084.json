@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_V24/BS_C01_S01_V24_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V24_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V24_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "It is taught: 'that light which shines beyond heaven... this indeed is that light within this person.' Here doubt arises: does 'light' denote solar/fire light or the Supreme Self? In the previous case, prana had clear linga; here whether such linga exists is examined. Prima facie: physical light like sun etc. Why? From common usage: darkness and light are opposed terms, where darkness obstructs sight and sunlight/light enables sight. Also the verb 'shines' is commonly applied to physical light, not to formless Brahman. And 'beyond heaven' suggests a bounded region, not all-pervasive Brahman, source of all moving and unmoving. If one notes physical light appears below heaven too (fire etc.), one may still take a specific region for upasana without contradiction. Multiple supports ('in all directions, highest worlds') also better suit an effect-light than the partless Brahman. And the statement 'this light within the person' appears as superimposition of a higher light upon the abdominal light (kauksheya), as often superimpositions are based on similarity. Thus one may conclude the passage concerns physical light, not Brahman. (text truncated in source output)",
+    "technical_translation": "Purvapaksha before 1.1.24 presses jyotis in its primary physical sense via lexical convention, shining-verb usage, and locative boundedness arguments.",
+    "interpretive_note": "Introduces another familiar-versus-contextual reading conflict, now around jyotis."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,24 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "objection",
+      "definition",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-11",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.76,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 pass with stable inferential-tag schema.",
+      "A later philological pass should revisit truncated source lines and detailed jyotis/gayatri technical phrasing in records 1.1.084-1.1.087."
     ]
   }
 }

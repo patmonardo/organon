@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S03_V20/BS_C01_S03_V20_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S03_V20_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S03_V20_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "Now, the jiva-reference shown in the remainder of the dahara passage ('this serene one...') would become pointless if, in explaining dahara as supreme Lord, it were taken neither as instruction on jiva-upasana nor as specific detail of the present topic. Therefore it is said: this jiva-reference has another purpose; it does not terminate in jiva-nature, but in supreme-Lord nature. How? The jiva denoted by samprasada, after functioning in waking as overseer of body-sense cage, experiencing dream-impressions moving in the channels, and becoming weary, rises from identification with both modes and, in deep sleep, attaining the highest light - the supreme Brahman signified by akasha - abandoning particularized cognition, appears in its own form. That highest light which is to be attained, and that by which one appears in own form, is this very Self endowed with freedom from sin and the rest, the proper object of contemplation. In this way, even for one who upholds the supreme-Lord interpretation, the jiva-reference is coherent.",
+    "technical_translation": "Sutra 1.3.20 clarifies functional role of jiva-parāmarśa: it serves as pedagogical bridge from empirical consciousness-states to realization of paramatma-svarupa.",
+    "interpretive_note": "Resolves redundancy concern: jiva mention is instrumental, not terminal."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,23 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s03-curation-pass-6",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.86,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S03 pass with consistent S04-style inferential framing.",
+      "A later philological pass should tighten nuance in long non-dual interpretive paragraphs (1.3.045 especially)."
     ]
   }
 }

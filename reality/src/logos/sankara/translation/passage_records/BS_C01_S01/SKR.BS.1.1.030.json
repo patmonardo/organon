@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_V05/BS_C01_S01_V05_B3."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V05_B3.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V05_B3; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "There is no defect in knowledge being eternal. If one says that with eternal knowledge no independent predication about knowledge-objects is possible, no: even for the sun, whose heat and light are constant, we still say 'it burns' and 'it illumines.' If one objects that such predication applies only when sun contacts burnable/illuminable things, whereas before creation Brahman has no knowledge-object relation, so the analogy fails - no: even without specific object-contact we say 'the sun shines'; likewise, even without actualized knowledge-act one can have predication 'it saw' for Brahman. With object-reference, statements of Brahman's seeing are even more coherent. What then is the pre-creation object of Ishvara's knowledge? We say: name and form in unmanifest state, indescribable as either identical or different, ready for manifestation. If yoga theorists accept even yogins can know past/future by grace of that principle, how much more the eternally accomplished Ishvara has eternal knowledge of creation, maintenance, and dissolution. If one says before creation Brahman cannot be a seer without body/senses, that objection fails: like solar illumination, Brahman's knowledge is intrinsic and eternal, so no instrument-dependence applies. Instrument-dependent cognition pertains to bound souls under ignorance-obstruction, not to Ishvara free of knowledge-obstruction causes. Sruti mantras show Ishvara's independence from bodily instruments and unobstructed knowing: 'he has no work nor instruments... his powers are manifold, intrinsic, knowledge-strength-action'; 'without hands/feet, swift, grasping; seeing without eyes, hearing without ears; he knows the knowable and none knows him.' If one asks how then we can still speak of bound soul distinct from Ishvara given texts denying another seer/knower, reply: truly there is no different self; yet body-mind aggregate as upadhi is admitted, like space conditioned by pot/cave. Hence language and cognition of conditioned distinctions arise conventionally, though non-difference remains in reality.",
+    "technical_translation": "Bhashya defends nitya-jnana Ishvara against instrument-dependence objections and reconciles non-dual seer texts with upadhi-conditioned jiva discourse.",
+    "interpretive_note": "Integrates cosmology, epistemology, and non-dual semantics in one rebuttal arc."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,25 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "definition",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-4",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.8,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 pass with stable inferential-tag schema.",
+      "A later philological pass should revisit long compound argument boundaries and technical Mimamsa-Sankhya polemic vocabulary in records 1.1.024-1.1.031."
     ]
   }
 }

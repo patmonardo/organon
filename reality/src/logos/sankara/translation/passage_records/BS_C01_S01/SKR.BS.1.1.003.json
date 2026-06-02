@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_PRE/BS_C01_S01_I03."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_I03.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_I03; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for intro_bhashya; replace with curated doctrinal note."
+    "literal_translation": "How can there be superimposition of object and object-properties upon the inner self, which is not an object? For people superimpose one object only upon another object standing before them, and you yourself say the inner self is outside the 'you'-cognition domain. Reply: the inner self is not absolutely non-object, since it is given in 'I'-cognition and is immediately evident. Nor is there a rule that superimposition occurs only on what is perceptually present before one. Even in imperceptible space, children superimpose dirtiness and the like. So too, non-self can be superimposed on the inner self without contradiction.",
+    "technical_translation": "Defense of atman-adhyasa possibility: pratyagatman is aparoksa via asmadvritti, and adhyasa is not restricted to present perceptual substrates.",
+    "interpretive_note": "Removes the epistemic objection that self cannot host superimposition."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,25 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "intro_bhashya"
+      "objection",
+      "response",
+      "resolution",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-1",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.9,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 opening pass with stable inferential-tag schema.",
+      "A later philological pass should revisit dense adhyasa technical vocabulary and karmani-sasthi grammatical framing in PRE-1.1.007."
     ]
   }
 }

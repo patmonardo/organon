@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_V22/BS_C01_S01_V22_B2."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V22_B2.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V22_B2; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "'Akasha, because of that indicator.' Here akasha should be taken as Brahman. Why? Because of that indicator: 'all these beings arise from akasha.' In Vedanta, origination of beings is delimited as from Supreme Brahman. True, element-space is shown as cause in the air etc. sequence; yet if the root cause Brahman is not taken, the restrictive expression 'from akasha alone' and universal qualifier 'all beings' become unsuitable. Likewise, 'into akasha they return' is a Brahman-indicator; and so are greatness and final resort. Unqualified greatness is taught only of Supreme Self ('greater than earth, greater than sky...'). Final resort too is more fitting in Supreme cause; sruti says Brahman is the supreme resort. Also, after criticizing Salavatya's finite view, Jaivali chooses akasha to teach the infinite and concludes: 'this is the highest udgitha; this is infinite.' That infinitude is a Brahman-linga. As for the claim that element-space first appears by familiarity: even if first cognized so, once Brahmanic indicators in sentence-end are seen, it is not retained. And akasha is elsewhere directly used for Brahman ('akasha is the bearer of names and forms...'), and even synonyms like vyoman and kha are used for Brahman in multiple texts. Therefore determining Brahman-sense from sentence-end is proper even when the word begins the sentence. Hence it is established: akasha here means Brahman. (22)",
+    "technical_translation": "Bhashya on 1.1.22 establishes Brahman-akasha by linga: universal origination/dissolution, anapeksika greatness, parayanatva, infinitude-context, and corroborative cross-text lexical usage.",
+    "interpretive_note": "Sentence-end indicators override default lexical familiarity."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,25 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "definition",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-10",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.9,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 pass with stable inferential-tag schema.",
+      "A later philological pass should revisit antaraditya imagery and akasha lexical-paradigmatic nuances in records 1.1.072-1.1.079."
     ]
   }
 }

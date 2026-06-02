@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S03_V03/BS_C01_S03_V03_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S03_V03_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S03_V03_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "Just as a specific reason establishing Brahman was given, no such specific establishing reason exists for an alternative. The inferentially posited Pradhana imagined from Sankhya Smriti should not be accepted here as the support of heaven and earth. Why? Because there is no word denoting it. A word denoting that insentient Pradhana would be a 'that-word'; here there is no such denotative term by which an insentient Pradhana could be grasped as cause or support. Rather, words denoting the opposite, namely a conscious principle, are present here, such as 'the one who is all-knowing and all-aware.' Therefore Vayu also is not to be taken here as support of heaven and earth.",
+    "technical_translation": "Sutra 1.3.3 basis: atacchabda excludes anumana-based Pradhana by absence of explicit textual denotation, while positive consciousness-markers (sarvajna, etc.) privilege Brahman. Same exclusion extends to Vayu candidate.",
+    "interpretive_note": "Denotation test: no proper scriptural sign for Pradhana in this locus."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,23 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s03-curation-pass-1",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.86,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated to match S04 style: doctrinal continuity plus explicit inferential tagging.",
+      "A later philological pass may tighten lexical precision for setu/ayatana/atacchabda terminology."
     ]
   }
 }

@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S02_V11/BS_C01_S02_V11_B2."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S02_V11_B2.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S02_V11_B2; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "What is prima facie obtained is: intellect and knower-self. Why? Because of the qualifier 'entered the cave.' Whether cave means body or heart, intellect and knower-self can coherently be said to have entered there. And where that is possible, one should not force a spatially particular location upon all-pervasive Brahman. The phrase 'in the world of merit' also indicates not crossing karma-domain; but the Supreme does not move within merit/demerit range ('neither increased by good nor diminished by bad'). Also 'shadow and light' fits a conscious-inert pair, due to mutual contrast. Therefore one may take the pair here as intellect and knower-self. To that we reply -",
+    "technical_translation": "Purvapaksha refinement in 1.2.11: guhapravesha, sukrita-loka limitation, and chaya-tapa contrast are marshaled for buddhi-jiva pairing.",
+    "interpretive_note": "Raises the strongest internal-semantic case against paramatma as one of the two."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,23 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "objection",
+      "definition"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s02-curation-pass-4",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.86,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S02 pass with stable cadence and inferential-tag schema.",
+      "A later philological pass should revisit sattva-kshetrajna and bhoktrtva figurative-usage choices in records 1.2.025-1.2.030."
     ]
   }
 }

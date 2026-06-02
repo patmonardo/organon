@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S03_V22/BS_C01_S03_V22_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S03_V22_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S03_V22_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "It is recited: 'There the sun does not shine, nor moon and stars; these lightnings do not shine there, much less this fire. Everything shines only after that shining one; by Its light all this shines.' Regarding that by whose light all shines, doubt arises: is it some luminous element, or the conscious Self? Prima facie, a luminous element. Why? Because the shining of luminous entities such as sun is denied there; and in common experience moon and stars do not shine by day when sun shines. So one infers some stronger light in whose presence other lights fade. Even 'shining after' can be read among similar luminous things, as one moving follows another. Thus one may conclude it is a specific light-element.",
+    "technical_translation": "Purvapaksha for jyotir-adhikarana: the Muṇḍaka non-shining verse is initially naturalized as relative luminosity hierarchy among tejas entities.",
+    "interpretive_note": "Sets up tejas-substance interpretation before conscious-light reversal."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,24 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "objection",
+      "thesis",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s03-curation-pass-7",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.81,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S03 pass with unchanged block cadence and schema expectations.",
+      "A later philological sweep should revisit light-metaphysics language for strict terminological consistency."
     ]
   }
 }

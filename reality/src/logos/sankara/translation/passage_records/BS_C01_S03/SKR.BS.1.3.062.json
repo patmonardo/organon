@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S03_V26/BS_C01_S03_V26_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S03_V26_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S03_V26_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "It was said that the thumb-sized statement is with reference to human heart because scripture addresses humans. In that connection it is further said: granted, scripture addresses humans, but there is no rule that in Brahman-knowledge it addresses only humans. Those above humans - gods and others - are also included, says Badarayana. Why? Because eligibility is possible for them too. The causes of eligibility, such as desire for liberation, can arise in gods as well through reflection on impermanence of conditioned excellences. Capacity too is possible for them, as known from mantra, arthavada, itihasa, and purana materials that indicate embodied agency. Nor is there an absolute prohibition for them. Their eligibility is not cancelled by upanayana rules, because upanayana serves Vedic study, while for them Veda may be self-manifest. Moreover scripture itself depicts brahmacarya and knowledge-seeking among such beings: Indra dwelling long with Prajapati, Bhrigu approaching Varuna for Brahman-teaching, and so on. The reasons given for ineligibility in ritual domains (e.g., no other deity to invoke for gods, no other lineage counterpart for rishis) do not apply to vidyas. In vidya there is no ritual action to be performed toward Indra and the like as distinct deity-addresses. Therefore what blocks gods and others from eligibility in knowledge? Even with their eligibility admitted, thumb-size statements remain non-contradictory by taking them relative to their own thumb-reference.",
+    "technical_translation": "Sutra 1.3.26 broadens adhikara: deva-adi are eligible for brahma-vidya where eligibility conditions hold; ritual ineligibility arguments are domain-specific and do not transfer to knowledge sections.",
+    "interpretive_note": "Extends human-focused teaching into a graded universal eligibility doctrine."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,24 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "definition"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s03-curation-pass-8",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.78,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S03 pass with stable cadence and inferential-tag schema.",
+      "A later philological pass should revisit adhikara/karma technical vocabulary in records 1.3.062 and 1.3.064."
     ]
   }
 }

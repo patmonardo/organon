@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S03_V41/BS_C01_S03_V41_B2."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S03_V41_B2.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S03_V41_B2; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "Here the word akasha should denote Supreme Brahman alone. Why? Because it is taught as other-than name and form and by related indicators. The line 'that which is between those two is Brahman' presents akasha as distinct from name and form. But apart from Brahman there is nothing truly outside name and form, since all transformations are articulated as name-form. Further, unrestricted governance of name and form cannot stand anywhere other than Brahman, as heard: 'having entered with this living self, I shall differentiate name and form.' One may object that empirical selves also manage name and form in some way; granted, but identity-reference is intended here. Merely by stating governance of name and form, creatorhood and similar Brahman-indicators are already conveyed. And the clause 'that is Brahman, that is immortal, that is the Self' provides direct indicators. This is an expanded exposition of the sutra 'akasha, because of that indicator.' (41)",
+    "technical_translation": "Bhashya on 1.3.41 resolves akasha as Brahman from arthantara-vyapadesha (beyond nama-rupa), nirvahana-capacity, and explicit brahma-linga phrases in-text.",
+    "interpretive_note": "Moves from lexical convention to ontological distinctness test."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,24 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "definition"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s03-curation-pass-13",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.83,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S03 pass with stable cadence and inferential-tag schema.",
+      "A later philological pass should revisit para-jyotis and akasha technical term choices in records 1.3.100-1.3.104."
     ]
   }
 }

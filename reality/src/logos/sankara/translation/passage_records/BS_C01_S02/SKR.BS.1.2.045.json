@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S02_V18/BS_C01_S02_V18_B2."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S02_V18_B2.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S02_V18_B2; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "The inner controller heard in deity and related domains must be the Supreme Self alone, not another. Why? Because the attributes stated there are His attributes. The role of inward regulator over all modifications across deity and other divisions coheres for the Supreme, since as cause of all modifications all powers are coherent in Him. The expressions 'your Self, the inner controller, immortal' fit primarily only the Supreme in both selfhood and immortality. And by saying 'whom earth does not know' with respect to the earth-deity, the text shows an inner controller distinct from that deity-self, who would otherwise know itself as 'I am earth.' Likewise expressions such as unseen and unheard fit the Supreme as devoid of sensory form. As for the objection that one without action-instruments cannot regulate, there is no fault: He regulates those with instruments through their own instruments. Nor does infinite regress arise ('another must regulate Him too'), because there is no real second distinct regulator there; regress requires real difference. Therefore the inner controller is the Supreme Self alone. (18)",
+    "technical_translation": "Bhashya on 1.2.18 identifies Antaryamin as Brahman via taddharma-vyapadesha, distinctness from domain deities, and regress-blocking non-duality logic.",
+    "interpretive_note": "Positive attribute match plus anti-regress argument secures Brahman identity."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,24 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "definition"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s02-curation-pass-6",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.86,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S02 pass with stable cadence and inferential-tag schema.",
+      "A later philological pass should revisit antaryamin technical vocabulary and akshi-purusha predicate nuances in records 1.2.040-1.2.046."
     ]
   }
 }

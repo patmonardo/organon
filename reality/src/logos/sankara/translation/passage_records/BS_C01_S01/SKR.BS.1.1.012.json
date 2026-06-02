@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_V02/BS_C01_S01_V02_B2."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V02_B2.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V02_B2; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "But is not this very point already stated in the birth-etc. sutra? No: the sutras are for stringing together the flowers of Vedanta sentences. Vedanta statements are cited and examined through sutras. Brahman-realization is achieved through settled determination of sentence-meaning, not by an independent pramana such as bare inference. Still, when Vedanta sentences about the world's causal source are present, inference that does not contradict Vedanta can strengthen grasp of their meaning and is not rejected; sruti itself accepts reasoning as auxiliary ('to be heard, reflected upon' etc.). Nor in Brahman-inquiry, as in dharma-inquiry, are sruti and allied sources alone pramana; here sruti, experience, and others, as applicable, are pramana, because Brahman-knowledge concerns what is real and culminates in direct realization. In matters to be done, experience is not decisive and scriptural injunction predominates, since action is agent-dependent and can be done, not done, or done otherwise (both in worldly and Vedic cases). But reality cannot be optionally fixed as 'thus/not thus,' 'is/is not'; such alternation belongs to conceptual construction, not to truth-knowledge, which is object-determined. Just as on seeing a stump, 'stump or person?' is error, while 'stump indeed' is truth by object-control, so too validity in matters of real entities is object-governed. Therefore Brahman-knowledge is also object-governed. If so, one may ask whether Brahman should then be known by other pramanas and Vedanta inquiry becomes pointless. No, because relation to Brahman is not grasped by senses: senses are naturally object-bound and do not take Brahman as their direct object. Without such access, one cannot determine whether the seen effect is connected with Brahman or with something else. Hence the birth-etc. sutra is not to propose an independent inference; rather it displays a Vedanta sentence. Which sentence? The Varuni-Bhrgu passage: 'That from which these beings are born, by which they live, into which they enter - seek to know that; that is Brahman,' with its determination sentence, 'from bliss indeed these beings are born...' Other similar sentences should be cited that concern the causal reality whose nature is eternal purity, consciousness, freedom, and omniscience. (2)",
+    "technical_translation": "Bhashya construes sutra method as Vedanta-vakya-mimamsa, permitting tarka/anumana only as sruti-anugrhitopakarana; Brahman knowledge is vakyartha-niscaya grounded and object-determined.",
+    "interpretive_note": "Strong methodological statement: inference supports but never displaces Vedantic sentence authority."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,26 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "objection",
+      "response",
+      "resolution",
+      "definition",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-2",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.85,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 pass with stable inferential-tag schema.",
+      "A later philological pass should revisit janmadi-lakshana and sastra-yonitva technical compression in records 1.1.008-1.1.015."
     ]
   }
 }

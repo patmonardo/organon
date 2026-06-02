@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S03_V33/BS_C01_S03_V33_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S03_V33_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S03_V33_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "The particle tu rejects the prior view. Teacher Badarayana holds that eligibility does exist, even for gods and others. Although eligibility is impossible in mixed meditations such as Madhu where deity and object collapse, still in pure Brahma-vidya it is indeed possible. Eligibility depends on desire, capacity, and absence of prohibition. A local impossibility does not cancel eligibility where possibility remains. Even among humans, not all brahmanas and others are eligible for all rites such as Rajasuya; the same rule applies here. And with Brahma-vidya as topic, scriptural evidence indicates divine eligibility: 'whoever among gods realized That became That, likewise among seers and among humans'; and 'let us seek that Self by knowing which one attains all worlds and all desires - Indra among gods and Virocana among asuras approached.' Smriti too (such as Gandharva-Yajnavalkya dialogue) supports this.",
+    "technical_translation": "Bhashya on 1.3.33 restores Badarayana-siddhanta: deva-adhikara is affirmed in nirupadhika brahma-vidya despite exclusion from certain structurally incompatible upasanas.",
+    "interpretive_note": "Distinguishes local upasana constraints from general brahma-vidya eligibility."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,25 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "example",
+      "definition"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s03-curation-pass-11",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.83,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S03 pass with stable cadence and inferential-tag schema.",
+      "A later philological pass should revisit adhikara and varna terminology choices in records 1.3.086-1.3.088."
     ]
   }
 }

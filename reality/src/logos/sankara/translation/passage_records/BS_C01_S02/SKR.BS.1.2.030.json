@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S02_V12/BS_C01_S02_V12_B2."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S02_V12_B2.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S02_V12_B2; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "Another says: 'two birds' does not follow this adhikarana's siddhanta, because the Paingi Rahasya Brahmana explains it differently: one eats the fruit - that is sattva; the other, not eating, sees - the knower; these two are sattva and kshetrajna. But taking sattva as jiva and kshetrajna as Supreme is not right, since in common usage here these terms denote inner instrument and embodied knower, and that very text explains so ('that sattva by which one sees dream; and this embodied overseer is kshetrajna'). Yet this does not establish the present adhikarana's purvapaksha either: the kshetrajna here is not intended as embodied self qualified by doership/enjoyership samsaric traits. Rather, as shown by 'the other not eating sees, as knower,' and by texts like 'That thou art' and 'know Me as kshetrajna in all fields,' the intended meaning is consciousness alone, beyond all samsaric traits, of Brahman-nature. Then the vidya-conclusion passages also fit ('for one who knows thus, no dust adheres,' etc.). Objection: in this view why is enjoyership spoken in inert sattva ('one of them eats fruit')? Reply: this shruti does not aim to establish actual enjoyership of inert sattva; rather it aims to teach non-enjoyership and Brahman-nature of conscious kshetrajna. For that purpose it superimposes enjoyership on sattva, which is subject to pleasure/pain modifications. Doership and enjoyership are projected through non-discrimination between sattva and kshetrajna. In truth they belong to neither: not to sattva (inert), not to kshetrajna (non-modifying). Since sattva's presented nature is itself ignorance-conditioned, attribution is even less real. Shruti confirms this: where duality appears, transactional seeing etc. occurs like dream-elephant dealings within ignorance-domain; where all has become Self, who would see what by what? - for the discerning, doership and related transactions cease.",
+    "technical_translation": "Alternative hermeneutic note: even when sattva-kshetrajna terminology is retained, ultimate intent is non-dual kshetrajna beyond bhoktrtva; bhoga language is adhyaropa within avidya-vyavahara.",
+    "interpretive_note": "Shows compatibility between textual variant exegesis and final non-dual intent."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,25 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "objection",
+      "response",
+      "resolution",
+      "definition"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s02-curation-pass-4",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.73,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S02 pass with stable cadence and inferential-tag schema.",
+      "A later philological pass should revisit sattva-kshetrajna and bhoktrtva figurative-usage choices in records 1.2.025-1.2.030."
     ]
   }
 }

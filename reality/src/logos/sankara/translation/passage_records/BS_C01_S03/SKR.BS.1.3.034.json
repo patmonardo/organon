@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S03_V14/BS_C01_S03_V14_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S03_V14_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S03_V14_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "A passage is recited: 'Now, in this city of Brahman, there is a small lotus-house; within it a small space; what is within that is to be sought, indeed to be known.' Here the small space in the heart-lotus is heard. Is it elemental space, or the cognitive self, or the supreme Self? Doubt arises from the words space and city-of-Brahman. The word akasha is used for elemental space and for the supreme. So is this small one elemental space, or the higher principle? Likewise with brahmapura: is Brahman here a name for the individual self, making body its city; or is it the city of supreme Brahman? Thus doubt persists whether the owner is jiva or the supreme, and whether the inner space is one or the other. Prima facie, it is elemental space, because akasha is conventionally fixed there; its smallness is relative to the little lotus-seat; and scripture compares inner and outer spaces as equivalent in extent. Heaven and earth being gathered in it can be explained by the unity of spatial extension. Alternatively one might conclude it is jiva, from brahmapura: body as city earned by one's karma; jiva being secondarily called brahman; and city-owner often residing in one part of the city, as a king does. Jiva, associated with mind, and mind mostly seated in heart, supports inner-heart location. Its subtle smallness too can be admitted by comparison to a point. Statements like akasha-comparison may then be taken as intending jiva's non-difference from Brahman. Further, one might say the text does not directly prescribe searching/knowing the small space itself, since the phrase 'what is within it' can be read as qualifying something else.",
+    "technical_translation": "Opening purvapaksha of daharadhikarana: lexical polysemy of akasha and brahmapura permits candidate readings (bhutakasha, jiva, paramatma), with conventional usage and localization arguments initially favoring non-parama readings.",
+    "interpretive_note": "Sets up full referent ambiguity for dahara-akasha."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,24 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "objection",
+      "thesis",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s03-curation-pass-5",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.79,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S03 pass with stable section-04 style criteria.",
+      "A later philological pass may refine compound parsing and samasa-level nuance in long bhashya segments."
     ]
   }
 }

@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_V04/BS_C01_S01_V04_B7."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V04_B7.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V04_B7; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "As for the claim that because hearing is followed by reflection and contemplation, Brahman must be only subsidiary to injunction and not culminate in direct nature-knowledge - no. Reflection and contemplation, like hearing, are for understanding. Only if already-understood Brahman were to be assigned elsewhere would subsidiary-to-injunction status follow; that is not the case. Since reflection and contemplation are themselves understanding-oriented like hearing, Brahman cannot be scripturally known as merely object of a cognition-injunction. Therefore Brahman is independently established by scripture through harmonized Vedanta sentences. On this basis, a distinct scripture-opening 'now therefore inquiry into Brahman' is coherent. If everything were cognition-injunction within dharma-framework, there would be no separate shastra-opening beyond 'now therefore inquiry into dharma'; at most it would begin as an extension, like inquiries into subdivisions of ritual means and human ends. But brahman-atman identity realization had not yet been undertaken, so a new opening is proper. Thus all injunctions and other pramanas culminate in 'I am Brahman.' Once nondual self-knowledge free of reject/accept structures is realized, pramanas cannot continue as objectified and knower-dependent in the previous way. Therefore the verse says: when false figurative-self identifications in son/body etc. are sublated by true knowledge 'I am Brahman-self,' what further action remains? Before self-knowledge, knowerhood functions for inquiry; after inquiry, that very knower is found to be free from sin and defects. Just as body-self cognition is provisionally accepted for ordinary pramana function, so too this scriptural pramana operates until self-certainty.",
+    "technical_translation": "Bhashya on 1.1.4 rejects vidhi-shesha reading by treating shravana-manana-nididhyasana as avagati-sadhana, and frames all pramana activity as sublated in aham brahmasmi aparoksha-niscaya.",
+    "interpretive_note": "Clarifies that post-knowledge cessation is structural, not anti-scriptural."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,24 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "definition"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-4",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.84,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 pass with stable inferential-tag schema.",
+      "A later philological pass should revisit long compound argument boundaries and technical Mimamsa-Sankhya polemic vocabulary in records 1.1.024-1.1.031."
     ]
   }
 }

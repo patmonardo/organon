@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S02_V20/BS_C01_S02_V20_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S02_V20_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S02_V20_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "'Not' continues from the previous sutra: and the embodied self too is not the inner controller. Why? Although seerhood and related predicates apply to it, being delimited by adjuncts like pot-space it cannot wholly abide within earth and all entities and govern them. Also, in both recensions (Kanva and Madhyandina), the embodied self is read as distinct from the inner controller and as something governed, like earth etc.: Kanvas read 'who stands in knowledge'; Madhyandinas read 'who stands in the self.' In the latter, 'self' denotes the embodied self; in the former too, 'knowledge' denotes the embodied self (as knowledge-formed). Hence an Ishvara other than the embodied self is established as inner controller. But how can two seers be in one body, this inner-controlling Ishvara and this other embodied self? What is the inconsistency here? One might say sruti 'there is no other seer than this' would be contradicted, since it denies any seer, hearer, thinker, knower other than the inner controller. If one says that sentence merely denies another regulator, no: another regulator is not at issue, and the hearing is unqualified. Reply: this distinction between embodied self and inner controller is due to body-sense adjuncts projected by ignorance, not ultimate. In truth there is one inward self, not two. Difference-talk is adjunct-caused, as pot-space and great-space. Thus scriptures of knower-known difference, perception and other pramanas, worldly experience, and injunction-prohibition teaching all stand. Sruti itself marks all transaction as in the sphere of ignorance: 'where there is, as it were, duality, one sees another'; and in knowledge it halts all transaction: 'where everything has become the Self, by what should one see whom?' (20)",
+    "technical_translation": "Bhashya on 1.2.20 excludes jiva as antaryamin at vyavahara level (upadhi-paricchinna incapacity), while reconciling non-dual sruti through avidya-based bheda-vyavahara and paramarthika eka-atman.",
+    "interpretive_note": "Maintains practical distinction for exegesis while dissolving it at the non-dual level."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,25 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "definition",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s02-curation-pass-7",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.81,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S02 pass with stable cadence and inferential-tag schema.",
+      "A later philological pass should revisit antaryamin and akshara-bhuta-yoni terminology in records 1.2.047-1.2.054."
     ]
   }
 }

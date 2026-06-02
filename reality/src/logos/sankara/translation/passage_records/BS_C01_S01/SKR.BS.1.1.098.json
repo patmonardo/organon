@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_V30/BS_C01_S01_V30_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V30_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V30_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "Indra, the deity-self, seeing by scriptural vision 'I myself am Supreme Brahman,' taught accordingly: 'know me alone' - like the sage Vamadeva who realized 'I was Manu and Surya'; scripture says whoever among gods awoke thus became That. As for the objection that Indra praised himself by body-bound deeds like slaying Tvastar, this must be answered: those deeds are not introduced to glorify the knowable Indra as such ('since I did this, know me'), but to praise knowledge itself. For after recounting those daring acts he immediately follows with praise of knowledge: 'yet not even a hair of mine is harmed there; he who knows me, no world of his is harmed by any action...' Meaning: because even I, become Brahman, am untouched by such fierce acts, so too one who knows thus is not harmed by any action. The knowable referred to in 'I am prana, conscious self' is Brahman alone. Therefore this is Brahman-teaching. (30)",
+    "technical_translation": "Bhashya on 1.1.30 interprets Indra's self-reference as shastra-drsti identity-upadesha (Vamadeva model), with heroic episodes serving jnana-stuti, not deity-limitation.",
+    "interpretive_note": "Mythic narrative is recast as pedagogical vehicle for Brahman-knowledge."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,25 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "definition",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-13",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.9,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 pass with stable inferential-tag schema.",
+      "A later philological pass should revisit truncated Kausitaki argument lines and detailed phrasing around upasa-traividhya in records 1.1.101-1.1.103."
     ]
   }
 }

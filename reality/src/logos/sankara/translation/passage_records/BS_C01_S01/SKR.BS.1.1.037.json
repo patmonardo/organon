@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_V07/BS_C01_S01_V07_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V07_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V07_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "Non-conscious Pradhana cannot be the referent supported by atman-word. Taking the subtle sat introduced as 'that self,' and teaching 'that thou art, Svetaketu,' then teaching liberation for one established in that through 'the person with a teacher knows; for him delay lasts only till release, then he attains' - all this gives moksha instruction. If scripture told a conscious seeker 'you are that' while referring to non-conscious Pradhana, it would instruct 'you are non-conscious,' becoming error-speaking and therefore invalid, producing harm. If authoritative scripture taught an ignorant liberation-seeker that a non-self non-conscious principle is the self, trusting it he would cling to that view and fail to realize the self beyond it, losing highest good and incurring harm. Therefore, just as scripture correctly teaches Agnihotra means to one desiring heaven, so to the seeker of liberation it teaches the self exactly as it is: 'that self, thou art.' Then the liberation teaching with the heated-axe truth test is coherent. Otherwise, if the self-teaching were non-primary, it would yield only temporary symbolic identification, like 'know, I am the uktha,' and moksha teaching would fail. Hence the atman-word for sat-subtle cannot be figurative. A figurative use like 'my self is Bhadrasena' (for servant) is possible because master-servant distinction is directly known. But merely because a word is figurative somewhere, one cannot impose figurative sense in scriptural-pramana contexts, else certainty collapses everywhere. Nor is it valid to claim atman is equally common to conscious and non-conscious, as 'jyotis' is for ritual fire and light: unrestricted polysemy is not acceptable. Atman is primarily for conscious referent; in things like 'element-self' or 'sense-self' usage is figurative by extension. Even if a word were common, without contextual determinants one cannot fix either meaning. Here no determinant supports non-conscious sense; rather the topic is seer-sat and nearby conscious Svetaketu. As said, conscious Svetaketu cannot have non-conscious self. Therefore atman here is decisively conscious. The jyotis example also fails, since in ordinary usage it is rooted in luminous fire; ritual use is extended by resemblance. Or, even after rejecting figurative/commonness doubts from prior sutra, an independent reason remains: because liberation is taught for one established in that. Therefore non-conscious Pradhana is not denoted by sat-word. (7)",
+    "technical_translation": "Bhashya on 1.1.7 deploys tan-nishtha-mokshopadesha plus semantic-priority arguments to exclude acaitanya Pradhana from tat tvam asi context.",
+    "interpretive_note": "Liberation pedagogy becomes a semantic test: wrong referent would invalidate scripture."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,25 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "definition",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-5",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.84,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 pass with stable inferential-tag schema.",
+      "A later philological pass should revisit ikshateh/atman lexical precision and figurative-language boundary claims in records 1.1.032-1.1.039."
     ]
   }
 }

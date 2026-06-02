@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S03_V42/BS_C01_S03_V42_B2."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S03_V42_B2.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S03_V42_B2; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "This passage is intended to teach the Supreme Lord, not merely to describe the embodied individual. Why? Because in deep sleep and in departure, the Supreme is designated as distinct from the embodied self. In sleep, 'this person embraced by the knowing Self knows no external, no internal' distinguishes the embodied knower from the supreme knower: the 'person' is the embodied one (since knowing belongs there in context), while the 'knowing one' is the Supreme, inseparable from omniscient awareness. In departure too, 'this embodied self, mounted by the knowing Self, goes forth' distinguishes jiva from Supreme. Therefore by explicit differentiation in sleep and death-transition, the intended referent here is the Supreme. As for the claim that beginning, middle, and end bodily markers prove jiva-intent: in the opening, 'this consciousness-formed one among the pranas' does not intend to stop at jiva-definition; rather, having introduced the empirical self, it intends identity of this with the higher Brahman. This is seen from later flow such as 'as if meditating, as if moving,' which aims at negating samsaric predicates. The conclusion mirrors the opening in that same way: the apparently empirical one is taught as the great unborn Self, i.e., the Supreme. And if someone argues that the middle-state descriptions intend samsaric nature, that is self-defeating: those portions actually intend state-transcendence and non-samsaric character. This is evident because the student repeatedly asks for teaching only for liberation, and the replies repeatedly stress non-attachment ('this person is unattached') and not being touched by merit/demerit, crossing all heart-born sorrow. Therefore this passage is to be understood as teaching the non-samsaric nature alone.",
+    "technical_translation": "Bhashya on 1.3.42 resolves the Brhadaranyaka passage as Ishvara/Brahman instruction by bheda-vyapadesha in suṣupti-utkranti contexts and by systematic negation of samsari-dharmas.",
+    "interpretive_note": "Method: begin from empirical self-language, then sublate into non-samsaric Self through contextual negation."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,24 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "definition"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s03-curation-pass-14",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.79,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S03 pass with stable cadence and inferential-tag schema.",
+      "A later philological pass should revisit suṣupti/utkranti and patyadi technical term choices in records 1.3.106-1.3.110."
     ]
   }
 }

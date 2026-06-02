@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_PRE/BS_C01_S01_I04."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_I04.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_I04; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for intro_bhashya; replace with curated doctrinal note."
+    "literal_translation": "This adhyasa of the described kind is regarded by the learned as avidya; determining reality by discriminating it is called vidya. So, wherever something is superimposed, that substratum is not touched even in the least by the superimposed fault or quality. Presupposing this mutual superimposition of self and non-self, called ignorance, all means of knowledge and objects of knowledge, worldly and Vedic practices, and all scriptures concerned with injunction, prohibition, and liberation proceed. How can pramanas and sastras concern what is under ignorance? Because without identification as 'I' and 'mine' in body and senses, there is no possible knowerhood and no operation of pramana; perceptual and other transactions do not occur without senses, nor senses without a supporting basis, nor bodily activity without self-attribution. And without this, unattached self cannot be a knower; without a knower, no pramana operates. Thus pramanas and sastras necessarily concern the ignorance-conditioned domain. Human and animal behavior are alike here: both withdraw from what is seen as hostile and move toward what is favorable. This common pattern shows that even the learned, at the level of transactional cognition, share the same adhyasa-conditioned perceptual operation. Even scriptural action, though deliberate and involving afterlife-oriented intention, does not presuppose realization of the Vedantic self beyond hunger and social distinctions; such realization is inapplicable and opposed to ritual eligibility. Before that realization, scripture remains within avidya's field, operating through superimposed distinctions such as class, stage of life, and age ('a brahmana should sacrifice'). Adhyasa is cognition of something as what it is not: one superimposes external states onto self ('I am impaired/whole'), bodily traits ('I am fat/thin/fair, I stand, I go'), sensory defects ('I am mute/one-eyed/impotent/deaf/blind'), and mental modes (desire, doubt, resolve), and conversely superimposes the witnessing self upon mind and inner instruments. This beginningless, endless, natural adhyasa - false cognition driving agency and enjoyership - is evident to all. To remove this root of suffering and realize knowledge of self-nonduality, all Vedanta texts are begun; and this will be shown in this Shariraka-mimamsa. The opening sutra of the Vedanta inquiry now follows.",
+    "technical_translation": "Foundational adhyasa-bhashya: all pramana-prameya-vyavahara and vidhi-nishedha domains are shown as operating within avidya, while Vedanta is launched for adhyasa-nivritti via atmaikatva-vidya.",
+    "interpretive_note": "Extends the diagnosis from perceptual error to the full structure of worldly and scriptural transaction."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,25 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "intro_bhashya"
+      "definition",
+      "response",
+      "resolution",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-1",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.86,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 opening pass with stable inferential-tag schema.",
+      "A later philological pass should revisit dense adhyasa technical vocabulary and karmani-sasthi grammatical framing in PRE-1.1.007."
     ]
   }
 }

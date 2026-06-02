@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S03_V30/BS_C01_S03_V30_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S03_V30_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S03_V30_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "Yet one might still object: if divine individuals, like animal and human individuals, arise and perish in continuity, contradiction in word could be removed through uninterrupted speaker-word-object transactions and stable relation. But scripture and smriti also say that at dissolution the whole three-world system, stripped of name and form, dissolves and then emerges anew. How then no contradiction? The answer: because the same names and forms recur. One must accept beginninglessness of samsara; and this will be established (2.1.36). In a beginningless cycle, just as no contradiction arises in sleep-waking despite hearing of dissolution and emergence there, so too in world-cycles. Scripture indeed describes contraction in sleep and re-emergence on waking. Objection: sleep differs because others continue transactions and the same person can reconnect prior waking experience, whereas in great dissolution all transaction ceases and cross-cycle continuity seems impossible, like inability to recover past-birth transactions. Reply: no fault, because by grace of the Supreme, higher lords such as Hiranyagarbha can reconnect prior-cycle transactions even across total collapse. Ordinary beings may not recall prior births, but divine lords need not be like ordinary beings. As obstacles vary in degree across embodied ranks, so too manifestation of knowledge and lordship increases by rank up to Hiranyagarbha, as repeatedly heard in scripture and smriti. Hence those lords, endowed by prior-cycle great knowledge and karma and graced by the Supreme, emerge at cycle-beginning and reconnect prior-cycle order like one awakened from sleep. Scripture and tradition support this, including transmission of Veda from the Supreme and recollection of mantras by seers. Ritual performance too is tied to knowledge of rishi/chandas/devata in each mantra. Further, dharma is prescribed for attaining happiness and adharma prohibited to avoid suffering; attachment and aversion track seen/heard pleasures and pains, so the later creation that is fruit of dharma/adharma necessarily resembles prior creation. Smriti says beings repeatedly obtain the same karmic patterns and corresponding dispositions. Even in dissolution, the world persists as residual potency and re-emerges from potency; otherwise random emergence would follow. Nor can one posit unlimited arbitrary powers. Therefore, though world-streams are repeatedly interrupted and resumed - worlds, classes of beings, and varna-ashrama result-structures - they retain determinacy in beginningless samsara, like fixed sense-object relations. One cannot plausibly imagine each re-creation with entirely different transaction-logic (as though inventing a sixth sense-object regime). Since all cycles share comparable transaction and higher lords can reconnect cross-cycle continuity, specific forms recur with the same names and forms. Thus even granting repeated great creation and dissolution, no contradiction with scriptural authority arises. Shruti and smriti explicitly attest this sameness: creator fashions sun/moon etc. as before; sacrificial passages preserve same agni-referents across cycles; and smriti says names, forms, and role-patterns recur at each cycle-turn.",
+    "technical_translation": "Bhashya on 1.3.30 secures shabda-pramanya across maha-pralaya via samana-nama-rupa recurrence, beginningless samsara, karmic continuity, and privileged cross-cycle memory in higher cosmic agents.",
+    "interpretive_note": "Macro-cosmological continuity argument prevents semantic collapse at dissolution boundaries."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,26 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "objection",
+      "response",
+      "resolution",
+      "example",
+      "definition"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s03-curation-pass-10",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.73,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S03 pass with stable cadence and inferential-tag schema.",
+      "A later philological pass should revisit pramana and upasana technical vocabulary in records 1.3.076-1.3.079."
     ]
   }
 }

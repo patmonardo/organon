@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_V12/BS_C01_S01_V12_I01."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V12_I01.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V12_I01; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for leading_bhashya; replace with curated doctrinal note."
+    "literal_translation": "Starting from 'from which are birth and so on' through 'and because it is heard,' the cited sutras have established with reasoning that Vedanta passages teach this meaning: omniscient omnipotent Ishvara is cause of world-origin, maintenance, and dissolution. By presenting common drift it was also explained that all Vedantas teach conscious causality. Then what is the occasion for the next text? Reply: Brahman is known in two modes - qualified by name-form and all modification distinctions through adjuncts, and opposite to that, free of all adjuncts. Numerous passages show this dual presentation via knowledge/ignorance domains: where there is as-if duality one sees another; where all is self, what and by what would one see; where one sees nothing else that is the vast immortal, where otherwise it is finite mortal; the wise fashions names/forms and remains beyond; partless actionless pure bridge to immortality; 'not this, not this'; 'not gross, not minute,' and countless similar statements. In ignorance-state, all worshiper-worshiped transaction regarding Brahman occurs. Some upasanas aim at worldly prosperity, some at gradual liberation, some at ritual enhancement; distinctions arise from adjunct and attribute differences. Though one and the same Supreme Self is worshiped under various qualified forms, fruits differ according to the specific mode of worship ('as one worships, so one becomes'; 'as one's intention in this world, so after death'). Smrti agrees ('whatever state one remembers at death...'). Though one self is hidden in all beings, due to gradation in mental adjuncts the manifestation of that immutable self appears graded with powers and lordly distinctions; sruti and Gita describe this. Thus wherever extraordinary glory appears, that is to be contemplated as Ishvara. So too here, a golden person in the solar orb will be taught as the Supreme by signs like freedom from all evil; similarly in later sutras such as 'akasha because of signs.' Even immediate-liberation-causing self-knowledge, though taught through adjunct-language, requires analysis of sentence drift when para/apara sense is doubtful. Hence this very discussion 'anandamayo'bhyasat.' To show that one Brahman is taught in Vedanta both with adjunct relation and without adjunct relation, as object of worship and as object of knowledge, the next section begins. And what was earlier stated by 'because of common drift' in rejecting non-conscious cause will now be further elaborated through explaining additional Brahman-passages and negating contrary causes.",
+    "technical_translation": "Major transition preface: codifies twofold Brahman presentation (sopadhika/nirupadhika), differentiates upasana-fruit structures, and motivates continued sutra sequence including anandamaya adjudication.",
+    "interpretive_note": "This record functions as doctrinal map and methodological bridge from causal establishment to nuanced Brahman-mode exegesis."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,25 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "leading_bhashya"
+      "definition",
+      "response",
+      "resolution",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-7",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.81,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 pass with stable inferential-tag schema.",
+      "A later philological pass should revisit anandamaya technical layering and the long transition bridge in records 1.1.048-1.1.055."
     ]
   }
 }

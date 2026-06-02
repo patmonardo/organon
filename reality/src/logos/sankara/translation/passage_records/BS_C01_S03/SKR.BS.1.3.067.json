@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S03_V28/BS_C01_S03_V28_B2."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S03_V28_B2.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S03_V28_B2; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "Objection: in 1.1.2 the world is settled as arising from Brahman; how then is it said here to arise from word? And even if world-arising from Vedic word is admitted, how does that remove contradiction? Meanings such as Vasus, Rudras, Adityas, Vishvedevas, and Maruts are non-eternal because produced; then why would the Vedic words denoting them not also be non-eternal, just as a child newly born receives a newly assigned name in ordinary life? Reply: no contradiction, as seen in the permanence of relation between words like 'cow' and their meanings. Though individual cows are produced, the form-type is not thereby produced; production applies to individuals of substance, quality, and action, not to universal form. Words are connected to forms, not to infinitely many individuals. Thus even when individuals arise and perish, no contradiction follows for word-use. Similarly, even if divine individuals are produced, the relevant form remains stable; hence no contradiction for words like 'Vasu.' The specific forms of gods are inferred from mantra/arthavada and related sources that show embodied characteristics. Terms like Indra are office-terms linked to specific stations, like 'general': whoever occupies that station is denoted by that term. Hence no defect. Nor is 'arising from word' meant as material causation like Brahman-causation. Rather, with eternal denotative word and eternal word-meaning relation in place, the emergence of meaning-individuals fit for linguistic transaction is called 'arising from that.' How is world-arising-from-word known? By perception and inference: śruti (self-valid) and smṛti (dependent-valid). These attest a word-preceded creation: Prajapati creates by utterance; elsewhere creation is repeatedly shown as preceded by word; smriti too says eternal speech is issued by the Self-born, all activities begin in Veda, names/forms/actions are fashioned from Vedic words. Common experience also shows this pattern: one first recalls the signifying word, then executes the intended act. So too, before creation, Vedic words appeared in Prajapati's mind, and then corresponding entities were projected. Texts like 'he uttered bhuh and created earth' show worlds proceeding from mentally manifest Vedic words.",
+    "technical_translation": "Core 1.3.28 bhashya reconciliation: brahman-causality and shabda-prabhava are non-competitive when the latter is read as emergence of transactional particulars under eternal word-universal relations; extensive shruti-smriti support affirms word-prior creation.",
+    "interpretive_note": "Distinguishes material causality from semantic-projection causality."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,26 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "objection",
+      "response",
+      "resolution",
+      "example",
+      "definition"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s03-curation-pass-9",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.72,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S03 pass with stable cadence and inferential-tag schema.",
+      "A later philological pass should revisit technical choices around sphota/varna vocabulary in records 1.3.068 and 1.3.069."
     ]
   }
 }

@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S03_V24/BS_C01_S03_V24_B2."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S03_V24_B2.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S03_V24_B2; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "This thumb-sized measured person must indeed be the supreme Self. Why? Because of the word: 'lord of past and future.' None other than the supreme Lord is unrestricted ruler of past and future. And the phrase 'this indeed is That' reconnects with what was asked in context: this is that Brahman asked about - namely, 'that which you see as beyond dharma and adharma, beyond done and not done, beyond past and future.' Therefore by the word itself - by explicit designation as Lord - this is understood as supreme Lord.",
+    "technical_translation": "Sutra 1.3.24 bhashya: despite size-language, ishana-bhutabhavyasya and etad-vai-tat anuvada fix angushtha-purusha as para-brahman, not finite jiva.",
+    "interpretive_note": "Lexical sovereignty marker overrides prima facie size objection."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,23 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s03-curation-pass-8",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.89,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S03 pass with stable cadence and inferential-tag schema.",
+      "A later philological pass should revisit adhikara/karma technical vocabulary in records 1.3.062 and 1.3.064."
     ]
   }
 }

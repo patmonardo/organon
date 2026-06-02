@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S02_V24/BS_C01_S02_V24_B2."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S02_V24_B2.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S02_V24_B2; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "It is said: Vaishvanara ought to be the Supreme Self. Why? Because of specification of common words. The two terms 'self' and 'Vaishvanara' are indeed common words - Vaishvanara common to three, self common to two - yet a specific determination appears by which both are accepted as referring to the Supreme Lord: 'of this Vaishvanara self, heaven is head...' etc. Here the Supreme Lord alone, qualified by heaven-as-head and so on, is presented as inward self in another mode for meditation, because He is cause. For the cause can stand in all states found in effects; hence having heaven-world and others as limbs is fitting. Also the fruit heard - 'he eats food in all worlds, all beings, all selves' - fits only when the supreme cause is taken. And hearing that all sins of the knower are burned, and the opening with self/Brahman terms ('Who is our self? what is Brahman?'), all these indicators point only to the Supreme Lord. Therefore Vaishvanara is indeed the Supreme Lord. (24)",
+    "technical_translation": "Bhashya on 1.2.24 resolves Vaishvanara polysemy via sadharana-sabda-visesa: cosmic-limb specification, Brahmanic fruits, and opening brahman-atman markers establish Ishvara-reference.",
+    "interpretive_note": "Contextual specification overrides lexical commonness."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,24 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "definition"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s02-curation-pass-8",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.86,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S02 pass with stable cadence and inferential-tag schema.",
+      "A later philological pass should revisit akshara/avyakrta and vaisvanara lexical decisions in records 1.2.055-1.2.062."
     ]
   }
 }

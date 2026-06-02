@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S02_V23/BS_C01_S02_V23_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S02_V23_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S02_V23_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "Further, after 'higher than the imperishable is the highest,' and after stating creation of principles from prana down to earth ('from this are born prana...'), we see the text presenting a form of that very source of beings as the totality of modifications: 'fire is His head, moon and sun His eyes, directions His ears, Vedas His speech, wind His breath, the universe His heart, earth from His feet; this indeed is the inner self of all beings.' This is proper only to the Supreme Lord as cause of all transformations. Not to embodied self, whose body-glory is limited; nor to Pradhana, since inner-selfhood of all beings cannot apply. Therefore only the Supreme Lord is source of beings. How is this form-presentation known to concern source-of-beings? From context and from pulling forward the prior referent by 'this.' Having introduced source-of-beings, statements like 'from this is born prana' and 'this is the inner self of all beings' concern that same topic, just as after introducing a teacher one says, 'study from this one; this is master of Veda and Vedanga.' If asked how an invisibility-qualified source can have form-like description, no fault: the intention is to express all-selfhood, not corporeality, like 'I am food, I am eater of food.'",
+    "technical_translation": "Bhashya supporting 1.2.23 reads cosmic-body imagery as rupa-upanyasa of the previously introduced bhuta-yoni, secured by prakarana continuity and pronoun anukarsana; this suits Brahman-causality alone.",
+    "interpretive_note": "Cosmic-form language is hermeneutic, signaling total immanence rather than finite embodiment."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,25 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "example",
+      "definition"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s02-curation-pass-8",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.84,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S02 pass with stable cadence and inferential-tag schema.",
+      "A later philological pass should revisit akshara/avyakrta and vaisvanara lexical decisions in records 1.2.055-1.2.062."
     ]
   }
 }

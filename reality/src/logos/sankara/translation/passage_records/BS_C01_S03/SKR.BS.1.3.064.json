@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S03_V27/BS_C01_S03_V27_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S03_V27_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S03_V27_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "One may object: if gods are admitted as embodied etc. and thus eligible for knowledge, then by embodiment they should, like priests and others, become ritual components through bodily presence - creating contradiction in karma, since Indra and the like are not seen bodily present as ritual components. And one Indra cannot be simultaneously present in many sacrifices. Reply: no contradiction. Why? Because multiple manifestation is possible. Even one divine self can assume many forms simultaneously. How is this known? From scriptural witness. The text that begins 'How many gods?' and answers with many hundreds and thousands, then resolves them into thirty-three powers, shows simultaneous plurality of one deity-principle. It further resolves to one - prana - and still presents that one with many forms, again showing one-to-many manifestation. Smriti also depicts yogins attaining powers to project many bodies simultaneously, engaging many activities and then withdrawing them like sun-rays. If such is possible for accomplished yogins, how much more for naturally perfected gods. Thus one deity can divide manifestation across many forms, functioning in many sacrifices at once and remaining unseen by others through capacities such as concealment; this is coherent. Another reading of 'from seeing multiple manifestation': even embodied beings in ritual injunction contexts show varied simultaneous role-patterns - in some acts one embodied person cannot be consumed by many diners at once, but in others one embodied person can receive salutations from many simultaneously. Likewise here, since sacrifice consists in relinquishing offerings toward a designated deity, many can simultaneously offer their distinct materials to one deity; thus even with embodiment there is no ritual contradiction for gods.",
+    "technical_translation": "Sutra 1.3.27 defuses karma-conflict objection via aneka-pratipatti doctrine: deities can manifest multiplicity or receive concurrent intentional offerings without requiring single-body physical co-presence in one-mode terms.",
+    "interpretive_note": "Bridges vidya-eligibility with ritual coherence through multi-form ontology."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,25 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "objection",
+      "response",
+      "resolution",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s03-curation-pass-8",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.74,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S03 pass with stable cadence and inferential-tag schema.",
+      "A later philological pass should revisit adhikara/karma technical vocabulary in records 1.3.062 and 1.3.064."
     ]
   }
 }

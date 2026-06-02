@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S02_V20/BS_C01_S02_V20_I01."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S02_V20_I01.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S02_V20_I01; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for leading_bhashya; replace with curated doctrinal note."
+    "literal_translation": "If Pradhana is not accepted as inner controller due to impossibility of selfhood and seerhood etc., then let the embodied self be inner controller. For the embodied self, being conscious, is seer, hearer, thinker, and knower, and is self by inwardness. It is also immortal, given the intelligibility of experiencing fruits of dharma and adharma. Invisibility and related properties are known for the embodied self too, since perceptual actions cannot operate upon their own agent, and from srutis such as 'you cannot see the seer of seeing.' It is also disposed to regulate the body-sense aggregate from within, because it is the enjoyer. Therefore the embodied self is inner controller. To this, the answer-sutra is read -",
+    "technical_translation": "Purvapaksha before 1.2.20 shifts from Pradhana to jiva: conscious-agent and inward-self predicates are marshaled to claim antaryamin status.",
+    "interpretive_note": "Sets up the jiva-candidate case before its scriptural and structural rejection."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,23 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "leading_bhashya"
+      "objection",
+      "definition"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s02-curation-pass-7",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.87,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S02 pass with stable cadence and inferential-tag schema.",
+      "A later philological pass should revisit antaryamin and akshara-bhuta-yoni terminology in records 1.2.047-1.2.054."
     ]
   }
 }

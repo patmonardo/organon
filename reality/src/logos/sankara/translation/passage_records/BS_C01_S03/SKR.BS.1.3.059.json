@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S03_V25/BS_C01_S03_V25_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S03_V25_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S03_V25_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "Even though the supreme Self is all-pervading, this thumb-sizedness is spoken with reference to abiding in the heart - just as space, though vast, is spoken of as hand-span with reference to a bamboo-node enclosure. A direct literal thumb-size cannot fit the measureless supreme Self, and no other referent can be accepted here, as already shown from terms like Lord. Objection: because hearts vary across beings, even heart-relative thumb-size is unstable. Reply: because scripture addresses humans. Though scripture may proceed generally, in practice it addresses humans due to capacity, need, non-exclusion, and initiatory frameworks, as discussed under adhikara rules. Humans have a determinate body scale, and proportionately a determinate thumb-sized heart locus; therefore, for human addressees, heart-location-relative thumb-size of the supreme Self is coherent. Objection again: from size-language and Smriti, this should be only the transmigrating soul. Reply: as with 'That thou art,' what is taught is that even the one appearing as finite is in truth Brahman. Vedanta statements function in two modes: some directly describe supreme Self; others teach identity of the knowing self with supreme Self. Here the latter is intended; no independent literal size is being established. This will be made explicit by the later verse about the thumb-sized inner Self in the hearts of beings, to be drawn out like a reed-fiber and known as pure and immortal.",
+    "technical_translation": "Sutra 1.3.25: angushtha-matra is pedagogical upadhi-apeksha tied to human-heart meditation context; final intent is jiva-brahma aikya instruction, not ontic dimensional claim.",
+    "interpretive_note": "Key interpretive move: measure-language is didactic indexing, not metaphysical size."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,24 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "definition"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s03-curation-pass-8",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.79,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S03 pass with stable cadence and inferential-tag schema.",
+      "A later philological pass should revisit adhikara/karma technical vocabulary in records 1.3.062 and 1.3.064."
     ]
   }
 }

@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S02_V32/BS_C01_S02_V32_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S02_V32_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S02_V32_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "And the Jabala tradition also teaches this one-the Supreme Lord-as established in this interval between head and chin: 'That infinite unmanifest Self is established in Avimukta.' 'Where is that Avimukta established?' 'It is established between Varana and Nasi.' 'What are Varana and Nasi?' There it interprets this very nasal region: 'because it wards off sins done by the senses, it is Varana; because it destroys sins done by the senses, it is Nasi,' thus deriving Varana and Nasi. Again they teach: 'And what is His place? The junction of the eyebrows and the nose-that is the junction of this world and the higher world.' Therefore the span-measure teaching is coherent in relation to the Supreme Lord. The expression abhimana is intended in the sense of inward selfhood: as inward self He is measured/approached by all beings; or He is approached as inward self and 'mana' implies non-separateness from humans; or He measures/pervades the whole world as cause. Therefore it is established that Vaishvanara is the Supreme Lord. (32)",
+    "technical_translation": "Bhashya on 1.2.32 adds Jabala-upanishadic support: craniofacial Avimukta localization and abhimana etymologies are read as contemplative markers of Brahman as inner self, confirming Vaisvanara=Ishvara.",
+    "interpretive_note": "Tradition-based localization and word-derivation reinforce the non-literal, contemplative Brahman reading."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,25 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "definition",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s02-curation-pass-11",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.86,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S02 pass with stable cadence and inferential-tag schema.",
+      "A later philological pass should revisit Jabala Avimukta phrasing and abhimana etymological glosses in records 1.2.079-1.2.081."
     ]
   }
 }

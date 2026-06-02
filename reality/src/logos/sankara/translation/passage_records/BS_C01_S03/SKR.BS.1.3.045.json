@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S03_V19/BS_C01_S03_V19_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S03_V19_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S03_V19_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "The jiva-doubt arose from that 'other-reference,' and was dismissed as impossible. Yet again it is raised, like reviving the dead with nectar, from the later Prajapati passage. There, after promising inquiry into the Self with qualities like freedom from sin, the text says, 'the person seen in the eye is the Self,' repeatedly returns to that one, and through waking, dream, and deep sleep descriptions explains the jiva in different states. It then says of that very one: 'this is immortal, fearless, this is Brahman.' Seeing defect in deep sleep - 'he does not then know himself as I am this' - it begins again and finally says: 'this serene one, rising from this body, attaining highest light, appears in its own form; he is the highest Person.' Thus one might argue that Lord-qualities can belong to jiva, so dahara too should be jiva. To this one should answer with 'but as manifest in true nature.' The particle tu rejects the prior reading: even from that later text a strict jiva-reading is not intended. Why? Because there too the jiva is intended only as manifest in its true nature. The meaning is: after first indicating the eye-seer and gradually withdrawing body-self identification through successive teaching, the text finally says that the jiva, attaining the highest light, is manifested in its own real nature - that nature being supreme Brahman, not the empirical jiva-form. What is attained as highest light is Brahman, endowed with the very qualities earlier named. That alone is the jiva's ultimate nature, as taught by statements like 'That thou art,' not the adjunct-imagined condition. So long as one does not realize, 'I am Brahman,' through removal of dualistic ignorance (like mistaking a post for a man), jiva-hood continues. But when scripture awakens one from identification with body, senses, mind, and intellect, one recognizes oneself as pure consciousness-Self; then, rising from body-identification, one abides as the same immutable witnessing Self. Thus 'becoming Brahman' and 'appearing in one's own form' signify recognition, not production of a new entity. Objection: how can the eternal immutable Self newly appear? Reply: unlike gold or stars whose obscured features become manifest after external conditions change, the light of consciousness is never actually overpowered. The 'rise from body' and 'manifestation' mean removal of non-discrimination: as a crystal appears colored before discrimination and clear after right knowledge, so the jiva appears mixed with adjuncts before teaching and as pure Self after discriminative knowledge. Therefore embodied/unembodied distinctions are by standpoint, not by change in the Self. Difference between jiva and Lord is ignorance-made, not reality-made. This is supported because the one pointed out in the eye is immediately identified as immortal, fearless Brahman; if it were another, such apposition fails. The text through all cycles keeps the same referent ('I will explain this very one again'), not different entities each time. In deep sleep passages it denies only special cognition, not the knower; other scripture says cognition of the knower does not perish. In the fourth cycle too, by negating body-upadhi and teaching manifestation in own form, it shows the samprasada-jiva as attaining Brahman-nature, not as an entity separate from immortal Brahman. Some interpreters, reluctant to pull jiva forward in a paramatma context, take 'this very one' as only the opening apahatapapma-Self; but that strains proximal pronoun usage, interrupts the repeated teaching sequence, and risks making Prajapati deceptive. The proper reading is that ignorance-presented empirical jiva form, stained by doership, enjoyership, attachment, aversion, and other defects, is dissolved; by knowledge one attains the opposite Lordly nature marked by freedom from sin - like rope known when snake-imagination ceases. Against views that empirical jiva-form is ultimately real, this Brahma-sutra teaching is undertaken to negate all positions opposed to self-unity. There is one immutable consciousness-principle, the Lord, appearing manifold through ignorance, like a magician's display; no second consciousness-substance exists. Therefore where the sutrakara rejects jiva in a Lord-context ('not, because impossible'), the intent is to firmly deny real otherness of Lord from jiva while removing the ignorance-imagined jiva-form by non-dual teaching and reasoning. He does not seek to prove an absolute separateness of jiva from the supreme; rather he concedes conventional jiva-distinction for karma discourse while ultimately teaching unity: instruction, from scripture's standpoint, as with Vamadeva.",
+    "technical_translation": "Expansive bhashya for sutra 1.3.19: the Prajapati-cycle jiva references are reinterpreted as pedagogical ascent to avirbhuta-svarupa (Brahman-recognition), not ontological dualism. Core move: empirical jiva is avidya-kalpita; paramarthika self is one immutable consciousness.",
+    "interpretive_note": "Major non-dual clarification: jiva-reference serves manifestation-of-true-self doctrine, not separate-self ontology."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,25 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "example",
+      "definition"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s03-curation-pass-6",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.67,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S03 pass with consistent S04-style inferential framing.",
+      "A later philological pass should tighten nuance in long non-dual interpretive paragraphs (1.3.045 especially)."
     ]
   }
 }

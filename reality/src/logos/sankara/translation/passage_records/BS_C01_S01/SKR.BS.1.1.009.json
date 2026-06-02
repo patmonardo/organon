@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_V01/BS_C01_S01_V01_B5."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V01_B5.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V01_B5; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "But is Brahman already known or unknown? If known, it need not be inquired into; if wholly unknown, it cannot be inquired into at all. Reply: Brahman is indeed known in a general way - eternal, pure, conscious, free in nature, omniscient, endowed with all powers. Such senses arise from etymological derivation of 'Brahman' from the root brmh (to expand). And since Brahman is the self of all, its existence is evident: everyone cognizes 'I am,' not 'I am not.' If self-existence were not evident, everyone would cognize non-existence of self. And self is Brahman. Still, if Brahman is thus known as self in ordinary life, why inquire? Because there is dispute regarding its true nature. Ordinary people and materialists hold self to be body with consciousness; others, senses alone; others, mind; some, momentary cognition; some, void; some, an embodied agent-enjoyer distinct from body; some, enjoyer only not agent; some, an omniscient omnipotent Lord distinct from self; some, that Lord as enjoyer's self. Thus many conflicting views arise, relying on reasoning, scripture, and pseudo-scriptural appearances. If one accepts any position without examination, one may be obstructed from the highest good and incur harm. Therefore, under the opening of Brahman-inquiry, inquiry into Vedanta sentences, supported by non-contradictory reasoning, is undertaken for liberation. (1)",
+    "technical_translation": "Bhashya establishes a middle epistemic status: Brahman is samanya-prasiddha but visesa-aspashta, justifying inquiry due to pervasive doctrinal vipratipatti.",
+    "interpretive_note": "Inquiry is necessary because familiarity of 'self' does not equal clarity of metaphysical identity."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,26 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "objection",
+      "response",
+      "resolution",
+      "definition",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-2",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.88,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 pass with stable inferential-tag schema.",
+      "A later philological pass should revisit janmadi-lakshana and sastra-yonitva technical compression in records 1.1.008-1.1.015."
     ]
   }
 }

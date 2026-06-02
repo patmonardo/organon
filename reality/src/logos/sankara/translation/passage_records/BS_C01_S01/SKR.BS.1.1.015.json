@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_V03/BS_C01_S01_V03_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V03_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V03_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "Brahman is the source, the cause, of the great scripture beginning with the Rgveda - expanded by many seats of knowledge, illuminating all meanings like a lamp, and as if the product of omniscience. Such a scripture, marked by Rgveda etc., endowed with omniscient-grade content, cannot arise from anyone other than an omniscient source. In the world it is well known: from whatever special person a treatise of broad scope arises - even one with partial knowable range like grammar from Panini - that author is known to possess knowledge exceeding that scope. How much more here: this vast Vedic corpus, diversified into many branches and grounding distinctions of gods, animals, humans, social classes, and life-stages, treasury of all knowledge, arising effortlessly in playful manner like a breath from the Great Being - as sruti says, 'this Rgveda is the breath of that Great Being.' Therefore that Great Being possesses unsurpassed omniscience and omnipotence.",
+    "technical_translation": "Bhashya extends 1.1.2 with sastra-yonitva reasoning: Veda's scope and structure imply an omniscient omnipotent source, identified with Brahman.",
+    "interpretive_note": "Scriptural authorship/cause argument reinforces Brahman's omniscience beyond cosmological inference alone."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,25 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "definition",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-2",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.9,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 pass with stable inferential-tag schema.",
+      "A later philological pass should revisit janmadi-lakshana and sastra-yonitva technical compression in records 1.1.008-1.1.015."
     ]
   }
 }

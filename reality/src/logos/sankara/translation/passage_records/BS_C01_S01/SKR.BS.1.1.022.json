@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_V04/BS_C01_S01_V04_B4."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V04_B4.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V04_B4; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "As for those who say there is no Vedic section that teaches mere reality apart from injunction, prohibition, and their auxiliaries - not so. The Upanishadic Person is non-subsidiary. That Person known only in the Upanishads - non-samsarin, Brahman in nature, distinct from the fourfold producible/acquirable/modifiable/performable categories, and established in its own context - cannot be denied as nonexistent or unknowable. Since sruti says 'this self is not this, not this,' and since self cannot be denied (the denier is that very self), it cannot be rejected. One may object: self is already known in the 'I' cognition, so saying it is known only in Upanishads is untenable. Reply: that has already been answered - the Upanishadic teaching concerns the witness distinct from the egoic knower-object, the one equal, present in all beings, immutable and eternal, not otherwise established in injunction-section or mere reasoning. Therefore it cannot be reduced to injunction-subsidiary status, and being self of all it is neither to be rejected nor newly appropriated. All changing entities up to personhood perish; the Person is imperishable due to absence of causes of destruction, and immutable due to absence of causes of modification. Hence eternally pure, conscious, and free. Therefore qualifiers like 'nothing beyond the Person' and 'I ask about that Upanishadic Person' are proper: the Person is primarily revealed in Upanishads. So the claim that no Vedic portion teaches an already existent reality is mere rashness.",
+    "technical_translation": "Bhashya asserts a bhuta-vastu-paratva of Upanishad: the auopanishada purusha is ananya-shesha and irreducible to ritual hermeneutics; self-evident yet not fully disclosed apart from sruti-witness teaching.",
+    "interpretive_note": "Affirms a distinct revelatory domain for Upanishad beyond action-text economy."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,24 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "definition"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-3",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.85,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 pass with stable inferential-tag schema.",
+      "A later philological pass should revisit condensed Mimamsa technical vocabulary and long polemical sentence boundaries in records 1.1.016-1.1.023."
     ]
   }
 }

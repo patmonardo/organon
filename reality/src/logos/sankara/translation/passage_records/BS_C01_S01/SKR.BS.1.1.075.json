@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_V21/BS_C01_S01_V21_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V21_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V21_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "And there is another Lord, distinct from the jivas who identify with solar and other bodies: 'He who dwells in the sun, within the sun, whom the sun does not know, whose body is the sun, who controls the sun from within - He is your self, the inner controller, immortal.' In that other scripture, difference is explicitly declared. There, by saying 'within the sun whom the sun does not know,' an inner controller distinct from the conscious sun-associated self is clearly indicated. That very one should also be the person within the sun here, because the scriptural pattern is the same. Therefore it is established that the Supreme Lord alone is taught here. (21)",
+    "technical_translation": "Bhashya on 1.1.21 adduces antaryamin-brāhmana bheda-vyapadesha to confirm that inner solar person is Ishvara distinct from conditioned jiva.",
+    "interpretive_note": "Cross-text identity via shared 'inner controller' structure."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,24 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "definition"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-10",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.9,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 pass with stable inferential-tag schema.",
+      "A later philological pass should revisit antaraditya imagery and akasha lexical-paradigmatic nuances in records 1.1.072-1.1.079."
     ]
   }
 }

@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_V02/BS_C01_S01_V02_VERSETEXT_01."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V02_VERSETEXT_01.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V02_VERSETEXT_01; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for versetext; replace with curated doctrinal note."
+    "literal_translation": "From which are birth and so on of this. (2)",
+    "technical_translation": "Sutra 1.1.2: Brahman is indicated as jagat-karana through janmadi-lakshana.",
+    "interpretive_note": "Canonical causal definition sutra."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,22 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "versetext"
+      "resolution"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-2",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.96,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 pass with stable inferential-tag schema.",
+      "A later philological pass should revisit janmadi-lakshana and sastra-yonitva technical compression in records 1.1.008-1.1.015."
     ]
   }
 }

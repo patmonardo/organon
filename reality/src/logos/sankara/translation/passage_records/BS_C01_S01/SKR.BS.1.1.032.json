@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_V05/BS_C01_S01_V05_I02."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V05_I02.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V05_I02; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for leading_bhashya; replace with curated doctrinal note."
+    "literal_translation": "There Sankhyas, holding that independent, non-conscious, tri-guna Pradhana is world-cause, say: the Vedanta passages you cited as teaching an omniscient omnipotent Brahman-cause can also be interpreted under the Pradhana-cause view. Pradhana too can be said to have all-power with respect to its own modifications. Likewise omniscience can be explained. How? What you call knowledge is a sattva-property ('from sattva arises knowledge'). Through that sattva-property, embodied conscious persons such as yogins are known to become omniscient; with extreme sattva-excellence omniscience is admitted. For a mere non-instrumental pure consciousness, they claim, neither omniscience nor partial knowledge is intelligible. But since Pradhana is tri-guna, the sattva that causes all-knowledge exists even in Pradhana-state, so Vedanta passages may figuratively attribute omniscience to that non-conscious Pradhana. They add: even you, accepting omniscient Brahman, must accept omniscience only as possession of all-knowledge-power, since Brahman is not always actively cognizing all objects. If knowledge is eternal, Brahman loses freedom regarding acts of knowing; if non-eternal, Brahman itself pauses when cognition pauses, so omniscience becomes merely potential. Further, before creation you accept Brahman as devoid of instruments; and where body/senses are absent, cognition does not arise for anyone. Also Pradhana, being multiple and transformable, can be causal like clay etc., unlike non-composite one Brahman. In this obtained position, the next sutra begins -",
+    "technical_translation": "Purvapaksha to 1.1.5: Sankhya tries to reinterpret Vedantic causality through tri-guna Pradhana, using sattva-based epistemology and instrument-dependence objections against sentient Brahman-causality.",
+    "interpretive_note": "Sets up the core anti-Pradhana refutation by pressing on ikshana, omniscience, and causality structure."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,24 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "leading_bhashya"
+      "objection",
+      "definition",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-5",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.83,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 pass with stable inferential-tag schema.",
+      "A later philological pass should revisit ikshateh/atman lexical precision and figurative-language boundary claims in records 1.1.032-1.1.039."
     ]
   }
 }

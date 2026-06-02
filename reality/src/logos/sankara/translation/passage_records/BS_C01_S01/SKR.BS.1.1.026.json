@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_V04/BS_C01_S01_V04_I01."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V04_I01.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V04_I01; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for leading_bhashya; replace with curated doctrinal note."
+    "literal_translation": "How can Brahman be said to be known by scripture, when it has been argued that scripture is action-oriented and non-action content meaningless? Then Vedanta, being non-action-oriented, would be pointless unless taken as revealing doer/deity details for ritual injunction, or as enjoining other actions like meditation. Fully established reality cannot be taught, one says, because such reality is perceptible etc.; and if taught, having no reject/accept structure, it serves no human purpose. Hence statements like 'he wept' are interpreted as praise to support injunction, and mantras as denoting action and action-instruments; nowhere is Vedic meaningfulness seen apart from contact with injunction. Since injunction concerns action, it cannot apply to an already accomplished reality. Therefore Vedanta should be taken either as subsidiary to action-injunction through revealing ritual factors, or at least as enjoining meditation internal to its own passages. If this is not accepted, one fears crossing into another doctrinal domain; so in any case Brahman would not be established as scriptural-source. In that obtained position, the answer is given -",
+    "technical_translation": "Formal purvapaksha reasserts Mimamsa kriyarthatva against brahma-vastu teaching, narrowing possible Vedanta function to vidhi support or upasana-vidhi.",
+    "interpretive_note": "This restates the hermeneutic challenge before the decisive sutra reply."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,23 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "leading_bhashya"
+      "objection",
+      "definition"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-4",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.86,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 pass with stable inferential-tag schema.",
+      "A later philological pass should revisit long compound argument boundaries and technical Mimamsa-Sankhya polemic vocabulary in records 1.1.024-1.1.031."
     ]
   }
 }

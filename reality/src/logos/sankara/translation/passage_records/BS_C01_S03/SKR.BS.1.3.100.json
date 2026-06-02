@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S03_V40/BS_C01_S03_V40_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S03_V40_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S03_V40_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "The text says: 'This serene one, rising from this body, attaining the supreme light, manifests in its own form.' Here doubt arises: does 'light' denote ordinary visible light that dispels darkness, or the Supreme Brahman? Prima facie one may take ordinary light, because that is the established lexical sense of jyotis. In another case ('because jyotis and quarters are mentioned') jyotis is read as Brahman only by force of context after giving up its primary sense. Here no such reason for abandoning primary sense appears. Also in the nadi section it is said that the seeker ascends upward through rays and reaches the sun. Therefore one may conclude that jyotis here means ordinary light. To that we reply -",
+    "technical_translation": "Opening purvapaksha for 1.3.40 frames para-jyotis either as physical luminosity or Brahman, pressing lexical default and nadi/rays ascent evidence for the former.",
+    "interpretive_note": "Sets up the jyotis-adhikarana by lexical-vs-context tension."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,23 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "objection",
+      "definition"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s03-curation-pass-13",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.84,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S03 pass with stable cadence and inferential-tag schema.",
+      "A later philological pass should revisit para-jyotis and akasha technical term choices in records 1.3.100-1.3.104."
     ]
   }
 }

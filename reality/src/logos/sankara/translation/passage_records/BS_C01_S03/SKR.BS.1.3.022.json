@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S03_V09/BS_C01_S03_V09_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S03_V09_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S03_V09_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "Further, the attributes heard of Bhuman fit only the supreme Self. 'Where one sees no other, hears no other, knows no other, that is Bhuman' teaches absence of dualized cognition in Bhuman; and this is known in supreme Self from other passages such as 'when everything has become the Self, by what and whom could one see?' The absence of seeing and so on mentioned in deep sleep is likewise intended to indicate the Self's non-attachment, not the essential nature of prana, because the governing context is about the supreme Self. Likewise sleep-bliss statements intend the Self's bliss-nature, as shown by passages that all beings live on only a fraction of that bliss. Here too, by rejecting limited happiness, scripture points to Bhuman as true happiness: only Bhuman is happiness, not the small. Bhuman's immortality also indicates the supreme cause, since immortality in effects is only relative, and scripture says what is other than That is afflicted. Thus the attributes heard here - truth, self-grounded majesty, all-pervasiveness, all-selfhood - apply only to the supreme Self, not elsewhere. Therefore it is established that Bhuman is the supreme Self.",
+    "technical_translation": "Sutra 1.3.9 support from dharma-upapatti: non-dual cognition-absence, absolute bliss, absolute immortality, satyatva, svamahima-pratishtha, sarvagatatva, and sarvatmatva cohere only in Brahman; prana-level readings fail to bear absolute force.",
+    "interpretive_note": "Attribute-fit argument closes the bhuma dispute."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,23 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s03-curation-pass-3",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.83,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S03 pass with consistent inferential labeling and S04-style structure.",
+      "A later philological sweep should revisit bhuma/samprasada nuance and long-compound Sanskrit segmentation."
     ]
   }
 }

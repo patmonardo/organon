@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S02_V17/BS_C01_S02_V17_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S02_V17_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S02_V17_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "As for the claim that the eye-located referent may instead be reflection-self, knowing self, or deity-self, this is answered: none of these alternatives can be accepted here. Why? Because of non-stability and non-fit. Reflection-self is not continuously present in the eye: it appears only when a person is near and disappears when absent. But the statement 'the person in the eye' teaches as object of contemplation what is to be seen in one's own eye by immediate relation; it is not reasonable to imagine that, during worship, one places some shadow-producing person nearby and meditates on that. Another text also shows non-stability of shadow-self. And immortality and related attributes do not fit reflection-self. Likewise for knowing self: since it has a general relation to the whole body and senses, one cannot restrict it to eye-location alone (whereas for Brahman, though all-pervasive, specific locations like heart are taught for realization). Immortality and fearlessness also do not fit the empirical knowing self: though non-different from the Supreme ultimately, in empirical superimposition mortality and fear are imposed through ignorance, desire, and action. Samyadvama and related lordly attributes likewise do not fit it due to non-sovereignty. For deity-self, even if eye-location is granted from ray-related texts, primary selfhood does not fit because it is still other-oriented; immortality etc. do not truly fit due to scriptural accounts of origin and dissolution; even deity-immortality is only long duration. Its power too is dependent on the Supreme, not intrinsic, as texts of cosmic fear make clear. Therefore the eye-located one should be understood as the Supreme Lord alone. In this reading, the phrase 'is seen' is to be interpreted as a pedagogical, scripture-informed presentation oriented toward the learned, meant to inspire contemplative engagement.",
+    "technical_translation": "Bhashya on 1.2.17 excludes reflection/jiva/devata candidates by anavasthiti and guna-asambhava filters, preserving Ishvara as the sole stable referent of akshi-purusha.",
+    "interpretive_note": "Negative elimination plus predicate-fit yields a strict referent decision."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,25 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "objection",
+      "response",
+      "resolution",
+      "definition"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s02-curation-pass-6",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.79,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S02 pass with stable cadence and inferential-tag schema.",
+      "A later philological pass should revisit antaryamin technical vocabulary and akshi-purusha predicate nuances in records 1.2.040-1.2.046."
     ]
   }
 }

@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S02_V22/BS_C01_S02_V22_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S02_V22_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S02_V22_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "For this reason too, only the Supreme Lord is the source of beings, not the other two - embodied self or Pradhana. Why? From qualifying attributes and declarations of distinction. The text qualifies the discussed source of beings as distinct from embodied self: 'for that divine, formless Person, both within and without, unborn, without breath, without mind, pure.' Such divine qualifiers do not fit the embodied self that, through ignorance, superimposes body-name-form limits and their properties upon itself. Therefore the directly Upanishadic Person is taught here. Likewise it declares the discussed source distinct even from Pradhana: 'higher than the imperishable is the highest.' 'Imperishable' here means the unmanifest seed-power of name and form, subtle being-element, dependent on Ishvara and serving as His adjunct. By distinguishing the Supreme Self as beyond that changeless principle, beyond all modifications, the text shows its intent is Paramatman. No independent Sankhya Pradhana is admitted here as a separate ultimate. If one still imagines some unmanifest subtle principle denoted by terms like avyakrta without opposing sruti, let it be imagined; even then, by declaration of distinction from it, the teaching here is that the source of beings is the Supreme Lord. (22)",
+    "technical_translation": "Bhashya on 1.2.22 confirms bhuta-yoni as Brahman via visesana and bheda-vyapadesha: textually marked transcendence over jiva and over akshara/avyakrta adjunct-principle.",
+    "interpretive_note": "Differentiating predicates and 'beyond-the-imperishable' language block both jiva and Pradhana readings."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,24 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "definition"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s02-curation-pass-8",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.86,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S02 pass with stable cadence and inferential-tag schema.",
+      "A later philological pass should revisit akshara/avyakrta and vaisvanara lexical decisions in records 1.2.055-1.2.062."
     ]
   }
 }

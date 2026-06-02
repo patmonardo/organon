@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_V05/BS_C01_S01_V05_B2."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V05_B2.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V05_B2; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "As for the claim that Pradhana may still be called omniscient through sattva's knowledge-quality, this is untenable. In Pradhana-state, with gunas in equilibrium, sattva's knowledge function does not arise. If one says it is omniscient by possessing the power for knowledge, that too fails: if in guna-equilibrium one invokes sattva-based knowledge-power to call it omniscient, one could equally invoke rajas/tamas-based obstruction-power and call it only partially knowing. Further, knowing is spoken of only where there is witness-awareness of sattva-modification; inert Pradhana has no witnessing capacity. Hence Pradhana's omniscience is impossible. Yogins are no example, because being conscious they can be omniscient through sattva-excellence. If one instead imagines Pradhana's seeing to be derivative from some witness, as iron burns by fire-contact, then that very witness-ground is the truly omniscient Brahman and the principal world-cause. As for saying Brahman's omniscience cannot be primary because if knowledge is eternal it has no freedom toward acts of knowing: this objection should first explain how eternal knowledge negates omniscience. One who eternally has knowledge capable of illuminating all objects cannot be non-omniscient. If knowledge were non-eternal, then sometimes knowing and sometimes not would indeed imply non-omniscience.",
+    "technical_translation": "Bhashya continues 1.1.5 by dismantling guna-based Pradhana omniscience and defending nitya-jnana as compatible with, and required for, sarvajnatva.",
+    "interpretive_note": "Turns the opponent's power-language into an argument for conscious witness-causality."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,25 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "definition",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-4",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.86,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 pass with stable inferential-tag schema.",
+      "A later philological pass should revisit long compound argument boundaries and technical Mimamsa-Sankhya polemic vocabulary in records 1.1.024-1.1.031."
     ]
   }
 }

@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S03_V12/BS_C01_S03_V12_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S03_V12_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S03_V12_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "And for the further reason that all other candidates are excluded, the term Imperishable here denotes Brahman alone; this sustaining up to space is its act, and no one else's. What is meant by exclusion of other states? Whatever other referent for akshara is suspected apart from Brahman is ruled out by scripture itself: 'That Imperishable, O Gargi, is unseen but the seer, unheard but the hearer, unthought but the thinker, unknown but the knower.' In that passage, predicates like unseen could in a limited way fit Pradhana too, but seer/hearer/thinker/knower cannot fit it because it is insentient. Likewise, because scripture denies any other seer/hearer/thinker/knower besides That, the embodied self under limiting adjuncts cannot be the referent either. And scripture negates adjunct-conditions with expressions like without eyes, without ears, without speech, without mind. There is no such thing as an embodied self entirely without adjuncts. Therefore the conclusion is firm: the Imperishable is supreme Brahman alone.",
+    "technical_translation": "Sutra 1.3.12 argument from anyabhava-vyavrtti: positive epistemic-agency predicates and non-dual seer-denial jointly exclude pradhana and upadhi-bound jiva, fixing akshara as nirupadhika Brahman.",
+    "interpretive_note": "Decisive exclusion pass: neither inert cause nor conditioned individual survives."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,23 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s03-curation-pass-4",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.83,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S03 pass with stable S04-style schema semantics.",
+      "A later philological pass should tighten technical terms in the akshara and pranava subsections."
     ]
   }
 }

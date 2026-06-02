@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S03_V33/BS_C01_S03_V33_B2."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S03_V33_B2.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S03_V33_B2; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "As for the claim 'and because of being in the luminous body': we reply that words like Sun, even when tied to luminous entities, convey conscious divine selves endowed with lordly powers, as shown by usage in mantra and arthavada. By their powers, deities can abide in luminous forms and assume whatever body they choose. Scripture says in Subrahmanya-arthavada that Indra became a ram and carried off Medhatithi; smriti says the Sun became a man and approached Kunti. Even in earth and waters conscious presiding agents are admitted, from statements like 'earth said' and 'waters said.' So one may admit insentience in the elemental substrate (jyotis etc.) while still affirming conscious presiding deity-selves, as indicated in mantra/arthavada usage.",
+    "technical_translation": "Rejoinder to 1.3.32: deva-terms need not reduce to inert celestial matter; adhishthatri-devata framework allows simultaneous acceptance of inert bhuta-substrates and conscious governing entities.",
+    "interpretive_note": "Introduces layered referential ontology: substrate plus presiding consciousness."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,26 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "objection",
+      "response",
+      "resolution",
+      "example",
+      "definition"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s03-curation-pass-11",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.78,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S03 pass with stable cadence and inferential-tag schema.",
+      "A later philological pass should revisit adhikara and varna terminology choices in records 1.3.086-1.3.088."
     ]
   }
 }

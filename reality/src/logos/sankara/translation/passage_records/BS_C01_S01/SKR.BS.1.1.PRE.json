@@ -15,9 +15,9 @@
     "segmentation_note": "BS 1.1 preamble opening block (BS_C01_S01_I01) as extracted witness text."
   },
   "translation": {
-    "literal_translation": "When the mutual non-coincidence of the subject and object, which fall within the sphere of the notions of you and I and are opposed in nature like darkness and light, has been established, the mutual non-coincidence of their properties also necessarily follows. Therefore, in the subject, the self that falls within the sphere of the I-notion, there is superimposition of the object that falls within the sphere of the you-notion, and of its properties; and conversely, upon the subject there is superimposition of the subject and its properties upon the object, which is false. Thus it is fitting to say that the ordinary world-process arises from a mistaken cognition that mixes together mutually distinct subject and object, the real and the unreal, and says: ‘I am this’ and ‘this is mine.’",
-    "technical_translation": "Once the impossibility of mutual identity between object and subject, as they are cognized within the fields of the you-notion and the I-notion and are contrary in nature like darkness and light, has been established, the impossibility of mutual identity among their properties is likewise established. Therefore, in the subject, the conscious self that is the field of the I-notion, there is adhyasa of the object, the field of the you-notion, together with its properties; and by reversal there is adhyasa of the subject together with its properties in the object. Since this is mithya, the ordinary व्यवहार of the world rightly consists in a natural misrecognition of what is utterly distinct as subject and object, in which the real and the unreal are conjoined and taken as ‘I’ and ‘mine.’",
-    "interpretive_note": "This is the opening definition of adhyasa and the doctrinal threshold of the whole commentary. The separate Sanskrit note for Padmapada's व्याख्या is preserved adjacent to this record."
+    "literal_translation": "Since it is established that there can be no mutual superimposition between subject and object - opposed in nature like darkness and light, one being the domain of 'you' cognition and the other of 'I' cognition - all the more there can be no real transfer of each other's properties. Therefore it is reasonable that, in the conscious subject given in 'I'-cognition, the object given in 'you'-cognition and its properties are falsely superimposed; and conversely, the subject and its properties are superimposed on the object. Yet through non-discrimination, people mutually project identity and attributes between these utterly distinct substratum and properties, conjoining the real and unreal through false cognition, and thus arises this natural worldly practice: 'I am this,' 'this is mine.'",
+    "technical_translation": "Preamble establishes adhyasa as mithya-jnana: reciprocal superimposition of atman/anatman and their dharmas due to aviveka, generating the basic aham-idam/mamedam structure of samsaric cognition.",
+    "interpretive_note": "The opening move grounds Vedanta in diagnosing the primordial confusion of subject and object before any further doctrinal argument."
   },
   "analysis": {
     "lexical_notes": [
@@ -26,31 +26,40 @@
         "gloss": "superimposition",
         "contextual_sense": "Erroneous reciprocal attribution of self and non-self, and of their properties",
         "grammatical_role": "noun",
-        "alternate_glosses": ["misattribution", "cognitive overlay"]
+        "alternate_glosses": [
+          "misattribution",
+          "cognitive overlay"
+        ]
       },
       {
         "headword_iast": "mithyā",
         "gloss": "false, dependent, not absolutely real",
         "contextual_sense": "Marks the false status of the superimposed world-process",
         "grammatical_role": "adjective",
-        "alternate_glosses": ["unreal", "falsely presented"]
+        "alternate_glosses": [
+          "unreal",
+          "falsely presented"
+        ]
       }
     ],
-    "argument_tags": ["definition", "thesis", "world-process"]
+    "argument_tags": [
+      "definition",
+      "resolution"
+    ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-01T11:27:43.626182Z",
     "extractor_version": "generate_bs_draft_records.py@0.1",
-    "translator_version": "human+llm@preamble-pass-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-1",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.78,
+    "confidence": 0.88,
     "uncertainty_notes": [
-      "Canonical preamble translation created from the fresh restart baseline.",
-      "Padmapada's Sanskrit व्याख्या is preserved in a separate adjunct note."
+      "Curated in contiguous S01 opening pass with stable inferential-tag schema.",
+      "A later philological pass should revisit dense adhyasa technical vocabulary and karmani-sasthi grammatical framing in PRE-1.1.007."
     ]
   }
 }

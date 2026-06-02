@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S03_V28/BS_C01_S03_V28_B3."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S03_V28_B3.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S03_V28_B3; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "What kind of 'word' is intended when saying the world arises from word? The answer: sphota. If one takes perishable phonemes as word, emergence of divine individuals from eternal words would not be coherent, since phonemes are produced and destroyed and differ across each utterance. We distinguish speakers merely by hearing recitation sounds, and this difference-cognition is not false absent a defeater. Nor can meaning be established from isolated phonemes, due to irregularity. Nor is there cognition of the whole phoneme-cluster simultaneously, since phonemes occur sequentially. If one says the final phoneme, aided by traces of previous ones, conveys meaning, that fails: a sign conveys only when apprehended with relation known; but traces are not directly perceived. If one invokes memory as trace-effect, memory too is sequential. Therefore word is sphota: when trace-seeds from successive phoneme-cognitions ripen with the final phoneme-cognition, a single cognition flashes forth. This single cognition is not mere phoneme-memory, since many phonemes cannot be the object of one cognition as such. Its repeat-recognition across utterances indicates permanence; difference-cognition belongs to phonemes, not to sphota. Therefore from eternal denotative word in sphota-form, the world characterized by action, agent, and result arises as denotatum.",
+    "technical_translation": "Presents sphota-vada defense: rejects varna as ultimate semantic unit due to sequentiality and perishability; posits instantaneous unitary sphota-cognition as stable denotative basis for veda-eternity and shabda-prabhava.",
+    "interpretive_note": "Metaphysics of language is used to protect Vedic eternality under production-talk."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,24 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "definition",
+      "response",
+      "resolution"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s03-curation-pass-9",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.7,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S03 pass with stable cadence and inferential-tag schema.",
+      "A later philological pass should revisit technical choices around sphota/varna vocabulary in records 1.3.068 and 1.3.069."
     ]
   }
 }

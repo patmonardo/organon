@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S02_V07/BS_C01_S02_V07_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S02_V07_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S02_V07_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "The objection that should be dismissed is this: because of restricted locus ('this self within the heart') and because of smallness-expressions ('smaller than rice or barley'), it must be the embodied jiva, minute like a point, that is taught here, not the all-pervasive Supreme. Reply: this is no defect. For a truly spatially delimited thing, all-pervasiveness cannot fit; but for what is all-pervasive, designation in a limited place is possible under a specific standpoint, since it is present everywhere. Just as one who is lord of the whole earth is still called lord of Ayodhya under a perspective, so too. Under what perspective is the all-pervasive Lord called small-housed and minute? We say: because He is to be specifically focused upon. The Lord endowed with such qualities is taught as to be contemplated in the lotus of the heart, as Hari in a Salagrama. Here intellect-cognition functions as the grasping medium; and even though all-pervasive, when worshipped there the Lord becomes gracious. This should be understood like space: though all-pervasive, space is called tiny or minute with reference to a needle-eye or loop. Likewise Brahman. Thus Brahman's small-housedness and minuteness are relative to contemplative focusing, not ultimate. Therefore the further worry is also answered: if Brahman has heart as locus, and hearts differ per body, then like pots (many loci) Brahman would become many, composite, non-eternal, etc. That consequence does not follow.",
+    "technical_translation": "Bhashya on 1.2.7 defuses alpatva-hrdaya objections by introducing nicayya-upasana relativity: local specification is pedagogical focus-mode, not ontological delimitation of Brahman.",
+    "interpretive_note": "Distinguishes upasana-indexing from metaphysical partition."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,26 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "objection",
+      "response",
+      "resolution",
+      "example",
+      "definition"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s02-curation-pass-3",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.8,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S02 pass with stable cadence and inferential-tag schema.",
+      "A later philological pass should revisit upadhi/vyavahara terminology and atta-grahana technical choices in records 1.2.016-1.2.022."
     ]
   }
 }

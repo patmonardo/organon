@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_V27/BS_C01_S01_V27_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V27_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V27_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "As for the claim: earlier 'three quarters are immortal in heaven' uses locative (in heaven), while here 'beyond heaven' uses ablative, so due to difference of expression there can be no recognition of the same referent - this must be answered. No defect: there is no contradiction in either expression. Recognition is not blocked whether taught by locative or ablative. In common usage too, the same hawk related to treetop is described both ways - 'the hawk is on the treetop' and 'the hawk is beyond the treetop.' Another explains: even a hawk not physically connected can be spoken of both ways; similarly Brahman, though beyond heaven, may be spoken of as in heaven. Therefore recognition of the previously indicated Brahman here is valid. Hence it is established that the jyotis-word denotes Supreme Brahman. (27)",
+    "technical_translation": "Bhashya on 1.1.27 resolves grammatical-form objection (saptami vs panchami) by allowing referential continuity across both locative and beyond-locative instruction forms.",
+    "interpretive_note": "Case-ending variation is treated as pedagogical expression, not referent shift."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,25 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "example",
+      "definition"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-12",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.9,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 pass with stable inferential-tag schema.",
+      "A later philological pass should revisit truncated source lines and precise phrasing in the jyotis/gayatri bridge and Kausitaki prana section (1.1.084-1.1.095)."
     ]
   }
 }

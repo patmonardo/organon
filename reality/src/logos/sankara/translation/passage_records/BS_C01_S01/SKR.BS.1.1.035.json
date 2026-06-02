@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_V06/BS_C01_S01_V06_I01."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V06_I01.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V06_I01; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for leading_bhashya; replace with curated doctrinal note."
+    "literal_translation": "Here one may object: your rejection of non-conscious Pradhana as cause based on hearing 'it saw' can be otherwise explained, since figurative conscious-language is seen even for non-conscious things. As one says of a riverbank near collapse 'the bank wants to fall,' so in non-conscious Pradhana too, when creation is near, one may have figurative conscious-language: 'it saw.' Just as in worldly case a conscious person thinks 'after bathing and eating I will go to the village' and then acts accordingly, so Pradhana too proceeds in fixed sequence as mahat etc., and thus is treated as if conscious. Why abandon primary seeing and posit figurative? Because in the same passage even non-conscious fire and water are said to 'see' ('fire saw,' 'waters saw'). Therefore sat's seeing too is figurative, since the discourse is predominantly figurative. In this obtained position, the next sutra begins -",
+    "technical_translation": "Purvapaksha for 1.1.6: appeals to pervasive upacara (figurative predication) in creation passage to generalize ikshana away from conscious agency.",
+    "interpretive_note": "Attempts to neutralize ikshateh by rhetorical leveling."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,24 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "leading_bhashya"
+      "objection",
+      "definition",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-5",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.87,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 pass with stable inferential-tag schema.",
+      "A later philological pass should revisit ikshateh/atman lexical precision and figurative-language boundary claims in records 1.1.032-1.1.039."
     ]
   }
 }

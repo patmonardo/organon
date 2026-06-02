@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_V06/BS_C01_S01_V06_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V06_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V06_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "What was said - that non-conscious Pradhana denoted by sat can have only figurative seeing, like waters and fire - is false. Why? Because of the word self (atman). After beginning with 'Being alone was this in the beginning' and then stating 'it saw' and creation of fire-water-food, the text re-mentions that very sat as seer and those elements as deities: 'that deity saw: let me enter these three deities with this jiva-self and differentiate names and forms.' If non-conscious Pradhana were the primary topic and seer only figuratively by guna activity, then that same topic should be referenced there; in that case deity would not designate jiva by the word atman. But jiva is conscious, body-governor, life-sustainer by usage and derivation; how can conscious jiva be the self (essential nature) of non-conscious Pradhana? Atman denotes intrinsic identity. If instead one takes conscious Brahman as principal seer, then use of atman for jiva is coherent. Likewise in 'that subtle essence, this all has that as self, that is the real, that is the self, that thou art, Svetaketu,' the text first presents the subtle sat as self and then teaches it as the self of conscious Svetaketu. Fire and water are non-conscious as objects, and in name-form differentiation they are shown as instruments, with no basis for primary self-word use; so their seeing is rightly figurative like 'the bank wants to fall.' Even there, their seeing depends on sat as substrate. But for sat, due to atman-word, seeing is not figurative.",
+    "technical_translation": "Bhashya on 1.1.6 uses atman-sabda and tat tvam asi sequence to block figurative ikshana reading for sat; conscious Brahman alone satisfies self-reference continuity.",
+    "interpretive_note": "Textual self-reference continuity defeats Pradhana substitution."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,25 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "definition",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-5",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.88,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 pass with stable inferential-tag schema.",
+      "A later philological pass should revisit ikshateh/atman lexical precision and figurative-language boundary claims in records 1.1.032-1.1.039."
     ]
   }
 }

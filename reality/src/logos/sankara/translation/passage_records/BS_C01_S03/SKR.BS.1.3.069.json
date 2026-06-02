@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S03_V28/BS_C01_S03_V28_B4."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S03_V28_B4.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S03_V28_B4; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "Upavarsha says instead: phonemes themselves are word. Objection had claimed phonemes are produced and destroyed; not so, because they are re-recognized as the same. If one says this is only resemblance-based recognition as with hair, no: such recognition is not defeated by another valid cognition. If one says recognition concerns only a generic form, no: we re-recognize the very phoneme-individual in repeated utterance. We say 'the word go was uttered twice,' not 'two different go-words.' Differences heard between reciters are due not to phoneme essence but to variation in manifesting conditions (contact/disjunction etc.) and to acoustic medium. Even a phoneme such as ga cannot at one moment be truly many essences (udatta, anudatta, svarita, nasal, non-nasal); those distinctions are sound-conditioned, not essence-conditioned. Otherwise accent-cognitions would become groundless because their supposed bases are not directly available. Nor should one insist that recognized phonemes become really distinct by accentual differences; difference in one thing does not force difference in another, just as difference of individuals does not divide a universal. Meaning can be conveyed from phonemes, so sphota is unnecessary. If someone claims sphota is directly perceived as the flash-cognition after cumulative traces, reply: that cognition still has phonemes as its object; ga etc. continue there while unrelated phonemes do not. If sphota were a distinct object, ga would disappear from that cognition just as da does; it does not. Hence that one cognition is phoneme-based memory. One cognition can indeed take many items (as in row, forest, army, ten, hundred, thousand). The cognition 'this is one word go' is a figurative unity by single meaning-delimitation across many phonemes. If one objects that then word distinctions like jara/raja/kapi/pika collapse because phonemes recur elsewhere, reply: order determines word-identity, just as ordered ants form a row-cognition. So specific order yields specific word-cognition despite shared phoneme stock. In living usage, phonemes are learned with ordered semantic association, and in practice, after sequential grasp, they present together in a comprehensive cognition and reliably communicate specific meaning. This is the lighter hypothesis for the varna theorist. The sphota theorist bears heavier cost: loss of what is seen plus postulation of the unseen - namely that sequential phonemes merely manifest sphota and sphota then manifests meaning.",
+    "technical_translation": "Major anti-sphota polemic: varna-vada defends phoneme persistence through recognition, explains accent differences as manifestive-upadhi effects, and preserves semantic compositionality via order-sensitive aggregate cognition.",
+    "interpretive_note": "A dense epistemology-of-language countercase privileging explanatory economy."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,25 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "objection",
+      "response",
+      "resolution",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s03-curation-pass-9",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.66,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S03 pass with stable cadence and inferential-tag schema.",
+      "A later philological pass should revisit technical choices around sphota/varna vocabulary in records 1.3.068 and 1.3.069."
     ]
   }
 }

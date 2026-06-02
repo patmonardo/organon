@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_V13/BS_C01_S01_V13_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V13_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V13_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "Here one objects: anandamaya cannot be the Supreme Self. Why? Because it is a transformation-word. This term 'anandamaya,' occurring in the present context, is understood as denoting modification, since the suffix mayat can indicate vikara. Therefore, like annamaya etc., anandamaya too should denote a derivative entity. Reply: no, because mayat is also remembered in the sense of abundance (pracurya). Grammar teaches mayat in the sense of fullness too; as in 'annamayo yajna' meaning food-abundant, so Brahman rich in bliss is called anandamaya. And Brahman's abundance of bliss is established since, after describing each higher level as a hundredfold increase from human bliss upward, scripture finally determines Brahman-bliss as unsurpassed. Therefore here mayat is in the abundance sense. (13)",
+    "technical_translation": "Bhashya on 1.1.13 rebuts vikara reading by invoking mayat-pracurya usage; anandamaya denotes plenitude of bliss in Brahman, not a produced sheath-entity.",
+    "interpretive_note": "Suffix semantics is resolved by contextual excess-bliss gradation, not by defaulting to modification."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,26 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "objection",
+      "response",
+      "resolution",
+      "definition",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-8",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.9,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 pass with stable inferential-tag schema.",
+      "A later philological pass should revisit mayat suffix semantics and anandamaya mantra-brahmana continuity framing in records 1.1.056-1.1.063."
     ]
   }
 }

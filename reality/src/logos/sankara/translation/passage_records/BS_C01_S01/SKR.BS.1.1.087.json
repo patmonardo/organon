@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_V25/BS_C01_S01_V25_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V25_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V25_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "If it is argued that even in the prior passage Brahman was not taught because 'Gayatri indeed is all this' refers to the meter alone, and therefore the subsequent mantra cannot suddenly refer to four-footed Brahman: this is answered. 'Because of statement of fixing the mind thus' (tatha ceto'rpana-nigadat): through the Gayatri-named meter as doorway, this Brahmana sentence directs concentration of mind upon the Brahman associated with it. For mere arrangement of syllables cannot truly be all this. Thus what is called 'all' is Brahman, the world-cause pervading the Gayatri-form manifestation, as in 'all this indeed is Brahman.' Effect is non-different from cause (as will be argued later), and elsewhere too Brahman-upasana through transformed symbolic forms is seen. Therefore even with mention of meter, four-footed Brahman is taught in the earlier passage; that same is recalled in the jyotis passage for another upasana. Another interpretation also says Brahman may be directly denoted by 'Gayatri' through numerical sameness (four-footedness), as seen elsewhere where meter-terms shift by structural correspondence. (text truncated in source output)",
+    "technical_translation": "Bhashya (on next sutra transition after 1.1.24) argues chandas-reference need not exclude Brahman: Gayatri functions as upasana-gateway and ceto-arpana device pointing to causal Brahman.",
+    "interpretive_note": "Meter-language is integrated as symbolic concentration method, not reduction to mere prosody."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,25 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "definition",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-11",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.79,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 pass with stable inferential-tag schema.",
+      "A later philological pass should revisit truncated source lines and detailed jyotis/gayatri technical phrasing in records 1.1.084-1.1.087."
     ]
   }
 }

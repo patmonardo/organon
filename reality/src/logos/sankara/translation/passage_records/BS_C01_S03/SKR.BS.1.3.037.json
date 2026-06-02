@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S03_V15/BS_C01_S03_V15_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S03_V15_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S03_V15_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "It was said that the small one is the supreme Lord from subsequent reasons. Those same reasons are now elaborated. Further too, the small one is the supreme Lord because in the remainder of the dahara passage there occur two movement-terms that signify the Lord alone: 'all these beings go day by day to that Brahma-loka yet do not find it.' There, naming the topic-dahara as Brahma-loka and describing the movement of jivas toward it indicates the dahara's Brahman-nature. Elsewhere too scripture shows that in deep sleep jivas daily go to Brahman, and common speech says of one deeply asleep that he has become Brahman. Thus the word Brahma-loka used of the present dahara removes doubt that it is jiva or elemental space and indicates Brahman. Objection: Brahma-loka might mean the world of the lotus-seated Brahma. That would follow if construed as a genitive compound ('the world of Brahma'). But if construed appositionally ('Brahman itself as loka'), it indicates supreme Brahman. This very daily-going statement is a sign favoring the appositional reading, since it is not reasonable to imagine beings daily going to the produced Brahma-world called Satya-loka.",
+    "technical_translation": "Sutra 1.3.15 bhashya uses gati-shabda and compound-interpretation (samanadhikaranya vs sasthi) to fix brahmaloka in this context as Brahman itself, not a created loka of Hiranyagarbha.",
+    "interpretive_note": "Daily deep-sleep 'going' becomes key linguistic evidence for non-local Brahma-loka reading."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,24 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s03-curation-pass-5",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.84,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S03 pass with stable section-04 style criteria.",
+      "A later philological pass may refine compound parsing and samasa-level nuance in long bhashya segments."
     ]
   }
 }

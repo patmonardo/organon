@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_V22/BS_C01_S01_V22_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V22_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V22_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "It is taught: 'What is the destination of this world? - space, he said. From space indeed all these beings arise; into space they return; space is greater than these; space is the final resort.' There doubt arises: does the word akasha denote Supreme Brahman or elemental space? Why doubt? Because usage appears in both. In common worldly and Vedic use, akasha is well known as element. Yet sometimes it is used for Brahman where sentence-end or uncommon attributes determine that sense - e.g., 'if this bliss in space were not,' or 'space indeed is the bearer of name and form; that which is between them is Brahman.' Hence doubt. Prima facie: elemental space, because that meaning is more familiar and first rises in cognition. One cannot treat akasha as equally common to both, else unacceptable polysemy proliferates; so Brahman-use would be secondary, by similarity in pervasiveness etc. Also when primary meaning is possible, secondary meaning should not be taken. And here primary element-space meaning is possible. Objection: with element-space, the sentence-end ('all beings arise from it,' etc.) is strained. Reply: no, even element-space can be causal in sequence (from self comes space, from space air, etc.). Greatness and finality too can be taken relative to other elements. Therefore, in this obtained position, we reply -",
+    "technical_translation": "Purvapaksha before 1.1.22 argues for bhutakasha reading on lexical primacy, relegating Brahman-akasha use to gauni sense while attempting to absorb sentence-end claims.",
+    "interpretive_note": "Classical lexical-priority challenge to Brahmanic reinterpretation."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,24 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "objection",
+      "definition",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-10",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.88,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 pass with stable inferential-tag schema.",
+      "A later philological pass should revisit antaraditya imagery and akasha lexical-paradigmatic nuances in records 1.1.072-1.1.079."
     ]
   }
 }

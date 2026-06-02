@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S03_V05/BS_C01_S03_V05_I01."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S03_V05_I01.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S03_V05_I01; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for leading_bhashya; replace with curated doctrinal note."
+    "literal_translation": "And from what further reason should the life-bearer not be accepted as the support of heaven and earth?",
+    "technical_translation": "Leading question introducing additional exclusion grounds beyond prior denotation and role-difference arguments.",
+    "interpretive_note": "Transition prompt to the next sutra rationale."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,22 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "leading_bhashya"
+      "objection"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s03-curation-pass-2",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.86,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S03 pass with S04-style inferential framing.",
+      "A later philological pass may refine precision around kṣetrajña/upādhi and two-birds imagery terms."
     ]
   }
 }

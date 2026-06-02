@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_V28/BS_C01_S01_V28_B2."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V28_B2.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V28_B2; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "The word prana here should be known as Brahman. Why? Because of such consistent progression (tathanugama). Examining the words in sequence, their integration is found to aim at teaching Brahman. At the start, when Indra says 'choose a boon,' Pratardana requests the highest human good: 'you yourself choose what you deem best for a human.' What is then taught as that highest good - how could it be anything but Supreme Self? For no highest good is attained apart from knowledge of Supreme Self, as texts state ('knowing Him alone one crosses death; there is no other path'). Likewise statements such as 'for one who knows me, his world is not diminished by any action, neither theft nor foeticide...' fit only Brahman-reference; for by Brahman-knowledge destruction of karmas is well known. 'Conscious-self' too fits only Brahman, not inert air. And in the conclusion, terms like 'blissful, ageless, immortal' do not properly fit anything other than Brahman. Further statements - that He causes good action for those He raises upward and bad action for those He leads downward, and that He is lord, protector, ruler of worlds - all this can be consistently carried only when referred to Supreme Brahman, not to primary vital air. Therefore prana here is Brahman. (28)",
+    "technical_translation": "Bhashya on 1.1.28 resolves the Kausitaki ambiguity by tathanugama: beginning-middle-end coherence, highest-good framing, karma-transcending fruit, and lordship predicates converge on Brahman.",
+    "interpretive_note": "Holistic discourse-flow outranks isolated local indicators."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,25 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "definition",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-12",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.91,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 pass with stable inferential-tag schema.",
+      "A later philological pass should revisit truncated source lines and precise phrasing in the jyotis/gayatri bridge and Kausitaki prana section (1.1.084-1.1.095)."
     ]
   }
 }

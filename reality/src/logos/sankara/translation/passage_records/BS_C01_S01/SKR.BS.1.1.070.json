@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_V19/BS_C01_S01_V19_B3."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V19_B3.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V19_B3; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "The sutras are to be explained thus: in 'Brahman is tail-support,' is Brahman intended as a part of anandamaya or in its own primacy? Prima facie, due to the word tail, it seems parthood. Reply: in 'anandamayo'bhyasat,' Brahman is taught in its own primacy even there, because in the concluding verse beginning 'if one knows Brahman as non-being' Brahman alone is repeatedly stated. If one says 'no, due to modification/part-word,' the answer is: no defect, because part-language is also possible by abundance/near-part expression. Since for annamaya etc. head-to-tail parts were spoken, and for anandamaya too analogous part-like expressions are stated, 'Brahman is tail-support' is said in part-approximation style, not to assert literal parthood; this is why 'abhyasa' supports Brahman's primacy. Also, because of declaration as cause: Brahman is declared cause of all modifications including anandamaya ('He created all this, whatever there is'). A cause that is real Brahman cannot, in primary sense, be a literal part of its own modification. Other sutras too should, as far as possible, be seen as supporting the Brahman indicated in that tail sentence. (12-19)",
+    "technical_translation": "Hermeneutic summary aligning Sutras 1.1.12-1.1.19 around brahma-puccham interpretation: abhyasa and causal declaration secure Brahman's primacy over sheath-part reading.",
+    "interpretive_note": "Functions as an internal scholastic recapitulation of the anandamaya adhikarana."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,24 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "definition"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-9",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.83,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 pass with stable inferential-tag schema.",
+      "A later philological pass should revisit tadyoga nuance and the heavily compressed debate text in records 1.1.069-1.1.071."
     ]
   }
 }

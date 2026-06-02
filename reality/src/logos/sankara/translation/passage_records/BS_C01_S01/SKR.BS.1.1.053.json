@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S01_V12/BS_C01_S01_V12_B2."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S01_V12_B2.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S01_V12_B2; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "'Anandamaya because of repetition.' The anandamaya self must indeed be the Supreme Self. Why? Because the word ananda is repeatedly used for the Supreme Self. After introducing anandamaya and saying 'He indeed is rasa,' scripture continues: by attaining that rasa one becomes blissful; who would breathe if that bliss in space were not? He alone gives bliss; then 'this is inquiry into bliss'; 'he attains this anandamaya self'; 'knowing Brahman's bliss one fears nothing'; and also 'he knew bliss as Brahman.' Elsewhere too: 'Brahman is knowledge and bliss.' Since bliss-language is repeatedly applied to Brahman, anandamaya self is understood as Brahman. As for the objection that being in the annamaya-stream makes it non-primary, that is no defect, because anandamaya is the innermost. Scripture, wanting to teach the primary self while following ordinary cognition for pedagogical ease, first acknowledges grossly mistaken self-identifications (body etc.), then progressively indicates subtler non-selfs as self, like successive casts in a mold, finally teaching the innermost primary anandamaya. As in Arundhati demonstration, where many non-Arundhati stars may be shown first but the final indicated one is the actual Arundhati, so here innermostness marks primary selfhood. If one says priya etc. as parts cannot fit primary self, answer: those are generated from prior contiguous adjuncts, not intrinsic to the self. And anandamaya's embodiedness is shown only through the chain of annamaya etc., not direct samsarin embodiment. Therefore anandamaya is the Supreme Self alone. (12)",
+    "technical_translation": "Bhashya on 1.1.12 resolves anandamaya as Brahman by ananda-abhyasa, pedagogical kosha-unfolding, and innermostness, while treating priya-siras/sharira language as upadhi-mediated.",
+    "interpretive_note": "Repetition plus pedagogical sequencing overturns the sheath-only reading."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,25 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "definition",
+      "example"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s01-curation-pass-7",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.86,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S01 pass with stable inferential-tag schema.",
+      "A later philological pass should revisit anandamaya technical layering and the long transition bridge in records 1.1.048-1.1.055."
     ]
   }
 }

@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S03_V23/BS_C01_S03_V23_B1."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S03_V23_B1.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S03_V23_B1; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "And this light-as-seer nature of the conscious Self is also remembered in the Bhagavad Gita: 'That is not illumined by sun, moon, or fire; having gone there, they do not return - that is my highest abode,' and 'the splendor in sun, moon, and fire, know that splendor to be mine.'",
+    "technical_translation": "Sutra 1.3.23 supporting smriti-pramana: Gita passages corroborate Brahman as source-light beyond derivative celestial luminosity.",
+    "interpretive_note": "Smriti corroboration aligns with the upanishadic jyotir reading."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,24 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "example",
+      "resolution"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s03-curation-pass-7",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.9,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S03 pass with unchanged block cadence and schema expectations.",
+      "A later philological sweep should revisit light-metaphysics language for strict terminological consistency."
     ]
   }
 }

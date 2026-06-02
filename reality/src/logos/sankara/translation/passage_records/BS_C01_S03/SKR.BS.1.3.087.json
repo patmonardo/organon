@@ -15,9 +15,9 @@
     "segmentation_note": "Block-level extraction from BS_C01_S03_V34/BS_C01_S03_V34_B2."
   },
   "translation": {
-    "literal_translation": "DRAFT: Literal translation pending hand curation for BS_C01_S03_V34_B2.",
-    "technical_translation": "DRAFT: Technical translation pending hand curation for BS_C01_S03_V34_B2; preserve adhikarana vocabulary and inference structure.",
-    "interpretive_note": "Auto-generated scaffold record for bhashya; replace with curated doctrinal note."
+    "literal_translation": "The Shudra has no eligibility, because there is no Vedic study. Only one who has studied Veda and understood Vedic meaning is eligible in Vedic matters. But the Shudra has no Vedic study, since study is preceded by initiation, and initiation pertains to the three varnas. Mere desire does not become a ground of eligibility where required capacity is absent. Nor is merely worldly capacity enough; in scriptural matters scripturally qualified capacity is required, and that has been negated here by exclusion from study. The statement 'the Shudra is unfit for sacrifice' by general reasoning also indicates unfitness for vidya. As for hearing the word Shudra in Samvarga-vidya as an indicator, that is no indicator without supporting rule. At most, even if admitted, it could concern only that specific vidya, not all vidyas; and being in arthavada-context it cannot establish eligibility at all. The term can instead be interpreted for one already otherwise eligible: from the swan-dialogue line ('you thought him yoked with carts' etc.), Janashruti heard disparagement and grief arose; Raikva used the word Shudra to signal that sorrow and his own remote-knowing. Since caste-Shudra has no eligibility here, the word is explained etymologically: one who ran toward sorrow, or was run over by sorrow, or ran toward Raikva in sorrow - thus 'Shudra.' This avayava-based sense is possible while the conventional caste sense is not; and the narrative supports this reading.",
+    "technical_translation": "Main siddhanta of 1.3.34: shudra-anadhikara in Vedic vidya is argued from adhyayana/upanayana structure and reinterpretation of 'shudra' in ChU 4.2.3 as etymological-shoka marker, not varna designation.",
+    "interpretive_note": "Combines procedural-ritual eligibility logic with contextual semantic reinterpretation."
   },
   "analysis": {
     "lexical_notes": [
@@ -33,24 +33,24 @@
       }
     ],
     "argument_tags": [
-      "draft",
-      "block-by-block",
-      "bhashya"
+      "response",
+      "resolution",
+      "definition"
     ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
     "extractor_version": "extract_bs_records.py@0.1",
-    "translator_version": "human+llm@bs-c01-full-block-scaffold-1",
+    "translator_version": "human+llm@bs-c01-s03-curation-pass-11",
     "reviewer_version": "pending",
     "source_manifest_path": "reality/src/logos/sankara/raw/manifest.jsonl"
   },
   "qa": {
     "status": "draft",
-    "confidence": 0.45,
+    "confidence": 0.74,
     "uncertainty_notes": [
-      "Scaffold generated automatically for full BS_C01 block coverage.",
-      "Literal and technical translations are placeholders pending manual curation."
+      "Curated in contiguous S03 pass with stable cadence and inferential-tag schema.",
+      "A later philological pass should revisit adhikara and varna terminology choices in records 1.3.086-1.3.088."
     ]
   }
 }
