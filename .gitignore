@@ -65,6 +65,8 @@ gds/src/sklearn
 gds/src/lightning
 gds/src/litdata
 gds/src/pytorch_geometric
+reality/src/logos/sankara/translation/workbench/md
+reality/src/logos/sankara/workbench/md
 reality/src/logos/open-logic
 logic/src/compiler.old
 gds/examples.old

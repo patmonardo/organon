@@ -8,7 +8,7 @@ It ensures deterministic, deep-linkable, and restorable user flow for curation s
 
 Reference implementation artifact:
 
-- ../prototype_app/route_state_contract.ts
+- ../workbench/prototype_app/route_state_contract.ts
 
 QA artifact:
 
@@ -138,7 +138,7 @@ Restore rules:
 
 ## Initialization Sequence
 
-1. Load manifest from translation/workbench/manifest.json.
+1. Load manifest from workbench/manifest.json.
 2. Parse route path + query into RouteState.
 3. Validate and normalize RouteState against manifest data.
 4. Merge missing fields from persisted preferences.

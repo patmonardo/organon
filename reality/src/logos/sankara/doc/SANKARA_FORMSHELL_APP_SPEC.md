@@ -53,10 +53,10 @@ Source of truth remains JSON records under:
 
 Deterministic generator emits:
 
-- `translation/workbench/manifest.json`
-- `translation/workbench/md/index.md`
-- `translation/workbench/md/sections/*.md`
-- `translation/workbench/md/records/**/*.md`
+- `workbench/manifest.json`
+- `workbench/md/index.md`
+- `workbench/md/sections/*.md`
+- `workbench/md/records/**/*.md`
 
 ### Manifest Record Fields Required by App
 

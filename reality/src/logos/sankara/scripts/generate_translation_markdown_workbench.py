@@ -21,7 +21,7 @@ from typing import Any
 SCRIPT_DIR = Path(__file__).resolve().parent
 SANKARA_DIR = SCRIPT_DIR.parent
 DEFAULT_RECORDS_DIR = SANKARA_DIR / "translation" / "passage_records"
-DEFAULT_WORKBENCH_DIR = SANKARA_DIR / "translation" / "workbench"
+DEFAULT_WORKBENCH_DIR = SANKARA_DIR / "workbench"
 
 
 @dataclass(frozen=True)
@@ -50,6 +50,7 @@ class RecordDoc:
     input_path: Path
     output_path: Path
 
+    record_kind: str
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
@@ -65,7 +66,7 @@ def parse_args() -> argparse.Namespace:
         "--out-dir",
         type=Path,
         default=DEFAULT_WORKBENCH_DIR,
-        help="Workbench output root (default: translation/workbench).",
+      help="Workbench output root (default: workbench).",
     )
     parser.add_argument(
         "--work-code",
@@ -128,6 +129,72 @@ def as_list_of_str(value: Any) -> list[str]:
     return out
 
 
+def normalize_record_kind(value: str) -> str:
+    kind = value.strip().lower().replace("-", "_").replace(" ", "_")
+    kind_map = {
+        "verse": "sutra",
+        "versetext": "sutra",
+        "sutra": "sutra",
+        "bhashya": "bhasya",
+        "leading_bhashya": "bhasya",
+        "intro_bhashya": "preamble",
+        "preamble": "preamble",
+        "preface": "preamble",
+    }
+    return kind_map.get(kind, kind)
+
+
+def parse_trailing_paren_value(text: str) -> str:
+    if "(" not in text or ")" not in text:
+        return ""
+    return text.rsplit("(", 1)[-1].split(")", 1)[0].strip()
+
+
+def infer_record_kind(
+    data: dict[str, Any],
+    record_id: str,
+    source: dict[str, Any],
+    text: dict[str, Any],
+) -> str:
+  text_signals = [
+    str(text.get("segmentation_note", "")).lower(),
+    str(source.get("edition_note", "")).lower(),
+  ]
+
+  explicit_candidates = [
+    data.get("kind"),
+    data.get("record_kind"),
+    source.get("kind"),
+    source.get("record_kind"),
+    text.get("kind"),
+    text.get("record_kind"),
+  ]
+  for candidate in explicit_candidates:
+    if isinstance(candidate, str) and candidate.strip():
+      return normalize_record_kind(candidate)
+
+  if record_id.endswith(".PRE") or any("preamble" in signal for signal in text_signals):
+    return "preamble"
+
+  if any("versetext" in signal or "sutra" in signal for signal in text_signals):
+    return "sutra"
+
+  if any("bhashya" in signal for signal in text_signals):
+    return "bhasya"
+
+  inferred_candidates = [
+    parse_trailing_paren_value(str(text.get("segmentation_note", ""))),
+    parse_trailing_paren_value(str(source.get("edition_note", ""))),
+  ]
+  for candidate in inferred_candidates:
+    if candidate:
+      normalized = normalize_record_kind(candidate)
+      if normalized in {"preamble", "sutra", "bhasya"}:
+        return normalized
+
+  return "unknown"
+
+
 def read_record_doc(path: Path, md_root: Path) -> RecordDoc | None:
     data = json.loads(path.read_text(encoding="utf-8"))
 
@@ -160,6 +227,7 @@ def read_record_doc(path: Path, md_root: Path) -> RecordDoc | None:
             if isinstance(note, dict):
                 lexical_notes.append(note)
 
+    record_kind = infer_record_kind(data, record_id, source, text)
     return RecordDoc(
         record_id=record_id,
         work_code=work_code,
@@ -184,6 +252,7 @@ def read_record_doc(path: Path, md_root: Path) -> RecordDoc | None:
         source_manifest_path=str(provenance.get("source_manifest_path", "")).strip(),
         input_path=path,
         output_path=out_path,
+        record_kind=record_kind,
     )
 
 
@@ -227,6 +296,7 @@ def render_record_markdown(doc: RecordDoc) -> str:
         f"# {doc.record_id}",
         "",
         "## Metadata",
+      f"- Kind: {doc.record_kind or 'unknown'}",
         f"- Work code: {doc.work_code or 'n/a'}",
         f"- Section code: {doc.section_code or 'n/a'}",
         f"- QA status: {doc.qa_status or 'n/a'}",
@@ -385,6 +455,7 @@ def write_manifest(workbench_root: Path, md_root: Path, docs: list[RecordDoc], s
                 "literal_translation": doc.literal_translation,
                 "technical_translation": doc.technical_translation,
                 "md_path": doc.output_path.relative_to(workbench_root).as_posix(),
+          "record_kind": doc.record_kind,
             }
         )
 
@@ -787,6 +858,7 @@ def write_viewer_html(workbench_root: Path) -> None:
 
         const haystack = [
           record.record_id,
+          record.record_kind,
           record.section_code,
           record.source_text,
           record.literal_translation,
@@ -809,7 +881,7 @@ def write_viewer_html(workbench_root: Path) -> None:
         const button = document.createElement('button');
         button.type = 'button';
         button.className = 'item' + (record.record_id === state.selectedRecordId ? ' active' : '');
-        button.innerHTML = `<div class=\"id\">${escapeHtml(record.record_id)}</div><div class=\"meta\">Section ${escapeHtml(record.section_code)}</div>`;
+        button.innerHTML = `<div class=\"id\">${escapeHtml(record.record_id)}</div><div class=\"meta\">${escapeHtml(record.record_kind || 'unknown')} | Section ${escapeHtml(record.section_code)}</div>`;
         button.addEventListener('click', () => {
           state.selectedRecordId = record.record_id;
           renderRecordList();
@@ -820,7 +892,7 @@ def write_viewer_html(workbench_root: Path) -> None:
     }
 
     async function openRecord(record) {
-      dom.currentMeta.textContent = `${record.record_id} | Section ${record.section_code}`;
+      dom.currentMeta.textContent = `${record.record_id} | ${record.record_kind || 'unknown'} | Section ${record.section_code}`;
       dom.doc.innerHTML = '<p>Loading markdown...</p>';
       const response = await fetch(record.md_path);
       if (!response.ok) {
