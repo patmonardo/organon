@@ -33,11 +33,26 @@ Sutra condensation of the context argument.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **prakaranac ca**
+  - Gloss: and because of context
+  - Context: Sutra-compressed appeal to topical continuity for referent decision.
+  - Grammar: causal phrase
+  - Alternate glosses: further from topical frame, context-grounded reason
+- **prakrta-visaya**
+  - Gloss: already-introduced subject matter
+  - Context: Prevents shifting from Brahman to lower candidates without textual necessity.
+  - Grammar: compound noun
+  - Alternate glosses: established topic, current semantic subject
+- **visaya-niyama**
+  - Gloss: restriction by topic-domain
+  - Context: Methodic guard against overextension into unrelated meanings.
+  - Grammar: compound noun
+  - Alternate glosses: topic constraint, domain restriction
+- **sutra-sankshepa**
+  - Gloss: compressed aphoristic condensation
+  - Context: Single-word sutra carries forward full bhashya logic from surrounding discussion.
+  - Grammar: compound noun
+  - Alternate glosses: aphoristic compression, doctrinal shorthand
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

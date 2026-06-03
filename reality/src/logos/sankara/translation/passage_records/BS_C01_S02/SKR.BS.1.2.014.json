@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "headword_iast": "upadhi",
+        "gloss": "limiting adjunct",
+        "contextual_sense": "Explains why jiva-language can appear without being ultimate ontology: limitation belongs to adjunct, not absolute self.",
         "grammatical_role": "noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "conditioner",
+          "limiting condition"
+        ]
+      },
+      {
+        "headword_iast": "adhyaropa-apavada",
+        "gloss": "superimposition followed by rescission",
+        "contextual_sense": "Pedagogical two-step method invoked to reconcile provisional plurality with final non-dual teaching.",
+        "grammatical_role": "compound doctrinal formula",
+        "alternate_glosses": [
+          "provisional attribution and withdrawal",
+          "teaching-by-negation sequence"
+        ]
+      },
+      {
+        "headword_iast": "vyavahara-paramartha-bheda",
+        "gloss": "difference between transactional and ultimate standpoints",
+        "contextual_sense": "Framework allowing functional distinctions without compromising paramarthic non-duality.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "empirical-ultimate distinction",
+          "two-level discourse"
+        ]
+      },
+      {
+        "headword_iast": "jiva-vacana",
+        "gloss": "language apparently about the individual self",
+        "contextual_sense": "Interpreted as provisional teaching device, not final referential endpoint.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "individual-self expression",
+          "jiva-designation"
+        ]
+      },
+      {
+        "headword_iast": "siddhanta",
+        "gloss": "settled conclusion",
+        "contextual_sense": "Maintained as Brahman-reference after integrating and subordinating provisional jiva-reading.",
+        "grammatical_role": "noun",
+        "alternate_glosses": [
+          "final determination",
+          "doctrinal settlement"
         ]
       }
     ],

@@ -33,11 +33,26 @@ Canonical causal definition sutra.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **janmady-asya-yatah**
+  - Gloss: from which are origination etc. of this world
+  - Context: Sutra-laksana identifying Brahman through relation to cosmos-process triad.
+  - Grammar: sutra phrase
+  - Alternate glosses: source of creation etc., world-process origin indicator
+- **jagat-karana-laksana**
+  - Gloss: definition via world-causality
+  - Context: Brahman indicated through causal status vis-a-vis universe.
+  - Grammar: compound noun
+  - Alternate glosses: cosmological marker, world-cause definition
+- **sristi-sthiti-laya-traya**
+  - Gloss: triad of creation, sustenance, dissolution
+  - Context: Implicit expansion of janmadi shorthand in bhashya treatment.
+  - Grammar: compound noun
+  - Alternate glosses: creation-maintenance-dissolution triad, cosmic process triad
+- **sutra-laksana-sanksepa**
+  - Gloss: compressed definitional aphorism
+  - Context: Minimal form carrying broad theological consequences.
+  - Grammar: compound noun
+  - Alternate glosses: terse defining formula, aphoristic compression
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

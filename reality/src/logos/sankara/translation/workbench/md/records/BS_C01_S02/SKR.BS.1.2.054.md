@@ -33,11 +33,26 @@ Sutra seal for Mundaka-source identification.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **adrsyatvadi-gunaka**
+  - Gloss: qualified by invisibility-type attributes
+  - Context: Sutra reuses attribute cluster while assigning it to Brahman via later predicate fit.
+  - Grammar: compound adjectival noun
+  - Alternate glosses: bearing unseenness attributes, non-sensory-qualified referent
+- **dharma-ukteh**
+  - Gloss: because of property statement
+  - Context: Causal ground in sutra: explicit Brahmanic predicates settle identity.
+  - Grammar: ablative reason phrase
+  - Alternate glosses: from predicate declaration, due to stated properties
+- **sutra-hetu**
+  - Gloss: aphoristic inferential reason
+  - Context: Condenses full bhashya argument into one decisive criterion.
+  - Grammar: compound noun
+  - Alternate glosses: compressed rationale, terse proof-ground
+- **bhuta-yoni-brahmatva**
+  - Gloss: Brahman-identity of source-principle
+  - Context: Conclusion secured by combining attribute cluster with omniscience declarations.
+  - Grammar: compound noun
+  - Alternate glosses: source as Brahman, cosmic-origin absolute identity
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

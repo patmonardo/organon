@@ -33,11 +33,31 @@ Sets the eater-identification problem before the decisive caracara criterion.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **atta**
+  - Gloss: the eater/consumer
+  - Context: Key disputed term launching triadic candidate analysis (fire, jiva, Brahman) in the new adhikarana.
+  - Grammar: agent noun
+  - Alternate glosses: consumer, devourer
+- **purvapaksa**
+  - Gloss: prima facie thesis
+  - Context: Methodic opening stance that tests multiple candidate referents before siddhanta selection.
+  - Grammar: compound noun
+  - Alternate glosses: initial objection-framework, provisional thesis
+- **trivikalpa**
+  - Gloss: three-way alternative analysis
+  - Context: Interpretive structure in which agni, jiva, and Brahman are comparatively evaluated.
+  - Grammar: compound noun
+  - Alternate glosses: triadic option set, threefold candidate frame
+- **lakshana-linga-pariksa**
+  - Gloss: testing by defining marks and indicators
+  - Context: Procedure used to discriminate among candidate referents in ambiguous scriptural expressions.
+  - Grammar: compound noun
+  - Alternate glosses: indicator-testing method, mark-based adjudication
+- **prakarana-pravesa**
+  - Gloss: entry into a new topical sequence
+  - Context: Signals transition from previous closure into fresh inferential debate architecture.
+  - Grammar: compound noun
+  - Alternate glosses: topic-entry, new argument sequence opening
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

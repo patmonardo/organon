@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "pranah tathanugamat",
+        "gloss": "prana, because of coherent progression",
+        "contextual_sense": "Sutra states that discourse-flow consistency fixes prana as Brahman in this locus.",
+        "grammatical_role": "sutra phrase",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "prana by textual continuity",
+          "flow-grounded determination"
+        ]
+      },
+      {
+        "headword_iast": "anugama-pramana",
+        "gloss": "evidence from thematic carry-through",
+        "contextual_sense": "A holistic criterion is elevated above local lexical reflex.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "continuity evidence",
+          "coherence warrant"
+        ]
+      },
+      {
+        "headword_iast": "linga-ekikarana",
+        "gloss": "unification of indicators",
+        "contextual_sense": "Diverse signs are reconciled under one referent instead of split into separate targets.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "marker integration",
+          "sign consolidation"
+        ]
+      },
+      {
+        "headword_iast": "adhikarana-samapti-cihna",
+        "gloss": "marker of topical closure",
+        "contextual_sense": "Sutra seals the primary adjudication before the speaker-objection sequence.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "closure sign",
+          "argument completion marker"
         ]
       }
     ],

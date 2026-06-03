@@ -33,11 +33,31 @@ Establishes the classic adhikari profile for Vedanta without subordinating Brahm
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **atha**
+  - Gloss: now/thereafter
+  - Context: Interpreted as anantarya marker after requisite preparedness, not as ritual entitlement token.
+  - Grammar: indeclinable particle
+  - Alternate glosses: thereupon, subsequently
+- **sadhana-sampatti-anantarya**
+  - Gloss: immediacy after attainment of means
+  - Context: Defines the transition condition into brahma-jijnasa.
+  - Grammar: compound noun
+  - Alternate glosses: post-qualification immediacy, preparedness-sequence
+- **adhikara-artha-nirasa**
+  - Gloss: rejection of mere eligibility reading
+  - Context: Bhashya denies taking atha as only adhikara indicator unlike ritual contexts.
+  - Grammar: compound noun
+  - Alternate glosses: eligibility-sense exclusion, adhikara-reading refusal
+- **dharma-jijnasa-vilakshanata**
+  - Gloss: difference from dharma-inquiry
+  - Context: Brahma-jijnasa is differentiated by object, fruit, and scriptural operation.
+  - Grammar: compound noun
+  - Alternate glosses: contrast with ritual inquiry, non-equivalence to dharma-analysis
+- **mangala-vyakhya-parihara**
+  - Gloss: setting aside pure auspicious-opening reading
+  - Context: Atha is not reduced to ornamental benediction within this semantic frame.
+  - Grammar: compound noun
+  - Alternate glosses: anti-ornamental reading, mangala-only interpretation rejection
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 opening pass with stable inferential-tag schema.

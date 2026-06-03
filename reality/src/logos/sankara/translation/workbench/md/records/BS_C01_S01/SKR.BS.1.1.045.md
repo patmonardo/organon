@@ -33,11 +33,26 @@ Sutra shorthand for svapya-linga argument.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **svāpyayāt**
+  - Gloss: because of dissolution in sleep
+  - Context: Sutra states that deep-sleep merger points to conscious sat as causal basis.
+  - Grammar: ablative reason term
+  - Alternate glosses: from sleep-resolution evidence, due to suṣupti reabsorption
+- **suṣupti-pramāṇa**
+  - Gloss: deep sleep as means of knowing
+  - Context: Experiential scripture of sleep functions as metaphysical evidence, not psychology alone.
+  - Grammar: compound noun
+  - Alternate glosses: sleep-state proof, susupti warrant
+- **sat-kāraṇa-niścaya**
+  - Gloss: fixing sat as the cause
+  - Context: The dissolution pattern stabilizes sat-reference against material reinterpretation.
+  - Grammar: compound noun
+  - Alternate glosses: causal sat determination, being-cause ascertainment
+- **pradhāna-vyudāsa**
+  - Gloss: setting aside Pradhana
+  - Context: Inert candidate cannot serve as meaningful terminus of conscious return.
+  - Grammar: compound noun
+  - Alternate glosses: Pradhana sidelining, matter-cause exclusion
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

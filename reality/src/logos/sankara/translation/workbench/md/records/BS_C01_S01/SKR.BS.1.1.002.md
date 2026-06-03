@@ -33,11 +33,31 @@ Shankara permits definitional variation while preserving the phenomenological co
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
+- **adhyasa**
+  - Gloss: superimposition/misattribution
+  - Context: Core operation where properties of one domain appear in another through non-discrimination.
   - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+  - Alternate glosses: erroneous overlay, transposed attribution
+- **smrti-rupa**
+  - Gloss: memory-structured appearance
+  - Context: Shankara’s formula marks adhyasa as prior-seen content reappearing elsewhere.
+  - Grammar: compound noun
+  - Alternate glosses: memory-form cognition, recollective appearance
+- **paratra purva-drsta-avabhasa**
+  - Gloss: appearance elsewhere of what was previously seen
+  - Context: Classic definitional phrase unifying variant theories under one phenomenological structure.
+  - Grammar: compound definition phrase
+  - Alternate glosses: elsewhere-appearance of prior object, transferred phenomenal showing
+- **aviveka-nibandhana**
+  - Gloss: grounded in non-discrimination
+  - Context: Explains causal condition for cross-attribution of self/not-self properties.
+  - Grammar: compound noun
+  - Alternate glosses: rooted in non-discernment, undiscriminated basis
+- **para-dharma-avabhasa**
+  - Gloss: appearance of alien properties
+  - Context: Convergence-point across rival definitions of error in the bhashya survey.
+  - Grammar: compound noun
+  - Alternate glosses: foreign-attribute appearance, misplaced property-display
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 opening pass with stable inferential-tag schema.

@@ -33,11 +33,26 @@ Sutra closure for the attā-adhikarana.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **caracara-grahanat**
+  - Gloss: because of inclusion of moving and unmoving
+  - Context: Sutra-hetu establishing atta as Brahman through total object-scope.
+  - Grammar: ablative reason phrase
+  - Alternate glosses: on account of totality-inclusion, due to all-entity grasping
+- **sutra-hetu**
+  - Gloss: concise inferential reason in sutra form
+  - Context: Captures the compressed logic where one linga settles referent identity.
+  - Grammar: compound noun
+  - Alternate glosses: aphoristic rationale, sutrified reason
+- **sarva-visayatva**
+  - Gloss: all-object scope
+  - Context: Semantic breadth that excludes finite candidates for the eater.
+  - Grammar: abstract noun
+  - Alternate glosses: universal object-range, total referential scope
+- **atta-brahma-nirnaya**
+  - Gloss: determination of the eater as Brahman
+  - Context: Result secured by the charachara indicator in this sutra.
+  - Grammar: compound noun
+  - Alternate glosses: consumer-as-Brahman conclusion, referent adjudication
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

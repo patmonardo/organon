@@ -33,11 +33,31 @@ Contextual specification overrides lexical commonness.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **sadharana-sabda-visesa**
+  - Gloss: specification of otherwise common terms
+  - Context: Core method: shared terms atma/vaisvanara are constrained by contextual qualifiers to Brahman.
+  - Grammar: compound hermeneutic term
+  - Alternate glosses: common-term restriction, lexical disambiguation by qualifier
+- **atma-sabda**
+  - Gloss: the word atma (Self)
+  - Context: Used as a high-order marker that favors ultimate referent when read with sectional attributes.
+  - Grammar: compound noun
+  - Alternate glosses: Self-term, atma-designation
+- **vaisvanara-sabda**
+  - Gloss: the word vaisvanara
+  - Context: Lexically broad term narrowed here by cosmic-limb and fruit statements.
+  - Grammar: compound noun
+  - Alternate glosses: vaisvanara designation, universal-fire term
+- **visesa-linga**
+  - Gloss: distinctive indicator
+  - Context: Cosmic-body predicates and Brahmanic fruits function as disambiguating linga.
+  - Grammar: compound noun
+  - Alternate glosses: specificity marker, differentiating sign
+- **isvara-nirnaya**
+  - Gloss: determination as Ishvara
+  - Context: Siddhanta settles referent identity by contextual over lexical priority.
+  - Grammar: compound noun
+  - Alternate glosses: Supreme-Lord adjudication, Brahman-reference settlement
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

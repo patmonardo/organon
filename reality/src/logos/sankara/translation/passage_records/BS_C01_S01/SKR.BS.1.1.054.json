@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "sopādhika-nirupādhika-brahma-bheda",
+        "gloss": "distinction of conditioned and unconditioned Brahman presentation",
+        "contextual_sense": "Record maps two pedagogical registers without positing two ultimate realities.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "dual-mode Brahman exposition",
+          "qualified/unqualified teaching distinction"
+        ]
+      },
+      {
+        "headword_iast": "upāsanā-phala-vailakṣaṇya",
+        "gloss": "difference in contemplative results",
+        "contextual_sense": "Fruit-structure helps separate meditative supports from final identity-knowledge teaching.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "upasana-result differentiation",
+          "practice-fruit contrast"
+        ]
+      },
+      {
+        "headword_iast": "adhikaraṇa-krama-saṅgraha",
+        "gloss": "summary of topical sequence",
+        "contextual_sense": "Acts as a structural map from earlier causality proofs into anandamaya adjudication.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "argument-chain synopsis",
+          "sequence compendium"
+        ]
+      },
+      {
+        "headword_iast": "vedānta-ekavākyatā-rakṣā",
+        "gloss": "protection of single coherent purport",
+        "contextual_sense": "Bridge text insists multiple strands still converge on one conscious absolute.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "purport-unity defense",
+          "one-sense preservation"
+        ]
+      },
+      {
+        "headword_iast": "prakaraṇa-parivartana-sandhi",
+        "gloss": "junction at thematic transition",
+        "contextual_sense": "Marks pivot from broad causal establishment to fine-grained semantic disputes.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "topic-turn hinge",
+          "sectional transition joint"
         ]
       }
     ],

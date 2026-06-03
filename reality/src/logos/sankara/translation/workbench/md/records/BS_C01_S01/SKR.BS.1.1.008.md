@@ -33,11 +33,31 @@ Defines inquiry as purposive cognition aimed at liberation, not curiosity.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
+- **jijnasa**
+  - Gloss: desire to know
+  - Context: Defined as an intentional orientation terminating in avagati (ascertaining knowledge).
+  - Grammar: abstract noun
+  - Alternate glosses: inquiry-intent, epistemic aspiration
+- **avagati**
+  - Gloss: determinate understanding
+  - Context: Serves as proper fulfillment of inquiry rather than mere curiosity.
   - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+  - Alternate glosses: ascertainment, comprehending cognition
+- **jnana-iccha-karma-sambandha**
+  - Gloss: relation of desire to knowledge as its object
+  - Context: Clarifies semantic structure of jijnasa expression.
+  - Grammar: compound noun
+  - Alternate glosses: desire-object relation, inquiry-object semantics
+- **brahmavagati-purushartha**
+  - Gloss: Brahman-realization as human end
+  - Context: Teleological justification for Brahma-jijnasa in the sutra opening.
+  - Grammar: compound noun
+  - Alternate glosses: liberating realization goal, ultimate human aim
+- **avidya-bija-nivritti**
+  - Gloss: cessation of ignorance-seed
+  - Context: Explains why Brahman-knowledge alone removes samsara root.
+  - Grammar: compound noun
+  - Alternate glosses: eradication of nescience-root, samsara-seed dissolution
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

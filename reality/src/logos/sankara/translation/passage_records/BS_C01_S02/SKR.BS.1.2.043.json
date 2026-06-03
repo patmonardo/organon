@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "anavasthiter",
+        "gloss": "because of instability",
+        "contextual_sense": "Sutra reason excluding non-Brahman candidates that cannot remain as fixed referent.",
+        "grammatical_role": "ablative reason phrase",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "from non-abidingness",
+          "due to lack of stability"
+        ]
+      },
+      {
+        "headword_iast": "asambhavac ca",
+        "gloss": "and because of impossibility",
+        "contextual_sense": "Second reason dismissing options that cannot host the required attributes.",
+        "grammatical_role": "causal phrase",
+        "alternate_glosses": [
+          "further due to infeasibility",
+          "also from impossibility"
+        ]
+      },
+      {
+        "headword_iast": "netarah",
+        "gloss": "not the other (alternative) referent",
+        "contextual_sense": "Aphoristic elimination of all non-Ishvara options in this context.",
+        "grammatical_role": "negative referential pronoun",
+        "alternate_glosses": [
+          "none of the alternatives",
+          "not any other candidate"
+        ]
+      },
+      {
+        "headword_iast": "nirakarana-krama",
+        "gloss": "sequence of eliminative refutation",
+        "contextual_sense": "Sutra preserves the bhashya’s method of rejecting by stability and compatibility tests.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "stepwise exclusion",
+          "eliminative method"
         ]
       }
     ],

@@ -33,11 +33,31 @@ Central hermeneutic claim: Vedanta has autonomous revelatory force about Brahman
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
+- **samanvaya**
+  - Gloss: consistent convergence/coordination
+  - Context: Vedanta passages are shown to converge on one nondual Brahman purport.
   - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+  - Alternate glosses: harmonization, integrated consistency
+- **tatparya-niscaya**
+  - Gloss: determination of intended purport
+  - Context: Method for distinguishing principal teaching from subordinate or auxiliary clauses.
+  - Grammar: compound noun
+  - Alternate glosses: intent determination, dominant import fixation
+- **vidhi-sesa-nirasa**
+  - Gloss: rejection of reducing Vedanta to injunction accessory
+  - Context: Bhashya denies making Brahman-statements merely supportive of ritual acts.
+  - Grammar: compound noun
+  - Alternate glosses: anti-ritual accessory reading, injunction-subordination refusal
+- **kriya-karaka-phala-badha**
+  - Gloss: sublation of action-agent-result triad
+  - Context: Atmaikatva-knowledge undermines the structure presupposed by injunctional discourse.
+  - Grammar: compound noun
+  - Alternate glosses: action-structure negation, agent-instrument-result cancellation
+- **mahavakya-ekarthata**
+  - Gloss: single purport of great statements
+  - Context: Supports claim that Vedanta is fundamentally revelatory, not purely prescriptive.
+  - Grammar: compound noun
+  - Alternate glosses: unity of mahavakya intent, nondual statement convergence
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

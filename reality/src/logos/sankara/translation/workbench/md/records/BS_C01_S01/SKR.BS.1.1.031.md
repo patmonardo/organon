@@ -33,11 +33,26 @@ Meta-hermeneutic transition from foundational method to structured polemic again
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **samanvaya-siddhānta-saṃgraha**
+  - Gloss: recap of established convergence doctrine
+  - Context: Summarizes prior proof that Vedanta culminates in Brahman-atman realization.
+  - Grammar: compound noun
+  - Alternate glosses: convergence recap, established purport summary
+- **sarvajña-sarvaśakti-jagat-kāraṇa**
+  - Gloss: omniscient omnipotent world-cause
+  - Context: Restates doctrinal target before launching further rival-system refutations.
+  - Grammar: compound noun
+  - Alternate glosses: all-knowing all-powerful source, comprehensive causal absolute
+- **sāṅkhyādi-pūrvapakṣa**
+  - Gloss: Sankhya and related prima facie cosmologies
+  - Context: Introduces next argumentative wave where rival inferential causes are staged then refuted.
+  - Grammar: compound noun
+  - Alternate glosses: rival cosmological objections, systematic opponent theses
+- **adhikaraṇa-vistara-prastāva**
+  - Gloss: proposal of expanded topical refutation sequence
+  - Context: Serves as hinge from foundational harmonization to extended polemical defense.
+  - Grammar: compound noun
+  - Alternate glosses: expanded argument setup, next-phase transition
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

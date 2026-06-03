@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "sastra-drsti",
+        "gloss": "scripturally informed seeing",
+        "contextual_sense": "Indra speaks from realized identity-understanding, not from egoic deity standpoint.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "scriptural vision",
+          "revelation-shaped insight"
+        ]
+      },
+      {
+        "headword_iast": "vamadeva-drstanta",
+        "gloss": "Vamadeva precedent",
+        "contextual_sense": "First-person identity declarations are legitimized by prior sage-model usage.",
+        "grammatical_role": "illustrative compound",
+        "alternate_glosses": [
+          "Vamadeva analogy",
+          "rishi precedent"
+        ]
+      },
+      {
+        "headword_iast": "jnana-stuti",
+        "gloss": "praise of knowledge",
+        "contextual_sense": "Mythic heroic narration is interpreted as glorifying insight rather than delimiting ontology.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "knowledge eulogy",
+          "epistemic praise"
+        ]
+      },
+      {
+        "headword_iast": "devata-katha-upaya",
+        "gloss": "deity narrative as pedagogical means",
+        "contextual_sense": "Story-frame is retained as instructional medium that points beyond itself.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "mythic teaching vehicle",
+          "narrative pedagogy"
+        ]
+      },
+      {
+        "headword_iast": "aham-brahmasmi-anubhava-anukarana",
+        "gloss": "echo of I-am-Brahman realization mode",
+        "contextual_sense": "Speaker-language is mapped to realization discourse, not ordinary self-reference.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "identity realization pattern",
+          "nondual first-person mode"
         ]
       }
     ],

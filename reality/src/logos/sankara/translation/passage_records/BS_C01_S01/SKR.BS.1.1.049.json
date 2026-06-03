@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "svaśabda-śruti",
+        "gloss": "direct naming testimony",
+        "contextual_sense": "Bhashya cites explicit scriptural wording naming omniscient Ishvara as causal source.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "self-word revelation",
+          "direct lexical testimony"
+        ]
+      },
+      {
+        "headword_iast": "sarvajña-īśvara-vacana",
+        "gloss": "statement of omniscient Lord",
+        "contextual_sense": "Positive theological naming supplements prior inferential eliminations.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "all-knowing Lord declaration",
+          "Ishvara naming clause"
+        ]
+      },
+      {
+        "headword_iast": "śvetāśvatara-mantra-pramāṇa",
+        "gloss": "evidence from Svetasvatara mantra",
+        "contextual_sense": "Cross-Upanishadic citation strengthens causal conclusion with explicit mantra authority.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "Svetasvatara textual warrant",
+          "mantric confirmation"
+        ]
+      },
+      {
+        "headword_iast": "karaṇādhipādhipa",
+        "gloss": "lord of lords of instruments",
+        "contextual_sense": "Phrase emphasizes transcendent sovereignty incompatible with Pradhana mechanism.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "supreme over instrumental powers",
+          "meta-lord designation"
+        ]
+      },
+      {
+        "headword_iast": "śruti-sākṣāt-pratipatti",
+        "gloss": "immediate ascertainment from revelation",
+        "contextual_sense": "Here the text does not merely imply but directly states the causal subject.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "direct revelatory determination",
+          "explicit scriptural ascertainment"
         ]
       }
     ],

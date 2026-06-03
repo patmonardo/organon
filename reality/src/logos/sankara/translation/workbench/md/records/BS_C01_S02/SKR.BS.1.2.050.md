@@ -33,11 +33,31 @@ Sets up the jiva-candidate case before its scriptural and structural rejection.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **sarira-purvapaksa**
+  - Gloss: prima facie embodied-self thesis
+  - Context: After rejecting Pradhana, objection advances conscious jiva as antaryamin candidate.
+  - Grammar: compound noun
+  - Alternate glosses: jiva-first objection, embodied candidate thesis
+- **drastrtva-srotrtva-mantrtva-vijnatrtva**
+  - Gloss: seer-hearer-thinker-knower capacities
+  - Context: Conscious functions cited to argue jiva qualifies for inner-controller role.
+  - Grammar: compound capability cluster
+  - Alternate glosses: cognitive-agent predicates, consciousness-function set
+- **pratyag-atmatva**
+  - Gloss: inward selfhood
+  - Context: Objection uses interiority of self-awareness to support antaryamin claim.
+  - Grammar: abstract noun
+  - Alternate glosses: inner-self status, subjective interior selfhood
+- **amrtatva-upacara**
+  - Gloss: qualified immortality attribution
+  - Context: Purvapaksa leverages karmic continuity and experiencer-role to claim relative immortality for jiva.
+  - Grammar: compound noun
+  - Alternate glosses: relative deathlessness claim, experiential continuity-based immortality
+- **cetana-karttva-hetu**
+  - Gloss: reason from conscious agency
+  - Context: Main inferential driver in this objection branch before siddhanta refutation.
+  - Grammar: compound noun
+  - Alternate glosses: agency-based rationale, conscious-doer argument
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

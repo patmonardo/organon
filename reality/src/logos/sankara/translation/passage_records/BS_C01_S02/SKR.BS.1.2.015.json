@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "smrtes ca",
+        "gloss": "and because of smriti",
+        "contextual_sense": "Sutra-level appeal to remembered tradition as corroborative evidence for the established distinction.",
+        "grammatical_role": "causal phrase",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "further from tradition",
+          "also due to smriti witness"
+        ]
+      },
+      {
+        "headword_iast": "sahakari-pramana",
+        "gloss": "auxiliary means of proof",
+        "contextual_sense": "Smrti functions as secondary support, reinforcing sruti-grounded inference.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "supporting evidence",
+          "subsidiary proof"
+        ]
+      },
+      {
+        "headword_iast": "nirnita-bheda",
+        "gloss": "already-determined distinction",
+        "contextual_sense": "The sutra re-seals non-identity already argued, preventing regression into jiva-upasya reading.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "settled difference",
+          "resolved non-identity"
+        ]
+      },
+      {
+        "headword_iast": "sutra-anuvada",
+        "gloss": "reiterative sutra confirmation",
+        "contextual_sense": "Compressed restatement of prior reasoning with an added corroborative source marker.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "confirmatory recap",
+          "compressed reaffirmation"
         ]
       }
     ],

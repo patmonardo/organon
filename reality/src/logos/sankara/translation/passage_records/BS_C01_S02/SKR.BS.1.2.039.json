@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "sukha-visista-abhidhana",
+        "gloss": "explicit designation as bliss-qualified",
+        "contextual_sense": "Sutra reason that directly locks the referent to Brahman in this context.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "bliss-qualified naming",
+          "sukha-marked denotation"
+        ]
+      },
+      {
+        "headword_iast": "brahmatva-siddhi",
+        "gloss": "establishment of Brahman-reference",
+        "contextual_sense": "The named qualifier is sufficient to settle the doctrinal identity.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "Brahman-determination",
+          "absolute-reference proof"
+        ]
+      },
+      {
+        "headword_iast": "visesana-bala",
+        "gloss": "force of qualifying term",
+        "contextual_sense": "Hermeneutic weight assigned to predicate language in concise sutra reasoning.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "qualifier strength",
+          "attribute-force"
+        ]
+      },
+      {
+        "headword_iast": "sutra-hetu",
+        "gloss": "sutra-level reason",
+        "contextual_sense": "Aphoristic causal marker recaps broader bhashya continuity argument.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "aphoristic rationale",
+          "compressed inferential ground"
         ]
       }
     ],

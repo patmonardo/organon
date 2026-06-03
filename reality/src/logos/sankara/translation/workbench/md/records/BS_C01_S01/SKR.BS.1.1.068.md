@@ -33,11 +33,31 @@ Fear/abheda pedagogy is used as a decisive referential test.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **tad-yoga-upadeśa**
+  - Gloss: instruction of union/identity with that
+  - Context: Teaching promises fearlessness through assimilation to the discussed anandamaya referent.
+  - Grammar: compound noun
+  - Alternate glosses: that-identity instruction, Brahman-assimilation teaching
+- **abhaya-prāpti**
+  - Gloss: attainment of fearlessness
+  - Context: Freedom from fear is treated as diagnostic fruit of Brahman-realization, not Pradhana relation.
+  - Grammar: compound noun
+  - Alternate glosses: fear-transcendence, security-through-identity
+- **tad-bhāva-āpatti**
+  - Gloss: arrival into that very being
+  - Context: Moksha is interpreted as identity-realization rather than spatial conjunction.
+  - Grammar: compound noun
+  - Alternate glosses: becoming-that realization, identity-attainment
+- **pratibuddha-jīva-adhikāra**
+  - Gloss: domain of the awakened jiva
+  - Context: Instruction addresses the knower in transition from ignorance to stabilized non-dual insight.
+  - Grammar: compound noun
+  - Alternate glosses: awakened-seeker locus, realizing-subject context
+- **pradhāna-jīva-vyāvṛtti-yugma**
+  - Gloss: paired exclusion of Pradhana and finite self
+  - Context: Fearlessness criterion simultaneously rejects inert cause and bound individual as final referent.
+  - Grammar: compound noun
+  - Alternate glosses: double exclusion frame, two-candidate elimination
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

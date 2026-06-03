@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "atah",
+        "gloss": "therefore/from this reason",
+        "contextual_sense": "Read as hetu indicating transition to Brahman-inquiry from prior discerned grounds.",
+        "grammatical_role": "indeclinable causal particle",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "hence",
+          "for this reason"
+        ]
+      },
+      {
+        "headword_iast": "hetvartha",
+        "gloss": "causal-force meaning",
+        "contextual_sense": "Bhashya insists atah functions logically, not merely sequentially.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "reason-value",
+          "causal import"
+        ]
+      },
+      {
+        "headword_iast": "karma-phala-anityatva",
+        "gloss": "impermanence of ritual fruits",
+        "contextual_sense": "Scriptural evidence of finite outcomes motivates seeking the highest purushartha.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "transience of works-results",
+          "non-eternity of ritual gain"
+        ]
+      },
+      {
+        "headword_iast": "brahma-vidya-paratva",
+        "gloss": "supremacy of Brahman-knowledge",
+        "contextual_sense": "Contrasted with finite karmic attainments as reason for inquiry shift.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "primacy of liberating knowledge",
+          "highest epistemic path"
+        ]
+      },
+      {
+        "headword_iast": "jijnasa-pravritti-hetu",
+        "gloss": "motivating ground for inquiry",
+        "contextual_sense": "Combines finite-result critique with liberation orientation.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "inquiry impetus",
+          "reason for turning to Brahman-question"
         ]
       }
     ],

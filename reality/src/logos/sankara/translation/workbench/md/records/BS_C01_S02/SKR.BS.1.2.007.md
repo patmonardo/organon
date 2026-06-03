@@ -33,11 +33,21 @@ Core move: predicate-fit test excludes embodied jiva while preserving antaryami 
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
+- **anupapatti**
+  - Gloss: non-fit, incoherence
+  - Context: Reasoning form used to exclude embodied jiva as bearer of expansive predicates.
   - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+  - Alternate glosses: inapplicability, logical mismatch
+- **sarira**
+  - Gloss: body-bounded embodied self
+  - Context: Candidate referent rejected because cited predicates exceed bodily delimitation.
+  - Grammar: noun
+  - Alternate glosses: embodied locus, corporeal individual
+- **tu (avadharana)**
+  - Gloss: restrictive particle
+  - Context: Marks exclusion: not the embodied self, but the alternative established referent.
+  - Grammar: indeclinable particle
+  - Alternate glosses: contrastive limiter, exclusion marker
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

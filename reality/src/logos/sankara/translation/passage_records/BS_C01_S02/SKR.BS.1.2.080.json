@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "jabala-amnaya",
+        "gloss": "Jabala Upanishadic transmission",
+        "contextual_sense": "Additional scriptural witness for contemplative localization of the same Supreme referent.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "Jabala testimony",
+          "Jabala textual tradition"
+        ]
+      },
+      {
+        "headword_iast": "avimukta-pratistha",
+        "gloss": "establishment in Avimukta locus",
+        "contextual_sense": "Craniofacial localization is read as contemplative marker, not ontic confinement.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "Avimukta localization",
+          "sacred-site establishment"
+        ]
+      },
+      {
+        "headword_iast": "abhimana-nirvacana",
+        "gloss": "etymological interpretation through reflective naming",
+        "contextual_sense": "Name-analysis is used to support contemplative orientation toward inner Brahman.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "etymological contemplative gloss",
+          "name-based doctrinal unpacking"
+        ]
+      },
+      {
+        "headword_iast": "murdha-cubuka-antaram",
+        "gloss": "space between crown and chin",
+        "contextual_sense": "Body-zone invoked as meditative mapping field in upasana discourse.",
+        "grammatical_role": "locative compound phrase",
+        "alternate_glosses": [
+          "craniofacial interval",
+          "head-to-chin contemplative field"
+        ]
+      },
+      {
+        "headword_iast": "vaisvanara-isvara-sthairya",
+        "gloss": "stabilization of Vaisvanara as Ishvara",
+        "contextual_sense": "Jabala support consolidates the already reached doctrinal conclusion.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "Vaisvanara-Ishvara consolidation",
+          "conclusion reinforcement"
         ]
       }
     ],

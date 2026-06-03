@@ -22,13 +22,33 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "brahman",
-        "gloss": "ultimate reality",
-        "contextual_sense": "Primary interpretive referent under adjudication in this adhikarana",
-        "grammatical_role": "noun",
+        "headword_iast": "sarvatra-prasiddha-upadesa",
+        "gloss": "instruction concerning what is established everywhere",
+        "contextual_sense": "Siddhanta principle: a referent already universally fixed in Vedanta is carried forward unless compellingly displaced.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "absolute",
-          "supreme principle"
+          "universally established instruction",
+          "widely attested doctrinal indication"
+        ]
+      },
+      {
+        "headword_iast": "prakrta-hana",
+        "gloss": "abandonment of the current topic",
+        "contextual_sense": "Hermeneutic fault avoided by keeping Brahman as continuous referent through the passage.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "topic-break",
+          "loss of contextual subject"
+        ]
+      },
+      {
+        "headword_iast": "aprakrta-prakriya",
+        "gloss": "forcing an unrelated procedure/topic",
+        "contextual_sense": "Undesired interpretive shift that would occur if jiva were introduced without adequate textual anchoring.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "untopical transition",
+          "foreign procedural shift"
         ]
       }
     ],

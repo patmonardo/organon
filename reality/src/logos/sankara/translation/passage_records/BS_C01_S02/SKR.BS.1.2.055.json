@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "headword_iast": "visesana",
+        "gloss": "specific qualifying descriptor",
+        "contextual_sense": "Text marks bhuta-yoni with descriptors transcending jiva and Pradhana.",
         "grammatical_role": "noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "qualifier",
+          "determinative marker"
+        ]
+      },
+      {
+        "headword_iast": "bheda-vyapadesa",
+        "gloss": "statement of distinction",
+        "contextual_sense": "Passage explicitly differentiates the referent from subordinate principles.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "distinction ascription",
+          "differentiating declaration"
+        ]
+      },
+      {
+        "headword_iast": "divya-amurta-purusa",
+        "gloss": "divine formless person",
+        "contextual_sense": "Qualifier set used to establish transcendence beyond empirical and material candidates.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "luminous formless purusa",
+          "transcendent person"
+        ]
+      },
+      {
+        "headword_iast": "sabahya-abhyantara",
+        "gloss": "both external and internal",
+        "contextual_sense": "Pervasive scope marker fitting Brahman, not finite jiva.",
+        "grammatical_role": "compound adjective",
+        "alternate_glosses": [
+          "within-and-without",
+          "inner-outer pervasion"
+        ]
+      },
+      {
+        "headword_iast": "jiva-pradhana-vyavaccheda",
+        "gloss": "exclusion of jiva and Pradhana",
+        "contextual_sense": "Bhashya effect: both lower candidates are eliminated by qualifier and distinction evidence.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "dual-candidate exclusion",
+          "non-Brahman disqualification"
         ]
       }
     ],

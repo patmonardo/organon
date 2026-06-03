@@ -33,11 +33,31 @@ Creative intentionality is used to distinguish Supreme Self from bound individua
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **netara-anupapatti-bhūmikā**
+  - Gloss: ground for excluding the other (jiva)
+  - Context: Argument opens by testing whether anandamaya predicates can coherently fit a bound individual self.
+  - Grammar: compound noun
+  - Alternate glosses: jiva-exclusion setup, other-self non-fit basis
+- **so’kāmayata-vākya**
+  - Gloss: the “He willed” declaration
+  - Context: Pre-creation willing is read as intentional sovereignty beyond samsaric cognition limits.
+  - Grammar: quoted doctrinal phrase
+  - Alternate glosses: creative-willing statement, cosmic intention clause
+- **bahu-syām-prajāyeya**
+  - Gloss: may I become many, may I be born forth
+  - Context: Multiplicity-projection statement functions as mark of universal causal agency.
+  - Grammar: quoted scriptural phrase
+  - Alternate glosses: emanative resolve formula, plural-manifestation intention
+- **jagat-sṛṣṭi-śakti**
+  - Gloss: capacity for total world-projection
+  - Context: Creation of the whole order is incompatible with finite jiva’s constrained operational range.
+  - Grammar: compound noun
+  - Alternate glosses: cosmic manifestation power, universal production capacity
+- **īśvara-jīva-viveka**
+  - Gloss: discrimination between Lord and individual
+  - Context: Predicate analysis is used to preserve doctrinal clarity at the empirical explanatory level.
+  - Grammar: compound noun
+  - Alternate glosses: Lord-self distinction, creator-individual discernment
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

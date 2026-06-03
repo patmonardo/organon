@@ -33,11 +33,31 @@ Turns the opponent's power-language into an argument for conscious witness-causa
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **guṇa-sāmya**
+  - Gloss: equilibrium of gunas
+  - Context: Used to rebut claim that Pradhana could host operative omniscient cognition in causal state.
+  - Grammar: compound noun
+  - Alternate glosses: guna equilibrium, pre-differentiated quality balance
+- **sarvajñatva-asambhava**
+  - Gloss: impossibility of omniscience (for Pradhana)
+  - Context: Demonstrates mismatch between inert equilibrium and all-knowing causality.
+  - Grammar: compound noun
+  - Alternate glosses: omniscience non-fit, all-knowingness impossibility
+- **jñāna-śakti-vāda-nirāsa**
+  - Gloss: rejection of latent-knowledge-power workaround
+  - Context: Bhashya denies that mere potentiality rescues Pradhana from acetanatva objection.
+  - Grammar: compound noun
+  - Alternate glosses: latent cognition thesis denial, potential omniscience refutation
+- **nitya-jñāna**
+  - Gloss: eternal knowledge
+  - Context: Prepared as positive model for Ishvara’s omniscience against episodic cognition accounts.
+  - Grammar: compound noun
+  - Alternate glosses: permanent cognition, ever-present knowledge
+- **caitanya-lakṣaṇa-kāraṇa**
+  - Gloss: cause marked by consciousness
+  - Context: Reinforces that jagat-cause requires sentience, not matter-equilibrium.
+  - Grammar: compound noun
+  - Alternate glosses: consciousness-marked source, aware causal principle
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

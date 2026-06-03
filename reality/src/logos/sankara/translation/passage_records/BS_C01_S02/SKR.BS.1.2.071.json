@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "saksat-upasana",
+        "gloss": "direct contemplation (without intermediary symbol)",
+        "contextual_sense": "Jaimini allows direct Brahman-reference of Vaisvanara without mandatory jatharagni-symbol mediation.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "immediate meditation",
+          "non-symbolic contemplation"
+        ]
+      },
+      {
+        "headword_iast": "pratika-upadhi-kalpana",
+        "gloss": "construction of symbol/adjunct mediation",
+        "contextual_sense": "Earlier interpretive option acknowledged, but no longer required as exclusive reading.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "symbolic superimposition model",
+          "mediated-upasana construction"
+        ]
+      },
+      {
+        "headword_iast": "jaimini-mata",
+        "gloss": "Jaimini’s doctrinal position",
+        "contextual_sense": "Affirms avirodha in taking Vaisvanara as Brahman directly in this context.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "Jaiminian view",
+          "Jaimini’s interpretive thesis"
+        ]
+      },
+      {
+        "headword_iast": "sabda-rudhi-vs-prakarana",
+        "gloss": "lexical convention versus contextual force",
+        "contextual_sense": "Semantic conflict is resolved by contextual-linga priority over routine fire-term usage.",
+        "grammatical_role": "contrastive hermeneutic compound",
+        "alternate_glosses": [
+          "usage-context tension",
+          "convention-context adjudication"
+        ]
+      },
+      {
+        "headword_iast": "yoga-vrtti",
+        "gloss": "etymological/derivative semantic extension",
+        "contextual_sense": "Used to broaden Vaisvanara beyond narrow jatharagni literalism.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "etymological sense",
+          "semantic derivation mode"
         ]
       }
     ],

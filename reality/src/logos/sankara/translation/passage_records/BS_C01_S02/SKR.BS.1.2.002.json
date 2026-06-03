@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "brahman",
-        "gloss": "ultimate reality",
-        "contextual_sense": "Primary interpretive referent under adjudication in this adhikarana",
+        "headword_iast": "manomaya",
+        "gloss": "mind-formed",
+        "contextual_sense": "Qualifier contested in ChU 3.14: whether it points to jiva or to qualified Brahman.",
+        "grammatical_role": "adjectival compound",
+        "alternate_glosses": [
+          "constituted by mind",
+          "mental-form qualifier"
+        ]
+      },
+      {
+        "headword_iast": "kratu",
+        "gloss": "resolve, intentional determination",
+        "contextual_sense": "Taken as meditative resolve that functions as upasana-operation and shapes post-mortem becoming.",
         "grammatical_role": "noun",
         "alternate_glosses": [
-          "absolute",
-          "supreme principle"
+          "intention",
+          "meditative volition"
+        ]
+      },
+      {
+        "headword_iast": "sama-vidhi",
+        "gloss": "injunction of tranquility",
+        "contextual_sense": "Purvapaksha reading of \"sarvam khalv idam brahma\" as dispassion-producing instruction rather than direct upasana-vidhi.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "calming injunction",
+          "equanimity directive"
+        ]
+      },
+      {
+        "headword_iast": "jiva-linga",
+        "gloss": "indicator of individual self",
+        "contextual_sense": "Feature read as pointing toward embodied experiencer rather than para-brahman.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "individual-self marker",
+          "embodied-self sign"
         ]
       }
     ],

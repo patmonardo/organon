@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "taddharma-vyapadesa",
+        "gloss": "ascription of His (Brahman’s) properties",
+        "contextual_sense": "Principal proof: attributes named in the passage align with Brahman alone.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "Brahman-property attribution",
+          "divine attribute designation"
+        ]
+      },
+      {
+        "headword_iast": "adhidaiva-adhy-atma-bheda",
+        "gloss": "distinction across deity and embodied domains",
+        "contextual_sense": "Controller is shown as distinct from each controlled domain, including presiding deities.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "domain-level differentiation",
+          "cosmic-individual distinction grid"
+        ]
+      },
+      {
+        "headword_iast": "sarva-vikara-niyantrtva",
+        "gloss": "governance over all modifications",
+        "contextual_sense": "Universal control function exceeds finite agents and supports Paramatman identity.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "total regulatory sovereignty",
+          "universal modification-control"
+        ]
+      },
+      {
+        "headword_iast": "anavastha-pratisedha",
+        "gloss": "blocking infinite regress",
+        "contextual_sense": "If controller were itself controlled entity, regress would follow; Brahman avoids this.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "regress prevention",
+          "non-regressive closure"
+        ]
+      },
+      {
+        "headword_iast": "paramatma-nirnaya",
+        "gloss": "determination as Supreme Self",
+        "contextual_sense": "Bhashya resolves antaryamin identity conclusively in favor of Brahman.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "Supreme-self adjudication",
+          "final controller identity"
         ]
       }
     ],

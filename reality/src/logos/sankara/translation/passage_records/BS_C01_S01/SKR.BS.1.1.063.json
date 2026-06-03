@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "netaraḥ anupapatteḥ",
+        "gloss": "not the other, due to impossibility",
+        "contextual_sense": "Sutra states that predicate-set does not fit the non-supreme candidate.",
+        "grammatical_role": "sutra reason phrase",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "other excluded by non-fit",
+          "jiva denied on coherence grounds"
+        ]
+      },
+      {
+        "headword_iast": "anupapatti-liṅga",
+        "gloss": "indicator from incoherence",
+        "contextual_sense": "Logical non-fit of attributes is treated as a decisive referential test.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "coherence-failure sign",
+          "predicate mismatch marker"
+        ]
+      },
+      {
+        "headword_iast": "jīva-vyāvṛtti",
+        "gloss": "exclusion of jiva referent",
+        "contextual_sense": "Aphoristic closure removes residual finite-self interpretation of anandamaya.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "individual-self exclusion",
+          "bound-self disqualification"
+        ]
+      },
+      {
+        "headword_iast": "sūtra-nibandha-sāra",
+        "gloss": "compressed argumentative core",
+        "contextual_sense": "Short form condenses the prior prose demonstration into one inferential pivot.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "aphoristic gist",
+          "compressed doctrinal kernel"
         ]
       }
     ],

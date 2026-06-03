@@ -33,11 +33,26 @@ Compact causal-epistemic marker.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **sastra-yonitvat**
+  - Gloss: because Brahman is source/ground of scripture
+  - Context: Sutra encapsulates omniscience argument via relation to revealed corpus.
+  - Grammar: ablative reason phrase
+  - Alternate glosses: from scriptural-source status, due to revelation-origin relation
+- **sarvajnatva-linga**
+  - Gloss: indicator of omniscience
+  - Context: Scripture-source status functions as linga for Brahman’s all-knowing nature.
+  - Grammar: compound noun
+  - Alternate glosses: omniscience marker, all-knowing indicator
+- **sutra-sanksepa**
+  - Gloss: compressed aphoristic statement
+  - Context: Brief line condenses extended argument developed in bhashya.
+  - Grammar: compound noun
+  - Alternate glosses: terse doctrinal compression, concise reasoning node
+- **brahma-pramana-niscaya**
+  - Gloss: determination of valid means for Brahman
+  - Context: Locks inquiry into sruti-grounded mode.
+  - Grammar: compound noun
+  - Alternate glosses: Brahman-proof fixation, epistemic determination
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

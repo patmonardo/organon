@@ -33,11 +33,26 @@ Sutra ties intentional willing directly to conscious Brahman-causality.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **kāmāc ca na anumānāpekṣā**
+  - Gloss: and because of willing, no need for inference
+  - Context: Sutra states volitional scriptural evidence makes Pradhana-hypothesis unnecessary.
+  - Grammar: sutra reason phrase
+  - Alternate glosses: willing removes inferential dependence, intent-language excludes anumana fallback
+- **anumāna-apekṣā-nivṛtti**
+  - Gloss: cessation of inferential dependence
+  - Context: Revelatory clarity cancels demand for external causal theorizing.
+  - Grammar: compound noun
+  - Alternate glosses: inference-need withdrawal, speculative supplement cancellation
+- **kāma-liṅga**
+  - Gloss: indicator from desire/intention expression
+  - Context: Kama-expression functions as semantic seal of consciousness in causal subject.
+  - Grammar: compound noun
+  - Alternate glosses: volition sign, intent marker
+- **pradhāna-anavakāśa**
+  - Gloss: no interpretive room for Pradhana
+  - Context: With intentionality fixed, inert-first-principle cannot be reintroduced.
+  - Grammar: compound noun
+  - Alternate glosses: Pradhana non-availability, matter-cause no-entry condition
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "kutas ca",
+        "gloss": "and from what reason?",
+        "contextual_sense": "Transition question introducing fresh inferential support for Brahman identification.",
+        "grammatical_role": "interrogative causal phrase",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "what further basis",
+          "on what ground further"
+        ]
+      },
+      {
+        "headword_iast": "bhuta-yoni-paramesvara",
+        "gloss": "source of beings as Supreme Lord",
+        "contextual_sense": "Target conclusion announced before giving final reason in next sutra.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "cosmic source as Ishvara",
+          "origin-principle Supreme reading"
+        ]
+      },
+      {
+        "headword_iast": "uttara-hetu-prastava",
+        "gloss": "proposal of a further proof",
+        "contextual_sense": "Signals movement from previous arguments to an additional conclusive indicator.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "next-ground introduction",
+          "supplementary reason setup"
+        ]
+      },
+      {
+        "headword_iast": "adhikarana-sandhi",
+        "gloss": "bridge within the argument sequence",
+        "contextual_sense": "Connects earlier bheda/visesana reasoning to the rupa-upanyasa proof.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "topical transition knot",
+          "inferential bridge step"
         ]
       }
     ],

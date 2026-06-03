@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "headword_iast": "smaryamanam",
+        "gloss": "that which is remembered (Smrti)",
+        "contextual_sense": "Sutra invokes remembered material as legitimate supplementary evidence.",
+        "grammatical_role": "past participial substantive",
+        "alternate_glosses": [
+          "remembered tradition",
+          "Smrti witness"
+        ]
+      },
+      {
+        "headword_iast": "anumanam",
+        "gloss": "inferential support",
+        "contextual_sense": "Smrti serves as inferential linga rather than primary independent pramana.",
         "grammatical_role": "noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "inference",
+          "indicative reasoning"
+        ]
+      },
+      {
+        "headword_iast": "syat",
+        "gloss": "may function as",
+        "contextual_sense": "Modal phrasing indicates supportive-status without displacing Sruti primacy.",
+        "grammatical_role": "optative verb form",
+        "alternate_glosses": [
+          "can be treated as",
+          "may count as"
+        ]
+      },
+      {
+        "headword_iast": "smrti-samarthana",
+        "gloss": "validation of Smrti corroboration",
+        "contextual_sense": "Aphorism legitimizes remembered cosmic-form testimony in this adhikarana.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "Smrti corroborative role",
+          "memory-text support function"
         ]
       }
     ],

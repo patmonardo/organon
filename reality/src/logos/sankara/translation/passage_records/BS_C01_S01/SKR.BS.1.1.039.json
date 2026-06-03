@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "tan-niṣṭhasya mokṣa-upadeśāt",
+        "gloss": "because liberation is taught for one abiding in that",
+        "contextual_sense": "Sutra infers referent must be ultimate self-reality, not insentient substrate.",
+        "grammatical_role": "ablative reason phrase",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "from abidance-liberation teaching",
+          "moksha-linked inference"
+        ]
+      },
+      {
+        "headword_iast": "mokṣa-lakṣaṇa-parīkṣā",
+        "gloss": "liberation-criterion test",
+        "contextual_sense": "Interpretation is vetted by whether it can ground the promised release.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "emancipation criterion",
+          "release-condition audit"
+        ]
+      },
+      {
+        "headword_iast": "pradhāna-pratiṣedha",
+        "gloss": "denial of Pradhana referent",
+        "contextual_sense": "If established-in-that yields moksha, inert cause reading is disqualified.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "inert-referent negation",
+          "Sankhya-candidate rejection"
+        ]
+      },
+      {
+        "headword_iast": "upadeśa-phala-ekatā",
+        "gloss": "unity of instruction and fruit",
+        "contextual_sense": "Doctrinal consistency requires teaching-object and salvific result to converge.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "pedagogy-fruit unity",
+          "instruction-result coherence"
         ]
       }
     ],

@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "vaktr-atmopadesa-aksepa",
+        "gloss": "objection from speaker self-reference",
+        "contextual_sense": "Indra's first-person statements are taken as evidence for limited deity referent.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "narrative voice objection",
+          "speaker-self challenge"
+        ]
+      },
+      {
+        "headword_iast": "adhyatma-sambandha-bhuman",
+        "gloss": "preponderance of inner-self orientation",
+        "contextual_sense": "Chapter-wide inward orientation counters a merely mythic speaker-level reading.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "inner-self predominance",
+          "adhyatma thematic weight"
+        ]
+      },
+      {
+        "headword_iast": "upasamhara-bala",
+        "gloss": "force of conclusion section",
+        "contextual_sense": "Closing statements function as interpretive anchors for earlier ambiguous lines.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "concluding force",
+          "terminal interpretive weight"
+        ]
+      },
+      {
+        "headword_iast": "devata-vacya-parimiti",
+        "gloss": "limitation of deity-literal reading",
+        "contextual_sense": "Narrative deity frame is constrained so it does not override the deeper doctrinal target.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "deity-reading boundary",
+          "speaker-literalism limit"
         ]
       }
     ],

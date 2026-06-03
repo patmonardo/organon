@@ -33,11 +33,31 @@ Grammatical decision safeguards the directness and scope of Vedantic inquiry.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **brahmano jijnasa**
+  - Gloss: inquiry into Brahman
+  - Context: Compound is parsed with object-focused genitive (karmani-sasthi).
+  - Grammar: compound phrase
+  - Alternate glosses: Brahman-inquiry, questioning Brahman as object
+- **karmani-sasthi**
+  - Gloss: objective genitive construction
+  - Context: Secures Brahman as that-to-be-known rather than merely related topic.
+  - Grammar: grammatical term
+  - Alternate glosses: object-genitive, accusative-like genitive force
+- **visaya-niscaya**
+  - Gloss: determination of principal subject
+  - Context: Bhashya blocks alternative broad lexical readings of brahman.
+  - Grammar: compound noun
+  - Alternate glosses: topic fixation, subject adjudication
+- **janmady-asya-yatah-laksana**
+  - Gloss: defining mark: source of origination etc.
+  - Context: Forward reference anchors intended Brahman as jagat-karana.
+  - Grammar: compound noun
+  - Alternate glosses: cosmological defining indicator, creation-etc source mark
+- **sruti-anvaya**
+  - Gloss: continuity with scriptural context
+  - Context: Contextual coherence supports this object-determining grammatical parse.
+  - Grammar: compound noun
+  - Alternate glosses: scriptural linkage, textual continuity
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 opening pass with stable inferential-tag schema.

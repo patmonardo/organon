@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "īkṣateḥ",
+        "gloss": "from deliberate seeing/willing",
+        "contextual_sense": "Sutra reason-sign that causal subject in the text is intentional, not inert.",
+        "grammatical_role": "ablative reason term",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "because of intentional regard",
+          "on account of purposive cognition"
+        ]
+      },
+      {
+        "headword_iast": "aśabdam",
+        "gloss": "not scripturally denoted here",
+        "contextual_sense": "Excludes Pradhana since the Upanishadic wording does not establish it as referent.",
+        "grammatical_role": "predicate adjective",
+        "alternate_glosses": [
+          "textually unsupported",
+          "non-signified by this passage"
+        ]
+      },
+      {
+        "headword_iast": "cetana-kāraṇa-niyama",
+        "gloss": "constraint that cause be sentient",
+        "contextual_sense": "The deliberative marker functions as a rule restricting admissible first-cause candidates.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "sentient-cause requirement",
+          "awareness-conditioned causality rule"
+        ]
+      },
+      {
+        "headword_iast": "pradhāna-vyāvṛtti",
+        "gloss": "exclusion of Pradhana option",
+        "contextual_sense": "The concise sutra cuts off Sankhya reinterpretation opened in the prior objection.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "Sankhya-cause elimination",
+          "inert-principle exclusion"
         ]
       }
     ],

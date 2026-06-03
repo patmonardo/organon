@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "netara-anupapatti-bhūmikā",
+        "gloss": "ground for excluding the other (jiva)",
+        "contextual_sense": "Argument opens by testing whether anandamaya predicates can coherently fit a bound individual self.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "jiva-exclusion setup",
+          "other-self non-fit basis"
+        ]
+      },
+      {
+        "headword_iast": "so’kāmayata-vākya",
+        "gloss": "the “He willed” declaration",
+        "contextual_sense": "Pre-creation willing is read as intentional sovereignty beyond samsaric cognition limits.",
+        "grammatical_role": "quoted doctrinal phrase",
+        "alternate_glosses": [
+          "creative-willing statement",
+          "cosmic intention clause"
+        ]
+      },
+      {
+        "headword_iast": "bahu-syām-prajāyeya",
+        "gloss": "may I become many, may I be born forth",
+        "contextual_sense": "Multiplicity-projection statement functions as mark of universal causal agency.",
+        "grammatical_role": "quoted scriptural phrase",
+        "alternate_glosses": [
+          "emanative resolve formula",
+          "plural-manifestation intention"
+        ]
+      },
+      {
+        "headword_iast": "jagat-sṛṣṭi-śakti",
+        "gloss": "capacity for total world-projection",
+        "contextual_sense": "Creation of the whole order is incompatible with finite jiva’s constrained operational range.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "cosmic manifestation power",
+          "universal production capacity"
+        ]
+      },
+      {
+        "headword_iast": "īśvara-jīva-viveka",
+        "gloss": "discrimination between Lord and individual",
+        "contextual_sense": "Predicate analysis is used to preserve doctrinal clarity at the empirical explanatory level.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "Lord-self distinction",
+          "creator-individual discernment"
         ]
       }
     ],

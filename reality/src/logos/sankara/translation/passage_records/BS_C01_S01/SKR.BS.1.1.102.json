@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "upasa-traividhya",
+        "gloss": "threefold contemplative mode",
+        "contextual_sense": "One Brahman is meditated through prana-dharma, prajna-dharma, and own intrinsic nature.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "triple upasana structure",
+          "three-mode contemplation"
+        ]
+      },
+      {
+        "headword_iast": "upadhi-dvaya-dharma",
+        "gloss": "two adjunct-conditioned attribute sets",
+        "contextual_sense": "Prana and prajna features are treated as dependent overlays on one underlying object.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "dual adjunct attributes",
+          "conditioned property pair"
+        ]
+      },
+      {
+        "headword_iast": "sva-dharma-brahman",
+        "gloss": "Brahman in intrinsic mode",
+        "contextual_sense": "Beyond adjunct-layers, the text explicitly preserves Brahman's own defining nature.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "intrinsic Brahman mode",
+          "self-nature referent"
+        ]
+      },
+      {
+        "headword_iast": "ashritatva",
+        "gloss": "dependence or rootedness",
+        "contextual_sense": "Jiva and main-prana indicators are accepted as dependent on Brahman, not autonomous referents.",
+        "grammatical_role": "abstract noun",
+        "alternate_glosses": [
+          "dependent status",
+          "groundedness"
+        ]
+      },
+      {
+        "headword_iast": "ekopasya-siddhi",
+        "gloss": "establishment of a single object of meditation",
+        "contextual_sense": "The entire reconciliation aims to retain one upasya across varied descriptive lenses.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "single contemplative target",
+          "one-object proof"
         ]
       }
     ],

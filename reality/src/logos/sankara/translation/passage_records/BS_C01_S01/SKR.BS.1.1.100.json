@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "sastra-drstya upadesah",
+        "gloss": "instruction from scriptural realization-vision",
+        "contextual_sense": "Sutra states that first-person teaching is from realized standpoint recognized in scripture.",
+        "grammatical_role": "sutra phrase",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "vision-based instruction",
+          "realization-grounded teaching"
+        ]
+      },
+      {
+        "headword_iast": "vamadeva-vat",
+        "gloss": "as in Vamadeva",
+        "contextual_sense": "Classic precedent authorizes identity-speech without narrowing referent to individual ego.",
+        "grammatical_role": "comparative phrase",
+        "alternate_glosses": [
+          "like Vamadeva",
+          "Vamadeva paradigm"
+        ]
+      },
+      {
+        "headword_iast": "atmopadesa-laksana",
+        "gloss": "interpretive handling of self-referential speech",
+        "contextual_sense": "First-person pronoun is read functionally through realization context.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "self-speech interpretation",
+          "I-statement hermeneutic"
+        ]
+      },
+      {
+        "headword_iast": "deha-devata-vyavrtti",
+        "gloss": "exclusion of bodily-deity limitation",
+        "contextual_sense": "Speaker is not confined to finite form when uttering realization-based identity.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "finite speaker exclusion",
+          "deity-form limitation denied"
         ]
       }
     ],

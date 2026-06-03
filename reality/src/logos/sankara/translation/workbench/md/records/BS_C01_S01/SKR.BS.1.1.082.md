@@ -33,11 +33,26 @@ Methodological cleanup distinguishes real from only apparent lexical ambiguity.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **prāṇa-prāṇa-vacana-viveka**
+  - Gloss: discrimination of the phrase 'prana of prana'
+  - Context: Methodological cleanup: not every prana-phrase creates genuine ambiguity in the same way as the present passage.
+  - Grammar: compound noun
+  - Alternate glosses: prana-phrase discrimination, context-sensitive reading
+- **śabda-bheda**
+  - Gloss: difference of wording
+  - Context: Sutra rejects false equivalence where wording and contextual setting already differ.
+  - Grammar: compound noun
+  - Alternate glosses: lexical distinction, verbal difference
+- **prakaraṇa-niyama**
+  - Gloss: governance by context
+  - Context: The surrounding topic controls whether a term is genuinely open to multiple readings.
+  - Grammar: compound noun
+  - Alternate glosses: contextual constraint, topic-bound determination
+- **pitar-pitṛ-prayoga**
+  - Gloss: father-of-father usage
+  - Context: Illustrative grammar shows how a genitive-plus-nominative pattern fixes the intended relation.
+  - Grammar: illustrative compound
+  - Alternate glosses: possessive example, relational usage model
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

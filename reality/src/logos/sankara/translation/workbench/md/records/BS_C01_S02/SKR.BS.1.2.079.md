@@ -33,11 +33,26 @@ Sutra close endorsing the sampatti-based account.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **sampatteh**
+  - Gloss: because of correspondence-integration
+  - Context: Sutra reason endorsing macro-micro mapping as explanation of pradesa-matra.
+  - Grammar: ablative reason term
+  - Alternate glosses: from identificatory integration, due to correspondence
+- **jaiminis**
+  - Gloss: Jaimini (as authority)
+  - Context: Names proponent of the preferred integration explanation.
+  - Grammar: proper noun
+  - Alternate glosses: Jaimini authority, Jaiminian source
+- **tatha hi darsayati**
+  - Gloss: for thus he shows/demonstrates
+  - Context: Signals explicit textual demonstration backing the cited interpretive view.
+  - Grammar: demonstrative evidentiary phrase
+  - Alternate glosses: thus it is shown, textually demonstrated so
+- **pradesa-matra-nirukti**
+  - Gloss: resolved sense of span-language
+  - Context: Finalized via correspondence-model rather than literal quantification.
+  - Grammar: compound noun
+  - Alternate glosses: measure-language determination, span-term resolution
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

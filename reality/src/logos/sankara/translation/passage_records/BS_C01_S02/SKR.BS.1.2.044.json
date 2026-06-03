@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "headword_iast": "antaryamin",
+        "gloss": "inner controller",
+        "contextual_sense": "Core disputed referent in the Brhadaranyaka sequence on internal governance.",
         "grammatical_role": "noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "inner regulator",
+          "immanent governor"
+        ]
+      },
+      {
+        "headword_iast": "yamayati",
+        "gloss": "controls, restrains, governs",
+        "contextual_sense": "Functional verb driving candidate comparison over who can truly exercise universal internal control.",
+        "grammatical_role": "finite verb",
+        "alternate_glosses": [
+          "rules from within",
+          "internally governs"
+        ]
+      },
+      {
+        "headword_iast": "samsaya",
+        "gloss": "hermeneutic doubt",
+        "contextual_sense": "Opening uncertainty whether controller is deity, yogin, Brahman, or another principle.",
+        "grammatical_role": "noun",
+        "alternate_glosses": [
+          "interpretive uncertainty",
+          "referential doubt"
+        ]
+      },
+      {
+        "headword_iast": "bahu-vikalpa-purvapaksa",
+        "gloss": "multi-option prima facie framing",
+        "contextual_sense": "Purvapaksa expands candidate field due to novelty and functional breadth of the term.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "multiple-candidate thesis",
+          "plural-option objection frame"
+        ]
+      },
+      {
+        "headword_iast": "sruti-upakrama",
+        "gloss": "opening textual frame of revelation",
+        "contextual_sense": "Initial scriptural formulation sets the thematic scope for antaryamin adjudication.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "revealed opening context",
+          "textual proem"
         ]
       }
     ],

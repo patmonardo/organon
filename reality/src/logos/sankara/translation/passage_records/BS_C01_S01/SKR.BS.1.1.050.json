@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "kutaś ca sarvajñaṃ brahma jagataḥ kāraṇam",
+        "gloss": "what establishes omniscient Brahman as world-cause?",
+        "contextual_sense": "Interrogative setup cues the move to explicit scriptural-hearing proof.",
+        "grammatical_role": "interrogative phrase",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "on what ground Brahman as cosmic cause?",
+          "proof prompt for omniscient cause"
+        ]
+      },
+      {
+        "headword_iast": "śruti-pratyakṣa-hetu-prastāva",
+        "gloss": "proposal of direct-text reason",
+        "contextual_sense": "Transition indicates shift from contextual inference to explicit citation force.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "explicit-hearing ground setup",
+          "direct scriptural reason introduction"
+        ]
+      },
+      {
+        "headword_iast": "siddhānta-dṛḍhīkaraṇa",
+        "gloss": "fortification of established conclusion",
+        "contextual_sense": "Adds positive corroboration after prior rounds of opponent refutation.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "conclusion reinforcement",
+          "final thesis strengthening"
+        ]
+      },
+      {
+        "headword_iast": "adhikaraṇa-avasāna-krama",
+        "gloss": "closing sequence of the topical unit",
+        "contextual_sense": "Signals the argument is approaching final seal through direct testimony.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "topic-closing cadence",
+          "endgame progression"
         ]
       }
     ],

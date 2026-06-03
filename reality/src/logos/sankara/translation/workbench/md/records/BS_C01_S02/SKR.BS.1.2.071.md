@@ -33,11 +33,31 @@ Moves from mediated symbol/upadhi reading to direct Brahman-reference without ab
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **saksat-upasana**
+  - Gloss: direct contemplation (without intermediary symbol)
+  - Context: Jaimini allows direct Brahman-reference of Vaisvanara without mandatory jatharagni-symbol mediation.
+  - Grammar: compound noun
+  - Alternate glosses: immediate meditation, non-symbolic contemplation
+- **pratika-upadhi-kalpana**
+  - Gloss: construction of symbol/adjunct mediation
+  - Context: Earlier interpretive option acknowledged, but no longer required as exclusive reading.
+  - Grammar: compound noun
+  - Alternate glosses: symbolic superimposition model, mediated-upasana construction
+- **jaimini-mata**
+  - Gloss: Jaimini’s doctrinal position
+  - Context: Affirms avirodha in taking Vaisvanara as Brahman directly in this context.
+  - Grammar: compound noun
+  - Alternate glosses: Jaiminian view, Jaimini’s interpretive thesis
+- **sabda-rudhi-vs-prakarana**
+  - Gloss: lexical convention versus contextual force
+  - Context: Semantic conflict is resolved by contextual-linga priority over routine fire-term usage.
+  - Grammar: contrastive hermeneutic compound
+  - Alternate glosses: usage-context tension, convention-context adjudication
+- **yoga-vrtti**
+  - Gloss: etymological/derivative semantic extension
+  - Context: Used to broaden Vaisvanara beyond narrow jatharagni literalism.
+  - Grammar: compound noun
+  - Alternate glosses: etymological sense, semantic derivation mode
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

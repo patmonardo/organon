@@ -33,11 +33,26 @@ Sutra seal for multi-linga integration by discourse continuity.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **pranah tathanugamat**
+  - Gloss: prana, because of coherent progression
+  - Context: Sutra states that discourse-flow consistency fixes prana as Brahman in this locus.
+  - Grammar: sutra phrase
+  - Alternate glosses: prana by textual continuity, flow-grounded determination
+- **anugama-pramana**
+  - Gloss: evidence from thematic carry-through
+  - Context: A holistic criterion is elevated above local lexical reflex.
+  - Grammar: compound noun
+  - Alternate glosses: continuity evidence, coherence warrant
+- **linga-ekikarana**
+  - Gloss: unification of indicators
+  - Context: Diverse signs are reconciled under one referent instead of split into separate targets.
+  - Grammar: compound noun
+  - Alternate glosses: marker integration, sign consolidation
+- **adhikarana-samapti-cihna**
+  - Gloss: marker of topical closure
+  - Context: Sutra seals the primary adjudication before the speaker-objection sequence.
+  - Grammar: compound noun
+  - Alternate glosses: closure sign, argument completion marker
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

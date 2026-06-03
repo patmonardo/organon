@@ -33,11 +33,31 @@ Smrti operates as corroborative inferential evidence, not independent scriptural
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **smrti-anumana-linga**
+  - Gloss: remembered text as inferential indicator
+  - Context: Smrti cosmic-body verse is treated as a valid linga supporting Vaisvanara=Brahman.
+  - Grammar: compound noun
+  - Alternate glosses: memory-text inference sign, Smrti corroborative marker
+- **trilokyatmaka-rupa**
+  - Gloss: form constituted by three worlds
+  - Context: Universal form-ascription aligns with Brahmanic cosmological scope.
+  - Grammar: compound noun
+  - Alternate glosses: three-world body, cosmic triadic form
+- **lokatman**
+  - Gloss: Self of the worlds
+  - Context: Smrti epithet reinforcing totalized, non-local referent identity.
+  - Grammar: compound noun
+  - Alternate glosses: world-self, cosmic self
+- **sruti-mula-smrti-nyaya**
+  - Gloss: principle that valid Smrti rests on Sruti source
+  - Context: Justifies importing Smrti as secondary evidence in Vedantic referent determination.
+  - Grammar: compound hermeneutic principle
+  - Alternate glosses: Sruti-grounded Smrti rule, memory-text source principle
+- **vaisvanara-brahman-samarthana**
+  - Gloss: support for Vaisvanara as Brahman
+  - Context: Net function of Smrti citation: corroborative reinforcement of siddhanta.
+  - Grammar: compound noun
+  - Alternate glosses: Vaisvanara-Brahman support, cosmic-self confirmation
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

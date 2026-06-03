@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "samanvaya-siddhānta-saṃgraha",
+        "gloss": "recap of established convergence doctrine",
+        "contextual_sense": "Summarizes prior proof that Vedanta culminates in Brahman-atman realization.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "convergence recap",
+          "established purport summary"
+        ]
+      },
+      {
+        "headword_iast": "sarvajña-sarvaśakti-jagat-kāraṇa",
+        "gloss": "omniscient omnipotent world-cause",
+        "contextual_sense": "Restates doctrinal target before launching further rival-system refutations.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "all-knowing all-powerful source",
+          "comprehensive causal absolute"
+        ]
+      },
+      {
+        "headword_iast": "sāṅkhyādi-pūrvapakṣa",
+        "gloss": "Sankhya and related prima facie cosmologies",
+        "contextual_sense": "Introduces next argumentative wave where rival inferential causes are staged then refuted.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "rival cosmological objections",
+          "systematic opponent theses"
+        ]
+      },
+      {
+        "headword_iast": "adhikaraṇa-vistara-prastāva",
+        "gloss": "proposal of expanded topical refutation sequence",
+        "contextual_sense": "Serves as hinge from foundational harmonization to extended polemical defense.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "expanded argument setup",
+          "next-phase transition"
         ]
       }
     ],

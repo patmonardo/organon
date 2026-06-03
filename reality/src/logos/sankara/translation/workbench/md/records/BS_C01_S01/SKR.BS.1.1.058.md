@@ -33,11 +33,31 @@ Causal language about giving bliss confirms abundance semantics.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **ānanda-hetu-vyapadeśa**
+  - Gloss: designation as cause of bliss
+  - Context: Scripture describes Brahman as that which makes others blissful, implying intrinsic fullness.
+  - Grammar: compound noun
+  - Alternate glosses: bliss-cause predication, source-of-joy attribution
+- **ānandayati-iti-vyākhyā**
+  - Gloss: interpretation of “it causes bliss”
+  - Context: Verbal analysis supports a possessor-overflow model, not borrowed or incidental joy.
+  - Grammar: compound noun
+  - Alternate glosses: causative-bliss exegesis, joy-bestowal gloss
+- **dhanika-dṛṣṭānta**
+  - Gloss: wealth-analogy for abundance inference
+  - Context: One who enriches others is inferred rich; likewise source of bliss is bliss-plentiful.
+  - Grammar: illustrative compound
+  - Alternate glosses: prosperity analogy, abundance inference example
+- **prācurya-siddhi**
+  - Gloss: establishment of plenitude sense
+  - Context: Causal-dispenser language confirms mayat as abundance-marker here.
+  - Grammar: compound noun
+  - Alternate glosses: abundance proof, plenitude confirmation
+- **vikāra-pakṣa-nivṛtti**
+  - Gloss: withdrawal of modification thesis
+  - Context: Derivative-entity reading loses force once causal bliss language is admitted.
+  - Grammar: compound noun
+  - Alternate glosses: product-reading retreat, vikara-thesis collapse
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

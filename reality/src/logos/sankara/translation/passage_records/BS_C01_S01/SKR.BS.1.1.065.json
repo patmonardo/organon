@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "bheda-vyapadeśāc ca",
+        "gloss": "and because difference is explicitly stated",
+        "contextual_sense": "Sutra treats differentiation-language as further evidence against jiva-identification.",
+        "grammatical_role": "sutra reason phrase",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "from stated distinction",
+          "due to explicit dual reference"
+        ]
+      },
+      {
+        "headword_iast": "labdha-labdhavya-nyāya",
+        "gloss": "principle that attained is distinct from attainer",
+        "contextual_sense": "Supports reading of pedagogical duality without positing ultimate two-self doctrine.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "attainer-attained rule",
+          "acquirer-object principle"
+        ]
+      },
+      {
+        "headword_iast": "jīva-pakṣa-nivṛtti",
+        "gloss": "withdrawal of jiva thesis",
+        "contextual_sense": "Finite-self referent is decisively retired in this stage of adjudication.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "individualist reading retreat",
+          "bound-self thesis withdrawal"
+        ]
+      },
+      {
+        "headword_iast": "adhikaraṇa-dṛḍhīkaraṇa",
+        "gloss": "strengthening of topical conclusion",
+        "contextual_sense": "Adds a second line of support after anupapatti-based exclusion.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "argument reinforcement",
+          "conclusion fortification"
         ]
       }
     ],

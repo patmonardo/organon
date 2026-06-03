@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "kāmāc ca na anumānāpekṣā",
+        "gloss": "and because of willing, no need for inference",
+        "contextual_sense": "Sutra states volitional scriptural evidence makes Pradhana-hypothesis unnecessary.",
+        "grammatical_role": "sutra reason phrase",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "willing removes inferential dependence",
+          "intent-language excludes anumana fallback"
+        ]
+      },
+      {
+        "headword_iast": "anumāna-apekṣā-nivṛtti",
+        "gloss": "cessation of inferential dependence",
+        "contextual_sense": "Revelatory clarity cancels demand for external causal theorizing.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "inference-need withdrawal",
+          "speculative supplement cancellation"
+        ]
+      },
+      {
+        "headword_iast": "kāma-liṅga",
+        "gloss": "indicator from desire/intention expression",
+        "contextual_sense": "Kama-expression functions as semantic seal of consciousness in causal subject.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "volition sign",
+          "intent marker"
+        ]
+      },
+      {
+        "headword_iast": "pradhāna-anavakāśa",
+        "gloss": "no interpretive room for Pradhana",
+        "contextual_sense": "With intentionality fixed, inert-first-principle cannot be reintroduced.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "Pradhana non-availability",
+          "matter-cause no-entry condition"
         ]
       }
     ],

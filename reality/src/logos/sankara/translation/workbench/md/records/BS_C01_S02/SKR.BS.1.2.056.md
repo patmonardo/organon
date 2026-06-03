@@ -33,11 +33,26 @@ Sutra condensation of the twofold exclusion test.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **visesana-bheda-vyapadesabhyam**
+  - Gloss: by qualification and statement of distinction
+  - Context: Dual-ground sutra reason for excluding jiva and Pradhana.
+  - Grammar: instrumental compound phrase
+  - Alternate glosses: via qualifiers and differentiation, through twofold indicator
+- **na itarau**
+  - Gloss: not the other two
+  - Context: Sutra’s explicit rejection of rival pair (jiva and Pradhana).
+  - Grammar: negative dual phrase
+  - Alternate glosses: neither of the alternatives, both others excluded
+- **dvi-hetu-nisedha**
+  - Gloss: two-reason exclusion
+  - Context: Aphorism compresses bhashya’s positive and differentiating arguments.
+  - Grammar: compound noun
+  - Alternate glosses: paired-ground refutation, dual-criterion denial
+- **bhuta-yoni-siddhanta**
+  - Gloss: settled doctrine of source-principle
+  - Context: Stabilizes Brahman-reference after eliminating both rival candidates.
+  - Grammar: compound noun
+  - Alternate glosses: source-principle final view, cosmic-origin doctrinal settlement
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

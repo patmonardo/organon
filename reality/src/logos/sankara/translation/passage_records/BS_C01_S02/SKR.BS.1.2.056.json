@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "visesana-bheda-vyapadesabhyam",
+        "gloss": "by qualification and statement of distinction",
+        "contextual_sense": "Dual-ground sutra reason for excluding jiva and Pradhana.",
+        "grammatical_role": "instrumental compound phrase",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "via qualifiers and differentiation",
+          "through twofold indicator"
+        ]
+      },
+      {
+        "headword_iast": "na itarau",
+        "gloss": "not the other two",
+        "contextual_sense": "Sutra’s explicit rejection of rival pair (jiva and Pradhana).",
+        "grammatical_role": "negative dual phrase",
+        "alternate_glosses": [
+          "neither of the alternatives",
+          "both others excluded"
+        ]
+      },
+      {
+        "headword_iast": "dvi-hetu-nisedha",
+        "gloss": "two-reason exclusion",
+        "contextual_sense": "Aphorism compresses bhashya’s positive and differentiating arguments.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "paired-ground refutation",
+          "dual-criterion denial"
+        ]
+      },
+      {
+        "headword_iast": "bhuta-yoni-siddhanta",
+        "gloss": "settled doctrine of source-principle",
+        "contextual_sense": "Stabilizes Brahman-reference after eliminating both rival candidates.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "source-principle final view",
+          "cosmic-origin doctrinal settlement"
         ]
       }
     ],

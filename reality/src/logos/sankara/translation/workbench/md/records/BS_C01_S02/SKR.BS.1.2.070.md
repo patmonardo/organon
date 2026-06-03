@@ -33,11 +33,26 @@ Sutra close of alternative-fire rejection.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **ata eva**
+  - Gloss: therefore, for that very reason
+  - Context: Sutra connective indicating direct dependence on already established reasoning.
+  - Grammar: inferential connective phrase
+  - Alternate glosses: hence, on that basis itself
+- **na devata bhutam ca**
+  - Gloss: not deity and not elemental fire
+  - Context: Aphoristic exclusion of both residual non-Brahman options.
+  - Grammar: negative coordinate phrase
+  - Alternate glosses: neither deity nor element-fire, dual-candidate denial
+- **purva-hetu-anusandhana**
+  - Gloss: follow-through of prior reasons
+  - Context: Sutra compresses the inherited argumentative chain into final exclusion statement.
+  - Grammar: compound noun
+  - Alternate glosses: prior-proof continuation, reason-chain integration
+- **vaisvanara-siddhanta-sthirikarana**
+  - Gloss: stabilization of Vaisvanara doctrinal conclusion
+  - Context: Locks the adhikarana on Ishvara-reference by removing remaining alternatives.
+  - Grammar: compound noun
+  - Alternate glosses: final Vaisvanara settlement, conclusion consolidation
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

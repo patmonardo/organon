@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "prāṇa-śabda-saṃśaya",
+        "gloss": "doubt about the word prana",
+        "contextual_sense": "Issue is whether prana denotes vital-air principle or Brahman in udgitha context.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "prana-term ambiguity",
+          "vital-force referential dispute"
+        ]
+      },
+      {
+        "headword_iast": "mukhya-prāṇa-pakṣa",
+        "gloss": "thesis of literal vital-breath meaning",
+        "contextual_sense": "Purvapaksha leans on common usage and physiological prominence.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "vital-air reading",
+          "primary breath thesis"
+        ]
+      },
+      {
+        "headword_iast": "nidra-prabodha-kriyā-dṛṣṭānta",
+        "gloss": "example from sleep-wake functional behavior",
+        "contextual_sense": "Operational evidence of life-breath is used to secure non-Brahman interpretation.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "sleep-wake function example",
+          "vital operation illustration"
+        ]
+      },
+      {
+        "headword_iast": "vākya-śeṣa-bala-hrāsa-prayatna",
+        "gloss": "attempt to weaken sentence-end force",
+        "contextual_sense": "Objection tries to reinterpret cosmic language so it remains compatible with vital-air thesis.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "post-clause force reduction",
+          "sentence-tail downgrading attempt"
+        ]
+      },
+      {
+        "headword_iast": "devatā-prastāva-vicāra",
+        "gloss": "inquiry into the deity of prastava",
+        "contextual_sense": "Ritual-musical framing complicates referent and invites layered exegesis.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "prastava deity inquiry",
+          "chant-deity determination debate"
         ]
       }
     ],

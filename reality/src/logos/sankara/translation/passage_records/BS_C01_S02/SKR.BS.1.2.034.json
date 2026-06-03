@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "headword_iast": "upapatti",
+        "gloss": "coherent explanatory fit",
+        "contextual_sense": "Primary criterion: only Ishvara adequately supports the full predicate set in the passage.",
         "grammatical_role": "noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "rational fit",
+          "explanatory suitability"
+        ]
+      },
+      {
+        "headword_iast": "atmatva",
+        "gloss": "selfhood predicate",
+        "contextual_sense": "Taken in principal sense as fitting the Supreme Self rather than derivative entities.",
+        "grammatical_role": "abstract noun",
+        "alternate_glosses": [
+          "status as Self",
+          "true self-reference"
+        ]
+      },
+      {
+        "headword_iast": "amrtatva-abhayatva",
+        "gloss": "immortality and fearlessness",
+        "contextual_sense": "Key theological predicates marshaled to disqualify finite ocular candidates.",
+        "grammatical_role": "compound abstract noun",
+        "alternate_glosses": [
+          "deathlessness and fearlessness",
+          "transcendent safety predicates"
+        ]
+      },
+      {
+        "headword_iast": "aliptatva",
+        "gloss": "non-adherence, untouchedness",
+        "contextual_sense": "Eye-contact imagery (ghee/water) is read as marker of unaffected transcendence.",
+        "grammatical_role": "abstract noun",
+        "alternate_glosses": [
+          "unstained nature",
+          "non-contact purity"
+        ]
+      },
+      {
+        "headword_iast": "samyadvama-vamani-bhamani",
+        "gloss": "special functional epithets in the section",
+        "contextual_sense": "Attribute-cluster interpreted as fitting Ishvara-level significance, not mere reflection or organ-function.",
+        "grammatical_role": "epithet series",
+        "alternate_glosses": [
+          "sectional divine epithets",
+          "functional qualifier triad"
         ]
       }
     ],

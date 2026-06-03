@@ -33,11 +33,26 @@ Sutra marker for the multi-designation hermeneutic.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **sthanadi-vyapadesat**
+  - Gloss: because of place-and-related designations
+  - Context: Sutra endorses interpretive legitimacy of location-style language in Brahman passages.
+  - Grammar: ablative reason phrase
+  - Alternate glosses: from locative designation, due to site-form attribution
+- **upasana-prayojana**
+  - Gloss: purpose of meditative instruction
+  - Context: Explains why finite-style descriptors are retained without literal limitation implications.
+  - Grammar: compound noun
+  - Alternate glosses: contemplative purpose, instructional aim
+- **vyavahara-anukula-bhasa**
+  - Gloss: language adapted to practical cognition
+  - Context: Scriptural speech mode that facilitates practice while preserving higher non-dual doctrine.
+  - Grammar: compound noun
+  - Alternate glosses: pedagogically adapted diction, practice-oriented expression
+- **sutra-samarthana**
+  - Gloss: supportive aphoristic confirmation
+  - Context: Concise reaffirmation of the previous bhashya’s generalizing hermeneutic principle.
+  - Grammar: compound noun
+  - Alternate glosses: brief doctrinal support, aphoristic reinforcement
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

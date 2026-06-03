@@ -33,11 +33,26 @@ Hermeneutic deepening of 1.2.1: intended predicate fitness determines referent.
 ## Analysis
 
 ### Lexical Notes
-- **brahman**
-  - Gloss: ultimate reality
-  - Context: Primary interpretive referent under adjudication in this adhikarana
+- **vivaksa**
+  - Gloss: intended force of expression
+  - Context: Operationally defined via what is normatively to be adopted in upasana, not psychological speaker intention.
   - Grammar: noun
-  - Alternate glosses: absolute, supreme principle
+  - Alternate glosses: intended purport, semantic intention
+- **upadeyata**
+  - Gloss: adoptability, practical uptake
+  - Context: Criterion for deciding which predicates are doctrinally operative in meditation-context.
+  - Grammar: abstract noun
+  - Alternate glosses: normative applicability, meditative uptake value
+- **satyasankalpa**
+  - Gloss: whose resolve is unfailingly real
+  - Context: Predicate treated as properly fitting omnipotent saguna-brahman rather than finite jiva.
+  - Grammar: bahuvrihi compound
+  - Alternate glosses: true-willed, infallible in resolve
+- **saguna-brahman**
+  - Gloss: Brahman considered with qualifying attributes
+  - Context: Mode in which mind/prana and other relational predicates are admissibly attributed without denying nirguna statements.
+  - Grammar: compound noun
+  - Alternate glosses: qualified Brahman, attribute-bearing Brahman
 
 ## QA Uncertainty Notes
 - Long bhashya blocks translated as draft prose and require line-level philological curation.

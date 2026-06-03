@@ -33,11 +33,26 @@ Recensional evidence is used as a decisive exclusion marker.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **sarira-na-antaryami**
+  - Gloss: embodied self is not the inner controller
+  - Context: Sutra confirms jiva exclusion from antaryamin role after prior arguments.
+  - Grammar: negative doctrinal phrase
+  - Alternate glosses: jiva not antaryamin, embodied agent exclusion
+- **ubhaye api**
+  - Gloss: in both recensions/textual branches
+  - Context: Appeal to dual textual traditions as convergent evidence for distinction.
+  - Grammar: locative emphatic phrase
+  - Alternate glosses: in both readings, across both shakhas
+- **bhedena adhiyate**
+  - Gloss: is taught as distinct
+  - Context: Core indicator: text presents embodied self as governed, not governing absolute.
+  - Grammar: predicate phrase
+  - Alternate glosses: read as differentiated, taught in distinction
+- **sakha-sammata-pramana**
+  - Gloss: evidence agreed across recensions
+  - Context: Hermeneutic strength arises from Kanva/Madhyandina convergence.
+  - Grammar: compound noun
+  - Alternate glosses: cross-recensional proof, dual-branch corroboration
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

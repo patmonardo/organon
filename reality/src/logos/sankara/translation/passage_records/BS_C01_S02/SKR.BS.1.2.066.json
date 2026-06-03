@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "sabda-adibhyaḥ",
+        "gloss": "from word-usage and related indicators",
+        "contextual_sense": "Purvapaksa bases objection on lexical convention and associated ritual correspondences.",
+        "grammatical_role": "ablative plural phrase",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "from linguistic and allied signs",
+          "word-based grounds"
+        ]
+      },
+      {
+        "headword_iast": "antah-pratisthana",
+        "gloss": "inner location/abiding within",
+        "contextual_sense": "Interior placement is used to argue for digestive fire over transcendent Brahman.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "internal seat",
+          "inward establishment"
+        ]
+      },
+      {
+        "headword_iast": "jatharagni-rudhi",
+        "gloss": "conventional fixation on gastric fire",
+        "contextual_sense": "Lexical rootedness claim that Vaisvanara usually denotes digestive fire.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "digestive-fire convention",
+          "jatharagni lexical default"
+        ]
+      },
+      {
+        "headword_iast": "garhapatyadi-sambandha",
+        "gloss": "relation to ritual fires like garhapatya",
+        "contextual_sense": "Ritual-fire mapping is marshaled to restrict referent to fire-principle readings.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "sacrificial-fire correspondence",
+          "ritual homologous mapping"
+        ]
+      },
+      {
+        "headword_iast": "purvapaksa-pratijna",
+        "gloss": "objectional thesis declaration",
+        "contextual_sense": "Sets the explicit non-Ishvara claim prior to drsti-upadesa response.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "prima facie claim",
+          "initial refutand position"
         ]
       }
     ],

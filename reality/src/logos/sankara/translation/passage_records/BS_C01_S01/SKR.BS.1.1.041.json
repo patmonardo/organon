@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "hetvantara-prastāva",
+        "gloss": "proposal of an additional reason",
+        "contextual_sense": "Interrogative bridge opens the next exclusion argument beyond prior grounds.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "new-reason transition",
+          "further-proof setup"
+        ]
+      },
+      {
+        "headword_iast": "praśna-vākyārambha",
+        "gloss": "question-form onset",
+        "contextual_sense": "Signals structural shift from settled point to supplementary demonstration.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "interrogative pivot",
+          "query-led transition"
+        ]
+      },
+      {
+        "headword_iast": "pradhāna-vācya-śaṅkā",
+        "gloss": "doubt that sat might denote Pradhana",
+        "contextual_sense": "Residual ambiguity is explicitly raised so it can be decisively removed.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "Pradhana-denotation doubt",
+          "referential uncertainty"
+        ]
+      },
+      {
+        "headword_iast": "adhikaraṇa-gati-sandhi",
+        "gloss": "junction in topic progression",
+        "contextual_sense": "Marks connective seam between completed refutation and upcoming inferential move.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "argument-flow hinge",
+          "topic-transition seam"
         ]
       }
     ],

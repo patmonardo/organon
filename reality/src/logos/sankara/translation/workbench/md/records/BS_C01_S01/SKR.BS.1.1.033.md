@@ -33,11 +33,26 @@ Sutra hinge for sentient-cause requirement.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **īkṣateḥ**
+  - Gloss: from deliberate seeing/willing
+  - Context: Sutra reason-sign that causal subject in the text is intentional, not inert.
+  - Grammar: ablative reason term
+  - Alternate glosses: because of intentional regard, on account of purposive cognition
+- **aśabdam**
+  - Gloss: not scripturally denoted here
+  - Context: Excludes Pradhana since the Upanishadic wording does not establish it as referent.
+  - Grammar: predicate adjective
+  - Alternate glosses: textually unsupported, non-signified by this passage
+- **cetana-kāraṇa-niyama**
+  - Gloss: constraint that cause be sentient
+  - Context: The deliberative marker functions as a rule restricting admissible first-cause candidates.
+  - Grammar: compound noun
+  - Alternate glosses: sentient-cause requirement, awareness-conditioned causality rule
+- **pradhāna-vyāvṛtti**
+  - Gloss: exclusion of Pradhana option
+  - Context: The concise sutra cuts off Sankhya reinterpretation opened in the prior objection.
+  - Grammar: compound noun
+  - Alternate glosses: Sankhya-cause elimination, inert-principle exclusion
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

@@ -33,11 +33,26 @@ Atman-word is decisive constraint on interpretation.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **gauṇaś cet na**
+  - Gloss: if secondary sense, no
+  - Context: Sutra rejects figurative fallback as soon as self-term evidence is considered.
+  - Grammar: conditional phrase
+  - Alternate glosses: secondary-reading denied, metaphor option blocked
+- **ātma-śabdāt**
+  - Gloss: because of atman-word
+  - Context: Decisive inferential pivot: lexical self-reference secures conscious subject.
+  - Grammar: ablative reason term
+  - Alternate glosses: from self-designator, owing to atman expression
+- **mukhya-vṛtti-bala**
+  - Gloss: force of primary signification
+  - Context: Primary meaning takes precedence where no compelling contradiction appears.
+  - Grammar: compound noun
+  - Alternate glosses: literal-sense priority, direct denotation strength
+- **pradhāna-asambhava**
+  - Gloss: Pradhana untenability
+  - Context: Insentient candidate cannot satisfy required self-referential semantics.
+  - Grammar: compound noun
+  - Alternate glosses: inert-candidate failure, Sankhya option collapse
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

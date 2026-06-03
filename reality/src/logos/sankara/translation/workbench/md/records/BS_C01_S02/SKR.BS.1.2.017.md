@@ -33,11 +33,26 @@ Sutra answer to the locality-size objection.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **arbhakaukas**
+  - Gloss: small abode expression
+  - Context: Sutra handles minuteness-language as contemplative specification, not proof of jiva-reference.
+  - Grammar: compound expression
+  - Alternate glosses: minute-seat formulation, small-locus phrase
+- **upamana (akasa-drsanta)**
+  - Gloss: analogy via space-example
+  - Context: Local speech about all-pervasive space supports analogous reading for Brahman localization-language.
+  - Grammar: inferential device
+  - Alternate glosses: illustrative analogy, space-example reasoning
+- **upasana-nimitta**
+  - Gloss: meditation-conditioned basis
+  - Context: Ground for reading restrictive descriptors as practice-tools within a larger non-restrictive ontology.
+  - Grammar: compound noun
+  - Alternate glosses: contemplative condition, practice-driven qualifier
+- **sarvagatatva**
+  - Gloss: all-pervasiveness
+  - Context: Underlying property preserved despite pedagogical localization language.
+  - Grammar: abstract noun
+  - Alternate glosses: omnipresence, unrestricted pervasion
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

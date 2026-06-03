@@ -33,11 +33,31 @@ Removes the epistemic objection that self cannot host superimposition.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **pratyagatman**
+  - Gloss: inner self/immediate subject
+  - Context: Though said non-objectifiable in one sense, it remains aparoksa in asmadvritti for adhyasa discourse.
+  - Grammar: compound noun
+  - Alternate glosses: inward self, immediate witness-self
+- **aparoksa**
+  - Gloss: immediate, non-mediated givenness
+  - Context: Used to rebut objection that adhyasa requires only externally objectified substrates.
+  - Grammar: adjective/substantive
+  - Alternate glosses: directly evident, non-indirectly known
+- **asmat-pratyaya-visayatva**
+  - Gloss: being the content of the I-cognition
+  - Context: Establishes self-presence sufficient for superimposition dynamics.
+  - Grammar: compound noun
+  - Alternate glosses: I-notion referentiality, ego-cognition scope
+- **adhyasa-anapeksa-purovarti**
+  - Gloss: adhyasa not restricted to present perceptual substrate
+  - Context: Defends broader error structure beyond strict face-to-face object conditions.
+  - Grammar: compound doctrinal phrase
+  - Alternate glosses: non-local substrate requirement, not-only-present-object error rule
+- **atmadhyasa-upapatti**
+  - Gloss: coherence of self-superimposition
+  - Context: Conclusion: subject-side adhyasa remains philosophically admissible.
+  - Grammar: compound noun
+  - Alternate glosses: self-superimposition validity, subject-error coherence
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 opening pass with stable inferential-tag schema.

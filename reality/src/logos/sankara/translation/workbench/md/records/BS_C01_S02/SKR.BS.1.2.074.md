@@ -33,11 +33,26 @@ Introduces the interpretive sequence of alternative explanations.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **pradesa-matra-sruti**
+  - Gloss: scriptural statement of limited measure
+  - Context: Transition centers on explaining why such wording can still refer to Brahman.
+  - Grammar: compound noun
+  - Alternate glosses: measure-language scripture, finite-span declaration
+- **paramesvara-parigraha**
+  - Gloss: acceptance of Supreme as referent
+  - Context: The challenge is to preserve this referent while accounting for measure-language.
+  - Grammar: compound noun
+  - Alternate glosses: Ishvara-reference acceptance, Supreme-referent commitment
+- **vyakhyana-arambha**
+  - Gloss: beginning of explanatory resolution
+  - Context: Marks shift from established conclusion to modality-specific reconciliation.
+  - Grammar: compound noun
+  - Alternate glosses: exegetical start, interpretive unpacking onset
+- **adhikarana-sandhi**
+  - Gloss: argumental transition linkage
+  - Context: Bridges direct-Vaisvanara conclusion into pradesa-matra interpretive sub-debate.
+  - Grammar: compound noun
+  - Alternate glosses: topic bridge, inferential transition
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

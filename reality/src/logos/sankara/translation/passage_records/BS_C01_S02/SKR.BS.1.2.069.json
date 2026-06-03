@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "na devata na bhutagni",
+        "gloss": "neither deity nor elemental fire",
+        "contextual_sense": "Bhashya excludes secondary fire-candidates under established reasoning constraints.",
+        "grammatical_role": "negative dual doctrinal phrase",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "not presiding deity or physical fire",
+          "dual exclusion clause"
+        ]
+      },
+      {
+        "headword_iast": "karya-karana-atiyoga",
+        "gloss": "excess over derivative causal status",
+        "contextual_sense": "Text attributes scope beyond dependent cosmic principles.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "beyond derivative causality",
+          "surpassing subordinate origin"
+        ]
+      },
+      {
+        "headword_iast": "atma-vacana-anupapatti",
+        "gloss": "incoherence of Self-designation for those candidates",
+        "contextual_sense": "Atma-language is argued to fit only highest referent in this context.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "self-term mismatch",
+          "atma-predicate non-fit"
+        ]
+      },
+      {
+        "headword_iast": "hetu-anukramana",
+        "gloss": "reuse of previously established reasons",
+        "contextual_sense": "Response explicitly carries forward prior criteria rather than introducing new ones.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "reason carry-forward",
+          "inferential continuity"
+        ]
+      },
+      {
+        "headword_iast": "vaisvanara-isvara-ekartha",
+        "gloss": "single intended sense: Vaisvanara as Ishvara",
+        "contextual_sense": "Final narrowing against residual alternate-candidate drift.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "univocal Supreme referent",
+          "single-sense determination"
         ]
       }
     ],

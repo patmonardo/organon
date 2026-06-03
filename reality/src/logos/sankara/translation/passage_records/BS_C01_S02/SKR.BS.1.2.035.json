@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "antarah",
+        "gloss": "the inner one",
+        "contextual_sense": "Sutra identifies the eye-interior referent as transcendent indweller, not incidental image.",
+        "grammatical_role": "adjectival substantive",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "interior indweller",
+          "inner presence"
+        ]
+      },
+      {
+        "headword_iast": "upapatter iti",
+        "gloss": "because of explanatory fit",
+        "contextual_sense": "Causal marker that grounds the decision in predicate coherence from preceding bhashya.",
+        "grammatical_role": "ablative reason phrase",
+        "alternate_glosses": [
+          "on account of suitability",
+          "from coherent application"
+        ]
+      },
+      {
+        "headword_iast": "aksi-antah-purusa",
+        "gloss": "person within the eye",
+        "contextual_sense": "Now decisively read as Brahman/Ishvara by attribute adequacy.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "intra-ocular person",
+          "eye-indweller"
+        ]
+      },
+      {
+        "headword_iast": "sutra-nirnaya",
+        "gloss": "aphoristic doctrinal determination",
+        "contextual_sense": "Brief line that seals the multi-candidate debate from record 033-034.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "terse verdict",
+          "aphoristic resolution"
         ]
       }
     ],

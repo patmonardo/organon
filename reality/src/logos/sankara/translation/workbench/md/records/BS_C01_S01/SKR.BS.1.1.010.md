@@ -33,11 +33,26 @@ Repetition functions as formal sutra anchor within the running bhashya sequence.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **atha**
+  - Gloss: now/thereafter
+  - Context: Signals commencement conditioned by prior preparedness and causal ground.
+  - Grammar: indeclinable particle
+  - Alternate glosses: thereupon, at this juncture
+- **atah**
+  - Gloss: therefore
+  - Context: Marks inferential transition from finite-result critique to Brahman inquiry.
+  - Grammar: causal particle
+  - Alternate glosses: hence, for this reason
+- **brahma-jijnasa**
+  - Gloss: inquiry into Brahman
+  - Context: Programmatic sutra declaration of the Vedanta project.
+  - Grammar: compound noun
+  - Alternate glosses: Brahman-investigation, nondual inquiry project
+- **adhikarana-pravesa**
+  - Gloss: entry into the opening topical unit
+  - Context: Functions as root launch-node for all subsequent sutra adjudications.
+  - Grammar: compound noun
+  - Alternate glosses: foundational topic entry, opening argument initiation
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

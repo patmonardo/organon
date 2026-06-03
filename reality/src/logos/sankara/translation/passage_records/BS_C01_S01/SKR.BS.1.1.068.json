@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "tad-yoga-upadeśa",
+        "gloss": "instruction of union/identity with that",
+        "contextual_sense": "Teaching promises fearlessness through assimilation to the discussed anandamaya referent.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "that-identity instruction",
+          "Brahman-assimilation teaching"
+        ]
+      },
+      {
+        "headword_iast": "abhaya-prāpti",
+        "gloss": "attainment of fearlessness",
+        "contextual_sense": "Freedom from fear is treated as diagnostic fruit of Brahman-realization, not Pradhana relation.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "fear-transcendence",
+          "security-through-identity"
+        ]
+      },
+      {
+        "headword_iast": "tad-bhāva-āpatti",
+        "gloss": "arrival into that very being",
+        "contextual_sense": "Moksha is interpreted as identity-realization rather than spatial conjunction.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "becoming-that realization",
+          "identity-attainment"
+        ]
+      },
+      {
+        "headword_iast": "pratibuddha-jīva-adhikāra",
+        "gloss": "domain of the awakened jiva",
+        "contextual_sense": "Instruction addresses the knower in transition from ignorance to stabilized non-dual insight.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "awakened-seeker locus",
+          "realizing-subject context"
+        ]
+      },
+      {
+        "headword_iast": "pradhāna-jīva-vyāvṛtti-yugma",
+        "gloss": "paired exclusion of Pradhana and finite self",
+        "contextual_sense": "Fearlessness criterion simultaneously rejects inert cause and bound individual as final referent.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "double exclusion frame",
+          "two-candidate elimination"
         ]
       }
     ],

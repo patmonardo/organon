@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "tad-dharma-upadeśa",
+        "gloss": "teaching of those very (Brahmanic) attributes",
+        "contextual_sense": "Sinlessness, Vedic-totality, and universal rulership are treated as decisive markers of Ishvara.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "attribute-based instruction",
+          "Brahman-sign exposition"
+        ]
+      },
+      {
+        "headword_iast": "pāpmarahitatva",
+        "gloss": "freedom from sin-defect",
+        "contextual_sense": "Moral-transcendent predicate exceeds empirical jiva limitations.",
+        "grammatical_role": "abstract noun",
+        "alternate_glosses": [
+          "sinlessness",
+          "blemish-transcendence"
+        ]
+      },
+      {
+        "headword_iast": "sarva-veda-gītitva",
+        "gloss": "being sung in all Vedas",
+        "contextual_sense": "Total scriptural scope indicates supreme referent rather than localized deity-fragment.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "Vedic-totality predicate",
+          "all-Vedic praise marker"
+        ]
+      },
+      {
+        "headword_iast": "saguṇa-upāsanā-vyavahāra",
+        "gloss": "qualified contemplative presentation",
+        "contextual_sense": "Form and location are interpreted as pedagogical supports, not ontological constraints.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "devotional-mode presentation",
+          "upasana-oriented manifestation"
+        ]
+      },
+      {
+        "headword_iast": "nirviśeṣa-svarūpa-avirodha",
+        "gloss": "non-conflict with attributeless reality",
+        "contextual_sense": "Bhashya preserves higher nondual teaching while admitting provisional descriptive modes.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "nondual compatibility",
+          "attribute-free essence non-contradiction"
         ]
       }
     ],

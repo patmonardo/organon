@@ -33,11 +33,31 @@ Functions as an internal scholastic recapitulation of the anandamaya adhikarana.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **sūtra-samīkṣā-saṃgraha**
+  - Gloss: synoptic review of sutra sequence
+  - Context: Record consolidates 1.1.12-1.1.19 into one coherent interpretive line.
+  - Grammar: compound noun
+  - Alternate glosses: sutra-chain recap, aphoristic synthesis
+- **brahma-puccha-pradhānatva-vyākhyā**
+  - Gloss: reading puccha as grounding primacy
+  - Context: Tail-language is interpreted as support/foundation marker, not literal parthood.
+  - Grammar: compound noun
+  - Alternate glosses: foundation-reading of puccha, supportive primacy interpretation
+- **abhyāsa-hetu-samanvaya**
+  - Gloss: integration of repetition and causal reasons
+  - Context: Multiple proof-lines are woven into a single referential judgment.
+  - Grammar: compound noun
+  - Alternate glosses: reason-cluster harmonization, multi-hetu integration
+- **kośa-pakṣa-parimiti**
+  - Gloss: limitation of sheath-only reading
+  - Context: Summary shows why layer-logic cannot dominate against stronger contextual signs.
+  - Grammar: compound noun
+  - Alternate glosses: sheath-interpretation boundary, layer-model restriction
+- **siddhānta-pariśuddhi**
+  - Gloss: purification/clarification of final doctrine
+  - Context: Recap removes lingering ambiguities before sutra close.
+  - Grammar: compound noun
+  - Alternate glosses: doctrinal clarification, conclusion refinement
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

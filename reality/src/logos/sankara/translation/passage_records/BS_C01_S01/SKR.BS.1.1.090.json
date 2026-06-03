@@ -22,19 +22,38 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "bhūtādi-pāda-vyapadeśa-upapatti",
+        "gloss": "coherence of the quarter-designations",
+        "contextual_sense": "The sutra compresses the prior argument that the quarter-structure coheres only on a Brahman reading.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": ["quarter-coherence", "designation-fit"]
+      },
+      {
+        "headword_iast": "prakaraṇa-saṅgati",
+        "gloss": "contextual coherence",
+        "contextual_sense": "The whole Gayatri passage is read as internally continuous, not as a loose list of unrelated labels.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": ["topic coherence", "discursive continuity"]
+      },
+      {
+        "headword_iast": "brahma-pramāṇa-bala",
+        "gloss": "strength of Brahman evidence",
+        "contextual_sense": "The interpretive weight now falls on the total pattern of the passage, not on isolated terms.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": ["Brahman-proof strength", "evidential force"]
+      },
+      {
+        "headword_iast": "vaiseṣika-kalpanā-nivṛtti",
+        "gloss": "cessation of atomistic or special-part speculation",
+        "contextual_sense": "The passage is not handled as a puzzle of parts but as a coherent Brahman disclosure.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "fragmentary speculation withdrawal",
+          "part-logic refusal"
         ]
       }
     ],
-    "argument_tags": [
-      "resolution"
-    ]
+    "argument_tags": ["resolution"]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",

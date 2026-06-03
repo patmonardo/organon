@@ -33,11 +33,31 @@ Sets up the crucial debate whether anandamaya is Brahman or a kosha-level deriva
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **ānandamaya-śaṅkā**
+  - Gloss: doubt regarding anandamaya referent
+  - Context: Core uncertainty: whether the term points to supreme Brahman or a conditioned inner sheath-layer.
+  - Grammar: compound noun
+  - Alternate glosses: anandamaya ambiguity, referential doubt
+- **kośa-anukrama**
+  - Gloss: sequence of sheaths
+  - Context: Annamaya through vijnanamaya progression supplies the opponent’s layering framework.
+  - Grammar: compound noun
+  - Alternate glosses: sheath progression, layered self-model
+- **priya-śiras-ādi-rūpaṇa**
+  - Gloss: description via priya-head etc.
+  - Context: Part-structured bliss-body language is cited to argue non-absolute status.
+  - Grammar: compound noun
+  - Alternate glosses: priya-headed structuring, composite-form depiction
+- **śārīratva-liṅga**
+  - Gloss: indicator of embodied/structured status
+  - Context: Opponent reads body-member metaphors as signs of derivative entityhood.
+  - Grammar: compound noun
+  - Alternate glosses: corporeality marker, structured-self indicator
+- **prakṛta-brahma-smṛti**
+  - Gloss: recall of previously introduced Brahman
+  - Context: Counter-pressure in the same passage keeps open a higher referent despite sheath language.
+  - Grammar: compound noun
+  - Alternate glosses: topic-memory of Brahman, prior-subject retention
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

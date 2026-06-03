@@ -33,11 +33,21 @@ Sutra capsule for the preceding debate.
 ## Analysis
 
 ### Lexical Notes
-- **brahman**
-  - Gloss: ultimate reality
-  - Context: Primary interpretive referent under adjudication in this adhikarana
+- **sarvatra-prasiddha**
+  - Gloss: established everywhere
+  - Context: Sutra criterion for preserving Brahman-reference by pan-Vedantic continuity.
+  - Grammar: adjectival compound
+  - Alternate glosses: universally attested, widely recognized
+- **upadesa**
+  - Gloss: instruction, teaching indication
+  - Context: Normative textual indication used as inferential ground for referent determination.
   - Grammar: noun
-  - Alternate glosses: absolute, supreme principle
+  - Alternate glosses: teaching statement, doctrinal instruction
+- **brahma-parata**
+  - Gloss: orientation toward Brahman as referent
+  - Context: Conclusion that the debated sentence belongs to Brahman-doctrine rather than finite-self discourse.
+  - Grammar: compound noun
+  - Alternate glosses: Brahman-reference, Brahman-directed purport
 
 ## QA Uncertainty Notes
 - Long bhashya blocks translated as draft prose and require line-level philological curation.

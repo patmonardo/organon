@@ -33,11 +33,31 @@ Localization vocabulary is treated as phenomenological disclosure, not ontologic
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **pradesa-matra**
+  - Gloss: measure of a limited span (span-like extent)
+  - Context: Finite-measure language requiring reconciliation with all-pervasive Brahman.
+  - Grammar: compound noun
+  - Alternate glosses: span-measure expression, limited-extent term
+- **abhivyakti-nimitta**
+  - Gloss: occasioned by manifestation
+  - Context: Asmarathya explains measure-language as manifestation condition for meditators, not ontic limit.
+  - Grammar: compound noun
+  - Alternate glosses: manifestation-based reason, appearance-conditioned designation
+- **upalabdhi-sthana**
+  - Gloss: site of apprehension (e.g., heart)
+  - Context: Localization belongs to cognition-access points where Brahman is specially manifested.
+  - Grammar: compound noun
+  - Alternate glosses: cognitive locus, perceptual access-point
+- **asmarathya-mata**
+  - Gloss: Asmarathya’s position
+  - Context: Provides first major harmonization of finite-language with infinite referent.
+  - Grammar: compound noun
+  - Alternate glosses: Asmarathya view, Asmarathya interpretation
+- **a-pariccheda-siddhanta**
+  - Gloss: doctrine of non-delimitation
+  - Context: Underlying protection that Brahman is not intrinsically bounded by pradesa terms.
+  - Grammar: compound noun
+  - Alternate glosses: non-limitation principle, unboundedness doctrine
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

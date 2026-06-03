@@ -33,11 +33,26 @@ Interrogative hinge introducing the decisive linga.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **kutas ca**
+  - Gloss: and from what reason?
+  - Context: Transition question introducing fresh inferential support for Brahman identification.
+  - Grammar: interrogative causal phrase
+  - Alternate glosses: what further basis, on what ground further
+- **bhuta-yoni-paramesvara**
+  - Gloss: source of beings as Supreme Lord
+  - Context: Target conclusion announced before giving final reason in next sutra.
+  - Grammar: compound noun
+  - Alternate glosses: cosmic source as Ishvara, origin-principle Supreme reading
+- **uttara-hetu-prastava**
+  - Gloss: proposal of a further proof
+  - Context: Signals movement from previous arguments to an additional conclusive indicator.
+  - Grammar: compound noun
+  - Alternate glosses: next-ground introduction, supplementary reason setup
+- **adhikarana-sandhi**
+  - Gloss: bridge within the argument sequence
+  - Context: Connects earlier bheda/visesana reasoning to the rupa-upanyasa proof.
+  - Grammar: compound noun
+  - Alternate glosses: topical transition knot, inferential bridge step
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

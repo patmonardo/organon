@@ -33,11 +33,26 @@ Sets up the next supporting sutra for the jiva-paramatma reading.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **vijnanatma-paramatma**
+  - Gloss: individual cognizer and Supreme Self pair
+  - Context: Question seeks additional grounds for why this precise dual, rather than alternatives, is adopted in the cave passage.
+  - Grammar: compound dyadic phrase
+  - Alternate glosses: jiva-Ishvara pair, cognizer-Supreme dual
+- **hetu-anvesana**
+  - Gloss: search for inferential ground
+  - Context: Transition move demanding explicit justification beyond prior provisional reasoning.
+  - Grammar: compound noun
+  - Alternate glosses: reason-seeking, proof-demand
+- **adhikarana-parivartana**
+  - Gloss: shift to a new inferential step within topic
+  - Context: Marks the procedural move from accepted claim to demand for stronger linga support.
+  - Grammar: compound noun
+  - Alternate glosses: argument-phase shift, topical progression
+- **samsaya-prastavana**
+  - Gloss: formal introduction of doubt
+  - Context: Frames the need to restate and secure the dual-reference conclusion with further precision.
+  - Grammar: compound noun
+  - Alternate glosses: doubt setup, question framework
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

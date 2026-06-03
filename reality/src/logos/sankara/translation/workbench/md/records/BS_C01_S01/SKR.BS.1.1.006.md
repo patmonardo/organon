@@ -33,11 +33,31 @@ Moves the argument from lexical parsing to existential motive.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **atah**
+  - Gloss: therefore/from this reason
+  - Context: Read as hetu indicating transition to Brahman-inquiry from prior discerned grounds.
+  - Grammar: indeclinable causal particle
+  - Alternate glosses: hence, for this reason
+- **hetvartha**
+  - Gloss: causal-force meaning
+  - Context: Bhashya insists atah functions logically, not merely sequentially.
+  - Grammar: compound noun
+  - Alternate glosses: reason-value, causal import
+- **karma-phala-anityatva**
+  - Gloss: impermanence of ritual fruits
+  - Context: Scriptural evidence of finite outcomes motivates seeking the highest purushartha.
+  - Grammar: compound noun
+  - Alternate glosses: transience of works-results, non-eternity of ritual gain
+- **brahma-vidya-paratva**
+  - Gloss: supremacy of Brahman-knowledge
+  - Context: Contrasted with finite karmic attainments as reason for inquiry shift.
+  - Grammar: compound noun
+  - Alternate glosses: primacy of liberating knowledge, highest epistemic path
+- **jijnasa-pravritti-hetu**
+  - Gloss: motivating ground for inquiry
+  - Context: Combines finite-result critique with liberation orientation.
+  - Grammar: compound noun
+  - Alternate glosses: inquiry impetus, reason for turning to Brahman-question
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 opening pass with stable inferential-tag schema.

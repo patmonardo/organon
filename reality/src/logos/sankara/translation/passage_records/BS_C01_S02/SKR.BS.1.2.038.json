@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "sukha-visista-brahman",
+        "gloss": "Brahman qualified by bliss",
+        "contextual_sense": "Topic continuity claim: the same bliss-qualified Brahman governs subsequent eye-person and path passages.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "bliss-qualified absolute",
+          "sukha-marked Brahman"
+        ]
+      },
+      {
+        "headword_iast": "upakrama-anvaya",
+        "gloss": "continuity with opening statement",
+        "contextual_sense": "Method tying later clauses back to the initial Brahman declaration in the section.",
+        "grammatical_role": "compound hermeneutic term",
+        "alternate_glosses": [
+          "opening-link coherence",
+          "introductory continuity"
+        ]
+      },
+      {
+        "headword_iast": "ka-kha-vyakhya",
+        "gloss": "interpretation of ka/kha terms",
+        "contextual_sense": "Re-reading of symbolic vocabulary used to preserve a unified Brahman topic-thread.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "ka-kha exegesis",
+          "symbolic term interpretation"
+        ]
+      },
+      {
+        "headword_iast": "prakarana-ekavakyata",
+        "gloss": "single-sentence/topic unity of section",
+        "contextual_sense": "Prevents fragmenting Upakosala material into unrelated doctrinal objects.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "sectional unity",
+          "single thematic continuity"
+        ]
+      },
+      {
+        "headword_iast": "devayana-prastava",
+        "gloss": "introduction of the devayana path sequence",
+        "contextual_sense": "Treated as downstream unfoldment of same Brahman-topic, not a topic break.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "path-teaching transition",
+          "arciradi lead-in"
         ]
       }
     ],

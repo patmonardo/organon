@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "gati-sāmānya",
+        "gloss": "uniform scriptural trajectory",
+        "contextual_sense": "Across Upanishads, discourse-direction converges on conscious atman-brahman causality.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "shared movement of texts",
+          "cross-corpus directional unity"
+        ]
+      },
+      {
+        "headword_iast": "vedānta-ekārthya",
+        "gloss": "single purport of Vedanta corpus",
+        "contextual_sense": "Plural incompatible causes are denied by hermeneutic demand for coherent intention.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "corpus-level univocity",
+          "one-intent scriptural reading"
+        ]
+      },
+      {
+        "headword_iast": "vikalpa-kāraṇa-nirāsa",
+        "gloss": "rejection of multiple causal options",
+        "contextual_sense": "Bhashya refuses to treat Brahman, Pradhana, and others as parallel valid referents.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "alternative-cause denial",
+          "causal plurality rebuttal"
+        ]
+      },
+      {
+        "headword_iast": "samānārthatā-pramāṇa",
+        "gloss": "proof from same-meaning alignment",
+        "contextual_sense": "Repeated thematic vectors across passages are used as evidence, not mere style.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "concordant-signification evidence",
+          "shared-semantic proof"
+        ]
+      },
+      {
+        "headword_iast": "jagat-kāraṇa-caitanya",
+        "gloss": "world-cause marked by sentience",
+        "contextual_sense": "Convergent testimony fixes causality in conscious absolute rather than inert principle.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "sentient-source world-causality",
+          "aware first-cause marker"
         ]
       }
     ],

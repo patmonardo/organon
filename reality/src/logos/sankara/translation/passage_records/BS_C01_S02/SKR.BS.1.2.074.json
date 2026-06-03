@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "pradesa-matra-sruti",
+        "gloss": "scriptural statement of limited measure",
+        "contextual_sense": "Transition centers on explaining why such wording can still refer to Brahman.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "measure-language scripture",
+          "finite-span declaration"
+        ]
+      },
+      {
+        "headword_iast": "paramesvara-parigraha",
+        "gloss": "acceptance of Supreme as referent",
+        "contextual_sense": "The challenge is to preserve this referent while accounting for measure-language.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "Ishvara-reference acceptance",
+          "Supreme-referent commitment"
+        ]
+      },
+      {
+        "headword_iast": "vyakhyana-arambha",
+        "gloss": "beginning of explanatory resolution",
+        "contextual_sense": "Marks shift from established conclusion to modality-specific reconciliation.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "exegetical start",
+          "interpretive unpacking onset"
+        ]
+      },
+      {
+        "headword_iast": "adhikarana-sandhi",
+        "gloss": "argumental transition linkage",
+        "contextual_sense": "Bridges direct-Vaisvanara conclusion into pradesa-matra interpretive sub-debate.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "topic bridge",
+          "inferential transition"
         ]
       }
     ],

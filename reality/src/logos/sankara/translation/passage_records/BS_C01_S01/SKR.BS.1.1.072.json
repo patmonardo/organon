@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "antar-āditya-puruṣa-saṃśaya",
+        "gloss": "doubt about the inner-solar person",
+        "contextual_sense": "Debate opens over whether luminous inner form denotes Brahman or a highly endowed empirical being.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "inner-sun referential doubt",
+          "solar-indweller ambiguity"
+        ]
+      },
+      {
+        "headword_iast": "hiraṇmaya-rūpa-vacana",
+        "gloss": "golden-form description",
+        "contextual_sense": "Form-language is cited by the objection to argue limitation and qualified embodiment.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "radiant form predication",
+          "golden-body description"
+        ]
+      },
+      {
+        "headword_iast": "deśa-paricchinna-ākṣepa",
+        "gloss": "objection from spatial confinement",
+        "contextual_sense": "Location in sun/eye is used to contest absolute, all-pervasive interpretation.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "locative limitation challenge",
+          "site-boundedness objection"
+        ]
+      },
+      {
+        "headword_iast": "aiśvarya-parimāṇa-vāda",
+        "gloss": "graded-lordship thesis",
+        "contextual_sense": "Opponent treats sovereignty predicates as relative excellence within samsara, not supreme status.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "limited divinity argument",
+          "comparative lordship reading"
+        ]
+      },
+      {
+        "headword_iast": "upāsya-devatā-kalpanā",
+        "gloss": "constructing a meditational deity referent",
+        "contextual_sense": "Purvapaksha frames the passage as symbolic worship-object teaching rather than ontological absoluteness.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "upasana-deity interpretation",
+          "symbolic worship referent"
         ]
       }
     ],

@@ -33,11 +33,31 @@ Strong topic-continuity argument integrating lexical clarification and pedagogic
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **sukha-visista-brahman**
+  - Gloss: Brahman qualified by bliss
+  - Context: Topic continuity claim: the same bliss-qualified Brahman governs subsequent eye-person and path passages.
+  - Grammar: compound noun
+  - Alternate glosses: bliss-qualified absolute, sukha-marked Brahman
+- **upakrama-anvaya**
+  - Gloss: continuity with opening statement
+  - Context: Method tying later clauses back to the initial Brahman declaration in the section.
+  - Grammar: compound hermeneutic term
+  - Alternate glosses: opening-link coherence, introductory continuity
+- **ka-kha-vyakhya**
+  - Gloss: interpretation of ka/kha terms
+  - Context: Re-reading of symbolic vocabulary used to preserve a unified Brahman topic-thread.
+  - Grammar: compound noun
+  - Alternate glosses: ka-kha exegesis, symbolic term interpretation
+- **prakarana-ekavakyata**
+  - Gloss: single-sentence/topic unity of section
+  - Context: Prevents fragmenting Upakosala material into unrelated doctrinal objects.
+  - Grammar: compound noun
+  - Alternate glosses: sectional unity, single thematic continuity
+- **devayana-prastava**
+  - Gloss: introduction of the devayana path sequence
+  - Context: Treated as downstream unfoldment of same Brahman-topic, not a topic break.
+  - Grammar: compound noun
+  - Alternate glosses: path-teaching transition, arciradi lead-in
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

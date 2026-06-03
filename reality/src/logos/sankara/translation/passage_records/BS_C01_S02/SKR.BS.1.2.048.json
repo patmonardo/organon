@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "na ca smartam",
+        "gloss": "nor the Smrti-based candidate",
+        "contextual_sense": "Sutra explicitly excludes Pradhana imported from Smrti traditions.",
+        "grammatical_role": "negative doctrinal phrase",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "not the smarta option",
+          "Smrti candidate denied"
+        ]
+      },
+      {
+        "headword_iast": "ataddharma-abhilapat",
+        "gloss": "because non-Pradhana properties are stated",
+        "contextual_sense": "Reason clause: assigned attributes do not belong to insentient Pradhana.",
+        "grammatical_role": "ablative reason phrase",
+        "alternate_glosses": [
+          "from incompatible property assertion",
+          "due to alien predicate ascription"
+        ]
+      },
+      {
+        "headword_iast": "smrti-sruti-viveka",
+        "gloss": "discrimination between Smrti import and Sruti intent",
+        "contextual_sense": "Protects local scriptural context from being overridden by external doctrinal constructs.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "textual hierarchy discrimination",
+          "revelation-tradition sorting"
+        ]
+      },
+      {
+        "headword_iast": "sutra-pratisedha",
+        "gloss": "aphoristic negation",
+        "contextual_sense": "Concise rejection formula closing the Pradhana branch of the debate.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "terse exclusion",
+          "brief doctrinal denial"
         ]
       }
     ],

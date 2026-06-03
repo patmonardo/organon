@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "upacāra-darśana",
+        "gloss": "observed figurative predication",
+        "contextual_sense": "Purvapaksha cites common anthropomorphic speech to normalize non-literal agency attributions.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "metaphorical usage evidence",
+          "figurative language precedent"
+        ]
+      },
+      {
+        "headword_iast": "kūla-pipatiṣā-nyāya",
+        "gloss": "bank wants to fall example",
+        "contextual_sense": "Illustrates assigning intention-language to non-conscious entities.",
+        "grammatical_role": "illustrative compound",
+        "alternate_glosses": [
+          "riverbank intention trope",
+          "inert-agent idiom example"
+        ]
+      },
+      {
+        "headword_iast": "gauṇārtha-sāmānyīkaraṇa",
+        "gloss": "generalization of secondary meaning",
+        "contextual_sense": "Strategy attempts to flatten all creation verbs into figurative register.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "broad figurative recoding",
+          "secondary-sense expansion"
+        ]
+      },
+      {
+        "headword_iast": "īkṣaṇa-śabda-laghukaraṇa",
+        "gloss": "downgrading force of ikshana term",
+        "contextual_sense": "Objection weakens intentionality marker so Pradhana remains viable.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "intent-term dilution",
+          "deliberation-word minimization"
+        ]
+      },
+      {
+        "headword_iast": "pradhāna-pakṣa-rakṣā",
+        "gloss": "defense of Pradhana view",
+        "contextual_sense": "Linguistic maneuver aimed at preserving Sankhya causality in Vedantic passage.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "Sankhya-position salvage",
+          "inert-cause protection"
         ]
       }
     ],

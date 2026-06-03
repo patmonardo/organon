@@ -33,11 +33,26 @@ This marks a multi-indicator adjudication case, not a simple lexical one.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **pratardana-indra-akhyayika**
+  - Gloss: the Pratardana-Indra narrative unit
+  - Context: Narrative frame introduces a multi-layered semantic field where indicators initially diverge.
+  - Grammar: compound noun
+  - Alternate glosses: Pratardana episode, Indra dialogue frame
+- **prana-samsaya**
+  - Gloss: ambiguity around prana referent
+  - Context: The passage appears to support deity, vital-force, self, and Brahman readings simultaneously.
+  - Grammar: compound noun
+  - Alternate glosses: prana uncertainty, multi-candidate referent doubt
+- **linga-sankara**
+  - Gloss: intermixed indicators
+  - Context: Competing marks from different doctrinal levels require a higher integrative method.
+  - Grammar: compound noun
+  - Alternate glosses: mixed marker cluster, sign-overlap
+- **adhikarana-pravesa**
+  - Gloss: entry into the topical dispute
+  - Context: This record formally sets up the difficult reconciliation case for the next sutras.
+  - Grammar: compound noun
+  - Alternate glosses: argument entry, problem setup
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

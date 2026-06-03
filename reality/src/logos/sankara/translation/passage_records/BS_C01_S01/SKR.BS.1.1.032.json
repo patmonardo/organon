@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "triguṇa-pradhāna",
+        "gloss": "three-quality primal matrix",
+        "contextual_sense": "Sankhya presents it as autonomous world-source to absorb Vedantic causality language.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "triadic material ground",
+          "guna-structured first principle"
+        ]
+      },
+      {
+        "headword_iast": "sattva-jñāna-sambandha",
+        "gloss": "link between sattva and cognition",
+        "contextual_sense": "Objection grounds knowing-capacity in sattva so awareness need not imply a conscious absolute.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "sattva-cognition thesis",
+          "quality-based epistemic link"
+        ]
+      },
+      {
+        "headword_iast": "sarvajñatva-śaktimattva-vāda",
+        "gloss": "omniscience as mere possession of capacity",
+        "contextual_sense": "Attempts to reduce all-knowingness to latent power rather than constant actual awareness.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "potentialist omniscience model",
+          "capacity-based all-knowingness"
+        ]
+      },
+      {
+        "headword_iast": "karaṇa-abhāva-doṣa",
+        "gloss": "defect from absence of cognitive instruments",
+        "contextual_sense": "Purvapaksha argues no episodic knowledge arises without body-sense apparatus.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "instrument-lack objection",
+          "means-of-cognition deficit"
+        ]
+      },
+      {
+        "headword_iast": "anekātmakatva-pariṇāma",
+        "gloss": "transformability grounded in multiplicity",
+        "contextual_sense": "Pradhana is said to qualify as cause by analogy with composite transformables like clay.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "plural-structure evolvability",
+          "multi-constituent causal fitness"
         ]
       }
     ],

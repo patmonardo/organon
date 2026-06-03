@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "anusmrteh",
+        "gloss": "because of recollection",
+        "contextual_sense": "Sutra reason adopting Badari’s mnemonic explanation for measure-language.",
+        "grammatical_role": "ablative reason term",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "from contemplative memory",
+          "due to meditative recollection"
+        ]
+      },
+      {
+        "headword_iast": "badarih",
+        "gloss": "Badari",
+        "contextual_sense": "Named authority for the recollection-based harmonization.",
+        "grammatical_role": "proper noun",
+        "alternate_glosses": [
+          "sage Badari",
+          "Badari teacher-position"
+        ]
+      },
+      {
+        "headword_iast": "pradesa-matra-vyakhya",
+        "gloss": "interpretation of span-language",
+        "contextual_sense": "Finite wording treated as upasana-memory aid, not objective measure.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "measure-expression explanation",
+          "span-term exegesis"
+        ]
+      },
+      {
+        "headword_iast": "sutra-nirnaya",
+        "gloss": "aphoristic adjudication",
+        "contextual_sense": "Brief acceptance of Badari’s resolution within the multi-view sequence.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "terse determination",
+          "compact doctrinal verdict"
         ]
       }
     ],

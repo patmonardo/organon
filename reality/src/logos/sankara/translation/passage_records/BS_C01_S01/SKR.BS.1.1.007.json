@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "brahmano jijnasa",
+        "gloss": "inquiry into Brahman",
+        "contextual_sense": "Compound is parsed with object-focused genitive (karmani-sasthi).",
+        "grammatical_role": "compound phrase",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "Brahman-inquiry",
+          "questioning Brahman as object"
+        ]
+      },
+      {
+        "headword_iast": "karmani-sasthi",
+        "gloss": "objective genitive construction",
+        "contextual_sense": "Secures Brahman as that-to-be-known rather than merely related topic.",
+        "grammatical_role": "grammatical term",
+        "alternate_glosses": [
+          "object-genitive",
+          "accusative-like genitive force"
+        ]
+      },
+      {
+        "headword_iast": "visaya-niscaya",
+        "gloss": "determination of principal subject",
+        "contextual_sense": "Bhashya blocks alternative broad lexical readings of brahman.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "topic fixation",
+          "subject adjudication"
+        ]
+      },
+      {
+        "headword_iast": "janmady-asya-yatah-laksana",
+        "gloss": "defining mark: source of origination etc.",
+        "contextual_sense": "Forward reference anchors intended Brahman as jagat-karana.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "cosmological defining indicator",
+          "creation-etc source mark"
+        ]
+      },
+      {
+        "headword_iast": "sruti-anvaya",
+        "gloss": "continuity with scriptural context",
+        "contextual_sense": "Contextual coherence supports this object-determining grammatical parse.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "scriptural linkage",
+          "textual continuity"
         ]
       }
     ],

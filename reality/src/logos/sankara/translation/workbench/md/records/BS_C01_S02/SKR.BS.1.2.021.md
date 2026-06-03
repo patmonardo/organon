@@ -33,11 +33,31 @@ Interprets 'eating' as total withdrawal/dissolution, not sensory consumption.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **atta**
+  - Gloss: eater, consumer
+  - Context: Interpreted here as the principle that withdraws the total cosmos, not as an empirical enjoyer.
+  - Grammar: agent noun
+  - Alternate glosses: devourer, cosmic consumer
+- **caracara-grahana**
+  - Gloss: grasping of moving and unmoving totality
+  - Context: Reason-term showing that the object consumed is all-inclusive, requiring a Brahman-level referent.
+  - Grammar: compound noun
+  - Alternate glosses: all-entity inclusion, totality uptake
+- **mrtyu-upasecana**
+  - Gloss: death as condiment
+  - Context: Image used to mark universality and finality of consumption in the Upanisadic passage.
+  - Grammar: compound expression
+  - Alternate glosses: death-seasoning motif, mortality-condiment image
+- **vikara-samhara**
+  - Gloss: withdrawal of all modifications
+  - Context: Defines the sense in which Brahman is said to eat: cosmic reabsorption, not sensory bhoga.
+  - Grammar: compound noun
+  - Alternate glosses: modification dissolution, phenomenal retraction
+- **karmaphala-bhoga-pratisedha**
+  - Gloss: negation of karmic-fruit enjoyment
+  - Context: Used to limit witness-texts so they do not cancel Brahman as cosmic dissolver.
+  - Grammar: compound noun
+  - Alternate glosses: denial of fruit-enjoyership, bhoga-negation clause
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

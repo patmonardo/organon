@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "sarira-na-antaryami",
+        "gloss": "the embodied self is not the inner controller",
+        "contextual_sense": "Bhashya exclusion at empirical level: finite jiva cannot universally indwell and regulate all domains.",
+        "grammatical_role": "negative doctrinal phrase",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "jiva not antaryamin",
+          "embodied self exclusion"
+        ]
+      },
+      {
+        "headword_iast": "upadhi-paricchinnatva",
+        "gloss": "limitation by adjuncts",
+        "contextual_sense": "Like pot-space analogy, jiva is bounded by conditioning factors and lacks total scope.",
+        "grammatical_role": "abstract compound noun",
+        "alternate_glosses": [
+          "adjunct-boundedness",
+          "conditioned finitude"
+        ]
+      },
+      {
+        "headword_iast": "kartsnya-niyantrtva-asambhava",
+        "gloss": "impossibility of complete regulation",
+        "contextual_sense": "Finite consciousness cannot govern earth and all entities from within in full extent.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "total-control impossibility",
+          "universal governance denial"
+        ]
+      },
+      {
+        "headword_iast": "avidya-kalpitabheda-vyavahara",
+        "gloss": "difference-based discourse projected by ignorance",
+        "contextual_sense": "Reconciles antaryamin distinction-talk with non-dual ultimate identity.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "ignorance-conditioned distinction discourse",
+          "projected dual transaction"
+        ]
+      },
+      {
+        "headword_iast": "paramarthika-eka-atman",
+        "gloss": "single Self at ultimate level",
+        "contextual_sense": "Non-dual endpoint preserved while empirical governance distinctions remain provisionally valid.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "ultimate one-self",
+          "absolute non-dual self"
         ]
       }
     ],

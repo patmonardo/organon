@@ -33,11 +33,31 @@ This record functions as doctrinal map and methodological bridge from causal est
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **sopādhika-nirupādhika-brahma-bheda**
+  - Gloss: distinction of conditioned and unconditioned Brahman presentation
+  - Context: Record maps two pedagogical registers without positing two ultimate realities.
+  - Grammar: compound noun
+  - Alternate glosses: dual-mode Brahman exposition, qualified/unqualified teaching distinction
+- **upāsanā-phala-vailakṣaṇya**
+  - Gloss: difference in contemplative results
+  - Context: Fruit-structure helps separate meditative supports from final identity-knowledge teaching.
+  - Grammar: compound noun
+  - Alternate glosses: upasana-result differentiation, practice-fruit contrast
+- **adhikaraṇa-krama-saṅgraha**
+  - Gloss: summary of topical sequence
+  - Context: Acts as a structural map from earlier causality proofs into anandamaya adjudication.
+  - Grammar: compound noun
+  - Alternate glosses: argument-chain synopsis, sequence compendium
+- **vedānta-ekavākyatā-rakṣā**
+  - Gloss: protection of single coherent purport
+  - Context: Bridge text insists multiple strands still converge on one conscious absolute.
+  - Grammar: compound noun
+  - Alternate glosses: purport-unity defense, one-sense preservation
+- **prakaraṇa-parivartana-sandhi**
+  - Gloss: junction at thematic transition
+  - Context: Marks pivot from broad causal establishment to fine-grained semantic disputes.
+  - Grammar: compound noun
+  - Alternate glosses: topic-turn hinge, sectional transition joint
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

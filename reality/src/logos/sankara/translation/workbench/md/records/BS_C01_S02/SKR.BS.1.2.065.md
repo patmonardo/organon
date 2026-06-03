@@ -33,11 +33,26 @@ Sutra compression of smrti-to-sruti inferential support.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
+- **smaryamanam**
+  - Gloss: that which is remembered (Smrti)
+  - Context: Sutra invokes remembered material as legitimate supplementary evidence.
+  - Grammar: past participial substantive
+  - Alternate glosses: remembered tradition, Smrti witness
+- **anumanam**
+  - Gloss: inferential support
+  - Context: Smrti serves as inferential linga rather than primary independent pramana.
   - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+  - Alternate glosses: inference, indicative reasoning
+- **syat**
+  - Gloss: may function as
+  - Context: Modal phrasing indicates supportive-status without displacing Sruti primacy.
+  - Grammar: optative verb form
+  - Alternate glosses: can be treated as, may count as
+- **smrti-samarthana**
+  - Gloss: validation of Smrti corroboration
+  - Context: Aphorism legitimizes remembered cosmic-form testimony in this adhikarana.
+  - Grammar: compound noun
+  - Alternate glosses: Smrti corroborative role, memory-text support function
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

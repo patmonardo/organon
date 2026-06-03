@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "rajju-sarpa-dṛṣṭānta",
+        "gloss": "rope-snake analogy",
+        "contextual_sense": "Shows object-level disclosure can be meaningful without ritual injunction.",
+        "grammatical_role": "illustrative compound",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "error-correction analogy",
+          "illusion-sublation model"
+        ]
+      },
+      {
+        "headword_iast": "sāśarīratva-avidyā-nimitta",
+        "gloss": "embodied status due to ignorance",
+        "contextual_sense": "Reframes body-self relation as adhyasa-conditioned rather than ontologically final.",
+        "grammatical_role": "compound doctrinal phrase",
+        "alternate_glosses": [
+          "ignorance-conditioned embodiment",
+          "avidya-based corporeality"
+        ]
+      },
+      {
+        "headword_iast": "anyonyāśraya",
+        "gloss": "mutual dependence fallacy",
+        "contextual_sense": "Used against theories that require circular grounding of body-self relations.",
+        "grammatical_role": "logical term",
+        "alternate_glosses": [
+          "circular dependence",
+          "reciprocal presupposition defect"
+        ]
+      },
+      {
+        "headword_iast": "anavasthā-doṣa",
+        "gloss": "infinite regress defect",
+        "contextual_sense": "Exposes instability in karmic-body explanatory models when pushed recursively.",
+        "grammatical_role": "logical term",
+        "alternate_glosses": [
+          "regress fault",
+          "non-terminating dependency problem"
+        ]
+      },
+      {
+        "headword_iast": "vastu-kathana-prayojana",
+        "gloss": "purpose of reality-statement",
+        "contextual_sense": "Defends non-injunctive factual teaching as pragmatically and liberatively relevant.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "function of descriptive teaching",
+          "utility of object-disclosure"
         ]
       }
     ],

@@ -33,11 +33,26 @@ Sutra seal for topic continuity via bliss qualification.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **sukha-visista-abhidhana**
+  - Gloss: explicit designation as bliss-qualified
+  - Context: Sutra reason that directly locks the referent to Brahman in this context.
+  - Grammar: compound noun
+  - Alternate glosses: bliss-qualified naming, sukha-marked denotation
+- **brahmatva-siddhi**
+  - Gloss: establishment of Brahman-reference
+  - Context: The named qualifier is sufficient to settle the doctrinal identity.
+  - Grammar: compound noun
+  - Alternate glosses: Brahman-determination, absolute-reference proof
+- **visesana-bala**
+  - Gloss: force of qualifying term
+  - Context: Hermeneutic weight assigned to predicate language in concise sutra reasoning.
+  - Grammar: compound noun
+  - Alternate glosses: qualifier strength, attribute-force
+- **sutra-hetu**
+  - Gloss: sutra-level reason
+  - Context: Aphoristic causal marker recaps broader bhashya continuity argument.
+  - Grammar: compound noun
+  - Alternate glosses: aphoristic rationale, compressed inferential ground
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

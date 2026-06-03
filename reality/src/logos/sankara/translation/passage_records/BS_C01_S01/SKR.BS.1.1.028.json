@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "īkṣateḥ",
+        "gloss": "because of seeing/intending",
+        "contextual_sense": "Conscious-intent marker used to deny inert Pradhana as ultimate cause.",
+        "grammatical_role": "ablative reason term",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "from intentional seeing",
+          "due to conscious willing"
+        ]
+      },
+      {
+        "headword_iast": "aśabda-pradhāna",
+        "gloss": "Pradhana not scripturally taught here",
+        "contextual_sense": "Pradhana is excluded as unscriptural and semantically unfit in Vedanta context.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "non-sruti Pradhana",
+          "textually unsupported primal matter"
+        ]
+      },
+      {
+        "headword_iast": "cetana-kāraṇatva",
+        "gloss": "sentient causal status",
+        "contextual_sense": "Causal principle must be conscious to match ikshana statements.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "conscious causality",
+          "aware sourcehood"
+        ]
+      },
+      {
+        "headword_iast": "sad-eva-agra-āsīt",
+        "gloss": "Being alone existed in the beginning",
+        "contextual_sense": "Upanishadic basis cited to anchor conscious-cause interpretation.",
+        "grammatical_role": "scriptural citation phrase",
+        "alternate_glosses": [
+          "primordial Being statement",
+          "originary sat declaration"
+        ]
+      },
+      {
+        "headword_iast": "pradhāna-nirākaraṇa",
+        "gloss": "refutation of Pradhana",
+        "contextual_sense": "Sankhya inert cause is ruled out at the onset of causality adhikarana.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "Sankhya cause denial",
+          "insentient source rejection"
         ]
       }
     ],

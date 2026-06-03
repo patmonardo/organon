@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "sūtra-samīkṣā-saṃgraha",
+        "gloss": "synoptic review of sutra sequence",
+        "contextual_sense": "Record consolidates 1.1.12-1.1.19 into one coherent interpretive line.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "sutra-chain recap",
+          "aphoristic synthesis"
+        ]
+      },
+      {
+        "headword_iast": "brahma-puccha-pradhānatva-vyākhyā",
+        "gloss": "reading puccha as grounding primacy",
+        "contextual_sense": "Tail-language is interpreted as support/foundation marker, not literal parthood.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "foundation-reading of puccha",
+          "supportive primacy interpretation"
+        ]
+      },
+      {
+        "headword_iast": "abhyāsa-hetu-samanvaya",
+        "gloss": "integration of repetition and causal reasons",
+        "contextual_sense": "Multiple proof-lines are woven into a single referential judgment.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "reason-cluster harmonization",
+          "multi-hetu integration"
+        ]
+      },
+      {
+        "headword_iast": "kośa-pakṣa-parimiti",
+        "gloss": "limitation of sheath-only reading",
+        "contextual_sense": "Summary shows why layer-logic cannot dominate against stronger contextual signs.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "sheath-interpretation boundary",
+          "layer-model restriction"
+        ]
+      },
+      {
+        "headword_iast": "siddhānta-pariśuddhi",
+        "gloss": "purification/clarification of final doctrine",
+        "contextual_sense": "Recap removes lingering ambiguities before sutra close.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "doctrinal clarification",
+          "conclusion refinement"
         ]
       }
     ],

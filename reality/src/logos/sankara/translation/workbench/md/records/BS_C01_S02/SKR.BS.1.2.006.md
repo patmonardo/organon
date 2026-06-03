@@ -33,11 +33,21 @@ Sutra statement keyed to vivaksita-guna hermeneutics.
 ## Analysis
 
 ### Lexical Notes
-- **brahman**
-  - Gloss: ultimate reality
-  - Context: Primary interpretive referent under adjudication in this adhikarana
+- **vivaksita-guna**
+  - Gloss: intended qualifying attributes
+  - Context: Sutra shorthand for predicates that must be coherently assignable to the intended upasya.
+  - Grammar: compound noun
+  - Alternate glosses: purport-relevant attributes, operative qualifiers
+- **upapatti**
+  - Gloss: coherent fit, rational tenability
+  - Context: Primary inferential test for assigning scriptural predicates to a referent.
   - Grammar: noun
-  - Alternate glosses: absolute, supreme principle
+  - Alternate glosses: logical applicability, doctrinal coherence
+- **upasya**
+  - Gloss: object of meditation/worship
+  - Context: The referent selected by predicate-fit analysis in contemplative injunction contexts.
+  - Grammar: gerundive-derived noun
+  - Alternate glosses: meditative target, contemplative object
 
 ## QA Uncertainty Notes
 - Long bhashya blocks translated as draft prose and require line-level philological curation.

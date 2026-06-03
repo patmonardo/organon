@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "caracara-grahanat",
+        "gloss": "because of inclusion of moving and unmoving",
+        "contextual_sense": "Sutra-hetu establishing atta as Brahman through total object-scope.",
+        "grammatical_role": "ablative reason phrase",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "on account of totality-inclusion",
+          "due to all-entity grasping"
+        ]
+      },
+      {
+        "headword_iast": "sutra-hetu",
+        "gloss": "concise inferential reason in sutra form",
+        "contextual_sense": "Captures the compressed logic where one linga settles referent identity.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "aphoristic rationale",
+          "sutrified reason"
+        ]
+      },
+      {
+        "headword_iast": "sarva-visayatva",
+        "gloss": "all-object scope",
+        "contextual_sense": "Semantic breadth that excludes finite candidates for the eater.",
+        "grammatical_role": "abstract noun",
+        "alternate_glosses": [
+          "universal object-range",
+          "total referential scope"
+        ]
+      },
+      {
+        "headword_iast": "atta-brahma-nirnaya",
+        "gloss": "determination of the eater as Brahman",
+        "contextual_sense": "Result secured by the charachara indicator in this sutra.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "consumer-as-Brahman conclusion",
+          "referent adjudication"
         ]
       }
     ],

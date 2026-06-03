@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "na vaktur atmopadesat",
+        "gloss": "not (limited) because of speaker self-reference",
+        "contextual_sense": "Sutra denies that first-person narrative language alone determines referent class.",
+        "grammatical_role": "sutra phrase",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "speaker-reference not decisive",
+          "voice-based objection denied"
+        ]
+      },
+      {
+        "headword_iast": "adhyatma-sambandha-bhuma",
+        "gloss": "abundance of adhyatma linkage",
+        "contextual_sense": "The dominant relation to inner selfhood governs interpretation in this chapter.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "inner-link predominance",
+          "adhyatma preponderance"
+        ]
+      },
+      {
+        "headword_iast": "vakyartha-niyamaka",
+        "gloss": "controller of sentence meaning",
+        "contextual_sense": "Global thematic pressure overrides isolated pronoun-level cues.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "meaning-governing factor",
+          "semantic regulator"
+        ]
+      },
+      {
+        "headword_iast": "sutra-ksepa-nirasa",
+        "gloss": "dismissal of the raised objection",
+        "contextual_sense": "Aphoristic response collapses the narrative-literal objection in one move.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "objection rejection",
+          "compact rebuttal"
         ]
       }
     ],

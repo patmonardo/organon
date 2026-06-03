@@ -33,11 +33,31 @@ Final elimination of fire/deity alternatives by causal and semantic non-fit.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **na devata na bhutagni**
+  - Gloss: neither deity nor elemental fire
+  - Context: Bhashya excludes secondary fire-candidates under established reasoning constraints.
+  - Grammar: negative dual doctrinal phrase
+  - Alternate glosses: not presiding deity or physical fire, dual exclusion clause
+- **karya-karana-atiyoga**
+  - Gloss: excess over derivative causal status
+  - Context: Text attributes scope beyond dependent cosmic principles.
+  - Grammar: compound noun
+  - Alternate glosses: beyond derivative causality, surpassing subordinate origin
+- **atma-vacana-anupapatti**
+  - Gloss: incoherence of Self-designation for those candidates
+  - Context: Atma-language is argued to fit only highest referent in this context.
+  - Grammar: compound noun
+  - Alternate glosses: self-term mismatch, atma-predicate non-fit
+- **hetu-anukramana**
+  - Gloss: reuse of previously established reasons
+  - Context: Response explicitly carries forward prior criteria rather than introducing new ones.
+  - Grammar: compound noun
+  - Alternate glosses: reason carry-forward, inferential continuity
+- **vaisvanara-isvara-ekartha**
+  - Gloss: single intended sense: Vaisvanara as Ishvara
+  - Context: Final narrowing against residual alternate-candidate drift.
+  - Grammar: compound noun
+  - Alternate glosses: univocal Supreme referent, single-sense determination
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

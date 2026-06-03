@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "headword_iast": "vaisesya",
+        "gloss": "specific differentiating feature",
+        "contextual_sense": "Used to maintain functional jiva-isvara distinction where bhoga attribution is being tested.",
+        "grammatical_role": "abstract noun",
+        "alternate_glosses": [
+          "specificity",
+          "distinguishing characteristic"
+        ]
+      },
+      {
+        "headword_iast": "bhoga",
+        "gloss": "enjoyment/experience of karmic results",
+        "contextual_sense": "Objection concerns whether all-pervading non-dual Brahman would improperly inherit finite experiential suffering.",
         "grammatical_role": "noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "experiential fruition",
+          "karmic enjoyment"
+        ]
+      },
+      {
+        "headword_iast": "mithyajnana-vyavahara",
+        "gloss": "transactional domain grounded in misapprehension",
+        "contextual_sense": "Explains why empirical attributions do not penetrate paramarthic Brahman established by right knowledge.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "error-based empirical practice",
+          "ignorance-conditioned transaction"
+        ]
+      },
+      {
+        "headword_iast": "samyagjnana",
+        "gloss": "right knowledge",
+        "contextual_sense": "Epistemic standpoint from which false superimpositions and bhoga-transfers are cancelled.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "valid realization",
+          "correct cognition"
+        ]
+      },
+      {
+        "headword_iast": "isvara-jiva-vyavahara",
+        "gloss": "Lord-individual functional discourse",
+        "contextual_sense": "Admitted at operative level to preserve scriptural pedagogy while guarding non-dual conclusion.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "functional dual discourse",
+          "pedagogical distinction-domain"
         ]
       }
     ],

@@ -22,13 +22,33 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "brahman",
-        "gloss": "ultimate reality",
-        "contextual_sense": "Primary interpretive referent under adjudication in this adhikarana",
+        "headword_iast": "janmady asya yatah",
+        "gloss": "that from which origin and so on (of the world proceed)",
+        "contextual_sense": "Foundational Brahma-sutra marker identifying Brahman as cosmological source, ground, and terminus.",
+        "grammatical_role": "sutra clause",
+        "alternate_glosses": [
+          "source of creation etc.",
+          "causal formula of Vedanta"
+        ]
+      },
+      {
+        "headword_iast": "brahma-linga",
+        "gloss": "indicative mark of Brahman",
+        "contextual_sense": "Hermeneutic signal used to decide whether an ambiguous passage denotes para-brahman.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "Brahman-indicator",
+          "Brahman-sign"
+        ]
+      },
+      {
+        "headword_iast": "nirnaya",
+        "gloss": "determinate adjudication",
+        "contextual_sense": "Methodical settlement of scriptural doubt by inferential and contextual criteria.",
         "grammatical_role": "noun",
         "alternate_glosses": [
-          "absolute",
-          "supreme principle"
+          "decision",
+          "definitive determination"
         ]
       }
     ],

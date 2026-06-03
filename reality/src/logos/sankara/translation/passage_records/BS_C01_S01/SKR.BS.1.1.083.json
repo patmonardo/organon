@@ -22,19 +22,38 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "prāṇa-śabda",
+        "gloss": "the word prana",
+        "contextual_sense": "Here the term is tested against Brahmanic context, not accepted at face-value as vital air.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": ["prana-term", "breath-word"]
+      },
+      {
+        "headword_iast": "talliṅga",
+        "gloss": "that contextual marker",
+        "contextual_sense": "The prior marker principle continues to govern interpretation in this shorter aphorism.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": ["same-sign principle", "contextual indicator"]
+      },
+      {
+        "headword_iast": "brahma-prāṇa-bheda-nivāraṇa",
+        "gloss": "removal of any split between Brahman and prana",
+        "contextual_sense": "The upshot is not a second principle but Brahman named through the prana-term.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "Brahman-prana identity",
+          "dual-reading exclusion"
         ]
+      },
+      {
+        "headword_iast": "sūtra-saṅkṣepa",
+        "gloss": "aphoristic compression",
+        "contextual_sense": "The whole argument is collapsed into a single contextual tag.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": ["sutra condensation", "brief doctrinal seal"]
       }
     ],
-    "argument_tags": [
-      "resolution"
-    ]
+    "argument_tags": ["resolution"]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",

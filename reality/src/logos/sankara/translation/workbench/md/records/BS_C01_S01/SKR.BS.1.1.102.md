@@ -33,11 +33,31 @@ Rather than competing referents, indicators are layered modes of a single contem
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **upasa-traividhya**
+  - Gloss: threefold contemplative mode
+  - Context: One Brahman is meditated through prana-dharma, prajna-dharma, and own intrinsic nature.
+  - Grammar: compound noun
+  - Alternate glosses: triple upasana structure, three-mode contemplation
+- **upadhi-dvaya-dharma**
+  - Gloss: two adjunct-conditioned attribute sets
+  - Context: Prana and prajna features are treated as dependent overlays on one underlying object.
+  - Grammar: compound noun
+  - Alternate glosses: dual adjunct attributes, conditioned property pair
+- **sva-dharma-brahman**
+  - Gloss: Brahman in intrinsic mode
+  - Context: Beyond adjunct-layers, the text explicitly preserves Brahman's own defining nature.
+  - Grammar: compound noun
+  - Alternate glosses: intrinsic Brahman mode, self-nature referent
+- **ashritatva**
+  - Gloss: dependence or rootedness
+  - Context: Jiva and main-prana indicators are accepted as dependent on Brahman, not autonomous referents.
+  - Grammar: abstract noun
+  - Alternate glosses: dependent status, groundedness
+- **ekopasya-siddhi**
+  - Gloss: establishment of a single object of meditation
+  - Context: The entire reconciliation aims to retain one upasya across varied descriptive lenses.
+  - Grammar: compound noun
+  - Alternate glosses: single contemplative target, one-object proof
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

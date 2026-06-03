@@ -33,11 +33,31 @@ Maintains practical distinction for exegesis while dissolving it at the non-dual
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **sarira-na-antaryami**
+  - Gloss: the embodied self is not the inner controller
+  - Context: Bhashya exclusion at empirical level: finite jiva cannot universally indwell and regulate all domains.
+  - Grammar: negative doctrinal phrase
+  - Alternate glosses: jiva not antaryamin, embodied self exclusion
+- **upadhi-paricchinnatva**
+  - Gloss: limitation by adjuncts
+  - Context: Like pot-space analogy, jiva is bounded by conditioning factors and lacks total scope.
+  - Grammar: abstract compound noun
+  - Alternate glosses: adjunct-boundedness, conditioned finitude
+- **kartsnya-niyantrtva-asambhava**
+  - Gloss: impossibility of complete regulation
+  - Context: Finite consciousness cannot govern earth and all entities from within in full extent.
+  - Grammar: compound noun
+  - Alternate glosses: total-control impossibility, universal governance denial
+- **avidya-kalpitabheda-vyavahara**
+  - Gloss: difference-based discourse projected by ignorance
+  - Context: Reconciles antaryamin distinction-talk with non-dual ultimate identity.
+  - Grammar: compound noun
+  - Alternate glosses: ignorance-conditioned distinction discourse, projected dual transaction
+- **paramarthika-eka-atman**
+  - Gloss: single Self at ultimate level
+  - Context: Non-dual endpoint preserved while empirical governance distinctions remain provisionally valid.
+  - Grammar: compound noun
+  - Alternate glosses: ultimate one-self, absolute non-dual self
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

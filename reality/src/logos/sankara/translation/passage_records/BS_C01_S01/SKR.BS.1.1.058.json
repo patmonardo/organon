@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "ānanda-hetu-vyapadeśa",
+        "gloss": "designation as cause of bliss",
+        "contextual_sense": "Scripture describes Brahman as that which makes others blissful, implying intrinsic fullness.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "bliss-cause predication",
+          "source-of-joy attribution"
+        ]
+      },
+      {
+        "headword_iast": "ānandayati-iti-vyākhyā",
+        "gloss": "interpretation of “it causes bliss”",
+        "contextual_sense": "Verbal analysis supports a possessor-overflow model, not borrowed or incidental joy.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "causative-bliss exegesis",
+          "joy-bestowal gloss"
+        ]
+      },
+      {
+        "headword_iast": "dhanika-dṛṣṭānta",
+        "gloss": "wealth-analogy for abundance inference",
+        "contextual_sense": "One who enriches others is inferred rich; likewise source of bliss is bliss-plentiful.",
+        "grammatical_role": "illustrative compound",
+        "alternate_glosses": [
+          "prosperity analogy",
+          "abundance inference example"
+        ]
+      },
+      {
+        "headword_iast": "prācurya-siddhi",
+        "gloss": "establishment of plenitude sense",
+        "contextual_sense": "Causal-dispenser language confirms mayat as abundance-marker here.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "abundance proof",
+          "plenitude confirmation"
+        ]
+      },
+      {
+        "headword_iast": "vikāra-pakṣa-nivṛtti",
+        "gloss": "withdrawal of modification thesis",
+        "contextual_sense": "Derivative-entity reading loses force once causal bliss language is admitted.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "product-reading retreat",
+          "vikara-thesis collapse"
         ]
       }
     ],

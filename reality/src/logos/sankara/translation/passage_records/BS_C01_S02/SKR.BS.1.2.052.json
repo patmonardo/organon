@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "headword_iast": "bhuta-yoni",
+        "gloss": "source/womb of beings",
+        "contextual_sense": "Central disputed referent in Mundaka: whether ultimate source is Brahman, Pradhana, or other.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "origin of entities",
+          "cosmic source-principle"
+        ]
+      },
+      {
+        "headword_iast": "aksara",
+        "gloss": "imperishable principle",
+        "contextual_sense": "Term in the passage that triggers candidate ambiguity in purvapaksa framing.",
         "grammatical_role": "noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "imperishable",
+          "non-decaying principle"
+        ]
+      },
+      {
+        "headword_iast": "adrsyatvadi-guna",
+        "gloss": "attributes such as invisibility and intangibility",
+        "contextual_sense": "Used in objection to support Pradhana-style reading before siddhanta refinement.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "unseenness predicate cluster",
+          "non-sensory attribute set"
+        ]
+      },
+      {
+        "headword_iast": "para-apara-vidya-vibhaga",
+        "gloss": "division into higher and lower knowledge",
+        "contextual_sense": "Purvapaksa attempts to relocate highest referent via vidya-layer separation.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "two-knowledge architecture",
+          "higher-lower epistemic split"
+        ]
+      },
+      {
+        "headword_iast": "purvapaksa",
+        "gloss": "prima facie thesis",
+        "contextual_sense": "Introduces Pradhana/jiva-leaning interpretation for subsequent refutation.",
+        "grammatical_role": "noun",
+        "alternate_glosses": [
+          "provisional objection",
+          "initial candidate thesis"
         ]
       }
     ],

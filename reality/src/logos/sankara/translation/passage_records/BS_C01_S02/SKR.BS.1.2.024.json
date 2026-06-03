@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "prakaranac ca",
+        "gloss": "and because of context",
+        "contextual_sense": "Sutra-compressed appeal to topical continuity for referent decision.",
+        "grammatical_role": "causal phrase",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "further from topical frame",
+          "context-grounded reason"
+        ]
+      },
+      {
+        "headword_iast": "prakrta-visaya",
+        "gloss": "already-introduced subject matter",
+        "contextual_sense": "Prevents shifting from Brahman to lower candidates without textual necessity.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "established topic",
+          "current semantic subject"
+        ]
+      },
+      {
+        "headword_iast": "visaya-niyama",
+        "gloss": "restriction by topic-domain",
+        "contextual_sense": "Methodic guard against overextension into unrelated meanings.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "topic constraint",
+          "domain restriction"
+        ]
+      },
+      {
+        "headword_iast": "sutra-sankshepa",
+        "gloss": "compressed aphoristic condensation",
+        "contextual_sense": "Single-word sutra carries forward full bhashya logic from surrounding discussion.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "aphoristic compression",
+          "doctrinal shorthand"
         ]
       }
     ],

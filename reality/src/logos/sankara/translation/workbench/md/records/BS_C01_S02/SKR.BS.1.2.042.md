@@ -33,11 +33,31 @@ Negative elimination plus predicate-fit yields a strict referent decision.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **anavasthiti**
+  - Gloss: lack of stable abiding
+  - Context: Primary exclusion criterion against reflection and other non-stable ocular candidates.
+  - Grammar: abstract noun
+  - Alternate glosses: instability, non-fixed presence
+- **asambhava**
+  - Gloss: impossibility
+  - Context: Applied where candidate predicates cannot coherently be sustained.
+  - Grammar: abstract noun
+  - Alternate glosses: infeasibility, doctrinal impossibility
+- **chayatma-paksa**
+  - Gloss: reflection-self hypothesis
+  - Context: Rejected because reflected appearance lacks continuity and qualifying doctrinal predicates.
+  - Grammar: compound noun
+  - Alternate glosses: shadow-self view, reflected-image candidate
+- **devatatma-vikalpa**
+  - Gloss: deity-self candidate option
+  - Context: Examined and set aside due to mismatch with passage-wide attribute set.
+  - Grammar: compound noun
+  - Alternate glosses: deity referent option, divine candidate
+- **isvara-ekasesa**
+  - Gloss: Ishvara as sole remaining viable referent
+  - Context: After eliminative filtering, only Supreme Self remains hermeneutically stable.
+  - Grammar: compound noun
+  - Alternate glosses: exclusive Ishvara remainder, single-valid referent outcome
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

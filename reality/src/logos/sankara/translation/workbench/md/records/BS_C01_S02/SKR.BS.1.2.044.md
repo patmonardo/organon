@@ -33,11 +33,31 @@ Introduces the antaryamin inquiry through semantic novelty and agency questions.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
+- **antaryamin**
+  - Gloss: inner controller
+  - Context: Core disputed referent in the Brhadaranyaka sequence on internal governance.
   - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+  - Alternate glosses: inner regulator, immanent governor
+- **yamayati**
+  - Gloss: controls, restrains, governs
+  - Context: Functional verb driving candidate comparison over who can truly exercise universal internal control.
+  - Grammar: finite verb
+  - Alternate glosses: rules from within, internally governs
+- **samsaya**
+  - Gloss: hermeneutic doubt
+  - Context: Opening uncertainty whether controller is deity, yogin, Brahman, or another principle.
+  - Grammar: noun
+  - Alternate glosses: interpretive uncertainty, referential doubt
+- **bahu-vikalpa-purvapaksa**
+  - Gloss: multi-option prima facie framing
+  - Context: Purvapaksa expands candidate field due to novelty and functional breadth of the term.
+  - Grammar: compound noun
+  - Alternate glosses: multiple-candidate thesis, plural-option objection frame
+- **sruti-upakrama**
+  - Gloss: opening textual frame of revelation
+  - Context: Initial scriptural formulation sets the thematic scope for antaryamin adjudication.
+  - Grammar: compound noun
+  - Alternate glosses: revealed opening context, textual proem
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

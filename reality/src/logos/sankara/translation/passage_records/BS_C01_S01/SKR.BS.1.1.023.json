@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "kriyārthatva-sīmā",
+        "gloss": "limit of action-centered hermeneutics",
+        "contextual_sense": "Bhashya narrows Mimamsa claim by preserving genuine vastu-upadesha domains.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "boundary of ritual hermeneutic",
+          "action-theory limit"
+        ]
+      },
+      {
+        "headword_iast": "vastu-upadeśa",
+        "gloss": "instruction about reality as such",
+        "contextual_sense": "Affirms non-injunctive teaching function in Vedanta statements.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "reality-disclosure",
+          "object-teaching"
+        ]
+      },
+      {
+        "headword_iast": "nivṛtti-vākya",
+        "gloss": "cessation-oriented statement",
+        "contextual_sense": "Used to show scripture can negate/resolve rather than command action.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "withdrawal statement",
+          "sublative sentence"
+        ]
+      },
+      {
+        "headword_iast": "pravṛtti-vidhi-vyatireka",
+        "gloss": "distinct from action-injunction",
+        "contextual_sense": "Separates Upanishadic self-teaching from ritual imperatives.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "non-injunctive difference",
+          "beyond action command"
+        ]
+      },
+      {
+        "headword_iast": "ātma-vastu-pratipatti",
+        "gloss": "ascertainment of Self-reality",
+        "contextual_sense": "Marks Vedanta’s positive cognitive result outside karmic structure.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "self-reality cognition",
+          "Atman ascertainment"
         ]
       }
     ],

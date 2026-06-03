@@ -22,13 +22,33 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "brahman",
-        "gloss": "ultimate reality",
-        "contextual_sense": "Primary interpretive referent under adjudication in this adhikarana",
+        "headword_iast": "sarvatra-prasiddha",
+        "gloss": "established everywhere",
+        "contextual_sense": "Sutra criterion for preserving Brahman-reference by pan-Vedantic continuity.",
+        "grammatical_role": "adjectival compound",
+        "alternate_glosses": [
+          "universally attested",
+          "widely recognized"
+        ]
+      },
+      {
+        "headword_iast": "upadesa",
+        "gloss": "instruction, teaching indication",
+        "contextual_sense": "Normative textual indication used as inferential ground for referent determination.",
         "grammatical_role": "noun",
         "alternate_glosses": [
-          "absolute",
-          "supreme principle"
+          "teaching statement",
+          "doctrinal instruction"
+        ]
+      },
+      {
+        "headword_iast": "brahma-parata",
+        "gloss": "orientation toward Brahman as referent",
+        "contextual_sense": "Conclusion that the debated sentence belongs to Brahman-doctrine rather than finite-self discourse.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "Brahman-reference",
+          "Brahman-directed purport"
         ]
       }
     ],

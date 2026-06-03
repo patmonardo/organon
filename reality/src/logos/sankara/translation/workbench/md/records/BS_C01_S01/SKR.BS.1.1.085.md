@@ -33,11 +33,26 @@ Contextual carryover and semantic expansion override purely physical-light defau
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **caraṇa-abhidhāna**
+  - Gloss: mention of a pada or quarter
+  - Context: The earlier section’s quarter-structure is used to carry meaning forward into this passage.
+  - Grammar: compound noun
+  - Alternate glosses: pada reference, quarter-mention
+- **jyotis-brahma-grahaṇa**
+  - Gloss: taking jyotis as Brahman
+  - Context: The readied conclusion is that the luminous term stands for the absolute, not a physical lamp or star.
+  - Grammar: compound noun
+  - Alternate glosses: Brahman-light reading, supreme-luminosity interpretation
+- **catura-pāda-smṛti**
+  - Gloss: memory of the four-footed Brahman
+  - Context: The prior depiction of Brahman supplies the continuity needed for the current passage.
+  - Grammar: compound noun
+  - Alternate glosses: four-quarter recollection, earlier Brahman image
+- **pratipatti-saukarya**
+  - Gloss: ease of apprehension
+  - Context: The contextual reading is justified because the scripture is teaching, not merely naming.
+  - Grammar: abstract noun
+  - Alternate glosses: interpretive ease, pedagogical accessibility
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

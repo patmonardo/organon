@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "adrsyatvadi-gunaka",
+        "gloss": "qualified by invisibility-type attributes",
+        "contextual_sense": "Sutra reuses attribute cluster while assigning it to Brahman via later predicate fit.",
+        "grammatical_role": "compound adjectival noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "bearing unseenness attributes",
+          "non-sensory-qualified referent"
+        ]
+      },
+      {
+        "headword_iast": "dharma-ukteh",
+        "gloss": "because of property statement",
+        "contextual_sense": "Causal ground in sutra: explicit Brahmanic predicates settle identity.",
+        "grammatical_role": "ablative reason phrase",
+        "alternate_glosses": [
+          "from predicate declaration",
+          "due to stated properties"
+        ]
+      },
+      {
+        "headword_iast": "sutra-hetu",
+        "gloss": "aphoristic inferential reason",
+        "contextual_sense": "Condenses full bhashya argument into one decisive criterion.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "compressed rationale",
+          "terse proof-ground"
+        ]
+      },
+      {
+        "headword_iast": "bhuta-yoni-brahmatva",
+        "gloss": "Brahman-identity of source-principle",
+        "contextual_sense": "Conclusion secured by combining attribute cluster with omniscience declarations.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "source as Brahman",
+          "cosmic-origin absolute identity"
         ]
       }
     ],

@@ -33,11 +33,31 @@ Sets up the core anti-Pradhana refutation by pressing on ikshana, omniscience, a
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **triguṇa-pradhāna**
+  - Gloss: three-quality primal matrix
+  - Context: Sankhya presents it as autonomous world-source to absorb Vedantic causality language.
+  - Grammar: compound noun
+  - Alternate glosses: triadic material ground, guna-structured first principle
+- **sattva-jñāna-sambandha**
+  - Gloss: link between sattva and cognition
+  - Context: Objection grounds knowing-capacity in sattva so awareness need not imply a conscious absolute.
+  - Grammar: compound noun
+  - Alternate glosses: sattva-cognition thesis, quality-based epistemic link
+- **sarvajñatva-śaktimattva-vāda**
+  - Gloss: omniscience as mere possession of capacity
+  - Context: Attempts to reduce all-knowingness to latent power rather than constant actual awareness.
+  - Grammar: compound noun
+  - Alternate glosses: potentialist omniscience model, capacity-based all-knowingness
+- **karaṇa-abhāva-doṣa**
+  - Gloss: defect from absence of cognitive instruments
+  - Context: Purvapaksha argues no episodic knowledge arises without body-sense apparatus.
+  - Grammar: compound noun
+  - Alternate glosses: instrument-lack objection, means-of-cognition deficit
+- **anekātmakatva-pariṇāma**
+  - Gloss: transformability grounded in multiplicity
+  - Context: Pradhana is said to qualify as cause by analogy with composite transformables like clay.
+  - Grammar: compound noun
+  - Alternate glosses: plural-structure evolvability, multi-constituent causal fitness
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

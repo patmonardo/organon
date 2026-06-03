@@ -33,11 +33,26 @@ Sutra compression of bheda-vyapadesha argument.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **bheda-vyapadeśāc ca**
+  - Gloss: and because difference is explicitly stated
+  - Context: Sutra treats differentiation-language as further evidence against jiva-identification.
+  - Grammar: sutra reason phrase
+  - Alternate glosses: from stated distinction, due to explicit dual reference
+- **labdha-labdhavya-nyāya**
+  - Gloss: principle that attained is distinct from attainer
+  - Context: Supports reading of pedagogical duality without positing ultimate two-self doctrine.
+  - Grammar: compound noun
+  - Alternate glosses: attainer-attained rule, acquirer-object principle
+- **jīva-pakṣa-nivṛtti**
+  - Gloss: withdrawal of jiva thesis
+  - Context: Finite-self referent is decisively retired in this stage of adjudication.
+  - Grammar: compound noun
+  - Alternate glosses: individualist reading retreat, bound-self thesis withdrawal
+- **adhikaraṇa-dṛḍhīkaraṇa**
+  - Gloss: strengthening of topical conclusion
+  - Context: Adds a second line of support after anupapatti-based exclusion.
+  - Grammar: compound noun
+  - Alternate glosses: argument reinforcement, conclusion fortification
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

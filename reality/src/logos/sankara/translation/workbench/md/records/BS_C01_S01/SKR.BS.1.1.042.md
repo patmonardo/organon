@@ -33,11 +33,26 @@ Sutra compression of the heya-vacana argument.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **heyatva-avacanāt**
+  - Gloss: because no rejectability is stated
+  - Context: Sutra infers sat is not a provisional pointer since scripture never instructs abandoning it.
+  - Grammar: ablative reason phrase
+  - Alternate glosses: absence of discard-marking, non-provisionality indicator
+- **anātma-upadeśa-doṣa**
+  - Gloss: defect of teaching non-self as self
+  - Context: If referent were Pradhana, identity-instruction would become pedagogically perverse.
+  - Grammar: compound noun
+  - Alternate glosses: false-self instruction fault, non-self pedagogy contradiction
+- **pratipādyavastu-sthairya**
+  - Gloss: stability of taught referent
+  - Context: The same object is preserved across teaching sequence without later correction.
+  - Grammar: compound noun
+  - Alternate glosses: referential stability, teaching-object continuity
+- **sūtra-saṅkṣepa-nyāya**
+  - Gloss: compressed aphoristic reasoning
+  - Context: Brief form condenses the prior Arundhati-style argument against provisional designation.
+  - Grammar: compound noun
+  - Alternate glosses: sutra condensation logic, compressed inferential form
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

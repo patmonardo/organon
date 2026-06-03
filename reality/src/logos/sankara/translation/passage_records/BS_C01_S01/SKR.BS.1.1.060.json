@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "mantra-brāhmaṇa-ekārthya",
+        "gloss": "single meaning across mantra and prose",
+        "contextual_sense": "Bhashya argues both textual strata refer to the same Brahman-topic.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "mantra-prose referential unity",
+          "cross-stratum semantic identity"
+        ]
+      },
+      {
+        "headword_iast": "satyam-jñānam-anantam-brahma",
+        "gloss": "Brahman as reality-consciousness-infinite",
+        "contextual_sense": "Earlier defining mantra anchors the later anandamaya passage’s referent.",
+        "grammatical_role": "quoted doctrinal phrase",
+        "alternate_glosses": [
+          "triple qualifier formula",
+          "definitional Brahman mantra"
+        ]
+      },
+      {
+        "headword_iast": "prakṛta-anusandhāna",
+        "gloss": "tracking the established topic",
+        "contextual_sense": "Interpretation preserves continuity with what was initially introduced as main subject.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "topic continuity tracking",
+          "subject-thread retention"
+        ]
+      },
+      {
+        "headword_iast": "ākāśādi-krama-kāraṇatva",
+        "gloss": "causality through the akasha-first sequence",
+        "contextual_sense": "Creation series serves as evidential backbone for identifying same supreme cause.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "cosmogonic sequence causality",
+          "akasha-order sourcehood"
+        ]
+      },
+      {
+        "headword_iast": "adhikaraṇa-saṅgati",
+        "gloss": "coherence within topical argument",
+        "contextual_sense": "Long prose argument ensures no referential slippage between contiguous sections.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "internal argument coherence",
+          "topic-fit consistency"
         ]
       }
     ],

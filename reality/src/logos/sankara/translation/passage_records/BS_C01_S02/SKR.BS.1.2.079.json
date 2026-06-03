@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "sampatteh",
+        "gloss": "because of correspondence-integration",
+        "contextual_sense": "Sutra reason endorsing macro-micro mapping as explanation of pradesa-matra.",
+        "grammatical_role": "ablative reason term",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "from identificatory integration",
+          "due to correspondence"
+        ]
+      },
+      {
+        "headword_iast": "jaiminis",
+        "gloss": "Jaimini (as authority)",
+        "contextual_sense": "Names proponent of the preferred integration explanation.",
+        "grammatical_role": "proper noun",
+        "alternate_glosses": [
+          "Jaimini authority",
+          "Jaiminian source"
+        ]
+      },
+      {
+        "headword_iast": "tatha hi darsayati",
+        "gloss": "for thus he shows/demonstrates",
+        "contextual_sense": "Signals explicit textual demonstration backing the cited interpretive view.",
+        "grammatical_role": "demonstrative evidentiary phrase",
+        "alternate_glosses": [
+          "thus it is shown",
+          "textually demonstrated so"
+        ]
+      },
+      {
+        "headword_iast": "pradesa-matra-nirukti",
+        "gloss": "resolved sense of span-language",
+        "contextual_sense": "Finalized via correspondence-model rather than literal quantification.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "measure-language determination",
+          "span-term resolution"
         ]
       }
     ],

@@ -22,22 +22,41 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "prāṇa-prāṇa-vacana-viveka",
+        "gloss": "discrimination of the phrase 'prana of prana'",
+        "contextual_sense": "Methodological cleanup: not every prana-phrase creates genuine ambiguity in the same way as the present passage.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "prana-phrase discrimination",
+          "context-sensitive reading"
         ]
+      },
+      {
+        "headword_iast": "śabda-bheda",
+        "gloss": "difference of wording",
+        "contextual_sense": "Sutra rejects false equivalence where wording and contextual setting already differ.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": ["lexical distinction", "verbal difference"]
+      },
+      {
+        "headword_iast": "prakaraṇa-niyama",
+        "gloss": "governance by context",
+        "contextual_sense": "The surrounding topic controls whether a term is genuinely open to multiple readings.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "contextual constraint",
+          "topic-bound determination"
+        ]
+      },
+      {
+        "headword_iast": "pitar-pitṛ-prayoga",
+        "gloss": "father-of-father usage",
+        "contextual_sense": "Illustrative grammar shows how a genitive-plus-nominative pattern fixes the intended relation.",
+        "grammatical_role": "illustrative compound",
+        "alternate_glosses": ["possessive example", "relational usage model"]
       }
     ],
-    "argument_tags": [
-      "response",
-      "definition",
-      "resolution",
-      "example"
-    ]
+    "argument_tags": ["response", "definition", "resolution", "example"]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",

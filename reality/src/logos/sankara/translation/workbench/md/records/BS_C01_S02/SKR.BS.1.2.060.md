@@ -33,11 +33,26 @@ Sutra marker for the cosmic-body hermeneutic criterion.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **rupa-upanyasat**
+  - Gloss: because of presentation of form
+  - Context: Sutra reason: cosmic-form exposition belongs to the previously established source-principle.
+  - Grammar: ablative reason phrase
+  - Alternate glosses: from form-presentation, due to cosmic-body exposition
+- **ca**
+  - Gloss: and, moreover
+  - Context: Connective indicating this is cumulative support atop prior proofs.
+  - Grammar: particle
+  - Alternate glosses: further, additionally
+- **sutra-linga**
+  - Gloss: aphoristic indicator
+  - Context: Rupa-upanyasa serves as concise inferential marker in sutra format.
+  - Grammar: compound noun
+  - Alternate glosses: terse sign, compressed indicator
+- **bhuta-yoni-brahma-siddhi**
+  - Gloss: establishment of source as Brahman
+  - Context: Final determination strengthened by cosmic-form continuity in the text.
+  - Grammar: compound noun
+  - Alternate glosses: source-Brahman proof, cosmic-origin Brahman establishment
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

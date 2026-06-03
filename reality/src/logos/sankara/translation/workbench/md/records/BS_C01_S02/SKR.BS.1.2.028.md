@@ -33,11 +33,26 @@ Sutra seal for the cave-entered two-selves reading.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **guham pravistau**
+  - Gloss: the two entered the cave
+  - Context: Sutra cites this as decisive textual marker for identifying both as selves.
+  - Grammar: quoted locative phrase
+  - Alternate glosses: cave-entry indicator, heart-cavity dual marker
+- **atmanau hi**
+  - Gloss: indeed, two selves
+  - Context: Aphoristic resolution that both dual referents are conscious principles.
+  - Grammar: assertive doctrinal phrase
+  - Alternate glosses: both are selves, self-dual assertion
+- **tad-darsanat**
+  - Gloss: because that is seen in scripture
+  - Context: Scriptural observation clause grounding the sutra’s inferential closure.
+  - Grammar: ablative reason term
+  - Alternate glosses: from textual witnessing, owing to scriptural indication
+- **linga-siddhi**
+  - Gloss: establishment by indicator
+  - Context: Summarizes how the guha-reference functions as linga to settle identity.
+  - Grammar: compound noun
+  - Alternate glosses: indicator-based establishment, sign-grounded proof
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

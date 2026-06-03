@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "heya-vacana-abhāva",
+        "gloss": "absence of discard-instruction",
+        "contextual_sense": "No scriptural move marks sat as something to abandon, unlike provisional pointing devices.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "no rejection directive",
+          "absence of renunciation cue"
+        ]
+      },
+      {
+        "headword_iast": "arundhatī-nyāya",
+        "gloss": "Arundhati teaching method analogy",
+        "contextual_sense": "Used to show when provisional designation is intended, text explicitly retracts it later.",
+        "grammatical_role": "illustrative compound",
+        "alternate_glosses": [
+          "progressive-pointing pedagogy",
+          "indirect indication model"
+        ]
+      },
+      {
+        "headword_iast": "ekavijñānena sarvavijñāna-pratijñā",
+        "gloss": "pledge that one knowledge yields all knowledge",
+        "contextual_sense": "Opening promise would fail if sat denoted only a partial material principle.",
+        "grammatical_role": "compound doctrinal phrase",
+        "alternate_glosses": [
+          "one-knowing-all pledge",
+          "total-knowledge through single insight"
+        ]
+      },
+      {
+        "headword_iast": "pratijñā-upapatti",
+        "gloss": "fulfillment of initial thesis",
+        "contextual_sense": "Hermeneutic reading must preserve the chapter’s declared pedagogical aim.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "thesis coherence",
+          "promise-justification"
+        ]
+      },
+      {
+        "headword_iast": "sat-śabda-brahma-paratva",
+        "gloss": "sat-word oriented to Brahman",
+        "contextual_sense": "Conclusion secures non-provisional referent across teaching sequence.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "being-term as Brahman-reference",
+          "sat-denotation finality"
         ]
       }
     ],

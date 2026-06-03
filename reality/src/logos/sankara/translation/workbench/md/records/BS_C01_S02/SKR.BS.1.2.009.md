@@ -33,11 +33,21 @@ Syntax-level role distinction becomes ontological indicator.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **karmakartr-vyapadesa**
+  - Gloss: designation of object and agent roles
+  - Context: Grammatical role differentiation ('Him' to be attained vs 'I' who attains) used to prove referential non-identity.
+  - Grammar: compound noun
+  - Alternate glosses: goal-agent designation, object-actor attribution
+- **upasya-upasaka-bheda**
+  - Gloss: difference between meditated object and meditator
+  - Context: Meditative structure requiring a distinction that blocks simple jiva self-reference.
+  - Grammar: compound noun
+  - Alternate glosses: worshiped-worshiper distinction, meditation subject-object difference
+- **abhisambhavita**
+  - Gloss: I shall attain/come into union with
+  - Context: Verbal indicator of directed attainment, implying a goal distinct from the present empirical self.
+  - Grammar: future verbal form (first person)
+  - Alternate glosses: will reach, will realize/attain
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

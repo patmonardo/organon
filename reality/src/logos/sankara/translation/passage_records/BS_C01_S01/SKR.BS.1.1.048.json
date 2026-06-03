@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "gati-sāmānyāt",
+        "gloss": "because of common trajectory",
+        "contextual_sense": "Sutra grounds conclusion in the shared direction of Vedantic testimony.",
+        "grammatical_role": "ablative reason term",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "from uniform scriptural movement",
+          "due to convergent textual drift"
+        ]
+      },
+      {
+        "headword_iast": "samanvaya-prakriyā",
+        "gloss": "procedure of convergence-reading",
+        "contextual_sense": "Diverse passages are read as coordinated witnesses to one causal referent.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "harmonization method",
+          "integrative reading protocol"
+        ]
+      },
+      {
+        "headword_iast": "brahma-kāraṇatva-siddhi",
+        "gloss": "establishment of Brahman as cause",
+        "contextual_sense": "Cross-passage coherence yields a positive causal determination, not only negative exclusion.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "Brahman-causality proof",
+          "causal Brahman establishment"
+        ]
+      },
+      {
+        "headword_iast": "pradhāna-aprasakti",
+        "gloss": "non-arising of Pradhana relevance",
+        "contextual_sense": "Given corpus direction, Pradhana no longer enters as live interpretive candidate.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "Pradhana non-applicability",
+          "inert-cause irrelevance"
         ]
       }
     ],

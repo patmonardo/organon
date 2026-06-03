@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "bheda-vyapadeśa",
+        "gloss": "explicit predication of difference",
+        "contextual_sense": "“Rasa” and “attainer of rasa” are read as pedagogical duality markers.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "difference-statement",
+          "dual predication"
+        ]
+      },
+      {
+        "headword_iast": "rasa-labdhi-vākya",
+        "gloss": "statement of attaining bliss-essence",
+        "contextual_sense": "Attainment grammar implies seeker and sought are provisionally distinct in instruction.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "bliss-attainment clause",
+          "rasa-acquisition expression"
+        ]
+      },
+      {
+        "headword_iast": "avidyā-kṛta-jīvatva",
+        "gloss": "jiva-status produced by ignorance",
+        "contextual_sense": "Empirical individuality is preserved as superimposed, not ultimate subject-truth.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "ignorance-conditioned individuality",
+          "superimposed finite-selfhood"
+        ]
+      },
+      {
+        "headword_iast": "ātma-lābha-vyavahāra",
+        "gloss": "discourse of “attaining the Self”",
+        "contextual_sense": "Interpreted as removal of error, not production or acquisition of a new entity.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "self-attainment idiom",
+          "realization-language usage"
+        ]
+      },
+      {
+        "headword_iast": "vyavahāra-paramārtha-samanvaya",
+        "gloss": "coordination of empirical and ultimate standpoints",
+        "contextual_sense": "Bhashya keeps transactional duality and final non-duality from collapsing into confusion.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "two-level reconciliation",
+          "empirical-ultimate alignment"
         ]
       }
     ],

@@ -33,11 +33,26 @@ Sutra compacts the bliss-causality proof.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **tad-hetu-vyapadeśāt ca**
+  - Gloss: and because of being declared the cause of that
+  - Context: Sutra condenses bliss-causality argument as direct indicator of referent status.
+  - Grammar: sutra reason phrase
+  - Alternate glosses: from cause-designation, due to source-attribution
+- **hetu-liṅga**
+  - Gloss: inferential sign from causality
+  - Context: Stated causal role functions as semantic criterion for term-resolution.
+  - Grammar: compound noun
+  - Alternate glosses: cause-marker, causal indicator
+- **ānanda-pravartakatva**
+  - Gloss: capacity to occasion bliss in others
+  - Context: Only an intrinsically full principle can ground universal bliss-dispensation.
+  - Grammar: abstract noun
+  - Alternate glosses: bliss-initiating role, joy-generative status
+- **brahma-lakṣaṇa-saṃgraha**
+  - Gloss: collection of Brahman-defining signs
+  - Context: This sutra adds another lakshana to prior abhyasa and contextual continuity grounds.
+  - Grammar: compound noun
+  - Alternate glosses: Brahman-mark aggregation, defining-sign consolidation
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

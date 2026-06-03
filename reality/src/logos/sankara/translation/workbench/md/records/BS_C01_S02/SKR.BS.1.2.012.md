@@ -33,11 +33,26 @@ Sutra condensation of linguistic-evidence argument.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
+- **sabda-visesat**
+  - Gloss: because of specific wording
+  - Context: Sutra-form reason: grammatical precision is treated as decisive inferential ground.
+  - Grammar: ablative causal phrase
+  - Alternate glosses: from textual specificity, owing to grammatical form
+- **linga-pramana**
+  - Gloss: indicative mark as means of proof
+  - Context: Sutra condenses the use of grammatical marking as linga for referent determination.
+  - Grammar: compound noun
+  - Alternate glosses: indicator-evidence, sign-based proof
+- **vakyartha-nirnaya**
+  - Gloss: determination of sentence-meaning
+  - Context: What the sutra secures by privileging precise expression over loose thematic reading.
+  - Grammar: compound noun
+  - Alternate glosses: semantic adjudication, sentence-level determination
+- **anvaya**
+  - Gloss: connected construal
+  - Context: Proper linkage of words/cases preserves doctrinal coherence and blocks mistaken identity claims.
   - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+  - Alternate glosses: syntactic connection, contextual linkage
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

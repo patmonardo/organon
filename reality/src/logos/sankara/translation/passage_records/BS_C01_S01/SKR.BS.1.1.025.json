@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "śravaṇa-manana-nididhyāsana",
+        "gloss": "hearing-reflection-contemplative assimilation triad",
+        "contextual_sense": "Interpreted as avagati-sadhana sequence, not proof that Brahman is vidhi-accessory.",
+        "grammatical_role": "compound triad term",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "triple discipline",
+          "knowledge-assimilation triad"
+        ]
+      },
+      {
+        "headword_iast": "avagati-sādhana",
+        "gloss": "means to ascertaining knowledge",
+        "contextual_sense": "Clarifies functional role of post-hearing practices within cognition, not ritual production.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "knowledge-means",
+          "ascertainment instrument"
+        ]
+      },
+      {
+        "headword_iast": "vidhi-śeṣatva-nirāsa",
+        "gloss": "rejection of injunction-subsidiary status",
+        "contextual_sense": "Denies that Brahman is merely an object inserted for commanding practice.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "anti-accessory thesis",
+          "injunction-subordination refusal"
+        ]
+      },
+      {
+        "headword_iast": "ahaṃ brahmāsmi-aparokṣa-niścaya",
+        "gloss": "immediate certainty of I-am-Brahman",
+        "contextual_sense": "Final realization sublates ordinary pramana-prameya transactionality.",
+        "grammatical_role": "compound doctrinal phrase",
+        "alternate_glosses": [
+          "direct nondual certainty",
+          "immediate identity ascertainment"
+        ]
+      },
+      {
+        "headword_iast": "pramāṇa-pravṛtti-bādha",
+        "gloss": "sublation of pramana operation",
+        "contextual_sense": "At ultimate realization level, empirical cognition-structures lose independent standing.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "epistemic transaction cancellation",
+          "means-of-knowledge sublation"
         ]
       }
     ],

@@ -33,11 +33,31 @@ Transforms locality-objection into a general rule of pedagogical specification.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **sthana-vyapadesa**
+  - Gloss: designation by place
+  - Context: Localizing language (eye, heart, etc.) is interpreted as contemplative upaya, not ontological confinement.
+  - Grammar: compound noun
+  - Alternate glosses: location-designation, site-attribution language
+- **nama-rupa-vyakarana**
+  - Gloss: designation by names and forms
+  - Context: Multiple appellations are treated as pedagogical handles for meditation practice.
+  - Grammar: compound noun
+  - Alternate glosses: name-form specification, didactic labeling
+- **upasana-upaya**
+  - Gloss: means for contemplative fixation
+  - Context: Hermeneutic strategy that reconciles finite descriptors with all-pervasive Brahman.
+  - Grammar: compound noun
+  - Alternate glosses: meditative aid, contemplative device
+- **sarvagatatva**
+  - Gloss: all-pervasiveness
+  - Context: Underlying metaphysical status preserved despite sectional local descriptors.
+  - Grammar: abstract noun
+  - Alternate glosses: omnipresence, unrestricted pervasion
+- **anavakalpti-dosa**
+  - Gloss: defect of impossible fit
+  - Context: Objection-term dissolved by showing plurality of sanctioned contemplative locations.
+  - Grammar: compound noun
+  - Alternate glosses: non-fit objection, incoherence challenge
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

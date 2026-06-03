@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "anusmrti-nimitta",
+        "gloss": "occasioned by meditative recollection",
+        "contextual_sense": "Badari grounds pradesa-matra in mnemonic-practice function rather than ontology.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "recollection-based reason",
+          "mnemonic contemplation basis"
+        ]
+      },
+      {
+        "headword_iast": "hrdaya-pratistha",
+        "gloss": "heart-centered establishment",
+        "contextual_sense": "Localization serves recollective concentration in upasana procedure.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "heart-seat placement",
+          "cardiac contemplative locus"
+        ]
+      },
+      {
+        "headword_iast": "prastha-yava-drstanta",
+        "gloss": "measure-grain analogy",
+        "contextual_sense": "Illustrates how naming by associated measure need not imply intrinsic dimensionality.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "standard-measure analogy",
+          "indirect-quantification example"
+        ]
+      },
+      {
+        "headword_iast": "badari-mata",
+        "gloss": "Badari’s interpretive position",
+        "contextual_sense": "Alternative harmonization emphasizing practice-memory over manifestation-language.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "Badari view",
+          "Badari explanation"
+        ]
+      },
+      {
+        "headword_iast": "a-parimana-brahman",
+        "gloss": "Brahman without intrinsic measure",
+        "contextual_sense": "Protective doctrinal baseline in Badari’s argument.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "non-quantified absolute",
+          "dimensionless Brahman"
         ]
       }
     ],

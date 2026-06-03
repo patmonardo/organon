@@ -22,13 +22,33 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "karmakartr-vyapadesa",
+        "gloss": "designation of object and agent roles",
+        "contextual_sense": "Grammatical role differentiation ('Him' to be attained vs 'I' who attains) used to prove referential non-identity.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "goal-agent designation",
+          "object-actor attribution"
+        ]
+      },
+      {
+        "headword_iast": "upasya-upasaka-bheda",
+        "gloss": "difference between meditated object and meditator",
+        "contextual_sense": "Meditative structure requiring a distinction that blocks simple jiva self-reference.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "worshiped-worshiper distinction",
+          "meditation subject-object difference"
+        ]
+      },
+      {
+        "headword_iast": "abhisambhavita",
+        "gloss": "I shall attain/come into union with",
+        "contextual_sense": "Verbal indicator of directed attainment, implying a goal distinct from the present empirical self.",
+        "grammatical_role": "future verbal form (first person)",
+        "alternate_glosses": [
+          "will reach",
+          "will realize/attain"
         ]
       }
     ],

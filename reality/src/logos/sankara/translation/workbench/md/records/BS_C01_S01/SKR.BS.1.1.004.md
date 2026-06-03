@@ -33,11 +33,31 @@ Extends the diagnosis from perceptual error to the full structure of worldly and
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
+- **avidya**
+  - Gloss: ignorance (as adhyasa-structure)
+  - Context: Pandita diagnosis: adhyasa itself is avidya, and vidya is its discriminative negation.
   - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+  - Alternate glosses: nescience, misapprehension condition
+- **atma-anatma-itaretara-adhyasa**
+  - Gloss: mutual superimposition of self and non-self
+  - Context: Foundational matrix generating empirical subject-object and normativity domains.
+  - Grammar: compound noun
+  - Alternate glosses: reciprocal misattribution, self-not-self cross-overlay
+- **pramana-prameya-vyavahara**
+  - Gloss: epistemic transaction of means and objects of knowledge
+  - Context: Declared to function only within avidya-conditioned experience.
+  - Grammar: compound noun
+  - Alternate glosses: knowledge-practice domain, means-object transactional field
+- **vidhi-nisedha-sastra**
+  - Gloss: injunction-prohibition scriptural domain
+  - Context: Ritual-ethical prescriptions presuppose adhyasa-level agenthood.
+  - Grammar: compound noun
+  - Alternate glosses: normative scripture, prescriptive-proscriptive discourse
+- **atmaikatva-vidya**
+  - Gloss: knowledge of self-nonduality
+  - Context: Vedanta’s terminal function: sublation of adhyasa through discriminative realization.
+  - Grammar: compound noun
+  - Alternate glosses: nondual self-knowledge, unity-realization
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 opening pass with stable inferential-tag schema.

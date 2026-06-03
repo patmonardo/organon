@@ -33,11 +33,26 @@ Sutra seal invoking supplementary scriptural testimony.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **amananti**
+  - Gloss: they teach/transmit in tradition
+  - Context: Sutra invokes supplementary transmitted authority to reinforce Vaisvanara as Brahman.
+  - Grammar: finite verbal form
+  - Alternate glosses: they declare, they hand down
+- **ca enam**
+  - Gloss: and Him (indeed this very referent)
+  - Context: Anaphoric pointer preserves continuity with the already-determined Vaisvanara-Ishvara referent.
+  - Grammar: enclitic demonstrative phrase
+  - Alternate glosses: and this one, and that very one
+- **asmin**
+  - Gloss: in this locus/context
+  - Context: Locative marker indicating corroborative teaching appears in this very doctrinal frame.
+  - Grammar: locative pronoun
+  - Alternate glosses: herein, in this setting
+- **amnaya-samarthana**
+  - Gloss: support from transmitted scriptural tradition
+  - Context: Concluding corroboration strategy: auxiliary testimony seals the established Brahman reading.
+  - Grammar: compound noun
+  - Alternate glosses: traditional witness support, lineage-text corroboration
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

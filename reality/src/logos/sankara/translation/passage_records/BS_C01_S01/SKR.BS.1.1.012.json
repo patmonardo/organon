@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "vedanta-vakya-mimamsa",
+        "gloss": "critical inquiry into Vedanta sentences",
+        "contextual_sense": "Bhashya frames sutra-work as organizing and deciding Upanishadic sentence-meaning, not independent speculation.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "Vedanta sentence hermeneutics",
+          "Upanishadic interpretive inquiry"
+        ]
+      },
+      {
+        "headword_iast": "vakyartha-niscaya",
+        "gloss": "determination of sentence meaning",
+        "contextual_sense": "Brahman-knowledge is said to culminate through settled import of sruti statements.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "semantic determination",
+          "statement-import ascertainment"
+        ]
+      },
+      {
+        "headword_iast": "sruti-anugrhita-tarka",
+        "gloss": "reasoning supported by scripture",
+        "contextual_sense": "Tarka/anumana accepted only as auxiliary when governed by revealed textual intent.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "scripture-guided reasoning",
+          "subordinate inference"
+        ]
+      },
+      {
+        "headword_iast": "pramana-antara-nirasa",
+        "gloss": "rejection of independent non-scriptural pramana here",
+        "contextual_sense": "Brahman is not established by autonomous inference apart from Vedanta testimony.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "non-sruti proof exclusion",
+          "independent inference denial"
+        ]
+      },
+      {
+        "headword_iast": "sutra-kusuma-grathana",
+        "gloss": "sutras as garland-threading of Vedanta passages",
+        "contextual_sense": "Metaphor for compositional role: systematizing scattered revelations into coherent argument.",
+        "grammatical_role": "compound metaphor noun",
+        "alternate_glosses": [
+          "aphoristic stringing",
+          "doctrinal arrangement"
         ]
       }
     ],

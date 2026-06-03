@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "ākāśaḥ tat-liṅgāt",
+        "gloss": "akasha due to contextual sign",
+        "contextual_sense": "Aphoristic closure: here akasha denotes Brahman on marker-based grounds.",
+        "grammatical_role": "sutra phrase",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "Brahman-akasha conclusion",
+          "liṅga-based akasha verdict"
+        ]
+      },
+      {
+        "headword_iast": "liṅga-prābalya",
+        "gloss": "strength of contextual indicator",
+        "contextual_sense": "Semantic sign-force outruns dictionary-priority when conflict appears.",
+        "grammatical_role": "abstract noun",
+        "alternate_glosses": [
+          "marker dominance",
+          "contextual force superiority"
+        ]
+      },
+      {
+        "headword_iast": "bhūtākāśa-vyāvṛtti",
+        "gloss": "exclusion of elemental space referent",
+        "contextual_sense": "Physical-space meaning is ruled out as insufficient for stated predicates.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "ether-reading exclusion",
+          "elemental referent elimination"
+        ]
+      },
+      {
+        "headword_iast": "adhikaraṇa-parisamāpti",
+        "gloss": "topical closure",
+        "contextual_sense": "Marks end of akasha adjudication sequence before prana dispute begins.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "argument completion",
+          "topic wrap-up"
         ]
       }
     ],

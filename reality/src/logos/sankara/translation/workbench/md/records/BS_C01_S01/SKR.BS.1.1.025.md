@@ -33,11 +33,31 @@ Clarifies that post-knowledge cessation is structural, not anti-scriptural.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **śravaṇa-manana-nididhyāsana**
+  - Gloss: hearing-reflection-contemplative assimilation triad
+  - Context: Interpreted as avagati-sadhana sequence, not proof that Brahman is vidhi-accessory.
+  - Grammar: compound triad term
+  - Alternate glosses: triple discipline, knowledge-assimilation triad
+- **avagati-sādhana**
+  - Gloss: means to ascertaining knowledge
+  - Context: Clarifies functional role of post-hearing practices within cognition, not ritual production.
+  - Grammar: compound noun
+  - Alternate glosses: knowledge-means, ascertainment instrument
+- **vidhi-śeṣatva-nirāsa**
+  - Gloss: rejection of injunction-subsidiary status
+  - Context: Denies that Brahman is merely an object inserted for commanding practice.
+  - Grammar: compound noun
+  - Alternate glosses: anti-accessory thesis, injunction-subordination refusal
+- **ahaṃ brahmāsmi-aparokṣa-niścaya**
+  - Gloss: immediate certainty of I-am-Brahman
+  - Context: Final realization sublates ordinary pramana-prameya transactionality.
+  - Grammar: compound doctrinal phrase
+  - Alternate glosses: direct nondual certainty, immediate identity ascertainment
+- **pramāṇa-pravṛtti-bādha**
+  - Gloss: sublation of pramana operation
+  - Context: At ultimate realization level, empirical cognition-structures lose independent standing.
+  - Grammar: compound noun
+  - Alternate glosses: epistemic transaction cancellation, means-of-knowledge sublation
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

@@ -33,11 +33,31 @@ Repetition plus pedagogical sequencing overturns the sheath-only reading.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **ānanda-abhyāsa**
+  - Gloss: repeated deployment of ananda language
+  - Context: Frequency of bliss-terms around the section is used to stabilize a Brahman-reading.
+  - Grammar: compound noun
+  - Alternate glosses: bliss-term recurrence, ananda reiteration
+- **rasa-vai-saḥ-vākya**
+  - Gloss: the “He is rasa” declaration
+  - Context: Bliss-essence statement links anandamaya to highest experiential plenitude.
+  - Grammar: quoted doctrinal phrase
+  - Alternate glosses: rasa formula, essence-of-bliss statement
+- **antara-tama-pratipatti**
+  - Gloss: ascertainment of innermost status
+  - Context: Pedagogical inward movement culminates in what is ontologically deepest, not another finite layer.
+  - Grammar: compound noun
+  - Alternate glosses: innermost determination, deepest-self ascertainment
+- **upādhi-kṛta-avayava-vyavahāra**
+  - Gloss: member-language conditioned by adjuncts
+  - Context: Partitive expressions are treated as pedagogical superimpositions rather than literal composition.
+  - Grammar: compound noun
+  - Alternate glosses: adjunct-based part discourse, didactic composite language
+- **siddhānta-nirṇaya**
+  - Gloss: doctrinal adjudication
+  - Context: Bhashya resolves the ambiguity toward Brahman while preserving instructional sequencing.
+  - Grammar: compound noun
+  - Alternate glosses: settled conclusion, final determination
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

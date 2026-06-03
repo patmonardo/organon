@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "sastra-yonitvat",
+        "gloss": "because scripture is its source/means",
+        "contextual_sense": "Interpreted to secure Brahman through sruti-pramana, not free-standing inference.",
+        "grammatical_role": "ablative reason phrase",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "from scripture-source relation",
+          "due to scriptural origin-proof"
+        ]
+      },
+      {
+        "headword_iast": "janmadi-sutra-vyakhya",
+        "gloss": "clarification of prior janmadi-sutra reading",
+        "contextual_sense": "Prevents reduction of first causal sutra to mere speculative cosmology.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "janmadi interpretation correction",
+          "causal-sutra refinement"
+        ]
+      },
+      {
+        "headword_iast": "sruti-pramanya-niscaya",
+        "gloss": "fixing scriptural authority as decisive",
+        "contextual_sense": "Brahman-knowledge is tied to Vedanta textual revelation as primary ground.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "scriptural primacy determination",
+          "revelation-authority fixing"
+        ]
+      },
+      {
+        "headword_iast": "anumana-anuvartin-upakarana",
+        "gloss": "inference as subordinate follow-up aid",
+        "contextual_sense": "Reasoning may assist only after sruti has determined object identity.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "secondary inferential helper",
+          "post-sruti logical aid"
+        ]
+      },
+      {
+        "headword_iast": "purvapaksa-vyavaccheda",
+        "gloss": "exclusion of mistaken prior reading",
+        "contextual_sense": "Sutra interpretation explicitly blocks alternate epistemic framing.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "misreading elimination",
+          "objection removal"
         ]
       }
     ],

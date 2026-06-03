@@ -33,11 +33,26 @@ Sutra close for the fearlessness-through-identity argument.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **asminn asya ca tad-yogaṃ śāsti**
+  - Gloss: and in this, scripture teaches his union with that
+  - Context: Sutra finalizes identity-instruction as decisive indicator for anandamaya referent.
+  - Grammar: sutra phrase
+  - Alternate glosses: this-context identity teaching, that-union doctrinal instruction
+- **tad-yoga-liṅga**
+  - Gloss: indicator from identity/union teaching
+  - Context: Instructional fruit becomes semantic criterion for referent determination.
+  - Grammar: compound noun
+  - Alternate glosses: union-teaching marker, assimilation sign
+- **abhaya-phala-sākṣya**
+  - Gloss: testimony from fearlessness-result
+  - Context: Promised fearlessness corroborates Brahman-reference over lower ontic candidates.
+  - Grammar: compound noun
+  - Alternate glosses: fearlessness evidence, result-based witness
+- **adhikaraṇa-samāpti**
+  - Gloss: closure of topical unit
+  - Context: Marks completion of the anandamaya adjudication cycle in the sutra chain.
+  - Grammar: compound noun
+  - Alternate glosses: topic conclusion, argumental closure
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

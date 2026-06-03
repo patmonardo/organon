@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "brahman",
-        "gloss": "ultimate reality",
-        "contextual_sense": "Primary interpretive referent under adjudication in this adhikarana",
+        "headword_iast": "vivaksa",
+        "gloss": "intended force of expression",
+        "contextual_sense": "Operationally defined via what is normatively to be adopted in upasana, not psychological speaker intention.",
         "grammatical_role": "noun",
         "alternate_glosses": [
-          "absolute",
-          "supreme principle"
+          "intended purport",
+          "semantic intention"
+        ]
+      },
+      {
+        "headword_iast": "upadeyata",
+        "gloss": "adoptability, practical uptake",
+        "contextual_sense": "Criterion for deciding which predicates are doctrinally operative in meditation-context.",
+        "grammatical_role": "abstract noun",
+        "alternate_glosses": [
+          "normative applicability",
+          "meditative uptake value"
+        ]
+      },
+      {
+        "headword_iast": "satyasankalpa",
+        "gloss": "whose resolve is unfailingly real",
+        "contextual_sense": "Predicate treated as properly fitting omnipotent saguna-brahman rather than finite jiva.",
+        "grammatical_role": "bahuvrihi compound",
+        "alternate_glosses": [
+          "true-willed",
+          "infallible in resolve"
+        ]
+      },
+      {
+        "headword_iast": "saguna-brahman",
+        "gloss": "Brahman considered with qualifying attributes",
+        "contextual_sense": "Mode in which mind/prana and other relational predicates are admissibly attributed without denying nirguna statements.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "qualified Brahman",
+          "attribute-bearing Brahman"
         ]
       }
     ],

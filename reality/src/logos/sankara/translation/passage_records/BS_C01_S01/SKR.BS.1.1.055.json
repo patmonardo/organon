@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "ānandamayo abhyāsāt",
+        "gloss": "anandamaya, due to repetition",
+        "contextual_sense": "Sutra crystallizes recurrent bliss-language as decisive for referent fixation.",
+        "grammatical_role": "sutra phrase",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "anandamaya by reiteration",
+          "repetition-based determination"
+        ]
+      },
+      {
+        "headword_iast": "abhyāsa-liṅga",
+        "gloss": "indicator from repeated usage",
+        "contextual_sense": "Hermeneutic sign that recurrence tracks primary topic rather than incidental descriptor.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "repetition marker",
+          "iterative sign"
+        ]
+      },
+      {
+        "headword_iast": "brahma-paratva-niścaya",
+        "gloss": "ascertainment of Brahman-orientation",
+        "contextual_sense": "Short aphorism settles kosha-versus-Brahman dispute in favor of the latter.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "Brahman referent fixation",
+          "supreme-orientation certainty"
+        ]
+      },
+      {
+        "headword_iast": "kośa-pakṣa-vyāvṛtti",
+        "gloss": "exclusion of sheath-only view",
+        "contextual_sense": "Finite layer interpretation is set aside at the sutra level.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "sheath reading exclusion",
+          "layer-model rejection"
         ]
       }
     ],

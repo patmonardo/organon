@@ -33,11 +33,31 @@ Adhyatma framing and seer-seen structure determine the pair.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **rathin-ratha-rupaka**
+  - Gloss: chariot-rider allegory
+  - Context: Intertextual support used to profile the empirical self as traveler in samsara-moksa trajectory.
+  - Grammar: compound metaphor label
+  - Alternate glosses: chariot allegory, rider-vehicle schema
+- **bhokta-saksi-dvaya**
+  - Gloss: enjoyer-witness pair
+  - Context: Mapped across Katha and Mundaka to stabilize jiva-Paramatma dual structure.
+  - Grammar: compound noun
+  - Alternate glosses: experiencer-observer dyad, consumer-witness duality
+- **samsara-moksa-gamana**
+  - Gloss: movement through bondage and release
+  - Context: Marks the functional role of jiva in contrast to non-transmigrating witness.
+  - Grammar: compound noun
+  - Alternate glosses: transmigration-liberation trajectory, path of bondage and release
+- **antartexta-samarthana**
+  - Gloss: cross-textual reinforcement
+  - Context: Bhashya method of triangulating meaning through multiple Upanisadic loci.
+  - Grammar: compound noun
+  - Alternate glosses: intertextual corroboration, multi-text support
+- **jiva-paramatma-viveka**
+  - Gloss: discernment between individual and Supreme
+  - Context: Interpretive payoff of the extended textual mapping in this continuation.
+  - Grammar: compound noun
+  - Alternate glosses: self-Supreme discrimination, individual-Lord differentiation
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

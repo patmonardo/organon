@@ -33,11 +33,31 @@ Cosmic-form language is hermeneutic, signaling total immanence rather than finit
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
+- **rupa-upanyasa**
+  - Gloss: presentation of cosmic form
+  - Context: Imagery of universal body is read as exposition of already established bhuta-yoni.
+  - Grammar: compound noun
+  - Alternate glosses: form-deployment, cosmic-form exposition
+- **prakarana**
+  - Gloss: contextual topic continuity
+  - Context: Ensures the form-passage remains tied to prior Brahman cause-topic.
   - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+  - Alternate glosses: topic frame, section continuity
+- **anukarsana**
+  - Gloss: carry-forward by pronoun/reference
+  - Context: Referential continuity marker linking ensuing imagery to the same source principle.
+  - Grammar: compound noun
+  - Alternate glosses: referential pull-through, pronominal continuity
+- **sarva-vikara-atmaka-rupa**
+  - Gloss: form consisting of all modifications
+  - Context: Universal-body depiction supports Brahmanic causal scope rather than finite entity.
+  - Grammar: compound noun
+  - Alternate glosses: all-modification form, cosmic aggregate body
+- **bhuta-yoni-brahma-anvaya**
+  - Gloss: linking source-principle to Brahman through form passage
+  - Context: Hermeneutic payoff of this section: cosmic imagery strengthens prior Brahman identification.
+  - Grammar: compound noun
+  - Alternate glosses: source-Brahman continuity, form-based Brahman linkage
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

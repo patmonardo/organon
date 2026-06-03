@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "kutaś ca na pradhānaṃ jagataḥ kāraṇam",
+        "gloss": "what further denies Pradhana as world-cause?",
+        "contextual_sense": "Question-form launches the sutra that formalizes cross-text convergence reasoning.",
+        "grammatical_role": "interrogative phrase",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "why not Pradhana as cosmic cause?",
+          "next exclusion query"
+        ]
+      },
+      {
+        "headword_iast": "sūtra-praveśa-praśna",
+        "gloss": "entry question before aphoristic decision",
+        "contextual_sense": "Transitional prompt tightens focus from discourse argument to canonical sutra closure.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "pre-sutra interrogative",
+          "decision-gateway question"
+        ]
+      },
+      {
+        "headword_iast": "pramāṇa-saṅkalana-krama",
+        "gloss": "sequenced accumulation of evidence",
+        "contextual_sense": "Shows method of stacked reasons rather than one-shot refutation.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "layered proof order",
+          "cumulative warrant sequence"
+        ]
+      },
+      {
+        "headword_iast": "adhikaraṇa-gati-parivarta",
+        "gloss": "shift in argumentative motion",
+        "contextual_sense": "Moves from sleep-based indicator to corpus-wide trajectory principle.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "topic-motion shift",
+          "reasoning-vector transition"
         ]
       }
     ],

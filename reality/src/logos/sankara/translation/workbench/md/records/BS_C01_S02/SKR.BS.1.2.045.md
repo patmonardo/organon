@@ -33,11 +33,31 @@ Positive attribute match plus anti-regress argument secures Brahman identity.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **taddharma-vyapadesa**
+  - Gloss: ascription of His (Brahman’s) properties
+  - Context: Principal proof: attributes named in the passage align with Brahman alone.
+  - Grammar: compound noun
+  - Alternate glosses: Brahman-property attribution, divine attribute designation
+- **adhidaiva-adhy-atma-bheda**
+  - Gloss: distinction across deity and embodied domains
+  - Context: Controller is shown as distinct from each controlled domain, including presiding deities.
+  - Grammar: compound noun
+  - Alternate glosses: domain-level differentiation, cosmic-individual distinction grid
+- **sarva-vikara-niyantrtva**
+  - Gloss: governance over all modifications
+  - Context: Universal control function exceeds finite agents and supports Paramatman identity.
+  - Grammar: compound noun
+  - Alternate glosses: total regulatory sovereignty, universal modification-control
+- **anavastha-pratisedha**
+  - Gloss: blocking infinite regress
+  - Context: If controller were itself controlled entity, regress would follow; Brahman avoids this.
+  - Grammar: compound noun
+  - Alternate glosses: regress prevention, non-regressive closure
+- **paramatma-nirnaya**
+  - Gloss: determination as Supreme Self
+  - Context: Bhashya resolves antaryamin identity conclusively in favor of Brahman.
+  - Grammar: compound noun
+  - Alternate glosses: Supreme-self adjudication, final controller identity
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

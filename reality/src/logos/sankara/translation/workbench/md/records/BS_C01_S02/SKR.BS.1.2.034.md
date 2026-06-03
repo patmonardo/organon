@@ -33,11 +33,31 @@ Predicate-coherence overrules mere location-based reduction.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
+- **upapatti**
+  - Gloss: coherent explanatory fit
+  - Context: Primary criterion: only Ishvara adequately supports the full predicate set in the passage.
   - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+  - Alternate glosses: rational fit, explanatory suitability
+- **atmatva**
+  - Gloss: selfhood predicate
+  - Context: Taken in principal sense as fitting the Supreme Self rather than derivative entities.
+  - Grammar: abstract noun
+  - Alternate glosses: status as Self, true self-reference
+- **amrtatva-abhayatva**
+  - Gloss: immortality and fearlessness
+  - Context: Key theological predicates marshaled to disqualify finite ocular candidates.
+  - Grammar: compound abstract noun
+  - Alternate glosses: deathlessness and fearlessness, transcendent safety predicates
+- **aliptatva**
+  - Gloss: non-adherence, untouchedness
+  - Context: Eye-contact imagery (ghee/water) is read as marker of unaffected transcendence.
+  - Grammar: abstract noun
+  - Alternate glosses: unstained nature, non-contact purity
+- **samyadvama-vamani-bhamani**
+  - Gloss: special functional epithets in the section
+  - Context: Attribute-cluster interpreted as fitting Ishvara-level significance, not mere reflection or organ-function.
+  - Grammar: epithet series
+  - Alternate glosses: sectional divine epithets, functional qualifier triad
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "guham pravistau",
+        "gloss": "the two entered the cave",
+        "contextual_sense": "Sutra cites this as decisive textual marker for identifying both as selves.",
+        "grammatical_role": "quoted locative phrase",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "cave-entry indicator",
+          "heart-cavity dual marker"
+        ]
+      },
+      {
+        "headword_iast": "atmanau hi",
+        "gloss": "indeed, two selves",
+        "contextual_sense": "Aphoristic resolution that both dual referents are conscious principles.",
+        "grammatical_role": "assertive doctrinal phrase",
+        "alternate_glosses": [
+          "both are selves",
+          "self-dual assertion"
+        ]
+      },
+      {
+        "headword_iast": "tad-darsanat",
+        "gloss": "because that is seen in scripture",
+        "contextual_sense": "Scriptural observation clause grounding the sutra’s inferential closure.",
+        "grammatical_role": "ablative reason term",
+        "alternate_glosses": [
+          "from textual witnessing",
+          "owing to scriptural indication"
+        ]
+      },
+      {
+        "headword_iast": "linga-siddhi",
+        "gloss": "establishment by indicator",
+        "contextual_sense": "Summarizes how the guha-reference functions as linga to settle identity.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "indicator-based establishment",
+          "sign-grounded proof"
         ]
       }
     ],

@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "headword_iast": "kriyarthatva-vada",
+        "gloss": "thesis that scripture is action-oriented",
+        "contextual_sense": "Purvapaksa applies strict Jaimini-style criterion to assimilate Vedanta into injunction framework.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "action-centric hermeneutic",
+          "injunction primacy thesis"
+        ]
+      },
+      {
+        "headword_iast": "vidhi-sesatva",
+        "gloss": "status as subordinate to injunction",
+        "contextual_sense": "Brahman-passages are argued to function like ritual accessories.",
+        "grammatical_role": "abstract noun",
+        "alternate_glosses": [
+          "injunction accessory status",
+          "subsidiary textual role"
+        ]
+      },
+      {
+        "headword_iast": "jaimini-paksa",
+        "gloss": "Mimamsa-style objectional stance",
+        "contextual_sense": "Framework pressuring all scriptural language toward codana-function.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "purvapaksa mimamsa view",
+          "ritualist reading"
+        ]
+      },
+      {
+        "headword_iast": "upasana-vidhi-kalpana",
+        "gloss": "construction as meditation injunction",
+        "contextual_sense": "Strategy to preserve kriyarthatva by recoding declarative passages as practice directives.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "meditation-prescription recoding",
+          "injunctional reinterpretation"
+        ]
+      },
+      {
+        "headword_iast": "purvapaksa",
+        "gloss": "prima facie objection",
+        "contextual_sense": "Sets up the key hermeneutic conflict resolved in subsequent records.",
         "grammatical_role": "noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "initial thesis",
+          "objectional frame"
         ]
       }
     ],

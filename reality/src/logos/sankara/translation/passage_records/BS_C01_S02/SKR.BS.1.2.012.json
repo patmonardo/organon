@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "headword_iast": "sabda-visesat",
+        "gloss": "because of specific wording",
+        "contextual_sense": "Sutra-form reason: grammatical precision is treated as decisive inferential ground.",
+        "grammatical_role": "ablative causal phrase",
+        "alternate_glosses": [
+          "from textual specificity",
+          "owing to grammatical form"
+        ]
+      },
+      {
+        "headword_iast": "linga-pramana",
+        "gloss": "indicative mark as means of proof",
+        "contextual_sense": "Sutra condenses the use of grammatical marking as linga for referent determination.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "indicator-evidence",
+          "sign-based proof"
+        ]
+      },
+      {
+        "headword_iast": "vakyartha-nirnaya",
+        "gloss": "determination of sentence-meaning",
+        "contextual_sense": "What the sutra secures by privileging precise expression over loose thematic reading.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "semantic adjudication",
+          "sentence-level determination"
+        ]
+      },
+      {
+        "headword_iast": "anvaya",
+        "gloss": "connected construal",
+        "contextual_sense": "Proper linkage of words/cases preserves doctrinal coherence and blocks mistaken identity claims.",
         "grammatical_role": "noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "syntactic connection",
+          "contextual linkage"
         ]
       }
     ],

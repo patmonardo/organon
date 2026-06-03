@@ -33,11 +33,26 @@ Sutra triad rebuts the jatharagni-only interpretation.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **sabdadibhyo antah-pratisthanac ca na**
+  - Gloss: not (rejected) merely from lexical and locative grounds
+  - Context: Sutra denies the purvapaksa exclusion of Brahman based on word-usage and inner location.
+  - Grammar: negative argumentative clause
+  - Alternate glosses: word/location objection denied, lexical-locative refutation
+- **drsti-upadesat**
+  - Gloss: because of contemplative instruction
+  - Context: Primary sutra reason preserving Brahman-reference despite fire-language.
+  - Grammar: ablative reason phrase
+  - Alternate glosses: from meditation-teaching, due to vision-instruction
+- **asambhavat**
+  - Gloss: because of impossibility (otherwise)
+  - Context: Alternative candidates cannot bear full set of textual predicates.
+  - Grammar: ablative reason term
+  - Alternate glosses: from non-fit, due to infeasibility
+- **purusam api enam adhiyate**
+  - Gloss: and this is also read as a person
+  - Context: Recensional testimony further supports non-literal, personal-cosmic referent.
+  - Grammar: textual assertion phrase
+  - Alternate glosses: also transmitted as purusa, person-reading attested
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "headword_iast": "visesana",
+        "gloss": "qualifying descriptor",
+        "contextual_sense": "Sutra reason: specific qualifiers in the source text distinguish the intended referent pair.",
         "grammatical_role": "noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "qualifier",
+          "determinative attribute"
+        ]
+      },
+      {
+        "headword_iast": "linga-pramana",
+        "gloss": "indicator-based proof",
+        "contextual_sense": "Qualifiers operate as linga to settle interpretation in favor of jiva-Paramatman reading.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "sign-evidence",
+          "indicative warrant"
+        ]
+      },
+      {
+        "headword_iast": "dvaya-nirnaya",
+        "gloss": "determination of the intended pair",
+        "contextual_sense": "Aphoristic closure of candidate uncertainty by appeal to qualifier fit.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "pair adjudication",
+          "dual-reference settlement"
+        ]
+      },
+      {
+        "headword_iast": "sutra-sankshepa",
+        "gloss": "aphoristic condensation",
+        "contextual_sense": "Condenses the broader bhashya argument into one causal marker: visesana.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "terse doctrinal compression",
+          "brief inferential node"
         ]
       }
     ],

@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "na bhoga",
+        "gloss": "no experiential accrual",
+        "contextual_sense": "Sutra denial that Brahman becomes subject to finite karmic enjoyment/suffering.",
+        "grammatical_role": "negative doctrinal predication",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "no bhoga-transfer",
+          "absence of experiential attribution"
+        ]
+      },
+      {
+        "headword_iast": "bheda-vyavastha",
+        "gloss": "regulated distinction framework",
+        "contextual_sense": "Maintains operational difference sufficient to block objection while preserving higher non-duality.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "structured differentiation",
+          "functional distinction order"
+        ]
+      },
+      {
+        "headword_iast": "adhikarana-parisamapti",
+        "gloss": "closure of topical inferential cycle",
+        "contextual_sense": "Sutra seals the bhoga-objection sequence with a concise negative conclusion.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "topic closure",
+          "argument cycle completion"
+        ]
+      },
+      {
+        "headword_iast": "sarvagatabrahman",
+        "gloss": "all-pervading Brahman",
+        "contextual_sense": "Affirmed without conceding experiential contamination by finite embodied states.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "omnipresent absolute",
+          "all-pervasive reality"
         ]
       }
     ],

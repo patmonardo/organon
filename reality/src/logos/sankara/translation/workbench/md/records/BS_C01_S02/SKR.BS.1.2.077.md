@@ -33,11 +33,26 @@ Sutra encapsulates the recollection-based account.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **anusmrteh**
+  - Gloss: because of recollection
+  - Context: Sutra reason adopting Badari’s mnemonic explanation for measure-language.
+  - Grammar: ablative reason term
+  - Alternate glosses: from contemplative memory, due to meditative recollection
+- **badarih**
+  - Gloss: Badari
+  - Context: Named authority for the recollection-based harmonization.
+  - Grammar: proper noun
+  - Alternate glosses: sage Badari, Badari teacher-position
+- **pradesa-matra-vyakhya**
+  - Gloss: interpretation of span-language
+  - Context: Finite wording treated as upasana-memory aid, not objective measure.
+  - Grammar: compound noun
+  - Alternate glosses: measure-expression explanation, span-term exegesis
+- **sutra-nirnaya**
+  - Gloss: aphoristic adjudication
+  - Context: Brief acceptance of Badari’s resolution within the multi-view sequence.
+  - Grammar: compound noun
+  - Alternate glosses: terse determination, compact doctrinal verdict
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

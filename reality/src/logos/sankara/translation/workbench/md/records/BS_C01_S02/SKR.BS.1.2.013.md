@@ -33,11 +33,26 @@ Cross-text reinforcement from Gita-style antaryami language.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
+- **smrti**
+  - Gloss: remembered tradition (e.g., Gita)
+  - Context: Corroborative authority used to reinforce bheda already grounded in sruti reasoning.
   - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+  - Alternate glosses: traditional scripture, secondary revelation
+- **jiva-isvara-bheda**
+  - Gloss: difference between individual self and Lord
+  - Context: Doctrinal distinction cited from smriti to support non-identity in contemplative grammar.
+  - Grammar: compound noun
+  - Alternate glosses: soul-Lord distinction, individual-divine differentiation
+- **anugraha-pramana**
+  - Gloss: supportive evidentiary reinforcement
+  - Context: Smrti functions not as primary source here, but as confirmatory strengthening of prior siddhanta.
+  - Grammar: compound noun
+  - Alternate glosses: confirming proof, supplementary validation
+- **adhikarana-samarthana**
+  - Gloss: support of the topical conclusion
+  - Context: The line’s function is to stabilize the current adhikarana decision before moving onward.
+  - Grammar: compound noun
+  - Alternate glosses: topic-level support, argument stabilization
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

@@ -22,13 +22,33 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "headword_iast": "karmakartr-vyapadesac ca",
+        "gloss": "and because of object-agent designation",
+        "contextual_sense": "Sutra condensation of grammatical-role argument for distinct meditative referent.",
+        "grammatical_role": "sutra phrase",
+        "alternate_glosses": [
+          "further from role differentiation",
+          "also due to goal-agent distinction"
+        ]
+      },
+      {
+        "headword_iast": "vyapadesa",
+        "gloss": "designation by textual expression",
+        "contextual_sense": "Explicit linguistic assignment that carries inferential force in referent adjudication.",
         "grammatical_role": "noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "naming indication",
+          "scriptural designation"
+        ]
+      },
+      {
+        "headword_iast": "bheda-hetu",
+        "gloss": "ground for difference",
+        "contextual_sense": "Argumentative function of the sutra: to establish non-identity between embodied seeker and meditative goal.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "differentiating reason",
+          "basis of non-identity"
         ]
       }
     ],

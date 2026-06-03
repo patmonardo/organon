@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "smrti-anumana-linga",
+        "gloss": "remembered text as inferential indicator",
+        "contextual_sense": "Smrti cosmic-body verse is treated as a valid linga supporting Vaisvanara=Brahman.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "memory-text inference sign",
+          "Smrti corroborative marker"
+        ]
+      },
+      {
+        "headword_iast": "trilokyatmaka-rupa",
+        "gloss": "form constituted by three worlds",
+        "contextual_sense": "Universal form-ascription aligns with Brahmanic cosmological scope.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "three-world body",
+          "cosmic triadic form"
+        ]
+      },
+      {
+        "headword_iast": "lokatman",
+        "gloss": "Self of the worlds",
+        "contextual_sense": "Smrti epithet reinforcing totalized, non-local referent identity.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "world-self",
+          "cosmic self"
+        ]
+      },
+      {
+        "headword_iast": "sruti-mula-smrti-nyaya",
+        "gloss": "principle that valid Smrti rests on Sruti source",
+        "contextual_sense": "Justifies importing Smrti as secondary evidence in Vedantic referent determination.",
+        "grammatical_role": "compound hermeneutic principle",
+        "alternate_glosses": [
+          "Sruti-grounded Smrti rule",
+          "memory-text source principle"
+        ]
+      },
+      {
+        "headword_iast": "vaisvanara-brahman-samarthana",
+        "gloss": "support for Vaisvanara as Brahman",
+        "contextual_sense": "Net function of Smrti citation: corroborative reinforcement of siddhanta.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "Vaisvanara-Brahman support",
+          "cosmic-self confirmation"
         ]
       }
     ],

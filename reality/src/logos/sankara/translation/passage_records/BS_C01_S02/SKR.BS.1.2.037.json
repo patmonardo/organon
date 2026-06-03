@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "sthanadi-vyapadesat",
+        "gloss": "because of place-and-related designations",
+        "contextual_sense": "Sutra endorses interpretive legitimacy of location-style language in Brahman passages.",
+        "grammatical_role": "ablative reason phrase",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "from locative designation",
+          "due to site-form attribution"
+        ]
+      },
+      {
+        "headword_iast": "upasana-prayojana",
+        "gloss": "purpose of meditative instruction",
+        "contextual_sense": "Explains why finite-style descriptors are retained without literal limitation implications.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "contemplative purpose",
+          "instructional aim"
+        ]
+      },
+      {
+        "headword_iast": "vyavahara-anukula-bhasa",
+        "gloss": "language adapted to practical cognition",
+        "contextual_sense": "Scriptural speech mode that facilitates practice while preserving higher non-dual doctrine.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "pedagogically adapted diction",
+          "practice-oriented expression"
+        ]
+      },
+      {
+        "headword_iast": "sutra-samarthana",
+        "gloss": "supportive aphoristic confirmation",
+        "contextual_sense": "Concise reaffirmation of the previous bhashya’s generalizing hermeneutic principle.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "brief doctrinal support",
+          "aphoristic reinforcement"
         ]
       }
     ],

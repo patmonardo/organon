@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "atta",
+        "gloss": "the eater/consumer",
+        "contextual_sense": "Key disputed term launching triadic candidate analysis (fire, jiva, Brahman) in the new adhikarana.",
+        "grammatical_role": "agent noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "consumer",
+          "devourer"
+        ]
+      },
+      {
+        "headword_iast": "purvapaksa",
+        "gloss": "prima facie thesis",
+        "contextual_sense": "Methodic opening stance that tests multiple candidate referents before siddhanta selection.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "initial objection-framework",
+          "provisional thesis"
+        ]
+      },
+      {
+        "headword_iast": "trivikalpa",
+        "gloss": "three-way alternative analysis",
+        "contextual_sense": "Interpretive structure in which agni, jiva, and Brahman are comparatively evaluated.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "triadic option set",
+          "threefold candidate frame"
+        ]
+      },
+      {
+        "headword_iast": "lakshana-linga-pariksa",
+        "gloss": "testing by defining marks and indicators",
+        "contextual_sense": "Procedure used to discriminate among candidate referents in ambiguous scriptural expressions.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "indicator-testing method",
+          "mark-based adjudication"
+        ]
+      },
+      {
+        "headword_iast": "prakarana-pravesa",
+        "gloss": "entry into a new topical sequence",
+        "contextual_sense": "Signals transition from previous closure into fresh inferential debate architecture.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "topic-entry",
+          "new argument sequence opening"
         ]
       }
     ],

@@ -22,19 +22,38 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "amananti",
+        "gloss": "they teach/transmit in tradition",
+        "contextual_sense": "Sutra invokes supplementary transmitted authority to reinforce Vaisvanara as Brahman.",
+        "grammatical_role": "finite verbal form",
+        "alternate_glosses": ["they declare", "they hand down"]
+      },
+      {
+        "headword_iast": "ca enam",
+        "gloss": "and Him (indeed this very referent)",
+        "contextual_sense": "Anaphoric pointer preserves continuity with the already-determined Vaisvanara-Ishvara referent.",
+        "grammatical_role": "enclitic demonstrative phrase",
+        "alternate_glosses": ["and this one", "and that very one"]
+      },
+      {
+        "headword_iast": "asmin",
+        "gloss": "in this locus/context",
+        "contextual_sense": "Locative marker indicating corroborative teaching appears in this very doctrinal frame.",
+        "grammatical_role": "locative pronoun",
+        "alternate_glosses": ["herein", "in this setting"]
+      },
+      {
+        "headword_iast": "amnaya-samarthana",
+        "gloss": "support from transmitted scriptural tradition",
+        "contextual_sense": "Concluding corroboration strategy: auxiliary testimony seals the established Brahman reading.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "traditional witness support",
+          "lineage-text corroboration"
         ]
       }
     ],
-    "argument_tags": [
-      "resolution"
-    ]
+    "argument_tags": ["resolution"]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",

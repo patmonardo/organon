@@ -33,11 +33,31 @@ Sharp separation between empirical enjoyment and ultimate non-dual realization.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
+- **vaisesya**
+  - Gloss: specific differentiating feature
+  - Context: Used to maintain functional jiva-isvara distinction where bhoga attribution is being tested.
+  - Grammar: abstract noun
+  - Alternate glosses: specificity, distinguishing characteristic
+- **bhoga**
+  - Gloss: enjoyment/experience of karmic results
+  - Context: Objection concerns whether all-pervading non-dual Brahman would improperly inherit finite experiential suffering.
   - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+  - Alternate glosses: experiential fruition, karmic enjoyment
+- **mithyajnana-vyavahara**
+  - Gloss: transactional domain grounded in misapprehension
+  - Context: Explains why empirical attributions do not penetrate paramarthic Brahman established by right knowledge.
+  - Grammar: compound noun
+  - Alternate glosses: error-based empirical practice, ignorance-conditioned transaction
+- **samyagjnana**
+  - Gloss: right knowledge
+  - Context: Epistemic standpoint from which false superimpositions and bhoga-transfers are cancelled.
+  - Grammar: compound noun
+  - Alternate glosses: valid realization, correct cognition
+- **isvara-jiva-vyavahara**
+  - Gloss: Lord-individual functional discourse
+  - Context: Admitted at operative level to preserve scriptural pedagogy while guarding non-dual conclusion.
+  - Grammar: compound noun
+  - Alternate glosses: functional dual discourse, pedagogical distinction-domain
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

@@ -33,11 +33,26 @@ Bridge line from causal definition to epistemic entailment.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **sarvajnatva-drdhikarana**
+  - Gloss: strengthening of omniscience claim
+  - Context: Transition note states intent to reinforce previously introduced Brahman omniscience.
+  - Grammar: compound noun
+  - Alternate glosses: omniscience consolidation, sarvajna claim reinforcement
+- **upaksipta-artha**
+  - Gloss: point already adumbrated
+  - Context: Marks continuity from prior causal demonstration to scriptural-source argument.
+  - Grammar: compound noun
+  - Alternate glosses: previously introduced thesis, carried-forward claim
+- **sutra-antara-prastavana**
+  - Gloss: introduction to next sutra
+  - Context: Bridge from explanatory prose to formal aphoristic assertion.
+  - Grammar: compound noun
+  - Alternate glosses: next aphorism preface, formal transition
+- **visaya-anukrama**
+  - Gloss: ordered thematic continuation
+  - Context: Ensures argument flow remains cumulative and non-disjunctive.
+  - Grammar: compound noun
+  - Alternate glosses: topic sequence continuity, ordered progression
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

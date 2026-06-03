@@ -33,11 +33,31 @@ This section ties liberation-effect directly to de-identification rather than ri
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **rajju-sarpa-dṛṣṭānta**
+  - Gloss: rope-snake analogy
+  - Context: Shows object-level disclosure can be meaningful without ritual injunction.
+  - Grammar: illustrative compound
+  - Alternate glosses: error-correction analogy, illusion-sublation model
+- **sāśarīratva-avidyā-nimitta**
+  - Gloss: embodied status due to ignorance
+  - Context: Reframes body-self relation as adhyasa-conditioned rather than ontologically final.
+  - Grammar: compound doctrinal phrase
+  - Alternate glosses: ignorance-conditioned embodiment, avidya-based corporeality
+- **anyonyāśraya**
+  - Gloss: mutual dependence fallacy
+  - Context: Used against theories that require circular grounding of body-self relations.
+  - Grammar: logical term
+  - Alternate glosses: circular dependence, reciprocal presupposition defect
+- **anavasthā-doṣa**
+  - Gloss: infinite regress defect
+  - Context: Exposes instability in karmic-body explanatory models when pushed recursively.
+  - Grammar: logical term
+  - Alternate glosses: regress fault, non-terminating dependency problem
+- **vastu-kathana-prayojana**
+  - Gloss: purpose of reality-statement
+  - Context: Defends non-injunctive factual teaching as pragmatically and liberatively relevant.
+  - Grammar: compound noun
+  - Alternate glosses: function of descriptive teaching, utility of object-disclosure
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

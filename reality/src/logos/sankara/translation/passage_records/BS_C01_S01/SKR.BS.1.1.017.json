@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "sarvajnatva-drdhikarana",
+        "gloss": "strengthening of omniscience claim",
+        "contextual_sense": "Transition note states intent to reinforce previously introduced Brahman omniscience.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "omniscience consolidation",
+          "sarvajna claim reinforcement"
+        ]
+      },
+      {
+        "headword_iast": "upaksipta-artha",
+        "gloss": "point already adumbrated",
+        "contextual_sense": "Marks continuity from prior causal demonstration to scriptural-source argument.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "previously introduced thesis",
+          "carried-forward claim"
+        ]
+      },
+      {
+        "headword_iast": "sutra-antara-prastavana",
+        "gloss": "introduction to next sutra",
+        "contextual_sense": "Bridge from explanatory prose to formal aphoristic assertion.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "next aphorism preface",
+          "formal transition"
+        ]
+      },
+      {
+        "headword_iast": "visaya-anukrama",
+        "gloss": "ordered thematic continuation",
+        "contextual_sense": "Ensures argument flow remains cumulative and non-disjunctive.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "topic sequence continuity",
+          "ordered progression"
         ]
       }
     ],

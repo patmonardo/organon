@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "headword_iast": "vaisvanarah",
+        "gloss": "Vaisvanara (here as doctrinal referent)",
+        "contextual_sense": "Sutra nominative subject fixed through contextual specialization.",
         "grammatical_role": "noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "Vaisvanara principle",
+          "universal-fire referent"
+        ]
+      },
+      {
+        "headword_iast": "sadharana-sabda-visesat",
+        "gloss": "because of specification of common terms",
+        "contextual_sense": "Aphoristic reason that lexical commonality is overridden by context-specific markers.",
+        "grammatical_role": "ablative reason phrase",
+        "alternate_glosses": [
+          "from contextual disambiguation",
+          "due to term-specification"
+        ]
+      },
+      {
+        "headword_iast": "sutra-hetu",
+        "gloss": "sutra-level inferential reason",
+        "contextual_sense": "Condenses broad bhashya semantics into one interpretive criterion.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "aphoristic rationale",
+          "compressed ground"
+        ]
+      },
+      {
+        "headword_iast": "sabda-bheda-nirnaya",
+        "gloss": "resolution by lexical differentiation",
+        "contextual_sense": "Methodic closure of polysemy through qualifier-governed referential fixing.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "term-level adjudication",
+          "semantic resolution"
         ]
       }
     ],

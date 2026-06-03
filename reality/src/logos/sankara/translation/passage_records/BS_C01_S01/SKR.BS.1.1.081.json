@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "ata eva prāṇaḥ",
+        "gloss": "therefore prana (here as Brahman)",
+        "contextual_sense": "By same marker-logic as akasha case, prana-term is elevated to Brahman-reference.",
+        "grammatical_role": "doctrinal phrase",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "thus prana denotes Brahman",
+          "marker-derived prana determination"
+        ]
+      },
+      {
+        "headword_iast": "prāṇa-brahma-liṅga-saṃbandha",
+        "gloss": "connection of prana term with Brahman-indicators",
+        "contextual_sense": "Universal entry-and-emergence predicates outweigh lexical familiarity of vital-air usage.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "prana-Brahman marker linkage",
+          "sign-based prana elevation"
+        ]
+      },
+      {
+        "headword_iast": "vākya-śeṣa-bala",
+        "gloss": "force of sentence-completion context",
+        "contextual_sense": "Interpretation is controlled by full propositional arc, not isolated word habit.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "terminal-clause force",
+          "context-completion strength"
+        ]
+      },
+      {
+        "headword_iast": "mukhya-prāṇa-vyāvṛtti",
+        "gloss": "exclusion of mere vital-breath referent",
+        "contextual_sense": "Physiological prana reading is retained only as subordinate possibility outside this context.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "vital-air reading exclusion",
+          "breath-only sense removal"
+        ]
+      },
+      {
+        "headword_iast": "adhikaraṇa-antara-sādharmya",
+        "gloss": "structural parallel with prior adhikarana",
+        "contextual_sense": "Bhashya explicitly reuses previous interpretive template for consistency.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "inter-topic methodological parallel",
+          "earlier-case pattern carryover"
         ]
       }
     ],

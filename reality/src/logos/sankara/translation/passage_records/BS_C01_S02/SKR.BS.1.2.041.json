@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "srutopanisatka-gati",
+        "gloss": "path taught in revealed esoteric Upanishadic instruction",
+        "contextual_sense": "Sutra reason: the described post-mortem trajectory is specific to Brahmavid contexts.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "Upanishadic secret-path marker",
+          "revealed contemplative route"
+        ]
+      },
+      {
+        "headword_iast": "gaty-abhidhana",
+        "gloss": "explicit naming of a path",
+        "contextual_sense": "Path designation functions as linga to identify the referent as Brahman.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "route designation",
+          "trajectory naming"
+        ]
+      },
+      {
+        "headword_iast": "brahmatva-nirnaya",
+        "gloss": "determination of Brahman-identity",
+        "contextual_sense": "The sutra concludes that only Brahman matches the path-profile in canonical usage.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "Brahman adjudication",
+          "absolute referent settlement"
+        ]
+      },
+      {
+        "headword_iast": "sutra-linga",
+        "gloss": "aphoristic inferential indicator",
+        "contextual_sense": "Compact reason structure condenses broader bhashya argument into one decisive sign.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "terse indicator",
+          "compressed proof marker"
         ]
       }
     ],

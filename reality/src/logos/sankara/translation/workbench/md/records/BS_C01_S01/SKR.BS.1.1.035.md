@@ -33,11 +33,31 @@ Attempts to neutralize ikshateh by rhetorical leveling.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **upacāra-darśana**
+  - Gloss: observed figurative predication
+  - Context: Purvapaksha cites common anthropomorphic speech to normalize non-literal agency attributions.
+  - Grammar: compound noun
+  - Alternate glosses: metaphorical usage evidence, figurative language precedent
+- **kūla-pipatiṣā-nyāya**
+  - Gloss: bank wants to fall example
+  - Context: Illustrates assigning intention-language to non-conscious entities.
+  - Grammar: illustrative compound
+  - Alternate glosses: riverbank intention trope, inert-agent idiom example
+- **gauṇārtha-sāmānyīkaraṇa**
+  - Gloss: generalization of secondary meaning
+  - Context: Strategy attempts to flatten all creation verbs into figurative register.
+  - Grammar: compound noun
+  - Alternate glosses: broad figurative recoding, secondary-sense expansion
+- **īkṣaṇa-śabda-laghukaraṇa**
+  - Gloss: downgrading force of ikshana term
+  - Context: Objection weakens intentionality marker so Pradhana remains viable.
+  - Grammar: compound noun
+  - Alternate glosses: intent-term dilution, deliberation-word minimization
+- **pradhāna-pakṣa-rakṣā**
+  - Gloss: defense of Pradhana view
+  - Context: Linguistic maneuver aimed at preserving Sankhya causality in Vedantic passage.
+  - Grammar: compound noun
+  - Alternate glosses: Sankhya-position salvage, inert-cause protection
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

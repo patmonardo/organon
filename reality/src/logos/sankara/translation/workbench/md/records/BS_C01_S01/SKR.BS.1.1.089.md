@@ -33,11 +33,26 @@ Contextual continuity from Gayatri section to jyotis section is explicitly defen
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **bhūtādi-pāda-vyapadeśa**
+  - Gloss: designation of the bhuta and other quarters
+  - Context: The earlier passage’s quarter-structure is recalled to maintain topic continuity.
+  - Grammar: compound noun
+  - Alternate glosses: quarter designation, bhuta-quarter naming
+- **brahma-prakaraṇa**
+  - Gloss: Brahman topic-section
+  - Context: The surrounding segment is treated as already being about Brahman, so the same referent carries through.
+  - Grammar: compound noun
+  - Alternate glosses: Brahman context, topic-bound Brahman reading
+- **jyotis-pratyabhijñā**
+  - Gloss: recognition of jyotis
+  - Context: The light-term is recovered as the same doctrinal object already introduced earlier.
+  - Grammar: compound noun
+  - Alternate glosses: light-recognition, repeat identification
+- **samānādhikaraṇya**
+  - Gloss: co-reference in grammar
+  - Context: Even with different phrasings, the passage keeps one underlying subject in view.
+  - Grammar: compound noun
+  - Alternate glosses: shared reference, same-subject grammar
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

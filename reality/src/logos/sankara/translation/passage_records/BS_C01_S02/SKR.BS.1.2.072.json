@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "headword_iast": "saksad api avirodham",
+        "gloss": "even direct reading is non-contradictory",
+        "contextual_sense": "Sutra statement that direct Brahman-reference of Vaisvanara is coherent.",
+        "grammatical_role": "doctrinal phrase",
+        "alternate_glosses": [
+          "direct sense without conflict",
+          "immediate-reference compatibility"
+        ]
+      },
+      {
+        "headword_iast": "jaiminih",
+        "gloss": "Jaimini",
+        "contextual_sense": "Named authority anchoring this interpretive permission in established Mimamsa lineage.",
+        "grammatical_role": "proper noun",
+        "alternate_glosses": [
+          "Jaimini authority",
+          "Jaimini-acharya"
+        ]
+      },
+      {
+        "headword_iast": "avirodha",
+        "gloss": "absence of contradiction",
+        "contextual_sense": "Central criterion for allowing direct Ishvara-upasana reading.",
         "grammatical_role": "noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "compatibility",
+          "non-conflict"
+        ]
+      },
+      {
+        "headword_iast": "sutra-sanksepa",
+        "gloss": "aphoristic compression",
+        "contextual_sense": "Condenses the expanded bhashya reconciliation into a terse verdict.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "brief doctrinal summary",
+          "compressed adjudication"
         ]
       }
     ],

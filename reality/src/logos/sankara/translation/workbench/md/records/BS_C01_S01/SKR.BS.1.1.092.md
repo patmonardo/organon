@@ -33,11 +33,26 @@ Sutra closes the locative/ablative objection.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **upadeśa-bheda**
+  - Gloss: difference of teaching-form
+  - Context: Sutra addresses the objection that locative and ablative formulations imply different referents.
+  - Grammar: compound noun
+  - Alternate glosses: instructional variation, form-shift objection
+- **ubhayasmin avirodha**
+  - Gloss: non-contradiction in both formulations
+  - Context: Both expressions are accepted as compatible ways of indicating one doctrinal object.
+  - Grammar: doctrinal phrase
+  - Alternate glosses: two-form compatibility, dual expression coherence
+- **pratyabhijna-sadhana**
+  - Gloss: means of re-identification
+  - Context: Continuity is preserved by recognizing referential sameness across grammatical shifts.
+  - Grammar: compound noun
+  - Alternate glosses: recognition device, referent-continuity method
+- **sutra-nirnaya**
+  - Gloss: aphoristic adjudication
+  - Context: This concise closure seals the locative/ablative dispute without multiplying entities.
+  - Grammar: compound noun
+  - Alternate glosses: sutra verdict, brief settlement
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

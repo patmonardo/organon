@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "kriyārthatva-pūrvapakṣa",
+        "gloss": "prima facie action-teleology thesis",
+        "contextual_sense": "Formal objection restates Mimamsa principle against independent Brahman-vastu teaching.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "ritualist objection frame",
+          "action-centric purvapaksa"
+        ]
+      },
+      {
+        "headword_iast": "āmnāyasya kriyārthatvāt",
+        "gloss": "because revelation is for action",
+        "contextual_sense": "Quoted Mimamsa maxim driving reduction of Vedanta to injunction-support.",
+        "grammatical_role": "doctrinal maxim phrase",
+        "alternate_glosses": [
+          "scripture-for-action axiom",
+          "ritual teleology formula"
+        ]
+      },
+      {
+        "headword_iast": "vedāntānarthakya-āśaṅkā",
+        "gloss": "suspicion of Vedanta meaninglessness",
+        "contextual_sense": "Objection claims non-action passages lack function under strict criteria.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "Vedanta redundancy objection",
+          "non-kriya text uselessness claim"
+        ]
+      },
+      {
+        "headword_iast": "upāsanā-vidhi-śeṣa-kalpana",
+        "gloss": "constructing Vedanta as accessory to meditation injunction",
+        "contextual_sense": "Purvapaksa fallback strategy when direct ritual reduction seems strained.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "meditation-injunction subordination",
+          "upasana accessory model"
+        ]
+      },
+      {
+        "headword_iast": "śāstra-pramāṇakatva-praśna",
+        "gloss": "questioning scriptural authority for Brahman",
+        "contextual_sense": "Sets up core epistemic conflict resolved by samnvaya and phala-vailaksanya arguments.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "Brahman-proof challenge",
+          "authority dispute setup"
         ]
       }
     ],

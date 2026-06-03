@@ -33,11 +33,31 @@ Textual self-reference continuity defeats Pradhana substitution.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **gauṇa-īkṣaṇa-nirākaraṇa**
+  - Gloss: rejection of figurative intending
+  - Context: Bhashya denies metaphorical intent-reading for sat in this context.
+  - Grammar: compound noun
+  - Alternate glosses: anti-metaphorical willing, secondary-sense denial
+- **ātma-śabda-pramāṇa**
+  - Gloss: authority of the word atman
+  - Context: Self-designation binds the referent to conscious selfhood, not insentient substrate.
+  - Grammar: compound noun
+  - Alternate glosses: self-term evidentiary force, atman-word constraint
+- **prakaraṇa-anugati**
+  - Gloss: continuity with discourse-context
+  - Context: Beginning, middle, and culmination are read as one semantic current.
+  - Grammar: compound noun
+  - Alternate glosses: contextual carry-through, sectional continuity
+- **tat tvam asi-anvaya**
+  - Gloss: identity linkage in tat tvam asi
+  - Context: Identity instruction would fracture if sat were shifted to non-conscious Pradhana.
+  - Grammar: compound noun
+  - Alternate glosses: great-sentence coherence, identity-statement alignment
+- **upakrama-upasaṃhāra-sāmya**
+  - Gloss: opening-closing concordance
+  - Context: Hermeneutic seal that preserves one referent across creation and self-teaching segments.
+  - Grammar: compound noun
+  - Alternate glosses: initial-final symmetry, framing concordance
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

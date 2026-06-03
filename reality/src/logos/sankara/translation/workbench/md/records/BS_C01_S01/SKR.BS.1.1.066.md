@@ -33,11 +33,31 @@ Rejection is reiterated to secure consistency across all relevant passages.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **kāmayitṛtva-nirdeśa**
+  - Gloss: designation of willing agency
+  - Context: Intentional volition in the text blocks non-conscious causal substitution.
+  - Grammar: compound noun
+  - Alternate glosses: volitional-agency indication, intentionality marker
+- **anumānika-pradhāna-nirāsa**
+  - Gloss: rejection of inferentially posited Pradhana
+  - Context: Sankhya causal postulate is excluded where sruti gives direct conscious-cause signals.
+  - Grammar: compound noun
+  - Alternate glosses: inferential Pradhana denial, anumana-based matter-cause rejection
+- **īkṣateḥ-nyāya-punaranuvṛtti**
+  - Gloss: reapplication of the ikshateh principle
+  - Context: Earlier sentient-cause rule is carried into anandamaya discussion for consistency.
+  - Grammar: compound noun
+  - Alternate glosses: ikshateh rule recurrence, prior criterion carryover
+- **śruti-prādhānya**
+  - Gloss: priority of revelation over speculative inference
+  - Context: Direct textual indicators outrank imported cosmological hypotheses.
+  - Grammar: compound noun
+  - Alternate glosses: scriptural priority, revelation-first hermeneutic
+- **caitanya-kāraṇa-ekatā**
+  - Gloss: one consistent conscious-cause doctrine
+  - Context: Maintains doctrinal continuity across causality passages without compartmental exceptions.
+  - Grammar: compound noun
+  - Alternate glosses: uniform sentient-source view, single aware-cause framework
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "vijnanatma-paramatma",
+        "gloss": "individual cognizer and Supreme Self pair",
+        "contextual_sense": "Question seeks additional grounds for why this precise dual, rather than alternatives, is adopted in the cave passage.",
+        "grammatical_role": "compound dyadic phrase",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "jiva-Ishvara pair",
+          "cognizer-Supreme dual"
+        ]
+      },
+      {
+        "headword_iast": "hetu-anvesana",
+        "gloss": "search for inferential ground",
+        "contextual_sense": "Transition move demanding explicit justification beyond prior provisional reasoning.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "reason-seeking",
+          "proof-demand"
+        ]
+      },
+      {
+        "headword_iast": "adhikarana-parivartana",
+        "gloss": "shift to a new inferential step within topic",
+        "contextual_sense": "Marks the procedural move from accepted claim to demand for stronger linga support.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "argument-phase shift",
+          "topical progression"
+        ]
+      },
+      {
+        "headword_iast": "samsaya-prastavana",
+        "gloss": "formal introduction of doubt",
+        "contextual_sense": "Frames the need to restate and secure the dual-reference conclusion with further precision.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "doubt setup",
+          "question framework"
         ]
       }
     ],

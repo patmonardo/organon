@@ -33,11 +33,31 @@ This is the major Mimamsa challenge: preserve scriptural meaningfulness by reduc
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
+- **kriyarthatva-vada**
+  - Gloss: thesis that scripture is action-oriented
+  - Context: Purvapaksa applies strict Jaimini-style criterion to assimilate Vedanta into injunction framework.
+  - Grammar: compound noun
+  - Alternate glosses: action-centric hermeneutic, injunction primacy thesis
+- **vidhi-sesatva**
+  - Gloss: status as subordinate to injunction
+  - Context: Brahman-passages are argued to function like ritual accessories.
+  - Grammar: abstract noun
+  - Alternate glosses: injunction accessory status, subsidiary textual role
+- **jaimini-paksa**
+  - Gloss: Mimamsa-style objectional stance
+  - Context: Framework pressuring all scriptural language toward codana-function.
+  - Grammar: compound noun
+  - Alternate glosses: purvapaksa mimamsa view, ritualist reading
+- **upasana-vidhi-kalpana**
+  - Gloss: construction as meditation injunction
+  - Context: Strategy to preserve kriyarthatva by recoding declarative passages as practice directives.
+  - Grammar: compound noun
+  - Alternate glosses: meditation-prescription recoding, injunctional reinterpretation
+- **purvapaksa**
+  - Gloss: prima facie objection
+  - Context: Sets up the key hermeneutic conflict resolved in subsequent records.
   - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+  - Alternate glosses: initial thesis, objectional frame
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

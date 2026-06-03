@@ -33,11 +33,31 @@ Cross-text identity via shared 'inner controller' structure.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **antaryāmin-brāhmaṇa-pramāṇa**
+  - Gloss: evidence from the antaryamin brāhmaṇa
+  - Context: Cross-text citation confirms a distinct inner ruler beyond embodied occupants.
+  - Grammar: compound noun
+  - Alternate glosses: inner-controller textual warrant, antaryamin evidence
+- **āditya-śarīra-jīva-vilakṣaṇatā**
+  - Gloss: difference from the jiva identified with solar body
+  - Context: Passage distinguishes indwelling regulator from body-associated conscious principle.
+  - Grammar: compound noun
+  - Alternate glosses: solar-body jiva distinction, embodied-occupant differentiation
+- **yamayitṛtva**
+  - Gloss: governing/controlling function
+  - Context: Regulative sovereignty marks Ishvara, not conditioned experiencer.
+  - Grammar: abstract noun
+  - Alternate glosses: inner governance, regulator-status
+- **amṛtatva-vyapadeśa**
+  - Gloss: ascription of immortality
+  - Context: Immortality predicate supports supra-samsaric referent identification.
+  - Grammar: compound noun
+  - Alternate glosses: deathless designation, immortal-marker predication
+- **śrutyantara-samanvaya**
+  - Gloss: harmonization with parallel revelation
+  - Context: Interpretation is reinforced through convergent Upanishadic testimony.
+  - Grammar: compound noun
+  - Alternate glosses: cross-text concordance, parallel-shruti integration
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

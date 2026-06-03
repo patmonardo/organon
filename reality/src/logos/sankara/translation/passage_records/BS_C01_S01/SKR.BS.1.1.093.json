@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "pratardana-indra-akhyayika",
+        "gloss": "the Pratardana-Indra narrative unit",
+        "contextual_sense": "Narrative frame introduces a multi-layered semantic field where indicators initially diverge.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "Pratardana episode",
+          "Indra dialogue frame"
+        ]
+      },
+      {
+        "headword_iast": "prana-samsaya",
+        "gloss": "ambiguity around prana referent",
+        "contextual_sense": "The passage appears to support deity, vital-force, self, and Brahman readings simultaneously.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "prana uncertainty",
+          "multi-candidate referent doubt"
+        ]
+      },
+      {
+        "headword_iast": "linga-sankara",
+        "gloss": "intermixed indicators",
+        "contextual_sense": "Competing marks from different doctrinal levels require a higher integrative method.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "mixed marker cluster",
+          "sign-overlap"
+        ]
+      },
+      {
+        "headword_iast": "adhikarana-pravesa",
+        "gloss": "entry into the topical dispute",
+        "contextual_sense": "This record formally sets up the difficult reconciliation case for the next sutras.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "argument entry",
+          "problem setup"
         ]
       }
     ],

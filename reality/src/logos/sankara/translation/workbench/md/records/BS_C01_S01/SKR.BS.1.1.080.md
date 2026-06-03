@@ -33,11 +33,31 @@ The dispute mirrors earlier akasha/prana ambiguity: familiar meaning versus cont
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **prāṇa-śabda-saṃśaya**
+  - Gloss: doubt about the word prana
+  - Context: Issue is whether prana denotes vital-air principle or Brahman in udgitha context.
+  - Grammar: compound noun
+  - Alternate glosses: prana-term ambiguity, vital-force referential dispute
+- **mukhya-prāṇa-pakṣa**
+  - Gloss: thesis of literal vital-breath meaning
+  - Context: Purvapaksha leans on common usage and physiological prominence.
+  - Grammar: compound noun
+  - Alternate glosses: vital-air reading, primary breath thesis
+- **nidra-prabodha-kriyā-dṛṣṭānta**
+  - Gloss: example from sleep-wake functional behavior
+  - Context: Operational evidence of life-breath is used to secure non-Brahman interpretation.
+  - Grammar: compound noun
+  - Alternate glosses: sleep-wake function example, vital operation illustration
+- **vākya-śeṣa-bala-hrāsa-prayatna**
+  - Gloss: attempt to weaken sentence-end force
+  - Context: Objection tries to reinterpret cosmic language so it remains compatible with vital-air thesis.
+  - Grammar: compound noun
+  - Alternate glosses: post-clause force reduction, sentence-tail downgrading attempt
+- **devatā-prastāva-vicāra**
+  - Gloss: inquiry into the deity of prastava
+  - Context: Ritual-musical framing complicates referent and invites layered exegesis.
+  - Grammar: compound noun
+  - Alternate glosses: prastava deity inquiry, chant-deity determination debate
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

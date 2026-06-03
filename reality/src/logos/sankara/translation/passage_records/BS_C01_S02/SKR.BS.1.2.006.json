@@ -22,13 +22,33 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "brahman",
-        "gloss": "ultimate reality",
-        "contextual_sense": "Primary interpretive referent under adjudication in this adhikarana",
+        "headword_iast": "vivaksita-guna",
+        "gloss": "intended qualifying attributes",
+        "contextual_sense": "Sutra shorthand for predicates that must be coherently assignable to the intended upasya.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "purport-relevant attributes",
+          "operative qualifiers"
+        ]
+      },
+      {
+        "headword_iast": "upapatti",
+        "gloss": "coherent fit, rational tenability",
+        "contextual_sense": "Primary inferential test for assigning scriptural predicates to a referent.",
         "grammatical_role": "noun",
         "alternate_glosses": [
-          "absolute",
-          "supreme principle"
+          "logical applicability",
+          "doctrinal coherence"
+        ]
+      },
+      {
+        "headword_iast": "upasya",
+        "gloss": "object of meditation/worship",
+        "contextual_sense": "The referent selected by predicate-fit analysis in contemplative injunction contexts.",
+        "grammatical_role": "gerundive-derived noun",
+        "alternate_glosses": [
+          "meditative target",
+          "contemplative object"
         ]
       }
     ],

@@ -33,11 +33,26 @@ Sutra compression of the ataddharma criterion.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **na ca smartam**
+  - Gloss: nor the Smrti-based candidate
+  - Context: Sutra explicitly excludes Pradhana imported from Smrti traditions.
+  - Grammar: negative doctrinal phrase
+  - Alternate glosses: not the smarta option, Smrti candidate denied
+- **ataddharma-abhilapat**
+  - Gloss: because non-Pradhana properties are stated
+  - Context: Reason clause: assigned attributes do not belong to insentient Pradhana.
+  - Grammar: ablative reason phrase
+  - Alternate glosses: from incompatible property assertion, due to alien predicate ascription
+- **smrti-sruti-viveka**
+  - Gloss: discrimination between Smrti import and Sruti intent
+  - Context: Protects local scriptural context from being overridden by external doctrinal constructs.
+  - Grammar: compound noun
+  - Alternate glosses: textual hierarchy discrimination, revelation-tradition sorting
+- **sutra-pratisedha**
+  - Gloss: aphoristic negation
+  - Context: Concise rejection formula closing the Pradhana branch of the debate.
+  - Grammar: compound noun
+  - Alternate glosses: terse exclusion, brief doctrinal denial
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

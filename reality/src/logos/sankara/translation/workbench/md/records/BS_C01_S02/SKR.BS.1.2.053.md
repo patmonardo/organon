@@ -33,11 +33,31 @@ A large integrative rebuttal: semantics, pedagogy, and soteriology converge on B
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **dharma-ukti**
+  - Gloss: explicit statement of defining properties
+  - Context: Main proof: sarvajna/sarvavit predicates identify bhuta-yoni as Brahman.
+  - Grammar: compound noun
+  - Alternate glosses: property statement, predicate declaration
+- **sarvajna-sarvavit**
+  - Gloss: all-knowing, all-knower
+  - Context: Conscious omniscience markers impossible for inert Pradhana or limited jiva.
+  - Grammar: paired epithets
+  - Alternate glosses: omniscience pair, total-knower predicates
+- **bhuta-yoni-brahma-nirnaya**
+  - Gloss: determination of source of beings as Brahman
+  - Context: Siddhanta decision integrating predicate evidence and passage continuity.
+  - Grammar: compound noun
+  - Alternate glosses: source-principle adjudication, cosmic-origin Brahman conclusion
+- **prakarana-anvaya**
+  - Gloss: contextual continuity linkage
+  - Context: Maintains referential coherence across cause-statements in Mundaka sequence.
+  - Grammar: compound noun
+  - Alternate glosses: topic continuity, sectional connection
+- **moksa-prayojana-vidya**
+  - Gloss: knowledge oriented to liberation
+  - Context: Soteriological framing supports Brahman-reference over cosmological material principle.
+  - Grammar: compound noun
+  - Alternate glosses: liberation-directed knowledge, soteriological epistemic frame
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

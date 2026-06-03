@@ -33,11 +33,21 @@ Sutra marker for role-differentiation argument.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
+- **karmakartr-vyapadesac ca**
+  - Gloss: and because of object-agent designation
+  - Context: Sutra condensation of grammatical-role argument for distinct meditative referent.
+  - Grammar: sutra phrase
+  - Alternate glosses: further from role differentiation, also due to goal-agent distinction
+- **vyapadesa**
+  - Gloss: designation by textual expression
+  - Context: Explicit linguistic assignment that carries inferential force in referent adjudication.
   - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+  - Alternate glosses: naming indication, scriptural designation
+- **bheda-hetu**
+  - Gloss: ground for difference
+  - Context: Argumentative function of the sutra: to establish non-identity between embodied seeker and meditative goal.
+  - Grammar: compound noun
+  - Alternate glosses: differentiating reason, basis of non-identity
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

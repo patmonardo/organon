@@ -33,11 +33,26 @@ Sets up formal definition after programmatic call to inquiry.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **brahma-laksana-prasna**
+  - Gloss: question of Brahman’s defining mark
+  - Context: Transition asks how the previously declared inquiry-object is to be identified.
+  - Grammar: compound noun
+  - Alternate glosses: Brahman-definition query, object-marking question
+- **jijnasa-visaya-nirdharana**
+  - Gloss: fixing the object of inquiry
+  - Context: Moves from injunction to investigate toward criterion for recognizing Brahman.
+  - Grammar: compound noun
+  - Alternate glosses: inquiry-object determination, visaya clarification
+- **sutra-pravesa**
+  - Gloss: entry into next aphoristic unit
+  - Context: Signals transition from introductory justification to lakshana-formula.
+  - Grammar: compound noun
+  - Alternate glosses: next-sutra entry, formal transition node
+- **laksana-upakrama**
+  - Gloss: commencement of defining indicator
+  - Context: Begins specification sequence anchored in janmadi-sutra.
+  - Grammar: compound noun
+  - Alternate glosses: definition opening, indicator initiation
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

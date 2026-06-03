@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "mayat-vikāra-pakṣa",
+        "gloss": "modification-reading of suffix mayat",
+        "contextual_sense": "Objection claims anandamaya should denote a derivative product like earlier -maya layers.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "vikara suffix reading",
+          "product-meaning proposal"
+        ]
+      },
+      {
+        "headword_iast": "mayat-prācurya-vṛtti",
+        "gloss": "abundance-reading of suffix mayat",
+        "contextual_sense": "Bhashya invokes lexical precedent where mayat means plenitude rather than transformation.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "plenary mayat usage",
+          "intensity-suffix function"
+        ]
+      },
+      {
+        "headword_iast": "ānanda-tāratamya-kalpanā",
+        "gloss": "graded hierarchy of bliss",
+        "contextual_sense": "Comparative bliss-scale supports understanding anandamaya as unsurpassed fullness.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "bliss gradation model",
+          "ananda hierarchy"
+        ]
+      },
+      {
+        "headword_iast": "vācya-vācaka-viveka",
+        "gloss": "discrimination between term and denotatum",
+        "contextual_sense": "Suffix form is interpreted through context-sensitive semantics, not morphology alone.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "word-referent discrimination",
+          "semantic discernment"
+        ]
+      },
+      {
+        "headword_iast": "pradhāna-artha-apavāda",
+        "gloss": "override of default suffix meaning",
+        "contextual_sense": "Contextual force cancels the routine vikara assumption for this doctrinal locus.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "default-meaning suspension",
+          "contextual exception"
         ]
       }
     ],

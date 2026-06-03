@@ -33,11 +33,31 @@ Explicit transition from vyavahara-level differentiation to tattva-level non-dua
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
+- **upadhi**
+  - Gloss: limiting adjunct
+  - Context: Explains why jiva-language can appear without being ultimate ontology: limitation belongs to adjunct, not absolute self.
   - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+  - Alternate glosses: conditioner, limiting condition
+- **adhyaropa-apavada**
+  - Gloss: superimposition followed by rescission
+  - Context: Pedagogical two-step method invoked to reconcile provisional plurality with final non-dual teaching.
+  - Grammar: compound doctrinal formula
+  - Alternate glosses: provisional attribution and withdrawal, teaching-by-negation sequence
+- **vyavahara-paramartha-bheda**
+  - Gloss: difference between transactional and ultimate standpoints
+  - Context: Framework allowing functional distinctions without compromising paramarthic non-duality.
+  - Grammar: compound noun
+  - Alternate glosses: empirical-ultimate distinction, two-level discourse
+- **jiva-vacana**
+  - Gloss: language apparently about the individual self
+  - Context: Interpreted as provisional teaching device, not final referential endpoint.
+  - Grammar: compound noun
+  - Alternate glosses: individual-self expression, jiva-designation
+- **siddhanta**
+  - Gloss: settled conclusion
+  - Context: Maintained as Brahman-reference after integrating and subordinating provisional jiva-reading.
+  - Grammar: noun
+  - Alternate glosses: final determination, doctrinal settlement
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

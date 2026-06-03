@@ -33,11 +33,31 @@ Records the rival interpretive strategy that delays Brahman-identification.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **nirantara-sarga-vyakhya**
+  - Gloss: reading as uninterrupted cosmogenesis
+  - Context: Alternative interpretation resisting immediate cosmic-form application to bhuta-yoni.
+  - Grammar: compound noun
+  - Alternate glosses: continuous creation reading, unbroken emanation interpretation
+- **hiranyagarbha-paksa**
+  - Gloss: Hiranyagarbha-candidate interpretation
+  - Context: Universal-form descriptors are reallocated to a derivative cosmic purusa.
+  - Grammar: compound noun
+  - Alternate glosses: cosmic-creator candidate, subordinate cosmic self view
+- **vikara-purusa**
+  - Gloss: evolved/manifest cosmic person
+  - Context: Purvapaksa term for non-ultimate bearer of universal imagery.
+  - Grammar: compound noun
+  - Alternate glosses: manifest cosmic person, derivative universal agent
+- **purvapaksa-vikalpa**
+  - Gloss: alternative objectional construal
+  - Context: Methodic counter-reading tested before final sutra decision.
+  - Grammar: compound noun
+  - Alternate glosses: counter-proposal, alternative interpretive branch
+- **rupa-upanyasa-pratisedha**
+  - Gloss: denial of immediate cosmic-form application
+  - Context: Objection rejects linking the form-passage directly to prior bhuta-yoni referent.
+  - Grammar: compound noun
+  - Alternate glosses: form-link denial, cosmic-body attribution refusal
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

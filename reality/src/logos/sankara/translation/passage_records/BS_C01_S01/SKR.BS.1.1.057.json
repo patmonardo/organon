@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "vikāra-śabdāt na iti cet",
+        "gloss": "if from modification-word, no",
+        "contextual_sense": "Sutra voices objection that mayat implies producthood.",
+        "grammatical_role": "conditional argumentative phrase",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "modification objection clause",
+          "vikara challenge statement"
+        ]
+      },
+      {
+        "headword_iast": "na prācuryāt",
+        "gloss": "no, because of abundance sense",
+        "contextual_sense": "Resolution affirms plenitude semantics for anandamaya.",
+        "grammatical_role": "reason phrase",
+        "alternate_glosses": [
+          "denied due to plenitude",
+          "rejected via abundance reading"
+        ]
+      },
+      {
+        "headword_iast": "śabda-śakti-vikalpa",
+        "gloss": "alternative semantic power of a term",
+        "contextual_sense": "A single morphological form can license more than one meaning by context.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "polyvalent lexical force",
+          "semantic option structure"
+        ]
+      },
+      {
+        "headword_iast": "brahma-viṣayatā-rakṣaṇa",
+        "gloss": "preservation of Brahman-reference",
+        "contextual_sense": "Suffix dispute is resolved without sacrificing the already-fixed supreme topic.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "Brahman-topic protection",
+          "referent continuity defense"
         ]
       }
     ],

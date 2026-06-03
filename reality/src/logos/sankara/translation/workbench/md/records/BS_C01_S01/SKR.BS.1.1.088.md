@@ -33,11 +33,26 @@ Sutra preserves symbolic-meter language while retaining Brahmanic purport.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **chandas-abhidhāna-nirāsa**
+  - Gloss: rejection of the meter-only reading
+  - Context: The sutra denies that mere mention of chandas blocks Brahman-reference.
+  - Grammar: compound noun
+  - Alternate glosses: meter-reading exclusion, chandas objection denial
+- **ceto-arpana-nigada**
+  - Gloss: statement of mind-focusing
+  - Context: The supporting explanation says the hymn directs consciousness toward the intended object.
+  - Grammar: compound noun
+  - Alternate glosses: attention-setting statement, mind-placement teaching
+- **darśana-samarthana**
+  - Gloss: corroboration by example or vision
+  - Context: The Bhashya leans on established interpretive practice to show this reading is not forced.
+  - Grammar: compound noun
+  - Alternate glosses: exemplary support, vision-based confirmation
+- **brahma-pratīka**
+  - Gloss: Brahman as symbolic support
+  - Context: The meter is not itself the endpoint; it serves as a contemplative proxy for Brahman.
+  - Grammar: compound noun
+  - Alternate glosses: Brahman-symbol, proxy-sign for Brahman
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

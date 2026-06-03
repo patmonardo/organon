@@ -33,11 +33,26 @@ Interrogative bridge introducing a fresh pramana.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **hetvantara-prastāva**
+  - Gloss: proposal of an additional reason
+  - Context: Interrogative bridge opens the next exclusion argument beyond prior grounds.
+  - Grammar: compound noun
+  - Alternate glosses: new-reason transition, further-proof setup
+- **praśna-vākyārambha**
+  - Gloss: question-form onset
+  - Context: Signals structural shift from settled point to supplementary demonstration.
+  - Grammar: compound noun
+  - Alternate glosses: interrogative pivot, query-led transition
+- **pradhāna-vācya-śaṅkā**
+  - Gloss: doubt that sat might denote Pradhana
+  - Context: Residual ambiguity is explicitly raised so it can be decisively removed.
+  - Grammar: compound noun
+  - Alternate glosses: Pradhana-denotation doubt, referential uncertainty
+- **adhikaraṇa-gati-sandhi**
+  - Gloss: junction in topic progression
+  - Context: Marks connective seam between completed refutation and upcoming inferential move.
+  - Grammar: compound noun
+  - Alternate glosses: argument-flow hinge, topic-transition seam
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

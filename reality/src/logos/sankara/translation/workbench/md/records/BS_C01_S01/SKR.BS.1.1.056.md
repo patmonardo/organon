@@ -33,11 +33,31 @@ Suffix semantics is resolved by contextual excess-bliss gradation, not by defaul
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **mayat-vikāra-pakṣa**
+  - Gloss: modification-reading of suffix mayat
+  - Context: Objection claims anandamaya should denote a derivative product like earlier -maya layers.
+  - Grammar: compound noun
+  - Alternate glosses: vikara suffix reading, product-meaning proposal
+- **mayat-prācurya-vṛtti**
+  - Gloss: abundance-reading of suffix mayat
+  - Context: Bhashya invokes lexical precedent where mayat means plenitude rather than transformation.
+  - Grammar: compound noun
+  - Alternate glosses: plenary mayat usage, intensity-suffix function
+- **ānanda-tāratamya-kalpanā**
+  - Gloss: graded hierarchy of bliss
+  - Context: Comparative bliss-scale supports understanding anandamaya as unsurpassed fullness.
+  - Grammar: compound noun
+  - Alternate glosses: bliss gradation model, ananda hierarchy
+- **vācya-vācaka-viveka**
+  - Gloss: discrimination between term and denotatum
+  - Context: Suffix form is interpreted through context-sensitive semantics, not morphology alone.
+  - Grammar: compound noun
+  - Alternate glosses: word-referent discrimination, semantic discernment
+- **pradhāna-artha-apavāda**
+  - Gloss: override of default suffix meaning
+  - Context: Contextual force cancels the routine vikara assumption for this doctrinal locus.
+  - Grammar: compound noun
+  - Alternate glosses: default-meaning suspension, contextual exception
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

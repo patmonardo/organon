@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "janmadi",
+        "gloss": "origination and the rest (sustenance, dissolution)",
+        "contextual_sense": "Laksana cluster defining Brahman through relation to world-process totality.",
+        "grammatical_role": "compound abbreviation term",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "creation-etc sequence",
+          "sristi-sthiti-laya triad"
+        ]
+      },
+      {
+        "headword_iast": "jagat-karanatva",
+        "gloss": "status as cause of the cosmos",
+        "contextual_sense": "Used to exclude rival causes lacking omniscient intentionality.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "world-causality",
+          "cosmic-source status"
+        ]
+      },
+      {
+        "headword_iast": "tatastha-laksana",
+        "gloss": "extrinsic defining indicator",
+        "contextual_sense": "Brahman indicated through effects while intrinsic nature remains beyond objectification.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "indirect definition",
+          "effect-based marker"
+        ]
+      },
+      {
+        "headword_iast": "sarvajna-sarvasakti",
+        "gloss": "omniscience and omnipotence",
+        "contextual_sense": "Required causal qualifications that differentiate Brahman from inert principles.",
+        "grammatical_role": "paired compound",
+        "alternate_glosses": [
+          "all-knowing all-powerful profile",
+          "complete knowledge-power set"
+        ]
+      },
+      {
+        "headword_iast": "pradhana-nirasa",
+        "gloss": "rejection of Pradhana-like rival causes",
+        "contextual_sense": "Causal-definition argument blocks non-conscious first-principle candidates.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "insentient-cause exclusion",
+          "rival-cause refutation"
         ]
       }
     ],

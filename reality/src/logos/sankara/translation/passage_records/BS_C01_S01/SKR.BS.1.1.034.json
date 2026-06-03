@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "gauṇa-īkṣaṇa-nirākaraṇa",
+        "gloss": "rejection of figurative intending",
+        "contextual_sense": "Bhashya denies metaphorical intent-reading for sat in this context.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "anti-metaphorical willing",
+          "secondary-sense denial"
+        ]
+      },
+      {
+        "headword_iast": "ātma-śabda-pramāṇa",
+        "gloss": "authority of the word atman",
+        "contextual_sense": "Self-designation binds the referent to conscious selfhood, not insentient substrate.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "self-term evidentiary force",
+          "atman-word constraint"
+        ]
+      },
+      {
+        "headword_iast": "prakaraṇa-anugati",
+        "gloss": "continuity with discourse-context",
+        "contextual_sense": "Beginning, middle, and culmination are read as one semantic current.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "contextual carry-through",
+          "sectional continuity"
+        ]
+      },
+      {
+        "headword_iast": "tat tvam asi-anvaya",
+        "gloss": "identity linkage in tat tvam asi",
+        "contextual_sense": "Identity instruction would fracture if sat were shifted to non-conscious Pradhana.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "great-sentence coherence",
+          "identity-statement alignment"
+        ]
+      },
+      {
+        "headword_iast": "upakrama-upasaṃhāra-sāmya",
+        "gloss": "opening-closing concordance",
+        "contextual_sense": "Hermeneutic seal that preserves one referent across creation and self-teaching segments.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "initial-final symmetry",
+          "framing concordance"
         ]
       }
     ],

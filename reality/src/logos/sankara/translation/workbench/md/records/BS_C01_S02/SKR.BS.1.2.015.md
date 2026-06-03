@@ -33,11 +33,26 @@ Sutra closure adding smriti as supportive pramana.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **smrtes ca**
+  - Gloss: and because of smriti
+  - Context: Sutra-level appeal to remembered tradition as corroborative evidence for the established distinction.
+  - Grammar: causal phrase
+  - Alternate glosses: further from tradition, also due to smriti witness
+- **sahakari-pramana**
+  - Gloss: auxiliary means of proof
+  - Context: Smrti functions as secondary support, reinforcing sruti-grounded inference.
+  - Grammar: compound noun
+  - Alternate glosses: supporting evidence, subsidiary proof
+- **nirnita-bheda**
+  - Gloss: already-determined distinction
+  - Context: The sutra re-seals non-identity already argued, preventing regression into jiva-upasya reading.
+  - Grammar: compound noun
+  - Alternate glosses: settled difference, resolved non-identity
+- **sutra-anuvada**
+  - Gloss: reiterative sutra confirmation
+  - Context: Compressed restatement of prior reasoning with an added corroborative source marker.
+  - Grammar: compound noun
+  - Alternate glosses: confirmatory recap, compressed reaffirmation
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

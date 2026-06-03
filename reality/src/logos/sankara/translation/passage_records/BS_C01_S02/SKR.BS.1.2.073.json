@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "pradesa-matra",
+        "gloss": "measure of a limited span (span-like extent)",
+        "contextual_sense": "Finite-measure language requiring reconciliation with all-pervasive Brahman.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "span-measure expression",
+          "limited-extent term"
+        ]
+      },
+      {
+        "headword_iast": "abhivyakti-nimitta",
+        "gloss": "occasioned by manifestation",
+        "contextual_sense": "Asmarathya explains measure-language as manifestation condition for meditators, not ontic limit.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "manifestation-based reason",
+          "appearance-conditioned designation"
+        ]
+      },
+      {
+        "headword_iast": "upalabdhi-sthana",
+        "gloss": "site of apprehension (e.g., heart)",
+        "contextual_sense": "Localization belongs to cognition-access points where Brahman is specially manifested.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "cognitive locus",
+          "perceptual access-point"
+        ]
+      },
+      {
+        "headword_iast": "asmarathya-mata",
+        "gloss": "Asmarathya’s position",
+        "contextual_sense": "Provides first major harmonization of finite-language with infinite referent.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "Asmarathya view",
+          "Asmarathya interpretation"
+        ]
+      },
+      {
+        "headword_iast": "a-pariccheda-siddhanta",
+        "gloss": "doctrine of non-delimitation",
+        "contextual_sense": "Underlying protection that Brahman is not intrinsically bounded by pradesa terms.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "non-limitation principle",
+          "unboundedness doctrine"
         ]
       }
     ],

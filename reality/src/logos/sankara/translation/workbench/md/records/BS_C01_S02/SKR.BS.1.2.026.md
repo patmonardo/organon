@@ -33,11 +33,31 @@ Raises the strongest internal-semantic case against paramatma as one of the two.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
+- **buddhi-ksetrajna-paksa**
+  - Gloss: thesis pairing intellect and knower-of-field
+  - Context: Purvapaksa proposal deriving dual referents from guha-locus plausibility.
+  - Grammar: compound doctrinal label
+  - Alternate glosses: intellect-self pairing thesis, buddhi-jiva view
+- **guha-visesana**
+  - Gloss: qualification by cave/heart locus
+  - Context: Reasoning device that makes interior cognitive pairings appear textually natural.
+  - Grammar: compound noun
+  - Alternate glosses: cavity-qualifier, heart-location marker
+- **sarvagata-brahman-asambhava**
+  - Gloss: improbability claim against all-pervasive Brahman localization
+  - Context: Objection that specific site-entry language should not apply to Brahman under ordinary reading.
+  - Grammar: compound objection term
+  - Alternate glosses: anti-localization objection, omnipresent referent challenge
+- **sukrta-bhoga-yogyata**
+  - Gloss: fitness for merit-fruit enjoyment
+  - Context: Used to prefer finite experiential subjects in the prima facie construal.
+  - Grammar: compound noun
+  - Alternate glosses: karmic-fruit eligibility, merit-enjoyment suitability
+- **purvapaksa**
+  - Gloss: prima facie interpretive claim
+  - Context: Frames the initial, eventually rebutted pairing strategy.
   - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+  - Alternate glosses: provisional thesis, initial objection model
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

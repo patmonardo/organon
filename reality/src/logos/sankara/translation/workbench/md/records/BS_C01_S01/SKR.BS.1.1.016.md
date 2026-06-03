@@ -33,11 +33,31 @@ This is a methodological safeguard against reducing Vedanta to independent infer
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **sastra-yonitvat**
+  - Gloss: because scripture is its source/means
+  - Context: Interpreted to secure Brahman through sruti-pramana, not free-standing inference.
+  - Grammar: ablative reason phrase
+  - Alternate glosses: from scripture-source relation, due to scriptural origin-proof
+- **janmadi-sutra-vyakhya**
+  - Gloss: clarification of prior janmadi-sutra reading
+  - Context: Prevents reduction of first causal sutra to mere speculative cosmology.
+  - Grammar: compound noun
+  - Alternate glosses: janmadi interpretation correction, causal-sutra refinement
+- **sruti-pramanya-niscaya**
+  - Gloss: fixing scriptural authority as decisive
+  - Context: Brahman-knowledge is tied to Vedanta textual revelation as primary ground.
+  - Grammar: compound noun
+  - Alternate glosses: scriptural primacy determination, revelation-authority fixing
+- **anumana-anuvartin-upakarana**
+  - Gloss: inference as subordinate follow-up aid
+  - Context: Reasoning may assist only after sruti has determined object identity.
+  - Grammar: compound noun
+  - Alternate glosses: secondary inferential helper, post-sruti logical aid
+- **purvapaksa-vyavaccheda**
+  - Gloss: exclusion of mistaken prior reading
+  - Context: Sutra interpretation explicitly blocks alternate epistemic framing.
+  - Grammar: compound noun
+  - Alternate glosses: misreading elimination, objection removal
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

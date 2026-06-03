@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "svāpyayāt",
+        "gloss": "because of dissolution in sleep",
+        "contextual_sense": "Sutra states that deep-sleep merger points to conscious sat as causal basis.",
+        "grammatical_role": "ablative reason term",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "from sleep-resolution evidence",
+          "due to suṣupti reabsorption"
+        ]
+      },
+      {
+        "headword_iast": "suṣupti-pramāṇa",
+        "gloss": "deep sleep as means of knowing",
+        "contextual_sense": "Experiential scripture of sleep functions as metaphysical evidence, not psychology alone.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "sleep-state proof",
+          "susupti warrant"
+        ]
+      },
+      {
+        "headword_iast": "sat-kāraṇa-niścaya",
+        "gloss": "fixing sat as the cause",
+        "contextual_sense": "The dissolution pattern stabilizes sat-reference against material reinterpretation.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "causal sat determination",
+          "being-cause ascertainment"
+        ]
+      },
+      {
+        "headword_iast": "pradhāna-vyudāsa",
+        "gloss": "setting aside Pradhana",
+        "contextual_sense": "Inert candidate cannot serve as meaningful terminus of conscious return.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "Pradhana sidelining",
+          "matter-cause exclusion"
         ]
       }
     ],

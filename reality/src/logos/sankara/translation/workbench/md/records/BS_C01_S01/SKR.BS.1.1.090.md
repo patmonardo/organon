@@ -33,11 +33,26 @@ Sutra condenses the quarter-assignment argument.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **bhūtādi-pāda-vyapadeśa-upapatti**
+  - Gloss: coherence of the quarter-designations
+  - Context: The sutra compresses the prior argument that the quarter-structure coheres only on a Brahman reading.
+  - Grammar: compound noun
+  - Alternate glosses: quarter-coherence, designation-fit
+- **prakaraṇa-saṅgati**
+  - Gloss: contextual coherence
+  - Context: The whole Gayatri passage is read as internally continuous, not as a loose list of unrelated labels.
+  - Grammar: compound noun
+  - Alternate glosses: topic coherence, discursive continuity
+- **brahma-pramāṇa-bala**
+  - Gloss: strength of Brahman evidence
+  - Context: The interpretive weight now falls on the total pattern of the passage, not on isolated terms.
+  - Grammar: compound noun
+  - Alternate glosses: Brahman-proof strength, evidential force
+- **vaiseṣika-kalpanā-nivṛtti**
+  - Gloss: cessation of atomistic or special-part speculation
+  - Context: The passage is not handled as a puzzle of parts but as a coherent Brahman disclosure.
+  - Grammar: compound noun
+  - Alternate glosses: fragmentary speculation withdrawal, part-logic refusal
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

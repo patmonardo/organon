@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "śrutatvāc ca",
+        "gloss": "and because it is explicitly heard",
+        "contextual_sense": "Sutra clinches Brahman-causality by direct scriptural declaration.",
+        "grammatical_role": "ablative reason phrase",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "from explicit hearing",
+          "due to direct revelation"
+        ]
+      },
+      {
+        "headword_iast": "pratyakṣa-śruti-bala",
+        "gloss": "force of explicit revelation",
+        "contextual_sense": "Not inferred only from context; conclusion rests on unambiguous textual statement.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "direct textual force",
+          "manifest scriptural authority"
+        ]
+      },
+      {
+        "headword_iast": "sarvajña-brahma-kāraṇatva",
+        "gloss": "omniscient Brahman as causal source",
+        "contextual_sense": "Finalized referent after cumulative dialectic against Pradhana alternatives.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "all-knowing causal Brahman",
+          "omniscient source doctrine"
+        ]
+      },
+      {
+        "headword_iast": "sūtra-avasāna-nirṇaya",
+        "gloss": "closing aphoristic determination",
+        "contextual_sense": "This concise reason functions as the final seal for the present exclusion chain.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "terminal sutra verdict",
+          "final aphoristic closure"
         ]
       }
     ],

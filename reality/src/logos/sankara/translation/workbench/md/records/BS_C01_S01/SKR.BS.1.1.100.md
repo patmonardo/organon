@@ -33,11 +33,26 @@ Sutra codifies the non-literal narrative speaker reading.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **sastra-drstya upadesah**
+  - Gloss: instruction from scriptural realization-vision
+  - Context: Sutra states that first-person teaching is from realized standpoint recognized in scripture.
+  - Grammar: sutra phrase
+  - Alternate glosses: vision-based instruction, realization-grounded teaching
+- **vamadeva-vat**
+  - Gloss: as in Vamadeva
+  - Context: Classic precedent authorizes identity-speech without narrowing referent to individual ego.
+  - Grammar: comparative phrase
+  - Alternate glosses: like Vamadeva, Vamadeva paradigm
+- **atmopadesa-laksana**
+  - Gloss: interpretive handling of self-referential speech
+  - Context: First-person pronoun is read functionally through realization context.
+  - Grammar: compound noun
+  - Alternate glosses: self-speech interpretation, I-statement hermeneutic
+- **deha-devata-vyavrtti**
+  - Gloss: exclusion of bodily-deity limitation
+  - Context: Speaker is not confined to finite form when uttering realization-based identity.
+  - Grammar: compound noun
+  - Alternate glosses: finite speaker exclusion, deity-form limitation denied
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

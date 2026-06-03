@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "rathin-ratha-rupaka",
+        "gloss": "chariot-rider allegory",
+        "contextual_sense": "Intertextual support used to profile the empirical self as traveler in samsara-moksa trajectory.",
+        "grammatical_role": "compound metaphor label",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "chariot allegory",
+          "rider-vehicle schema"
+        ]
+      },
+      {
+        "headword_iast": "bhokta-saksi-dvaya",
+        "gloss": "enjoyer-witness pair",
+        "contextual_sense": "Mapped across Katha and Mundaka to stabilize jiva-Paramatma dual structure.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "experiencer-observer dyad",
+          "consumer-witness duality"
+        ]
+      },
+      {
+        "headword_iast": "samsara-moksa-gamana",
+        "gloss": "movement through bondage and release",
+        "contextual_sense": "Marks the functional role of jiva in contrast to non-transmigrating witness.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "transmigration-liberation trajectory",
+          "path of bondage and release"
+        ]
+      },
+      {
+        "headword_iast": "antartexta-samarthana",
+        "gloss": "cross-textual reinforcement",
+        "contextual_sense": "Bhashya method of triangulating meaning through multiple Upanisadic loci.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "intertextual corroboration",
+          "multi-text support"
+        ]
+      },
+      {
+        "headword_iast": "jiva-paramatma-viveka",
+        "gloss": "discernment between individual and Supreme",
+        "contextual_sense": "Interpretive payoff of the extended textual mapping in this continuation.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "self-Supreme discrimination",
+          "individual-Lord differentiation"
         ]
       }
     ],

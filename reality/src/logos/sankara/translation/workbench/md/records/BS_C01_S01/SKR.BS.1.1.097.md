@@ -33,11 +33,26 @@ Sutra resolves narrative first-person ambiguity.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **na vaktur atmopadesat**
+  - Gloss: not (limited) because of speaker self-reference
+  - Context: Sutra denies that first-person narrative language alone determines referent class.
+  - Grammar: sutra phrase
+  - Alternate glosses: speaker-reference not decisive, voice-based objection denied
+- **adhyatma-sambandha-bhuma**
+  - Gloss: abundance of adhyatma linkage
+  - Context: The dominant relation to inner selfhood governs interpretation in this chapter.
+  - Grammar: compound noun
+  - Alternate glosses: inner-link predominance, adhyatma preponderance
+- **vakyartha-niyamaka**
+  - Gloss: controller of sentence meaning
+  - Context: Global thematic pressure overrides isolated pronoun-level cues.
+  - Grammar: compound noun
+  - Alternate glosses: meaning-governing factor, semantic regulator
+- **sutra-ksepa-nirasa**
+  - Gloss: dismissal of the raised objection
+  - Context: Aphoristic response collapses the narrative-literal objection in one move.
+  - Grammar: compound noun
+  - Alternate glosses: objection rejection, compact rebuttal
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "atha",
+        "gloss": "now/thereafter",
+        "contextual_sense": "Signals commencement conditioned by prior preparedness and causal ground.",
+        "grammatical_role": "indeclinable particle",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "thereupon",
+          "at this juncture"
+        ]
+      },
+      {
+        "headword_iast": "atah",
+        "gloss": "therefore",
+        "contextual_sense": "Marks inferential transition from finite-result critique to Brahman inquiry.",
+        "grammatical_role": "causal particle",
+        "alternate_glosses": [
+          "hence",
+          "for this reason"
+        ]
+      },
+      {
+        "headword_iast": "brahma-jijnasa",
+        "gloss": "inquiry into Brahman",
+        "contextual_sense": "Programmatic sutra declaration of the Vedanta project.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "Brahman-investigation",
+          "nondual inquiry project"
+        ]
+      },
+      {
+        "headword_iast": "adhikarana-pravesa",
+        "gloss": "entry into the opening topical unit",
+        "contextual_sense": "Functions as root launch-node for all subsequent sutra adjudications.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "foundational topic entry",
+          "opening argument initiation"
         ]
       }
     ],

@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "sarira-na-antaryami",
+        "gloss": "embodied self is not the inner controller",
+        "contextual_sense": "Sutra confirms jiva exclusion from antaryamin role after prior arguments.",
+        "grammatical_role": "negative doctrinal phrase",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "jiva not antaryamin",
+          "embodied agent exclusion"
+        ]
+      },
+      {
+        "headword_iast": "ubhaye api",
+        "gloss": "in both recensions/textual branches",
+        "contextual_sense": "Appeal to dual textual traditions as convergent evidence for distinction.",
+        "grammatical_role": "locative emphatic phrase",
+        "alternate_glosses": [
+          "in both readings",
+          "across both shakhas"
+        ]
+      },
+      {
+        "headword_iast": "bhedena adhiyate",
+        "gloss": "is taught as distinct",
+        "contextual_sense": "Core indicator: text presents embodied self as governed, not governing absolute.",
+        "grammatical_role": "predicate phrase",
+        "alternate_glosses": [
+          "read as differentiated",
+          "taught in distinction"
+        ]
+      },
+      {
+        "headword_iast": "sakha-sammata-pramana",
+        "gloss": "evidence agreed across recensions",
+        "contextual_sense": "Hermeneutic strength arises from Kanva/Madhyandina convergence.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "cross-recensional proof",
+          "dual-branch corroboration"
         ]
       }
     ],

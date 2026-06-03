@@ -33,11 +33,31 @@ Converts each purvapaksha indicator into a pro-Brahman indicator by hermeneutic 
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
+- **vijnanatma-paramatma**
+  - Gloss: individual cognizer and Supreme Self pair
+  - Context: Siddhanta pairing accepted for the dual reference in the mantra.
+  - Grammar: compound dyad
+  - Alternate glosses: jiva-Ishvara pair, knower-Supreme dyad
+- **samanasvabhava-dvaya**
+  - Gloss: dual reference among same-class entities
+  - Context: Principle that dual mention normally picks two of one ontological class (both conscious selves).
+  - Grammar: compound noun
+  - Alternate glosses: same-nature duality, class-consistent pairing rule
+- **guhahita-pramana**
+  - Gloss: scriptural evidence for indwelling in the cave
+  - Context: Cited passages support both jiva and Paramatma as heart-cavity occupants.
+  - Grammar: compound noun
+  - Alternate glosses: cave-indwelling testimony, inner-heart witness text
+- **chaya-tapa-vyakhya**
+  - Gloss: interpretation of shade-sun imagery
+  - Context: Read as asymmetrical relation within jiva-Paramatma dyad rather than buddhi-jiva pairing.
+  - Grammar: compound noun
+  - Alternate glosses: shadow-light exegesis, metaphor adjudication
+- **siddhanta**
+  - Gloss: settled conclusion
+  - Context: Final determination displacing the buddhi-ksetrajna purvapaksa.
   - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+  - Alternate glosses: final view, doctrinal settlement
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

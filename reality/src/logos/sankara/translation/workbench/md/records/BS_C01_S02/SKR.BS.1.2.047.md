@@ -33,11 +33,31 @@ Re-opens and closes Pradhana candidacy by contrasting negative apophatic predica
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **smarta-pradhana-paksa**
+  - Gloss: Smrti-based Pradhana hypothesis
+  - Context: Purvapaksa attempts to read antaryamin through Sankhya-style insentient root principle.
+  - Grammar: compound noun
+  - Alternate glosses: Sankhya Pradhana option, smarta primordial-matter thesis
+- **adrsyatva**
+  - Gloss: invisibility/unperceivability
+  - Context: Surface compatibility term used by objection to claim Pradhana fit.
+  - Grammar: abstract noun
+  - Alternate glosses: non-perceptibility, unseen status
+- **ataddharma-abhilapa**
+  - Gloss: statement of non-Pradhana attributes
+  - Context: Refutation hinge: text ascribes conscious-knower traits impossible for inert Pradhana.
+  - Grammar: compound noun
+  - Alternate glosses: non-applicable property attribution, incompatible predicate declaration
+- **cetana-laksana**
+  - Gloss: marker of consciousness
+  - Context: Knower-language in passage establishes conscious controller, excluding acetanamula.
+  - Grammar: compound noun
+  - Alternate glosses: consciousness indicator, sentience marker
+- **pradhana-nirakarana**
+  - Gloss: rejection of Pradhana candidate
+  - Context: Bhashya dismisses material-cause-only reading as inadequate to textual predicates.
+  - Grammar: compound noun
+  - Alternate glosses: Pradhana exclusion, insentient-cause refutation
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

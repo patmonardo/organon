@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "antaryāmin-brāhmaṇa-pramāṇa",
+        "gloss": "evidence from the antaryamin brāhmaṇa",
+        "contextual_sense": "Cross-text citation confirms a distinct inner ruler beyond embodied occupants.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "inner-controller textual warrant",
+          "antaryamin evidence"
+        ]
+      },
+      {
+        "headword_iast": "āditya-śarīra-jīva-vilakṣaṇatā",
+        "gloss": "difference from the jiva identified with solar body",
+        "contextual_sense": "Passage distinguishes indwelling regulator from body-associated conscious principle.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "solar-body jiva distinction",
+          "embodied-occupant differentiation"
+        ]
+      },
+      {
+        "headword_iast": "yamayitṛtva",
+        "gloss": "governing/controlling function",
+        "contextual_sense": "Regulative sovereignty marks Ishvara, not conditioned experiencer.",
+        "grammatical_role": "abstract noun",
+        "alternate_glosses": [
+          "inner governance",
+          "regulator-status"
+        ]
+      },
+      {
+        "headword_iast": "amṛtatva-vyapadeśa",
+        "gloss": "ascription of immortality",
+        "contextual_sense": "Immortality predicate supports supra-samsaric referent identification.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "deathless designation",
+          "immortal-marker predication"
+        ]
+      },
+      {
+        "headword_iast": "śrutyantara-samanvaya",
+        "gloss": "harmonization with parallel revelation",
+        "contextual_sense": "Interpretation is reinforced through convergent Upanishadic testimony.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "cross-text concordance",
+          "parallel-shruti integration"
         ]
       }
     ],

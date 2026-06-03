@@ -33,11 +33,31 @@ Sentence-end indicators override default lexical familiarity.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **ākāśaḥ tat-liṅgāt**
+  - Gloss: akasha (means Brahman) because of that sign
+  - Context: Sutra-bhashya method privileges contextual indicators over default lexical habit.
+  - Grammar: doctrinal phrase
+  - Alternate glosses: Brahman-akasha via marker, sign-governed akasha determination
+- **utpatti-laya-sāmarthya-liṅga**
+  - Gloss: marker of universal origination and dissolution
+  - Context: Total emergence-return language fits only supreme cause.
+  - Grammar: compound noun
+  - Alternate glosses: creation-dissolution sign, cosmic-cycle indicator
+- **anapekṣika-jyāyastva**
+  - Gloss: greatness independent of comparison
+  - Context: Passage signals unsurpassed magnitude unlike finite elemental category.
+  - Grammar: abstract noun
+  - Alternate glosses: non-relative supremacy, incomparable greatness
+- **parāyaṇatva**
+  - Gloss: status as final resort
+  - Context: Ultimate destination language identifies transcendental ground, not inert medium.
+  - Grammar: abstract noun
+  - Alternate glosses: supreme refugehood, final-recourse status
+- **śabdāntara-saṅgata-pramāṇa**
+  - Gloss: support from aligned usage elsewhere
+  - Context: Cross-text lexeme behavior corroborates Brahman-reference in this locus.
+  - Grammar: compound noun
+  - Alternate glosses: parallel-wording support, lexical concord evidence
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

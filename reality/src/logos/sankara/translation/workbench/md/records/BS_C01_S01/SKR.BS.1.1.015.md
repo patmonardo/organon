@@ -33,11 +33,31 @@ Scriptural authorship/cause argument reinforces Brahman's omniscience beyond cos
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **sastra-yonitva-anumana**
+  - Gloss: inference from scripture-source character
+  - Context: Veda’s magnitude and coherence imply an omniscient origin.
+  - Grammar: compound noun
+  - Alternate glosses: scripture-source inference, Veda-origin argument
+- **sarvajna-sarvasakti-yoni**
+  - Gloss: source endowed with omniscience and omnipotence
+  - Context: Only such a source can ground exhaustive multi-domain revelation.
+  - Grammar: compound noun
+  - Alternate glosses: all-knowing all-powerful source, complete-cognition source
+- **rgvedadi-sastra-mahattva**
+  - Gloss: vast scope of Vedic corpus
+  - Context: Breadth of scriptural teaching is used as evidentiary pressure for Brahman-source.
+  - Grammar: compound noun
+  - Alternate glosses: Vedic magnitude argument, scriptural vastness marker
+- **asarvajna-karana-nirasa**
+  - Gloss: exclusion of non-omniscient causes
+  - Context: Inferential elimination of finite or inert source candidates.
+  - Grammar: compound noun
+  - Alternate glosses: limited-source rejection, non-omniscient cause denial
+- **brahma-karanatva-samarthana**
+  - Gloss: support for Brahman as causal source
+  - Context: Record strengthens janmadi-laksana via scripture-origin reasoning.
+  - Grammar: compound noun
+  - Alternate glosses: Brahman-cause reinforcement, causal identity corroboration
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

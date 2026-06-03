@@ -33,11 +33,26 @@ Sutra encapsulation of the antaryamin determination.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **antaryami-adhidaivadisu**
+  - Gloss: inner controller across deity and other domains
+  - Context: Sutra situates one controller-function through multiple ontological layers.
+  - Grammar: locative compound phrase
+  - Alternate glosses: cross-domain antaryamin reference, multi-level inner governance
+- **taddharma-vyapadesat**
+  - Gloss: because of ascription of His attributes
+  - Context: Decisive reason clause identifying controller as Brahman by predicate profile.
+  - Grammar: ablative reason phrase
+  - Alternate glosses: from Brahmanic attribute assignment, due to specific property attribution
+- **sutra-hetu**
+  - Gloss: sutra-level inferential ground
+  - Context: Compressed form of the full bhashya reasoning on antaryamin identity.
+  - Grammar: compound noun
+  - Alternate glosses: aphoristic rationale, terse proof basis
+- **brahma-antaryamin-aikya**
+  - Gloss: identity of Brahman and inner controller
+  - Context: Final doctrinal equation secured by attribute evidence across sections.
+  - Grammar: compound noun
+  - Alternate glosses: Brahman-controller identity, inner ruler as absolute
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

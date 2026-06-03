@@ -33,11 +33,26 @@ Introduces another familiar-versus-contextual reading conflict, now around jyoti
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **jyotis-śabda-saṃśaya**
+  - Gloss: doubt about the word jyotis
+  - Context: The objection takes the word in its obvious physical-light sense and asks whether that is enough.
+  - Grammar: compound noun
+  - Alternate glosses: light-term ambiguity, jyotis dispute
+- **aditya-diśa-bhāva**
+  - Gloss: sun-direction and spatial boundedness
+  - Context: Locative framing is pressed as a reason to keep the referent finite and visible.
+  - Grammar: compound noun
+  - Alternate glosses: solar location, bounded light reading
+- **mukhya-vṛtti**
+  - Gloss: primary signification
+  - Context: Default lexical habit is the rival model that the Bhashya will later displace.
+  - Grammar: compound noun
+  - Alternate glosses: literal sense, direct denotation
+- **lokika-jyotis**
+  - Gloss: worldly light
+  - Context: The objection explicitly leans on ordinary shining things before contextual reversal arrives.
+  - Grammar: compound noun
+  - Alternate glosses: physical light, visible luminosity
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

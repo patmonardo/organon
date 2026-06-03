@@ -33,11 +33,31 @@ Classical lexical-priority challenge to Brahmanic reinterpretation.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **ākāśa-śabda-saṃśaya**
+  - Gloss: doubt concerning the word akasha
+  - Context: Question is whether lexical default (elemental space) or contextual sign (Brahman) should prevail.
+  - Grammar: compound noun
+  - Alternate glosses: akasha word ambiguity, space-term dispute
+- **mukhya-gauṇa-vivāda**
+  - Gloss: literal versus secondary usage dispute
+  - Context: Purvapaksha insists ordinary elemental meaning is primary and Brahman-use is derivative.
+  - Grammar: compound noun
+  - Alternate glosses: primary-secondary meaning conflict, literal-figurative contest
+- **lokagati-praśna**
+  - Gloss: question of the world’s final destination
+  - Context: Sentence opening on ultimate destination sets interpretive stakes beyond physical ether.
+  - Grammar: compound noun
+  - Alternate glosses: cosmic destination query, final resort question
+- **vākya-śeṣa-nirāsa-prayatna**
+  - Gloss: attempt to neutralize sentence-end force
+  - Context: Objection tries to absorb origination-dissolution claims into bhutakasha interpretation.
+  - Grammar: compound noun
+  - Alternate glosses: post-clause force deflection, sentence-tail minimization
+- **bhūtākāśa-pakṣa-rakṣā**
+  - Gloss: defense of elemental-space reading
+  - Context: Lexical familiarity is foregrounded to resist Brahmanic reinterpretation.
+  - Grammar: compound noun
+  - Alternate glosses: physical-space thesis defense, elemental-akasha preservation
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

@@ -33,11 +33,31 @@ Provides the operative laksana for Brahman by cosmological causality under scrip
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **janmadi**
+  - Gloss: origination and the rest (sustenance, dissolution)
+  - Context: Laksana cluster defining Brahman through relation to world-process totality.
+  - Grammar: compound abbreviation term
+  - Alternate glosses: creation-etc sequence, sristi-sthiti-laya triad
+- **jagat-karanatva**
+  - Gloss: status as cause of the cosmos
+  - Context: Used to exclude rival causes lacking omniscient intentionality.
+  - Grammar: compound noun
+  - Alternate glosses: world-causality, cosmic-source status
+- **tatastha-laksana**
+  - Gloss: extrinsic defining indicator
+  - Context: Brahman indicated through effects while intrinsic nature remains beyond objectification.
+  - Grammar: compound noun
+  - Alternate glosses: indirect definition, effect-based marker
+- **sarvajna-sarvasakti**
+  - Gloss: omniscience and omnipotence
+  - Context: Required causal qualifications that differentiate Brahman from inert principles.
+  - Grammar: paired compound
+  - Alternate glosses: all-knowing all-powerful profile, complete knowledge-power set
+- **pradhana-nirasa**
+  - Gloss: rejection of Pradhana-like rival causes
+  - Context: Causal-definition argument blocks non-conscious first-principle candidates.
+  - Grammar: compound noun
+  - Alternate glosses: insentient-cause exclusion, rival-cause refutation
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

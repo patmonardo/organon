@@ -33,11 +33,31 @@ Distinguishes nirvisesa teaching from saguna-upasana presentation without contra
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **tad-dharma-upadeśa**
+  - Gloss: teaching of those very (Brahmanic) attributes
+  - Context: Sinlessness, Vedic-totality, and universal rulership are treated as decisive markers of Ishvara.
+  - Grammar: compound noun
+  - Alternate glosses: attribute-based instruction, Brahman-sign exposition
+- **pāpmarahitatva**
+  - Gloss: freedom from sin-defect
+  - Context: Moral-transcendent predicate exceeds empirical jiva limitations.
+  - Grammar: abstract noun
+  - Alternate glosses: sinlessness, blemish-transcendence
+- **sarva-veda-gītitva**
+  - Gloss: being sung in all Vedas
+  - Context: Total scriptural scope indicates supreme referent rather than localized deity-fragment.
+  - Grammar: compound noun
+  - Alternate glosses: Vedic-totality predicate, all-Vedic praise marker
+- **saguṇa-upāsanā-vyavahāra**
+  - Gloss: qualified contemplative presentation
+  - Context: Form and location are interpreted as pedagogical supports, not ontological constraints.
+  - Grammar: compound noun
+  - Alternate glosses: devotional-mode presentation, upasana-oriented manifestation
+- **nirviśeṣa-svarūpa-avirodha**
+  - Gloss: non-conflict with attributeless reality
+  - Context: Bhashya preserves higher nondual teaching while admitting provisional descriptive modes.
+  - Grammar: compound noun
+  - Alternate glosses: nondual compatibility, attribute-free essence non-contradiction
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

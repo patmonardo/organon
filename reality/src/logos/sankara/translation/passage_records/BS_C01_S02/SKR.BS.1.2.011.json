@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "headword_iast": "sabda-visesa",
+        "gloss": "specificity of wording/grammatical expression",
+        "contextual_sense": "Used as inferential evidence that distinct case-forms indicate distinct referential roles in the passage.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "grammatical distinctness",
+          "textual form-specificity"
+        ]
+      },
+      {
+        "headword_iast": "saptami-prathama-bheda",
+        "gloss": "difference between locative and nominative usage",
+        "contextual_sense": "Case distinction leveraged to block identity of embodied locus and meditated purusa.",
+        "grammatical_role": "grammatical compound",
+        "alternate_glosses": [
+          "case-role differentiation",
+          "locative-nominative contrast"
+        ]
+      },
+      {
+        "headword_iast": "bheda",
+        "gloss": "difference, non-identity",
+        "contextual_sense": "Hermeneutic conclusion that upasaka-jiva and upasya-purusa cannot be collapsed at this interpretive stage.",
         "grammatical_role": "noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "distinction",
+          "differentiation"
+        ]
+      },
+      {
+        "headword_iast": "upasya-purusa",
+        "gloss": "the person as object of meditation",
+        "contextual_sense": "Referent established by syntactic and contextual indicators rather than by superficial body-language.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "meditated person",
+          "contemplative purusa"
         ]
       }
     ],

@@ -33,11 +33,26 @@ Sutra closes the jiva-exclusion argument.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **netaraḥ anupapatteḥ**
+  - Gloss: not the other, due to impossibility
+  - Context: Sutra states that predicate-set does not fit the non-supreme candidate.
+  - Grammar: sutra reason phrase
+  - Alternate glosses: other excluded by non-fit, jiva denied on coherence grounds
+- **anupapatti-liṅga**
+  - Gloss: indicator from incoherence
+  - Context: Logical non-fit of attributes is treated as a decisive referential test.
+  - Grammar: compound noun
+  - Alternate glosses: coherence-failure sign, predicate mismatch marker
+- **jīva-vyāvṛtti**
+  - Gloss: exclusion of jiva referent
+  - Context: Aphoristic closure removes residual finite-self interpretation of anandamaya.
+  - Grammar: compound noun
+  - Alternate glosses: individual-self exclusion, bound-self disqualification
+- **sūtra-nibandha-sāra**
+  - Gloss: compressed argumentative core
+  - Context: Short form condenses the prior prose demonstration into one inferential pivot.
+  - Grammar: compound noun
+  - Alternate glosses: aphoristic gist, compressed doctrinal kernel
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

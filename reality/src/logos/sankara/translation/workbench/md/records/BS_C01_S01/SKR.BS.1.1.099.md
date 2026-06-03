@@ -33,11 +33,26 @@ Bridge into the next sutra's interpretive key.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **katham tarhi vaktur atmopadesah**
+  - Gloss: how then is the speaker's self-instruction understood?
+  - Context: Bridge question transitions from objection-rebuttal to a constructive interpretive model.
+  - Grammar: interrogative doctrinal phrase
+  - Alternate glosses: transition query, interpretive hinge question
+- **vyakhyana-sandhi**
+  - Gloss: junction to explanatory resolution
+  - Context: A short pivot that formally opens the Vamadeva-style answer.
+  - Grammar: compound noun
+  - Alternate glosses: explanatory bridge, resolution transition
+- **purvapaksa-avasesa**
+  - Gloss: residual objection remainder
+  - Context: Identifies the final unresolved piece before sutra codification.
+  - Grammar: compound noun
+  - Alternate glosses: remaining challenge, leftover objection
+- **uttara-prastava**
+  - Gloss: proposal of the response
+  - Context: Prepares the immediate doctrinal answer in the next verse unit.
+  - Grammar: compound noun
+  - Alternate glosses: reply setup, answer launch
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

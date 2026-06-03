@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "abhivyakteh",
+        "gloss": "because of manifestation",
+        "contextual_sense": "Sutra reason grounding pradesa-matra wording in how Brahman appears for upasana.",
+        "grammatical_role": "ablative reason term",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "from manifestation",
+          "due to appearing mode"
+        ]
+      },
+      {
+        "headword_iast": "asmarathyah",
+        "gloss": "Asmarathya",
+        "contextual_sense": "Sutra attributes this harmonizing explanation to Asmarathya authority.",
+        "grammatical_role": "proper noun",
+        "alternate_glosses": [
+          "Asmarathya teacher",
+          "Asmarathya lineage view"
+        ]
+      },
+      {
+        "headword_iast": "pradesa-matra-anvaya",
+        "gloss": "interpretive linkage of measure-language",
+        "contextual_sense": "Finite-span expression mapped to manifestation rather than intrinsic measure.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "measure-expression reconciliation",
+          "span-language integration"
+        ]
+      },
+      {
+        "headword_iast": "sutra-hetu",
+        "gloss": "aphoristic reason clause",
+        "contextual_sense": "Condensed statement of the manifestation-based solution.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "terse rationale",
+          "compressed proof-ground"
         ]
       }
     ],

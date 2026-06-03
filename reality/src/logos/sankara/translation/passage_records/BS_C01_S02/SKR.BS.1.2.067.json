@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "drsti-upadesa",
+        "gloss": "instruction of contemplative seeing",
+        "contextual_sense": "Key reply: passage teaches Brahman-vision through jatharagni as meditative support.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "vision-instruction",
+          "superimpositional meditation teaching"
+        ]
+      },
+      {
+        "headword_iast": "jathara-alambana-upasana",
+        "gloss": "meditation using gastric fire as support",
+        "contextual_sense": "Digestive fire is retained as upadhi/alambana, not as final ontological referent.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "jatharagni-based contemplation",
+          "internal-fire support meditation"
+        ]
+      },
+      {
+        "headword_iast": "paramesvara-drsti",
+        "gloss": "cognition of Supreme in a support-object",
+        "contextual_sense": "Hermeneutic mechanism resolving lexical fire-language into Brahman-upasana.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "Ishvara-vision",
+          "Supreme-superimposition cognition"
+        ]
+      },
+      {
+        "headword_iast": "guna-asambhava",
+        "gloss": "impossibility of full predicate-fit otherwise",
+        "contextual_sense": "Cosmic personhood predicates exceed literal digestive-fire interpretation.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "attribute mismatch",
+          "predicate infeasibility"
+        ]
+      },
+      {
+        "headword_iast": "purusa-patha-samarthana",
+        "gloss": "support from recensional reading of person-form",
+        "contextual_sense": "Textual tradition reading him as purusa reinforces Brahman-level interpretation.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "person-form textual support",
+          "purusa-reading corroboration"
         ]
       }
     ],

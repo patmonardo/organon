@@ -33,11 +33,31 @@ Sentence-end force (vakya-shesha-bala) controls interpretation over local lexica
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **ata eva prāṇaḥ**
+  - Gloss: therefore prana (here as Brahman)
+  - Context: By same marker-logic as akasha case, prana-term is elevated to Brahman-reference.
+  - Grammar: doctrinal phrase
+  - Alternate glosses: thus prana denotes Brahman, marker-derived prana determination
+- **prāṇa-brahma-liṅga-saṃbandha**
+  - Gloss: connection of prana term with Brahman-indicators
+  - Context: Universal entry-and-emergence predicates outweigh lexical familiarity of vital-air usage.
+  - Grammar: compound noun
+  - Alternate glosses: prana-Brahman marker linkage, sign-based prana elevation
+- **vākya-śeṣa-bala**
+  - Gloss: force of sentence-completion context
+  - Context: Interpretation is controlled by full propositional arc, not isolated word habit.
+  - Grammar: compound noun
+  - Alternate glosses: terminal-clause force, context-completion strength
+- **mukhya-prāṇa-vyāvṛtti**
+  - Gloss: exclusion of mere vital-breath referent
+  - Context: Physiological prana reading is retained only as subordinate possibility outside this context.
+  - Grammar: compound noun
+  - Alternate glosses: vital-air reading exclusion, breath-only sense removal
+- **adhikaraṇa-antara-sādharmya**
+  - Gloss: structural parallel with prior adhikarana
+  - Context: Bhashya explicitly reuses previous interpretive template for consistency.
+  - Grammar: compound noun
+  - Alternate glosses: inter-topic methodological parallel, earlier-case pattern carryover
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

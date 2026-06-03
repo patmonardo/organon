@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "jiva-linga",
+        "gloss": "indicator toward jiva reading",
+        "contextual_sense": "Speaker-knowledge and instrument-agency language is marshaled to support individual-self interpretation.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "jiva marker",
+          "individual-self sign"
+        ]
+      },
+      {
+        "headword_iast": "mukhya-prana-linga",
+        "gloss": "indicator toward primary vital-prana",
+        "contextual_sense": "Body-support and life-function statements are used to support vital-force reading.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "vital-prana marker",
+          "physiological sign"
+        ]
+      },
+      {
+        "headword_iast": "vakya-ekatva",
+        "gloss": "unity of sentence-purport",
+        "contextual_sense": "Bhashya blocks referent multiplication by requiring one coherent meaning from start to finish.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "single purport",
+          "one-meaning constraint"
+        ]
+      },
+      {
+        "headword_iast": "upakrama-upasamhara",
+        "gloss": "opening-closing hermeneutic pair",
+        "contextual_sense": "Beginnings and conclusions are invoked to anchor the primary intended object.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "initial-final criterion",
+          "framing coherence test"
+        ]
+      },
+      {
+        "headword_iast": "linga-bala-taratamya",
+        "gloss": "hierarchy of indicator strength",
+        "contextual_sense": "Stronger Brahman-signs are made to govern weaker competing signs.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "marker priority ranking",
+          "evidential gradation"
         ]
       }
     ],

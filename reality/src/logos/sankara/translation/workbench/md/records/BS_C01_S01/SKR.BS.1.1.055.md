@@ -33,11 +33,26 @@ Sutra key for resolving the kosha-vs-Brahman ambiguity.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **ānandamayo abhyāsāt**
+  - Gloss: anandamaya, due to repetition
+  - Context: Sutra crystallizes recurrent bliss-language as decisive for referent fixation.
+  - Grammar: sutra phrase
+  - Alternate glosses: anandamaya by reiteration, repetition-based determination
+- **abhyāsa-liṅga**
+  - Gloss: indicator from repeated usage
+  - Context: Hermeneutic sign that recurrence tracks primary topic rather than incidental descriptor.
+  - Grammar: compound noun
+  - Alternate glosses: repetition marker, iterative sign
+- **brahma-paratva-niścaya**
+  - Gloss: ascertainment of Brahman-orientation
+  - Context: Short aphorism settles kosha-versus-Brahman dispute in favor of the latter.
+  - Grammar: compound noun
+  - Alternate glosses: Brahman referent fixation, supreme-orientation certainty
+- **kośa-pakṣa-vyāvṛtti**
+  - Gloss: exclusion of sheath-only view
+  - Context: Finite layer interpretation is set aside at the sutra level.
+  - Grammar: compound noun
+  - Alternate glosses: sheath reading exclusion, layer-model rejection
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

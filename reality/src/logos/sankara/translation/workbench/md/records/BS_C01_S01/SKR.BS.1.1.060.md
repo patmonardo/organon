@@ -33,11 +33,31 @@ Contextual continuity across textual strata blocks downgrading anandamaya to a l
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **mantra-brāhmaṇa-ekārthya**
+  - Gloss: single meaning across mantra and prose
+  - Context: Bhashya argues both textual strata refer to the same Brahman-topic.
+  - Grammar: compound noun
+  - Alternate glosses: mantra-prose referential unity, cross-stratum semantic identity
+- **satyam-jñānam-anantam-brahma**
+  - Gloss: Brahman as reality-consciousness-infinite
+  - Context: Earlier defining mantra anchors the later anandamaya passage’s referent.
+  - Grammar: quoted doctrinal phrase
+  - Alternate glosses: triple qualifier formula, definitional Brahman mantra
+- **prakṛta-anusandhāna**
+  - Gloss: tracking the established topic
+  - Context: Interpretation preserves continuity with what was initially introduced as main subject.
+  - Grammar: compound noun
+  - Alternate glosses: topic continuity tracking, subject-thread retention
+- **ākāśādi-krama-kāraṇatva**
+  - Gloss: causality through the akasha-first sequence
+  - Context: Creation series serves as evidential backbone for identifying same supreme cause.
+  - Grammar: compound noun
+  - Alternate glosses: cosmogonic sequence causality, akasha-order sourcehood
+- **adhikaraṇa-saṅgati**
+  - Gloss: coherence within topical argument
+  - Context: Long prose argument ensures no referential slippage between contiguous sections.
+  - Grammar: compound noun
+  - Alternate glosses: internal argument coherence, topic-fit consistency
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

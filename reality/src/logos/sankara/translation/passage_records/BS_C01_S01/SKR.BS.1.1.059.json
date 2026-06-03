@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "tad-hetu-vyapadeśāt ca",
+        "gloss": "and because of being declared the cause of that",
+        "contextual_sense": "Sutra condenses bliss-causality argument as direct indicator of referent status.",
+        "grammatical_role": "sutra reason phrase",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "from cause-designation",
+          "due to source-attribution"
+        ]
+      },
+      {
+        "headword_iast": "hetu-liṅga",
+        "gloss": "inferential sign from causality",
+        "contextual_sense": "Stated causal role functions as semantic criterion for term-resolution.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "cause-marker",
+          "causal indicator"
+        ]
+      },
+      {
+        "headword_iast": "ānanda-pravartakatva",
+        "gloss": "capacity to occasion bliss in others",
+        "contextual_sense": "Only an intrinsically full principle can ground universal bliss-dispensation.",
+        "grammatical_role": "abstract noun",
+        "alternate_glosses": [
+          "bliss-initiating role",
+          "joy-generative status"
+        ]
+      },
+      {
+        "headword_iast": "brahma-lakṣaṇa-saṃgraha",
+        "gloss": "collection of Brahman-defining signs",
+        "contextual_sense": "This sutra adds another lakshana to prior abhyasa and contextual continuity grounds.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "Brahman-mark aggregation",
+          "defining-sign consolidation"
         ]
       }
     ],

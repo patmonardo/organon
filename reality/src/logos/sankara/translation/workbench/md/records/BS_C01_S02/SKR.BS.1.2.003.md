@@ -33,11 +33,21 @@ Siddhanta turn: continuity of prakarana fixes Brahman as referent.
 ## Analysis
 
 ### Lexical Notes
-- **brahman**
-  - Gloss: ultimate reality
-  - Context: Primary interpretive referent under adjudication in this adhikarana
-  - Grammar: noun
-  - Alternate glosses: absolute, supreme principle
+- **sarvatra-prasiddha-upadesa**
+  - Gloss: instruction concerning what is established everywhere
+  - Context: Siddhanta principle: a referent already universally fixed in Vedanta is carried forward unless compellingly displaced.
+  - Grammar: compound noun
+  - Alternate glosses: universally established instruction, widely attested doctrinal indication
+- **prakrta-hana**
+  - Gloss: abandonment of the current topic
+  - Context: Hermeneutic fault avoided by keeping Brahman as continuous referent through the passage.
+  - Grammar: compound noun
+  - Alternate glosses: topic-break, loss of contextual subject
+- **aprakrta-prakriya**
+  - Gloss: forcing an unrelated procedure/topic
+  - Context: Undesired interpretive shift that would occur if jiva were introduced without adequate textual anchoring.
+  - Grammar: compound noun
+  - Alternate glosses: untopical transition, foreign procedural shift
 
 ## QA Uncertainty Notes
 - Long bhashya blocks translated as draft prose and require line-level philological curation.

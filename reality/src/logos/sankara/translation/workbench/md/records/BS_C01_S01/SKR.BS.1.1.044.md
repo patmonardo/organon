@@ -33,11 +33,26 @@ Signals continuation of cumulative exclusion method.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **kutaś ca na pradhānam**
+  - Gloss: what further ground excludes Pradhana?
+  - Context: Interrogative bridge opens the next evidentiary layer beyond sleep-argument.
+  - Grammar: interrogative phrase
+  - Alternate glosses: why else not Pradhana?, additional exclusion prompt
+- **hetvantara-anveṣaṇa**
+  - Gloss: search for an additional reason
+  - Context: Signals cumulative method: one exclusion is reinforced by another independent line.
+  - Grammar: compound noun
+  - Alternate glosses: further-ground inquiry, supplementary proof pursuit
+- **adhikaraṇa-sandhi**
+  - Gloss: junction in argumentative flow
+  - Context: Connects svapya logic to upcoming cross-text convergence proof.
+  - Grammar: compound noun
+  - Alternate glosses: topical hinge, argument transition node
+- **pūrvapakṣa-avaśeṣa-śaṅkā**
+  - Gloss: residual opponent doubt
+  - Context: A remaining ambiguity is surfaced explicitly so it can be fully dissolved.
+  - Grammar: compound noun
+  - Alternate glosses: leftover objection cue, residual uncertainty signal
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

@@ -33,11 +33,31 @@ Distinguishes upasana-indexing from metaphysical partition.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **nicayya-upasana**
+  - Gloss: focused/determinate meditation mode
+  - Context: Explains localizing expressions as contemplative focus-tools rather than metaphysical delimitation.
+  - Grammar: compound noun
+  - Alternate glosses: concentrated upasana, fixation-oriented contemplation
+- **alpatva**
+  - Gloss: smallness/minuteness
+  - Context: Objection-term answered by reclassifying smallness as pedagogical standpoint-language.
+  - Grammar: abstract noun
+  - Alternate glosses: finitude-language, minuteness predicate
+- **hrdaya-sthana**
+  - Gloss: heart-location
+  - Context: Interpreted as contemplative locus for practice, not ontic confinement of Brahman.
+  - Grammar: compound noun
+  - Alternate glosses: cardiac seat, inner-heart locus
+- **upasana-arthavada**
+  - Gloss: meditation-oriented explanatory framing
+  - Context: Allows practice-directed contextualization without altering ultimate referent.
+  - Grammar: compound noun
+  - Alternate glosses: practice-framing explanation, contemplative contextualization
+- **avaccheda-abhava**
+  - Gloss: absence of real delimitation
+  - Context: Key rebuttal that apparent spatial restriction does not genuinely bound Brahman.
+  - Grammar: compound noun
+  - Alternate glosses: non-delimitation, no real boundedness
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

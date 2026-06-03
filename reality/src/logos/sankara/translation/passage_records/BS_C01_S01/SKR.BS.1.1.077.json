@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "ākāśa-śabda-saṃśaya",
+        "gloss": "doubt concerning the word akasha",
+        "contextual_sense": "Question is whether lexical default (elemental space) or contextual sign (Brahman) should prevail.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "akasha word ambiguity",
+          "space-term dispute"
+        ]
+      },
+      {
+        "headword_iast": "mukhya-gauṇa-vivāda",
+        "gloss": "literal versus secondary usage dispute",
+        "contextual_sense": "Purvapaksha insists ordinary elemental meaning is primary and Brahman-use is derivative.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "primary-secondary meaning conflict",
+          "literal-figurative contest"
+        ]
+      },
+      {
+        "headword_iast": "lokagati-praśna",
+        "gloss": "question of the world’s final destination",
+        "contextual_sense": "Sentence opening on ultimate destination sets interpretive stakes beyond physical ether.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "cosmic destination query",
+          "final resort question"
+        ]
+      },
+      {
+        "headword_iast": "vākya-śeṣa-nirāsa-prayatna",
+        "gloss": "attempt to neutralize sentence-end force",
+        "contextual_sense": "Objection tries to absorb origination-dissolution claims into bhutakasha interpretation.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "post-clause force deflection",
+          "sentence-tail minimization"
+        ]
+      },
+      {
+        "headword_iast": "bhūtākāśa-pakṣa-rakṣā",
+        "gloss": "defense of elemental-space reading",
+        "contextual_sense": "Lexical familiarity is foregrounded to resist Brahmanic reinterpretation.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "physical-space thesis defense",
+          "elemental-akasha preservation"
         ]
       }
     ],

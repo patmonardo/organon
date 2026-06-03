@@ -33,11 +33,26 @@ Sutra seal for cross-text convergence argument.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **gati-sāmānyāt**
+  - Gloss: because of common trajectory
+  - Context: Sutra grounds conclusion in the shared direction of Vedantic testimony.
+  - Grammar: ablative reason term
+  - Alternate glosses: from uniform scriptural movement, due to convergent textual drift
+- **samanvaya-prakriyā**
+  - Gloss: procedure of convergence-reading
+  - Context: Diverse passages are read as coordinated witnesses to one causal referent.
+  - Grammar: compound noun
+  - Alternate glosses: harmonization method, integrative reading protocol
+- **brahma-kāraṇatva-siddhi**
+  - Gloss: establishment of Brahman as cause
+  - Context: Cross-passage coherence yields a positive causal determination, not only negative exclusion.
+  - Grammar: compound noun
+  - Alternate glosses: Brahman-causality proof, causal Brahman establishment
+- **pradhāna-aprasakti**
+  - Gloss: non-arising of Pradhana relevance
+  - Context: Given corpus direction, Pradhana no longer enters as live interpretive candidate.
+  - Grammar: compound noun
+  - Alternate glosses: Pradhana non-applicability, inert-cause irrelevance
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

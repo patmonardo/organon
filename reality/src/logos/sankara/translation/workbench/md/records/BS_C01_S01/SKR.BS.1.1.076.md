@@ -33,11 +33,26 @@ Sutra compression of antaryamin distinction proof.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **bheda-vyapadeśāc ca anyaḥ**
+  - Gloss: and because of difference statement, another
+  - Context: Sutra infers inner controller is distinct from empirical jiva position.
+  - Grammar: sutra reason phrase
+  - Alternate glosses: other due to explicit distinction, difference-based otherness conclusion
+- **anya-pada-niścaya**
+  - Gloss: fixing meaning of “other”
+  - Context: Aphorism secures ontological distinction required by antaryamin structure.
+  - Grammar: compound noun
+  - Alternate glosses: other-term determination, distinctness fixation
+- **jīva-īśvara-bheda-vyavahāra**
+  - Gloss: difference discourse between jiva and Ishvara
+  - Context: Transactional distinction is maintained for scriptural consistency in governance passages.
+  - Grammar: compound noun
+  - Alternate glosses: individual-lord difference language, regulative dual discourse
+- **antaryāmitva-siddhi**
+  - Gloss: establishment of inner-controller status
+  - Context: Distinct controller role cannot collapse into controlled entity.
+  - Grammar: compound noun
+  - Alternate glosses: inner-rule proof, indwelling sovereignty establishment
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

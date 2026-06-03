@@ -33,11 +33,31 @@ Strong methodological statement: inference supports but never displaces Vedantic
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **vedanta-vakya-mimamsa**
+  - Gloss: critical inquiry into Vedanta sentences
+  - Context: Bhashya frames sutra-work as organizing and deciding Upanishadic sentence-meaning, not independent speculation.
+  - Grammar: compound noun
+  - Alternate glosses: Vedanta sentence hermeneutics, Upanishadic interpretive inquiry
+- **vakyartha-niscaya**
+  - Gloss: determination of sentence meaning
+  - Context: Brahman-knowledge is said to culminate through settled import of sruti statements.
+  - Grammar: compound noun
+  - Alternate glosses: semantic determination, statement-import ascertainment
+- **sruti-anugrhita-tarka**
+  - Gloss: reasoning supported by scripture
+  - Context: Tarka/anumana accepted only as auxiliary when governed by revealed textual intent.
+  - Grammar: compound noun
+  - Alternate glosses: scripture-guided reasoning, subordinate inference
+- **pramana-antara-nirasa**
+  - Gloss: rejection of independent non-scriptural pramana here
+  - Context: Brahman is not established by autonomous inference apart from Vedanta testimony.
+  - Grammar: compound noun
+  - Alternate glosses: non-sruti proof exclusion, independent inference denial
+- **sutra-kusuma-grathana**
+  - Gloss: sutras as garland-threading of Vedanta passages
+  - Context: Metaphor for compositional role: systematizing scattered revelations into coherent argument.
+  - Grammar: compound metaphor noun
+  - Alternate glosses: aphoristic stringing, doctrinal arrangement
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

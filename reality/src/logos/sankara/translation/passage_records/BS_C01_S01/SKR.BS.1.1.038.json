@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "sarvārtha-kāritva-ātma-śabda",
+        "gloss": "atman-usage from all-purpose serviceability",
+        "contextual_sense": "Purvapaksha extends servant-analogy to justify atman-word for Pradhana.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "functional atman usage",
+          "service-based self-term claim"
+        ]
+      },
+      {
+        "headword_iast": "bhṛtya-rāja-dṛṣṭānta",
+        "gloss": "servant-king analogy",
+        "contextual_sense": "Cited to defend non-primary atman application by relational utility.",
+        "grammatical_role": "illustrative compound",
+        "alternate_glosses": [
+          "retainer-lord example",
+          "instrumental proxy analogy"
+        ]
+      },
+      {
+        "headword_iast": "bhoga-apavarga-upakāra",
+        "gloss": "assistance in enjoyment and release",
+        "contextual_sense": "Pradhana is pitched as pragmatic facilitator for purusha aims.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "experience-liberation support role",
+          "dual-end facilitation"
+        ]
+      },
+      {
+        "headword_iast": "śabda-bahuvṛtti-āśraya",
+        "gloss": "reliance on polysemous word-function",
+        "contextual_sense": "Objection appeals to lexical flexibility to keep Pradhana semantically admissible.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "multi-sense lexeme strategy",
+          "polyvalence-based defense"
+        ]
+      },
+      {
+        "headword_iast": "prādhānya-gauṇya-vikalpa",
+        "gloss": "primary-secondary sense alternation",
+        "contextual_sense": "Seeks interpretive room where context does not immediately force one sense.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "literal-figurative toggling",
+          "sense-priority alternation"
         ]
       }
     ],

@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "bheda-vyapadeśāc ca anyaḥ",
+        "gloss": "and because of difference statement, another",
+        "contextual_sense": "Sutra infers inner controller is distinct from empirical jiva position.",
+        "grammatical_role": "sutra reason phrase",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "other due to explicit distinction",
+          "difference-based otherness conclusion"
+        ]
+      },
+      {
+        "headword_iast": "anya-pada-niścaya",
+        "gloss": "fixing meaning of “other”",
+        "contextual_sense": "Aphorism secures ontological distinction required by antaryamin structure.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "other-term determination",
+          "distinctness fixation"
+        ]
+      },
+      {
+        "headword_iast": "jīva-īśvara-bheda-vyavahāra",
+        "gloss": "difference discourse between jiva and Ishvara",
+        "contextual_sense": "Transactional distinction is maintained for scriptural consistency in governance passages.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "individual-lord difference language",
+          "regulative dual discourse"
+        ]
+      },
+      {
+        "headword_iast": "antaryāmitva-siddhi",
+        "gloss": "establishment of inner-controller status",
+        "contextual_sense": "Distinct controller role cannot collapse into controlled entity.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "inner-rule proof",
+          "indwelling sovereignty establishment"
         ]
       }
     ],

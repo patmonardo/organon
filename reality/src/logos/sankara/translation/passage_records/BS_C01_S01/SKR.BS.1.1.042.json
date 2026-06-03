@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "heyatva-avacanāt",
+        "gloss": "because no rejectability is stated",
+        "contextual_sense": "Sutra infers sat is not a provisional pointer since scripture never instructs abandoning it.",
+        "grammatical_role": "ablative reason phrase",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "absence of discard-marking",
+          "non-provisionality indicator"
+        ]
+      },
+      {
+        "headword_iast": "anātma-upadeśa-doṣa",
+        "gloss": "defect of teaching non-self as self",
+        "contextual_sense": "If referent were Pradhana, identity-instruction would become pedagogically perverse.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "false-self instruction fault",
+          "non-self pedagogy contradiction"
+        ]
+      },
+      {
+        "headword_iast": "pratipādyavastu-sthairya",
+        "gloss": "stability of taught referent",
+        "contextual_sense": "The same object is preserved across teaching sequence without later correction.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "referential stability",
+          "teaching-object continuity"
+        ]
+      },
+      {
+        "headword_iast": "sūtra-saṅkṣepa-nyāya",
+        "gloss": "compressed aphoristic reasoning",
+        "contextual_sense": "Brief form condenses the prior Arundhati-style argument against provisional designation.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "sutra condensation logic",
+          "compressed inferential form"
         ]
       }
     ],

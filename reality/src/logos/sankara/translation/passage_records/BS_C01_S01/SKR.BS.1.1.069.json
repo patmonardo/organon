@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "annarasamaya-ādi-krama-vimarśa",
+        "gloss": "analysis of annarasamaya-first sequence",
+        "contextual_sense": "Debate tests whether strict layer-sequence forces all later terms into part-whole scheme.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "sheath-sequence critique",
+          "layer-order examination"
+        ]
+      },
+      {
+        "headword_iast": "brahma-puccham-pratiṣṭhā-vivāda",
+        "gloss": "dispute over “brahma is the tail-foundation”",
+        "contextual_sense": "Key interpretive crux: avayava reading versus foundational-principal reading.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "puccham interpretation conflict",
+          "tail-foundation controversy"
+        ]
+      },
+      {
+        "headword_iast": "avayava-avayavin-asangatī",
+        "gloss": "part-whole inconsistency",
+        "contextual_sense": "If Brahman is reduced to a part, broader sectional claims risk contradiction.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "member-whole mismatch",
+          "compositional inconsistency"
+        ]
+      },
+      {
+        "headword_iast": "prakaraṇa-viccheda-bhaya",
+        "gloss": "risk of topic fracture",
+        "contextual_sense": "Abrupt referential shift would break coherence with established Brahman-thread.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "context-break risk",
+          "subject-thread rupture concern"
+        ]
+      },
+      {
+        "headword_iast": "antar-dvāndva-saṃrakṣaṇa",
+        "gloss": "preservation of internal dialectic",
+        "contextual_sense": "Long record intentionally retains live tensions before final sutra consolidation.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "intra-argument tension keeping",
+          "dialectic preservation"
         ]
       }
     ],

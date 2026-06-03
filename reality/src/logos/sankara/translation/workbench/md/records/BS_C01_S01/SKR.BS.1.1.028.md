@@ -33,11 +33,31 @@ Intentional creation language is the decisive anti-Pradhana lever.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **īkṣateḥ**
+  - Gloss: because of seeing/intending
+  - Context: Conscious-intent marker used to deny inert Pradhana as ultimate cause.
+  - Grammar: ablative reason term
+  - Alternate glosses: from intentional seeing, due to conscious willing
+- **aśabda-pradhāna**
+  - Gloss: Pradhana not scripturally taught here
+  - Context: Pradhana is excluded as unscriptural and semantically unfit in Vedanta context.
+  - Grammar: compound noun
+  - Alternate glosses: non-sruti Pradhana, textually unsupported primal matter
+- **cetana-kāraṇatva**
+  - Gloss: sentient causal status
+  - Context: Causal principle must be conscious to match ikshana statements.
+  - Grammar: compound noun
+  - Alternate glosses: conscious causality, aware sourcehood
+- **sad-eva-agra-āsīt**
+  - Gloss: Being alone existed in the beginning
+  - Context: Upanishadic basis cited to anchor conscious-cause interpretation.
+  - Grammar: scriptural citation phrase
+  - Alternate glosses: primordial Being statement, originary sat declaration
+- **pradhāna-nirākaraṇa**
+  - Gloss: refutation of Pradhana
+  - Context: Sankhya inert cause is ruled out at the onset of causality adhikarana.
+  - Grammar: compound noun
+  - Alternate glosses: Sankhya cause denial, insentient source rejection
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

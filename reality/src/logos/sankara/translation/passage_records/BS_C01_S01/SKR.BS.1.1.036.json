@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "gauṇaś cet na",
+        "gloss": "if secondary sense, no",
+        "contextual_sense": "Sutra rejects figurative fallback as soon as self-term evidence is considered.",
+        "grammatical_role": "conditional phrase",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "secondary-reading denied",
+          "metaphor option blocked"
+        ]
+      },
+      {
+        "headword_iast": "ātma-śabdāt",
+        "gloss": "because of atman-word",
+        "contextual_sense": "Decisive inferential pivot: lexical self-reference secures conscious subject.",
+        "grammatical_role": "ablative reason term",
+        "alternate_glosses": [
+          "from self-designator",
+          "owing to atman expression"
+        ]
+      },
+      {
+        "headword_iast": "mukhya-vṛtti-bala",
+        "gloss": "force of primary signification",
+        "contextual_sense": "Primary meaning takes precedence where no compelling contradiction appears.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "literal-sense priority",
+          "direct denotation strength"
+        ]
+      },
+      {
+        "headword_iast": "pradhāna-asambhava",
+        "gloss": "Pradhana untenability",
+        "contextual_sense": "Insentient candidate cannot satisfy required self-referential semantics.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "inert-candidate failure",
+          "Sankhya option collapse"
         ]
       }
     ],

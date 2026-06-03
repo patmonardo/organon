@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "ānanda-abhyāsa",
+        "gloss": "repeated deployment of ananda language",
+        "contextual_sense": "Frequency of bliss-terms around the section is used to stabilize a Brahman-reading.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "bliss-term recurrence",
+          "ananda reiteration"
+        ]
+      },
+      {
+        "headword_iast": "rasa-vai-saḥ-vākya",
+        "gloss": "the “He is rasa” declaration",
+        "contextual_sense": "Bliss-essence statement links anandamaya to highest experiential plenitude.",
+        "grammatical_role": "quoted doctrinal phrase",
+        "alternate_glosses": [
+          "rasa formula",
+          "essence-of-bliss statement"
+        ]
+      },
+      {
+        "headword_iast": "antara-tama-pratipatti",
+        "gloss": "ascertainment of innermost status",
+        "contextual_sense": "Pedagogical inward movement culminates in what is ontologically deepest, not another finite layer.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "innermost determination",
+          "deepest-self ascertainment"
+        ]
+      },
+      {
+        "headword_iast": "upādhi-kṛta-avayava-vyavahāra",
+        "gloss": "member-language conditioned by adjuncts",
+        "contextual_sense": "Partitive expressions are treated as pedagogical superimpositions rather than literal composition.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "adjunct-based part discourse",
+          "didactic composite language"
+        ]
+      },
+      {
+        "headword_iast": "siddhānta-nirṇaya",
+        "gloss": "doctrinal adjudication",
+        "contextual_sense": "Bhashya resolves the ambiguity toward Brahman while preserving instructional sequencing.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "settled conclusion",
+          "final determination"
         ]
       }
     ],

@@ -33,11 +33,31 @@ This block preserves a dense internal dialectic; final adjudication is continued
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **annarasamaya-ādi-krama-vimarśa**
+  - Gloss: analysis of annarasamaya-first sequence
+  - Context: Debate tests whether strict layer-sequence forces all later terms into part-whole scheme.
+  - Grammar: compound noun
+  - Alternate glosses: sheath-sequence critique, layer-order examination
+- **brahma-puccham-pratiṣṭhā-vivāda**
+  - Gloss: dispute over “brahma is the tail-foundation”
+  - Context: Key interpretive crux: avayava reading versus foundational-principal reading.
+  - Grammar: compound noun
+  - Alternate glosses: puccham interpretation conflict, tail-foundation controversy
+- **avayava-avayavin-asangatī**
+  - Gloss: part-whole inconsistency
+  - Context: If Brahman is reduced to a part, broader sectional claims risk contradiction.
+  - Grammar: compound noun
+  - Alternate glosses: member-whole mismatch, compositional inconsistency
+- **prakaraṇa-viccheda-bhaya**
+  - Gloss: risk of topic fracture
+  - Context: Abrupt referential shift would break coherence with established Brahman-thread.
+  - Grammar: compound noun
+  - Alternate glosses: context-break risk, subject-thread rupture concern
+- **antar-dvāndva-saṃrakṣaṇa**
+  - Gloss: preservation of internal dialectic
+  - Context: Long record intentionally retains live tensions before final sutra consolidation.
+  - Grammar: compound noun
+  - Alternate glosses: intra-argument tension keeping, dialectic preservation
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

@@ -33,11 +33,31 @@ Tradition-based localization and word-derivation reinforce the non-literal, cont
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **jabala-amnaya**
+  - Gloss: Jabala Upanishadic transmission
+  - Context: Additional scriptural witness for contemplative localization of the same Supreme referent.
+  - Grammar: compound noun
+  - Alternate glosses: Jabala testimony, Jabala textual tradition
+- **avimukta-pratistha**
+  - Gloss: establishment in Avimukta locus
+  - Context: Craniofacial localization is read as contemplative marker, not ontic confinement.
+  - Grammar: compound noun
+  - Alternate glosses: Avimukta localization, sacred-site establishment
+- **abhimana-nirvacana**
+  - Gloss: etymological interpretation through reflective naming
+  - Context: Name-analysis is used to support contemplative orientation toward inner Brahman.
+  - Grammar: compound noun
+  - Alternate glosses: etymological contemplative gloss, name-based doctrinal unpacking
+- **murdha-cubuka-antaram**
+  - Gloss: space between crown and chin
+  - Context: Body-zone invoked as meditative mapping field in upasana discourse.
+  - Grammar: locative compound phrase
+  - Alternate glosses: craniofacial interval, head-to-chin contemplative field
+- **vaisvanara-isvara-sthairya**
+  - Gloss: stabilization of Vaisvanara as Ishvara
+  - Context: Jabala support consolidates the already reached doctrinal conclusion.
+  - Grammar: compound noun
+  - Alternate glosses: Vaisvanara-Ishvara consolidation, conclusion reinforcement
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

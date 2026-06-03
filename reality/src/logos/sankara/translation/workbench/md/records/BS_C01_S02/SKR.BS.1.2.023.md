@@ -33,11 +33,31 @@ Context-priority and transcendence-marker jointly settle referent.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
+- **prakarana**
+  - Gloss: ongoing topical context
+  - Context: Continuity from prior Brahman-discourse constrains the meaning of atta.
   - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+  - Alternate glosses: contextual frame, topic sequence
+- **prakrta-grahana-nyaya**
+  - Gloss: rule of retaining the established referent
+  - Context: Hermeneutic principle favoring previously introduced Brahman unless compelled otherwise.
+  - Grammar: compound hermeneutic term
+  - Alternate glosses: default-context rule, carry-forward referent principle
+- **durvijnyatva-linga**
+  - Gloss: indicator of difficult knowability
+  - Context: Mark used to identify the referent as transcendent Self rather than a finite agent.
+  - Grammar: compound noun
+  - Alternate glosses: hard-to-know marker, transcendence indicator
+- **paramatma-linga**
+  - Gloss: indicator pointing to Supreme Self
+  - Context: Scriptural sign cluster validating Brahman-reference in this context.
+  - Grammar: compound noun
+  - Alternate glosses: Supreme referent marker, Brahman-sign
+- **anvaya-samarthya**
+  - Gloss: coherence by connected reading
+  - Context: Secures interpretive continuity between surrounding mantras and the contested phrase.
+  - Grammar: compound noun
+  - Alternate glosses: contextual fit, connectional force
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

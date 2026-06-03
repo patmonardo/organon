@@ -33,11 +33,21 @@ Programmatic preface for the hermeneutic work of padas 2-3.
 ## Analysis
 
 ### Lexical Notes
-- **brahman**
-  - Gloss: ultimate reality
-  - Context: Primary interpretive referent under adjudication in this adhikarana
+- **janmady asya yatah**
+  - Gloss: that from which origin and so on (of the world proceed)
+  - Context: Foundational Brahma-sutra marker identifying Brahman as cosmological source, ground, and terminus.
+  - Grammar: sutra clause
+  - Alternate glosses: source of creation etc., causal formula of Vedanta
+- **brahma-linga**
+  - Gloss: indicative mark of Brahman
+  - Context: Hermeneutic signal used to decide whether an ambiguous passage denotes para-brahman.
+  - Grammar: compound noun
+  - Alternate glosses: Brahman-indicator, Brahman-sign
+- **nirnaya**
+  - Gloss: determinate adjudication
+  - Context: Methodical settlement of scriptural doubt by inferential and contextual criteria.
   - Grammar: noun
-  - Alternate glosses: absolute, supreme principle
+  - Alternate glosses: decision, definitive determination
 
 ## QA Uncertainty Notes
 - Long bhashya blocks translated as draft prose and require line-level philological curation.

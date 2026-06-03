@@ -33,11 +33,26 @@ Sutra shorthand for the devayana-identification argument.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **srutopanisatka-gati**
+  - Gloss: path taught in revealed esoteric Upanishadic instruction
+  - Context: Sutra reason: the described post-mortem trajectory is specific to Brahmavid contexts.
+  - Grammar: compound noun
+  - Alternate glosses: Upanishadic secret-path marker, revealed contemplative route
+- **gaty-abhidhana**
+  - Gloss: explicit naming of a path
+  - Context: Path designation functions as linga to identify the referent as Brahman.
+  - Grammar: compound noun
+  - Alternate glosses: route designation, trajectory naming
+- **brahmatva-nirnaya**
+  - Gloss: determination of Brahman-identity
+  - Context: The sutra concludes that only Brahman matches the path-profile in canonical usage.
+  - Grammar: compound noun
+  - Alternate glosses: Brahman adjudication, absolute referent settlement
+- **sutra-linga**
+  - Gloss: aphoristic inferential indicator
+  - Context: Compact reason structure condenses broader bhashya argument into one decisive sign.
+  - Grammar: compound noun
+  - Alternate glosses: terse indicator, compressed proof marker
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

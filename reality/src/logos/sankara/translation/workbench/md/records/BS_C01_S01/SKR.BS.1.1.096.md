@@ -33,11 +33,26 @@ Narrative voice is subordinated to chapter-wide inner-self hermeneutics.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **vaktr-atmopadesa-aksepa**
+  - Gloss: objection from speaker self-reference
+  - Context: Indra's first-person statements are taken as evidence for limited deity referent.
+  - Grammar: compound noun
+  - Alternate glosses: narrative voice objection, speaker-self challenge
+- **adhyatma-sambandha-bhuman**
+  - Gloss: preponderance of inner-self orientation
+  - Context: Chapter-wide inward orientation counters a merely mythic speaker-level reading.
+  - Grammar: compound noun
+  - Alternate glosses: inner-self predominance, adhyatma thematic weight
+- **upasamhara-bala**
+  - Gloss: force of conclusion section
+  - Context: Closing statements function as interpretive anchors for earlier ambiguous lines.
+  - Grammar: compound noun
+  - Alternate glosses: concluding force, terminal interpretive weight
+- **devata-vacya-parimiti**
+  - Gloss: limitation of deity-literal reading
+  - Context: Narrative deity frame is constrained so it does not override the deeper doctrinal target.
+  - Grammar: compound noun
+  - Alternate glosses: deity-reading boundary, speaker-literalism limit
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

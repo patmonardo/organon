@@ -33,11 +33,26 @@ Sutra closes the Kausitaki reconciliation by integrating all indicators under on
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **jiva-mukhya-prana-lingan na iti cet**
+  - Gloss: if denied due to jiva and main-prana indicators
+  - Context: Sutra acknowledges the objection from mixed signs before integrating them.
+  - Grammar: conditional sutra phrase
+  - Alternate glosses: mixed-marker objection clause, jiva-prana denial premise
+- **nopasa-traividhyat**
+  - Gloss: no, because of threefold upasana
+  - Context: Tripartite contemplative framing reconciles the indicator plurality.
+  - Grammar: reason phrase
+  - Alternate glosses: denial via triple contemplation, three-mode resolution
+- **ashritatvad iha tadyogat**
+  - Gloss: because they are dependent and connected with That here
+  - Context: Non-Brahman indicators are subordinated as dependent expressions of the same ultimate referent.
+  - Grammar: reason phrase
+  - Alternate glosses: dependent linkage reason, That-connectedness criterion
+- **samanvaya-parisamapti**
+  - Gloss: completion of integrative reconciliation
+  - Context: Final sutra closes the Kausitaki sequence by preserving one referent across layered language.
+  - Grammar: compound noun
+  - Alternate glosses: harmonization closure, integration finale
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

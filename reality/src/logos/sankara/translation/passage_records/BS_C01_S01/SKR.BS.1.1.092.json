@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "upadeśa-bheda",
+        "gloss": "difference of teaching-form",
+        "contextual_sense": "Sutra addresses the objection that locative and ablative formulations imply different referents.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "instructional variation",
+          "form-shift objection"
+        ]
+      },
+      {
+        "headword_iast": "ubhayasmin avirodha",
+        "gloss": "non-contradiction in both formulations",
+        "contextual_sense": "Both expressions are accepted as compatible ways of indicating one doctrinal object.",
+        "grammatical_role": "doctrinal phrase",
+        "alternate_glosses": [
+          "two-form compatibility",
+          "dual expression coherence"
+        ]
+      },
+      {
+        "headword_iast": "pratyabhijna-sadhana",
+        "gloss": "means of re-identification",
+        "contextual_sense": "Continuity is preserved by recognizing referential sameness across grammatical shifts.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "recognition device",
+          "referent-continuity method"
+        ]
+      },
+      {
+        "headword_iast": "sutra-nirnaya",
+        "gloss": "aphoristic adjudication",
+        "contextual_sense": "This concise closure seals the locative/ablative dispute without multiplying entities.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "sutra verdict",
+          "brief settlement"
         ]
       }
     ],

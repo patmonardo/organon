@@ -33,11 +33,26 @@ Sutra key for resolving kriyarthatva dispute.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **tat tu samanvayāt**
+  - Gloss: but that (Brahman) from convergence
+  - Context: Sutra verdict: Vedanta corpus coheres around Brahman as principal purport.
+  - Grammar: sutra phrase
+  - Alternate glosses: Brahman through harmonized purport, nondual convergence determination
+- **tu-śabda-vyāvṛtti**
+  - Gloss: contrastive exclusion via tu
+  - Context: Indicates rejection of prior kriyarthatva-based objection.
+  - Grammar: grammatical-doctrinal term
+  - Alternate glosses: objection exclusion marker, contrastive turn
+- **samanvaya-hetu**
+  - Gloss: reason of textual convergence
+  - Context: Serves as decisive interpretive criterion in this adhikarana.
+  - Grammar: compound noun
+  - Alternate glosses: harmonization reason, purport-convergence ground
+- **vedānta-tātparya-niścaya**
+  - Gloss: fixing Vedanta’s intended meaning
+  - Context: Establishes Brahman as autonomous revelatory object of Upanishads.
+  - Grammar: compound noun
+  - Alternate glosses: Upanishadic intent determination, Vedanta purport fixation
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

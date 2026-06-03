@@ -33,11 +33,31 @@ Shows compatibility between textual variant exegesis and final non-dual intent.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
+- **dva suparna**
+  - Gloss: the two birds motif
+  - Context: Alternative interpretive entry point for the dual structure beyond the immediate adhikarana closure.
+  - Grammar: scriptural motif phrase
+  - Alternate glosses: two-birds image, paired avian allegory
+- **sattva-ksetrajna-vyakhya**
+  - Gloss: reading in terms of mind-principle and knower
+  - Context: Competing doctrinal gloss that rearticulates the dual without abandoning ultimate non-dual intent.
+  - Grammar: compound noun
+  - Alternate glosses: psychic-knower interpretation, sattva-self exegesis
+- **adhyaropa**
+  - Gloss: provisional superimposition
+  - Context: Bhoga language is treated as pedagogical imputation within avidya-conditioned discourse.
   - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+  - Alternate glosses: didactic attribution, provisional projection
+- **avidya-vyavahara**
+  - Gloss: transactional domain under ignorance
+  - Context: Explains why enjoyer-language can operate without determining the ultimate referent.
+  - Grammar: compound noun
+  - Alternate glosses: ignorance-conditioned discourse, empirical error-domain
+- **akhanda-ksetrajna**
+  - Gloss: undivided knower principle
+  - Context: Final horizon preserved even when provisional dual terminologies are admitted.
+  - Grammar: compound noun
+  - Alternate glosses: non-dual knower, indivisible consciousness
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

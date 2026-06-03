@@ -33,11 +33,31 @@ Mythic narrative is recast as pedagogical vehicle for Brahman-knowledge.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **sastra-drsti**
+  - Gloss: scripturally informed seeing
+  - Context: Indra speaks from realized identity-understanding, not from egoic deity standpoint.
+  - Grammar: compound noun
+  - Alternate glosses: scriptural vision, revelation-shaped insight
+- **vamadeva-drstanta**
+  - Gloss: Vamadeva precedent
+  - Context: First-person identity declarations are legitimized by prior sage-model usage.
+  - Grammar: illustrative compound
+  - Alternate glosses: Vamadeva analogy, rishi precedent
+- **jnana-stuti**
+  - Gloss: praise of knowledge
+  - Context: Mythic heroic narration is interpreted as glorifying insight rather than delimiting ontology.
+  - Grammar: compound noun
+  - Alternate glosses: knowledge eulogy, epistemic praise
+- **devata-katha-upaya**
+  - Gloss: deity narrative as pedagogical means
+  - Context: Story-frame is retained as instructional medium that points beyond itself.
+  - Grammar: compound noun
+  - Alternate glosses: mythic teaching vehicle, narrative pedagogy
+- **aham-brahmasmi-anubhava-anukarana**
+  - Gloss: echo of I-am-Brahman realization mode
+  - Context: Speaker-language is mapped to realization discourse, not ordinary self-reference.
+  - Grammar: compound noun
+  - Alternate glosses: identity realization pattern, nondual first-person mode
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

@@ -33,11 +33,26 @@ Interrogative hinge continuing cumulative proof sequence.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **kutaś ca sarvajñaṃ brahma jagataḥ kāraṇam**
+  - Gloss: what establishes omniscient Brahman as world-cause?
+  - Context: Interrogative setup cues the move to explicit scriptural-hearing proof.
+  - Grammar: interrogative phrase
+  - Alternate glosses: on what ground Brahman as cosmic cause?, proof prompt for omniscient cause
+- **śruti-pratyakṣa-hetu-prastāva**
+  - Gloss: proposal of direct-text reason
+  - Context: Transition indicates shift from contextual inference to explicit citation force.
+  - Grammar: compound noun
+  - Alternate glosses: explicit-hearing ground setup, direct scriptural reason introduction
+- **siddhānta-dṛḍhīkaraṇa**
+  - Gloss: fortification of established conclusion
+  - Context: Adds positive corroboration after prior rounds of opponent refutation.
+  - Grammar: compound noun
+  - Alternate glosses: conclusion reinforcement, final thesis strengthening
+- **adhikaraṇa-avasāna-krama**
+  - Gloss: closing sequence of the topical unit
+  - Context: Signals the argument is approaching final seal through direct testimony.
+  - Grammar: compound noun
+  - Alternate glosses: topic-closing cadence, endgame progression
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

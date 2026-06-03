@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "tathanugama",
+        "gloss": "coherent progression in that manner",
+        "contextual_sense": "Beginning-middle-end flow is used as the governing criterion over isolated marker fragments.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "discursive continuity",
+          "flow-based integration"
+        ]
+      },
+      {
+        "headword_iast": "purvapara-samanvaya",
+        "gloss": "prior-later coherence",
+        "contextual_sense": "Interpretation is stabilized by checking how opening and closure converge on one aim.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "earlier-later alignment",
+          "textual arc coherence"
+        ]
+      },
+      {
+        "headword_iast": "parama-purusartha-laksana",
+        "gloss": "mark of supreme human end",
+        "contextual_sense": "Highest-good framing signals Brahman-topic rather than finite deity benefit discourse.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "ultimate-end marker",
+          "highest-goal sign"
+        ]
+      },
+      {
+        "headword_iast": "karma-atikranta-phala",
+        "gloss": "fruit beyond ritual action",
+        "contextual_sense": "Promised result exceeds karma-limited scope, indicating a Brahmanic horizon.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "action-transcending fruit",
+          "supra-ritual result"
+        ]
+      },
+      {
+        "headword_iast": "aisvarya-vyapadesa",
+        "gloss": "ascription of lordly sovereignty",
+        "contextual_sense": "Universal governance predicates are read as decisive for the ultimate referent.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "sovereignty declaration",
+          "lordship attribution"
         ]
       }
     ],

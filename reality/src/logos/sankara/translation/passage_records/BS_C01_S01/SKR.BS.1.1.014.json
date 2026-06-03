@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "janmady-asya-yatah",
+        "gloss": "from which are origination etc. of this world",
+        "contextual_sense": "Sutra-laksana identifying Brahman through relation to cosmos-process triad.",
+        "grammatical_role": "sutra phrase",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "source of creation etc.",
+          "world-process origin indicator"
+        ]
+      },
+      {
+        "headword_iast": "jagat-karana-laksana",
+        "gloss": "definition via world-causality",
+        "contextual_sense": "Brahman indicated through causal status vis-a-vis universe.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "cosmological marker",
+          "world-cause definition"
+        ]
+      },
+      {
+        "headword_iast": "sristi-sthiti-laya-traya",
+        "gloss": "triad of creation, sustenance, dissolution",
+        "contextual_sense": "Implicit expansion of janmadi shorthand in bhashya treatment.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "creation-maintenance-dissolution triad",
+          "cosmic process triad"
+        ]
+      },
+      {
+        "headword_iast": "sutra-laksana-sanksepa",
+        "gloss": "compressed definitional aphorism",
+        "contextual_sense": "Minimal form carrying broad theological consequences.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "terse defining formula",
+          "aphoristic compression"
         ]
       }
     ],

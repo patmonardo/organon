@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "rupa-upanyasat",
+        "gloss": "because of presentation of form",
+        "contextual_sense": "Sutra reason: cosmic-form exposition belongs to the previously established source-principle.",
+        "grammatical_role": "ablative reason phrase",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "from form-presentation",
+          "due to cosmic-body exposition"
+        ]
+      },
+      {
+        "headword_iast": "ca",
+        "gloss": "and, moreover",
+        "contextual_sense": "Connective indicating this is cumulative support atop prior proofs.",
+        "grammatical_role": "particle",
+        "alternate_glosses": [
+          "further",
+          "additionally"
+        ]
+      },
+      {
+        "headword_iast": "sutra-linga",
+        "gloss": "aphoristic indicator",
+        "contextual_sense": "Rupa-upanyasa serves as concise inferential marker in sutra format.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "terse sign",
+          "compressed indicator"
+        ]
+      },
+      {
+        "headword_iast": "bhuta-yoni-brahma-siddhi",
+        "gloss": "establishment of source as Brahman",
+        "contextual_sense": "Final determination strengthened by cosmic-form continuity in the text.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "source-Brahman proof",
+          "cosmic-origin Brahman establishment"
         ]
       }
     ],

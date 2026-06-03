@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "atta",
+        "gloss": "eater, consumer",
+        "contextual_sense": "Interpreted here as the principle that withdraws the total cosmos, not as an empirical enjoyer.",
+        "grammatical_role": "agent noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "devourer",
+          "cosmic consumer"
+        ]
+      },
+      {
+        "headword_iast": "caracara-grahana",
+        "gloss": "grasping of moving and unmoving totality",
+        "contextual_sense": "Reason-term showing that the object consumed is all-inclusive, requiring a Brahman-level referent.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "all-entity inclusion",
+          "totality uptake"
+        ]
+      },
+      {
+        "headword_iast": "mrtyu-upasecana",
+        "gloss": "death as condiment",
+        "contextual_sense": "Image used to mark universality and finality of consumption in the Upanisadic passage.",
+        "grammatical_role": "compound expression",
+        "alternate_glosses": [
+          "death-seasoning motif",
+          "mortality-condiment image"
+        ]
+      },
+      {
+        "headword_iast": "vikara-samhara",
+        "gloss": "withdrawal of all modifications",
+        "contextual_sense": "Defines the sense in which Brahman is said to eat: cosmic reabsorption, not sensory bhoga.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "modification dissolution",
+          "phenomenal retraction"
+        ]
+      },
+      {
+        "headword_iast": "karmaphala-bhoga-pratisedha",
+        "gloss": "negation of karmic-fruit enjoyment",
+        "contextual_sense": "Used to limit witness-texts so they do not cancel Brahman as cosmic dissolver.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "denial of fruit-enjoyership",
+          "bhoga-negation clause"
         ]
       }
     ],

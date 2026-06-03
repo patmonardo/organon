@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "kutaś ca na pradhānam",
+        "gloss": "what further ground excludes Pradhana?",
+        "contextual_sense": "Interrogative bridge opens the next evidentiary layer beyond sleep-argument.",
+        "grammatical_role": "interrogative phrase",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "why else not Pradhana?",
+          "additional exclusion prompt"
+        ]
+      },
+      {
+        "headword_iast": "hetvantara-anveṣaṇa",
+        "gloss": "search for an additional reason",
+        "contextual_sense": "Signals cumulative method: one exclusion is reinforced by another independent line.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "further-ground inquiry",
+          "supplementary proof pursuit"
+        ]
+      },
+      {
+        "headword_iast": "adhikaraṇa-sandhi",
+        "gloss": "junction in argumentative flow",
+        "contextual_sense": "Connects svapya logic to upcoming cross-text convergence proof.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "topical hinge",
+          "argument transition node"
+        ]
+      },
+      {
+        "headword_iast": "pūrvapakṣa-avaśeṣa-śaṅkā",
+        "gloss": "residual opponent doubt",
+        "contextual_sense": "A remaining ambiguity is surfaced explicitly so it can be fully dissolved.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "leftover objection cue",
+          "residual uncertainty signal"
         ]
       }
     ],

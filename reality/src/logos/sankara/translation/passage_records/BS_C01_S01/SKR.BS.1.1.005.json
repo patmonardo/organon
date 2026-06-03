@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "atha",
+        "gloss": "now/thereafter",
+        "contextual_sense": "Interpreted as anantarya marker after requisite preparedness, not as ritual entitlement token.",
+        "grammatical_role": "indeclinable particle",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "thereupon",
+          "subsequently"
+        ]
+      },
+      {
+        "headword_iast": "sadhana-sampatti-anantarya",
+        "gloss": "immediacy after attainment of means",
+        "contextual_sense": "Defines the transition condition into brahma-jijnasa.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "post-qualification immediacy",
+          "preparedness-sequence"
+        ]
+      },
+      {
+        "headword_iast": "adhikara-artha-nirasa",
+        "gloss": "rejection of mere eligibility reading",
+        "contextual_sense": "Bhashya denies taking atha as only adhikara indicator unlike ritual contexts.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "eligibility-sense exclusion",
+          "adhikara-reading refusal"
+        ]
+      },
+      {
+        "headword_iast": "dharma-jijnasa-vilakshanata",
+        "gloss": "difference from dharma-inquiry",
+        "contextual_sense": "Brahma-jijnasa is differentiated by object, fruit, and scriptural operation.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "contrast with ritual inquiry",
+          "non-equivalence to dharma-analysis"
+        ]
+      },
+      {
+        "headword_iast": "mangala-vyakhya-parihara",
+        "gloss": "setting aside pure auspicious-opening reading",
+        "contextual_sense": "Atha is not reduced to ornamental benediction within this semantic frame.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "anti-ornamental reading",
+          "mangala-only interpretation rejection"
         ]
       }
     ],

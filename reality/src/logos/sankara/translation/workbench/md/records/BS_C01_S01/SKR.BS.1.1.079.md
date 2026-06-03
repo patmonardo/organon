@@ -33,11 +33,26 @@ Sutra close for Brahman-akasha determination.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **ākāśaḥ tat-liṅgāt**
+  - Gloss: akasha due to contextual sign
+  - Context: Aphoristic closure: here akasha denotes Brahman on marker-based grounds.
+  - Grammar: sutra phrase
+  - Alternate glosses: Brahman-akasha conclusion, liṅga-based akasha verdict
+- **liṅga-prābalya**
+  - Gloss: strength of contextual indicator
+  - Context: Semantic sign-force outruns dictionary-priority when conflict appears.
+  - Grammar: abstract noun
+  - Alternate glosses: marker dominance, contextual force superiority
+- **bhūtākāśa-vyāvṛtti**
+  - Gloss: exclusion of elemental space referent
+  - Context: Physical-space meaning is ruled out as insufficient for stated predicates.
+  - Grammar: compound noun
+  - Alternate glosses: ether-reading exclusion, elemental referent elimination
+- **adhikaraṇa-parisamāpti**
+  - Gloss: topical closure
+  - Context: Marks end of akasha adjudication sequence before prana dispute begins.
+  - Grammar: compound noun
+  - Alternate glosses: argument completion, topic wrap-up
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

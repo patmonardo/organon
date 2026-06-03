@@ -33,11 +33,26 @@ Sutra compression of direct textual testimony.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **śrutatvāc ca**
+  - Gloss: and because it is explicitly heard
+  - Context: Sutra clinches Brahman-causality by direct scriptural declaration.
+  - Grammar: ablative reason phrase
+  - Alternate glosses: from explicit hearing, due to direct revelation
+- **pratyakṣa-śruti-bala**
+  - Gloss: force of explicit revelation
+  - Context: Not inferred only from context; conclusion rests on unambiguous textual statement.
+  - Grammar: compound noun
+  - Alternate glosses: direct textual force, manifest scriptural authority
+- **sarvajña-brahma-kāraṇatva**
+  - Gloss: omniscient Brahman as causal source
+  - Context: Finalized referent after cumulative dialectic against Pradhana alternatives.
+  - Grammar: compound noun
+  - Alternate glosses: all-knowing causal Brahman, omniscient source doctrine
+- **sūtra-avasāna-nirṇaya**
+  - Gloss: closing aphoristic determination
+  - Context: This concise reason functions as the final seal for the present exclusion chain.
+  - Grammar: compound noun
+  - Alternate glosses: terminal sutra verdict, final aphoristic closure
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

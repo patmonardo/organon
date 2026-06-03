@@ -33,11 +33,31 @@ Deep sleep phenomenology becomes a causal-identification argument.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **svapiti-śruti**
+  - Gloss: scripture on deep sleep
+  - Context: Sleep passage is used as pramana for where jiva resolves in causal condition.
+  - Grammar: compound noun
+  - Alternate glosses: susupti testimony, sleep-state revelation
+- **sat-sampatti**
+  - Gloss: mergence into sat
+  - Context: Deep sleep is read as temporary assimilation into conscious ground, not inert substrate.
+  - Grammar: compound noun
+  - Alternate glosses: entry into being, resolution into causal self
+- **svam apītaḥ**
+  - Gloss: having gone to one’s own self
+  - Context: Phrase indicates return to intrinsic selfhood, blocking Pradhana detour.
+  - Grammar: quoted doctrinal phrase
+  - Alternate glosses: reached one’s own, self-reentry expression
+- **laya-liṅga**
+  - Gloss: indicator from dissolution
+  - Context: What one dissolves into reveals ontological basis; conscious experiencer cannot terminate in inert matter.
+  - Grammar: compound noun
+  - Alternate glosses: resolution-sign, dissolution marker
+- **acaitanya-kāraṇa-nivṛtti**
+  - Gloss: withdrawal of inert-cause option
+  - Context: Sleep phenomenology is weaponized against non-conscious first-cause models.
+  - Grammar: compound noun
+  - Alternate glosses: insentient-cause elimination, Pradhana option withdrawal
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

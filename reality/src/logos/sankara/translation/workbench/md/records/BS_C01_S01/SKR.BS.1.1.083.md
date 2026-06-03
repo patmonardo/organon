@@ -33,11 +33,26 @@ Sutra closure of prastava-prana determination.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **prāṇa-śabda**
+  - Gloss: the word prana
+  - Context: Here the term is tested against Brahmanic context, not accepted at face-value as vital air.
+  - Grammar: compound noun
+  - Alternate glosses: prana-term, breath-word
+- **talliṅga**
+  - Gloss: that contextual marker
+  - Context: The prior marker principle continues to govern interpretation in this shorter aphorism.
+  - Grammar: compound noun
+  - Alternate glosses: same-sign principle, contextual indicator
+- **brahma-prāṇa-bheda-nivāraṇa**
+  - Gloss: removal of any split between Brahman and prana
+  - Context: The upshot is not a second principle but Brahman named through the prana-term.
+  - Grammar: compound noun
+  - Alternate glosses: Brahman-prana identity, dual-reading exclusion
+- **sūtra-saṅkṣepa**
+  - Gloss: aphoristic compression
+  - Context: The whole argument is collapsed into a single contextual tag.
+  - Grammar: compound noun
+  - Alternate glosses: sutra condensation, brief doctrinal seal
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

@@ -33,11 +33,31 @@ Cosmic-to-bodily correspondential superimposition supplies the most robust accou
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **sampatti-nimitta**
+  - Gloss: occasioned by integration/identificatory correspondence
+  - Context: Pradesa language is explained by macrocosm-microcosm mapping of Vaisvanara limbs.
+  - Grammar: compound noun
+  - Alternate glosses: correspondence-based reason, identificatory integration basis
+- **adhidaiva-adhyatma-sampatti**
+  - Gloss: integration of cosmic and bodily correspondences
+  - Context: Heaven-head etc. mapped onto bodily points to produce contemplative totality.
+  - Grammar: compound noun
+  - Alternate glosses: macro-micro correspondence, cosmic-bodily alignment
+- **pradesa-matra-sampadana**
+  - Gloss: constructive rendering into measured span
+  - Context: Measure-language emerges from completed correspondence schema, not intrinsic limit.
+  - Grammar: compound noun
+  - Alternate glosses: span-formation by mapping, measure-expression derivation
+- **jaimini-pradhanya**
+  - Gloss: Jaimini’s preference/priority
+  - Context: Among alternatives, this integration model is presented as strongest harmonization.
+  - Grammar: compound noun
+  - Alternate glosses: Jaiminian priority reading, preferred explanatory model
+- **vajasaneyi-pramana**
+  - Gloss: evidence from Vajasaneyi textual parallel
+  - Context: Cross-recensional support for macro-micro mapping explanation.
+  - Grammar: compound noun
+  - Alternate glosses: Vajasaneyi witness, parallel-recension support
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

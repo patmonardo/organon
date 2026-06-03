@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "headword_iast": "avidya",
+        "gloss": "ignorance (as adhyasa-structure)",
+        "contextual_sense": "Pandita diagnosis: adhyasa itself is avidya, and vidya is its discriminative negation.",
         "grammatical_role": "noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "nescience",
+          "misapprehension condition"
+        ]
+      },
+      {
+        "headword_iast": "atma-anatma-itaretara-adhyasa",
+        "gloss": "mutual superimposition of self and non-self",
+        "contextual_sense": "Foundational matrix generating empirical subject-object and normativity domains.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "reciprocal misattribution",
+          "self-not-self cross-overlay"
+        ]
+      },
+      {
+        "headword_iast": "pramana-prameya-vyavahara",
+        "gloss": "epistemic transaction of means and objects of knowledge",
+        "contextual_sense": "Declared to function only within avidya-conditioned experience.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "knowledge-practice domain",
+          "means-object transactional field"
+        ]
+      },
+      {
+        "headword_iast": "vidhi-nisedha-sastra",
+        "gloss": "injunction-prohibition scriptural domain",
+        "contextual_sense": "Ritual-ethical prescriptions presuppose adhyasa-level agenthood.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "normative scripture",
+          "prescriptive-proscriptive discourse"
+        ]
+      },
+      {
+        "headword_iast": "atmaikatva-vidya",
+        "gloss": "knowledge of self-nonduality",
+        "contextual_sense": "Vedanta’s terminal function: sublation of adhyasa through discriminative realization.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "nondual self-knowledge",
+          "unity-realization"
         ]
       }
     ],

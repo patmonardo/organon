@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "headword_iast": "prasiddha-aprasiddha-vicara",
+        "gloss": "analysis of known versus unknown status",
+        "contextual_sense": "Bhashya rejects both extremes and establishes middle epistemic status for Brahman-inquiry.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "familiarity-unknownness dialectic",
+          "known/unknown adjudication"
+        ]
+      },
+      {
+        "headword_iast": "samanya-prasiddhi",
+        "gloss": "general familiarity",
+        "contextual_sense": "Brahman is broadly acknowledged as concept, enabling meaningful inquiry entry.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "generic recognition",
+          "common-level awareness"
+        ]
+      },
+      {
+        "headword_iast": "visesa-aspastata",
+        "gloss": "indeterminacy of specific nature",
+        "contextual_sense": "Lack of precise ascertainment creates legitimate need for systematic investigation.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "specific ambiguity",
+          "particular non-clarity"
+        ]
+      },
+      {
+        "headword_iast": "vipratipatti",
+        "gloss": "doctrinal divergence/conflicting views",
+        "contextual_sense": "Competing schools’ claims intensify necessity of Brahma-jijnasa.",
         "grammatical_role": "noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "interpretive conflict",
+          "philosophical disagreement"
+        ]
+      },
+      {
+        "headword_iast": "jijnasa-upapatti",
+        "gloss": "coherence of inquiry undertaking",
+        "contextual_sense": "Conclusion from middle status: inquiry is both possible and required.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "inquiry justification",
+          "epistemic project validity"
         ]
       }
     ],

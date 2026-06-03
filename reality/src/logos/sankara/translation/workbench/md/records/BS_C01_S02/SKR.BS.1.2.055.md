@@ -33,11 +33,31 @@ Differentiating predicates and 'beyond-the-imperishable' language block both jiv
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
+- **visesana**
+  - Gloss: specific qualifying descriptor
+  - Context: Text marks bhuta-yoni with descriptors transcending jiva and Pradhana.
   - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+  - Alternate glosses: qualifier, determinative marker
+- **bheda-vyapadesa**
+  - Gloss: statement of distinction
+  - Context: Passage explicitly differentiates the referent from subordinate principles.
+  - Grammar: compound noun
+  - Alternate glosses: distinction ascription, differentiating declaration
+- **divya-amurta-purusa**
+  - Gloss: divine formless person
+  - Context: Qualifier set used to establish transcendence beyond empirical and material candidates.
+  - Grammar: compound noun
+  - Alternate glosses: luminous formless purusa, transcendent person
+- **sabahya-abhyantara**
+  - Gloss: both external and internal
+  - Context: Pervasive scope marker fitting Brahman, not finite jiva.
+  - Grammar: compound adjective
+  - Alternate glosses: within-and-without, inner-outer pervasion
+- **jiva-pradhana-vyavaccheda**
+  - Gloss: exclusion of jiva and Pradhana
+  - Context: Bhashya effect: both lower candidates are eliminated by qualifier and distinction evidence.
+  - Grammar: compound noun
+  - Alternate glosses: dual-candidate exclusion, non-Brahman disqualification
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "antaryami-adhidaivadisu",
+        "gloss": "inner controller across deity and other domains",
+        "contextual_sense": "Sutra situates one controller-function through multiple ontological layers.",
+        "grammatical_role": "locative compound phrase",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "cross-domain antaryamin reference",
+          "multi-level inner governance"
+        ]
+      },
+      {
+        "headword_iast": "taddharma-vyapadesat",
+        "gloss": "because of ascription of His attributes",
+        "contextual_sense": "Decisive reason clause identifying controller as Brahman by predicate profile.",
+        "grammatical_role": "ablative reason phrase",
+        "alternate_glosses": [
+          "from Brahmanic attribute assignment",
+          "due to specific property attribution"
+        ]
+      },
+      {
+        "headword_iast": "sutra-hetu",
+        "gloss": "sutra-level inferential ground",
+        "contextual_sense": "Compressed form of the full bhashya reasoning on antaryamin identity.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "aphoristic rationale",
+          "terse proof basis"
+        ]
+      },
+      {
+        "headword_iast": "brahma-antaryamin-aikya",
+        "gloss": "identity of Brahman and inner controller",
+        "contextual_sense": "Final doctrinal equation secured by attribute evidence across sections.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "Brahman-controller identity",
+          "inner ruler as absolute"
         ]
       }
     ],

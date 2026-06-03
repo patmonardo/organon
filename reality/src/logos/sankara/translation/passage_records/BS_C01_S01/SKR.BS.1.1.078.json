@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "ākāśaḥ tat-liṅgāt",
+        "gloss": "akasha (means Brahman) because of that sign",
+        "contextual_sense": "Sutra-bhashya method privileges contextual indicators over default lexical habit.",
+        "grammatical_role": "doctrinal phrase",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "Brahman-akasha via marker",
+          "sign-governed akasha determination"
+        ]
+      },
+      {
+        "headword_iast": "utpatti-laya-sāmarthya-liṅga",
+        "gloss": "marker of universal origination and dissolution",
+        "contextual_sense": "Total emergence-return language fits only supreme cause.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "creation-dissolution sign",
+          "cosmic-cycle indicator"
+        ]
+      },
+      {
+        "headword_iast": "anapekṣika-jyāyastva",
+        "gloss": "greatness independent of comparison",
+        "contextual_sense": "Passage signals unsurpassed magnitude unlike finite elemental category.",
+        "grammatical_role": "abstract noun",
+        "alternate_glosses": [
+          "non-relative supremacy",
+          "incomparable greatness"
+        ]
+      },
+      {
+        "headword_iast": "parāyaṇatva",
+        "gloss": "status as final resort",
+        "contextual_sense": "Ultimate destination language identifies transcendental ground, not inert medium.",
+        "grammatical_role": "abstract noun",
+        "alternate_glosses": [
+          "supreme refugehood",
+          "final-recourse status"
+        ]
+      },
+      {
+        "headword_iast": "śabdāntara-saṅgata-pramāṇa",
+        "gloss": "support from aligned usage elsewhere",
+        "contextual_sense": "Cross-text lexeme behavior corroborates Brahman-reference in this locus.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "parallel-wording support",
+          "lexical concord evidence"
         ]
       }
     ],

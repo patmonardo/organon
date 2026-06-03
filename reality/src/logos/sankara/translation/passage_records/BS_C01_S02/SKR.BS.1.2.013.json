@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "headword_iast": "smrti",
+        "gloss": "remembered tradition (e.g., Gita)",
+        "contextual_sense": "Corroborative authority used to reinforce bheda already grounded in sruti reasoning.",
         "grammatical_role": "noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "traditional scripture",
+          "secondary revelation"
+        ]
+      },
+      {
+        "headword_iast": "jiva-isvara-bheda",
+        "gloss": "difference between individual self and Lord",
+        "contextual_sense": "Doctrinal distinction cited from smriti to support non-identity in contemplative grammar.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "soul-Lord distinction",
+          "individual-divine differentiation"
+        ]
+      },
+      {
+        "headword_iast": "anugraha-pramana",
+        "gloss": "supportive evidentiary reinforcement",
+        "contextual_sense": "Smrti functions not as primary source here, but as confirmatory strengthening of prior siddhanta.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "confirming proof",
+          "supplementary validation"
+        ]
+      },
+      {
+        "headword_iast": "adhikarana-samarthana",
+        "gloss": "support of the topical conclusion",
+        "contextual_sense": "The line’s function is to stabilize the current adhikarana decision before moving onward.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "topic-level support",
+          "argument stabilization"
         ]
       }
     ],

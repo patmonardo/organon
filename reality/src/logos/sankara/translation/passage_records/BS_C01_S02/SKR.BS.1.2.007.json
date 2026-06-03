@@ -22,13 +22,33 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "headword_iast": "anupapatti",
+        "gloss": "non-fit, incoherence",
+        "contextual_sense": "Reasoning form used to exclude embodied jiva as bearer of expansive predicates.",
         "grammatical_role": "noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "inapplicability",
+          "logical mismatch"
+        ]
+      },
+      {
+        "headword_iast": "sarira",
+        "gloss": "body-bounded embodied self",
+        "contextual_sense": "Candidate referent rejected because cited predicates exceed bodily delimitation.",
+        "grammatical_role": "noun",
+        "alternate_glosses": [
+          "embodied locus",
+          "corporeal individual"
+        ]
+      },
+      {
+        "headword_iast": "tu (avadharana)",
+        "gloss": "restrictive particle",
+        "contextual_sense": "Marks exclusion: not the embodied self, but the alternative established referent.",
+        "grammatical_role": "indeclinable particle",
+        "alternate_glosses": [
+          "contrastive limiter",
+          "exclusion marker"
         ]
       }
     ],

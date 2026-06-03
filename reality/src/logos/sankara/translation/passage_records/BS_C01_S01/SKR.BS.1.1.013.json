@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "brahma-laksana-prasna",
+        "gloss": "question of Brahman’s defining mark",
+        "contextual_sense": "Transition asks how the previously declared inquiry-object is to be identified.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "Brahman-definition query",
+          "object-marking question"
+        ]
+      },
+      {
+        "headword_iast": "jijnasa-visaya-nirdharana",
+        "gloss": "fixing the object of inquiry",
+        "contextual_sense": "Moves from injunction to investigate toward criterion for recognizing Brahman.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "inquiry-object determination",
+          "visaya clarification"
+        ]
+      },
+      {
+        "headword_iast": "sutra-pravesa",
+        "gloss": "entry into next aphoristic unit",
+        "contextual_sense": "Signals transition from introductory justification to lakshana-formula.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "next-sutra entry",
+          "formal transition node"
+        ]
+      },
+      {
+        "headword_iast": "laksana-upakrama",
+        "gloss": "commencement of defining indicator",
+        "contextual_sense": "Begins specification sequence anchored in janmadi-sutra.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "definition opening",
+          "indicator initiation"
         ]
       }
     ],

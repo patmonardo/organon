@@ -33,11 +33,31 @@ This sets up a classic dispute between symbolic local manifestation and absolute
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **antar-āditya-puruṣa-saṃśaya**
+  - Gloss: doubt about the inner-solar person
+  - Context: Debate opens over whether luminous inner form denotes Brahman or a highly endowed empirical being.
+  - Grammar: compound noun
+  - Alternate glosses: inner-sun referential doubt, solar-indweller ambiguity
+- **hiraṇmaya-rūpa-vacana**
+  - Gloss: golden-form description
+  - Context: Form-language is cited by the objection to argue limitation and qualified embodiment.
+  - Grammar: compound noun
+  - Alternate glosses: radiant form predication, golden-body description
+- **deśa-paricchinna-ākṣepa**
+  - Gloss: objection from spatial confinement
+  - Context: Location in sun/eye is used to contest absolute, all-pervasive interpretation.
+  - Grammar: compound noun
+  - Alternate glosses: locative limitation challenge, site-boundedness objection
+- **aiśvarya-parimāṇa-vāda**
+  - Gloss: graded-lordship thesis
+  - Context: Opponent treats sovereignty predicates as relative excellence within samsara, not supreme status.
+  - Grammar: compound noun
+  - Alternate glosses: limited divinity argument, comparative lordship reading
+- **upāsya-devatā-kalpanā**
+  - Gloss: constructing a meditational deity referent
+  - Context: Purvapaksha frames the passage as symbolic worship-object teaching rather than ontological absoluteness.
+  - Grammar: compound noun
+  - Alternate glosses: upasana-deity interpretation, symbolic worship referent
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

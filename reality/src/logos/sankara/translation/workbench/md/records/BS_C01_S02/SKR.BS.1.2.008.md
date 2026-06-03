@@ -33,11 +33,21 @@ Sutra compression of the non-fit criterion.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **anupapattes tu**
+  - Gloss: because of non-applicability, indeed
+  - Context: Sutra formula joining inferential exclusion (anupapatti) with restrictive contrast (tu).
+  - Grammar: sutra phrase
+  - Alternate glosses: on grounds of mismatch, by reason of incoherence
+- **na sarirah**
+  - Gloss: not the embodied one
+  - Context: Compressed negation of jiva-as-upasya thesis in this adhikarana step.
+  - Grammar: negated nominal predication
+  - Alternate glosses: embodied self excluded, non-jiva referent
+- **siddhanta-nigamana**
+  - Gloss: concluding doctrinal closure
+  - Context: Sutra concise closure of the immediately preceding explanatory argument.
+  - Grammar: compound noun
+  - Alternate glosses: conclusion marker, final inferential seal
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

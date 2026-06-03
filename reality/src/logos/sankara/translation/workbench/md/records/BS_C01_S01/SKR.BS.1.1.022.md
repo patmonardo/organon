@@ -33,11 +33,31 @@ Affirms a distinct revelatory domain for Upanishad beyond action-text economy.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **aupaniṣada-puruṣa**
+  - Gloss: the Upanishadic person/self
+  - Context: Presented as non-samsaric Brahman-reality irreducible to ritual accessory status.
+  - Grammar: compound noun
+  - Alternate glosses: Upanishadic Self, revealed inner person
+- **ananya-śeṣatva**
+  - Gloss: non-subsidiary status
+  - Context: Key claim that Vedanta teaching is not merely remainder to vidhi/kriya.
+  - Grammar: abstract noun
+  - Alternate glosses: non-accessoriness, independent doctrinal standing
+- **bhūta-vastu-paratva**
+  - Gloss: orientation toward an existent reality
+  - Context: Upanishadic discourse is defended as revealing an already-real object, not producing one.
+  - Grammar: compound noun
+  - Alternate glosses: reality-directed teaching, existent-object orientation
+- **śruti-sākṣitā**
+  - Gloss: scriptural witnessing function
+  - Context: Brahman-self is self-evident in one sense yet definitively disclosed through sruti testimony.
+  - Grammar: compound noun
+  - Alternate glosses: revelatory witness role, textual attestation
+- **kriyārthatva-nirākaraṇa**
+  - Gloss: rejection of pure action-teleology
+  - Context: Counters strict Mimamsa reduction of all Vedic language to ritual use.
+  - Grammar: compound noun
+  - Alternate glosses: anti-action reduction, ritual-teleology refusal
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

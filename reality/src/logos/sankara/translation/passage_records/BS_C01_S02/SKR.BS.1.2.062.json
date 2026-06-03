@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "sadharana-sabda-visesa",
+        "gloss": "specification of otherwise common terms",
+        "contextual_sense": "Core method: shared terms atma/vaisvanara are constrained by contextual qualifiers to Brahman.",
+        "grammatical_role": "compound hermeneutic term",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "common-term restriction",
+          "lexical disambiguation by qualifier"
+        ]
+      },
+      {
+        "headword_iast": "atma-sabda",
+        "gloss": "the word atma (Self)",
+        "contextual_sense": "Used as a high-order marker that favors ultimate referent when read with sectional attributes.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "Self-term",
+          "atma-designation"
+        ]
+      },
+      {
+        "headword_iast": "vaisvanara-sabda",
+        "gloss": "the word vaisvanara",
+        "contextual_sense": "Lexically broad term narrowed here by cosmic-limb and fruit statements.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "vaisvanara designation",
+          "universal-fire term"
+        ]
+      },
+      {
+        "headword_iast": "visesa-linga",
+        "gloss": "distinctive indicator",
+        "contextual_sense": "Cosmic-body predicates and Brahmanic fruits function as disambiguating linga.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "specificity marker",
+          "differentiating sign"
+        ]
+      },
+      {
+        "headword_iast": "isvara-nirnaya",
+        "gloss": "determination as Ishvara",
+        "contextual_sense": "Siddhanta settles referent identity by contextual over lexical priority.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "Supreme-Lord adjudication",
+          "Brahman-reference settlement"
         ]
       }
     ],

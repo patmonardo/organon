@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "headword_iast": "jijnasa",
+        "gloss": "desire to know",
+        "contextual_sense": "Defined as an intentional orientation terminating in avagati (ascertaining knowledge).",
+        "grammatical_role": "abstract noun",
+        "alternate_glosses": [
+          "inquiry-intent",
+          "epistemic aspiration"
+        ]
+      },
+      {
+        "headword_iast": "avagati",
+        "gloss": "determinate understanding",
+        "contextual_sense": "Serves as proper fulfillment of inquiry rather than mere curiosity.",
         "grammatical_role": "noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "ascertainment",
+          "comprehending cognition"
+        ]
+      },
+      {
+        "headword_iast": "jnana-iccha-karma-sambandha",
+        "gloss": "relation of desire to knowledge as its object",
+        "contextual_sense": "Clarifies semantic structure of jijnasa expression.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "desire-object relation",
+          "inquiry-object semantics"
+        ]
+      },
+      {
+        "headword_iast": "brahmavagati-purushartha",
+        "gloss": "Brahman-realization as human end",
+        "contextual_sense": "Teleological justification for Brahma-jijnasa in the sutra opening.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "liberating realization goal",
+          "ultimate human aim"
+        ]
+      },
+      {
+        "headword_iast": "avidya-bija-nivritti",
+        "gloss": "cessation of ignorance-seed",
+        "contextual_sense": "Explains why Brahman-knowledge alone removes samsara root.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "eradication of nescience-root",
+          "samsara-seed dissolution"
         ]
       }
     ],

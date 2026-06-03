@@ -22,22 +22,35 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
-        "alternate_glosses": [
-          "topic-unit",
-          "argument node"
-        ]
+        "headword_iast": "chandas-bhāṣya-saṃśaya",
+        "gloss": "doubt concerning meter-language",
+        "contextual_sense": "The objection is that reference to chandas seems to reduce the passage to prosody rather than doctrine.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": ["meter ambiguity", "chandas dispute"]
+      },
+      {
+        "headword_iast": "gāyatrī-upāsanā",
+        "gloss": "contemplation through the Gayatri",
+        "contextual_sense": "The Bhashya treats the hymn as a concentrated contemplative support, not mere syllabic form.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": ["Gayatri meditation", "contemplative meter"]
+      },
+      {
+        "headword_iast": "ceto-arpana",
+        "gloss": "fixing or placing the mind",
+        "contextual_sense": "The meter functions as a device for steadying attention toward Brahman.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": ["mind-gathering", "attention placement"]
+      },
+      {
+        "headword_iast": "pratika-lakṣaṇa",
+        "gloss": "symbolic marker",
+        "contextual_sense": "Meter here is read as a sign-form that points beyond itself.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": ["symbol-sign", "iconic indicator"]
       }
     ],
-    "argument_tags": [
-      "response",
-      "resolution",
-      "definition",
-      "example"
-    ]
+    "argument_tags": ["response", "resolution", "definition", "example"]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",

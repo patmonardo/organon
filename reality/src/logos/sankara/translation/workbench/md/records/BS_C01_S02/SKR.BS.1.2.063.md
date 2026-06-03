@@ -33,11 +33,26 @@ Sutra seal for the sadharana-sabda-visesa criterion.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
+- **vaisvanarah**
+  - Gloss: Vaisvanara (here as doctrinal referent)
+  - Context: Sutra nominative subject fixed through contextual specialization.
   - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+  - Alternate glosses: Vaisvanara principle, universal-fire referent
+- **sadharana-sabda-visesat**
+  - Gloss: because of specification of common terms
+  - Context: Aphoristic reason that lexical commonality is overridden by context-specific markers.
+  - Grammar: ablative reason phrase
+  - Alternate glosses: from contextual disambiguation, due to term-specification
+- **sutra-hetu**
+  - Gloss: sutra-level inferential reason
+  - Context: Condenses broad bhashya semantics into one interpretive criterion.
+  - Grammar: compound noun
+  - Alternate glosses: aphoristic rationale, compressed ground
+- **sabda-bheda-nirnaya**
+  - Gloss: resolution by lexical differentiation
+  - Context: Methodic closure of polysemy through qualifier-governed referential fixing.
+  - Grammar: compound noun
+  - Alternate glosses: term-level adjudication, semantic resolution
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

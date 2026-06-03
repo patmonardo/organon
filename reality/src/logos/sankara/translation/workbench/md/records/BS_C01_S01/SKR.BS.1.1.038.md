@@ -33,11 +33,31 @@ Last attempt to salvage Pradhana through semantic flexibility.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **sarvārtha-kāritva-ātma-śabda**
+  - Gloss: atman-usage from all-purpose serviceability
+  - Context: Purvapaksha extends servant-analogy to justify atman-word for Pradhana.
+  - Grammar: compound noun
+  - Alternate glosses: functional atman usage, service-based self-term claim
+- **bhṛtya-rāja-dṛṣṭānta**
+  - Gloss: servant-king analogy
+  - Context: Cited to defend non-primary atman application by relational utility.
+  - Grammar: illustrative compound
+  - Alternate glosses: retainer-lord example, instrumental proxy analogy
+- **bhoga-apavarga-upakāra**
+  - Gloss: assistance in enjoyment and release
+  - Context: Pradhana is pitched as pragmatic facilitator for purusha aims.
+  - Grammar: compound noun
+  - Alternate glosses: experience-liberation support role, dual-end facilitation
+- **śabda-bahuvṛtti-āśraya**
+  - Gloss: reliance on polysemous word-function
+  - Context: Objection appeals to lexical flexibility to keep Pradhana semantically admissible.
+  - Grammar: compound noun
+  - Alternate glosses: multi-sense lexeme strategy, polyvalence-based defense
+- **prādhānya-gauṇya-vikalpa**
+  - Gloss: primary-secondary sense alternation
+  - Context: Seeks interpretive room where context does not immediately force one sense.
+  - Grammar: compound noun
+  - Alternate glosses: literal-figurative toggling, sense-priority alternation
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

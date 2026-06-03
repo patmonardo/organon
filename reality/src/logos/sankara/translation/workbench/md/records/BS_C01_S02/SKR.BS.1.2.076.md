@@ -33,11 +33,31 @@ Measure-language functions as meditative aid through intentional cognitive frami
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **anusmrti-nimitta**
+  - Gloss: occasioned by meditative recollection
+  - Context: Badari grounds pradesa-matra in mnemonic-practice function rather than ontology.
+  - Grammar: compound noun
+  - Alternate glosses: recollection-based reason, mnemonic contemplation basis
+- **hrdaya-pratistha**
+  - Gloss: heart-centered establishment
+  - Context: Localization serves recollective concentration in upasana procedure.
+  - Grammar: compound noun
+  - Alternate glosses: heart-seat placement, cardiac contemplative locus
+- **prastha-yava-drstanta**
+  - Gloss: measure-grain analogy
+  - Context: Illustrates how naming by associated measure need not imply intrinsic dimensionality.
+  - Grammar: compound noun
+  - Alternate glosses: standard-measure analogy, indirect-quantification example
+- **badari-mata**
+  - Gloss: Badari’s interpretive position
+  - Context: Alternative harmonization emphasizing practice-memory over manifestation-language.
+  - Grammar: compound noun
+  - Alternate glosses: Badari view, Badari explanation
+- **a-parimana-brahman**
+  - Gloss: Brahman without intrinsic measure
+  - Context: Protective doctrinal baseline in Badari’s argument.
+  - Grammar: compound noun
+  - Alternate glosses: non-quantified absolute, dimensionless Brahman
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "headword_iast": "rupa-upanyasa",
+        "gloss": "presentation of cosmic form",
+        "contextual_sense": "Imagery of universal body is read as exposition of already established bhuta-yoni.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "form-deployment",
+          "cosmic-form exposition"
+        ]
+      },
+      {
+        "headword_iast": "prakarana",
+        "gloss": "contextual topic continuity",
+        "contextual_sense": "Ensures the form-passage remains tied to prior Brahman cause-topic.",
         "grammatical_role": "noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "topic frame",
+          "section continuity"
+        ]
+      },
+      {
+        "headword_iast": "anukarsana",
+        "gloss": "carry-forward by pronoun/reference",
+        "contextual_sense": "Referential continuity marker linking ensuing imagery to the same source principle.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "referential pull-through",
+          "pronominal continuity"
+        ]
+      },
+      {
+        "headword_iast": "sarva-vikara-atmaka-rupa",
+        "gloss": "form consisting of all modifications",
+        "contextual_sense": "Universal-body depiction supports Brahmanic causal scope rather than finite entity.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "all-modification form",
+          "cosmic aggregate body"
+        ]
+      },
+      {
+        "headword_iast": "bhuta-yoni-brahma-anvaya",
+        "gloss": "linking source-principle to Brahman through form passage",
+        "contextual_sense": "Hermeneutic payoff of this section: cosmic imagery strengthens prior Brahman identification.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "source-Brahman continuity",
+          "form-based Brahman linkage"
         ]
       }
     ],

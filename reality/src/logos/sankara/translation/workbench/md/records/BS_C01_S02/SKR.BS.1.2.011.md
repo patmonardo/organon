@@ -33,11 +33,26 @@ Grammatical case contrast is treated as interpretive evidence.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
+- **sabda-visesa**
+  - Gloss: specificity of wording/grammatical expression
+  - Context: Used as inferential evidence that distinct case-forms indicate distinct referential roles in the passage.
+  - Grammar: compound noun
+  - Alternate glosses: grammatical distinctness, textual form-specificity
+- **saptami-prathama-bheda**
+  - Gloss: difference between locative and nominative usage
+  - Context: Case distinction leveraged to block identity of embodied locus and meditated purusa.
+  - Grammar: grammatical compound
+  - Alternate glosses: case-role differentiation, locative-nominative contrast
+- **bheda**
+  - Gloss: difference, non-identity
+  - Context: Hermeneutic conclusion that upasaka-jiva and upasya-purusa cannot be collapsed at this interpretive stage.
   - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+  - Alternate glosses: distinction, differentiation
+- **upasya-purusa**
+  - Gloss: the person as object of meditation
+  - Context: Referent established by syntactic and contextual indicators rather than by superficial body-language.
+  - Grammar: compound noun
+  - Alternate glosses: meditated person, contemplative purusa
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

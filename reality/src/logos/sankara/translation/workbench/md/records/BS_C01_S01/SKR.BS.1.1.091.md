@@ -33,11 +33,26 @@ Case-ending variation is treated as pedagogical expression, not referent shift.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **upadeśa-bheda**
+  - Gloss: difference of instructional mode
+  - Context: The objection appeals to differing grammatical cases and pedagogical forms to claim a changed referent.
+  - Grammar: compound noun
+  - Alternate glosses: instructional variation, teaching-form difference
+- **saptamī-pañcamī-virodha**
+  - Gloss: contrast of locative and ablative forms
+  - Context: Case-ending variation is used as the main objection against continuity of reference.
+  - Grammar: compound noun
+  - Alternate glosses: case-form opposition, grammatical contrast
+- **pratyabhijñā**
+  - Gloss: recognition / re-identification
+  - Context: The Bhashya later rejects the claim that a new case-form necessarily means a new object.
+  - Grammar: abstract noun
+  - Alternate glosses: recognition, re-cognition
+- **upadeśa-krama**
+  - Gloss: sequence of instruction
+  - Context: A change in expression is treated as a change in pedagogical stance, not in ontic target.
+  - Grammar: compound noun
+  - Alternate glosses: teaching sequence, instructional order
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

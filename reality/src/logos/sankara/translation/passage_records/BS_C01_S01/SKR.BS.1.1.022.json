@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "aupaniṣada-puruṣa",
+        "gloss": "the Upanishadic person/self",
+        "contextual_sense": "Presented as non-samsaric Brahman-reality irreducible to ritual accessory status.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "Upanishadic Self",
+          "revealed inner person"
+        ]
+      },
+      {
+        "headword_iast": "ananya-śeṣatva",
+        "gloss": "non-subsidiary status",
+        "contextual_sense": "Key claim that Vedanta teaching is not merely remainder to vidhi/kriya.",
+        "grammatical_role": "abstract noun",
+        "alternate_glosses": [
+          "non-accessoriness",
+          "independent doctrinal standing"
+        ]
+      },
+      {
+        "headword_iast": "bhūta-vastu-paratva",
+        "gloss": "orientation toward an existent reality",
+        "contextual_sense": "Upanishadic discourse is defended as revealing an already-real object, not producing one.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "reality-directed teaching",
+          "existent-object orientation"
+        ]
+      },
+      {
+        "headword_iast": "śruti-sākṣitā",
+        "gloss": "scriptural witnessing function",
+        "contextual_sense": "Brahman-self is self-evident in one sense yet definitively disclosed through sruti testimony.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "revelatory witness role",
+          "textual attestation"
+        ]
+      },
+      {
+        "headword_iast": "kriyārthatva-nirākaraṇa",
+        "gloss": "rejection of pure action-teleology",
+        "contextual_sense": "Counters strict Mimamsa reduction of all Vedic language to ritual use.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "anti-action reduction",
+          "ritual-teleology refusal"
         ]
       }
     ],

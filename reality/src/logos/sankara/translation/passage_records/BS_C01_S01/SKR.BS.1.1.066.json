@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "kāmayitṛtva-nirdeśa",
+        "gloss": "designation of willing agency",
+        "contextual_sense": "Intentional volition in the text blocks non-conscious causal substitution.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "volitional-agency indication",
+          "intentionality marker"
+        ]
+      },
+      {
+        "headword_iast": "anumānika-pradhāna-nirāsa",
+        "gloss": "rejection of inferentially posited Pradhana",
+        "contextual_sense": "Sankhya causal postulate is excluded where sruti gives direct conscious-cause signals.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "inferential Pradhana denial",
+          "anumana-based matter-cause rejection"
+        ]
+      },
+      {
+        "headword_iast": "īkṣateḥ-nyāya-punaranuvṛtti",
+        "gloss": "reapplication of the ikshateh principle",
+        "contextual_sense": "Earlier sentient-cause rule is carried into anandamaya discussion for consistency.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "ikshateh rule recurrence",
+          "prior criterion carryover"
+        ]
+      },
+      {
+        "headword_iast": "śruti-prādhānya",
+        "gloss": "priority of revelation over speculative inference",
+        "contextual_sense": "Direct textual indicators outrank imported cosmological hypotheses.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "scriptural priority",
+          "revelation-first hermeneutic"
+        ]
+      },
+      {
+        "headword_iast": "caitanya-kāraṇa-ekatā",
+        "gloss": "one consistent conscious-cause doctrine",
+        "contextual_sense": "Maintains doctrinal continuity across causality passages without compartmental exceptions.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "uniform sentient-source view",
+          "single aware-cause framework"
         ]
       }
     ],

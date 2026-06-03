@@ -33,11 +33,31 @@ Objection stacks lexical, ritual, and locative evidence against Ishvara reading.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **sabda-adibhyaḥ**
+  - Gloss: from word-usage and related indicators
+  - Context: Purvapaksa bases objection on lexical convention and associated ritual correspondences.
+  - Grammar: ablative plural phrase
+  - Alternate glosses: from linguistic and allied signs, word-based grounds
+- **antah-pratisthana**
+  - Gloss: inner location/abiding within
+  - Context: Interior placement is used to argue for digestive fire over transcendent Brahman.
+  - Grammar: compound noun
+  - Alternate glosses: internal seat, inward establishment
+- **jatharagni-rudhi**
+  - Gloss: conventional fixation on gastric fire
+  - Context: Lexical rootedness claim that Vaisvanara usually denotes digestive fire.
+  - Grammar: compound noun
+  - Alternate glosses: digestive-fire convention, jatharagni lexical default
+- **garhapatyadi-sambandha**
+  - Gloss: relation to ritual fires like garhapatya
+  - Context: Ritual-fire mapping is marshaled to restrict referent to fire-principle readings.
+  - Grammar: compound noun
+  - Alternate glosses: sacrificial-fire correspondence, ritual homologous mapping
+- **purvapaksa-pratijna**
+  - Gloss: objectional thesis declaration
+  - Context: Sets the explicit non-Ishvara claim prior to drsti-upadesa response.
+  - Grammar: compound noun
+  - Alternate glosses: prima facie claim, initial refutand position
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

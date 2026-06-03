@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "antaḥ tad-dharma-upadeśāt",
+        "gloss": "the inner one, because those attributes are taught",
+        "contextual_sense": "Sutra applies attribute-criterion to identify inner sun/eye person with Brahman.",
+        "grammatical_role": "sutra reason phrase",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "inner referent by attribute teaching",
+          "taddharma-based determination"
+        ]
+      },
+      {
+        "headword_iast": "antaḥ-puruṣa-brahma-niścaya",
+        "gloss": "fixing inner person as Brahman",
+        "contextual_sense": "Aphoristic verdict resolves locative-form ambiguity in favor of supreme indweller.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "inner-indweller determination",
+          "solar-eye Brahman adjudication"
+        ]
+      },
+      {
+        "headword_iast": "liṅga-sāra",
+        "gloss": "core inferential marker",
+        "contextual_sense": "Specific predicates function as semantic anchors stronger than surface imagery.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "decisive sign-core",
+          "marker-based resolution"
+        ]
+      },
+      {
+        "headword_iast": "upāsanā-rūpa-anugraha",
+        "gloss": "concessive form for meditation",
+        "contextual_sense": "Locative portrayal is retained as contemplative aid after referent determination.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "worship-form concession",
+          "meditative representation allowance"
         ]
       }
     ],

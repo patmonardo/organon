@@ -33,11 +33,31 @@ Corpus-wide semantic convergence is treated as an evidentiary principle.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **gati-sāmānya**
+  - Gloss: uniform scriptural trajectory
+  - Context: Across Upanishads, discourse-direction converges on conscious atman-brahman causality.
+  - Grammar: compound noun
+  - Alternate glosses: shared movement of texts, cross-corpus directional unity
+- **vedānta-ekārthya**
+  - Gloss: single purport of Vedanta corpus
+  - Context: Plural incompatible causes are denied by hermeneutic demand for coherent intention.
+  - Grammar: compound noun
+  - Alternate glosses: corpus-level univocity, one-intent scriptural reading
+- **vikalpa-kāraṇa-nirāsa**
+  - Gloss: rejection of multiple causal options
+  - Context: Bhashya refuses to treat Brahman, Pradhana, and others as parallel valid referents.
+  - Grammar: compound noun
+  - Alternate glosses: alternative-cause denial, causal plurality rebuttal
+- **samānārthatā-pramāṇa**
+  - Gloss: proof from same-meaning alignment
+  - Context: Repeated thematic vectors across passages are used as evidence, not mere style.
+  - Grammar: compound noun
+  - Alternate glosses: concordant-signification evidence, shared-semantic proof
+- **jagat-kāraṇa-caitanya**
+  - Gloss: world-cause marked by sentience
+  - Context: Convergent testimony fixes causality in conscious absolute rather than inert principle.
+  - Grammar: compound noun
+  - Alternate glosses: sentient-source world-causality, aware first-cause marker
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

@@ -33,11 +33,26 @@ Sutra shorthand for manifestation-based construal.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **abhivyakteh**
+  - Gloss: because of manifestation
+  - Context: Sutra reason grounding pradesa-matra wording in how Brahman appears for upasana.
+  - Grammar: ablative reason term
+  - Alternate glosses: from manifestation, due to appearing mode
+- **asmarathyah**
+  - Gloss: Asmarathya
+  - Context: Sutra attributes this harmonizing explanation to Asmarathya authority.
+  - Grammar: proper noun
+  - Alternate glosses: Asmarathya teacher, Asmarathya lineage view
+- **pradesa-matra-anvaya**
+  - Gloss: interpretive linkage of measure-language
+  - Context: Finite-span expression mapped to manifestation rather than intrinsic measure.
+  - Grammar: compound noun
+  - Alternate glosses: measure-expression reconciliation, span-language integration
+- **sutra-hetu**
+  - Gloss: aphoristic reason clause
+  - Context: Condensed statement of the manifestation-based solution.
+  - Grammar: compound noun
+  - Alternate glosses: terse rationale, compressed proof-ground
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

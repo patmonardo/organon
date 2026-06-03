@@ -33,11 +33,31 @@ This restates the hermeneutic challenge before the decisive sutra reply.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **kriyārthatva-pūrvapakṣa**
+  - Gloss: prima facie action-teleology thesis
+  - Context: Formal objection restates Mimamsa principle against independent Brahman-vastu teaching.
+  - Grammar: compound noun
+  - Alternate glosses: ritualist objection frame, action-centric purvapaksa
+- **āmnāyasya kriyārthatvāt**
+  - Gloss: because revelation is for action
+  - Context: Quoted Mimamsa maxim driving reduction of Vedanta to injunction-support.
+  - Grammar: doctrinal maxim phrase
+  - Alternate glosses: scripture-for-action axiom, ritual teleology formula
+- **vedāntānarthakya-āśaṅkā**
+  - Gloss: suspicion of Vedanta meaninglessness
+  - Context: Objection claims non-action passages lack function under strict criteria.
+  - Grammar: compound noun
+  - Alternate glosses: Vedanta redundancy objection, non-kriya text uselessness claim
+- **upāsanā-vidhi-śeṣa-kalpana**
+  - Gloss: constructing Vedanta as accessory to meditation injunction
+  - Context: Purvapaksa fallback strategy when direct ritual reduction seems strained.
+  - Grammar: compound noun
+  - Alternate glosses: meditation-injunction subordination, upasana accessory model
+- **śāstra-pramāṇakatva-praśna**
+  - Gloss: questioning scriptural authority for Brahman
+  - Context: Sets up core epistemic conflict resolved by samnvaya and phala-vailaksanya arguments.
+  - Grammar: compound noun
+  - Alternate glosses: Brahman-proof challenge, authority dispute setup
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

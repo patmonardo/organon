@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "katham tarhi vaktur atmopadesah",
+        "gloss": "how then is the speaker's self-instruction understood?",
+        "contextual_sense": "Bridge question transitions from objection-rebuttal to a constructive interpretive model.",
+        "grammatical_role": "interrogative doctrinal phrase",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "transition query",
+          "interpretive hinge question"
+        ]
+      },
+      {
+        "headword_iast": "vyakhyana-sandhi",
+        "gloss": "junction to explanatory resolution",
+        "contextual_sense": "A short pivot that formally opens the Vamadeva-style answer.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "explanatory bridge",
+          "resolution transition"
+        ]
+      },
+      {
+        "headword_iast": "purvapaksa-avasesa",
+        "gloss": "residual objection remainder",
+        "contextual_sense": "Identifies the final unresolved piece before sutra codification.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "remaining challenge",
+          "leftover objection"
+        ]
+      },
+      {
+        "headword_iast": "uttara-prastava",
+        "gloss": "proposal of the response",
+        "contextual_sense": "Prepares the immediate doctrinal answer in the next verse unit.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "reply setup",
+          "answer launch"
         ]
       }
     ],

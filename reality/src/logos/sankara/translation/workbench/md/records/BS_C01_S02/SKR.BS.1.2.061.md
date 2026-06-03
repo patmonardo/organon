@@ -33,11 +33,31 @@ A lexical-ritual ambiguity frame precedes the Vedantic determination.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
+- **vaisvanara**
+  - Gloss: the all-human/all-pervading fire principle
+  - Context: Polysemous key term debated across jatharagni, bhutagni, devata, jiva, and Brahman readings.
   - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+  - Alternate glosses: universal fire, cosmic fire-principle
+- **ko na atma kim brahma**
+  - Gloss: what is Self and what is Brahman?
+  - Context: Opening interrogative frame establishes high-stakes referential inquiry beyond ritual literalism.
+  - Grammar: interrogative scriptural phrase
+  - Alternate glosses: Self-Brahman inquiry, identity-question opening
+- **anekarthatva**
+  - Gloss: polysemy/multiple possible meanings
+  - Context: Purvapaksa leverages lexical spread to resist immediate Ishvara determination.
+  - Grammar: abstract noun
+  - Alternate glosses: semantic multiplicity, multi-reference capacity
+- **eka-deva-upasana-ninda**
+  - Gloss: censure of one-part worship
+  - Context: Textual critique of partial meditations points toward a totalized Vaisvanara referent.
+  - Grammar: compound noun
+  - Alternate glosses: partial-upasana critique, fragmentary worship negation
+- **purvapaksa-vikalpa**
+  - Gloss: prima facie option-branching
+  - Context: Record stages multiple candidate ontologies before siddhanta unification.
+  - Grammar: compound noun
+  - Alternate glosses: candidate branching, objectional alternatives
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

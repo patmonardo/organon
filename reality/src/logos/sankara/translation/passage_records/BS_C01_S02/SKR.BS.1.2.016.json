@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "nicayya-upasana",
+        "gloss": "focused/determinate meditation mode",
+        "contextual_sense": "Explains localizing expressions as contemplative focus-tools rather than metaphysical delimitation.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "concentrated upasana",
+          "fixation-oriented contemplation"
+        ]
+      },
+      {
+        "headword_iast": "alpatva",
+        "gloss": "smallness/minuteness",
+        "contextual_sense": "Objection-term answered by reclassifying smallness as pedagogical standpoint-language.",
+        "grammatical_role": "abstract noun",
+        "alternate_glosses": [
+          "finitude-language",
+          "minuteness predicate"
+        ]
+      },
+      {
+        "headword_iast": "hrdaya-sthana",
+        "gloss": "heart-location",
+        "contextual_sense": "Interpreted as contemplative locus for practice, not ontic confinement of Brahman.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "cardiac seat",
+          "inner-heart locus"
+        ]
+      },
+      {
+        "headword_iast": "upasana-arthavada",
+        "gloss": "meditation-oriented explanatory framing",
+        "contextual_sense": "Allows practice-directed contextualization without altering ultimate referent.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "practice-framing explanation",
+          "contemplative contextualization"
+        ]
+      },
+      {
+        "headword_iast": "avaccheda-abhava",
+        "gloss": "absence of real delimitation",
+        "contextual_sense": "Key rebuttal that apparent spatial restriction does not genuinely bound Brahman.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "non-delimitation",
+          "no real boundedness"
         ]
       }
     ],

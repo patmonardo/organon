@@ -33,11 +33,26 @@ Purvapaksha staging: apparent jiva-upasana reading of Chandogya 3.14.
 ## Analysis
 
 ### Lexical Notes
-- **brahman**
-  - Gloss: ultimate reality
-  - Context: Primary interpretive referent under adjudication in this adhikarana
+- **manomaya**
+  - Gloss: mind-formed
+  - Context: Qualifier contested in ChU 3.14: whether it points to jiva or to qualified Brahman.
+  - Grammar: adjectival compound
+  - Alternate glosses: constituted by mind, mental-form qualifier
+- **kratu**
+  - Gloss: resolve, intentional determination
+  - Context: Taken as meditative resolve that functions as upasana-operation and shapes post-mortem becoming.
   - Grammar: noun
-  - Alternate glosses: absolute, supreme principle
+  - Alternate glosses: intention, meditative volition
+- **sama-vidhi**
+  - Gloss: injunction of tranquility
+  - Context: Purvapaksha reading of "sarvam khalv idam brahma" as dispassion-producing instruction rather than direct upasana-vidhi.
+  - Grammar: compound noun
+  - Alternate glosses: calming injunction, equanimity directive
+- **jiva-linga**
+  - Gloss: indicator of individual self
+  - Context: Feature read as pointing toward embodied experiencer rather than para-brahman.
+  - Grammar: compound noun
+  - Alternate glosses: individual-self marker, embodied-self sign
 
 ## QA Uncertainty Notes
 - Long bhashya blocks translated as draft prose and require line-level philological curation.

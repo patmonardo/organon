@@ -33,11 +33,26 @@ Sutra key for Brahman-jyotis identification.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **jyotis-caraṇa-abidhāna**
+  - Gloss: light identified through prior quarter-mention
+  - Context: The short sutra compresses the previous argument by linking jyotis back to the established Brahman frame.
+  - Grammar: compound noun
+  - Alternate glosses: light-quarter linkage, context-supported jyotis
+- **liṅga-anusaraṇa**
+  - Gloss: following the indicator
+  - Context: The rule is not verbal habit but sign-led continuity from the earlier section.
+  - Grammar: compound noun
+  - Alternate glosses: marker-following, sign-based inference
+- **ālocya-pratibhā**
+  - Gloss: discerned meaning
+  - Context: What is seen here is not a new object but the same doctrinal light in a different verbal frame.
+  - Grammar: compound noun
+  - Alternate glosses: insightful meaning, apprehended sense
+- **sūtra-saṃkṣepa-siddhi**
+  - Gloss: successful sutra compression
+  - Context: The aphorism preserves the earlier reasoning without repeating it at length.
+  - Grammar: compound noun
+  - Alternate glosses: concise doctrinal success, abbreviated proof
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

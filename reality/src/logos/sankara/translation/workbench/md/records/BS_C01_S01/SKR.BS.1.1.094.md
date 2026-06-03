@@ -33,11 +33,31 @@ Holistic discourse-flow outranks isolated local indicators.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **tathanugama**
+  - Gloss: coherent progression in that manner
+  - Context: Beginning-middle-end flow is used as the governing criterion over isolated marker fragments.
+  - Grammar: compound noun
+  - Alternate glosses: discursive continuity, flow-based integration
+- **purvapara-samanvaya**
+  - Gloss: prior-later coherence
+  - Context: Interpretation is stabilized by checking how opening and closure converge on one aim.
+  - Grammar: compound noun
+  - Alternate glosses: earlier-later alignment, textual arc coherence
+- **parama-purusartha-laksana**
+  - Gloss: mark of supreme human end
+  - Context: Highest-good framing signals Brahman-topic rather than finite deity benefit discourse.
+  - Grammar: compound noun
+  - Alternate glosses: ultimate-end marker, highest-goal sign
+- **karma-atikranta-phala**
+  - Gloss: fruit beyond ritual action
+  - Context: Promised result exceeds karma-limited scope, indicating a Brahmanic horizon.
+  - Grammar: compound noun
+  - Alternate glosses: action-transcending fruit, supra-ritual result
+- **aisvarya-vyapadesa**
+  - Gloss: ascription of lordly sovereignty
+  - Context: Universal governance predicates are read as decisive for the ultimate referent.
+  - Grammar: compound noun
+  - Alternate glosses: sovereignty declaration, lordship attribution
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

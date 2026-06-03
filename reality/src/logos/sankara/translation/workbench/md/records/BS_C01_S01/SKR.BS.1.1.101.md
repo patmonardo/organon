@@ -33,11 +33,31 @@ The argument pivots on preserving single coherent upasya across upakrama-upasamh
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **jiva-linga**
+  - Gloss: indicator toward jiva reading
+  - Context: Speaker-knowledge and instrument-agency language is marshaled to support individual-self interpretation.
+  - Grammar: compound noun
+  - Alternate glosses: jiva marker, individual-self sign
+- **mukhya-prana-linga**
+  - Gloss: indicator toward primary vital-prana
+  - Context: Body-support and life-function statements are used to support vital-force reading.
+  - Grammar: compound noun
+  - Alternate glosses: vital-prana marker, physiological sign
+- **vakya-ekatva**
+  - Gloss: unity of sentence-purport
+  - Context: Bhashya blocks referent multiplication by requiring one coherent meaning from start to finish.
+  - Grammar: compound noun
+  - Alternate glosses: single purport, one-meaning constraint
+- **upakrama-upasamhara**
+  - Gloss: opening-closing hermeneutic pair
+  - Context: Beginnings and conclusions are invoked to anchor the primary intended object.
+  - Grammar: compound noun
+  - Alternate glosses: initial-final criterion, framing coherence test
+- **linga-bala-taratamya**
+  - Gloss: hierarchy of indicator strength
+  - Context: Stronger Brahman-signs are made to govern weaker competing signs.
+  - Grammar: compound noun
+  - Alternate glosses: marker priority ranking, evidential gradation
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

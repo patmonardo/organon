@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "headword_iast": "vaisvanara",
+        "gloss": "the all-human/all-pervading fire principle",
+        "contextual_sense": "Polysemous key term debated across jatharagni, bhutagni, devata, jiva, and Brahman readings.",
         "grammatical_role": "noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "universal fire",
+          "cosmic fire-principle"
+        ]
+      },
+      {
+        "headword_iast": "ko na atma kim brahma",
+        "gloss": "what is Self and what is Brahman?",
+        "contextual_sense": "Opening interrogative frame establishes high-stakes referential inquiry beyond ritual literalism.",
+        "grammatical_role": "interrogative scriptural phrase",
+        "alternate_glosses": [
+          "Self-Brahman inquiry",
+          "identity-question opening"
+        ]
+      },
+      {
+        "headword_iast": "anekarthatva",
+        "gloss": "polysemy/multiple possible meanings",
+        "contextual_sense": "Purvapaksa leverages lexical spread to resist immediate Ishvara determination.",
+        "grammatical_role": "abstract noun",
+        "alternate_glosses": [
+          "semantic multiplicity",
+          "multi-reference capacity"
+        ]
+      },
+      {
+        "headword_iast": "eka-deva-upasana-ninda",
+        "gloss": "censure of one-part worship",
+        "contextual_sense": "Textual critique of partial meditations points toward a totalized Vaisvanara referent.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "partial-upasana critique",
+          "fragmentary worship negation"
+        ]
+      },
+      {
+        "headword_iast": "purvapaksa-vikalpa",
+        "gloss": "prima facie option-branching",
+        "contextual_sense": "Record stages multiple candidate ontologies before siddhanta unification.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "candidate branching",
+          "objectional alternatives"
         ]
       }
     ],

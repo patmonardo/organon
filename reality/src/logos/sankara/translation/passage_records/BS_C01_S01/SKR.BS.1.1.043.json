@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "svapiti-śruti",
+        "gloss": "scripture on deep sleep",
+        "contextual_sense": "Sleep passage is used as pramana for where jiva resolves in causal condition.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "susupti testimony",
+          "sleep-state revelation"
+        ]
+      },
+      {
+        "headword_iast": "sat-sampatti",
+        "gloss": "mergence into sat",
+        "contextual_sense": "Deep sleep is read as temporary assimilation into conscious ground, not inert substrate.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "entry into being",
+          "resolution into causal self"
+        ]
+      },
+      {
+        "headword_iast": "svam apītaḥ",
+        "gloss": "having gone to one’s own self",
+        "contextual_sense": "Phrase indicates return to intrinsic selfhood, blocking Pradhana detour.",
+        "grammatical_role": "quoted doctrinal phrase",
+        "alternate_glosses": [
+          "reached one’s own",
+          "self-reentry expression"
+        ]
+      },
+      {
+        "headword_iast": "laya-liṅga",
+        "gloss": "indicator from dissolution",
+        "contextual_sense": "What one dissolves into reveals ontological basis; conscious experiencer cannot terminate in inert matter.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "resolution-sign",
+          "dissolution marker"
+        ]
+      },
+      {
+        "headword_iast": "acaitanya-kāraṇa-nivṛtti",
+        "gloss": "withdrawal of inert-cause option",
+        "contextual_sense": "Sleep phenomenology is weaponized against non-conscious first-cause models.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "insentient-cause elimination",
+          "Pradhana option withdrawal"
         ]
       }
     ],

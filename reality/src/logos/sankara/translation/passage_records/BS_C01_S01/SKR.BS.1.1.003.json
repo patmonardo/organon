@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "pratyagatman",
+        "gloss": "inner self/immediate subject",
+        "contextual_sense": "Though said non-objectifiable in one sense, it remains aparoksa in asmadvritti for adhyasa discourse.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "inward self",
+          "immediate witness-self"
+        ]
+      },
+      {
+        "headword_iast": "aparoksa",
+        "gloss": "immediate, non-mediated givenness",
+        "contextual_sense": "Used to rebut objection that adhyasa requires only externally objectified substrates.",
+        "grammatical_role": "adjective/substantive",
+        "alternate_glosses": [
+          "directly evident",
+          "non-indirectly known"
+        ]
+      },
+      {
+        "headword_iast": "asmat-pratyaya-visayatva",
+        "gloss": "being the content of the I-cognition",
+        "contextual_sense": "Establishes self-presence sufficient for superimposition dynamics.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "I-notion referentiality",
+          "ego-cognition scope"
+        ]
+      },
+      {
+        "headword_iast": "adhyasa-anapeksa-purovarti",
+        "gloss": "adhyasa not restricted to present perceptual substrate",
+        "contextual_sense": "Defends broader error structure beyond strict face-to-face object conditions.",
+        "grammatical_role": "compound doctrinal phrase",
+        "alternate_glosses": [
+          "non-local substrate requirement",
+          "not-only-present-object error rule"
+        ]
+      },
+      {
+        "headword_iast": "atmadhyasa-upapatti",
+        "gloss": "coherence of self-superimposition",
+        "contextual_sense": "Conclusion: subject-side adhyasa remains philosophically admissible.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "self-superimposition validity",
+          "subject-error coherence"
         ]
       }
     ],

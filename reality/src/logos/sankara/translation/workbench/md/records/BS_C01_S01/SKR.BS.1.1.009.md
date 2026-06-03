@@ -33,11 +33,31 @@ Inquiry is necessary because familiarity of 'self' does not equal clarity of met
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
+- **prasiddha-aprasiddha-vicara**
+  - Gloss: analysis of known versus unknown status
+  - Context: Bhashya rejects both extremes and establishes middle epistemic status for Brahman-inquiry.
+  - Grammar: compound noun
+  - Alternate glosses: familiarity-unknownness dialectic, known/unknown adjudication
+- **samanya-prasiddhi**
+  - Gloss: general familiarity
+  - Context: Brahman is broadly acknowledged as concept, enabling meaningful inquiry entry.
+  - Grammar: compound noun
+  - Alternate glosses: generic recognition, common-level awareness
+- **visesa-aspastata**
+  - Gloss: indeterminacy of specific nature
+  - Context: Lack of precise ascertainment creates legitimate need for systematic investigation.
+  - Grammar: compound noun
+  - Alternate glosses: specific ambiguity, particular non-clarity
+- **vipratipatti**
+  - Gloss: doctrinal divergence/conflicting views
+  - Context: Competing schools’ claims intensify necessity of Brahma-jijnasa.
   - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+  - Alternate glosses: interpretive conflict, philosophical disagreement
+- **jijnasa-upapatti**
+  - Gloss: coherence of inquiry undertaking
+  - Context: Conclusion from middle status: inquiry is both possible and required.
+  - Grammar: compound noun
+  - Alternate glosses: inquiry justification, epistemic project validity
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

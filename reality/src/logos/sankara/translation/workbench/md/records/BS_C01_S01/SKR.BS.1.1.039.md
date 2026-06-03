@@ -33,11 +33,26 @@ Moksha-upadesha seals conscious Brahman reading.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **tan-niṣṭhasya mokṣa-upadeśāt**
+  - Gloss: because liberation is taught for one abiding in that
+  - Context: Sutra infers referent must be ultimate self-reality, not insentient substrate.
+  - Grammar: ablative reason phrase
+  - Alternate glosses: from abidance-liberation teaching, moksha-linked inference
+- **mokṣa-lakṣaṇa-parīkṣā**
+  - Gloss: liberation-criterion test
+  - Context: Interpretation is vetted by whether it can ground the promised release.
+  - Grammar: compound noun
+  - Alternate glosses: emancipation criterion, release-condition audit
+- **pradhāna-pratiṣedha**
+  - Gloss: denial of Pradhana referent
+  - Context: If established-in-that yields moksha, inert cause reading is disqualified.
+  - Grammar: compound noun
+  - Alternate glosses: inert-referent negation, Sankhya-candidate rejection
+- **upadeśa-phala-ekatā**
+  - Gloss: unity of instruction and fruit
+  - Context: Doctrinal consistency requires teaching-object and salvific result to converge.
+  - Grammar: compound noun
+  - Alternate glosses: pedagogy-fruit unity, instruction-result coherence
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

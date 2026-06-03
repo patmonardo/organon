@@ -33,11 +33,31 @@ Pedagogical structure and opening promise jointly rule out Pradhana reading.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **heya-vacana-abhāva**
+  - Gloss: absence of discard-instruction
+  - Context: No scriptural move marks sat as something to abandon, unlike provisional pointing devices.
+  - Grammar: compound noun
+  - Alternate glosses: no rejection directive, absence of renunciation cue
+- **arundhatī-nyāya**
+  - Gloss: Arundhati teaching method analogy
+  - Context: Used to show when provisional designation is intended, text explicitly retracts it later.
+  - Grammar: illustrative compound
+  - Alternate glosses: progressive-pointing pedagogy, indirect indication model
+- **ekavijñānena sarvavijñāna-pratijñā**
+  - Gloss: pledge that one knowledge yields all knowledge
+  - Context: Opening promise would fail if sat denoted only a partial material principle.
+  - Grammar: compound doctrinal phrase
+  - Alternate glosses: one-knowing-all pledge, total-knowledge through single insight
+- **pratijñā-upapatti**
+  - Gloss: fulfillment of initial thesis
+  - Context: Hermeneutic reading must preserve the chapter’s declared pedagogical aim.
+  - Grammar: compound noun
+  - Alternate glosses: thesis coherence, promise-justification
+- **sat-śabda-brahma-paratva**
+  - Gloss: sat-word oriented to Brahman
+  - Context: Conclusion secures non-provisional referent across teaching sequence.
+  - Grammar: compound noun
+  - Alternate glosses: being-term as Brahman-reference, sat-denotation finality
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

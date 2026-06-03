@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "sthana-vyapadesa",
+        "gloss": "designation by place",
+        "contextual_sense": "Localizing language (eye, heart, etc.) is interpreted as contemplative upaya, not ontological confinement.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "location-designation",
+          "site-attribution language"
+        ]
+      },
+      {
+        "headword_iast": "nama-rupa-vyakarana",
+        "gloss": "designation by names and forms",
+        "contextual_sense": "Multiple appellations are treated as pedagogical handles for meditation practice.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "name-form specification",
+          "didactic labeling"
+        ]
+      },
+      {
+        "headword_iast": "upasana-upaya",
+        "gloss": "means for contemplative fixation",
+        "contextual_sense": "Hermeneutic strategy that reconciles finite descriptors with all-pervasive Brahman.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "meditative aid",
+          "contemplative device"
+        ]
+      },
+      {
+        "headword_iast": "sarvagatatva",
+        "gloss": "all-pervasiveness",
+        "contextual_sense": "Underlying metaphysical status preserved despite sectional local descriptors.",
+        "grammatical_role": "abstract noun",
+        "alternate_glosses": [
+          "omnipresence",
+          "unrestricted pervasion"
+        ]
+      },
+      {
+        "headword_iast": "anavakalpti-dosa",
+        "gloss": "defect of impossible fit",
+        "contextual_sense": "Objection-term dissolved by showing plurality of sanctioned contemplative locations.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "non-fit objection",
+          "incoherence challenge"
         ]
       }
     ],

@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "headword_iast": "samanvaya",
+        "gloss": "consistent convergence/coordination",
+        "contextual_sense": "Vedanta passages are shown to converge on one nondual Brahman purport.",
         "grammatical_role": "noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "harmonization",
+          "integrated consistency"
+        ]
+      },
+      {
+        "headword_iast": "tatparya-niscaya",
+        "gloss": "determination of intended purport",
+        "contextual_sense": "Method for distinguishing principal teaching from subordinate or auxiliary clauses.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "intent determination",
+          "dominant import fixation"
+        ]
+      },
+      {
+        "headword_iast": "vidhi-sesa-nirasa",
+        "gloss": "rejection of reducing Vedanta to injunction accessory",
+        "contextual_sense": "Bhashya denies making Brahman-statements merely supportive of ritual acts.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "anti-ritual accessory reading",
+          "injunction-subordination refusal"
+        ]
+      },
+      {
+        "headword_iast": "kriya-karaka-phala-badha",
+        "gloss": "sublation of action-agent-result triad",
+        "contextual_sense": "Atmaikatva-knowledge undermines the structure presupposed by injunctional discourse.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "action-structure negation",
+          "agent-instrument-result cancellation"
+        ]
+      },
+      {
+        "headword_iast": "mahavakya-ekarthata",
+        "gloss": "single purport of great statements",
+        "contextual_sense": "Supports claim that Vedanta is fundamentally revelatory, not purely prescriptive.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "unity of mahavakya intent",
+          "nondual statement convergence"
         ]
       }
     ],

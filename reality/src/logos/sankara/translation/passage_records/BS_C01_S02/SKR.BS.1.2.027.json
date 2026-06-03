@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "headword_iast": "vijnanatma-paramatma",
+        "gloss": "individual cognizer and Supreme Self pair",
+        "contextual_sense": "Siddhanta pairing accepted for the dual reference in the mantra.",
+        "grammatical_role": "compound dyad",
+        "alternate_glosses": [
+          "jiva-Ishvara pair",
+          "knower-Supreme dyad"
+        ]
+      },
+      {
+        "headword_iast": "samanasvabhava-dvaya",
+        "gloss": "dual reference among same-class entities",
+        "contextual_sense": "Principle that dual mention normally picks two of one ontological class (both conscious selves).",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "same-nature duality",
+          "class-consistent pairing rule"
+        ]
+      },
+      {
+        "headword_iast": "guhahita-pramana",
+        "gloss": "scriptural evidence for indwelling in the cave",
+        "contextual_sense": "Cited passages support both jiva and Paramatma as heart-cavity occupants.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "cave-indwelling testimony",
+          "inner-heart witness text"
+        ]
+      },
+      {
+        "headword_iast": "chaya-tapa-vyakhya",
+        "gloss": "interpretation of shade-sun imagery",
+        "contextual_sense": "Read as asymmetrical relation within jiva-Paramatma dyad rather than buddhi-jiva pairing.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "shadow-light exegesis",
+          "metaphor adjudication"
+        ]
+      },
+      {
+        "headword_iast": "siddhanta",
+        "gloss": "settled conclusion",
+        "contextual_sense": "Final determination displacing the buddhi-ksetrajna purvapaksa.",
         "grammatical_role": "noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "final view",
+          "doctrinal settlement"
         ]
       }
     ],

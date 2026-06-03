@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "tan-niṣṭhasya mokṣa-upadeśa",
+        "gloss": "liberation taught for one established in that",
+        "contextual_sense": "Release-instruction functions as a referential test: object must be conscious self-reality.",
+        "grammatical_role": "compound phrase",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "abidance-linked liberation teaching",
+          "moksha instruction criterion"
+        ]
+      },
+      {
+        "headword_iast": "śvetaketu-upadeśa-krama",
+        "gloss": "instructional sequence to Svetaketu",
+        "contextual_sense": "Pedagogical arc tracks from sat declaration to personal identity assimilation.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "Svetaketu teaching progression",
+          "student-directed identity pedagogy"
+        ]
+      },
+      {
+        "headword_iast": "anupapatti-heya-vastu",
+        "gloss": "incoherence of teaching a rejectable object as self",
+        "contextual_sense": "If referent were inert matter, scripture would have to mark it as discardable, not ultimate.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "rejectable-object inconsistency",
+          "heya-object contradiction"
+        ]
+      },
+      {
+        "headword_iast": "śāstra-phala-saṅgati",
+        "gloss": "fit between scripture and promised fruit",
+        "contextual_sense": "Semantic choice must preserve liberation outcome, not merely lexical possibility.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "text-fruit coherence",
+          "doctrinal payoff alignment"
+        ]
+      },
+      {
+        "headword_iast": "caitanya-viṣaya-niyama",
+        "gloss": "restriction to conscious referent",
+        "contextual_sense": "Moksha pedagogy narrows admissible meaning-field to sentient absolute.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "awareness-referent constraint",
+          "sentient-object restriction"
         ]
       }
     ],

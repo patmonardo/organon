@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "headword_iast": "adhyasa",
+        "gloss": "superimposition/misattribution",
+        "contextual_sense": "Core operation where properties of one domain appear in another through non-discrimination.",
         "grammatical_role": "noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "erroneous overlay",
+          "transposed attribution"
+        ]
+      },
+      {
+        "headword_iast": "smrti-rupa",
+        "gloss": "memory-structured appearance",
+        "contextual_sense": "Shankara’s formula marks adhyasa as prior-seen content reappearing elsewhere.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "memory-form cognition",
+          "recollective appearance"
+        ]
+      },
+      {
+        "headword_iast": "paratra purva-drsta-avabhasa",
+        "gloss": "appearance elsewhere of what was previously seen",
+        "contextual_sense": "Classic definitional phrase unifying variant theories under one phenomenological structure.",
+        "grammatical_role": "compound definition phrase",
+        "alternate_glosses": [
+          "elsewhere-appearance of prior object",
+          "transferred phenomenal showing"
+        ]
+      },
+      {
+        "headword_iast": "aviveka-nibandhana",
+        "gloss": "grounded in non-discrimination",
+        "contextual_sense": "Explains causal condition for cross-attribution of self/not-self properties.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "rooted in non-discernment",
+          "undiscriminated basis"
+        ]
+      },
+      {
+        "headword_iast": "para-dharma-avabhasa",
+        "gloss": "appearance of alien properties",
+        "contextual_sense": "Convergence-point across rival definitions of error in the bhashya survey.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "foreign-attribute appearance",
+          "misplaced property-display"
         ]
       }
     ],

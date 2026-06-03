@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "headword_iast": "dva suparna",
+        "gloss": "the two birds motif",
+        "contextual_sense": "Alternative interpretive entry point for the dual structure beyond the immediate adhikarana closure.",
+        "grammatical_role": "scriptural motif phrase",
+        "alternate_glosses": [
+          "two-birds image",
+          "paired avian allegory"
+        ]
+      },
+      {
+        "headword_iast": "sattva-ksetrajna-vyakhya",
+        "gloss": "reading in terms of mind-principle and knower",
+        "contextual_sense": "Competing doctrinal gloss that rearticulates the dual without abandoning ultimate non-dual intent.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "psychic-knower interpretation",
+          "sattva-self exegesis"
+        ]
+      },
+      {
+        "headword_iast": "adhyaropa",
+        "gloss": "provisional superimposition",
+        "contextual_sense": "Bhoga language is treated as pedagogical imputation within avidya-conditioned discourse.",
         "grammatical_role": "noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "didactic attribution",
+          "provisional projection"
+        ]
+      },
+      {
+        "headword_iast": "avidya-vyavahara",
+        "gloss": "transactional domain under ignorance",
+        "contextual_sense": "Explains why enjoyer-language can operate without determining the ultimate referent.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "ignorance-conditioned discourse",
+          "empirical error-domain"
+        ]
+      },
+      {
+        "headword_iast": "akhanda-ksetrajna",
+        "gloss": "undivided knower principle",
+        "contextual_sense": "Final horizon preserved even when provisional dual terminologies are admitted.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "non-dual knower",
+          "indivisible consciousness"
         ]
       }
     ],

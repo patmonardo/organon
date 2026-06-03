@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "sastra-yonitvat",
+        "gloss": "because Brahman is source/ground of scripture",
+        "contextual_sense": "Sutra encapsulates omniscience argument via relation to revealed corpus.",
+        "grammatical_role": "ablative reason phrase",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "from scriptural-source status",
+          "due to revelation-origin relation"
+        ]
+      },
+      {
+        "headword_iast": "sarvajnatva-linga",
+        "gloss": "indicator of omniscience",
+        "contextual_sense": "Scripture-source status functions as linga for Brahman’s all-knowing nature.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "omniscience marker",
+          "all-knowing indicator"
+        ]
+      },
+      {
+        "headword_iast": "sutra-sanksepa",
+        "gloss": "compressed aphoristic statement",
+        "contextual_sense": "Brief line condenses extended argument developed in bhashya.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "terse doctrinal compression",
+          "concise reasoning node"
+        ]
+      },
+      {
+        "headword_iast": "brahma-pramana-niscaya",
+        "gloss": "determination of valid means for Brahman",
+        "contextual_sense": "Locks inquiry into sruti-grounded mode.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "Brahman-proof fixation",
+          "epistemic determination"
         ]
       }
     ],

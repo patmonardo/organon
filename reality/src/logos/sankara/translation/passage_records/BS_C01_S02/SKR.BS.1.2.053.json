@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "dharma-ukti",
+        "gloss": "explicit statement of defining properties",
+        "contextual_sense": "Main proof: sarvajna/sarvavit predicates identify bhuta-yoni as Brahman.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "property statement",
+          "predicate declaration"
+        ]
+      },
+      {
+        "headword_iast": "sarvajna-sarvavit",
+        "gloss": "all-knowing, all-knower",
+        "contextual_sense": "Conscious omniscience markers impossible for inert Pradhana or limited jiva.",
+        "grammatical_role": "paired epithets",
+        "alternate_glosses": [
+          "omniscience pair",
+          "total-knower predicates"
+        ]
+      },
+      {
+        "headword_iast": "bhuta-yoni-brahma-nirnaya",
+        "gloss": "determination of source of beings as Brahman",
+        "contextual_sense": "Siddhanta decision integrating predicate evidence and passage continuity.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "source-principle adjudication",
+          "cosmic-origin Brahman conclusion"
+        ]
+      },
+      {
+        "headword_iast": "prakarana-anvaya",
+        "gloss": "contextual continuity linkage",
+        "contextual_sense": "Maintains referential coherence across cause-statements in Mundaka sequence.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "topic continuity",
+          "sectional connection"
+        ]
+      },
+      {
+        "headword_iast": "moksa-prayojana-vidya",
+        "gloss": "knowledge oriented to liberation",
+        "contextual_sense": "Soteriological framing supports Brahman-reference over cosmological material principle.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "liberation-directed knowledge",
+          "soteriological epistemic frame"
         ]
       }
     ],

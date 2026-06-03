@@ -22,22 +22,41 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "caraṇa-abhidhāna",
+        "gloss": "mention of a pada or quarter",
+        "contextual_sense": "The earlier section’s quarter-structure is used to carry meaning forward into this passage.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": ["pada reference", "quarter-mention"]
+      },
+      {
+        "headword_iast": "jyotis-brahma-grahaṇa",
+        "gloss": "taking jyotis as Brahman",
+        "contextual_sense": "The readied conclusion is that the luminous term stands for the absolute, not a physical lamp or star.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "Brahman-light reading",
+          "supreme-luminosity interpretation"
         ]
+      },
+      {
+        "headword_iast": "catura-pāda-smṛti",
+        "gloss": "memory of the four-footed Brahman",
+        "contextual_sense": "The prior depiction of Brahman supplies the continuity needed for the current passage.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "four-quarter recollection",
+          "earlier Brahman image"
+        ]
+      },
+      {
+        "headword_iast": "pratipatti-saukarya",
+        "gloss": "ease of apprehension",
+        "contextual_sense": "The contextual reading is justified because the scripture is teaching, not merely naming.",
+        "grammatical_role": "abstract noun",
+        "alternate_glosses": ["interpretive ease", "pedagogical accessibility"]
       }
     ],
-    "argument_tags": [
-      "response",
-      "resolution",
-      "definition",
-      "example"
-    ]
+    "argument_tags": ["response", "resolution", "definition", "example"]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",

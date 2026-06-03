@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "ānandamaya-śaṅkā",
+        "gloss": "doubt regarding anandamaya referent",
+        "contextual_sense": "Core uncertainty: whether the term points to supreme Brahman or a conditioned inner sheath-layer.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "anandamaya ambiguity",
+          "referential doubt"
+        ]
+      },
+      {
+        "headword_iast": "kośa-anukrama",
+        "gloss": "sequence of sheaths",
+        "contextual_sense": "Annamaya through vijnanamaya progression supplies the opponent’s layering framework.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "sheath progression",
+          "layered self-model"
+        ]
+      },
+      {
+        "headword_iast": "priya-śiras-ādi-rūpaṇa",
+        "gloss": "description via priya-head etc.",
+        "contextual_sense": "Part-structured bliss-body language is cited to argue non-absolute status.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "priya-headed structuring",
+          "composite-form depiction"
+        ]
+      },
+      {
+        "headword_iast": "śārīratva-liṅga",
+        "gloss": "indicator of embodied/structured status",
+        "contextual_sense": "Opponent reads body-member metaphors as signs of derivative entityhood.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "corporeality marker",
+          "structured-self indicator"
+        ]
+      },
+      {
+        "headword_iast": "prakṛta-brahma-smṛti",
+        "gloss": "recall of previously introduced Brahman",
+        "contextual_sense": "Counter-pressure in the same passage keeps open a higher referent despite sheath language.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "topic-memory of Brahman",
+          "prior-subject retention"
         ]
       }
     ],

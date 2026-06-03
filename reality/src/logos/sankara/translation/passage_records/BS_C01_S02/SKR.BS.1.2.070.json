@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "ata eva",
+        "gloss": "therefore, for that very reason",
+        "contextual_sense": "Sutra connective indicating direct dependence on already established reasoning.",
+        "grammatical_role": "inferential connective phrase",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "hence",
+          "on that basis itself"
+        ]
+      },
+      {
+        "headword_iast": "na devata bhutam ca",
+        "gloss": "not deity and not elemental fire",
+        "contextual_sense": "Aphoristic exclusion of both residual non-Brahman options.",
+        "grammatical_role": "negative coordinate phrase",
+        "alternate_glosses": [
+          "neither deity nor element-fire",
+          "dual-candidate denial"
+        ]
+      },
+      {
+        "headword_iast": "purva-hetu-anusandhana",
+        "gloss": "follow-through of prior reasons",
+        "contextual_sense": "Sutra compresses the inherited argumentative chain into final exclusion statement.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "prior-proof continuation",
+          "reason-chain integration"
+        ]
+      },
+      {
+        "headword_iast": "vaisvanara-siddhanta-sthirikarana",
+        "gloss": "stabilization of Vaisvanara doctrinal conclusion",
+        "contextual_sense": "Locks the adhikarana on Ishvara-reference by removing remaining alternatives.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "final Vaisvanara settlement",
+          "conclusion consolidation"
         ]
       }
     ],

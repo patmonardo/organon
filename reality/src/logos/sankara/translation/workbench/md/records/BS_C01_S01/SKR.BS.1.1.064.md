@@ -33,11 +33,31 @@ Attainment language is explained as removal of false identification, not product
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **bheda-vyapadeśa**
+  - Gloss: explicit predication of difference
+  - Context: “Rasa” and “attainer of rasa” are read as pedagogical duality markers.
+  - Grammar: compound noun
+  - Alternate glosses: difference-statement, dual predication
+- **rasa-labdhi-vākya**
+  - Gloss: statement of attaining bliss-essence
+  - Context: Attainment grammar implies seeker and sought are provisionally distinct in instruction.
+  - Grammar: compound noun
+  - Alternate glosses: bliss-attainment clause, rasa-acquisition expression
+- **avidyā-kṛta-jīvatva**
+  - Gloss: jiva-status produced by ignorance
+  - Context: Empirical individuality is preserved as superimposed, not ultimate subject-truth.
+  - Grammar: compound noun
+  - Alternate glosses: ignorance-conditioned individuality, superimposed finite-selfhood
+- **ātma-lābha-vyavahāra**
+  - Gloss: discourse of “attaining the Self”
+  - Context: Interpreted as removal of error, not production or acquisition of a new entity.
+  - Grammar: compound noun
+  - Alternate glosses: self-attainment idiom, realization-language usage
+- **vyavahāra-paramārtha-samanvaya**
+  - Gloss: coordination of empirical and ultimate standpoints
+  - Context: Bhashya keeps transactional duality and final non-duality from collapsing into confusion.
+  - Grammar: compound noun
+  - Alternate glosses: two-level reconciliation, empirical-ultimate alignment
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

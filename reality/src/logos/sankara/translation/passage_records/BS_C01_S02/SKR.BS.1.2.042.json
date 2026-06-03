@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "anavasthiti",
+        "gloss": "lack of stable abiding",
+        "contextual_sense": "Primary exclusion criterion against reflection and other non-stable ocular candidates.",
+        "grammatical_role": "abstract noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "instability",
+          "non-fixed presence"
+        ]
+      },
+      {
+        "headword_iast": "asambhava",
+        "gloss": "impossibility",
+        "contextual_sense": "Applied where candidate predicates cannot coherently be sustained.",
+        "grammatical_role": "abstract noun",
+        "alternate_glosses": [
+          "infeasibility",
+          "doctrinal impossibility"
+        ]
+      },
+      {
+        "headword_iast": "chayatma-paksa",
+        "gloss": "reflection-self hypothesis",
+        "contextual_sense": "Rejected because reflected appearance lacks continuity and qualifying doctrinal predicates.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "shadow-self view",
+          "reflected-image candidate"
+        ]
+      },
+      {
+        "headword_iast": "devatatma-vikalpa",
+        "gloss": "deity-self candidate option",
+        "contextual_sense": "Examined and set aside due to mismatch with passage-wide attribute set.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "deity referent option",
+          "divine candidate"
+        ]
+      },
+      {
+        "headword_iast": "isvara-ekasesa",
+        "gloss": "Ishvara as sole remaining viable referent",
+        "contextual_sense": "After eliminative filtering, only Supreme Self remains hermeneutically stable.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "exclusive Ishvara remainder",
+          "single-valid referent outcome"
         ]
       }
     ],

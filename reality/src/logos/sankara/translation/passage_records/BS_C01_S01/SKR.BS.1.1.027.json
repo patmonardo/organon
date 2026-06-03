@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "tat tu samanvayāt",
+        "gloss": "but that (Brahman) from convergence",
+        "contextual_sense": "Sutra verdict: Vedanta corpus coheres around Brahman as principal purport.",
+        "grammatical_role": "sutra phrase",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "Brahman through harmonized purport",
+          "nondual convergence determination"
+        ]
+      },
+      {
+        "headword_iast": "tu-śabda-vyāvṛtti",
+        "gloss": "contrastive exclusion via tu",
+        "contextual_sense": "Indicates rejection of prior kriyarthatva-based objection.",
+        "grammatical_role": "grammatical-doctrinal term",
+        "alternate_glosses": [
+          "objection exclusion marker",
+          "contrastive turn"
+        ]
+      },
+      {
+        "headword_iast": "samanvaya-hetu",
+        "gloss": "reason of textual convergence",
+        "contextual_sense": "Serves as decisive interpretive criterion in this adhikarana.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "harmonization reason",
+          "purport-convergence ground"
+        ]
+      },
+      {
+        "headword_iast": "vedānta-tātparya-niścaya",
+        "gloss": "fixing Vedanta’s intended meaning",
+        "contextual_sense": "Establishes Brahman as autonomous revelatory object of Upanishads.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "Upanishadic intent determination",
+          "Vedanta purport fixation"
         ]
       }
     ],

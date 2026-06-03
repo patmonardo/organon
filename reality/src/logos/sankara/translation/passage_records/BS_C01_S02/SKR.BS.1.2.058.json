@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "nirantara-sarga-vyakhya",
+        "gloss": "reading as uninterrupted cosmogenesis",
+        "contextual_sense": "Alternative interpretation resisting immediate cosmic-form application to bhuta-yoni.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "continuous creation reading",
+          "unbroken emanation interpretation"
+        ]
+      },
+      {
+        "headword_iast": "hiranyagarbha-paksa",
+        "gloss": "Hiranyagarbha-candidate interpretation",
+        "contextual_sense": "Universal-form descriptors are reallocated to a derivative cosmic purusa.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "cosmic-creator candidate",
+          "subordinate cosmic self view"
+        ]
+      },
+      {
+        "headword_iast": "vikara-purusa",
+        "gloss": "evolved/manifest cosmic person",
+        "contextual_sense": "Purvapaksa term for non-ultimate bearer of universal imagery.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "manifest cosmic person",
+          "derivative universal agent"
+        ]
+      },
+      {
+        "headword_iast": "purvapaksa-vikalpa",
+        "gloss": "alternative objectional construal",
+        "contextual_sense": "Methodic counter-reading tested before final sutra decision.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "counter-proposal",
+          "alternative interpretive branch"
+        ]
+      },
+      {
+        "headword_iast": "rupa-upanyasa-pratisedha",
+        "gloss": "denial of immediate cosmic-form application",
+        "contextual_sense": "Objection rejects linking the form-passage directly to prior bhuta-yoni referent.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "form-link denial",
+          "cosmic-body attribution refusal"
         ]
       }
     ],

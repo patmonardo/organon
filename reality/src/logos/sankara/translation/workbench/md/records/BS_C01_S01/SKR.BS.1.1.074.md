@@ -33,11 +33,26 @@ Sutra seal for taddharma-upadesha criterion.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **antaḥ tad-dharma-upadeśāt**
+  - Gloss: the inner one, because those attributes are taught
+  - Context: Sutra applies attribute-criterion to identify inner sun/eye person with Brahman.
+  - Grammar: sutra reason phrase
+  - Alternate glosses: inner referent by attribute teaching, taddharma-based determination
+- **antaḥ-puruṣa-brahma-niścaya**
+  - Gloss: fixing inner person as Brahman
+  - Context: Aphoristic verdict resolves locative-form ambiguity in favor of supreme indweller.
+  - Grammar: compound noun
+  - Alternate glosses: inner-indweller determination, solar-eye Brahman adjudication
+- **liṅga-sāra**
+  - Gloss: core inferential marker
+  - Context: Specific predicates function as semantic anchors stronger than surface imagery.
+  - Grammar: compound noun
+  - Alternate glosses: decisive sign-core, marker-based resolution
+- **upāsanā-rūpa-anugraha**
+  - Gloss: concessive form for meditation
+  - Context: Locative portrayal is retained as contemplative aid after referent determination.
+  - Grammar: compound noun
+  - Alternate glosses: worship-form concession, meditative representation allowance
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

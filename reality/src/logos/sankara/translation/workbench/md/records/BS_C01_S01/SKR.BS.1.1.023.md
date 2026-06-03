@@ -33,11 +33,31 @@ Concludes by preserving both purposiveness and truth-disclosure without collapsi
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **kriyārthatva-sīmā**
+  - Gloss: limit of action-centered hermeneutics
+  - Context: Bhashya narrows Mimamsa claim by preserving genuine vastu-upadesha domains.
+  - Grammar: compound noun
+  - Alternate glosses: boundary of ritual hermeneutic, action-theory limit
+- **vastu-upadeśa**
+  - Gloss: instruction about reality as such
+  - Context: Affirms non-injunctive teaching function in Vedanta statements.
+  - Grammar: compound noun
+  - Alternate glosses: reality-disclosure, object-teaching
+- **nivṛtti-vākya**
+  - Gloss: cessation-oriented statement
+  - Context: Used to show scripture can negate/resolve rather than command action.
+  - Grammar: compound noun
+  - Alternate glosses: withdrawal statement, sublative sentence
+- **pravṛtti-vidhi-vyatireka**
+  - Gloss: distinct from action-injunction
+  - Context: Separates Upanishadic self-teaching from ritual imperatives.
+  - Grammar: compound noun
+  - Alternate glosses: non-injunctive difference, beyond action command
+- **ātma-vastu-pratipatti**
+  - Gloss: ascertainment of Self-reality
+  - Context: Marks Vedanta’s positive cognitive result outside karmic structure.
+  - Grammar: compound noun
+  - Alternate glosses: self-reality cognition, Atman ascertainment
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

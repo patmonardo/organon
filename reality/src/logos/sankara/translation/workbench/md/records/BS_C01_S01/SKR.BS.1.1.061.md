@@ -33,11 +33,26 @@ Sutra affirms mantra-brahmana referential identity.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **māntra-varṇikam eva ca gīyate**
+  - Gloss: indeed it is sung as the very one described in the mantra
+  - Context: Sutra seals identity between anandamaya referent and earlier mantra-defined Brahman.
+  - Grammar: sutra phrase
+  - Alternate glosses: mantra-described same referent, mantric identity affirmation
+- **varṇika-sāmya**
+  - Gloss: agreement with prior descriptive wording
+  - Context: Shared descriptors across passages are treated as strong referential evidence.
+  - Grammar: compound noun
+  - Alternate glosses: descriptive concordance, qualifier alignment
+- **prastuta-brahma-anvaya**
+  - Gloss: continuity with currently discussed Brahman
+  - Context: The already-established subject remains operative through the anandamaya discussion.
+  - Grammar: compound noun
+  - Alternate glosses: present-topic Brahman linkage, ongoing subject continuity
+- **sūtra-parisamāpti-lakṣaṇa**
+  - Gloss: marker of concluding determination
+  - Context: Functions as closure-sign for this segment of the anandamaya adjudication chain.
+  - Grammar: compound noun
+  - Alternate glosses: closure indicator, terminal adjudicative marker
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

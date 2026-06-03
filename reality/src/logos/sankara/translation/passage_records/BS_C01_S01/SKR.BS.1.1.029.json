@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "guṇa-sāmya",
+        "gloss": "equilibrium of gunas",
+        "contextual_sense": "Used to rebut claim that Pradhana could host operative omniscient cognition in causal state.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "guna equilibrium",
+          "pre-differentiated quality balance"
+        ]
+      },
+      {
+        "headword_iast": "sarvajñatva-asambhava",
+        "gloss": "impossibility of omniscience (for Pradhana)",
+        "contextual_sense": "Demonstrates mismatch between inert equilibrium and all-knowing causality.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "omniscience non-fit",
+          "all-knowingness impossibility"
+        ]
+      },
+      {
+        "headword_iast": "jñāna-śakti-vāda-nirāsa",
+        "gloss": "rejection of latent-knowledge-power workaround",
+        "contextual_sense": "Bhashya denies that mere potentiality rescues Pradhana from acetanatva objection.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "latent cognition thesis denial",
+          "potential omniscience refutation"
+        ]
+      },
+      {
+        "headword_iast": "nitya-jñāna",
+        "gloss": "eternal knowledge",
+        "contextual_sense": "Prepared as positive model for Ishvara’s omniscience against episodic cognition accounts.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "permanent cognition",
+          "ever-present knowledge"
+        ]
+      },
+      {
+        "headword_iast": "caitanya-lakṣaṇa-kāraṇa",
+        "gloss": "cause marked by consciousness",
+        "contextual_sense": "Reinforces that jagat-cause requires sentience, not matter-equilibrium.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "consciousness-marked source",
+          "aware causal principle"
         ]
       }
     ],

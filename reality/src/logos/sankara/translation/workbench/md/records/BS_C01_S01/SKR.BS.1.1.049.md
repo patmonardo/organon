@@ -33,11 +33,31 @@ Direct scriptural naming supplements prior inferential-hermeneutic exclusions.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **svaśabda-śruti**
+  - Gloss: direct naming testimony
+  - Context: Bhashya cites explicit scriptural wording naming omniscient Ishvara as causal source.
+  - Grammar: compound noun
+  - Alternate glosses: self-word revelation, direct lexical testimony
+- **sarvajña-īśvara-vacana**
+  - Gloss: statement of omniscient Lord
+  - Context: Positive theological naming supplements prior inferential eliminations.
+  - Grammar: compound noun
+  - Alternate glosses: all-knowing Lord declaration, Ishvara naming clause
+- **śvetāśvatara-mantra-pramāṇa**
+  - Gloss: evidence from Svetasvatara mantra
+  - Context: Cross-Upanishadic citation strengthens causal conclusion with explicit mantra authority.
+  - Grammar: compound noun
+  - Alternate glosses: Svetasvatara textual warrant, mantric confirmation
+- **karaṇādhipādhipa**
+  - Gloss: lord of lords of instruments
+  - Context: Phrase emphasizes transcendent sovereignty incompatible with Pradhana mechanism.
+  - Grammar: compound noun
+  - Alternate glosses: supreme over instrumental powers, meta-lord designation
+- **śruti-sākṣāt-pratipatti**
+  - Gloss: immediate ascertainment from revelation
+  - Context: Here the text does not merely imply but directly states the causal subject.
+  - Grammar: compound noun
+  - Alternate glosses: direct revelatory determination, explicit scriptural ascertainment
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

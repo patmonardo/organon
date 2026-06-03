@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "māntra-varṇikam eva ca gīyate",
+        "gloss": "indeed it is sung as the very one described in the mantra",
+        "contextual_sense": "Sutra seals identity between anandamaya referent and earlier mantra-defined Brahman.",
+        "grammatical_role": "sutra phrase",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "mantra-described same referent",
+          "mantric identity affirmation"
+        ]
+      },
+      {
+        "headword_iast": "varṇika-sāmya",
+        "gloss": "agreement with prior descriptive wording",
+        "contextual_sense": "Shared descriptors across passages are treated as strong referential evidence.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "descriptive concordance",
+          "qualifier alignment"
+        ]
+      },
+      {
+        "headword_iast": "prastuta-brahma-anvaya",
+        "gloss": "continuity with currently discussed Brahman",
+        "contextual_sense": "The already-established subject remains operative through the anandamaya discussion.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "present-topic Brahman linkage",
+          "ongoing subject continuity"
+        ]
+      },
+      {
+        "headword_iast": "sūtra-parisamāpti-lakṣaṇa",
+        "gloss": "marker of concluding determination",
+        "contextual_sense": "Functions as closure-sign for this segment of the anandamaya adjudication chain.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "closure indicator",
+          "terminal adjudicative marker"
         ]
       }
     ],

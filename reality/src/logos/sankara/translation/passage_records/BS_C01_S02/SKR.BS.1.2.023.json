@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
+        "headword_iast": "prakarana",
+        "gloss": "ongoing topical context",
+        "contextual_sense": "Continuity from prior Brahman-discourse constrains the meaning of atta.",
         "grammatical_role": "noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "contextual frame",
+          "topic sequence"
+        ]
+      },
+      {
+        "headword_iast": "prakrta-grahana-nyaya",
+        "gloss": "rule of retaining the established referent",
+        "contextual_sense": "Hermeneutic principle favoring previously introduced Brahman unless compelled otherwise.",
+        "grammatical_role": "compound hermeneutic term",
+        "alternate_glosses": [
+          "default-context rule",
+          "carry-forward referent principle"
+        ]
+      },
+      {
+        "headword_iast": "durvijnyatva-linga",
+        "gloss": "indicator of difficult knowability",
+        "contextual_sense": "Mark used to identify the referent as transcendent Self rather than a finite agent.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "hard-to-know marker",
+          "transcendence indicator"
+        ]
+      },
+      {
+        "headword_iast": "paramatma-linga",
+        "gloss": "indicator pointing to Supreme Self",
+        "contextual_sense": "Scriptural sign cluster validating Brahman-reference in this context.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "Supreme referent marker",
+          "Brahman-sign"
+        ]
+      },
+      {
+        "headword_iast": "anvaya-samarthya",
+        "gloss": "coherence by connected reading",
+        "contextual_sense": "Secures interpretive continuity between surrounding mantras and the contested phrase.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "contextual fit",
+          "connectional force"
         ]
       }
     ],

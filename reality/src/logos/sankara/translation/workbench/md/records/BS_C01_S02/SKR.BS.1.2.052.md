@@ -33,11 +33,31 @@ Frames the bhuta-yoni debate by exploiting ambiguity around 'akshara' and cause-
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
+- **bhuta-yoni**
+  - Gloss: source/womb of beings
+  - Context: Central disputed referent in Mundaka: whether ultimate source is Brahman, Pradhana, or other.
+  - Grammar: compound noun
+  - Alternate glosses: origin of entities, cosmic source-principle
+- **aksara**
+  - Gloss: imperishable principle
+  - Context: Term in the passage that triggers candidate ambiguity in purvapaksa framing.
   - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+  - Alternate glosses: imperishable, non-decaying principle
+- **adrsyatvadi-guna**
+  - Gloss: attributes such as invisibility and intangibility
+  - Context: Used in objection to support Pradhana-style reading before siddhanta refinement.
+  - Grammar: compound noun
+  - Alternate glosses: unseenness predicate cluster, non-sensory attribute set
+- **para-apara-vidya-vibhaga**
+  - Gloss: division into higher and lower knowledge
+  - Context: Purvapaksa attempts to relocate highest referent via vidya-layer separation.
+  - Grammar: compound noun
+  - Alternate glosses: two-knowledge architecture, higher-lower epistemic split
+- **purvapaksa**
+  - Gloss: prima facie thesis
+  - Context: Introduces Pradhana/jiva-leaning interpretation for subsequent refutation.
+  - Grammar: noun
+  - Alternate glosses: provisional objection, initial candidate thesis
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

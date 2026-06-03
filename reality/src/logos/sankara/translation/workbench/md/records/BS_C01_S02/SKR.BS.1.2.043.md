@@ -33,11 +33,26 @@ Sutra close of the exclusion argument.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **anavasthiter**
+  - Gloss: because of instability
+  - Context: Sutra reason excluding non-Brahman candidates that cannot remain as fixed referent.
+  - Grammar: ablative reason phrase
+  - Alternate glosses: from non-abidingness, due to lack of stability
+- **asambhavac ca**
+  - Gloss: and because of impossibility
+  - Context: Second reason dismissing options that cannot host the required attributes.
+  - Grammar: causal phrase
+  - Alternate glosses: further due to infeasibility, also from impossibility
+- **netarah**
+  - Gloss: not the other (alternative) referent
+  - Context: Aphoristic elimination of all non-Ishvara options in this context.
+  - Grammar: negative referential pronoun
+  - Alternate glosses: none of the alternatives, not any other candidate
+- **nirakarana-krama**
+  - Gloss: sequence of eliminative refutation
+  - Context: Sutra preserves the bhashya’s method of rejecting by stability and compatibility tests.
+  - Grammar: compound noun
+  - Alternate glosses: stepwise exclusion, eliminative method
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

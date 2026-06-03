@@ -33,11 +33,26 @@ Meter-language is integrated as symbolic concentration method, not reduction to 
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **chandas-bhāṣya-saṃśaya**
+  - Gloss: doubt concerning meter-language
+  - Context: The objection is that reference to chandas seems to reduce the passage to prosody rather than doctrine.
+  - Grammar: compound noun
+  - Alternate glosses: meter ambiguity, chandas dispute
+- **gāyatrī-upāsanā**
+  - Gloss: contemplation through the Gayatri
+  - Context: The Bhashya treats the hymn as a concentrated contemplative support, not mere syllabic form.
+  - Grammar: compound noun
+  - Alternate glosses: Gayatri meditation, contemplative meter
+- **ceto-arpana**
+  - Gloss: fixing or placing the mind
+  - Context: The meter functions as a device for steadying attention toward Brahman.
+  - Grammar: compound noun
+  - Alternate glosses: mind-gathering, attention placement
+- **pratika-lakṣaṇa**
+  - Gloss: symbolic marker
+  - Context: Meter here is read as a sign-form that points beyond itself.
+  - Grammar: compound noun
+  - Alternate glosses: symbol-sign, iconic indicator
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

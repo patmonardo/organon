@@ -33,11 +33,31 @@ Liberation pedagogy becomes a semantic test: wrong referent would invalidate scr
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **tan-niṣṭhasya mokṣa-upadeśa**
+  - Gloss: liberation taught for one established in that
+  - Context: Release-instruction functions as a referential test: object must be conscious self-reality.
+  - Grammar: compound phrase
+  - Alternate glosses: abidance-linked liberation teaching, moksha instruction criterion
+- **śvetaketu-upadeśa-krama**
+  - Gloss: instructional sequence to Svetaketu
+  - Context: Pedagogical arc tracks from sat declaration to personal identity assimilation.
+  - Grammar: compound noun
+  - Alternate glosses: Svetaketu teaching progression, student-directed identity pedagogy
+- **anupapatti-heya-vastu**
+  - Gloss: incoherence of teaching a rejectable object as self
+  - Context: If referent were inert matter, scripture would have to mark it as discardable, not ultimate.
+  - Grammar: compound noun
+  - Alternate glosses: rejectable-object inconsistency, heya-object contradiction
+- **śāstra-phala-saṅgati**
+  - Gloss: fit between scripture and promised fruit
+  - Context: Semantic choice must preserve liberation outcome, not merely lexical possibility.
+  - Grammar: compound noun
+  - Alternate glosses: text-fruit coherence, doctrinal payoff alignment
+- **caitanya-viṣaya-niyama**
+  - Gloss: restriction to conscious referent
+  - Context: Moksha pedagogy narrows admissible meaning-field to sentient absolute.
+  - Grammar: compound noun
+  - Alternate glosses: awareness-referent constraint, sentient-object restriction
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

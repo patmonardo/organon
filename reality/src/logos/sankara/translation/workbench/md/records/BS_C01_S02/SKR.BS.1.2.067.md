@@ -33,11 +33,31 @@ Meditative superimposition structure preserves ritual surface while fixing metap
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **drsti-upadesa**
+  - Gloss: instruction of contemplative seeing
+  - Context: Key reply: passage teaches Brahman-vision through jatharagni as meditative support.
+  - Grammar: compound noun
+  - Alternate glosses: vision-instruction, superimpositional meditation teaching
+- **jathara-alambana-upasana**
+  - Gloss: meditation using gastric fire as support
+  - Context: Digestive fire is retained as upadhi/alambana, not as final ontological referent.
+  - Grammar: compound noun
+  - Alternate glosses: jatharagni-based contemplation, internal-fire support meditation
+- **paramesvara-drsti**
+  - Gloss: cognition of Supreme in a support-object
+  - Context: Hermeneutic mechanism resolving lexical fire-language into Brahman-upasana.
+  - Grammar: compound noun
+  - Alternate glosses: Ishvara-vision, Supreme-superimposition cognition
+- **guna-asambhava**
+  - Gloss: impossibility of full predicate-fit otherwise
+  - Context: Cosmic personhood predicates exceed literal digestive-fire interpretation.
+  - Grammar: compound noun
+  - Alternate glosses: attribute mismatch, predicate infeasibility
+- **purusa-patha-samarthana**
+  - Gloss: support from recensional reading of person-form
+  - Context: Textual tradition reading him as purusa reinforces Brahman-level interpretation.
+  - Grammar: compound noun
+  - Alternate glosses: person-form textual support, purusa-reading corroboration
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

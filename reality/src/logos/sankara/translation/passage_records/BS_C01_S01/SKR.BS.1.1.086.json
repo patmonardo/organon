@@ -22,19 +22,38 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "jyotis-caraṇa-abidhāna",
+        "gloss": "light identified through prior quarter-mention",
+        "contextual_sense": "The short sutra compresses the previous argument by linking jyotis back to the established Brahman frame.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "light-quarter linkage",
+          "context-supported jyotis"
         ]
+      },
+      {
+        "headword_iast": "liṅga-anusaraṇa",
+        "gloss": "following the indicator",
+        "contextual_sense": "The rule is not verbal habit but sign-led continuity from the earlier section.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": ["marker-following", "sign-based inference"]
+      },
+      {
+        "headword_iast": "ālocya-pratibhā",
+        "gloss": "discerned meaning",
+        "contextual_sense": "What is seen here is not a new object but the same doctrinal light in a different verbal frame.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": ["insightful meaning", "apprehended sense"]
+      },
+      {
+        "headword_iast": "sūtra-saṃkṣepa-siddhi",
+        "gloss": "successful sutra compression",
+        "contextual_sense": "The aphorism preserves the earlier reasoning without repeating it at length.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": ["concise doctrinal success", "abbreviated proof"]
       }
     ],
-    "argument_tags": [
-      "resolution"
-    ]
+    "argument_tags": ["resolution"]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",

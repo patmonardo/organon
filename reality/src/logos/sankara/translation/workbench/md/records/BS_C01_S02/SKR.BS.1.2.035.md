@@ -33,11 +33,26 @@ Sutra compression of the upapatti-based conclusion.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **antarah**
+  - Gloss: the inner one
+  - Context: Sutra identifies the eye-interior referent as transcendent indweller, not incidental image.
+  - Grammar: adjectival substantive
+  - Alternate glosses: interior indweller, inner presence
+- **upapatter iti**
+  - Gloss: because of explanatory fit
+  - Context: Causal marker that grounds the decision in predicate coherence from preceding bhashya.
+  - Grammar: ablative reason phrase
+  - Alternate glosses: on account of suitability, from coherent application
+- **aksi-antah-purusa**
+  - Gloss: person within the eye
+  - Context: Now decisively read as Brahman/Ishvara by attribute adequacy.
+  - Grammar: compound noun
+  - Alternate glosses: intra-ocular person, eye-indweller
+- **sutra-nirnaya**
+  - Gloss: aphoristic doctrinal determination
+  - Context: Brief line that seals the multi-candidate debate from record 033-034.
+  - Grammar: compound noun
+  - Alternate glosses: terse verdict, aphoristic resolution
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

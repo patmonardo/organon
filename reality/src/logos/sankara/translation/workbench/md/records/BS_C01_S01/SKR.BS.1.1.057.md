@@ -33,11 +33,26 @@ Sutra settles the suffix dispute in favor of Brahman-reference.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **vikāra-śabdāt na iti cet**
+  - Gloss: if from modification-word, no
+  - Context: Sutra voices objection that mayat implies producthood.
+  - Grammar: conditional argumentative phrase
+  - Alternate glosses: modification objection clause, vikara challenge statement
+- **na prācuryāt**
+  - Gloss: no, because of abundance sense
+  - Context: Resolution affirms plenitude semantics for anandamaya.
+  - Grammar: reason phrase
+  - Alternate glosses: denied due to plenitude, rejected via abundance reading
+- **śabda-śakti-vikalpa**
+  - Gloss: alternative semantic power of a term
+  - Context: A single morphological form can license more than one meaning by context.
+  - Grammar: compound noun
+  - Alternate glosses: polyvalent lexical force, semantic option structure
+- **brahma-viṣayatā-rakṣaṇa**
+  - Gloss: preservation of Brahman-reference
+  - Context: Suffix dispute is resolved without sacrificing the already-fixed supreme topic.
+  - Grammar: compound noun
+  - Alternate glosses: Brahman-topic protection, referent continuity defense
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

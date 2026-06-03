@@ -22,13 +22,33 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "anupapattes tu",
+        "gloss": "because of non-applicability, indeed",
+        "contextual_sense": "Sutra formula joining inferential exclusion (anupapatti) with restrictive contrast (tu).",
+        "grammatical_role": "sutra phrase",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "on grounds of mismatch",
+          "by reason of incoherence"
+        ]
+      },
+      {
+        "headword_iast": "na sarirah",
+        "gloss": "not the embodied one",
+        "contextual_sense": "Compressed negation of jiva-as-upasya thesis in this adhikarana step.",
+        "grammatical_role": "negated nominal predication",
+        "alternate_glosses": [
+          "embodied self excluded",
+          "non-jiva referent"
+        ]
+      },
+      {
+        "headword_iast": "siddhanta-nigamana",
+        "gloss": "concluding doctrinal closure",
+        "contextual_sense": "Sutra concise closure of the immediately preceding explanatory argument.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "conclusion marker",
+          "final inferential seal"
         ]
       }
     ],

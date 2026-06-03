@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "asminn asya ca tad-yogaṃ śāsti",
+        "gloss": "and in this, scripture teaches his union with that",
+        "contextual_sense": "Sutra finalizes identity-instruction as decisive indicator for anandamaya referent.",
+        "grammatical_role": "sutra phrase",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "this-context identity teaching",
+          "that-union doctrinal instruction"
+        ]
+      },
+      {
+        "headword_iast": "tad-yoga-liṅga",
+        "gloss": "indicator from identity/union teaching",
+        "contextual_sense": "Instructional fruit becomes semantic criterion for referent determination.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "union-teaching marker",
+          "assimilation sign"
+        ]
+      },
+      {
+        "headword_iast": "abhaya-phala-sākṣya",
+        "gloss": "testimony from fearlessness-result",
+        "contextual_sense": "Promised fearlessness corroborates Brahman-reference over lower ontic candidates.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "fearlessness evidence",
+          "result-based witness"
+        ]
+      },
+      {
+        "headword_iast": "adhikaraṇa-samāpti",
+        "gloss": "closure of topical unit",
+        "contextual_sense": "Marks completion of the anandamaya adjudication cycle in the sutra chain.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "topic conclusion",
+          "argumental closure"
         ]
       }
     ],

@@ -33,11 +33,26 @@ Prepares the subsequent sutra argument chain.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **kutaś ca na pradhānaṃ jagataḥ kāraṇam**
+  - Gloss: what further denies Pradhana as world-cause?
+  - Context: Question-form launches the sutra that formalizes cross-text convergence reasoning.
+  - Grammar: interrogative phrase
+  - Alternate glosses: why not Pradhana as cosmic cause?, next exclusion query
+- **sūtra-praveśa-praśna**
+  - Gloss: entry question before aphoristic decision
+  - Context: Transitional prompt tightens focus from discourse argument to canonical sutra closure.
+  - Grammar: compound noun
+  - Alternate glosses: pre-sutra interrogative, decision-gateway question
+- **pramāṇa-saṅkalana-krama**
+  - Gloss: sequenced accumulation of evidence
+  - Context: Shows method of stacked reasons rather than one-shot refutation.
+  - Grammar: compound noun
+  - Alternate glosses: layered proof order, cumulative warrant sequence
+- **adhikaraṇa-gati-parivarta**
+  - Gloss: shift in argumentative motion
+  - Context: Moves from sleep-based indicator to corpus-wide trajectory principle.
+  - Grammar: compound noun
+  - Alternate glosses: topic-motion shift, reasoning-vector transition
 
 ## QA Uncertainty Notes
 - Curated in contiguous S01 pass with stable inferential-tag schema.

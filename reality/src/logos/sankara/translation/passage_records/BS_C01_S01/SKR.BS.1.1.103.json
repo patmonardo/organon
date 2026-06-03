@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "jiva-mukhya-prana-lingan na iti cet",
+        "gloss": "if denied due to jiva and main-prana indicators",
+        "contextual_sense": "Sutra acknowledges the objection from mixed signs before integrating them.",
+        "grammatical_role": "conditional sutra phrase",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "mixed-marker objection clause",
+          "jiva-prana denial premise"
+        ]
+      },
+      {
+        "headword_iast": "nopasa-traividhyat",
+        "gloss": "no, because of threefold upasana",
+        "contextual_sense": "Tripartite contemplative framing reconciles the indicator plurality.",
+        "grammatical_role": "reason phrase",
+        "alternate_glosses": [
+          "denial via triple contemplation",
+          "three-mode resolution"
+        ]
+      },
+      {
+        "headword_iast": "ashritatvad iha tadyogat",
+        "gloss": "because they are dependent and connected with That here",
+        "contextual_sense": "Non-Brahman indicators are subordinated as dependent expressions of the same ultimate referent.",
+        "grammatical_role": "reason phrase",
+        "alternate_glosses": [
+          "dependent linkage reason",
+          "That-connectedness criterion"
+        ]
+      },
+      {
+        "headword_iast": "samanvaya-parisamapti",
+        "gloss": "completion of integrative reconciliation",
+        "contextual_sense": "Final sutra closes the Kausitaki sequence by preserving one referent across layered language.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "harmonization closure",
+          "integration finale"
         ]
       }
     ],

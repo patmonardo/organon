@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "sastra-yonitva-anumana",
+        "gloss": "inference from scripture-source character",
+        "contextual_sense": "Veda’s magnitude and coherence imply an omniscient origin.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "scripture-source inference",
+          "Veda-origin argument"
+        ]
+      },
+      {
+        "headword_iast": "sarvajna-sarvasakti-yoni",
+        "gloss": "source endowed with omniscience and omnipotence",
+        "contextual_sense": "Only such a source can ground exhaustive multi-domain revelation.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "all-knowing all-powerful source",
+          "complete-cognition source"
+        ]
+      },
+      {
+        "headword_iast": "rgvedadi-sastra-mahattva",
+        "gloss": "vast scope of Vedic corpus",
+        "contextual_sense": "Breadth of scriptural teaching is used as evidentiary pressure for Brahman-source.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "Vedic magnitude argument",
+          "scriptural vastness marker"
+        ]
+      },
+      {
+        "headword_iast": "asarvajna-karana-nirasa",
+        "gloss": "exclusion of non-omniscient causes",
+        "contextual_sense": "Inferential elimination of finite or inert source candidates.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "limited-source rejection",
+          "non-omniscient cause denial"
+        ]
+      },
+      {
+        "headword_iast": "brahma-karanatva-samarthana",
+        "gloss": "support for Brahman as causal source",
+        "contextual_sense": "Record strengthens janmadi-laksana via scripture-origin reasoning.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "Brahman-cause reinforcement",
+          "causal identity corroboration"
         ]
       }
     ],

@@ -33,11 +33,31 @@ Soteriological destination evidence determines identity of referent.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
-  - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+- **gati-laksana**
+  - Gloss: indicator through post-mortem path teaching
+  - Context: Devayana trajectory serves as inferential mark that the eye-person is Brahman, object of brahmavid travel.
+  - Grammar: compound noun
+  - Alternate glosses: path-indicator, trajectory marker
+- **arciradi-marga**
+  - Gloss: the archis-initiated devayana path
+  - Context: Canonical sequence tied to Brahmavid destination, reinforcing high-level referent identity.
+  - Grammar: compound noun
+  - Alternate glosses: devayana route, light-path sequence
+- **brahmavid-gamana**
+  - Gloss: movement of the knower of Brahman
+  - Context: Path references are interpreted as pertaining to Brahman-realization context, not lower deity attainment.
+  - Grammar: compound noun
+  - Alternate glosses: Brahman-knower trajectory, knower’s ascent
+- **srutopanisat-rahasya**
+  - Gloss: scriptural esoteric teaching heard in tradition
+  - Context: Invoked to anchor the path doctrine in recognized Upanishadic authority chains.
+  - Grammar: compound noun
+  - Alternate glosses: revealed esoteric instruction, Upanishadic secret teaching
+- **aksi-purusa-brahmatva**
+  - Gloss: Brahman-identity of the eye-person
+  - Context: Conclusion strengthened by correlating eye-person teaching with devayana destination logic.
+  - Grammar: compound noun
+  - Alternate glosses: ocular purusa as Brahman, eye-indweller absolute identity
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.

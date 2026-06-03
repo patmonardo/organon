@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "gati-laksana",
+        "gloss": "indicator through post-mortem path teaching",
+        "contextual_sense": "Devayana trajectory serves as inferential mark that the eye-person is Brahman, object of brahmavid travel.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "path-indicator",
+          "trajectory marker"
+        ]
+      },
+      {
+        "headword_iast": "arciradi-marga",
+        "gloss": "the archis-initiated devayana path",
+        "contextual_sense": "Canonical sequence tied to Brahmavid destination, reinforcing high-level referent identity.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "devayana route",
+          "light-path sequence"
+        ]
+      },
+      {
+        "headword_iast": "brahmavid-gamana",
+        "gloss": "movement of the knower of Brahman",
+        "contextual_sense": "Path references are interpreted as pertaining to Brahman-realization context, not lower deity attainment.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "Brahman-knower trajectory",
+          "knower’s ascent"
+        ]
+      },
+      {
+        "headword_iast": "srutopanisat-rahasya",
+        "gloss": "scriptural esoteric teaching heard in tradition",
+        "contextual_sense": "Invoked to anchor the path doctrine in recognized Upanishadic authority chains.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "revealed esoteric instruction",
+          "Upanishadic secret teaching"
+        ]
+      },
+      {
+        "headword_iast": "aksi-purusa-brahmatva",
+        "gloss": "Brahman-identity of the eye-person",
+        "contextual_sense": "Conclusion strengthened by correlating eye-person teaching with devayana destination logic.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "ocular purusa as Brahman",
+          "eye-indweller absolute identity"
         ]
       }
     ],

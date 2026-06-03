@@ -22,13 +22,43 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "sabdadibhyo antah-pratisthanac ca na",
+        "gloss": "not (rejected) merely from lexical and locative grounds",
+        "contextual_sense": "Sutra denies the purvapaksa exclusion of Brahman based on word-usage and inner location.",
+        "grammatical_role": "negative argumentative clause",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "word/location objection denied",
+          "lexical-locative refutation"
+        ]
+      },
+      {
+        "headword_iast": "drsti-upadesat",
+        "gloss": "because of contemplative instruction",
+        "contextual_sense": "Primary sutra reason preserving Brahman-reference despite fire-language.",
+        "grammatical_role": "ablative reason phrase",
+        "alternate_glosses": [
+          "from meditation-teaching",
+          "due to vision-instruction"
+        ]
+      },
+      {
+        "headword_iast": "asambhavat",
+        "gloss": "because of impossibility (otherwise)",
+        "contextual_sense": "Alternative candidates cannot bear full set of textual predicates.",
+        "grammatical_role": "ablative reason term",
+        "alternate_glosses": [
+          "from non-fit",
+          "due to infeasibility"
+        ]
+      },
+      {
+        "headword_iast": "purusam api enam adhiyate",
+        "gloss": "and this is also read as a person",
+        "contextual_sense": "Recensional testimony further supports non-literal, personal-cosmic referent.",
+        "grammatical_role": "textual assertion phrase",
+        "alternate_glosses": [
+          "also transmitted as purusa",
+          "person-reading attested"
         ]
       }
     ],

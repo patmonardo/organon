@@ -22,13 +22,53 @@
   "analysis": {
     "lexical_notes": [
       {
-        "headword_iast": "adhikaraṇa",
-        "gloss": "topical unit of argument",
-        "contextual_sense": "Tracks each block inside the section-level inferential sequence",
-        "grammatical_role": "noun",
+        "headword_iast": "sarira-purvapaksa",
+        "gloss": "prima facie embodied-self thesis",
+        "contextual_sense": "After rejecting Pradhana, objection advances conscious jiva as antaryamin candidate.",
+        "grammatical_role": "compound noun",
         "alternate_glosses": [
-          "topic-unit",
-          "argument node"
+          "jiva-first objection",
+          "embodied candidate thesis"
+        ]
+      },
+      {
+        "headword_iast": "drastrtva-srotrtva-mantrtva-vijnatrtva",
+        "gloss": "seer-hearer-thinker-knower capacities",
+        "contextual_sense": "Conscious functions cited to argue jiva qualifies for inner-controller role.",
+        "grammatical_role": "compound capability cluster",
+        "alternate_glosses": [
+          "cognitive-agent predicates",
+          "consciousness-function set"
+        ]
+      },
+      {
+        "headword_iast": "pratyag-atmatva",
+        "gloss": "inward selfhood",
+        "contextual_sense": "Objection uses interiority of self-awareness to support antaryamin claim.",
+        "grammatical_role": "abstract noun",
+        "alternate_glosses": [
+          "inner-self status",
+          "subjective interior selfhood"
+        ]
+      },
+      {
+        "headword_iast": "amrtatva-upacara",
+        "gloss": "qualified immortality attribution",
+        "contextual_sense": "Purvapaksa leverages karmic continuity and experiencer-role to claim relative immortality for jiva.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "relative deathlessness claim",
+          "experiential continuity-based immortality"
+        ]
+      },
+      {
+        "headword_iast": "cetana-karttva-hetu",
+        "gloss": "reason from conscious agency",
+        "contextual_sense": "Main inferential driver in this objection branch before siddhanta refutation.",
+        "grammatical_role": "compound noun",
+        "alternate_glosses": [
+          "agency-based rationale",
+          "conscious-doer argument"
         ]
       }
     ],

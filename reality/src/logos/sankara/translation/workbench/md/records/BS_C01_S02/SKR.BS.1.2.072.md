@@ -33,11 +33,26 @@ Sutra codifies the direct-reference allowance.
 ## Analysis
 
 ### Lexical Notes
-- **adhikaraṇa**
-  - Gloss: topical unit of argument
-  - Context: Tracks each block inside the section-level inferential sequence
+- **saksad api avirodham**
+  - Gloss: even direct reading is non-contradictory
+  - Context: Sutra statement that direct Brahman-reference of Vaisvanara is coherent.
+  - Grammar: doctrinal phrase
+  - Alternate glosses: direct sense without conflict, immediate-reference compatibility
+- **jaiminih**
+  - Gloss: Jaimini
+  - Context: Named authority anchoring this interpretive permission in established Mimamsa lineage.
+  - Grammar: proper noun
+  - Alternate glosses: Jaimini authority, Jaimini-acharya
+- **avirodha**
+  - Gloss: absence of contradiction
+  - Context: Central criterion for allowing direct Ishvara-upasana reading.
   - Grammar: noun
-  - Alternate glosses: topic-unit, argument node
+  - Alternate glosses: compatibility, non-conflict
+- **sutra-sanksepa**
+  - Gloss: aphoristic compression
+  - Context: Condenses the expanded bhashya reconciliation into a terse verdict.
+  - Grammar: compound noun
+  - Alternate glosses: brief doctrinal summary, compressed adjudication
 
 ## QA Uncertainty Notes
 - Curated in contiguous S02 pass with stable cadence and inferential-tag schema.
