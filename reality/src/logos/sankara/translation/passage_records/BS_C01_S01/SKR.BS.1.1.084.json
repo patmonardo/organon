@@ -26,31 +26,52 @@
         "gloss": "doubt about the word jyotis",
         "contextual_sense": "The objection takes the word in its obvious physical-light sense and asks whether that is enough.",
         "grammatical_role": "compound noun",
-        "alternate_glosses": ["light-term ambiguity", "jyotis dispute"]
+        "alternate_glosses": [
+          "light-term ambiguity",
+          "jyotis dispute"
+        ]
       },
       {
         "headword_iast": "aditya-diśa-bhāva",
         "gloss": "sun-direction and spatial boundedness",
         "contextual_sense": "Locative framing is pressed as a reason to keep the referent finite and visible.",
         "grammatical_role": "compound noun",
-        "alternate_glosses": ["solar location", "bounded light reading"]
+        "alternate_glosses": [
+          "solar location",
+          "bounded light reading"
+        ]
       },
       {
         "headword_iast": "mukhya-vṛtti",
         "gloss": "primary signification",
         "contextual_sense": "Default lexical habit is the rival model that the Bhashya will later displace.",
         "grammatical_role": "compound noun",
-        "alternate_glosses": ["literal sense", "direct denotation"]
+        "alternate_glosses": [
+          "literal sense",
+          "direct denotation"
+        ]
       },
       {
         "headword_iast": "lokika-jyotis",
         "gloss": "worldly light",
         "contextual_sense": "The objection explicitly leans on ordinary shining things before contextual reversal arrives.",
         "grammatical_role": "compound noun",
-        "alternate_glosses": ["physical light", "visible luminosity"]
+        "alternate_glosses": [
+          "physical light",
+          "visible luminosity"
+        ]
       }
     ],
-    "argument_tags": ["objection", "definition", "example"]
+    "argument_tags": [
+      "objection",
+      "definition",
+      "example"
+    ],
+    "tags": [
+      "layout:chapter-section-record",
+      "policy:append-and-supersede-never-delete",
+      "strata:bhasya"
+    ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
@@ -66,5 +87,6 @@
       "Curated in contiguous S01 pass with stable inferential-tag schema.",
       "A later philological pass should revisit truncated source lines and detailed jyotis/gayatri technical phrasing in records 1.1.084-1.1.087."
     ]
-  }
+  },
+  "record_kind": "bhasya"
 }

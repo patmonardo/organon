@@ -75,10 +75,61 @@
         color: var(--ink);
       }
 
+      .kind-presets {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 6px;
+      }
+
+      .kind-presets button {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--bg-panel);
+        color: var(--ink);
+        font-family: inherit;
+        font-size: 12px;
+        padding: 6px 8px;
+        cursor: pointer;
+      }
+
+      .kind-presets button.active {
+        border-color: var(--accent);
+        background: var(--accent-soft);
+      }
+
       .count {
         font-size: 12px;
         color: var(--muted);
         margin-bottom: 10px;
+      }
+
+      .mode-hint {
+        font-size: 12px;
+        color: var(--muted);
+        margin-bottom: 10px;
+        padding: 6px 8px;
+        border: 1px dashed var(--line);
+        border-radius: 8px;
+        background: #faf6ee;
+      }
+
+      .mode-hint.warn {
+        border-style: solid;
+        border-color: #c27f2b;
+        background: #fff6e6;
+        color: #7c4f12;
+      }
+
+      .debug-panel {
+        margin-bottom: 10px;
+        padding: 6px 8px;
+        border: 1px dashed var(--line);
+        border-radius: 8px;
+        background: #f7f2e8;
+        color: var(--muted);
+        font-size: 11px;
+        line-height: 1.45;
+        white-space: pre-wrap;
       }
 
       .list {
@@ -138,6 +189,47 @@
       .toolbar .label {
         font-size: 13px;
         color: var(--muted);
+      }
+
+      .toolbar-actions {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+
+      .toolbar-actions button {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--bg-panel);
+        color: var(--ink);
+        font-family: inherit;
+        font-size: 12px;
+        padding: 5px 8px;
+        cursor: pointer;
+      }
+
+      .toolbar-actions button:hover {
+        border-color: var(--accent);
+        background: var(--accent-soft);
+      }
+
+      .citation-strip {
+        margin-bottom: 12px;
+        padding: 8px 10px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: #faf6ee;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .citation-strip a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+
+      .citation-strip a:hover {
+        text-decoration: underline;
       }
 
       .doc {
@@ -241,17 +333,40 @@
             type="search"
             placeholder="Search record id or content"
           />
+          <select id="viewProfile">
+            <option value="simple" selected>View: Simple</option>
+            <option value="core">View: Core</option>
+            <option value="source">View: Source</option>
+            <option value="translation">View: Translation</option>
+            <option value="curation">View: Curation</option>
+            <option value="markdown">View: Full Markdown</option>
+          </select>
           <select id="sectionFilter">
             <option value="">All sections</option>
           </select>
+          <div class="kind-presets" id="kindPresets">
+            <button type="button" data-preset="all">All</button>
+            <button type="button" data-preset="opening">Opening</button>
+            <button type="button" data-preset="verse">Verses</button>
+            <button type="button" data-preset="verse-bhasya">
+              Verse + Bhasya
+            </button>
+          </div>
         </div>
         <div id="count" class="count">Loading records...</div>
+        <div id="modeHint" class="mode-hint">Mode: All records</div>
+        <div id="debugPanel" class="debug-panel" hidden></div>
         <div id="recordList" class="list"></div>
       </aside>
       <main class="main">
         <div class="toolbar">
           <div class="label" id="currentMeta">No record selected</div>
+          <div class="toolbar-actions">
+            <button type="button" id="jumpOpeningBtn">Opening Preamble</button>
+            <button type="button" id="jumpSutraBtn">First Sutra</button>
+          </div>
         </div>
+        <div class="citation-strip" id="citationMeta">No citation selected</div>
         <article id="doc" class="doc">
           <h2>Ready</h2>
           <p>Select a record from the left panel.</p>
@@ -264,15 +379,42 @@
         manifest: null,
         records: [],
         selectedRecordId: null,
+        semantic: null,
+        diagnostics: null,
       };
 
       const dom = {
         searchInput: document.getElementById('searchInput'),
+        viewProfile: document.getElementById('viewProfile'),
         sectionFilter: document.getElementById('sectionFilter'),
+        kindPresetButtons: Array.from(
+          document.querySelectorAll('#kindPresets [data-preset]'),
+        ),
         recordList: document.getElementById('recordList'),
         count: document.getElementById('count'),
+        modeHint: document.getElementById('modeHint'),
+        debugPanel: document.getElementById('debugPanel'),
         doc: document.getElementById('doc'),
         currentMeta: document.getElementById('currentMeta'),
+        citationMeta: document.getElementById('citationMeta'),
+        jumpOpeningBtn: document.getElementById('jumpOpeningBtn'),
+        jumpSutraBtn: document.getElementById('jumpSutraBtn'),
+      };
+
+      const KIND_PRESETS = {
+        all: [],
+        opening: ['preamble'],
+        verse: ['sutra'],
+        'verse-bhasya': ['sutra', 'bhasya', 'preamble'],
+      };
+
+      const VIEW_PROFILES = {
+        simple: [],
+        core: ['kind', 'section'],
+        source: ['kind', 'section', 'source'],
+        translation: ['kind', 'literal', 'technical'],
+        curation: ['kind', 'section', 'tags'],
+        markdown: ['kind', 'section'],
       };
 
       function escapeHtml(text) {
@@ -394,12 +536,633 @@
         }
       }
 
+      function shortText(value, maxLen = 80) {
+        const text = String(value || '')
+          .trim()
+          .replace(/\s+/g, ' ');
+        if (!text) {
+          return '(empty)';
+        }
+        return text.length > maxLen ? text.slice(0, maxLen - 1) + '…' : text;
+      }
+
+      function currentProfileKey() {
+        const key = String(dom.viewProfile.value || 'simple').toLowerCase();
+        return Object.prototype.hasOwnProperty.call(VIEW_PROFILES, key)
+          ? key
+          : 'simple';
+      }
+
+      function profileFieldText(record, field) {
+        if (field === 'kind') {
+          return String(record.record_kind || 'unknown');
+        }
+        if (field === 'section') {
+          return `Section ${String(record.section_code || 'n/a')}`;
+        }
+        if (field === 'source') {
+          return `Src: ${shortText(record.source_text, 70)}`;
+        }
+        if (field === 'literal') {
+          return `Lit: ${shortText(record.literal_translation, 70)}`;
+        }
+        if (field === 'technical') {
+          return `Tech: ${shortText(record.technical_translation, 70)}`;
+        }
+        if (field === 'tags') {
+          const tags = Array.isArray(record.argument_tags)
+            ? record.argument_tags
+                .map((x) => String(x))
+                .filter((x) => x.length > 0)
+            : [];
+          return tags.length > 0
+            ? `Tags: ${tags.slice(0, 3).join(', ')}`
+            : 'Tags: none';
+        }
+        return '';
+      }
+
+      function formatRecordMeta(record) {
+        const fields = VIEW_PROFILES[currentProfileKey()] || VIEW_PROFILES.core;
+        const values = fields
+          .map((field) => profileFieldText(record, field))
+          .filter((text) => text.length > 0);
+        return values.join(' | ') || ' ';
+      }
+
+      function formatCurrentMeta(record) {
+        const fields = VIEW_PROFILES[currentProfileKey()] || VIEW_PROFILES.core;
+        const values = fields
+          .map((field) => profileFieldText(record, field))
+          .filter((text) => text.length > 0)
+          .join(' | ');
+        return `${record.record_id}${values ? ` | ${values}` : ''}`;
+      }
+
+      function renderSimpleStructured(record, profileKey) {
+        const sourceText = shortText(record.source_text, 6000);
+        const transliterationRaw = String(
+          record.transliteration_iast || record.transliteration || '',
+        ).trim();
+        const transliteration =
+          transliterationRaw || '(not available in record)';
+        const literal = shortText(record.literal_translation, 6000);
+        const technical = shortText(record.technical_translation, 6000);
+        const tags = Array.isArray(record.argument_tags)
+          ? record.argument_tags
+              .map((x) => String(x))
+              .filter((x) => x.length > 0)
+          : [];
+
+        const chunks = [];
+
+        if (
+          profileKey === 'simple' ||
+          profileKey === 'source' ||
+          profileKey === 'core'
+        ) {
+          chunks.push(
+            '<h2>Source</h2>',
+            `<h3>Source Text</h3><p>${escapeHtml(sourceText)}</p>`,
+            `<h3>Transliteration</h3><p>${escapeHtml(transliteration)}</p>`,
+          );
+        }
+
+        if (profileKey === 'simple' || profileKey === 'translation') {
+          chunks.push(
+            '<h2>Translation</h2>',
+            `<h3>Literal</h3><p>${escapeHtml(literal)}</p>`,
+            `<h3>Technical</h3><p>${escapeHtml(technical)}</p>`,
+          );
+        }
+
+        if (profileKey === 'curation') {
+          chunks.push(
+            '<h2>Curation</h2>',
+            `<p><strong>Kind:</strong> ${escapeHtml(String(record.record_kind || 'unknown'))}</p>`,
+            `<p><strong>Tags:</strong> ${escapeHtml(tags.length ? tags.join(', ') : 'none')}</p>`,
+          );
+        }
+
+        if (profileKey === 'core') {
+          chunks.push(
+            '<h2>Core</h2>',
+            `<p><strong>Kind:</strong> ${escapeHtml(String(record.record_kind || 'unknown'))}</p>`,
+            `<p><strong>Section:</strong> ${escapeHtml(String(record.section_code || 'n/a'))}</p>`,
+          );
+        }
+
+        dom.doc.innerHTML = chunks.join('');
+      }
+
+      function parseListParam(params, key) {
+        const raw = (params.get(key) || '').trim();
+        if (!raw) {
+          return [];
+        }
+        return raw
+          .split(',')
+          .map((x) => x.trim().toLowerCase())
+          .filter((x) => x.length > 0);
+      }
+
+      function parseAnchorParam(raw) {
+        const text = String(raw || '').trim();
+        if (!text) {
+          return null;
+        }
+        const parts = text
+          .split('.')
+          .map((x) => x.trim())
+          .filter((x) => x.length > 0)
+          .map((x) => Number.parseInt(x, 10));
+        if (parts.some((x) => !Number.isFinite(x) || x <= 0)) {
+          return null;
+        }
+        if (parts.length === 1) {
+          return { sutra: parts[0] };
+        }
+        if (parts.length === 2) {
+          return { chapter: parts[0], section: parts[1] };
+        }
+        return { chapter: parts[0], section: parts[1], sutra: parts[2] };
+      }
+
+      function parseRecordLocator(recordId) {
+        const m = String(recordId || '').match(
+          /^SKR\.([^.]+)\.(\d+)\.(\d+)\.([A-Z0-9]+)$/,
+        );
+        if (!m) {
+          return null;
+        }
+        const chapter = Number.parseInt(m[2], 10);
+        const section = Number.parseInt(m[3], 10);
+        const unitRaw = m[4];
+        const sutra = /^\d+$/.test(unitRaw)
+          ? Number.parseInt(unitRaw, 10)
+          : undefined;
+        return {
+          work: m[1],
+          chapter,
+          section,
+          unitRaw,
+          sutra,
+        };
+      }
+
+      function sectionSortKey(sectionCode) {
+        return String(sectionCode || '')
+          .split('.')
+          .map((x) => Number.parseInt(x, 10))
+          .filter((x) => Number.isFinite(x));
+      }
+
+      function compareSectionCodes(left, right) {
+        const l = sectionSortKey(left);
+        const r = sectionSortKey(right);
+        const n = Math.max(l.length, r.length);
+        for (let i = 0; i < n; i += 1) {
+          const lv = Number.isFinite(l[i]) ? l[i] : 0;
+          const rv = Number.isFinite(r[i]) ? r[i] : 0;
+          if (lv !== rv) {
+            return lv - rv;
+          }
+        }
+        return String(left || '').localeCompare(String(right || ''));
+      }
+
+      function recordUnitOrder(recordId) {
+        const locator = parseRecordLocator(recordId);
+        if (!locator) {
+          return { value: Number.MAX_SAFE_INTEGER, raw: '' };
+        }
+        if (locator.unitRaw === 'PRE') {
+          return { value: -1, raw: locator.unitRaw };
+        }
+        const numeric = Number.parseInt(locator.unitRaw, 10);
+        return {
+          value: Number.isFinite(numeric) ? numeric : Number.MAX_SAFE_INTEGER,
+          raw: locator.unitRaw,
+        };
+      }
+
+      function buildDiagnostics(records) {
+        const bySection = new Map();
+        for (const record of records) {
+          const section = String(record.section_code || '');
+          if (!bySection.has(section)) {
+            bySection.set(section, []);
+          }
+          bySection.get(section).push(record);
+        }
+
+        const perSection = {};
+        for (const [section, rows] of bySection.entries()) {
+          const sorted = [...rows].sort((a, b) => {
+            return (
+              recordUnitOrder(a.record_id).value -
+              recordUnitOrder(b.record_id).value
+            );
+          });
+
+          let firstSutraIndex = -1;
+          for (let i = 0; i < sorted.length; i += 1) {
+            if (String(sorted[i].record_kind || '').toLowerCase() === 'sutra') {
+              firstSutraIndex = i;
+              break;
+            }
+          }
+
+          const preambleAfterSutra = [];
+          if (firstSutraIndex >= 0) {
+            for (let i = firstSutraIndex + 1; i < sorted.length; i += 1) {
+              if (
+                String(sorted[i].record_kind || '').toLowerCase() === 'preamble'
+              ) {
+                preambleAfterSutra.push(sorted[i].record_id);
+              }
+            }
+          }
+
+          perSection[section] = {
+            first_sutra_record_id:
+              firstSutraIndex >= 0 ? sorted[firstSutraIndex].record_id : null,
+            preamble_after_sutra: preambleAfterSutra,
+          };
+        }
+
+        return { perSection };
+      }
+
+      function currentSectionWarning() {
+        const sectionCode = currentSectionCode();
+        if (
+          !sectionCode ||
+          !state.diagnostics ||
+          !state.diagnostics.perSection
+        ) {
+          return '';
+        }
+        const data = state.diagnostics.perSection[sectionCode];
+        if (!data || !Array.isArray(data.preamble_after_sutra)) {
+          return '';
+        }
+        if (data.preamble_after_sutra.length === 0) {
+          return '';
+        }
+        return `Warning: section ${sectionCode} has preamble tagged records after first sutra (${data.preamble_after_sutra.slice(0, 4).join(', ')}).`;
+      }
+
+      function renderDebugPanel() {
+        const params = new URLSearchParams(window.location.search);
+        const enabled = (params.get('debug') || '').toLowerCase();
+        const show = enabled === '1' || enabled === 'true';
+        dom.debugPanel.hidden = !show;
+        if (!show) {
+          return;
+        }
+
+        const selected = state.records.find(
+          (x) => x.record_id === state.selectedRecordId,
+        );
+        const sectionCode = currentSectionCode();
+        const activePreset = activeKindPreset();
+        const filtered = filteredRecords();
+        const warning = currentSectionWarning();
+        const lines = [
+          `Debug Mode`,
+          `section=${sectionCode || 'all'} preset=${activePreset}`,
+          `selected=${selected ? selected.record_id : 'none'}`,
+          `filtered_count=${filtered.length}`,
+        ];
+        if (warning) {
+          lines.push(warning);
+        }
+        dom.debugPanel.textContent = lines.join('\n');
+      }
+
+      function currentSectionCode() {
+        const selected = state.records.find(
+          (x) => x.record_id === state.selectedRecordId,
+        );
+        if (selected && selected.section_code) {
+          return selected.section_code;
+        }
+        return dom.sectionFilter.value || '';
+      }
+
+      function findFirstByKind(kind, sectionCode) {
+        const targetKind = String(kind || '').toLowerCase();
+        for (const record of state.records) {
+          if (sectionCode && record.section_code !== sectionCode) {
+            continue;
+          }
+          if (String(record.record_kind || '').toLowerCase() === targetKind) {
+            return record;
+          }
+        }
+        return null;
+      }
+
+      function renderCitationMeta(record) {
+        const sourceUrl = String(record.source_url || '').trim();
+        const chunks = [
+          `<strong>${escapeHtml(String(record.record_id || ''))}</strong>`,
+          `Kind: ${escapeHtml(String(record.record_kind || 'unknown'))}`,
+          `Section: ${escapeHtml(String(record.section_code || 'n/a'))}`,
+        ];
+        if (sourceUrl) {
+          chunks.push(
+            `Source: <a href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener">link</a>`,
+          );
+        }
+        dom.citationMeta.innerHTML = chunks.join(' | ');
+      }
+
+      function selectAndOpenRecord(record) {
+        if (!record) {
+          return;
+        }
+        state.selectedRecordId = record.record_id;
+        renderRecordList();
+        openRecord(record).catch(() => {
+          dom.doc.innerHTML = '<p>Failed to load record.</p>';
+        });
+      }
+
+      function syncSelectionWithFilters() {
+        const records = filteredRecords();
+        if (records.length === 0) {
+          state.selectedRecordId = null;
+          dom.currentMeta.textContent = 'No record selected';
+          dom.citationMeta.textContent = 'No citation selected';
+          dom.doc.innerHTML = '<p>No records match the current filters.</p>';
+          return;
+        }
+
+        const selected = records.find(
+          (x) => x.record_id === state.selectedRecordId,
+        );
+        if (selected) {
+          openRecord(selected).catch(() => {
+            dom.doc.innerHTML = '<p>Failed to load record.</p>';
+          });
+          return;
+        }
+
+        selectAndOpenRecord(records[0]);
+      }
+
+      function parseSemanticFromLocation() {
+        const params = new URLSearchParams(window.location.search);
+        const kinds = parseListParam(params, 'kinds');
+        const topics = parseListParam(params, 'topics');
+        const transitions = parseListParam(params, 'tx');
+        const anchor = parseAnchorParam(params.get('anchor'));
+        const coLocatedRaw = (params.get('co_located') || '').toLowerCase();
+        const coLocatedOnly = coLocatedRaw === '1' || coLocatedRaw === 'true';
+
+        if (
+          kinds.length === 0 &&
+          topics.length === 0 &&
+          transitions.length === 0 &&
+          !anchor &&
+          !coLocatedOnly
+        ) {
+          return null;
+        }
+
+        return {
+          kinds,
+          topics,
+          transitions,
+          anchor,
+          coLocatedOnly,
+        };
+      }
+
+      function recordTopicTags(record) {
+        if (Array.isArray(record.topic_tags) && record.topic_tags.length > 0) {
+          return record.topic_tags.map((x) => String(x).toLowerCase());
+        }
+        return Array.isArray(record.argument_tags)
+          ? record.argument_tags.map((x) => String(x).toLowerCase())
+          : [];
+      }
+
+      function ensureSemanticState() {
+        if (!state.semantic) {
+          state.semantic = {
+            kinds: [],
+            topics: [],
+            transitions: [],
+            anchor: null,
+            coLocatedOnly: false,
+          };
+        }
+        if (!Array.isArray(state.semantic.kinds)) {
+          state.semantic.kinds = [];
+        }
+        return state.semantic;
+      }
+
+      function sameKinds(left, right) {
+        if (left.length !== right.length) {
+          return false;
+        }
+        const ls = [...left].sort().join('|');
+        const rs = [...right].sort().join('|');
+        return ls === rs;
+      }
+
+      function activeKindPreset() {
+        const semantic = state.semantic;
+        const activeKinds =
+          semantic && Array.isArray(semantic.kinds)
+            ? semantic.kinds.map((x) => String(x).toLowerCase())
+            : [];
+
+        if (activeKinds.length === 0) {
+          return 'all';
+        }
+        if (sameKinds(activeKinds, KIND_PRESETS.opening)) {
+          return 'opening';
+        }
+        if (sameKinds(activeKinds, KIND_PRESETS.verse)) {
+          return 'verse';
+        }
+        if (sameKinds(activeKinds, KIND_PRESETS['verse-bhasya'])) {
+          return 'verse-bhasya';
+        }
+        return 'custom';
+      }
+
+      function renderKindPresetButtons() {
+        const active = activeKindPreset();
+        for (const button of dom.kindPresetButtons) {
+          button.classList.toggle('active', button.dataset.preset === active);
+        }
+
+        const warning = currentSectionWarning();
+        dom.modeHint.classList.toggle('warn', warning.length > 0);
+
+        if (active === 'opening') {
+          dom.modeHint.textContent =
+            'Mode: English opening lane (preamble only). Sutra rows like *.001 are excluded here.';
+          if (warning) {
+            dom.modeHint.textContent += ` ${warning}`;
+          }
+          renderDebugPanel();
+          return;
+        }
+        if (active === 'verse') {
+          dom.modeHint.textContent = 'Mode: Sutra-only lane.';
+          if (warning) {
+            dom.modeHint.textContent += ` ${warning}`;
+          }
+          renderDebugPanel();
+          return;
+        }
+        if (active === 'verse-bhasya') {
+          dom.modeHint.textContent =
+            'Mode: Sutra + Bhasya lane (includes preamble).';
+          if (warning) {
+            dom.modeHint.textContent += ` ${warning}`;
+          }
+          renderDebugPanel();
+          return;
+        }
+        dom.modeHint.textContent = warning
+          ? `Mode: All records. ${warning}`
+          : 'Mode: All records.';
+        renderDebugPanel();
+      }
+
+      function applyKindPreset(preset) {
+        const semantic = ensureSemanticState();
+        semantic.kinds = [...(KIND_PRESETS[preset] || [])];
+        renderKindPresetButtons();
+        renderRecordList();
+
+        const records = filteredRecords();
+        if (records.length === 0) {
+          state.selectedRecordId = null;
+          dom.currentMeta.textContent = 'No record selected';
+          dom.citationMeta.textContent = 'No citation selected';
+          dom.doc.innerHTML = '<p>No records match the current filters.</p>';
+          return;
+        }
+
+        if (!records.some((x) => x.record_id === state.selectedRecordId)) {
+          state.selectedRecordId = records[0].record_id;
+          renderRecordList();
+          openRecord(records[0]).catch(() => {
+            dom.doc.innerHTML = '<p>Failed to load markdown.</p>';
+          });
+        }
+      }
+
+      function applyOpeningFocus() {
+        const sectionCode = currentSectionCode();
+        if (sectionCode) {
+          dom.sectionFilter.value = sectionCode;
+        }
+
+        const semantic = ensureSemanticState();
+        semantic.kinds = [...KIND_PRESETS.opening];
+        renderKindPresetButtons();
+        renderRecordList();
+
+        const records = filteredRecords();
+        if (records.length === 0) {
+          state.selectedRecordId = null;
+          dom.currentMeta.textContent = 'No opening preamble found';
+          dom.citationMeta.textContent = sectionCode
+            ? `Section ${sectionCode}: no opening preamble extracted.`
+            : 'No opening preamble extracted.';
+          dom.doc.innerHTML = sectionCode
+            ? `<p>No opening preamble records were found for section ${escapeHtml(sectionCode)}.</p>`
+            : '<p>No opening preamble records were found in the current scope.</p>';
+          return;
+        }
+
+        selectAndOpenRecord(records[0]);
+      }
+
+      function matchesSemantic(record, semantic) {
+        if (!semantic) {
+          return true;
+        }
+
+        const locator = parseRecordLocator(record.record_id);
+
+        if (semantic.kinds.length > 0) {
+          const kind = String(record.record_kind || 'unknown').toLowerCase();
+          if (!semantic.kinds.includes(kind)) {
+            return false;
+          }
+        }
+
+        if (semantic.topics.length > 0) {
+          const tags = recordTopicTags(record);
+          if (!semantic.topics.some((topic) => tags.includes(topic))) {
+            return false;
+          }
+        }
+
+        if (semantic.transitions.length > 0) {
+          const hay = [
+            record.source_text,
+            record.literal_translation,
+            record.technical_translation,
+          ]
+            .join(' ')
+            .toLowerCase();
+          if (!semantic.transitions.some((term) => hay.includes(term))) {
+            return false;
+          }
+        }
+
+        if (semantic.anchor && locator) {
+          if (
+            semantic.anchor.chapter != null &&
+            locator.chapter !== semantic.anchor.chapter
+          ) {
+            return false;
+          }
+          if (
+            semantic.anchor.section != null &&
+            locator.section !== semantic.anchor.section
+          ) {
+            return false;
+          }
+          if (semantic.anchor.sutra != null) {
+            if (!Number.isFinite(locator.sutra)) {
+              return false;
+            }
+            if (semantic.coLocatedOnly) {
+              if (locator.sutra !== semantic.anchor.sutra) {
+                return false;
+              }
+            } else if (locator.sutra !== semantic.anchor.sutra) {
+              return false;
+            }
+          }
+        }
+
+        return true;
+      }
+
       function filteredRecords() {
         const query = dom.searchInput.value.trim().toLowerCase();
         const section = dom.sectionFilter.value;
 
         return state.records.filter((record) => {
           if (section && record.section_code !== section) {
+            return false;
+          }
+
+          if (!matchesSemantic(record, state.semantic)) {
             return false;
           }
 
@@ -427,6 +1190,7 @@
         const records = filteredRecords();
         dom.recordList.innerHTML = '';
         dom.count.textContent = `${records.length} record(s)`;
+        renderDebugPanel();
 
         for (const record of records) {
           const button = document.createElement('button');
@@ -434,7 +1198,7 @@
           button.className =
             'item' +
             (record.record_id === state.selectedRecordId ? ' active' : '');
-          button.innerHTML = `<div class="id">${escapeHtml(record.record_id)}</div><div class="meta">${escapeHtml(record.record_kind || 'unknown')} | Section ${escapeHtml(record.section_code)}</div>`;
+          button.innerHTML = `<div class="id">${escapeHtml(record.record_id)}</div><div class="meta">${escapeHtml(formatRecordMeta(record))}</div>`;
           button.addEventListener('click', () => {
             state.selectedRecordId = record.record_id;
             renderRecordList();
@@ -445,7 +1209,14 @@
       }
 
       async function openRecord(record) {
-        dom.currentMeta.textContent = `${record.record_id} | ${record.record_kind || 'unknown'} | Section ${record.section_code}`;
+        dom.currentMeta.textContent = formatCurrentMeta(record);
+        renderCitationMeta(record);
+        const profileKey = currentProfileKey();
+        if (profileKey !== 'markdown') {
+          renderSimpleStructured(record, profileKey);
+          return;
+        }
+
         dom.doc.innerHTML = '<p>Loading markdown...</p>';
         const response = await fetch(record.md_path);
         if (!response.ok) {
@@ -467,8 +1238,24 @@
 
         state.manifest = await response.json();
         state.records = state.manifest.records || [];
+        state.records.sort((a, b) => {
+          const sectionCmp = compareSectionCodes(
+            a.section_code,
+            b.section_code,
+          );
+          if (sectionCmp !== 0) {
+            return sectionCmp;
+          }
+          return (
+            recordUnitOrder(a.record_id).value -
+            recordUnitOrder(b.record_id).value
+          );
+        });
+        state.semantic = parseSemanticFromLocation();
+        state.diagnostics = buildDiagnostics(state.records);
 
         buildSectionOptions(state.manifest.sections || []);
+        renderKindPresetButtons();
         renderRecordList();
 
         const first = state.records[0];
@@ -481,8 +1268,39 @@
             '<h2>No records</h2><p>No projected markdown records found.</p>';
         }
 
-        dom.searchInput.addEventListener('input', renderRecordList);
-        dom.sectionFilter.addEventListener('change', renderRecordList);
+        dom.searchInput.addEventListener('input', () => {
+          renderRecordList();
+          syncSelectionWithFilters();
+        });
+        dom.viewProfile.addEventListener('change', () => {
+          renderRecordList();
+          const selected = state.records.find(
+            (x) => x.record_id === state.selectedRecordId,
+          );
+          if (selected) {
+            openRecord(selected).catch(() => {
+              dom.doc.innerHTML = '<p>Failed to load record.</p>';
+            });
+          }
+        });
+        dom.sectionFilter.addEventListener('change', () => {
+          renderRecordList();
+          syncSelectionWithFilters();
+        });
+        for (const button of dom.kindPresetButtons) {
+          button.addEventListener('click', () => {
+            applyKindPreset(button.dataset.preset || 'all');
+          });
+        }
+
+        dom.jumpOpeningBtn.addEventListener('click', applyOpeningFocus);
+
+        dom.jumpSutraBtn.addEventListener('click', () => {
+          const target = findFirstByKind('sutra', currentSectionCode());
+          if (target) {
+            selectAndOpenRecord(target);
+          }
+        });
       }
 
       init().catch((err) => {

@@ -56,6 +56,11 @@
       "adhikarana",
       "brahman-reference",
       "versetext"
+    ],
+    "tags": [
+      "layout:chapter-section-record",
+      "policy:append-and-supersede-never-delete",
+      "strata:sutra"
     ]
   },
   "provenance": {
@@ -72,5 +77,6 @@
       "Long bhashya blocks translated as draft prose and require line-level philological curation.",
       "Terminology retained in mixed transliteration/English where doctrinal precision is required."
     ]
-  }
+  },
+  "record_kind": "sutra"
 }

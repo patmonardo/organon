@@ -64,6 +64,11 @@
     ],
     "argument_tags": [
       "resolution"
+    ],
+    "tags": [
+      "layout:chapter-section-record",
+      "policy:append-and-supersede-never-delete",
+      "strata:sutra"
     ]
   },
   "provenance": {
@@ -80,5 +85,6 @@
       "Curated in contiguous S01 pass with stable inferential-tag schema.",
       "A later philological pass should revisit truncated source lines and precise phrasing in the jyotis/gayatri bridge and Kausitaki prana section (1.1.084-1.1.095)."
     ]
-  }
+  },
+  "record_kind": "sutra"
 }

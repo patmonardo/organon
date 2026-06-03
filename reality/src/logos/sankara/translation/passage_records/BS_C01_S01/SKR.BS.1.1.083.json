@@ -26,14 +26,20 @@
         "gloss": "the word prana",
         "contextual_sense": "Here the term is tested against Brahmanic context, not accepted at face-value as vital air.",
         "grammatical_role": "compound noun",
-        "alternate_glosses": ["prana-term", "breath-word"]
+        "alternate_glosses": [
+          "prana-term",
+          "breath-word"
+        ]
       },
       {
         "headword_iast": "talliṅga",
         "gloss": "that contextual marker",
         "contextual_sense": "The prior marker principle continues to govern interpretation in this shorter aphorism.",
         "grammatical_role": "compound noun",
-        "alternate_glosses": ["same-sign principle", "contextual indicator"]
+        "alternate_glosses": [
+          "same-sign principle",
+          "contextual indicator"
+        ]
       },
       {
         "headword_iast": "brahma-prāṇa-bheda-nivāraṇa",
@@ -50,10 +56,20 @@
         "gloss": "aphoristic compression",
         "contextual_sense": "The whole argument is collapsed into a single contextual tag.",
         "grammatical_role": "compound noun",
-        "alternate_glosses": ["sutra condensation", "brief doctrinal seal"]
+        "alternate_glosses": [
+          "sutra condensation",
+          "brief doctrinal seal"
+        ]
       }
     ],
-    "argument_tags": ["resolution"]
+    "argument_tags": [
+      "resolution"
+    ],
+    "tags": [
+      "layout:chapter-section-record",
+      "policy:append-and-supersede-never-delete",
+      "strata:sutra"
+    ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
@@ -69,5 +85,6 @@
       "Curated in contiguous S01 pass with stable inferential-tag schema.",
       "A later philological pass should revisit truncated source lines and detailed jyotis/gayatri technical phrasing in records 1.1.084-1.1.087."
     ]
-  }
+  },
+  "record_kind": "sutra"
 }

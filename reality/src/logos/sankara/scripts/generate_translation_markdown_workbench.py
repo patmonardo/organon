@@ -156,43 +156,57 @@ def infer_record_kind(
     source: dict[str, Any],
     text: dict[str, Any],
 ) -> str:
-  text_signals = [
-    str(text.get("segmentation_note", "")).lower(),
-    str(source.get("edition_note", "")).lower(),
-  ]
+    text_signals = [
+        str(text.get("segmentation_note", "")).lower(),
+        str(source.get("edition_note", "")).lower(),
+    ]
 
-  explicit_candidates = [
-    data.get("kind"),
-    data.get("record_kind"),
-    source.get("kind"),
-    source.get("record_kind"),
-    text.get("kind"),
-    text.get("record_kind"),
-  ]
-  for candidate in explicit_candidates:
-    if isinstance(candidate, str) and candidate.strip():
-      return normalize_record_kind(candidate)
+    # Strong source/text markers should override stale legacy `record_kind` values.
+    if record_id.endswith(".PRE") or any(
+      "preamble" in signal or "_pre/" in signal or "_pre_" in signal
+      for signal in text_signals
+    ):
+        return "preamble"
 
-  if record_id.endswith(".PRE") or any("preamble" in signal for signal in text_signals):
-    return "preamble"
+    if any(
+        "versetext" in signal
+        or "core sutra line" in signal
+        or "sutra text unit" in signal
+        or "sutra" in signal
+        or "mantra" in signal
+        for signal in text_signals
+    ):
+        return "sutra"
 
-  if any("versetext" in signal or "sutra" in signal for signal in text_signals):
-    return "sutra"
+    if any("transition" in signal for signal in text_signals):
+        return "transition"
 
-  if any("bhashya" in signal for signal in text_signals):
-    return "bhasya"
+    explicit_candidates = [
+        data.get("kind"),
+        data.get("record_kind"),
+        source.get("kind"),
+        source.get("record_kind"),
+        text.get("kind"),
+        text.get("record_kind"),
+    ]
+    for candidate in explicit_candidates:
+        if isinstance(candidate, str) and candidate.strip():
+            return normalize_record_kind(candidate)
 
-  inferred_candidates = [
-    parse_trailing_paren_value(str(text.get("segmentation_note", ""))),
-    parse_trailing_paren_value(str(source.get("edition_note", ""))),
-  ]
-  for candidate in inferred_candidates:
-    if candidate:
-      normalized = normalize_record_kind(candidate)
-      if normalized in {"preamble", "sutra", "bhasya"}:
-        return normalized
+    if any("bhashya" in signal for signal in text_signals):
+      return "bhasya"
 
-  return "unknown"
+    inferred_candidates = [
+        parse_trailing_paren_value(str(text.get("segmentation_note", ""))),
+        parse_trailing_paren_value(str(source.get("edition_note", ""))),
+    ]
+    for candidate in inferred_candidates:
+        if candidate:
+            normalized = normalize_record_kind(candidate)
+            if normalized in {"preamble", "sutra", "bhasya", "transition"}:
+                return normalized
+
+    return "unknown"
 
 
 def read_record_doc(path: Path, md_root: Path) -> RecordDoc | None:
@@ -452,6 +466,8 @@ def write_manifest(workbench_root: Path, md_root: Path, docs: list[RecordDoc], s
           "qa_uncertainty_notes": doc.qa_uncertainty_notes,
                 "argument_tags": doc.argument_tags,
                 "source_text": doc.source_text,
+                "transliteration_iast": doc.transliteration_iast,
+                "transliteration": doc.transliteration_iast,
                 "literal_translation": doc.literal_translation,
                 "technical_translation": doc.technical_translation,
                 "md_path": doc.output_path.relative_to(workbench_root).as_posix(),
@@ -479,6 +495,13 @@ def write_manifest(workbench_root: Path, md_root: Path, docs: list[RecordDoc], s
 def write_viewer_html(workbench_root: Path) -> None:
     viewer_path = workbench_root / "viewer.html"
     if viewer_path.exists():
+        return
+    canonical_viewer = SANKARA_DIR / "workbench" / "viewer.html"
+    if canonical_viewer.exists():
+        viewer_path.write_text(
+            canonical_viewer.read_text(encoding="utf-8"),
+            encoding="utf-8",
+        )
         return
     viewer_html = r"""<!doctype html>
 <html lang=\"en\">
@@ -548,6 +571,28 @@ def write_viewer_html(workbench_root: Path) -> None:
       font-size: 14px;
       background: #fff;
       color: var(--ink);
+    }
+
+    .kind-presets {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+    }
+
+    .kind-presets button {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--bg-panel);
+      color: var(--ink);
+      font-family: inherit;
+      font-size: 12px;
+      padding: 6px 8px;
+      cursor: pointer;
+    }
+
+    .kind-presets button.active {
+      border-color: var(--accent);
+      background: var(--accent-soft);
     }
 
     .count {
@@ -693,9 +738,22 @@ def write_viewer_html(workbench_root: Path) -> None:
       <p class=\"sub\">Basic Markdown View (v0.1)</p>
       <div class=\"controls\">
         <input id=\"searchInput\" type=\"search\" placeholder=\"Search record id or content\" />
+        <select id=\"viewProfile\">
+          <option value=\"simple\" selected>View: Simple</option>
+          <option value=\"core\">View: Core</option>
+          <option value=\"source\">View: Source</option>
+          <option value=\"translation\">View: Translation</option>
+          <option value=\"curation\">View: Curation</option>
+          <option value=\"markdown\">View: Full Markdown</option>
+        </select>
         <select id=\"sectionFilter\">
           <option value=\"\">All sections</option>
         </select>
+        <div class="kind-presets" id="kindPresets">
+          <button type="button" data-preset="all">All</button>
+          <button type="button" data-preset="verse">Verses</button>
+          <button type="button" data-preset="verse-bhasya">Verse + Bhasya</button>
+        </div>
       </div>
       <div id=\"count\" class=\"count\">Loading records...</div>
       <div id=\"recordList\" class=\"list\"></div>
@@ -716,15 +774,33 @@ def write_viewer_html(workbench_root: Path) -> None:
       manifest: null,
       records: [],
       selectedRecordId: null,
+      semantic: null,
     };
 
     const dom = {
       searchInput: document.getElementById('searchInput'),
+      viewProfile: document.getElementById('viewProfile'),
       sectionFilter: document.getElementById('sectionFilter'),
+      kindPresetButtons: Array.from(document.querySelectorAll('#kindPresets [data-preset]')),
       recordList: document.getElementById('recordList'),
       count: document.getElementById('count'),
       doc: document.getElementById('doc'),
       currentMeta: document.getElementById('currentMeta'),
+    };
+
+    const KIND_PRESETS = {
+      all: [],
+      verse: ['sutra'],
+      'verse-bhasya': ['sutra', 'bhasya', 'preamble'],
+    };
+
+    const VIEW_PROFILES = {
+      simple: [],
+      core: ['kind', 'section'],
+      source: ['kind', 'section', 'source'],
+      translation: ['kind', 'literal', 'technical'],
+      curation: ['kind', 'section', 'tags'],
+      markdown: ['kind', 'section'],
     };
 
     function escapeHtml(text) {
@@ -843,12 +919,357 @@ def write_viewer_html(workbench_root: Path) -> None:
       }
     }
 
+    function shortText(value, maxLen = 80) {
+      const text = String(value || '').trim().replace(/\s+/g, ' ');
+      if (!text) {
+        return '(empty)';
+      }
+      return text.length > maxLen ? text.slice(0, maxLen - 1) + '…' : text;
+    }
+
+    function currentProfileKey() {
+      const key = String(dom.viewProfile.value || 'simple').toLowerCase();
+      return Object.prototype.hasOwnProperty.call(VIEW_PROFILES, key)
+        ? key
+        : 'simple';
+    }
+
+    function profileFieldText(record, field) {
+      if (field === 'kind') {
+        return String(record.record_kind || 'unknown');
+      }
+      if (field === 'section') {
+        return `Section ${String(record.section_code || 'n/a')}`;
+      }
+      if (field === 'source') {
+        return `Src: ${shortText(record.source_text, 70)}`;
+      }
+      if (field === 'literal') {
+        return `Lit: ${shortText(record.literal_translation, 70)}`;
+      }
+      if (field === 'technical') {
+        return `Tech: ${shortText(record.technical_translation, 70)}`;
+      }
+      if (field === 'tags') {
+        const tags = Array.isArray(record.argument_tags)
+          ? record.argument_tags.map((x) => String(x)).filter((x) => x.length > 0)
+          : [];
+        return tags.length > 0
+          ? `Tags: ${tags.slice(0, 3).join(', ')}`
+          : 'Tags: none';
+      }
+      return '';
+    }
+
+    function formatRecordMeta(record) {
+      const fields = VIEW_PROFILES[currentProfileKey()] || VIEW_PROFILES.core;
+      const values = fields
+        .map((field) => profileFieldText(record, field))
+        .filter((text) => text.length > 0);
+      return values.join(' | ') || ' ';
+    }
+
+    function formatCurrentMeta(record) {
+      const fields = VIEW_PROFILES[currentProfileKey()] || VIEW_PROFILES.core;
+      const values = fields
+        .map((field) => profileFieldText(record, field))
+        .filter((text) => text.length > 0)
+        .join(' | ');
+      return `${record.record_id}${values ? ` | ${values}` : ''}`;
+    }
+
+    function renderSimpleStructured(record, profileKey) {
+      const sourceText = shortText(record.source_text, 6000);
+      const transliterationRaw = String(
+        record.transliteration_iast || record.transliteration || '',
+      ).trim();
+      const transliteration = transliterationRaw || '(not available in record)';
+      const literal = shortText(record.literal_translation, 6000);
+      const technical = shortText(record.technical_translation, 6000);
+      const tags = Array.isArray(record.argument_tags)
+        ? record.argument_tags.map((x) => String(x)).filter((x) => x.length > 0)
+        : [];
+
+      const chunks = [];
+
+      if (
+        profileKey === 'simple' ||
+        profileKey === 'source' ||
+        profileKey === 'core'
+      ) {
+        chunks.push(
+          '<h2>Source</h2>',
+          `<h3>Source Text</h3><p>${escapeHtml(sourceText)}</p>`,
+          `<h3>Transliteration</h3><p>${escapeHtml(transliteration)}</p>`,
+        );
+      }
+
+      if (profileKey === 'simple' || profileKey === 'translation') {
+        chunks.push(
+          '<h2>Translation</h2>',
+          `<h3>Literal</h3><p>${escapeHtml(literal)}</p>`,
+          `<h3>Technical</h3><p>${escapeHtml(technical)}</p>`,
+        );
+      }
+
+      if (profileKey === 'curation') {
+        chunks.push(
+          '<h2>Curation</h2>',
+          `<p><strong>Kind:</strong> ${escapeHtml(String(record.record_kind || 'unknown'))}</p>`,
+          `<p><strong>Tags:</strong> ${escapeHtml(tags.length ? tags.join(', ') : 'none')}</p>`,
+        );
+      }
+
+      if (profileKey === 'core') {
+        chunks.push(
+          '<h2>Core</h2>',
+          `<p><strong>Kind:</strong> ${escapeHtml(String(record.record_kind || 'unknown'))}</p>`,
+          `<p><strong>Section:</strong> ${escapeHtml(String(record.section_code || 'n/a'))}</p>`,
+        );
+      }
+
+      dom.doc.innerHTML = chunks.join('');
+    }
+
+    function parseListParam(params, key) {
+      const raw = (params.get(key) || '').trim();
+      if (!raw) {
+        return [];
+      }
+      return raw
+        .split(',')
+        .map((x) => x.trim().toLowerCase())
+        .filter((x) => x.length > 0);
+    }
+
+    function parseAnchorParam(raw) {
+      const text = String(raw || '').trim();
+      if (!text) {
+        return null;
+      }
+      const parts = text
+        .split('.')
+        .map((x) => x.trim())
+        .filter((x) => x.length > 0)
+        .map((x) => Number.parseInt(x, 10));
+      if (parts.some((x) => !Number.isFinite(x) || x <= 0)) {
+        return null;
+      }
+      if (parts.length === 1) {
+        return { sutra: parts[0] };
+      }
+      if (parts.length === 2) {
+        return { chapter: parts[0], section: parts[1] };
+      }
+      return { chapter: parts[0], section: parts[1], sutra: parts[2] };
+    }
+
+    function parseRecordLocator(recordId) {
+      const m = String(recordId || '').match(
+        /^SKR\.([^.]+)\.(\d+)\.(\d+)\.([A-Z0-9]+)$/,
+      );
+      if (!m) {
+        return null;
+      }
+      const chapter = Number.parseInt(m[2], 10);
+      const section = Number.parseInt(m[3], 10);
+      const unitRaw = m[4];
+      const sutra = /^\d+$/.test(unitRaw)
+        ? Number.parseInt(unitRaw, 10)
+        : undefined;
+      return {
+        work: m[1],
+        chapter,
+        section,
+        unitRaw,
+        sutra,
+      };
+    }
+
+    function parseSemanticFromLocation() {
+      const params = new URLSearchParams(window.location.search);
+      const kinds = parseListParam(params, 'kinds');
+      const topics = parseListParam(params, 'topics');
+      const transitions = parseListParam(params, 'tx');
+      const anchor = parseAnchorParam(params.get('anchor'));
+      const coLocatedRaw = (params.get('co_located') || '').toLowerCase();
+      const coLocatedOnly = coLocatedRaw === '1' || coLocatedRaw === 'true';
+
+      if (
+        kinds.length === 0 &&
+        topics.length === 0 &&
+        transitions.length === 0 &&
+        !anchor &&
+        !coLocatedOnly
+      ) {
+        return null;
+      }
+
+      return {
+        kinds,
+        topics,
+        transitions,
+        anchor,
+        coLocatedOnly,
+      };
+    }
+
+    function recordTopicTags(record) {
+      if (Array.isArray(record.topic_tags) && record.topic_tags.length > 0) {
+        return record.topic_tags.map((x) => String(x).toLowerCase());
+      }
+      return Array.isArray(record.argument_tags)
+        ? record.argument_tags.map((x) => String(x).toLowerCase())
+        : [];
+    }
+
+    function ensureSemanticState() {
+      if (!state.semantic) {
+        state.semantic = {
+          kinds: [],
+          topics: [],
+          transitions: [],
+          anchor: null,
+          coLocatedOnly: false,
+        };
+      }
+      if (!Array.isArray(state.semantic.kinds)) {
+        state.semantic.kinds = [];
+      }
+      return state.semantic;
+    }
+
+    function sameKinds(left, right) {
+      if (left.length !== right.length) {
+        return false;
+      }
+      const ls = [...left].sort().join('|');
+      const rs = [...right].sort().join('|');
+      return ls === rs;
+    }
+
+    function activeKindPreset() {
+      const semantic = state.semantic;
+      const activeKinds = semantic && Array.isArray(semantic.kinds)
+        ? semantic.kinds.map((x) => String(x).toLowerCase())
+        : [];
+
+      if (activeKinds.length === 0) {
+        return 'all';
+      }
+      if (sameKinds(activeKinds, KIND_PRESETS.verse)) {
+        return 'verse';
+      }
+      if (sameKinds(activeKinds, KIND_PRESETS['verse-bhasya'])) {
+        return 'verse-bhasya';
+      }
+      return 'custom';
+    }
+
+    function renderKindPresetButtons() {
+      const active = activeKindPreset();
+      for (const button of dom.kindPresetButtons) {
+        button.classList.toggle('active', button.dataset.preset === active);
+      }
+    }
+
+    function applyKindPreset(preset) {
+      const semantic = ensureSemanticState();
+      semantic.kinds = [...(KIND_PRESETS[preset] || [])];
+      renderKindPresetButtons();
+      renderRecordList();
+
+      const records = filteredRecords();
+      if (records.length === 0) {
+        state.selectedRecordId = null;
+        dom.currentMeta.textContent = 'No record selected';
+        dom.doc.innerHTML = '<p>No records match the current filters.</p>';
+        return;
+      }
+
+      if (!records.some((x) => x.record_id === state.selectedRecordId)) {
+        state.selectedRecordId = records[0].record_id;
+        renderRecordList();
+        openRecord(records[0]).catch(() => {
+          dom.doc.innerHTML = '<p>Failed to load markdown.</p>';
+        });
+      }
+    }
+
+    function matchesSemantic(record, semantic) {
+      if (!semantic) {
+        return true;
+      }
+
+      const locator = parseRecordLocator(record.record_id);
+
+      if (semantic.kinds.length > 0) {
+        const kind = String(record.record_kind || 'unknown').toLowerCase();
+        if (!semantic.kinds.includes(kind)) {
+          return false;
+        }
+      }
+
+      if (semantic.topics.length > 0) {
+        const tags = recordTopicTags(record);
+        if (!semantic.topics.some((topic) => tags.includes(topic))) {
+          return false;
+        }
+      }
+
+      if (semantic.transitions.length > 0) {
+        const hay = [
+          record.source_text,
+          record.literal_translation,
+          record.technical_translation,
+        ]
+          .join(' ')
+          .toLowerCase();
+        if (!semantic.transitions.some((term) => hay.includes(term))) {
+          return false;
+        }
+      }
+
+      if (semantic.anchor && locator) {
+        if (
+          semantic.anchor.chapter != null &&
+          locator.chapter !== semantic.anchor.chapter
+        ) {
+          return false;
+        }
+        if (
+          semantic.anchor.section != null &&
+          locator.section !== semantic.anchor.section
+        ) {
+          return false;
+        }
+        if (semantic.anchor.sutra != null) {
+          if (!Number.isFinite(locator.sutra)) {
+            return false;
+          }
+          if (semantic.coLocatedOnly) {
+            if (locator.sutra !== semantic.anchor.sutra) {
+              return false;
+            }
+          } else if (locator.sutra !== semantic.anchor.sutra) {
+            return false;
+          }
+        }
+      }
+
+      return true;
+    }
+
     function filteredRecords() {
       const query = dom.searchInput.value.trim().toLowerCase();
       const section = dom.sectionFilter.value;
 
       return state.records.filter((record) => {
         if (section && record.section_code !== section) {
+          return false;
+        }
+
+        if (!matchesSemantic(record, state.semantic)) {
           return false;
         }
 
@@ -881,7 +1302,7 @@ def write_viewer_html(workbench_root: Path) -> None:
         const button = document.createElement('button');
         button.type = 'button';
         button.className = 'item' + (record.record_id === state.selectedRecordId ? ' active' : '');
-        button.innerHTML = `<div class=\"id\">${escapeHtml(record.record_id)}</div><div class=\"meta\">${escapeHtml(record.record_kind || 'unknown')} | Section ${escapeHtml(record.section_code)}</div>`;
+        button.innerHTML = `<div class=\"id\">${escapeHtml(record.record_id)}</div><div class=\"meta\">${escapeHtml(formatRecordMeta(record))}</div>`;
         button.addEventListener('click', () => {
           state.selectedRecordId = record.record_id;
           renderRecordList();
@@ -892,7 +1313,13 @@ def write_viewer_html(workbench_root: Path) -> None:
     }
 
     async function openRecord(record) {
-      dom.currentMeta.textContent = `${record.record_id} | ${record.record_kind || 'unknown'} | Section ${record.section_code}`;
+      dom.currentMeta.textContent = formatCurrentMeta(record);
+      const profileKey = currentProfileKey();
+      if (profileKey !== 'markdown') {
+        renderSimpleStructured(record, profileKey);
+        return;
+      }
+
       dom.doc.innerHTML = '<p>Loading markdown...</p>';
       const response = await fetch(record.md_path);
       if (!response.ok) {
@@ -913,8 +1340,10 @@ def write_viewer_html(workbench_root: Path) -> None:
 
       state.manifest = await response.json();
       state.records = state.manifest.records || [];
+      state.semantic = parseSemanticFromLocation();
 
       buildSectionOptions(state.manifest.sections || []);
+      renderKindPresetButtons();
       renderRecordList();
 
       const first = state.records[0];
@@ -927,7 +1356,21 @@ def write_viewer_html(workbench_root: Path) -> None:
       }
 
       dom.searchInput.addEventListener('input', renderRecordList);
+      dom.viewProfile.addEventListener('change', () => {
+        renderRecordList();
+        const selected = state.records.find((x) => x.record_id === state.selectedRecordId);
+        if (selected) {
+          openRecord(selected).catch(() => {
+            dom.doc.innerHTML = '<p>Failed to load record.</p>';
+          });
+        }
+      });
       dom.sectionFilter.addEventListener('change', renderRecordList);
+      for (const button of dom.kindPresetButtons) {
+        button.addEventListener('click', () => {
+          applyKindPreset(button.dataset.preset || 'all');
+        });
+      }
     }
 
     init().catch((err) => {

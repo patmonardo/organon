@@ -76,6 +76,11 @@
       "objection",
       "definition",
       "example"
+    ],
+    "tags": [
+      "layout:chapter-section-record",
+      "policy:append-and-supersede-never-delete",
+      "strata:bhasya"
     ]
   },
   "provenance": {
@@ -92,5 +97,6 @@
       "Curated in contiguous S01 pass with stable inferential-tag schema.",
       "A later philological pass should revisit truncated source lines and detailed jyotis/gayatri technical phrasing in records 1.1.084-1.1.087."
     ]
-  }
+  },
+  "record_kind": "bhasya"
 }

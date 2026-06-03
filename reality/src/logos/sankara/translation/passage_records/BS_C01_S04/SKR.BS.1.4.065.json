@@ -34,6 +34,11 @@
     ],
     "argument_tags": [
       "objection"
+    ],
+    "tags": [
+      "layout:chapter-section-record",
+      "policy:append-and-supersede-never-delete",
+      "strata:bhasya"
     ]
   },
   "provenance": {
@@ -50,5 +55,6 @@
       "Draft translation prioritized doctrinal continuity within the local adhikarana sequence.",
       "Final philological pass should tighten citation-level granularity and preferred Sanskrit term retention."
     ]
-  }
+  },
+  "record_kind": "bhasya"
 }

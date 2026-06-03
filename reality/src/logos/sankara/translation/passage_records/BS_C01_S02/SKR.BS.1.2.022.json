@@ -64,6 +64,11 @@
     ],
     "argument_tags": [
       "resolution"
+    ],
+    "tags": [
+      "layout:chapter-section-record",
+      "policy:append-and-supersede-never-delete",
+      "strata:sutra"
     ]
   },
   "provenance": {
@@ -80,5 +85,6 @@
       "Curated in contiguous S02 pass with stable cadence and inferential-tag schema.",
       "A later philological pass should revisit upadhi/vyavahara terminology and atta-grahana technical choices in records 1.2.016-1.2.022."
     ]
-  }
+  },
+  "record_kind": "sutra"
 }

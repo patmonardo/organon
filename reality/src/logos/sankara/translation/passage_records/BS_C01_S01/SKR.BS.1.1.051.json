@@ -64,6 +64,11 @@
     ],
     "argument_tags": [
       "resolution"
+    ],
+    "tags": [
+      "layout:chapter-section-record",
+      "policy:append-and-supersede-never-delete",
+      "strata:sutra"
     ]
   },
   "provenance": {
@@ -80,5 +85,6 @@
       "Curated in contiguous S01 pass with stable inferential-tag schema.",
       "A later philological pass should revisit anandamaya technical layering and the long transition bridge in records 1.1.048-1.1.055."
     ]
-  }
+  },
+  "record_kind": "sutra"
 }

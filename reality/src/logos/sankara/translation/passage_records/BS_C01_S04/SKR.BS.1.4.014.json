@@ -26,10 +26,20 @@
         "gloss": "topical unit of argument",
         "contextual_sense": "Tracks each block inside the section-level inferential sequence",
         "grammatical_role": "noun",
-        "alternate_glosses": ["topic-unit", "argument node"]
+        "alternate_glosses": [
+          "topic-unit",
+          "argument node"
+        ]
       }
     ],
-    "argument_tags": ["objection"]
+    "argument_tags": [
+      "objection"
+    ],
+    "tags": [
+      "layout:chapter-section-record",
+      "policy:append-and-supersede-never-delete",
+      "strata:bhasya"
+    ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
@@ -45,5 +55,6 @@
       "This block is intentionally rendered as an argumentative dilemma rather than a settled claim.",
       "Terms like anukarsa/apurva are translated functionally; you may prefer explicit Sanskrit retention in final curation."
     ]
-  }
+  },
+  "record_kind": "bhasya"
 }

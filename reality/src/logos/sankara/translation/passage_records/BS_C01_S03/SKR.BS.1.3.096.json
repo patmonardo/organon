@@ -34,6 +34,11 @@
     ],
     "argument_tags": [
       "resolution"
+    ],
+    "tags": [
+      "layout:chapter-section-record",
+      "policy:append-and-supersede-never-delete",
+      "strata:sutra"
     ]
   },
   "provenance": {
@@ -50,5 +55,6 @@
       "Curated in contiguous S03 pass with stable cadence and inferential-tag schema.",
       "A later philological pass should revisit social-category and adhikara terminology choices in records 1.3.089-1.3.096."
     ]
-  }
+  },
+  "record_kind": "sutra"
 }

@@ -76,6 +76,11 @@
       "response",
       "resolution",
       "definition"
+    ],
+    "tags": [
+      "layout:chapter-section-record",
+      "policy:append-and-supersede-never-delete",
+      "strata:bhasya"
     ]
   },
   "provenance": {
@@ -92,5 +97,6 @@
       "Curated in contiguous S02 pass with stable cadence and inferential-tag schema.",
       "A later philological pass should revisit akshara/avyakrta and vaisvanara lexical decisions in records 1.2.055-1.2.062."
     ]
-  }
+  },
+  "record_kind": "bhasya"
 }

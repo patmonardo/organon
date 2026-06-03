@@ -1,0 +1,105 @@
+{
+  "kind": "corpus-annotation-examples",
+  "version": "0.1",
+  "policy": {
+    "analysis_mode": "technical-vocabulary-only",
+    "unknown_term_handling": "flag-for-curation",
+    "minimum_translation_note_level": "lexical-notes",
+    "review_exclusions": ["qa-uncertainty-notes", "provenance-review"],
+    "source_track_policy": {
+      "must_retain_source_track": true,
+      "preferred_source_track": "sringeri.net"
+    },
+    "do_not_touch": [
+      "translation.literal_translation",
+      "translation.technical_translation",
+      "translation.interpretive_note",
+      "provenance",
+      "source.track"
+    ],
+    "safe_structuring_lane": [
+      "record_kind",
+      "analysis.tags",
+      "analysis.lexical_notes",
+      "analysis.transition_notes",
+      "analysis.logical_notes"
+    ]
+  },
+  "examples": [
+    {
+      "kind": "corpus-annotation-example",
+      "input": {
+        "kind": "corpus-document-input",
+        "documentId": "doc.BS.1.1",
+        "workCode": "BS",
+        "sectionCode": "1.1",
+        "recordId": "SKR.BS.1.1.1.VERSETEXT_01",
+        "content": "atha ato brahma jijñāsā"
+      },
+      "output": {
+        "kind": "analytical-output",
+        "mode": "technical-vocabulary-only",
+        "annotations": [
+          {
+            "label": "mantra",
+            "start": 0,
+            "end": 22,
+            "text": "atha ato brahma jijñāsā",
+            "vocabulary": "technical"
+          },
+          {
+            "label": "technical-term",
+            "start": 9,
+            "end": 15,
+            "text": "brahma",
+            "vocabulary": "technical"
+          }
+        ],
+        "summaryTerms": ["adhikarana-entry", "brahma", "jijnasa"]
+      }
+    },
+    {
+      "kind": "corpus-annotation-example",
+      "input": {
+        "kind": "corpus-document-input",
+        "documentId": "doc.BS.1.2",
+        "workCode": "BS",
+        "sectionCode": "1.2",
+        "recordId": "SKR.BS.1.2.1.BHASHYA_01",
+        "content": "iti kecit vadanti; ayam arthaḥ anyathā vyākhyātaḥ"
+      },
+      "output": {
+        "kind": "analytical-output",
+        "mode": "technical-vocabulary-only",
+        "annotations": [
+          {
+            "label": "bhasya",
+            "start": 0,
+            "end": 52,
+            "text": "iti kecit vadanti; ayam arthaḥ anyathā vyākhyātaḥ",
+            "vocabulary": "technical"
+          },
+          {
+            "label": "transition",
+            "start": 0,
+            "end": 3,
+            "text": "iti",
+            "vocabulary": "technical"
+          },
+          {
+            "label": "logical-note",
+            "start": 24,
+            "end": 51,
+            "text": "arthaḥ anyathā vyākhyātaḥ",
+            "vocabulary": "logical-open"
+          }
+        ],
+        "summaryTerms": [
+          "transition-marker",
+          "interpretive-shift",
+          "flag-for-curation"
+        ]
+      }
+    }
+  ]
+}

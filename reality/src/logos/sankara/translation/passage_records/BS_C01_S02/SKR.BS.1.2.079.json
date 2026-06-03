@@ -64,6 +64,11 @@
     ],
     "argument_tags": [
       "resolution"
+    ],
+    "tags": [
+      "layout:chapter-section-record",
+      "policy:append-and-supersede-never-delete",
+      "strata:sutra"
     ]
   },
   "provenance": {
@@ -80,5 +85,6 @@
       "Curated in contiguous S02 pass with stable cadence and inferential-tag schema.",
       "A later philological pass should revisit Jabala Avimukta phrasing and abhimana etymological glosses in records 1.2.079-1.2.081."
     ]
-  }
+  },
+  "record_kind": "sutra"
 }

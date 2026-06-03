@@ -77,6 +77,11 @@
       "response",
       "resolution",
       "example"
+    ],
+    "tags": [
+      "layout:chapter-section-record",
+      "policy:append-and-supersede-never-delete",
+      "strata:preamble"
     ]
   },
   "provenance": {
@@ -93,5 +98,6 @@
       "Curated in contiguous S01 opening pass with stable inferential-tag schema.",
       "A later philological pass should revisit dense adhyasa technical vocabulary and karmani-sasthi grammatical framing in PRE-1.1.007."
     ]
-  }
+  },
+  "record_kind": "preamble"
 }

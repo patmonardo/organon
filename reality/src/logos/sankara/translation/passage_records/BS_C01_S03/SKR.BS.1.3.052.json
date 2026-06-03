@@ -35,6 +35,11 @@
     "argument_tags": [
       "response",
       "resolution"
+    ],
+    "tags": [
+      "layout:chapter-section-record",
+      "policy:append-and-supersede-never-delete",
+      "strata:bhasya"
     ]
   },
   "provenance": {
@@ -51,5 +56,6 @@
       "Curated in contiguous S03 pass with unchanged block cadence and schema expectations.",
       "A later philological sweep should revisit light-metaphysics language for strict terminological consistency."
     ]
-  }
+  },
+  "record_kind": "bhasya"
 }

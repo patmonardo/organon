@@ -26,10 +26,21 @@
         "gloss": "topical unit of argument",
         "contextual_sense": "Tracks each block inside the section-level inferential sequence",
         "grammatical_role": "noun",
-        "alternate_glosses": ["topic-unit", "argument node"]
+        "alternate_glosses": [
+          "topic-unit",
+          "argument node"
+        ]
       }
     ],
-    "argument_tags": ["response", "resolution"]
+    "argument_tags": [
+      "response",
+      "resolution"
+    ],
+    "tags": [
+      "layout:chapter-section-record",
+      "policy:append-and-supersede-never-delete",
+      "strata:bhasya"
+    ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
@@ -45,5 +56,6 @@
       "Camasa analogy is rendered as a general hermeneutic argument against exclusive fixation.",
       "Final Sanskrit nuance of avadharana is compressed into 'cannot be determined' phrasing."
     ]
-  }
+  },
+  "record_kind": "bhasya"
 }

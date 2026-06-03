@@ -34,6 +34,11 @@
     ],
     "argument_tags": [
       "resolution"
+    ],
+    "tags": [
+      "layout:chapter-section-record",
+      "policy:append-and-supersede-never-delete",
+      "strata:sutra"
     ]
   },
   "provenance": {
@@ -50,5 +55,6 @@
       "Curated in contiguous S03 pass with consistent S04-style inferential framing.",
       "A later philological pass should tighten nuance in long non-dual interpretive paragraphs (1.3.045 especially)."
     ]
-  }
+  },
+  "record_kind": "sutra"
 }

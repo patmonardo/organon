@@ -64,6 +64,11 @@
     ],
     "argument_tags": [
       "resolution"
+    ],
+    "tags": [
+      "layout:chapter-section-record",
+      "policy:append-and-supersede-never-delete",
+      "strata:sutra"
     ]
   },
   "provenance": {
@@ -80,5 +85,6 @@
       "Curated in contiguous S02 pass with stable cadence and inferential-tag schema.",
       "A later philological pass should revisit vaisvanara lexical-rhetorical pivots and drsti-upadesa framing in records 1.2.063-1.2.070."
     ]
-  }
+  },
+  "record_kind": "sutra"
 }

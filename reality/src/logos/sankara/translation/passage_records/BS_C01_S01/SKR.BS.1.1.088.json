@@ -46,17 +46,30 @@
         "gloss": "corroboration by example or vision",
         "contextual_sense": "The Bhashya leans on established interpretive practice to show this reading is not forced.",
         "grammatical_role": "compound noun",
-        "alternate_glosses": ["exemplary support", "vision-based confirmation"]
+        "alternate_glosses": [
+          "exemplary support",
+          "vision-based confirmation"
+        ]
       },
       {
         "headword_iast": "brahma-pratīka",
         "gloss": "Brahman as symbolic support",
         "contextual_sense": "The meter is not itself the endpoint; it serves as a contemplative proxy for Brahman.",
         "grammatical_role": "compound noun",
-        "alternate_glosses": ["Brahman-symbol", "proxy-sign for Brahman"]
+        "alternate_glosses": [
+          "Brahman-symbol",
+          "proxy-sign for Brahman"
+        ]
       }
     ],
-    "argument_tags": ["resolution"]
+    "argument_tags": [
+      "resolution"
+    ],
+    "tags": [
+      "layout:chapter-section-record",
+      "policy:append-and-supersede-never-delete",
+      "strata:sutra"
+    ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
@@ -72,5 +85,6 @@
       "Curated in contiguous S01 pass with stable inferential-tag schema.",
       "A later philological pass should revisit truncated source lines and precise phrasing in the jyotis/gayatri bridge and Kausitaki prana section (1.1.084-1.1.095)."
     ]
-  }
+  },
+  "record_kind": "sutra"
 }

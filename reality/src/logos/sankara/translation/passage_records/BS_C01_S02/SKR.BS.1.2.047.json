@@ -77,6 +77,11 @@
       "response",
       "resolution",
       "definition"
+    ],
+    "tags": [
+      "layout:chapter-section-record",
+      "policy:append-and-supersede-never-delete",
+      "strata:bhasya"
     ]
   },
   "provenance": {
@@ -93,5 +98,6 @@
       "Curated in contiguous S02 pass with stable cadence and inferential-tag schema.",
       "A later philological pass should revisit antaryamin and akshara-bhuta-yoni terminology in records 1.2.047-1.2.054."
     ]
-  }
+  },
+  "record_kind": "bhasya"
 }

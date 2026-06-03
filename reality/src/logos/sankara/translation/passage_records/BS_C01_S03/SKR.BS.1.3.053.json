@@ -34,6 +34,11 @@
     ],
     "argument_tags": [
       "resolution"
+    ],
+    "tags": [
+      "layout:chapter-section-record",
+      "policy:append-and-supersede-never-delete",
+      "strata:sutra"
     ]
   },
   "provenance": {
@@ -50,5 +55,6 @@
       "Curated in contiguous S03 pass with unchanged block cadence and schema expectations.",
       "A later philological sweep should revisit light-metaphysics language for strict terminological consistency."
     ]
-  }
+  },
+  "record_kind": "sutra"
 }

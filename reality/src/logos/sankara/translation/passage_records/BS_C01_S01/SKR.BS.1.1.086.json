@@ -36,24 +36,40 @@
         "gloss": "following the indicator",
         "contextual_sense": "The rule is not verbal habit but sign-led continuity from the earlier section.",
         "grammatical_role": "compound noun",
-        "alternate_glosses": ["marker-following", "sign-based inference"]
+        "alternate_glosses": [
+          "marker-following",
+          "sign-based inference"
+        ]
       },
       {
         "headword_iast": "ālocya-pratibhā",
         "gloss": "discerned meaning",
         "contextual_sense": "What is seen here is not a new object but the same doctrinal light in a different verbal frame.",
         "grammatical_role": "compound noun",
-        "alternate_glosses": ["insightful meaning", "apprehended sense"]
+        "alternate_glosses": [
+          "insightful meaning",
+          "apprehended sense"
+        ]
       },
       {
         "headword_iast": "sūtra-saṃkṣepa-siddhi",
         "gloss": "successful sutra compression",
         "contextual_sense": "The aphorism preserves the earlier reasoning without repeating it at length.",
         "grammatical_role": "compound noun",
-        "alternate_glosses": ["concise doctrinal success", "abbreviated proof"]
+        "alternate_glosses": [
+          "concise doctrinal success",
+          "abbreviated proof"
+        ]
       }
     ],
-    "argument_tags": ["resolution"]
+    "argument_tags": [
+      "resolution"
+    ],
+    "tags": [
+      "layout:chapter-section-record",
+      "policy:append-and-supersede-never-delete",
+      "strata:sutra"
+    ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
@@ -69,5 +85,6 @@
       "Curated in contiguous S01 pass with stable inferential-tag schema.",
       "A later philological pass should revisit truncated source lines and detailed jyotis/gayatri technical phrasing in records 1.1.084-1.1.087."
     ]
-  }
+  },
+  "record_kind": "sutra"
 }

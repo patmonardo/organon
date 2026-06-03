@@ -26,10 +26,21 @@
         "gloss": "topical unit of argument",
         "contextual_sense": "Tracks each block inside the section-level inferential sequence",
         "grammatical_role": "noun",
-        "alternate_glosses": ["topic-unit", "argument node"]
+        "alternate_glosses": [
+          "topic-unit",
+          "argument node"
+        ]
       }
     ],
-    "argument_tags": ["thesis", "resolution"]
+    "argument_tags": [
+      "thesis",
+      "resolution"
+    ],
+    "tags": [
+      "layout:chapter-section-record",
+      "policy:append-and-supersede-never-delete",
+      "strata:sutra"
+    ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
@@ -45,5 +56,6 @@
       "Sutra is translated at high level and should still be checked against neighboring bhashya granularity.",
       "Interpretive scope of jneyatva here remains tied to the ongoing anti-pradhana argument."
     ]
-  }
+  },
+  "record_kind": "sutra"
 }

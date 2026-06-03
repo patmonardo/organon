@@ -36,6 +36,11 @@
       "objection",
       "response",
       "resolution"
+    ],
+    "tags": [
+      "layout:chapter-section-record",
+      "policy:append-and-supersede-never-delete",
+      "strata:bhasya"
     ]
   },
   "provenance": {
@@ -52,5 +57,6 @@
       "Curated against local adhikarana flow and neighboring translated blocks.",
       "A final philological pass can still refine register and Sanskrit term granularity."
     ]
-  }
+  },
+  "record_kind": "bhasya"
 }

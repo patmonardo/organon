@@ -26,10 +26,21 @@
         "gloss": "topical unit of argument",
         "contextual_sense": "Tracks each block inside the section-level inferential sequence",
         "grammatical_role": "noun",
-        "alternate_glosses": ["topic-unit", "argument node"]
+        "alternate_glosses": [
+          "topic-unit",
+          "argument node"
+        ]
       }
     ],
-    "argument_tags": ["response", "resolution"]
+    "argument_tags": [
+      "response",
+      "resolution"
+    ],
+    "tags": [
+      "layout:chapter-section-record",
+      "policy:append-and-supersede-never-delete",
+      "strata:bhasya"
+    ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
@@ -45,5 +56,6 @@
       "This draft compresses a longer illustrative passage into functional prose.",
       "Final version may separate the illustrative goat analogy from doctrinal conclusion more explicitly."
     ]
-  }
+  },
+  "record_kind": "bhasya"
 }

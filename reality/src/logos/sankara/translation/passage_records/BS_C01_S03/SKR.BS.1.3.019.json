@@ -36,6 +36,11 @@
       "objection",
       "example",
       "thesis"
+    ],
+    "tags": [
+      "layout:chapter-section-record",
+      "policy:append-and-supersede-never-delete",
+      "strata:bhasya"
     ]
   },
   "provenance": {
@@ -52,5 +57,6 @@
       "Curated in contiguous S03 pass with consistent inferential labeling and S04-style structure.",
       "A later philological sweep should revisit bhuma/samprasada nuance and long-compound Sanskrit segmentation."
     ]
-  }
+  },
+  "record_kind": "bhasya"
 }

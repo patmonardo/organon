@@ -66,6 +66,11 @@
       "response",
       "resolution",
       "example"
+    ],
+    "tags": [
+      "layout:chapter-section-record",
+      "policy:append-and-supersede-never-delete",
+      "strata:bhasya"
     ]
   },
   "provenance": {
@@ -82,5 +87,6 @@
       "Curated in contiguous S02 pass with stable cadence and inferential-tag schema.",
       "A later philological pass should revisit sharira/jiva/upadhi precision in records 1.2.007-1.2.014."
     ]
-  }
+  },
+  "record_kind": "bhasya"
 }

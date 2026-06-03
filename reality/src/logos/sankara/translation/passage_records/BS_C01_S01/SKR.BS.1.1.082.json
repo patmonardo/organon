@@ -36,7 +36,10 @@
         "gloss": "difference of wording",
         "contextual_sense": "Sutra rejects false equivalence where wording and contextual setting already differ.",
         "grammatical_role": "compound noun",
-        "alternate_glosses": ["lexical distinction", "verbal difference"]
+        "alternate_glosses": [
+          "lexical distinction",
+          "verbal difference"
+        ]
       },
       {
         "headword_iast": "prakaraṇa-niyama",
@@ -53,10 +56,23 @@
         "gloss": "father-of-father usage",
         "contextual_sense": "Illustrative grammar shows how a genitive-plus-nominative pattern fixes the intended relation.",
         "grammatical_role": "illustrative compound",
-        "alternate_glosses": ["possessive example", "relational usage model"]
+        "alternate_glosses": [
+          "possessive example",
+          "relational usage model"
+        ]
       }
     ],
-    "argument_tags": ["response", "definition", "resolution", "example"]
+    "argument_tags": [
+      "response",
+      "definition",
+      "resolution",
+      "example"
+    ],
+    "tags": [
+      "layout:chapter-section-record",
+      "policy:append-and-supersede-never-delete",
+      "strata:bhasya"
+    ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
@@ -72,5 +88,6 @@
       "Curated in contiguous S01 pass with stable inferential-tag schema.",
       "A later philological pass should revisit truncated source lines and detailed jyotis/gayatri technical phrasing in records 1.1.084-1.1.087."
     ]
-  }
+  },
+  "record_kind": "bhasya"
 }

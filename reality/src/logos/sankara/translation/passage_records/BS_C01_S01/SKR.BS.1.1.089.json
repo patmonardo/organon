@@ -26,31 +26,53 @@
         "gloss": "designation of the bhuta and other quarters",
         "contextual_sense": "The earlier passage’s quarter-structure is recalled to maintain topic continuity.",
         "grammatical_role": "compound noun",
-        "alternate_glosses": ["quarter designation", "bhuta-quarter naming"]
+        "alternate_glosses": [
+          "quarter designation",
+          "bhuta-quarter naming"
+        ]
       },
       {
         "headword_iast": "brahma-prakaraṇa",
         "gloss": "Brahman topic-section",
         "contextual_sense": "The surrounding segment is treated as already being about Brahman, so the same referent carries through.",
         "grammatical_role": "compound noun",
-        "alternate_glosses": ["Brahman context", "topic-bound Brahman reading"]
+        "alternate_glosses": [
+          "Brahman context",
+          "topic-bound Brahman reading"
+        ]
       },
       {
         "headword_iast": "jyotis-pratyabhijñā",
         "gloss": "recognition of jyotis",
         "contextual_sense": "The light-term is recovered as the same doctrinal object already introduced earlier.",
         "grammatical_role": "compound noun",
-        "alternate_glosses": ["light-recognition", "repeat identification"]
+        "alternate_glosses": [
+          "light-recognition",
+          "repeat identification"
+        ]
       },
       {
         "headword_iast": "samānādhikaraṇya",
         "gloss": "co-reference in grammar",
         "contextual_sense": "Even with different phrasings, the passage keeps one underlying subject in view.",
         "grammatical_role": "compound noun",
-        "alternate_glosses": ["shared reference", "same-subject grammar"]
+        "alternate_glosses": [
+          "shared reference",
+          "same-subject grammar"
+        ]
       }
     ],
-    "argument_tags": ["response", "resolution", "definition", "example"]
+    "argument_tags": [
+      "response",
+      "resolution",
+      "definition",
+      "example"
+    ],
+    "tags": [
+      "layout:chapter-section-record",
+      "policy:append-and-supersede-never-delete",
+      "strata:bhasya"
+    ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
@@ -66,5 +88,6 @@
       "Curated in contiguous S01 pass with stable inferential-tag schema.",
       "A later philological pass should revisit truncated source lines and precise phrasing in the jyotis/gayatri bridge and Kausitaki prana section (1.1.084-1.1.095)."
     ]
-  }
+  },
+  "record_kind": "bhasya"
 }

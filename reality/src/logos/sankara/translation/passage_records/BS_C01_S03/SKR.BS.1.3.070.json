@@ -35,6 +35,11 @@
     "argument_tags": [
       "resolution",
       "definition"
+    ],
+    "tags": [
+      "layout:chapter-section-record",
+      "policy:append-and-supersede-never-delete",
+      "strata:bhasya"
     ]
   },
   "provenance": {
@@ -51,5 +56,6 @@
       "Curated in contiguous S03 pass with stable cadence and inferential-tag schema.",
       "A later philological pass should revisit technical choices around sphota/varna vocabulary in records 1.3.068 and 1.3.069."
     ]
-  }
+  },
+  "record_kind": "bhasya"
 }

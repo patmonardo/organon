@@ -26,10 +26,21 @@
         "gloss": "topical unit of argument",
         "contextual_sense": "Tracks each block inside the section-level inferential sequence",
         "grammatical_role": "noun",
-        "alternate_glosses": ["topic-unit", "argument node"]
+        "alternate_glosses": [
+          "topic-unit",
+          "argument node"
+        ]
       }
     ],
-    "argument_tags": ["response", "resolution"]
+    "argument_tags": [
+      "response",
+      "resolution"
+    ],
+    "tags": [
+      "layout:chapter-section-record",
+      "policy:append-and-supersede-never-delete",
+      "strata:bhasya"
+    ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
@@ -45,5 +56,6 @@
       "Source block is long; this draft foregrounds formal rebuttal structure rather than every sub-example.",
       "Count-overflow (atireka) may be tuned further after line-level reconciliation with your preferred edition."
     ]
-  }
+  },
+  "record_kind": "bhasya"
 }

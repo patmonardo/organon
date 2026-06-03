@@ -26,10 +26,21 @@
         "gloss": "topical unit of argument",
         "contextual_sense": "Tracks each block inside the section-level inferential sequence",
         "grammatical_role": "noun",
-        "alternate_glosses": ["topic-unit", "argument node"]
+        "alternate_glosses": [
+          "topic-unit",
+          "argument node"
+        ]
       }
     ],
-    "argument_tags": ["objection", "response"]
+    "argument_tags": [
+      "objection",
+      "response"
+    ],
+    "tags": [
+      "layout:chapter-section-record",
+      "policy:append-and-supersede-never-delete",
+      "strata:bhasya"
+    ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
@@ -45,5 +56,6 @@
       "Rendered as a transition statement; full argument is distributed across adjacent records.",
       "Asat citation interpretation should be checked against your final section-level style sheet."
     ]
-  }
+  },
+  "record_kind": "bhasya"
 }

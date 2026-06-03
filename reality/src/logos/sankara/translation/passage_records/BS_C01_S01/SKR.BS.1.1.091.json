@@ -36,24 +36,43 @@
         "gloss": "contrast of locative and ablative forms",
         "contextual_sense": "Case-ending variation is used as the main objection against continuity of reference.",
         "grammatical_role": "compound noun",
-        "alternate_glosses": ["case-form opposition", "grammatical contrast"]
+        "alternate_glosses": [
+          "case-form opposition",
+          "grammatical contrast"
+        ]
       },
       {
         "headword_iast": "pratyabhijñā",
         "gloss": "recognition / re-identification",
         "contextual_sense": "The Bhashya later rejects the claim that a new case-form necessarily means a new object.",
         "grammatical_role": "abstract noun",
-        "alternate_glosses": ["recognition", "re-cognition"]
+        "alternate_glosses": [
+          "recognition",
+          "re-cognition"
+        ]
       },
       {
         "headword_iast": "upadeśa-krama",
         "gloss": "sequence of instruction",
         "contextual_sense": "A change in expression is treated as a change in pedagogical stance, not in ontic target.",
         "grammatical_role": "compound noun",
-        "alternate_glosses": ["teaching sequence", "instructional order"]
+        "alternate_glosses": [
+          "teaching sequence",
+          "instructional order"
+        ]
       }
     ],
-    "argument_tags": ["response", "resolution", "example", "definition"]
+    "argument_tags": [
+      "response",
+      "resolution",
+      "example",
+      "definition"
+    ],
+    "tags": [
+      "layout:chapter-section-record",
+      "policy:append-and-supersede-never-delete",
+      "strata:bhasya"
+    ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
@@ -69,5 +88,6 @@
       "Curated in contiguous S01 pass with stable inferential-tag schema.",
       "A later philological pass should revisit truncated source lines and precise phrasing in the jyotis/gayatri bridge and Kausitaki prana section (1.1.084-1.1.095)."
     ]
-  }
+  },
+  "record_kind": "bhasya"
 }

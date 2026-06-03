@@ -35,6 +35,11 @@
     "argument_tags": [
       "objection",
       "thesis"
+    ],
+    "tags": [
+      "layout:chapter-section-record",
+      "policy:append-and-supersede-never-delete",
+      "strata:bhasya"
     ]
   },
   "provenance": {
@@ -51,5 +56,6 @@
       "Curated in contiguous S03 pass with stable S04-style schema semantics.",
       "A later philological pass should tighten technical terms in the akshara and pranava subsections."
     ]
-  }
+  },
+  "record_kind": "bhasya"
 }

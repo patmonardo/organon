@@ -34,6 +34,11 @@
     ],
     "argument_tags": [
       "resolution"
+    ],
+    "tags": [
+      "layout:chapter-section-record",
+      "policy:append-and-supersede-never-delete",
+      "strata:sutra"
     ]
   },
   "provenance": {
@@ -50,5 +55,6 @@
       "Curated to match S04 style: doctrinal continuity plus explicit inferential tagging.",
       "A later philological pass may tighten lexical precision for setu/ayatana/atacchabda terminology."
     ]
-  }
+  },
+  "record_kind": "sutra"
 }

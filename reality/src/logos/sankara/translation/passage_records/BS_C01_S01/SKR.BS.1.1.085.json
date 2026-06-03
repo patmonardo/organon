@@ -26,7 +26,10 @@
         "gloss": "mention of a pada or quarter",
         "contextual_sense": "The earlier section’s quarter-structure is used to carry meaning forward into this passage.",
         "grammatical_role": "compound noun",
-        "alternate_glosses": ["pada reference", "quarter-mention"]
+        "alternate_glosses": [
+          "pada reference",
+          "quarter-mention"
+        ]
       },
       {
         "headword_iast": "jyotis-brahma-grahaṇa",
@@ -53,10 +56,23 @@
         "gloss": "ease of apprehension",
         "contextual_sense": "The contextual reading is justified because the scripture is teaching, not merely naming.",
         "grammatical_role": "abstract noun",
-        "alternate_glosses": ["interpretive ease", "pedagogical accessibility"]
+        "alternate_glosses": [
+          "interpretive ease",
+          "pedagogical accessibility"
+        ]
       }
     ],
-    "argument_tags": ["response", "resolution", "definition", "example"]
+    "argument_tags": [
+      "response",
+      "resolution",
+      "definition",
+      "example"
+    ],
+    "tags": [
+      "layout:chapter-section-record",
+      "policy:append-and-supersede-never-delete",
+      "strata:bhasya"
+    ]
   },
   "provenance": {
     "extraction_timestamp_utc": "2026-06-02T16:24:50Z",
@@ -72,5 +88,6 @@
       "Curated in contiguous S01 pass with stable inferential-tag schema.",
       "A later philological pass should revisit truncated source lines and detailed jyotis/gayatri technical phrasing in records 1.1.084-1.1.087."
     ]
-  }
+  },
+  "record_kind": "bhasya"
 }

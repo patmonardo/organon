@@ -36,6 +36,11 @@
       "response",
       "resolution",
       "example"
+    ],
+    "tags": [
+      "layout:chapter-section-record",
+      "policy:append-and-supersede-never-delete",
+      "strata:bhasya"
     ]
   },
   "provenance": {
@@ -52,5 +57,6 @@
       "Curated in contiguous S03 pass with S04-style inferential framing.",
       "A later philological pass may refine precision around kṣetrajña/upādhi and two-birds imagery terms."
     ]
-  }
+  },
+  "record_kind": "bhasya"
 }

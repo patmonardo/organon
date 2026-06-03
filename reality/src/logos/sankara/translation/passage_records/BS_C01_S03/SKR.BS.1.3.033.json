@@ -34,6 +34,11 @@
     ],
     "argument_tags": [
       "resolution"
+    ],
+    "tags": [
+      "layout:chapter-section-record",
+      "policy:append-and-supersede-never-delete",
+      "strata:sutra"
     ]
   },
   "provenance": {
@@ -50,5 +55,6 @@
       "Curated in contiguous S03 pass with stable section-04 style criteria.",
       "A later philological pass may refine compound parsing and samasa-level nuance in long bhashya segments."
     ]
-  }
+  },
+  "record_kind": "sutra"
 }

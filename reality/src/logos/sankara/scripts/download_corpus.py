@@ -77,9 +77,32 @@ def read_url_file(path: Path) -> list[str]:
 def safe_slug(url: str) -> str:
     parsed = urlparse(url)
     parts = [parsed.netloc, *[piece for piece in parsed.path.split("/") if piece]]
+
     query_pairs = parse_qsl(parsed.query, keep_blank_values=True)
-    if query_pairs:
-        parts.extend(f"{key}-{value}" for key, value in query_pairs)
+    query_map: dict[str, str] = {}
+    for key, value in query_pairs:
+        if key not in query_map:
+            query_map[key] = value
+
+    # Canonical naming policy:
+    # - For bhashya display pages, prefer semantic id-based names.
+    # - Include page only when id is absent.
+    if parsed.path.startswith("/display/bhashya/"):
+        id_value = query_map.get("id", "").strip()
+        if id_value:
+            parts.append(f"id-{id_value}")
+        else:
+            page_value = query_map.get("page", "").strip()
+            if page_value:
+                parts.append(f"page-{page_value}")
+        for key, value in query_pairs:
+            if key in {"id", "page"}:
+                continue
+            parts.append(f"{key}-{value}")
+    else:
+        if query_pairs:
+            parts.extend(f"{key}-{value}" for key, value in query_pairs)
+
     if parsed.fragment:
         parts.append(parsed.fragment)
     base = "_".join(parts)
