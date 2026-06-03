@@ -1,0 +1,51 @@
+# SKR.BS.1.3.034
+
+## Metadata
+- Work code: BS
+- Section code: 1.3
+- QA status: draft
+- QA confidence: 0.79
+- Argument tags: objection, thesis, example
+
+## Source
+- Source URL: https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1
+- Language: sa
+- Script: Devanagari
+- Edition note: Draft block record from BS_C01_S03.json::BS_C01_S03_V14_B1 (bhashya).
+
+### Source Text
+‘ अथ यदिदमस्मिन्ब्रह्मपुरे दहरं पुण्डरीकं वेश्म दहरोऽस्मिन्नन्तराकाशस्तस्मिन्यदन्तस्तदन्वेष्टव्यं तद्वाव विजिज्ञासितव्यम् ’ (छा. उ. ८ । १ । १) इत्यादि वाक्यं समाम्नायते । तत्र योऽयं दहरे हृदयपुण्डरीके दहर आकाशः श्रुतः , स किं भूताकाशः , अथवा विज्ञानात्मा , अथवा परमात्मेति संशय्यते । कुतः संशयः ? आकाशब्रह्मपुरशब्दाभ्याम् । आकाशशब्दो ह्ययं भूताकाशे परस्मिंश्च प्रयुज्यमानो दृश्यते । तत्र किं भूताकाश एव दहरः स्यात् , किं वा पर इति संशयः । तथा ब्रह्मपुरमिति — किं जीवोऽत्र ब्रह्मनामा , तस्येदं पुरं शरीरं ब्रह्मपुरम् , अथवा परस्यैव ब्रह्मणः पुरं ब्रह्मपुरमिति । तत्र जीवस्य परस्य वान्यतरस्य पुरस्वामिनो दहराकाशत्वे संशयः । तत्राकाश शब्दस्य भूताकाशे रूढत्वाद्भूताकाश एव दहरशब्द इति प्राप्तम् । तस्य च दहरायतनापेक्षया दहरत्वम् । ‘ यावान्वा अयमाकाशस्तावानेषोऽन्तर्हृदय आकाशः ’ इति च बाह्याभ्यन्तरभावकृतभेदस्योपमानोपमेयभावः । द्यावापृथिव्यादि च तस्मिन्नन्तःसमाहितम् , अवकाशात्मनाकाशस्यैकत्वात् । अथवा जीवो दहर इति प्राप्तम् , ब्रह्मपुरशब्दात् । जीवस्य हीदं पुरं सत् शरीरं ब्रह्मपुरमित्युच्यते , तस्य स्वकर्मणोपार्जितत्वात् । भक्त्या च तस्य ब्रह्मशब्दवाच्यत्वम् । न हि परस्य ब्रह्मणः शरीरेण स्वस्वामिभावः सम्बन्धोऽस्ति । तत्र पुरस्वामिनः पुरैकदेशेऽवस्थानं दृष्टम् , यथा राज्ञः । मन उपाधिकश्च जीवः । मनश्च प्रायेण हृदये प्रतिष्ठितम् — इत्यतो जीवस्यैवेदं हृदयेऽन्तरवस्थानं स्यात् । दहरत्वमपि तस्यैव आराग्रोपमितत्वात् अवकल्पते । आका शोपमितत्वादि च ब्रह्माभेदविवक्षया भविष्यति । न चात्र दहरस्याकाशस्यान्वेष्टव्यत्वं विजिज्ञासितव्यत्वं च श्रूयते ; ‘ तस्मिन्यदन्तः ’ इति परविशेषणत्वेनोपादानादिति ॥
+
+### Transliteration (IAST)
+‘ atha yadidamasminbrahmapure daharaṃ puṇḍarīkaṃ veśma daharo'sminnantarākāśastasminyadantastadanveṣṭavyaṃ tadvāva vijijñāsitavyam ’ (chā. u. 8 | 1 | 1) ityādi vākyaṃ samāmnāyate | tatra yo'yaṃ dahare hṛdayapuṇḍarīke dahara ākāśaḥ śrutaḥ , sa kiṃ bhūtākāśaḥ , athavā vijñānātmā , athavā paramātmeti saṃśayyate | kutaḥ saṃśayaḥ ? ākāśabrahmapuraśabdābhyām | ākāśaśabdo hyayaṃ bhūtākāśe parasmiṃśca prayujyamāno dṛśyate | tatra kiṃ bhūtākāśa eva daharaḥ syāt , kiṃ vā para iti saṃśayaḥ | tathā brahmapuramiti — kiṃ jīvo'tra brahmanāmā , tasyedaṃ puraṃ śarīraṃ brahmapuram , athavā parasyaiva brahmaṇaḥ puraṃ brahmapuramiti | tatra jīvasya parasya vānyatarasya purasvāmino daharākāśatve saṃśayaḥ | tatrākāśa śabdasya bhūtākāśe rūḍhatvādbhūtākāśa eva daharaśabda iti prāptam | tasya ca daharāyatanāpekṣayā daharatvam | ‘ yāvānvā ayamākāśastāvāneṣo'ntarhṛdaya ākāśaḥ ’ iti ca bāhyābhyantarabhāvakṛtabhedasyopamānopameyabhāvaḥ | dyāvāpṛthivyādi ca tasminnantaḥsamāhitam , avakāśātmanākāśasyaikatvāt | athavā jīvo dahara iti prāptam , brahmapuraśabdāt | jīvasya hīdaṃ puraṃ sat śarīraṃ brahmapuramityucyate , tasya svakarmaṇopārjitatvāt | bhaktyā ca tasya brahmaśabdavācyatvam | na hi parasya brahmaṇaḥ śarīreṇa svasvāmibhāvaḥ sambandho'sti | tatra purasvāminaḥ puraikadeśe'vasthānaṃ dṛṣṭam , yathā rājñaḥ | mana upādhikaśca jīvaḥ | manaśca prāyeṇa hṛdaye pratiṣṭhitam — ityato jīvasyaivedaṃ hṛdaye'ntaravasthānaṃ syāt | daharatvamapi tasyaiva ārāgropamitatvāt avakalpate | ākā śopamitatvādi ca brahmābhedavivakṣayā bhaviṣyati | na cātra daharasyākāśasyānveṣṭavyatvaṃ vijijñāsitavyatvaṃ ca śrūyate ; ‘ tasminyadantaḥ ’ iti paraviśeṣaṇatvenopādānāditi ||
+
+## Translation
+
+### Literal
+A passage is recited: 'Now, in this city of Brahman, there is a small lotus-house; within it a small space; what is within that is to be sought, indeed to be known.' Here the small space in the heart-lotus is heard. Is it elemental space, or the cognitive self, or the supreme Self? Doubt arises from the words space and city-of-Brahman. The word akasha is used for elemental space and for the supreme. So is this small one elemental space, or the higher principle? Likewise with brahmapura: is Brahman here a name for the individual self, making body its city; or is it the city of supreme Brahman? Thus doubt persists whether the owner is jiva or the supreme, and whether the inner space is one or the other. Prima facie, it is elemental space, because akasha is conventionally fixed there; its smallness is relative to the little lotus-seat; and scripture compares inner and outer spaces as equivalent in extent. Heaven and earth being gathered in it can be explained by the unity of spatial extension. Alternatively one might conclude it is jiva, from brahmapura: body as city earned by one's karma; jiva being secondarily called brahman; and city-owner often residing in one part of the city, as a king does. Jiva, associated with mind, and mind mostly seated in heart, supports inner-heart location. Its subtle smallness too can be admitted by comparison to a point. Statements like akasha-comparison may then be taken as intending jiva's non-difference from Brahman. Further, one might say the text does not directly prescribe searching/knowing the small space itself, since the phrase 'what is within it' can be read as qualifying something else.
+
+### Technical
+Opening purvapaksha of daharadhikarana: lexical polysemy of akasha and brahmapura permits candidate readings (bhutakasha, jiva, paramatma), with conventional usage and localization arguments initially favoring non-parama readings.
+
+### Interpretive Note
+Sets up full referent ambiguity for dahara-akasha.
+
+## Analysis
+
+### Lexical Notes
+- **adhikaraṇa**
+  - Gloss: topical unit of argument
+  - Context: Tracks each block inside the section-level inferential sequence
+  - Grammar: noun
+  - Alternate glosses: topic-unit, argument node
+
+## QA Uncertainty Notes
+- Curated in contiguous S03 pass with stable section-04 style criteria.
+- A later philological pass may refine compound parsing and samasa-level nuance in long bhashya segments.
+
+## Provenance
+- Extraction timestamp (UTC): 2026-06-02T16:24:50Z
+- Translator version: human+llm@bs-c01-s03-curation-pass-5
+- Reviewer version: pending
+- Source manifest path: reality/src/logos/sankara/raw/manifest.jsonl
+- Source JSON path: /home/pat/VSCode/organon/reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.034.json

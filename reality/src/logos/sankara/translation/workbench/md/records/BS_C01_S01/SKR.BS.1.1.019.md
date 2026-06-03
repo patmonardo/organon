@@ -1,0 +1,51 @@
+# SKR.BS.1.1.019
+
+## Metadata
+- Work code: BS
+- Section code: 1.1
+- QA status: draft
+- QA confidence: 0.84
+- Argument tags: response, resolution, definition, example
+
+## Source
+- Source URL: https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1
+- Language: sa
+- Script: Devanagari
+- Edition note: Draft block record from BS_C01_S01.json::BS_C01_S01_V04_B1 (bhashya).
+
+### Source Text
+तुशब्दः पूर्वपक्षव्यावृत्त्यर्थः । तद्ब्रह्म सर्वज्ञं सर्वशक्ति जगदुत्पत्तिस्थितिलयकारणं वेदान्तशास्त्रादेवावगम्यते । कथम् ? सम न्वयात् । सर्वेषु हि वेदान्तेषु वाक्यानि तात्पर्येणैतस्यार्थस्य प्रतिपादकत्वेन समनुगतानि — ‘ सदेव सो म्येद मग्र आसीत् एक मेवा द्वितीयम् ’ (छा. उ. ६ । २ । १) ‘ आत्मा वा इदमेक एवाग्र आसीत् ’ (ऐ. उ. १ । १ । १) ‘ तदेत द्ब्र ह्मा पूर्व मनपरमनन्तर मबाह्यम् अय मा त्मा ब्रह्म सर्वा नुभूः ’ (बृ. उ. २ । ५ । १९) ‘ ब्रह्मैवेद म मृतं पुरस्तात् ’ (मु. उ. २ । २ । १२) इत्यादीनि । न च तद्गतानां पदानां ब्रह्मस्वरूपविषये निश्चिते समन्वयेऽवगम्यमाने अर्थान्तरकल्पना युक्ता , श्रुतहान्यश्रुतकल्पनाप्रसङ्गात् । न च तेषां कर्तृदेवतादिस्वरूपप्रतिपादनपरता अवसीयते , ‘ तत्केन कं पश्येत् ’ (बृ. उ. २ । ४ । १४) इत्यादिक्रियाकारकफलनिराकरणश्रुतेः । न च परि निष्ठितवस्तुस्वरूपत्वेऽपि प्रत्यक्षादिविषयत्वं ब्रह्मणः , ‘ तत्त्वमसि ’ (छा. उ. ६ । ८ । ७) इति ब्रह्मात्मभावस्य शास्त्रमन्तरेणानवगम्यमानत्वात् । यत्तु हेयोपादेयरहितत्वा दुपदेशानर्थक्यमिति , नै ष दोषः ; हेयोपादेयशून्य ब्रह्मात्मतावगमादेव सर्वक्लेशप्रहाणात्पुरुषार्थसिद्धेः । देवतादि प्रतिपादनस्य तु स्ववाक्यगतोपासनार्थत्वेऽपि न कश्चिद्विरोधः । न तु तथा ब्रह्मण उपासनाविधिशेषत्वं सम्भवति , एकत्वे हेयोपादेयशून्यतया क्रियाकारकादिद्वैतविज्ञानोपमर्दोपपत्तेः । न हि एकत्वविज्ञानेनोन्मथितस्य द्वैतविज्ञानस्य पुनः सम्भवोऽस्ति येनो पासनाविधिशेषत्वं ब्रह्मणः प्रतिपाद्येत । यद्य प्य न्यत्र वेदवाक्यानां विधिसंस्पर्शमन्तरेण प्रमाणत्वं न दृष्टम् , तथा प्या त्म विज्ञानस्य फलपर्यन्तत्वान्न तद्विषयस्य शास्त्रस्य प्रामाण्यं शक्यं प्रत्याख्यातुम् । न चा नुमानगम्यं शास्त्रप्रामाण्यम् , येना न्यत्र दृष्टं निदर्शनमपेक्ष्येत । तस्मा त्सिद्धं ब्रह्मणः शास्त्रप्रमाणकत्वम् ॥
+
+### Transliteration (IAST)
+tuśabdaḥ pūrvapakṣavyāvṛttyarthaḥ | tadbrahma sarvajñaṃ sarvaśakti jagadutpattisthitilayakāraṇaṃ vedāntaśāstrādevāvagamyate | katham ? sama nvayāt | sarveṣu hi vedānteṣu vākyāni tātparyeṇaitasyārthasya pratipādakatvena samanugatāni — ‘ sadeva so myeda magra āsīt eka mevā dvitīyam ’ (chā. u. 6 | 2 | 1) ‘ ātmā vā idameka evāgra āsīt ’ (ai. u. 1 | 1 | 1) ‘ tadeta dbra hmā pūrva manaparamanantara mabāhyam aya mā tmā brahma sarvā nubhūḥ ’ (bṛ. u. 2 | 5 | 19) ‘ brahmaiveda ma mṛtaṃ purastāt ’ (mu. u. 2 | 2 | 12) ityādīni | na ca tadgatānāṃ padānāṃ brahmasvarūpaviṣaye niścite samanvaye'vagamyamāne arthāntarakalpanā yuktā , śrutahānyaśrutakalpanāprasaṅgāt | na ca teṣāṃ kartṛdevatādisvarūpapratipādanaparatā avasīyate , ‘ tatkena kaṃ paśyet ’ (bṛ. u. 2 | 4 | 14) ityādikriyākārakaphalanirākaraṇaśruteḥ | na ca pari niṣṭhitavastusvarūpatve'pi pratyakṣādiviṣayatvaṃ brahmaṇaḥ , ‘ tattvamasi ’ (chā. u. 6 | 8 | 7) iti brahmātmabhāvasya śāstramantareṇānavagamyamānatvāt | yattu heyopādeyarahitatvā dupadeśānarthakyamiti , nai ṣa doṣaḥ ; heyopādeyaśūnya brahmātmatāvagamādeva sarvakleśaprahāṇātpuruṣārthasiddheḥ | devatādi pratipādanasya tu svavākyagatopāsanārthatve'pi na kaścidvirodhaḥ | na tu tathā brahmaṇa upāsanāvidhiśeṣatvaṃ sambhavati , ekatve heyopādeyaśūnyatayā kriyākārakādidvaitavijñānopamardopapatteḥ | na hi ekatvavijñānenonmathitasya dvaitavijñānasya punaḥ sambhavo'sti yeno pāsanāvidhiśeṣatvaṃ brahmaṇaḥ pratipādyeta | yadya pya nyatra vedavākyānāṃ vidhisaṃsparśamantareṇa pramāṇatvaṃ na dṛṣṭam , tathā pyā tma vijñānasya phalaparyantatvānna tadviṣayasya śāstrasya prāmāṇyaṃ śakyaṃ pratyākhyātum | na cā numānagamyaṃ śāstraprāmāṇyam , yenā nyatra dṛṣṭaṃ nidarśanamapekṣyeta | tasmā tsiddhaṃ brahmaṇaḥ śāstrapramāṇakatvam ||
+
+## Translation
+
+### Literal
+The word 'tu' excludes a prior view. That Brahman - omniscient, omnipotent, cause of the world's origination, maintenance, and dissolution - is known from Vedanta scripture alone. How? Through harmonization. Across all Vedantas, the sentences converge in intention upon this meaning: 'Being alone was this in the beginning, one without a second'; 'Self alone was this in the beginning'; 'that Brahman was before, without after, without inside/outside; this self is Brahman, all-experience'; 'Brahman alone is this immortal before.' Once the terms in those passages are ascertained as concerning Brahman's nature, constructing some other meaning is improper, else heard meaning would be abandoned and unheard meaning imagined. Nor can these passages be reduced to teaching agent/deity structures, because sruti negates action-agent-result structures ('by what should one see whom?'). Even though Brahman is an established reality, it is not an object of perception etc., since identity statements like 'That thou art' are not knowable apart from scripture. If one says teaching is pointless because Brahman is beyond acceptance/rejection, this is no defect: knowing Brahman as self, free of acceptance/rejection, removes all affliction and fulfills human purpose. Deity-focused passages may still serve meditation in their own contexts; no contradiction there. But Brahman cannot be merely a subsidiary of meditation injunction, because nondual realization sublates dual cognition of action, agent, and instrument; once true unity-knowledge arises, the dual framework for injunction cannot stand. Though elsewhere Vedic sentences are usually taken as authoritative in relation to injunction, one cannot deny authority of scripture here because self-knowledge itself is fruit-complete. Nor is scriptural authority for this inferable from some external model requiring analogy. Therefore it is established that Brahman is known by scriptural pramana.
+
+### Technical
+Bhashya on 1.1.4 argues samanvaya: Vedanta mahavakya convergence fixes Brahman as nondual scriptural object; vidhi-sesha reduction is rejected by kriya-karaka-phala sublation in atmaikatva-jnana.
+
+### Interpretive Note
+Central hermeneutic claim: Vedanta has autonomous revelatory force about Brahman, with tarka supportive but subordinate.
+
+## Analysis
+
+### Lexical Notes
+- **adhikaraṇa**
+  - Gloss: topical unit of argument
+  - Context: Tracks each block inside the section-level inferential sequence
+  - Grammar: noun
+  - Alternate glosses: topic-unit, argument node
+
+## QA Uncertainty Notes
+- Curated in contiguous S01 pass with stable inferential-tag schema.
+- A later philological pass should revisit condensed Mimamsa technical vocabulary and long polemical sentence boundaries in records 1.1.016-1.1.023.
+
+## Provenance
+- Extraction timestamp (UTC): 2026-06-02T16:24:50Z
+- Translator version: human+llm@bs-c01-s01-curation-pass-3
+- Reviewer version: pending
+- Source manifest path: reality/src/logos/sankara/raw/manifest.jsonl
+- Source JSON path: /home/pat/VSCode/organon/reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.019.json

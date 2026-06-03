@@ -1,0 +1,51 @@
+# SKR.BS.1.1.054
+
+## Metadata
+- Work code: BS
+- Section code: 1.1
+- QA status: draft
+- QA confidence: 0.81
+- Argument tags: definition, response, resolution, example
+
+## Source
+- Source URL: https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1
+- Language: sa
+- Script: Devanagari
+- Edition note: Draft block record from BS_C01_S01.json::BS_C01_S01_V12_I01 (leading_bhashya).
+
+### Source Text
+‘ जन्मा द्य स्य यतः ’ इत्यारभ्य ‘ श्रुतत्वाच्च ’ इत्येवमन्तैः सूत्रैर्यान्युदाहृतानि वेदान्तवाक्यानि , तेषां सर्वज्ञः सर्वशक्तिरीश्वरो जगतो जन्मस्थितिलयकारणमित्येतस्यार्थस्य प्रतिपादकत्वं न्यायपूर्वकं प्रतिपादितम् । गतिसामान्योपन्यासेन च सर्वे वेदान्ताश्चेतनकारणवादिन इति व्याख्यातम् । अतः परस्य ग्रन्थस्य किमुत्थानमिति , उच्यते — द्विरूपं हि ब्रह्मावगम्यते — नामरूपविकारभेदोपाधिविशिष्टम् , तद्विपरीतं च सर्वोपाधिविवर्जितम् । ‘ यत्र हि द्वैतमिव भवति तदितर इतरं पश्यति ’ (बृ. उ. २ । ४ । १४) ‘ यत्र त्वस्य सर्वमात्मैवाभूत्तत्केन कं पश्येत् ’ (बृ. उ. ४ । ५ । १५) ‘ यत्र नान्यत्पश्यति नान्यच्छृणोति नान्यद्विजानाति स भूमाथ यत्रान्यत्पश्यत्यन्यच्छृणोत्यन्यद्विजानाति तदल्पम् ; यो वै भूमा तदमृत मथ यदल्पं तन्मर्त्यम् ’ (छा. उ. ७ । २४ । १) ‘ सर्वाणि रूपाणि विचित्य धीरो नामानि कृत्वाभिवदन्यदास्ते ’ (तै. आ. ३ । १२ । ७) ‘ निष्कलं निष्क्रियं शान्तं निरवद्यं निरञ्जनम् । अमृतस्य परं सेतुं दग्धेन्धनमिवानलम् ’ (श्वे. उ. ६ । १९) ‘ नेति नेति ’ (बृ. उ. २ । ३ । ६) ‘ अस्थूलमनण्वह्रस्वमदीर्घम् ’ (बृ. उ. ३ । ८ । ८) ‘ न्यून म न्यत्स्थानं सम्पूर्णमन्यत् ’ इति चैवं सहस्रशो विद्या विद्याविषयभेदेन ब्रह्मणो द्विरूपतां दर्शयन्ति वाक्यानि । तत्रा विद्यावस्थायां ब्रह्मण उपास्योपासकादिलक्षणः सर्वो व्यवहारः । तत्र कानिचिद्ब्रह्मण उपासनान्यभ्युदयार्थानि , कानिचित्क्रममुक्त्यर्थानि , कानिचित्कर्मसमृद्ध्यर्थानि । तेषां गुणविशेषोपाधिभेदेन भेदः । एक एव तु परमात्मेश्वरस्तैस्तैर्गुणविशेषैर्विशिष्ट उपास्यो यद्यपि भवति , तथापि यथागुणोपासनमेव फलानि भिद्यन्ते ; ‘ तं यथा यथोपासते तदेव भवति ’ इति श्रुतेः , ‘ यथाक्रतुरस्मिँल्लोके पुरुषो भवति , तथेतः प्रेत्य भवति ’ (छा. उ. ३ । १४ । १) इति च । स्मृतेश्च — ‘ यं यं वापि स्मरन्भावं त्यजत्यन्ते कलेबरम् । तं तमेवैति कौन्तेय सदा तद्भावभावितः ’ (भ. गी. ८ । ६) इति । यद्यप्येक आत्मा सर्वभूतेषु स्थावरजङ्गमेषु गूढः , तथापि चित्तोपाधिविशेषतारतम्यादात्मनः कूटस्थनित्यस्यैकरूपस्याप्युत्तरोत्तरमाविष्कृतस्य तारतम्यमैश्वर्यशक्तिविशेषैः श्रूयते — ‘ तस्य य आत्मानमाविस्तरां वेद ’ (ऐ. आ. २ । ३ । २ । १) इत्यत्र । स्मृता व पि — ‘ यद्यद्विभूतिमत्सत्त्वं श्रीमदूर्जितमेव वा । तत्तदेवावगच्छ त्वं मम तेजोंऽशसम्भवम् ’ (भ. गी. १० । ४१) इति यत्र यत्र विभूत्याद्यतिशयः , स स ईश्वर इत्युपास्यतया चोद्यते । एव मि हाप्यादित्यमण्डले हिरण्मयः पुरुषः सर्वपाप्मोदयलिङ्गात्पर एवेति वक्ष्यति । एवम् ‘ आकाशस्तल्लिङ्गात् ’ (ब्र. सू. १ । १ । २२) इत्यादिषु द्रष्टव्यम् । एवं सद्यो मुक्तिकारणमप्यात्मज्ञानमुपाधिविशेषद्वारेणोपदिश्यमानमप्यविवक्षितोपाधिसम्बन्धविशेषं परापरविषयत्वेन सन्दिह्यमानं वाक्यगतिपर्यालोचनया निर्णेतव्यं भवति — यथेहैव तावत् ‘ आनन्दमयोऽभ्यासात् ’ इति । एवमेकमपि ब्रह्मापेक्षितोपाधिसम्बन्धं निरस्तोपाधिसम्बन्धं चोपास्यत्वेन ज्ञेयत्वेन च वेदान्तेषूपदिश्यत इति प्रदर्शयितुं परो ग्रन्थ आरभ्यते । यच्च ‘ गतिसामान्यात् ’ इत्यचेतनकारणनिराकरणमुक्तम् , तदपि वाक्यान्तराणि ब्रह्मविषयाणि व्याचक्षाणेन ब्रह्मविपरीतकारणनिषेधेन प्रपञ्च्यते —
+
+### Transliteration (IAST)
+‘ janmā dya sya yataḥ ’ ityārabhya ‘ śrutatvācca ’ ityevamantaiḥ sūtrairyānyudāhṛtāni vedāntavākyāni , teṣāṃ sarvajñaḥ sarvaśaktirīśvaro jagato janmasthitilayakāraṇamityetasyārthasya pratipādakatvaṃ nyāyapūrvakaṃ pratipāditam | gatisāmānyopanyāsena ca sarve vedāntāścetanakāraṇavādina iti vyākhyātam | ataḥ parasya granthasya kimutthānamiti , ucyate — dvirūpaṃ hi brahmāvagamyate — nāmarūpavikārabhedopādhiviśiṣṭam , tadviparītaṃ ca sarvopādhivivarjitam | ‘ yatra hi dvaitamiva bhavati taditara itaraṃ paśyati ’ (bṛ. u. 2 | 4 | 14) ‘ yatra tvasya sarvamātmaivābhūttatkena kaṃ paśyet ’ (bṛ. u. 4 | 5 | 15) ‘ yatra nānyatpaśyati nānyacchṛṇoti nānyadvijānāti sa bhūmātha yatrānyatpaśyatyanyacchṛṇotyanyadvijānāti tadalpam ; yo vai bhūmā tadamṛta matha yadalpaṃ tanmartyam ’ (chā. u. 7 | 24 | 1) ‘ sarvāṇi rūpāṇi vicitya dhīro nāmāni kṛtvābhivadanyadāste ’ (tai. ā. 3 | 12 | 7) ‘ niṣkalaṃ niṣkriyaṃ śāntaṃ niravadyaṃ nirañjanam | amṛtasya paraṃ setuṃ dagdhendhanamivānalam ’ (śve. u. 6 | 19) ‘ neti neti ’ (bṛ. u. 2 | 3 | 6) ‘ asthūlamanaṇvahrasvamadīrgham ’ (bṛ. u. 3 | 8 | 8) ‘ nyūna ma nyatsthānaṃ sampūrṇamanyat ’ iti caivaṃ sahasraśo vidyā vidyāviṣayabhedena brahmaṇo dvirūpatāṃ darśayanti vākyāni | tatrā vidyāvasthāyāṃ brahmaṇa upāsyopāsakādilakṣaṇaḥ sarvo vyavahāraḥ | tatra kānicidbrahmaṇa upāsanānyabhyudayārthāni , kānicitkramamuktyarthāni , kānicitkarmasamṛddhyarthāni | teṣāṃ guṇaviśeṣopādhibhedena bhedaḥ | eka eva tu paramātmeśvarastaistairguṇaviśeṣairviśiṣṭa upāsyo yadyapi bhavati , tathāpi yathāguṇopāsanameva phalāni bhidyante ; ‘ taṃ yathā yathopāsate tadeva bhavati ’ iti śruteḥ , ‘ yathākraturasmi~lloke puruṣo bhavati , tathetaḥ pretya bhavati ’ (chā. u. 3 | 14 | 1) iti ca | smṛteśca — ‘ yaṃ yaṃ vāpi smaranbhāvaṃ tyajatyante kalebaram | taṃ tamevaiti kaunteya sadā tadbhāvabhāvitaḥ ’ (bha. gī. 8 | 6) iti | yadyapyeka ātmā sarvabhūteṣu sthāvarajaṅgameṣu gūḍhaḥ , tathāpi cittopādhiviśeṣatāratamyādātmanaḥ kūṭasthanityasyaikarūpasyāpyuttarottaramāviṣkṛtasya tāratamyamaiśvaryaśaktiviśeṣaiḥ śrūyate — ‘ tasya ya ātmānamāvistarāṃ veda ’ (ai. ā. 2 | 3 | 2 | 1) ityatra | smṛtā va pi — ‘ yadyadvibhūtimatsattvaṃ śrīmadūrjitameva vā | tattadevāvagaccha tvaṃ mama tejoṃ'śasambhavam ’ (bha. gī. 10 | 41) iti yatra yatra vibhūtyādyatiśayaḥ , sa sa īśvara ityupāsyatayā codyate | eva mi hāpyādityamaṇḍale hiraṇmayaḥ puruṣaḥ sarvapāpmodayaliṅgātpara eveti vakṣyati | evam ‘ ākāśastalliṅgāt ’ (bra. sū. 1 | 1 | 22) ityādiṣu draṣṭavyam | evaṃ sadyo muktikāraṇamapyātmajñānamupādhiviśeṣadvāreṇopadiśyamānamapyavivakṣitopādhisambandhaviśeṣaṃ parāparaviṣayatvena sandihyamānaṃ vākyagatiparyālocanayā nirṇetavyaṃ bhavati — yathehaiva tāvat ‘ ānandamayo'bhyāsāt ’ iti | evamekamapi brahmāpekṣitopādhisambandhaṃ nirastopādhisambandhaṃ copāsyatvena jñeyatvena ca vedānteṣūpadiśyata iti pradarśayituṃ paro grantha ārabhyate | yacca ‘ gatisāmānyāt ’ ityacetanakāraṇanirākaraṇamuktam , tadapi vākyāntarāṇi brahmaviṣayāṇi vyācakṣāṇena brahmaviparītakāraṇaniṣedhena prapañcyate —
+
+## Translation
+
+### Literal
+Starting from 'from which are birth and so on' through 'and because it is heard,' the cited sutras have established with reasoning that Vedanta passages teach this meaning: omniscient omnipotent Ishvara is cause of world-origin, maintenance, and dissolution. By presenting common drift it was also explained that all Vedantas teach conscious causality. Then what is the occasion for the next text? Reply: Brahman is known in two modes - qualified by name-form and all modification distinctions through adjuncts, and opposite to that, free of all adjuncts. Numerous passages show this dual presentation via knowledge/ignorance domains: where there is as-if duality one sees another; where all is self, what and by what would one see; where one sees nothing else that is the vast immortal, where otherwise it is finite mortal; the wise fashions names/forms and remains beyond; partless actionless pure bridge to immortality; 'not this, not this'; 'not gross, not minute,' and countless similar statements. In ignorance-state, all worshiper-worshiped transaction regarding Brahman occurs. Some upasanas aim at worldly prosperity, some at gradual liberation, some at ritual enhancement; distinctions arise from adjunct and attribute differences. Though one and the same Supreme Self is worshiped under various qualified forms, fruits differ according to the specific mode of worship ('as one worships, so one becomes'; 'as one's intention in this world, so after death'). Smrti agrees ('whatever state one remembers at death...'). Though one self is hidden in all beings, due to gradation in mental adjuncts the manifestation of that immutable self appears graded with powers and lordly distinctions; sruti and Gita describe this. Thus wherever extraordinary glory appears, that is to be contemplated as Ishvara. So too here, a golden person in the solar orb will be taught as the Supreme by signs like freedom from all evil; similarly in later sutras such as 'akasha because of signs.' Even immediate-liberation-causing self-knowledge, though taught through adjunct-language, requires analysis of sentence drift when para/apara sense is doubtful. Hence this very discussion 'anandamayo'bhyasat.' To show that one Brahman is taught in Vedanta both with adjunct relation and without adjunct relation, as object of worship and as object of knowledge, the next section begins. And what was earlier stated by 'because of common drift' in rejecting non-conscious cause will now be further elaborated through explaining additional Brahman-passages and negating contrary causes.
+
+### Technical
+Major transition preface: codifies twofold Brahman presentation (sopadhika/nirupadhika), differentiates upasana-fruit structures, and motivates continued sutra sequence including anandamaya adjudication.
+
+### Interpretive Note
+This record functions as doctrinal map and methodological bridge from causal establishment to nuanced Brahman-mode exegesis.
+
+## Analysis
+
+### Lexical Notes
+- **adhikaraṇa**
+  - Gloss: topical unit of argument
+  - Context: Tracks each block inside the section-level inferential sequence
+  - Grammar: noun
+  - Alternate glosses: topic-unit, argument node
+
+## QA Uncertainty Notes
+- Curated in contiguous S01 pass with stable inferential-tag schema.
+- A later philological pass should revisit anandamaya technical layering and the long transition bridge in records 1.1.048-1.1.055.
+
+## Provenance
+- Extraction timestamp (UTC): 2026-06-02T16:24:50Z
+- Translator version: human+llm@bs-c01-s01-curation-pass-7
+- Reviewer version: pending
+- Source manifest path: reality/src/logos/sankara/raw/manifest.jsonl
+- Source JSON path: /home/pat/VSCode/organon/reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.054.json

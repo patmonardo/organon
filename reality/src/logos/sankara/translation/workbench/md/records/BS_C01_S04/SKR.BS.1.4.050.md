@@ -1,0 +1,51 @@
+# SKR.BS.1.4.050
+
+## Metadata
+- Work code: BS
+- Section code: 1.4
+- QA status: draft
+- QA confidence: 0.72
+- Argument tags: objection, definition
+
+## Source
+- Source URL: https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1
+- Language: sa
+- Script: Devanagari
+- Edition note: Draft block record from BS_C01_S04.json::BS_C01_S04_V19_B1 (bhashya).
+
+### Source Text
+बृह दारण्यके मैत्रेयीब्राह्मणेऽधीयते — ‘ न वा अरे पत्युः कामाय ’ इत्युपक्रम्य ‘ न वा अरे सर्वस्य कामाय सर्वं प्रियं भवत्यात्मनस्तु कामाय सर्वं प्रियं भवत्यात्मा वा अरे द्रष्टव्यः श्रोतव्यो मन्तव्यो निदिध्यासितव्यो मैत्रेय्यात्मनो वा अरे दर्शनेन श्रवणेन मत्या विज्ञानेनेदꣳ सर्वं विदितम् ’ (बृ. उ. ४ । ५। ६) इति । तत्रैतद्विचिकित्स्यते — किं विज्ञानात्मैवायं द्रष्टव्यश्रोतव्यत्वादिरूपेणोपदिश्यते , आहोस्वित्परमात्मेति । कुतः पुनरेषा विचिकित्सा ? प्रियसंसूचिते नात्मना भोक्त्रोपक्रमाद्विज्ञानात्मोपदेश इति प्रतिभाति । तथा आत्मविज्ञानेन सर्वविज्ञानोपदेशात्परमात्मोपदेश इति । किं ताव त्प्राप्तम् ? विज्ञानात्मोपदेश इति । कस्मात् ? उपक्रमसामर्थ्यात् । पतिजायापुत्रवित्तादिकं हि भोग्यभूतं सर्वं जगत् आत्मार्थतया प्रियं भवतीति प्रियसंसूचितं भोक्तारमात्मानमुपक्रम्यानन्तरमिदमात्मनो दर्शनाद्युपदिश्यमानं कस्यान्यस्यात्मनः स्यात् । मध्येऽपि ‘ इदं महद्भूतमनन्तमपारं विज्ञानघन एवैतेभ्यो भूतेभ्यः समुत्थाय तान्येवानुविनश्यति न प्रेत्य संज्ञास्ति ’(बृ. उ. २। ४ । १२) इति प्रकृतस्यैव महतो भूतस्य द्रष्टव्यस्य भूतेभ्यः समुत्थानं विज्ञानात्मभावेन ब्रुवन्विज्ञानात्मन एवेदं द्रष्टव्यत्वं दर्शयति । तथा ‘ विज्ञातार मरे केन विजानीयात् ’(बृ. उ. २। ४ । १४) इति कर्तृवचनेन शब्देनोपसंहरन्विज्ञानात्मानमेवेहोपदिष्टं दर्शयति । तस्मादात्मविज्ञानेन सर्वविज्ञानवचनं भोक्त्रर्थत्वाद्भोग्यजातस्यौपचारिकं द्रष्टव्यमि त्येवं प्राप्ते ब्रूमः —
+
+### Transliteration (IAST)
+bṛha dāraṇyake maitreyībrāhmaṇe'dhīyate — ‘ na vā are patyuḥ kāmāya ’ ityupakramya ‘ na vā are sarvasya kāmāya sarvaṃ priyaṃ bhavatyātmanastu kāmāya sarvaṃ priyaṃ bhavatyātmā vā are draṣṭavyaḥ śrotavyo mantavyo nididhyāsitavyo maitreyyātmano vā are darśanena śravaṇena matyā vijñānenedam̐ sarvaṃ viditam ’ (bṛ. u. 4 | 5| 6) iti | tatraitadvicikitsyate — kiṃ vijñānātmaivāyaṃ draṣṭavyaśrotavyatvādirūpeṇopadiśyate , āhosvitparamātmeti | kutaḥ punareṣā vicikitsā ? priyasaṃsūcite nātmanā bhoktropakramādvijñānātmopadeśa iti pratibhāti | tathā ātmavijñānena sarvavijñānopadeśātparamātmopadeśa iti | kiṃ tāva tprāptam ? vijñānātmopadeśa iti | kasmāt ? upakramasāmarthyāt | patijāyāputravittādikaṃ hi bhogyabhūtaṃ sarvaṃ jagat ātmārthatayā priyaṃ bhavatīti priyasaṃsūcitaṃ bhoktāramātmānamupakramyānantaramidamātmano darśanādyupadiśyamānaṃ kasyānyasyātmanaḥ syāt | madhye'pi ‘ idaṃ mahadbhūtamanantamapāraṃ vijñānaghana evaitebhyo bhūtebhyaḥ samutthāya tānyevānuvinaśyati na pretya saṃjñāsti ’(bṛ. u. 2| 4 | 12) iti prakṛtasyaiva mahato bhūtasya draṣṭavyasya bhūtebhyaḥ samutthānaṃ vijñānātmabhāvena bruvanvijñānātmana evedaṃ draṣṭavyatvaṃ darśayati | tathā ‘ vijñātāra mare kena vijānīyāt ’(bṛ. u. 2| 4 | 14) iti kartṛvacanena śabdenopasaṃharanvijñānātmānamevehopadiṣṭaṃ darśayati | tasmādātmavijñānena sarvavijñānavacanaṃ bhoktrarthatvādbhogyajātasyaupacārikaṃ draṣṭavyami tyevaṃ prāpte brūmaḥ —
+
+## Translation
+
+### Literal
+In the Brhadaranyaka's Maitreyi section it is taught: beginning with 'not for the sake of the husband...' and culminating in 'for the sake of the self all is dear; the self is to be seen, heard, reflected upon, and meditated upon; by knowing the self all this is known.' Here doubt arises: is what is thus enjoined the empirical knower-self, or the supreme self? Why this doubt? The opening about dearness seems to introduce an enjoyer-self, suggesting the empirical conscious self; yet the claim that by knowing the self everything is known suggests the supreme self. Prima facie the empirical conscious self appears intended, because of opening-force and intermediate passages about the great conscious being arising from elements and the statement 'by what should one know the knower?' Thus, one might take the 'all is known' claim as secondary, based on all objects being for the enjoyer. In this situation, the reply begins.
+
+### Technical
+This block establishes the new adhikarana in Maitreyi-brahmana: viṣaya is the identity of the self to be known; saṃśaya is between vijñānātman (empirical cognizer) and Paramātman. Purvapaksha leans toward vijñānātman via upakrama (priya discourse centered on enjoyer), mid-text cognition language, and closure around 'knower' grammar. It then attempts to downgrade the sarva-vijñāna claim into an indirect, enjoyer-based extension. The block ends at the threshold of siddhanta rebuttal.
+
+### Interpretive Note
+New adhikarana opening: empirical-self reading is built first before being overturned by Brahman-level epistemic claim.
+
+## Analysis
+
+### Lexical Notes
+- **adhikaraṇa**
+  - Gloss: topical unit of argument
+  - Context: Tracks each block inside the section-level inferential sequence
+  - Grammar: noun
+  - Alternate glosses: topic-unit, argument node
+
+## QA Uncertainty Notes
+- Long opening compressed into structured prose while preserving debate shape.
+- Final curation may separate explicit quotation fragments from argumentative narration more granularly.
+
+## Provenance
+- Extraction timestamp (UTC): 2026-06-02T16:24:50Z
+- Translator version: human+llm@bs-c01-s04-curation-pass-5
+- Reviewer version: pending
+- Source manifest path: reality/src/logos/sankara/raw/manifest.jsonl
+- Source JSON path: /home/pat/VSCode/organon/reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.050.json

@@ -1,0 +1,51 @@
+# SKR.BS.1.1.052
+
+## Metadata
+- Work code: BS
+- Section code: 1.1
+- QA status: draft
+- QA confidence: 0.88
+- Argument tags: objection, definition
+
+## Source
+- Source URL: https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1
+- Language: sa
+- Script: Devanagari
+- Edition note: Draft block record from BS_C01_S01.json::BS_C01_S01_V12_B1 (bhashya).
+
+### Source Text
+तैत्तिरीयके अन्नमयं प्राणमयं मनोमयं विज्ञानमयं चानुक्रम्याम्नायते — ‘ तस्माद्वा एतस्माद्विज्ञानमयादन्योऽन्तर आत्मानन्दमयः ’ (तै. उ. २ । ५ । १) इति । तत्र संशयः — कि मि हानन्दमयशब्देन परमेव ब्रह्मोच्यते , यत्प्रकृतम् ‘ सत्यं ज्ञानमनन्तं ब्रह्म ’ (तै. उ. २ । १ । १) इति , किं वान्नमयादिवद्ब्रह्मणोऽर्थान्तरमिति । किं तावत्प्राप्तम् ? ब्रह्मणोऽर्थान्तरममुख्य आत्मानन्दमयः स्यात् । कस्मात् ? अन्नमया द्य मुख्यात्मप्रवाहपतितत्वात् । अथापि स्यात्सर्वान्तरत्वादानन्दमयो मुख्य एवात्मेति ; न स्या त्प्रियाद्यवयवयोगाच्छारीरत्वश्रवणाच्च । मुख्य श्चेदात्मा आनन्दमयः स्यान्न प्रियादिसंस्पर्शः स्यात् । इह तु ‘ तस्य प्रियमेव शिरः ’ (तै. उ. २ । ५ । १) इत्यादि श्रूयते । शारीरत्वं च श्रूयते — ‘ तस्यैष एव शारीर आत्मा यः पूर्वस्य ’ इति । तस्य पूर्वस्य विज्ञानमयस्यैष एव शारीर आत्मा य एष आनन्दमय इत्यर्थः । न च सशरीरस्य सतः प्रियाप्रियसंस्पर्शो वारयितुं शक्यः । तस्मात्संसार्येवानन्दमय आत्मेत्येवं प्राप्ते , इदमुच्यते —
+
+### Transliteration (IAST)
+taittirīyake annamayaṃ prāṇamayaṃ manomayaṃ vijñānamayaṃ cānukramyāmnāyate — ‘ tasmādvā etasmādvijñānamayādanyo'ntara ātmānandamayaḥ ’ (tai. u. 2 | 5 | 1) iti | tatra saṃśayaḥ — ki mi hānandamayaśabdena parameva brahmocyate , yatprakṛtam ‘ satyaṃ jñānamanantaṃ brahma ’ (tai. u. 2 | 1 | 1) iti , kiṃ vānnamayādivadbrahmaṇo'rthāntaramiti | kiṃ tāvatprāptam ? brahmaṇo'rthāntaramamukhya ātmānandamayaḥ syāt | kasmāt ? annamayā dya mukhyātmapravāhapatitatvāt | athāpi syātsarvāntaratvādānandamayo mukhya evātmeti ; na syā tpriyādyavayavayogācchārīratvaśravaṇācca | mukhya ścedātmā ānandamayaḥ syānna priyādisaṃsparśaḥ syāt | iha tu ‘ tasya priyameva śiraḥ ’ (tai. u. 2 | 5 | 1) ityādi śrūyate | śārīratvaṃ ca śrūyate — ‘ tasyaiṣa eva śārīra ātmā yaḥ pūrvasya ’ iti | tasya pūrvasya vijñānamayasyaiṣa eva śārīra ātmā ya eṣa ānandamaya ityarthaḥ | na ca saśarīrasya sataḥ priyāpriyasaṃsparśo vārayituṃ śakyaḥ | tasmātsaṃsāryevānandamaya ātmetyevaṃ prāpte , idamucyate —
+
+## Translation
+
+### Literal
+In the Taittiriya, after enumerating annamaya, pranamaya, manomaya, and vijnanamaya, it says: 'different from this vijnanamaya, inner self is anandamaya.' There doubt arises: does anandamaya here denote the very Brahman introduced earlier as 'truth, knowledge, infinite,' or, like annamaya etc., something other than Brahman? Prima facie: it should be some non-primary self distinct from Brahman, because it falls in the stream of non-primary selves like annamaya. If one says it is primary self due to being innermost, no: because of having parts like priya etc. and because it is heard as embodied. If anandamaya were the primary self, contact with pleasant/unpleasant configurations should not apply; yet scripture says 'its head is priya' etc. And embodiedness is heard: 'this indeed is the embodied self of the previous (vijnanamaya).' For one truly embodied, pleasant/unpleasant contact cannot be avoided. Thus one may conclude anandamaya self is still samsarin. In this obtained position, it is said -
+
+### Technical
+Purvapaksha before 1.1.12 reads anandamaya as a sheath-level conditioned self, citing priya-siras structure and shariratva language.
+
+### Interpretive Note
+Sets up the crucial debate whether anandamaya is Brahman or a kosha-level derivative.
+
+## Analysis
+
+### Lexical Notes
+- **adhikaraṇa**
+  - Gloss: topical unit of argument
+  - Context: Tracks each block inside the section-level inferential sequence
+  - Grammar: noun
+  - Alternate glosses: topic-unit, argument node
+
+## QA Uncertainty Notes
+- Curated in contiguous S01 pass with stable inferential-tag schema.
+- A later philological pass should revisit anandamaya technical layering and the long transition bridge in records 1.1.048-1.1.055.
+
+## Provenance
+- Extraction timestamp (UTC): 2026-06-02T16:24:50Z
+- Translator version: human+llm@bs-c01-s01-curation-pass-7
+- Reviewer version: pending
+- Source manifest path: reality/src/logos/sankara/raw/manifest.jsonl
+- Source JSON path: /home/pat/VSCode/organon/reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.052.json

@@ -1,0 +1,781 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sankara Translation Workbench</title>
+    <style>
+      :root {
+        --bg: #f5f2ea;
+        --bg-panel: #fffdf8;
+        --ink: #1f1b17;
+        --muted: #6d6358;
+        --line: #d8cfc1;
+        --accent: #2b6f77;
+        --accent-soft: #d8ecef;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: 'Source Serif 4', 'Georgia', serif;
+        color: var(--ink);
+        background: radial-gradient(
+          circle at 10% 10%,
+          #fefcf7 0%,
+          #f1ece1 45%,
+          #ebe3d6 100%
+        );
+        min-height: 100vh;
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: 320px 1fr;
+        min-height: 100vh;
+      }
+
+      .sidebar {
+        border-right: 1px solid var(--line);
+        background: linear-gradient(180deg, #f8f4ec 0%, #f3ebde 100%);
+        padding: 16px;
+        overflow: auto;
+      }
+
+      .brand {
+        font-size: 20px;
+        letter-spacing: 0.02em;
+        margin: 0 0 10px;
+      }
+
+      .sub {
+        margin: 0 0 12px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .controls {
+        display: grid;
+        gap: 8px;
+        margin-bottom: 14px;
+      }
+
+      .controls input,
+      .controls select {
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 8px 10px;
+        font-family: inherit;
+        font-size: 14px;
+        background: #fff;
+        color: var(--ink);
+      }
+
+      .controls .check {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: var(--muted);
+        padding: 2px 2px 0;
+      }
+
+      .controls .check input {
+        width: auto;
+        margin: 0;
+      }
+
+      .controls .inline-field {
+        display: grid;
+        grid-template-columns: 1fr 96px;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      .controls .inline-field input {
+        width: 100%;
+        padding: 6px 8px;
+        font-size: 13px;
+      }
+
+      .controls .preset-row {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+
+      .controls .preset-btn {
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: #fff;
+        color: var(--muted);
+        padding: 4px 10px;
+        font-size: 12px;
+        cursor: pointer;
+      }
+
+      .controls .preset-btn:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      .controls .preset-btn.active {
+        border-color: var(--accent);
+        background: var(--accent-soft);
+        color: #1d4f55;
+      }
+
+      .count {
+        font-size: 12px;
+        color: var(--muted);
+        margin-bottom: 10px;
+      }
+
+      .list {
+        display: grid;
+        gap: 6px;
+      }
+
+      .item {
+        display: block;
+        width: 100%;
+        text-align: left;
+        border: 1px solid var(--line);
+        background: var(--bg-panel);
+        border-radius: 8px;
+        padding: 8px 10px;
+        font-family: inherit;
+        cursor: pointer;
+      }
+
+      .item:hover {
+        border-color: var(--accent);
+        background: var(--accent-soft);
+      }
+
+      .item.active {
+        border-color: var(--accent);
+        background: var(--accent-soft);
+        box-shadow: inset 0 0 0 1px var(--accent);
+      }
+
+      .item .id {
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 2px;
+      }
+
+      .item .meta {
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .main {
+        padding: 18px 24px;
+        overflow: auto;
+      }
+
+      .toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 12px;
+        border-bottom: 1px solid var(--line);
+        padding-bottom: 10px;
+      }
+
+      .toolbar .label {
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      .toolbar .toolbar-controls {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      .toolbar .toolbar-controls select {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 6px 8px;
+        background: #fff;
+        color: var(--ink);
+        font-family: inherit;
+        font-size: 13px;
+      }
+
+      .doc {
+        max-width: 900px;
+        margin: 0 auto;
+        background: var(--bg-panel);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 20px 26px;
+        box-shadow: 0 8px 24px rgba(66, 43, 12, 0.08);
+        line-height: 1.55;
+        white-space: normal;
+      }
+
+      .doc h1,
+      .doc h2,
+      .doc h3 {
+        margin-top: 1.1em;
+        margin-bottom: 0.4em;
+        line-height: 1.25;
+      }
+
+      .doc h1 {
+        font-size: 1.7rem;
+      }
+      .doc h2 {
+        font-size: 1.3rem;
+        border-bottom: 1px solid var(--line);
+        padding-bottom: 4px;
+      }
+      .doc h3 {
+        font-size: 1.05rem;
+      }
+
+      .doc p {
+        margin: 0.5em 0;
+      }
+      .doc ul,
+      .doc ol {
+        margin: 0.4em 0 0.7em 1.3em;
+      }
+      .doc li {
+        margin: 0.2em 0;
+      }
+
+      .doc code {
+        font-family: 'JetBrains Mono', 'Consolas', monospace;
+        background: #f2eee6;
+        border: 1px solid #ded3c4;
+        border-radius: 4px;
+        padding: 0.05em 0.3em;
+        font-size: 0.92em;
+      }
+
+      .doc pre {
+        overflow: auto;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #ded3c4;
+        background: #f2eee6;
+      }
+
+      .doc a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+
+      .doc a:hover {
+        text-decoration: underline;
+      }
+
+      @media (max-width: 980px) {
+        .layout {
+          grid-template-columns: 1fr;
+        }
+
+        .sidebar {
+          border-right: 0;
+          border-bottom: 1px solid var(--line);
+          max-height: 40vh;
+        }
+
+        .main {
+          padding: 12px;
+        }
+
+        .doc {
+          padding: 16px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="layout">
+      <aside class="sidebar">
+        <h1 class="brand">Sankara Translation Workbench</h1>
+        <p class="sub">Basic Markdown View (v0.2)</p>
+        <div class="controls">
+          <input
+            id="searchInput"
+            type="search"
+            placeholder="Search record id or content"
+          />
+          <select id="sectionFilter">
+            <option value="">All sections</option>
+          </select>
+          <label class="check">
+            <input id="reviewQueueOnly" type="checkbox" />
+            Review queue only (uncertainty)
+          </label>
+          <label class="check">
+            <input id="strictQueueOnly" type="checkbox" />
+            Strict queue (uncertainty + low confidence)
+          </label>
+          <label class="inline-field" for="maxConfidence">
+            <span>Max confidence</span>
+            <input
+              id="maxConfidence"
+              type="number"
+              min="0"
+              max="1"
+              step="0.01"
+              value="0.90"
+            />
+          </label>
+          <div
+            id="thresholdPresets"
+            class="preset-row"
+            aria-label="Threshold presets"
+          >
+            <button type="button" class="preset-btn" data-threshold="0.95">
+              0.95
+            </button>
+            <button
+              type="button"
+              class="preset-btn active"
+              data-threshold="0.90"
+            >
+              0.90
+            </button>
+            <button type="button" class="preset-btn" data-threshold="0.85">
+              0.85
+            </button>
+            <button type="button" class="preset-btn" data-threshold="0.80">
+              0.80
+            </button>
+          </div>
+        </div>
+        <div id="count" class="count">Loading records...</div>
+        <div id="recordList" class="list"></div>
+      </aside>
+      <main class="main">
+        <div class="toolbar">
+          <div class="label" id="currentMeta">No record selected</div>
+          <div class="toolbar-controls">
+            <label for="viewMode">View</label>
+            <select id="viewMode">
+              <option value="markdown">Markdown</option>
+              <option value="source">Source</option>
+              <option value="literal">Literal</option>
+              <option value="technical">Technical</option>
+            </select>
+          </div>
+        </div>
+        <article id="doc" class="doc">
+          <h2>Ready</h2>
+          <p>Select a record from the left panel.</p>
+        </article>
+      </main>
+    </div>
+
+    <script>
+      const state = {
+        manifest: null,
+        records: [],
+        selectedRecordId: null,
+      };
+
+      const dom = {
+        searchInput: document.getElementById('searchInput'),
+        sectionFilter: document.getElementById('sectionFilter'),
+        reviewQueueOnly: document.getElementById('reviewQueueOnly'),
+        strictQueueOnly: document.getElementById('strictQueueOnly'),
+        maxConfidence: document.getElementById('maxConfidence'),
+        thresholdPresets: document.getElementById('thresholdPresets'),
+        recordList: document.getElementById('recordList'),
+        count: document.getElementById('count'),
+        doc: document.getElementById('doc'),
+        currentMeta: document.getElementById('currentMeta'),
+        viewMode: document.getElementById('viewMode'),
+      };
+
+      function escapeHtml(text) {
+        return String(text)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/\"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
+      function markdownToHtml(markdown) {
+        const lines = markdown.split(/\r?\n/);
+        const out = [];
+        let i = 0;
+        let inCode = false;
+        let listType = null;
+
+        function closeList() {
+          if (listType) {
+            out.push(listType === 'ol' ? '</ol>' : '</ul>');
+            listType = null;
+          }
+        }
+
+        while (i < lines.length) {
+          const raw = lines[i];
+          const line = raw.trimEnd();
+
+          if (line.startsWith('```')) {
+            closeList();
+            if (!inCode) {
+              inCode = true;
+              out.push('<pre><code>');
+            } else {
+              inCode = false;
+              out.push('</code></pre>');
+            }
+            i += 1;
+            continue;
+          }
+
+          if (inCode) {
+            out.push(escapeHtml(raw) + '\n');
+            i += 1;
+            continue;
+          }
+
+          if (!line) {
+            closeList();
+            i += 1;
+            continue;
+          }
+
+          const heading = line.match(/^(#{1,3})\s+(.*)$/);
+          if (heading) {
+            closeList();
+            const level = heading[1].length;
+            out.push(`<h${level}>${inlineMd(heading[2])}</h${level}>`);
+            i += 1;
+            continue;
+          }
+
+          const ordered = line.match(/^\d+\.\s+(.*)$/);
+          if (ordered) {
+            if (listType !== 'ol') {
+              closeList();
+              listType = 'ol';
+              out.push('<ol>');
+            }
+            out.push(`<li>${inlineMd(ordered[1])}</li>`);
+            i += 1;
+            continue;
+          }
+
+          const unordered = line.match(/^[-*]\s+(.*)$/);
+          if (unordered) {
+            if (listType !== 'ul') {
+              closeList();
+              listType = 'ul';
+              out.push('<ul>');
+            }
+            out.push(`<li>${inlineMd(unordered[1])}</li>`);
+            i += 1;
+            continue;
+          }
+
+          closeList();
+          out.push(`<p>${inlineMd(line)}</p>`);
+          i += 1;
+        }
+
+        closeList();
+        if (inCode) {
+          out.push('</code></pre>');
+        }
+
+        return out.join('');
+      }
+
+      function inlineMd(text) {
+        let html = escapeHtml(text);
+        html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+        html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+        html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+        html = html.replace(
+          /\[([^\]]+)\]\(([^)]+)\)/g,
+          '<a href="$2" target="_blank" rel="noopener">$1</a>',
+        );
+        return html;
+      }
+
+      function renderTextBlock(text) {
+        const safe = escapeHtml(text || '(empty)');
+        return safe.replace(/\n/g, '<br />');
+      }
+
+      function renderFocusedView(record, mode) {
+        const titleMap = {
+          source: 'Source Text',
+          literal: 'Literal Translation',
+          technical: 'Technical Translation',
+        };
+        const fieldMap = {
+          source: record.source_text,
+          literal: record.literal_translation,
+          technical: record.technical_translation,
+        };
+
+        const title = titleMap[mode] || 'Focused View';
+        const content = fieldMap[mode] || '';
+        const confidence =
+          record.qa_confidence == null
+            ? 'n/a'
+            : Number(record.qa_confidence).toFixed(2);
+        const tags =
+          record.argument_tags && record.argument_tags.length
+            ? record.argument_tags.join(', ')
+            : 'none';
+        const notes = Array.isArray(record.qa_uncertainty_notes)
+          ? record.qa_uncertainty_notes.length
+          : 0;
+
+        return [
+          `<h2>${escapeHtml(record.record_id)}</h2>`,
+          `<p><strong>Section:</strong> ${escapeHtml(record.section_code)} | <strong>QA:</strong> ${escapeHtml(record.qa_status || 'n/a')} | <strong>Confidence:</strong> ${escapeHtml(confidence)}</p>`,
+          `<p><strong>Tags:</strong> ${escapeHtml(tags)} | <strong>Uncertainty notes:</strong> ${notes}</p>`,
+          `<h3>${escapeHtml(title)}</h3>`,
+          `<p>${renderTextBlock(content)}</p>`,
+        ].join('');
+      }
+
+      function buildSectionOptions(sections) {
+        for (const section of sections) {
+          const option = document.createElement('option');
+          option.value = section.section_code;
+          option.textContent = `Section ${section.section_code} (${section.record_count})`;
+          dom.sectionFilter.appendChild(option);
+        }
+      }
+
+      function normalizedThreshold() {
+        const parsed = Number.parseFloat(dom.maxConfidence.value);
+        if (!Number.isFinite(parsed)) {
+          return 0.9;
+        }
+        if (parsed < 0) {
+          return 0;
+        }
+        if (parsed > 1) {
+          return 1;
+        }
+        return parsed;
+      }
+
+      function syncPresetButtons() {
+        if (!dom.thresholdPresets) {
+          return;
+        }
+        const current = normalizedThreshold().toFixed(2);
+        const buttons = dom.thresholdPresets.querySelectorAll('.preset-btn');
+        for (const button of buttons) {
+          const value = button.dataset.threshold || '';
+          if (value === current) {
+            button.classList.add('active');
+          } else {
+            button.classList.remove('active');
+          }
+        }
+      }
+
+      async function applyThresholdPreset(value) {
+        const parsed = Number.parseFloat(value);
+        if (!Number.isFinite(parsed)) {
+          return;
+        }
+        dom.maxConfidence.value = parsed.toFixed(2);
+        dom.strictQueueOnly.checked = true;
+        syncPresetButtons();
+        await syncSelectionAndView();
+      }
+
+      function filteredRecords() {
+        const query = dom.searchInput.value.trim().toLowerCase();
+        const section = dom.sectionFilter.value;
+        const reviewOnly = dom.reviewQueueOnly.checked;
+        const strictOnly = dom.strictQueueOnly.checked;
+        const threshold = normalizedThreshold();
+
+        return state.records.filter((record) => {
+          if (section && record.section_code !== section) {
+            return false;
+          }
+
+          const notes = record.qa_uncertainty_notes || [];
+          const noteCount = Array.isArray(notes) ? notes.length : 0;
+          const confidenceValue = Number(record.qa_confidence);
+          const hasConfidence = Number.isFinite(confidenceValue);
+
+          if (reviewOnly && noteCount === 0) {
+            return false;
+          }
+
+          if (strictOnly) {
+            if (noteCount === 0) {
+              return false;
+            }
+            if (!hasConfidence || confidenceValue > threshold) {
+              return false;
+            }
+          }
+
+          if (!query) {
+            return true;
+          }
+
+          const haystack = [
+            record.record_id,
+            record.section_code,
+            record.source_text,
+            record.literal_translation,
+            record.technical_translation,
+            ...(record.argument_tags || []),
+          ]
+            .join(' ')
+            .toLowerCase();
+
+          return haystack.includes(query);
+        });
+      }
+
+      function currentFilteredSelection(records) {
+        if (records.length === 0) {
+          return null;
+        }
+        const same = records.find(
+          (r) => r.record_id === state.selectedRecordId,
+        );
+        return same || records[0];
+      }
+
+      function renderRecordList() {
+        const records = filteredRecords();
+        dom.recordList.innerHTML = '';
+        const thresholdText = normalizedThreshold();
+        if (dom.strictQueueOnly.checked) {
+          const safeThreshold = thresholdText.toFixed(2);
+          dom.count.textContent = `${records.length} strict queue record(s) <= ${safeThreshold}`;
+        } else if (dom.reviewQueueOnly.checked) {
+          dom.count.textContent = `${records.length} review queue record(s)`;
+        } else {
+          dom.count.textContent = `${records.length} record(s)`;
+        }
+
+        for (const record of records) {
+          const notes = Array.isArray(record.qa_uncertainty_notes)
+            ? record.qa_uncertainty_notes.length
+            : 0;
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className =
+            'item' +
+            (record.record_id === state.selectedRecordId ? ' active' : '');
+          button.innerHTML = `<div class="id">${escapeHtml(record.record_id)}</div><div class="meta">Section ${escapeHtml(record.section_code)} | Notes ${notes}</div>`;
+          button.addEventListener('click', () => {
+            state.selectedRecordId = record.record_id;
+            renderRecordList();
+            openRecord(record);
+          });
+          dom.recordList.appendChild(button);
+        }
+
+        if (records.length === 0) {
+          dom.currentMeta.textContent = 'No record selected';
+          dom.doc.innerHTML =
+            '<h2>No matching records</h2><p>Try widening filters or relaxing queue filters.</p>';
+        }
+      }
+
+      async function openRecord(record) {
+        dom.currentMeta.textContent = `${record.record_id} | Section ${record.section_code}`;
+        const mode = dom.viewMode.value;
+
+        if (mode !== 'markdown') {
+          dom.doc.innerHTML = renderFocusedView(record, mode);
+          return;
+        }
+
+        dom.doc.innerHTML = '<p>Loading markdown...</p>';
+        try {
+          const response = await fetch(record.md_path);
+          if (!response.ok) {
+            dom.doc.innerHTML = `<p>Failed to load ${escapeHtml(record.md_path)}</p>`;
+            return;
+          }
+          const markdown = await response.text();
+          dom.doc.innerHTML = markdownToHtml(markdown);
+        } catch (err) {
+          dom.doc.innerHTML = `<p>Failed to load record: ${escapeHtml(String(err))}</p>`;
+        }
+      }
+
+      async function syncSelectionAndView() {
+        const records = filteredRecords();
+        const selected = currentFilteredSelection(records);
+
+        renderRecordList();
+        if (selected) {
+          state.selectedRecordId = selected.record_id;
+          renderRecordList();
+          await openRecord(selected);
+        }
+      }
+
+      async function init() {
+        const response = await fetch('./manifest.json');
+        if (!response.ok) {
+          dom.doc.innerHTML =
+            '<h2>Manifest not found</h2><p>Run the generator script first.</p>';
+          dom.count.textContent = '0 record(s)';
+          return;
+        }
+
+        state.manifest = await response.json();
+        state.records = state.manifest.records || [];
+
+        buildSectionOptions(state.manifest.sections || []);
+        syncPresetButtons();
+        await syncSelectionAndView();
+
+        dom.searchInput.addEventListener('input', syncSelectionAndView);
+        dom.sectionFilter.addEventListener('change', syncSelectionAndView);
+        dom.reviewQueueOnly.addEventListener('change', syncSelectionAndView);
+        dom.strictQueueOnly.addEventListener('change', syncSelectionAndView);
+        dom.maxConfidence.addEventListener('input', () => {
+          syncPresetButtons();
+          syncSelectionAndView();
+        });
+        dom.viewMode.addEventListener('change', syncSelectionAndView);
+
+        if (dom.thresholdPresets) {
+          const buttons = dom.thresholdPresets.querySelectorAll('.preset-btn');
+          for (const button of buttons) {
+            button.addEventListener('click', () => {
+              applyThresholdPreset(button.dataset.threshold || '');
+            });
+          }
+        }
+      }
+
+      init().catch((err) => {
+        dom.doc.innerHTML = `<h2>Viewer error</h2><p>${escapeHtml(String(err))}</p>`;
+        dom.count.textContent = '0 record(s)';
+      });
+    </script>
+  </body>
+</html>

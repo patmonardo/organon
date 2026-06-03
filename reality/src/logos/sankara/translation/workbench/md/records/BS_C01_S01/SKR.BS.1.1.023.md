@@ -1,0 +1,51 @@
+# SKR.BS.1.1.023
+
+## Metadata
+- Work code: BS
+- Section code: 1.1
+- QA status: draft
+- QA confidence: 0.82
+- Argument tags: response, resolution, definition, example
+
+## Source
+- Source URL: https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1
+- Language: sa
+- Script: Devanagari
+- Edition note: Draft block record from BS_C01_S01.json::BS_C01_S01_V04_B5 (bhashya).
+
+### Source Text
+यदपि शास्त्रतात्पर्यविदामनुक्रमणम् — ‘ दृष्टो हि तस्यार्थः कर्मावबोधनम् ’ इत्येवमादि , तत् धर्म जिज्ञासाविषयत्वाद्विधिप्रतिषेधशास्त्राभिप्रायं द्रष्टव्यम् । अपि च ‘ आम्नायस्य क्रियार्थत्वा दानर्थक्यमतदर्थानाम् ’ इत्येतदेकान्तेनाभ्युपगच्छतां भूतोपदेशानर्थक्यप्रसङ्गः । प्रवृत्ति निवृत्तिविधिव्यतिरेकेण भूतं चे द्वस्तूपदिशति भव्यार्थत्वेन , कूटस्थ नित्यं भूतं नोपदिशतीति को हेतुः । न हि भूतमुपदिश्यमानं क्रिया भवति । अक्रियात्वेऽपि भूतस्य क्रियासाधनत्वात्क्रियार्थ एव भूतोपदेश इति चेत् , नैष दोषः । क्रियार्थत्वेऽपि क्रियानिर्वर्तनशक्तिमद्वस्तूपदिष्टमेव । क्रियार्थत्वं तु प्रयोजनं तस्य । न चै तावता वस्त्वनुपदिष्टं भवति । यदि नामोपदिष्टं किं तव तेन स्या दिति , उच्यते — अनवगतात्मवस्तूपदेशश्च तथैव भवितुमर्हति । तदवगत्या मिथ्याज्ञानस्य संसार हेतोर्निवृत्तिः प्रयोजनं क्रियत इत्यविशिष्ट मर्थवत्त्वं क्रियासाधनवस्तूपदेशेन । अपि च ‘ ब्राह्मणो न हन्तव्यः ’ इति चै वमाद्या निवृत्तिरुपदिश्यते । न च सा क्रिया । नापि क्रियासाधनम् । अक्रिया र्थाना मुपदेशोऽनर्थकश्चेत् , ‘ ब्राह्मणो न हन्तव्यः ’ इत्यादिनिवृत्त्युपदेशानामानर्थक्यं प्राप्तम् । तच्चानिष्टम् । न च स्वभावप्राप्तहन्त्यर्थानुरागेण नञः शक्यमप्राप्तक्रियार्थत्वं कल्पयितुं हनन क्रियानिवृत्त्यौदासीन्यव्यतिरेकेण । नञ श्चै ष स्वभावः , यत्स्वसम्बन्धिनोऽभावं बोधयतीति । अभाव बुद्धिश्चौदासीन्यकारणम् । सा च दग्धेन्धनाग्निवत्स्वयमेवोपशाम्यति । तस्मा त्प्रसक्तक्रियानिवृत्त्यौदासीन्यमेव ‘ ब्राह्मणो न हन्तव्यः ’ इत्यादिषु प्रतिषेधार्थं मन्यामहे , अन्यत्र प्रजापतिव्रतादिभ्यः । तस्मा त्पुरुषार्था नुपयोग्युपाख्यानादिभूतार्थवादविषयमानर्थक्याभिधानं द्रष्टव्यम् ॥
+
+### Transliteration (IAST)
+yadapi śāstratātparyavidāmanukramaṇam — ‘ dṛṣṭo hi tasyārthaḥ karmāvabodhanam ’ ityevamādi , tat dharma jijñāsāviṣayatvādvidhipratiṣedhaśāstrābhiprāyaṃ draṣṭavyam | api ca ‘ āmnāyasya kriyārthatvā dānarthakyamatadarthānām ’ ityetadekāntenābhyupagacchatāṃ bhūtopadeśānarthakyaprasaṅgaḥ | pravṛtti nivṛttividhivyatirekeṇa bhūtaṃ ce dvastūpadiśati bhavyārthatvena , kūṭastha nityaṃ bhūtaṃ nopadiśatīti ko hetuḥ | na hi bhūtamupadiśyamānaṃ kriyā bhavati | akriyātve'pi bhūtasya kriyāsādhanatvātkriyārtha eva bhūtopadeśa iti cet , naiṣa doṣaḥ | kriyārthatve'pi kriyānirvartanaśaktimadvastūpadiṣṭameva | kriyārthatvaṃ tu prayojanaṃ tasya | na cai tāvatā vastvanupadiṣṭaṃ bhavati | yadi nāmopadiṣṭaṃ kiṃ tava tena syā diti , ucyate — anavagatātmavastūpadeśaśca tathaiva bhavitumarhati | tadavagatyā mithyājñānasya saṃsāra hetornivṛttiḥ prayojanaṃ kriyata ityaviśiṣṭa marthavattvaṃ kriyāsādhanavastūpadeśena | api ca ‘ brāhmaṇo na hantavyaḥ ’ iti cai vamādyā nivṛttirupadiśyate | na ca sā kriyā | nāpi kriyāsādhanam | akriyā rthānā mupadeśo'narthakaścet , ‘ brāhmaṇo na hantavyaḥ ’ ityādinivṛttyupadeśānāmānarthakyaṃ prāptam | taccāniṣṭam | na ca svabhāvaprāptahantyarthānurāgeṇa nañaḥ śakyamaprāptakriyārthatvaṃ kalpayituṃ hanana kriyānivṛttyaudāsīnyavyatirekeṇa | naña ścai ṣa svabhāvaḥ , yatsvasambandhino'bhāvaṃ bodhayatīti | abhāva buddhiścaudāsīnyakāraṇam | sā ca dagdhendhanāgnivatsvayamevopaśāmyati | tasmā tprasaktakriyānivṛttyaudāsīnyameva ‘ brāhmaṇo na hantavyaḥ ’ ityādiṣu pratiṣedhārthaṃ manyāmahe , anyatra prajāpativratādibhyaḥ | tasmā tpuruṣārthā nupayogyupākhyānādibhūtārthavādaviṣayamānarthakyābhidhānaṃ draṣṭavyam ||
+
+## Translation
+
+### Literal
+And the cited exegetical maxim - 'its purpose is known as disclosing action,' etc. - should be understood as concerning dharma-inquiry and scriptures of injunction/prohibition. Further, those who accept without qualification the claim 'since recited text is for action, non-action content is meaningless' face absurdity: what of teachings about existent realities? If they allow existent object-teaching only as serving future action, why deny teaching of immutable eternal reality? Even when an object is taught for action, it is still genuinely taught as an object possessing capacity for action-effect; action-orientation is only its purpose, not negation of objecthood. Likewise teaching the as-yet-unrealized self-object can be meaningful: by realizing it, false cognition - cause of samsara - is removed; thus it has practical purposiveness comparable in meaningfulness to teaching action-supporting objects. Also, prohibitions such as 'a brahmana is not to be killed' are taught; these are not positive actions nor instruments of action. If all non-action teaching were meaningless, such prohibitions would become meaningless, which is unacceptable. Nor can one force the negative particle into some hidden positive action-function in every case; its natural function is to convey absence/non-doing, yielding withdrawal from the act. Therefore we take prohibitions primarily as producing cessation/indifference toward a prompted act (with limited special exceptions), and similarly claims of meaninglessness must be restricted to purposeless narrative material not connected to human ends - not to all statements of reality.
+
+### Technical
+Bhashya narrows Mimamsa kriyarthatva thesis: even where action-purpose exists, vastu-upadesha remains real; nivrtti-vakyas and atma-vastu teaching demonstrate non-reducibility to pravrtti-vidhi.
+
+### Interpretive Note
+Concludes by preserving both purposiveness and truth-disclosure without collapsing all Veda into injunction mechanics.
+
+## Analysis
+
+### Lexical Notes
+- **adhikaraṇa**
+  - Gloss: topical unit of argument
+  - Context: Tracks each block inside the section-level inferential sequence
+  - Grammar: noun
+  - Alternate glosses: topic-unit, argument node
+
+## QA Uncertainty Notes
+- Curated in contiguous S01 pass with stable inferential-tag schema.
+- A later philological pass should revisit condensed Mimamsa technical vocabulary and long polemical sentence boundaries in records 1.1.016-1.1.023.
+
+## Provenance
+- Extraction timestamp (UTC): 2026-06-02T16:24:50Z
+- Translator version: human+llm@bs-c01-s01-curation-pass-3
+- Reviewer version: pending
+- Source manifest path: reality/src/logos/sankara/raw/manifest.jsonl
+- Source JSON path: /home/pat/VSCode/organon/reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.023.json

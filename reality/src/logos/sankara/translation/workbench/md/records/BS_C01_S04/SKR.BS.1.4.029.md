@@ -1,0 +1,51 @@
+# SKR.BS.1.4.029
+
+## Metadata
+- Work code: BS
+- Section code: 1.4
+- QA status: draft
+- QA confidence: 0.70
+- Argument tags: response, resolution
+
+## Source
+- Source URL: https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1
+- Language: sa
+- Script: Devanagari
+- Edition note: Draft block record from BS_C01_S04.json::BS_C01_S04_V11_B2 (bhashya).
+
+### Source Text
+ततो ब्रूमः — न संख्योपसङ्ग्रहादपि प्रधानादीनां श्रुतिमत्त्वं प्रत्याशा कर्तव्या । कस्मात् ? नानाभावात् । नाना ह्येतानि पञ्चविंशतिस्तत्त्वानि । नैषां पञ्चशः पञ्चशः साधारणो धर्मोऽस्ति , येन पञ्चविंशतेरन्तराले पराः पञ्च पञ्च संख्या निविशेरन् । न ह्ये कनिबन्धनमन्तरेण नानाभूतेषु द्वित्वादिकाः संख्या निविशन्ते । अ थोच्येत — पञ्चविंशतिसंख्यैवेयमवयवद्वारेण लक्ष्यते , यथा ‘ पञ्च सप्त च वर्षाणि न ववर्ष शतक्रतुः ’ इति द्वादशवार्षिकीमनावृष्टिं कथयन्ति , तद्वदिति ; तदपि नो पपद्यते । अयमेवास्मिन्पक्षे दोषः , यल्लक्षणाश्रयणीया स्यात् । पर श्चात्र पञ्चशब्दो जनशब्देन समस्तः पञ्चजनाः इति , भाषिकेण स्वरेणैकपदत्वनिश्चयात् । प्रयोगान्तरे च ‘ पञ्चानां त्वा पञ्चजनानाम् ’ (तै. सं. १ । ६ । २ । २) इत्यैकपद्यैकस्वर्यैकविभक्तिकत्वावगमात् । समस्तत्वाच्च न वीप्सा ‘ पञ्च पञ्च ’ इति । तेन न पञ्चकद्वयग्रहणं पञ्च पञ्चेति । न च पञ्चसंख्याया एकस्याः पञ्चसंख्यया परया विशेषणम् ‘ पञ्च पञ्चकाः ’ इति , उपसर्जनस्य विशेषणेनासंयोगात् । न न्वापन्नपञ्चसंख्याका जना एव पुनः पञ्चसंख्यया विशेष्यमाणाः पञ्चविंशतिः प्रत्येष्यन्ते , यथा पञ्च पञ्चपूल्य इति पञ्चविंशतिः पूलाः प्रतीयन्ते , तद्वत् । नेति ब्रूमः । युक्तं यत्पञ्चपूलीशब्दस्य समाहाराभिप्रायत्वात् कतीति सत्यां भेदाकाङ्क्षायां पञ्च पञ्चपूल्य इति विशेषणम् । इह तु पञ्च जना इत्यादित एव भेदोपादानात्कतीत्यसत्यां भेदाकाङ्क्षायां न पञ्च पञ्चजना इति विशेषणं भवेत् । भवद पीदं विशेषणं पञ्चसंख्याया एव भवेत् ; तत्र चो क्तो दोषः । तस्मात्पञ्च पञ्चजना इति न पञ्चविंशतितत्त्वाभिप्रायम् । अतिरेकाच्च न पञ्चविंशतितत्त्वाभिप्रायम् । अतिरेको हि भवत्यात्माकाशाभ्यां पञ्चविंशतिसंख्यायाः । आत्मा तावदिह प्रतिष्ठां प्रत्याधारत्वेन निर्दिष्टः , ‘ यस्मिन् ’ इति सप्तमीसूचितस्य ‘ तमेव मन्य आत्मानम् ’ इत्यात्मत्वेनानुकर्षणात् । आत्मा च चेतनः पुरुषः ; स च पञ्चविंशतावन्तर्गत एवेति न तस्यैवाधारत्वमाधेयत्वं च युज्यते । अर्थान्तर परिग्रहे च तत्त्वसंख्यातिरेकः सिद्धान्तविरुद्धः प्रसज्येत । तथा ‘ आकाशश्च प्रतिष्ठितः ’ इत्याकाशस्यापि पञ्चविंशतावन्तर्गतस्य न पृथगुपादानं न्याय्यम् ; अर्थान्तरपरिग्रहे चोक्तं दूषणम् । कथं च संख्यामात्रश्रवणे सत्यश्रुतानां पञ्चविंशतितत्त्वानामुपसङ्ग्रहः प्रतीयेत ? जन शब्दस्य तत्त्वेष्वरूढत्वात् , अर्थान्त रोपसङ्ग्रहेऽपि संख्योपपत्तेः । कथं तर्हि पञ्च पञ्चजना इति ? उच्यते — ‘ दिक्संख्ये संज्ञायाम् ’ (पा. सू. २ । १ । ५०) इति विशेषस्मरणात्संज्ञायामेव पञ्चशब्दस्य जनशब्देन समासः । ततश्च रूढत्वाभिप्रायेणैव केचित्पञ्चजना नाम विवक्ष्यन्ते , न साङ्ख्यतत्त्वाभिप्रायेण । ते कतीत्यस्यामाकाङ्क्षायां पुनः पञ्चेति प्रयुज्यते । पञ्चजना नाम ये केचित् , ते च पञ्चैवेत्यर्थः , सप्तर्षयः सप्तेति यथा ॥ ११ ॥
+
+### Transliteration (IAST)
+tato brūmaḥ — na saṃkhyopasaṅgrahādapi pradhānādīnāṃ śrutimattvaṃ pratyāśā kartavyā | kasmāt ? nānābhāvāt | nānā hyetāni pañcaviṃśatistattvāni | naiṣāṃ pañcaśaḥ pañcaśaḥ sādhāraṇo dharmo'sti , yena pañcaviṃśaterantarāle parāḥ pañca pañca saṃkhyā niviśeran | na hye kanibandhanamantareṇa nānābhūteṣu dvitvādikāḥ saṃkhyā niviśante | a thocyeta — pañcaviṃśatisaṃkhyaiveyamavayavadvāreṇa lakṣyate , yathā ‘ pañca sapta ca varṣāṇi na vavarṣa śatakratuḥ ’ iti dvādaśavārṣikīmanāvṛṣṭiṃ kathayanti , tadvaditi ; tadapi no papadyate | ayamevāsminpakṣe doṣaḥ , yallakṣaṇāśrayaṇīyā syāt | para ścātra pañcaśabdo janaśabdena samastaḥ pañcajanāḥ iti , bhāṣikeṇa svareṇaikapadatvaniścayāt | prayogāntare ca ‘ pañcānāṃ tvā pañcajanānām ’ (tai. saṃ. 1 | 6 | 2 | 2) ityaikapadyaikasvaryaikavibhaktikatvāvagamāt | samastatvācca na vīpsā ‘ pañca pañca ’ iti | tena na pañcakadvayagrahaṇaṃ pañca pañceti | na ca pañcasaṃkhyāyā ekasyāḥ pañcasaṃkhyayā parayā viśeṣaṇam ‘ pañca pañcakāḥ ’ iti , upasarjanasya viśeṣaṇenāsaṃyogāt | na nvāpannapañcasaṃkhyākā janā eva punaḥ pañcasaṃkhyayā viśeṣyamāṇāḥ pañcaviṃśatiḥ pratyeṣyante , yathā pañca pañcapūlya iti pañcaviṃśatiḥ pūlāḥ pratīyante , tadvat | neti brūmaḥ | yuktaṃ yatpañcapūlīśabdasya samāhārābhiprāyatvāt katīti satyāṃ bhedākāṅkṣāyāṃ pañca pañcapūlya iti viśeṣaṇam | iha tu pañca janā ityādita eva bhedopādānātkatītyasatyāṃ bhedākāṅkṣāyāṃ na pañca pañcajanā iti viśeṣaṇaṃ bhavet | bhavada pīdaṃ viśeṣaṇaṃ pañcasaṃkhyāyā eva bhavet ; tatra co kto doṣaḥ | tasmātpañca pañcajanā iti na pañcaviṃśatitattvābhiprāyam | atirekācca na pañcaviṃśatitattvābhiprāyam | atireko hi bhavatyātmākāśābhyāṃ pañcaviṃśatisaṃkhyāyāḥ | ātmā tāvadiha pratiṣṭhāṃ pratyādhāratvena nirdiṣṭaḥ , ‘ yasmin ’ iti saptamīsūcitasya ‘ tameva manya ātmānam ’ ityātmatvenānukarṣaṇāt | ātmā ca cetanaḥ puruṣaḥ ; sa ca pañcaviṃśatāvantargata eveti na tasyaivādhāratvamādheyatvaṃ ca yujyate | arthāntara parigrahe ca tattvasaṃkhyātirekaḥ siddhāntaviruddhaḥ prasajyeta | tathā ‘ ākāśaśca pratiṣṭhitaḥ ’ ityākāśasyāpi pañcaviṃśatāvantargatasya na pṛthagupādānaṃ nyāyyam ; arthāntaraparigrahe coktaṃ dūṣaṇam | kathaṃ ca saṃkhyāmātraśravaṇe satyaśrutānāṃ pañcaviṃśatitattvānāmupasaṅgrahaḥ pratīyeta ? jana śabdasya tattveṣvarūḍhatvāt , arthānta ropasaṅgrahe'pi saṃkhyopapatteḥ | kathaṃ tarhi pañca pañcajanā iti ? ucyate — ‘ diksaṃkhye saṃjñāyām ’ (pā. sū. 2 | 1 | 50) iti viśeṣasmaraṇātsaṃjñāyāmeva pañcaśabdasya janaśabdena samāsaḥ | tataśca rūḍhatvābhiprāyeṇaiva kecitpañcajanā nāma vivakṣyante , na sāṅkhyatattvābhiprāyeṇa | te katītyasyāmākāṅkṣāyāṃ punaḥ pañceti prayujyate | pañcajanā nāma ye kecit , te ca pañcaivetyarthaḥ , saptarṣayaḥ sapteti yathā || 11 ||
+
+## Translation
+
+### Literal
+To that we reply: even from this numerical grouping one should not expect scriptural validation of pradhana and the rest. Why? Because of heterogeneity. These twenty-five proposed entities are mutually diverse; there is no uniform property by which they can be grouped as five sets of five in the required way. And because of excess as well: once one includes the self and the supporting locus indicated in the mantra, the count no longer fits the Sankhya schema. Therefore the expression cannot be fixed as a Sankhya tally. Rather, the passage is to be read according to its own contextual intent and not by externally imposed arithmetic matching.
+
+### Technical
+Siddhanta rejects panca-pancajana = 25 tattvas on two grounds formalized in the sutra: (1) nanabhava - internal non-uniformity prevents coherent fivefold partitioning under a shared class-principle; (2) atireka - contextual elements in the mantra introduce count overflow relative to canonical Sankhya enumeration. Thus numerical resemblance is neither necessary nor sufficient for doctrinal identity. The reading must remain prakarana-governed and semantically constrained by the local Upanisadic discourse.
+
+### Interpretive Note
+Core anti-reduction move: arithmetic similarity cannot override semantic and contextual incompatibility.
+
+## Analysis
+
+### Lexical Notes
+- **adhikaraṇa**
+  - Gloss: topical unit of argument
+  - Context: Tracks each block inside the section-level inferential sequence
+  - Grammar: noun
+  - Alternate glosses: topic-unit, argument node
+
+## QA Uncertainty Notes
+- Source block is long; this draft foregrounds formal rebuttal structure rather than every sub-example.
+- Count-overflow (atireka) may be tuned further after line-level reconciliation with your preferred edition.
+
+## Provenance
+- Extraction timestamp (UTC): 2026-06-02T16:24:50Z
+- Translator version: human+llm@bs-c01-s04-curation-pass-3
+- Reviewer version: pending
+- Source manifest path: reality/src/logos/sankara/raw/manifest.jsonl
+- Source JSON path: /home/pat/VSCode/organon/reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.029.json

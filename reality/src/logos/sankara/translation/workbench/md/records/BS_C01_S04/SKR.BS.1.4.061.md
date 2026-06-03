@@ -1,0 +1,51 @@
+# SKR.BS.1.4.061
+
+## Metadata
+- Work code: BS
+- Section code: 1.4
+- QA status: draft
+- QA confidence: 0.74
+- Argument tags: definition, thesis
+
+## Source
+- Source URL: https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1
+- Language: sa
+- Script: Devanagari
+- Edition note: Draft block record from BS_C01_S04.json::BS_C01_S04_V23_B1 (bhashya).
+
+### Source Text
+य थाभ्युदयहेतुत्वाद्धर्मो जिज्ञास्यः , एवं निःश्रेयसहेतुत्वाद्ब्रह्म जिज्ञास्यमित्युक्तम् । ब्रह्म च ‘ जन्माद्यस्य यतः ’ (ब्र. सू. १ । १ । २) इति लक्षितम् । तच्च लक्षणं घटरुचकादीनां मृत्सुवर्णादिवत्प्रकृतित्वे कुलालसुवर्णकारादिवन्निमित्तत्वे च समानमित्यतो भवति विमर्शः — किमात्मकं पुनर्ब्रह्मणः कारणत्वं स्यादिति । तत्र निमित्त कारणमेव तावत्केवलं स्यादिति प्रतिभाति । कस्मात् ? ईक्षापूर्वक कर्तृत्वश्रवणात् — ईक्षापूर्वकं हि ब्रह्मणः कर्तृत्वमवगम्यते — ‘ स ईक्षाञ्चक्रे ’ (प्र. उ. ६ । ३) ‘ स प्राणमसृजत ’ (प्र. उ. ६ । ४) इत्यादिश्रुतिभ्यः । ईक्षापूर्वकं च कर्तृत्वं निमित्तकारणेष्वेव कुलालादिषु दृष्टम् । अनेक कारकपूर्विका च क्रियाफलसिद्धिर्लोके दृष्टा । स च न्याय आदिकर्तर्यपि युक्तः सङ्क्रमयितुम् । ईश्वरत्व प्रसिद्धेश्च — ईश्वराणां हि राजवैवस्वतादीनां निमित्तकारणत्वमेव केवलं प्रतीयते । तद्वत्परमेश्वरस्यापि निमित्तकारणत्वमेव युक्तं प्रतिपत्तुम् । कार्यं चे दं जगत्सावयवमचेतनमशुद्धं च दृश्यते । कारणेनापि तस्य तादृशेनैव भवितव्यम् , कार्यकारणयोः सारूप्यदर्शनात् । ब्रह्म च नैवंलक्षणमवगम्यते — ‘ निष्कलं निष्क्रियं शान्तं निरवद्यं निरञ्जनम् ’ (श्वे. उ. ६ । १९) इत्यादिश्रुतिभ्यः । पारिशेष्या द्ब्रह्मणोऽन्यदुपादानकारणमशुद्ध्यादिगुणकं स्मृतिप्रसिद्धमभ्युपगन्तव्यम् , ब्रह्मकारणत्वश्रुतेर्निमित्तत्वमात्रे पर्यवसानादित्येवं प्राप्ते ब्रूमः —
+
+### Transliteration (IAST)
+ya thābhyudayahetutvāddharmo jijñāsyaḥ , evaṃ niḥśreyasahetutvādbrahma jijñāsyamityuktam | brahma ca ‘ janmādyasya yataḥ ’ (bra. sū. 1 | 1 | 2) iti lakṣitam | tacca lakṣaṇaṃ ghaṭarucakādīnāṃ mṛtsuvarṇādivatprakṛtitve kulālasuvarṇakārādivannimittatve ca samānamityato bhavati vimarśaḥ — kimātmakaṃ punarbrahmaṇaḥ kāraṇatvaṃ syāditi | tatra nimitta kāraṇameva tāvatkevalaṃ syāditi pratibhāti | kasmāt ? īkṣāpūrvaka kartṛtvaśravaṇāt — īkṣāpūrvakaṃ hi brahmaṇaḥ kartṛtvamavagamyate — ‘ sa īkṣāñcakre ’ (pra. u. 6 | 3) ‘ sa prāṇamasṛjata ’ (pra. u. 6 | 4) ityādiśrutibhyaḥ | īkṣāpūrvakaṃ ca kartṛtvaṃ nimittakāraṇeṣveva kulālādiṣu dṛṣṭam | aneka kārakapūrvikā ca kriyāphalasiddhirloke dṛṣṭā | sa ca nyāya ādikartaryapi yuktaḥ saṅkramayitum | īśvaratva prasiddheśca — īśvarāṇāṃ hi rājavaivasvatādīnāṃ nimittakāraṇatvameva kevalaṃ pratīyate | tadvatparameśvarasyāpi nimittakāraṇatvameva yuktaṃ pratipattum | kāryaṃ ce daṃ jagatsāvayavamacetanamaśuddhaṃ ca dṛśyate | kāraṇenāpi tasya tādṛśenaiva bhavitavyam , kāryakāraṇayoḥ sārūpyadarśanāt | brahma ca naivaṃlakṣaṇamavagamyate — ‘ niṣkalaṃ niṣkriyaṃ śāntaṃ niravadyaṃ nirañjanam ’ (śve. u. 6 | 19) ityādiśrutibhyaḥ | pāriśeṣyā dbrahmaṇo'nyadupādānakāraṇamaśuddhyādiguṇakaṃ smṛtiprasiddhamabhyupagantavyam , brahmakāraṇatvaśruternimittatvamātre paryavasānādityevaṃ prāpte brūmaḥ —
+
+## Translation
+
+### Literal
+Earlier it was stated that just as dharma is to be inquired into because it yields worldly flourishing, so Brahman is to be inquired into because it yields the highest good. Brahman was characterized as that from which origin etc. proceeds. That mark, unlike clay-gold examples where maker and material may differ, requires further determination here regarding causal status.
+
+### Technical
+Opening of the upadana-nimitta discussion: after establishing Brahma-jijnasa and the janmadi-laksana, the bhashya raises whether Brahman is merely efficient cause or also material cause. The ordinary artifact analogy is introduced only to mark the need for stricter Vedantic criteria.
+
+### Interpretive Note
+Transition into explicit proof that Brahman is both material and efficient cause.
+
+## Analysis
+
+### Lexical Notes
+- **adhikaraṇa**
+  - Gloss: topical unit of argument
+  - Context: Tracks each block inside the section-level inferential sequence
+  - Grammar: noun
+  - Alternate glosses: topic-unit, argument node
+
+## QA Uncertainty Notes
+- Draft translation prioritized doctrinal continuity within the local adhikarana sequence.
+- Final philological pass should tighten citation-level granularity and preferred Sanskrit term retention.
+
+## Provenance
+- Extraction timestamp (UTC): 2026-06-02T16:24:50Z
+- Translator version: human+llm@bs-c01-s04-curation-pass-7
+- Reviewer version: pending
+- Source manifest path: reality/src/logos/sankara/raw/manifest.jsonl
+- Source JSON path: /home/pat/VSCode/organon/reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.061.json

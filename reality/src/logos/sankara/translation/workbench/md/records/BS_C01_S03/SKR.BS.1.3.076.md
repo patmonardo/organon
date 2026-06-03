@@ -1,0 +1,51 @@
+# SKR.BS.1.3.076
+
+## Metadata
+- Work code: BS
+- Section code: 1.3
+- QA status: draft
+- QA confidence: 0.79
+- Argument tags: objection, response, definition
+
+## Source
+- Source URL: https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1
+- Language: sa
+- Script: Devanagari
+- Edition note: Draft block record from BS_C01_S03.json::BS_C01_S03_V31_B1 (bhashya).
+
+### Source Text
+इह देवादीनामपि ब्रह्मविद्यायामस्त्यधिकार इति यत्प्रतिज्ञातं तत्पर्यावर्त्यते — देवादीनामनधिकारं जैमिनिराचार्यो मन्यते । कस्मात् ? मध्वादिष्वसम्भवात् । ब्रह्मविद्यायामधिकाराभ्युपगमे हि विद्यात्वाविशेषात् मध्वादिविद्यास्वप्यधिकारोऽभ्युपगम्येत ; न चैवं सम्भवति । कथम् ? ‘ असौ वा आदित्यो देवमधु ’ (छा. उ. ३ । १ । १) इत्यत्र मनुष्या आदित्यं मध्वध्यासेनोपासीरन् । देवादिषु ह्युपासकेष्वभ्युपगम्यमानेष्वादित्यः कमन्यमादित्यमुपासीत ? पुन श्चादित्यव्यपाश्रयाणि पञ्च रोहितादीन्यमृतान्यनुक्रम्य , वसवो रुद्रा आदित्या मरुतः साध्याश्च पञ्च देवगणाः क्रमेण तत्तदमृतमुपजीवन्तीत्युपदिश्य , ‘ स य एतदेवममृतं वेद वसूनामेवैको भूत्वाग्निनैव मुखेनैतदेवामृतं दृष्ट्वा तृप्यति ’ (छा. उ. ३ । ६ । ३) इत्यादिना वस्वाद्युपजीव्यान्यमृतानि विजानतां वस्वादिमहिमप्राप्तिं दर्शयति । वस्वादयस्तु कान् अन्यान् वस्वादीनमृतोपजीविनो विजानीयुः ? कं वान्यं वस्वादिमहिमानं प्रेप्सेयुः ? तथा — ‘ अग्निः पादो वायुः पाद आदित्यः पादो दिशः पादः ’ ‘ वायुर्वाव संवर्गः ’ (छा. उ. ४ । ३ । १) ‘ आदित्यो ब्रह्मेत्यादेशः ’ (छा. उ. ३ । १९ । १) इत्यादिषु देवतात्मोपासनेषु न तेषामेव देवतात्मनामधिकारः सम्भवति । तथा ‘ इमावेव गोतमभरद्वाजावयमेव गोतमोऽयं भरद्वाजः ’ (बृ. उ. २ । २ । ४) इत्यादिष्वपि ऋषिसम्बन्धेषूपासनेषु न तेषामेव ऋषीणामधिकारः सम्भवति ॥ ३१ ॥
+
+### Transliteration (IAST)
+iha devādīnāmapi brahmavidyāyāmastyadhikāra iti yatpratijñātaṃ tatparyāvartyate — devādīnāmanadhikāraṃ jaiminirācāryo manyate | kasmāt ? madhvādiṣvasambhavāt | brahmavidyāyāmadhikārābhyupagame hi vidyātvāviśeṣāt madhvādividyāsvapyadhikāro'bhyupagamyeta ; na caivaṃ sambhavati | katham ? ‘ asau vā ādityo devamadhu ’ (chā. u. 3 | 1 | 1) ityatra manuṣyā ādityaṃ madhvadhyāsenopāsīran | devādiṣu hyupāsakeṣvabhyupagamyamāneṣvādityaḥ kamanyamādityamupāsīta ? puna ścādityavyapāśrayāṇi pañca rohitādīnyamṛtānyanukramya , vasavo rudrā ādityā marutaḥ sādhyāśca pañca devagaṇāḥ krameṇa tattadamṛtamupajīvantītyupadiśya , ‘ sa ya etadevamamṛtaṃ veda vasūnāmevaiko bhūtvāgninaiva mukhenaitadevāmṛtaṃ dṛṣṭvā tṛpyati ’ (chā. u. 3 | 6 | 3) ityādinā vasvādyupajīvyānyamṛtāni vijānatāṃ vasvādimahimaprāptiṃ darśayati | vasvādayastu kān anyān vasvādīnamṛtopajīvino vijānīyuḥ ? kaṃ vānyaṃ vasvādimahimānaṃ prepseyuḥ ? tathā — ‘ agniḥ pādo vāyuḥ pāda ādityaḥ pādo diśaḥ pādaḥ ’ ‘ vāyurvāva saṃvargaḥ ’ (chā. u. 4 | 3 | 1) ‘ ādityo brahmetyādeśaḥ ’ (chā. u. 3 | 19 | 1) ityādiṣu devatātmopāsaneṣu na teṣāmeva devatātmanāmadhikāraḥ sambhavati | tathā ‘ imāveva gotamabharadvājāvayameva gotamo'yaṃ bharadvājaḥ ’ (bṛ. u. 2 | 2 | 4) ityādiṣvapi ṛṣisambandheṣūpāsaneṣu na teṣāmeva ṛṣīṇāmadhikāraḥ sambhavati || 31 ||
+
+## Translation
+
+### Literal
+At this point, what had been proposed - that even gods and others are eligible for Brahma-vidya - is now reversed. Teacher Jaimini holds that gods and others are not eligible. Why? Because in meditations such as the Madhu-vidya, such eligibility is impossible. If eligibility in Brahma-vidya is granted to them, then due to no distinction in being vidya, eligibility would extend to Madhu and similar vidyas too; but that cannot stand. How? In passages like 'that sun is the honey of the gods,' humans are to meditate on the sun under honey-superimposition. If gods themselves are admitted as meditators there, which other sun would the sun meditate on? Again, after teaching five immortal essences dependent on the sun and saying the five divine groups (Vasus, Rudras, Adityas, Maruts, Sadhyas) subsist on them in order, the text further teaches attainment of Vasu and similar greatness for knowers of those essences. But what other Vasus would Vasus know as users of those essences, or what other Vasu-status would they seek? Likewise in deity-self meditations ('Agni is one quarter, Vayu one quarter...'; 'Vayu indeed is absorptive principle'; 'the injunction: the sun is Brahman') those very deity-selves cannot coherently be the meditators. Similarly, in rishi-linked meditations ('these two are Gautama and Bharadvaja; this indeed is Gautama, this is Bharadvaja'), those very rishis cannot coherently be the subjects.
+
+### Technical
+Bhashya on 1.3.31 presents Jaimini-paksha: deva-adhikara fails in specific upasanas where meditator-object structure collapses if deities themselves are primary adhikarin.
+
+### Interpretive Note
+A role-structure impossibility argument, not merely a capacity argument.
+
+## Analysis
+
+### Lexical Notes
+- **adhikaraṇa**
+  - Gloss: topical unit of argument
+  - Context: Tracks each block inside the section-level inferential sequence
+  - Grammar: noun
+  - Alternate glosses: topic-unit, argument node
+
+## QA Uncertainty Notes
+- Curated in contiguous S03 pass with stable cadence and inferential-tag schema.
+- A later philological pass should revisit pramana and upasana technical vocabulary in records 1.3.076-1.3.079.
+
+## Provenance
+- Extraction timestamp (UTC): 2026-06-02T16:24:50Z
+- Translator version: human+llm@bs-c01-s03-curation-pass-10
+- Reviewer version: pending
+- Source manifest path: reality/src/logos/sankara/raw/manifest.jsonl
+- Source JSON path: /home/pat/VSCode/organon/reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.076.json

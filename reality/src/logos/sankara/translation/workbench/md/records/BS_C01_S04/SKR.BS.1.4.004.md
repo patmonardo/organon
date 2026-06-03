@@ -1,0 +1,51 @@
+# SKR.BS.1.4.004
+
+## Metadata
+- Work code: BS
+- Section code: 1.4
+- QA status: draft
+- QA confidence: 0.79
+- Argument tags: objection, response, resolution
+
+## Source
+- Source URL: https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1
+- Language: sa
+- Script: Devanagari
+- Edition note: Draft block record from BS_C01_S04.json::BS_C01_S04_V02_B1 (bhashya).
+
+### Source Text
+उक्तमेतत् — प्रकरणपरिशेषाभ्यां शरीरमव्यक्तशब्दम् , न प्रधानमिति । इदमिदानीमाशङ्क्यते — कथमव्यक्तशब्दार्हत्वं शरीरस्य , यावता स्थूलत्वात्स्पष्टतरमिदं शरीरं व्यक्तशब्दार्हम् , अस्पष्टवचनस्त्वव्यक्तशब्द इति । अत उत्तरमुच्यते — सूक्ष्मं तु इह कारणात्मना शरीरं विवक्ष्यते , सूक्ष्मस्याव्यक्तशब्दार्हत्वात् । यद्यपि स्थूलमिदं शरीरं न स्वयमव्यक्तशब्दमर्हति , तथापि तस्य त्वारम्भकं भूतसूक्ष्ममव्यक्तशब्दमर्हति । प्रकृतिशब्दश्च विकारे दृष्टः — यथा ‘ गोभिः श्रीणीत मत्सरम् ’ (ऋ. सं. ९ । ४६ । ४) इति । श्रुतिश्च — ‘ तद्धेदं तर्ह्यव्याकृतमासीत् ’ (बृ. उ. १ । ४ । ७) इतीदमेव व्याकृतनामरूपविभिन्नं जगत्प्रागवस्थायां परित्यक्तव्याकृतनामरूपं बीजशक्त्यवस्थमव्यक्तशब्दयोग्यं दर्शयति ॥ २ ॥
+
+### Transliteration (IAST)
+uktametat — prakaraṇapariśeṣābhyāṃ śarīramavyaktaśabdam , na pradhānamiti | idamidānīmāśaṅkyate — kathamavyaktaśabdārhatvaṃ śarīrasya , yāvatā sthūlatvātspaṣṭataramidaṃ śarīraṃ vyaktaśabdārham , aspaṣṭavacanastvavyaktaśabda iti | ata uttaramucyate — sūkṣmaṃ tu iha kāraṇātmanā śarīraṃ vivakṣyate , sūkṣmasyāvyaktaśabdārhatvāt | yadyapi sthūlamidaṃ śarīraṃ na svayamavyaktaśabdamarhati , tathāpi tasya tvārambhakaṃ bhūtasūkṣmamavyaktaśabdamarhati | prakṛtiśabdaśca vikāre dṛṣṭaḥ — yathā ‘ gobhiḥ śrīṇīta matsaram ’ (ṛ. saṃ. 9 | 46 | 4) iti | śrutiśca — ‘ taddhedaṃ tarhyavyākṛtamāsīt ’ (bṛ. u. 1 | 4 | 7) itīdameva vyākṛtanāmarūpavibhinnaṃ jagatprāgavasthāyāṃ parityaktavyākṛtanāmarūpaṃ bījaśaktyavasthamavyaktaśabdayogyaṃ darśayati || 2 ||
+
+## Translation
+
+### Literal
+It has been said that by context and residual indication, "unmanifest" denotes body, not Pradhana. A doubt now arises: how can body deserve the term "unmanifest", since gross body is clearly manifest? Reply: here body is intended in its causal subtle condition, and the subtle is fit for the name unmanifest. Though gross body itself is not so named, its initiating subtle element is. A cause-term may be used for an effect, and scripture too speaks of the world before differentiation of name and form as unmanifest, seed-power state. Thus the differentiated world, in its prior condition with name-form withdrawn, is properly called unmanifest.
+
+### Technical
+Sutra-bhashya support for avyakta = subtle causal body-state: Shankara distinguishes gross manifestation from causal seed-condition (bija-shakti / avyakrita) and allows causal designation by extension. This preserves non-Sankhya reading while explaining lexical fitness.
+
+### Interpretive Note
+Clarifies that avyakta points to causal subtlety, not independent Pradhana substance.
+
+## Analysis
+
+### Lexical Notes
+- **adhikaraṇa**
+  - Gloss: topical unit of argument
+  - Context: Tracks each block inside the section-level inferential sequence
+  - Grammar: noun
+  - Alternate glosses: topic-unit, argument node
+
+## QA Uncertainty Notes
+- Curated against local adhikarana flow and neighboring translated blocks.
+- A final philological pass can still refine register and Sanskrit term granularity.
+
+## Provenance
+- Extraction timestamp (UTC): 2026-06-02T16:24:50Z
+- Translator version: human+llm@bs-c01-s04-curation-pass-8
+- Reviewer version: pending
+- Source manifest path: reality/src/logos/sankara/raw/manifest.jsonl
+- Source JSON path: /home/pat/VSCode/organon/reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.004.json

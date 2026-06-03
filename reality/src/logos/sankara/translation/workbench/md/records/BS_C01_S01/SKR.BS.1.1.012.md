@@ -1,0 +1,51 @@
+# SKR.BS.1.1.012
+
+## Metadata
+- Work code: BS
+- Section code: 1.1
+- QA status: draft
+- QA confidence: 0.85
+- Argument tags: objection, response, resolution, definition, example
+
+## Source
+- Source URL: https://advaitasharada.sringeri.net/display/bhashya/BS/devanagari?id=BS_C01&page=1
+- Language: sa
+- Script: Devanagari
+- Edition note: Draft block record from BS_C01_S01.json::BS_C01_S01_V02_B2 (bhashya).
+
+### Source Text
+न न्वि हापि तदेवोपन्यस्तं जन्मादिसूत्रे । न ; वेदान्त वाक्यकुसुमग्रथनार्थत्वात्सूत्राणाम् । वेदान्त वाक्यानि हि सूत्रैरुदाहृत्य विचार्यन्ते । वाक्यार्थ विचारणाध्यवसाननिर्वृत्ता हि ब्रह्मावगतिः , नानुमानादिप्रमाणान्तरनिर्वृत्ता । सत्सु तु वेदान्तवाक्येषु जगतो जन्मादिकारणवादिषु , तदर्थ ग्रहणदार्ढ्याय अनुमानमपि वेदान्त वाक्याविरोधि प्रमाणं भवत् , न निवार्यते , श्रु त्यैव च सहायत्वेन तर्कस्याभ्युपेतत्वात् । तथा हि — ‘ श्रोतव्यो मन्तव्यः ’ (बृ. उ. २ । ४ । ५) इति श्रुतिः ‘ पण्डितो मेधावी गन्धारानेवोपसम्पद्येतैवमेवेहाचार्यवान्पुरुषो वेद ’ (छा. उ. ६ । १४ । २) इति च पुरुष बुद्धिसाहाय्यमात्मनो दर्शयति । न धर्मजिज्ञासायामिव श्रुत्यादय एव प्रमाणं ब्रह्मजिज्ञासायाम् । किन्तु श्रुत्यादयोऽनुभवादयश्च यथासम्भव मिह प्रमाणम् , अनुभवा वसानत्वा द्भूत वस्तुविषयत्वाच्च ब्रह्मज्ञानस्य । कर्तव्ये हि विषये नानुभवापेक्षास्तीति श्रुत्यादीनामेव प्रामाण्यं स्यात् , पुरुषा धीना त्मलाभत्वाच्च कर्तव्यस्य । कर्तु म कर्तु मन्यथा वा कर्तुं शक्यं लौकिकं वैदिकं च कर्म ; यथा अश्वेन गच्छति , पद्भ्याम् , अन्यथा वा , न वा गच्छतीति । तथा ‘ अतिरात्रे षोडशिनं गृह्णाति , नातिरात्रे षोडशिनं गृह्णाति ’ ‘ उदिते जुहोति , अनुदिते जुहोति ’ इति विधि प्रतिषेधाश्च अत्र अर्थवन्तः स्युः , विकल्पो त्सर्गापवादाश्च । न तु वस्तु ‘ एवम् , नैवम् ’ ‘ अस्ति , नास्ति ’ इति वा विकल्प्यते । विकल्पनास्तु पुरुषबुद्ध्यपेक्षाः । न वस्तु याथात्म्य ज्ञानं पुरुषबुद्ध्यपेक्षम् । किं तर्हि ? वस्तुतन्त्रमेव तत् । न हि स्थाणा वे कस्मिन् ‘ स्थाणुर्वा , पुरुषोऽन्यो वा ’ इति तत्त्वज्ञानं भवति । तत्र ‘ पुरुषोऽन्यो वा ’ इति मिथ्याज्ञानम् । ‘ स्थाणुरेव ’ इति तत्त्वज्ञानम् , वस्तुतन्त्रत्वात् । एवं भूतवस्तुविषयाणां प्रामाण्यं वस्तुतन्त्रम् । त त्रैवं सति ब्रह्मज्ञानमपि वस्तुतन्त्रमेव , भूत वस्तुविषयत्वात् । ननु भूत वस्तुत्वे ब्रह्मणः प्रमाणान्तरविषयत्वमेवेति वेदान्तवाक्यविचारणा अनर्थिकैव प्राप्ता । न ; इन्द्रियाविषयत्वेन सम्बन्धाग्रहणात् । स्वभावतो विषयविषयाणीन्द्रियाणि , न ब्रह्मविषयाणि । सति ही न्द्रिय विषयत्वे ब्रह्मणः इदं ब्रह्मणा सम्बद्धं कार्यमिति गृह्येत । कार्यमात्र मे व तु गृह्यमाणम् — किं ब्रह्मणा सम्बद्धम् ? किमन्येन केनचिद्वा सम्बद्धम् ? — इति न शक्यं निश्चेतुम् । तस्मा ज्जन्मादिसूत्रं नानुमानोपन्यासार्थम् । किं तर्हि ? वेदान्तवाक्यप्रदर्शनार्थम् । किं पुन स्तद्वेदान्तवाक्यं यत् सूत्रेणेह लिलक्षयिषितम् ? ‘ भृगु र्वै वारुणिः । वरुणं पितरमुपससार । अधीहि भगवो ब्रह्मेति ’ (तै. उ. ३ । १ । १) इत्युपक्रम्याह — ‘ यतो वा इमानि भूतानि जायन्ते । येन जातानि जीवन्ति । यत्प्रयन्त्यभिसंविशन्ति । तद्विजिज्ञासस्व । तद्ब्रह्मेति । ’ (तै. उ. ३ । १ । १) तस्य च निर्णयवाक्यम् — ‘ आनन्दाद्ध्येव खल्विमानि भूतानि जायन्ते । आनन्देन जातानि जीवन्ति । आनन्दं प्रयन्त्यभिसंविशन्ति ’ (तै. उ. ३ । ६ । १) इति । अन्यान्य प्ये वंजातीयकानि वाक्यानि नित्य शुद्धबुद्धमुक्तस्वभावसर्वज्ञस्वरूपकारणविषयाणि उदाहर्तव्यानि ॥ २ ॥
+
+### Transliteration (IAST)
+na nvi hāpi tadevopanyastaṃ janmādisūtre | na ; vedānta vākyakusumagrathanārthatvātsūtrāṇām | vedānta vākyāni hi sūtrairudāhṛtya vicāryante | vākyārtha vicāraṇādhyavasānanirvṛttā hi brahmāvagatiḥ , nānumānādipramāṇāntaranirvṛttā | satsu tu vedāntavākyeṣu jagato janmādikāraṇavādiṣu , tadartha grahaṇadārḍhyāya anumānamapi vedānta vākyāvirodhi pramāṇaṃ bhavat , na nivāryate , śru tyaiva ca sahāyatvena tarkasyābhyupetatvāt | tathā hi — ‘ śrotavyo mantavyaḥ ’ (bṛ. u. 2 | 4 | 5) iti śrutiḥ ‘ paṇḍito medhāvī gandhārānevopasampadyetaivamevehācāryavānpuruṣo veda ’ (chā. u. 6 | 14 | 2) iti ca puruṣa buddhisāhāyyamātmano darśayati | na dharmajijñāsāyāmiva śrutyādaya eva pramāṇaṃ brahmajijñāsāyām | kintu śrutyādayo'nubhavādayaśca yathāsambhava miha pramāṇam , anubhavā vasānatvā dbhūta vastuviṣayatvācca brahmajñānasya | kartavye hi viṣaye nānubhavāpekṣāstīti śrutyādīnāmeva prāmāṇyaṃ syāt , puruṣā dhīnā tmalābhatvācca kartavyasya | kartu ma kartu manyathā vā kartuṃ śakyaṃ laukikaṃ vaidikaṃ ca karma ; yathā aśvena gacchati , padbhyām , anyathā vā , na vā gacchatīti | tathā ‘ atirātre ṣoḍaśinaṃ gṛhṇāti , nātirātre ṣoḍaśinaṃ gṛhṇāti ’ ‘ udite juhoti , anudite juhoti ’ iti vidhi pratiṣedhāśca atra arthavantaḥ syuḥ , vikalpo tsargāpavādāśca | na tu vastu ‘ evam , naivam ’ ‘ asti , nāsti ’ iti vā vikalpyate | vikalpanāstu puruṣabuddhyapekṣāḥ | na vastu yāthātmya jñānaṃ puruṣabuddhyapekṣam | kiṃ tarhi ? vastutantrameva tat | na hi sthāṇā ve kasmin ‘ sthāṇurvā , puruṣo'nyo vā ’ iti tattvajñānaṃ bhavati | tatra ‘ puruṣo'nyo vā ’ iti mithyājñānam | ‘ sthāṇureva ’ iti tattvajñānam , vastutantratvāt | evaṃ bhūtavastuviṣayāṇāṃ prāmāṇyaṃ vastutantram | ta traivaṃ sati brahmajñānamapi vastutantrameva , bhūta vastuviṣayatvāt | nanu bhūta vastutve brahmaṇaḥ pramāṇāntaraviṣayatvameveti vedāntavākyavicāraṇā anarthikaiva prāptā | na ; indriyāviṣayatvena sambandhāgrahaṇāt | svabhāvato viṣayaviṣayāṇīndriyāṇi , na brahmaviṣayāṇi | sati hī ndriya viṣayatve brahmaṇaḥ idaṃ brahmaṇā sambaddhaṃ kāryamiti gṛhyeta | kāryamātra me va tu gṛhyamāṇam — kiṃ brahmaṇā sambaddham ? kimanyena kenacidvā sambaddham ? — iti na śakyaṃ niścetum | tasmā jjanmādisūtraṃ nānumānopanyāsārtham | kiṃ tarhi ? vedāntavākyapradarśanārtham | kiṃ puna stadvedāntavākyaṃ yat sūtreṇeha lilakṣayiṣitam ? ‘ bhṛgu rvai vāruṇiḥ | varuṇaṃ pitaramupasasāra | adhīhi bhagavo brahmeti ’ (tai. u. 3 | 1 | 1) ityupakramyāha — ‘ yato vā imāni bhūtāni jāyante | yena jātāni jīvanti | yatprayantyabhisaṃviśanti | tadvijijñāsasva | tadbrahmeti | ’ (tai. u. 3 | 1 | 1) tasya ca nirṇayavākyam — ‘ ānandāddhyeva khalvimāni bhūtāni jāyante | ānandena jātāni jīvanti | ānandaṃ prayantyabhisaṃviśanti ’ (tai. u. 3 | 6 | 1) iti | anyānya pye vaṃjātīyakāni vākyāni nitya śuddhabuddhamuktasvabhāvasarvajñasvarūpakāraṇaviṣayāṇi udāhartavyāni || 2 ||
+
+## Translation
+
+### Literal
+But is not this very point already stated in the birth-etc. sutra? No: the sutras are for stringing together the flowers of Vedanta sentences. Vedanta statements are cited and examined through sutras. Brahman-realization is achieved through settled determination of sentence-meaning, not by an independent pramana such as bare inference. Still, when Vedanta sentences about the world's causal source are present, inference that does not contradict Vedanta can strengthen grasp of their meaning and is not rejected; sruti itself accepts reasoning as auxiliary ('to be heard, reflected upon' etc.). Nor in Brahman-inquiry, as in dharma-inquiry, are sruti and allied sources alone pramana; here sruti, experience, and others, as applicable, are pramana, because Brahman-knowledge concerns what is real and culminates in direct realization. In matters to be done, experience is not decisive and scriptural injunction predominates, since action is agent-dependent and can be done, not done, or done otherwise (both in worldly and Vedic cases). But reality cannot be optionally fixed as 'thus/not thus,' 'is/is not'; such alternation belongs to conceptual construction, not to truth-knowledge, which is object-determined. Just as on seeing a stump, 'stump or person?' is error, while 'stump indeed' is truth by object-control, so too validity in matters of real entities is object-governed. Therefore Brahman-knowledge is also object-governed. If so, one may ask whether Brahman should then be known by other pramanas and Vedanta inquiry becomes pointless. No, because relation to Brahman is not grasped by senses: senses are naturally object-bound and do not take Brahman as their direct object. Without such access, one cannot determine whether the seen effect is connected with Brahman or with something else. Hence the birth-etc. sutra is not to propose an independent inference; rather it displays a Vedanta sentence. Which sentence? The Varuni-Bhrgu passage: 'That from which these beings are born, by which they live, into which they enter - seek to know that; that is Brahman,' with its determination sentence, 'from bliss indeed these beings are born...' Other similar sentences should be cited that concern the causal reality whose nature is eternal purity, consciousness, freedom, and omniscience. (2)
+
+### Technical
+Bhashya construes sutra method as Vedanta-vakya-mimamsa, permitting tarka/anumana only as sruti-anugrhitopakarana; Brahman knowledge is vakyartha-niscaya grounded and object-determined.
+
+### Interpretive Note
+Strong methodological statement: inference supports but never displaces Vedantic sentence authority.
+
+## Analysis
+
+### Lexical Notes
+- **adhikaraṇa**
+  - Gloss: topical unit of argument
+  - Context: Tracks each block inside the section-level inferential sequence
+  - Grammar: noun
+  - Alternate glosses: topic-unit, argument node
+
+## QA Uncertainty Notes
+- Curated in contiguous S01 pass with stable inferential-tag schema.
+- A later philological pass should revisit janmadi-lakshana and sastra-yonitva technical compression in records 1.1.008-1.1.015.
+
+## Provenance
+- Extraction timestamp (UTC): 2026-06-02T16:24:50Z
+- Translator version: human+llm@bs-c01-s01-curation-pass-2
+- Reviewer version: pending
+- Source manifest path: reality/src/logos/sankara/raw/manifest.jsonl
+- Source JSON path: /home/pat/VSCode/organon/reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.012.json
