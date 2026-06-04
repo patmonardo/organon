@@ -9,6 +9,8 @@
     "verse_id": "T_C01_S12_V01",
     "block_id": "T_C01_S12_V01_B01",
     "block_type": "bhashya",
+    "record_kind": "bhasya",
+    "source_block_class": "bhashya",
     "text": "शं नो मित्र इत्यादि । व्याख्यातमेतत्पूर्वम् ॥",
     "citations": []
   },
@@ -22,6 +24,8 @@
     "verse_id": "T_C01_S12_V01",
     "block_id": "T_C01_S12_V01_VERSETEXT_01",
     "block_type": "versetext",
+    "record_kind": "sutra",
+    "source_block_class": "versetext",
     "text": "शं नो मित्रः शं वरुणः । शं नो भवत्वर्यमा । शं न इन्द्रो बृहस्पतिः । शं नो विष्णुरुरुक्रमः । नमो ब्रह्मणे । नमस्ते वायो । त्वमेव प्रत्यक्षं ब्रह्मासि । त्वामेव प्रत्यक्षं ब्रह्मावादिषम् । ऋतमवादिषम् । सत्यमवादिषम् । तन्मामावीत् । तद्वक्तारमावीत् । आवीन्माम् । आवीद्वक्तारम् ॥",
     "citations": []
   }

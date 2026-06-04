@@ -26,10 +26,7 @@
         "gloss": "ignorance (as adhyasa-structure)",
         "contextual_sense": "Pandita diagnosis: adhyasa itself is avidya, and vidya is its discriminative negation.",
         "grammatical_role": "noun",
-        "alternate_glosses": [
-          "nescience",
-          "misapprehension condition"
-        ]
+        "alternate_glosses": ["nescience", "misapprehension condition"]
       },
       {
         "headword_iast": "atma-anatma-itaretara-adhyasa",
@@ -66,22 +63,14 @@
         "gloss": "knowledge of self-nonduality",
         "contextual_sense": "Vedanta’s terminal function: sublation of adhyasa through discriminative realization.",
         "grammatical_role": "compound noun",
-        "alternate_glosses": [
-          "nondual self-knowledge",
-          "unity-realization"
-        ]
+        "alternate_glosses": ["nondual self-knowledge", "unity-realization"]
       }
     ],
-    "argument_tags": [
-      "definition",
-      "response",
-      "resolution",
-      "example"
-    ],
+    "argument_tags": ["definition", "response", "resolution", "example"],
     "tags": [
       "layout:chapter-section-record",
       "policy:append-and-supersede-never-delete",
-      "strata:preamble"
+      "strata:bhasya"
     ]
   },
   "provenance": {
@@ -99,5 +88,5 @@
       "A later philological pass should revisit dense adhyasa technical vocabulary and karmani-sasthi grammatical framing in PRE-1.1.007."
     ]
   },
-  "record_kind": "preamble"
+  "record_kind": "bhasya"
 }

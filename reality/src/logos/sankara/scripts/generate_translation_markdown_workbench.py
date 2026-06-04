@@ -129,6 +129,28 @@ def as_list_of_str(value: Any) -> list[str]:
     return out
 
 
+def pick_first(data: dict[str, Any], keys: list[str]) -> Any:
+    for key in keys:
+        current: Any = data
+        found = True
+        for part in key.split("."):
+            if isinstance(current, dict) and part in current:
+                current = current.get(part)
+            else:
+                found = False
+                break
+        if found and current is not None:
+            return current
+    return None
+
+
+def pick_first_str(data: dict[str, Any], keys: list[str]) -> str:
+    value = pick_first(data, keys)
+    if value is None:
+        return ""
+    return str(value).strip()
+
+
 def normalize_record_kind(value: str) -> str:
     kind = value.strip().lower().replace("-", "_").replace(" ", "_")
     kind_map = {
@@ -156,15 +178,40 @@ def infer_record_kind(
     source: dict[str, Any],
     text: dict[str, Any],
 ) -> str:
+    explicit_candidates = [
+        data.get("kind"),
+        data.get("record_kind"),
+        source.get("kind"),
+        source.get("record_kind"),
+        text.get("kind"),
+        text.get("record_kind"),
+    ]
+    for candidate in explicit_candidates:
+        if isinstance(candidate, str) and candidate.strip():
+            return normalize_record_kind(candidate)
+
+    if pick_first_str(data, ["bhasya_text", "text.bhasya_text", "bhasya", "text.bhasya"]):
+        return "bhasya"
+    if pick_first_str(data, ["sutra_text", "text.sutra_text", "sutra", "text.sutra"]):
+        return "sutra"
+
     text_signals = [
         str(text.get("segmentation_note", "")).lower(),
         str(source.get("edition_note", "")).lower(),
+        pick_first_str(
+            data,
+            [
+                "segmentation_note",
+                "text.segmentationNote",
+                "source.editionNote",
+                "notes.segmentation",
+            ],
+        ).lower(),
     ]
 
-    # Strong source/text markers should override stale legacy `record_kind` values.
     if record_id.endswith(".PRE") or any(
-      "preamble" in signal or "_pre/" in signal or "_pre_" in signal
-      for signal in text_signals
+        "preamble" in signal or "_pre/" in signal or "_pre_" in signal
+        for signal in text_signals
     ):
         return "preamble"
 
@@ -180,18 +227,6 @@ def infer_record_kind(
 
     if any("transition" in signal for signal in text_signals):
         return "transition"
-
-    explicit_candidates = [
-        data.get("kind"),
-        data.get("record_kind"),
-        source.get("kind"),
-        source.get("record_kind"),
-        text.get("kind"),
-        text.get("record_kind"),
-    ]
-    for candidate in explicit_candidates:
-        if isinstance(candidate, str) and candidate.strip():
-            return normalize_record_kind(candidate)
 
     if any("bhashya" in signal for signal in text_signals):
       return "bhasya"
@@ -212,12 +247,12 @@ def infer_record_kind(
 def read_record_doc(path: Path, md_root: Path) -> RecordDoc | None:
     data = json.loads(path.read_text(encoding="utf-8"))
 
-    record_id = str(data.get("record_id", "")).strip()
+    record_id = pick_first_str(data, ["record_id", "id"])
     if not record_id:
         return None
 
-    work_code = str(data.get("work_code", "")).strip()
-    section_code = str(data.get("section_code", "")).strip()
+    work_code = pick_first_str(data, ["work_code", "workCode", "work.code"])
+    section_code = pick_first_str(data, ["section_code", "sectionCode", "section.code"])
 
     source = data.get("source") or {}
     text = data.get("text") or {}
@@ -234,36 +269,98 @@ def read_record_doc(path: Path, md_root: Path) -> RecordDoc | None:
     if isinstance(confidence_raw, (int, float)):
         qa_confidence = float(confidence_raw)
 
-    lexical_notes_raw = analysis.get("lexical_notes")
+    lexical_notes_raw = pick_first(
+        data,
+        [
+            "analysis.lexical_notes",
+            "analysis.lexicalNotes",
+            "lexical_notes",
+            "lexicalNotes",
+        ],
+    )
     lexical_notes: list[dict[str, Any]] = []
     if isinstance(lexical_notes_raw, list):
         for note in lexical_notes_raw:
             if isinstance(note, dict):
                 lexical_notes.append(note)
 
+    argument_tags_raw = pick_first(
+        data,
+        [
+            "analysis.argument_tags",
+            "analysis.argumentTags",
+            "argument_tags",
+            "argumentTags",
+        ],
+    )
+
     record_kind = infer_record_kind(data, record_id, source, text)
     return RecordDoc(
         record_id=record_id,
         work_code=work_code,
         section_code=section_code,
-        source_text=str(text.get("source_text", "")).strip(),
-        transliteration_iast=str(text.get("transliteration_iast", "")).strip(),
-        literal_translation=str(translation.get("literal_translation", "")).strip(),
-        technical_translation=str(translation.get("technical_translation", "")).strip(),
-        interpretive_note=str(translation.get("interpretive_note", "")).strip(),
-        argument_tags=as_list_of_str(analysis.get("argument_tags")),
+        source_text=pick_first_str(
+            data,
+            [
+                "text.source_text",
+                "text.sourceText",
+                "source_text",
+                "sourceText",
+                "sutra_text",
+                "bhasya_text",
+                "sutra",
+                "bhasya",
+            ],
+        ),
+        transliteration_iast=pick_first_str(
+            data,
+            [
+                "text.transliteration_iast",
+                "text.transliterationIAST",
+                "transliteration_iast",
+                "transliterationIAST",
+            ],
+        ),
+        literal_translation=pick_first_str(
+            data,
+            [
+                "translation.literal_translation",
+                "translation.literalTranslation",
+                "literal_translation",
+                "literalTranslation",
+            ],
+        ),
+        technical_translation=pick_first_str(
+            data,
+            [
+                "translation.technical_translation",
+                "translation.technicalTranslation",
+                "technical_translation",
+                "technicalTranslation",
+            ],
+        ),
+        interpretive_note=pick_first_str(
+            data,
+            [
+                "translation.interpretive_note",
+                "translation.interpretiveNote",
+                "interpretive_note",
+                "interpretiveNote",
+            ],
+        ),
+        argument_tags=as_list_of_str(argument_tags_raw),
         lexical_notes=lexical_notes,
-        source_url=str(source.get("source_url", "")).strip(),
-        language=str(source.get("language", "")).strip(),
-        script=str(source.get("script", "")).strip(),
-        edition_note=str(source.get("edition_note", "")).strip(),
-        qa_status=str(qa.get("status", "")).strip(),
+        source_url=pick_first_str(data, ["source.source_url", "source.sourceUrl", "source_url", "sourceUrl"]),
+        language=pick_first_str(data, ["source.language", "language"]),
+        script=pick_first_str(data, ["source.script", "script"]),
+        edition_note=pick_first_str(data, ["source.edition_note", "source.editionNote", "edition_note", "editionNote"]),
+        qa_status=pick_first_str(data, ["qa.status", "status"]),
         qa_confidence=qa_confidence,
-        qa_uncertainty_notes=as_list_of_str(qa.get("uncertainty_notes")),
-        translator_version=str(provenance.get("translator_version", "")).strip(),
-        reviewer_version=str(provenance.get("reviewer_version", "")).strip(),
-        extraction_timestamp_utc=str(provenance.get("extraction_timestamp_utc", "")).strip(),
-        source_manifest_path=str(provenance.get("source_manifest_path", "")).strip(),
+        qa_uncertainty_notes=as_list_of_str(pick_first(data, ["qa.uncertainty_notes", "qa.uncertaintyNotes", "uncertainty_notes"])),
+        translator_version=pick_first_str(data, ["provenance.translator_version", "provenance.translatorVersion", "translator_version", "translatorVersion"]),
+        reviewer_version=pick_first_str(data, ["provenance.reviewer_version", "provenance.reviewerVersion", "reviewer_version", "reviewerVersion"]),
+        extraction_timestamp_utc=pick_first_str(data, ["provenance.extraction_timestamp_utc", "provenance.extractionTimestampUtc", "extraction_timestamp_utc", "extractionTimestampUtc"]),
+        source_manifest_path=pick_first_str(data, ["provenance.source_manifest_path", "provenance.sourceManifestPath", "source_manifest_path", "sourceManifestPath"]),
         input_path=path,
         output_path=out_path,
         record_kind=record_kind,

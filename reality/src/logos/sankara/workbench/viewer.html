@@ -378,6 +378,7 @@
       const state = {
         manifest: null,
         records: [],
+        recordInfoById: new Map(),
         selectedRecordId: null,
         semantic: null,
         diagnostics: null,
@@ -409,7 +410,7 @@
       };
 
       const VIEW_PROFILES = {
-        simple: [],
+        simple: ['kind'],
         core: ['kind', 'section'],
         source: ['kind', 'section', 'source'],
         translation: ['kind', 'literal', 'technical'],
@@ -555,7 +556,9 @@
 
       function profileFieldText(record, field) {
         if (field === 'kind') {
-          return String(record.record_kind || 'unknown');
+          const kind = displayKind(record);
+          const anchor = displayAnchor(record);
+          return anchor ? `Kind: ${kind} · ${anchor}` : `Kind: ${kind}`;
         }
         if (field === 'section') {
           return `Section ${String(record.section_code || 'n/a')}`;
@@ -639,7 +642,7 @@
         if (profileKey === 'curation') {
           chunks.push(
             '<h2>Curation</h2>',
-            `<p><strong>Kind:</strong> ${escapeHtml(String(record.record_kind || 'unknown'))}</p>`,
+            `<p><strong>Kind:</strong> ${escapeHtml(displayKind(record))}</p>`,
             `<p><strong>Tags:</strong> ${escapeHtml(tags.length ? tags.join(', ') : 'none')}</p>`,
           );
         }
@@ -647,7 +650,7 @@
         if (profileKey === 'core') {
           chunks.push(
             '<h2>Core</h2>',
-            `<p><strong>Kind:</strong> ${escapeHtml(String(record.record_kind || 'unknown'))}</p>`,
+            `<p><strong>Kind:</strong> ${escapeHtml(displayKind(record))}</p>`,
             `<p><strong>Section:</strong> ${escapeHtml(String(record.section_code || 'n/a'))}</p>`,
           );
         }
@@ -710,6 +713,76 @@
         };
       }
 
+      function recordKind(record) {
+        const raw = String(
+          record && record.record_kind ? record.record_kind : '',
+        )
+          .trim()
+          .toLowerCase();
+        return raw && raw !== 'unknown' ? raw : 'unknown';
+      }
+
+      function recordUnitLabel(record) {
+        const locator = parseRecordLocator(record && record.record_id);
+        if (!locator) {
+          return '';
+        }
+        if (locator.unitRaw === 'PRE') {
+          return 'opening';
+        }
+        if (/^\d+$/.test(locator.unitRaw)) {
+          return `${locator.chapter}.${locator.section}.${Number(locator.unitRaw)}`;
+        }
+        return locator.unitRaw;
+      }
+
+      function buildRecordInfo(records) {
+        const info = new Map();
+        const bySection = new Map();
+
+        for (const record of records) {
+          const section = String(record.section_code || '');
+          if (!bySection.has(section)) {
+            bySection.set(section, []);
+          }
+          bySection.get(section).push(record);
+        }
+
+        for (const rows of bySection.values()) {
+          let lastSutraLabel = '';
+          for (const record of rows) {
+            const kind = recordKind(record);
+            const selfLabel = recordUnitLabel(record);
+            let anchor = selfLabel;
+
+            if (kind === 'sutra' && selfLabel) {
+              lastSutraLabel = selfLabel;
+            } else if (kind === 'bhasya' && lastSutraLabel) {
+              anchor = lastSutraLabel;
+            } else if (kind === 'preamble') {
+              anchor = 'opening';
+            }
+
+            info.set(record.record_id, { kind, anchor });
+          }
+        }
+
+        return info;
+      }
+
+      function displayKind(record) {
+        const info = state.recordInfoById.get(record.record_id);
+        return info && info.kind ? info.kind : recordKind(record);
+      }
+
+      function displayAnchor(record) {
+        const info = state.recordInfoById.get(record.record_id);
+        if (info && info.anchor) {
+          return info.anchor;
+        }
+        return recordUnitLabel(record);
+      }
+
       function sectionSortKey(sectionCode) {
         return String(sectionCode || '')
           .split('.')
@@ -767,7 +840,7 @@
 
           let firstSutraIndex = -1;
           for (let i = 0; i < sorted.length; i += 1) {
-            if (String(sorted[i].record_kind || '').toLowerCase() === 'sutra') {
+            if (displayKind(sorted[i]) === 'sutra') {
               firstSutraIndex = i;
               break;
             }
@@ -776,9 +849,7 @@
           const preambleAfterSutra = [];
           if (firstSutraIndex >= 0) {
             for (let i = firstSutraIndex + 1; i < sorted.length; i += 1) {
-              if (
-                String(sorted[i].record_kind || '').toLowerCase() === 'preamble'
-              ) {
+              if (displayKind(sorted[i]) === 'preamble') {
                 preambleAfterSutra.push(sorted[i].record_id);
               }
             }
@@ -857,7 +928,7 @@
           if (sectionCode && record.section_code !== sectionCode) {
             continue;
           }
-          if (String(record.record_kind || '').toLowerCase() === targetKind) {
+          if (displayKind(record) === targetKind) {
             return record;
           }
         }
@@ -868,7 +939,7 @@
         const sourceUrl = String(record.source_url || '').trim();
         const chunks = [
           `<strong>${escapeHtml(String(record.record_id || ''))}</strong>`,
-          `Kind: ${escapeHtml(String(record.record_kind || 'unknown'))}`,
+          `Kind: ${escapeHtml(displayKind(record))}`,
           `Section: ${escapeHtml(String(record.section_code || 'n/a'))}`,
         ];
         if (sourceUrl) {
@@ -1097,7 +1168,7 @@
         const locator = parseRecordLocator(record.record_id);
 
         if (semantic.kinds.length > 0) {
-          const kind = String(record.record_kind || 'unknown').toLowerCase();
+          const kind = displayKind(record);
           if (!semantic.kinds.includes(kind)) {
             return false;
           }
@@ -1172,7 +1243,7 @@
 
           const haystack = [
             record.record_id,
-            record.record_kind,
+            displayKind(record),
             record.section_code,
             record.source_text,
             record.literal_translation,
@@ -1251,6 +1322,7 @@
             recordUnitOrder(b.record_id).value
           );
         });
+        state.recordInfoById = buildRecordInfo(state.records);
         state.semantic = parseSemanticFromLocation();
         state.diagnostics = buildDiagnostics(state.records);
 

@@ -9,6 +9,8 @@
     "verse_id": "Ch_C02_S15_V01",
     "block_id": "Ch_C02_S15_V01_B01",
     "block_type": "bhashya",
+    "record_kind": "bhasya",
+    "source_block_class": "bhashya",
     "text": "अभ्राणि अब्भरणात् । मेघः उदकसेक्तृत्वात् । उक्तार्थमन्यत् । एतद्वैरूपं नाम साम पर्जन्ये प्रोतम् । अनेकरूपत्वात् अभ्रादिभिः पर्जन्यस्य, वैरूप्यम् ॥",
     "citations": []
   },
@@ -22,6 +24,8 @@
     "verse_id": "Ch_C02_S15_V01",
     "block_id": "Ch_C02_S15_V01_VERSETEXT_01",
     "block_type": "versetext",
+    "record_kind": "sutra",
+    "source_block_class": "versetext",
     "text": "अभ्राणि सम्प्लवन्ते स हिङ्कारो मेघो जायते स प्रस्तावो वर्षति स उद्गीथो विद्योतते स्तनयति स प्रतिहार उद्गृह्णाति तन्निधनमेतद्वैरूपं पर्जन्ये प्रोतम् ॥ १ ॥",
     "citations": []
   },
@@ -35,6 +39,8 @@
     "verse_id": "Ch_C02_S15_V02",
     "block_id": "Ch_C02_S15_V02_B01",
     "block_type": "bhashya",
+    "record_kind": "bhasya",
+    "source_block_class": "bhashya",
     "text": "विरूपांश्च सुरूपांश्चाजाविप्रभृतीन्पशूनवरुन्धे प्राप्नोतीत्यर्थः । वर्षन्तं न निन्देत् तद्व्रतम् ॥",
     "citations": []
   },
@@ -48,6 +54,8 @@
     "verse_id": "Ch_C02_S15_V02",
     "block_id": "Ch_C02_S15_V02_VERSETEXT_01",
     "block_type": "versetext",
+    "record_kind": "sutra",
+    "source_block_class": "versetext",
     "text": "स य एवमेतद्वैरूपं पर्जन्ये प्रोतं वेद विरूपाꣳश्च सुरूपाꣳश्च पशूनवरुन्धे सर्वमायुरेति ज्योग्जीवति महान्प्रजया पशुभिर्भवति महान्कीर्त्या वर्षन्तं न निन्देत्तद्ब्रतम् ॥ २ ॥",
     "citations": []
   }

@@ -9,6 +9,8 @@
     "verse_id": "Ch_C03_S03_V01",
     "block_id": "Ch_C03_S03_V01_VERSETEXT_01",
     "block_type": "versetext",
+    "record_kind": "sutra",
+    "source_block_class": "versetext",
     "text": "अथ येऽस्य प्रत्यञ्चो रश्मयस्ता एवास्य प्रतीच्यो मधुनाड्यः सामान्येव मधुकृतः सामवेद एव पुष्पं ता अमृता आपः ॥ १ ॥",
     "citations": []
   },
@@ -22,6 +24,8 @@
     "verse_id": "Ch_C03_S03_V02",
     "block_id": "Ch_C03_S03_V02_VERSETEXT_01",
     "block_type": "versetext",
+    "record_kind": "sutra",
+    "source_block_class": "versetext",
     "text": "तानि वा एतानि सामान्येतं सामवेदमभ्यतपंस्तस्याभितप्तस्य यशस्तेज इन्द्रियं वीर्यमन्नाद्यꣳ रसोऽजायत ॥ २ ॥",
     "citations": []
   },
@@ -35,6 +39,8 @@
     "verse_id": "Ch_C03_S03_V03",
     "block_id": "Ch_C03_S03_V03_B01",
     "block_type": "bhashya",
+    "record_kind": "bhasya",
+    "source_block_class": "bhashya",
     "text": "अथ येऽस्य प्रत्यञ्चो रश्मय इत्यादि समानम् । तथा साम्नां मधु, एतदादित्यस्य कृष्णं रूपम् ॥",
     "citations": []
   },
@@ -48,6 +54,8 @@
     "verse_id": "Ch_C03_S03_V03",
     "block_id": "Ch_C03_S03_V03_VERSETEXT_01",
     "block_type": "versetext",
+    "record_kind": "sutra",
+    "source_block_class": "versetext",
     "text": "तद्व्यक्षरत्तदादित्यमभितोऽश्रयत्तद्वा एतद्यदेतदादित्यस्य कृष्णꣳ रूपम् ॥ ३ ॥",
     "citations": []
   }

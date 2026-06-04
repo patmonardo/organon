@@ -9,6 +9,8 @@
     "verse_id": "Ch_C02_S18_V01",
     "block_id": "Ch_C02_S18_V01_B01",
     "block_type": "bhashya",
+    "record_kind": "bhasya",
+    "source_block_class": "bhashya",
     "text": "अजा हिङ्कार इत्यादि पूर्ववत् । पशुषु प्रोताः ॥",
     "citations": []
   },
@@ -22,6 +24,8 @@
     "verse_id": "Ch_C02_S18_V01",
     "block_id": "Ch_C02_S18_V01_VERSETEXT_01",
     "block_type": "versetext",
+    "record_kind": "sutra",
+    "source_block_class": "versetext",
     "text": "अजा हिङ्कारोऽवयः प्रस्तावो गाव उद्गीथोऽश्वाः प्रतिहारः पुरुषो निधनमेता रेवत्यः पशुषु प्रोताः ॥ १ ॥",
     "citations": []
   },
@@ -35,6 +39,8 @@
     "verse_id": "Ch_C02_S18_V02",
     "block_id": "Ch_C02_S18_V02_B01",
     "block_type": "bhashya",
+    "record_kind": "bhasya",
+    "source_block_class": "bhashya",
     "text": "पशून् न निन्देत् , तद्व्रतम् ॥",
     "citations": []
   },
@@ -48,6 +54,8 @@
     "verse_id": "Ch_C02_S18_V02",
     "block_id": "Ch_C02_S18_V02_VERSETEXT_01",
     "block_type": "versetext",
+    "record_kind": "sutra",
+    "source_block_class": "versetext",
     "text": "स य एवमेता रेवत्यः पशुषु प्रोता वेद पशुमान्भवति सर्वमायुरेति ज्योग्जीवति महान्प्रजया पशुभिर्भवति महान्कीर्त्या पशून्न निन्देत्तद्व्रतम् ॥ २ ॥",
     "citations": []
   }

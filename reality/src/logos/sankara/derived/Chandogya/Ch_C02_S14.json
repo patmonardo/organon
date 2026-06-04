@@ -9,6 +9,8 @@
     "verse_id": "Ch_C02_S14_V01",
     "block_id": "Ch_C02_S14_V01_B01",
     "block_type": "bhashya",
+    "record_kind": "bhasya",
+    "source_block_class": "bhashya",
     "text": "उद्यन्सविता स हिङ्कारः, प्राथंयाद्दर्शनस्य । उदितः प्रस्तावः, प्रस्तवनहेतुत्वात्कर्मणाम् । मध्यन्दिन उद्गीथः, श्रैष्ठ्यात् । अपराह्णः प्रतिहारः, पश्वादीनां गृहान्प्रति हरणात् । यदस्तं यंस्तन्निधनम् , रात्रौ गृहे निधानात्प्राणिनाम् । एतद्बृहत् आदित्ये प्रोतम् , बृहतः आदित्यदैवत्यत्वात् ॥",
     "citations": []
   },
@@ -22,6 +24,8 @@
     "verse_id": "Ch_C02_S14_V01",
     "block_id": "Ch_C02_S14_V01_VERSETEXT_01",
     "block_type": "versetext",
+    "record_kind": "sutra",
+    "source_block_class": "versetext",
     "text": "उद्यन्हिङ्कार उदितः प्रस्तावो मध्यन्दिन उद्गीथोऽपराह्णः प्रतिहारोऽस्तं यन्निधनमेतद्बृहदादित्ये प्रोतम् ॥ १ ॥",
     "citations": []
   },
@@ -35,6 +39,8 @@
     "verse_id": "Ch_C02_S14_V02",
     "block_id": "Ch_C02_S14_V02_B01",
     "block_type": "bhashya",
+    "record_kind": "bhasya",
+    "source_block_class": "bhashya",
     "text": "स य इत्यादि पूर्ववत् । तपन्तं न निन्देत् ; तद्व्रतम् ॥",
     "citations": []
   },
@@ -48,6 +54,8 @@
     "verse_id": "Ch_C02_S14_V02",
     "block_id": "Ch_C02_S14_V02_VERSETEXT_01",
     "block_type": "versetext",
+    "record_kind": "sutra",
+    "source_block_class": "versetext",
     "text": "स य एवमेतद्बृहदादित्ये प्रोतं वेद तेजस्व्यन्नादो भवति सर्वमायुरेति ज्योग्जीवति महान्प्रजया पशुभिर्भवति महान्कीर्त्या तपन्तं न निन्देत्तद्व्रतम् ॥ २ ॥",
     "citations": []
   }

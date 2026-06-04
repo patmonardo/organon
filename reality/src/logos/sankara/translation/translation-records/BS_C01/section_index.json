@@ -1,14 +1,2616 @@
 {
   "section": "BS_C01",
-  "scope": "preamble-pass-1",
-  "generated_at_utc": "2026-06-01T00:00:00Z",
-  "record_count": 1,
-  "records": [
+  "scope": "translation-pass-current",
+  "generated_at_utc": "2026-06-04T00:58:29Z",
+  "record_count": 369,
+  "section_count": 4,
+  "sections": [
     {
-      "record_id": "SKR.BS.1.1.PRE",
-      "passage_id": "BS_C01_S01_I01",
-      "block_type": "intro_bhashya",
-      "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.PRE.json"
+      "section_code": "1.1",
+      "record_count": 104,
+      "records": [
+        {
+          "record_id": "SKR.BS.1.1.PRE",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "preamble",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.PRE.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.001",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.001.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.002",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.002.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.003",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.003.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.004",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.004.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.005",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.005.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.006",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.006.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.007",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.007.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.008",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.008.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.009",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.009.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.010",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.010.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.011",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.011.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.012",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.012.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.013",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.013.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.014",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.014.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.015",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.015.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.016",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.016.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.017",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.017.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.018",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.018.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.019",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.019.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.020",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.020.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.021",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.021.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.022",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.022.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.023",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.023.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.024",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.024.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.025",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.025.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.026",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.026.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.027",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.027.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.028",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.028.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.029",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.029.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.030",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.030.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.031",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.031.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.032",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.032.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.033",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.033.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.034",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.034.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.035",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.035.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.036",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.036.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.037",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.037.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.038",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.038.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.039",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.039.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.040",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.040.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.041",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.041.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.042",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.042.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.043",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.043.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.044",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.044.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.045",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.045.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.046",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.046.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.047",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.047.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.048",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.048.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.049",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.049.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.050",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.050.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.051",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.051.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.052",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.052.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.053",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.053.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.054",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.054.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.055",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.055.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.056",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.056.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.057",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.057.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.058",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.058.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.059",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.059.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.060",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.060.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.061",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.061.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.062",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.062.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.063",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.063.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.064",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.064.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.065",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.065.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.066",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.066.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.067",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.067.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.068",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.068.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.069",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.069.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.070",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.070.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.071",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.071.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.072",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.072.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.073",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.073.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.074",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.074.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.075",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.075.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.076",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.076.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.077",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.077.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.078",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.078.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.079",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.079.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.080",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.080.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.081",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.081.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.082",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.082.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.083",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.083.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.084",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.084.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.085",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.085.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.086",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.086.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.087",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.087.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.088",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.088.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.089",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.089.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.090",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.090.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.091",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.091.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.092",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.092.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.093",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.093.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.094",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.094.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.095",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.095.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.096",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.096.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.097",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.097.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.098",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.098.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.099",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.099.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.100",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.100.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.101",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.101.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.102",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.102.json"
+        },
+        {
+          "record_id": "SKR.BS.1.1.103",
+          "work_code": "BS",
+          "section_code": "1.1",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S01/SKR.BS.1.1.103.json"
+        }
+      ]
+    },
+    {
+      "section_code": "1.2",
+      "record_count": 81,
+      "records": [
+        {
+          "record_id": "SKR.BS.1.2.001",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.001.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.002",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.002.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.003",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.003.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.004",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.004.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.005",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.005.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.006",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.006.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.007",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.007.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.008",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.008.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.009",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.009.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.010",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.010.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.011",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.011.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.012",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.012.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.013",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.013.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.014",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.014.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.015",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.015.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.016",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.016.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.017",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.017.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.018",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.018.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.019",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.019.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.020",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.020.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.021",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.021.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.022",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.022.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.023",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.023.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.024",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.024.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.025",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.025.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.026",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.026.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.027",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.027.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.028",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.028.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.029",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.029.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.030",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.030.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.031",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.031.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.032",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.032.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.033",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.033.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.034",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.034.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.035",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.035.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.036",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.036.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.037",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.037.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.038",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.038.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.039",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.039.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.040",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.040.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.041",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.041.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.042",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.042.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.043",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.043.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.044",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.044.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.045",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.045.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.046",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.046.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.047",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.047.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.048",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.048.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.049",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.049.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.050",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.050.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.051",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.051.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.052",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.052.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.053",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.053.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.054",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.054.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.055",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.055.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.056",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.056.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.057",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.057.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.058",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.058.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.059",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.059.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.060",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.060.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.061",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.061.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.062",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.062.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.063",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.063.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.064",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.064.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.065",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.065.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.066",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.066.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.067",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.067.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.068",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.068.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.069",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.069.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.070",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.070.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.071",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.071.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.072",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.072.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.073",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.073.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.074",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.074.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.075",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.075.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.076",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.076.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.077",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.077.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.078",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.078.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.079",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.079.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.080",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.080.json"
+        },
+        {
+          "record_id": "SKR.BS.1.2.081",
+          "work_code": "BS",
+          "section_code": "1.2",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S02/SKR.BS.1.2.081.json"
+        }
+      ]
+    },
+    {
+      "section_code": "1.3",
+      "record_count": 110,
+      "records": [
+        {
+          "record_id": "SKR.BS.1.3.001",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.001.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.002",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.002.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.003",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.003.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.004",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.004.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.005",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.005.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.006",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.006.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.007",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.007.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.008",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.008.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.009",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.009.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.010",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.010.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.011",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.011.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.012",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.012.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.013",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.013.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.014",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.014.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.015",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.015.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.016",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.016.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.017",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.017.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.018",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.018.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.019",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.019.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.020",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.020.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.021",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.021.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.022",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.022.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.023",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.023.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.024",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.024.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.025",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.025.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.026",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.026.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.027",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.027.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.028",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.028.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.029",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.029.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.030",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.030.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.031",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.031.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.032",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.032.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.033",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.033.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.034",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.034.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.035",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.035.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.036",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.036.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.037",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.037.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.038",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.038.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.039",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.039.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.040",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.040.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.041",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.041.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.042",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.042.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.043",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.043.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.044",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.044.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.045",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.045.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.046",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.046.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.047",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.047.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.048",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.048.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.049",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.049.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.050",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.050.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.051",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.051.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.052",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.052.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.053",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.053.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.054",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.054.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.055",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.055.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.056",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.056.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.057",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.057.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.058",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.058.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.059",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.059.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.060",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.060.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.061",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.061.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.062",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.062.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.063",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.063.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.064",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.064.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.065",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.065.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.066",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.066.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.067",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.067.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.068",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.068.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.069",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.069.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.070",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.070.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.071",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.071.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.072",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.072.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.073",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.073.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.074",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.074.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.075",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.075.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.076",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.076.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.077",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.077.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.078",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.078.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.079",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.079.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.080",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.080.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.081",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.081.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.082",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.082.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.083",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.083.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.084",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.084.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.085",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.085.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.086",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.086.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.087",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.087.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.088",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.088.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.089",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.089.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.090",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.090.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.091",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.091.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.092",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.092.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.093",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.093.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.094",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.094.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.095",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.095.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.096",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.096.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.097",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.097.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.098",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.098.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.099",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.099.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.100",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.100.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.101",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.101.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.102",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.102.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.103",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.103.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.104",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.104.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.105",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.105.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.106",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.106.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.107",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.107.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.108",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.108.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.109",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.109.json"
+        },
+        {
+          "record_id": "SKR.BS.1.3.110",
+          "work_code": "BS",
+          "section_code": "1.3",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S03/SKR.BS.1.3.110.json"
+        }
+      ]
+    },
+    {
+      "section_code": "1.4",
+      "record_count": 74,
+      "records": [
+        {
+          "record_id": "SKR.BS.1.4.001",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "preamble",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.001.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.002",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.002.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.003",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.003.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.004",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.004.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.005",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.005.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.006",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.006.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.007",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.007.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.008",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.008.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.009",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.009.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.010",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.010.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.011",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.011.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.012",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.012.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.013",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.013.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.014",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.014.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.015",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.015.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.016",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.016.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.017",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.017.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.018",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.018.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.019",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.019.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.020",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.020.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.021",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.021.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.022",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.022.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.023",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.023.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.024",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.024.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.025",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.025.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.026",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.026.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.027",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.027.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.028",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.028.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.029",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.029.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.030",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.030.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.031",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.031.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.032",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.032.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.033",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.033.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.034",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.034.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.035",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.035.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.036",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.036.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.037",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.037.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.038",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.038.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.039",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.039.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.040",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.040.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.041",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.041.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.042",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.042.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.043",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.043.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.044",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.044.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.045",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.045.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.046",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.046.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.047",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.047.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.048",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.048.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.049",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.049.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.050",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.050.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.051",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.051.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.052",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.052.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.053",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.053.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.054",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.054.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.055",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.055.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.056",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.056.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.057",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.057.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.058",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.058.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.059",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.059.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.060",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.060.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.061",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.061.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.062",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.062.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.063",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.063.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.064",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.064.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.065",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.065.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.066",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.066.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.067",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.067.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.068",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.068.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.069",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.069.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.070",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.070.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.071",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.071.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.072",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.072.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.073",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "bhasya",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.073.json"
+        },
+        {
+          "record_id": "SKR.BS.1.4.074",
+          "work_code": "BS",
+          "section_code": "1.4",
+          "record_kind": "sutra",
+          "file": "reality/src/logos/sankara/translation/passage_records/BS_C01_S04/SKR.BS.1.4.074.json"
+        }
+      ]
     }
   ]
 }

@@ -26,10 +26,7 @@
         "gloss": "superimposition/misattribution",
         "contextual_sense": "Core operation where properties of one domain appear in another through non-discrimination.",
         "grammatical_role": "noun",
-        "alternate_glosses": [
-          "erroneous overlay",
-          "transposed attribution"
-        ]
+        "alternate_glosses": ["erroneous overlay", "transposed attribution"]
       },
       {
         "headword_iast": "smrti-rupa",
@@ -72,14 +69,11 @@
         ]
       }
     ],
-    "argument_tags": [
-      "definition",
-      "example"
-    ],
+    "argument_tags": ["definition", "example"],
     "tags": [
       "layout:chapter-section-record",
       "policy:append-and-supersede-never-delete",
-      "strata:preamble"
+      "strata:bhasya"
     ]
   },
   "provenance": {
@@ -97,5 +91,5 @@
       "A later philological pass should revisit dense adhyasa technical vocabulary and karmani-sasthi grammatical framing in PRE-1.1.007."
     ]
   },
-  "record_kind": "preamble"
+  "record_kind": "bhasya"
 }

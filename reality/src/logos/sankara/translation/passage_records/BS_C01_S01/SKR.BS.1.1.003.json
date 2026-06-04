@@ -26,30 +26,21 @@
         "gloss": "inner self/immediate subject",
         "contextual_sense": "Though said non-objectifiable in one sense, it remains aparoksa in asmadvritti for adhyasa discourse.",
         "grammatical_role": "compound noun",
-        "alternate_glosses": [
-          "inward self",
-          "immediate witness-self"
-        ]
+        "alternate_glosses": ["inward self", "immediate witness-self"]
       },
       {
         "headword_iast": "aparoksa",
         "gloss": "immediate, non-mediated givenness",
         "contextual_sense": "Used to rebut objection that adhyasa requires only externally objectified substrates.",
         "grammatical_role": "adjective/substantive",
-        "alternate_glosses": [
-          "directly evident",
-          "non-indirectly known"
-        ]
+        "alternate_glosses": ["directly evident", "non-indirectly known"]
       },
       {
         "headword_iast": "asmat-pratyaya-visayatva",
         "gloss": "being the content of the I-cognition",
         "contextual_sense": "Establishes self-presence sufficient for superimposition dynamics.",
         "grammatical_role": "compound noun",
-        "alternate_glosses": [
-          "I-notion referentiality",
-          "ego-cognition scope"
-        ]
+        "alternate_glosses": ["I-notion referentiality", "ego-cognition scope"]
       },
       {
         "headword_iast": "adhyasa-anapeksa-purovarti",
@@ -72,16 +63,11 @@
         ]
       }
     ],
-    "argument_tags": [
-      "objection",
-      "response",
-      "resolution",
-      "example"
-    ],
+    "argument_tags": ["objection", "response", "resolution", "example"],
     "tags": [
       "layout:chapter-section-record",
       "policy:append-and-supersede-never-delete",
-      "strata:preamble"
+      "strata:bhasya"
     ]
   },
   "provenance": {
@@ -99,5 +85,5 @@
       "A later philological pass should revisit dense adhyasa technical vocabulary and karmani-sasthi grammatical framing in PRE-1.1.007."
     ]
   },
-  "record_kind": "preamble"
+  "record_kind": "bhasya"
 }

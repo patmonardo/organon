@@ -151,6 +151,17 @@ def section_from_id(bs_id: str) -> str:
     return m.group(1) if m else ""
 
 
+def record_kind_from_block_type(block_type: str) -> str:
+    normalized = str(block_type or "").strip().lower()
+    if normalized == "versetext":
+        return "sutra"
+    if normalized == "intro_bhashya":
+        return "preamble"
+    if normalized in {"leading_bhashya", "bhashya"}:
+        return "bhasya"
+    return "unknown"
+
+
 def extract_records(html_text: str) -> list[dict[str, Any]]:
     records: list[dict[str, Any]] = []
     block_classes = ("versetext", "intro_bhashya", "leading_bhashya", "bhashya")
@@ -208,6 +219,8 @@ def extract_records(html_text: str) -> list[dict[str, Any]]:
                 block_counters[block_key] += 1
                 block_id = f"{block_key[0]}_{class_name.upper()}_{block_counters[block_key]:02d}"
 
+            record_kind = record_kind_from_block_type(class_name)
+
             records.append(
                 {
                     "chapter_id": chapter_id,
@@ -215,6 +228,8 @@ def extract_records(html_text: str) -> list[dict[str, Any]]:
                     "verse_id": verse_id,
                     "block_id": block_id,
                     "block_type": class_name,
+                    "record_kind": record_kind,
+                    "source_block_class": class_name,
                     "text": text,
                     "citations": parse_citations(body),
                 }

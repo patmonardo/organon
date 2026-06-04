@@ -9,6 +9,8 @@
     "verse_id": "Ch_C07_S18_V01",
     "block_id": "Ch_C07_S18_V01_B01",
     "block_type": "bhashya",
+    "record_kind": "bhasya",
+    "source_block_class": "bhashya",
     "text": "यदा वै मनुत इति । मतिः मननं तर्कः ॥",
     "citations": []
   },
@@ -22,6 +24,8 @@
     "verse_id": "Ch_C07_S18_V01",
     "block_id": "Ch_C07_S18_V01_VERSETEXT_01",
     "block_type": "versetext",
+    "record_kind": "sutra",
+    "source_block_class": "versetext",
     "text": "यदा वै मनुतेऽथ विजानाति नामत्वा विजानाति मत्वैव विजानाति मतिस्त्वेव विजिज्ञासितव्येति मतिं भगवो विजिज्ञास इति ॥ १ ॥",
     "citations": []
   }

@@ -16,6 +16,28 @@ from typing import Any
 DEFAULT_RECORDS_DIR = Path("reality/src/logos/sankara/translation/passage_records")
 
 
+def pick_first(data: dict[str, Any], keys: list[str]) -> Any:
+    for key in keys:
+        current: Any = data
+        found = True
+        for part in key.split("."):
+            if isinstance(current, dict) and part in current:
+                current = current.get(part)
+            else:
+                found = False
+                break
+        if found and current is not None:
+            return current
+    return None
+
+
+def pick_first_str(data: dict[str, Any], keys: list[str]) -> str:
+    value = pick_first(data, keys)
+    if value is None:
+        return ""
+    return str(value).strip()
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Print readable passage records from Sankara translation JSON files."
@@ -105,17 +127,32 @@ def parse_record_sort_key(record_id: str) -> tuple[Any, ...]:
 def infer_kind(data: dict[str, Any]) -> str:
     source = data.get("source") or {}
     text = data.get("text") or {}
+    record_id = pick_first_str(data, ["record_id", "id"])
+
+    if pick_first_str(data, ["bhasya_text", "text.bhasya_text", "bhasya", "text.bhasya"]):
+        return "bhasya"
+    if pick_first_str(data, ["sutra_text", "text.sutra_text", "sutra", "text.sutra"]):
+        return "sutra"
 
     signals = " ".join(
         [
             str(source.get("edition_note", "")).lower(),
             str(text.get("segmentation_note", "")).lower(),
+            pick_first_str(
+                data,
+                [
+                    "segmentation_note",
+                    "text.segmentationNote",
+                    "source.editionNote",
+                    "notes.segmentation",
+                ],
+            ).lower(),
         ]
     )
 
     # Strong text-level markers are authoritative and should override stale tags.
     if (
-        data.get("record_id", "").endswith(".PRE")
+        record_id.endswith(".PRE")
         or "preamble" in signals
         or "_pre/" in signals
         or "_pre_" in signals
@@ -146,20 +183,56 @@ def iter_records(records_dir: Path):
 
 
 def render_record(path: Path, data: dict[str, Any], records_dir: Path, max_chars: int) -> None:
-    work_code = str(data.get("work_code", "")).upper()
-    section_code = str(data.get("section_code", ""))
+    work_code = pick_first_str(data, ["work_code", "workCode", "work.code"]).upper()
+    section_code = pick_first_str(data, ["section_code", "sectionCode", "section.code"])
     kind = infer_kind(data)
 
     text = data.get("text") or {}
     translation = data.get("translation") or {}
 
-    source_text = str(text.get("source_text", "")).strip()
-    translit = str(text.get("transliteration_iast", "")).strip()
-    literal = str(translation.get("literal_translation", "")).strip()
-    technical = str(translation.get("technical_translation", "")).strip()
+    source_text = pick_first_str(
+        data,
+        [
+            "text.source_text",
+            "text.sourceText",
+            "source_text",
+            "sourceText",
+            "sutra_text",
+            "bhasya_text",
+            "sutra",
+            "bhasya",
+        ],
+    )
+    translit = pick_first_str(
+        data,
+        [
+            "text.transliteration_iast",
+            "text.transliterationIAST",
+            "transliteration_iast",
+            "transliterationIAST",
+        ],
+    )
+    literal = pick_first_str(
+        data,
+        [
+            "translation.literal_translation",
+            "translation.literalTranslation",
+            "literal_translation",
+            "literalTranslation",
+        ],
+    )
+    technical = pick_first_str(
+        data,
+        [
+            "translation.technical_translation",
+            "translation.technicalTranslation",
+            "technical_translation",
+            "technicalTranslation",
+        ],
+    )
 
     print("=" * 96)
-    print(f"Record: {data.get('record_id', '')}")
+    print(f"Record: {pick_first_str(data, ['record_id', 'id'])}")
     print(f"Work/Section: {work_code} / {section_code}    Kind: {kind}")
     print(f"File: {path.relative_to(records_dir.parent).as_posix()}")
     print("- Source Text:")
@@ -192,8 +265,8 @@ def main() -> None:
 
     rows: list[tuple[Path, dict[str, Any]]] = []
     for path, data in iter_records(records_dir):
-        work_code = str(data.get("work_code", "")).upper()
-        section_code = str(data.get("section_code", ""))
+        work_code = pick_first_str(data, ["work_code", "workCode", "work.code"]).upper()
+        section_code = pick_first_str(data, ["section_code", "sectionCode", "section.code"])
         kind = infer_kind(data)
 
         if args.work_code and work_code != args.work_code.upper():
@@ -202,11 +275,11 @@ def main() -> None:
             continue
         if args.kind and kind != args.kind.lower():
             continue
-        if args.record_id and str(data.get("record_id", "")) != args.record_id:
+        if args.record_id and pick_first_str(data, ["record_id", "id"]) != args.record_id:
             continue
         rows.append((path, data))
 
-    rows.sort(key=lambda row: parse_record_sort_key(str(row[1].get("record_id", ""))))
+    rows.sort(key=lambda row: parse_record_sort_key(pick_first_str(row[1], ["record_id", "id"])))
 
     if args.view == "records":
         shown = 0

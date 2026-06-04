@@ -9,6 +9,8 @@
     "verse_id": "Ch_C07_S21_V01",
     "block_id": "Ch_C07_S21_V01_B01",
     "block_type": "bhashya",
+    "record_kind": "bhasya",
+    "source_block_class": "bhashya",
     "text": "यदा वै करोति । कृतिः इन्द्रियसंयमः चित्तैकाग्रताकरणं च । सत्यां हि तस्यां निष्ठादीनि यथोक्तानि भवन्ति विज्ञानावसानानि ॥",
     "citations": []
   },
@@ -22,6 +24,8 @@
     "verse_id": "Ch_C07_S21_V01",
     "block_id": "Ch_C07_S21_V01_VERSETEXT_01",
     "block_type": "versetext",
+    "record_kind": "sutra",
+    "source_block_class": "versetext",
     "text": "यदा वै करोत्यथ निस्तिष्ठति नाकृत्वा निस्तिष्ठति कृत्वैव निस्तिष्ठति कृतिस्त्वेव विजिज्ञासितव्येति कृतिं भगवो विजिज्ञास इति ॥ १ ॥",
     "citations": []
   }

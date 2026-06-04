@@ -130,6 +130,21 @@ def parse_citations(verse_html: str) -> list[dict[str, str]]:
     return citations
 
 
+def kinds_from_components(
+    versetext_blocks: list[dict[str, str]],
+    leading_blocks: list[dict[str, str]],
+    bhashya_blocks: list[dict[str, str]],
+) -> list[str]:
+    kinds: list[str] = []
+    if versetext_blocks:
+        kinds.append("sutra")
+    if leading_blocks:
+        kinds.append("preamble")
+    if bhashya_blocks:
+        kinds.append("bhasya")
+    return kinds
+
+
 def extract_records(html_text: str) -> list[dict[str, Any]]:
     records: list[dict[str, Any]] = []
 
@@ -156,6 +171,20 @@ def extract_records(html_text: str) -> list[dict[str, Any]]:
                 "versetext": "\n".join(b["text"] for b in versetext_blocks).strip(),
                 "leading_bhashya": "\n\n".join(b["text"] for b in leading_blocks).strip(),
                 "bhashya_blocks": bhashya_blocks,
+                "source_block_types_present": [
+                    block_type
+                    for block_type, blocks in (
+                        ("versetext", versetext_blocks),
+                        ("leading_bhashya", leading_blocks),
+                        ("bhashya", bhashya_blocks),
+                    )
+                    if blocks
+                ],
+                "record_kinds_present": kinds_from_components(
+                    versetext_blocks,
+                    leading_blocks,
+                    bhashya_blocks,
+                ),
                 "citations": citations,
             }
         )

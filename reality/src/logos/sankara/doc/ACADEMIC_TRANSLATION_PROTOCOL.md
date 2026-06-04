@@ -9,6 +9,7 @@ Produce a fully auditable, source-faithful, technically rigorous English transla
 - Philological transparency: lexical, syntactic, and interpretive choices are explicit.
 - Separation of layers: literal rendering, technical rendering, and interpretive commentary must remain distinct fields.
 - Reproducibility: each artifact must include provenance and version metadata.
+- Compatibility-preserving ingestion: schema shape may vary across curation passes, but validated Sutra/Bhasya witness text must be preserved.
 
 ## Output Unit
 Each passage is represented by one JSON record validated against:
@@ -56,6 +57,11 @@ For key terms (for example: adhyasa, avidya, atman, brahman), include:
 - short gloss
 - contextual sense in this passage
 - alternate plausible glosses
+
+Incremental lexical updates are allowed between full translation passes when all of the following hold:
+- Source witness fields remain unchanged for the passage.
+- Sutra/Bhasya classification remains stable.
+- The update only appends or refines lexical notes and provenance/reviewer metadata.
 
 ## Citation and Provenance
 Every passage record must include:

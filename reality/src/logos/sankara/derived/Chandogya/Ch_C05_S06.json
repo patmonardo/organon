@@ -9,6 +9,8 @@
     "verse_id": "Ch_C05_S06_V01",
     "block_id": "Ch_C05_S06_V01_B01",
     "block_type": "bhashya",
+    "record_kind": "bhasya",
+    "source_block_class": "bhashya",
     "text": "पृथिवी वाव गौतमाग्निरित्यादि पूर्ववत् । तस्याः पृथिव्याख्यस्याग्नेः संवत्सर एव समित् , संवत्सरेण हि कालेन समिद्धा पृथिवी व्रीह्यादिनिष्पत्तये भवति । आकाशो धूमः, पृथिव्या इवोत्थित आकाशो दृश्यते — यथा अग्नेर्धूमः । रात्रिरर्चिः, पृथिव्या हि अप्रकाशात्मिकाया अनुरूपा रात्रिः, तमोरूपत्वात् — अग्नेरिवानुरूपमर्चिः । दिशः अङ्गाराः, उपशान्तत्वसामान्यात् । अवान्तरदिशः विस्फुलिङ्गाः, क्षुद्रत्वसामान्यात् ॥",
     "citations": []
   },
@@ -22,6 +24,8 @@
     "verse_id": "Ch_C05_S06_V01",
     "block_id": "Ch_C05_S06_V01_VERSETEXT_01",
     "block_type": "versetext",
+    "record_kind": "sutra",
+    "source_block_class": "versetext",
     "text": "पृथिवी वाव गौतमाग्निस्तस्याः संवत्सर एव समिदाकाशो धूमो रात्रिरर्चिर्दिशोऽङ्गारा अवान्तरदिशो विस्फुलिङ्गाः ॥ १ ॥",
     "citations": []
   },
@@ -35,6 +39,8 @@
     "verse_id": "Ch_C05_S06_V02",
     "block_id": "Ch_C05_S06_V02_B01",
     "block_type": "bhashya",
+    "record_kind": "bhasya",
+    "source_block_class": "bhashya",
     "text": "तस्मिन्नित्यादि समानम् । तस्या आहुतेरन्नं व्रीहियवादि सम्भवति ॥",
     "citations": []
   },
@@ -48,6 +54,8 @@
     "verse_id": "Ch_C05_S06_V02",
     "block_id": "Ch_C05_S06_V02_VERSETEXT_01",
     "block_type": "versetext",
+    "record_kind": "sutra",
+    "source_block_class": "versetext",
     "text": "तस्मिन्नेतस्मिन्नग्नौ देवा वर्षं जुह्वति तस्या आहुतेरन्नं सम्भवति ॥ २ ॥",
     "citations": []
   }
