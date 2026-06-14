@@ -2,7 +2,7 @@
 //!
 //! Each database gets its own isolated task storage with thread-safe concurrent access.
 
-use crate::core::utils::progress::{
+use crate::task::progress::{
     JobId, ObservableTaskStore, Task, TaskStore, TaskStoreListener, UserTask,
 };
 use std::collections::HashMap;

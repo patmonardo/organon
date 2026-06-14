@@ -2,7 +2,7 @@
 //!
 //! Simplified version without Neo4j kernel dependencies.
 
-use crate::core::utils::progress::TaskStore;
+use crate::task::progress::TaskStore;
 use std::sync::Arc;
 
 /// Provider trait for TaskStore instances.
@@ -67,8 +67,8 @@ impl TaskStoreProviders {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::core::utils::progress::task_store_holder::TaskStoreHolder;
-    use crate::core::utils::progress::{JobId, Task};
+    use crate::task::progress::task_store_holder::TaskStoreHolder;
+    use crate::task::progress::{JobId, Task};
 
     #[test]
     fn test_simple_provider_get_store() {

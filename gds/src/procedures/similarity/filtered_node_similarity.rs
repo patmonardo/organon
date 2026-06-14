@@ -10,7 +10,7 @@ use crate::algo::similarity::node_similarity::{
     NodeSimilarityConfig, NodeSimilarityMetric, NodeSimilarityResult,
 };
 use crate::task::concurrency::TerminationFlag;
-use crate::core::utils::progress::{ProgressTracker, Tasks};
+use crate::task::progress::{ProgressTracker, Tasks};
 use crate::task::memory::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::Orientation;
@@ -20,7 +20,7 @@ use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
 
 // Additional imports for progress tracking and node ID mapping
-use crate::core::utils::progress::TaskProgressTracker;
+use crate::task::progress::TaskProgressTracker;
 use crate::types::graph::id_map::MappedNodeId;
 
 pub struct FilteredNodeSimilarityFacade {

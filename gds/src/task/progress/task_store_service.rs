@@ -4,7 +4,7 @@
 //! Therefore, it should be a singleton. You instantiate it once as part of assembling the application.
 //! TaskStores are tied to databases and live for the lifetime of a database.
 
-use crate::core::utils::progress::{EmptyTaskStore, TaskStore, TaskStoreHolder};
+use crate::task::progress::{EmptyTaskStore, TaskStore, TaskStoreHolder};
 use std::sync::Arc;
 
 /// Application-level service for managing TaskStores.
@@ -126,7 +126,7 @@ impl Default for TaskStoreService {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::core::utils::progress::{JobId, Task};
+    use crate::task::progress::{JobId, Task};
     use std::sync::{Mutex, OnceLock};
 
     fn task_store_holder_lock() -> std::sync::MutexGuard<'static, ()> {

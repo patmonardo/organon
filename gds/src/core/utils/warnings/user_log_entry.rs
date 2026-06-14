@@ -1,6 +1,6 @@
 //! User log entry for tracking warnings and messages.
 
-use crate::core::utils::progress::Task;
+use crate::task::progress::Task;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 /// A single log entry containing task information and a message.

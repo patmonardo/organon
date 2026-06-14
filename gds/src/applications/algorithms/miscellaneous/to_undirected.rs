@@ -7,7 +7,7 @@ use crate::applications::algorithms::machinery::{
 use crate::applications::algorithms::miscellaneous::{err, timings_json};
 use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::core::loading::{CatalogLoader, GraphResources};
-use crate::core::utils::progress::{JobId, ProgressTracker, TaskRegistryFactories, Tasks};
+use crate::task::progress::{JobId, ProgressTracker, TaskRegistryFactories, Tasks};
 use crate::procedures::miscellaneous::ToUndirectedFacade;
 use crate::types::catalog::GraphCatalog;
 use crate::types::prelude::GraphStore;

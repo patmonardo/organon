@@ -5,12 +5,12 @@
 
 use crate::collections::{HugeDoubleArray, HugeLongArray, HugeObjectArray};
 use crate::task::concurrency::Concurrency;
-use crate::pregel::{DefaultValue, Element, PregelSchema};
+use crate::task::pregel::{DefaultValue, Element, PregelSchema};
 use crate::types::ValueType;
 use std::collections::HashMap;
 
 #[cfg(test)]
-use crate::pregel::Visibility;
+use crate::task::pregel::Visibility;
 
 /// Property storage type - discriminated union of all supported array types.
 enum PropertyArray {

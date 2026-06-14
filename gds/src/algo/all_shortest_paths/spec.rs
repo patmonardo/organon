@@ -8,7 +8,7 @@
 //! **Use Case**: Network analysis, centrality measures, graph connectivity
 
 use crate::config::validation::ConfigError;
-use crate::core::utils::progress::TaskProgressTracker;
+use crate::task::progress::TaskProgressTracker;
 use crate::core::LogLevel;
 use crate::define_algorithm_spec;
 use crate::projection::eval::algorithm::AlgorithmError;
@@ -225,7 +225,7 @@ define_algorithm_spec! {
     modes: [Stream, Stats],
 
     execute: |self, graph_store, config, context| {
-        use crate::core::utils::progress::Tasks;
+        use crate::task::progress::Tasks;
         // Extract configuration
         let parsed_config: AllShortestPathsConfig = serde_json::from_value(config.clone())
             .map_err(|e| AlgorithmError::Execution(format!("Config parsing failed: {}", e)))?;

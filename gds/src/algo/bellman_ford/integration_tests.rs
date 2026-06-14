@@ -8,7 +8,7 @@
 use super::spec::{BELLMAN_FORDAlgorithmSpec, BellmanFordConfig, BellmanFordResult};
 use super::BellmanFordComputationRuntime;
 use super::BellmanFordStorageRuntime;
-use crate::core::utils::progress::{TaskProgressTracker, Tasks};
+use crate::task::progress::{TaskProgressTracker, Tasks};
 use crate::projection::eval::algorithm::{
     AlgorithmSpec, ExecutionContext, ExecutionMode, ProcedureExecutor,
 };

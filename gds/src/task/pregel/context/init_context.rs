@@ -2,7 +2,7 @@
 //!
 //! Provides access to node properties and configuration during the init() phase.
 
-use crate::pregel::{NodeValue, PregelRuntimeConfig};
+use crate::task::pregel::{NodeValue, PregelRuntimeConfig};
 use crate::types::graph::Graph;
 use parking_lot::RwLock;
 use std::sync::Arc;

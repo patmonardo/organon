@@ -3,7 +3,7 @@
 //! Concrete implementations only need to handle storage mechanics by implementing
 //! the abstract methods. This base handles all listener management and notifications.
 
-use crate::core::utils::progress::{JobId, Task, TaskStoreListener, UserTask};
+use crate::task::progress::{JobId, Task, TaskStoreListener, UserTask};
 use std::sync::{Arc, RwLock};
 
 /// Abstract TaskStore that handles observer pattern for task lifecycle events.

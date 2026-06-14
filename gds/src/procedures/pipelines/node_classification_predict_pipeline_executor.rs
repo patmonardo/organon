@@ -2,7 +2,7 @@ use std::collections::HashSet;
 use std::sync::Arc;
 
 use crate::task::concurrency::{Concurrency, TerminationFlag};
-use crate::core::utils::progress::{Task, TaskProgressTracker, Tasks};
+use crate::task::progress::{Task, TaskProgressTracker, Tasks};
 use crate::ml::core::subgraph::LocalIdMap;
 use crate::ml::models::{ClassifierData, ClassifierFactory, FeaturesFactory};
 use crate::ml::node_classification::NodeClassificationPredict;

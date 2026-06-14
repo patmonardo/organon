@@ -3,7 +3,7 @@
 //! Provides the foundation for InitContext and ComputeContext with common
 //! node-centric operations like setting node values, accessing neighbors, etc.
 
-use crate::pregel::{NodeValue, PregelRuntimeConfig};
+use crate::task::pregel::{NodeValue, PregelRuntimeConfig};
 use crate::types::graph::Graph;
 use parking_lot::RwLock;
 use std::sync::Arc;

@@ -16,7 +16,7 @@ use crate::algo::wcc::{
 };
 use crate::collections::backends::vec::VecLong;
 use crate::task::concurrency::TerminationFlag;
-use crate::core::utils::progress::{TaskRegistry, Tasks};
+use crate::task::progress::{TaskRegistry, Tasks};
 use crate::task::memory::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};

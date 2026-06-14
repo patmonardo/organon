@@ -232,7 +232,7 @@ impl IterativeTask {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::core::utils::progress::tasks::Status;
+    use crate::task::progress::tasks::Status;
 
     fn create_sub_tasks_supplier() -> Arc<dyn Fn() -> Vec<Arc<Task>> + Send + Sync> {
         Arc::new(|| {

@@ -5,7 +5,7 @@
 //! - progress task registry factory + job id (for trackers)
 
 use crate::task::concurrency::TerminationFlag;
-use crate::core::utils::progress::{JobId, TaskRegistryFactory};
+use crate::task::progress::{JobId, TaskRegistryFactory};
 use std::sync::Arc;
 
 #[derive(Clone)]

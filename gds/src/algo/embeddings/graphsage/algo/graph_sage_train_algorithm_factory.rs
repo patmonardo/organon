@@ -5,7 +5,7 @@ use crate::algo::embeddings::graphsage::algo::multi_label_graph_sage_train::Mult
 use crate::algo::embeddings::graphsage::algo::single_label_graph_sage_train::SingleLabelGraphSageTrain;
 use crate::algo::embeddings::graphsage::types::GraphSageTrainConfig;
 use crate::task::concurrency::TerminationFlag;
-use crate::core::utils::progress::TaskProgressTracker;
+use crate::task::progress::TaskProgressTracker;
 use crate::types::graph::Graph;
 use std::sync::Arc;
 

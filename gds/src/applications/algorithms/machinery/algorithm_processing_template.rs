@@ -8,7 +8,7 @@
 
 use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::core::loading::GraphResources;
-use crate::core::utils::progress::{ProgressTracker, Task};
+use crate::task::progress::{ProgressTracker, Task};
 use crate::errors::MemoryEstimationError;
 use crate::task::memory::MemoryTreeWithDimensions;
 

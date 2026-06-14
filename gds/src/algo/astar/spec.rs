@@ -9,7 +9,7 @@ use crate::algo::algorithms::pathfinding::{
 };
 use crate::algo::algorithms::{ExecutionMetadata, ResultBuilder};
 use crate::config::validation::ConfigError;
-use crate::core::utils::progress::TaskProgressTracker;
+use crate::task::progress::TaskProgressTracker;
 use crate::define_algorithm_spec;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::relationship_type::RelationshipType;
@@ -394,7 +394,7 @@ define_algorithm_spec! {
     execute: |_self, graph_store, config, _context| {
         use super::AStarStorageRuntime;
         use super::AStarComputationRuntime;
-        use crate::core::utils::progress::Tasks;
+        use crate::task::progress::Tasks;
 
         let start_time = std::time::Instant::now();
 

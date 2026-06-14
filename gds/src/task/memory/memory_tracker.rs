@@ -2,7 +2,7 @@
 //!
 //! Tracks memory reservations for tasks and graph stores, mirroring the Java `mem` package.
 
-use crate::core::utils::progress::{JobId, TaskStoreListener, UserTask};
+use crate::task::progress::{JobId, TaskStoreListener, UserTask};
 
 use super::{
     GraphStoreAddedEvent, GraphStoreMemoryContainer, GraphStoreRemovedEvent,

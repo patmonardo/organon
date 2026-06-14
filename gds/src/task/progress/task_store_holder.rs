@@ -7,7 +7,7 @@
 //! Translation of Java TaskStoreHolder - maintains per-database task stores
 //! in a JVM-wide (now process-wide) singleton map.
 
-use crate::core::utils::progress::{PerDatabaseTaskStore, TaskStore};
+use crate::task::progress::{PerDatabaseTaskStore, TaskStore};
 use std::collections::HashMap;
 use std::sync::{Arc, RwLock};
 
@@ -119,7 +119,7 @@ impl TaskStoreHolder {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::core::utils::progress::{JobId, Task};
+    use crate::task::progress::{JobId, Task};
 
     #[test]
     fn test_get_task_store_creates_new() {

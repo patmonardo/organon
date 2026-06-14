@@ -5,7 +5,7 @@
 //! This module contains integration tests for A* algorithm with the executor runtime.
 
 use super::*;
-use crate::core::utils::progress::{TaskProgressTracker, Tasks};
+use crate::task::progress::{TaskProgressTracker, Tasks};
 use crate::projection::eval::algorithm::{
     AlgorithmSpec, ExecutionContext, ExecutionMode, ProcedureExecutor,
 };

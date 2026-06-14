@@ -4,7 +4,7 @@
 //! computation model. Messages are stored in queues per node and swapped between iterations.
 
 use crate::collections::HugeObjectArray;
-use crate::pregel::MessageIterator;
+use crate::task::pregel::MessageIterator;
 
 /// Synchronous double-buffered message queues for BSP Pregel computation.
 ///

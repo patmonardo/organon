@@ -1,7 +1,7 @@
 use crate::collections::HugeLongArray;
 use crate::task::concurrency::Concurrency;
 use crate::task::concurrency::TerminationFlag;
-use crate::core::utils::progress::TaskProgressTracker;
+use crate::task::progress::TaskProgressTracker;
 use crate::task::memory::Estimate;
 use crate::task::memory::MemoryEstimation;
 use crate::task::memory::MemoryEstimations;

@@ -9,8 +9,8 @@
 //! - Abstract interface with concrete ForkJoin implementation
 
 use crate::collections::HugeAtomicBitSet;
-use crate::core::utils::progress::tasks::LeafTask;
-use crate::pregel::{
+use crate::task::progress::tasks::LeafTask;
+use crate::task::pregel::{
     ComputeFn, ForkJoinComputeStep, InitFn, MessageIterator, Messenger, NodeValue, Partition,
     PregelRuntimeConfig,
 };

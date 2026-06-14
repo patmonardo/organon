@@ -3,7 +3,7 @@
 //! Represents the immutable output of a Pregel computation including
 //! computed node values and metadata about the execution.
 
-use crate::pregel::node_value::NodeValue;
+use crate::task::pregel::node_value::NodeValue;
 use std::sync::Arc;
 
 /// Represents the result of a Pregel computation.

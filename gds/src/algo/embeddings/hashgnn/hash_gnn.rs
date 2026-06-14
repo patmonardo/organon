@@ -2,7 +2,7 @@ use crate::collections::HugeObjectArray;
 use crate::task::concurrency::TerminationFlag;
 use crate::core::utils::paged::HugeAtomicBitSet;
 use crate::core::utils::partition::{DegreeFunction, DegreePartition, Partition, PartitionUtils};
-use crate::core::utils::progress::TaskProgressTracker;
+use crate::task::progress::TaskProgressTracker;
 use crate::types::graph::Graph;
 use std::collections::HashSet;
 use std::sync::Arc;
@@ -231,7 +231,7 @@ mod tests {
     use super::*;
     use crate::collections::backends::vec::VecLong;
     use crate::task::concurrency::Concurrency;
-    use crate::core::utils::progress::{TaskProgressTracker, Tasks};
+    use crate::task::progress::{TaskProgressTracker, Tasks};
     use crate::types::graph_store::DefaultGraphStore;
     use crate::types::graph_store::GraphStore;
     use crate::types::properties::node::DefaultLongNodePropertyValues;

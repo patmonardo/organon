@@ -3,7 +3,7 @@
 use std::collections::HashMap;
 use std::marker::PhantomData;
 
-use crate::core::utils::progress::{LeafTask, UNKNOWN_VOLUME};
+use crate::task::progress::{LeafTask, UNKNOWN_VOLUME};
 use crate::projection::RelationshipType;
 
 // ============================================================================

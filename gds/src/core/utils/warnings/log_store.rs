@@ -1,6 +1,6 @@
 //! LogStore for tracking task messages with capacity limits.
 
-use crate::core::utils::progress::Task;
+use crate::task::progress::Task;
 use std::collections::{BTreeMap, VecDeque};
 
 /// Default capacity for tracking tasks per user.

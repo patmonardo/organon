@@ -8,7 +8,7 @@ use crate::task::concurrency::{Concurrency, TerminationFlag};
 #[cfg(test)]
 use crate::core::model::InMemoryModelCatalog;
 #[cfg(test)]
-use crate::core::utils::progress::{TaskProgressTracker, Tasks};
+use crate::task::progress::{TaskProgressTracker, Tasks};
 #[cfg(test)]
 use crate::core::ConcreteGraphDimensions;
 #[cfg(test)]

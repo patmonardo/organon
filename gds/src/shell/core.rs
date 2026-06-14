@@ -12,7 +12,7 @@ use crate::collections::dataset::{
     MLE,
 };
 use crate::core::graph_dimensions::ConcreteGraphDimensions;
-use crate::core::utils::progress::{TaskProgressTracker, Tasks};
+use crate::task::progress::{TaskProgressTracker, Tasks};
 use crate::form::{ProgramFeatureKind, ProgramFeatures};
 use crate::task::memory::{MemoryEstimations, MemoryRange, MemoryTree};
 

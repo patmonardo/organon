@@ -8,7 +8,7 @@ use crate::algo::undirected::{
     ToUndirectedStats, ToUndirectedStorageRuntime,
 };
 use crate::task::concurrency::TerminationFlag;
-use crate::core::utils::progress::{TaskProgressTracker, Tasks};
+use crate::task::progress::{TaskProgressTracker, Tasks};
 use crate::core::Aggregation;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::prelude::DefaultGraphStore;

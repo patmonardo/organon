@@ -10,7 +10,7 @@ use crate::applications::algorithms::similarity::{
 };
 use crate::task::concurrency::TerminationFlag;
 use crate::core::loading::{CatalogLoader, GraphResources};
-use crate::core::utils::progress::{JobId, ProgressTracker, TaskRegistryFactories, Tasks};
+use crate::task::progress::{JobId, ProgressTracker, TaskRegistryFactories, Tasks};
 use crate::procedures::similarity::filtered_knn::FilteredKnnFacade;
 use crate::projection::NodeLabel;
 use crate::types::catalog::GraphCatalog;

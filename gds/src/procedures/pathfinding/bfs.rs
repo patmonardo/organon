@@ -34,7 +34,7 @@ use crate::algo::bfs::{
     BfsComputationRuntime, BfsConfig, BfsMutateResult, BfsResult, BfsResultBuilder, BfsStats,
     BfsStorageRuntime, BfsWriteSummary,
 };
-use crate::core::utils::progress::{
+use crate::task::progress::{
     EmptyTaskRegistryFactory, TaskProgressTracker, TaskRegistryFactory, Tasks,
 };
 use crate::task::memory::MemoryRange;

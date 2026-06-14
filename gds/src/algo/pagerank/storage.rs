@@ -4,7 +4,7 @@
 
 use crate::algo::pagerank::{PageRankComputationRuntime, PageRankRunResult};
 use crate::task::concurrency::Concurrency;
-use crate::core::utils::progress::ProgressTracker;
+use crate::task::progress::ProgressTracker;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::{Orientation, RelationshipType};
 use crate::types::graph::Graph;

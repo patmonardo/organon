@@ -4,7 +4,7 @@ use super::node_regression_training_pipeline::NodeRegressionTrainingPipeline;
 use crate::collections::HugeDoubleArray;
 use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::core::model::ModelCatalog;
-use crate::core::utils::progress::{LeafTask, ProgressTracker, Task, TaskProgressTracker, Tasks};
+use crate::task::progress::{LeafTask, ProgressTracker, Task, TaskProgressTracker, Tasks};
 use crate::task::memory::{Estimate, MemoryEstimation, MemoryEstimations, MemoryRange};
 use crate::ml::metrics::regression::RegressionMetric;
 use crate::ml::metrics::{Metric, ModelCandidateStats};
@@ -541,7 +541,7 @@ mod tests {
     use super::*;
     use crate::collections::backends::vec::VecDouble;
     use crate::core::model::EmptyModelCatalog;
-    use crate::core::utils::progress::NoopProgressTracker;
+    use crate::task::progress::NoopProgressTracker;
     use crate::types::properties::node::DefaultDoubleNodePropertyValues;
     use crate::types::random::RandomGraphConfig;
 

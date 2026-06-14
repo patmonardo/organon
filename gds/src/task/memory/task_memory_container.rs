@@ -3,7 +3,7 @@
 //! Tracks memory usage per user for running tasks.
 
 use super::user_entity_memory::UserEntityMemory;
-use crate::core::utils::progress::{JobId, UserTask};
+use crate::task::progress::{JobId, UserTask};
 use std::collections::{HashMap, HashSet};
 
 /// Information about a task's memory usage
@@ -132,7 +132,7 @@ impl TaskMemoryContainer {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::core::utils::progress::Task;
+    use crate::task::progress::Task;
 
     #[test]
     fn test_reserve_task() {

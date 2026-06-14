@@ -6,7 +6,7 @@
 use crate::collections::HugeLongArray;
 use crate::task::concurrency::TerminationFlag;
 use crate::core::utils::paged::HugeLongArrayStack;
-use crate::core::utils::progress::ProgressTracker;
+use crate::task::progress::ProgressTracker;
 use crate::types::graph::Graph;
 
 #[derive(Clone)]

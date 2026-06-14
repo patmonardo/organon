@@ -8,7 +8,7 @@
 
 use crate::algo::msbfs::{AggregatedNeighborProcessingMsBfs, OMEGA};
 use crate::task::concurrency::{install_with_concurrency, Concurrency, TerminationFlag};
-use crate::core::utils::progress::ProgressTracker;
+use crate::task::progress::ProgressTracker;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::Graph;
 use crate::types::graph::NodeId;
@@ -715,7 +715,7 @@ pub struct ShortestPathResult {
 mod tests {
     use super::*;
     use crate::config::GraphStoreConfig;
-    use crate::core::utils::progress::{TaskProgressTracker, Tasks};
+    use crate::task::progress::{TaskProgressTracker, Tasks};
     use crate::projection::RelationshipType;
     use crate::types::graph::{
         DefaultGraph, GraphCharacteristicsBuilder, RelationshipTopology, SimpleIdMap,

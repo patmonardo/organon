@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use crate::task::concurrency::{Concurrency, TerminationFlag};
-use crate::core::utils::progress::{EmptyTaskRegistryFactory, JobId, TaskProgressTracker};
+use crate::task::progress::{EmptyTaskRegistryFactory, JobId, TaskProgressTracker};
 use crate::ml::models::Regressor;
 use crate::projection::eval::pipeline::node_pipeline::NodePropertyPredictPipeline;
 use crate::projection::eval::pipeline::{PredictPipelineExecutor, PredictPipelineExecutorError};

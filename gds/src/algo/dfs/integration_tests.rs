@@ -7,7 +7,7 @@
 use super::spec::{DFSAlgorithmSpec, DfsConfig, DfsResult};
 use super::DfsComputationRuntime;
 use super::DfsStorageRuntime;
-use crate::core::utils::progress::{TaskProgressTracker, Tasks};
+use crate::task::progress::{TaskProgressTracker, Tasks};
 use crate::projection::eval::algorithm::AlgorithmSpec;
 use crate::projection::eval::algorithm::{ExecutionContext, ExecutionMode, ProcedureExecutor};
 use serde_json::json;

@@ -5,7 +5,7 @@ use crate::algo::embeddings::graphsage::algo::graph_sage_model_resolver::GraphSa
 use crate::task::concurrency::Concurrency;
 use crate::task::concurrency::TerminationFlag;
 use crate::core::model::ModelCatalog;
-use crate::core::utils::progress::TaskProgressTracker;
+use crate::task::progress::TaskProgressTracker;
 use crate::types::graph::Graph;
 use std::sync::Arc;
 

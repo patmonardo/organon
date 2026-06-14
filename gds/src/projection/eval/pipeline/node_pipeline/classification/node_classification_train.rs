@@ -6,7 +6,7 @@ use crate::collections::long_multiset::LongMultiSet;
 use crate::collections::{HugeIntArray, HugeLongArray};
 use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::core::model::ModelCatalog;
-use crate::core::utils::progress::{NoopProgressTracker, ProgressTracker, Task, Tasks};
+use crate::task::progress::{NoopProgressTracker, ProgressTracker, Task, Tasks};
 use crate::task::memory::{Estimate, MemoryEstimation, MemoryEstimations, MemoryRange};
 use crate::ml::core::subgraph::LocalIdMap;
 use crate::ml::metrics::classification::ClassificationMetric;
@@ -729,7 +729,7 @@ mod tests {
     use crate::collections::backends::vec::VecLong;
     use crate::core::graph_dimensions::ConcreteGraphDimensions;
     use crate::core::model::EmptyModelCatalog;
-    use crate::core::utils::progress::NoopProgressTracker;
+    use crate::task::progress::NoopProgressTracker;
     use crate::types::graph_store::DefaultGraphStore;
     use crate::types::properties::node::DefaultLongNodePropertyValues;
     use crate::types::random::RandomGraphConfig;

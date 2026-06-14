@@ -12,7 +12,7 @@ use super::targets::{create_targets, AllTargets, ManyTargets, SingleTarget, Targ
 use super::traversal_state::TraversalState;
 use super::DijkstraComputationRuntime;
 use super::DijkstraStorageRuntime;
-use crate::core::utils::progress::{TaskProgressTracker, Tasks};
+use crate::task::progress::{TaskProgressTracker, Tasks};
 use crate::projection::eval::algorithm::{
     AlgorithmSpec, ExecutionContext, ExecutionMode, ProcedureExecutor,
 };

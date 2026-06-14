@@ -13,7 +13,7 @@ use crate::algo::algorithms::pathfinding::{
 };
 use crate::algo::algorithms::{ExecutionMetadata, ResultBuilder};
 use crate::config::validation::ConfigError;
-use crate::core::utils::progress::TaskProgressTracker;
+use crate::task::progress::TaskProgressTracker;
 use crate::define_algorithm_spec;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::relationship_type::RelationshipType;
@@ -310,7 +310,7 @@ define_algorithm_spec! {
     modes: [Stream, WriteNodeProperty],
 
     execute: |_self, graph_store, config, _context| {
-        use crate::core::utils::progress::Tasks;
+        use crate::task::progress::Tasks;
         // Parse configuration
         let config: DeltaSteppingConfig = serde_json::from_value(config.clone())
             .map_err(|e| AlgorithmError::InvalidGraph(

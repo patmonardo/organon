@@ -4,7 +4,7 @@
 //! during the compute phase of each superstep.
 
 use crate::collections::HugeAtomicBitSet;
-use crate::pregel::{MessageIterator, Messenger, NodeValue, PregelRuntimeConfig};
+use crate::task::pregel::{MessageIterator, Messenger, NodeValue, PregelRuntimeConfig};
 use crate::types::graph::Graph;
 use parking_lot::RwLock;
 use std::sync::Arc;

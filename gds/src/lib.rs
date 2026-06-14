@@ -14,7 +14,6 @@ pub mod dsl;
 pub mod errors;
 pub mod form;
 pub mod ml;
-pub mod pregel;
 pub mod prints;
 pub mod procedures;
 pub mod projection;

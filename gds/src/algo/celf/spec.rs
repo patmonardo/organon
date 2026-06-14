@@ -4,7 +4,7 @@
 //! Finds k seed nodes that maximize expected spread via Monte Carlo simulation.
 
 use crate::config::validation::ConfigError;
-use crate::core::utils::progress::{LeafTask, Tasks};
+use crate::task::progress::{LeafTask, Tasks};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::Arc;

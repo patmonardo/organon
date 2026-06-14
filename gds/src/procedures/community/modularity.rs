@@ -12,7 +12,7 @@ use crate::algo::modularity::{
 };
 use crate::collections::backends::vec::VecDouble;
 use crate::task::concurrency::TerminationFlag;
-use crate::core::utils::progress::{TaskRegistry, Tasks};
+use crate::task::progress::{TaskRegistry, Tasks};
 use crate::task::memory::{Estimate, MemoryRange};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};

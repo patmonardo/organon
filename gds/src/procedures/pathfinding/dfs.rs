@@ -36,7 +36,7 @@ use crate::algo::dfs::{
     DfsComputationRuntime, DfsConfig, DfsMutateResult, DfsMutationSummary, DfsResultBuilder,
     DfsStats, DfsStorageRuntime, DfsWriteSummary,
 };
-use crate::core::utils::progress::{EmptyTaskRegistryFactory, TaskRegistryFactory, Tasks};
+use crate::task::progress::{EmptyTaskRegistryFactory, TaskRegistryFactory, Tasks};
 use crate::task::memory::MemoryRange;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
@@ -46,7 +46,7 @@ use std::collections::HashSet;
 use std::sync::Arc;
 
 // Additional imports for error handling and progress tracking
-use crate::core::utils::progress::TaskProgressTracker;
+use crate::task::progress::TaskProgressTracker;
 use crate::projection::eval::algorithm::AlgorithmError;
 
 // ============================================================================

@@ -12,7 +12,7 @@ use crate::algo::conductance::{
 };
 use crate::collections::backends::vec::VecDouble;
 use crate::task::concurrency::TerminationFlag;
-use crate::core::utils::progress::TaskRegistry;
+use crate::task::progress::TaskRegistry;
 use crate::task::memory::{Estimate, MemoryRange};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};

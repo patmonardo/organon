@@ -6,7 +6,7 @@
 
 use super::AStarComputationResult;
 use crate::algo::dijkstra::{DijkstraComputationRuntime, DijkstraStorageRuntime, SingleTarget};
-use crate::core::utils::progress::ProgressTracker;
+use crate::task::progress::ProgressTracker;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::Graph;
 use crate::types::graph::NodeId;
@@ -408,7 +408,7 @@ mod tests {
     #[test]
     fn test_astar_path_computation() {
         use super::super::AStarComputationRuntime;
-        use crate::core::utils::progress::{TaskProgressTracker, Tasks};
+        use crate::task::progress::{TaskProgressTracker, Tasks};
 
         let mut storage = AStarStorageRuntime::new(0, 1, "lat".to_string(), "lon".to_string());
 
@@ -430,7 +430,7 @@ mod tests {
     #[test]
     fn test_astar_path_same_source_target() {
         use super::super::AStarComputationRuntime;
-        use crate::core::utils::progress::{TaskProgressTracker, Tasks};
+        use crate::task::progress::{TaskProgressTracker, Tasks};
 
         let mut storage = AStarStorageRuntime::new(
             5,

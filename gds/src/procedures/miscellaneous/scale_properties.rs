@@ -12,7 +12,7 @@ use crate::algo::scale_properties::{
 };
 use crate::collections::backends::vec::VecDoubleArray;
 use crate::task::concurrency::TerminationFlag;
-use crate::core::utils::progress::{TaskProgressTracker, Tasks};
+use crate::task::progress::{TaskProgressTracker, Tasks};
 use crate::task::memory::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::NodeLabel;

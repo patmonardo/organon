@@ -13,7 +13,7 @@ use crate::task::concurrency::virtual_threads::Executor;
 use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::core::utils::paged::dss::{DisjointSetStruct, HugeAtomicDisjointSetStruct};
 use crate::core::utils::partition::{Partition, PartitionUtils, DEFAULT_BATCH_SIZE};
-use crate::core::utils::progress::ProgressTracker;
+use crate::task::progress::ProgressTracker;
 use crate::types::graph::Graph;
 use crate::types::properties::node::NodePropertyValues;
 use std::collections::{HashMap, HashSet};

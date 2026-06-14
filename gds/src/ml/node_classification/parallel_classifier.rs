@@ -3,7 +3,7 @@ use crate::collections::HugeObjectArray;
 use crate::task::concurrency::virtual_threads::RunWithConcurrency;
 use crate::task::concurrency::Concurrency;
 use crate::task::concurrency::TerminationFlag;
-use crate::core::utils::progress::TaskProgressTracker;
+use crate::task::progress::TaskProgressTracker;
 use crate::ml::core::batch::BatchTransformer;
 use crate::ml::core::batch::IdentityBatchTransformer;
 use crate::ml::core::batch::RangeBatch;

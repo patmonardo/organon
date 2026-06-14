@@ -2,9 +2,9 @@ use super::node_classification_pipeline_train_config::NodeClassificationPipeline
 use super::node_classification_train::NodeClassificationTrain;
 use super::node_classification_train_algorithm::NodeClassificationTrainAlgorithm;
 use super::node_classification_training_pipeline::NodeClassificationTrainingPipeline;
-use crate::core::utils::progress::tasks::progress_tracker::NoopProgressTracker;
-use crate::core::utils::progress::tasks::progress_tracker::ProgressTracker;
-use crate::core::utils::progress::tasks::Task;
+use crate::task::progress::tasks::progress_tracker::NoopProgressTracker;
+use crate::task::progress::tasks::progress_tracker::ProgressTracker;
+use crate::task::progress::tasks::Task;
 use crate::task::memory::MemoryEstimation;
 use crate::task::memory::MemoryEstimations;
 use crate::projection::eval::algorithm::ExecutionContext;

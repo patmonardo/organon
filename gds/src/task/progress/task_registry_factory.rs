@@ -1,6 +1,6 @@
 //! Factory interface for creating TaskRegistry instances.
 
-use crate::core::utils::progress::{JobId, TaskRegistry, TaskStore};
+use crate::task::progress::{JobId, TaskRegistry, TaskStore};
 use std::sync::Arc;
 
 /// Factory trait for creating TaskRegistry instances.
@@ -51,7 +51,7 @@ pub struct EmptyTaskRegistryFactory;
 
 impl TaskRegistryFactory for EmptyTaskRegistryFactory {
     fn new_instance(&self, job_id: JobId) -> TaskRegistry {
-        use crate::core::utils::progress::EmptyTaskStore;
+        use crate::task::progress::EmptyTaskStore;
         TaskRegistry::new(String::new(), Arc::new(EmptyTaskStore), job_id)
     }
 }
@@ -121,7 +121,7 @@ impl TaskRegistryFactory for LocalTaskRegistryFactory {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::core::utils::progress::{EmptyTaskStore, Task};
+    use crate::task::progress::{EmptyTaskStore, Task};
 
     #[test]
     fn test_empty_factory_creates_empty_registry() {

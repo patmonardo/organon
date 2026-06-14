@@ -3,7 +3,7 @@
 //! Provides common functionality shared across all context types:
 //! configuration access, logging, and graph statistics.
 
-use crate::pregel::PregelRuntimeConfig;
+use crate::task::pregel::PregelRuntimeConfig;
 
 /// Base context for all Pregel context types.
 ///

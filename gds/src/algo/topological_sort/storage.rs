@@ -5,7 +5,7 @@
 use super::computation::TopologicalSortComputationRuntime;
 use super::spec::TopologicalSortResult;
 use crate::task::concurrency::TerminationFlag;
-use crate::core::utils::progress::ProgressTracker;
+use crate::task::progress::ProgressTracker;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::{Graph, NodeId};
 use std::sync::atomic::{AtomicI64, Ordering};

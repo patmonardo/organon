@@ -8,7 +8,7 @@
 
 use super::spec::{IndirectExposureConfig, IndirectExposureResult};
 use super::{IndirectExposureComputationRuntime, IndirectExposurePregelRuntimeConfig};
-use crate::pregel::{Pregel, PregelResult, ReducingMessenger};
+use crate::task::pregel::{Pregel, PregelResult, ReducingMessenger};
 use crate::projection::{Orientation, RelationshipType};
 use crate::types::graph::Graph;
 use crate::types::prelude::GraphStore;

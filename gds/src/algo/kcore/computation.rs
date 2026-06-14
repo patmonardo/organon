@@ -10,7 +10,7 @@ use crate::collections::HugeAtomicLongArray;
 use crate::task::concurrency::{install_with_concurrency, Concurrency, TerminationFlag};
 use crate::core::utils::paged::{HugeLongArrayQueue, HugeLongArrayStack};
 use crate::core::utils::partition::{Partition, PartitionUtils};
-use crate::core::utils::progress::{NoopProgressTracker, ProgressTracker};
+use crate::task::progress::{NoopProgressTracker, ProgressTracker};
 use rayon::prelude::*;
 use std::cmp;
 use std::sync::atomic::{AtomicIsize, AtomicUsize, Ordering};

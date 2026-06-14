@@ -1,6 +1,6 @@
 //! User log store interface for tracking user messages per task.
 
-use crate::core::utils::progress::Task;
+use crate::task::progress::Task;
 use crate::core::utils::warnings::UserLogEntry;
 
 /// Interface for storing and querying user log messages.

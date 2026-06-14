@@ -9,7 +9,7 @@ use crate::applications::algorithms::similarity::{
 };
 use crate::task::concurrency::TerminationFlag;
 use crate::core::loading::{CatalogLoader, GraphResources};
-use crate::core::utils::progress::{JobId, ProgressTracker, TaskRegistryFactories, Tasks};
+use crate::task::progress::{JobId, ProgressTracker, TaskRegistryFactories, Tasks};
 use crate::procedures::similarity::knn::KnnFacade;
 use crate::types::catalog::GraphCatalog;
 use serde_json::{json, Value};

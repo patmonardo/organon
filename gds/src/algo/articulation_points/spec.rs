@@ -1,7 +1,7 @@
 //! Articulation Points Algorithm Specification
 
 use crate::config::validation::ConfigError;
-use crate::core::utils::progress::{LeafTask, ProgressTracker, TaskProgressTracker, Tasks};
+use crate::task::progress::{LeafTask, ProgressTracker, TaskProgressTracker, Tasks};
 use crate::core::LogLevel;
 use crate::define_algorithm_spec;
 use crate::projection::eval::algorithm::AlgorithmError;

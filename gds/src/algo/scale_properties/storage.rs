@@ -15,7 +15,7 @@ use crate::algo::algorithms::scaling::{
     StdScoreScaler,
 };
 use crate::task::concurrency::TerminationFlag;
-use crate::core::utils::progress::ProgressTracker;
+use crate::task::progress::ProgressTracker;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::IdMap;
 use crate::types::prelude::GraphStore;
@@ -40,7 +40,7 @@ impl ScalePropertiesStorageRuntime {
         computation: &mut ScalePropertiesComputationRuntime,
     ) -> Result<ScalePropertiesResult, AlgorithmError> {
         let termination_flag = TerminationFlag::running_true();
-        let mut progress_tracker = crate::core::utils::progress::NoopProgressTracker;
+        let mut progress_tracker = crate::task::progress::NoopProgressTracker;
         self.compute_with_controls(
             graph_store,
             config,
@@ -468,7 +468,7 @@ mod tests {
         let store = build_store();
         let mut computation = ScalePropertiesComputationRuntime::new();
         let storage = ScalePropertiesStorageRuntime::new();
-        let mut progress_tracker = crate::core::utils::progress::NoopProgressTracker;
+        let mut progress_tracker = crate::task::progress::NoopProgressTracker;
         let termination = TerminationFlag::running_true();
 
         let result = storage
@@ -493,7 +493,7 @@ mod tests {
         let store = build_store();
         let mut computation = ScalePropertiesComputationRuntime::new();
         let storage = ScalePropertiesStorageRuntime::new();
-        let mut progress_tracker = crate::core::utils::progress::NoopProgressTracker;
+        let mut progress_tracker = crate::task::progress::NoopProgressTracker;
         let termination = TerminationFlag::running_true();
 
         let error = storage
@@ -514,7 +514,7 @@ mod tests {
         let store = build_store();
         let mut computation = ScalePropertiesComputationRuntime::new();
         let storage = ScalePropertiesStorageRuntime::new();
-        let mut progress_tracker = crate::core::utils::progress::NoopProgressTracker;
+        let mut progress_tracker = crate::task::progress::NoopProgressTracker;
         let termination = TerminationFlag::stop_running();
 
         let error = storage

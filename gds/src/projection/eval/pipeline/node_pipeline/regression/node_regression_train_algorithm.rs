@@ -1,4 +1,4 @@
-use crate::core::utils::progress::tasks::progress_tracker::ProgressTracker;
+use crate::task::progress::tasks::progress_tracker::ProgressTracker;
 use crate::projection::eval::pipeline::node_pipeline::node_property_pipeline_base_train_config::NodePropertyPipelineBaseTrainConfig;
 use crate::projection::eval::pipeline::pipeline_train_algorithm::{
     PipelineTrainAlgorithm, PipelineTrainAlgorithmError,
@@ -149,7 +149,7 @@ mod tests {
 
     #[test]
     fn test_algorithm_new() {
-        use crate::core::utils::progress::tasks::progress_tracker::NoopProgressTracker;
+        use crate::task::progress::tasks::progress_tracker::NoopProgressTracker;
         use crate::types::graph_store::DefaultGraphStore;
         use crate::types::random::random_graph::RandomGraphConfig;
 
@@ -184,7 +184,7 @@ mod tests {
 
     #[test]
     fn test_algorithm_preserves_relationship_types() {
-        use crate::core::utils::progress::tasks::progress_tracker::NoopProgressTracker;
+        use crate::task::progress::tasks::progress_tracker::NoopProgressTracker;
         use crate::types::graph_store::DefaultGraphStore;
         use crate::types::random::random_graph::RandomGraphConfig;
 
@@ -222,7 +222,7 @@ mod tests {
 
     #[test]
     fn test_algorithm_accessors() {
-        use crate::core::utils::progress::tasks::progress_tracker::NoopProgressTracker;
+        use crate::task::progress::tasks::progress_tracker::NoopProgressTracker;
         use crate::types::graph_store::DefaultGraphStore;
         use crate::types::random::random_graph::RandomGraphConfig;
 

@@ -1,7 +1,7 @@
 use crate::collections::HugeLongArray;
 use crate::collections::HugeObjectArray;
-use crate::core::utils::progress::ProgressTracker;
-use crate::core::utils::progress::TaskProgressTracker;
+use crate::task::progress::ProgressTracker;
+use crate::task::progress::TaskProgressTracker;
 use crate::ml::core::batch::Batch;
 use crate::ml::core::batch::BatchTransformer;
 use crate::ml::models::Classifier;

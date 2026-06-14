@@ -1,7 +1,7 @@
 //! K-Means config + result types.
 
 use crate::config::validation::ConfigError;
-use crate::core::utils::progress::{Task, Tasks};
+use crate::task::progress::{Task, Tasks};
 use std::sync::Arc;
 use std::time::Duration;
 

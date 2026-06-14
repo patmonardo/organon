@@ -9,7 +9,7 @@
 use super::spec::{DijkstraPathResult, DijkstraResult};
 use super::targets::Targets;
 use super::DijkstraComputationRuntime;
-use crate::core::utils::progress::{ProgressTracker, UNKNOWN_VOLUME};
+use crate::task::progress::{ProgressTracker, UNKNOWN_VOLUME};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::Graph;
 use crate::types::graph::NodeId;
@@ -435,7 +435,7 @@ mod tests {
     use super::super::targets::{AllTargets, ManyTargets, SingleTarget};
     use super::super::DijkstraComputationRuntime;
     use super::*;
-    use crate::core::utils::progress::{TaskProgressTracker, Tasks};
+    use crate::task::progress::{TaskProgressTracker, Tasks};
 
     #[test]
     fn test_dijkstra_storage_runtime_creation() {

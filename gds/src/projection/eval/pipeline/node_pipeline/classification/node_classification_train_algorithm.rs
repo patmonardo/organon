@@ -3,7 +3,7 @@ use super::node_classification_pipeline_train_config::NodeClassificationPipeline
 use super::node_classification_to_model_converter::NodeClassificationToModelConverter;
 use super::node_classification_train_result::NodeClassificationTrainResult;
 use super::node_classification_training_pipeline::NodeClassificationTrainingPipeline;
-use crate::core::utils::progress::tasks::progress_tracker::ProgressTracker;
+use crate::task::progress::tasks::progress_tracker::ProgressTracker;
 use crate::projection::eval::pipeline::node_pipeline::node_property_pipeline_base_train_config::NodePropertyPipelineBaseTrainConfig;
 use crate::projection::eval::pipeline::pipeline_train_algorithm::{
     PipelineTrainAlgorithm, PipelineTrainAlgorithmError,
@@ -123,7 +123,7 @@ impl
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::core::utils::progress::tasks::progress_tracker::NoopProgressTracker;
+    use crate::task::progress::tasks::progress_tracker::NoopProgressTracker;
     use crate::types::graph_store::DefaultGraphStore;
     use crate::types::random::RandomGraphConfig;
     use std::sync::Arc;

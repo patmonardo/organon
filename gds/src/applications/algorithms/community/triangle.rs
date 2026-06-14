@@ -10,7 +10,7 @@ use crate::applications::algorithms::machinery::{
 use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::core::loading::CatalogLoader;
 use crate::core::loading::GraphResources;
-use crate::core::utils::progress::{JobId, ProgressTracker, TaskRegistryFactories, Tasks};
+use crate::task::progress::{JobId, ProgressTracker, TaskRegistryFactories, Tasks};
 use crate::procedures::community::triangle::TriangleFacade;
 use crate::types::catalog::GraphCatalog;
 use serde_json::{json, Value};

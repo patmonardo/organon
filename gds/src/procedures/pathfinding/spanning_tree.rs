@@ -19,7 +19,7 @@ use std::sync::Arc;
 use std::time::Instant;
 
 // Import upgraded systems
-use crate::core::utils::progress::{
+use crate::task::progress::{
     EmptyTaskRegistryFactory, TaskProgressTracker, TaskRegistryFactory, Tasks,
 };
 use crate::projection::eval::algorithm::AlgorithmError;

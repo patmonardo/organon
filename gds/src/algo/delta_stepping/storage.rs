@@ -9,7 +9,7 @@
 use super::spec::{DeltaSteppingPathResult, DeltaSteppingResult};
 use super::DeltaSteppingComputationRuntime;
 use crate::task::concurrency::{install_with_concurrency, Concurrency};
-use crate::core::utils::progress::{ProgressTracker, UNKNOWN_VOLUME};
+use crate::task::progress::{ProgressTracker, UNKNOWN_VOLUME};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::Graph;
 use crate::types::graph::NodeId;
@@ -540,7 +540,7 @@ impl DeltaSteppingStorageRuntime {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::core::utils::progress::{TaskProgressTracker, Tasks};
+    use crate::task::progress::{TaskProgressTracker, Tasks};
     use crate::projection::Orientation;
     use crate::types::graph_store::{DefaultGraphStore, GraphStore};
     use crate::types::random::{RandomGraphConfig, RandomRelationshipConfig};

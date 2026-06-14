@@ -3,7 +3,7 @@
 //! Java’s `TaskProgressLogger` extends `BatchingProgressLogger` and adds
 //! task-hierarchy-aware begin/end logging.
 
-use crate::core::utils::progress::{BatchingProgressLogger, ProgressLogger};
+use crate::task::progress::{BatchingProgressLogger, ProgressLogger};
 
 use super::Task;
 

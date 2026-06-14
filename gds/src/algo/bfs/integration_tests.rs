@@ -7,7 +7,7 @@
 use super::spec::{BFSAlgorithmSpec, BfsConfig, BfsResult};
 use super::BfsComputationRuntime;
 use super::BfsStorageRuntime;
-use crate::core::utils::progress::{TaskProgressTracker, Tasks};
+use crate::task::progress::{TaskProgressTracker, Tasks};
 use crate::projection::eval::algorithm::AlgorithmSpec;
 use crate::projection::eval::algorithm::{ExecutionContext, ExecutionMode, ProcedureExecutor};
 use serde_json::json;

@@ -13,7 +13,7 @@ use crate::algo::kspanningtree::{
     KSpanningTreeResultBuilder, KSpanningTreeRow, KSpanningTreeStats,
 };
 use crate::task::concurrency::TerminationFlag;
-use crate::core::utils::progress::{EmptyTaskRegistryFactory, TaskRegistryFactory, Tasks};
+use crate::task::progress::{EmptyTaskRegistryFactory, TaskRegistryFactory, Tasks};
 use crate::task::memory::MemoryRange;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
@@ -22,7 +22,7 @@ use std::collections::HashSet;
 use std::sync::Arc;
 use std::time::Instant;
 
-use crate::core::utils::progress::TaskProgressTracker;
+use crate::task::progress::TaskProgressTracker;
 use crate::projection::eval::algorithm::AlgorithmError;
 
 /// K-Spanning Tree algorithm builder

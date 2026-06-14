@@ -8,13 +8,13 @@ use crate::algo::similarity::knn::{
 };
 use crate::algo::similarity::knn::{KnnNodePropertySpec, SimilarityMetric};
 use crate::task::concurrency::TerminationFlag;
-use crate::core::utils::progress::{ProgressTracker, Tasks};
+use crate::task::progress::{ProgressTracker, Tasks};
 use crate::task::memory::MemoryRange;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use std::sync::Arc;
 
 // Additional imports for progress tracking
-use crate::core::utils::progress::TaskProgressTracker;
+use crate::task::progress::TaskProgressTracker;
 
 pub struct KnnFacade {
     graph_store: Arc<DefaultGraphStore>,

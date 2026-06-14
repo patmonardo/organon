@@ -22,7 +22,7 @@ use std::time::Instant;
 // Import upgraded systems
 use crate::algo::algorithms::pathfinding::PathResult;
 use crate::task::concurrency::TerminationFlag;
-use crate::core::utils::progress::{TaskProgressTracker, TaskRegistryFactory, Tasks};
+use crate::task::progress::{TaskProgressTracker, TaskRegistryFactory, Tasks};
 
 /// DAG Longest Path algorithm builder
 pub struct DagLongestPathBuilder {

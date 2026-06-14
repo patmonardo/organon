@@ -10,8 +10,8 @@
 
 use crate::task::concurrency::Concurrency;
 use crate::task::concurrency::TerminationFlag;
-use crate::core::utils::progress::tasks::LogLevel;
-use crate::core::utils::progress::ProgressTracker;
+use crate::task::progress::tasks::LogLevel;
+use crate::task::progress::ProgressTracker;
 use crate::task::memory::MemoryRange;
 
 pub struct TerminationAwareProgressTracker<'a> {

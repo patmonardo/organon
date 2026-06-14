@@ -39,8 +39,8 @@ use crate::algo::pagerank::{
 use crate::collections::backends::vec::VecDouble;
 use crate::task::concurrency::Concurrency;
 use crate::core::graph_dimensions::ConcreteGraphDimensions;
-use crate::core::utils::progress::ProgressTracker;
-use crate::core::utils::progress::{
+use crate::task::progress::ProgressTracker;
+use crate::task::progress::{
     EmptyTaskRegistryFactory, JobId, TaskProgressTracker, TaskRegistryFactory,
 };
 use crate::task::memory::{MemoryEstimation, MemoryRange};

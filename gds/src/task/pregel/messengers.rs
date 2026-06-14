@@ -7,8 +7,8 @@
 //! 3. **ReducingMessenger**: Atomic double arrays with reducers for aggregated message passing
 
 use crate::collections::{HugeAtomicDoubleArray, HugeAtomicLongArray, HugeObjectArray};
-use crate::pregel::AsyncDoubleQueues;
-use crate::pregel::{MessageIterator, MessageReducer, Messenger};
+use crate::task::pregel::AsyncDoubleQueues;
+use crate::task::pregel::{MessageIterator, MessageReducer, Messenger};
 
 // ================================================================================================
 // SyncQueueMessenger - Synchronous BSP message passing
@@ -572,7 +572,7 @@ impl Messenger<ReducingMessageIterator> for ReducingMessenger {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::pregel::{MaxReducer, MinReducer, SumReducer};
+    use crate::task::pregel::{MaxReducer, MinReducer, SumReducer};
 
     #[test]
     fn test_sync_queue_messenger_basic() {

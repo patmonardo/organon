@@ -18,7 +18,7 @@ use crate::algo::articulation_points::{
 use crate::collections::backends::vec::VecDouble;
 use crate::collections::BitSet;
 use crate::task::concurrency::Concurrency;
-use crate::core::utils::progress::{
+use crate::task::progress::{
     EmptyTaskRegistryFactory, JobId, ProgressTracker, TaskProgressTracker, TaskRegistryFactory,
 };
 use crate::task::memory::MemoryRange;

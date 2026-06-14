@@ -11,7 +11,7 @@ use crate::algo::traversal::{
     run_sequential_dfs, Aggregator, ExitPredicate, FollowExitPredicate, OneHopAggregator,
     SequentialDfsConfig, TargetExitPredicate,
 };
-use crate::core::utils::progress::{ProgressTracker, UNKNOWN_VOLUME};
+use crate::task::progress::{ProgressTracker, UNKNOWN_VOLUME};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::Graph;
 use crate::types::graph::NodeId;
@@ -175,7 +175,7 @@ impl DfsStorageRuntime {
 mod tests {
     use super::*;
     use crate::algo::traversal::{ExitPredicateResult, FollowExitPredicate};
-    use crate::core::utils::progress::{TaskProgressTracker, Tasks};
+    use crate::task::progress::{TaskProgressTracker, Tasks};
 
     struct ContinueOnTwo;
 

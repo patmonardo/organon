@@ -23,7 +23,6 @@ pub mod time_util;
 
 pub mod paged;
 pub mod partition;
-pub mod progress;
 pub mod queue;
 pub mod set_bits_iterable;
 pub mod shuffle;

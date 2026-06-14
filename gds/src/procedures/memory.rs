@@ -6,7 +6,7 @@
 
 use std::sync::Arc;
 
-use crate::core::utils::progress::JobId;
+use crate::task::progress::JobId;
 use crate::task::memory::{
     MemoryReservationExceededException, MemoryTracker, UserEntityMemory, UserMemorySummary,
 };

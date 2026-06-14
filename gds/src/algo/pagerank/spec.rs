@@ -3,7 +3,7 @@
 use crate::collections::backends::vec::VecDouble;
 use crate::task::concurrency::Concurrency;
 use crate::config::validation::ConfigError;
-use crate::core::utils::progress::{LeafTask, ProgressTracker, TaskProgressTracker, Tasks};
+use crate::task::progress::{LeafTask, ProgressTracker, TaskProgressTracker, Tasks};
 use crate::define_algorithm_spec;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::NodeLabel;

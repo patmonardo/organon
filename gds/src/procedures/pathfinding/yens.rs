@@ -10,7 +10,7 @@ use crate::algo::yens::{
     YensComputationRuntime, YensConfig, YensMutateResult, YensMutationSummary, YensResult,
     YensResultBuilder, YensStats, YensStorageRuntime, YensWriteSummary,
 };
-use crate::core::utils::progress::{
+use crate::task::progress::{
     EmptyTaskRegistryFactory, TaskProgressTracker, TaskRegistryFactory, Tasks,
 };
 use crate::task::memory::MemoryRange;

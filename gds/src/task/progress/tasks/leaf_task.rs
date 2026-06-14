@@ -70,7 +70,7 @@ impl LeafTask {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::core::utils::progress::tasks::Status;
+    use crate::task::progress::tasks::Status;
 
     #[test]
     fn test_leaf_task_creation() {

@@ -1,6 +1,6 @@
 use super::TriangleComputationRuntime;
 use crate::task::concurrency::TerminationFlag;
-use crate::core::utils::progress::NoopProgressTracker;
+use crate::task::progress::NoopProgressTracker;
 
 #[test]
 fn triangle_empty() {

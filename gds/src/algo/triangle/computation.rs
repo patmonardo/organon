@@ -3,7 +3,7 @@ use super::intersect::{
 };
 use super::spec::{TriangleResult, EXCLUDED_NODE_TRIANGLE_COUNT};
 use crate::task::concurrency::{install_with_concurrency, Concurrency, TerminationFlag};
-use crate::core::utils::progress::{NoopProgressTracker, ProgressTracker};
+use crate::task::progress::{NoopProgressTracker, ProgressTracker};
 use rayon::prelude::*;
 use std::time::Duration;
 

@@ -1,4 +1,4 @@
-use crate::pregel::{
+use crate::task::pregel::{
     ComputeContext, DefaultValue, InitContext, MasterComputeContext, Messages, PregelResult,
     PregelSchema, PregelSchemaBuilder, SyncQueueMessageIterator, Visibility,
 };

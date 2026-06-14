@@ -5,7 +5,7 @@
 use super::computation::DagLongestPathComputationRuntime;
 use super::spec::DagLongestPathResult;
 use crate::task::concurrency::TerminatedException;
-use crate::core::utils::progress::ProgressTracker;
+use crate::task::progress::ProgressTracker;
 use crate::types::graph::{Graph, NodeId};
 use std::sync::atomic::{AtomicI64, AtomicUsize, Ordering};
 

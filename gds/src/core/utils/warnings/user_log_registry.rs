@@ -1,6 +1,6 @@
 //! User log registry for adding warnings to the log store.
 
-use crate::core::utils::progress::Task;
+use crate::task::progress::Task;
 use crate::core::utils::warnings::UserLogStore;
 
 /// Registry for logging user warnings associated with tasks.

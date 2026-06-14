@@ -21,8 +21,8 @@ use std::sync::Arc;
 
 // Import upgraded systems
 use crate::algo::algorithms::pathfinding::PathResult;
-use crate::core::utils::progress::TaskProgressTracker;
-use crate::core::utils::progress::{TaskRegistryFactory, Tasks};
+use crate::task::progress::TaskProgressTracker;
+use crate::task::progress::{TaskRegistryFactory, Tasks};
 use crate::projection::eval::algorithm::AlgorithmError;
 
 /// Steiner Tree algorithm builder

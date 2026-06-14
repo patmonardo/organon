@@ -6,7 +6,7 @@
 
 use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::config::validation::ConfigError;
-use crate::core::utils::progress::{
+use crate::task::progress::{
     EmptyTaskRegistryFactory, JobId, ProgressTracker, Task, TaskProgressTracker, Tasks,
 };
 use crate::define_algorithm_spec;

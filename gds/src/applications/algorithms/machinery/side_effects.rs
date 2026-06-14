@@ -1,7 +1,7 @@
 //! Concrete side-effect wrappers (Java parity).
 
 use crate::core::loading::GraphResources;
-use crate::core::utils::progress::JobId;
+use crate::task::progress::JobId;
 
 use super::{MutateStep, SideEffect, SideEffectExecutor, WriteStep};
 

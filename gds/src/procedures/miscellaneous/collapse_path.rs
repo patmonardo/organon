@@ -11,7 +11,7 @@ use crate::algo::walking::{
     CollapsePathStorageRuntime,
 };
 use crate::task::concurrency::TerminationFlag;
-use crate::core::utils::progress::{TaskProgressTracker, Tasks};
+use crate::task::progress::{TaskProgressTracker, Tasks};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::prelude::DefaultGraphStore;
 use std::sync::Arc;

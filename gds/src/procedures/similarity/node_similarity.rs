@@ -7,7 +7,7 @@ use crate::algo::similarity::node_similarity::{
     NodeSimilarityStats, NodeSimilarityStorageRuntime,
 };
 use crate::task::concurrency::TerminationFlag;
-use crate::core::utils::progress::{ProgressTracker, Tasks};
+use crate::task::progress::{ProgressTracker, Tasks};
 use crate::task::memory::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::Orientation;
@@ -17,7 +17,7 @@ use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
 
 // Additional imports for progress tracking and similarity stats
-use crate::core::utils::progress::TaskProgressTracker;
+use crate::task::progress::TaskProgressTracker;
 
 pub struct NodeSimilarityFacade {
     graph_store: Arc<DefaultGraphStore>,

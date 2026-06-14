@@ -371,7 +371,7 @@ define_algorithm_spec! {
             .get_graph_with_types_selectors_and_orientation(&rel_types, &selectors, orientation)
             .map_err(|e| AlgorithmError::Execution(format!("Failed to obtain graph view: {}", e)))?;
 
-        use crate::core::utils::progress::{TaskProgressTracker, Tasks};
+        use crate::task::progress::{TaskProgressTracker, Tasks};
         let mut progress_tracker = TaskProgressTracker::with_concurrency(
             Tasks::leaf_with_volume("spanning_tree".to_string(), graph.relationship_count()),
             config.concurrency,

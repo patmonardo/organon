@@ -4,7 +4,7 @@
 //! manages nested tasks, mutates task progress/volume, and emits logs.
 
 use crate::task::concurrency::Concurrency;
-use crate::core::utils::progress::{JobId, TaskRegistry, TaskRegistryFactory};
+use crate::task::progress::{JobId, TaskRegistry, TaskRegistryFactory};
 use crate::task::memory::MemoryRange;
 use std::sync::{Arc, Mutex};
 
@@ -64,7 +64,7 @@ impl TaskProgressTracker {
     /// Convenience constructor matching historical Rust call sites.
     /// Uses a fresh JobId and an empty TaskRegistry.
     pub fn with_concurrency(task: super::LeafTask, concurrency: usize) -> Self {
-        let registry_factory = crate::core::utils::progress::EmptyTaskRegistryFactory;
+        let registry_factory = crate::task::progress::EmptyTaskRegistryFactory;
         Self::with_registry(
             task.base().clone(),
             Concurrency::of(concurrency.max(1)),

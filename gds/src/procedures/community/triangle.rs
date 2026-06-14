@@ -14,7 +14,7 @@ use crate::algo::triangle::{
 };
 use crate::collections::backends::vec::VecLong;
 use crate::task::concurrency::TerminationFlag;
-use crate::core::utils::progress::{ProgressTracker, TaskRegistry, Tasks};
+use crate::task::progress::{ProgressTracker, TaskRegistry, Tasks};
 use crate::task::memory::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};

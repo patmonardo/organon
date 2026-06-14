@@ -52,7 +52,7 @@ impl UserLogStore for ArcUserLogStoreWrapper {
     fn add_user_log_message(
         &self,
         username: &str,
-        task: &crate::core::utils::progress::Task,
+        task: &crate::task::progress::Task,
         message: String,
     ) {
         self.store.add_user_log_message(username, task, message);

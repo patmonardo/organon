@@ -1,7 +1,7 @@
 use crate::collections::HugeLongArray;
 use crate::task::concurrency::Concurrency;
 use crate::core::utils::paged::HugeMergeSort;
-use crate::core::utils::progress::ProgressTracker;
+use crate::task::progress::ProgressTracker;
 use crate::core::utils::shuffle::ShuffleUtil;
 use crate::ml::splitting::FractionSplitter;
 use crate::ml::splitting::TrainingExamplesSplit;

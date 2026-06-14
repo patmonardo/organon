@@ -5,8 +5,8 @@ use crate::algo::similarity::knn::metrics::{KnnNodePropertySpec, SimilarityMetri
 use crate::algo::similarity::knn::KnnNnDescentStats;
 use crate::algo::similarity::knn::KnnSamplerType;
 use crate::task::concurrency::TerminationFlag;
-use crate::core::utils::progress::TaskProgressTracker;
-use crate::core::utils::progress::Tasks;
+use crate::task::progress::TaskProgressTracker;
+use crate::task::progress::Tasks;
 use crate::define_algorithm_spec;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::NodeLabel;

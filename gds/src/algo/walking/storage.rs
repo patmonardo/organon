@@ -8,7 +8,7 @@
 use super::spec::{CollapsePathConfig, CollapsePathResult};
 use super::CollapsePathComputationRuntime;
 use crate::task::concurrency::TerminationFlag;
-use crate::core::utils::progress::ProgressTracker;
+use crate::task::progress::ProgressTracker;
 use crate::projection::{Orientation, RelationshipType};
 use crate::types::graph::Graph;
 use crate::types::graph::MappedNodeId;
@@ -34,7 +34,7 @@ impl CollapsePathStorageRuntime {
         computation: &mut CollapsePathComputationRuntime,
     ) -> Result<CollapsePathResult, String> {
         let termination_flag = TerminationFlag::running_true();
-        let mut progress_tracker = crate::core::utils::progress::NoopProgressTracker;
+        let mut progress_tracker = crate::task::progress::NoopProgressTracker;
         self.compute_with_controls(
             graph_store,
             config,
@@ -287,7 +287,7 @@ mod tests {
         let store = build_store();
         let mut computation = CollapsePathComputationRuntime::new(false);
         let runtime = CollapsePathStorageRuntime::new(0);
-        let mut progress_tracker = crate::core::utils::progress::NoopProgressTracker;
+        let mut progress_tracker = crate::task::progress::NoopProgressTracker;
         let termination = TerminationFlag::running_true();
 
         let config = CollapsePathConfig {
@@ -316,7 +316,7 @@ mod tests {
         let store = build_store();
         let mut computation = CollapsePathComputationRuntime::new(false);
         let runtime = CollapsePathStorageRuntime::new(1);
-        let mut progress_tracker = crate::core::utils::progress::NoopProgressTracker;
+        let mut progress_tracker = crate::task::progress::NoopProgressTracker;
         let termination = TerminationFlag::stop_running();
 
         let config = CollapsePathConfig {

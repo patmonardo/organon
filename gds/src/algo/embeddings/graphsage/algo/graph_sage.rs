@@ -8,7 +8,7 @@ use crate::algo::embeddings::graphsage::types::GraphSageTrainConfig;
 use crate::collections::HugeObjectArray;
 use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::core::model::Model;
-use crate::core::utils::progress::TaskProgressTracker;
+use crate::task::progress::TaskProgressTracker;
 use crate::types::graph::Graph;
 use std::sync::Arc;
 

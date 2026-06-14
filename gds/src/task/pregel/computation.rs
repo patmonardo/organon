@@ -350,7 +350,7 @@ mod tests {
         type Config = PregelConfig;
 
         fn schema(&self, _config: &Self::Config) -> PregelSchema {
-            use crate::pregel::Visibility;
+            use crate::task::pregel::Visibility;
             use crate::types::ValueType;
             PregelSchema::builder()
                 .add("test_value", ValueType::Long, Visibility::Public)

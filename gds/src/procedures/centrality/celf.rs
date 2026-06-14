@@ -11,7 +11,7 @@ use crate::algo::celf::{
 };
 use crate::collections::backends::vec::VecDouble;
 use crate::task::concurrency::{Concurrency, TerminationFlag};
-use crate::core::utils::progress::{
+use crate::task::progress::{
     EmptyTaskRegistryFactory, JobId, ProgressTracker, TaskProgressTracker, TaskRegistryFactory,
 };
 use crate::task::memory::MemoryRange;

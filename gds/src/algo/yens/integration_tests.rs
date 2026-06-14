@@ -8,7 +8,7 @@ use super::spec::{YensConfig, YensResult};
 use super::YensComputationRuntime;
 use super::YensStorageRuntime;
 use crate::algo::yens::YENSAlgorithmSpec;
-use crate::core::utils::progress::{TaskProgressTracker, Tasks};
+use crate::task::progress::{TaskProgressTracker, Tasks};
 use crate::projection::eval::algorithm::AlgorithmSpec;
 use crate::projection::eval::algorithm::{ExecutionContext, ExecutionMode, ProcedureExecutor};
 use crate::types::prelude::DefaultGraphStore;

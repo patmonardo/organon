@@ -2,7 +2,7 @@
 //!
 //! Convenient wrapper around TaskStore with bound username and jobId.
 
-use crate::core::utils::progress::{JobId, Task, TaskStore, UserTask};
+use crate::task::progress::{JobId, Task, TaskStore, UserTask};
 use std::sync::Arc;
 
 /// Registry for managing tasks for a specific user session.
@@ -96,7 +96,7 @@ impl TaskRegistry {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::core::utils::progress::EmptyTaskStore;
+    use crate::task::progress::EmptyTaskStore;
 
     #[test]
     fn test_create_registry_with_job_id() {

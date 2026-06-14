@@ -6,14 +6,14 @@
 
 use std::sync::Arc;
 
-use crate::core::utils::progress::{
+use crate::task::progress::{
     TaskRegistryFactories, TaskRegistryFactory as TaskRegistryFactoryTrait,
 };
 use crate::core::utils::warnings::{
     EmptyUserLogRegistryFactory, UserLogRegistryFactory as UserLogRegistryFactoryTrait,
 };
 
-/// Factory handle for creating [`crate::core::utils::progress::TaskRegistry`] instances.
+/// Factory handle for creating [`crate::task::progress::TaskRegistry`] instances.
 pub type TaskRegistryFactory = Arc<dyn TaskRegistryFactoryTrait>;
 
 /// Factory handle for creating [`crate::core::utils::warnings::UserLogRegistry`] instances.

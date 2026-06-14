@@ -8,7 +8,7 @@
 use super::spec::{ToUndirectedConfig, ToUndirectedResult};
 use super::ToUndirectedComputationRuntime;
 use crate::task::concurrency::TerminationFlag;
-use crate::core::utils::progress::ProgressTracker;
+use crate::task::progress::ProgressTracker;
 use crate::core::Aggregation as CoreAggregation;
 use crate::projection::{Orientation, RelationshipType};
 use crate::types::graph::MappedNodeId;
@@ -39,7 +39,7 @@ impl ToUndirectedStorageRuntime {
         computation: &mut ToUndirectedComputationRuntime,
     ) -> Result<ToUndirectedResult, String> {
         let termination_flag = TerminationFlag::running_true();
-        let mut progress_tracker = crate::core::utils::progress::NoopProgressTracker;
+        let mut progress_tracker = crate::task::progress::NoopProgressTracker;
         self.compute_with_controls(
             graph_store,
             config,

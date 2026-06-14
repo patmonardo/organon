@@ -4,7 +4,7 @@ use crate::collections::HugeObjectArray;
 use crate::task::concurrency::virtual_threads::RunWithConcurrency;
 use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::core::utils::partition::PartitionUtils;
-use crate::core::utils::progress::TaskProgressTracker;
+use crate::task::progress::TaskProgressTracker;
 use crate::ml::core::computation_context::ComputationContext;
 use crate::ml::core::tensor::Matrix;
 use crate::types::graph::Graph;
@@ -163,7 +163,7 @@ mod tests {
         ActivationFunctionType, AggregatorType, LayerConfig,
     };
     use crate::collections::backends::vec::VecDouble;
-    use crate::core::utils::progress::{TaskProgressTracker, Tasks};
+    use crate::task::progress::{TaskProgressTracker, Tasks};
     use crate::types::graph_store::{DefaultGraphStore, GraphStore};
     use crate::types::properties::node::DefaultDoubleNodePropertyValues;
     use crate::types::random::{RandomGraphConfig, RandomRelationshipConfig};

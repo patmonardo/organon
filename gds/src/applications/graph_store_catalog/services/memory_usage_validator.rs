@@ -3,7 +3,7 @@
 /// Mirrors Java MemoryUsageValidator class.
 /// Contains memory validation logic for graph operations.
 use crate::applications::services::logging::Log;
-use crate::core::utils::progress::JobId;
+use crate::task::progress::JobId;
 use crate::task::memory::{
     MemoryRange, MemoryReservationExceededException, MemoryTracker, MemoryTreeWithDimensions,
 };

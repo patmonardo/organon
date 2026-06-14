@@ -8,7 +8,7 @@ use crate::algo::similarity::knn::{KnnSamplerType, KnnStorageRuntime};
 use crate::task::concurrency::virtual_threads::Executor;
 use crate::task::concurrency::Concurrency;
 use crate::task::concurrency::TerminationFlag;
-use crate::core::utils::progress::ProgressTracker;
+use crate::task::progress::ProgressTracker;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::NodeLabel;
 use crate::types::graph_store::GraphStore;
@@ -358,7 +358,7 @@ impl FilteredKnnStorageRuntime {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::core::utils::progress::{TaskProgressTracker, Tasks};
+    use crate::task::progress::{TaskProgressTracker, Tasks};
     use crate::types::prelude::DefaultGraphStore;
     use crate::types::random::RandomGraphConfig;
 

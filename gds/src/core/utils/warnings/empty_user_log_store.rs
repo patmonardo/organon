@@ -1,6 +1,6 @@
 //! Empty user log store that discards all messages.
 
-use crate::core::utils::progress::Task;
+use crate::task::progress::Task;
 use crate::core::utils::warnings::{UserLogEntry, UserLogStore};
 
 /// A no-op implementation of UserLogStore that discards all messages.

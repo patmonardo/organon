@@ -4,7 +4,7 @@
 use crate::collections::{HugeAtomicBitSet, HugeAtomicLongArray};
 use crate::config::{ConcurrencyConfig, Config, IterationsConfig};
 use crate::core::utils::partition::Partitioning;
-use crate::pregel::{
+use crate::task::pregel::{
     ComputeContext, DefaultValue, InitContext, Messages, PregelRuntimeConfig, PregelSchema,
     PregelSchemaBuilder, Reducer, ReducingMessageIterator, Visibility,
 };

@@ -7,8 +7,8 @@
 //! Corresponds to Java's ForkJoinComputeStep and TypeScript's ForkJoinComputeStep.
 
 use crate::collections::HugeAtomicBitSet;
-use crate::core::utils::progress::tasks::LeafTask;
-use crate::pregel::{
+use crate::task::progress::tasks::LeafTask;
+use crate::task::pregel::{
     ComputeContext, InitContext, MessageIterator, Messages, Messenger, NodeValue, Partition,
     PregelRuntimeConfig,
 };

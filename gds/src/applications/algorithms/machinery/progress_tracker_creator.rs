@@ -7,7 +7,7 @@
 //! - request-scoped dependencies (job id + task registry)
 
 use crate::task::concurrency::{Concurrency, TerminationFlag};
-use crate::core::utils::progress::{ProgressTracker, Task, TaskProgressTracker};
+use crate::task::progress::{ProgressTracker, Task, TaskProgressTracker};
 
 use super::RequestScopedDependencies;
 

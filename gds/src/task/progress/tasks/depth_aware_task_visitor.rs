@@ -16,7 +16,7 @@ pub trait DepthAwareTaskVisitor: TaskVisitor {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::core::utils::progress::tasks::Task;
+    use crate::task::progress::tasks::Task;
     use std::cell::RefCell;
 
     struct TestDepthVisitor {

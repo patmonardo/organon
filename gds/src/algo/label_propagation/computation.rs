@@ -12,7 +12,7 @@
 //! - Sequential iteration is required for proper convergence (Gauss-Seidel vs Jacobi).
 
 use crate::task::concurrency::{install_with_concurrency, Concurrency, TerminationFlag};
-use crate::core::utils::progress::{NoopProgressTracker, ProgressTracker};
+use crate::task::progress::{NoopProgressTracker, ProgressTracker};
 use std::collections::HashMap;
 use std::sync::atomic::{AtomicBool, Ordering};
 

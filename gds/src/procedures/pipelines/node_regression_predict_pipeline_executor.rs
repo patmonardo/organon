@@ -2,7 +2,7 @@ use std::collections::HashSet;
 use std::sync::Arc;
 
 use crate::task::concurrency::{Concurrency, TerminationFlag};
-use crate::core::utils::progress::{Task, TaskProgressTracker, Tasks};
+use crate::task::progress::{Task, TaskProgressTracker, Tasks};
 use crate::ml::models::{FeaturesFactory, Regressor};
 use crate::ml::node_prediction::regression::NodeRegressionPredict;
 use crate::projection::eval::pipeline::{
