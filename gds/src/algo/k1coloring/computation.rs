@@ -10,10 +10,10 @@
 //! 2) validation which schedules conflicting nodes for recoloring
 
 use crate::collections::{BitSet, HugeAtomicLongArray};
-use crate::concurrency::{install_with_concurrency, Concurrency, TerminationFlag};
+use crate::task::concurrency::{install_with_concurrency, Concurrency, TerminationFlag};
 use crate::core::graph_dimensions::GraphDimensions;
 use crate::core::utils::paged::HugeAtomicBitSet;
-use crate::mem::{Estimate, MemoryEstimation, MemoryRange, MemoryTree};
+use crate::task::memory::{Estimate, MemoryEstimation, MemoryRange, MemoryTree};
 use rayon::prelude::*;
 
 pub const INITIAL_FORBIDDEN_COLORS: usize = 1000;

@@ -11,9 +11,9 @@ use crate::algo::scale_properties::{
     ScalePropertiesStorageRuntime, ScalePropertiesStreamRow, ScalePropertiesWriteSummary,
 };
 use crate::collections::backends::vec::VecDoubleArray;
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::TerminationFlag;
 use crate::core::utils::progress::{TaskProgressTracker, Tasks};
-use crate::mem::MemoryRange;
+use crate::task::memory::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::NodeLabel;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};

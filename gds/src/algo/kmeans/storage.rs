@@ -6,7 +6,7 @@
 
 use super::spec::{KMeansConfig, KMeansResult};
 use super::KMeansComputationRuntime;
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::TerminationFlag;
 use crate::core::utils::progress::ProgressTracker;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::Orientation;

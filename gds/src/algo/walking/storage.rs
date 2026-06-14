@@ -7,7 +7,7 @@
 
 use super::spec::{CollapsePathConfig, CollapsePathResult};
 use super::CollapsePathComputationRuntime;
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::TerminationFlag;
 use crate::core::utils::progress::ProgressTracker;
 use crate::projection::{Orientation, RelationshipType};
 use crate::types::graph::Graph;

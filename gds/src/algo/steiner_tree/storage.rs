@@ -1,6 +1,6 @@
 use crate::algo::steiner_tree::spec::{SteinerTreeConfig, SteinerTreeResult, PRUNED};
 use crate::algo::steiner_tree::SteinerTreeComputationRuntime;
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::TerminationFlag;
 use crate::core::utils::progress::{ProgressTracker, UNKNOWN_VOLUME};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::Graph;

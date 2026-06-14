@@ -1,6 +1,6 @@
 use super::{GraphProjectConfig, GraphStoreCreator, GraphStoreLoader, ResultStore};
 use crate::core::{ConcreteGraphDimensions, GraphDimensions};
-use crate::mem::{MemoryEstimation, MemoryRange, MemoryTree};
+use crate::task::memory::{MemoryEstimation, MemoryRange, MemoryTree};
 use crate::types::graph_store::DefaultGraphStore;
 use crate::types::graph_store::GraphStore as _;
 use crate::types::random::{RandomGraphConfig, Randomizable};

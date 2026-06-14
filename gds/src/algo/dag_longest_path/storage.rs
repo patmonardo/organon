@@ -4,7 +4,7 @@
 
 use super::computation::DagLongestPathComputationRuntime;
 use super::spec::DagLongestPathResult;
-use crate::concurrency::TerminatedException;
+use crate::task::concurrency::TerminatedException;
 use crate::core::utils::progress::ProgressTracker;
 use crate::types::graph::{Graph, NodeId};
 use std::sync::atomic::{AtomicI64, AtomicUsize, Ordering};
@@ -102,7 +102,7 @@ impl DagLongestPathStorageRuntime {
         graph: &dyn Graph,
         progress_tracker: &mut dyn ProgressTracker,
         concurrency: usize,
-        termination: &crate::concurrency::TerminationFlag,
+        termination: &crate::task::concurrency::TerminationFlag,
     ) -> Result<DagLongestPathResult, TerminatedException> {
         let node_count = graph.node_count();
         progress_tracker.begin_subtask_with_volume(node_count);

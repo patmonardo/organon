@@ -31,7 +31,7 @@
 //! - Multi-source graph integration
 
 use crate::collections::HugeLongArray;
-use crate::mem::BitUtil;
+use crate::task::memory::BitUtil;
 use std::collections::HashMap;
 use std::sync::atomic::{AtomicI64, Ordering};
 use std::sync::{Arc, Mutex};

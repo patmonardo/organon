@@ -13,7 +13,7 @@ use crate::algo::embeddings::graphsage::layer_factory::generate_weights;
 use crate::algo::embeddings::graphsage::multi_label_feature_function::MultiLabelFeatureFunction;
 use crate::algo::embeddings::graphsage::train_config_transformer::TrainConfigTransformer;
 use crate::algo::embeddings::graphsage::types::{GraphSageTrainConfig, GraphSageTrainParameters};
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::TerminationFlag;
 use crate::core::model::Model;
 use crate::ml::core::functions::Weights;
 use crate::ml::core::tensor::{Matrix, Tensor};

@@ -6,7 +6,7 @@
 
 use super::spec::{DagLongestPathResult, PathRow};
 use super::DagLongestPathStorageRuntime;
-use crate::concurrency::{
+use crate::task::concurrency::{
     virtual_threads::Executor, Concurrency, TerminatedException, TerminationFlag,
 };
 use crate::projection::eval::algorithm::AlgorithmError;

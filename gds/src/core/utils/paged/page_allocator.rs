@@ -19,7 +19,7 @@
 //! - Memory-mapped file compatibility
 
 use crate::collections::PageUtil;
-use crate::mem::{BitUtil, Estimate};
+use crate::task::memory::{BitUtil, Estimate};
 use std::marker::PhantomData;
 
 /// Abstract trait for page allocation strategies.
@@ -144,7 +144,7 @@ impl<T> PageAllocatorFactory<T> {
     ///
     /// ```
     /// use gds::core::utils::paged::PageAllocatorFactory;
-    /// use gds::mem::Estimate;
+    /// use gds::task::memory::Estimate;
     ///
     /// let page_size = 4096;
     /// let bytes_per_page = Estimate::size_of_long_array(page_size);

@@ -4,7 +4,7 @@
 //! This is a literal 1:1 translation following repository translation policy.
 
 use super::int_uniform_sampler_with_retries::IntUniformSamplerWithRetries;
-use crate::mem::{Estimate, MemoryRange};
+use crate::task::memory::{Estimate, MemoryRange};
 
 /// Sample numbers by excluding from the given range.
 ///

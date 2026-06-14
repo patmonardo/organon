@@ -1,5 +1,5 @@
 use crate::collections::{BitSet, HugeObjectArray};
-use crate::concurrency::{Concurrency, TerminationFlag};
+use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::core::utils::paged::HugeAtomicBitSet;
 use crate::core::utils::partition::DegreePartition;
 use crate::types::graph::Graph;

@@ -4,7 +4,7 @@
 //! not fully wired in Rust GDS yet.
 
 use crate::collections::HugeObjectArray;
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::TerminationFlag;
 use crate::core::utils::paged::HugeAtomicBitSet;
 use crate::core::utils::partition::Partition;
 use crate::ml::core::features::{self, FeatureConsumer};

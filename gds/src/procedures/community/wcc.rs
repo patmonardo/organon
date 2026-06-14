@@ -15,9 +15,9 @@ use crate::algo::wcc::{
     WccResultBuilder, WccStats, WccStorageRuntime,
 };
 use crate::collections::backends::vec::VecLong;
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::TerminationFlag;
 use crate::core::utils::progress::{TaskRegistry, Tasks};
-use crate::mem::MemoryRange;
+use crate::task::memory::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use crate::types::properties::node::DefaultLongNodePropertyValues;

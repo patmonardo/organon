@@ -18,7 +18,7 @@ use crate::applications::services::logging::Log;
 use crate::core::loading::GraphResources;
 use crate::core::utils::progress::JobId;
 use crate::errors::MemoryEstimationError;
-use crate::mem::{MemoryRange, MemoryTracker, MemoryTreeWithDimensions};
+use crate::task::memory::{MemoryRange, MemoryTracker, MemoryTreeWithDimensions};
 
 use super::Label;
 

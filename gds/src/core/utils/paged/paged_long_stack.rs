@@ -59,7 +59,7 @@
 
 use crate::collections::PageUtil;
 use crate::core::utils::paged::PageAllocatorFactory;
-use crate::mem::Estimate;
+use crate::task::memory::Estimate;
 
 /// High-performance paged stack for i64 values.
 ///

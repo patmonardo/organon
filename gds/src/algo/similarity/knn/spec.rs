@@ -3,7 +3,7 @@ use super::KnnSamplerType;
 use super::KnnStorageRuntime;
 use super::{KnnComputationResult, KnnComputationRuntime, KnnNnDescentStats};
 use crate::algo::algorithms::similarity::similarity_stats;
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::TerminationFlag;
 use crate::core::utils::progress::TaskProgressTracker;
 use crate::core::utils::progress::Tasks;
 use crate::define_algorithm_spec;

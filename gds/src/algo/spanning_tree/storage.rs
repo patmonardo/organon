@@ -6,7 +6,7 @@
 //! handling persistent data access and orchestrating the Prim's algorithm execution.
 
 use super::{SpanningTree, SpanningTreeComputationRuntime};
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::TerminationFlag;
 use crate::core::utils::progress::ProgressTracker;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::Graph;

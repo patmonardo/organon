@@ -8,7 +8,7 @@
 
 use crate::algo::msbfs::{AggregatedNeighborProcessingMsBfs, OMEGA};
 use crate::collections::{HugeAtomicDoubleArray, HugeAtomicLongArray};
-use crate::concurrency::{
+use crate::task::concurrency::{
     virtual_threads::{Executor, WorkerContext},
     Concurrency, TerminatedException, TerminationFlag,
 };

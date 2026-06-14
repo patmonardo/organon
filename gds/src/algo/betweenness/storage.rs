@@ -3,7 +3,7 @@
 //! Responsible for building a graph view from a GraphStore with the correct
 //! orientation and optional relationship weight property.
 
-use crate::concurrency::{Concurrency, TerminatedException, TerminationFlag};
+use crate::task::concurrency::{Concurrency, TerminatedException, TerminationFlag};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::{Orientation, RelationshipType};
 use crate::types::graph::Graph;

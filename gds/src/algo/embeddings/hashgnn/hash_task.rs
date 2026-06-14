@@ -1,4 +1,4 @@
-use crate::concurrency::{Concurrency, TerminationFlag};
+use crate::task::concurrency::{Concurrency, TerminationFlag};
 use rand::Rng;
 use rand::SeedableRng;
 use rand_chacha::ChaCha8Rng;

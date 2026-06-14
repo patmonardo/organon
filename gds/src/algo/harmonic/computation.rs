@@ -1,6 +1,6 @@
 use crate::algo::msbfs::AggregatedNeighborProcessingMsBfs;
 use crate::collections::HugeAtomicDoubleArray;
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::TerminationFlag;
 
 /// Pure state runtime for harmonic centrality.
 ///

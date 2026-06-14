@@ -6,7 +6,7 @@
 
 use super::spec::RandomWalkResult;
 use super::RandomWalkStorageRuntime;
-use crate::concurrency::{Concurrency, Executor, TerminatedException, TerminationFlag};
+use crate::task::concurrency::{Concurrency, Executor, TerminatedException, TerminationFlag};
 use rand::rngs::StdRng;
 use rand::{Rng, SeedableRng};
 use std::sync::atomic::{AtomicUsize, Ordering};

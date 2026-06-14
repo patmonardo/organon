@@ -1,5 +1,5 @@
 use super::{Aggregator, ExitPredicate, ExitPredicateResult};
-use crate::concurrency::{install_with_concurrency, Concurrency};
+use crate::task::concurrency::{install_with_concurrency, Concurrency};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::{Graph, NodeId};
 use rayon::prelude::*;

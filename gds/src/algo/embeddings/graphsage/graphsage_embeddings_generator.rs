@@ -1,8 +1,8 @@
 //! Java: `GraphSageEmbeddingsGenerator`.
 
 use crate::collections::HugeObjectArray;
-use crate::concurrency::virtual_threads::RunWithConcurrency;
-use crate::concurrency::{Concurrency, TerminationFlag};
+use crate::task::concurrency::virtual_threads::RunWithConcurrency;
+use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::core::utils::partition::PartitionUtils;
 use crate::core::utils::progress::TaskProgressTracker;
 use crate::ml::core::computation_context::ComputationContext;

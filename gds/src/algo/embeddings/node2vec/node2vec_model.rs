@@ -2,7 +2,7 @@
 
 use super::compressed_random_walks::CompressedRandomWalks;
 use super::train_parameters::TrainParameters;
-use crate::concurrency::{Concurrency, TerminationFlag};
+use crate::task::concurrency::{Concurrency, TerminationFlag};
 use rand::prelude::*;
 
 #[derive(Debug)]

@@ -1,6 +1,6 @@
 //! Builder for random walk probabilities used in negative sampling.
 
-use crate::concurrency::Concurrency;
+use crate::task::concurrency::Concurrency;
 use std::collections::HashMap;
 
 #[derive(Debug)]

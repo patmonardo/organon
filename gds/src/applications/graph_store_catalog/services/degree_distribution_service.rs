@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::TerminationFlag;
 use crate::types::graph::degrees::Degrees;
 use crate::types::graph::IdMap as _;
 use crate::types::graph_store::DefaultGraphStore;

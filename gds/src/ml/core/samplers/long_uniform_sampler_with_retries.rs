@@ -8,7 +8,7 @@ use rand::Rng;
 use rand::SeedableRng;
 use std::collections::HashSet;
 
-use crate::mem::{Estimate, MemoryRange};
+use crate::task::memory::{Estimate, MemoryRange};
 
 /// Samples with retries until the desired number of unique samples are obtained.
 ///

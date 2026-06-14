@@ -1,4 +1,4 @@
-use crate::concurrency::Concurrency;
+use crate::task::concurrency::Concurrency;
 use serde_json::Value;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

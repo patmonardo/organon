@@ -5,7 +5,7 @@
 use super::CELFComputationRuntime;
 use crate::collections::BitSet;
 use crate::collections::HugeDoubleArray;
-use crate::concurrency::{TerminatedException, TerminationFlag};
+use crate::task::concurrency::{TerminatedException, TerminationFlag};
 use crate::core::utils::paged::HugeLongArrayStack;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::{Orientation, RelationshipType};

@@ -21,7 +21,7 @@
 //! The model is constructed with a mapping closure so training can reference original ids
 //! where needed, but the returned matrix is aligned to the projected graph's node order.
 
-use crate::concurrency::{Concurrency, TerminationFlag};
+use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::core::utils::progress::{TaskProgressTracker, Tasks};
 use crate::ml::core::samplers::RandomWalkSampler;
 use crate::projection::eval::algorithm::AlgorithmError;

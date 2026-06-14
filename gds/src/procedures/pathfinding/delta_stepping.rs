@@ -12,7 +12,7 @@ use crate::algo::delta_stepping::{
     DeltaSteppingMutationSummary, DeltaSteppingResultBuilder, DeltaSteppingStats,
     DeltaSteppingStorageRuntime, DeltaSteppingWriteSummary,
 };
-use crate::mem::MemoryRange;
+use crate::task::memory::MemoryRange;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};

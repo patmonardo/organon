@@ -3,7 +3,7 @@
 use crate::algo::embeddings::graphsage::train_config_transformer::TrainConfigTransformer;
 use crate::algo::embeddings::graphsage::types::GraphSageTrainConfig;
 use crate::core::graph_dimensions::GraphDimensions;
-use crate::mem::{Estimate, MemoryEstimation, MemoryRange, MemoryTree};
+use crate::task::memory::{Estimate, MemoryEstimation, MemoryRange, MemoryTree};
 
 /// A memory estimation for GraphSage inference (embeddings generation).
 #[derive(Debug, Clone)]

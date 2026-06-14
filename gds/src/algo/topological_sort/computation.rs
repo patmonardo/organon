@@ -6,7 +6,7 @@
 
 use super::spec::TopologicalSortResult;
 use super::TopologicalSortStorageRuntime;
-use crate::concurrency::{Concurrency, Executor, TerminatedException, TerminationFlag};
+use crate::task::concurrency::{Concurrency, Executor, TerminatedException, TerminationFlag};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::Graph;
 use crate::types::graph::NodeId;

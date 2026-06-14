@@ -22,9 +22,9 @@ use crate::algo::kmeans::{
     KMeansMutationSummary, KMeansResult, KMeansResultBuilder, KMeansStats, KMeansStorageRuntime,
 };
 use crate::collections::backends::vec::VecLong;
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::TerminationFlag;
 use crate::core::utils::progress::TaskRegistry;
-use crate::mem::{Estimate, MemoryRange};
+use crate::task::memory::{Estimate, MemoryRange};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use crate::types::properties::node::DefaultLongNodePropertyValues;

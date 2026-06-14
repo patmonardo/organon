@@ -11,7 +11,7 @@ use crate::applications::algorithms::machinery::{
 use crate::applications::services::logging::Log;
 use crate::collections::backends::vec::VecDouble;
 use crate::core::loading::GraphResources;
-use crate::mem::MemoryEstimationResult;
+use crate::task::memory::MemoryEstimationResult;
 use crate::ml::metrics::{ClassificationMetricSpecification, RegressionMetric};
 use crate::ml::models::Regressor;
 use crate::projection::eval::pipeline::link_pipeline::LinkFeatureStepFactory;

@@ -3,7 +3,7 @@ use crate::algo::similarity::node_similarity::{
     NodeSimilarityComputationRuntime, NodeSimilarityConfig, NodeSimilarityResult,
     NodeSimilarityStorageRuntime,
 };
-use crate::concurrency::{TerminatedException, TerminationFlag};
+use crate::task::concurrency::{TerminatedException, TerminationFlag};
 use crate::types::graph::graph::Graph;
 use crate::types::graph::MappedNodeId;
 use std::collections::HashSet;

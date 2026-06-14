@@ -11,9 +11,9 @@ use crate::algo::conductance::{
     ConductanceResultBuilder, ConductanceStats, ConductanceStorageRuntime,
 };
 use crate::collections::backends::vec::VecDouble;
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::TerminationFlag;
 use crate::core::utils::progress::TaskRegistry;
-use crate::mem::{Estimate, MemoryRange};
+use crate::task::memory::{Estimate, MemoryRange};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use crate::types::properties::node::DefaultDoubleNodePropertyValues;

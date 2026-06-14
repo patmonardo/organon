@@ -10,7 +10,7 @@ use crate::algo::all_shortest_paths::{
     AlgorithmType, AllShortestPathsComputationRuntime, AllShortestPathsConfig,
     AllShortestPathsMutationSummary, AllShortestPathsStats, AllShortestPathsStorageRuntime,
 };
-use crate::mem::MemoryRange;
+use crate::task::memory::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;

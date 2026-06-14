@@ -1,8 +1,8 @@
 use crate::collections::HugeDoubleArray;
 use crate::collections::HugeIntArray;
 use crate::collections::HugeLongArray;
-use crate::concurrency::Concurrency;
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::Concurrency;
+use crate::task::concurrency::TerminationFlag;
 use crate::core::utils::progress::NoopProgressTracker;
 use crate::core::utils::progress::TaskProgressTracker;
 use crate::core::utils::progress::Tasks;

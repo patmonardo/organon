@@ -33,7 +33,7 @@ use crate::algo::dijkstra::{
     DijkstraMutationSummary, DijkstraResult, DijkstraResultBuilder, DijkstraStats,
     DijkstraStorageRuntime, DijkstraWriteSummary,
 };
-use crate::mem::MemoryRange;
+use crate::task::memory::MemoryRange;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
 use crate::types::graph::id_map::NodeId;

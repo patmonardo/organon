@@ -1,4 +1,4 @@
-use crate::mem::Estimate;
+use crate::task::memory::Estimate;
 use std::cmp::Ordering;
 
 /// A bounded priority queue retaining the best `i64` elements by `f64` priority.

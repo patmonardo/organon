@@ -1,4 +1,4 @@
-use crate::mem::{Estimate, MemoryEstimation, MemoryEstimations, MemoryRange};
+use crate::task::memory::{Estimate, MemoryEstimation, MemoryEstimations, MemoryRange};
 use crate::ml::decision_tree::DecisionTreeClassifierTrainer;
 use crate::ml::decision_tree::DecisionTreeTrainerConfig;
 use crate::ml::models::base::TrainerConfigTrait;

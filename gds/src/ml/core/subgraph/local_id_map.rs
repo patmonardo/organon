@@ -14,7 +14,7 @@
 
 use std::collections::HashMap;
 
-use crate::mem::{Estimate, MemoryEstimation, MemoryEstimations};
+use crate::task::memory::{Estimate, MemoryEstimation, MemoryEstimations};
 
 /// Bidirectional mapping between original graph node IDs and local consecutive IDs.
 ///

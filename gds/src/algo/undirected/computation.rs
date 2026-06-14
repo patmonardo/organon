@@ -5,7 +5,7 @@
 //! Symmetrizes a single relationship type by adding reverse edges for every
 //! observed edge, producing a deduplicated edge set.
 
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::TerminationFlag;
 use crate::core::Aggregation;
 use crate::types::graph::Graph;
 use std::collections::{BTreeMap, BTreeSet};

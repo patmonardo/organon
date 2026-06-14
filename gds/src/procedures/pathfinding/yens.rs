@@ -13,7 +13,7 @@ use crate::algo::yens::{
 use crate::core::utils::progress::{
     EmptyTaskRegistryFactory, TaskProgressTracker, TaskRegistryFactory, Tasks,
 };
-use crate::mem::MemoryRange;
+use crate::task::memory::MemoryRange;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
 use crate::types::graph::id_map::NodeId;

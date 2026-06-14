@@ -2,7 +2,7 @@
 //!
 //! This is the **Subtle pole**: ephemeral computation state for FastRP.
 
-use crate::concurrency::{Concurrency, TerminationFlag};
+use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::ml::core::features::{feature_extraction, AnyFeatureExtractor, FeatureConsumer};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::Graph;

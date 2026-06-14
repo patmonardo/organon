@@ -3,7 +3,7 @@
 
 use std::fmt;
 
-use crate::mem::Estimate;
+use crate::task::memory::Estimate;
 
 /// A node in a decision tree, either a split node or a leaf.
 ///

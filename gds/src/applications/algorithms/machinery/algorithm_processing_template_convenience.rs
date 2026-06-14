@@ -7,7 +7,7 @@
 //!
 //! This file keeps that "one obvious entry point per mode" surface.
 
-use crate::concurrency::{Concurrency, TerminationFlag};
+use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::core::loading::GraphResources;
 use crate::core::utils::progress::{ProgressTracker, Task};
 

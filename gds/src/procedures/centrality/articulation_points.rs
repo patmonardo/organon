@@ -17,11 +17,11 @@ use crate::algo::articulation_points::{
 };
 use crate::collections::backends::vec::VecDouble;
 use crate::collections::BitSet;
-use crate::concurrency::Concurrency;
+use crate::task::concurrency::Concurrency;
 use crate::core::utils::progress::{
     EmptyTaskRegistryFactory, JobId, ProgressTracker, TaskProgressTracker, TaskRegistryFactory,
 };
-use crate::mem::MemoryRange;
+use crate::task::memory::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use crate::types::properties::node::DefaultDoubleNodePropertyValues;

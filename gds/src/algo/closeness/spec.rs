@@ -4,7 +4,7 @@
 //! - `org.neo4j.gds.closeness.ClosenessCentrality`
 //! - `org.neo4j.gds.closeness.ClosenessCentralityAlgorithmFactory` (progress task layout)
 
-use crate::concurrency::{Concurrency, TerminationFlag};
+use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::config::validation::ConfigError;
 use crate::core::utils::progress::{
     EmptyTaskRegistryFactory, JobId, ProgressTracker, Task, TaskProgressTracker, Tasks,

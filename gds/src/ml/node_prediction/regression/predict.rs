@@ -2,9 +2,9 @@
 //! 1:1 translation of NodeRegressionPredict.java
 
 use crate::collections::HugeDoubleArray;
-use crate::concurrency::parallel_util::parallel_for_each_node;
-use crate::concurrency::Concurrency;
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::parallel_util::parallel_for_each_node;
+use crate::task::concurrency::Concurrency;
+use crate::task::concurrency::TerminationFlag;
 use crate::core::utils::progress::LeafTask;
 use crate::core::utils::progress::ProgressTracker;
 use crate::core::utils::progress::TaskProgressTracker;

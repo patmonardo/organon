@@ -7,7 +7,7 @@
 //! - Provide neighbor access
 //! - Own the top-level pipeline (farness -> closeness)
 
-use crate::concurrency::{Concurrency, TerminatedException, TerminationFlag};
+use crate::task::concurrency::{Concurrency, TerminatedException, TerminationFlag};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::{Orientation, RelationshipType};
 use crate::types::graph::Graph;

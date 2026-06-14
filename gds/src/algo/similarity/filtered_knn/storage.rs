@@ -5,9 +5,9 @@ use crate::algo::similarity::knn::metrics::{
 use crate::algo::similarity::knn::KnnNnDescentConfig;
 use crate::algo::similarity::knn::KnnNnDescentStats;
 use crate::algo::similarity::knn::{KnnSamplerType, KnnStorageRuntime};
-use crate::concurrency::virtual_threads::Executor;
-use crate::concurrency::Concurrency;
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::virtual_threads::Executor;
+use crate::task::concurrency::Concurrency;
+use crate::task::concurrency::TerminationFlag;
 use crate::core::utils::progress::ProgressTracker;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::NodeLabel;

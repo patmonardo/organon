@@ -2,8 +2,8 @@
 
 use crate::algo::embeddings::graphsage::algo::graph_sage::GraphSage;
 use crate::algo::embeddings::graphsage::algo::graph_sage_model_resolver::GraphSageModelResolver;
-use crate::concurrency::Concurrency;
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::Concurrency;
+use crate::task::concurrency::TerminationFlag;
 use crate::core::model::ModelCatalog;
 use crate::core::utils::progress::TaskProgressTracker;
 use crate::types::graph::Graph;

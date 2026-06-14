@@ -1,7 +1,7 @@
 // Feature and label extraction for link prediction.
 
 use super::FeaturesAndLabels;
-use crate::concurrency::{Concurrency, TerminationFlag};
+use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::projection::eval::pipeline::link_pipeline::{LinkFeatureExtractor, LinkFeatureStep};
 use crate::types::graph::Graph;
 

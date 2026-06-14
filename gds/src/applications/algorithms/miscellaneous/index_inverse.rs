@@ -1,7 +1,7 @@
 //! IndexInverse dispatch handler.
 
 use crate::applications::algorithms::miscellaneous::err;
-use crate::concurrency::Concurrency;
+use crate::task::concurrency::Concurrency;
 use crate::core::loading::CatalogLoader;
 use crate::types::catalog::GraphCatalog;
 use crate::types::prelude::GraphStore;

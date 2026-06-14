@@ -8,11 +8,11 @@
 //! the computation has been cancelled; callers should convert that panic into an
 //! error using `catch_unwind` if they need a `Result` surface.
 
-use crate::concurrency::Concurrency;
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::Concurrency;
+use crate::task::concurrency::TerminationFlag;
 use crate::core::utils::progress::tasks::LogLevel;
 use crate::core::utils::progress::ProgressTracker;
-use crate::mem::MemoryRange;
+use crate::task::memory::MemoryRange;
 
 pub struct TerminationAwareProgressTracker<'a> {
     inner: &'a mut dyn ProgressTracker,

@@ -5,7 +5,7 @@
 
 use crate::algo::algorithms::scaling::Scaler;
 use crate::algo::scale_properties::spec::ScalePropertiesResult;
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::TerminationFlag;
 use crate::projection::eval::algorithm::AlgorithmError;
 use std::collections::HashMap;
 use std::sync::Arc;

@@ -1,8 +1,8 @@
 //! Java: `GraphSageModelTrainer`.
 
 use crate::collections::HugeObjectArray;
-use crate::concurrency::virtual_threads::RunWithConcurrency;
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::virtual_threads::RunWithConcurrency;
+use crate::task::concurrency::TerminationFlag;
 use crate::core::model::ModelCatalogCustomInfo;
 use crate::ml::core::computation_context::ComputationContext;
 use crate::ml::core::functions::{ConstantScale, ElementSum, L2NormSquared, Weights};
@@ -57,7 +57,7 @@ mod tests {
     use crate::algo::embeddings::graphsage::types::{
         ActivationFunctionType, AggregatorType, GraphSageTrainConfig,
     };
-    use crate::concurrency::Concurrency;
+    use crate::task::concurrency::Concurrency;
     use crate::types::graph_store::DefaultGraphStore;
     use crate::types::random::{RandomGraphConfig, RandomRelationshipConfig};
     use crate::types::schema::NodeLabel;

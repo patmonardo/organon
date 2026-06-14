@@ -5,8 +5,8 @@ use super::node_classification_training_pipeline::NodeClassificationTrainingPipe
 use crate::core::utils::progress::tasks::progress_tracker::NoopProgressTracker;
 use crate::core::utils::progress::tasks::progress_tracker::ProgressTracker;
 use crate::core::utils::progress::tasks::Task;
-use crate::mem::MemoryEstimation;
-use crate::mem::MemoryEstimations;
+use crate::task::memory::MemoryEstimation;
+use crate::task::memory::MemoryEstimations;
 use crate::projection::eval::algorithm::ExecutionContext;
 use crate::projection::eval::pipeline::node_pipeline::node_property_pipeline_base_train_config::NodePropertyPipelineBaseTrainConfig;
 use crate::projection::eval::pipeline::node_pipeline::NodeFeatureProducer;

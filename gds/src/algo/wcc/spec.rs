@@ -2,7 +2,7 @@
 
 use super::WccComputationRuntime;
 use super::WccStorageRuntime;
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::TerminationFlag;
 use crate::config::validation::ConfigError;
 use crate::core::utils::progress::TaskProgressTracker;
 use crate::core::utils::progress::Tasks;

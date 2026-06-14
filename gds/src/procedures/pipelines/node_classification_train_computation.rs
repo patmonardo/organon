@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use crate::applications::algorithms::machinery::AlgorithmMachinery;
-use crate::concurrency::Concurrency;
+use crate::task::concurrency::Concurrency;
 use crate::core::utils::progress::tasks::progress_tracker::NoopProgressTracker;
 use crate::projection::eval::pipeline::node_pipeline::NodeClassificationModelResult;
 use crate::projection::eval::pipeline::node_pipeline::NodeClassificationPipelineTrainConfig;

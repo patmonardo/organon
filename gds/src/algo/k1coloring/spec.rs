@@ -2,8 +2,8 @@
 
 use crate::algo::k1coloring::K1ColoringComputationRuntime;
 use crate::algo::k1coloring::K1ColoringStorageRuntime;
-use crate::concurrency::Concurrency;
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::Concurrency;
+use crate::task::concurrency::TerminationFlag;
 use crate::config::validation::ConfigError;
 use crate::core::utils::partition::DEFAULT_BATCH_SIZE;
 use crate::core::utils::progress::EmptyTaskRegistryFactory;

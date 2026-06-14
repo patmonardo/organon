@@ -1,7 +1,7 @@
 //! Feature bagger for random feature selection in decision trees.
 //!
 
-use crate::mem::{Estimate, MemoryRange};
+use crate::task::memory::{Estimate, MemoryRange};
 use crate::ml::core::samplers::IntUniformSamplerFromRange;
 
 /// Samples a subset of features for each split (feature bagging).

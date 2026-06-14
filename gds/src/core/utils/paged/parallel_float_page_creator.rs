@@ -21,7 +21,7 @@
 //! - Property values for graph analytics
 //! - Fast setup of floating-point lookup tables
 
-use crate::concurrency::Concurrency;
+use crate::task::concurrency::Concurrency;
 use crate::core::utils::paged::{PageAllocator, PageAllocatorFactory};
 use std::sync::Arc;
 
@@ -39,7 +39,7 @@ use std::sync::Arc;
 ///
 /// ```
 /// use gds::core::utils::paged::ParallelFloatPageCreator;
-/// use gds::concurrency::Concurrency;
+/// use gds::task::concurrency::Concurrency;
 ///
 /// // Identity mapping for 1 billion elements
 /// let creator = ParallelFloatPageCreator::identity(Concurrency::of(8));
@@ -70,7 +70,7 @@ impl ParallelFloatPageCreator {
     ///
     /// ```
     /// use gds::core::utils::paged::ParallelFloatPageCreator;
-    /// use gds::concurrency::Concurrency;
+    /// use gds::task::concurrency::Concurrency;
     ///
     /// // Create pages with square root values
     /// let creator = ParallelFloatPageCreator::of(
@@ -109,7 +109,7 @@ impl ParallelFloatPageCreator {
     ///
     /// ```
     /// use gds::core::utils::paged::ParallelFloatPageCreator;
-    /// use gds::concurrency::Concurrency;
+    /// use gds::task::concurrency::Concurrency;
     ///
     /// // Create identity mapping for 1 million elements
     /// let creator = ParallelFloatPageCreator::identity(Concurrency::of(8));
@@ -138,7 +138,7 @@ impl ParallelFloatPageCreator {
     ///
     /// ```
     /// use gds::core::utils::paged::ParallelFloatPageCreator;
-    /// use gds::concurrency::Concurrency;
+    /// use gds::task::concurrency::Concurrency;
     ///
     /// // Create zero-initialized pages
     /// let creator = ParallelFloatPageCreator::pass_through(Concurrency::of(4));
@@ -171,7 +171,7 @@ impl ParallelFloatPageCreator {
     ///
     /// ```
     /// use gds::core::utils::paged::ParallelFloatPageCreator;
-    /// use gds::concurrency::Concurrency;
+    /// use gds::task::concurrency::Concurrency;
     ///
     /// // Create pages with custom values
     /// let creator = ParallelFloatPageCreator::of(

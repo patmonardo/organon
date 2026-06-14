@@ -21,7 +21,7 @@
 //! - Bulk initialization of sparse data structures
 //! - Fast setup of lookup tables and mappings
 
-use crate::concurrency::Concurrency;
+use crate::task::concurrency::Concurrency;
 use crate::core::utils::paged::{PageAllocator, PageAllocatorFactory};
 use std::sync::Arc;
 
@@ -39,7 +39,7 @@ use std::sync::Arc;
 ///
 /// ```
 /// use gds::core::utils::paged::ParallelLongPageCreator;
-/// use gds::concurrency::Concurrency;
+/// use gds::task::concurrency::Concurrency;
 ///
 /// // Identity mapping for 1 billion elements
 /// let creator = ParallelLongPageCreator::identity(Concurrency::of(8));
@@ -70,7 +70,7 @@ impl ParallelLongPageCreator {
     ///
     /// ```
     /// use gds::core::utils::paged::ParallelLongPageCreator;
-    /// use gds::concurrency::Concurrency;
+    /// use gds::task::concurrency::Concurrency;
     ///
     /// // Create pages with squared values
     /// let creator = ParallelLongPageCreator::of(
@@ -109,7 +109,7 @@ impl ParallelLongPageCreator {
     ///
     /// ```
     /// use gds::core::utils::paged::ParallelLongPageCreator;
-    /// use gds::concurrency::Concurrency;
+    /// use gds::task::concurrency::Concurrency;
     ///
     /// // Create node ID mapping for graph with 1M nodes
     /// let creator = ParallelLongPageCreator::identity(Concurrency::of(8));
@@ -140,7 +140,7 @@ impl ParallelLongPageCreator {
     ///
     /// ```
     /// use gds::core::utils::paged::ParallelLongPageCreator;
-    /// use gds::concurrency::Concurrency;
+    /// use gds::task::concurrency::Concurrency;
     ///
     /// // Allocate pages without initialization
     /// let creator = ParallelLongPageCreator::pass_through(Concurrency::of(4));
@@ -173,7 +173,7 @@ impl ParallelLongPageCreator {
     ///
     /// ```
     /// use gds::core::utils::paged::ParallelLongPageCreator;
-    /// use gds::concurrency::Concurrency;
+    /// use gds::task::concurrency::Concurrency;
     ///
     /// let creator = ParallelLongPageCreator::identity(Concurrency::of(8));
     /// let pages = creator.create_pages(10_000);
@@ -226,7 +226,7 @@ impl ParallelLongPageCreator {
     ///
     /// ```
     /// use gds::core::utils::paged::ParallelLongPageCreator;
-    /// use gds::concurrency::Concurrency;
+    /// use gds::task::concurrency::Concurrency;
     ///
     /// let creator = ParallelLongPageCreator::identity(Concurrency::of(4));
     /// let mut pages = vec![Vec::new(); 100];

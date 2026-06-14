@@ -7,7 +7,7 @@ use crate::applications::algorithms::machinery::{
 use crate::applications::algorithms::similarity::{
     err, get_array, get_f64, get_str, get_u64, timings_json, CommonRequest, Mode,
 };
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::TerminationFlag;
 use crate::core::loading::{CatalogLoader, GraphResources};
 use crate::core::utils::progress::{JobId, ProgressTracker, TaskRegistryFactories, Tasks};
 use crate::procedures::similarity::knn::KnnFacade;

@@ -5,7 +5,7 @@
 
 use crate::collections::cursor::{HugeCursor, HugeCursorSupport, PagedCursor, SinglePageCursor};
 use crate::collections::PageUtil;
-use crate::concurrency::Concurrency;
+use crate::task::concurrency::Concurrency;
 use crate::core::utils::paged::ParallelDoublePageCreator;
 
 /// Maximum size for single-page arrays
@@ -109,7 +109,7 @@ impl HugeDoubleArray {
     ///
     /// ```
     /// use gds::collections::huge_array::HugeDoubleArray;
-    /// use gds::concurrency::Concurrency;
+    /// use gds::task::concurrency::Concurrency;
     ///
     /// // Identity mapping
     /// let array = HugeDoubleArray::with_generator(
@@ -760,7 +760,7 @@ mod tests {
 
     #[test]
     fn test_with_generator_small_array() {
-        use crate::concurrency::Concurrency;
+        use crate::task::concurrency::Concurrency;
 
         // Small array should use single-page implementation
         let array = HugeDoubleArray::with_generator(1000, Concurrency::of(4), |i| i as f64);
@@ -776,7 +776,7 @@ mod tests {
 
     #[test]
     fn test_with_generator_large_array() {
-        use crate::concurrency::Concurrency;
+        use crate::task::concurrency::Concurrency;
 
         // Large array should use paged implementation
         let size = MAX_ARRAY_LENGTH + 10000;
@@ -793,7 +793,7 @@ mod tests {
 
     #[test]
     fn test_with_generator_custom_computation() {
-        use crate::concurrency::Concurrency;
+        use crate::task::concurrency::Concurrency;
 
         // Test with sqrt computation
         let size = 10_000;
@@ -807,7 +807,7 @@ mod tests {
 
     #[test]
     fn test_with_generator_parallel_consistency() {
-        use crate::concurrency::Concurrency;
+        use crate::task::concurrency::Concurrency;
 
         // Test that different concurrency levels produce same results
         let size = 100_000;
@@ -830,7 +830,7 @@ mod tests {
 
     #[test]
     fn test_with_generator_million_elements() {
-        use crate::concurrency::Concurrency;
+        use crate::task::concurrency::Concurrency;
 
         // Test with 10 million elements
         let size = 10_000_000;
@@ -850,7 +850,7 @@ mod tests {
 
     #[test]
     fn test_with_generator_identity_mapping() {
-        use crate::concurrency::Concurrency;
+        use crate::task::concurrency::Concurrency;
 
         let array = HugeDoubleArray::with_generator(1000, Concurrency::of(4), |i| i as f64);
 
@@ -861,7 +861,7 @@ mod tests {
 
     #[test]
     fn test_with_generator_constant_values() {
-        use crate::concurrency::Concurrency;
+        use crate::task::concurrency::Concurrency;
 
         let array = HugeDoubleArray::with_generator(1000, Concurrency::of(4), |_| 3.0);
 
@@ -872,7 +872,7 @@ mod tests {
 
     #[test]
     fn test_with_generator_zero_values() {
-        use crate::concurrency::Concurrency;
+        use crate::task::concurrency::Concurrency;
 
         let array = HugeDoubleArray::with_generator(1000, Concurrency::of(4), |_| 0.0);
 
@@ -883,7 +883,7 @@ mod tests {
 
     #[test]
     fn test_with_generator_alternating_pattern() {
-        use crate::concurrency::Concurrency;
+        use crate::task::concurrency::Concurrency;
 
         let array = HugeDoubleArray::with_generator(100, Concurrency::of(4), |i| {
             if i % 2 == 0 {

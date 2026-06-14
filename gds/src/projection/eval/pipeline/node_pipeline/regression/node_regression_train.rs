@@ -2,10 +2,10 @@ use super::node_regression_pipeline_train_config::NodeRegressionPipelineTrainCon
 use super::node_regression_train_result::NodeRegressionTrainResult;
 use super::node_regression_training_pipeline::NodeRegressionTrainingPipeline;
 use crate::collections::HugeDoubleArray;
-use crate::concurrency::{Concurrency, TerminationFlag};
+use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::core::model::ModelCatalog;
 use crate::core::utils::progress::{LeafTask, ProgressTracker, Task, TaskProgressTracker, Tasks};
-use crate::mem::{Estimate, MemoryEstimation, MemoryEstimations, MemoryRange};
+use crate::task::memory::{Estimate, MemoryEstimation, MemoryEstimations, MemoryRange};
 use crate::ml::metrics::regression::RegressionMetric;
 use crate::ml::metrics::{Metric, ModelCandidateStats};
 use crate::ml::models::linear_regression::LinearRegressionTrainConfig;

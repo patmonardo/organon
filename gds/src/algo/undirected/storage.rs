@@ -7,7 +7,7 @@
 
 use super::spec::{ToUndirectedConfig, ToUndirectedResult};
 use super::ToUndirectedComputationRuntime;
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::TerminationFlag;
 use crate::core::utils::progress::ProgressTracker;
 use crate::core::Aggregation as CoreAggregation;
 use crate::projection::{Orientation, RelationshipType};

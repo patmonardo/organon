@@ -43,7 +43,7 @@ use crate::algo::astar::{
     AStarResultBuilder, AStarStats, AStarStorageRuntime, AStarWriteSummary,
 };
 use crate::core::utils::progress::TaskProgressTracker;
-use crate::mem::MemoryRange;
+use crate::task::memory::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::relationship_type::RelationshipType;
 use crate::projection::Orientation;

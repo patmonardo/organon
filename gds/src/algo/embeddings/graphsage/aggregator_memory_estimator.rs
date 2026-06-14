@@ -1,6 +1,6 @@
 //! Java: `AggregatorMemoryEstimator`.
 
-use crate::mem::MemoryRange;
+use crate::task::memory::MemoryRange;
 
 pub trait AggregatorMemoryEstimator {
     fn estimate(

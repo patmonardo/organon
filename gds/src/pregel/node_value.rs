@@ -4,7 +4,7 @@
 //! Pregel execution. Properties are stored in columnar HugeArrays for memory efficiency.
 
 use crate::collections::{HugeDoubleArray, HugeLongArray, HugeObjectArray};
-use crate::concurrency::Concurrency;
+use crate::task::concurrency::Concurrency;
 use crate::pregel::{DefaultValue, Element, PregelSchema};
 use crate::types::ValueType;
 use std::collections::HashMap;

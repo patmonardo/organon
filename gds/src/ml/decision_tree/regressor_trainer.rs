@@ -6,7 +6,7 @@
 //!
 
 use crate::collections::HugeDoubleArray;
-use crate::mem::Estimate;
+use crate::task::memory::Estimate;
 use crate::ml::decision_tree::{
     DecisionTreeTrainer, DecisionTreeTrainerConfig, FeatureBagger, Group, ImpurityCriterion,
     MSEImpurityData, SplitMeanSquaredError, TreeNode,

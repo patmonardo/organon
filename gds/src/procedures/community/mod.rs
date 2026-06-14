@@ -12,7 +12,7 @@ pub mod scc;
 pub mod triangle;
 pub mod wcc;
 
-use crate::concurrency::Concurrency;
+use crate::task::concurrency::Concurrency;
 use crate::core::utils::progress::{
     EmptyTaskRegistryFactory, JobId, LeafTask, Task, TaskProgressTracker, TaskRegistry,
     TaskRegistryFactory,

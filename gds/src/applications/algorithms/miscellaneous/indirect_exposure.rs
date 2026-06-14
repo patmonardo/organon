@@ -6,7 +6,7 @@ use crate::applications::algorithms::machinery::{
     StatsResultBuilder,
 };
 use crate::applications::algorithms::miscellaneous::{err, timings_json};
-use crate::concurrency::{Concurrency, TerminationFlag};
+use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::core::loading::{CatalogLoader, GraphResources};
 use crate::core::utils::progress::{JobId, ProgressTracker, TaskRegistryFactories, Tasks};
 use crate::procedures::miscellaneous::IndirectExposureFacade;

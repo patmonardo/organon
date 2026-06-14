@@ -4,7 +4,7 @@ use crate::algo::embeddings::graphsage::{
     GraphSageMemoryEstimateDefinition, GraphSageTrainAlgorithmFactory, GraphSageTrainConfig,
 };
 #[cfg(test)]
-use crate::concurrency::{Concurrency, TerminationFlag};
+use crate::task::concurrency::{Concurrency, TerminationFlag};
 #[cfg(test)]
 use crate::core::model::InMemoryModelCatalog;
 #[cfg(test)]
@@ -14,7 +14,7 @@ use crate::core::ConcreteGraphDimensions;
 #[cfg(test)]
 use crate::core::ModelCatalog;
 #[cfg(test)]
-use crate::mem::memory_estimation::MemoryEstimation;
+use crate::task::memory::memory_estimation::MemoryEstimation;
 #[cfg(test)]
 use crate::types::graph::graph::Graph;
 #[cfg(test)]

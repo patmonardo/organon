@@ -2,7 +2,7 @@
 //!
 //! Java package: `org.neo4j.gds.embeddings.graphsage` (+ `...graphsage.algo` for configs).
 
-use crate::concurrency::Concurrency;
+use crate::task::concurrency::Concurrency;
 use crate::config::base_types::{BaseConfig, Config};
 use crate::config::validation::ConfigError;
 use crate::core::model::ModelConfig;

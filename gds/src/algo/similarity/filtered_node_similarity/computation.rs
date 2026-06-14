@@ -1,6 +1,6 @@
 use super::storage::FilteredNodeSimilarityStorageRuntime;
 use crate::algo::similarity::node_similarity::{NodeSimilarityConfig, NodeSimilarityResult};
-use crate::concurrency::{TerminatedException, TerminationFlag};
+use crate::task::concurrency::{TerminatedException, TerminationFlag};
 use crate::types::graph::graph::Graph;
 use crate::types::graph::MappedNodeId;
 use std::collections::HashSet;

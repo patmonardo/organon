@@ -1,7 +1,7 @@
 use super::metrics::{KnnNodePropertySpec, SimilarityComputer, SimilarityMetric};
 use super::{KnnComputationResult, KnnComputationRuntime, KnnNnDescentConfig, KnnNnDescentStats};
-use crate::concurrency::virtual_threads::Executor;
-use crate::concurrency::{Concurrency, TerminationFlag};
+use crate::task::concurrency::virtual_threads::Executor;
+use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::core::utils::progress::ProgressTracker;
 use crate::ml::core::samplers::RandomWalkSampler;
 use crate::projection::eval::algorithm::AlgorithmError;

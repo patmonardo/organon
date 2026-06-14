@@ -12,9 +12,9 @@ use crate::algo::kspanningtree::{
     KSpanningTreeConfig, KSpanningTreeMutateResult, KSpanningTreeResult,
     KSpanningTreeResultBuilder, KSpanningTreeRow, KSpanningTreeStats,
 };
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::TerminationFlag;
 use crate::core::utils::progress::{EmptyTaskRegistryFactory, TaskRegistryFactory, Tasks};
-use crate::mem::MemoryRange;
+use crate::task::memory::MemoryRange;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};

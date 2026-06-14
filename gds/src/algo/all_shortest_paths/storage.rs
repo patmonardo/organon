@@ -7,7 +7,7 @@
 //! **Key Features**: Multi-source parallelization, weighted/unweighted support, streaming results
 
 use crate::algo::msbfs::{AggregatedNeighborProcessingMsBfs, OMEGA};
-use crate::concurrency::{install_with_concurrency, Concurrency, TerminationFlag};
+use crate::task::concurrency::{install_with_concurrency, Concurrency, TerminationFlag};
 use crate::core::utils::progress::ProgressTracker;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::Graph;

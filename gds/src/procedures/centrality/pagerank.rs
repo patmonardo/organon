@@ -37,13 +37,13 @@ use crate::algo::pagerank::{
     PageRankResultBuilder, PageRankStats, PageRankVariant,
 };
 use crate::collections::backends::vec::VecDouble;
-use crate::concurrency::Concurrency;
+use crate::task::concurrency::Concurrency;
 use crate::core::graph_dimensions::ConcreteGraphDimensions;
 use crate::core::utils::progress::ProgressTracker;
 use crate::core::utils::progress::{
     EmptyTaskRegistryFactory, JobId, TaskProgressTracker, TaskRegistryFactory,
 };
-use crate::mem::{MemoryEstimation, MemoryRange};
+use crate::task::memory::{MemoryEstimation, MemoryRange};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::Orientation;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};

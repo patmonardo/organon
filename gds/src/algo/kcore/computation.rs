@@ -7,7 +7,7 @@
 //! - `org.neo4j.gds.kcore.NodeProvider`
 
 use crate::collections::HugeAtomicLongArray;
-use crate::concurrency::{install_with_concurrency, Concurrency, TerminationFlag};
+use crate::task::concurrency::{install_with_concurrency, Concurrency, TerminationFlag};
 use crate::core::utils::paged::{HugeLongArrayQueue, HugeLongArrayStack};
 use crate::core::utils::partition::{Partition, PartitionUtils};
 use crate::core::utils::progress::{NoopProgressTracker, ProgressTracker};

@@ -8,7 +8,7 @@
 use crate::applications::services::logging::Log;
 use crate::core::loading::GraphResources;
 use crate::errors::MemoryEstimationError;
-use crate::mem::MemoryTreeWithDimensions;
+use crate::task::memory::MemoryTreeWithDimensions;
 
 use super::{
     AlgoBaseConfigLike, Computation, DimensionTransformer, Label, MemoryGuard, MemoryGuardError,

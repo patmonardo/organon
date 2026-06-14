@@ -1,5 +1,5 @@
-use crate::concurrency::Concurrency;
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::Concurrency;
+use crate::task::concurrency::TerminationFlag;
 use crate::core::utils::progress::TaskProgressTracker;
 use crate::core::LogLevel as ProcedureLogLevel;
 use crate::ml::models::linear_regression::{LinearRegressionTrainConfig, LinearRegressionTrainer};

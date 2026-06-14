@@ -1,5 +1,5 @@
-use crate::concurrency::Concurrency;
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::Concurrency;
+use crate::task::concurrency::TerminationFlag;
 use crate::core::utils::progress::{ProgressTracker, TaskProgressTracker, Tasks};
 use crate::ml::metrics::ModelSpecificMetricsHandler;
 use crate::ml::models::logistic_regression::{

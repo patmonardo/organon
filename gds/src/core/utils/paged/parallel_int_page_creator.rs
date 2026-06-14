@@ -21,7 +21,7 @@
 //! - Compact index mappings
 //! - Fast setup of integer lookup tables
 
-use crate::concurrency::Concurrency;
+use crate::task::concurrency::Concurrency;
 use crate::core::utils::paged::{PageAllocator, PageAllocatorFactory};
 use std::sync::Arc;
 
@@ -39,7 +39,7 @@ use std::sync::Arc;
 ///
 /// ```
 /// use gds::core::utils::paged::ParallelIntPageCreator;
-/// use gds::concurrency::Concurrency;
+/// use gds::task::concurrency::Concurrency;
 ///
 /// // Identity mapping for 1 billion elements
 /// let creator = ParallelIntPageCreator::identity(Concurrency::of(8));
@@ -66,7 +66,7 @@ impl ParallelIntPageCreator {
     ///
     /// ```
     /// use gds::core::utils::paged::ParallelIntPageCreator;
-    /// use gds::concurrency::Concurrency;
+    /// use gds::task::concurrency::Concurrency;
     ///
     /// // Create pages with modulo values
     /// let creator = ParallelIntPageCreator::of(
@@ -101,7 +101,7 @@ impl ParallelIntPageCreator {
     ///
     /// ```
     /// use gds::core::utils::paged::ParallelIntPageCreator;
-    /// use gds::concurrency::Concurrency;
+    /// use gds::task::concurrency::Concurrency;
     ///
     /// let creator = ParallelIntPageCreator::identity(Concurrency::of(8));
     /// let pages = creator.create_pages(10_000);
@@ -126,7 +126,7 @@ impl ParallelIntPageCreator {
     ///
     /// ```
     /// use gds::core::utils::paged::ParallelIntPageCreator;
-    /// use gds::concurrency::Concurrency;
+    /// use gds::task::concurrency::Concurrency;
     ///
     /// let creator = ParallelIntPageCreator::pass_through(Concurrency::of(4));
     /// let mut pages = creator.create_pages(10_000);
@@ -147,7 +147,7 @@ impl ParallelIntPageCreator {
     ///
     /// ```
     /// use gds::core::utils::paged::ParallelIntPageCreator;
-    /// use gds::concurrency::Concurrency;
+    /// use gds::task::concurrency::Concurrency;
     ///
     /// let creator = ParallelIntPageCreator::identity(Concurrency::of(8));
     /// let pages = creator.create_pages(1_000_000);

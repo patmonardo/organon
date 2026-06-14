@@ -2,7 +2,7 @@ use super::intersect::{
     AdjacencyProvider, GraphIntersect, RelationshipIntersect, RelationshipIntersectConfig,
 };
 use super::spec::{TriangleResult, EXCLUDED_NODE_TRIANGLE_COUNT};
-use crate::concurrency::{install_with_concurrency, Concurrency, TerminationFlag};
+use crate::task::concurrency::{install_with_concurrency, Concurrency, TerminationFlag};
 use crate::core::utils::progress::{NoopProgressTracker, ProgressTracker};
 use rayon::prelude::*;
 use std::time::Duration;

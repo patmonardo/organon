@@ -4,8 +4,8 @@ use super::ConductanceComputationRuntime;
 use super::ConductanceStorageRuntime;
 // progress_task helper removed; construct a local base task when needed
 // use crate::algo::conductance::progress_task;
-use crate::concurrency::Concurrency;
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::Concurrency;
+use crate::task::concurrency::TerminationFlag;
 use crate::config::GraphStoreConfig;
 use crate::core::utils::progress::EmptyTaskRegistryFactory;
 use crate::core::utils::progress::JobId;

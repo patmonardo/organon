@@ -13,7 +13,7 @@
 
 pub const OMEGA: usize = 64;
 
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::TerminationFlag;
 
 #[derive(Debug, Clone)]
 pub struct AggregatedNeighborProcessingMsBfs {

@@ -4,7 +4,7 @@
 /// Contains memory validation logic for graph operations.
 use crate::applications::services::logging::Log;
 use crate::core::utils::progress::JobId;
-use crate::mem::{
+use crate::task::memory::{
     MemoryRange, MemoryReservationExceededException, MemoryTracker, MemoryTreeWithDimensions,
 };
 

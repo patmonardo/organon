@@ -9,8 +9,8 @@ use crate::algo::steiner_tree::{
     SteinerTreeComputationRuntime, SteinerTreeConfig, SteinerTreeMutateResult, SteinerTreeResult,
     SteinerTreeResultBuilder, SteinerTreeRow, SteinerTreeStats, SteinerTreeStorageRuntime,
 };
-use crate::concurrency::TerminationFlag;
-use crate::mem::MemoryRange;
+use crate::task::concurrency::TerminationFlag;
+use crate::task::memory::MemoryRange;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
 use crate::types::graph::id_map::NodeId;

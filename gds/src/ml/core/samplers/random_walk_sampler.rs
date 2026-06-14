@@ -30,7 +30,7 @@
 //! let walk = sampler.walk(start_node);
 //! ```
 
-use crate::mem::{Estimate, MemoryRange};
+use crate::task::memory::{Estimate, MemoryRange};
 use crate::types::graph::Graph;
 use rand::Rng;
 use rand::SeedableRng;

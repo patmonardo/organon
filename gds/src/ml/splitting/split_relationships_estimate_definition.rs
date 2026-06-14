@@ -1,9 +1,9 @@
 use super::SplitRelationshipsEstimateParameters;
 use crate::core::graph_dimensions::GraphDimensions;
-use crate::mem::MemoryEstimation;
-use crate::mem::MemoryEstimations;
-use crate::mem::MemoryRange;
-use crate::mem::MemoryTree;
+use crate::task::memory::MemoryEstimation;
+use crate::task::memory::MemoryEstimations;
+use crate::task::memory::MemoryRange;
+use crate::task::memory::MemoryTree;
 
 #[derive(Debug, Clone)]
 pub struct SplitRelationshipsEstimateDefinition {

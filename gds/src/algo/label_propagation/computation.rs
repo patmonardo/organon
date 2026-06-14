@@ -11,7 +11,7 @@
 //! - Tie-breaker matches Java: smallest label ID wins when weights equal.
 //! - Sequential iteration is required for proper convergence (Gauss-Seidel vs Jacobi).
 
-use crate::concurrency::{install_with_concurrency, Concurrency, TerminationFlag};
+use crate::task::concurrency::{install_with_concurrency, Concurrency, TerminationFlag};
 use crate::core::utils::progress::{NoopProgressTracker, ProgressTracker};
 use std::collections::HashMap;
 use std::sync::atomic::{AtomicBool, Ordering};

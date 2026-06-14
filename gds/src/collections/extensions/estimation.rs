@@ -5,7 +5,7 @@
 
 use crate::collections::Collections;
 use crate::config::{CollectionsBackend, Extension};
-use crate::mem::Estimate;
+use crate::task::memory::Estimate;
 use crate::types::ValueType;
 use std::collections::HashMap;
 use std::marker::PhantomData;

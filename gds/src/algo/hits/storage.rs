@@ -6,7 +6,7 @@
 //! - (eventually) termination and progress bridging
 
 use crate::algo::hits::HitsComputationRuntime;
-use crate::concurrency::Concurrency;
+use crate::task::concurrency::Concurrency;
 use crate::config::{ConcurrencyConfig, Config, IterationsConfig, PregelRuntimeConfig};
 use crate::core::utils::partition::Partitioning;
 use crate::core::utils::progress::ProgressTracker;

@@ -7,7 +7,7 @@
 //! - Optional per-node silhouette (centroid-based approximation).
 
 use super::spec::{KMeansConfig, KMeansResult, KMeansSamplerType};
-use crate::concurrency::{install_with_concurrency, Concurrency};
+use crate::task::concurrency::{install_with_concurrency, Concurrency};
 use rand::prelude::*;
 use rand::seq::index::sample;
 use rayon::prelude::*;

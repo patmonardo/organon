@@ -3,9 +3,9 @@
 //! This is the “real tracker”: it registers the base task via TaskRegistry,
 //! manages nested tasks, mutates task progress/volume, and emits logs.
 
-use crate::concurrency::Concurrency;
+use crate::task::concurrency::Concurrency;
 use crate::core::utils::progress::{JobId, TaskRegistry, TaskRegistryFactory};
-use crate::mem::MemoryRange;
+use crate::task::memory::MemoryRange;
 use std::sync::{Arc, Mutex};
 
 use super::{LogLevel, ProgressTracker, Status, Task, UNKNOWN_VOLUME};

@@ -1,5 +1,5 @@
 use super::GraphStoreLoader;
-use crate::mem::MemoryEstimation;
+use crate::task::memory::MemoryEstimation;
 
 /// Extended trait for creating graph stores with memory estimation.
 ///

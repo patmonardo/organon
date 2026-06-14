@@ -1,5 +1,5 @@
 use crate::collections::HugeAtomicDoubleArray;
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::TerminationFlag;
 
 /// Pure kernel helpers for degree centrality.
 ///

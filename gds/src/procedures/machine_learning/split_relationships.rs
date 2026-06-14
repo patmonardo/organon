@@ -5,9 +5,9 @@
 
 use crate::algo::algorithms::ConfigValidator;
 use crate::algo::algorithms::Result;
-use crate::concurrency::Concurrency;
+use crate::task::concurrency::Concurrency;
 use crate::core::graph_dimensions::ConcreteGraphDimensions;
-use crate::mem::{MemoryEstimation, MemoryRange};
+use crate::task::memory::{MemoryEstimation, MemoryRange};
 use crate::ml::splitting::{
     InMemoryRelationshipsBuilderFactory, SplitRelationships, SplitRelationshipsConfig,
     SplitRelationshipsEstimateDefinition, SplitRelationshipsParameters,

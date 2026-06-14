@@ -5,7 +5,7 @@
 
 use crate::collections::cursor::{HugeCursor, HugeCursorSupport, PagedCursor, SinglePageCursor};
 use crate::collections::{ArrayUtil, PageUtil};
-use crate::concurrency::Concurrency;
+use crate::task::concurrency::Concurrency;
 use crate::core::utils::paged::ParallelLongPageCreator;
 
 /// Maximum size for single-page arrays (from PageUtil)
@@ -166,7 +166,7 @@ impl HugeLongArray {
     ///
     /// ```
     /// use gds::collections::huge_array::HugeLongArray;
-    /// use gds::concurrency::Concurrency;
+    /// use gds::task::concurrency::Concurrency;
     ///
     /// // Create 1 billion node IDs in parallel
     /// let node_ids = HugeLongArray::with_generator(
@@ -849,7 +849,7 @@ mod tests {
 
     #[test]
     fn test_with_generator_small_array() {
-        use crate::concurrency::Concurrency;
+        use crate::task::concurrency::Concurrency;
 
         // Small array should use single-page implementation
         let array = HugeLongArray::with_generator(1000, Concurrency::of(4), |i| i as i64);
@@ -865,7 +865,7 @@ mod tests {
 
     #[test]
     fn test_with_generator_large_array() {
-        use crate::concurrency::Concurrency;
+        use crate::task::concurrency::Concurrency;
 
         // Large array should use paged implementation
         let size = MAX_ARRAY_LENGTH + 10000;
@@ -882,7 +882,7 @@ mod tests {
 
     #[test]
     fn test_with_generator_identity_mapping() {
-        use crate::concurrency::Concurrency;
+        use crate::task::concurrency::Concurrency;
 
         // Test identity mapping for 1 million elements
         let array = HugeLongArray::with_generator(1_000_000, Concurrency::of(8), |i| i as i64);
@@ -895,7 +895,7 @@ mod tests {
 
     #[test]
     fn test_with_generator_custom_function() {
-        use crate::concurrency::Concurrency;
+        use crate::task::concurrency::Concurrency;
 
         // Test custom generator: squares
         let array = HugeLongArray::with_generator(1000, Concurrency::of(4), |i| (i * i) as i64);
@@ -908,7 +908,7 @@ mod tests {
 
     #[test]
     fn test_with_generator_parallel_consistency() {
-        use crate::concurrency::Concurrency;
+        use crate::task::concurrency::Concurrency;
 
         // Test that different concurrency levels produce same results
         let size = 100_000;
@@ -929,7 +929,7 @@ mod tests {
     #[test]
     #[ignore]
     fn test_with_generator_billion_elements() {
-        use crate::concurrency::Concurrency;
+        use crate::task::concurrency::Concurrency;
 
         // Test with 1 billion elements (this is fast with parallel creation!)
         let size = 1_000_000_000;
@@ -957,7 +957,7 @@ mod tests {
 
     #[test]
     fn test_with_generator_boundary_conditions() {
-        use crate::concurrency::Concurrency;
+        use crate::task::concurrency::Concurrency;
 
         // Test exact page boundary
         let page_size =
@@ -972,7 +972,7 @@ mod tests {
 
     #[test]
     fn test_with_generator_compatibility_with_operations() {
-        use crate::concurrency::Concurrency;
+        use crate::task::concurrency::Concurrency;
 
         // Verify that arrays created with with_generator work with all operations
         let mut array = HugeLongArray::with_generator(10000, Concurrency::of(4), |i| i as i64);

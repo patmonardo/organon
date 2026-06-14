@@ -7,9 +7,9 @@ use crate::algo::similarity::knn::{
     KnnResultRow, KnnStats, KnnStorageRuntime,
 };
 use crate::algo::similarity::knn::{KnnNodePropertySpec, SimilarityMetric};
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::TerminationFlag;
 use crate::core::utils::progress::{ProgressTracker, Tasks};
-use crate::mem::MemoryRange;
+use crate::task::memory::MemoryRange;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use std::sync::Arc;
 

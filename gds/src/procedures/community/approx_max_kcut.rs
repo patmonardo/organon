@@ -13,9 +13,9 @@ use crate::algo::approx_max_kcut::spec::{
 use crate::algo::approx_max_kcut::storage::ApproxMaxKCutStorageRuntime;
 use crate::algo::approx_max_kcut::ApproxMaxKCutComputationRuntime;
 use crate::collections::backends::vec::VecLong;
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::TerminationFlag;
 use crate::core::utils::progress::TaskRegistry;
-use crate::mem::{Estimate, MemoryRange};
+use crate::task::memory::{Estimate, MemoryRange};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use crate::types::properties::node::DefaultLongNodePropertyValues;

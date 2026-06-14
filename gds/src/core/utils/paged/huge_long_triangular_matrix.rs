@@ -1,5 +1,5 @@
 use crate::collections::HugeLongArray;
-use crate::mem::Estimate;
+use crate::task::memory::Estimate;
 
 use super::huge_matrices::{normalize_triangular_coordinates, triangular_index, triangular_size};
 use super::HugeLongSquareMatrix;
@@ -339,7 +339,7 @@ mod tests {
         let estimated = HugeLongTriangularMatrix::memory_estimation(10);
         // Should be greater than just the array due to struct overhead
         let size = crate::core::utils::paged::huge_matrices::triangular_size(10);
-        let array_memory = crate::mem::Estimate::size_of_long_array(size);
+        let array_memory = crate::task::memory::Estimate::size_of_long_array(size);
         assert!(estimated > array_memory);
     }
 }

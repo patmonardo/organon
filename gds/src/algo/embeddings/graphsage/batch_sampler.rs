@@ -1,6 +1,6 @@
 //! Java: `BatchSampler`.
 
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::TerminationFlag;
 use crate::core::utils::partition::{Partition, PartitionUtils};
 use crate::ml::core::samplers::WeightedUniformSampler;
 use crate::types::graph::Graph;

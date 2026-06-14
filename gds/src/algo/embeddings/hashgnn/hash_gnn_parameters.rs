@@ -1,4 +1,4 @@
-use crate::concurrency::Concurrency;
+use crate::task::concurrency::Concurrency;
 
 /// Config for generating random base features when no feature properties are provided.
 #[derive(Debug, Clone)]

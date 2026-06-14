@@ -15,9 +15,9 @@ use crate::algo::k1coloring::{
     K1ColoringStats, K1ColoringStorageRuntime, INITIAL_FORBIDDEN_COLORS,
 };
 use crate::collections::backends::vec::VecLong;
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::TerminationFlag;
 use crate::core::utils::progress::TaskRegistry;
-use crate::mem::{Estimate, MemoryRange};
+use crate::task::memory::{Estimate, MemoryRange};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use crate::types::properties::node::DefaultLongNodePropertyValues;

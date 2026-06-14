@@ -1,4 +1,4 @@
-use crate::mem::{MemoryEstimation, MemoryEstimations};
+use crate::task::memory::{MemoryEstimation, MemoryEstimations};
 use crate::ml::models::ClassifierData;
 use crate::ml::node_classification::estimate_predict_memory_with_derived_batch_size;
 

@@ -10,12 +10,12 @@ use crate::algo::bridges::{
     BridgesMutationSummary, BridgesResult, BridgesResultBuilder, BridgesRow, BridgesStats,
     STACK_EVENT_SIZE_BYTES,
 };
-use crate::concurrency::{Concurrency, TerminationFlag};
+use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::core::utils::progress::ProgressTracker;
 use crate::core::utils::progress::{
     EmptyTaskRegistryFactory, JobId, TaskProgressTracker, TaskRegistryFactory,
 };
-use crate::mem::MemoryRange;
+use crate::task::memory::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use crate::types::properties::relationship::DefaultRelationshipPropertyValues;

@@ -1,6 +1,6 @@
 use super::spec::{ConductanceConfig, ConductanceResult};
-use crate::concurrency::virtual_threads::RunWithConcurrency;
-use crate::concurrency::{Concurrency, TerminationFlag};
+use crate::task::concurrency::virtual_threads::RunWithConcurrency;
+use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::core::utils::partition::{DegreeFunction, DegreePartition, PartitionUtils};
 use crate::types::graph::Graph;
 use crate::types::properties::node::NodePropertyValues;

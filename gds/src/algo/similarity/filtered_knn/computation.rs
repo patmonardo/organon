@@ -2,8 +2,8 @@ use crate::algo::similarity::knn::metrics::SimilarityComputer;
 use crate::algo::similarity::knn::KnnComputationRuntime;
 use crate::algo::similarity::knn::KnnNnDescentConfig;
 use crate::algo::similarity::knn::KnnNnDescentStats;
-use crate::concurrency::virtual_threads::Executor;
-use crate::concurrency::{TerminatedException, TerminationFlag};
+use crate::task::concurrency::virtual_threads::Executor;
+use crate::task::concurrency::{TerminatedException, TerminationFlag};
 use std::sync::Arc;
 
 #[derive(Debug, Clone)]

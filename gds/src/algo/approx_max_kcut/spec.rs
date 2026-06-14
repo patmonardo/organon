@@ -2,8 +2,8 @@
 
 use super::ApproxMaxKCutComputationRuntime;
 use super::ApproxMaxKCutStorageRuntime;
-use crate::concurrency::Concurrency;
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::Concurrency;
+use crate::task::concurrency::TerminationFlag;
 use crate::config::validation::ConfigError;
 use crate::core::utils::progress::EmptyTaskRegistryFactory;
 use crate::core::utils::progress::JobId;

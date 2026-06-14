@@ -1,5 +1,5 @@
-use crate::concurrency::virtual_threads::{Executor, WorkerContext};
-use crate::concurrency::{Concurrency, TerminatedException, TerminationFlag};
+use crate::task::concurrency::virtual_threads::{Executor, WorkerContext};
+use crate::task::concurrency::{Concurrency, TerminatedException, TerminationFlag};
 use crate::types::graph::graph::Graph;
 use crate::types::graph::MappedNodeId;
 use std::collections::HashSet;

@@ -50,7 +50,7 @@
 //! ```
 
 use crate::collections::page_util::PageUtil;
-use crate::mem::bit_util::BitUtil;
+use crate::task::memory::bit_util::BitUtil;
 use std::sync::atomic::{AtomicI64, Ordering};
 use std::sync::{Arc, RwLock};
 

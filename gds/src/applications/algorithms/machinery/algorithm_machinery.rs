@@ -4,7 +4,7 @@
 //!
 //! Java reference: `AlgorithmMachinery.runAlgorithmsAndManageProgressTracker(...)`.
 
-use crate::concurrency::Concurrency;
+use crate::task::concurrency::Concurrency;
 use crate::core::utils::progress::ProgressTracker;
 
 pub struct AlgorithmMachinery;

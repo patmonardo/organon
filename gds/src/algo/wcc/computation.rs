@@ -9,8 +9,8 @@
 //! - Uses `HugeAtomicDisjointSetStruct` for wait-free parallel union-find.
 //! - Uses optional relationship-property threshold filtering (`property > threshold`).
 
-use crate::concurrency::virtual_threads::Executor;
-use crate::concurrency::{Concurrency, TerminationFlag};
+use crate::task::concurrency::virtual_threads::Executor;
+use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::core::utils::paged::dss::{DisjointSetStruct, HugeAtomicDisjointSetStruct};
 use crate::core::utils::partition::{Partition, PartitionUtils, DEFAULT_BATCH_SIZE};
 use crate::core::utils::progress::ProgressTracker;

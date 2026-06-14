@@ -1,7 +1,7 @@
 //! SCC Storage Runtime
 
 use super::{SccComputationResult, SccComputationRuntime};
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::TerminationFlag;
 use crate::core::utils::progress::ProgressTracker;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;

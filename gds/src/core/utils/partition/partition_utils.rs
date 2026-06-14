@@ -24,7 +24,7 @@
 //! ```
 
 use super::{DegreeFunction, DegreePartition, LazyDegreePartitionIterator, Partition};
-use crate::mem::BitUtil;
+use crate::task::memory::BitUtil;
 
 /// Minimum partition capacity as a fraction of the target batch size.
 const MIN_PARTITION_CAPACITY: f64 = 0.67;

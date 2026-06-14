@@ -5,7 +5,7 @@
 
 use crate::algo::harmonic::HarmonicComputationRuntime;
 use crate::algo::msbfs::{AggregatedNeighborProcessingMsBfs, OMEGA};
-use crate::concurrency::{
+use crate::task::concurrency::{
     virtual_threads::{Executor, WorkerContext},
     Concurrency, TerminatedException, TerminationFlag,
 };

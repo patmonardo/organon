@@ -1,11 +1,11 @@
 use crate::collections::HugeLongArray;
-use crate::concurrency::Concurrency;
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::Concurrency;
+use crate::task::concurrency::TerminationFlag;
 use crate::core::utils::progress::TaskProgressTracker;
-use crate::mem::Estimate;
-use crate::mem::MemoryEstimation;
-use crate::mem::MemoryEstimations;
-use crate::mem::MemoryRange;
+use crate::task::memory::Estimate;
+use crate::task::memory::MemoryEstimation;
+use crate::task::memory::MemoryEstimations;
+use crate::task::memory::MemoryRange;
 use crate::ml::core::batch::DEFAULT_BATCH_SIZE;
 use crate::ml::metrics::classification::ClassificationMetric;
 use crate::ml::models::Classifier;

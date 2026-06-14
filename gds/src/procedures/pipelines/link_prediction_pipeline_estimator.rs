@@ -1,4 +1,4 @@
-use crate::mem::{MemoryEstimation, MemoryEstimations};
+use crate::task::memory::{MemoryEstimation, MemoryEstimations};
 
 pub struct LinkPredictionPipelineEstimator;
 

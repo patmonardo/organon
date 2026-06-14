@@ -6,7 +6,7 @@ use crate::algo::embeddings::graphsage::graphsage_helper;
 use crate::algo::embeddings::graphsage::graphsage_model_trainer::GraphSageTrainMetrics;
 use crate::algo::embeddings::graphsage::types::GraphSageTrainConfig;
 use crate::collections::HugeObjectArray;
-use crate::concurrency::{Concurrency, TerminationFlag};
+use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::core::model::Model;
 use crate::core::utils::progress::TaskProgressTracker;
 use crate::types::graph::Graph;

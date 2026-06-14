@@ -37,7 +37,7 @@ use crate::algo::dfs::{
     DfsStats, DfsStorageRuntime, DfsWriteSummary,
 };
 use crate::core::utils::progress::{EmptyTaskRegistryFactory, TaskRegistryFactory, Tasks};
-use crate::mem::MemoryRange;
+use crate::task::memory::MemoryRange;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
 use crate::types::graph::id_map::NodeId;

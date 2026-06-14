@@ -1,5 +1,5 @@
 use super::Updater;
-use crate::mem::Estimate;
+use crate::task::memory::Estimate;
 use crate::ml::core::functions::Weights;
 use crate::ml::core::Tensor;
 use std::sync::Arc;

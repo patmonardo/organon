@@ -4,7 +4,7 @@ use crate::algo::embeddings::graphsage::types::{
     AggregatorType, GraphSageTrainMemoryEstimateParameters,
 };
 use crate::core::graph_dimensions::GraphDimensions;
-use crate::mem::{Estimate, MemoryEstimation, MemoryRange, MemoryTree};
+use crate::task::memory::{Estimate, MemoryEstimation, MemoryRange, MemoryTree};
 
 #[derive(Debug, Clone)]
 pub struct GraphSageTrainEstimateDefinition {

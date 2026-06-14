@@ -7,7 +7,7 @@
 
 use super::spec::{BellmanFordPathResult, BellmanFordResult};
 use super::BellmanFordComputationRuntime;
-use crate::concurrency::{install_with_concurrency, Concurrency};
+use crate::task::concurrency::{install_with_concurrency, Concurrency};
 use crate::core::utils::progress::{ProgressTracker, UNKNOWN_VOLUME};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::Graph;

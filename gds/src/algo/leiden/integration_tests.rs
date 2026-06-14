@@ -1,6 +1,6 @@
 use super::spec::LeidenConfig;
 use super::{AdjacencyGraph, LeidenComputationRuntime};
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::TerminationFlag;
 
 fn build_adj(node_count: usize, edges: &[(usize, usize, f64)]) -> AdjacencyGraph {
     let mut adj = vec![Vec::new(); node_count];

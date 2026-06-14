@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use crate::concurrency::{Concurrency, TerminationFlag};
+use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::core::utils::progress::{Task, TaskProgressTracker, Tasks};
 use crate::ml::link_models::LinkPredictionResult;
 use crate::ml::models::Classifier;

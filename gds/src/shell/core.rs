@@ -14,7 +14,7 @@ use crate::collections::dataset::{
 use crate::core::graph_dimensions::ConcreteGraphDimensions;
 use crate::core::utils::progress::{TaskProgressTracker, Tasks};
 use crate::form::{ProgramFeatureKind, ProgramFeatures};
-use crate::mem::{MemoryEstimations, MemoryRange, MemoryTree};
+use crate::task::memory::{MemoryEstimations, MemoryRange, MemoryTree};
 
 use super::{
     ShellAddress, ShellAlgebra, ShellFold, ShellHelp, ShellMoment, ShellMomentKind, ShellPipeline,

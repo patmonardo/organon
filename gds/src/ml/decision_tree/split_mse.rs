@@ -2,7 +2,7 @@
 //!
 
 use crate::collections::{HugeDoubleArray, HugeLongArray};
-use crate::mem::Estimate;
+use crate::task::memory::Estimate;
 use crate::ml::decision_tree::{ImpurityCriterion, ImpurityData, ImpurityDataAny};
 use std::any::Any;
 use std::sync::Arc;

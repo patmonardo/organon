@@ -1,6 +1,6 @@
 //! Top-K prediction driver for KGE.
 
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::TerminationFlag;
 use crate::core::utils::queue::BoundedLongLongPriorityQueue;
 use crate::types::ValueType;
 use rayon::prelude::*;

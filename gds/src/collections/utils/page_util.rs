@@ -19,7 +19,7 @@
 //! Example:      | 20 bits      |  12 bits (4KB)  |
 //! ```
 
-use crate::mem::BitUtil;
+use crate::task::memory::BitUtil;
 
 /// Utility for page-based memory management
 ///

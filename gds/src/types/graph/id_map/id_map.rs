@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-use crate::concurrency::Concurrency;
+use crate::task::concurrency::Concurrency;
 use crate::types::schema::NodeLabel;
 
 use super::{

@@ -1,7 +1,7 @@
 // Phase 3.2: LinkFeatureExtractor - Core feature extraction orchestrator
 
 use super::{LinkFeatureAppender, LinkFeatureStep};
-use crate::concurrency::{Concurrency, TerminationFlag};
+use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::types::graph::Graph;
 use rayon::prelude::*;
 

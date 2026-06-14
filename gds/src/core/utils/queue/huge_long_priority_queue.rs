@@ -1,5 +1,5 @@
 use crate::collections::{HugeDoubleArray, HugeLongArray};
-use crate::mem::Estimate;
+use crate::task::memory::Estimate;
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 enum QueueOrder {

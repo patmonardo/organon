@@ -7,7 +7,7 @@ use std::sync::OnceLock;
 
 use serde_json::Value;
 
-use crate::mem::MemoryEstimationResult;
+use crate::task::memory::MemoryEstimationResult;
 use crate::projection::eval::pipeline::link_pipeline::LinkPredictionSplitConfig;
 use crate::projection::eval::pipeline::node_pipeline::{
     NodeFeatureStep, NodePropertyPredictionSplitConfig,

@@ -10,7 +10,7 @@ use crate::algo::dag_longest_path::{
     DagLongestPathResult, DagLongestPathResultBuilder, DagLongestPathRow, DagLongestPathStats,
     DagLongestPathStorageRuntime,
 };
-use crate::mem::MemoryRange;
+use crate::task::memory::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
@@ -21,7 +21,7 @@ use std::time::Instant;
 
 // Import upgraded systems
 use crate::algo::algorithms::pathfinding::PathResult;
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::TerminationFlag;
 use crate::core::utils::progress::{TaskProgressTracker, TaskRegistryFactory, Tasks};
 
 /// DAG Longest Path algorithm builder

@@ -6,11 +6,11 @@
 //! - optional side effects
 //! - result rendering
 
-use crate::concurrency::{Concurrency, TerminationFlag};
+use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::core::loading::GraphResources;
 use crate::core::utils::progress::{ProgressTracker, Task};
 use crate::errors::MemoryEstimationError;
-use crate::mem::MemoryTreeWithDimensions;
+use crate::task::memory::MemoryTreeWithDimensions;
 
 use super::{
     AlgoBaseConfigLike, AlgorithmMachinery, AlgorithmProcessingTimings,

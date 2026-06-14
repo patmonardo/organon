@@ -5,8 +5,8 @@
 use crate::algo::degree_centrality::DegreeCentralityComputationRuntime;
 use crate::algo::degree_centrality::{DegreeCentralityStorageRuntime, Orientation};
 use crate::collections::backends::vec::VecDouble;
-use crate::concurrency::Concurrency;
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::Concurrency;
+use crate::task::concurrency::TerminationFlag;
 use crate::config::validation::ConfigError;
 use crate::core::utils::progress::{LeafTask, ProgressTracker, TaskProgressTracker, Tasks};
 use crate::define_algorithm_spec;

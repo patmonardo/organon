@@ -3,8 +3,8 @@
 //! This is a thin wrapper around another `ProgressTracker` that batches
 //! `log_progress(..)` calls to reduce overhead in tight loops.
 
-use crate::concurrency::Concurrency;
-use crate::mem::MemoryRange;
+use crate::task::concurrency::Concurrency;
+use crate::task::memory::MemoryRange;
 
 use super::tasks::{LogLevel, ProgressTracker};
 use super::BatchingProgressLogger;

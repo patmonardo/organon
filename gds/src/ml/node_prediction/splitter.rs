@@ -1,5 +1,5 @@
 use crate::collections::HugeLongArray;
-use crate::concurrency::Concurrency;
+use crate::task::concurrency::Concurrency;
 use crate::core::utils::paged::HugeMergeSort;
 use crate::core::utils::progress::ProgressTracker;
 use crate::core::utils::shuffle::ShuffleUtil;

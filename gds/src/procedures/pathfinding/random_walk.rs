@@ -10,8 +10,8 @@ use crate::algo::random_walk::{
     RandomWalkMutationSummary, RandomWalkResult, RandomWalkResultBuilder, RandomWalkRow,
     RandomWalkStats, RandomWalkStorageRuntime, RandomWalkWriteSummary,
 };
-use crate::concurrency::TerminationFlag;
-use crate::mem::MemoryRange;
+use crate::task::concurrency::TerminationFlag;
+use crate::task::memory::MemoryRange;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};

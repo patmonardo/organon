@@ -400,7 +400,7 @@ mod feature_bagger_tests {
 
 #[cfg(test)]
 mod mse_impurity_tests {
-    use crate::mem::Estimate;
+    use crate::task::memory::Estimate;
     use crate::ml::decision_tree::ImpurityData;
     use crate::ml::decision_tree::MSEImpurityData;
 

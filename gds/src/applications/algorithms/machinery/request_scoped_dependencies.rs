@@ -4,7 +4,7 @@
 //! - termination flag (cancellation)
 //! - progress task registry factory + job id (for trackers)
 
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::TerminationFlag;
 use crate::core::utils::progress::{JobId, TaskRegistryFactory};
 use std::sync::Arc;
 

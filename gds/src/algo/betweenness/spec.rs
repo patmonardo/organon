@@ -1,7 +1,7 @@
 //! Betweenness Centrality specification
 
 use crate::algo::betweenness::BetweennessCentralityComputationRuntime;
-use crate::concurrency::{Concurrency, TerminationFlag};
+use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::config::config_trait::ValidatedConfig;
 use crate::config::validation::ConfigError;
 use crate::core::utils::progress::LeafTask;

@@ -5,8 +5,8 @@
 //! We keep the API close to Java’s `ProgressTracker` interface, but expressed
 //! as a Rust trait.
 
-use crate::concurrency::Concurrency;
-use crate::mem::MemoryRange;
+use crate::task::concurrency::Concurrency;
+use crate::task::memory::MemoryRange;
 
 use super::{LogLevel, UNKNOWN_VOLUME};
 

@@ -7,7 +7,7 @@
 //! - aggregation (contract graph and iterate levels)
 
 use super::spec::{LeidenConfig, LeidenResult};
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::TerminationFlag;
 use rand::rngs::StdRng;
 use rand::{Rng, SeedableRng};
 use std::collections::{HashMap, HashSet, VecDeque};

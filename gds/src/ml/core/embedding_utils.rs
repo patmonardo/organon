@@ -3,7 +3,7 @@
 //! Translated from Java GDS ml-core EmbeddingUtils.java.
 //! This is a literal 1:1 translation following repository translation policy.
 
-use crate::concurrency::Concurrency;
+use crate::task::concurrency::Concurrency;
 use crate::types::graph::Graph;
 
 /// Retrieve a checked double array node property.

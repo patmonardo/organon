@@ -1,4 +1,4 @@
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::TerminationFlag;
 use std::error::Error as StdError;
 
 /// Trainer for ML pipelines with termination support.

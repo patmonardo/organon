@@ -7,7 +7,7 @@ mod tests {
 
     use crate::algo::hits::HitsComputationRuntime;
     use crate::algo::hits::HitsStorageRuntime;
-    use crate::concurrency::Concurrency;
+    use crate::task::concurrency::Concurrency;
     use crate::config::GraphStoreConfig;
     use crate::core::utils::progress::tasks::NoopProgressTracker;
     use crate::types::graph::RelationshipTopology;

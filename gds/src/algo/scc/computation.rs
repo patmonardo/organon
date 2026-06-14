@@ -4,7 +4,7 @@
 //! suitable for large graphs without relying on recursion.
 
 use crate::collections::HugeLongArray;
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::TerminationFlag;
 use crate::core::utils::paged::HugeLongArrayStack;
 use crate::core::utils::progress::ProgressTracker;
 use crate::types::graph::Graph;

@@ -1,7 +1,7 @@
 //! Lazy iterator that generates degree partitions on-demand.
 
 use super::{DegreeFunction, DegreePartition};
-use crate::mem::BitUtil;
+use crate::task::memory::BitUtil;
 
 /// This is a good guess to achieve smaller partitions
 const DIVISION_FACTOR: usize = 10;

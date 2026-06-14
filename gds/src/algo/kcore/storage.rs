@@ -5,7 +5,7 @@
 
 use super::spec::KCoreConfig;
 use super::{KCoreComputationResult, KCoreComputationRuntime};
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::TerminationFlag;
 use crate::core::utils::progress::ProgressTracker;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::Orientation;

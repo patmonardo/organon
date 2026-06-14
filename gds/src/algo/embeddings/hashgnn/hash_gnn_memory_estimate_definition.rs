@@ -5,7 +5,7 @@
 //! Rust GDS has a richer `mem` subsystem; this is currently a lightweight placeholder.
 
 use super::hash_gnn_parameters::HashGNNParameters;
-use crate::mem::Estimate;
+use crate::task::memory::Estimate;
 
 #[derive(Debug, Clone)]
 #[allow(dead_code)]

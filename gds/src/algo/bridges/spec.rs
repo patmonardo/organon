@@ -2,7 +2,7 @@
 //!
 //! Java parity reference: `org.neo4j.gds.bridges.Bridges`.
 
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::TerminationFlag;
 use crate::config::validation::ConfigError;
 use crate::core::utils::progress::{LeafTask, ProgressTracker, TaskProgressTracker, Tasks};
 use crate::core::LogLevel;

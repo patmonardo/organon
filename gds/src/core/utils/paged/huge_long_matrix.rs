@@ -1,5 +1,5 @@
 use crate::collections::HugeLongArray;
-use crate::mem::Estimate;
+use crate::task::memory::Estimate;
 
 /// Row-major matrix backed by a `HugeLongArray` for massive datasets.
 pub struct HugeLongMatrix {
@@ -207,7 +207,7 @@ mod tests {
     fn memory_estimation_accounts_for_array_and_struct() {
         let estimated = HugeLongMatrix::memory_estimation(10, 20);
         // Should be greater than just the array due to struct overhead
-        let array_memory = crate::mem::Estimate::size_of_long_array(200);
+        let array_memory = crate::task::memory::Estimate::size_of_long_array(200);
         assert!(estimated > array_memory);
     }
 }

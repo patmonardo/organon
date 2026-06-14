@@ -13,7 +13,7 @@ use super::{
     ScalarPropertyExtractor,
 };
 use crate::collections::HugeObjectArray;
-use crate::mem::Estimate;
+use crate::task::memory::Estimate;
 use crate::ml::core::batch::Batch;
 use crate::ml::core::functions::Constant;
 use crate::ml::core::Matrix;

@@ -2,7 +2,7 @@
 //!
 
 use crate::collections::HugeIntArray;
-use crate::mem::Estimate;
+use crate::task::memory::Estimate;
 use crate::ml::decision_tree::{
     DecisionTreeTrainer, DecisionTreeTrainerConfig, FeatureBagger, GiniImpurityData, Group,
     ImpurityCriterion, TreeNode,

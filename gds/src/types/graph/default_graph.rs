@@ -1,5 +1,5 @@
 use super::{Graph, GraphCharacteristics, GraphResult, RelationshipTopology};
-use crate::concurrency::Concurrency;
+use crate::task::concurrency::Concurrency;
 use crate::config::GraphStoreConfig;
 use crate::projection::RelationshipType;
 use crate::types::graph::characteristics::GraphCharacteristicsBuilder;

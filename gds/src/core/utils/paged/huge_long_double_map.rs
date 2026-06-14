@@ -1,5 +1,5 @@
 use crate::collections::{HugeDoubleArray, HugeLongArray};
-use crate::mem::Estimate;
+use crate::task::memory::Estimate;
 
 /// Hash map: `long → double` with open addressing and linear probing.
 ///

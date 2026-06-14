@@ -6,7 +6,7 @@
 //! neighbor accessors. This module focuses on compute + parallel execution.
 
 use crate::collections::HugeAtomicDoubleArray;
-use crate::concurrency::{
+use crate::task::concurrency::{
     virtual_threads::{Executor, WorkerContext},
     Concurrency, TerminatedException, TerminationFlag,
 };

@@ -32,7 +32,7 @@
 //! - Minimal atomic operation overhead
 
 use crate::collections::HugeAtomicLongArray;
-use crate::mem::BitUtil;
+use crate::task::memory::BitUtil;
 
 const NUM_BITS: usize = 64; // 64 bits per i64 word
 

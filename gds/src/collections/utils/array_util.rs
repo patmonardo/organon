@@ -16,7 +16,7 @@
 //! - **Linear Search Optimizations**: Unrolled loops, early termination
 //! - **Memory Allocation Strategies**: Exponential growth, alignment optimization
 
-use crate::mem::Estimate;
+use crate::task::memory::Estimate;
 
 /// Utility for optimized array operations
 ///

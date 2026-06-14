@@ -21,7 +21,7 @@
 //! - Property values for graph analytics
 //! - Fast setup of floating-point lookup tables
 
-use crate::concurrency::Concurrency;
+use crate::task::concurrency::Concurrency;
 use crate::core::utils::paged::{PageAllocator, PageAllocatorFactory};
 use std::sync::Arc;
 
@@ -39,7 +39,7 @@ use std::sync::Arc;
 ///
 /// ```
 /// use gds::core::utils::paged::ParallelDoublePageCreator;
-/// use gds::concurrency::Concurrency;
+/// use gds::task::concurrency::Concurrency;
 ///
 /// // Identity mapping for 1 billion elements
 /// let creator = ParallelDoublePageCreator::identity(Concurrency::of(8));
@@ -70,7 +70,7 @@ impl ParallelDoublePageCreator {
     ///
     /// ```
     /// use gds::core::utils::paged::ParallelDoublePageCreator;
-    /// use gds::concurrency::Concurrency;
+    /// use gds::task::concurrency::Concurrency;
     ///
     /// // Create pages with square root values
     /// let creator = ParallelDoublePageCreator::of(
@@ -109,7 +109,7 @@ impl ParallelDoublePageCreator {
     ///
     /// ```
     /// use gds::core::utils::paged::ParallelDoublePageCreator;
-    /// use gds::concurrency::Concurrency;
+    /// use gds::task::concurrency::Concurrency;
     ///
     /// let creator = ParallelDoublePageCreator::identity(Concurrency::of(8));
     /// let pages = creator.create_pages(10_000);
@@ -139,7 +139,7 @@ impl ParallelDoublePageCreator {
     ///
     /// ```
     /// use gds::core::utils::paged::ParallelDoublePageCreator;
-    /// use gds::concurrency::Concurrency;
+    /// use gds::task::concurrency::Concurrency;
     ///
     /// let creator = ParallelDoublePageCreator::pass_through(Concurrency::of(4));
     /// let mut pages = creator.create_pages(10_000);
@@ -169,7 +169,7 @@ impl ParallelDoublePageCreator {
     ///
     /// ```
     /// use gds::core::utils::paged::ParallelDoublePageCreator;
-    /// use gds::concurrency::Concurrency;
+    /// use gds::task::concurrency::Concurrency;
     ///
     /// let creator = ParallelDoublePageCreator::identity(Concurrency::of(8));
     /// let pages = creator.create_pages(1_000_000);

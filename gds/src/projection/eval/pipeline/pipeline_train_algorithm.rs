@@ -6,7 +6,7 @@ use std::collections::HashSet;
 use std::error::Error as StdError;
 use std::sync::Arc;
 
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::TerminationFlag;
 use crate::projection::eval::pipeline::{
     PipelineTrainer, ResultToModelConverter, TrainingPipeline,
 };

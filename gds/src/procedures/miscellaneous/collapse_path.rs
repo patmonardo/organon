@@ -10,7 +10,7 @@ use crate::algo::walking::{
     CollapsePathComputationRuntime, CollapsePathConfig, CollapsePathStats,
     CollapsePathStorageRuntime,
 };
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::TerminationFlag;
 use crate::core::utils::progress::{TaskProgressTracker, Tasks};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::prelude::DefaultGraphStore;

@@ -1,6 +1,6 @@
 //! Java: `PoolAggregatorMemoryEstimator`.
 
-use crate::mem::{Estimate, MemoryRange};
+use crate::task::memory::{Estimate, MemoryRange};
 
 use super::aggregator_memory_estimator::AggregatorMemoryEstimator;
 

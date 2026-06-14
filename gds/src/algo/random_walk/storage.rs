@@ -4,7 +4,7 @@
 
 use super::computation::RandomWalkComputationRuntime;
 use super::spec::RandomWalkResult;
-use crate::concurrency::{TerminatedException, TerminationFlag};
+use crate::task::concurrency::{TerminatedException, TerminationFlag};
 use crate::core::utils::progress::ProgressTracker;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::Graph;

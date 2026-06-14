@@ -1,7 +1,7 @@
 use std::collections::HashSet;
 use std::sync::Arc;
 
-use crate::concurrency::{Concurrency, TerminationFlag};
+use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::core::utils::progress::{Task, TaskProgressTracker, Tasks};
 use crate::ml::core::subgraph::LocalIdMap;
 use crate::ml::models::{ClassifierData, ClassifierFactory, FeaturesFactory};

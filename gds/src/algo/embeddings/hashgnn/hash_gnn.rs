@@ -1,5 +1,5 @@
 use crate::collections::HugeObjectArray;
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::TerminationFlag;
 use crate::core::utils::paged::HugeAtomicBitSet;
 use crate::core::utils::partition::{DegreeFunction, DegreePartition, Partition, PartitionUtils};
 use crate::core::utils::progress::TaskProgressTracker;
@@ -230,7 +230,7 @@ mod tests {
     use super::super::hash_gnn_parameters::GenerateFeaturesConfig;
     use super::*;
     use crate::collections::backends::vec::VecLong;
-    use crate::concurrency::Concurrency;
+    use crate::task::concurrency::Concurrency;
     use crate::core::utils::progress::{TaskProgressTracker, Tasks};
     use crate::types::graph_store::DefaultGraphStore;
     use crate::types::graph_store::GraphStore;

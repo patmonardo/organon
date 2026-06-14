@@ -5,7 +5,7 @@
 
 use super::long_uniform_sampler_by_exclusion::LongUniformSamplerByExclusion;
 use super::long_uniform_sampler_with_retries::LongUniformSamplerWithRetries;
-use crate::mem::{Estimate, MemoryRange};
+use crate::task::memory::{Estimate, MemoryRange};
 
 /// Threshold for choosing retry vs exclusion strategy
 const RETRY_SAMPLING_RATIO: f64 = 0.6;

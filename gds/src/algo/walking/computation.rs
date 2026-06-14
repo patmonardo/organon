@@ -5,7 +5,7 @@
 //! This implementation is a straightforward, sequential traversal that follows
 //! each path template depth by depth and records the resulting collapsed edges.
 
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::TerminationFlag;
 use crate::types::graph::Graph;
 use std::collections::BTreeSet;
 use std::sync::Arc;

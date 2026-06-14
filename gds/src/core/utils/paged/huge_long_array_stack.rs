@@ -1,5 +1,5 @@
 use crate::collections::HugeLongArray;
-use crate::mem::Estimate;
+use crate::task::memory::Estimate;
 
 /// LIFO stack backed by `HugeLongArray`.
 ///

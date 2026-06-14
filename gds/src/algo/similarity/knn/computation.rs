@@ -1,6 +1,6 @@
 use super::metrics::SimilarityComputer;
-use crate::concurrency::virtual_threads::{Executor, WorkerContext};
-use crate::concurrency::{TerminatedException, TerminationFlag};
+use crate::task::concurrency::virtual_threads::{Executor, WorkerContext};
+use crate::task::concurrency::{TerminatedException, TerminationFlag};
 use rand::Rng;
 use rand::SeedableRng;
 use rand_chacha::ChaCha8Rng;

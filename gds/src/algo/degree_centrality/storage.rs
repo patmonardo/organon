@@ -8,8 +8,8 @@
 
 use crate::algo::degree_centrality::DegreeCentralityComputationRuntime;
 use crate::collections::HugeAtomicDoubleArray;
-use crate::concurrency::virtual_threads::Executor;
-use crate::concurrency::{Concurrency, TerminatedException, TerminationFlag};
+use crate::task::concurrency::virtual_threads::Executor;
+use crate::task::concurrency::{Concurrency, TerminatedException, TerminationFlag};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::{Orientation as ProjectionOrientation, RelationshipType};
 use crate::types::graph::Graph;

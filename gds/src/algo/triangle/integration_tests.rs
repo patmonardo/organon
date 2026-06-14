@@ -1,5 +1,5 @@
 use super::TriangleComputationRuntime;
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::TerminationFlag;
 use crate::core::utils::progress::NoopProgressTracker;
 
 #[test]

@@ -9,8 +9,8 @@ use crate::algo::spanning_tree::{
     SpanningTreeResultBuilder, SpanningTreeRow, SpanningTreeStats, SpanningTreeStorageRuntime,
     SpanningTreeWriteSummary,
 };
-use crate::concurrency::TerminationFlag;
-use crate::mem::MemoryRange;
+use crate::task::concurrency::TerminationFlag;
+use crate::task::memory::MemoryRange;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};

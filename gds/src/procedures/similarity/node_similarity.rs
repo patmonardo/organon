@@ -6,9 +6,9 @@ use crate::algo::similarity::node_similarity::{
     NodeSimilarityMutateResult, NodeSimilarityResult, NodeSimilarityResultBuilder,
     NodeSimilarityStats, NodeSimilarityStorageRuntime,
 };
-use crate::concurrency::TerminationFlag;
+use crate::task::concurrency::TerminationFlag;
 use crate::core::utils::progress::{ProgressTracker, Tasks};
-use crate::mem::MemoryRange;
+use crate::task::memory::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
