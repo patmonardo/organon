@@ -12,6 +12,7 @@ mod moments;
 mod pipeline;
 mod program;
 mod schema;
+pub mod workbench;
 
 pub use crate::dsl::*;
 
@@ -30,3 +31,4 @@ pub use pipeline::{
 };
 pub use program::ShellProgram;
 pub use schema::ShellSchema;
+pub use workbench::*;

@@ -15,6 +15,11 @@ pub use crate::task::memory::MemoryEstimations;
 pub use crate::task::memory::MemoryRange;
 pub use crate::task::memory::MemoryTree;
 pub use crate::task::memory::TaskMemoryContainer;
+pub use crate::task::runtime::TaskFrame;
+pub use crate::task::runtime::TaskRuntime;
+pub use crate::task::workbench::task_workbench_track;
+pub use crate::task::workbench::task_workbench_tracks;
+pub use crate::task::workbench::TaskWorkbenchTrack;
 
 pub use crate::task::pregel::*;
 pub use crate::task::progress::*;

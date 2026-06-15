@@ -1,6 +1,6 @@
 //! Memory tracker
 //!
-//! Tracks memory reservations for tasks and graph stores, mirroring the Java `mem` package.
+//! Tracks memory reservations for tasks and graph stores.
 
 use crate::task::progress::{JobId, TaskStoreListener, UserTask};
 

@@ -1,7 +1,7 @@
-// Concurrency package - Java GDS compatible concurrency primitives
+// Concurrency package for task runtime primitives.
 //
-// This package provides the foundational types for parallel graph algorithm execution.
-// It mirrors the Java GDS concurrency package while leveraging Rust's safety guarantees.
+// This package provides foundational types for parallel graph algorithm execution
+// and keeps runtime-specific details behind a narrow public surface.
 
 /// Default concurrency / pool size for the Open GDS (community) profile.
 ///

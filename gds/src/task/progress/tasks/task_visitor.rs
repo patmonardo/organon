@@ -28,7 +28,7 @@ pub trait TaskVisitor {
     }
 }
 
-/// Marker trait for types that can be visited (kept for backwards compatibility).
+/// Marker trait for types that can be visited.
 pub trait TaskLike {
     fn description(&self) -> &str;
 }

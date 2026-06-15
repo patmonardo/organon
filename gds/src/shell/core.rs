@@ -12,9 +12,15 @@ use crate::collections::dataset::{
     MLE,
 };
 use crate::core::graph_dimensions::ConcreteGraphDimensions;
-use crate::task::progress::{TaskProgressTracker, Tasks};
 use crate::form::{ProgramFeatureKind, ProgramFeatures};
+use crate::task::concurrency::Concurrency;
 use crate::task::memory::{MemoryEstimations, MemoryRange, MemoryTree};
+use crate::task::progress::JobId;
+use crate::task::progress::TaskProgressTracker;
+use crate::task::progress::TaskRegistryFactory;
+use crate::task::progress::Tasks;
+use crate::task::runtime::TaskFrame;
+use crate::task::runtime::TaskRuntime;
 
 use super::{
     ShellAddress, ShellAlgebra, ShellFold, ShellHelp, ShellMoment, ShellMomentKind, ShellPipeline,
@@ -1615,6 +1621,44 @@ impl GdsShell {
         let description = format!("shell.pipeline::{:?}", self.pipeline());
         let leaf = Tasks::leaf_with_volume(description, self.estimated_pipeline_volume());
         TaskProgressTracker::new(leaf)
+    }
+
+    /// Generate a canonical TaskFrame from shell state.
+    ///
+    /// The Shell is the TaskFrame master generator: it maps the current
+    /// register/pipeline/algebra state into a runtime frame contract.
+    pub fn task_frame(&self, concurrency: usize) -> TaskFrame {
+        let concurrency = concurrency.max(1);
+        let estimate = self.estimate_pipeline_memory(concurrency);
+        let mut steps = self.concept_return_plan_steps();
+
+        if steps.is_empty() {
+            steps.push("shell.pipeline".to_string());
+        }
+
+        TaskFrame::new(
+            "shell".to_string(),
+            format!("pipeline::{:?}", self.pipeline()),
+            steps,
+            self.estimated_pipeline_volume(),
+            Concurrency::of(concurrency),
+        )
+        .with_memory_range(*estimate.memory_range())
+    }
+
+    /// Materialize a TaskRuntime from this shell using a request-local registry.
+    pub fn task_runtime(&self, concurrency: usize) -> TaskRuntime {
+        TaskRuntime::from_frame(self.task_frame(concurrency))
+    }
+
+    /// Materialize a TaskRuntime from this shell with an explicit task registry.
+    pub fn task_runtime_with_registry(
+        &self,
+        concurrency: usize,
+        job_id: JobId,
+        task_registry_factory: &dyn TaskRegistryFactory,
+    ) -> TaskRuntime {
+        TaskRuntime::with_registry(self.task_frame(concurrency), job_id, task_registry_factory)
     }
 
     /// Estimate memory for this shell pipeline using kernel memory-estimation machinery.

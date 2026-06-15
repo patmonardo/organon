@@ -46,14 +46,14 @@ impl TaskMemoryContainer {
 
     /// Removes a task and returns the updated allocated memory
     ///
-    /// Note: Returns total allocated memory if task is not found (mimicking Java behavior)
+    /// Returns total allocated memory when the task is not found.
     pub fn remove_task(&mut self, task: &UserTask) -> u64 {
         self.remove_task_by_job(task.username(), task.job_id())
     }
 
     /// Removes a task using (username, job_id) and returns the updated total allocated memory.
     ///
-    /// Java parity: returns current total allocated memory if task not found.
+    /// Returns current total allocated memory if the task is not found.
     pub fn remove_task_by_job(&mut self, username: &str, job_id: &JobId) -> u64 {
         if let Some(user_tasks) = self.memory_in_use.get_mut(username) {
             if let Some(task_info) = user_tasks.remove(job_id) {
@@ -194,7 +194,7 @@ mod tests {
         );
         let total = container.remove_task(&task);
 
-        assert_eq!(total, 1000); // Java parity: returns current total if not found
+        assert_eq!(total, 1000); // Contract: returns current total if not found
     }
 
     #[test]

@@ -76,6 +76,8 @@ ref/algo-specs
 ref/nltk
 ref/nltk-book
 ref/neo4j
+ref/algo
+ref/ml
 ref/rust-clrs
 ref/py-polars
 ref/polars
