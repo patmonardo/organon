@@ -1,0 +1,10 @@
+id: pe-catalog-symbolics
+title: Catalog Symbolics
+focus: pipeline identity, user scoping, and typed retrieval boundaries
+exemplar: examples/eval_catalog_symbolics.rs
+status: covered
+
+checks:
+- pipeline symbol is namespaced by user
+- pipeline type is recorded for runtime downcast safety
+- typed retrieval must match expected concrete pipeline type

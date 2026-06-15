@@ -1,0 +1,6 @@
+id: pe-map-surfaces
+title: Map Surfaces
+focus: classify functions by pipeline kind, execution mode, and layer
+exemplar: examples/eval_map_surfaces.rs
+status: core
+practice: classify files by (pipeline kind, execution mode, layer) before editing.

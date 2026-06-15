@@ -1,0 +1,10 @@
+id: pe-facade-boundary-discipline
+title: Facade Boundary Discipline
+focus: keep procedure orchestration thin and execution in projection eval
+exemplar: examples/eval_facade_boundary_discipline.rs
+status: covered
+
+boundary-assertions:
+- procedures facade owns request parsing and output projection
+- projection eval owns pipeline execution templates and runtime sequencing
+- catalog owns pipeline symbol persistence and user scoping

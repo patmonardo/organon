@@ -12,10 +12,24 @@ Allowed top-level prefixes:
 
 - `proc`
 - `algo`
+- `eval`
 - `form`
 - `shell`
 - `dataframe`
 - `dataset`
+
+Eval workbench examples use the `eval_` prefix.
+Run the full eval workbench artifact pass with:
+
+```text
+./gds/examples/eval.sh
+```
+
+Run the rapid train/predict/type loop with:
+
+```text
+./gds/examples/eval_train_predict.sh
+```
 
 The historical Doctrine roots remain, in order:
 

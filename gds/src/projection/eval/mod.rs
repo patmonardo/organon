@@ -6,5 +6,6 @@
 pub mod algorithm;
 pub mod form;
 pub mod pipeline;
+pub mod workbench;
 
 pub use form::*;

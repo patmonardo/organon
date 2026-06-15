@@ -15,16 +15,14 @@ Training is model production. The orchestrator is PipelineTrainAlgorithm plus a 
 
 ```mermaid
 flowchart TD
-    A[Procedure train entrypoint] --> B[TrainComputation
-    parse config + fetch pipeline]
-    B --> C[NodeFeatureProducer context validation]
-    C --> D[Concrete TrainAlgorithm
-    (classification/regression)]
-    D --> E[PipelineTrainAlgorithm.compute]
-    E --> F[Pipeline validation]
-    F --> G[PipelineTrainer.run]
-    G --> H[ResultToModelConverter.to_model]
-    H --> I[Catalog model artifact]
+    A["Procedure train entrypoint"] --> B["TrainComputation<br/>parse config + fetch pipeline"]
+    B --> C["NodeFeatureProducer context validation"]
+    C --> D["Concrete TrainAlgorithm<br/>(classification/regression)"]
+    D --> E["PipelineTrainAlgorithm.compute"]
+    E --> F["Pipeline validation"]
+    F --> G["PipelineTrainer.run"]
+    G --> H["ResultToModelConverter.to_model"]
+    H --> I["Catalog model artifact"]
 ```
 
 Key idea:
@@ -36,18 +34,14 @@ Prediction is model use. Predict executors run node-property feature steps, then
 
 ```mermaid
 flowchart TD
-    A[Procedure predict entrypoint] --> B[PredictComputation
-    load model + config]
-    B --> C[Concrete PredictPipelineExecutor
-    classification/regression]
-    C --> D[PredictPipelineExecutor.compute]
-    D --> E[Validate pipeline + feature requirements]
-    E --> F[Execute nodePropertySteps]
-    F --> G[Executor.execute
-    model inference]
-    G --> H[Result shaping
-    stream or mutate or write]
-    H --> I[Cleanup intermediate properties]
+    A["Procedure predict entrypoint"] --> B["PredictComputation<br/>load model + config"]
+    B --> C["Concrete PredictPipelineExecutor<br/>classification/regression"]
+    C --> D["PredictPipelineExecutor.compute"]
+    D --> E["Validate pipeline + feature requirements"]
+    E --> F["Execute nodePropertySteps"]
+    F --> G["Executor.execute<br/>model inference"]
+    G --> H["Result shaping<br/>stream or mutate or write"]
+    H --> I["Cleanup intermediate properties"]
 ```
 
 Key idea:
@@ -63,12 +57,12 @@ It is not the top-level orchestrator for pipeline training in the current archit
 
 ```mermaid
 flowchart LR
-    A[Pipeline training outer flow] --> B[PipelineTrainAlgorithm + PipelineTrainer]
-    B -. nested feature step calls .-> C[NodePropertyStep execution]
-    C --> D[ProcedureExecutor.compute]
-    D --> E[AlgorithmSpec.execute]
+    A["Pipeline training outer flow"] --> B["PipelineTrainAlgorithm + PipelineTrainer"]
+    B -. "nested feature step calls" .-> C["NodePropertyStep execution"]
+    C --> D["ProcedureExecutor.compute"]
+    D --> E["AlgorithmSpec.execute"]
 
-    F[Generic non-pipeline procedures] --> D
+    F["Generic non-pipeline procedures"] --> D
 ```
 
 Key idea:
@@ -100,12 +94,12 @@ This architecture supports iterative retrain-and-serve loops, but production con
 
 ```mermaid
 flowchart TD
-    A[Observe data + outcomes] --> B[Drift or trigger check]
-    B -->|yes| C[Train candidate model]
-    C --> D[Evaluate vs champion]
-    D -->|pass| E[Promote + deploy]
-    D -->|fail| F[Keep champion]
-    E --> G[Monitor online behavior]
+    A["Observe data + outcomes"] --> B["Drift or trigger check"]
+    B -->|yes| C["Train candidate model"]
+    C --> D["Evaluate vs champion"]
+    D -->|pass| E["Promote + deploy"]
+    D -->|fail| F["Keep champion"]
+    E --> G["Monitor online behavior"]
     G --> A
     F --> A
 ```

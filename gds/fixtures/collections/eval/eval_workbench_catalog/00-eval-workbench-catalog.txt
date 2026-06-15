@@ -1,0 +1,7 @@
+Projection Eval Workbench Slice
+- pe-map-surfaces | Map Surfaces | core | examples/eval_map_surfaces.rs
+- pe-train-template-law | Train Template Law | core | examples/eval_train_template_law.rs
+- pe-predict-template-law | Predict Template Law | core | examples/eval_predict_template_law.rs
+- pe-facade-boundary-discipline | Facade Boundary Discipline | covered | examples/eval_facade_boundary_discipline.rs
+- pe-catalog-symbolics | Catalog Symbolics | covered | examples/eval_catalog_symbolics.rs
+- pe-shell-taskframe-projection | Shell TaskFrame Projection | planned | examples/eval_shell_taskframe_projection.rs

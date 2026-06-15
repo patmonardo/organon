@@ -1,0 +1,13 @@
+id: pe-train-template-law
+title: Train Template Law
+focus: internalize pipeline train template sequence and invariants
+exemplar: examples/eval_train_template_law.rs
+status: core
+
+train-sequence:
+- set termination flag on trainer
+- validate training parameter space
+- validate pipeline before execution
+- capture original schema
+- run pipeline trainer
+- convert result to catalog model

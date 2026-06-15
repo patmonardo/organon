@@ -1,0 +1,16 @@
+id: pe-shell-taskframe-projection
+title: Shell TaskFrame Projection
+focus: project eval tracks into ProgramFeature and TaskFrame slices
+exemplar: examples/eval_shell_taskframe_projection.rs
+status: planned
+
+program-feature-shape:
+- trackId
+- executionMode
+- boundaryLaw
+
+taskframe-shape:
+- inputGraph
+- pipelineSymbol
+- mode
+- outputContract

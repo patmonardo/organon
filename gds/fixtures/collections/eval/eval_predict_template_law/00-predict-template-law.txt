@@ -1,0 +1,16 @@
+id: pe-predict-template-law
+title: Predict Template Law
+focus: internalize predict template sequence and cleanup guarantees
+exemplar: examples/eval_predict_template_law.rs
+status: core
+
+predict-sequence:
+- generate dataset split graph filters
+- validate pipeline before execution
+- validate node property step context
+- split datasets
+- execute node property steps
+- validate feature properties
+- execute prediction algorithm
+- cleanup intermediate properties
+cleanup-law: cleanup runs even when predict execution fails.
