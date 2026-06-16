@@ -1,12 +1,10 @@
-use std::sync::Arc;
-
-use crate::projection::eval::pipeline::link_pipeline::LinkPredictionTrainingPipeline;
-use crate::projection::eval::pipeline::node_pipeline::classification::node_classification_training_pipeline::NodeClassificationTrainingPipeline;
-use crate::projection::eval::pipeline::node_pipeline::regression::node_regression_training_pipeline::NodeRegressionTrainingPipeline;
+use super::PipelineName;
+use crate::projection::eval::pipeline::LinkPredictionTrainingPipeline;
+use crate::projection::eval::pipeline::NodeClassificationTrainingPipeline;
+use crate::projection::eval::pipeline::NodeRegressionTrainingPipeline;
 use crate::projection::eval::pipeline::{PipelineCatalog, PipelineCatalogEntry, TrainingPipeline};
 use crate::types::user::User;
-
-use super::PipelineName;
+use std::sync::Arc;
 
 #[derive(Clone)]
 pub struct PipelineRepository {

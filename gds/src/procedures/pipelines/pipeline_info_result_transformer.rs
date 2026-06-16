@@ -1,5 +1,5 @@
 use crate::procedures::pipelines::types::{AnyMapList, PipelineInfoResult};
-use crate::projection::eval::pipeline::link_pipeline::LinkPredictionTrainingPipeline;
+use crate::projection::eval::pipeline::LinkPredictionTrainingPipeline;
 use crate::projection::eval::pipeline::{FeatureStep, Pipeline, TrainingPipeline};
 
 pub fn create_pipeline_info_result(
