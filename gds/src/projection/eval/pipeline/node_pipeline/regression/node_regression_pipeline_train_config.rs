@@ -1,6 +1,6 @@
 use crate::config::validation::ConfigError;
 use crate::ml::metrics::regression::RegressionMetric;
-use crate::projection::eval::pipeline::node_pipeline::NodePropertyPipelineBaseTrainConfig;
+use crate::projection::eval::pipeline::NodePropertyPipelineBaseTrainConfig;
 
 // Placeholder type until ml-metrics package is translated
 pub type RegressionMetrics = RegressionMetric;

@@ -1,5 +1,5 @@
 use super::node_property_prediction_split_config::NodePropertyPredictionSplitConfig;
-use crate::projection::eval::pipeline::training_pipeline::TrainingPipeline;
+use crate::projection::eval::pipeline::TrainingPipeline;
 use serde_json::Value;
 use std::collections::HashMap;
 

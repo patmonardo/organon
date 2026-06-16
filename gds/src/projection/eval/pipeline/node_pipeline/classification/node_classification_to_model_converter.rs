@@ -3,7 +3,7 @@ use super::node_classification_pipeline_model_info::NodeClassificationPipelineMo
 use super::node_classification_pipeline_train_config::NodeClassificationPipelineTrainConfig;
 use super::node_classification_train_result::NodeClassificationTrainResult;
 use super::node_classification_training_pipeline::NodeClassificationTrainingPipeline;
-use crate::projection::eval::pipeline::node_pipeline::NodePropertyPredictPipeline;
+use crate::projection::eval::pipeline::NodePropertyPredictPipeline;
 use crate::projection::eval::pipeline::ResultToModelConverter;
 use crate::types::schema::GraphSchema;
 

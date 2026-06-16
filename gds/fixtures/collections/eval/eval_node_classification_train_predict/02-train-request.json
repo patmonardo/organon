@@ -1,0 +1,13 @@
+{
+  "targetProperty": "label",
+  "concurrency": 2,
+  "targetNodeLabels": [
+    "*"
+  ],
+  "metrics": [
+    "F1_MACRO"
+  ],
+  "modelName": "nc_demo_model",
+  "randomSeed": 42,
+  "pipeline": "nc_demo"
+}

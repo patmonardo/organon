@@ -4,10 +4,9 @@ use super::node_classification_to_model_converter::NodeClassificationToModelConv
 use super::node_classification_train_result::NodeClassificationTrainResult;
 use super::node_classification_training_pipeline::NodeClassificationTrainingPipeline;
 use crate::task::progress::tasks::progress_tracker::ProgressTracker;
-use crate::projection::eval::pipeline::node_pipeline::node_property_pipeline_base_train_config::NodePropertyPipelineBaseTrainConfig;
-use crate::projection::eval::pipeline::pipeline_train_algorithm::{
-    PipelineTrainAlgorithm, PipelineTrainAlgorithmError,
-};
+use crate::projection::eval::pipeline::NodePropertyPipelineBaseTrainConfig;
+use crate::projection::eval::pipeline::PipelineTrainAlgorithm;
+use crate::projection::eval::pipeline::PipelineTrainAlgorithmError;
 use crate::projection::eval::pipeline::PipelineTrainer;
 use crate::projection::eval::pipeline::ResultToModelConverter;
 use crate::types::graph_store::DefaultGraphStore;

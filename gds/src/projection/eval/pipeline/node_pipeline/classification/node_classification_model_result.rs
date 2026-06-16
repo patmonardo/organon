@@ -3,7 +3,7 @@ use super::node_classification_pipeline_train_config::NodeClassificationPipeline
 use crate::ml::models::base::ClassifierData;
 use crate::ml::models::Classifier;
 use crate::ml::training::statistics::TrainingStatistics;
-use crate::projection::eval::pipeline::node_pipeline::classification::NodeClassificationTrainingPipeline;
+use crate::projection::eval::pipeline::NodeClassificationTrainingPipeline;
 use crate::types::schema::GraphSchema;
 
 /// Result of node classification model creation containing the catalog model and training statistics.

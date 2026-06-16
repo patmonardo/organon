@@ -1,0 +1,53 @@
+{
+  "created": [
+    {
+      "name": "nc_demo",
+      "nodePropertySteps": [],
+      "featureProperties": [],
+      "splitConfig": {
+        "validationFolds": "3",
+        "testFraction": "0.3"
+      },
+      "autoTuningConfig": {
+        "maxTrials": 10
+      },
+      "parameterSpace": {}
+    }
+  ],
+  "selectedFeatures": [
+    {
+      "name": "nc_demo",
+      "nodePropertySteps": [],
+      "featureProperties": [
+        "age"
+      ],
+      "splitConfig": {
+        "validationFolds": "3",
+        "testFraction": "0.3"
+      },
+      "autoTuningConfig": {
+        "maxTrials": 10
+      },
+      "parameterSpace": {}
+    }
+  ],
+  "logisticRegression": [
+    {
+      "name": "nc_demo",
+      "nodePropertySteps": [],
+      "featureProperties": [
+        "age"
+      ],
+      "splitConfig": {
+        "testFraction": "0.3",
+        "validationFolds": "3"
+      },
+      "autoTuningConfig": {
+        "maxTrials": 10
+      },
+      "parameterSpace": {
+        "LogisticRegression": []
+      }
+    }
+  ]
+}

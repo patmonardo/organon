@@ -1,10 +1,10 @@
 use std::sync::Arc;
 
+use crate::ml::core::subgraph::LocalIdMap;
+use crate::projection::eval::pipeline::node_pipeline::NodeClassificationModelResult;
+use crate::projection::eval::pipeline::{PredictPipelineExecutor, PredictPipelineExecutorError};
 use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::task::progress::{EmptyTaskRegistryFactory, JobId, TaskProgressTracker};
-use crate::ml::core::subgraph::LocalIdMap;
-use crate::projection::eval::pipeline::node_pipeline::classification::node_classification_model_result::NodeClassificationModelResult;
-use crate::projection::eval::pipeline::{PredictPipelineExecutor, PredictPipelineExecutorError};
 use crate::types::graph_store::DefaultGraphStore;
 
 use super::{

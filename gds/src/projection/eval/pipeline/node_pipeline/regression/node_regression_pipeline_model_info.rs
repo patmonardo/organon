@@ -1,5 +1,5 @@
 use crate::ml::metrics::ModelCandidateStats;
-use crate::projection::eval::pipeline::node_pipeline::NodePropertyPredictPipeline;
+use crate::projection::eval::pipeline::NodePropertyPredictPipeline;
 use crate::projection::eval::pipeline::Pipeline;
 use crate::projection::eval::pipeline::TrainingMethod;
 use serde_json::Value;

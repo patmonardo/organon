@@ -1,0 +1,12 @@
+{
+  "graphName": "nc_graph",
+  "nodeCount": 24,
+  "targetProperty": "label",
+  "featureProperties": [
+    "age"
+  ],
+  "classes": [
+    0,
+    1
+  ]
+}

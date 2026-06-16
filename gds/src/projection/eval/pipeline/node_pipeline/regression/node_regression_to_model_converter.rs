@@ -2,7 +2,7 @@ use super::{
     NodeRegressionPipelineModelInfo, NodeRegressionPipelineTrainConfig,
     NodeRegressionTrainPipelineResult, NodeRegressionTrainResult, NodeRegressionTrainingPipeline,
 };
-use crate::projection::eval::pipeline::node_pipeline::NodePropertyPredictPipeline;
+use crate::projection::eval::pipeline::NodePropertyPredictPipeline;
 use crate::projection::eval::pipeline::ResultToModelConverter;
 use crate::types::schema::GraphSchema;
 

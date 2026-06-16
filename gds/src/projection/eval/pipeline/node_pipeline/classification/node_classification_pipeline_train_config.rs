@@ -2,7 +2,7 @@ use crate::collections::long_multiset::LongMultiSet;
 use crate::config::validation::ConfigError;
 use crate::ml::core::subgraph::LocalIdMap;
 use crate::ml::metrics::{ClassificationMetric, ClassificationMetricSpecification, Metric};
-use crate::projection::eval::pipeline::node_pipeline::NodePropertyPipelineBaseTrainConfig;
+use crate::projection::eval::pipeline::NodePropertyPipelineBaseTrainConfig;
 
 /// Training configuration for node classification pipelines.
 ///
