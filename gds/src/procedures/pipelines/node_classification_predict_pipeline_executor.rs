@@ -1,16 +1,16 @@
 use std::collections::HashSet;
 use std::sync::Arc;
 
-use crate::task::concurrency::{Concurrency, TerminationFlag};
-use crate::task::progress::{Task, TaskProgressTracker, Tasks};
 use crate::ml::core::subgraph::LocalIdMap;
 use crate::ml::models::{ClassifierData, ClassifierFactory, FeaturesFactory};
 use crate::ml::node_classification::NodeClassificationPredict;
-use crate::projection::eval::pipeline::node_pipeline::NodePropertyPredictPipeline;
+use crate::projection::eval::pipeline::NodePropertyPredictPipeline;
 use crate::projection::eval::pipeline::PipelineGraphFilter;
 use crate::projection::eval::pipeline::PredictPipelineExecutor;
 use crate::projection::eval::pipeline::PredictPipelineExecutorError;
 use crate::projection::NodeLabel;
+use crate::task::concurrency::{Concurrency, TerminationFlag};
+use crate::task::progress::{Task, TaskProgressTracker, Tasks};
 use crate::types::graph_store::{DefaultGraphStore, GraphStore};
 
 use super::{

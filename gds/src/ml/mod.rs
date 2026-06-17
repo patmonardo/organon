@@ -6,7 +6,7 @@ pub mod metrics;
 pub mod models;
 pub mod nlp;
 pub mod node_classification;
-pub mod node_prediction;
+pub mod node_regression;
 pub mod sampling;
 pub mod splitting;
 pub mod training;

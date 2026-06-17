@@ -14,7 +14,7 @@ use crate::ml::models::{
     base::TrainerConfigTrait, Classifier, ClassifierTrainerFactory, Features,
     TrainingMethod as MlTrainingMethod,
 };
-use crate::ml::node_prediction::NodeSplitter;
+use crate::ml::node_regression::NodeSplitter;
 use crate::ml::splitting::TrainingExamplesSplit;
 use crate::ml::training::{CrossValidation, TrainingStatistics};
 use crate::procedures::AlgorithmsProcedureFacade;

@@ -117,9 +117,9 @@ const MODEL_COMMANDS: &[ModelWorkbenchCommand] = &[
         title: "Node classification metrics",
     },
     ModelWorkbenchCommand {
-        id: "node-prediction-split-preview",
+        id: "node-regression-split-preview",
         group: "Node Tasks",
-        title: "Node prediction split preview",
+        title: "Node regression split preview",
     },
     ModelWorkbenchCommand {
         id: "node-regression-preview",
@@ -260,7 +260,7 @@ fn dispatch_command(command: &str, verbose: bool) -> bool {
         "linear-sweep" => print_json(run_linear_sweep()),
         "node-classification-preview" => print_json(run_node_classification_preview()),
         "node-classification-metrics" => print_json(run_node_classification_metrics()),
-        "node-prediction-split-preview" => print_json(run_node_prediction_split_preview()),
+        "node-regression-split-preview" => print_json(run_node_regression_split_preview()),
         "node-regression-preview" => print_json(run_node_regression_preview()),
         "node-regression-metrics" => print_json(run_node_regression_metrics()),
         "large-logistic-benchmark" => {
@@ -295,7 +295,11 @@ fn parse_index_selection(input: &str, max: usize) -> Option<Vec<usize>> {
             if start == 0 || end == 0 || start > max || end > max {
                 return None;
             }
-            let (lo, hi) = if start <= end { (start, end) } else { (end, start) };
+            let (lo, hi) = if start <= end {
+                (start, end)
+            } else {
+                (end, start)
+            };
             for value in lo..=hi {
                 selected.insert(value);
             }
@@ -409,7 +413,9 @@ fn print_help() {
     println!("ML Models Workbench");
     println!();
     println!("Usage:");
-    println!("  cargo run -p gds --bin ml_models_cli -- [menu|run <selection>|<command>] [--verbose|-v]");
+    println!(
+        "  cargo run -p gds --bin ml_models_cli -- [menu|run <selection>|<command>] [--verbose|-v]"
+    );
     println!();
     println!("Commands:");
     println!("  menu           Interactive command selection");
@@ -452,7 +458,7 @@ fn print_help() {
     println!("  linear-sweep   Compare linear regression learning settings");
     println!("  node-classification-preview  Run node classification preview over model fixtures");
     println!("  node-classification-metrics  Run node classification metric suite");
-    println!("  node-prediction-split-preview Run node prediction split preview over fixture ids");
+    println!("  node-regression-split-preview Run node regression split preview over fixture ids");
     println!("  node-regression-preview      Run node regression predictor over model fixtures");
     println!("  node-regression-metrics      Run node regression metric suite");
     println!("  large-logistic-benchmark     Benchmark logistic regression on a 1k fixture (supports --verbose)");

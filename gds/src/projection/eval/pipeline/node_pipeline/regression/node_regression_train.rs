@@ -7,7 +7,7 @@ use crate::ml::metrics::regression::RegressionMetric;
 use crate::ml::metrics::{Metric, ModelCandidateStats};
 use crate::ml::models::linear_regression::LinearRegressionTrainConfig;
 use crate::ml::models::{Features, RegressionTrainerFactory, Regressor};
-use crate::ml::node_prediction::NodeSplitter;
+use crate::ml::node_regression::NodeSplitter;
 use crate::ml::splitting::TrainingExamplesSplit;
 use crate::ml::training::statistics::TrainingStatistics;
 use crate::procedures::AlgorithmsProcedureFacade;

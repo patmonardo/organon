@@ -1,15 +1,15 @@
 use std::collections::HashSet;
 use std::sync::Arc;
 
-use crate::task::concurrency::{Concurrency, TerminationFlag};
-use crate::task::progress::{Task, TaskProgressTracker, Tasks};
 use crate::ml::models::{FeaturesFactory, Regressor};
-use crate::ml::node_prediction::regression::NodeRegressionPredict;
+use crate::ml::node_regression::NodeRegressionPredict;
 use crate::projection::eval::pipeline::{
     node_pipeline::NodePropertyPredictPipeline, PipelineGraphFilter, PredictPipelineExecutor,
     PredictPipelineExecutorError,
 };
 use crate::projection::NodeLabel;
+use crate::task::concurrency::{Concurrency, TerminationFlag};
+use crate::task::progress::{Task, TaskProgressTracker, Tasks};
 use crate::types::graph_store::{DefaultGraphStore, GraphStore};
 
 use super::{NodeRegressionPipelineResult, NodeRegressionPredictPipelineConfig};

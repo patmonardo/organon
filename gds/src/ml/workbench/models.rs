@@ -1,11 +1,6 @@
 use crate::collections::HugeDoubleArray;
 use crate::collections::HugeIntArray;
 use crate::collections::HugeLongArray;
-use crate::task::concurrency::Concurrency;
-use crate::task::concurrency::TerminationFlag;
-use crate::task::progress::NoopProgressTracker;
-use crate::task::progress::TaskProgressTracker;
-use crate::task::progress::Tasks;
 use crate::ml::decision_tree::ClassifierImpurityCriterionType;
 use crate::ml::gradient_descent::GradientDescentConfig;
 use crate::ml::metrics::Accuracy;
@@ -35,8 +30,13 @@ use crate::ml::models::Features;
 use crate::ml::models::RegressorTrainer;
 use crate::ml::node_classification::ClassificationMetricComputer;
 use crate::ml::node_classification::NodeClassificationPredict;
-use crate::ml::node_prediction::NodeRegressionPredict;
-use crate::ml::node_prediction::NodeSplitter;
+use crate::ml::node_regression::NodeRegressionPredict;
+use crate::ml::node_regression::NodeSplitter;
+use crate::task::concurrency::Concurrency;
+use crate::task::concurrency::TerminationFlag;
+use crate::task::progress::NoopProgressTracker;
+use crate::task::progress::TaskProgressTracker;
+use crate::task::progress::Tasks;
 use parking_lot::RwLock;
 use serde::Deserialize;
 use serde::Serialize;
@@ -160,7 +160,7 @@ pub struct NodeClassificationPreviewReport {
 }
 
 #[derive(Clone, Debug, Serialize)]
-pub struct NodePredictionSplitPreviewReport {
+pub struct NodeRegressionSplitPreviewReport {
     pub experiment: &'static str,
     pub fixture: FixtureReport,
     pub total_examples: usize,
@@ -465,7 +465,7 @@ pub fn available_experiments() -> &'static [&'static str] {
         "linear-sweep",
         "node-classification-preview",
         "node-classification-metrics",
-        "node-prediction-split-preview",
+        "node-regression-split-preview",
         "node-regression-preview",
         "node-regression-metrics",
         "large-logistic-benchmark",
@@ -1686,7 +1686,7 @@ pub fn run_node_classification_metrics() -> NodeClassificationMetricsReport {
     }
 }
 
-pub fn run_node_prediction_split_preview() -> NodePredictionSplitPreviewReport {
+pub fn run_node_regression_split_preview() -> NodeRegressionSplitPreviewReport {
     let fixture = linear_fixture();
     let total_examples = fixture.features.len();
 
@@ -1703,8 +1703,8 @@ pub fn run_node_prediction_split_preview() -> NodePredictionSplitPreviewReport {
     let train_set = outer_split.train_set();
     let test_set = outer_split.test_set();
 
-    NodePredictionSplitPreviewReport {
-        experiment: "node-prediction-split-preview",
+    NodeRegressionSplitPreviewReport {
+        experiment: "node-regression-split-preview",
         fixture: fixture.report(),
         total_examples,
         train_size: train_set.len(),
@@ -2505,7 +2505,7 @@ mod tests {
     fn node_oriented_previews_execute() {
         let classification = run_node_classification_preview();
         let metrics = run_node_classification_metrics();
-        let split = run_node_prediction_split_preview();
+        let split = run_node_regression_split_preview();
         let regression = run_node_regression_preview();
         let regression_metrics = run_node_regression_metrics();
 

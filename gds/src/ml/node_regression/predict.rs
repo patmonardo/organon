@@ -1,7 +1,6 @@
-//! Node regression prediction
-//! 1:1 translation of NodeRegressionPredict.java
-
 use crate::collections::HugeDoubleArray;
+use crate::ml::models::Features;
+use crate::ml::models::Regressor;
 use crate::task::concurrency::parallel_util::parallel_for_each_node;
 use crate::task::concurrency::Concurrency;
 use crate::task::concurrency::TerminationFlag;
@@ -9,8 +8,6 @@ use crate::task::progress::LeafTask;
 use crate::task::progress::ProgressTracker;
 use crate::task::progress::TaskProgressTracker;
 use crate::task::progress::Tasks;
-use crate::ml::models::Features;
-use crate::ml::models::Regressor;
 use std::sync::Arc;
 use std::sync::Mutex;
 

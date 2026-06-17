@@ -1,12 +1,7 @@
-// Translated from Neo4j Graph Data Science:
-// https://github.com/neo4j/graph-data-science
-// pipeline/src/main/java/org/neo4j/gds/ml/pipeline/PredictPipelineExecutor.java
-
-use std::error::Error as StdError;
-use std::sync::Arc;
-
 use crate::projection::eval::pipeline::{NodePropertyStepExecutor, Pipeline, PipelineGraphFilter};
 use crate::types::graph_store::{DefaultGraphStore, GraphStore};
+use std::error::Error as StdError;
+use std::sync::Arc;
 
 /// Abstract pipeline executor for prediction (no training/test splits).
 ///
@@ -23,7 +18,6 @@ use crate::types::graph_store::{DefaultGraphStore, GraphStore};
 /// * `PIPELINE` - The pipeline type (e.g., NodeClassificationPipeline)
 /// * `RESULT` - The prediction result type
 ///
-/// # Java Source (PredictPipelineExecutor.java)
 pub trait PredictPipelineExecutor<PIPELINE: Pipeline, RESULT> {
     /// Access the pipeline being executed.
     fn pipeline(&self) -> &PIPELINE;
