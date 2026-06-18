@@ -20,6 +20,8 @@ use crate::task::progress::TaskProgressTracker;
 use crate::task::progress::TaskRegistryFactory;
 use crate::task::progress::Tasks;
 use crate::task::runtime::TaskFrame;
+use crate::task::runtime::TaskFrameKind;
+use crate::task::runtime::TaskFrameStorageBackend;
 use crate::task::runtime::TaskRuntime;
 
 use super::{
@@ -1623,27 +1625,97 @@ impl GdsShell {
         TaskProgressTracker::new(leaf)
     }
 
+    /// Compile shell state into a staged TaskFrame plan.
+    ///
+    /// This keeps the shell->task boundary explicit: seed preparation,
+    /// compute-graph execution, and persistence are distinct runtime images.
+    pub fn task_frame_plan(&self, concurrency: usize) -> Vec<TaskFrame> {
+        let concurrency = concurrency.max(1);
+        let estimate = self.estimate_pipeline_memory(concurrency);
+        let memory = *estimate.memory_range();
+
+        let mut compute_steps = self.concept_return_plan_steps();
+        if compute_steps.is_empty() {
+            compute_steps.push("shell.pipeline".to_string());
+        }
+
+        let pipeline = format!("{:?}", self.pipeline());
+        let register_input = format!("shell::{:?}", self.register());
+        let seed_output = format!("shell.seed::{pipeline}");
+        let compute_output = format!("shell.compute::{pipeline}");
+        let pipeline_output = format!("pipeline::{pipeline}");
+
+        let seed_steps = if self.dataframe.is_some() {
+            vec!["dataframe.seed".to_string()]
+        } else {
+            vec!["shell.seed".to_string()]
+        };
+
+        let persist_steps = vec![
+            "shell.persist".to_string(),
+            "shell.progress.finalize".to_string(),
+        ];
+
+        let seed_memory = scale_memory_range(memory, 1, 5);
+        let compute_memory = scale_memory_range(memory, 7, 10);
+        let persist_memory = scale_memory_range(memory, 1, 10);
+
+        let seed_frame = TaskFrame::new(
+            "shell".to_string(),
+            format!("pipeline::{pipeline}::Seed"),
+            seed_steps,
+            self.estimated_pipeline_volume().max(1),
+            Concurrency::of(concurrency),
+        )
+        .with_image_kind(TaskFrameKind::ShellProgram)
+        .with_execution_image("seed.dataframe")
+        .with_storage_backend(TaskFrameStorageBackend::PolarsPropertyStore)
+        .with_inputs(vec![register_input.clone()])
+        .with_outputs(vec![seed_output.clone()])
+        .with_memory_range(seed_memory);
+
+        let compute_frame = TaskFrame::new(
+            "shell".to_string(),
+            format!("pipeline::{pipeline}::ComputeGraph"),
+            compute_steps,
+            self.estimated_pipeline_volume(),
+            Concurrency::of(concurrency),
+        )
+        .with_image_kind(TaskFrameKind::PregelExecutionImage)
+        .with_execution_image("pregel.compute-graph")
+        .with_storage_backend(TaskFrameStorageBackend::PolarsPropertyStore)
+        .with_inputs(vec![seed_output])
+        .with_outputs(vec![compute_output.clone()])
+        .with_memory_range(compute_memory);
+
+        let persist_frame = TaskFrame::new(
+            "shell".to_string(),
+            format!("pipeline::{pipeline}::Persist"),
+            persist_steps,
+            self.estimated_pipeline_volume().max(1),
+            Concurrency::of(concurrency),
+        )
+        .with_image_kind(TaskFrameKind::ProcedurePipeline)
+        .with_execution_image("persist.artifacts")
+        .with_storage_backend(TaskFrameStorageBackend::RuntimeManaged)
+        .with_inputs(vec![compute_output])
+        .with_outputs(vec![pipeline_output])
+        .with_memory_range(persist_memory);
+
+        vec![seed_frame, compute_frame, persist_frame]
+    }
+
     /// Generate a canonical TaskFrame from shell state.
     ///
     /// The Shell is the TaskFrame master generator: it maps the current
     /// register/pipeline/algebra state into a runtime frame contract.
+    ///
+    /// This resolves to the compute-image stage of the shell task plan.
     pub fn task_frame(&self, concurrency: usize) -> TaskFrame {
-        let concurrency = concurrency.max(1);
-        let estimate = self.estimate_pipeline_memory(concurrency);
-        let mut steps = self.concept_return_plan_steps();
-
-        if steps.is_empty() {
-            steps.push("shell.pipeline".to_string());
-        }
-
-        TaskFrame::new(
-            "shell".to_string(),
-            format!("pipeline::{:?}", self.pipeline()),
-            steps,
-            self.estimated_pipeline_volume(),
-            Concurrency::of(concurrency),
-        )
-        .with_memory_range(*estimate.memory_range())
+        self.task_frame_plan(concurrency)
+            .into_iter()
+            .nth(1)
+            .expect("shell task plan should include compute stage")
     }
 
     /// Materialize a TaskRuntime from this shell using a request-local registry.
@@ -1970,5 +2042,56 @@ impl GdsShell {
             );
 
         ConcreteGraphDimensions::of(node_count, relationship_count)
+    }
+}
+
+fn scale_memory_range(range: MemoryRange, numerator: usize, denominator: usize) -> MemoryRange {
+    let denominator = denominator.max(1);
+    let min = range
+        .min()
+        .saturating_mul(numerator)
+        .checked_div(denominator)
+        .unwrap_or(0);
+    let mut max = range
+        .max()
+        .saturating_mul(numerator)
+        .checked_div(denominator)
+        .unwrap_or(0);
+    if max < min {
+        max = min;
+    }
+    MemoryRange::of_range(min, max)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::task::runtime::TaskFrameKind;
+
+    #[test]
+    fn shell_task_frame_plan_emits_three_stages() {
+        let shell = GdsShell::new();
+        let plan = shell.task_frame_plan(2);
+
+        assert_eq!(plan.len(), 3);
+        assert!(plan[0].pipeline().ends_with("::Seed"));
+        assert!(plan[1].pipeline().ends_with("::ComputeGraph"));
+        assert!(plan[2].pipeline().ends_with("::Persist"));
+        assert_eq!(
+            plan[1].image_spec().kind(),
+            TaskFrameKind::PregelExecutionImage
+        );
+    }
+
+    #[test]
+    fn shell_task_frame_returns_compute_stage() {
+        let shell = GdsShell::new();
+        let frame = shell.task_frame(2);
+
+        assert!(frame.pipeline().ends_with("::ComputeGraph"));
+        assert_eq!(
+            frame.image_spec().kind(),
+            TaskFrameKind::PregelExecutionImage
+        );
     }
 }

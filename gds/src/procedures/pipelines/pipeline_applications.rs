@@ -1,43 +1,46 @@
-use std::collections::HashMap;
-use std::sync::Arc;
-
-use dyn_clone::clone_box;
-use serde_json::Value;
-
 use crate::applications::algorithms::machinery::{
     AlgorithmProcessingTimings, GraphStoreNodePropertiesWritten, GraphStoreService,
     MutateResultBuilder, NodeProperty, StreamResultBuilder, WriteResultBuilder,
 };
 use crate::applications::services::logging::Log;
 use crate::collections::backends::vec::VecDouble;
+use crate::core::graph_dimensions::ConcreteGraphDimensions;
 use crate::core::loading::GraphResources;
-use crate::task::memory::MemoryEstimationResult;
 use crate::ml::metrics::{ClassificationMetricSpecification, RegressionMetric};
 use crate::ml::models::Regressor;
-use crate::projection::eval::pipeline::link_pipeline::LinkFeatureStepFactory;
-use crate::projection::eval::pipeline::link_pipeline::LinkPredictionSplitConfig;
-use crate::projection::eval::pipeline::link_pipeline::LinkPredictionTrainingPipeline;
-use crate::projection::eval::pipeline::node_pipeline::NodeClassificationModelResult;
-use crate::projection::eval::pipeline::node_pipeline::NodeClassificationPipelineTrainConfig;
-use crate::projection::eval::pipeline::node_pipeline::NodeClassificationTrainingPipeline;
-use crate::projection::eval::pipeline::node_pipeline::NodeFeatureStep;
-use crate::projection::eval::pipeline::node_pipeline::NodePropertyPipelineBaseTrainConfig;
-use crate::projection::eval::pipeline::node_pipeline::NodePropertyPredictPipeline;
-use crate::projection::eval::pipeline::node_pipeline::NodePropertyPredictionSplitConfig;
-use crate::projection::eval::pipeline::node_pipeline::NodePropertyTrainingPipeline;
-use crate::projection::eval::pipeline::node_pipeline::NodeRegressionPipelineModelInfo;
-use crate::projection::eval::pipeline::node_pipeline::NodeRegressionPipelineTrainConfig;
-use crate::projection::eval::pipeline::node_pipeline::NodeRegressionTrainingPipeline;
+use crate::projection::eval::pipeline::LinkFeatureStepFactory;
+use crate::projection::eval::pipeline::LinkPredictionSplitConfig;
+use crate::projection::eval::pipeline::LinkPredictionTrainingPipeline;
+use crate::projection::eval::pipeline::NodeClassificationModelResult;
+use crate::projection::eval::pipeline::NodeClassificationPipelineTrainConfig;
+use crate::projection::eval::pipeline::NodeClassificationTrainingPipeline;
+use crate::projection::eval::pipeline::NodeFeatureStep;
+use crate::projection::eval::pipeline::NodePropertyPipelineBaseTrainConfig;
+use crate::projection::eval::pipeline::NodePropertyPredictPipeline;
+use crate::projection::eval::pipeline::NodePropertyPredictionSplitConfig;
+use crate::projection::eval::pipeline::NodePropertyTrainingPipeline;
+use crate::projection::eval::pipeline::NodeRegressionPipelineModelInfo;
+use crate::projection::eval::pipeline::NodeRegressionPipelineTrainConfig;
+use crate::projection::eval::pipeline::NodeRegressionTrainingPipeline;
 use crate::projection::eval::pipeline::{
     AutoTuningConfig, ExecutableNodePropertyStep, Pipeline, TrainingMethod, TrainingPipeline,
 };
 use crate::projection::eval::pipeline::{NodePropertyStep, PipelineCatalogEntry};
+use crate::task::concurrency::Concurrency;
+use crate::task::memory::{MemoryEstimationResult, MemoryRange, MemoryTree};
+use crate::task::runtime::TaskFrame;
+use crate::task::runtime::TaskFrameKind;
+use crate::task::runtime::TaskFrameStorageBackend;
 use crate::types::catalog::{GraphCatalog, InMemoryGraphCatalog};
 use crate::types::graph_store::DefaultGraphStore;
 use crate::types::graph_store::GraphStore;
 use crate::types::properties::node::DefaultDoubleNodePropertyValues;
 use crate::types::properties::node::NodePropertyValues;
 use crate::types::user::User;
+use dyn_clone::clone_box;
+use serde_json::Value;
+use std::collections::HashMap;
+use std::sync::Arc;
 
 use super::node_classification_predict_computation::NodeClassificationPredictComputation;
 use super::node_classification_predict_pipeline_base_config::{
@@ -96,6 +99,19 @@ struct NodeRegressionRuntimeModel {
     regressor: Arc<dyn Regressor>,
     pipeline: NodePropertyPredictPipeline,
     train_config: NodeRegressionPipelineTrainConfig,
+}
+
+#[derive(Clone, Copy)]
+struct EstimateCoefficients {
+    fixed_bytes: usize,
+    per_node_bytes: usize,
+    per_relationship_bytes: usize,
+}
+
+#[derive(Clone, Copy)]
+struct PlannedResourceContract {
+    concurrency: usize,
+    memory_range: MemoryRange,
 }
 
 impl PipelineApplications {
@@ -445,10 +461,20 @@ impl PipelineApplications {
 
     pub fn link_prediction_mutate_estimate(
         &self,
-        _graph_name_or_configuration: Value,
-        _raw_configuration: AnyMap,
+        graph_name_or_configuration: Value,
+        raw_configuration: AnyMap,
     ) -> Vec<MemoryEstimationResult> {
-        executor_backed_pipeline_application_not_wired("linkPrediction.mutateEstimate")
+        self.estimate_pipeline_memory(
+            "linkPrediction.mutateEstimate",
+            &graph_name_or_configuration,
+            &raw_configuration,
+            EstimateCoefficients {
+                fixed_bytes: 2 * 1024 * 1024,
+                per_node_bytes: 48,
+                per_relationship_bytes: 24,
+            },
+            "writeConcurrency",
+        )
     }
 
     pub fn link_prediction_stream(
@@ -461,10 +487,20 @@ impl PipelineApplications {
 
     pub fn link_prediction_stream_estimate(
         &self,
-        _graph_name_or_configuration: Value,
-        _raw_configuration: AnyMap,
+        graph_name_or_configuration: Value,
+        raw_configuration: AnyMap,
     ) -> Vec<MemoryEstimationResult> {
-        executor_backed_pipeline_application_not_wired("linkPrediction.streamEstimate")
+        self.estimate_pipeline_memory(
+            "linkPrediction.streamEstimate",
+            &graph_name_or_configuration,
+            &raw_configuration,
+            EstimateCoefficients {
+                fixed_bytes: 1024 * 1024,
+                per_node_bytes: 32,
+                per_relationship_bytes: 16,
+            },
+            "concurrency",
+        )
     }
 
     pub fn link_prediction_train(
@@ -477,10 +513,20 @@ impl PipelineApplications {
 
     pub fn link_prediction_train_estimate(
         &self,
-        _graph_name_or_configuration: Value,
-        _raw_configuration: AnyMap,
+        graph_name_or_configuration: Value,
+        raw_configuration: AnyMap,
     ) -> Vec<MemoryEstimationResult> {
-        executor_backed_pipeline_application_not_wired("linkPrediction.trainEstimate")
+        self.estimate_pipeline_memory(
+            "linkPrediction.trainEstimate",
+            &graph_name_or_configuration,
+            &raw_configuration,
+            EstimateCoefficients {
+                fixed_bytes: 4 * 1024 * 1024,
+                per_node_bytes: 64,
+                per_relationship_bytes: 48,
+            },
+            "concurrency",
+        )
     }
 
     pub fn node_classification_predict_mutate(
@@ -541,12 +587,57 @@ impl PipelineApplications {
         )]
     }
 
+    pub fn node_classification_predict_mutate_task_frame_plan(
+        &self,
+        graph_name: &str,
+        configuration: &AnyMap,
+    ) -> Vec<TaskFrame> {
+        let resource_contract = self.node_pipeline_plan_resource_contract(
+            graph_name,
+            configuration,
+            EstimateCoefficients {
+                fixed_bytes: 2 * 1024 * 1024,
+                per_node_bytes: 56,
+                per_relationship_bytes: 20,
+            },
+            "writeConcurrency",
+        );
+
+        self.build_node_pipeline_task_frame_plan(
+            "nodeClassification.predict.mutate",
+            graph_name,
+            &[
+                "graph.load".to_string(),
+                "pipeline.config.resolve".to_string(),
+            ],
+            &[
+                "pipeline.predict".to_string(),
+                "node.classification".to_string(),
+            ],
+            &[
+                "graph.mutate".to_string(),
+                "procedure.result.render".to_string(),
+            ],
+            resource_contract,
+        )
+    }
+
     pub fn node_classification_predict_mutate_estimate(
         &self,
-        _graph_name_or_configuration: Value,
-        _raw_configuration: AnyMap,
+        graph_name_or_configuration: Value,
+        raw_configuration: AnyMap,
     ) -> Vec<MemoryEstimationResult> {
-        executor_backed_pipeline_application_not_wired("nodeClassification.mutateEstimate")
+        self.estimate_pipeline_memory(
+            "nodeClassification.mutateEstimate",
+            &graph_name_or_configuration,
+            &raw_configuration,
+            EstimateCoefficients {
+                fixed_bytes: 2 * 1024 * 1024,
+                per_node_bytes: 56,
+                per_relationship_bytes: 20,
+            },
+            "writeConcurrency",
+        )
     }
 
     pub fn node_classification_predict_stream(
@@ -582,10 +673,20 @@ impl PipelineApplications {
 
     pub fn node_classification_predict_stream_estimate(
         &self,
-        _graph_name_or_configuration: Value,
-        _raw_configuration: AnyMap,
+        graph_name_or_configuration: Value,
+        raw_configuration: AnyMap,
     ) -> Vec<MemoryEstimationResult> {
-        executor_backed_pipeline_application_not_wired("nodeClassification.streamEstimate")
+        self.estimate_pipeline_memory(
+            "nodeClassification.streamEstimate",
+            &graph_name_or_configuration,
+            &raw_configuration,
+            EstimateCoefficients {
+                fixed_bytes: 1024 * 1024,
+                per_node_bytes: 40,
+                per_relationship_bytes: 12,
+            },
+            "concurrency",
+        )
     }
 
     pub fn node_classification_train(
@@ -622,10 +723,20 @@ impl PipelineApplications {
 
     pub fn node_classification_train_estimate(
         &self,
-        _graph_name_or_configuration: Value,
-        _raw_configuration: AnyMap,
+        graph_name_or_configuration: Value,
+        raw_configuration: AnyMap,
     ) -> Vec<MemoryEstimationResult> {
-        executor_backed_pipeline_application_not_wired("nodeClassification.trainEstimate")
+        self.estimate_pipeline_memory(
+            "nodeClassification.trainEstimate",
+            &graph_name_or_configuration,
+            &raw_configuration,
+            EstimateCoefficients {
+                fixed_bytes: 6 * 1024 * 1024,
+                per_node_bytes: 72,
+                per_relationship_bytes: 32,
+            },
+            "concurrency",
+        )
     }
 
     pub fn node_classification_predict_write(
@@ -683,10 +794,20 @@ impl PipelineApplications {
 
     pub fn node_classification_predict_write_estimate(
         &self,
-        _graph_name_or_configuration: Value,
-        _raw_configuration: AnyMap,
+        graph_name_or_configuration: Value,
+        raw_configuration: AnyMap,
     ) -> Vec<MemoryEstimationResult> {
-        executor_backed_pipeline_application_not_wired("nodeClassification.writeEstimate")
+        self.estimate_pipeline_memory(
+            "nodeClassification.writeEstimate",
+            &graph_name_or_configuration,
+            &raw_configuration,
+            EstimateCoefficients {
+                fixed_bytes: 2 * 1024 * 1024,
+                per_node_bytes: 56,
+                per_relationship_bytes: 20,
+            },
+            "writeConcurrency",
+        )
     }
 
     pub fn node_regression_predict_mutate(
@@ -748,6 +869,59 @@ impl PipelineApplications {
         )]
     }
 
+    pub fn node_regression_predict_mutate_task_frame_plan(
+        &self,
+        graph_name: &str,
+        configuration: &AnyMap,
+    ) -> Vec<TaskFrame> {
+        let resource_contract = self.node_pipeline_plan_resource_contract(
+            graph_name,
+            configuration,
+            EstimateCoefficients {
+                fixed_bytes: 2 * 1024 * 1024,
+                per_node_bytes: 56,
+                per_relationship_bytes: 20,
+            },
+            "writeConcurrency",
+        );
+
+        self.build_node_pipeline_task_frame_plan(
+            "nodeRegression.predict.mutate",
+            graph_name,
+            &[
+                "graph.load".to_string(),
+                "pipeline.config.resolve".to_string(),
+            ],
+            &[
+                "pipeline.predict".to_string(),
+                "node.regression".to_string(),
+            ],
+            &[
+                "graph.mutate".to_string(),
+                "procedure.result.render".to_string(),
+            ],
+            resource_contract,
+        )
+    }
+
+    pub fn node_regression_predict_mutate_estimate(
+        &self,
+        graph_name_or_configuration: Value,
+        raw_configuration: AnyMap,
+    ) -> Vec<MemoryEstimationResult> {
+        self.estimate_pipeline_memory(
+            "nodeRegression.mutateEstimate",
+            &graph_name_or_configuration,
+            &raw_configuration,
+            EstimateCoefficients {
+                fixed_bytes: 2 * 1024 * 1024,
+                per_node_bytes: 56,
+                per_relationship_bytes: 20,
+            },
+            "writeConcurrency",
+        )
+    }
+
     pub fn node_regression_predict_stream(
         &self,
         graph_name: &str,
@@ -779,6 +953,24 @@ impl PipelineApplications {
         builder
             .build(&graph_resources, Some(predict_result))
             .collect()
+    }
+
+    pub fn node_regression_predict_stream_estimate(
+        &self,
+        graph_name_or_configuration: Value,
+        raw_configuration: AnyMap,
+    ) -> Vec<MemoryEstimationResult> {
+        self.estimate_pipeline_memory(
+            "nodeRegression.streamEstimate",
+            &graph_name_or_configuration,
+            &raw_configuration,
+            EstimateCoefficients {
+                fixed_bytes: 1024 * 1024,
+                per_node_bytes: 40,
+                per_relationship_bytes: 12,
+            },
+            "concurrency",
+        )
     }
 
     pub fn node_regression_train(
@@ -815,6 +1007,24 @@ impl PipelineApplications {
             &model_info,
             &training_statistics.to_map(),
             AlgorithmProcessingTimings::unavailable(),
+        )
+    }
+
+    pub fn node_regression_train_estimate(
+        &self,
+        graph_name_or_configuration: Value,
+        raw_configuration: AnyMap,
+    ) -> Vec<MemoryEstimationResult> {
+        self.estimate_pipeline_memory(
+            "nodeRegression.trainEstimate",
+            &graph_name_or_configuration,
+            &raw_configuration,
+            EstimateCoefficients {
+                fixed_bytes: 6 * 1024 * 1024,
+                per_node_bytes: 72,
+                per_relationship_bytes: 32,
+            },
+            "concurrency",
         )
     }
 
@@ -900,6 +1110,195 @@ impl PipelineApplications {
                 panic!("Trained node regression model not found: {model_user}/{model_name}")
             })
     }
+
+    fn node_pipeline_plan_resource_contract(
+        &self,
+        graph_name: &str,
+        raw_configuration: &AnyMap,
+        coefficients: EstimateCoefficients,
+        concurrency_key: &str,
+    ) -> PlannedResourceContract {
+        let graph_store = self.graph_store_for(graph_name);
+        let node_count = GraphStore::node_count(graph_store.as_ref());
+        let relationship_count = GraphStore::relationship_count(graph_store.as_ref());
+
+        let concurrency = optional_usize(raw_configuration, concurrency_key)
+            .or_else(|| optional_usize(raw_configuration, "concurrency"))
+            .unwrap_or_else(num_cpus::get)
+            .max(1);
+
+        let resident_bytes = coefficients
+            .fixed_bytes
+            .saturating_add(coefficients.per_node_bytes.saturating_mul(node_count))
+            .saturating_add(
+                coefficients
+                    .per_relationship_bytes
+                    .saturating_mul(relationship_count),
+            );
+
+        let temporary_min = resident_bytes.checked_div(10).unwrap_or(0).saturating_add(
+            coefficients
+                .per_node_bytes
+                .saturating_mul(node_count)
+                .saturating_mul(concurrency.saturating_sub(1))
+                .checked_div(5)
+                .unwrap_or(0),
+        );
+        let temporary_max = temporary_min
+            .saturating_mul(2)
+            .saturating_add(resident_bytes.checked_div(5).unwrap_or(0));
+
+        let total_min = resident_bytes.saturating_add(temporary_min);
+        let total_max = resident_bytes.saturating_add(temporary_max).max(total_min);
+
+        PlannedResourceContract {
+            concurrency,
+            memory_range: MemoryRange::of_range(total_min, total_max),
+        }
+    }
+
+    fn build_node_pipeline_task_frame_plan(
+        &self,
+        procedure_name: &str,
+        graph_name: &str,
+        seed_steps: &[String],
+        compute_steps: &[String],
+        persist_steps: &[String],
+        resource_contract: PlannedResourceContract,
+    ) -> Vec<TaskFrame> {
+        let seed_memory = scale_memory_range(resource_contract.memory_range, 1, 5);
+        let compute_memory = scale_memory_range(resource_contract.memory_range, 7, 10);
+        let persist_memory = scale_memory_range(resource_contract.memory_range, 1, 10);
+
+        let seed_output = format!("{procedure_name}::{graph_name}::SeedOutput");
+        let compute_output = format!("{procedure_name}::{graph_name}::ComputeOutput");
+        let final_output = format!("{procedure_name}::{graph_name}::Result");
+        let concurrency = Concurrency::of(resource_contract.concurrency);
+
+        let seed = TaskFrame::new(
+            "procedure".to_string(),
+            format!("{procedure_name}::Seed"),
+            seed_steps.to_vec(),
+            1,
+            concurrency,
+        )
+        .with_image_kind(TaskFrameKind::GraphAlgorithm)
+        .with_execution_image("seed.graph-store")
+        .with_storage_backend(TaskFrameStorageBackend::GraphStore)
+        .with_inputs(vec![format!("graph::{graph_name}")])
+        .with_outputs(vec![seed_output.clone()])
+        .with_memory_range(seed_memory);
+
+        let compute = TaskFrame::new(
+            "procedure".to_string(),
+            format!("{procedure_name}::ComputeGraph"),
+            compute_steps.to_vec(),
+            1,
+            concurrency,
+        )
+        .with_image_kind(TaskFrameKind::MachineLearning)
+        .with_execution_image("pipeline.predict")
+        .with_storage_backend(TaskFrameStorageBackend::GraphStore)
+        .with_inputs(vec![seed_output])
+        .with_outputs(vec![compute_output.clone()])
+        .with_memory_range(compute_memory);
+
+        let persist = TaskFrame::new(
+            "procedure".to_string(),
+            format!("{procedure_name}::Persist"),
+            persist_steps.to_vec(),
+            1,
+            concurrency,
+        )
+        .with_image_kind(TaskFrameKind::ProcedurePipeline)
+        .with_execution_image("persist.result")
+        .with_storage_backend(TaskFrameStorageBackend::RuntimeManaged)
+        .with_inputs(vec![compute_output])
+        .with_outputs(vec![final_output])
+        .with_memory_range(persist_memory);
+
+        vec![seed, compute, persist]
+    }
+
+    fn estimate_pipeline_memory(
+        &self,
+        procedure_name: &str,
+        graph_name_or_configuration: &Value,
+        raw_configuration: &AnyMap,
+        coefficients: EstimateCoefficients,
+        concurrency_key: &str,
+    ) -> Vec<MemoryEstimationResult> {
+        let graph_name = estimate_graph_name(graph_name_or_configuration, raw_configuration);
+        let graph_store = self.graph_store_for(&graph_name);
+
+        let node_count = GraphStore::node_count(graph_store.as_ref());
+        let relationship_count = GraphStore::relationship_count(graph_store.as_ref());
+        let dimensions = ConcreteGraphDimensions::of(node_count, relationship_count);
+
+        let concurrency = optional_usize(raw_configuration, concurrency_key)
+            .or_else(|| optional_usize(raw_configuration, "concurrency"))
+            .unwrap_or_else(num_cpus::get)
+            .max(1);
+
+        let resident_bytes = coefficients
+            .fixed_bytes
+            .saturating_add(coefficients.per_node_bytes.saturating_mul(node_count))
+            .saturating_add(
+                coefficients
+                    .per_relationship_bytes
+                    .saturating_mul(relationship_count),
+            );
+
+        let temporary_min = resident_bytes.checked_div(10).unwrap_or(0).saturating_add(
+            coefficients
+                .per_node_bytes
+                .saturating_mul(node_count)
+                .saturating_mul(concurrency.saturating_sub(1))
+                .checked_div(5)
+                .unwrap_or(0),
+        );
+        let temporary_max = temporary_min
+            .saturating_mul(2)
+            .saturating_add(resident_bytes.checked_div(5).unwrap_or(0));
+
+        let total_min = resident_bytes.saturating_add(temporary_min);
+        let total_max = resident_bytes.saturating_add(temporary_max).max(total_min);
+
+        let memory_tree = MemoryTree::new(
+            procedure_name.to_string(),
+            MemoryRange::of_range(total_min, total_max),
+            vec![
+                MemoryTree::leaf(
+                    "residentMemory".to_string(),
+                    MemoryRange::of(resident_bytes),
+                ),
+                MemoryTree::leaf(
+                    "temporaryMemory".to_string(),
+                    MemoryRange::of_range(temporary_min, temporary_max.max(temporary_min)),
+                ),
+            ],
+        );
+
+        vec![MemoryEstimationResult::new(dimensions, memory_tree)]
+    }
+}
+
+fn scale_memory_range(range: MemoryRange, numerator: usize, denominator: usize) -> MemoryRange {
+    let denominator = denominator.max(1);
+    let min = range
+        .min()
+        .saturating_mul(numerator)
+        .checked_div(denominator)
+        .unwrap_or(0);
+    let mut max = range
+        .max()
+        .saturating_mul(numerator)
+        .checked_div(denominator)
+        .unwrap_or(0);
+    if max < min {
+        max = min;
+    }
+    MemoryRange::of_range(min, max)
 }
 
 fn pipeline_catalog_entry_to_result(entry: PipelineCatalogEntry) -> PipelineCatalogResult {
@@ -1084,6 +1483,29 @@ fn optional_string(configuration: &AnyMap, key: &str) -> Option<String> {
         .map(str::trim)
         .filter(|value| !value.is_empty())
         .map(ToString::to_string)
+}
+
+fn estimate_graph_name(graph_name_or_configuration: &Value, raw_configuration: &AnyMap) -> String {
+    let from_embedded_object = match graph_name_or_configuration {
+        Value::Object(value_map) => value_map
+            .get("graphName")
+            .and_then(Value::as_str)
+            .map(str::trim)
+            .filter(|value| !value.is_empty())
+            .map(ToString::to_string),
+        _ => None,
+    };
+
+    match graph_name_or_configuration {
+        Value::String(graph_name) if !graph_name.trim().is_empty() => graph_name.trim().to_string(),
+        _ => from_embedded_object
+            .or_else(|| optional_string(raw_configuration, "graphName"))
+            .unwrap_or_else(|| {
+                panic!(
+                    "Missing graph name for estimate call; provide graphName as the first argument or in configuration"
+                )
+            }),
+    }
 }
 
 fn render_node_classification_train_result(
@@ -1368,4 +1790,57 @@ fn apply_node_classification_mutation(
         .unwrap_or_else(|e| panic!("nodeClassification.mutate failed to update graph store: {e}"));
 
     GraphStoreNodePropertiesWritten(written.0)
+}
+
+#[cfg(test)]
+mod task_frame_plan_tests {
+    use super::*;
+    use crate::projection::eval::pipeline::PipelineCatalog;
+    use crate::types::catalog::GraphCatalog;
+    use crate::types::random::RandomGraphConfig;
+    use crate::types::random::RandomRelationshipConfig;
+    use serde_json::Value;
+
+    fn pipeline_applications_with_graph() -> PipelineApplications {
+        let graph_catalog: Arc<dyn GraphCatalog> = Arc::new(InMemoryGraphCatalog::new());
+        let graph = Arc::new(
+            DefaultGraphStore::random(&RandomGraphConfig {
+                seed: Some(19),
+                node_count: 7,
+                relationships: vec![RandomRelationshipConfig::new("REL", 1.0)],
+                ..RandomGraphConfig::default()
+            })
+            .expect("random graph generation"),
+        );
+        graph_catalog.set("graph", graph);
+
+        let repository = PipelineRepository::new(Arc::new(PipelineCatalog::new()));
+        PipelineApplications::new_with_graph_catalog(User::from("alice"), repository, graph_catalog)
+    }
+
+    #[test]
+    fn node_classification_mutate_task_frame_plan_is_three_stage() {
+        let apps = pipeline_applications_with_graph();
+        let config = AnyMap::from([("writeConcurrency".to_string(), Value::from(2))]);
+
+        let plan = apps.node_classification_predict_mutate_task_frame_plan("graph", &config);
+        assert_eq!(plan.len(), 3);
+        assert!(plan[0].pipeline().ends_with("::Seed"));
+        assert!(plan[1].pipeline().ends_with("::ComputeGraph"));
+        assert!(plan[2].pipeline().ends_with("::Persist"));
+        assert_eq!(plan[1].image_spec().kind(), TaskFrameKind::MachineLearning);
+    }
+
+    #[test]
+    fn node_regression_mutate_task_frame_plan_is_three_stage() {
+        let apps = pipeline_applications_with_graph();
+        let config = AnyMap::from([("writeConcurrency".to_string(), Value::from(2))]);
+
+        let plan = apps.node_regression_predict_mutate_task_frame_plan("graph", &config);
+        assert_eq!(plan.len(), 3);
+        assert!(plan[0].pipeline().ends_with("::Seed"));
+        assert!(plan[1].pipeline().ends_with("::ComputeGraph"));
+        assert!(plan[2].pipeline().ends_with("::Persist"));
+        assert_eq!(plan[1].image_spec().kind(), TaskFrameKind::MachineLearning);
+    }
 }

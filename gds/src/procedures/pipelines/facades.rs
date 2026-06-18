@@ -1,25 +1,21 @@
-//! Trait surface for the Pipelines Procedure Facades.
-//!
-//! This is intentionally "ceremonial" and Java-shaped.
-
 use std::sync::Arc;
 use std::sync::OnceLock;
 
 use serde_json::Value;
 
-use crate::task::memory::MemoryEstimationResult;
-use crate::projection::eval::pipeline::link_pipeline::LinkPredictionSplitConfig;
-use crate::projection::eval::pipeline::node_pipeline::{
-    NodeFeatureStep, NodePropertyPredictionSplitConfig,
-};
-use crate::projection::eval::pipeline::AutoTuningConfig;
-use crate::projection::eval::pipeline::PipelineCatalog;
-use crate::projection::eval::pipeline::TrainingMethod;
-use crate::types::catalog::{GraphCatalog, InMemoryGraphCatalog};
-use crate::types::user::User;
-
 use super::types::*;
 use super::{PipelineApplications, PipelineName, PipelineRepository};
+use crate::projection::eval::pipeline::AutoTuningConfig;
+use crate::projection::eval::pipeline::LinkPredictionSplitConfig;
+use crate::projection::eval::pipeline::NodeFeatureStep;
+use crate::projection::eval::pipeline::NodePropertyPredictionSplitConfig;
+use crate::projection::eval::pipeline::PipelineCatalog;
+use crate::projection::eval::pipeline::TrainingMethod;
+use crate::task::memory::MemoryEstimationResult;
+use crate::task::runtime::TaskFrame;
+use crate::types::catalog::GraphCatalog;
+use crate::types::catalog::InMemoryGraphCatalog;
+use crate::types::user::User;
 
 pub type RawConfig = AnyMap;
 
@@ -130,6 +126,8 @@ pub trait NodeClassificationFacade {
 
     fn mutate(&self, graph_name: &str, configuration: RawConfig) -> Vec<PredictMutateResult>;
 
+    fn mutate_task_frame_plan(&self, graph_name: &str, configuration: RawConfig) -> Vec<TaskFrame>;
+
     fn mutate_estimate(
         &self,
         graph_name_or_configuration: Value,
@@ -211,8 +209,22 @@ pub trait NodeRegressionFacade {
 
     fn mutate(&self, graph_name: &str, configuration: RawConfig) -> Vec<PredictMutateResult>;
 
+    fn mutate_task_frame_plan(&self, graph_name: &str, configuration: RawConfig) -> Vec<TaskFrame>;
+
+    fn mutate_estimate(
+        &self,
+        graph_name_or_configuration: Value,
+        raw_configuration: RawConfig,
+    ) -> Vec<MemoryEstimationResult>;
+
     fn stream(&self, graph_name: &str, configuration: RawConfig)
         -> Vec<NodeRegressionStreamResult>;
+
+    fn stream_estimate(
+        &self,
+        graph_name_or_configuration: Value,
+        raw_configuration: RawConfig,
+    ) -> Vec<MemoryEstimationResult>;
 
     fn select_features(
         &self,
@@ -225,6 +237,12 @@ pub trait NodeRegressionFacade {
         graph_name: &str,
         configuration: RawConfig,
     ) -> Vec<NodeRegressionPipelineTrainResult>;
+
+    fn train_estimate(
+        &self,
+        graph_name_or_configuration: Value,
+        raw_configuration: RawConfig,
+    ) -> Vec<MemoryEstimationResult>;
 }
 
 pub trait PipelinesProcedureFacade {
@@ -689,6 +707,11 @@ impl NodeClassificationFacade for LocalNodeClassificationFacade {
             .node_classification_predict_mutate(graph_name, configuration)
     }
 
+    fn mutate_task_frame_plan(&self, graph_name: &str, configuration: RawConfig) -> Vec<TaskFrame> {
+        self.pipeline_applications
+            .node_classification_predict_mutate_task_frame_plan(graph_name, &configuration)
+    }
+
     fn mutate_estimate(
         &self,
         graph_name_or_configuration: Value,
@@ -902,6 +925,20 @@ impl NodeRegressionFacade for LocalNodeRegressionFacade {
             .node_regression_predict_mutate(graph_name, configuration)
     }
 
+    fn mutate_task_frame_plan(&self, graph_name: &str, configuration: RawConfig) -> Vec<TaskFrame> {
+        self.pipeline_applications
+            .node_regression_predict_mutate_task_frame_plan(graph_name, &configuration)
+    }
+
+    fn mutate_estimate(
+        &self,
+        graph_name_or_configuration: Value,
+        raw_configuration: RawConfig,
+    ) -> Vec<MemoryEstimationResult> {
+        self.pipeline_applications
+            .node_regression_predict_mutate_estimate(graph_name_or_configuration, raw_configuration)
+    }
+
     fn stream(
         &self,
         graph_name: &str,
@@ -909,6 +946,15 @@ impl NodeRegressionFacade for LocalNodeRegressionFacade {
     ) -> Vec<NodeRegressionStreamResult> {
         self.pipeline_applications
             .node_regression_predict_stream(graph_name, configuration)
+    }
+
+    fn stream_estimate(
+        &self,
+        graph_name_or_configuration: Value,
+        raw_configuration: RawConfig,
+    ) -> Vec<MemoryEstimationResult> {
+        self.pipeline_applications
+            .node_regression_predict_stream_estimate(graph_name_or_configuration, raw_configuration)
     }
 
     fn select_features(
@@ -942,6 +988,15 @@ impl NodeRegressionFacade for LocalNodeRegressionFacade {
     ) -> Vec<NodeRegressionPipelineTrainResult> {
         self.pipeline_applications
             .node_regression_train(graph_name, configuration)
+    }
+
+    fn train_estimate(
+        &self,
+        graph_name_or_configuration: Value,
+        raw_configuration: RawConfig,
+    ) -> Vec<MemoryEstimationResult> {
+        self.pipeline_applications
+            .node_regression_train_estimate(graph_name_or_configuration, raw_configuration)
     }
 }
 
@@ -1027,6 +1082,36 @@ mod top_level_facade_tests {
 #[cfg(test)]
 mod executor_backed_facade_tests {
     use super::*;
+    use crate::task::runtime::TaskFrameKind;
+    use crate::types::graph_store::DefaultGraphStore;
+    use crate::types::random::{RandomGraphConfig, RandomRelationshipConfig};
+
+    fn facade_with_graph() -> LocalPipelinesProcedureFacade {
+        let pipeline_catalog = Arc::new(PipelineCatalog::new());
+        let graph_catalog: Arc<dyn GraphCatalog> = Arc::new(InMemoryGraphCatalog::new());
+        let graph = Arc::new(
+            DefaultGraphStore::random(&RandomGraphConfig {
+                seed: Some(7),
+                node_count: 8,
+                relationships: vec![RandomRelationshipConfig::new("REL", 1.0)],
+                ..RandomGraphConfig::default()
+            })
+            .expect("random graph generation"),
+        );
+        graph_catalog.set("graph", graph);
+
+        LocalPipelinesProcedureFacade::new(
+            RequestScopedDependencies::with_graph_catalog(User::from("alice"), graph_catalog),
+            pipeline_catalog,
+        )
+    }
+
+    fn graph_name_config() -> Value {
+        Value::Object(serde_json::Map::from_iter([(
+            "graphName".to_string(),
+            Value::String("graph".to_string()),
+        )]))
+    }
 
     #[test]
     #[should_panic(expected = "linkPrediction.train is an executor-backed pipeline procedure")]
@@ -1110,6 +1195,119 @@ mod executor_backed_facade_tests {
         );
 
         facade.node_regression().stream("graph", AnyMap::new());
+    }
+
+    #[test]
+    fn link_prediction_estimates_use_graph_dimensions() {
+        let facade = facade_with_graph();
+
+        let mutate = facade
+            .link_prediction()
+            .mutate_estimate(Value::String("graph".to_string()), AnyMap::new());
+        let stream = facade
+            .link_prediction()
+            .stream_estimate(Value::String("graph".to_string()), AnyMap::new());
+        let train = facade
+            .link_prediction()
+            .train_estimate(Value::String("graph".to_string()), AnyMap::new());
+
+        assert_eq!(mutate.len(), 1);
+        assert_eq!(stream.len(), 1);
+        assert_eq!(train.len(), 1);
+        assert!(mutate[0].memory_usage() > 0);
+        assert!(stream[0].memory_usage() > 0);
+        assert!(train[0].memory_usage() > 0);
+    }
+
+    #[test]
+    fn node_classification_estimates_use_graph_dimensions() {
+        let facade = facade_with_graph();
+
+        let mutate = facade
+            .node_classification()
+            .mutate_estimate(Value::String("graph".to_string()), AnyMap::new());
+        let stream = facade
+            .node_classification()
+            .stream_estimate(Value::String("graph".to_string()), AnyMap::new());
+        let train = facade
+            .node_classification()
+            .train_estimate(Value::String("graph".to_string()), AnyMap::new());
+        let write = facade
+            .node_classification()
+            .write_estimate(Value::String("graph".to_string()), AnyMap::new());
+
+        assert_eq!(mutate.len(), 1);
+        assert_eq!(stream.len(), 1);
+        assert_eq!(train.len(), 1);
+        assert_eq!(write.len(), 1);
+        assert!(mutate[0].memory_usage() > 0);
+        assert!(stream[0].memory_usage() > 0);
+        assert!(train[0].memory_usage() > 0);
+        assert!(write[0].memory_usage() > 0);
+    }
+
+    #[test]
+    fn node_regression_estimates_use_graph_dimensions() {
+        let facade = facade_with_graph();
+
+        let mutate = facade
+            .node_regression()
+            .mutate_estimate(Value::String("graph".to_string()), AnyMap::new());
+        let stream = facade
+            .node_regression()
+            .stream_estimate(Value::String("graph".to_string()), AnyMap::new());
+        let train = facade
+            .node_regression()
+            .train_estimate(Value::String("graph".to_string()), AnyMap::new());
+
+        assert_eq!(mutate.len(), 1);
+        assert_eq!(stream.len(), 1);
+        assert_eq!(train.len(), 1);
+        assert!(mutate[0].memory_usage() > 0);
+        assert!(stream[0].memory_usage() > 0);
+        assert!(train[0].memory_usage() > 0);
+    }
+
+    #[test]
+    fn node_regression_estimates_accept_embedded_graph_name() {
+        let facade = facade_with_graph();
+
+        let mutate = facade
+            .node_regression()
+            .mutate_estimate(graph_name_config(), AnyMap::new());
+
+        assert_eq!(mutate.len(), 1);
+        assert!(mutate[0].memory_usage() > 0);
+    }
+
+    #[test]
+    fn node_classification_mutate_task_frame_plan_uses_staged_contract() {
+        let facade = facade_with_graph();
+
+        let plan = facade
+            .node_classification()
+            .mutate_task_frame_plan("graph", AnyMap::new());
+
+        assert_eq!(plan.len(), 3);
+        assert!(plan[0].pipeline().ends_with("::Seed"));
+        assert!(plan[1].pipeline().ends_with("::ComputeGraph"));
+        assert!(plan[2].pipeline().ends_with("::Persist"));
+        assert_eq!(plan[1].image_spec().kind(), TaskFrameKind::MachineLearning);
+    }
+
+    #[test]
+    fn node_regression_mutate_task_frame_plan_uses_staged_contract() {
+        let facade = facade_with_graph();
+
+        let plan = facade
+            .node_regression()
+            .mutate_task_frame_plan("graph", AnyMap::new());
+
+        assert_eq!(plan.len(), 3);
+        assert!(plan[0].pipeline().ends_with("::Seed"));
+        assert!(plan[1].pipeline().ends_with("::ComputeGraph"));
+        assert!(plan[2].pipeline().ends_with("::Persist"));
+        assert_eq!(plan[1].image_spec().kind(), TaskFrameKind::MachineLearning);
     }
 }
 
