@@ -1,6 +1,3 @@
-//! Linear Regression objective function.
-//!
-
 use crate::collections::HugeDoubleArray;
 use crate::ml::core::functions::{
     Constant, ConstantScale, ElementSum, L2NormSquared, MeanSquareError, Weights,

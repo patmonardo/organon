@@ -3,7 +3,6 @@ use super::Metric;
 /// Handler for model-specific metrics during training.
 /// Filters metrics to only those marked as model-specific and delegates to a consumer.
 ///
-/// This is a 1:1 translation of ModelSpecificMetricsHandler from Java GDS.
 #[derive(Clone)]
 pub struct ModelSpecificMetricsHandler {
     metrics: Vec<String>,

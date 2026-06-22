@@ -2,7 +2,9 @@ use super::PipelineName;
 use crate::projection::eval::pipeline::LinkPredictionTrainingPipeline;
 use crate::projection::eval::pipeline::NodeClassificationTrainingPipeline;
 use crate::projection::eval::pipeline::NodeRegressionTrainingPipeline;
-use crate::projection::eval::pipeline::{PipelineCatalog, PipelineCatalogEntry, TrainingPipeline};
+use crate::projection::eval::pipeline::PipelineCatalog;
+use crate::projection::eval::pipeline::PipelineCatalogEntry;
+use crate::projection::eval::pipeline::TrainingPipeline;
 use crate::types::user::User;
 use std::sync::Arc;
 

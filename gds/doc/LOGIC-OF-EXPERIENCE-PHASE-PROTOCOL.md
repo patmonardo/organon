@@ -6,12 +6,15 @@ Date: 2026-06-17
 
 This protocol unifies Logical ModelSpace and Statistical ModelSpace on one platform without collapsing one into the other.
 
+Non-collapse is not a static balance. It is a teleological syllogism: a triadic, organic turning that differentiates extremes, mediates them, and returns them to higher unity.
+
 The governing rule is:
 
 1. Quality determines what can count.
 2. Quantity modulates what has been determined.
 3. Measure mediates transitions where quantitative drift becomes qualitative shift.
 4. Learning is teleological correction inside this unity, not a replacement for it.
+5. Non-collapse is maintained by triadic teleological turning, not by a simple mechanical loop.
 
 ## Core Terms
 
@@ -338,6 +341,231 @@ When you import statistical learning from ESL:
 2. **Do:** Treat its uncertainty estimates as phase-4 outputs (Statistical Estimation).
 3. **Do not:** Let its model selection override logical constraints from Phase 2.
 4. **Do not:** Treat its prediction accuracy as final; it is an input to Phase 5 (Reconciliation).
+
+## Shell-Task and Dataset Dual Architecture
+
+The platform should not be read as Procedure-first. It is Dataset-first on the semantic side and Shell-Task-first on the computational side.
+
+The doctrine relation is:
+
+1. Dataset is the semantic ground (marks, features, logic forms, plans, models).
+2. Shell is the executable aggregate that presents those grounds as operable DSL surfaces.
+3. TaskFrame is the computational frame analogue to DataFrame: it carries runtime state, scheduling, memory, progress, and termination semantics for semantic operations.
+
+### Structural Correspondence
+
+1. Dataset semantic objects:
+   corpus, feature, logic, model, plan, frame, valuation, protocol.
+2. Shell aggregate objects:
+   program, moments, pipeline, schema, help, command surfaces.
+3. Task subsystem objects:
+   runtime, concurrency, memory, pregel execution, progress registry, termination control.
+
+Together these form a single machine:
+
+1. Dataset defines what operations mean.
+2. Shell defines how they are composed and invoked.
+3. Task defines how they are executed safely and audibly in time.
+
+### TaskFrame Principle
+
+If DataFrame is the immediate tabular body of data determination, then TaskFrame is the immediate operational body of computational determination.
+
+TaskFrame should expose:
+
+1. execution context identity,
+2. resource budget and reservation state,
+3. cancellation and termination lineage,
+4. progress and provenance events,
+5. phase-tagged outputs and side effects.
+
+This prevents Shell execution from collapsing into opaque procedure calls. It restores execution as a first-class semantic artifact.
+
+### Semantic Suite Required in Dataset
+
+To support this architecture, Dataset must continue to expose a presupposed semantic suite as stable components:
+
+1. Mark/Feature schema components.
+2. Logical form and inference components.
+3. Plan/runtime contract components.
+4. Model valuation and model-space components.
+5. Protocol/reporting/provenance components.
+
+These are not optional extras; they are the conditions that let Shell remain a semantic executor rather than a command wrapper.
+
+### Shell as Aggregate of DSLs
+
+Shell should be treated as an aggregate of DSL surfaces springing from Dataset namespaces, not as an independent language.
+
+Operational rule:
+
+1. Every Shell command must map to a Dataset semantic component.
+2. Every Shell pipeline must preserve phase traceability back to the Logic of Experience circuit.
+3. Every Task execution record must be re-bindable to semantic artifacts (feature/model/plan/protocol) for audit and learning.
+
+Under this rule, the platform avoids both one-sided statistical reduction and one-sided logical idealism: semantic determination and computational realization remain internally coupled.
+
+## Reciprocal Life: DataFrame-Dataset and TaskFrame-Shell
+
+The correct direction is not to erase one-sided moments, but to bind them in a reciprocal life process.
+
+1. Dataset gives semantic determination.
+2. DataFrame gives immediate shaped body for determinations.
+3. Shell gives executable articulation of semantic intentions.
+4. TaskFrame gives temporal-operational embodiment of execution.
+
+No side is complete in isolation:
+
+1. Dataset/DataFrame without Shell/TaskFrame remains descriptive and under-realized.
+2. Shell/TaskFrame without Dataset/DataFrame becomes procedural drift without semantic ground.
+
+### Reciprocal Life Loop
+
+1. Semantic constitution:
+   Dataset and logical components define marks, constraints, and admissible structures.
+2. Embodiment:
+   DataFrame materializes those structures into inspectable and transformable bodies.
+3. Execution:
+   Shell orchestrates DSL-level acts over those bodies.
+4. Operational realization:
+   TaskFrame schedules, measures, and stabilizes runtime behavior.
+5. Return and reinterpretation:
+   Outputs are re-bound into Dataset/Model/Plan provenance and revise future constitution.
+
+This loop is the practical form of Learning in this architecture.
+
+### Anti-Reduction Rule
+
+1. Do not reduce the system to logic only.
+2. Do not reduce the system to statistics only.
+3. Do not reduce the system to execution mechanics only.
+
+The system is phase-correct only when these four poles remain in reciprocal determination:
+
+1. Dataset,
+2. DataFrame,
+3. Shell,
+4. TaskFrame.
+
+### Immediate Implementation Consequence
+
+When adding or modifying a component, require a four-way mapping note:
+
+1. Dataset meaning affected.
+2. DataFrame representation affected.
+3. Shell command or DSL surface affected.
+4. TaskFrame runtime/provenance contract affected.
+
+If any of the four is undefined, the change is incomplete by doctrine.
+
+## Transcendental Wheel: A Priori Looping Foundation
+
+The term looping is often trivialized in ML discourse as repeated optimization. In this system, looping has a deeper status.
+
+Looping names the pure a priori synthetic motion by which determination, embodiment, execution, and return are continuously unified.
+
+1. It is not mere iteration.
+2. It is not blind recursion.
+3. It is not metric chasing.
+
+It is the Wheel: the transcendental condition for the reciprocal life of Dataset/DataFrame and TaskFrame/Shell.
+
+### Metaphysical Claim
+
+The phase circuit is not only an engineering control flow. It is the operational shape of a synthesis that must already hold for coherent experience and learning to occur.
+
+In this sense:
+
+1. The Wheel is prior to any single model family.
+2. Statistical learning is one moment inside the Wheel.
+3. Logical determination is another moment inside the Wheel.
+4. Agent mediation keeps the Wheel phase-correct across revisions.
+
+### Practical Guardrail
+
+When a change claims to improve the system but weakens return-to-meaning, provenance, or reconciliation, it accelerates iteration while breaking the Wheel.
+
+Such a change is doctrinally invalid, even if local metrics improve.
+
+## Teleological Priority and Organic Looping
+
+Coherent learning should be treated as pure a priori telos.
+
+The loop between extremes is teleological prior to being causal:
+
+1. Teleological relation specifies what the movement is for.
+2. Causal relation specifies how the movement is realized.
+3. Without telos, causality degenerates into blind mechanism.
+
+This is the edge of Absolute Reflection in operational form: the system does not only react; it orients itself by end-structure.
+
+### Relation Distinction
+
+1. Telos as Essential Relation:
+   defines purposive unity across phases and preserves identity through revision.
+2. Causality as Absolute Relation:
+   realizes determinate transitions and effects in concrete runtime processes.
+
+Dialectically, these are not competitors. They are embedded in one higher unity: the Absolute Concept as living loop.
+
+### Organic Loop Principle
+
+The governing loop is dyadic and organic:
+
+1. It differentiates moments (logical/statistical, semantic/executive).
+2. It reintegrates them through purposive return.
+3. It learns by preserving identity while transforming form.
+
+This is looping with purpose, not repetition for its own sake.
+
+### Engineering Consequence
+
+A learning cycle is valid only if it satisfies both:
+
+1. Causal adequacy:
+   transitions execute correctly and reproducibly.
+2. Teleological coherence:
+   transitions demonstrably serve the declared end hierarchy.
+
+If causal gains undermine teleological coherence, the cycle is invalid even when metrics improve.
+
+## Principle at the End: Logical Return of Task and Shell
+
+The principle of this architecture becomes fully explicit only at the end of the cycle.
+
+Task and Shell are not add-on utilities. They are the logical return from a one-sided statistical regime.
+
+1. Statistical modeling pushes toward external optimization and local fit.
+2. Task/Shell returns that exteriority into governed semantic execution.
+3. The return completes the cycle by reconnecting computation with meaning, provenance, and end-structure.
+
+### Storage-Computation Wheel
+
+The system is organized as a Storage-Computation wheel:
+
+1. Storage pole:
+   Dataset/DataFrame as semantic memory, structure, and determinate artifacts.
+2. Computation pole:
+   TaskFrame/Shell as execution, orchestration, scheduling, and runtime realization.
+3. Return arc:
+   procedural outputs are re-inscribed as semantic artifacts and constraints for the next turn.
+
+Computation is therefore an extreme of the same wheel, not a separate subsystem with independent legitimacy.
+
+### Semantic Manifestation in Pipeline Connection
+
+Semantic components do not disappear in the procedural pipeline. They manifest there.
+
+In the Task/Shell to pipeline connection, each procedural step should expose:
+
+1. semantic origin:
+   which Dataset component (feature/model/plan/logic/protocol) authorizes the step,
+2. operational contract:
+   what Task runtime guarantees (resources, termination, traceability) are active,
+3. return contract:
+   how outputs are written back as semantic deltas, reports, or revised constraints.
+
+If a pipeline step cannot state these three contracts, it is procedurally executable but doctrinally incomplete.
 
 ## One-Line Doctrine
 

@@ -1,6 +1,3 @@
-//! Linear Regression trainer implementation.
-//!
-
 use crate::collections::HugeDoubleArray;
 use crate::ml::core::batch::from_array;
 use crate::ml::gradient_descent::Objective;

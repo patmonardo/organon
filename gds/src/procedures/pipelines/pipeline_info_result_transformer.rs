@@ -1,6 +1,9 @@
-use crate::procedures::pipelines::types::{AnyMapList, PipelineInfoResult};
+use crate::procedures::pipelines::types::AnyMapList;
+use crate::procedures::pipelines::types::PipelineInfoResult;
+use crate::projection::eval::pipeline::FeatureStep;
 use crate::projection::eval::pipeline::LinkPredictionTrainingPipeline;
-use crate::projection::eval::pipeline::{FeatureStep, Pipeline, TrainingPipeline};
+use crate::projection::eval::pipeline::Pipeline;
+use crate::projection::eval::pipeline::TrainingPipeline;
 
 pub fn create_pipeline_info_result(
     pipeline_name: &str,

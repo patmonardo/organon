@@ -1,6 +1,3 @@
-//! Linear Regression model data structure.
-//!
-
 use crate::ml::core::functions::Weights;
 use crate::ml::core::tensor::Matrix;
 use crate::ml::core::tensor::Scalar;

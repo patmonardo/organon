@@ -1,8 +1,3 @@
-use std::sync::Arc;
-use std::sync::OnceLock;
-
-use serde_json::Value;
-
 use super::types::*;
 use super::{PipelineApplications, PipelineName, PipelineRepository};
 use crate::projection::eval::pipeline::AutoTuningConfig;
@@ -16,7 +11,9 @@ use crate::task::runtime::TaskFrame;
 use crate::types::catalog::GraphCatalog;
 use crate::types::catalog::InMemoryGraphCatalog;
 use crate::types::user::User;
-
+use serde_json::Value;
+use std::sync::Arc;
+use std::sync::OnceLock;
 pub type RawConfig = AnyMap;
 
 pub trait LinkPredictionFacade {
