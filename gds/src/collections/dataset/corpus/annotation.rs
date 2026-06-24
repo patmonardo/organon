@@ -1,6 +1,7 @@
 //! `Annotation` — the evidentiary `Feature` (R3 in the doctrine).
 //!
-//! See `gds/doc/SEMANTIC-DATASET-FIVE-FOLD.md` (Five-Fold Synthesis), Root
+//! See `gds/doc/SEMANTIC-DATASET.md` (seven-fold semantic support contract),
+//! Root
 //! Object **R3**, and the §"Four roles of a Feature" table. NLTK Ch11 is
 //! the reference text for *why* annotation must carry provenance as part of
 //! its identity rather than as metadata.
@@ -19,7 +20,7 @@
 //! (κ, windowdiff) a first-class measurement on the `Corpus` (R7) rather
 //! than on a downstream model.
 //!
-//! Position in the four-fold:
+//! Position in the seven-fold support stack:
 //!
 //! Annotation lives on the **intensional** side as a Feature, but it
 //! addresses a `Document` (extensional/evidentiary), and its presence on a

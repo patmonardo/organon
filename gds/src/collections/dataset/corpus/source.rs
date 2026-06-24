@@ -1,6 +1,7 @@
 //! `Source` — content-addressed immutable bytes (R1 in the doctrine).
 //!
-//! See `gds/doc/SEMANTIC-DATASET-FIVE-FOLD.md` (Five-Fold Synthesis), Root
+//! See `gds/doc/SEMANTIC-DATASET.md` (seven-fold semantic support contract),
+//! Root
 //! Object **R1**, and NLTK Ch11 *Managing Linguistic Data* for the motivating
 //! account. Source is the ground-truth artifact: a `.wav`, a scanned page, a
 //! raw text file. It carries bytes and a MIME/structure declaration. **It has
@@ -17,7 +18,7 @@
 //!   to be grounded must pin itself to one via the distinguished Feature
 //!   `source : Source`.
 //!
-//! Position in the four-fold:
+//! Position in the seven-fold support stack:
 //!
 //! Source is *pre-extensional*. It is the byte ground beneath the
 //! `Frame:Series` cell — addressable but not yet projected into a Frame.
@@ -26,7 +27,7 @@
 //! struct, a `SourceFrame` wrapper over `GDSDataFrame` with the canonical
 //! schema `(uri, hash, media_type, len)`, and the `ContentHash` /
 //! `MediaType` newtypes. No bytes loader, no fetcher, no validation beyond
-//! schema-shape. See `SEMANTIC-DATASET-FIVE-FOLD.md` §"What this note
+//! schema-shape. See `SEMANTIC-DATASET.md` §"What this note
 //! commits to" for what is and is not decided.
 
 use polars::prelude::{

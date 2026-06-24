@@ -30,7 +30,8 @@
 //! `Corpus` paired with a `LanguageModel`: evidence on one side,
 //! meaning on the other.
 //!
-//! In the nine-moment Dataset SDK, `Corpus` is the Concept-body fold. Its
+//! In the seven-fold semantic support contract, `Corpus` is the Concept-body
+//! fold. Its
 //! canonical SubFeatures live here:
 //!
 //! - [`document`] — document frames and spans;

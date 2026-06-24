@@ -1,9 +1,6 @@
-//! Gini index impurity criterion for classification.
-//!
-
 use crate::collections::{HugeIntArray, HugeLongArray};
-use crate::task::memory::Estimate;
 use crate::ml::decision_tree::{ImpurityCriterion, ImpurityData, ImpurityDataAny};
+use crate::task::memory::Estimate;
 use std::any::Any;
 use std::sync::Arc;
 

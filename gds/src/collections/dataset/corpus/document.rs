@@ -1,6 +1,7 @@
 //! `Document` — the addressable meaning-bearer (R2 in the doctrine).
 //!
-//! See `gds/doc/SEMANTIC-DATASET-FIVE-FOLD.md` (Five-Fold Synthesis), Root
+//! See `gds/doc/SEMANTIC-DATASET.md` (seven-fold semantic support contract),
+//! Root
 //! Object **R2** and the §"Document / Model meeting-point" section. NLTK Ch11
 //! is the reference text.
 //!
@@ -16,7 +17,7 @@
 //! exist uninterpreted (raw spans over a Source with no further annotation)
 //! and still be a well-formed kernel object.
 //!
-//! Position in the four-fold:
+//! Position in the seven-fold support stack:
 //!
 //! Document is the **extensional/evidentiary** counterpart of `Model`. They
 //! sit on opposite axes and meet at exactly one place: the Document side
@@ -38,7 +39,7 @@
 //! `Span`, and `DocumentFrame` (a `GDSDataFrame` wrapper that requires the
 //! distinguished `source` column carrying a `ContentHash` reference).
 //! Offset columns and per-document Feature decoding come in later phases.
-//! See `SEMANTIC-DATASET-FIVE-FOLD.md` §"Document / Model meeting-point".
+//! See `SEMANTIC-DATASET.md` §"Document / Model meeting-point".
 
 use polars::prelude::{DataFrame, NamedFrom, PolarsError, Series};
 

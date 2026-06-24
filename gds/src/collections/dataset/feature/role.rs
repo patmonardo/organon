@@ -2,7 +2,7 @@
 //!
 //! Companion to [`crate::collections::dataset::feature`]. This module names
 //! the **four roles** a Feature plays per the doctrine
-//! (`gds/doc/SEMANTIC-DATASET-FIVE-FOLD.md` §"The four roles of a Feature")
+//! (`gds/doc/SEMANTIC-DATASET.md` §"The four roles of a Feature")
 //! as plain data, plus a [`FeatureDescriptor`] row struct and a
 //! [`FeatureFrame`] access object over `GDSDataFrame`.
 //!

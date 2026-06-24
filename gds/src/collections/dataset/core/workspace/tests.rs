@@ -20,7 +20,11 @@ fn workspace_initializes_semantic_layout() {
     let ws = DatasetWorkspace::new(&root).expect("workspace");
     let layout = ws.ensure_dataset_layout("demo").expect("layout");
     assert!(layout.semantic_dir.exists());
+    assert!(layout.model_dir.exists());
+    assert!(layout.feature_dir.exists());
+    assert!(layout.plan_dir.exists());
     assert!(layout.corpus_dir.exists());
+    assert!(layout.language_dir.exists());
     assert!(layout.logic_dir.exists());
 }
 
@@ -31,6 +35,11 @@ fn workspace_writes_frame_and_catalog() {
     let frame = ws
         .write_semantic_frame("demo", "model-feature-plan", "corpus-language-logic")
         .expect("frame");
+    let frame_body = fs::read_to_string(&frame).expect("read frame");
+    assert!(frame_body.contains("\"seven_fold_support\""));
+    assert!(frame_body.contains("\"model\""));
+    assert!(frame_body.contains("\"feature\""));
+    assert!(frame_body.contains("\"plan\""));
     let layout = ws.ensure_dataset_layout("demo").expect("layout");
     let catalog = ws.write_catalog_frame("demo", &layout).expect("catalog");
     assert!(frame.exists());

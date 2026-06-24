@@ -3,7 +3,7 @@ use std::path::{Path, PathBuf};
 
 use crate::collections::dataset::core::error::DatasetIoError;
 
-use super::{DatasetLayout, DatasetWorkspace};
+use super::{DatasetLayout, DatasetSemanticSupportFold, DatasetWorkspace};
 
 impl DatasetWorkspace {
     pub fn new(root: impl AsRef<Path>) -> Result<Self, DatasetIoError> {
@@ -36,6 +36,9 @@ impl DatasetWorkspace {
         let layout = DatasetLayout {
             root: base.clone(),
             semantic_dir: base.join("semantic"),
+            model_dir: base.join("model"),
+            feature_dir: base.join("feature"),
+            plan_dir: base.join("plan"),
             corpus_dir: base.join("corpus"),
             language_dir: base.join("language"),
             logic_dir: base.join("logic"),
@@ -43,6 +46,9 @@ impl DatasetWorkspace {
             artifacts_dir: base.join("artifacts"),
         };
         fs::create_dir_all(&layout.semantic_dir).map_err(|e| DatasetIoError::Io(e.to_string()))?;
+        fs::create_dir_all(&layout.model_dir).map_err(|e| DatasetIoError::Io(e.to_string()))?;
+        fs::create_dir_all(&layout.feature_dir).map_err(|e| DatasetIoError::Io(e.to_string()))?;
+        fs::create_dir_all(&layout.plan_dir).map_err(|e| DatasetIoError::Io(e.to_string()))?;
         fs::create_dir_all(&layout.corpus_dir).map_err(|e| DatasetIoError::Io(e.to_string()))?;
         fs::create_dir_all(&layout.language_dir).map_err(|e| DatasetIoError::Io(e.to_string()))?;
         fs::create_dir_all(&layout.logic_dir).map_err(|e| DatasetIoError::Io(e.to_string()))?;
@@ -59,9 +65,14 @@ impl DatasetWorkspace {
     ) -> Result<PathBuf, DatasetIoError> {
         let layout = self.ensure_dataset_layout(dataset)?;
         let frame_path = layout.semantic_dir.join("frame.json");
+        let seven_fold_support = DatasetSemanticSupportFold::ALL
+            .iter()
+            .map(|fold| format!("\"{}\"", fold.as_str()))
+            .collect::<Vec<_>>()
+            .join(", ");
         let body = format!(
-            "{{\n  \"dataset\": \"{}\",\n  \"principle\": \"{}\",\n  \"law\": \"{}\",\n  \"pairs\": {{\n    \"rational\": \"Model-Feature-Plan\",\n    \"empirical\": \"Corpus-Language-Logic\"\n  }}\n}}\n",
-            dataset, principle_triad, law_view
+            "{{\n  \"dataset\": \"{}\",\n  \"principle\": \"{}\",\n  \"law\": \"{}\",\n  \"pairs\": {{\n    \"rational\": \"Model-Feature-Plan\",\n    \"empirical\": \"Corpus-Language-Logic\"\n  }},\n  \"seven_fold_support\": [{}],\n  \"support_directories\": {{\n    \"semantic\": \"semantic\",\n    \"model\": \"model\",\n    \"feature\": \"feature\",\n    \"plan\": \"plan\",\n    \"corpus\": \"corpus\",\n    \"language\": \"language\",\n    \"logic\": \"logic\"\n  }}\n}}\n",
+            dataset, principle_triad, law_view, seven_fold_support
         );
         fs::write(&frame_path, body).map_err(|e| DatasetIoError::Io(e.to_string()))?;
         Ok(frame_path)

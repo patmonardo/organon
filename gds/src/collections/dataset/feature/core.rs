@@ -1,6 +1,7 @@
 //! `Feature` — the unit of meaning (R5 in the doctrine).
 //!
-//! See `gds/doc/SEMANTIC-DATASET-FIVE-FOLD.md` (Five-Fold Synthesis), Root
+//! See `gds/doc/SEMANTIC-DATASET.md` (seven-fold semantic support contract),
+//! Root
 //! Object **R5** and Principle **P3** (`Model:Feature`, the augmenting
 //! principle). NLTK Ch9 / Ch10 are the reference texts.
 //!

@@ -1,6 +1,3 @@
-//! Linear Regressor implementation.
-//!
-
 use crate::ml::core::functions::{EWiseAddMatrixScalar, MatrixMultiplyWithTransposedSecondOperand};
 use crate::ml::core::VariableRef;
 use crate::ml::models::Regressor;

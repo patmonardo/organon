@@ -26,7 +26,7 @@
 //!   [`WittenBellInterpolated`], [`AbsoluteDiscountingInterpolated`],
 //!   [`KneserNeyInterpolated`].
 //!
-//! In the nine-moment Dataset SDK, `lm` is the Language fold. It owns the
+//! In the seven-fold semantic support contract, `lm` is the Language fold. It owns the
 //! LanguageModel SubFeatures that transform or read a `Corpus`: tokenizer,
 //! stemmer, tagger, and parser. Their value forms — token, stem, tag, parse,
 //! and tree — live beside them so a Specific Model can declare logogenesis as a

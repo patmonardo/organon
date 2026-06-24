@@ -1,6 +1,3 @@
-//! Impurity criterion trait for decision trees.
-//!
-
 use crate::collections::HugeLongArray;
 use std::any::Any;
 

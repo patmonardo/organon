@@ -10,6 +10,7 @@
 // Core SDK and Concept-return types
 pub use crate::collections::dataset::core::catalog::DatasetCatalog;
 pub use crate::collections::dataset::core::dataset::Dataset;
+pub use crate::collections::dataset::core::workspace::DatasetSemanticSupportFold;
 pub use crate::collections::dataset::corpus::Corpus;
 pub use crate::collections::dataset::logic::{LogicError, LogicForm, LogicFrame};
 pub use crate::collections::dataset::{DatasetArtifactKind, DatasetArtifactProfile};

@@ -3,6 +3,41 @@ use std::path::PathBuf;
 use crate::collections::dataset::core::utils::download::DownloadReport;
 use crate::collections::dataset::core::utils::extract::ExtractReport;
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum DatasetSemanticSupportFold {
+    Semantic,
+    Model,
+    Feature,
+    Plan,
+    Corpus,
+    Language,
+    Logic,
+}
+
+impl DatasetSemanticSupportFold {
+    pub const ALL: [Self; 7] = [
+        Self::Semantic,
+        Self::Model,
+        Self::Feature,
+        Self::Plan,
+        Self::Corpus,
+        Self::Language,
+        Self::Logic,
+    ];
+
+    pub const fn as_str(self) -> &'static str {
+        match self {
+            Self::Semantic => "semantic",
+            Self::Model => "model",
+            Self::Feature => "feature",
+            Self::Plan => "plan",
+            Self::Corpus => "corpus",
+            Self::Language => "language",
+            Self::Logic => "logic",
+        }
+    }
+}
+
 #[derive(Debug, Clone)]
 pub struct DatasetWorkspace {
     pub(super) root: PathBuf,
@@ -12,6 +47,9 @@ pub struct DatasetWorkspace {
 pub struct DatasetLayout {
     pub root: PathBuf,
     pub semantic_dir: PathBuf,
+    pub model_dir: PathBuf,
+    pub feature_dir: PathBuf,
+    pub plan_dir: PathBuf,
     pub corpus_dir: PathBuf,
     pub language_dir: PathBuf,
     pub logic_dir: PathBuf,

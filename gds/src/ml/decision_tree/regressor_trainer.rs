@@ -1,18 +1,11 @@
-//! Decision tree regressor trainer.
-//!
-//! Note: `max_depth == 0` is treated as "unlimited" (no explicit depth cap). This
-//! matches the convention used by `RandomForest` configs and is used by the
-//! estimation and training logic.
-//!
-
 use crate::collections::HugeDoubleArray;
-use crate::task::memory::Estimate;
 use crate::ml::decision_tree::{
     DecisionTreeTrainer, DecisionTreeTrainerConfig, FeatureBagger, Group, ImpurityCriterion,
     MSEImpurityData, SplitMeanSquaredError, TreeNode,
 };
 use crate::ml::decision_tree::{Splitter, StackRecord};
 use crate::ml::models::Features;
+use crate::task::memory::Estimate;
 use std::sync::Arc;
 
 pub struct DecisionTreeRegressorTrainer<'a> {

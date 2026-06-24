@@ -4,6 +4,17 @@ Date: 2026-06-21
 Source PDF: ref/stat-learning/ISLP.pdf
 Companion PDF: ref/stat-learning/ESL.pdf
 
+## Chapter Placement in Absolute Science
+
+Chapter 2 names the mediation principle itself. It does not yet commit to a single fitted form; it shows how form, flexibility, and error are related before any one method is fixed.
+
+This makes Chapter 2 the bridge from Rational Science to Empirical Science:
+- Rational Science supplies the need for principled form.
+- Empirical Science supplies the encounter with data and the pressure of test error.
+- Statistics names the rule of mediation between them.
+
+Chapter 3 will then show the first concrete enactment of that mediation in linear regression.
+
 ## Scope
 
 This artifact starts Chapter 2 work in a form we can refine incrementally.
@@ -20,7 +31,7 @@ Chapter 2 already contains the bridge we need:
 2. A formal bias-variance framing.
 3. A software lab showing concrete workflow habits.
 
-This is enough to launch a full ESL method program while preserving ISLP clarity.
+This is enough to launch a full ESL method program while preserving ISLP clarity. In the Organon frame, it is the first chapter where empirical method is explicitly governed by rational principle rather than treated as rote fitting.
 
 ## Core Chapter 2 Concepts (Operational Form)
 
@@ -90,6 +101,10 @@ A method is considered complete only when all three views are present.
 1. Extract the subsection 2.2.2 Bias-Variance Trade-Off into a focused note.
 2. Implement one small reproducible simulation showing U-shaped test error.
 3. Annotate results with HyperModel interpretation fields.
+
+## Transition to Chapter 3
+
+Chapter 2 gives the law of mediation in general form. Chapter 3 will take that law into a concrete method: linear regression as the first fully visible case where a committed form is confronted by data, revised by statistical principle, and re-spelled as empirical concept.
 
 ## Notes on Extraction Quality
 

@@ -1,6 +1,7 @@
 //! `Valuation` — partial valuation against a Feature schema (R4 access object).
 //!
-//! See `gds/doc/SEMANTIC-DATASET.md` (Five-Fold Synthesis), Root
+//! See `gds/doc/SEMANTIC-DATASET.md` (seven-fold semantic support contract),
+//! Root
 //! Object **R4** ("`Model` — a partial valuation: a row, a region, or a
 //! sub-frame considered as satisfying a Feature schema"). NLTK Ch9 / Ch10
 //! are the reference texts; the DRS, the FeatStruct, and the Valuation are
@@ -22,7 +23,7 @@
 //! compute trait to disambiguate, but the Valuation type sits at the R4
 //! address regardless.
 //!
-//! ## Position in the four-fold
+//! ## Position in the seven-fold support stack
 //!
 //! Valuation is the **intensional** counterpart of a Document. A Document
 //! lives on the extensional/evidentiary side and carries a distinguished

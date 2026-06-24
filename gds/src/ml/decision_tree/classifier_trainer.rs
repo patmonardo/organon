@@ -1,13 +1,10 @@
-//! Decision tree classifier trainer.
-//!
-
 use crate::collections::HugeIntArray;
-use crate::task::memory::Estimate;
 use crate::ml::decision_tree::{
     DecisionTreeTrainer, DecisionTreeTrainerConfig, FeatureBagger, GiniImpurityData, Group,
     ImpurityCriterion, TreeNode,
 };
 use crate::ml::models::Features;
+use crate::task::memory::Estimate;
 use std::sync::Arc;
 
 pub struct DecisionTreeClassifierTrainer<'a> {

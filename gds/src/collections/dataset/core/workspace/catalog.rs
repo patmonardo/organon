@@ -40,6 +40,27 @@ impl DatasetWorkspace {
                 "schema catalog frame",
             ),
             (
+                "model_dir",
+                "model",
+                "folder",
+                layout.model_dir.clone(),
+                "model persistence root",
+            ),
+            (
+                "feature_dir",
+                "feature",
+                "folder",
+                layout.feature_dir.clone(),
+                "feature persistence root",
+            ),
+            (
+                "plan_dir",
+                "plan",
+                "folder",
+                layout.plan_dir.clone(),
+                "plan persistence root",
+            ),
+            (
                 "corpus_dir",
                 "corpus",
                 "folder",

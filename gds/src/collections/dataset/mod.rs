@@ -5,6 +5,12 @@
 //! DataFrame/Polars body available, and recursively names that body through the
 //! Dataset pipeline.
 //!
+//! The workspace substrate defines a seven-fold semantic support machinery:
+//! `semantic`, `model`, `feature`, `plan`, `corpus`, `language`, `logic`.
+//! These are the canonical persistence folds that carry principle-law metadata
+//! and keep the Rational (`Model:Feature:Plan`) and Empirical
+//! (`Corpus:Language:Logic`) moments explicit.
+//!
 //! The canonical pipeline has nine moments:
 //!
 //! ```text
