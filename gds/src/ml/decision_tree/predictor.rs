@@ -1,6 +1,3 @@
-//! Decision tree predictor.
-//!
-
 use crate::ml::decision_tree::TreeNode;
 
 #[derive(Debug)]

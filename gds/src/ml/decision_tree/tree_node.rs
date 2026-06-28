@@ -1,6 +1,3 @@
-//! Tree node for decision trees in GDS.
-//!
-
 use std::fmt;
 
 use crate::task::memory::Estimate;

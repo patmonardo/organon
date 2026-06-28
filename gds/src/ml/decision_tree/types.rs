@@ -1,6 +1,3 @@
-//! Type definitions for decision tree algorithms.
-//!
-
 use crate::collections::HugeLongArray;
 use crate::ml::decision_tree::{ImpurityData, TreeNode};
 

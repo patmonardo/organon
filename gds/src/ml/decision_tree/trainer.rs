@@ -1,17 +1,10 @@
-//! Base decision tree trainer.
-//!
-//! Note: `max_depth == 0` is treated as "unlimited" (no explicit depth cap). This
-//! matches the convention used by `RandomForest` configs and is used by the
-//! estimation and training logic.
-//!
-
 use crate::collections::HugeLongArray;
-use crate::task::memory::Estimate;
 use crate::ml::decision_tree::{
     predictor::DecisionTreePredictor, DecisionTreeTrainerConfig, FeatureBagger, Group,
     ImpurityCriterion, Splitter, StackRecord, TreeNode,
 };
 use crate::ml::models::Features;
+use crate::task::memory::Estimate;
 
 pub trait DecisionTreeTrainer<P: Clone> {
     fn impurity_criterion(&self) -> Box<dyn ImpurityCriterion>;

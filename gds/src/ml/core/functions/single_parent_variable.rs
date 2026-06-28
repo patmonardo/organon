@@ -1,10 +1,3 @@
-//! Single parent variable base implementation for ML functions in GDS.
-//!
-//! Translated from Java GDS ml-core functions/SingleParentVariable.java.
-//! This is a literal 1:1 translation following repository translation policy.
-//!
-//! Uses type erasure pattern (Box<dyn Variable>) to match our architecture.
-
 use crate::ml::core::AbstractVariable;
 use crate::ml::core::ComputationContext;
 use crate::ml::core::Tensor;
@@ -15,7 +8,6 @@ use crate::ml::core::{Variable, VariableRef};
 /// Provides common functionality for functions that have exactly one input variable.
 /// Uses composition with AbstractVariable to match Java's inheritance pattern.
 ///
-/// This corresponds to Java's `SingleParentVariable<P extends Tensor<P>, T extends Tensor<T>> extends AbstractVariable<T>`
 pub struct SingleParentVariable {
     base: AbstractVariable,
     parent: VariableRef,

@@ -1,12 +1,6 @@
 use crate::collections::HugeLongArray;
 use std::any::Any;
 
-impl Clone for Box<dyn ImpurityCriterion> {
-    fn clone(&self) -> Self {
-        self.clone_box()
-    }
-}
-
 /// Trait for computing impurity of decision tree node splits.
 pub trait ImpurityCriterion: Send + Sync {
     /// Compute the impurity of a group of samples.
@@ -51,4 +45,10 @@ pub trait ImpurityData: ImpurityDataAny + Send + Sync {
 /// Helper trait for downcasting ImpurityData implementations.
 pub trait ImpurityDataAny {
     fn as_any_mut(&mut self) -> &mut dyn Any;
+}
+
+impl Clone for Box<dyn ImpurityCriterion> {
+    fn clone(&self) -> Self {
+        self.clone_box()
+    }
 }

@@ -76,7 +76,6 @@ impl<MODEL> CrossValidation<MODEL> {
     }
 
     /// Selects the best model through cross validation
-    /// 1:1 with selectModel() in Java
     pub fn select_model(
         &self,
         outer_train_set: ReadOnlyHugeLongArray,

@@ -1,8 +1,8 @@
-use crate::collections::long_multiset::LongMultiSet;
+use crate::collections::LongMultiSet;
+use crate::ml::core::subgraph::LocalIdMap;
 use crate::task::memory::MemoryEstimation;
 use crate::task::memory::MemoryEstimations;
 use crate::task::memory::MemoryRange;
-use crate::ml::core::subgraph::LocalIdMap;
 
 use super::classification::Accuracy;
 use super::classification::F1Macro;
