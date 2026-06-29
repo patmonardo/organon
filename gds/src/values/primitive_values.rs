@@ -1,17 +1,3 @@
-//! PrimitiveValues - The Mega Macro Factory
-//!
-//! This is the runtime type system for GDSL (Graph Data Science Language).
-//! Like Zod for TypeScript, this provides runtime validation, transformation,
-//! and type-safe extraction of graph property values.
-//!
-//! The factory provides:
-//! - Runtime parsing/validation (of(), create())
-//! - Type inference (GdsValue trait hierarchy)
-//! - Transformation (widening conversions i32→i64, f32→f64)
-//! - Data extraction (IntegralValue::long_value(), FloatingPointValue::double_value())
-//! - Default value support
-//! - Error handling for validation failures
-
 use crate::values::*;
 use serde_json::Value as JsonValue;
 use std::sync::Arc;
