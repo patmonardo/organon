@@ -3,7 +3,7 @@
 //! Community detection by iterative label voting.
 //!
 //! Parameters (Java GDS aligned):
-//! - `concurrency`: accepted for API/progress alignment; computation keeps deterministic update order.
+//! - `concurrency`: number of parallel asynchronous label-update workers.
 //! - `max_iterations`: max number of propagation iterations (must be >= 1).
 //! - `node_weight_property`: optional node weight property (defaults to 1.0).
 //! - `seed_property`: optional seed labels property.
@@ -18,7 +18,7 @@ use crate::algo::label_propagation::spec::{
 use crate::algo::label_propagation::storage::LabelPropStorageRuntime;
 use crate::collections::backends::vec::VecLong;
 use crate::task::concurrency::TerminationFlag;
-use crate::task::progress::{TaskRegistry, Tasks};
+use crate::task::progress::{ProgressTracker, TaskRegistry, Tasks};
 use crate::task::memory::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
@@ -121,16 +121,18 @@ impl LabelPropagationFacade {
 
     fn compute(&self) -> Result<LabelPropResult> {
         self.validate()?;
-        let start = Instant::now();
-
-        let config = self.config.clone();
 
         let storage = LabelPropStorageRuntime::new(self.graph_store.as_ref())?;
         let node_count = storage.node_count();
 
         let base_task = Tasks::leaf_with_volume(
             "label_propagation".to_string(),
-            node_count.saturating_add(self.config.max_iterations as usize),
+            node_count.saturating_add(
+                storage
+                    .graph()
+                    .relationship_count()
+                    .saturating_mul(self.config.max_iterations as usize),
+            ),
         );
         let mut progress_tracker = super::progress_tracker(
             base_task,
@@ -140,14 +142,34 @@ impl LabelPropagationFacade {
 
         let termination_flag = TerminationFlag::running_true();
 
+        self.compute_with_storage_context(&storage, &mut progress_tracker, &termination_flag)
+    }
+
+    fn compute_with_context(
+        &self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<LabelPropResult> {
+        self.validate()?;
+        let storage = LabelPropStorageRuntime::new(self.graph_store.as_ref())?;
+        self.compute_with_storage_context(&storage, progress_tracker, termination_flag)
+    }
+
+    fn compute_with_storage_context(
+        &self,
+        storage: &LabelPropStorageRuntime,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<LabelPropResult> {
+        let start = Instant::now();
+        let node_count = storage.node_count();
         let runtime = LabelPropComputationRuntime::new(node_count, self.config.max_iterations)
             .concurrency(self.config.concurrency);
-
         let result = storage.compute_label_propagation(
             runtime,
-            &config,
-            &mut progress_tracker,
-            &termination_flag,
+            &self.config,
+            progress_tracker,
+            termination_flag,
         )?;
 
         Ok(LabelPropResult {
@@ -173,9 +195,35 @@ impl LabelPropagationFacade {
         Ok(Box::new(iter))
     }
 
+    pub fn stream_with_context(
+        &self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<Vec<LabelPropagationRow>> {
+        let result = self.compute_with_context(progress_tracker, termination_flag)?;
+        Ok(result
+            .labels
+            .into_iter()
+            .enumerate()
+            .map(|(node_id, label_id)| LabelPropagationRow {
+                node_id: node_id as u64,
+                label_id,
+            })
+            .collect())
+    }
+
     /// Stats mode: yields convergence info + community count.
     pub fn stats(&self) -> Result<LabelPropStats> {
         let result = self.compute()?;
+        Ok(LabelPropResultBuilder::new(result).stats())
+    }
+
+    pub fn stats_with_context(
+        &self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<LabelPropStats> {
+        let result = self.compute_with_context(progress_tracker, termination_flag)?;
         Ok(LabelPropResultBuilder::new(result).stats())
     }
 
@@ -246,7 +294,14 @@ impl LabelPropagationFacade {
 
     /// Full result: returns the procedure-level Label Propagation result.
     pub fn run(&self) -> Result<LabelPropResult> {
-        let result = self.compute()?;
-        Ok(result)
+        self.compute()
+    }
+
+    pub fn run_with_context(
+        &self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<LabelPropResult> {
+        self.compute_with_context(progress_tracker, termination_flag)
     }
 }

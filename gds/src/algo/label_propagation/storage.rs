@@ -71,29 +71,49 @@ impl LabelPropStorageRuntime {
         termination_flag.assert_running();
 
         let weights: Vec<f64> = match &config.node_weight_property {
-            Some(key) => match self.node_properties.get(key) {
-                Some(pv) => (0..node_count)
-                    .map(|i| {
+            Some(key) => {
+                let property = self.node_properties.get(key).ok_or_else(|| {
+                    AlgorithmError::Execution(format!("node weight property '{key}' not found"))
+                })?;
+                (0..node_count)
+                    .map(|node| {
                         termination_flag.assert_running();
-                        pv.double_value(i as u64).unwrap_or(1.0)
+                        let weight = property.double_value(node as u64).map_err(|error| {
+                            AlgorithmError::Execution(format!(
+                                "cannot read node weight property '{key}' for node {node}: {error}"
+                            ))
+                        })?;
+                        if !weight.is_finite() || weight < 0.0 {
+                            return Err(AlgorithmError::Execution(format!(
+                                "node weight property '{key}' must be finite and non-negative for node {node}, got {weight}"
+                            )));
+                        }
+                        Ok(weight)
                     })
-                    .collect(),
-                None => vec![1.0; node_count],
-            },
-            _ => vec![1.0; node_count],
+                    .collect::<Result<Vec<_>, AlgorithmError>>()?
+            }
+            None => vec![1.0; node_count],
         };
 
         // Seed labels (Java InitStep parity):
         // - If a seedProperty exists and has a value: use it.
         // - Otherwise: label = maxLabelId + originalNodeId + 1.
         // This avoids collisions with node IDs while keeping determinism.
-        progress_tracker
-            .begin_subtask_with_volume(node_count.saturating_add(config.max_iterations as usize));
+        let relationship_volume = self
+            .graph
+            .relationship_count()
+            .saturating_mul(config.max_iterations as usize);
+        progress_tracker.begin_subtask_with_volume(node_count.saturating_add(relationship_volume));
 
         let seed_pv = config
             .seed_property
             .as_ref()
-            .and_then(|key| self.node_properties.get(key).cloned());
+            .map(|key| {
+                self.node_properties.get(key).cloned().ok_or_else(|| {
+                    AlgorithmError::Execution(format!("seed property '{key}' not found"))
+                })
+            })
+            .transpose()?;
 
         let max_label_id: i64 = seed_pv
             .as_deref()
@@ -109,7 +129,17 @@ impl LabelPropStorageRuntime {
 
             let label = match seed_pv.as_deref() {
                 Some(pv) if pv.has_value(i as u64) => {
-                    pv.long_value(i as u64).unwrap_or(LONG_DEFAULT_FALLBACK) as u64
+                    let seed = pv.long_value(i as u64).map_err(|error| {
+                        AlgorithmError::Execution(format!(
+                            "cannot read seed property for node {i}: {error}"
+                        ))
+                    })?;
+                    if seed == LONG_DEFAULT_FALLBACK || seed < 0 {
+                        return Err(AlgorithmError::Execution(format!(
+                            "seed property must be non-negative for node {i}, got {seed}"
+                        )));
+                    }
+                    seed as u64
                 }
                 _ => (max_label_id + original + 1) as u64,
             };

@@ -163,10 +163,6 @@ pub fn handle_fast_rp(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value 
     embeddings::fast_rp::handle_fast_rp(request, catalog)
 }
 
-pub fn handle_gat(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value {
-    embeddings::gat::handle_gat(request, catalog)
-}
-
 pub fn handle_hash_gnn(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value {
     embeddings::hash_gnn::handle_hash_gnn(request, catalog)
 }

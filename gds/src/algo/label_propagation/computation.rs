@@ -5,16 +5,18 @@
 //! - `InitStep` / `ComputeStep` / `ComputeStepConsumer`
 //!
 //! Notes:
-//! - Uses deterministic in-place (Gauss–Seidel) updates in node-id order.
-//!   This avoids oscillations on bipartite components while preserving a stable tie-break.
+//! - Uses Java-shaped asynchronous in-place updates over parallel node batches.
 //! - Voting is weighted by relationship weight * target-node weight.
 //! - Tie-breaker matches Java: smallest label ID wins when weights equal.
-//! - Sequential iteration is required for proper convergence (Gauss-Seidel vs Jacobi).
 
-use crate::task::concurrency::{install_with_concurrency, Concurrency, TerminationFlag};
+use crate::collections::HugeAtomicLongArray;
+use crate::task::concurrency::virtual_threads::Executor;
+use crate::task::concurrency::virtual_threads::WorkerContext;
+use crate::task::concurrency::Concurrency;
+use crate::task::concurrency::TerminationFlag;
 use crate::task::progress::{NoopProgressTracker, ProgressTracker};
 use std::collections::HashMap;
-use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
 
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub struct LabelPropResult {
@@ -49,9 +51,7 @@ impl LabelPropComputationRuntime {
     }
 
     pub fn with_weights(mut self, weights: Vec<f64>) -> Self {
-        if weights.len() == self.node_count {
-            self.node_weights = weights;
-        }
+        self.node_weights = weights;
         self
     }
 
@@ -59,9 +59,7 @@ impl LabelPropComputationRuntime {
     ///
     /// This corresponds to Java's `InitStep` output.
     pub fn with_seeds(mut self, labels: Vec<u64>) -> Self {
-        if labels.len() == self.node_count {
-            self.initial_labels = Some(labels);
-        }
+        self.initial_labels = Some(labels);
         self
     }
 
@@ -98,15 +96,40 @@ impl LabelPropComputationRuntime {
                 ran_iterations: 0,
             });
         }
+        if node_count != self.node_count {
+            return Err(format!(
+                "runtime node count ({}) must match input node count ({node_count})",
+                self.node_count
+            ));
+        }
+        if self.node_weights.len() != node_count {
+            return Err(format!(
+                "node weight count ({}) must match node count ({node_count})",
+                self.node_weights.len()
+            ));
+        }
 
-        // Init step (either provided labels or identity labels).
-        let mut labels: Vec<u64> = if let Some(init) = self.initial_labels.take() {
+        let initial_labels: Vec<u64> = if let Some(init) = self.initial_labels.take() {
+            if init.len() != node_count {
+                return Err(format!(
+                    "initial label count ({}) must match node count ({node_count})",
+                    init.len()
+                ));
+            }
             init
         } else {
             (0..node_count as u64).collect()
         };
 
-        let concurrency = Concurrency::from_usize(self.concurrency);
+        let labels = HugeAtomicLongArray::new(node_count);
+        for (node, label) in initial_labels.into_iter().enumerate() {
+            let label = i64::try_from(label)
+                .map_err(|_| format!("initial label {label} exceeds signed label range"))?;
+            labels.set(node, label);
+        }
+
+        let executor = Executor::new(Concurrency::of(self.concurrency));
+        let vote_tallies = WorkerContext::new(VoteTally::new);
 
         let mut ran_iterations = 0u64;
         let mut did_converge = false;
@@ -114,49 +137,53 @@ impl LabelPropComputationRuntime {
         while ran_iterations < self.max_iterations {
             termination_flag.assert_running();
             let any_changed = AtomicBool::new(false);
+            let relationships_processed = AtomicUsize::new(0);
 
-            // Deterministic in-place update in node order (Gauss-Seidel).
-            // Sequential iteration ensures proper convergence on bipartite graphs.
-            // Concurrency config is accepted for API consistency.
-            install_with_concurrency(concurrency, || {
-                let mut tally = VoteTally::new();
+            executor
+                .parallel_for(0, node_count, termination_flag, |node_id| {
+                    let neighbors = neighbors(node_id);
+                    relationships_processed.fetch_add(neighbors.len(), Ordering::Relaxed);
+                    vote_tallies.with(|tally| {
+                        tally.clear();
 
-                for node_id in 0..node_count {
-                    termination_flag.assert_running();
-                    tally.clear();
+                        let current_label = labels.get(node_id) as u64;
+                        let mut best_label = current_label;
+                        let mut best_weight = f64::NEG_INFINITY;
 
-                    let current_label = labels[node_id];
-                    let mut best_label = current_label;
-                    let mut best_weight = f64::NEG_INFINITY;
-
-                    for (target, rel_weight) in neighbors(node_id) {
-                        let node_weight = *self.node_weights.get(target).unwrap_or(&1.0);
-                        let vote_weight = rel_weight * node_weight;
-                        let candidate_label = labels[target];
-                        tally.add_vote(candidate_label, vote_weight);
-                    }
-
-                    for (&label, &weight) in tally.votes.iter() {
-                        if weight > best_weight || (weight == best_weight && label < best_label) {
-                            best_weight = weight;
-                            best_label = label;
+                        for (target, rel_weight) in neighbors {
+                            let node_weight = *self.node_weights.get(target).unwrap_or(&1.0);
+                            let vote_weight = rel_weight * node_weight;
+                            let candidate_label = labels.get(target) as u64;
+                            tally.add_vote(candidate_label, vote_weight);
                         }
-                    }
 
-                    if best_label != current_label {
-                        labels[node_id] = best_label;
-                        any_changed.store(true, Ordering::Relaxed);
-                    }
-                }
-            });
+                        for (&label, &weight) in tally.votes.iter() {
+                            if weight > best_weight || (weight == best_weight && label < best_label)
+                            {
+                                best_weight = weight;
+                                best_label = label;
+                            }
+                        }
+
+                        if best_label != current_label {
+                            labels.set(node_id, best_label as i64);
+                            any_changed.store(true, Ordering::Relaxed);
+                        }
+                    });
+                })
+                .map_err(|_| "label propagation terminated during iteration".to_string())?;
 
             ran_iterations += 1;
-            progress_tracker.log_progress(1);
+            progress_tracker.log_progress(relationships_processed.load(Ordering::Relaxed));
             if !any_changed.load(Ordering::Relaxed) {
                 did_converge = true;
                 break;
             }
         }
+
+        let labels = (0..node_count)
+            .map(|node| labels.get(node) as u64)
+            .collect();
 
         Ok(LabelPropResult {
             labels,

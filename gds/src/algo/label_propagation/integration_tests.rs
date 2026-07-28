@@ -8,6 +8,8 @@ mod tests {
     use crate::config::GraphStoreConfig;
     use crate::procedures::GraphFacade;
     use crate::projection::RelationshipType;
+    use crate::task::concurrency::TerminationFlag;
+    use crate::task::progress::{TaskProgressTracker, Tasks};
     use crate::types::graph::{RelationshipTopology, SimpleIdMap};
     use crate::types::graph_store::{
         Capabilities, DatabaseId, DatabaseInfo, DatabaseLocation, DefaultGraphStore, GraphName,
@@ -96,7 +98,12 @@ mod tests {
         let store = store_from_outgoing(outgoing);
         let graph = GraphFacade::new(Arc::new(store));
 
-        let result = graph.label_propagation().max_iterations(1).run().unwrap();
+        let result = graph
+            .label_propagation()
+            .concurrency(1)
+            .max_iterations(1)
+            .run()
+            .unwrap();
         assert_eq!(result.labels[0], 1);
     }
 
@@ -110,6 +117,7 @@ mod tests {
 
         let result = graph
             .label_propagation()
+            .concurrency(1)
             .seed_property("seed")
             .max_iterations(5)
             .run()
@@ -137,6 +145,7 @@ mod tests {
 
         let result = graph
             .label_propagation()
+            .concurrency(1)
             .seed_property("seed")
             .node_weight_property("weight")
             .max_iterations(1)
@@ -159,5 +168,83 @@ mod tests {
         for (node_id, label) in result.labels.iter().copied().enumerate() {
             assert_eq!(label, node_id as u64);
         }
+    }
+
+    #[test]
+    fn label_propagation_parallel_workers_preserve_component_partition() {
+        let store = store_from_outgoing(vec![
+            vec![(1, 1.0), (2, 1.0)],
+            vec![(0, 1.0), (2, 1.0)],
+            vec![(0, 1.0), (1, 1.0)],
+            vec![(4, 1.0), (5, 1.0)],
+            vec![(3, 1.0), (5, 1.0)],
+            vec![(3, 1.0), (4, 1.0)],
+        ]);
+        let graph = GraphFacade::new(Arc::new(store));
+
+        let result = graph
+            .label_propagation()
+            .concurrency(4)
+            .max_iterations(20)
+            .run()
+            .unwrap();
+
+        assert!(result.did_converge);
+        assert!(result.labels[0..3]
+            .iter()
+            .all(|label| *label == result.labels[0]));
+        assert!(result.labels[3..6]
+            .iter()
+            .all(|label| *label == result.labels[3]));
+        assert_ne!(result.labels[0], result.labels[3]);
+    }
+
+    #[test]
+    fn label_propagation_rejects_missing_requested_properties() {
+        let store = store_from_outgoing(vec![vec![(1, 1.0)], vec![(0, 1.0)]]);
+        let graph = GraphFacade::new(Arc::new(store));
+
+        let weight_error = graph
+            .label_propagation()
+            .node_weight_property("missing_weight")
+            .run()
+            .unwrap_err();
+        assert!(weight_error.to_string().contains("not found"));
+
+        let seed_error = graph
+            .label_propagation()
+            .seed_property("missing_seed")
+            .run()
+            .unwrap_err();
+        assert!(seed_error.to_string().contains("not found"));
+    }
+
+    #[test]
+    fn label_propagation_rejects_negative_seed_values() {
+        let mut store = store_from_outgoing(vec![vec![], vec![]]);
+        store
+            .add_node_property_i64("seed".to_string(), vec![10, -2])
+            .unwrap();
+        let graph = GraphFacade::new(Arc::new(store));
+
+        let error = graph
+            .label_propagation()
+            .seed_property("seed")
+            .run()
+            .unwrap_err();
+
+        assert!(error.to_string().contains("non-negative"));
+    }
+
+    #[test]
+    #[should_panic(expected = "The execution has been terminated.")]
+    fn label_propagation_run_with_context_honors_termination() {
+        let store = store_from_outgoing(vec![vec![(1, 1.0)], vec![(0, 1.0)]]);
+        let graph = GraphFacade::new(Arc::new(store));
+        let mut progress = TaskProgressTracker::new(Tasks::leaf("label_propagation".to_string()));
+
+        let _ = graph
+            .label_propagation()
+            .run_with_context(&mut progress, &TerminationFlag::stop_running());
     }
 }

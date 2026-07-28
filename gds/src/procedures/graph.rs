@@ -20,9 +20,7 @@ use super::community::{
     TriangleFacade, WccFacade,
 };
 
-use super::embeddings::{
-    FastRPBuilder, GATBuilder, GraphSageBuilder, HashGNNBuilder, Node2VecBuilder,
-};
+use super::embeddings::{FastRPBuilder, GraphSageBuilder, HashGNNBuilder, Node2VecBuilder};
 
 use super::miscellaneous::{
     CollapsePathFacade, IndexInverseFacade, ScalePropertiesFacade, ToUndirectedFacade,
@@ -130,11 +128,6 @@ impl GraphFacade {
     /// HashGNN node embeddings.
     pub fn hash_gnn(&self) -> HashGNNBuilder {
         HashGNNBuilder::new(Arc::clone(&self.store))
-    }
-
-    /// GAT node embeddings (Graph Attention Network).
-    pub fn gat(&self) -> GATBuilder {
-        GATBuilder::new(Arc::clone(&self.store))
     }
 
     /// GraphSAGE node embeddings (inductive representation learning).

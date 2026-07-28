@@ -14,8 +14,7 @@ use super::LabelPropStorageRuntime;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct LabelPropConfig {
-    /// Concurrency hint accepted for Java GDS API alignment.
-    /// Current Rust computation keeps deterministic sequential update order.
+    /// Number of parallel asynchronous label-update workers.
     #[serde(default = "default_concurrency")]
     pub concurrency: usize,
 
@@ -184,7 +183,12 @@ define_algorithm_spec! {
         let mut progress = TaskProgressTracker::with_concurrency(
             Tasks::leaf_with_volume(
                 "label_propagation".to_string(),
-                node_count.saturating_add(parsed.max_iterations as usize),
+                node_count.saturating_add(
+                    storage
+                        .graph()
+                        .relationship_count()
+                        .saturating_mul(parsed.max_iterations as usize),
+                ),
             ),
             parsed.concurrency,
         );

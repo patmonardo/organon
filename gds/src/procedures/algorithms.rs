@@ -17,7 +17,7 @@ use crate::procedures::community::{
     TriangleFacade, WccFacade,
 };
 use crate::procedures::embeddings::{
-    FastRPBuilder, GATBuilder, GraphSageBuilder, HashGNNBuilder, Node2VecBuilder,
+    FastRPBuilder, GraphSageBuilder, HashGNNBuilder, Node2VecBuilder,
 };
 use crate::procedures::miscellaneous::{
     CollapsePathFacade, IndexInverseFacade, IndirectExposureFacade, ScalePropertiesFacade,
@@ -226,10 +226,6 @@ impl NodeEmbeddingsProcedureFacade {
 
     pub fn hash_gnn(&self) -> HashGNNBuilder {
         HashGNNBuilder::new(Arc::clone(&self.store))
-    }
-
-    pub fn gat(&self) -> GATBuilder {
-        GATBuilder::new(Arc::clone(&self.store))
     }
 
     pub fn graphsage(&self) -> GraphSageBuilder {

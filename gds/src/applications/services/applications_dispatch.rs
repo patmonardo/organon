@@ -73,7 +73,6 @@ pub fn handle_algorithms(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Val
 
         // Embeddings
         "fast_rp" => algorithms_dispatch::handle_fast_rp(request, catalog),
-        "gat" => algorithms_dispatch::handle_gat(request, catalog),
         "hash_gnn" => algorithms_dispatch::handle_hash_gnn(request, catalog),
         "graphsage" => algorithms_dispatch::handle_graphsage(request, catalog),
         "node2vec" => algorithms_dispatch::handle_node2vec(request, catalog),

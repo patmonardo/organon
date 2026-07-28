@@ -85,8 +85,8 @@ pub fn handle_label_propagation(request: &Value, catalog: Arc<dyn GraphCatalog>)
             let node_weight_property = node_weight_property.clone();
 
             let compute = move |gr: &GraphResources,
-                                _tracker: &mut dyn ProgressTracker,
-                                _termination: &TerminationFlag|
+                                tracker: &mut dyn ProgressTracker,
+                                termination: &TerminationFlag|
                   -> Result<Option<Vec<Value>>, String> {
                 let mut builder = gr
                     .facade()
@@ -102,8 +102,10 @@ pub fn handle_label_propagation(request: &Value, catalog: Arc<dyn GraphCatalog>)
                     builder = builder.seed_property(seed);
                 }
 
-                let iter = builder.stream().map_err(|e| e.to_string())?;
-                let rows = iter
+                let rows = builder
+                    .stream_with_context(tracker, termination)
+                    .map_err(|e| e.to_string())?
+                    .into_iter()
                     .map(|row| serde_json::to_value(row).map_err(|e| e.to_string()))
                     .collect::<Result<Vec<_>, _>>()?;
                 Ok(Some(rows))
@@ -150,8 +152,8 @@ pub fn handle_label_propagation(request: &Value, catalog: Arc<dyn GraphCatalog>)
             let node_weight_property = node_weight_property.clone();
 
             let compute = move |gr: &GraphResources,
-                                _tracker: &mut dyn ProgressTracker,
-                                _termination: &TerminationFlag|
+                                tracker: &mut dyn ProgressTracker,
+                                termination: &TerminationFlag|
                   -> Result<Option<Value>, String> {
                 let mut builder = gr
                     .facade()
@@ -167,7 +169,9 @@ pub fn handle_label_propagation(request: &Value, catalog: Arc<dyn GraphCatalog>)
                     builder = builder.seed_property(seed);
                 }
 
-                let stats = builder.stats().map_err(|e| e.to_string())?;
+                let stats = builder
+                    .stats_with_context(tracker, termination)
+                    .map_err(|e| e.to_string())?;
                 let stats_value = serde_json::to_value(stats).map_err(|e| e.to_string())?;
                 Ok(Some(stats_value))
             };
