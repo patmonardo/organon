@@ -10,11 +10,13 @@
 //! 2) validation which schedules conflicting nodes for recoloring
 
 use crate::collections::{BitSet, HugeAtomicLongArray};
-use crate::task::concurrency::{install_with_concurrency, Concurrency, TerminationFlag};
 use crate::core::graph_dimensions::GraphDimensions;
 use crate::core::utils::paged::HugeAtomicBitSet;
+use crate::task::concurrency::virtual_threads::Executor;
+use crate::task::concurrency::virtual_threads::WorkerContext;
+use crate::task::concurrency::Concurrency;
+use crate::task::concurrency::TerminationFlag;
 use crate::task::memory::{Estimate, MemoryEstimation, MemoryRange, MemoryTree};
-use rayon::prelude::*;
 
 pub const INITIAL_FORBIDDEN_COLORS: usize = 1000;
 
@@ -158,34 +160,29 @@ impl K1ColoringComputationRuntime {
     ) where
         F: Fn(usize) -> Vec<usize> + Sync,
     {
-        let concurrency = Concurrency::from_usize(self.concurrency);
-        install_with_concurrency(concurrency, || {
-            nodes.par_iter().for_each_init(
-                || BitSet::new(INITIAL_FORBIDDEN_COLORS),
-                |forbidden, &node_id| {
-                    if !termination_flag.running() {
-                        return;
-                    }
+        let executor = Executor::new(Concurrency::of(self.concurrency));
+        let forbidden_colors = WorkerContext::new(|| BitSet::new(INITIAL_FORBIDDEN_COLORS));
+        let _ = executor.parallel_for(0, nodes.len(), termination_flag, |index| {
+            let node_id = nodes[index];
+            forbidden_colors.with(|forbidden| {
+                forbidden.clear_all();
 
-                    forbidden.clear_all();
-
-                    for target in neighbors(node_id) {
-                        if target == node_id {
-                            continue;
-                        }
-                        let c = colors.get(target);
-                        if c >= 0 {
-                            forbidden.set(c as usize);
-                        }
+                for target in neighbors(node_id) {
+                    if target == node_id {
+                        continue;
                     }
-
-                    let mut next_color = 0usize;
-                    while forbidden.get(next_color) {
-                        next_color += 1;
+                    let color = colors.get(target);
+                    if color >= 0 {
+                        forbidden.set(color as usize);
                     }
-                    colors.set(node_id, next_color as i64);
-                },
-            );
+                }
+
+                let mut next_color = 0usize;
+                while forbidden.get(next_color) {
+                    next_color += 1;
+                }
+                colors.set(node_id, next_color as i64);
+            });
         });
     }
 
@@ -199,25 +196,20 @@ impl K1ColoringComputationRuntime {
     ) where
         F: Fn(usize) -> Vec<usize> + Sync,
     {
-        let concurrency = Concurrency::from_usize(self.concurrency);
-        install_with_concurrency(concurrency, || {
-            nodes.par_iter().for_each(|&source| {
-                if !termination_flag.running() {
-                    return;
+        let executor = Executor::new(Concurrency::of(self.concurrency));
+        let _ = executor.parallel_for(0, nodes.len(), termination_flag, |index| {
+            let source = nodes[index];
+            let source_color = colors.get(source);
+            for target in neighbors(source) {
+                if target == source {
+                    continue;
                 }
 
-                let source_color = colors.get(source);
-                for target in neighbors(source) {
-                    if target == source {
-                        continue;
-                    }
-
-                    if source_color == colors.get(target) && !next_nodes.get(target) {
-                        next_nodes.set(source);
-                        break;
-                    }
+                if source_color == colors.get(target) && !next_nodes.get(target) {
+                    next_nodes.set(source);
+                    break;
                 }
-            });
+            }
         });
     }
 }

@@ -107,6 +107,44 @@ mod tests {
     }
 
     #[test]
+    fn k1coloring_is_valid_at_concurrency_one_and_four() {
+        let outgoing = vec![
+            vec![1, 2],
+            vec![0, 2, 3],
+            vec![0, 1, 4],
+            vec![1, 4, 5],
+            vec![2, 3, 5],
+            vec![3, 4],
+        ];
+
+        for concurrency in [1, 4] {
+            let store = store_from_outgoing(outgoing.clone());
+            let graph = GraphFacade::new(Arc::new(store));
+            let result = graph
+                .k1coloring()
+                .concurrency(concurrency)
+                .max_iterations(20)
+                .run()
+                .unwrap();
+
+            assert!(result.did_converge);
+            assert_valid_coloring(&outgoing, &result.colors);
+        }
+    }
+
+    #[test]
+    fn k1coloring_ignores_self_loops_when_validating_colors() {
+        let outgoing = vec![vec![0, 1], vec![0, 1]];
+        let store = store_from_outgoing(outgoing.clone());
+        let graph = GraphFacade::new(Arc::new(store));
+
+        let result = graph.k1coloring().concurrency(4).run().unwrap();
+
+        assert!(result.did_converge);
+        assert_valid_coloring(&outgoing, &result.colors);
+    }
+
+    #[test]
     fn k1coloring_isolated_nodes_converge_to_single_color() {
         let outgoing = vec![vec![], vec![], vec![], vec![]];
         let store = store_from_outgoing(outgoing.clone());

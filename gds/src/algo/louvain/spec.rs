@@ -30,7 +30,7 @@ pub struct LouvainConfig {
     )]
     pub include_intermediate_communities: bool,
 
-    #[serde(default)]
+    #[serde(default, alias = "seedProperty")]
     pub seed_property: Option<String>,
 
     #[serde(default = "default_gamma")]
@@ -91,6 +91,12 @@ impl LouvainConfig {
         crate::config::validate_positive(self.tolerance, "tolerance")?;
         crate::config::validate_range(self.gamma, 0.0, 10.0, "gamma")?;
         crate::config::validate_range(self.theta, 0.0, 1.0, "theta")?;
+        if matches!(&self.seed_property, Some(property) if property.trim().is_empty()) {
+            return Err(ConfigError::InvalidParameter {
+                parameter: "seedProperty".to_string(),
+                reason: "seed_property cannot be empty".to_string(),
+            });
+        }
         Ok(())
     }
 }
@@ -226,7 +232,10 @@ define_algorithm_spec! {
         let mut computation = LouvainComputationRuntime::new();
         let termination_flag = TerminationFlag::default();
         let mut progress = TaskProgressTracker::with_concurrency(
-            Tasks::leaf_with_volume("louvain".to_string(), storage.node_count()),
+            Tasks::leaf_with_volume(
+                "louvain".to_string(),
+                storage.node_count().saturating_add(parsed.max_levels),
+            ),
             parsed.concurrency,
         );
 

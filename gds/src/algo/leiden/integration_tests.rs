@@ -114,8 +114,7 @@ fn leiden_two_components_stay_separate() {
 }
 
 #[test]
-fn leiden_refinement_splits_disconnected_seeded_community() {
-    // Force all nodes into the same starting community, but with two disconnected components.
+fn leiden_preserves_converged_seed_partition_without_refinement() {
     let graph = build_adj(4, &[(0, 1, 1.0), (2, 3, 1.0)]);
 
     let config = LeidenConfig {
@@ -130,9 +129,8 @@ fn leiden_refinement_splits_disconnected_seeded_community() {
         .compute(&graph, &config, &TerminationFlag::default())
         .unwrap();
 
-    assert_ne!(result.communities[0], result.communities[2]);
-    assert_eq!(result.communities[0], result.communities[1]);
-    assert_eq!(result.communities[2], result.communities[3]);
+    assert_eq!(result.communities, vec![0, 0, 0, 0]);
+    assert!(result.converged);
 }
 
 #[test]

@@ -2,11 +2,6 @@
 //!
 //! Louvain is a modularity-optimization community detection algorithm.
 //!
-//! Note: the underlying Louvain implementation in this crate is currently a
-//! placeholder. The facade is wired to the procedure module and supports seeding
-//! to keep API parity and determinism while the full modularity optimization
-//! runtime is built out.
-//!
 //! Parameters:
 //! - `concurrency`
 
@@ -18,7 +13,7 @@ use crate::algo::louvain::{
 };
 use crate::collections::backends::vec::VecLong;
 use crate::task::concurrency::TerminationFlag;
-use crate::task::progress::{TaskRegistry, Tasks};
+use crate::task::progress::{ProgressTracker, TaskRegistry, Tasks};
 use crate::task::memory::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
@@ -152,8 +147,34 @@ impl LouvainFacade {
         Ok(Box::new(iter))
     }
 
+    pub fn stream_with_context(
+        &self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<Vec<LouvainRow>> {
+        let result = self.compute_with_context(progress_tracker, termination_flag)?;
+        Ok(result
+            .data
+            .into_iter()
+            .enumerate()
+            .map(|(node_id, community_id)| LouvainRow {
+                node_id: node_id as u64,
+                community_id,
+            })
+            .collect())
+    }
+
     pub fn stats(&self) -> Result<LouvainStats> {
         let result = self.compute()?;
+        Ok(LouvainResultBuilder::new(result).stats())
+    }
+
+    pub fn stats_with_context(
+        &self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<LouvainStats> {
+        let result = self.compute_with_context(progress_tracker, termination_flag)?;
         Ok(LouvainResultBuilder::new(result).stats())
     }
 
@@ -231,24 +252,48 @@ impl LouvainFacade {
 
     fn compute(&self) -> Result<LouvainResult> {
         self.validate()?;
-        let start = Instant::now();
 
         let storage =
             LouvainStorageRuntime::new(self.graph_store.as_ref(), self.config.concurrency)?;
-        let mut computation = LouvainComputationRuntime::new();
         let termination_flag = TerminationFlag::default();
 
         let mut progress_tracker = super::progress_tracker(
-            Tasks::leaf_with_volume("louvain".to_string(), storage.node_count()),
+            Tasks::leaf_with_volume(
+                "louvain".to_string(),
+                storage.node_count().saturating_add(self.config.max_levels),
+            ),
             self.config.concurrency,
             self.task_registry.as_ref(),
         );
 
+        self.compute_with_storage_context(&storage, &mut progress_tracker, &termination_flag)
+    }
+
+    fn compute_with_context(
+        &self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<LouvainResult> {
+        self.validate()?;
+        let storage =
+            LouvainStorageRuntime::new(self.graph_store.as_ref(), self.config.concurrency)?;
+        self.compute_with_storage_context(&storage, progress_tracker, termination_flag)
+    }
+
+    fn compute_with_storage_context(
+        &self,
+        storage: &LouvainStorageRuntime,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<LouvainResult> {
+        let start = Instant::now();
+        let mut computation = LouvainComputationRuntime::new();
+
         let result = storage.compute_louvain(
             &mut computation,
             &self.config,
-            &mut progress_tracker,
-            &termination_flag,
+            progress_tracker,
+            termination_flag,
         )?;
         Ok(LouvainResult {
             execution_time: start.elapsed(),
@@ -260,5 +305,13 @@ impl LouvainFacade {
     pub fn run(&self) -> Result<LouvainResult> {
         let result = self.compute()?;
         Ok(result)
+    }
+
+    pub fn run_with_context(
+        &self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<LouvainResult> {
+        self.compute_with_context(progress_tracker, termination_flag)
     }
 }

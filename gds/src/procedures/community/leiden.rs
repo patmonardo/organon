@@ -17,10 +17,10 @@ use crate::algo::leiden::{
     LeidenResult, LeidenResultBuilder, LeidenStats, LeidenStorageRuntime,
 };
 use crate::collections::backends::vec::VecLong;
-use crate::task::concurrency::TerminationFlag;
-use crate::task::progress::{TaskRegistry, Tasks};
-use crate::task::memory::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
+use crate::task::concurrency::TerminationFlag;
+use crate::task::memory::MemoryRange;
+use crate::task::progress::{ProgressTracker, TaskRegistry, Tasks};
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use crate::types::properties::node::DefaultLongNodePropertyValues;
 use crate::types::properties::node::NodePropertyValues;
@@ -140,6 +140,11 @@ impl LeidenFacade {
         self
     }
 
+    pub fn seed_communities(mut self, seed_communities: Vec<u64>) -> Self {
+        self.config.seed_communities = Some(seed_communities);
+        self
+    }
+
     pub fn concurrency(mut self, concurrency: usize) -> Self {
         self.config.concurrency = concurrency;
         self
@@ -158,7 +163,6 @@ impl LeidenFacade {
 
     fn compute(&self) -> Result<LeidenResult> {
         self.validate()?;
-        let start = Instant::now();
 
         let storage = LeidenStorageRuntime::new(self.graph_store.as_ref())?;
         let node_count = storage.node_count();
@@ -175,13 +179,34 @@ impl LeidenFacade {
 
         let termination_flag = TerminationFlag::default();
 
+        self.compute_with_storage_context(&storage, &mut progress_tracker, &termination_flag)
+    }
+
+    fn compute_with_context(
+        &self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<LeidenResult> {
+        self.validate()?;
+        let storage = LeidenStorageRuntime::new(self.graph_store.as_ref())?;
+        self.compute_with_storage_context(&storage, progress_tracker, termination_flag)
+    }
+
+    fn compute_with_storage_context(
+        &self,
+        storage: &LeidenStorageRuntime,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<LeidenResult> {
+        let start = Instant::now();
+
         let mut computation = LeidenComputationRuntime::new();
 
         let result = storage.compute_leiden(
             &mut computation,
             &self.config,
-            &mut progress_tracker,
-            &termination_flag,
+            progress_tracker,
+            termination_flag,
         )?;
 
         Ok(LeidenResult {
@@ -204,10 +229,48 @@ impl LeidenFacade {
         Ok(Box::new(iter))
     }
 
+    pub fn stream_with_context(
+        &self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<Vec<LeidenRow>> {
+        let result = self.compute_with_context(progress_tracker, termination_flag)?;
+        Ok(result
+            .communities
+            .into_iter()
+            .enumerate()
+            .map(|(node_id, community_id)| LeidenRow {
+                node_id: node_id as u64,
+                community_id,
+            })
+            .collect())
+    }
+
     /// Stats mode: returns aggregated statistics.
     pub fn stats(&self) -> Result<LeidenStats> {
         let result = self.compute()?;
         Ok(LeidenResultBuilder::new(result).stats())
+    }
+
+    pub fn stats_with_context(
+        &self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<LeidenStats> {
+        let result = self.compute_with_context(progress_tracker, termination_flag)?;
+        Ok(LeidenResultBuilder::new(result).stats())
+    }
+
+    pub fn run(&self) -> Result<LeidenResult> {
+        self.compute()
+    }
+
+    pub fn run_with_context(
+        &self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<LeidenResult> {
+        self.compute_with_context(progress_tracker, termination_flag)
     }
 
     /// Mutate mode: writes labels back to the graph store.

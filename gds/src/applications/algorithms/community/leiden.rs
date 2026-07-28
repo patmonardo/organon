@@ -53,6 +53,11 @@ pub fn handle_leiden(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value {
         .and_then(|v| v.as_u64())
         .unwrap_or(42);
 
+    let seed_communities = request
+        .get("seedCommunities")
+        .and_then(Value::as_array)
+        .map(|values| values.iter().filter_map(Value::as_u64).collect::<Vec<_>>());
+
     let concurrency_value = request
         .get("concurrency")
         .and_then(|v| v.as_u64())
@@ -86,22 +91,29 @@ pub fn handle_leiden(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value {
     match mode {
         "stream" => {
             let task = Tasks::leaf("leiden::stream".to_string()).base().clone();
+            let seed_communities = seed_communities.clone();
 
             let compute = move |gr: &GraphResources,
-                                _tracker: &mut dyn ProgressTracker,
-                                _termination: &TerminationFlag|
+                                tracker: &mut dyn ProgressTracker,
+                                termination: &TerminationFlag|
                   -> Result<Option<Vec<Value>>, String> {
-                let iter = gr
+                let mut facade = gr
                     .facade()
                     .leiden()
+                    .concurrency(concurrency_value)
                     .gamma(gamma)
                     .theta(theta)
                     .tolerance(tolerance)
                     .max_iterations(max_iterations)
-                    .random_seed(random_seed)
-                    .stream()
+                    .random_seed(random_seed);
+                if let Some(seeds) = seed_communities.clone() {
+                    facade = facade.seed_communities(seeds);
+                }
+                let rows = facade
+                    .stream_with_context(tracker, termination)
                     .map_err(|e| e.to_string())?;
-                let rows = iter
+                let rows = rows
+                    .into_iter()
                     .map(|row| serde_json::to_value(row).map_err(|e| e.to_string()))
                     .collect::<Result<Vec<_>, _>>()?;
                 Ok(Some(rows))
@@ -138,20 +150,26 @@ pub fn handle_leiden(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value {
         }
         "stats" => {
             let task = Tasks::leaf("leiden::stats".to_string()).base().clone();
+            let seed_communities = seed_communities.clone();
 
             let compute = move |gr: &GraphResources,
-                                _tracker: &mut dyn ProgressTracker,
-                                _termination: &TerminationFlag|
+                                tracker: &mut dyn ProgressTracker,
+                                termination: &TerminationFlag|
                   -> Result<Option<Value>, String> {
-                let stats = gr
+                let mut facade = gr
                     .facade()
                     .leiden()
+                    .concurrency(concurrency_value)
                     .gamma(gamma)
                     .theta(theta)
                     .tolerance(tolerance)
                     .max_iterations(max_iterations)
-                    .random_seed(random_seed)
-                    .stats()
+                    .random_seed(random_seed);
+                if let Some(seeds) = seed_communities.clone() {
+                    facade = facade.seed_communities(seeds);
+                }
+                let stats = facade
+                    .stats_with_context(tracker, termination)
                     .map_err(|e| e.to_string())?;
                 let stats_value = serde_json::to_value(stats).map_err(|e| e.to_string())?;
                 Ok(Some(stats_value))
@@ -187,12 +205,16 @@ pub fn handle_leiden(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value {
                 })
                 .unwrap_or_else(|| "community".to_string());
 
-            let facade = LeidenFacade::new(Arc::clone(graph_resources.store()))
+            let mut facade = LeidenFacade::new(Arc::clone(graph_resources.store()))
+                .concurrency(concurrency_value)
                 .gamma(gamma)
                 .theta(theta)
                 .tolerance(tolerance)
                 .max_iterations(max_iterations)
                 .random_seed(random_seed);
+            if let Some(seeds) = seed_communities.clone() {
+                facade = facade.seed_communities(seeds);
+            }
 
             match facade.mutate(&property_name) {
                 Ok(result) => {
@@ -223,12 +245,16 @@ pub fn handle_leiden(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value {
                 })
                 .unwrap_or_else(|| "community".to_string());
 
-            let facade = LeidenFacade::new(Arc::clone(graph_resources.store()))
+            let mut facade = LeidenFacade::new(Arc::clone(graph_resources.store()))
+                .concurrency(concurrency_value)
                 .gamma(gamma)
                 .theta(theta)
                 .tolerance(tolerance)
                 .max_iterations(max_iterations)
                 .random_seed(random_seed);
+            if let Some(seeds) = seed_communities.clone() {
+                facade = facade.seed_communities(seeds);
+            }
 
             match facade.write(&property_name) {
                 Ok(result) => json!({"ok": true, "op": op, "data": result}),
@@ -240,7 +266,16 @@ pub fn handle_leiden(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value {
             }
         }
         "estimate" => {
-            let facade = LeidenFacade::new(Arc::clone(graph_resources.store()));
+            let mut facade = LeidenFacade::new(Arc::clone(graph_resources.store()))
+                .concurrency(concurrency_value)
+                .gamma(gamma)
+                .theta(theta)
+                .tolerance(tolerance)
+                .max_iterations(max_iterations)
+                .random_seed(random_seed);
+            if let Some(seeds) = seed_communities {
+                facade = facade.seed_communities(seeds);
+            }
             match facade.estimate_memory() {
                 Ok(range) => json!({"ok": true, "op": op, "data": range}),
                 Err(e) => err(

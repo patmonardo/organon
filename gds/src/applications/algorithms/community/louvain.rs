@@ -76,16 +76,17 @@ pub fn handle_louvain(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value 
             let task = Tasks::leaf("louvain::stream".to_string()).base().clone();
 
             let compute = move |gr: &GraphResources,
-                                _tracker: &mut dyn ProgressTracker,
-                                _termination: &TerminationFlag|
+                                tracker: &mut dyn ProgressTracker,
+                                termination: &TerminationFlag|
                   -> Result<Option<Vec<Value>>, String> {
-                let iter = gr
+                let rows = gr
                     .facade()
                     .louvain()
                     .concurrency(concurrency_value)
-                    .stream()
+                    .stream_with_context(tracker, termination)
                     .map_err(|e| e.to_string())?;
-                let rows = iter
+                let rows = rows
+                    .into_iter()
                     .map(|row| serde_json::to_value(row).map_err(|e| e.to_string()))
                     .collect::<Result<Vec<_>, _>>()?;
                 Ok(Some(rows))
@@ -128,14 +129,14 @@ pub fn handle_louvain(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value 
             let task = Tasks::leaf("louvain::stats".to_string()).base().clone();
 
             let compute = move |gr: &GraphResources,
-                                _tracker: &mut dyn ProgressTracker,
-                                _termination: &TerminationFlag|
+                                                                tracker: &mut dyn ProgressTracker,
+                                                                termination: &TerminationFlag|
                   -> Result<Option<Value>, String> {
                 let stats = gr
                     .facade()
                     .louvain()
                     .concurrency(concurrency_value)
-                    .stats()
+                                        .stats_with_context(tracker, termination)
                     .map_err(|e| e.to_string())?;
                 let stats_value = serde_json::to_value(stats).map_err(|e| e.to_string())?;
                 Ok(Some(stats_value))

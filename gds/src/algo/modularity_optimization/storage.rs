@@ -96,9 +96,12 @@ impl ModularityOptimizationStorageRuntime {
         progress_tracker.begin_subtask_with_description("compute modularity");
         progress_tracker
             .begin_subtask_with_description_and_volume("optimizeForColor", self.relationship_count);
-        let result =
-            computation.compute(&ModularityOptimizationInput::new(node_count, adj), config);
-        progress_tracker.log_progress(self.relationship_count);
+        let input = ModularityOptimizationInput::new(node_count, adj);
+        let result = computation
+            .compute_with_controls(&input, config, None, termination_flag, |completed| {
+                progress_tracker.log_progress(completed)
+            })
+            .map_err(AlgorithmError::Execution)?;
         progress_tracker.end_subtask_with_description("optimizeForColor");
         progress_tracker.end_subtask_with_description("compute modularity");
         progress_tracker.end_subtask_with_description("ModularityOptimization");
