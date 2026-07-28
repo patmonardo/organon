@@ -22,14 +22,32 @@ impl Node2VecStorageRuntime {
         let fallback = graph.default_property_value();
         for node in 0..graph.node_count() {
             for cursor in graph.stream_relationships_weighted(node as i64, fallback) {
-                if cursor.weight() < 0.0 {
+                if !cursor.weight().is_finite() || cursor.weight() < 0.0 {
                     return Err(AlgorithmError::Execution(
-                        "Node2Vec only supports non-negative relationship weights".into(),
+                        "Node2Vec only supports finite non-negative relationship weights".into(),
                     ));
                 }
             }
         }
 
+        Ok(())
+    }
+
+    pub fn validate_source_nodes(
+        &self,
+        graph: &dyn Graph,
+        source_nodes: &[i64],
+    ) -> Result<(), AlgorithmError> {
+        let node_count = graph.node_count() as i64;
+        if let Some(source) = source_nodes
+            .iter()
+            .copied()
+            .find(|source| *source < 0 || *source >= node_count)
+        {
+            return Err(AlgorithmError::Execution(format!(
+                "Node2Vec source node {source} is outside mapped node range 0..{node_count}"
+            )));
+        }
         Ok(())
     }
 }

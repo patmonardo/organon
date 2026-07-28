@@ -70,7 +70,7 @@ pub struct Node2VecStats {
 #[derive(Debug, Clone, PartialEq)]
 pub struct Node2VecRow {
     pub node_id: u64,
-    pub embedding: Vec<f32>,
+    pub embedding: Vec<f64>,
 }
 
 /// Node2Vec builder.

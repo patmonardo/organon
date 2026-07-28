@@ -1,4 +1,5 @@
-use crate::task::concurrency::{Concurrency, TerminationFlag};
+use crate::task::concurrency::virtual_threads::Executor;
+use crate::task::concurrency::{Concurrency, TerminatedException, TerminationFlag};
 use rand::Rng;
 use rand::SeedableRng;
 use rand_chacha::ChaCha8Rng;
@@ -47,25 +48,26 @@ impl HashTask {
         embedding_dimension: usize,
         scaled_neighbor_influence: f64,
         number_of_relationship_types: usize,
-        _concurrency: Concurrency,
+        concurrency: Concurrency,
         embedding_density: usize,
         random_seed: u64,
         termination_flag: &TerminationFlag,
-    ) -> Vec<Hashes> {
-        // Sequential for now.
-        let mut out = Vec::with_capacity(embedding_density);
-        for seed_offset in 0..embedding_density {
-            termination_flag.assert_running();
-            let mut task = HashTask::new(
-                embedding_dimension,
-                scaled_neighbor_influence,
-                number_of_relationship_types,
-                random_seed + seed_offset as u64,
-            );
-            task.run();
-            out.push(task.hashes());
-        }
-        out
+    ) -> Result<Vec<Hashes>, TerminatedException> {
+        Executor::new(concurrency).parallel_map(
+            0,
+            embedding_density,
+            termination_flag,
+            |seed_offset| {
+                let mut task = HashTask::new(
+                    embedding_dimension,
+                    scaled_neighbor_influence,
+                    number_of_relationship_types,
+                    random_seed + seed_offset as u64,
+                );
+                task.run();
+                task.hashes()
+            },
+        )
     }
 
     pub fn run(&mut self) {

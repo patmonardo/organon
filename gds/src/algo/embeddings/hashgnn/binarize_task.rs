@@ -5,10 +5,10 @@
 
 use super::hash_gnn_parameters::BinarizeFeaturesConfig;
 use crate::collections::HugeObjectArray;
-use crate::task::concurrency::TerminationFlag;
 use crate::core::utils::paged::HugeAtomicBitSet;
 use crate::core::utils::partition::Partition;
 use crate::ml::core::features::{self, FeatureConsumer};
+use crate::task::concurrency::{TerminatedException, TerminationFlag};
 use crate::types::graph::Graph;
 use rand::Rng;
 use rand::SeedableRng;
@@ -26,7 +26,7 @@ impl BinarizeTask {
         feature_properties: Vec<String>,
         random_seed: u64,
         termination_flag: &TerminationFlag,
-    ) -> (HugeObjectArray<Option<Arc<HugeAtomicBitSet>>>, u64) {
+    ) -> Result<(HugeObjectArray<Option<Arc<HugeAtomicBitSet>>>, u64), TerminatedException> {
         let extractors = features::property_extractors(graph.as_ref(), &feature_properties);
         let input_dimension = features::feature_count(&extractors);
 
@@ -77,9 +77,15 @@ impl BinarizeTask {
         }
 
         for partition in partitions {
-            termination_flag.assert_running();
+            if !termination_flag.running() {
+                return Err(TerminatedException);
+            }
+            let mut terminated = false;
             partition.consume(|node_id| {
-                termination_flag.assert_running();
+                if terminated || !termination_flag.running() {
+                    terminated = true;
+                    return;
+                }
 
                 let mut embedding = vec![0.0f32; output_dimension];
                 let mut consumer = Consumer {
@@ -99,9 +105,12 @@ impl BinarizeTask {
                 total_feature_count += bitset.cardinality() as u64;
                 out.set(node_id, Some(bitset));
             });
+            if terminated {
+                return Err(TerminatedException);
+            }
         }
 
-        (out, total_feature_count)
+        Ok((out, total_feature_count))
     }
 }
 

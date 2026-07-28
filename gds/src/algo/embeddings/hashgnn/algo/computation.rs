@@ -2,9 +2,9 @@
 //!
 //! This is the **Subtle pole**: ephemeral computation state for HashGNN.
 
-use crate::task::concurrency::{Concurrency, TerminationFlag};
-use crate::task::progress::{TaskProgressTracker, Tasks};
 use crate::projection::eval::algorithm::AlgorithmError;
+use crate::task::concurrency::{Concurrency, TerminationFlag};
+use crate::task::progress::{NoopProgressTracker, ProgressTracker};
 use crate::types::graph::Graph;
 use std::sync::Arc;
 
@@ -21,6 +21,28 @@ impl HashGNNComputationRuntime {
         config: &HashGNNConfig,
         storage: &HashGNNStorageRuntime,
     ) -> Result<HashGNNResult, AlgorithmError> {
+        Self::run_with_controls(
+            graph,
+            config,
+            storage,
+            &mut NoopProgressTracker,
+            &TerminationFlag::running_true(),
+        )
+    }
+
+    pub fn run_with_controls(
+        graph: Arc<dyn Graph>,
+        config: &HashGNNConfig,
+        storage: &HashGNNStorageRuntime,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<HashGNNResult, AlgorithmError> {
+        if !termination_flag.running() {
+            return Err(AlgorithmError::Execution(
+                "HashGNN execution terminated".to_string(),
+            ));
+        }
+
         if !config.feature_properties.is_empty() {
             storage
                 .validate_feature_properties(graph.as_ref(), &config.feature_properties)
@@ -50,14 +72,11 @@ impl HashGNNComputationRuntime {
             random_seed: config.random_seed,
         };
 
-        let algo = super::super::hash_gnn::HashGNN::new(
-            graph,
-            params,
-            TaskProgressTracker::new(Tasks::leaf_with_volume("HashGNN".to_string(), 1)),
-            TerminationFlag::default(),
-        );
+        let algo = super::super::hash_gnn::HashGNN::new(graph, params, termination_flag.clone());
 
-        let raw = algo.compute();
+        let raw = algo
+            .compute(progress_tracker)
+            .map_err(|_| AlgorithmError::Execution("HashGNN execution terminated".to_string()))?;
 
         let embeddings = match raw.embeddings {
             super::super::hash_gnn_result::HashGNNEmbeddings::Binary {
@@ -81,10 +100,9 @@ impl HashGNNComputationRuntime {
             }
             super::super::hash_gnn_result::HashGNNEmbeddings::Dense { embeddings } => {
                 let node_count = embeddings.size();
-                let mut out: Vec<Vec<f32>> = Vec::with_capacity(node_count);
+                let mut out = Vec::with_capacity(node_count);
                 for i in 0..node_count {
-                    let row = embeddings.get(i);
-                    out.push(row.iter().map(|v| *v as f32).collect());
+                    out.push(embeddings.get(i).clone());
                 }
                 HashGNNEmbeddings::Dense { embeddings: out }
             }

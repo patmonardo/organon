@@ -2,7 +2,7 @@
 //!
 //! Implements the `AlgorithmSpec` contract for the executor runtime.
 
-use crate::collections::backends::vec::VecFloatArray;
+use crate::collections::backends::vec::VecDoubleArray;
 use crate::config::validation::ConfigError;
 use crate::core::LogLevel;
 use crate::define_algorithm_spec;
@@ -10,7 +10,7 @@ use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::NodeLabel;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
-use crate::types::properties::node::{DefaultFloatArrayNodePropertyValues, NodePropertyValues};
+use crate::types::properties::node::{DefaultDoubleArrayNodePropertyValues, NodePropertyValues};
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 use std::sync::Arc;
@@ -56,11 +56,11 @@ pub struct FastRPConfig {
     #[serde(default = "FastRPConfig::default_node_self_influence")]
     pub node_self_influence: f32,
 
-    /// Concurrency hint (currently unused; computation runs single-threaded).
+    /// Number of parallel workers used by node initialization and propagation.
     #[serde(default = "FastRPConfig::default_concurrency")]
     pub concurrency: usize,
 
-    /// Batch size hint (currently unused; kept for parity).
+    /// Minimum partition size hint retained for Java API parity.
     #[serde(default = "FastRPConfig::default_min_batch_size")]
     pub min_batch_size: usize,
 
@@ -110,6 +110,40 @@ impl FastRPConfig {
                 reason: "iterationWeights must be non-empty".to_string(),
             });
         }
+        if self.concurrency == 0 {
+            return Err(ConfigError::InvalidParameter {
+                parameter: "concurrency".to_string(),
+                reason: "concurrency must be > 0".to_string(),
+            });
+        }
+        if self.min_batch_size == 0 {
+            return Err(ConfigError::InvalidParameter {
+                parameter: "minBatchSize".to_string(),
+                reason: "minBatchSize must be > 0".to_string(),
+            });
+        }
+        if self
+            .iteration_weights
+            .iter()
+            .any(|weight| !weight.is_finite())
+        {
+            return Err(ConfigError::InvalidParameter {
+                parameter: "iterationWeights".to_string(),
+                reason: "iterationWeights must contain only finite values".to_string(),
+            });
+        }
+        if !self.normalization_strength.is_finite() {
+            return Err(ConfigError::InvalidParameter {
+                parameter: "normalizationStrength".to_string(),
+                reason: "normalizationStrength must be finite".to_string(),
+            });
+        }
+        if !self.node_self_influence.is_finite() {
+            return Err(ConfigError::InvalidParameter {
+                parameter: "nodeSelfInfluence".to_string(),
+                reason: "nodeSelfInfluence must be finite".to_string(),
+            });
+        }
         Ok(())
     }
 }
@@ -145,7 +179,7 @@ impl Default for FastRPConfig {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct FastRPResult {
-    pub embeddings: Vec<Vec<f32>>,
+    pub embeddings: Vec<Vec<f64>>,
 }
 
 // ============================================================================
@@ -185,12 +219,7 @@ define_algorithm_spec! {
         let feature_extractors = storage
             .feature_extractors(graph_view.as_ref(), &config.feature_properties)
             .map_err(AlgorithmError::Execution)?;
-
-        let result = FastRPComputationRuntime::run(
-            graph_view,
-            &config,
-            feature_extractors,
-        )?;
+        let result = FastRPComputationRuntime::run(graph_view, &config, feature_extractors)?;
 
         Ok(result)
     },
@@ -220,9 +249,9 @@ define_algorithm_spec! {
             )));
         }
 
-        let dense: Vec<Option<Vec<f32>>> = result.embeddings.clone().into_iter().map(Some).collect();
-        let backend = VecFloatArray::from(dense);
-        let values = DefaultFloatArrayNodePropertyValues::<VecFloatArray>::from_collection(
+        let dense: Vec<Option<Vec<f64>>> = result.embeddings.clone().into_iter().map(Some).collect();
+        let backend = VecDoubleArray::from(dense);
+        let values = DefaultDoubleArrayNodePropertyValues::<VecDoubleArray>::from_collection(
             backend, node_count,
         );
         let values: Arc<dyn NodePropertyValues> = Arc::new(values);

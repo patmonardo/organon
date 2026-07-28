@@ -277,7 +277,7 @@ pub struct LocalModelCatalogProcedureFacade {
     model_catalog: Arc<ModelCatalogFacade>,
 }
 
-fn shared_in_memory_model_catalog() -> Arc<ModelCatalogFacade> {
+pub(crate) fn shared_in_memory_model_catalog() -> Arc<ModelCatalogFacade> {
     static CATALOG: OnceLock<Arc<ModelCatalogFacade>> = OnceLock::new();
     Arc::clone(CATALOG.get_or_init(|| Arc::new(ModelCatalogFacade::new())))
 }

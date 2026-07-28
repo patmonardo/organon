@@ -191,8 +191,8 @@ pub enum HashGNNEmbeddings {
         embedding_dimension: usize,
         embeddings: Vec<Vec<u32>>,
     },
-    /// Dense embedding represented as f32 vectors.
-    Dense { embeddings: Vec<Vec<f32>> },
+    /// Dense embedding represented as f64 vectors.
+    Dense { embeddings: Vec<Vec<f64>> },
 }
 
 /// HashGNN result wrapper.

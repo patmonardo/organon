@@ -1,47 +1,54 @@
-//! GraphSAGE Computation Runtime
+//! GraphSAGE model-backed inference runtime.
 
-use super::spec::{GraphSageConfig, GraphSageResult};
-use crate::collections::HugeObjectArray;
+use super::spec::GraphSageResult;
+use super::GraphSage;
+use crate::algo::embeddings::graphsage::algo::graph_sage_model_data::GraphSageModelData;
+use crate::algo::embeddings::graphsage::graphsage_model_trainer::GraphSageTrainMetrics;
+use crate::algo::embeddings::graphsage::types::GraphSageTrainConfig;
+use crate::core::model::Model;
+use crate::projection::eval::algorithm::AlgorithmError;
+use crate::task::concurrency::{Concurrency, TerminationFlag};
+use crate::task::progress::TaskProgressTracker;
 use crate::types::graph::Graph;
+use std::sync::Arc;
 
 pub struct GraphSageComputationRuntime;
 
 impl GraphSageComputationRuntime {
-    pub fn run(graph: &dyn Graph, _config: &GraphSageConfig) -> GraphSageResult {
-        // Get the model catalog from the graph store
-        // This is a simplified implementation - in practice we'd need access to the model catalog
-        // For now, we'll create a placeholder that shows the structure
-
-        // Note: model catalog access is deferred.
-        // let model_catalog = graph_store.model_catalog();
-        // let factory = GraphSageAlgorithmFactory::new(model_catalog);
-        // let graphsage = factory.build(
-        //     Arc::new(graph),
-        //     &config.model_user,
-        //     &config.model_name,
-        //     Concurrency::from(config.concurrency),
-        //     config.batch_size,
-        //     ProgressTracker::default(),
-        // );
-        // let result = graphsage.compute();
-
-        // Placeholder implementation
-        let node_count = graph.node_count();
-        let embedding_dimension = 64; // This should come from the model
-
-        // Create dummy embeddings for now
-        let mut embeddings = HugeObjectArray::new(node_count);
-        for i in 0..node_count {
-            let embedding: Vec<f64> = (0..embedding_dimension)
-                .map(|_| rand::random::<f64>() * 2.0 - 1.0)
-                .collect();
-            embeddings.set(i, embedding);
+    pub fn run(
+        graph: Arc<dyn Graph>,
+        model: Arc<Model<GraphSageModelData, GraphSageTrainConfig, GraphSageTrainMetrics>>,
+        concurrency: usize,
+        batch_size: usize,
+        progress_tracker: TaskProgressTracker,
+        termination_flag: TerminationFlag,
+    ) -> Result<GraphSageResult, AlgorithmError> {
+        if !termination_flag.running() {
+            return Err(AlgorithmError::Execution(
+                "GraphSAGE inference terminated".to_string(),
+            ));
         }
 
-        GraphSageResult {
-            embeddings,
+        let result = GraphSage::new(
+            graph,
+            model,
+            Concurrency::of(concurrency),
+            batch_size,
+            progress_tracker,
+            termination_flag,
+        )
+        .compute();
+        let node_count = result.embeddings.size();
+        let embedding_dimension = if node_count == 0 {
+            0
+        } else {
+            result.embeddings.get(0).len()
+        };
+
+        Ok(GraphSageResult {
+            embeddings: result.embeddings,
             embedding_dimension,
             node_count,
-        }
+        })
     }
 }

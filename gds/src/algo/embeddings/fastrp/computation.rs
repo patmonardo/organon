@@ -2,9 +2,14 @@
 //!
 //! This is the **Subtle pole**: ephemeral computation state for FastRP.
 
-use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::ml::core::features::{feature_extraction, AnyFeatureExtractor, FeatureConsumer};
+use crate::ml::core::tensor::operations::vector_operations::{
+    add_in_place, add_weighted_in_place, l2_norm, scale,
+};
 use crate::projection::eval::algorithm::AlgorithmError;
+use crate::task::concurrency::virtual_threads::Executor;
+use crate::task::concurrency::{Concurrency, TerminationFlag};
+use crate::task::progress::{NoopProgressTracker, ProgressTracker};
 use crate::types::graph::Graph;
 use std::sync::Arc;
 
@@ -19,6 +24,22 @@ impl FastRPComputationRuntime {
         graph: Arc<dyn Graph>,
         config: &FastRPConfig,
         feature_extractors: Vec<AnyFeatureExtractor>,
+    ) -> Result<FastRPResult, AlgorithmError> {
+        Self::run_with_controls(
+            graph,
+            config,
+            feature_extractors,
+            &mut NoopProgressTracker,
+            &TerminationFlag::running_true(),
+        )
+    }
+
+    pub fn run_with_controls(
+        graph: Arc<dyn Graph>,
+        config: &FastRPConfig,
+        feature_extractors: Vec<AnyFeatureExtractor>,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
     ) -> Result<FastRPResult, AlgorithmError> {
         let parameters = FastRPParameters {
             iteration_weights: config.iteration_weights.clone(),
@@ -36,10 +57,10 @@ impl FastRPComputationRuntime {
             config.min_batch_size,
             feature_extractors,
             config.random_seed,
-            TerminationFlag::default(),
+            termination_flag.clone(),
         );
 
-        let result = algo.compute()?;
+        let result = algo.compute(progress_tracker)?;
         Ok(FastRPResult {
             embeddings: result.embeddings.to_vec(),
         })
@@ -66,8 +87,8 @@ struct FastRPParameters {
 struct FastRP {
     graph: Arc<dyn Graph>,
     parameters: FastRPParameters,
-    concurrency: Concurrency,
-    min_batch_size: usize,
+    executor: Executor,
+    _min_batch_size: usize,
     feature_extractors: Vec<AnyFeatureExtractor>,
     random_seed: u64,
     termination_flag: TerminationFlag,
@@ -77,7 +98,7 @@ impl FastRP {
     const SPARSITY: i32 = 3;
     const ENTRY_PROBABILITY: f64 = 1.0 / (2.0 * Self::SPARSITY as f64);
     // Java: EPSILON = 10f / Float.MAX_VALUE
-    const EPSILON: f32 = 10.0f32 / f32::MAX;
+    const EPSILON: f64 = 10.0 / f64::MAX;
 
     #[allow(clippy::too_many_arguments)]
     fn new(
@@ -95,20 +116,18 @@ impl FastRP {
         Self {
             graph,
             parameters,
-            concurrency,
-            min_batch_size,
+            executor: Executor::new(concurrency),
+            _min_batch_size: min_batch_size,
             feature_extractors,
             random_seed: improved,
             termination_flag,
         }
     }
 
-    fn compute(self) -> Result<FastRPInternalResult, AlgorithmError> {
-        // NOTE: We currently run single-threaded for correctness.
-        // Concurrency/min_batch_size are kept for API parity.
-        let _ = self.concurrency;
-        let _ = self.min_batch_size;
-
+    fn compute(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+    ) -> Result<FastRPInternalResult, AlgorithmError> {
         let embedding_dimension = self.parameters.embedding_dimension;
         let base_embedding_dimension =
             embedding_dimension.saturating_sub(self.parameters.property_dimension);
@@ -117,36 +136,34 @@ impl FastRP {
         let property_vectors = self.init_property_vectors(feature_dim);
 
         let node_count = self.graph.node_count();
-        let mut embeddings: Vec<Vec<f32>> = vec![vec![0.0; embedding_dimension]; node_count];
-        let mut embedding_a: Vec<Vec<f32>> = vec![vec![0.0; embedding_dimension]; node_count];
-        let mut embedding_b: Vec<Vec<f32>> = vec![vec![0.0; embedding_dimension]; node_count];
-
-        self.init_random_vectors(
+        let embedding_b = self.init_random_vectors(
             base_embedding_dimension,
             embedding_dimension,
             &property_vectors,
-            &mut embedding_b,
-        );
+        )?;
+        progress_tracker.log_progress(node_count);
 
-        self.add_initial_vectors_to_embedding(&embedding_b, &mut embeddings);
+        let mut embeddings = self.add_initial_vectors_to_embedding(&embedding_b)?;
+        if self.parameters.node_self_influence != 0.0 {
+            progress_tracker.log_progress(node_count);
+        }
 
-        self.propagate_embeddings(&mut embeddings, &mut embedding_a, &mut embedding_b)?;
+        self.propagate_embeddings(&mut embeddings, embedding_b, progress_tracker)?;
 
         Ok(FastRPInternalResult { embeddings })
     }
 
-    fn init_property_vectors(&self, feature_dim: usize) -> Vec<Vec<f32>> {
+    fn init_property_vectors(&self, feature_dim: usize) -> Vec<Vec<f64>> {
         let property_dimension = self.parameters.property_dimension;
         if property_dimension == 0 || feature_dim == 0 {
             return vec![vec![]; feature_dim];
         }
 
         let entry_value =
-            ((Self::SPARSITY as f32).sqrt()) / (self.parameters.embedding_dimension as f32).sqrt();
+            (Self::SPARSITY as f64).sqrt() / (self.parameters.embedding_dimension as f64).sqrt();
 
         let mut random = HighQualityRandom::new(self.random_seed);
-        let mut property_vectors: Vec<Vec<f32>> =
-            vec![vec![0.0f32; property_dimension]; feature_dim];
+        let mut property_vectors = vec![vec![0.0; property_dimension]; feature_dim];
 
         for d in 0..property_dimension {
             for pv in property_vectors.iter_mut().take(feature_dim) {
@@ -161,86 +178,76 @@ impl FastRP {
         &self,
         base_embedding_dimension: usize,
         embedding_dimension: usize,
-        property_vectors: &[Vec<f32>],
-        embedding_b: &mut [Vec<f32>],
-    ) {
-        let sqrt_embedding_dimension = (embedding_dimension as f32).sqrt();
-        let sqrt_sparsity = (Self::SPARSITY as f32).sqrt();
+        property_vectors: &[Vec<f64>],
+    ) -> Result<Vec<Vec<f64>>, AlgorithmError> {
+        let sqrt_embedding_dimension = (embedding_dimension as f64).sqrt();
+        let sqrt_sparsity = (Self::SPARSITY as f64).sqrt();
 
-        // Per-node deterministic reseeding to match Java behaviour.
-        let mut random = HighQualityRandom::new(self.random_seed);
+        self.executor
+            .parallel_map(0, self.graph.node_count(), &self.termination_flag, |node| {
+                let node_id = node as i64;
 
-        for (node_usize, embedding_slot) in embedding_b
-            .iter_mut()
-            .enumerate()
-            .take(self.graph.node_count())
-        {
-            self.termination_flag.assert_running();
-            let node_id = node_usize as i64;
+                let degree = self.graph.degree(node_id);
+                let scaling = if degree == 0 {
+                    1.0
+                } else {
+                    (degree as f64).powf(self.parameters.normalization_strength as f64)
+                };
+                let entry_value = scaling * sqrt_sparsity / sqrt_embedding_dimension;
 
-            let degree = self.graph.degree(node_id);
-            let scaling = if degree == 0 {
-                1.0f32
-            } else {
-                (degree as f32).powf(self.parameters.normalization_strength)
-            };
-            let entry_value = scaling * sqrt_sparsity / sqrt_embedding_dimension;
+                let original_id = self.graph.to_original_node_id(node_id).unwrap_or(node_id);
+                let mut random = HighQualityRandom::new(self.random_seed ^ original_id as u64);
 
-            let original_id = self.graph.to_original_node_id(node_id).unwrap_or(node_id);
-            random.reseed(self.random_seed ^ (original_id as u64));
+                let mut vec = vec![0.0; embedding_dimension];
+                for (_i, val) in vec.iter_mut().enumerate().take(base_embedding_dimension) {
+                    *val = compute_random_entry(&mut random, entry_value);
+                }
 
-            let mut vec = vec![0.0f32; embedding_dimension];
-            for (_i, val) in vec.iter_mut().enumerate().take(base_embedding_dimension) {
-                *val = compute_random_entry(&mut random, entry_value);
-            }
+                // Property feature contribution for tail dimensions.
+                if self.parameters.property_dimension > 0 && !property_vectors.is_empty() {
+                    let mut adder = PropertyVectorAdder::new(
+                        base_embedding_dimension,
+                        embedding_dimension,
+                        property_vectors,
+                        &mut vec,
+                    );
+                    feature_extraction::extract(
+                        node_id as u64,
+                        0,
+                        &self.feature_extractors,
+                        &mut adder,
+                    );
+                }
 
-            // Property feature contribution for tail dimensions.
-            if self.parameters.property_dimension > 0 && !property_vectors.is_empty() {
-                let mut adder = PropertyVectorAdder::new(
-                    base_embedding_dimension,
-                    embedding_dimension,
-                    property_vectors,
-                    &mut vec,
-                );
-                feature_extraction::extract(
-                    node_id as u64,
-                    0,
-                    &self.feature_extractors,
-                    &mut adder,
-                );
-            }
-
-            *embedding_slot = vec;
-        }
+                vec
+            })
+            .map_err(|_| AlgorithmError::Execution("FastRP initialization terminated".to_string()))
     }
 
     fn add_initial_vectors_to_embedding(
         &self,
-        embedding_b: &[Vec<f32>],
-        embeddings: &mut [Vec<f32>],
-    ) {
-        if self.parameters.node_self_influence == 0.0 {
-            return;
-        }
-
-        for node in 0..self.graph.node_count() {
-            self.termination_flag.assert_running();
-            let initial = &embedding_b[node];
-            let l2 = l2_norm_f32(initial);
-            let adjusted = if l2 < Self::EPSILON { 1.0 } else { l2 };
-            add_weighted_in_place_f32(
-                &mut embeddings[node],
-                initial,
-                self.parameters.node_self_influence / adjusted,
-            );
-        }
+        embedding_b: &[Vec<f64>],
+    ) -> Result<Vec<Vec<f64>>, AlgorithmError> {
+        let influence = self.parameters.node_self_influence as f64;
+        self.executor
+            .parallel_map(0, self.graph.node_count(), &self.termination_flag, |node| {
+                let initial = &embedding_b[node];
+                let mut embedding = vec![0.0; self.parameters.embedding_dimension];
+                if influence != 0.0 {
+                    let norm = l2_norm(initial);
+                    let adjusted = if norm < Self::EPSILON { 1.0 } else { norm };
+                    add_weighted_in_place(&mut embedding, initial, influence / adjusted);
+                }
+                embedding
+            })
+            .map_err(|_| AlgorithmError::Execution("FastRP self-influence terminated".to_string()))
     }
 
     fn propagate_embeddings(
         &self,
-        embeddings: &mut [Vec<f32>],
-        embedding_a: &mut [Vec<f32>],
-        embedding_b: &mut [Vec<f32>],
+        embeddings: &mut [Vec<f64>],
+        mut previous: Vec<Vec<f64>>,
+        progress_tracker: &mut dyn ProgressTracker,
     ) -> Result<(), AlgorithmError> {
         let relationship_weight_fallback = if self.parameters.relationship_weight_property.is_some()
         {
@@ -252,25 +259,19 @@ impl FastRP {
         for (i, &iteration_weight) in self.parameters.iteration_weights.iter().enumerate() {
             self.termination_flag.assert_running();
             let first_iteration = i == 0;
-
-            let (current, previous): (&mut [Vec<f32>], &[Vec<f32>]) = if i % 2 == 0 {
-                (&mut *embedding_a, &*embedding_b)
-            } else {
-                (&mut *embedding_b, &*embedding_a)
-            };
-
-            for node_usize in 0..self.graph.node_count() {
-                self.termination_flag.assert_running();
-                let node_id = node_usize as i64;
-
-                let current_vec = &mut current[node_usize];
-                current_vec.fill(0.0);
+            let rows = self
+                .executor
+                .parallel_map(0, self.graph.node_count(), &self.termination_flag, |node| {
+                let node_id = node as i64;
+                let mut current = vec![0.0; self.parameters.embedding_dimension];
+                let mut relationships_processed = 0usize;
 
                 if self.graph.has_relationship_property() {
                     for cursor in self
                         .graph
                         .stream_relationships_weighted(node_id, relationship_weight_fallback)
                     {
+                        relationships_processed += 1;
                         let weight = cursor.weight();
                         if first_iteration && weight.is_nan() {
                             let source = cursor.source_id();
@@ -292,36 +293,43 @@ impl FastRP {
                         }
 
                         let target_idx = cursor.target_id() as usize;
-                        add_weighted_in_place_f32(
-                            current_vec,
-                            &previous[target_idx],
-                            weight as f32,
-                        );
+                        add_weighted_in_place(&mut current, &previous[target_idx], weight);
                     }
                 } else {
                     for cursor in self
                         .graph
                         .stream_relationships(node_id, relationship_weight_fallback)
                     {
+                        relationships_processed += 1;
                         let target_idx = cursor.target_id() as usize;
-                        add_in_place_f32(current_vec, &previous[target_idx]);
+                        add_in_place(&mut current, &previous[target_idx]);
                     }
                 }
 
                 let degree = self.graph.degree(node_id);
                 let adjusted_degree = if degree == 0 { 1 } else { degree };
-                let degree_scale = 1.0f32 / (adjusted_degree as f32);
-                scale_f32(current_vec, degree_scale);
+                let degree_scale = 1.0 / adjusted_degree as f64;
+                scale(&mut current, degree_scale);
 
-                let inv_l2 = 1.0f32 / l2_norm_f32(current_vec);
+                let inv_l2 = 1.0 / l2_norm(&current);
                 let safe_inv = if inv_l2.is_finite() { inv_l2 } else { 1.0 };
+                Ok((current, relationships_processed, safe_inv))
+            })
+            .map_err(|_| AlgorithmError::Execution("FastRP propagation terminated".to_string()))?;
 
-                add_weighted_in_place_f32(
-                    &mut embeddings[node_usize],
-                    current_vec,
-                    safe_inv * iteration_weight,
+            let rows = rows
+                .into_iter()
+                .collect::<Result<Vec<_>, AlgorithmError>>()?;
+            let relationships_processed = rows.iter().map(|(_, count, _)| count).sum();
+            for (node, (current, _, safe_inv)) in rows.into_iter().enumerate() {
+                add_weighted_in_place(
+                    &mut embeddings[node],
+                    &current,
+                    safe_inv * iteration_weight as f64,
                 );
+                previous[node] = current;
             }
+            progress_tracker.log_progress(relationships_processed);
         }
 
         Ok(())
@@ -330,7 +338,7 @@ impl FastRP {
 
 #[derive(Debug, Clone)]
 struct FastRPInternalResult {
-    embeddings: Vec<Vec<f32>>,
+    embeddings: Vec<Vec<f64>>,
 }
 
 // =============================================================================
@@ -340,16 +348,16 @@ struct FastRPInternalResult {
 struct PropertyVectorAdder<'a> {
     base_embedding_dimension: usize,
     embedding_dimension: usize,
-    property_vectors: &'a [Vec<f32>],
-    output: &'a mut [f32],
+    property_vectors: &'a [Vec<f64>],
+    output: &'a mut [f64],
 }
 
 impl<'a> PropertyVectorAdder<'a> {
     fn new(
         base_embedding_dimension: usize,
         embedding_dimension: usize,
-        property_vectors: &'a [Vec<f32>],
-        output: &'a mut [f32],
+        property_vectors: &'a [Vec<f64>],
+        output: &'a mut [f64],
     ) -> Self {
         Self {
             base_embedding_dimension,
@@ -368,12 +376,11 @@ impl FeatureConsumer for PropertyVectorAdder<'_> {
         }
 
         // Equivalent to Java: addPropertyVector( offset, value )
-        let v = value as f32;
         let pv = &self.property_vectors[offset];
         for (i, &pv_val) in pv.iter().enumerate() {
             let idx = self.base_embedding_dimension + i;
             if idx < self.embedding_dimension {
-                self.output[idx] = self.output[idx].mul_add(v, pv_val);
+                self.output[idx] = value.mul_add(pv_val, self.output[idx]);
             }
         }
     }
@@ -402,10 +409,6 @@ impl HighQualityRandom {
         Self { state: seed }
     }
 
-    fn reseed(&mut self, seed: u64) {
-        self.state = seed;
-    }
-
     fn next_u64(&mut self) -> u64 {
         // SplitMix64
         self.state = self.state.wrapping_add(0x9E3779B97F4A7C15);
@@ -423,7 +426,7 @@ impl HighQualityRandom {
 }
 
 #[inline]
-fn compute_random_entry(random: &mut HighQualityRandom, entry_value: f32) -> f32 {
+fn compute_random_entry(random: &mut HighQualityRandom, entry_value: f64) -> f64 {
     let r = random.next_f64();
 
     if r < FastRP::ENTRY_PROBABILITY {
@@ -435,45 +438,10 @@ fn compute_random_entry(random: &mut HighQualityRandom, entry_value: f32) -> f32
     }
 }
 
-// =============================================================================
-// Vector math helpers
-// =============================================================================
-
-#[inline]
-fn add_in_place_f32(lhs: &mut [f32], rhs: &[f32]) {
-    let len = lhs.len().min(rhs.len());
-    for i in 0..len {
-        lhs[i] += rhs[i];
-    }
-}
-
-#[inline]
-fn add_weighted_in_place_f32(lhs: &mut [f32], rhs: &[f32], weight: f32) {
-    let len = lhs.len().min(rhs.len());
-    for i in 0..len {
-        lhs[i] = rhs[i].mul_add(weight, lhs[i]);
-    }
-}
-
-#[inline]
-fn scale_f32(lhs: &mut [f32], scalar: f32) {
-    for x in lhs.iter_mut() {
-        *x *= scalar;
-    }
-}
-
-#[inline]
-fn l2_norm_f32(v: &[f32]) -> f32 {
-    let mut sum = 0.0f32;
-    for &x in v {
-        sum = x.mul_add(x, sum);
-    }
-    sum.sqrt()
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::task::progress::NoopProgressTracker;
     use crate::types::graph_store::DefaultGraphStore;
     use crate::types::random::{RandomGraphConfig, RandomRelationshipConfig};
 
@@ -508,5 +476,66 @@ mod tests {
         let result = FastRPComputationRuntime::run(graph, &cfg, vec![]).unwrap();
         assert_eq!(result.embeddings.len(), config.node_count);
         assert_eq!(result.embeddings[0].len(), 8);
+        assert!(result
+            .embeddings
+            .iter()
+            .flatten()
+            .all(|value| value.is_finite()));
+    }
+
+    #[test]
+    fn fastrp_seeded_results_are_equal_across_worker_counts() {
+        let graph_config = RandomGraphConfig {
+            graph_name: "fastrp-concurrency".into(),
+            database_name: "in-memory".into(),
+            node_count: 64,
+            node_labels: vec!["N".into()],
+            relationships: vec![RandomRelationshipConfig::new("R", 0.2)],
+            directed: true,
+            inverse_indexed: false,
+            seed: Some(11),
+        };
+        let graph: Arc<dyn Graph> = DefaultGraphStore::random(&graph_config).unwrap().graph();
+        let mut config = FastRPConfig {
+            embedding_dimension: 16,
+            iteration_weights: vec![0.5, 1.0, 1.5],
+            random_seed: Some(17),
+            concurrency: 1,
+            ..FastRPConfig::default()
+        };
+
+        let sequential =
+            FastRPComputationRuntime::run(Arc::clone(&graph), &config, vec![]).unwrap();
+        config.concurrency = 4;
+        let parallel = FastRPComputationRuntime::run(graph, &config, vec![]).unwrap();
+
+        assert_eq!(sequential.embeddings, parallel.embeddings);
+    }
+
+    #[test]
+    fn fastrp_honors_pre_cancelled_execution() {
+        let graph_config = RandomGraphConfig {
+            node_count: 8,
+            relationships: vec![RandomRelationshipConfig::new("R", 0.5)],
+            ..RandomGraphConfig::default()
+        };
+        let graph = DefaultGraphStore::random(&graph_config).unwrap().graph();
+        let config = FastRPConfig {
+            embedding_dimension: 8,
+            concurrency: 2,
+            ..FastRPConfig::default()
+        };
+        let mut progress = NoopProgressTracker;
+
+        let error = FastRPComputationRuntime::run_with_controls(
+            graph,
+            &config,
+            vec![],
+            &mut progress,
+            &TerminationFlag::stop_running(),
+        )
+        .unwrap_err();
+
+        assert!(error.to_string().contains("terminated"));
     }
 }

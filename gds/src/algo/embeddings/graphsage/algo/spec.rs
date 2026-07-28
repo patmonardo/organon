@@ -10,10 +10,7 @@ use crate::collections::HugeObjectArray;
 use crate::config::validation::ConfigError;
 use crate::define_algorithm_spec;
 use crate::projection::eval::algorithm::AlgorithmError;
-use crate::projection::Orientation;
 use serde::{Deserialize, Serialize};
-
-use super::GraphSageStorageRuntime;
 
 // ============================================================================
 // Configuration
@@ -54,6 +51,18 @@ impl GraphSageConfig {
             return Err(ConfigError::InvalidParameter {
                 parameter: "modelName".to_string(),
                 reason: "modelName must be specified".to_string(),
+            });
+        }
+        if self.batch_size == 0 {
+            return Err(ConfigError::InvalidParameter {
+                parameter: "batchSize".to_string(),
+                reason: "batchSize must be > 0".to_string(),
+            });
+        }
+        if self.concurrency == 0 {
+            return Err(ConfigError::InvalidParameter {
+                parameter: "concurrency".to_string(),
+                reason: "concurrency must be > 0".to_string(),
             });
         }
         Ok(())
@@ -106,14 +115,9 @@ define_algorithm_spec! {
             .validate()
             .map_err(|e| AlgorithmError::Execution(e.to_string()))?;
 
-        // Load graph
-        let rel_types = std::collections::HashSet::new();
-        let graph = graph_store
-            .get_graph_with_types_and_orientation(&rel_types, Orientation::Natural)
-            .map_err(|e| AlgorithmError::Graph(e.to_string()))?;
-
-        // Run computation
-        Ok(GraphSageStorageRuntime::new()
-            .compute(graph.as_ref(), &config))
+        let _ = graph_store;
+        Err(AlgorithmError::Execution(
+            "GraphSAGE inference requires an injected model catalog; use GraphSageStorageRuntime::compute".to_string(),
+        ))
     }
 }

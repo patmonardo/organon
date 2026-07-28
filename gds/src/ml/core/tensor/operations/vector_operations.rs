@@ -50,18 +50,30 @@ pub fn cosine_similarity(lhs: &[f64], rhs: &[f64]) -> f64 {
 
 /// Add rhs to lhs in place.
 pub fn add_in_place(lhs: &mut [f64], rhs: &[f64]) {
-    let length = lhs.len().min(rhs.len());
+    assert_eq!(
+        lhs.len(),
+        rhs.len(),
+        "vector addition requires equal lengths, got {} and {}",
+        lhs.len(),
+        rhs.len()
+    );
 
-    for i in 0..length {
+    for i in 0..lhs.len() {
         lhs[i] += rhs[i];
     }
 }
 
 /// Add weighted rhs to lhs in place: lhs[i] += weight * rhs[i]
 pub fn add_weighted_in_place(lhs: &mut [f64], rhs: &[f64], weight: f64) {
-    let length = lhs.len().min(rhs.len());
+    assert_eq!(
+        lhs.len(),
+        rhs.len(),
+        "weighted vector addition requires equal lengths, got {} and {}",
+        lhs.len(),
+        rhs.len()
+    );
 
-    for i in 0..length {
+    for i in 0..lhs.len() {
         lhs[i] += weight * rhs[i];
     }
 }
@@ -153,6 +165,18 @@ mod tests {
         let rhs = vec![4.0, 5.0, 6.0];
         add_weighted_in_place(&mut lhs, &rhs, 2.0);
         assert_eq!(lhs, vec![9.0, 12.0, 15.0]);
+    }
+
+    #[test]
+    #[should_panic(expected = "vector addition requires equal lengths")]
+    fn test_add_in_place_rejects_dimension_mismatch() {
+        add_in_place(&mut [1.0, 2.0], &[3.0]);
+    }
+
+    #[test]
+    #[should_panic(expected = "weighted vector addition requires equal lengths")]
+    fn test_add_weighted_in_place_rejects_dimension_mismatch() {
+        add_weighted_in_place(&mut [1.0, 2.0], &[3.0], 2.0);
     }
 
     #[test]

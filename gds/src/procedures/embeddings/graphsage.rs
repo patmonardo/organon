@@ -4,8 +4,11 @@ use crate::algo::algorithms::traits as facade;
 use crate::algo::algorithms::ConfigValidator;
 use crate::algo::embeddings::graphsage::spec::{GraphSageConfig, GraphSageResult};
 use crate::algo::embeddings::graphsage::GraphSageStorageRuntime;
+use crate::procedures::model_catalog::{shared_in_memory_model_catalog, ModelCatalogFacade};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::Orientation;
+use crate::task::concurrency::TerminationFlag;
+use crate::task::progress::{TaskProgressTracker, Tasks};
 use crate::types::DefaultGraphStore;
 use crate::types::GraphStore;
 use serde::{Deserialize, Serialize};
@@ -31,6 +34,7 @@ pub struct GraphSageBuilder {
     model_name: String,
     batch_size: usize,
     concurrency: usize,
+    model_catalog: Arc<ModelCatalogFacade>,
 }
 
 impl GraphSageBuilder {
@@ -41,6 +45,7 @@ impl GraphSageBuilder {
             model_name: "".to_string(),
             batch_size: 100,
             concurrency: num_cpus::get().max(1),
+            model_catalog: shared_in_memory_model_catalog(),
         }
     }
 
@@ -61,6 +66,11 @@ impl GraphSageBuilder {
 
     pub fn concurrency(mut self, concurrency: usize) -> Self {
         self.concurrency = concurrency;
+        self
+    }
+
+    pub fn model_catalog(mut self, model_catalog: Arc<ModelCatalogFacade>) -> Self {
+        self.model_catalog = model_catalog;
         self
     }
 
@@ -100,7 +110,16 @@ impl GraphSageBuilder {
             concurrency: self.concurrency,
         };
 
-        Ok(storage.compute(graph.as_ref(), &graphsage_config))
+        storage.compute(
+            graph,
+            &graphsage_config,
+            self.model_catalog.as_ref(),
+            TaskProgressTracker::new(Tasks::leaf_with_volume(
+                "GraphSAGE".to_string(),
+                self.graph_store.node_count(),
+            )),
+            TerminationFlag::running_true(),
+        )
     }
 
     pub fn stats(self) -> facade::Result<GraphSageStats> {

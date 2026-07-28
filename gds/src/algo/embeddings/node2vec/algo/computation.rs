@@ -21,10 +21,11 @@
 //! The model is constructed with a mapping closure so training can reference original ids
 //! where needed, but the returned matrix is aligned to the projected graph's node order.
 
-use crate::task::concurrency::{Concurrency, TerminationFlag};
-use crate::task::progress::{TaskProgressTracker, Tasks};
 use crate::ml::core::samplers::RandomWalkSampler;
 use crate::projection::eval::algorithm::AlgorithmError;
+use crate::task::concurrency::virtual_threads::Executor;
+use crate::task::concurrency::{Concurrency, TerminationFlag};
+use crate::task::progress::{NoopProgressTracker, ProgressTracker};
 use crate::types::graph::Graph;
 use std::sync::Arc;
 
@@ -46,7 +47,24 @@ impl Node2VecComputationRuntime {
         config: &Node2VecConfig,
         storage: &Node2VecStorageRuntime,
     ) -> Result<Node2VecResult, AlgorithmError> {
+        Self::run_with_controls(
+            graph,
+            config,
+            storage,
+            &mut NoopProgressTracker,
+            &TerminationFlag::running_true(),
+        )
+    }
+
+    pub fn run_with_controls(
+        graph: Arc<dyn Graph>,
+        config: &Node2VecConfig,
+        storage: &Node2VecStorageRuntime,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<Node2VecResult, AlgorithmError> {
         storage.validate_non_negative_weights(graph.as_ref())?;
+        storage.validate_source_nodes(graph.as_ref(), &config.source_nodes)?;
 
         let sampling = SamplingWalkParameters {
             walks_per_node: config.walks_per_node,
@@ -82,21 +100,7 @@ impl Node2VecComputationRuntime {
         let mut probabilities_builder =
             RandomWalkProbabilitiesBuilder::new(Concurrency::of(config.concurrency.max(1)));
 
-        let max_walk_count =
-            node_count.saturating_mul(parameters.sampling_walk_parameters.walks_per_node);
-        let mut walks = CompressedRandomWalks::new(max_walk_count);
-
         let random_seed = config.random_seed.unwrap_or(42);
-
-        // Cumulative-weight supplier by summing outgoing relationship weights.
-        let graph_for_weight = Arc::clone(&graph);
-        let weight_fn = move |node_id: u64| -> f64 {
-            let mut sum = 0.0;
-            for cursor in graph_for_weight.stream_relationships(node_id as i64, 1.0) {
-                sum += cursor.property();
-            }
-            sum
-        };
 
         let nodes: Vec<i64> = if config.source_nodes.is_empty() {
             (0..node_count as i64).collect()
@@ -104,50 +108,75 @@ impl Node2VecComputationRuntime {
             config.source_nodes.clone()
         };
 
-        let mut sampler = RandomWalkSampler::create(
-            Arc::clone(&graph),
-            weight_fn,
-            parameters.sampling_walk_parameters.walk_length,
-            parameters.sampling_walk_parameters.return_factor,
-            parameters.sampling_walk_parameters.in_out_factor,
-            random_seed,
-        );
+        let max_walk_count = nodes
+            .len()
+            .saturating_mul(parameters.sampling_walk_parameters.walks_per_node);
+        let mut walks = CompressedRandomWalks::new(max_walk_count);
+        let executor = Executor::new(Concurrency::of(config.concurrency));
+        let walks_by_source = executor
+            .parallel_map(0, nodes.len(), termination_flag, |source_index| {
+                let node_id = nodes[source_index];
+                if graph.degree(node_id) == 0 {
+                    return Vec::new();
+                }
 
-        let termination_flag = TerminationFlag::default();
+                let graph_for_weight = Arc::clone(&graph);
+                let weight_fn = move |mapped_node_id: u64| -> f64 {
+                    graph_for_weight
+                        .stream_relationships(mapped_node_id as i64, 1.0)
+                        .map(|cursor| cursor.property())
+                        .sum()
+                };
+                let mut sampler = RandomWalkSampler::create(
+                    Arc::clone(&graph),
+                    weight_fn,
+                    parameters.sampling_walk_parameters.walk_length,
+                    parameters.sampling_walk_parameters.return_factor,
+                    parameters.sampling_walk_parameters.in_out_factor,
+                    random_seed,
+                );
+                sampler.prepare_for_new_node(node_id as u64);
+
+                (0..parameters.sampling_walk_parameters.walks_per_node)
+                    .map(|_| {
+                        sampler
+                            .walk(node_id as u64)
+                            .into_iter()
+                            .map(|node| node as i64)
+                            .collect()
+                    })
+                    .collect::<Vec<Vec<i64>>>()
+            })
+            .map_err(|_| {
+                AlgorithmError::Execution("Node2Vec walk generation terminated".to_string())
+            })?;
 
         let mut used_walks = 0usize;
         let mut max_len = 0usize;
-        let mut produced_since_check = 0usize;
-        let check_every = config.walk_buffer_size.max(1);
-
-        for &node_id in &nodes {
-            if produced_since_check >= check_every {
-                termination_flag.assert_running();
-                produced_since_check = 0;
-            }
-
-            if graph.degree(node_id) == 0 {
-                continue;
-            }
-
-            sampler.prepare_for_new_node(node_id as u64);
-            for _ in 0..parameters.sampling_walk_parameters.walks_per_node {
-                termination_flag.assert_running();
-                let walk = sampler.walk(node_id as u64);
-                let walk_i64: Vec<i64> = walk.into_iter().map(|v| v as i64).collect();
-
-                probabilities_builder.register_walk(&walk_i64);
-                walks.add(used_walks, &walk_i64);
-                max_len = max_len.max(walk_i64.len());
+        for source_walks in walks_by_source {
+            for walk in source_walks {
+                probabilities_builder.register_walk(&walk);
+                walks.add(used_walks, &walk);
+                max_len = max_len.max(walk.len());
                 used_walks += 1;
-                produced_since_check += 1;
+                progress_tracker.log_progress(1);
             }
         }
 
         walks.set_max_walk_length(max_len);
         walks.set_size(used_walks);
 
-        let _probabilities = probabilities_builder.build();
+        let probabilities = probabilities_builder.build();
+        let positive_sampling_probabilities = probabilities.positive_sampling_probabilities(
+            node_count,
+            parameters.sampling_walk_parameters.positive_sampling_factor,
+        );
+        let negative_sampling_distribution = probabilities.negative_sampling_distribution(
+            node_count,
+            parameters
+                .sampling_walk_parameters
+                .negative_sampling_exponent,
+        );
 
         let graph_for_mapping = Arc::clone(&graph);
         let _to_original = move |mapped: i64| {
@@ -156,28 +185,23 @@ impl Node2VecComputationRuntime {
                 .unwrap_or(mapped)
         };
 
-        let _progress_tracker = TaskProgressTracker::new(Tasks::leaf_with_volume(
-            "Node2Vec".to_string(),
-            config.iterations,
-        ));
-
         let model = Node2VecModel::new(
             node_count,
             parameters.train_parameters.clone(),
             Concurrency::of(config.concurrency.max(1)),
             config.random_seed,
             walks,
-            termination_flag,
+            positive_sampling_probabilities,
+            negative_sampling_distribution,
+            termination_flag.clone(),
         );
 
-        let trained = model.train();
+        let trained = model
+            .train(progress_tracker)
+            .map_err(|_| AlgorithmError::Execution("Node2Vec training terminated".to_string()))?;
 
         Ok(Node2VecResult {
-            embeddings: trained
-                .embeddings
-                .into_iter()
-                .map(|emb| emb.into_iter().map(|v| v as f32).collect())
-                .collect(),
+            embeddings: trained.embeddings,
             loss_per_iteration: trained.loss_per_iteration,
             embedding_dimension: config.embedding_dimension,
             node_count,
@@ -234,5 +258,36 @@ mod tests {
             cfg.source_nodes.len().max(config.node_count)
         );
         assert_eq!(result.embeddings[0].len(), 8);
+    }
+
+    #[test]
+    fn node2vec_seeded_results_are_equal_across_worker_counts() {
+        let graph_config = RandomGraphConfig {
+            node_count: 20,
+            relationships: vec![RandomRelationshipConfig::new("R", 0.35)],
+            directed: true,
+            seed: Some(42),
+            ..RandomGraphConfig::default()
+        };
+        let store = DefaultGraphStore::random(&graph_config).unwrap();
+        let graph: Arc<dyn Graph> = store.graph();
+        let mut config = Node2VecConfig {
+            walks_per_node: 3,
+            walk_length: 8,
+            iterations: 2,
+            embedding_dimension: 8,
+            random_seed: Some(7),
+            concurrency: 1,
+            ..Node2VecConfig::default()
+        };
+        let storage = Node2VecStorageRuntime::new();
+
+        let single =
+            Node2VecComputationRuntime::run(Arc::clone(&graph), &config, &storage).unwrap();
+        config.concurrency = 4;
+        let parallel = Node2VecComputationRuntime::run(graph, &config, &storage).unwrap();
+
+        assert_eq!(single.embeddings, parallel.embeddings);
+        assert_eq!(single.loss_per_iteration, parallel.loss_per_iteration);
     }
 }

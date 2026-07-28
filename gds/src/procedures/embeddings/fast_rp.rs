@@ -2,13 +2,13 @@
 
 use crate::algo::algorithms::ConfigValidator;
 use crate::algo::algorithms::Result;
-use crate::algo::embeddings::fastrp::{
-    FastRPComputationRuntime, FastRPConfig, FastRPResult, FastRPStorageRuntime,
-};
+use crate::algo::embeddings::fastrp::{FastRPConfig, FastRPResult, FastRPStorageRuntime};
 use crate::prints::{PrintEnvelope, PrintKind, PrintProvenance};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
+use crate::task::concurrency::TerminationFlag;
+use crate::task::progress::{ProgressTracker, TaskProgressTracker, Tasks};
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
@@ -30,7 +30,7 @@ pub struct FastRPStats {
 #[derive(Debug, Clone, PartialEq)]
 pub struct FastRPRow {
     pub node_id: u64,
-    pub embedding: Vec<f32>,
+    pub embedding: Vec<f64>,
 }
 
 /// FastRP builder.
@@ -135,12 +135,37 @@ impl FastRPBuilder {
             .get_graph_with_types_and_orientation(&rel_types, Orientation::Natural)
             .map_err(|e| AlgorithmError::Graph(e.to_string()))?;
 
-        let storage = FastRPStorageRuntime::new();
-        let extractors = storage
-            .feature_extractors(graph_view.as_ref(), &self.config.feature_properties)
-            .map_err(AlgorithmError::Execution)?;
+        let volume = graph_view.node_count().saturating_add(
+            graph_view
+                .relationship_count()
+                .saturating_mul(self.config.iteration_weights.len()),
+        );
+        let mut progress =
+            TaskProgressTracker::new(Tasks::leaf_with_volume("FastRP".to_string(), volume));
+        self.compute_with_graph_context(graph_view, &mut progress, &TerminationFlag::running_true())
+    }
 
-        FastRPComputationRuntime::run(Arc::clone(&graph_view), &self.config, extractors)
+    fn compute_with_context(
+        &self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<FastRPResult> {
+        self.validate()?;
+        let rel_types: HashSet<RelationshipType> = HashSet::new();
+        let graph_view = self
+            .graph_store
+            .get_graph_with_types_and_orientation(&rel_types, Orientation::Natural)
+            .map_err(|error| AlgorithmError::Graph(error.to_string()))?;
+        self.compute_with_graph_context(graph_view, progress_tracker, termination_flag)
+    }
+
+    fn compute_with_graph_context(
+        &self,
+        graph: Arc<dyn crate::types::graph::Graph>,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<FastRPResult> {
+        FastRPStorageRuntime::new().compute(graph, &self.config, progress_tracker, termination_flag)
     }
 
     /// Stream mode: yields `(node_id, embedding)` for every node.
@@ -157,9 +182,34 @@ impl FastRPBuilder {
         Ok(Box::new(iter))
     }
 
+    pub fn stream_with_context(
+        &self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<Vec<FastRPRow>> {
+        let result = self.compute_with_context(progress_tracker, termination_flag)?;
+        Ok(result
+            .embeddings
+            .into_iter()
+            .enumerate()
+            .map(|(node_id, embedding)| FastRPRow {
+                node_id: node_id as u64,
+                embedding,
+            })
+            .collect())
+    }
+
     /// Full result: returns all embeddings.
     pub fn run(&self) -> Result<FastRPResult> {
         self.compute()
+    }
+
+    pub fn run_with_context(
+        &self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<FastRPResult> {
+        self.compute_with_context(progress_tracker, termination_flag)
     }
 
     pub fn stats(&self) -> Result<FastRPStats> {
@@ -178,6 +228,25 @@ impl FastRPBuilder {
             node_count,
             embedding_dimension,
             compute_millis,
+            success: true,
+        })
+    }
+
+    pub fn stats_with_context(
+        &self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<FastRPStats> {
+        let start = Instant::now();
+        let result = self.compute_with_context(progress_tracker, termination_flag)?;
+        Ok(FastRPStats {
+            node_count: result.embeddings.len() as u64,
+            embedding_dimension: result
+                .embeddings
+                .first()
+                .map(|embedding| embedding.len() as u64)
+                .unwrap_or(0),
+            compute_millis: start.elapsed().as_millis() as u64,
             success: true,
         })
     }

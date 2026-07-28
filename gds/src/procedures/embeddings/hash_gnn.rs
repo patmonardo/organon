@@ -12,6 +12,8 @@ use crate::prints::{PrintEnvelope, PrintKind, PrintProvenance};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
+use crate::task::concurrency::TerminationFlag;
+use crate::task::progress::{ProgressTracker, TaskProgressTracker, Tasks};
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
@@ -143,6 +145,18 @@ impl HashGNNBuilder {
     }
 
     fn compute(&self) -> Result<HashGNNResult> {
+        let mut progress = TaskProgressTracker::new(Tasks::leaf_with_volume(
+            "HashGNN".to_string(),
+            self.config.iterations,
+        ));
+        self.compute_with_context(&mut progress, &TerminationFlag::running_true())
+    }
+
+    fn compute_with_context(
+        &self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<HashGNNResult> {
         self.validate()?;
 
         let rel_types: HashSet<RelationshipType> = HashSet::new();
@@ -152,7 +166,13 @@ impl HashGNNBuilder {
             .map_err(|e| AlgorithmError::Graph(e.to_string()))?;
 
         let storage = HashGNNStorageRuntime::new();
-        HashGNNComputationRuntime::run(graph_view, &self.config, &storage)
+        HashGNNComputationRuntime::run_with_controls(
+            graph_view,
+            &self.config,
+            &storage,
+            progress_tracker,
+            termination_flag,
+        )
     }
 
     /// Full result: returns embeddings.
@@ -160,11 +180,37 @@ impl HashGNNBuilder {
         self.compute()
     }
 
+    pub fn run_with_context(
+        &self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<HashGNNResult> {
+        self.compute_with_context(progress_tracker, termination_flag)
+    }
+
     pub fn stats(&self) -> Result<HashGNNStats> {
         let start = Instant::now();
         let result = self.compute()?;
-        let compute_millis = start.elapsed().as_millis() as u64;
+        Ok(Self::stats_from_result(
+            result,
+            start.elapsed().as_millis() as u64,
+        ))
+    }
 
+    pub fn stats_with_context(
+        &self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<HashGNNStats> {
+        let start = Instant::now();
+        let result = self.compute_with_context(progress_tracker, termination_flag)?;
+        Ok(Self::stats_from_result(
+            result,
+            start.elapsed().as_millis() as u64,
+        ))
+    }
+
+    fn stats_from_result(result: HashGNNResult, compute_millis: u64) -> HashGNNStats {
         let (output_mode, embedding_dimension, node_count) = match &result.embeddings {
             HashGNNEmbeddings::BinaryIndices {
                 embedding_dimension,
@@ -181,13 +227,13 @@ impl HashGNNBuilder {
             ),
         };
 
-        Ok(HashGNNStats {
+        HashGNNStats {
             node_count,
             embedding_dimension,
             output_mode,
             compute_millis,
             success: true,
-        })
+        }
     }
 
     /// Full result + a canonical print envelope (summary) emitted at the boundary.
@@ -255,6 +301,7 @@ impl HashGNNBuilder {
 mod tests {
     use super::*;
     use crate::procedures::GraphFacade;
+    use crate::task::progress::NoopProgressTracker;
     use crate::types::random::{RandomGraphConfig, RandomRelationshipConfig};
 
     fn store() -> Arc<DefaultGraphStore> {
@@ -305,5 +352,23 @@ mod tests {
         assert_eq!(value["payload"]["output_mode"], "binary");
         assert_eq!(value["payload"]["embedding_dimension"], 64);
         assert!(value["payload"].get("embeddings").is_none());
+    }
+
+    #[test]
+    fn facade_run_with_context_honors_pre_cancelled_execution() {
+        let graph = GraphFacade::new(store());
+        let mut progress = NoopProgressTracker;
+        let error = graph
+            .hash_gnn()
+            .iterations(2)
+            .embedding_density(4)
+            .generate_features(Some(GenerateFeaturesConfig {
+                dimension: 64,
+                density_level: 3,
+            }))
+            .run_with_context(&mut progress, &TerminationFlag::stop_running())
+            .unwrap_err();
+
+        assert!(error.to_string().contains("terminated"));
     }
 }

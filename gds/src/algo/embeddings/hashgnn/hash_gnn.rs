@@ -1,8 +1,8 @@
 use crate::collections::HugeObjectArray;
-use crate::task::concurrency::TerminationFlag;
 use crate::core::utils::paged::HugeAtomicBitSet;
 use crate::core::utils::partition::{DegreeFunction, DegreePartition, Partition, PartitionUtils};
-use crate::task::progress::TaskProgressTracker;
+use crate::task::concurrency::{TerminatedException, TerminationFlag};
+use crate::task::progress::ProgressTracker;
 use crate::types::graph::Graph;
 use std::collections::HashSet;
 use std::sync::Arc;
@@ -24,7 +24,6 @@ pub struct MinAndArgmin {
 pub struct HashGNN {
     graph: Arc<dyn Graph>,
     parameters: HashGNNParameters,
-    _progress_tracker: TaskProgressTracker,
     termination_flag: TerminationFlag,
 }
 
@@ -32,18 +31,19 @@ impl HashGNN {
     pub fn new(
         graph: Arc<dyn Graph>,
         parameters: HashGNNParameters,
-        progress_tracker: TaskProgressTracker,
         termination_flag: TerminationFlag,
     ) -> Self {
         Self {
             graph,
             parameters,
-            _progress_tracker: progress_tracker,
             termination_flag,
         }
     }
 
-    pub fn compute(self) -> HashGNNResult {
+    pub fn compute(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+    ) -> Result<HashGNNResult, TerminatedException> {
         let node_count = self.graph.node_count();
         let concurrency = self.parameters.concurrency;
         let random_seed = self.parameters.random_seed.unwrap_or(42);
@@ -83,7 +83,7 @@ impl HashGNN {
 
         // Construct input embeddings.
         let (embeddings_b, mut current_total_feature_count) =
-            self.construct_input_embeddings(&range_partitions, random_seed);
+            self.construct_input_embeddings(&range_partitions, random_seed)?;
 
         let embedding_dimension = embeddings_b
             .get(0)
@@ -110,7 +110,9 @@ impl HashGNN {
         };
 
         for iteration in 0..self.parameters.iterations {
-            self.termination_flag.assert_running();
+            if !self.termination_flag.running() {
+                return Err(TerminatedException);
+            }
 
             let (current_embeddings, previous_embeddings) = if iteration % 2 == 0 {
                 (&embeddings_a, &embeddings_b)
@@ -144,7 +146,7 @@ impl HashGNN {
                 self.parameters.embedding_density,
                 random_seed + (self.parameters.embedding_density as u64) * iteration as u64,
                 &self.termination_flag,
-            );
+            )?;
 
             let added = MinHashTask::compute(
                 &degree_partitions,
@@ -156,8 +158,9 @@ impl HashGNN {
                 previous_embeddings,
                 &hashes,
                 &self.termination_flag,
-            );
+            )?;
             current_total_feature_count += added;
+            progress_tracker.log_progress(1);
         }
 
         let binary_output_vectors =
@@ -179,14 +182,14 @@ impl HashGNN {
             EmbeddingsToNodePropertyValues::from_binary(binary_output_vectors, embedding_dimension)
         };
 
-        HashGNNResult { embeddings }
+        Ok(HashGNNResult { embeddings })
     }
 
     fn construct_input_embeddings(
         &self,
         partitions: &[Partition],
         random_seed: u64,
-    ) -> (HugeObjectArray<Option<Arc<HugeAtomicBitSet>>>, u64) {
+    ) -> Result<(HugeObjectArray<Option<Arc<HugeAtomicBitSet>>>, u64), TerminatedException> {
         // Translation note: FeatureProperties path depends on FeatureExtraction plumbing.
         if !self.parameters.feature_properties.is_empty() {
             if self.parameters.binarize_features.is_some() {
@@ -216,12 +219,12 @@ impl HashGNN {
             .clone()
             .expect("generate_features must be provided when feature_properties is empty");
 
-        GenerateFeaturesTask::compute(
+        Ok(GenerateFeaturesTask::compute(
             cfg,
             Arc::clone(&self.graph),
             partitions.to_vec(),
             random_seed,
-        )
+        ))
     }
 }
 
@@ -231,7 +234,7 @@ mod tests {
     use super::*;
     use crate::collections::backends::vec::VecLong;
     use crate::task::concurrency::Concurrency;
-    use crate::task::progress::{TaskProgressTracker, Tasks};
+    use crate::task::progress::NoopProgressTracker;
     use crate::types::graph_store::DefaultGraphStore;
     use crate::types::graph_store::GraphStore;
     use crate::types::properties::node::DefaultLongNodePropertyValues;
@@ -270,14 +273,9 @@ mod tests {
             random_seed: Some(7),
         };
 
-        let algo = HashGNN::new(
-            graph,
-            params,
-            TaskProgressTracker::new(Tasks::leaf_with_volume("HashGNN".to_string(), 1)),
-            TerminationFlag::default(),
-        );
+        let algo = HashGNN::new(graph, params, TerminationFlag::default());
 
-        let result = algo.compute();
+        let result = algo.compute(&mut NoopProgressTracker).unwrap();
         match result.embeddings {
             super::super::hash_gnn_result::HashGNNEmbeddings::Binary {
                 embeddings,
@@ -336,14 +334,9 @@ mod tests {
             random_seed: Some(7),
         };
 
-        let algo = HashGNN::new(
-            graph,
-            params,
-            TaskProgressTracker::new(Tasks::leaf_with_volume("HashGNN".to_string(), 1)),
-            TerminationFlag::default(),
-        );
+        let algo = HashGNN::new(graph, params, TerminationFlag::default());
 
-        let result = algo.compute();
+        let result = algo.compute(&mut NoopProgressTracker).unwrap();
         match result.embeddings {
             super::super::hash_gnn_result::HashGNNEmbeddings::Binary { embeddings, .. } => {
                 // Just ensure we have an embedding for every node.
@@ -354,6 +347,65 @@ mod tests {
             }
             _ => panic!("expected binary embeddings"),
         }
+    }
+
+    #[test]
+    fn hashgnn_seeded_results_are_equal_across_worker_counts() {
+        let config = RandomGraphConfig {
+            node_count: 40,
+            relationships: vec![RandomRelationshipConfig::new("R", 0.3)],
+            directed: true,
+            seed: Some(42),
+            ..RandomGraphConfig::default()
+        };
+        let store = DefaultGraphStore::random(&config).unwrap();
+        let graph: Arc<dyn Graph> = store.graph();
+        let mut parameters = super::super::hash_gnn_parameters::HashGNNParameters {
+            concurrency: Concurrency::of(1),
+            iterations: 3,
+            embedding_density: 6,
+            neighbor_influence: 1.0,
+            feature_properties: vec![],
+            heterogeneous: false,
+            output_dimension: None,
+            binarize_features: None,
+            generate_features: Some(GenerateFeaturesConfig {
+                dimension: 64,
+                density_level: 3,
+            }),
+            random_seed: Some(7),
+        };
+
+        let run = |parameters| {
+            let result = HashGNN::new(
+                Arc::clone(&graph),
+                parameters,
+                TerminationFlag::running_true(),
+            )
+            .compute(&mut NoopProgressTracker)
+            .unwrap();
+            match result.embeddings {
+                super::super::hash_gnn_result::HashGNNEmbeddings::Binary { embeddings, .. } => (0
+                    ..embeddings.size())
+                    .map(|node| {
+                        let mut indices = Vec::new();
+                        embeddings
+                            .get(node)
+                            .as_ref()
+                            .unwrap()
+                            .for_each_set_bit(|bit| indices.push(bit));
+                        indices
+                    })
+                    .collect::<Vec<_>>(),
+                _ => panic!("expected binary embeddings"),
+            }
+        };
+
+        let single = run(parameters.clone());
+        parameters.concurrency = Concurrency::of(4);
+        let parallel = run(parameters);
+
+        assert_eq!(single, parallel);
     }
 }
 

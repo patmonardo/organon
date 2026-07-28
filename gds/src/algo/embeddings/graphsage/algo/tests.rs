@@ -1,20 +1,22 @@
 #[cfg(test)]
+use crate::algo::embeddings::graphsage::algo::{GraphSageConfig, GraphSageStorageRuntime};
+#[cfg(test)]
 use crate::algo::embeddings::graphsage::{
     ActivationFunctionType, AggregatorType, GraphSageAlgorithmFactory,
     GraphSageMemoryEstimateDefinition, GraphSageTrainAlgorithmFactory, GraphSageTrainConfig,
 };
 #[cfg(test)]
-use crate::task::concurrency::{Concurrency, TerminationFlag};
-#[cfg(test)]
 use crate::core::model::InMemoryModelCatalog;
-#[cfg(test)]
-use crate::task::progress::{TaskProgressTracker, Tasks};
 #[cfg(test)]
 use crate::core::ConcreteGraphDimensions;
 #[cfg(test)]
 use crate::core::ModelCatalog;
 #[cfg(test)]
+use crate::task::concurrency::{Concurrency, TerminationFlag};
+#[cfg(test)]
 use crate::task::memory::memory_estimation::MemoryEstimation;
+#[cfg(test)]
+use crate::task::progress::{TaskProgressTracker, Tasks};
 #[cfg(test)]
 use crate::types::graph::graph::Graph;
 #[cfg(test)]
@@ -71,6 +73,25 @@ fn graphsage_train_then_infer_via_catalog() {
     let catalog = InMemoryModelCatalog::new();
     catalog.set(model).unwrap();
 
+    let config = GraphSageConfig {
+        model_user: "alice".to_string(),
+        model_name: "m1".to_string(),
+        batch_size: 10,
+        concurrency: 1,
+    };
+    let cancelled = GraphSageStorageRuntime::new().compute(
+        Graph::concurrent_copy(graph.as_ref()),
+        &config,
+        &catalog,
+        TaskProgressTracker::new(Tasks::leaf_with_volume("GraphSage".to_string(), 1)),
+        TerminationFlag::stop_running(),
+    );
+    let cancelled = match cancelled {
+        Ok(_) => panic!("expected pre-cancelled GraphSAGE inference to fail"),
+        Err(error) => error,
+    };
+    assert!(cancelled.to_string().contains("terminated"));
+
     let factory = GraphSageAlgorithmFactory::new(std::sync::Arc::new(catalog));
     let algo = factory.build(
         Graph::concurrent_copy(graph.as_ref()),
@@ -84,6 +105,38 @@ fn graphsage_train_then_infer_via_catalog() {
     let res = algo.compute();
     assert_eq!(res.embeddings.size(), 50);
     assert_eq!(res.embeddings.get(0).len(), 8);
+}
+
+#[test]
+fn graphsage_storage_reports_missing_model() {
+    let store = DefaultGraphStore::random(&RandomGraphConfig {
+        node_count: 4,
+        relationships: vec![RandomRelationshipConfig::new("R", 0.5)],
+        seed: Some(1),
+        ..RandomGraphConfig::default()
+    })
+    .unwrap();
+    let config = GraphSageConfig {
+        model_user: "alice".to_string(),
+        model_name: "missing".to_string(),
+        batch_size: 2,
+        concurrency: 1,
+    };
+
+    let error = GraphSageStorageRuntime::new().compute(
+        store.graph(),
+        &config,
+        &InMemoryModelCatalog::new(),
+        TaskProgressTracker::new(Tasks::leaf_with_volume("GraphSage".to_string(), 1)),
+        TerminationFlag::running_true(),
+    );
+    let error = match error {
+        Ok(_) => panic!("expected missing GraphSAGE model resolution to fail"),
+        Err(error) => error,
+    };
+
+    assert!(error.to_string().contains("alice/missing"));
+    assert!(error.to_string().contains("could not be resolved"));
 }
 
 #[test]

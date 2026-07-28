@@ -228,6 +228,53 @@ impl Node2VecConfig {
                 reason: "iterations must be > 0".to_string(),
             });
         }
+        if self.concurrency == 0 {
+            return Err(ConfigError::InvalidParameter {
+                parameter: "concurrency".to_string(),
+                reason: "concurrency must be > 0".to_string(),
+            });
+        }
+        if self.walk_buffer_size == 0 {
+            return Err(ConfigError::InvalidParameter {
+                parameter: "walkBufferSize".to_string(),
+                reason: "walkBufferSize must be > 0".to_string(),
+            });
+        }
+        if !self.return_factor.is_finite() || self.return_factor <= 0.0 {
+            return Err(ConfigError::InvalidParameter {
+                parameter: "returnFactor".to_string(),
+                reason: "returnFactor must be finite and > 0".to_string(),
+            });
+        }
+        if !self.in_out_factor.is_finite() || self.in_out_factor <= 0.0 {
+            return Err(ConfigError::InvalidParameter {
+                parameter: "inOutFactor".to_string(),
+                reason: "inOutFactor must be finite and > 0".to_string(),
+            });
+        }
+        if !self.positive_sampling_factor.is_finite() || self.positive_sampling_factor <= 0.0 {
+            return Err(ConfigError::InvalidParameter {
+                parameter: "positiveSamplingFactor".to_string(),
+                reason: "positiveSamplingFactor must be finite and > 0".to_string(),
+            });
+        }
+        if !self.negative_sampling_exponent.is_finite() || self.negative_sampling_exponent <= 0.0 {
+            return Err(ConfigError::InvalidParameter {
+                parameter: "negativeSamplingExponent".to_string(),
+                reason: "negativeSamplingExponent must be finite and > 0".to_string(),
+            });
+        }
+        if !self.initial_learning_rate.is_finite()
+            || !self.min_learning_rate.is_finite()
+            || self.initial_learning_rate <= 0.0
+            || self.min_learning_rate <= 0.0
+            || self.min_learning_rate > self.initial_learning_rate
+        {
+            return Err(ConfigError::InvalidParameter {
+                parameter: "learningRate".to_string(),
+                reason: "learning rates must be finite, positive, and minLearningRate must not exceed initialLearningRate".to_string(),
+            });
+        }
         Ok(())
     }
 }
@@ -265,7 +312,7 @@ impl Default for Node2VecConfig {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Node2VecResult {
-    pub embeddings: Vec<Vec<f32>>,
+    pub embeddings: Vec<Vec<f64>>,
     pub loss_per_iteration: Vec<f64>,
     pub embedding_dimension: usize,
     pub node_count: usize,
