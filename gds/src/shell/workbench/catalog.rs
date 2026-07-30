@@ -12,7 +12,7 @@ pub struct ShellWorkbenchTrack {
     pub status: &'static str,
 }
 
-const SHELL_TRACKS: [ShellWorkbenchTrack; 5] = [
+const SHELL_TRACKS: [ShellWorkbenchTrack; 6] = [
     ShellWorkbenchTrack {
         id: "shell-model-first",
         title: "Shell Model First",
@@ -47,6 +47,13 @@ const SHELL_TRACKS: [ShellWorkbenchTrack; 5] = [
         focus: "single-shell narrative for Model:Feature::Plan unity",
         exemplar: "examples/shell_trilogy.rs",
         status: "covered",
+    },
+    ShellWorkbenchTrack {
+        id: "shell-knowledge-script",
+        title: "Shell Knowledge Script",
+        focus: "typed Dataset Plan execution with Shell knowledge return",
+        exemplar: "examples/shell_knowledge_script.rs",
+        status: "experimental",
     },
 ];
 

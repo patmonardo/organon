@@ -27,6 +27,7 @@ use crate::task::runtime::TaskRuntime;
 use super::{
     ShellAddress, ShellAlgebra, ShellFold, ShellHelp, ShellMoment, ShellMomentKind, ShellPipeline,
     ShellPipelineDescriptor, ShellPipelineFacade, ShellProgram, ShellRegister, ShellSchema,
+    ShellScript, ShellScriptError, ShellScriptResult,
 };
 
 /// Lightweight seed extracted from the immediate DataFrame body.
@@ -1472,6 +1473,59 @@ impl GdsShell {
 
     pub fn logic_frame(&self) -> Option<&LogicFrame<MLE>> {
         self.logic_frame.as_ref()
+    }
+
+    /// Execute a typed Semantic Dataset script against the current Shell body.
+    pub fn run_script(&self, script: &ShellScript) -> Result<ShellScriptResult, ShellScriptError> {
+        let dataset = self
+            .dataset
+            .clone()
+            .or_else(|| self.dataframe.clone().map(Dataset::new))
+            .ok_or(ShellScriptError::MissingBody)?;
+        let before_address = self.address();
+        let before_schema = self.seed.as_ref().map(|seed| seed.schema().clone());
+        let mut runtime = self.task_runtime(1);
+        runtime.begin();
+
+        let (dataset, report, print) = match script.execute(dataset) {
+            Ok(result) => result,
+            Err(error) => {
+                runtime.fail();
+                return Err(error);
+            }
+        };
+
+        runtime.progress(dataset.row_count().max(1));
+        runtime.end();
+
+        let mut shell = GdsShell::from_dataset(dataset);
+        if let Some(program) = &self.program {
+            let schema = shell
+                .seed
+                .as_ref()
+                .expect("script result shell has a seed")
+                .schema()
+                .clone();
+            shell = shell.with_program(program.clone().with_schema(schema));
+        }
+
+        Ok(ShellScriptResult::new(
+            shell,
+            report,
+            print,
+            before_address,
+            before_schema,
+            script.mode(),
+        ))
+    }
+
+    /// Execute a preview without consuming or changing this Shell.
+    pub fn preview_script(
+        &self,
+        script: &ShellScript,
+        rows: usize,
+    ) -> Result<ShellScriptResult, ShellScriptError> {
+        self.run_script(&script.clone().preview(rows))
     }
 
     pub fn materialize_logic_frame_from_texts<T>(
