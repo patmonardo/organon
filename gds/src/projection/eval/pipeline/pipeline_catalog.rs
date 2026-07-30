@@ -1,6 +1,8 @@
 use std::collections::HashMap;
 use std::sync::{Arc, RwLock};
 
+use chrono::{DateTime, FixedOffset, Utc};
+
 use crate::projection::eval::pipeline::TrainingPipeline;
 
 /// Entry in the pipeline catalog associating a name with a pipeline.
@@ -13,6 +15,7 @@ pub struct PipelineCatalogEntry {
     pipeline_name: String,
     pipeline_type: String,
     pipeline_map: HashMap<String, serde_json::Value>,
+    creation_time: DateTime<FixedOffset>,
     // Store as Any to avoid associated type issues
     // Implementers can downcast to specific pipeline types
     pipeline: Arc<dyn std::any::Any + Send + Sync>,
@@ -23,12 +26,25 @@ impl PipelineCatalogEntry {
         pipeline_name: String,
         pipeline: Arc<P>,
     ) -> Self {
+        Self::new_with_creation_time(
+            pipeline_name,
+            pipeline,
+            Utc::now().with_timezone(&FixedOffset::east_opt(0).expect("UTC offset")),
+        )
+    }
+
+    fn new_with_creation_time<P: TrainingPipeline + Send + Sync + 'static>(
+        pipeline_name: String,
+        pipeline: Arc<P>,
+        creation_time: DateTime<FixedOffset>,
+    ) -> Self {
         let pipeline_type = pipeline.pipeline_type().to_string();
         let pipeline_map = pipeline.to_map();
         Self {
             pipeline_name,
             pipeline_type,
             pipeline_map,
+            creation_time,
             pipeline: pipeline as Arc<dyn std::any::Any + Send + Sync>,
         }
     }
@@ -39,6 +55,10 @@ impl PipelineCatalogEntry {
 
     pub fn pipeline_type(&self) -> &str {
         &self.pipeline_type
+    }
+
+    pub fn creation_time(&self) -> DateTime<FixedOffset> {
+        self.creation_time
     }
 
     /// Serialized pipeline IR snapshot captured when the pipeline was cataloged.
@@ -117,7 +137,16 @@ impl PipelineUserCatalog {
             ));
         }
 
-        let entry = PipelineCatalogEntry::new(pipeline_name.clone(), pipeline);
+        let creation_time = self
+            .pipelines_by_name
+            .get(&pipeline_name)
+            .expect("pipeline existence checked")
+            .creation_time();
+        let entry = PipelineCatalogEntry::new_with_creation_time(
+            pipeline_name.clone(),
+            pipeline,
+            creation_time,
+        );
         self.pipelines_by_name.insert(pipeline_name, entry);
         Ok(())
     }

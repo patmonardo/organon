@@ -54,7 +54,11 @@ use std::sync::Arc;
 
 use crate::algo::algorithms::scaling::{MinMaxScaler, Scaler};
 
-/// In-memory [`GraphStore`] backed by [`SimpleIdMap`] and [`RelationshipTopology`].
+/// RAM-only Bootstrap [`GraphStore`] for deterministic algorithm development and tests.
+///
+/// Cloning creates a shallow snapshot fork for `Arc`-backed ID maps, topologies, and
+/// property values, while metadata maps, sets, and vectors are copied. This type is
+/// neither persistent storage nor the future production CoreGraphStore/HugeGraphStore.
 #[derive(Debug, Clone)]
 pub struct DefaultGraphStore {
     config: Arc<GraphStoreConfig>,

@@ -94,8 +94,10 @@ pub trait PredictPipelineExecutor<PIPELINE: Pipeline, RESULT> {
             self.concurrency(),
         );
 
+        let has_node_property_steps = !self.pipeline().node_property_steps().is_empty();
+
         // 4. Execute node property steps (scoped to avoid overlapping borrows on `self`)
-        {
+        if has_node_property_steps {
             let (pipeline, graph_store) = self.pipeline_and_graph_store_mut();
             node_property_step_executor
                 .execute_node_property_steps(graph_store, pipeline.node_property_steps())
@@ -111,11 +113,13 @@ pub trait PredictPipelineExecutor<PIPELINE: Pipeline, RESULT> {
         let result = self.execute();
 
         // 7. Cleanup (always runs, even if error occurred)
-        let cleanup_error = {
+        let cleanup_error = if has_node_property_steps {
             let (pipeline, graph_store) = self.pipeline_and_graph_store_mut();
             node_property_step_executor
                 .cleanup_intermediate_properties(graph_store, pipeline.node_property_steps())
                 .err()
+        } else {
+            None
         };
 
         // Return result, or cleanup error if result was Ok

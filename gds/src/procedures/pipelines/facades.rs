@@ -1,5 +1,5 @@
 use super::types::*;
-use super::{PipelineApplications, PipelineName, PipelineRepository};
+use super::{PipelineApplications, PipelineModelStore, PipelineName, PipelineRepository};
 use crate::projection::eval::pipeline::AutoTuningConfig;
 use crate::projection::eval::pipeline::LinkPredictionSplitConfig;
 use crate::projection::eval::pipeline::NodeFeatureStep;
@@ -267,6 +267,7 @@ pub trait PipelinesProcedureFacade {
 pub struct RequestScopedDependencies {
     pub user: User,
     pub graph_catalog: Arc<dyn GraphCatalog>,
+    pub model_store: Arc<PipelineModelStore>,
 }
 
 impl RequestScopedDependencies {
@@ -275,9 +276,18 @@ impl RequestScopedDependencies {
     }
 
     pub fn with_graph_catalog(user: User, graph_catalog: Arc<dyn GraphCatalog>) -> Self {
+        Self::with_runtime_dependencies(user, graph_catalog, shared_pipeline_model_store())
+    }
+
+    pub fn with_runtime_dependencies(
+        user: User,
+        graph_catalog: Arc<dyn GraphCatalog>,
+        model_store: Arc<PipelineModelStore>,
+    ) -> Self {
         Self {
             user,
             graph_catalog,
+            model_store,
         }
     }
 }
@@ -299,6 +309,11 @@ fn shared_in_memory_graph_catalog() -> Arc<dyn GraphCatalog> {
     Arc::clone(CATALOG.get_or_init(|| Arc::new(InMemoryGraphCatalog::new())))
 }
 
+fn shared_pipeline_model_store() -> Arc<PipelineModelStore> {
+    static STORE: OnceLock<Arc<PipelineModelStore>> = OnceLock::new();
+    Arc::clone(STORE.get_or_init(|| Arc::new(PipelineModelStore::new())))
+}
+
 impl Default for LocalPipelinesProcedureFacade {
     fn default() -> Self {
         Self::new(
@@ -314,10 +329,11 @@ impl LocalPipelinesProcedureFacade {
         pipeline_catalog: Arc<PipelineCatalog>,
     ) -> Self {
         let pipeline_repository = PipelineRepository::new(Arc::clone(&pipeline_catalog));
-        let pipeline_applications = PipelineApplications::new_with_graph_catalog(
+        let pipeline_applications = PipelineApplications::new_with_runtime_dependencies(
             request_scoped_dependencies.user.clone(),
             pipeline_repository,
             Arc::clone(&request_scoped_dependencies.graph_catalog),
+            Arc::clone(&request_scoped_dependencies.model_store),
         );
         Self {
             pipeline_applications: pipeline_applications.clone(),
@@ -449,7 +465,7 @@ impl LinkPredictionFacade for LocalLinkPredictionFacade {
     fn add_logistic_regression(
         &self,
         pipeline_name: &str,
-        _configuration: RawConfig,
+        configuration: RawConfig,
     ) -> Vec<PipelineInfoResult> {
         let pipeline_name = PipelineName::parse(pipeline_name).unwrap_or_else(|e| panic!("{e}"));
         vec![self
@@ -457,16 +473,18 @@ impl LinkPredictionFacade for LocalLinkPredictionFacade {
             .add_training_method_to_link_prediction_pipeline(
                 &pipeline_name,
                 TrainingMethod::LogisticRegression,
+                configuration,
             )]
     }
 
-    fn add_mlp(&self, pipeline_name: &str, _configuration: RawConfig) -> Vec<PipelineInfoResult> {
+    fn add_mlp(&self, pipeline_name: &str, configuration: RawConfig) -> Vec<PipelineInfoResult> {
         let pipeline_name = PipelineName::parse(pipeline_name).unwrap_or_else(|e| panic!("{e}"));
         vec![self
             .pipeline_applications
             .add_training_method_to_link_prediction_pipeline(
                 &pipeline_name,
                 TrainingMethod::MLPClassification,
+                configuration,
             )]
     }
 
@@ -489,7 +507,7 @@ impl LinkPredictionFacade for LocalLinkPredictionFacade {
     fn add_random_forest(
         &self,
         pipeline_name: &str,
-        _configuration: RawConfig,
+        configuration: RawConfig,
     ) -> Vec<PipelineInfoResult> {
         let pipeline_name = PipelineName::parse(pipeline_name).unwrap_or_else(|e| panic!("{e}"));
         vec![self
@@ -497,6 +515,7 @@ impl LinkPredictionFacade for LocalLinkPredictionFacade {
             .add_training_method_to_link_prediction_pipeline(
                 &pipeline_name,
                 TrainingMethod::RandomForestClassification,
+                configuration,
             )]
     }
 
@@ -616,12 +635,13 @@ impl NodeClassificationFacade for LocalNodeClassificationFacade {
     fn add_logistic_regression(
         &self,
         pipeline_name: &str,
-        _configuration: RawConfig,
+        configuration: RawConfig,
     ) -> Vec<NodePipelineInfoResult> {
         let pipeline_name = PipelineName::parse(pipeline_name).unwrap_or_else(|e| panic!("{e}"));
         vec![self.pipeline_applications.add_training_method(
             &pipeline_name,
             TrainingMethod::LogisticRegression,
+            configuration,
             true,
         )]
     }
@@ -629,12 +649,13 @@ impl NodeClassificationFacade for LocalNodeClassificationFacade {
     fn add_mlp(
         &self,
         pipeline_name: &str,
-        _configuration: RawConfig,
+        configuration: RawConfig,
     ) -> Vec<NodePipelineInfoResult> {
         let pipeline_name = PipelineName::parse(pipeline_name).unwrap_or_else(|e| panic!("{e}"));
         vec![self.pipeline_applications.add_training_method(
             &pipeline_name,
             TrainingMethod::MLPClassification,
+            configuration,
             true,
         )]
     }
@@ -658,12 +679,13 @@ impl NodeClassificationFacade for LocalNodeClassificationFacade {
     fn add_random_forest(
         &self,
         pipeline_name: &str,
-        _configuration: RawConfig,
+        configuration: RawConfig,
     ) -> Vec<NodePipelineInfoResult> {
         let pipeline_name = PipelineName::parse(pipeline_name).unwrap_or_else(|e| panic!("{e}"));
         vec![self.pipeline_applications.add_training_method(
             &pipeline_name,
             TrainingMethod::RandomForestClassification,
+            configuration,
             true,
         )]
     }
@@ -845,12 +867,13 @@ impl NodeRegressionFacade for LocalNodeRegressionFacade {
     fn add_logistic_regression(
         &self,
         pipeline_name: &str,
-        _configuration: RawConfig,
+        configuration: RawConfig,
     ) -> Vec<NodePipelineInfoResult> {
         let pipeline_name = PipelineName::parse(pipeline_name).unwrap_or_else(|e| panic!("{e}"));
         vec![self.pipeline_applications.add_training_method(
             &pipeline_name,
             TrainingMethod::LinearRegression,
+            configuration,
             false,
         )]
     }
@@ -874,12 +897,13 @@ impl NodeRegressionFacade for LocalNodeRegressionFacade {
     fn add_random_forest(
         &self,
         pipeline_name: &str,
-        _configuration: RawConfig,
+        configuration: RawConfig,
     ) -> Vec<NodePipelineInfoResult> {
         let pipeline_name = PipelineName::parse(pipeline_name).unwrap_or_else(|e| panic!("{e}"));
         vec![self.pipeline_applications.add_training_method(
             &pipeline_name,
             TrainingMethod::RandomForestRegression,
+            configuration,
             false,
         )]
     }
@@ -1030,6 +1054,11 @@ mod top_level_facade_tests {
             single[0].pipeline_type,
             NodeClassificationTrainingPipeline::PIPELINE_TYPE
         );
+        let creation_time = single[0].creation_time;
+        facade
+            .node_classification()
+            .configure_auto_tuning("nc1", AnyMap::new());
+        assert_eq!(facade.list("nc1")[0].creation_time, creation_time);
 
         let exists = facade.exists("lp1");
         assert_eq!(exists.len(), 1);
@@ -1079,8 +1108,10 @@ mod top_level_facade_tests {
 #[cfg(test)]
 mod executor_backed_facade_tests {
     use super::*;
+    use crate::applications::algorithms::machinery::{GraphStoreService, NodeProperty};
+    use crate::applications::services::logging::Log;
     use crate::task::runtime::TaskFrameKind;
-    use crate::types::graph_store::DefaultGraphStore;
+    use crate::types::graph_store::{DefaultGraphStore, GraphStore};
     use crate::types::random::{RandomGraphConfig, RandomRelationshipConfig};
 
     fn facade_with_graph() -> LocalPipelinesProcedureFacade {
@@ -1306,6 +1337,114 @@ mod executor_backed_facade_tests {
         assert!(plan[2].pipeline().ends_with("::Persist"));
         assert_eq!(plan[1].image_spec().kind(), TaskFrameKind::MachineLearning);
     }
+
+    #[test]
+    fn trained_model_is_shared_across_facades_and_rejects_duplicates() {
+        let graph_catalog: Arc<dyn GraphCatalog> = Arc::new(InMemoryGraphCatalog::new());
+        let pipeline_catalog = Arc::new(PipelineCatalog::new());
+        let model_store = Arc::new(PipelineModelStore::new());
+        let mut graph = DefaultGraphStore::random(&RandomGraphConfig {
+            seed: Some(42),
+            node_count: 24,
+            relationships: vec![RandomRelationshipConfig::new("RELATES", 0.2)],
+            ..RandomGraphConfig::default()
+        })
+        .expect("random graph generation");
+        graph
+            .add_node_property_i64(
+                "label".to_string(),
+                (0..24).map(|idx| (idx % 2) as i64).collect(),
+            )
+            .expect("label property");
+        graph
+            .add_node_property_f64(
+                "age".to_string(),
+                (0..24).map(|idx| 20.0 + (idx as f64 * 0.5)).collect(),
+            )
+            .expect("age property");
+        let labels = graph.node_labels();
+        let properties = [
+            NodeProperty::new(
+                "label",
+                graph
+                    .node_property_values("label")
+                    .expect("label property values"),
+            ),
+            NodeProperty::new(
+                "age",
+                graph
+                    .node_property_values("age")
+                    .expect("age property values"),
+            ),
+        ];
+        GraphStoreService::new(Log::new())
+            .add_node_properties(&mut graph, labels, &properties)
+            .expect("label-scoped properties");
+        graph_catalog.set("graph", Arc::new(graph));
+
+        let make_facade = || {
+            LocalPipelinesProcedureFacade::new(
+                RequestScopedDependencies::with_runtime_dependencies(
+                    User::from("alice"),
+                    Arc::clone(&graph_catalog),
+                    Arc::clone(&model_store),
+                ),
+                Arc::clone(&pipeline_catalog),
+            )
+        };
+        let training_facade = make_facade();
+        training_facade
+            .node_classification()
+            .create_pipeline("classification");
+        training_facade.node_classification().select_features(
+            "classification",
+            Value::Array(vec![Value::String("age".to_string())]),
+        );
+        training_facade
+            .node_classification()
+            .add_logistic_regression("classification", AnyMap::new());
+
+        let train_config = AnyMap::from([
+            (
+                "pipeline".to_string(),
+                Value::String("classification".to_string()),
+            ),
+            (
+                "modelName".to_string(),
+                Value::String("classification-model".to_string()),
+            ),
+            (
+                "targetProperty".to_string(),
+                Value::String("label".to_string()),
+            ),
+            (
+                "metrics".to_string(),
+                Value::Array(vec![Value::String("F1_MACRO".to_string())]),
+            ),
+            ("randomSeed".to_string(), Value::from(42)),
+            ("concurrency".to_string(), Value::from(2)),
+        ]);
+        training_facade
+            .node_classification()
+            .train("graph", train_config.clone());
+
+        let prediction_facade = make_facade();
+        let predictions = prediction_facade.node_classification().stream(
+            "graph",
+            AnyMap::from([(
+                "modelName".to_string(),
+                Value::String("classification-model".to_string()),
+            )]),
+        );
+        assert_eq!(predictions.len(), 24);
+
+        let duplicate = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            prediction_facade
+                .node_classification()
+                .train("graph", train_config);
+        }));
+        assert!(duplicate.is_err());
+    }
 }
 
 #[cfg(test)]
@@ -1375,6 +1514,14 @@ mod node_classification_facade_tests {
         assert_eq!(
             with_features[0].feature_properties,
             vec!["pagerank".to_string()]
+        );
+
+        let with_more_features = facade
+            .node_classification()
+            .select_features("p1", Value::Array(vec![Value::String("age".to_string())]));
+        assert_eq!(
+            with_more_features[0].feature_properties,
+            vec!["pagerank".to_string(), "age".to_string()]
         );
     }
 }
@@ -1458,6 +1605,61 @@ mod link_prediction_facade_tests {
 
         assert_eq!(updated.len(), 1);
         assert_eq!(updated[0].node_property_steps.len(), 1);
+    }
+
+    #[test]
+    fn trainer_configurations_are_preserved_across_pipeline_kinds() {
+        let catalog = Arc::new(PipelineCatalog::new());
+        let facade = LocalPipelinesProcedureFacade::new(
+            RequestScopedDependencies::new(User::from("alice")),
+            Arc::clone(&catalog),
+        );
+
+        facade.link_prediction().create_pipeline("lp1");
+        let link_fixed = facade.link_prediction().add_logistic_regression(
+            "lp1",
+            AnyMap::from([("penalty".to_string(), Value::from(0.25))]),
+        );
+        let link_ranged = facade.link_prediction().add_logistic_regression(
+            "lp1",
+            AnyMap::from([(
+                "penalty".to_string(),
+                serde_json::json!({"range": [0.1, 1.0]}),
+            )]),
+        );
+        let link_configs = link_ranged[0].parameter_space["LogisticRegression"]
+            .as_array()
+            .expect("link trainer configurations");
+        assert_eq!(link_configs.len(), 2);
+        assert_eq!(
+            link_fixed[0].parameter_space["LogisticRegression"][0]["penalty"],
+            0.25
+        );
+        assert_eq!(
+            link_configs[1]["penalty"]["range"],
+            serde_json::json!([0.1, 1.0])
+        );
+
+        facade.node_classification().create_pipeline("nc1");
+        let classification = facade.node_classification().add_random_forest(
+            "nc1",
+            AnyMap::from([("numberOfDecisionTrees".to_string(), Value::from(17))]),
+        );
+        assert_eq!(
+            classification[0].parameter_space["RandomForestClassification"][0]
+                ["numberOfDecisionTrees"],
+            Value::from(17)
+        );
+
+        facade.node_regression().create_pipeline("nr1");
+        let regression = facade.node_regression().add_logistic_regression(
+            "nr1",
+            AnyMap::from([("penalty".to_string(), Value::from(0.75))]),
+        );
+        assert_eq!(
+            regression[0].parameter_space["LinearRegression"][0]["penalty"],
+            Value::from(0.75)
+        );
     }
 }
 

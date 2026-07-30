@@ -70,10 +70,12 @@ pub enum GraphStoreError {
 /// - **Topology**: Manages relationship connectivity
 /// - **Graph**: Provides filtered views of the data
 ///
-/// # Thread Safety
+/// # Bootstrap ownership
 ///
-/// Implementations should be thread-safe, typically using Arc and RwLock
-/// for shared mutable state.
+/// `Send + Sync` permits immutable sharing of a store. Mutating methods require an
+/// exclusive `&mut self`; shared catalog mutation is implemented by replacing a
+/// successor snapshot rather than by locking or mutating through a shared handle.
+/// Persistent and production-scale ownership semantics belong to CoreGraphStore.
 pub trait GraphStore: Send + Sync {
     // =============================================================================
     // Database & Metadata

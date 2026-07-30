@@ -35,12 +35,12 @@ impl GraphCatalog for InMemoryGraphCatalog {
         mutator: &mut dyn FnMut(&mut DefaultGraphStore),
     ) -> Result<(), CatalogError> {
         let mut map = self.entries.write().expect("catalog poisoned");
-        let store = map
-            .get_mut(name)
+        let current = map
+            .get(name)
             .ok_or_else(|| CatalogError::NotFound(name.to_string()))?;
-        let store =
-            Arc::get_mut(store).ok_or_else(|| CatalogError::GraphInUse(name.to_string()))?;
-        mutator(store);
+        let mut successor = current.as_ref().clone();
+        mutator(&mut successor);
+        map.insert(name.to_string(), Arc::new(successor));
         Ok(())
     }
 
@@ -103,4 +103,78 @@ fn simple_degree_histogram(store: &DefaultGraphStore) -> HashMap<u32, u64> {
         *hist.entry(deg).or_insert(0) += 1;
     }
     hist
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::config::GraphStoreConfig;
+    use crate::types::graph::id_map::SimpleIdMap;
+    use crate::types::graph_store::{
+        Capabilities, DatabaseId, DatabaseInfo, DatabaseLocation, GraphName,
+    };
+    use crate::types::schema::GraphSchema;
+    use std::collections::HashMap;
+
+    fn test_store() -> DefaultGraphStore {
+        let mut store = DefaultGraphStore::new(
+            GraphStoreConfig::default(),
+            GraphName::new("test"),
+            DatabaseInfo::new(
+                DatabaseId::new("test"),
+                DatabaseLocation::remote("localhost", 7687, None, None),
+            ),
+            GraphSchema::empty(),
+            Capabilities::default(),
+            SimpleIdMap::from_original_ids([0, 1, 2]),
+            HashMap::new(),
+        );
+        store
+            .add_node_property_i64("input".to_string(), vec![1, 2, 3])
+            .expect("add input property");
+        store
+    }
+
+    #[test]
+    fn mutation_replaces_snapshot_without_invalidating_live_readers() {
+        let catalog = InMemoryGraphCatalog::new();
+        catalog.set("test", Arc::new(test_store()));
+
+        let old_snapshot = catalog.get("test").expect("old snapshot");
+        let old_nodes = old_snapshot.nodes();
+        let old_input = old_snapshot
+            .node_property_values("input")
+            .expect("old input property");
+
+        catalog
+            .with_store_mut("test", &mut |store| {
+                store
+                    .add_node_property_i64("first".to_string(), vec![4, 5, 6])
+                    .expect("add first property");
+            })
+            .expect("replace catalog snapshot");
+
+        let first_snapshot = catalog.get("test").expect("first snapshot");
+        assert!(!old_snapshot.has_node_property("first"));
+        assert!(first_snapshot.has_node_property("first"));
+        assert!(Arc::ptr_eq(&old_nodes, &first_snapshot.nodes()));
+        assert!(Arc::ptr_eq(
+            &old_input,
+            &first_snapshot
+                .node_property_values("input")
+                .expect("shared input property")
+        ));
+
+        catalog
+            .with_store_mut("test", &mut |store| {
+                store
+                    .add_node_property_i64("second".to_string(), vec![7, 8, 9])
+                    .expect("add second property");
+            })
+            .expect("replace catalog snapshot again");
+
+        let latest = catalog.get("test").expect("latest snapshot");
+        assert!(latest.has_node_property("first"));
+        assert!(latest.has_node_property("second"));
+    }
 }

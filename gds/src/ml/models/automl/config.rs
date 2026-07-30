@@ -178,13 +178,16 @@ fn fill_defaults(
     keys.extend(user_input.keys().cloned());
 
     keys.into_iter()
-        .filter(|key| key != "methodName")
-        .map(|key| {
+        .filter(|key| key != "methodName" && key != "method")
+        .filter_map(|key| {
             let value = user_input
                 .get(&key)
                 .cloned()
                 .or_else(|| defaults.get(&key).cloned());
-            (key, value.unwrap_or(serde_json::Value::Null))
+            match value {
+                Some(serde_json::Value::Null) | None => None,
+                Some(value) => Some((key, value)),
+            }
         })
         .collect()
 }

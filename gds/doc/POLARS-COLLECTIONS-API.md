@@ -4,6 +4,11 @@
 
 Define a single API surface that merges Collections with Polars, positioning Collections as the **direct Polars client** and treating `GraphStore`/`Graph` as the **GraphFrame**.
 
+This document describes the future persistent direction. The current
+`DefaultGraphStore` is a RAM-only Bootstrap snapshot used primarily for algorithm
+development and tests; its temporary contract is defined in
+[DEFAULT-GRAPHSTORE-BOOTSTRAP-CONTRACT.md](DEFAULT-GRAPHSTORE-BOOTSTRAP-CONTRACT.md).
+
 ## Scope
 
 - Convert Collections config into Polars table/column policy.

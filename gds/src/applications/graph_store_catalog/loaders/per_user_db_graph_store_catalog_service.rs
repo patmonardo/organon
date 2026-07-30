@@ -130,8 +130,10 @@ impl GraphCatalog for MergedDbCatalog {
                 continue;
             }
 
-            if catalog.get(name).is_some() {
-                return GraphCatalog::with_store_mut(catalog.as_ref(), name, mutator);
+            match GraphCatalog::with_store_mut(catalog.as_ref(), name, mutator) {
+                Ok(()) => return Ok(()),
+                Err(CatalogError::NotFound(_)) => continue,
+                Err(error) => return Err(error),
             }
         }
 

@@ -111,10 +111,16 @@ pub trait Pipeline {
         graph_store: &DefaultGraphStore,
         node_labels: &[String],
     ) -> HashSet<String> {
-        let labels: HashSet<NodeLabel> = node_labels
-            .iter()
-            .map(|label| NodeLabel::of(label.clone()))
-            .collect();
+        let labels: HashSet<NodeLabel> = if node_labels.is_empty()
+            || (node_labels.len() == 1 && node_labels[0] == "*")
+        {
+            HashSet::new()
+        } else {
+            node_labels
+                .iter()
+                .map(|label| NodeLabel::of(label.clone()))
+                .collect()
+        };
 
         let graph_properties = graph_store.node_property_keys_for_labels(&labels);
 

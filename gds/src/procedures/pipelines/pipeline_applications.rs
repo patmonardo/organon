@@ -7,7 +7,9 @@ use crate::collections::backends::vec::VecDouble;
 use crate::core::graph_dimensions::ConcreteGraphDimensions;
 use crate::core::loading::GraphResources;
 use crate::ml::metrics::{ClassificationMetricSpecification, RegressionMetric};
+use crate::ml::models::automl::TunableTrainerConfig as AutoMlTrainerConfig;
 use crate::ml::models::Regressor;
+use crate::ml::models::TrainingMethod as MlTrainingMethod;
 use crate::projection::eval::pipeline::LinkFeatureStepFactory;
 use crate::projection::eval::pipeline::LinkPredictionSplitConfig;
 use crate::projection::eval::pipeline::LinkPredictionTrainingPipeline;
@@ -24,6 +26,7 @@ use crate::projection::eval::pipeline::NodeRegressionPipelineTrainConfig;
 use crate::projection::eval::pipeline::NodeRegressionTrainingPipeline;
 use crate::projection::eval::pipeline::{
     AutoTuningConfig, ExecutableNodePropertyStep, Pipeline, TrainingMethod, TrainingPipeline,
+    TunableTrainerConfig,
 };
 use crate::projection::eval::pipeline::{NodePropertyStep, PipelineCatalogEntry};
 use crate::task::concurrency::Concurrency;
@@ -89,16 +92,103 @@ pub struct PipelineApplications {
     user: User,
     pipeline_repository: PipelineRepository,
     graph_catalog: Arc<dyn GraphCatalog>,
-    node_classification_models:
-        Arc<parking_lot::RwLock<HashMap<(String, String), Arc<NodeClassificationModelResult>>>>,
-    node_regression_models:
-        Arc<parking_lot::RwLock<HashMap<(String, String), Arc<NodeRegressionRuntimeModel>>>>,
+    model_store: Arc<PipelineModelStore>,
 }
 
 struct NodeRegressionRuntimeModel {
     regressor: Arc<dyn Regressor>,
     pipeline: NodePropertyPredictPipeline,
     train_config: NodeRegressionPipelineTrainConfig,
+}
+
+#[derive(Default)]
+struct PipelineRuntimeModels {
+    node_classification: HashMap<(String, String), Arc<NodeClassificationModelResult>>,
+    node_regression: HashMap<(String, String), Arc<NodeRegressionRuntimeModel>>,
+}
+
+#[derive(Default)]
+pub struct PipelineModelStore {
+    models: parking_lot::RwLock<PipelineRuntimeModels>,
+}
+
+impl PipelineModelStore {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    fn verify_can_store(&self, username: &str, model_name: &str) -> Result<(), String> {
+        let key = (username.to_string(), model_name.to_string());
+        let models = self.models.read();
+        if models.node_classification.contains_key(&key)
+            || models.node_regression.contains_key(&key)
+        {
+            return Err(format!(
+                "Model `{model_name}` already exists for user `{username}`"
+            ));
+        }
+        Ok(())
+    }
+
+    fn insert_node_classification(
+        &self,
+        username: &str,
+        model_name: String,
+        model: Arc<NodeClassificationModelResult>,
+    ) -> Result<(), String> {
+        let key = (username.to_string(), model_name);
+        let mut models = self.models.write();
+        if models.node_classification.contains_key(&key)
+            || models.node_regression.contains_key(&key)
+        {
+            return Err(format!(
+                "Model `{}` already exists for user `{username}`",
+                key.1
+            ));
+        }
+        models.node_classification.insert(key, model);
+        Ok(())
+    }
+
+    fn insert_node_regression(
+        &self,
+        username: &str,
+        model_name: String,
+        model: Arc<NodeRegressionRuntimeModel>,
+    ) -> Result<(), String> {
+        let key = (username.to_string(), model_name);
+        let mut models = self.models.write();
+        if models.node_classification.contains_key(&key)
+            || models.node_regression.contains_key(&key)
+        {
+            return Err(format!(
+                "Model `{}` already exists for user `{username}`",
+                key.1
+            ));
+        }
+        models.node_regression.insert(key, model);
+        Ok(())
+    }
+}
+
+#[derive(Clone)]
+struct PipelineTrainerConfig {
+    inner: AutoMlTrainerConfig,
+    method: TrainingMethod,
+}
+
+impl TunableTrainerConfig for PipelineTrainerConfig {
+    fn training_method(&self) -> TrainingMethod {
+        self.method
+    }
+
+    fn is_concrete(&self) -> bool {
+        self.inner.is_concrete()
+    }
+
+    fn to_map(&self) -> HashMap<String, Value> {
+        self.inner.to_map()
+    }
 }
 
 #[derive(Clone, Copy)]
@@ -116,10 +206,11 @@ struct PlannedResourceContract {
 
 impl PipelineApplications {
     pub fn new(user: User, pipeline_repository: PipelineRepository) -> Self {
-        Self::new_with_graph_catalog(
+        Self::new_with_runtime_dependencies(
             user,
             pipeline_repository,
             Arc::new(InMemoryGraphCatalog::new()),
+            Arc::new(PipelineModelStore::new()),
         )
     }
 
@@ -128,12 +219,25 @@ impl PipelineApplications {
         pipeline_repository: PipelineRepository,
         graph_catalog: Arc<dyn GraphCatalog>,
     ) -> Self {
+        Self::new_with_runtime_dependencies(
+            user,
+            pipeline_repository,
+            graph_catalog,
+            Arc::new(PipelineModelStore::new()),
+        )
+    }
+
+    pub fn new_with_runtime_dependencies(
+        user: User,
+        pipeline_repository: PipelineRepository,
+        graph_catalog: Arc<dyn GraphCatalog>,
+        model_store: Arc<PipelineModelStore>,
+    ) -> Self {
         Self {
             user,
             pipeline_repository,
             graph_catalog,
-            node_classification_models: Arc::new(parking_lot::RwLock::new(HashMap::new())),
-            node_regression_models: Arc::new(parking_lot::RwLock::new(HashMap::new())),
+            model_store,
         }
     }
 
@@ -259,15 +363,14 @@ impl PipelineApplications {
         &self,
         pipeline_name: &PipelineName,
         method: TrainingMethod,
+        configuration: AnyMap,
     ) -> PipelineInfoResult {
         let existing = self
             .pipeline_repository
             .get_link_prediction_training_pipeline(&self.user, pipeline_name);
 
         let mut next = (*existing).clone();
-        next.training_parameter_space_mut()
-            .entry(method)
-            .or_default();
+        next.add_trainer_config(parse_trainer_config(configuration, method));
 
         let next = Arc::new(next);
         self.pipeline_repository
@@ -422,6 +525,7 @@ impl PipelineApplications {
         &self,
         pipeline_name: &PipelineName,
         method: TrainingMethod,
+        configuration: AnyMap,
         is_classification: bool,
     ) -> NodePipelineInfoResult {
         if is_classification {
@@ -429,9 +533,7 @@ impl PipelineApplications {
                 .pipeline_repository
                 .get_node_classification_training_pipeline(&self.user, pipeline_name);
             let mut next = (*existing).clone();
-            next.training_parameter_space_mut()
-                .entry(method)
-                .or_default();
+            next.add_trainer_config(parse_trainer_config(configuration, method));
             let next = Arc::new(next);
             self.pipeline_repository
                 .replace(&self.user, pipeline_name, Arc::clone(&next));
@@ -441,9 +543,7 @@ impl PipelineApplications {
                 .pipeline_repository
                 .get_node_regression_training_pipeline(&self.user, pipeline_name);
             let mut next = (*existing).clone();
-            next.training_parameter_space_mut()
-                .entry(method)
-                .or_default();
+            next.add_trainer_config(parse_trainer_config(configuration, method));
             let next = Arc::new(next);
             self.pipeline_repository
                 .replace(&self.user, pipeline_name, Arc::clone(&next));
@@ -697,6 +797,9 @@ impl PipelineApplications {
         let graph_store = self.graph_store_for(graph_name);
         let model_name = optional_string(&configuration, "modelName")
             .unwrap_or_else(|| required_string(&configuration, "pipeline"));
+        self.model_store
+            .verify_can_store(self.user.username(), &model_name)
+            .unwrap_or_else(|e| panic!("nodeClassification.train failed: {e}"));
         let train_config = parse_node_classification_train_config(&self.user, configuration);
         let computation = NodeClassificationTrainComputation::new(
             self.pipeline_repository.clone(),
@@ -710,10 +813,9 @@ impl PipelineApplications {
 
         let model_result = Arc::new(model_result);
 
-        self.node_classification_models.write().insert(
-            (self.user.username().to_string(), model_name),
-            Arc::clone(&model_result),
-        );
+        self.model_store
+            .insert_node_classification(self.user.username(), model_name, Arc::clone(&model_result))
+            .unwrap_or_else(|e| panic!("nodeClassification.train failed: {e}"));
 
         render_node_classification_train_result(
             model_result.as_ref(),
@@ -770,16 +872,21 @@ impl PipelineApplications {
             .compute(Arc::clone(&graph_store))
             .unwrap_or_else(|e| panic!("nodeClassification.write failed: {e}"));
 
-        let node_properties = as_properties(
-            Some(&predict_result),
-            write_configuration.write_property(),
-            write_configuration.predicted_probability_property(),
-        );
-        let metadata = GraphStoreNodePropertiesWritten(
-            node_properties.len() * predict_result.predicted_node_count(),
-        );
+        let mut metadata = None;
+        self.graph_catalog
+            .with_store_mut(graph_name, &mut |graph_store| {
+                metadata = Some(apply_node_classification_write(
+                    graph_store,
+                    &write_configuration,
+                    &predict_result,
+                ));
+            })
+            .unwrap_or_else(|e| {
+                panic!("nodeClassification.write failed to update graph store: {e}")
+            });
+        let metadata = metadata.expect("nodeClassification.write metadata should be set");
 
-        let graph_resources = GraphResources::new(graph_store);
+        let graph_resources = GraphResources::new(self.graph_store_for(graph_name));
         let builder =
             NodeClassificationPredictPipelineWriteResultBuilder::new(write_configuration.clone());
 
@@ -981,6 +1088,9 @@ impl PipelineApplications {
         let graph_store = self.graph_store_for(graph_name);
         let model_name = optional_string(&configuration, "modelName")
             .unwrap_or_else(|| required_string(&configuration, "pipeline"));
+        self.model_store
+            .verify_can_store(self.user.username(), &model_name)
+            .unwrap_or_else(|e| panic!("nodeRegression.train failed: {e}"));
         let train_config = parse_node_regression_train_config(&self.user, configuration);
         let computation = NodeRegressionTrainComputation::new(
             self.pipeline_repository.clone(),
@@ -993,14 +1103,17 @@ impl PipelineApplications {
             .unwrap_or_else(|e| panic!("nodeRegression.train failed: {e}"));
 
         let (regressor, train_config, model_info, training_statistics) = model_result.into_parts();
-        self.node_regression_models.write().insert(
-            (self.user.username().to_string(), model_name),
-            Arc::new(NodeRegressionRuntimeModel {
-                regressor: Arc::from(regressor),
-                pipeline: clone_predict_pipeline(model_info.pipeline()),
-                train_config: train_config.clone(),
-            }),
-        );
+        self.model_store
+            .insert_node_regression(
+                self.user.username(),
+                model_name,
+                Arc::new(NodeRegressionRuntimeModel {
+                    regressor: Arc::from(regressor),
+                    pipeline: clone_predict_pipeline(model_info.pipeline()),
+                    train_config: train_config.clone(),
+                }),
+            )
+            .unwrap_or_else(|e| panic!("nodeRegression.train failed: {e}"));
 
         render_node_regression_train_result(
             &train_config,
@@ -1088,8 +1201,10 @@ impl PipelineApplications {
         model_user: &str,
         model_name: &str,
     ) -> Arc<NodeClassificationModelResult> {
-        self.node_classification_models
+        self.model_store
+            .models
             .read()
+            .node_classification
             .get(&(model_user.to_string(), model_name.to_string()))
             .cloned()
             .unwrap_or_else(|| {
@@ -1102,8 +1217,10 @@ impl PipelineApplications {
         model_user: &str,
         model_name: &str,
     ) -> Arc<NodeRegressionRuntimeModel> {
-        self.node_regression_models
+        self.model_store
+            .models
             .read()
+            .node_regression
             .get(&(model_user.to_string(), model_name.to_string()))
             .cloned()
             .unwrap_or_else(|| {
@@ -1302,27 +1419,34 @@ fn scale_memory_range(range: MemoryRange, numerator: usize, denominator: usize) 
 }
 
 fn pipeline_catalog_entry_to_result(entry: PipelineCatalogEntry) -> PipelineCatalogResult {
+    let creation_time = entry.creation_time();
     match entry.pipeline_as::<LinkPredictionTrainingPipeline>() {
         Some(pipeline) => {
-            return create_pipeline_catalog_result(pipeline.as_ref(), entry.pipeline_name());
+            let mut result =
+                create_pipeline_catalog_result(pipeline.as_ref(), entry.pipeline_name());
+            result.creation_time = creation_time;
+            return result;
         }
         None => {}
     }
 
     if let Some(pipeline) = entry.pipeline_as::<NodeClassificationTrainingPipeline>() {
-        return create_pipeline_catalog_result(pipeline.as_ref(), entry.pipeline_name());
+        let mut result = create_pipeline_catalog_result(pipeline.as_ref(), entry.pipeline_name());
+        result.creation_time = creation_time;
+        return result;
     }
 
     if let Some(pipeline) = entry.pipeline_as::<NodeRegressionTrainingPipeline>() {
-        return create_pipeline_catalog_result(pipeline.as_ref(), entry.pipeline_name());
+        let mut result = create_pipeline_catalog_result(pipeline.as_ref(), entry.pipeline_name());
+        result.creation_time = creation_time;
+        return result;
     }
 
     PipelineCatalogResult {
         pipeline_info: HashMap::new(),
         pipeline_name: entry.pipeline_name().to_string(),
         pipeline_type: entry.pipeline_type().to_string(),
-        creation_time: chrono::Utc::now()
-            .with_timezone(&chrono::FixedOffset::east_opt(0).expect("UTC offset")),
+        creation_time,
     }
 }
 
@@ -1334,6 +1458,10 @@ fn rebuild_node_classification_with_features(
 
     for step in pipeline.node_property_steps() {
         next.add_node_property_step(step.clone());
+    }
+
+    for step in pipeline.feature_steps() {
+        next.add_feature_step(step.clone());
     }
 
     for step in feature_steps {
@@ -1359,6 +1487,10 @@ fn rebuild_node_regression_with_features(
 
     for step in pipeline.node_property_steps() {
         next.add_node_property_step(step.clone());
+    }
+
+    for step in pipeline.feature_steps() {
+        next.add_feature_step(step.clone());
     }
 
     for step in feature_steps {
@@ -1442,6 +1574,24 @@ fn required_string(configuration: &AnyMap, key: &str) -> String {
         .filter(|value| !value.is_empty())
         .map(ToString::to_string)
         .unwrap_or_else(|| panic!("Missing required config field: {key}"))
+}
+
+fn parse_trainer_config(
+    configuration: AnyMap,
+    method: TrainingMethod,
+) -> Box<dyn TunableTrainerConfig> {
+    let ml_method = match method {
+        TrainingMethod::LogisticRegression => MlTrainingMethod::LogisticRegression,
+        TrainingMethod::RandomForestClassification => MlTrainingMethod::RandomForestClassification,
+        TrainingMethod::SVMClassification => MlTrainingMethod::SVMClassification,
+        TrainingMethod::MLPClassification => MlTrainingMethod::MLPClassification,
+        TrainingMethod::LinearRegression => MlTrainingMethod::LinearRegression,
+        TrainingMethod::RandomForestRegression => MlTrainingMethod::RandomForestRegression,
+    };
+    let inner = AutoMlTrainerConfig::of(&configuration, ml_method)
+        .unwrap_or_else(|e| panic!("Invalid {method} trainer configuration: {e}"));
+
+    Box::new(PipelineTrainerConfig { inner, method })
 }
 
 fn string_list_or_default(configuration: &AnyMap, key: &str, default: Vec<&str>) -> Vec<String> {
@@ -1792,9 +1942,42 @@ fn apply_node_classification_mutation(
     GraphStoreNodePropertiesWritten(written.0)
 }
 
+fn apply_node_classification_write(
+    graph_store: &mut DefaultGraphStore,
+    configuration: &NodeClassificationPredictPipelineWriteConfig,
+    result: &NodeClassificationPipelineResult,
+) -> GraphStoreNodePropertiesWritten {
+    let labels_to_update = if configuration.target_node_labels().is_empty()
+        || (configuration.target_node_labels().len() == 1
+            && configuration.target_node_labels()[0] == "*")
+    {
+        graph_store.node_labels()
+    } else {
+        configuration
+            .target_node_labels()
+            .iter()
+            .map(|label| crate::projection::NodeLabel::of(label.clone()))
+            .collect()
+    };
+
+    let node_properties = as_properties(
+        Some(result),
+        configuration.write_property(),
+        configuration.predicted_probability_property(),
+    );
+
+    let service = GraphStoreService::new(Log::new());
+    service
+        .add_node_properties(graph_store, labels_to_update, &node_properties)
+        .unwrap_or_else(|e| panic!("nodeClassification.write failed to update graph store: {e}"))
+}
+
 #[cfg(test)]
 mod task_frame_plan_tests {
     use super::*;
+    use crate::collections::HugeLongArray;
+    use crate::ml::core::subgraph::LocalIdMap;
+    use crate::ml::node_classification::NodeClassificationPredictResult;
     use crate::projection::eval::pipeline::PipelineCatalog;
     use crate::types::catalog::GraphCatalog;
     use crate::types::random::RandomGraphConfig;
@@ -1842,5 +2025,45 @@ mod task_frame_plan_tests {
         assert!(plan[1].pipeline().ends_with("::ComputeGraph"));
         assert!(plan[2].pipeline().ends_with("::Persist"));
         assert_eq!(plan[1].image_spec().kind(), TaskFrameKind::MachineLearning);
+    }
+
+    #[test]
+    fn node_classification_write_persists_predictions() {
+        let mut graph_store = DefaultGraphStore::random(&RandomGraphConfig {
+            seed: Some(23),
+            node_count: 5,
+            relationships: vec![RandomRelationshipConfig::new("REL", 1.0)],
+            ..RandomGraphConfig::default()
+        })
+        .expect("random graph generation");
+
+        let mut internal_predictions = HugeLongArray::new(2);
+        internal_predictions.set(0, 0);
+        internal_predictions.set(1, 1);
+        let prediction_result =
+            NodeClassificationPredictResult::new(Arc::new(internal_predictions), None);
+        let result = NodeClassificationPipelineResult::of_for_node_ids(
+            &prediction_result,
+            &LocalIdMap::of(&[10, 20]),
+            vec![1, 3],
+            5,
+        );
+        let configuration = parse_node_classification_write_config(
+            "alice".to_string(),
+            AnyMap::from([(
+                "writeProperty".to_string(),
+                Value::String("prediction".to_string()),
+            )]),
+        );
+
+        let written = apply_node_classification_write(&mut graph_store, &configuration, &result);
+
+        assert_eq!(written.0, 5);
+        assert!(graph_store.has_node_property("prediction"));
+        let values = graph_store
+            .node_property_values("prediction")
+            .expect("prediction property");
+        assert_eq!(values.long_value(1).expect("node 1 prediction"), 10);
+        assert_eq!(values.long_value(3).expect("node 3 prediction"), 20);
     }
 }
