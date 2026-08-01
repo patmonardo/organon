@@ -6,6 +6,7 @@
 //! same time: DataFrame supplies the Polars body, while Dataset expands the same
 //! moments through framework metadata and ProgramFeatures.
 
+pub mod components;
 mod core;
 mod help;
 mod moments;
@@ -17,6 +18,11 @@ pub mod workbench;
 
 pub use crate::dsl::*;
 
+pub use components::{
+    builtin_component, BuiltinComponentRef, BuiltinComponentSuite, ShellComponentCall,
+    ShellComponentCategory, ShellComponentDescriptor, ShellComponentId, ShellComponentMode,
+    ShellComponentSuiteError,
+};
 pub use core::{
     GdsShell, ShellCapabilityBand, ShellCapabilityMap, ShellCapabilityState, ShellCorpusError,
     ShellCorpusReport, ShellDataFrameKnowledge, ShellFeatureMomentKnowledge, ShellLearningReport,
