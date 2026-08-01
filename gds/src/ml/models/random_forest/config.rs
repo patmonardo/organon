@@ -168,6 +168,10 @@ impl TrainerConfig for RandomForestClassifierTrainerConfig {
     fn to_map(&self) -> HashMap<String, serde_json::Value> {
         let mut map = HashMap::new();
         map.insert(
+            "method".to_string(),
+            serde_json::Value::String("RandomForestClassification".to_string()),
+        );
+        map.insert(
             "criterion".to_string(),
             serde_json::Value::String(self.criterion.to_string()),
         );
@@ -220,6 +224,10 @@ impl TrainerConfig for RandomForestRegressorTrainerConfig {
     fn to_map(&self) -> HashMap<String, serde_json::Value> {
         let mut map = HashMap::new();
         map.insert(
+            "method".to_string(),
+            serde_json::Value::String("RandomForestRegression".to_string()),
+        );
+        map.insert(
             "maxFeaturesRatio".to_string(),
             serde_json::json!(self.forest.max_features_ratio),
         );
@@ -250,5 +258,23 @@ impl TrainerConfig for RandomForestRegressorTrainerConfig {
 impl crate::config::ValidatedConfig for RandomForestRegressorTrainerConfig {
     fn validate(&self) -> Result<(), ConfigError> {
         crate::config::ValidatedConfig::validate(&self.forest)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn classifier_map_includes_method_discriminator() {
+        let config = RandomForestClassifierTrainerConfig {
+            forest: RandomForestConfig::default(),
+            criterion: ClassifierImpurityCriterionType::Gini,
+        };
+
+        assert_eq!(
+            config.to_map().get("method"),
+            Some(&serde_json::json!("RandomForestClassification"))
+        );
     }
 }

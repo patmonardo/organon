@@ -1,8 +1,6 @@
 use std::sync::Arc;
 
 use crate::applications::algorithms::machinery::AlgorithmMachinery;
-use crate::task::concurrency::Concurrency;
-use crate::task::progress::tasks::progress_tracker::NoopProgressTracker;
 use crate::projection::eval::pipeline::node_pipeline::NodeClassificationModelResult;
 use crate::projection::eval::pipeline::node_pipeline::NodeClassificationPipelineTrainConfig;
 use crate::projection::eval::pipeline::node_pipeline::NodeClassificationTrain;
@@ -12,6 +10,8 @@ use crate::projection::eval::pipeline::node_pipeline::NodePropertyPipelineBaseTr
 use crate::projection::eval::pipeline::validate_main_metric;
 use crate::projection::eval::pipeline::PipelineTrainAlgorithmError;
 use crate::projection::eval::pipeline::{Pipeline, TrainingPipeline};
+use crate::task::concurrency::Concurrency;
+use crate::task::progress::tasks::progress_tracker::NoopProgressTracker;
 use crate::types::graph_store::DefaultGraphStore;
 use crate::types::user::User;
 
@@ -45,7 +45,8 @@ impl NodeClassificationTrainComputation {
 
         let pipeline = self
             .pipeline_repository
-            .get_node_classification_training_pipeline(&self.user, &pipeline_name);
+            .try_get_node_classification_training_pipeline(&self.user, &pipeline_name)
+            .map_err(PipelineTrainAlgorithmError::ConversionFailed)?;
 
         let training_methods: Vec<String> = pipeline
             .training_parameter_space()
@@ -70,13 +71,14 @@ impl NodeClassificationTrainComputation {
             .validate_node_property_steps_context_configs(pipeline.node_property_steps())
             .map_err(|e| PipelineTrainAlgorithmError::ValidationFailed(Box::new(e)))?;
 
-        let pipeline_trainer = NodeClassificationTrain::create(
+        let pipeline_trainer = NodeClassificationTrain::try_create(
             Arc::clone(&graph_store),
             (*pipeline).clone(),
             self.configuration.clone(),
             node_feature_producer,
             Box::new(NoopProgressTracker),
-        );
+        )
+        .map_err(|error| PipelineTrainAlgorithmError::ValidationFailed(Box::new(error)))?;
 
         let mut algorithm = NodeClassificationTrainAlgorithm::new(
             Box::new(pipeline_trainer),
@@ -93,5 +95,32 @@ impl NodeClassificationTrainComputation {
             Concurrency::of(self.configuration.concurrency()),
             |_| algorithm.compute(),
         )
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::projection::eval::pipeline::PipelineCatalog;
+    use crate::types::random::RandomGraphConfig;
+
+    #[test]
+    fn compute_reports_missing_pipeline() {
+        let computation = NodeClassificationTrainComputation::new(
+            PipelineRepository::new(Arc::new(PipelineCatalog::new())),
+            NodeClassificationPipelineTrainConfig::default(),
+            User::from("alice"),
+        );
+        let graph_store = Arc::new(
+            DefaultGraphStore::random(&RandomGraphConfig::default()).expect("random graph"),
+        );
+
+        let result = computation.compute(graph_store);
+
+        assert!(matches!(
+            result,
+            Err(PipelineTrainAlgorithmError::ConversionFailed(message))
+                if message.contains("does not exist")
+        ));
     }
 }

@@ -8,6 +8,7 @@ use crate::projection::eval::pipeline::{
 use crate::projection::{NodeLabel, RelationshipType};
 use crate::task::concurrency::TerminationFlag;
 use crate::types::graph_store::{DefaultGraphStore, GraphStore};
+use crate::types::schema::GraphSchema;
 
 /// Abstract algorithm for training ML pipelines.
 ///
@@ -83,22 +84,11 @@ pub trait PipelineTrainAlgorithm<RESULT, MODEL, P: TrainingPipeline + ?Sized> {
             .map_err(|e| PipelineTrainAlgorithmError::ValidationFailed(Box::new(e)))?;
 
         // 4. Capture original schema (before node property steps)
-        let node_labels_set: HashSet<NodeLabel> = self
-            .node_labels()
-            .iter()
-            .map(|s| NodeLabel::of(s.as_str()))
-            .collect();
-        let rel_types_set: HashSet<RelationshipType> = self
-            .relationship_types()
-            .iter()
-            .map(|s| RelationshipType::of(s.as_str()))
-            .collect();
-
-        let original_schema = self
-            .graph_store()
-            .schema()
-            .filter_node_labels(&node_labels_set)
-            .filter_relationship_types(&rel_types_set);
+        let original_schema = filtered_training_schema(
+            self.graph_store(),
+            self.node_labels(),
+            self.relationship_types(),
+        );
 
         // 5. Run pipeline trainer
         let pipeline_train_result = self
@@ -113,6 +103,40 @@ pub trait PipelineTrainAlgorithm<RESULT, MODEL, P: TrainingPipeline + ?Sized> {
 
         Ok(model)
     }
+}
+
+fn filtered_training_schema(
+    graph_store: &DefaultGraphStore,
+    node_labels: &[String],
+    relationship_types: &[String],
+) -> GraphSchema {
+    let node_labels_set: HashSet<NodeLabel> = if node_labels.is_empty()
+        || node_labels.iter().any(|label| label == "*")
+    {
+        graph_store.node_labels()
+    } else {
+        node_labels
+            .iter()
+            .map(|label| NodeLabel::of(label.as_str()))
+            .collect()
+    };
+    let relationship_types_set: HashSet<RelationshipType> = if relationship_types.is_empty()
+        || relationship_types
+            .iter()
+            .any(|relationship_type| relationship_type == "*")
+    {
+        graph_store.relationship_types().into_iter().collect()
+    } else {
+        relationship_types
+            .iter()
+            .map(|relationship_type| RelationshipType::of(relationship_type.as_str()))
+            .collect()
+    };
+
+    graph_store
+        .schema()
+        .filter_node_labels(&node_labels_set)
+        .filter_relationship_types(&relationship_types_set)
 }
 
 /// Errors that can occur during pipeline training.
@@ -368,5 +392,26 @@ mod tests {
 
         assert_eq!(model, "trained");
         assert!(algorithm.trainer.saw_terminated_flag);
+    }
+
+    #[test]
+    fn test_filtered_training_schema_resolves_wildcard_and_empty_filters() {
+        let graph_store = DefaultGraphStore::random(&RandomGraphConfig {
+            node_count: 4,
+            seed: Some(42),
+            ..RandomGraphConfig::default()
+        })
+        .expect("random graph");
+
+        let schema = filtered_training_schema(&graph_store, &["*".to_string()], &[]);
+
+        assert_eq!(
+            schema.node_schema().available_labels(),
+            graph_store.schema().node_schema().available_labels()
+        );
+        assert_eq!(
+            schema.relationship_schema().available_types(),
+            graph_store.schema().relationship_schema().available_types()
+        );
     }
 }

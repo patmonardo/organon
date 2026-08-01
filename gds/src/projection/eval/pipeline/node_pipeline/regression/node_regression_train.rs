@@ -4,18 +4,22 @@ use super::node_regression_training_pipeline::NodeRegressionTrainingPipeline;
 use crate::collections::HugeDoubleArray;
 use crate::core::model::ModelCatalog;
 use crate::ml::metrics::regression::RegressionMetric;
-use crate::ml::metrics::{Metric, ModelCandidateStats};
-use crate::ml::models::linear_regression::LinearRegressionTrainConfig;
+use crate::ml::metrics::Metric;
+use crate::ml::models::automl::{
+    create_trainer_config_from_map, RandomSearch, TunableTrainerConfig as MlTunableTrainerConfig,
+};
+use crate::ml::models::base::TrainerConfigTrait;
 use crate::ml::models::{Features, RegressionTrainerFactory, Regressor};
 use crate::ml::node_regression::NodeSplitter;
 use crate::ml::splitting::TrainingExamplesSplit;
-use crate::ml::training::statistics::TrainingStatistics;
+use crate::ml::training::{CrossValidation, TrainingStatistics};
 use crate::procedures::AlgorithmsProcedureFacade;
 use crate::projection::eval::pipeline::NodeFeatureProducer;
 use crate::projection::eval::pipeline::NodePropertyPipelineBaseTrainConfig;
 use crate::projection::eval::pipeline::NodePropertyTrainingPipeline;
 use crate::projection::eval::pipeline::Pipeline;
 use crate::projection::eval::pipeline::PipelineTrainer;
+use crate::projection::eval::pipeline::TrainingMethod as PipelineTrainingMethod;
 use crate::projection::eval::pipeline::TrainingPipeline;
 use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::task::memory::{Estimate, MemoryEstimation, MemoryEstimations, MemoryRange};
@@ -23,7 +27,8 @@ use crate::task::progress::{LeafTask, ProgressTracker, Task, TaskProgressTracker
 use crate::types::graph::Graph;
 use crate::types::graph_store::DefaultGraphStore;
 use crate::types::prelude::GraphStore;
-use std::collections::HashMap;
+use parking_lot::RwLock;
+use std::collections::{BTreeSet, HashMap};
 use std::sync::Arc;
 
 /// Core training algorithm for node regression.
@@ -44,6 +49,45 @@ pub struct NodeRegressionTrain {
     progress_tracker: Box<dyn ProgressTracker>,
     termination_flag: TerminationFlag,
 }
+
+#[derive(Debug, PartialEq)]
+pub enum NodeRegressionTrainError {
+    InvalidTargetNodeLabels(String),
+    InvalidSplitConfiguration(String),
+    MissingTargetProperty(String),
+    MissingTargetValue { node_id: i64, property: String },
+    NonFiniteTargetValue { node_id: i64, property: String },
+}
+
+impl std::fmt::Display for NodeRegressionTrainError {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::InvalidTargetNodeLabels(message) => {
+                write!(formatter, "Invalid target node labels: {message}")
+            }
+            Self::InvalidSplitConfiguration(message) => {
+                write!(formatter, "Invalid split configuration: {message}")
+            }
+            Self::MissingTargetProperty(property) => {
+                write!(formatter, "Missing target node property `{property}`")
+            }
+            Self::MissingTargetValue { node_id, property } => {
+                write!(
+                    formatter,
+                    "Node with id {node_id} has no `{property}` target property value"
+                )
+            }
+            Self::NonFiniteTargetValue { node_id, property } => {
+                write!(
+                    formatter,
+                    "Node with id {node_id} has non-finite `{property}` target property value"
+                )
+            }
+        }
+    }
+}
+
+impl std::error::Error for NodeRegressionTrainError {}
 
 impl NodeRegressionTrain {
     /// Estimate memory requirements for training.
@@ -133,10 +177,29 @@ impl NodeRegressionTrain {
         node_feature_producer: NodeFeatureProducer<NodeRegressionPipelineTrainConfig>,
         progress_tracker: Box<dyn ProgressTracker>,
     ) -> Self {
+        Self::try_create(
+            graph_store,
+            pipeline,
+            config,
+            node_feature_producer,
+            progress_tracker,
+        )
+        .expect("Invalid node regression training configuration")
+    }
+
+    pub fn try_create(
+        graph_store: Arc<DefaultGraphStore>,
+        pipeline: NodeRegressionTrainingPipeline,
+        config: NodeRegressionPipelineTrainConfig,
+        node_feature_producer: NodeFeatureProducer<NodeRegressionPipelineTrainConfig>,
+        progress_tracker: Box<dyn ProgressTracker>,
+    ) -> Result<Self, NodeRegressionTrainError> {
         let node_graph = graph_store.get_graph();
         let target_node_labels = config
             .validate_target_node_label_identifiers(&graph_store)
-            .expect("Invalid target node labels for regression");
+            .map_err(|error| {
+                NodeRegressionTrainError::InvalidTargetNodeLabels(error.to_string())
+            })?;
         let target_node_ids = node_graph
             .iter_with_labels(&target_node_labels)
             .map(|node_id| node_id as u64)
@@ -145,41 +208,39 @@ impl NodeRegressionTrain {
         pipeline
             .split_config()
             .validate_min_num_nodes_in_split_sets(target_node_ids.len())
-            .expect("Invalid split configuration for node count");
+            .map_err(NodeRegressionTrainError::InvalidSplitConfiguration)?;
 
         let target_node_property = node_graph
             .node_properties(config.target_property())
-            .expect("Missing target node property for regression");
+            .ok_or_else(|| {
+                NodeRegressionTrainError::MissingTargetProperty(
+                    config.target_property().to_string(),
+                )
+            })?;
 
         let mut targets = HugeDoubleArray::new(target_node_ids.len());
         for (target_idx, root_node_id) in target_node_ids.iter().enumerate() {
+            let original_node_id = node_graph
+                .to_original_node_id(*root_node_id as i64)
+                .unwrap_or(*root_node_id as i64);
             let value = target_node_property
                 .double_value(*root_node_id)
-                .unwrap_or(0.0);
-            if value.is_nan() {
-                panic!(
-                    "Node with id {} has `{}` target property value `NaN`",
-                    node_graph
-                        .to_original_node_id(*root_node_id as i64)
-                        .unwrap_or(*root_node_id as i64),
-                    config.target_property()
-                );
-            }
-            if value.is_infinite() {
-                panic!(
-                    "Node with id {} has infinite `{}` target property value",
-                    node_graph
-                        .to_original_node_id(*root_node_id as i64)
-                        .unwrap_or(*root_node_id as i64),
-                    config.target_property()
-                );
+                .map_err(|_| NodeRegressionTrainError::MissingTargetValue {
+                    node_id: original_node_id,
+                    property: config.target_property().to_string(),
+                })?;
+            if !value.is_finite() {
+                return Err(NodeRegressionTrainError::NonFiniteTargetValue {
+                    node_id: original_node_id,
+                    property: config.target_property().to_string(),
+                });
             }
             targets.set(target_idx, value);
         }
 
         let termination_flag = TerminationFlag::running_true();
 
-        Self {
+        Ok(Self {
             pipeline,
             train_config: config,
             targets,
@@ -188,7 +249,7 @@ impl NodeRegressionTrain {
             node_feature_producer,
             progress_tracker,
             termination_flag,
-        }
+        })
     }
 
     /// Set termination flag for early stopping.
@@ -212,8 +273,9 @@ impl NodeRegressionTrain {
                 .collect::<HashMap<_, _>>(),
         );
 
+        let concurrency = Concurrency::of(self.train_config.concurrency());
         let node_splitter = NodeSplitter::new(
-            Concurrency::available_cores(),
+            concurrency,
             node_count,
             Arc::new({
                 let graph = Arc::clone(&self.node_graph);
@@ -255,27 +317,111 @@ impl NodeRegressionTrain {
             .collect();
 
         let mut training_statistics = TrainingStatistics::new(&metric_boxes);
-        training_statistics.add_candidate_stats(ModelCandidateStats::new(
-            serde_json::json!({}),
-            HashMap::new(),
-            HashMap::new(),
-        ));
 
         let features = self
             .node_feature_producer
             .procedure_features(&self.pipeline)
             .map_err(|e| format!("Feature production failed: {e}"))?;
+        let features: Arc<dyn Features> = Arc::from(features);
 
-        let regressor = self.train_simple_model(node_splits.outer_split(), &features)?;
+        if !self.termination_flag.running() {
+            return Err("Node regression training was terminated".into());
+        }
+
+        let candidates = self.collect_candidate_configs()?;
+        let candidate_configs_for_cv: Vec<Box<dyn TrainerConfigTrait>> = candidates
+            .iter()
+            .map(|(method, config_map)| create_trainer_config_from_map(config_map.clone(), *method))
+            .collect();
+
+        let metrics_for_cv: Vec<Box<dyn Metric>> = metrics
+            .iter()
+            .copied()
+            .map(|metric| Box::new(metric) as Box<dyn Metric>)
+            .collect();
+        let metrics_for_evaluation = Arc::new(metrics.clone());
+        let targets = Arc::new(self.targets.clone());
+        let termination_flag = self.termination_flag.clone();
+        let random_seed = self.train_config.random_seed();
+        let cv = CrossValidation::new(
+            Arc::new(RwLock::new(false)),
+            metrics_for_cv,
+            split_config.validation_folds(),
+            random_seed,
+            Box::new({
+                let features = Arc::clone(&features);
+                let targets = Arc::clone(&targets);
+                move |train_set, trainer_config, _metrics_handler, _name| {
+                    let progress = TaskProgressTracker::new(LeafTask::new(
+                        "Train regression candidate".to_string(),
+                        0,
+                    ));
+                    let trainer = RegressionTrainerFactory::create(
+                        trainer_config,
+                        &termination_flag,
+                        progress,
+                        &concurrency,
+                        random_seed,
+                    );
+                    trainer.train(features.as_ref(), targets.as_ref(), &to_u64_arc(train_set))
+                }
+            }),
+            Box::new({
+                let features = Arc::clone(&features);
+                let targets = Arc::clone(&targets);
+                move |evaluation_set, model, consumer| {
+                    let scores = evaluate_metrics(
+                        &evaluation_set,
+                        features.as_ref(),
+                        model.as_ref(),
+                        targets.as_ref(),
+                        metrics_for_evaluation.as_ref(),
+                    );
+                    for metric in metrics_for_evaluation.iter() {
+                        consumer.consume(
+                            metric as &dyn Metric,
+                            scores.get(metric.name()).copied().unwrap_or(0.0),
+                        );
+                    }
+                }
+            }),
+        );
+
+        cv.select_model(
+            node_splits.outer_split().train_set(),
+            |_| 0,
+            BTreeSet::from([0]),
+            &mut training_statistics,
+            candidate_configs_for_cv.into_iter(),
+        );
+
+        if !self.termination_flag.running() {
+            return Err("Node regression training was terminated".into());
+        }
+
+        let (best_method, best_map) = candidates
+            .get(training_statistics.best_trial_idx())
+            .ok_or("Node regression model selection produced no winning candidate")?;
+        let best_config = create_trainer_config_from_map(best_map.clone(), *best_method);
+
+        let regressor = self.train_simple_model(
+            node_splits.outer_split(),
+            features.as_ref(),
+            best_config.as_ref(),
+        )?;
         self.evaluate_model(
             node_splits.outer_split(),
-            &features,
+            features.as_ref(),
             &regressor,
             &metrics,
             &mut training_statistics,
         );
 
-        let retrained = self.retrain_best_model(node_splits.all_training_examples(), &features)?;
+        let retrained = self.retrain_best_model(
+            node_splits.all_training_examples(),
+            features.as_ref(),
+            best_config.as_ref(),
+        )?;
 
         self.progress_tracker.end_subtask();
 
@@ -306,47 +452,47 @@ impl NodeRegressionTrain {
     fn train_simple_model(
         &self,
         split: &TrainingExamplesSplit,
-        features: &Box<dyn Features>,
+        features: &dyn Features,
+        trainer_config: &dyn TrainerConfigTrait,
     ) -> Result<Box<dyn Regressor>, Box<dyn std::error::Error + Send + Sync>> {
         let train_set = to_u64_arc(split.train_set());
-        let trainer_config = LinearRegressionTrainConfig::default();
         let progress =
             TaskProgressTracker::new(LeafTask::new("Train regression model".to_string(), 0));
         let trainer = RegressionTrainerFactory::create(
-            &trainer_config,
+            trainer_config,
             &self.termination_flag,
             progress,
-            &Concurrency::available_cores(),
+            &Concurrency::of(self.train_config.concurrency()),
             self.train_config.random_seed(),
         );
 
-        Ok(trainer.train(features.as_ref(), &self.targets, &train_set))
+        Ok(trainer.train(features, &self.targets, &train_set))
     }
 
     fn retrain_best_model(
         &self,
         all_training_examples: &Arc<Vec<i64>>,
-        features: &Box<dyn Features>,
+        features: &dyn Features,
+        trainer_config: &dyn TrainerConfigTrait,
     ) -> Result<Box<dyn Regressor>, Box<dyn std::error::Error + Send + Sync>> {
         let train_set = to_u64_arc(all_training_examples.clone());
-        let trainer_config = LinearRegressionTrainConfig::default();
         let progress =
             TaskProgressTracker::new(LeafTask::new("Retrain regression model".to_string(), 0));
         let trainer = RegressionTrainerFactory::create(
-            &trainer_config,
+            trainer_config,
             &self.termination_flag,
             progress,
-            &Concurrency::available_cores(),
+            &Concurrency::of(self.train_config.concurrency()),
             self.train_config.random_seed(),
         );
 
-        Ok(trainer.train(features.as_ref(), &self.targets, &train_set))
+        Ok(trainer.train(features, &self.targets, &train_set))
     }
 
     fn evaluate_model(
         &self,
         split: &TrainingExamplesSplit,
-        features: &Box<dyn Features>,
+        features: &dyn Features,
         regressor: &Box<dyn Regressor>,
         metrics: &[RegressionMetric],
         training_statistics: &mut TrainingStatistics,
@@ -374,6 +520,59 @@ impl NodeRegressionTrain {
         for (metric, score) in test_scores {
             training_statistics.add_test_score(metric, score);
         }
+    }
+
+    fn collect_candidate_configs(
+        &self,
+    ) -> Result<
+        Vec<(
+            crate::ml::models::TrainingMethod,
+            HashMap<String, serde_json::Value>,
+        )>,
+        Box<dyn std::error::Error + Send + Sync>,
+    > {
+        let mut parameter_space = HashMap::new();
+        for method in [
+            PipelineTrainingMethod::LinearRegression,
+            PipelineTrainingMethod::RandomForestRegression,
+        ] {
+            let Some(configs) = self.pipeline.training_parameter_space().get(&method) else {
+                continue;
+            };
+            let ml_method = map_training_method(method);
+            let method_configs = parameter_space.entry(ml_method).or_insert_with(Vec::new);
+            for config in configs {
+                let tunable = MlTunableTrainerConfig::of(&config.to_map(), ml_method)
+                    .map_err(|error| format!("Invalid {method} parameter space: {error}"))?;
+                method_configs.push(tunable);
+            }
+        }
+
+        if parameter_space.values().all(Vec::is_empty) {
+            return Err("Need at least one regression model candidate for training.".into());
+        }
+
+        let candidates = RandomSearch::new_with_seed(
+            parameter_space,
+            self.pipeline.auto_tuning_config().max_trials(),
+            self.train_config.random_seed(),
+        )
+        .map(|config| (config.method(), config.to_map()))
+        .collect();
+
+        Ok(candidates)
+    }
+}
+
+fn map_training_method(method: PipelineTrainingMethod) -> crate::ml::models::TrainingMethod {
+    match method {
+        PipelineTrainingMethod::LinearRegression => {
+            crate::ml::models::TrainingMethod::LinearRegression
+        }
+        PipelineTrainingMethod::RandomForestRegression => {
+            crate::ml::models::TrainingMethod::RandomForestRegression
+        }
+        other => panic!("Unsupported training method for regression: {other:?}"),
     }
 }
 
@@ -507,7 +706,7 @@ fn estimate_stats_map(metrics_size: usize, number_of_model_candidates: usize) ->
 
 fn evaluate_metrics(
     eval_ids: &Arc<Vec<i64>>,
-    features: &Box<dyn Features>,
+    features: &dyn Features,
     regressor: &dyn Regressor,
     targets: &HugeDoubleArray,
     metrics: &[RegressionMetric],
@@ -541,9 +740,31 @@ mod tests {
     use super::*;
     use crate::collections::backends::vec::VecDouble;
     use crate::core::model::EmptyModelCatalog;
+    use crate::projection::eval::pipeline::NodeFeatureStep;
+    use crate::projection::eval::pipeline::TunableTrainerConfig;
     use crate::task::progress::NoopProgressTracker;
     use crate::types::properties::node::DefaultDoubleNodePropertyValues;
     use crate::types::random::RandomGraphConfig;
+
+    #[derive(Clone)]
+    struct FixedRegressionTrainerConfig {
+        method: PipelineTrainingMethod,
+        parameters: HashMap<String, serde_json::Value>,
+    }
+
+    impl TunableTrainerConfig for FixedRegressionTrainerConfig {
+        fn training_method(&self) -> PipelineTrainingMethod {
+            self.method
+        }
+
+        fn is_concrete(&self) -> bool {
+            !self.parameters.values().any(serde_json::Value::is_object)
+        }
+
+        fn to_map(&self) -> HashMap<String, serde_json::Value> {
+            self.parameters.clone()
+        }
+    }
 
     #[test]
     #[ignore]
@@ -648,8 +869,281 @@ mod tests {
     }
 
     #[test]
-    #[should_panic(expected = "Missing target node property for regression")]
-    fn test_run() {
+    fn test_run_selects_configured_linear_regression_candidate() {
+        let mut graph_store = DefaultGraphStore::random(&RandomGraphConfig {
+            seed: Some(42),
+            node_count: 60,
+            ..RandomGraphConfig::default()
+        })
+        .expect("random graph");
+        let node_count = graph_store.node_count();
+        let labels = graph_store.node_labels();
+        let features = Arc::new(DefaultDoubleNodePropertyValues::from_collection(
+            VecDouble::from(
+                (0..node_count)
+                    .map(|node_id| node_id as f64)
+                    .collect::<Vec<_>>(),
+            ),
+            node_count,
+        ));
+        let targets = Arc::new(DefaultDoubleNodePropertyValues::from_collection(
+            VecDouble::from(
+                (0..node_count)
+                    .map(|node_id| 2.0 * node_id as f64 + 1.0)
+                    .collect::<Vec<_>>(),
+            ),
+            node_count,
+        ));
+        graph_store
+            .add_node_property(labels.clone(), "feature", features)
+            .expect("feature property");
+        graph_store
+            .add_node_property(labels, "target", targets)
+            .expect("target property");
+
+        let mut pipeline = NodeRegressionTrainingPipeline::new();
+        pipeline.add_feature_step(NodeFeatureStep::of("feature"));
+        pipeline.add_trainer_config(Box::new(FixedRegressionTrainerConfig {
+            method: PipelineTrainingMethod::LinearRegression,
+            parameters: HashMap::from([
+                ("penalty".to_string(), serde_json::json!(0.0)),
+                ("maxEpochs".to_string(), serde_json::json!(50)),
+                ("learningRate".to_string(), serde_json::json!(0.01)),
+            ]),
+        }));
+
+        let graph_store = Arc::new(graph_store);
+        let config = NodeRegressionPipelineTrainConfig::new(
+            "test-pipeline".to_string(),
+            vec!["*".to_string()],
+            "target".to_string(),
+            Some(42),
+            vec![RegressionMetric::MeanSquaredError],
+        )
+        .with_concurrency(1);
+        let producer = NodeFeatureProducer::create(Arc::clone(&graph_store), config.clone());
+        let mut trainer = NodeRegressionTrain::create(
+            graph_store,
+            pipeline,
+            config,
+            producer,
+            Box::new(NoopProgressTracker),
+        );
+
+        let result = trainer.run().expect("regression training should run");
+        let statistics = result.training_statistics();
+
+        assert_eq!(
+            result.regressor().data().trainer_method(),
+            crate::ml::models::TrainingMethod::LinearRegression
+        );
+        assert_eq!(statistics.best_parameters()["method"], "LinearRegression");
+        assert!(statistics
+            .best_candidate()
+            .training_stats
+            .contains_key("MEAN_SQUARED_ERROR"));
+        assert!(statistics
+            .best_candidate()
+            .validation_stats
+            .contains_key("MEAN_SQUARED_ERROR"));
+        assert!(statistics
+            .winning_model_test_metrics()
+            .contains_key("MEAN_SQUARED_ERROR"));
+        assert!(statistics
+            .winning_model_outer_train_metrics()
+            .contains_key("MEAN_SQUARED_ERROR"));
+    }
+
+    #[test]
+    fn test_run_selects_configured_random_forest_regression_candidate() {
+        let mut graph_store = DefaultGraphStore::random(&RandomGraphConfig {
+            seed: Some(42),
+            node_count: 60,
+            ..RandomGraphConfig::default()
+        })
+        .expect("random graph");
+        let node_count = graph_store.node_count();
+        let labels = graph_store.node_labels();
+        let features = Arc::new(DefaultDoubleNodePropertyValues::from_collection(
+            VecDouble::from(
+                (0..node_count)
+                    .map(|node_id| node_id as f64)
+                    .collect::<Vec<_>>(),
+            ),
+            node_count,
+        ));
+        let targets = Arc::new(DefaultDoubleNodePropertyValues::from_collection(
+            VecDouble::from(
+                (0..node_count)
+                    .map(|node_id| 2.0 * node_id as f64 + 1.0)
+                    .collect::<Vec<_>>(),
+            ),
+            node_count,
+        ));
+        graph_store
+            .add_node_property(labels.clone(), "feature", features)
+            .expect("feature property");
+        graph_store
+            .add_node_property(labels, "target", targets)
+            .expect("target property");
+
+        let mut pipeline = NodeRegressionTrainingPipeline::new();
+        pipeline.add_feature_step(NodeFeatureStep::of("feature"));
+        pipeline.add_trainer_config(Box::new(FixedRegressionTrainerConfig {
+            method: PipelineTrainingMethod::RandomForestRegression,
+            parameters: HashMap::from([
+                ("numberOfDecisionTrees".to_string(), serde_json::json!(5)),
+                ("numberOfSamplesRatio".to_string(), serde_json::json!(1.0)),
+                ("maxFeaturesRatio".to_string(), serde_json::json!(1.0)),
+                ("maxDepth".to_string(), serde_json::json!(3)),
+            ]),
+        }));
+
+        let graph_store = Arc::new(graph_store);
+        let config = NodeRegressionPipelineTrainConfig::new(
+            "test-pipeline".to_string(),
+            vec!["*".to_string()],
+            "target".to_string(),
+            Some(42),
+            vec![RegressionMetric::MeanSquaredError],
+        )
+        .with_concurrency(1);
+        let producer = NodeFeatureProducer::create(Arc::clone(&graph_store), config.clone());
+        let mut trainer = NodeRegressionTrain::create(
+            graph_store,
+            pipeline,
+            config,
+            producer,
+            Box::new(NoopProgressTracker),
+        );
+
+        let result = trainer.run().expect("regression training should run");
+        let statistics = result.training_statistics();
+
+        assert_eq!(
+            result.regressor().data().trainer_method(),
+            crate::ml::models::TrainingMethod::RandomForestRegression
+        );
+        assert_eq!(
+            statistics.best_parameters()["method"],
+            "RandomForestRegression"
+        );
+        assert_eq!(statistics.best_parameters()["numberOfDecisionTrees"], 5);
+        assert!(statistics
+            .best_candidate()
+            .validation_stats
+            .contains_key("MEAN_SQUARED_ERROR"));
+        assert!(statistics
+            .winning_model_test_metrics()
+            .contains_key("MEAN_SQUARED_ERROR"));
+    }
+
+    #[test]
+    fn test_run_materializes_tunable_linear_regression_candidates() {
+        let mut graph_store = DefaultGraphStore::random(&RandomGraphConfig {
+            seed: Some(42),
+            node_count: 60,
+            ..RandomGraphConfig::default()
+        })
+        .expect("random graph");
+        let node_count = graph_store.node_count();
+        let labels = graph_store.node_labels();
+        let features = Arc::new(DefaultDoubleNodePropertyValues::from_collection(
+            VecDouble::from(
+                (0..node_count)
+                    .map(|node_id| node_id as f64 / (node_count - 1) as f64)
+                    .collect::<Vec<_>>(),
+            ),
+            node_count,
+        ));
+        let targets = Arc::new(DefaultDoubleNodePropertyValues::from_collection(
+            VecDouble::from(
+                (0..node_count)
+                    .map(|node_id| 2.0 * node_id as f64 / (node_count - 1) as f64 + 1.0)
+                    .collect::<Vec<_>>(),
+            ),
+            node_count,
+        ));
+        graph_store
+            .add_node_property(labels.clone(), "feature", features)
+            .expect("feature property");
+        graph_store
+            .add_node_property(labels, "target", targets)
+            .expect("target property");
+
+        let mut pipeline = NodeRegressionTrainingPipeline::new();
+        pipeline.add_feature_step(NodeFeatureStep::of("feature"));
+        pipeline.add_trainer_config(Box::new(FixedRegressionTrainerConfig {
+            method: PipelineTrainingMethod::LinearRegression,
+            parameters: HashMap::from([
+                (
+                    "penalty".to_string(),
+                    serde_json::json!({"range": [0.001, 0.1]}),
+                ),
+                (
+                    "learningRate".to_string(),
+                    serde_json::json!({"range": [0.01, 0.05]}),
+                ),
+                (
+                    "maxEpochs".to_string(),
+                    serde_json::json!({"range": [50, 100]}),
+                ),
+            ]),
+        }));
+        pipeline.set_auto_tuning_config(
+            crate::projection::eval::pipeline::AutoTuningConfig::new(3)
+                .expect("valid AutoML trial count"),
+        );
+
+        let graph_store = Arc::new(graph_store);
+        let config = NodeRegressionPipelineTrainConfig::new(
+            "test-pipeline".to_string(),
+            vec!["*".to_string()],
+            "target".to_string(),
+            Some(42),
+            vec![RegressionMetric::MeanSquaredError],
+        )
+        .with_concurrency(1);
+        let producer = NodeFeatureProducer::create(Arc::clone(&graph_store), config.clone());
+        let mut trainer = NodeRegressionTrain::create(
+            graph_store,
+            pipeline,
+            config,
+            producer,
+            Box::new(NoopProgressTracker),
+        );
+
+        let result = trainer
+            .run()
+            .expect("AutoML regression training should run");
+        let statistics = result.training_statistics();
+        let statistics_map = statistics.to_map();
+        let candidates = statistics_map["modelCandidates"]
+            .as_array()
+            .expect("model candidate statistics");
+        let best_parameters = statistics.best_parameters();
+
+        assert_eq!(candidates.len(), 3);
+        assert_eq!(best_parameters["method"], "LinearRegression");
+        assert!((0.001..0.1).contains(
+            &best_parameters["penalty"]
+                .as_f64()
+                .expect("materialized penalty")
+        ));
+        assert!((0.01..0.05).contains(
+            &best_parameters["learning_rate"]
+                .as_f64()
+                .expect("materialized learning rate")
+        ));
+        assert!((50..100).contains(
+            &best_parameters["max_epochs"]
+                .as_u64()
+                .expect("materialized max epochs")
+        ));
+    }
+
+    #[test]
+    fn test_try_create_reports_missing_target_property() {
         let config = RandomGraphConfig {
             node_count: 10,
             seed: Some(42),
@@ -663,7 +1157,7 @@ mod tests {
             NodeFeatureProducer::create(graph_store.clone(), config.clone());
         let progress_tracker = Box::new(NoopProgressTracker);
 
-        let mut trainer = NodeRegressionTrain::create(
+        let result = NodeRegressionTrain::try_create(
             graph_store,
             pipeline,
             config,
@@ -671,6 +1165,10 @@ mod tests {
             progress_tracker,
         );
 
-        let _result = trainer.run();
+        assert!(matches!(
+            result,
+            Err(NodeRegressionTrainError::MissingTargetProperty(property))
+                if property == "target"
+        ));
     }
 }

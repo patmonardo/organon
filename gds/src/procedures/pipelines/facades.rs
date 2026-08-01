@@ -1445,6 +1445,124 @@ mod executor_backed_facade_tests {
         }));
         assert!(duplicate.is_err());
     }
+
+    #[test]
+    fn node_regression_trains_model_and_streams_predictions() {
+        let graph_catalog: Arc<dyn GraphCatalog> = Arc::new(InMemoryGraphCatalog::new());
+        let pipeline_catalog = Arc::new(PipelineCatalog::new());
+        let model_store = Arc::new(PipelineModelStore::new());
+        let mut graph = DefaultGraphStore::random(&RandomGraphConfig {
+            seed: Some(42),
+            node_count: 60,
+            relationships: vec![RandomRelationshipConfig::new("RELATES", 0.2)],
+            ..RandomGraphConfig::default()
+        })
+        .expect("random graph generation");
+        graph
+            .add_node_property_f64(
+                "feature".to_string(),
+                (0..60).map(|idx| idx as f64 / 59.0).collect(),
+            )
+            .expect("feature property");
+        graph
+            .add_node_property_f64(
+                "target".to_string(),
+                (0..60).map(|idx| 2.0 * (idx as f64 / 59.0) + 1.0).collect(),
+            )
+            .expect("target property");
+        let labels = graph.node_labels();
+        let properties = [
+            NodeProperty::new(
+                "feature",
+                graph
+                    .node_property_values("feature")
+                    .expect("feature property values"),
+            ),
+            NodeProperty::new(
+                "target",
+                graph
+                    .node_property_values("target")
+                    .expect("target property values"),
+            ),
+        ];
+        GraphStoreService::new(Log::new())
+            .add_node_properties(&mut graph, labels, &properties)
+            .expect("label-scoped properties");
+        graph_catalog.set("graph", Arc::new(graph));
+
+        let make_facade = || {
+            LocalPipelinesProcedureFacade::new(
+                RequestScopedDependencies::with_runtime_dependencies(
+                    User::from("alice"),
+                    Arc::clone(&graph_catalog),
+                    Arc::clone(&model_store),
+                ),
+                Arc::clone(&pipeline_catalog),
+            )
+        };
+        let training_facade = make_facade();
+        training_facade
+            .node_regression()
+            .create_pipeline("regression");
+        training_facade.node_regression().select_features(
+            "regression",
+            Value::Array(vec![Value::String("feature".to_string())]),
+        );
+        training_facade.node_regression().add_logistic_regression(
+            "regression",
+            AnyMap::from([
+                ("penalty".to_string(), Value::from(0.0)),
+                ("maxEpochs".to_string(), Value::from(500)),
+                ("learningRate".to_string(), Value::from(0.05)),
+            ]),
+        );
+
+        let trained = training_facade.node_regression().train(
+            "graph",
+            AnyMap::from([
+                (
+                    "pipeline".to_string(),
+                    Value::String("regression".to_string()),
+                ),
+                (
+                    "modelName".to_string(),
+                    Value::String("regression-model".to_string()),
+                ),
+                (
+                    "targetProperty".to_string(),
+                    Value::String("target".to_string()),
+                ),
+                (
+                    "metrics".to_string(),
+                    Value::Array(vec![Value::String("MEAN_SQUARED_ERROR".to_string())]),
+                ),
+                ("randomSeed".to_string(), Value::from(42)),
+                ("concurrency".to_string(), Value::from(1)),
+            ]),
+        );
+        assert_eq!(trained.len(), 1);
+
+        let predictions = make_facade().node_regression().stream(
+            "graph",
+            AnyMap::from([(
+                "modelName".to_string(),
+                Value::String("regression-model".to_string()),
+            )]),
+        );
+
+        assert_eq!(predictions.len(), 60);
+        let mean_squared_error = predictions
+            .iter()
+            .map(|prediction| {
+                let expected = 2.0 * (prediction.node_id as f64 / 59.0) + 1.0;
+                let error = prediction.predicted_value - expected;
+                assert!(prediction.predicted_value.is_finite());
+                error * error
+            })
+            .sum::<f64>()
+            / predictions.len() as f64;
+        assert!(mean_squared_error < 0.05, "MSE was {mean_squared_error}");
+    }
 }
 
 #[cfg(test)]

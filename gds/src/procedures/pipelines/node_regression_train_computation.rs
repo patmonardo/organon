@@ -1,8 +1,6 @@
 use std::sync::Arc;
 
 use crate::applications::algorithms::machinery::AlgorithmMachinery;
-use crate::task::concurrency::Concurrency;
-use crate::task::progress::tasks::progress_tracker::NoopProgressTracker;
 use crate::projection::eval::pipeline::node_pipeline::NodeFeatureProducer;
 use crate::projection::eval::pipeline::node_pipeline::NodePropertyPipelineBaseTrainConfig;
 use crate::projection::eval::pipeline::node_pipeline::NodeRegressionPipelineTrainConfig;
@@ -12,6 +10,8 @@ use crate::projection::eval::pipeline::node_pipeline::NodeRegressionTrainPipelin
 use crate::projection::eval::pipeline::pipeline_companion::validate_main_metric;
 use crate::projection::eval::pipeline::PipelineTrainAlgorithmError;
 use crate::projection::eval::pipeline::{Pipeline, TrainingPipeline};
+use crate::task::concurrency::Concurrency;
+use crate::task::progress::tasks::progress_tracker::NoopProgressTracker;
 use crate::types::graph_store::DefaultGraphStore;
 use crate::types::user::User;
 
@@ -65,13 +65,14 @@ impl NodeRegressionTrainComputation {
             .validate_node_property_steps_context_configs(pipeline.node_property_steps())
             .map_err(|e| PipelineTrainAlgorithmError::ValidationFailed(Box::new(e)))?;
 
-        let pipeline_trainer = NodeRegressionTrain::create(
+        let pipeline_trainer = NodeRegressionTrain::try_create(
             Arc::clone(&graph_store),
             (*pipeline).clone(),
             self.configuration.clone(),
             node_feature_producer,
             Box::new(NoopProgressTracker),
-        );
+        )
+        .map_err(|error| PipelineTrainAlgorithmError::ValidationFailed(Box::new(error)))?;
 
         let mut algorithm = NodeRegressionTrainAlgorithm::new(
             Box::new(pipeline_trainer),

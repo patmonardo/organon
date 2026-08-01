@@ -63,14 +63,13 @@ impl NodeRegressionTrainPipelineAlgorithmFactory {
         graph_store: Arc<DefaultGraphStore>,
         configuration: NodeRegressionPipelineTrainConfig,
         progress_tracker: Box<dyn ProgressTracker>,
-    ) -> NodeRegressionTrainAlgorithm {
+    ) -> Result<NodeRegressionTrainAlgorithm, String> {
         let pipeline = self
             .pipeline_catalog
             .get_typed::<NodeRegressionTrainingPipeline>(
                 configuration.username(),
                 configuration.pipeline(),
-            )
-            .unwrap_or_else(|_| Arc::new(NodeRegressionTrainingPipeline::new()));
+            )?;
 
         self.build_with_pipeline(
             graph_store,
@@ -89,7 +88,7 @@ impl NodeRegressionTrainPipelineAlgorithmFactory {
         configuration: NodeRegressionPipelineTrainConfig,
         pipeline: NodeRegressionTrainingPipeline,
         progress_tracker: Box<dyn ProgressTracker>,
-    ) -> NodeRegressionTrainAlgorithm {
+    ) -> Result<NodeRegressionTrainAlgorithm, String> {
         Self::validate_main_metric(&pipeline, configuration.metrics().first());
 
         // Execute node-property-step context validation early (mirrors Java behavior).
@@ -98,25 +97,26 @@ impl NodeRegressionTrainPipelineAlgorithmFactory {
             NodeFeatureProducer::create(graph_store.clone(), configuration.clone());
         node_feature_producer
             .validate_node_property_steps_context_configs(pipeline.node_property_steps())
-            .expect("node property step context config validation failed");
+            .map_err(|error| error.to_string())?;
 
-        let trainer = Box::new(NodeRegressionTrain::create(
+        let trainer = Box::new(NodeRegressionTrain::try_create(
             graph_store.clone(),
             pipeline.clone(),
             configuration.clone(),
             node_feature_producer,
             progress_tracker,
-        ));
+        )
+        .map_err(|error| error.to_string())?);
 
         let algorithm_progress = Box::new(NoopProgressTracker);
 
-        NodeRegressionTrainAlgorithm::new(
+        Ok(NodeRegressionTrainAlgorithm::new(
             trainer,
             pipeline,
             graph_store,
             configuration,
             algorithm_progress,
-        )
+        ))
     }
 
     /// Returns the task name for this algorithm.
@@ -130,21 +130,20 @@ impl NodeRegressionTrainPipelineAlgorithmFactory {
     pub fn memory_estimation(
         &self,
         configuration: &NodeRegressionPipelineTrainConfig,
-    ) -> Box<dyn MemoryEstimation> {
+    ) -> Result<Box<dyn MemoryEstimation>, String> {
         let pipeline = self
             .pipeline_catalog
             .get_typed::<NodeRegressionTrainingPipeline>(
                 configuration.username(),
                 configuration.pipeline(),
-            )
-            .unwrap_or_else(|_| Arc::new(NodeRegressionTrainingPipeline::new()));
+            )?;
 
-        MemoryEstimations::builder("NodeRegressionTrain")
+        Ok(MemoryEstimations::builder("NodeRegressionTrain")
             .add(NodeRegressionTrain::estimate_pipeline(
                 &pipeline,
                 configuration,
             ))
-            .build()
+            .build())
     }
 
     /// Creates a progress task for pipeline training.
@@ -154,13 +153,15 @@ impl NodeRegressionTrainPipelineAlgorithmFactory {
         &self,
         graph_store: &DefaultGraphStore,
         config: &NodeRegressionPipelineTrainConfig,
-    ) -> Task {
+    ) -> Result<Task, String> {
         let pipeline = self
             .pipeline_catalog
-            .get_typed::<NodeRegressionTrainingPipeline>(config.username(), config.pipeline())
-            .unwrap_or_else(|_| Arc::new(NodeRegressionTrainingPipeline::new()));
+            .get_typed::<NodeRegressionTrainingPipeline>(config.username(), config.pipeline())?;
 
-        Self::progress_task_for_pipeline(&pipeline, graph_store.node_count() as u64)
+        Ok(Self::progress_task_for_pipeline(
+            &pipeline,
+            graph_store.node_count() as u64,
+        ))
     }
 
     /// Creates a progress task for a specific pipeline.
@@ -222,8 +223,7 @@ mod tests {
     }
 
     #[test]
-    #[should_panic(expected = "Missing target node property for regression")]
-    fn test_build_with_pipeline() {
+    fn test_build_with_pipeline_reports_missing_target_property() {
         let factory = NodeRegressionTrainPipelineAlgorithmFactory::new(
             ExecutionContext::empty(),
             "2.5.0".to_string(),
@@ -239,12 +239,14 @@ mod tests {
         let graph_store =
             Arc::new(DefaultGraphStore::random(&random_config).expect("random graph"));
 
-        let _algorithm = factory.build_with_pipeline(
+        let result = factory.build_with_pipeline(
             graph_store,
             config,
             pipeline,
             Box::new(NoopProgressTracker),
         );
+
+        assert!(matches!(result, Err(message) if message.contains("Missing target node property")));
     }
 
     #[test]
@@ -289,11 +291,33 @@ mod tests {
             vec![super::super::RegressionMetrics::MeanSquaredError],
         );
 
-        let task = factory.progress_task(&graph_store, &train_config);
+        let task = factory
+            .progress_task(&graph_store, &train_config)
+            .expect("cataloged pipeline should produce a progress task");
 
         assert_eq!(
             task.sub_tasks()[1].description(),
             "Cross-validation (5 folds, 0 trials)"
         );
+    }
+
+    #[test]
+    fn test_build_reports_missing_pipeline() {
+        let factory = NodeRegressionTrainPipelineAlgorithmFactory::new(
+            ExecutionContext::empty(),
+            "2.5.0".to_string(),
+            Arc::new(PipelineCatalog::new()),
+        );
+        let graph_store = Arc::new(
+            DefaultGraphStore::random(&RandomGraphConfig::default()).expect("random graph"),
+        );
+
+        let result = factory.build(
+            graph_store,
+            NodeRegressionPipelineTrainConfig::default(),
+            Box::new(NoopProgressTracker),
+        );
+
+        assert!(matches!(result, Err(message) if message.contains("does not exist")));
     }
 }

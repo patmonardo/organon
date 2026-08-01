@@ -32,6 +32,11 @@ pub trait NodePropertyPipelineBaseTrainConfig {
     /// Returns the random seed for reproducibility.
     fn random_seed(&self) -> Option<u64>;
 
+    /// Returns the concurrency used by pipeline feature-production steps.
+    fn concurrency(&self) -> usize {
+        1
+    }
+
     /// Resolves target node labels from the graph store.
     ///
     /// This handles the special case of "*" (all labels) and validates

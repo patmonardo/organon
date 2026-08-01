@@ -137,12 +137,20 @@ impl PipelineRepository {
         user: &User,
         pipeline_name: &PipelineName,
     ) -> Arc<NodeClassificationTrainingPipeline> {
+        self.try_get_node_classification_training_pipeline(user, pipeline_name)
+            .unwrap_or_else(|e| panic!("{e}"))
+    }
+
+    pub fn try_get_node_classification_training_pipeline(
+        &self,
+        user: &User,
+        pipeline_name: &PipelineName,
+    ) -> Result<Arc<NodeClassificationTrainingPipeline>, String> {
         self.pipeline_catalog
             .get_typed::<NodeClassificationTrainingPipeline>(
                 user.username(),
                 pipeline_name.as_str(),
             )
-            .unwrap_or_else(|e| panic!("{e}"))
     }
 
     pub fn get_node_regression_training_pipeline(
@@ -153,5 +161,29 @@ impl PipelineRepository {
         self.pipeline_catalog
             .get_typed::<NodeRegressionTrainingPipeline>(user.username(), pipeline_name.as_str())
             .unwrap_or_else(|e| panic!("{e}"))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn try_get_node_classification_pipeline_is_fallible_and_typed() {
+        let repository = PipelineRepository::new(Arc::new(PipelineCatalog::new()));
+        let user = User::from("alice");
+        let pipeline_name = PipelineName::parse("classification").expect("valid pipeline name");
+
+        assert!(repository
+            .try_get_node_classification_training_pipeline(&user, &pipeline_name)
+            .is_err());
+
+        let created =
+            repository.create_node_classification_training_pipeline(&user, &pipeline_name);
+        let retrieved = repository
+            .try_get_node_classification_training_pipeline(&user, &pipeline_name)
+            .expect("created pipeline should be retrievable");
+
+        assert!(Arc::ptr_eq(&created, &retrieved));
     }
 }

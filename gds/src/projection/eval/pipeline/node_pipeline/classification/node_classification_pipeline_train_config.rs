@@ -142,6 +142,10 @@ impl NodePropertyPipelineBaseTrainConfig for NodeClassificationPipelineTrainConf
     fn random_seed(&self) -> Option<u64> {
         self.random_seed
     }
+
+    fn concurrency(&self) -> usize {
+        self.concurrency
+    }
 }
 
 impl crate::config::ValidatedConfig for NodeClassificationPipelineTrainConfig {

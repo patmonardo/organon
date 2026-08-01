@@ -2,16 +2,16 @@ use super::node_classification_pipeline_train_config::NodeClassificationPipeline
 use super::node_classification_train::NodeClassificationTrain;
 use super::node_classification_train_algorithm::NodeClassificationTrainAlgorithm;
 use super::node_classification_training_pipeline::NodeClassificationTrainingPipeline;
-use crate::task::progress::tasks::progress_tracker::NoopProgressTracker;
-use crate::task::progress::tasks::progress_tracker::ProgressTracker;
-use crate::task::progress::tasks::Task;
-use crate::task::memory::MemoryEstimation;
-use crate::task::memory::MemoryEstimations;
 use crate::projection::eval::algorithm::ExecutionContext;
 use crate::projection::eval::pipeline::NodeFeatureProducer;
 use crate::projection::eval::pipeline::NodePropertyPipelineBaseTrainConfig;
 use crate::projection::eval::pipeline::Pipeline;
 use crate::projection::eval::pipeline::PipelineCatalog;
+use crate::task::memory::MemoryEstimation;
+use crate::task::memory::MemoryEstimations;
+use crate::task::progress::tasks::progress_tracker::NoopProgressTracker;
+use crate::task::progress::tasks::progress_tracker::ProgressTracker;
+use crate::task::progress::tasks::Task;
 use crate::types::graph_store::DefaultGraphStore;
 use crate::types::prelude::GraphStore;
 use std::sync::Arc;
@@ -58,14 +58,13 @@ impl NodeClassificationTrainPipelineAlgorithmFactory {
         graph_store: Arc<DefaultGraphStore>,
         configuration: NodeClassificationPipelineTrainConfig,
         progress_tracker: Box<dyn ProgressTracker>,
-    ) -> NodeClassificationTrainAlgorithm {
+    ) -> Result<NodeClassificationTrainAlgorithm, String> {
         let pipeline = self
             .pipeline_catalog
             .get_typed::<NodeClassificationTrainingPipeline>(
                 configuration.username(),
                 configuration.pipeline(),
-            )
-            .unwrap_or_else(|_| Arc::new(NodeClassificationTrainingPipeline::new()));
+            )?;
 
         self.build_with_pipeline(
             graph_store,
@@ -84,7 +83,7 @@ impl NodeClassificationTrainPipelineAlgorithmFactory {
         configuration: NodeClassificationPipelineTrainConfig,
         pipeline: NodeClassificationTrainingPipeline,
         progress_tracker: Box<dyn ProgressTracker>,
-    ) -> NodeClassificationTrainAlgorithm {
+    ) -> Result<NodeClassificationTrainAlgorithm, String> {
         // Note: Pipeline/metric validation will be wired in once the metrics system is translated.
         // validate_main_metric(&pipeline, &configuration.metrics()[0].to_string());
 
@@ -92,46 +91,48 @@ impl NodeClassificationTrainPipelineAlgorithmFactory {
             NodeFeatureProducer::create(graph_store.clone(), configuration.clone());
         node_feature_producer
             .validate_node_property_steps_context_configs(pipeline.node_property_steps())
-            .expect("Invalid node property step context configs");
+            .map_err(|error| error.to_string())?;
 
-        let trainer = Box::new(NodeClassificationTrain::create(
-            graph_store.clone(),
-            pipeline.clone(),
-            configuration.clone(),
-            node_feature_producer,
-            progress_tracker,
-        ));
+        let trainer = Box::new(
+            NodeClassificationTrain::try_create(
+                graph_store.clone(),
+                pipeline.clone(),
+                configuration.clone(),
+                node_feature_producer,
+                progress_tracker,
+            )
+            .map_err(|error| error.to_string())?,
+        );
 
         let algorithm_progress = Box::new(NoopProgressTracker);
 
-        NodeClassificationTrainAlgorithm::new(
+        Ok(NodeClassificationTrainAlgorithm::new(
             trainer,
             pipeline,
             graph_store,
             configuration,
             algorithm_progress,
-        )
+        ))
     }
 
     /// Estimate memory requirements for training.
     pub fn memory_estimation(
         &self,
         configuration: &NodeClassificationPipelineTrainConfig,
-    ) -> Box<dyn MemoryEstimation> {
+    ) -> Result<Box<dyn MemoryEstimation>, String> {
         let pipeline = self
             .pipeline_catalog
             .get_typed::<NodeClassificationTrainingPipeline>(
                 configuration.username(),
                 configuration.pipeline(),
-            )
-            .unwrap_or_else(|_| Arc::new(NodeClassificationTrainingPipeline::new()));
+            )?;
 
-        MemoryEstimations::builder("NodeClassificationTrain")
+        Ok(MemoryEstimations::builder("NodeClassificationTrain")
             .add(NodeClassificationTrain::estimate_pipeline(
                 &pipeline,
                 configuration,
             ))
-            .build()
+            .build())
     }
 
     /// Get task name for progress tracking.
@@ -144,13 +145,15 @@ impl NodeClassificationTrainPipelineAlgorithmFactory {
         &self,
         graph_store: &DefaultGraphStore,
         config: &NodeClassificationPipelineTrainConfig,
-    ) -> Task {
+    ) -> Result<Task, String> {
         let pipeline = self
             .pipeline_catalog
-            .get_typed::<NodeClassificationTrainingPipeline>(config.username(), config.pipeline())
-            .unwrap_or_else(|_| Arc::new(NodeClassificationTrainingPipeline::new()));
+            .get_typed::<NodeClassificationTrainingPipeline>(
+                config.username(),
+                config.pipeline(),
+            )?;
 
-        Self::progress_task_with_pipeline(graph_store, &pipeline)
+        Ok(Self::progress_task_with_pipeline(graph_store, &pipeline))
     }
 
     /// Create progress task with explicit pipeline.
@@ -216,6 +219,52 @@ mod tests {
     }
 
     #[test]
+    fn test_build_with_pipeline_reports_missing_target_property() {
+        let factory = NodeClassificationTrainPipelineAlgorithmFactory::new(
+            ExecutionContext::empty(),
+            "2.5.0".to_string(),
+            Arc::new(PipelineCatalog::new()),
+        );
+        let graph_store = Arc::new(
+            DefaultGraphStore::random(&RandomGraphConfig {
+                node_count: 10,
+                seed: Some(42),
+                ..RandomGraphConfig::default()
+            })
+            .expect("random graph"),
+        );
+
+        let result = factory.build_with_pipeline(
+            graph_store,
+            NodeClassificationPipelineTrainConfig::default(),
+            NodeClassificationTrainingPipeline::new(),
+            Box::new(NoopProgressTracker),
+        );
+
+        assert!(matches!(result, Err(message) if message.contains("Missing target node property")));
+    }
+
+    #[test]
+    fn test_build_reports_missing_pipeline() {
+        let factory = NodeClassificationTrainPipelineAlgorithmFactory::new(
+            ExecutionContext::empty(),
+            "2.5.0".to_string(),
+            Arc::new(PipelineCatalog::new()),
+        );
+        let graph_store = Arc::new(
+            DefaultGraphStore::random(&RandomGraphConfig::default()).expect("random graph"),
+        );
+
+        let result = factory.build(
+            graph_store,
+            NodeClassificationPipelineTrainConfig::default(),
+            Box::new(NoopProgressTracker),
+        );
+
+        assert!(matches!(result, Err(message) if message.contains("does not exist")));
+    }
+
+    #[test]
     fn test_progress_task() {
         let pipeline_catalog = Arc::new(PipelineCatalog::new());
         let mut pipeline = NodeClassificationTrainingPipeline::new();
@@ -249,7 +298,9 @@ mod tests {
             vec![],
         );
 
-        let task = factory.progress_task(&graph_store, &train_config);
+        let task = factory
+            .progress_task(&graph_store, &train_config)
+            .expect("cataloged pipeline");
 
         assert_eq!(
             task.sub_tasks()[1].description(),
@@ -284,8 +335,7 @@ mod tests {
         );
         let config = NodeClassificationPipelineTrainConfig::default();
 
-        // Should return placeholder for now
-        let _ = factory.memory_estimation(&config);
+        assert!(factory.memory_estimation(&config).is_err());
     }
 
     // Note: duplicated progress-task tests removed.

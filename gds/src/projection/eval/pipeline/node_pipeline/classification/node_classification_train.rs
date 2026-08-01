@@ -1,3 +1,4 @@
+use super::labels_and_class_counts_extractor::LabelsAndClassCountsError;
 use super::labels_and_class_counts_extractor::LabelsAndClassCountsExtractor;
 use super::node_classification_pipeline_train_config::NodeClassificationPipelineTrainConfig;
 use super::node_classification_train_result::NodeClassificationTrainResult;
@@ -9,7 +10,9 @@ use crate::ml::core::subgraph::LocalIdMap;
 use crate::ml::metrics::classification::ClassificationMetric;
 use crate::ml::metrics::ClassificationMetricSpecification;
 use crate::ml::metrics::{Metric, ModelSpecificMetricsHandler};
-use crate::ml::models::automl::create_trainer_config_from_map;
+use crate::ml::models::automl::{
+    create_trainer_config_from_map, RandomSearch, TunableTrainerConfig as MlTunableTrainerConfig,
+};
 use crate::ml::models::{
     base::TrainerConfigTrait, Classifier, ClassifierTrainerFactory, Features,
     TrainingMethod as MlTrainingMethod,
@@ -55,6 +58,60 @@ pub struct NodeClassificationTrain {
     progress_tracker: Box<dyn ProgressTracker>,
     termination_flag: TerminationFlag,
 }
+
+#[derive(Debug, PartialEq)]
+pub enum NodeClassificationTrainError {
+    InvalidTargetNodeLabels(String),
+    InvalidSplitConfiguration(String),
+    MissingTargetProperty(String),
+    MissingTargetValue {
+        node_id: i64,
+        property: String,
+    },
+    NonIntegerTargetValue {
+        node_id: i64,
+        property: String,
+    },
+    NegativeTargetValue {
+        node_id: i64,
+        property: String,
+        value: i64,
+    },
+}
+
+impl std::fmt::Display for NodeClassificationTrainError {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::InvalidTargetNodeLabels(message) => {
+                write!(formatter, "Invalid target node labels: {message}")
+            }
+            Self::InvalidSplitConfiguration(message) => {
+                write!(formatter, "Invalid split configuration: {message}")
+            }
+            Self::MissingTargetProperty(property) => {
+                write!(formatter, "Missing target node property `{property}`")
+            }
+            Self::MissingTargetValue { node_id, property } => write!(
+                formatter,
+                "Node with id {node_id} has no `{property}` classification target value"
+            ),
+            Self::NonIntegerTargetValue { node_id, property } => write!(
+                formatter,
+                "Node with id {node_id} has a non-integer `{property}` classification target value"
+            ),
+            Self::NegativeTargetValue {
+                node_id,
+                property,
+                value,
+            } => write!(
+                formatter,
+                "Node with id {node_id} has negative `{property}` classification target value {value}"
+            ),
+        }
+    }
+}
+
+impl std::error::Error for NodeClassificationTrainError {}
 
 impl NodeClassificationTrain {
     /// Estimate memory requirements for training.
@@ -149,10 +206,29 @@ impl NodeClassificationTrain {
         node_feature_producer: NodeFeatureProducer<NodeClassificationPipelineTrainConfig>,
         progress_tracker: Box<dyn ProgressTracker>,
     ) -> Self {
+        Self::try_create(
+            graph_store,
+            pipeline,
+            config,
+            node_feature_producer,
+            progress_tracker,
+        )
+        .expect("Invalid node classification training configuration")
+    }
+
+    pub fn try_create(
+        graph_store: Arc<DefaultGraphStore>,
+        pipeline: NodeClassificationTrainingPipeline,
+        config: NodeClassificationPipelineTrainConfig,
+        node_feature_producer: NodeFeatureProducer<NodeClassificationPipelineTrainConfig>,
+        progress_tracker: Box<dyn ProgressTracker>,
+    ) -> Result<Self, NodeClassificationTrainError> {
         let node_graph = graph_store.get_graph();
         let target_node_labels = config
             .validate_target_node_label_identifiers(&graph_store)
-            .expect("Invalid target node labels for classification");
+            .map_err(|error| {
+                NodeClassificationTrainError::InvalidTargetNodeLabels(error.to_string())
+            })?;
         let target_node_ids = node_graph
             .iter_with_labels(&target_node_labels)
             .map(|node_id| node_id as u64)
@@ -161,17 +237,49 @@ impl NodeClassificationTrain {
         pipeline
             .split_config()
             .validate_min_num_nodes_in_split_sets(target_node_ids.len())
-            .expect("Invalid split configuration for node count");
+            .map_err(NodeClassificationTrainError::InvalidSplitConfiguration)?;
 
         let target_node_property = node_graph
             .node_properties(config.target_property())
-            .expect("Missing target node property for classification");
+            .ok_or_else(|| {
+                NodeClassificationTrainError::MissingTargetProperty(
+                    config.target_property().to_string(),
+                )
+            })?;
 
         let labels_and_counts =
             LabelsAndClassCountsExtractor::extract_labels_and_class_counts_for_node_ids(
                 target_node_property.as_ref(),
                 &target_node_ids,
-            );
+            )
+            .map_err(|error| {
+                let original_node_id = |node_id: u64| {
+                    node_graph
+                        .to_original_node_id(node_id as i64)
+                        .unwrap_or(node_id as i64)
+                };
+                match error {
+                    LabelsAndClassCountsError::MissingValue(node_id) => {
+                        NodeClassificationTrainError::MissingTargetValue {
+                            node_id: original_node_id(node_id),
+                            property: config.target_property().to_string(),
+                        }
+                    }
+                    LabelsAndClassCountsError::NonIntegerValue(node_id) => {
+                        NodeClassificationTrainError::NonIntegerTargetValue {
+                            node_id: original_node_id(node_id),
+                            property: config.target_property().to_string(),
+                        }
+                    }
+                    LabelsAndClassCountsError::NegativeValue { node_id, value } => {
+                        NodeClassificationTrainError::NegativeTargetValue {
+                            node_id: original_node_id(node_id),
+                            property: config.target_property().to_string(),
+                            value,
+                        }
+                    }
+                }
+            })?;
 
         let class_counts = labels_and_counts.class_counts().clone();
         let targets = labels_and_counts.labels().clone();
@@ -186,7 +294,7 @@ impl NodeClassificationTrain {
 
         let termination_flag = TerminationFlag::running_true();
 
-        Self {
+        Ok(Self {
             pipeline,
             train_config: config,
             targets,
@@ -197,7 +305,7 @@ impl NodeClassificationTrain {
             node_feature_producer,
             progress_tracker,
             termination_flag,
-        }
+        })
     }
 
     /// Set termination flag for early stopping.
@@ -221,8 +329,9 @@ impl NodeClassificationTrain {
                 .collect::<HashMap<_, _>>(),
         );
 
+        let concurrency = Concurrency::of(self.train_config.concurrency());
         let node_splitter = NodeSplitter::new(
-            Concurrency::available_cores(),
+            concurrency,
             node_count,
             Arc::new({
                 let graph = Arc::clone(&self.node_graph);
@@ -275,12 +384,10 @@ impl NodeClassificationTrain {
         let distinct_targets: BTreeSet<i64> =
             (0..self.class_id_map.size()).map(|v| v as i64).collect();
 
-        let candidates = self.collect_candidate_configs();
+        let candidates = self.collect_candidate_configs()?;
         let candidate_configs_for_cv: Vec<Box<dyn TrainerConfigTrait>> = candidates
             .iter()
-            .map(|(method, config_map)| {
-                create_trainer_config_from_map(config_map.clone(), map_training_method(*method))
-            })
+            .map(|(method, config_map)| create_trainer_config_from_map(config_map.clone(), *method))
             .collect();
 
         let cv_termination_flag = Arc::new(RwLock::new(false));
@@ -305,7 +412,7 @@ impl NodeClassificationTrain {
                         class_count,
                         &termination_flag,
                         &progress_tracker,
-                        &Concurrency::available_cores(),
+                        &concurrency,
                         random_seed,
                         false,
                         metrics_handler,
@@ -355,8 +462,7 @@ impl NodeClassificationTrain {
         let (best_method, best_map) = candidates
             .get(best_idx)
             .expect("At least one trainer config is required");
-        let best_config =
-            create_trainer_config_from_map(best_map.clone(), map_training_method(*best_method));
+        let best_config = create_trainer_config_from_map(best_map.clone(), *best_method);
 
         let classifier = self.train_simple_model(
             node_splits.outer_split(),
@@ -446,7 +552,7 @@ impl NodeClassificationTrain {
             self.class_id_map.size(),
             &self.termination_flag,
             &*self.progress_tracker,
-            &Concurrency::available_cores(),
+            &Concurrency::of(self.train_config.concurrency()),
             self.train_config.random_seed(),
             false,
             &ModelSpecificMetricsHandler::noop(),
@@ -467,7 +573,7 @@ impl NodeClassificationTrain {
             self.class_id_map.size(),
             &self.termination_flag,
             &*self.progress_tracker,
-            &Concurrency::available_cores(),
+            &Concurrency::of(self.train_config.concurrency()),
             self.train_config.random_seed(),
             false,
             &ModelSpecificMetricsHandler::noop(),
@@ -504,45 +610,49 @@ impl NodeClassificationTrain {
 
     fn collect_candidate_configs(
         &self,
-    ) -> Vec<(PipelineTrainingMethod, HashMap<String, serde_json::Value>)> {
-        let mut candidates: Vec<(PipelineTrainingMethod, HashMap<String, serde_json::Value>)> =
-            Vec::new();
+    ) -> Result<
+        Vec<(MlTrainingMethod, HashMap<String, serde_json::Value>)>,
+        Box<dyn std::error::Error + Send + Sync>,
+    > {
+        let mut parameter_space = HashMap::new();
 
         for (method, configs) in self.pipeline.training_parameter_space() {
-            if configs.is_empty() {
-                candidates.push((*method, HashMap::<String, serde_json::Value>::new()));
-                continue;
-            }
-
+            let ml_method = map_training_method(*method)?;
+            let method_configs = parameter_space.entry(ml_method).or_insert_with(Vec::new);
             for cfg in configs {
-                candidates.push((*method, cfg.to_map()));
+                let tunable = MlTunableTrainerConfig::of(&cfg.to_map(), ml_method)
+                    .map_err(|error| format!("Invalid {method} parameter space: {error}"))?;
+                method_configs.push(tunable);
             }
         }
 
-        if candidates.is_empty() {
-            candidates.push((
-                PipelineTrainingMethod::MLPClassification,
-                HashMap::<String, serde_json::Value>::new(),
-            ));
+        if parameter_space.values().all(Vec::is_empty) {
+            return Err("Need at least one classification model candidate for training.".into());
         }
 
-        let max_trials = self.pipeline.auto_tuning_config().max_trials();
-        if max_trials > 0 && candidates.len() > max_trials {
-            candidates.truncate(max_trials);
-        }
+        let candidates = RandomSearch::new_with_seed(
+            parameter_space,
+            self.pipeline.auto_tuning_config().max_trials(),
+            self.train_config.random_seed(),
+        )
+        .map(|config| (config.method(), config.to_map()))
+        .collect();
 
-        candidates
+        Ok(candidates)
     }
 }
 
-fn map_training_method(method: PipelineTrainingMethod) -> MlTrainingMethod {
+fn map_training_method(method: PipelineTrainingMethod) -> Result<MlTrainingMethod, String> {
     match method {
-        PipelineTrainingMethod::LogisticRegression => MlTrainingMethod::LogisticRegression,
+        PipelineTrainingMethod::LogisticRegression => Ok(MlTrainingMethod::LogisticRegression),
         PipelineTrainingMethod::RandomForestClassification => {
-            MlTrainingMethod::RandomForestClassification
+            Ok(MlTrainingMethod::RandomForestClassification)
         }
-        PipelineTrainingMethod::MLPClassification => MlTrainingMethod::MLPClassification,
-        other => panic!("Unsupported training method for classification: {other:?}"),
+        PipelineTrainingMethod::SVMClassification => Ok(MlTrainingMethod::SVMClassification),
+        PipelineTrainingMethod::MLPClassification => Ok(MlTrainingMethod::MLPClassification),
+        other => Err(format!(
+            "Unsupported training method for classification: {other:?}"
+        )),
     }
 }
 
@@ -725,14 +835,38 @@ fn evaluate_metrics(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::collections::backends::vec::VecDouble;
     use crate::collections::backends::vec::VecLong;
     use crate::core::graph_dimensions::ConcreteGraphDimensions;
     use crate::core::model::EmptyModelCatalog;
+    use crate::projection::eval::pipeline::NodeFeatureStep;
+    use crate::projection::eval::pipeline::TunableTrainerConfig;
     use crate::task::progress::NoopProgressTracker;
     use crate::types::graph_store::DefaultGraphStore;
+    use crate::types::properties::node::DefaultDoubleNodePropertyValues;
     use crate::types::properties::node::DefaultLongNodePropertyValues;
     use crate::types::random::RandomGraphConfig;
     use std::sync::Arc;
+
+    #[derive(Clone)]
+    struct TestClassificationTrainerConfig {
+        method: PipelineTrainingMethod,
+        parameters: HashMap<String, serde_json::Value>,
+    }
+
+    impl TunableTrainerConfig for TestClassificationTrainerConfig {
+        fn training_method(&self) -> PipelineTrainingMethod {
+            self.method
+        }
+
+        fn is_concrete(&self) -> bool {
+            !self.parameters.values().any(serde_json::Value::is_object)
+        }
+
+        fn to_map(&self) -> HashMap<String, serde_json::Value> {
+            self.parameters.clone()
+        }
+    }
 
     #[test]
     #[ignore]
@@ -876,8 +1010,209 @@ mod tests {
     }
 
     #[test]
-    #[should_panic(expected = "Missing target node property for classification")]
-    fn test_run() {
+    fn test_run_materializes_tunable_logistic_regression_candidates() {
+        let mut graph_store = DefaultGraphStore::random(&RandomGraphConfig {
+            seed: Some(42),
+            node_count: 60,
+            ..RandomGraphConfig::default()
+        })
+        .expect("random graph");
+        let node_count = graph_store.node_count();
+        let labels = graph_store.node_labels();
+        let features = Arc::new(DefaultLongNodePropertyValues::from_collection(
+            VecLong::from(
+                (0..node_count)
+                    .map(|node_id| (node_id % 2) as i64)
+                    .collect::<Vec<_>>(),
+            ),
+            node_count,
+        ));
+        let targets = Arc::new(DefaultLongNodePropertyValues::from_collection(
+            VecLong::from(
+                (0..node_count)
+                    .map(|node_id| (node_id % 2) as i64)
+                    .collect::<Vec<_>>(),
+            ),
+            node_count,
+        ));
+        graph_store
+            .add_node_property(labels.clone(), "feature", features)
+            .expect("feature property");
+        graph_store
+            .add_node_property(labels, "target", targets)
+            .expect("target property");
+
+        let mut pipeline = NodeClassificationTrainingPipeline::new();
+        pipeline.add_feature_step(NodeFeatureStep::of("feature"));
+        pipeline.add_trainer_config(Box::new(TestClassificationTrainerConfig {
+            method: PipelineTrainingMethod::LogisticRegression,
+            parameters: HashMap::from([
+                (
+                    "penalty".to_string(),
+                    serde_json::json!({"range": [0.001, 0.1]}),
+                ),
+                (
+                    "learningRate".to_string(),
+                    serde_json::json!({"range": [0.01, 0.05]}),
+                ),
+                (
+                    "maxEpochs".to_string(),
+                    serde_json::json!({"range": [50, 100]}),
+                ),
+            ]),
+        }));
+        pipeline.set_auto_tuning_config(
+            crate::projection::eval::pipeline::AutoTuningConfig::new(3)
+                .expect("valid AutoML trial count"),
+        );
+
+        let graph_store = Arc::new(graph_store);
+        let config = NodeClassificationPipelineTrainConfig::new(
+            "test-pipeline".to_string(),
+            vec!["*".to_string()],
+            "target".to_string(),
+            Some(42),
+            vec![],
+        )
+        .with_concurrency(1);
+        let producer = NodeFeatureProducer::create(Arc::clone(&graph_store), config.clone());
+        let mut trainer = NodeClassificationTrain::create(
+            graph_store,
+            pipeline,
+            config,
+            producer,
+            Box::new(NoopProgressTracker),
+        );
+
+        let result = trainer
+            .run()
+            .expect("AutoML classification training should run");
+        let statistics = result.training_statistics();
+        let statistics_map = statistics.to_map();
+        let candidates = statistics_map["modelCandidates"]
+            .as_array()
+            .expect("model candidate statistics");
+        let best_parameters = statistics.best_parameters();
+
+        assert_eq!(candidates.len(), 3);
+        assert_eq!(best_parameters["method"], "LogisticRegression");
+        assert!((0.001..0.1).contains(
+            &best_parameters["penalty"]
+                .as_f64()
+                .expect("materialized penalty")
+        ));
+        assert!((0.01..0.05).contains(
+            &best_parameters["learning_rate"]
+                .as_f64()
+                .expect("materialized learning rate")
+        ));
+        assert!((50..100).contains(
+            &best_parameters["max_epochs"]
+                .as_u64()
+                .expect("materialized max epochs")
+        ));
+    }
+
+    #[test]
+    fn test_run_materializes_tunable_random_forest_candidates() {
+        let mut graph_store = DefaultGraphStore::random(&RandomGraphConfig {
+            seed: Some(42),
+            node_count: 60,
+            ..RandomGraphConfig::default()
+        })
+        .expect("random graph");
+        let node_count = graph_store.node_count();
+        let labels = graph_store.node_labels();
+        let features = Arc::new(DefaultLongNodePropertyValues::from_collection(
+            VecLong::from(
+                (0..node_count)
+                    .map(|node_id| (node_id % 2) as i64)
+                    .collect::<Vec<_>>(),
+            ),
+            node_count,
+        ));
+        let targets = Arc::new(DefaultLongNodePropertyValues::from_collection(
+            VecLong::from(
+                (0..node_count)
+                    .map(|node_id| (node_id % 2) as i64)
+                    .collect::<Vec<_>>(),
+            ),
+            node_count,
+        ));
+        graph_store
+            .add_node_property(labels.clone(), "feature", features)
+            .expect("feature property");
+        graph_store
+            .add_node_property(labels, "target", targets)
+            .expect("target property");
+
+        let mut pipeline = NodeClassificationTrainingPipeline::new();
+        pipeline.add_feature_step(NodeFeatureStep::of("feature"));
+        pipeline.add_trainer_config(Box::new(TestClassificationTrainerConfig {
+            method: PipelineTrainingMethod::RandomForestClassification,
+            parameters: HashMap::from([
+                (
+                    "numberOfDecisionTrees".to_string(),
+                    serde_json::json!({"range": [3, 6]}),
+                ),
+                ("maxDepth".to_string(), serde_json::json!({"range": [2, 4]})),
+                ("numberOfSamplesRatio".to_string(), serde_json::json!(1.0)),
+                ("maxFeaturesRatio".to_string(), serde_json::json!(1.0)),
+            ]),
+        }));
+        pipeline.set_auto_tuning_config(
+            crate::projection::eval::pipeline::AutoTuningConfig::new(2)
+                .expect("valid AutoML trial count"),
+        );
+
+        let graph_store = Arc::new(graph_store);
+        let config = NodeClassificationPipelineTrainConfig::new(
+            "test-pipeline".to_string(),
+            vec!["*".to_string()],
+            "target".to_string(),
+            Some(42),
+            vec![],
+        )
+        .with_concurrency(1);
+        let producer = NodeFeatureProducer::create(Arc::clone(&graph_store), config.clone());
+        let mut trainer = NodeClassificationTrain::try_create(
+            graph_store,
+            pipeline,
+            config,
+            producer,
+            Box::new(NoopProgressTracker),
+        )
+        .expect("valid classification trainer");
+
+        let result = trainer
+            .run()
+            .expect("AutoML random-forest classification training should run");
+        let statistics = result.training_statistics();
+        let statistics_map = statistics.to_map();
+        let candidates = statistics_map["modelCandidates"]
+            .as_array()
+            .expect("model candidate statistics");
+        let best_parameters = statistics.best_parameters();
+
+        assert_eq!(candidates.len(), 2);
+        assert_eq!(best_parameters["method"], "RandomForestClassification");
+        assert!((3..6).contains(
+            &best_parameters["numberOfDecisionTrees"]
+                .as_u64()
+                .expect("materialized tree count")
+        ));
+        assert!((2..4).contains(
+            &best_parameters["maxDepth"]
+                .as_u64()
+                .expect("materialized max depth")
+        ));
+        assert!(statistics
+            .winning_model_test_metrics()
+            .contains_key("ACCURACY"));
+    }
+
+    #[test]
+    fn test_try_create_reports_missing_target_property() {
         let config = RandomGraphConfig {
             node_count: 10,
             seed: Some(42),
@@ -891,7 +1226,7 @@ mod tests {
             NodeFeatureProducer::create(graph_store.clone(), config.clone());
         let progress_tracker = Box::new(NoopProgressTracker);
 
-        let mut trainer = NodeClassificationTrain::create(
+        let result = NodeClassificationTrain::try_create(
             graph_store,
             pipeline,
             config,
@@ -899,6 +1234,93 @@ mod tests {
             progress_tracker,
         );
 
-        let _result = trainer.run();
+        assert!(matches!(
+            result,
+            Err(NodeClassificationTrainError::MissingTargetProperty(property))
+                if property == "target"
+        ));
+    }
+
+    #[test]
+    fn test_try_create_reports_non_integer_target_value() {
+        let mut graph_store = DefaultGraphStore::random(&RandomGraphConfig {
+            node_count: 10,
+            seed: Some(42),
+            ..RandomGraphConfig::default()
+        })
+        .expect("random graph");
+        let node_count = graph_store.node_count();
+        graph_store
+            .add_node_property(
+                graph_store.node_labels(),
+                "target",
+                Arc::new(DefaultDoubleNodePropertyValues::from_collection(
+                    VecDouble::from(vec![1.5; node_count]),
+                    node_count,
+                )),
+            )
+            .expect("target property");
+        let graph_store = Arc::new(graph_store);
+        let config = NodeClassificationPipelineTrainConfig::default();
+        let producer = NodeFeatureProducer::create(Arc::clone(&graph_store), config.clone());
+
+        let result = NodeClassificationTrain::try_create(
+            graph_store,
+            NodeClassificationTrainingPipeline::new(),
+            config,
+            producer,
+            Box::new(NoopProgressTracker),
+        );
+
+        assert!(matches!(
+            result,
+            Err(NodeClassificationTrainError::NonIntegerTargetValue {
+                property,
+                ..
+            }) if property == "target"
+        ));
+    }
+
+    #[test]
+    fn test_try_create_reports_negative_target_value() {
+        let mut graph_store = DefaultGraphStore::random(&RandomGraphConfig {
+            node_count: 10,
+            seed: Some(42),
+            ..RandomGraphConfig::default()
+        })
+        .expect("random graph");
+        let node_count = graph_store.node_count();
+        let mut targets = vec![0; node_count];
+        targets[3] = -1;
+        graph_store
+            .add_node_property(
+                graph_store.node_labels(),
+                "target",
+                Arc::new(DefaultLongNodePropertyValues::from_collection(
+                    VecLong::from(targets),
+                    node_count,
+                )),
+            )
+            .expect("target property");
+        let graph_store = Arc::new(graph_store);
+        let config = NodeClassificationPipelineTrainConfig::default();
+        let producer = NodeFeatureProducer::create(Arc::clone(&graph_store), config.clone());
+
+        let result = NodeClassificationTrain::try_create(
+            graph_store,
+            NodeClassificationTrainingPipeline::new(),
+            config,
+            producer,
+            Box::new(NoopProgressTracker),
+        );
+
+        assert!(matches!(
+            result,
+            Err(NodeClassificationTrainError::NegativeTargetValue {
+                property,
+                value: -1,
+                ..
+            }) if property == "target"
+        ));
     }
 }

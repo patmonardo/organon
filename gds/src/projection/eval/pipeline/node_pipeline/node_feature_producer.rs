@@ -60,25 +60,29 @@ impl<C: NodePropertyPipelineBaseTrainConfig> NodeFeatureProducer<C> {
             node_labels_config
         };
 
-        let mut relationship_types: Vec<String> = graph_store
+        let mut available_relationship_types: Vec<String> = graph_store
             .relationship_types()
             .into_iter()
             .map(|t| t.name().to_string())
             .collect();
-        relationship_types.sort();
+        available_relationship_types.sort();
 
+        let configured_relationship_types = config.relationship_types();
+        let relationship_types = if configured_relationship_types.is_empty()
+            || (configured_relationship_types.len() == 1 && configured_relationship_types[0] == "*")
+        {
+            available_relationship_types.clone()
+        } else {
+            configured_relationship_types
+        };
         let available_relationship_types: HashSet<String> =
-            relationship_types.iter().cloned().collect();
-
-        let concurrency = std::thread::available_parallelism()
-            .map(|n| n.get())
-            .unwrap_or(1);
+            available_relationship_types.into_iter().collect();
 
         let step_executor = NodePropertyStepExecutor::new(
             node_labels,
             relationship_types,
             available_relationship_types,
-            concurrency,
+            config.concurrency(),
         );
 
         Self::new(step_executor, graph_store, config)
@@ -99,62 +103,70 @@ impl<C: NodePropertyPipelineBaseTrainConfig> NodeFeatureProducer<C> {
     ) -> Result<Box<dyn Features>, NodeFeatureProducerError> {
         let has_steps = !pipeline.node_property_steps().is_empty();
 
-        // Execute node property steps to compute intermediate properties
-        if has_steps {
-            self.step_executor
-                .execute_node_property_steps(&mut self.graph_store, pipeline.node_property_steps())
-                .map_err(NodeFeatureProducerError::StepExecutionFailed)?;
-        }
+        let result = (|| {
+            if has_steps {
+                self.step_executor
+                    .execute_node_property_steps(
+                        &mut self.graph_store,
+                        pipeline.node_property_steps(),
+                    )
+                    .map_err(NodeFeatureProducerError::StepExecutionFailed)?;
+            }
 
-        // Get target node labels
-        let target_node_label_set = self
-            .train_config
-            .validate_target_node_label_identifiers(&self.graph_store)
-            .map_err(|e| NodeFeatureProducerError::TargetLabelValidationFailed(e.to_string()))?;
-        let mut target_node_labels: Vec<String> = target_node_label_set
-            .into_iter()
-            .map(|l| l.name().to_string())
-            .collect();
-        target_node_labels.sort();
-        let target_node_label_set = target_node_labels
-            .iter()
-            .map(|label| crate::types::schema::NodeLabel::of(label.as_str()))
-            .collect();
+            let target_node_label_set = self
+                .train_config
+                .validate_target_node_label_identifiers(&self.graph_store)
+                .map_err(|e| {
+                    NodeFeatureProducerError::TargetLabelValidationFailed(e.to_string())
+                })?;
+            let mut target_node_labels: Vec<String> = target_node_label_set
+                .into_iter()
+                .map(|label| label.name().to_string())
+                .collect();
+            target_node_labels.sort();
+            let target_node_label_set = target_node_labels
+                .iter()
+                .map(|label| crate::types::schema::NodeLabel::of(label.as_str()))
+                .collect();
 
-        pipeline
-            .validate_feature_properties(&self.graph_store, &target_node_labels)
-            .map_err(|e| NodeFeatureProducerError::FeatureValidationFailed(e.to_string()))?;
+            pipeline
+                .validate_feature_properties(&self.graph_store, &target_node_labels)
+                .map_err(|e| NodeFeatureProducerError::FeatureValidationFailed(e.to_string()))?;
 
-        let target_graph = self.graph_store.get_graph();
-        let target_node_ids = target_graph
-            .iter_with_labels(&target_node_label_set)
-            .map(|node_id| node_id as u64)
-            .collect::<Vec<_>>();
-        let features = if pipeline.require_eager_features() {
-            FeaturesFactory::extract_eager_features_for_node_ids(
-                target_graph,
-                &pipeline.feature_properties(),
-                target_node_ids,
+            let target_graph = self.graph_store.get_graph();
+            let target_node_ids = target_graph
+                .iter_with_labels(&target_node_label_set)
+                .map(|node_id| node_id as u64)
+                .collect::<Vec<_>>();
+            if pipeline.require_eager_features() {
+                Ok(FeaturesFactory::extract_eager_features_for_node_ids(
+                    target_graph,
+                    &pipeline.feature_properties(),
+                    target_node_ids,
+                ))
+            } else {
+                Ok(FeaturesFactory::extract_lazy_features_for_node_ids(
+                    target_graph,
+                    &pipeline.feature_properties(),
+                    target_node_ids,
+                ))
+            }
+        })();
+
+        let cleanup_result = if has_steps {
+            self.step_executor.cleanup_intermediate_properties(
+                &mut self.graph_store,
+                pipeline.node_property_steps(),
             )
         } else {
-            FeaturesFactory::extract_lazy_features_for_node_ids(
-                target_graph,
-                &pipeline.feature_properties(),
-                target_node_ids,
-            )
+            Ok(())
         };
 
-        // Cleanup intermediate properties (only if steps executed)
-        if has_steps {
-            self.step_executor
-                .cleanup_intermediate_properties(
-                    &mut self.graph_store,
-                    pipeline.node_property_steps(),
-                )
-                .map_err(NodeFeatureProducerError::CleanupFailed)?;
+        match (result, cleanup_result) {
+            (Ok(features), Ok(())) => Ok(features),
+            (Ok(_), Err(error)) => Err(NodeFeatureProducerError::CleanupFailed(error)),
+            (Err(error), _) => Err(error),
         }
-
-        Ok(features)
     }
 
     /// Validates node property step context configurations.
@@ -252,6 +264,8 @@ mod tests {
     use crate::projection::eval::pipeline::node_pipeline::{
         NodeFeatureStep, NodePropertyPredictionSplitConfig,
     };
+    use crate::projection::eval::pipeline::node_property_step::DEBUG_WRITE_CONSTANT_DOUBLE_MUTATE;
+    use crate::projection::eval::pipeline::node_property_step::MUTATE_PROPERTY_KEY;
     use crate::projection::eval::pipeline::training_pipeline::TunableTrainerConfig;
     use crate::projection::eval::pipeline::{Pipeline, PipelineValidationError, TrainingMethod};
     use crate::types::random::RandomGraphConfig;
@@ -285,6 +299,7 @@ mod tests {
     }
 
     struct FeatureOnlyPipeline {
+        node_property_steps: Vec<Box<dyn ExecutableNodePropertyStep>>,
         feature_steps: Vec<NodeFeatureStep>,
         split_config: NodePropertyPredictionSplitConfig,
         training_parameter_space: HashMap<TrainingMethod, Vec<Box<dyn TunableTrainerConfig>>>,
@@ -295,6 +310,7 @@ mod tests {
     impl FeatureOnlyPipeline {
         fn new(feature_property: &str, eager_features: bool) -> Self {
             Self {
+                node_property_steps: Vec::new(),
                 feature_steps: vec![NodeFeatureStep::of(feature_property)],
                 split_config: NodePropertyPredictionSplitConfig::default(),
                 training_parameter_space: HashMap::new(),
@@ -312,7 +328,7 @@ mod tests {
         }
 
         fn node_property_steps(&self) -> &[Box<dyn ExecutableNodePropertyStep>] {
-            &[]
+            &self.node_property_steps
         }
 
         fn feature_steps(&self) -> &[Self::FeatureStep] {
@@ -465,5 +481,43 @@ mod tests {
             .expect("features should extract for target labels");
 
         assert_eq!(features.size(), target_count);
+    }
+
+    #[test]
+    fn test_procedure_features_cleans_steps_after_feature_validation_failure() {
+        let mut graph_store =
+            DefaultGraphStore::random(&RandomGraphConfig::default().with_seed(42))
+                .expect("random graph");
+        graph_store
+            .add_node_label(crate::projection::NodeLabel::of("Node"))
+            .expect("add node label");
+
+        let config = MockTrainConfig {
+            pipeline_name: "test-pipeline".to_string(),
+            target_labels: vec!["Node".to_string()],
+            target_prop: "target".to_string(),
+        };
+        let mut pipeline = FeatureOnlyPipeline::new("missingFeature", false);
+        let mut step_config = HashMap::new();
+        step_config.insert(
+            MUTATE_PROPERTY_KEY.to_string(),
+            Value::String("temporaryFeature".to_string()),
+        );
+        step_config.insert("value".to_string(), serde_json::json!(3.0));
+        pipeline.node_property_steps.push(Box::new(
+            crate::projection::eval::pipeline::NodePropertyStep::new(
+                DEBUG_WRITE_CONSTANT_DOUBLE_MUTATE.to_string(),
+                step_config,
+            ),
+        ));
+
+        let mut producer = NodeFeatureProducer::create(Arc::new(graph_store), config);
+        let result = producer.procedure_features(&pipeline);
+
+        assert!(matches!(
+            result,
+            Err(NodeFeatureProducerError::FeatureValidationFailed(_))
+        ));
+        assert!(!producer.graph_store.has_node_property("temporaryFeature"));
     }
 }

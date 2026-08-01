@@ -38,16 +38,20 @@ impl RandomSearch {
         max_trials: usize,
         random_seed: Option<u64>,
     ) -> Self {
-        let concrete_configs: Vec<TunableTrainerConfig> = parameter_space
-            .values()
-            .flatten()
+        let mut ordered_parameter_space: Vec<_> = parameter_space.into_iter().collect();
+        ordered_parameter_space.sort_by_key(|(method, _)| training_method_rank(*method));
+        let ordered_configs: Vec<TunableTrainerConfig> = ordered_parameter_space
+            .into_iter()
+            .flat_map(|(_, configs)| configs)
+            .collect();
+        let concrete_configs: Vec<TunableTrainerConfig> = ordered_configs
+            .iter()
             .filter(|config| config.is_concrete())
             .cloned()
             .collect();
 
-        let tunable_configs: Vec<TunableTrainerConfig> = parameter_space
-            .values()
-            .flatten()
+        let tunable_configs: Vec<TunableTrainerConfig> = ordered_configs
+            .iter()
             .filter(|config| !config.is_concrete())
             .cloned()
             .collect();
@@ -94,26 +98,25 @@ impl RandomSearch {
 
     fn sample(&mut self, tunable_config: &TunableTrainerConfig) -> Box<dyn TrainerConfig> {
         let mut hyper_parameter_values = HashMap::new();
-        tunable_config
-            .double_ranges()
-            .iter()
-            .for_each(|(name, range)| {
-                hyper_parameter_values.insert(
-                    name.clone(),
-                    serde_json::Value::Number(
-                        serde_json::Number::from_f64(self.sample_double(range)).unwrap(),
-                    ),
-                );
-            });
-        tunable_config
-            .integer_ranges()
-            .iter()
-            .for_each(|(name, range)| {
-                hyper_parameter_values.insert(
-                    name.clone(),
-                    serde_json::Value::Number(self.sample_integer(range).into()),
-                );
-            });
+        let mut double_ranges: Vec<_> = tunable_config.double_ranges().iter().collect();
+        double_ranges.sort_by_key(|(name, _)| *name);
+        for (name, range) in double_ranges {
+            hyper_parameter_values.insert(
+                name.clone(),
+                serde_json::Value::Number(
+                    serde_json::Number::from_f64(self.sample_double(range)).unwrap(),
+                ),
+            );
+        }
+
+        let mut integer_ranges: Vec<_> = tunable_config.integer_ranges().iter().collect();
+        integer_ranges.sort_by_key(|(name, _)| *name);
+        for (name, range) in integer_ranges {
+            hyper_parameter_values.insert(
+                name.clone(),
+                serde_json::Value::Number(self.sample_integer(range).into()),
+            );
+        }
         tunable_config.materialize(hyper_parameter_values)
     }
 }
@@ -123,7 +126,7 @@ impl Iterator for RandomSearch {
 
     fn next(&mut self) -> Option<Self::Item> {
         if !self.has_next() {
-            panic!("RandomSearch has already exhausted the maximum trials or the parameter space.");
+            return None;
         }
 
         let config = if self.number_of_finished_trials < self.concrete_configs.len() {
@@ -143,3 +146,98 @@ impl Iterator for RandomSearch {
 }
 
 impl HyperParameterOptimizer for RandomSearch {}
+
+fn training_method_rank(method: TrainingMethod) -> usize {
+    match method {
+        TrainingMethod::LogisticRegression => 0,
+        TrainingMethod::LinearRegression => 1,
+        TrainingMethod::RandomForestClassification => 2,
+        TrainingMethod::RandomForestRegression => 3,
+        TrainingMethod::SVMClassification => 4,
+        TrainingMethod::MLPClassification => 5,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde_json::json;
+
+    fn tunable_linear_config() -> TunableTrainerConfig {
+        TunableTrainerConfig::of(
+            &HashMap::from([
+                ("penalty".to_string(), json!({"range": [0.01, 1.0]})),
+                ("learningRate".to_string(), json!({"range": [0.001, 0.1]})),
+                ("maxEpochs".to_string(), json!({"range": [10, 50]})),
+            ]),
+            TrainingMethod::LinearRegression,
+        )
+        .expect("valid linear parameter ranges")
+    }
+
+    fn tunable_random_forest_config() -> TunableTrainerConfig {
+        TunableTrainerConfig::of(
+            &HashMap::from([
+                (
+                    "numberOfDecisionTrees".to_string(),
+                    json!({"range": [2, 8]}),
+                ),
+                ("maxDepth".to_string(), json!({"range": [2, 6]})),
+            ]),
+            TrainingMethod::RandomForestRegression,
+        )
+        .expect("valid random forest parameter ranges")
+    }
+
+    #[test]
+    fn seeded_search_is_independent_of_parameter_space_insertion_order() {
+        let forward = HashMap::from([
+            (
+                TrainingMethod::LinearRegression,
+                vec![tunable_linear_config()],
+            ),
+            (
+                TrainingMethod::RandomForestRegression,
+                vec![tunable_random_forest_config()],
+            ),
+        ]);
+        let reverse = HashMap::from([
+            (
+                TrainingMethod::RandomForestRegression,
+                vec![tunable_random_forest_config()],
+            ),
+            (
+                TrainingMethod::LinearRegression,
+                vec![tunable_linear_config()],
+            ),
+        ]);
+
+        let first: Vec<_> = RandomSearch::new(forward, 6, 42)
+            .map(|config| config.to_map())
+            .collect();
+        let second: Vec<_> = RandomSearch::new(reverse, 6, 42)
+            .map(|config| config.to_map())
+            .collect();
+
+        assert_eq!(first, second);
+        assert_eq!(first.len(), 6);
+    }
+
+    #[test]
+    fn exhausted_search_returns_none() {
+        let config = TunableTrainerConfig::of(
+            &HashMap::from([("penalty".to_string(), json!(0.0))]),
+            TrainingMethod::LinearRegression,
+        )
+        .expect("valid concrete config");
+        let mut search = RandomSearch::new(
+            HashMap::from([(TrainingMethod::LinearRegression, vec![config])]),
+            10,
+            42,
+        );
+
+        assert!(search.next().is_some());
+        assert!(search.next().is_none());
+        assert!(search.next().is_none());
+    }
+}
