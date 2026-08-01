@@ -5,9 +5,9 @@ use crate::projection::Orientation;
 use crate::projection::{NodeLabel, RelationshipType};
 use crate::types::graph::id_map::{IdMap, MappedNodeId};
 use crate::types::graph::Graph;
-use crate::types::properties::graph::GraphPropertyValues;
-use crate::types::properties::node::NodePropertyValues;
-use crate::types::properties::relationship::RelationshipPropertyValues;
+use crate::types::properties::graph::{GraphProperty, GraphPropertyValues};
+use crate::types::properties::node::{NodeProperty, NodePropertyValues};
+use crate::types::properties::relationship::{RelationshipProperty, RelationshipPropertyValues};
 use crate::types::schema::GraphSchema;
 use crate::types::ValueType;
 use std::collections::{HashMap, HashSet};
@@ -197,6 +197,15 @@ pub trait GraphStore: Send + Sync {
         property_key: &str,
     ) -> GraphStoreResult<Arc<dyn GraphPropertyValues>>;
 
+    /// Adds one schema-bearing graph property column.
+    fn add_graph_property_column(&mut self, property: GraphProperty) -> GraphStoreResult<()>;
+
+    /// Replaces one schema-bearing graph property column.
+    fn replace_graph_property_column(
+        &mut self,
+        property: GraphProperty,
+    ) -> GraphStoreResult<GraphProperty>;
+
     /// Adds a graph property.
     fn add_graph_property(
         &mut self,
@@ -253,6 +262,20 @@ pub trait GraphStore: Send + Sync {
         &self,
         property_key: &str,
     ) -> GraphStoreResult<Arc<dyn NodePropertyValues>>;
+
+    /// Adds one schema-bearing node property column.
+    fn add_node_property_column(
+        &mut self,
+        node_labels: HashSet<NodeLabel>,
+        property: NodeProperty,
+    ) -> GraphStoreResult<()>;
+
+    /// Replaces one schema-bearing node property column.
+    fn replace_node_property_column(
+        &mut self,
+        node_labels: HashSet<NodeLabel>,
+        property: NodeProperty,
+    ) -> GraphStoreResult<NodeProperty>;
 
     /// Adds a node property.
     fn add_node_property(
@@ -312,6 +335,20 @@ pub trait GraphStore: Send + Sync {
         relationship_type: &RelationshipType,
         property_key: &str,
     ) -> GraphStoreResult<Arc<dyn RelationshipPropertyValues>>;
+
+    /// Adds one schema-bearing relationship property column.
+    fn add_relationship_property_column(
+        &mut self,
+        relationship_type: RelationshipType,
+        property: RelationshipProperty,
+    ) -> GraphStoreResult<()>;
+
+    /// Replaces one schema-bearing relationship property column.
+    fn replace_relationship_property_column(
+        &mut self,
+        relationship_type: RelationshipType,
+        property: RelationshipProperty,
+    ) -> GraphStoreResult<RelationshipProperty>;
 
     /// Adds relationship property values for the given relationship type.
     fn add_relationship_property(
@@ -510,6 +547,21 @@ impl<G: GraphStore> GraphStore for GraphStoreAdapter<G> {
         self.graph_store.graph_property_values(property_key)
     }
 
+    fn add_graph_property_column(&mut self, _property: GraphProperty) -> GraphStoreResult<()> {
+        Err(GraphStoreError::InvalidOperation(
+            "Cannot mutate through adapter".to_string(),
+        ))
+    }
+
+    fn replace_graph_property_column(
+        &mut self,
+        _property: GraphProperty,
+    ) -> GraphStoreResult<GraphProperty> {
+        Err(GraphStoreError::InvalidOperation(
+            "Cannot mutate through adapter".to_string(),
+        ))
+    }
+
     fn add_graph_property(
         &mut self,
         _property_key: impl Into<String>,
@@ -580,6 +632,26 @@ impl<G: GraphStore> GraphStore for GraphStoreAdapter<G> {
         property_key: &str,
     ) -> GraphStoreResult<Arc<dyn NodePropertyValues>> {
         self.graph_store.node_property_values(property_key)
+    }
+
+    fn add_node_property_column(
+        &mut self,
+        _node_labels: HashSet<NodeLabel>,
+        _property: NodeProperty,
+    ) -> GraphStoreResult<()> {
+        Err(GraphStoreError::InvalidOperation(
+            "Cannot mutate through adapter".to_string(),
+        ))
+    }
+
+    fn replace_node_property_column(
+        &mut self,
+        _node_labels: HashSet<NodeLabel>,
+        _property: NodeProperty,
+    ) -> GraphStoreResult<NodeProperty> {
+        Err(GraphStoreError::InvalidOperation(
+            "Cannot mutate through adapter".to_string(),
+        ))
     }
 
     fn add_node_property(
@@ -653,6 +725,26 @@ impl<G: GraphStore> GraphStore for GraphStoreAdapter<G> {
     ) -> GraphStoreResult<Arc<dyn RelationshipPropertyValues>> {
         self.graph_store
             .relationship_property_values(relationship_type, property_key)
+    }
+
+    fn add_relationship_property_column(
+        &mut self,
+        _relationship_type: RelationshipType,
+        _property: RelationshipProperty,
+    ) -> GraphStoreResult<()> {
+        Err(GraphStoreError::InvalidOperation(
+            "Cannot mutate through adapter".to_string(),
+        ))
+    }
+
+    fn replace_relationship_property_column(
+        &mut self,
+        _relationship_type: RelationshipType,
+        _property: RelationshipProperty,
+    ) -> GraphStoreResult<RelationshipProperty> {
+        Err(GraphStoreError::InvalidOperation(
+            "Cannot mutate through adapter".to_string(),
+        ))
     }
 
     fn add_relationship_property(

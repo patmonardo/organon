@@ -94,7 +94,9 @@ macro_rules! node_long_property_values_impl {
     ($struct_name:ident) => {
         impl NodePropertyValues for $struct_name {
             fn double_value(&self, node_id: u64) -> PropertyValuesResult<f64> {
-                Ok(self.long_value(node_id)? as f64)
+                $crate::types::properties::property_values::checked_long_to_double_property(
+                    self.long_value(node_id)?,
+                )
             }
 
             fn long_value(&self, node_id: u64) -> PropertyValuesResult<i64> {
@@ -161,7 +163,9 @@ macro_rules! node_double_property_values_impl {
             }
 
             fn long_value(&self, node_id: u64) -> PropertyValuesResult<i64> {
-                Ok(self.double_value(node_id)? as i64)
+                $crate::types::properties::property_values::checked_double_to_long_property(
+                    self.double_value(node_id)?,
+                )
             }
 
             fn double_array_value(&self, _node_id: u64) -> PropertyValuesResult<Vec<f64>> {
@@ -649,7 +653,9 @@ macro_rules! impl_typed_node_property_values_universal {
                 &self,
                 node_id: u64,
             ) -> $crate::types::properties::PropertyValuesResult<f64> {
-                Ok(self.long_value(node_id)? as f64)
+                $crate::types::properties::property_values::checked_long_to_double_property(
+                    self.long_value(node_id)?,
+                )
             }
 
             fn has_value(&self, node_id: u64) -> bool {
@@ -769,7 +775,9 @@ macro_rules! impl_typed_node_property_values_universal {
                 &self,
                 node_id: u64,
             ) -> $crate::types::properties::PropertyValuesResult<i64> {
-                Ok(self.double_value(node_id)? as i64)
+                $crate::types::properties::property_values::checked_double_to_long_property(
+                    self.double_value(node_id)?,
+                )
             }
 
             fn has_value(&self, node_id: u64) -> bool {
@@ -1228,7 +1236,9 @@ macro_rules! impl_relationship_property_values_universal {
             }
 
             fn long_value(&self, rel_index: u64) -> $crate::types::properties::PropertyValuesResult<i64> {
-                Ok(self.double_value(rel_index)? as i64)
+                $crate::types::properties::property_values::checked_double_to_long_property(
+                    self.double_value(rel_index)?,
+                )
             }
 
             fn get_object(&self, rel_index: u64) -> $crate::types::properties::PropertyValuesResult<Box<dyn std::any::Any>> {

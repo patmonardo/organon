@@ -1416,9 +1416,22 @@ impl GraphStore for DefaultGraphStore {
         property_key: impl Into<String>,
         property_values: Arc<dyn GraphPropertyValues>,
     ) -> GraphStoreResult<()> {
-        let key = property_key.into();
-        let property =
-            GraphProperty::with_state(key.clone(), PropertyState::Persistent, property_values);
+        self.add_graph_property_column(GraphProperty::with_state(
+            property_key,
+            PropertyState::Persistent,
+            property_values,
+        ))
+    }
+
+    fn add_graph_property_column(&mut self, property: GraphProperty) -> GraphStoreResult<()> {
+        let key = property.key().to_string();
+        if property.property_schema().value_type() != property.values().value_type() {
+            return Err(GraphStoreError::SchemaError(format!(
+                "graph property '{key}' declares {:?} but values are {:?}",
+                property.property_schema().value_type(),
+                property.values().value_type()
+            )));
+        }
         let mut schema = MutableGraphSchema::from_schema(&self.schema);
         schema.put_graph_property(key, property.property_schema().clone());
         self.graph_properties
@@ -1427,6 +1440,29 @@ impl GraphStore for DefaultGraphStore {
         self.schema = Arc::new(schema.build());
         self.set_modified();
         Ok(())
+    }
+
+    fn replace_graph_property_column(
+        &mut self,
+        property: GraphProperty,
+    ) -> GraphStoreResult<GraphProperty> {
+        let key = property.key().to_string();
+        if property.property_schema().value_type() != property.values().value_type() {
+            return Err(GraphStoreError::SchemaError(format!(
+                "graph property '{key}' declares {:?} but values are {:?}",
+                property.property_schema().value_type(),
+                property.values().value_type()
+            )));
+        }
+        let mut schema = MutableGraphSchema::from_schema(&self.schema);
+        schema.put_graph_property(key, property.property_schema().clone());
+        let replaced = self
+            .graph_properties
+            .replace_column(property)
+            .map_err(|error| GraphStoreError::InvalidOperation(error.to_string()))?;
+        self.schema = Arc::new(schema.build());
+        self.set_modified();
+        Ok(replaced)
     }
 
     fn remove_graph_property(&mut self, property_key: &str) -> GraphStoreResult<()> {
@@ -1534,12 +1570,35 @@ impl GraphStore for DefaultGraphStore {
         property_key: impl Into<String>,
         property_values: Arc<dyn NodePropertyValues>,
     ) -> GraphStoreResult<()> {
-        let key = property_key.into();
+        let property =
+            NodeProperty::with_state(property_key, PropertyState::Persistent, property_values);
+        if self.node_properties.contains_key(property.key()) {
+            self.replace_node_property_column(node_labels, property)
+                .map(|_| ())
+        } else {
+            self.add_node_property_column(node_labels, property)
+        }
+    }
+
+    fn add_node_property_column(
+        &mut self,
+        node_labels: HashSet<NodeLabel>,
+        property: NodeProperty,
+    ) -> GraphStoreResult<()> {
+        let key = property.key().to_string();
         let node_labels = if node_labels.is_empty() {
             HashSet::from([NodeLabel::all_nodes()])
         } else {
             node_labels
         };
+        if property.property_schema().value_type() != property.values().value_type() {
+            return Err(GraphStoreError::SchemaError(format!(
+                "node property '{key}' declares {:?} but values are {:?}",
+                property.property_schema().value_type(),
+                property.values().value_type()
+            )));
+        }
+        let property_values = property.values_arc();
         if property_values.element_count() != self.node_count() {
             return Err(GraphStoreError::InvalidOperation(format!(
                 "node property '{key}' has {} values but the node domain requires {}",
@@ -1553,8 +1612,6 @@ impl GraphStore for DefaultGraphStore {
             }
         }
 
-        let property =
-            NodeProperty::with_state(key.clone(), PropertyState::Persistent, property_values);
         let mut schema = MutableGraphSchema::from_schema(&self.schema);
         for label in &node_labels {
             schema
@@ -1562,15 +1619,9 @@ impl GraphStore for DefaultGraphStore {
                 .get_or_create_label(label.clone())
                 .add_property_schema(property.property_schema().clone());
         }
-        if self.node_properties.contains_key(&key) {
-            self.node_properties
-                .replace_column(property)
-                .map_err(|error| GraphStoreError::InvalidOperation(error.to_string()))?;
-        } else {
-            self.node_properties
-                .add_column(property)
-                .map_err(|error| GraphStoreError::InvalidOperation(error.to_string()))?;
-        }
+        self.node_properties
+            .add_column(property)
+            .map_err(|error| GraphStoreError::InvalidOperation(error.to_string()))?;
 
         for label in node_labels {
             let label_key = Self::label_key(&label);
@@ -1583,6 +1634,59 @@ impl GraphStore for DefaultGraphStore {
         self.schema = Arc::new(schema.build());
         self.set_modified();
         Ok(())
+    }
+
+    fn replace_node_property_column(
+        &mut self,
+        node_labels: HashSet<NodeLabel>,
+        property: NodeProperty,
+    ) -> GraphStoreResult<NodeProperty> {
+        let key = property.key().to_string();
+        let node_labels = if node_labels.is_empty() {
+            HashSet::from([NodeLabel::all_nodes()])
+        } else {
+            node_labels
+        };
+        if property.property_schema().value_type() != property.values().value_type() {
+            return Err(GraphStoreError::SchemaError(format!(
+                "node property '{key}' declares {:?} but values are {:?}",
+                property.property_schema().value_type(),
+                property.values().value_type()
+            )));
+        }
+        if property.values().element_count() != self.node_count() {
+            return Err(GraphStoreError::InvalidOperation(format!(
+                "node property '{key}' has {} values but the node domain requires {}",
+                property.values().element_count(),
+                self.node_count()
+            )));
+        }
+        for label in &node_labels {
+            if !label.is_all_nodes() && !self.has_node_label(label) {
+                return Err(GraphStoreError::NodeLabelNotFound(label.name().to_string()));
+            }
+        }
+
+        let mut schema = MutableGraphSchema::from_schema(&self.schema);
+        for label in &node_labels {
+            schema
+                .node_schema_mut()
+                .get_or_create_label(label.clone())
+                .add_property_schema(property.property_schema().clone());
+        }
+        let replaced = self
+            .node_properties
+            .replace_column(property)
+            .map_err(|error| GraphStoreError::InvalidOperation(error.to_string()))?;
+        for label in node_labels {
+            self.node_properties_by_label
+                .entry(Self::label_key(&label))
+                .or_default()
+                .insert(key.clone());
+        }
+        self.schema = Arc::new(schema.build());
+        self.set_modified();
+        Ok(replaced)
     }
 
     fn remove_node_property(&mut self, property_key: &str) -> GraphStoreResult<()> {
@@ -1706,6 +1810,46 @@ impl GraphStore for DefaultGraphStore {
         property_values: Arc<dyn RelationshipPropertyValues>,
     ) -> GraphStoreResult<()> {
         let key = property_key.into();
+        let schema_entry = self
+            .schema
+            .relationship_schema()
+            .get(&relationship_type)
+            .ok_or_else(|| {
+                GraphStoreError::SchemaError(format!(
+                    "relationship type '{relationship_type}' is materialized but absent from the schema"
+                ))
+            })?;
+        let column_schema = if let Some(schema) = schema_entry.properties().get(&key) {
+            schema.clone()
+        } else {
+            RelationshipPropertySchema::with_aggregation(
+                key,
+                property_values.value_type(),
+                DefaultValue::of(property_values.value_type()),
+                PropertyState::Persistent,
+                Aggregation::None,
+            )
+        };
+        let property = RelationshipProperty::try_with_schema(column_schema, property_values)
+            .map_err(|error| GraphStoreError::SchemaError(error.to_string()))?;
+        self.add_relationship_property_column(relationship_type, property)
+    }
+
+    fn add_relationship_property_column(
+        &mut self,
+        relationship_type: RelationshipType,
+        property: RelationshipProperty,
+    ) -> GraphStoreResult<()> {
+        let key = property.key().to_string();
+        let property_values = property.values_arc();
+        let column_schema = property.property_schema().clone();
+        if column_schema.value_type() != property_values.value_type() {
+            return Err(GraphStoreError::SchemaError(format!(
+                "relationship property '{key}' declares {:?} but values are {:?}",
+                column_schema.value_type(),
+                property_values.value_type()
+            )));
+        }
         let expected_count = self
             .relationship_topologies
             .get(&relationship_type)
@@ -1730,25 +1874,6 @@ impl GraphStore for DefaultGraphStore {
                 ))
             })?;
         let direction = schema_entry.direction();
-        let column_schema = if let Some(schema) = schema_entry.properties().get(&key) {
-            if schema.value_type() != property_values.value_type() {
-                return Err(GraphStoreError::SchemaError(format!(
-                    "relationship property '{key}' declares {:?} but values are {:?}",
-                    schema.value_type(),
-                    property_values.value_type()
-                )));
-            }
-            schema.clone()
-        } else {
-            RelationshipPropertySchema::with_aggregation(
-                key.clone(),
-                property_values.value_type(),
-                DefaultValue::of(property_values.value_type()),
-                PropertyState::Persistent,
-                Aggregation::None,
-            )
-        };
-        let property = RelationshipProperty::with_schema(column_schema.clone(), property_values);
 
         let mut schema = MutableGraphSchema::from_schema(&self.schema);
         schema.relationship_schema_mut().add_property_schema(
@@ -1766,6 +1891,60 @@ impl GraphStore for DefaultGraphStore {
         self.refresh_relationship_property_state();
         self.set_modified();
         Ok(())
+    }
+
+    fn replace_relationship_property_column(
+        &mut self,
+        relationship_type: RelationshipType,
+        property: RelationshipProperty,
+    ) -> GraphStoreResult<RelationshipProperty> {
+        let key = property.key().to_string();
+        if property.property_schema().value_type() != property.values().value_type() {
+            return Err(GraphStoreError::SchemaError(format!(
+                "relationship property '{key}' declares {:?} but values are {:?}",
+                property.property_schema().value_type(),
+                property.values().value_type()
+            )));
+        }
+        let expected_count = self
+            .relationship_topologies
+            .get(&relationship_type)
+            .ok_or_else(|| {
+                GraphStoreError::RelationshipTypeNotFound(relationship_type.name().to_string())
+            })?
+            .relationship_count();
+        if property.values().element_count() != expected_count {
+            return Err(GraphStoreError::InvalidOperation(format!(
+                "relationship property '{key}' for type '{relationship_type}' has {} values but the topology requires {expected_count}",
+                property.values().element_count()
+            )));
+        }
+        let direction = self
+            .schema
+            .relationship_schema()
+            .get(&relationship_type)
+            .ok_or_else(|| {
+                GraphStoreError::SchemaError(format!(
+                    "relationship type '{relationship_type}' is materialized but absent from the schema"
+                ))
+            })?
+            .direction();
+        let mut schema = MutableGraphSchema::from_schema(&self.schema);
+        schema.relationship_schema_mut().add_property_schema(
+            relationship_type.clone(),
+            direction,
+            property.property_schema().clone(),
+        );
+        let replaced = self
+            .relationship_property_stores
+            .get_mut(&relationship_type)
+            .ok_or_else(|| GraphStoreError::PropertyNotFound(key.clone()))?
+            .replace_column(property)
+            .map_err(|error| GraphStoreError::InvalidOperation(error.to_string()))?;
+        self.schema = Arc::new(schema.build());
+        self.refresh_relationship_property_state();
+        self.set_modified();
+        Ok(replaced)
     }
 
     fn remove_relationship_property(
@@ -2278,6 +2457,53 @@ mod tests {
     }
 
     #[test]
+    fn adds_schema_bearing_graph_and_node_columns() {
+        let mut store = sample_store();
+        let graph_values: Arc<dyn GraphPropertyValues> =
+            Arc::new(DefaultLongGraphPropertyValues::<VecLong>::singleton(3));
+        let graph_property = GraphProperty::with_default(
+            "iterations",
+            PropertyState::Transient,
+            graph_values,
+            DefaultValue::long(-1),
+        );
+        store.add_graph_property_column(graph_property).unwrap();
+
+        let node_values: Arc<dyn NodePropertyValues> = Arc::new(
+            DefaultLongNodePropertyValues::from_collection(VecLong::from(vec![10, 20, 30]), 3),
+        );
+        let node_property = NodeProperty::with_default(
+            "score",
+            PropertyState::Transient,
+            node_values,
+            DefaultValue::long(-1),
+        );
+        store
+            .add_node_property_column(HashSet::from([NodeLabel::all_nodes()]), node_property)
+            .unwrap();
+
+        assert_eq!(
+            store
+                .graph_properties
+                .get("iterations")
+                .unwrap()
+                .property_schema()
+                .state(),
+            PropertyState::Transient
+        );
+        assert_eq!(
+            store
+                .node_properties
+                .get("score")
+                .unwrap()
+                .property_schema()
+                .default_value(),
+            &DefaultValue::long(-1)
+        );
+        validate_graph_store_schema(&store).unwrap();
+    }
+
+    #[test]
     fn vec_only_config_keeps_node_properties_vec_backed() {
         let mut store = store_with_config(GraphStoreConfig::vec_only());
         store
@@ -2382,6 +2608,144 @@ mod tests {
         assert_eq!(
             materialized.property_schema().default_value(),
             &DefaultValue::double(7.5)
+        );
+        validate_graph_store_schema(&store).unwrap();
+    }
+
+    #[test]
+    fn rejects_values_that_disagree_with_declared_relationship_schema() {
+        let mut store = sample_store();
+        let rel_type = RelationshipType::of("KNOWS");
+        let mut schema = MutableGraphSchema::from_schema(&store.schema);
+        schema.relationship_schema_mut().add_property_schema(
+            rel_type.clone(),
+            Direction::Directed,
+            RelationshipPropertySchema::of("weight", ValueType::Long),
+        );
+        store.schema = Arc::new(schema.build());
+        let schema_before = Arc::clone(&store.schema);
+        let modified_before = store.modification_time;
+        let values = Arc::new(DefaultRelationshipPropertyValues::with_values(
+            vec![1.0, 2.0, 3.0],
+            0.0,
+            3,
+        ));
+
+        assert!(matches!(
+            store.add_relationship_property(rel_type.clone(), "weight", values),
+            Err(GraphStoreError::SchemaError(_))
+        ));
+        assert!(!store.has_relationship_property(&rel_type, "weight"));
+        assert_eq!(store.schema.as_ref(), schema_before.as_ref());
+        assert_eq!(store.modification_time, modified_before);
+    }
+
+    #[test]
+    fn adds_schema_bearing_relationship_column() {
+        let mut store = sample_store();
+        let rel_type = RelationshipType::of("KNOWS");
+        let values = Arc::new(DefaultRelationshipPropertyValues::with_values(
+            vec![1.0, 2.0, 3.0],
+            7.5,
+            3,
+        ));
+        let property = RelationshipProperty::with_aggregation(
+            "weight",
+            PropertyState::Transient,
+            values,
+            DefaultValue::double(7.5),
+            Aggregation::Max,
+        );
+
+        store
+            .add_relationship_property_column(rel_type.clone(), property)
+            .unwrap();
+
+        let materialized = store
+            .relationship_property_stores
+            .get(&rel_type)
+            .unwrap()
+            .get("weight")
+            .unwrap();
+        assert_eq!(
+            materialized.property_schema().aggregation(),
+            Aggregation::Max
+        );
+        assert_eq!(
+            materialized.property_schema().state(),
+            PropertyState::Transient
+        );
+        assert_eq!(
+            materialized.property_schema().default_value(),
+            &DefaultValue::double(7.5)
+        );
+        validate_graph_store_schema(&store).unwrap();
+    }
+
+    #[test]
+    fn explicitly_replaces_schema_bearing_columns() {
+        let mut store = sample_store();
+        let graph_values: Arc<dyn GraphPropertyValues> =
+            Arc::new(DefaultLongGraphPropertyValues::<VecLong>::singleton(1));
+        store
+            .add_graph_property_column(GraphProperty::of("round", graph_values))
+            .unwrap();
+        let replacement_values: Arc<dyn GraphPropertyValues> =
+            Arc::new(DefaultLongGraphPropertyValues::<VecLong>::singleton(2));
+        store
+            .replace_graph_property_column(GraphProperty::with_default(
+                "round",
+                PropertyState::Transient,
+                replacement_values,
+                DefaultValue::long(-1),
+            ))
+            .unwrap();
+
+        let rel_type = RelationshipType::of("KNOWS");
+        let relationship_values: Arc<dyn RelationshipPropertyValues> = Arc::new(
+            DefaultRelationshipPropertyValues::with_values(vec![1.0, 2.0, 3.0], 0.0, 3),
+        );
+        store
+            .add_relationship_property_column(
+                rel_type.clone(),
+                RelationshipProperty::of("weight", relationship_values),
+            )
+            .unwrap();
+        let replacement_values: Arc<dyn RelationshipPropertyValues> = Arc::new(
+            DefaultRelationshipPropertyValues::with_values(vec![3.0, 2.0, 1.0], 9.0, 3),
+        );
+        store
+            .replace_relationship_property_column(
+                rel_type.clone(),
+                RelationshipProperty::with_aggregation(
+                    "weight",
+                    PropertyState::Transient,
+                    replacement_values,
+                    DefaultValue::double(9.0),
+                    Aggregation::Min,
+                ),
+            )
+            .unwrap();
+
+        assert_eq!(
+            store
+                .graph_properties
+                .get("round")
+                .unwrap()
+                .property_schema()
+                .state(),
+            PropertyState::Transient
+        );
+        assert_eq!(
+            store
+                .relationship_property_stores
+                .get(&rel_type)
+                .unwrap()
+                .get("weight")
+                .unwrap()
+                .property_schema()
+                .aggregation(),
+            Aggregation::Min
         );
         validate_graph_store_schema(&store).unwrap();
     }

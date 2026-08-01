@@ -1,4 +1,5 @@
 use super::property::Property;
+use crate::types::ValueType;
 use thiserror::Error;
 
 /// Error type for property store operations.
@@ -12,9 +13,31 @@ pub enum PropertyStoreError {
 
     #[error("Invalid property key: {0}")]
     InvalidPropertyKey(String),
+
+    #[error("Property '{key}' declares {declared:?} but its values are {materialized:?}")]
+    SchemaValueTypeMismatch {
+        key: String,
+        declared: ValueType,
+        materialized: ValueType,
+    },
 }
 
 pub type PropertyStoreResult<T> = Result<T, PropertyStoreError>;
+
+pub(crate) fn validate_column_value_type(
+    key: &str,
+    declared: ValueType,
+    materialized: ValueType,
+) -> PropertyStoreResult<()> {
+    if declared == materialized {
+        return Ok(());
+    }
+    Err(PropertyStoreError::SchemaValueTypeMismatch {
+        key: key.to_string(),
+        declared,
+        materialized,
+    })
+}
 
 /// A framing protocol for schema-bearing property columns.
 pub trait PropertyStore: Send + Sync {

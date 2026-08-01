@@ -1,5 +1,7 @@
 use crate::types::properties::graph::GraphPropertyValues;
+use crate::types::properties::property_store::validate_column_value_type;
 use crate::types::properties::Property;
+use crate::types::properties::PropertyStoreResult;
 use crate::types::properties::PropertyValues;
 use crate::types::schema::PropertySchema;
 use crate::types::DefaultValue;
@@ -30,7 +32,7 @@ impl DefaultGraphProperty {
         let key_str = key.into();
         let value_type = values.value_type();
         let default_value = DefaultValue::of(value_type);
-        Self::with_schema(
+        Self::from_validated_schema(
             PropertySchema::new(key_str, value_type, default_value, state),
             values,
         )
@@ -45,14 +47,22 @@ impl DefaultGraphProperty {
     ) -> Self {
         let key_str = key.into();
         let value_type = values.value_type();
-        Self::with_schema(
+        Self::from_validated_schema(
             PropertySchema::new(key_str, value_type, default_value, state),
             values,
         )
     }
 
-    /// Construct a property from an existing schema, reusing the provided values.
-    pub fn with_schema(schema: PropertySchema, values: Arc<dyn GraphPropertyValues>) -> Self {
+    /// Construct a property from an existing schema after validating its values.
+    pub fn try_with_schema(
+        schema: PropertySchema,
+        values: Arc<dyn GraphPropertyValues>,
+    ) -> PropertyStoreResult<Self> {
+        validate_column_value_type(schema.key(), schema.value_type(), values.value_type())?;
+        Ok(Self { values, schema })
+    }
+
+    fn from_validated_schema(schema: PropertySchema, values: Arc<dyn GraphPropertyValues>) -> Self {
         Self { values, schema }
     }
 
@@ -107,5 +117,21 @@ mod tests {
         );
         assert_eq!(property.property_schema().value_type(), values.value_type());
         assert!(Arc::ptr_eq(&property.values_arc(), &values));
+    }
+
+    #[test]
+    fn explicit_schema_rejects_mismatched_values() {
+        use crate::collections::backends::vec::VecDouble;
+        use crate::types::properties::graph::DefaultDoubleGraphPropertyValues;
+
+        let values: Arc<dyn GraphPropertyValues> = Arc::new(DefaultDoubleGraphPropertyValues::<
+            VecDouble,
+        >::singleton(1.0));
+        let schema = PropertySchema::of("count", crate::types::ValueType::Long);
+
+        assert!(matches!(
+            DefaultGraphProperty::try_with_schema(schema, values),
+            Err(crate::types::properties::PropertyStoreError::SchemaValueTypeMismatch { .. })
+        ));
     }
 }

@@ -1,5 +1,7 @@
 use crate::types::properties::node::NodePropertyValues;
+use crate::types::properties::property_store::validate_column_value_type;
 use crate::types::properties::Property;
+use crate::types::properties::PropertyStoreResult;
 use crate::types::properties::PropertyValues;
 use crate::types::schema::PropertySchema;
 use crate::types::DefaultValue;
@@ -28,7 +30,7 @@ impl DefaultNodeProperty {
         let key_str = key.into();
         let value_type = values.value_type();
         let default_value = DefaultValue::of(value_type);
-        Self::with_schema(
+        Self::from_validated_schema(
             PropertySchema::new(key_str, value_type, default_value, state),
             values,
         )
@@ -43,14 +45,27 @@ impl DefaultNodeProperty {
     ) -> Self {
         let key_str = key.into();
         let value_type = values.value_type();
-        Self::with_schema(
+        Self::from_validated_schema(
             PropertySchema::new(key_str, value_type, default_value, state),
             values,
         )
     }
 
-    /// Construct a property from an existing schema, reusing the provided values.
-    pub fn with_schema(schema: PropertySchema, values: Arc<dyn NodePropertyValues>) -> Self {
+    /// Construct a property from an existing schema after validating its values.
+    pub fn try_with_schema(
+        schema: PropertySchema,
+        values: Arc<dyn NodePropertyValues>,
+    ) -> PropertyStoreResult<Self> {
+        validate_column_value_type(schema.key(), schema.value_type(), values.value_type())?;
+        Ok(Self { values, schema })
+    }
+
+    pub(crate) fn with_schema(schema: PropertySchema, values: Arc<dyn NodePropertyValues>) -> Self {
+        Self::try_with_schema(schema, values)
+            .expect("node property schema value type must match its values")
+    }
+
+    fn from_validated_schema(schema: PropertySchema, values: Arc<dyn NodePropertyValues>) -> Self {
         Self { values, schema }
     }
 
@@ -153,5 +168,21 @@ mod tests {
         // Test Arc access
         let values_arc = property.values_arc();
         assert_eq!(values_arc.element_count(), 3);
+    }
+
+    #[test]
+    fn explicit_schema_rejects_mismatched_values() {
+        use crate::collections::backends::vec::VecDouble;
+        use crate::types::properties::node::DefaultDoubleNodePropertyValues;
+
+        let values: Arc<dyn NodePropertyValues> = Arc::new(
+            DefaultDoubleNodePropertyValues::from_collection(VecDouble::from(vec![1.0]), 1),
+        );
+        let schema = PropertySchema::of("count", crate::types::ValueType::Long);
+
+        assert!(matches!(
+            DefaultNodeProperty::try_with_schema(schema, values),
+            Err(crate::types::properties::PropertyStoreError::SchemaValueTypeMismatch { .. })
+        ));
     }
 }

@@ -75,4 +75,12 @@ mod tests {
         let values = DefaultRelationshipPropertyValues::with_values(vec![1.0], f64::NAN, 1);
         assert!(values.default_value().is_nan());
     }
+
+    #[test]
+    fn long_access_rejects_lossy_conversion() {
+        let values = DefaultRelationshipPropertyValues::with_values(vec![2.0, 2.5], 0.0, 2);
+
+        assert_eq!(values.long_value(0).unwrap(), 2);
+        assert!(values.long_value(1).is_err());
+    }
 }

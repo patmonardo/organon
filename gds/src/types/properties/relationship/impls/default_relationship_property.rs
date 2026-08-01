@@ -1,5 +1,7 @@
+use crate::types::properties::property_store::validate_column_value_type;
 use crate::types::properties::relationship::RelationshipPropertyValues;
 use crate::types::properties::Property;
+use crate::types::properties::PropertyStoreResult;
 use crate::types::properties::PropertyValues;
 use crate::types::schema::Aggregation;
 use crate::types::schema::PropertySchema;
@@ -33,7 +35,7 @@ impl DefaultRelationshipProperty {
         let key_str = key.into();
         let value_type = values.value_type();
         let default_value = DefaultValue::of(value_type);
-        Self::with_schema(
+        Self::from_validated_schema(
             RelationshipPropertySchema::new(
                 PropertySchema::new(key_str, value_type, default_value, state),
                 Aggregation::None,
@@ -51,7 +53,7 @@ impl DefaultRelationshipProperty {
     ) -> Self {
         let key_str = key.into();
         let value_type = values.value_type();
-        Self::with_schema(
+        Self::from_validated_schema(
             RelationshipPropertySchema::new(
                 PropertySchema::new(key_str, value_type, default_value, state),
                 Aggregation::None,
@@ -74,11 +76,27 @@ impl DefaultRelationshipProperty {
             state,
             aggregation,
         );
-        Self::with_schema(schema, values)
+        Self::from_validated_schema(schema, values)
     }
 
-    /// Construct a property from an existing schema, reusing the provided values.
-    pub fn with_schema(
+    /// Construct a property from an existing schema after validating its values.
+    pub fn try_with_schema(
+        schema: RelationshipPropertySchema,
+        values: Arc<dyn RelationshipPropertyValues>,
+    ) -> PropertyStoreResult<Self> {
+        validate_column_value_type(schema.key(), schema.value_type(), values.value_type())?;
+        Ok(Self { values, schema })
+    }
+
+    pub(crate) fn with_schema(
+        schema: RelationshipPropertySchema,
+        values: Arc<dyn RelationshipPropertyValues>,
+    ) -> Self {
+        Self::try_with_schema(schema, values)
+            .expect("relationship property schema value type must match its values")
+    }
+
+    fn from_validated_schema(
         schema: RelationshipPropertySchema,
         values: Arc<dyn RelationshipPropertyValues>,
     ) -> Self {
@@ -210,5 +228,18 @@ mod tests {
         // Should use system default for Double type
         let schema = property.property_schema();
         assert!(schema.default_value().double_value().unwrap().is_nan());
+    }
+
+    #[test]
+    fn explicit_schema_rejects_mismatched_values() {
+        let values: Arc<dyn RelationshipPropertyValues> = Arc::new(
+            DefaultRelationshipPropertyValues::with_values(vec![1.0], 0.0, 1),
+        );
+        let schema = RelationshipPropertySchema::of("count", ValueType::Long);
+
+        assert!(matches!(
+            DefaultRelationshipProperty::try_with_schema(schema, values),
+            Err(crate::types::properties::PropertyStoreError::SchemaValueTypeMismatch { .. })
+        ));
     }
 }

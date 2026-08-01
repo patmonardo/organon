@@ -53,6 +53,32 @@ impl PropertyValuesError {
     }
 }
 
+pub(crate) fn checked_long_to_double_property(value: i64) -> PropertyValuesResult<f64> {
+    let converted = value as f64;
+    let upper_bound = -(i64::MIN as f64);
+    if converted >= i64::MIN as f64 && converted < upper_bound && converted as i64 == value {
+        Ok(converted)
+    } else {
+        Err(PropertyValuesError::unsupported_operation(format!(
+            "Cannot convert {value} from Long to Double without loss"
+        )))
+    }
+}
+
+pub(crate) fn checked_double_to_long_property(value: f64) -> PropertyValuesResult<i64> {
+    let upper_bound = -(i64::MIN as f64);
+    if value.is_finite() && value.fract() == 0.0 && value >= i64::MIN as f64 && value < upper_bound
+    {
+        let converted = value as i64;
+        if converted as f64 == value {
+            return Ok(converted);
+        }
+    }
+    Err(PropertyValuesError::unsupported_operation(format!(
+        "Cannot convert {value} from Double to Long without loss"
+    )))
+}
+
 pub type PropertyValuesResult<T> = Result<T, PropertyValuesError>;
 
 // Implement PropertyValues for Box<dyn PropertyValues> to allow trait objects
@@ -80,5 +106,17 @@ mod tests {
 
         let err = PropertyValuesError::unsupported_operation("test operation");
         assert!(err.to_string().contains("test operation"));
+    }
+
+    #[test]
+    fn scalar_conversions_reject_loss() {
+        assert_eq!(checked_double_to_long_property(2.0).unwrap(), 2);
+        assert!(checked_double_to_long_property(2.5).is_err());
+        assert!(checked_double_to_long_property(f64::NAN).is_err());
+        assert_eq!(
+            checked_long_to_double_property(9_007_199_254_740_992).unwrap(),
+            9_007_199_254_740_992.0
+        );
+        assert!(checked_long_to_double_property(9_007_199_254_740_993).is_err());
     }
 }
