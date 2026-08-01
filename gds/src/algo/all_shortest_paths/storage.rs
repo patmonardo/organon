@@ -514,7 +514,7 @@ impl<'a> AllShortestPathsStorageRuntime<'a> {
                     .map(|_| -> Result<(), AlgorithmError> {
                         // Each worker gets its own thread-local graph copy (mirrors Java's `graph.concurrentCopy()`).
                         let local_graph =
-                            crate::types::graph::graph::Graph::concurrent_copy(self.graph);
+                            crate::types::graph::graph::Graph::concurrent_view(self.graph);
 
                         // Worker-local Dijkstra state — reused across sources (reset via fill).
                         let mut distances = vec![f64::INFINITY; node_count];

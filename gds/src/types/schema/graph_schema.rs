@@ -1,13 +1,13 @@
 use crate::types::schema::{
     Direction, MutableNodeSchema, MutableRelationshipSchema, NodeLabel, NodeSchema, PropertySchema,
     PropertySchemaTrait, RelationshipPropertySchema, RelationshipSchema, RelationshipType,
-    SchemaError, SchemaResult,
+    SchemaResult,
 };
 use serde::{Deserialize, Serialize};
 use std::collections::{HashMap, HashSet};
 
 /// Schema representation for a graph, including node and relationship schemas.
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GraphSchema {
     node_schema: NodeSchema,
     relationship_schema: RelationshipSchema,
@@ -45,6 +45,21 @@ impl GraphSchema {
 
     pub fn graph_properties(&self) -> &HashMap<String, PropertySchema> {
         &self.graph_properties
+    }
+
+    pub fn validate(&self) -> SchemaResult<()> {
+        self.node_schema.validate()?;
+        self.relationship_schema.validate()?;
+        for (key, property) in &self.graph_properties {
+            if key != property.key() {
+                return Err(crate::types::schema::SchemaError::MapKeyMismatch {
+                    dimension: "graph property",
+                    key: key.clone(),
+                    embedded: property.key().to_string(),
+                });
+            }
+        }
+        Ok(())
     }
 
     /// Creates a filtered version of this schema containing only the specified node labels.
@@ -87,13 +102,9 @@ impl GraphSchema {
         self.relationship_schema.is_undirected()
     }
 
-    /// Returns the direction of relationships in this graph.
-    pub fn direction(&self) -> Direction {
-        if self.is_undirected() {
-            Direction::Undirected
-        } else {
-            Direction::Directed
-        }
+    /// Returns the common direction for a non-empty, uniform relationship schema.
+    pub fn direction(&self) -> Option<Direction> {
+        self.relationship_schema.direction()
     }
 
     /// Converts the schema to a JSON-friendly map representation.
@@ -241,14 +252,7 @@ fn merge_graph_properties(
 
     for (key, right_schema) in right {
         if let Some(left_schema) = result.get(key) {
-            if left_schema.value_type() != right_schema.value_type() {
-                return Err(SchemaError::PropertyTypeConflict {
-                    key: key.clone(),
-                    left: left_schema.value_type(),
-                    right: right_schema.value_type(),
-                });
-            }
-            // Keep left schema if types match
+            left_schema.ensure_compatible(right_schema)?;
         } else {
             result.insert(key.clone(), right_schema.clone());
         }
@@ -332,6 +336,8 @@ mod tests {
         assert!(schema.node_schema().entries().is_empty());
         assert!(schema.relationship_schema().entries().is_empty());
         assert!(schema.graph_properties().is_empty());
+        assert_eq!(schema.direction(), None);
+        assert!(!schema.is_undirected());
     }
 
     #[test]
@@ -371,6 +377,26 @@ mod tests {
         schema.put_graph_property("version", PropertySchema::of("version", ValueType::Long));
 
         assert!(schema.graph_properties().contains_key("version"));
+    }
+
+    #[test]
+    fn validation_rejects_map_key_that_disagrees_with_graph_property() {
+        let schema = GraphSchema::new(
+            NodeSchema::empty(),
+            RelationshipSchema::empty(),
+            HashMap::from([(
+                "wrong".to_string(),
+                PropertySchema::of("node_count", ValueType::Long),
+            )]),
+        );
+
+        assert!(matches!(
+            schema.validate(),
+            Err(crate::types::schema::SchemaError::MapKeyMismatch {
+                dimension: "graph property",
+                ..
+            })
+        ));
     }
 
     #[test]

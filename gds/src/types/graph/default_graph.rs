@@ -1,7 +1,7 @@
-use super::{Graph, GraphCharacteristics, GraphResult, RelationshipTopology};
-use crate::task::concurrency::Concurrency;
+use super::{Graph, GraphCharacteristics, RelationshipTopology};
 use crate::config::GraphStoreConfig;
 use crate::projection::RelationshipType;
+use crate::task::concurrency::Concurrency;
 use crate::types::graph::characteristics::GraphCharacteristicsBuilder;
 use crate::types::graph::degrees::Degrees;
 use crate::types::graph::id_map::NodeLabelConsumer;
@@ -18,6 +18,7 @@ use crate::types::properties::relationship::{
     RelationshipStream, WeightedRelationshipCursor, WeightedRelationshipCursorBox,
     WeightedRelationshipStream,
 };
+use crate::types::properties::PropertyStore;
 use crate::types::schema::{GraphSchema, NodeLabel};
 use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
@@ -182,6 +183,84 @@ impl DefaultGraph {
         };
 
         selected.value_at_or(index, fallback_value)
+    }
+
+    pub(crate) fn filtered_by_relationship_types(
+        &self,
+        relationship_types: &HashSet<RelationshipType>,
+    ) -> Arc<dyn Graph> {
+        if relationship_types.is_empty() {
+            return Arc::new(self.clone());
+        }
+
+        let mut filtered_topologies: HashMap<RelationshipType, Arc<RelationshipTopology>> =
+            HashMap::new();
+        let mut ordered_types = Vec::new();
+        let mut inverse_indexed_types = HashSet::new();
+        let mut relationship_count = 0usize;
+        let mut has_parallel_edges = false;
+
+        for relationship_type in &self.ordered_types {
+            if !relationship_types.contains(relationship_type) {
+                continue;
+            }
+
+            if let Some(topology) = self.topology_for(relationship_type) {
+                ordered_types.push(relationship_type.clone());
+                filtered_topologies.insert(relationship_type.clone(), Arc::clone(topology));
+                relationship_count += topology.relationship_count();
+                if topology.is_inverse_indexed() {
+                    inverse_indexed_types.insert(relationship_type.clone());
+                }
+                if topology.has_parallel_edges() {
+                    has_parallel_edges = true;
+                }
+            }
+        }
+
+        let has_inverse_indices = !ordered_types.is_empty()
+            && ordered_types
+                .iter()
+                .all(|rel_type| inverse_indexed_types.contains(rel_type));
+
+        let filtered_characteristics = self.filtered_characteristics(has_inverse_indices);
+        let schema_types = relationship_types
+            .iter()
+            .map(|rel_type| RelationshipType::of(rel_type.name()))
+            .collect();
+        let filtered_schema = Arc::new(self.schema.filter_relationship_types(&schema_types));
+
+        let filtered_relationship_properties = ordered_types
+            .iter()
+            .filter_map(|rel_type| {
+                self.relationship_properties
+                    .get(rel_type)
+                    .map(|store| (rel_type.clone(), store.clone()))
+            })
+            .collect();
+        let filtered_selectors = ordered_types
+            .iter()
+            .filter_map(|rel_type| {
+                self.relationship_property_selectors
+                    .get(rel_type)
+                    .map(|key| (rel_type.clone(), key.clone()))
+            })
+            .collect();
+
+        Arc::new(DefaultGraph::new(
+            Arc::clone(&self.config),
+            filtered_schema,
+            Arc::clone(&self.id_map),
+            filtered_characteristics,
+            filtered_topologies,
+            ordered_types,
+            inverse_indexed_types,
+            relationship_count,
+            has_parallel_edges,
+            self.node_properties.clone(),
+            filtered_relationship_properties,
+            filtered_selectors,
+        ))
     }
 
     fn traverse_outgoing_relationships<F>(
@@ -395,7 +474,10 @@ fn build_selected_relationship_properties(
 
 fn auto_select_property_key(store: &DefaultRelationshipPropertyStore) -> Option<String> {
     if store.len() == 1 {
-        store.relationship_properties().keys().next().cloned()
+        store
+            .columns()
+            .next()
+            .map(|property| property.key().to_string())
     } else {
         None
     }
@@ -418,97 +500,11 @@ impl Graph for DefaultGraph {
         self.has_parallel_edges
     }
 
-    fn relationship_type_filtered_graph(
-        &self,
-        relationship_types: &HashSet<RelationshipType>,
-    ) -> GraphResult<Arc<dyn Graph>> {
-        if relationship_types.is_empty() {
-            return Ok(Arc::new(self.clone()));
-        }
-
-        let mut filtered_topologies: HashMap<RelationshipType, Arc<RelationshipTopology>> =
-            HashMap::new();
-        let mut ordered_types = Vec::new();
-        let mut inverse_indexed_types = HashSet::new();
-        let mut relationship_count = 0usize;
-        let mut has_parallel_edges = false;
-
-        for relationship_type in &self.ordered_types {
-            if !relationship_types.contains(relationship_type) {
-                continue;
-            }
-
-            if let Some(topology) = self.topology_for(relationship_type) {
-                ordered_types.push(relationship_type.clone());
-                filtered_topologies.insert(relationship_type.clone(), Arc::clone(topology));
-                relationship_count += topology.relationship_count();
-                if topology.is_inverse_indexed() {
-                    inverse_indexed_types.insert(relationship_type.clone());
-                }
-                if topology.has_parallel_edges() {
-                    has_parallel_edges = true;
-                }
-            }
-        }
-
-        let has_inverse_indices = !ordered_types.is_empty()
-            && ordered_types
-                .iter()
-                .all(|rel_type| inverse_indexed_types.contains(rel_type));
-
-        let filtered_characteristics = self.filtered_characteristics(has_inverse_indices);
-
-        let filtered_schema = if relationship_types.is_empty() {
-            Arc::clone(&self.schema)
-        } else {
-            let schema_types: HashSet<RelationshipType> = relationship_types
-                .iter()
-                .map(|rel_type| RelationshipType::of(rel_type.name()))
-                .collect();
-            Arc::new(self.schema.filter_relationship_types(&schema_types))
-        };
-
-        let filtered_relationship_properties = ordered_types
-            .iter()
-            .filter_map(|rel_type| {
-                self.relationship_properties
-                    .get(rel_type)
-                    .map(|store| (rel_type.clone(), store.clone()))
-            })
-            .collect::<HashMap<_, _>>();
-
-        let filtered_selectors = ordered_types
-            .iter()
-            .filter_map(|rel_type| {
-                self.relationship_property_selectors
-                    .get(rel_type)
-                    .map(|key| (rel_type.clone(), key.clone()))
-            })
-            .collect::<HashMap<_, _>>();
-
-        let filtered_graph = DefaultGraph::new(
-            Arc::clone(&self.config),
-            filtered_schema,
-            Arc::clone(&self.id_map),
-            filtered_characteristics,
-            filtered_topologies,
-            ordered_types,
-            inverse_indexed_types,
-            relationship_count,
-            has_parallel_edges,
-            self.node_properties.clone(),
-            filtered_relationship_properties,
-            filtered_selectors,
-        );
-
-        Ok(Arc::new(filtered_graph))
-    }
-
     fn has_relationship_property(&self) -> bool {
         self.has_relationship_properties
     }
 
-    fn concurrent_copy(&self) -> Arc<dyn Graph> {
+    fn concurrent_view(&self) -> Arc<dyn Graph> {
         Arc::new(self.clone())
     }
 
@@ -873,13 +869,11 @@ mod tests {
 
         let mut filter = HashSet::new();
         filter.insert(rel_type.clone());
-        let filtered = graph.relationship_type_filtered_graph(&filter).unwrap();
+        let filtered = graph.filtered_by_relationship_types(&filter);
         assert_eq!(filtered.relationship_count(), 3);
 
         let empty_filter = HashSet::new();
-        let no_filter = graph
-            .relationship_type_filtered_graph(&empty_filter)
-            .unwrap();
+        let no_filter = graph.filtered_by_relationship_types(&empty_filter);
         assert_eq!(no_filter.relationship_count(), graph.relationship_count());
     }
 }

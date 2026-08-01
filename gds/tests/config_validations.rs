@@ -354,7 +354,7 @@ fn graphsage_train_config_valid_and_invalid() {
     use gds::algo::embeddings::graphsage::types::{
         ActivationFunctionType, AggregatorType, GraphSageTrainConfig,
     };
-    use gds::concurrency::Concurrency;
+    use gds::task::concurrency::Concurrency;
 
     let valid = GraphSageTrainConfig {
         model_user: "u".to_string(),

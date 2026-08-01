@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::{HashMap, HashSet};
 
 /// Schema entry for a relationship type.
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct RelationshipSchemaEntry {
     identifier: RelationshipType,
     direction: Direction,
@@ -49,6 +49,19 @@ impl RelationshipSchemaEntry {
 
     pub fn properties(&self) -> &HashMap<String, RelationshipPropertySchema> {
         &self.properties
+    }
+
+    pub fn validate(&self) -> SchemaResult<()> {
+        for (key, property) in &self.properties {
+            if key != property.key() {
+                return Err(SchemaError::MapKeyMismatch {
+                    dimension: "relationship property",
+                    key: key.clone(),
+                    embedded: property.key().to_string(),
+                });
+            }
+        }
+        Ok(())
     }
 
     /// Creates a union of this entry with another entry.
@@ -168,7 +181,7 @@ impl MutableRelationshipSchemaEntry {
 }
 
 /// Schema for relationships in a graph.
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct RelationshipSchema {
     entries: HashMap<RelationshipType, RelationshipSchemaEntry>,
 }
@@ -196,8 +209,31 @@ impl RelationshipSchema {
         self.entries.keys().cloned().collect()
     }
 
+    pub fn validate(&self) -> SchemaResult<()> {
+        for (rel_type, entry) in &self.entries {
+            if rel_type != entry.identifier() {
+                return Err(SchemaError::MapKeyMismatch {
+                    dimension: "relationship",
+                    key: rel_type.name().to_string(),
+                    embedded: entry.identifier().name().to_string(),
+                });
+            }
+            entry.validate()?;
+        }
+        Ok(())
+    }
+
+    /// Returns the common direction when this schema is non-empty and uniform.
+    pub fn direction(&self) -> Option<Direction> {
+        let direction = self.entries.values().next()?.direction();
+        self.entries
+            .values()
+            .all(|entry| entry.direction() == direction)
+            .then_some(direction)
+    }
+
     pub fn is_undirected(&self) -> bool {
-        self.entries.values().all(|entry| entry.is_undirected())
+        self.direction() == Some(Direction::Undirected)
     }
 
     pub fn is_undirected_for_type(&self, rel_type: &RelationshipType) -> bool {
@@ -301,9 +337,19 @@ impl MutableRelationshipSchema {
         rel_type: RelationshipType,
         direction: Direction,
     ) -> &mut MutableRelationshipSchemaEntry {
-        self.entries
+        let entry = self
+            .entries
             .entry(rel_type.clone())
-            .or_insert_with(|| MutableRelationshipSchemaEntry::new(rel_type, direction))
+            .or_insert_with(|| MutableRelationshipSchemaEntry::new(rel_type.clone(), direction));
+        assert_eq!(
+            entry.direction(),
+            direction,
+            "relationship type '{}' cannot be both {} and {}",
+            rel_type,
+            entry.direction(),
+            direction
+        );
+        entry
     }
 
     /// Adds a relationship type to the schema.
@@ -326,6 +372,26 @@ impl MutableRelationshipSchema {
     ) -> &mut Self {
         self.get_or_create_type(rel_type, direction)
             .add_property(key, value_type);
+        self
+    }
+
+    /// Adds a complete property schema to a relationship type.
+    pub fn add_property_schema(
+        &mut self,
+        rel_type: RelationshipType,
+        direction: Direction,
+        schema: RelationshipPropertySchema,
+    ) -> &mut Self {
+        self.get_or_create_type(rel_type, direction)
+            .add_property_schema(schema);
+        self
+    }
+
+    /// Removes a property schema while retaining its relationship type.
+    pub fn remove_property(&mut self, rel_type: &RelationshipType, key: &str) -> &mut Self {
+        if let Some(entry) = self.entries.get_mut(rel_type) {
+            entry.remove_property(key);
+        }
         self
     }
 
@@ -390,14 +456,7 @@ fn union_relationship_properties(
 
     for (key, right_schema) in right {
         if let Some(left_schema) = result.get(key) {
-            if left_schema.value_type() != right_schema.value_type() {
-                return Err(SchemaError::PropertyTypeConflict {
-                    key: key.clone(),
-                    left: left_schema.value_type(),
-                    right: right_schema.value_type(),
-                });
-            }
-            // Keep left schema if types match
+            left_schema.ensure_compatible(right_schema)?;
         } else {
             result.insert(key.clone(), right_schema.clone());
         }
@@ -421,6 +480,22 @@ mod tests {
         assert_eq!(entry.properties().len(), 2);
         assert!(entry.properties().contains_key("since"));
         assert!(entry.properties().contains_key("weight"));
+    }
+
+    #[test]
+    fn validation_rejects_map_key_that_disagrees_with_relationship_type() {
+        let schema = RelationshipSchema::new(HashMap::from([(
+            RelationshipType::of("WRONG"),
+            RelationshipSchemaEntry::empty(RelationshipType::of("KNOWS"), Direction::Directed),
+        )]));
+
+        assert!(matches!(
+            schema.validate(),
+            Err(SchemaError::MapKeyMismatch {
+                dimension: "relationship",
+                ..
+            })
+        ));
     }
 
     #[test]
@@ -475,5 +550,27 @@ mod tests {
 
         let built = schema.build();
         assert!(built.is_undirected());
+        assert_eq!(built.direction(), Some(Direction::Undirected));
+    }
+
+    #[test]
+    fn global_direction_requires_non_empty_uniform_schema() {
+        assert_eq!(RelationshipSchema::empty().direction(), None);
+        assert!(!RelationshipSchema::empty().is_undirected());
+
+        let mut mixed = MutableRelationshipSchema::new();
+        mixed.add_relationship_type(RelationshipType::of("DIRECTED"), Direction::Directed);
+        mixed.add_relationship_type(RelationshipType::of("UNDIRECTED"), Direction::Undirected);
+
+        assert_eq!(mixed.build().direction(), None);
+    }
+
+    #[test]
+    #[should_panic(expected = "cannot be both DIRECTED and UNDIRECTED")]
+    fn mutable_schema_rejects_direction_conflict_immediately() {
+        let rel_type = RelationshipType::of("REL");
+        let mut schema = MutableRelationshipSchema::new();
+        schema.add_relationship_type(rel_type.clone(), Direction::Directed);
+        schema.add_relationship_type(rel_type, Direction::Undirected);
     }
 }

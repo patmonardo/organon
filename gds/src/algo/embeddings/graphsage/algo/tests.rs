@@ -63,7 +63,7 @@ fn graphsage_train_then_infer_via_catalog() {
     };
 
     let train = GraphSageTrainAlgorithmFactory::new("1.0.0".to_string()).build(
-        Graph::concurrent_copy(graph.as_ref()),
+        Graph::concurrent_view(graph.as_ref()),
         train_cfg.clone(),
         TaskProgressTracker::new(Tasks::leaf_with_volume("GraphSageTrain".to_string(), 1)),
         TerminationFlag::default(),
@@ -80,7 +80,7 @@ fn graphsage_train_then_infer_via_catalog() {
         concurrency: 1,
     };
     let cancelled = GraphSageStorageRuntime::new().compute(
-        Graph::concurrent_copy(graph.as_ref()),
+        Graph::concurrent_view(graph.as_ref()),
         &config,
         &catalog,
         TaskProgressTracker::new(Tasks::leaf_with_volume("GraphSage".to_string(), 1)),
@@ -94,7 +94,7 @@ fn graphsage_train_then_infer_via_catalog() {
 
     let factory = GraphSageAlgorithmFactory::new(std::sync::Arc::new(catalog));
     let algo = factory.build(
-        Graph::concurrent_copy(graph.as_ref()),
+        Graph::concurrent_view(graph.as_ref()),
         "alice",
         "m1",
         Concurrency::of(1),

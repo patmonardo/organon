@@ -4,7 +4,7 @@ use super::{Capabilities, DatabaseInfo, DeletionResult};
 use crate::projection::Orientation;
 use crate::projection::{NodeLabel, RelationshipType};
 use crate::types::graph::id_map::{IdMap, MappedNodeId};
-use crate::types::graph::{Graph, GraphResult};
+use crate::types::graph::Graph;
 use crate::types::properties::graph::GraphPropertyValues;
 use crate::types::properties::node::NodePropertyValues;
 use crate::types::properties::relationship::RelationshipPropertyValues;
@@ -15,6 +15,27 @@ use std::sync::Arc;
 
 /// Result type for GraphStore operations.
 pub type GraphStoreResult<T> = Result<T, GraphStoreError>;
+
+/// Result type for runtime graph-view construction.
+pub type GraphViewResult<T> = Result<T, GraphViewError>;
+
+/// Errors produced while validating or constructing a runtime graph view.
+#[derive(Debug, Clone, PartialEq, Eq, thiserror::Error)]
+pub enum GraphViewError {
+    #[error("Relationship type is not materialized: {0}")]
+    RelationshipTypeNotMaterialized(String),
+
+    #[error("Relationship property selector targets an unselected type: {0}")]
+    SelectorForUnselectedType(String),
+
+    #[error(
+        "Relationship property is not materialized for type {relationship_type}: {property_key}"
+    )]
+    RelationshipPropertyNotMaterialized {
+        relationship_type: String,
+        property_key: String,
+    },
+}
 
 /// Result of an induced subgraph operation
 #[derive(Debug, Clone)]
@@ -53,6 +74,56 @@ pub enum GraphStoreError {
 
     #[error("Schema error: {0}")]
     SchemaError(String),
+}
+
+/// Canonical request for constructing a runtime graph view.
+///
+/// An empty relationship-type set means all relationship types. The existing
+/// Java-compatible `get_graph_with_*` methods delegate to this Rust request type.
+#[derive(Debug, Clone, Default)]
+pub struct GraphViewSpec {
+    relationship_types: HashSet<RelationshipType>,
+    relationship_property_selectors: HashMap<RelationshipType, String>,
+    orientation: Orientation,
+}
+
+impl GraphViewSpec {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn with_relationship_types(
+        mut self,
+        relationship_types: HashSet<RelationshipType>,
+    ) -> Self {
+        self.relationship_types = relationship_types;
+        self
+    }
+
+    pub fn with_relationship_property_selectors(
+        mut self,
+        relationship_property_selectors: HashMap<RelationshipType, String>,
+    ) -> Self {
+        self.relationship_property_selectors = relationship_property_selectors;
+        self
+    }
+
+    pub fn with_orientation(mut self, orientation: Orientation) -> Self {
+        self.orientation = orientation;
+        self
+    }
+
+    pub fn relationship_types(&self) -> &HashSet<RelationshipType> {
+        &self.relationship_types
+    }
+
+    pub fn relationship_property_selectors(&self) -> &HashMap<RelationshipType, String> {
+        &self.relationship_property_selectors
+    }
+
+    pub fn orientation(&self) -> Orientation {
+        self.orientation
+    }
 }
 
 /// Central interface for managing and accessing graph data.
@@ -275,11 +346,18 @@ pub trait GraphStore: Send + Sync {
     /// This is the primary method for obtaining a Graph instance from the store.
     fn get_graph(&self) -> Arc<dyn Graph>;
 
+    /// Constructs a graph view from one canonical request.
+    fn get_graph_view(&self, spec: &GraphViewSpec) -> GraphViewResult<Arc<dyn Graph>>;
+
     /// Returns a graph view filtered to the provided relationship types.
     fn get_graph_with_types(
         &self,
         relationship_types: &HashSet<RelationshipType>,
-    ) -> GraphResult<Arc<dyn Graph>>;
+    ) -> GraphViewResult<Arc<dyn Graph>> {
+        self.get_graph_view(
+            &GraphViewSpec::new().with_relationship_types(relationship_types.clone()),
+        )
+    }
 
     /// Returns a graph view filtered to the provided relationship types and using
     /// the provided relationship property selectors per type.
@@ -290,14 +368,26 @@ pub trait GraphStore: Send + Sync {
         &self,
         relationship_types: &HashSet<RelationshipType>,
         relationship_property_selectors: &HashMap<RelationshipType, String>,
-    ) -> GraphResult<Arc<dyn Graph>>;
+    ) -> GraphViewResult<Arc<dyn Graph>> {
+        self.get_graph_view(
+            &GraphViewSpec::new()
+                .with_relationship_types(relationship_types.clone())
+                .with_relationship_property_selectors(relationship_property_selectors.clone()),
+        )
+    }
 
     /// Returns a graph view filtered to the provided relationship types and orientation.
     fn get_graph_with_types_and_orientation(
         &self,
         relationship_types: &HashSet<RelationshipType>,
         orientation: Orientation,
-    ) -> GraphResult<Arc<dyn Graph>>;
+    ) -> GraphViewResult<Arc<dyn Graph>> {
+        self.get_graph_view(
+            &GraphViewSpec::new()
+                .with_relationship_types(relationship_types.clone())
+                .with_orientation(orientation),
+        )
+    }
 
     /// Returns a graph view filtered by types, with property selectors, and orientation.
     fn get_graph_with_types_selectors_and_orientation(
@@ -305,7 +395,14 @@ pub trait GraphStore: Send + Sync {
         relationship_types: &HashSet<RelationshipType>,
         relationship_property_selectors: &HashMap<RelationshipType, String>,
         orientation: Orientation,
-    ) -> GraphResult<Arc<dyn Graph>>;
+    ) -> GraphViewResult<Arc<dyn Graph>> {
+        self.get_graph_view(
+            &GraphViewSpec::new()
+                .with_relationship_types(relationship_types.clone())
+                .with_relationship_property_selectors(relationship_property_selectors.clone())
+                .with_orientation(orientation),
+        )
+    }
 }
 
 /// Base implementation for GraphStore adapters.
@@ -592,43 +689,8 @@ impl<G: GraphStore> GraphStore for GraphStoreAdapter<G> {
         self.graph_store.get_graph()
     }
 
-    fn get_graph_with_types(
-        &self,
-        relationship_types: &HashSet<RelationshipType>,
-    ) -> GraphResult<Arc<dyn Graph>> {
-        self.graph_store.get_graph_with_types(relationship_types)
-    }
-
-    fn get_graph_with_types_and_selectors(
-        &self,
-        relationship_types: &HashSet<RelationshipType>,
-        relationship_property_selectors: &HashMap<RelationshipType, String>,
-    ) -> GraphResult<Arc<dyn Graph>> {
-        self.graph_store
-            .get_graph_with_types_and_selectors(relationship_types, relationship_property_selectors)
-    }
-
-    fn get_graph_with_types_and_orientation(
-        &self,
-        relationship_types: &HashSet<RelationshipType>,
-        orientation: Orientation,
-    ) -> GraphResult<Arc<dyn Graph>> {
-        self.graph_store
-            .get_graph_with_types_and_orientation(relationship_types, orientation)
-    }
-
-    fn get_graph_with_types_selectors_and_orientation(
-        &self,
-        relationship_types: &HashSet<RelationshipType>,
-        relationship_property_selectors: &HashMap<RelationshipType, String>,
-        orientation: Orientation,
-    ) -> GraphResult<Arc<dyn Graph>> {
-        self.graph_store
-            .get_graph_with_types_selectors_and_orientation(
-                relationship_types,
-                relationship_property_selectors,
-                orientation,
-            )
+    fn get_graph_view(&self, spec: &GraphViewSpec) -> GraphViewResult<Arc<dyn Graph>> {
+        self.graph_store.get_graph_view(spec)
     }
 }
 
@@ -642,6 +704,7 @@ mod tests {
     use crate::types::graph::RelationshipTopology;
     use crate::types::graph_store::{DatabaseId, DatabaseLocation, GraphName};
     use crate::types::properties::relationship::DefaultRelationshipPropertyValues;
+    use crate::types::schema::{Direction, MutableGraphSchema};
     use std::collections::HashMap;
     use std::sync::Arc;
 
@@ -651,7 +714,11 @@ mod tests {
             DatabaseId::new("db"),
             DatabaseLocation::remote("localhost", 7687, None, None),
         );
-        let schema = GraphSchema::empty();
+        let mut schema = MutableGraphSchema::empty();
+        schema
+            .relationship_schema_mut()
+            .add_relationship_type(RelationshipType::of("KNOWS"), Direction::Directed);
+        let schema = schema.build();
         let capabilities = Capabilities::default();
         let id_map = SimpleIdMap::from_original_ids([0, 1, 2]);
 

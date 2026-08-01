@@ -13,6 +13,7 @@ mod graph_name;
 mod graph_store;
 #[cfg(test)]
 mod miscellaneous_tests;
+mod schema_validation;
 
 pub use capabilities::*;
 pub use database_id::*;
@@ -21,3 +22,4 @@ pub use default_graph_store::*;
 pub use deletion_result::*;
 pub use graph_name::*;
 pub use graph_store::*;
+pub use schema_validation::*;

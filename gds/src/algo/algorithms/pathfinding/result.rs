@@ -198,7 +198,7 @@ pub fn build_path_relationship_store(
     let pv: Arc<dyn RelationshipPropertyValues> = Arc::new(
         DefaultDoubleRelationshipPropertyValues::<VecDouble>::from_collection(
             VecDouble::from(flat_costs),
-            updated.relationship_count(),
+            updated.relationship_count_for_type(&rel_type),
         ),
     );
 

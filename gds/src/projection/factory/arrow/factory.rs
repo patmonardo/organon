@@ -16,7 +16,13 @@ use crate::types::graph::PartialIdMap;
 use crate::types::graph::RelationshipTopology;
 use crate::types::graph::SimpleIdMap;
 use crate::types::graph_store::DefaultGraphStore;
+use crate::types::schema::Direction;
 use crate::types::schema::GraphSchema;
+use crate::types::schema::MutableGraphSchema;
+use crate::types::schema::NodeLabel;
+use crate::types::schema::PropertySchema;
+use crate::types::schema::RelationshipType;
+use crate::types::ValueType;
 use std::sync::Arc;
 
 /// Arrow-native factory for creating GraphStores.
@@ -286,8 +292,7 @@ impl ArrowNativeFactory {
         }
         let topology = RelationshipTopology::new(outgoing, None);
 
-        // Schema: basic node/relationship schemas
-        let schema = GraphSchema::empty();
+        let schema = infer_materialized_schema(node_table);
 
         // Backend selection for properties
         // Assemble DefaultGraphStore
@@ -368,6 +373,39 @@ impl ArrowNativeFactory {
 
         Ok(store)
     }
+}
+
+fn infer_materialized_schema(node_table: &NodeTableReference) -> GraphSchema {
+    let all_nodes = NodeLabel::all_nodes();
+    let mut schema = MutableGraphSchema::empty();
+    schema
+        .node_schema_mut()
+        .add_property(all_nodes.clone(), "id", ValueType::Long);
+
+    for index in node_table.property_column_indices() {
+        let field = &node_table.schema().fields[index];
+        let value_type = match field.data_type() {
+            arrow2::datatypes::DataType::Int64 => Some(ValueType::Long),
+            arrow2::datatypes::DataType::Float64 => Some(ValueType::Double),
+            _ => None,
+        };
+        if let Some(value_type) = value_type {
+            schema.node_schema_mut().add_property(
+                all_nodes.clone(),
+                field.name.clone(),
+                value_type,
+            );
+        }
+    }
+
+    schema
+        .relationship_schema_mut()
+        .add_relationship_type(RelationshipType::of("REL"), Direction::Directed);
+    schema.put_graph_property(
+        "node_count",
+        PropertySchema::of("node_count", ValueType::Long),
+    );
+    schema.build()
 }
 
 #[cfg(test)]
@@ -470,7 +508,7 @@ mod tests {
     #[test]
     fn build_from_in_memory_tables() {
         use crate::projection::factory::arrow::test_utils::{sample_edge_table, sample_node_table};
-        use crate::types::graph_store::GraphStore;
+        use crate::types::graph_store::{validate_graph_store_schema, GraphStore};
 
         let nodes = Arc::new(sample_node_table());
         let edges = Arc::new(sample_edge_table());
@@ -486,5 +524,19 @@ mod tests {
         assert_eq!(store.node_count(), 3);
         assert_eq!(store.relationship_count(), 2);
         assert!(store.has_node_property("id"));
+        assert!(store.schema().validate().is_ok());
+        assert_eq!(
+            store.schema().relationship_schema().direction(),
+            Some(Direction::Directed)
+        );
+        assert!(store
+            .schema()
+            .node_schema()
+            .get(&NodeLabel::all_nodes())
+            .unwrap()
+            .properties()
+            .contains_key("id"));
+        assert!(store.schema().graph_properties().contains_key("node_count"));
+        validate_graph_store_schema(&store).expect("schema must describe materialized store");
     }
 }

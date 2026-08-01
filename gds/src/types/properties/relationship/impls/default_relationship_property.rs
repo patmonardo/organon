@@ -1,7 +1,10 @@
 use crate::types::properties::relationship::RelationshipPropertyValues;
 use crate::types::properties::Property;
 use crate::types::properties::PropertyValues;
+use crate::types::schema::Aggregation;
 use crate::types::schema::PropertySchema;
+use crate::types::schema::PropertySchemaTrait;
+use crate::types::schema::RelationshipPropertySchema;
 use crate::types::DefaultValue;
 use crate::types::PropertyState;
 use std::sync::Arc;
@@ -12,7 +15,7 @@ use std::sync::Arc;
 #[derive(Debug, Clone)]
 pub struct DefaultRelationshipProperty {
     values: Arc<dyn RelationshipPropertyValues>,
-    schema: PropertySchema,
+    schema: RelationshipPropertySchema,
 }
 
 impl DefaultRelationshipProperty {
@@ -31,7 +34,10 @@ impl DefaultRelationshipProperty {
         let value_type = values.value_type();
         let default_value = DefaultValue::of(value_type);
         Self::with_schema(
-            PropertySchema::new(key_str, value_type, default_value, state),
+            RelationshipPropertySchema::new(
+                PropertySchema::new(key_str, value_type, default_value, state),
+                Aggregation::None,
+            ),
             values,
         )
     }
@@ -46,14 +52,34 @@ impl DefaultRelationshipProperty {
         let key_str = key.into();
         let value_type = values.value_type();
         Self::with_schema(
-            PropertySchema::new(key_str, value_type, default_value, state),
+            RelationshipPropertySchema::new(
+                PropertySchema::new(key_str, value_type, default_value, state),
+                Aggregation::None,
+            ),
             values,
         )
     }
 
+    pub fn with_aggregation(
+        key: impl Into<String>,
+        state: PropertyState,
+        values: Arc<dyn RelationshipPropertyValues>,
+        default_value: DefaultValue,
+        aggregation: Aggregation,
+    ) -> Self {
+        let schema = RelationshipPropertySchema::with_aggregation(
+            key,
+            values.value_type(),
+            default_value,
+            state,
+            aggregation,
+        );
+        Self::with_schema(schema, values)
+    }
+
     /// Construct a property from an existing schema, reusing the provided values.
     pub fn with_schema(
-        schema: PropertySchema,
+        schema: RelationshipPropertySchema,
         values: Arc<dyn RelationshipPropertyValues>,
     ) -> Self {
         Self { values, schema }
@@ -70,7 +96,7 @@ impl DefaultRelationshipProperty {
     }
 
     /// Returns the relationship property schema.
-    pub fn property_schema(&self) -> &PropertySchema {
+    pub fn property_schema(&self) -> &RelationshipPropertySchema {
         &self.schema
     }
 
@@ -86,7 +112,7 @@ impl Property for DefaultRelationshipProperty {
     }
 
     fn schema(&self) -> &PropertySchema {
-        &self.schema
+        self.schema.base_schema()
     }
 }
 
@@ -140,6 +166,22 @@ mod tests {
 
         assert_eq!(property.key(), "score");
         assert_eq!(property.property_schema().default_value(), &default_value);
+    }
+
+    #[test]
+    fn relationship_property_preserves_aggregation() {
+        let values: Arc<dyn RelationshipPropertyValues> = Arc::new(
+            DefaultRelationshipPropertyValues::with_values(vec![5.5, 6.6], 1.0, 2),
+        );
+        let property = DefaultRelationshipProperty::with_aggregation(
+            "score",
+            PropertyState::Persistent,
+            values,
+            DefaultValue::double(1.0),
+            Aggregation::Max,
+        );
+
+        assert_eq!(property.property_schema().aggregation(), Aggregation::Max);
     }
 
     #[test]

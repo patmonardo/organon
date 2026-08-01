@@ -88,7 +88,7 @@ pub fn run_parallel_bfs(
                     let end = (start + chunk_size).min(expandable.len());
                     let mut examined_relationships = 0usize;
                     let mut candidates = Vec::new();
-                    let worker_graph = Graph::concurrent_copy(graph);
+                    let worker_graph = Graph::concurrent_view(graph);
 
                     for (_source_node, current_node, weight) in &expandable[start..end] {
                         let stream = worker_graph.stream_relationships(*current_node, fallback);

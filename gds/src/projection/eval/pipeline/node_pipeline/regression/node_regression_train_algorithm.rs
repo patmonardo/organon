@@ -1,9 +1,9 @@
-use crate::task::progress::tasks::progress_tracker::ProgressTracker;
 use crate::projection::eval::pipeline::NodePropertyPipelineBaseTrainConfig;
 use crate::projection::eval::pipeline::PipelineTrainAlgorithm;
 use crate::projection::eval::pipeline::PipelineTrainAlgorithmError;
 use crate::projection::eval::pipeline::PipelineTrainer;
 use crate::projection::eval::pipeline::ResultToModelConverter;
+use crate::task::progress::tasks::progress_tracker::ProgressTracker;
 use crate::types::graph_store::DefaultGraphStore;
 use std::sync::Arc;
 

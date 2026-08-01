@@ -99,9 +99,7 @@ impl GraphSageBuilder {
                 &std::collections::HashMap::new(),
                 Orientation::Natural,
             )
-            .map_err(|e: Box<dyn std::error::Error + Send + Sync>| {
-                AlgorithmError::Graph(e.to_string())
-            })?;
+            .map_err(|error| AlgorithmError::Graph(error.to_string()))?;
 
         let graphsage_config = GraphSageConfig {
             model_user: self.model_user,

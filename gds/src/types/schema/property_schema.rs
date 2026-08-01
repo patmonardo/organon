@@ -1,4 +1,6 @@
 use super::Aggregation;
+use super::SchemaError;
+use super::SchemaResult;
 use crate::types::DefaultValue;
 use crate::types::PropertyState;
 use crate::types::ValueType;
@@ -13,7 +15,7 @@ pub trait PropertySchemaTrait: Send + Sync {
 }
 
 /// Schema describing a node property.
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct PropertySchema {
     key: String,
     value_type: ValueType,
@@ -72,6 +74,35 @@ impl PropertySchema {
     pub fn state(&self) -> PropertyState {
         self.state // PropertyState is Copy, no need to clone
     }
+
+    pub fn ensure_compatible(&self, other: &Self) -> SchemaResult<()> {
+        if self.key != other.key {
+            return Err(SchemaError::IdentifierMismatch {
+                left: self.key.clone(),
+                right: other.key.clone(),
+            });
+        }
+        if self.value_type != other.value_type {
+            return Err(SchemaError::PropertyTypeConflict {
+                key: self.key.clone(),
+                left: self.value_type,
+                right: other.value_type,
+            });
+        }
+        if self.default_value != other.default_value {
+            return Err(SchemaError::PropertyDefaultConflict {
+                key: self.key.clone(),
+            });
+        }
+        if self.state != other.state {
+            return Err(SchemaError::PropertyStateConflict {
+                key: self.key.clone(),
+                left: self.state,
+                right: other.state,
+            });
+        }
+        Ok(())
+    }
 }
 
 impl PropertySchemaTrait for PropertySchema {
@@ -93,7 +124,7 @@ impl PropertySchemaTrait for PropertySchema {
 }
 
 /// Schema describing a relationship property (extends PropertySchema with aggregation).
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct RelationshipPropertySchema {
     base: PropertySchema,
     aggregation: Aggregation,
@@ -102,6 +133,10 @@ pub struct RelationshipPropertySchema {
 impl RelationshipPropertySchema {
     pub fn new(base: PropertySchema, aggregation: Aggregation) -> Self {
         Self { base, aggregation }
+    }
+
+    pub fn base_schema(&self) -> &PropertySchema {
+        &self.base
     }
 
     /// Creates a relationship property schema with default settings.
@@ -128,6 +163,18 @@ impl RelationshipPropertySchema {
 
     pub fn aggregation(&self) -> Aggregation {
         self.aggregation
+    }
+
+    pub fn ensure_compatible(&self, other: &Self) -> SchemaResult<()> {
+        self.base.ensure_compatible(&other.base)?;
+        if self.aggregation != other.aggregation {
+            return Err(SchemaError::PropertyAggregationConflict {
+                key: self.key().to_string(),
+                left: self.aggregation,
+                right: other.aggregation,
+            });
+        }
+        Ok(())
     }
 
     /// Returns a normalized version where DEFAULT aggregation is resolved.
@@ -202,5 +249,59 @@ mod tests {
 
         let normalized = schema.normalize();
         assert_eq!(normalized.aggregation(), Aggregation::None);
+    }
+
+    #[test]
+    fn compatibility_includes_default_and_state() {
+        let persistent = PropertySchema::with_defaults(
+            "score",
+            ValueType::Double,
+            DefaultValue::double(0.0),
+            PropertyState::Persistent,
+        );
+        let different_default = PropertySchema::with_defaults(
+            "score",
+            ValueType::Double,
+            DefaultValue::double(1.0),
+            PropertyState::Persistent,
+        );
+        let transient = PropertySchema::with_defaults(
+            "score",
+            ValueType::Double,
+            DefaultValue::double(0.0),
+            PropertyState::Transient,
+        );
+
+        assert!(matches!(
+            persistent.ensure_compatible(&different_default),
+            Err(SchemaError::PropertyDefaultConflict { .. })
+        ));
+        assert!(matches!(
+            persistent.ensure_compatible(&transient),
+            Err(SchemaError::PropertyStateConflict { .. })
+        ));
+    }
+
+    #[test]
+    fn relationship_compatibility_includes_aggregation() {
+        let sum = RelationshipPropertySchema::with_aggregation(
+            "weight",
+            ValueType::Double,
+            DefaultValue::double(0.0),
+            PropertyState::Persistent,
+            Aggregation::Sum,
+        );
+        let max = RelationshipPropertySchema::with_aggregation(
+            "weight",
+            ValueType::Double,
+            DefaultValue::double(0.0),
+            PropertyState::Persistent,
+            Aggregation::Max,
+        );
+
+        assert!(matches!(
+            sum.ensure_compatible(&max),
+            Err(SchemaError::PropertyAggregationConflict { .. })
+        ));
     }
 }

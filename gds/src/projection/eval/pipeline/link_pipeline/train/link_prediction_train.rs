@@ -1,10 +1,10 @@
 // Phase 5.2: LinkPredictionTrain - Training orchestration for link prediction
 
 use super::{FeaturesAndLabels, LinkPredictionTrainConfig, LinkPredictionTrainResult};
-use crate::task::progress::{LeafTask, Tasks};
 use crate::projection::eval::pipeline::link_pipeline::{
     LinkPredictionSplitConfig, LinkPredictionTrainingPipeline,
 };
+use crate::task::progress::{LeafTask, Tasks};
 use std::marker::PhantomData;
 
 /// Link prediction training orchestrator.

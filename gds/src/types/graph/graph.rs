@@ -1,5 +1,4 @@
 use super::{characteristics::GraphCharacteristics, degrees::Degrees};
-use crate::projection::RelationshipType;
 use crate::types::graph::{
     characteristics::GraphCharacteristicsBuilder,
     id_map::{FilteredIdMap, IdMap, MappedNodeId, NOT_FOUND},
@@ -9,11 +8,7 @@ use crate::types::properties::{
     relationship::{relationship_properties::RelationshipProperties, traits::RelationshipIterator},
 };
 use crate::types::schema::GraphSchema;
-use std::collections::HashSet;
 use std::sync::Arc;
-
-/// Result alias used by graph operations that may fail during construction of filtered views.
-pub type GraphResult<T> = Result<T, Box<dyn std::error::Error + Send + Sync>>;
 
 /// Core graph interface combining topology, properties, and ID mapping access.
 pub trait Graph:
@@ -42,17 +37,11 @@ pub trait Graph:
     /// Returns `true` when parallel relationships may exist in the graph.
     fn is_multi_graph(&self) -> bool;
 
-    /// Produces a filtered view limited to the given relationship types.
-    fn relationship_type_filtered_graph(
-        &self,
-        relationship_types: &HashSet<RelationshipType>,
-    ) -> GraphResult<Arc<dyn Graph>>;
-
     /// Returns whether any relationship property values are present.
     fn has_relationship_property(&self) -> bool;
 
     /// Creates a thread-safe copy for concurrent use.
-    fn concurrent_copy(&self) -> Arc<dyn Graph>;
+    fn concurrent_view(&self) -> Arc<dyn Graph>;
 
     /// Returns the filtered node mapping used to create this graph, if one exists.
     fn as_node_filtered_graph(&self) -> Option<Arc<dyn FilteredIdMap>>;

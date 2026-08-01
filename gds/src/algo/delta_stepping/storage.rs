@@ -376,7 +376,7 @@ impl DeltaSteppingStorageRuntime {
         direction: u8,
         node_count: usize,
     ) -> Result<BinExpansion, AlgorithmError> {
-        let worker_graph = Graph::concurrent_copy(graph);
+        let worker_graph = Graph::concurrent_view(graph);
         let fallback = worker_graph.default_property_value();
         let mut candidates = Vec::new();
         let mut scanned_relationships = 0usize;

@@ -123,7 +123,7 @@ impl SubGraph {
 
     pub fn relationship_weight_function(graph: &dyn Graph) -> (Arc<dyn RelationshipWeights>, bool) {
         if graph.has_relationship_property() {
-            let g = Graph::concurrent_copy(graph);
+            let g = Graph::concurrent_view(graph);
             (
                 Arc::new(ClosureRelationshipWeights::new(move |s, t, default| {
                     g.relationship_property(s as i64, t as i64, default)

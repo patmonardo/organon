@@ -2,6 +2,8 @@ use crate::types::properties::node::NodeProperty;
 use crate::types::properties::node::NodePropertyValues;
 use crate::types::properties::node::{NodePropertyStore, NodePropertyStoreBuilder};
 use crate::types::properties::PropertyStore;
+use crate::types::properties::PropertyStoreError;
+use crate::types::properties::PropertyStoreResult;
 use crate::types::PropertyState;
 // Note: The generated property value types are now generic over Collections backend.
 // They should be used as DefaultLongNodePropertyValues<C>, DefaultDoubleNodePropertyValues<C>, etc.
@@ -31,12 +33,47 @@ pub struct DefaultNodePropertyStoreBuilder {
     properties: HashMap<String, NodeProperty>,
 }
 
-/* Base PropertyStore implementation - only properties() needed */
 impl PropertyStore for DefaultNodePropertyStore {
     type Property = NodeProperty;
 
-    fn properties(&self) -> &HashMap<String, Self::Property> {
-        &self.properties
+    fn get(&self, property_key: &str) -> Option<&Self::Property> {
+        self.properties.get(property_key)
+    }
+
+    fn columns(&self) -> Box<dyn Iterator<Item = &Self::Property> + '_> {
+        Box::new(self.properties.values())
+    }
+
+    fn add_column(&mut self, property: Self::Property) -> PropertyStoreResult<()> {
+        let key = property.key().to_string();
+        if key.trim().is_empty() {
+            return Err(PropertyStoreError::InvalidPropertyKey(key));
+        }
+        if self.properties.contains_key(&key) {
+            return Err(PropertyStoreError::PropertyAlreadyExists(key));
+        }
+        self.properties.insert(key, property);
+        Ok(())
+    }
+
+    fn replace_column(&mut self, property: Self::Property) -> PropertyStoreResult<Self::Property> {
+        let key = property.key().to_string();
+        if key.trim().is_empty() {
+            return Err(PropertyStoreError::InvalidPropertyKey(key));
+        }
+        if !self.properties.contains_key(&key) {
+            return Err(PropertyStoreError::PropertyNotFound(key));
+        }
+        Ok(self
+            .properties
+            .insert(key, property)
+            .expect("column existence was checked"))
+    }
+
+    fn remove_column(&mut self, property_key: &str) -> PropertyStoreResult<Self::Property> {
+        self.properties
+            .remove(property_key)
+            .ok_or_else(|| PropertyStoreError::PropertyNotFound(property_key.to_string()))
     }
 }
 
@@ -99,14 +136,15 @@ impl NodePropertyStoreBuilder for DefaultNodePropertyStoreBuilder {
         self
     }
 
-    fn put_if_absent(mut self, key: impl Into<String>, property: Self::Property) -> Self {
-        let k = key.into();
-        self.properties.entry(k).or_insert(property);
+    fn put_if_absent(mut self, property: Self::Property) -> Self {
+        self.properties
+            .entry(property.key().to_string())
+            .or_insert(property);
         self
     }
 
-    fn put(mut self, key: impl Into<String>, property: Self::Property) -> Self {
-        self.properties.insert(key.into(), property);
+    fn put(mut self, property: Self::Property) -> Self {
+        self.properties.insert(property.key().to_string(), property);
         self
     }
 
@@ -291,7 +329,7 @@ mod tests {
     #[test]
     fn put_and_get() {
         let p1 = sample_prop("age");
-        let store = DefaultNodePropertyStore::builder().put("age", p1).build();
+        let store = DefaultNodePropertyStore::builder().put(p1).build();
         assert!(store.contains_key("age"));
         assert_eq!(store.key_set(), vec!["age"]);
         assert!(store.get_property_values("age").is_some());
@@ -302,8 +340,8 @@ mod tests {
         let p1 = sample_prop("level");
         let p2 = sample_prop("level");
         let store = DefaultNodePropertyStore::builder()
-            .put_if_absent("level", p1)
-            .put_if_absent("level", p2) // ignored
+            .put_if_absent(p1)
+            .put_if_absent(p2) // ignored
             .build();
         assert_eq!(store.len(), 1);
     }
@@ -312,7 +350,7 @@ mod tests {
     fn remove_property() {
         let p1 = sample_prop("rank");
         let store = DefaultNodePropertyStore::builder()
-            .put("rank", p1)
+            .put(p1)
             .remove_property("rank")
             .build();
         assert!(store.is_empty());
@@ -321,9 +359,28 @@ mod tests {
     #[test]
     fn to_builder_round_trip() {
         let p1 = sample_prop("score");
-        let store = DefaultNodePropertyStore::builder().put("score", p1).build();
+        let store = DefaultNodePropertyStore::builder().put(p1).build();
         let rebuilt = store.to_builder().build();
         assert!(rebuilt.contains_key("score"));
+    }
+
+    #[test]
+    fn column_mutations_use_embedded_schema_key() {
+        let mut store = DefaultNodePropertyStore::empty();
+        store.add_column(sample_prop("score")).unwrap();
+        assert!(store.contains_key("score"));
+        assert!(matches!(
+            store.add_column(sample_prop("score")),
+            Err(PropertyStoreError::PropertyAlreadyExists(key)) if key == "score"
+        ));
+
+        let previous = store.replace_column(sample_prop("score")).unwrap();
+        assert_eq!(previous.key(), "score");
+        assert_eq!(store.remove_column("score").unwrap().key(), "score");
+        assert!(matches!(
+            store.remove_column("score"),
+            Err(PropertyStoreError::PropertyNotFound(key)) if key == "score"
+        ));
     }
 
     #[test]

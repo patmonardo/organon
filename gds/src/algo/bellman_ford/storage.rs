@@ -341,7 +341,7 @@ impl BellmanFordStorageRuntime {
         direction: u8,
         node_count: usize,
     ) -> Result<FrontierExpansion, AlgorithmError> {
-        let worker_graph = Graph::concurrent_copy(graph);
+        let worker_graph = Graph::concurrent_view(graph);
         let fallback = worker_graph.default_property_value();
         let mut candidates = Vec::new();
         let mut negative_cycle_nodes = Vec::new();

@@ -28,6 +28,30 @@ pub enum SchemaError {
         right: ValueType,
     },
 
+    #[error("Property '{key}' has conflicting default values")]
+    PropertyDefaultConflict { key: String },
+
+    #[error("Property '{key}' has conflicting states: {left} vs {right}")]
+    PropertyStateConflict {
+        key: String,
+        left: crate::types::PropertyState,
+        right: crate::types::PropertyState,
+    },
+
+    #[error("Relationship property '{key}' has conflicting aggregations: {left} vs {right}")]
+    PropertyAggregationConflict {
+        key: String,
+        left: Aggregation,
+        right: Aggregation,
+    },
+
+    #[error("{dimension} map key '{key}' does not match embedded identifier '{embedded}'")]
+    MapKeyMismatch {
+        dimension: &'static str,
+        key: String,
+        embedded: String,
+    },
+
     #[error("Cannot union entries with different identifiers: {left} and {right}")]
     IdentifierMismatch { left: String, right: String },
 

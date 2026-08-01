@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::{HashMap, HashSet};
 
 /// Schema entry for a node label.
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct NodeSchemaEntry {
     identifier: NodeLabel,
     properties: HashMap<String, PropertySchema>,
@@ -31,6 +31,19 @@ impl NodeSchemaEntry {
 
     pub fn properties(&self) -> &HashMap<String, PropertySchema> {
         &self.properties
+    }
+
+    pub fn validate(&self) -> SchemaResult<()> {
+        for (key, property) in &self.properties {
+            if key != property.key() {
+                return Err(SchemaError::MapKeyMismatch {
+                    dimension: "node property",
+                    key: key.clone(),
+                    embedded: property.key().to_string(),
+                });
+            }
+        }
+        Ok(())
     }
 
     /// Creates a union of this entry with another entry.
@@ -122,7 +135,7 @@ impl MutableNodeSchemaEntry {
 }
 
 /// Schema for nodes in a graph.
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct NodeSchema {
     entries: HashMap<NodeLabel, NodeSchemaEntry>,
 }
@@ -148,6 +161,20 @@ impl NodeSchema {
 
     pub fn available_labels(&self) -> HashSet<NodeLabel> {
         self.entries.keys().cloned().collect()
+    }
+
+    pub fn validate(&self) -> SchemaResult<()> {
+        for (label, entry) in &self.entries {
+            if label != entry.identifier() {
+                return Err(SchemaError::MapKeyMismatch {
+                    dimension: "node",
+                    key: label.name().to_string(),
+                    embedded: entry.identifier().name().to_string(),
+                });
+            }
+            entry.validate()?;
+        }
+        Ok(())
     }
 
     pub fn contains_only_all_nodes_label(&self) -> bool {
@@ -323,14 +350,7 @@ fn union_properties(
 
     for (key, right_schema) in right {
         if let Some(left_schema) = result.get(key) {
-            if left_schema.value_type() != right_schema.value_type() {
-                return Err(SchemaError::PropertyTypeConflict {
-                    key: key.clone(),
-                    left: left_schema.value_type(),
-                    right: right_schema.value_type(),
-                });
-            }
-            // Keep left schema if types match
+            left_schema.ensure_compatible(right_schema)?;
         } else {
             result.insert(key.clone(), right_schema.clone());
         }
@@ -354,6 +374,22 @@ mod tests {
         assert_eq!(entry.properties().len(), 2);
         assert!(entry.properties().contains_key("name"));
         assert!(entry.properties().contains_key("age"));
+    }
+
+    #[test]
+    fn validation_rejects_map_key_that_disagrees_with_node_label() {
+        let schema = NodeSchema::new(HashMap::from([(
+            NodeLabel::of("Wrong"),
+            NodeSchemaEntry::empty(NodeLabel::of("Person")),
+        )]));
+
+        assert!(matches!(
+            schema.validate(),
+            Err(SchemaError::MapKeyMismatch {
+                dimension: "node",
+                ..
+            })
+        ));
     }
 
     #[test]

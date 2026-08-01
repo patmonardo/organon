@@ -241,7 +241,7 @@ impl GraphSageModelTrainer {
                 let tasks: Vec<Box<dyn FnOnce() + Send>> = sampled_batches
                     .into_iter()
                     .map(|batch| {
-                        let graph = <dyn Graph as Graph>::concurrent_copy(&*graph);
+                        let graph = <dyn Graph as Graph>::concurrent_view(&*graph);
                         let features = Arc::clone(&features);
                         let layers = layers.clone();
                         let feature_function = Arc::clone(&self.feature_function);

@@ -18,11 +18,13 @@ pub struct HashGNNComputationRuntime;
 impl HashGNNComputationRuntime {
     pub fn run(
         graph: Arc<dyn Graph>,
+        relationship_graphs: Vec<Arc<dyn Graph>>,
         config: &HashGNNConfig,
         storage: &HashGNNStorageRuntime,
     ) -> Result<HashGNNResult, AlgorithmError> {
         Self::run_with_controls(
             graph,
+            relationship_graphs,
             config,
             storage,
             &mut NoopProgressTracker,
@@ -32,6 +34,7 @@ impl HashGNNComputationRuntime {
 
     pub fn run_with_controls(
         graph: Arc<dyn Graph>,
+        relationship_graphs: Vec<Arc<dyn Graph>>,
         config: &HashGNNConfig,
         storage: &HashGNNStorageRuntime,
         progress_tracker: &mut dyn ProgressTracker,
@@ -72,7 +75,12 @@ impl HashGNNComputationRuntime {
             random_seed: config.random_seed,
         };
 
-        let algo = super::super::hash_gnn::HashGNN::new(graph, params, termination_flag.clone());
+        let algo = super::super::hash_gnn::HashGNN::new(
+            graph,
+            relationship_graphs,
+            params,
+            termination_flag.clone(),
+        );
 
         let raw = algo
             .compute(progress_tracker)

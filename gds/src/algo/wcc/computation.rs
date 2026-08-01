@@ -154,7 +154,7 @@ fn sampled_strategy(
     let sampled_progress: Vec<usize> = executor
         .parallel_map(0, partitions.len(), termination_flag, |idx| {
             let partition = partitions[idx];
-            let g = Graph::concurrent_copy(graph);
+            let g = Graph::concurrent_view(graph);
             let fallback = g.default_property_value();
 
             let mut processed: usize = 0;
@@ -206,7 +206,7 @@ fn sampled_strategy(
     let linked_progress: Vec<usize> = executor
         .parallel_map(0, partitions.len(), termination_flag, |idx| {
             let partition = partitions[idx];
-            let g = Graph::concurrent_copy(graph);
+            let g = Graph::concurrent_view(graph);
             let fallback = g.default_property_value();
             let use_inverse = g.characteristics().is_inverse_indexed();
 
@@ -299,7 +299,7 @@ fn unsampled_strategy(
     let processed: Vec<usize> = executor
         .parallel_map(0, partitions.len(), termination_flag, |idx| {
             let partition = partitions[idx];
-            let g = Graph::concurrent_copy(graph);
+            let g = Graph::concurrent_view(graph);
             let fallback = g.default_property_value();
 
             let mut count = 0usize;

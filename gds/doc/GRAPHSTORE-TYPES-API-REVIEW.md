@@ -16,6 +16,28 @@ The governing architectural question is whether the current Types surface is a
 genuine contract that both `DefaultGraphStore` and a future `CoreGraphStore` can
 implement, or whether it still encodes the shape of the Bootstrap implementation.
 
+## Review Posture
+
+Java GDS compatibility remains an external behavioral reference, especially for
+the GraphStore and Graph capabilities consumed by algorithms. It is not a mandate
+to reproduce Java ownership, factories, or class structure in Rust.
+
+`DefaultGraphStore` is a disposable conformance probe. Its standalone RAM model,
+`Arc` snapshots, nested vectors, and direct property maps are useful because they
+make API contradictions cheap to expose and test. They are not design constraints
+for `CoreGraphStore`. Code should be retained only where it clarifies the shared
+contract or remains useful for small deterministic algorithm tests.
+
+The Applications layer exposes two first-class public worlds:
+
+- Dataset is the primary data and statistical-learning API.
+- GraphStore is the graph-native API for projection, topology, typed graph
+  properties, graph views, algorithms, and catalog operations.
+
+GraphStore may interoperate with Dataset and Collections, but it must not disappear
+behind them. `CoreGraphStore` therefore needs a stable Applications-facing contract,
+not merely an internal Dataset adapter.
+
 ## Invariants
 
 - **Empirical adequacy:** existing graph and property behavior remains executable
@@ -36,10 +58,9 @@ Verified on 2026-07-31:
 | `cargo test -p gds --lib types::graph`       | 48 passed |
 | `cargo test -p gds --lib types::properties`  | 51 passed |
 
-The unqualified `cargo test -p gds types::graph_store` does not reach the focused
-tests because unrelated integration test compilation currently fails in
-`gds/tests/config_validations.rs`: it imports the absent `gds::concurrency` path.
-This is baseline debt, not a finding against the GraphStore Types slice.
+The initial unqualified `cargo test -p gds types::graph_store` run exposed a stale
+`gds::concurrency::Concurrency` import in `gds/tests/config_validations.rs`. The
+test now uses the canonical `gds::task::concurrency::Concurrency` path.
 
 ## Current Architectural Shape
 
@@ -139,47 +160,38 @@ declared schema.
 
 ### F4. High: graph-view constructors do not implement one coherent contract
 
-The five `get_graph*` methods look like overloads of one view-construction
-operation, but their behavior diverges:
+**Resolution:** selector-aware and plain type filtering now share
+one internal `DefaultGraph::filtered_by_relationship_types` implementation owned
+by `DefaultGraphStore` view construction. Empty type filters, filtered schema
+construction, topology metadata, and relationship-property filtering no longer
+diverge between entrypoints. `Graph` no longer exposes view construction;
+HashGNN and CSV export now request views from `GraphStore`.
 
-- `get_graph_with_types` delegates to `DefaultGraph::relationship_type_filtered_graph`,
-  which treats an empty relationship-type set as no filter and preserves all
-  relationships;
-- `get_graph_with_types_and_selectors` constructs its own view and treats an empty
-  relationship-type set as an empty graph;
-- the first path filters `GraphSchema`, while the selector path passes the full
-  store schema into the filtered graph;
-- both orientation-taking methods ignore the supplied `Orientation`;
-- the selector path duplicates topology, metadata, characteristics, property,
-  and schema assembly logic instead of using one canonical constructor.
+Reverse and undirected views now materialize oriented Bootstrap adjacency while
+sharing relationship-property values through an edge-index remap. Regression tests
+verify direction, relationship counts, schema/characteristics, and distinct edge
+weights. This is a conformance implementation, not the required Core storage
+strategy.
 
-Orientation is not a dormant parameter. Dozens of algorithm and procedure call
-sites request `Orientation::Undirected` or a configured orientation through these
-methods. The current implementation returns a type-filtered graph with its
-original traversal orientation.
+`GraphViewSpec` is now the canonical Rust request implemented by GraphStore. The
+Java-compatible `get_graph_with_*` methods remain public compatibility conveniences
+and delegate to it. A direct conformance test and overload tests exercise the same
+path.
 
-**Consequence:** algorithm behavior can depend on which apparent overload was
-called, and callers requesting undirected traversal do not receive the advertised
-view.
+The canonical path validates explicit relationship types and property selectors
+against materialized topology and relationship-property state before allocating
+an oriented view. Missing materialization and selectors for unselected types are
+reported through `GraphViewError`.
 
-**Review direction:** replace the overload family internally with one validated
-`GraphViewSpec`-like request and one construction path. Define empty-set semantics,
-schema filtering, selector validation, and orientation transformation exactly
-once. Compatibility methods may delegate to that path.
+The graph-level concurrency operation is now named `concurrent_view`, distinct
+from `RelationshipIterator::concurrent_copy` and its cursor-iterator semantics.
 
 ### F5. Medium: relationship property key aggregation contradicts its contract
 
-`relationship_property_keys_for_types` is documented as returning keys common to
-all selected relationship types. `DefaultGraphStore` implements it with
-`flat_map(...).collect()`, producing the union. The corresponding node method
-computes an intersection.
-
-**Consequence:** validation or projection code may accept a relationship property
-that is absent from some selected relationship types.
-
-**Review direction:** make graph/node/relationship aggregation semantics explicit
-and symmetric, then add a behavioral test with overlapping but non-identical key
-sets before changing the implementation.
+**Resolution:** corrected on 2026-07-31. `DefaultGraphStore` now computes the
+intersection for selected relationship types and treats an empty selection as all
+relationship property keys, matching the node-property contract. A regression
+test covers shared, type-specific, and empty-selection behavior.
 
 ### F6. Medium: Bootstrap operations are embedded in the substrate implementation
 
@@ -214,16 +226,16 @@ silently encoded as the universal Core model.
 
 ### F8. Medium: error contracts are split and weakly typed at the view boundary
 
-Store operations use `GraphStoreError`; graph-view construction returns
-`GraphResult<T> = Result<T, Box<dyn Error + Send + Sync>>`. Several application
-boundaries convert failures to `String`.
+**Partial resolution:** store operations use `GraphStoreError`; graph-view
+construction now uses typed `GraphViewError` categories for unmaterialized types,
+unselected selector types, and unmaterialized relationship properties. Several
+application boundaries still convert failures to `String`.
 
 **Consequence:** implementations and consumers lose stable error categories at
 precisely the boundary a second store implementation must share.
 
-**Review direction:** define typed construction/view errors and preserve their
-categories through the Kernel. Application serialization may translate them at
-the outer boundary.
+**Remaining direction:** preserve `GraphViewError` categories through the Kernel.
+Application serialization may translate them at the outer boundary.
 
 ## Target API Criteria
 
@@ -231,18 +243,20 @@ The final target specification will be accepted only if it demonstrates:
 
 1. A minimal read/view contract implementable by both a small in-memory store and
    a Collections/Core-backed store.
-2. Explicit authority rules for schema, materialized topology, and materialized
+2. A stable GraphStore surface that Applications can expose alongside Dataset
+   without coupling callers to `DefaultGraphStore`.
+3. Explicit authority rules for schema, materialized topology, and materialized
    properties.
-3. A coherent composition model for graph, node, and relationship property
+4. A coherent composition model for graph, node, and relationship property
    storage.
-4. Explicit mutation or successor-store capabilities rather than universal
+5. Explicit mutation or successor-store capabilities rather than universal
    mutable methods with implementation-dependent behavior.
-5. Typed errors across store-to-view construction.
-6. One canonical graph-view request whose type filters, property selectors,
+6. Typed errors across store-to-view construction.
+7. One canonical graph-view request whose type filters, property selectors,
    orientation, schema, and empty-filter behavior cannot diverge by entrypoint.
-7. Preservation of `Graph` as the algorithm-facing runtime abstraction unless a
+8. Preservation of `Graph` as the algorithm-facing runtime abstraction unless a
    concrete conformance failure requires changing it.
-8. A compile-time conformance fixture using a second minimal implementation, so
+9. A compile-time conformance fixture using a second minimal implementation, so
    the contract is not validated solely by `DefaultGraphStore`.
 
 ## Next Review Slice

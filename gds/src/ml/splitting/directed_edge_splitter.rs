@@ -81,7 +81,7 @@ impl EdgeSplitter for DirectedEdgeSplitter {
         let node_count = graph.node_count();
         let relationship_count = graph.relationship_count();
         let degrees = {
-            let graph = Graph::concurrent_copy(graph);
+            let graph = Graph::concurrent_view(graph);
             Box::new(move |node_id: usize| graph.degree(node_id as i64)) as Box<dyn DegreeFunction>
         };
 
@@ -92,12 +92,12 @@ impl EdgeSplitter for DirectedEdgeSplitter {
             degrees,
             self.base.concurrency(),
             {
-                let graph = Graph::concurrent_copy(graph);
+                let graph = Graph::concurrent_view(graph);
                 let valid_relationship_count = valid_relationship_count.clone();
                 let is_valid_node_pair = is_valid_node_pair.clone();
 
                 move |partition| {
-                    let graph = Graph::concurrent_copy(graph.as_ref());
+                    let graph = Graph::concurrent_view(graph.as_ref());
                     let is_valid_node_pair = is_valid_node_pair.clone();
                     let valid_relationship_count = valid_relationship_count.clone();
                     Box::new(move || {

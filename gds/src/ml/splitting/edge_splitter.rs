@@ -3,7 +3,6 @@ use crate::projection::Orientation;
 use crate::projection::RelationshipType;
 use crate::types::graph::id_map::IdMap;
 use crate::types::graph::Graph;
-use crate::types::schema::Direction;
 use rand::rngs::StdRng;
 use rand::Rng;
 use rand::SeedableRng;
@@ -266,9 +265,10 @@ pub fn split_positive_examples_with(
         Some(RELATIONSHIP_PROPERTY.to_string()),
     );
 
-    let remaining_orientation = match graph.schema().direction() {
-        Direction::Undirected => Orientation::Undirected,
-        Direction::Directed => Orientation::Natural,
+    let remaining_orientation = if graph.characteristics().is_undirected() {
+        Orientation::Undirected
+    } else {
+        Orientation::Natural
     };
     let remaining_relationships = builder_factory.create(
         remaining_relationship_type,

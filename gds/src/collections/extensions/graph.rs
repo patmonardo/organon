@@ -213,7 +213,11 @@ impl GraphFramePolars32Plugin {
 
         let node_count = store.node_count() as i64;
         let relationship_count = store.relationship_count() as i64;
-        let direction = format!("{:?}", store.schema().direction());
+        let direction = store
+            .schema()
+            .direction()
+            .map(|direction| direction.to_string())
+            .unwrap_or_else(|| "NONE_OR_MIXED".to_string());
         let created_at = store.creation_time().to_rfc3339();
         let modified_at = store.modification_time().to_rfc3339();
 

@@ -1,9 +1,8 @@
 use super::property::Property;
-use std::collections::HashMap;
 use thiserror::Error;
 
 /// Error type for property store operations.
-#[derive(Error, Debug, Clone)]
+#[derive(Error, Debug, Clone, PartialEq, Eq)]
 pub enum PropertyStoreError {
     #[error("Property not found: {0}")]
     PropertyNotFound(String),
@@ -17,39 +16,44 @@ pub enum PropertyStoreError {
 
 pub type PropertyStoreResult<T> = Result<T, PropertyStoreError>;
 
-/// A store that contains properties indexed by their property key.
-///
-/// This mirrors the TypeScript PropertyStore interface.
-/// Provides default implementations for common map-like operations.
+/// A framing protocol for schema-bearing property columns.
 pub trait PropertyStore: Send + Sync {
     type Property: Property;
 
-    /// Returns a reference to the properties map.
-    /// This is the only method concrete stores must implement.
-    fn properties(&self) -> &HashMap<String, Self::Property>;
+    /// Gets a column by its schema key.
+    fn get(&self, property_key: &str) -> Option<&Self::Property>;
 
-    /// Gets a property by key.
-    fn get(&self, property_key: &str) -> Option<&Self::Property> {
-        self.properties().get(property_key)
-    }
+    /// Iterates over the columns without exposing their storage representation.
+    fn columns(&self) -> Box<dyn Iterator<Item = &Self::Property> + '_>;
+
+    /// Adds a new column, rejecting duplicate schema keys.
+    fn add_column(&mut self, property: Self::Property) -> PropertyStoreResult<()>;
+
+    /// Replaces an existing column with the same schema key.
+    fn replace_column(&mut self, property: Self::Property) -> PropertyStoreResult<Self::Property>;
+
+    /// Removes and returns a column by schema key.
+    fn remove_column(&mut self, property_key: &str) -> PropertyStoreResult<Self::Property>;
 
     /// Checks if the property store is empty.
     fn is_empty(&self) -> bool {
-        self.properties().is_empty()
+        self.len() == 0
     }
 
     /// Returns the number of properties in the store.
     fn len(&self) -> usize {
-        self.properties().len()
+        self.columns().count()
     }
 
     /// Returns the set of property keys in this store.
     fn key_set(&self) -> Vec<&str> {
-        self.properties().keys().map(|s| s.as_str()).collect()
+        self.columns()
+            .map(|property| property.schema().key())
+            .collect()
     }
 
     /// Checks if the store contains a property with the given key.
     fn contains_key(&self, property_key: &str) -> bool {
-        self.properties().contains_key(property_key)
+        self.get(property_key).is_some()
     }
 }

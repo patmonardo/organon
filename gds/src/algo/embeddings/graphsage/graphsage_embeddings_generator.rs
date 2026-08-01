@@ -86,7 +86,7 @@ impl GraphSageEmbeddingsGenerator {
             graph.node_count(),
             self.batch_size,
             |partition| {
-                let graph = <dyn Graph as Graph>::concurrent_copy(&*graph);
+                let graph = <dyn Graph as Graph>::concurrent_view(&*graph);
                 let layers = layers.clone();
                 // We cannot clone trait objects; we re-borrow from &self inside the closure by cloning Arc pointers.
                 let feature_function = Arc::clone(&self.feature_function);

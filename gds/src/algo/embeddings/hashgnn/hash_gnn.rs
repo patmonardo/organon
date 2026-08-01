@@ -4,7 +4,6 @@ use crate::core::utils::partition::{DegreeFunction, DegreePartition, Partition, 
 use crate::task::concurrency::{TerminatedException, TerminationFlag};
 use crate::task::progress::ProgressTracker;
 use crate::types::graph::Graph;
-use std::collections::HashSet;
 use std::sync::Arc;
 
 use super::densify_task::DensifyTask;
@@ -23,6 +22,7 @@ pub struct MinAndArgmin {
 
 pub struct HashGNN {
     graph: Arc<dyn Graph>,
+    relationship_graphs: Vec<Arc<dyn Graph>>,
     parameters: HashGNNParameters,
     termination_flag: TerminationFlag,
 }
@@ -30,11 +30,13 @@ pub struct HashGNN {
 impl HashGNN {
     pub fn new(
         graph: Arc<dyn Graph>,
+        relationship_graphs: Vec<Arc<dyn Graph>>,
         parameters: HashGNNParameters,
         termination_flag: TerminationFlag,
     ) -> Self {
         Self {
             graph,
+            relationship_graphs,
             parameters,
             termination_flag,
         }
@@ -64,22 +66,6 @@ impl HashGNN {
 
         let range_partitions: Vec<Partition> =
             PartitionUtils::range_partition(concurrency.value(), node_count, |p| p, Some(1));
-
-        // Build filtered graphs list for heterogeneous mode.
-        let graphs: Vec<Arc<dyn Graph>> = if self.parameters.heterogeneous {
-            let schema_types = self.graph.schema().relationship_schema().available_types();
-            schema_types
-                .into_iter()
-                .map(|rt| {
-                    let set: HashSet<_> = vec![rt].into_iter().collect();
-                    self.graph
-                        .relationship_type_filtered_graph(&set)
-                        .expect("relationship type filtered graph")
-                })
-                .collect()
-        } else {
-            vec![<dyn Graph as Graph>::concurrent_copy(&*self.graph)]
-        };
 
         // Construct input embeddings.
         let (embeddings_b, mut current_total_feature_count) =
@@ -141,7 +127,7 @@ impl HashGNN {
             let hashes = HashTask::compute(
                 embedding_dimension,
                 scaled_neighbor_influence,
-                graphs.len(),
+                self.relationship_graphs.len(),
                 concurrency,
                 self.parameters.embedding_density,
                 random_seed + (self.parameters.embedding_density as u64) * iteration as u64,
@@ -150,7 +136,7 @@ impl HashGNN {
 
             let added = MinHashTask::compute(
                 &degree_partitions,
-                &graphs,
+                &self.relationship_graphs,
                 concurrency,
                 self.parameters.embedding_density,
                 embedding_dimension,
@@ -273,7 +259,13 @@ mod tests {
             random_seed: Some(7),
         };
 
-        let algo = HashGNN::new(graph, params, TerminationFlag::default());
+        let relationship_graphs = vec![Graph::concurrent_view(graph.as_ref())];
+        let algo = HashGNN::new(
+            graph,
+            relationship_graphs,
+            params,
+            TerminationFlag::default(),
+        );
 
         let result = algo.compute(&mut NoopProgressTracker).unwrap();
         match result.embeddings {
@@ -334,7 +326,13 @@ mod tests {
             random_seed: Some(7),
         };
 
-        let algo = HashGNN::new(graph, params, TerminationFlag::default());
+        let relationship_graphs = vec![Graph::concurrent_view(graph.as_ref())];
+        let algo = HashGNN::new(
+            graph,
+            relationship_graphs,
+            params,
+            TerminationFlag::default(),
+        );
 
         let result = algo.compute(&mut NoopProgressTracker).unwrap();
         match result.embeddings {
@@ -377,8 +375,10 @@ mod tests {
         };
 
         let run = |parameters| {
+            let relationship_graphs = vec![Graph::concurrent_view(graph.as_ref())];
             let result = HashGNN::new(
                 Arc::clone(&graph),
+                relationship_graphs,
                 parameters,
                 TerminationFlag::running_true(),
             )

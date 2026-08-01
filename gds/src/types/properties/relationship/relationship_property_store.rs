@@ -35,8 +35,8 @@ pub trait RelationshipPropertyStoreBuilder {
     fn from_store(store: &Self::Store) -> Self;
 
     fn properties(self, props: HashMap<String, Self::Property>) -> Self;
-    fn put_if_absent(self, key: impl Into<String>, property: Self::Property) -> Self;
-    fn put(self, key: impl Into<String>, property: Self::Property) -> Self;
+    fn put_if_absent(self, property: Self::Property) -> Self;
+    fn put(self, property: Self::Property) -> Self;
     fn remove_property(self, key: &str) -> Self;
 
     fn build(self) -> Self::Store;

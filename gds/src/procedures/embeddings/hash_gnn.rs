@@ -166,8 +166,16 @@ impl HashGNNBuilder {
             .map_err(|e| AlgorithmError::Graph(e.to_string()))?;
 
         let storage = HashGNNStorageRuntime::new();
+        let relationship_graphs = storage
+            .relationship_graphs(
+                self.graph_store.as_ref(),
+                &graph_view,
+                self.config.heterogeneous,
+            )
+            .map_err(AlgorithmError::Graph)?;
         HashGNNComputationRuntime::run_with_controls(
             graph_view,
+            relationship_graphs,
             &self.config,
             &storage,
             progress_tracker,

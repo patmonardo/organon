@@ -36,7 +36,7 @@ impl NeighborhoodSampler {
             return Vec::new();
         }
 
-        let concurrent_graph = Graph::concurrent_copy(graph);
+        let concurrent_graph = Graph::concurrent_view(graph);
 
         // Every neighbor needs to be sampled
         if degree <= sample_size {

@@ -110,16 +110,15 @@ fn filtered_training_schema(
     node_labels: &[String],
     relationship_types: &[String],
 ) -> GraphSchema {
-    let node_labels_set: HashSet<NodeLabel> = if node_labels.is_empty()
-        || node_labels.iter().any(|label| label == "*")
-    {
-        graph_store.node_labels()
-    } else {
-        node_labels
-            .iter()
-            .map(|label| NodeLabel::of(label.as_str()))
-            .collect()
-    };
+    let node_labels_set: HashSet<NodeLabel> =
+        if node_labels.is_empty() || node_labels.iter().any(|label| label == "*") {
+            graph_store.node_labels()
+        } else {
+            node_labels
+                .iter()
+                .map(|label| NodeLabel::of(label.as_str()))
+                .collect()
+        };
     let relationship_types_set: HashSet<RelationshipType> = if relationship_types.is_empty()
         || relationship_types
             .iter()

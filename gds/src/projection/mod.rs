@@ -29,6 +29,7 @@ pub mod node_label;
 pub mod orientation;
 pub mod power;
 pub mod relationship_type;
+pub mod schema_compiler;
 pub mod trace;
 pub mod traits;
 
@@ -38,6 +39,7 @@ pub use node_label::*;
 pub use orientation::*;
 pub use power::*;
 pub use relationship_type::*;
+pub use schema_compiler::*;
 pub use trace::*;
 pub use traits::*;
 

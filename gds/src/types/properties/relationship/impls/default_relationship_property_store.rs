@@ -7,6 +7,8 @@ use crate::types::properties::relationship::{
     relationship_property_values::RelationshipPropertyValues,
 };
 use crate::types::properties::PropertyStore;
+use crate::types::properties::PropertyStoreError;
+use crate::types::properties::PropertyStoreResult;
 use std::collections::HashMap;
 use std::sync::Arc;
 
@@ -22,12 +24,47 @@ pub struct DefaultRelationshipPropertyStoreBuilder {
     properties: HashMap<String, RelationshipProperty>,
 }
 
-/* Base PropertyStore implementation - only properties() needed */
 impl PropertyStore for DefaultRelationshipPropertyStore {
     type Property = RelationshipProperty;
 
-    fn properties(&self) -> &HashMap<String, Self::Property> {
-        &self.properties
+    fn get(&self, property_key: &str) -> Option<&Self::Property> {
+        self.properties.get(property_key)
+    }
+
+    fn columns(&self) -> Box<dyn Iterator<Item = &Self::Property> + '_> {
+        Box::new(self.properties.values())
+    }
+
+    fn add_column(&mut self, property: Self::Property) -> PropertyStoreResult<()> {
+        let key = property.key().to_string();
+        if key.trim().is_empty() {
+            return Err(PropertyStoreError::InvalidPropertyKey(key));
+        }
+        if self.properties.contains_key(&key) {
+            return Err(PropertyStoreError::PropertyAlreadyExists(key));
+        }
+        self.properties.insert(key, property);
+        Ok(())
+    }
+
+    fn replace_column(&mut self, property: Self::Property) -> PropertyStoreResult<Self::Property> {
+        let key = property.key().to_string();
+        if key.trim().is_empty() {
+            return Err(PropertyStoreError::InvalidPropertyKey(key));
+        }
+        if !self.properties.contains_key(&key) {
+            return Err(PropertyStoreError::PropertyNotFound(key));
+        }
+        Ok(self
+            .properties
+            .insert(key, property)
+            .expect("column existence was checked"))
+    }
+
+    fn remove_column(&mut self, property_key: &str) -> PropertyStoreResult<Self::Property> {
+        self.properties
+            .remove(property_key)
+            .ok_or_else(|| PropertyStoreError::PropertyNotFound(property_key.to_string()))
     }
 }
 
@@ -86,14 +123,15 @@ impl RelationshipPropertyStoreBuilder for DefaultRelationshipPropertyStoreBuilde
         self
     }
 
-    fn put_if_absent(mut self, key: impl Into<String>, property: Self::Property) -> Self {
-        let key = key.into();
-        self.properties.entry(key).or_insert(property);
+    fn put_if_absent(mut self, property: Self::Property) -> Self {
+        self.properties
+            .entry(property.key().to_string())
+            .or_insert(property);
         self
     }
 
-    fn put(mut self, key: impl Into<String>, property: Self::Property) -> Self {
-        self.properties.insert(key.into(), property);
+    fn put(mut self, property: Self::Property) -> Self {
+        self.properties.insert(property.key().to_string(), property);
         self
     }
 

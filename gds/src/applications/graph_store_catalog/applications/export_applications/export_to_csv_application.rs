@@ -1,7 +1,5 @@
 use crate::applications::graph_store_catalog::results::ExportResult;
 use crate::projection::RelationshipType;
-use crate::types::graph::DefaultGraph;
-use crate::types::graph::Graph as _;
 use crate::types::graph::IdMap as _;
 use crate::types::graph_store::DefaultGraphStore;
 use crate::types::graph_store::GraphStore as _;
@@ -82,12 +80,11 @@ impl ExportToCsvApplication {
         graph_store: &DefaultGraphStore,
         export_root: &Path,
     ) -> Result<u64, String> {
-        let graph = graph_store.graph();
         let mut total: u64 = 0;
 
         let rel_types = graph_store.relationship_types();
         for rel_type in rel_types.iter() {
-            total += self.write_relationships_for_type(&graph, rel_type, export_root)?;
+            total += self.write_relationships_for_type(graph_store, rel_type, export_root)?;
         }
 
         Ok(total)
@@ -95,21 +92,18 @@ impl ExportToCsvApplication {
 
     fn write_relationships_for_type(
         &self,
-        graph: &DefaultGraph,
+        graph_store: &DefaultGraphStore,
         rel_type: &RelationshipType,
         export_root: &Path,
     ) -> Result<u64, String> {
-        // Filter graph to a single type so we can label the file with certainty.
         let mut types = std::collections::HashSet::new();
         types.insert(rel_type.clone());
-        let filtered = graph
-            .relationship_type_filtered_graph(&types)
-            .map_err(|e| {
-                format!(
-                    "Failed to filter graph by relationship type '{}': {e}",
-                    rel_type.name()
-                )
-            })?;
+        let filtered = graph_store.get_graph_with_types(&types).map_err(|e| {
+            format!(
+                "Failed to construct graph view for relationship type '{}': {e}",
+                rel_type.name()
+            )
+        })?;
 
         let safe_name = rel_type.name().replace('/', "_");
         let file_path = export_root.join(format!("relationships_{}.csv", safe_name));

@@ -99,14 +99,16 @@ impl NodeRegressionTrainPipelineAlgorithmFactory {
             .validate_node_property_steps_context_configs(pipeline.node_property_steps())
             .map_err(|error| error.to_string())?;
 
-        let trainer = Box::new(NodeRegressionTrain::try_create(
-            graph_store.clone(),
-            pipeline.clone(),
-            configuration.clone(),
-            node_feature_producer,
-            progress_tracker,
-        )
-        .map_err(|error| error.to_string())?);
+        let trainer = Box::new(
+            NodeRegressionTrain::try_create(
+                graph_store.clone(),
+                pipeline.clone(),
+                configuration.clone(),
+                node_feature_producer,
+                progress_tracker,
+            )
+            .map_err(|error| error.to_string())?,
+        );
 
         let algorithm_progress = Box::new(NoopProgressTracker);
 

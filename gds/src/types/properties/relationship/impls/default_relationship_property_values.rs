@@ -6,6 +6,7 @@
 
 // Import the macros from the crate root
 use crate::generate_all_relationship_adapters;
+use crate::types::ValueType;
 
 // Generate all relationship property adapters from the ValueType table
 // This expands to adapters for: Byte, Short, Int, Long, BigInt, Float, Double, Boolean, Char, String
@@ -32,9 +33,14 @@ pub type DefaultRelationshipPropertyValues = DefaultDoubleRelationshipPropertyVa
 
 // Provide backwards-compatible constructors
 impl DefaultRelationshipPropertyValues {
-    pub fn with_values(values: Vec<f64>, _default_value: f64, element_count: usize) -> Self {
+    pub fn with_values(values: Vec<f64>, default_value: f64, element_count: usize) -> Self {
         let backend = VecDouble::from(values);
-        Self::from_collection(backend, element_count)
+        let universal = crate::collections::adapter::UniversalPropertyValues::new(
+            backend,
+            ValueType::Double,
+            default_value,
+        );
+        Self::new(universal, element_count)
     }
 
     pub fn with_default(values: Vec<f64>, element_count: usize) -> Self {
@@ -56,7 +62,17 @@ mod tests {
         assert_eq!(values.value_type(), ValueType::Double);
         assert_eq!(values.element_count(), 3); // Use element_count from PropertyValues trait
         assert_eq!(values.double_value(1).unwrap(), 2.5);
+        assert_eq!(values.default_value(), 0.0);
         assert!(values.has_value(0));
         assert!(!values.has_value(10));
+    }
+
+    #[test]
+    fn preserves_custom_default_value() {
+        let values = DefaultRelationshipPropertyValues::with_values(vec![1.0], 7.5, 1);
+        assert_eq!(values.default_value(), 7.5);
+
+        let values = DefaultRelationshipPropertyValues::with_values(vec![1.0], f64::NAN, 1);
+        assert!(values.default_value().is_nan());
     }
 }

@@ -237,7 +237,15 @@ define_algorithm_spec! {
             .map_err(|e| AlgorithmError::InvalidGraph(format!("Failed to obtain graph view: {e}")))?;
 
         let storage = HashGNNStorageRuntime::new();
-        let result = HashGNNComputationRuntime::run(graph_view, &config, &storage)?;
+        let relationship_graphs = storage
+            .relationship_graphs(graph_store, &graph_view, config.heterogeneous)
+            .map_err(AlgorithmError::InvalidGraph)?;
+        let result = HashGNNComputationRuntime::run(
+            graph_view,
+            relationship_graphs,
+            &config,
+            &storage,
+        )?;
 
         Ok(result)
     }

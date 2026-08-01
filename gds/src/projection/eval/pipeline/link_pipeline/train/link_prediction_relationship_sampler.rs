@@ -1,11 +1,11 @@
 // Phase 5.3: LinkPredictionRelationshipSampler - Relationship sampling and splitting
 
 use super::LinkPredictionTrainConfig;
-use crate::task::progress::{LeafTask, Tasks};
-use crate::task::memory::{MemoryRange, MemoryTree};
 use crate::projection::eval::pipeline::link_pipeline::{
     ExpectedSetSizes, LinkPredictionSplitConfig,
 };
+use crate::task::memory::{MemoryRange, MemoryTree};
+use crate::task::progress::{LeafTask, Tasks};
 use std::marker::PhantomData;
 
 /// Relationship sampler for link prediction training.
