@@ -14,14 +14,14 @@ impl HashGNNCompanion {
         result: &mut MinAndArgmin,
         temp: &mut MinAndArgmin,
     ) {
-        temp.arg_min = -1;
+        temp.arg_min = None;
         temp.min = i32::MAX;
 
         bitset.for_each_set_bit(|bit| {
             let hash = hashes[bit];
             if hash < temp.min {
                 temp.min = hash;
-                temp.arg_min = bit as i32;
+                temp.arg_min = Some(bit);
             }
         });
 
@@ -30,14 +30,14 @@ impl HashGNNCompanion {
     }
 
     pub fn hash_argmin(bitset: &BitSet, hashes: &[i32], result: &mut MinAndArgmin) {
-        let mut arg_min = -1;
+        let mut arg_min = None;
         let mut min_hash = i32::MAX;
         let mut bit = bitset.next_set_bit(0);
         while let Some(b) = bit {
             let hash = hashes[b];
             if hash < min_hash {
                 min_hash = hash;
-                arg_min = b as i32;
+                arg_min = Some(b);
             }
             bit = bitset.next_set_bit(b + 1);
         }

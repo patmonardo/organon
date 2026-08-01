@@ -2,6 +2,7 @@
 
 use super::super::{LinkFeatureAppender, LinkFeatureStep};
 use crate::types::graph::Graph;
+use crate::types::graph::MappedNodeId;
 use crate::types::properties::node::NodePropertyValues;
 use crate::types::ValueType;
 use std::collections::HashMap;
@@ -87,15 +88,15 @@ struct SameCategoryLongAppender {
 }
 
 impl LinkFeatureAppender for SameCategoryLongAppender {
-    fn append_features(&self, source: u64, target: u64, link_features: &mut [f64], offset: usize) {
-        let source_val = match self.props.long_value(source) {
+    fn append_features(&self, source: MappedNodeId, target: MappedNodeId, link_features: &mut [f64], offset: usize) {
+        let source_val = match self.props.long_value(u64::from(source)) {
             Ok(val) => val,
             Err(_) => {
                 link_features[offset] = 0.0;
                 return;
             }
         };
-        let target_val = match self.props.long_value(target) {
+        let target_val = match self.props.long_value(u64::from(target)) {
             Ok(val) => val,
             Err(_) => {
                 link_features[offset] = 0.0;
@@ -117,15 +118,15 @@ struct SameCategoryDoubleAppender {
 }
 
 impl LinkFeatureAppender for SameCategoryDoubleAppender {
-    fn append_features(&self, source: u64, target: u64, link_features: &mut [f64], offset: usize) {
-        let source_val = match self.props.double_value(source) {
+    fn append_features(&self, source: MappedNodeId, target: MappedNodeId, link_features: &mut [f64], offset: usize) {
+        let source_val = match self.props.double_value(u64::from(source)) {
             Ok(val) => val,
             Err(_) => {
                 link_features[offset] = 0.0;
                 return;
             }
         };
-        let target_val = match self.props.double_value(target) {
+        let target_val = match self.props.double_value(u64::from(target)) {
             Ok(val) => val,
             Err(_) => {
                 link_features[offset] = 0.0;

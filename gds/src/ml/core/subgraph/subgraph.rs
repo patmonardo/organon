@@ -9,6 +9,7 @@ use crate::ml::core::relationship_weights::{
     ClosureRelationshipWeights, RelationshipWeights, DEFAULT_VALUE, UNWEIGHTED,
 };
 use crate::types::graph::Graph;
+use crate::types::graph::MappedNodeId;
 use std::sync::Arc;
 
 /// SubGraph represents a sampled neighborhood subgraph for batch processing.
@@ -126,7 +127,7 @@ impl SubGraph {
             let g = Graph::concurrent_view(graph);
             (
                 Arc::new(ClosureRelationshipWeights::new(move |s, t, default| {
-                    g.relationship_property(s as i64, t as i64, default)
+                    g.relationship_property(MappedNodeId::new(s), MappedNodeId::new(t), default)
                 })),
                 true,
             )

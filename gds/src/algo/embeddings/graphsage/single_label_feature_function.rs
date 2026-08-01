@@ -28,7 +28,9 @@ impl FeatureFunction for SingleLabelFeatureFunction {
             move || {
                 let mut batch_features = Matrix::create(0.0, node_ids.len(), feature_dimension);
                 for (batch_idx, &node_id) in node_ids.iter().enumerate() {
-                    let row = features.get(node_id as usize);
+                    let node_index = usize::try_from(node_id)
+                        .expect("GraphSAGE batch node ID must fit dense feature storage");
+                    let row = features.get(node_index);
                     batch_features.set_row(batch_idx, row);
                 }
                 Box::new(batch_features)

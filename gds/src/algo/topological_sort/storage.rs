@@ -4,47 +4,45 @@
 
 use super::computation::TopologicalSortComputationRuntime;
 use super::spec::TopologicalSortResult;
+use crate::projection::eval::algorithm::AlgorithmError;
 use crate::task::concurrency::TerminationFlag;
 use crate::task::progress::ProgressTracker;
-use crate::projection::eval::algorithm::AlgorithmError;
-use crate::types::graph::{Graph, NodeId};
-use std::sync::atomic::{AtomicI64, Ordering};
+use crate::types::graph::{Graph, MappedNodeId};
+use std::sync::atomic::{AtomicU64, AtomicUsize, Ordering};
 
 /// Storage for topological sort computation
 pub struct TopologicalSortStorageRuntime {
     /// In-degree for each node (updated during traversal)
-    pub in_degrees: Vec<AtomicI64>,
+    pub in_degrees: Vec<AtomicUsize>,
     /// Sorted nodes in topological order
-    pub sorted_nodes: Vec<AtomicI64>,
+    pub sorted_nodes: Vec<AtomicU64>,
     /// Current position in sorted_nodes array
-    pub add_index: AtomicI64,
+    pub add_index: AtomicUsize,
     /// Optional longest path distances
-    pub max_source_distances: Option<Vec<AtomicI64>>, // Stored as bits for atomic f64
+    pub max_source_distances: Option<Vec<AtomicU64>>,
 }
 
 impl TopologicalSortStorageRuntime {
     pub fn new(node_count: usize, compute_max_distance: bool) -> Self {
         Self {
-            in_degrees: (0..node_count).map(|_| AtomicI64::new(0)).collect(),
-            sorted_nodes: (0..node_count)
-                .map(|_| AtomicI64::new(-1)) // Use -1 as sentinel instead of usize::MAX
-                .collect(),
-            add_index: AtomicI64::new(0),
+            in_degrees: (0..node_count).map(|_| AtomicUsize::new(0)).collect(),
+            sorted_nodes: (0..node_count).map(|_| AtomicU64::new(0)).collect(),
+            add_index: AtomicUsize::new(0),
             max_source_distances: if compute_max_distance {
-                Some((0..node_count).map(|_| AtomicI64::new(0)).collect())
+                Some((0..node_count).map(|_| AtomicU64::new(0)).collect())
             } else {
                 None
             },
         }
     }
 
-    pub fn add_node(&self, node_id: NodeId) {
+    pub fn add_node(&self, node_id: MappedNodeId) {
         let index = self.add_index.fetch_add(1, Ordering::SeqCst);
-        self.sorted_nodes[index as usize].store(node_id, Ordering::SeqCst);
+        self.sorted_nodes[index].store(node_id.get(), Ordering::SeqCst);
     }
 
     pub fn size(&self) -> usize {
-        self.add_index.load(Ordering::SeqCst) as usize
+        self.add_index.load(Ordering::SeqCst)
     }
 
     pub fn compute_topological_sort(
@@ -76,26 +74,25 @@ impl TopologicalSortStorageRuntime {
         let result = (|| {
             // Pre-collect all edges from the graph
             let fallback = graph.default_property_value();
-            let mut edge_list: Vec<Vec<(NodeId, f64)>> = vec![Vec::new(); node_count];
+            let mut edge_list: Vec<Vec<(MappedNodeId, f64)>> = vec![Vec::new(); node_count];
 
-            for node_idx in 0..node_count as i64 {
-                let neighbors: Vec<(NodeId, f64)> = graph
-                    .stream_relationships(node_idx, fallback)
-                    .filter_map(|cursor| {
-                        let target = cursor.target_id();
-                        if target < 0 {
-                            return None;
-                        }
-                        Some((target, cursor.property()))
-                    })
+            for node_index in 0..node_count {
+                let node_id = MappedNodeId::try_from(node_index)
+                    .expect("graph node count must fit mapped ID space");
+                let neighbors: Vec<(MappedNodeId, f64)> = graph
+                    .stream_relationships(node_id, fallback)
+                    .map(|cursor| (cursor.target_id(), cursor.property()))
                     .collect();
 
-                edge_list[node_idx as usize] = neighbors;
+                edge_list[node_index] = neighbors;
             }
 
             let edge_list = std::sync::Arc::new(edge_list);
-            let get_neighbors = move |node_idx: NodeId| -> Vec<(NodeId, f64)> {
-                edge_list[node_idx as usize].clone()
+            let get_neighbors = move |node_idx: MappedNodeId| -> Vec<(MappedNodeId, f64)> {
+                let node_index = node_idx
+                    .to_usize()
+                    .expect("mapped graph node must fit physical index space");
+                edge_list[node_index].clone()
             };
 
             let result = computation.compute_with_concurrency(

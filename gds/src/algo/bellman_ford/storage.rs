@@ -7,11 +7,12 @@
 
 use super::spec::{BellmanFordPathResult, BellmanFordResult};
 use super::BellmanFordComputationRuntime;
+use crate::projection::eval::algorithm::AlgorithmError;
 use crate::task::concurrency::{install_with_concurrency, Concurrency};
 use crate::task::progress::{ProgressTracker, UNKNOWN_VOLUME};
-use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::Graph;
-use crate::types::graph::NodeId;
+use crate::types::graph::MappedNodeId;
+use crate::types::graph::RelationshipIndex;
 use crate::types::properties::relationship::RelationshipCursorBox;
 use rayon::prelude::*;
 use std::collections::HashMap;
@@ -22,8 +23,8 @@ const FRONTIER_CHUNK_SIZE: usize = 64;
 
 #[derive(Debug, Clone)]
 struct RelaxationCandidate {
-    source_node: NodeId,
-    target_node: NodeId,
+    source_node: MappedNodeId,
+    target_node: MappedNodeId,
     new_distance: f64,
     new_length: u32,
 }
@@ -31,7 +32,7 @@ struct RelaxationCandidate {
 #[derive(Debug, Clone)]
 struct FrontierExpansion {
     candidates: Vec<RelaxationCandidate>,
-    negative_cycle_nodes: Vec<NodeId>,
+    negative_cycle_nodes: Vec<MappedNodeId>,
     scanned_relationships: usize,
 }
 
@@ -41,7 +42,7 @@ struct FrontierExpansion {
 /// Handles the persistent data access and algorithm orchestration
 pub struct BellmanFordStorageRuntime {
     /// Source node for shortest path computation
-    pub source_node: NodeId,
+    pub source_node: MappedNodeId,
 
     /// Whether to track negative cycles
     pub track_negative_cycles: bool,
@@ -58,7 +59,7 @@ impl BellmanFordStorageRuntime {
     ///
     /// Translation of: Constructor (lines 55-69)
     pub fn new(
-        source_node: NodeId,
+        source_node: MappedNodeId,
         track_negative_cycles: bool,
         track_paths: bool,
         concurrency: usize,
@@ -175,8 +176,12 @@ impl BellmanFordStorageRuntime {
         let mut paths = Vec::new();
         let node_count = computation.node_count();
 
-        for target_node in 0..node_count {
-            let target_node = target_node as NodeId;
+        for target_index in 0..node_count {
+            let target_node = MappedNodeId::try_from(target_index).map_err(|_| {
+                AlgorithmError::InvalidGraph(format!(
+                    "Node index does not fit mapped node identity: {target_index}"
+                ))
+            })?;
             if computation.predecessor(target_node).is_some() {
                 let path = self.reconstruct_path(computation, self.source_node, target_node)?;
                 paths.push(path);
@@ -201,7 +206,7 @@ impl BellmanFordStorageRuntime {
         frontier.push_back(self.source_node);
 
         while let Some(node_id) = frontier.pop_front() {
-            if computation.length(node_id) as usize >= node_count + 1 {
+            if Self::is_negative_cycle_length(computation.length(node_id), node_count) {
                 computation.add_negative_cycle_node(node_id);
                 if !self.track_negative_cycles {
                     break;
@@ -216,7 +221,7 @@ impl BellmanFordStorageRuntime {
                 scanned_relationships = 0;
             }
 
-            for (neighbor, weight) in neighbors {
+            for (neighbor, weight, _relationship_index) in neighbors {
                 Self::validate_node_in_graph(neighbor, node_count, "target")?;
                 Self::validate_edge_weight(node_id, neighbor, weight)?;
 
@@ -230,7 +235,7 @@ impl BellmanFordStorageRuntime {
                     computation.set_predecessor(neighbor, Some(node_id));
                     computation.set_length(neighbor, new_length);
 
-                    if new_length as usize >= node_count + 1 {
+                    if Self::is_negative_cycle_length(new_length, node_count) {
                         computation.add_negative_cycle_node(neighbor);
                         if !self.track_negative_cycles {
                             return Ok(scanned_relationships);
@@ -276,7 +281,8 @@ impl BellmanFordStorageRuntime {
                     .collect::<Result<Vec<_>, _>>()
             })?;
 
-            let mut candidates_by_target: HashMap<NodeId, RelaxationCandidate> = HashMap::new();
+            let mut candidates_by_target: HashMap<MappedNodeId, RelaxationCandidate> =
+                HashMap::new();
             for expansion in expansions {
                 scanned_relationships =
                     scanned_relationships.saturating_add(expansion.scanned_relationships);
@@ -315,7 +321,7 @@ impl BellmanFordStorageRuntime {
                     computation.set_predecessor(candidate.target_node, Some(candidate.source_node));
                     computation.set_length(candidate.target_node, candidate.new_length);
 
-                    if candidate.new_length as usize >= node_count + 1 {
+                    if Self::is_negative_cycle_length(candidate.new_length, node_count) {
                         computation.add_negative_cycle_node(candidate.target_node);
                         if !self.track_negative_cycles {
                             next_frontier.clear();
@@ -337,7 +343,7 @@ impl BellmanFordStorageRuntime {
         &self,
         graph: &dyn Graph,
         computation: &BellmanFordComputationRuntime,
-        frontier: &[NodeId],
+        frontier: &[MappedNodeId],
         direction: u8,
         node_count: usize,
     ) -> Result<FrontierExpansion, AlgorithmError> {
@@ -349,7 +355,7 @@ impl BellmanFordStorageRuntime {
 
         for node_id in frontier {
             let source_length = computation.length(*node_id);
-            if source_length as usize >= node_count + 1 {
+            if Self::is_negative_cycle_length(source_length, node_count) {
                 negative_cycle_nodes.push(*node_id);
                 continue;
             }
@@ -410,8 +416,8 @@ impl BellmanFordStorageRuntime {
     fn reconstruct_path(
         &self,
         computation: &BellmanFordComputationRuntime,
-        source_node: NodeId,
-        target_node: NodeId,
+        source_node: MappedNodeId,
+        target_node: MappedNodeId,
     ) -> Result<BellmanFordPathResult, AlgorithmError> {
         let mut node_ids = Vec::new();
         let mut costs = Vec::new();
@@ -451,7 +457,7 @@ impl BellmanFordStorageRuntime {
     fn reconstruct_negative_cycle(
         &self,
         computation: &BellmanFordComputationRuntime,
-        start_node: NodeId,
+        start_node: MappedNodeId,
     ) -> Result<BellmanFordPathResult, AlgorithmError> {
         let mut node_ids = Vec::new();
         let mut costs = Vec::new();
@@ -503,9 +509,9 @@ impl BellmanFordStorageRuntime {
     fn get_neighbors_with_weights(
         &self,
         graph: Option<&dyn Graph>,
-        node_id: NodeId,
+        node_id: MappedNodeId,
         direction: u8,
-    ) -> Result<Vec<(NodeId, f64)>, AlgorithmError> {
+    ) -> Result<Vec<(MappedNodeId, f64, RelationshipIndex)>, AlgorithmError> {
         if let Some(g) = graph {
             let fallback: f64 = 1.0;
             let iter: Box<dyn Iterator<Item = RelationshipCursorBox> + Send> = if direction == 1 {
@@ -514,22 +520,41 @@ impl BellmanFordStorageRuntime {
                 g.stream_relationships(node_id, fallback)
             };
             Ok(iter
-                .map(|cursor| (cursor.target_id(), cursor.property()))
+                .map(|cursor| {
+                    (
+                        cursor.target_id(),
+                        cursor.property(),
+                        cursor.relationship_index(),
+                    )
+                })
                 .collect())
         } else {
             // Mock implementation for tests
-            Ok(match node_id {
-                0 => vec![(1, 1.0), (2, 4.0)],
-                1 => vec![(2, 2.0), (3, 5.0)],
-                2 => vec![(3, 1.0), (4, 3.0)],
-                3 => vec![(4, 2.0)],
+            Ok(match node_id.get() {
+                0 => vec![
+                    (MappedNodeId::new(1), 1.0, RelationshipIndex::new(0)),
+                    (MappedNodeId::new(2), 4.0, RelationshipIndex::new(1)),
+                ],
+                1 => vec![
+                    (MappedNodeId::new(2), 2.0, RelationshipIndex::new(2)),
+                    (MappedNodeId::new(3), 5.0, RelationshipIndex::new(3)),
+                ],
+                2 => vec![
+                    (MappedNodeId::new(3), 1.0, RelationshipIndex::new(4)),
+                    (MappedNodeId::new(4), 3.0, RelationshipIndex::new(5)),
+                ],
+                3 => vec![(MappedNodeId::new(4), 2.0, RelationshipIndex::new(6))],
                 _ => vec![],
             })
         }
     }
 
+    fn is_negative_cycle_length(length: u32, node_count: usize) -> bool {
+        usize::try_from(length).is_ok_and(|length| length >= node_count.saturating_add(1))
+    }
+
     fn validate_node_in_graph(
-        node_id: NodeId,
+        node_id: MappedNodeId,
         node_count: usize,
         role: &str,
     ) -> Result<(), AlgorithmError> {
@@ -545,8 +570,8 @@ impl BellmanFordStorageRuntime {
     }
 
     fn validate_edge_weight(
-        source_node: NodeId,
-        target_node: NodeId,
+        source_node: MappedNodeId,
+        target_node: MappedNodeId,
         weight: f64,
     ) -> Result<(), AlgorithmError> {
         if !weight.is_finite() {
@@ -558,8 +583,8 @@ impl BellmanFordStorageRuntime {
     }
 
     fn validate_path_cost(
-        source_node: NodeId,
-        target_node: NodeId,
+        source_node: MappedNodeId,
+        target_node: MappedNodeId,
         cost: f64,
     ) -> Result<(), AlgorithmError> {
         if !cost.is_finite() {
@@ -574,16 +599,16 @@ impl BellmanFordStorageRuntime {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::task::progress::{TaskProgressTracker, Tasks};
     use crate::projection::Orientation;
+    use crate::task::progress::{TaskProgressTracker, Tasks};
     use crate::types::graph_store::{DefaultGraphStore, GraphStore};
     use crate::types::random::{RandomGraphConfig, RandomRelationshipConfig};
     use std::collections::HashSet;
 
     #[test]
     fn test_bellman_ford_storage_runtime_creation() {
-        let storage = BellmanFordStorageRuntime::new(0, true, true, 4);
-        assert_eq!(storage.source_node, 0);
+        let storage = BellmanFordStorageRuntime::new(MappedNodeId::ZERO, true, true, 4);
+        assert_eq!(storage.source_node, MappedNodeId::ZERO);
         assert!(storage.track_negative_cycles);
         assert!(storage.track_paths);
         assert_eq!(storage.concurrency, 4);
@@ -591,8 +616,8 @@ mod tests {
 
     #[test]
     fn test_bellman_ford_path_computation() {
-        let mut storage = BellmanFordStorageRuntime::new(0, true, true, 4);
-        let mut computation = BellmanFordComputationRuntime::new(0, true, true, 4);
+        let mut storage = BellmanFordStorageRuntime::new(MappedNodeId::ZERO, true, true, 4);
+        let mut computation = BellmanFordComputationRuntime::new(MappedNodeId::ZERO, true, true, 4);
         let mut progress_tracker =
             TaskProgressTracker::new(Tasks::leaf("bellman_ford".to_string()));
 
@@ -606,8 +631,8 @@ mod tests {
 
     #[test]
     fn test_bellman_ford_path_same_source_target() {
-        let mut storage = BellmanFordStorageRuntime::new(0, true, true, 4);
-        let mut computation = BellmanFordComputationRuntime::new(0, true, true, 4);
+        let mut storage = BellmanFordStorageRuntime::new(MappedNodeId::ZERO, true, true, 4);
+        let mut computation = BellmanFordComputationRuntime::new(MappedNodeId::ZERO, true, true, 4);
         let mut progress_tracker =
             TaskProgressTracker::new(Tasks::leaf("bellman_ford".to_string()));
 
@@ -621,21 +646,31 @@ mod tests {
 
     #[test]
     fn test_neighbors_with_weights() {
-        let storage = BellmanFordStorageRuntime::new(0, true, true, 4);
+        let storage = BellmanFordStorageRuntime::new(MappedNodeId::ZERO, true, true, 4);
 
-        let neighbors = storage.get_neighbors_with_weights(None, 0, 0).unwrap();
+        let neighbors = storage
+            .get_neighbors_with_weights(None, MappedNodeId::ZERO, 0)
+            .unwrap();
         assert_eq!(neighbors.len(), 2);
-        assert_eq!(neighbors[0], (1, 1.0));
-        assert_eq!(neighbors[1], (2, 4.0));
+        assert_eq!(
+            neighbors[0],
+            (MappedNodeId::new(1), 1.0, RelationshipIndex::ZERO)
+        );
+        assert_eq!(
+            neighbors[1],
+            (MappedNodeId::new(2), 4.0, RelationshipIndex::new(1))
+        );
 
-        let neighbors_empty = storage.get_neighbors_with_weights(None, 99, 0).unwrap();
+        let neighbors_empty = storage
+            .get_neighbors_with_weights(None, MappedNodeId::new(99), 0)
+            .unwrap();
         assert!(neighbors_empty.is_empty());
     }
 
     #[test]
     fn computes_expected_mock_shortest_paths() {
-        let mut storage = BellmanFordStorageRuntime::new(0, true, true, 4);
-        let mut computation = BellmanFordComputationRuntime::new(0, true, true, 4);
+        let mut storage = BellmanFordStorageRuntime::new(MappedNodeId::ZERO, true, true, 4);
+        let mut computation = BellmanFordComputationRuntime::new(MappedNodeId::ZERO, true, true, 4);
         let mut progress_tracker =
             TaskProgressTracker::new(Tasks::leaf("bellman_ford".to_string()));
 
@@ -646,9 +681,17 @@ mod tests {
         let path_to_three = result
             .shortest_paths
             .iter()
-            .find(|path| path.target_node == 3)
+            .find(|path| path.target_node == MappedNodeId::new(3))
             .expect("expected path to node 3");
-        assert_eq!(path_to_three.node_ids, vec![0, 1, 2, 3]);
+        assert_eq!(
+            path_to_three.node_ids,
+            vec![
+                MappedNodeId::ZERO,
+                MappedNodeId::new(1),
+                MappedNodeId::new(2),
+                MappedNodeId::new(3)
+            ]
+        );
         assert_eq!(path_to_three.costs, vec![0.0, 1.0, 3.0, 4.0]);
         assert_eq!(path_to_three.total_cost, 4.0);
     }
@@ -667,8 +710,9 @@ mod tests {
             .get_graph_with_types_and_orientation(&rel_types, Orientation::Natural)
             .unwrap();
 
-        let mut single_storage = BellmanFordStorageRuntime::new(0, true, true, 1);
-        let mut single_computation = BellmanFordComputationRuntime::new(0, true, true, 1);
+        let mut single_storage = BellmanFordStorageRuntime::new(MappedNodeId::ZERO, true, true, 1);
+        let mut single_computation =
+            BellmanFordComputationRuntime::new(MappedNodeId::ZERO, true, true, 1);
         let mut single_progress = TaskProgressTracker::new(Tasks::leaf("bellman_ford".to_string()));
         let single = single_storage
             .compute_bellman_ford(
@@ -679,8 +723,10 @@ mod tests {
             )
             .unwrap();
 
-        let mut parallel_storage = BellmanFordStorageRuntime::new(0, true, true, 4);
-        let mut parallel_computation = BellmanFordComputationRuntime::new(0, true, true, 4);
+        let mut parallel_storage =
+            BellmanFordStorageRuntime::new(MappedNodeId::ZERO, true, true, 4);
+        let mut parallel_computation =
+            BellmanFordComputationRuntime::new(MappedNodeId::ZERO, true, true, 4);
         let mut parallel_progress =
             TaskProgressTracker::new(Tasks::leaf("bellman_ford".to_string()));
         let parallel = parallel_storage
@@ -714,8 +760,9 @@ mod tests {
 
     #[test]
     fn rejects_source_node_outside_graph_hint() {
-        let mut storage = BellmanFordStorageRuntime::new(101, true, true, 4);
-        let mut computation = BellmanFordComputationRuntime::new(101, true, true, 4);
+        let mut storage = BellmanFordStorageRuntime::new(MappedNodeId::new(101), true, true, 4);
+        let mut computation =
+            BellmanFordComputationRuntime::new(MappedNodeId::new(101), true, true, 4);
         let mut progress_tracker =
             TaskProgressTracker::new(Tasks::leaf("bellman_ford".to_string()));
 
@@ -726,9 +773,25 @@ mod tests {
 
     #[test]
     fn allows_negative_but_rejects_non_finite_weights() {
-        assert!(BellmanFordStorageRuntime::validate_edge_weight(0, 1, -1.0).is_ok());
-        assert!(BellmanFordStorageRuntime::validate_edge_weight(0, 1, 0.0).is_ok());
-        assert!(BellmanFordStorageRuntime::validate_edge_weight(0, 1, f64::NAN).is_err());
-        assert!(BellmanFordStorageRuntime::validate_edge_weight(0, 1, f64::INFINITY).is_err());
+        let source_node = MappedNodeId::ZERO;
+        let target_node = MappedNodeId::new(1);
+        assert!(
+            BellmanFordStorageRuntime::validate_edge_weight(source_node, target_node, -1.0).is_ok()
+        );
+        assert!(
+            BellmanFordStorageRuntime::validate_edge_weight(source_node, target_node, 0.0).is_ok()
+        );
+        assert!(BellmanFordStorageRuntime::validate_edge_weight(
+            source_node,
+            target_node,
+            f64::NAN
+        )
+        .is_err());
+        assert!(BellmanFordStorageRuntime::validate_edge_weight(
+            source_node,
+            target_node,
+            f64::INFINITY
+        )
+        .is_err());
     }
 }

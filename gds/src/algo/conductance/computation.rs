@@ -1,8 +1,9 @@
 use super::spec::{ConductanceConfig, ConductanceResult};
+use crate::core::utils::partition::{DegreeFunction, DegreePartition, PartitionUtils};
 use crate::task::concurrency::virtual_threads::RunWithConcurrency;
 use crate::task::concurrency::{Concurrency, TerminationFlag};
-use crate::core::utils::partition::{DegreeFunction, DegreePartition, PartitionUtils};
 use crate::types::graph::Graph;
+use crate::types::graph::MappedNodeId;
 use crate::types::properties::node::NodePropertyValues;
 use std::collections::HashMap;
 use std::sync::Arc;
@@ -70,36 +71,36 @@ impl ConductanceComputationRuntime {
                             break;
                         }
 
-                        let Ok(source_community_raw) = community_properties.long_value(node as u64)
+                        let Ok(source_node) = MappedNodeId::try_from(node) else {
+                            continue;
+                        };
+                        let Ok(source_community_raw) =
+                            community_properties.long_value(source_node.get())
                         else {
                             continue;
                         };
-                        if source_community_raw < 0 {
+                        let Ok(source_community) = u64::try_from(source_community_raw) else {
                             continue;
-                        }
-                        let source_community = source_community_raw as u64;
+                        };
 
                         // Java parity: once a community is seen, both counts exist (0.0 allowed).
                         local_internal.entry(source_community).or_insert(0.0);
                         local_external.entry(source_community).or_insert(0.0);
 
-                        for cursor in graph_copy.stream_relationships(node as i64, fallback) {
+                        for cursor in graph_copy.stream_relationships(source_node, fallback) {
                             if !termination_flag.running() {
                                 break;
                             }
 
                             let target = cursor.target_id();
-                            if target < 0 {
-                                continue;
-                            }
                             let weight = if has_weights { cursor.property() } else { 1.0 };
 
-                            let target_community_raw =
-                                community_properties.long_value(target as u64).unwrap_or(-1);
+                            let target_community = community_properties
+                                .long_value(target.get())
+                                .ok()
+                                .and_then(|value| u64::try_from(value).ok());
 
-                            if target_community_raw >= 0
-                                && source_community == target_community_raw as u64
-                            {
+                            if target_community == Some(source_community) {
                                 *local_internal.entry(source_community).or_insert(0.0) += weight;
                             } else {
                                 *local_external.entry(source_community).or_insert(0.0) += weight;
@@ -197,7 +198,9 @@ struct GraphDegrees {
 
 impl DegreeFunction for GraphDegrees {
     fn degree(&self, node: usize) -> usize {
-        self.graph.degree(node as i64)
+        MappedNodeId::try_from(node)
+            .map(|node_id| self.graph.degree(node_id))
+            .unwrap_or(0)
     }
 }
 

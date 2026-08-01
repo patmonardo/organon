@@ -7,9 +7,9 @@
 
 use super::spec::{CollapsePathConfig, CollapsePathResult};
 use super::CollapsePathComputationRuntime;
+use crate::projection::{Orientation, RelationshipType};
 use crate::task::concurrency::TerminationFlag;
 use crate::task::progress::ProgressTracker;
-use crate::projection::{Orientation, RelationshipType};
 use crate::types::graph::Graph;
 use crate::types::graph::MappedNodeId;
 use crate::types::graph_store::{GraphName, GraphStore};
@@ -146,7 +146,11 @@ impl CollapsePathStorageRuntime {
         let edges_for_result: Vec<(u64, u64)> = outgoing
             .iter()
             .enumerate()
-            .flat_map(|(src, targets)| targets.iter().map(move |t| (src as u64, *t as u64)))
+            .flat_map(|(source_index, targets)| {
+                let source = u64::try_from(source_index)
+                    .expect("validated collapse-path source index must fit u64");
+                targets.iter().map(move |target| (source, target.get()))
+            })
             .collect();
 
         let store = graph_store
@@ -179,14 +183,16 @@ fn build_outgoing(
 ) -> Result<Vec<Vec<MappedNodeId>>, String> {
     let mut outgoing: Vec<Vec<MappedNodeId>> = vec![Vec::new(); node_count];
     for (src, tgt) in edges.drain(..) {
-        let src_usize = src as usize;
-        let tgt_usize = tgt as usize;
+        let src_usize = usize::try_from(src)
+            .map_err(|_| format!("edge source {src} exceeds the dense index range"))?;
+        let tgt_usize = usize::try_from(tgt)
+            .map_err(|_| format!("edge target {tgt} exceeds the dense index range"))?;
         if src_usize >= node_count || tgt_usize >= node_count {
             return Err(format!(
                 "edge ({src},{tgt}) is out of bounds for node_count={node_count}"
             ));
         }
-        outgoing[src_usize].push(tgt as MappedNodeId);
+        outgoing[src_usize].push(MappedNodeId::new(tgt));
     }
 
     for adj in outgoing.iter_mut() {
@@ -274,8 +280,10 @@ mod tests {
         let mut edges: Vec<(u64, u64)> = Vec::new();
         let fallback = rel_graph.default_property_value();
         for src in 0..rel_graph.node_count() {
-            for cursor in rel_graph.stream_relationships(src as i64, fallback) {
-                edges.push((src as u64, cursor.target_id() as u64));
+            let source = MappedNodeId::try_from(src)
+                .expect("walking test source index must fit a mapped node ID");
+            for cursor in rel_graph.stream_relationships(source, fallback) {
+                edges.push((source.get(), cursor.target_id().get()));
             }
         }
 

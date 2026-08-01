@@ -13,7 +13,7 @@ use crate::task::concurrency::{Concurrency, TerminatedException, TerminationFlag
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::{Orientation as ProjectionOrientation, RelationshipType};
 use crate::types::graph::Graph;
-use crate::types::graph::NodeId;
+use crate::types::graph::MappedNodeId;
 use crate::types::prelude::GraphStore;
 use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
@@ -109,7 +109,7 @@ impl<'a, G: GraphStore> DegreeCentralityStorageRuntime<'a, G> {
     }
 
     fn degree_unweighted(&self, node_idx: usize) -> f64 {
-        let node_id = match NodeId::try_from(node_idx as i64) {
+        let node_id = match MappedNodeId::try_from(node_idx as i64) {
             Ok(id) => id,
             Err(_) => return 0.0,
         };
@@ -132,7 +132,7 @@ impl<'a, G: GraphStore> DegreeCentralityStorageRuntime<'a, G> {
     }
 
     fn degree_weighted(&self, node_idx: usize) -> f64 {
-        let node_id = match NodeId::try_from(node_idx as i64) {
+        let node_id = match MappedNodeId::try_from(node_idx as i64) {
             Ok(id) => id,
             Err(_) => return 0.0,
         };

@@ -3,11 +3,11 @@
 //! Responsible for building a graph view from a GraphStore with the correct
 //! orientation and optional relationship weight property.
 
-use crate::task::concurrency::{Concurrency, TerminatedException, TerminationFlag};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::{Orientation, RelationshipType};
+use crate::task::concurrency::{Concurrency, TerminatedException, TerminationFlag};
 use crate::types::graph::Graph;
-use crate::types::graph::NodeId;
+use crate::types::graph::MappedNodeId;
 use crate::types::prelude::GraphStore;
 use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
@@ -78,18 +78,12 @@ impl<'a, G: GraphStore> BetweennessCentralityStorageRuntime<'a, G> {
     }
 
     pub fn degree(&self, node_idx: usize) -> usize {
-        let node_id = match NodeId::try_from(node_idx as i64) {
-            Ok(id) => id,
-            Err(_) => return 0,
-        };
+        let node_id = mapped_node_id(node_idx);
         self.graph.degree(node_id)
     }
 
     pub fn neighbors(&self, node_idx: usize) -> Vec<usize> {
-        let node_id = match NodeId::try_from(node_idx as i64) {
-            Ok(id) => id,
-            Err(_) => return Vec::new(),
-        };
+        let node_id = mapped_node_id(node_idx);
 
         let fallback = self.graph.default_property_value();
         match self.orientation {
@@ -97,15 +91,13 @@ impl<'a, G: GraphStore> BetweennessCentralityStorageRuntime<'a, G> {
                 .graph
                 .stream_relationships(node_id, fallback)
                 .map(|cursor| cursor.target_id())
-                .filter(|target| *target >= 0)
-                .map(|target| target as usize)
+                .map(physical_node_index)
                 .collect(),
             Orientation::Reverse => self
                 .graph
                 .stream_inverse_relationships(node_id, fallback)
                 .map(|cursor| cursor.source_id())
-                .filter(|source| *source >= 0)
-                .map(|source| source as usize)
+                .map(physical_node_index)
                 .collect(),
             Orientation::Undirected => {
                 let mut neighbors = Vec::new();
@@ -113,16 +105,14 @@ impl<'a, G: GraphStore> BetweennessCentralityStorageRuntime<'a, G> {
 
                 for cursor in self.graph.stream_relationships(node_id, fallback) {
                     let target = cursor.target_id();
-                    if target >= 0 {
-                        outgoing_targets.insert(target);
-                        neighbors.push(target as usize);
-                    }
+                    outgoing_targets.insert(target);
+                    neighbors.push(physical_node_index(target));
                 }
 
                 for cursor in self.graph.stream_inverse_relationships(node_id, fallback) {
                     let source = cursor.source_id();
-                    if source >= 0 && !outgoing_targets.contains(&source) {
-                        neighbors.push(source as usize);
+                    if !outgoing_targets.contains(&source) {
+                        neighbors.push(physical_node_index(source));
                     }
                 }
 
@@ -132,10 +122,7 @@ impl<'a, G: GraphStore> BetweennessCentralityStorageRuntime<'a, G> {
     }
 
     pub fn neighbors_weighted(&self, node_idx: usize) -> Vec<(usize, f64)> {
-        let node_id = match NodeId::try_from(node_idx as i64) {
-            Ok(id) => id,
-            Err(_) => return Vec::new(),
-        };
+        let node_id = mapped_node_id(node_idx);
 
         let fallback = self.graph.default_property_value();
         match self.orientation {
@@ -143,15 +130,13 @@ impl<'a, G: GraphStore> BetweennessCentralityStorageRuntime<'a, G> {
                 .graph
                 .stream_relationships(node_id, fallback)
                 .map(|cursor| (cursor.target_id(), cursor.property()))
-                .filter(|(target, _w)| *target >= 0)
-                .map(|(target, weight)| (target as usize, weight))
+                .map(|(target, weight)| (physical_node_index(target), weight))
                 .collect(),
             Orientation::Reverse => self
                 .graph
                 .stream_inverse_relationships(node_id, fallback)
                 .map(|cursor| (cursor.source_id(), cursor.property()))
-                .filter(|(source, _w)| *source >= 0)
-                .map(|(source, weight)| (source as usize, weight))
+                .map(|(source, weight)| (physical_node_index(source), weight))
                 .collect(),
             Orientation::Undirected => {
                 let mut neighbors = Vec::new();
@@ -159,16 +144,14 @@ impl<'a, G: GraphStore> BetweennessCentralityStorageRuntime<'a, G> {
 
                 for cursor in self.graph.stream_relationships(node_id, fallback) {
                     let target = cursor.target_id();
-                    if target >= 0 {
-                        outgoing_targets.insert(target);
-                        neighbors.push((target as usize, cursor.property()));
-                    }
+                    outgoing_targets.insert(target);
+                    neighbors.push((physical_node_index(target), cursor.property()));
                 }
 
                 for cursor in self.graph.stream_inverse_relationships(node_id, fallback) {
                     let source = cursor.source_id();
-                    if source >= 0 && !outgoing_targets.contains(&source) {
-                        neighbors.push((source as usize, cursor.property()));
+                    if !outgoing_targets.contains(&source) {
+                        neighbors.push((physical_node_index(source), cursor.property()));
                     }
                 }
 
@@ -287,4 +270,14 @@ impl<'a, G: GraphStore> BetweennessCentralityStorageRuntime<'a, G> {
 
         Ok(computation.finalize_result())
     }
+}
+
+fn mapped_node_id(index: usize) -> MappedNodeId {
+    MappedNodeId::try_from(index).expect("graph node count must fit mapped ID space")
+}
+
+fn physical_node_index(node_id: MappedNodeId) -> usize {
+    node_id
+        .to_usize()
+        .expect("mapped graph node must fit Brandes worker index space")
 }

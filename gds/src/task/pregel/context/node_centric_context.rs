@@ -5,6 +5,8 @@
 
 use crate::task::pregel::{NodeValue, PregelRuntimeConfig};
 use crate::types::graph::Graph;
+use crate::types::graph::MappedNodeId;
+use crate::types::graph::OriginalNodeId;
 use parking_lot::RwLock;
 use std::sync::Arc;
 
@@ -26,7 +28,7 @@ use std::sync::Arc;
 ///
 /// Rust ownership model: contexts borrow Graph and NodeValue to allow concurrent access.
 pub struct NodeCentricContext<C: PregelRuntimeConfig> {
-    node_id: u64,
+    node_id: MappedNodeId,
     config: C,
     graph: Arc<dyn Graph>,
     node_value: Arc<RwLock<NodeValue>>,
@@ -46,7 +48,7 @@ impl<C: PregelRuntimeConfig> NodeCentricContext<C> {
     /// Maps directly to Java constructor:
     pub fn new(graph: Arc<dyn Graph>, config: C, node_value: Arc<RwLock<NodeValue>>) -> Self {
         Self {
-            node_id: 0,
+            node_id: MappedNodeId::ZERO,
             config,
             graph,
             node_value,
@@ -61,7 +63,7 @@ impl<C: PregelRuntimeConfig> NodeCentricContext<C> {
     /// # Java equivalent
     ///
     pub fn set_node_id(&mut self, node_id: u64) {
-        self.node_id = node_id;
+        self.node_id = MappedNodeId::new(node_id);
     }
 
     /// Get the node ID currently being processed.
@@ -69,12 +71,7 @@ impl<C: PregelRuntimeConfig> NodeCentricContext<C> {
     /// # Java equivalent
     ///
     pub fn node_id(&self) -> u64 {
-        self.node_id
-    }
-
-    /// Get the internal node id as i64 (Graph's NodeId type).
-    pub fn internal_node_id_i64(&self) -> i64 {
-        self.node_id as i64
+        self.node_id.get()
     }
 
     /// Get the configuration.
@@ -103,7 +100,7 @@ impl<C: PregelRuntimeConfig> NodeCentricContext<C> {
     /// # Java equivalent
     ///
     pub fn node_count(&self) -> u64 {
-        self.graph.node_count() as u64
+        u64::try_from(self.graph.node_count()).expect("graph node count must fit Pregel ID space")
     }
 
     /// Get the number of relationships in the graph.
@@ -111,7 +108,8 @@ impl<C: PregelRuntimeConfig> NodeCentricContext<C> {
     /// # Java equivalent
     ///
     pub fn relationship_count(&self) -> u64 {
-        self.graph.relationship_count() as u64
+        u64::try_from(self.graph.relationship_count())
+            .expect("relationship count must fit Pregel count space")
     }
 
     /// Set a double node value for the given property key.
@@ -124,9 +122,7 @@ impl<C: PregelRuntimeConfig> NodeCentricContext<C> {
     /// # Java equivalent
     ///
     pub fn set_node_value(&mut self, key: &str, value: f64) {
-        self.node_value
-            .write()
-            .set(key, self.node_id as usize, value);
+        self.node_value.write().set(key, self.node_index(), value);
     }
 
     /// Set a long node value for the given property key.
@@ -136,7 +132,7 @@ impl<C: PregelRuntimeConfig> NodeCentricContext<C> {
     pub fn set_node_value_long(&mut self, key: &str, value: i64) {
         self.node_value
             .write()
-            .set_long(key, self.node_id as usize, value);
+            .set_long(key, self.node_index(), value);
     }
 
     /// Set a long array node value for the given property key.
@@ -146,7 +142,7 @@ impl<C: PregelRuntimeConfig> NodeCentricContext<C> {
     pub fn set_node_value_long_array(&mut self, key: &str, value: Vec<i64>) {
         self.node_value
             .write()
-            .set_long_array(key, self.node_id as usize, value);
+            .set_long_array(key, self.node_index(), value);
     }
 
     /// Set a double array node value for the given property key.
@@ -156,21 +152,17 @@ impl<C: PregelRuntimeConfig> NodeCentricContext<C> {
     pub fn set_node_value_double_array(&mut self, key: &str, value: Vec<f64>) {
         self.node_value
             .write()
-            .set_double_array(key, self.node_id as usize, value);
+            .set_double_array(key, self.node_index(), value);
     }
 
     /// Read a double node value for the given property key.
     pub(crate) fn double_node_value(&self, key: &str) -> f64 {
-        self.node_value
-            .read()
-            .double_value(key, self.node_id as usize)
+        self.node_value.read().double_value(key, self.node_index())
     }
 
     /// Read a long node value for the given property key.
     pub(crate) fn long_node_value(&self, key: &str) -> i64 {
-        self.node_value
-            .read()
-            .long_value(key, self.node_id as usize)
+        self.node_value.read().long_value(key, self.node_index())
     }
 
     /// Returns the degree (number of relationships) of the currently processed node.
@@ -178,7 +170,7 @@ impl<C: PregelRuntimeConfig> NodeCentricContext<C> {
     /// # Java equivalent
     ///
     pub fn degree(&self) -> usize {
-        self.graph.degree(self.node_id as i64)
+        self.graph.degree(self.node_id)
     }
 
     /// Returns the incoming degree (number of incoming relationships) of the currently processed node.
@@ -189,7 +181,7 @@ impl<C: PregelRuntimeConfig> NodeCentricContext<C> {
         // For now, return the same as degree
         // Proper implementation would use topology.incoming(node_id).len()
         // but that requires access to the topology which isn't exposed through Graph trait
-        self.graph.degree(self.node_id as i64)
+        self.graph.degree_inverse(self.node_id).unwrap_or(0)
     }
 
     /// Returns the corresponding node id in the original graph for the current node id.
@@ -198,8 +190,9 @@ impl<C: PregelRuntimeConfig> NodeCentricContext<C> {
     ///
     pub fn to_original_id(&self) -> i64 {
         self.graph
-            .to_original_node_id(self.node_id as i64)
+            .to_original_node_id(self.node_id)
             .expect("node should exist in graph")
+            .get()
     }
 
     /// Returns the corresponding node id in the original graph for the given internal node id.
@@ -208,8 +201,9 @@ impl<C: PregelRuntimeConfig> NodeCentricContext<C> {
     ///
     pub fn to_original_id_of(&self, internal_node_id: u64) -> i64 {
         self.graph
-            .to_original_node_id(internal_node_id as i64)
+            .to_original_node_id(MappedNodeId::new(internal_node_id))
             .expect("node should exist in graph")
+            .get()
     }
 
     /// Returns the corresponding node id in the internal graph for the given original node id.
@@ -218,8 +212,9 @@ impl<C: PregelRuntimeConfig> NodeCentricContext<C> {
     ///
     pub fn to_internal_id(&self, original_node_id: i64) -> u64 {
         self.graph
-            .to_mapped_node_id(original_node_id)
-            .expect("node should exist in graph") as u64
+            .to_mapped_node_id(OriginalNodeId::new(original_node_id))
+            .expect("node should exist in graph")
+            .get()
     }
 
     /// Calls the consumer for each neighbor of the currently processed node (outgoing edges).
@@ -230,9 +225,9 @@ impl<C: PregelRuntimeConfig> NodeCentricContext<C> {
     where
         F: FnMut(u64),
     {
-        let stream = self.graph.stream_relationships(self.node_id as i64, 0.0);
+        let stream = self.graph.stream_relationships(self.node_id, 0.0);
         for cursor in stream {
-            consumer(cursor.target_id() as u64);
+            consumer(cursor.target_id().get());
         }
     }
 
@@ -247,24 +242,9 @@ impl<C: PregelRuntimeConfig> NodeCentricContext<C> {
     where
         F: FnMut(u64),
     {
-        // Use the topology's incoming adjacency list
-        // This requires the graph to have been created with incoming edges
-
-        // Get the internal topology through default_graph's stream_incoming_relationships
-        // For now, we'll need to access via the graph's topology
-        // This is a bit indirect, but maintains abstraction
-        let node_id = self.node_id as i64;
-
-        // Iterate through all nodes and check if they point to current node
-        // This is O(E) but correct for now; optimization later with proper topology access
-        for source_id in 0..self.graph.node_count() {
-            let stream = self.graph.stream_relationships(source_id as i64, 0.0);
-            for cursor in stream {
-                if cursor.target_id() == node_id {
-                    consumer(source_id as u64);
-                    break; // Found this source, move to next
-                }
-            }
+        let stream = self.graph.stream_inverse_relationships(self.node_id, 0.0);
+        for cursor in stream {
+            consumer(cursor.source_id().get());
         }
     }
 
@@ -276,10 +256,18 @@ impl<C: PregelRuntimeConfig> NodeCentricContext<C> {
     where
         F: FnMut(u64),
     {
-        let stream = self.graph.stream_relationships(node_id as i64, 0.0);
+        let stream = self
+            .graph
+            .stream_relationships(MappedNodeId::new(node_id), 0.0);
         for cursor in stream {
-            consumer(cursor.target_id() as u64);
+            consumer(cursor.target_id().get());
         }
+    }
+
+    fn node_index(&self) -> usize {
+        self.node_id
+            .to_usize()
+            .expect("Pregel mapped node must fit node-value storage index space")
     }
 }
 

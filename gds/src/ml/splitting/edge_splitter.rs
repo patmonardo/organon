@@ -3,6 +3,7 @@ use crate::projection::Orientation;
 use crate::projection::RelationshipType;
 use crate::types::graph::id_map::IdMap;
 use crate::types::graph::Graph;
+use crate::types::graph::MappedNodeId;
 use rand::rngs::StdRng;
 use rand::Rng;
 use rand::SeedableRng;
@@ -147,7 +148,7 @@ pub trait EdgeSplitter {
     fn valid_positive_relationship_candidate_count(
         &self,
         graph: &dyn Graph,
-        is_valid_node_pair: Arc<dyn Fn(i64, i64) -> bool + Send + Sync>,
+        is_valid_node_pair: Arc<dyn Fn(MappedNodeId, MappedNodeId) -> bool + Send + Sync>,
     ) -> usize;
 
     /// Performs positive sampling
@@ -159,8 +160,8 @@ pub trait EdgeSplitter {
         remaining_rel_property_key: Option<&str>,
         selected_rel_count: &mut usize,
         remaining_rel_count: &mut usize,
-        node_id: i64,
-        is_valid_node_pair: &dyn Fn(i64, i64) -> bool,
+        node_id: MappedNodeId,
+        is_valid_node_pair: &dyn Fn(MappedNodeId, MappedNodeId) -> bool,
         positive_samples_remaining: &mut usize,
         candidate_edges_remaining: &mut usize,
     );
@@ -205,7 +206,12 @@ impl BaseEdgeSplitter {
     }
 
     /// Checks if a node pair is valid
-    pub fn is_valid_node_pair(&self, graph: &dyn Graph, source: i64, target: i64) -> bool {
+    pub fn is_valid_node_pair(
+        &self,
+        graph: &dyn Graph,
+        source: MappedNodeId,
+        target: MappedNodeId,
+    ) -> bool {
         let Some(source_original) = graph.to_original_node_id(source) else {
             return false;
         };
@@ -280,7 +286,7 @@ pub fn split_positive_examples_with(
         let graph = graph.clone();
         let source_nodes = source_nodes.clone();
         let target_nodes = target_nodes.clone();
-        Arc::new(move |source: i64, target: i64| {
+        Arc::new(move |source: MappedNodeId, target: MappedNodeId| {
             let Some(source_original) = graph.to_original_node_id(source) else {
                 return false;
             };
@@ -333,12 +339,14 @@ impl BaseEdgeSplitter {
         self.rng.gen_bool(clamped)
     }
 
-    pub fn to_root_ids(&self, graph: &dyn Graph, source: i64, target: i64) -> Option<(u64, u64)> {
+    pub fn to_root_ids(
+        &self,
+        graph: &dyn Graph,
+        source: MappedNodeId,
+        target: MappedNodeId,
+    ) -> Option<(u64, u64)> {
         let source_root = graph.to_root_node_id(source)?;
         let target_root = graph.to_root_node_id(target)?;
-        if source_root < 0 || target_root < 0 {
-            return None;
-        }
-        Some((source_root as u64, target_root as u64))
+        Some((source_root.get(), target_root.get()))
     }
 }

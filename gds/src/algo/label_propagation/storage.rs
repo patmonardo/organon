@@ -10,6 +10,7 @@ use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
 use crate::types::default_value::LONG_DEFAULT_FALLBACK;
+use crate::types::graph::MappedNodeId;
 use crate::types::prelude::GraphStore;
 use crate::types::properties::node::NodePropertyValues;
 use std::collections::{HashMap, HashSet};
@@ -124,8 +125,20 @@ impl LabelPropStorageRuntime {
         for i in 0..node_count {
             termination_flag.assert_running();
 
-            let node_id = i as i64;
-            let original = self.graph.to_original_node_id(node_id).unwrap_or(node_id);
+            let node_id = MappedNodeId::try_from(i).map_err(|_| {
+                AlgorithmError::Execution(format!(
+                    "node index {i} exceeds the mapped ID domain"
+                ))
+            })?;
+            let original = self
+                .graph
+                .to_original_node_id(node_id)
+                .ok_or_else(|| {
+                    AlgorithmError::Execution(format!(
+                        "mapped node {node_id} has no original node ID"
+                    ))
+                })?
+                .get();
 
             let label = match seed_pv.as_deref() {
                 Some(pv) if pv.has_value(i as u64) => {
@@ -151,11 +164,19 @@ impl LabelPropStorageRuntime {
         let fallback = 1.0;
         let graph = Arc::clone(&self.graph);
         let neighbors = move |node_idx: usize| -> Vec<(usize, f64)> {
+            let node_id = MappedNodeId::try_from(node_idx)
+                .expect("graph node count must fit the mapped ID domain");
             graph
-                .stream_relationships_weighted(node_idx as i64, fallback)
+                .stream_relationships_weighted(node_id, fallback)
                 .map(|cursor| (cursor.target_id(), cursor.weight()))
-                .filter(|(target, _w)| *target >= 0)
-                .map(|(target, w)| (target as usize, w))
+                .map(|(target, weight)| {
+                    (
+                        target
+                            .to_usize()
+                            .expect("mapped target must fit the dense index domain"),
+                        weight,
+                    )
+                })
                 .collect()
         };
 

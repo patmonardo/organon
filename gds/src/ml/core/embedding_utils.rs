@@ -88,8 +88,8 @@ pub fn validate_relationship_weight_property_value_with_validator<F>(
 {
     // Single-threaded scan for now; hook into parallel utilities once available.
     let fallback = graph.default_property_value();
-    for node_id in 0..graph.node_count() {
-        for rel in graph.stream_relationships_weighted(node_id as i64, fallback) {
+    for node_id in graph.iter() {
+        for rel in graph.stream_relationships_weighted(node_id, fallback) {
             let weight = rel.weight();
             if !validator(weight) {
                 panic!(

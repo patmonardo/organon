@@ -10,7 +10,7 @@ use crate::core::utils::paged::HugeLongArrayStack;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::{Orientation, RelationshipType};
 use crate::types::graph::Graph;
-use crate::types::graph::NodeId;
+use crate::types::graph::MappedNodeId;
 use crate::types::prelude::GraphStore;
 use std::collections::{HashMap, HashSet};
 use std::marker::PhantomData;
@@ -212,7 +212,7 @@ impl<'a, G: GraphStore> CELFStorageRuntime<'a, G> {
     }
 
     pub fn neighbors(&self, node_idx: usize) -> Vec<usize> {
-        let node_id = match NodeId::try_from(node_idx as i64) {
+        let node_id = match MappedNodeId::try_from(node_idx) {
             Ok(id) => id,
             Err(_) => return Vec::new(),
         };
@@ -221,8 +221,7 @@ impl<'a, G: GraphStore> CELFStorageRuntime<'a, G> {
         self.graph
             .stream_relationships(node_id, fallback)
             .map(|cursor| cursor.target_id())
-            .filter(|target| *target >= 0)
-            .map(|target| target as usize)
+            .filter_map(MappedNodeId::to_usize)
             .collect()
     }
 

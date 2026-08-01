@@ -3,6 +3,7 @@
 use super::{LinkFeatureAppender, LinkFeatureStep};
 use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::types::graph::Graph;
+use crate::types::graph::MappedNodeId;
 use rayon::prelude::*;
 
 /// Core feature extraction orchestrator for link prediction.
@@ -128,7 +129,9 @@ impl LinkFeatureExtractor {
 
         // Collect all relationships as (source, target) pairs
         let mut relationships = Vec::new();
-        for source in 0..graph.node_count() as i64 {
+        for source_index in 0..graph.node_count() {
+            let source = MappedNodeId::try_from(source_index)
+                .expect("graph node count exceeds the mapped node ID domain");
             let relationships_iter =
                 graph.stream_relationships(source, graph.default_property_value());
             for cursor in relationships_iter {
@@ -145,7 +148,7 @@ impl LinkFeatureExtractor {
                 if !termination_flag.running() {
                     return vec![0.0; extractor.feature_dimension];
                 }
-                extractor.extract_features_for_pair(source as u64, target as u64)
+                extractor.extract_features_for_pair(source, target)
             })
             .collect();
 
@@ -169,7 +172,11 @@ impl LinkFeatureExtractor {
     /// # Returns
     ///
     /// Feature array of length `feature_dimension`.
-    pub fn extract_features_for_pair(&self, source: u64, target: u64) -> Vec<f64> {
+    pub fn extract_features_for_pair(
+        &self,
+        source: MappedNodeId,
+        target: MappedNodeId,
+    ) -> Vec<f64> {
         let mut features_for_link = vec![0.0; self.feature_dimension];
         let mut feature_offset = 0;
 
@@ -249,7 +256,10 @@ mod tests {
         let extractor = LinkFeatureExtractor::of(graph.as_ref(), steps);
 
         // Extract for source=0, target=1
-        let features = extractor.extract_features_for_pair(0, 1);
+        let features = extractor.extract_features_for_pair(
+            MappedNodeId::new(0),
+            MappedNodeId::new(1),
+        );
 
         // Should return array of correct dimension (0 with placeholder)
         assert_eq!(features.len(), extractor.feature_dimension());
@@ -290,6 +300,9 @@ mod tests {
         assert_eq!(extractor.feature_dimension(), 1); // Sum of dimensions
 
         // Extract features for a pair
-        let _features = extractor.extract_features_for_pair(0, 1);
+        let _features = extractor.extract_features_for_pair(
+            MappedNodeId::new(0),
+            MappedNodeId::new(1),
+        );
     }
 }

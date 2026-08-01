@@ -6,6 +6,7 @@
 //! - BufferedCompositeRelationshipConsumer.java (59 lines)
 
 use crate::projection::{NodeLabel, RelationshipType};
+use crate::types::graph::OriginalNodeId;
 use std::collections::HashSet;
 
 /// RecordConsumer trait - offers records to buffer
@@ -27,14 +28,14 @@ pub trait RecordConsumer<T> {
 /// A node record from Arrow batch
 #[derive(Debug, Clone)]
 pub struct NodeRecord {
-    pub node_id: u64,
+    pub node_id: OriginalNodeId,
     pub labels: Vec<NodeLabel>,
 }
 
 /// Buffer for node records
 #[derive(Debug)]
 struct NodeBatchBuffer {
-    node_ids: Vec<u64>,
+    node_ids: Vec<OriginalNodeId>,
     labels_by_node: Vec<Vec<NodeLabel>>,
     capacity: usize,
     current_size: usize,
@@ -50,7 +51,7 @@ impl NodeBatchBuffer {
         }
     }
 
-    fn add(&mut self, node_id: u64, labels: Vec<NodeLabel>) {
+    fn add(&mut self, node_id: OriginalNodeId, labels: Vec<NodeLabel>) {
         self.node_ids.push(node_id);
         self.labels_by_node.push(labels);
         self.current_size += 1;
@@ -116,7 +117,7 @@ impl BufferedNodeConsumer {
     }
 
     /// Get buffered node IDs
-    pub fn node_ids(&self) -> &[u64] {
+    pub fn node_ids(&self) -> &[OriginalNodeId] {
         &self.buffer.node_ids
     }
 
@@ -134,7 +135,9 @@ impl RecordConsumer<NodeRecord> for BufferedNodeConsumer {
         }
 
         // Skip nodes beyond max count
-        if record.node_id >= self.highest_possible_node_count {
+        if !u64::try_from(record.node_id.get())
+            .is_ok_and(|node_id| node_id < self.highest_possible_node_count)
+        {
             return true;
         }
 
@@ -175,18 +178,16 @@ impl RecordConsumer<NodeRecord> for BufferedNodeConsumer {
 /// A relationship record from Arrow batch
 #[derive(Debug, Clone)]
 pub struct RelationshipRecord {
-    pub relationship_id: u64,
-    pub source_node_id: u64,
-    pub target_node_id: u64,
+    pub source_node_id: OriginalNodeId,
+    pub target_node_id: OriginalNodeId,
     pub relationship_type: RelationshipType,
 }
 
 /// Buffer for relationship records
 #[derive(Debug)]
 struct RelationshipBatchBuffer {
-    sources: Vec<u64>,
-    targets: Vec<u64>,
-    relationship_ids: Vec<u64>,
+    sources: Vec<OriginalNodeId>,
+    targets: Vec<OriginalNodeId>,
     capacity: usize,
     current_size: usize,
 }
@@ -196,16 +197,14 @@ impl RelationshipBatchBuffer {
         Self {
             sources: Vec::with_capacity(capacity),
             targets: Vec::with_capacity(capacity),
-            relationship_ids: Vec::with_capacity(capacity),
             capacity,
             current_size: 0,
         }
     }
 
-    fn add(&mut self, source: u64, target: u64, rel_id: u64) {
+    fn add(&mut self, source: OriginalNodeId, target: OriginalNodeId) {
         self.sources.push(source);
         self.targets.push(target);
-        self.relationship_ids.push(rel_id);
         self.current_size += 1;
     }
 
@@ -216,7 +215,6 @@ impl RelationshipBatchBuffer {
     fn reset(&mut self) {
         self.sources.clear();
         self.targets.clear();
-        self.relationship_ids.clear();
         self.current_size = 0;
     }
 
@@ -265,19 +263,15 @@ impl BufferedEdgeConsumer {
     }
 
     /// Get buffered sources
-    pub fn sources(&self) -> &[u64] {
+    pub fn sources(&self) -> &[OriginalNodeId] {
         &self.buffer.sources
     }
 
     /// Get buffered targets
-    pub fn targets(&self) -> &[u64] {
+    pub fn targets(&self) -> &[OriginalNodeId] {
         &self.buffer.targets
     }
 
-    /// Get buffered relationship IDs
-    pub fn relationship_ids(&self) -> &[u64] {
-        &self.buffer.relationship_ids
-    }
 }
 
 impl RecordConsumer<RelationshipRecord> for BufferedEdgeConsumer {
@@ -295,8 +289,10 @@ impl RecordConsumer<RelationshipRecord> for BufferedEdgeConsumer {
         }
 
         // Check for dangling relationships
-        let source_valid = record.source_node_id < self.node_count;
-        let target_valid = record.target_node_id < self.node_count;
+        let source_valid = u64::try_from(record.source_node_id.get())
+            .is_ok_and(|source| source < self.node_count);
+        let target_valid = u64::try_from(record.target_node_id.get())
+            .is_ok_and(|target| target < self.node_count);
 
         if !source_valid || !target_valid {
             if self.skip_dangling {
@@ -309,11 +305,8 @@ impl RecordConsumer<RelationshipRecord> for BufferedEdgeConsumer {
         }
 
         // Add to buffer
-        self.buffer.add(
-            record.source_node_id,
-            record.target_node_id,
-            record.relationship_id,
-        );
+        self.buffer
+            .add(record.source_node_id, record.target_node_id);
 
         !self.buffer.is_full()
     }
@@ -400,21 +393,21 @@ mod tests {
         assert!(!consumer.is_full());
 
         let record1 = NodeRecord {
-            node_id: 0,
+            node_id: OriginalNodeId::new(0),
             labels: vec![NodeLabel::of("Person")],
         };
         assert!(consumer.offer(record1));
         assert_eq!(consumer.buffer().size(), 1);
 
         let record2 = NodeRecord {
-            node_id: 1,
+            node_id: OriginalNodeId::new(1),
             labels: vec![NodeLabel::of("Company")],
         };
         assert!(consumer.offer(record2));
         assert_eq!(consumer.buffer().size(), 2);
 
         let record3 = NodeRecord {
-            node_id: 2,
+            node_id: OriginalNodeId::new(2),
             labels: vec![NodeLabel::of("Product")],
         };
         let offered = consumer.offer(record3);
@@ -424,7 +417,7 @@ mod tests {
 
         // Full - should reject
         let record4 = NodeRecord {
-            node_id: 3,
+            node_id: OriginalNodeId::new(3),
             labels: vec![NodeLabel::of("Event")],
         };
         assert!(!consumer.offer(record4)); // Still full, rejects
@@ -439,7 +432,7 @@ mod tests {
 
         // Matching label - accepted
         let record1 = NodeRecord {
-            node_id: 0,
+            node_id: OriginalNodeId::new(0),
             labels: vec![NodeLabel::of("Person")],
         };
         assert!(consumer.offer(record1));
@@ -447,7 +440,7 @@ mod tests {
 
         // Non-matching label - skipped
         let record2 = NodeRecord {
-            node_id: 1,
+            node_id: OriginalNodeId::new(1),
             labels: vec![NodeLabel::of("Company")],
         };
         assert!(consumer.offer(record2));
@@ -460,7 +453,7 @@ mod tests {
 
         // Within range
         let record1 = NodeRecord {
-            node_id: 99,
+            node_id: OriginalNodeId::new(99),
             labels: vec![NodeLabel::of("Person")],
         };
         assert!(consumer.offer(record1));
@@ -468,7 +461,7 @@ mod tests {
 
         // Beyond range - skipped
         let record2 = NodeRecord {
-            node_id: 100,
+            node_id: OriginalNodeId::new(100),
             labels: vec![NodeLabel::of("Person")],
         };
         assert!(consumer.offer(record2));
@@ -480,18 +473,16 @@ mod tests {
         let mut consumer = BufferedEdgeConsumer::new(3, 1000, None, true);
 
         let record1 = RelationshipRecord {
-            relationship_id: 0,
-            source_node_id: 0,
-            target_node_id: 1,
+            source_node_id: OriginalNodeId::new(0),
+            target_node_id: OriginalNodeId::new(1),
             relationship_type: RelationshipType::of("KNOWS"),
         };
         assert!(consumer.offer(record1));
         assert_eq!(consumer.buffer().size(), 1);
 
         let record2 = RelationshipRecord {
-            relationship_id: 1,
-            source_node_id: 1,
-            target_node_id: 2,
+            source_node_id: OriginalNodeId::new(1),
+            target_node_id: OriginalNodeId::new(2),
             relationship_type: RelationshipType::of("KNOWS"),
         };
         assert!(consumer.offer(record2));
@@ -505,9 +496,8 @@ mod tests {
 
         // Matching type
         let record1 = RelationshipRecord {
-            relationship_id: 0,
-            source_node_id: 0,
-            target_node_id: 1,
+            source_node_id: OriginalNodeId::new(0),
+            target_node_id: OriginalNodeId::new(1),
             relationship_type: RelationshipType::of("KNOWS"),
         };
         assert!(consumer.offer(record1));
@@ -515,9 +505,8 @@ mod tests {
 
         // Non-matching type - skipped
         let record2 = RelationshipRecord {
-            relationship_id: 1,
-            source_node_id: 1,
-            target_node_id: 2,
+            source_node_id: OriginalNodeId::new(1),
+            target_node_id: OriginalNodeId::new(2),
             relationship_type: RelationshipType::of("WORKS_AT"),
         };
         assert!(consumer.offer(record2));
@@ -530,9 +519,8 @@ mod tests {
 
         // Valid relationship
         let record1 = RelationshipRecord {
-            relationship_id: 0,
-            source_node_id: 0,
-            target_node_id: 9,
+            source_node_id: OriginalNodeId::new(0),
+            target_node_id: OriginalNodeId::new(9),
             relationship_type: RelationshipType::of("KNOWS"),
         };
         assert!(consumer.offer(record1));
@@ -540,9 +528,8 @@ mod tests {
 
         // Dangling source - skipped
         let record2 = RelationshipRecord {
-            relationship_id: 1,
-            source_node_id: 100,
-            target_node_id: 5,
+            source_node_id: OriginalNodeId::new(100),
+            target_node_id: OriginalNodeId::new(5),
             relationship_type: RelationshipType::of("KNOWS"),
         };
         assert!(consumer.offer(record2));
@@ -550,9 +537,8 @@ mod tests {
 
         // Dangling target - skipped
         let record3 = RelationshipRecord {
-            relationship_id: 2,
-            source_node_id: 5,
-            target_node_id: 100,
+            source_node_id: OriginalNodeId::new(5),
+            target_node_id: OriginalNodeId::new(100),
             relationship_type: RelationshipType::of("KNOWS"),
         };
         assert!(consumer.offer(record3));
@@ -569,9 +555,8 @@ mod tests {
         let mut composite = CompositeEdgeConsumer::new(vec![consumer1, consumer2]);
 
         let record = RelationshipRecord {
-            relationship_id: 0,
-            source_node_id: 0,
-            target_node_id: 1,
+            source_node_id: OriginalNodeId::new(0),
+            target_node_id: OriginalNodeId::new(1),
             relationship_type: RelationshipType::of("KNOWS"),
         };
 
@@ -587,7 +572,7 @@ mod tests {
         let mut consumer = BufferedNodeConsumer::new(10, 1000, None);
 
         let record = NodeRecord {
-            node_id: 0,
+            node_id: OriginalNodeId::new(0),
             labels: vec![NodeLabel::of("Person")],
         };
         consumer.offer(record);

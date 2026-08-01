@@ -11,7 +11,7 @@ use super::YensStorageRuntime;
 use crate::task::progress::TaskProgressTracker;
 use crate::task::progress::Tasks;
 use crate::types::graph::Graph;
-use crate::types::graph::NodeId;
+use crate::types::graph::MappedNodeId;
 use std::collections::HashMap;
 
 /// Yen's Computation Runtime - handles ephemeral computation state
@@ -20,9 +20,9 @@ use std::collections::HashMap;
 /// This implements the "Subtle pole" for managing Yen's algorithm state
 pub struct YensComputationRuntime {
     /// Source node for path finding
-    pub source_node: NodeId,
+    pub source_node: MappedNodeId,
     /// Target node for path finding
-    pub target_node: NodeId,
+    pub target_node: MappedNodeId,
     /// Number of shortest paths to find (K)
     pub k: usize,
     /// Whether to track relationships
@@ -32,7 +32,7 @@ pub struct YensComputationRuntime {
     /// Relationship filterer for avoiding cycles
     relationship_filterer: RelationshipFilterer,
     /// Visited nodes for cycle avoidance
-    visited_nodes: HashMap<NodeId, bool>,
+    visited_nodes: HashMap<MappedNodeId, bool>,
     /// Number of spur searches attempted in this computation.
     spur_searches: usize,
     /// Number of candidate paths generated in this computation.
@@ -44,8 +44,8 @@ pub struct YensComputationRuntime {
 impl YensComputationRuntime {
     /// Create new Yen's computation runtime
     pub fn new(
-        source_node: NodeId,
-        target_node: NodeId,
+        source_node: MappedNodeId,
+        target_node: MappedNodeId,
         k: usize,
         track_relationships: bool,
         concurrency: usize,
@@ -70,8 +70,8 @@ impl YensComputationRuntime {
     /// This resets the internal state for a new computation
     pub fn initialize(
         &mut self,
-        source_node: NodeId,
-        target_node: NodeId,
+        source_node: MappedNodeId,
+        target_node: MappedNodeId,
         k: usize,
         track_relationships: bool,
     ) {
@@ -89,7 +89,7 @@ impl YensComputationRuntime {
     /// Prepare a filter for one spur-node Dijkstra search.
     pub fn prepare_relationship_filter(
         &mut self,
-        spur_node: NodeId,
+        spur_node: MappedNodeId,
         prev_path: &MutablePathResult,
         k_shortest_paths: &[MutablePathResult],
         spur_index: usize,
@@ -137,12 +137,12 @@ impl YensComputationRuntime {
     ///
     /// Translation of: `YensTask.withVisited()` (lines 128-130)
     /// This marks nodes as visited to avoid cycles
-    pub fn add_visited_node(&mut self, node: NodeId) {
+    pub fn add_visited_node(&mut self, node: MappedNodeId) {
         self.visited_nodes.insert(node, true);
     }
 
     /// Check if a node has been visited
-    pub fn is_visited(&self, node: NodeId) -> bool {
+    pub fn is_visited(&self, node: MappedNodeId) -> bool {
         self.visited_nodes.get(&node).copied().unwrap_or(false)
     }
 

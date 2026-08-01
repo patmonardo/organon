@@ -1,10 +1,14 @@
-use crate::algo::prize_collecting_steiner_tree::spec::{PCSTreeConfig, PCSTreeResult, PRUNED};
-use crate::algo::prize_collecting_steiner_tree::PCSTreeComputationRuntime;
+use crate::algo::prize_collecting_steiner_tree::spec::{
+    PCSTreeConfig, PCSTreeResult, PRUNED, ROOT_NODE,
+};
+use crate::algo::prize_collecting_steiner_tree::{
+    PCSTreeComputationRuntime, PCSTreeParent,
+};
 use crate::task::concurrency::TerminationFlag;
 use crate::task::progress::{ProgressTracker, UNKNOWN_VOLUME};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::Graph;
-use crate::types::graph::NodeId;
+use crate::types::graph::MappedNodeId;
 use std::cmp::Ordering;
 use std::collections::BinaryHeap;
 use std::time::Instant;
@@ -21,8 +25,8 @@ pub struct PCSTreeStorageRuntime {
 
 #[derive(Debug, Clone)]
 struct FrontierEntry {
-    node: NodeId,
-    from: NodeId,
+    node: MappedNodeId,
+    from: MappedNodeId,
     weight: f64,
     effective_cost: f64,
 }
@@ -92,7 +96,7 @@ impl PCSTreeStorageRuntime {
         let start = Instant::now();
         let node_count = graph.map(|g| g.node_count()).unwrap_or(0);
         let neighbor_fn =
-            |node: NodeId| -> Vec<(NodeId, f64)> { self.get_neighbors_with_weights(graph, node) };
+            |node: MappedNodeId| -> Vec<(MappedNodeId, f64)> { self.get_neighbors_with_weights(graph, node) };
 
         let result = self.compute_core(
             computation,
@@ -125,7 +129,7 @@ impl PCSTreeStorageRuntime {
         progress_tracker: &mut dyn ProgressTracker,
     ) -> Result<PCSTreeResult, AlgorithmError>
     where
-        F: Fn(NodeId) -> Vec<(NodeId, f64)>,
+        F: Fn(MappedNodeId) -> Vec<(MappedNodeId, f64)>,
     {
         progress_tracker.begin_subtask_unknown();
         let start = Instant::now();
@@ -159,7 +163,7 @@ impl PCSTreeStorageRuntime {
         termination: &TerminationFlag,
     ) -> Result<PCSTreeResult, AlgorithmError>
     where
-        F: Fn(NodeId) -> Vec<(NodeId, f64)>,
+        F: Fn(MappedNodeId) -> Vec<(MappedNodeId, f64)>,
     {
         if node_count == 0 {
             return Ok(PCSTreeResult {
@@ -206,9 +210,6 @@ impl PCSTreeStorageRuntime {
                 progress_tracker.log_progress(scanned_relationships);
                 scanned_relationships = 0;
             }
-            if nbr < 0 {
-                continue;
-            }
             if weight.is_nan() || weight.is_infinite() || weight < 0.0 {
                 continue;
             }
@@ -240,9 +241,6 @@ impl PCSTreeStorageRuntime {
                     progress_tracker.log_progress(scanned_relationships);
                     scanned_relationships = 0;
                 }
-                if nbr < 0 {
-                    continue;
-                }
                 if weight.is_nan() || weight.is_infinite() || weight < 0.0 {
                     continue;
                 }
@@ -269,19 +267,33 @@ impl PCSTreeStorageRuntime {
         let mut total_edge_cost = 0.0;
         let mut effective_node_count = 0u64;
         for node in 0..node_count {
-            let p = computation.parent_array()[node];
-            if p == PRUNED {
+            let parent = computation.parent_array()[node];
+            if parent == PCSTreeParent::Pruned {
                 continue;
             }
             effective_node_count += 1;
             total_prize += computation.prizes()[node];
-            if p >= 0 {
+            if matches!(parent, PCSTreeParent::Parent(_)) {
                 total_edge_cost += computation.parent_cost_array()[node];
             }
         }
 
+        let parent_array = computation
+            .parent_array()
+            .iter()
+            .map(|parent| match parent {
+                PCSTreeParent::Pruned => Ok(PRUNED),
+                PCSTreeParent::Root => Ok(ROOT_NODE),
+                PCSTreeParent::Parent(parent) => i64::try_from(parent.get()).map_err(|_| {
+                    AlgorithmError::InvalidGraph(format!(
+                        "Parent mapped node ID does not fit result encoding: {parent}"
+                    ))
+                }),
+            })
+            .collect::<Result<Vec<_>, _>>()?;
+
         Ok(PCSTreeResult {
-            parent_array: computation.parent_array().to_vec(),
+            parent_array,
             relationship_to_parent_cost: computation.parent_cost_array().to_vec(),
             total_edge_cost,
             total_prize,
@@ -293,13 +305,12 @@ impl PCSTreeStorageRuntime {
     fn get_neighbors_with_weights(
         &self,
         graph: Option<&dyn Graph>,
-        node_id: NodeId,
-    ) -> Vec<(NodeId, f64)> {
+        node_id: MappedNodeId,
+    ) -> Vec<(MappedNodeId, f64)> {
         if let Some(g) = graph {
             let fallback: f64 = 1.0;
             g.stream_relationships(node_id, fallback)
                 .map(|cursor| (cursor.target_id(), cursor.property()))
-                .filter(|(t, _)| *t >= 0)
                 .collect()
         } else {
             Vec::new()

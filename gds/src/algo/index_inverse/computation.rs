@@ -24,15 +24,15 @@ impl IndexInverseComputationRuntime {
         let mut incoming: Vec<Vec<MappedNodeId>> = vec![Vec::new(); node_count];
 
         for src in 0..node_count {
-            for cursor in graph.stream_relationships(src as i64, fallback) {
+            let Ok(source) = MappedNodeId::try_from(src) else {
+                continue;
+            };
+            for cursor in graph.stream_relationships(source, fallback) {
                 let tgt = cursor.target_id();
-                if tgt < 0 {
-                    continue;
+                outgoing[src].push(tgt);
+                if let Some(incoming_row) = tgt.to_usize().and_then(|index| incoming.get_mut(index)) {
+                    incoming_row.push(source);
                 }
-                let u = src as MappedNodeId;
-                let v = tgt as MappedNodeId;
-                outgoing[src].push(v);
-                incoming[v as usize].push(u);
             }
         }
 

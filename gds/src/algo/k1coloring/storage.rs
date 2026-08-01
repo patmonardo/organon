@@ -10,6 +10,7 @@ use crate::task::progress::ProgressTracker;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
+use crate::types::graph::MappedNodeId;
 use crate::types::prelude::GraphStore;
 use std::collections::HashSet;
 use std::sync::Arc;
@@ -62,11 +63,16 @@ impl K1ColoringStorageRuntime {
         let fallback = self.graph.default_property_value();
         let graph = Arc::clone(&self.graph);
         let neighbors = move |node_idx: usize| -> Vec<usize> {
+            let node_id = MappedNodeId::try_from(node_idx)
+                .expect("graph node count must fit the mapped ID domain");
             graph
-                .stream_relationships(node_idx as i64, fallback)
+                .stream_relationships(node_id, fallback)
                 .map(|cursor| cursor.target_id())
-                .filter(|t| *t >= 0)
-                .map(|t| t as usize)
+                .map(|target| {
+                    target
+                        .to_usize()
+                        .expect("mapped target must fit the dense index domain")
+                })
                 .collect()
         };
 

@@ -5,6 +5,7 @@ use crate::task::progress::ProgressTracker;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::{Orientation, RelationshipType};
 use crate::types::graph::Graph;
+use crate::types::graph::MappedNodeId;
 use crate::types::prelude::GraphStore;
 use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
@@ -80,14 +81,22 @@ impl ModularityOptimizationStorageRuntime {
         let mut adj: Vec<Vec<(usize, f64)>> = vec![Vec::new(); node_count];
         for (node_id, neighbors) in adj.iter_mut().enumerate() {
             termination_flag.assert_running();
+            let mapped_node_id = MappedNodeId::try_from(node_id).map_err(|_| {
+                AlgorithmError::Execution(format!(
+                    "node index {node_id} exceeds the mapped ID domain"
+                ))
+            })?;
             let stream = self
                 .graph
-                .stream_relationships_weighted(node_id as i64, weight_fallback);
+                .stream_relationships_weighted(mapped_node_id, weight_fallback);
             for cursor in stream {
-                let target = cursor.target_id();
-                if target >= 0 {
-                    neighbors.push((target as usize, cursor.weight()));
-                }
+                let target = cursor.target_id().to_usize().ok_or_else(|| {
+                    AlgorithmError::Execution(format!(
+                        "mapped target {} exceeds the dense index domain",
+                        cursor.target_id()
+                    ))
+                })?;
+                neighbors.push((target, cursor.weight()));
             }
             progress_tracker.log_progress(1);
         }

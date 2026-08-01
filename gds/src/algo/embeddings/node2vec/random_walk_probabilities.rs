@@ -50,11 +50,9 @@ impl RandomWalkProbabilities {
     ) -> Vec<f64> {
         (0..node_count)
             .map(|node_id| {
-                let frequency = self
-                    .node_frequencies
-                    .get(&(node_id as i64))
-                    .copied()
-                    .unwrap_or(0.0)
+                let node_id = i64::try_from(node_id)
+                    .expect("Node2Vec probability index must fit corpus node IDs");
+                let frequency = self.node_frequencies.get(&node_id).copied().unwrap_or(0.0)
                     / self.total_frequency;
                 if frequency == 0.0 {
                     0.0
@@ -73,8 +71,10 @@ impl RandomWalkProbabilities {
     ) -> NegativeSamplingDistribution {
         let weights: Vec<f64> = (0..node_count)
             .map(|node_id| {
+                let node_id = i64::try_from(node_id)
+                    .expect("Node2Vec probability index must fit corpus node IDs");
                 self.node_frequencies
-                    .get(&(node_id as i64))
+                    .get(&node_id)
                     .copied()
                     .unwrap_or(0.0)
                     .powf(exponent)

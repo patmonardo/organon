@@ -1,12 +1,13 @@
 use super::similarity_metric::SimilarityMetric;
+use crate::types::graph::MappedNodeId;
 use std::cmp::Reverse;
 use std::collections::BinaryHeap;
 use std::sync::Arc;
 
 #[derive(Debug, Clone)]
 pub struct NodeSimilarityComputationResult {
-    pub source: u64,
-    pub target: u64,
+    pub source: MappedNodeId,
+    pub target: MappedNodeId,
     pub similarity: f64,
 }
 
@@ -18,7 +19,7 @@ pub struct NodeSimilarityComputationRuntime;
 #[derive(PartialEq)]
 struct ScoredNode {
     similarity: f64,
-    target: u64,
+    target: MappedNodeId,
 }
 
 impl Eq for ScoredNode {}
@@ -45,9 +46,9 @@ impl NodeSimilarityComputationRuntime {
 
     pub fn score_source_from_candidates(
         &self,
-        source: u64,
-        candidates: impl IntoIterator<Item = u64>,
-        vectors: &[Vec<u64>],
+        source: MappedNodeId,
+        candidates: impl IntoIterator<Item = MappedNodeId>,
+        vectors: &[Vec<usize>],
         weights: Option<&[Vec<f64>]>,
         metric: &Arc<dyn SimilarityMetric>,
         top_k: usize,
@@ -55,7 +56,10 @@ impl NodeSimilarityComputationRuntime {
         let limit = if top_k == 0 { usize::MAX } else { top_k };
 
         let mut heap: BinaryHeap<Reverse<ScoredNode>> = BinaryHeap::new();
-        let source_vec = &vectors[source as usize];
+        let source_index = source
+            .to_usize()
+            .expect("mapped source ID must fit vector storage");
+        let source_vec = &vectors[source_index];
 
         if source_vec.is_empty() {
             return Vec::new();
@@ -64,7 +68,10 @@ impl NodeSimilarityComputationRuntime {
         match weights {
             None => {
                 for target in candidates {
-                    let target_vec = &vectors[target as usize];
+                    let target_index = target
+                        .to_usize()
+                        .expect("mapped target ID must fit vector storage");
+                    let target_vec = &vectors[target_index];
                     if target_vec.is_empty() {
                         continue;
                     }
@@ -87,15 +94,18 @@ impl NodeSimilarityComputationRuntime {
                 }
             }
             Some(weights) => {
-                let source_weights = &weights[source as usize];
+                let source_weights = &weights[source_index];
                 debug_assert_eq!(source_vec.len(), source_weights.len());
 
                 for target in candidates {
-                    let target_vec = &vectors[target as usize];
+                    let target_index = target
+                        .to_usize()
+                        .expect("mapped target ID must fit vector storage");
+                    let target_vec = &vectors[target_index];
                     if target_vec.is_empty() {
                         continue;
                     }
-                    let target_weights = &weights[target as usize];
+                    let target_weights = &weights[target_index];
                     debug_assert_eq!(target_vec.len(), target_weights.len());
 
                     let similarity = metric.compute_weighted_similarity(
@@ -146,8 +156,8 @@ impl NodeSimilarityComputationRuntime {
         #[derive(PartialEq)]
         struct ScoredPair {
             similarity: f64,
-            source: u64,
-            target: u64,
+            source: MappedNodeId,
+            target: MappedNodeId,
         }
 
         impl Eq for ScoredPair {}

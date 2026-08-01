@@ -35,8 +35,10 @@ impl Iterator for NodeIdBatchIter {
             return None;
         }
         let value = self.current;
-        self.current += 1;
         self.remaining -= 1;
+        if self.remaining > 0 {
+            self.current = self.current.checked_add(1)?;
+        }
         Some(value)
     }
 

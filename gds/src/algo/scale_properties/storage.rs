@@ -18,6 +18,7 @@ use crate::task::concurrency::TerminationFlag;
 use crate::task::progress::ProgressTracker;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::IdMap;
+use crate::types::graph::MappedNodeId;
 use crate::types::prelude::GraphStore;
 use crate::types::properties::node::NodePropertyValues;
 use crate::types::ValueType;
@@ -331,12 +332,13 @@ fn invalid_array_error(
     node_id: u64,
     id_map: &Arc<dyn IdMap>,
 ) -> AlgorithmError {
-    let original_id = id_map
-        .to_original_node_id(node_id as i64)
-        .unwrap_or(node_id as i64);
+    let display_id = id_map
+        .to_original_node_id(MappedNodeId::new(node_id))
+        .map(|original_id| original_id.to_string())
+        .unwrap_or_else(|| node_id.to_string());
     AlgorithmError::Execution(format!(
         "For scaling property `{}` expected array of length {} but got length {} for node {}",
-        property_name, expected_dimension, actual_dimension, original_id
+        property_name, expected_dimension, actual_dimension, display_id
     ))
 }
 

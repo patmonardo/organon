@@ -7,6 +7,7 @@
 
 use crate::task::concurrency::TerminationFlag;
 use crate::types::graph::Graph;
+use crate::types::graph::MappedNodeId;
 use std::collections::BTreeSet;
 use std::sync::Arc;
 
@@ -59,25 +60,24 @@ fn process_template_with_progress(
         return Ok(());
     }
 
-    let node_count = graphs[0].node_count() as u64;
+    let node_count = graphs[0].node_count();
 
-    for source in 0..node_count {
+    for source_index in 0..node_count {
         if !termination_flag.running() {
             return Err("CollapsePath terminated".to_string());
         }
 
-        let mut frontier: Vec<u64> = vec![source];
+        let source = MappedNodeId::try_from(source_index)
+            .map_err(|_| "CollapsePath node index exceeds mapped ID range".to_string())?;
+        let mut frontier = vec![source];
 
         for (depth, graph) in graphs.iter().enumerate() {
             let fallback = graph.default_property_value();
-            let mut next_frontier: Vec<u64> = Vec::new();
+            let mut next_frontier = Vec::new();
 
             for &node in &frontier {
-                for cursor in graph.stream_relationships(node as i64, fallback) {
-                    let target = cursor.target_id();
-                    if target >= 0 {
-                        next_frontier.push(target as u64);
-                    }
+                for cursor in graph.stream_relationships(node, fallback) {
+                    next_frontier.push(cursor.target_id());
                 }
             }
 
@@ -101,7 +101,7 @@ fn process_template_with_progress(
 
         for target in frontier {
             if allow_self_loops || target != source {
-                edges.insert((source, target));
+                edges.insert((source.get(), target.get()));
             }
         }
 

@@ -14,7 +14,7 @@ use crate::task::memory::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
-use crate::types::graph::id_map::NodeId;
+use crate::types::graph::id_map::MappedNodeId;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
@@ -54,13 +54,10 @@ pub struct AllShortestPathsBuilder {
     user_log_registry_factory: Option<Box<dyn TaskRegistryFactory>>, // Placeholder for now
 }
 
-/// Helper function to convert NodeId to u64
-fn checked_u64(value: NodeId, context: &str) -> Result<u64> {
-    u64::try_from(value).map_err(|_| {
-        AlgorithmError::Execution(format!(
-            "AllShortestPaths returned invalid node id for {context}: {value}",
-        ))
-    })
+/// Helper function to convert MappedNodeId to u64
+fn checked_u64(value: MappedNodeId, context: &str) -> Result<u64> {
+    let _ = context;
+    Ok(u64::from(value))
 }
 
 impl AllShortestPathsBuilder {

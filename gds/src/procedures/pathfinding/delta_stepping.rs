@@ -15,6 +15,7 @@ use crate::algo::delta_stepping::{
 use crate::task::memory::MemoryRange;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
+use crate::types::graph::MappedNodeId;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
@@ -98,7 +99,7 @@ impl DeltaSteppingFacade {
     }
 
     pub fn source(mut self, source: u64) -> Self {
-        self.config.source_node = i64::try_from(source).unwrap_or(-1);
+        self.config.source_node = MappedNodeId::new(source);
         self
     }
 

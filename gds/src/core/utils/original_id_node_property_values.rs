@@ -4,6 +4,7 @@
 //! essential for algorithms that need to output results in terms of the original node identifiers.
 
 use crate::types::graph::id_map::IdMap;
+use crate::types::graph::MappedNodeId;
 use crate::types::properties::node::LongNodePropertyValues;
 use crate::types::properties::{PropertyValues, PropertyValuesError, PropertyValuesResult};
 use crate::types::ValueType;
@@ -62,12 +63,21 @@ impl OriginalIdNodePropertyValues {
         // Capture the original IDs at creation time to avoid lifetime issues
         let node_count = id_map.node_count();
         let original_ids: Vec<Option<i64>> = (0..node_count)
-            .map(|i| id_map.to_original_node_id(i as i64))
+            .map(|node_id| {
+                MappedNodeId::try_from(node_id)
+                    .ok()
+                    .and_then(|node_id| id_map.to_original_node_id(node_id))
+                    .map(|node_id| node_id.get())
+            })
             .collect();
 
         Self {
             to_original_node_id: Box::new(move |node_id| {
-                original_ids.get(node_id as usize).and_then(|&id| id)
+                usize::try_from(node_id)
+                    .ok()
+                    .and_then(|node_id| original_ids.get(node_id))
+                    .copied()
+                    .flatten()
             }),
             node_count,
         }

@@ -16,6 +16,7 @@ use crate::task::progress::{ProgressTracker, Tasks};
 use crate::task::memory::MemoryRange;
 use crate::projection::NodeLabel;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
+use crate::types::graph::MappedNodeId;
 use std::sync::Arc;
 
 // Additional imports for progress tracking
@@ -362,10 +363,11 @@ impl FilteredKnnFacade {
         let id_map = self.graph_store.nodes();
         (0..self.graph_store.node_count())
             .filter(|mapped| {
-                let mapped_i64 = *mapped as i64;
+                let mapped_node_id = MappedNodeId::try_from(*mapped)
+                    .expect("graph node count exceeds the mapped node ID domain");
                 self.source_node_labels
                     .iter()
-                    .any(|label| id_map.has_label(mapped_i64, label))
+                    .any(|label| id_map.has_label(mapped_node_id, label))
             })
             .count()
     }

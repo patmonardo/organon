@@ -6,6 +6,8 @@ pub mod default_graph;
 pub mod degrees;
 pub mod graph;
 pub mod id_map;
+pub mod neighbor_cursor;
+pub mod node_cursor;
 pub mod topology;
 
 pub use adj_list::*;
@@ -14,4 +16,6 @@ pub use default_graph::*;
 pub use degrees::*;
 pub use graph::*;
 pub use id_map::*;
+pub use neighbor_cursor::*;
+pub use node_cursor::*;
 pub use topology::*;

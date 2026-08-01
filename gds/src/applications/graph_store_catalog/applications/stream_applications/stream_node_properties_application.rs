@@ -1,6 +1,7 @@
 use crate::applications::graph_store_catalog::results::GraphStreamNodePropertiesResult;
 use crate::projection::NodeLabel;
 use crate::types::graph::id_map::IdMap;
+use crate::types::graph::MappedNodeId;
 use crate::types::graph_store::DefaultGraphStore;
 use crate::types::properties::node::node_property_container::NodePropertyContainer;
 use crate::types::properties::node::NodePropertyValues;
@@ -31,8 +32,9 @@ impl StreamNodePropertiesApplication {
         let filter_all = label_filter.contains(&NodeLabel::all_nodes())
             || label_filter.contains(&NodeLabel::of("*"));
 
-        let node_count = graph.node_count() as i64;
-        for mapped_node_id in 0..node_count {
+        for mapped_index in 0..graph.node_count() {
+            let mapped_node_id = MappedNodeId::try_from(mapped_index)
+                .map_err(|_| "Graph node count exceeds mapped ID space".to_string())?;
             if !label_filter.is_empty() && !filter_all {
                 let labels = graph.node_labels(mapped_node_id);
                 let any_match = labels.iter().any(|l| label_filter.contains(l));
@@ -43,7 +45,7 @@ impl StreamNodePropertiesApplication {
 
             let original_id = graph
                 .to_original_node_id(mapped_node_id)
-                .unwrap_or(mapped_node_id);
+                .ok_or_else(|| format!("No original node ID for mapped node {mapped_node_id}"))?;
 
             let node_labels: Vec<String> = if list_node_labels {
                 graph
@@ -62,12 +64,12 @@ impl StreamNodePropertiesApplication {
                     None => serde_json::Value::Null,
                     Some(values) => match values.value_type() {
                         ValueType::Long => values
-                            .long_value(mapped_node_id as u64)
+                            .long_value(mapped_node_id.get())
                             .ok()
                             .map(|v| serde_json::Value::Number(serde_json::Number::from(v)))
                             .unwrap_or(serde_json::Value::Null),
                         ValueType::Double => values
-                            .double_value(mapped_node_id as u64)
+                            .double_value(mapped_node_id.get())
                             .ok()
                             .and_then(|v| {
                                 serde_json::Number::from_f64(v).map(serde_json::Value::Number)
@@ -81,7 +83,7 @@ impl StreamNodePropertiesApplication {
                 };
 
                 out.push(GraphStreamNodePropertiesResult::new(
-                    original_id,
+                    original_id.get(),
                     prop_key.clone(),
                     value,
                     node_labels.clone(),

@@ -150,7 +150,7 @@ impl PropertyAccumulator {
                 for (original_id, value) in self.values {
                     if let Some(mapped_id) = id_map.safe_to_mapped_node_id(original_id) {
                         if let PropertyValue::Long(v) = value {
-                            dense[mapped_id as usize] = v;
+                            dense[mapped_id_to_physical_index(mapped_id)?] = v;
                         }
                     }
                 }
@@ -167,7 +167,7 @@ impl PropertyAccumulator {
                 for (original_id, value) in self.values {
                     if let Some(mapped_id) = id_map.safe_to_mapped_node_id(original_id) {
                         if let PropertyValue::Double(v) = value {
-                            dense[mapped_id as usize] = v;
+                            dense[mapped_id_to_physical_index(mapped_id)?] = v;
                         }
                     }
                 }
@@ -183,7 +183,7 @@ impl PropertyAccumulator {
                 for (original_id, value) in self.values {
                     if let Some(mapped_id) = id_map.safe_to_mapped_node_id(original_id) {
                         if let PropertyValue::LongArray(v) = value {
-                            dense[mapped_id as usize] = Some(v);
+                            dense[mapped_id_to_physical_index(mapped_id)?] = Some(v);
                         }
                     }
                 }
@@ -201,7 +201,7 @@ impl PropertyAccumulator {
                 for (original_id, value) in self.values {
                     if let Some(mapped_id) = id_map.safe_to_mapped_node_id(original_id) {
                         if let PropertyValue::DoubleArray(v) = value {
-                            dense[mapped_id as usize] = Some(v);
+                            dense[mapped_id_to_physical_index(mapped_id)?] = Some(v);
                         }
                     }
                 }
@@ -219,7 +219,7 @@ impl PropertyAccumulator {
                 for (original_id, value) in self.values {
                     if let Some(mapped_id) = id_map.safe_to_mapped_node_id(original_id) {
                         if let PropertyValue::FloatArray(v) = value {
-                            dense[mapped_id as usize] = Some(v);
+                            dense[mapped_id_to_physical_index(mapped_id)?] = Some(v);
                         }
                     }
                 }
@@ -343,7 +343,9 @@ impl NodeAccumulator {
         for (node_index, label_set) in self.labels_by_node {
             for label in label_set {
                 id_map.add_node_label(label.clone());
-                id_map.add_node_id_to_label(node_index as MappedNodeId, label);
+                let mapped_node_id = MappedNodeId::try_from(node_index)
+                    .expect("node index was validated while constructing the id map");
+                id_map.add_node_id_to_label(mapped_node_id, label);
             }
         }
 
@@ -473,7 +475,7 @@ impl EdgeAccumulator {
             let mut outgoing: Vec<Vec<MappedNodeId>> = vec![Vec::new(); node_count];
 
             for (source, target) in edges {
-                outgoing[source as usize].push(target);
+                outgoing[mapped_id_to_physical_index(source)?].push(target);
             }
 
             let topology = RelationshipTopology::new(outgoing, None);
@@ -666,8 +668,16 @@ fn extract_list_property(
     }
 
     let offsets = list_array.offsets().as_slice();
-    let start = offsets[row_index] as usize;
-    let end = offsets[row_index + 1] as usize;
+    let start = usize::try_from(offsets[row_index]).map_err(|_| {
+        ImporterError::InvalidArrowOffset {
+            offset: offsets[row_index],
+        }
+    })?;
+    let end = usize::try_from(offsets[row_index + 1]).map_err(|_| {
+        ImporterError::InvalidArrowOffset {
+            offset: offsets[row_index + 1],
+        }
+    })?;
     let values = list_array.values();
 
     // Try to downcast to specific array types
@@ -708,7 +718,7 @@ fn process_node_batch(
 
     // Process each row in the batch range
     for i in batch.start_offset()..batch.end_offset() {
-        let original_id = id_column.value(i);
+        let original_id = OriginalNodeId::new(id_column.value(i));
 
         // Extract labels if column exists
         let labels = if let Some(label_col) = label_column {
@@ -745,7 +755,7 @@ pub(super) fn process_node_batch_with_consumer(
 
     // Process each row in the batch range
     for i in batch.start_offset()..batch.end_offset() {
-        let original_id = id_column.value(i);
+        let original_id = OriginalNodeId::new(id_column.value(i));
 
         // Extract labels if column exists
         let labels = if let Some(label_col) = label_column {
@@ -756,7 +766,7 @@ pub(super) fn process_node_batch_with_consumer(
         };
 
         let record = super::consumer::NodeRecord {
-            node_id: original_id as u64,
+            node_id: original_id,
             labels,
         };
 
@@ -864,8 +874,8 @@ fn process_edge_batch(
 
     // Process each row in the batch range
     for i in batch.start_offset()..batch.end_offset() {
-        let source_id = source_column.value(i);
-        let target_id = target_column.value(i);
+        let source_id = OriginalNodeId::new(source_column.value(i));
+        let target_id = OriginalNodeId::new(target_column.value(i));
 
         // Extract relationship type if column exists
         let rel_type = if let Some(type_col) = type_column {
@@ -907,8 +917,8 @@ pub(super) fn process_edge_batch_with_consumer(
 
     // Process each row in the batch range
     for i in batch.start_offset()..batch.end_offset() {
-        let source_id = source_column.value(i);
-        let target_id = target_column.value(i);
+        let source_id = OriginalNodeId::new(source_column.value(i));
+        let target_id = OriginalNodeId::new(target_column.value(i));
 
         // Extract relationship type if column exists
         let rel_type = if let Some(type_col) = type_column {
@@ -919,9 +929,8 @@ pub(super) fn process_edge_batch_with_consumer(
         };
 
         let record = super::consumer::RelationshipRecord {
-            relationship_id: 0, // relationship id not available in this schema
-            source_node_id: source_id as u64,
-            target_node_id: target_id as u64,
+            source_node_id: source_id,
+            target_node_id: target_id,
             relationship_type: rel_type,
         };
 
@@ -996,6 +1005,10 @@ pub enum ImporterError {
     MissingColumn { column_name: String },
     /// Invalid node ID (not found in IdMap)
     InvalidNodeId { original_id: OriginalNodeId },
+    /// A mapped ID cannot address the platform's physical vector space.
+    MappedIdExceedsPhysicalIndex { mapped_id: MappedNodeId },
+    /// An Arrow list offset cannot address the platform's physical vector space.
+    InvalidArrowOffset { offset: i32 },
     /// Lock acquisition failed
     LockError { message: String },
     /// Unsupported property type
@@ -1025,6 +1038,12 @@ impl std::fmt::Display for ImporterError {
             }
             ImporterError::InvalidNodeId { original_id } => {
                 write!(f, "Invalid node ID: {} not found in IdMap", original_id)
+            }
+            ImporterError::MappedIdExceedsPhysicalIndex { mapped_id } => {
+                write!(f, "Mapped node ID {mapped_id} exceeds physical index space")
+            }
+            ImporterError::InvalidArrowOffset { offset } => {
+                write!(f, "Arrow list offset {offset} is outside physical index space")
             }
             ImporterError::LockError { message } => {
                 write!(f, "Lock error: {}", message)
@@ -1066,6 +1085,12 @@ impl std::fmt::Display for ImporterError {
 }
 
 impl std::error::Error for ImporterError {}
+
+fn mapped_id_to_physical_index(mapped_id: MappedNodeId) -> Result<usize, ImporterError> {
+    mapped_id
+        .to_usize()
+        .ok_or(ImporterError::MappedIdExceedsPhysicalIndex { mapped_id })
+}
 
 // ================================================================================================
 // Tests

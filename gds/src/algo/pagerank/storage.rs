@@ -8,6 +8,7 @@ use crate::task::progress::ProgressTracker;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::{Orientation, RelationshipType};
 use crate::types::graph::Graph;
+use crate::types::graph::MappedNodeId;
 use crate::types::prelude::GraphStore;
 use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
@@ -100,7 +101,7 @@ impl<'a, G: GraphStore> PageRankStorageRuntime<'a, G> {
         concurrency: Concurrency,
         progress_tracker: &mut dyn ProgressTracker,
     ) -> PageRankRunResult {
-        let node_count = self.graph.node_count() as usize;
+        let node_count = self.graph.node_count();
 
         let mut degree: Vec<f64> = vec![0.0; node_count];
         let weight_fallback = if self.has_weights {
@@ -110,14 +111,15 @@ impl<'a, G: GraphStore> PageRankStorageRuntime<'a, G> {
         };
 
         for i in 0..node_count {
+            let node_id = MappedNodeId::try_from(i).expect("validated graph node count");
             degree[i] = if self.has_weights {
                 self.graph
-                    .stream_relationships_weighted(i as i64, weight_fallback)
+                    .stream_relationships_weighted(node_id, weight_fallback)
                     .map(|cursor| cursor.weight())
                     .filter(|weight| weight.is_finite() && *weight > 0.0)
                     .sum()
             } else {
-                self.graph.degree(i as i64) as f64
+                self.graph.degree(node_id) as f64
             };
         }
 
@@ -128,19 +130,26 @@ impl<'a, G: GraphStore> PageRankStorageRuntime<'a, G> {
         };
 
         let stream_neighbors = |source: usize, push: &mut dyn FnMut(usize, f64)| {
+            let Ok(source_id) = MappedNodeId::try_from(source) else {
+                return;
+            };
             if self.has_weights {
                 for cursor in self
                     .graph
-                    .stream_relationships_weighted(source as i64, weight_fallback)
+                    .stream_relationships_weighted(source_id, weight_fallback)
                 {
                     let weight = cursor.weight();
                     if weight.is_finite() && weight > 0.0 {
-                        push(cursor.target_id() as usize, weight);
+                        if let Some(target_index) = cursor.target_id().to_usize() {
+                            push(target_index, weight);
+                        }
                     }
                 }
             } else {
-                for cursor in self.graph.stream_relationships(source as i64, 0.0) {
-                    push(cursor.target_id() as usize, 1.0);
+                for cursor in self.graph.stream_relationships(source_id, 0.0) {
+                    if let Some(target_index) = cursor.target_id().to_usize() {
+                        push(target_index, 1.0);
+                    }
                 }
             }
         };

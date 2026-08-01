@@ -25,6 +25,7 @@ use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::task::memory::{Estimate, MemoryEstimation, MemoryEstimations, MemoryRange};
 use crate::task::progress::{LeafTask, ProgressTracker, Task, TaskProgressTracker, Tasks};
 use crate::types::graph::Graph;
+use crate::types::graph::id_map::{MappedNodeId, OriginalNodeId};
 use crate::types::graph_store::DefaultGraphStore;
 use crate::types::prelude::GraphStore;
 use parking_lot::RwLock;
@@ -44,7 +45,7 @@ pub struct NodeRegressionTrain {
     train_config: NodeRegressionPipelineTrainConfig,
     targets: HugeDoubleArray,
     node_graph: Arc<dyn Graph>,
-    target_node_ids: Arc<Vec<u64>>,
+    target_node_ids: Arc<Vec<MappedNodeId>>,
     node_feature_producer: NodeFeatureProducer<NodeRegressionPipelineTrainConfig>,
     progress_tracker: Box<dyn ProgressTracker>,
     termination_flag: TerminationFlag,
@@ -202,7 +203,6 @@ impl NodeRegressionTrain {
             })?;
         let target_node_ids = node_graph
             .iter_with_labels(&target_node_labels)
-            .map(|node_id| node_id as u64)
             .collect::<Vec<_>>();
 
         pipeline
@@ -221,10 +221,11 @@ impl NodeRegressionTrain {
         let mut targets = HugeDoubleArray::new(target_node_ids.len());
         for (target_idx, root_node_id) in target_node_ids.iter().enumerate() {
             let original_node_id = node_graph
-                .to_original_node_id(*root_node_id as i64)
-                .unwrap_or(*root_node_id as i64);
+                .to_original_node_id(*root_node_id)
+                .expect("target node id must belong to the training graph")
+                .get();
             let value = target_node_property
-                .double_value(*root_node_id)
+                .double_value(root_node_id.get())
                 .map_err(|_| NodeRegressionTrainError::MissingTargetValue {
                     node_id: original_node_id,
                     property: config.target_property().to_string(),
@@ -281,10 +282,11 @@ impl NodeRegressionTrain {
                 let graph = Arc::clone(&self.node_graph);
                 let target_node_ids = Arc::clone(&self.target_node_ids);
                 move |id| {
-                    let root_node_id = target_node_ids[id] as i64;
+                    let root_node_id = target_node_ids[id];
                     graph
                         .to_original_node_id(root_node_id)
-                        .unwrap_or(root_node_id)
+                        .expect("target node id must belong to the training graph")
+                        .get()
                 }
             }),
             Arc::new({
@@ -292,9 +294,8 @@ impl NodeRegressionTrain {
                 let root_to_target_index = Arc::clone(&root_to_target_index);
                 move |id| {
                     let root_node_id = graph
-                        .to_mapped_node_id(id)
-                        .expect("Mapped node id not found")
-                        as u64;
+                        .to_mapped_node_id(OriginalNodeId::new(id))
+                        .expect("original node id must belong to the training graph");
                     *root_to_target_index
                         .get(&root_node_id)
                         .expect("Mapped node id not found in target label set")
@@ -585,7 +586,14 @@ fn resolve_metrics(config: &NodeRegressionPipelineTrainConfig) -> Vec<Regression
 }
 
 fn to_u64_arc(values: Arc<Vec<i64>>) -> Arc<Vec<u64>> {
-    Arc::new(values.iter().map(|v| *v as u64).collect())
+    Arc::new(
+        values
+            .iter()
+            .map(|value| {
+                u64::try_from(*value).expect("training example id must fit the model row domain")
+            })
+            .collect(),
+    )
 }
 
 fn estimate_node_property_steps(step_count: usize) -> Box<dyn MemoryEstimation> {
@@ -715,7 +723,8 @@ fn evaluate_metrics(
     let mut actuals: Vec<f64> = Vec::with_capacity(eval_ids.len());
 
     for node_id in eval_ids.iter() {
-        let idx = *node_id as usize;
+        let idx = usize::try_from(*node_id)
+            .expect("evaluation example id must fit the model row domain");
         let prediction = regressor.predict(features.get(idx));
         predictions.push(prediction);
         actuals.push(targets.get(idx));

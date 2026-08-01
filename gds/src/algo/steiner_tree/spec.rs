@@ -1,6 +1,6 @@
 use crate::algo::algorithms::pathfinding::PathResult;
 use crate::config::validation::ConfigError;
-use crate::types::graph::NodeId;
+use crate::types::graph::MappedNodeId;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use std::time::Duration;
@@ -9,10 +9,10 @@ use std::time::Duration;
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SteinerTreeConfig {
     /// Source node from which to start the tree
-    pub source_node: NodeId,
+    pub source_node: MappedNodeId,
 
     /// Terminal nodes that must be included in the tree
-    pub target_nodes: Vec<NodeId>,
+    pub target_nodes: Vec<MappedNodeId>,
 
     /// Optional relationship weight property
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -78,8 +78,8 @@ impl crate::config::ValidatedConfig for SteinerTreeConfig {
 /// Result of Steiner Tree computation
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SteinerTreeResult {
-    /// Parent node for each node in the tree (-1 for root, -2 for pruned)
-    pub parent_array: Vec<i64>,
+    /// Explicit tree membership and parent state for each mapped node.
+    pub parent_array: Vec<SteinerTreeParent>,
 
     /// Cost of edge to parent for each node
     pub relationship_to_parent_cost: Vec<f64>,
@@ -94,9 +94,12 @@ pub struct SteinerTreeResult {
     pub effective_target_nodes_count: u64,
 }
 
-/// Constants for parent array encoding
-pub const ROOT_NODE: i64 = -1;
-pub const PRUNED: i64 = -2;
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum SteinerTreeParent {
+    Pruned,
+    Root,
+    Parent(MappedNodeId),
+}
 
 /// Result row for Steiner tree stream mode
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -143,25 +146,24 @@ fn result_rows(result: &SteinerTreeResult) -> Vec<SteinerTreeRow> {
         .parent_array
         .iter()
         .enumerate()
-        .filter_map(|(node_id, &parent)| {
-            if parent >= 0 {
-                Some(SteinerTreeRow {
-                    node: node_id as u64,
-                    parent: Some(parent as u64),
+        .filter_map(|(node_index, &parent)| {
+            let node = u64::try_from(node_index).ok()?;
+            match parent {
+                SteinerTreeParent::Parent(parent_id) => Some(SteinerTreeRow {
+                    node,
+                    parent: Some(parent_id.get()),
                     cost_to_parent: result
                         .relationship_to_parent_cost
-                        .get(node_id)
+                        .get(node_index)
                         .copied()
                         .unwrap_or(0.0),
-                })
-            } else if parent == ROOT_NODE {
-                Some(SteinerTreeRow {
-                    node: node_id as u64,
+                }),
+                SteinerTreeParent::Root => Some(SteinerTreeRow {
+                    node,
                     parent: None,
                     cost_to_parent: 0.0,
-                })
-            } else {
-                None
+                }),
+                SteinerTreeParent::Pruned => None,
             }
         })
         .collect()
@@ -172,17 +174,16 @@ fn result_paths(result: &SteinerTreeResult) -> Vec<PathResult> {
         .parent_array
         .iter()
         .enumerate()
-        .filter_map(|(node_id, &parent)| {
-            if parent >= 0 {
-                let parent_u64 = parent as u64;
-                let node_u64 = node_id as u64;
+        .filter_map(|(node_index, &parent)| {
+            if let SteinerTreeParent::Parent(parent_id) = parent {
+                let node = u64::try_from(node_index).ok()?;
                 Some(PathResult {
-                    source: parent_u64,
-                    target: node_u64,
-                    path: vec![parent_u64, node_u64],
+                    source: parent_id.get(),
+                    target: node,
+                    path: vec![parent_id.get(), node],
                     cost: result
                         .relationship_to_parent_cost
-                        .get(node_id)
+                        .get(node_index)
                         .copied()
                         .unwrap_or(0.0),
                 })

@@ -3,14 +3,14 @@ use std::cmp::Ordering;
 /// Trait for computing similarity between two node vectors.
 pub trait SimilarityMetric: Send + Sync {
     /// Compute similarity between two unweighted vectors (node IDs).
-    fn compute_similarity(&self, vector1: &[u64], vector2: &[u64]) -> f64;
+    fn compute_similarity(&self, vector1: &[usize], vector2: &[usize]) -> f64;
 
     /// Compute similarity between two weighted vectors.
     /// `vector1` and `weights1` must have the same length.
     fn compute_weighted_similarity(
         &self,
-        vector1: &[u64],
-        vector2: &[u64],
+        vector1: &[usize],
+        vector2: &[usize],
         weights1: &[f64],
         weights2: &[f64],
     ) -> f64;
@@ -50,7 +50,7 @@ impl Jaccard {
 }
 
 impl SimilarityMetric for Jaccard {
-    fn compute_similarity(&self, vector1: &[u64], vector2: &[u64]) -> f64 {
+    fn compute_similarity(&self, vector1: &[usize], vector2: &[usize]) -> f64 {
         let intersection = intersection_size(vector1, vector2);
         let union_size = vector1.len() + vector2.len() - intersection;
 
@@ -69,8 +69,8 @@ impl SimilarityMetric for Jaccard {
 
     fn compute_weighted_similarity(
         &self,
-        vector1: &[u64],
-        vector2: &[u64],
+        vector1: &[usize],
+        vector2: &[usize],
         weights1: &[f64],
         weights2: &[f64],
     ) -> f64 {
@@ -142,7 +142,7 @@ impl Cosine {
 }
 
 impl SimilarityMetric for Cosine {
-    fn compute_similarity(&self, vector1: &[u64], vector2: &[u64]) -> f64 {
+    fn compute_similarity(&self, vector1: &[usize], vector2: &[usize]) -> f64 {
         let intersection = intersection_size(vector1, vector2) as f64;
         let similarity =
             intersection / ((vector1.len() as f64).sqrt() * (vector2.len() as f64).sqrt());
@@ -156,8 +156,8 @@ impl SimilarityMetric for Cosine {
 
     fn compute_weighted_similarity(
         &self,
-        vector1: &[u64],
-        vector2: &[u64],
+        vector1: &[usize],
+        vector2: &[usize],
         weights1: &[f64],
         weights2: &[f64],
     ) -> f64 {
@@ -228,7 +228,7 @@ impl Overlap {
 }
 
 impl SimilarityMetric for Overlap {
-    fn compute_similarity(&self, vector1: &[u64], vector2: &[u64]) -> f64 {
+    fn compute_similarity(&self, vector1: &[usize], vector2: &[usize]) -> f64 {
         let intersection = intersection_size(vector1, vector2) as f64;
         let min_len = vector1.len().min(vector2.len()) as f64;
 
@@ -247,8 +247,8 @@ impl SimilarityMetric for Overlap {
 
     fn compute_weighted_similarity(
         &self,
-        vector1: &[u64],
-        vector2: &[u64],
+        vector1: &[usize],
+        vector2: &[usize],
         weights1: &[f64],
         weights2: &[f64],
     ) -> f64 {
@@ -319,7 +319,7 @@ impl SimilarityMetric for Overlap {
 // ============================================================================
 
 /// Assumes sorted vectors
-fn intersection_size(v1: &[u64], v2: &[u64]) -> usize {
+fn intersection_size(v1: &[usize], v2: &[usize]) -> usize {
     let mut count = 0;
     let mut i = 0;
     let mut j = 0;

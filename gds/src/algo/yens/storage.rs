@@ -11,12 +11,13 @@ use super::spec::{YensPathResult, YensResult};
 use super::YensComputationRuntime;
 use crate::algo::dijkstra::targets::create_targets;
 use crate::algo::dijkstra::{DijkstraComputationRuntime, DijkstraStorageRuntime};
+use crate::projection::eval::algorithm::AlgorithmError;
 use crate::task::concurrency::virtual_threads::Executor;
 use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::task::progress::{ProgressTracker, TaskProgressTracker, Tasks, UNKNOWN_VOLUME};
-use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::Graph;
-use crate::types::graph::NodeId;
+use crate::types::graph::MappedNodeId;
+use crate::types::graph::RelationshipIndex;
 use std::collections::HashSet;
 
 /// Yen's Storage Runtime - handles persistent data access and algorithm orchestration
@@ -25,9 +26,9 @@ use std::collections::HashSet;
 /// This implements the "Gross pole" for accessing graph data
 pub struct YensStorageRuntime {
     /// Source node for path finding
-    pub source_node: NodeId,
+    pub source_node: MappedNodeId,
     /// Target node for path finding
-    pub target_node: NodeId,
+    pub target_node: MappedNodeId,
     /// Number of shortest paths to find (K)
     pub k: usize,
     /// Whether to track relationships
@@ -39,8 +40,8 @@ pub struct YensStorageRuntime {
 impl YensStorageRuntime {
     /// Create new Yen's storage runtime
     pub fn new(
-        source_node: NodeId,
-        target_node: NodeId,
+        source_node: MappedNodeId,
+        target_node: MappedNodeId,
         k: usize,
         track_relationships: bool,
         concurrency: usize,
@@ -192,7 +193,7 @@ impl YensStorageRuntime {
     }
 
     fn validate_node_in_graph(
-        node_id: NodeId,
+        node_id: MappedNodeId,
         node_count: usize,
         role: &str,
     ) -> Result<(), AlgorithmError> {
@@ -219,11 +220,13 @@ impl YensStorageRuntime {
     #[allow(clippy::type_complexity)]
     fn shortest_path(
         &self,
-        source: NodeId,
-        target: NodeId,
+        source: MappedNodeId,
+        target: MappedNodeId,
         graph: Option<&dyn Graph>,
         direction: u8,
-        extra_filter: Option<Box<dyn Fn(NodeId, NodeId, NodeId) -> bool + Send + Sync>>,
+        extra_filter: Option<
+            Box<dyn Fn(MappedNodeId, MappedNodeId, RelationshipIndex) -> bool + Send + Sync>,
+        >,
     ) -> Result<Option<MutablePathResult>, AlgorithmError> {
         let targets = create_targets(vec![target]);
 
@@ -394,7 +397,7 @@ impl YensStorageRuntime {
         let mut root_path = prev_path.sub_path(spur_index + 1);
 
         // Remove nodes in the root path (except spur node) to prevent loops.
-        let removed_nodes: HashSet<NodeId> = root_path
+        let removed_nodes: HashSet<MappedNodeId> = root_path
             .node_ids
             .iter()
             .copied()
@@ -410,15 +413,19 @@ impl YensStorageRuntime {
 
         let filter_removed_nodes = removed_nodes.clone();
 
-        let filter: Box<dyn Fn(NodeId, NodeId, NodeId) -> bool + Send + Sync> =
-            Box::new(move |source, target, relationship_id| {
-                if filter_removed_nodes.contains(&source) || filter_removed_nodes.contains(&target)
-                {
-                    return false;
-                }
+        let filter: Box<
+            dyn Fn(MappedNodeId, MappedNodeId, RelationshipIndex) -> bool + Send + Sync,
+        > = Box::new(move |source, target, relationship_id| {
+            if filter_removed_nodes.contains(&source) || filter_removed_nodes.contains(&target) {
+                return false;
+            }
 
-                relationship_filterer.valid_relationship(source, target, relationship_id)
-            });
+            relationship_filterer.valid_relationship(
+                source,
+                target,
+                    relationship_id,
+            )
+        });
 
         let spur_path =
             self.shortest_path(spur_node, self.target_node, graph, direction, Some(filter))?;
@@ -492,7 +499,7 @@ mod tests {
         assert!(result.path_count <= 3);
 
         // Paths should be unique.
-        let unique: std::collections::HashSet<Vec<NodeId>> =
+        let unique: std::collections::HashSet<Vec<MappedNodeId>> =
             result.paths.iter().map(|p| p.node_ids.clone()).collect();
         assert_eq!(unique.len(), result.paths.len());
     }
@@ -557,7 +564,7 @@ mod tests {
             .generate_candidates(&mut computation, &previous, &[previous.clone()], None, 0)
             .unwrap();
 
-        let candidate_nodes: std::collections::HashSet<Vec<NodeId>> =
+        let candidate_nodes: std::collections::HashSet<Vec<MappedNodeId>> =
             candidates.into_iter().map(|path| path.node_ids).collect();
 
         assert!(!candidate_nodes.contains(&vec![0, 2, 3]));
@@ -612,7 +619,7 @@ mod tests {
         let candidates = storage
             .generate_candidates(&mut computation, &previous, &[previous.clone()], None, 0)
             .unwrap();
-        let candidate_nodes: std::collections::HashSet<Vec<NodeId>> =
+        let candidate_nodes: std::collections::HashSet<Vec<MappedNodeId>> =
             candidates.into_iter().map(|path| path.node_ids).collect();
 
         assert!(candidate_nodes.contains(&vec![0, 2, 3]));

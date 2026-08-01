@@ -9,6 +9,7 @@ use crate::define_algorithm_spec;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
+use crate::types::graph::MappedNodeId;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::collections::HashSet;
@@ -79,8 +80,8 @@ impl crate::config::ValidatedConfig for NodeSimilarityConfig {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct NodeSimilarityResult {
-    pub source: u64,
-    pub target: u64,
+    pub source: MappedNodeId,
+    pub target: MappedNodeId,
     pub similarity: f64,
 }
 
@@ -142,9 +143,9 @@ fn result_paths(results: &[NodeSimilarityResult]) -> Vec<PathResult> {
     results
         .iter()
         .map(|r| PathResult {
-            source: r.source,
-            target: r.target,
-            path: vec![r.source, r.target],
+            source: r.source.get(),
+            target: r.target.get(),
+            path: vec![r.source.get(), r.target.get()],
             cost: r.similarity,
         })
         .collect()
@@ -175,7 +176,7 @@ impl<'a> NodeSimilarityResultBuilder<'a> {
             .iter()
             .map(|r| {
                 sources.insert(r.source);
-                (r.source, r.target, r.similarity)
+                (r.source.get(), r.target.get(), r.similarity)
             })
             .collect();
 

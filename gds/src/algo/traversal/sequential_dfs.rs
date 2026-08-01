@@ -1,17 +1,17 @@
 use super::{Aggregator, ExitPredicate, ExitPredicateResult};
 use crate::projection::eval::algorithm::AlgorithmError;
-use crate::types::graph::NodeId;
+use crate::types::graph::MappedNodeId;
 
 #[derive(Debug, Clone, Copy)]
 pub struct SequentialDfsConfig {
-    pub source_node: NodeId,
+    pub source_node: MappedNodeId,
     pub node_count: usize,
     pub max_depth: Option<u32>,
 }
 
 #[derive(Debug, Clone)]
 pub struct SequentialDfsResult {
-    pub visited_nodes: Vec<NodeId>,
+    pub visited_nodes: Vec<MappedNodeId>,
     pub visited_depths: Vec<f64>,
     pub relationships_examined: usize,
 }
@@ -23,7 +23,7 @@ pub fn run_sequential_dfs<F>(
     get_neighbors: F,
 ) -> Result<SequentialDfsResult, AlgorithmError>
 where
-    F: Fn(NodeId) -> Vec<NodeId>,
+    F: Fn(MappedNodeId) -> Vec<MappedNodeId>,
 {
     validate_node_in_graph(config.source_node, config.node_count, "source")?;
 
@@ -84,7 +84,7 @@ fn check_max_depth(max_depth: Option<u32>, current_depth: f64) -> bool {
 }
 
 fn validate_node_in_graph(
-    node_id: NodeId,
+    node_id: MappedNodeId,
     node_count: usize,
     role: &str,
 ) -> Result<(), AlgorithmError> {
@@ -97,7 +97,7 @@ fn validate_node_in_graph(
     Ok(())
 }
 
-fn node_index_in_graph(node_id: NodeId, role: &str) -> Result<usize, AlgorithmError> {
+fn node_index_in_graph(node_id: MappedNodeId, role: &str) -> Result<usize, AlgorithmError> {
     usize::try_from(node_id)
         .map_err(|_| AlgorithmError::InvalidGraph(format!("Invalid {role} node id: {node_id}")))
 }

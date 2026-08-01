@@ -1,6 +1,7 @@
 // Phase 2.7: SinglePropertyFeatureAppender - Base class for single-property appenders
 
 use super::super::LinkFeatureAppender;
+use crate::types::graph::MappedNodeId;
 use crate::types::properties::node::NodePropertyValues;
 use std::sync::Arc;
 
@@ -50,8 +51,8 @@ pub trait SinglePropertyCompute: Send + Sync {
         &self,
         props: &dyn NodePropertyValues,
         dimension: usize,
-        source: u64,
-        target: u64,
+        source: MappedNodeId,
+        target: MappedNodeId,
         features: &mut [f64],
         offset: usize,
     );
@@ -62,7 +63,13 @@ pub trait SinglePropertyCompute: Send + Sync {
 }
 
 impl LinkFeatureAppender for SinglePropertyFeatureAppender {
-    fn append_features(&self, source: u64, target: u64, features: &mut [f64], offset: usize) {
+    fn append_features(
+        &self,
+        source: MappedNodeId,
+        target: MappedNodeId,
+        features: &mut [f64],
+        offset: usize,
+    ) {
         self.compute.append_features(
             &*self.props,
             self.dimension,
@@ -159,8 +166,8 @@ mod tests {
             &self,
             _props: &dyn NodePropertyValues,
             dimension: usize,
-            _source: u64,
-            _target: u64,
+            _source: MappedNodeId,
+            _target: MappedNodeId,
             features: &mut [f64],
             offset: usize,
         ) {
@@ -261,7 +268,7 @@ mod tests {
         );
 
         let mut features = vec![0.0; 5];
-        appender.append_features(0, 1, &mut features, 1);
+        appender.append_features(MappedNodeId::new(0), MappedNodeId::new(1), &mut features, 1);
 
         assert_eq!(features[1], 2.5);
         assert_eq!(features[2], 2.5);

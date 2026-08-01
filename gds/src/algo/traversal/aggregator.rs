@@ -1,4 +1,4 @@
-use crate::types::graph::NodeId;
+use crate::types::graph::MappedNodeId;
 
 /// Aggregator function for computing weights during traversal
 ///
@@ -14,7 +14,7 @@ pub trait Aggregator: Send + Sync {
     ///
     /// # Returns
     /// New weight (e.g., weight_at_source + 1.0)
-    fn apply(&self, source_node: NodeId, current_node: NodeId, weight_at_source: f64) -> f64;
+    fn apply(&self, source_node: MappedNodeId, current_node: MappedNodeId, weight_at_source: f64) -> f64;
 }
 
 /// No aggregation aggregator
@@ -23,7 +23,7 @@ pub trait Aggregator: Send + Sync {
 pub struct NoAggregator;
 
 impl Aggregator for NoAggregator {
-    fn apply(&self, _source_node: NodeId, _current_node: NodeId, _weight_at_source: f64) -> f64 {
+    fn apply(&self, _source_node: MappedNodeId, _current_node: MappedNodeId, _weight_at_source: f64) -> f64 {
         0.0
     }
 }
@@ -34,7 +34,7 @@ impl Aggregator for NoAggregator {
 pub struct OneHopAggregator;
 
 impl Aggregator for OneHopAggregator {
-    fn apply(&self, _source_node: NodeId, _current_node: NodeId, weight_at_source: f64) -> f64 {
+    fn apply(&self, _source_node: MappedNodeId, _current_node: MappedNodeId, weight_at_source: f64) -> f64 {
         weight_at_source + 1.0
     }
 }
@@ -43,7 +43,7 @@ impl Aggregator for OneHopAggregator {
 pub struct WeightAggregator;
 
 impl Aggregator for WeightAggregator {
-    fn apply(&self, _source_node: NodeId, _current_node: NodeId, weight_at_source: f64) -> f64 {
+    fn apply(&self, _source_node: MappedNodeId, _current_node: MappedNodeId, weight_at_source: f64) -> f64 {
         // Note: edge weight lookup is deferred.
         // For now, just increment by 1.0
         weight_at_source + 1.0

@@ -4,6 +4,7 @@ use super::super::{LinkFeatureAppender, LinkFeatureStep};
 use super::abstract_link_feature_appender_factory::AbstractLinkFeatureAppenderFactory;
 use super::union_link_feature_appender::UnionLinkFeatureAppender;
 use crate::types::graph::Graph;
+use crate::types::graph::MappedNodeId;
 use crate::types::properties::node::NodePropertyValues;
 use std::collections::HashMap;
 use std::sync::Arc;
@@ -115,8 +116,8 @@ struct HadamardDoubleArrayAppender {
 }
 
 impl LinkFeatureAppender for HadamardDoubleArrayAppender {
-    fn append_features(&self, source: u64, target: u64, link_features: &mut [f64], offset: usize) {
-        let source_vec = match self.props.double_array_value(source) {
+    fn append_features(&self, source: MappedNodeId, target: MappedNodeId, link_features: &mut [f64], offset: usize) {
+        let source_vec = match self.props.double_array_value(u64::from(source)) {
             Ok(vec) => vec,
             Err(_) => {
                 // Fill with zeros if property not found
@@ -126,7 +127,7 @@ impl LinkFeatureAppender for HadamardDoubleArrayAppender {
                 return;
             }
         };
-        let target_vec = match self.props.double_array_value(target) {
+        let target_vec = match self.props.double_array_value(u64::from(target)) {
             Ok(vec) => vec,
             Err(_) => {
                 // Fill with zeros if property not found
@@ -157,8 +158,8 @@ struct HadamardFloatArrayAppender {
 }
 
 impl LinkFeatureAppender for HadamardFloatArrayAppender {
-    fn append_features(&self, source: u64, target: u64, link_features: &mut [f64], offset: usize) {
-        let source_vec = match self.props.float_array_value(source) {
+    fn append_features(&self, source: MappedNodeId, target: MappedNodeId, link_features: &mut [f64], offset: usize) {
+        let source_vec = match self.props.float_array_value(u64::from(source)) {
             Ok(vec) => vec,
             Err(_) => {
                 for i in 0..self.dimension {
@@ -167,7 +168,7 @@ impl LinkFeatureAppender for HadamardFloatArrayAppender {
                 return;
             }
         };
-        let target_vec = match self.props.float_array_value(target) {
+        let target_vec = match self.props.float_array_value(u64::from(target)) {
             Ok(vec) => vec,
             Err(_) => {
                 for i in 0..self.dimension {
@@ -196,8 +197,8 @@ struct HadamardLongArrayAppender {
 }
 
 impl LinkFeatureAppender for HadamardLongArrayAppender {
-    fn append_features(&self, source: u64, target: u64, link_features: &mut [f64], offset: usize) {
-        let source_vec = match self.props.long_array_value(source) {
+    fn append_features(&self, source: MappedNodeId, target: MappedNodeId, link_features: &mut [f64], offset: usize) {
+        let source_vec = match self.props.long_array_value(u64::from(source)) {
             Ok(vec) => vec,
             Err(_) => {
                 for i in 0..self.dimension {
@@ -206,7 +207,7 @@ impl LinkFeatureAppender for HadamardLongArrayAppender {
                 return;
             }
         };
-        let target_vec = match self.props.long_array_value(target) {
+        let target_vec = match self.props.long_array_value(u64::from(target)) {
             Ok(vec) => vec,
             Err(_) => {
                 for i in 0..self.dimension {
@@ -235,12 +236,12 @@ struct HadamardLongAppender {
 }
 
 impl LinkFeatureAppender for HadamardLongAppender {
-    fn append_features(&self, source: u64, target: u64, link_features: &mut [f64], offset: usize) {
-        let source_val = match self.props.long_value(source) {
+    fn append_features(&self, source: MappedNodeId, target: MappedNodeId, link_features: &mut [f64], offset: usize) {
+        let source_val = match self.props.long_value(u64::from(source)) {
             Ok(val) => val as f64,
             Err(_) => 0.0,
         };
-        let target_val = match self.props.long_value(target) {
+        let target_val = match self.props.long_value(u64::from(target)) {
             Ok(val) => val as f64,
             Err(_) => 0.0,
         };
@@ -260,12 +261,12 @@ struct HadamardDoubleAppender {
 }
 
 impl LinkFeatureAppender for HadamardDoubleAppender {
-    fn append_features(&self, source: u64, target: u64, link_features: &mut [f64], offset: usize) {
-        let source_val = match self.props.double_value(source) {
+    fn append_features(&self, source: MappedNodeId, target: MappedNodeId, link_features: &mut [f64], offset: usize) {
+        let source_val = match self.props.double_value(u64::from(source)) {
             Ok(val) => val,
             Err(_) => 0.0,
         };
-        let target_val = match self.props.double_value(target) {
+        let target_val = match self.props.double_value(u64::from(target)) {
             Ok(val) => val,
             Err(_) => 0.0,
         };

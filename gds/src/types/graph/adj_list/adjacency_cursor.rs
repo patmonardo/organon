@@ -1,14 +1,11 @@
 use crate::types::graph::MappedNodeId;
 
-/// Special target identifier returned when a cursor cannot produce a valid value.
-pub const NOT_FOUND_TARGET: MappedNodeId = MappedNodeId::MAX;
-
 /// Low-level cursor iterating over the target ids of a single adjacency list.
 ///
 /// The contract mirrors the semantics of the TypeScript/Java GDS `AdjacencyCursor` while
-/// embracing idiomatic Rust ergonomics. Implementations are free to expose more ergonomic
-/// iterator adapters via the provided extension trait.
-pub trait AdjacencyCursor: Send + Sync + std::fmt::Debug {
+/// embracing idiomatic Rust ergonomics. Cursor state is mutable and worker-local; immutable
+/// adjacency storage remains shareable and creates fresh cursor state for concurrent views.
+pub trait AdjacencyCursor: Send + std::fmt::Debug {
     /// (Re-)initialise the cursor so that it produces the targets for the adjacency list
     /// identified by `index`. The `degree` is provided as a hint and should describe the
     /// number of targets that can be decoded.
@@ -53,11 +50,6 @@ pub trait AdjacencyCursorExt: AdjacencyCursor {
             out.push(target);
         }
         out
-    }
-
-    /// Return the next target id or [`NOT_FOUND_TARGET`] when the cursor is exhausted.
-    fn next_or_not_found(&mut self) -> MappedNodeId {
-        self.next_vlong().unwrap_or(NOT_FOUND_TARGET)
     }
 }
 

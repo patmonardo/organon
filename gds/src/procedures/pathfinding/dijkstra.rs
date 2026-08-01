@@ -36,7 +36,7 @@ use crate::algo::dijkstra::{
 use crate::task::memory::MemoryRange;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
-use crate::types::graph::id_map::NodeId;
+use crate::types::graph::id_map::MappedNodeId;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use std::collections::HashMap;
 use std::collections::HashSet;
@@ -148,8 +148,8 @@ impl DijkstraFacade {
         Ok(self)
     }
 
-    /// Set source node (NodeId)
-    pub fn source_node(mut self, source: NodeId) -> Self {
+    /// Set source node (MappedNodeId)
+    pub fn source_node(mut self, source: MappedNodeId) -> Self {
         self.config.source_node = source;
         self
     }
@@ -159,7 +159,7 @@ impl DijkstraFacade {
     /// The algorithm starts path computation from this node.
     /// Must be a valid node ID in the graph.
     pub fn source(mut self, source: u64) -> Self {
-        self.config.source_node = i64::try_from(source).unwrap_or(-1);
+        self.config.source_node = MappedNodeId::new(source);
         self
     }
 
@@ -168,7 +168,7 @@ impl DijkstraFacade {
     /// If specified, algorithm stops when target is reached.
     /// If not specified, computes paths to all reachable nodes.
     pub fn target(mut self, target: u64) -> Self {
-        self.config.target_nodes = vec![i64::try_from(target).unwrap_or(-1)];
+        self.config.target_nodes = vec![MappedNodeId::new(target)];
         self
     }
 
@@ -178,7 +178,7 @@ impl DijkstraFacade {
     pub fn targets(mut self, targets: Vec<u64>) -> Self {
         self.config.target_nodes = targets
             .into_iter()
-            .map(|value| i64::try_from(value).unwrap_or(-1))
+            .map(MappedNodeId::new)
             .collect();
         self
     }

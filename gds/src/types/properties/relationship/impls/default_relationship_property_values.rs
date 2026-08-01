@@ -51,6 +51,7 @@ impl DefaultRelationshipPropertyValues {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::types::graph::RelationshipIndex;
     use crate::types::properties::relationship::RelationshipPropertyValues;
     use crate::types::properties::PropertyValues;
     use crate::types::ValueType;
@@ -61,10 +62,13 @@ mod tests {
 
         assert_eq!(values.value_type(), ValueType::Double);
         assert_eq!(values.element_count(), 3); // Use element_count from PropertyValues trait
-        assert_eq!(values.double_value(1).unwrap(), 2.5);
+        assert_eq!(
+            values.double_value(RelationshipIndex::new(1)).unwrap(),
+            2.5
+        );
         assert_eq!(values.default_value(), 0.0);
-        assert!(values.has_value(0));
-        assert!(!values.has_value(10));
+        assert!(values.has_value(RelationshipIndex::ZERO));
+        assert!(!values.has_value(RelationshipIndex::new(10)));
     }
 
     #[test]
@@ -80,7 +84,7 @@ mod tests {
     fn long_access_rejects_lossy_conversion() {
         let values = DefaultRelationshipPropertyValues::with_values(vec![2.0, 2.5], 0.0, 2);
 
-        assert_eq!(values.long_value(0).unwrap(), 2);
-        assert!(values.long_value(1).is_err());
+        assert_eq!(values.long_value(RelationshipIndex::ZERO).unwrap(), 2);
+        assert!(values.long_value(RelationshipIndex::new(1)).is_err());
     }
 }

@@ -11,6 +11,7 @@ use crate::collections::catalog::{
 };
 use crate::collections::dataframe::GDSDataFrame;
 use crate::config::CollectionsBackend;
+use crate::types::graph::MappedNodeId;
 use crate::types::graph_store::{DefaultGraphStore, GraphStore};
 use crate::types::ValueType;
 use polars::prelude::{NamedFrom, PlSmallStr, Series};
@@ -37,7 +38,7 @@ pub struct GraphFrameCatalogWriteResult {
 #[derive(Debug, thiserror::Error)]
 pub enum GraphFramePluginError {
     #[error("node id out of 32-bit range: {0}")]
-    NodeIdOutOfRange(i64),
+    NodeIdOutOfRange(u64),
 
     #[error("graph export error: {0}")]
     Graph(String),
@@ -97,11 +98,8 @@ impl GraphFramePolars32Plugin {
         }
     }
 
-    fn id_to_i32(value: i64) -> Result<i32, GraphFramePluginError> {
-        if value < i32::MIN as i64 || value > i32::MAX as i64 {
-            return Err(GraphFramePluginError::NodeIdOutOfRange(value));
-        }
-        Ok(value as i32)
+    fn id_to_i32(value: MappedNodeId) -> Result<i32, GraphFramePluginError> {
+        i32::try_from(value.get()).map_err(|_| GraphFramePluginError::NodeIdOutOfRange(value.get()))
     }
 
     fn build_nodes(

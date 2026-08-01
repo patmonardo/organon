@@ -11,10 +11,10 @@ use crate::algo::traversal::{
     run_parallel_bfs, Aggregator, ExitPredicate, ExitPredicateResult, FollowExitPredicate,
     OneHopAggregator, ParallelBfsConfig, TargetExitPredicate,
 };
-use crate::task::progress::{ProgressTracker, UNKNOWN_VOLUME};
 use crate::projection::eval::algorithm::AlgorithmError;
+use crate::task::progress::{ProgressTracker, UNKNOWN_VOLUME};
 use crate::types::graph::Graph;
-use crate::types::graph::NodeId;
+use crate::types::graph::MappedNodeId;
 
 /// BFS Storage Runtime - handles persistent data access and algorithm orchestration
 ///
@@ -22,9 +22,9 @@ use crate::types::graph::NodeId;
 /// This implements the "Gross pole" for accessing graph data using simplified BFS architecture
 pub struct BfsStorageRuntime {
     /// Source node for BFS traversal
-    pub source_node: NodeId,
+    pub source_node: MappedNodeId,
     /// Target nodes to find
-    pub target_nodes: Vec<NodeId>,
+    pub target_nodes: Vec<MappedNodeId>,
     /// Maximum depth to traverse
     pub max_depth: Option<u32>,
     /// Whether to track paths during traversal
@@ -38,8 +38,8 @@ const DEFAULT_DELTA: usize = 64;
 impl BfsStorageRuntime {
     /// Create new BFS storage runtime
     pub fn new(
-        source_node: NodeId,
-        target_nodes: Vec<NodeId>,
+        source_node: MappedNodeId,
+        target_nodes: Vec<MappedNodeId>,
         max_depth: Option<u32>,
         track_paths: bool,
     ) -> Self {
@@ -111,7 +111,15 @@ impl BfsStorageRuntime {
         }
 
         let result = (|| {
-            let node_count = graph.map(|g| g.node_count()).unwrap_or(1000) as usize;
+            let node_count = match graph {
+                Some(graph) => usize::try_from(graph.node_count()).map_err(|_| {
+                    AlgorithmError::InvalidGraph(format!(
+                        "node count exceeds physical index capacity: {}",
+                        graph.node_count()
+                    ))
+                })?,
+                None => 1000,
+            };
             Self::validate_node_in_graph(self.source_node, node_count, "source")?;
             for target_node in &self.target_nodes {
                 Self::validate_node_in_graph(*target_node, node_count, "target")?;
@@ -134,7 +142,7 @@ impl BfsStorageRuntime {
             computation.initialize(self.source_node, self.max_depth, node_count);
 
             // BFS queue (source, node, aggregated weight)
-            let mut queue: std::collections::VecDeque<(NodeId, NodeId, f64)> =
+            let mut queue: std::collections::VecDeque<(MappedNodeId, MappedNodeId, f64)> =
                 std::collections::VecDeque::new();
             computation.set_visited(self.source_node);
             queue.push_back((self.source_node, self.source_node, 0.0));
@@ -220,24 +228,28 @@ impl BfsStorageRuntime {
     }
 
     /// Get neighbors of a node (graph-backed when available; mock fallback)
-    fn get_neighbors(&self, graph: Option<&dyn Graph>, node: NodeId) -> Vec<NodeId> {
+    fn get_neighbors(&self, graph: Option<&dyn Graph>, node: MappedNodeId) -> Vec<MappedNodeId> {
         if let Some(g) = graph {
             let fallback: f64 = 1.0;
             let stream = g.stream_relationships(node, fallback);
             stream.into_iter().map(|c| c.target_id()).collect()
         } else {
+            const ONE: MappedNodeId = MappedNodeId::new(1);
+            const TWO: MappedNodeId = MappedNodeId::new(2);
+            const THREE: MappedNodeId = MappedNodeId::new(3);
+
             match node {
-                0 => vec![1, 2],
-                1 => vec![0, 3],
-                2 => vec![0, 3],
-                3 => vec![1, 2],
+                MappedNodeId::ZERO => vec![ONE, TWO],
+                ONE => vec![MappedNodeId::ZERO, THREE],
+                TWO => vec![MappedNodeId::ZERO, THREE],
+                THREE => vec![ONE, TWO],
                 _ => vec![],
             }
         }
     }
 
     fn validate_node_in_graph(
-        node_id: NodeId,
+        node_id: MappedNodeId,
         node_count: usize,
         role: &str,
     ) -> Result<(), AlgorithmError> {
@@ -251,7 +263,7 @@ impl BfsStorageRuntime {
     }
 
     fn node_index_in_graph(
-        node_id: NodeId,
+        node_id: MappedNodeId,
         _node_count: usize,
         role: &str,
     ) -> Result<usize, AlgorithmError> {
@@ -271,8 +283,8 @@ mod tests {
     impl ExitPredicate for ContinueOnOne {
         fn test(
             &self,
-            _source_node: NodeId,
-            current_node: NodeId,
+            _source_node: MappedNodeId,
+            current_node: MappedNodeId,
             _weight_at_source: f64,
         ) -> ExitPredicateResult {
             if current_node == 1 {
@@ -286,7 +298,12 @@ mod tests {
     struct DoubleHopAggregator;
 
     impl Aggregator for DoubleHopAggregator {
-        fn apply(&self, _source_node: NodeId, _current_node: NodeId, weight_at_source: f64) -> f64 {
+        fn apply(
+            &self,
+            _source_node: MappedNodeId,
+            _current_node: MappedNodeId,
+            weight_at_source: f64,
+        ) -> f64 {
             weight_at_source + 2.0
         }
     }

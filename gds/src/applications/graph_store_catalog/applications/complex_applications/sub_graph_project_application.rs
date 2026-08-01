@@ -2,6 +2,8 @@ use crate::applications::graph_store_catalog::loaders::GraphStoreCatalogService;
 use crate::applications::graph_store_catalog::results::GraphFilterResult;
 use crate::applications::services::logging::Log;
 use crate::core::User;
+use crate::types::graph::MappedNodeId;
+use crate::types::graph::OriginalNodeId;
 use crate::types::graph_store::{DatabaseId, GraphName, GraphStore};
 
 use rand::rngs::StdRng;
@@ -53,18 +55,21 @@ impl SubGraphProjectApplication {
         let n = origin_store.node_count();
         let target = compute_target_node_count(n, sample_node_count, sample_ratio, node_filter);
 
-        let mut candidates: Vec<i64> = (0..n as i64).collect();
+        let mut candidates: Vec<usize> = (0..n).collect();
         let mut rng = StdRng::seed_from_u64(seed.unwrap_or(0));
         candidates.shuffle(&mut rng);
         candidates.truncate(target);
 
         // Convert mapped node IDs -> original node IDs.
         let id_map = origin_store.nodes();
-        let mut selected_original: Vec<i64> = Vec::with_capacity(candidates.len());
-        for mapped_id in candidates {
-            if let Some(original) = id_map.to_original_node_id(mapped_id) {
-                selected_original.push(original);
-            }
+        let mut selected_original: Vec<OriginalNodeId> = Vec::with_capacity(candidates.len());
+        for mapped_index in candidates {
+            let mapped_id = MappedNodeId::try_from(mapped_index)
+                .map_err(|_| "Graph node count exceeds mapped ID space".to_string())?;
+            let original_id = id_map
+                .to_original_node_id(mapped_id)
+                .ok_or_else(|| format!("No original node ID for mapped node {mapped_id}"))?;
+            selected_original.push(original_id);
         }
 
         let induced = origin_store

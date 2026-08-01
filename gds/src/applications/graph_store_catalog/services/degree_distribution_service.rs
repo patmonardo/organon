@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use crate::task::concurrency::TerminationFlag;
 use crate::types::graph::degrees::Degrees;
-use crate::types::graph::IdMap as _;
+use crate::types::graph::NodeIterator as _;
 use crate::types::graph_store::DefaultGraphStore;
 
 /// Service for computing degree distributions.
@@ -23,15 +23,15 @@ impl DegreeDistributionService {
         termination_flag: &TerminationFlag,
     ) -> HashMap<u32, u64> {
         let graph = graph_store.graph();
-        let node_count = graph.node_count();
         let mut hist: HashMap<u32, u64> = HashMap::new();
 
-        for mapped in 0..node_count {
+        for mapped_node_id in graph.iter() {
             if !termination_flag.running() {
                 break;
             }
 
-            let deg = Degrees::degree(graph.as_ref(), mapped as i64) as u32;
+            let deg = u32::try_from(Degrees::degree(graph.as_ref(), mapped_node_id))
+                .expect("node degree must fit the histogram key");
             *hist.entry(deg).or_insert(0) += 1;
         }
 

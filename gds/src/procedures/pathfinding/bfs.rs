@@ -41,7 +41,7 @@ use crate::task::memory::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
-use crate::types::graph::id_map::NodeId;
+use crate::types::graph::id_map::MappedNodeId;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use std::collections::HashSet;
 use std::sync::Arc;
@@ -143,11 +143,11 @@ impl BfsFacade {
     /// The algorithm starts traversal from this node.
     /// Must be a valid node ID in the graph.
     pub fn source(mut self, source: u64) -> Self {
-        self.config.source_node = i64::try_from(source).unwrap_or(-1);
+        self.config.source_node = MappedNodeId::new(source);
         self
     }
 
-    pub fn source_node(mut self, source: NodeId) -> Self {
+    pub fn source_node(mut self, source: MappedNodeId) -> Self {
         self.config.source_node = source;
         self
     }
@@ -157,7 +157,7 @@ impl BfsFacade {
     /// If specified, traversal stops when target is reached.
     /// If not specified, traverses all reachable nodes.
     pub fn target(mut self, target: u64) -> Self {
-        self.config.target_nodes = vec![i64::try_from(target).unwrap_or(-1)];
+        self.config.target_nodes = vec![MappedNodeId::new(target)];
         self
     }
 
@@ -167,7 +167,7 @@ impl BfsFacade {
     pub fn targets(mut self, targets: Vec<u64>) -> Self {
         self.config.target_nodes = targets
             .into_iter()
-            .map(|value| i64::try_from(value).unwrap_or(-1))
+            .map(MappedNodeId::new)
             .collect();
         self
     }

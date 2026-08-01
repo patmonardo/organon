@@ -6,8 +6,9 @@ use super::computation::DagLongestPathComputationRuntime;
 use super::spec::DagLongestPathResult;
 use crate::task::concurrency::TerminatedException;
 use crate::task::progress::ProgressTracker;
-use crate::types::graph::{Graph, NodeId};
+use crate::types::graph::{Graph, MappedNodeId};
 use std::sync::atomic::{AtomicI64, AtomicUsize, Ordering};
+use std::sync::Mutex;
 
 /// Storage for dag longest path computation
 pub struct DagLongestPathStorageRuntime {
@@ -16,7 +17,7 @@ pub struct DagLongestPathStorageRuntime {
     /// Best distances found to each node (stored as bits for atomic f64)
     pub distances: Vec<AtomicI64>,
     /// Predecessor for each node in the longest path
-    pub predecessors: Vec<AtomicI64>,
+    pub predecessors: Vec<Mutex<Option<MappedNodeId>>>,
 }
 
 impl DagLongestPathStorageRuntime {
@@ -30,37 +31,39 @@ impl DagLongestPathStorageRuntime {
                 .map(|_| AtomicI64::new(neg_infinity_bits))
                 .collect(),
             predecessors: (0..node_count)
-                .map(|_| AtomicI64::new(-1)) // Use -1 as sentinel instead of usize::MAX
+                .map(|_| Mutex::new(None))
                 .collect(),
         }
     }
 
-    pub fn get_distance(&self, node: usize) -> f64 {
-        let bits = self.distances[node].load(Ordering::SeqCst);
+    pub fn get_distance(&self, node: MappedNodeId) -> f64 {
+        let bits = self.distances[physical_node_index(node)].load(Ordering::SeqCst);
         f64::from_bits(bits as u64)
     }
 
-    pub fn set_distance(&self, node: usize, distance: f64) {
+    pub fn set_distance(&self, node: MappedNodeId, distance: f64) {
         self.set_distance_tag(node, distance, "set_distance");
     }
 
-    pub fn set_distance_tag(&self, node: usize, distance: f64, _tag: &'static str) {
-        self.distances[node].store(distance.to_bits() as i64, Ordering::SeqCst);
+    pub fn set_distance_tag(&self, node: MappedNodeId, distance: f64, _tag: &'static str) {
+        self.distances[physical_node_index(node)]
+            .store(distance.to_bits() as i64, Ordering::SeqCst);
     }
 
     pub fn compare_and_update_distance(
         &self,
-        node: usize,
+        node: MappedNodeId,
         new_distance: f64,
-        predecessor: usize,
+        predecessor: MappedNodeId,
     ) -> bool {
+        let node_index = physical_node_index(node);
         loop {
-            let current_bits = self.distances[node].load(Ordering::SeqCst);
+            let current_bits = self.distances[node_index].load(Ordering::SeqCst);
             let current = f64::from_bits(current_bits as u64);
 
             if new_distance > current {
                 let new_bits = new_distance.to_bits() as i64;
-                match self.distances[node].compare_exchange(
+                match self.distances[node_index].compare_exchange(
                     current_bits,
                     new_bits,
                     Ordering::SeqCst,
@@ -68,7 +71,7 @@ impl DagLongestPathStorageRuntime {
                 ) {
                     Ok(_) => {
                         // Successfully updated distance, also set predecessor
-                        self.predecessors[node].store(predecessor as i64, Ordering::SeqCst);
+                        *self.predecessors[node_index].lock().unwrap() = Some(predecessor);
                         return true;
                     }
                     Err(_) => continue,
@@ -79,21 +82,21 @@ impl DagLongestPathStorageRuntime {
         }
     }
 
-    pub fn get_predecessor(&self, node: usize) -> Option<usize> {
-        let pred = self.predecessors[node].load(Ordering::SeqCst);
-        if pred == -1 {
-            None
-        } else {
-            Some(pred as usize)
-        }
+    pub fn get_predecessor(&self, node: MappedNodeId) -> Option<MappedNodeId> {
+        *self.predecessors[physical_node_index(node)].lock().unwrap()
     }
 
-    pub fn set_predecessor(&self, node: usize, predecessor: usize) {
+    pub fn set_predecessor(&self, node: MappedNodeId, predecessor: MappedNodeId) {
         self.set_predecessor_tag(node, predecessor, "set_predecessor");
     }
 
-    pub fn set_predecessor_tag(&self, node: usize, predecessor: usize, _tag: &'static str) {
-        self.predecessors[node].store(predecessor as i64, Ordering::SeqCst);
+    pub fn set_predecessor_tag(
+        &self,
+        node: MappedNodeId,
+        predecessor: MappedNodeId,
+        _tag: &'static str,
+    ) {
+        *self.predecessors[physical_node_index(node)].lock().unwrap() = Some(predecessor);
     }
 
     pub fn compute_dag_longest_path(
@@ -109,18 +112,13 @@ impl DagLongestPathStorageRuntime {
 
         let result = (|| {
             let fallback = graph.default_property_value();
-            let mut adjacency: Vec<Vec<(NodeId, f64)>> = Vec::with_capacity(node_count);
+            let mut adjacency: Vec<Vec<(MappedNodeId, f64)>> = Vec::with_capacity(node_count);
 
-            for node_id in 0..node_count {
+            for node_index in 0..node_count {
+                let node_id = mapped_node_id(node_index);
                 let neighbors = graph
-                    .stream_relationships(node_id as NodeId, fallback)
-                    .filter_map(|cursor| {
-                        let target = cursor.target_id();
-                        if target < 0 {
-                            return None;
-                        }
-                        Some((target, cursor.property()))
-                    })
+                    .stream_relationships(node_id, fallback)
+                    .map(|cursor| (cursor.target_id(), cursor.property()))
                     .collect();
                 adjacency.push(neighbors);
             }
@@ -130,8 +128,8 @@ impl DagLongestPathStorageRuntime {
                 concurrency,
                 termination,
                 move |node_id| {
-                    usize::try_from(node_id)
-                        .ok()
+                    node_id
+                        .to_usize()
                         .and_then(|idx| adjacency.get(idx).cloned())
                         .unwrap_or_default()
                 },
@@ -152,4 +150,14 @@ impl DagLongestPathStorageRuntime {
             }
         }
     }
+}
+
+fn mapped_node_id(index: usize) -> MappedNodeId {
+    MappedNodeId::try_from(index).expect("graph node count must fit mapped ID space")
+}
+
+fn physical_node_index(node_id: MappedNodeId) -> usize {
+    node_id
+        .to_usize()
+        .expect("mapped graph node must fit DAG longest-path storage")
 }

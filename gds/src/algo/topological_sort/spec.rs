@@ -4,7 +4,7 @@
 
 use crate::algo::algorithms::pathfinding::PathResult;
 use crate::config::validation::ConfigError;
-use crate::types::graph::NodeId;
+use crate::types::graph::MappedNodeId;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use std::time::Duration;
@@ -59,7 +59,7 @@ impl crate::config::ValidatedConfig for TopologicalSortConfig {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TopologicalSortResult {
     /// Sorted nodes in topological order
-    pub sorted_nodes: Vec<NodeId>,
+    pub sorted_nodes: Vec<MappedNodeId>,
     /// Optional maximum distance from source for each node
     pub max_source_distances: Option<Vec<f64>>,
 }
@@ -67,7 +67,7 @@ pub struct TopologicalSortResult {
 /// Result row for topological sort stream mode
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TopologicalSortRow {
-    pub node_id: NodeId,
+    pub node_id: MappedNodeId,
     pub max_distance: Option<f64>,
 }
 
@@ -101,8 +101,8 @@ pub struct TopologicalSortMutateResult {
     pub updated_store: Arc<crate::types::prelude::DefaultGraphStore>,
 }
 
-fn checked_u64(value: NodeId) -> u64 {
-    u64::try_from(value).unwrap_or(0)
+fn checked_u64(value: MappedNodeId) -> u64 {
+    value.get()
 }
 
 fn result_paths(result: &TopologicalSortResult) -> Vec<PathResult> {
@@ -115,7 +115,12 @@ fn result_paths(result: &TopologicalSortResult) -> Vec<PathResult> {
             let cost = result
                 .max_source_distances
                 .as_ref()
-                .and_then(|d| d.get(*node_id as usize).copied())
+                .and_then(|distances| {
+                    node_id
+                        .to_usize()
+                        .and_then(|node_index| distances.get(node_index))
+                        .copied()
+                })
                 .unwrap_or(idx as f64);
             paths.push(PathResult {
                 source: prev_id,
@@ -155,7 +160,12 @@ impl TopologicalSortResultBuilder {
                     .result
                     .max_source_distances
                     .as_ref()
-                    .and_then(|d| d.get(node_id as usize).copied()),
+                    .and_then(|distances| {
+                        node_id
+                            .to_usize()
+                            .and_then(|node_index| distances.get(node_index))
+                            .copied()
+                    }),
             })
             .collect()
     }

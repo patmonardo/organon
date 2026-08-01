@@ -4,13 +4,13 @@
 //!
 //! This module implements the computation runtime for A* algorithm - the "Subtle pole" for ephemeral computation.
 
-use crate::types::graph::NodeId;
+use crate::types::graph::MappedNodeId;
 
 /// A* computation result
 #[derive(Debug, Clone)]
 pub struct AStarComputationResult {
     /// Path from source to target
-    pub path: Option<Vec<NodeId>>,
+    pub path: Option<Vec<MappedNodeId>>,
     /// Total cost of the path
     pub total_cost: f64,
     /// Number of nodes explored
@@ -23,13 +23,13 @@ pub struct AStarComputationResult {
 
 impl AStarComputationResult {
     /// Create a new A* computation result
-    pub fn new(path: Option<Vec<NodeId>>, total_cost: f64, nodes_explored: usize) -> Self {
+    pub fn new(path: Option<Vec<MappedNodeId>>, total_cost: f64, nodes_explored: usize) -> Self {
         Self::new_with_metrics(path, total_cost, nodes_explored, 0, 0)
     }
 
     /// Create a new A* computation result with delegated driver metrics
     pub fn new_with_metrics(
-        path: Option<Vec<NodeId>>,
+        path: Option<Vec<MappedNodeId>>,
         total_cost: f64,
         nodes_explored: usize,
         edges_considered: u64,
@@ -61,15 +61,15 @@ impl AStarComputationResult {
 pub struct AStarComputationRuntime {
     /// Priority queue for A* algorithm (placeholder for now)
     /// Note: a dedicated priority queue + heuristic integration is deferred.
-    open_set: Vec<NodeId>,
+    open_set: Vec<MappedNodeId>,
     /// Visited nodes
-    visited: std::collections::HashSet<NodeId>,
+    visited: std::collections::HashSet<MappedNodeId>,
     /// Cost from start to each node
-    g_cost: std::collections::HashMap<NodeId, f64>,
+    g_cost: std::collections::HashMap<MappedNodeId, f64>,
     /// Estimated total cost (g + h)
-    f_cost: std::collections::HashMap<NodeId, f64>,
+    f_cost: std::collections::HashMap<MappedNodeId, f64>,
     /// Parent nodes for path reconstruction
-    parents: std::collections::HashMap<NodeId, NodeId>,
+    parents: std::collections::HashMap<MappedNodeId, MappedNodeId>,
 }
 
 impl AStarComputationRuntime {
@@ -85,7 +85,7 @@ impl AStarComputationRuntime {
     }
 
     /// Initialize A* computation for given source and target
-    pub fn initialize(&mut self, source: NodeId, _target: NodeId) {
+    pub fn initialize(&mut self, source: MappedNodeId, _target: MappedNodeId) {
         self.open_set.clear();
         self.visited.clear();
         self.g_cost.clear();
@@ -99,19 +99,19 @@ impl AStarComputationRuntime {
     }
 
     /// Add node to open set
-    pub fn add_to_open_set(&mut self, node: NodeId) {
+    pub fn add_to_open_set(&mut self, node: MappedNodeId) {
         if !self.open_set.contains(&node) {
             self.open_set.push(node);
         }
     }
 
     /// Remove node from open set
-    pub fn remove_from_open_set(&mut self, node: NodeId) {
+    pub fn remove_from_open_set(&mut self, node: MappedNodeId) {
         self.open_set.retain(|&n| n != node);
     }
 
     /// Get node with lowest f-cost from open set
-    pub fn get_lowest_f_cost_node(&self) -> Option<NodeId> {
+    pub fn get_lowest_f_cost_node(&self) -> Option<MappedNodeId> {
         self.open_set
             .iter()
             .min_by(|a, b| {
@@ -123,47 +123,47 @@ impl AStarComputationRuntime {
     }
 
     /// Mark node as visited
-    pub fn mark_visited(&mut self, node: NodeId) {
+    pub fn mark_visited(&mut self, node: MappedNodeId) {
         self.visited.insert(node);
     }
 
     /// Check if node is visited
-    pub fn is_visited(&self, node: NodeId) -> bool {
+    pub fn is_visited(&self, node: MappedNodeId) -> bool {
         self.visited.contains(&node)
     }
 
     /// Update g-cost for a node
-    pub fn update_g_cost(&mut self, node: NodeId, cost: f64) {
+    pub fn update_g_cost(&mut self, node: MappedNodeId, cost: f64) {
         self.g_cost.insert(node, cost);
     }
 
     /// Get g-cost for a node
-    pub fn get_g_cost(&self, node: NodeId) -> f64 {
+    pub fn get_g_cost(&self, node: MappedNodeId) -> f64 {
         self.g_cost.get(&node).copied().unwrap_or(f64::INFINITY)
     }
 
     /// Update f-cost for a node
-    pub fn update_f_cost(&mut self, node: NodeId, cost: f64) {
+    pub fn update_f_cost(&mut self, node: MappedNodeId, cost: f64) {
         self.f_cost.insert(node, cost);
     }
 
     /// Get f-cost for a node
-    pub fn get_f_cost(&self, node: NodeId) -> f64 {
+    pub fn get_f_cost(&self, node: MappedNodeId) -> f64 {
         self.f_cost.get(&node).copied().unwrap_or(f64::INFINITY)
     }
 
     /// Set parent for path reconstruction
-    pub fn set_parent(&mut self, child: NodeId, parent: NodeId) {
+    pub fn set_parent(&mut self, child: MappedNodeId, parent: MappedNodeId) {
         self.parents.insert(child, parent);
     }
 
     /// Get parent for path reconstruction
-    pub fn get_parent(&self, node: NodeId) -> Option<NodeId> {
+    pub fn get_parent(&self, node: MappedNodeId) -> Option<MappedNodeId> {
         self.parents.get(&node).copied()
     }
 
     /// Reconstruct path from target to source
-    pub fn reconstruct_path(&self, source: NodeId, target: NodeId) -> Option<Vec<NodeId>> {
+    pub fn reconstruct_path(&self, source: MappedNodeId, target: MappedNodeId) -> Option<Vec<MappedNodeId>> {
         if !self.visited.contains(&target) {
             return None;
         }
@@ -192,12 +192,12 @@ impl AStarComputationRuntime {
     }
 
     /// Get total cost to target (if found)
-    pub fn get_total_cost(&self, target: NodeId) -> f64 {
+    pub fn get_total_cost(&self, target: MappedNodeId) -> f64 {
         self.get_g_cost(target)
     }
 
     /// Get all visited nodes
-    pub fn get_visited_nodes(&self) -> Vec<NodeId> {
+    pub fn get_visited_nodes(&self) -> Vec<MappedNodeId> {
         self.visited.iter().cloned().collect()
     }
 }

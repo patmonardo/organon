@@ -1,4 +1,4 @@
-use super::{Graph, GraphCharacteristics, RelationshipTopology};
+use super::{AdjacencyList, Graph, GraphCharacteristics, RelationshipTopology};
 use crate::config::GraphStoreConfig;
 use crate::projection::RelationshipType;
 use crate::task::concurrency::Concurrency;
@@ -7,16 +7,18 @@ use crate::types::graph::degrees::Degrees;
 use crate::types::graph::id_map::NodeLabelConsumer;
 use crate::types::graph::id_map::{
     BatchNodeIterable, FilteredIdMap, IdMap, MappedNodeId, NodeConsumer, NodeIdBatch,
-    NodeIdIterator, NodeIterator, OriginalNodeId, PartialIdMap, SimpleIdMap,
+    NodeIdIterator, NodeIterator, OriginalNodeId, PartialIdMap, RelationshipIndex, SimpleIdMap,
 };
+use crate::types::graph::Neighbor;
+use crate::types::graph::NeighborCursor;
+use crate::types::graph::TraversalDirection;
 use crate::types::properties::node::{NodePropertyContainer, NodePropertyValues};
 use crate::types::properties::relationship::{
     relationship_properties::RelationshipProperties,
-    relationship_property_values::RelationshipPropertyValues, DefaultModifiableRelationshipCursor,
-    DefaultRelationshipCursor, DefaultRelationshipPropertyStore, ModifiableRelationshipCursor,
-    RelationshipCursor, RelationshipCursorBox, RelationshipIterator, RelationshipPredicate,
-    RelationshipStream, WeightedRelationshipCursor, WeightedRelationshipCursorBox,
-    WeightedRelationshipStream,
+    relationship_property_values::RelationshipPropertyValues, DefaultRelationshipCursor,
+    DefaultRelationshipPropertyStore, RelationshipCursorBox, RelationshipIterator,
+    RelationshipPredicate, RelationshipStream, WeightedRelationshipCursor,
+    WeightedRelationshipCursorBox, WeightedRelationshipStream,
 };
 use crate::types::properties::PropertyStore;
 use crate::types::schema::{GraphSchema, NodeLabel};
@@ -39,7 +41,6 @@ pub struct DefaultGraph {
     relationship_properties: HashMap<RelationshipType, DefaultRelationshipPropertyStore>,
     selected_relationship_properties: HashMap<RelationshipType, SelectedRelationshipProperty>,
     relationship_property_selectors: HashMap<RelationshipType, String>,
-    topology_offsets: HashMap<RelationshipType, Arc<Vec<usize>>>,
     has_relationship_properties: bool,
 }
 
@@ -47,12 +48,17 @@ pub struct DefaultGraph {
 
 #[derive(Debug)]
 struct WeightedCursor {
+    relationship_index: RelationshipIndex,
     source: MappedNodeId,
     target: MappedNodeId,
     weight: f64,
 }
 
 impl WeightedRelationshipCursor for WeightedCursor {
+    fn relationship_index(&self) -> RelationshipIndex {
+        self.relationship_index
+    }
+
     fn source_id(&self) -> MappedNodeId {
         self.source
     }
@@ -63,6 +69,69 @@ impl WeightedRelationshipCursor for WeightedCursor {
 
     fn weight(&self) -> f64 {
         self.weight
+    }
+}
+
+struct DefaultNeighborStream<'a> {
+    graph: &'a DefaultGraph,
+    node_id: MappedNodeId,
+    direction: TraversalDirection,
+    fallback_value: f64,
+    next_type_index: usize,
+    active_type_index: usize,
+    cursor: Option<Box<dyn NeighborCursor>>,
+}
+
+impl<'a> DefaultNeighborStream<'a> {
+    fn new(
+        graph: &'a DefaultGraph,
+        node_id: MappedNodeId,
+        direction: TraversalDirection,
+        fallback_value: f64,
+    ) -> Self {
+        Self {
+            graph,
+            node_id,
+            direction,
+            fallback_value,
+            next_type_index: 0,
+            active_type_index: 0,
+            cursor: None,
+        }
+    }
+}
+
+impl Iterator for DefaultNeighborStream<'_> {
+    type Item = (Neighbor, f64);
+
+    fn next(&mut self) -> Option<Self::Item> {
+        loop {
+            if let Some(cursor) = self.cursor.as_mut() {
+                if let Some(neighbor) = cursor.next_neighbor() {
+                    let relationship_type = &self.graph.ordered_types[self.active_type_index];
+                    let property = self.graph.relationship_property_value_for(
+                        relationship_type,
+                        neighbor.relationship_index,
+                        self.fallback_value,
+                    );
+                    return Some((neighbor, property));
+                }
+                self.cursor = None;
+            }
+
+            let relationship_type = self.graph.ordered_types.get(self.next_type_index)?;
+            self.active_type_index = self.next_type_index;
+            self.next_type_index += 1;
+            let Some(topology) = self.graph.topology_for(relationship_type) else {
+                continue;
+            };
+
+            let mut cursor = Arc::clone(topology).new_cursor();
+            if cursor.reset(self.node_id, self.direction).is_err() {
+                continue;
+            }
+            self.cursor = Some(cursor);
+        }
     }
 }
 
@@ -83,7 +152,6 @@ impl DefaultGraph {
         relationship_properties: HashMap<RelationshipType, DefaultRelationshipPropertyStore>,
         relationship_property_selectors: HashMap<RelationshipType, String>,
     ) -> Self {
-        let topology_offsets = compute_topology_offsets(&topologies);
         let (selected_relationship_properties, effective_selectors) =
             build_selected_relationship_properties(
                 &ordered_types,
@@ -106,7 +174,6 @@ impl DefaultGraph {
             relationship_properties,
             selected_relationship_properties,
             relationship_property_selectors: effective_selectors,
-            topology_offsets,
             has_relationship_properties,
         }
     }
@@ -145,31 +212,10 @@ impl DefaultGraph {
         self.selected_relationship_properties.get(relationship_type)
     }
 
-    fn property_index(
-        &self,
-        relationship_type: &RelationshipType,
-        source_id: MappedNodeId,
-        neighbor_index: usize,
-    ) -> Option<u64> {
-        let offsets = self.topology_offsets.get(relationship_type)?;
-        let source_index = source_id as usize;
-        if source_index + 1 >= offsets.len() {
-            return None;
-        }
-        let start = offsets[source_index];
-        let end = offsets[source_index + 1];
-        let degree = end.saturating_sub(start);
-        if neighbor_index >= degree {
-            return None;
-        }
-        Some((start + neighbor_index) as u64)
-    }
-
     fn relationship_property_value_for(
         &self,
         relationship_type: &RelationshipType,
-        source_id: MappedNodeId,
-        neighbor_index: usize,
+        relationship_index: RelationshipIndex,
         fallback_value: f64,
     ) -> f64 {
         let selected = match self.selected_property(relationship_type) {
@@ -177,12 +223,7 @@ impl DefaultGraph {
             None => return fallback_value,
         };
 
-        let index = match self.property_index(relationship_type, source_id, neighbor_index) {
-            Some(index) => index,
-            None => return fallback_value,
-        };
-
-        selected.value_at_or(index, fallback_value)
+        selected.value_at_or(relationship_index, fallback_value)
     }
 
     pub(crate) fn filtered_by_relationship_types(
@@ -262,114 +303,6 @@ impl DefaultGraph {
             filtered_selectors,
         ))
     }
-
-    fn traverse_outgoing_relationships<F>(
-        &self,
-        node_id: MappedNodeId,
-        mode: PropertyTraversalMode,
-        mut callback: F,
-    ) -> bool
-    where
-        F: FnMut(&dyn RelationshipCursor) -> bool,
-    {
-        let fallback = mode.fallback();
-        let mut cursor = DefaultModifiableRelationshipCursor::new(node_id, node_id, fallback);
-        cursor.set_source_id(node_id);
-
-        for relationship_type in &self.ordered_types {
-            let topology = match self.topology_for(relationship_type) {
-                Some(topology) => topology,
-                None => continue,
-            };
-
-            let neighbors = match topology.outgoing(node_id) {
-                Some(neighbors) => neighbors,
-                None => continue,
-            };
-
-            for (index, &target) in neighbors.iter().enumerate() {
-                cursor.set_target_id(target);
-
-                let property_value = if mode.requires_value() {
-                    self.relationship_property_value_for(
-                        relationship_type,
-                        node_id,
-                        index,
-                        fallback,
-                    )
-                } else {
-                    fallback
-                };
-
-                cursor.set_property(property_value);
-
-                if !callback(&cursor as &dyn RelationshipCursor) {
-                    return false;
-                }
-            }
-        }
-
-        true
-    }
-
-    fn traverse_inverse_relationships<F>(
-        &self,
-        node_id: MappedNodeId,
-        mode: PropertyTraversalMode,
-        mut callback: F,
-    ) -> bool
-    where
-        F: FnMut(&dyn RelationshipCursor) -> bool,
-    {
-        let fallback = mode.fallback();
-        let mut cursor = DefaultModifiableRelationshipCursor::new(node_id, node_id, fallback);
-        cursor.set_target_id(node_id);
-
-        for relationship_type in &self.ordered_types {
-            let topology = match self.topology_for(relationship_type) {
-                Some(topology) => topology,
-                None => continue,
-            };
-
-            let incoming = match topology.incoming(node_id) {
-                Some(incoming) => incoming,
-                None => continue,
-            };
-
-            for &source in incoming.iter() {
-                cursor.set_source_id(source);
-
-                let property_value = if mode.requires_value() {
-                    topology
-                        .outgoing(source)
-                        .and_then(|neighbors| {
-                            neighbors
-                                .iter()
-                                .position(|&target| target == node_id)
-                                .map(|index| {
-                                    self.relationship_property_value_for(
-                                        relationship_type,
-                                        source,
-                                        index,
-                                        fallback,
-                                    )
-                                })
-                        })
-                        .unwrap_or(fallback)
-                } else {
-                    fallback
-                };
-
-                cursor.set_property(property_value);
-
-                if !callback(&cursor as &dyn RelationshipCursor) {
-                    return false;
-                }
-            }
-        }
-
-        true
-    }
 }
 
 #[derive(Debug, Clone)]
@@ -383,55 +316,9 @@ impl SelectedRelationshipProperty {
         Self { values, fallback }
     }
 
-    fn value_at_or(&self, index: u64, fallback: f64) -> f64 {
+    fn value_at_or(&self, index: RelationshipIndex, fallback: f64) -> f64 {
         self.values.double_value(index).unwrap_or(fallback)
     }
-}
-
-#[derive(Debug, Clone, Copy)]
-struct PropertyTraversalMode {
-    fallback: f64,
-    include_value: bool,
-}
-
-impl PropertyTraversalMode {
-    fn with_value(fallback: f64) -> Self {
-        Self {
-            fallback,
-            include_value: true,
-        }
-    }
-
-    fn fallback(self) -> f64 {
-        self.fallback
-    }
-
-    fn requires_value(self) -> bool {
-        self.include_value
-    }
-}
-
-fn compute_topology_offsets(
-    topologies: &HashMap<RelationshipType, Arc<RelationshipTopology>>,
-) -> HashMap<RelationshipType, Arc<Vec<usize>>> {
-    let mut offsets = HashMap::new();
-    for (rel_type, topology) in topologies {
-        let capacity = topology.node_capacity();
-        let mut prefix = Vec::with_capacity(capacity + 1);
-        let mut total = 0usize;
-        prefix.push(total);
-        for node in 0..capacity {
-            let mapped_id = node as MappedNodeId;
-            let degree = topology
-                .outgoing(mapped_id)
-                .map(|neighbors| neighbors.len())
-                .unwrap_or(0);
-            total += degree;
-            prefix.push(total);
-        }
-        offsets.insert(rel_type.clone(), Arc::new(prefix));
-    }
-    offsets
 }
 
 fn build_selected_relationship_properties(
@@ -509,6 +396,29 @@ impl Graph for DefaultGraph {
     }
 
     fn as_node_filtered_graph(&self) -> Option<Arc<dyn FilteredIdMap>> {
+        None
+    }
+
+    fn nth_target(&self, source_id: MappedNodeId, offset: usize) -> Option<MappedNodeId> {
+        let mut partition_offset = offset;
+
+        for relationship_type in &self.ordered_types {
+            let topology = self.topology_for(relationship_type)?;
+            let degree =
+                AdjacencyList::degree(topology.as_ref(), source_id, TraversalDirection::Outgoing)
+                    .ok()?;
+            if partition_offset >= degree {
+                partition_offset -= degree;
+                continue;
+            }
+
+            let mut cursor = Arc::clone(topology).new_cursor();
+            cursor.reset(source_id, TraversalDirection::Outgoing).ok()?;
+            return cursor
+                .advance_by(partition_offset)
+                .map(|neighbor| neighbor.target);
+        }
+
         None
     }
 }
@@ -618,8 +528,9 @@ impl Degrees for DefaultGraph {
         self.ordered_types
             .iter()
             .filter_map(|rel_type| self.topology_for(rel_type))
-            .filter_map(|topology| topology.outgoing(node_id))
-            .map(|neighbors| neighbors.len())
+            .filter_map(|topology| {
+                AdjacencyList::degree(topology.as_ref(), node_id, TraversalDirection::Outgoing).ok()
+            })
             .sum()
     }
 
@@ -633,8 +544,9 @@ impl Degrees for DefaultGraph {
             .iter()
             .filter(|rel_type| self.inverse_indexed_types.contains(*rel_type))
             .filter_map(|rel_type| self.topology_for(rel_type))
-            .filter_map(|topology| topology.incoming(node_id))
-            .map(|neighbors| neighbors.len())
+            .filter_map(|topology| {
+                AdjacencyList::degree(topology.as_ref(), node_id, TraversalDirection::Incoming).ok()
+            })
             .sum();
         Some(total)
     }
@@ -655,10 +567,19 @@ impl Degrees for DefaultGraph {
 impl RelationshipPredicate for DefaultGraph {
     fn exists(&self, source_id: MappedNodeId, target_id: MappedNodeId) -> bool {
         self.ordered_types.iter().any(|rel_type| {
-            self.topology_for(rel_type)
-                .and_then(|topology| topology.outgoing(source_id))
-                .map(|neighbors| neighbors.contains(&target_id))
-                .unwrap_or(false)
+            let Some(topology) = self.topology_for(rel_type) else {
+                return false;
+            };
+            let mut cursor = Arc::clone(topology).new_cursor();
+            if cursor
+                .reset(source_id, TraversalDirection::Outgoing)
+                .is_err()
+            {
+                return false;
+            }
+
+            std::iter::from_fn(|| cursor.next_neighbor())
+                .any(|neighbor| neighbor.target == target_id)
         })
     }
 }
@@ -669,21 +590,17 @@ impl RelationshipIterator for DefaultGraph {
         node_id: MappedNodeId,
         fallback_value: f64,
     ) -> RelationshipStream<'a> {
-        let mut cursors: Vec<RelationshipCursorBox> = Vec::new();
-        let _ = self.traverse_outgoing_relationships(
-            node_id,
-            PropertyTraversalMode::with_value(fallback_value),
-            |cursor| {
-                let snapshot = DefaultRelationshipCursor::new(
-                    cursor.source_id(),
-                    cursor.target_id(),
-                    cursor.property(),
-                );
-                cursors.push(Box::new(snapshot) as RelationshipCursorBox);
-                true
-            },
-        );
-        Box::new(cursors.into_iter())
+        Box::new(
+            DefaultNeighborStream::new(self, node_id, TraversalDirection::Outgoing, fallback_value)
+                .map(|(neighbor, property)| {
+                    Box::new(DefaultRelationshipCursor::new(
+                        neighbor.relationship_index,
+                        neighbor.source,
+                        neighbor.target,
+                        property,
+                    )) as RelationshipCursorBox
+                }),
+        )
     }
 
     fn stream_inverse_relationships<'a>(
@@ -691,21 +608,17 @@ impl RelationshipIterator for DefaultGraph {
         node_id: MappedNodeId,
         fallback_value: f64,
     ) -> RelationshipStream<'a> {
-        let mut cursors: Vec<RelationshipCursorBox> = Vec::new();
-        let _ = self.traverse_inverse_relationships(
-            node_id,
-            PropertyTraversalMode::with_value(fallback_value),
-            |cursor| {
-                let snapshot = DefaultRelationshipCursor::new(
-                    cursor.source_id(),
-                    cursor.target_id(),
-                    cursor.property(),
-                );
-                cursors.push(Box::new(snapshot) as RelationshipCursorBox);
-                true
-            },
-        );
-        Box::new(cursors.into_iter())
+        Box::new(
+            DefaultNeighborStream::new(self, node_id, TraversalDirection::Incoming, fallback_value)
+                .map(|(neighbor, property)| {
+                    Box::new(DefaultRelationshipCursor::new(
+                        neighbor.relationship_index,
+                        neighbor.source,
+                        neighbor.target,
+                        property,
+                    )) as RelationshipCursorBox
+                }),
+        )
     }
 
     fn concurrent_copy(&self) -> Box<dyn RelationshipIterator> {
@@ -719,23 +632,17 @@ impl RelationshipIterator for DefaultGraph {
         node_id: MappedNodeId,
         fallback_value: f64,
     ) -> WeightedRelationshipStream<'a> {
-        let mut cursors: Vec<WeightedRelationshipCursorBox> = Vec::new();
-        let _ = self.traverse_outgoing_relationships(
-            node_id,
-            PropertyTraversalMode::with_value(fallback_value),
-            |cursor| {
-                // Direct f64 weight access - no conversion needed
-                let weight = cursor.property();
-                let snapshot = WeightedCursor {
-                    source: cursor.source_id(),
-                    target: cursor.target_id(),
-                    weight,
-                };
-                cursors.push(Box::new(snapshot) as WeightedRelationshipCursorBox);
-                true
-            },
-        );
-        Box::new(cursors.into_iter())
+        Box::new(
+            DefaultNeighborStream::new(self, node_id, TraversalDirection::Outgoing, fallback_value)
+                .map(|(neighbor, weight)| {
+                    Box::new(WeightedCursor {
+                        relationship_index: neighbor.relationship_index,
+                        source: neighbor.source,
+                        target: neighbor.target,
+                        weight,
+                    }) as WeightedRelationshipCursorBox
+                }),
+        )
     }
 
     fn stream_inverse_relationships_weighted<'a>(
@@ -743,23 +650,17 @@ impl RelationshipIterator for DefaultGraph {
         node_id: MappedNodeId,
         fallback_value: f64,
     ) -> WeightedRelationshipStream<'a> {
-        let mut cursors: Vec<WeightedRelationshipCursorBox> = Vec::new();
-        let _ = self.traverse_inverse_relationships(
-            node_id,
-            PropertyTraversalMode::with_value(fallback_value),
-            |cursor| {
-                // Direct f64 weight access - no conversion needed
-                let weight = cursor.property();
-                let snapshot = WeightedCursor {
-                    source: cursor.source_id(),
-                    target: cursor.target_id(),
-                    weight,
-                };
-                cursors.push(Box::new(snapshot) as WeightedRelationshipCursorBox);
-                true
-            },
-        );
-        Box::new(cursors.into_iter())
+        Box::new(
+            DefaultNeighborStream::new(self, node_id, TraversalDirection::Incoming, fallback_value)
+                .map(|(neighbor, weight)| {
+                    Box::new(WeightedCursor {
+                        relationship_index: neighbor.relationship_index,
+                        source: neighbor.source,
+                        target: neighbor.target,
+                        weight,
+                    }) as WeightedRelationshipCursorBox
+                }),
+        )
     }
 }
 
@@ -782,27 +683,14 @@ impl RelationshipProperties for DefaultGraph {
             return fallback_value;
         }
 
-        let mut property = fallback_value;
-        let mut found = false;
-        let _ = self.traverse_outgoing_relationships(
+        DefaultNeighborStream::new(
+            self,
             source_id,
-            PropertyTraversalMode::with_value(fallback_value),
-            |cursor| {
-                if cursor.target_id() == target_id {
-                    property = cursor.property();
-                    found = true;
-                    false
-                } else {
-                    true
-                }
-            },
-        );
-
-        if found {
-            property
-        } else {
-            fallback_value
-        }
+            TraversalDirection::Outgoing,
+            fallback_value,
+        )
+        .find(|(neighbor, _)| neighbor.target == target_id)
+        .map_or(fallback_value, |(_, property)| property)
     }
 }
 
@@ -826,7 +714,18 @@ mod tests {
         let schema = Arc::new(GraphSchema::empty());
         let id_map = Arc::new(SimpleIdMap::from_original_ids([0, 1, 2]));
 
-        let topology = RelationshipTopology::new(vec![vec![1, 2], vec![2], vec![]], None);
+        let topology = RelationshipTopology::new(
+            vec![
+                vec![MappedNodeId::new(1), MappedNodeId::new(2)],
+                vec![MappedNodeId::new(2)],
+                vec![],
+            ],
+            Some(vec![
+                vec![],
+                vec![MappedNodeId::ZERO],
+                vec![MappedNodeId::ZERO, MappedNodeId::new(1)],
+            ]),
+        );
         let relationship_count = topology.relationship_count();
         let has_parallel_edges = topology.has_parallel_edges();
 
@@ -840,8 +739,8 @@ mod tests {
             id_map,
             GraphCharacteristicsBuilder::new().directed().build(),
             topologies,
-            vec![rel_type],
-            HashSet::new(),
+            vec![rel_type.clone()],
+            HashSet::from([rel_type]),
             relationship_count,
             has_parallel_edges,
             HashMap::new(),
@@ -854,12 +753,42 @@ mod tests {
     fn computes_degrees_and_relationship_counts() {
         let graph = build_graph();
         assert_eq!(graph.relationship_count(), 3);
-        assert_eq!(graph.degree(0), 2);
-        assert_eq!(graph.degree(1), 1);
-        assert_eq!(graph.degree_without_parallel_relationships(0), 2);
-        assert!(graph.exists(0, 2));
-        assert!(!graph.exists(2, 0));
-        assert_eq!(graph.nth_target(0, 1), Some(2));
+        assert_eq!(graph.degree(MappedNodeId::ZERO), 2);
+        assert_eq!(graph.degree(MappedNodeId::new(1)), 1);
+        assert_eq!(
+            graph.degree_without_parallel_relationships(MappedNodeId::ZERO),
+            2
+        );
+        assert!(graph.exists(MappedNodeId::ZERO, MappedNodeId::new(2)));
+        assert!(!graph.exists(MappedNodeId::new(2), MappedNodeId::ZERO));
+        assert_eq!(
+            graph.nth_target(MappedNodeId::ZERO, 1),
+            Some(MappedNodeId::new(2))
+        );
+
+        let outgoing = graph
+            .stream_relationships(MappedNodeId::ZERO, 0.0)
+            .map(|cursor| (cursor.relationship_index(), cursor.target_id()))
+            .collect::<Vec<_>>();
+        assert_eq!(
+            outgoing,
+            vec![
+                (RelationshipIndex::ZERO, MappedNodeId::new(1)),
+                (RelationshipIndex::new(1), MappedNodeId::new(2)),
+            ]
+        );
+
+        let incoming = graph
+            .stream_inverse_relationships(MappedNodeId::new(2), 0.0)
+            .map(|cursor| (cursor.relationship_index(), cursor.source_id()))
+            .collect::<Vec<_>>();
+        assert_eq!(
+            incoming,
+            vec![
+                (RelationshipIndex::new(1), MappedNodeId::ZERO),
+                (RelationshipIndex::new(2), MappedNodeId::new(1)),
+            ]
+        );
     }
 
     #[test]

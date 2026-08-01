@@ -4,7 +4,7 @@
 
 use crate::algo::algorithms::pathfinding::PathResult;
 use crate::config::validation::ConfigError;
-use crate::types::graph::NodeId;
+use crate::types::graph::MappedNodeId;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use std::time::Duration;
@@ -32,13 +32,13 @@ pub struct PathRow {
     /// Index of this path
     pub index: u64,
     /// Source node of the path
-    pub source_node: NodeId,
+    pub source_node: MappedNodeId,
     /// Target node of the path
-    pub target_node: NodeId,
+    pub target_node: MappedNodeId,
     /// Total cost of the path
     pub total_cost: f64,
     /// Sequence of node IDs in the path
-    pub node_ids: Vec<NodeId>,
+    pub node_ids: Vec<MappedNodeId>,
     /// Costs at each step in the path
     pub costs: Vec<f64>,
 }
@@ -83,8 +83,8 @@ pub struct DagLongestPathMutateResult {
     pub updated_store: Arc<crate::types::prelude::DefaultGraphStore>,
 }
 
-fn checked_u64(value: NodeId) -> u64 {
-    u64::try_from(value).unwrap_or(0)
+fn checked_u64(value: MappedNodeId) -> u64 {
+    value.get()
 }
 
 fn result_paths(result: &DagLongestPathResult) -> Vec<PathResult> {
@@ -98,7 +98,6 @@ fn result_paths(result: &DagLongestPathResult) -> Vec<PathResult> {
                 .node_ids
                 .iter()
                 .copied()
-                .filter(|node_id| *node_id >= 0)
                 .map(checked_u64)
                 .collect(),
             cost: row.total_cost,

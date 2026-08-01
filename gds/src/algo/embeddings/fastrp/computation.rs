@@ -11,6 +11,7 @@ use crate::task::concurrency::virtual_threads::Executor;
 use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::task::progress::{NoopProgressTracker, ProgressTracker};
 use crate::types::graph::Graph;
+use crate::types::graph::MappedNodeId;
 use std::sync::Arc;
 
 use super::spec::{FastRPConfig, FastRPResult};
@@ -185,7 +186,8 @@ impl FastRP {
 
         self.executor
             .parallel_map(0, self.graph.node_count(), &self.termination_flag, |node| {
-                let node_id = node as i64;
+                let node_id = MappedNodeId::try_from(node)
+                    .expect("graph node count must fit the mapped ID domain");
 
                 let degree = self.graph.degree(node_id);
                 let scaling = if degree == 0 {
@@ -195,8 +197,12 @@ impl FastRP {
                 };
                 let entry_value = scaling * sqrt_sparsity / sqrt_embedding_dimension;
 
-                let original_id = self.graph.to_original_node_id(node_id).unwrap_or(node_id);
-                let mut random = HighQualityRandom::new(self.random_seed ^ original_id as u64);
+                let original_id = self
+                    .graph
+                    .to_original_node_id(node_id)
+                    .expect("mapped graph node must have an original ID");
+                let original_seed = u64::from_ne_bytes(original_id.get().to_ne_bytes());
+                let mut random = HighQualityRandom::new(self.random_seed ^ original_seed);
 
                 let mut vec = vec![0.0; embedding_dimension];
                 for (_i, val) in vec.iter_mut().enumerate().take(base_embedding_dimension) {
@@ -212,7 +218,7 @@ impl FastRP {
                         &mut vec,
                     );
                     feature_extraction::extract(
-                        node_id as u64,
+                        node_id.get(),
                         0,
                         &self.feature_extractors,
                         &mut adder,
@@ -262,7 +268,8 @@ impl FastRP {
             let rows = self
                 .executor
                 .parallel_map(0, self.graph.node_count(), &self.termination_flag, |node| {
-                let node_id = node as i64;
+                let node_id = MappedNodeId::try_from(node)
+                    .expect("graph node count must fit the mapped ID domain");
                 let mut current = vec![0.0; self.parameters.embedding_dimension];
                 let mut relationships_processed = 0usize;
 
@@ -277,9 +284,13 @@ impl FastRP {
                             let source = cursor.source_id();
                             let target = cursor.target_id();
                             let source_orig =
-                                self.graph.to_original_node_id(source).unwrap_or(source);
+                                self.graph.to_original_node_id(source).expect(
+                                    "relationship source must have an original node ID",
+                                );
                             let target_orig =
-                                self.graph.to_original_node_id(target).unwrap_or(target);
+                                self.graph.to_original_node_id(target).expect(
+                                    "relationship target must have an original node ID",
+                                );
 
                             return Err(AlgorithmError::InvalidGraph(format!(
                                 "Missing relationship property `{}` on relationship between nodes with ids `{}` and `{}`.",
@@ -292,7 +303,10 @@ impl FastRP {
                             )));
                         }
 
-                        let target_idx = cursor.target_id() as usize;
+                        let target_idx = cursor
+                            .target_id()
+                            .to_usize()
+                            .expect("mapped node ID must fit embedding storage");
                         add_weighted_in_place(&mut current, &previous[target_idx], weight);
                     }
                 } else {
@@ -301,7 +315,10 @@ impl FastRP {
                         .stream_relationships(node_id, relationship_weight_fallback)
                     {
                         relationships_processed += 1;
-                        let target_idx = cursor.target_id() as usize;
+                        let target_idx = cursor
+                            .target_id()
+                            .to_usize()
+                            .expect("mapped node ID must fit embedding storage");
                         add_in_place(&mut current, &previous[target_idx]);
                     }
                 }

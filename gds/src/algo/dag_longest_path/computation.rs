@@ -10,7 +10,7 @@ use crate::task::concurrency::{
     virtual_threads::Executor, Concurrency, TerminatedException, TerminationFlag,
 };
 use crate::projection::eval::algorithm::AlgorithmError;
-use crate::types::graph::NodeId;
+use crate::types::graph::MappedNodeId;
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::{Arc, Mutex};
 
@@ -29,7 +29,7 @@ impl DagLongestPathComputationRuntime {
     pub fn compute(
         &mut self,
         node_count: usize,
-        get_neighbors: impl Fn(NodeId) -> Vec<(NodeId, f64)> + Send + Sync + 'static,
+        get_neighbors: impl Fn(MappedNodeId) -> Vec<(MappedNodeId, f64)> + Send + Sync + 'static,
     ) -> Result<DagLongestPathResult, TerminatedException> {
         self.compute_with_concurrency(
             node_count,
@@ -44,29 +44,31 @@ impl DagLongestPathComputationRuntime {
         node_count: usize,
         concurrency: usize,
         termination: &TerminationFlag,
-        get_neighbors: impl Fn(NodeId) -> Vec<(NodeId, f64)> + Send + Sync + 'static,
+        get_neighbors: impl Fn(MappedNodeId) -> Vec<(MappedNodeId, f64)> + Send + Sync + 'static,
     ) -> Result<DagLongestPathResult, TerminatedException> {
         self.storage = Arc::new(DagLongestPathStorageRuntime::new(node_count));
         let get_neighbors = Arc::new(get_neighbors);
 
         // Phase 1: Initialize in-degrees
-        for node_id in 0..(node_count as i64) {
+        for node_index in 0..node_count {
+            let node_id = mapped_node_id(node_index);
             for (target, weight) in get_neighbors(node_id) {
-                validate_neighbor(node_count, node_id, target).map_err(|_| TerminatedException)?;
+                let target_index =
+                    validate_neighbor(node_count, node_id, target).map_err(|_| TerminatedException)?;
                 validate_weight(node_id, target, weight).map_err(|_| TerminatedException)?;
-                self.storage.in_degrees[target as usize].fetch_add(1, Ordering::SeqCst);
+                self.storage.in_degrees[target_index].fetch_add(1, Ordering::SeqCst);
             }
         }
 
         // Phase 2: Collect initial ready nodes (in-degree 0)
         let ready_nodes = Arc::new(Mutex::new(Vec::new()));
-        for node_id in 0..(node_count as i64) {
-            if self.storage.in_degrees[node_id as usize].load(Ordering::SeqCst) == 0 {
+        for node_index in 0..node_count {
+            let node_id = mapped_node_id(node_index);
+            if self.storage.in_degrees[node_index].load(Ordering::SeqCst) == 0 {
                 ready_nodes.lock().unwrap().push(node_id);
                 // Initialize source node distance
-                self.storage.set_distance(node_id as usize, 0.0);
-                self.storage
-                    .set_predecessor(node_id as usize, node_id as usize);
+                self.storage.set_distance(node_id, 0.0);
+                self.storage.set_predecessor(node_id, node_id);
             }
         }
 
@@ -106,16 +108,17 @@ impl DagLongestPathComputationRuntime {
 
                         // Process all neighbors
                         for (target, weight) in get_neighbors(node_id) {
-                            let source_distance = self.storage.get_distance(node_id as usize);
+                            let target_index = physical_node_index(target);
+                            let source_distance = self.storage.get_distance(node_id);
                             let potential_distance = source_distance + weight;
                             self.storage.compare_and_update_distance(
-                                target as usize,
+                                target,
                                 potential_distance,
-                                node_id as usize,
+                                node_id,
                             );
 
                             // Decrement in-degree
-                            let prev_degree = self.storage.in_degrees[target as usize]
+                            let prev_degree = self.storage.in_degrees[target_index]
                                 .fetch_sub(1, Ordering::SeqCst);
 
                             // If in-degree reaches 0, add to ready queue
@@ -141,7 +144,8 @@ impl DagLongestPathComputationRuntime {
         let mut paths = Vec::new();
         let mut path_index = 0u64;
 
-        for target_node in 0..node_count {
+        for target_index in 0..node_count {
+            let target_node = mapped_node_id(target_index);
             let distance = self.storage.get_distance(target_node);
 
             // Skip unreachable nodes (still have -infinity)
@@ -156,7 +160,7 @@ impl DagLongestPathComputationRuntime {
 
             // Walk back through predecessors until we reach a source node
             loop {
-                node_ids.push(current as NodeId);
+                node_ids.push(current);
                 costs.push(self.storage.get_distance(current));
 
                 match self.storage.get_predecessor(current) {
@@ -174,7 +178,7 @@ impl DagLongestPathComputationRuntime {
             paths.push(PathRow {
                 index: path_index,
                 source_node,
-                target_node: target_node as NodeId,
+                target_node,
                 total_cost: distance,
                 node_ids,
                 costs,
@@ -189,21 +193,36 @@ impl DagLongestPathComputationRuntime {
 
 fn validate_neighbor(
     node_count: usize,
-    source: NodeId,
-    target: NodeId,
-) -> std::result::Result<(), AlgorithmError> {
-    if target < 0 || target as usize >= node_count {
+    source: MappedNodeId,
+    target: MappedNodeId,
+) -> std::result::Result<usize, AlgorithmError> {
+    let target_index = target.to_usize().ok_or_else(|| {
+        AlgorithmError::InvalidGraph(format!(
+            "edge from node {source} points to target {target} outside physical index space"
+        ))
+    })?;
+    if target_index >= node_count {
         return Err(AlgorithmError::InvalidGraph(format!(
             "edge from node {source} points to out-of-range target {target} for graph with {node_count} nodes"
         )));
     }
 
-    Ok(())
+    Ok(target_index)
+}
+
+fn mapped_node_id(index: usize) -> MappedNodeId {
+    MappedNodeId::try_from(index).expect("graph node count must fit mapped ID space")
+}
+
+fn physical_node_index(node_id: MappedNodeId) -> usize {
+    node_id
+        .to_usize()
+        .expect("mapped graph node must fit physical index space")
 }
 
 fn validate_weight(
-    source: NodeId,
-    target: NodeId,
+    source: MappedNodeId,
+    target: MappedNodeId,
     weight: f64,
 ) -> std::result::Result<(), AlgorithmError> {
     if !weight.is_finite() {

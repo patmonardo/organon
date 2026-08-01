@@ -67,7 +67,7 @@ impl<'a> NodeRegressionPredictPipelineExecutor<'a> {
     fn prediction_node_ids(&self, graph: &Arc<dyn crate::types::graph::Graph>) -> Vec<u64> {
         let labels = self.resolved_node_labels();
         if labels.is_empty() {
-            return graph.iter().map(|node_id| node_id as u64).collect();
+            return graph.iter().map(u64::from).collect();
         }
 
         let label_set: HashSet<NodeLabel> = labels
@@ -77,7 +77,7 @@ impl<'a> NodeRegressionPredictPipelineExecutor<'a> {
 
         graph
             .iter_with_labels(&label_set)
-            .map(|node_id| node_id as u64)
+            .map(u64::from)
             .collect()
     }
 }

@@ -7,10 +7,10 @@
 
 use super::spec::{ToUndirectedConfig, ToUndirectedResult};
 use super::ToUndirectedComputationRuntime;
-use crate::task::concurrency::TerminationFlag;
-use crate::task::progress::ProgressTracker;
 use crate::core::Aggregation as CoreAggregation;
 use crate::projection::{Orientation, RelationshipType};
+use crate::task::concurrency::TerminationFlag;
+use crate::task::progress::ProgressTracker;
 use crate::types::graph::MappedNodeId;
 use crate::types::graph_store::{GraphName, GraphStore};
 use crate::types::prelude::DefaultGraphStore;
@@ -139,11 +139,34 @@ impl ToUndirectedStorageRuntime {
             |done| progress_tracker.log_progress(done),
         )?;
         let outgoing = build_outgoing(graph_store.node_count(), edges)?;
-        let edges_for_result: Vec<(u64, u64)> = outgoing
+        let mapped_edges: Vec<(MappedNodeId, MappedNodeId)> = outgoing
             .iter()
             .enumerate()
-            .flat_map(|(src, targets)| targets.iter().map(move |t| (src as u64, *t as u64)))
+            .flat_map(|(source, targets)| {
+                let source = MappedNodeId::try_from(source)
+                    .expect("graph node count must fit the mapped ID domain");
+                targets.iter().map(move |target| (source, *target))
+            })
             .collect();
+        let edges_for_result = mapped_edges
+            .iter()
+            .map(|&(source, target)| {
+                let source = graph
+                    .to_original_node_id(source)
+                    .ok_or_else(|| format!("mapped node {source} has no original node ID"))?;
+                let target = graph
+                    .to_original_node_id(target)
+                    .ok_or_else(|| format!("mapped node {target} has no original node ID"))?;
+                Ok((
+                    u64::try_from(source.get()).map_err(|_| {
+                        format!("original node ID {source} cannot be represented in the result")
+                    })?,
+                    u64::try_from(target.get()).map_err(|_| {
+                        format!("original node ID {target} cannot be represented in the result")
+                    })?,
+                ))
+            })
+            .collect::<Result<Vec<_>, String>>()?;
 
         let mut store = graph_store
             .with_added_relationship_type_and_properties(
@@ -165,7 +188,7 @@ impl ToUndirectedStorageRuntime {
                 &source_relationship_type,
                 property_schema,
                 aggregation,
-                &edges_for_result,
+                &mapped_edges,
                 termination_flag,
                 progress_tracker,
             )?;
@@ -208,18 +231,22 @@ impl ToUndirectedStorageRuntime {
 
 fn build_outgoing(
     node_count: usize,
-    mut edges: Vec<(u64, u64)>,
+    mut edges: Vec<(MappedNodeId, MappedNodeId)>,
 ) -> Result<Vec<Vec<MappedNodeId>>, String> {
     let mut outgoing: Vec<Vec<MappedNodeId>> = vec![Vec::new(); node_count];
     for (src, tgt) in edges.drain(..) {
-        let src_usize = src as usize;
-        let tgt_usize = tgt as usize;
+        let src_usize = src
+            .to_usize()
+            .ok_or_else(|| format!("mapped source {src} exceeds the dense index domain"))?;
+        let tgt_usize = tgt
+            .to_usize()
+            .ok_or_else(|| format!("mapped target {tgt} exceeds the dense index domain"))?;
         if src_usize >= node_count || tgt_usize >= node_count {
             return Err(format!(
                 "edge ({src},{tgt}) is out of bounds for node_count={node_count}"
             ));
         }
-        outgoing[src_usize].push(tgt as MappedNodeId);
+        outgoing[src_usize].push(tgt);
     }
 
     for adj in outgoing.iter_mut() {
@@ -276,7 +303,7 @@ fn aggregate_property_values(
     source_relationship_type: &RelationshipType,
     property_schema: &RelationshipPropertySchema,
     aggregation: CoreAggregation,
-    edges_for_result: &[(u64, u64)],
+    mapped_edges: &[(MappedNodeId, MappedNodeId)],
     termination_flag: &TerminationFlag,
     progress_tracker: &mut dyn ProgressTracker,
 ) -> Result<Vec<f64>, String> {
@@ -303,9 +330,9 @@ fn aggregate_property_values(
         .default_value()
         .double_value()
         .unwrap_or(f64::NAN);
-    let mut values = Vec::with_capacity(edges_for_result.len());
+    let mut values = Vec::with_capacity(mapped_edges.len());
 
-    for &(source, target) in edges_for_result {
+    for &(source, target) in mapped_edges {
         let key = if source <= target {
             (source, target)
         } else {
@@ -357,6 +384,7 @@ fn core_to_schema_aggregation(aggregation: CoreAggregation) -> SchemaAggregation
 mod tests {
     use super::*;
     use crate::config::GraphStoreConfig;
+    use crate::types::graph::RelationshipIndex;
     use crate::types::graph::{RelationshipTopology, SimpleIdMap};
     use crate::types::graph_store::{Capabilities, DatabaseId, DatabaseInfo, DatabaseLocation};
     use crate::types::properties::relationship::DefaultRelationshipPropertyValues;
@@ -436,8 +464,8 @@ mod tests {
             .graph_store
             .relationship_property_values(&rel_type, "weight")
             .expect("mutated weight values");
-        assert_eq!(values.double_value(0).unwrap(), 5.0);
-        assert_eq!(values.double_value(1).unwrap(), 5.0);
+        assert_eq!(values.double_value(RelationshipIndex::ZERO).unwrap(), 5.0);
+        assert_eq!(values.double_value(RelationshipIndex::new(1)).unwrap(), 5.0);
 
         let schema_aggregation = result
             .graph_store
@@ -469,8 +497,8 @@ mod tests {
             .graph_store
             .relationship_property_values(&rel_type, "weight")
             .expect("mutated weight values");
-        assert_eq!(values.double_value(0).unwrap(), 3.0);
-        assert_eq!(values.double_value(1).unwrap(), 3.0);
+        assert_eq!(values.double_value(RelationshipIndex::ZERO).unwrap(), 3.0);
+        assert_eq!(values.double_value(RelationshipIndex::new(1)).unwrap(), 3.0);
 
         let schema_aggregation = result
             .graph_store

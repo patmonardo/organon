@@ -18,6 +18,7 @@ use crate::task::memory::MemoryRange;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
+use crate::types::graph::MappedNodeId;
 use std::collections::HashSet;
 use std::sync::Arc;
 use std::time::Instant;
@@ -128,7 +129,7 @@ impl KSpanningTreeBuilder {
             .unwrap_or(&EmptyTaskRegistryFactory);
 
         let start = Instant::now();
-        let source = self.config.source_node;
+        let source = MappedNodeId::new(self.config.source_node);
 
         // K-spanning tree typically works on undirected graphs (like MST)
         let rel_types: HashSet<RelationshipType> = HashSet::new();
@@ -144,7 +145,7 @@ impl KSpanningTreeBuilder {
                     parent: Vec::new(),
                     cost_to_parent: Vec::new(),
                     total_cost: 0.0,
-                    root: source,
+                    root: u64::from(source),
                     node_count,
                 },
                 start.elapsed(),
@@ -152,7 +153,12 @@ impl KSpanningTreeBuilder {
         }
 
         // Check source node exists
-        if source as usize >= node_count {
+        let source_index = source.to_usize().ok_or_else(|| {
+            AlgorithmError::Execution(format!(
+                "source_node {source} exceeds the platform index domain"
+            ))
+        })?;
+        if source_index >= node_count {
             return Err(AlgorithmError::Execution(format!(
                 "source_node {} out of range [0, {})",
                 source, node_count
@@ -166,7 +172,7 @@ impl KSpanningTreeBuilder {
 
         // Create storage runtime (Gross pole - controller)
         let storage = KSpanningTreeStorageRuntime::new(
-            source as i64,
+            source,
             self.config.k,
             self.config.objective.clone(),
         );

@@ -1,7 +1,7 @@
 use super::{characteristics::GraphCharacteristics, degrees::Degrees};
 use crate::types::graph::{
     characteristics::GraphCharacteristicsBuilder,
-    id_map::{FilteredIdMap, IdMap, MappedNodeId, NOT_FOUND},
+    id_map::{FilteredIdMap, IdMap, MappedNodeId},
 };
 use crate::types::properties::{
     node::node_property_container::{NodePropertyContainer, NodePropertyContainerExt},
@@ -74,10 +74,6 @@ pub trait GraphExt: Graph {
         self.characteristics().intersect(requested)
     }
 
-    /// Helper that replicates the TypeScript static `Graph.nthTarget` convenience function.
-    fn nth_target_or_not_found(&self, source_id: MappedNodeId, offset: usize) -> i64 {
-        self.nth_target(source_id, offset).unwrap_or(NOT_FOUND)
-    }
 }
 
 impl<T: Graph + ?Sized> GraphExt for T {}

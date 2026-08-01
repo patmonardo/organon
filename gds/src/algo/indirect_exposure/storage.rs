@@ -8,9 +8,10 @@
 
 use super::spec::{IndirectExposureConfig, IndirectExposureResult};
 use super::{IndirectExposureComputationRuntime, IndirectExposurePregelRuntimeConfig};
-use crate::task::pregel::{Pregel, PregelResult, ReducingMessenger};
 use crate::projection::{Orientation, RelationshipType};
+use crate::task::pregel::{Pregel, PregelResult, ReducingMessenger};
 use crate::types::graph::Graph;
+use crate::types::graph::MappedNodeId;
 use crate::types::prelude::GraphStore;
 use crate::ValueType;
 use std::collections::HashMap;
@@ -133,12 +134,15 @@ impl IndirectExposureStorageRuntime {
 
         let mut totals = vec![0.0f64; node_count];
         for node in 0..node_count {
+            let Ok(node_id) = MappedNodeId::try_from(node) else {
+                continue;
+            };
             let sum = self
                 .graph
-                .stream_relationships(node as i64, fallback)
+                .stream_relationships(node_id, fallback)
                 .map(|c| c.property())
                 .sum::<f64>();
-            let degree = self.graph.degree(node as i64) as f64;
+            let degree = self.graph.degree(node_id) as f64;
             let total = if self.weight_property.is_some() {
                 sum
             } else {

@@ -13,23 +13,27 @@ mod tests {
     use crate::task::concurrency::TerminationFlag;
     use crate::task::progress::{TaskProgressTracker, Tasks};
     use crate::types::graph::RelationshipTopology;
+    use crate::types::graph::MappedNodeId;
     use crate::types::graph::SimpleIdMap;
     use crate::types::graph_store::{
         Capabilities, DatabaseId, DatabaseInfo, DatabaseLocation, DefaultGraphStore, GraphName,
     };
     use crate::types::schema::{Direction, MutableGraphSchema};
 
-    fn store_from_outgoing(outgoing: Vec<Vec<i64>>) -> DefaultGraphStore {
+    fn store_from_outgoing(outgoing: Vec<Vec<MappedNodeId>>) -> DefaultGraphStore {
         let node_count = outgoing.len();
 
-        let mut incoming: Vec<Vec<i64>> = vec![Vec::new(); node_count];
+        let mut incoming: Vec<Vec<MappedNodeId>> = vec![Vec::new(); node_count];
         for (source, targets) in outgoing.iter().enumerate() {
             for &target in targets {
-                if target >= 0 {
-                    let t = target as usize;
-                    if t < node_count {
-                        incoming[t].push(source as i64);
-                    }
+                let target = target
+                    .to_usize()
+                    .expect("fixture target must fit the dense index domain");
+                if target < node_count {
+                    incoming[target].push(
+                        MappedNodeId::try_from(source)
+                            .expect("fixture source must fit the mapped ID domain"),
+                    );
                 }
             }
         }
@@ -48,7 +52,9 @@ mod tests {
             RelationshipTopology::new(outgoing, Some(incoming)),
         );
 
-        let original_ids: Vec<i64> = (0..node_count as i64).collect();
+        let original_ids: Vec<i64> = (0..node_count)
+            .map(|node| i64::try_from(node).expect("fixture node must fit the original ID domain"))
+            .collect();
         let id_map = SimpleIdMap::from_original_ids(original_ids);
 
         DefaultGraphStore::new(

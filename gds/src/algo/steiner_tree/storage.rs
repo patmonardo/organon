@@ -1,10 +1,12 @@
-use crate::algo::steiner_tree::spec::{SteinerTreeConfig, SteinerTreeResult, PRUNED};
+use crate::algo::steiner_tree::spec::{
+    SteinerTreeConfig, SteinerTreeParent, SteinerTreeResult,
+};
 use crate::algo::steiner_tree::SteinerTreeComputationRuntime;
 use crate::task::concurrency::TerminationFlag;
 use crate::task::progress::{ProgressTracker, UNKNOWN_VOLUME};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::Graph;
-use crate::types::graph::NodeId;
+use crate::types::graph::MappedNodeId;
 use std::collections::HashSet;
 use std::time::Instant;
 
@@ -60,7 +62,7 @@ impl SteinerTreeStorageRuntime {
 
         let node_count = graph.map(|g| g.node_count()).unwrap_or(0);
         let neighbor_fn =
-            |node: NodeId| -> Vec<(NodeId, f64)> { self.get_neighbors_with_weights(graph, node) };
+            |node: MappedNodeId| -> Vec<(MappedNodeId, f64)> { self.get_neighbors_with_weights(graph, node) };
 
         let result = self.compute_core(
             computation,
@@ -93,7 +95,7 @@ impl SteinerTreeStorageRuntime {
         progress_tracker: &mut dyn ProgressTracker,
     ) -> Result<SteinerTreeResult, AlgorithmError>
     where
-        F: Fn(NodeId) -> Vec<(NodeId, f64)>,
+        F: Fn(MappedNodeId) -> Vec<(MappedNodeId, f64)>,
     {
         progress_tracker.begin_subtask_unknown();
         let start = Instant::now();
@@ -127,7 +129,7 @@ impl SteinerTreeStorageRuntime {
         termination: &TerminationFlag,
     ) -> Result<SteinerTreeResult, AlgorithmError>
     where
-        F: Fn(NodeId) -> Vec<(NodeId, f64)>,
+        F: Fn(MappedNodeId) -> Vec<(MappedNodeId, f64)>,
     {
         if node_count == 0 {
             return Ok(SteinerTreeResult {
@@ -146,7 +148,10 @@ impl SteinerTreeStorageRuntime {
         }
 
         let source = self.config.source_node;
-        if source < 0 || (source as usize) >= node_count {
+        let source_index = source.to_usize().ok_or_else(|| {
+            AlgorithmError::InvalidGraph("source_node exceeds physical index space".to_string())
+        })?;
+        if source_index >= node_count {
             return Err(AlgorithmError::InvalidGraph(
                 "source_node out of bounds".to_string(),
             ));
@@ -157,10 +162,15 @@ impl SteinerTreeStorageRuntime {
             ));
         }
 
-        let mut terminals: Vec<NodeId> = Vec::new();
+        let mut terminals: Vec<MappedNodeId> = Vec::new();
         let mut seen = HashSet::new();
         for &t in &self.config.target_nodes {
-            if t < 0 || (t as usize) >= node_count {
+            let target_index = t.to_usize().ok_or_else(|| {
+                AlgorithmError::InvalidGraph(
+                    "target node exceeds physical index space".to_string(),
+                )
+            })?;
+            if target_index >= node_count {
                 return Err(AlgorithmError::InvalidGraph(
                     "target_nodes contains out-of-bounds node".to_string(),
                 ));
@@ -172,15 +182,15 @@ impl SteinerTreeStorageRuntime {
 
         let mut is_terminal = vec![false; node_count];
         for &t in &terminals {
-            is_terminal[t as usize] = true;
+            is_terminal[physical_node_index(t)] = true;
         }
 
         computation.initialize_tree(source);
 
         let mut merged_to_source = vec![false; node_count];
-        merged_to_source[source as usize] = true;
+        merged_to_source[source_index] = true;
 
-        let mut remaining: Vec<NodeId> = terminals.into_iter().filter(|&t| t != source).collect();
+        let mut remaining: Vec<MappedNodeId> = terminals.into_iter().filter(|&t| t != source).collect();
 
         while !remaining.is_empty() {
             if !termination.running() {
@@ -231,14 +241,14 @@ impl SteinerTreeStorageRuntime {
         let mut effective_target_nodes_count = 0u64;
         for node_id in 0..node_count {
             let parent = computation.parent_array()[node_id];
-            if parent == PRUNED {
+            if parent == SteinerTreeParent::Pruned {
                 continue;
             }
             effective_node_count += 1;
             if is_terminal[node_id] {
                 effective_target_nodes_count += 1;
             }
-            if parent >= 0 {
+            if matches!(parent, SteinerTreeParent::Parent(_)) {
                 total_cost += computation.parent_cost_array()[node_id];
             }
         }
@@ -261,7 +271,7 @@ impl SteinerTreeStorageRuntime {
         termination: &TerminationFlag,
     ) -> Result<(), AlgorithmError>
     where
-        F: Fn(NodeId) -> Vec<(NodeId, f64)>,
+        F: Fn(MappedNodeId) -> Vec<(MappedNodeId, f64)>,
     {
         let mut scanned_relationships: usize = 0;
         const LOG_BATCH: usize = 256;
@@ -292,9 +302,6 @@ impl SteinerTreeStorageRuntime {
                     }
 
                     for (nbr, weight) in neighbors {
-                        if nbr < 0 {
-                            continue;
-                        }
                         if weight.is_nan() || weight.is_infinite() || weight < 0.0 {
                             continue;
                         }
@@ -333,22 +340,27 @@ impl SteinerTreeStorageRuntime {
     fn get_neighbors_with_weights(
         &self,
         graph: Option<&dyn Graph>,
-        node_id: NodeId,
-    ) -> Vec<(NodeId, f64)> {
+        node_id: MappedNodeId,
+    ) -> Vec<(MappedNodeId, f64)> {
         if let Some(g) = graph {
             let fallback: f64 = 1.0;
             g.stream_relationships(node_id, fallback)
                 .map(|cursor| (cursor.target_id(), cursor.property()))
-                .filter(|(t, _)| *t >= 0)
                 .collect()
         } else {
             // Minimal mock for storage/computation integration tests.
-            match node_id {
-                0 => vec![(1, 1.0), (2, 1.0)],
-                1 => vec![(3, 1.0)],
-                2 => vec![(4, 1.0)],
+            match node_id.get() {
+                0 => vec![(MappedNodeId::new(1), 1.0), (MappedNodeId::new(2), 1.0)],
+                1 => vec![(MappedNodeId::new(3), 1.0)],
+                2 => vec![(MappedNodeId::new(4), 1.0)],
                 _ => vec![],
             }
         }
     }
+}
+
+fn physical_node_index(node_id: MappedNodeId) -> usize {
+    node_id
+        .to_usize()
+        .expect("mapped graph node must fit physical index space")
 }

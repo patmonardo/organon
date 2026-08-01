@@ -2,7 +2,7 @@ use std::collections::HashMap;
 use std::sync::{Arc, RwLock};
 
 use super::{CatalogError, Dropped, GraphCatalog, GraphMemoryUsage, ListEntry};
-use crate::types::graph::{degrees::Degrees, id_map::IdMap};
+use crate::types::graph::{degrees::Degrees, id_map::IdMap, MappedNodeId};
 use crate::types::graph_store::{DefaultGraphStore, GraphStore};
 
 #[derive(Default)]
@@ -99,7 +99,9 @@ fn simple_degree_histogram(store: &DefaultGraphStore) -> HashMap<u32, u64> {
     let graph = store.graph();
     let n = IdMap::node_count(graph.as_ref());
     for node_id in 0..n {
-        let deg = Degrees::degree(graph.as_ref(), node_id as i64) as u32;
+        let node_id = MappedNodeId::try_from(node_id)
+            .expect("catalog node count must fit mapped node ID space");
+        let deg = Degrees::degree(graph.as_ref(), node_id) as u32;
         *hist.entry(deg).or_insert(0) += 1;
     }
     hist

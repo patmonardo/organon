@@ -18,7 +18,7 @@ use crate::define_algorithm_spec;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::relationship_type::RelationshipType;
 use crate::projection::Orientation;
-use crate::types::graph::NodeId;
+use crate::types::graph::MappedNodeId;
 use serde::{Deserialize, Serialize};
 use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
@@ -35,7 +35,7 @@ fn default_weight_property() -> String {
 pub struct DeltaSteppingConfig {
     /// Source node for shortest path computation
     #[serde(alias = "sourceNode")]
-    pub source_node: NodeId,
+    pub source_node: MappedNodeId,
 
     /// Relationship property used as edge weight.
     #[serde(
@@ -68,7 +68,7 @@ pub struct DeltaSteppingConfig {
 impl Default for DeltaSteppingConfig {
     fn default() -> Self {
         Self {
-            source_node: 0,
+            source_node: MappedNodeId::ZERO,
             weight_property: default_weight_property(),
             delta: 1.0,
             concurrency: 4,
@@ -106,13 +106,6 @@ impl DeltaDirection {
 impl DeltaSteppingConfig {
     /// Validate configuration parameters
     pub fn validate(&self) -> Result<(), ConfigError> {
-        if self.source_node < 0 {
-            return Err(ConfigError::InvalidParameter {
-                parameter: "source_node".to_string(),
-                reason: "source_node must be >= 0".to_string(),
-            });
-        }
-
         if self.concurrency == 0 {
             return Err(ConfigError::MustBePositive {
                 name: "concurrency".to_string(),
@@ -175,13 +168,13 @@ pub struct DeltaSteppingPathResult {
     pub index: u64,
 
     /// Source node ID
-    pub source_node: NodeId,
+    pub source_node: MappedNodeId,
 
     /// Target node ID
-    pub target_node: NodeId,
+    pub target_node: MappedNodeId,
 
     /// Node IDs along the path
-    pub node_ids: Vec<NodeId>,
+    pub node_ids: Vec<MappedNodeId>,
 
     /// Costs for each step along the path
     pub costs: Vec<f64>,
@@ -231,19 +224,14 @@ pub struct DeltaSteppingMutateResult {
     pub updated_store: Arc<crate::types::prelude::DefaultGraphStore>,
 }
 
-fn checked_u64(value: NodeId) -> u64 {
-    u64::try_from(value).unwrap_or(0)
-}
-
 fn spec_path_to_core(path: &DeltaSteppingPathResult) -> PathResult {
-    let source = checked_u64(path.source_node);
-    let target = checked_u64(path.target_node);
+    let source = path.source_node.get();
+    let target = path.target_node.get();
     let path_ids = path
         .node_ids
         .iter()
         .copied()
-        .filter(|node_id| *node_id >= 0)
-        .map(checked_u64)
+        .map(MappedNodeId::get)
         .collect();
 
     PathResult {
@@ -280,7 +268,6 @@ impl DeltaSteppingResultBuilder {
             .result
             .shortest_paths
             .iter()
-            .filter(|p| p.source_node >= 0 && p.target_node >= 0)
             .map(spec_path_to_core)
             .collect();
 

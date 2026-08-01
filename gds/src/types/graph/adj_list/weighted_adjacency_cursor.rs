@@ -1,4 +1,4 @@
-use super::{AdjacencyCursor, NOT_FOUND_TARGET};
+use super::AdjacencyCursor;
 use crate::types::graph::MappedNodeId;
 
 /// Type alias describing the scalar value associated with a weighted relationship.
@@ -19,12 +19,6 @@ pub trait WeightedAdjacencyCursor: AdjacencyCursor {
     /// Fallback weight returned when an implementation cannot provide an explicit value.
     fn fallback_weight(&self) -> EdgeWeight;
 
-    /// Produce the next weighted edge or a tuple containing [`NOT_FOUND_TARGET`] and the
-    /// fallback weight when the cursor is exhausted.
-    fn next_weighted_or_fallback(&mut self) -> (MappedNodeId, EdgeWeight) {
-        self.next_weighted()
-            .unwrap_or((NOT_FOUND_TARGET, self.fallback_weight()))
-    }
 }
 
 /// Helper providing high-level collection utilities for [`WeightedAdjacencyCursor`].

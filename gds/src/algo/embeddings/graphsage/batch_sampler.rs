@@ -1,9 +1,10 @@
 //! Java: `BatchSampler`.
 
-use crate::task::concurrency::TerminationFlag;
 use crate::core::utils::partition::{Partition, PartitionUtils};
 use crate::ml::core::samplers::WeightedUniformSampler;
+use crate::task::concurrency::TerminationFlag;
 use crate::types::graph::Graph;
+use crate::types::graph::MappedNodeId;
 use rand::Rng;
 use rand::SeedableRng;
 use rand_chacha::ChaCha8Rng;
@@ -36,9 +37,11 @@ impl BatchSampler {
             batch_size,
             |batch| {
                 self.termination_flag.assert_running();
-                let local_seed = (batch.start_node() as u64
-                    / self.graph.node_count().max(1) as u64)
-                    + random_seed;
+                let batch_start = u64::try_from(batch.start_node())
+                    .expect("GraphSAGE batch start must fit the seed domain");
+                let node_count = u64::try_from(self.graph.node_count().max(1))
+                    .expect("GraphSAGE node count must fit the seed domain");
+                let local_seed = (batch_start / node_count) + random_seed;
                 self.sample_neighbor_and_negative_node_per_batch_node(
                     batch,
                     search_depth,
@@ -59,7 +62,9 @@ impl BatchSampler {
         let negatives = self.negative_batch(batch.node_count(), &neighbours, random_seed);
 
         let mut out = Vec::with_capacity(batch.node_count() * 3);
-        out.extend(batch.iter().map(|n| n as u64));
+        out.extend(batch.iter().map(|node_index| {
+            u64::try_from(node_index).expect("GraphSAGE batch index must fit a mapped node ID")
+        }));
         out.extend(neighbours);
         out.extend(negatives);
         out
@@ -76,24 +81,25 @@ impl BatchSampler {
 
         for node_id in batch.iter() {
             // random walk with at most searchDepth steps, save last node
-            let mut current = node_id as u64;
+            let mut current = MappedNodeId::try_from(node_id)
+                .expect("GraphSAGE batch node index must fit a mapped node ID");
             let mut depth = rng.gen_range(1..=search_depth.max(1));
 
             while depth > 0 {
-                let degree = self.graph.degree(current as i64);
+                let degree = self.graph.degree(current);
                 if degree == 0 {
                     break;
                 }
                 let idx = rng.gen_range(0..degree);
                 let next = self
                     .graph
-                    .nth_target(current as i64, idx)
+                    .nth_target(current, idx)
                     .expect("nth_target within degree");
-                current = next as u64;
+                current = next;
                 depth -= 1;
             }
 
-            neighbors.push(current);
+            neighbors.push(current.get());
         }
 
         neighbors
@@ -110,8 +116,10 @@ impl BatchSampler {
 
         let neighbor_set: HashSet<u64> = batch_neighbors.iter().copied().collect();
 
-        let input = (0..node_count as u64).map(|node_id| {
-            let degree = self.graph.degree(node_id as i64) as f64;
+        let mapped_node_count =
+            u64::try_from(node_count).expect("GraphSAGE node count must fit mapped node IDs");
+        let input = (0..mapped_node_count).map(|node_id| {
+            let degree = self.graph.degree(MappedNodeId::new(node_id)) as f64;
             (node_id, degree.powf(Self::DEGREE_SMOOTHING_FACTOR))
         });
 

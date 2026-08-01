@@ -6,14 +6,15 @@
 //! handling ephemeral computation state including priority queue management,
 //! visited set tracking, and predecessor/relationship ID storage.
 
-use crate::types::graph::NodeId;
+use crate::types::graph::MappedNodeId;
+use crate::types::graph::RelationshipIndex;
 use std::cmp::Ordering;
 use std::collections::{BinaryHeap, HashMap, HashSet};
 
 /// Priority queue item for Dijkstra algorithm
 #[derive(Debug, Clone)]
 struct QueueItem {
-    node_id: NodeId,
+    node_id: MappedNodeId,
     cost: f64,
     priority: f64,
 }
@@ -50,7 +51,7 @@ impl Ord for QueueItem {
 }
 
 impl QueueItem {
-    fn new(node_id: NodeId, cost: f64, priority: f64) -> Self {
+    fn new(node_id: MappedNodeId, cost: f64, priority: f64) -> Self {
         Self {
             node_id,
             cost,
@@ -68,19 +69,19 @@ pub struct DijkstraComputationRuntime {
     priority_queue: BinaryHeap<QueueItem>,
 
     /// Visited set
-    visited: HashSet<NodeId>,
+    visited: HashSet<MappedNodeId>,
 
     /// Predecessor map for path reconstruction
-    predecessors: HashMap<NodeId, Option<NodeId>>,
+    predecessors: HashMap<MappedNodeId, Option<MappedNodeId>>,
 
     /// Relationship ID map (if tracking relationships)
-    relationship_ids: HashMap<NodeId, Option<NodeId>>,
+    relationship_ids: HashMap<MappedNodeId, Option<RelationshipIndex>>,
 
     /// Cost map for all nodes
-    costs: HashMap<NodeId, f64>,
+    costs: HashMap<MappedNodeId, f64>,
 
     /// Source node
-    source_node: NodeId,
+    source_node: MappedNodeId,
 
     /// Whether to track relationship IDs
     track_relationships: bool,
@@ -98,7 +99,7 @@ impl DijkstraComputationRuntime {
     ///
     /// Translation of: Constructor initialization (lines 118-140)
     pub fn new(
-        source_node: NodeId,
+        source_node: MappedNodeId,
         track_relationships: bool,
         concurrency: usize,
         use_heuristic: bool,
@@ -121,7 +122,7 @@ impl DijkstraComputationRuntime {
     /// Translation of: Initialization in `compute()` method (lines 170-173)
     pub fn initialize(
         &mut self,
-        source_node: NodeId,
+        source_node: MappedNodeId,
         track_relationships: bool,
         use_heuristic: bool,
         node_count: usize,
@@ -139,7 +140,8 @@ impl DijkstraComputationRuntime {
 
         // Initialize with infinite costs
         for idx in 0..node_count {
-            let node_id = idx as NodeId;
+            let node_id = MappedNodeId::try_from(idx)
+                .expect("Dijkstra node count must fit mapped node ID space");
             self.costs.insert(node_id, f64::INFINITY);
             self.predecessors.insert(node_id, None);
             if self.track_relationships {
@@ -151,7 +153,7 @@ impl DijkstraComputationRuntime {
     /// Add a node to the priority queue
     ///
     /// Translation of: `queue.add()` calls (lines 173, 228)
-    pub fn add_to_queue(&mut self, node_id: NodeId, cost: f64) {
+    pub fn add_to_queue(&mut self, node_id: MappedNodeId, cost: f64) {
         self.add_to_queue_with_priority(node_id, cost, cost);
     }
 
@@ -159,7 +161,7 @@ impl DijkstraComputationRuntime {
     ///
     /// Java A* parity: queue ordering may use `cost + heuristic(node)` while
     /// `queue.cost(node)` remains the true path cost.
-    pub fn add_to_queue_with_priority(&mut self, node_id: NodeId, cost: f64, priority: f64) {
+    pub fn add_to_queue_with_priority(&mut self, node_id: MappedNodeId, cost: f64, priority: f64) {
         self.costs.insert(node_id, cost);
         self.priority_queue
             .push(QueueItem::new(node_id, cost, priority));
@@ -168,7 +170,7 @@ impl DijkstraComputationRuntime {
     /// Pop the node with minimum cost from the queue
     ///
     /// Translation of: `queue.pop()` method (line 189)
-    pub fn pop_from_queue(&mut self) -> (NodeId, f64) {
+    pub fn pop_from_queue(&mut self) -> (MappedNodeId, f64) {
         if let Some(item) = self.priority_queue.pop() {
             (item.node_id, item.cost)
         } else {
@@ -186,7 +188,7 @@ impl DijkstraComputationRuntime {
     /// Check if a node is in the queue
     ///
     /// Translation of: `queue.containsElement()` method (line 226)
-    pub fn is_in_queue(&self, node_id: NodeId) -> bool {
+    pub fn is_in_queue(&self, node_id: MappedNodeId) -> bool {
         self.costs
             .get(&node_id)
             .is_some_and(|&cost| cost != f64::INFINITY)
@@ -195,26 +197,26 @@ impl DijkstraComputationRuntime {
     /// Get the cost of a node
     ///
     /// Translation of: `queue.cost()` method (lines 190, 260)
-    pub fn get_cost(&self, node_id: NodeId) -> f64 {
+    pub fn get_cost(&self, node_id: MappedNodeId) -> f64 {
         self.costs.get(&node_id).copied().unwrap_or(f64::INFINITY)
     }
 
     /// Check whether a popped queue entry has been superseded by a lower cost.
-    pub fn is_stale_queue_entry(&self, node_id: NodeId, popped_cost: f64) -> bool {
+    pub fn is_stale_queue_entry(&self, node_id: MappedNodeId, popped_cost: f64) -> bool {
         popped_cost > self.get_cost(node_id)
     }
 
     /// Update the cost of a node in the queue
     ///
     /// Translation of: `queue.set()` method (line 235)
-    pub fn update_queue_cost(&mut self, node_id: NodeId, new_cost: f64) {
+    pub fn update_queue_cost(&mut self, node_id: MappedNodeId, new_cost: f64) {
         self.update_queue_cost_with_priority(node_id, new_cost, new_cost);
     }
 
     /// Update a queue cost with a separate ordering priority.
     pub fn update_queue_cost_with_priority(
         &mut self,
-        node_id: NodeId,
+        node_id: MappedNodeId,
         new_cost: f64,
         priority: f64,
     ) {
@@ -228,40 +230,44 @@ impl DijkstraComputationRuntime {
     /// Mark a node as visited
     ///
     /// Translation of: `visited.set()` method (line 191)
-    pub fn mark_visited(&mut self, node_id: NodeId) {
+    pub fn mark_visited(&mut self, node_id: MappedNodeId) {
         self.visited.insert(node_id);
     }
 
     /// Check if a node is visited
     ///
     /// Translation of: `visited.get()` method (line 222)
-    pub fn is_visited(&self, node_id: NodeId) -> bool {
+    pub fn is_visited(&self, node_id: MappedNodeId) -> bool {
         self.visited.contains(&node_id)
     }
 
     /// Get all visited nodes
-    pub fn get_visited_nodes(&self) -> &HashSet<NodeId> {
+    pub fn get_visited_nodes(&self) -> &HashSet<MappedNodeId> {
         &self.visited
     }
 
     /// Set the predecessor of a node
     ///
     /// Translation of: `predecessors.put()` method (lines 229, 236)
-    pub fn set_predecessor(&mut self, node_id: NodeId, predecessor: Option<NodeId>) {
+    pub fn set_predecessor(&mut self, node_id: MappedNodeId, predecessor: Option<MappedNodeId>) {
         self.predecessors.insert(node_id, predecessor);
     }
 
     /// Get the predecessor of a node
     ///
     /// Translation of: `predecessors.getOrDefault()` method (line 271)
-    pub fn get_predecessor(&self, node_id: NodeId) -> Option<NodeId> {
+    pub fn get_predecessor(&self, node_id: MappedNodeId) -> Option<MappedNodeId> {
         self.predecessors.get(&node_id).copied().flatten()
     }
 
     /// Set the relationship ID of a node
     ///
     /// Translation of: `relationships.put()` method (lines 231, 238)
-    pub fn set_relationship_id(&mut self, node_id: NodeId, relationship_id: Option<NodeId>) {
+    pub fn set_relationship_id(
+        &mut self,
+        node_id: MappedNodeId,
+        relationship_id: Option<RelationshipIndex>,
+    ) {
         if self.track_relationships {
             self.relationship_ids.insert(node_id, relationship_id);
         }
@@ -270,7 +276,7 @@ impl DijkstraComputationRuntime {
     /// Get the relationship ID of a node
     ///
     /// Translation of: `relationships.getOrDefault()` method (line 273)
-    pub fn get_relationship_id(&self, node_id: NodeId) -> Option<NodeId> {
+    pub fn get_relationship_id(&self, node_id: MappedNodeId) -> Option<RelationshipIndex> {
         if self.track_relationships {
             self.relationship_ids.get(&node_id).copied().flatten()
         } else {
@@ -289,7 +295,7 @@ impl DijkstraComputationRuntime {
     }
 
     /// Get source node
-    pub fn source_node(&self) -> NodeId {
+    pub fn source_node(&self) -> MappedNodeId {
         self.source_node
     }
 

@@ -39,7 +39,7 @@ use super::{ComputationResult, ExecutionContext, ExecutionMode, ValidationConfig
 /// }
 ///
 /// impl AlgorithmSpec for PageRankAlgorithm {
-///     type Output = Vec<(NodeId, f64)>;
+///     type Output = Vec<(MappedNodeId, f64)>;
 ///
 ///     fn name(&self) -> &str { "pagerank" }
 ///     fn graph_name(&self) -> &str { &self.graph_name }
@@ -50,7 +50,7 @@ pub trait AlgorithmSpec: Send + Sync {
     /// Algorithm output type
     ///
     /// This is the raw result produced by the algorithm.
-    /// Examples: Vec<(NodeId, f64)> for PageRank, Vec<Community> for Louvain
+    /// Examples: Vec<(MappedNodeId, f64)> for PageRank, Vec<Community> for Louvain
     type Output: Send + Sync;
 
     /// Algorithm name (for logging, catalog, error messages)

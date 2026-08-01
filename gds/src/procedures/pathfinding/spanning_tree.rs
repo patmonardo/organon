@@ -14,6 +14,7 @@ use crate::task::memory::MemoryRange;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
+use crate::types::graph::MappedNodeId;
 use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
 use std::time::Instant;
@@ -95,7 +96,9 @@ impl SpanningTreeFacade {
     /// The algorithm starts the spanning tree from this node.
     /// Must be a valid node ID in the graph.
     pub fn start_node(mut self, start_node: u64) -> Self {
-        self.config.start_node_id = u32::try_from(start_node).unwrap_or(u32::MAX);
+        let start_node = MappedNodeId::new(start_node);
+        self.config.start_node_id = u32::try_from(u64::from(start_node))
+            .expect("spanning-tree start node exceeds the supported u32 domain");
         self
     }
 

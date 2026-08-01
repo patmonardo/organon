@@ -15,7 +15,7 @@ use crate::collections::backends::vec::{
 use crate::config::GraphStoreConfig;
 use crate::projection::Orientation;
 use crate::projection::{NodeLabel, RelationshipType};
-use crate::types::graph::id_map::{MappedNodeId, OriginalNodeId};
+use crate::types::graph::id_map::{MappedNodeId, OriginalNodeId, RelationshipIndex};
 use crate::types::graph::{
     id_map::{IdMap, SimpleIdMap},
     DefaultGraph, Graph, GraphCharacteristics, GraphCharacteristicsBuilder, RelationshipTopology,
@@ -64,22 +64,31 @@ use crate::algo::algorithms::scaling::{MinMaxScaler, Scaler};
 #[derive(Debug, Clone)]
 struct ReindexedRelationshipPropertyValues {
     values: Arc<dyn RelationshipPropertyValues>,
-    old_indices: Arc<Vec<u64>>,
+    old_indices: Arc<Vec<RelationshipIndex>>,
 }
 
 impl ReindexedRelationshipPropertyValues {
-    fn new(values: Arc<dyn RelationshipPropertyValues>, old_indices: Arc<Vec<u64>>) -> Self {
+    fn new(
+        values: Arc<dyn RelationshipPropertyValues>,
+        old_indices: Arc<Vec<RelationshipIndex>>,
+    ) -> Self {
         Self {
             values,
             old_indices,
         }
     }
 
-    fn old_index(&self, rel_index: u64) -> PropertyValuesResult<u64> {
+    fn old_index(
+        &self,
+        relationship_index: RelationshipIndex,
+    ) -> PropertyValuesResult<RelationshipIndex> {
+        let physical_index = relationship_index
+            .to_usize()
+            .ok_or(PropertyValuesError::ValueNotFound(relationship_index.get()))?;
         self.old_indices
-            .get(rel_index as usize)
+            .get(physical_index)
             .copied()
-            .ok_or(PropertyValuesError::ValueNotFound(rel_index))
+            .ok_or(PropertyValuesError::ValueNotFound(relationship_index.get()))
     }
 }
 
@@ -94,15 +103,18 @@ impl PropertyValues for ReindexedRelationshipPropertyValues {
 }
 
 impl RelationshipPropertyValues for ReindexedRelationshipPropertyValues {
-    fn double_value(&self, rel_index: u64) -> PropertyValuesResult<f64> {
+    fn double_value(&self, rel_index: RelationshipIndex) -> PropertyValuesResult<f64> {
         self.values.double_value(self.old_index(rel_index)?)
     }
 
-    fn long_value(&self, rel_index: u64) -> PropertyValuesResult<i64> {
+    fn long_value(&self, rel_index: RelationshipIndex) -> PropertyValuesResult<i64> {
         self.values.long_value(self.old_index(rel_index)?)
     }
 
-    fn get_object(&self, rel_index: u64) -> PropertyValuesResult<Box<dyn std::any::Any>> {
+    fn get_object(
+        &self,
+        rel_index: RelationshipIndex,
+    ) -> PropertyValuesResult<Box<dyn std::any::Any>> {
         self.values.get_object(self.old_index(rel_index)?)
     }
 
@@ -110,9 +122,10 @@ impl RelationshipPropertyValues for ReindexedRelationshipPropertyValues {
         self.values.default_value()
     }
 
-    fn has_value(&self, rel_index: u64) -> bool {
-        self.old_indices
-            .get(rel_index as usize)
+    fn has_value(&self, rel_index: RelationshipIndex) -> bool {
+        rel_index
+            .to_usize()
+            .and_then(|index| self.old_indices.get(index))
             .is_some_and(|old_index| self.values.has_value(*old_index))
     }
 }
@@ -157,6 +170,39 @@ impl DefaultGraphStore {
         id_map: SimpleIdMap,
         relationship_topologies: HashMap<RelationshipType, RelationshipTopology>,
     ) -> Self {
+        Self::try_new(
+            config,
+            graph_name,
+            database_info,
+            schema,
+            capabilities,
+            id_map,
+            relationship_topologies,
+        )
+        .expect("default graph store components must be valid")
+    }
+
+    /// Creates a store after validating topology capacity against the mapped node domain.
+    #[allow(clippy::too_many_arguments)]
+    pub fn try_new(
+        config: GraphStoreConfig,
+        graph_name: GraphName,
+        database_info: DatabaseInfo,
+        schema: GraphSchema,
+        capabilities: Capabilities,
+        id_map: SimpleIdMap,
+        relationship_topologies: HashMap<RelationshipType, RelationshipTopology>,
+    ) -> GraphStoreResult<Self> {
+        let node_count = id_map.node_count();
+        for (relationship_type, topology) in &relationship_topologies {
+            if topology.node_capacity() != node_count {
+                return Err(GraphStoreError::InvalidOperation(format!(
+                    "relationship topology '{relationship_type}' has capacity {} but IdMap contains {node_count} nodes",
+                    topology.node_capacity()
+                )));
+            }
+        }
+
         let now = Utc::now();
         let config = Arc::new(config);
         let schema = Arc::new(schema);
@@ -190,7 +236,7 @@ impl DefaultGraphStore {
 
         store.rebuild_relationship_metadata();
         store.refresh_relationship_property_state();
-        store
+        Ok(store)
     }
 
     /// Builds a [`DefaultGraph`] view over the current store contents.
@@ -311,16 +357,22 @@ impl DefaultGraphStore {
             let mut outgoing: Vec<Vec<MappedNodeId>> = vec![Vec::new(); node_count];
 
             for source in 0..node_count {
-                let source_id = source as MappedNodeId;
+                let source_id = MappedNodeId::try_from(source).map_err(|_| {
+                    GraphStoreError::InvalidOperation(
+                        "node count exceeds mapped ID space while building undirected topology"
+                            .to_string(),
+                    )
+                })?;
                 let Some(neighbors) = topology.outgoing(source_id) else {
                     continue;
                 };
 
                 for &target_id in neighbors.iter() {
-                    let target = target_id as usize;
-                    if target >= node_count {
-                        continue;
-                    }
+                    let target = target_id.to_usize().ok_or_else(|| {
+                        GraphStoreError::InvalidOperation(format!(
+                            "relationship target {target_id} exceeds physical index space"
+                        ))
+                    })?;
                     outgoing[source].push(target_id);
                     outgoing[target].push(source_id);
                 }
@@ -331,8 +383,12 @@ impl DefaultGraphStore {
                 adj.dedup();
             }
 
-            new_relationship_topologies
-                .insert(rel_type.clone(), RelationshipTopology::new(outgoing, None));
+            let undirected = RelationshipTopology::try_new(outgoing, None).map_err(|error| {
+                GraphStoreError::InvalidOperation(format!(
+                    "invalid undirected topology for relationship type '{rel_type}': {error}"
+                ))
+            })?;
+            new_relationship_topologies.insert(rel_type.clone(), undirected);
         }
 
         // Update schema: mark all relationship types as undirected, preserving properties.
@@ -412,28 +468,36 @@ impl DefaultGraphStore {
             let mut incoming: Vec<Vec<MappedNodeId>> = vec![Vec::new(); node_count];
 
             for source in 0..node_count {
-                let source_id = source as MappedNodeId;
+                let source_id = MappedNodeId::try_from(source).map_err(|_| {
+                    GraphStoreError::InvalidOperation(
+                        "node count exceeds mapped ID space while building inverse topology"
+                            .to_string(),
+                    )
+                })?;
                 let Some(neighbors) = topology.outgoing(source_id) else {
                     continue;
                 };
                 for &target_id in neighbors.iter() {
-                    let target = target_id as usize;
-                    if target >= node_count {
-                        continue;
-                    }
+                    let target = target_id.to_usize().ok_or_else(|| {
+                        GraphStoreError::InvalidOperation(format!(
+                            "relationship target {target_id} exceeds physical index space"
+                        ))
+                    })?;
                     incoming[target].push(source_id);
                 }
             }
 
             for adj in incoming.iter_mut() {
                 adj.sort_unstable();
-                adj.dedup();
             }
 
-            new_relationship_topologies.insert(
-                rel_type.clone(),
-                Arc::new(RelationshipTopology::new(outgoing, Some(incoming))),
-            );
+            let inverse_topology = RelationshipTopology::try_new(outgoing, Some(incoming))
+                .map_err(|error| {
+                    GraphStoreError::InvalidOperation(format!(
+                        "invalid inverse topology for relationship type '{rel_type}': {error}"
+                    ))
+                })?;
+            new_relationship_topologies.insert(rel_type.clone(), Arc::new(inverse_topology));
         }
 
         let mut store = self.clone();
@@ -477,11 +541,13 @@ impl DefaultGraphStore {
             )));
         }
 
+        let topology = RelationshipTopology::try_new(outgoing, None).map_err(|error| {
+            GraphStoreError::InvalidOperation(format!(
+                "invalid topology for relationship type '{rel_type}': {error}"
+            ))
+        })?;
         let mut relationship_topologies = self.relationship_topologies.clone();
-        relationship_topologies.insert(
-            rel_type.clone(),
-            Arc::new(RelationshipTopology::new(outgoing, None)),
-        );
+        relationship_topologies.insert(rel_type.clone(), Arc::new(topology));
 
         let mut schema = MutableGraphSchema::from_schema(&self.schema);
         let entry = schema
@@ -635,10 +701,16 @@ impl DefaultGraphStore {
                     succ[u] = Some(neighbors[0]);
                 }
                 for &v in neighbors {
-                    let v_usize = v as usize;
-                    if v_usize < node_count {
-                        in_degree[v_usize] += 1;
-                    }
+                    let target_index = v.to_usize().ok_or_else(|| {
+                        GraphStoreError::InvalidOperation(format!(
+                            "relationship target {v} exceeds physical index space"
+                        ))
+                    })?;
+                    *in_degree.get_mut(target_index).ok_or_else(|| {
+                        GraphStoreError::InvalidOperation(format!(
+                            "relationship target {v} exceeds graph node count {node_count}"
+                        ))
+                    })? += 1;
                 }
             }
 
@@ -668,9 +740,15 @@ impl DefaultGraphStore {
                         break;
                     }
 
-                    let next_usize = next as usize;
+                    let next_usize = next.to_usize().ok_or_else(|| {
+                        GraphStoreError::InvalidOperation(format!(
+                            "relationship target {next} exceeds physical index space"
+                        ))
+                    })?;
                     if next_usize >= node_count {
-                        break;
+                        return Err(GraphStoreError::InvalidOperation(format!(
+                            "relationship target {next} exceeds graph node count {node_count}"
+                        )));
                     }
 
                     // Stop if next isn't a strict intermediate.
@@ -688,7 +766,12 @@ impl DefaultGraphStore {
                 }
 
                 // Create the collapsed edge from the original start to the terminal.
-                collapsed_edges.push((s as MappedNodeId, next));
+                let source = MappedNodeId::try_from(s).map_err(|_| {
+                    GraphStoreError::InvalidOperation(
+                        "graph node count exceeds mapped ID space".to_string(),
+                    )
+                })?;
+                collapsed_edges.push((source, next));
             }
 
             // Rebuild outgoing adjacency, skipping removed unique edges and adding collapsed edges.
@@ -703,21 +786,28 @@ impl DefaultGraphStore {
             }
 
             for (s, t) in collapsed_edges {
-                let s_usize = s as usize;
-                if s_usize < node_count {
-                    new_outgoing[s_usize].push(t);
-                }
+                let source_index = s.to_usize().ok_or_else(|| {
+                    GraphStoreError::InvalidOperation(format!(
+                        "collapsed source {s} exceeds physical index space"
+                    ))
+                })?;
+                new_outgoing
+                    .get_mut(source_index)
+                    .expect("collapsed source must belong to the graph mapped domain")
+                    .push(t);
             }
 
             for adj in new_outgoing.iter_mut() {
                 adj.sort_unstable();
-                adj.dedup();
             }
 
-            new_relationship_topologies.insert(
-                rel_type.clone(),
-                Arc::new(RelationshipTopology::new(new_outgoing, None)),
-            );
+            let rebuilt_topology =
+                RelationshipTopology::try_new(new_outgoing, None).map_err(|error| {
+                    GraphStoreError::InvalidOperation(format!(
+                        "invalid collapsed topology for relationship type '{rel_type}': {error}"
+                    ))
+                })?;
+            new_relationship_topologies.insert(rel_type.clone(), Arc::new(rebuilt_topology));
         }
 
         let mut store = self.clone();
@@ -771,7 +861,11 @@ impl DefaultGraphStore {
                         "Unknown node id in selection: {original_id}"
                     ))
                 })?;
-            let new_mapped: MappedNodeId = index as MappedNodeId;
+            let new_mapped = MappedNodeId::try_from(index).map_err(|_| {
+                GraphStoreError::InvalidOperation(
+                    "induced subgraph node count exceeds mapped ID space".to_string(),
+                )
+            })?;
             selected_ordered_old_mapped.push(old_mapped);
             old_mapped_to_new.insert(old_mapped, new_mapped);
         }
@@ -782,9 +876,14 @@ impl DefaultGraphStore {
 
         // Build new IdMap, preserving labels.
         let mut new_id_map =
-            SimpleIdMap::from_original_ids(selected_original_node_ids.iter().copied());
-        for (new_mapped, &original_id) in selected_original_node_ids.iter().enumerate() {
-            let new_mapped = new_mapped as MappedNodeId;
+            SimpleIdMap::try_from_original_ids(selected_original_node_ids.iter().copied())
+                .map_err(|error| GraphStoreError::InvalidOperation(error.to_string()))?;
+        for (new_mapped_index, &original_id) in selected_original_node_ids.iter().enumerate() {
+            let new_mapped = MappedNodeId::try_from(new_mapped_index).map_err(|_| {
+                GraphStoreError::InvalidOperation(
+                    "induced subgraph node count exceeds mapped ID space".to_string(),
+                )
+            })?;
             let old_mapped = self
                 .id_map
                 .safe_to_mapped_node_id(original_id)
@@ -822,13 +921,22 @@ impl DefaultGraphStore {
 
             let incoming = if topology.is_inverse_indexed() {
                 let mut incoming: Vec<Vec<MappedNodeId>> = vec![Vec::new(); n];
-                for (source, neighbors) in outgoing.iter().enumerate() {
-                    let source_id = source as MappedNodeId;
+                for (source_index, neighbors) in outgoing.iter().enumerate() {
+                    let source_id = MappedNodeId::try_from(source_index).map_err(|_| {
+                        GraphStoreError::InvalidOperation(
+                            "induced subgraph node count exceeds mapped ID space".to_string(),
+                        )
+                    })?;
                     for &target in neighbors {
-                        let idx = target as usize;
-                        if idx < incoming.len() {
-                            incoming[idx].push(source_id);
-                        }
+                        let target_index = target.to_usize().ok_or_else(|| {
+                            GraphStoreError::InvalidOperation(format!(
+                                "induced relationship target {target} exceeds physical index space"
+                            ))
+                        })?;
+                        incoming
+                            .get_mut(target_index)
+                            .expect("induced target must belong to selected mapped domain")
+                            .push(source_id);
                     }
                 }
                 Some(incoming)
@@ -836,7 +944,11 @@ impl DefaultGraphStore {
                 None
             };
 
-            let induced = RelationshipTopology::new(outgoing, incoming);
+            let induced = RelationshipTopology::try_new(outgoing, incoming).map_err(|error| {
+                GraphStoreError::InvalidOperation(format!(
+                    "invalid induced topology for relationship type '{rel_type}': {error}"
+                ))
+            })?;
             let kept = induced.relationship_count();
             if kept > 0 {
                 kept_by_type.insert(rel_type.clone(), kept);
@@ -850,7 +962,7 @@ impl DefaultGraphStore {
             &relationship_topologies,
         )?;
 
-        let store = DefaultGraphStore::new(
+        let store = DefaultGraphStore::try_new(
             self.config.as_ref().clone(),
             graph_name,
             self.database_info.clone(),
@@ -858,7 +970,7 @@ impl DefaultGraphStore {
             self.capabilities.clone(),
             new_id_map,
             relationship_topologies,
-        );
+        )?;
 
         let mut store = store;
         let mut projected_node_properties = DefaultNodePropertyStore::empty();
@@ -903,7 +1015,7 @@ impl DefaultGraphStore {
                     let mut data = Vec::with_capacity(node_count);
                     for &old_id in selected_ordered_old_mapped {
                         let v = values
-                            .double_value(old_id as u64)
+                            .double_value(old_id.get())
                             .map_err(|err| GraphStoreError::InvalidOperation(format!("{err}")))?;
                         data.push(v);
                     }
@@ -916,7 +1028,7 @@ impl DefaultGraphStore {
                     let mut data = Vec::with_capacity(node_count);
                     for &old_id in selected_ordered_old_mapped {
                         let v = values
-                            .long_value(old_id as u64)
+                            .long_value(old_id.get())
                             .map_err(|err| GraphStoreError::InvalidOperation(format!("{err}")))?;
                         data.push(v);
                     }
@@ -929,7 +1041,7 @@ impl DefaultGraphStore {
                     let mut data = Vec::with_capacity(node_count);
                     for &old_id in selected_ordered_old_mapped {
                         let v = values
-                            .double_value(old_id as u64)
+                            .double_value(old_id.get())
                             .map_err(|err| GraphStoreError::InvalidOperation(format!("{err}")))?;
                         data.push(v as f32);
                     }
@@ -942,7 +1054,7 @@ impl DefaultGraphStore {
                     let mut data = Vec::with_capacity(node_count);
                     for &old_id in selected_ordered_old_mapped {
                         let v = values
-                            .long_value(old_id as u64)
+                            .long_value(old_id.get())
                             .map_err(|err| GraphStoreError::InvalidOperation(format!("{err}")))?;
                         data.push(v as i32);
                     }
@@ -955,7 +1067,7 @@ impl DefaultGraphStore {
                     let mut data: Vec<Option<Vec<f64>>> = Vec::with_capacity(node_count);
                     for &old_id in selected_ordered_old_mapped {
                         let v = values
-                            .double_array_value(old_id as u64)
+                            .double_array_value(old_id.get())
                             .ok()
                             .map(Some)
                             .unwrap_or(None);
@@ -969,7 +1081,7 @@ impl DefaultGraphStore {
                     let mut data: Vec<Option<Vec<i64>>> = Vec::with_capacity(node_count);
                     for &old_id in selected_ordered_old_mapped {
                         let v = values
-                            .long_array_value(old_id as u64)
+                            .long_array_value(old_id.get())
                             .ok()
                             .map(Some)
                             .unwrap_or(None);
@@ -1017,7 +1129,6 @@ impl DefaultGraphStore {
                 Some(t) => t,
                 None => continue,
             };
-            let old_offsets = relationship_prefix_offsets(old_topology);
             let new_count = new_topology.relationship_count();
             if new_count == 0 {
                 continue;
@@ -1040,13 +1151,16 @@ impl DefaultGraphStore {
                                 for (neighbor_idx, &old_target) in old_neighbors.iter().enumerate()
                                 {
                                     if old_mapped_to_new.contains_key(&old_target) {
-                                        let old_index =
-                                            old_offsets[old_source as usize] + neighbor_idx;
-                                        let v = values.double_value(old_index as u64).map_err(
-                                            |err| {
-                                                GraphStoreError::InvalidOperation(format!("{err}"))
-                                            },
-                                        )?;
+                                        let old_index = old_topology
+                                            .relationship_index(old_source, neighbor_idx)
+                                            .ok_or_else(|| {
+                                                GraphStoreError::InvalidOperation(format!(
+                                                    "missing canonical relationship index for {old_source} at offset {neighbor_idx}"
+                                                ))
+                                            })?;
+                                        let v = values.double_value(old_index).map_err(|err| {
+                                            GraphStoreError::InvalidOperation(format!("{err}"))
+                                        })?;
                                         data.push(v);
                                     }
                                 }
@@ -1075,12 +1189,16 @@ impl DefaultGraphStore {
                                 for (neighbor_idx, &old_target) in old_neighbors.iter().enumerate()
                                 {
                                     if old_mapped_to_new.contains_key(&old_target) {
-                                        let old_index =
-                                            old_offsets[old_source as usize] + neighbor_idx;
-                                        let v =
-                                            values.long_value(old_index as u64).map_err(|err| {
-                                                GraphStoreError::InvalidOperation(format!("{err}"))
+                                        let old_index = old_topology
+                                            .relationship_index(old_source, neighbor_idx)
+                                            .ok_or_else(|| {
+                                                GraphStoreError::InvalidOperation(format!(
+                                                    "missing canonical relationship index for {old_source} at offset {neighbor_idx}"
+                                                ))
                                             })?;
+                                        let v = values.long_value(old_index).map_err(|err| {
+                                            GraphStoreError::InvalidOperation(format!("{err}"))
+                                        })?;
                                         data.push(v);
                                     }
                                 }
@@ -1109,12 +1227,16 @@ impl DefaultGraphStore {
                                 for (neighbor_idx, &old_target) in old_neighbors.iter().enumerate()
                                 {
                                     if old_mapped_to_new.contains_key(&old_target) {
-                                        let old_index =
-                                            old_offsets[old_source as usize] + neighbor_idx;
-                                        let v =
-                                            values.long_value(old_index as u64).map_err(|err| {
-                                                GraphStoreError::InvalidOperation(format!("{err}"))
+                                        let old_index = old_topology
+                                            .relationship_index(old_source, neighbor_idx)
+                                            .ok_or_else(|| {
+                                                GraphStoreError::InvalidOperation(format!(
+                                                    "missing canonical relationship index for {old_source} at offset {neighbor_idx}"
+                                                ))
                                             })?;
+                                        let v = values.long_value(old_index).map_err(|err| {
+                                            GraphStoreError::InvalidOperation(format!("{err}"))
+                                        })?;
                                         data.push(v as i32);
                                     }
                                 }
@@ -2035,30 +2157,41 @@ impl GraphStore for DefaultGraphStore {
 fn orient_topology(
     topology: &RelationshipTopology,
     orientation: Orientation,
-) -> (RelationshipTopology, Vec<u64>) {
+) -> (RelationshipTopology, Vec<RelationshipIndex>) {
     let node_count = topology.node_capacity();
-    let mut buckets = vec![Vec::<(MappedNodeId, u64)>::new(); node_count];
-    let mut old_index = 0u64;
+    let mut buckets = vec![Vec::<(MappedNodeId, RelationshipIndex)>::new(); node_count];
 
-    for (source, targets) in topology.outgoing_lists().iter().enumerate() {
-        for &target in targets {
+    for (source_index, targets) in topology.outgoing_lists().iter().enumerate() {
+        let source = MappedNodeId::try_from(source_index)
+            .expect("validated topology node capacity must fit mapped ID space");
+        for (neighbor_offset, &target) in targets.iter().enumerate() {
+            let old_index = topology
+                .relationship_index(source, neighbor_offset)
+                .expect("validated topology row must have a canonical relationship index");
             match orientation {
-                Orientation::Natural => buckets[source].push((target, old_index)),
+                Orientation::Natural => buckets[source_index].push((target, old_index)),
                 Orientation::Reverse => {
-                    if let Some(bucket) = buckets.get_mut(target as usize) {
-                        bucket.push((source as MappedNodeId, old_index));
-                    }
+                    let target_index = target
+                        .to_usize()
+                        .expect("validated mapped target must fit physical index space");
+                    buckets
+                        .get_mut(target_index)
+                        .expect("validated mapped target must belong to topology")
+                        .push((source, old_index));
                 }
                 Orientation::Undirected => {
-                    buckets[source].push((target, old_index));
-                    if target as usize != source {
-                        if let Some(bucket) = buckets.get_mut(target as usize) {
-                            bucket.push((source as MappedNodeId, old_index));
-                        }
+                    buckets[source_index].push((target, old_index));
+                    if target != source {
+                        let target_index = target
+                            .to_usize()
+                            .expect("validated mapped target must fit physical index space");
+                        buckets
+                            .get_mut(target_index)
+                            .expect("validated mapped target must belong to topology")
+                            .push((source, old_index));
                     }
                 }
             }
-            old_index += 1;
         }
     }
 
@@ -2084,11 +2217,15 @@ fn orient_topology(
 
 fn build_incoming(outgoing: &[Vec<MappedNodeId>]) -> Vec<Vec<MappedNodeId>> {
     let mut incoming = vec![Vec::new(); outgoing.len()];
-    for (source, targets) in outgoing.iter().enumerate() {
+    for (source_index, targets) in outgoing.iter().enumerate() {
+        let source = MappedNodeId::try_from(source_index)
+            .expect("validated topology node capacity must fit mapped ID space");
         for &target in targets {
-            if let Some(target_incoming) = incoming.get_mut(target as usize) {
-                target_incoming.push(source as MappedNodeId);
-            }
+            let target_incoming = target
+                .to_usize()
+                .and_then(|index| incoming.get_mut(index))
+                .expect("validated mapped target must belong to topology");
+            target_incoming.push(source);
         }
     }
     incoming
@@ -2096,7 +2233,7 @@ fn build_incoming(outgoing: &[Vec<MappedNodeId>]) -> Vec<Vec<MappedNodeId>> {
 
 fn reindex_relationship_property_store(
     store: &DefaultRelationshipPropertyStore,
-    old_indices: Arc<Vec<u64>>,
+    old_indices: Arc<Vec<RelationshipIndex>>,
 ) -> DefaultRelationshipPropertyStore {
     let mut builder = DefaultRelationshipPropertyStore::builder();
     for property in store.columns() {
@@ -2324,21 +2461,6 @@ fn build_relationship_int_property_values(
         ),
     )
 }
-fn relationship_prefix_offsets(topology: &RelationshipTopology) -> Vec<usize> {
-    let mut prefix = Vec::with_capacity(topology.node_capacity() + 1);
-    let mut total = 0usize;
-    prefix.push(total);
-    for node in 0..topology.node_capacity() {
-        let degree = topology
-            .outgoing(node as MappedNodeId)
-            .map(|neighbors| neighbors.len())
-            .unwrap_or(0);
-        total += degree;
-        prefix.push(total);
-    }
-    prefix
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -2348,6 +2470,7 @@ mod tests {
     use crate::types::graph_store::validate_graph_store_schema;
     use crate::types::graph_store::{DatabaseId, DatabaseLocation, GraphViewError};
     use crate::types::properties::relationship::DefaultRelationshipPropertyValues;
+    use crate::types::properties::relationship::RelationshipIterator;
     use std::sync::Arc;
 
     fn store_with_config(config: GraphStoreConfig) -> DefaultGraphStore {
@@ -2393,6 +2516,159 @@ mod tests {
         assert_eq!(graph.relationship_count(), 3);
         assert!(graph.characteristics().is_directed());
         assert_eq!(graph.degree(0), 2);
+    }
+
+    #[test]
+    fn fallible_constructor_rejects_topology_capacity_mismatch() {
+        let relationship_type = RelationshipType::of("KNOWS");
+        let topology = RelationshipTopology::new(vec![vec![MappedNodeId::new(1)], vec![]], None);
+        let error = DefaultGraphStore::try_new(
+            GraphStoreConfig::default(),
+            GraphName::new("invalid"),
+            DatabaseInfo::new(
+                DatabaseId::new("db"),
+                DatabaseLocation::remote("localhost", 7687, None, None),
+            ),
+            GraphSchema::empty(),
+            Capabilities::default(),
+            SimpleIdMap::from_original_ids([0, 1, 2]),
+            HashMap::from([(relationship_type, topology)]),
+        )
+        .expect_err("topology capacity must match the mapped node domain");
+
+        assert!(matches!(error, GraphStoreError::InvalidOperation(message)
+            if message.contains("KNOWS") && message.contains("capacity 2") && message.contains("3 nodes")));
+    }
+
+    #[test]
+    fn adding_relationship_type_rejects_target_outside_mapped_space() {
+        let store = sample_store();
+        let error = store
+            .with_added_relationship_type_preserve_name(
+                RelationshipType::of("INVALID"),
+                vec![vec![MappedNodeId::new(3)], vec![], vec![]],
+                Direction::Directed,
+            )
+            .expect_err("relationship target must belong to the mapped node domain");
+
+        assert!(matches!(error, GraphStoreError::InvalidOperation(message)
+            if message.contains("INVALID") && message.contains("0 -> 3") && message.contains("node count 3")));
+    }
+
+    #[test]
+    fn inverse_index_preserves_parallel_relationship_identity() {
+        let relationship_type = RelationshipType::of("KNOWS");
+        let topology = RelationshipTopology::new(
+            vec![
+                vec![MappedNodeId::new(1), MappedNodeId::new(1)],
+                vec![],
+                vec![],
+            ],
+            None,
+        );
+        let store = sample_store()
+            .with_rebuilt_relationship_topologies(
+                GraphName::new("parallel"),
+                HashMap::from([(relationship_type, topology)]),
+            )
+            .unwrap()
+            .with_inverse_indices(GraphName::new("parallel-inverse"))
+            .unwrap();
+
+        let inverse = store
+            .graph()
+            .stream_inverse_relationships(MappedNodeId::new(1), 0.0)
+            .map(|cursor| cursor.relationship_index())
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            inverse,
+            vec![RelationshipIndex::ZERO, RelationshipIndex::new(1)]
+        );
+    }
+
+    #[test]
+    fn path_collapse_preserves_unrelated_parallel_edges() {
+        let relationship_type = RelationshipType::of("KNOWS");
+        let topology = RelationshipTopology::new(
+            vec![
+                vec![MappedNodeId::new(1)],
+                vec![MappedNodeId::new(2)],
+                vec![MappedNodeId::new(2), MappedNodeId::new(2)],
+            ],
+            None,
+        );
+        let store = sample_store()
+            .with_rebuilt_relationship_topologies(
+                GraphName::new("collapse-source"),
+                HashMap::from([(relationship_type, topology)]),
+            )
+            .unwrap()
+            .collapse_paths_degree2(GraphName::new("collapsed"), None)
+            .unwrap();
+
+        let graph = store.graph();
+        let collapsed_targets = graph
+            .stream_relationships(MappedNodeId::ZERO, 0.0)
+            .map(|cursor| cursor.target_id())
+            .collect::<Vec<_>>();
+        let parallel_targets = graph
+            .stream_relationships(MappedNodeId::new(2), 0.0)
+            .map(|cursor| cursor.target_id())
+            .collect::<Vec<_>>();
+
+        assert_eq!(collapsed_targets, vec![MappedNodeId::new(2)]);
+        assert_eq!(parallel_targets, vec![MappedNodeId::new(2); 2]);
+        assert_eq!(graph.relationship_count(), 3);
+    }
+
+    #[test]
+    fn reverse_orientation_preserves_parallel_relationship_properties() {
+        let relationship_type = RelationshipType::of("KNOWS");
+        let topology = RelationshipTopology::new(
+            vec![
+                vec![MappedNodeId::new(1), MappedNodeId::new(1)],
+                vec![],
+                vec![],
+            ],
+            None,
+        );
+        let mut store = sample_store()
+            .with_rebuilt_relationship_topologies(
+                GraphName::new("parallel"),
+                HashMap::from([(relationship_type.clone(), topology)]),
+            )
+            .unwrap();
+        store
+            .add_relationship_property(
+                relationship_type.clone(),
+                "weight",
+                Arc::new(DefaultRelationshipPropertyValues::with_default(
+                    vec![10.0, 20.0],
+                    2,
+                )),
+            )
+            .unwrap();
+
+        let graph = store
+            .get_graph_with_types_selectors_and_orientation(
+                &HashSet::new(),
+                &HashMap::from([(relationship_type, "weight".to_string())]),
+                Orientation::Reverse,
+            )
+            .unwrap();
+        let relationships = graph
+            .stream_relationships(MappedNodeId::new(1), -1.0)
+            .map(|cursor| (cursor.relationship_index(), cursor.property()))
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            relationships,
+            vec![
+                (RelationshipIndex::ZERO, 10.0),
+                (RelationshipIndex::new(1), 20.0),
+            ]
+        );
     }
 
     #[test]
@@ -2536,7 +2812,10 @@ mod tests {
         let retrieved = store
             .relationship_property_values(&rel_type, "weight")
             .expect("retrieve property");
-        assert_eq!(retrieved.double_value(1).unwrap(), 2.0);
+        assert_eq!(
+            retrieved.double_value(RelationshipIndex::new(1)).unwrap(),
+            2.0
+        );
         assert!(store.graph().has_relationship_property());
         validate_graph_store_schema(&store).unwrap();
 

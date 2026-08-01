@@ -9,6 +9,7 @@ use crate::ml::core::neighborhood_function::NeighborhoodFunction;
 use crate::ml::core::subgraph::{NeighborhoodSampler, SubGraph};
 use crate::ml::core::variable::VariableRef;
 use crate::types::graph::Graph;
+use crate::types::graph::MappedNodeId;
 use crate::types::schema::NodeLabel;
 use rand::Rng;
 use rand::SeedableRng;
@@ -93,7 +94,9 @@ pub fn initialize_multi_label_features(
     let mut consumer = HugeObjectArrayFeatureConsumer::new(features_out);
 
     for node_id in 0..graph.node_count() {
-        let node_label = label_of(graph, node_id as u64);
+        let mapped_node_id =
+            u64::try_from(node_id).expect("GraphSAGE feature index must fit a mapped node ID");
+        let node_label = label_of(graph, mapped_node_id);
         let extractors = multi
             .extractors_per_label
             .get(&node_label)
@@ -106,7 +109,7 @@ pub fn initialize_multi_label_features(
         consumer
             .features_mut()
             .set(node_id, vec![0.0f64; feature_count]);
-        features::extract(node_id as u64, node_id as u64, extractors, &mut consumer);
+        features::extract(mapped_node_id, mapped_node_id, extractors, &mut consumer);
     }
 
     consumer.into_inner()
@@ -123,7 +126,9 @@ pub fn multi_label_feature_extractors(
         HashMap::new();
 
     for node_id in 0..graph.node_count() {
-        let node_label = label_of(graph, node_id as u64);
+        let mapped_node_id =
+            u64::try_from(node_id).expect("GraphSAGE feature index must fit a mapped node ID");
+        let node_label = label_of(graph, mapped_node_id);
 
         extractors_per_label
             .entry(node_label.clone())
@@ -136,7 +141,7 @@ pub fn multi_label_feature_extractors(
                     .collect::<Vec<_>>();
 
                 let mut extractors =
-                    features::property_extractors_with_init(graph, &property_keys, node_id as u64);
+                    features::property_extractors_with_init(graph, &property_keys, mapped_node_id);
                 extractors.push(features::AnyFeatureExtractor::Scalar(Box::new(BiasFeature)));
                 extractors
             });
@@ -174,9 +179,10 @@ fn filtered_property_keys_per_node_label(
 }
 
 fn label_of(graph: &dyn Graph, node_id: u64) -> NodeLabel {
+    let mapped_node_id = MappedNodeId::new(node_id);
     let mut label_ref: Option<NodeLabel> = None;
     let mut count = 0usize;
-    graph.for_each_node_label(node_id as i64, &mut |node_label: &NodeLabel| {
+    graph.for_each_node_label(mapped_node_id, &mut |node_label: &NodeLabel| {
         count += 1;
         if count == 1 {
             label_ref = Some(node_label.clone());
@@ -190,7 +196,7 @@ fn label_of(graph: &dyn Graph, node_id: u64) -> NodeLabel {
         panic!(
             "Each node must have exactly one label: nodeId={}, labels={:?}",
             node_id,
-            graph.node_labels(node_id as i64)
+            graph.node_labels(mapped_node_id)
         );
     }
     label_ref.expect("label missing")

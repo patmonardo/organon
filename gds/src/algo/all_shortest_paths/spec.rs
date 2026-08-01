@@ -8,12 +8,13 @@
 //! **Use Case**: Network analysis, centrality measures, graph connectivity
 
 use crate::config::validation::ConfigError;
-use crate::task::progress::TaskProgressTracker;
 use crate::core::LogLevel;
 use crate::define_algorithm_spec;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::relationship_type::RelationshipType;
 use crate::projection::Orientation;
+use crate::task::progress::TaskProgressTracker;
+use crate::types::graph::MappedNodeId;
 use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
 use std::time::Duration;
@@ -312,7 +313,10 @@ define_algorithm_spec! {
         } else {
             // Non-streaming mode: Process all nodes sequentially
             let node_count = storage.node_count();
-            for source_node in 0..node_count as i64 {
+            for source_index in 0..node_count {
+                let source_node = MappedNodeId::try_from(source_index).map_err(|_| {
+                    AlgorithmError::InvalidGraph("Node count exceeds mapped ID space".to_string())
+                })?;
                 // **FUNCTOR IN ACTION**:
                 // Project from Storage (Gross/GraphStore)
                 // to Computation (Subtle/shortest path results)
@@ -359,7 +363,7 @@ define_algorithm_spec! {
 mod tests {
     use super::*;
     use crate::projection::eval::algorithm::{AlgorithmSpec, ProjectionHint};
-    use crate::types::graph::NodeId;
+    use crate::types::graph::MappedNodeId;
 
     #[test]
     fn test_all_shortest_paths_algorithm_name() {
@@ -438,18 +442,18 @@ mod tests {
 
         // Add some test results
         runtime.add_result(ShortestPathResult {
-            source: 0 as NodeId,
-            target: 1 as NodeId,
+            source: MappedNodeId::ZERO,
+            target: MappedNodeId::new(1),
             distance: 2.0,
         });
         runtime.add_result(ShortestPathResult {
-            source: 0 as NodeId,
-            target: 2 as NodeId,
+            source: MappedNodeId::ZERO,
+            target: MappedNodeId::new(2),
             distance: 4.0,
         });
         runtime.add_result(ShortestPathResult {
-            source: 1 as NodeId,
-            target: 2 as NodeId,
+            source: MappedNodeId::new(1),
+            target: MappedNodeId::new(2),
             distance: f64::INFINITY,
         });
 

@@ -45,8 +45,8 @@ impl RandomNegativeSampler {
         }
     }
 
-    fn random_node_id(rng: &mut StdRng, upper_bound: MappedNodeId) -> MappedNodeId {
-        rng.gen_range(0..upper_bound)
+    fn random_node_id(rng: &mut StdRng, upper_bound: usize) -> Option<MappedNodeId> {
+        MappedNodeId::try_from(rng.gen_range(0..upper_bound)).ok()
     }
 
     fn samples_per_node(
@@ -90,7 +90,9 @@ impl NegativeSampler for RandomNegativeSampler {
         }
 
         for node_index in 0..node_count {
-            let node_id = node_index as MappedNodeId;
+            let Ok(node_id) = MappedNodeId::try_from(node_index) else {
+                return;
+            };
 
             let Some(original_id) = self.graph.to_original_node_id(node_id) else {
                 continue;
@@ -123,8 +125,9 @@ impl NegativeSampler for RandomNegativeSampler {
                 }
                 let mut retries = MAX_RETRIES;
                 loop {
-                    let negative_target =
-                        Self::random_node_id(&mut rng, node_count as MappedNodeId);
+                    let Some(negative_target) = Self::random_node_id(&mut rng, node_count) else {
+                        break;
+                    };
 
                     let Some(negative_original) = self.graph.to_original_node_id(negative_target)
                     else {
@@ -153,15 +156,15 @@ impl NegativeSampler for RandomNegativeSampler {
                         if Self::sample(&mut rng, prob) {
                             remaining_test_samples -= 1;
                             test_set_builder.add_from_internal(
-                                source_root as u64,
-                                target_root as u64,
+                                u64::from(source_root),
+                                u64::from(target_root),
                                 NEGATIVE,
                             );
                         } else {
                             remaining_train_samples -= 1;
                             train_set_builder.add_from_internal(
-                                source_root as u64,
-                                target_root as u64,
+                                u64::from(source_root),
+                                u64::from(target_root),
                                 NEGATIVE,
                             );
                         }

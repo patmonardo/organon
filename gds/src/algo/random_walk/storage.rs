@@ -4,9 +4,10 @@
 
 use super::computation::RandomWalkComputationRuntime;
 use super::spec::RandomWalkResult;
+use crate::projection::eval::algorithm::AlgorithmError;
 use crate::task::concurrency::{TerminatedException, TerminationFlag};
 use crate::task::progress::ProgressTracker;
-use crate::projection::eval::algorithm::AlgorithmError;
+use crate::types::graph::id_map::MappedNodeId;
 use crate::types::graph::Graph;
 use std::sync::Mutex;
 
@@ -49,16 +50,11 @@ impl RandomWalkStorageRuntime {
 
         let fallback = graph.default_property_value();
         let get_neighbors = |node_idx: usize| -> Vec<usize> {
+            let node_id = MappedNodeId::try_from(node_idx)
+                .expect("dense random-walk node index must fit a mapped node ID");
             graph
-                .stream_relationships(node_idx as i64, fallback)
-                .filter_map(|cursor| {
-                    let target = cursor.target_id();
-                    if target >= 0 {
-                        Some(target as usize)
-                    } else {
-                        None
-                    }
-                })
+                .stream_relationships(node_id, fallback)
+                .filter_map(|cursor| cursor.target_id().to_usize())
                 .collect()
         };
 
@@ -85,16 +81,11 @@ impl RandomWalkStorageRuntime {
         let mut adjacency: Vec<Vec<usize>> = vec![Vec::new(); node_count];
 
         for node_idx in 0..node_count {
+            let node_id = MappedNodeId::try_from(node_idx)
+                .expect("dense random-walk node index must fit a mapped node ID");
             adjacency[node_idx] = graph
-                .stream_relationships(node_idx as i64, fallback)
-                .filter_map(|cursor| {
-                    let target = cursor.target_id();
-                    if target >= 0 {
-                        Some(target as usize)
-                    } else {
-                        None
-                    }
-                })
+                .stream_relationships(node_id, fallback)
+                .filter_map(|cursor| cursor.target_id().to_usize())
                 .collect();
         }
 

@@ -9,6 +9,7 @@ use crate::projection::factory::RelationshipsBuilder;
 use crate::projection::RelationshipType;
 use crate::types::graph::id_map::IdMap;
 use crate::types::graph::Graph;
+use crate::types::graph::MappedNodeId;
 use std::collections::HashSet;
 use std::sync::atomic::AtomicUsize;
 use std::sync::Arc;
@@ -20,7 +21,7 @@ use std::sync::Arc;
 /// with the same node pair but with random direction.
 pub struct UndirectedEdgeSplitter {
     base: BaseEdgeSplitter,
-    seen_relationships: Arc<parking_lot::RwLock<HashSet<(i64, i64)>>>,
+    seen_relationships: Arc<parking_lot::RwLock<HashSet<(MappedNodeId, MappedNodeId)>>>,
 }
 
 impl UndirectedEdgeSplitter {
@@ -49,7 +50,7 @@ impl UndirectedEdgeSplitter {
     }
 
     /// Records a relationship as seen
-    fn mark_relationship_seen(&self, source: i64, target: i64) -> bool {
+    fn mark_relationship_seen(&self, source: MappedNodeId, target: MappedNodeId) -> bool {
         let mut seen = self.seen_relationships.write();
         let canonical = if source < target {
             (source, target)
@@ -60,7 +61,7 @@ impl UndirectedEdgeSplitter {
     }
 
     /// Checks if a relationship has been seen
-    fn has_seen_relationship(&self, source: i64, target: i64) -> bool {
+    fn has_seen_relationship(&self, source: MappedNodeId, target: MappedNodeId) -> bool {
         let seen = self.seen_relationships.read();
         let canonical = if source < target {
             (source, target)
@@ -104,7 +105,7 @@ impl EdgeSplitter for UndirectedEdgeSplitter {
     fn valid_positive_relationship_candidate_count(
         &self,
         graph: &dyn Graph,
-        is_valid_node_pair: Arc<dyn Fn(i64, i64) -> bool + Send + Sync>,
+        is_valid_node_pair: Arc<dyn Fn(MappedNodeId, MappedNodeId) -> bool + Send + Sync>,
     ) -> usize {
         let valid_relationship_count = Arc::new(AtomicUsize::new(0));
 
@@ -112,7 +113,11 @@ impl EdgeSplitter for UndirectedEdgeSplitter {
         let relationship_count = graph.relationship_count();
         let degrees = {
             let graph = Graph::concurrent_view(graph);
-            Box::new(move |node_id: usize| graph.degree(node_id as i64)) as Box<dyn DegreeFunction>
+            Box::new(move |node_id: usize| {
+                let node_id = MappedNodeId::try_from(node_id)
+                    .expect("partition node must fit mapped node ID space");
+                graph.degree(node_id)
+            }) as Box<dyn DegreeFunction>
         };
 
         // Create tasks for each partition
@@ -134,7 +139,8 @@ impl EdgeSplitter for UndirectedEdgeSplitter {
                         let mut local_count = 0;
 
                         for node_id in partition.as_partition().iter() {
-                            let node_id = node_id as i64;
+                            let node_id = MappedNodeId::try_from(node_id)
+                                .expect("partition node must fit mapped node ID space");
                             for cursor in
                                 graph.stream_relationships(node_id, graph.default_property_value())
                             {
@@ -174,8 +180,8 @@ impl EdgeSplitter for UndirectedEdgeSplitter {
         remaining_rel_property_key: Option<&str>,
         selected_rel_count: &mut usize,
         remaining_rel_count: &mut usize,
-        node_id: i64,
-        is_valid_node_pair: &dyn Fn(i64, i64) -> bool,
+        node_id: MappedNodeId,
+        is_valid_node_pair: &dyn Fn(MappedNodeId, MappedNodeId) -> bool,
         positive_samples_remaining: &mut usize,
         candidate_edges_remaining: &mut usize,
     ) {

@@ -6,10 +6,10 @@
 
 use super::AStarComputationResult;
 use crate::algo::dijkstra::{DijkstraComputationRuntime, DijkstraStorageRuntime, SingleTarget};
-use crate::task::progress::ProgressTracker;
 use crate::projection::eval::algorithm::AlgorithmError;
+use crate::task::progress::ProgressTracker;
 use crate::types::graph::Graph;
-use crate::types::graph::NodeId;
+use crate::types::graph::MappedNodeId;
 use crate::types::properties::node::NodePropertyValues;
 use std::collections::HashMap;
 use std::sync::Arc;
@@ -18,12 +18,12 @@ use std::sync::Arc;
 ///
 /// Translation of: `org.neo4j.gds.paths.astar.AStar` (lines 37-88)
 pub struct AStarStorageRuntime {
-    source_node: NodeId,
-    target_node: NodeId,
+    source_node: MappedNodeId,
+    target_node: MappedNodeId,
     latitude_property: String,
     longitude_property: String,
     // Cache for latitude/longitude values to avoid repeated property lookups
-    pub coordinate_cache: HashMap<NodeId, (f64, f64)>,
+    pub coordinate_cache: HashMap<MappedNodeId, (f64, f64)>,
     // Optional bound property value accessors (preferred over mock)
     lat_values: Option<Arc<dyn NodePropertyValues>>,
     lon_values: Option<Arc<dyn NodePropertyValues>>,
@@ -34,8 +34,8 @@ impl AStarStorageRuntime {
     ///
     /// Translation of: `AStar.sourceTarget()` (lines 47-88)
     pub fn new(
-        source_node: NodeId,
-        target_node: NodeId,
+        source_node: MappedNodeId,
+        target_node: MappedNodeId,
         latitude_property: String,
         longitude_property: String,
     ) -> Self {
@@ -52,8 +52,8 @@ impl AStarStorageRuntime {
 
     /// Create new A* storage runtime bound to concrete latitude/longitude property values
     pub fn new_with_values(
-        source_node: NodeId,
-        target_node: NodeId,
+        source_node: MappedNodeId,
+        target_node: MappedNodeId,
         latitude_property: String,
         longitude_property: String,
         lat_values: Arc<dyn NodePropertyValues>,
@@ -80,9 +80,6 @@ impl AStarStorageRuntime {
         direction: u8,
         progress_tracker: &mut dyn ProgressTracker,
     ) -> Result<AStarComputationResult, String> {
-        Self::validate_node_id(self.source_node, "source")?;
-        Self::validate_node_id(self.target_node, "target")?;
-
         if graph.is_none() {
             progress_tracker.begin_subtask_unknown();
             let result = (|| {
@@ -168,8 +165,8 @@ impl AStarStorageRuntime {
     /// Translation of: `HaversineHeuristic.distance()` (lines 1.038-1.056)
     pub fn compute_haversine_distance(
         &mut self,
-        source: NodeId,
-        target: NodeId,
+        source: MappedNodeId,
+        target: MappedNodeId,
     ) -> Result<f64, String> {
         let (source_lat, source_lon) = self.get_coordinates(source)?;
         let (target_lat, target_lon) = self.get_coordinates(target)?;
@@ -181,7 +178,7 @@ impl AStarStorageRuntime {
 
     fn haversine_heuristic(
         &self,
-    ) -> Result<impl Fn(NodeId) -> f64 + Send + Sync + 'static, String> {
+    ) -> Result<impl Fn(MappedNodeId) -> f64 + Send + Sync + 'static, String> {
         let Some(lat_values) = self.lat_values.as_ref().cloned() else {
             return Err(format!(
                 "The property `{}` has not been loaded",
@@ -195,12 +192,7 @@ impl AStarStorageRuntime {
             ));
         };
 
-        let target_index = u64::try_from(self.target_node).map_err(|_| {
-            format!(
-                "invalid target node id for property lookup: {}",
-                self.target_node
-            )
-        })?;
+        let target_index = self.target_node.get();
         let target_latitude = lat_values
             .double_value(target_index)
             .map_err(|e| format!("lat read error: {e}"))?;
@@ -209,10 +201,8 @@ impl AStarStorageRuntime {
             .map_err(|e| format!("lon read error: {e}"))?;
         Self::validate_coordinates(self.target_node, (target_latitude, target_longitude))?;
 
-        Ok(move |source| {
-            let Ok(source_index) = u64::try_from(source) else {
-                return f64::NAN;
-            };
+        Ok(move |source: MappedNodeId| {
+            let source_index = source.get();
             let Ok(source_latitude) = lat_values.double_value(source_index) else {
                 return f64::NAN;
             };
@@ -233,15 +223,14 @@ impl AStarStorageRuntime {
     }
 
     /// Get coordinates for a node (with caching)
-    pub fn get_coordinates(&mut self, node_id: NodeId) -> Result<(f64, f64), String> {
+    pub fn get_coordinates(&mut self, node_id: MappedNodeId) -> Result<(f64, f64), String> {
         if let Some(&coords) = self.coordinate_cache.get(&node_id) {
             return Ok(coords);
         }
         // Prefer bound property values when available; fallback to mock
         let coords = if let (Some(lat_vals), Some(lon_vals)) = (&self.lat_values, &self.lon_values)
         {
-            let idx = u64::try_from(node_id)
-                .map_err(|_| format!("invalid node id for property lookup: {node_id}"))?;
+            let idx = node_id.get();
             let lat = lat_vals
                 .double_value(idx)
                 .map_err(|e| format!("lat read error: {e}"))?;
@@ -251,8 +240,7 @@ impl AStarStorageRuntime {
             (lat, lon)
         } else {
             // Mock fallback
-            let idx = u64::try_from(node_id)
-                .map_err(|_| format!("invalid node id for mock coordinates: {node_id}"))?;
+            let idx = node_id.get();
             let lat = (idx as f64) * 0.01;
             let lon = (idx as f64) * 0.01;
             (lat, lon)
@@ -262,19 +250,11 @@ impl AStarStorageRuntime {
         Ok(coords)
     }
 
-    fn validate_node_id(node_id: NodeId, role: &str) -> Result<(), String> {
-        if node_id < 0 {
-            return Err(format!("invalid {role} node id: {node_id}"));
-        }
-        Ok(())
-    }
-
     fn validate_node_in_graph(
-        node_id: NodeId,
+        node_id: MappedNodeId,
         node_count: usize,
         role: &str,
     ) -> Result<(), String> {
-        Self::validate_node_id(node_id, role)?;
         let node_index =
             usize::try_from(node_id).map_err(|_| format!("invalid {role} node id: {node_id}"))?;
         if node_index >= node_count {
@@ -286,7 +266,11 @@ impl AStarStorageRuntime {
     }
 
     #[cfg(test)]
-    fn validate_edge_weight(source: NodeId, target: NodeId, weight: f64) -> Result<(), String> {
+    fn validate_edge_weight(
+        source: MappedNodeId,
+        target: MappedNodeId,
+        weight: f64,
+    ) -> Result<(), String> {
         if !weight.is_finite() || weight < 0.0 {
             return Err(format!(
                 "A* requires non-negative finite edge weights; edge {source}->{target} has weight {weight}"
@@ -295,7 +279,7 @@ impl AStarStorageRuntime {
         Ok(())
     }
 
-    fn validate_coordinates(node_id: NodeId, coords: (f64, f64)) -> Result<(), String> {
+    fn validate_coordinates(node_id: MappedNodeId, coords: (f64, f64)) -> Result<(), String> {
         let (latitude, longitude) = coords;
         if !latitude.is_finite() || !longitude.is_finite() {
             return Err(format!(
@@ -331,12 +315,12 @@ impl AStarStorageRuntime {
     }
 
     /// Get source node ID
-    pub fn source_node(&self) -> NodeId {
+    pub fn source_node(&self) -> MappedNodeId {
         self.source_node
     }
 
     /// Get target node ID
-    pub fn target_node(&self) -> NodeId {
+    pub fn target_node(&self) -> MappedNodeId {
         self.target_node
     }
 

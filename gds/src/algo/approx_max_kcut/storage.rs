@@ -10,6 +10,7 @@ use crate::task::concurrency::TerminationFlag;
 use crate::task::progress::ProgressTracker;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
+use crate::types::graph::MappedNodeId;
 use crate::types::prelude::GraphStore;
 use std::collections::HashSet;
 
@@ -61,12 +62,13 @@ impl ApproxMaxKCutStorageRuntime {
         let mut adjacency: Vec<Vec<(usize, f64)>> = vec![Vec::new(); node_count];
         for node_id in 0..node_count {
             termination_flag.assert_running();
+            let mapped_node_id = MappedNodeId::try_from(node_id)
+                .map_err(|_| format!("node index {node_id} exceeds the mapped ID domain"))?;
 
-            for cursor in graph_view.stream_relationships(node_id as i64, default_weight) {
-                let target = cursor.target_id();
-                if target < 0 {
-                    continue;
-                }
+            for cursor in graph_view.stream_relationships(mapped_node_id, default_weight) {
+                let target = cursor.target_id().to_usize().ok_or_else(|| {
+                    format!("mapped target {} exceeds the dense index domain", cursor.target_id())
+                })?;
 
                 let weight = if config.has_relationship_weight_property {
                     cursor.property()
@@ -74,7 +76,7 @@ impl ApproxMaxKCutStorageRuntime {
                     1.0
                 };
 
-                adjacency[node_id].push((target as usize, weight));
+                adjacency[node_id].push((target, weight));
             }
 
             progress_tracker.log_progress(1);

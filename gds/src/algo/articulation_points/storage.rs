@@ -10,7 +10,7 @@ use crate::task::progress::ProgressTracker;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::{Orientation, RelationshipType};
 use crate::types::graph::Graph;
-use crate::types::graph::NodeId;
+use crate::types::graph::MappedNodeId;
 use crate::types::prelude::GraphStore;
 use std::collections::HashSet;
 use std::sync::Arc;
@@ -47,7 +47,7 @@ impl<'a, G: GraphStore> ArticulationPointsStorageRuntime<'a, G> {
     }
 
     pub fn neighbors(&self, node_idx: usize) -> Vec<usize> {
-        let node_id = match NodeId::try_from(node_idx as i64) {
+        let node_id = match MappedNodeId::try_from(node_idx) {
             Ok(id) => id,
             Err(_) => return Vec::new(),
         };
@@ -58,15 +58,19 @@ impl<'a, G: GraphStore> ArticulationPointsStorageRuntime<'a, G> {
 
         for cursor in self.graph.stream_relationships(node_id, fallback) {
             let target = cursor.target_id();
-            if target >= 0 && seen.insert(target) {
-                neighbors.push(target as usize);
+            if seen.insert(target) {
+                if let Some(target_index) = target.to_usize() {
+                    neighbors.push(target_index);
+                }
             }
         }
 
         for cursor in self.graph.stream_inverse_relationships(node_id, fallback) {
             let source = cursor.source_id();
-            if source >= 0 && seen.insert(source) {
-                neighbors.push(source as usize);
+            if seen.insert(source) {
+                if let Some(source_index) = source.to_usize() {
+                    neighbors.push(source_index);
+                }
             }
         }
 

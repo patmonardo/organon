@@ -15,6 +15,7 @@ use crate::task::memory::MemoryRange;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
+use crate::types::graph::MappedNodeId;
 use std::collections::HashSet;
 use std::sync::Arc;
 use std::time::Instant;
@@ -170,8 +171,14 @@ impl RandomWalkFacade {
             .source_nodes
             .clone()
             .into_iter()
-            .map(|n| n as usize)
-            .collect();
+            .map(|node_id| {
+                MappedNodeId::new(node_id).to_usize().ok_or_else(|| {
+                    AlgorithmError::Execution(format!(
+                        "Random walk source node {node_id} exceeds the platform index domain"
+                    ))
+                })
+            })
+            .collect::<Result<_>>()?;
 
         let seed = self.config.random_seed.unwrap_or_else(|| {
             use std::time::SystemTime;

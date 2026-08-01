@@ -20,7 +20,8 @@ use crate::define_algorithm_spec;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::relationship_type::RelationshipType;
 use crate::projection::Orientation;
-use crate::types::graph::NodeId;
+use crate::types::graph::MappedNodeId;
+use crate::types::graph::RelationshipIndex;
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 use std::time::Duration;
@@ -36,11 +37,11 @@ fn default_weight_property() -> String {
 pub struct DijkstraConfig {
     /// Source node for shortest path computation
     #[serde(alias = "sourceNode")]
-    pub source_node: NodeId,
+    pub source_node: MappedNodeId,
 
     /// Target nodes (empty = all targets, single = single target, multiple = many targets)
     #[serde(alias = "targetNodes")]
-    pub target_nodes: Vec<NodeId>,
+    pub target_nodes: Vec<MappedNodeId>,
 
     /// Relationship property used as edge weight.
     #[serde(
@@ -76,7 +77,7 @@ pub struct DijkstraConfig {
 impl Default for DijkstraConfig {
     fn default() -> Self {
         Self {
-            source_node: 0,
+            source_node: MappedNodeId::ZERO,
             target_nodes: vec![],
             weight_property: default_weight_property(),
             track_relationships: false,
@@ -118,20 +119,6 @@ impl DijkstraDirection {
 impl DijkstraConfig {
     /// Validate configuration parameters
     pub fn validate(&self) -> Result<(), ConfigError> {
-        if self.source_node < 0 {
-            return Err(ConfigError::InvalidParameter {
-                parameter: "sourceNode".to_string(),
-                reason: "Must be >= 0".to_string(),
-            });
-        }
-
-        if let Some(bad) = self.target_nodes.iter().copied().find(|id| *id < 0) {
-            return Err(ConfigError::InvalidParameter {
-                parameter: "targetNodes".to_string(),
-                reason: format!("All target nodes must be >= 0, got {}", bad),
-            });
-        }
-
         if self.concurrency == 0 {
             return Err(ConfigError::InvalidParameter {
                 parameter: "concurrency".to_string(),
@@ -199,16 +186,16 @@ pub struct DijkstraPathResult {
     pub index: u64,
 
     /// Source node ID
-    pub source_node: NodeId,
+    pub source_node: MappedNodeId,
 
     /// Target node ID
-    pub target_node: NodeId,
+    pub target_node: MappedNodeId,
 
     /// Node IDs along the path
-    pub node_ids: Vec<NodeId>,
+    pub node_ids: Vec<MappedNodeId>,
 
     /// Relationship IDs along the path (if tracking relationships)
-    pub relationship_ids: Vec<NodeId>,
+    pub relationship_ids: Vec<RelationshipIndex>,
 
     /// Costs for each step along the path
     pub costs: Vec<f64>,
@@ -254,8 +241,8 @@ pub struct DijkstraMutateResult {
     pub updated_store: std::sync::Arc<crate::types::prelude::DefaultGraphStore>,
 }
 
-fn checked_u64(value: NodeId) -> u64 {
-    u64::try_from(value).unwrap_or(0)
+fn checked_u64(value: MappedNodeId) -> u64 {
+    value.get()
 }
 
 fn spec_path_to_core(path: &DijkstraPathResult) -> PathResult {
@@ -265,7 +252,6 @@ fn spec_path_to_core(path: &DijkstraPathResult) -> PathResult {
         .node_ids
         .iter()
         .copied()
-        .filter(|node_id| *node_id >= 0)
         .map(checked_u64)
         .collect();
 
@@ -303,7 +289,6 @@ impl DijkstraResultBuilder {
             .result
             .path_finding_result
             .paths()
-            .filter(|p| p.source_node >= 0 && p.target_node >= 0)
             .map(spec_path_to_core)
             .collect();
 

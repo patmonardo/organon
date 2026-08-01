@@ -1,6 +1,6 @@
 // Phase 1.2: LinkFeatureAppender - Feature appending for link pairs
 
-// Note: When a distinct NodeId type exists, use it instead of u64.
+use crate::types::graph::MappedNodeId;
 
 /// Appends features for a specific graph's link pairs.
 ///
@@ -36,7 +36,13 @@ pub trait LinkFeatureAppender: Send + Sync {
     ///
     /// Writes `dimension()` feature values starting at `link_features[offset]`.
     /// Does not check array bounds - caller must ensure sufficient capacity.
-    fn append_features(&self, source: u64, target: u64, link_features: &mut [f64], offset: usize);
+    fn append_features(
+        &self,
+        source: MappedNodeId,
+        target: MappedNodeId,
+        link_features: &mut [f64],
+        offset: usize,
+    );
 
     /// Returns the number of features this appender will add.
     ///
@@ -76,14 +82,14 @@ mod tests {
     impl LinkFeatureAppender for TestAppender {
         fn append_features(
             &self,
-            source: u64,
-            target: u64,
+            source: MappedNodeId,
+            target: MappedNodeId,
             link_features: &mut [f64],
             offset: usize,
         ) {
             // Test implementation: just write source + target as features
             for i in 0..self.dim {
-                link_features[offset + i] = (source + target) as f64 + i as f64;
+                link_features[offset + i] = (u64::from(source) + u64::from(target)) as f64 + i as f64;
             }
         }
 
@@ -116,7 +122,7 @@ mod tests {
         let mut features = vec![0.0; 5];
 
         // Append at offset 1
-        appender.append_features(10, 20, &mut features, 1);
+        appender.append_features(MappedNodeId::new(10), MappedNodeId::new(20), &mut features, 1);
 
         assert_eq!(features[0], 0.0); // Before offset - unchanged
         assert_eq!(features[1], 30.0); // 10 + 20 + 0
@@ -148,11 +154,11 @@ mod tests {
         let mut features = vec![0.0; 6];
 
         // First append at offset 0
-        appender.append_features(1, 2, &mut features, 0);
+        appender.append_features(MappedNodeId::new(1), MappedNodeId::new(2), &mut features, 0);
         // Second append at offset 2
-        appender.append_features(3, 4, &mut features, 2);
+        appender.append_features(MappedNodeId::new(3), MappedNodeId::new(4), &mut features, 2);
         // Third append at offset 4
-        appender.append_features(5, 6, &mut features, 4);
+        appender.append_features(MappedNodeId::new(5), MappedNodeId::new(6), &mut features, 4);
 
         assert_eq!(features[0], 3.0); // 1 + 2 + 0
         assert_eq!(features[1], 4.0); // 1 + 2 + 1
@@ -170,7 +176,7 @@ mod tests {
         };
         let mut features = vec![1.0, 2.0, 3.0];
 
-        appender.append_features(10, 20, &mut features, 1);
+        appender.append_features(MappedNodeId::new(10), MappedNodeId::new(20), &mut features, 1);
 
         // Zero-dimensional appender doesn't modify anything
         assert_eq!(features, vec![1.0, 2.0, 3.0]);

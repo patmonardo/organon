@@ -62,8 +62,8 @@ mod tests {
     impl LinkFeatureAppender for TestLinkFeatureAppender {
         fn append_features(
             &self,
-            _source: u64,
-            _target: u64,
+            _source: MappedNodeId,
+            _target: MappedNodeId,
             _features: &mut [f64],
             _offset: usize,
         ) {

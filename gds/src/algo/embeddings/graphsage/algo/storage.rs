@@ -10,6 +10,7 @@ use crate::projection::eval::algorithm::AlgorithmError;
 use crate::task::concurrency::TerminationFlag;
 use crate::task::progress::TaskProgressTracker;
 use crate::types::graph::Graph;
+use crate::types::graph::MappedNodeId;
 use std::sync::Arc;
 
 pub struct GraphSageStorageRuntime;
@@ -60,8 +61,10 @@ impl GraphSageStorageRuntime {
             return Ok(());
         }
         let fallback = graph.default_property_value();
-        for node in 0..graph.node_count() {
-            for relationship in graph.stream_relationships_weighted(node as i64, fallback) {
+        for node_index in 0..graph.node_count() {
+            let node_id = MappedNodeId::try_from(node_index)
+                .expect("validated GraphSAGE node index must fit a mapped node ID");
+            for relationship in graph.stream_relationships_weighted(node_id, fallback) {
                 if !relationship.weight().is_finite() {
                     return Err(AlgorithmError::Execution(format!(
                         "GraphSAGE relationship weights must be finite, got {}",

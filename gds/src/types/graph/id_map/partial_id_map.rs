@@ -18,13 +18,6 @@ pub trait PartialIdMap: Send + Sync {
         None
     }
 
-    /// Convenience helper that mirrors the TypeScript `NOT_FOUND` sentinel.
-    /// Most Rust call-sites should use [`PartialIdMap::to_mapped_node_id`], but the
-    /// sentinel is provided for compatibility with existing logic.
-    fn to_mapped_or_not_found(&self, original_node_id: OriginalNodeId) -> i64 {
-        self.to_mapped_node_id(original_node_id)
-            .unwrap_or(super::NOT_FOUND)
-    }
 }
 
 /// Empty partial mapping used as a safe default. It never maps any identifiers.

@@ -4,7 +4,7 @@
 //!
 //! This module implements the "Subtle pole" for BFS algorithm - ephemeral computation state.
 
-use crate::types::graph::NodeId;
+use crate::types::graph::MappedNodeId;
 
 /// BFS Computation Runtime - handles ephemeral computation state
 ///
@@ -12,7 +12,7 @@ use crate::types::graph::NodeId;
 /// This implements the "Subtle pole" for accumulating traversal state
 pub struct BfsComputationRuntime {
     /// Source node for traversal
-    pub source_node: NodeId,
+    pub source_node: MappedNodeId,
     /// Whether to track paths
     pub track_paths: bool,
     /// Concurrency level
@@ -26,7 +26,7 @@ pub struct BfsComputationRuntime {
 impl BfsComputationRuntime {
     /// Create new BFS computation runtime
     pub fn new(
-        source_node: NodeId,
+        source_node: MappedNodeId,
         track_paths: bool,
         concurrency: usize,
         node_count: usize,
@@ -44,7 +44,12 @@ impl BfsComputationRuntime {
     ///
     /// Translation of: `BFSComputation.initialize()` (lines 76-100)
     /// This resets the internal state for a new traversal
-    pub fn initialize(&mut self, source_node: NodeId, max_depth: Option<u32>, node_count: usize) {
+    pub fn initialize(
+        &mut self,
+        source_node: MappedNodeId,
+        max_depth: Option<u32>,
+        node_count: usize,
+    ) {
         self.source_node = source_node;
         self.max_depth = max_depth;
         self.visited = vec![false; node_count];
@@ -54,14 +59,20 @@ impl BfsComputationRuntime {
     ///
     /// Translation of: `BFSComputation.isVisited()` (lines 126-140)
     /// This checks the visited state of a node
-    pub fn is_visited(&self, node: NodeId) -> bool {
-        (node as usize) < self.visited.len() && self.visited[node as usize]
+    pub fn is_visited(&self, node: MappedNodeId) -> bool {
+        usize::try_from(node)
+            .ok()
+            .and_then(|node_index| self.visited.get(node_index))
+            .copied()
+            .unwrap_or(false)
     }
 
     /// Set a node as visited
-    pub fn set_visited(&mut self, node: NodeId) {
-        if (node as usize) < self.visited.len() {
-            self.visited[node as usize] = true;
+    pub fn set_visited(&mut self, node: MappedNodeId) {
+        if let Ok(node_index) = usize::try_from(node) {
+            if let Some(visited) = self.visited.get_mut(node_index) {
+                *visited = true;
+            }
         }
     }
 

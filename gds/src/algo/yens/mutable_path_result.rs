@@ -7,7 +7,8 @@
 use serde::{Deserialize, Serialize};
 use std::hash::{Hash, Hasher};
 
-use crate::types::graph::NodeId;
+use crate::types::graph::MappedNodeId;
+use crate::types::graph::RelationshipIndex;
 
 /// Mutable path result for Yen's algorithm manipulation
 ///
@@ -18,13 +19,13 @@ pub struct MutablePathResult {
     /// Index of this path in the result set
     pub index: u32,
     /// Source node ID
-    pub source_node: NodeId,
+    pub source_node: MappedNodeId,
     /// Target node ID
-    pub target_node: NodeId,
+    pub target_node: MappedNodeId,
     /// Node IDs along the path
-    pub node_ids: Vec<NodeId>,
+    pub node_ids: Vec<MappedNodeId>,
     /// Relationship IDs along the path
-    pub relationship_ids: Vec<NodeId>,
+    pub relationship_ids: Vec<RelationshipIndex>,
     /// Costs accumulated along the path
     pub costs: Vec<f64>,
 }
@@ -33,10 +34,10 @@ impl MutablePathResult {
     /// Create new mutable path result from individual components
     pub fn new(
         index: u32,
-        source_node: NodeId,
-        target_node: NodeId,
-        node_ids: Vec<NodeId>,
-        relationship_ids: Vec<NodeId>,
+        source_node: MappedNodeId,
+        target_node: MappedNodeId,
+        node_ids: Vec<MappedNodeId>,
+        relationship_ids: Vec<RelationshipIndex>,
         costs: Vec<f64>,
     ) -> Self {
         Self {
@@ -52,10 +53,10 @@ impl MutablePathResult {
     /// Create from a path result (conversion method)
     pub fn from_path_result(
         index: u32,
-        source_node: NodeId,
-        target_node: NodeId,
-        node_ids: Vec<NodeId>,
-        relationship_ids: Vec<NodeId>,
+        source_node: MappedNodeId,
+        target_node: MappedNodeId,
+        node_ids: Vec<MappedNodeId>,
+        relationship_ids: Vec<RelationshipIndex>,
         costs: Vec<f64>,
     ) -> Self {
         Self::new(
@@ -92,12 +93,12 @@ impl MutablePathResult {
     }
 
     /// Get node at given index
-    pub fn node(&self, index: usize) -> Option<NodeId> {
+    pub fn node(&self, index: usize) -> Option<MappedNodeId> {
         self.node_ids.get(index).copied()
     }
 
     /// Get relationship at given index
-    pub fn relationship(&self, index: usize) -> Option<NodeId> {
+    pub fn relationship(&self, index: usize) -> Option<RelationshipIndex> {
         self.relationship_ids.get(index).copied()
     }
 
@@ -217,10 +218,10 @@ impl Hash for MutablePathResult {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PathResult {
     pub index: u32,
-    pub source_node: NodeId,
-    pub target_node: NodeId,
-    pub node_ids: Vec<NodeId>,
-    pub relationship_ids: Vec<NodeId>,
+    pub source_node: MappedNodeId,
+    pub target_node: MappedNodeId,
+    pub node_ids: Vec<MappedNodeId>,
+    pub relationship_ids: Vec<RelationshipIndex>,
     pub costs: Vec<f64>,
 }
 

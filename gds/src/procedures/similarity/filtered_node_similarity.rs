@@ -296,7 +296,7 @@ impl FilteredNodeSimilarityFacade {
 
         let pairs: Vec<(u64, u64, f64)> = results
             .iter()
-            .map(|r| (r.source, r.target, r.similarity))
+            .map(|r| (u64::from(r.source), u64::from(r.target), r.similarity))
             .collect();
 
         let updated_store =

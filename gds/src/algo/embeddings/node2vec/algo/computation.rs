@@ -27,6 +27,8 @@ use crate::task::concurrency::virtual_threads::Executor;
 use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::task::progress::{NoopProgressTracker, ProgressTracker};
 use crate::types::graph::Graph;
+use crate::types::graph::MappedNodeId;
+use crate::types::graph::OriginalNodeId;
 use std::sync::Arc;
 
 use super::super::compressed_random_walks::CompressedRandomWalks;
@@ -102,10 +104,23 @@ impl Node2VecComputationRuntime {
 
         let random_seed = config.random_seed.unwrap_or(42);
 
-        let nodes: Vec<i64> = if config.source_nodes.is_empty() {
-            (0..node_count as i64).collect()
+        let nodes: Vec<MappedNodeId> = if config.source_nodes.is_empty() {
+            (0..node_count)
+                .map(|node_index| {
+                    MappedNodeId::try_from(node_index)
+                        .expect("validated Node2Vec node index must fit a mapped node ID")
+                })
+                .collect()
         } else {
-            config.source_nodes.clone()
+            config
+                .source_nodes
+                .iter()
+                .copied()
+                .map(|node_id| {
+                    MappedNodeId::try_from(node_id)
+                        .expect("validated Node2Vec source must be a mapped node ID")
+                })
+                .collect()
         };
 
         let max_walk_count = nodes
@@ -123,7 +138,7 @@ impl Node2VecComputationRuntime {
                 let graph_for_weight = Arc::clone(&graph);
                 let weight_fn = move |mapped_node_id: u64| -> f64 {
                     graph_for_weight
-                        .stream_relationships(mapped_node_id as i64, 1.0)
+                        .stream_relationships(MappedNodeId::new(mapped_node_id), 1.0)
                         .map(|cursor| cursor.property())
                         .sum()
                 };
@@ -135,14 +150,18 @@ impl Node2VecComputationRuntime {
                     parameters.sampling_walk_parameters.in_out_factor,
                     random_seed,
                 );
-                sampler.prepare_for_new_node(node_id as u64);
+                sampler.prepare_for_new_node(node_id.get());
 
                 (0..parameters.sampling_walk_parameters.walks_per_node)
                     .map(|_| {
                         sampler
-                            .walk(node_id as u64)
+                            .walk(node_id.get())
                             .into_iter()
-                            .map(|node| node as i64)
+                            .map(|node| {
+                                i64::try_from(node).expect(
+                                    "mapped Node2Vec walk ID must fit legacy corpus storage",
+                                )
+                            })
                             .collect()
                     })
                     .collect::<Vec<Vec<i64>>>()
@@ -180,9 +199,12 @@ impl Node2VecComputationRuntime {
 
         let graph_for_mapping = Arc::clone(&graph);
         let _to_original = move |mapped: i64| {
+            let mapped_node_id = MappedNodeId::try_from(mapped)
+                .expect("Node2Vec corpus IDs must remain non-negative mapped IDs");
             graph_for_mapping
-                .to_original_node_id(mapped)
-                .unwrap_or(mapped)
+                .to_original_node_id(mapped_node_id)
+                .unwrap_or_else(|| OriginalNodeId::new(mapped))
+                .get()
         };
 
         let model = Node2VecModel::new(

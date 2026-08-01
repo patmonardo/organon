@@ -47,7 +47,7 @@ use crate::task::memory::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::relationship_type::RelationshipType;
 use crate::projection::Orientation;
-use crate::types::graph::id_map::NodeId;
+use crate::types::graph::id_map::MappedNodeId;
 use crate::types::graph_store::GraphStore;
 use crate::types::prelude::DefaultGraphStore;
 use std::collections::{HashMap, HashSet};
@@ -199,8 +199,8 @@ impl AStarFacade {
         Ok(self)
     }
 
-    /// Set source node (NodeId)
-    pub fn source_node(mut self, source: NodeId) -> Self {
+    /// Set source node (MappedNodeId)
+    pub fn source_node(mut self, source: MappedNodeId) -> Self {
         self.config.source_node = source;
         self
     }
@@ -210,7 +210,7 @@ impl AStarFacade {
     /// The algorithm starts search from this node.
     /// Must be a valid node ID in the graph.
     pub fn source(mut self, source: u64) -> Self {
-        self.config.source_node = i64::try_from(source).unwrap_or(-1);
+        self.config.source_node = MappedNodeId::new(source);
         self
     }
 
@@ -218,13 +218,13 @@ impl AStarFacade {
     ///
     /// If specified, algorithm stops when target is reached.
     /// If not specified, computes paths to all reachable nodes.
-    pub fn target_node(mut self, target: NodeId) -> Self {
+    pub fn target_node(mut self, target: MappedNodeId) -> Self {
         self.config.target_node = target;
         self
     }
 
     pub fn target(mut self, target: u64) -> Self {
-        self.config.target_node = i64::try_from(target).unwrap_or(-1);
+        self.config.target_node = MappedNodeId::new(target);
         self
     }
 
@@ -233,7 +233,7 @@ impl AStarFacade {
     /// Algorithm computes shortest paths to all specified targets.
     pub fn targets(mut self, targets: Vec<u64>) -> Self {
         if let Some(first) = targets.into_iter().next() {
-            self.config.target_node = i64::try_from(first).unwrap_or(-1);
+            self.config.target_node = MappedNodeId::new(first);
         }
         self
     }

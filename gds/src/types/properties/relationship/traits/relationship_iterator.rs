@@ -1,6 +1,6 @@
 use super::relationship_cursor::{RelationshipCursorBox, WeightedRelationshipCursorBox};
 use super::relationship_predicate::RelationshipPredicate;
-use crate::types::graph::id_map::NodeId;
+use crate::types::graph::id_map::MappedNodeId;
 
 /// Relationship traversal exposed through cursor streams.
 pub trait RelationshipIterator: RelationshipPredicate + Send + Sync {
@@ -8,7 +8,7 @@ pub trait RelationshipIterator: RelationshipPredicate + Send + Sync {
     /// include the property value or `fallback_value` when none exists.
     fn stream_relationships<'a>(
         &'a self,
-        node_id: NodeId,
+        node_id: MappedNodeId,
         fallback_value: f64,
     ) -> RelationshipStream<'a>;
 
@@ -16,7 +16,7 @@ pub trait RelationshipIterator: RelationshipPredicate + Send + Sync {
     /// [`stream_relationships`].
     fn stream_inverse_relationships<'a>(
         &'a self,
-        node_id: NodeId,
+        node_id: MappedNodeId,
         fallback_value: f64,
     ) -> RelationshipStream<'a>;
 
@@ -32,7 +32,7 @@ pub trait RelationshipIterator: RelationshipPredicate + Send + Sync {
     /// type conversion overhead, designed for pathfinding algorithms.
     fn stream_relationships_weighted<'a>(
         &'a self,
-        node_id: NodeId,
+        node_id: MappedNodeId,
         fallback_value: f64,
     ) -> WeightedRelationshipStream<'a>;
 
@@ -40,7 +40,7 @@ pub trait RelationshipIterator: RelationshipPredicate + Send + Sync {
     /// [`stream_relationships_weighted`].
     fn stream_inverse_relationships_weighted<'a>(
         &'a self,
-        node_id: NodeId,
+        node_id: MappedNodeId,
         fallback_value: f64,
     ) -> WeightedRelationshipStream<'a>;
 }
@@ -56,14 +56,15 @@ pub type WeightedRelationshipStream<'a> =
 mod tests {
     use super::super::relationship_cursor;
     use super::*;
+    use crate::types::graph::id_map::RelationshipIndex;
 
     #[derive(Clone)]
     struct TestIterator {
-        edges: Vec<(NodeId, NodeId, f64)>,
+        edges: Vec<(MappedNodeId, MappedNodeId, f64)>,
     }
 
     impl RelationshipPredicate for TestIterator {
-        fn exists(&self, source_id: NodeId, target_id: NodeId) -> bool {
+        fn exists(&self, source_id: MappedNodeId, target_id: MappedNodeId) -> bool {
             self.edges
                 .iter()
                 .any(|(s, t, _)| *s == source_id && *t == target_id)
@@ -73,7 +74,7 @@ mod tests {
     impl RelationshipIterator for TestIterator {
         fn stream_relationships<'a>(
             &'a self,
-            node_id: NodeId,
+            node_id: MappedNodeId,
             _fallback_value: f64,
         ) -> RelationshipStream<'a> {
             let iter = self
@@ -83,6 +84,7 @@ mod tests {
                 .filter(move |(s, _, _)| *s == node_id)
                 .map(|(s, t, p)| {
                     Box::new(SimpleCursor {
+                        relationship_index: RelationshipIndex::ZERO,
                         source: s,
                         target: t,
                         property: p,
@@ -93,7 +95,7 @@ mod tests {
 
         fn stream_inverse_relationships<'a>(
             &'a self,
-            node_id: NodeId,
+            node_id: MappedNodeId,
             _fallback_value: f64,
         ) -> RelationshipStream<'a> {
             let iter = self
@@ -103,6 +105,7 @@ mod tests {
                 .filter(move |(_, t, _)| *t == node_id)
                 .map(|(s, t, p)| {
                     Box::new(SimpleCursor {
+                        relationship_index: RelationshipIndex::ZERO,
                         source: s,
                         target: t,
                         property: p,
@@ -119,7 +122,7 @@ mod tests {
 
         fn stream_relationships_weighted<'a>(
             &'a self,
-            node_id: NodeId,
+            node_id: MappedNodeId,
             _fallback_value: f64,
         ) -> WeightedRelationshipStream<'a> {
             let iter = self
@@ -130,6 +133,7 @@ mod tests {
                 .map(|(s, t, p)| {
                     // Direct f64 weight access - no conversion needed
                     Box::new(WeightedCursor {
+                        relationship_index: RelationshipIndex::ZERO,
                         source: s,
                         target: t,
                         weight: p,
@@ -140,7 +144,7 @@ mod tests {
 
         fn stream_inverse_relationships_weighted<'a>(
             &'a self,
-            node_id: NodeId,
+            node_id: MappedNodeId,
             _fallback_value: f64,
         ) -> WeightedRelationshipStream<'a> {
             let iter = self
@@ -151,6 +155,7 @@ mod tests {
                 .map(|(s, t, p)| {
                     // Direct f64 weight access - no conversion needed
                     Box::new(WeightedCursor {
+                        relationship_index: RelationshipIndex::ZERO,
                         source: s,
                         target: t,
                         weight: p,
@@ -162,17 +167,22 @@ mod tests {
 
     #[derive(Debug)]
     struct SimpleCursor {
-        source: NodeId,
-        target: NodeId,
+        relationship_index: RelationshipIndex,
+        source: MappedNodeId,
+        target: MappedNodeId,
         property: f64,
     }
 
     impl relationship_cursor::RelationshipCursor for SimpleCursor {
-        fn source_id(&self) -> NodeId {
+        fn relationship_index(&self) -> RelationshipIndex {
+            self.relationship_index
+        }
+
+        fn source_id(&self) -> MappedNodeId {
             self.source
         }
 
-        fn target_id(&self) -> NodeId {
+        fn target_id(&self) -> MappedNodeId {
             self.target
         }
 
@@ -185,17 +195,22 @@ mod tests {
 
     #[derive(Debug)]
     struct WeightedCursor {
-        source: NodeId,
-        target: NodeId,
+        relationship_index: RelationshipIndex,
+        source: MappedNodeId,
+        target: MappedNodeId,
         weight: f64,
     }
 
     impl relationship_cursor::WeightedRelationshipCursor for WeightedCursor {
-        fn source_id(&self) -> NodeId {
+        fn relationship_index(&self) -> RelationshipIndex {
+            self.relationship_index
+        }
+
+        fn source_id(&self) -> MappedNodeId {
             self.source
         }
 
-        fn target_id(&self) -> NodeId {
+        fn target_id(&self) -> MappedNodeId {
             self.target
         }
 
@@ -209,7 +224,7 @@ mod tests {
         let iter = TestIterator {
             edges: vec![(1, 2, 1.0), (1, 3, 2.0)],
         };
-        let collected: Vec<(NodeId, NodeId, f64)> = iter
+        let collected: Vec<(MappedNodeId, MappedNodeId, f64)> = iter
             .stream_relationships(1, 0.0)
             .map(|cursor| (cursor.source_id(), cursor.target_id(), cursor.property()))
             .collect();
@@ -221,7 +236,7 @@ mod tests {
         let iter = TestIterator {
             edges: vec![(0, 1, 2.0), (2, 1, 4.0), (2, 3, 6.0)],
         };
-        let collected: Vec<(NodeId, NodeId, f64)> = iter
+        let collected: Vec<(MappedNodeId, MappedNodeId, f64)> = iter
             .stream_inverse_relationships(1, 0.0)
             .map(|cursor| (cursor.source_id(), cursor.target_id(), cursor.property()))
             .collect();
@@ -243,7 +258,7 @@ mod tests {
             edges: vec![(1, 2, 3.0)],
         };
         let clone = iter.concurrent_copy();
-        let collected: Vec<(NodeId, NodeId, f64)> = clone
+        let collected: Vec<(MappedNodeId, MappedNodeId, f64)> = clone
             .stream_relationships(1, 0.0)
             .map(|cursor| (cursor.source_id(), cursor.target_id(), cursor.property()))
             .collect();
@@ -257,7 +272,7 @@ mod tests {
         let iter = TestIterator {
             edges: vec![(1, 2, 1.0), (1, 3, 2.0)],
         };
-        let collected: Vec<(NodeId, NodeId, f64)> = iter
+        let collected: Vec<(MappedNodeId, MappedNodeId, f64)> = iter
             .stream_relationships_weighted(1, 0.0)
             .map(|cursor| (cursor.source_id(), cursor.target_id(), cursor.weight()))
             .collect();
@@ -269,7 +284,7 @@ mod tests {
         let iter = TestIterator {
             edges: vec![(0, 1, 2.0), (2, 1, 4.0), (2, 3, 6.0)],
         };
-        let collected: Vec<(NodeId, NodeId, f64)> = iter
+        let collected: Vec<(MappedNodeId, MappedNodeId, f64)> = iter
             .stream_inverse_relationships_weighted(1, 0.0)
             .map(|cursor| (cursor.source_id(), cursor.target_id(), cursor.weight()))
             .collect();

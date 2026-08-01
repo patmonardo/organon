@@ -4,6 +4,7 @@
 
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::Graph;
+use crate::types::graph::MappedNodeId;
 
 #[derive(Debug, Default, Clone)]
 pub struct Node2VecStorageRuntime;
@@ -20,8 +21,10 @@ impl Node2VecStorageRuntime {
         }
 
         let fallback = graph.default_property_value();
-        for node in 0..graph.node_count() {
-            for cursor in graph.stream_relationships_weighted(node as i64, fallback) {
+        for node_index in 0..graph.node_count() {
+            let node_id = MappedNodeId::try_from(node_index)
+                .expect("validated Node2Vec node index must fit a mapped node ID");
+            for cursor in graph.stream_relationships_weighted(node_id, fallback) {
                 if !cursor.weight().is_finite() || cursor.weight() < 0.0 {
                     return Err(AlgorithmError::Execution(
                         "Node2Vec only supports finite non-negative relationship weights".into(),
@@ -38,7 +41,8 @@ impl Node2VecStorageRuntime {
         graph: &dyn Graph,
         source_nodes: &[i64],
     ) -> Result<(), AlgorithmError> {
-        let node_count = graph.node_count() as i64;
+        let node_count = i64::try_from(graph.node_count())
+            .expect("Node2Vec node count must fit configured source node IDs");
         if let Some(source) = source_nodes
             .iter()
             .copied()

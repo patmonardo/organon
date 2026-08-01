@@ -6,12 +6,12 @@ use crate::task::concurrency::TerminationFlag;
 use crate::task::progress::ProgressTracker;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::Graph;
-use crate::types::graph::NodeId;
+use crate::types::graph::MappedNodeId;
 
 /// KSpanningTree Storage Runtime - handles persistent data access and algorithm orchestration
 pub struct KSpanningTreeStorageRuntime {
     /// Source node for spanning tree
-    pub source_node: NodeId,
+    pub source_node: MappedNodeId,
     /// Number of spanning trees to create (k)
     pub k: u64,
     /// Objective: "min" or "max"
@@ -20,7 +20,7 @@ pub struct KSpanningTreeStorageRuntime {
 
 impl KSpanningTreeStorageRuntime {
     /// Create new KSpanningTree storage runtime
-    pub fn new(source_node: NodeId, k: u64, objective: String) -> Self {
+    pub fn new(source_node: MappedNodeId, k: u64, objective: String) -> Self {
         Self {
             source_node,
             k,
@@ -91,7 +91,12 @@ impl KSpanningTreeStorageRuntime {
                 .collect::<Vec<_>>(),
             &mst_result.cost_to_parent,
             mst_result.total_weight,
-            self.source_node as usize,
+            self.source_node.to_usize().ok_or_else(|| {
+                AlgorithmError::InvalidGraph(format!(
+                    "Source mapped node ID does not fit array indexing: {}",
+                    self.source_node
+                ))
+            })?,
             node_count,
         );
 
@@ -101,7 +106,7 @@ impl KSpanningTreeStorageRuntime {
                 parent: mst_result.parent.iter().map(|&x| x as i64).collect(),
                 cost_to_parent: mst_result.cost_to_parent,
                 total_cost: mst_result.total_weight,
-                root: self.source_node as u64,
+                root: self.source_node.get(),
                 node_count,
             });
         }
@@ -115,7 +120,7 @@ impl KSpanningTreeStorageRuntime {
             parent: computation.get_parent().iter().map(|&x| x as i64).collect(),
             cost_to_parent: computation.get_cost_to_parent().clone(),
             total_cost: computation.get_total_cost(),
-            root: self.source_node as u64,
+            root: self.source_node.get(),
             node_count,
         })
     }
@@ -133,13 +138,19 @@ impl KSpanningTreeStorageRuntime {
         };
 
         // Create spanning tree runtimes
+        let source_node = u32::try_from(self.source_node.get()).map_err(|_| {
+            AlgorithmError::InvalidGraph(format!(
+                "Source mapped node ID does not fit spanning-tree runtime: {}",
+                self.source_node
+            ))
+        })?;
         let spanning_tree_storage = SpanningTreeStorageRuntime::new(
-            self.source_node as u32,
+            source_node,
             is_min,
             1, // concurrency
         );
         let mut spanning_tree_computation = SpanningTreeComputationRuntime::new(
-            self.source_node as u32,
+            source_node,
             is_min,
             graph.node_count() as u32,
             1, // concurrency
@@ -158,9 +169,17 @@ impl KSpanningTreeStorageRuntime {
     /// Get neighbors from graph interface
     fn get_neighbors_from_graph(&self, graph: &dyn Graph, node_id: usize) -> Vec<(usize, f64)> {
         let fallback = 1.0;
+        let Ok(mapped_node_id) = MappedNodeId::try_from(node_id) else {
+            return Vec::new();
+        };
         graph
-            .stream_relationships_weighted(node_id as i64, fallback)
-            .map(|cursor| (cursor.target_id() as usize, cursor.weight()))
+            .stream_relationships_weighted(mapped_node_id, fallback)
+            .filter_map(|cursor| {
+                cursor
+                    .target_id()
+                    .to_usize()
+                    .map(|target| (target, cursor.weight()))
+            })
             .collect()
     }
 }

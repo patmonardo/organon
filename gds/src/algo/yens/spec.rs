@@ -17,7 +17,8 @@ use crate::define_algorithm_spec;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::relationship_type::RelationshipType;
 use crate::projection::Orientation;
-use crate::types::graph::NodeId;
+use crate::types::graph::MappedNodeId;
+use crate::types::graph::RelationshipIndex;
 use serde::{Deserialize, Serialize};
 use std::collections::{HashMap, HashSet};
 use std::time::Duration;
@@ -30,10 +31,10 @@ use std::time::Duration;
 pub struct YensConfig {
     /// Source node for path finding
     #[serde(alias = "sourceNode")]
-    pub source_node: NodeId,
+    pub source_node: MappedNodeId,
     /// Target node for path finding
     #[serde(alias = "targetNode")]
-    pub target_node: NodeId,
+    pub target_node: MappedNodeId,
     /// Number of shortest paths to find (K)
     pub k: usize,
     /// Property name for relationship weights
@@ -60,8 +61,8 @@ pub struct YensConfig {
 impl Default for YensConfig {
     fn default() -> Self {
         Self {
-            source_node: 0,
-            target_node: 1,
+            source_node: MappedNodeId::ZERO,
+            target_node: MappedNodeId::new(1),
             k: 3,
             weight_property: Self::default_weight_property(),
             relationship_types: vec![],
@@ -83,18 +84,6 @@ impl YensConfig {
 
     /// Validate configuration parameters
     pub fn validate(&self) -> Result<(), ConfigError> {
-        if self.source_node < 0 {
-            return Err(ConfigError::InvalidParameter {
-                parameter: "sourceNode".to_string(),
-                reason: "must be >= 0".to_string(),
-            });
-        }
-        if self.target_node < 0 {
-            return Err(ConfigError::InvalidParameter {
-                parameter: "targetNode".to_string(),
-                reason: "must be >= 0".to_string(),
-            });
-        }
         if self.concurrency == 0 {
             return Err(ConfigError::InvalidParameter {
                 parameter: "concurrency".to_string(),
@@ -166,13 +155,13 @@ pub struct YensPathResult {
     /// Index of this path (1st, 2nd, 3rd shortest, etc.)
     pub index: u32,
     /// Source node
-    pub source_node: NodeId,
+    pub source_node: MappedNodeId,
     /// Target node
-    pub target_node: NodeId,
+    pub target_node: MappedNodeId,
     /// Path as sequence of node IDs
-    pub node_ids: Vec<NodeId>,
+    pub node_ids: Vec<MappedNodeId>,
     /// Path as sequence of relationship IDs
-    pub relationship_ids: Vec<NodeId>,
+    pub relationship_ids: Vec<RelationshipIndex>,
     /// Costs accumulated along the path
     pub costs: Vec<f64>,
     /// Total cost of the path
@@ -212,8 +201,8 @@ pub struct YensMutateResult {
     pub updated_store: std::sync::Arc<crate::types::prelude::DefaultGraphStore>,
 }
 
-fn checked_u64(value: NodeId) -> u64 {
-    u64::try_from(value).unwrap_or(0)
+fn checked_u64(value: MappedNodeId) -> u64 {
+    value.get()
 }
 
 fn spec_path_to_core(path: &YensPathResult) -> PathResult {
@@ -223,7 +212,6 @@ fn spec_path_to_core(path: &YensPathResult) -> PathResult {
         .node_ids
         .iter()
         .copied()
-        .filter(|node_id| *node_id >= 0)
         .map(checked_u64)
         .collect();
 

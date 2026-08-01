@@ -1,6 +1,7 @@
 use crate::applications::services::logging::Log;
 use crate::projection::NodeLabel;
 use crate::types::graph::IdMap as _;
+use crate::types::graph::MappedNodeId;
 use crate::types::graph_store::DefaultGraphStore;
 use crate::types::graph_store::GraphStore as _;
 
@@ -51,8 +52,9 @@ impl WriteNodePropertiesApplication {
             || label_filter.contains(&NodeLabel::of("*"));
 
         let mut nodes_written: u64 = 0;
-        let node_count = graph.node_count() as i64;
-        for mapped_node_id in 0..node_count {
+        for mapped_node_id in 0..graph.node_count() {
+            let mapped_node_id = MappedNodeId::try_from(mapped_node_id)
+                .expect("graph node count must fit mapped node IDs");
             if !filter_all {
                 let labels = graph.node_labels(mapped_node_id);
                 if !labels.iter().any(|l| label_filter.contains(l)) {

@@ -8,7 +8,7 @@ use crate::task::memory::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
-use crate::types::graph::id_map::NodeId;
+use crate::types::graph::id_map::MappedNodeId;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use serde_json::Value as JsonValue;
 use std::collections::{HashMap, HashSet};
@@ -91,13 +91,13 @@ impl BellmanFordFacade {
         Ok(self)
     }
 
-    pub fn source_node(mut self, source: NodeId) -> Self {
+    pub fn source_node(mut self, source: MappedNodeId) -> Self {
         self.config.source_node = source;
         self
     }
 
     pub fn source(mut self, source: u64) -> Self {
-        self.config.source_node = i64::try_from(source).unwrap_or(-1);
+        self.config.source_node = MappedNodeId::new(source);
         self
     }
 

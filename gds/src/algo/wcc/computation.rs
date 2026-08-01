@@ -9,12 +9,13 @@
 //! - Uses `HugeAtomicDisjointSetStruct` for wait-free parallel union-find.
 //! - Uses optional relationship-property threshold filtering (`property > threshold`).
 
-use crate::task::concurrency::virtual_threads::Executor;
-use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::core::utils::paged::dss::{DisjointSetStruct, HugeAtomicDisjointSetStruct};
 use crate::core::utils::partition::{Partition, PartitionUtils, DEFAULT_BATCH_SIZE};
+use crate::task::concurrency::virtual_threads::Executor;
+use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::task::progress::ProgressTracker;
 use crate::types::graph::Graph;
+use crate::types::graph::MappedNodeId;
 use crate::types::properties::node::NodePropertyValues;
 use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
@@ -89,8 +90,10 @@ impl WccComputationRuntime {
         let dss = Arc::new(match self.seed_property_values.clone() {
             Some(seed_values) => {
                 HugeAtomicDisjointSetStruct::with_communities(node_count, |node| {
-                    if seed_values.has_value(node as u64) {
-                        seed_values.long_value(node as u64).unwrap_or(-1)
+                    let property_index = u64::try_from(node)
+                        .expect("graph node count must fit node property index space");
+                    if seed_values.has_value(property_index) {
+                        seed_values.long_value(property_index).unwrap_or(-1)
                     } else {
                         -1
                     }
@@ -162,35 +165,30 @@ fn sampled_strategy(
                 if node % RUN_CHECK_NODE_COUNT == 0 {
                     termination_flag.assert_running();
                 }
+                let node_id = mapped_node_id(node);
 
                 let mut remaining = NEIGHBOR_ROUNDS;
                 if let Some(t) = threshold {
-                    for cursor in g.stream_relationships(node as i64, t + 1.0) {
+                    for cursor in g.stream_relationships(node_id, t + 1.0) {
                         if remaining == 0 {
                             break;
                         }
                         if cursor.property() > t {
-                            let target = cursor.target_id();
-                            if target >= 0 {
-                                dss.union(node, target as usize);
-                                remaining -= 1;
-                            }
-                        }
-                    }
-                } else {
-                    for cursor in g.stream_relationships(node as i64, fallback) {
-                        if remaining == 0 {
-                            break;
-                        }
-                        let target = cursor.target_id();
-                        if target >= 0 {
-                            dss.union(node, target as usize);
+                            dss.union(node, physical_node_index(cursor.target_id()));
                             remaining -= 1;
                         }
                     }
+                } else {
+                    for cursor in g.stream_relationships(node_id, fallback) {
+                        if remaining == 0 {
+                            break;
+                        }
+                        dss.union(node, physical_node_index(cursor.target_id()));
+                        remaining -= 1;
+                    }
                 }
 
-                processed += NEIGHBOR_ROUNDS.min(g.degree(node as i64));
+                processed += NEIGHBOR_ROUNDS.min(g.degree(node_id));
             }
 
             processed
@@ -215,35 +213,30 @@ fn sampled_strategy(
                 if node % RUN_CHECK_NODE_COUNT == 0 {
                     termination_flag.assert_running();
                 }
+                let node_id = mapped_node_id(node);
 
                 if dss.set_id_of(node) == largest_component {
                     continue;
                 }
 
-                let degree = g.degree(node as i64);
+                let degree = g.degree(node_id);
                 if degree > NEIGHBOR_ROUNDS {
                     if let Some(t) = threshold {
                         let mut skipped = 0usize;
-                        for cursor in g.stream_relationships(node as i64, t + 1.0) {
+                        for cursor in g.stream_relationships(node_id, t + 1.0) {
                             if cursor.property() > t {
                                 skipped += 1;
                                 if skipped > NEIGHBOR_ROUNDS {
-                                    let target = cursor.target_id();
-                                    if target >= 0 {
-                                        dss.union(node, target as usize);
-                                    }
+                                    dss.union(node, physical_node_index(cursor.target_id()));
                                 }
                             }
                         }
                     } else {
                         let mut skipped = 0usize;
-                        for cursor in g.stream_relationships(node as i64, fallback) {
+                        for cursor in g.stream_relationships(node_id, fallback) {
                             skipped += 1;
                             if skipped > NEIGHBOR_ROUNDS {
-                                let target = cursor.target_id();
-                                if target >= 0 {
-                                    dss.union(node, target as usize);
-                                }
+                                dss.union(node, physical_node_index(cursor.target_id()));
                             }
                         }
                     }
@@ -253,20 +246,14 @@ fn sampled_strategy(
 
                 if use_inverse {
                     if let Some(t) = threshold {
-                        for cursor in g.stream_inverse_relationships(node as i64, t + 1.0) {
+                        for cursor in g.stream_inverse_relationships(node_id, t + 1.0) {
                             if cursor.property() > t {
-                                let src = cursor.source_id();
-                                if src >= 0 {
-                                    dss.union(node, src as usize);
-                                }
+                                dss.union(node, physical_node_index(cursor.source_id()));
                             }
                         }
                     } else {
-                        for cursor in g.stream_inverse_relationships(node as i64, fallback) {
-                            let src = cursor.source_id();
-                            if src >= 0 {
-                                dss.union(node, src as usize);
-                            }
+                        for cursor in g.stream_inverse_relationships(node_id, fallback) {
+                            dss.union(node, physical_node_index(cursor.source_id()));
                         }
                     }
                 }
@@ -307,26 +294,21 @@ fn unsampled_strategy(
                 if node % RUN_CHECK_NODE_COUNT == 0 {
                     termination_flag.assert_running();
                 }
+                let node_id = mapped_node_id(node);
 
                 if let Some(t) = threshold {
-                    for cursor in g.stream_relationships(node as i64, t + 1.0) {
+                    for cursor in g.stream_relationships(node_id, t + 1.0) {
                         if cursor.property() > t {
-                            let target = cursor.target_id();
-                            if target >= 0 {
-                                dss.union(node, target as usize);
-                            }
+                            dss.union(node, physical_node_index(cursor.target_id()));
                         }
                     }
                 } else {
-                    for cursor in g.stream_relationships(node as i64, fallback) {
-                        let target = cursor.target_id();
-                        if target >= 0 {
-                            dss.union(node, target as usize);
-                        }
+                    for cursor in g.stream_relationships(node_id, fallback) {
+                        dss.union(node, physical_node_index(cursor.target_id()));
                     }
                 }
 
-                count += g.degree(node as i64);
+                count += g.degree(node_id);
             }
 
             count
@@ -348,7 +330,7 @@ fn components_from_dss(
     for i in 0..node_count {
         let root = dss.set_id_of(i);
         unique_components.insert(root);
-        components[i] = root as u64;
+        components[i] = u64::try_from(root).expect("component root must fit result ID space");
     }
 
     (components, unique_components.len())
@@ -360,7 +342,8 @@ fn find_largest_component(node_count: usize, dss: &Arc<HugeAtomicDisjointSetStru
     }
 
     // Deterministic xorshift64* sampler (no external deps).
-    let mut state: u64 = (node_count as u64).wrapping_mul(0x9E3779B97F4A7C15);
+    let node_count_u64 = u64::try_from(node_count).expect("node count must fit sampling ID space");
+    let mut state: u64 = node_count_u64.wrapping_mul(0x9E3779B97F4A7C15);
     let mut counts: HashMap<usize, usize> = HashMap::new();
 
     let samples = SAMPLING_SIZE.min(node_count.max(1));
@@ -369,7 +352,8 @@ fn find_largest_component(node_count: usize, dss: &Arc<HugeAtomicDisjointSetStru
         state ^= state << 25;
         state ^= state >> 27;
         let rnd = state.wrapping_mul(0x2545F4914F6CDD1D);
-        let node = (rnd % node_count as u64) as usize;
+        let node = usize::try_from(rnd % node_count_u64)
+            .expect("sampled node must fit physical index space");
         let root = dss.set_id_of(node);
         *counts.entry(root).or_insert(0) += 1;
     }
@@ -384,4 +368,14 @@ fn find_largest_component(node_count: usize, dss: &Arc<HugeAtomicDisjointSetStru
     }
 
     best_root
+}
+
+fn mapped_node_id(index: usize) -> MappedNodeId {
+    MappedNodeId::try_from(index).expect("graph node count must fit mapped ID space")
+}
+
+fn physical_node_index(node_id: MappedNodeId) -> usize {
+    node_id
+        .to_usize()
+        .expect("mapped graph node must fit physical index space")
 }

@@ -2,6 +2,8 @@ use crate::collections::HugeObjectArray;
 use crate::core::utils::paged::HugeAtomicBitSet;
 use crate::core::utils::partition::Partition;
 use crate::types::graph::Graph;
+use crate::types::graph::MappedNodeId;
+use crate::types::graph::OriginalNodeId;
 use rand::Rng;
 use rand::SeedableRng;
 use rand_chacha::ChaCha8Rng;
@@ -74,11 +76,19 @@ impl GenerateFeaturesTask {
         self.partition.consume(|node_id| {
             let bitset = Arc::new(HugeAtomicBitSet::new(dimension));
 
+            let mapped_node_id = MappedNodeId::try_from(node_id)
+                .expect("HashGNN partition node index must fit a mapped node ID");
             let original = self
                 .graph
-                .to_original_node_id(node_id as i64)
-                .unwrap_or(node_id as i64) as u64;
-            let seed = self.random_seed ^ original;
+                .to_original_node_id(mapped_node_id)
+                .unwrap_or_else(|| {
+                    OriginalNodeId::new(
+                        i64::try_from(node_id)
+                            .expect("HashGNN fallback original node ID must fit i64"),
+                    )
+                });
+            let original_seed_bits = u64::from_ne_bytes(original.get().to_ne_bytes());
+            let seed = self.random_seed ^ original_seed_bits;
             let mut rng = ChaCha8Rng::seed_from_u64(seed);
 
             for _ in 0..density_level {

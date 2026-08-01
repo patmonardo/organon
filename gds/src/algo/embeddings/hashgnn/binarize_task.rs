@@ -93,7 +93,9 @@ impl BinarizeTask {
                     property_embeddings: &property_embeddings,
                 };
 
-                features::extract(node_id as u64, node_id as u64, &extractors, &mut consumer);
+                let mapped_node_id = u64::try_from(node_id)
+                    .expect("HashGNN feature index must fit a mapped node ID");
+                features::extract(mapped_node_id, mapped_node_id, &extractors, &mut consumer);
 
                 let bitset = Arc::new(HugeAtomicBitSet::new(output_dimension));
                 for (i, &embedding_val) in embedding.iter().enumerate().take(output_dimension) {

@@ -31,13 +31,13 @@
 //! ```
 
 use crate::task::memory::{Estimate, MemoryRange};
+use crate::types::graph::id_map::MappedNodeId;
 use crate::types::graph::Graph;
 use rand::Rng;
 use rand::SeedableRng;
 use rand_chacha::ChaCha8Rng;
 use std::sync::Arc;
 
-const NO_MORE_NODES: i64 = -1;
 const MAX_TRIES: usize = 100;
 
 /// Function that computes cumulative relationship weight for a node.
@@ -137,22 +137,23 @@ impl<W: CumulativeWeightSupplier> RandomWalkSampler<W> {
     pub fn walk(&mut self, start_node: u64) -> Vec<u64> {
         let mut walk = vec![0u64; self.walk_length];
         walk[0] = start_node;
+        let start_node = MappedNodeId::new(start_node);
 
         // Take first step
-        let first_step = self.random_neighbour(start_node);
-        if first_step == NO_MORE_NODES {
+        let Some(first_step) = self.random_neighbour(start_node) else {
             return vec![walk[0]];
-        }
-        walk[1] = first_step as u64;
+        };
+        walk[1] = first_step.get();
 
         // Continue walk with bias
         for i in 2..self.walk_length {
-            let next_node = self.walk_one_step(walk[i - 2], walk[i - 1]);
-            if next_node == NO_MORE_NODES {
+            let previous_node = MappedNodeId::new(walk[i - 2]);
+            let current_node = MappedNodeId::new(walk[i - 1]);
+            let Some(next_node) = self.walk_one_step(previous_node, current_node) else {
                 // Walk terminated early, return shortened walk
                 return walk[..i].to_vec();
-            }
-            walk[i] = next_node as u64;
+            };
+            walk[i] = next_node.get();
         }
 
         walk
@@ -167,12 +168,16 @@ impl<W: CumulativeWeightSupplier> RandomWalkSampler<W> {
     }
 
     /// Take one step in the random walk with Node2Vec bias.
-    fn walk_one_step(&mut self, previous_node: u64, current_node: u64) -> i64 {
-        let current_node_degree = self.graph.degree(current_node as i64);
+    fn walk_one_step(
+        &mut self,
+        previous_node: MappedNodeId,
+        current_node: MappedNodeId,
+    ) -> Option<MappedNodeId> {
+        let current_node_degree = self.graph.degree(current_node);
 
         if current_node_degree == 0 {
             // Dead end - no outgoing edges
-            return NO_MORE_NODES;
+            return None;
         }
 
         if current_node_degree == 1 {
@@ -182,18 +187,14 @@ impl<W: CumulativeWeightSupplier> RandomWalkSampler<W> {
 
         // Try to find valid next node with bias
         for _ in 0..MAX_TRIES {
-            let new_node = self.random_neighbour(current_node);
-            if new_node == NO_MORE_NODES {
-                return NO_MORE_NODES;
-            }
-            let new_node = new_node as u64;
+            let new_node = self.random_neighbour(current_node)?;
 
             let r: f64 = self.rng.gen();
 
             if new_node == previous_node {
                 // Return to previous node
                 if r < self.normalized_return_probability {
-                    return new_node as i64;
+                    return Some(new_node);
                 }
             } else {
                 // Moving to new node - check same distance vs in-out
@@ -207,7 +208,7 @@ impl<W: CumulativeWeightSupplier> RandomWalkSampler<W> {
 
                 // Definitely keep if r < min
                 if r < min_prob {
-                    return new_node as i64;
+                    return Some(new_node);
                 }
 
                 // Definitely reject if r >= max
@@ -219,12 +220,12 @@ impl<W: CumulativeWeightSupplier> RandomWalkSampler<W> {
                 if self.is_neighbour(previous_node, new_node) {
                     // Same distance from previous
                     if r < self.normalized_same_distance_probability {
-                        return new_node as i64;
+                        return Some(new_node);
                     }
                 } else {
                     // Moving outward
                     if r < self.normalized_in_out_probability {
-                        return new_node as i64;
+                        return Some(new_node);
                     }
                 }
             }
@@ -235,26 +236,26 @@ impl<W: CumulativeWeightSupplier> RandomWalkSampler<W> {
     }
 
     /// Select a random neighbor weighted by relationship weights.
-    fn random_neighbour(&mut self, node: u64) -> i64 {
-        let cumulative_weight = (self.cumulative_weight_supplier)(node);
+    fn random_neighbour(&mut self, node: MappedNodeId) -> Option<MappedNodeId> {
+        let cumulative_weight = (self.cumulative_weight_supplier)(node.get());
 
         if cumulative_weight == 0.0 {
-            return NO_MORE_NODES;
+            return None;
         }
 
         let random_weight: f64 = self.rng.gen();
         let random_weight = cumulative_weight * random_weight;
 
         let mut current_weight = 0.0;
-        let mut selected_neighbor = NO_MORE_NODES;
+        let mut selected_neighbor = None;
 
         // Use stream_relationships for cursor-based iteration
-        for cursor in self.graph.stream_relationships(node as i64, 1.0) {
+        for cursor in self.graph.stream_relationships(node, 1.0) {
             let weight = cursor.property();
             current_weight += weight;
 
             if random_weight <= current_weight {
-                selected_neighbor = cursor.target_id();
+                selected_neighbor = Some(cursor.target_id());
                 break;
             }
         }
@@ -263,8 +264,8 @@ impl<W: CumulativeWeightSupplier> RandomWalkSampler<W> {
     }
 
     /// Check if target is a neighbor of source.
-    fn is_neighbour(&self, source: u64, target: u64) -> bool {
-        self.graph.exists(source as i64, target as i64)
+    fn is_neighbour(&self, source: MappedNodeId, target: MappedNodeId) -> bool {
+        self.graph.exists(source, target)
     }
 
     /// Estimate memory usage for random walks.

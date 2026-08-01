@@ -10,13 +10,14 @@ use crate::algo::bridges::{
     BridgesMutationSummary, BridgesResult, BridgesResultBuilder, BridgesRow, BridgesStats,
     STACK_EVENT_SIZE_BYTES,
 };
+use crate::projection::eval::algorithm::AlgorithmError;
 use crate::task::concurrency::{Concurrency, TerminationFlag};
+use crate::task::memory::MemoryRange;
 use crate::task::progress::ProgressTracker;
 use crate::task::progress::{
     EmptyTaskRegistryFactory, JobId, TaskProgressTracker, TaskRegistryFactory,
 };
-use crate::task::memory::MemoryRange;
-use crate::projection::eval::algorithm::AlgorithmError;
+use crate::types::graph::MappedNodeId;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use crate::types::properties::relationship::DefaultRelationshipPropertyValues;
 use crate::types::properties::relationship::RelationshipPropertyValues;
@@ -201,17 +202,18 @@ impl BridgesFacade {
             let fallback = graph.default_property_value();
             let mut values: Vec<f64> = Vec::with_capacity(graph.relationship_count());
 
-            for node_id in 0..graph.node_count() {
-                let source = node_id as i64;
+            for node_index in 0..graph.node_count() {
+                let source = MappedNodeId::try_from(node_index).map_err(|_| {
+                    AlgorithmError::Execution(
+                        "Bridges mutate graph exceeds the mapped node ID domain".to_string(),
+                    )
+                })?;
                 for cursor in graph.stream_relationships(source, fallback) {
                     let target = cursor.target_id();
-                    if target < 0 {
-                        continue;
-                    }
                     let (a, b) = if source <= target {
-                        (source as u64, target as u64)
+                        (u64::from(source), u64::from(target))
                     } else {
-                        (target as u64, source as u64)
+                        (u64::from(target), u64::from(source))
                     };
                     let is_bridge = bridge_set.contains(&(a, b));
                     values.push(if is_bridge { 1.0 } else { 0.0 });
@@ -370,6 +372,7 @@ mod tests {
     use crate::config::GraphStoreConfig;
     use crate::procedures::GraphFacade;
     use crate::projection::RelationshipType;
+    use crate::types::graph::RelationshipIndex;
     use crate::types::graph::{RelationshipTopology, SimpleIdMap};
     use crate::types::graph_store::{
         Capabilities, DatabaseId, DatabaseInfo, DatabaseLocation, DefaultGraphStore, GraphName,
@@ -538,7 +541,8 @@ mod tests {
 
         assert_eq!(values.element_count(), 6);
         for idx in 0..values.element_count() {
-            assert_eq!(values.double_value(idx as u64).unwrap(), 1.0);
+            let relationship_index = RelationshipIndex::try_from(idx).unwrap();
+            assert_eq!(values.double_value(relationship_index).unwrap(), 1.0);
         }
     }
 

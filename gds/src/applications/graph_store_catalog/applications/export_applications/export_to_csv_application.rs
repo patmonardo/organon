@@ -1,6 +1,7 @@
 use crate::applications::graph_store_catalog::results::ExportResult;
 use crate::projection::RelationshipType;
 use crate::types::graph::IdMap as _;
+use crate::types::graph::MappedNodeId;
 use crate::types::graph_store::DefaultGraphStore;
 use crate::types::graph_store::GraphStore as _;
 use std::fs;
@@ -55,11 +56,13 @@ impl ExportToCsvApplication {
         writeln!(file, "id,labels")
             .map_err(|e| format!("Failed to write '{}': {e}", file_path.display()))?;
 
-        let node_count = graph.node_count() as i64;
-        for mapped_node_id in 0..node_count {
+        let node_count = graph.node_count();
+        for mapped_index in 0..node_count {
+            let mapped_node_id = MappedNodeId::try_from(mapped_index)
+                .map_err(|_| "Graph node count exceeds mapped ID space".to_string())?;
             let original_id = graph
                 .to_original_node_id(mapped_node_id)
-                .unwrap_or(mapped_node_id);
+                .ok_or_else(|| format!("No original node ID for mapped node {mapped_node_id}"))?;
             let labels = graph
                 .node_labels(mapped_node_id)
                 .into_iter()
@@ -68,11 +71,11 @@ impl ExportToCsvApplication {
                 .join(";");
 
             // CSV: quote labels to keep delimiter-stable.
-            writeln!(file, "{},\"{}\"", original_id, labels)
+            writeln!(file, "{},\"{}\"", original_id.get(), labels)
                 .map_err(|e| format!("Failed to write '{}': {e}", file_path.display()))?;
         }
 
-        Ok(node_count as u64)
+        u64::try_from(node_count).map_err(|_| "Graph node count exceeds export range".to_string())
     }
 
     fn write_relationships_csv(
@@ -114,20 +117,23 @@ impl ExportToCsvApplication {
             .map_err(|e| format!("Failed to write '{}': {e}", file_path.display()))?;
 
         let mut count: u64 = 0;
-        let node_count = filtered.node_count() as i64;
-        for mapped_source in 0..node_count {
+        let node_count = filtered.node_count();
+        for mapped_index in 0..node_count {
+            let mapped_source = MappedNodeId::try_from(mapped_index)
+                .map_err(|_| "Graph node count exceeds mapped ID space".to_string())?;
             let source_original = filtered
                 .to_original_node_id(mapped_source)
-                .unwrap_or(mapped_source);
+                .ok_or_else(|| format!("No original node ID for mapped node {mapped_source}"))?;
 
             for cursor in
                 filtered.stream_relationships(mapped_source, filtered.default_property_value())
             {
                 let mapped_target = cursor.target_id();
-                let target_original = filtered
-                    .to_original_node_id(mapped_target)
-                    .unwrap_or(mapped_target);
-                writeln!(file, "{},{}", source_original, target_original)
+                let target_original =
+                    filtered.to_original_node_id(mapped_target).ok_or_else(|| {
+                        format!("No original node ID for mapped node {mapped_target}")
+                    })?;
+                writeln!(file, "{},{}", source_original.get(), target_original.get())
                     .map_err(|e| format!("Failed to write '{}': {e}", file_path.display()))?;
                 count += 1;
             }

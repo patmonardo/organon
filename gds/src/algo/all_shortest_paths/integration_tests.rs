@@ -11,7 +11,7 @@ mod tests {
         AlgorithmSpec, ComputationResult, ExecutionContext, ExecutionMode, ProcedureExecutor,
         ProjectionHint,
     };
-    use crate::types::graph::NodeId;
+    use crate::types::graph::MappedNodeId;
     use serde_json::json;
 
     #[test]
@@ -51,13 +51,13 @@ mod tests {
                 AllShortestPathsResult {
                     results: vec![
                         ShortestPathResult {
-                            source: 0 as NodeId,
-                            target: 1 as NodeId,
+                            source: MappedNodeId::ZERO,
+                            target: MappedNodeId::new(1),
                             distance: 2.0,
                         },
                         ShortestPathResult {
-                            source: 0 as NodeId,
-                            target: 2 as NodeId,
+                            source: MappedNodeId::ZERO,
+                            target: MappedNodeId::new(2),
                             distance: 4.0,
                         },
                     ],

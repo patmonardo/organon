@@ -1,12 +1,12 @@
 //! Java: `GraphSageEmbeddingsGenerator`.
 
 use crate::collections::HugeObjectArray;
-use crate::task::concurrency::virtual_threads::RunWithConcurrency;
-use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::core::utils::partition::PartitionUtils;
-use crate::task::progress::TaskProgressTracker;
 use crate::ml::core::computation_context::ComputationContext;
 use crate::ml::core::tensor::Matrix;
+use crate::task::concurrency::virtual_threads::RunWithConcurrency;
+use crate::task::concurrency::{Concurrency, TerminationFlag};
+use crate::task::progress::TaskProgressTracker;
 use crate::types::graph::Graph;
 use rand::Rng;
 use rand::SeedableRng;
@@ -98,7 +98,13 @@ impl GraphSageEmbeddingsGenerator {
                 Box::new(move || {
                     termination_flag.assert_running();
 
-                    let node_ids: Vec<u64> = partition.iter().map(|n| n as u64).collect();
+                    let node_ids: Vec<u64> = partition
+                        .iter()
+                        .map(|node_index| {
+                            u64::try_from(node_index)
+                                .expect("GraphSAGE partition index must fit a mapped node ID")
+                        })
+                        .collect();
                     let sub_graphs = graphsage_helper::sub_graphs_per_layer(
                         Arc::clone(&graph),
                         &node_ids,

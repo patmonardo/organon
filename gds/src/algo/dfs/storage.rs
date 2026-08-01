@@ -11,10 +11,10 @@ use crate::algo::traversal::{
     run_sequential_dfs, Aggregator, ExitPredicate, FollowExitPredicate, OneHopAggregator,
     SequentialDfsConfig, TargetExitPredicate,
 };
-use crate::task::progress::{ProgressTracker, UNKNOWN_VOLUME};
 use crate::projection::eval::algorithm::AlgorithmError;
+use crate::task::progress::{ProgressTracker, UNKNOWN_VOLUME};
 use crate::types::graph::Graph;
-use crate::types::graph::NodeId;
+use crate::types::graph::MappedNodeId;
 
 /// DFS Storage Runtime - handles persistent data access and algorithm orchestration
 ///
@@ -22,9 +22,9 @@ use crate::types::graph::NodeId;
 /// This implements the "Gross pole" for accessing graph data
 pub struct DfsStorageRuntime {
     /// Source node for DFS traversal
-    pub source_node: NodeId,
+    pub source_node: MappedNodeId,
     /// Target nodes to find
-    pub target_nodes: Vec<NodeId>,
+    pub target_nodes: Vec<MappedNodeId>,
     /// Maximum depth to traverse
     pub max_depth: Option<u32>,
     /// Whether to track paths during traversal
@@ -36,8 +36,8 @@ pub struct DfsStorageRuntime {
 impl DfsStorageRuntime {
     /// Create new DFS storage runtime
     pub fn new(
-        source_node: NodeId,
-        target_nodes: Vec<NodeId>,
+        source_node: MappedNodeId,
+        target_nodes: Vec<MappedNodeId>,
         max_depth: Option<u32>,
         track_paths: bool,
         concurrency: usize,
@@ -104,7 +104,15 @@ impl DfsStorageRuntime {
         }
 
         let result = (|| {
-            let node_count = graph.map(|g| g.node_count()).unwrap_or(1000) as usize;
+            let node_count = match graph {
+                Some(graph) => usize::try_from(graph.node_count()).map_err(|_| {
+                    AlgorithmError::InvalidGraph(format!(
+                        "node count exceeds physical index capacity: {}",
+                        graph.node_count()
+                    ))
+                })?,
+                None => 1000,
+            };
             Self::validate_node_in_graph(self.source_node, node_count, "source")?;
             for target_node in &self.target_nodes {
                 Self::validate_node_in_graph(*target_node, node_count, "target")?;
@@ -138,24 +146,28 @@ impl DfsStorageRuntime {
     }
 
     /// Get neighbors of a node (graph-backed when available; mock fallback)
-    fn get_neighbors(&self, graph: Option<&dyn Graph>, node: NodeId) -> Vec<NodeId> {
+    fn get_neighbors(&self, graph: Option<&dyn Graph>, node: MappedNodeId) -> Vec<MappedNodeId> {
         if let Some(g) = graph {
             let fallback: f64 = 1.0;
             let stream = g.stream_relationships(node, fallback);
             stream.into_iter().map(|c| c.target_id()).collect()
         } else {
+            const ONE: MappedNodeId = MappedNodeId::new(1);
+            const TWO: MappedNodeId = MappedNodeId::new(2);
+            const THREE: MappedNodeId = MappedNodeId::new(3);
+
             match node {
-                0 => vec![1, 2],
-                1 => vec![0, 3],
-                2 => vec![0, 3],
-                3 => vec![1, 2],
+                MappedNodeId::ZERO => vec![ONE, TWO],
+                ONE => vec![MappedNodeId::ZERO, THREE],
+                TWO => vec![MappedNodeId::ZERO, THREE],
+                THREE => vec![ONE, TWO],
                 _ => vec![],
             }
         }
     }
 
     fn validate_node_in_graph(
-        node_id: NodeId,
+        node_id: MappedNodeId,
         node_count: usize,
         role: &str,
     ) -> Result<(), AlgorithmError> {
@@ -182,8 +194,8 @@ mod tests {
     impl ExitPredicate for ContinueOnTwo {
         fn test(
             &self,
-            _source_node: NodeId,
-            current_node: NodeId,
+            _source_node: MappedNodeId,
+            current_node: MappedNodeId,
             _weight_at_source: f64,
         ) -> ExitPredicateResult {
             if current_node == 2 {
@@ -197,7 +209,12 @@ mod tests {
     struct DoubleHopAggregator;
 
     impl Aggregator for DoubleHopAggregator {
-        fn apply(&self, _source_node: NodeId, _current_node: NodeId, weight_at_source: f64) -> f64 {
+        fn apply(
+            &self,
+            _source_node: MappedNodeId,
+            _current_node: MappedNodeId,
+            weight_at_source: f64,
+        ) -> f64 {
             weight_at_source + 2.0
         }
     }

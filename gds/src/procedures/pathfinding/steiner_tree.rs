@@ -13,7 +13,7 @@ use crate::task::concurrency::TerminationFlag;
 use crate::task::memory::MemoryRange;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
-use crate::types::graph::id_map::NodeId;
+use crate::types::graph::id_map::MappedNodeId;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use std::collections::HashMap;
 use std::collections::HashSet;
@@ -102,8 +102,13 @@ impl SteinerTreeBuilder {
 
     fn validate(&self) -> Result<()> {
         let config = SteinerTreeConfig {
-            source_node: self.source_node as NodeId,
-            target_nodes: self.target_nodes.iter().map(|&n| n as NodeId).collect(),
+            source_node: MappedNodeId::new(self.source_node),
+            target_nodes: self
+                .target_nodes
+                .iter()
+                .copied()
+                .map(MappedNodeId::new)
+                .collect(),
             relationship_weight_property: self.relationship_weight_property.clone(),
             delta: self.delta,
             apply_rerouting: self.apply_rerouting,
@@ -167,17 +172,17 @@ impl SteinerTreeBuilder {
             self.concurrency,
         );
 
-        let source_node: NodeId = NodeId::try_from(self.source_node).map_err(|_| {
+        let source_node: MappedNodeId = MappedNodeId::try_from(self.source_node).map_err(|_| {
             AlgorithmError::Execution(format!(
                 "source_node must fit into i64 (got {})",
                 self.source_node
             ))
         })?;
-        let target_nodes: Vec<NodeId> = self
+        let target_nodes: Vec<MappedNodeId> = self
             .target_nodes
             .iter()
             .map(|&t| {
-                NodeId::try_from(t).map_err(|_| {
+                MappedNodeId::try_from(t).map_err(|_| {
                     AlgorithmError::Execution(format!("target_nodes must fit into i64 (got {t})"))
                 })
             })

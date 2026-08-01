@@ -86,11 +86,6 @@ impl<C: PregelRuntimeConfig, I: MessageIterator> ComputeContext<C, I> {
         self.base.node_id()
     }
 
-    /// Internal node id as i64 (Graph's NodeId type)
-    pub fn internal_node_id_i64(&self) -> i64 {
-        self.base.internal_node_id_i64()
-    }
-
     /// Get the current superstep number (0-indexed).
     pub fn superstep(&self) -> usize {
         self.iteration
@@ -240,6 +235,8 @@ impl<C: PregelRuntimeConfig, I: MessageIterator> ComputeContext<C, I> {
     ///
     pub fn vote_to_halt(&self) {
         let node_id = self.base.node_id();
-        self.vote_bits.set(node_id as usize);
+        let node_index = usize::try_from(node_id)
+            .expect("Pregel mapped node must fit vote-bit storage index space");
+        self.vote_bits.set(node_index);
     }
 }

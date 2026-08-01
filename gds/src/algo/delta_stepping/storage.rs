@@ -12,7 +12,7 @@ use crate::task::concurrency::{install_with_concurrency, Concurrency};
 use crate::task::progress::{ProgressTracker, UNKNOWN_VOLUME};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::Graph;
-use crate::types::graph::NodeId;
+use crate::types::graph::MappedNodeId;
 use crate::types::properties::relationship::RelationshipCursorBox;
 use rayon::prelude::*;
 use std::collections::HashMap;
@@ -20,12 +20,11 @@ use std::collections::HashSet;
 use std::time::Instant;
 
 const FRONTIER_BATCH_SIZE: usize = 64;
-const NO_BIN: usize = usize::MAX;
 
 #[derive(Debug, Clone)]
 struct RelaxationCandidate {
-    source_node: NodeId,
-    target_node: NodeId,
+    source_node: MappedNodeId,
+    target_node: MappedNodeId,
     new_distance: f64,
     dest_bin: usize,
 }
@@ -42,7 +41,7 @@ struct BinExpansion {
 /// Handles the persistent data access and algorithm orchestration
 pub struct DeltaSteppingStorageRuntime {
     /// Source node for shortest path computation
-    pub source_node: NodeId,
+    pub source_node: MappedNodeId,
 
     /// Delta parameter for binning strategy
     pub delta: f64,
@@ -59,7 +58,7 @@ impl DeltaSteppingStorageRuntime {
     ///
     /// Translation of: Constructor (lines 86-114)
     pub fn new(
-        source_node: NodeId,
+        source_node: MappedNodeId,
         delta: f64,
         concurrency: usize,
         store_predecessors: bool,
@@ -172,7 +171,11 @@ impl DeltaSteppingStorageRuntime {
         let node_count = computation.node_count();
 
         for target_node in 0..node_count {
-            let target_node = target_node as NodeId;
+            let target_node = MappedNodeId::try_from(target_node).map_err(|_| {
+                AlgorithmError::InvalidGraph(format!(
+                    "Node count exceeds mapped node ID space: {node_count}"
+                ))
+            })?;
             if computation.predecessor(target_node).is_some() {
                 let path = self.reconstruct_path(computation, self.source_node, target_node)?;
                 paths.push(path);
@@ -196,7 +199,7 @@ impl DeltaSteppingStorageRuntime {
         let mut current_bin = 0usize;
         let mut frontier = vec![self.source_node];
 
-        while current_bin != NO_BIN {
+        loop {
             loop {
                 let mut next_local_frontier = Vec::new();
 
@@ -240,10 +243,10 @@ impl DeltaSteppingStorageRuntime {
                 frontier = next_local_frontier;
             }
 
-            current_bin = computation.find_next_non_empty_bin(current_bin + 1);
-            if current_bin == NO_BIN {
+            let Some(next_bin) = computation.find_next_non_empty_bin(current_bin + 1) else {
                 break;
-            }
+            };
+            current_bin = next_bin;
             frontier = computation.get_bin_nodes(current_bin);
         }
 
@@ -263,7 +266,7 @@ impl DeltaSteppingStorageRuntime {
         let mut current_bin = 0usize;
         let mut frontier = vec![self.source_node];
 
-        while current_bin != NO_BIN {
+        loop {
             loop {
                 let expansions = self.expand_frontier_parallel(
                     graph,
@@ -275,7 +278,7 @@ impl DeltaSteppingStorageRuntime {
                     concurrency,
                 )?;
 
-                let mut candidates_by_target: HashMap<NodeId, RelaxationCandidate> = HashMap::new();
+                let mut candidates_by_target: HashMap<MappedNodeId, RelaxationCandidate> = HashMap::new();
                 for expansion in expansions {
                     scanned_relationships =
                         scanned_relationships.saturating_add(expansion.scanned_relationships);
@@ -327,10 +330,10 @@ impl DeltaSteppingStorageRuntime {
                 frontier = next_local_frontier;
             }
 
-            current_bin = computation.find_next_non_empty_bin(current_bin + 1);
-            if current_bin == NO_BIN {
+            let Some(next_bin) = computation.find_next_non_empty_bin(current_bin + 1) else {
                 break;
-            }
+            };
+            current_bin = next_bin;
             frontier = computation.get_bin_nodes(current_bin);
         }
 
@@ -341,7 +344,7 @@ impl DeltaSteppingStorageRuntime {
         &self,
         graph: &dyn Graph,
         computation: &DeltaSteppingComputationRuntime,
-        frontier: &[NodeId],
+        frontier: &[MappedNodeId],
         current_bin: usize,
         direction: u8,
         node_count: usize,
@@ -371,7 +374,7 @@ impl DeltaSteppingStorageRuntime {
         &self,
         graph: &dyn Graph,
         computation: &DeltaSteppingComputationRuntime,
-        frontier: &[NodeId],
+        frontier: &[MappedNodeId],
         current_bin: usize,
         direction: u8,
         node_count: usize,
@@ -424,8 +427,8 @@ impl DeltaSteppingStorageRuntime {
     fn reconstruct_path(
         &self,
         computation: &DeltaSteppingComputationRuntime,
-        source_node: NodeId,
-        target_node: NodeId,
+        source_node: MappedNodeId,
+        target_node: MappedNodeId,
     ) -> Result<DeltaSteppingPathResult, AlgorithmError> {
         let mut node_ids = Vec::new();
         let mut costs = Vec::new();
@@ -465,9 +468,9 @@ impl DeltaSteppingStorageRuntime {
     fn get_neighbors_with_weights(
         &self,
         graph: Option<&dyn Graph>,
-        node_id: NodeId,
+        node_id: MappedNodeId,
         direction: u8,
-    ) -> Result<Vec<(NodeId, f64)>, AlgorithmError> {
+    ) -> Result<Vec<(MappedNodeId, f64)>, AlgorithmError> {
         if let Some(g) = graph {
             let fallback: f64 = 1.0;
             let iter: Box<dyn Iterator<Item = RelationshipCursorBox> + Send> = if direction == 1 {
@@ -481,17 +484,28 @@ impl DeltaSteppingStorageRuntime {
         } else {
             // Mock implementation for tests
             Ok(match node_id {
-                0 => vec![(1, 1.0), (2, 4.0)],
-                1 => vec![(2, 2.0), (3, 5.0)],
-                2 => vec![(3, 1.0), (4, 3.0)],
-                3 => vec![(4, 2.0)],
+                MappedNodeId::ZERO => vec![
+                    (MappedNodeId::new(1), 1.0),
+                    (MappedNodeId::new(2), 4.0),
+                ],
+                node if node == MappedNodeId::new(1) => vec![
+                    (MappedNodeId::new(2), 2.0),
+                    (MappedNodeId::new(3), 5.0),
+                ],
+                node if node == MappedNodeId::new(2) => vec![
+                    (MappedNodeId::new(3), 1.0),
+                    (MappedNodeId::new(4), 3.0),
+                ],
+                node if node == MappedNodeId::new(3) => {
+                    vec![(MappedNodeId::new(4), 2.0)]
+                }
                 _ => vec![],
             })
         }
     }
 
     fn validate_node_in_graph(
-        node_id: NodeId,
+        node_id: MappedNodeId,
         node_count: usize,
         role: &str,
     ) -> Result<(), AlgorithmError> {
@@ -507,8 +521,8 @@ impl DeltaSteppingStorageRuntime {
     }
 
     fn validate_edge_weight(
-        source_node: NodeId,
-        target_node: NodeId,
+        source_node: MappedNodeId,
+        target_node: MappedNodeId,
         weight: f64,
     ) -> Result<(), AlgorithmError> {
         if !weight.is_finite() || weight < 0.0 {
@@ -520,8 +534,8 @@ impl DeltaSteppingStorageRuntime {
     }
 
     fn validate_path_cost(
-        source_node: NodeId,
-        target_node: NodeId,
+        source_node: MappedNodeId,
+        target_node: MappedNodeId,
         cost: f64,
     ) -> Result<(), AlgorithmError> {
         if !cost.is_finite() {

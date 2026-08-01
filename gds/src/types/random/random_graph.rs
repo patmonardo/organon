@@ -1,6 +1,7 @@
 use crate::collections::backends::vec::VecDouble;
 use crate::config::GraphStoreConfig;
 use crate::projection::{NodeLabel, RelationshipType};
+use crate::types::graph::MappedNodeId;
 use crate::types::graph::{IdMap, RelationshipTopology, SimpleIdMap};
 use crate::types::graph_store::{
     Capabilities, DatabaseId, DatabaseInfo, DatabaseLocation, DefaultGraphStore, GraphName,
@@ -133,8 +134,8 @@ impl Randomizable<(&RandomGraphConfig, &RandomRelationshipConfig)> for Relations
             return Err(RandomGraphError::EmptyGraph);
         }
 
-        let mut outgoing: Vec<Vec<u64>> = vec![Vec::new(); node_count];
-        let mut incoming: Option<Vec<Vec<u64>>> = if graph_config.inverse_indexed {
+        let mut outgoing: Vec<Vec<MappedNodeId>> = vec![Vec::new(); node_count];
+        let mut incoming: Option<Vec<Vec<MappedNodeId>>> = if graph_config.inverse_indexed {
             Some(vec![Vec::new(); node_count])
         } else {
             None
@@ -148,9 +149,15 @@ impl Randomizable<(&RandomGraphConfig, &RandomRelationshipConfig)> for Relations
                     }
 
                     if rng.gen_bool(rel_config.probability) {
-                        neighbors.push(target as u64);
+                        neighbors.push(
+                            MappedNodeId::try_from(target)
+                                .expect("graph node count must fit mapped node IDs"),
+                        );
                         if let Some(incoming_lists) = incoming.as_mut() {
-                            incoming_lists[target].push(source as u64);
+                            incoming_lists[target].push(
+                                MappedNodeId::try_from(source)
+                                    .expect("graph node count must fit mapped node IDs"),
+                            );
                         }
                     }
                 }
@@ -163,29 +170,31 @@ impl Randomizable<(&RandomGraphConfig, &RandomRelationshipConfig)> for Relations
                 for (offset, target_neighbors) in right.iter_mut().enumerate() {
                     let target = source + 1 + offset;
                     if rng.gen_bool(rel_config.probability) {
-                        source_neighbors.push(target as u64);
-                        target_neighbors.push(source as u64);
+                        source_neighbors.push(
+                            MappedNodeId::try_from(target)
+                                .expect("graph node count must fit mapped node IDs"),
+                        );
+                        target_neighbors.push(
+                            MappedNodeId::try_from(source)
+                                .expect("graph node count must fit mapped node IDs"),
+                        );
 
                         if let Some(incoming_lists) = incoming.as_mut() {
-                            incoming_lists[target].push(source as u64);
-                            incoming_lists[source].push(target as u64);
+                            incoming_lists[target].push(
+                                MappedNodeId::try_from(source)
+                                    .expect("graph node count must fit mapped node IDs"),
+                            );
+                            incoming_lists[source].push(
+                                MappedNodeId::try_from(target)
+                                    .expect("graph node count must fit mapped node IDs"),
+                            );
                         }
                     }
                 }
             }
         }
 
-        Ok(RelationshipTopology::new(
-            outgoing
-                .into_iter()
-                .map(|adj| adj.into_iter().map(|id| id as i64).collect())
-                .collect(),
-            incoming.map(|inc| {
-                inc.into_iter()
-                    .map(|adj| adj.into_iter().map(|id| id as i64).collect())
-                    .collect()
-            }),
-        ))
+        Ok(RelationshipTopology::new(outgoing, incoming))
     }
 }
 
@@ -252,17 +261,23 @@ impl Randomizable<RandomGraphConfig> for DefaultGraphStore {
         let node_labels = resolve_node_labels(config)?;
 
         // Build SimpleIdMap with random label assignments
-        let original_ids: Vec<i64> = (0..config.node_count).map(|id| id as i64).collect();
+        let original_ids: Vec<i64> = (0..config.node_count)
+            .map(|id| i64::try_from(id).expect("random graph node count must fit original IDs"))
+            .collect();
         let mut id_map = SimpleIdMap::from_original_ids(original_ids);
 
         for label in &node_labels {
             id_map.add_node_label(label.clone());
         }
 
-        for mapped_id in 0..config.node_count as u64 {
+        for mapped_id in 0..config.node_count {
             let label_index = rng.gen_range(0..node_labels.len());
             let label = node_labels[label_index].clone();
-            id_map.add_node_id_to_label(mapped_id as i64, label);
+            id_map.add_node_id_to_label(
+                MappedNodeId::try_from(mapped_id)
+                    .expect("graph node count must fit mapped node IDs"),
+                label,
+            );
         }
 
         let direction = if config.directed {

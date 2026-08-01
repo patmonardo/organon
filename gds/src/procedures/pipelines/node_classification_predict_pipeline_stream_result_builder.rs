@@ -5,6 +5,7 @@ use crate::procedures::pipelines::{
     NodeClassificationPipelineResult, NodeClassificationPredictPipelineStreamConfig,
 };
 use crate::types::graph_store::GraphStore;
+use crate::types::graph::MappedNodeId;
 
 pub struct NodeClassificationPredictPipelineStreamResultBuilder {
     _configuration: NodeClassificationPredictPipelineStreamConfig,
@@ -41,20 +42,26 @@ impl StreamResultBuilder<NodeClassificationPipelineResult, NodeClassificationStr
             .map(|node_ids| node_ids.to_vec())
             .unwrap_or_else(|| {
                 (0..graph.node_count())
-                    .map(|node_id| node_id as u64)
+                    .map(|node_index| {
+                        u64::from(
+                            MappedNodeId::try_from(node_index)
+                                .expect("graph node count exceeds the mapped node ID domain"),
+                        )
+                    })
                     .collect()
             });
 
         let mut rows = Vec::with_capacity(node_ids.len());
         for (row_id, node_id) in node_ids.into_iter().enumerate() {
+            let mapped_node_id = MappedNodeId::new(node_id);
             let original = graph
-                .to_original_node_id(node_id as i64)
-                .unwrap_or(node_id as i64);
+                .to_original_node_id(mapped_node_id)
+                .expect("prediction returned an unknown mapped node ID");
             let predicted = predicted_classes.get(row_id) as i64;
             let probs = predicted_probabilities.map(|p| p.get(row_id).clone());
 
             rows.push(NodeClassificationStreamResult {
-                node_id: original as i64,
+                node_id: original.get(),
                 predicted_class: predicted,
                 predicted_probabilities: probs,
             });

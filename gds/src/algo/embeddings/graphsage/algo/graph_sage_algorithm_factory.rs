@@ -2,11 +2,12 @@
 
 use crate::algo::embeddings::graphsage::algo::graph_sage::GraphSage;
 use crate::algo::embeddings::graphsage::algo::graph_sage_model_resolver::GraphSageModelResolver;
+use crate::core::model::ModelCatalog;
 use crate::task::concurrency::Concurrency;
 use crate::task::concurrency::TerminationFlag;
-use crate::core::model::ModelCatalog;
 use crate::task::progress::TaskProgressTracker;
 use crate::types::graph::Graph;
+use crate::types::graph::MappedNodeId;
 use std::sync::Arc;
 
 #[derive(Clone)]
@@ -50,8 +51,10 @@ impl<MC: ModelCatalog> GraphSageAlgorithmFactory<MC> {
 
 fn validate_relationship_weight_property_value(graph: &dyn Graph) {
     let fallback = graph.default_property_value();
-    for node_id in 0..graph.node_count() {
-        for rel in graph.stream_relationships_weighted(node_id as i64, fallback) {
+    for node_index in 0..graph.node_count() {
+        let node_id = MappedNodeId::try_from(node_index)
+            .expect("validated GraphSAGE node index must fit a mapped node ID");
+        for rel in graph.stream_relationships_weighted(node_id, fallback) {
             let w = rel.weight();
             if !w.is_finite() {
                 panic!("GraphSage relationship weights must be finite (found {w})");

@@ -2,6 +2,7 @@ use std::collections::{HashMap, HashSet};
 
 use crate::applications::graph_store_catalog::results::GraphStreamRelationshipPropertiesResult;
 use crate::projection::RelationshipType;
+use crate::types::graph::MappedNodeId;
 use crate::types::graph_store::{DefaultGraphStore, GraphStore};
 use crate::types::ValueType;
 
@@ -48,16 +49,19 @@ impl StreamRelationshipPropertiesApplication {
                     .relationship_property_type(prop_key.as_str())
                     .map_err(|e| e.to_string())?;
 
-                let node_count = graph.node_count() as i64;
-                for mapped_source in 0..node_count {
-                    let original_source = graph
-                        .to_original_node_id(mapped_source)
-                        .unwrap_or(mapped_source);
+                for mapped_index in 0..graph.node_count() {
+                    let mapped_source = MappedNodeId::try_from(mapped_index)
+                        .map_err(|_| "Graph node count exceeds mapped ID space".to_string())?;
+                    let original_source =
+                        graph.to_original_node_id(mapped_source).ok_or_else(|| {
+                            format!("No original node ID for mapped node {mapped_source}")
+                        })?;
                     for cursor in graph.stream_relationships(mapped_source, f64::NAN) {
                         let mapped_target = cursor.target_id();
-                        let original_target = graph
-                            .to_original_node_id(mapped_target)
-                            .unwrap_or(mapped_target);
+                        let original_target =
+                            graph.to_original_node_id(mapped_target).ok_or_else(|| {
+                                format!("No original node ID for mapped node {mapped_target}")
+                            })?;
                         let pv = cursor.property();
 
                         let value = match value_type {
@@ -68,8 +72,8 @@ impl StreamRelationshipPropertiesApplication {
                         };
 
                         out.push(GraphStreamRelationshipPropertiesResult::new(
-                            original_source,
-                            original_target,
+                            original_source.get(),
+                            original_target.get(),
                             rel_type.name().to_string(),
                             prop_key.clone(),
                             value,

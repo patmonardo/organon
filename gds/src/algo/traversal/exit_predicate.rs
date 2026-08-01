@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::types::graph::NodeId;
+use crate::types::graph::MappedNodeId;
 
 /// Exit predicate result for traversal control
 ///
@@ -29,8 +29,8 @@ pub trait ExitPredicate: Send + Sync {
     /// * `weight_at_source` - Total weight collected by Aggregator during traversal
     fn test(
         &self,
-        source_node: NodeId,
-        current_node: NodeId,
+        source_node: MappedNodeId,
+        current_node: MappedNodeId,
         weight_at_source: f64,
     ) -> ExitPredicateResult;
 }
@@ -43,8 +43,8 @@ pub struct FollowExitPredicate;
 impl ExitPredicate for FollowExitPredicate {
     fn test(
         &self,
-        _source_node: NodeId,
-        _current_node: NodeId,
+        _source_node: MappedNodeId,
+        _current_node: MappedNodeId,
         _weight_at_source: f64,
     ) -> ExitPredicateResult {
         ExitPredicateResult::Follow
@@ -56,12 +56,12 @@ impl ExitPredicate for FollowExitPredicate {
 /// Translation of: `TargetExitPredicate.java` (lines 24-33)
 /// Terminates traversal when target nodes are reached
 pub struct TargetExitPredicate {
-    targets: Vec<NodeId>,
+    targets: Vec<MappedNodeId>,
 }
 
 impl TargetExitPredicate {
     /// Create new target exit predicate
-    pub fn new(targets: Vec<NodeId>) -> Self {
+    pub fn new(targets: Vec<MappedNodeId>) -> Self {
         Self { targets }
     }
 }
@@ -69,8 +69,8 @@ impl TargetExitPredicate {
 impl ExitPredicate for TargetExitPredicate {
     fn test(
         &self,
-        _source_node: NodeId,
-        current_node: NodeId,
+        _source_node: MappedNodeId,
+        current_node: MappedNodeId,
         _weight_at_source: f64,
     ) -> ExitPredicateResult {
         if self.targets.contains(&current_node) {

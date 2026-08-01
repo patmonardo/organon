@@ -35,14 +35,10 @@ pub fn build_similarity_relationship_store(
         let fallback = graph.default_property_value();
         let mut values: Vec<f64> = Vec::with_capacity(graph.relationship_count());
 
-        for node_id in 0..graph.node_count() {
-            let source = node_id as i64;
+        for source in graph.iter() {
             for cursor in graph.stream_relationships(source, fallback) {
                 let target = cursor.target_id();
-                if target < 0 {
-                    continue;
-                }
-                let key = (source as u64, target as u64);
+                let key = (source.get(), target.get());
                 let value = similarity_by_pair.get(&key).copied().unwrap_or(0.0);
                 values.push(value);
             }

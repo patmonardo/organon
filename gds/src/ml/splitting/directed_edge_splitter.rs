@@ -1,14 +1,15 @@
 use super::edge_splitter::{
     split_positive_examples_with, BaseEdgeSplitter, EdgeSplitter, RelationshipsBuilderFactory,
 };
-use crate::task::concurrency::virtual_threads::RunWithConcurrency;
-use crate::task::concurrency::Concurrency;
 use crate::core::utils::partition::DegreeFunction;
 use crate::core::utils::partition::PartitionUtils;
 use crate::projection::factory::RelationshipsBuilder;
 use crate::projection::RelationshipType;
+use crate::task::concurrency::virtual_threads::RunWithConcurrency;
+use crate::task::concurrency::Concurrency;
 use crate::types::graph::id_map::IdMap;
 use crate::types::graph::Graph;
+use crate::types::graph::MappedNodeId;
 use std::sync::atomic::AtomicUsize;
 use std::sync::Arc;
 
@@ -74,7 +75,7 @@ impl EdgeSplitter for DirectedEdgeSplitter {
     fn valid_positive_relationship_candidate_count(
         &self,
         graph: &dyn Graph,
-        is_valid_node_pair: Arc<dyn Fn(i64, i64) -> bool + Send + Sync>,
+        is_valid_node_pair: Arc<dyn Fn(MappedNodeId, MappedNodeId) -> bool + Send + Sync>,
     ) -> usize {
         let valid_relationship_count = Arc::new(AtomicUsize::new(0));
 
@@ -82,7 +83,11 @@ impl EdgeSplitter for DirectedEdgeSplitter {
         let relationship_count = graph.relationship_count();
         let degrees = {
             let graph = Graph::concurrent_view(graph);
-            Box::new(move |node_id: usize| graph.degree(node_id as i64)) as Box<dyn DegreeFunction>
+            Box::new(move |node_id: usize| {
+                let node_id = MappedNodeId::try_from(node_id)
+                    .expect("partition node must fit mapped node ID space");
+                graph.degree(node_id)
+            }) as Box<dyn DegreeFunction>
         };
 
         // Create tasks for each partition
@@ -104,7 +109,8 @@ impl EdgeSplitter for DirectedEdgeSplitter {
                         let mut local_count = 0;
 
                         for node_id in partition.as_partition().iter() {
-                            let node_id = node_id as i64;
+                            let node_id = MappedNodeId::try_from(node_id)
+                                .expect("partition node must fit mapped node ID space");
                             for cursor in
                                 graph.stream_relationships(node_id, graph.default_property_value())
                             {
@@ -140,8 +146,8 @@ impl EdgeSplitter for DirectedEdgeSplitter {
         remaining_rel_property_key: Option<&str>,
         selected_rel_count: &mut usize,
         remaining_rel_count: &mut usize,
-        node_id: i64,
-        is_valid_node_pair: &dyn Fn(i64, i64) -> bool,
+        node_id: MappedNodeId,
+        is_valid_node_pair: &dyn Fn(MappedNodeId, MappedNodeId) -> bool,
         positive_samples_remaining: &mut usize,
         candidate_edges_remaining: &mut usize,
     ) {

@@ -1,5 +1,6 @@
 use crate::types::graph::id_map::IdMap;
 use crate::types::graph::Graph;
+use crate::types::graph::MappedNodeId;
 
 pub trait LPNodeFilter: Send + Sync {
     fn valid_node_count(&self) -> i64;
@@ -31,7 +32,10 @@ impl<'a> LPNodeFilter for IdMapNodeFilter<'a> {
     }
 
     fn test(&self, node_id: i64) -> bool {
-        let Some(original) = self.graph.to_original_node_id(node_id) else {
+        let Ok(mapped_node_id) = MappedNodeId::try_from(node_id) else {
+            return false;
+        };
+        let Some(original) = self.graph.to_original_node_id(mapped_node_id) else {
             return false;
         };
         self.id_map.contains_original_id(original)

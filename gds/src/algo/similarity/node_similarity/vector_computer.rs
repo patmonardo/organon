@@ -6,11 +6,11 @@ use crate::types::graph::MappedNodeId;
 /// Abstraaction for accessing node neighbors (vectors).
 pub trait VectorComputer: Send + Sync {
     /// Get the sorted neighbor IDs for a node.
-    fn vector(&self, node_id: u64) -> Vec<u64>;
+    fn vector(&self, node_id: MappedNodeId) -> Vec<usize>;
 
     /// Get the weights corresponding to the neighbor IDs.
     /// Returns empty vector if unweighted.
-    fn weights(&self, node_id: u64) -> Vec<f64>;
+    fn weights(&self, node_id: MappedNodeId) -> Vec<f64>;
 }
 
 pub struct UnweightedVectorComputer<'a> {
@@ -28,18 +28,21 @@ impl UnweightedVectorComputer<'_> {
 }
 
 impl<'a> VectorComputer for UnweightedVectorComputer<'a> {
-    fn vector(&self, node_id: u64) -> Vec<u64> {
-        let node_id_mapped = node_id as MappedNodeId;
+    fn vector(&self, node_id: MappedNodeId) -> Vec<usize> {
         self.graph
-            .stream_relationships(node_id_mapped, self.graph.default_property_value())
-            .map(|cursor| cursor.target_id() as u64)
+            .stream_relationships(node_id, self.graph.default_property_value())
+            .map(|cursor| {
+                cursor
+                    .target_id()
+                    .to_usize()
+                    .expect("mapped target ID must fit vector storage")
+            })
             .collect()
     }
 
-    fn weights(&self, node_id: u64) -> Vec<f64> {
-        let node_id_mapped = node_id as MappedNodeId;
+    fn weights(&self, node_id: MappedNodeId) -> Vec<f64> {
         // Optimization: use degree to pre-allocate?
-        let degree = self.graph.degree(node_id_mapped);
+        let degree = self.graph.degree(node_id);
         vec![1.0; degree]
     }
 }
@@ -55,17 +58,20 @@ impl<'a> WeightedVectorComputer<'a> {
 }
 
 impl<'a> VectorComputer for WeightedVectorComputer<'a> {
-    fn vector(&self, node_id: u64) -> Vec<u64> {
-        let node_id_mapped = node_id as MappedNodeId;
+    fn vector(&self, node_id: MappedNodeId) -> Vec<usize> {
         self.graph
-            .stream_relationships(node_id_mapped, self.graph.default_property_value())
-            .map(|cursor| cursor.target_id() as u64)
+            .stream_relationships(node_id, self.graph.default_property_value())
+            .map(|cursor| {
+                cursor
+                    .target_id()
+                    .to_usize()
+                    .expect("mapped target ID must fit vector storage")
+            })
             .collect()
     }
 
-    fn weights(&self, node_id: u64) -> Vec<f64> {
-        let node_id_mapped = node_id as MappedNodeId;
-        let degree = self.graph.degree(node_id_mapped);
+    fn weights(&self, node_id: MappedNodeId) -> Vec<f64> {
+        let degree = self.graph.degree(node_id);
         vec![1.0; degree]
     }
 }

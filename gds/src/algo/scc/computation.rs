@@ -8,6 +8,7 @@ use crate::task::concurrency::TerminationFlag;
 use crate::core::utils::paged::HugeLongArrayStack;
 use crate::task::progress::ProgressTracker;
 use crate::types::graph::Graph;
+use crate::types::graph::MappedNodeId;
 
 #[derive(Clone)]
 pub struct SccComputationResult {
@@ -73,12 +74,17 @@ impl SccComputationRuntime {
             stack.push(start_node as i64);
             boundaries.push(index.get(start_node));
 
+            let mapped_start = MappedNodeId::try_from(start_node)
+                .map_err(|_| format!("node index {start_node} exceeds the mapped ID domain"))?;
             let neighbors: Vec<usize> = graph
-                .stream_relationships(start_node as i64, fallback)
+                .stream_relationships(mapped_start, fallback)
                 .map(|c| c.target_id())
-                .filter(|t| *t >= 0)
-                .map(|t| t as usize)
-                .collect();
+                .map(|target| {
+                    target
+                        .to_usize()
+                        .ok_or_else(|| format!("mapped target {target} exceeds the dense index domain"))
+                })
+                .collect::<Result<_, _>>()?;
             frames.push(Frame {
                 node: start_node,
                 neighbors,
@@ -105,12 +111,20 @@ impl SccComputationRuntime {
                         stack.push(w as i64);
                         boundaries.push(index.get(w));
 
+                        let mapped_w = MappedNodeId::try_from(w).map_err(|_| {
+                            format!("node index {w} exceeds the mapped ID domain")
+                        })?;
                         let w_neighbors: Vec<usize> = graph
-                            .stream_relationships(w as i64, fallback)
+                            .stream_relationships(mapped_w, fallback)
                             .map(|c| c.target_id())
-                            .filter(|t| *t >= 0)
-                            .map(|t| t as usize)
-                            .collect();
+                            .map(|target| {
+                                target.to_usize().ok_or_else(|| {
+                                    format!(
+                                        "mapped target {target} exceeds the dense index domain"
+                                    )
+                                })
+                            })
+                            .collect::<Result<_, _>>()?;
 
                         frames.push(Frame {
                             node: w,

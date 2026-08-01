@@ -1,20 +1,23 @@
-use crate::types::graph::id_map::NodeId;
+use crate::types::graph::id_map::MappedNodeId;
+use crate::types::graph::id_map::RelationshipIndex;
 use crate::values::{FromGdsValue, GdsValue};
 use std::fmt::Debug;
 use std::sync::Arc;
 
 /// Represents a relationship between two nodes with an associated property value.
 pub trait RelationshipCursor: Debug {
-    fn source_id(&self) -> NodeId;
-    fn target_id(&self) -> NodeId;
+    fn relationship_index(&self) -> RelationshipIndex;
+    fn source_id(&self) -> MappedNodeId;
+    fn target_id(&self) -> MappedNodeId;
     fn property(&self) -> f64;
 }
 
 /// Mutable variant of the relationship cursor used by iterator implementations
 /// that reuse a single cursor instance.
 pub trait ModifiableRelationshipCursor: RelationshipCursor {
-    fn set_source_id(&mut self, source_id: NodeId);
-    fn set_target_id(&mut self, target_id: NodeId);
+    fn set_relationship_index(&mut self, relationship_index: RelationshipIndex);
+    fn set_source_id(&mut self, source_id: MappedNodeId);
+    fn set_target_id(&mut self, target_id: MappedNodeId);
     fn set_property(&mut self, property: f64);
 }
 
@@ -34,11 +37,14 @@ pub type RelationshipCursorBox = Box<dyn RelationshipCursor + Send>;
 /// - Zero-copy weight access for performance-critical paths
 /// - Clean separation from general property access
 pub trait WeightedRelationshipCursor: Debug {
+    /// Returns the canonical index within the relationship-type partition.
+    fn relationship_index(&self) -> RelationshipIndex;
+
     /// Returns the source node ID of this relationship.
-    fn source_id(&self) -> NodeId;
+    fn source_id(&self) -> MappedNodeId;
 
     /// Returns the target node ID of this relationship.
-    fn target_id(&self) -> NodeId;
+    fn target_id(&self) -> MappedNodeId;
 
     /// Returns the weight of this relationship as f64.
     ///
@@ -49,11 +55,13 @@ pub trait WeightedRelationshipCursor: Debug {
 
 /// Mutable variant of the weighted relationship cursor for iterator implementations.
 pub trait ModifiableWeightedRelationshipCursor: WeightedRelationshipCursor {
+    fn set_relationship_index(&mut self, relationship_index: RelationshipIndex);
+
     /// Sets the source node ID of this relationship.
-    fn set_source_id(&mut self, source_id: NodeId);
+    fn set_source_id(&mut self, source_id: MappedNodeId);
 
     /// Sets the target node ID of this relationship.
-    fn set_target_id(&mut self, target_id: NodeId);
+    fn set_target_id(&mut self, target_id: MappedNodeId);
 
     /// Sets the weight of this relationship as f64.
     ///
@@ -79,10 +87,10 @@ pub type WeightedRelationshipCursorBox = Box<dyn WeightedRelationshipCursor + Se
 /// - Arrow/Polars alignment via `Value` enum
 pub trait TypedRelationshipCursor: Debug {
     /// Returns the source node ID of this relationship.
-    fn source_id(&self) -> NodeId;
+    fn source_id(&self) -> MappedNodeId;
 
     /// Returns the target node ID of this relationship.
-    fn target_id(&self) -> NodeId;
+    fn target_id(&self) -> MappedNodeId;
 
     /// Returns the property value as a `Value` enum.
     ///
@@ -110,10 +118,10 @@ pub trait TypedRelationshipCursor: Debug {
 /// Mutable variant of the typed relationship cursor for iterator implementations.
 pub trait ModifiableTypedRelationshipCursor: TypedRelationshipCursor {
     /// Sets the source node ID of this relationship.
-    fn set_source_id(&mut self, source_id: NodeId);
+    fn set_source_id(&mut self, source_id: MappedNodeId);
 
     /// Sets the target node ID of this relationship.
-    fn set_target_id(&mut self, target_id: NodeId);
+    fn set_target_id(&mut self, target_id: MappedNodeId);
 
     /// Sets the property value as a `GdsValue`.
     ///
@@ -138,17 +146,22 @@ mod tests {
 
     #[derive(Debug, Default, Clone, Copy)]
     struct SimpleCursor {
-        source: NodeId,
-        target: NodeId,
+        relationship_index: RelationshipIndex,
+        source: MappedNodeId,
+        target: MappedNodeId,
         property: f64,
     }
 
     impl RelationshipCursor for SimpleCursor {
-        fn source_id(&self) -> NodeId {
+        fn relationship_index(&self) -> RelationshipIndex {
+            self.relationship_index
+        }
+
+        fn source_id(&self) -> MappedNodeId {
             self.source
         }
 
-        fn target_id(&self) -> NodeId {
+        fn target_id(&self) -> MappedNodeId {
             self.target
         }
 
@@ -158,11 +171,15 @@ mod tests {
     }
 
     impl ModifiableRelationshipCursor for SimpleCursor {
-        fn set_source_id(&mut self, source_id: NodeId) {
+        fn set_relationship_index(&mut self, relationship_index: RelationshipIndex) {
+            self.relationship_index = relationship_index;
+        }
+
+        fn set_source_id(&mut self, source_id: MappedNodeId) {
             self.source = source_id;
         }
 
-        fn set_target_id(&mut self, target_id: NodeId) {
+        fn set_target_id(&mut self, target_id: MappedNodeId) {
             self.target = target_id;
         }
 
@@ -174,12 +191,14 @@ mod tests {
     #[test]
     fn modifiable_cursor_updates_values() {
         let mut cursor = SimpleCursor::default();
-        cursor.set_source_id(1);
-        cursor.set_target_id(2);
+        cursor.set_relationship_index(RelationshipIndex::new(4));
+        cursor.set_source_id(MappedNodeId::new(1));
+        cursor.set_target_id(MappedNodeId::new(2));
         cursor.set_property(3.0);
 
-        assert_eq!(cursor.source_id(), 1);
-        assert_eq!(cursor.target_id(), 2);
+        assert_eq!(cursor.relationship_index(), RelationshipIndex::new(4));
+        assert_eq!(cursor.source_id(), MappedNodeId::new(1));
+        assert_eq!(cursor.target_id(), MappedNodeId::new(2));
         assert_eq!(cursor.property(), 3.0);
     }
 
@@ -187,17 +206,22 @@ mod tests {
 
     #[derive(Debug, Default, Clone, Copy)]
     struct WeightedCursor {
-        source: NodeId,
-        target: NodeId,
+        relationship_index: RelationshipIndex,
+        source: MappedNodeId,
+        target: MappedNodeId,
         weight: f64,
     }
 
     impl WeightedRelationshipCursor for WeightedCursor {
-        fn source_id(&self) -> NodeId {
+        fn relationship_index(&self) -> RelationshipIndex {
+            self.relationship_index
+        }
+
+        fn source_id(&self) -> MappedNodeId {
             self.source
         }
 
-        fn target_id(&self) -> NodeId {
+        fn target_id(&self) -> MappedNodeId {
             self.target
         }
 
@@ -207,11 +231,15 @@ mod tests {
     }
 
     impl ModifiableWeightedRelationshipCursor for WeightedCursor {
-        fn set_source_id(&mut self, source_id: NodeId) {
+        fn set_relationship_index(&mut self, relationship_index: RelationshipIndex) {
+            self.relationship_index = relationship_index;
+        }
+
+        fn set_source_id(&mut self, source_id: MappedNodeId) {
             self.source = source_id;
         }
 
-        fn set_target_id(&mut self, target_id: NodeId) {
+        fn set_target_id(&mut self, target_id: MappedNodeId) {
             self.target = target_id;
         }
 
@@ -223,20 +251,23 @@ mod tests {
     #[test]
     fn weighted_cursor_provides_direct_f64_access() {
         let mut cursor = WeightedCursor::default();
-        cursor.set_source_id(1);
-        cursor.set_target_id(2);
+        cursor.set_relationship_index(RelationshipIndex::new(4));
+        cursor.set_source_id(MappedNodeId::new(1));
+        cursor.set_target_id(MappedNodeId::new(2));
         cursor.set_weight(3.0);
 
-        assert_eq!(cursor.source_id(), 1);
-        assert_eq!(cursor.target_id(), 2);
+        assert_eq!(cursor.relationship_index(), RelationshipIndex::new(4));
+        assert_eq!(cursor.source_id(), MappedNodeId::new(1));
+        assert_eq!(cursor.target_id(), MappedNodeId::new(2));
         assert_eq!(cursor.weight(), 3.0);
     }
 
     #[test]
     fn weighted_cursor_performance_characteristics() {
         let cursor = WeightedCursor {
-            source: 1,
-            target: 2,
+            relationship_index: RelationshipIndex::new(0),
+            source: MappedNodeId::new(1),
+            target: MappedNodeId::new(2),
             weight: 42.0,
         };
 
@@ -253,8 +284,8 @@ mod tests {
 
     #[derive(Clone)]
     struct TypedCursor {
-        source: NodeId,
-        target: NodeId,
+        source: MappedNodeId,
+        target: MappedNodeId,
         value: Arc<dyn GdsValue>,
     }
 
@@ -271,19 +302,19 @@ mod tests {
     impl Default for TypedCursor {
         fn default() -> Self {
             Self {
-                source: 0,
-                target: 0,
+                source: MappedNodeId::ZERO,
+                target: MappedNodeId::ZERO,
                 value: PrimitiveValues::long_value(0),
             }
         }
     }
 
     impl TypedRelationshipCursor for TypedCursor {
-        fn source_id(&self) -> NodeId {
+        fn source_id(&self) -> MappedNodeId {
             self.source
         }
 
-        fn target_id(&self) -> NodeId {
+        fn target_id(&self) -> MappedNodeId {
             self.target
         }
 
@@ -297,11 +328,11 @@ mod tests {
     }
 
     impl ModifiableTypedRelationshipCursor for TypedCursor {
-        fn set_source_id(&mut self, source_id: NodeId) {
+        fn set_source_id(&mut self, source_id: MappedNodeId) {
             self.source = source_id;
         }
 
-        fn set_target_id(&mut self, target_id: NodeId) {
+        fn set_target_id(&mut self, target_id: MappedNodeId) {
             self.target = target_id;
         }
 

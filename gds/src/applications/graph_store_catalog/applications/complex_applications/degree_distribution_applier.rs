@@ -3,6 +3,7 @@ use std::collections::HashMap;
 
 use crate::types::graph::Degrees as _;
 use crate::types::graph::IdMap as _;
+use crate::types::graph::MappedNodeId;
 
 /// DegreeDistributionApplier
 ///
@@ -21,8 +22,10 @@ impl DegreeDistributionApplier {
         let mut hist: HashMap<u32, u64> = HashMap::new();
 
         for mapped in 0..node_count {
-            let deg = graph.degree(mapped as i64);
-            let key = deg as u32;
+            let mapped_node_id = MappedNodeId::try_from(mapped)
+                .expect("graph node count must fit mapped node IDs");
+            let deg = graph.degree(mapped_node_id);
+            let key = u32::try_from(deg).expect("node degree must fit the histogram key");
             *hist.entry(key).or_insert(0) += 1;
         }
 

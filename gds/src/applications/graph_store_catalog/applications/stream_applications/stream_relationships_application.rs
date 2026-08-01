@@ -2,6 +2,7 @@ use std::collections::HashSet;
 
 use crate::applications::graph_store_catalog::results::TopologyResult;
 use crate::projection::RelationshipType;
+use crate::types::graph::MappedNodeId;
 use crate::types::graph_store::DefaultGraphStore;
 use crate::types::graph_store::GraphStore;
 
@@ -36,19 +37,22 @@ impl StreamRelationshipsApplication {
                 .map_err(|e| e.to_string())?;
 
             // Stream outgoing relationships for each mapped node id.
-            let node_count = graph.node_count() as i64;
-            for mapped_source in 0..node_count {
-                let source_original = graph
-                    .to_original_node_id(mapped_source)
-                    .unwrap_or(mapped_source);
+            for mapped_index in 0..graph.node_count() {
+                let mapped_source = MappedNodeId::try_from(mapped_index)
+                    .map_err(|_| "Graph node count exceeds mapped ID space".to_string())?;
+                let source_original =
+                    graph.to_original_node_id(mapped_source).ok_or_else(|| {
+                        format!("No original node ID for mapped node {mapped_source}")
+                    })?;
                 for cursor in graph.stream_relationships(mapped_source, f64::NAN) {
                     let target_mapped = cursor.target_id();
-                    let target_original = graph
-                        .to_original_node_id(target_mapped)
-                        .unwrap_or(target_mapped);
+                    let target_original =
+                        graph.to_original_node_id(target_mapped).ok_or_else(|| {
+                            format!("No original node ID for mapped node {target_mapped}")
+                        })?;
                     out.push(TopologyResult::new(
-                        source_original,
-                        target_original,
+                        source_original.get(),
+                        target_original.get(),
                         rel_type.name().to_string(),
                     ));
                 }

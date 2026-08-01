@@ -12,6 +12,8 @@ use super::config::{ArrowProjectionConfig, ArrowProjectionError};
 use super::reference::{EdgeTableReference, NodeTableReference};
 use crate::projection::factory::arrow::reference::ArrowReference;
 use crate::projection::factory::GraphStoreFactory;
+use crate::types::graph::MappedNodeId;
+use crate::types::graph::OriginalNodeId;
 use crate::types::graph::PartialIdMap;
 use crate::types::graph::RelationshipTopology;
 use crate::types::graph::SimpleIdMap;
@@ -274,23 +276,37 @@ impl ArrowNativeFactory {
     ) -> Result<DefaultGraphStore, ArrowProjectionError> {
         // Build id map from node ids (assume dense i64 ids)
         let node_ids: Vec<i64> = node_table.id_column().values().to_vec();
-        let id_map = SimpleIdMap::from_original_ids(node_ids.clone());
+        let id_map = SimpleIdMap::try_from_original_ids(node_ids.iter().copied())
+            .map_err(|error| ArrowProjectionError::Import(error.to_string()))?;
 
         // Build topology (outgoing adjacency) from source/target columns
         let source = edge_table.source_column();
         let target = edge_table.target_column();
         let node_count = node_ids.len();
-        let mut outgoing: Vec<Vec<i64>> = vec![Vec::new(); node_count];
+        let mut outgoing: Vec<Vec<MappedNodeId>> = vec![Vec::new(); node_count];
         for (&s, &t) in source.values().iter().zip(target.values().iter()) {
-            let mapped_source = id_map.to_mapped_node_id(s).ok_or_else(|| {
-                ArrowProjectionError::Import(format!("source id {s} missing in nodes"))
+            let mapped_source = id_map
+                .to_mapped_node_id(OriginalNodeId::new(s))
+                .ok_or_else(|| {
+                    ArrowProjectionError::Import(format!("source id {s} missing in nodes"))
+                })?;
+            let mapped_target = id_map
+                .to_mapped_node_id(OriginalNodeId::new(t))
+                .ok_or_else(|| {
+                    ArrowProjectionError::Import(format!("target id {t} missing in nodes"))
+                })?;
+            let source_index = mapped_source.to_usize().ok_or_else(|| {
+                ArrowProjectionError::Import(format!(
+                    "mapped source {mapped_source} exceeds physical index space"
+                ))
             })?;
-            let mapped_target = id_map.to_mapped_node_id(t).ok_or_else(|| {
-                ArrowProjectionError::Import(format!("target id {t} missing in nodes"))
-            })?;
-            outgoing[mapped_source as usize].push(mapped_target);
+            outgoing
+                .get_mut(source_index)
+                .expect("mapped source must belong to the imported node domain")
+                .push(mapped_target);
         }
-        let topology = RelationshipTopology::new(outgoing, None);
+        let topology = RelationshipTopology::try_new(outgoing, None)
+            .map_err(|error| ArrowProjectionError::Import(error.to_string()))?;
 
         let schema = infer_materialized_schema(node_table);
 

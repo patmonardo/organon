@@ -1,13 +1,13 @@
 use super::{Aggregator, ExitPredicate, ExitPredicateResult};
 use crate::task::concurrency::{install_with_concurrency, Concurrency};
 use crate::projection::eval::algorithm::AlgorithmError;
-use crate::types::graph::{Graph, NodeId};
+use crate::types::graph::{Graph, MappedNodeId};
 use rayon::prelude::*;
 use std::sync::atomic::{AtomicBool, Ordering};
 
 #[derive(Debug, Clone, Copy)]
 pub struct ParallelBfsConfig {
-    pub source_node: NodeId,
+    pub source_node: MappedNodeId,
     pub node_count: usize,
     pub max_depth: Option<u32>,
     pub concurrency: usize,
@@ -16,14 +16,14 @@ pub struct ParallelBfsConfig {
 
 #[derive(Debug, Clone)]
 pub struct ParallelBfsResult {
-    pub visited_nodes: Vec<NodeId>,
+    pub visited_nodes: Vec<MappedNodeId>,
     pub visited_depths: Vec<f64>,
     pub relationships_examined: usize,
 }
 
 struct ChunkExpansion {
     examined_relationships: usize,
-    candidates: Vec<(NodeId, NodeId, f64)>,
+    candidates: Vec<(MappedNodeId, MappedNodeId, f64)>,
 }
 
 pub fn run_parallel_bfs(
@@ -41,7 +41,7 @@ pub fn run_parallel_bfs(
     let source_idx = node_index_in_graph(config.source_node, "source")?;
     visited[source_idx].store(true, Ordering::SeqCst);
 
-    let mut frontier: Vec<(NodeId, NodeId, f64)> =
+    let mut frontier: Vec<(MappedNodeId, MappedNodeId, f64)> =
         vec![(config.source_node, config.source_node, 0.0)];
     let mut result = Vec::new();
     let mut result_depths = Vec::new();
@@ -138,7 +138,7 @@ fn check_max_depth(max_depth: Option<u32>, current_depth: f64) -> bool {
 }
 
 fn validate_node_in_graph(
-    node_id: NodeId,
+    node_id: MappedNodeId,
     node_count: usize,
     role: &str,
 ) -> Result<(), AlgorithmError> {
@@ -151,7 +151,7 @@ fn validate_node_in_graph(
     Ok(())
 }
 
-fn node_index_in_graph(node_id: NodeId, role: &str) -> Result<usize, AlgorithmError> {
+fn node_index_in_graph(node_id: MappedNodeId, role: &str) -> Result<usize, AlgorithmError> {
     usize::try_from(node_id)
         .map_err(|_| AlgorithmError::InvalidGraph(format!("Invalid {role} node id: {node_id}")))
 }

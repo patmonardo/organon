@@ -11,13 +11,13 @@ use crate::algo::algorithms::pathfinding::{
 };
 use crate::algo::algorithms::{ExecutionMetadata, ResultBuilder};
 use crate::config::validation::ConfigError;
-use crate::task::progress::TaskProgressTracker;
-use crate::task::progress::Tasks;
 use crate::define_algorithm_spec;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
-use crate::types::graph::NodeId;
+use crate::task::progress::TaskProgressTracker;
+use crate::task::progress::Tasks;
+use crate::types::graph::MappedNodeId;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::time::Duration;
@@ -30,10 +30,10 @@ use std::time::Duration;
 pub struct DfsConfig {
     /// Source node for DFS traversal
     #[serde(default, alias = "sourceNode")]
-    pub source_node: NodeId,
+    pub source_node: MappedNodeId,
     /// Target nodes to find (empty means find all reachable)
     #[serde(default, alias = "targetNodes")]
-    pub target_nodes: Vec<NodeId>,
+    pub target_nodes: Vec<MappedNodeId>,
     /// Maximum depth to traverse (None means unlimited)
     #[serde(default, alias = "maxDepth")]
     pub max_depth: Option<u32>,
@@ -48,7 +48,7 @@ pub struct DfsConfig {
 impl Default for DfsConfig {
     fn default() -> Self {
         Self {
-            source_node: 0,
+            source_node: MappedNodeId::ZERO,
             target_nodes: Vec::new(),
             max_depth: None,
             track_paths: false,
@@ -64,20 +64,6 @@ impl DfsConfig {
 
     /// Validate configuration parameters
     pub fn validate(&self) -> Result<(), ConfigError> {
-        if self.source_node < 0 {
-            return Err(ConfigError::FieldValidation {
-                field: "source_node".to_string(),
-                message: "must be >= 0".to_string(),
-            });
-        }
-
-        if self.target_nodes.iter().any(|&node_id| node_id < 0) {
-            return Err(ConfigError::FieldValidation {
-                field: "target_nodes".to_string(),
-                message: "all target nodes must be >= 0".to_string(),
-            });
-        }
-
         if self.concurrency == 0 {
             return Err(ConfigError::FieldValidation {
                 field: "concurrency".to_string(),
@@ -115,7 +101,7 @@ impl crate::config::ValidatedConfig for DfsConfig {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct DfsResult {
     /// Visited nodes in traversal order
-    pub visited_nodes: Vec<NodeId>,
+    pub visited_nodes: Vec<MappedNodeId>,
     /// Aggregated traversal depth for each visited node, aligned with visited_nodes.
     #[serde(default)]
     pub visited_depths: Vec<f64>,
@@ -127,11 +113,11 @@ pub struct DfsResult {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct DfsPathResult {
     /// Source node
-    pub source_node: NodeId,
+    pub source_node: MappedNodeId,
     /// Target node
-    pub target_node: NodeId,
+    pub target_node: MappedNodeId,
     /// Path as sequence of node IDs
-    pub node_ids: Vec<NodeId>,
+    pub node_ids: Vec<MappedNodeId>,
     /// Path length (number of edges)
     pub path_length: u32,
 }
@@ -178,14 +164,10 @@ pub struct DfsMutateResult {
     pub updated_store: std::sync::Arc<crate::types::prelude::DefaultGraphStore>,
 }
 
-fn checked_u64(value: NodeId) -> u64 {
-    u64::try_from(value).unwrap_or(0)
-}
-
-fn spec_path_to_core(source: NodeId, target: NodeId, depth: f64) -> PathResult {
-    let target_u64 = checked_u64(target);
+fn spec_path_to_core(source: MappedNodeId, target: MappedNodeId, depth: f64) -> PathResult {
+    let target_u64 = target.get();
     PathResult {
-        source: checked_u64(source),
+        source: source.get(),
         target: target_u64,
         path: vec![target_u64],
         cost: depth,
@@ -196,16 +178,16 @@ fn spec_path_to_core(source: NodeId, target: NodeId, depth: f64) -> PathResult {
 pub struct DfsResultBuilder {
     result: DfsResult,
     execution_time: Duration,
-    source_node: NodeId,
-    target_nodes: Vec<NodeId>,
+    source_node: MappedNodeId,
+    target_nodes: Vec<MappedNodeId>,
 }
 
 impl DfsResultBuilder {
     pub fn new(
         result: DfsResult,
         execution_time: Duration,
-        source_node: NodeId,
-        target_nodes: Vec<NodeId>,
+        source_node: MappedNodeId,
+        target_nodes: Vec<MappedNodeId>,
     ) -> Self {
         Self {
             result,
@@ -218,8 +200,8 @@ impl DfsResultBuilder {
     pub fn result(
         result: DfsResult,
         execution_time: Duration,
-        source_node: NodeId,
-        target_nodes: Vec<NodeId>,
+        source_node: MappedNodeId,
+        target_nodes: Vec<MappedNodeId>,
     ) -> Result<PathFindingResult, AlgorithmError> {
         Self::new(result, execution_time, source_node, target_nodes).build_pathfinding_result()
     }
@@ -304,7 +286,12 @@ define_algorithm_spec! {
             .get_graph_with_types_and_orientation(&rel_types, Orientation::Natural)
             .map_err(|e| AlgorithmError::InvalidGraph(format!("Failed to obtain graph view: {}", e)))?;
 
-        let node_count = graph_view.node_count() as usize;
+        let node_count = usize::try_from(graph_view.node_count()).map_err(|_| {
+            AlgorithmError::InvalidGraph(format!(
+                "node count exceeds physical index capacity: {}",
+                graph_view.node_count()
+            ))
+        })?;
 
         let mut computation = DfsComputationRuntime::new(
             parsed_config.source_node,

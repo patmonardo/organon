@@ -4,6 +4,7 @@ use crate::task::concurrency::TerminationFlag;
 use crate::task::progress::ProgressTracker;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
+use crate::types::graph::MappedNodeId;
 use crate::types::prelude::GraphStore;
 use std::collections::HashSet;
 
@@ -46,12 +47,13 @@ impl TriangleStorageRuntime {
         let mut adj: Vec<Vec<usize>> = vec![Vec::new(); node_count];
         for node in 0..node_count {
             termination_flag.assert_running();
+            let node_id = MappedNodeId::try_from(node)
+                .map_err(|_| format!("node index does not fit mapped ID: {node}"))?;
 
             let mut neighbors: Vec<usize> = graph_view
-                .stream_relationships(node as i64, fallback)
+                .stream_relationships(node_id, fallback)
                 .map(|cursor| cursor.target_id())
-                .filter(|t| *t >= 0)
-                .map(|t| t as usize)
+                .filter_map(MappedNodeId::to_usize)
                 .collect();
 
             neighbors.sort_unstable();

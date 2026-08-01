@@ -74,7 +74,9 @@ impl RawFeaturesTask {
                     bitset: bitset.as_ref(),
                 };
 
-                features::extract(node_id as u64, node_id as u64, &extractors, &mut consumer);
+                let mapped_node_id = u64::try_from(node_id)
+                    .expect("HashGNN feature index must fit a mapped node ID");
+                features::extract(mapped_node_id, mapped_node_id, &extractors, &mut consumer);
 
                 total_feature_count += bitset.cardinality() as u64;
                 out.set(node_id, Some(bitset));

@@ -5,6 +5,7 @@ use crate::projection::RelationshipType;
 use crate::task::concurrency::TerminationFlag;
 use crate::task::progress::ProgressTracker;
 use crate::types::graph::Graph;
+use crate::types::graph::MappedNodeId;
 use crate::types::prelude::GraphStore;
 use crate::types::properties::node::NodePropertyValues;
 use std::collections::HashMap;
@@ -76,14 +77,22 @@ impl LouvainStorageRuntime {
         let mut adj: Vec<Vec<(usize, f64)>> = vec![Vec::new(); node_count];
         for node_id in 0..node_count {
             termination_flag.assert_running();
+            let mapped_node_id = MappedNodeId::try_from(node_id).map_err(|_| {
+                AlgorithmError::Execution(format!(
+                    "node index {node_id} exceeds the mapped ID domain"
+                ))
+            })?;
             let stream = self
                 .graph
-                .stream_relationships_weighted(node_id as i64, weight_fallback);
+                .stream_relationships_weighted(mapped_node_id, weight_fallback);
             for cursor in stream {
-                let t = cursor.target_id();
-                if t >= 0 {
-                    adj[node_id].push((t as usize, cursor.weight()));
-                }
+                let target = cursor.target_id().to_usize().ok_or_else(|| {
+                    AlgorithmError::Execution(format!(
+                        "mapped target {} exceeds the dense index domain",
+                        cursor.target_id()
+                    ))
+                })?;
+                adj[node_id].push((target, cursor.weight()));
             }
             progress_tracker.log_progress(1);
         }
@@ -142,10 +151,20 @@ impl LouvainStorageRuntime {
                 }
                 seed as u64
             } else {
+                let mapped_node_id = MappedNodeId::try_from(node).map_err(|_| {
+                    AlgorithmError::Execution(format!(
+                        "node index {node} exceeds the mapped ID domain"
+                    ))
+                })?;
                 let original = self
                     .graph
-                    .to_original_node_id(node as i64)
-                    .unwrap_or(node as i64);
+                    .to_original_node_id(mapped_node_id)
+                    .ok_or_else(|| {
+                        AlgorithmError::Execution(format!(
+                            "mapped node {mapped_node_id} has no original node ID"
+                        ))
+                    })?
+                    .get();
                 max_seed.saturating_add(original) as u64
             };
 

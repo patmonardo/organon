@@ -12,10 +12,11 @@ use super::DijkstraComputationRuntime;
 use crate::task::progress::{ProgressTracker, UNKNOWN_VOLUME};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::Graph;
-use crate::types::graph::NodeId;
+use crate::types::graph::MappedNodeId;
+use crate::types::graph::RelationshipIndex;
 use std::time::Instant;
 
-type HeuristicFunction = Box<dyn Fn(NodeId) -> f64 + Send + Sync>;
+type HeuristicFunction = Box<dyn Fn(MappedNodeId) -> f64 + Send + Sync>;
 
 /// Dijkstra Storage Runtime
 ///
@@ -23,7 +24,7 @@ type HeuristicFunction = Box<dyn Fn(NodeId) -> f64 + Send + Sync>;
 /// Handles the persistent data access and algorithm orchestration
 pub struct DijkstraStorageRuntime {
     /// Source node for shortest path computation
-    pub source_node: NodeId,
+    pub source_node: MappedNodeId,
 
     /// Whether to track relationship IDs
     pub track_relationships: bool,
@@ -40,7 +41,8 @@ pub struct DijkstraStorageRuntime {
     ///
     /// Note: `relationship_id` follows Java GDS semantics here: index within the
     /// enumerated adjacency stream for the current source node.
-    relationship_filter: Box<dyn Fn(NodeId, NodeId, NodeId) -> bool + Send + Sync>,
+    relationship_filter:
+        Box<dyn Fn(MappedNodeId, MappedNodeId, RelationshipIndex) -> bool + Send + Sync>,
 
     /// Optional A* style heuristic used only to order the priority queue.
     heuristic_function: Option<HeuristicFunction>,
@@ -51,7 +53,7 @@ impl DijkstraStorageRuntime {
     ///
     /// Translation of: Constructor (lines 118-140)
     pub fn new(
-        source_node: NodeId,
+        source_node: MappedNodeId,
         track_relationships: bool,
         concurrency: usize,
         use_heuristic: bool,
@@ -71,7 +73,7 @@ impl DijkstraStorageRuntime {
     /// Mirrors Java `Dijkstra.withRelationshipFilter(...)` which AND-combines filters.
     pub fn with_relationship_filter<F>(mut self, filter: F) -> Self
     where
-        F: Fn(NodeId, NodeId, NodeId) -> bool + Send + Sync + 'static,
+        F: Fn(MappedNodeId, MappedNodeId, RelationshipIndex) -> bool + Send + Sync + 'static,
     {
         let previous = self.relationship_filter;
         self.relationship_filter = Box::new(move |source, target, relationship_id| {
@@ -86,7 +88,7 @@ impl DijkstraStorageRuntime {
     /// path costs remain the true Dijkstra distance from the source.
     pub fn with_heuristic_function<F>(mut self, heuristic_function: F) -> Self
     where
-        F: Fn(NodeId) -> f64 + Send + Sync + 'static,
+        F: Fn(MappedNodeId) -> f64 + Send + Sync + 'static,
     {
         self.use_heuristic = true;
         self.heuristic_function = Some(Box::new(heuristic_function));
@@ -208,7 +210,7 @@ impl DijkstraStorageRuntime {
     fn relax_edges(
         &self,
         computation: &mut DijkstraComputationRuntime,
-        source_node: NodeId,
+        source_node: MappedNodeId,
         source_cost: f64,
         graph: Option<&dyn Graph>,
         direction: u8,
@@ -266,7 +268,7 @@ impl DijkstraStorageRuntime {
     fn add_to_queue(
         &self,
         computation: &mut DijkstraComputationRuntime,
-        node_id: NodeId,
+        node_id: MappedNodeId,
         cost: f64,
     ) -> Result<(), AlgorithmError> {
         let priority = self.queue_priority(node_id, cost)?;
@@ -277,7 +279,7 @@ impl DijkstraStorageRuntime {
     fn update_queue_cost(
         &self,
         computation: &mut DijkstraComputationRuntime,
-        node_id: NodeId,
+        node_id: MappedNodeId,
         cost: f64,
     ) -> Result<(), AlgorithmError> {
         let priority = self.queue_priority(node_id, cost)?;
@@ -285,7 +287,7 @@ impl DijkstraStorageRuntime {
         Ok(())
     }
 
-    fn queue_priority(&self, node_id: NodeId, cost: f64) -> Result<f64, AlgorithmError> {
+    fn queue_priority(&self, node_id: MappedNodeId, cost: f64) -> Result<f64, AlgorithmError> {
         let heuristic = self
             .heuristic_function
             .as_ref()
@@ -301,7 +303,7 @@ impl DijkstraStorageRuntime {
     }
 
     fn validate_node_in_graph(
-        node_id: NodeId,
+        node_id: MappedNodeId,
         node_count: usize,
         role: &str,
     ) -> Result<(), AlgorithmError> {
@@ -317,8 +319,8 @@ impl DijkstraStorageRuntime {
     }
 
     fn validate_edge_weight(
-        source_node: NodeId,
-        target_node: NodeId,
+        source_node: MappedNodeId,
+        target_node: MappedNodeId,
         weight: f64,
     ) -> Result<(), AlgorithmError> {
         if !weight.is_finite() || weight < 0.0 {
@@ -335,7 +337,7 @@ impl DijkstraStorageRuntime {
     fn reconstruct_path(
         &self,
         computation: &DijkstraComputationRuntime,
-        target_node: NodeId,
+        target_node: MappedNodeId,
         path_index: u64,
     ) -> Result<DijkstraPathResult, AlgorithmError> {
         let mut node_ids = Vec::new();
@@ -350,7 +352,15 @@ impl DijkstraStorageRuntime {
             costs.push(computation.get_cost(current_node));
 
             if self.track_relationships {
-                relationship_ids.push(computation.get_relationship_id(current_node).unwrap_or(0));
+                relationship_ids.push(
+                    computation
+                        .get_relationship_id(current_node)
+                        .ok_or_else(|| {
+                            AlgorithmError::InvalidGraph(
+                                "Missing relationship identity for tracked path".to_string(),
+                            )
+                        })?,
+                );
             }
 
             current_node = computation
@@ -385,12 +395,12 @@ impl DijkstraStorageRuntime {
     fn get_neighbors_with_weights(
         &self,
         graph: Option<&dyn Graph>,
-        node_id: NodeId,
+        node_id: MappedNodeId,
         direction: u8,
-    ) -> Result<Vec<(NodeId, f64, NodeId)>, AlgorithmError> {
+    ) -> Result<Vec<(MappedNodeId, f64, RelationshipIndex)>, AlgorithmError> {
         if let Some(g) = graph {
             let fallback = g.default_property_value();
-            let mapped: NodeId = node_id;
+            let mapped: MappedNodeId = node_id;
             let iter = if direction == 1 {
                 // 1 = incoming
                 g.stream_inverse_relationships_weighted(mapped, fallback)
@@ -399,27 +409,35 @@ impl DijkstraStorageRuntime {
             };
 
             let mut out = Vec::new();
-            for (idx, cursor) in iter.enumerate() {
-                let relationship_id = idx as NodeId;
-                let target_node = cursor.target_id();
+            for cursor in iter {
+                let relationship_id = cursor.relationship_index();
+                let target_node = if direction == 1 {
+                    cursor.source_id()
+                } else {
+                    cursor.target_id()
+                };
                 out.push((target_node, cursor.weight(), relationship_id));
             }
             return Ok(out);
         }
 
         // Deterministic mock when no Graph is provided
-        let neighbors: Vec<(NodeId, f64)> = match node_id {
-            0 => vec![(1, 1.0), (2, 4.0)],
-            1 => vec![(2, 2.0), (3, 5.0)],
-            2 => vec![(3, 1.0), (4, 3.0)],
-            3 => vec![(4, 2.0)],
+        let neighbors: Vec<(MappedNodeId, f64)> = match node_id.get() {
+            0 => vec![(MappedNodeId::new(1), 1.0), (MappedNodeId::new(2), 4.0)],
+            1 => vec![(MappedNodeId::new(2), 2.0), (MappedNodeId::new(3), 5.0)],
+            2 => vec![(MappedNodeId::new(3), 1.0), (MappedNodeId::new(4), 3.0)],
+            3 => vec![(MappedNodeId::new(4), 2.0)],
             _ => vec![],
         };
 
         Ok(neighbors
             .into_iter()
             .enumerate()
-            .map(|(idx, (target, weight))| (target, weight, idx as NodeId))
+            .map(|(idx, (target, weight))| {
+                let relationship_index = RelationshipIndex::try_from(idx)
+                    .expect("mock adjacency index must fit relationship identity space");
+                (target, weight, relationship_index)
+            })
             .collect())
     }
 

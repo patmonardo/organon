@@ -1,5 +1,11 @@
-use crate::algo::prize_collecting_steiner_tree::spec::{PRUNED, ROOT_NODE};
-use crate::types::graph::NodeId;
+use crate::types::graph::MappedNodeId;
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum PCSTreeParent {
+    Pruned,
+    Root,
+    Parent(MappedNodeId),
+}
 
 /// Computation runtime for Prize-Collecting Steiner Tree.
 ///
@@ -10,7 +16,7 @@ pub struct PCSTreeComputationRuntime {
     node_count: usize,
     prizes: Vec<f64>,
 
-    parent: Vec<i64>,
+    parent: Vec<PCSTreeParent>,
     parent_cost: Vec<f64>,
     in_tree: Vec<bool>,
 }
@@ -20,14 +26,14 @@ impl PCSTreeComputationRuntime {
         Self {
             node_count,
             prizes,
-            parent: vec![PRUNED; node_count],
+            parent: vec![PCSTreeParent::Pruned; node_count],
             parent_cost: vec![0.0; node_count],
             in_tree: vec![false; node_count],
         }
     }
 
     pub fn reset(&mut self) {
-        self.parent.fill(PRUNED);
+        self.parent.fill(PCSTreeParent::Pruned);
         self.parent_cost.fill(0.0);
         self.in_tree.fill(false);
     }
@@ -40,7 +46,7 @@ impl PCSTreeComputationRuntime {
         &self.prizes
     }
 
-    pub fn parent_array(&self) -> &[i64] {
+    pub fn parent_array(&self) -> &[PCSTreeParent] {
         &self.parent
     }
 
@@ -48,38 +54,48 @@ impl PCSTreeComputationRuntime {
         &self.parent_cost
     }
 
-    pub fn is_in_tree(&self, node: NodeId) -> bool {
-        self.in_tree.get(node as usize).copied().unwrap_or(false)
+    pub fn is_in_tree(&self, node: MappedNodeId) -> bool {
+        node.to_usize()
+            .and_then(|index| self.in_tree.get(index))
+            .copied()
+            .unwrap_or(false)
     }
 
-    pub fn prize(&self, node: NodeId) -> f64 {
-        self.prizes.get(node as usize).copied().unwrap_or(0.0)
+    pub fn prize(&self, node: MappedNodeId) -> f64 {
+        node.to_usize()
+            .and_then(|index| self.prizes.get(index))
+            .copied()
+            .unwrap_or(0.0)
     }
 
-    pub fn max_prize_node(&self) -> Option<NodeId> {
+    pub fn max_prize_node(&self) -> Option<MappedNodeId> {
         self.prizes
             .iter()
             .enumerate()
             .max_by(|(_, a), (_, b)| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal))
-            .map(|(idx, _)| idx as NodeId)
+            .and_then(|(index, _)| MappedNodeId::try_from(index).ok())
     }
 
-    pub fn include_root(&mut self, root: NodeId) {
-        let idx = root as usize;
+    pub fn include_root(&mut self, root: MappedNodeId) {
+        let Some(idx) = root.to_usize() else {
+            return;
+        };
         if idx >= self.node_count {
             return;
         }
-        self.parent[idx] = ROOT_NODE;
+        self.parent[idx] = PCSTreeParent::Root;
         self.parent_cost[idx] = 0.0;
         self.in_tree[idx] = true;
     }
 
-    pub fn include_edge(&mut self, parent: NodeId, node: NodeId, weight: f64) {
-        let node_idx = node as usize;
+    pub fn include_edge(&mut self, parent: MappedNodeId, node: MappedNodeId, weight: f64) {
+        let Some(node_idx) = node.to_usize() else {
+            return;
+        };
         if node_idx >= self.node_count {
             return;
         }
-        self.parent[node_idx] = parent as i64;
+        self.parent[node_idx] = PCSTreeParent::Parent(parent);
         self.parent_cost[node_idx] = weight;
         self.in_tree[node_idx] = true;
     }
@@ -90,7 +106,7 @@ impl PCSTreeComputationRuntime {
             .parent
             .iter()
             .enumerate()
-            .find(|(_, &p)| p == ROOT_NODE)
+            .find(|(_, &parent)| parent == PCSTreeParent::Root)
             .map(|(idx, _)| idx)
         else {
             return;
@@ -98,9 +114,11 @@ impl PCSTreeComputationRuntime {
 
         // Build children lists for current tree.
         let mut children: Vec<Vec<usize>> = vec![Vec::new(); self.node_count];
-        for (node, &p) in self.parent.iter().enumerate() {
-            if p >= 0 {
-                children[p as usize].push(node);
+        for (node, &parent) in self.parent.iter().enumerate() {
+            if let PCSTreeParent::Parent(parent) = parent {
+                if let Some(parent_index) = parent.to_usize() {
+                    children[parent_index].push(node);
+                }
             }
         }
 
@@ -116,13 +134,13 @@ impl PCSTreeComputationRuntime {
 
         let mut subtree_value = vec![0.0_f64; self.node_count];
         for &n in order.iter().rev() {
-            if self.parent[n] == PRUNED {
+            if self.parent[n] == PCSTreeParent::Pruned {
                 subtree_value[n] = 0.0_f64;
                 continue;
             }
 
             let mut value = self.prizes[n];
-            if self.parent[n] >= 0 {
+            if matches!(self.parent[n], PCSTreeParent::Parent(_)) {
                 value -= self.parent_cost[n];
             }
 
@@ -146,10 +164,10 @@ impl PCSTreeComputationRuntime {
         }
 
         while let Some(n) = prune_stack.pop() {
-            if self.parent[n] == PRUNED {
+            if self.parent[n] == PCSTreeParent::Pruned {
                 continue;
             }
-            self.parent[n] = PRUNED;
+            self.parent[n] = PCSTreeParent::Pruned;
             self.parent_cost[n] = 0.0;
             self.in_tree[n] = false;
             for &c in &children[n] {

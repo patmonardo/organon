@@ -47,9 +47,9 @@ fn result_paths(results: &[NodeSimilarityResult]) -> Vec<PathResult> {
     results
         .iter()
         .map(|r| PathResult {
-            source: r.source,
-            target: r.target,
-            path: vec![r.source, r.target],
+            source: r.source.get(),
+            target: r.target.get(),
+            path: vec![r.source.get(), r.target.get()],
             cost: r.similarity,
         })
         .collect()
@@ -80,7 +80,7 @@ impl<'a> FilteredNodeSimilarityResultBuilder<'a> {
             .iter()
             .map(|r| {
                 sources.insert(r.source);
-                (r.source, r.target, r.similarity)
+                (r.source.get(), r.target.get(), r.similarity)
             })
             .collect();
 

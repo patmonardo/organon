@@ -32,6 +32,7 @@ use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::task::memory::{Estimate, MemoryEstimation, MemoryEstimations, MemoryRange};
 use crate::task::progress::{NoopProgressTracker, ProgressTracker, Task, Tasks};
 use crate::types::graph::Graph;
+use crate::types::graph::id_map::{MappedNodeId, OriginalNodeId};
 use crate::types::graph_store::DefaultGraphStore;
 use crate::types::prelude::GraphStore;
 use parking_lot::RwLock;
@@ -53,7 +54,7 @@ pub struct NodeClassificationTrain {
     class_id_map: LocalIdMap,
     class_counts: LongMultiSet,
     node_graph: Arc<dyn Graph>,
-    target_node_ids: Arc<Vec<u64>>,
+    target_node_ids: Arc<Vec<MappedNodeId>>,
     node_feature_producer: NodeFeatureProducer<NodeClassificationPipelineTrainConfig>,
     progress_tracker: Box<dyn ProgressTracker>,
     termination_flag: TerminationFlag,
@@ -231,7 +232,6 @@ impl NodeClassificationTrain {
             })?;
         let target_node_ids = node_graph
             .iter_with_labels(&target_node_labels)
-            .map(|node_id| node_id as u64)
             .collect::<Vec<_>>();
 
         pipeline
@@ -247,16 +247,21 @@ impl NodeClassificationTrain {
                 )
             })?;
 
+        let target_property_node_ids = target_node_ids
+            .iter()
+            .map(|node_id| node_id.get())
+            .collect::<Vec<_>>();
         let labels_and_counts =
             LabelsAndClassCountsExtractor::extract_labels_and_class_counts_for_node_ids(
                 target_node_property.as_ref(),
-                &target_node_ids,
+                &target_property_node_ids,
             )
             .map_err(|error| {
                 let original_node_id = |node_id: u64| {
                     node_graph
-                        .to_original_node_id(node_id as i64)
-                        .unwrap_or(node_id as i64)
+                        .to_original_node_id(MappedNodeId::new(node_id))
+                        .expect("target node id must belong to the training graph")
+                        .get()
                 };
                 match error {
                     LabelsAndClassCountsError::MissingValue(node_id) => {
@@ -337,10 +342,11 @@ impl NodeClassificationTrain {
                 let graph = Arc::clone(&self.node_graph);
                 let target_node_ids = Arc::clone(&self.target_node_ids);
                 move |id| {
-                    let root_node_id = target_node_ids[id] as i64;
+                    let root_node_id = target_node_ids[id];
                     graph
                         .to_original_node_id(root_node_id)
-                        .unwrap_or(root_node_id)
+                        .expect("target node id must belong to the training graph")
+                        .get()
                 }
             }),
             Arc::new({
@@ -348,9 +354,8 @@ impl NodeClassificationTrain {
                 let root_to_target_index = Arc::clone(&root_to_target_index);
                 move |id| {
                     let root_node_id = graph
-                        .to_mapped_node_id(id)
-                        .expect("Mapped node id not found")
-                        as u64;
+                        .to_mapped_node_id(OriginalNodeId::new(id))
+                        .expect("original node id must belong to the training graph");
                     *root_to_target_index
                         .get(&root_node_id)
                         .expect("Mapped node id not found in target label set")
@@ -451,7 +456,11 @@ impl NodeClassificationTrain {
             outer_train,
             {
                 let labels_vec = Arc::clone(&labels_vec);
-                move |node_id| labels_vec[node_id as usize]
+                move |node_id| {
+                    let row = usize::try_from(node_id)
+                        .expect("training example id must fit the model row domain");
+                    labels_vec[row]
+                }
             },
             distinct_targets,
             &mut training_statistics,
@@ -795,7 +804,14 @@ fn estimate_stats_map(metrics_size: usize, number_of_model_candidates: usize) ->
 }
 
 fn to_u64_arc(values: Arc<Vec<i64>>) -> Arc<Vec<u64>> {
-    Arc::new(values.iter().map(|v| *v as u64).collect())
+    Arc::new(
+        values
+            .iter()
+            .map(|value| {
+                u64::try_from(*value).expect("training example id must fit the model row domain")
+            })
+            .collect(),
+    )
 }
 
 fn evaluate_metrics(
@@ -805,7 +821,12 @@ fn evaluate_metrics(
     labels: &HugeLongArray,
     metrics: &[&dyn ClassificationMetric],
 ) -> HashMap<String, f64> {
-    let eval_ids: Vec<usize> = evaluation_set.iter().map(|v| *v as usize).collect();
+    let eval_ids: Vec<usize> = evaluation_set
+        .iter()
+        .map(|value| {
+            usize::try_from(*value).expect("evaluation example id must fit the model row domain")
+        })
+        .collect();
     let mut predictions = HugeLongArray::new(eval_ids.len());
     let mut eval_labels = HugeLongArray::new(eval_ids.len());
 

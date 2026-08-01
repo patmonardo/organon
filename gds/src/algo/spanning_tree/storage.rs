@@ -10,7 +10,7 @@ use crate::task::concurrency::TerminationFlag;
 use crate::task::progress::ProgressTracker;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::Graph;
-use crate::types::graph::NodeId;
+use crate::types::graph::MappedNodeId;
 
 /// Spanning Tree Storage Runtime
 ///
@@ -233,32 +233,35 @@ impl SpanningTreeStorageRuntime {
         let fallback: f64 = 1.0;
         let mut out = Vec::new();
 
-        let mut push_cursor = |target_id: NodeId, weight: f64| -> Result<(), AlgorithmError> {
-            let target = u32::try_from(target_id).map_err(|_| {
+        let mut push_cursor = |target_id: MappedNodeId, weight: f64| -> Result<(), AlgorithmError> {
+            let target = u32::try_from(target_id.get()).map_err(|_| {
                 AlgorithmError::InvalidGraph(format!("Invalid neighbor node id: {target_id}"))
             })?;
             out.push((target, weight));
             Ok(())
         };
+        let mapped_node_id = MappedNodeId::new(u64::from(node_id));
 
         match direction {
             1 => {
-                for cursor in graph.stream_inverse_relationships_weighted(node_id as i64, fallback)
+                for cursor in
+                    graph.stream_inverse_relationships_weighted(mapped_node_id, fallback)
                 {
                     push_cursor(cursor.target_id(), cursor.weight())?;
                 }
             }
             2 => {
-                for cursor in graph.stream_relationships_weighted(node_id as i64, fallback) {
+                for cursor in graph.stream_relationships_weighted(mapped_node_id, fallback) {
                     push_cursor(cursor.target_id(), cursor.weight())?;
                 }
-                for cursor in graph.stream_inverse_relationships_weighted(node_id as i64, fallback)
+                for cursor in
+                    graph.stream_inverse_relationships_weighted(mapped_node_id, fallback)
                 {
                     push_cursor(cursor.target_id(), cursor.weight())?;
                 }
             }
             _ => {
-                for cursor in graph.stream_relationships_weighted(node_id as i64, fallback) {
+                for cursor in graph.stream_relationships_weighted(mapped_node_id, fallback) {
                     push_cursor(cursor.target_id(), cursor.weight())?;
                 }
             }

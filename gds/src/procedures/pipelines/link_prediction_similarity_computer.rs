@@ -5,6 +5,7 @@ use crate::ml::models::Classifier;
 use crate::projection::eval::pipeline::link_pipeline::train::POSITIVE;
 use crate::projection::eval::pipeline::link_pipeline::LinkFeatureExtractor;
 use crate::types::graph::Graph;
+use crate::types::graph::MappedNodeId;
 
 use super::lp_node_filter::LPNodeFilter;
 
@@ -27,9 +28,10 @@ impl<'a> LinkPredictionSimilarityComputer<'a> {
 
 impl<'a> SimilarityComputer for LinkPredictionSimilarityComputer<'a> {
     fn similarity(&self, first_node_id: u64, second_node_id: u64) -> f64 {
-        let features = self
-            .link_feature_extractor
-            .extract_features_for_pair(first_node_id, second_node_id);
+        let features = self.link_feature_extractor.extract_features_for_pair(
+            MappedNodeId::new(first_node_id),
+            MappedNodeId::new(second_node_id),
+        );
         let probabilities = self.classifier.predict_probabilities(&features);
         probabilities.get(POSITIVE as usize).copied().unwrap_or(0.0)
     }
@@ -70,21 +72,33 @@ impl LinkFilter {
 
 impl NeighborFilter for LinkFilter {
     fn exclude_node_pair(&self, first_node_id: i64, second_node_id: i64) -> bool {
+        let first_filter_id = first_node_id;
+        let second_filter_id = second_node_id;
+        let Ok(first_node_id) = MappedNodeId::try_from(first_filter_id) else {
+            return true;
+        };
+        let Ok(second_node_id) = MappedNodeId::try_from(second_filter_id) else {
+            return true;
+        };
         if first_node_id == second_node_id {
             return true;
         }
 
-        let matches_filter = (self.source_node_filter.test(first_node_id)
-            && self.target_node_filter.test(second_node_id))
-            || (self.source_node_filter.test(second_node_id)
-                && self.target_node_filter.test(first_node_id));
+        let matches_filter = (self.source_node_filter.test(first_filter_id)
+            && self.target_node_filter.test(second_filter_id))
+            || (self.source_node_filter.test(second_filter_id)
+                && self.target_node_filter.test(first_filter_id));
 
         !matches_filter || self.graph.exists(first_node_id, second_node_id)
     }
 
     fn lower_bound_of_potential_neighbors(&self, node_id: i64) -> i64 {
-        let degree = self.graph.degree(node_id) as i64;
-        if self.source_node_filter.test(node_id) {
+        let filter_node_id = node_id;
+        let Ok(node_id) = MappedNodeId::try_from(filter_node_id) else {
+            return 0;
+        };
+        let degree = i64::try_from(self.graph.degree(node_id)).unwrap_or(i64::MAX);
+        if self.source_node_filter.test(filter_node_id) {
             (self.target_node_filter.valid_node_count() - 1 - degree).max(0)
         } else {
             (self.source_node_filter.valid_node_count() - 1 - degree).max(0)

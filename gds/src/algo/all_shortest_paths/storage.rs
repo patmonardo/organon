@@ -7,11 +7,11 @@
 //! **Key Features**: Multi-source parallelization, weighted/unweighted support, streaming results
 
 use crate::algo::msbfs::{AggregatedNeighborProcessingMsBfs, OMEGA};
+use crate::projection::eval::algorithm::AlgorithmError;
 use crate::task::concurrency::{install_with_concurrency, Concurrency, TerminationFlag};
 use crate::task::progress::ProgressTracker;
-use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::Graph;
-use crate::types::graph::NodeId;
+use crate::types::graph::MappedNodeId;
 use parking_lot::Mutex;
 use rayon::prelude::*;
 use std::sync::mpsc;
@@ -75,7 +75,7 @@ impl<'a> AllShortestPathsStorageRuntime<'a> {
     /// - Weighted: Multi-Source Dijkstra with priority queue
     pub fn compute_shortest_paths(
         &self,
-        source_node: NodeId,
+        source_node: MappedNodeId,
         direction: u8,
     ) -> Result<Vec<ShortestPathResult>, AlgorithmError> {
         match self.algorithm_type {
@@ -89,7 +89,7 @@ impl<'a> AllShortestPathsStorageRuntime<'a> {
     /// Compute unweighted shortest paths using BFS
     fn compute_unweighted_shortest_paths(
         &self,
-        source_node: NodeId,
+        source_node: MappedNodeId,
         direction: u8,
     ) -> Result<Vec<ShortestPathResult>, AlgorithmError> {
         let node_count = self.graph.node_count();
@@ -134,12 +134,17 @@ impl<'a> AllShortestPathsStorageRuntime<'a> {
             .into_iter()
             .enumerate()
             .filter(|(target, distance)| *target != source_index && *distance != f64::INFINITY)
-            .map(|(target, distance)| ShortestPathResult {
-                source: source_node,
-                target: target as NodeId,
-                distance,
+            .map(|(target, distance)| {
+                let target = MappedNodeId::try_from(target).map_err(|_| {
+                    AlgorithmError::InvalidGraph("Node count exceeds mapped ID space".to_string())
+                })?;
+                Ok(ShortestPathResult {
+                    source: source_node,
+                    target,
+                    distance,
+                })
             })
-            .collect();
+            .collect::<Result<Vec<_>, AlgorithmError>>()?;
 
         Ok(results)
     }
@@ -153,8 +158,8 @@ impl<'a> AllShortestPathsStorageRuntime<'a> {
     }
 
     fn validate_edge_weight(
-        source_node: NodeId,
-        target_node: NodeId,
+        source_node: MappedNodeId,
+        target_node: MappedNodeId,
         weight: f64,
     ) -> Result<(), AlgorithmError> {
         if !weight.is_finite() || weight < 0.0 {
@@ -168,7 +173,7 @@ impl<'a> AllShortestPathsStorageRuntime<'a> {
     /// Compute weighted shortest paths using Dijkstra
     fn compute_weighted_shortest_paths(
         &self,
-        source_node: NodeId,
+        source_node: MappedNodeId,
         direction: u8,
     ) -> Result<Vec<ShortestPathResult>, AlgorithmError> {
         if !self.graph.has_relationship_property() {
@@ -184,7 +189,7 @@ impl<'a> AllShortestPathsStorageRuntime<'a> {
         #[derive(Debug, Clone, Copy)]
         struct State {
             cost: f64,
-            node: NodeId,
+            node: MappedNodeId,
         }
 
         impl PartialEq for State {
@@ -275,17 +280,22 @@ impl<'a> AllShortestPathsStorageRuntime<'a> {
             .into_iter()
             .enumerate()
             .filter(|(_, distance)| *distance != f64::INFINITY)
-            .map(|(target, distance)| ShortestPathResult {
-                source: source_node,
-                target: target as NodeId,
-                distance,
+            .map(|(target, distance)| {
+                let target = MappedNodeId::try_from(target).map_err(|_| {
+                    AlgorithmError::InvalidGraph("Node count exceeds mapped ID space".to_string())
+                })?;
+                Ok(ShortestPathResult {
+                    source: source_node,
+                    target,
+                    distance,
+                })
             })
-            .collect();
+            .collect::<Result<Vec<_>, AlgorithmError>>()?;
 
         Ok(results)
     }
 
-    fn get_neighbors(&self, node_id: NodeId, direction: u8) -> Vec<NodeId> {
+    fn get_neighbors(&self, node_id: MappedNodeId, direction: u8) -> Vec<MappedNodeId> {
         let fallback: f64 = 1.0;
         match direction {
             1 => self
@@ -294,7 +304,7 @@ impl<'a> AllShortestPathsStorageRuntime<'a> {
                 .map(|cursor| cursor.target_id())
                 .collect(),
             2 => {
-                let mut out: Vec<NodeId> = self
+                let mut out: Vec<MappedNodeId> = self
                     .graph
                     .stream_relationships(node_id, fallback)
                     .map(|cursor| cursor.target_id())
@@ -314,7 +324,11 @@ impl<'a> AllShortestPathsStorageRuntime<'a> {
         }
     }
 
-    fn get_neighbors_with_weights(&self, node_id: NodeId, direction: u8) -> Vec<(NodeId, f64)> {
+    fn get_neighbors_with_weights(
+        &self,
+        node_id: MappedNodeId,
+        direction: u8,
+    ) -> Vec<(MappedNodeId, f64)> {
         let fallback: f64 = 1.0;
         match direction {
             1 => self
@@ -323,7 +337,7 @@ impl<'a> AllShortestPathsStorageRuntime<'a> {
                 .map(|cursor| (cursor.target_id(), cursor.weight()))
                 .collect(),
             2 => {
-                let mut out: Vec<(NodeId, f64)> = self
+                let mut out: Vec<(MappedNodeId, f64)> = self
                     .graph
                     .stream_relationships_weighted(node_id, fallback)
                     .map(|cursor| (cursor.target_id(), cursor.weight()))
@@ -419,7 +433,9 @@ impl<'a> AllShortestPathsStorageRuntime<'a> {
                 source_len,
                 false,
                 |node| {
-                    self.get_neighbors(node as NodeId, direction)
+                    let node = MappedNodeId::try_from(node)
+                        .expect("graph node count must fit mapped ID space");
+                    self.get_neighbors(node, direction)
                         .into_iter()
                         .filter_map(|neighbor| usize::try_from(neighbor).ok())
                         .collect()
@@ -432,9 +448,13 @@ impl<'a> AllShortestPathsStorageRuntime<'a> {
                     for source in
                         AggregatedNeighborProcessingMsBfs::iter_sources(source_mask, source_offset)
                     {
+                        let source = MappedNodeId::try_from(source)
+                            .expect("graph node count must fit mapped ID space");
+                        let target = MappedNodeId::try_from(target)
+                            .expect("graph node count must fit mapped ID space");
                         let result = ShortestPathResult {
-                            source: source as NodeId,
-                            target: target as NodeId,
+                            source,
+                            target,
                             distance: f64::from(distance),
                         };
 
@@ -532,7 +552,8 @@ impl<'a> AllShortestPathsStorageRuntime<'a> {
                                 break;
                             }
 
-                            let source_node = source_idx as NodeId;
+                            let source_node = MappedNodeId::try_from(source_idx)
+                                .expect("graph node count must fit mapped ID space");
 
                             // Reset distances for this source.
                             distances.fill(f64::INFINITY);
@@ -547,7 +568,7 @@ impl<'a> AllShortestPathsStorageRuntime<'a> {
                                 #[derive(Debug, Clone, Copy)]
                                 struct State {
                                     cost: f64,
-                                    node: NodeId,
+                                    node: MappedNodeId,
                                 }
                                 impl PartialEq for State {
                                     fn eq(&self, other: &Self) -> bool {
@@ -577,7 +598,9 @@ impl<'a> AllShortestPathsStorageRuntime<'a> {
 
                                 let fallback = 1.0f64;
                                 while let Some(State { cost, node }) = heap.pop() {
-                                    let node_idx = node as usize;
+                                    let Some(node_idx) = node.to_usize() else {
+                                        continue;
+                                    };
                                     if node_idx >= node_count {
                                         continue;
                                     }
@@ -585,13 +608,13 @@ impl<'a> AllShortestPathsStorageRuntime<'a> {
                                         continue;
                                     }
 
-                                    let neighbors: Vec<(NodeId, f64)> = match direction {
+                                    let neighbors: Vec<(MappedNodeId, f64)> = match direction {
                                         1 => local_graph
                                             .stream_inverse_relationships_weighted(node, fallback)
                                             .map(|c| (c.target_id(), c.weight()))
                                             .collect(),
                                         2 => {
-                                            let mut v: Vec<(NodeId, f64)> = local_graph
+                                            let mut v: Vec<(MappedNodeId, f64)> = local_graph
                                                 .stream_relationships_weighted(node, fallback)
                                                 .map(|c| (c.target_id(), c.weight()))
                                                 .collect();
@@ -611,8 +634,10 @@ impl<'a> AllShortestPathsStorageRuntime<'a> {
                                     };
 
                                     for (neighbor, weight) in neighbors {
-                                        let nb_idx = neighbor as usize;
-                                        if nb_idx >= node_count {
+                                        let Some(neighbor_idx) = neighbor.to_usize() else {
+                                            continue;
+                                        };
+                                        if neighbor_idx >= node_count {
                                             continue;
                                         }
                                         Self::validate_edge_weight(node, neighbor, weight)?;
@@ -622,8 +647,8 @@ impl<'a> AllShortestPathsStorageRuntime<'a> {
                                                 "WeightedAllShortestPaths cost overflow while relaxing edge {node}->{neighbor}"
                                             )));
                                         }
-                                        if next_cost < distances[nb_idx] {
-                                            distances[nb_idx] = next_cost;
+                                        if next_cost < distances[neighbor_idx] {
+                                            distances[neighbor_idx] = next_cost;
                                             heap.push(State {
                                                 cost: next_cost,
                                                 node: neighbor,
@@ -639,9 +664,11 @@ impl<'a> AllShortestPathsStorageRuntime<'a> {
                                 if dist == f64::INFINITY {
                                     continue;
                                 }
+                                let target = MappedNodeId::try_from(target_idx)
+                                    .expect("graph node count must fit mapped ID space");
                                 let result = ShortestPathResult {
                                     source: source_node,
-                                    target: target_idx as NodeId,
+                                    target,
                                     distance: dist,
                                 };
                                 local_computation.add_result(result.clone());
@@ -704,9 +731,9 @@ impl<'a> AllShortestPathsStorageRuntime<'a> {
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub struct ShortestPathResult {
     /// Source node ID
-    pub source: NodeId,
+    pub source: MappedNodeId,
     /// Target node ID
-    pub target: NodeId,
+    pub target: MappedNodeId,
     /// Shortest path distance
     pub distance: f64,
 }
@@ -715,21 +742,26 @@ pub struct ShortestPathResult {
 mod tests {
     use super::*;
     use crate::config::GraphStoreConfig;
-    use crate::task::progress::{TaskProgressTracker, Tasks};
     use crate::projection::RelationshipType;
+    use crate::task::progress::{TaskProgressTracker, Tasks};
     use crate::types::graph::{
-        DefaultGraph, GraphCharacteristicsBuilder, RelationshipTopology, SimpleIdMap,
+        DefaultGraph, GraphCharacteristicsBuilder, OriginalNodeId, RelationshipTopology,
+        SimpleIdMap,
     };
     use crate::types::schema::GraphSchema;
     use std::collections::{HashMap, HashSet};
     use std::sync::Arc;
 
-    fn graph_from_outgoing(outgoing: Vec<Vec<NodeId>>) -> DefaultGraph {
+    fn graph_from_outgoing(outgoing: Vec<Vec<MappedNodeId>>) -> DefaultGraph {
         let schema = Arc::new(GraphSchema::empty());
         let node_count = outgoing.len();
-        let id_map = Arc::new(SimpleIdMap::from_original_ids(
-            (0..node_count as NodeId).collect::<Vec<_>>(),
-        ));
+        let id_map = Arc::new(SimpleIdMap::from_original_ids((0..node_count).map(
+            |index| {
+                OriginalNodeId::new(
+                    i64::try_from(index).expect("test graph node count must fit original ID space"),
+                )
+            },
+        )));
 
         let topology = RelationshipTopology::new(outgoing, None);
         let relationship_count = topology.relationship_count();
@@ -757,7 +789,12 @@ mod tests {
 
     #[test]
     fn unweighted_streaming_uses_reachable_non_self_pairs() {
-        let graph = graph_from_outgoing(vec![vec![1], vec![2], vec![], vec![]]);
+        let graph = graph_from_outgoing(vec![
+            vec![MappedNodeId::new(1)],
+            vec![MappedNodeId::new(2)],
+            vec![],
+            vec![],
+        ]);
         let storage =
             AllShortestPathsStorageRuntime::with_settings(&graph, AlgorithmType::Unweighted, 1);
         let mut computation = AllShortestPathsComputationRuntime::new();
@@ -777,7 +814,11 @@ mod tests {
             rows.iter()
                 .map(|row| (row.source, row.target, row.distance))
                 .collect::<Vec<_>>(),
-            vec![(0, 1, 1.0), (0, 2, 2.0), (1, 2, 1.0)]
+            vec![
+                (MappedNodeId::ZERO, MappedNodeId::new(1), 1.0),
+                (MappedNodeId::ZERO, MappedNodeId::new(2), 2.0),
+                (MappedNodeId::new(1), MappedNodeId::new(2), 1.0),
+            ]
         );
     }
 
@@ -793,8 +834,18 @@ mod tests {
         use crate::types::schema::Direction;
 
         // 4-node chain: 0→1 (w=1.0), 1→2 (w=2.0), 2→3 (w=3.0), plus 0→3 (w=10.0)
-        let outgoing: Vec<Vec<NodeId>> = vec![vec![1, 3], vec![2], vec![3], vec![]];
-        let incoming: Vec<Vec<NodeId>> = vec![vec![], vec![0], vec![1], vec![2, 0]];
+        let outgoing = vec![
+            vec![MappedNodeId::new(1), MappedNodeId::new(3)],
+            vec![MappedNodeId::new(2)],
+            vec![MappedNodeId::new(3)],
+            vec![],
+        ];
+        let incoming = vec![
+            vec![],
+            vec![MappedNodeId::ZERO],
+            vec![MappedNodeId::new(1)],
+            vec![MappedNodeId::new(2), MappedNodeId::ZERO],
+        ];
 
         let rel_type = RelationshipType::of("REL");
         let mut schema_builder = crate::types::schema::MutableGraphSchema::empty();
@@ -809,7 +860,7 @@ mod tests {
             RelationshipTopology::new(outgoing, Some(incoming)),
         );
 
-        let original_ids: Vec<NodeId> = (0..4i64).collect();
+        let original_ids = (0..4i64).map(OriginalNodeId::new);
         let id_map = SimpleIdMap::from_original_ids(original_ids);
 
         let mut store = DefaultGraphStore::new(
@@ -836,7 +887,7 @@ mod tests {
 
         let store = Arc::new(store);
 
-        let run = |concurrency: usize| -> Vec<(NodeId, NodeId, f64)> {
+        let run = |concurrency: usize| -> Vec<(MappedNodeId, MappedNodeId, f64)> {
             let rel_types: HashSet<RelationshipType> = store.relationship_types();
             let selectors: HashMap<RelationshipType, String> = rel_types
                 .iter()
@@ -885,7 +936,7 @@ mod tests {
 
     #[test]
     fn weighted_streaming_requires_relationship_property() {
-        let graph = graph_from_outgoing(vec![vec![1], vec![]]);
+        let graph = graph_from_outgoing(vec![vec![MappedNodeId::new(1)], vec![]]);
         let storage =
             AllShortestPathsStorageRuntime::with_settings(&graph, AlgorithmType::Weighted, 1);
         let mut computation = AllShortestPathsComputationRuntime::new();
@@ -903,12 +954,26 @@ mod tests {
 
     #[test]
     fn weighted_validation_rejects_negative_and_non_finite_weights() {
-        assert!(AllShortestPathsStorageRuntime::validate_edge_weight(0, 1, 0.0).is_ok());
-        assert!(AllShortestPathsStorageRuntime::validate_edge_weight(0, 1, 2.5).is_ok());
+        assert!(AllShortestPathsStorageRuntime::validate_edge_weight(
+            MappedNodeId::ZERO,
+            MappedNodeId::new(1),
+            0.0,
+        )
+        .is_ok());
+        assert!(AllShortestPathsStorageRuntime::validate_edge_weight(
+            MappedNodeId::ZERO,
+            MappedNodeId::new(1),
+            2.5,
+        )
+        .is_ok());
 
         for weight in [-1.0, f64::INFINITY, f64::NEG_INFINITY, f64::NAN] {
-            let err = AllShortestPathsStorageRuntime::validate_edge_weight(0, 1, weight)
-                .expect_err("invalid weight should be rejected");
+            let err = AllShortestPathsStorageRuntime::validate_edge_weight(
+                MappedNodeId::ZERO,
+                MappedNodeId::new(1),
+                weight,
+            )
+            .expect_err("invalid weight should be rejected");
             assert!(matches!(err, AlgorithmError::Execution(_)));
         }
     }

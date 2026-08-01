@@ -16,7 +16,7 @@ use crate::task::progress::{
 use crate::task::memory::MemoryRange;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
-use crate::types::graph::id_map::NodeId;
+use crate::types::graph::id_map::MappedNodeId;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
@@ -96,21 +96,21 @@ impl YensFacade {
     }
 
     pub fn source(mut self, source: u64) -> Self {
-        self.config.source_node = i64::try_from(source).unwrap_or(-1);
+        self.config.source_node = MappedNodeId::new(source);
         self
     }
 
-    pub fn source_node(mut self, source: NodeId) -> Self {
+    pub fn source_node(mut self, source: MappedNodeId) -> Self {
         self.config.source_node = source;
         self
     }
 
     pub fn target(mut self, target: u64) -> Self {
-        self.config.target_node = i64::try_from(target).unwrap_or(-1);
+        self.config.target_node = MappedNodeId::new(target);
         self
     }
 
-    pub fn target_node(mut self, target: NodeId) -> Self {
+    pub fn target_node(mut self, target: MappedNodeId) -> Self {
         self.config.target_node = target;
         self
     }
@@ -320,7 +320,7 @@ impl YensFacade {
         let concurrency = self.config.concurrency.max(1);
         let relationship_count = self.graph_store.relationship_count();
 
-        let node_id_bytes = std::mem::size_of::<NodeId>();
+        let node_id_bytes = std::mem::size_of::<MappedNodeId>();
         let cost_bytes = std::mem::size_of::<f64>();
         let path_entry_bytes = node_id_bytes.saturating_add(cost_bytes).saturating_add(
             if self.config.track_relationships {

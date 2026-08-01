@@ -11,6 +11,7 @@ use crate::task::concurrency::TerminationFlag;
 use crate::task::progress::ProgressTracker;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::NodeLabel;
+use crate::types::graph::MappedNodeId;
 use crate::types::graph_store::GraphStore;
 use crate::types::properties::node::NodePropertyValues;
 use std::collections::HashSet;
@@ -340,10 +341,11 @@ impl FilteredKnnStorageRuntime {
 
         let mut allowed = vec![false; node_count];
         for (mapped, allowed_slot) in allowed.iter_mut().enumerate().take(node_count) {
-            let mapped_i64 = mapped as i64;
+            let mapped_node_id = MappedNodeId::try_from(mapped)
+                .expect("graph node count must fit mapped node IDs");
             let mut ok = false;
             for label in &label_set {
-                if id_map.has_label(mapped_i64, label) {
+                if id_map.has_label(mapped_node_id, label) {
                     ok = true;
                     break;
                 }

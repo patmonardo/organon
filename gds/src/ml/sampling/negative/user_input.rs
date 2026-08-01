@@ -72,11 +72,13 @@ impl UserInputNegativeSampler {
                         let source_original = self
                             .negative_example_graph
                             .to_original_node_id(s)
-                            .unwrap_or(-1);
+                            .map(|id| id.to_string())
+                            .unwrap_or_else(|| "<unmapped>".to_owned());
                         let target_original = self
                             .negative_example_graph
                             .to_original_node_id(t)
-                            .unwrap_or(-1);
+                            .map(|id| id.to_string())
+                            .unwrap_or_else(|| "<unmapped>".to_owned());
 
                         panic!(
                             "Invalid relationship between nodes {} and {}. Found labels {:?} and {:?}, expected between {:?} and {:?}",
@@ -162,16 +164,16 @@ impl NegativeSampler for UserInputNegativeSampler {
                             if test_relationships_to_add > 0 {
                                 test_relationships_to_add -= 1;
                                 test_set_builder.add_from_internal(
-                                    root_s as u64,
-                                    root_t as u64,
+                                    u64::from(root_s),
+                                    u64::from(root_t),
                                     NEGATIVE,
                                 );
                             }
                         } else if train_relationships_to_add > 0 {
                             train_relationships_to_add -= 1;
                             train_set_builder.add_from_internal(
-                                root_s as u64,
-                                root_t as u64,
+                                u64::from(root_s),
+                                u64::from(root_t),
                                 NEGATIVE,
                             );
                         }

@@ -5,6 +5,7 @@ use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::task::progress::ProgressTracker;
 use crate::ml::core::samplers::RandomWalkSampler;
 use crate::projection::eval::algorithm::AlgorithmError;
+use crate::types::graph::MappedNodeId;
 use crate::types::graph_store::GraphStore;
 use crate::types::properties::node::NodePropertyValues;
 use rand::{RngCore, SeedableRng};
@@ -319,7 +320,7 @@ impl KnnStorageRuntime {
                 let graph = graph_store.get_graph();
                 let mut walker = RandomWalkSampler::create(
                     Arc::clone(&graph),
-                    |node| graph.degree(node as i64) as f64,
+                    |node| graph.degree(MappedNodeId::new(node)) as f64,
                     // Java uses 3*k walk length multiplier.
                     3 * bounded_k,
                     // Heuristic defaults inspired by the Java implementation.

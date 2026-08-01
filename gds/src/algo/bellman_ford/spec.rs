@@ -18,7 +18,7 @@ use crate::define_algorithm_spec;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::relationship_type::RelationshipType;
 use crate::projection::Orientation;
-use crate::types::graph::NodeId;
+use crate::types::graph::MappedNodeId;
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 use std::time::Duration;
@@ -29,7 +29,7 @@ use std::time::Duration;
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BellmanFordConfig {
     /// Source node for shortest path computation
-    pub source_node: NodeId,
+    pub source_node: MappedNodeId,
 
     /// Whether to track negative cycles
     pub track_negative_cycles: bool,
@@ -50,7 +50,7 @@ pub struct BellmanFordConfig {
 impl Default for BellmanFordConfig {
     fn default() -> Self {
         Self {
-            source_node: 0,
+            source_node: MappedNodeId::ZERO,
             track_negative_cycles: true,
             track_paths: true,
             concurrency: 4,
@@ -87,13 +87,6 @@ impl BellmanDirection {
 impl BellmanFordConfig {
     /// Validate configuration parameters
     pub fn validate(&self) -> Result<(), ConfigError> {
-        if self.source_node < 0 {
-            return Err(ConfigError::InvalidParameter {
-                parameter: "source_node".to_string(),
-                reason: "Must be a non-negative i64".to_string(),
-            });
-        }
-
         if self.concurrency == 0 {
             return Err(ConfigError::InvalidParameter {
                 parameter: "concurrency".to_string(),
@@ -140,16 +133,16 @@ pub struct BellmanFordResult {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BellmanFordPathResult {
     /// Source node ID
-    pub source_node: NodeId,
+    pub source_node: MappedNodeId,
 
     /// Target node ID
-    pub target_node: NodeId,
+    pub target_node: MappedNodeId,
 
     /// Total cost of the path
     pub total_cost: f64,
 
     /// Node IDs along the path
-    pub node_ids: Vec<NodeId>,
+    pub node_ids: Vec<MappedNodeId>,
 
     /// Costs for each step along the path
     pub costs: Vec<f64>,
@@ -187,8 +180,8 @@ pub struct BellmanFordMutateResult {
     pub updated_store: std::sync::Arc<crate::types::prelude::DefaultGraphStore>,
 }
 
-fn checked_u64(value: NodeId, _context: &str) -> u64 {
-    u64::try_from(value).unwrap_or(0)
+fn checked_u64(value: MappedNodeId, _context: &str) -> u64 {
+    value.get()
 }
 
 fn spec_path_to_core(path: &BellmanFordPathResult) -> PathResult {
@@ -198,7 +191,6 @@ fn spec_path_to_core(path: &BellmanFordPathResult) -> PathResult {
         .node_ids
         .iter()
         .copied()
-        .filter(|node_id| *node_id >= 0)
         .map(|node_id| checked_u64(node_id, "path"))
         .collect();
 
@@ -214,7 +206,6 @@ fn result_paths(result: &BellmanFordResult) -> Vec<PathResult> {
     result
         .shortest_paths
         .iter()
-        .filter(|p| p.source_node >= 0 && p.target_node >= 0)
         .map(spec_path_to_core)
         .collect()
 }

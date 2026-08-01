@@ -4,7 +4,7 @@ use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
 use crate::types::graph::Graph;
-use crate::types::graph::NodeId;
+use crate::types::graph::MappedNodeId;
 use crate::types::prelude::GraphStore;
 use std::collections::HashSet;
 use std::sync::Arc;
@@ -78,12 +78,17 @@ impl ModularityStorageRuntime {
 
         let get_neighbors = |node_idx: usize| -> Vec<(usize, f64)> {
             termination_flag.assert_running();
-            let Ok(node_id) = i64::try_from(node_idx) else {
+            let Ok(node_id) = MappedNodeId::try_from(node_idx) else {
                 return Vec::new();
             };
             self.graph
-                .stream_relationships(node_id as NodeId, weight_fallback)
-                .map(|cursor| (cursor.target_id() as usize, cursor.property()))
+                .stream_relationships(node_id, weight_fallback)
+                .filter_map(|cursor| {
+                    cursor
+                        .target_id()
+                        .to_usize()
+                        .map(|target| (target, cursor.property()))
+                })
                 .collect()
         };
 

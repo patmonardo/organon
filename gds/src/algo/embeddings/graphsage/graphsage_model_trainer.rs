@@ -1,8 +1,6 @@
 //! Java: `GraphSageModelTrainer`.
 
 use crate::collections::HugeObjectArray;
-use crate::task::concurrency::virtual_threads::RunWithConcurrency;
-use crate::task::concurrency::TerminationFlag;
 use crate::core::model::ModelCatalogCustomInfo;
 use crate::ml::core::computation_context::ComputationContext;
 use crate::ml::core::functions::{ConstantScale, ElementSum, L2NormSquared, Weights};
@@ -13,7 +11,10 @@ use crate::ml::core::relationship_weights::{
 };
 use crate::ml::core::tensor::{Scalar, Tensor};
 use crate::ml::core::variable::{Variable, VariableRef};
+use crate::task::concurrency::virtual_threads::RunWithConcurrency;
+use crate::task::concurrency::TerminationFlag;
 use crate::types::graph::Graph;
+use crate::types::graph::MappedNodeId;
 use rand::Rng;
 use rand::SeedableRng;
 use rand_chacha::ChaCha8Rng;
@@ -208,7 +209,7 @@ impl GraphSageModelTrainer {
             if graph.has_relationship_property() {
                 let g = Arc::clone(&graph);
                 Arc::new(ClosureRelationshipWeights::new(move |s, t, default| {
-                    g.relationship_property(s as i64, t as i64, default)
+                    g.relationship_property(MappedNodeId::new(s), MappedNodeId::new(t), default)
                 }))
             } else {
                 Arc::new(UNWEIGHTED)

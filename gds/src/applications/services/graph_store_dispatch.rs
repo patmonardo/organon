@@ -2,8 +2,11 @@ use crate::applications::services::tsjson_support::{err, ok, FacadeContext};
 use crate::collections::backends::vec::{VecDouble, VecDoubleArray, VecLong};
 use crate::config::GraphStoreConfig;
 use crate::projection::{NodeLabel, RelationshipType};
-use crate::types::graph::id_map::SimpleIdMap;
+use crate::types::graph::MappedNodeId;
+use crate::types::graph::OriginalNodeId;
+use crate::types::graph::PartialIdMap;
 use crate::types::graph::RelationshipTopology;
+use crate::types::graph::SimpleIdMap;
 use crate::types::graph_store::{
     Capabilities, DatabaseId, DatabaseInfo, DatabaseLocation, DefaultGraphStore, GraphName,
     GraphStore,
@@ -64,16 +67,16 @@ pub(super) fn handle_graph_store(request: &Value, ctx: &FacadeContext) -> Value 
                 original_node_ids.push(n);
             }
 
-            let mut index_by_original: HashMap<i64, i64> =
-                HashMap::with_capacity(original_node_ids.len());
-            for (idx, original) in original_node_ids.iter().copied().enumerate() {
-                index_by_original.insert(original, idx as i64);
-            }
+            let id_map = match SimpleIdMap::try_from_original_ids(original_node_ids.iter().copied())
+            {
+                Ok(id_map) => id_map,
+                Err(error) => return err(op, "INVALID_REQUEST", error.to_string()),
+            };
 
             #[derive(Clone, Debug)]
             struct RelEdge {
-                source: i64,
-                target: i64,
+                source: MappedNodeId,
+                target: MappedNodeId,
                 props: HashMap<String, serde_json::Value>,
             }
             let mut rels_by_type: HashMap<String, Vec<RelEdge>> = HashMap::new();
@@ -108,7 +111,8 @@ pub(super) fn handle_graph_store(request: &Value, ctx: &FacadeContext) -> Value 
                         );
                     };
 
-                    let Some(source_mapped) = index_by_original.get(&source_original).copied()
+                    let Some(source_mapped) =
+                        id_map.to_mapped_node_id(OriginalNodeId::new(source_original))
                     else {
                         return err(
                             op,
@@ -116,7 +120,8 @@ pub(super) fn handle_graph_store(request: &Value, ctx: &FacadeContext) -> Value 
                             "snapshot.relationships[*].source not found in snapshot.nodes",
                         );
                     };
-                    let Some(target_mapped) = index_by_original.get(&target_original).copied()
+                    let Some(target_mapped) =
+                        id_map.to_mapped_node_id(OriginalNodeId::new(target_original))
                     else {
                         return err(
                             op,
@@ -147,7 +152,8 @@ pub(super) fn handle_graph_store(request: &Value, ctx: &FacadeContext) -> Value 
             > = HashMap::new();
 
             for (rel_type, edges) in rels_by_type.into_iter() {
-                let mut adjacency: Vec<Vec<i64>> = vec![Vec::new(); original_node_ids.len()];
+                let mut adjacency: Vec<Vec<MappedNodeId>> =
+                    vec![Vec::new(); original_node_ids.len()];
 
                 let mut keys: std::collections::HashSet<String> = std::collections::HashSet::new();
                 for e in edges.iter() {
@@ -165,16 +171,26 @@ pub(super) fn handle_graph_store(request: &Value, ctx: &FacadeContext) -> Value 
                 }
 
                 for e in edges.into_iter() {
-                    adjacency[e.source as usize].push(e.target);
+                    let Some(source_index) = e.source.to_usize() else {
+                        return err(
+                            op,
+                            "INVALID_REQUEST",
+                            format!("mapped source {} exceeds physical index space", e.source),
+                        );
+                    };
+                    adjacency[source_index].push(e.target);
                     if let Some(by_key) = rel_props_by_type.get_mut(&rel_type) {
                         for (_k, per_source) in by_key.iter_mut() {
                             let v = e.props.get(_k).cloned().unwrap_or(serde_json::Value::Null);
-                            per_source[e.source as usize].push(v);
+                            per_source[source_index].push(v);
                         }
                     }
                 }
 
-                let topology = RelationshipTopology::new(adjacency, None);
+                let topology = match RelationshipTopology::try_new(adjacency, None) {
+                    Ok(topology) => topology,
+                    Err(error) => return err(op, "INVALID_REQUEST", error.to_string()),
+                };
                 relationship_topologies.insert(RelationshipType::of(&rel_type), topology);
             }
 
@@ -183,15 +199,18 @@ pub(super) fn handle_graph_store(request: &Value, ctx: &FacadeContext) -> Value 
                 DatabaseLocation::remote("tsjson", 0, None, None),
             );
 
-            let mut store = DefaultGraphStore::new(
+            let mut store = match DefaultGraphStore::try_new(
                 GraphStoreConfig::default(),
                 GraphName::new(graph_name),
                 database_info,
                 GraphSchema::empty(),
                 Capabilities::default(),
-                SimpleIdMap::from_original_ids(original_node_ids),
+                id_map,
                 relationship_topologies,
-            );
+            ) {
+                Ok(store) => store,
+                Err(error) => return err(op, "INVALID_REQUEST", error.to_string()),
+            };
 
             // persist rel props
             for (rel_type, by_key) in rel_props_by_type.into_iter() {

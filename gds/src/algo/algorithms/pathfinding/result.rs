@@ -5,6 +5,7 @@ use crate::algo::algorithms::{ExecutionMetadata, ResultBuilder, ResultBuilderErr
 use crate::collections::backends::vec::VecDouble;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::RelationshipType;
+use crate::types::graph::MappedNodeId;
 use crate::types::graph_store::GraphStore;
 use crate::types::prelude::DefaultGraphStore;
 use crate::types::properties::relationship::DefaultDoubleRelationshipPropertyValues;
@@ -171,16 +172,22 @@ pub fn build_path_relationship_store(
     paths: &[PathResult],
 ) -> Result<Arc<DefaultGraphStore>, AlgorithmError> {
     let node_count = graph_store.node_count();
-    let mut outgoing: Vec<Vec<i64>> = vec![Vec::new(); node_count];
+    let mut outgoing: Vec<Vec<MappedNodeId>> = vec![Vec::new(); node_count];
     let mut costs_by_source: Vec<Vec<f64>> = vec![Vec::new(); node_count];
 
     for path in paths {
-        let source = path.source as usize;
-        let target = path.target as usize;
+        let source_id = MappedNodeId::new(path.source);
+        let target_id = MappedNodeId::new(path.target);
+        let Some(source) = source_id.to_usize() else {
+            continue;
+        };
+        let Some(target) = target_id.to_usize() else {
+            continue;
+        };
         if source >= node_count || target >= node_count {
             continue;
         }
-        outgoing[source].push(path.target as i64);
+        outgoing[source].push(target_id);
         costs_by_source[source].push(path.cost);
     }
 

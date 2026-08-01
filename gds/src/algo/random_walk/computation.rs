@@ -56,7 +56,9 @@ impl RandomWalkComputationRuntime {
         };
 
         for start_node in nodes_to_walk {
-            let mut rng = StdRng::seed_from_u64(self.random_seed.wrapping_add(start_node as u64));
+            let start_seed = u64::try_from(start_node)
+                .expect("random-walk source index must fit the RNG seed domain");
+            let mut rng = StdRng::seed_from_u64(self.random_seed.wrapping_add(start_seed));
 
             for _ in 0..self.walks_per_node {
                 let walk = self.perform_walk(start_node, &get_neighbors, &mut rng);
@@ -101,8 +103,9 @@ impl RandomWalkComputationRuntime {
                 }
 
                 let start_node = nodes_to_walk[idx];
-                let mut rng =
-                    StdRng::seed_from_u64(self.random_seed.wrapping_add(start_node as u64));
+                let start_seed = u64::try_from(start_node)
+                    .expect("random-walk source index must fit the RNG seed domain");
+                let mut rng = StdRng::seed_from_u64(self.random_seed.wrapping_add(start_seed));
 
                 for _ in 0..self.walks_per_node {
                     let walk = self.perform_walk(start_node, &get_neighbors, &mut rng);
@@ -123,7 +126,9 @@ impl RandomWalkComputationRuntime {
         rng: &mut StdRng,
     ) -> Vec<u64> {
         let mut walk = Vec::with_capacity(self.walk_length);
-        walk.push(start_node as u64);
+        walk.push(
+            u64::try_from(start_node).expect("random-walk source index must fit result storage"),
+        );
 
         let mut current = start_node;
         let mut previous: Option<usize> = None;
@@ -137,7 +142,7 @@ impl RandomWalkComputationRuntime {
 
             let next = self.sample_next_node(previous, &neighbors, rng);
 
-            walk.push(next as u64);
+            walk.push(u64::try_from(next).expect("random-walk node index must fit result storage"));
             previous = Some(current);
             current = next;
         }

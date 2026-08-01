@@ -1224,24 +1224,36 @@ macro_rules! impl_relationship_property_values_universal {
                 + $crate::collections::PropertyValuesAdapter<$element_type>
                 + Send + Sync + std::fmt::Debug,
         {
-            fn double_value(&self, rel_index: u64) -> $crate::types::properties::PropertyValuesResult<f64> {
+            fn double_value(
+                &self,
+                rel_index: $crate::types::graph::RelationshipIndex,
+            ) -> $crate::types::properties::PropertyValuesResult<f64> {
                 #[allow(unused_imports)]
                 use $crate::collections::Collections;
                 let convert = $to_double;
+                let physical_index = rel_index.to_usize().ok_or_else(|| {
+                    $crate::types::properties::PropertyValuesError::ValueNotFound(rel_index.get())
+                })?;
                 self.universal
                     .collection()
-                    .get(rel_index as usize)
+                    .get(physical_index)
                     .map(convert)
-                    .ok_or_else(|| $crate::types::properties::PropertyValuesError::InvalidNodeId(rel_index))
+                    .ok_or_else(|| $crate::types::properties::PropertyValuesError::ValueNotFound(rel_index.get()))
             }
 
-            fn long_value(&self, rel_index: u64) -> $crate::types::properties::PropertyValuesResult<i64> {
+            fn long_value(
+                &self,
+                rel_index: $crate::types::graph::RelationshipIndex,
+            ) -> $crate::types::properties::PropertyValuesResult<i64> {
                 $crate::types::properties::property_values::checked_double_to_long_property(
                     self.double_value(rel_index)?,
                 )
             }
 
-            fn get_object(&self, rel_index: u64) -> $crate::types::properties::PropertyValuesResult<Box<dyn std::any::Any>> {
+            fn get_object(
+                &self,
+                rel_index: $crate::types::graph::RelationshipIndex,
+            ) -> $crate::types::properties::PropertyValuesResult<Box<dyn std::any::Any>> {
                 Ok(Box::new(self.double_value(rel_index)?))
             }
 
@@ -1250,9 +1262,11 @@ macro_rules! impl_relationship_property_values_universal {
                 convert(self.universal.default_value())
             }
 
-            fn has_value(&self, rel_index: u64) -> bool {
-                rel_index < self.element_count as u64
-                    && !self.universal.collection().is_null(rel_index as usize)
+            fn has_value(&self, rel_index: $crate::types::graph::RelationshipIndex) -> bool {
+                rel_index.to_usize().is_some_and(|physical_index| {
+                    physical_index < self.element_count
+                        && !self.universal.collection().is_null(physical_index)
+                })
             }
         }
     };

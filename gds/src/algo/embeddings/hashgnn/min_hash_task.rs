@@ -4,6 +4,7 @@ use crate::core::utils::partition::DegreePartition;
 use crate::task::concurrency::virtual_threads::Executor;
 use crate::task::concurrency::{Concurrency, TerminatedException, TerminationFlag};
 use crate::types::graph::Graph;
+use crate::types::graph::MappedNodeId;
 use std::sync::Arc;
 
 use super::hash_gnn::MinAndArgmin;
@@ -63,12 +64,17 @@ impl MinHashTask {
                         );
 
                         neighbors_vector.clear_all();
+                        let mapped_node_id = MappedNodeId::try_from(node_id)
+                            .expect("HashGNN partition node index must fit a mapped node ID");
 
                         for (i, graph) in graphs.iter().enumerate() {
                             let pre_hashes = &hashes_for_k.pre_aggregation_hashes[i];
 
-                            for cursor in graph.stream_relationships(node_id as i64, 1.0) {
-                                let trg = cursor.target_id() as usize;
+                            for cursor in graph.stream_relationships(mapped_node_id, 1.0) {
+                                let trg = cursor
+                                    .target_id()
+                                    .to_usize()
+                                    .expect("validated HashGNN target must fit a dense index");
                                 let prev_target_embedding = previous_embeddings
                                     .get(trg)
                                     .as_ref()
@@ -81,9 +87,8 @@ impl MinHashTask {
                                     &mut temp,
                                 );
 
-                                let arg_min = neighbors_min_and_arg_min.arg_min;
-                                if arg_min != -1 {
-                                    neighbors_vector.set(arg_min as usize);
+                                if let Some(arg_min) = neighbors_min_and_arg_min.arg_min {
+                                    neighbors_vector.set(arg_min);
                                 }
                             }
                         }
@@ -100,8 +105,10 @@ impl MinHashTask {
                             self_min_and_arg_min.arg_min
                         };
 
-                        if arg_min != -1 && !current_embedding.get_and_set(arg_min as usize) {
-                            partition_feature_count += 1;
+                        if let Some(arg_min) = arg_min {
+                            if !current_embedding.get_and_set(arg_min) {
+                                partition_feature_count += 1;
+                            }
                         }
                     });
                     if terminated {

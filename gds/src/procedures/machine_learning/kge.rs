@@ -15,6 +15,8 @@ use crate::algo::algorithms::Result;
 use crate::task::concurrency::TerminationFlag;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::id_map::IdMap;
+use crate::types::graph::MappedNodeId;
+use crate::types::graph::OriginalNodeId;
 use crate::types::prelude::DefaultGraphStore;
 use std::sync::Arc;
 
@@ -91,13 +93,36 @@ impl KgePredictFacade {
     fn compute(&self) -> Result<KgePredictResult> {
         let graph = self.graph_store.graph();
 
+        let map_nodes = |node_ids: &Option<Vec<i64>>, role: &str| -> Result<Option<Vec<i64>>> {
+            node_ids
+                .as_ref()
+                .map(|ids| {
+                    ids.iter()
+                        .map(|&node_id| {
+                            let original = OriginalNodeId::new(node_id);
+                            let mapped = graph.safe_to_mapped_node_id(original).ok_or_else(|| {
+                                AlgorithmError::Execution(format!(
+                                    "KGE {role} node {original} is not present in the graph"
+                                ))
+                            })?;
+                            i64::try_from(u64::from(mapped)).map_err(|_| {
+                                AlgorithmError::Execution(format!(
+                                    "KGE {role} node {original} exceeds the kernel ID domain"
+                                ))
+                            })
+                        })
+                        .collect()
+                })
+                .transpose()
+        };
+
         let params = KgePredictParameters {
             node_embedding_property: self.node_embedding_property.clone(),
             relationship_type_embedding: self.relationship_type_embedding.clone(),
             scoring_function: self.scoring_function,
             top_k: self.top_k,
-            source_nodes: self.source_nodes.clone(),
-            target_nodes: self.target_nodes.clone(),
+            source_nodes: map_nodes(&self.source_nodes, "source")?,
+            target_nodes: map_nodes(&self.target_nodes, "target")?,
         };
 
         let termination_flag = TerminationFlag::running_true();
@@ -113,21 +138,33 @@ impl KgePredictFacade {
 
         let rows: Vec<KgeStreamResult> = result
             .iter()
-            .map(|row| {
-                let source = graph
-                    .to_original_node_id(row.source_node_id)
-                    .unwrap_or(row.source_node_id);
-                let target = graph
-                    .to_original_node_id(row.target_node_id)
-                    .unwrap_or(row.target_node_id);
+            .map(|row| -> Result<KgeStreamResult> {
+                let source = MappedNodeId::try_from(row.source_node_id).map_err(|_| {
+                    AlgorithmError::Execution(format!(
+                        "KGE returned invalid mapped source node {}",
+                        row.source_node_id
+                    ))
+                })?;
+                let target = MappedNodeId::try_from(row.target_node_id).map_err(|_| {
+                    AlgorithmError::Execution(format!(
+                        "KGE returned invalid mapped target node {}",
+                        row.target_node_id
+                    ))
+                })?;
+                let source = graph.to_original_node_id(source).ok_or_else(|| {
+                    AlgorithmError::Execution(format!("KGE returned unknown source node {source}"))
+                })?;
+                let target = graph.to_original_node_id(target).ok_or_else(|| {
+                    AlgorithmError::Execution(format!("KGE returned unknown target node {target}"))
+                })?;
 
-                KgeStreamResult {
-                    source_node_id: source,
-                    target_node_id: target,
+                Ok(KgeStreamResult {
+                    source_node_id: source.get(),
+                    target_node_id: target.get(),
                     score: row.score,
-                }
+                })
             })
-            .collect();
+            .collect::<Result<_>>()?;
 
         Ok(Box::new(rows.into_iter()))
     }

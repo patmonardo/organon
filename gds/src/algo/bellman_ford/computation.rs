@@ -5,7 +5,7 @@
 //! This module implements the "Subtle pole" of the Bellman-Ford algorithm,
 //! handling ephemeral computation state and distance tracking.
 
-use crate::types::graph::NodeId;
+use crate::types::graph::MappedNodeId;
 use std::collections::HashMap;
 
 /// Bellman-Ford Computation Runtime
@@ -14,22 +14,22 @@ use std::collections::HashMap;
 /// Handles ephemeral computation state for the Bellman-Ford algorithm
 pub struct BellmanFordComputationRuntime {
     /// Distances from source to each node
-    distances: HashMap<NodeId, f64>,
+    distances: HashMap<MappedNodeId, f64>,
 
     /// Predecessor for each node in shortest path
-    predecessors: HashMap<NodeId, Option<NodeId>>,
+    predecessors: HashMap<MappedNodeId, Option<MappedNodeId>>,
 
     /// Path length for each node
-    lengths: HashMap<NodeId, u32>,
+    lengths: HashMap<MappedNodeId, u32>,
 
     /// Nodes involved in negative cycles
-    negative_cycle_nodes: Vec<NodeId>,
+    negative_cycle_nodes: Vec<MappedNodeId>,
 
     /// Whether any negative cycle was detected, independent of path tracking.
     contains_negative_cycle: bool,
 
     /// Source node
-    source_node: NodeId,
+    source_node: MappedNodeId,
 
     /// Whether to track negative cycles
     track_negative_cycles: bool,
@@ -47,7 +47,7 @@ impl BellmanFordComputationRuntime {
     ///
     /// Translation of: `DistanceTracker.create()` method (lines 36-54)
     pub fn new(
-        source_node: NodeId,
+        source_node: MappedNodeId,
         track_negative_cycles: bool,
         track_paths: bool,
         concurrency: usize,
@@ -70,7 +70,7 @@ impl BellmanFordComputationRuntime {
     /// Translation of: Initialization in `compute()` method (lines 100-103)
     pub fn initialize(
         &mut self,
-        source_node: NodeId,
+        source_node: MappedNodeId,
         track_negative_cycles: bool,
         track_paths: bool,
         node_count: usize,
@@ -88,7 +88,8 @@ impl BellmanFordComputationRuntime {
 
         // Initialize with infinite distances
         for node_id in 0..node_count {
-            let node_id = node_id as NodeId;
+            let node_id = MappedNodeId::try_from(node_id)
+                .expect("Bellman-Ford node count must fit mapped node ID space");
             self.distances.insert(node_id, f64::INFINITY);
             self.predecessors.insert(node_id, None);
             self.lengths.insert(node_id, u32::MAX);
@@ -98,7 +99,7 @@ impl BellmanFordComputationRuntime {
     /// Get distance to a node
     ///
     /// Translation of: `distance()` method (lines 83-85)
-    pub fn distance(&self, node_id: NodeId) -> f64 {
+    pub fn distance(&self, node_id: MappedNodeId) -> f64 {
         self.distances
             .get(&node_id)
             .copied()
@@ -108,42 +109,42 @@ impl BellmanFordComputationRuntime {
     /// Set distance to a node
     ///
     /// Translation of: `set()` method (lines 101-105)
-    pub fn set_distance(&mut self, node_id: NodeId, distance: f64) {
+    pub fn set_distance(&mut self, node_id: MappedNodeId, distance: f64) {
         self.distances.insert(node_id, distance);
     }
 
     /// Get predecessor of a node
     ///
     /// Translation of: `predecessor()` method (lines 87-89)
-    pub fn predecessor(&self, node_id: NodeId) -> Option<NodeId> {
+    pub fn predecessor(&self, node_id: MappedNodeId) -> Option<MappedNodeId> {
         self.predecessors.get(&node_id).copied().flatten()
     }
 
     /// Set predecessor of a node
     ///
     /// Translation of: `set()` method (lines 101-105)
-    pub fn set_predecessor(&mut self, node_id: NodeId, predecessor: Option<NodeId>) {
+    pub fn set_predecessor(&mut self, node_id: MappedNodeId, predecessor: Option<MappedNodeId>) {
         self.predecessors.insert(node_id, predecessor);
     }
 
     /// Get path length to a node
     ///
     /// Translation of: `length()` method (lines 91-91)
-    pub fn length(&self, node_id: NodeId) -> u32 {
+    pub fn length(&self, node_id: MappedNodeId) -> u32 {
         self.lengths.get(&node_id).copied().unwrap_or(u32::MAX)
     }
 
     /// Set path length to a node
     ///
     /// Translation of: `set()` method (lines 101-105)
-    pub fn set_length(&mut self, node_id: NodeId, length: u32) {
+    pub fn set_length(&mut self, node_id: MappedNodeId, length: u32) {
         self.lengths.insert(node_id, length);
     }
 
     /// Add a node to negative cycles
     ///
     /// Translation of: `processNegativeCycle()` method (lines 152-162)
-    pub fn add_negative_cycle_node(&mut self, node_id: NodeId) {
+    pub fn add_negative_cycle_node(&mut self, node_id: MappedNodeId) {
         self.contains_negative_cycle = true;
         if self.track_negative_cycles && !self.negative_cycle_nodes.contains(&node_id) {
             self.negative_cycle_nodes.push(node_id);
@@ -160,7 +161,7 @@ impl BellmanFordComputationRuntime {
     /// Get all negative cycle nodes
     ///
     /// Translation of: `negativeCyclesVertices` usage (lines 83, 122)
-    pub fn get_negative_cycle_nodes(&self) -> &[NodeId] {
+    pub fn get_negative_cycle_nodes(&self) -> &[MappedNodeId] {
         &self.negative_cycle_nodes
     }
 
@@ -170,10 +171,10 @@ impl BellmanFordComputationRuntime {
     /// Simplified version without atomic operations for now
     pub fn compare_and_exchange(
         &mut self,
-        node_id: NodeId,
+        node_id: MappedNodeId,
         expected_distance: f64,
         new_distance: f64,
-        predecessor: NodeId,
+        predecessor: MappedNodeId,
         length: u32,
     ) -> f64 {
         let current_distance = self.distance(node_id);
@@ -199,7 +200,7 @@ impl BellmanFordComputationRuntime {
     }
 
     /// Get source node
-    pub fn source_node(&self) -> NodeId {
+    pub fn source_node(&self) -> MappedNodeId {
         self.source_node
     }
 
@@ -214,7 +215,7 @@ impl BellmanFordComputationRuntime {
     }
 
     /// Get all visited nodes (nodes with finite distances)
-    pub fn get_visited_nodes(&self) -> Vec<NodeId> {
+    pub fn get_visited_nodes(&self) -> Vec<MappedNodeId> {
         self.distances.keys().cloned().collect()
     }
 }

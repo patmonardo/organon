@@ -7,6 +7,7 @@ use crate::ml::core::functions::LabelwiseFeatureProjection;
 use crate::ml::core::functions::Weights;
 use crate::ml::core::variable::VariableRef;
 use crate::types::graph::Graph;
+use crate::types::graph::MappedNodeId;
 use crate::types::schema::NodeLabel;
 use std::collections::HashMap;
 use std::sync::Arc;
@@ -57,9 +58,10 @@ impl FeatureFunction for MultiLabelFeatureFunction {
 }
 
 fn single_label_of(graph: &dyn Graph, node_id: u64) -> NodeLabel {
+    let mapped_node_id = MappedNodeId::new(node_id);
     let mut label_ref: Option<NodeLabel> = None;
     let mut count = 0usize;
-    graph.for_each_node_label(node_id as i64, &mut |node_label: &NodeLabel| {
+    graph.for_each_node_label(mapped_node_id, &mut |node_label: &NodeLabel| {
         count += 1;
         if count == 1 {
             label_ref = Some(node_label.clone());
@@ -72,7 +74,7 @@ fn single_label_of(graph: &dyn Graph, node_id: u64) -> NodeLabel {
         panic!(
             "Each node must have exactly one label: nodeId={}, labels={:?}",
             node_id,
-            graph.node_labels(node_id as i64)
+            graph.node_labels(mapped_node_id)
         );
     }
 

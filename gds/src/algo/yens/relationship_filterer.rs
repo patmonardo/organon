@@ -6,7 +6,14 @@
 
 use super::mutable_path_result::MutablePathResult;
 
-use crate::types::graph::NodeId;
+use crate::types::graph::MappedNodeId;
+use crate::types::graph::RelationshipIndex;
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+enum BlockedIdentity {
+    Node(MappedNodeId),
+    Relationship(RelationshipIndex),
+}
 
 /// Relationship filterer for Yen's algorithm
 ///
@@ -15,11 +22,9 @@ use crate::types::graph::NodeId;
 #[derive(Clone)]
 pub struct RelationshipFilterer {
     /// Neighbors to avoid
-    neighbors: Vec<NodeId>,
+    neighbors: Vec<BlockedIdentity>,
     /// Current filtering spur node
-    filtering_spur_node: NodeId,
-    /// Number of neighbors to avoid
-    all_neighbors: usize,
+    filtering_spur_node: Option<MappedNodeId>,
     /// Whether to track relationships
     track_relationships: bool,
 }
@@ -30,9 +35,8 @@ impl RelationshipFilterer {
     /// Translation of: Constructor (lines 34-46)
     pub fn new(k: usize, track_relationships: bool) -> Self {
         Self {
-            neighbors: vec![0; k],
-            filtering_spur_node: 0,
-            all_neighbors: 0,
+            neighbors: Vec::with_capacity(k),
+            filtering_spur_node: None,
             track_relationships,
         }
     }
@@ -42,30 +46,30 @@ impl RelationshipFilterer {
     /// Translation of: `addBlockingNeighbor()` method (lines 47-50)
     pub fn add_blocking_neighbor(&mut self, path: &MutablePathResult, index_id: usize) {
         let avoid_id = if self.track_relationships {
-            path.relationship(index_id).unwrap_or(0)
+            path.relationship(index_id)
+                .map(BlockedIdentity::Relationship)
         } else {
-            path.node(index_id + 1).unwrap_or(0)
+            path.node(index_id + 1).map(BlockedIdentity::Node)
         };
 
-        if self.all_neighbors < self.neighbors.len() {
-            self.neighbors[self.all_neighbors] = avoid_id;
-            self.all_neighbors += 1;
+        if let Some(avoid_id) = avoid_id {
+            self.neighbors.push(avoid_id);
         }
     }
 
     /// Set the filtering spur node
     ///
     /// Translation of: `setFilter()` method (lines 52-56)
-    pub fn set_filter(&mut self, filtering_spur_node: NodeId) {
-        self.filtering_spur_node = filtering_spur_node;
-        self.all_neighbors = 0;
+    pub fn set_filter(&mut self, filtering_spur_node: MappedNodeId) {
+        self.filtering_spur_node = Some(filtering_spur_node);
+        self.neighbors.clear();
     }
 
     /// Prepare the filter by sorting neighbors
     ///
     /// Translation of: `prepare()` method (lines 57-59)
     pub fn prepare(&mut self) {
-        self.neighbors[..self.all_neighbors].sort_unstable();
+        self.neighbors.sort_unstable();
     }
 
     /// Check if a relationship is valid (not blocked)
@@ -73,20 +77,18 @@ impl RelationshipFilterer {
     /// Translation of: `validRelationship()` method (lines 60-80)
     pub fn valid_relationship(
         &self,
-        source: NodeId,
-        target: NodeId,
-        relationship_id: NodeId,
+        source: MappedNodeId,
+        target: MappedNodeId,
+        relationship_id: RelationshipIndex,
     ) -> bool {
-        if source == self.filtering_spur_node {
+        if self.filtering_spur_node == Some(source) {
             let forbidden = if self.track_relationships {
-                relationship_id
+                BlockedIdentity::Relationship(relationship_id)
             } else {
-                target
+                BlockedIdentity::Node(target)
             };
 
-            return self.neighbors[..self.all_neighbors]
-                .binary_search(&forbidden)
-                .is_err();
+            return self.neighbors.binary_search(&forbidden).is_err();
         }
 
         true
@@ -94,13 +96,13 @@ impl RelationshipFilterer {
 
     /// Reset the filter state
     pub fn reset(&mut self) {
-        self.filtering_spur_node = 0;
-        self.all_neighbors = 0;
+        self.filtering_spur_node = None;
+        self.neighbors.clear();
     }
 
     /// Get the number of blocked neighbors
     pub fn blocked_count(&self) -> usize {
-        self.all_neighbors
+        self.neighbors.len()
     }
 }
 

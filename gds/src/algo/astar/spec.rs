@@ -14,7 +14,7 @@ use crate::define_algorithm_spec;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::relationship_type::RelationshipType;
 use crate::projection::Orientation;
-use crate::types::graph::NodeId;
+use crate::types::graph::MappedNodeId;
 use serde::{Deserialize, Serialize};
 use std::collections::{HashMap, HashSet};
 use std::time::Duration;
@@ -30,10 +30,10 @@ fn default_weight_property() -> String {
 pub struct AStarConfig {
     /// Source node ID
     #[serde(alias = "sourceNode")]
-    pub source_node: NodeId,
+    pub source_node: MappedNodeId,
     /// Target node ID
     #[serde(alias = "targetNode")]
-    pub target_node: NodeId,
+    pub target_node: MappedNodeId,
     /// Relationship property used as edge weight.
     #[serde(
         default = "default_weight_property",
@@ -63,8 +63,8 @@ pub struct AStarConfig {
 impl Default for AStarConfig {
     fn default() -> Self {
         Self {
-            source_node: 0,
-            target_node: 1,
+            source_node: MappedNodeId::ZERO,
+            target_node: MappedNodeId::new(1),
             weight_property: default_weight_property(),
             latitude_property: "latitude".to_string(),
             longitude_property: "longitude".to_string(),
@@ -102,20 +102,6 @@ impl AStarDirection {
 impl AStarConfig {
     /// Validate configuration parameters
     pub fn validate(&self) -> Result<(), ConfigError> {
-        if self.source_node < 0 {
-            return Err(ConfigError::InvalidParameter {
-                parameter: "source_node".to_string(),
-                reason: "Must be a non-negative i64".to_string(),
-            });
-        }
-
-        if self.target_node < 0 {
-            return Err(ConfigError::InvalidParameter {
-                parameter: "target_node".to_string(),
-                reason: "Must be a non-negative i64".to_string(),
-            });
-        }
-
         if self.concurrency == 0 {
             return Err(ConfigError::MustBePositive {
                 name: "concurrency".to_string(),
@@ -168,7 +154,7 @@ impl crate::config::ValidatedConfig for AStarConfig {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AStarResult {
     /// Path from source to target
-    pub path: Option<Vec<NodeId>>,
+    pub path: Option<Vec<MappedNodeId>>,
     /// Total cost of the path
     pub total_cost: f64,
     /// Execution time in milliseconds
@@ -186,7 +172,7 @@ pub struct AStarResult {
 impl AStarResult {
     /// Create a new A* result
     pub fn new(
-        path: Option<Vec<NodeId>>,
+        path: Option<Vec<MappedNodeId>>,
         total_cost: f64,
         execution_time_ms: u64,
         nodes_explored: usize,
@@ -196,7 +182,7 @@ impl AStarResult {
 
     /// Create a new A* result with delegated driver metrics
     pub fn new_with_metrics(
-        path: Option<Vec<NodeId>>,
+        path: Option<Vec<MappedNodeId>>,
         total_cost: f64,
         execution_time_ms: u64,
         nodes_explored: usize,
@@ -268,15 +254,19 @@ pub struct AStarMutateResult {
     pub updated_store: std::sync::Arc<crate::types::prelude::DefaultGraphStore>,
 }
 
-fn checked_u64(value: NodeId) -> u64 {
-    u64::try_from(value).unwrap_or(0)
+fn checked_u64(value: MappedNodeId) -> u64 {
+    value.get()
 }
 
-fn spec_path_to_core(path: &[NodeId], source: NodeId, target: NodeId, cost: f64) -> PathResult {
+fn spec_path_to_core(
+    path: &[MappedNodeId],
+    source: MappedNodeId,
+    target: MappedNodeId,
+    cost: f64,
+) -> PathResult {
     let path_ids = path
         .iter()
         .copied()
-        .filter(|node_id| *node_id >= 0)
         .map(checked_u64)
         .collect();
 
@@ -292,8 +282,8 @@ fn spec_path_to_core(path: &[NodeId], source: NodeId, target: NodeId, cost: f64)
 pub struct AStarResultBuilder {
     result: AStarResult,
     execution_time: Duration,
-    source_node: NodeId,
-    target_node: NodeId,
+    source_node: MappedNodeId,
+    target_node: MappedNodeId,
     additional: HashMap<String, String>,
 }
 
@@ -301,8 +291,8 @@ impl AStarResultBuilder {
     pub fn new(
         result: AStarResult,
         execution_time: Duration,
-        source_node: NodeId,
-        target_node: NodeId,
+        source_node: MappedNodeId,
+        target_node: MappedNodeId,
     ) -> Self {
         Self {
             result,
@@ -316,8 +306,8 @@ impl AStarResultBuilder {
     pub fn result(
         result: AStarResult,
         execution_time: Duration,
-        source_node: NodeId,
-        target_node: NodeId,
+        source_node: MappedNodeId,
+        target_node: MappedNodeId,
     ) -> Result<PathFindingResult, AlgorithmError> {
         Self::new(result, execution_time, source_node, target_node).build_pathfinding_result()
     }
@@ -325,8 +315,8 @@ impl AStarResultBuilder {
     pub fn result_with_additional(
         result: AStarResult,
         execution_time: Duration,
-        source_node: NodeId,
-        target_node: NodeId,
+        source_node: MappedNodeId,
+        target_node: MappedNodeId,
         additional: HashMap<String, String>,
     ) -> Result<PathFindingResult, AlgorithmError> {
         let mut builder = Self::new(result, execution_time, source_node, target_node);

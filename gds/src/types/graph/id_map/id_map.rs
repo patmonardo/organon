@@ -9,9 +9,7 @@ use super::{
 };
 
 /// Lower bound of mapped identifiers.
-pub const START_NODE_ID: MappedNodeId = 0;
-/// Sentinel value mirroring the TypeScript `IdMap.NOT_FOUND` constant.
-pub const NOT_FOUND: i64 = -1;
+pub const START_NODE_ID: MappedNodeId = MappedNodeId::ZERO;
 /// Type identifier used when an implementation does not have a dedicated type string.
 pub const NO_TYPE: &str = "unsupported";
 
@@ -42,12 +40,6 @@ pub trait IdMap: PartialIdMap + NodeIterator + BatchNodeIterable {
     /// validation before returning the mapped identifier.
     fn safe_to_mapped_node_id(&self, original_node_id: OriginalNodeId) -> Option<MappedNodeId> {
         self.to_mapped_node_id(original_node_id)
-    }
-
-    /// Convenience helper exposing the sentinel-based variant used by the Java/TypeScript APIs.
-    fn safe_to_mapped_or_not_found(&self, original_node_id: OriginalNodeId) -> i64 {
-        self.safe_to_mapped_node_id(original_node_id)
-            .unwrap_or(NOT_FOUND)
     }
 
     /// Maps a compact mapped identifier back to the original identifier (usually the database ID).

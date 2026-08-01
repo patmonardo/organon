@@ -1,6 +1,6 @@
 //! Pathfinding Result Builders (Java parity)
 //!
-//! These builders transform raw algorithm results (like Vec<NodeId> traversal order)
+//! These builders transform raw algorithm results (like Vec<MappedNodeId> traversal order)
 //! into procedure-friendly results, matching Java GDS ResultBuilder pattern.
 
 use crate::algo::algorithms::pathfinding::PathResult;

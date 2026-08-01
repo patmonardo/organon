@@ -33,16 +33,21 @@ impl FilteredNodeSimilarityStorageRuntime {
         let computation = NodeSimilarityComputationRuntime::new();
 
         let sources_vec: Vec<u64> = if let Some(source_nodes) = sources {
-            source_nodes.iter().map(|id| *id as u64).collect()
+            source_nodes.iter().map(|id| id.get()).collect()
         } else {
-            (0..node_count as u64).collect()
+            (0..node_count)
+                .map(|id| {
+                    MappedNodeId::try_from(id)
+                        .expect("graph node count must fit mapped node IDs")
+                        .get()
+                })
+                .collect()
         };
 
         let target_mask = targets.map(|target_nodes| {
             let mut mask = vec![false; node_count];
             for id in target_nodes {
-                let idx = *id as usize;
-                if idx < node_count {
+                if let Some(idx) = id.to_usize().filter(|&idx| idx < node_count) {
                     mask[idx] = true;
                 }
             }

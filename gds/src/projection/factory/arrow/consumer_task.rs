@@ -71,10 +71,12 @@ impl ConsumerNodeImportTask {
                 message: format!("Failed to acquire accumulator lock: {}", e),
             })?;
 
-        let count = node_ids.len() as u64;
+        let count = u64::try_from(node_ids.len()).map_err(|_| TaskError::ExecutionFailed {
+            message: "node buffer length exceeds import count space".to_string(),
+        })?;
 
         for (node_id, label_vec) in node_ids.iter().zip(labels.iter()) {
-            acc.add_node(*node_id as i64, label_vec.clone());
+            acc.add_node(*node_id, label_vec.clone());
         }
 
         // Reset consumer buffer after flush
@@ -159,7 +161,6 @@ impl ConsumerEdgeImportTask {
     fn flush_buffer(&mut self) -> Result<u64, TaskError> {
         let sources = self.consumer.sources();
         let targets = self.consumer.targets();
-        let _rel_ids = self.consumer.relationship_ids();
 
         if sources.is_empty() {
             return Ok(0);
@@ -172,7 +173,9 @@ impl ConsumerEdgeImportTask {
                 message: format!("Failed to acquire accumulator lock: {}", e),
             })?;
 
-        let count = sources.len() as u64;
+        let count = u64::try_from(sources.len()).map_err(|_| TaskError::ExecutionFailed {
+            message: "relationship buffer length exceeds import count space".to_string(),
+        })?;
 
         // For now, we use a placeholder relationship type since the consumer
         // doesn't expose per-relationship types (future enhancement)
@@ -180,8 +183,8 @@ impl ConsumerEdgeImportTask {
 
         for i in 0..sources.len() {
             acc.add_edge(
-                sources[i] as i64,
-                targets[i] as i64,
+                sources[i],
+                targets[i],
                 default_rel_type.clone(),
             );
         }
@@ -321,6 +324,7 @@ mod tests {
     use crate::projection::factory::arrow::{NodeRecord, RelationshipRecord};
     use crate::projection::NodeLabel;
     use crate::types::graph::id_map::IdMap;
+    use crate::types::graph::OriginalNodeId;
 
     #[test]
     fn test_consumer_node_task_factory_creation() {
@@ -350,11 +354,11 @@ mod tests {
 
         // Manually add records to consumer
         task.consumer.offer(NodeRecord {
-            node_id: 100,
+            node_id: OriginalNodeId::new(100),
             labels: vec![NodeLabel::of("Person")],
         });
         task.consumer.offer(NodeRecord {
-            node_id: 101,
+            node_id: OriginalNodeId::new(101),
             labels: vec![NodeLabel::of("Company")],
         });
 
@@ -377,15 +381,13 @@ mod tests {
 
         // Manually add records to consumer
         task.consumer.offer(RelationshipRecord {
-            relationship_id: 0,
-            source_node_id: 100,
-            target_node_id: 101,
+            source_node_id: OriginalNodeId::new(100),
+            target_node_id: OriginalNodeId::new(101),
             relationship_type: RelationshipType::of("KNOWS"),
         });
         task.consumer.offer(RelationshipRecord {
-            relationship_id: 1,
-            source_node_id: 101,
-            target_node_id: 102,
+            source_node_id: OriginalNodeId::new(101),
+            target_node_id: OriginalNodeId::new(102),
             relationship_type: RelationshipType::of("KNOWS"),
         });
 

@@ -42,7 +42,11 @@ impl NodeSimilarityStorageRuntime {
         on_sources_done: Arc<dyn Fn(usize) + Send + Sync>,
     ) -> Result<NodeSimilarityComputationReport, TerminatedException> {
         let node_count = graph.node_count();
-        let sources: Vec<u64> = (0..node_count as u64).collect();
+        let sources: Vec<MappedNodeId> = (0..node_count)
+            .map(|node| {
+                MappedNodeId::try_from(node).expect("graph node index must fit MappedNodeId")
+            })
+            .collect();
         self.compute_with_filters_report(
             computation,
             graph,
@@ -55,17 +59,20 @@ impl NodeSimilarityStorageRuntime {
         )
     }
 
-    pub fn compute_with_filters(
+    pub fn compute_with_filters<SourceId>(
         &self,
         computation: &NodeSimilarityComputationRuntime,
         graph: &dyn Graph,
         config: &super::spec::NodeSimilarityConfig,
-        sources: Vec<u64>,
+        sources: Vec<SourceId>,
         target_mask: Option<Vec<bool>>,
         enforce_ordering: bool,
         termination: &TerminationFlag,
         on_sources_done: Arc<dyn Fn(usize) + Send + Sync>,
-    ) -> Result<Vec<NodeSimilarityComputationResult>, TerminatedException> {
+    ) -> Result<Vec<NodeSimilarityComputationResult>, TerminatedException>
+    where
+        SourceId: Into<MappedNodeId>,
+    {
         Ok(self
             .compute_with_filters_report(
                 computation,
@@ -80,21 +87,25 @@ impl NodeSimilarityStorageRuntime {
             .results)
     }
 
-    pub fn compute_with_filters_report(
+    pub fn compute_with_filters_report<SourceId>(
         &self,
         computation: &NodeSimilarityComputationRuntime,
         graph: &dyn Graph,
         config: &super::spec::NodeSimilarityConfig,
-        sources: Vec<u64>,
+        sources: Vec<SourceId>,
         target_mask: Option<Vec<bool>>,
         enforce_ordering: bool,
         termination: &TerminationFlag,
         on_sources_done: Arc<dyn Fn(usize) + Send + Sync>,
-    ) -> Result<NodeSimilarityComputationReport, TerminatedException> {
+    ) -> Result<NodeSimilarityComputationReport, TerminatedException>
+    where
+        SourceId: Into<MappedNodeId>,
+    {
         if !termination.running() {
             return Err(TerminatedException);
         }
 
+        let sources: Vec<MappedNodeId> = sources.into_iter().map(Into::into).collect();
         let node_count = graph.node_count();
         let metric = Arc::from(config.similarity_metric.create(config.similarity_cutoff));
         let worker_count = self.concurrency.max(1);
@@ -129,7 +140,10 @@ impl NodeSimilarityStorageRuntime {
                         }
 
                         let source = sources[idx];
-                        let source_vec = &vectors[source as usize];
+                        let source_index = source
+                            .to_usize()
+                            .expect("mapped source ID must fit vector storage");
+                        let source_vec = &vectors[source_index];
 
                         if source_vec.is_empty() {
                             (on_sources_done.as_ref())(1);
@@ -180,12 +194,12 @@ fn build_vectors(
     with_weights: bool,
     executor: &Executor,
     termination: &TerminationFlag,
-) -> Result<(Vec<Vec<u64>>, Option<Vec<Vec<f64>>>), TerminatedException> {
+) -> Result<(Vec<Vec<usize>>, Option<Vec<Vec<f64>>>), TerminatedException> {
     // Use 1.0 as the fallback weight so missing/unselected properties behave as unweighted.
     let fallback_weight = 1.0;
 
     if with_weights {
-        let slots: Vec<parking_lot::Mutex<Option<(Vec<u64>, Vec<f64>)>>> = (0..node_count)
+        let slots: Vec<parking_lot::Mutex<Option<(Vec<usize>, Vec<f64>)>>> = (0..node_count)
             .map(|_| parking_lot::Mutex::new(None))
             .collect();
 
@@ -195,10 +209,19 @@ fn build_vectors(
                     return;
                 }
 
-                let node_id = node as MappedNodeId;
-                let mut pairs: Vec<(u64, f64)> = graph
+                let node_id = MappedNodeId::try_from(node)
+                    .expect("graph node index must fit MappedNodeId");
+                let mut pairs: Vec<(usize, f64)> = graph
                     .stream_relationships(node_id, fallback_weight)
-                    .map(|cursor| (cursor.target_id() as u64, cursor.property()))
+                    .map(|cursor| {
+                        (
+                            cursor
+                                .target_id()
+                                .to_usize()
+                                .expect("mapped target ID must fit vector storage"),
+                            cursor.property(),
+                        )
+                    })
                     .collect();
 
                 pairs.sort_unstable_by_key(|(t, _)| *t);
@@ -223,7 +246,7 @@ fn build_vectors(
 
         Ok((vectors, Some(weights)))
     } else {
-        let slots: Vec<parking_lot::Mutex<Option<Vec<u64>>>> = (0..node_count)
+        let slots: Vec<parking_lot::Mutex<Option<Vec<usize>>>> = (0..node_count)
             .map(|_| parking_lot::Mutex::new(None))
             .collect();
 
@@ -233,17 +256,23 @@ fn build_vectors(
                     return;
                 }
 
-                let node_id = node as MappedNodeId;
-                let mut neighbors: Vec<u64> = graph
+                let node_id = MappedNodeId::try_from(node)
+                    .expect("graph node index must fit MappedNodeId");
+                let mut neighbors: Vec<usize> = graph
                     .stream_relationships(node_id, fallback_weight)
-                    .map(|cursor| cursor.target_id() as u64)
+                    .map(|cursor| {
+                        cursor
+                            .target_id()
+                            .to_usize()
+                            .expect("mapped target ID must fit vector storage")
+                    })
                     .collect();
                 neighbors.sort_unstable();
                 *slots[node].lock() = Some(neighbors);
             });
         })?;
 
-        let vectors: Vec<Vec<u64>> = slots
+        let vectors: Vec<Vec<usize>> = slots
             .into_iter()
             .map(|slot| slot.into_inner().unwrap_or_default())
             .collect();
@@ -254,22 +283,24 @@ fn build_vectors(
 
 fn enumerate_candidates(
     graph: &dyn Graph,
-    source: u64,
-    source_vector: &[u64],
+    source: MappedNodeId,
+    source_vector: &[usize],
     target_mask: Option<&[bool]>,
     enforce_ordering: bool,
-) -> HashSet<u64> {
+) -> HashSet<MappedNodeId> {
     // Use a HashSet to dedupe candidates across multiple shared neighbors.
     // Use 1.0 fallback for property access; candidate enumeration is topology-only.
     let fallback_weight = 1.0;
-    let mut candidates: HashSet<u64> = HashSet::new();
+    let mut candidates: HashSet<MappedNodeId> = HashSet::new();
 
     // Inverse traversal for each neighbor to find nodes that share that neighbor.
     // (This matches the classic two-hop candidate enumeration in Node Similarity.)
     for &neighbor in source_vector {
-        let inverse = graph.stream_inverse_relationships(neighbor as MappedNodeId, fallback_weight);
+        let neighbor_id = MappedNodeId::try_from(neighbor)
+            .expect("stored neighbor index must fit MappedNodeId");
+        let inverse = graph.stream_inverse_relationships(neighbor_id, fallback_weight);
         for inv_rel in inverse {
-            let potential_target = inv_rel.source_id() as u64;
+            let potential_target = inv_rel.source_id();
             if potential_target == source {
                 continue;
             }
@@ -279,7 +310,9 @@ fn enumerate_candidates(
             }
 
             if let Some(mask) = target_mask {
-                let idx = potential_target as usize;
+                let idx = potential_target
+                    .to_usize()
+                    .expect("mapped target ID must fit target mask storage");
                 if idx >= mask.len() || !mask[idx] {
                     continue;
                 }

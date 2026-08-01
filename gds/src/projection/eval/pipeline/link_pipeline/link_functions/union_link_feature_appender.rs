@@ -1,6 +1,7 @@
 // Phase 2.8: UnionLinkFeatureAppender - Combines multiple property appenders into one
 
 use super::super::LinkFeatureAppender;
+use crate::types::graph::MappedNodeId;
 
 /// Combines multiple link feature appenders into one feature vector.
 ///
@@ -65,7 +66,13 @@ impl UnionLinkFeatureAppender {
 }
 
 impl LinkFeatureAppender for UnionLinkFeatureAppender {
-    fn append_features(&self, source: u64, target: u64, features: &mut [f64], offset: usize) {
+    fn append_features(
+        &self,
+        source: MappedNodeId,
+        target: MappedNodeId,
+        features: &mut [f64],
+        offset: usize,
+    ) {
         let mut local_offset = offset;
 
         // Call each appender sequentially
@@ -90,8 +97,8 @@ impl UnionLinkFeatureAppender {
         features: &[f64],
         offset: usize,
         end_offset: usize,
-        source: u64,
-        target: u64,
+        source: MappedNodeId,
+        target: MappedNodeId,
     ) {
         for (index, feature) in features.iter().take(end_offset).skip(offset).enumerate() {
             if !feature.is_finite() {
@@ -119,7 +126,13 @@ mod tests {
     }
 
     impl LinkFeatureAppender for ConstantAppender {
-        fn append_features(&self, _source: u64, _target: u64, features: &mut [f64], offset: usize) {
+        fn append_features(
+            &self,
+            _source: MappedNodeId,
+            _target: MappedNodeId,
+            features: &mut [f64],
+            offset: usize,
+        ) {
             for i in 0..self.dimension {
                 features[offset + i] = self.value;
             }
@@ -152,7 +165,7 @@ mod tests {
         );
 
         let mut features = vec![0.0; 10];
-        union.append_features(0, 1, &mut features, 0);
+        union.append_features(MappedNodeId::new(0), MappedNodeId::new(1), &mut features, 0);
 
         assert_eq!(union.dimension(), 6);
         assert_eq!(features[0], 1.0);
@@ -174,7 +187,7 @@ mod tests {
             UnionLinkFeatureAppender::new(appenders, "TEST".to_string(), vec!["prop".to_string()]);
 
         let mut features = vec![0.0; 10];
-        union.append_features(0, 1, &mut features, 5);
+        union.append_features(MappedNodeId::new(0), MappedNodeId::new(1), &mut features, 5);
 
         assert_eq!(features[4], 0.0);
         assert_eq!(features[5], 3.0);
@@ -201,7 +214,7 @@ mod tests {
         assert_eq!(union.dimension(), 2);
 
         let mut features = vec![0.0; 5];
-        union.append_features(0, 0, &mut features, 0);
+        union.append_features(MappedNodeId::new(0), MappedNodeId::new(0), &mut features, 0);
 
         assert_eq!(features[0], 1.0);
         assert_eq!(features[1], 1.0);
@@ -231,7 +244,12 @@ mod tests {
         assert_eq!(union.dimension(), 6);
 
         let mut feature_space = vec![0.0; 10];
-        union.append_features(0, 1, &mut feature_space, 0);
+        union.append_features(
+            MappedNodeId::new(0),
+            MappedNodeId::new(1),
+            &mut feature_space,
+            0,
+        );
 
         assert_eq!(feature_space[0], 1.0);
         assert_eq!(feature_space[1], 1.0);

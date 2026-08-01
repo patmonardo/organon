@@ -1,4 +1,6 @@
 use std::collections::{HashMap, HashSet};
+use std::error::Error;
+use std::fmt;
 
 use crate::types::schema::NodeLabel;
 
@@ -9,6 +11,25 @@ use super::{
     partial_id_map::PartialIdMap,
     Concurrency, FilteredIdMap, MappedNodeId, OriginalNodeId,
 };
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum SimpleIdMapError {
+    DuplicateOriginalId(OriginalNodeId),
+    NodeCountOverflow,
+}
+
+impl fmt::Display for SimpleIdMapError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::DuplicateOriginalId(original_id) => {
+                write!(formatter, "duplicate original node ID {original_id}")
+            }
+            Self::NodeCountOverflow => formatter.write_str("node count exceeds mapped ID space"),
+        }
+    }
+}
+
+impl Error for SimpleIdMapError {}
 
 /// Simple in-memory [`IdMap`] implementation built on top of Rust `HashMap`s.
 ///
@@ -27,27 +48,41 @@ impl SimpleIdMap {
         Self::default()
     }
 
-    pub fn from_original_ids<I>(ids: I) -> Self
+    pub fn try_from_original_ids<I, T>(ids: I) -> Result<Self, SimpleIdMapError>
     where
-        I: IntoIterator<Item = OriginalNodeId>,
+        I: IntoIterator<Item = T>,
+        T: Into<OriginalNodeId>,
     {
         let mut forward = HashMap::new();
         let mut reverse = Vec::new();
         for (index, original) in ids.into_iter().enumerate() {
-            let mapped = index as MappedNodeId;
-            forward.insert(original, mapped);
+            let original = original.into();
+            let mapped =
+                MappedNodeId::try_from(index).map_err(|_| SimpleIdMapError::NodeCountOverflow)?;
+            if forward.insert(original, mapped).is_some() {
+                return Err(SimpleIdMapError::DuplicateOriginalId(original));
+            }
             reverse.push(original);
         }
 
-        Self {
+        Ok(Self {
             forward,
             reverse,
             ..Default::default()
-        }
+        })
     }
 
-    fn mapped_range(&self) -> std::ops::Range<MappedNodeId> {
-        0..self.reverse.len() as MappedNodeId
+    pub fn from_original_ids<I, T>(ids: I) -> Self
+    where
+        I: IntoIterator<Item = T>,
+        T: Into<OriginalNodeId>,
+    {
+        Self::try_from_original_ids(ids).expect("original node IDs must be unique")
+    }
+
+    fn mapped_range(&self) -> impl ExactSizeIterator<Item = MappedNodeId> + '_ {
+        (0..self.reverse.len())
+            .map(|index| MappedNodeId::try_from(index).expect("validated SimpleIdMap node count"))
     }
 }
 
@@ -95,13 +130,15 @@ impl BatchNodeIterable for SimpleIdMap {
         }
 
         let mut batches = Vec::new();
-        let mut start = 0u64;
-        let total = self.node_count() as u64;
+        let mut start = 0usize;
+        let total = self.node_count();
         while start < total {
             let remaining = total - start;
-            let length = usize::min(batch_size, remaining as usize);
-            batches.push(NodeIdBatch::new(start as i64, length));
-            start += length as u64;
+            let length = usize::min(batch_size, remaining);
+            let mapped_start =
+                MappedNodeId::try_from(start).expect("validated SimpleIdMap node count");
+            batches.push(NodeIdBatch::new(mapped_start, length));
+            start += length;
         }
         batches
     }
@@ -117,7 +154,7 @@ impl IdMap for SimpleIdMap {
     }
 
     fn to_original_node_id(&self, mapped_node_id: MappedNodeId) -> Option<OriginalNodeId> {
-        self.reverse.get(mapped_node_id as usize).copied()
+        self.reverse.get(mapped_node_id.to_usize()?).copied()
     }
 
     fn to_root_node_id(&self, mapped_node_id: MappedNodeId) -> Option<MappedNodeId> {
@@ -203,19 +240,30 @@ mod tests {
     #[test]
     fn basic_mapping() {
         let map = SimpleIdMap::from_original_ids([10, 20, 30]);
-        assert_eq!(map.to_mapped_node_id(10), Some(0));
-        assert_eq!(map.to_mapped_node_id(20), Some(1));
-        assert_eq!(map.to_mapped_node_id(30), Some(2));
-        assert_eq!(map.to_original_node_id(1), Some(20));
+        assert_eq!(map.to_mapped_node_id(10.into()), Some(MappedNodeId::new(0)));
+        assert_eq!(map.to_mapped_node_id(20.into()), Some(MappedNodeId::new(1)));
+        assert_eq!(map.to_mapped_node_id(30.into()), Some(MappedNodeId::new(2)));
+        assert_eq!(
+            map.to_original_node_id(MappedNodeId::new(1)),
+            Some(20.into())
+        );
         assert_eq!(map.node_count(), 3);
         assert_eq!(map.root_node_count(), Some(3));
+    }
+
+    #[test]
+    fn duplicate_original_ids_are_rejected() {
+        assert_eq!(
+            SimpleIdMap::try_from_original_ids([10, 20, 10]),
+            Err(SimpleIdMapError::DuplicateOriginalId(10.into()))
+        );
     }
 
     #[test]
     fn node_iteration() {
         let map = SimpleIdMap::from_original_ids([5, 6]);
         let nodes: Vec<_> = map.iter().collect();
-        assert_eq!(nodes, vec![0, 1]);
+        assert_eq!(nodes, vec![MappedNodeId::new(0), MappedNodeId::new(1)]);
 
         let mut collected = Vec::new();
         let mut consumer = |node| {
@@ -223,7 +271,7 @@ mod tests {
             true
         };
         map.for_each_node(&mut consumer);
-        assert_eq!(collected, vec![0, 1]);
+        assert_eq!(collected, vec![MappedNodeId::new(0), MappedNodeId::new(1)]);
     }
 
     #[test]
@@ -231,9 +279,9 @@ mod tests {
         let map = SimpleIdMap::from_original_ids([1, 2, 3, 4, 5]);
         let batches = map.batch_iterables(2);
         assert_eq!(batches.len(), 3);
-        assert_eq!(batches[0], NodeIdBatch::new(0, 2));
-        assert_eq!(batches[1], NodeIdBatch::new(2, 2));
-        assert_eq!(batches[2], NodeIdBatch::new(4, 1));
+        assert_eq!(batches[0], NodeIdBatch::new(MappedNodeId::new(0), 2));
+        assert_eq!(batches[1], NodeIdBatch::new(MappedNodeId::new(2), 2));
+        assert_eq!(batches[2], NodeIdBatch::new(MappedNodeId::new(4), 1));
     }
 
     #[test]
@@ -241,11 +289,11 @@ mod tests {
         let mut map = SimpleIdMap::from_original_ids([1, 2]);
         let label = NodeLabel::of("Person");
         map.add_node_label(label.clone());
-        map.add_node_id_to_label(0, label.clone());
-        assert!(map.has_label(0, &label));
+        map.add_node_id_to_label(MappedNodeId::new(0), label.clone());
+        assert!(map.has_label(MappedNodeId::new(0), &label));
         assert_eq!(map.node_count_for_label(&label), 1);
 
-        let labels = map.node_labels(0);
+        let labels = map.node_labels(MappedNodeId::new(0));
         assert!(labels.contains(&label));
     }
 }

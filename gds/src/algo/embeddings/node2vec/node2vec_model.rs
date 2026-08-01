@@ -83,13 +83,14 @@ impl Node2VecModel {
                 if !self.termination_flag.running() {
                     return Err(TerminatedException);
                 }
-                let sampled_walk: Vec<i64> = walk
+                let sampled_walk: Vec<usize> = walk
                     .iter()
                     .copied()
-                    .filter(|&node| {
-                        let node_index = node as usize;
-                        node_index < self.node_count
-                            && rng.gen::<f64>() < self.positive_sampling_probabilities[node_index]
+                    .filter_map(|node| {
+                        let node_index = usize::try_from(node).ok()?;
+                        (node_index < self.node_count
+                            && rng.gen::<f64>() < self.positive_sampling_probabilities[node_index])
+                            .then_some(node_index)
                     })
                     .collect();
                 if sampled_walk.len() < 2 {
@@ -109,8 +110,8 @@ impl Node2VecModel {
                         }
 
                         let loss = self.train_pair(
-                            center_node as usize,
-                            context_node as usize,
+                            center_node,
+                            context_node,
                             &mut center_embeddings,
                             &mut context_embeddings,
                             learning_rate,

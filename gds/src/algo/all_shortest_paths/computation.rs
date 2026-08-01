@@ -4,7 +4,7 @@
 //! It represents ephemeral computation state (shortest path results and statistics).
 
 use super::ShortestPathResult;
-use crate::types::graph::NodeId;
+use crate::types::graph::MappedNodeId;
 
 /// Computation Runtime for All Shortest Paths
 ///
@@ -100,7 +100,7 @@ impl AllShortestPathsComputationRuntime {
     }
 
     /// Get results for a specific source node
-    pub fn get_results_for_source(&self, source: NodeId) -> Vec<ShortestPathResult> {
+    pub fn get_results_for_source(&self, source: MappedNodeId) -> Vec<ShortestPathResult> {
         self.results
             .iter()
             .filter(|result| result.source == source)
@@ -109,7 +109,7 @@ impl AllShortestPathsComputationRuntime {
     }
 
     /// Get results for a specific target node
-    pub fn get_results_for_target(&self, target: NodeId) -> Vec<ShortestPathResult> {
+    pub fn get_results_for_target(&self, target: MappedNodeId) -> Vec<ShortestPathResult> {
         self.results
             .iter()
             .filter(|result| result.target == target)

@@ -6,6 +6,8 @@ use crate::applications::graph_store_catalog::results::SamplingResult;
 use crate::applications::services::logging::Log;
 use crate::core::User;
 use crate::types::graph::IdMap as _;
+use crate::types::graph::MappedNodeId;
+use crate::types::graph::OriginalNodeId;
 use crate::types::graph_store::GraphStore as _;
 use crate::types::graph_store::{DatabaseId, GraphName};
 use rand::seq::SliceRandom;
@@ -76,15 +78,21 @@ impl GraphSamplingApplication {
 
         // Select nodes (original ids) deterministically.
         let graph = origin.graph();
-        let mut original_ids: Vec<i64> = (0..graph.node_count() as i64)
-            .map(|mapped| graph.to_original_node_id(mapped).unwrap_or(mapped))
-            .collect();
+        let mut original_ids = Vec::with_capacity(graph.node_count());
+        for mapped_index in 0..graph.node_count() {
+            let mapped_id = MappedNodeId::try_from(mapped_index)
+                .map_err(|_| "Graph node count exceeds mapped ID space".to_string())?;
+            let original_id = graph.to_original_node_id(mapped_id).ok_or_else(|| {
+                format!("No original node ID for mapped node {mapped_id}")
+            })?;
+            original_ids.push(original_id);
+        }
 
         let seed = cfg.seed.unwrap_or(0);
         let mut rng = rand::rngs::StdRng::seed_from_u64(seed);
         original_ids.shuffle(&mut rng);
 
-        let selected: Vec<i64> = original_ids.into_iter().take(sample_size).collect();
+        let selected: Vec<OriginalNodeId> = original_ids.into_iter().take(sample_size).collect();
         let induced = origin
             .commit_induced_subgraph_by_original_node_ids(
                 GraphName::new(sampled_graph_name.clone()),

@@ -2,15 +2,15 @@ use crate::algo::prize_collecting_steiner_tree::{
     PCSTreeComputationRuntime, PCSTreeConfig, PCSTreeStorageRuntime, PRUNED, ROOT_NODE,
 };
 use crate::task::progress::{TaskProgressTracker, Tasks};
-use crate::types::graph::NodeId;
+use crate::types::graph::MappedNodeId;
 
-fn create_neighbors(edges: Vec<Vec<(usize, f64)>>) -> impl Fn(NodeId) -> Vec<(NodeId, f64)> {
-    move |node: NodeId| {
+fn create_neighbors(edges: Vec<Vec<(usize, f64)>>) -> impl Fn(MappedNodeId) -> Vec<(MappedNodeId, f64)> {
+    move |node: MappedNodeId| {
         let node = node as usize;
         if node < edges.len() {
             edges[node]
                 .iter()
-                .map(|(t, w)| (*t as NodeId, *w))
+                .map(|(t, w)| (*t as MappedNodeId, *w))
                 .collect()
         } else {
             Vec::new()

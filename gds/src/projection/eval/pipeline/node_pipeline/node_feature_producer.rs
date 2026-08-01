@@ -136,7 +136,7 @@ impl<C: NodePropertyPipelineBaseTrainConfig> NodeFeatureProducer<C> {
             let target_graph = self.graph_store.get_graph();
             let target_node_ids = target_graph
                 .iter_with_labels(&target_node_label_set)
-                .map(|node_id| node_id as u64)
+                .map(|node_id| node_id.get())
                 .collect::<Vec<_>>();
             if pipeline.require_eager_features() {
                 Ok(FeaturesFactory::extract_eager_features_for_node_ids(

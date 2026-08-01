@@ -3,6 +3,7 @@
 use crate::task::concurrency::TerminationFlag;
 use crate::core::utils::queue::BoundedLongLongPriorityQueue;
 use crate::types::ValueType;
+use crate::types::graph::MappedNodeId;
 use rayon::prelude::*;
 use std::collections::HashMap;
 use std::sync::Arc;
@@ -91,7 +92,11 @@ pub fn compute_kge_predict(
                 if source == target {
                     continue;
                 }
-                if graph.exists(source, target) {
+                let source_node = MappedNodeId::try_from(source)
+                    .expect("validated KGE source must fit mapped node ID space");
+                let target_node = MappedNodeId::try_from(target)
+                    .expect("validated KGE target must fit mapped node ID space");
+                if graph.exists(source_node, target_node) {
                     continue;
                 }
 

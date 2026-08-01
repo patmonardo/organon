@@ -4,6 +4,7 @@ use crate::core::utils::partition::{DegreeFunction, DegreePartition, Partition, 
 use crate::task::concurrency::{TerminatedException, TerminationFlag};
 use crate::task::progress::ProgressTracker;
 use crate::types::graph::Graph;
+use crate::types::graph::MappedNodeId;
 use std::sync::Arc;
 
 use super::densify_task::DensifyTask;
@@ -17,7 +18,7 @@ use super::min_hash_task::MinHashTask;
 #[derive(Debug, Default, Clone, Copy)]
 pub struct MinAndArgmin {
     pub min: i32,
-    pub arg_min: i32,
+    pub arg_min: Option<usize>,
 }
 
 pub struct HashGNN {
@@ -415,6 +416,9 @@ struct GraphDegrees {
 
 impl DegreeFunction for GraphDegrees {
     fn degree(&self, node_id: usize) -> usize {
-        self.graph.degree(node_id as i64)
+        self.graph.degree(
+            MappedNodeId::try_from(node_id)
+                .expect("HashGNN degree node index must fit a mapped node ID"),
+        )
     }
 }
