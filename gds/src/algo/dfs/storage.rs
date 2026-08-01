@@ -189,6 +189,10 @@ mod tests {
     use crate::algo::traversal::{ExitPredicateResult, FollowExitPredicate};
     use crate::task::progress::{TaskProgressTracker, Tasks};
 
+    fn mapped(node_id: u64) -> MappedNodeId {
+        MappedNodeId::new(node_id)
+    }
+
     struct ContinueOnTwo;
 
     impl ExitPredicate for ContinueOnTwo {
@@ -198,7 +202,7 @@ mod tests {
             current_node: MappedNodeId,
             _weight_at_source: f64,
         ) -> ExitPredicateResult {
-            if current_node == 2 {
+            if current_node == mapped(2) {
                 ExitPredicateResult::Continue
             } else {
                 ExitPredicateResult::Follow
@@ -221,9 +225,9 @@ mod tests {
 
     #[test]
     fn test_dfs_storage_runtime_creation() {
-        let storage = DfsStorageRuntime::new(0, vec![3], Some(5), true, 4);
-        assert_eq!(storage.source_node, 0);
-        assert_eq!(storage.target_nodes, vec![3]);
+        let storage = DfsStorageRuntime::new(mapped(0), vec![mapped(3)], Some(5), true, 4);
+        assert_eq!(storage.source_node, mapped(0));
+        assert_eq!(storage.target_nodes, vec![mapped(3)]);
         assert_eq!(storage.max_depth, Some(5));
         assert!(storage.track_paths);
         assert_eq!(storage.concurrency, 4);
@@ -231,8 +235,8 @@ mod tests {
 
     #[test]
     fn test_dfs_path_computation() {
-        let storage = DfsStorageRuntime::new(0, vec![3], None, true, 1);
-        let mut computation = DfsComputationRuntime::new(0, true, 1, 10);
+        let storage = DfsStorageRuntime::new(mapped(0), vec![mapped(3)], None, true, 1);
+        let mut computation = DfsComputationRuntime::new(mapped(0), true, 1, 10);
 
         let mut progress_tracker = TaskProgressTracker::new(Tasks::leaf("DFS".to_string()));
 
@@ -241,13 +245,13 @@ mod tests {
             .unwrap();
 
         assert!(!result.visited_nodes.is_empty());
-        assert!(result.visited_nodes.contains(&0));
+        assert!(result.visited_nodes.contains(&mapped(0)));
     }
 
     #[test]
     fn test_dfs_mock_traversal_follows_edges() {
-        let storage = DfsStorageRuntime::new(0, vec![], None, false, 1);
-        let mut computation = DfsComputationRuntime::new(0, false, 1, 10);
+        let storage = DfsStorageRuntime::new(mapped(0), vec![], None, false, 1);
+        let mut computation = DfsComputationRuntime::new(mapped(0), false, 1, 10);
 
         let mut progress_tracker = TaskProgressTracker::new(Tasks::leaf("DFS".to_string()));
 
@@ -256,13 +260,13 @@ mod tests {
             .unwrap();
 
         assert!(result.visited_nodes.len() > 1);
-        assert_eq!(result.visited_nodes[0], 0);
+        assert_eq!(result.visited_nodes[0], mapped(0));
     }
 
     #[test]
     fn test_dfs_stops_when_target_reached() {
-        let storage = DfsStorageRuntime::new(0, vec![2], None, true, 1);
-        let mut computation = DfsComputationRuntime::new(0, true, 1, 10);
+        let storage = DfsStorageRuntime::new(mapped(0), vec![mapped(2)], None, true, 1);
+        let mut computation = DfsComputationRuntime::new(mapped(0), true, 1, 10);
 
         let mut progress_tracker = TaskProgressTracker::new(Tasks::leaf("DFS".to_string()));
 
@@ -270,13 +274,13 @@ mod tests {
             .compute_dfs(&mut computation, None, &mut progress_tracker)
             .unwrap();
 
-        assert_eq!(result.visited_nodes, vec![0, 2]);
+        assert_eq!(result.visited_nodes, vec![mapped(0), mapped(2)]);
     }
 
     #[test]
     fn test_dfs_honors_continue_exit_predicate() {
-        let storage = DfsStorageRuntime::new(0, vec![], None, false, 1);
-        let mut computation = DfsComputationRuntime::new(0, false, 1, 10);
+        let storage = DfsStorageRuntime::new(mapped(0), vec![], None, false, 1);
+        let mut computation = DfsComputationRuntime::new(mapped(0), false, 1, 10);
         let aggregator = OneHopAggregator;
         let exit_predicate = ContinueOnTwo;
 
@@ -292,14 +296,14 @@ mod tests {
             )
             .unwrap();
 
-        assert!(!result.visited_nodes.contains(&2));
-        assert_eq!(result.visited_nodes, vec![0, 1, 3]);
+        assert!(!result.visited_nodes.contains(&mapped(2)));
+        assert_eq!(result.visited_nodes, vec![mapped(0), mapped(1), mapped(3)]);
     }
 
     #[test]
     fn test_dfs_honors_custom_aggregator_for_depth() {
-        let storage = DfsStorageRuntime::new(0, vec![], Some(2), false, 1);
-        let mut computation = DfsComputationRuntime::new(0, false, 1, 10);
+        let storage = DfsStorageRuntime::new(mapped(0), vec![], Some(2), false, 1);
+        let mut computation = DfsComputationRuntime::new(mapped(0), false, 1, 10);
         let aggregator = DoubleHopAggregator;
         let exit_predicate = FollowExitPredicate;
 
@@ -315,13 +319,13 @@ mod tests {
             )
             .unwrap();
 
-        assert_eq!(result.visited_nodes, vec![0, 2, 1]);
+        assert_eq!(result.visited_nodes, vec![mapped(0), mapped(2), mapped(1)]);
     }
 
     #[test]
     fn test_dfs_path_same_source_target() {
-        let storage = DfsStorageRuntime::new(0, vec![0], None, true, 1);
-        let mut computation = DfsComputationRuntime::new(0, true, 1, 10);
+        let storage = DfsStorageRuntime::new(mapped(0), vec![mapped(0)], None, true, 1);
+        let mut computation = DfsComputationRuntime::new(mapped(0), true, 1, 10);
 
         let mut progress_tracker = TaskProgressTracker::new(Tasks::leaf("DFS".to_string()));
 
@@ -329,14 +333,13 @@ mod tests {
             .compute_dfs(&mut computation, None, &mut progress_tracker)
             .unwrap();
 
-        assert!(!result.visited_nodes.is_empty());
-        assert_eq!(result.visited_nodes[0], 0);
+        assert_eq!(result.visited_nodes, vec![mapped(0)]);
     }
 
     #[test]
     fn test_dfs_max_depth_constraint() {
-        let storage = DfsStorageRuntime::new(0, vec![], Some(1), false, 1);
-        let mut computation = DfsComputationRuntime::new(0, false, 1, 10);
+        let storage = DfsStorageRuntime::new(mapped(0), vec![], Some(1), false, 1);
+        let mut computation = DfsComputationRuntime::new(mapped(0), false, 1, 10);
 
         let mut progress_tracker = TaskProgressTracker::new(Tasks::leaf("DFS".to_string()));
 
@@ -351,8 +354,8 @@ mod tests {
 
     #[test]
     fn test_dfs_rejects_out_of_range_source() {
-        let storage = DfsStorageRuntime::new(1000, vec![], None, false, 1);
-        let mut computation = DfsComputationRuntime::new(0, false, 1, 10);
+        let storage = DfsStorageRuntime::new(mapped(1000), vec![], None, false, 1);
+        let mut computation = DfsComputationRuntime::new(mapped(0), false, 1, 10);
 
         let mut progress_tracker = TaskProgressTracker::new(Tasks::leaf("DFS".to_string()));
 
@@ -363,8 +366,8 @@ mod tests {
 
     #[test]
     fn test_dfs_rejects_out_of_range_target() {
-        let storage = DfsStorageRuntime::new(0, vec![1000], None, false, 1);
-        let mut computation = DfsComputationRuntime::new(0, false, 1, 10);
+        let storage = DfsStorageRuntime::new(mapped(0), vec![mapped(1000)], None, false, 1);
+        let mut computation = DfsComputationRuntime::new(mapped(0), false, 1, 10);
 
         let mut progress_tracker = TaskProgressTracker::new(Tasks::leaf("DFS".to_string()));
 

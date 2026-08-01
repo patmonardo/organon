@@ -238,22 +238,28 @@ impl DeltaSteppingComputationRuntime {
 mod tests {
     use super::*;
 
+    fn mapped_node_id(value: u64) -> MappedNodeId {
+        MappedNodeId::new(value)
+    }
+
     #[test]
     fn test_delta_stepping_computation_runtime_initialization() {
-        let mut runtime = DeltaSteppingComputationRuntime::new(0, 1.0, 4, true);
-        runtime.initialize(0, 1.0, true, 100);
+        let source = mapped_node_id(0);
+        let mut runtime = DeltaSteppingComputationRuntime::new(source, 1.0, 4, true);
+        runtime.initialize(source, 1.0, true, 100);
 
-        assert_eq!(runtime.source_node(), 0);
+        assert_eq!(runtime.source_node(), source);
         assert_eq!(runtime.delta(), 1.0);
         assert!(runtime.store_predecessors());
-        assert_eq!(runtime.distance(0), f64::INFINITY);
-        assert_eq!(runtime.predecessor(0), None);
+        assert_eq!(runtime.distance(source), f64::INFINITY);
+        assert_eq!(runtime.predecessor(source), None);
     }
 
     #[test]
     fn test_delta_stepping_computation_runtime_empty_bins() {
-        let mut runtime = DeltaSteppingComputationRuntime::new(0, 1.0, 4, true);
-        runtime.initialize(0, 1.0, true, 100);
+        let source = mapped_node_id(0);
+        let mut runtime = DeltaSteppingComputationRuntime::new(source, 1.0, 4, true);
+        runtime.initialize(source, 1.0, true, 100);
 
         assert_eq!(runtime.bin_count(), 0);
         assert_eq!(runtime.find_next_non_empty_bin(0), None);
@@ -261,81 +267,92 @@ mod tests {
 
     #[test]
     fn test_delta_stepping_computation_runtime_nodes_explored() {
-        let mut runtime = DeltaSteppingComputationRuntime::new(0, 1.0, 4, true);
-        runtime.initialize(0, 1.0, true, 100);
+        let source = mapped_node_id(0);
+        let first = mapped_node_id(1);
+        let second = mapped_node_id(2);
+        let unreachable = mapped_node_id(3);
+        let mut runtime = DeltaSteppingComputationRuntime::new(source, 1.0, 4, true);
+        runtime.initialize(source, 1.0, true, 100);
 
         // Set some distances
-        runtime.set_distance(1, 5.0);
-        runtime.set_distance(2, 10.0);
+        runtime.set_distance(first, 5.0);
+        runtime.set_distance(second, 10.0);
 
-        assert_eq!(runtime.distance(1), 5.0);
-        assert_eq!(runtime.distance(2), 10.0);
-        assert_eq!(runtime.distance(3), f64::INFINITY);
+        assert_eq!(runtime.distance(first), 5.0);
+        assert_eq!(runtime.distance(second), 10.0);
+        assert_eq!(runtime.distance(unreachable), f64::INFINITY);
     }
 
     #[test]
     fn test_delta_stepping_computation_runtime_total_cost() {
-        let mut runtime = DeltaSteppingComputationRuntime::new(0, 1.0, 4, true);
-        runtime.initialize(0, 1.0, true, 100);
+        let source = mapped_node_id(0);
+        let mut runtime = DeltaSteppingComputationRuntime::new(source, 1.0, 4, true);
+        runtime.initialize(source, 1.0, true, 100);
 
         // Set source distance
-        runtime.set_distance(0, 0.0);
-        runtime.set_predecessor(0, None);
+        runtime.set_distance(source, 0.0);
+        runtime.set_predecessor(source, None);
 
-        assert_eq!(runtime.distance(0), 0.0);
-        assert_eq!(runtime.predecessor(0), None);
+        assert_eq!(runtime.distance(source), 0.0);
+        assert_eq!(runtime.predecessor(source), None);
     }
 
     #[test]
     fn test_delta_stepping_computation_runtime_operations() {
-        let mut runtime = DeltaSteppingComputationRuntime::new(0, 1.0, 4, true);
-        runtime.initialize(0, 1.0, true, 100);
+        let source = mapped_node_id(0);
+        let target = mapped_node_id(1);
+        let mut runtime = DeltaSteppingComputationRuntime::new(source, 1.0, 4, true);
+        runtime.initialize(source, 1.0, true, 100);
 
         // Test distance operations
-        runtime.set_distance(1, 5.0);
-        assert_eq!(runtime.distance(1), 5.0);
+        runtime.set_distance(target, 5.0);
+        assert_eq!(runtime.distance(target), 5.0);
 
         // Test predecessor operations
-        runtime.set_predecessor(1, Some(0));
-        assert_eq!(runtime.predecessor(1), Some(0));
+        runtime.set_predecessor(target, Some(source));
+        assert_eq!(runtime.predecessor(target), Some(source));
     }
 
     #[test]
     fn test_delta_stepping_computation_runtime_path_reconstruction() {
-        let mut runtime = DeltaSteppingComputationRuntime::new(0, 1.0, 4, true);
-        runtime.initialize(0, 1.0, true, 100);
+        let source = mapped_node_id(0);
+        let middle = mapped_node_id(1);
+        let target = mapped_node_id(2);
+        let mut runtime = DeltaSteppingComputationRuntime::new(source, 1.0, 4, true);
+        runtime.initialize(source, 1.0, true, 100);
 
         // Set up a simple path: 0 -> 1 -> 2
-        runtime.set_distance(0, 0.0);
-        runtime.set_predecessor(0, None);
+        runtime.set_distance(source, 0.0);
+        runtime.set_predecessor(source, None);
 
-        runtime.set_distance(1, 5.0);
-        runtime.set_predecessor(1, Some(0));
+        runtime.set_distance(middle, 5.0);
+        runtime.set_predecessor(middle, Some(source));
 
-        runtime.set_distance(2, 10.0);
-        runtime.set_predecessor(2, Some(1));
+        runtime.set_distance(target, 10.0);
+        runtime.set_predecessor(target, Some(middle));
 
         // Test path reconstruction
-        assert_eq!(runtime.predecessor(2), Some(1));
-        assert_eq!(runtime.predecessor(1), Some(0));
-        assert_eq!(runtime.predecessor(0), None);
+        assert_eq!(runtime.predecessor(target), Some(middle));
+        assert_eq!(runtime.predecessor(middle), Some(source));
+        assert_eq!(runtime.predecessor(source), None);
     }
 
     #[test]
     fn test_delta_stepping_computation_runtime_lowest_f_cost() {
-        let mut runtime = DeltaSteppingComputationRuntime::new(0, 1.0, 4, true);
-        runtime.initialize(0, 1.0, true, 100);
+        let source = mapped_node_id(0);
+        let mut runtime = DeltaSteppingComputationRuntime::new(source, 1.0, 4, true);
+        runtime.initialize(source, 1.0, true, 100);
 
         // Set different distances
-        runtime.set_distance(1, 10.0);
-        runtime.set_distance(2, 5.0);
-        runtime.set_distance(3, 15.0);
+        runtime.set_distance(mapped_node_id(1), 10.0);
+        runtime.set_distance(mapped_node_id(2), 5.0);
+        runtime.set_distance(mapped_node_id(3), 15.0);
 
         // Find node with minimum distance
         let mut min_node = None;
         let mut min_distance = f64::INFINITY;
 
-        for node_id in 1..=3 {
+        for node_id in (1..=3).map(mapped_node_id) {
             let distance = runtime.distance(node_id);
             if distance < min_distance {
                 min_distance = distance;
@@ -343,52 +360,59 @@ mod tests {
             }
         }
 
-        assert_eq!(min_node, Some(2));
+        assert_eq!(min_node, Some(mapped_node_id(2)));
         assert_eq!(min_distance, 5.0);
     }
 
     #[test]
     fn test_delta_stepping_computation_runtime_binning() {
-        let mut runtime = DeltaSteppingComputationRuntime::new(0, 1.0, 4, true);
-        runtime.initialize(0, 1.0, true, 100);
+        let source = mapped_node_id(0);
+        let first = mapped_node_id(1);
+        let second = mapped_node_id(2);
+        let third = mapped_node_id(3);
+        let mut runtime = DeltaSteppingComputationRuntime::new(source, 1.0, 4, true);
+        runtime.initialize(source, 1.0, true, 100);
 
         // Add nodes to different bins
-        runtime.add_to_bin(1, 0);
-        runtime.add_to_bin(2, 1);
-        runtime.add_to_bin(3, 0);
+        runtime.add_to_bin(first, 0);
+        runtime.add_to_bin(second, 1);
+        runtime.add_to_bin(third, 0);
 
         assert_eq!(runtime.bin_count(), 2);
-        assert_eq!(runtime.find_next_non_empty_bin(0), 0);
-        assert_eq!(runtime.find_next_non_empty_bin(1), 1);
+        assert_eq!(runtime.find_next_non_empty_bin(0), Some(0));
+        assert_eq!(runtime.find_next_non_empty_bin(1), Some(1));
         assert_eq!(runtime.find_next_non_empty_bin(2), None);
 
         // Test getting bin nodes
         let bin_0_nodes = runtime.get_bin_nodes(0);
         assert_eq!(bin_0_nodes.len(), 2);
-        assert!(bin_0_nodes.contains(&1));
-        assert!(bin_0_nodes.contains(&3));
+        assert!(bin_0_nodes.contains(&first));
+        assert!(bin_0_nodes.contains(&third));
 
         let bin_1_nodes = runtime.get_bin_nodes(1);
         assert_eq!(bin_1_nodes.len(), 1);
-        assert_eq!(bin_1_nodes[0], 2);
+        assert_eq!(bin_1_nodes[0], second);
     }
 
     #[test]
     fn test_delta_stepping_computation_runtime_compare_and_exchange() {
-        let mut runtime = DeltaSteppingComputationRuntime::new(0, 1.0, 4, true);
-        runtime.initialize(0, 1.0, true, 100);
+        let source = mapped_node_id(0);
+        let target = mapped_node_id(1);
+        let mut runtime = DeltaSteppingComputationRuntime::new(source, 1.0, 4, true);
+        runtime.initialize(source, 1.0, true, 100);
 
         // Set initial distance
-        runtime.set_distance(1, 10.0);
+        runtime.set_distance(target, 10.0);
 
         // Try to update with better distance
-        let result = runtime.compare_and_exchange(1, 10.0, 5.0, 0);
+        let result = runtime.compare_and_exchange(target, 10.0, 5.0, source);
         assert_eq!(result, 10.0); // Should return expected distance on success
-        assert_eq!(runtime.distance(1), 5.0);
+        assert_eq!(runtime.distance(target), 5.0);
+        assert_eq!(runtime.predecessor(target), Some(source));
 
         // Try to update with worse distance
-        let result = runtime.compare_and_exchange(1, 5.0, 8.0, 0);
-        assert_eq!(result, -5.0); // Should return negative expected distance on failure
-        assert_eq!(runtime.distance(1), 5.0); // Distance should remain unchanged
+        runtime.compare_and_exchange(target, 5.0, 8.0, source);
+        assert_eq!(runtime.distance(target), 5.0);
+        assert_eq!(runtime.predecessor(target), Some(source));
     }
 }

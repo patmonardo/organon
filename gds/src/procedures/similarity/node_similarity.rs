@@ -294,7 +294,7 @@ mod tests {
                 })
         });
         rows.into_iter()
-            .map(|r| (r.source, r.target, r.similarity))
+            .map(|r| (r.source.get(), r.target.get(), r.similarity))
             .collect()
     }
 

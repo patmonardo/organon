@@ -12,11 +12,21 @@ use super::targets::{create_targets, AllTargets, ManyTargets, SingleTarget, Targ
 use super::traversal_state::TraversalState;
 use super::DijkstraComputationRuntime;
 use super::DijkstraStorageRuntime;
-use crate::task::progress::{TaskProgressTracker, Tasks};
 use crate::projection::eval::algorithm::{
     AlgorithmSpec, ExecutionContext, ExecutionMode, ProcedureExecutor,
 };
+use crate::task::progress::{TaskProgressTracker, Tasks};
+use crate::types::graph::MappedNodeId;
+use crate::types::graph::RelationshipIndex;
 use serde_json::json;
+
+fn node(value: u64) -> MappedNodeId {
+    MappedNodeId::new(value)
+}
+
+fn relationship(value: u64) -> RelationshipIndex {
+    RelationshipIndex::new(value)
+}
 
 #[test]
 fn test_dijkstra_algorithm_spec_contract() {
@@ -48,7 +58,7 @@ fn test_dijkstra_config_validation() {
     // Test invalid configuration - the validation_config doesn't validate our custom fields
     // so we'll test the config validation directly instead
     let invalid_config = DijkstraConfig {
-        source_node: 0,
+        source_node: node(0),
         target_nodes: vec![],
         weight_property: "weight".to_string(),
         track_relationships: false,
@@ -73,10 +83,10 @@ fn test_dijkstra_execution_modes() {
 
 #[test]
 fn test_dijkstra_storage_runtime() {
-    let storage = DijkstraStorageRuntime::new(0, true, 4, false);
+    let storage = DijkstraStorageRuntime::new(node(0), true, 4, false);
 
     // Test storage runtime creation
-    assert_eq!(storage.source_node, 0);
+    assert_eq!(storage.source_node, node(0));
     assert!(storage.track_relationships);
     assert_eq!(storage.concurrency, 4);
     assert!(!storage.use_heuristic);
@@ -84,11 +94,11 @@ fn test_dijkstra_storage_runtime() {
 
 #[test]
 fn test_dijkstra_computation_runtime() {
-    let mut computation = DijkstraComputationRuntime::new(0, true, 4, false);
-    computation.initialize(0, true, false, 100);
+    let mut computation = DijkstraComputationRuntime::new(node(0), true, 4, false);
+    computation.initialize(node(0), true, false, 100);
 
     // Test computation runtime
-    assert_eq!(computation.source_node(), 0);
+    assert_eq!(computation.source_node(), node(0));
     assert!(computation.track_relationships());
     assert!(!computation.use_heuristic());
     assert_eq!(computation.visited_count(), 0);
@@ -98,38 +108,38 @@ fn test_dijkstra_computation_runtime() {
 #[test]
 fn test_dijkstra_targets_system() {
     // Test SingleTarget
-    let mut single_target = SingleTarget::new(5);
-    assert_eq!(single_target.apply(3), TraversalState::Continue);
-    assert_eq!(single_target.apply(5), TraversalState::EmitAndStop);
+    let mut single_target = SingleTarget::new(node(5));
+    assert_eq!(single_target.apply(node(3)), TraversalState::Continue);
+    assert_eq!(single_target.apply(node(5)), TraversalState::EmitAndStop);
 
     // Test ManyTargets
-    let mut many_targets = ManyTargets::new(vec![3, 5, 7]);
-    assert_eq!(many_targets.apply(1), TraversalState::Continue);
-    assert_eq!(many_targets.apply(3), TraversalState::EmitAndContinue);
-    assert_eq!(many_targets.apply(5), TraversalState::EmitAndContinue);
-    assert_eq!(many_targets.apply(7), TraversalState::EmitAndStop);
+    let mut many_targets = ManyTargets::new(vec![node(3), node(5), node(7)]);
+    assert_eq!(many_targets.apply(node(1)), TraversalState::Continue);
+    assert_eq!(many_targets.apply(node(3)), TraversalState::EmitAndContinue);
+    assert_eq!(many_targets.apply(node(5)), TraversalState::EmitAndContinue);
+    assert_eq!(many_targets.apply(node(7)), TraversalState::EmitAndStop);
 
     // Test AllTargets
     let mut all_targets = AllTargets::new();
-    assert_eq!(all_targets.apply(1), TraversalState::EmitAndContinue);
-    assert_eq!(all_targets.apply(5), TraversalState::EmitAndContinue);
+    assert_eq!(all_targets.apply(node(1)), TraversalState::EmitAndContinue);
+    assert_eq!(all_targets.apply(node(5)), TraversalState::EmitAndContinue);
 }
 
 #[test]
 fn test_dijkstra_targets_factory() {
     // Test factory function
     let mut targets = create_targets(vec![]);
-    assert_eq!(targets.apply(5), TraversalState::EmitAndContinue); // AllTargets
+    assert_eq!(targets.apply(node(5)), TraversalState::EmitAndContinue); // AllTargets
 
-    let mut targets = create_targets(vec![5]);
-    assert_eq!(targets.apply(3), TraversalState::Continue);
-    assert_eq!(targets.apply(5), TraversalState::EmitAndStop); // SingleTarget
+    let mut targets = create_targets(vec![node(5)]);
+    assert_eq!(targets.apply(node(3)), TraversalState::Continue);
+    assert_eq!(targets.apply(node(5)), TraversalState::EmitAndStop); // SingleTarget
 
-    let mut targets = create_targets(vec![3, 5, 7]);
-    assert_eq!(targets.apply(1), TraversalState::Continue);
-    assert_eq!(targets.apply(3), TraversalState::EmitAndContinue);
-    assert_eq!(targets.apply(5), TraversalState::EmitAndContinue);
-    assert_eq!(targets.apply(7), TraversalState::EmitAndStop); // ManyTargets
+    let mut targets = create_targets(vec![node(3), node(5), node(7)]);
+    assert_eq!(targets.apply(node(1)), TraversalState::Continue);
+    assert_eq!(targets.apply(node(3)), TraversalState::EmitAndContinue);
+    assert_eq!(targets.apply(node(5)), TraversalState::EmitAndContinue);
+    assert_eq!(targets.apply(node(7)), TraversalState::EmitAndStop); // ManyTargets
 }
 
 #[test]
@@ -152,10 +162,10 @@ fn test_dijkstra_traversal_state() {
 fn test_dijkstra_path_finding_result() {
     let path_result = super::spec::DijkstraPathResult {
         index: 0,
-        source_node: 0,
-        target_node: 5,
-        node_ids: vec![0, 1, 3, 5],
-        relationship_ids: vec![0, 1, 2],
+        source_node: node(0),
+        target_node: node(5),
+        node_ids: vec![node(0), node(1), node(3), node(5)],
+        relationship_ids: vec![relationship(0), relationship(1), relationship(2)],
         costs: vec![0.0, 3.5, 7.0, 10.5],
     };
 
@@ -169,7 +179,7 @@ fn test_dijkstra_path_finding_result() {
     assert!(first.is_some());
     let first_path = first.unwrap();
     assert_eq!(first_path.index, 0);
-    assert_eq!(first_path.target_node, 5);
+    assert_eq!(first_path.target_node, node(5));
     assert_eq!(first_path.total_cost(), 10.5);
 }
 
@@ -183,7 +193,7 @@ fn test_dijkstra_focused_macro_integration() {
 
     // Test that we can create a config
     let config = DijkstraConfig::default();
-    assert_eq!(config.source_node, 0);
+    assert_eq!(config.source_node, node(0));
     assert!(config.target_nodes.is_empty());
     assert!(!config.track_relationships);
 }
@@ -202,8 +212,8 @@ fn test_dijkstra_config_accepts_java_aliases() {
     }))
     .unwrap();
 
-    assert_eq!(config.source_node, 0);
-    assert_eq!(config.target_nodes, vec![5, 7]);
+    assert_eq!(config.source_node, node(0));
+    assert_eq!(config.target_nodes, vec![node(5), node(7)]);
     assert_eq!(config.weight_property, "cost");
     assert!(config.track_relationships);
     assert_eq!(config.relationship_types, vec!["ROAD"]);
@@ -225,9 +235,9 @@ fn test_dijkstra_algorithm_completeness() {
 
 #[test]
 fn test_dijkstra_storage_computation_integration() {
-    let mut storage = DijkstraStorageRuntime::new(0, false, 4, false);
-    let mut computation = DijkstraComputationRuntime::new(0, false, 4, false);
-    let targets = Box::new(SingleTarget::new(3));
+    let mut storage = DijkstraStorageRuntime::new(node(0), false, 4, false);
+    let mut computation = DijkstraComputationRuntime::new(node(0), false, 4, false);
+    let targets = Box::new(SingleTarget::new(node(3)));
     let mut progress_tracker = TaskProgressTracker::new(Tasks::leaf("dijkstra".to_string()));
 
     // Test integration between storage and computation
@@ -245,10 +255,10 @@ fn test_dijkstra_storage_computation_integration() {
 fn test_dijkstra_result_serialization() {
     let path_result = super::spec::DijkstraPathResult {
         index: 0,
-        source_node: 0,
-        target_node: 5,
-        node_ids: vec![0, 1, 3, 5],
-        relationship_ids: vec![0, 1, 2],
+        source_node: node(0),
+        target_node: node(5),
+        node_ids: vec![node(0), node(1), node(3), node(5)],
+        relationship_ids: vec![relationship(0), relationship(1), relationship(2)],
         costs: vec![0.0, 3.5, 7.0, 10.5],
     };
 

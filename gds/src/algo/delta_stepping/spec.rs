@@ -372,10 +372,14 @@ mod tests {
     use crate::projection::eval::algorithm::{AlgorithmSpec, ExecutionContext};
     use serde_json::json;
 
+    fn mapped_node_id(value: u64) -> MappedNodeId {
+        MappedNodeId::new(value)
+    }
+
     #[test]
     fn test_delta_stepping_config_default() {
         let config = DeltaSteppingConfig::default();
-        assert_eq!(config.source_node, 0);
+        assert_eq!(config.source_node, MappedNodeId::ZERO);
         assert_eq!(config.weight_property, "weight");
         assert_eq!(config.delta, 1.0);
         assert_eq!(config.concurrency, 4);
@@ -415,19 +419,24 @@ mod tests {
 
     #[test]
     fn test_delta_stepping_path_result() {
+        let source = mapped_node_id(0);
+        let target = mapped_node_id(5);
         let path_result = DeltaSteppingPathResult {
             index: 0,
-            source_node: 0,
-            target_node: 5,
-            node_ids: vec![0, 1, 3, 5],
+            source_node: source,
+            target_node: target,
+            node_ids: vec![source, mapped_node_id(1), mapped_node_id(3), target],
             costs: vec![0.0, 3.5, 7.0, 10.5],
         };
 
         assert_eq!(path_result.index, 0);
-        assert_eq!(path_result.source_node, 0);
-        assert_eq!(path_result.target_node, 5);
+        assert_eq!(path_result.source_node, source);
+        assert_eq!(path_result.target_node, target);
         assert_eq!(path_result.total_cost(), 10.5);
-        assert_eq!(path_result.node_ids.len(), 4);
+        assert_eq!(
+            path_result.node_ids,
+            vec![source, mapped_node_id(1), mapped_node_id(3), target]
+        );
         assert_eq!(path_result.costs.len(), 4);
     }
 
@@ -475,7 +484,7 @@ mod tests {
         // Test invalid configuration - the validation_config doesn't validate our custom fields
         // so we'll test the config validation directly instead
         let invalid_config = DeltaSteppingConfig {
-            source_node: 0,
+            source_node: mapped_node_id(0),
             weight_property: "weight".to_string(),
             delta: 0.0,
             concurrency: 4,
@@ -497,7 +506,7 @@ mod tests {
 
         // Test that we can create a config
         let config = DeltaSteppingConfig::default();
-        assert_eq!(config.source_node, 0);
+        assert_eq!(config.source_node, MappedNodeId::ZERO);
         assert_eq!(config.delta, 1.0);
     }
 
@@ -513,7 +522,7 @@ mod tests {
         }))
         .unwrap();
 
-        assert_eq!(config.source_node, 3);
+        assert_eq!(config.source_node, mapped_node_id(3));
         assert_eq!(config.weight_property, "distance");
         assert_eq!(config.delta, 2.5);
         assert_eq!(config.concurrency, 8);

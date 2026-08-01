@@ -42,11 +42,11 @@ use crate::algo::astar::{
     AStarComputationRuntime, AStarConfig, AStarMutateResult, AStarMutationSummary, AStarResult,
     AStarResultBuilder, AStarStats, AStarStorageRuntime, AStarWriteSummary,
 };
-use crate::task::progress::TaskProgressTracker;
-use crate::task::memory::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::relationship_type::RelationshipType;
 use crate::projection::Orientation;
+use crate::task::memory::MemoryRange;
+use crate::task::progress::TaskProgressTracker;
 use crate::types::graph::id_map::MappedNodeId;
 use crate::types::graph_store::GraphStore;
 use crate::types::prelude::DefaultGraphStore;
@@ -671,11 +671,15 @@ mod tests {
         Arc::new(store)
     }
 
+    fn mapped(node_id: u64) -> MappedNodeId {
+        MappedNodeId::new(node_id)
+    }
+
     #[test]
     fn test_builder_defaults() {
         let builder = AStarBuilder::new(store());
-        assert_eq!(builder.config.source_node, 0);
-        assert_eq!(builder.config.target_node, 1);
+        assert_eq!(builder.config.source_node, mapped(0));
+        assert_eq!(builder.config.target_node, mapped(1));
         assert_eq!(builder.weight_property, "weight");
         assert!(builder.config.relationship_types.is_empty());
         assert_eq!(builder.config.direction, "outgoing");
@@ -695,8 +699,8 @@ mod tests {
             .heuristic(Heuristic::Euclidean)
             .concurrency(8);
 
-        assert_eq!(builder.config.source_node, 42);
-        assert_eq!(builder.config.target_node, 99);
+        assert_eq!(builder.config.source_node, mapped(42));
+        assert_eq!(builder.config.target_node, mapped(99));
         assert_eq!(builder.weight_property, "cost");
         assert_eq!(builder.config.weight_property, "cost");
         assert_eq!(builder.config.relationship_types, vec!["REL".to_string()]);
@@ -749,14 +753,18 @@ mod tests {
     }
 
     #[test]
-    fn test_validate_missing_source() {
-        let builder = AStarBuilder::new(store()).source_node(-1);
+    fn test_validate_invalid_concurrency_on_typed_command() {
+        let builder = AStarBuilder::new(store())
+            .source_node(mapped(0))
+            .concurrency(0);
         assert!(builder.config.validate().is_err());
     }
 
     #[test]
-    fn test_validate_missing_targets() {
-        let builder = AStarBuilder::new(store()).target_node(-1);
+    fn test_validate_invalid_direction_on_typed_command() {
+        let builder = AStarBuilder::new(store())
+            .target_node(mapped(1))
+            .direction("both");
         assert!(builder.config.validate().is_err());
     }
 
@@ -799,7 +807,9 @@ mod tests {
 
     #[test]
     fn test_stream_requires_validation() {
-        let builder = AStarBuilder::new(store()).source_node(-1);
+        let builder = AStarBuilder::new(store())
+            .source_node(mapped(0))
+            .concurrency(0);
         assert!(builder.stream().is_err());
     }
 
@@ -857,8 +867,10 @@ mod tests {
     }
 
     #[test]
-    fn test_stream_requires_targets() {
-        let builder = AStarBuilder::new(store()).target_node(-1);
+    fn test_stream_rejects_invalid_direction() {
+        let builder = AStarBuilder::new(store())
+            .target_node(mapped(1))
+            .direction("both");
         assert!(builder.stream().is_err());
     }
 

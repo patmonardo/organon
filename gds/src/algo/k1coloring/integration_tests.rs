@@ -14,6 +14,10 @@ mod tests {
     };
     use crate::types::schema::{Direction, MutableGraphSchema};
 
+    fn node(value: u64) -> MappedNodeId {
+        MappedNodeId::new(value)
+    }
+
     fn store_from_outgoing(outgoing: Vec<Vec<MappedNodeId>>) -> DefaultGraphStore {
         let node_count = outgoing.len();
 
@@ -65,13 +69,12 @@ mod tests {
         )
     }
 
-    fn assert_valid_coloring(outgoing: &[Vec<i64>], colors: &[u64]) {
+    fn assert_valid_coloring(outgoing: &[Vec<MappedNodeId>], colors: &[u64]) {
         for (u, nbrs) in outgoing.iter().enumerate() {
             for &v in nbrs {
-                if v < 0 {
-                    continue;
-                }
-                let v = v as usize;
+                let v = v
+                    .to_usize()
+                    .expect("fixture target must fit the dense index domain");
                 if v == u {
                     continue;
                 }
@@ -83,7 +86,11 @@ mod tests {
     #[test]
     fn k1coloring_triangle_uses_three_colors() {
         // Triangle (undirected modeled as symmetric directed edges)
-        let outgoing = vec![vec![1, 2], vec![0, 2], vec![0, 1]];
+        let outgoing = vec![
+            vec![node(1), node(2)],
+            vec![node(0), node(2)],
+            vec![node(0), node(1)],
+        ];
         let store = store_from_outgoing(outgoing.clone());
         let graph = GraphFacade::new(Arc::new(store));
 
@@ -100,7 +107,12 @@ mod tests {
     #[test]
     fn k1coloring_path_is_two_colorable() {
         // Path 0-1-2-3
-        let outgoing = vec![vec![1], vec![0, 2], vec![1, 3], vec![2]];
+        let outgoing = vec![
+            vec![node(1)],
+            vec![node(0), node(2)],
+            vec![node(1), node(3)],
+            vec![node(2)],
+        ];
         let store = store_from_outgoing(outgoing.clone());
         let graph = GraphFacade::new(Arc::new(store));
 
@@ -114,12 +126,12 @@ mod tests {
     #[test]
     fn k1coloring_is_valid_at_concurrency_one_and_four() {
         let outgoing = vec![
-            vec![1, 2],
-            vec![0, 2, 3],
-            vec![0, 1, 4],
-            vec![1, 4, 5],
-            vec![2, 3, 5],
-            vec![3, 4],
+            vec![node(1), node(2)],
+            vec![node(0), node(2), node(3)],
+            vec![node(0), node(1), node(4)],
+            vec![node(1), node(4), node(5)],
+            vec![node(2), node(3), node(5)],
+            vec![node(3), node(4)],
         ];
 
         for concurrency in [1, 4] {
@@ -139,7 +151,7 @@ mod tests {
 
     #[test]
     fn k1coloring_ignores_self_loops_when_validating_colors() {
-        let outgoing = vec![vec![0, 1], vec![0, 1]];
+        let outgoing = vec![vec![node(0), node(1)], vec![node(0), node(1)]];
         let store = store_from_outgoing(outgoing.clone());
         let graph = GraphFacade::new(Arc::new(store));
 
@@ -189,7 +201,7 @@ mod tests {
 
     #[test]
     fn k1coloring_memory_estimate_tracks_concurrency() {
-        let outgoing = vec![vec![1], vec![0]];
+        let outgoing = vec![vec![node(1)], vec![node(0)]];
         let store = store_from_outgoing(outgoing);
         let graph = GraphFacade::new(Arc::new(store));
 
@@ -202,7 +214,11 @@ mod tests {
 
     #[test]
     fn k1coloring_stats_include_node_count() {
-        let outgoing = vec![vec![1], vec![0, 2], vec![1]];
+        let outgoing = vec![
+            vec![node(1)],
+            vec![node(0), node(2)],
+            vec![node(1)],
+        ];
         let store = store_from_outgoing(outgoing);
         let graph = GraphFacade::new(Arc::new(store));
 

@@ -508,10 +508,14 @@ mod tests {
         Arc::new(DefaultGraphStore::random(&config).unwrap())
     }
 
+    fn mapped(node_id: u64) -> MappedNodeId {
+        MappedNodeId::new(node_id)
+    }
+
     #[test]
     fn test_builder_defaults() {
         let builder = DijkstraBuilder::new(store());
-        assert_eq!(builder.config.source_node, 0);
+        assert_eq!(builder.config.source_node, mapped(0));
         assert!(builder.config.target_nodes.is_empty());
         assert_eq!(builder.weight_property, "weight");
         assert_eq!(builder.config.direction, "outgoing");
@@ -529,8 +533,8 @@ mod tests {
             .track_relationships(true)
             .concurrency(8);
 
-        assert_eq!(builder.config.source_node, 42);
-        assert_eq!(builder.config.target_nodes, vec![99]);
+        assert_eq!(builder.config.source_node, mapped(42));
+        assert_eq!(builder.config.target_nodes, vec![mapped(99)]);
         assert_eq!(builder.weight_property, "cost");
         assert_eq!(builder.config.direction, "incoming");
         assert!(builder.config.track_relationships);
@@ -538,8 +542,10 @@ mod tests {
     }
 
     #[test]
-    fn test_validate_missing_source() {
-        let builder = DijkstraBuilder::new(store()).source_node(-1);
+    fn test_validate_invalid_concurrency_on_typed_command() {
+        let builder = DijkstraBuilder::new(store())
+            .source_node(mapped(0))
+            .concurrency(0);
         assert!(builder.config.validate().is_err());
     }
 
@@ -573,7 +579,9 @@ mod tests {
 
     #[test]
     fn test_stream_requires_validation() {
-        let builder = DijkstraBuilder::new(store()).source_node(-1);
+        let builder = DijkstraBuilder::new(store())
+            .source_node(mapped(0))
+            .concurrency(0);
         assert!(builder.stream().is_err());
     }
 

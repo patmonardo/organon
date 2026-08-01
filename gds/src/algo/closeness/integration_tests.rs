@@ -10,19 +10,23 @@ mod tests {
     use crate::config::GraphStoreConfig;
     use crate::procedures::GraphFacade;
     use crate::projection::RelationshipType;
-    use crate::types::graph::{RelationshipTopology, SimpleIdMap};
+    use crate::types::graph::{MappedNodeId, RelationshipTopology, SimpleIdMap};
     use crate::types::graph_store::{
         Capabilities, DatabaseId, DatabaseInfo, DatabaseLocation, DefaultGraphStore, GraphName,
     };
     use crate::types::schema::{Direction, MutableGraphSchema};
 
     fn store_from_directed_edges(node_count: usize, edges: &[(usize, usize)]) -> DefaultGraphStore {
-        let mut outgoing: Vec<Vec<i64>> = vec![Vec::new(); node_count];
-        let mut incoming: Vec<Vec<i64>> = vec![Vec::new(); node_count];
+        let mut outgoing: Vec<Vec<MappedNodeId>> = vec![Vec::new(); node_count];
+        let mut incoming: Vec<Vec<MappedNodeId>> = vec![Vec::new(); node_count];
 
         for &(source, target) in edges {
-            outgoing[source].push(target as i64);
-            incoming[target].push(source as i64);
+            outgoing[source].push(
+                MappedNodeId::try_from(target).expect("fixture target must fit mapped ID space"),
+            );
+            incoming[target].push(
+                MappedNodeId::try_from(source).expect("fixture source must fit mapped ID space"),
+            );
         }
 
         let rel_type = RelationshipType::of("REL");
@@ -48,7 +52,9 @@ mod tests {
             ),
             schema,
             Capabilities::default(),
-            SimpleIdMap::from_original_ids(0..node_count as i64),
+            SimpleIdMap::from_original_ids((0..node_count).map(|node| {
+                i64::try_from(node).expect("fixture node must fit original ID space")
+            })),
             relationship_topologies,
         )
     }

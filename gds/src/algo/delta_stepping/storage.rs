@@ -8,9 +8,9 @@
 
 use super::spec::{DeltaSteppingPathResult, DeltaSteppingResult};
 use super::DeltaSteppingComputationRuntime;
+use crate::projection::eval::algorithm::AlgorithmError;
 use crate::task::concurrency::{install_with_concurrency, Concurrency};
 use crate::task::progress::{ProgressTracker, UNKNOWN_VOLUME};
-use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::Graph;
 use crate::types::graph::MappedNodeId;
 use crate::types::properties::relationship::RelationshipCursorBox;
@@ -278,7 +278,8 @@ impl DeltaSteppingStorageRuntime {
                     concurrency,
                 )?;
 
-                let mut candidates_by_target: HashMap<MappedNodeId, RelaxationCandidate> = HashMap::new();
+                let mut candidates_by_target: HashMap<MappedNodeId, RelaxationCandidate> =
+                    HashMap::new();
                 for expansion in expansions {
                     scanned_relationships =
                         scanned_relationships.saturating_add(expansion.scanned_relationships);
@@ -484,18 +485,15 @@ impl DeltaSteppingStorageRuntime {
         } else {
             // Mock implementation for tests
             Ok(match node_id {
-                MappedNodeId::ZERO => vec![
-                    (MappedNodeId::new(1), 1.0),
-                    (MappedNodeId::new(2), 4.0),
-                ],
-                node if node == MappedNodeId::new(1) => vec![
-                    (MappedNodeId::new(2), 2.0),
-                    (MappedNodeId::new(3), 5.0),
-                ],
-                node if node == MappedNodeId::new(2) => vec![
-                    (MappedNodeId::new(3), 1.0),
-                    (MappedNodeId::new(4), 3.0),
-                ],
+                MappedNodeId::ZERO => {
+                    vec![(MappedNodeId::new(1), 1.0), (MappedNodeId::new(2), 4.0)]
+                }
+                node if node == MappedNodeId::new(1) => {
+                    vec![(MappedNodeId::new(2), 2.0), (MappedNodeId::new(3), 5.0)]
+                }
+                node if node == MappedNodeId::new(2) => {
+                    vec![(MappedNodeId::new(3), 1.0), (MappedNodeId::new(4), 3.0)]
+                }
                 node if node == MappedNodeId::new(3) => {
                     vec![(MappedNodeId::new(4), 2.0)]
                 }
@@ -554,16 +552,21 @@ impl DeltaSteppingStorageRuntime {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::task::progress::{TaskProgressTracker, Tasks};
     use crate::projection::Orientation;
+    use crate::task::progress::{TaskProgressTracker, Tasks};
     use crate::types::graph_store::{DefaultGraphStore, GraphStore};
     use crate::types::random::{RandomGraphConfig, RandomRelationshipConfig};
     use std::collections::HashSet;
 
+    fn mapped_node_id(value: u64) -> MappedNodeId {
+        MappedNodeId::new(value)
+    }
+
     #[test]
     fn test_delta_stepping_storage_runtime_creation() {
-        let storage = DeltaSteppingStorageRuntime::new(0, 1.0, 4, true);
-        assert_eq!(storage.source_node, 0);
+        let source = mapped_node_id(0);
+        let storage = DeltaSteppingStorageRuntime::new(source, 1.0, 4, true);
+        assert_eq!(storage.source_node, source);
         assert_eq!(storage.delta, 1.0);
         assert_eq!(storage.concurrency, 4);
         assert!(storage.store_predecessors);
@@ -571,8 +574,9 @@ mod tests {
 
     #[test]
     fn test_delta_stepping_path_computation() {
-        let mut storage = DeltaSteppingStorageRuntime::new(0, 1.0, 4, true);
-        let mut computation = DeltaSteppingComputationRuntime::new(0, 1.0, 4, true);
+        let source = mapped_node_id(0);
+        let mut storage = DeltaSteppingStorageRuntime::new(source, 1.0, 4, true);
+        let mut computation = DeltaSteppingComputationRuntime::new(source, 1.0, 4, true);
         let mut progress_tracker =
             TaskProgressTracker::new(Tasks::leaf("delta_stepping".to_string()));
 
@@ -586,8 +590,9 @@ mod tests {
 
     #[test]
     fn test_delta_stepping_path_same_source_target() {
-        let mut storage = DeltaSteppingStorageRuntime::new(0, 1.0, 4, true);
-        let mut computation = DeltaSteppingComputationRuntime::new(0, 1.0, 4, true);
+        let source = mapped_node_id(0);
+        let mut storage = DeltaSteppingStorageRuntime::new(source, 1.0, 4, true);
+        let mut computation = DeltaSteppingComputationRuntime::new(source, 1.0, 4, true);
         let mut progress_tracker =
             TaskProgressTracker::new(Tasks::leaf("delta_stepping".to_string()));
 
@@ -601,21 +606,26 @@ mod tests {
 
     #[test]
     fn test_neighbors_with_weights() {
-        let storage = DeltaSteppingStorageRuntime::new(0, 1.0, 4, true);
+        let storage = DeltaSteppingStorageRuntime::new(MappedNodeId::ZERO, 1.0, 4, true);
 
-        let neighbors = storage.get_neighbors_with_weights(None, 0, 0).unwrap();
+        let neighbors = storage
+            .get_neighbors_with_weights(None, MappedNodeId::ZERO, 0)
+            .unwrap();
         assert_eq!(neighbors.len(), 2);
-        assert_eq!(neighbors[0], (1, 1.0));
-        assert_eq!(neighbors[1], (2, 4.0));
+        assert_eq!(neighbors[0], (mapped_node_id(1), 1.0));
+        assert_eq!(neighbors[1], (mapped_node_id(2), 4.0));
 
-        let neighbors_empty = storage.get_neighbors_with_weights(None, 99, 0).unwrap();
+        let neighbors_empty = storage
+            .get_neighbors_with_weights(None, mapped_node_id(99), 0)
+            .unwrap();
         assert!(neighbors_empty.is_empty());
     }
 
     #[test]
     fn computes_expected_mock_shortest_paths() {
-        let mut storage = DeltaSteppingStorageRuntime::new(0, 1.0, 4, true);
-        let mut computation = DeltaSteppingComputationRuntime::new(0, 1.0, 4, true);
+        let source = mapped_node_id(0);
+        let mut storage = DeltaSteppingStorageRuntime::new(source, 1.0, 4, true);
+        let mut computation = DeltaSteppingComputationRuntime::new(source, 1.0, 4, true);
         let mut progress_tracker =
             TaskProgressTracker::new(Tasks::leaf("delta_stepping".to_string()));
 
@@ -626,9 +636,17 @@ mod tests {
         let path_to_three = result
             .shortest_paths
             .iter()
-            .find(|path| path.target_node == 3)
+            .find(|path| path.target_node == mapped_node_id(3))
             .expect("expected path to node 3");
-        assert_eq!(path_to_three.node_ids, vec![0, 1, 2, 3]);
+        assert_eq!(
+            path_to_three.node_ids,
+            vec![
+                source,
+                mapped_node_id(1),
+                mapped_node_id(2),
+                mapped_node_id(3)
+            ]
+        );
         assert_eq!(path_to_three.costs, vec![0.0, 1.0, 3.0, 4.0]);
     }
 
@@ -646,8 +664,9 @@ mod tests {
             .get_graph_with_types_and_orientation(&rel_types, Orientation::Natural)
             .unwrap();
 
-        let mut single_storage = DeltaSteppingStorageRuntime::new(0, 1.0, 1, true);
-        let mut single_computation = DeltaSteppingComputationRuntime::new(0, 1.0, 1, true);
+        let source = mapped_node_id(0);
+        let mut single_storage = DeltaSteppingStorageRuntime::new(source, 1.0, 1, true);
+        let mut single_computation = DeltaSteppingComputationRuntime::new(source, 1.0, 1, true);
         let mut single_progress =
             TaskProgressTracker::new(Tasks::leaf("delta_stepping".to_string()));
         let single = single_storage
@@ -659,8 +678,8 @@ mod tests {
             )
             .unwrap();
 
-        let mut parallel_storage = DeltaSteppingStorageRuntime::new(0, 1.0, 4, true);
-        let mut parallel_computation = DeltaSteppingComputationRuntime::new(0, 1.0, 4, true);
+        let mut parallel_storage = DeltaSteppingStorageRuntime::new(source, 1.0, 4, true);
+        let mut parallel_computation = DeltaSteppingComputationRuntime::new(source, 1.0, 4, true);
         let mut parallel_progress =
             TaskProgressTracker::new(Tasks::leaf("delta_stepping".to_string()));
         let parallel = parallel_storage
@@ -690,8 +709,9 @@ mod tests {
 
     #[test]
     fn rejects_source_node_outside_graph_hint() {
-        let mut storage = DeltaSteppingStorageRuntime::new(101, 1.0, 4, true);
-        let mut computation = DeltaSteppingComputationRuntime::new(101, 1.0, 4, true);
+        let source = mapped_node_id(101);
+        let mut storage = DeltaSteppingStorageRuntime::new(source, 1.0, 4, true);
+        let mut computation = DeltaSteppingComputationRuntime::new(source, 1.0, 4, true);
         let mut progress_tracker =
             TaskProgressTracker::new(Tasks::leaf("delta_stepping".to_string()));
 
@@ -703,9 +723,16 @@ mod tests {
 
     #[test]
     fn rejects_negative_or_non_finite_weights() {
-        assert!(DeltaSteppingStorageRuntime::validate_edge_weight(0, 1, -1.0).is_err());
-        assert!(DeltaSteppingStorageRuntime::validate_edge_weight(0, 1, f64::NAN).is_err());
-        assert!(DeltaSteppingStorageRuntime::validate_edge_weight(0, 1, f64::INFINITY).is_err());
-        assert!(DeltaSteppingStorageRuntime::validate_edge_weight(0, 1, 0.0).is_ok());
+        let source = mapped_node_id(0);
+        let target = mapped_node_id(1);
+        assert!(DeltaSteppingStorageRuntime::validate_edge_weight(source, target, -1.0).is_err());
+        assert!(
+            DeltaSteppingStorageRuntime::validate_edge_weight(source, target, f64::NAN).is_err()
+        );
+        assert!(
+            DeltaSteppingStorageRuntime::validate_edge_weight(source, target, f64::INFINITY)
+                .is_err()
+        );
+        assert!(DeltaSteppingStorageRuntime::validate_edge_weight(source, target, 0.0).is_ok());
     }
 }

@@ -278,6 +278,10 @@ mod tests {
     use crate::algo::traversal::{ExitPredicateResult, FollowExitPredicate};
     use crate::task::progress::{TaskProgressTracker, Tasks};
 
+    fn mapped(node_id: u64) -> MappedNodeId {
+        MappedNodeId::new(node_id)
+    }
+
     struct ContinueOnOne;
 
     impl ExitPredicate for ContinueOnOne {
@@ -287,7 +291,7 @@ mod tests {
             current_node: MappedNodeId,
             _weight_at_source: f64,
         ) -> ExitPredicateResult {
-            if current_node == 1 {
+            if current_node == mapped(1) {
                 ExitPredicateResult::Continue
             } else {
                 ExitPredicateResult::Follow
@@ -310,9 +314,9 @@ mod tests {
 
     #[test]
     fn test_bfs_storage_runtime_creation() {
-        let storage = BfsStorageRuntime::new(0, vec![3], Some(5), true);
-        assert_eq!(storage.source_node, 0);
-        assert_eq!(storage.target_nodes, vec![3]);
+        let storage = BfsStorageRuntime::new(mapped(0), vec![mapped(3)], Some(5), true);
+        assert_eq!(storage.source_node, mapped(0));
+        assert_eq!(storage.target_nodes, vec![mapped(3)]);
         assert_eq!(storage.max_depth, Some(5));
         assert!(storage.track_paths);
         assert_eq!(storage.delta, DEFAULT_DELTA);
@@ -320,8 +324,8 @@ mod tests {
 
     #[test]
     fn test_bfs_path_computation() {
-        let storage = BfsStorageRuntime::new(0, vec![3], None, true);
-        let mut computation = BfsComputationRuntime::new(0, true, 1, 10);
+        let storage = BfsStorageRuntime::new(mapped(0), vec![mapped(3)], None, true);
+        let mut computation = BfsComputationRuntime::new(mapped(0), true, 1, 10);
 
         let mut progress_tracker = TaskProgressTracker::new(Tasks::leaf("BFS".to_string()));
 
@@ -334,8 +338,8 @@ mod tests {
 
     #[test]
     fn test_bfs_stops_when_target_reached() {
-        let storage = BfsStorageRuntime::new(0, vec![1], None, true);
-        let mut computation = BfsComputationRuntime::new(0, true, 1, 10);
+        let storage = BfsStorageRuntime::new(mapped(0), vec![mapped(1)], None, true);
+        let mut computation = BfsComputationRuntime::new(mapped(0), true, 1, 10);
 
         let mut progress_tracker = TaskProgressTracker::new(Tasks::leaf("BFS".to_string()));
 
@@ -343,13 +347,13 @@ mod tests {
             .compute_bfs(&mut computation, None, &mut progress_tracker)
             .unwrap();
 
-        assert_eq!(result.visited_nodes, vec![0, 1]);
+        assert_eq!(result.visited_nodes, vec![mapped(0), mapped(1)]);
     }
 
     #[test]
     fn test_bfs_honors_continue_exit_predicate() {
-        let storage = BfsStorageRuntime::new(0, vec![], None, false);
-        let mut computation = BfsComputationRuntime::new(0, false, 1, 10);
+        let storage = BfsStorageRuntime::new(mapped(0), vec![], None, false);
+        let mut computation = BfsComputationRuntime::new(mapped(0), false, 1, 10);
         let aggregator = OneHopAggregator;
         let exit_predicate = ContinueOnOne;
 
@@ -365,14 +369,14 @@ mod tests {
             )
             .unwrap();
 
-        assert!(!result.visited_nodes.contains(&1));
-        assert_eq!(result.visited_nodes, vec![0, 2, 3]);
+        assert!(!result.visited_nodes.contains(&mapped(1)));
+        assert_eq!(result.visited_nodes, vec![mapped(0), mapped(2), mapped(3)]);
     }
 
     #[test]
     fn test_bfs_honors_custom_aggregator_for_depth() {
-        let storage = BfsStorageRuntime::new(0, vec![], Some(2), false);
-        let mut computation = BfsComputationRuntime::new(0, false, 1, 10);
+        let storage = BfsStorageRuntime::new(mapped(0), vec![], Some(2), false);
+        let mut computation = BfsComputationRuntime::new(mapped(0), false, 1, 10);
         let aggregator = DoubleHopAggregator;
         let exit_predicate = FollowExitPredicate;
 
@@ -388,16 +392,16 @@ mod tests {
             )
             .unwrap();
 
-        assert_eq!(result.visited_nodes, vec![0, 1, 2]);
+        assert_eq!(result.visited_nodes, vec![mapped(0), mapped(1), mapped(2)]);
     }
 
     #[test]
     fn test_bfs_parallel_matches_single_thread_order() {
-        let storage = BfsStorageRuntime::new(0, vec![], None, false);
+        let storage = BfsStorageRuntime::new(mapped(0), vec![], None, false);
         let aggregator = OneHopAggregator;
         let exit_predicate = FollowExitPredicate;
 
-        let mut sequential = BfsComputationRuntime::new(0, false, 1, 10);
+        let mut sequential = BfsComputationRuntime::new(mapped(0), false, 1, 10);
         let mut sequential_progress = TaskProgressTracker::new(Tasks::leaf("BFS-seq".to_string()));
         let sequential_result = storage
             .compute_bfs_with_traversal(
@@ -409,7 +413,7 @@ mod tests {
             )
             .unwrap();
 
-        let mut parallel = BfsComputationRuntime::new(0, false, 4, 10);
+        let mut parallel = BfsComputationRuntime::new(mapped(0), false, 4, 10);
         let mut parallel_progress = TaskProgressTracker::new(Tasks::leaf("BFS-par".to_string()));
         let parallel_result = storage
             .compute_bfs_with_traversal(
@@ -429,8 +433,8 @@ mod tests {
 
     #[test]
     fn test_bfs_path_same_source_target() {
-        let storage = BfsStorageRuntime::new(0, vec![0], None, true);
-        let mut computation = BfsComputationRuntime::new(0, true, 1, 10);
+        let storage = BfsStorageRuntime::new(mapped(0), vec![mapped(0)], None, true);
+        let mut computation = BfsComputationRuntime::new(mapped(0), true, 1, 10);
 
         let mut progress_tracker = TaskProgressTracker::new(Tasks::leaf("BFS".to_string()));
 
@@ -438,13 +442,13 @@ mod tests {
             .compute_bfs(&mut computation, None, &mut progress_tracker)
             .unwrap();
 
-        assert!(result.visited_nodes.len() >= 1);
+        assert_eq!(result.visited_nodes, vec![mapped(0)]);
     }
 
     #[test]
     fn test_bfs_max_depth_constraint() {
-        let storage = BfsStorageRuntime::new(0, vec![], Some(1), false);
-        let mut computation = BfsComputationRuntime::new(0, false, 1, 10);
+        let storage = BfsStorageRuntime::new(mapped(0), vec![], Some(1), false);
+        let mut computation = BfsComputationRuntime::new(mapped(0), false, 1, 10);
 
         let mut progress_tracker = TaskProgressTracker::new(Tasks::leaf("BFS".to_string()));
 
@@ -458,8 +462,8 @@ mod tests {
 
     #[test]
     fn test_bfs_rejects_out_of_range_source() {
-        let storage = BfsStorageRuntime::new(1000, vec![], None, false);
-        let mut computation = BfsComputationRuntime::new(0, false, 1, 10);
+        let storage = BfsStorageRuntime::new(mapped(1000), vec![], None, false);
+        let mut computation = BfsComputationRuntime::new(mapped(0), false, 1, 10);
 
         let mut progress_tracker = TaskProgressTracker::new(Tasks::leaf("BFS".to_string()));
 
@@ -470,8 +474,8 @@ mod tests {
 
     #[test]
     fn test_bfs_rejects_out_of_range_target() {
-        let storage = BfsStorageRuntime::new(0, vec![1000], None, false);
-        let mut computation = BfsComputationRuntime::new(0, false, 1, 10);
+        let storage = BfsStorageRuntime::new(mapped(0), vec![mapped(1000)], None, false);
+        let mut computation = BfsComputationRuntime::new(mapped(0), false, 1, 10);
 
         let mut progress_tracker = TaskProgressTracker::new(Tasks::leaf("BFS".to_string()));
 

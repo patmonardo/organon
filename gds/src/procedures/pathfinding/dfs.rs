@@ -429,10 +429,14 @@ mod tests {
         Arc::new(DefaultGraphStore::random(&config).unwrap())
     }
 
+    fn mapped(node_id: u64) -> MappedNodeId {
+        MappedNodeId::new(node_id)
+    }
+
     #[test]
     fn test_builder_defaults() {
         let builder = DfsBuilder::new(store());
-        assert_eq!(builder.config.source_node, 0);
+        assert_eq!(builder.config.source_node, mapped(0));
         assert!(builder.config.target_nodes.is_empty());
         assert!(builder.config.max_depth.is_none());
         assert!(!builder.config.track_paths);
@@ -448,16 +452,18 @@ mod tests {
             .track_paths(true)
             .concurrency(4);
 
-        assert_eq!(builder.config.source_node, 42);
-        assert_eq!(builder.config.target_nodes, vec![99, 100]);
+        assert_eq!(builder.config.source_node, mapped(42));
+        assert_eq!(builder.config.target_nodes, vec![mapped(99), mapped(100)]);
         assert_eq!(builder.config.max_depth, Some(10));
         assert!(builder.config.track_paths);
         assert_eq!(builder.config.concurrency, 4);
     }
 
     #[test]
-    fn test_validate_missing_source() {
-        let builder = DfsBuilder::new(store()).source_node(-1);
+    fn test_validate_invalid_concurrency_on_typed_command() {
+        let builder = DfsBuilder::new(store())
+            .source_node(mapped(0))
+            .concurrency(0);
         assert!(builder.config.validate().is_err());
     }
 
@@ -484,7 +490,9 @@ mod tests {
 
     #[test]
     fn test_stream_requires_validation() {
-        let builder = DfsBuilder::new(store()).source_node(-1);
+        let builder = DfsBuilder::new(store())
+            .source_node(mapped(0))
+            .concurrency(0);
         assert!(builder.stream().is_err());
     }
 
@@ -525,8 +533,8 @@ mod tests {
         )
         .unwrap();
 
-        assert_eq!(facade.config.source_node, 0);
-        assert_eq!(facade.config.target_nodes, vec![3]);
+        assert_eq!(facade.config.source_node, mapped(0));
+        assert_eq!(facade.config.target_nodes, vec![mapped(3)]);
         assert_eq!(facade.config.max_depth, Some(4));
         assert!(facade.config.track_paths);
         assert_eq!(facade.config.concurrency, DfsConfig::default().concurrency);

@@ -93,6 +93,7 @@ mod tests {
     use super::*;
     use crate::config::GraphStoreConfig;
     use crate::types::graph::degrees::Degrees;
+    use crate::types::graph::MappedNodeId;
     use crate::types::graph::RelationshipTopology;
     use crate::types::graph::SimpleIdMap;
     use crate::types::graph_store::{Capabilities, DatabaseId, DatabaseInfo, DatabaseLocation};
@@ -124,8 +125,8 @@ mod tests {
 
         let id_map = SimpleIdMap::from_original_ids([0, 1, 2]);
 
-        let outgoing_r1 = vec![vec![1], vec![], vec![]];
-        let outgoing_r2 = vec![vec![2], vec![], vec![]];
+        let outgoing_r1 = vec![vec![MappedNodeId::new(1)], vec![], vec![]];
+        let outgoing_r2 = vec![vec![MappedNodeId::new(2)], vec![], vec![]];
         let mut topologies = HashMap::new();
         topologies.insert(rel1, RelationshipTopology::new(outgoing_r1, None));
         topologies.insert(rel2, RelationshipTopology::new(outgoing_r2, None));
@@ -158,7 +159,7 @@ mod tests {
 
         assert_eq!(result.graph_name, "g_inv");
         // Only R1 is inverse indexed; node 1 has one inverse edge, node 2 has none.
-        assert_eq!(graph.degree_inverse(1).unwrap(), 1);
-        assert_eq!(graph.degree_inverse(2).unwrap(), 0);
+        assert_eq!(graph.degree_inverse(MappedNodeId::new(1)).unwrap(), 1);
+        assert_eq!(graph.degree_inverse(MappedNodeId::new(2)).unwrap(), 0);
     }
 }

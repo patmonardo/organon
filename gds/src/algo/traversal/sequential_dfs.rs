@@ -105,38 +105,95 @@ fn node_index_in_graph(node_id: MappedNodeId, role: &str) -> Result<usize, Algor
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::algo::traversal::{FollowExitPredicate, OneHopAggregator};
+    use crate::algo::traversal::{FollowExitPredicate, OneHopAggregator, TargetExitPredicate};
+    use std::sync::Mutex;
+
+    fn mapped(node_id: u64) -> MappedNodeId {
+        MappedNodeId::new(node_id)
+    }
+
+    fn neighbors(node: MappedNodeId) -> Vec<MappedNodeId> {
+        match node {
+            node if node == mapped(0) => vec![mapped(1), mapped(2)],
+            node if node == mapped(1) => vec![mapped(3)],
+            _ => vec![],
+        }
+    }
+
+    #[derive(Default)]
+    struct RecordingExitPredicate {
+        visits: Mutex<Vec<(Option<MappedNodeId>, MappedNodeId)>>,
+    }
+
+    impl ExitPredicate for RecordingExitPredicate {
+        fn test(
+            &self,
+            source_node: MappedNodeId,
+            current_node: MappedNodeId,
+            _weight_at_source: f64,
+        ) -> ExitPredicateResult {
+            let parent = (source_node != current_node).then_some(source_node);
+            self.visits.lock().unwrap().push((parent, current_node));
+            ExitPredicateResult::Follow
+        }
+    }
 
     #[test]
     fn traverses_with_depth_first_order() {
+        let exit_predicate = RecordingExitPredicate::default();
         let result = run_sequential_dfs(
             SequentialDfsConfig {
-                source_node: 0,
+                source_node: mapped(0),
                 node_count: 4,
                 max_depth: None,
             },
             &OneHopAggregator,
-            &FollowExitPredicate,
-            |node| match node {
-                0 => vec![1, 2],
-                1 => vec![3],
-                2 => vec![],
-                3 => vec![],
-                _ => vec![],
-            },
+            &exit_predicate,
+            neighbors,
         )
         .unwrap();
 
-        assert_eq!(result.visited_nodes, vec![0, 2, 1, 3]);
+        assert_eq!(
+            result.visited_nodes,
+            vec![mapped(0), mapped(2), mapped(1), mapped(3)]
+        );
         assert_eq!(result.visited_depths, vec![0.0, 1.0, 1.0, 2.0]);
         assert_eq!(result.relationships_examined, 3);
+        assert_eq!(
+            *exit_predicate.visits.lock().unwrap(),
+            vec![
+                (None, mapped(0)),
+                (Some(mapped(0)), mapped(2)),
+                (Some(mapped(0)), mapped(1)),
+                (Some(mapped(1)), mapped(3)),
+            ]
+        );
+    }
+
+    #[test]
+    fn target_exit_stops_before_remaining_stack_entries() {
+        let result = run_sequential_dfs(
+            SequentialDfsConfig {
+                source_node: mapped(0),
+                node_count: 4,
+                max_depth: None,
+            },
+            &OneHopAggregator,
+            &TargetExitPredicate::new(vec![mapped(2)]),
+            neighbors,
+        )
+        .unwrap();
+
+        assert_eq!(result.visited_nodes, vec![mapped(0), mapped(2)]);
+        assert_eq!(result.visited_depths, vec![0.0, 1.0]);
+        assert_eq!(result.relationships_examined, 2);
     }
 
     #[test]
     fn rejects_out_of_range_source() {
         let err = run_sequential_dfs(
             SequentialDfsConfig {
-                source_node: 4,
+                source_node: mapped(4),
                 node_count: 4,
                 max_depth: None,
             },

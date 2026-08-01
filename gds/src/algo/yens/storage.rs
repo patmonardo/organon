@@ -457,11 +457,19 @@ mod tests {
     use crate::types::random::{RandomGraphConfig, RandomRelationshipConfig};
     use std::sync::Arc;
 
+    fn node(value: u64) -> MappedNodeId {
+        MappedNodeId::new(value)
+    }
+
+    fn relationship(value: u64) -> RelationshipIndex {
+        RelationshipIndex::new(value)
+    }
+
     #[test]
     fn test_yens_storage_runtime_creation() {
-        let storage = YensStorageRuntime::new(0, 3, 5, true, 4);
-        assert_eq!(storage.source_node, 0);
-        assert_eq!(storage.target_node, 3);
+        let storage = YensStorageRuntime::new(node(0), node(3), 5, true, 4);
+        assert_eq!(storage.source_node, node(0));
+        assert_eq!(storage.target_node, node(3));
         assert_eq!(storage.k, 5);
         assert!(storage.track_relationships);
         assert_eq!(storage.concurrency, 4);
@@ -479,8 +487,8 @@ mod tests {
         let store = Arc::new(DefaultGraphStore::random(&config).unwrap());
         let graph = store.graph();
 
-        let storage = YensStorageRuntime::new(0, 5, 3, true, 1);
-        let mut computation = YensComputationRuntime::new(0, 5, 3, true, 1);
+        let storage = YensStorageRuntime::new(node(0), node(5), 3, true, 1);
+        let mut computation = YensComputationRuntime::new(node(0), node(5), 3, true, 1);
 
         let mut progress_tracker = TaskProgressTracker::with_concurrency(
             Tasks::leaf_with_volume("yens".to_string(), 3),
@@ -506,8 +514,8 @@ mod tests {
 
     #[test]
     fn computes_ordered_mock_k_shortest_paths() {
-        let storage = YensStorageRuntime::new(0, 3, 3, false, 1);
-        let mut computation = YensComputationRuntime::new(0, 3, 3, false, 1);
+        let storage = YensStorageRuntime::new(node(0), node(3), 3, false, 1);
+        let mut computation = YensComputationRuntime::new(node(0), node(3), 3, false, 1);
 
         let mut progress_tracker = TaskProgressTracker::with_concurrency(
             Tasks::leaf_with_volume("yens".to_string(), 3),
@@ -519,11 +527,14 @@ mod tests {
             .unwrap();
 
         assert_eq!(result.path_count, 3);
-        assert_eq!(result.paths[0].node_ids, vec![0, 1, 2, 3]);
+        assert_eq!(
+            result.paths[0].node_ids,
+            vec![node(0), node(1), node(2), node(3)]
+        );
         assert_eq!(result.paths[0].total_cost, 4.0);
-        assert_eq!(result.paths[1].node_ids, vec![0, 2, 3]);
+        assert_eq!(result.paths[1].node_ids, vec![node(0), node(2), node(3)]);
         assert_eq!(result.paths[1].total_cost, 5.0);
-        assert_eq!(result.paths[2].node_ids, vec![0, 1, 3]);
+        assert_eq!(result.paths[2].node_ids, vec![node(0), node(1), node(3)]);
         assert_eq!(result.paths[2].total_cost, 6.0);
         assert_eq!(result.spur_searches, 5);
         assert_eq!(result.candidates_generated, 2);
@@ -532,33 +543,39 @@ mod tests {
     #[test]
     fn rejects_invalid_storage_contracts() {
         assert!(matches!(
-            YensStorageRuntime::new(0, 3, 0, false, 1).validate(100),
+            YensStorageRuntime::new(node(0), node(3), 0, false, 1).validate(100),
             Err(AlgorithmError::InvalidGraph(_))
         ));
         assert!(matches!(
-            YensStorageRuntime::new(0, 3, 3, false, 0).validate(100),
+            YensStorageRuntime::new(node(0), node(3), 3, false, 0).validate(100),
             Err(AlgorithmError::InvalidGraph(_))
         ));
         assert!(matches!(
-            YensStorageRuntime::new(3, 3, 3, false, 1).validate(100),
+            YensStorageRuntime::new(node(3), node(3), 3, false, 1).validate(100),
             Err(AlgorithmError::InvalidGraph(_))
         ));
         assert!(matches!(
-            YensStorageRuntime::new(100, 3, 3, false, 1).validate(100),
+            YensStorageRuntime::new(node(100), node(3), 3, false, 1).validate(100),
             Err(AlgorithmError::InvalidGraph(_))
         ));
         assert!(matches!(
-            YensStorageRuntime::new(0, 100, 3, false, 1).validate(100),
+            YensStorageRuntime::new(node(0), node(100), 3, false, 1).validate(100),
             Err(AlgorithmError::InvalidGraph(_))
         ));
     }
 
     #[test]
     fn lawler_spur_index_skips_earlier_candidates() {
-        let storage = YensStorageRuntime::new(0, 3, 3, false, 1);
-        let mut computation = YensComputationRuntime::new(0, 3, 3, false, 1);
-        let previous =
-            MutablePathResult::new(1, 0, 3, vec![0, 1, 2, 3], vec![], vec![0.0, 1.0, 3.0, 4.0]);
+        let storage = YensStorageRuntime::new(node(0), node(3), 3, false, 1);
+        let mut computation = YensComputationRuntime::new(node(0), node(3), 3, false, 1);
+        let previous = MutablePathResult::new(
+            1,
+            node(0),
+            node(3),
+            vec![node(0), node(1), node(2), node(3)],
+            vec![],
+            vec![0.0, 1.0, 3.0, 4.0],
+        );
 
         let candidates = storage
             .generate_candidates(&mut computation, &previous, &[previous.clone()], None, 0)
@@ -567,8 +584,8 @@ mod tests {
         let candidate_nodes: std::collections::HashSet<Vec<MappedNodeId>> =
             candidates.into_iter().map(|path| path.node_ids).collect();
 
-        assert!(!candidate_nodes.contains(&vec![0, 2, 3]));
-        assert!(candidate_nodes.contains(&vec![0, 1, 3]));
+        assert!(!candidate_nodes.contains(&vec![node(0), node(2), node(3)]));
+        assert!(candidate_nodes.contains(&vec![node(0), node(1), node(3)]));
     }
 
     #[test]
@@ -595,24 +612,36 @@ mod tests {
         let result = compute_mock_paths(true, 1);
 
         assert_eq!(result.path_count, 3);
-        assert_eq!(result.paths[0].node_ids, vec![0, 1, 2, 3]);
-        assert_eq!(result.paths[0].relationship_ids, vec![0, 0, 0]);
-        assert_eq!(result.paths[1].node_ids, vec![0, 2, 3]);
-        assert_eq!(result.paths[1].relationship_ids, vec![1, 0]);
-        assert_eq!(result.paths[2].node_ids, vec![0, 1, 3]);
-        assert_eq!(result.paths[2].relationship_ids, vec![0, 1]);
+        assert_eq!(
+            result.paths[0].node_ids,
+            vec![node(0), node(1), node(2), node(3)]
+        );
+        assert_eq!(
+            result.paths[0].relationship_ids,
+            vec![relationship(0), relationship(0), relationship(0)]
+        );
+        assert_eq!(result.paths[1].node_ids, vec![node(0), node(2), node(3)]);
+        assert_eq!(
+            result.paths[1].relationship_ids,
+            vec![relationship(1), relationship(0)]
+        );
+        assert_eq!(result.paths[2].node_ids, vec![node(0), node(1), node(3)]);
+        assert_eq!(
+            result.paths[2].relationship_ids,
+            vec![relationship(0), relationship(1)]
+        );
     }
 
     #[test]
     fn generate_candidates_blocks_same_root_edges() {
-        let storage = YensStorageRuntime::new(0, 3, 3, true, 1);
-        let mut computation = YensComputationRuntime::new(0, 3, 3, true, 1);
+        let storage = YensStorageRuntime::new(node(0), node(3), 3, true, 1);
+        let mut computation = YensComputationRuntime::new(node(0), node(3), 3, true, 1);
         let previous = MutablePathResult::new(
             0,
-            0,
-            3,
-            vec![0, 1, 2, 3],
-            vec![0, 0, 0],
+            node(0),
+            node(3),
+            vec![node(0), node(1), node(2), node(3)],
+            vec![relationship(0), relationship(0), relationship(0)],
             vec![0.0, 1.0, 3.0, 4.0],
         );
 
@@ -622,17 +651,18 @@ mod tests {
         let candidate_nodes: std::collections::HashSet<Vec<MappedNodeId>> =
             candidates.into_iter().map(|path| path.node_ids).collect();
 
-        assert!(candidate_nodes.contains(&vec![0, 2, 3]));
-        assert!(candidate_nodes.contains(&vec![0, 1, 3]));
-        assert!(!candidate_nodes.contains(&vec![0, 1, 2, 3]));
+        assert!(candidate_nodes.contains(&vec![node(0), node(2), node(3)]));
+        assert!(candidate_nodes.contains(&vec![node(0), node(1), node(3)]));
+        assert!(!candidate_nodes.contains(&vec![node(0), node(1), node(2), node(3)]));
         assert_eq!(computation.spur_search_count(), 3);
         assert_eq!(computation.candidates_generated_count(), 2);
     }
 
     fn compute_mock_paths(track_relationships: bool, concurrency: usize) -> YensResult {
-        let storage = YensStorageRuntime::new(0, 3, 3, track_relationships, concurrency);
+        let storage =
+            YensStorageRuntime::new(node(0), node(3), 3, track_relationships, concurrency);
         let mut computation =
-            YensComputationRuntime::new(0, 3, 3, track_relationships, concurrency);
+            YensComputationRuntime::new(node(0), node(3), 3, track_relationships, concurrency);
         let mut progress_tracker = TaskProgressTracker::with_concurrency(
             Tasks::leaf_with_volume("yens".to_string(), 3),
             concurrency,

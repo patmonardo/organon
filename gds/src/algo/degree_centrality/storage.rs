@@ -8,10 +8,10 @@
 
 use crate::algo::degree_centrality::DegreeCentralityComputationRuntime;
 use crate::collections::HugeAtomicDoubleArray;
-use crate::task::concurrency::virtual_threads::Executor;
-use crate::task::concurrency::{Concurrency, TerminatedException, TerminationFlag};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::{Orientation as ProjectionOrientation, RelationshipType};
+use crate::task::concurrency::virtual_threads::Executor;
+use crate::task::concurrency::{Concurrency, TerminatedException, TerminationFlag};
 use crate::types::graph::Graph;
 use crate::types::graph::MappedNodeId;
 use crate::types::prelude::GraphStore;
@@ -45,7 +45,6 @@ impl Orientation {
 pub struct DegreeCentralityStorageRuntime<'a, G: GraphStore> {
     graph_store: &'a G,
     graph: Arc<dyn Graph>,
-    orientation: Orientation,
     weighted: bool,
 }
 
@@ -91,7 +90,6 @@ impl<'a, G: GraphStore> DegreeCentralityStorageRuntime<'a, G> {
         Ok(Self {
             graph_store,
             graph,
-            orientation,
             weighted: relationship_weight_property.is_some(),
         })
     }
@@ -114,21 +112,7 @@ impl<'a, G: GraphStore> DegreeCentralityStorageRuntime<'a, G> {
             Err(_) => return 0.0,
         };
 
-        match self.orientation {
-            Orientation::Natural => self.graph.degree(node_id) as f64,
-            Orientation::Reverse => self
-                .graph
-                .stream_inverse_relationships(node_id, 0.0)
-                .count() as f64,
-            Orientation::Undirected => {
-                let outgoing = self.graph.degree(node_id) as f64;
-                let incoming = self
-                    .graph
-                    .stream_inverse_relationships(node_id, 0.0)
-                    .count() as f64;
-                outgoing + incoming
-            }
-        }
+        self.graph.degree(node_id) as f64
     }
 
     fn degree_weighted(&self, node_idx: usize) -> f64 {
@@ -137,18 +121,7 @@ impl<'a, G: GraphStore> DegreeCentralityStorageRuntime<'a, G> {
             Err(_) => return 0.0,
         };
 
-        match self.orientation {
-            Orientation::Natural => {
-                positive_weight_sum(self.graph.stream_relationships(node_id, 0.0))
-            }
-            Orientation::Reverse => {
-                positive_weight_sum(self.graph.stream_inverse_relationships(node_id, 0.0))
-            }
-            Orientation::Undirected => {
-                positive_weight_sum(self.graph.stream_relationships(node_id, 0.0))
-                    + positive_weight_sum(self.graph.stream_inverse_relationships(node_id, 0.0))
-            }
-        }
+        positive_weight_sum(self.graph.stream_relationships(node_id, 0.0))
     }
 
     pub fn compute_parallel(

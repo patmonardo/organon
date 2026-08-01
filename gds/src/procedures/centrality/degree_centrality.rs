@@ -437,6 +437,8 @@ mod tests {
     use super::*;
     use crate::config::GraphStoreConfig;
     use crate::projection::RelationshipType;
+    use crate::types::graph::MappedNodeId;
+    use crate::types::graph::OriginalNodeId;
     use crate::types::graph::{RelationshipTopology, SimpleIdMap};
     use crate::types::graph_store::{
         Capabilities, DatabaseId, DatabaseInfo, DatabaseLocation, DefaultGraphStore, GraphName,
@@ -459,23 +461,27 @@ mod tests {
     }
 
     fn weighted_store_from_outgoing(
-        outgoing: Vec<Vec<i64>>,
+        outgoing: Vec<Vec<u64>>,
         weights: Vec<f64>,
     ) -> Arc<DefaultGraphStore> {
         weighted_store_from_outgoing_with_property(outgoing, weights, "weight")
     }
 
     fn weighted_store_from_outgoing_with_property(
-        outgoing: Vec<Vec<i64>>,
+        outgoing: Vec<Vec<u64>>,
         weights: Vec<f64>,
         property_name: &str,
     ) -> Arc<DefaultGraphStore> {
         let node_count = outgoing.len();
-        let mut incoming: Vec<Vec<i64>> = vec![Vec::new(); node_count];
+        let mut mapped_outgoing: Vec<Vec<MappedNodeId>> = vec![Vec::new(); node_count];
+        let mut incoming: Vec<Vec<MappedNodeId>> = vec![Vec::new(); node_count];
         for (source, targets) in outgoing.iter().enumerate() {
             for &target in targets {
-                if target >= 0 && (target as usize) < node_count {
-                    incoming[target as usize].push(source as i64);
+                let target_index = usize::try_from(target).expect("fixture node ID must fit");
+                if target_index < node_count {
+                    mapped_outgoing[source].push(MappedNodeId::new(target));
+                    incoming[target_index]
+                        .push(MappedNodeId::try_from(source).expect("fixture node ID must fit"));
                 }
             }
         }
@@ -491,10 +497,14 @@ mod tests {
         let mut relationship_topologies = HashMap::new();
         relationship_topologies.insert(
             rel_type.clone(),
-            RelationshipTopology::new(outgoing, Some(incoming)),
+            RelationshipTopology::new(mapped_outgoing, Some(incoming)),
         );
 
-        let original_ids: Vec<i64> = (0..node_count as i64).collect();
+        let original_ids: Vec<OriginalNodeId> = (0..node_count)
+            .map(|node_id| {
+                OriginalNodeId::new(i64::try_from(node_id).expect("fixture original ID must fit"))
+            })
+            .collect();
         let id_map = SimpleIdMap::from_original_ids(original_ids);
 
         let mut store = DefaultGraphStore::new(

@@ -253,10 +253,11 @@ mod tests {
 
     #[test]
     fn duplicate_original_ids_are_rejected() {
-        assert_eq!(
+        assert!(matches!(
             SimpleIdMap::try_from_original_ids([10, 20, 10]),
-            Err(SimpleIdMapError::DuplicateOriginalId(10.into()))
-        );
+            Err(SimpleIdMapError::DuplicateOriginalId(original_id))
+                if original_id == OriginalNodeId::new(10)
+        ));
     }
 
     #[test]

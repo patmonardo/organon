@@ -385,17 +385,17 @@ mod tests {
         Arc::new(DefaultGraphStore::random(&config).unwrap())
     }
 
+    fn mapped(node_id: u64) -> MappedNodeId {
+        MappedNodeId::new(node_id)
+    }
+
     #[test]
     fn test_builder_validation() {
         let store = random_store(99);
 
         assert!(YensBuilder::new(Arc::clone(&store))
-            .source_node(-1)
-            .config
-            .validate()
-            .is_err());
-        assert!(YensBuilder::new(Arc::clone(&store))
-            .target_node(-1)
+            .source_node(mapped(1))
+            .target_node(mapped(1))
             .config
             .validate()
             .is_err());
@@ -425,8 +425,8 @@ mod tests {
         )
         .unwrap();
 
-        assert_eq!(facade.config.source_node, 0);
-        assert_eq!(facade.config.target_node, 3);
+        assert_eq!(facade.config.source_node, mapped(0));
+        assert_eq!(facade.config.target_node, mapped(3));
         assert_eq!(facade.config.k, 5);
         assert_eq!(facade.config.weight_property, "travelTime");
         assert_eq!(facade.config.relationship_types, vec!["REL"]);
@@ -439,8 +439,8 @@ mod tests {
     fn test_with_spec_config_syncs_facade_state() {
         let store = random_store(103);
         let config = YensConfig {
-            source_node: 0,
-            target_node: 3,
+            source_node: mapped(0),
+            target_node: mapped(3),
             k: 2,
             weight_property: "cost".to_string(),
             relationship_types: vec!["REL".to_string()],
@@ -470,8 +470,8 @@ mod tests {
             .track_relationships(true)
             .concurrency(2);
 
-        assert_eq!(facade.config.source_node, 1);
-        assert_eq!(facade.config.target_node, 4);
+        assert_eq!(facade.config.source_node, mapped(1));
+        assert_eq!(facade.config.target_node, mapped(4));
         assert_eq!(facade.config.k, 6);
         assert_eq!(facade.config.weight_property, "latency");
         assert_eq!(facade.config.relationship_types, vec!["REL"]);

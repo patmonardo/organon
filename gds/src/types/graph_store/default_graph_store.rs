@@ -320,6 +320,19 @@ impl DefaultGraphStore {
             let Some(topology) = self.relationship_topologies.get(rel_type) else {
                 continue;
             };
+            let already_undirected = orientation == Orientation::Undirected
+                && self
+                    .schema
+                    .relationship_schema()
+                    .get(rel_type)
+                    .is_some_and(RelationshipSchemaEntry::is_undirected);
+            if already_undirected {
+                topologies.insert(rel_type.clone(), Arc::clone(topology));
+                if let Some(store) = self.relationship_property_stores.get(rel_type) {
+                    property_stores.insert(rel_type.clone(), store.clone());
+                }
+                continue;
+            }
             let (oriented_topology, old_indices) = orient_topology(topology, orientation);
             topologies.insert(rel_type.clone(), Arc::new(oriented_topology));
 
@@ -2486,7 +2499,14 @@ mod tests {
         let capabilities = Capabilities::default();
         let id_map = SimpleIdMap::from_original_ids([0, 1, 2]);
 
-        let topology = RelationshipTopology::new(vec![vec![1, 2], vec![2], vec![]], None);
+        let topology = RelationshipTopology::new(
+            vec![
+                vec![MappedNodeId::new(1), MappedNodeId::new(2)],
+                vec![MappedNodeId::new(2)],
+                vec![],
+            ],
+            None,
+        );
 
         let mut relationship_topologies = HashMap::new();
         relationship_topologies.insert(RelationshipType::of("KNOWS"), topology);
@@ -2515,7 +2535,7 @@ mod tests {
         let graph = store.graph();
         assert_eq!(graph.relationship_count(), 3);
         assert!(graph.characteristics().is_directed());
-        assert_eq!(graph.degree(0), 2);
+        assert_eq!(graph.degree(MappedNodeId::ZERO), 2);
     }
 
     #[test]
@@ -3037,7 +3057,7 @@ mod tests {
         store = store
             .with_added_relationship_type_preserve_name(
                 likes.clone(),
-                vec![vec![2], vec![], vec![]],
+                vec![vec![MappedNodeId::new(2)], vec![], vec![]],
                 Direction::Directed,
             )
             .expect("add LIKES relationship type");
@@ -3090,7 +3110,10 @@ mod tests {
 
         assert_eq!(graph.relationship_count(), store.relationship_count());
         assert_eq!(graph.schema().to_map(), store.schema().to_map());
-        assert_eq!(graph.relationship_property(0, 1, -1.0), 1.0);
+        assert_eq!(
+            graph.relationship_property(MappedNodeId::ZERO, MappedNodeId::new(1), -1.0),
+            1.0
+        );
     }
 
     #[test]
@@ -3113,13 +3136,22 @@ mod tests {
             )
             .expect("build reverse graph");
 
-        assert!(!graph.exists(0, 1));
-        assert!(graph.exists(1, 0));
-        assert!(graph.exists(2, 0));
-        assert!(graph.exists(2, 1));
-        assert_eq!(graph.relationship_property(1, 0, -1.0), 1.0);
-        assert_eq!(graph.relationship_property(2, 0, -1.0), 2.0);
-        assert_eq!(graph.relationship_property(2, 1, -1.0), 3.0);
+        assert!(!graph.exists(MappedNodeId::ZERO, MappedNodeId::new(1)));
+        assert!(graph.exists(MappedNodeId::new(1), MappedNodeId::ZERO));
+        assert!(graph.exists(MappedNodeId::new(2), MappedNodeId::ZERO));
+        assert!(graph.exists(MappedNodeId::new(2), MappedNodeId::new(1)));
+        assert_eq!(
+            graph.relationship_property(MappedNodeId::new(1), MappedNodeId::ZERO, -1.0),
+            1.0
+        );
+        assert_eq!(
+            graph.relationship_property(MappedNodeId::new(2), MappedNodeId::ZERO, -1.0),
+            2.0
+        );
+        assert_eq!(
+            graph.relationship_property(MappedNodeId::new(2), MappedNodeId::new(1), -1.0,),
+            3.0
+        );
     }
 
     #[test]
@@ -3133,8 +3165,8 @@ mod tests {
             )
             .expect("build graph from canonical view spec");
 
-        assert!(!graph.exists(0, 1));
-        assert!(graph.exists(1, 0));
+        assert!(!graph.exists(MappedNodeId::ZERO, MappedNodeId::new(1)));
+        assert!(graph.exists(MappedNodeId::new(1), MappedNodeId::ZERO));
         assert_eq!(graph.relationship_count(), store.relationship_count());
     }
 
@@ -3215,10 +3247,22 @@ mod tests {
         assert!(graph.characteristics().is_undirected());
         assert!(graph.schema().is_undirected());
         assert_eq!(graph.relationship_count(), 6);
-        assert_eq!(graph.relationship_property(0, 1, -1.0), 1.0);
-        assert_eq!(graph.relationship_property(1, 0, -1.0), 1.0);
-        assert_eq!(graph.relationship_property(2, 0, -1.0), 2.0);
-        assert_eq!(graph.relationship_property(2, 1, -1.0), 3.0);
+        assert_eq!(
+            graph.relationship_property(MappedNodeId::ZERO, MappedNodeId::new(1), -1.0),
+            1.0
+        );
+        assert_eq!(
+            graph.relationship_property(MappedNodeId::new(1), MappedNodeId::ZERO, -1.0),
+            1.0
+        );
+        assert_eq!(
+            graph.relationship_property(MappedNodeId::new(2), MappedNodeId::ZERO, -1.0),
+            2.0
+        );
+        assert_eq!(
+            graph.relationship_property(MappedNodeId::new(2), MappedNodeId::new(1), -1.0,),
+            3.0
+        );
     }
 
     #[test]

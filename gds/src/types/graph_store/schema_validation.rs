@@ -227,6 +227,7 @@ mod tests {
     use super::*;
     use crate::config::GraphStoreConfig;
     use crate::projection::RelationshipType;
+    use crate::types::graph::MappedNodeId;
     use crate::types::graph::RelationshipTopology;
     use crate::types::graph::SimpleIdMap;
     use crate::types::graph_store::Capabilities;
@@ -252,7 +253,7 @@ mod tests {
             SimpleIdMap::from_original_ids([0, 1]),
             HashMap::from([(
                 RelationshipType::of("REL"),
-                RelationshipTopology::new(vec![vec![1], vec![]], None),
+                RelationshipTopology::new(vec![vec![MappedNodeId::new(1)], vec![]], None),
             )]),
         );
 

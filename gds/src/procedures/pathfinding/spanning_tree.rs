@@ -9,21 +9,21 @@ use crate::algo::spanning_tree::{
     SpanningTreeResultBuilder, SpanningTreeRow, SpanningTreeStats, SpanningTreeStorageRuntime,
     SpanningTreeWriteSummary,
 };
-use crate::task::concurrency::TerminationFlag;
-use crate::task::memory::MemoryRange;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
-use crate::types::prelude::{DefaultGraphStore, GraphStore};
+use crate::task::concurrency::TerminationFlag;
+use crate::task::memory::MemoryRange;
 use crate::types::graph::MappedNodeId;
+use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
 use std::time::Instant;
 
 // Import upgraded systems
+use crate::projection::eval::algorithm::AlgorithmError;
 use crate::task::progress::{
     EmptyTaskRegistryFactory, TaskProgressTracker, TaskRegistryFactory, Tasks,
 };
-use crate::projection::eval::algorithm::AlgorithmError;
 
 /// Spanning tree facade builder.
 ///

@@ -433,10 +433,18 @@ mod tests {
     use crate::projection::eval::algorithm::ExecutionContext;
     use serde_json::json;
 
+    fn node(value: u64) -> MappedNodeId {
+        MappedNodeId::new(value)
+    }
+
+    fn relationship(value: u64) -> RelationshipIndex {
+        RelationshipIndex::new(value)
+    }
+
     #[test]
     fn test_dijkstra_config_default() {
         let config = DijkstraConfig::default();
-        assert_eq!(config.source_node, 0);
+        assert_eq!(config.source_node, node(0));
         assert!(config.target_nodes.is_empty());
         assert!(!config.track_relationships);
         assert_eq!(config.concurrency, 4);
@@ -447,11 +455,6 @@ mod tests {
     fn test_dijkstra_config_validation() {
         let mut config = DijkstraConfig::default();
         assert!(config.validate().is_ok());
-
-        config.source_node = -1;
-        assert!(config.validate().is_err());
-
-        config.source_node = 0;
 
         config.concurrency = 0;
         assert!(config.validate().is_err());
@@ -464,10 +467,10 @@ mod tests {
     fn test_dijkstra_result() {
         let path_result = DijkstraPathResult {
             index: 0,
-            source_node: 0,
-            target_node: 5,
-            node_ids: vec![0, 1, 3, 5],
-            relationship_ids: vec![0, 1, 2],
+            source_node: node(0),
+            target_node: node(5),
+            node_ids: vec![node(0), node(1), node(3), node(5)],
+            relationship_ids: vec![relationship(0), relationship(1), relationship(2)],
             costs: vec![0.0, 3.5, 7.0, 10.5],
         };
 
@@ -488,16 +491,16 @@ mod tests {
     fn test_dijkstra_path_result() {
         let path_result = DijkstraPathResult {
             index: 0,
-            source_node: 0,
-            target_node: 5,
-            node_ids: vec![0, 1, 3, 5],
-            relationship_ids: vec![0, 1, 2],
+            source_node: node(0),
+            target_node: node(5),
+            node_ids: vec![node(0), node(1), node(3), node(5)],
+            relationship_ids: vec![relationship(0), relationship(1), relationship(2)],
             costs: vec![0.0, 3.5, 7.0, 10.5],
         };
 
         assert_eq!(path_result.index, 0);
-        assert_eq!(path_result.source_node, 0);
-        assert_eq!(path_result.target_node, 5);
+        assert_eq!(path_result.source_node, node(0));
+        assert_eq!(path_result.target_node, node(5));
         assert_eq!(path_result.total_cost(), 10.5);
         assert_eq!(path_result.node_ids.len(), 4);
         assert_eq!(path_result.relationship_ids.len(), 3);
@@ -548,7 +551,7 @@ mod tests {
         // Test invalid configuration - the validation_config doesn't validate our custom fields
         // so we'll test the config validation directly instead
         let invalid_config = DijkstraConfig {
-            source_node: 0,
+            source_node: node(0),
             target_nodes: vec![],
             weight_property: default_weight_property(),
             track_relationships: false,
@@ -571,7 +574,7 @@ mod tests {
 
         // Test that we can create a config
         let config = DijkstraConfig::default();
-        assert_eq!(config.source_node, 0);
+        assert_eq!(config.source_node, node(0));
         assert!(config.target_nodes.is_empty());
         assert!(!config.track_relationships);
     }
@@ -590,8 +593,8 @@ mod tests {
         }))
         .unwrap();
 
-        assert_eq!(config.source_node, 0);
-        assert_eq!(config.target_nodes, vec![5, 7]);
+        assert_eq!(config.source_node, node(0));
+        assert_eq!(config.target_nodes, vec![node(5), node(7)]);
         assert_eq!(config.weight_property, "cost");
         assert!(config.track_relationships);
         assert_eq!(config.relationship_types, vec!["ROAD"]);

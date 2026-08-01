@@ -16,6 +16,10 @@ mod tests {
     };
     use crate::types::schema::{Direction, MutableGraphSchema};
 
+    fn node(value: u64) -> MappedNodeId {
+        MappedNodeId::new(value)
+    }
+
     fn store_from_outgoing(outgoing: Vec<Vec<(MappedNodeId, f64)>>) -> DefaultGraphStore {
         let node_count = outgoing.len();
 
@@ -76,10 +80,10 @@ mod tests {
     fn label_propagation_converges_on_two_components() {
         // Two disconnected edges: 0-1 and 2-3
         let outgoing = vec![
-            vec![(1, 1.0)],
-            vec![(0, 1.0)],
-            vec![(3, 1.0)],
-            vec![(2, 1.0)],
+            vec![(node(1), 1.0)],
+            vec![(node(0), 1.0)],
+            vec![(node(3), 1.0)],
+            vec![(node(2), 1.0)],
         ];
         let store = store_from_outgoing(outgoing);
         let graph = GraphFacade::new(Arc::new(store));
@@ -99,7 +103,11 @@ mod tests {
     fn label_propagation_tie_breaks_to_smallest_label() {
         // Star: 0 connected to 1 and 2 (symmetric).
         // With identity init labels, node 0 sees labels {1,2} equal weight -> picks 1.
-        let outgoing = vec![vec![(1, 1.0), (2, 1.0)], vec![(0, 1.0)], vec![(0, 1.0)]];
+        let outgoing = vec![
+            vec![(node(1), 1.0), (node(2), 1.0)],
+            vec![(node(0), 1.0)],
+            vec![(node(0), 1.0)],
+        ];
         let store = store_from_outgoing(outgoing);
         let graph = GraphFacade::new(Arc::new(store));
 
@@ -136,9 +144,9 @@ mod tests {
     #[test]
     fn label_propagation_node_weights_influence_voting() {
         let mut store = store_from_outgoing(vec![
-            vec![(1, 1.0), (2, 1.0)],
-            vec![(0, 1.0)],
-            vec![(0, 1.0)],
+            vec![(node(1), 1.0), (node(2), 1.0)],
+            vec![(node(0), 1.0)],
+            vec![(node(0), 1.0)],
         ]);
         store
             .add_node_property_i64("seed".to_string(), vec![100, 10, 20])
@@ -171,19 +179,22 @@ mod tests {
         assert_eq!(result.ran_iterations, 1);
         assert_eq!(result.labels.len(), 100);
         for (node_id, label) in result.labels.iter().copied().enumerate() {
-            assert_eq!(label, node_id as u64);
+            assert_eq!(
+                label,
+                u64::try_from(node_id).expect("fixture node must fit the label domain")
+            );
         }
     }
 
     #[test]
     fn label_propagation_parallel_workers_preserve_component_partition() {
         let store = store_from_outgoing(vec![
-            vec![(1, 1.0), (2, 1.0)],
-            vec![(0, 1.0), (2, 1.0)],
-            vec![(0, 1.0), (1, 1.0)],
-            vec![(4, 1.0), (5, 1.0)],
-            vec![(3, 1.0), (5, 1.0)],
-            vec![(3, 1.0), (4, 1.0)],
+            vec![(node(1), 1.0), (node(2), 1.0)],
+            vec![(node(0), 1.0), (node(2), 1.0)],
+            vec![(node(0), 1.0), (node(1), 1.0)],
+            vec![(node(4), 1.0), (node(5), 1.0)],
+            vec![(node(3), 1.0), (node(5), 1.0)],
+            vec![(node(3), 1.0), (node(4), 1.0)],
         ]);
         let graph = GraphFacade::new(Arc::new(store));
 
@@ -206,7 +217,7 @@ mod tests {
 
     #[test]
     fn label_propagation_rejects_missing_requested_properties() {
-        let store = store_from_outgoing(vec![vec![(1, 1.0)], vec![(0, 1.0)]]);
+        let store = store_from_outgoing(vec![vec![(node(1), 1.0)], vec![(node(0), 1.0)]]);
         let graph = GraphFacade::new(Arc::new(store));
 
         let weight_error = graph
@@ -244,7 +255,7 @@ mod tests {
     #[test]
     #[should_panic(expected = "The execution has been terminated.")]
     fn label_propagation_run_with_context_honors_termination() {
-        let store = store_from_outgoing(vec![vec![(1, 1.0)], vec![(0, 1.0)]]);
+        let store = store_from_outgoing(vec![vec![(node(1), 1.0)], vec![(node(0), 1.0)]]);
         let graph = GraphFacade::new(Arc::new(store));
         let mut progress = TaskProgressTracker::new(Tasks::leaf("label_propagation".to_string()));
 

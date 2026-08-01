@@ -5,12 +5,12 @@
 
 use crate::algo::harmonic::HarmonicComputationRuntime;
 use crate::algo::msbfs::{AggregatedNeighborProcessingMsBfs, OMEGA};
+use crate::projection::eval::algorithm::AlgorithmError;
+use crate::projection::{Orientation, RelationshipType};
 use crate::task::concurrency::{
     virtual_threads::{Executor, WorkerContext},
     Concurrency, TerminatedException, TerminationFlag,
 };
-use crate::projection::eval::algorithm::AlgorithmError;
-use crate::projection::{Orientation, RelationshipType};
 use crate::types::graph::Graph;
 use crate::types::graph::MappedNodeId;
 use crate::types::prelude::GraphStore;
@@ -21,7 +21,6 @@ use std::sync::Arc;
 pub struct HarmonicStorageRuntime<'a, G: GraphStore> {
     graph_store: &'a G,
     graph: Arc<dyn Graph>,
-    orientation: Orientation,
 }
 
 impl<'a, G: GraphStore> HarmonicStorageRuntime<'a, G> {
@@ -34,11 +33,7 @@ impl<'a, G: GraphStore> HarmonicStorageRuntime<'a, G> {
             .get_graph_with_types_and_orientation(&rel_types, orientation)
             .map_err(|e| AlgorithmError::Graph(e.to_string()))?;
 
-        Ok(Self {
-            graph_store,
-            graph,
-            orientation,
-        })
+        Ok(Self { graph_store, graph })
     }
 
     pub fn node_count(&self) -> usize {
@@ -60,44 +55,11 @@ impl<'a, G: GraphStore> HarmonicStorageRuntime<'a, G> {
         };
 
         let fallback = self.graph.default_property_value();
-        match self.orientation {
-            Orientation::Natural => self
-                .graph
-                .stream_relationships(node_id, fallback)
-                .map(|cursor| cursor.target_id())
-                .filter_map(MappedNodeId::to_usize)
-                .collect(),
-            Orientation::Reverse => self
-                .graph
-                .stream_inverse_relationships(node_id, fallback)
-                .map(|cursor| cursor.source_id())
-                .filter_map(MappedNodeId::to_usize)
-                .collect(),
-            Orientation::Undirected => {
-                let mut neighbors = Vec::new();
-                let mut seen = HashSet::new();
-
-                for cursor in self.graph.stream_relationships(node_id, fallback) {
-                    let target = cursor.target_id();
-                    if seen.insert(target) {
-                        if let Some(target_index) = target.to_usize() {
-                            neighbors.push(target_index);
-                        }
-                    }
-                }
-
-                for cursor in self.graph.stream_inverse_relationships(node_id, fallback) {
-                    let source = cursor.source_id();
-                    if seen.insert(source) {
-                        if let Some(source_index) = source.to_usize() {
-                            neighbors.push(source_index);
-                        }
-                    }
-                }
-
-                neighbors
-            }
-        }
+        self.graph
+            .stream_relationships(node_id, fallback)
+            .map(|cursor| cursor.target_id())
+            .filter_map(MappedNodeId::to_usize)
+            .collect()
     }
 
     /// Controller entrypoint: orchestrates MSBFS batches, termination, and progress reporting.

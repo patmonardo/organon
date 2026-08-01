@@ -5,12 +5,12 @@ use crate::algo::similarity::knn::metrics::{
 use crate::algo::similarity::knn::KnnNnDescentConfig;
 use crate::algo::similarity::knn::KnnNnDescentStats;
 use crate::algo::similarity::knn::{KnnSamplerType, KnnStorageRuntime};
+use crate::projection::eval::algorithm::AlgorithmError;
+use crate::projection::NodeLabel;
 use crate::task::concurrency::virtual_threads::Executor;
 use crate::task::concurrency::Concurrency;
 use crate::task::concurrency::TerminationFlag;
 use crate::task::progress::ProgressTracker;
-use crate::projection::eval::algorithm::AlgorithmError;
-use crate::projection::NodeLabel;
 use crate::types::graph::MappedNodeId;
 use crate::types::graph_store::GraphStore;
 use crate::types::properties::node::NodePropertyValues;
@@ -341,8 +341,8 @@ impl FilteredKnnStorageRuntime {
 
         let mut allowed = vec![false; node_count];
         for (mapped, allowed_slot) in allowed.iter_mut().enumerate().take(node_count) {
-            let mapped_node_id = MappedNodeId::try_from(mapped)
-                .expect("graph node count must fit mapped node IDs");
+            let mapped_node_id =
+                MappedNodeId::try_from(mapped).expect("graph node count must fit mapped node IDs");
             let mut ok = false;
             for label in &label_set {
                 if id_map.has_label(mapped_node_id, label) {
@@ -380,10 +380,20 @@ mod tests {
         let b = NodeLabel::of("B");
 
         let a_count = (0..node_count)
-            .filter(|&i| id_map.has_label(i as i64, &a))
+            .filter(|&i| {
+                id_map.has_label(
+                    MappedNodeId::try_from(i).expect("node count must fit mapped IDs"),
+                    &a,
+                )
+            })
             .count();
         let b_count = (0..node_count)
-            .filter(|&i| id_map.has_label(i as i64, &b))
+            .filter(|&i| {
+                id_map.has_label(
+                    MappedNodeId::try_from(i).expect("node count must fit mapped IDs"),
+                    &b,
+                )
+            })
             .count();
         assert!(a_count > 0, "seeded graph should contain label A");
         assert!(b_count > 0, "seeded graph should contain label B");
@@ -421,12 +431,12 @@ mod tests {
 
         for row in &rows {
             assert!(
-                id_map.has_label(row.source as i64, &a),
+                id_map.has_label(MappedNodeId::new(row.source), &a),
                 "source {} must have label A",
                 row.source
             );
             assert!(
-                id_map.has_label(row.target as i64, &b),
+                id_map.has_label(MappedNodeId::new(row.target), &b),
                 "target {} must have label B",
                 row.target
             );

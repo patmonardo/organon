@@ -369,29 +369,33 @@ mod tests {
     use super::*;
     use crate::projection::eval::algorithm::AlgorithmSpec;
 
+    fn mapped(node_id: u64) -> MappedNodeId {
+        MappedNodeId::new(node_id)
+    }
+
     #[test]
     fn test_bfs_result() {
         let result = BfsResult {
             computation_time_ms: 5,
-            visited_nodes: vec![0, 1, 2],
+            visited_nodes: vec![mapped(0), mapped(1), mapped(2)],
             visited_depths: vec![0.0, 1.0, 1.0],
         };
 
         assert_eq!(result.visited_nodes.len(), 3);
-        assert_eq!(result.visited_nodes[0], 0);
+        assert_eq!(result.visited_nodes[0], mapped(0));
     }
 
     #[test]
     fn test_bfs_path_result() {
         let path = BfsPathResult {
-            source_node: 0,
-            target_node: 3,
-            node_ids: vec![0, 1, 2, 3],
+            source_node: mapped(0),
+            target_node: mapped(3),
+            node_ids: vec![mapped(0), mapped(1), mapped(2), mapped(3)],
             path_length: 3,
         };
 
-        assert_eq!(path.source_node, 0);
-        assert_eq!(path.target_node, 3);
+        assert_eq!(path.source_node, mapped(0));
+        assert_eq!(path.target_node, mapped(3));
         assert_eq!(path.node_ids.len(), 4);
         assert_eq!(path.path_length, 3);
     }
@@ -399,7 +403,7 @@ mod tests {
     #[test]
     fn test_bfs_config_default() {
         let config = BfsConfig::default();
-        assert_eq!(config.source_node, 0);
+        assert_eq!(config.source_node, mapped(0));
         assert!(config.target_nodes.is_empty());
         assert!(config.max_depth.is_none());
         assert!(!config.track_paths);
@@ -457,8 +461,8 @@ mod tests {
         }))
         .unwrap();
 
-        assert_eq!(config.source_node, 0);
-        assert_eq!(config.target_nodes, vec![2, 3]);
+        assert_eq!(config.source_node, mapped(0));
+        assert_eq!(config.target_nodes, vec![mapped(2), mapped(3)]);
         assert_eq!(config.max_depth, Some(4));
         assert!(config.track_paths);
     }
@@ -467,15 +471,33 @@ mod tests {
     fn test_bfs_paths_use_depth_as_cost() {
         let result = BfsResult {
             computation_time_ms: 5,
-            visited_nodes: vec![0, 1, 3],
+            visited_nodes: vec![mapped(0), mapped(1), mapped(3)],
             visited_depths: vec![0.0, 1.0, 2.0],
         };
 
-        let paths = BfsResultBuilder::new(result, Duration::from_millis(5), 0, vec![3]).paths();
+        let paths =
+            BfsResultBuilder::new(result, Duration::from_millis(5), mapped(0), vec![mapped(3)])
+                .paths();
 
-        assert_eq!(paths[0].cost, 0.0);
-        assert_eq!(paths[1].cost, 1.0);
-        assert_eq!(paths[2].cost, 2.0);
+        assert_eq!(
+            paths.iter().map(|path| path.source).collect::<Vec<_>>(),
+            vec![0, 0, 0]
+        );
+        assert_eq!(
+            paths.iter().map(|path| path.target).collect::<Vec<_>>(),
+            vec![0, 1, 3]
+        );
+        assert_eq!(
+            paths
+                .iter()
+                .map(|path| path.path.clone())
+                .collect::<Vec<_>>(),
+            vec![vec![0], vec![1], vec![3]]
+        );
+        assert_eq!(
+            paths.iter().map(|path| path.cost).collect::<Vec<_>>(),
+            vec![0.0, 1.0, 2.0]
+        );
     }
 
     #[test]

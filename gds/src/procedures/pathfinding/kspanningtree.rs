@@ -12,19 +12,19 @@ use crate::algo::kspanningtree::{
     KSpanningTreeConfig, KSpanningTreeMutateResult, KSpanningTreeResult,
     KSpanningTreeResultBuilder, KSpanningTreeRow, KSpanningTreeStats,
 };
-use crate::task::concurrency::TerminationFlag;
-use crate::task::progress::{EmptyTaskRegistryFactory, TaskRegistryFactory, Tasks};
-use crate::task::memory::MemoryRange;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
-use crate::types::prelude::{DefaultGraphStore, GraphStore};
+use crate::task::concurrency::TerminationFlag;
+use crate::task::memory::MemoryRange;
+use crate::task::progress::{EmptyTaskRegistryFactory, TaskRegistryFactory, Tasks};
 use crate::types::graph::MappedNodeId;
+use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use std::collections::HashSet;
 use std::sync::Arc;
 use std::time::Instant;
 
-use crate::task::progress::TaskProgressTracker;
 use crate::projection::eval::algorithm::AlgorithmError;
+use crate::task::progress::TaskProgressTracker;
 
 /// K-Spanning Tree algorithm builder
 pub struct KSpanningTreeBuilder {
@@ -171,11 +171,8 @@ impl KSpanningTreeBuilder {
         ));
 
         // Create storage runtime (Gross pole - controller)
-        let storage = KSpanningTreeStorageRuntime::new(
-            source,
-            self.config.k,
-            self.config.objective.clone(),
-        );
+        let storage =
+            KSpanningTreeStorageRuntime::new(source, self.config.k, self.config.objective.clone());
 
         // Create computation runtime (Subtle pole - state management)
         let mut computation = KSpanningTreeComputationRuntime::new(node_count);
@@ -275,6 +272,7 @@ mod tests {
     use crate::procedures::GraphFacade;
 
     use crate::projection::RelationshipType;
+    use crate::types::graph::OriginalNodeId;
     use crate::types::graph::{RelationshipTopology, SimpleIdMap};
     use crate::types::graph_store::{
         Capabilities, DatabaseId, DatabaseInfo, DatabaseLocation, DefaultGraphStore, GraphName,
@@ -286,14 +284,16 @@ mod tests {
         node_count: usize,
         edges: &[(usize, usize)],
     ) -> DefaultGraphStore {
-        let mut outgoing: Vec<Vec<i64>> = vec![Vec::new(); node_count];
-        let mut incoming: Vec<Vec<i64>> = vec![Vec::new(); node_count];
+        let mut outgoing: Vec<Vec<MappedNodeId>> = vec![Vec::new(); node_count];
+        let mut incoming: Vec<Vec<MappedNodeId>> = vec![Vec::new(); node_count];
 
         for &(a, b) in edges {
-            outgoing[a].push(b as i64);
-            outgoing[b].push(a as i64);
-            incoming[a].push(b as i64);
-            incoming[b].push(a as i64);
+            let mapped_a = MappedNodeId::try_from(a).expect("fixture node ID must fit");
+            let mapped_b = MappedNodeId::try_from(b).expect("fixture node ID must fit");
+            outgoing[a].push(mapped_b);
+            outgoing[b].push(mapped_a);
+            incoming[a].push(mapped_b);
+            incoming[b].push(mapped_a);
         }
 
         let rel_type = RelationshipType::of("REL");
@@ -310,7 +310,11 @@ mod tests {
             RelationshipTopology::new(outgoing, Some(incoming)),
         );
 
-        let original_ids: Vec<i64> = (0..node_count as i64).collect();
+        let original_ids: Vec<OriginalNodeId> = (0..node_count)
+            .map(|node_id| {
+                OriginalNodeId::new(i64::try_from(node_id).expect("fixture original ID must fit"))
+            })
+            .collect();
         let id_map = SimpleIdMap::from_original_ids(original_ids);
 
         DefaultGraphStore::new(

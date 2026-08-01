@@ -20,6 +20,10 @@ mod tests {
     };
     use crate::types::schema::{Direction, MutableGraphSchema};
 
+    fn node(value: u64) -> MappedNodeId {
+        MappedNodeId::new(value)
+    }
+
     fn store_from_outgoing(outgoing: Vec<Vec<MappedNodeId>>) -> DefaultGraphStore {
         let node_count = outgoing.len();
 
@@ -74,7 +78,7 @@ mod tests {
     #[test]
     fn louvain_splits_isolated_nodes() {
         // 0--1 connected, 2 isolated => expect two communities.
-        let store = store_from_outgoing(vec![vec![1], vec![0], vec![]]);
+        let store = store_from_outgoing(vec![vec![node(1)], vec![node(0)], vec![]]);
         let graph = GraphFacade::new(Arc::new(store));
 
         let result = graph.louvain().run().unwrap();
@@ -139,7 +143,7 @@ mod tests {
     #[test]
     #[should_panic(expected = "The execution has been terminated.")]
     fn louvain_run_with_context_honors_termination() {
-        let store = store_from_outgoing(vec![vec![1], vec![0]]);
+        let store = store_from_outgoing(vec![vec![node(1)], vec![node(0)]]);
         let graph = GraphFacade::new(Arc::new(store));
         let mut progress = TaskProgressTracker::new(Tasks::leaf("louvain".to_string()));
 
@@ -178,7 +182,7 @@ mod tests {
 
     #[test]
     fn louvain_tracks_intermediate_communities_when_enabled() {
-        let store = store_from_outgoing(vec![vec![1], vec![0], vec![]]);
+        let store = store_from_outgoing(vec![vec![node(1)], vec![node(0)], vec![]]);
         let graph = GraphFacade::new(Arc::new(store));
 
         let result = graph
@@ -217,12 +221,12 @@ mod tests {
     #[test]
     fn louvain_k1_scheduler_is_equivalent_across_concurrency() {
         let outgoing = vec![
-            vec![1, 2],
-            vec![0, 2],
-            vec![0, 1, 3],
-            vec![2, 4, 5],
-            vec![3, 5],
-            vec![3, 4],
+            vec![node(1), node(2)],
+            vec![node(0), node(2)],
+            vec![node(0), node(1), node(3)],
+            vec![node(2), node(4), node(5)],
+            vec![node(3), node(5)],
+            vec![node(3), node(4)],
         ];
         let run = |concurrency| {
             let graph = GraphFacade::new(Arc::new(store_from_outgoing(outgoing.clone())));
@@ -242,7 +246,12 @@ mod tests {
 
     #[test]
     fn seeded_louvain_preserves_external_labels_across_concurrency() {
-        let outgoing = vec![vec![1], vec![0, 2], vec![1, 3], vec![2]];
+        let outgoing = vec![
+            vec![node(1)],
+            vec![node(0), node(2)],
+            vec![node(1), node(3)],
+            vec![node(2)],
+        ];
         let run = |concurrency| {
             let mut store = store_from_outgoing(outgoing.clone());
             store

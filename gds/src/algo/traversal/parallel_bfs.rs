@@ -1,6 +1,6 @@
 use super::{Aggregator, ExitPredicate, ExitPredicateResult};
-use crate::task::concurrency::{install_with_concurrency, Concurrency};
 use crate::projection::eval::algorithm::AlgorithmError;
+use crate::task::concurrency::{install_with_concurrency, Concurrency};
 use crate::types::graph::{Graph, MappedNodeId};
 use rayon::prelude::*;
 use std::sync::atomic::{AtomicBool, Ordering};
@@ -161,10 +161,14 @@ mod tests {
     use super::*;
     use crate::algo::traversal::{FollowExitPredicate, OneHopAggregator};
 
+    fn mapped(node_id: u64) -> MappedNodeId {
+        MappedNodeId::new(node_id)
+    }
+
     #[test]
-    fn rejects_negative_source() {
+    fn rejects_out_of_range_source() {
         let config = ParallelBfsConfig {
-            source_node: -1,
+            source_node: mapped(4),
             node_count: 4,
             max_depth: None,
             concurrency: 2,

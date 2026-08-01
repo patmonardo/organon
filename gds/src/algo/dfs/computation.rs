@@ -102,10 +102,14 @@ impl DfsComputationRuntime {
 mod tests {
     use super::*;
 
+    fn mapped(node_id: u64) -> MappedNodeId {
+        MappedNodeId::new(node_id)
+    }
+
     #[test]
     fn test_dfs_computation_runtime_creation() {
-        let runtime = DfsComputationRuntime::new(0, true, 4, 10);
-        assert_eq!(runtime.source_node, 0);
+        let runtime = DfsComputationRuntime::new(mapped(0), true, 4, 10);
+        assert_eq!(runtime.source_node, mapped(0));
         assert!(runtime.track_paths);
         assert_eq!(runtime.concurrency, 4);
         assert_eq!(runtime.visited_count(), 0);
@@ -113,38 +117,38 @@ mod tests {
 
     #[test]
     fn test_dfs_computation_runtime_initialization() {
-        let mut runtime = DfsComputationRuntime::new(0, true, 1, 10);
-        runtime.initialize(5, Some(10), 10);
+        let mut runtime = DfsComputationRuntime::new(mapped(0), true, 1, 10);
+        runtime.initialize(mapped(5), Some(10), 10);
 
-        assert_eq!(runtime.source_node, 5);
+        assert_eq!(runtime.source_node, mapped(5));
         assert_eq!(runtime.max_depth, Some(10));
         assert_eq!(runtime.visited_count(), 1);
-        assert!(runtime.is_visited(5));
+        assert!(runtime.is_visited(mapped(5)));
     }
 
     #[test]
     fn test_dfs_computation_runtime_visited_operations() {
-        let mut runtime = DfsComputationRuntime::new(0, false, 1, 10);
-        runtime.initialize(0, None, 10);
+        let mut runtime = DfsComputationRuntime::new(mapped(0), false, 1, 10);
+        runtime.initialize(mapped(0), None, 10);
 
-        assert!(!runtime.is_visited(1));
+        assert!(!runtime.is_visited(mapped(1)));
 
-        runtime.set_visited(1);
-        assert!(runtime.is_visited(1));
+        runtime.set_visited(mapped(1));
+        assert!(runtime.is_visited(mapped(1)));
         assert_eq!(runtime.visited_count(), 2);
     }
 
     #[test]
     fn test_dfs_computation_runtime_max_depth_check() {
-        let mut runtime = DfsComputationRuntime::new(0, false, 1, 10);
-        runtime.initialize(0, Some(3), 10);
+        let mut runtime = DfsComputationRuntime::new(mapped(0), false, 1, 10);
+        runtime.initialize(mapped(0), Some(3), 10);
 
         assert!(runtime.check_max_depth(0.0));
         assert!(runtime.check_max_depth(1.0));
         assert!(runtime.check_max_depth(2.9));
         assert!(!runtime.check_max_depth(3.0));
 
-        runtime.initialize(0, None, 10);
+        runtime.initialize(mapped(0), None, 10);
         assert!(runtime.check_max_depth(100.0)); // No limit
     }
 }

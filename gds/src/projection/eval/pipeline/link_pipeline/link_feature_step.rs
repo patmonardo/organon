@@ -52,6 +52,7 @@ impl Clone for Box<dyn LinkFeatureStep> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::types::graph::MappedNodeId;
 
     struct TestLinkFeatureStep {
         name: String,

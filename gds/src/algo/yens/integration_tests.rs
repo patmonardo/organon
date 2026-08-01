@@ -8,9 +8,10 @@ use super::spec::{YensConfig, YensResult};
 use super::YensComputationRuntime;
 use super::YensStorageRuntime;
 use crate::algo::yens::YENSAlgorithmSpec;
-use crate::task::progress::{TaskProgressTracker, Tasks};
 use crate::projection::eval::algorithm::AlgorithmSpec;
 use crate::projection::eval::algorithm::{ExecutionContext, ExecutionMode, ProcedureExecutor};
+use crate::task::progress::{TaskProgressTracker, Tasks};
+use crate::types::graph::MappedNodeId;
 use crate::types::prelude::DefaultGraphStore;
 use crate::types::random::{RandomGraphConfig, RandomRelationshipConfig};
 use serde_json::json;
@@ -19,6 +20,10 @@ use std::sync::Arc;
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    fn node(value: u64) -> MappedNodeId {
+        MappedNodeId::new(value)
+    }
 
     #[test]
     fn test_yens_algorithm_spec_contract() {
@@ -46,9 +51,9 @@ mod tests {
 
     #[test]
     fn test_yens_storage_runtime() {
-        let storage = YensStorageRuntime::new(0, 3, 5, true, 4);
-        assert_eq!(storage.source_node, 0);
-        assert_eq!(storage.target_node, 3);
+        let storage = YensStorageRuntime::new(node(0), node(3), 5, true, 4);
+        assert_eq!(storage.source_node, node(0));
+        assert_eq!(storage.target_node, node(3));
         assert_eq!(storage.k, 5);
         assert!(storage.track_relationships);
         assert_eq!(storage.concurrency, 4);
@@ -56,11 +61,11 @@ mod tests {
 
     #[test]
     fn test_yens_computation_runtime() {
-        let mut runtime = YensComputationRuntime::new(0, 3, 5, true, 1);
-        runtime.initialize(1, 4, 3, false);
+        let mut runtime = YensComputationRuntime::new(node(0), node(3), 5, true, 1);
+        runtime.initialize(node(1), node(4), 3, false);
 
-        assert_eq!(runtime.source_node, 1);
-        assert_eq!(runtime.target_node, 4);
+        assert_eq!(runtime.source_node, node(1));
+        assert_eq!(runtime.target_node, node(4));
         assert_eq!(runtime.k, 3);
         assert!(!runtime.track_relationships);
     }
@@ -87,8 +92,8 @@ mod tests {
         let store = Arc::new(DefaultGraphStore::random(&config).unwrap());
         let graph = store.graph();
 
-        let storage = YensStorageRuntime::new(0, 3, 3, false, 1);
-        let mut computation = YensComputationRuntime::new(0, 3, 3, false, 1);
+        let storage = YensStorageRuntime::new(node(0), node(3), 3, false, 1);
+        let mut computation = YensComputationRuntime::new(node(0), node(3), 3, false, 1);
 
         let mut progress_tracker = TaskProgressTracker::with_concurrency(
             Tasks::leaf_with_volume("yens".to_string(), 3),

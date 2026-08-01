@@ -6,11 +6,19 @@ use crate::types::graph::MappedNodeId;
 
 fn create_neighbors(edges: Vec<Vec<(usize, f64)>>) -> impl Fn(MappedNodeId) -> Vec<(MappedNodeId, f64)> {
     move |node: MappedNodeId| {
-        let node = node as usize;
+        let node = node
+            .to_usize()
+            .expect("fixture node must fit the dense index domain");
         if node < edges.len() {
             edges[node]
                 .iter()
-                .map(|(t, w)| (*t as MappedNodeId, *w))
+                .map(|(target, weight)| {
+                    (
+                        MappedNodeId::try_from(*target)
+                            .expect("fixture target must fit the mapped ID domain"),
+                        *weight,
+                    )
+                })
                 .collect()
         } else {
             Vec::new()

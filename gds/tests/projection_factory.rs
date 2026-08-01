@@ -7,7 +7,7 @@ use gds::collections::backends::vec::{VecFloat, VecInt};
 use gds::config::GraphStoreConfig;
 use gds::projection::{NodeLabel, RelationshipType};
 use gds::types::graph::id_map::{IdMap, SimpleIdMap};
-use gds::types::graph::RelationshipTopology;
+use gds::types::graph::{MappedNodeId, OriginalNodeId, RelationshipIndex, RelationshipTopology};
 use gds::types::graph_store::{
     Capabilities, DatabaseId, DatabaseInfo, DatabaseLocation, DefaultGraphStore, GraphName,
 };
@@ -17,6 +17,18 @@ use gds::types::properties::relationship::impls::default_relationship_property_v
 use gds::types::properties::relationship::impls::default_relationship_property_values::DefaultRelationshipPropertyValues;
 use gds::types::schema::{Direction, MutableGraphSchema};
 use gds::types::ValueType;
+
+fn original(value: i64) -> OriginalNodeId {
+    OriginalNodeId::new(value)
+}
+
+fn node(value: u64) -> MappedNodeId {
+    MappedNodeId::new(value)
+}
+
+fn relationship(value: u64) -> RelationshipIndex {
+    RelationshipIndex::new(value)
+}
 
 #[test]
 fn projection_factory_induces_subgraph_and_preserves_labels() {
@@ -33,7 +45,7 @@ fn projection_factory_induces_subgraph_and_preserves_labels() {
 
     let store = build_store(&labels, rel_type.clone(), outgoing, incoming);
 
-    let selection = vec![0, 2, 3];
+    let selection = vec![original(0), original(2), original(3)];
     let result = store
         .commit_induced_subgraph_by_original_node_ids(GraphName::new("projected"), &selection)
         .expect("projection succeeds");
@@ -44,9 +56,9 @@ fn projection_factory_induces_subgraph_and_preserves_labels() {
 
     assert_eq!(projected.node_count(), 3);
     assert_eq!(projected.relationship_count(), 3);
-    assert_eq!(mapping.get(&0), Some(&0));
-    assert_eq!(mapping.get(&2), Some(&1));
-    assert_eq!(mapping.get(&3), Some(&2));
+    assert_eq!(mapping.get(&node(0)), Some(&node(0)));
+    assert_eq!(mapping.get(&node(2)), Some(&node(1)));
+    assert_eq!(mapping.get(&node(3)), Some(&node(2)));
     assert_eq!(kept.get(&rel_type), Some(&3));
 
     // Labels should survive the projection.
@@ -72,7 +84,7 @@ fn projection_factory_projects_node_properties() {
         .add_node_property_f64("score".to_string(), vec![0.5, 1.5, 2.5, 3.5])
         .expect("property added");
 
-    let selection = vec![0, 2, 3];
+    let selection = vec![original(0), original(2), original(3)];
     let result = store
         .commit_induced_subgraph_by_original_node_ids(GraphName::new("projected"), &selection)
         .expect("projection succeeds");
@@ -108,7 +120,7 @@ fn projection_factory_projects_float_node_properties() {
         .add_node_property(store.node_labels(), "float_score", Arc::new(pv))
         .expect("add float property");
 
-    let selection = vec![0, 2, 3];
+    let selection = vec![original(0), original(2), original(3)];
     let result = store
         .commit_induced_subgraph_by_original_node_ids(GraphName::new("projected"), &selection)
         .expect("projection succeeds");
@@ -140,7 +152,7 @@ fn projection_factory_projects_relationship_properties() {
         .add_relationship_property(rel_type.clone(), "weight", Arc::new(rel_values))
         .expect("add relationship property");
 
-    let selection = vec![0, 2, 3];
+    let selection = vec![original(0), original(2), original(3)];
     let result = store
         .commit_induced_subgraph_by_original_node_ids(GraphName::new("projected"), &selection)
         .expect("projection succeeds");
@@ -153,9 +165,18 @@ fn projection_factory_projects_relationship_properties() {
         .expect("weight projected");
 
     // Kept edges (flattened): 0->2 (20.0), 2->3 (50.0), 3->0 (60.0)
-    assert_eq!(projected_values.double_value(0).unwrap(), 20.0);
-    assert_eq!(projected_values.double_value(1).unwrap(), 50.0);
-    assert_eq!(projected_values.double_value(2).unwrap(), 60.0);
+    assert_eq!(
+        projected_values.double_value(relationship(0)).unwrap(),
+        20.0
+    );
+    assert_eq!(
+        projected_values.double_value(relationship(1)).unwrap(),
+        50.0
+    );
+    assert_eq!(
+        projected_values.double_value(relationship(2)).unwrap(),
+        60.0
+    );
 }
 
 #[test]
@@ -174,7 +195,7 @@ fn projection_factory_projects_int_relationship_properties() {
         .add_relationship_property(rel_type.clone(), "rank", Arc::new(pv))
         .expect("add relationship property");
 
-    let selection = vec![0, 2, 3];
+    let selection = vec![original(0), original(2), original(3)];
     let result = store
         .commit_induced_subgraph_by_original_node_ids(GraphName::new("projected"), &selection)
         .expect("projection succeeds");
@@ -185,9 +206,9 @@ fn projection_factory_projects_int_relationship_properties() {
         .relationship_property_values(&rel_type, "rank")
         .expect("rank projected");
 
-    assert_eq!(projected_values.long_value(0).unwrap(), 2);
-    assert_eq!(projected_values.long_value(1).unwrap(), 5);
-    assert_eq!(projected_values.long_value(2).unwrap(), 6);
+    assert_eq!(projected_values.long_value(relationship(0)).unwrap(), 2);
+    assert_eq!(projected_values.long_value(relationship(1)).unwrap(), 5);
+    assert_eq!(projected_values.long_value(relationship(2)).unwrap(), 6);
 }
 
 #[test]
@@ -215,7 +236,7 @@ fn projection_factory_handles_multiple_relationship_types() {
         ],
     );
 
-    let selection = vec![0, 1, 2];
+    let selection = vec![original(0), original(1), original(2)];
     let result = store
         .commit_induced_subgraph_by_original_node_ids(GraphName::new("projected"), &selection)
         .expect("projection succeeds");
@@ -253,16 +274,13 @@ fn build_store(
 
     let mut id_map = SimpleIdMap::from_original_ids((0..node_count as i64).collect::<Vec<i64>>());
     for (mapped, label) in (0..node_count).zip(labels.iter().cycle()) {
-        let mapped = mapped as i64;
+        let mapped = MappedNodeId::try_from(mapped).expect("fixture node must fit mapped ID space");
         IdMap::add_node_label(&mut id_map, label.clone());
         IdMap::add_node_id_to_label(&mut id_map, mapped, label.clone());
     }
 
     let mut relationship_topologies = HashMap::new();
-    relationship_topologies.insert(
-        rel_type,
-        RelationshipTopology::new(outgoing, Some(incoming)),
-    );
+    relationship_topologies.insert(rel_type, typed_topology(outgoing, incoming));
 
     let mut capabilities = Capabilities::new();
     capabilities.add_feature("projection");
@@ -303,17 +321,14 @@ fn build_store_multi(
 
     let mut id_map = SimpleIdMap::from_original_ids((0..node_count as i64).collect::<Vec<i64>>());
     for (mapped, label) in (0..node_count).zip(labels.iter().cycle()) {
-        let mapped = mapped as i64;
+        let mapped = MappedNodeId::try_from(mapped).expect("fixture node must fit mapped ID space");
         IdMap::add_node_label(&mut id_map, label.clone());
         IdMap::add_node_id_to_label(&mut id_map, mapped, label.clone());
     }
 
     let mut relationship_topologies = HashMap::new();
     for (rel_type, outgoing, incoming) in relationships {
-        relationship_topologies.insert(
-            rel_type,
-            RelationshipTopology::new(outgoing, Some(incoming)),
-        );
+        relationship_topologies.insert(rel_type, typed_topology(outgoing, incoming));
     }
 
     let mut capabilities = Capabilities::new();
@@ -331,4 +346,17 @@ fn build_store_multi(
         id_map,
         relationship_topologies,
     )
+}
+
+fn typed_topology(outgoing: Vec<Vec<i64>>, incoming: Vec<Vec<i64>>) -> RelationshipTopology {
+    let map_rows = |rows: Vec<Vec<i64>>| {
+        rows.into_iter()
+            .map(|row| {
+                row.into_iter()
+                    .map(|id| MappedNodeId::try_from(id).expect("fixture ID must be non-negative"))
+                    .collect()
+            })
+            .collect()
+    };
+    RelationshipTopology::new(map_rows(outgoing), Some(map_rows(incoming)))
 }

@@ -1,6 +1,7 @@
 #[cfg(test)]
 mod tests {
     use crate::config::GraphStoreConfig;
+    use crate::types::graph::id_map::MappedNodeId;
     use crate::types::graph::id_map::SimpleIdMap;
     use crate::types::graph::RelationshipTopology;
     use crate::types::graph_store::{
@@ -34,7 +35,7 @@ mod tests {
 
         // For every observed (u->v), expect (v->u).
         for u in 0..n {
-            let u = u as i64;
+            let u = MappedNodeId::try_from(u).expect("node count fits mapped ID space");
             for cursor in g.stream_relationships(u, 0.0) {
                 assert!(g.exists(cursor.target_id(), cursor.source_id()));
             }
@@ -54,7 +55,7 @@ mod tests {
 
         let g0 = store.graph();
         // Before: might be None if there are no inverse indices.
-        let _ = g0.degree_inverse(0);
+        let _ = g0.degree_inverse(MappedNodeId::ZERO);
 
         let indexed = store
             .with_inverse_indices("g_indexed".into())
@@ -63,7 +64,7 @@ mod tests {
 
         // After: should be Some(...) for at least one node when graph has relationships.
         if GraphStore::relationship_count(&indexed) > 0 {
-            assert!(g1.degree_inverse(0).is_some());
+            assert!(g1.degree_inverse(MappedNodeId::ZERO).is_some());
         }
     }
 
@@ -88,7 +89,12 @@ mod tests {
 
         let id_map = SimpleIdMap::from_original_ids([0, 1, 2, 3]);
 
-        let outgoing = vec![vec![1], vec![2], vec![3], vec![]];
+        let outgoing = vec![
+            vec![MappedNodeId::new(1)],
+            vec![MappedNodeId::new(2)],
+            vec![MappedNodeId::new(3)],
+            vec![],
+        ];
         let topo = RelationshipTopology::new(outgoing, None);
         let mut topologies = std::collections::HashMap::new();
         topologies.insert(rel_type.clone(), topo);
@@ -109,10 +115,10 @@ mod tests {
 
         let g = collapsed.graph();
         // Expect 0->3 exists (collapsed edge).
-        assert!(g.exists(0, 3));
+        assert!(g.exists(MappedNodeId::ZERO, MappedNodeId::new(3)));
         // And original chain edges removed.
-        assert!(!g.exists(0, 1));
-        assert!(!g.exists(1, 2));
-        assert!(!g.exists(2, 3));
+        assert!(!g.exists(MappedNodeId::ZERO, MappedNodeId::new(1)));
+        assert!(!g.exists(MappedNodeId::new(1), MappedNodeId::new(2)));
+        assert!(!g.exists(MappedNodeId::new(2), MappedNodeId::new(3)));
     }
 }

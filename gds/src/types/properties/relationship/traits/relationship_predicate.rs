@@ -36,18 +36,18 @@ mod tests {
     #[test]
     fn all_predicate_accepts_everything() {
         let pred = all_relationships();
-        assert!(pred.exists(1, 2));
+        assert!(pred.exists(MappedNodeId::new(1), MappedNodeId::new(2)));
     }
 
     #[test]
     fn none_predicate_rejects_everything() {
         let pred = no_relationships();
-        assert!(!pred.exists(1, 2));
+        assert!(!pred.exists(MappedNodeId::new(1), MappedNodeId::new(2)));
     }
 
     #[test]
     fn not_predicate_inverts() {
         let pred = not_relationships(no_relationships());
-        assert!(pred.exists(1, 2));
+        assert!(pred.exists(MappedNodeId::new(1), MappedNodeId::new(2)));
     }
 }

@@ -132,15 +132,27 @@ mod tests {
     fn constant_relationship_properties_returns_same_value() {
         let props = ConstantRelationshipProperties::new(42.0);
         assert_eq!(props.default_property_value(), 42.0);
-        assert_eq!(props.relationship_property_or_default(1, 2), 42.0);
-        assert_eq!(props.relationship_property(1, 2, 99.0), 42.0);
+        assert_eq!(
+            props.relationship_property_or_default(MappedNodeId::new(1), MappedNodeId::new(2)),
+            42.0
+        );
+        assert_eq!(
+            props.relationship_property(MappedNodeId::new(1), MappedNodeId::new(2), 99.0),
+            42.0
+        );
     }
 
     #[test]
     fn empty_relationship_properties_respects_fallback() {
         let props = EmptyRelationshipProperties::new(0.5);
         assert_eq!(props.default_property_value(), 0.5);
-        assert_eq!(props.relationship_property(1, 2, 1.5), 1.5);
-        assert_eq!(props.relationship_property_or_default(3, 4), 0.5);
+        assert_eq!(
+            props.relationship_property(MappedNodeId::new(1), MappedNodeId::new(2), 1.5),
+            1.5
+        );
+        assert_eq!(
+            props.relationship_property_or_default(MappedNodeId::new(3), MappedNodeId::new(4)),
+            0.5
+        );
     }
 }

@@ -279,6 +279,8 @@ mod tests {
             cursor.advance(MappedNodeId::new(2)).map(|neighbor| neighbor.target),
             Some(MappedNodeId::new(3))
         );
+        assert_eq!(cursor.peek_neighbor(), None);
+        assert_eq!(cursor.next_neighbor(), None);
 
         cursor
             .reset(MappedNodeId::new(3), TraversalDirection::Incoming)
@@ -287,5 +289,13 @@ mod tests {
             cursor.skip_until(MappedNodeId::ZERO).map(|neighbor| neighbor.source),
             Some(MappedNodeId::new(1))
         );
+        assert_eq!(cursor.peek_neighbor(), None);
+        assert_eq!(cursor.next_neighbor(), None);
+
+        cursor
+            .reset(MappedNodeId::ZERO, TraversalDirection::Outgoing)
+            .unwrap();
+        assert_eq!(cursor.advance(MappedNodeId::new(4)), None);
+        assert_eq!(cursor.next_neighbor(), None);
     }
 }

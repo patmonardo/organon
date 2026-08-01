@@ -82,15 +82,24 @@ impl PathFindingResult {
 mod tests {
     use super::*;
     use crate::types::graph::MappedNodeId;
+    use crate::types::graph::RelationshipIndex;
+
+    fn node(value: u64) -> MappedNodeId {
+        MappedNodeId::new(value)
+    }
+
+    fn relationship(value: u64) -> RelationshipIndex {
+        RelationshipIndex::new(value)
+    }
 
     #[test]
     fn test_path_finding_result_creation() {
         let paths = vec![DijkstraPathResult {
             index: 0,
-            source_node: 0,
-            target_node: 5,
-            node_ids: vec![0, 1, 3, 5],
-            relationship_ids: vec![0, 1, 2],
+            source_node: node(0),
+            target_node: node(5),
+            node_ids: vec![node(0), node(1), node(3), node(5)],
+            relationship_ids: vec![relationship(0), relationship(1), relationship(2)],
             costs: vec![0.0, 3.5, 7.0, 10.5],
         }];
 
@@ -111,18 +120,18 @@ mod tests {
         let paths = vec![
             DijkstraPathResult {
                 index: 0,
-                source_node: 0,
-                target_node: 5,
-                node_ids: vec![0, 1, 3, 5],
-                relationship_ids: vec![0, 1, 2],
+                source_node: node(0),
+                target_node: node(5),
+                node_ids: vec![node(0), node(1), node(3), node(5)],
+                relationship_ids: vec![relationship(0), relationship(1), relationship(2)],
                 costs: vec![0.0, 3.5, 7.0, 10.5],
             },
             DijkstraPathResult {
                 index: 1,
-                source_node: 0,
-                target_node: 7,
-                node_ids: vec![0, 2, 4, 7],
-                relationship_ids: vec![3, 4, 5],
+                source_node: node(0),
+                target_node: node(7),
+                node_ids: vec![node(0), node(2), node(4), node(7)],
+                relationship_ids: vec![relationship(3), relationship(4), relationship(5)],
                 costs: vec![0.0, 2.0, 6.0, 8.0],
             },
         ];
@@ -133,17 +142,17 @@ mod tests {
         assert!(first.is_some());
         let first_path = first.unwrap();
         assert_eq!(first_path.index, 0);
-        assert_eq!(first_path.target_node, 5);
+        assert_eq!(first_path.target_node, node(5));
     }
 
     #[test]
     fn test_for_each_path() {
         let paths = vec![DijkstraPathResult {
             index: 0,
-            source_node: 0,
-            target_node: 5,
-            node_ids: vec![0, 1, 3, 5],
-            relationship_ids: vec![0, 1, 2],
+            source_node: node(0),
+            target_node: node(5),
+            node_ids: vec![node(0), node(1), node(3), node(5)],
+            relationship_ids: vec![relationship(0), relationship(1), relationship(2)],
             costs: vec![0.0, 3.5, 7.0, 10.5],
         }];
 
@@ -161,27 +170,27 @@ mod tests {
     fn test_map_paths() {
         let paths = vec![DijkstraPathResult {
             index: 0,
-            source_node: 0,
-            target_node: 5,
-            node_ids: vec![0, 1, 3, 5],
-            relationship_ids: vec![0, 1, 2],
+            source_node: node(0),
+            target_node: node(5),
+            node_ids: vec![node(0), node(1), node(3), node(5)],
+            relationship_ids: vec![relationship(0), relationship(1), relationship(2)],
             costs: vec![0.0, 3.5, 7.0, 10.5],
         }];
 
         let mut result = PathFindingResult::new(paths);
         let target_nodes: Vec<MappedNodeId> = result.map_paths(|path| path.target_node);
 
-        assert_eq!(target_nodes, vec![5]);
+        assert_eq!(target_nodes, vec![node(5)]);
     }
 
     #[test]
     fn test_path_set() {
         let paths = vec![DijkstraPathResult {
             index: 0,
-            source_node: 0,
-            target_node: 5,
-            node_ids: vec![0, 1, 3, 5],
-            relationship_ids: vec![0, 1, 2],
+            source_node: node(0),
+            target_node: node(5),
+            node_ids: vec![node(0), node(1), node(3), node(5)],
+            relationship_ids: vec![relationship(0), relationship(1), relationship(2)],
             costs: vec![0.0, 3.5, 7.0, 10.5],
         }];
 

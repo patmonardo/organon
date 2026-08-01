@@ -85,19 +85,38 @@ impl ExitPredicate for TargetExitPredicate {
 mod tests {
     use super::*;
 
+    fn mapped(node_id: u64) -> MappedNodeId {
+        MappedNodeId::new(node_id)
+    }
+
     #[test]
     fn test_follow_exit_predicate() {
         let predicate = FollowExitPredicate;
-        assert_eq!(predicate.test(0, 1, 1.0), ExitPredicateResult::Follow);
-        assert_eq!(predicate.test(1, 2, 2.0), ExitPredicateResult::Follow);
+        assert_eq!(
+            predicate.test(mapped(0), mapped(1), 1.0),
+            ExitPredicateResult::Follow
+        );
+        assert_eq!(
+            predicate.test(mapped(1), mapped(2), 2.0),
+            ExitPredicateResult::Follow
+        );
     }
 
     #[test]
     fn test_target_exit_predicate() {
-        let predicate = TargetExitPredicate::new(vec![3, 5]);
+        let predicate = TargetExitPredicate::new(vec![mapped(3), mapped(5)]);
 
-        assert_eq!(predicate.test(0, 1, 1.0), ExitPredicateResult::Follow);
-        assert_eq!(predicate.test(0, 3, 2.0), ExitPredicateResult::Break);
-        assert_eq!(predicate.test(0, 5, 3.0), ExitPredicateResult::Break);
+        assert_eq!(
+            predicate.test(mapped(0), mapped(1), 1.0),
+            ExitPredicateResult::Follow
+        );
+        assert_eq!(
+            predicate.test(mapped(0), mapped(3), 2.0),
+            ExitPredicateResult::Break
+        );
+        assert_eq!(
+            predicate.test(mapped(0), mapped(5), 3.0),
+            ExitPredicateResult::Break
+        );
     }
 }

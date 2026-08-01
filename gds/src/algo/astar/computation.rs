@@ -212,9 +212,13 @@ impl Default for AStarComputationRuntime {
 mod tests {
     use super::*;
 
+    fn node(value: u64) -> MappedNodeId {
+        MappedNodeId::new(value)
+    }
+
     #[test]
     fn test_astar_computation_result() {
-        let path = Some(vec![0, 1, 2]);
+        let path = Some(vec![node(0), node(1), node(2)]);
         let result = AStarComputationResult::new(path.clone(), 10.5, 5);
 
         assert!(result.has_path());
@@ -230,87 +234,87 @@ mod tests {
     #[test]
     fn test_astar_computation_runtime_initialization() {
         let mut runtime = AStarComputationRuntime::new();
-        runtime.initialize(0, 5);
+        runtime.initialize(node(0), node(5));
 
         assert_eq!(runtime.open_set.len(), 1);
-        assert_eq!(runtime.open_set[0], 0);
-        assert_eq!(runtime.get_g_cost(0), 0.0);
-        assert_eq!(runtime.get_f_cost(0), 0.0);
-        assert!(!runtime.is_visited(0));
+        assert_eq!(runtime.open_set[0], node(0));
+        assert_eq!(runtime.get_g_cost(node(0)), 0.0);
+        assert_eq!(runtime.get_f_cost(node(0)), 0.0);
+        assert!(!runtime.is_visited(node(0)));
     }
 
     #[test]
     fn test_astar_computation_runtime_operations() {
         let mut runtime = AStarComputationRuntime::new();
-        runtime.initialize(0, 5);
+        runtime.initialize(node(0), node(5));
 
         // Test adding to open set
-        runtime.add_to_open_set(1);
-        runtime.add_to_open_set(2);
+        runtime.add_to_open_set(node(1));
+        runtime.add_to_open_set(node(2));
         assert_eq!(runtime.open_set.len(), 3);
 
         // Test updating costs
-        runtime.update_g_cost(1, 5.0);
-        runtime.update_f_cost(1, 7.0);
-        assert_eq!(runtime.get_g_cost(1), 5.0);
-        assert_eq!(runtime.get_f_cost(1), 7.0);
+        runtime.update_g_cost(node(1), 5.0);
+        runtime.update_f_cost(node(1), 7.0);
+        assert_eq!(runtime.get_g_cost(node(1)), 5.0);
+        assert_eq!(runtime.get_f_cost(node(1)), 7.0);
 
         // Test marking as visited
-        runtime.mark_visited(1);
-        assert!(runtime.is_visited(1));
-        assert!(!runtime.is_visited(2));
+        runtime.mark_visited(node(1));
+        assert!(runtime.is_visited(node(1)));
+        assert!(!runtime.is_visited(node(2)));
 
         // Test parent setting
-        runtime.set_parent(1, 0);
-        assert_eq!(runtime.get_parent(1), Some(0));
-        assert_eq!(runtime.get_parent(2), None);
+        runtime.set_parent(node(1), node(0));
+        assert_eq!(runtime.get_parent(node(1)), Some(node(0)));
+        assert_eq!(runtime.get_parent(node(2)), None);
     }
 
     #[test]
     fn test_astar_computation_runtime_lowest_f_cost() {
         let mut runtime = AStarComputationRuntime::new();
-        runtime.initialize(0, 5);
+        runtime.initialize(node(0), node(5));
 
-        runtime.add_to_open_set(1);
-        runtime.add_to_open_set(2);
-        runtime.add_to_open_set(3);
+        runtime.add_to_open_set(node(1));
+        runtime.add_to_open_set(node(2));
+        runtime.add_to_open_set(node(3));
 
-        runtime.update_f_cost(0, 20.0); // Set high f_cost for source node
-        runtime.update_f_cost(1, 10.0);
-        runtime.update_f_cost(2, 5.0);
-        runtime.update_f_cost(3, 15.0);
+        runtime.update_f_cost(node(0), 20.0); // Set high f_cost for source node
+        runtime.update_f_cost(node(1), 10.0);
+        runtime.update_f_cost(node(2), 5.0);
+        runtime.update_f_cost(node(3), 15.0);
 
-        assert_eq!(runtime.get_lowest_f_cost_node(), Some(2));
+        assert_eq!(runtime.get_lowest_f_cost_node(), Some(node(2)));
 
-        runtime.remove_from_open_set(2);
-        assert_eq!(runtime.get_lowest_f_cost_node(), Some(1));
+        runtime.remove_from_open_set(node(2));
+        assert_eq!(runtime.get_lowest_f_cost_node(), Some(node(1)));
     }
 
     #[test]
     fn test_astar_computation_runtime_path_reconstruction() {
         let mut runtime = AStarComputationRuntime::new();
-        runtime.initialize(0, 5);
+        runtime.initialize(node(0), node(5));
 
         // Build a simple path: 0 -> 1 -> 2 -> 5
-        runtime.set_parent(1, 0);
-        runtime.set_parent(2, 1);
-        runtime.set_parent(5, 2);
+        runtime.set_parent(node(1), node(0));
+        runtime.set_parent(node(2), node(1));
+        runtime.set_parent(node(5), node(2));
 
-        runtime.mark_visited(5);
+        runtime.mark_visited(node(5));
 
-        let path = runtime.reconstruct_path(0, 5);
-        assert_eq!(path, Some(vec![0, 1, 2, 5]));
+        let path = runtime.reconstruct_path(node(0), node(5));
+        assert_eq!(path, Some(vec![node(0), node(1), node(2), node(5)]));
 
         // Test path reconstruction when target not visited
         runtime.visited.clear();
-        let no_path = runtime.reconstruct_path(0, 5);
+        let no_path = runtime.reconstruct_path(node(0), node(5));
         assert_eq!(no_path, None);
     }
 
     #[test]
     fn test_astar_computation_runtime_empty_open_set() {
         let mut runtime = AStarComputationRuntime::new();
-        runtime.initialize(0, 5);
+        runtime.initialize(node(0), node(5));
 
         assert!(!runtime.is_open_set_empty());
 
@@ -321,13 +325,13 @@ mod tests {
     #[test]
     fn test_astar_computation_runtime_nodes_explored() {
         let mut runtime = AStarComputationRuntime::new();
-        runtime.initialize(0, 5);
+        runtime.initialize(node(0), node(5));
 
         assert_eq!(runtime.nodes_explored(), 0);
 
-        runtime.mark_visited(0);
-        runtime.mark_visited(1);
-        runtime.mark_visited(2);
+        runtime.mark_visited(node(0));
+        runtime.mark_visited(node(1));
+        runtime.mark_visited(node(2));
 
         assert_eq!(runtime.nodes_explored(), 3);
     }
@@ -335,12 +339,12 @@ mod tests {
     #[test]
     fn test_astar_computation_runtime_total_cost() {
         let mut runtime = AStarComputationRuntime::new();
-        runtime.initialize(0, 5);
+        runtime.initialize(node(0), node(5));
 
-        runtime.update_g_cost(5, 12.5);
-        assert_eq!(runtime.get_total_cost(5), 12.5);
+        runtime.update_g_cost(node(5), 12.5);
+        assert_eq!(runtime.get_total_cost(node(5)), 12.5);
 
         // Test with unvisited node
-        assert_eq!(runtime.get_total_cost(10), f64::INFINITY);
+        assert_eq!(runtime.get_total_cost(node(10)), f64::INFINITY);
     }
 }

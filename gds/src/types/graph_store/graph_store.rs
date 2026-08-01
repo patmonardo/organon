@@ -793,6 +793,7 @@ mod tests {
 
     use crate::config::GraphStoreConfig;
     use crate::types::graph::id_map::SimpleIdMap;
+    use crate::types::graph::MappedNodeId;
     use crate::types::graph::RelationshipTopology;
     use crate::types::graph_store::{DatabaseId, DatabaseLocation, GraphName};
     use crate::types::properties::relationship::DefaultRelationshipPropertyValues;
@@ -814,7 +815,14 @@ mod tests {
         let capabilities = Capabilities::default();
         let id_map = SimpleIdMap::from_original_ids([0, 1, 2]);
 
-        let topology = RelationshipTopology::new(vec![vec![1, 2], vec![2], vec![]], None);
+        let topology = RelationshipTopology::new(
+            vec![
+                vec![MappedNodeId::new(1), MappedNodeId::new(2)],
+                vec![MappedNodeId::new(2)],
+                vec![],
+            ],
+            None,
+        );
 
         let mut relationship_topologies = HashMap::new();
         relationship_topologies.insert(RelationshipType::of("KNOWS"), topology);

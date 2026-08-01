@@ -7,9 +7,10 @@ mod tests {
 
     use crate::algo::hits::HitsComputationRuntime;
     use crate::algo::hits::HitsStorageRuntime;
-    use crate::task::concurrency::Concurrency;
     use crate::config::GraphStoreConfig;
+    use crate::task::concurrency::Concurrency;
     use crate::task::progress::tasks::NoopProgressTracker;
+    use crate::types::graph::MappedNodeId;
     use crate::types::graph::RelationshipTopology;
     use crate::types::graph::SimpleIdMap;
     use crate::types::graph_store::{
@@ -50,8 +51,27 @@ mod tests {
         let schema: GraphSchema = schema.build();
 
         let id_map = SimpleIdMap::from_original_ids([0, 1, 2, 3]);
-        let outgoing = vec![vec![1, 2, 3], vec![3], vec![3], vec![]];
-        let topo = RelationshipTopology::new(outgoing, None);
+        let outgoing = vec![
+            vec![
+                MappedNodeId::new(1),
+                MappedNodeId::new(2),
+                MappedNodeId::new(3),
+            ],
+            vec![MappedNodeId::new(3)],
+            vec![MappedNodeId::new(3)],
+            vec![],
+        ];
+        let incoming = vec![
+            vec![],
+            vec![MappedNodeId::new(0)],
+            vec![MappedNodeId::new(0)],
+            vec![
+                MappedNodeId::new(0),
+                MappedNodeId::new(1),
+                MappedNodeId::new(2),
+            ],
+        ];
+        let topo = RelationshipTopology::new(outgoing, Some(incoming));
         let mut topologies = std::collections::HashMap::new();
         topologies.insert(rel_type, topo);
 

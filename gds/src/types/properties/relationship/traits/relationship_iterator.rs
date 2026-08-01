@@ -58,6 +58,10 @@ mod tests {
     use super::*;
     use crate::types::graph::id_map::RelationshipIndex;
 
+    fn node(value: u64) -> MappedNodeId {
+        MappedNodeId::new(value)
+    }
+
     #[derive(Clone)]
     struct TestIterator {
         edges: Vec<(MappedNodeId, MappedNodeId, f64)>,
@@ -222,47 +226,60 @@ mod tests {
     #[test]
     fn streams_yield_relationships() {
         let iter = TestIterator {
-            edges: vec![(1, 2, 1.0), (1, 3, 2.0)],
+            edges: vec![(node(1), node(2), 1.0), (node(1), node(3), 2.0)],
         };
         let collected: Vec<(MappedNodeId, MappedNodeId, f64)> = iter
-            .stream_relationships(1, 0.0)
+            .stream_relationships(node(1), 0.0)
             .map(|cursor| (cursor.source_id(), cursor.target_id(), cursor.property()))
             .collect();
-        assert_eq!(collected, vec![(1, 2, 1.0), (1, 3, 2.0)]);
+        assert_eq!(
+            collected,
+            vec![(node(1), node(2), 1.0), (node(1), node(3), 2.0)]
+        );
     }
 
     #[test]
     fn inverse_streams_filter_by_target() {
         let iter = TestIterator {
-            edges: vec![(0, 1, 2.0), (2, 1, 4.0), (2, 3, 6.0)],
+            edges: vec![
+                (node(0), node(1), 2.0),
+                (node(2), node(1), 4.0),
+                (node(2), node(3), 6.0),
+            ],
         };
         let collected: Vec<(MappedNodeId, MappedNodeId, f64)> = iter
-            .stream_inverse_relationships(1, 0.0)
+            .stream_inverse_relationships(node(1), 0.0)
             .map(|cursor| (cursor.source_id(), cursor.target_id(), cursor.property()))
             .collect();
-        assert_eq!(collected, vec![(0, 1, 2.0), (2, 1, 4.0)]);
+        assert_eq!(
+            collected,
+            vec![(node(0), node(1), 2.0), (node(2), node(1), 4.0)]
+        );
     }
 
     #[test]
     fn streams_respect_existence_checks() {
         let iter = TestIterator {
-            edges: vec![(5, 6, 1.0)],
+            edges: vec![(node(5), node(6), 1.0)],
         };
-        assert!(iter.exists(5, 6));
-        assert!(iter.stream_relationships(4, 0.0).next().is_none());
+        assert!(iter.exists(node(5), node(6)));
+        assert!(iter
+            .stream_relationships(node(4), 0.0)
+            .next()
+            .is_none());
     }
 
     #[test]
     fn concurrent_copy_clones_state() {
         let iter = TestIterator {
-            edges: vec![(1, 2, 3.0)],
+            edges: vec![(node(1), node(2), 3.0)],
         };
         let clone = iter.concurrent_copy();
         let collected: Vec<(MappedNodeId, MappedNodeId, f64)> = clone
-            .stream_relationships(1, 0.0)
+            .stream_relationships(node(1), 0.0)
             .map(|cursor| (cursor.source_id(), cursor.target_id(), cursor.property()))
             .collect();
-        assert_eq!(collected, vec![(1, 2, 3.0)]);
+        assert_eq!(collected, vec![(node(1), node(2), 3.0)]);
     }
 
     // === Phase 2C: Weighted Stream Tests ===
@@ -270,33 +287,46 @@ mod tests {
     #[test]
     fn weighted_streams_yield_f64_weights() {
         let iter = TestIterator {
-            edges: vec![(1, 2, 1.0), (1, 3, 2.0)],
+            edges: vec![(node(1), node(2), 1.0), (node(1), node(3), 2.0)],
         };
         let collected: Vec<(MappedNodeId, MappedNodeId, f64)> = iter
-            .stream_relationships_weighted(1, 0.0)
+            .stream_relationships_weighted(node(1), 0.0)
             .map(|cursor| (cursor.source_id(), cursor.target_id(), cursor.weight()))
             .collect();
-        assert_eq!(collected, vec![(1, 2, 1.0), (1, 3, 2.0)]);
+        assert_eq!(
+            collected,
+            vec![(node(1), node(2), 1.0), (node(1), node(3), 2.0)]
+        );
     }
 
     #[test]
     fn weighted_inverse_streams_filter_by_target() {
         let iter = TestIterator {
-            edges: vec![(0, 1, 2.0), (2, 1, 4.0), (2, 3, 6.0)],
+            edges: vec![
+                (node(0), node(1), 2.0),
+                (node(2), node(1), 4.0),
+                (node(2), node(3), 6.0),
+            ],
         };
         let collected: Vec<(MappedNodeId, MappedNodeId, f64)> = iter
-            .stream_inverse_relationships_weighted(1, 0.0)
+            .stream_inverse_relationships_weighted(node(1), 0.0)
             .map(|cursor| (cursor.source_id(), cursor.target_id(), cursor.weight()))
             .collect();
-        assert_eq!(collected, vec![(0, 1, 2.0), (2, 1, 4.0)]);
+        assert_eq!(
+            collected,
+            vec![(node(0), node(1), 2.0), (node(2), node(1), 4.0)]
+        );
     }
 
     #[test]
     fn weighted_streams_provide_direct_f64_access() {
         let iter = TestIterator {
-            edges: vec![(1, 2, 42.0)],
+            edges: vec![(node(1), node(2), 42.0)],
         };
-        let cursor = iter.stream_relationships_weighted(1, 0.0).next().unwrap();
+        let cursor = iter
+            .stream_relationships_weighted(node(1), 0.0)
+            .next()
+            .unwrap();
 
         // Direct f64 access - no conversion overhead
         let weight = cursor.weight();

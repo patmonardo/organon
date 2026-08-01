@@ -110,6 +110,14 @@ impl RelationshipFilterer {
 mod tests {
     use super::*;
 
+    fn node(value: u64) -> MappedNodeId {
+        MappedNodeId::new(value)
+    }
+
+    fn relationship(value: u64) -> RelationshipIndex {
+        RelationshipIndex::new(value)
+    }
+
     #[test]
     fn test_relationship_filterer_creation() {
         let filterer = RelationshipFilterer::new(10, true);
@@ -122,10 +130,10 @@ mod tests {
 
         let path = MutablePathResult::new(
             0,
-            0,
-            3,
-            vec![0, 1, 2, 3],
-            vec![10, 11, 12],
+            node(0),
+            node(3),
+            vec![node(0), node(1), node(2), node(3)],
+            vec![relationship(10), relationship(11), relationship(12)],
             vec![0.0, 1.0, 2.0, 3.0],
         );
 
@@ -139,8 +147,8 @@ mod tests {
     fn test_relationship_filterer_set_filter() {
         let mut filterer = RelationshipFilterer::new(5, false);
 
-        filterer.set_filter(5);
-        assert_eq!(filterer.filtering_spur_node, 5);
+        filterer.set_filter(node(5));
+        assert_eq!(filterer.filtering_spur_node, Some(node(5)));
         assert_eq!(filterer.blocked_count(), 0);
     }
 
@@ -149,73 +157,78 @@ mod tests {
         let mut filterer = RelationshipFilterer::new(5, false);
 
         // Set up filter for node 1
-        filterer.set_filter(1);
+        filterer.set_filter(node(1));
 
         // Add some blocked neighbors
         let path = MutablePathResult::new(
             0,
-            0,
-            3,
-            vec![0, 1, 2, 3],
-            vec![10, 11, 12],
+            node(0),
+            node(3),
+            vec![node(0), node(1), node(2), node(3)],
+            vec![relationship(10), relationship(11), relationship(12)],
             vec![0.0, 1.0, 2.0, 3.0],
         );
         filterer.add_blocking_neighbor(&path, 1); // blocks target node 2
         filterer.prepare();
 
         // Test valid relationship (different source)
-        assert!(filterer.valid_relationship(0, 2, 10));
+        assert!(filterer.valid_relationship(node(0), node(2), relationship(10)));
 
         // Test invalid relationship (blocked target)
-        assert!(!filterer.valid_relationship(1, 2, 10));
+        assert!(!filterer.valid_relationship(node(1), node(2), relationship(10)));
 
         // Test valid relationship (different target)
-        assert!(filterer.valid_relationship(1, 3, 11));
+        assert!(filterer.valid_relationship(node(1), node(3), relationship(11)));
     }
 
     #[test]
     fn test_relationship_filterer_with_relationships() {
         let mut filterer = RelationshipFilterer::new(5, true);
 
-        filterer.set_filter(1);
+        filterer.set_filter(node(1));
 
         let path = MutablePathResult::new(
             0,
-            0,
-            3,
-            vec![0, 1, 2, 3],
-            vec![10, 11, 12],
+            node(0),
+            node(3),
+            vec![node(0), node(1), node(2), node(3)],
+            vec![relationship(10), relationship(11), relationship(12)],
             vec![0.0, 1.0, 2.0, 3.0],
         );
         filterer.add_blocking_neighbor(&path, 0); // blocks relationship 10
         filterer.prepare();
 
         // Test invalid relationship (blocked relationship)
-        assert!(!filterer.valid_relationship(1, 2, 10));
+        assert!(!filterer.valid_relationship(node(1), node(2), relationship(10)));
 
         // Test valid relationship (different relationship)
-        assert!(filterer.valid_relationship(1, 2, 15));
+        assert!(filterer.valid_relationship(node(1), node(2), relationship(15)));
     }
 
     #[test]
     fn test_relationship_filterer_is_order_independent() {
         let mut filterer = RelationshipFilterer::new(5, false);
-        filterer.set_filter(1);
+        filterer.set_filter(node(1));
 
         let path = MutablePathResult::new(
             0,
-            0,
-            4,
-            vec![0, 1, 2, 3, 4],
-            vec![10, 11, 12, 13],
+            node(0),
+            node(4),
+            vec![node(0), node(1), node(2), node(3), node(4)],
+            vec![
+                relationship(10),
+                relationship(11),
+                relationship(12),
+                relationship(13),
+            ],
             vec![0.0, 1.0, 2.0, 3.0, 4.0],
         );
         filterer.add_blocking_neighbor(&path, 1);
         filterer.add_blocking_neighbor(&path, 2);
         filterer.prepare();
 
-        assert!(filterer.valid_relationship(1, 4, 20));
-        assert!(!filterer.valid_relationship(1, 2, 10));
-        assert!(!filterer.valid_relationship(1, 3, 11));
+        assert!(filterer.valid_relationship(node(1), node(4), relationship(20)));
+        assert!(!filterer.valid_relationship(node(1), node(2), relationship(10)));
+        assert!(!filterer.valid_relationship(node(1), node(3), relationship(11)));
     }
 }

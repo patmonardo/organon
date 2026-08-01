@@ -5,11 +5,16 @@
 //! This module contains integration tests for A* algorithm with the executor runtime.
 
 use super::*;
-use crate::task::progress::{TaskProgressTracker, Tasks};
 use crate::projection::eval::algorithm::{
     AlgorithmSpec, ExecutionContext, ExecutionMode, ProcedureExecutor,
 };
+use crate::task::progress::{TaskProgressTracker, Tasks};
+use crate::types::graph::MappedNodeId;
 use serde_json::json;
+
+fn node(value: u64) -> MappedNodeId {
+    MappedNodeId::new(value)
+}
 
 #[test]
 fn test_astar_algorithm_spec_contract() {
@@ -68,8 +73,8 @@ fn test_astar_java_config_aliases() {
     }))
     .unwrap();
 
-    assert_eq!(config.source_node, 3);
-    assert_eq!(config.target_node, 6);
+    assert_eq!(config.source_node, node(3));
+    assert_eq!(config.target_node, node(6));
     assert_eq!(config.weight_property, "distance");
     assert_eq!(config.latitude_property, "lat");
     assert_eq!(config.longitude_property, "lon");
@@ -131,8 +136,12 @@ fn test_astar_with_executor() {
 
 #[test]
 fn test_astar_storage_computation_integration() {
-    let mut storage =
-        AStarStorageRuntime::new(0, 1, "latitude".to_string(), "longitude".to_string());
+    let mut storage = AStarStorageRuntime::new(
+        node(0),
+        node(1),
+        "latitude".to_string(),
+        "longitude".to_string(),
+    );
 
     let mut computation = AStarComputationRuntime::new();
     let mut progress_tracker = TaskProgressTracker::new(Tasks::leaf("astar".to_string()));
@@ -149,40 +158,48 @@ fn test_astar_storage_computation_integration() {
 
 #[test]
 fn test_astar_haversine_integration() {
-    let mut storage = AStarStorageRuntime::new(0, 1, "lat".to_string(), "lon".to_string());
+    let mut storage =
+        AStarStorageRuntime::new(node(0), node(1), "lat".to_string(), "lon".to_string());
 
     // Test Haversine distance calculation
-    let distance = storage.compute_haversine_distance(0, 1).unwrap();
+    let distance = storage
+        .compute_haversine_distance(node(0), node(1))
+        .unwrap();
     assert!(distance >= 0.0);
 
     // Test with same node
-    let zero_distance = storage.compute_haversine_distance(0, 0).unwrap();
+    let zero_distance = storage
+        .compute_haversine_distance(node(0), node(0))
+        .unwrap();
     assert_eq!(zero_distance, 0.0);
 }
 
 #[test]
 fn test_astar_coordinate_caching_integration() {
-    let mut storage = AStarStorageRuntime::new(0, 1, "lat".to_string(), "lon".to_string());
+    let mut storage =
+        AStarStorageRuntime::new(node(0), node(1), "lat".to_string(), "lon".to_string());
 
     // First call should populate cache
-    let coords1 = storage.get_coordinates(5).unwrap();
+    let coords1 = storage.get_coordinates(node(5)).unwrap();
 
     // Second call should use cache
-    let coords2 = storage.get_coordinates(5).unwrap();
+    let coords2 = storage.get_coordinates(node(5)).unwrap();
 
     assert_eq!(coords1, coords2);
     assert_eq!(storage.coordinate_cache.len(), 1);
 
     // Test distance calculation with cached coordinates
-    let distance = storage.compute_haversine_distance(5, 6).unwrap();
+    let distance = storage
+        .compute_haversine_distance(node(5), node(6))
+        .unwrap();
     assert!(distance >= 0.0);
 }
 
 #[test]
 fn test_astar_result_serialization() {
     let config = AStarConfig {
-        source_node: 0,
-        target_node: 1,
+        source_node: node(0),
+        target_node: node(1),
         weight_property: "weight".to_string(),
         latitude_property: "lat".to_string(),
         longitude_property: "lon".to_string(),

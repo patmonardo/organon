@@ -339,13 +339,21 @@ impl AStarStorageRuntime {
 mod tests {
     use super::*;
 
+    fn node(value: u64) -> MappedNodeId {
+        MappedNodeId::new(value)
+    }
+
     #[test]
     fn test_astar_storage_runtime_creation() {
-        let storage =
-            AStarStorageRuntime::new(0, 1, "latitude".to_string(), "longitude".to_string());
+        let storage = AStarStorageRuntime::new(
+            node(0),
+            node(1),
+            "latitude".to_string(),
+            "longitude".to_string(),
+        );
 
-        assert_eq!(storage.source_node(), 0);
-        assert_eq!(storage.target_node(), 1);
+        assert_eq!(storage.source_node(), node(0));
+        assert_eq!(storage.target_node(), node(1));
         assert_eq!(storage.latitude_property(), "latitude");
         assert_eq!(storage.longitude_property(), "longitude");
     }
@@ -377,13 +385,14 @@ mod tests {
 
     #[test]
     fn test_coordinate_caching() {
-        let mut storage = AStarStorageRuntime::new(0, 1, "lat".to_string(), "lon".to_string());
+        let mut storage =
+            AStarStorageRuntime::new(node(0), node(1), "lat".to_string(), "lon".to_string());
 
         // First call should populate cache
-        let coords1 = storage.get_coordinates(5).unwrap();
+        let coords1 = storage.get_coordinates(node(5)).unwrap();
 
         // Second call should use cache
-        let coords2 = storage.get_coordinates(5).unwrap();
+        let coords2 = storage.get_coordinates(node(5)).unwrap();
 
         assert_eq!(coords1, coords2);
         assert_eq!(storage.coordinate_cache.len(), 1);
@@ -394,7 +403,8 @@ mod tests {
         use super::super::AStarComputationRuntime;
         use crate::task::progress::{TaskProgressTracker, Tasks};
 
-        let mut storage = AStarStorageRuntime::new(0, 1, "lat".to_string(), "lon".to_string());
+        let mut storage =
+            AStarStorageRuntime::new(node(0), node(1), "lat".to_string(), "lon".to_string());
 
         let mut computation = AStarComputationRuntime::new();
         let mut progress_tracker = TaskProgressTracker::new(Tasks::leaf("astar".to_string()));
@@ -405,8 +415,8 @@ mod tests {
 
         assert!(result.path.is_some());
         assert_eq!(result.path.as_ref().unwrap().len(), 2);
-        assert_eq!(result.path.as_ref().unwrap()[0], 0);
-        assert_eq!(result.path.as_ref().unwrap()[1], 1);
+        assert_eq!(result.path.as_ref().unwrap()[0], node(0));
+        assert_eq!(result.path.as_ref().unwrap()[1], node(1));
         assert!(result.total_cost >= 0.0);
         assert_eq!(result.nodes_explored, 2);
     }
@@ -417,8 +427,8 @@ mod tests {
         use crate::task::progress::{TaskProgressTracker, Tasks};
 
         let mut storage = AStarStorageRuntime::new(
-            5,
-            5, // Same source and target
+            node(5),
+            node(5), // Same source and target
             "lat".to_string(),
             "lon".to_string(),
         );
@@ -432,25 +442,27 @@ mod tests {
 
         assert!(result.path.is_some());
         assert_eq!(result.path.as_ref().unwrap().len(), 1);
-        assert_eq!(result.path.as_ref().unwrap()[0], 5);
+        assert_eq!(result.path.as_ref().unwrap()[0], node(5));
         assert_eq!(result.total_cost, 0.0);
         assert_eq!(result.nodes_explored, 1);
     }
 
     #[test]
     fn rejects_invalid_node_ids_and_weights() {
-        assert!(AStarStorageRuntime::validate_node_id(-1, "source").is_err());
-        assert!(AStarStorageRuntime::validate_node_id(0, "source").is_ok());
-        assert!(AStarStorageRuntime::validate_edge_weight(0, 1, -1.0).is_err());
-        assert!(AStarStorageRuntime::validate_edge_weight(0, 1, f64::NAN).is_err());
-        assert!(AStarStorageRuntime::validate_edge_weight(0, 1, f64::INFINITY).is_err());
-        assert!(AStarStorageRuntime::validate_edge_weight(0, 1, 0.0).is_ok());
+        assert!(AStarStorageRuntime::validate_node_in_graph(node(1), 1, "source").is_err());
+        assert!(AStarStorageRuntime::validate_node_in_graph(node(0), 1, "source").is_ok());
+        assert!(AStarStorageRuntime::validate_edge_weight(node(0), node(1), -1.0).is_err());
+        assert!(AStarStorageRuntime::validate_edge_weight(node(0), node(1), f64::NAN).is_err());
+        assert!(
+            AStarStorageRuntime::validate_edge_weight(node(0), node(1), f64::INFINITY).is_err()
+        );
+        assert!(AStarStorageRuntime::validate_edge_weight(node(0), node(1), 0.0).is_ok());
     }
 
     #[test]
     fn rejects_non_finite_coordinates() {
-        assert!(AStarStorageRuntime::validate_coordinates(0, (f64::NAN, 0.0)).is_err());
-        assert!(AStarStorageRuntime::validate_coordinates(0, (0.0, f64::INFINITY)).is_err());
-        assert!(AStarStorageRuntime::validate_coordinates(0, (0.0, 0.0)).is_ok());
+        assert!(AStarStorageRuntime::validate_coordinates(node(0), (f64::NAN, 0.0)).is_err());
+        assert!(AStarStorageRuntime::validate_coordinates(node(0), (0.0, f64::INFINITY)).is_err());
+        assert!(AStarStorageRuntime::validate_coordinates(node(0), (0.0, 0.0)).is_ok());
     }
 }

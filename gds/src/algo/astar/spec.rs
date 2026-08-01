@@ -474,11 +474,15 @@ mod tests {
     use crate::projection::eval::algorithm::AlgorithmSpec; // bring trait methods into scope
     use serde_json::json; // macro for tests
 
+    fn node(value: u64) -> MappedNodeId {
+        MappedNodeId::new(value)
+    }
+
     #[test]
     fn test_astar_config_default() {
         let config = AStarConfig::default();
-        assert_eq!(config.source_node, 0);
-        assert_eq!(config.target_node, 1);
+        assert_eq!(config.source_node, node(0));
+        assert_eq!(config.target_node, node(1));
         assert_eq!(config.weight_property, "weight");
         assert_eq!(config.latitude_property, "latitude");
         assert_eq!(config.longitude_property, "longitude");
@@ -514,7 +518,7 @@ mod tests {
 
     #[test]
     fn test_astar_result() {
-        let path = Some(vec![0, 1, 2]);
+        let path = Some(vec![node(0), node(1), node(2)]);
         let result = AStarResult::new(path.clone(), 10.5, 100, 5);
 
         assert!(result.has_path());
@@ -536,9 +540,11 @@ mod tests {
 
     #[test]
     fn test_astar_result_builder_metadata_includes_metrics() {
-        let result = AStarResult::new_with_metrics(Some(vec![0, 1, 2]), 3.0, 10, 4, 7, 2);
+        let result =
+            AStarResult::new_with_metrics(Some(vec![node(0), node(1), node(2)]), 3.0, 10, 4, 7, 2);
         let path_result =
-            AStarResultBuilder::result(result, Duration::from_millis(10), 0, 2).unwrap();
+            AStarResultBuilder::result(result, Duration::from_millis(10), node(0), node(2))
+                .unwrap();
 
         assert_eq!(
             path_result.metadata.additional.get("edges_considered"),
@@ -595,8 +601,8 @@ mod tests {
         }))
         .unwrap();
 
-        assert_eq!(config.source_node, 7);
-        assert_eq!(config.target_node, 11);
+        assert_eq!(config.source_node, node(7));
+        assert_eq!(config.target_node, node(11));
         assert_eq!(config.weight_property, "travelTime");
         assert_eq!(config.latitude_property, "lat");
         assert_eq!(config.longitude_property, "lon");

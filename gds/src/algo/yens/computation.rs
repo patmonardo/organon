@@ -203,12 +203,21 @@ impl YensComputationRuntime {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::types::graph::RelationshipIndex;
+
+    fn node(value: u64) -> MappedNodeId {
+        MappedNodeId::new(value)
+    }
+
+    fn relationship(value: u64) -> RelationshipIndex {
+        RelationshipIndex::new(value)
+    }
 
     #[test]
     fn test_yens_computation_runtime_creation() {
-        let runtime = YensComputationRuntime::new(0, 3, 5, true, 4);
-        assert_eq!(runtime.source_node, 0);
-        assert_eq!(runtime.target_node, 3);
+        let runtime = YensComputationRuntime::new(node(0), node(3), 5, true, 4);
+        assert_eq!(runtime.source_node, node(0));
+        assert_eq!(runtime.target_node, node(3));
         assert_eq!(runtime.k, 5);
         assert!(runtime.track_relationships);
         assert_eq!(runtime.concurrency, 4);
@@ -217,15 +226,15 @@ mod tests {
 
     #[test]
     fn test_yens_computation_runtime_initialization() {
-        let mut runtime = YensComputationRuntime::new(0, 3, 5, true, 1);
+        let mut runtime = YensComputationRuntime::new(node(0), node(3), 5, true, 1);
         runtime.record_spur_search();
         runtime.record_candidate_generated();
         runtime.record_path_found();
 
-        runtime.initialize(1, 4, 3, false);
+        runtime.initialize(node(1), node(4), 3, false);
 
-        assert_eq!(runtime.source_node, 1);
-        assert_eq!(runtime.target_node, 4);
+        assert_eq!(runtime.source_node, node(1));
+        assert_eq!(runtime.target_node, node(4));
         assert_eq!(runtime.k, 3);
         assert!(!runtime.track_relationships);
         assert_eq!(runtime.visited_count(), 0);
@@ -236,26 +245,33 @@ mod tests {
 
     #[test]
     fn test_yens_computation_runtime_visited_operations() {
-        let mut runtime = YensComputationRuntime::new(0, 3, 5, true, 1);
+        let mut runtime = YensComputationRuntime::new(node(0), node(3), 5, true, 1);
 
-        assert!(!runtime.is_visited(1));
-        runtime.add_visited_node(1);
-        assert!(runtime.is_visited(1));
+        assert!(!runtime.is_visited(node(1)));
+        runtime.add_visited_node(node(1));
+        assert!(runtime.is_visited(node(1)));
         assert_eq!(runtime.visited_count(), 1);
 
         runtime.reset_visited();
-        assert!(!runtime.is_visited(1));
+        assert!(!runtime.is_visited(node(1)));
         assert_eq!(runtime.visited_count(), 0);
     }
 
     #[test]
     fn test_prepare_relationship_filter_blocks_same_root() {
-        let mut runtime = YensComputationRuntime::new(0, 3, 3, false, 1);
-        let previous =
-            MutablePathResult::new(0, 0, 3, vec![0, 1, 2, 3], vec![], vec![0.0, 1.0, 3.0, 4.0]);
-        let filter = runtime.prepare_relationship_filter(1, &previous, &[previous.clone()], 1);
+        let mut runtime = YensComputationRuntime::new(node(0), node(3), 3, false, 1);
+        let previous = MutablePathResult::new(
+            0,
+            node(0),
+            node(3),
+            vec![node(0), node(1), node(2), node(3)],
+            vec![],
+            vec![0.0, 1.0, 3.0, 4.0],
+        );
+        let filter =
+            runtime.prepare_relationship_filter(node(1), &previous, &[previous.clone()], 1);
 
-        assert!(!filter.valid_relationship(1, 2, 10));
-        assert!(filter.valid_relationship(1, 3, 11));
+        assert!(!filter.valid_relationship(node(1), node(2), relationship(10)));
+        assert!(filter.valid_relationship(node(1), node(3), relationship(11)));
     }
 }

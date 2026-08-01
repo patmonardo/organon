@@ -369,15 +369,23 @@ mod tests {
     use crate::projection::eval::algorithm::{AlgorithmSpec, ExecutionContext};
     use serde_json::json;
 
+    fn node(value: u64) -> MappedNodeId {
+        MappedNodeId::new(value)
+    }
+
+    fn relationship(value: u64) -> RelationshipIndex {
+        RelationshipIndex::new(value)
+    }
+
     #[test]
     fn test_yens_result() {
         let result = YensResult {
             paths: vec![YensPathResult {
                 index: 0,
-                source_node: 0,
-                target_node: 3,
-                node_ids: vec![0, 1, 3],
-                relationship_ids: vec![10, 13],
+                source_node: node(0),
+                target_node: node(3),
+                node_ids: vec![node(0), node(1), node(3)],
+                relationship_ids: vec![relationship(10), relationship(13)],
                 costs: vec![0.0, 1.0, 2.0],
                 total_cost: 2.0,
             }],
@@ -398,17 +406,17 @@ mod tests {
     fn test_yens_path_result() {
         let path = YensPathResult {
             index: 0,
-            source_node: 0,
-            target_node: 3,
-            node_ids: vec![0, 1, 2, 3],
-            relationship_ids: vec![10, 11, 12],
+            source_node: node(0),
+            target_node: node(3),
+            node_ids: vec![node(0), node(1), node(2), node(3)],
+            relationship_ids: vec![relationship(10), relationship(11), relationship(12)],
             costs: vec![0.0, 1.0, 2.0, 3.0],
             total_cost: 3.0,
         };
 
         assert_eq!(path.index, 0);
-        assert_eq!(path.source_node, 0);
-        assert_eq!(path.target_node, 3);
+        assert_eq!(path.source_node, node(0));
+        assert_eq!(path.target_node, node(3));
         assert_eq!(path.node_ids.len(), 4);
         assert_eq!(path.total_cost, 3.0);
     }
@@ -416,8 +424,8 @@ mod tests {
     #[test]
     fn test_yens_config_default() {
         let config = YensConfig::default();
-        assert_eq!(config.source_node, 0);
-        assert_eq!(config.target_node, 1);
+        assert_eq!(config.source_node, node(0));
+        assert_eq!(config.target_node, node(1));
         assert_eq!(config.k, 3);
         assert_eq!(config.weight_property, "weight");
         assert!(config.relationship_types.is_empty());
@@ -457,8 +465,8 @@ mod tests {
         }))
         .unwrap();
 
-        assert_eq!(config.source_node, 2);
-        assert_eq!(config.target_node, 7);
+        assert_eq!(config.source_node, node(2));
+        assert_eq!(config.target_node, node(7));
         assert_eq!(config.k, 4);
         assert_eq!(config.weight_property, "travelTime");
         assert_eq!(config.relationship_types, vec!["ROAD", "RAIL"]);
@@ -473,10 +481,10 @@ mod tests {
         let result = YensResult {
             paths: vec![YensPathResult {
                 index: 0,
-                source_node: 0,
-                target_node: 3,
-                node_ids: vec![0, 1, 3],
-                relationship_ids: vec![10, 13],
+                source_node: node(0),
+                target_node: node(3),
+                node_ids: vec![node(0), node(1), node(3)],
+                relationship_ids: vec![relationship(10), relationship(13)],
                 costs: vec![0.0, 1.0, 2.0],
                 total_cost: 2.0,
             }],

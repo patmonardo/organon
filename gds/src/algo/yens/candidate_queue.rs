@@ -160,6 +160,16 @@ impl Default for CandidatePathsPriorityQueue {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::types::graph::MappedNodeId;
+    use crate::types::graph::RelationshipIndex;
+
+    fn node(value: u64) -> MappedNodeId {
+        MappedNodeId::new(value)
+    }
+
+    fn relationship(value: u64) -> RelationshipIndex {
+        RelationshipIndex::new(value)
+    }
 
     #[test]
     fn test_candidate_queue_creation() {
@@ -174,14 +184,20 @@ mod tests {
 
         let path1 = MutablePathResult::new(
             0,
-            0,
-            3,
-            vec![0, 1, 2, 3],
-            vec![10, 11, 12],
+            node(0),
+            node(3),
+            vec![node(0), node(1), node(2), node(3)],
+            vec![relationship(10), relationship(11), relationship(12)],
             vec![0.0, 1.0, 2.0, 3.0],
         );
-        let path2 =
-            MutablePathResult::new(0, 0, 3, vec![0, 1, 3], vec![10, 13], vec![0.0, 1.0, 2.0]);
+        let path2 = MutablePathResult::new(
+            0,
+            node(0),
+            node(3),
+            vec![node(0), node(1), node(3)],
+            vec![relationship(10), relationship(13)],
+            vec![0.0, 1.0, 2.0],
+        );
 
         queue.add_path(path1.clone());
         queue.add_path(path2.clone());
@@ -208,14 +224,25 @@ mod tests {
         // Add paths in reverse order of priority
         let path_long = MutablePathResult::new(
             0,
-            0,
-            4,
-            vec![0, 1, 2, 3, 4],
-            vec![10, 11, 12, 13],
+            node(0),
+            node(4),
+            vec![node(0), node(1), node(2), node(3), node(4)],
+            vec![
+                relationship(10),
+                relationship(11),
+                relationship(12),
+                relationship(13),
+            ],
             vec![0.0, 1.0, 2.0, 3.0, 4.0],
         );
-        let path_short =
-            MutablePathResult::new(0, 0, 3, vec![0, 1, 3], vec![10, 13], vec![0.0, 1.0, 2.0]);
+        let path_short = MutablePathResult::new(
+            0,
+            node(0),
+            node(3),
+            vec![node(0), node(1), node(3)],
+            vec![relationship(10), relationship(13)],
+            vec![0.0, 1.0, 2.0],
+        );
 
         queue.add_path(path_long);
         queue.add_path(path_short);
@@ -234,15 +261,33 @@ mod tests {
     fn test_candidate_queue_deterministic_tie_breaking() {
         let queue = CandidatePathsPriorityQueue::new();
 
-        let path_b =
-            MutablePathResult::new(0, 0, 3, vec![0, 2, 3], vec![20, 23], vec![0.0, 1.0, 2.0]);
-        let path_a =
-            MutablePathResult::new(0, 0, 3, vec![0, 1, 3], vec![10, 13], vec![0.0, 1.0, 2.0]);
+        let path_b = MutablePathResult::new(
+            0,
+            node(0),
+            node(3),
+            vec![node(0), node(2), node(3)],
+            vec![relationship(20), relationship(23)],
+            vec![0.0, 1.0, 2.0],
+        );
+        let path_a = MutablePathResult::new(
+            0,
+            node(0),
+            node(3),
+            vec![node(0), node(1), node(3)],
+            vec![relationship(10), relationship(13)],
+            vec![0.0, 1.0, 2.0],
+        );
 
         queue.add_path(path_b);
         queue.add_path(path_a);
 
-        assert_eq!(queue.pop().unwrap().node_ids, vec![0, 1, 3]);
-        assert_eq!(queue.pop().unwrap().node_ids, vec![0, 2, 3]);
+        assert_eq!(
+            queue.pop().unwrap().node_ids,
+            vec![node(0), node(1), node(3)]
+        );
+        assert_eq!(
+            queue.pop().unwrap().node_ids,
+            vec![node(0), node(2), node(3)]
+        );
     }
 }

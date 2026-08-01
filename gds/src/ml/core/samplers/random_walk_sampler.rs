@@ -312,7 +312,7 @@ mod tests {
         let store = create_test_graph().unwrap();
         let graph = store.graph();
 
-        let weight_fn = |node_id: u64| graph.degree(node_id as i64) as f64;
+        let weight_fn = |node_id: u64| graph.degree(MappedNodeId::new(node_id)) as f64;
         let mut sampler = RandomWalkSampler::create(graph.clone(), weight_fn, 100, 1.0, 1.0, 42);
 
         let walk = sampler.walk(0);
@@ -330,7 +330,7 @@ mod tests {
         let store = create_test_graph().unwrap();
         let graph = store.graph();
 
-        let weight_fn = |node_id: u64| graph.degree(node_id as i64) as f64;
+        let weight_fn = |node_id: u64| graph.degree(MappedNodeId::new(node_id)) as f64;
 
         let mut sampler1 = RandomWalkSampler::create(graph.clone(), weight_fn, 10, 1.0, 1.0, 42);
 
@@ -347,7 +347,7 @@ mod tests {
         let store = create_test_graph().unwrap();
         let graph = store.graph();
 
-        let weight_fn = |node_id: u64| graph.degree(node_id as i64) as f64;
+        let weight_fn = |node_id: u64| graph.degree(MappedNodeId::new(node_id)) as f64;
 
         let mut sampler1 = RandomWalkSampler::create(graph.clone(), weight_fn, 100, 1.0, 1.0, 42);
 
@@ -365,7 +365,7 @@ mod tests {
         let store = create_test_graph().unwrap();
         let graph = store.graph();
 
-        let weight_fn = |node_id: u64| graph.degree(node_id as i64) as f64;
+        let weight_fn = |node_id: u64| graph.degree(MappedNodeId::new(node_id)) as f64;
 
         let mut sampler = RandomWalkSampler::create(graph.clone(), weight_fn, 100, 1.0, 1.0, 42);
 
@@ -384,7 +384,7 @@ mod tests {
         let store = create_test_graph().unwrap();
         let graph = store.graph();
 
-        let weight_fn = |node_id: u64| graph.degree(node_id as i64) as f64;
+        let weight_fn = |node_id: u64| graph.degree(MappedNodeId::new(node_id)) as f64;
 
         // High return factor (low p) encourages staying close
         let mut sampler = RandomWalkSampler::create(
@@ -405,7 +405,7 @@ mod tests {
         let store = create_test_graph().unwrap();
         let graph = store.graph();
 
-        let weight_fn = |node_id: u64| graph.degree(node_id as i64) as f64;
+        let weight_fn = |node_id: u64| graph.degree(MappedNodeId::new(node_id)) as f64;
 
         // Low in-out factor encourages exploration
         let mut sampler = RandomWalkSampler::create(
@@ -435,7 +435,7 @@ mod tests {
         let store = create_test_graph().unwrap();
         let graph = store.graph();
 
-        let weight_fn = |node_id: u64| graph.degree(node_id as i64) as f64;
+        let weight_fn = |node_id: u64| graph.degree(MappedNodeId::new(node_id)) as f64;
         let mut sampler = RandomWalkSampler::create(graph.clone(), weight_fn, 100, 1.0, 1.0, 42);
 
         // Walk from all nodes - shouldn't panic

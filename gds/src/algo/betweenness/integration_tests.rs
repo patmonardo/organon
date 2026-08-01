@@ -10,7 +10,7 @@ mod tests {
     use crate::procedures::GraphFacade;
     use crate::projection::Orientation;
     use crate::projection::RelationshipType;
-    use crate::types::graph::{RelationshipTopology, SimpleIdMap};
+    use crate::types::graph::{MappedNodeId, RelationshipTopology, SimpleIdMap};
     use crate::types::graph_store::{
         Capabilities, DatabaseId, DatabaseInfo, DatabaseLocation, DefaultGraphStore, GraphName,
     };
@@ -24,14 +24,16 @@ mod tests {
         node_count: usize,
         edges: &[(usize, usize)],
     ) -> DefaultGraphStore {
-        let mut outgoing: Vec<Vec<i64>> = vec![Vec::new(); node_count];
-        let mut incoming: Vec<Vec<i64>> = vec![Vec::new(); node_count];
+        let mut outgoing: Vec<Vec<MappedNodeId>> = vec![Vec::new(); node_count];
+        let mut incoming: Vec<Vec<MappedNodeId>> = vec![Vec::new(); node_count];
 
         for &(a, b) in edges {
-            outgoing[a].push(b as i64);
-            outgoing[b].push(a as i64);
-            incoming[a].push(b as i64);
-            incoming[b].push(a as i64);
+            let a_id = MappedNodeId::try_from(a).expect("fixture node must fit mapped ID space");
+            let b_id = MappedNodeId::try_from(b).expect("fixture node must fit mapped ID space");
+            outgoing[a].push(b_id);
+            outgoing[b].push(a_id);
+            incoming[a].push(b_id);
+            incoming[b].push(a_id);
         }
 
         let rel_type = RelationshipType::of("REL");
@@ -48,7 +50,9 @@ mod tests {
             RelationshipTopology::new(outgoing, Some(incoming)),
         );
 
-        let original_ids: Vec<i64> = (0..node_count as i64).collect();
+        let original_ids: Vec<i64> = (0..node_count)
+            .map(|node| i64::try_from(node).expect("fixture node must fit original ID space"))
+            .collect();
         let id_map = SimpleIdMap::from_original_ids(original_ids);
 
         DefaultGraphStore::new(
@@ -66,12 +70,16 @@ mod tests {
     }
 
     fn store_from_directed_edges(node_count: usize, edges: &[(usize, usize)]) -> DefaultGraphStore {
-        let mut outgoing: Vec<Vec<i64>> = vec![Vec::new(); node_count];
-        let mut incoming: Vec<Vec<i64>> = vec![Vec::new(); node_count];
+        let mut outgoing: Vec<Vec<MappedNodeId>> = vec![Vec::new(); node_count];
+        let mut incoming: Vec<Vec<MappedNodeId>> = vec![Vec::new(); node_count];
 
         for &(source, target) in edges {
-            outgoing[source].push(target as i64);
-            incoming[target].push(source as i64);
+            outgoing[source].push(
+                MappedNodeId::try_from(target).expect("fixture target must fit mapped ID space"),
+            );
+            incoming[target].push(
+                MappedNodeId::try_from(source).expect("fixture source must fit mapped ID space"),
+            );
         }
 
         let rel_type = RelationshipType::of("REL");
@@ -88,7 +96,9 @@ mod tests {
             RelationshipTopology::new(outgoing, Some(incoming)),
         );
 
-        let original_ids: Vec<i64> = (0..node_count as i64).collect();
+        let original_ids: Vec<i64> = (0..node_count)
+            .map(|node| i64::try_from(node).expect("fixture node must fit original ID space"))
+            .collect();
         let id_map = SimpleIdMap::from_original_ids(original_ids);
 
         DefaultGraphStore::new(
@@ -110,13 +120,17 @@ mod tests {
         edges: &[(usize, usize, f64)],
         property_name: &str,
     ) -> DefaultGraphStore {
-        let mut outgoing: Vec<Vec<i64>> = vec![Vec::new(); node_count];
-        let mut incoming: Vec<Vec<i64>> = vec![Vec::new(); node_count];
+        let mut outgoing: Vec<Vec<MappedNodeId>> = vec![Vec::new(); node_count];
+        let mut incoming: Vec<Vec<MappedNodeId>> = vec![Vec::new(); node_count];
         let mut weights = Vec::with_capacity(edges.len());
 
         for &(source, target, weight) in edges {
-            outgoing[source].push(target as i64);
-            incoming[target].push(source as i64);
+            outgoing[source].push(
+                MappedNodeId::try_from(target).expect("fixture target must fit mapped ID space"),
+            );
+            incoming[target].push(
+                MappedNodeId::try_from(source).expect("fixture source must fit mapped ID space"),
+            );
             weights.push(weight);
         }
 
@@ -134,7 +148,9 @@ mod tests {
             RelationshipTopology::new(outgoing, Some(incoming)),
         );
 
-        let original_ids: Vec<i64> = (0..node_count as i64).collect();
+        let original_ids: Vec<i64> = (0..node_count)
+            .map(|node| i64::try_from(node).expect("fixture node must fit original ID space"))
+            .collect();
         let id_map = SimpleIdMap::from_original_ids(original_ids);
 
         let mut store = DefaultGraphStore::new(
@@ -177,7 +193,9 @@ mod tests {
 
         let mut scores = vec![0.0; 3];
         for r in rows {
-            scores[r.node_id as usize] = r.score;
+            let node_index = usize::try_from(r.node_id)
+                .expect("streamed node ID must fit the fixture score array");
+            scores[node_index] = r.score;
         }
 
         assert!((scores[1] - 1.0).abs() < 1e-9);

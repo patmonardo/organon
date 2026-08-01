@@ -117,3 +117,40 @@ impl TopologicalSortStorageRuntime {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn initializes_result_state_without_distance_storage() {
+        let storage = TopologicalSortStorageRuntime::new(3, false);
+
+        assert_eq!(storage.size(), 0);
+        assert_eq!(storage.in_degrees.len(), 3);
+        assert!(storage
+            .in_degrees
+            .iter()
+            .all(|degree| degree.load(Ordering::SeqCst) == 0));
+        assert!(storage
+            .sorted_nodes
+            .iter()
+            .all(|node| node.load(Ordering::SeqCst) == 0));
+        assert!(storage.max_source_distances.is_none());
+    }
+
+    #[test]
+    fn initializes_optional_distance_storage_to_zero() {
+        let storage = TopologicalSortStorageRuntime::new(3, true);
+        let distances = storage
+            .max_source_distances
+            .as_ref()
+            .expect("distance storage must be initialized when requested");
+
+        assert_eq!(storage.size(), 0);
+        assert_eq!(distances.len(), 3);
+        assert!(distances
+            .iter()
+            .all(|distance| f64::from_bits(distance.load(Ordering::SeqCst)) == 0.0));
+    }
+}

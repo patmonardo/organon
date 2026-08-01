@@ -10,10 +10,10 @@ use crate::algo::dag_longest_path::{
     DagLongestPathResult, DagLongestPathResultBuilder, DagLongestPathRow, DagLongestPathStats,
     DagLongestPathStorageRuntime,
 };
-use crate::task::memory::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
+use crate::task::memory::MemoryRange;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use std::collections::HashSet;
 use std::sync::Arc;
@@ -181,6 +181,8 @@ mod tests {
     use crate::config::GraphStoreConfig;
 
     use crate::projection::RelationshipType;
+    use crate::types::graph::MappedNodeId;
+    use crate::types::graph::OriginalNodeId;
     use crate::types::graph_store::{
         Capabilities, DatabaseId, DatabaseInfo, DatabaseLocation, DefaultGraphStore, GraphName,
     };
@@ -191,12 +193,12 @@ mod tests {
     use std::sync::Arc;
 
     fn store_from_directed_edges(node_count: usize, edges: &[(usize, usize)]) -> DefaultGraphStore {
-        let mut outgoing: Vec<Vec<i64>> = vec![Vec::new(); node_count];
-        let mut incoming: Vec<Vec<i64>> = vec![Vec::new(); node_count];
+        let mut outgoing: Vec<Vec<MappedNodeId>> = vec![Vec::new(); node_count];
+        let mut incoming: Vec<Vec<MappedNodeId>> = vec![Vec::new(); node_count];
 
         for &(a, b) in edges {
-            outgoing[a].push(b as i64);
-            incoming[b].push(a as i64);
+            outgoing[a].push(MappedNodeId::try_from(b).expect("fixture node ID must fit"));
+            incoming[b].push(MappedNodeId::try_from(a).expect("fixture node ID must fit"));
         }
 
         let rel_type = RelationshipType::of("REL");
@@ -213,7 +215,11 @@ mod tests {
             RelationshipTopology::new(outgoing, Some(incoming)),
         );
 
-        let original_ids: Vec<i64> = (0..node_count as i64).collect();
+        let original_ids: Vec<OriginalNodeId> = (0..node_count)
+            .map(|node_id| {
+                OriginalNodeId::new(i64::try_from(node_id).expect("fixture original ID must fit"))
+            })
+            .collect();
         let id_map = SimpleIdMap::from_original_ids(original_ids);
 
         DefaultGraphStore::new(
@@ -240,9 +246,19 @@ mod tests {
         assert!(!rows.is_empty());
 
         // Find path to node 2
-        let path_to_2 = rows.iter().find(|r| r.target_node == 2).unwrap();
-        assert_eq!(path_to_2.source_node, 0);
-        assert_eq!(path_to_2.node_ids, vec![0, 1, 2]);
+        let path_to_2 = rows
+            .iter()
+            .find(|r| r.target_node == MappedNodeId::new(2))
+            .unwrap();
+        assert_eq!(path_to_2.source_node, MappedNodeId::new(0));
+        assert_eq!(
+            path_to_2.node_ids,
+            vec![
+                MappedNodeId::new(0),
+                MappedNodeId::new(1),
+                MappedNodeId::new(2)
+            ]
+        );
     }
 
     #[test]
@@ -268,12 +284,15 @@ mod tests {
         let rows: Vec<DagLongestPathRow> = builder.stream().unwrap().collect();
 
         // Find path to node 3
-        let path_to_3 = rows.iter().find(|r| r.target_node == 3).unwrap();
+        let path_to_3 = rows
+            .iter()
+            .find(|r| r.target_node == MappedNodeId::new(3))
+            .unwrap();
 
         // Should have a path through 2 hops
         assert_eq!(path_to_3.node_ids.len(), 3);
-        assert_eq!(path_to_3.node_ids[0], 0);
-        assert_eq!(path_to_3.node_ids[2], 3);
+        assert_eq!(path_to_3.node_ids[0], MappedNodeId::new(0));
+        assert_eq!(path_to_3.node_ids[2], MappedNodeId::new(3));
     }
 
     #[test]

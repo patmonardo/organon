@@ -137,51 +137,55 @@ pub fn create_targets(target_nodes: Vec<MappedNodeId>) -> Box<dyn Targets> {
 mod tests {
     use super::*;
 
+    fn node(value: u64) -> MappedNodeId {
+        MappedNodeId::new(value)
+    }
+
     #[test]
     fn test_single_target() {
-        let mut target = SingleTarget::new(5);
+        let mut target = SingleTarget::new(node(5));
 
-        assert_eq!(target.apply(3), TraversalState::Continue);
-        assert_eq!(target.apply(5), TraversalState::EmitAndStop);
-        assert_eq!(target.apply(7), TraversalState::Continue);
+        assert_eq!(target.apply(node(3)), TraversalState::Continue);
+        assert_eq!(target.apply(node(5)), TraversalState::EmitAndStop);
+        assert_eq!(target.apply(node(7)), TraversalState::Continue);
     }
 
     #[test]
     fn test_many_targets() {
-        let mut target = ManyTargets::new(vec![3, 5, 7]);
+        let mut target = ManyTargets::new(vec![node(3), node(5), node(7)]);
 
-        assert_eq!(target.apply(1), TraversalState::Continue);
-        assert_eq!(target.apply(3), TraversalState::EmitAndContinue);
-        assert_eq!(target.apply(5), TraversalState::EmitAndContinue);
-        assert_eq!(target.apply(7), TraversalState::EmitAndStop);
-        assert_eq!(target.apply(9), TraversalState::Continue);
+        assert_eq!(target.apply(node(1)), TraversalState::Continue);
+        assert_eq!(target.apply(node(3)), TraversalState::EmitAndContinue);
+        assert_eq!(target.apply(node(5)), TraversalState::EmitAndContinue);
+        assert_eq!(target.apply(node(7)), TraversalState::EmitAndStop);
+        assert_eq!(target.apply(node(9)), TraversalState::Continue);
     }
 
     #[test]
     fn test_all_targets() {
         let mut target = AllTargets::new();
 
-        assert_eq!(target.apply(1), TraversalState::EmitAndContinue);
-        assert_eq!(target.apply(5), TraversalState::EmitAndContinue);
-        assert_eq!(target.apply(10), TraversalState::EmitAndContinue);
+        assert_eq!(target.apply(node(1)), TraversalState::EmitAndContinue);
+        assert_eq!(target.apply(node(5)), TraversalState::EmitAndContinue);
+        assert_eq!(target.apply(node(10)), TraversalState::EmitAndContinue);
     }
 
     #[test]
     fn test_create_targets_factory() {
         // Empty list -> AllTargets
         let mut targets = create_targets(vec![]);
-        assert_eq!(targets.apply(5), TraversalState::EmitAndContinue);
+        assert_eq!(targets.apply(node(5)), TraversalState::EmitAndContinue);
 
         // Single target -> SingleTarget
-        let mut targets = create_targets(vec![5]);
-        assert_eq!(targets.apply(3), TraversalState::Continue);
-        assert_eq!(targets.apply(5), TraversalState::EmitAndStop);
+        let mut targets = create_targets(vec![node(5)]);
+        assert_eq!(targets.apply(node(3)), TraversalState::Continue);
+        assert_eq!(targets.apply(node(5)), TraversalState::EmitAndStop);
 
         // Multiple targets -> ManyTargets
-        let mut targets = create_targets(vec![3, 5, 7]);
-        assert_eq!(targets.apply(1), TraversalState::Continue);
-        assert_eq!(targets.apply(3), TraversalState::EmitAndContinue);
-        assert_eq!(targets.apply(5), TraversalState::EmitAndContinue);
-        assert_eq!(targets.apply(7), TraversalState::EmitAndStop);
+        let mut targets = create_targets(vec![node(3), node(5), node(7)]);
+        assert_eq!(targets.apply(node(1)), TraversalState::Continue);
+        assert_eq!(targets.apply(node(3)), TraversalState::EmitAndContinue);
+        assert_eq!(targets.apply(node(5)), TraversalState::EmitAndContinue);
+        assert_eq!(targets.apply(node(7)), TraversalState::EmitAndStop);
     }
 }

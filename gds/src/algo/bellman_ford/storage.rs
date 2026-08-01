@@ -605,6 +605,14 @@ mod tests {
     use crate::types::random::{RandomGraphConfig, RandomRelationshipConfig};
     use std::collections::HashSet;
 
+    fn mapped_node_id(value: u64) -> MappedNodeId {
+        MappedNodeId::new(value)
+    }
+
+    fn relationship_index(value: u64) -> RelationshipIndex {
+        RelationshipIndex::new(value)
+    }
+
     #[test]
     fn test_bellman_ford_storage_runtime_creation() {
         let storage = BellmanFordStorageRuntime::new(MappedNodeId::ZERO, true, true, 4);
@@ -654,15 +662,15 @@ mod tests {
         assert_eq!(neighbors.len(), 2);
         assert_eq!(
             neighbors[0],
-            (MappedNodeId::new(1), 1.0, RelationshipIndex::ZERO)
+            (mapped_node_id(1), 1.0, relationship_index(0))
         );
         assert_eq!(
             neighbors[1],
-            (MappedNodeId::new(2), 4.0, RelationshipIndex::new(1))
+            (mapped_node_id(2), 4.0, relationship_index(1))
         );
 
         let neighbors_empty = storage
-            .get_neighbors_with_weights(None, MappedNodeId::new(99), 0)
+            .get_neighbors_with_weights(None, mapped_node_id(99), 0)
             .unwrap();
         assert!(neighbors_empty.is_empty());
     }
@@ -681,15 +689,15 @@ mod tests {
         let path_to_three = result
             .shortest_paths
             .iter()
-            .find(|path| path.target_node == MappedNodeId::new(3))
+            .find(|path| path.target_node == mapped_node_id(3))
             .expect("expected path to node 3");
         assert_eq!(
             path_to_three.node_ids,
             vec![
                 MappedNodeId::ZERO,
-                MappedNodeId::new(1),
-                MappedNodeId::new(2),
-                MappedNodeId::new(3)
+                mapped_node_id(1),
+                mapped_node_id(2),
+                mapped_node_id(3)
             ]
         );
         assert_eq!(path_to_three.costs, vec![0.0, 1.0, 3.0, 4.0]);
@@ -760,9 +768,9 @@ mod tests {
 
     #[test]
     fn rejects_source_node_outside_graph_hint() {
-        let mut storage = BellmanFordStorageRuntime::new(MappedNodeId::new(101), true, true, 4);
-        let mut computation =
-            BellmanFordComputationRuntime::new(MappedNodeId::new(101), true, true, 4);
+        let source = mapped_node_id(101);
+        let mut storage = BellmanFordStorageRuntime::new(source, true, true, 4);
+        let mut computation = BellmanFordComputationRuntime::new(source, true, true, 4);
         let mut progress_tracker =
             TaskProgressTracker::new(Tasks::leaf("bellman_ford".to_string()));
 
@@ -774,7 +782,7 @@ mod tests {
     #[test]
     fn allows_negative_but_rejects_non_finite_weights() {
         let source_node = MappedNodeId::ZERO;
-        let target_node = MappedNodeId::new(1);
+        let target_node = mapped_node_id(1);
         assert!(
             BellmanFordStorageRuntime::validate_edge_weight(source_node, target_node, -1.0).is_ok()
         );

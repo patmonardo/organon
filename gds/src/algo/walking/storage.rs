@@ -207,6 +207,7 @@ fn build_outgoing(
 mod tests {
     use super::*;
     use crate::config::GraphStoreConfig;
+    use crate::types::graph::MappedNodeId;
     use crate::types::graph::RelationshipTopology;
     use crate::types::graph::SimpleIdMap;
     use crate::types::graph_store::{Capabilities, DatabaseId, DatabaseInfo, DatabaseLocation};
@@ -232,7 +233,11 @@ mod tests {
 
         let id_map = SimpleIdMap::from_original_ids([0, 1, 2]);
 
-        let outgoing = vec![vec![1], vec![2], vec![]];
+        let outgoing = vec![
+            vec![MappedNodeId::new(1)],
+            vec![MappedNodeId::new(2)],
+            vec![],
+        ];
         let mut topologies = HashMap::new();
         topologies.insert(rel, RelationshipTopology::new(outgoing, None));
 

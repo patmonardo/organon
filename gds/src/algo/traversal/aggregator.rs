@@ -54,23 +54,27 @@ impl Aggregator for WeightAggregator {
 mod tests {
     use super::*;
 
+    fn node(value: u64) -> MappedNodeId {
+        MappedNodeId::new(value)
+    }
+
     #[test]
     fn test_no_aggregator() {
         let aggregator = NoAggregator;
-        assert_eq!(aggregator.apply(0, 1, 5.0), 0.0);
+        assert_eq!(aggregator.apply(node(0), node(1), 5.0), 0.0);
     }
 
     #[test]
     fn test_one_hop_aggregator() {
         let aggregator = OneHopAggregator;
-        assert_eq!(aggregator.apply(0, 1, 0.0), 1.0);
-        assert_eq!(aggregator.apply(1, 2, 1.0), 2.0);
+        assert_eq!(aggregator.apply(node(0), node(1), 0.0), 1.0);
+        assert_eq!(aggregator.apply(node(1), node(2), 1.0), 2.0);
     }
 
     #[test]
     fn test_weight_aggregator() {
         let aggregator = WeightAggregator;
-        assert_eq!(aggregator.apply(0, 1, 0.0), 1.0);
-        assert_eq!(aggregator.apply(1, 2, 1.0), 2.0);
+        assert_eq!(aggregator.apply(node(0), node(1), 0.0), 1.0);
+        assert_eq!(aggregator.apply(node(1), node(2), 1.0), 2.0);
     }
 }

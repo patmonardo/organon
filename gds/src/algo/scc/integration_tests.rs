@@ -10,13 +10,19 @@ mod tests {
     use crate::config::GraphStoreConfig;
     use crate::procedures::GraphFacade;
     use crate::projection::RelationshipType;
-    use crate::types::graph::RelationshipTopology;
     use crate::types::graph::MappedNodeId;
+    use crate::types::graph::OriginalNodeId;
+    use crate::types::graph::RelationshipTopology;
     use crate::types::graph::SimpleIdMap;
     use crate::types::graph_store::{
         Capabilities, DatabaseId, DatabaseInfo, DatabaseLocation, DefaultGraphStore, GraphName,
+        GraphStore,
     };
     use crate::types::schema::{Direction, MutableGraphSchema};
+
+    fn node(value: u64) -> MappedNodeId {
+        MappedNodeId::new(value)
+    }
 
     fn store_from_outgoing(outgoing: Vec<Vec<MappedNodeId>>) -> DefaultGraphStore {
         let node_count = outgoing.len();
@@ -51,7 +57,13 @@ mod tests {
         );
 
         let original_ids: Vec<i64> = (0..node_count)
-            .map(|node| i64::try_from(node).expect("fixture node must fit the original ID domain"))
+            .map(|node| {
+                100_i64
+                    .checked_add(
+                        i64::try_from(node).expect("fixture node must fit the original ID domain"),
+                    )
+                    .expect("fixture original ID must not overflow")
+            })
             .collect();
         let id_map = SimpleIdMap::from_original_ids(original_ids);
 
@@ -72,7 +84,16 @@ mod tests {
     #[test]
     fn scc_single_cycle_is_one_component() {
         // 0 -> 1 -> 2 -> 0
-        let store = store_from_outgoing(vec![vec![1], vec![2], vec![0]]);
+        let store = store_from_outgoing(vec![vec![node(1)], vec![node(2)], vec![node(0)]]);
+        let id_map = store.nodes();
+        assert_eq!(
+            id_map.to_mapped_node_id(OriginalNodeId::new(100)),
+            Some(node(0))
+        );
+        assert_eq!(
+            id_map.to_original_node_id(node(2)),
+            Some(OriginalNodeId::new(102))
+        );
         let graph = GraphFacade::new(Arc::new(store));
 
         let result = graph.scc().run().unwrap();
@@ -86,7 +107,12 @@ mod tests {
     #[test]
     fn scc_two_disjoint_cycles_are_two_components() {
         // (0 <-> 1) and (2 <-> 3)
-        let store = store_from_outgoing(vec![vec![1], vec![0], vec![3], vec![2]]);
+        let store = store_from_outgoing(vec![
+            vec![node(1)],
+            vec![node(0)],
+            vec![node(3)],
+            vec![node(2)],
+        ]);
         let graph = GraphFacade::new(Arc::new(store));
 
         let result = graph.scc().run().unwrap();
@@ -101,7 +127,7 @@ mod tests {
     #[test]
     fn scc_directed_chain_has_each_node_its_own_component() {
         // 0 -> 1 -> 2 -> 3
-        let store = store_from_outgoing(vec![vec![1], vec![2], vec![3], vec![]]);
+        let store = store_from_outgoing(vec![vec![node(1)], vec![node(2)], vec![node(3)], vec![]]);
         let graph = GraphFacade::new(Arc::new(store));
 
         let result = graph.scc().run().unwrap();
@@ -139,7 +165,14 @@ mod tests {
     #[test]
     fn scc_mixed_component_shapes() {
         // (0 <-> 1), (2 -> 3 -> 4 -> 2), and 5 isolated.
-        let store = store_from_outgoing(vec![vec![1], vec![0], vec![3], vec![4], vec![2], vec![]]);
+        let store = store_from_outgoing(vec![
+            vec![node(1)],
+            vec![node(0)],
+            vec![node(3)],
+            vec![node(4)],
+            vec![node(2)],
+            vec![],
+        ]);
         let graph = GraphFacade::new(Arc::new(store));
 
         let result = graph.scc().run().unwrap();
@@ -167,7 +200,7 @@ mod tests {
 
     #[test]
     fn scc_stats_include_node_count() {
-        let store = store_from_outgoing(vec![vec![1], vec![2], vec![0], vec![]]);
+        let store = store_from_outgoing(vec![vec![node(1)], vec![node(2)], vec![node(0)], vec![]]);
         let graph = GraphFacade::new(Arc::new(store));
 
         let stats = graph.scc().stats().unwrap();

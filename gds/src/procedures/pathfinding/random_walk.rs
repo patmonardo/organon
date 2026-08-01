@@ -10,20 +10,20 @@ use crate::algo::random_walk::{
     RandomWalkMutationSummary, RandomWalkResult, RandomWalkResultBuilder, RandomWalkRow,
     RandomWalkStats, RandomWalkStorageRuntime, RandomWalkWriteSummary,
 };
-use crate::task::concurrency::TerminationFlag;
-use crate::task::memory::MemoryRange;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
-use crate::types::prelude::{DefaultGraphStore, GraphStore};
+use crate::task::concurrency::TerminationFlag;
+use crate::task::memory::MemoryRange;
 use crate::types::graph::MappedNodeId;
+use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use std::collections::HashSet;
 use std::sync::Arc;
 use std::time::Instant;
 
 // Import upgraded systems
+use crate::projection::eval::algorithm::AlgorithmError;
 use crate::task::progress::TaskProgressTracker;
 use crate::task::progress::{EmptyTaskRegistryFactory, TaskRegistryFactory, Tasks};
-use crate::projection::eval::algorithm::AlgorithmError;
 
 /// Random Walk algorithm facade
 pub struct RandomWalkFacade {
@@ -344,6 +344,7 @@ mod tests {
     use crate::procedures::GraphFacade;
 
     use crate::projection::RelationshipType;
+    use crate::types::graph::OriginalNodeId;
     use crate::types::graph::{RelationshipTopology, SimpleIdMap};
     use crate::types::graph_store::{
         Capabilities, DatabaseId, DatabaseInfo, DatabaseLocation, DefaultGraphStore, GraphName,
@@ -352,12 +353,12 @@ mod tests {
     use std::collections::HashMap;
 
     fn store_from_directed_edges(node_count: usize, edges: &[(usize, usize)]) -> DefaultGraphStore {
-        let mut outgoing: Vec<Vec<i64>> = vec![Vec::new(); node_count];
-        let mut incoming: Vec<Vec<i64>> = vec![Vec::new(); node_count];
+        let mut outgoing: Vec<Vec<MappedNodeId>> = vec![Vec::new(); node_count];
+        let mut incoming: Vec<Vec<MappedNodeId>> = vec![Vec::new(); node_count];
 
         for &(a, b) in edges {
-            outgoing[a].push(b as i64);
-            incoming[b].push(a as i64);
+            outgoing[a].push(MappedNodeId::try_from(b).expect("fixture node ID must fit"));
+            incoming[b].push(MappedNodeId::try_from(a).expect("fixture node ID must fit"));
         }
 
         let rel_type = RelationshipType::of("REL");
@@ -374,7 +375,11 @@ mod tests {
             RelationshipTopology::new(outgoing, Some(incoming)),
         );
 
-        let original_ids: Vec<i64> = (0..node_count as i64).collect();
+        let original_ids: Vec<OriginalNodeId> = (0..node_count)
+            .map(|node_id| {
+                OriginalNodeId::new(i64::try_from(node_id).expect("fixture original ID must fit"))
+            })
+            .collect();
         let id_map = SimpleIdMap::from_original_ids(original_ids);
 
         DefaultGraphStore::new(

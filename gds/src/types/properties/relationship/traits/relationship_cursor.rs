@@ -350,13 +350,13 @@ mod tests {
     #[test]
     fn typed_cursor_provides_full_gdsvalue_access() {
         let mut cursor = TypedCursor::default();
-        cursor.set_source_id(1);
-        cursor.set_target_id(2);
+        cursor.set_source_id(MappedNodeId::new(1));
+        cursor.set_target_id(MappedNodeId::new(2));
         let long_value = PrimitiveValues::long_value(42);
         cursor.set_value(long_value.clone());
 
-        assert_eq!(cursor.source_id(), 1);
-        assert_eq!(cursor.target_id(), 2);
+        assert_eq!(cursor.source_id(), MappedNodeId::new(1));
+        assert_eq!(cursor.target_id(), MappedNodeId::new(2));
         assert_eq!(cursor.value().value_type(), long_value.value_type());
     }
 
@@ -364,8 +364,8 @@ mod tests {
     fn typed_cursor_smart_converter_works() {
         let long_value = PrimitiveValues::long_value(42);
         let cursor = TypedCursor {
-            source: 1,
-            target: 2,
+            source: MappedNodeId::new(1),
+            target: MappedNodeId::new(2),
             value: long_value,
         };
 
@@ -393,8 +393,8 @@ mod tests {
 
         for (value, type_name) in test_cases {
             let cursor = TypedCursor {
-                source: 1,
-                target: 2,
+                source: MappedNodeId::new(1),
+                target: MappedNodeId::new(2),
                 value: value.clone(),
             };
 

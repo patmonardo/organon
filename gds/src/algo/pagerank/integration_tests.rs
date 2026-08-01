@@ -8,23 +8,30 @@ mod tests {
     use crate::config::GraphStoreConfig;
     use crate::procedures::GraphFacade;
     use crate::projection::RelationshipType;
-    use crate::types::graph::{RelationshipTopology, SimpleIdMap};
+    use crate::types::graph::{MappedNodeId, RelationshipTopology, SimpleIdMap};
     use crate::types::graph_store::{
         Capabilities, DatabaseId, DatabaseInfo, DatabaseLocation, DefaultGraphStore, GraphName,
     };
     use crate::types::schema::{Direction, MutableGraphSchema};
 
-    fn store_from_outgoing(outgoing: Vec<Vec<i64>>) -> DefaultGraphStore {
+    fn node(value: u64) -> MappedNodeId {
+        MappedNodeId::new(value)
+    }
+
+    fn store_from_outgoing(outgoing: Vec<Vec<MappedNodeId>>) -> DefaultGraphStore {
         let node_count = outgoing.len();
 
-        let mut incoming: Vec<Vec<i64>> = vec![Vec::new(); node_count];
+        let mut incoming: Vec<Vec<MappedNodeId>> = vec![Vec::new(); node_count];
         for (source, targets) in outgoing.iter().enumerate() {
             for &target in targets {
-                if target >= 0 {
-                    let t = target as usize;
-                    if t < node_count {
-                        incoming[t].push(source as i64);
-                    }
+                let target = target
+                    .to_usize()
+                    .expect("fixture target must fit the dense index domain");
+                if target < node_count {
+                    incoming[target].push(
+                        MappedNodeId::try_from(source)
+                            .expect("fixture source must fit mapped ID space"),
+                    );
                 }
             }
         }
@@ -43,7 +50,9 @@ mod tests {
             RelationshipTopology::new(outgoing, Some(incoming)),
         );
 
-        let original_ids: Vec<i64> = (0..node_count as i64).collect();
+        let original_ids: Vec<i64> = (0..node_count)
+            .map(|node| i64::try_from(node).expect("fixture node must fit original ID space"))
+            .collect();
         let id_map = SimpleIdMap::from_original_ids(original_ids);
 
         DefaultGraphStore::new(
@@ -97,7 +106,7 @@ mod tests {
     #[test]
     fn pagerank_chain_orders_sink_highest() {
         // 0 -> 1 -> 2 (2 is dangling)
-        let store = store_from_outgoing(vec![vec![1], vec![2], vec![]]);
+        let store = store_from_outgoing(vec![vec![node(1)], vec![node(2)], vec![]]);
         let graph = GraphFacade::new(Arc::new(store));
 
         let scores: Vec<f64> = graph
@@ -117,7 +126,7 @@ mod tests {
 
     #[test]
     fn pagerank_out_of_range_sources_fall_back_to_all_nodes() {
-        let store = store_from_outgoing(vec![vec![1], vec![2], vec![]]);
+        let store = store_from_outgoing(vec![vec![node(1)], vec![node(2)], vec![]]);
         let graph = GraphFacade::new(Arc::new(store));
 
         let scores: Vec<f64> = graph
@@ -136,7 +145,7 @@ mod tests {
 
     #[test]
     fn article_rank_uses_degree_smoothed_denominator() {
-        let store = Arc::new(store_from_outgoing(vec![vec![1], vec![2], vec![]]));
+        let store = Arc::new(store_from_outgoing(vec![vec![node(1)], vec![node(2)], vec![]]));
         let graph = GraphFacade::new(Arc::clone(&store));
 
         let pagerank_scores: Vec<f64> = graph
@@ -167,7 +176,7 @@ mod tests {
 
     #[test]
     fn eigenvector_scores_are_l2_normalized() {
-        let store = store_from_outgoing(vec![vec![1], vec![2], vec![0]]);
+        let store = store_from_outgoing(vec![vec![node(1)], vec![node(2)], vec![node(0)]]);
         let graph = GraphFacade::new(Arc::new(store));
 
         let scores: Vec<f64> = graph

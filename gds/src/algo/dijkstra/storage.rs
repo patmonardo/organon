@@ -9,8 +9,8 @@
 use super::spec::{DijkstraPathResult, DijkstraResult};
 use super::targets::Targets;
 use super::DijkstraComputationRuntime;
-use crate::task::progress::{ProgressTracker, UNKNOWN_VOLUME};
 use crate::projection::eval::algorithm::AlgorithmError;
+use crate::task::progress::{ProgressTracker, UNKNOWN_VOLUME};
 use crate::types::graph::Graph;
 use crate::types::graph::MappedNodeId;
 use crate::types::graph::RelationshipIndex;
@@ -39,8 +39,8 @@ pub struct DijkstraStorageRuntime {
     ///
     /// Signature: `(source_node, target_node, relationship_id) -> bool`.
     ///
-    /// Note: `relationship_id` follows Java GDS semantics here: index within the
-    /// enumerated adjacency stream for the current source node.
+    /// `relationship_id` is the canonical relationship index supplied by graph traversal.
+    /// The deterministic no-graph fixture synthesizes local indices only for fixture use.
     relationship_filter:
         Box<dyn Fn(MappedNodeId, MappedNodeId, RelationshipIndex) -> bool + Send + Sync>,
 
@@ -352,15 +352,13 @@ impl DijkstraStorageRuntime {
             costs.push(computation.get_cost(current_node));
 
             if self.track_relationships {
-                relationship_ids.push(
-                    computation
-                        .get_relationship_id(current_node)
-                        .ok_or_else(|| {
-                            AlgorithmError::InvalidGraph(
-                                "Missing relationship identity for tracked path".to_string(),
-                            )
-                        })?,
-                );
+                relationship_ids.push(computation.get_relationship_id(current_node).ok_or_else(
+                    || {
+                        AlgorithmError::InvalidGraph(
+                            "Missing relationship identity for tracked path".to_string(),
+                        )
+                    },
+                )?);
             }
 
             current_node = computation
@@ -455,10 +453,18 @@ mod tests {
     use super::*;
     use crate::task::progress::{TaskProgressTracker, Tasks};
 
+    fn node(value: u64) -> MappedNodeId {
+        MappedNodeId::new(value)
+    }
+
+    fn relationship(value: u64) -> RelationshipIndex {
+        RelationshipIndex::new(value)
+    }
+
     #[test]
     fn test_dijkstra_storage_runtime_creation() {
-        let storage = DijkstraStorageRuntime::new(0, true, 4, false);
-        assert_eq!(storage.source_node, 0);
+        let storage = DijkstraStorageRuntime::new(node(0), true, 4, false);
+        assert_eq!(storage.source_node, node(0));
         assert!(storage.track_relationships);
         assert_eq!(storage.concurrency, 4);
         assert!(!storage.use_heuristic);
@@ -466,9 +472,9 @@ mod tests {
 
     #[test]
     fn test_dijkstra_path_computation_single_target() {
-        let mut storage = DijkstraStorageRuntime::new(0, false, 4, false);
-        let mut computation = DijkstraComputationRuntime::new(0, false, 4, false);
-        let targets = Box::new(SingleTarget::new(3));
+        let mut storage = DijkstraStorageRuntime::new(node(0), false, 4, false);
+        let mut computation = DijkstraComputationRuntime::new(node(0), false, 4, false);
+        let targets = Box::new(SingleTarget::new(node(3)));
         let mut progress_tracker = TaskProgressTracker::new(Tasks::leaf("dijkstra".to_string()));
 
         // Test basic path computation
@@ -481,9 +487,9 @@ mod tests {
 
     #[test]
     fn test_dijkstra_path_computation_many_targets() {
-        let mut storage = DijkstraStorageRuntime::new(0, false, 4, false);
-        let mut computation = DijkstraComputationRuntime::new(0, false, 4, false);
-        let targets = Box::new(ManyTargets::new(vec![3, 5]));
+        let mut storage = DijkstraStorageRuntime::new(node(0), false, 4, false);
+        let mut computation = DijkstraComputationRuntime::new(node(0), false, 4, false);
+        let targets = Box::new(ManyTargets::new(vec![node(3), node(5)]));
         let mut progress_tracker = TaskProgressTracker::new(Tasks::leaf("dijkstra".to_string()));
 
         // Test with multiple targets
@@ -496,8 +502,8 @@ mod tests {
 
     #[test]
     fn test_dijkstra_path_computation_all_targets() {
-        let mut storage = DijkstraStorageRuntime::new(0, false, 4, false);
-        let mut computation = DijkstraComputationRuntime::new(0, false, 4, false);
+        let mut storage = DijkstraStorageRuntime::new(node(0), false, 4, false);
+        let mut computation = DijkstraComputationRuntime::new(node(0), false, 4, false);
         let targets = Box::new(AllTargets::new());
         let mut progress_tracker = TaskProgressTracker::new(Tasks::leaf("dijkstra".to_string()));
 
@@ -511,27 +517,32 @@ mod tests {
 
     #[test]
     fn test_neighbors_with_weights() {
-        let storage = DijkstraStorageRuntime::new(0, false, 4, false);
+        let storage = DijkstraStorageRuntime::new(node(0), false, 4, false);
 
-        let neighbors = storage.get_neighbors_with_weights(None, 0, 0).unwrap();
+        let neighbors = storage
+            .get_neighbors_with_weights(None, node(0), 0)
+            .unwrap();
         assert_eq!(neighbors.len(), 2);
-        assert_eq!(neighbors[0], (1, 1.0, 0));
-        assert_eq!(neighbors[1], (2, 4.0, 1));
+        assert_eq!(neighbors[0], (node(1), 1.0, relationship(0)));
+        assert_eq!(neighbors[1], (node(2), 4.0, relationship(1)));
 
-        let neighbors_empty = storage.get_neighbors_with_weights(None, 99, 0).unwrap();
+        let neighbors_empty = storage
+            .get_neighbors_with_weights(None, node(99), 0)
+            .unwrap();
         assert!(neighbors_empty.is_empty());
     }
 
     #[test]
     fn relationship_filter_blocks_by_relationship_id_and_tracking_records_ids() {
-        // Block the first adjacency entry for source=0 (relationship_id=0), forcing
+        // Block fixture relationship 0 for source node 0, forcing
         // the path 0->2->3 instead of 0->1->2->3 on the deterministic mock graph.
-        let mut storage = DijkstraStorageRuntime::new(0, true, 4, false).with_relationship_filter(
-            |source, _target, relationship_id| !(source == 0 && relationship_id == 0),
-        );
+        let mut storage = DijkstraStorageRuntime::new(node(0), true, 4, false)
+            .with_relationship_filter(|source, _target, relationship_id| {
+                !(source == node(0) && relationship_id == relationship(0))
+            });
 
-        let mut computation = DijkstraComputationRuntime::new(0, true, 4, false);
-        let targets = Box::new(SingleTarget::new(3));
+        let mut computation = DijkstraComputationRuntime::new(node(0), true, 4, false);
+        let targets = Box::new(SingleTarget::new(node(3)));
         let mut progress_tracker = TaskProgressTracker::new(Tasks::leaf("dijkstra".to_string()));
 
         let result = storage
@@ -540,18 +551,18 @@ mod tests {
         let mut paths = result.path_finding_result.clone();
         let first = paths.find_first().expect("expected at least one path");
 
-        assert_eq!(first.node_ids, vec![0, 2, 3]);
-        // relationship_id semantics here: index within enumerated adjacency per source node.
-        // - for 0->2 on node 0, that's index 1
-        // - for 2->3 on node 2, that's index 0
-        assert_eq!(first.relationship_ids, vec![1, 0]);
+        assert_eq!(first.node_ids, vec![node(0), node(2), node(3)]);
+        assert_eq!(
+            first.relationship_ids,
+            vec![relationship(1), relationship(0)]
+        );
     }
 
     #[test]
     fn stale_queue_entries_do_not_emit_or_lock_in_old_paths() {
-        let mut storage = DijkstraStorageRuntime::new(0, false, 4, false);
-        let mut computation = DijkstraComputationRuntime::new(0, false, 4, false);
-        let targets = Box::new(SingleTarget::new(3));
+        let mut storage = DijkstraStorageRuntime::new(node(0), false, 4, false);
+        let mut computation = DijkstraComputationRuntime::new(node(0), false, 4, false);
+        let targets = Box::new(SingleTarget::new(node(3)));
         let mut progress_tracker = TaskProgressTracker::new(Tasks::leaf("dijkstra".to_string()));
 
         let result = storage
@@ -560,15 +571,15 @@ mod tests {
         let mut paths = result.path_finding_result.clone();
         let first = paths.find_first().expect("expected target path");
 
-        assert_eq!(first.node_ids, vec![0, 1, 2, 3]);
+        assert_eq!(first.node_ids, vec![node(0), node(1), node(2), node(3)]);
         assert_eq!(first.costs, vec![0.0, 1.0, 3.0, 4.0]);
     }
 
     #[test]
     fn heuristic_function_orders_queue_without_changing_path_costs() {
-        let mut storage = DijkstraStorageRuntime::new(0, false, 4, true)
-            .with_heuristic_function(|node| if node == 1 { 100.0 } else { 0.0 });
-        let mut computation = DijkstraComputationRuntime::new(0, false, 4, true);
+        let mut storage = DijkstraStorageRuntime::new(node(0), false, 4, true)
+            .with_heuristic_function(|candidate| if candidate == node(1) { 100.0 } else { 0.0 });
+        let mut computation = DijkstraComputationRuntime::new(node(0), false, 4, true);
         let targets = Box::new(AllTargets::new());
         let mut progress_tracker = TaskProgressTracker::new(Tasks::leaf("dijkstra".to_string()));
 
@@ -577,15 +588,15 @@ mod tests {
             .unwrap();
         let paths: Vec<_> = result.path_finding_result.paths().cloned().collect();
 
-        assert_eq!(paths[0].target_node, 0);
-        assert_eq!(paths[1].target_node, 2);
+        assert_eq!(paths[0].target_node, node(0));
+        assert_eq!(paths[1].target_node, node(2));
         assert_eq!(paths[1].costs.last().copied(), Some(4.0));
     }
 
     #[test]
     fn rejects_source_node_outside_graph_hint() {
-        let mut storage = DijkstraStorageRuntime::new(101, false, 4, false);
-        let mut computation = DijkstraComputationRuntime::new(101, false, 4, false);
+        let mut storage = DijkstraStorageRuntime::new(node(101), false, 4, false);
+        let mut computation = DijkstraComputationRuntime::new(node(101), false, 4, false);
         let targets = Box::new(AllTargets::new());
         let mut progress_tracker = TaskProgressTracker::new(Tasks::leaf("dijkstra".to_string()));
 
@@ -597,9 +608,11 @@ mod tests {
 
     #[test]
     fn rejects_negative_or_non_finite_weights() {
-        assert!(DijkstraStorageRuntime::validate_edge_weight(0, 1, -1.0).is_err());
-        assert!(DijkstraStorageRuntime::validate_edge_weight(0, 1, f64::NAN).is_err());
-        assert!(DijkstraStorageRuntime::validate_edge_weight(0, 1, f64::INFINITY).is_err());
-        assert!(DijkstraStorageRuntime::validate_edge_weight(0, 1, 0.0).is_ok());
+        assert!(DijkstraStorageRuntime::validate_edge_weight(node(0), node(1), -1.0).is_err());
+        assert!(DijkstraStorageRuntime::validate_edge_weight(node(0), node(1), f64::NAN).is_err());
+        assert!(
+            DijkstraStorageRuntime::validate_edge_weight(node(0), node(1), f64::INFINITY).is_err()
+        );
+        assert!(DijkstraStorageRuntime::validate_edge_weight(node(0), node(1), 0.0).is_ok());
     }
 }

@@ -372,6 +372,8 @@ mod tests {
     use crate::config::GraphStoreConfig;
     use crate::procedures::GraphFacade;
     use crate::projection::RelationshipType;
+    use crate::types::graph::MappedNodeId;
+    use crate::types::graph::OriginalNodeId;
     use crate::types::graph::RelationshipIndex;
     use crate::types::graph::{RelationshipTopology, SimpleIdMap};
     use crate::types::graph_store::{
@@ -385,14 +387,16 @@ mod tests {
         node_count: usize,
         edges: &[(usize, usize)],
     ) -> DefaultGraphStore {
-        let mut outgoing: Vec<Vec<i64>> = vec![Vec::new(); node_count];
-        let mut incoming: Vec<Vec<i64>> = vec![Vec::new(); node_count];
+        let mut outgoing: Vec<Vec<MappedNodeId>> = vec![Vec::new(); node_count];
+        let mut incoming: Vec<Vec<MappedNodeId>> = vec![Vec::new(); node_count];
 
         for &(a, b) in edges {
-            outgoing[a].push(b as i64);
-            outgoing[b].push(a as i64);
-            incoming[a].push(b as i64);
-            incoming[b].push(a as i64);
+            let mapped_a = MappedNodeId::try_from(a).expect("fixture node ID must fit");
+            let mapped_b = MappedNodeId::try_from(b).expect("fixture node ID must fit");
+            outgoing[a].push(mapped_b);
+            outgoing[b].push(mapped_a);
+            incoming[a].push(mapped_b);
+            incoming[b].push(mapped_a);
         }
 
         let rel_type = RelationshipType::of("REL");
@@ -409,7 +413,11 @@ mod tests {
             RelationshipTopology::new(outgoing, Some(incoming)),
         );
 
-        let original_ids: Vec<i64> = (0..node_count as i64).collect();
+        let original_ids: Vec<OriginalNodeId> = (0..node_count)
+            .map(|node_id| {
+                OriginalNodeId::new(i64::try_from(node_id).expect("fixture original ID must fit"))
+            })
+            .collect();
         let id_map = SimpleIdMap::from_original_ids(original_ids);
 
         DefaultGraphStore::new(
@@ -469,11 +477,13 @@ mod tests {
 
     #[test]
     fn facade_treats_directed_projection_as_undirected_connectivity() {
-        let mut outgoing: Vec<Vec<i64>> = vec![Vec::new(); 4];
-        let mut incoming: Vec<Vec<i64>> = vec![Vec::new(); 4];
+        let mut outgoing: Vec<Vec<MappedNodeId>> = vec![Vec::new(); 4];
+        let mut incoming: Vec<Vec<MappedNodeId>> = vec![Vec::new(); 4];
         for (source, target) in [(0usize, 1usize), (1, 2), (2, 3)] {
-            outgoing[source].push(target as i64);
-            incoming[target].push(source as i64);
+            outgoing[source]
+                .push(MappedNodeId::try_from(target).expect("fixture node ID must fit"));
+            incoming[target]
+                .push(MappedNodeId::try_from(source).expect("fixture node ID must fit"));
         }
 
         let rel_type = RelationshipType::of("REL");
@@ -498,7 +508,7 @@ mod tests {
             ),
             schema,
             Capabilities::default(),
-            SimpleIdMap::from_original_ids(0..4),
+            SimpleIdMap::from_original_ids((0..4).map(OriginalNodeId::new)),
             relationship_topologies,
         );
         let graph = GraphFacade::new(Arc::new(store));

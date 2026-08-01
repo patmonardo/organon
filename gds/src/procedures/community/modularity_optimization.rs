@@ -12,10 +12,10 @@ use crate::algo::modularity_optimization::{
     ModularityOptimizationStorageRuntime,
 };
 use crate::collections::backends::vec::VecLong;
-use crate::task::concurrency::TerminationFlag;
-use crate::task::progress::TaskRegistry;
-use crate::task::memory::{Estimate, MemoryRange};
 use crate::projection::eval::algorithm::AlgorithmError;
+use crate::task::concurrency::TerminationFlag;
+use crate::task::memory::{Estimate, MemoryRange};
+use crate::task::progress::TaskRegistry;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use crate::types::properties::node::DefaultLongNodePropertyValues;
 use crate::types::properties::node::NodePropertyValues;
@@ -260,6 +260,8 @@ mod tests {
     use super::*;
     use crate::config::GraphStoreConfig;
     use crate::projection::RelationshipType;
+    use crate::types::graph::MappedNodeId;
+    use crate::types::graph::OriginalNodeId;
     use crate::types::graph::{RelationshipTopology, SimpleIdMap};
     use crate::types::graph_store::{
         Capabilities, DatabaseId, DatabaseInfo, DatabaseLocation, GraphName,
@@ -268,12 +270,14 @@ mod tests {
     use std::collections::HashMap;
 
     fn store_from_edges(node_count: usize, edges: &[(usize, usize)]) -> DefaultGraphStore {
-        let mut outgoing: Vec<Vec<i64>> = vec![Vec::new(); node_count];
-        let mut incoming: Vec<Vec<i64>> = vec![Vec::new(); node_count];
+        let mut outgoing: Vec<Vec<MappedNodeId>> = vec![Vec::new(); node_count];
+        let mut incoming: Vec<Vec<MappedNodeId>> = vec![Vec::new(); node_count];
 
         for &(source, target) in edges {
-            outgoing[source].push(target as i64);
-            incoming[target].push(source as i64);
+            outgoing[source]
+                .push(MappedNodeId::try_from(target).expect("fixture node ID must fit"));
+            incoming[target]
+                .push(MappedNodeId::try_from(source).expect("fixture node ID must fit"));
         }
 
         let rel_type = RelationshipType::of("REL");
@@ -289,7 +293,11 @@ mod tests {
             RelationshipTopology::new(outgoing, Some(incoming)),
         );
 
-        let original_ids: Vec<i64> = (0..node_count as i64).collect();
+        let original_ids: Vec<OriginalNodeId> = (0..node_count)
+            .map(|node_id| {
+                OriginalNodeId::new(i64::try_from(node_id).expect("fixture original ID must fit"))
+            })
+            .collect();
         let id_map = SimpleIdMap::from_original_ids(original_ids);
 
         DefaultGraphStore::new(

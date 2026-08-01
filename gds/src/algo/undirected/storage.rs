@@ -411,7 +411,10 @@ mod tests {
         let mut topologies = HashMap::new();
         topologies.insert(
             rel_type.clone(),
-            RelationshipTopology::new(vec![vec![1], vec![0]], None),
+            RelationshipTopology::new(
+                vec![vec![MappedNodeId::new(1)], vec![MappedNodeId::ZERO]],
+                None,
+            ),
         );
 
         let id_map = SimpleIdMap::from_original_ids(vec![0, 1]);

@@ -229,20 +229,28 @@ pub struct PathResult {
 mod tests {
     use super::*;
 
+    fn node(value: u64) -> MappedNodeId {
+        MappedNodeId::new(value)
+    }
+
+    fn relationship(value: u64) -> RelationshipIndex {
+        RelationshipIndex::new(value)
+    }
+
     #[test]
     fn test_mutable_path_result_creation() {
         let path = MutablePathResult::new(
             0,
-            0,
-            3,
-            vec![0, 1, 2, 3],
-            vec![10, 11, 12],
+            node(0),
+            node(3),
+            vec![node(0), node(1), node(2), node(3)],
+            vec![relationship(10), relationship(11), relationship(12)],
             vec![0.0, 1.0, 2.0, 3.0],
         );
 
         assert_eq!(path.index, 0);
-        assert_eq!(path.source_node, 0);
-        assert_eq!(path.target_node, 3);
+        assert_eq!(path.source_node, node(0));
+        assert_eq!(path.target_node, node(3));
         assert_eq!(path.node_count(), 4);
         assert_eq!(path.total_cost(), 3.0);
     }
@@ -251,16 +259,16 @@ mod tests {
     fn test_mutable_path_result_node_access() {
         let path = MutablePathResult::new(
             0,
-            0,
-            3,
-            vec![0, 1, 2, 3],
-            vec![10, 11, 12],
+            node(0),
+            node(3),
+            vec![node(0), node(1), node(2), node(3)],
+            vec![relationship(10), relationship(11), relationship(12)],
             vec![0.0, 1.0, 2.0, 3.0],
         );
 
-        assert_eq!(path.node(0), Some(0));
-        assert_eq!(path.node(1), Some(1));
-        assert_eq!(path.node(3), Some(3));
+        assert_eq!(path.node(0), Some(node(0)));
+        assert_eq!(path.node(1), Some(node(1)));
+        assert_eq!(path.node(3), Some(node(3)));
         assert_eq!(path.node(4), None);
     }
 
@@ -268,16 +276,16 @@ mod tests {
     fn test_mutable_path_result_sub_path() {
         let path = MutablePathResult::new(
             0,
-            0,
-            3,
-            vec![0, 1, 2, 3],
-            vec![10, 11, 12],
+            node(0),
+            node(3),
+            vec![node(0), node(1), node(2), node(3)],
+            vec![relationship(10), relationship(11), relationship(12)],
             vec![0.0, 1.0, 2.0, 3.0],
         );
 
         let sub_path = path.sub_path(2);
-        assert_eq!(sub_path.node_ids, vec![0, 1]);
-        assert_eq!(sub_path.relationship_ids, vec![10]);
+        assert_eq!(sub_path.node_ids, vec![node(0), node(1)]);
+        assert_eq!(sub_path.relationship_ids, vec![relationship(10)]);
         assert_eq!(sub_path.costs, vec![0.0, 1.0]);
     }
 
@@ -285,18 +293,18 @@ mod tests {
     fn test_mutable_path_result_matches() {
         let path1 = MutablePathResult::new(
             0,
-            0,
-            3,
-            vec![0, 1, 2, 3],
-            vec![10, 11, 12],
+            node(0),
+            node(3),
+            vec![node(0), node(1), node(2), node(3)],
+            vec![relationship(10), relationship(11), relationship(12)],
             vec![0.0, 1.0, 2.0, 3.0],
         );
         let path2 = MutablePathResult::new(
             0,
-            0,
-            3,
-            vec![0, 1, 2, 4],
-            vec![10, 11, 13],
+            node(0),
+            node(3),
+            vec![node(0), node(1), node(2), node(4)],
+            vec![relationship(10), relationship(11), relationship(13)],
             vec![0.0, 1.0, 2.0, 4.0],
         );
 
@@ -306,15 +314,38 @@ mod tests {
 
     #[test]
     fn test_mutable_path_result_append() {
-        let mut path1 =
-            MutablePathResult::new(0, 0, 2, vec![0, 1, 2], vec![10, 11], vec![0.0, 1.0, 2.0]);
-        let path2 =
-            MutablePathResult::new(0, 2, 4, vec![2, 3, 4], vec![12, 13], vec![0.0, 1.0, 2.0]);
+        let mut path1 = MutablePathResult::new(
+            0,
+            node(0),
+            node(2),
+            vec![node(0), node(1), node(2)],
+            vec![relationship(10), relationship(11)],
+            vec![0.0, 1.0, 2.0],
+        );
+        let path2 = MutablePathResult::new(
+            0,
+            node(2),
+            node(4),
+            vec![node(2), node(3), node(4)],
+            vec![relationship(12), relationship(13)],
+            vec![0.0, 1.0, 2.0],
+        );
 
         path1.append(&path2);
 
-        assert_eq!(path1.node_ids, vec![0, 1, 2, 3, 4]);
-        assert_eq!(path1.relationship_ids, vec![10, 11, 12, 13]);
+        assert_eq!(
+            path1.node_ids,
+            vec![node(0), node(1), node(2), node(3), node(4)]
+        );
+        assert_eq!(
+            path1.relationship_ids,
+            vec![
+                relationship(10),
+                relationship(11),
+                relationship(12),
+                relationship(13)
+            ]
+        );
         assert_eq!(path1.costs, vec![0.0, 1.0, 2.0, 3.0, 4.0]);
     }
 }

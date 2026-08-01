@@ -224,23 +224,29 @@ impl BellmanFordComputationRuntime {
 mod tests {
     use super::*;
 
+    fn mapped_node_id(value: u64) -> MappedNodeId {
+        MappedNodeId::new(value)
+    }
+
     #[test]
     fn test_bellman_ford_computation_runtime_initialization() {
-        let mut runtime = BellmanFordComputationRuntime::new(0, true, true, 4);
-        runtime.initialize(0, true, true, 100);
+        let source = mapped_node_id(0);
+        let mut runtime = BellmanFordComputationRuntime::new(source, true, true, 4);
+        runtime.initialize(source, true, true, 100);
 
-        assert_eq!(runtime.source_node(), 0);
+        assert_eq!(runtime.source_node(), source);
         assert!(runtime.track_negative_cycles());
         assert!(runtime.track_paths());
-        assert_eq!(runtime.distance(0), f64::INFINITY);
-        assert_eq!(runtime.predecessor(0), None);
-        assert_eq!(runtime.length(0), u32::MAX);
+        assert_eq!(runtime.distance(source), f64::INFINITY);
+        assert_eq!(runtime.predecessor(source), None);
+        assert_eq!(runtime.length(source), u32::MAX);
     }
 
     #[test]
     fn test_bellman_ford_computation_runtime_empty_negative_cycles() {
-        let mut runtime = BellmanFordComputationRuntime::new(0, true, true, 4);
-        runtime.initialize(0, true, true, 100);
+        let source = mapped_node_id(0);
+        let mut runtime = BellmanFordComputationRuntime::new(source, true, true, 4);
+        runtime.initialize(source, true, true, 100);
 
         assert!(!runtime.has_negative_cycles());
         assert!(runtime.get_negative_cycle_nodes().is_empty());
@@ -248,10 +254,11 @@ mod tests {
 
     #[test]
     fn negative_cycle_detection_is_independent_of_cycle_path_tracking() {
-        let mut runtime = BellmanFordComputationRuntime::new(0, false, true, 4);
-        runtime.initialize(0, false, true, 100);
+        let source = mapped_node_id(0);
+        let mut runtime = BellmanFordComputationRuntime::new(source, false, true, 4);
+        runtime.initialize(source, false, true, 100);
 
-        runtime.add_negative_cycle_node(3);
+        runtime.add_negative_cycle_node(mapped_node_id(3));
 
         assert!(runtime.has_negative_cycles());
         assert!(runtime.get_negative_cycle_nodes().is_empty());
@@ -259,90 +266,101 @@ mod tests {
 
     #[test]
     fn test_bellman_ford_computation_runtime_nodes_explored() {
-        let mut runtime = BellmanFordComputationRuntime::new(0, true, true, 4);
-        runtime.initialize(0, true, true, 100);
+        let source = mapped_node_id(0);
+        let first = mapped_node_id(1);
+        let second = mapped_node_id(2);
+        let unreachable = mapped_node_id(3);
+        let mut runtime = BellmanFordComputationRuntime::new(source, true, true, 4);
+        runtime.initialize(source, true, true, 100);
 
         // Set some distances
-        runtime.set_distance(1, 5.0);
-        runtime.set_distance(2, 10.0);
+        runtime.set_distance(first, 5.0);
+        runtime.set_distance(second, 10.0);
 
-        assert_eq!(runtime.distance(1), 5.0);
-        assert_eq!(runtime.distance(2), 10.0);
-        assert_eq!(runtime.distance(3), f64::INFINITY);
+        assert_eq!(runtime.distance(first), 5.0);
+        assert_eq!(runtime.distance(second), 10.0);
+        assert_eq!(runtime.distance(unreachable), f64::INFINITY);
     }
 
     #[test]
     fn test_bellman_ford_computation_runtime_total_cost() {
-        let mut runtime = BellmanFordComputationRuntime::new(0, true, true, 4);
-        runtime.initialize(0, true, true, 100);
+        let source = mapped_node_id(0);
+        let mut runtime = BellmanFordComputationRuntime::new(source, true, true, 4);
+        runtime.initialize(source, true, true, 100);
 
         // Set source distance
-        runtime.set_distance(0, 0.0);
-        runtime.set_predecessor(0, None);
-        runtime.set_length(0, 0);
+        runtime.set_distance(source, 0.0);
+        runtime.set_predecessor(source, None);
+        runtime.set_length(source, 0);
 
-        assert_eq!(runtime.distance(0), 0.0);
-        assert_eq!(runtime.predecessor(0), None);
-        assert_eq!(runtime.length(0), 0);
+        assert_eq!(runtime.distance(source), 0.0);
+        assert_eq!(runtime.predecessor(source), None);
+        assert_eq!(runtime.length(source), 0);
     }
 
     #[test]
     fn test_bellman_ford_computation_runtime_operations() {
-        let mut runtime = BellmanFordComputationRuntime::new(0, true, true, 4);
-        runtime.initialize(0, true, true, 100);
+        let source = mapped_node_id(0);
+        let target = mapped_node_id(1);
+        let mut runtime = BellmanFordComputationRuntime::new(source, true, true, 4);
+        runtime.initialize(source, true, true, 100);
 
         // Test distance operations
-        runtime.set_distance(1, 5.0);
-        assert_eq!(runtime.distance(1), 5.0);
+        runtime.set_distance(target, 5.0);
+        assert_eq!(runtime.distance(target), 5.0);
 
         // Test predecessor operations
-        runtime.set_predecessor(1, Some(0));
-        assert_eq!(runtime.predecessor(1), Some(0));
+        runtime.set_predecessor(target, Some(source));
+        assert_eq!(runtime.predecessor(target), Some(source));
 
         // Test length operations
-        runtime.set_length(1, 1);
-        assert_eq!(runtime.length(1), 1);
+        runtime.set_length(target, 1);
+        assert_eq!(runtime.length(target), 1);
     }
 
     #[test]
     fn test_bellman_ford_computation_runtime_path_reconstruction() {
-        let mut runtime = BellmanFordComputationRuntime::new(0, true, true, 4);
-        runtime.initialize(0, true, true, 100);
+        let source = mapped_node_id(0);
+        let middle = mapped_node_id(1);
+        let target = mapped_node_id(2);
+        let mut runtime = BellmanFordComputationRuntime::new(source, true, true, 4);
+        runtime.initialize(source, true, true, 100);
 
         // Set up a simple path: 0 -> 1 -> 2
-        runtime.set_distance(0, 0.0);
-        runtime.set_predecessor(0, None);
-        runtime.set_length(0, 0);
+        runtime.set_distance(source, 0.0);
+        runtime.set_predecessor(source, None);
+        runtime.set_length(source, 0);
 
-        runtime.set_distance(1, 5.0);
-        runtime.set_predecessor(1, Some(0));
-        runtime.set_length(1, 1);
+        runtime.set_distance(middle, 5.0);
+        runtime.set_predecessor(middle, Some(source));
+        runtime.set_length(middle, 1);
 
-        runtime.set_distance(2, 10.0);
-        runtime.set_predecessor(2, Some(1));
-        runtime.set_length(2, 2);
+        runtime.set_distance(target, 10.0);
+        runtime.set_predecessor(target, Some(middle));
+        runtime.set_length(target, 2);
 
         // Test path reconstruction
-        assert_eq!(runtime.predecessor(2), Some(1));
-        assert_eq!(runtime.predecessor(1), Some(0));
-        assert_eq!(runtime.predecessor(0), None);
+        assert_eq!(runtime.predecessor(target), Some(middle));
+        assert_eq!(runtime.predecessor(middle), Some(source));
+        assert_eq!(runtime.predecessor(source), None);
     }
 
     #[test]
     fn test_bellman_ford_computation_runtime_lowest_f_cost() {
-        let mut runtime = BellmanFordComputationRuntime::new(0, true, true, 4);
-        runtime.initialize(0, true, true, 100);
+        let source = mapped_node_id(0);
+        let mut runtime = BellmanFordComputationRuntime::new(source, true, true, 4);
+        runtime.initialize(source, true, true, 100);
 
         // Set different distances
-        runtime.set_distance(1, 10.0);
-        runtime.set_distance(2, 5.0);
-        runtime.set_distance(3, 15.0);
+        runtime.set_distance(mapped_node_id(1), 10.0);
+        runtime.set_distance(mapped_node_id(2), 5.0);
+        runtime.set_distance(mapped_node_id(3), 15.0);
 
         // Find node with minimum distance
         let mut min_node = None;
         let mut min_distance = f64::INFINITY;
 
-        for node_id in 1..=3 {
+        for node_id in (1..=3).map(mapped_node_id) {
             let distance = runtime.distance(node_id);
             if distance < min_distance {
                 min_distance = distance;
@@ -350,41 +368,51 @@ mod tests {
             }
         }
 
-        assert_eq!(min_node, Some(2));
+        assert_eq!(min_node, Some(mapped_node_id(2)));
         assert_eq!(min_distance, 5.0);
     }
 
     #[test]
     fn test_bellman_ford_computation_runtime_negative_cycles() {
-        let mut runtime = BellmanFordComputationRuntime::new(0, true, true, 4);
-        runtime.initialize(0, true, true, 100);
+        let source = mapped_node_id(0);
+        let first_cycle_node = mapped_node_id(5);
+        let second_cycle_node = mapped_node_id(6);
+        let mut runtime = BellmanFordComputationRuntime::new(source, true, true, 4);
+        runtime.initialize(source, true, true, 100);
 
         // Add negative cycle nodes
-        runtime.add_negative_cycle_node(5);
-        runtime.add_negative_cycle_node(6);
+        runtime.add_negative_cycle_node(first_cycle_node);
+        runtime.add_negative_cycle_node(second_cycle_node);
 
         assert!(runtime.has_negative_cycles());
         assert_eq!(runtime.get_negative_cycle_nodes().len(), 2);
-        assert!(runtime.get_negative_cycle_nodes().contains(&5));
-        assert!(runtime.get_negative_cycle_nodes().contains(&6));
+        assert!(runtime
+            .get_negative_cycle_nodes()
+            .contains(&first_cycle_node));
+        assert!(runtime
+            .get_negative_cycle_nodes()
+            .contains(&second_cycle_node));
     }
 
     #[test]
     fn test_bellman_ford_computation_runtime_compare_and_exchange() {
-        let mut runtime = BellmanFordComputationRuntime::new(0, true, true, 4);
-        runtime.initialize(0, true, true, 100);
+        let source = mapped_node_id(0);
+        let target = mapped_node_id(1);
+        let mut runtime = BellmanFordComputationRuntime::new(source, true, true, 4);
+        runtime.initialize(source, true, true, 100);
 
         // Set initial distance
-        runtime.set_distance(1, 10.0);
+        runtime.set_distance(target, 10.0);
 
         // Try to update with better distance
-        let result = runtime.compare_and_exchange(1, 10.0, 5.0, 0, 1);
+        let result = runtime.compare_and_exchange(target, 10.0, 5.0, source, 1);
         assert_eq!(result, 10.0); // Should return expected distance on success
-        assert_eq!(runtime.distance(1), 5.0);
+        assert_eq!(runtime.distance(target), 5.0);
+        assert_eq!(runtime.predecessor(target), Some(source));
 
         // Try to update with worse distance
-        let result = runtime.compare_and_exchange(1, 5.0, 8.0, 0, 1);
-        assert_eq!(result, -5.0); // Should return negative expected distance on failure
-        assert_eq!(runtime.distance(1), 5.0); // Distance should remain unchanged
+        runtime.compare_and_exchange(target, 5.0, 8.0, source, 1);
+        assert_eq!(runtime.distance(target), 5.0);
+        assert_eq!(runtime.predecessor(target), Some(source));
     }
 }

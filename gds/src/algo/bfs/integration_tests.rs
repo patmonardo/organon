@@ -7,10 +7,15 @@
 use super::spec::{BFSAlgorithmSpec, BfsConfig, BfsResult};
 use super::BfsComputationRuntime;
 use super::BfsStorageRuntime;
-use crate::task::progress::{TaskProgressTracker, Tasks};
 use crate::projection::eval::algorithm::AlgorithmSpec;
 use crate::projection::eval::algorithm::{ExecutionContext, ExecutionMode, ProcedureExecutor};
+use crate::task::progress::{TaskProgressTracker, Tasks};
+use crate::types::graph::MappedNodeId;
 use serde_json::json;
+
+fn mapped(node_id: u64) -> MappedNodeId {
+    MappedNodeId::new(node_id)
+}
 
 #[test]
 fn test_bfs_algorithm_spec_contract() {
@@ -25,8 +30,8 @@ fn test_bfs_algorithm_spec_contract() {
 #[test]
 fn test_bfs_config_validation() {
     let config = BfsConfig {
-        source_node: 0,
-        target_nodes: vec![1, 2],
+        source_node: mapped(0),
+        target_nodes: vec![mapped(1), mapped(2)],
         max_depth: Some(5),
         track_paths: true,
         concurrency: 4,
@@ -44,19 +49,19 @@ fn test_bfs_config_validation() {
 
 #[test]
 fn test_bfs_storage_runtime() {
-    let storage = BfsStorageRuntime::new(0, vec![3], Some(5), true);
-    assert_eq!(storage.source_node, 0);
-    assert_eq!(storage.target_nodes, vec![3]);
+    let storage = BfsStorageRuntime::new(mapped(0), vec![mapped(3)], Some(5), true);
+    assert_eq!(storage.source_node, mapped(0));
+    assert_eq!(storage.target_nodes, vec![mapped(3)]);
     assert_eq!(storage.max_depth, Some(5));
     assert!(storage.track_paths);
 }
 
 #[test]
 fn test_bfs_computation_runtime() {
-    let mut computation = BfsComputationRuntime::new(0, true, 4, 10);
-    computation.initialize(0, Some(5), 10);
+    let mut computation = BfsComputationRuntime::new(mapped(0), true, 4, 10);
+    computation.initialize(mapped(0), Some(5), 10);
 
-    assert_eq!(computation.source_node, 0);
+    assert_eq!(computation.source_node, mapped(0));
     assert!(computation.check_max_depth(4.0));
     assert!(!computation.check_max_depth(5.0));
     assert_eq!(computation.visited_count(), 0);
@@ -74,8 +79,8 @@ fn test_bfs_focused_macro_integration() {
 
 #[test]
 fn test_bfs_storage_computation_integration() {
-    let storage = BfsStorageRuntime::new(0, vec![3], None, true);
-    let mut computation = BfsComputationRuntime::new(0, true, 1, 10);
+    let storage = BfsStorageRuntime::new(mapped(0), vec![mapped(3)], None, true);
+    let mut computation = BfsComputationRuntime::new(mapped(0), true, 1, 10);
 
     let mut progress_tracker = TaskProgressTracker::new(Tasks::leaf("BFS".to_string()));
     let bfs_result = storage
@@ -88,7 +93,7 @@ fn test_bfs_storage_computation_integration() {
 #[test]
 fn test_bfs_result_serialization() {
     let result = BfsResult {
-        visited_nodes: vec![0, 1, 2, 3],
+        visited_nodes: vec![mapped(0), mapped(1), mapped(2), mapped(3)],
         visited_depths: vec![0.0, 1.0, 1.0, 2.0],
         computation_time_ms: 5,
     };
@@ -117,8 +122,8 @@ fn test_bfs_config_accepts_java_aliases() {
     }))
     .unwrap();
 
-    assert_eq!(config.source_node, 0);
-    assert_eq!(config.target_nodes, vec![1, 2]);
+    assert_eq!(config.source_node, mapped(0));
+    assert_eq!(config.target_nodes, vec![mapped(1), mapped(2)]);
     assert_eq!(config.max_depth, Some(5));
     assert!(config.track_paths);
     assert_eq!(config.concurrency, 4);

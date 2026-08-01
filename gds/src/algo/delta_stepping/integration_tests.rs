@@ -8,11 +8,16 @@
 use super::spec::{DELTA_STEPPINGAlgorithmSpec, DeltaSteppingConfig, DeltaSteppingResult};
 use super::DeltaSteppingComputationRuntime;
 use super::DeltaSteppingStorageRuntime;
-use crate::task::progress::{TaskProgressTracker, Tasks};
 use crate::projection::eval::algorithm::{
     AlgorithmSpec, ExecutionContext, ExecutionMode, ProcedureExecutor,
 };
+use crate::task::progress::{TaskProgressTracker, Tasks};
+use crate::types::graph::MappedNodeId;
 use serde_json::json;
+
+fn mapped_node_id(value: u64) -> MappedNodeId {
+    MappedNodeId::new(value)
+}
 
 #[test]
 fn test_delta_stepping_algorithm_spec_contract() {
@@ -44,7 +49,7 @@ fn test_delta_stepping_config_validation() {
     // Test invalid configuration - the validation_config doesn't validate our custom fields
     // so we'll test the config validation directly instead
     let invalid_config = DeltaSteppingConfig {
-        source_node: 0,
+        source_node: mapped_node_id(0),
         weight_property: "weight".to_string(),
         delta: 0.0,
         concurrency: 4,
@@ -68,7 +73,7 @@ fn test_delta_stepping_java_config_aliases() {
     }))
     .unwrap();
 
-    assert_eq!(config.source_node, 4);
+    assert_eq!(config.source_node, mapped_node_id(4));
     assert_eq!(config.weight_property, "travelTime");
     assert_eq!(config.delta, 3.0);
     assert_eq!(config.concurrency, 2);
@@ -103,10 +108,11 @@ fn test_delta_stepping_execution_modes() {
 
 #[test]
 fn test_delta_stepping_storage_runtime() {
-    let storage = DeltaSteppingStorageRuntime::new(0, 1.0, 4, true);
+    let source = mapped_node_id(0);
+    let storage = DeltaSteppingStorageRuntime::new(source, 1.0, 4, true);
 
     // Test storage runtime creation
-    assert_eq!(storage.source_node, 0);
+    assert_eq!(storage.source_node, source);
     assert_eq!(storage.delta, 1.0);
     assert_eq!(storage.concurrency, 4);
     assert!(storage.store_predecessors);
@@ -114,14 +120,15 @@ fn test_delta_stepping_storage_runtime() {
 
 #[test]
 fn test_delta_stepping_computation_runtime() {
-    let mut computation = DeltaSteppingComputationRuntime::new(0, 1.0, 4, true);
-    computation.initialize(0, 1.0, true, 100);
+    let source = mapped_node_id(0);
+    let mut computation = DeltaSteppingComputationRuntime::new(source, 1.0, 4, true);
+    computation.initialize(source, 1.0, true, 100);
 
     // Test computation runtime
-    assert_eq!(computation.source_node(), 0);
+    assert_eq!(computation.source_node(), source);
     assert_eq!(computation.delta(), 1.0);
     assert!(computation.store_predecessors());
-    assert_eq!(computation.distance(0), f64::INFINITY);
+    assert_eq!(computation.distance(source), f64::INFINITY);
 }
 
 #[test]
@@ -134,7 +141,7 @@ fn test_delta_stepping_focused_macro_integration() {
 
     // Test that we can create a config
     let config = DeltaSteppingConfig::default();
-    assert_eq!(config.source_node, 0);
+    assert_eq!(config.source_node, MappedNodeId::ZERO);
     assert_eq!(config.delta, 1.0);
     assert_eq!(config.concurrency, 4);
     assert!(config.store_predecessors);
@@ -155,8 +162,9 @@ fn test_delta_stepping_algorithm_completeness() {
 
 #[test]
 fn test_delta_stepping_storage_computation_integration() {
-    let mut storage = DeltaSteppingStorageRuntime::new(0, 1.0, 4, true);
-    let mut computation = DeltaSteppingComputationRuntime::new(0, 1.0, 4, true);
+    let source = mapped_node_id(0);
+    let mut storage = DeltaSteppingStorageRuntime::new(source, 1.0, 4, true);
+    let mut computation = DeltaSteppingComputationRuntime::new(source, 1.0, 4, true);
     let mut progress_tracker = TaskProgressTracker::new(Tasks::leaf("delta_stepping".to_string()));
 
     // Test integration between storage and computation

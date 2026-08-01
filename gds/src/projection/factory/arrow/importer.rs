@@ -668,16 +668,14 @@ fn extract_list_property(
     }
 
     let offsets = list_array.offsets().as_slice();
-    let start = usize::try_from(offsets[row_index]).map_err(|_| {
-        ImporterError::InvalidArrowOffset {
+    let start =
+        usize::try_from(offsets[row_index]).map_err(|_| ImporterError::InvalidArrowOffset {
             offset: offsets[row_index],
-        }
-    })?;
-    let end = usize::try_from(offsets[row_index + 1]).map_err(|_| {
-        ImporterError::InvalidArrowOffset {
+        })?;
+    let end =
+        usize::try_from(offsets[row_index + 1]).map_err(|_| ImporterError::InvalidArrowOffset {
             offset: offsets[row_index + 1],
-        }
-    })?;
+        })?;
     let values = list_array.values();
 
     // Try to downcast to specific array types
@@ -1043,7 +1041,10 @@ impl std::fmt::Display for ImporterError {
                 write!(f, "Mapped node ID {mapped_id} exceeds physical index space")
             }
             ImporterError::InvalidArrowOffset { offset } => {
-                write!(f, "Arrow list offset {offset} is outside physical index space")
+                write!(
+                    f,
+                    "Arrow list offset {offset} is outside physical index space"
+                )
             }
             ImporterError::LockError { message } => {
                 write!(f, "Lock error: {}", message)
@@ -1110,11 +1111,11 @@ mod tests {
     #[test]
     fn test_node_accumulator_add_node() {
         let mut acc = NodeAccumulator::new();
-        let idx = acc.add_node(100, vec![NodeLabel::of("Person")]);
+        let idx = acc.add_node(OriginalNodeId::new(100), vec![NodeLabel::of("Person")]);
         assert_eq!(idx, 0);
         assert_eq!(acc.node_count(), 1);
 
-        let idx2 = acc.add_node(101, vec![NodeLabel::of("Company")]);
+        let idx2 = acc.add_node(OriginalNodeId::new(101), vec![NodeLabel::of("Company")]);
         assert_eq!(idx2, 1);
         assert_eq!(acc.node_count(), 2);
     }
@@ -1122,18 +1123,37 @@ mod tests {
     #[test]
     fn test_node_accumulator_build_id_map() {
         let mut acc = NodeAccumulator::new();
-        acc.add_node(100, vec![NodeLabel::of("Person")]);
-        acc.add_node(101, vec![NodeLabel::of("Person")]);
-        acc.add_node(200, vec![NodeLabel::of("Company")]);
+        acc.add_node(OriginalNodeId::new(100), vec![NodeLabel::of("Person")]);
+        acc.add_node(OriginalNodeId::new(101), vec![NodeLabel::of("Person")]);
+        acc.add_node(OriginalNodeId::new(200), vec![NodeLabel::of("Company")]);
 
         let id_map = acc.build_id_map();
         assert_eq!(id_map.node_count(), 3);
-        assert_eq!(id_map.to_mapped_node_id(100), Some(0));
-        assert_eq!(id_map.to_mapped_node_id(101), Some(1));
-        assert_eq!(id_map.to_mapped_node_id(200), Some(2));
+        assert_eq!(
+            id_map.to_mapped_node_id(OriginalNodeId::new(100)),
+            Some(MappedNodeId::new(0))
+        );
+        assert_eq!(
+            id_map.to_mapped_node_id(OriginalNodeId::new(101)),
+            Some(MappedNodeId::new(1))
+        );
+        assert_eq!(
+            id_map.to_mapped_node_id(OriginalNodeId::new(200)),
+            Some(MappedNodeId::new(2))
+        );
 
         let person_label = NodeLabel::of("Person");
         assert_eq!(id_map.node_count_for_label(&person_label), 2);
+    }
+
+    #[test]
+    #[should_panic(expected = "original node IDs must be unique")]
+    fn test_node_accumulator_rejects_duplicate_original_ids() {
+        let mut acc = NodeAccumulator::new();
+        acc.add_node(OriginalNodeId::new(100), vec![]);
+        acc.add_node(OriginalNodeId::new(100), vec![]);
+
+        let _ = acc.build_id_map();
     }
 
     #[test]
@@ -1145,10 +1165,18 @@ mod tests {
     #[test]
     fn test_edge_accumulator_add_edge() {
         let mut acc = EdgeAccumulator::new();
-        acc.add_edge(100, 101, RelationshipType::of("KNOWS"));
+        acc.add_edge(
+            OriginalNodeId::new(100),
+            OriginalNodeId::new(101),
+            RelationshipType::of("KNOWS"),
+        );
         assert_eq!(acc.edge_count(), 1);
 
-        acc.add_edge(101, 200, RelationshipType::of("WORKS_AT"));
+        acc.add_edge(
+            OriginalNodeId::new(101),
+            OriginalNodeId::new(200),
+            RelationshipType::of("WORKS_AT"),
+        );
         assert_eq!(acc.edge_count(), 2);
     }
 
@@ -1159,9 +1187,21 @@ mod tests {
 
         // Create accumulator with edges
         let mut acc = EdgeAccumulator::new();
-        acc.add_edge(100, 101, RelationshipType::of("KNOWS"));
-        acc.add_edge(100, 200, RelationshipType::of("KNOWS"));
-        acc.add_edge(101, 200, RelationshipType::of("WORKS_AT"));
+        acc.add_edge(
+            OriginalNodeId::new(100),
+            OriginalNodeId::new(101),
+            RelationshipType::of("KNOWS"),
+        );
+        acc.add_edge(
+            OriginalNodeId::new(100),
+            OriginalNodeId::new(200),
+            RelationshipType::of("KNOWS"),
+        );
+        acc.add_edge(
+            OriginalNodeId::new(101),
+            OriginalNodeId::new(200),
+            RelationshipType::of("WORKS_AT"),
+        );
 
         // Build topologies
         let topologies = acc.build_topology(&id_map).unwrap();
@@ -1170,25 +1210,36 @@ mod tests {
         // Check KNOWS topology
         let knows = topologies.get(&RelationshipType::of("KNOWS")).unwrap();
         assert_eq!(knows.relationship_count(), 2);
-        assert_eq!(knows.outgoing(0).unwrap(), &[1, 2]);
+        assert_eq!(
+            knows.outgoing(MappedNodeId::ZERO).unwrap(),
+            &[MappedNodeId::new(1), MappedNodeId::new(2)]
+        );
 
         // Check WORKS_AT topology
         let works_at = topologies.get(&RelationshipType::of("WORKS_AT")).unwrap();
         assert_eq!(works_at.relationship_count(), 1);
-        assert_eq!(works_at.outgoing(1).unwrap(), &[2]);
+        assert_eq!(
+            works_at.outgoing(MappedNodeId::new(1)).unwrap(),
+            &[MappedNodeId::new(2)]
+        );
     }
 
     #[test]
     fn test_edge_accumulator_invalid_node_id() {
         let id_map = SimpleIdMap::from_original_ids([100, 101]);
         let mut acc = EdgeAccumulator::new();
-        acc.add_edge(100, 999, RelationshipType::of("KNOWS")); // 999 not in id_map
+        acc.add_edge(
+            OriginalNodeId::new(100),
+            OriginalNodeId::new(999),
+            RelationshipType::of("KNOWS"),
+        );
 
         let result = acc.build_topology(&id_map);
         assert!(result.is_err());
         assert!(matches!(
             result.unwrap_err(),
-            ImporterError::InvalidNodeId { original_id: 999 }
+            ImporterError::InvalidNodeId { original_id }
+                if original_id == OriginalNodeId::new(999)
         ));
     }
 
@@ -1234,8 +1285,8 @@ mod tests {
     fn test_property_accumulator_add_long() {
         let config = PropertyConfig::new("age", 2, DefaultValue::long(0), ValueType::Long);
         let mut acc = PropertyAccumulator::new(config);
-        acc.set(100, PropertyValue::Long(42));
-        acc.set(101, PropertyValue::Long(35));
+        acc.set(OriginalNodeId::new(100), PropertyValue::Long(42));
+        acc.set(OriginalNodeId::new(101), PropertyValue::Long(35));
         assert_eq!(acc.value_count(), 2);
     }
 
@@ -1243,8 +1294,8 @@ mod tests {
     fn test_property_accumulator_add_double() {
         let config = PropertyConfig::new("weight", 2, DefaultValue::double(0.0), ValueType::Double);
         let mut acc = PropertyAccumulator::new(config);
-        acc.set(100, PropertyValue::Double(1.5));
-        acc.set(101, PropertyValue::Double(2.7));
+        acc.set(OriginalNodeId::new(100), PropertyValue::Double(1.5));
+        acc.set(OriginalNodeId::new(101), PropertyValue::Double(2.7));
         assert_eq!(acc.value_count(), 2);
     }
 
@@ -1252,8 +1303,14 @@ mod tests {
     fn test_property_accumulator_add_long_array() {
         let config = PropertyConfig::new("tags", 2, DefaultValue::null(), ValueType::LongArray);
         let mut acc = PropertyAccumulator::new(config);
-        acc.set(100, PropertyValue::LongArray(vec![1, 2, 3]));
-        acc.set(101, PropertyValue::LongArray(vec![4, 5]));
+        acc.set(
+            OriginalNodeId::new(100),
+            PropertyValue::LongArray(vec![1, 2, 3]),
+        );
+        acc.set(
+            OriginalNodeId::new(101),
+            PropertyValue::LongArray(vec![4, 5]),
+        );
         assert_eq!(acc.value_count(), 2);
     }
 
@@ -1263,8 +1320,8 @@ mod tests {
         let mut acc = PropertyAccumulator::new(config);
 
         // Add some values
-        acc.set(100, PropertyValue::Long(42));
-        acc.set(101, PropertyValue::Long(35));
+        acc.set(OriginalNodeId::new(100), PropertyValue::Long(42));
+        acc.set(OriginalNodeId::new(101), PropertyValue::Long(35));
 
         // Build with IdMap
         let id_map = SimpleIdMap::from_original_ids([100, 101, 102]);
@@ -1284,8 +1341,8 @@ mod tests {
         );
         let mut acc = PropertyAccumulator::new(config);
 
-        acc.set(100, PropertyValue::Double(1.5));
-        acc.set(102, PropertyValue::Double(2.7));
+        acc.set(OriginalNodeId::new(100), PropertyValue::Double(1.5));
+        acc.set(OriginalNodeId::new(102), PropertyValue::Double(2.7));
 
         let id_map = SimpleIdMap::from_original_ids([100, 101, 102]);
         let property_values = acc.build(&id_map).unwrap();
@@ -1300,8 +1357,14 @@ mod tests {
             PropertyConfig::new("embedding", 2, DefaultValue::null(), ValueType::LongArray);
         let mut acc = PropertyAccumulator::new(config);
 
-        acc.set(100, PropertyValue::LongArray(vec![1, 2, 3]));
-        acc.set(101, PropertyValue::LongArray(vec![4, 5, 6]));
+        acc.set(
+            OriginalNodeId::new(100),
+            PropertyValue::LongArray(vec![1, 2, 3]),
+        );
+        acc.set(
+            OriginalNodeId::new(101),
+            PropertyValue::LongArray(vec![4, 5, 6]),
+        );
 
         let id_map = SimpleIdMap::from_original_ids([100, 101]);
         let property_values = acc.build(&id_map).unwrap();
@@ -1316,7 +1379,10 @@ mod tests {
             PropertyConfig::new("embedding", 2, DefaultValue::null(), ValueType::DoubleArray);
         let mut acc = PropertyAccumulator::new(config);
 
-        acc.set(100, PropertyValue::DoubleArray(vec![1.0, 2.0, 3.0]));
+        acc.set(
+            OriginalNodeId::new(100),
+            PropertyValue::DoubleArray(vec![1.0, 2.0, 3.0]),
+        );
 
         let id_map = SimpleIdMap::from_original_ids([100, 101]);
         let property_values = acc.build(&id_map).unwrap();
@@ -1331,7 +1397,10 @@ mod tests {
             PropertyConfig::new("embedding", 2, DefaultValue::null(), ValueType::FloatArray);
         let mut acc = PropertyAccumulator::new(config);
 
-        acc.set(100, PropertyValue::FloatArray(vec![1.0, 2.0, 3.0]));
+        acc.set(
+            OriginalNodeId::new(100),
+            PropertyValue::FloatArray(vec![1.0, 2.0, 3.0]),
+        );
 
         let id_map = SimpleIdMap::from_original_ids([100, 101]);
         let property_values = acc.build(&id_map).unwrap();
@@ -1364,7 +1433,11 @@ mod tests {
         let mut acc = NodeAccumulator::new_with_properties(property_configs);
 
         let properties = vec![PropertyValue::Long(42)];
-        let idx = acc.add_node_with_properties(100, vec![NodeLabel::of("Person")], properties);
+        let idx = acc.add_node_with_properties(
+            OriginalNodeId::new(100),
+            vec![NodeLabel::of("Person")],
+            properties,
+        );
 
         assert_eq!(idx, 0);
         assert_eq!(acc.node_count(), 1);
@@ -1382,10 +1455,18 @@ mod tests {
 
         // Add nodes with properties
         let properties1 = vec![PropertyValue::Long(42), PropertyValue::Double(70.5)];
-        acc.add_node_with_properties(100, vec![NodeLabel::of("Person")], properties1);
+        acc.add_node_with_properties(
+            OriginalNodeId::new(100),
+            vec![NodeLabel::of("Person")],
+            properties1,
+        );
 
         let properties2 = vec![PropertyValue::Long(35), PropertyValue::Double(65.0)];
-        acc.add_node_with_properties(101, vec![NodeLabel::of("Person")], properties2);
+        acc.add_node_with_properties(
+            OriginalNodeId::new(101),
+            vec![NodeLabel::of("Person")],
+            properties2,
+        );
 
         // Build IdMap first
         let id_map = SimpleIdMap::from_original_ids([100, 101]);
@@ -1419,10 +1500,14 @@ mod tests {
 
         // Add node with property
         let properties = vec![PropertyValue::Long(42)];
-        acc.add_node_with_properties(100, vec![NodeLabel::of("Person")], properties);
+        acc.add_node_with_properties(
+            OriginalNodeId::new(100),
+            vec![NodeLabel::of("Person")],
+            properties,
+        );
 
         // Add node without property (will use default)
-        acc.add_node(101, vec![NodeLabel::of("Person")]);
+        acc.add_node(OriginalNodeId::new(101), vec![NodeLabel::of("Person")]);
 
         let id_map = SimpleIdMap::from_original_ids([100, 101]);
         let property_map = acc.build_properties(&id_map).unwrap();

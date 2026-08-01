@@ -34,13 +34,13 @@ use crate::algo::bfs::{
     BfsComputationRuntime, BfsConfig, BfsMutateResult, BfsResult, BfsResultBuilder, BfsStats,
     BfsStorageRuntime, BfsWriteSummary,
 };
-use crate::task::progress::{
-    EmptyTaskRegistryFactory, TaskProgressTracker, TaskRegistryFactory, Tasks,
-};
-use crate::task::memory::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
+use crate::task::memory::MemoryRange;
+use crate::task::progress::{
+    EmptyTaskRegistryFactory, TaskProgressTracker, TaskRegistryFactory, Tasks,
+};
 use crate::types::graph::id_map::MappedNodeId;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use std::collections::HashSet;
@@ -165,10 +165,7 @@ impl BfsFacade {
     ///
     /// Algorithm computes traversal until all targets are found or max depth reached.
     pub fn targets(mut self, targets: Vec<u64>) -> Self {
-        self.config.target_nodes = targets
-            .into_iter()
-            .map(MappedNodeId::new)
-            .collect();
+        self.config.target_nodes = targets.into_iter().map(MappedNodeId::new).collect();
         self
     }
 
@@ -411,6 +408,10 @@ mod tests {
     use super::*;
     use crate::types::random::{RandomGraphConfig, RandomRelationshipConfig};
 
+    fn mapped(node_id: u64) -> MappedNodeId {
+        MappedNodeId::new(node_id)
+    }
+
     #[test]
     fn test_builder_defaults() {
         let config = RandomGraphConfig {
@@ -421,7 +422,7 @@ mod tests {
         };
         let store = Arc::new(DefaultGraphStore::random(&config).unwrap());
         let builder = BfsBuilder::new(store);
-        assert_eq!(builder.config.source_node, 0);
+        assert_eq!(builder.config.source_node, mapped(0));
         assert!(builder.config.target_nodes.is_empty());
         assert!(builder.config.max_depth.is_none());
         assert!(!builder.config.track_paths);
@@ -447,8 +448,8 @@ mod tests {
             .concurrency(4)
             .delta(128);
 
-        assert_eq!(builder.config.source_node, 42);
-        assert_eq!(builder.config.target_nodes, vec![99, 100]);
+        assert_eq!(builder.config.source_node, mapped(42));
+        assert_eq!(builder.config.target_nodes, vec![mapped(99), mapped(100)]);
         assert_eq!(builder.config.max_depth, Some(5));
         assert!(builder.config.track_paths);
         assert_eq!(builder.config.concurrency, 4);
@@ -456,7 +457,7 @@ mod tests {
     }
 
     #[test]
-    fn test_validate_missing_source() {
+    fn test_validate_invalid_concurrency_on_typed_command() {
         let config = RandomGraphConfig {
             seed: Some(1),
             node_count: 8,
@@ -464,7 +465,7 @@ mod tests {
             ..RandomGraphConfig::default()
         };
         let store = Arc::new(DefaultGraphStore::random(&config).unwrap());
-        let builder = BfsBuilder::new(store).source_node(-1);
+        let builder = BfsBuilder::new(store).source_node(mapped(0)).concurrency(0);
         assert!(builder.config.validate().is_err());
     }
 
@@ -519,7 +520,7 @@ mod tests {
             ..RandomGraphConfig::default()
         };
         let store = Arc::new(DefaultGraphStore::random(&config).unwrap());
-        let builder = BfsBuilder::new(store).source_node(-1);
+        let builder = BfsBuilder::new(store).source_node(mapped(0)).concurrency(0);
         assert!(builder.stream().is_err());
     }
 
@@ -595,8 +596,8 @@ mod tests {
         )
         .unwrap();
 
-        assert_eq!(facade.config.source_node, 0);
-        assert_eq!(facade.config.target_nodes, vec![3]);
+        assert_eq!(facade.config.source_node, mapped(0));
+        assert_eq!(facade.config.target_nodes, vec![mapped(3)]);
         assert_eq!(facade.config.max_depth, Some(4));
         assert!(facade.config.track_paths);
         assert_eq!(facade.config.concurrency, BfsConfig::default().concurrency);

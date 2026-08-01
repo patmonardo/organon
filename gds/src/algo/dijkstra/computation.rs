@@ -314,12 +314,20 @@ impl DijkstraComputationRuntime {
 mod tests {
     use super::*;
 
+    fn node(value: u64) -> MappedNodeId {
+        MappedNodeId::new(value)
+    }
+
+    fn relationship(value: u64) -> RelationshipIndex {
+        RelationshipIndex::new(value)
+    }
+
     #[test]
     fn test_dijkstra_computation_runtime_initialization() {
-        let mut runtime = DijkstraComputationRuntime::new(0, true, 4, false);
-        runtime.initialize(0, true, false, 100);
+        let mut runtime = DijkstraComputationRuntime::new(node(0), true, 4, false);
+        runtime.initialize(node(0), true, false, 100);
 
-        assert_eq!(runtime.source_node(), 0);
+        assert_eq!(runtime.source_node(), node(0));
         assert!(runtime.track_relationships());
         assert!(!runtime.use_heuristic());
         assert_eq!(runtime.visited_count(), 0);
@@ -328,94 +336,94 @@ mod tests {
 
     #[test]
     fn test_dijkstra_computation_runtime_queue_operations() {
-        let mut runtime = DijkstraComputationRuntime::new(0, false, 4, false);
-        runtime.initialize(0, false, false, 100);
+        let mut runtime = DijkstraComputationRuntime::new(node(0), false, 4, false);
+        runtime.initialize(node(0), false, false, 100);
 
         // Test queue operations
         assert!(runtime.is_queue_empty());
-        assert!(!runtime.is_in_queue(1));
+        assert!(!runtime.is_in_queue(node(1)));
 
-        runtime.add_to_queue(1, 5.0);
+        runtime.add_to_queue(node(1), 5.0);
         assert!(!runtime.is_queue_empty());
-        assert!(runtime.is_in_queue(1));
-        assert_eq!(runtime.get_cost(1), 5.0);
+        assert!(runtime.is_in_queue(node(1)));
+        assert_eq!(runtime.get_cost(node(1)), 5.0);
 
         let (node, cost) = runtime.pop_from_queue();
-        assert_eq!(node, 1);
+        assert_eq!(node, self::node(1));
         assert_eq!(cost, 5.0);
         assert!(runtime.is_queue_empty());
     }
 
     #[test]
     fn test_dijkstra_computation_runtime_visited_operations() {
-        let mut runtime = DijkstraComputationRuntime::new(0, false, 4, false);
-        runtime.initialize(0, false, false, 100);
+        let mut runtime = DijkstraComputationRuntime::new(node(0), false, 4, false);
+        runtime.initialize(node(0), false, false, 100);
 
         // Test visited operations
-        assert!(!runtime.is_visited(1));
+        assert!(!runtime.is_visited(node(1)));
         assert_eq!(runtime.visited_count(), 0);
 
-        runtime.mark_visited(1);
-        assert!(runtime.is_visited(1));
+        runtime.mark_visited(node(1));
+        assert!(runtime.is_visited(node(1)));
         assert_eq!(runtime.visited_count(), 1);
     }
 
     #[test]
     fn test_dijkstra_computation_runtime_predecessor_operations() {
-        let mut runtime = DijkstraComputationRuntime::new(0, false, 4, false);
-        runtime.initialize(0, false, false, 100);
+        let mut runtime = DijkstraComputationRuntime::new(node(0), false, 4, false);
+        runtime.initialize(node(0), false, false, 100);
 
         // Test predecessor operations
-        assert_eq!(runtime.get_predecessor(1), None);
+        assert_eq!(runtime.get_predecessor(node(1)), None);
 
-        runtime.set_predecessor(1, Some(0));
-        assert_eq!(runtime.get_predecessor(1), Some(0));
+        runtime.set_predecessor(node(1), Some(node(0)));
+        assert_eq!(runtime.get_predecessor(node(1)), Some(node(0)));
 
-        runtime.set_predecessor(1, None);
-        assert_eq!(runtime.get_predecessor(1), None);
+        runtime.set_predecessor(node(1), None);
+        assert_eq!(runtime.get_predecessor(node(1)), None);
     }
 
     #[test]
     fn test_dijkstra_computation_runtime_relationship_operations() {
-        let mut runtime = DijkstraComputationRuntime::new(0, true, 4, false);
-        runtime.initialize(0, true, false, 100);
+        let mut runtime = DijkstraComputationRuntime::new(node(0), true, 4, false);
+        runtime.initialize(node(0), true, false, 100);
 
         // Test relationship operations
-        assert_eq!(runtime.get_relationship_id(1), None);
+        assert_eq!(runtime.get_relationship_id(node(1)), None);
 
-        runtime.set_relationship_id(1, Some(5));
-        assert_eq!(runtime.get_relationship_id(1), Some(5));
+        runtime.set_relationship_id(node(1), Some(relationship(5)));
+        assert_eq!(runtime.get_relationship_id(node(1)), Some(relationship(5)));
 
-        runtime.set_relationship_id(1, None);
-        assert_eq!(runtime.get_relationship_id(1), None);
+        runtime.set_relationship_id(node(1), None);
+        assert_eq!(runtime.get_relationship_id(node(1)), None);
     }
 
     #[test]
     fn test_dijkstra_computation_runtime_cost_operations() {
-        let mut runtime = DijkstraComputationRuntime::new(0, false, 4, false);
-        runtime.initialize(0, false, false, 100);
+        let mut runtime = DijkstraComputationRuntime::new(node(0), false, 4, false);
+        runtime.initialize(node(0), false, false, 100);
 
         // Test cost operations
-        assert_eq!(runtime.get_cost(1), f64::INFINITY);
+        assert_eq!(runtime.get_cost(node(1)), f64::INFINITY);
 
-        runtime.add_to_queue(1, 5.0);
-        assert_eq!(runtime.get_cost(1), 5.0);
+        runtime.add_to_queue(node(1), 5.0);
+        assert_eq!(runtime.get_cost(node(1)), 5.0);
 
-        runtime.update_queue_cost(1, 3.0);
-        assert_eq!(runtime.get_cost(1), 3.0);
-        assert!(runtime.is_stale_queue_entry(1, 5.0));
-        assert!(!runtime.is_stale_queue_entry(1, 3.0));
+        runtime.update_queue_cost(node(1), 3.0);
+        assert_eq!(runtime.get_cost(node(1)), 3.0);
+        assert!(runtime.is_stale_queue_entry(node(1), 5.0));
+        assert!(!runtime.is_stale_queue_entry(node(1), 3.0));
     }
 
     #[test]
     fn test_dijkstra_computation_runtime_priority_queue_order() {
-        let mut runtime = DijkstraComputationRuntime::new(0, false, 4, false);
-        runtime.initialize(0, false, false, 100);
+        let mut runtime = DijkstraComputationRuntime::new(node(0), false, 4, false);
+        runtime.initialize(node(0), false, false, 100);
 
         // Test priority queue ordering (min-heap)
-        runtime.add_to_queue(1, 10.0);
-        runtime.add_to_queue(2, 5.0);
-        runtime.add_to_queue(3, 15.0);
+        runtime.add_to_queue(node(1), 10.0);
+        runtime.add_to_queue(node(2), 5.0);
+        runtime.add_to_queue(node(3), 15.0);
 
         // Should pop in order of increasing cost
         let (_node1, cost1) = runtime.pop_from_queue();
@@ -429,16 +437,16 @@ mod tests {
 
     #[test]
     fn test_dijkstra_computation_runtime_heuristic_priority_order() {
-        let mut runtime = DijkstraComputationRuntime::new(0, false, 4, true);
-        runtime.initialize(0, false, true, 100);
+        let mut runtime = DijkstraComputationRuntime::new(node(0), false, 4, true);
+        runtime.initialize(node(0), false, true, 100);
 
-        runtime.add_to_queue_with_priority(1, 1.0, 101.0);
-        runtime.add_to_queue_with_priority(2, 4.0, 4.0);
+        runtime.add_to_queue_with_priority(node(1), 1.0, 101.0);
+        runtime.add_to_queue_with_priority(node(2), 4.0, 4.0);
 
-        let (node, cost) = runtime.pop_from_queue();
-        assert_eq!(node, 2);
+        let (popped_node, cost) = runtime.pop_from_queue();
+        assert_eq!(popped_node, node(2));
         assert_eq!(cost, 4.0);
-        assert_eq!(runtime.get_cost(1), 1.0);
-        assert_eq!(runtime.get_cost(2), 4.0);
+        assert_eq!(runtime.get_cost(node(1)), 1.0);
+        assert_eq!(runtime.get_cost(node(2)), 4.0);
     }
 }

@@ -13,11 +13,11 @@ use crate::algo::algorithms::pathfinding::{
 };
 use crate::algo::algorithms::{ExecutionMetadata, ResultBuilder};
 use crate::config::validation::ConfigError;
-use crate::task::progress::TaskProgressTracker;
 use crate::define_algorithm_spec;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::relationship_type::RelationshipType;
 use crate::projection::Orientation;
+use crate::task::progress::TaskProgressTracker;
 use crate::types::graph::MappedNodeId;
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
@@ -378,10 +378,14 @@ mod tests {
     use crate::projection::eval::algorithm::ExecutionContext;
     use serde_json::json;
 
+    fn mapped_node_id(value: u64) -> MappedNodeId {
+        MappedNodeId::new(value)
+    }
+
     #[test]
     fn test_bellman_ford_config_default() {
         let config = BellmanFordConfig::default();
-        assert_eq!(config.source_node, 0);
+        assert_eq!(config.source_node, MappedNodeId::ZERO);
         assert!(config.track_negative_cycles);
         assert!(config.track_paths);
         assert_eq!(config.concurrency, 4);
@@ -453,7 +457,7 @@ mod tests {
         // Test invalid configuration - the validation_config doesn't validate our custom fields
         // so we'll test the config validation directly instead
         let invalid_config = BellmanFordConfig {
-            source_node: 0,
+            source_node: mapped_node_id(0),
             track_negative_cycles: true,
             track_paths: true,
             concurrency: 0,
@@ -474,23 +478,28 @@ mod tests {
 
         // Test that we can create a config
         let config = BellmanFordConfig::default();
-        assert_eq!(config.source_node, 0);
+        assert_eq!(config.source_node, MappedNodeId::ZERO);
     }
 
     #[test]
     fn test_bellman_ford_path_result() {
+        let source = mapped_node_id(0);
+        let target = mapped_node_id(5);
         let path_result = BellmanFordPathResult {
-            source_node: 0,
-            target_node: 5,
+            source_node: source,
+            target_node: target,
             total_cost: 10.5,
-            node_ids: vec![0, 1, 3, 5],
+            node_ids: vec![source, mapped_node_id(1), mapped_node_id(3), target],
             costs: vec![0.0, 3.5, 7.0, 10.5],
         };
 
-        assert_eq!(path_result.source_node, 0);
-        assert_eq!(path_result.target_node, 5);
+        assert_eq!(path_result.source_node, source);
+        assert_eq!(path_result.target_node, target);
         assert_eq!(path_result.total_cost, 10.5);
-        assert_eq!(path_result.node_ids.len(), 4);
+        assert_eq!(
+            path_result.node_ids,
+            vec![source, mapped_node_id(1), mapped_node_id(3), target]
+        );
         assert_eq!(path_result.costs.len(), 4);
     }
 }

@@ -9,12 +9,12 @@ use crate::algo::similarity::filtered_node_similarity::{
 use crate::algo::similarity::node_similarity::{
     NodeSimilarityConfig, NodeSimilarityMetric, NodeSimilarityResult,
 };
-use crate::task::concurrency::TerminationFlag;
-use crate::task::progress::{ProgressTracker, Tasks};
-use crate::task::memory::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::Orientation;
 use crate::projection::{NodeLabel, RelationshipType};
+use crate::task::concurrency::TerminationFlag;
+use crate::task::memory::MemoryRange;
+use crate::task::progress::{ProgressTracker, Tasks};
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
@@ -355,6 +355,7 @@ mod tests {
     use crate::config::GraphStoreConfig;
     use crate::types::graph::id_map::IdMap;
     use crate::types::graph::id_map::SimpleIdMap;
+    use crate::types::graph::OriginalNodeId;
     use crate::types::graph::RelationshipTopology;
     use crate::types::graph_store::GraphName;
     use crate::types::graph_store::{Capabilities, DatabaseId, DatabaseInfo, DatabaseLocation};
@@ -375,7 +376,7 @@ mod tests {
                 })
         });
         rows.into_iter()
-            .map(|r| (r.source, r.target, r.similarity))
+            .map(|r| (r.source.get(), r.target.get(), r.similarity))
             .collect()
     }
 
@@ -401,17 +402,32 @@ mod tests {
             .add_relationship_type(rel_type.clone(), Direction::Directed);
         let schema: GraphSchema = schema.build();
 
-        let mut id_map = SimpleIdMap::from_original_ids([0, 1, 2, 3]);
+        let mut id_map = SimpleIdMap::from_original_ids([
+            OriginalNodeId::new(0),
+            OriginalNodeId::new(1),
+            OriginalNodeId::new(2),
+            OriginalNodeId::new(3),
+        ]);
         id_map.add_node_label(label_a.clone());
         id_map.add_node_label(label_b.clone());
-        id_map.add_node_id_to_label(0, label_a.clone());
-        id_map.add_node_id_to_label(1, label_a.clone());
-        id_map.add_node_id_to_label(2, label_b.clone());
-        id_map.add_node_id_to_label(3, label_b.clone());
+        id_map.add_node_id_to_label(MappedNodeId::new(0), label_a.clone());
+        id_map.add_node_id_to_label(MappedNodeId::new(1), label_a.clone());
+        id_map.add_node_id_to_label(MappedNodeId::new(2), label_b.clone());
+        id_map.add_node_id_to_label(MappedNodeId::new(3), label_b.clone());
 
         // Bipartite-ish: 0->2 and 1->2 gives 0 and 1 identical neighborhoods.
-        let outgoing = vec![vec![2], vec![2], vec![], vec![]];
-        let incoming = vec![vec![], vec![], vec![0, 1], vec![]];
+        let outgoing = vec![
+            vec![MappedNodeId::new(2)],
+            vec![MappedNodeId::new(2)],
+            vec![],
+            vec![],
+        ];
+        let incoming = vec![
+            vec![],
+            vec![],
+            vec![MappedNodeId::new(0), MappedNodeId::new(1)],
+            vec![],
+        ];
         let topo = RelationshipTopology::new(outgoing, Some(incoming));
         let mut topologies = std::collections::HashMap::new();
         topologies.insert(rel_type, topo);
@@ -437,10 +453,13 @@ mod tests {
             .collect();
 
         assert!(!results.is_empty());
-        assert!(results.iter().all(|r| r.source < 2 && r.target < 2));
         assert!(results
             .iter()
-            .any(|r| (r.source, r.target) == (0, 1) || (r.source, r.target) == (1, 0)));
+            .all(|r| { r.source < MappedNodeId::new(2) && r.target < MappedNodeId::new(2) }));
+        assert!(results.iter().any(|r| {
+            (r.source, r.target) == (MappedNodeId::new(0), MappedNodeId::new(1))
+                || (r.source, r.target) == (MappedNodeId::new(1), MappedNodeId::new(0))
+        }));
     }
 
     #[test]

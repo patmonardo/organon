@@ -8,11 +8,16 @@
 use super::spec::{BELLMAN_FORDAlgorithmSpec, BellmanFordConfig, BellmanFordResult};
 use super::BellmanFordComputationRuntime;
 use super::BellmanFordStorageRuntime;
-use crate::task::progress::{TaskProgressTracker, Tasks};
 use crate::projection::eval::algorithm::{
     AlgorithmSpec, ExecutionContext, ExecutionMode, ProcedureExecutor,
 };
+use crate::task::progress::{TaskProgressTracker, Tasks};
+use crate::types::graph::MappedNodeId;
 use serde_json::json;
+
+fn mapped_node_id(value: u64) -> MappedNodeId {
+    MappedNodeId::new(value)
+}
 
 #[test]
 fn test_bellman_ford_algorithm_spec_contract() {
@@ -43,7 +48,7 @@ fn test_bellman_ford_config_validation() {
     // Test invalid configuration - the validation_config doesn't validate our custom fields
     // so we'll test the config validation directly instead
     let invalid_config = BellmanFordConfig {
-        source_node: 0,
+        source_node: mapped_node_id(0),
         track_negative_cycles: true,
         track_paths: true,
         concurrency: 0,
@@ -66,10 +71,11 @@ fn test_bellman_ford_execution_modes() {
 
 #[test]
 fn test_bellman_ford_storage_runtime() {
-    let storage = BellmanFordStorageRuntime::new(0, true, true, 4);
+    let source = mapped_node_id(0);
+    let storage = BellmanFordStorageRuntime::new(source, true, true, 4);
 
     // Test storage runtime creation
-    assert_eq!(storage.source_node, 0);
+    assert_eq!(storage.source_node, source);
     assert!(storage.track_negative_cycles);
     assert!(storage.track_paths);
     assert_eq!(storage.concurrency, 4);
@@ -77,14 +83,15 @@ fn test_bellman_ford_storage_runtime() {
 
 #[test]
 fn test_bellman_ford_computation_runtime() {
-    let mut computation = BellmanFordComputationRuntime::new(0, true, true, 4);
-    computation.initialize(0, true, true, 100);
+    let source = mapped_node_id(0);
+    let mut computation = BellmanFordComputationRuntime::new(source, true, true, 4);
+    computation.initialize(source, true, true, 100);
 
     // Test computation runtime
-    assert_eq!(computation.source_node(), 0);
+    assert_eq!(computation.source_node(), source);
     assert!(computation.track_negative_cycles());
     assert!(computation.track_paths());
-    assert_eq!(computation.distance(0), f64::INFINITY);
+    assert_eq!(computation.distance(source), f64::INFINITY);
 }
 
 #[test]
@@ -97,7 +104,7 @@ fn test_bellman_ford_focused_macro_integration() {
 
     // Test that we can create a config
     let config = BellmanFordConfig::default();
-    assert_eq!(config.source_node, 0);
+    assert_eq!(config.source_node, MappedNodeId::ZERO);
     assert!(config.track_negative_cycles);
     assert!(config.track_paths);
     assert_eq!(config.concurrency, 4);
@@ -118,8 +125,9 @@ fn test_bellman_ford_algorithm_completeness() {
 
 #[test]
 fn test_bellman_ford_storage_computation_integration() {
-    let mut storage = BellmanFordStorageRuntime::new(0, true, true, 4);
-    let mut computation = BellmanFordComputationRuntime::new(0, true, true, 4);
+    let source = mapped_node_id(0);
+    let mut storage = BellmanFordStorageRuntime::new(source, true, true, 4);
+    let mut computation = BellmanFordComputationRuntime::new(source, true, true, 4);
     let mut progress_tracker = TaskProgressTracker::new(Tasks::leaf("bellman_ford".to_string()));
 
     // Test integration between storage and computation

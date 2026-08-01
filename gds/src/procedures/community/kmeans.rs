@@ -324,6 +324,7 @@ mod tests {
     use crate::collections::backends::vec::VecDoubleArray;
     use crate::config::GraphStoreConfig;
     use crate::procedures::GraphFacade;
+    use crate::types::graph::OriginalNodeId;
     use crate::types::graph::SimpleIdMap;
     use crate::types::graph_store::{
         Capabilities, DatabaseId, DatabaseInfo, DatabaseLocation, DefaultGraphStore, GraphName,
@@ -335,7 +336,11 @@ mod tests {
     fn store_from_points(points: Vec<Vec<f64>>) -> DefaultGraphStore {
         let node_count = points.len();
         let schema = MutableGraphSchema::empty().build();
-        let original_ids: Vec<i64> = (0..node_count as i64).collect();
+        let original_ids: Vec<OriginalNodeId> = (0..node_count)
+            .map(|node_id| {
+                OriginalNodeId::new(i64::try_from(node_id).expect("fixture original ID must fit"))
+            })
+            .collect();
         let id_map = SimpleIdMap::from_original_ids(original_ids);
 
         let mut store = DefaultGraphStore::new(

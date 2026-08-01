@@ -15,6 +15,10 @@ mod tests {
     };
     use crate::types::schema::{Direction, MutableGraphSchema};
 
+    fn node(value: u64) -> MappedNodeId {
+        MappedNodeId::new(value)
+    }
+
     fn store_from_outgoing(outgoing: Vec<Vec<MappedNodeId>>) -> DefaultGraphStore {
         let node_count = outgoing.len();
 
@@ -38,7 +42,7 @@ mod tests {
         let mut schema_builder = MutableGraphSchema::empty();
         schema_builder
             .relationship_schema_mut()
-            .add_relationship_type(rel_type.clone(), Direction::Directed);
+            .add_relationship_type(rel_type.clone(), Direction::Undirected);
         let schema = schema_builder.build();
 
         let mut relationship_topologies = HashMap::new();
@@ -108,7 +112,11 @@ mod tests {
 
     #[test]
     fn kcore_triangle_is_2_core() {
-        let outgoing = vec![vec![1, 2], vec![0, 2], vec![0, 1]];
+        let outgoing = vec![
+            vec![node(1), node(2)],
+            vec![node(0), node(2)],
+            vec![node(0), node(1)],
+        ];
         let store = store_from_outgoing(outgoing);
         let graph = GraphFacade::new(Arc::new(store));
 
@@ -120,7 +128,12 @@ mod tests {
 
     #[test]
     fn kcore_path_is_1_core() {
-        let outgoing = vec![vec![1], vec![0, 2], vec![1, 3], vec![2]];
+        let outgoing = vec![
+            vec![node(1)],
+            vec![node(0), node(2)],
+            vec![node(1), node(3)],
+            vec![node(2)],
+        ];
         let store = store_from_outgoing(outgoing);
         let graph = GraphFacade::new(Arc::new(store));
 
@@ -144,7 +157,14 @@ mod tests {
 
     #[test]
     fn kcore_mixed_component_shapes() {
-        let outgoing = vec![vec![1], vec![0], vec![3, 4], vec![2, 4], vec![2, 3], vec![]];
+        let outgoing = vec![
+            vec![node(1)],
+            vec![node(0)],
+            vec![node(3), node(4)],
+            vec![node(2), node(4)],
+            vec![node(2), node(3)],
+            vec![],
+        ];
         let store = store_from_outgoing(outgoing);
         let graph = GraphFacade::new(Arc::new(store));
 
@@ -164,7 +184,10 @@ mod tests {
         for source in sparse_count..node_count {
             for target in sparse_count..node_count {
                 if source != target {
-                    outgoing[source].push(target as i64);
+                    outgoing[source].push(
+                        MappedNodeId::try_from(target)
+                            .expect("fixture target must fit the mapped ID domain"),
+                    );
                 }
             }
         }

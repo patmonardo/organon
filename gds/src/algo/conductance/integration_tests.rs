@@ -11,6 +11,7 @@ use crate::task::progress::EmptyTaskRegistryFactory;
 use crate::task::progress::JobId;
 use crate::task::progress::TaskProgressTracker;
 use crate::projection::RelationshipType;
+use crate::types::graph::MappedNodeId;
 use crate::types::graph::RelationshipTopology;
 use crate::types::graph::SimpleIdMap;
 use crate::types::graph_store::Capabilities;
@@ -19,7 +20,11 @@ use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use crate::types::schema::GraphSchema;
 use std::collections::HashMap;
 
-fn make_store(outgoing: Vec<Vec<i64>>) -> DefaultGraphStore {
+fn node(value: u64) -> MappedNodeId {
+    MappedNodeId::new(value)
+}
+
+fn make_store(outgoing: Vec<Vec<MappedNodeId>>) -> DefaultGraphStore {
     let node_count = outgoing.len();
 
     let graph_name = GraphName::new("g");
@@ -33,7 +38,9 @@ fn make_store(outgoing: Vec<Vec<i64>>) -> DefaultGraphStore {
     let capabilities = Capabilities::default();
 
     // Simple id_map with nodes 0..node_count.
-    let id_map = SimpleIdMap::from_original_ids((0..node_count as i64).collect::<Vec<_>>());
+    let id_map = SimpleIdMap::from_original_ids((0..node_count).map(|node| {
+        i64::try_from(node).expect("fixture node must fit original ID space")
+    }));
 
     let topology = RelationshipTopology::new(outgoing, None);
 
@@ -57,7 +64,7 @@ fn conductance_matches_expected_small_graph() {
     // 0 -> 1 (internal for community 0)
     // 1 -> 2 (external for community 0)
     // 2 -> 0 (external for community 1)
-    let mut store = make_store(vec![vec![1], vec![2], vec![0]]);
+    let mut store = make_store(vec![vec![node(1)], vec![node(2)], vec![node(0)]]);
 
     // community ids: [0,0,1]
     store
@@ -102,7 +109,7 @@ fn conductance_matches_expected_small_graph() {
 
 #[test]
 fn negative_target_community_counts_as_external() {
-    let mut store = make_store(vec![vec![1], vec![]]);
+    let mut store = make_store(vec![vec![node(1)], vec![]]);
 
     store
         .add_node_property_i64("community".to_string(), vec![0, -1])
