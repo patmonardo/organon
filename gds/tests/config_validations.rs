@@ -429,23 +429,6 @@ fn hashgnn_config_valid_and_invalid() {
 }
 
 #[test]
-fn gat_config_invalid_dropout_alpha() {
-    use gds::algo::embeddings::gat::GATConfig;
-
-    let cfg = GATConfig {
-        dropout: -0.1,
-        ..Default::default()
-    };
-    assert!(ValidatedConfig::validate(&cfg).is_err());
-
-    let cfg2 = GATConfig {
-        alpha: 1.2, // >1.0
-        ..Default::default()
-    };
-    assert!(ValidatedConfig::validate(&cfg2).is_err());
-}
-
-#[test]
 fn node2vec_config_valid_and_invalid() {
     use gds::algo::embeddings::node2vec::algo::Node2VecConfig;
 

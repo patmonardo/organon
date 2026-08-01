@@ -10,11 +10,11 @@
 
 ## Procedure/ML Layers are Reflective
 
-**The Procedure/ML layers are Reflective, so our Reflection FormProcessor can play along with our GNN/GAT stuff and participate in Principle discovery.**
+**The Procedure/ML layers are Reflective, so our Reflection FormProcessor can work with our GNN systems and participate in Principle discovery.**
 
 - **Procedure/ML layers** = Reflective (not Absolute)
 - **Reflection FormProcessor** (TS) can work with Procedure/ML
-- Can participate in Principle discovery through GNN/GAT
+- Can participate in Principle discovery through GNN systems
 - But this is still Reflection, not Absolute Logic
 
 ## Shape.Eval is Nil Until Principle
@@ -41,7 +41,7 @@ Reflection FormProcessor (TS)
 Procedure/ML Layers (Reflective)
   ↓
 Reflection FormProcessor (TS)
-  ↓ can work with GNN/GAT
+  ↓ can work with GNN systems
   ↓ can participate in Principle discovery
   ↓ but Shape.Eval is still Nil until Principle is returned
 ```
@@ -50,8 +50,7 @@ Reflection FormProcessor (TS)
 
 - **AbsoluteEssence** = PureFormProcessor (Principle discovery)
 - **Procedure/ML** = Reflective (can participate in Principle discovery)
-- **Reflection FormProcessor** = Can work with GNN/GAT, but Shape.Eval is Nil until Principle
+- **Reflection FormProcessor** = Can work with GNN systems, but Shape.Eval is Nil until Principle
 - **Shape.Eval** = Nil until Absolute Logic returns a Principle
 
 The architecture: AbsoluteEssence (PureFormProcessor) discovers Principles, and only then does Shape.Eval become meaningful (Genus/Species - Determinate Science).
-

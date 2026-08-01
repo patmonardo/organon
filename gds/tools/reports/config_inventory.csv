@@ -106,7 +106,6 @@ gds/src/algo/bfs/spec.rs,BfsConfig,True,True,True,False,True,False,True,0
 gds/src/algo/kcore/spec.rs,KCoreConfig,True,True,True,False,True,False,False,0
 gds/src/algo/delta_stepping/spec.rs,DeltaSteppingConfig,True,True,True,False,True,False,True,0
 gds/src/algo/embeddings/node2vec/algo/spec.rs,Node2VecConfig,True,True,True,False,True,False,False,0
-gds/src/algo/embeddings/gat/config.rs,GATConfig,True,True,True,False,True,False,False,0
 gds/src/algo/embeddings/fastrp/spec.rs,FastRPConfig,True,True,True,False,True,False,False,0
 gds/src/algo/embeddings/hashgnn/hash_gnn_parameters.rs,GenerateFeaturesConfig,True,False,False,False,False,False,False,0
 gds/src/algo/embeddings/hashgnn/hash_gnn_parameters.rs,BinarizeFeaturesConfig,True,False,False,False,False,False,False,0

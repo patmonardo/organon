@@ -9,7 +9,7 @@ Scope: Procedure facades (`gds/src/procedures/**`) with attention to where confi
 - I found several _duplicate_ config types living both in `gds/src/config` and `gds/src/algo/*/spec.rs` (examples: **LouvainConfig**, **BetweennessCentralityConfig**, **NodeSimilarityConfig**). This duplication is the main source of confusion.
 - Pattern observed:
   - Some facades consume typed `gds/src/config` types (e.g., `PageRankFacade` uses `crate::config::PageRankConfig`).
-  - Others consume `algo::*::spec` config structs (e.g., `GraphSage`, `GAT`, `CELF`, `LabelProp`) or keep local builder fields and validate with `ConfigValidator`.
+  - Others consume `algo::*::spec` config structs (e.g., `GraphSage`, `CELF`, `LabelProp`) or keep local builder fields and validate with `ConfigValidator`.
   - Several facades mix approaches (local builder fields _and_ call into `algo::*` runtimes which expect spec configs).
 
 ## Methodology 🔎
@@ -29,7 +29,6 @@ Scope: Procedure facades (`gds/src/procedures/**`) with attention to where confi
 - Procedures that use `algo::*::spec` config types (examples):
   - `CELFFacade` — `crate::algo::celf::spec::CELFConfig`
   - `GraphSage` — `GraphSageConfig` (algo embedding spec)
-  - `GAT` — `GATConfig`
   - `LabelPropagation` — `LabelPropConfig`
   - `ApproxMaxKCut` — `ApproxMaxKCutConfig`
   - `NodeSimilarity` (procedures/\*) — `NodeSimilarityConfig` (algo/similarity/spec)
@@ -51,7 +50,7 @@ Scope: Procedure facades (`gds/src/procedures/**`) with attention to where confi
 - Centrality (`procedures/centrality`): mostly builder-style facades. Exception: `PageRankFacade` uses a `config::PageRankConfig` instance when building the runtime.
 - Community (`procedures/community`): some facades hold a `config` field (e.g., `LouvainFacade::config: LouvainConfig`) but the type currently comes from `algo::louvain::LouvainConfig` (duplicate with `gds/src/config`).
 - Similarity (`procedures/similarity`): procedures use `NodeSimilarityConfig` from `algo::similarity::node_similarity::spec` (again duplicate with `gds/src/config` NodeSimilarityConfig).
-- Embeddings (`procedures/embeddings`): many facades build a small runtime-local config (e.g., `GraphSageConfig`, `GATConfig`) coming from `algo::embeddings::*::spec`.
+- Embeddings (`procedures/embeddings`): many facades build a small runtime-local config (for example, `GraphSageConfig`) coming from `algo::embeddings::*::spec`.
 - Pathfinding: builder-style (parameters on builder structs), with occasional references to `GraphStoreConfig` for store-level settings.
 - Pipelines (`procedures/pipelines`): pipeline-specific small config structs live under `procedures/pipelines/*` (these should be reviewed for centralization if shared).
 

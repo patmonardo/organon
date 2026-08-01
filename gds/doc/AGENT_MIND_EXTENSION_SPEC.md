@@ -119,6 +119,7 @@ Return to PureForm should become an explicit protocol after Shell execution.
 A Return should record:
 
 1. Execution identity:
+
 - procedure name
 - graph name
 - model name/version
@@ -126,6 +127,7 @@ A Return should record:
 - execution mode
 
 2. Formal context:
+
 - graph schema snapshot
 - feature properties used
 - node-property steps executed
@@ -133,12 +135,14 @@ A Return should record:
 - config parameters
 
 3. Result summary:
+
 - predictions written or streamed
 - metrics if labels/outcomes are available
 - confidence/probability summaries when available
 - warnings or validation failures
 
 4. Reflective signal:
+
 - drift indicators
 - performance deltas
 - schema changes
@@ -146,6 +150,7 @@ A Return should record:
 - promotion/rollback recommendation
 
 5. Traceability:
+
 - timestamp
 - user/session/agent id
 - source model id
@@ -174,7 +179,6 @@ GNNs should enter as a new family within the same Form/Shell lifecycle, not as a
 Add GNN methods to the training method space:
 
 - GraphSAGE
-- GAT
 - GCN
 - message-passing variants
 - link/node embedding methods

@@ -26,23 +26,21 @@
 - Combining transcendental logic with empirical content
 - The Principle makes empirical content scientifically meaningful
 
-## GATs on Cats: Shape.Eval
+## GNNs on Cats: Shape.Eval
 
-**Our GATs (Graph Attention Networks) on Cats has Shape.Eval.**
+**Our GNNs on Cats have Shape.Eval.**
 
-- GATs = Graph Attention Networks
-- Applied to Cats (empirical content)
+- GNNs = Graph Neural Networks
+- Applied to Cats as empirical content
 - Has Shape.Eval (Genus/Species - Determinate Science)
 - This is Transcendentally Empirical
 
-## GNN and GATs
+## GNNs
 
-**GNN and GATs are interesting. I don't think our GDS has an Attention mechanism.**
+**GNNs are interesting because graph topology mediates empirical content.**
 
 - **GNN** = Graph Neural Networks
-- **GATs** = Graph Attention Networks (have Attention mechanism)
-- Our GDS doesn't currently have an Attention mechanism
-- But GATs would have Shape.Eval (Genus/Species)
+- Our GDS can treat their determinate results through Shape.Eval (Genus/Species)
 
 ## The Architecture
 
@@ -51,7 +49,7 @@ Transcendental (Pure Form - Kernel)
   ↓ provides Principle
 Empirical (Given Form - Relative)
   ↓
-GATs on Cats (empirical content)
+GNNs on Cats (empirical content)
   ↓
 Shape.Eval (Genus/Species - Determinate Science)
 ```
@@ -70,9 +68,7 @@ Shape.Eval (Genus/Species - Determinate Science)
 - **Not Concept of Experience** = Cultic Genus/Species (Determinate Science)
 - **Hegel's Science** = Dharma (Cat/Dog/Human/Tree - each with its own Genus/Species)
 - **Transcendentally Empirical** = Combining transcendental logic with empirical content
-- **GATs on Cats** = Has Shape.Eval (Genus/Species)
-- **Our GDS** = Doesn't have Attention mechanism (yet)
+- **GNNs on Cats** = Has Shape.Eval (Genus/Species)
 - **Schelling's attempt** = Transcendental Empiricism (we're implementing it)
 
 The architecture is Transcendentally Empirical - combining the transcendental Principle with empirical content (Cats, Dogs, Humans, Trees) to produce Determinate Science. **Schelling thought he could describe this in Grounding of Positive Philosophy - we're doing it!**
-
