@@ -1,0 +1,13 @@
+Doctrine Workbench Session Map
+
+mode: cheap-example
+timestamp: 2026-08-02T19:45:07Z
+
+hierarchy: Doctrine -> References -> Exemplars -> Examples -> Fixtures
+mediation: DataFrame -> TaskFrame through shell_ -> proc_ -> eval_
+
+artifact roots:
+- gds/fixtures/collections/shell/shell_compute_protocol
+- gds/fixtures/collections/eval/eval_shell_taskframe_projection
+- gds/fixtures/task/workbench/taskframe_shell_model_feature_plan
+- gds/fixtures/procedures/032-pathfinding-procedure-facade

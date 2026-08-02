@@ -102,7 +102,10 @@ fn parse_program_spec(program_value: &Value) -> Result<ProgramSpec, String> {
     let form = FormShape::new(shape, context, Morph::new(patterns));
 
     let application_forms = program
-        .get("applicationForms")
+        .get("pureFormComponents")
+        .or_else(|| program.get("pure_form_components"))
+        .or_else(|| program.get("components"))
+        .or_else(|| program.get("applicationForms"))
         .or_else(|| program.get("application_forms"))
         .and_then(Value::as_array)
         .map(|forms| {
@@ -136,7 +139,11 @@ fn parse_program_spec(program_value: &Value) -> Result<ProgramSpec, String> {
 
     let selected_forms = as_string_vec(
         program
-            .get("selectedForms")
+            .get("selectedPureFormComponents")
+            .or_else(|| program.get("selected_pure_form_components"))
+            .or_else(|| program.get("selectedComponents"))
+            .or_else(|| program.get("selected_components"))
+            .or_else(|| program.get("selectedForms"))
             .or_else(|| program.get("selected_forms")),
     );
 
@@ -149,6 +156,59 @@ fn parse_program_spec(program_value: &Value) -> Result<ProgramSpec, String> {
         application_forms,
         selected_forms,
     ))
+}
+
+fn parse_program_value<'a>(request: &'a Value) -> Result<&'a Value, String> {
+    if let Some(program) = request.get("program") {
+        return Ok(program);
+    }
+
+    if let Some(given_form) = request
+        .get("givenForm")
+        .or_else(|| request.get("given_form"))
+    {
+        return Ok(given_form);
+    }
+
+    if let Some(given_forms) = request
+        .get("givenForms")
+        .or_else(|| request.get("given_forms"))
+    {
+        if let Some(forms) = given_forms.as_array() {
+            return forms
+                .first()
+                .ok_or_else(|| "givenForms must contain at least one entry".to_string());
+        }
+
+        return Ok(given_forms);
+    }
+
+    Err("Missing required field: program|givenForm|givenForms".to_string())
+}
+
+fn program_features_json(program: &ProgramSpec) -> Result<Value, String> {
+    let features = program
+        .define_features()
+        .map_err(|error| format!("Program feature extraction failed: {error}"))?;
+
+    let feature_rows = features
+        .features
+        .iter()
+        .map(|feature| {
+            serde_json::json!({
+                "kind": feature.kind.as_str(),
+                "value": feature.value,
+                "source": feature.source,
+            })
+        })
+        .collect::<Vec<_>>();
+
+    Ok(serde_json::json!({
+        "programName": features.program_name,
+        "selectedForms": features.selected_forms,
+        "selectedComponents": features.selected_forms,
+        "features": feature_rows,
+    }))
 }
 
 fn parse_op_inputs(request: &Value) -> HashMap<String, Value> {
@@ -510,18 +570,19 @@ fn handle_form_eval(request: &Value) -> Value {
         .filter(|s| !s.is_empty())
         .map(ToOwned::to_owned);
 
-    let program = match request.get("program") {
-        Some(program_value) => match parse_program_spec(program_value) {
-            Ok(program) => program,
-            Err(message) => return err(&ctx.op, "INVALID_REQUEST", message),
-        },
-        None => {
-            return err(
-                &ctx.op,
-                "INVALID_REQUEST",
-                "Missing required field: program",
-            )
-        }
+    let program_value = match parse_program_value(request) {
+        Ok(value) => value,
+        Err(message) => return err(&ctx.op, "INVALID_REQUEST", message),
+    };
+
+    let program = match parse_program_spec(program_value) {
+        Ok(program) => program,
+        Err(message) => return err(&ctx.op, "INVALID_REQUEST", message),
+    };
+
+    let program_features = match program_features_json(&program) {
+        Ok(features) => features,
+        Err(message) => return err(&ctx.op, "FORM_PROGRAM_ERROR", message),
     };
 
     let mut form_request = ProgramFormRequest::for_agent_framework(program, ctx.user.username());
@@ -569,6 +630,7 @@ fn handle_form_eval(request: &Value) -> Value {
 
     let proof = serde_json::json!({
         "programForm": serde_json::to_value(&print).unwrap_or_else(|_| serde_json::json!({})),
+        "programFeatures": program_features,
         "artifactHooks": hook_artifacts,
     });
 
@@ -935,6 +997,28 @@ mod tests {
 
         assert_eq!(response.get("ok").and_then(|v| v.as_bool()), Some(true));
 
+        let program_features = response
+            .get("data")
+            .and_then(|v| v.get("proof"))
+            .and_then(|v| v.get("programFeatures"))
+            .expect("programFeatures expected in proof payload");
+
+        assert_eq!(
+            program_features
+                .get("selectedForms")
+                .and_then(|v| v.as_array())
+                .map(Vec::len),
+            Some(1)
+        );
+        assert!(program_features
+            .get("features")
+            .and_then(|v| v.as_array())
+            .map(|rows| rows.iter().any(|row| {
+                row.get("kind").and_then(|v| v.as_str()) == Some("operator-pattern")
+                    && row.get("value").and_then(|v| v.as_str()) == Some("algo.pagerank")
+            }))
+            .unwrap_or(false));
+
         let hooks = response
             .get("data")
             .and_then(|v| v.get("proof"))
@@ -1002,6 +1086,100 @@ mod tests {
         assert_eq!(table_counts.get("models").and_then(|v| v.as_u64()), Some(1));
         assert_eq!(
             table_counts.get("features").and_then(|v| v.as_u64()),
+            Some(1)
+        );
+    }
+
+    #[test]
+    fn invoke_form_eval_accepts_given_form_alias() {
+        let request = serde_json::json!({
+            "facade": "form_eval",
+            "op": "evaluate",
+            "user": { "username": "alice", "isAdmin": true },
+            "databaseId": "db1",
+            "graphName": "given-form-graph",
+            "givenForm": {
+                "morph": {
+                    "patterns": ["algo.pagerank"]
+                },
+                "applicationForms": [
+                    {
+                        "name": "centrality",
+                        "domain": "ontology-runtime",
+                        "features": ["feature.centrality.pagerank"],
+                        "patterns": ["algo.pagerank"],
+                        "specifications": { "binding": "spec.pagerank" }
+                    }
+                ],
+                "selectedForms": ["centrality"]
+            }
+        });
+
+        let response_json = invoke(request.to_string());
+        let response: serde_json::Value = serde_json::from_str(&response_json).unwrap();
+
+        assert_eq!(response.get("ok").and_then(|v| v.as_bool()), Some(true));
+        assert_eq!(
+            response
+                .get("data")
+                .and_then(|v| v.get("proof"))
+                .and_then(|v| v.get("programFeatures"))
+                .and_then(|v| v.get("selectedForms"))
+                .and_then(|v| v.as_array())
+                .map(Vec::len),
+            Some(1)
+        );
+    }
+
+    #[test]
+    fn invoke_form_eval_accepts_pureform_component_aliases() {
+        let request = serde_json::json!({
+            "facade": "form_eval",
+            "op": "evaluate",
+            "user": { "username": "alice", "isAdmin": true },
+            "databaseId": "db1",
+            "graphName": "pureform-components-graph",
+            "program": {
+                "morph": {
+                    "patterns": ["algo.pagerank"]
+                },
+                "pureFormComponents": [
+                    {
+                        "name": "centrality",
+                        "domain": "ontology-runtime",
+                        "features": ["feature.centrality.pagerank"],
+                        "patterns": ["algo.pagerank"],
+                        "specifications": { "binding": "spec.pagerank" }
+                    }
+                ],
+                "selectedPureFormComponents": ["centrality"]
+            }
+        });
+
+        let response_json = invoke(request.to_string());
+        let response: serde_json::Value = serde_json::from_str(&response_json).unwrap();
+
+        assert_eq!(response.get("ok").and_then(|v| v.as_bool()), Some(true));
+
+        let proof = response
+            .get("data")
+            .and_then(|v| v.get("proof"))
+            .expect("proof expected");
+
+        assert_eq!(
+            proof
+                .get("programFeatures")
+                .and_then(|v| v.get("selectedForms"))
+                .and_then(|v| v.as_array())
+                .map(Vec::len),
+            Some(1)
+        );
+        assert_eq!(
+            proof
+                .get("programFeatures")
+                .and_then(|v| v.get("selectedComponents"))
+                .and_then(|v| v.as_array())
+                .map(Vec::len),
             Some(1)
         );
     }

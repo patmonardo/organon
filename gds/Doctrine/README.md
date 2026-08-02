@@ -2,6 +2,15 @@
 
 **The exemplars are the canonical exposition. Runnable examples and fixtures are their executable evidence.**
 
+**Doctrine is the developer knowledge base of the platform: reference, curriculum, runtime evidence, and workbench in one coherent method surface.**
+
+Doctrine is also the apt name for the Rational Agent IDE app itself.
+Its governing rationale is a **Doctrine First Methodology**, and the practical execution of that rationale is the **Doctrinal Method**.
+
+The longer arc is clear: Doctrine should mature into a Rational Agent IDE in which `OG Script` names the internal DSL through which rational-agent construction becomes readable, runnable, and teachable.
+OG Script may begin from the current Shell script surface, but its order of importance is higher and clearer: it is first a Dataset Builder, second a Domain Model Design Surface, and then a Shell Script builder and toolchain coordinator.
+Everything it does should be assembled through Corpus, LM, and Logic artifacts rather than treated as an ungrounded command surface.
+
 This is the constitution of the GDS Knowledge Agent system. It is not scattered working notes.
 It is Doctrine.
 
@@ -88,8 +97,11 @@ the immediate body. Dataset supplies the mediated semantic controller.
 - Consistent voice
 - Clear entry points
 - All references tied to principles
+- Knowledge-base behavior: a developer can read, run, inspect, and learn from the same rooted surfaces
 
 This is higher principle at play. The docs are no longer scattered notes.
+
+They are also the rationale surface of a Doctrine First Methodology: the system explains itself doctrinally before it asks the user to trust execution alone.
 
 ---
 
@@ -102,6 +114,10 @@ The Doctrine must keep three layers distinct:
 3. **Fixtures** persist the generated artifact evidence.
 
 Do not let an exemplar become a scratch note, a fixture manifest become the doctrine, or an external program artifact masquerade as the internal RustScript surface. When a runnable example is renamed, update the exemplar source line, [INDEX.md](INDEX.md), and any namespace registry in the same change.
+
+At the same time, keep the layers connected enough that Doctrine behaves like an executable knowledge base: a reader should be able to move from claim -> example -> fixture -> workbench without losing the thread.
+
+This is the Doctrinal Method in practice: doctrine first, execution second, evidence third, but all held together in one readable path.
 
 ---
 
@@ -118,7 +134,10 @@ Do not let an exemplar become a scratch note, a fixture manifest become the doct
 
 - **Navigation**: [INDEX.md](INDEX.md)
 - **High Principle**: [PRINCIPLE-FOUNDATION.md](PRINCIPLE-FOUNDATION.md)
+- **Method Hierarchy**: [METHOD-HIERARCHY.md](METHOD-HIERARCHY.md)
+- **Kernel End-State / Closed Spec**: [end-state-and-closed-specification.md](REFERENCES/gds-kernel/end-state-and-closed-specification.md)
 - **Runnable Workbench**: [WORKBENCH.md](WORKBENCH.md)
+- **Workbench Server Direction**: [WORKBENCH-SERVER.md](WORKBENCH-SERVER.md)
 - **Exemplar Template**: [EXEMPLARS/TEMPLATE.md](EXEMPLARS/TEMPLATE.md)
 - **First Exemplar**: [EXEMPLARS/001-frame-dsl.md](EXEMPLARS/dataset/001-frame-dsl.md)
 - **External Shell Program Artifact**: [EXEMPLARS/006-external-shell-program-artifact.md](EXEMPLARS/shell/006-external-shell-program-artifact.md)

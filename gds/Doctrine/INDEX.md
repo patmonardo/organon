@@ -12,6 +12,8 @@ of the platform.
 1. [FOUNDING-CHARTER.md](FOUNDING-CHARTER.md) — Why the Doctrine exists and what it replaces
 2. [PRINCIPLE-FOUNDATION.md](PRINCIPLE-FOUNDATION.md) — The high principle in one page
 3. [WORKBENCH.md](WORKBENCH.md) — Runnable researcher path (notebook-like, fixture-backed)
+4. [METHOD-HIERARCHY.md](METHOD-HIERARCHY.md) — Canonical Doctrine -> References -> Exemplars -> Examples -> Fixtures hierarchy
+5. [WORKBENCH-SERVER.md](WORKBENCH-SERVER.md) — Server-side app direction for the Workbench
 
 Then study the exemplars in order (see section below).
 
@@ -272,6 +274,7 @@ References are organized by topic, not by project.
 - [zeroCopy-boundary.md](REFERENCES/gds-kernel/zeroCopy-boundary.md) — The kernel-agent contract at Absolute Reflection
 - [three-tier-architecture.md](REFERENCES/gds-kernel/three-tier-architecture.md) — Core Kernel, SemDataset discourse platform, and RealityFabric delivery layer
 - [sprint-to-adi.md](REFERENCES/gds-kernel/sprint-to-adi.md) — Get-something-working sprint path to Artificial Dataset Intelligence
+- [end-state-and-closed-specification.md](REFERENCES/gds-kernel/end-state-and-closed-specification.md) — End-oriented Kernel target and closed specification discipline
 
 ### Procedures
 
