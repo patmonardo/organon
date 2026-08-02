@@ -30,8 +30,7 @@
               "response": {
                 "ok": true,
                 "op": "pagerank",
-                "mode": "stream",
-                "data": [
+                "result": [
                   {
                     "node_id": 0,
                     "score": 0.15000000000000002
@@ -53,10 +52,13 @@
                     "score": 0.58636875
                   }
                 ],
-                "timings": {
-                  "preProcessingMillis": 0,
-                  "computeMillis": 0,
-                  "sideEffectMillis": 0
+                "busReceipt": {
+                  "service": "form.shell",
+                  "runtime": "ShellProcedureRuntime",
+                  "operation": "pagerank",
+                  "graphName": "form-shell-dispatch-graph",
+                  "component": "gds.algorithms.centrality.pagerank",
+                  "mode": "stream"
                 }
               }
             },
@@ -67,8 +69,7 @@
               "response": {
                 "ok": true,
                 "op": "pagerank",
-                "mode": "stream",
-                "data": [
+                "result": [
                   {
                     "node_id": 0,
                     "score": 0.15000000000000002
@@ -90,10 +91,13 @@
                     "score": 0.58636875
                   }
                 ],
-                "timings": {
-                  "preProcessingMillis": 0,
-                  "computeMillis": 0,
-                  "sideEffectMillis": 0
+                "busReceipt": {
+                  "service": "form.shell",
+                  "runtime": "ShellProcedureRuntime",
+                  "operation": "pagerank",
+                  "graphName": "form-shell-dispatch-graph",
+                  "component": "gds.algorithms.centrality.pagerank",
+                  "mode": "stream"
                 }
               }
             }
@@ -278,16 +282,24 @@
           },
           {
             "serviceId": "form.shell",
-            "purpose": "Run Form plans as long-lived task-daemon processes with supervision",
-            "executionState": "planned",
-            "runtimeBinding": "ShellTaskDaemonRuntime",
-            "components": [],
-            "daemonRuntime": {
-              "processModel": "long-lived",
-              "supervisionPolicy": "restart_on_failure",
-              "heartbeatIntervalMs": 30000,
-              "checkpointPolicy": "periodic_snapshot"
-            }
+            "purpose": "Mediate canonical Form PageRank plans through Shell procedures",
+            "executionState": "actual",
+            "runtimeBinding": "ShellProcedureRuntime",
+            "components": [
+              {
+                "id": "gds.algorithms.centrality.pagerank",
+                "alias": "pagerank",
+                "category": "centrality",
+                "modes": [
+                  "stream",
+                  "stats",
+                  "estimate",
+                  "mutate",
+                  "write"
+                ]
+              }
+            ],
+            "daemonRuntime": null
           }
         ],
         "unresolvedPatterns": []

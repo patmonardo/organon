@@ -1109,10 +1109,24 @@ mod tests {
                 .get("machines")
                 .and_then(|v| v.as_array())
                 .and_then(|machines| machines.get(2))
-                .and_then(|machine| machine.get("daemonRuntime"))
-                .and_then(|daemon| daemon.get("processModel"))
+                .and_then(|machine| machine.get("executionState"))
                 .and_then(|v| v.as_str()),
-            Some("long-lived")
+            Some("actual")
         );
+        assert_eq!(
+            service_manifest
+                .get("machines")
+                .and_then(|v| v.as_array())
+                .and_then(|machines| machines.get(2))
+                .and_then(|machine| machine.get("runtimeBinding"))
+                .and_then(|v| v.as_str()),
+            Some("ShellProcedureRuntime")
+        );
+        assert!(service_manifest
+            .get("machines")
+            .and_then(|v| v.as_array())
+            .and_then(|machines| machines.get(2))
+            .and_then(|machine| machine.get("daemonRuntime"))
+            .is_some_and(Value::is_null));
     }
 }

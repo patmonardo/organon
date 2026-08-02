@@ -103,8 +103,10 @@ The Form Server currently advertises five virtual operating machines:
 4. `form.shell`
 
 - Activates from shell/task/procedure patterns, algorithm or dataset activation, or `serviceId`.
-- Declares long-lived daemon runtime policy (`daemonRuntime`) for supervision and heartbeat.
-- Reports `planned` until Shell task-daemon execution is invoked through this path.
+- Reports `actual` with `ShellProcedureRuntime` when canonical PageRank execution is available
+  through the Form Bus Nexus.
+- Otherwise reports `planned` and declares the proposed long-lived daemon runtime policy
+  (`daemonRuntime`) without claiming scheduler execution.
 
 5. `form.recursion`
 
@@ -114,6 +116,24 @@ The Form Server currently advertises five virtual operating machines:
 
 `serviceManifest.unresolvedPatterns` preserves algorithm intent that has no registered Shell
 component instead of suppressing it or falsely reporting execution.
+
+## Form Bus Nexus
+
+Canonical PageRank `ExecuteSpec` requests now follow this path:
+
+`Form -> FormBusNexus -> ShellComponentPlan -> ShellProcedureRuntime -> PageRank Procedure`
+
+The Nexus lowers ProgramFeature intent into the unified `ModelFeaturePlan/ProgramFeature` Shell
+address, resolves the named graph through `GraphCatalog`, invokes the typed Shell plan, and returns
+a `busReceipt` identifying `form.shell`, `ShellProcedureRuntime`, the canonical component, and its
+mode. This receipt is execution evidence, not a queue or scheduler record.
+
+Non-PageRank `ExecuteSpec` operations remain on the existing `ProcedureExecutor` path as a
+transitional compatibility boundary. `DirectCompute` remains the explicit reduced-cost adapter
+path through application dispatchers. Neither path is represented as canonical Shell mediation.
+
+This slice does not claim durable jobs, retries, cancellation, supervision, or persisted task
+state. Those remain responsibilities of the proposed Shell Task Daemon.
 
 ###[B] Services become thin adapters
 
@@ -200,9 +220,9 @@ Deliverable: IDE can speak OG Script directly.
 ## Current Implementation Boundary
 
 The gateway and service registry determine what a Program means and which machine is active.
-`ProgramFormApi` remains the actual evaluator. Shell descriptors establish bindability but do not
-claim Shell execution. Dataset activation remains planned until Phase 3 supplies the daemonized
-runtime handoff and persisted mediation evidence.
+`ProgramFormApi` remains the evaluator. PageRank now has actual Shell execution through the Form
+Bus Nexus; other resolved Shell descriptors establish bindability only. Dataset and Task Daemon
+activation remain planned until their runtime handoffs and persisted mediation evidence exist.
 
 Real Dataset catalog reads, capability persistence, execution-feedback updates, and capability
 gating are deliberately deferred. The current mock establishes their replaceable semantic boundary

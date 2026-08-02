@@ -69,6 +69,9 @@ pub fn service_manifest(
     let algorithm_activated = service_override == Some(ALGORITHM_SERVICE_ID)
         || !algorithm_components.is_empty()
         || !unresolved_patterns.is_empty();
+    let pagerank_shell_actual = algorithm_components
+        .iter()
+        .any(|component| component.id.as_str() == "gds.algorithms.centrality.pagerank");
     if algorithm_activated {
         let execution_state = if algorithm_components.is_empty() {
             FormServiceExecutionState::Planned
@@ -80,7 +83,7 @@ pub fn service_manifest(
             "Resolve algorithm operators into Shell-bindable component plans",
             execution_state,
             "ShellProcedureRuntime",
-            algorithm_components,
+            algorithm_components.clone(),
         ));
     }
 
@@ -117,7 +120,21 @@ pub fn service_manifest(
     }
 
     if shell_activated {
-        machines.push(
+        let shell_machine = if pagerank_shell_actual {
+            FormServiceMachine::new(
+                SHELL_SERVICE_ID,
+                "Mediate canonical Form PageRank plans through Shell procedures",
+                FormServiceExecutionState::Actual,
+                "ShellProcedureRuntime",
+                algorithm_components
+                    .iter()
+                    .copied()
+                    .filter(|component| {
+                        component.id.as_str() == "gds.algorithms.centrality.pagerank"
+                    })
+                    .collect(),
+            )
+        } else {
             FormServiceMachine::new(
                 SHELL_SERVICE_ID,
                 "Run Form plans as long-lived task-daemon processes with supervision",
@@ -130,8 +147,9 @@ pub fn service_manifest(
                 "restart_on_failure",
                 30_000,
                 "periodic_snapshot",
-            )),
-        );
+            ))
+        };
+        machines.push(shell_machine);
     }
 
     Ok(FormServiceManifest::new(machines, unresolved_patterns))
@@ -234,14 +252,10 @@ mod tests {
             .iter()
             .find(|machine| machine.service_id == SHELL_SERVICE_ID)
             .expect("shell machine expected");
-        assert_eq!(shell.runtime_binding, "ShellTaskDaemonRuntime");
-        assert_eq!(
-            shell
-                .daemon_runtime
-                .as_ref()
-                .map(|profile| profile.process_model.as_str()),
-            Some("long-lived")
-        );
+        assert_eq!(shell.execution_state, FormServiceExecutionState::Actual);
+        assert_eq!(shell.runtime_binding, "ShellProcedureRuntime");
+        assert_eq!(shell.components, vec![pagerank]);
+        assert!(shell.daemon_runtime.is_none());
     }
 
     #[test]

@@ -5,4 +5,6 @@ capability_source=dataset_mock
 capability_persistent=false
 application_form_count=1
 executed_op=pagerank
+bus_service=form.shell
+bus_runtime=ShellProcedureRuntime
 note=program ingress is Form-first; adapter remains transport-only

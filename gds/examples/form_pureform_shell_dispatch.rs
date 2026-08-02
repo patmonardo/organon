@@ -109,6 +109,27 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .and_then(|row| row.get("op"))
         .and_then(Value::as_str)
         .unwrap_or("none");
+    let bus_receipt = proof
+        .get("programForm")
+        .and_then(|v| v.get("apply"))
+        .and_then(|v| v.get("executed"))
+        .and_then(Value::as_array)
+        .and_then(|rows| rows.first())
+        .and_then(|row| row.get("response"))
+        .and_then(|response| response.get("busReceipt"))
+        .ok_or("programForm.apply execution busReceipt missing")?;
+    let bus_service = bus_receipt
+        .get("service")
+        .and_then(Value::as_str)
+        .ok_or("busReceipt.service missing")?;
+    let bus_runtime = bus_receipt
+        .get("runtime")
+        .and_then(Value::as_str)
+        .ok_or("busReceipt.runtime missing")?;
+
+    if bus_service != "form.shell" || bus_runtime != "ShellProcedureRuntime" {
+        return Err("PageRank did not execute through the canonical Form Bus Nexus".into());
+    }
 
     let summary = format!(
         "PureForm Shell Dispatch Summary\n\
@@ -118,6 +139,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
          capability_persistent={capability_persistent}\n\
          application_form_count={application_form_count}\n\
          executed_op={executed_op}\n\
+         bus_service={bus_service}\n\
+         bus_runtime={bus_runtime}\n\
          note=program ingress is Form-first; adapter remains transport-only\n"
     );
 

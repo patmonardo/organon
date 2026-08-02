@@ -1,3 +1,4 @@
+pub mod bus_nexus;
 pub mod capability_source;
 pub mod evidence;
 pub mod program_gateway;

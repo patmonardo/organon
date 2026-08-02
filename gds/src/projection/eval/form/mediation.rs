@@ -4,6 +4,8 @@ use std::sync::Arc;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Map, Value};
 
+use crate::applications::form::bus_nexus::FormBusNexus;
+use crate::applications::form::bus_nexus::FormBusSubmission;
 use crate::applications::services::applications_dispatch;
 use crate::projection::eval::algorithm::{
     AlgorithmError, AlgorithmSpec, ComputationResult, ConfigError, ConsumerError, ExecutionContext,
@@ -75,14 +77,18 @@ pub(crate) fn apply_execution_plan(
 
         let (response, spec_binding) = match apply_backend {
             ProgramFormApplyBackend::ExecuteSpec => {
-                let execution = execute_via_algorithm_spec(
-                    pattern,
-                    &op,
-                    &payload,
-                    username,
-                    execution_mode,
-                    catalog.clone(),
-                );
+                let execution = if canonical_algorithm_pattern(pattern, &op) == "algo.pagerank" {
+                    execute_via_form_bus_nexus(&op, &payload, execution_mode, catalog.clone())
+                } else {
+                    execute_via_algorithm_spec(
+                        pattern,
+                        &op,
+                        &payload,
+                        username,
+                        execution_mode,
+                        catalog.clone(),
+                    )
+                };
                 (execution.response, execution.spec_binding)
             }
             ProgramFormApplyBackend::DirectCompute => (
@@ -167,6 +173,44 @@ fn value_as_object(value: &Value, field: &str) -> Result<Map<String, Value>, For
 struct SpecExecutionResult {
     spec_binding: String,
     response: Value,
+}
+
+fn execute_via_form_bus_nexus(
+    op: &str,
+    payload: &Value,
+    execution_mode: ExecutionMode,
+    catalog: Arc<dyn GraphCatalog>,
+) -> SpecExecutionResult {
+    let graph_name = match graph_name_from_payload(payload) {
+        Ok(name) => name,
+        Err(response) => {
+            return SpecExecutionResult {
+                spec_binding: "spec.pagerank".to_string(),
+                response,
+            };
+        }
+    };
+    let submission = FormBusSubmission {
+        graph_name: graph_name.to_string(),
+        operation: op.to_string(),
+        payload: payload.clone(),
+        execution_mode,
+    };
+    let response = FormBusNexus::execute_pagerank(&submission, catalog).unwrap_or_else(|error| {
+        json!({
+            "ok": false,
+            "op": op,
+            "error": {
+                "code": "FORM_BUS_EXECUTE_ERROR",
+                "message": error.to_string(),
+            }
+        })
+    });
+
+    SpecExecutionResult {
+        spec_binding: "spec.pagerank".to_string(),
+        response,
+    }
 }
 
 fn execute_via_algorithm_spec(
