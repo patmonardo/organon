@@ -46,7 +46,7 @@ impl StreamRelationshipPropertiesApplication {
                     .map_err(|e| e.to_string())?;
 
                 let value_type = graph_store
-                    .relationship_property_type(prop_key.as_str())
+                    .relationship_property_type(&rel_type, prop_key.as_str())
                     .map_err(|e| e.to_string())?;
 
                 for mapped_index in 0..graph.node_count() {

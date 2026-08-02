@@ -1,3 +1,4 @@
+use crate::algo::embeddings::node2vec::EmbeddingInitializerConfig;
 use crate::algo::similarity::knn::KnnSamplerType;
 use crate::algo::similarity::knn::SimilarityMetric;
 use crate::algo::similarity::node_similarity::NodeSimilarityMetric;
@@ -24,6 +25,12 @@ use crate::procedures::community::ModularityFacade;
 use crate::procedures::community::SccFacade;
 use crate::procedures::community::TriangleFacade;
 use crate::procedures::community::WccFacade;
+use crate::procedures::embeddings::BinarizeFeaturesConfig;
+use crate::procedures::embeddings::FastRPBuilder;
+use crate::procedures::embeddings::GenerateFeaturesConfig;
+use crate::procedures::embeddings::GraphSageBuilder;
+use crate::procedures::embeddings::HashGNNBuilder;
+use crate::procedures::embeddings::Node2VecBuilder;
 use crate::procedures::pathfinding::AStarBuilder;
 use crate::procedures::pathfinding::AllShortestPathsBuilder;
 use crate::procedures::pathfinding::BellmanFordBuilder;
@@ -50,7 +57,10 @@ use crate::shell::ShellComponentMode;
 
 use super::inputs::optional_bool;
 use super::inputs::optional_f64;
+use super::inputs::optional_f64_array;
 use super::inputs::optional_f64_matrix;
+use super::inputs::optional_i64_array;
+use super::inputs::optional_object;
 use super::inputs::optional_str;
 use super::inputs::optional_string_array;
 use super::inputs::optional_string_or_array;
@@ -274,6 +284,26 @@ pub(super) fn bind_algorithm(
             mode: call.mode,
             procedure: bind_filtered_node_similarity(graph, call)?,
             output_property: output_property(call)?,
+        }),
+        "fast_rp" => Ok(ShellProcedureBinding::FastRP {
+            component: component.id,
+            mode: call.mode,
+            procedure: bind_fast_rp(graph, call)?,
+        }),
+        "node2vec" => Ok(ShellProcedureBinding::Node2Vec {
+            component: component.id,
+            mode: call.mode,
+            procedure: bind_node2vec(graph, call)?,
+        }),
+        "graphsage" => Ok(ShellProcedureBinding::GraphSage {
+            component: component.id,
+            mode: call.mode,
+            procedure: bind_graphsage(graph, call)?,
+        }),
+        "hash_gnn" => Ok(ShellProcedureBinding::HashGNN {
+            component: component.id,
+            mode: call.mode,
+            procedure: bind_hash_gnn(graph, call)?,
         }),
         "kspanningtree" => Ok(ShellProcedureBinding::KSpanningTree {
             component: component.id,
@@ -1071,6 +1101,74 @@ pub(super) fn invoke_filtered_node_similarity(
         ),
         ShellComponentMode::Invoke => {
             unreachable!("Filtered Node Similarity mode is validated before invocation")
+        }
+    })
+}
+
+pub(super) fn invoke_fast_rp(
+    mode: ShellComponentMode,
+    procedure: FastRPBuilder,
+) -> Result<ShellProcedureResult, ShellProcedureError> {
+    Ok(match mode {
+        ShellComponentMode::Stream => {
+            ShellProcedureResult::FastRPStream(procedure.stream()?.collect())
+        }
+        ShellComponentMode::Stats => ShellProcedureResult::FastRPStats(procedure.stats()?),
+        ShellComponentMode::Estimate
+        | ShellComponentMode::Mutate
+        | ShellComponentMode::Write
+        | ShellComponentMode::Invoke => {
+            unreachable!("FastRP mode is validated before invocation")
+        }
+    })
+}
+
+pub(super) fn invoke_node2vec(
+    mode: ShellComponentMode,
+    procedure: Node2VecBuilder,
+) -> Result<ShellProcedureResult, ShellProcedureError> {
+    Ok(match mode {
+        ShellComponentMode::Stream => {
+            ShellProcedureResult::Node2VecStream(procedure.stream()?.collect())
+        }
+        ShellComponentMode::Stats => ShellProcedureResult::Node2VecStats(procedure.stats()?),
+        ShellComponentMode::Estimate
+        | ShellComponentMode::Mutate
+        | ShellComponentMode::Write
+        | ShellComponentMode::Invoke => {
+            unreachable!("Node2Vec mode is validated before invocation")
+        }
+    })
+}
+
+pub(super) fn invoke_graphsage(
+    mode: ShellComponentMode,
+    procedure: GraphSageBuilder,
+) -> Result<ShellProcedureResult, ShellProcedureError> {
+    Ok(match mode {
+        ShellComponentMode::Stats => ShellProcedureResult::GraphSageStats(procedure.stats()?),
+        ShellComponentMode::Stream
+        | ShellComponentMode::Estimate
+        | ShellComponentMode::Mutate
+        | ShellComponentMode::Write
+        | ShellComponentMode::Invoke => {
+            unreachable!("GraphSAGE mode is validated before invocation")
+        }
+    })
+}
+
+pub(super) fn invoke_hash_gnn(
+    mode: ShellComponentMode,
+    procedure: HashGNNBuilder,
+) -> Result<ShellProcedureResult, ShellProcedureError> {
+    Ok(match mode {
+        ShellComponentMode::Stats => ShellProcedureResult::HashGNNStats(procedure.stats()?),
+        ShellComponentMode::Stream
+        | ShellComponentMode::Estimate
+        | ShellComponentMode::Mutate
+        | ShellComponentMode::Write
+        | ShellComponentMode::Invoke => {
+            unreachable!("HashGNN mode is validated before invocation")
         }
     })
 }
@@ -2243,6 +2341,254 @@ fn bind_filtered_node_similarity(
         procedure = procedure.target_labels(labels.into_iter().map(NodeLabel::of).collect());
     }
     Ok(procedure)
+}
+
+fn bind_fast_rp(
+    graph: &GraphFacade,
+    call: &ShellComponentCall,
+) -> Result<FastRPBuilder, ShellProcedureError> {
+    let mut procedure = graph.fast_rp();
+    if let Some(dimension) = optional_usize(call, "embeddingDimension", &["embedding_dimension"])? {
+        procedure = procedure.embedding_dimension(dimension);
+    }
+    if let Some(dimension) = optional_usize(call, "propertyDimension", &["property_dimension"])? {
+        procedure = procedure.property_dimension(dimension);
+    }
+    if let Some(weights) = optional_f64_array(call, "iterationWeights", &["iteration_weights"])? {
+        procedure = procedure.iteration_weights(
+            weights
+                .into_iter()
+                .map(|value| checked_f32(value, "iterationWeights"))
+                .collect::<Result<Vec<_>, _>>()?,
+        );
+    }
+    if let Some(properties) =
+        optional_string_array(call, "featureProperties", &["feature_properties"])?
+    {
+        procedure = procedure.feature_properties(properties);
+    }
+    if let Some(property) = optional_str(
+        call,
+        "relationshipWeightProperty",
+        &["relationship_weight_property"],
+    )? {
+        procedure = procedure.relationship_weight_property(Some(property.to_string()));
+    }
+    if let Some(strength) =
+        optional_f64(call, "normalizationStrength", &["normalization_strength"])?
+    {
+        procedure =
+            procedure.normalization_strength(checked_f32(strength, "normalizationStrength")?);
+    }
+    if let Some(influence) = optional_f64(call, "nodeSelfInfluence", &["node_self_influence"])? {
+        procedure = procedure.node_self_influence(checked_f32(influence, "nodeSelfInfluence")?);
+    }
+    if let Some(seed) = optional_u64(call, "randomSeed", &["random_seed"])? {
+        procedure = procedure.random_seed(Some(seed));
+    }
+    if let Some(concurrency) = optional_usize(call, "concurrency", &[])? {
+        procedure = procedure.concurrency(concurrency);
+    }
+    if let Some(size) = optional_usize(call, "minBatchSize", &["min_batch_size"])? {
+        procedure = procedure.min_batch_size(size);
+    }
+    Ok(procedure)
+}
+
+fn bind_node2vec(
+    graph: &GraphFacade,
+    call: &ShellComponentCall,
+) -> Result<Node2VecBuilder, ShellProcedureError> {
+    let mut procedure = graph.node2vec();
+    if let Some(value) = optional_usize(call, "walksPerNode", &["walks_per_node"])? {
+        procedure = procedure.walks_per_node(value);
+    }
+    if let Some(value) = optional_usize(call, "walkLength", &["walk_length"])? {
+        procedure = procedure.walk_length(value);
+    }
+    if let Some(value) = optional_f64(call, "returnFactor", &["return_factor"])? {
+        procedure = procedure.return_factor(value);
+    }
+    if let Some(value) = optional_f64(call, "inOutFactor", &["in_out_factor"])? {
+        procedure = procedure.in_out_factor(value);
+    }
+    if let Some(value) = optional_f64(
+        call,
+        "positiveSamplingFactor",
+        &["positive_sampling_factor"],
+    )? {
+        procedure = procedure.positive_sampling_factor(value);
+    }
+    if let Some(value) = optional_f64(
+        call,
+        "negativeSamplingExponent",
+        &["negative_sampling_exponent"],
+    )? {
+        procedure = procedure.negative_sampling_exponent(value);
+    }
+    if let Some(value) = optional_f64(call, "initialLearningRate", &["initial_learning_rate"])? {
+        procedure = procedure.initial_learning_rate(value);
+    }
+    if let Some(value) = optional_f64(call, "minLearningRate", &["min_learning_rate"])? {
+        procedure = procedure.min_learning_rate(value);
+    }
+    if let Some(value) = optional_usize(call, "iterations", &[])? {
+        procedure = procedure.iterations(value);
+    }
+    if let Some(value) = optional_usize(call, "windowSize", &["window_size"])? {
+        procedure = procedure.window_size(value);
+    }
+    if let Some(value) = optional_usize(call, "negativeSamplingRate", &["negative_sampling_rate"])?
+    {
+        procedure = procedure.negative_sampling_rate(value);
+    }
+    if let Some(value) = optional_usize(call, "embeddingDimension", &["embedding_dimension"])? {
+        procedure = procedure.embedding_dimension(value);
+    }
+    if let Some(value) = optional_str(call, "embeddingInitializer", &["embedding_initializer"])? {
+        procedure = procedure.embedding_initializer(parse_embedding_initializer(value)?);
+    }
+    if let Some(nodes) = optional_i64_array(call, "sourceNodes", &["source_nodes"])? {
+        procedure = procedure.source_nodes(nodes);
+    }
+    if let Some(value) = optional_usize(call, "concurrency", &[])? {
+        procedure = procedure.concurrency(value);
+    }
+    if let Some(value) = optional_usize(call, "walkBufferSize", &["walk_buffer_size"])? {
+        procedure = procedure.walk_buffer_size(value);
+    }
+    if let Some(value) = optional_u64(call, "randomSeed", &["random_seed"])? {
+        procedure = procedure.random_seed(Some(value));
+    }
+    Ok(procedure)
+}
+
+fn bind_graphsage(
+    graph: &GraphFacade,
+    call: &ShellComponentCall,
+) -> Result<GraphSageBuilder, ShellProcedureError> {
+    let mut procedure =
+        graph
+            .graphsage()
+            .model_name(required_string(call, "modelName", &["model_name"])?);
+    if let Some(value) = optional_str(call, "modelUser", &["model_user"])? {
+        procedure = procedure.model_user(value);
+    }
+    if let Some(value) = optional_usize(call, "batchSize", &["batch_size"])? {
+        procedure = procedure.batch_size(value);
+    }
+    if let Some(value) = optional_usize(call, "concurrency", &[])? {
+        procedure = procedure.concurrency(value);
+    }
+    Ok(procedure)
+}
+
+fn bind_hash_gnn(
+    graph: &GraphFacade,
+    call: &ShellComponentCall,
+) -> Result<HashGNNBuilder, ShellProcedureError> {
+    let mut procedure = graph.hash_gnn();
+    if let Some(value) = optional_usize(call, "concurrency", &[])? {
+        procedure = procedure.concurrency(value);
+    }
+    if let Some(value) = optional_usize(call, "iterations", &[])? {
+        procedure = procedure.iterations(value);
+    }
+    if let Some(value) = optional_usize(call, "embeddingDensity", &["embedding_density"])? {
+        procedure = procedure.embedding_density(value);
+    }
+    if let Some(value) = optional_f64(call, "neighborInfluence", &["neighbor_influence"])? {
+        procedure = procedure.neighbor_influence(value);
+    }
+    if let Some(value) = optional_string_array(call, "featureProperties", &["feature_properties"])?
+    {
+        procedure = procedure.feature_properties(value);
+    }
+    if let Some(value) = optional_bool(call, "heterogeneous", &[])? {
+        procedure = procedure.heterogeneous(value);
+    }
+    if let Some(value) = optional_usize(call, "outputDimension", &["output_dimension"])? {
+        procedure = procedure.output_dimension(Some(value));
+    }
+    if let Some(config) = optional_object(call, "binarizeFeatures", &["binarize_features"])? {
+        procedure = procedure.binarize_features(Some(BinarizeFeaturesConfig {
+            dimension: required_object_usize(config, "binarizeFeatures", "dimension", &[])?,
+            threshold: required_object_f64(config, "binarizeFeatures", "threshold")?,
+        }));
+    }
+    if let Some(config) = optional_object(call, "generateFeatures", &["generate_features"])? {
+        procedure = procedure.generate_features(Some(GenerateFeaturesConfig {
+            dimension: required_object_usize(config, "generateFeatures", "dimension", &[])?,
+            density_level: required_object_usize(
+                config,
+                "generateFeatures",
+                "densityLevel",
+                &["density_level"],
+            )?,
+        }));
+    }
+    if let Some(value) = optional_u64(call, "randomSeed", &["random_seed"])? {
+        procedure = procedure.random_seed(Some(value));
+    }
+    Ok(procedure)
+}
+
+fn required_object_usize(
+    object: &serde_json::Map<String, serde_json::Value>,
+    input: &'static str,
+    name: &str,
+    aliases: &[&str],
+) -> Result<usize, ShellProcedureError> {
+    let value = object
+        .get(name)
+        .or_else(|| aliases.iter().find_map(|alias| object.get(*alias)))
+        .and_then(serde_json::Value::as_u64)
+        .ok_or(ShellProcedureError::InvalidInput {
+            input,
+            expected: "an object with unsigned integer fields",
+        })?;
+    usize::try_from(value).map_err(|_| ShellProcedureError::InvalidInput {
+        input,
+        expected: "an object with platform-sized unsigned integer fields",
+    })
+}
+
+fn required_object_f64(
+    object: &serde_json::Map<String, serde_json::Value>,
+    input: &'static str,
+    name: &str,
+) -> Result<f64, ShellProcedureError> {
+    object
+        .get(name)
+        .and_then(serde_json::Value::as_f64)
+        .ok_or(ShellProcedureError::InvalidInput {
+            input,
+            expected: "an object with numeric fields",
+        })
+}
+
+fn checked_f32(value: f64, input: &'static str) -> Result<f32, ShellProcedureError> {
+    if value.is_finite() && value >= f32::MIN as f64 && value <= f32::MAX as f64 {
+        Ok(value as f32)
+    } else {
+        Err(ShellProcedureError::InvalidInput {
+            input,
+            expected: "a finite 32-bit floating-point number",
+        })
+    }
+}
+
+fn parse_embedding_initializer(
+    value: &str,
+) -> Result<EmbeddingInitializerConfig, ShellProcedureError> {
+    match value.to_ascii_lowercase().as_str() {
+        "uniform" => Ok(EmbeddingInitializerConfig::Uniform),
+        "normalized" => Ok(EmbeddingInitializerConfig::Normalized),
+        _ => Err(ShellProcedureError::InvalidInput {
+            input: "embeddingInitializer",
+            expected: "uniform or normalized",
+        }),
+    }
 }
 
 fn configure_node_similarity(

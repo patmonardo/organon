@@ -1,5 +1,6 @@
 use crate::shell::ShellComponentCall;
 use crate::shell::ShellComponentMode;
+use serde_json::Map;
 use serde_json::Value;
 
 use super::ShellProcedureError;
@@ -134,6 +135,23 @@ pub(super) fn optional_str<'a>(
         })
 }
 
+pub(super) fn optional_object<'a>(
+    call: &'a ShellComponentCall,
+    name: &'static str,
+    aliases: &[&str],
+) -> Result<Option<&'a Map<String, Value>>, ShellProcedureError> {
+    let Some(value) = find_named_input(call, name, aliases) else {
+        return Ok(None);
+    };
+    value
+        .as_object()
+        .map(Some)
+        .ok_or(ShellProcedureError::InvalidInput {
+            input: name,
+            expected: "an object",
+        })
+}
+
 pub(super) fn optional_u64_array(
     call: &ShellComponentCall,
     name: &'static str,
@@ -152,6 +170,54 @@ pub(super) fn optional_u64_array(
             value.as_u64().ok_or(ShellProcedureError::InvalidInput {
                 input: name,
                 expected: "an array of unsigned integers",
+            })
+        })
+        .collect::<Result<Vec<_>, _>>()
+        .map(Some)
+}
+
+pub(super) fn optional_i64_array(
+    call: &ShellComponentCall,
+    name: &'static str,
+    aliases: &[&str],
+) -> Result<Option<Vec<i64>>, ShellProcedureError> {
+    let Some(value) = find_named_input(call, name, aliases) else {
+        return Ok(None);
+    };
+    let values = value.as_array().ok_or(ShellProcedureError::InvalidInput {
+        input: name,
+        expected: "an array of integers",
+    })?;
+    values
+        .iter()
+        .map(|value| {
+            value.as_i64().ok_or(ShellProcedureError::InvalidInput {
+                input: name,
+                expected: "an array of integers",
+            })
+        })
+        .collect::<Result<Vec<_>, _>>()
+        .map(Some)
+}
+
+pub(super) fn optional_f64_array(
+    call: &ShellComponentCall,
+    name: &'static str,
+    aliases: &[&str],
+) -> Result<Option<Vec<f64>>, ShellProcedureError> {
+    let Some(value) = find_named_input(call, name, aliases) else {
+        return Ok(None);
+    };
+    let values = value.as_array().ok_or(ShellProcedureError::InvalidInput {
+        input: name,
+        expected: "an array of numbers",
+    })?;
+    values
+        .iter()
+        .map(|value| {
+            value.as_f64().ok_or(ShellProcedureError::InvalidInput {
+                input: name,
+                expected: "an array of numbers",
             })
         })
         .collect::<Result<Vec<_>, _>>()

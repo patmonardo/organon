@@ -169,23 +169,21 @@ not itself the authority model that Core storage must reproduce.
 | Inverse availability     | Incoming adjacency on each topology                         | Not declared by schema                             | Topology construction and metadata rebuild                                 |
 | Counts                   | ID map and topology; aggregate relationship count is cached | Not applicable                                     | Structural operations and metadata rebuild                                 |
 
-Two direct contradictions were repaired during the audit:
+Six direct contradictions were repaired during the audit:
 
 - `add_node_label` now updates `SimpleIdMap` and `GraphSchema` together and is
   covered by `validate_graph_store_schema`.
 - `delete_relationships` now removes the complete relationship dimension from
   topology, property storage, and schema.
-
-Remaining authority risks are:
-
-- `node_properties_by_label` is a second mutable index whose replacement path
-  can retain old label associations;
-- `relationship_property_type` omits relationship type and can select among
-  per-type stores in hash iteration order;
-- topology rebuild helpers can retain relationship columns without revalidating
-  their cardinality;
-- aggregate relationship count and inverse-index type sets remain caches that
-  every structural mutation must rebuild.
+- node-property replacement now replaces its label domain in both schema and
+  `node_properties_by_label`.
+- `relationship_property_type` now requires a relationship type and resolves
+  only within that type's materialized property store.
+- topology rebuilds now reject retained relationship columns whose materialized
+  cardinality no longer matches the rebuilt per-type topology.
+- structural topology mutations rebuild aggregate relationship count,
+  relationship ordering, parallel-edge state, and inverse-index type caches
+  through one metadata boundary, with lifecycle regression coverage.
 
 The Core contract should make materialized topology and typed columns
 authoritative for availability, use schema as the validated declaration of shape,

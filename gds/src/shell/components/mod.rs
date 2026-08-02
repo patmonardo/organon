@@ -222,6 +222,22 @@ mod tests {
     }
 
     #[test]
+    fn embedding_components_advertise_only_executable_modes() {
+        for alias in ["fast_rp", "node2vec"] {
+            let descriptor = builtin_component(alias).unwrap().descriptor();
+            assert_eq!(
+                descriptor.modes,
+                &[ShellComponentMode::Stream, ShellComponentMode::Stats]
+            );
+        }
+
+        for alias in ["graphsage", "hash_gnn"] {
+            let descriptor = builtin_component(alias).unwrap().descriptor();
+            assert_eq!(descriptor.modes, &[ShellComponentMode::Stats]);
+        }
+    }
+
+    #[test]
     fn pipeline_suite_has_unique_valid_entries() {
         let suite = BuiltinComponentSuite::pipelines();
         assert_eq!(suite.all().len(), 6);

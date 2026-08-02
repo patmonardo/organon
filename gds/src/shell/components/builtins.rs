@@ -12,6 +12,11 @@ const ALGORITHM_MODES: &[ShellComponentMode] = &[
 
 const INVOKE_MODE: &[ShellComponentMode] = &[ShellComponentMode::Invoke];
 
+const STREAM_STATS_MODES: &[ShellComponentMode] =
+    &[ShellComponentMode::Stream, ShellComponentMode::Stats];
+
+const STATS_MODE: &[ShellComponentMode] = &[ShellComponentMode::Stats];
+
 macro_rules! category_name {
     (Pathfinding) => {
         "pathfinding"
@@ -51,6 +56,22 @@ macro_rules! component {
             $name,
             ShellComponentCategory::$category,
             INVOKE_MODE,
+        )
+    };
+    (stream_stats $category:ident, $name:literal) => {
+        ShellComponentDescriptor::new(
+            concat!("gds.algorithms.", category_name!($category), ".", $name),
+            $name,
+            ShellComponentCategory::$category,
+            STREAM_STATS_MODES,
+        )
+    };
+    (stats $category:ident, $name:literal) => {
+        ShellComponentDescriptor::new(
+            concat!("gds.algorithms.", category_name!($category), ".", $name),
+            $name,
+            ShellComponentCategory::$category,
+            STATS_MODE,
         )
     };
 }
@@ -95,10 +116,10 @@ pub static ALGORITHM_BUILTINS: &[ShellComponentDescriptor] = &[
     component!(Similarity, "node_similarity"),
     component!(Similarity, "filtered_knn"),
     component!(Similarity, "filtered_node_similarity"),
-    component!(Embeddings, "fast_rp"),
-    component!(Embeddings, "hash_gnn"),
-    component!(Embeddings, "graphsage"),
-    component!(Embeddings, "node2vec"),
+    component!(stream_stats Embeddings, "fast_rp"),
+    component!(stats Embeddings, "hash_gnn"),
+    component!(stats Embeddings, "graphsage"),
+    component!(stream_stats Embeddings, "node2vec"),
     component!(invoke Miscellaneous, "to_undirected"),
     component!(invoke Miscellaneous, "scale_properties"),
     component!(invoke Miscellaneous, "index_inverse"),

@@ -326,8 +326,12 @@ pub trait GraphStore: Send + Sync {
     /// Checks if a relationship property exists for a specific relationship type.
     fn has_relationship_property(&self, rel_type: &RelationshipType, property_key: &str) -> bool;
 
-    /// Returns the value type of a relationship property.
-    fn relationship_property_type(&self, property_key: &str) -> GraphStoreResult<ValueType>;
+    /// Returns the value type of a relationship property for one relationship type.
+    fn relationship_property_type(
+        &self,
+        relationship_type: &RelationshipType,
+        property_key: &str,
+    ) -> GraphStoreResult<ValueType>;
 
     /// Returns relationship property values.
     fn relationship_property_values(
@@ -714,8 +718,13 @@ impl<G: GraphStore> GraphStore for GraphStoreAdapter<G> {
             .has_relationship_property(rel_type, property_key)
     }
 
-    fn relationship_property_type(&self, property_key: &str) -> GraphStoreResult<ValueType> {
-        self.graph_store.relationship_property_type(property_key)
+    fn relationship_property_type(
+        &self,
+        relationship_type: &RelationshipType,
+        property_key: &str,
+    ) -> GraphStoreResult<ValueType> {
+        self.graph_store
+            .relationship_property_type(relationship_type, property_key)
     }
 
     fn relationship_property_values(

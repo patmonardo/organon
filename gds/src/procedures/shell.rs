@@ -140,6 +140,16 @@ use crate::procedures::community::TriangleFacade;
 use crate::procedures::community::TriangleRow;
 use crate::procedures::community::WccFacade;
 use crate::procedures::community::WccRow;
+use crate::procedures::embeddings::FastRPBuilder;
+use crate::procedures::embeddings::FastRPRow;
+use crate::procedures::embeddings::FastRPStats;
+use crate::procedures::embeddings::GraphSageBuilder;
+use crate::procedures::embeddings::GraphSageStats;
+use crate::procedures::embeddings::HashGNNBuilder;
+use crate::procedures::embeddings::HashGNNStats;
+use crate::procedures::embeddings::Node2VecBuilder;
+use crate::procedures::embeddings::Node2VecRow;
+use crate::procedures::embeddings::Node2VecStats;
 use crate::procedures::pathfinding::AStarBuilder;
 use crate::procedures::pathfinding::AllShortestPathsBuilder;
 use crate::procedures::pathfinding::AllShortestPathsRow;
@@ -368,6 +378,26 @@ pub enum ShellProcedureBinding {
         procedure: FilteredNodeSimilarityFacade,
         output_property: Option<String>,
     },
+    FastRP {
+        component: ShellComponentId,
+        mode: ShellComponentMode,
+        procedure: FastRPBuilder,
+    },
+    Node2Vec {
+        component: ShellComponentId,
+        mode: ShellComponentMode,
+        procedure: Node2VecBuilder,
+    },
+    GraphSage {
+        component: ShellComponentId,
+        mode: ShellComponentMode,
+        procedure: GraphSageBuilder,
+    },
+    HashGNN {
+        component: ShellComponentId,
+        mode: ShellComponentMode,
+        procedure: HashGNNBuilder,
+    },
     KSpanningTree {
         component: ShellComponentId,
         mode: ShellComponentMode,
@@ -453,6 +483,10 @@ impl ShellProcedureBinding {
             | Self::FilteredKnn { component, .. }
             | Self::NodeSimilarity { component, .. }
             | Self::FilteredNodeSimilarity { component, .. }
+            | Self::FastRP { component, .. }
+            | Self::Node2Vec { component, .. }
+            | Self::GraphSage { component, .. }
+            | Self::HashGNN { component, .. }
             | Self::KSpanningTree { component, .. }
             | Self::PageRank { component, .. }
             | Self::RandomWalk { component, .. }
@@ -498,6 +532,10 @@ impl ShellProcedureBinding {
             | Self::FilteredKnn { mode, .. }
             | Self::NodeSimilarity { mode, .. }
             | Self::FilteredNodeSimilarity { mode, .. }
+            | Self::FastRP { mode, .. }
+            | Self::Node2Vec { mode, .. }
+            | Self::GraphSage { mode, .. }
+            | Self::HashGNN { mode, .. }
             | Self::KSpanningTree { mode, .. }
             | Self::PageRank { mode, .. }
             | Self::RandomWalk { mode, .. }
@@ -703,6 +741,18 @@ impl ShellProcedureBinding {
                 output_property,
                 ..
             } => algorithms::invoke_filtered_node_similarity(mode, procedure, output_property),
+            Self::FastRP {
+                mode, procedure, ..
+            } => algorithms::invoke_fast_rp(mode, procedure),
+            Self::Node2Vec {
+                mode, procedure, ..
+            } => algorithms::invoke_node2vec(mode, procedure),
+            Self::GraphSage {
+                mode, procedure, ..
+            } => algorithms::invoke_graphsage(mode, procedure),
+            Self::HashGNN {
+                mode, procedure, ..
+            } => algorithms::invoke_hash_gnn(mode, procedure),
             Self::KSpanningTree {
                 mode,
                 procedure,
@@ -935,6 +985,12 @@ pub enum ShellProcedureResult {
     FilteredNodeSimilarityEstimate(MemoryRange),
     FilteredNodeSimilarityMutate(FilteredNodeSimilarityMutateResult),
     FilteredNodeSimilarityWrite(WriteResult),
+    FastRPStream(Vec<FastRPRow>),
+    FastRPStats(FastRPStats),
+    Node2VecStream(Vec<Node2VecRow>),
+    Node2VecStats(Node2VecStats),
+    GraphSageStats(GraphSageStats),
+    HashGNNStats(HashGNNStats),
     KSpanningTreeStream(Vec<KSpanningTreeRow>),
     KSpanningTreeStats(KSpanningTreeStats),
     KSpanningTreeEstimate(MemoryRange),
@@ -1408,6 +1464,98 @@ mod tests {
                 ..
             })
         ));
+    }
+
+    #[test]
+    fn binds_and_invokes_fast_rp_stats_as_a_typed_procedure() {
+        let call = builtin_component("fast_rp")
+            .unwrap()
+            .call(ShellComponentMode::Stats)
+            .with_input("embeddingDimension", 8_u64)
+            .with_input("propertyDimension", 0_u64)
+            .with_input("iterationWeights", vec![0.0_f64, 1.0_f64])
+            .with_input("normalizationStrength", 0.5_f64)
+            .with_input("nodeSelfInfluence", 0.1_f64)
+            .with_input("randomSeed", 7_u64)
+            .with_input("concurrency", 2_u64);
+
+        assert!(matches!(
+            graph().invoke_shell_component(&call).unwrap(),
+            ShellProcedureResult::FastRPStats(stats) if stats.node_count == 8
+        ));
+    }
+
+    #[test]
+    fn binds_and_invokes_node2vec_stats_as_a_typed_procedure() {
+        let call = builtin_component("node2vec")
+            .unwrap()
+            .call(ShellComponentMode::Stats)
+            .with_input("walksPerNode", 1_u64)
+            .with_input("walkLength", 4_u64)
+            .with_input("iterations", 1_u64)
+            .with_input("windowSize", 2_u64)
+            .with_input("negativeSamplingRate", 1_u64)
+            .with_input("embeddingDimension", 4_u64)
+            .with_input("embeddingInitializer", "normalized")
+            .with_input("randomSeed", 7_u64)
+            .with_input("concurrency", 1_u64);
+
+        assert!(matches!(
+            graph().invoke_shell_component(&call).unwrap(),
+            ShellProcedureResult::Node2VecStats(stats) if stats.node_count == 8
+        ));
+    }
+
+    #[test]
+    fn binds_graphsage_stats_as_a_typed_procedure() {
+        let call = builtin_component("graphsage")
+            .unwrap()
+            .call(ShellComponentMode::Stats)
+            .with_input("modelName", "shell-model")
+            .with_input("modelUser", "shell-user")
+            .with_input("batchSize", 16_u64)
+            .with_input("concurrency", 1_u64);
+
+        assert!(matches!(
+            graph().bind_shell_component(&call).unwrap(),
+            ShellProcedureBinding::GraphSage { .. }
+        ));
+    }
+
+    #[test]
+    fn binds_and_invokes_hash_gnn_stats_as_a_typed_procedure() {
+        let call = builtin_component("hash_gnn")
+            .unwrap()
+            .call(ShellComponentMode::Stats)
+            .with_input("iterations", 1_u64)
+            .with_input("embeddingDensity", 2_u64)
+            .with_input("neighborInfluence", 1.0_f64)
+            .with_input("heterogeneous", false)
+            .with_input("outputDimension", 4_u64)
+            .with_input(
+                "generateFeatures",
+                serde_json::json!({"dimension": 8, "densityLevel": 2}),
+            )
+            .with_input("randomSeed", 7_u64)
+            .with_input("concurrency", 1_u64);
+
+        assert!(matches!(
+            graph().invoke_shell_component(&call).unwrap(),
+            ShellProcedureResult::HashGNNStats(stats) if stats.node_count == 8
+        ));
+    }
+
+    #[test]
+    fn rejects_unadvertised_embedding_modes() {
+        for alias in ["fast_rp", "node2vec", "graphsage", "hash_gnn"] {
+            let call = builtin_component(alias)
+                .unwrap()
+                .call(ShellComponentMode::Estimate);
+            assert!(matches!(
+                graph().bind_shell_component(&call),
+                Err(ShellProcedureError::UnsupportedMode { .. })
+            ));
+        }
     }
 
     #[test]

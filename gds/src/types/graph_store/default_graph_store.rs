@@ -561,6 +561,7 @@ impl DefaultGraphStore {
         })?;
         let mut relationship_topologies = self.relationship_topologies.clone();
         relationship_topologies.insert(rel_type.clone(), Arc::new(topology));
+        self.validate_retained_relationship_property_cardinalities(&relationship_topologies)?;
 
         let mut schema = MutableGraphSchema::from_schema(&self.schema);
         let entry = schema
@@ -604,12 +605,15 @@ impl DefaultGraphStore {
             }
         }
 
+        let relationship_topologies = relationship_topologies
+            .into_iter()
+            .map(|(relationship_type, topology)| (relationship_type, Arc::new(topology)))
+            .collect();
+        self.validate_retained_relationship_property_cardinalities(&relationship_topologies)?;
+
         let mut store = self.clone();
         store.graph_name = graph_name;
-        store.relationship_topologies = relationship_topologies
-            .into_iter()
-            .map(|(t, topo)| (t, Arc::new(topo)))
-            .collect();
+        store.relationship_topologies = relationship_topologies;
         store.rebuild_relationship_metadata();
         store.refresh_relationship_property_state();
         Ok(store)
@@ -1447,6 +1451,33 @@ impl DefaultGraphStore {
             .any(|store| !store.is_empty());
     }
 
+    fn validate_retained_relationship_property_cardinalities(
+        &self,
+        relationship_topologies: &HashMap<RelationshipType, Arc<RelationshipTopology>>,
+    ) -> GraphStoreResult<()> {
+        for (relationship_type, property_store) in &self.relationship_property_stores {
+            if property_store.is_empty() {
+                continue;
+            }
+            let topology = relationship_topologies.get(relationship_type).ok_or_else(|| {
+                GraphStoreError::InvalidOperation(format!(
+                    "cannot retain properties for relationship type '{relationship_type}' without its topology"
+                ))
+            })?;
+            let expected_count = topology.relationship_count();
+            for property in property_store.columns() {
+                let materialized_count = property.values().element_count();
+                if materialized_count != expected_count {
+                    return Err(GraphStoreError::InvalidOperation(format!(
+                        "cannot retain relationship property '{}' for type '{relationship_type}': column cardinality {materialized_count} does not match rebuilt topology cardinality {expected_count}",
+                        property.key()
+                    )));
+                }
+            }
+        }
+        Ok(())
+    }
+
     fn validate_graph_view_spec(&self, spec: &GraphViewSpec) -> GraphViewResult<()> {
         let selected_types = if spec.relationship_types().is_empty() {
             self.relationship_topologies.keys().cloned().collect()
@@ -1806,6 +1837,12 @@ impl GraphStore for DefaultGraphStore {
         }
 
         let mut schema = MutableGraphSchema::from_schema(&self.schema);
+        for label in self.schema.node_schema().available_labels() {
+            schema
+                .node_schema_mut()
+                .get_or_create_label(label)
+                .remove_property(&key);
+        }
         for label in &node_labels {
             schema
                 .node_schema_mut()
@@ -1816,6 +1853,9 @@ impl GraphStore for DefaultGraphStore {
             .node_properties
             .replace_column(property)
             .map_err(|error| GraphStoreError::InvalidOperation(error.to_string()))?;
+        for keys in self.node_properties_by_label.values_mut() {
+            keys.remove(&key);
+        }
         for label in node_labels {
             self.node_properties_by_label
                 .entry(Self::label_key(&label))
@@ -1919,14 +1959,16 @@ impl GraphStore for DefaultGraphStore {
             .unwrap_or(false)
     }
 
-    fn relationship_property_type(&self, property_key: &str) -> GraphStoreResult<ValueType> {
-        for store in self.relationship_property_stores.values() {
-            if let Some(property) = store.get(property_key) {
-                return Ok(property.property_schema().value_type());
-            }
-        }
-
-        Err(GraphStoreError::PropertyNotFound(property_key.to_string()))
+    fn relationship_property_type(
+        &self,
+        relationship_type: &RelationshipType,
+        property_key: &str,
+    ) -> GraphStoreResult<ValueType> {
+        self.relationship_property_stores
+            .get(relationship_type)
+            .and_then(|store| store.get(property_key))
+            .map(|property| property.property_schema().value_type())
+            .ok_or_else(|| GraphStoreError::PropertyNotFound(property_key.to_string()))
     }
 
     fn relationship_property_values(
@@ -2616,6 +2658,78 @@ mod tests {
     }
 
     #[test]
+    fn topology_rebuild_rejects_retained_property_cardinality_mismatch() {
+        let relationship_type = RelationshipType::of("KNOWS");
+        let mut store = sample_store();
+        store
+            .add_relationship_property(
+                relationship_type.clone(),
+                "weight",
+                Arc::new(DefaultRelationshipPropertyValues::with_default(
+                    vec![1.0, 2.0, 3.0],
+                    3,
+                )),
+            )
+            .unwrap();
+
+        let rebuilt =
+            RelationshipTopology::new(vec![vec![MappedNodeId::new(1)], vec![], vec![]], None);
+        let error = store
+            .with_rebuilt_relationship_topologies(
+                GraphName::new("invalid-rebuild"),
+                HashMap::from([(relationship_type.clone(), rebuilt)]),
+            )
+            .expect_err("mismatched retained relationship property must reject rebuild");
+
+        assert!(matches!(error, GraphStoreError::InvalidOperation(message)
+            if message.contains("weight")
+                && message.contains("cardinality 3")
+                && message.contains("cardinality 1")));
+        assert_eq!(store.relationship_count_for_type(&relationship_type), 3);
+        assert_eq!(
+            store
+                .relationship_property_values(&relationship_type, "weight")
+                .unwrap()
+                .element_count(),
+            3
+        );
+        validate_graph_store_schema(&store).unwrap();
+    }
+
+    #[test]
+    fn structural_mutations_rebuild_relationship_metadata() {
+        let knows = RelationshipType::of("KNOWS");
+        let likes = RelationshipType::of("LIKES");
+        let store = sample_store()
+            .with_added_relationship_type_preserve_name(
+                likes.clone(),
+                vec![vec![MappedNodeId::new(2)], vec![], vec![]],
+                Direction::Directed,
+            )
+            .unwrap();
+
+        assert_eq!(store.relationship_count(), 4);
+        assert!(store.inverse_indexed_relationship_types().is_empty());
+
+        let mut store = store
+            .with_inverse_indices(GraphName::new("inverse-indexed"))
+            .unwrap();
+        assert_eq!(store.relationship_count(), 4);
+        assert_eq!(
+            store.inverse_indexed_relationship_types(),
+            HashSet::from([knows.clone(), likes.clone()])
+        );
+
+        store.delete_relationships(&knows).unwrap();
+        assert_eq!(store.relationship_count(), 1);
+        assert_eq!(
+            store.inverse_indexed_relationship_types(),
+            HashSet::from([likes])
+        );
+        validate_graph_store_schema(&store).unwrap();
+    }
+
+    #[test]
     fn path_collapse_preserves_unrelated_parallel_edges() {
         let relationship_type = RelationshipType::of("KNOWS");
         let topology = RelationshipTopology::new(
@@ -2769,6 +2883,49 @@ mod tests {
 
         assert!(store.has_node_label(&label));
         assert!(store.schema().node_schema().get(&label).is_some());
+        validate_graph_store_schema(&store).unwrap();
+    }
+
+    #[test]
+    fn replacing_node_property_replaces_its_label_domain() {
+        let mut store = sample_store();
+        let person = NodeLabel::of("Person");
+        let company = NodeLabel::of("Company");
+        store.add_node_label(person.clone()).unwrap();
+        store.add_node_label(company.clone()).unwrap();
+
+        let initial_values: Arc<dyn NodePropertyValues> = Arc::new(
+            DefaultLongNodePropertyValues::from_collection(VecLong::from(vec![1, 2, 3]), 3),
+        );
+        store
+            .add_node_property_column(
+                HashSet::from([person.clone()]),
+                NodeProperty::with_state("score", PropertyState::Persistent, initial_values),
+            )
+            .unwrap();
+
+        let replacement_values: Arc<dyn NodePropertyValues> = Arc::new(
+            DefaultLongNodePropertyValues::from_collection(VecLong::from(vec![4, 5, 6]), 3),
+        );
+        store
+            .replace_node_property_column(
+                HashSet::from([company.clone()]),
+                NodeProperty::with_state("score", PropertyState::Persistent, replacement_values),
+            )
+            .unwrap();
+
+        assert!(!store.has_node_property_for_label(&person, "score"));
+        assert!(store.has_node_property_for_label(&company, "score"));
+        assert!(store
+            .schema()
+            .node_schema()
+            .get(&person)
+            .is_some_and(|entry| !entry.properties().contains_key("score")));
+        assert!(store
+            .schema()
+            .node_schema()
+            .get(&company)
+            .is_some_and(|entry| entry.properties().contains_key("score")));
         validate_graph_store_schema(&store).unwrap();
     }
 
@@ -3124,6 +3281,56 @@ mod tests {
             store.relationship_property_keys_for_types(&HashSet::new()),
             store.relationship_property_keys()
         );
+    }
+
+    #[test]
+    fn relationship_property_type_is_scoped_to_relationship_type() {
+        let mut store = sample_store();
+        let knows = RelationshipType::of("KNOWS");
+        let likes = RelationshipType::of("LIKES");
+        store = store
+            .with_added_relationship_type_preserve_name(
+                likes.clone(),
+                vec![vec![MappedNodeId::new(2)], vec![], vec![]],
+                Direction::Directed,
+            )
+            .expect("add LIKES relationship type");
+
+        let knows_count = store.relationship_count_for_type(&knows);
+        store
+            .add_relationship_property(
+                knows.clone(),
+                "weight",
+                Arc::new(DefaultRelationshipPropertyValues::with_default(
+                    vec![1.0; knows_count],
+                    knows_count,
+                )),
+            )
+            .expect("add double KNOWS property");
+
+        let likes_count = store.relationship_count_for_type(&likes);
+        store
+            .add_relationship_property(
+                likes.clone(),
+                "weight",
+                Arc::new(
+                    DefaultLongRelationshipPropertyValues::<VecLong>::from_collection(
+                        VecLong::from(vec![1; likes_count]),
+                        likes_count,
+                    ),
+                ),
+            )
+            .expect("add long LIKES property");
+
+        assert_eq!(
+            store.relationship_property_type(&knows, "weight").unwrap(),
+            ValueType::Double
+        );
+        assert_eq!(
+            store.relationship_property_type(&likes, "weight").unwrap(),
+            ValueType::Long
+        );
+        validate_graph_store_schema(&store).unwrap();
     }
 
     #[test]
