@@ -1,0 +1,301 @@
+{
+  "ok": true,
+  "op": "evaluate",
+  "data": {
+    "graphName": "form-shell-dispatch-graph",
+    "outputGraphName": null,
+    "persistedOutputGraph": false,
+    "operator": "program_form.evaluate_apply_print",
+    "nodeCount": 5,
+    "relationshipCount": 5,
+    "proof": {
+      "programForm": {
+        "ok": true,
+        "backend": "ExecuteSpec",
+        "eval": {
+          "selected_forms": [
+            "centrality"
+          ],
+          "patterns": [
+            "algo.pagerank",
+            "algo.pagerank"
+          ]
+        },
+        "apply": {
+          "executed": [
+            {
+              "pattern": "algo.pagerank",
+              "op": "pagerank",
+              "spec_binding": "spec.pagerank",
+              "response": {
+                "ok": true,
+                "op": "pagerank",
+                "mode": "stream",
+                "data": [
+                  {
+                    "node_id": 0,
+                    "score": 0.15000000000000002
+                  },
+                  {
+                    "node_id": 1,
+                    "score": 0.21375
+                  },
+                  {
+                    "node_id": 2,
+                    "score": 0.21375
+                  },
+                  {
+                    "node_id": 3,
+                    "score": 0.513375
+                  },
+                  {
+                    "node_id": 4,
+                    "score": 0.58636875
+                  }
+                ],
+                "timings": {
+                  "preProcessingMillis": 0,
+                  "computeMillis": 0,
+                  "sideEffectMillis": 0
+                }
+              }
+            },
+            {
+              "pattern": "algo.pagerank",
+              "op": "pagerank",
+              "spec_binding": "spec.pagerank",
+              "response": {
+                "ok": true,
+                "op": "pagerank",
+                "mode": "stream",
+                "data": [
+                  {
+                    "node_id": 0,
+                    "score": 0.15000000000000002
+                  },
+                  {
+                    "node_id": 1,
+                    "score": 0.21375
+                  },
+                  {
+                    "node_id": 2,
+                    "score": 0.21375
+                  },
+                  {
+                    "node_id": 3,
+                    "score": 0.513375
+                  },
+                  {
+                    "node_id": 4,
+                    "score": 0.58636875
+                  }
+                ],
+                "timings": {
+                  "preProcessingMillis": 0,
+                  "computeMillis": 0,
+                  "sideEffectMillis": 0
+                }
+              }
+            }
+          ],
+          "failed": [],
+          "skipped": []
+        },
+        "contract": {
+          "form": {
+            "shape": {
+              "required_fields": [],
+              "optional_fields": [],
+              "type_constraints": {},
+              "validation_rules": {}
+            },
+            "context": {
+              "dependencies": [],
+              "execution_order": [],
+              "runtime_strategy": "kernel",
+              "conditions": []
+            },
+            "morph": {
+              "patterns": [
+                "algo.pagerank"
+              ]
+            }
+          },
+          "gdsl": {
+            "name": "form.program",
+            "version": null,
+            "attributes": {}
+          },
+          "sdsl": [],
+          "application_forms": [
+            {
+              "name": "centrality",
+              "domain": "ontology-runtime",
+              "features": [
+                "feature.centrality.pagerank"
+              ],
+              "patterns": [
+                "algo.pagerank"
+              ],
+              "specifications": {
+                "binding": "spec.pagerank"
+              }
+            }
+          ],
+          "selected_forms": [
+            "centrality"
+          ]
+        },
+        "pre_eval": {
+          "given_forms": [
+            {
+              "application_form": "centrality",
+              "principle_shape": "principle.shape",
+              "principle_context": "principle.context",
+              "principle_morph": "principle.morph",
+              "effect_entity": "entity::centrality",
+              "effect_property": "property::centrality",
+              "effect_aspect": "aspect::form-shell-dispatch-graph",
+              "monadic_evaluation": "Succeeded"
+            }
+          ]
+        },
+        "evaluation_slot": {
+          "state": "Succeeded"
+        },
+        "organic_unity": {
+          "status": "Coherent",
+          "reasons": []
+        }
+      },
+      "programFeatures": {
+        "programName": "form.program",
+        "selectedForms": [
+          "centrality"
+        ],
+        "selectedComponents": [
+          "centrality"
+        ],
+        "features": [
+          {
+            "kind": "application-form",
+            "value": "centrality",
+            "source": "application_form::centrality"
+          },
+          {
+            "kind": "operator-pattern",
+            "value": "algo.pagerank",
+            "source": "operator_pattern::algo.pagerank"
+          },
+          {
+            "kind": "operator-pattern",
+            "value": "algo.pagerank",
+            "source": "operator_pattern::algo.pagerank"
+          },
+          {
+            "kind": "specification-binding",
+            "value": "form.program",
+            "source": "specification::form.program"
+          }
+        ]
+      },
+      "formCapabilities": {
+        "source": {
+          "kind": "dataset_mock",
+          "persistent": false,
+          "semantics": "in_memory_program_snapshot"
+        },
+        "programName": "form.program",
+        "applicationForms": [
+          {
+            "name": "centrality",
+            "domain": "ontology-runtime",
+            "selected": true,
+            "declaredFeatures": [
+              "feature.centrality.pagerank"
+            ],
+            "operatorPatterns": [
+              "algo.pagerank"
+            ],
+            "specifications": {
+              "binding": "spec.pagerank"
+            },
+            "resolvedProgramFeatures": [
+              {
+                "kind": "application-form",
+                "value": "centrality",
+                "source": "application_form::centrality"
+              },
+              {
+                "kind": "operator-pattern",
+                "value": "algo.pagerank",
+                "source": "operator_pattern::algo.pagerank"
+              },
+              {
+                "kind": "operator-pattern",
+                "value": "algo.pagerank",
+                "source": "operator_pattern::algo.pagerank"
+              }
+            ]
+          }
+        ]
+      },
+      "serviceManifest": {
+        "activatedServices": [
+          "form.program",
+          "form.algorithms",
+          "form.shell"
+        ],
+        "machines": [
+          {
+            "serviceId": "form.program",
+            "purpose": "Normalize and evaluate a PureForm Program with ProgramFeatures evidence",
+            "executionState": "actual",
+            "runtimeBinding": "ProgramForm/ExecuteSpec",
+            "components": [],
+            "daemonRuntime": null
+          },
+          {
+            "serviceId": "form.algorithms",
+            "purpose": "Resolve algorithm operators into Shell-bindable component plans",
+            "executionState": "bindable",
+            "runtimeBinding": "ShellProcedureRuntime",
+            "components": [
+              {
+                "id": "gds.algorithms.centrality.pagerank",
+                "alias": "pagerank",
+                "category": "centrality",
+                "modes": [
+                  "stream",
+                  "stats",
+                  "estimate",
+                  "mutate",
+                  "write"
+                ]
+              }
+            ],
+            "daemonRuntime": null
+          },
+          {
+            "serviceId": "form.shell",
+            "purpose": "Run Form plans as long-lived task-daemon processes with supervision",
+            "executionState": "planned",
+            "runtimeBinding": "ShellTaskDaemonRuntime",
+            "components": [],
+            "daemonRuntime": {
+              "processModel": "long-lived",
+              "supervisionPolicy": "restart_on_failure",
+              "heartbeatIntervalMs": 30000,
+              "checkpointPolicy": "periodic_snapshot"
+            }
+          }
+        ],
+        "unresolvedPatterns": []
+      },
+      "artifactHooks": {
+        "enabled": false,
+        "validated": false
+      }
+    }
+  }
+}

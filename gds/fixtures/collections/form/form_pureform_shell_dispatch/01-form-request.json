@@ -1,0 +1,35 @@
+{
+  "facade": "form_eval",
+  "op": "evaluate",
+  "user": {
+    "username": "alice",
+    "isAdmin": true
+  },
+  "databaseId": "db1",
+  "graphName": "form-shell-dispatch-graph",
+  "program": {
+    "morph": {
+      "patterns": [
+        "algo.pagerank"
+      ]
+    },
+    "applicationForms": [
+      {
+        "name": "centrality",
+        "domain": "ontology-runtime",
+        "features": [
+          "feature.centrality.pagerank"
+        ],
+        "patterns": [
+          "algo.pagerank"
+        ],
+        "specifications": {
+          "binding": "spec.pagerank"
+        }
+      }
+    ],
+    "selectedForms": [
+      "centrality"
+    ]
+  }
+}

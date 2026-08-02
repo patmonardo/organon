@@ -52,23 +52,74 @@ This means the migration is mostly boundary and module reorganization, not green
 
 ## Proposed Folder Evolution
 
-###[A] New module layer in applications
+###[A] Form service layer in applications
 
-Create a focused PureForm OS layer under `applications`:
+The focused PureForm OS layer now lives under `applications/form`:
 
-- `applications/form_os/mod.rs`
-- `applications/form_os/program_gateway.rs` (OG Script/JSON Program ingress)
-- `applications/form_os/component_registry.rs` (PureFormComponent normalization)
-- `applications/form_os/plan_compiler.rs` (Program -> shell-plan-ready op sequence)
-- `applications/form_os/evidence.rs` (ProgramFeatures + traces + artifact links)
+- `applications/form/program_gateway.rs` normalizes Program/GivenForm ingress.
+- `applications/form/capability_source.rs` projects ApplicationForms and ProgramFeatures into a replaceable capability snapshot.
+- `applications/form/service_manifest.rs` defines the typed advertised-machine contract.
+- `applications/form/service_registry.rs` activates machines from the compiled Program.
+- `applications/form/evidence.rs` composes Program, feature, service, and artifact evidence.
 
 This layer orchestrates existing modules, it does not duplicate algorithm kernels.
+
+## Form Capability Source
+
+Form is the root capability authority. The current `InMemoryDatasetCapabilitySource` projects the
+Program's complete ApplicationForm set into `proof.formCapabilities`, including declared features,
+operator patterns, specifications, selection state, and associated canonical ProgramFeatures.
+
+This source is an explicit Dataset mock:
+
+- `source.kind` is `dataset_mock`.
+- `source.persistent` is `false`.
+- `source.semantics` is `in_memory_program_snapshot`.
+
+The trait boundary is intended to admit a real Dataset catalog source later without changing the
+Form evidence contract. This slice does not claim persisted capability learning.
+
+## Advertised Form Service Machines
+
+The Form Server currently advertises five virtual operating machines:
+
+1. `form.program`
+
+- Always active for normalized Program/GivenForm requests.
+- Executes through `ProgramForm/ExecuteSpec`.
+- Reports `actual` because this path is invoked today.
+
+2. `form.algorithms`
+
+- Activates from algorithm operator patterns or an explicit `serviceId`.
+- Resolves canonical Shell component descriptors and supported modes.
+- Reports `bindable` when descriptors resolve and `planned` when they do not.
+
+3. `form.datasets`
+
+- Activates from dataset, dataframe, or collections operator patterns, or `serviceId`.
+- Reports `planned` until the Dataset compilation runtime is invoked through this path.
+
+4. `form.shell`
+
+- Activates from shell/task/procedure patterns, algorithm or dataset activation, or `serviceId`.
+- Declares long-lived daemon runtime policy (`daemonRuntime`) for supervision and heartbeat.
+- Reports `planned` until Shell task-daemon execution is invoked through this path.
+
+5. `form.recursion`
+
+- Activates from recursion/recursive/triadic operator patterns, or `serviceId`.
+- Declares triadic recursive runtime policy for iterative checkpointed mediation.
+- Reports `planned` until recursive Form-cycle execution is invoked through this path.
+
+`serviceManifest.unresolvedPatterns` preserves algorithm intent that has no registered Shell
+component instead of suppressing it or falsely reporting execution.
 
 ###[B] Services become thin adapters
 
 Keep `services` as transport adapters only:
 
-- `tsjson_napi.rs` routes to `form_os` for form_eval and related program operations.
+- `tsjson_napi.rs` routes to `applications/form` for form_eval and related program operations.
 - graph_store, collections, and algorithms remain callable, but are invoked through Form-OS contracts when request type is Program/GivenForm.
 
 ###[C] Application module semantics
@@ -83,11 +134,11 @@ Difference after migration: they are no longer conceptual entry authorities. Pur
 
 ### Phase 1 (No Breakage)
 
-1. Extract form_eval parsing and evaluation into `applications/form_os/program_gateway.rs`.
+1. Extract form_eval parsing and evaluation into `applications/form/program_gateway.rs`.
 2. Introduce `PureFormComponent` aliases at boundary level (already partially done via request aliases).
 3. Keep current response shape and add Form-OS proof fields in parallel.
 
-Deliverable: same API behavior, cleaner architecture seam.
+Status: implemented, including `serviceManifest` as an additive proof field.
 
 ### Phase 2 (Semantic Consolidation)
 
@@ -132,24 +183,27 @@ Deliverable: IDE can speak OG Script directly.
 ### Evidence Egress
 
 - Always return ProgramFeatures.
+- Return `formCapabilities` as the Dataset-shaped account of what all ApplicationForms declare and
+  which forms are selected for the current Program.
 - Return selectedForms + selectedComponents aliases until migration is complete.
+- Return a typed serviceManifest with activation, runtime binding, execution state, resolved
+  Shell components, unresolved patterns, and optional daemon runtime profile.
 - Attach shell-plan draft when available.
 
 ## Guardrails
 
 1. Do not break existing facade operation names during migration.
 2. Do not duplicate algorithm execution logic in Form-OS modules.
-3. Keep services files transport-focused; move semantics into form_os.
+3. Keep services files transport-focused; move semantics into `applications/form`.
 4. Maintain library-scoped validation commands during each phase.
 
-## First Mechanical Refactor (Recommended Next PR)
+## Current Implementation Boundary
 
-1. Add `applications/form_os/mod.rs` and `program_gateway.rs`.
-2. Move from `services/tsjson_napi.rs`:
-   - Program value extraction
-   - ProgramSpec parsing
-   - ProgramFeatures payload generation
-3. Keep `handle_form_eval` signature unchanged; call new gateway functions.
-4. Run focused tests plus `cargo +stable check -p gds --lib`.
+The gateway and service registry determine what a Program means and which machine is active.
+`ProgramFormApi` remains the actual evaluator. Shell descriptors establish bindability but do not
+claim Shell execution. Dataset activation remains planned until Phase 3 supplies the daemonized
+runtime handoff and persisted mediation evidence.
 
-This gives immediate structural clarity while preserving all current behavior.
+Real Dataset catalog reads, capability persistence, execution-feedback updates, and capability
+gating are deliberately deferred. The current mock establishes their replaceable semantic boundary
+without representing in-memory declarations as learned knowledge.

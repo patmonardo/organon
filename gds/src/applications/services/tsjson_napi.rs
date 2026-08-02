@@ -1,7 +1,11 @@
+use crate::applications::form::capability_source::FormCapabilitySource;
+use crate::applications::form::capability_source::InMemoryDatasetCapabilitySource;
+use crate::applications::form::evidence;
+use crate::applications::form::program_gateway;
+use crate::applications::form::service_registry;
 use crate::applications::services::graph_store_dispatch;
 use crate::applications::services::tsjson_support::{err, ok, parse_facade_context};
 use crate::core::User;
-use crate::form::{ApplicationForm, Context, FormShape, Morph, ProgramSpec, Shape, Specification};
 use crate::projection::eval::algorithm::ExecutionMode;
 use crate::projection::eval::form::{ProgramFormApi, ProgramFormRequest};
 use crate::types::graph_store::GraphStore;
@@ -28,187 +32,6 @@ fn handle_graph_store_catalog(request: &serde_json::Value) -> serde_json::Value 
         &ctx.db,
         ctx.catalog,
     )
-}
-
-fn as_string_vec(value: Option<&Value>) -> Vec<String> {
-    value
-        .and_then(|v| v.as_array())
-        .map(|items| {
-            items
-                .iter()
-                .filter_map(Value::as_str)
-                .map(str::trim)
-                .filter(|s| !s.is_empty())
-                .map(ToOwned::to_owned)
-                .collect::<Vec<_>>()
-        })
-        .unwrap_or_default()
-}
-
-fn as_string_map(value: Option<&Value>) -> HashMap<String, String> {
-    value
-        .and_then(|v| v.as_object())
-        .map(|obj| {
-            obj.iter()
-                .filter_map(|(k, v)| {
-                    v.as_str()
-                        .map(str::trim)
-                        .filter(|s| !s.is_empty())
-                        .map(|s| (k.clone(), s.to_string()))
-                })
-                .collect::<HashMap<_, _>>()
-        })
-        .unwrap_or_default()
-}
-
-fn parse_program_spec(program_value: &Value) -> Result<ProgramSpec, String> {
-    let program = program_value
-        .as_object()
-        .ok_or_else(|| "program must be an object".to_string())?;
-
-    let morph = program
-        .get("morph")
-        .and_then(Value::as_object)
-        .ok_or_else(|| "program.morph is required".to_string())?;
-
-    let patterns = as_string_vec(morph.get("patterns"));
-    if patterns.is_empty() {
-        return Err("program.morph.patterns must contain at least one entry".to_string());
-    }
-
-    let shape_obj = program.get("shape").and_then(Value::as_object);
-    let context_obj = program.get("context").and_then(Value::as_object);
-
-    let shape = Shape {
-        required_fields: as_string_vec(shape_obj.and_then(|o| o.get("required_fields"))),
-        optional_fields: as_string_vec(shape_obj.and_then(|o| o.get("optional_fields"))),
-        type_constraints: as_string_map(shape_obj.and_then(|o| o.get("type_constraints"))),
-        validation_rules: as_string_map(shape_obj.and_then(|o| o.get("validation_rules"))),
-    };
-
-    let context = Context {
-        dependencies: as_string_vec(context_obj.and_then(|o| o.get("dependencies"))),
-        execution_order: as_string_vec(context_obj.and_then(|o| o.get("execution_order"))),
-        runtime_strategy: context_obj
-            .and_then(|o| o.get("runtime_strategy"))
-            .and_then(Value::as_str)
-            .map(str::trim)
-            .filter(|s| !s.is_empty())
-            .unwrap_or("kernel")
-            .to_string(),
-        conditions: as_string_vec(context_obj.and_then(|o| o.get("conditions"))),
-    };
-
-    let form = FormShape::new(shape, context, Morph::new(patterns));
-
-    let application_forms = program
-        .get("pureFormComponents")
-        .or_else(|| program.get("pure_form_components"))
-        .or_else(|| program.get("components"))
-        .or_else(|| program.get("applicationForms"))
-        .or_else(|| program.get("application_forms"))
-        .and_then(Value::as_array)
-        .map(|forms| {
-            forms
-                .iter()
-                .enumerate()
-                .map(|(index, form)| {
-                    let obj = form.as_object();
-                    let name = obj
-                        .and_then(|o| o.get("name"))
-                        .and_then(Value::as_str)
-                        .map(str::trim)
-                        .filter(|s| !s.is_empty())
-                        .map(ToOwned::to_owned)
-                        .unwrap_or_else(|| format!("form.{index}"));
-                    let domain = obj
-                        .and_then(|o| o.get("domain"))
-                        .and_then(Value::as_str)
-                        .map(str::trim)
-                        .filter(|s| !s.is_empty())
-                        .unwrap_or("graph-ml")
-                        .to_string();
-                    let features = as_string_vec(obj.and_then(|o| o.get("features")));
-                    let form_patterns = as_string_vec(obj.and_then(|o| o.get("patterns")));
-                    let specifications = as_string_map(obj.and_then(|o| o.get("specifications")));
-                    ApplicationForm::new(name, domain, features, form_patterns, specifications)
-                })
-                .collect::<Vec<_>>()
-        })
-        .unwrap_or_default();
-
-    let selected_forms = as_string_vec(
-        program
-            .get("selectedPureFormComponents")
-            .or_else(|| program.get("selected_pure_form_components"))
-            .or_else(|| program.get("selectedComponents"))
-            .or_else(|| program.get("selected_components"))
-            .or_else(|| program.get("selectedForms"))
-            .or_else(|| program.get("selected_forms")),
-    );
-
-    let gdsl = Specification::new("form.program".to_string(), None, HashMap::new());
-
-    Ok(ProgramSpec::new(
-        form,
-        gdsl,
-        Vec::new(),
-        application_forms,
-        selected_forms,
-    ))
-}
-
-fn parse_program_value<'a>(request: &'a Value) -> Result<&'a Value, String> {
-    if let Some(program) = request.get("program") {
-        return Ok(program);
-    }
-
-    if let Some(given_form) = request
-        .get("givenForm")
-        .or_else(|| request.get("given_form"))
-    {
-        return Ok(given_form);
-    }
-
-    if let Some(given_forms) = request
-        .get("givenForms")
-        .or_else(|| request.get("given_forms"))
-    {
-        if let Some(forms) = given_forms.as_array() {
-            return forms
-                .first()
-                .ok_or_else(|| "givenForms must contain at least one entry".to_string());
-        }
-
-        return Ok(given_forms);
-    }
-
-    Err("Missing required field: program|givenForm|givenForms".to_string())
-}
-
-fn program_features_json(program: &ProgramSpec) -> Result<Value, String> {
-    let features = program
-        .define_features()
-        .map_err(|error| format!("Program feature extraction failed: {error}"))?;
-
-    let feature_rows = features
-        .features
-        .iter()
-        .map(|feature| {
-            serde_json::json!({
-                "kind": feature.kind.as_str(),
-                "value": feature.value,
-                "source": feature.source,
-            })
-        })
-        .collect::<Vec<_>>();
-
-    Ok(serde_json::json!({
-        "programName": features.program_name,
-        "selectedForms": features.selected_forms,
-        "selectedComponents": features.selected_forms,
-        "features": feature_rows,
-    }))
 }
 
 fn parse_op_inputs(request: &Value) -> HashMap<String, Value> {
@@ -570,18 +393,32 @@ fn handle_form_eval(request: &Value) -> Value {
         .filter(|s| !s.is_empty())
         .map(ToOwned::to_owned);
 
-    let program_value = match parse_program_value(request) {
+    let program_value = match program_gateway::parse_program_value(request) {
         Ok(value) => value,
         Err(message) => return err(&ctx.op, "INVALID_REQUEST", message),
     };
 
-    let program = match parse_program_spec(program_value) {
+    let program = match program_gateway::parse_program_spec(program_value) {
         Ok(program) => program,
         Err(message) => return err(&ctx.op, "INVALID_REQUEST", message),
     };
 
-    let program_features = match program_features_json(&program) {
+    let program_features = match program_gateway::program_features_json(&program) {
         Ok(features) => features,
+        Err(message) => return err(&ctx.op, "FORM_PROGRAM_ERROR", message),
+    };
+
+    let form_capabilities = match InMemoryDatasetCapabilitySource::new().snapshot(&program) {
+        Ok(capabilities) => capabilities,
+        Err(message) => return err(&ctx.op, "FORM_PROGRAM_ERROR", message),
+    };
+
+    let service_id = match program_gateway::parse_service_id(request) {
+        Ok(service_id) => service_id,
+        Err(message) => return err(&ctx.op, "INVALID_REQUEST", message),
+    };
+    let service_manifest = match service_registry::service_manifest(&program, service_id) {
+        Ok(manifest) => manifest,
         Err(message) => return err(&ctx.op, "FORM_PROGRAM_ERROR", message),
     };
 
@@ -628,11 +465,16 @@ fn handle_form_eval(request: &Value) -> Value {
         })
         .unwrap_or((0, 0));
 
-    let proof = serde_json::json!({
-        "programForm": serde_json::to_value(&print).unwrap_or_else(|_| serde_json::json!({})),
-        "programFeatures": program_features,
-        "artifactHooks": hook_artifacts,
-    });
+    let proof = match evidence::compose(
+        &print,
+        program_features,
+        &form_capabilities,
+        &service_manifest,
+        hook_artifacts,
+    ) {
+        Ok(proof) => proof,
+        Err(message) => return err(&ctx.op, "FORM_PROGRAM_ERROR", message),
+    };
 
     ok(
         &ctx.op,
@@ -1181,6 +1023,96 @@ mod tests {
                 .and_then(|v| v.as_array())
                 .map(Vec::len),
             Some(1)
+        );
+
+        let form_capabilities = proof
+            .get("formCapabilities")
+            .expect("formCapabilities expected");
+        assert_eq!(
+            form_capabilities
+                .get("source")
+                .and_then(|v| v.get("kind"))
+                .and_then(|v| v.as_str()),
+            Some("dataset_mock")
+        );
+        assert_eq!(
+            form_capabilities
+                .get("source")
+                .and_then(|v| v.get("persistent"))
+                .and_then(|v| v.as_bool()),
+            Some(false)
+        );
+        let centrality = form_capabilities
+            .get("applicationForms")
+            .and_then(|v| v.as_array())
+            .and_then(|forms| forms.first())
+            .expect("centrality capability expected");
+        assert_eq!(
+            centrality.get("name").and_then(|v| v.as_str()),
+            Some("centrality")
+        );
+        assert_eq!(
+            centrality.get("selected").and_then(|v| v.as_bool()),
+            Some(true)
+        );
+        assert!(centrality
+            .get("resolvedProgramFeatures")
+            .and_then(|v| v.as_array())
+            .map(|features| features.iter().any(|feature| {
+                feature.get("kind").and_then(|v| v.as_str()) == Some("operator-pattern")
+                    && feature.get("value").and_then(|v| v.as_str()) == Some("algo.pagerank")
+            }))
+            .unwrap_or(false));
+
+        let service_manifest = proof
+            .get("serviceManifest")
+            .expect("serviceManifest expected");
+        assert_eq!(
+            service_manifest
+                .get("activatedServices")
+                .and_then(|v| v.as_array())
+                .and_then(|services| services.get(1))
+                .and_then(|v| v.as_str()),
+            Some("form.algorithms")
+        );
+        assert_eq!(
+            service_manifest
+                .get("machines")
+                .and_then(|v| v.as_array())
+                .and_then(|machines| machines.get(1))
+                .and_then(|machine| machine.get("executionState"))
+                .and_then(|v| v.as_str()),
+            Some("bindable")
+        );
+        assert_eq!(
+            service_manifest
+                .get("machines")
+                .and_then(|v| v.as_array())
+                .and_then(|machines| machines.get(1))
+                .and_then(|machine| machine.get("components"))
+                .and_then(|v| v.as_array())
+                .and_then(|components| components.first())
+                .and_then(|component| component.get("id"))
+                .and_then(|v| v.as_str()),
+            Some("gds.algorithms.centrality.pagerank")
+        );
+        assert_eq!(
+            service_manifest
+                .get("activatedServices")
+                .and_then(|v| v.as_array())
+                .and_then(|services| services.get(2))
+                .and_then(|v| v.as_str()),
+            Some("form.shell")
+        );
+        assert_eq!(
+            service_manifest
+                .get("machines")
+                .and_then(|v| v.as_array())
+                .and_then(|machines| machines.get(2))
+                .and_then(|machine| machine.get("daemonRuntime"))
+                .and_then(|daemon| daemon.get("processModel"))
+                .and_then(|v| v.as_str()),
+            Some("long-lived")
         );
     }
 }

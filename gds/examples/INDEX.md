@@ -78,44 +78,45 @@ not.
 
 ## Doctrine Mapping
 
-| Exemplar | New example | Old archive source |
-|---|---|---|
-| 001-frame-dsl | `dataset_frame_dsl.rs` | `examples.old/collections_dataset_frame_dsl.rs` |
-| 002-corpus-readers | `dataset_source_corpus.rs` | `examples.old/collections_dataset_corpus_readers.rs` |
-| 003-tree-structures | `dataset_tree_structures.rs` | `examples.old/collections_dataset_tree.rs` |
-| 004-featstruct-model | `dataset_feature_structures.rs` | `examples.old/collections_dataset_featstruct_model.rs` |
-| 005-compile-ir | `dataset_compile_ir.rs` | `examples.old/collections_dataset_compile_ir.rs` |
-| 006-external-shell-program-artifact | `dataset_compile_external_gdsl.rs` | `examples.old/collections_dataset_gdsl_absolute_concept.rs` |
-| 007-applications-expository | `form_applications_expository.rs` | `examples.old/collections_dataset_applications_expository.rs` |
-| 008-stdlib-resources | `dataset_source_stdlib.rs` | `examples.old/collections_dataset_stdlib.rs` |
-| 009-json-semantic-form | `dataset_io_json.rs` | `examples.old/collections_dataset_json.rs` |
-| 010-xml-html-semantic-form | `dataset_io_xml_html.rs` | `examples.old/collections_dataset_xml_html.rs` |
-| 011-dataframe-macros-reflection | `dataframe_macros_reflection.rs` | `examples.old/collections_dataframe_macros_expository.rs` |
-| 012-select-filter-principle | `dataframe_select_filter.rs` | `examples.old/collections_select_filter.rs` |
-| 013-series-concept-surface | `dataframe_series_concept.rs` | `examples.old/collections_series_basic.rs` |
-| 014-expr-pipeline-judgment | `dataframe_expr_pipeline.rs` | `examples.old/collections_series_expr_pipeline.rs` |
-| 015-order-group-syllogism | `dataframe_order_group.rs` | `examples.old/collections_order_group_exprs.rs` |
-| 016-join-operations-inference | `dataframe_join_operations.rs` | `examples.old/collections_join_operations.rs` |
-| 017-streaming-dataset-procedure | `dataset_streaming_procedure.rs` | `examples.old/collections_streaming_dataset.rs` |
-| 018-streaming-lazy-deferred | `dataset_streaming_lazy.rs` | `examples.old/collections_streaming_lazy.rs` |
-| 019-expr-basic-judgment-grammar | `dataframe_expr_basic.rs` | `examples.old/collections_expr_basic.rs` |
-| 020-framing-chunking-pureform | `form_framing_chunking.rs` | `examples.old/collections_extensions_framing_chunking.rs` |
-| 021-array-namespace-observation | `dataset_namespace_array.rs` | `examples.old/collections_array_namespace_rustscript.rs` |
-| 022-list-namespace-observation | `dataset_namespace_list.rs` | `examples.old/collections_list_namespace_rustscript.rs` |
-| 023-string-namespace-observation | `dataset_namespace_string.rs` | `examples.old/collections_string_namespace_rustscript.rs` |
-| 024-catalog-extension-persistence | `dataset_io_catalog_extensible.rs` | `examples.old/collections_catalog_extensible.rs` |
-| 025-graphframe-catalog-write | `dataset_io_catalog_graphframe.rs` | `examples.old/collections_graphframe_catalog_write.rs` |
-| 026-semantic-meta-pipeline | `dataset_sem_meta_pipeline.rs` | `examples.old/collections_semantic_meta_pipeline.rs` |
-| 027-model-feature-plan-middle | `dataset_model_feature_plan.rs` | `examples.old/collections_model_feature_plan.rs` |
-| 028-dataframe-intuition | `dataframe_intuition.rs` | `examples.old/collections_dataframe_intuition.rs` |
-| 029-shell-compute-protocol | `shell_compute_protocol.rs` | `examples.old/collections_gds_shell.rs` |
-| 030-ideal-dataframe-dsl | design-only for now | none |
-| 031-shell-model-first | `shell_model_first.rs` | none |
-| 032-pathfinding-procedure-facade | `proc_pathfinding_procedure.rs` | none |
-| 033-bfs-dfs-traversal-workbook | `proc_pathfinding_procedure.rs` | none |
-| 034-dataframe-transformations-workbook | `dataframe_transformations.rs` | none |
-| 035-dataframe-pivot-unpivot-operations | `dataframe_pivot_unpivot_operations.rs` | none |
-| 036-dataframe-concatenations-workbook | `dataframe_concatenations.rs` | none |
+| Exemplar                               | New example                             | Old archive source                                            |
+| -------------------------------------- | --------------------------------------- | ------------------------------------------------------------- |
+| 001-frame-dsl                          | `dataset_frame_dsl.rs`                  | `examples.old/collections_dataset_frame_dsl.rs`               |
+| 002-corpus-readers                     | `dataset_source_corpus.rs`              | `examples.old/collections_dataset_corpus_readers.rs`          |
+| 003-tree-structures                    | `dataset_tree_structures.rs`            | `examples.old/collections_dataset_tree.rs`                    |
+| 004-featstruct-model                   | `dataset_feature_structures.rs`         | `examples.old/collections_dataset_featstruct_model.rs`        |
+| 005-compile-ir                         | `dataset_compile_ir.rs`                 | `examples.old/collections_dataset_compile_ir.rs`              |
+| 006-external-shell-program-artifact    | `dataset_compile_external_gdsl.rs`      | `examples.old/collections_dataset_gdsl_absolute_concept.rs`   |
+| 007-applications-expository            | `form_applications_expository.rs`       | `examples.old/collections_dataset_applications_expository.rs` |
+| 008-stdlib-resources                   | `dataset_source_stdlib.rs`              | `examples.old/collections_dataset_stdlib.rs`                  |
+| 009-json-semantic-form                 | `dataset_io_json.rs`                    | `examples.old/collections_dataset_json.rs`                    |
+| 010-xml-html-semantic-form             | `dataset_io_xml_html.rs`                | `examples.old/collections_dataset_xml_html.rs`                |
+| 011-dataframe-macros-reflection        | `dataframe_macros_reflection.rs`        | `examples.old/collections_dataframe_macros_expository.rs`     |
+| 012-select-filter-principle            | `dataframe_select_filter.rs`            | `examples.old/collections_select_filter.rs`                   |
+| 013-series-concept-surface             | `dataframe_series_concept.rs`           | `examples.old/collections_series_basic.rs`                    |
+| 014-expr-pipeline-judgment             | `dataframe_expr_pipeline.rs`            | `examples.old/collections_series_expr_pipeline.rs`            |
+| 015-order-group-syllogism              | `dataframe_order_group.rs`              | `examples.old/collections_order_group_exprs.rs`               |
+| 016-join-operations-inference          | `dataframe_join_operations.rs`          | `examples.old/collections_join_operations.rs`                 |
+| 017-streaming-dataset-procedure        | `dataset_streaming_procedure.rs`        | `examples.old/collections_streaming_dataset.rs`               |
+| 018-streaming-lazy-deferred            | `dataset_streaming_lazy.rs`             | `examples.old/collections_streaming_lazy.rs`                  |
+| 019-expr-basic-judgment-grammar        | `dataframe_expr_basic.rs`               | `examples.old/collections_expr_basic.rs`                      |
+| 020-framing-chunking-pureform          | `form_framing_chunking.rs`              | `examples.old/collections_extensions_framing_chunking.rs`     |
+| 021-array-namespace-observation        | `dataset_namespace_array.rs`            | `examples.old/collections_array_namespace_rustscript.rs`      |
+| 022-list-namespace-observation         | `dataset_namespace_list.rs`             | `examples.old/collections_list_namespace_rustscript.rs`       |
+| 023-string-namespace-observation       | `dataset_namespace_string.rs`           | `examples.old/collections_string_namespace_rustscript.rs`     |
+| 024-catalog-extension-persistence      | `dataset_io_catalog_extensible.rs`      | `examples.old/collections_catalog_extensible.rs`              |
+| 025-graphframe-catalog-write           | `dataset_io_catalog_graphframe.rs`      | `examples.old/collections_graphframe_catalog_write.rs`        |
+| 026-semantic-meta-pipeline             | `dataset_sem_meta_pipeline.rs`          | `examples.old/collections_semantic_meta_pipeline.rs`          |
+| 027-model-feature-plan-middle          | `dataset_model_feature_plan.rs`         | `examples.old/collections_model_feature_plan.rs`              |
+| 028-dataframe-intuition                | `dataframe_intuition.rs`                | `examples.old/collections_dataframe_intuition.rs`             |
+| 029-shell-compute-protocol             | `shell_compute_protocol.rs`             | `examples.old/collections_gds_shell.rs`                       |
+| 030-ideal-dataframe-dsl                | design-only for now                     | none                                                          |
+| 031-shell-model-first                  | `shell_model_first.rs`                  | none                                                          |
+| 032-pathfinding-procedure-facade       | `proc_pathfinding_procedure.rs`         | none                                                          |
+| 033-bfs-dfs-traversal-workbook         | `proc_pathfinding_procedure.rs`         | none                                                          |
+| 034-dataframe-transformations-workbook | `dataframe_transformations.rs`          | none                                                          |
+| 035-dataframe-pivot-unpivot-operations | `dataframe_pivot_unpivot_operations.rs` | none                                                          |
+| 036-dataframe-concatenations-workbook  | `dataframe_concatenations.rs`           | none                                                          |
+| 037-pureform-shell-dispatch            | `form_pureform_shell_dispatch.rs`       | none                                                          |
 
 ## Batch 1 Spine
 
@@ -142,66 +143,67 @@ Coverage states:
 
 Initial covered spine:
 
-| Namespace Fold | Example | Fixture Root | State |
-|---|---|---|---|
-| `Frame:Series::Expr` | `dataframe_intuition.rs` | `fixtures/collections/dataframe/dataframe_intuition` | `covered` |
-| `Model:Feature::Plan` | `dataset_model_feature_plan.rs` | `fixtures/collections/dataset/dataset_model_feature_plan` | `covered` |
-| `Corpus:LM::SemDataset` | `dataset_sem_meta_pipeline.rs` | `fixtures/collections/dataset/dataset_sem_meta_pipeline` | `covered` |
+| Namespace Fold          | Example                         | Fixture Root                                              | State     |
+| ----------------------- | ------------------------------- | --------------------------------------------------------- | --------- |
+| `Frame:Series::Expr`    | `dataframe_intuition.rs`        | `fixtures/collections/dataframe/dataframe_intuition`      | `covered` |
+| `Model:Feature::Plan`   | `dataset_model_feature_plan.rs` | `fixtures/collections/dataset/dataset_model_feature_plan` | `covered` |
+| `Corpus:LM::SemDataset` | `dataset_sem_meta_pipeline.rs`  | `fixtures/collections/dataset/dataset_sem_meta_pipeline`  | `covered` |
 
 Form namespace coverage:
 
-| Namespace | Example | Fixture Root | State |
-|---|---|---|---|
-| `form::framing_chunking` | `form_framing_chunking.rs` | `fixtures/collections/form/form_framing_chunking` | `covered` |
+| Namespace                | Example                           | Fixture Root                                             | State     |
+| ------------------------ | --------------------------------- | -------------------------------------------------------- | --------- |
+| `form::framing_chunking` | `form_framing_chunking.rs`        | `fixtures/collections/form/form_framing_chunking`        | `covered` |
+| `form::shell_dispatch`   | `form_pureform_shell_dispatch.rs` | `fixtures/collections/form/form_pureform_shell_dispatch` | `covered` |
 
 Shell namespace coverage:
 
-| Namespace | Example | Fixture Root | State |
-|---|---|---|---|
-| `shell::model` | `shell_model_first.rs` | `fixtures/collections/shell/shell_model_first` | `covered` |
+| Namespace        | Example                     | Fixture Root                                        | State     |
+| ---------------- | --------------------------- | --------------------------------------------------- | --------- |
+| `shell::model`   | `shell_model_first.rs`      | `fixtures/collections/shell/shell_model_first`      | `covered` |
 | `shell::compute` | `shell_compute_protocol.rs` | `fixtures/collections/shell/shell_compute_protocol` | `covered` |
 
 Procedure namespace coverage:
 
-| Namespace | Example | Fixture Root | State |
-|---|---|---|---|
+| Namespace           | Example                         | Fixture Root                                           | State     |
+| ------------------- | ------------------------------- | ------------------------------------------------------ | --------- |
 | `proc::pathfinding` | `proc_pathfinding_procedure.rs` | `fixtures/procedures/032-pathfinding-procedure-facade` | `covered` |
 
 Algorithm-internal namespace coverage:
 
-| Namespace | Example | Fixture Root | State |
-|---|---|---|---|
-| `algo::pathfinding::traversal` | `proc_pathfinding_procedure.rs` | `fixtures/procedures/032-pathfinding-procedure-facade` | `covered through procedure route` |
-| `algo::pathfinding::storage_computation` | `algo_pathfinding_storage_computation.rs` | `fixtures/collections/algo/algo_pathfinding_storage_computation` | `planned` |
+| Namespace                                | Example                                   | Fixture Root                                                     | State                             |
+| ---------------------------------------- | ----------------------------------------- | ---------------------------------------------------------------- | --------------------------------- |
+| `algo::pathfinding::traversal`           | `proc_pathfinding_procedure.rs`           | `fixtures/procedures/032-pathfinding-procedure-facade`           | `covered through procedure route` |
+| `algo::pathfinding::storage_computation` | `algo_pathfinding_storage_computation.rs` | `fixtures/collections/algo/algo_pathfinding_storage_computation` | `planned`                         |
 
 Planned DataFrame namespace examples:
 
-| Namespace | Example | State |
-|---|---|---|
-| `dataframe::series` | `dataframe_series_concept.rs` | `covered` |
-| `dataframe::expr` | `dataframe_expr_basic.rs`, `dataframe_expr_pipeline.rs` | `covered` |
-| `dataframe::frame` | `dataframe_frame_surface.rs` | `covered` |
-| `dataframe::lazy` | `dataframe_lazy_valuation.rs` | `covered` |
-| `dataframe::selectors` | `dataframe_select_filter.rs` | `covered` |
-| `dataframe::macros` | `dataframe_macros_reflection.rs` | `covered` |
-| `dataframe::transformations` | `dataframe_transformations.rs` | `covered` |
-| `dataframe::concatenations` | `dataframe_concatenations.rs` | `covered` |
-| `dataframe::reshape` | `dataframe_pivot_unpivot_operations.rs` | `covered` |
-| `dataframe::namespaces::structure` | `dataframe_structure_projection.rs` | `planned` |
+| Namespace                          | Example                                                 | State     |
+| ---------------------------------- | ------------------------------------------------------- | --------- |
+| `dataframe::series`                | `dataframe_series_concept.rs`                           | `covered` |
+| `dataframe::expr`                  | `dataframe_expr_basic.rs`, `dataframe_expr_pipeline.rs` | `covered` |
+| `dataframe::frame`                 | `dataframe_frame_surface.rs`                            | `covered` |
+| `dataframe::lazy`                  | `dataframe_lazy_valuation.rs`                           | `covered` |
+| `dataframe::selectors`             | `dataframe_select_filter.rs`                            | `covered` |
+| `dataframe::macros`                | `dataframe_macros_reflection.rs`                        | `covered` |
+| `dataframe::transformations`       | `dataframe_transformations.rs`                          | `covered` |
+| `dataframe::concatenations`        | `dataframe_concatenations.rs`                           | `covered` |
+| `dataframe::reshape`               | `dataframe_pivot_unpivot_operations.rs`                 | `covered` |
+| `dataframe::namespaces::structure` | `dataframe_structure_projection.rs`                     | `planned` |
 
 Planned Dataset support namespace examples:
 
-| Namespace | Example | State |
-|---|---|---|
-| `dataset::source` | `dataset_source_corpus.rs` | `covered` |
-| `dataset::stdlib` | `dataset_source_stdlib.rs` | `planned` |
-| `dataset::io` | `dataset_io_json.rs`, `dataset_io_xml_html.rs` | `planned` |
-| `dataset::tree` | `dataset_tree_structures.rs` | `planned` |
-| `dataset::feature::featstruct` | `dataset_feature_structures.rs` | `planned` |
-| `dataset::compile` | `dataset_compile_ir.rs` | `covered` |
-| `dataset::dsl::functions::program` | `dataset_model_feature_plan.rs` | `covered` |
-| `dataset::dsl::functions::shell` | `dataset_frame_dsl.rs` | `covered` |
-| `dataset::macro` | `dataset_frame_dsl.rs` | `covered` |
-| `dataset::registry` | `dataset_io_catalog_extensible.rs` | `planned` |
-| `dataset::streaming` | `dataset_streaming_procedure.rs`, `dataset_streaming_lazy.rs` | `planned` |
-| `dataset::toolchain` | `dataset_compile_ir.rs`, `dataset_compile_external_gdsl.rs` | `covered` / `external` |
+| Namespace                          | Example                                                       | State                  |
+| ---------------------------------- | ------------------------------------------------------------- | ---------------------- |
+| `dataset::source`                  | `dataset_source_corpus.rs`                                    | `covered`              |
+| `dataset::stdlib`                  | `dataset_source_stdlib.rs`                                    | `planned`              |
+| `dataset::io`                      | `dataset_io_json.rs`, `dataset_io_xml_html.rs`                | `planned`              |
+| `dataset::tree`                    | `dataset_tree_structures.rs`                                  | `planned`              |
+| `dataset::feature::featstruct`     | `dataset_feature_structures.rs`                               | `planned`              |
+| `dataset::compile`                 | `dataset_compile_ir.rs`                                       | `covered`              |
+| `dataset::dsl::functions::program` | `dataset_model_feature_plan.rs`                               | `covered`              |
+| `dataset::dsl::functions::shell`   | `dataset_frame_dsl.rs`                                        | `covered`              |
+| `dataset::macro`                   | `dataset_frame_dsl.rs`                                        | `covered`              |
+| `dataset::registry`                | `dataset_io_catalog_extensible.rs`                            | `planned`              |
+| `dataset::streaming`               | `dataset_streaming_procedure.rs`, `dataset_streaming_lazy.rs` | `planned`              |
+| `dataset::toolchain`               | `dataset_compile_ir.rs`, `dataset_compile_external_gdsl.rs`   | `covered` / `external` |

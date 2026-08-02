@@ -1,0 +1,8 @@
+PureForm Shell Dispatch Summary
+graph=form-shell-dispatch-graph
+activated_services=[String("form.program"), String("form.algorithms"), String("form.shell")]
+capability_source=dataset_mock
+capability_persistent=false
+application_form_count=1
+executed_op=pagerank
+note=program ingress is Form-first; adapter remains transport-only
