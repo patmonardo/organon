@@ -10,14 +10,14 @@ use crate::algo::walking::{
     CollapsePathComputationRuntime, CollapsePathConfig, CollapsePathStats,
     CollapsePathStorageRuntime,
 };
+use crate::projection::eval::algorithm::AlgorithmError;
 use crate::task::concurrency::TerminationFlag;
 use crate::task::progress::{TaskProgressTracker, Tasks};
-use crate::projection::eval::algorithm::AlgorithmError;
-use crate::types::prelude::DefaultGraphStore;
+use crate::types::prelude::{DefaultGraphStore, GraphStore, ShellStoreControl};
 use std::sync::Arc;
 
-pub struct CollapsePathFacade {
-    graph_store: Arc<DefaultGraphStore>,
+pub struct CollapsePathFacade<Store: GraphStore + ShellStoreControl = DefaultGraphStore> {
+    graph_store: Arc<Store>,
     path_templates: Vec<Vec<String>>,
     mutate_relationship_type: String,
     mutate_graph_name: String,
@@ -25,8 +25,8 @@ pub struct CollapsePathFacade {
     concurrency: usize,
 }
 
-impl CollapsePathFacade {
-    pub fn new(graph_store: Arc<DefaultGraphStore>) -> Self {
+impl<Store: GraphStore + ShellStoreControl> CollapsePathFacade<Store> {
+    pub fn new(graph_store: Arc<Store>) -> Self {
         Self {
             graph_store,
             path_templates: Vec::new(),
@@ -107,7 +107,7 @@ impl CollapsePathFacade {
     fn compute(
         &self,
         config: &CollapsePathConfig,
-    ) -> Result<crate::algo::walking::CollapsePathResult> {
+    ) -> Result<crate::algo::walking::CollapsePathResult<Store>> {
         self.validate(config)?;
 
         let mut computation = CollapsePathComputationRuntime::new(config.allow_self_loops);
@@ -120,7 +120,7 @@ impl CollapsePathFacade {
 
         storage
             .compute_with_controls(
-                &self.graph_store,
+                self.graph_store.as_ref(),
                 config,
                 &mut computation,
                 &termination,
@@ -130,7 +130,7 @@ impl CollapsePathFacade {
     }
 
     /// Produce a new graph store with collapsed paths.
-    pub fn to_store(&self, graph_name: &str) -> Result<DefaultGraphStore> {
+    pub fn to_store(&self, graph_name: &str) -> Result<Store> {
         let config = self.config_for_graph(graph_name);
         self.compute(&config).map(|r| r.graph_store)
     }

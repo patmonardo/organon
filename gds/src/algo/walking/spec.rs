@@ -35,7 +35,7 @@ impl Default for CollapsePathConfig {
 
 /// Collapsed edges produced by following all templates.
 #[derive(Debug, Clone)]
-pub struct CollapsePathResult {
+pub struct CollapsePathResult<Store = DefaultGraphStore> {
     /// Name assigned to the output graph.
     pub graph_name: String,
     /// Relationship type used for the collapsed edges (echoed from the config).
@@ -47,7 +47,7 @@ pub struct CollapsePathResult {
     /// Relationship count of the output graph.
     pub relationship_count: u64,
     /// Graph store containing the collapsed edges.
-    pub graph_store: DefaultGraphStore,
+    pub graph_store: Store,
 }
 
 /// Statistics for CollapsePath computation.

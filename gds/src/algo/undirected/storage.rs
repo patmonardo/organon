@@ -12,8 +12,7 @@ use crate::projection::{Orientation, RelationshipType};
 use crate::task::concurrency::TerminationFlag;
 use crate::task::progress::ProgressTracker;
 use crate::types::graph::MappedNodeId;
-use crate::types::graph_store::{GraphName, GraphStore};
-use crate::types::prelude::DefaultGraphStore;
+use crate::types::graph_store::{GraphName, GraphStore, ShellStoreControl};
 use crate::types::properties::relationship::{
     DefaultRelationshipPropertyValues, RelationshipPropertyValues,
 };
@@ -32,12 +31,15 @@ impl ToUndirectedStorageRuntime {
         Self { concurrency }
     }
 
-    pub fn compute(
+    pub fn compute<Store>(
         &self,
-        graph_store: &DefaultGraphStore,
+        graph_store: &Store,
         config: &ToUndirectedConfig,
         computation: &mut ToUndirectedComputationRuntime,
-    ) -> Result<ToUndirectedResult, String> {
+    ) -> Result<ToUndirectedResult<Store>, String>
+    where
+        Store: GraphStore + ShellStoreControl,
+    {
         let termination_flag = TerminationFlag::running_true();
         let mut progress_tracker = crate::task::progress::NoopProgressTracker;
         self.compute_with_controls(
@@ -49,14 +51,17 @@ impl ToUndirectedStorageRuntime {
         )
     }
 
-    pub fn compute_with_controls(
+    pub fn compute_with_controls<Store>(
         &self,
-        graph_store: &DefaultGraphStore,
+        graph_store: &Store,
         config: &ToUndirectedConfig,
         computation: &mut ToUndirectedComputationRuntime,
         termination_flag: &TerminationFlag,
         progress_tracker: &mut dyn ProgressTracker,
-    ) -> Result<ToUndirectedResult, String> {
+    ) -> Result<ToUndirectedResult<Store>, String>
+    where
+        Store: GraphStore + ShellStoreControl,
+    {
         if self.concurrency == 0 || config.concurrency == 0 {
             return Err("concurrency must be greater than zero".to_string());
         }
@@ -106,9 +111,9 @@ impl ToUndirectedStorageRuntime {
     }
 
     #[allow(clippy::too_many_arguments)]
-    fn compute_inner(
+    fn compute_inner<Store>(
         &self,
-        graph_store: &DefaultGraphStore,
+        graph_store: &Store,
         config: &ToUndirectedConfig,
         computation: &mut ToUndirectedComputationRuntime,
         termination_flag: &TerminationFlag,
@@ -118,7 +123,10 @@ impl ToUndirectedStorageRuntime {
         mutate_relationship_type: RelationshipType,
         property_schemas: Vec<RelationshipPropertySchema>,
         target_property_schemas: Vec<RelationshipPropertySchema>,
-    ) -> Result<ToUndirectedResult, String> {
+    ) -> Result<ToUndirectedResult<Store>, String>
+    where
+        Store: GraphStore + ShellStoreControl,
+    {
         if !termination_flag.running() {
             return Err("ToUndirected terminated".to_string());
         }
@@ -258,7 +266,7 @@ fn build_outgoing(
 }
 
 fn relationship_property_schemas(
-    graph_store: &DefaultGraphStore,
+    graph_store: &impl GraphStore,
     rel_type: &RelationshipType,
 ) -> Result<Vec<RelationshipPropertySchema>, String> {
     let mut schemas: Vec<_> = graph_store
@@ -297,7 +305,7 @@ fn target_property_schemas(
 }
 
 fn aggregate_property_values(
-    graph_store: &DefaultGraphStore,
+    graph_store: &impl GraphStore,
     computation: &ToUndirectedComputationRuntime,
     rels: &HashSet<RelationshipType>,
     source_relationship_type: &RelationshipType,
@@ -386,7 +394,9 @@ mod tests {
     use crate::config::GraphStoreConfig;
     use crate::types::graph::RelationshipIndex;
     use crate::types::graph::{RelationshipTopology, SimpleIdMap};
-    use crate::types::graph_store::{Capabilities, DatabaseId, DatabaseInfo, DatabaseLocation};
+    use crate::types::graph_store::{
+        Capabilities, DatabaseId, DatabaseInfo, DatabaseLocation, DefaultGraphStore,
+    };
     use crate::types::properties::relationship::DefaultRelationshipPropertyValues;
     use crate::types::schema::{MutableGraphSchema, RelationshipPropertySchema};
     use crate::types::{DefaultValue, PropertyState, ValueType};

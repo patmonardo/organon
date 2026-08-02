@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use crate::types::graph_store::GraphStoreRead;
-use crate::types::prelude::{DefaultGraphStore, GraphStore};
+use crate::types::prelude::{DefaultGraphStore, GraphStore, ShellStoreControl};
 
 use super::pathfinding::{
     AStarBuilder, AllShortestPathsBuilder, BellmanFordBuilder, BfsBuilder, DagLongestPathBuilder,
@@ -272,19 +272,19 @@ impl<Store: GraphStore> GraphFacade<Store> {
     }
 }
 
-impl GraphFacade<DefaultGraphStore> {
+impl<Store: GraphStore + ShellStoreControl> GraphFacade<Store> {
     /// Converts the graph to an undirected projection (utility).
-    pub fn to_undirected(&self) -> ToUndirectedFacade {
+    pub fn to_undirected(&self) -> ToUndirectedFacade<Store> {
         ToUndirectedFacade::new(Arc::clone(&self.store))
     }
 
     /// Builds inverse indices for relationships (placeholder utility).
-    pub fn index_inverse(&self) -> IndexInverseFacade {
+    pub fn index_inverse(&self) -> IndexInverseFacade<Store> {
         IndexInverseFacade::new(Arc::clone(&self.store))
     }
 
     /// Collapses paths into relationships (placeholder utility).
-    pub fn collapse_path(&self) -> CollapsePathFacade {
+    pub fn collapse_path(&self) -> CollapsePathFacade<Store> {
         CollapsePathFacade::new(Arc::clone(&self.store))
     }
 }

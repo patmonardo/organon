@@ -73,7 +73,7 @@ impl Default for ToUndirectedConfig {
 
 /// Result of the undirected projection.
 #[derive(Debug, Clone)]
-pub struct ToUndirectedResult {
+pub struct ToUndirectedResult<Store = DefaultGraphStore> {
     /// Graph name assigned to the mutated store.
     pub graph_name: String,
     /// Relationship type assigned to the undirected edges.
@@ -85,7 +85,7 @@ pub struct ToUndirectedResult {
     /// Unique directed edges (source, target) representing the undirected view.
     pub edges: Vec<(u64, u64)>,
     /// Materialized graph store with the undirected relationship type added.
-    pub graph_store: DefaultGraphStore,
+    pub graph_store: Store,
 }
 
 /// Statistics for ToUndirected computation.

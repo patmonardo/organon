@@ -7,20 +7,20 @@ use crate::algo::undirected::{
     ToUndirectedAggregations, ToUndirectedComputationRuntime, ToUndirectedConfig,
     ToUndirectedStats, ToUndirectedStorageRuntime,
 };
-use crate::task::concurrency::TerminationFlag;
-use crate::task::progress::{TaskProgressTracker, Tasks};
 use crate::core::Aggregation;
 use crate::projection::eval::algorithm::AlgorithmError;
-use crate::types::prelude::DefaultGraphStore;
+use crate::task::concurrency::TerminationFlag;
+use crate::task::progress::{TaskProgressTracker, Tasks};
+use crate::types::prelude::{DefaultGraphStore, GraphStore, ShellStoreControl};
 use std::sync::Arc;
 
-pub struct ToUndirectedFacade {
-    graph_store: Arc<DefaultGraphStore>,
+pub struct ToUndirectedFacade<Store: GraphStore + ShellStoreControl = DefaultGraphStore> {
+    graph_store: Arc<Store>,
     config: ToUndirectedConfig,
 }
 
-impl ToUndirectedFacade {
-    pub fn new(graph_store: Arc<DefaultGraphStore>) -> Self {
+impl<Store: GraphStore + ShellStoreControl> ToUndirectedFacade<Store> {
+    pub fn new(graph_store: Arc<Store>) -> Self {
         Self {
             graph_store,
             config: ToUndirectedConfig::default(),
@@ -100,7 +100,7 @@ impl ToUndirectedFacade {
     fn compute(
         &self,
         config: &ToUndirectedConfig,
-    ) -> Result<crate::algo::undirected::ToUndirectedResult> {
+    ) -> Result<crate::algo::undirected::ToUndirectedResult<Store>> {
         let mut computation = ToUndirectedComputationRuntime::new();
         let storage = ToUndirectedStorageRuntime::new(config.concurrency);
         let termination = TerminationFlag::running_true();
@@ -112,7 +112,7 @@ impl ToUndirectedFacade {
         self.validate(config)?;
         storage
             .compute_with_controls(
-                &self.graph_store,
+                self.graph_store.as_ref(),
                 config,
                 &mut computation,
                 &termination,
@@ -122,7 +122,7 @@ impl ToUndirectedFacade {
     }
 
     /// Produce a new graph store with an undirected relationship type added.
-    pub fn to_store(&self, graph_name: &str) -> Result<DefaultGraphStore> {
+    pub fn to_store(&self, graph_name: &str) -> Result<Store> {
         let mut config = self.config.clone();
         config.mutate_graph_name = graph_name.to_string();
         self.compute(&config).map(|r| r.graph_store)

@@ -7,8 +7,7 @@ use super::spec::{IndexInverseConfig, IndexInverseResult};
 use super::IndexInverseComputationRuntime;
 use crate::projection::Orientation;
 use crate::types::graph::RelationshipTopology;
-use crate::types::graph_store::{GraphName, GraphStore};
-use crate::types::prelude::DefaultGraphStore;
+use crate::types::graph_store::{GraphName, GraphStore, ShellStoreControl};
 use crate::types::schema::RelationshipType;
 use std::collections::HashSet;
 
@@ -25,12 +24,15 @@ impl IndexInverseStorageRuntime {
     ///
     /// Note: current implementation applies to all relationship types in the
     /// store. Relationship-type filtering can be layered later if needed.
-    pub fn compute(
+    pub fn compute<Store>(
         &self,
-        graph_store: &DefaultGraphStore,
+        graph_store: &Store,
         config: &IndexInverseConfig,
         _computation: &mut IndexInverseComputationRuntime,
-    ) -> Result<IndexInverseResult, String> {
+    ) -> Result<IndexInverseResult<Store>, String>
+    where
+        Store: GraphStore + ShellStoreControl,
+    {
         let graph_name = GraphName::new(&config.mutate_graph_name);
 
         let selected_types: Option<HashSet<RelationshipType>> =
@@ -96,7 +98,9 @@ mod tests {
     use crate::types::graph::MappedNodeId;
     use crate::types::graph::RelationshipTopology;
     use crate::types::graph::SimpleIdMap;
-    use crate::types::graph_store::{Capabilities, DatabaseId, DatabaseInfo, DatabaseLocation};
+    use crate::types::graph_store::{
+        Capabilities, DatabaseId, DatabaseInfo, DatabaseLocation, DefaultGraphStore,
+    };
     use crate::types::schema::{
         Direction, GraphSchema, MutableGraphSchema, NodeLabel, RelationshipType,
     };

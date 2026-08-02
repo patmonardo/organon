@@ -12,8 +12,7 @@ use crate::task::concurrency::TerminationFlag;
 use crate::task::progress::ProgressTracker;
 use crate::types::graph::Graph;
 use crate::types::graph::MappedNodeId;
-use crate::types::graph_store::{GraphName, GraphStore};
-use crate::types::prelude::DefaultGraphStore;
+use crate::types::graph_store::{GraphName, GraphStore, ShellStoreControl};
 use crate::types::schema::Direction;
 use std::collections::HashSet;
 use std::sync::Arc;
@@ -27,12 +26,15 @@ impl CollapsePathStorageRuntime {
         Self { concurrency }
     }
 
-    pub fn compute(
+    pub fn compute<Store>(
         &self,
-        graph_store: &DefaultGraphStore,
+        graph_store: &Store,
         config: &CollapsePathConfig,
         computation: &mut CollapsePathComputationRuntime,
-    ) -> Result<CollapsePathResult, String> {
+    ) -> Result<CollapsePathResult<Store>, String>
+    where
+        Store: GraphStore + ShellStoreControl,
+    {
         let termination_flag = TerminationFlag::running_true();
         let mut progress_tracker = crate::task::progress::NoopProgressTracker;
         self.compute_with_controls(
@@ -44,14 +46,17 @@ impl CollapsePathStorageRuntime {
         )
     }
 
-    pub fn compute_with_controls(
+    pub fn compute_with_controls<Store>(
         &self,
-        graph_store: &DefaultGraphStore,
+        graph_store: &Store,
         config: &CollapsePathConfig,
         computation: &mut CollapsePathComputationRuntime,
         termination_flag: &TerminationFlag,
         progress_tracker: &mut dyn ProgressTracker,
-    ) -> Result<CollapsePathResult, String> {
+    ) -> Result<CollapsePathResult<Store>, String>
+    where
+        Store: GraphStore + ShellStoreControl,
+    {
         if self.concurrency == 0 || config.concurrency == 0 {
             return Err("concurrency must be greater than zero".to_string());
         }
@@ -86,14 +91,17 @@ impl CollapsePathStorageRuntime {
         result
     }
 
-    fn compute_inner(
+    fn compute_inner<Store>(
         &self,
-        graph_store: &DefaultGraphStore,
+        graph_store: &Store,
         config: &CollapsePathConfig,
         computation: &mut CollapsePathComputationRuntime,
         termination_flag: &TerminationFlag,
         progress_tracker: &mut dyn ProgressTracker,
-    ) -> Result<CollapsePathResult, String> {
+    ) -> Result<CollapsePathResult<Store>, String>
+    where
+        Store: GraphStore + ShellStoreControl,
+    {
         if !termination_flag.running() {
             return Err("CollapsePath terminated".to_string());
         }
@@ -210,7 +218,9 @@ mod tests {
     use crate::types::graph::MappedNodeId;
     use crate::types::graph::RelationshipTopology;
     use crate::types::graph::SimpleIdMap;
-    use crate::types::graph_store::{Capabilities, DatabaseId, DatabaseInfo, DatabaseLocation};
+    use crate::types::graph_store::{
+        Capabilities, DatabaseId, DatabaseInfo, DatabaseLocation, DefaultGraphStore,
+    };
     use crate::types::schema::{GraphSchema, MutableGraphSchema, NodeLabel};
     use std::collections::{HashMap, HashSet};
 

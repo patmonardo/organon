@@ -4,4 +4,5 @@
 
 pub use crate::types::graph_store::DefaultGraphStore;
 pub use crate::types::graph_store::GraphStore;
+pub use crate::types::graph_store::ShellStoreControl;
 pub use crate::types::random::RandomGraphConfig;

@@ -27,7 +27,7 @@ impl Default for IndexInverseConfig {
 
 /// Result of building inverse relationship indices.
 #[derive(Debug, Clone)]
-pub struct IndexInverseResult {
+pub struct IndexInverseResult<Store = DefaultGraphStore> {
     /// Name assigned to the output graph.
     pub graph_name: String,
     /// Node count of the output graph.
@@ -35,7 +35,7 @@ pub struct IndexInverseResult {
     /// Relationship count of the output graph.
     pub relationship_count: u64,
     /// Graph store containing inverse indices.
-    pub graph_store: DefaultGraphStore,
+    pub graph_store: Store,
 }
 
 /// Statistics for IndexInverse computation.

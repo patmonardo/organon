@@ -1,8 +1,11 @@
 //! Typed local Procedure bindings for Shell Component calls.
 
 mod algorithms;
+mod control;
 mod inputs;
 mod pipelines;
+
+pub use control::*;
 
 use crate::algo::algorithms::pathfinding::PathResult;
 use crate::algo::algorithms::CentralityScore;

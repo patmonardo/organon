@@ -10,18 +10,18 @@ use crate::algo::index_inverse::{
 };
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph_store::GraphName;
-use crate::types::prelude::{DefaultGraphStore, GraphStore};
+use crate::types::prelude::{DefaultGraphStore, GraphStore, ShellStoreControl};
 use std::sync::Arc;
 
-pub struct IndexInverseFacade {
-    graph_store: Arc<DefaultGraphStore>,
+pub struct IndexInverseFacade<Store: GraphStore + ShellStoreControl = DefaultGraphStore> {
+    graph_store: Arc<Store>,
     mutate_graph_name: String,
     concurrency: usize,
     relationship_types: Vec<String>,
 }
 
-impl IndexInverseFacade {
-    pub fn new(graph_store: Arc<DefaultGraphStore>) -> Self {
+impl<Store: GraphStore + ShellStoreControl> IndexInverseFacade<Store> {
+    pub fn new(graph_store: Arc<Store>) -> Self {
         Self {
             graph_store,
             mutate_graph_name: "index_inverse".to_string(),
@@ -49,7 +49,7 @@ impl IndexInverseFacade {
         self
     }
 
-    pub fn to_store(&self, graph_name: &str) -> Result<DefaultGraphStore> {
+    pub fn to_store(&self, graph_name: &str) -> Result<Store> {
         let mut computation = IndexInverseComputationRuntime::new();
         let storage = IndexInverseStorageRuntime::new(self.concurrency);
 
