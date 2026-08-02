@@ -2,12 +2,12 @@
 //!
 //! Java parity reference: `org.neo4j.gds.bridges.Bridges`.
 
-use crate::task::concurrency::TerminationFlag;
 use crate::config::validation::ConfigError;
-use crate::task::progress::{LeafTask, ProgressTracker, TaskProgressTracker, Tasks};
 use crate::core::LogLevel;
 use crate::define_algorithm_spec;
 use crate::projection::eval::algorithm::AlgorithmError;
+use crate::task::concurrency::TerminationFlag;
+use crate::task::progress::{LeafTask, ProgressTracker, TaskProgressTracker, Tasks};
 use std::sync::Arc;
 use std::time::{Duration, Instant};
 
@@ -140,6 +140,7 @@ impl BridgesResultBuilder {
 define_algorithm_spec! {
     name: "bridges",
     output_type: BridgesResult,
+    config_type: BridgesConfig,
     projection_hint: Dense,
     modes: [Stream, Stats],
 

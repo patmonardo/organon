@@ -26,6 +26,9 @@ use super::miscellaneous::{
     CollapsePathFacade, IndexInverseFacade, ScalePropertiesFacade, ToUndirectedFacade,
 };
 
+use super::similarity::FilteredKnnFacade;
+use super::similarity::FilteredNodeSimilarityFacade;
+use super::similarity::KnnFacade;
 use super::similarity::NodeSimilarityFacade;
 
 /// User-facing graph handle for running algorithms against a live `DefaultGraphStore`.
@@ -185,6 +188,21 @@ impl GraphFacade {
     /// Node Similarity (Jaccard, Cosine, Overlap).
     pub fn node_similarity(&self) -> NodeSimilarityFacade {
         NodeSimilarityFacade::new(Arc::clone(&self.store))
+    }
+
+    /// K-nearest neighbors over one or more node properties.
+    pub fn knn(&self, node_property: impl Into<String>) -> KnnFacade {
+        KnnFacade::new(Arc::clone(&self.store), node_property)
+    }
+
+    /// Label-filtered K-nearest neighbors over one or more node properties.
+    pub fn filtered_knn(&self, node_property: impl Into<String>) -> FilteredKnnFacade {
+        FilteredKnnFacade::new(Arc::clone(&self.store), node_property)
+    }
+
+    /// Label-filtered Node Similarity.
+    pub fn filtered_node_similarity(&self) -> FilteredNodeSimilarityFacade {
+        FilteredNodeSimilarityFacade::new(Arc::clone(&self.store))
     }
 
     /// Triangle Count (per-node triangles + global triangle count).

@@ -1,10 +1,10 @@
 //! Articulation Points Algorithm Specification
 
 use crate::config::validation::ConfigError;
-use crate::task::progress::{LeafTask, ProgressTracker, TaskProgressTracker, Tasks};
 use crate::core::LogLevel;
 use crate::define_algorithm_spec;
 use crate::projection::eval::algorithm::AlgorithmError;
+use crate::task::progress::{LeafTask, ProgressTracker, TaskProgressTracker, Tasks};
 use std::sync::Arc;
 use std::time::{Duration, Instant};
 
@@ -136,6 +136,7 @@ pub fn articulation_points_progress_task(node_count: usize) -> LeafTask {
 define_algorithm_spec! {
     name: "articulation_points",
     output_type: ArticulationPointsResult,
+    config_type: ArticulationPointsConfig,
     projection_hint: Dense,
     modes: [Stream, Stats],
 

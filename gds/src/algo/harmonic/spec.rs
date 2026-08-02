@@ -8,14 +8,14 @@
 //! - Normalizes by `(nodeCount - 1)`.
 
 use crate::collections::backends::vec::VecDouble;
-use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::config::validation::ConfigError;
-use crate::task::progress::{LeafTask, ProgressTracker, TaskProgressTracker, Tasks};
 use crate::core::LogLevel;
 use crate::define_algorithm_spec;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::NodeLabel;
 use crate::projection::Orientation;
+use crate::task::concurrency::{Concurrency, TerminationFlag};
+use crate::task::progress::{LeafTask, ProgressTracker, TaskProgressTracker, Tasks};
 use crate::types::properties::node::{DefaultDoubleNodePropertyValues, NodePropertyValues};
 use std::collections::HashSet;
 use std::sync::Arc;
@@ -230,6 +230,7 @@ pub fn harmonic_progress_task(node_count: usize) -> LeafTask {
 define_algorithm_spec! {
     name: "harmonic",
     output_type: HarmonicResult,
+    config_type: HarmonicConfig,
     projection_hint: Dense,
     modes: [Stream, Stats, MutateNodeProperty],
 

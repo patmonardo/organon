@@ -5,17 +5,42 @@ mod tests {
     use std::collections::HashMap;
     use std::sync::Arc;
 
+    use crate::algo::k1coloring::K1COLORINGAlgorithmSpec;
+    use crate::algo::k1coloring::K1ColoringConfig;
     use crate::config::GraphStoreConfig;
     use crate::procedures::GraphFacade;
+    use crate::projection::eval::algorithm::AlgorithmSpec;
     use crate::projection::RelationshipType;
     use crate::types::graph::{MappedNodeId, RelationshipTopology, SimpleIdMap};
     use crate::types::graph_store::{
         Capabilities, DatabaseId, DatabaseInfo, DatabaseLocation, DefaultGraphStore, GraphName,
     };
     use crate::types::schema::{Direction, MutableGraphSchema};
+    use serde_json::json;
 
     fn node(value: u64) -> MappedNodeId {
         MappedNodeId::new(value)
+    }
+
+    #[test]
+    fn k1coloring_algorithm_spec_parses_and_validates_config() {
+        let spec = K1COLORINGAlgorithmSpec::new("test_graph".to_string());
+
+        let parsed = spec
+            .parse_config(&json!({
+                "maxIterations": 20,
+                "minBatchSize": 64
+            }))
+            .unwrap();
+        let config: K1ColoringConfig = serde_json::from_value(parsed).unwrap();
+        assert_eq!(config.concurrency, 4);
+        assert_eq!(config.max_iterations, 20);
+        assert_eq!(config.min_batch_size, 64);
+
+        let error = spec
+            .parse_config(&json!({ "maxIterations": 0 }))
+            .unwrap_err();
+        assert!(error.to_string().contains("maxIterations"));
     }
 
     fn store_from_outgoing(outgoing: Vec<Vec<MappedNodeId>>) -> DefaultGraphStore {
@@ -214,11 +239,7 @@ mod tests {
 
     #[test]
     fn k1coloring_stats_include_node_count() {
-        let outgoing = vec![
-            vec![node(1)],
-            vec![node(0), node(2)],
-            vec![node(1)],
-        ];
+        let outgoing = vec![vec![node(1)], vec![node(0), node(2)], vec![node(1)]];
         let store = store_from_outgoing(outgoing);
         let graph = GraphFacade::new(Arc::new(store));
 

@@ -1,10 +1,10 @@
 //! Label Propagation algorithm specification (executor integration)
 
-use crate::task::concurrency::TerminationFlag;
 use crate::config::validation::ConfigError;
-use crate::task::progress::{TaskProgressTracker, Tasks};
 use crate::define_algorithm_spec;
 use crate::projection::eval::algorithm::AlgorithmError;
+use crate::task::concurrency::TerminationFlag;
+use crate::task::progress::{TaskProgressTracker, Tasks};
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use std::time::{Duration, Instant};
@@ -165,6 +165,7 @@ pub type LabelPropAlgorithmSpec = LABEL_PROPAGATIONAlgorithmSpec;
 define_algorithm_spec! {
     name: "label_propagation",
     output_type: LabelPropResult,
+    config_type: LabelPropConfig,
     projection_hint: Dense,
     modes: [Stream, Stats],
 

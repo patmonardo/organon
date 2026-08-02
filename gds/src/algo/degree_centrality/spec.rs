@@ -5,13 +5,13 @@
 use crate::algo::degree_centrality::DegreeCentralityComputationRuntime;
 use crate::algo::degree_centrality::{DegreeCentralityStorageRuntime, Orientation};
 use crate::collections::backends::vec::VecDouble;
-use crate::task::concurrency::Concurrency;
-use crate::task::concurrency::TerminationFlag;
 use crate::config::validation::ConfigError;
-use crate::task::progress::{LeafTask, ProgressTracker, TaskProgressTracker, Tasks};
 use crate::define_algorithm_spec;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::NodeLabel;
+use crate::task::concurrency::Concurrency;
+use crate::task::concurrency::TerminationFlag;
+use crate::task::progress::{LeafTask, ProgressTracker, TaskProgressTracker, Tasks};
 use crate::types::properties::node::{DefaultDoubleNodePropertyValues, NodePropertyValues};
 use std::collections::HashSet;
 use std::sync::{Arc, Mutex};
@@ -231,6 +231,7 @@ pub fn degree_centrality_progress_task(node_count: usize) -> LeafTask {
 define_algorithm_spec! {
     name: "degree_centrality",
     output_type: DegreeCentralityResult,
+    config_type: DegreeCentralityConfig,
     projection_hint: Dense,
     modes: [Stream, Stats, MutateNodeProperty],
 

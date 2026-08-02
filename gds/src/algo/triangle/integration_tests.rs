@@ -1,6 +1,23 @@
+use super::TRIANGLEAlgorithmSpec;
 use super::TriangleComputationRuntime;
+use super::TriangleConfig;
+use crate::projection::eval::algorithm::AlgorithmSpec;
 use crate::task::concurrency::TerminationFlag;
 use crate::task::progress::NoopProgressTracker;
+use serde_json::json;
+
+#[test]
+fn triangle_algorithm_spec_parses_and_validates_config() {
+    let spec = TRIANGLEAlgorithmSpec::new("test_graph".to_string());
+
+    let parsed = spec.parse_config(&json!({ "maxDegree": 12 })).unwrap();
+    let config: TriangleConfig = serde_json::from_value(parsed).unwrap();
+    assert_eq!(config.concurrency, 4);
+    assert_eq!(config.max_degree, 12);
+
+    let error = spec.parse_config(&json!({ "concurrency": 0 })).unwrap_err();
+    assert!(error.to_string().contains("concurrency"));
+}
 
 #[test]
 fn triangle_empty() {

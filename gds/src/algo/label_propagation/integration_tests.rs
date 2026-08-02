@@ -5,8 +5,11 @@ mod tests {
     use std::collections::HashMap;
     use std::sync::Arc;
 
+    use crate::algo::label_propagation::LabelPropAlgorithmSpec;
+    use crate::algo::label_propagation::LabelPropConfig;
     use crate::config::GraphStoreConfig;
     use crate::procedures::GraphFacade;
+    use crate::projection::eval::algorithm::AlgorithmSpec;
     use crate::projection::RelationshipType;
     use crate::task::concurrency::TerminationFlag;
     use crate::task::progress::{TaskProgressTracker, Tasks};
@@ -15,6 +18,30 @@ mod tests {
         Capabilities, DatabaseId, DatabaseInfo, DatabaseLocation, DefaultGraphStore, GraphName,
     };
     use crate::types::schema::{Direction, MutableGraphSchema};
+    use serde_json::json;
+
+    #[test]
+    fn label_propagation_algorithm_spec_parses_and_validates_config() {
+        let spec = LabelPropAlgorithmSpec::new("test_graph".to_string());
+
+        let parsed = spec
+            .parse_config(&json!({
+                "maxIterations": 20,
+                "nodeWeightProperty": "weight",
+                "seedProperty": "seed"
+            }))
+            .unwrap();
+        let config: LabelPropConfig = serde_json::from_value(parsed).unwrap();
+        assert_eq!(config.concurrency, 4);
+        assert_eq!(config.max_iterations, 20);
+        assert_eq!(config.node_weight_property.as_deref(), Some("weight"));
+        assert_eq!(config.seed_property.as_deref(), Some("seed"));
+
+        let error = spec
+            .parse_config(&json!({ "seedProperty": " " }))
+            .unwrap_err();
+        assert!(error.to_string().contains("seedProperty"));
+    }
 
     fn node(value: u64) -> MappedNodeId {
         MappedNodeId::new(value)

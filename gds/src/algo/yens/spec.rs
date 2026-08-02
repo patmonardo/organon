@@ -293,6 +293,7 @@ impl YensResultBuilder {
 define_algorithm_spec! {
     name: "yens",
     output_type: YensResult,
+    config_type: YensConfig,
     projection_hint: Dense,
     modes: [Stream, WriteNodeProperty],
     execute: |_self, graph_store, config_input, _context| {

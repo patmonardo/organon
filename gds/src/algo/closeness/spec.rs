@@ -4,14 +4,14 @@
 //! - `org.neo4j.gds.closeness.ClosenessCentrality`
 //! - `org.neo4j.gds.closeness.ClosenessCentralityAlgorithmFactory` (progress task layout)
 
-use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::config::validation::ConfigError;
-use crate::task::progress::{
-    EmptyTaskRegistryFactory, JobId, ProgressTracker, Task, TaskProgressTracker, Tasks,
-};
 use crate::define_algorithm_spec;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::Orientation;
+use crate::task::concurrency::{Concurrency, TerminationFlag};
+use crate::task::progress::{
+    EmptyTaskRegistryFactory, JobId, ProgressTracker, Task, TaskProgressTracker, Tasks,
+};
 use std::sync::Arc;
 use std::time::{Duration, Instant};
 
@@ -217,6 +217,7 @@ pub fn closeness_progress_task(node_count: usize) -> Task {
 define_algorithm_spec! {
     name: "closeness",
     output_type: ClosenessCentralityResult,
+    config_type: ClosenessCentralityConfig,
     projection_hint: Dense,
     modes: [Stream, Stats],
 

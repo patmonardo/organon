@@ -5,14 +5,42 @@ mod tests {
     use std::collections::HashMap;
     use std::sync::Arc;
 
+    use crate::algo::pagerank::PAGERANKAlgorithmSpec;
+    use crate::algo::pagerank::PageRankConfig;
     use crate::config::GraphStoreConfig;
     use crate::procedures::GraphFacade;
+    use crate::projection::eval::algorithm::AlgorithmSpec;
     use crate::projection::RelationshipType;
     use crate::types::graph::{MappedNodeId, RelationshipTopology, SimpleIdMap};
     use crate::types::graph_store::{
         Capabilities, DatabaseId, DatabaseInfo, DatabaseLocation, DefaultGraphStore, GraphName,
     };
     use crate::types::schema::{Direction, MutableGraphSchema};
+    use serde_json::json;
+
+    #[test]
+    fn pagerank_algorithm_spec_parses_and_validates_config() {
+        let spec = PAGERANKAlgorithmSpec::new("test_graph".to_string());
+
+        let parsed = spec
+            .parse_config(&json!({
+                "maxIterations": 30,
+                "dampingFactor": 0.9,
+                "sourceNodes": [1, 2]
+            }))
+            .unwrap();
+        let config: PageRankConfig = serde_json::from_value(parsed).unwrap();
+        assert_eq!(config.direction, "outgoing");
+        assert_eq!(config.concurrency, 4);
+        assert_eq!(config.max_iterations, 30);
+        assert_eq!(config.damping_factor, 0.9);
+        assert_eq!(config.source_nodes, Some(vec![1, 2]));
+
+        let error = spec
+            .parse_config(&json!({ "dampingFactor": 1.0 }))
+            .unwrap_err();
+        assert!(error.to_string().contains("dampingFactor"));
+    }
 
     fn node(value: u64) -> MappedNodeId {
         MappedNodeId::new(value)
@@ -145,7 +173,11 @@ mod tests {
 
     #[test]
     fn article_rank_uses_degree_smoothed_denominator() {
-        let store = Arc::new(store_from_outgoing(vec![vec![node(1)], vec![node(2)], vec![]]));
+        let store = Arc::new(store_from_outgoing(vec![
+            vec![node(1)],
+            vec![node(2)],
+            vec![],
+        ]));
         let graph = GraphFacade::new(Arc::clone(&store));
 
         let pagerank_scores: Vec<f64> = graph

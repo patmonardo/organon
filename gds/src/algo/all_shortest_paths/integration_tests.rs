@@ -6,7 +6,9 @@
 #[cfg(test)]
 mod tests {
     use crate::algo::all_shortest_paths::ALL_SHORTEST_PATHSAlgorithmSpec;
-    use crate::algo::all_shortest_paths::{AllShortestPathsResult, ShortestPathResult};
+    use crate::algo::all_shortest_paths::{
+        AllShortestPathsConfig, AllShortestPathsResult, ShortestPathResult,
+    };
     use crate::projection::eval::algorithm::{
         AlgorithmSpec, ComputationResult, ExecutionContext, ExecutionMode, ProcedureExecutor,
         ProjectionHint,
@@ -91,18 +93,22 @@ mod tests {
     fn test_all_shortest_paths_config_validation() {
         let algorithm = ALL_SHORTEST_PATHSAlgorithmSpec::new("test_graph".to_string());
 
-        // Test valid config
         let valid_config = json!({
-            "algorithm_type": "Weighted",
+            "algorithmType": "Weighted",
             "concurrency": 8,
-            "stream_results": false,
-            "max_results": 1000
+            "streamResults": false,
+            "maxResults": 1000
         });
 
-        let result = algorithm.parse_config(&valid_config);
-        assert!(result.is_ok(), "Valid config should parse successfully");
+        let parsed = algorithm.parse_config(&valid_config).unwrap();
+        let config: AllShortestPathsConfig = serde_json::from_value(parsed).unwrap();
+        assert_eq!(config.concurrency, 8);
+        assert!(!config.stream_results);
+        assert_eq!(config.max_results, Some(1000));
+        assert!(config.relationship_types.is_empty());
+        assert_eq!(config.direction, "outgoing");
+        assert_eq!(config.weight_property, "weight");
 
-        // Test invalid config (zero concurrency)
         let invalid_config = json!({
             "algorithm_type": "Unweighted",
             "concurrency": 0,
@@ -110,13 +116,8 @@ mod tests {
             "max_results": null
         });
 
-        // Note: The current macro doesn't validate config, it just passes through
-        // In a real implementation, this would be validated
-        let result = algorithm.parse_config(&invalid_config);
-        assert!(
-            result.is_ok(),
-            "Config parsing should succeed (validation happens elsewhere)"
-        );
+        let error = algorithm.parse_config(&invalid_config).unwrap_err();
+        assert!(error.to_string().contains("concurrency"));
     }
 
     #[test]

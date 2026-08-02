@@ -261,6 +261,7 @@ impl DfsResultBuilder {
 define_algorithm_spec! {
     name: "dfs",
     output_type: DfsResult,
+    config_type: DfsConfig,
     projection_hint: Dense,
     modes: [Stream, WriteNodeProperty],
     execute: |_self, graph_store, config_input, _context| {

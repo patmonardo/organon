@@ -3,13 +3,13 @@
 //! This module contains integration tests that verify the spanning tree algorithm
 //! works correctly with the ProcedureExecutor runtime.
 
-use super::spec::{SPANNING_TREEAlgorithmSpec, SpanningTreeResult};
+use super::spec::{SPANNING_TREEAlgorithmSpec, SpanningTreeConfig, SpanningTreeResult};
 use super::SpanningTreeComputationRuntime;
 use super::SpanningTreeStorageRuntime;
-use crate::task::progress::{TaskProgressTracker, Tasks};
 use crate::projection::eval::algorithm::{
     AlgorithmSpec, ExecutionContext, ExecutionMode, ProcedureExecutor,
 };
+use crate::task::progress::{TaskProgressTracker, Tasks};
 use serde_json::json;
 
 #[test]
@@ -29,32 +29,26 @@ fn test_spanning_tree_algorithm_spec_contract() {
 fn test_spanning_tree_config_validation() {
     let algorithm = SPANNING_TREEAlgorithmSpec::new("test_graph".to_string());
 
-    // Test valid config
-    let _valid_config = json!({
-        "start_node_id": 0,
-        "compute_minimum": true,
+    let valid_config = json!({
+        "startNode": 2,
+        "computeMinimum": false,
         "concurrency": 1
     });
+    let parsed = algorithm.parse_config(&valid_config).unwrap();
+    let config: SpanningTreeConfig = serde_json::from_value(parsed).unwrap();
+    assert_eq!(config.start_node_id, 2);
+    assert!(!config.compute_minimum);
+    assert!(config.relationship_types.is_empty());
+    assert_eq!(config.weight_property, "weight");
+    assert_eq!(config.direction, "undirected");
 
-    let context = ExecutionContext::new("test_user");
-    let validation_result = algorithm.validation_config(&context);
-    // ValidationConfiguration doesn't have is_ok/is_err methods
-    // Just verify it was created successfully
-    assert_eq!(validation_result.before_load_count(), 0);
-    assert_eq!(validation_result.after_load_count(), 0);
-
-    // Test invalid config (concurrency = 0)
-    let _invalid_config = json!({
+    let invalid_config = json!({
         "start_node_id": 0,
         "compute_minimum": true,
         "concurrency": 0
     });
-
-    let validation_result = algorithm.validation_config(&context);
-    // ValidationConfiguration doesn't have is_ok/is_err methods
-    // Just verify it was created successfully
-    assert_eq!(validation_result.before_load_count(), 0);
-    assert_eq!(validation_result.after_load_count(), 0);
+    let error = algorithm.parse_config(&invalid_config).unwrap_err();
+    assert!(error.to_string().contains("concurrency"));
 }
 
 #[test]

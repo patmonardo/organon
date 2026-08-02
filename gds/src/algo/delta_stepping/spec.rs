@@ -13,11 +13,11 @@ use crate::algo::algorithms::pathfinding::{
 };
 use crate::algo::algorithms::{ExecutionMetadata, ResultBuilder};
 use crate::config::validation::ConfigError;
-use crate::task::progress::TaskProgressTracker;
 use crate::define_algorithm_spec;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::relationship_type::RelationshipType;
 use crate::projection::Orientation;
+use crate::task::progress::TaskProgressTracker;
 use crate::types::graph::MappedNodeId;
 use serde::{Deserialize, Serialize};
 use std::collections::{HashMap, HashSet};
@@ -293,6 +293,7 @@ impl DeltaSteppingResultBuilder {
 define_algorithm_spec! {
     name: "delta_stepping",
     output_type: DeltaSteppingResult,
+    config_type: DeltaSteppingConfig,
     projection_hint: Dense,
     modes: [Stream, WriteNodeProperty],
 

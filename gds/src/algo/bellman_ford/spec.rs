@@ -29,18 +29,21 @@ use std::time::Duration;
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BellmanFordConfig {
     /// Source node for shortest path computation
+    #[serde(alias = "sourceNode")]
     pub source_node: MappedNodeId,
 
     /// Whether to track negative cycles
+    #[serde(alias = "trackNegativeCycles")]
     pub track_negative_cycles: bool,
 
     /// Whether to track shortest paths
+    #[serde(alias = "trackPaths")]
     pub track_paths: bool,
 
     /// Concurrency level for parallel processing
     pub concurrency: usize,
     /// Optional relationship types to include (empty means all types)
-    #[serde(default)]
+    #[serde(default, alias = "relationshipTypes")]
     pub relationship_types: Vec<String>,
     /// Direction for traversal ("outgoing" or "incoming")
     #[serde(default = "BellmanDirection::default_as_str")]
@@ -303,6 +306,7 @@ impl BellmanFordResultBuilder {
 define_algorithm_spec! {
     name: "bellman_ford",
     output_type: BellmanFordResult,
+    config_type: BellmanFordConfig,
     projection_hint: Dense,
     modes: [Stream, WriteNodeProperty],
 

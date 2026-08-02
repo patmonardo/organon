@@ -1,5 +1,7 @@
 use crate::algo::hits::HITSAlgorithmSpec;
+use crate::algo::hits::HitsConfig;
 use crate::projection::eval::algorithm::AlgorithmSpec;
+use serde_json::json;
 
 #[cfg(test)]
 mod tests {
@@ -26,6 +28,33 @@ mod tests {
         let algorithm = HITSAlgorithmSpec::new("test_graph".to_string());
         assert_eq!(algorithm.name(), "hits");
         assert_eq!(algorithm.graph_name(), "test_graph");
+    }
+
+    #[test]
+    fn test_hits_algorithm_spec_parses_and_validates_config() {
+        let algorithm = HITSAlgorithmSpec::new("test_graph".to_string());
+
+        let parsed = algorithm
+            .parse_config(&json!({
+                "maxIterations": 30,
+                "hubProperty": "my_hub",
+                "authProperty": "my_auth"
+            }))
+            .unwrap();
+        let config: HitsConfig = serde_json::from_value(parsed).unwrap();
+        assert_eq!(config.max_iterations, 30);
+        assert_eq!(config.tolerance, 1e-4);
+        assert_eq!(config.concurrency, 4);
+        assert_eq!(config.hub_property, "my_hub");
+        assert_eq!(config.auth_property, "my_auth");
+
+        let error = algorithm
+            .parse_config(&json!({
+                "hubProperty": "score",
+                "authProperty": "score"
+            }))
+            .unwrap_err();
+        assert!(error.to_string().contains("authProperty"));
     }
 
     #[test]

@@ -7,12 +7,12 @@
 
 use super::SpanningTreeStorageRuntime;
 use crate::algo::algorithms::pathfinding::PathResult;
-use crate::task::concurrency::TerminationFlag;
 use crate::config::validation::ConfigError;
 use crate::define_algorithm_spec;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::relationship_type::RelationshipType;
 use crate::projection::Orientation;
+use crate::task::concurrency::TerminationFlag;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::collections::HashSet;
@@ -327,6 +327,7 @@ impl SpanningTreeResultBuilder {
 define_algorithm_spec! {
     name: "spanning_tree",
     output_type: SpanningTreeResult,
+    config_type: SpanningTreeConfig,
     projection_hint: Dense,
     modes: [Stream, Stats, MutateNodeProperty, WriteNodeProperty],
     execute: |_self, graph_store, config_input, _context| {

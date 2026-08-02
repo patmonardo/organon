@@ -1,6 +1,32 @@
 use super::spec::LeidenConfig;
 use super::{AdjacencyGraph, LeidenComputationRuntime};
+use crate::algo::leiden::LEIDENAlgorithmSpec;
+use crate::projection::eval::algorithm::AlgorithmSpec;
 use crate::task::concurrency::TerminationFlag;
+use serde_json::json;
+
+#[test]
+fn leiden_algorithm_spec_parses_and_validates_config() {
+    let spec = LEIDENAlgorithmSpec::new("test_graph".to_string());
+
+    let parsed = spec
+        .parse_config(&json!({
+            "maxIterations": 20,
+            "includeIntermediateCommunities": true,
+            "randomSeed": 7,
+            "seedCommunities": [10, 10, 20]
+        }))
+        .unwrap();
+    let config: LeidenConfig = serde_json::from_value(parsed).unwrap();
+    assert_eq!(config.concurrency, 4);
+    assert_eq!(config.max_iterations, 20);
+    assert!(config.include_intermediate_communities);
+    assert_eq!(config.random_seed, 7);
+    assert_eq!(config.seed_communities, Some(vec![10, 10, 20]));
+
+    let error = spec.parse_config(&json!({ "gamma": 101.0 })).unwrap_err();
+    assert!(error.to_string().contains("gamma"));
+}
 
 fn build_adj(node_count: usize, edges: &[(usize, usize, f64)]) -> AdjacencyGraph {
     let mut adj = vec![Vec::new(); node_count];

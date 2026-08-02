@@ -1,3 +1,6 @@
+use crate::algo::similarity::knn::KnnSamplerType;
+use crate::algo::similarity::knn::SimilarityMetric;
+use crate::algo::similarity::node_similarity::NodeSimilarityMetric;
 use crate::procedures::centrality::ArticulationPointsFacade;
 use crate::procedures::centrality::BetweennessCentralityFacade;
 use crate::procedures::centrality::BridgesFacade;
@@ -11,6 +14,16 @@ use crate::procedures::centrality::PageRankFacade;
 use crate::procedures::community::ApproxMaxKCutFacade;
 use crate::procedures::community::ConductanceFacade;
 use crate::procedures::community::K1ColoringFacade;
+use crate::procedures::community::KCoreFacade;
+use crate::procedures::community::KMeansFacade;
+use crate::procedures::community::KMeansSamplerType;
+use crate::procedures::community::LabelPropagationFacade;
+use crate::procedures::community::LeidenFacade;
+use crate::procedures::community::LouvainFacade;
+use crate::procedures::community::ModularityFacade;
+use crate::procedures::community::SccFacade;
+use crate::procedures::community::TriangleFacade;
+use crate::procedures::community::WccFacade;
 use crate::procedures::pathfinding::AStarBuilder;
 use crate::procedures::pathfinding::AllShortestPathsBuilder;
 use crate::procedures::pathfinding::BellmanFordBuilder;
@@ -26,19 +39,27 @@ use crate::procedures::pathfinding::SpanningTreeBuilder;
 use crate::procedures::pathfinding::SteinerTreeBuilder;
 use crate::procedures::pathfinding::TopologicalSortBuilder;
 use crate::procedures::pathfinding::YensBuilder;
+use crate::procedures::similarity::FilteredKnnFacade;
+use crate::procedures::similarity::FilteredNodeSimilarityFacade;
+use crate::procedures::similarity::KnnFacade;
+use crate::procedures::similarity::NodeSimilarityFacade;
+use crate::projection::NodeLabel;
 use crate::shell::builtin_component;
 use crate::shell::ShellComponentCall;
 use crate::shell::ShellComponentMode;
 
 use super::inputs::optional_bool;
 use super::inputs::optional_f64;
+use super::inputs::optional_f64_matrix;
 use super::inputs::optional_str;
 use super::inputs::optional_string_array;
+use super::inputs::optional_string_or_array;
 use super::inputs::optional_u64;
 use super::inputs::optional_u64_array;
 use super::inputs::optional_usize;
 use super::inputs::output_property;
 use super::inputs::required_output_property;
+use super::inputs::required_property_metrics;
 use super::inputs::required_string;
 use super::inputs::required_u64;
 use super::GraphFacade;
@@ -174,6 +195,84 @@ pub(super) fn bind_algorithm(
             component: component.id,
             mode: call.mode,
             procedure: bind_k1coloring(graph, call)?,
+            output_property: output_property(call)?,
+        }),
+        "kcore" => Ok(ShellProcedureBinding::KCore {
+            component: component.id,
+            mode: call.mode,
+            procedure: bind_kcore(graph, call)?,
+            output_property: output_property(call)?,
+        }),
+        "kmeans" => Ok(ShellProcedureBinding::KMeans {
+            component: component.id,
+            mode: call.mode,
+            procedure: bind_kmeans(graph, call)?,
+            output_property: output_property(call)?,
+        }),
+        "label_propagation" => Ok(ShellProcedureBinding::LabelPropagation {
+            component: component.id,
+            mode: call.mode,
+            procedure: bind_label_propagation(graph, call)?,
+            output_property: output_property(call)?,
+        }),
+        "leiden" => Ok(ShellProcedureBinding::Leiden {
+            component: component.id,
+            mode: call.mode,
+            procedure: bind_leiden(graph, call)?,
+            output_property: output_property(call)?,
+        }),
+        "louvain" => Ok(ShellProcedureBinding::Louvain {
+            component: component.id,
+            mode: call.mode,
+            procedure: bind_louvain(graph, call)?,
+            output_property: output_property(call)?,
+        }),
+        "modularity" => Ok(ShellProcedureBinding::Modularity {
+            component: component.id,
+            mode: call.mode,
+            procedure: bind_modularity(graph, call)?,
+            output_property: output_property(call)?,
+        }),
+        "scc" => Ok(ShellProcedureBinding::Scc {
+            component: component.id,
+            mode: call.mode,
+            procedure: bind_scc(graph, call)?,
+            output_property: output_property(call)?,
+        }),
+        "triangle" => Ok(ShellProcedureBinding::Triangle {
+            component: component.id,
+            mode: call.mode,
+            procedure: bind_triangle(graph, call)?,
+            output_property: output_property(call)?,
+        }),
+        "wcc" => Ok(ShellProcedureBinding::Wcc {
+            component: component.id,
+            mode: call.mode,
+            procedure: bind_wcc(graph, call)?,
+            output_property: output_property(call)?,
+        }),
+        "knn" => Ok(ShellProcedureBinding::Knn {
+            component: component.id,
+            mode: call.mode,
+            procedure: bind_knn(graph, call)?,
+            output_property: output_property(call)?,
+        }),
+        "filtered_knn" => Ok(ShellProcedureBinding::FilteredKnn {
+            component: component.id,
+            mode: call.mode,
+            procedure: bind_filtered_knn(graph, call)?,
+            output_property: output_property(call)?,
+        }),
+        "node_similarity" => Ok(ShellProcedureBinding::NodeSimilarity {
+            component: component.id,
+            mode: call.mode,
+            procedure: bind_node_similarity(graph, call)?,
+            output_property: output_property(call)?,
+        }),
+        "filtered_node_similarity" => Ok(ShellProcedureBinding::FilteredNodeSimilarity {
+            component: component.id,
+            mode: call.mode,
+            procedure: bind_filtered_node_similarity(graph, call)?,
             output_property: output_property(call)?,
         }),
         "kspanningtree" => Ok(ShellProcedureBinding::KSpanningTree {
@@ -643,6 +742,335 @@ pub(super) fn invoke_k1coloring(
         ),
         ShellComponentMode::Invoke => {
             unreachable!("K1Coloring mode is validated before invocation")
+        }
+    })
+}
+
+pub(super) fn invoke_kcore(
+    mode: ShellComponentMode,
+    procedure: KCoreFacade,
+    output_property: Option<String>,
+) -> Result<ShellProcedureResult, ShellProcedureError> {
+    Ok(match mode {
+        ShellComponentMode::Stream => {
+            ShellProcedureResult::KCoreStream(procedure.stream()?.collect())
+        }
+        ShellComponentMode::Stats => ShellProcedureResult::KCoreStats(procedure.stats()?),
+        ShellComponentMode::Estimate => {
+            ShellProcedureResult::KCoreEstimate(procedure.estimate_memory()?)
+        }
+        ShellComponentMode::Mutate => ShellProcedureResult::KCoreMutate(
+            procedure.mutate(required_output_property(output_property.as_deref())?)?,
+        ),
+        ShellComponentMode::Write => ShellProcedureResult::KCoreWrite(
+            procedure.write(required_output_property(output_property.as_deref())?)?,
+        ),
+        ShellComponentMode::Invoke => {
+            unreachable!("K-Core mode is validated before invocation")
+        }
+    })
+}
+
+pub(super) fn invoke_kmeans(
+    mode: ShellComponentMode,
+    procedure: KMeansFacade,
+    output_property: Option<String>,
+) -> Result<ShellProcedureResult, ShellProcedureError> {
+    Ok(match mode {
+        ShellComponentMode::Stream => {
+            ShellProcedureResult::KMeansStream(procedure.stream()?.collect())
+        }
+        ShellComponentMode::Stats => ShellProcedureResult::KMeansStats(procedure.stats()?),
+        ShellComponentMode::Estimate => {
+            ShellProcedureResult::KMeansEstimate(procedure.estimate_memory()?)
+        }
+        ShellComponentMode::Mutate => ShellProcedureResult::KMeansMutate(
+            procedure.mutate(required_output_property(output_property.as_deref())?)?,
+        ),
+        ShellComponentMode::Write => ShellProcedureResult::KMeansWrite(
+            procedure.write(required_output_property(output_property.as_deref())?)?,
+        ),
+        ShellComponentMode::Invoke => {
+            unreachable!("K-Means mode is validated before invocation")
+        }
+    })
+}
+
+pub(super) fn invoke_label_propagation(
+    mode: ShellComponentMode,
+    procedure: LabelPropagationFacade,
+    output_property: Option<String>,
+) -> Result<ShellProcedureResult, ShellProcedureError> {
+    Ok(match mode {
+        ShellComponentMode::Stream => {
+            ShellProcedureResult::LabelPropagationStream(procedure.stream()?.collect())
+        }
+        ShellComponentMode::Stats => {
+            ShellProcedureResult::LabelPropagationStats(procedure.stats()?)
+        }
+        ShellComponentMode::Estimate => {
+            ShellProcedureResult::LabelPropagationEstimate(procedure.estimate_memory()?)
+        }
+        ShellComponentMode::Mutate => ShellProcedureResult::LabelPropagationMutate(
+            procedure.mutate(required_output_property(output_property.as_deref())?)?,
+        ),
+        ShellComponentMode::Write => ShellProcedureResult::LabelPropagationWrite(
+            procedure.write(required_output_property(output_property.as_deref())?)?,
+        ),
+        ShellComponentMode::Invoke => {
+            unreachable!("Label Propagation mode is validated before invocation")
+        }
+    })
+}
+
+pub(super) fn invoke_leiden(
+    mode: ShellComponentMode,
+    procedure: LeidenFacade,
+    output_property: Option<String>,
+) -> Result<ShellProcedureResult, ShellProcedureError> {
+    Ok(match mode {
+        ShellComponentMode::Stream => {
+            ShellProcedureResult::LeidenStream(procedure.stream()?.collect())
+        }
+        ShellComponentMode::Stats => ShellProcedureResult::LeidenStats(procedure.stats()?),
+        ShellComponentMode::Estimate => {
+            ShellProcedureResult::LeidenEstimate(procedure.estimate_memory()?)
+        }
+        ShellComponentMode::Mutate => ShellProcedureResult::LeidenMutate(
+            procedure.mutate(required_output_property(output_property.as_deref())?)?,
+        ),
+        ShellComponentMode::Write => ShellProcedureResult::LeidenWrite(
+            procedure.write(required_output_property(output_property.as_deref())?)?,
+        ),
+        ShellComponentMode::Invoke => {
+            unreachable!("Leiden mode is validated before invocation")
+        }
+    })
+}
+
+pub(super) fn invoke_louvain(
+    mode: ShellComponentMode,
+    procedure: LouvainFacade,
+    output_property: Option<String>,
+) -> Result<ShellProcedureResult, ShellProcedureError> {
+    Ok(match mode {
+        ShellComponentMode::Stream => {
+            ShellProcedureResult::LouvainStream(procedure.stream()?.collect())
+        }
+        ShellComponentMode::Stats => ShellProcedureResult::LouvainStats(procedure.stats()?),
+        ShellComponentMode::Estimate => {
+            ShellProcedureResult::LouvainEstimate(procedure.estimate_memory())
+        }
+        ShellComponentMode::Mutate => ShellProcedureResult::LouvainMutate(
+            procedure.mutate(required_output_property(output_property.as_deref())?)?,
+        ),
+        ShellComponentMode::Write => ShellProcedureResult::LouvainWrite(
+            procedure.write(required_output_property(output_property.as_deref())?)?,
+        ),
+        ShellComponentMode::Invoke => {
+            unreachable!("Louvain mode is validated before invocation")
+        }
+    })
+}
+
+pub(super) fn invoke_modularity(
+    mode: ShellComponentMode,
+    procedure: ModularityFacade,
+    output_property: Option<String>,
+) -> Result<ShellProcedureResult, ShellProcedureError> {
+    Ok(match mode {
+        ShellComponentMode::Stream => {
+            ShellProcedureResult::ModularityStream(procedure.stream()?.collect())
+        }
+        ShellComponentMode::Stats => ShellProcedureResult::ModularityStats(procedure.stats()?),
+        ShellComponentMode::Estimate => {
+            ShellProcedureResult::ModularityEstimate(procedure.estimate_memory()?)
+        }
+        ShellComponentMode::Mutate => ShellProcedureResult::ModularityMutate(
+            procedure.mutate(required_output_property(output_property.as_deref())?)?,
+        ),
+        ShellComponentMode::Write => ShellProcedureResult::ModularityWrite(
+            procedure.write(required_output_property(output_property.as_deref())?)?,
+        ),
+        ShellComponentMode::Invoke => {
+            unreachable!("Modularity mode is validated before invocation")
+        }
+    })
+}
+
+pub(super) fn invoke_scc(
+    mode: ShellComponentMode,
+    procedure: SccFacade,
+    output_property: Option<String>,
+) -> Result<ShellProcedureResult, ShellProcedureError> {
+    Ok(match mode {
+        ShellComponentMode::Stream => {
+            ShellProcedureResult::SccStream(procedure.stream()?.collect())
+        }
+        ShellComponentMode::Stats => ShellProcedureResult::SccStats(procedure.stats()?),
+        ShellComponentMode::Estimate => {
+            ShellProcedureResult::SccEstimate(procedure.estimate_memory()?)
+        }
+        ShellComponentMode::Mutate => ShellProcedureResult::SccMutate(
+            procedure.mutate(required_output_property(output_property.as_deref())?)?,
+        ),
+        ShellComponentMode::Write => ShellProcedureResult::SccWrite(
+            procedure.write(required_output_property(output_property.as_deref())?)?,
+        ),
+        ShellComponentMode::Invoke => {
+            unreachable!("SCC mode is validated before invocation")
+        }
+    })
+}
+
+pub(super) fn invoke_triangle(
+    mode: ShellComponentMode,
+    procedure: TriangleFacade,
+    output_property: Option<String>,
+) -> Result<ShellProcedureResult, ShellProcedureError> {
+    Ok(match mode {
+        ShellComponentMode::Stream => {
+            ShellProcedureResult::TriangleStream(procedure.stream()?.collect())
+        }
+        ShellComponentMode::Stats => ShellProcedureResult::TriangleStats(procedure.stats()?),
+        ShellComponentMode::Estimate => {
+            ShellProcedureResult::TriangleEstimate(procedure.estimate_memory()?)
+        }
+        ShellComponentMode::Mutate => ShellProcedureResult::TriangleMutate(
+            procedure.mutate(required_output_property(output_property.as_deref())?)?,
+        ),
+        ShellComponentMode::Write => ShellProcedureResult::TriangleWrite(
+            procedure.write(required_output_property(output_property.as_deref())?)?,
+        ),
+        ShellComponentMode::Invoke => {
+            unreachable!("Triangle mode is validated before invocation")
+        }
+    })
+}
+
+pub(super) fn invoke_wcc(
+    mode: ShellComponentMode,
+    procedure: WccFacade,
+    output_property: Option<String>,
+) -> Result<ShellProcedureResult, ShellProcedureError> {
+    Ok(match mode {
+        ShellComponentMode::Stream => {
+            ShellProcedureResult::WccStream(procedure.stream()?.collect())
+        }
+        ShellComponentMode::Stats => ShellProcedureResult::WccStats(procedure.stats()?),
+        ShellComponentMode::Estimate => {
+            ShellProcedureResult::WccEstimate(procedure.estimate_memory())
+        }
+        ShellComponentMode::Mutate => ShellProcedureResult::WccMutate(
+            procedure.mutate(required_output_property(output_property.as_deref())?)?,
+        ),
+        ShellComponentMode::Write => ShellProcedureResult::WccWrite(
+            procedure.write(required_output_property(output_property.as_deref())?)?,
+        ),
+        ShellComponentMode::Invoke => {
+            unreachable!("WCC mode is validated before invocation")
+        }
+    })
+}
+
+pub(super) fn invoke_knn(
+    mode: ShellComponentMode,
+    procedure: KnnFacade,
+    output_property: Option<String>,
+) -> Result<ShellProcedureResult, ShellProcedureError> {
+    Ok(match mode {
+        ShellComponentMode::Stream => {
+            ShellProcedureResult::KnnStream(procedure.stream()?.collect())
+        }
+        ShellComponentMode::Stats => ShellProcedureResult::KnnStats(procedure.stats()?),
+        ShellComponentMode::Estimate => {
+            ShellProcedureResult::KnnEstimate(procedure.estimate_memory())
+        }
+        ShellComponentMode::Mutate => ShellProcedureResult::KnnMutate(
+            procedure.mutate(required_output_property(output_property.as_deref())?)?,
+        ),
+        ShellComponentMode::Write => ShellProcedureResult::KnnWrite(
+            procedure.write(required_output_property(output_property.as_deref())?)?,
+        ),
+        ShellComponentMode::Invoke => {
+            unreachable!("KNN mode is validated before invocation")
+        }
+    })
+}
+
+pub(super) fn invoke_filtered_knn(
+    mode: ShellComponentMode,
+    procedure: FilteredKnnFacade,
+    output_property: Option<String>,
+) -> Result<ShellProcedureResult, ShellProcedureError> {
+    Ok(match mode {
+        ShellComponentMode::Stream => {
+            ShellProcedureResult::FilteredKnnStream(procedure.stream()?.collect())
+        }
+        ShellComponentMode::Stats => ShellProcedureResult::FilteredKnnStats(procedure.stats()?),
+        ShellComponentMode::Estimate => {
+            ShellProcedureResult::FilteredKnnEstimate(procedure.estimate_memory())
+        }
+        ShellComponentMode::Mutate => ShellProcedureResult::FilteredKnnMutate(
+            procedure.mutate(required_output_property(output_property.as_deref())?)?,
+        ),
+        ShellComponentMode::Write => ShellProcedureResult::FilteredKnnWrite(
+            procedure.write(required_output_property(output_property.as_deref())?)?,
+        ),
+        ShellComponentMode::Invoke => {
+            unreachable!("Filtered KNN mode is validated before invocation")
+        }
+    })
+}
+
+pub(super) fn invoke_node_similarity(
+    mode: ShellComponentMode,
+    procedure: NodeSimilarityFacade,
+    output_property: Option<String>,
+) -> Result<ShellProcedureResult, ShellProcedureError> {
+    Ok(match mode {
+        ShellComponentMode::Stream => {
+            ShellProcedureResult::NodeSimilarityStream(procedure.stream()?.collect())
+        }
+        ShellComponentMode::Stats => ShellProcedureResult::NodeSimilarityStats(procedure.stats()?),
+        ShellComponentMode::Estimate => {
+            ShellProcedureResult::NodeSimilarityEstimate(procedure.estimate_memory())
+        }
+        ShellComponentMode::Mutate => ShellProcedureResult::NodeSimilarityMutate(
+            procedure.mutate(required_output_property(output_property.as_deref())?)?,
+        ),
+        ShellComponentMode::Write => ShellProcedureResult::NodeSimilarityWrite(
+            procedure.write(required_output_property(output_property.as_deref())?)?,
+        ),
+        ShellComponentMode::Invoke => {
+            unreachable!("Node Similarity mode is validated before invocation")
+        }
+    })
+}
+
+pub(super) fn invoke_filtered_node_similarity(
+    mode: ShellComponentMode,
+    procedure: FilteredNodeSimilarityFacade,
+    output_property: Option<String>,
+) -> Result<ShellProcedureResult, ShellProcedureError> {
+    Ok(match mode {
+        ShellComponentMode::Stream => {
+            ShellProcedureResult::FilteredNodeSimilarityStream(procedure.stream()?.collect())
+        }
+        ShellComponentMode::Stats => {
+            ShellProcedureResult::FilteredNodeSimilarityStats(procedure.stats()?)
+        }
+        ShellComponentMode::Estimate => {
+            ShellProcedureResult::FilteredNodeSimilarityEstimate(procedure.estimate_memory())
+        }
+        ShellComponentMode::Mutate => ShellProcedureResult::FilteredNodeSimilarityMutate(
+            procedure.mutate(required_output_property(output_property.as_deref())?)?,
+        ),
+        ShellComponentMode::Write => ShellProcedureResult::FilteredNodeSimilarityWrite(
+            procedure.write(required_output_property(output_property.as_deref())?)?,
+        ),
+        ShellComponentMode::Invoke => {
+            unreachable!("Filtered Node Similarity mode is validated before invocation")
         }
     })
 }
@@ -1383,6 +1811,501 @@ fn bind_k1coloring(
     }
 
     Ok(procedure)
+}
+
+fn bind_kcore(
+    graph: &GraphFacade,
+    call: &ShellComponentCall,
+) -> Result<KCoreFacade, ShellProcedureError> {
+    let mut procedure = graph.kcore();
+
+    if let Some(concurrency) = optional_usize(call, "concurrency", &[])? {
+        procedure = procedure.concurrency(concurrency);
+    }
+
+    Ok(procedure)
+}
+
+fn bind_kmeans(
+    graph: &GraphFacade,
+    call: &ShellComponentCall,
+) -> Result<KMeansFacade, ShellProcedureError> {
+    let mut procedure = graph.kmeans();
+
+    if let Some(k) = optional_usize(call, "k", &[])? {
+        procedure = procedure.k(k);
+    }
+    if let Some(max_iterations) = optional_u64(call, "maxIterations", &["max_iterations"])? {
+        procedure = procedure.max_iterations(u32::try_from(max_iterations).map_err(|_| {
+            ShellProcedureError::InvalidInput {
+                input: "maxIterations",
+                expected: "an unsigned 32-bit integer",
+            }
+        })?);
+    }
+    if let Some(delta_threshold) = optional_f64(call, "deltaThreshold", &["delta_threshold"])? {
+        procedure = procedure.delta_threshold(delta_threshold);
+    }
+    if let Some(restarts) = optional_u64(call, "numberOfRestarts", &["number_of_restarts"])? {
+        procedure = procedure.number_of_restarts(u32::try_from(restarts).map_err(|_| {
+            ShellProcedureError::InvalidInput {
+                input: "numberOfRestarts",
+                expected: "an unsigned 32-bit integer",
+            }
+        })?);
+    }
+    if let Some(compute_silhouette) =
+        optional_bool(call, "computeSilhouette", &["compute_silhouette"])?
+    {
+        procedure = procedure.compute_silhouette(compute_silhouette);
+    }
+    if let Some(concurrency) = optional_usize(call, "concurrency", &[])? {
+        procedure = procedure.concurrency(concurrency);
+    }
+    procedure =
+        procedure.node_property(&required_string(call, "nodeProperty", &["node_property"])?);
+    if let Some(sampler_type) = optional_str(call, "samplerType", &["sampler_type"])? {
+        let sampler_type = match sampler_type.to_ascii_uppercase().as_str() {
+            "UNIFORM" => KMeansSamplerType::Uniform,
+            "KMEANSPP" => KMeansSamplerType::KmeansPlusPlus,
+            _ => {
+                return Err(ShellProcedureError::InvalidInput {
+                    input: "samplerType",
+                    expected: "UNIFORM or KMEANSPP",
+                })
+            }
+        };
+        procedure = procedure.sampler_type(sampler_type);
+    }
+    if let Some(seed_centroids) = optional_f64_matrix(call, "seedCentroids", &["seed_centroids"])? {
+        procedure = procedure.seed_centroids(seed_centroids);
+    }
+    if let Some(random_seed) = optional_u64(call, "randomSeed", &["random_seed"])? {
+        procedure = procedure.random_seed(random_seed);
+    }
+
+    Ok(procedure)
+}
+
+fn bind_label_propagation(
+    graph: &GraphFacade,
+    call: &ShellComponentCall,
+) -> Result<LabelPropagationFacade, ShellProcedureError> {
+    let mut procedure = graph.label_propagation();
+
+    if let Some(concurrency) = optional_usize(call, "concurrency", &[])? {
+        procedure = procedure.concurrency(concurrency);
+    }
+    if let Some(max_iterations) = optional_u64(call, "maxIterations", &["max_iterations"])? {
+        procedure = procedure.max_iterations(max_iterations);
+    }
+    if let Some(property) = optional_str(call, "nodeWeightProperty", &["node_weight_property"])? {
+        procedure = procedure.node_weight_property(property);
+    }
+    if let Some(property) = optional_str(call, "seedProperty", &["seed_property"])? {
+        procedure = procedure.seed_property(property);
+    }
+
+    Ok(procedure)
+}
+
+fn bind_leiden(
+    graph: &GraphFacade,
+    call: &ShellComponentCall,
+) -> Result<LeidenFacade, ShellProcedureError> {
+    let mut procedure = graph.leiden();
+
+    if let Some(gamma) = optional_f64(call, "gamma", &[])? {
+        procedure = procedure.gamma(gamma);
+    }
+    if let Some(theta) = optional_f64(call, "theta", &[])? {
+        procedure = procedure.theta(theta);
+    }
+    if let Some(tolerance) = optional_f64(call, "tolerance", &[])? {
+        procedure = procedure.tolerance(tolerance);
+    }
+    if let Some(max_iterations) = optional_usize(call, "maxIterations", &["max_iterations"])? {
+        procedure = procedure.max_iterations(max_iterations);
+    }
+    if let Some(include) = optional_bool(
+        call,
+        "includeIntermediateCommunities",
+        &["include_intermediate_communities"],
+    )? {
+        procedure = procedure.include_intermediate_communities(include);
+    }
+    if let Some(random_seed) = optional_u64(call, "randomSeed", &["random_seed"])? {
+        procedure = procedure.random_seed(random_seed);
+    }
+    if let Some(seed_communities) =
+        optional_u64_array(call, "seedCommunities", &["seed_communities"])?
+    {
+        procedure = procedure.seed_communities(seed_communities);
+    }
+    if let Some(concurrency) = optional_usize(call, "concurrency", &[])? {
+        procedure = procedure.concurrency(concurrency);
+    }
+
+    Ok(procedure)
+}
+
+fn bind_louvain(
+    graph: &GraphFacade,
+    call: &ShellComponentCall,
+) -> Result<LouvainFacade, ShellProcedureError> {
+    let mut procedure = graph.louvain();
+
+    if let Some(concurrency) = optional_usize(call, "concurrency", &[])? {
+        procedure = procedure.concurrency(concurrency);
+    }
+    if let Some(max_iterations) = optional_usize(call, "maxIterations", &["max_iterations"])? {
+        procedure = procedure.max_iterations(max_iterations);
+    }
+    if let Some(max_levels) = optional_usize(call, "maxLevels", &["max_levels"])? {
+        procedure = procedure.max_levels(max_levels);
+    }
+    if let Some(tolerance) = optional_f64(call, "tolerance", &[])? {
+        procedure = procedure.tolerance(tolerance);
+    }
+    if let Some(gamma) = optional_f64(call, "gamma", &[])? {
+        procedure = procedure.gamma(gamma);
+    }
+    if let Some(theta) = optional_f64(call, "theta", &[])? {
+        procedure = procedure.theta(theta);
+    }
+    if let Some(include) = optional_bool(
+        call,
+        "includeIntermediateCommunities",
+        &["include_intermediate_communities"],
+    )? {
+        procedure = procedure.include_intermediate_communities(include);
+    }
+    if let Some(seed_property) = optional_str(call, "seedProperty", &["seed_property"])? {
+        procedure = procedure.seed_property(seed_property);
+    }
+
+    Ok(procedure)
+}
+
+fn bind_modularity(
+    graph: &GraphFacade,
+    call: &ShellComponentCall,
+) -> Result<ModularityFacade, ShellProcedureError> {
+    let community_property = required_string(call, "communityProperty", &["community_property"])?;
+    let mut procedure = graph.modularity(community_property);
+
+    if let Some(concurrency) = optional_usize(call, "concurrency", &[])? {
+        procedure = procedure.concurrency(concurrency);
+    }
+
+    Ok(procedure)
+}
+
+fn bind_scc(
+    graph: &GraphFacade,
+    call: &ShellComponentCall,
+) -> Result<SccFacade, ShellProcedureError> {
+    let mut procedure = graph.scc();
+
+    if let Some(concurrency) = optional_usize(call, "concurrency", &[])? {
+        procedure = procedure.concurrency(concurrency);
+    }
+
+    Ok(procedure)
+}
+
+fn bind_triangle(
+    graph: &GraphFacade,
+    call: &ShellComponentCall,
+) -> Result<TriangleFacade, ShellProcedureError> {
+    let mut procedure = graph.triangle();
+
+    if let Some(concurrency) = optional_usize(call, "concurrency", &[])? {
+        procedure = procedure.concurrency(concurrency);
+    }
+    if let Some(max_degree) = optional_u64(call, "maxDegree", &["max_degree"])? {
+        procedure = procedure.max_degree(max_degree);
+    }
+
+    Ok(procedure)
+}
+
+fn bind_wcc(
+    graph: &GraphFacade,
+    call: &ShellComponentCall,
+) -> Result<WccFacade, ShellProcedureError> {
+    let mut procedure = graph.wcc();
+
+    if let Some(concurrency) = optional_usize(call, "concurrency", &[])? {
+        procedure = procedure.concurrency(concurrency);
+    }
+    if let Some(min_batch_size) = optional_usize(call, "minBatchSize", &["min_batch_size"])? {
+        procedure = procedure.min_batch_size(min_batch_size);
+    }
+    if let Some(threshold) = optional_f64(call, "threshold", &[])? {
+        procedure = procedure.threshold(threshold);
+    }
+    if let Some(seed_property) = optional_str(call, "seedProperty", &["seed_property"])? {
+        procedure = procedure.seed_property(seed_property);
+    }
+
+    Ok(procedure)
+}
+
+fn bind_knn(
+    graph: &GraphFacade,
+    call: &ShellComponentCall,
+) -> Result<KnnFacade, ShellProcedureError> {
+    let properties = required_property_metrics(call, "nodeProperties", &["node_properties"])?;
+    let default_metric = optional_str(call, "similarityMetric", &["similarity_metric"])?
+        .map(|value| parse_knn_metric(value, "similarityMetric"))
+        .transpose()?
+        .unwrap_or_default();
+    let mut properties = properties.into_iter();
+    let primary = properties.next().expect("nodeProperties is non-empty");
+    let primary_metric = primary
+        .metric
+        .as_deref()
+        .map(|value| parse_knn_metric(value, "nodeProperties"))
+        .transpose()?
+        .unwrap_or(default_metric);
+    let mut procedure = graph.knn(primary.name).metric(primary_metric);
+    for property in properties {
+        let metric = property
+            .metric
+            .as_deref()
+            .map(|value| parse_knn_metric(value, "nodeProperties"))
+            .transpose()?
+            .unwrap_or(default_metric);
+        procedure = procedure.add_property(property.name, metric);
+    }
+    configure_knn(procedure, call)
+}
+
+fn bind_filtered_knn(
+    graph: &GraphFacade,
+    call: &ShellComponentCall,
+) -> Result<FilteredKnnFacade, ShellProcedureError> {
+    let properties = required_property_metrics(call, "nodeProperties", &["node_properties"])?;
+    let default_metric = optional_str(call, "similarityMetric", &["similarity_metric"])?
+        .map(|value| parse_knn_metric(value, "similarityMetric"))
+        .transpose()?
+        .unwrap_or_default();
+    let mut properties = properties.into_iter();
+    let primary = properties.next().expect("nodeProperties is non-empty");
+    let primary_metric = primary
+        .metric
+        .as_deref()
+        .map(|value| parse_knn_metric(value, "nodeProperties"))
+        .transpose()?
+        .unwrap_or(default_metric);
+    let mut procedure = graph.filtered_knn(primary.name).metric(primary_metric);
+    for property in properties {
+        let metric = property
+            .metric
+            .as_deref()
+            .map(|value| parse_knn_metric(value, "nodeProperties"))
+            .transpose()?
+            .unwrap_or(default_metric);
+        procedure = procedure.add_property(property.name, metric);
+    }
+    if let Some(k) = optional_usize(call, "topK", &["top_k"])? {
+        procedure = procedure.k(k);
+    }
+    if let Some(sampled_k) = optional_usize(call, "sampledK", &["sampled_k"])? {
+        procedure = procedure.sampled_k(sampled_k);
+    }
+    if let Some(max_iterations) = optional_usize(call, "maxIterations", &["max_iterations"])? {
+        procedure = procedure.max_iterations(max_iterations);
+    }
+    if let Some(initial_sampler) = optional_str(call, "initialSampler", &["initial_sampler"])? {
+        procedure = procedure.initial_sampler(parse_knn_sampler(initial_sampler)?);
+    }
+    if let Some(random_seed) = optional_u64(call, "randomSeed", &["random_seed"])? {
+        procedure = procedure.random_seed(Some(random_seed));
+    }
+    if let Some(rate) = optional_f64(call, "perturbationRate", &["perturbation_rate"])? {
+        procedure = procedure.perturbation_rate(rate);
+    }
+    if let Some(random_joins) = optional_usize(call, "randomJoins", &["random_joins"])? {
+        procedure = procedure.random_joins(random_joins);
+    }
+    if let Some(threshold) = optional_u64(call, "updateThreshold", &["update_threshold"])? {
+        procedure = procedure.update_threshold(threshold);
+    }
+    if let Some(cutoff) = optional_f64(call, "similarityCutoff", &["similarity_cutoff"])? {
+        procedure = procedure.similarity_cutoff(cutoff);
+    }
+    if let Some(concurrency) = optional_usize(call, "concurrency", &[])? {
+        procedure = procedure.concurrency(concurrency);
+    }
+    if let Some(labels) = optional_string_or_array(
+        call,
+        "sourceNodeLabels",
+        &["sourceNodeLabel", "source_node_labels", "source_node_label"],
+    )? {
+        procedure = procedure.source_labels(labels.into_iter().map(NodeLabel::of).collect());
+    }
+    if let Some(labels) = optional_string_or_array(
+        call,
+        "targetNodeLabels",
+        &["targetNodeLabel", "target_node_labels", "target_node_label"],
+    )? {
+        procedure = procedure.target_labels(labels.into_iter().map(NodeLabel::of).collect());
+    }
+    Ok(procedure)
+}
+
+fn configure_knn(
+    mut procedure: KnnFacade,
+    call: &ShellComponentCall,
+) -> Result<KnnFacade, ShellProcedureError> {
+    if let Some(k) = optional_usize(call, "topK", &["top_k"])? {
+        procedure = procedure.k(k);
+    }
+    if let Some(sampled_k) = optional_usize(call, "sampledK", &["sampled_k"])? {
+        procedure = procedure.sampled_k(sampled_k);
+    }
+    if let Some(max_iterations) = optional_usize(call, "maxIterations", &["max_iterations"])? {
+        procedure = procedure.max_iterations(max_iterations);
+    }
+    if let Some(initial_sampler) = optional_str(call, "initialSampler", &["initial_sampler"])? {
+        procedure = procedure.initial_sampler(parse_knn_sampler(initial_sampler)?);
+    }
+    if let Some(random_seed) = optional_u64(call, "randomSeed", &["random_seed"])? {
+        procedure = procedure.random_seed(Some(random_seed));
+    }
+    if let Some(rate) = optional_f64(call, "perturbationRate", &["perturbation_rate"])? {
+        procedure = procedure.perturbation_rate(rate);
+    }
+    if let Some(random_joins) = optional_usize(call, "randomJoins", &["random_joins"])? {
+        procedure = procedure.random_joins(random_joins);
+    }
+    if let Some(threshold) = optional_u64(call, "updateThreshold", &["update_threshold"])? {
+        procedure = procedure.update_threshold(threshold);
+    }
+    if let Some(cutoff) = optional_f64(call, "similarityCutoff", &["similarity_cutoff"])? {
+        procedure = procedure.similarity_cutoff(cutoff);
+    }
+    if let Some(concurrency) = optional_usize(call, "concurrency", &[])? {
+        procedure = procedure.concurrency(concurrency);
+    }
+    Ok(procedure)
+}
+
+fn bind_node_similarity(
+    graph: &GraphFacade,
+    call: &ShellComponentCall,
+) -> Result<NodeSimilarityFacade, ShellProcedureError> {
+    let mut procedure = graph.node_similarity();
+    if let Some(metric) = optional_str(call, "similarityMetric", &["similarity_metric"])? {
+        procedure = procedure.metric(parse_node_similarity_metric(metric)?);
+    }
+    procedure = configure_node_similarity(procedure, call)?;
+    Ok(procedure)
+}
+
+fn bind_filtered_node_similarity(
+    graph: &GraphFacade,
+    call: &ShellComponentCall,
+) -> Result<FilteredNodeSimilarityFacade, ShellProcedureError> {
+    let mut procedure = graph.filtered_node_similarity();
+    if let Some(metric) = optional_str(call, "similarityMetric", &["similarity_metric"])? {
+        procedure = procedure.metric(parse_node_similarity_metric(metric)?);
+    }
+    if let Some(cutoff) = optional_f64(call, "similarityCutoff", &["similarity_cutoff"])? {
+        procedure = procedure.similarity_cutoff(cutoff);
+    }
+    if let Some(top_k) = optional_usize(call, "topK", &["top_k"])? {
+        procedure = procedure.top_k(top_k);
+    }
+    if let Some(top_n) = optional_usize(call, "topN", &["top_n"])? {
+        procedure = procedure.top_n(top_n);
+    }
+    if let Some(concurrency) = optional_usize(call, "concurrency", &[])? {
+        procedure = procedure.concurrency(concurrency);
+    }
+    if let Some(property) = optional_str(call, "weightProperty", &["weight_property"])? {
+        procedure = procedure.weight_property(property.to_string());
+    }
+    if let Some(labels) = optional_string_or_array(
+        call,
+        "sourceNodeLabels",
+        &["sourceNodeLabel", "source_node_labels", "source_node_label"],
+    )? {
+        procedure = procedure.source_labels(labels.into_iter().map(NodeLabel::of).collect());
+    }
+    if let Some(labels) = optional_string_or_array(
+        call,
+        "targetNodeLabels",
+        &["targetNodeLabel", "target_node_labels", "target_node_label"],
+    )? {
+        procedure = procedure.target_labels(labels.into_iter().map(NodeLabel::of).collect());
+    }
+    Ok(procedure)
+}
+
+fn configure_node_similarity(
+    mut procedure: NodeSimilarityFacade,
+    call: &ShellComponentCall,
+) -> Result<NodeSimilarityFacade, ShellProcedureError> {
+    if let Some(cutoff) = optional_f64(call, "similarityCutoff", &["similarity_cutoff"])? {
+        procedure = procedure.similarity_cutoff(cutoff);
+    }
+    if let Some(top_k) = optional_usize(call, "topK", &["top_k"])? {
+        procedure = procedure.top_k(top_k);
+    }
+    if let Some(top_n) = optional_usize(call, "topN", &["top_n"])? {
+        procedure = procedure.top_n(top_n);
+    }
+    if let Some(concurrency) = optional_usize(call, "concurrency", &[])? {
+        procedure = procedure.concurrency(concurrency);
+    }
+    if let Some(property) = optional_str(call, "weightProperty", &["weight_property"])? {
+        procedure = procedure.weight_property(property.to_string());
+    }
+    Ok(procedure)
+}
+
+fn parse_knn_metric(
+    value: &str,
+    input: &'static str,
+) -> Result<SimilarityMetric, ShellProcedureError> {
+    match value.to_ascii_uppercase().as_str() {
+        "DEFAULT" => Ok(SimilarityMetric::Default),
+        "COSINE" => Ok(SimilarityMetric::Cosine),
+        "EUCLIDEAN" => Ok(SimilarityMetric::Euclidean),
+        "PEARSON" => Ok(SimilarityMetric::Pearson),
+        "JACCARD" => Ok(SimilarityMetric::Jaccard),
+        "OVERLAP" => Ok(SimilarityMetric::Overlap),
+        _ => Err(ShellProcedureError::InvalidInput {
+            input,
+            expected: "DEFAULT, COSINE, EUCLIDEAN, PEARSON, JACCARD, or OVERLAP",
+        }),
+    }
+}
+
+fn parse_knn_sampler(value: &str) -> Result<KnnSamplerType, ShellProcedureError> {
+    match value.to_ascii_uppercase().as_str() {
+        "UNIFORM" => Ok(KnnSamplerType::Uniform),
+        "RANDOMWALK" => Ok(KnnSamplerType::RandomWalk),
+        _ => Err(ShellProcedureError::InvalidInput {
+            input: "initialSampler",
+            expected: "UNIFORM or RANDOMWALK",
+        }),
+    }
+}
+
+fn parse_node_similarity_metric(value: &str) -> Result<NodeSimilarityMetric, ShellProcedureError> {
+    match value.to_ascii_uppercase().as_str() {
+        "JACCARD" => Ok(NodeSimilarityMetric::Jaccard),
+        "COSINE" => Ok(NodeSimilarityMetric::Cosine),
+        "OVERLAP" => Ok(NodeSimilarityMetric::Overlap),
+        _ => Err(ShellProcedureError::InvalidInput {
+            input: "similarityMetric",
+            expected: "JACCARD, COSINE, or OVERLAP",
+        }),
+    }
 }
 
 fn bind_hits(

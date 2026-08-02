@@ -221,6 +221,39 @@ fn test_dijkstra_config_accepts_java_aliases() {
 }
 
 #[test]
+fn test_dijkstra_algorithm_spec_parses_and_validates_config() {
+    let spec = DIJKSTRAAlgorithmSpec::new("test_graph".to_string());
+
+    let parsed = spec
+        .parse_config(&json!({
+            "sourceNode": 0,
+            "targetNodes": [5],
+            "trackRelationships": true,
+            "concurrency": 4,
+            "useHeuristic": false
+        }))
+        .unwrap();
+    let config: DijkstraConfig = serde_json::from_value(parsed).unwrap();
+    assert_eq!(config.source_node, node(0));
+    assert_eq!(config.target_nodes, vec![node(5)]);
+    assert_eq!(config.weight_property, "weight");
+    assert!(config.relationship_types.is_empty());
+    assert_eq!(config.direction, "outgoing");
+
+    let error = spec
+        .parse_config(&json!({
+            "sourceNode": 0,
+            "targetNodes": [5],
+            "trackRelationships": false,
+            "concurrency": 4,
+            "useHeuristic": false,
+            "direction": "sideways"
+        }))
+        .unwrap_err();
+    assert!(error.to_string().contains("direction"));
+}
+
+#[test]
 fn test_dijkstra_algorithm_completeness() {
     let spec = DIJKSTRAAlgorithmSpec::new("test_graph".to_string());
 

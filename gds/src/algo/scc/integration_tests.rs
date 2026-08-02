@@ -7,8 +7,11 @@ mod tests {
     use std::collections::HashMap;
     use std::sync::Arc;
 
+    use crate::algo::scc::SCCAlgorithmSpec;
+    use crate::algo::scc::SccConfig;
     use crate::config::GraphStoreConfig;
     use crate::procedures::GraphFacade;
+    use crate::projection::eval::algorithm::AlgorithmSpec;
     use crate::projection::RelationshipType;
     use crate::types::graph::MappedNodeId;
     use crate::types::graph::OriginalNodeId;
@@ -19,9 +22,22 @@ mod tests {
         GraphStore,
     };
     use crate::types::schema::{Direction, MutableGraphSchema};
+    use serde_json::json;
 
     fn node(value: u64) -> MappedNodeId {
         MappedNodeId::new(value)
+    }
+
+    #[test]
+    fn scc_algorithm_spec_parses_and_validates_config() {
+        let spec = SCCAlgorithmSpec::new("test_graph".to_string());
+
+        let parsed = spec.parse_config(&json!({})).unwrap();
+        let config: SccConfig = serde_json::from_value(parsed).unwrap();
+        assert_eq!(config.concurrency, 4);
+
+        let error = spec.parse_config(&json!({ "concurrency": 0 })).unwrap_err();
+        assert!(error.to_string().contains("concurrency"));
     }
 
     fn store_from_outgoing(outgoing: Vec<Vec<MappedNodeId>>) -> DefaultGraphStore {

@@ -7,18 +7,45 @@ mod tests {
     use std::collections::HashMap;
     use std::sync::Arc;
 
+    use crate::algo::louvain::LOUVAINAlgorithmSpec;
+    use crate::algo::louvain::LouvainConfig;
     use crate::config::GraphStoreConfig;
     use crate::procedures::GraphFacade;
+    use crate::projection::eval::algorithm::AlgorithmSpec;
     use crate::projection::RelationshipType;
     use crate::task::concurrency::TerminationFlag;
     use crate::task::progress::{TaskProgressTracker, Tasks};
-    use crate::types::graph::RelationshipTopology;
     use crate::types::graph::MappedNodeId;
+    use crate::types::graph::RelationshipTopology;
     use crate::types::graph::SimpleIdMap;
     use crate::types::graph_store::{
         Capabilities, DatabaseId, DatabaseInfo, DatabaseLocation, DefaultGraphStore, GraphName,
     };
     use crate::types::schema::{Direction, MutableGraphSchema};
+    use serde_json::json;
+
+    #[test]
+    fn louvain_algorithm_spec_parses_and_validates_config() {
+        let spec = LOUVAINAlgorithmSpec::new("test_graph".to_string());
+
+        let parsed = spec
+            .parse_config(&json!({
+                "maxIterations": 20,
+                "maxLevels": 5,
+                "includeIntermediateCommunities": true,
+                "seedProperty": "seed"
+            }))
+            .unwrap();
+        let config: LouvainConfig = serde_json::from_value(parsed).unwrap();
+        assert_eq!(config.concurrency, 4);
+        assert_eq!(config.max_iterations, 20);
+        assert_eq!(config.max_levels, 5);
+        assert!(config.include_intermediate_communities);
+        assert_eq!(config.seed_property.as_deref(), Some("seed"));
+
+        let error = spec.parse_config(&json!({ "theta": 2.0 })).unwrap_err();
+        assert!(error.to_string().contains("theta"));
+    }
 
     fn node(value: u64) -> MappedNodeId {
         MappedNodeId::new(value)

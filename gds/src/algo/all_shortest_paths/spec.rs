@@ -222,6 +222,7 @@ impl AllShortestPathsResultBuilder {
 define_algorithm_spec! {
     name: "all_shortest_paths",
     output_type: AllShortestPathsResult,
+    config_type: AllShortestPathsConfig,
     projection_hint: Dense,
     modes: [Stream, Stats],
 

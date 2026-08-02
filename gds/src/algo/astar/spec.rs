@@ -9,11 +9,11 @@ use crate::algo::algorithms::pathfinding::{
 };
 use crate::algo::algorithms::{ExecutionMetadata, ResultBuilder};
 use crate::config::validation::ConfigError;
-use crate::task::progress::TaskProgressTracker;
 use crate::define_algorithm_spec;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::relationship_type::RelationshipType;
 use crate::projection::Orientation;
+use crate::task::progress::TaskProgressTracker;
 use crate::types::graph::MappedNodeId;
 use serde::{Deserialize, Serialize};
 use std::collections::{HashMap, HashSet};
@@ -264,11 +264,7 @@ fn spec_path_to_core(
     target: MappedNodeId,
     cost: f64,
 ) -> PathResult {
-    let path_ids = path
-        .iter()
-        .copied()
-        .map(checked_u64)
-        .collect();
+    let path_ids = path.iter().copied().map(checked_u64).collect();
 
     PathResult {
         source: checked_u64(source),
@@ -378,6 +374,7 @@ impl AStarResultBuilder {
 define_algorithm_spec! {
     name: "astar",
     output_type: AStarResult,
+    config_type: AStarConfig,
     projection_hint: Dense,
     modes: [Stream, WriteNodeProperty],
 

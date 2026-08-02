@@ -1,16 +1,16 @@
 //! Betweenness Centrality specification
 
 use crate::algo::betweenness::BetweennessCentralityComputationRuntime;
-use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::config::config_trait::ValidatedConfig;
 use crate::config::validation::ConfigError;
+use crate::define_algorithm_spec;
+use crate::projection::eval::algorithm::AlgorithmError;
+use crate::projection::Orientation;
+use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::task::progress::LeafTask;
 use crate::task::progress::ProgressTracker;
 use crate::task::progress::TaskProgressTracker;
 use crate::task::progress::Tasks;
-use crate::define_algorithm_spec;
-use crate::projection::eval::algorithm::AlgorithmError;
-use crate::projection::Orientation;
 use std::sync::Arc;
 use std::time::{Duration, Instant};
 
@@ -271,6 +271,7 @@ pub fn betweenness_progress_task(source_count: usize) -> LeafTask {
 define_algorithm_spec! {
     name: "betweenness",
     output_type: BetweennessCentralityResult,
+    config_type: BetweennessCentralityConfig,
     projection_hint: Dense,
     modes: [Stream, Stats],
 

@@ -60,6 +60,37 @@ fn test_bellman_ford_config_validation() {
 }
 
 #[test]
+fn test_bellman_ford_algorithm_spec_parses_and_validates_config() {
+    let spec = BELLMAN_FORDAlgorithmSpec::new("test_graph".to_string());
+
+    let parsed = spec
+        .parse_config(&json!({
+            "sourceNode": 2,
+            "trackNegativeCycles": true,
+            "trackPaths": false,
+            "concurrency": 3
+        }))
+        .unwrap();
+    let config: BellmanFordConfig = serde_json::from_value(parsed).unwrap();
+    assert_eq!(config.source_node, mapped_node_id(2));
+    assert!(config.track_negative_cycles);
+    assert!(!config.track_paths);
+    assert!(config.relationship_types.is_empty());
+    assert_eq!(config.direction, "outgoing");
+
+    let error = spec
+        .parse_config(&json!({
+            "sourceNode": 2,
+            "trackNegativeCycles": true,
+            "trackPaths": false,
+            "concurrency": 3,
+            "direction": "both"
+        }))
+        .unwrap_err();
+    assert!(error.to_string().contains("direction"));
+}
+
+#[test]
 fn test_bellman_ford_execution_modes() {
     let spec = BELLMAN_FORDAlgorithmSpec::new("test_graph".to_string());
 

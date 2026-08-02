@@ -25,13 +25,13 @@ An algorithm is certified only when all applicable gates pass:
 
 | Algorithm          | Request progress                                    | Request termination                                                             | Focused correctness   | Status              |
 | ------------------ | --------------------------------------------------- | ------------------------------------------------------------------------------- | --------------------- | ------------------- |
-| Yen's              | Propagated through application, facade, and storage | Checked before work, per solution, parallel spur execution, and Dijkstra        | 54 focused tests pass | Complete 2026-08-01 |
-| Dijkstra           | Propagated through application, facade, and storage | Checked before work and during queue processing                                 | 73 focused tests pass | Complete 2026-08-01 |
-| A\*                | Propagated through application, facade, and storage | Checked before coordinate/search work and during delegated Dijkstra             | 60 focused tests pass | Complete 2026-08-01 |
+| Yen's              | Propagated through application, facade, and storage | Checked before work, per solution, parallel spur execution, and Dijkstra        | 55 focused tests pass | Complete 2026-08-01 |
+| Dijkstra           | Propagated through application, facade, and storage | Checked before work and during queue processing                                 | 74 focused tests pass | Complete 2026-08-01 |
+| A\*                | Propagated through application, facade, and storage | Checked before coordinate/search work and during delegated Dijkstra             | 61 focused tests pass | Complete 2026-08-01 |
 | BFS                | Propagated through application, facade, and storage | Checked before work, per queue iteration, frontier, and parallel chunk          | 60 focused tests pass | Complete 2026-08-01 |
-| DFS                | Propagated through application, facade, and storage | Checked before work and per stack iteration                                     | 60 focused tests pass | Complete 2026-08-01 |
-| Bellman-Ford       | Propagated through application, facade, and storage | Checked before work, per frontier, parallel chunk, node, and relationship       | 39 focused tests pass | Complete 2026-08-01 |
-| Delta-Stepping     | Propagated through application, facade, and storage | Checked before work, per bin/frontier, parallel chunk, node, and relationship   | 45 focused tests pass | Complete 2026-08-01 |
+| DFS                | Propagated through application, facade, and storage | Checked before work and per stack iteration                                     | 61 focused tests pass | Complete 2026-08-01 |
+| Bellman-Ford       | Propagated through application, facade, and storage | Checked before work, per frontier, parallel chunk, node, and relationship       | 40 focused tests pass | Complete 2026-08-01 |
+| Delta-Stepping     | Propagated through application, facade, and storage | Checked before work, per bin/frontier, parallel chunk, node, and relationship   | 46 focused tests pass | Complete 2026-08-01 |
 | All Shortest Paths | Propagated through application, facade, and storage | Checked before work, per MSBFS batch/callback, worker, queue, and relationship  | 22 focused tests pass | Complete 2026-08-01 |
 | Topological Sort   | Propagated through application, facade, and storage | Checked during graph scan, in-degree setup, ready queues, workers, and results  | 17 focused tests pass | Complete 2026-08-01 |
 | DAG Longest Path   | Propagated through application, facade, and storage | Checked during graph scan, queues, edge updates, results, and path backtracking | 15 focused tests pass | Complete 2026-08-01 |
@@ -68,9 +68,57 @@ specs deserialize, apply defaults and aliases, call the typed `validate()` metho
 and return structured `ConfigError` values before execution. Legacy invocations
 remain source-compatible and retain pass-through parsing until migrated.
 
-BFS is the first certified adoption. Its generated spec accepts Java aliases and
-defaults while rejecting invalid concurrency through the shared macro contract.
-Further adoptions are per-spec correctness work rather than shared macro work.
+BFS and DFS are the first certified family adoption. Their generated specs accept
+Java aliases and defaults while rejecting invalid concurrency through the shared
+macro contract. Further adoptions are per-spec correctness work rather than
+shared macro work.
+
+Dijkstra, A\*, Yen's, Bellman-Ford, and Delta-Stepping form the certified
+weighted-path adoption. Their generated specs preserve required execution
+fields, normalize declared defaults, and reject algorithm-specific invalid
+values before graph loading. Yen's additionally enforces distinct source and
+target nodes, while Bellman-Ford now accepts the same Java field aliases as its
+neighboring path specs.
+
+All Shortest Paths completes typed-config adoption for the certified pathfinding
+specs. Its generated boundary now rejects invalid concurrency instead of retaining
+the legacy pass-through expectation. Spanning Tree begins the structural
+adoption with Java aliases, declared defaults, and validation enforced before
+graph loading.
+
+SCC and WCC extend structural adoption to the component family, with 9 and 7
+focused tests respectively. SCC normalizes its concurrency default and rejects
+zero concurrency; WCC additionally normalizes Java aliases for batch size and
+seed property while rejecting an invalid zero batch size.
+
+Degree Centrality and HITS begin typed-config adoption for centrality specs, with
+16 and 13 focused tests respectively. Degree Centrality validates orientation and
+relationship-weight aliases; HITS validates iteration/property aliases and keeps
+hub and authority output properties distinct. The historical Local Clustering
+Coefficient inventory entry has no current algorithm module to migrate.
+
+Triangle, K-Core, and K1-Coloring extend structural typed-config adoption, with
+focused filters passing 11, 7, and 11 tests respectively. Triangle normalizes its
+`maxDegree` control, K-Core validates its concurrency-only contract, and
+K1-Coloring normalizes canonical camelCase iteration and batch-size fields. The
+Triangle filter also matches neighboring tests whose names contain `triangle`.
+
+Articulation Points and Bridges complete typed-config adoption for the current
+cut-structure pair, with both focused filters passing 13 tests. Their generated
+boundaries normalize the shared concurrency default and reject zero concurrency
+before graph projection work.
+
+PageRank, Betweenness, Closeness, and Harmonic complete typed-config adoption for
+the current centrality specs, with focused filters passing 27, 24, 15, and 15
+tests respectively. Their generated boundaries mediate damping, sampling,
+Wasserman-Faust, direction, weighting, and concurrency controls through typed
+defaults and algorithm-specific validation before graph projection work.
+
+Label Propagation, Louvain, and Leiden begin community typed-config adoption,
+with focused filters passing 10, 15, and 16 tests respectively. Their generated
+boundaries normalize Java-shaped iteration, property, intermediate-community,
+random-seed, and seed-community fields while rejecting invalid scalar controls.
+Leiden retains graph-dependent seed-vector length validation after graph loading.
 
 ## Historical Inventory
 

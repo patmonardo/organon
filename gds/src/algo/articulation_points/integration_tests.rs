@@ -5,14 +5,30 @@ mod tests {
     use std::collections::HashMap;
     use std::sync::Arc;
 
+    use crate::algo::articulation_points::ARTICULATION_POINTSAlgorithmSpec;
+    use crate::algo::articulation_points::ArticulationPointsConfig;
     use crate::config::GraphStoreConfig;
     use crate::procedures::GraphFacade;
+    use crate::projection::eval::algorithm::AlgorithmSpec;
     use crate::projection::RelationshipType;
     use crate::types::graph::{MappedNodeId, RelationshipTopology, SimpleIdMap};
     use crate::types::graph_store::{
         Capabilities, DatabaseId, DatabaseInfo, DatabaseLocation, DefaultGraphStore, GraphName,
     };
     use crate::types::schema::{Direction, MutableGraphSchema};
+    use serde_json::json;
+
+    #[test]
+    fn articulation_points_algorithm_spec_parses_and_validates_config() {
+        let spec = ARTICULATION_POINTSAlgorithmSpec::new("test_graph".to_string());
+
+        let parsed = spec.parse_config(&json!({})).unwrap();
+        let config: ArticulationPointsConfig = serde_json::from_value(parsed).unwrap();
+        assert_eq!(config.concurrency, 4);
+
+        let error = spec.parse_config(&json!({ "concurrency": 0 })).unwrap_err();
+        assert!(error.to_string().contains("concurrency"));
+    }
 
     fn store_from_undirected_edges(
         node_count: usize,

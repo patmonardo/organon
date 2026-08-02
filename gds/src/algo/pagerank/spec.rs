@@ -1,13 +1,13 @@
 //! PageRank algorithm specification (executor integration)
 
 use crate::collections::backends::vec::VecDouble;
-use crate::task::concurrency::Concurrency;
 use crate::config::validation::ConfigError;
-use crate::task::progress::{LeafTask, ProgressTracker, TaskProgressTracker, Tasks};
 use crate::define_algorithm_spec;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::NodeLabel;
 use crate::projection::Orientation;
+use crate::task::concurrency::Concurrency;
+use crate::task::progress::{LeafTask, ProgressTracker, TaskProgressTracker, Tasks};
 use crate::types::properties::node::{DefaultDoubleNodePropertyValues, NodePropertyValues};
 use std::collections::HashSet;
 use std::sync::Arc;
@@ -279,6 +279,7 @@ pub fn pagerank_progress_task(max_iterations: usize) -> LeafTask {
 define_algorithm_spec! {
     name: "pagerank",
     output_type: PageRankResult,
+    config_type: PageRankConfig,
     projection_hint: VertexCentric,
     modes: [Stream, Stats, MutateNodeProperty],
 

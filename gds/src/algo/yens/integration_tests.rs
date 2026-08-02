@@ -51,6 +51,38 @@ mod tests {
     }
 
     #[test]
+    fn test_yens_algorithm_spec_parses_and_validates_config() {
+        let spec = YENSAlgorithmSpec::new("test_graph".to_string());
+
+        let parsed = spec
+            .parse_config(&json!({
+                "sourceNode": 2,
+                "targetNode": 7,
+                "k": 4,
+                "trackRelationships": true,
+                "concurrency": 3
+            }))
+            .unwrap();
+        let config: YensConfig = serde_json::from_value(parsed).unwrap();
+        assert_eq!(config.source_node, node(2));
+        assert_eq!(config.target_node, node(7));
+        assert_eq!(config.weight_property, "weight");
+        assert!(config.relationship_types.is_empty());
+        assert_eq!(config.direction, "outgoing");
+
+        let error = spec
+            .parse_config(&json!({
+                "sourceNode": 2,
+                "targetNode": 2,
+                "k": 4,
+                "trackRelationships": true,
+                "concurrency": 3
+            }))
+            .unwrap_err();
+        assert!(error.to_string().contains("sourceNode"));
+    }
+
+    #[test]
     fn test_yens_storage_runtime() {
         let storage = YensStorageRuntime::new(node(0), node(3), 5, true, 4);
         assert_eq!(storage.source_node, node(0));

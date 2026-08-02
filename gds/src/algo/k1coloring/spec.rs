@@ -2,17 +2,17 @@
 
 use crate::algo::k1coloring::K1ColoringComputationRuntime;
 use crate::algo::k1coloring::K1ColoringStorageRuntime;
-use crate::task::concurrency::Concurrency;
-use crate::task::concurrency::TerminationFlag;
 use crate::config::validation::ConfigError;
 use crate::core::utils::partition::DEFAULT_BATCH_SIZE;
+use crate::define_algorithm_spec;
+use crate::projection::eval::algorithm::AlgorithmError;
+use crate::task::concurrency::Concurrency;
+use crate::task::concurrency::TerminationFlag;
 use crate::task::progress::EmptyTaskRegistryFactory;
 use crate::task::progress::JobId;
 use crate::task::progress::Task;
 use crate::task::progress::TaskProgressTracker;
 use crate::task::progress::Tasks;
-use crate::define_algorithm_spec;
-use crate::projection::eval::algorithm::AlgorithmError;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use std::time::{Duration, Instant};
@@ -180,6 +180,7 @@ impl K1ColoringResultBuilder {
 define_algorithm_spec! {
     name: "k1coloring",
     output_type: K1ColoringResult,
+    config_type: K1ColoringConfig,
     projection_hint: Dense,
     modes: [Stream, Stats, MutateNodeProperty, WriteNodeProperty],
 

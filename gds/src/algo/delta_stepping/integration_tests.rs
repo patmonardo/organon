@@ -83,6 +83,36 @@ fn test_delta_stepping_java_config_aliases() {
 }
 
 #[test]
+fn test_delta_stepping_algorithm_spec_parses_and_validates_config() {
+    let spec = DELTA_STEPPINGAlgorithmSpec::new("test_graph".to_string());
+
+    let parsed = spec
+        .parse_config(&json!({
+            "sourceNode": 4,
+            "delta": 3.0,
+            "concurrency": 2,
+            "storePredecessors": false
+        }))
+        .unwrap();
+    let config: DeltaSteppingConfig = serde_json::from_value(parsed).unwrap();
+    assert_eq!(config.source_node, mapped_node_id(4));
+    assert_eq!(config.weight_property, "weight");
+    assert!(!config.store_predecessors);
+    assert!(config.relationship_types.is_empty());
+    assert_eq!(config.direction, "outgoing");
+
+    let error = spec
+        .parse_config(&json!({
+            "sourceNode": 4,
+            "delta": 0.0,
+            "concurrency": 2,
+            "storePredecessors": false
+        }))
+        .unwrap_err();
+    assert!(error.to_string().contains("delta"));
+}
+
+#[test]
 fn test_delta_stepping_blank_weight_property_rejected() {
     let config: DeltaSteppingConfig = serde_json::from_value(json!({
         "sourceNode": 0,

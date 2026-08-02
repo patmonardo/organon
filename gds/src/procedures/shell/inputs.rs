@@ -4,6 +4,11 @@ use serde_json::Value;
 
 use super::ShellProcedureError;
 
+pub(super) struct PropertyMetricInput {
+    pub name: String,
+    pub metric: Option<String>,
+}
+
 pub(super) fn output_property(
     call: &ShellComponentCall,
 ) -> Result<Option<String>, ShellProcedureError> {
@@ -175,6 +180,135 @@ pub(super) fn optional_string_array(
                     input: name,
                     expected: "an array of strings",
                 })
+        })
+        .collect::<Result<Vec<_>, _>>()
+        .map(Some)
+}
+
+pub(super) fn optional_string_or_array(
+    call: &ShellComponentCall,
+    name: &'static str,
+    aliases: &[&str],
+) -> Result<Option<Vec<String>>, ShellProcedureError> {
+    let Some(value) = find_named_input(call, name, aliases) else {
+        return Ok(None);
+    };
+    if let Some(value) = value.as_str() {
+        return if value.is_empty() {
+            Err(ShellProcedureError::InvalidInput {
+                input: name,
+                expected: "a non-empty string or an array of non-empty strings",
+            })
+        } else {
+            Ok(Some(vec![value.to_string()]))
+        };
+    }
+    let values = value.as_array().ok_or(ShellProcedureError::InvalidInput {
+        input: name,
+        expected: "a non-empty string or an array of non-empty strings",
+    })?;
+    values
+        .iter()
+        .map(|value| {
+            value
+                .as_str()
+                .filter(|value| !value.is_empty())
+                .map(str::to_string)
+                .ok_or(ShellProcedureError::InvalidInput {
+                    input: name,
+                    expected: "a non-empty string or an array of non-empty strings",
+                })
+        })
+        .collect::<Result<Vec<_>, _>>()
+        .map(Some)
+}
+
+pub(super) fn required_property_metrics(
+    call: &ShellComponentCall,
+    name: &'static str,
+    aliases: &[&str],
+) -> Result<Vec<PropertyMetricInput>, ShellProcedureError> {
+    let value =
+        find_named_input(call, name, aliases).ok_or(ShellProcedureError::MissingInput(name))?;
+    let values = value.as_array().ok_or(ShellProcedureError::InvalidInput {
+        input: name,
+        expected: "a non-empty array of property names or {name, metric} objects",
+    })?;
+    if values.is_empty() {
+        return Err(ShellProcedureError::InvalidInput {
+            input: name,
+            expected: "a non-empty array of property names or {name, metric} objects",
+        });
+    }
+    values
+        .iter()
+        .map(|value| {
+            if let Some(property) = value.as_str().filter(|value| !value.is_empty()) {
+                return Ok(PropertyMetricInput {
+                    name: property.to_string(),
+                    metric: None,
+                });
+            }
+            let object = value.as_object().ok_or(ShellProcedureError::InvalidInput {
+                input: name,
+                expected: "a non-empty array of property names or {name, metric} objects",
+            })?;
+            let property = object
+                .get("name")
+                .and_then(Value::as_str)
+                .filter(|value| !value.is_empty())
+                .ok_or(ShellProcedureError::InvalidInput {
+                    input: name,
+                    expected: "a non-empty array of property names or {name, metric} objects",
+                })?;
+            let metric = object
+                .get("metric")
+                .map(|value| {
+                    value
+                        .as_str()
+                        .map(str::to_string)
+                        .ok_or(ShellProcedureError::InvalidInput {
+                            input: name,
+                            expected:
+                                "a non-empty array of property names or {name, metric} objects",
+                        })
+                })
+                .transpose()?;
+            Ok(PropertyMetricInput {
+                name: property.to_string(),
+                metric,
+            })
+        })
+        .collect()
+}
+
+pub(super) fn optional_f64_matrix(
+    call: &ShellComponentCall,
+    name: &'static str,
+    aliases: &[&str],
+) -> Result<Option<Vec<Vec<f64>>>, ShellProcedureError> {
+    let Some(value) = find_named_input(call, name, aliases) else {
+        return Ok(None);
+    };
+    let rows = value.as_array().ok_or(ShellProcedureError::InvalidInput {
+        input: name,
+        expected: "an array of numeric arrays",
+    })?;
+    rows.iter()
+        .map(|row| {
+            let values = row.as_array().ok_or(ShellProcedureError::InvalidInput {
+                input: name,
+                expected: "an array of numeric arrays",
+            })?;
+            values
+                .iter()
+                .map(|value| {
+                    value.as_f64().ok_or(ShellProcedureError::InvalidInput {
+                        input: name,
+                        expected: "an array of numeric arrays",
+                    })
+                })
+                .collect::<Result<Vec<_>, _>>()
         })
         .collect::<Result<Vec<_>, _>>()
         .map(Some)

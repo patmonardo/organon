@@ -3,12 +3,12 @@
 use crate::algo::hits::HitsComputationRuntime;
 use crate::algo::hits::HitsStorageRuntime;
 use crate::collections::backends::vec::VecDouble;
-use crate::task::concurrency::Concurrency;
 use crate::config::validation::ConfigError;
-use crate::task::progress::{LeafTask, ProgressTracker, TaskProgressTracker, Tasks};
 use crate::define_algorithm_spec;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::NodeLabel;
+use crate::task::concurrency::Concurrency;
+use crate::task::progress::{LeafTask, ProgressTracker, TaskProgressTracker, Tasks};
 use crate::types::properties::node::{DefaultDoubleNodePropertyValues, NodePropertyValues};
 use std::collections::HashSet;
 use std::sync::Arc;
@@ -191,6 +191,7 @@ pub fn hits_progress_task(_node_count: usize, max_iterations: usize) -> LeafTask
 define_algorithm_spec! {
     name: "hits",
     output_type: HitsResult,
+    config_type: HitsConfig,
     projection_hint: Dense,
     modes: [Stream, Stats, MutateNodeProperty],
 

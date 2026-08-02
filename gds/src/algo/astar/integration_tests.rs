@@ -83,6 +83,39 @@ fn test_astar_java_config_aliases() {
 }
 
 #[test]
+fn test_astar_algorithm_spec_parses_and_validates_config() {
+    let spec = ASTARAlgorithmSpec::new("test_graph".to_string());
+
+    let parsed = spec
+        .parse_config(&json!({
+            "sourceNode": 3,
+            "targetNode": 6,
+            "latitudeProperty": "lat",
+            "longitudeProperty": "lon",
+            "concurrency": 4
+        }))
+        .unwrap();
+    let config: AStarConfig = serde_json::from_value(parsed).unwrap();
+    assert_eq!(config.source_node, node(3));
+    assert_eq!(config.target_node, node(6));
+    assert_eq!(config.weight_property, "weight");
+    assert!(config.relationship_types.is_empty());
+    assert_eq!(config.direction, "outgoing");
+
+    let error = spec
+        .parse_config(&json!({
+            "sourceNode": 3,
+            "targetNode": 6,
+            "latitudeProperty": "lat",
+            "longitudeProperty": "lon",
+            "concurrency": 4,
+            "direction": "both"
+        }))
+        .unwrap_err();
+    assert!(error.to_string().contains("direction"));
+}
+
+#[test]
 fn test_astar_blank_weight_property_rejected() {
     let config: AStarConfig = serde_json::from_value(json!({
         "sourceNode": 0,

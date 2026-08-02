@@ -8,8 +8,11 @@ mod tests {
     use std::collections::HashMap;
     use std::sync::Arc;
 
+    use crate::algo::wcc::WCCAlgorithmSpec;
+    use crate::algo::wcc::WccConfig;
     use crate::config::GraphStoreConfig;
     use crate::procedures::GraphFacade;
+    use crate::projection::eval::algorithm::AlgorithmSpec;
     use crate::projection::RelationshipType;
     use crate::types::graph::MappedNodeId;
     use crate::types::graph::RelationshipTopology;
@@ -18,9 +21,33 @@ mod tests {
         Capabilities, DatabaseId, DatabaseInfo, DatabaseLocation, DefaultGraphStore, GraphName,
     };
     use crate::types::schema::{Direction, MutableGraphSchema};
+    use serde_json::json;
 
     fn node(value: u64) -> MappedNodeId {
         MappedNodeId::new(value)
+    }
+
+    #[test]
+    fn wcc_algorithm_spec_parses_and_validates_config() {
+        let spec = WCCAlgorithmSpec::new("test_graph".to_string());
+
+        let parsed = spec
+            .parse_config(&json!({
+                "minBatchSize": 32,
+                "threshold": 0.5,
+                "seedProperty": "seed"
+            }))
+            .unwrap();
+        let config: WccConfig = serde_json::from_value(parsed).unwrap();
+        assert_eq!(config.concurrency, 4);
+        assert_eq!(config.min_batch_size, 32);
+        assert_eq!(config.threshold, Some(0.5));
+        assert_eq!(config.seed_property.as_deref(), Some("seed"));
+
+        let error = spec
+            .parse_config(&json!({ "minBatchSize": 0 }))
+            .unwrap_err();
+        assert!(error.to_string().contains("min_batch_size"));
     }
 
     fn store_from_outgoing(outgoing: Vec<Vec<MappedNodeId>>) -> DefaultGraphStore {
@@ -77,12 +104,7 @@ mod tests {
     #[test]
     fn wcc_chain_is_single_component() {
         // 0 - 1 - 2 - 3
-        let store = store_from_outgoing(vec![
-            vec![node(1)],
-            vec![node(2)],
-            vec![node(3)],
-            vec![],
-        ]);
+        let store = store_from_outgoing(vec![vec![node(1)], vec![node(2)], vec![node(3)], vec![]]);
         let graph = GraphFacade::new(Arc::new(store));
 
         let result = graph.wcc().run().unwrap();

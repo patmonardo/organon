@@ -6,8 +6,11 @@ mod tests {
     use std::sync::Arc;
 
     use crate::algo::betweenness::storage::BetweennessCentralityStorageRuntime;
+    use crate::algo::betweenness::BETWEENNESSAlgorithmSpec;
+    use crate::algo::betweenness::BetweennessCentralityConfig;
     use crate::config::GraphStoreConfig;
     use crate::procedures::GraphFacade;
+    use crate::projection::eval::algorithm::AlgorithmSpec;
     use crate::projection::Orientation;
     use crate::projection::RelationshipType;
     use crate::types::graph::{MappedNodeId, RelationshipTopology, SimpleIdMap};
@@ -19,6 +22,33 @@ mod tests {
         DefaultRelationshipPropertyValues, RelationshipPropertyValues,
     };
     use crate::types::schema::{Direction, MutableGraphSchema};
+    use serde_json::json;
+
+    #[test]
+    fn betweenness_algorithm_spec_parses_and_validates_config() {
+        let spec = BETWEENNESSAlgorithmSpec::new("test_graph".to_string());
+
+        let parsed = spec
+            .parse_config(&json!({
+                "samplingStrategy": "random_degree",
+                "samplingSize": 3,
+                "randomSeed": 7,
+                "relationshipWeightProperty": "cost"
+            }))
+            .unwrap();
+        let config: BetweennessCentralityConfig = serde_json::from_value(parsed).unwrap();
+        assert_eq!(config.direction, "both");
+        assert_eq!(config.concurrency, 4);
+        assert_eq!(config.sampling_strategy, "random_degree");
+        assert_eq!(config.sampling_size, Some(3));
+        assert_eq!(config.random_seed, 7);
+        assert_eq!(config.relationship_weight_property.as_deref(), Some("cost"));
+
+        let error = spec
+            .parse_config(&json!({ "samplingStrategy": "bogus" }))
+            .unwrap_err();
+        assert!(error.to_string().contains("samplingStrategy"));
+    }
 
     fn store_from_undirected_edges(
         node_count: usize,

@@ -55,15 +55,40 @@ use crate::algo::hits::HitsCentralityMutateResult;
 use crate::algo::hits::HitsCentralityStats;
 use crate::algo::k1coloring::K1ColoringMutateResult;
 use crate::algo::k1coloring::K1ColoringStats;
+use crate::algo::kcore::KCoreMutateResult;
+use crate::algo::kcore::KCoreStats;
+use crate::algo::kmeans::KMeansMutateResult;
+use crate::algo::kmeans::KMeansStats;
 use crate::algo::kspanningtree::KSpanningTreeMutateResult;
 use crate::algo::kspanningtree::KSpanningTreeRow;
 use crate::algo::kspanningtree::KSpanningTreeStats;
+use crate::algo::label_propagation::spec::LabelPropMutateResult;
+use crate::algo::label_propagation::spec::LabelPropStats;
+use crate::algo::leiden::LeidenMutateResult;
+use crate::algo::leiden::LeidenStats;
+use crate::algo::louvain::LouvainMutateResult;
+use crate::algo::louvain::LouvainStats;
+use crate::algo::modularity::ModularityMutateResult;
+use crate::algo::modularity::ModularityStats;
 use crate::algo::pagerank::PageRankMutateResult;
 use crate::algo::pagerank::PageRankStats;
 use crate::algo::random_walk::RandomWalkMutateResult;
 use crate::algo::random_walk::RandomWalkRow;
 use crate::algo::random_walk::RandomWalkStats;
 use crate::algo::random_walk::RandomWalkWriteSummary;
+use crate::algo::scc::SccMutateResult;
+use crate::algo::scc::SccStats;
+use crate::algo::similarity::filtered_knn::FilteredKnnMutateResult;
+use crate::algo::similarity::filtered_knn::FilteredKnnResultRow;
+use crate::algo::similarity::filtered_knn::FilteredKnnStats;
+use crate::algo::similarity::filtered_node_similarity::FilteredNodeSimilarityMutateResult;
+use crate::algo::similarity::filtered_node_similarity::FilteredNodeSimilarityStats;
+use crate::algo::similarity::knn::KnnMutateResult;
+use crate::algo::similarity::knn::KnnResultRow;
+use crate::algo::similarity::knn::KnnStats;
+use crate::algo::similarity::node_similarity::NodeSimilarityMutateResult;
+use crate::algo::similarity::node_similarity::NodeSimilarityResult;
+use crate::algo::similarity::node_similarity::NodeSimilarityStats;
 use crate::algo::spanning_tree::SpanningTreeMutateResult;
 use crate::algo::spanning_tree::SpanningTreeRow;
 use crate::algo::spanning_tree::SpanningTreeStats;
@@ -75,6 +100,10 @@ use crate::algo::topological_sort::TopologicalSortMutateResult;
 use crate::algo::topological_sort::TopologicalSortRow;
 use crate::algo::topological_sort::TopologicalSortStats;
 use crate::algo::topological_sort::TopologicalSortWriteSummary;
+use crate::algo::triangle::TriangleMutateResult;
+use crate::algo::triangle::TriangleStats;
+use crate::algo::wcc::WccMutateResult;
+use crate::algo::wcc::WccStats;
 use crate::algo::yens::YensMutateResult;
 use crate::algo::yens::YensStats;
 use crate::algo::yens::YensWriteSummary;
@@ -93,6 +122,24 @@ use crate::procedures::community::ConductanceFacade;
 use crate::procedures::community::ConductanceRow;
 use crate::procedures::community::K1ColoringFacade;
 use crate::procedures::community::K1ColoringRow;
+use crate::procedures::community::KCoreFacade;
+use crate::procedures::community::KCoreRow;
+use crate::procedures::community::KMeansFacade;
+use crate::procedures::community::KMeansRow;
+use crate::procedures::community::LabelPropagationFacade;
+use crate::procedures::community::LabelPropagationRow;
+use crate::procedures::community::LeidenFacade;
+use crate::procedures::community::LeidenRow;
+use crate::procedures::community::LouvainFacade;
+use crate::procedures::community::LouvainRow;
+use crate::procedures::community::ModularityFacade;
+use crate::procedures::community::ModularityRow;
+use crate::procedures::community::SccFacade;
+use crate::procedures::community::SccRow;
+use crate::procedures::community::TriangleFacade;
+use crate::procedures::community::TriangleRow;
+use crate::procedures::community::WccFacade;
+use crate::procedures::community::WccRow;
 use crate::procedures::pathfinding::AStarBuilder;
 use crate::procedures::pathfinding::AllShortestPathsBuilder;
 use crate::procedures::pathfinding::AllShortestPathsRow;
@@ -113,6 +160,10 @@ use crate::procedures::pipelines::NodePipelineInfoResult;
 use crate::procedures::pipelines::PipelineCatalogResult;
 use crate::procedures::pipelines::PipelineExistsResult;
 use crate::procedures::pipelines::PipelineInfoResult;
+use crate::procedures::similarity::FilteredKnnFacade;
+use crate::procedures::similarity::FilteredNodeSimilarityFacade;
+use crate::procedures::similarity::KnnFacade;
+use crate::procedures::similarity::NodeSimilarityFacade;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::shell::builtin_component;
 use crate::shell::ShellComponentCall;
@@ -239,6 +290,84 @@ pub enum ShellProcedureBinding {
         procedure: K1ColoringFacade,
         output_property: Option<String>,
     },
+    KCore {
+        component: ShellComponentId,
+        mode: ShellComponentMode,
+        procedure: KCoreFacade,
+        output_property: Option<String>,
+    },
+    KMeans {
+        component: ShellComponentId,
+        mode: ShellComponentMode,
+        procedure: KMeansFacade,
+        output_property: Option<String>,
+    },
+    LabelPropagation {
+        component: ShellComponentId,
+        mode: ShellComponentMode,
+        procedure: LabelPropagationFacade,
+        output_property: Option<String>,
+    },
+    Leiden {
+        component: ShellComponentId,
+        mode: ShellComponentMode,
+        procedure: LeidenFacade,
+        output_property: Option<String>,
+    },
+    Louvain {
+        component: ShellComponentId,
+        mode: ShellComponentMode,
+        procedure: LouvainFacade,
+        output_property: Option<String>,
+    },
+    Modularity {
+        component: ShellComponentId,
+        mode: ShellComponentMode,
+        procedure: ModularityFacade,
+        output_property: Option<String>,
+    },
+    Scc {
+        component: ShellComponentId,
+        mode: ShellComponentMode,
+        procedure: SccFacade,
+        output_property: Option<String>,
+    },
+    Triangle {
+        component: ShellComponentId,
+        mode: ShellComponentMode,
+        procedure: TriangleFacade,
+        output_property: Option<String>,
+    },
+    Wcc {
+        component: ShellComponentId,
+        mode: ShellComponentMode,
+        procedure: WccFacade,
+        output_property: Option<String>,
+    },
+    Knn {
+        component: ShellComponentId,
+        mode: ShellComponentMode,
+        procedure: KnnFacade,
+        output_property: Option<String>,
+    },
+    FilteredKnn {
+        component: ShellComponentId,
+        mode: ShellComponentMode,
+        procedure: FilteredKnnFacade,
+        output_property: Option<String>,
+    },
+    NodeSimilarity {
+        component: ShellComponentId,
+        mode: ShellComponentMode,
+        procedure: NodeSimilarityFacade,
+        output_property: Option<String>,
+    },
+    FilteredNodeSimilarity {
+        component: ShellComponentId,
+        mode: ShellComponentMode,
+        procedure: FilteredNodeSimilarityFacade,
+        output_property: Option<String>,
+    },
     KSpanningTree {
         component: ShellComponentId,
         mode: ShellComponentMode,
@@ -311,6 +440,19 @@ impl ShellProcedureBinding {
             | Self::Harmonic { component, .. }
             | Self::Hits { component, .. }
             | Self::K1Coloring { component, .. }
+            | Self::KCore { component, .. }
+            | Self::KMeans { component, .. }
+            | Self::LabelPropagation { component, .. }
+            | Self::Leiden { component, .. }
+            | Self::Louvain { component, .. }
+            | Self::Modularity { component, .. }
+            | Self::Scc { component, .. }
+            | Self::Triangle { component, .. }
+            | Self::Wcc { component, .. }
+            | Self::Knn { component, .. }
+            | Self::FilteredKnn { component, .. }
+            | Self::NodeSimilarity { component, .. }
+            | Self::FilteredNodeSimilarity { component, .. }
             | Self::KSpanningTree { component, .. }
             | Self::PageRank { component, .. }
             | Self::RandomWalk { component, .. }
@@ -343,6 +485,19 @@ impl ShellProcedureBinding {
             | Self::Harmonic { mode, .. }
             | Self::Hits { mode, .. }
             | Self::K1Coloring { mode, .. }
+            | Self::KCore { mode, .. }
+            | Self::KMeans { mode, .. }
+            | Self::LabelPropagation { mode, .. }
+            | Self::Leiden { mode, .. }
+            | Self::Louvain { mode, .. }
+            | Self::Modularity { mode, .. }
+            | Self::Scc { mode, .. }
+            | Self::Triangle { mode, .. }
+            | Self::Wcc { mode, .. }
+            | Self::Knn { mode, .. }
+            | Self::FilteredKnn { mode, .. }
+            | Self::NodeSimilarity { mode, .. }
+            | Self::FilteredNodeSimilarity { mode, .. }
             | Self::KSpanningTree { mode, .. }
             | Self::PageRank { mode, .. }
             | Self::RandomWalk { mode, .. }
@@ -470,6 +625,84 @@ impl ShellProcedureBinding {
                 output_property,
                 ..
             } => algorithms::invoke_k1coloring(mode, procedure, output_property),
+            Self::KCore {
+                mode,
+                procedure,
+                output_property,
+                ..
+            } => algorithms::invoke_kcore(mode, procedure, output_property),
+            Self::KMeans {
+                mode,
+                procedure,
+                output_property,
+                ..
+            } => algorithms::invoke_kmeans(mode, procedure, output_property),
+            Self::LabelPropagation {
+                mode,
+                procedure,
+                output_property,
+                ..
+            } => algorithms::invoke_label_propagation(mode, procedure, output_property),
+            Self::Leiden {
+                mode,
+                procedure,
+                output_property,
+                ..
+            } => algorithms::invoke_leiden(mode, procedure, output_property),
+            Self::Louvain {
+                mode,
+                procedure,
+                output_property,
+                ..
+            } => algorithms::invoke_louvain(mode, procedure, output_property),
+            Self::Modularity {
+                mode,
+                procedure,
+                output_property,
+                ..
+            } => algorithms::invoke_modularity(mode, procedure, output_property),
+            Self::Scc {
+                mode,
+                procedure,
+                output_property,
+                ..
+            } => algorithms::invoke_scc(mode, procedure, output_property),
+            Self::Triangle {
+                mode,
+                procedure,
+                output_property,
+                ..
+            } => algorithms::invoke_triangle(mode, procedure, output_property),
+            Self::Wcc {
+                mode,
+                procedure,
+                output_property,
+                ..
+            } => algorithms::invoke_wcc(mode, procedure, output_property),
+            Self::Knn {
+                mode,
+                procedure,
+                output_property,
+                ..
+            } => algorithms::invoke_knn(mode, procedure, output_property),
+            Self::FilteredKnn {
+                mode,
+                procedure,
+                output_property,
+                ..
+            } => algorithms::invoke_filtered_knn(mode, procedure, output_property),
+            Self::NodeSimilarity {
+                mode,
+                procedure,
+                output_property,
+                ..
+            } => algorithms::invoke_node_similarity(mode, procedure, output_property),
+            Self::FilteredNodeSimilarity {
+                mode,
+                procedure,
+                output_property,
+                ..
+            } => algorithms::invoke_filtered_node_similarity(mode, procedure, output_property),
             Self::KSpanningTree {
                 mode,
                 procedure,
@@ -637,6 +870,71 @@ pub enum ShellProcedureResult {
     K1ColoringEstimate(MemoryRange),
     K1ColoringMutate(K1ColoringMutateResult),
     K1ColoringWrite(WriteResult),
+    KCoreStream(Vec<KCoreRow>),
+    KCoreStats(KCoreStats),
+    KCoreEstimate(MemoryRange),
+    KCoreMutate(KCoreMutateResult),
+    KCoreWrite(WriteResult),
+    KMeansStream(Vec<KMeansRow>),
+    KMeansStats(KMeansStats),
+    KMeansEstimate(MemoryRange),
+    KMeansMutate(KMeansMutateResult),
+    KMeansWrite(WriteResult),
+    LabelPropagationStream(Vec<LabelPropagationRow>),
+    LabelPropagationStats(LabelPropStats),
+    LabelPropagationEstimate(MemoryRange),
+    LabelPropagationMutate(LabelPropMutateResult),
+    LabelPropagationWrite(WriteResult),
+    LeidenStream(Vec<LeidenRow>),
+    LeidenStats(LeidenStats),
+    LeidenEstimate(MemoryRange),
+    LeidenMutate(LeidenMutateResult),
+    LeidenWrite(WriteResult),
+    LouvainStream(Vec<LouvainRow>),
+    LouvainStats(LouvainStats),
+    LouvainEstimate(MemoryRange),
+    LouvainMutate(LouvainMutateResult),
+    LouvainWrite(WriteResult),
+    ModularityStream(Vec<ModularityRow>),
+    ModularityStats(ModularityStats),
+    ModularityEstimate(MemoryRange),
+    ModularityMutate(ModularityMutateResult),
+    ModularityWrite(WriteResult),
+    SccStream(Vec<SccRow>),
+    SccStats(SccStats),
+    SccEstimate(MemoryRange),
+    SccMutate(SccMutateResult),
+    SccWrite(WriteResult),
+    TriangleStream(Vec<TriangleRow>),
+    TriangleStats(TriangleStats),
+    TriangleEstimate(MemoryRange),
+    TriangleMutate(TriangleMutateResult),
+    TriangleWrite(WriteResult),
+    WccStream(Vec<WccRow>),
+    WccStats(WccStats),
+    WccEstimate(MemoryRange),
+    WccMutate(WccMutateResult),
+    WccWrite(WriteResult),
+    KnnStream(Vec<KnnResultRow>),
+    KnnStats(KnnStats),
+    KnnEstimate(MemoryRange),
+    KnnMutate(KnnMutateResult),
+    KnnWrite(WriteResult),
+    FilteredKnnStream(Vec<FilteredKnnResultRow>),
+    FilteredKnnStats(FilteredKnnStats),
+    FilteredKnnEstimate(MemoryRange),
+    FilteredKnnMutate(FilteredKnnMutateResult),
+    FilteredKnnWrite(WriteResult),
+    NodeSimilarityStream(Vec<NodeSimilarityResult>),
+    NodeSimilarityStats(NodeSimilarityStats),
+    NodeSimilarityEstimate(MemoryRange),
+    NodeSimilarityMutate(NodeSimilarityMutateResult),
+    NodeSimilarityWrite(WriteResult),
+    FilteredNodeSimilarityStream(Vec<NodeSimilarityResult>),
+    FilteredNodeSimilarityStats(FilteredNodeSimilarityStats),
+    FilteredNodeSimilarityEstimate(MemoryRange),
+    FilteredNodeSimilarityMutate(FilteredNodeSimilarityMutateResult),
+    FilteredNodeSimilarityWrite(WriteResult),
     KSpanningTreeStream(Vec<KSpanningTreeRow>),
     KSpanningTreeStats(KSpanningTreeStats),
     KSpanningTreeEstimate(MemoryRange),
@@ -845,16 +1143,270 @@ mod tests {
     }
 
     #[test]
-    fn reports_algorithms_without_a_local_binding() {
+    fn binds_and_invokes_kcore_estimate_as_a_typed_procedure() {
         let call = builtin_component("kcore")
             .unwrap()
             .call(ShellComponentMode::Estimate)
-            .with_input("source", 0_u64);
+            .with_input("concurrency", 2_u64);
+
+        assert!(matches!(
+            graph().invoke_shell_component(&call).unwrap(),
+            ShellProcedureResult::KCoreEstimate(memory) if !memory.is_empty()
+        ));
+    }
+
+    #[test]
+    fn binds_and_invokes_kmeans_estimate_as_a_typed_procedure() {
+        let call = builtin_component("kmeans")
+            .unwrap()
+            .call(ShellComponentMode::Estimate)
+            .with_input("nodeProperty", "embedding")
+            .with_input("k", 3_u64)
+            .with_input("samplerType", "KMEANSPP")
+            .with_input("seedCentroids", serde_json::json!([[0.0, 1.0], [1.0, 0.0]]));
+
+        assert!(matches!(
+            graph().invoke_shell_component(&call).unwrap(),
+            ShellProcedureResult::KMeansEstimate(memory) if !memory.is_empty()
+        ));
+    }
+
+    #[test]
+    fn binds_and_invokes_label_propagation_estimate_as_a_typed_procedure() {
+        let call = builtin_component("label_propagation")
+            .unwrap()
+            .call(ShellComponentMode::Estimate)
+            .with_input("maxIterations", 20_u64)
+            .with_input("nodeWeightProperty", "weight")
+            .with_input("seedProperty", "seed")
+            .with_input("concurrency", 2_u64);
+
+        assert!(matches!(
+            graph().invoke_shell_component(&call).unwrap(),
+            ShellProcedureResult::LabelPropagationEstimate(memory) if !memory.is_empty()
+        ));
+    }
+
+    #[test]
+    fn binds_and_invokes_leiden_estimate_as_a_typed_procedure() {
+        let call = builtin_component("leiden")
+            .unwrap()
+            .call(ShellComponentMode::Estimate)
+            .with_input("gamma", 1.5_f64)
+            .with_input("theta", 0.02_f64)
+            .with_input("maxIterations", 20_u64)
+            .with_input("includeIntermediateCommunities", true)
+            .with_input("seedCommunities", vec![0_u64; 8]);
+
+        assert!(matches!(
+            graph().invoke_shell_component(&call).unwrap(),
+            ShellProcedureResult::LeidenEstimate(memory) if !memory.is_empty()
+        ));
+    }
+
+    #[test]
+    fn binds_and_invokes_louvain_estimate_as_a_typed_procedure() {
+        let call = builtin_component("louvain")
+            .unwrap()
+            .call(ShellComponentMode::Estimate)
+            .with_input("maxIterations", 20_u64)
+            .with_input("maxLevels", 5_u64)
+            .with_input("includeIntermediateCommunities", true)
+            .with_input("seedProperty", "seed");
+
+        assert!(matches!(
+            graph().invoke_shell_component(&call).unwrap(),
+            ShellProcedureResult::LouvainEstimate(memory) if !memory.is_empty()
+        ));
+    }
+
+    #[test]
+    fn binds_and_invokes_modularity_estimate_as_a_typed_procedure() {
+        let call = builtin_component("modularity")
+            .unwrap()
+            .call(ShellComponentMode::Estimate)
+            .with_input("communityProperty", "community")
+            .with_input("concurrency", 2_u64);
+
+        assert!(matches!(
+            graph().invoke_shell_component(&call).unwrap(),
+            ShellProcedureResult::ModularityEstimate(memory) if !memory.is_empty()
+        ));
+    }
+
+    #[test]
+    fn binds_and_invokes_scc_estimate_as_a_typed_procedure() {
+        let call = builtin_component("scc")
+            .unwrap()
+            .call(ShellComponentMode::Estimate)
+            .with_input("concurrency", 2_u64);
+
+        assert!(matches!(
+            graph().invoke_shell_component(&call).unwrap(),
+            ShellProcedureResult::SccEstimate(memory) if !memory.is_empty()
+        ));
+    }
+
+    #[test]
+    fn binds_and_invokes_triangle_estimate_as_a_typed_procedure() {
+        let call = builtin_component("triangle")
+            .unwrap()
+            .call(ShellComponentMode::Estimate)
+            .with_input("concurrency", 2_u64)
+            .with_input("maxDegree", 100_u64);
+
+        assert!(matches!(
+            graph().invoke_shell_component(&call).unwrap(),
+            ShellProcedureResult::TriangleEstimate(memory) if !memory.is_empty()
+        ));
+    }
+
+    #[test]
+    fn binds_and_invokes_wcc_estimate_as_a_typed_procedure() {
+        let call = builtin_component("wcc")
+            .unwrap()
+            .call(ShellComponentMode::Estimate)
+            .with_input("concurrency", 2_u64)
+            .with_input("minBatchSize", 10_u64)
+            .with_input("threshold", 0.5_f64)
+            .with_input("seedProperty", "seed");
+
+        assert!(matches!(
+            graph().invoke_shell_component(&call).unwrap(),
+            ShellProcedureResult::WccEstimate(memory) if !memory.is_empty()
+        ));
+    }
+
+    #[test]
+    fn binds_and_invokes_knn_estimate_as_a_typed_procedure() {
+        let call = builtin_component("knn")
+            .unwrap()
+            .call(ShellComponentMode::Estimate)
+            .with_input(
+                "nodeProperties",
+                serde_json::json!(["embedding", {"name": "score", "metric": "PEARSON"}]),
+            )
+            .with_input("similarityMetric", "COSINE")
+            .with_input("topK", 5_u64)
+            .with_input("sampledK", 3_u64)
+            .with_input("initialSampler", "RANDOMWALK");
+
+        assert!(matches!(
+            graph().invoke_shell_component(&call).unwrap(),
+            ShellProcedureResult::KnnEstimate(memory) if !memory.is_empty()
+        ));
+    }
+
+    #[test]
+    fn binds_and_invokes_filtered_knn_estimate_as_a_typed_procedure() {
+        let call = builtin_component("filtered_knn")
+            .unwrap()
+            .call(ShellComponentMode::Estimate)
+            .with_input("nodeProperties", serde_json::json!(["embedding"]))
+            .with_input("sourceNodeLabels", "Source")
+            .with_input("targetNodeLabels", vec!["Target"])
+            .with_input("topK", 5_u64);
+
+        assert!(matches!(
+            graph().invoke_shell_component(&call).unwrap(),
+            ShellProcedureResult::FilteredKnnEstimate(memory) if !memory.is_empty()
+        ));
+    }
+
+    #[test]
+    fn binds_and_invokes_node_similarity_estimate_as_a_typed_procedure() {
+        let call = builtin_component("node_similarity")
+            .unwrap()
+            .call(ShellComponentMode::Estimate)
+            .with_input("similarityMetric", "COSINE")
+            .with_input("similarityCutoff", 0.2_f64)
+            .with_input("topK", 5_u64)
+            .with_input("topN", 20_u64)
+            .with_input("weightProperty", "weight");
+
+        assert!(matches!(
+            graph().invoke_shell_component(&call).unwrap(),
+            ShellProcedureResult::NodeSimilarityEstimate(memory) if !memory.is_empty()
+        ));
+    }
+
+    #[test]
+    fn binds_and_invokes_filtered_node_similarity_estimate_as_a_typed_procedure() {
+        let call = builtin_component("filtered_node_similarity")
+            .unwrap()
+            .call(ShellComponentMode::Estimate)
+            .with_input("sourceNodeLabels", vec!["Source"])
+            .with_input("targetNodeLabels", "Target")
+            .with_input("topK", 5_u64);
+
+        assert!(matches!(
+            graph().invoke_shell_component(&call).unwrap(),
+            ShellProcedureResult::FilteredNodeSimilarityEstimate(memory) if !memory.is_empty()
+        ));
+    }
+
+    #[test]
+    fn rejects_empty_knn_node_properties() {
+        let call = builtin_component("knn")
+            .unwrap()
+            .call(ShellComponentMode::Estimate)
+            .with_input("nodeProperties", serde_json::json!([]));
 
         assert!(matches!(
             graph().bind_shell_component(&call),
-            Err(ShellProcedureError::UnboundComponent(component))
-                if component == call.component
+            Err(ShellProcedureError::InvalidInput {
+                input: "nodeProperties",
+                ..
+            })
+        ));
+    }
+
+    #[test]
+    fn rejects_malformed_knn_node_properties() {
+        let call = builtin_component("filtered_knn")
+            .unwrap()
+            .call(ShellComponentMode::Estimate)
+            .with_input("nodeProperties", serde_json::json!([{"metric": "COSINE"}]));
+
+        assert!(matches!(
+            graph().bind_shell_component(&call),
+            Err(ShellProcedureError::InvalidInput {
+                input: "nodeProperties",
+                ..
+            })
+        ));
+    }
+
+    #[test]
+    fn rejects_unknown_knn_metrics() {
+        let call = builtin_component("knn")
+            .unwrap()
+            .call(ShellComponentMode::Estimate)
+            .with_input("nodeProperties", serde_json::json!(["embedding"]))
+            .with_input("similarityMetric", "MANHATTAN");
+
+        assert!(matches!(
+            graph().bind_shell_component(&call),
+            Err(ShellProcedureError::InvalidInput {
+                input: "similarityMetric",
+                ..
+            })
+        ));
+    }
+
+    #[test]
+    fn rejects_unknown_node_similarity_metrics() {
+        let call = builtin_component("node_similarity")
+            .unwrap()
+            .call(ShellComponentMode::Estimate)
+            .with_input("similarityMetric", "PEARSON");
+
+        assert!(matches!(
+            graph().bind_shell_component(&call),
+            Err(ShellProcedureError::InvalidInput {
+                input: "similarityMetric",
+                ..
+            })
         ));
     }
 

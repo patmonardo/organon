@@ -1,5 +1,8 @@
 use crate::algo::harmonic::HARMONICAlgorithmSpec;
+use crate::algo::harmonic::HarmonicConfig;
+use crate::algo::harmonic::HarmonicDirection;
 use crate::projection::eval::algorithm::AlgorithmSpec;
+use serde_json::json;
 
 #[cfg(test)]
 mod tests {
@@ -14,6 +17,23 @@ mod tests {
     use crate::types::schema::{Direction, MutableGraphSchema};
     use std::collections::HashMap;
     use std::sync::Arc;
+
+    #[test]
+    fn harmonic_algorithm_spec_parses_and_validates_config() {
+        let algorithm = HARMONICAlgorithmSpec::new("test_graph".to_string());
+
+        let parsed = algorithm
+            .parse_config(&json!({ "direction": "natural" }))
+            .unwrap();
+        let config: HarmonicConfig = serde_json::from_value(parsed).unwrap();
+        assert_eq!(config.direction, HarmonicDirection::Outgoing);
+        assert_eq!(config.concurrency, 4);
+
+        let error = algorithm
+            .parse_config(&json!({ "concurrency": 0 }))
+            .unwrap_err();
+        assert!(error.to_string().contains("concurrency"));
+    }
 
     fn store_from_undirected_edges(
         node_count: usize,
