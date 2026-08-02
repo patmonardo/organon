@@ -190,4 +190,14 @@ mod tests {
         // Control surface should be constructible for user-scoped operations.
         let _operations = facade.operations();
     }
+
+    #[test]
+    fn missing_graph_is_reported_with_not_found() {
+        let facade = facade();
+
+        assert!(matches!(
+            facade.graph("missing"),
+            Err(CatalogError::NotFound(name)) if name == "missing"
+        ));
+    }
 }

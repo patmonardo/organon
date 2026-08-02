@@ -15,7 +15,7 @@ mod graph_store_read;
 #[cfg(test)]
 mod miscellaneous_tests;
 mod schema_validation;
-mod shell_control_store;
+mod shell_store_control;
 
 pub use capabilities::*;
 pub use database_id::*;
@@ -26,4 +26,4 @@ pub use graph_name::*;
 pub use graph_store::*;
 pub use graph_store_read::*;
 pub use schema_validation::*;
-pub use shell_control_store::*;
+pub use shell_store_control::*;
