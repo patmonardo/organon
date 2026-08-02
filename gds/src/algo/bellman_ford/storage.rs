@@ -8,7 +8,7 @@
 use super::spec::{BellmanFordPathResult, BellmanFordResult};
 use super::BellmanFordComputationRuntime;
 use crate::projection::eval::algorithm::AlgorithmError;
-use crate::task::concurrency::{install_with_concurrency, Concurrency};
+use crate::task::concurrency::{install_with_concurrency, Concurrency, TerminationFlag};
 use crate::task::progress::{ProgressTracker, UNKNOWN_VOLUME};
 use crate::types::graph::Graph;
 use crate::types::graph::MappedNodeId;
@@ -82,6 +82,7 @@ impl BellmanFordStorageRuntime {
         direction: u8,
         progress_tracker: &mut dyn ProgressTracker,
     ) -> Result<BellmanFordResult, AlgorithmError> {
+        let termination_flag = TerminationFlag::running_true();
         let volume = graph
             .map(|g| g.relationship_count())
             .unwrap_or(UNKNOWN_VOLUME);
@@ -91,9 +92,38 @@ impl BellmanFordStorageRuntime {
             progress_tracker.begin_subtask_with_volume(volume);
         }
 
+        let result = self.compute_bellman_ford_with_context(
+            computation,
+            graph,
+            direction,
+            progress_tracker,
+            &termination_flag,
+        );
+
+        match result {
+            Ok(result) => {
+                progress_tracker.end_subtask();
+                Ok(result)
+            }
+            Err(e) => {
+                progress_tracker.end_subtask_with_failure();
+                Err(e)
+            }
+        }
+    }
+
+    pub fn compute_bellman_ford_with_context(
+        &mut self,
+        computation: &mut BellmanFordComputationRuntime,
+        graph: Option<&dyn Graph>,
+        direction: u8,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<BellmanFordResult, AlgorithmError> {
         let mut scanned_relationships: usize = 0;
 
-        let result = (|| {
+        (|| {
+            Self::ensure_running(termination_flag)?;
             // Initialize computation runtime
             let node_count = graph.map(|g| g.node_count()).unwrap_or(100);
             Self::validate_node_in_graph(self.source_node, node_count, "source")?;
@@ -116,6 +146,7 @@ impl BellmanFordStorageRuntime {
                     direction,
                     node_count,
                     progress_tracker,
+                    termination_flag,
                 )?;
             } else {
                 scanned_relationships = self.compute_sequential_frontier(
@@ -124,6 +155,7 @@ impl BellmanFordStorageRuntime {
                     direction,
                     node_count,
                     progress_tracker,
+                    termination_flag,
                 )?;
             }
 
@@ -152,18 +184,7 @@ impl BellmanFordStorageRuntime {
                 negative_cycles,
                 contains_negative_cycle,
             })
-        })();
-
-        match result {
-            Ok(result) => {
-                progress_tracker.end_subtask();
-                Ok(result)
-            }
-            Err(e) => {
-                progress_tracker.end_subtask_with_failure();
-                Err(e)
-            }
-        }
+        })()
     }
 
     /// Generate shortest paths from the distance tracker
@@ -198,6 +219,7 @@ impl BellmanFordStorageRuntime {
         direction: u8,
         node_count: usize,
         progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
     ) -> Result<usize, AlgorithmError> {
         let mut scanned_relationships = 0usize;
         const LOG_BATCH: usize = 256;
@@ -206,6 +228,7 @@ impl BellmanFordStorageRuntime {
         frontier.push_back(self.source_node);
 
         while let Some(node_id) = frontier.pop_front() {
+            Self::ensure_running(termination_flag)?;
             if Self::is_negative_cycle_length(computation.length(node_id), node_count) {
                 computation.add_negative_cycle_node(node_id);
                 if !self.track_negative_cycles {
@@ -257,17 +280,20 @@ impl BellmanFordStorageRuntime {
         direction: u8,
         node_count: usize,
         progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
     ) -> Result<usize, AlgorithmError> {
         let mut frontier = vec![self.source_node];
         let mut scanned_relationships = 0usize;
         let concurrency = Concurrency::from_usize(self.concurrency.max(1));
 
         while !frontier.is_empty() {
+            Self::ensure_running(termination_flag)?;
             let chunk_count = frontier.len().div_ceil(FRONTIER_CHUNK_SIZE);
             let expansions: Vec<FrontierExpansion> = install_with_concurrency(concurrency, || {
                 (0..chunk_count)
                     .into_par_iter()
                     .map(|chunk_idx| {
+                        Self::ensure_running(termination_flag)?;
                         let start = chunk_idx * FRONTIER_CHUNK_SIZE;
                         let end = (start + FRONTIER_CHUNK_SIZE).min(frontier.len());
                         self.expand_frontier_chunk(
@@ -276,6 +302,7 @@ impl BellmanFordStorageRuntime {
                             &frontier[start..end],
                             direction,
                             node_count,
+                            termination_flag,
                         )
                     })
                     .collect::<Result<Vec<_>, _>>()
@@ -346,6 +373,7 @@ impl BellmanFordStorageRuntime {
         frontier: &[MappedNodeId],
         direction: u8,
         node_count: usize,
+        termination_flag: &TerminationFlag,
     ) -> Result<FrontierExpansion, AlgorithmError> {
         let worker_graph = Graph::concurrent_view(graph);
         let fallback = worker_graph.default_property_value();
@@ -354,6 +382,7 @@ impl BellmanFordStorageRuntime {
         let mut scanned_relationships = 0usize;
 
         for node_id in frontier {
+            Self::ensure_running(termination_flag)?;
             let source_length = computation.length(*node_id);
             if Self::is_negative_cycle_length(source_length, node_count) {
                 negative_cycle_nodes.push(*node_id);
@@ -367,6 +396,7 @@ impl BellmanFordStorageRuntime {
             };
 
             for cursor in stream {
+                Self::ensure_running(termination_flag)?;
                 scanned_relationships += 1;
                 let neighbor = cursor.target_id();
                 let weight = cursor.property();
@@ -391,6 +421,16 @@ impl BellmanFordStorageRuntime {
             negative_cycle_nodes,
             scanned_relationships,
         })
+    }
+
+    fn ensure_running(termination_flag: &TerminationFlag) -> Result<(), AlgorithmError> {
+        if termination_flag.running() {
+            Ok(())
+        } else {
+            Err(AlgorithmError::Execution(
+                "Bellman-Ford computation terminated".to_string(),
+            ))
+        }
     }
 
     /// Generate negative cycle paths
@@ -600,7 +640,7 @@ impl BellmanFordStorageRuntime {
 mod tests {
     use super::*;
     use crate::projection::Orientation;
-    use crate::task::progress::{TaskProgressTracker, Tasks};
+    use crate::task::progress::{NoopProgressTracker, TaskProgressTracker, Tasks};
     use crate::types::graph_store::{DefaultGraphStore, GraphStore};
     use crate::types::random::{RandomGraphConfig, RandomRelationshipConfig};
     use std::collections::HashSet;
@@ -611,6 +651,27 @@ mod tests {
 
     fn relationship_index(value: u64) -> RelationshipIndex {
         RelationshipIndex::new(value)
+    }
+
+    #[test]
+    fn context_computation_honors_pre_terminated_request() {
+        let source = MappedNodeId::ZERO;
+        let mut storage = BellmanFordStorageRuntime::new(source, true, true, 4);
+        let mut computation = BellmanFordComputationRuntime::new(source, true, true, 4);
+        let mut progress_tracker = NoopProgressTracker;
+        let termination_flag = TerminationFlag::stop_running();
+
+        let result = storage.compute_bellman_ford_with_context(
+            &mut computation,
+            None,
+            0,
+            &mut progress_tracker,
+            &termination_flag,
+        );
+
+        assert!(
+            matches!(result, Err(AlgorithmError::Execution(message)) if message.contains("terminated"))
+        );
     }
 
     #[test]

@@ -4,10 +4,11 @@ use crate::algo::bellman_ford::{
     BellmanFordComputationRuntime, BellmanFordConfig, BellmanFordMutateResult, BellmanFordResult,
     BellmanFordResultBuilder, BellmanFordStats, BellmanFordStorageRuntime, BellmanFordWriteSummary,
 };
-use crate::task::memory::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
+use crate::task::concurrency::TerminationFlag;
+use crate::task::memory::MemoryRange;
 use crate::types::graph::id_map::MappedNodeId;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use serde_json::Value as JsonValue;
@@ -16,9 +17,7 @@ use std::sync::Arc;
 
 // Import upgraded systems
 use crate::algo::algorithms::pathfinding::PathResult;
-use crate::task::progress::{
-    EmptyTaskRegistryFactory, TaskProgressTracker, TaskRegistryFactory, Tasks,
-};
+use crate::task::progress::{ProgressTracker, TaskProgressTracker, TaskRegistryFactory, Tasks};
 
 /// Bellman-Ford algorithm facade - config-oriented builder
 pub struct BellmanFordFacade {
@@ -144,24 +143,42 @@ impl BellmanFordFacade {
     }
 
     fn compute(self) -> Result<(BellmanFordResult, std::time::Duration)> {
+        let relationship_count = self.graph_store.relationship_count();
+        let concurrency = self.config.concurrency;
+        let mut progress_tracker = TaskProgressTracker::with_concurrency(
+            Tasks::leaf_with_volume("bellman_ford".to_string(), relationship_count),
+            concurrency,
+        );
+        let termination_flag = TerminationFlag::running_true();
+
+        progress_tracker.begin_subtask_with_volume(relationship_count);
+        let result = self.compute_with_context(&mut progress_tracker, &termination_flag);
+        match result {
+            Ok(value) => {
+                progress_tracker.end_subtask();
+                Ok(value)
+            }
+            Err(error) => {
+                progress_tracker.end_subtask_with_failure();
+                Err(error)
+            }
+        }
+    }
+
+    fn compute_with_context(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<(BellmanFordResult, std::time::Duration)> {
         self.config
             .validate()
             .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
 
-        // Set up progress tracking
-        let _task_registry_factory = self
-            .task_registry_factory
-            .unwrap_or_else(|| Box::new(EmptyTaskRegistryFactory));
-        let _user_log_registry_factory = self
-            .user_log_registry_factory
-            .unwrap_or_else(|| Box::new(EmptyTaskRegistryFactory));
-
-        // Create progress tracker for Bellman-Ford execution
-        let node_count = self.graph_store.node_count();
-        let _progress_tracker = TaskProgressTracker::new(Tasks::leaf_with_volume(
-            "BellmanFord".to_string(),
-            node_count,
-        ));
+        if !termination_flag.running() {
+            return Err(AlgorithmError::Execution(
+                "Bellman-Ford computation terminated".to_string(),
+            ));
+        }
 
         let source_node = self.config.source_node;
 
@@ -203,17 +220,13 @@ impl BellmanFordFacade {
             self.config.concurrency,
         );
 
-        let mut progress_tracker = TaskProgressTracker::with_concurrency(
-            Tasks::leaf_with_volume("bellman_ford".to_string(), graph_view.relationship_count()),
-            self.config.concurrency,
-        );
-
         let start = std::time::Instant::now();
-        let result: BellmanFordResult = storage.compute_bellman_ford(
+        let result: BellmanFordResult = storage.compute_bellman_ford_with_context(
             &mut computation,
             Some(graph_view.as_ref()),
             direction_byte,
-            &mut progress_tracker,
+            progress_tracker,
+            termination_flag,
         )?;
         Ok((result, start.elapsed()))
     }
@@ -224,8 +237,26 @@ impl BellmanFordFacade {
         Ok(Box::new(paths.into_iter()))
     }
 
+    pub fn stream_with_context(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<Vec<PathResult>> {
+        let (result, elapsed) = self.compute_with_context(progress_tracker, termination_flag)?;
+        Ok(BellmanFordResultBuilder::new(result, elapsed).paths())
+    }
+
     pub fn stats(self) -> Result<BellmanFordStats> {
         let (result, elapsed) = self.compute()?;
+        Ok(BellmanFordResultBuilder::new(result, elapsed).stats())
+    }
+
+    pub fn stats_with_context(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<BellmanFordStats> {
+        let (result, elapsed) = self.compute_with_context(progress_tracker, termination_flag)?;
         Ok(BellmanFordResultBuilder::new(result, elapsed).stats())
     }
 
@@ -292,5 +323,33 @@ impl BellmanFordFacade {
             distance_memory + predecessor_memory + cycle_tracking_memory + graph_overhead;
         let overhead = total_memory / 5;
         MemoryRange::of_range(total_memory, total_memory + overhead)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::task::progress::NoopProgressTracker;
+    use crate::types::random::{RandomGraphConfig, RandomRelationshipConfig};
+
+    #[test]
+    fn context_execution_honors_pre_terminated_request() {
+        let config = RandomGraphConfig {
+            seed: Some(11),
+            node_count: 8,
+            relationships: vec![RandomRelationshipConfig::new("REL", 1.0)],
+            ..RandomGraphConfig::default()
+        };
+        let store = Arc::new(DefaultGraphStore::random(&config).unwrap());
+        let mut progress_tracker = NoopProgressTracker;
+        let termination_flag = TerminationFlag::stop_running();
+
+        let result = BellmanFordBuilder::new(store)
+            .source(0)
+            .stream_with_context(&mut progress_tracker, &termination_flag);
+
+        assert!(
+            matches!(result, Err(AlgorithmError::Execution(message)) if message.contains("terminated"))
+        );
     }
 }

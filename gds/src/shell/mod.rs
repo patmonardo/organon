@@ -21,7 +21,7 @@ pub use crate::dsl::*;
 pub use components::{
     builtin_component, BuiltinComponentRef, BuiltinComponentSuite, ShellComponentCall,
     ShellComponentCategory, ShellComponentDescriptor, ShellComponentId, ShellComponentMode,
-    ShellComponentSuiteError,
+    ShellComponentSuiteError, ALGORITHM_BUILTINS, PIPELINE_BUILTINS,
 };
 pub use core::{
     GdsShell, ShellCapabilityBand, ShellCapabilityMap, ShellCapabilityState, ShellCorpusError,

@@ -143,8 +143,10 @@ impl TopologicalSortComputationRuntime {
 
         // Phase 1: Initialize in-degrees (with validation)
         for node_index in 0..node_count {
+            ensure_running(termination)?;
             let node_id = mapped_node_id(node_index);
             for (target, weight) in get_neighbors(node_id) {
+                ensure_running(termination)?;
                 let target_index = validate_neighbor(node_count, node_id, target).map_err(|e| {
                     AlgorithmError::InvalidGraph(format!("Validation failed: {}", e))
                 })?;
@@ -174,6 +176,9 @@ impl TopologicalSortComputationRuntime {
         // Phase 2: Initialize queue with nodes having in-degree 0
         let ready_nodes = Arc::new(Mutex::new(Vec::new()));
         for node_index in 0..node_count {
+            if !termination.running() {
+                return Err(TerminatedException);
+            }
             let node_id = mapped_node_id(node_index);
             if self.storage.in_degrees[node_index].load(Ordering::SeqCst) == 0 {
                 ready_nodes.lock().unwrap().push(node_id);
@@ -228,6 +233,9 @@ impl TopologicalSortComputationRuntime {
                             };
 
                         for (target, weight) in get_neighbors(source) {
+                            if !termination.running() {
+                                return;
+                            }
                             let target_index = physical_node_index(target);
                             // Update longest path distance if computing
                             if let Some(ref distances) = self.storage.max_source_distances {
@@ -280,6 +288,9 @@ impl TopologicalSortComputationRuntime {
         let mut sorted_nodes = Vec::with_capacity(size);
 
         for i in 0..size {
+            if !termination.running() {
+                return Err(TerminatedException);
+            }
             let node = self.storage.sorted_nodes[i].load(Ordering::SeqCst);
             sorted_nodes.push(MappedNodeId::new(node));
         }
@@ -332,6 +343,15 @@ fn validate_neighbor(
     }
 
     Ok(target_index)
+}
+
+fn ensure_running(termination: &TerminationFlag) -> Result<(), AlgorithmError> {
+    if !termination.running() {
+        return Err(AlgorithmError::Execution(
+            "Topological sort computation terminated".to_string(),
+        ));
+    }
+    Ok(())
 }
 
 fn mapped_node_id(index: usize) -> MappedNodeId {

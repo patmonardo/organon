@@ -6,6 +6,8 @@
 //! 1. Computing MST using Prim's algorithm
 //! 2. Progressively cutting k weakest edges
 
+use crate::projection::eval::algorithm::AlgorithmError;
+use crate::task::concurrency::TerminationFlag;
 use std::cmp::Ordering;
 use std::collections::BinaryHeap;
 
@@ -225,7 +227,8 @@ impl KSpanningTreeComputationRuntime {
         k: usize,
         is_min: bool,
         get_neighbors: impl Fn(usize) -> Vec<(usize, f64)>,
-    ) {
+        termination: &TerminationFlag,
+    ) -> Result<(), AlgorithmError> {
         let mut nodes_in_tree = 0usize;
 
         // Reset state
@@ -243,6 +246,7 @@ impl KSpanningTreeComputationRuntime {
         });
 
         while !self.priority_queue.is_empty() && nodes_in_tree < k {
+            Self::ensure_running(termination)?;
             let current = self.priority_queue.pop().unwrap();
             let node_id = current.node_id;
             let cost = current.cost;
@@ -266,13 +270,14 @@ impl KSpanningTreeComputationRuntime {
             };
 
             if should_add {
-                self.add_node_to_tree(node_id, cost, &get_neighbors);
+                self.add_node_to_tree(node_id, cost, &get_neighbors, termination)?;
                 nodes_in_tree += 1;
             }
         }
 
         // Clean up nodes not in final tree
-        self.prune_untouched_nodes();
+        self.prune_untouched_nodes(termination)?;
+        Ok(())
     }
 
     /// Find the root node (node with parent == -1)
@@ -302,7 +307,8 @@ impl KSpanningTreeComputationRuntime {
         node_id: usize,
         cost: f64,
         get_neighbors: &impl Fn(usize) -> Vec<(usize, f64)>,
-    ) {
+        termination: &TerminationFlag,
+    ) -> Result<(), AlgorithmError> {
         self.included[node_id] = true;
         self.total_cost += cost;
 
@@ -310,7 +316,7 @@ impl KSpanningTreeComputationRuntime {
         self.update_exterior(node_id, cost);
 
         // Relax neighbors
-        self.relax_neighbors(node_id, get_neighbors);
+        self.relax_neighbors(node_id, get_neighbors, termination)
     }
 
     /// Update exterior set when adding a node
@@ -329,24 +335,41 @@ impl KSpanningTreeComputationRuntime {
         &mut self,
         node_id: usize,
         get_neighbors: &impl Fn(usize) -> Vec<(usize, f64)>,
-    ) {
+        termination: &TerminationFlag,
+    ) -> Result<(), AlgorithmError> {
         for (neighbor, _weight) in get_neighbors(node_id) {
+            Self::ensure_running(termination)?;
             if self.parent.get(neighbor).copied() == Some(node_id as i64) && self.included[neighbor]
             {
                 // This neighbor is a child - update out-degree
                 self.out_degree[node_id] += 1;
             }
         }
+        Ok(())
     }
 
     /// Remove nodes not included in final tree
-    fn prune_untouched_nodes(&mut self) {
+    fn prune_untouched_nodes(
+        &mut self,
+        termination: &TerminationFlag,
+    ) -> Result<(), AlgorithmError> {
         for i in 0..self.parent.len() {
+            Self::ensure_running(termination)?;
             if !self.included[i] {
                 self.parent[i] = -1;
                 self.cost_to_parent[i] = -1.0;
             }
         }
+        Ok(())
+    }
+
+    fn ensure_running(termination: &TerminationFlag) -> Result<(), AlgorithmError> {
+        if !termination.running() {
+            return Err(AlgorithmError::Execution(
+                "K-spanning tree computation terminated".to_string(),
+            ));
+        }
+        Ok(())
     }
 
     // Getters for final results

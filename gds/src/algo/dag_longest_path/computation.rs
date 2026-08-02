@@ -6,10 +6,10 @@
 
 use super::spec::{DagLongestPathResult, PathRow};
 use super::DagLongestPathStorageRuntime;
+use crate::projection::eval::algorithm::AlgorithmError;
 use crate::task::concurrency::{
     virtual_threads::Executor, Concurrency, TerminatedException, TerminationFlag,
 };
-use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::MappedNodeId;
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::{Arc, Mutex};
@@ -51,10 +51,12 @@ impl DagLongestPathComputationRuntime {
 
         // Phase 1: Initialize in-degrees
         for node_index in 0..node_count {
+            ensure_running(termination)?;
             let node_id = mapped_node_id(node_index);
             for (target, weight) in get_neighbors(node_id) {
-                let target_index =
-                    validate_neighbor(node_count, node_id, target).map_err(|_| TerminatedException)?;
+                ensure_running(termination)?;
+                let target_index = validate_neighbor(node_count, node_id, target)
+                    .map_err(|_| TerminatedException)?;
                 validate_weight(node_id, target, weight).map_err(|_| TerminatedException)?;
                 self.storage.in_degrees[target_index].fetch_add(1, Ordering::SeqCst);
             }
@@ -63,6 +65,7 @@ impl DagLongestPathComputationRuntime {
         // Phase 2: Collect initial ready nodes (in-degree 0)
         let ready_nodes = Arc::new(Mutex::new(Vec::new()));
         for node_index in 0..node_count {
+            ensure_running(termination)?;
             let node_id = mapped_node_id(node_index);
             if self.storage.in_degrees[node_index].load(Ordering::SeqCst) == 0 {
                 ready_nodes.lock().unwrap().push(node_id);
@@ -108,6 +111,9 @@ impl DagLongestPathComputationRuntime {
 
                         // Process all neighbors
                         for (target, weight) in get_neighbors(node_id) {
+                            if !termination.running() {
+                                return;
+                            }
                             let target_index = physical_node_index(target);
                             let source_distance = self.storage.get_distance(node_id);
                             let potential_distance = source_distance + weight;
@@ -137,14 +143,19 @@ impl DagLongestPathComputationRuntime {
         })?;
 
         // Phase 4: Build path results
-        Ok(self.build_paths(node_count))
+        self.build_paths(node_count, termination)
     }
 
-    fn build_paths(&self, node_count: usize) -> DagLongestPathResult {
+    fn build_paths(
+        &self,
+        node_count: usize,
+        termination: &TerminationFlag,
+    ) -> Result<DagLongestPathResult, TerminatedException> {
         let mut paths = Vec::new();
         let mut path_index = 0u64;
 
         for target_index in 0..node_count {
+            ensure_running(termination)?;
             let target_node = mapped_node_id(target_index);
             let distance = self.storage.get_distance(target_node);
 
@@ -160,6 +171,7 @@ impl DagLongestPathComputationRuntime {
 
             // Walk back through predecessors until we reach a source node
             loop {
+                ensure_running(termination)?;
                 node_ids.push(current);
                 costs.push(self.storage.get_distance(current));
 
@@ -187,8 +199,15 @@ impl DagLongestPathComputationRuntime {
             path_index += 1;
         }
 
-        DagLongestPathResult { paths }
+        Ok(DagLongestPathResult { paths })
     }
+}
+
+fn ensure_running(termination: &TerminationFlag) -> Result<(), TerminatedException> {
+    if !termination.running() {
+        return Err(TerminatedException);
+    }
+    Ok(())
 }
 
 fn validate_neighbor(

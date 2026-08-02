@@ -10,19 +10,16 @@ use crate::algo::all_shortest_paths::{
     AlgorithmType, AllShortestPathsComputationRuntime, AllShortestPathsConfig,
     AllShortestPathsMutationSummary, AllShortestPathsStats, AllShortestPathsStorageRuntime,
 };
-use crate::task::memory::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
+use crate::task::concurrency::TerminationFlag;
+use crate::task::memory::MemoryRange;
+use crate::task::progress::{ProgressTracker, TaskProgressTracker, TaskRegistryFactory, Tasks};
 use crate::types::graph::id_map::MappedNodeId;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
-
-// Import upgraded systems
-use crate::task::progress::{
-    EmptyTaskRegistryFactory, TaskProgressTracker, TaskRegistryFactory, Tasks,
-};
 
 /// A single all-pairs shortest path distance row.
 #[derive(Debug, Clone, serde::Serialize)]
@@ -166,15 +163,39 @@ impl AllShortestPathsBuilder {
     }
 
     fn compute(self) -> Result<(Vec<AllShortestPathsRow>, AllShortestPathsStats)> {
-        self.validate()?;
+        let node_count = self.graph_store.node_count();
+        let concurrency = self.concurrency;
+        let mut progress_tracker = TaskProgressTracker::with_concurrency(
+            Tasks::leaf_with_volume("all_shortest_paths".to_string(), node_count),
+            concurrency,
+        );
+        let termination_flag = TerminationFlag::running_true();
 
-        // Set up progress tracking
-        let _task_registry_factory = self
-            .task_registry_factory
-            .unwrap_or_else(|| Box::new(EmptyTaskRegistryFactory));
-        let _user_log_registry_factory = self
-            .user_log_registry_factory
-            .unwrap_or_else(|| Box::new(EmptyTaskRegistryFactory));
+        progress_tracker.begin_subtask_with_volume(node_count);
+        let result = self.compute_with_context(&mut progress_tracker, &termination_flag);
+        match result {
+            Ok(value) => {
+                progress_tracker.end_subtask();
+                Ok(value)
+            }
+            Err(error) => {
+                progress_tracker.end_subtask_with_failure();
+                Err(error)
+            }
+        }
+    }
+
+    fn compute_with_context(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<(Vec<AllShortestPathsRow>, AllShortestPathsStats)> {
+        self.validate()?;
+        if !termination_flag.running() {
+            return Err(AlgorithmError::Execution(
+                "All Shortest Paths computation terminated".to_string(),
+            ));
+        }
 
         let algorithm_type = if self.weighted {
             AlgorithmType::Weighted
@@ -214,16 +235,12 @@ impl AllShortestPathsBuilder {
 
         let mut computation = AllShortestPathsComputationRuntime::new();
 
-        let mut progress_tracker = TaskProgressTracker::with_concurrency(
-            Tasks::leaf_with_volume("all_shortest_paths".to_string(), graph_view.node_count()),
-            self.concurrency,
-        );
-
         let start = std::time::Instant::now();
-        let receiver = storage.compute_all_shortest_paths_streaming(
+        let receiver = storage.compute_all_shortest_paths_streaming_with_context(
             &mut computation,
             direction_byte,
-            &mut progress_tracker,
+            progress_tracker,
+            termination_flag,
         )?;
 
         let node_count = graph_view.node_count() as u64;
@@ -264,9 +281,27 @@ impl AllShortestPathsBuilder {
         Ok(Box::new(rows.into_iter()))
     }
 
+    pub fn stream_with_context(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<Vec<AllShortestPathsRow>> {
+        let (rows, _) = self.compute_with_context(progress_tracker, termination_flag)?;
+        Ok(rows)
+    }
+
     /// Stats mode: return aggregated statistics.
     pub fn stats(self) -> Result<AllShortestPathsStats> {
         let (_, stats) = self.compute()?;
+        Ok(stats)
+    }
+
+    pub fn stats_with_context(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<AllShortestPathsStats> {
+        let (_, stats) = self.compute_with_context(progress_tracker, termination_flag)?;
         Ok(stats)
     }
 
@@ -387,6 +422,7 @@ impl AllShortestPathsBuilder {
 mod tests {
     use super::*;
     use crate::procedures::GraphFacade;
+    use crate::task::progress::NoopProgressTracker;
     use crate::types::random::{RandomGraphConfig, RandomRelationshipConfig};
 
     fn store() -> Arc<DefaultGraphStore> {
@@ -397,6 +433,19 @@ mod tests {
             ..RandomGraphConfig::default()
         };
         Arc::new(DefaultGraphStore::random(&config).unwrap())
+    }
+
+    #[test]
+    fn context_execution_honors_pre_terminated_request() {
+        let mut progress_tracker = NoopProgressTracker;
+        let termination_flag = TerminationFlag::stop_running();
+
+        let result = AllShortestPathsBuilder::new(store())
+            .stream_with_context(&mut progress_tracker, &termination_flag);
+
+        assert!(
+            matches!(result, Err(AlgorithmError::Execution(message)) if message.contains("terminated"))
+        );
     }
 
     #[test]

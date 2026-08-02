@@ -6,9 +6,9 @@
 //! handling persistent data access and orchestrating the Prim's algorithm execution.
 
 use super::{SpanningTree, SpanningTreeComputationRuntime};
+use crate::projection::eval::algorithm::AlgorithmError;
 use crate::task::concurrency::TerminationFlag;
 use crate::task::progress::ProgressTracker;
-use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::Graph;
 use crate::types::graph::MappedNodeId;
 
@@ -100,74 +100,13 @@ impl SpanningTreeStorageRuntime {
 
         progress_tracker.begin_subtask_with_volume(progress_volume);
 
-        let result = (|| {
-            // Handle empty graph upfront
-            if node_count == 0 {
-                return Ok(computation.build_result(0));
-            }
-
-            self.validate(node_count)?;
-
-            // Initialize computation runtime
-            computation.initialize(self.start_node_id);
-
-            // Main Prim's algorithm loop
-            while !computation.is_queue_empty() {
-                if !termination.running() {
-                    return Err(AlgorithmError::Execution(
-                        "Spanning tree computation terminated".to_string(),
-                    ));
-                }
-
-                // Get next node from priority queue
-                let (current_node, current_cost) = match computation.pop_from_queue() {
-                    Some((node, cost)) => (node, cost),
-                    None => break,
-                };
-
-                // Skip if already visited
-                if computation.is_visited(current_node) {
-                    continue;
-                }
-
-                // Mark as visited and update progress
-                computation.mark_visited(current_node, current_cost);
-
-                // Process neighbors via graph interface
-                if let Some(graph) = graph {
-                    let neighbors =
-                        self.get_neighbors_from_graph(graph, current_node, direction)?;
-                    progress_tracker.log_progress(neighbors.len());
-                    for (neighbor, weight) in neighbors {
-                        Self::validate_node_in_graph(neighbor, node_count, "neighbor")?;
-                        Self::validate_edge_weight(current_node, neighbor, weight)?;
-
-                        // Skip if neighbor already visited
-                        if computation.is_visited(neighbor) {
-                            continue;
-                        }
-
-                        // Transform weight for min/max spanning tree
-                        let transformed_weight = computation.transform_weight(weight);
-
-                        // Check if neighbor is already in queue
-                        let current_parent = computation.parent(neighbor);
-                        let current_cost_to_parent = computation.cost_to_parent(neighbor);
-
-                        if current_parent == -1 {
-                            // Neighbor not in queue, add it
-                            computation.add_to_queue(neighbor, transformed_weight, current_node);
-                        } else if transformed_weight < current_cost_to_parent {
-                            // Better path found, update
-                            computation.update_cost(neighbor, transformed_weight, current_node);
-                        }
-                    }
-                }
-            }
-
-            // Build and return result
-            Ok(computation.build_result(node_count))
-        })();
+        let result = self.compute_spanning_tree_with_context(
+            computation,
+            graph,
+            direction,
+            progress_tracker,
+            termination,
+        );
 
         match result {
             Ok(result) => {
@@ -179,6 +118,67 @@ impl SpanningTreeStorageRuntime {
                 Err(e)
             }
         }
+    }
+
+    /// Compute the spanning tree within a caller-owned progress lifecycle.
+    pub fn compute_spanning_tree_with_context(
+        &self,
+        computation: &mut SpanningTreeComputationRuntime,
+        graph: Option<&dyn Graph>,
+        direction: u8,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination: &TerminationFlag,
+    ) -> Result<SpanningTree, AlgorithmError> {
+        Self::ensure_running(termination)?;
+        let node_count = graph.map(|graph| graph.node_count() as u32).unwrap_or(0);
+        if node_count == 0 {
+            return Ok(computation.build_result(0));
+        }
+
+        self.validate(node_count)?;
+        computation.initialize(self.start_node_id);
+
+        while !computation.is_queue_empty() {
+            Self::ensure_running(termination)?;
+            let (current_node, current_cost) = match computation.pop_from_queue() {
+                Some(entry) => entry,
+                None => break,
+            };
+
+            if computation.is_visited(current_node) {
+                continue;
+            }
+
+            computation.mark_visited(current_node, current_cost);
+
+            if let Some(graph) = graph {
+                let neighbors =
+                    self.get_neighbors_from_graph(graph, current_node, direction, termination)?;
+                progress_tracker.log_progress(neighbors.len());
+                for (neighbor, weight) in neighbors {
+                    Self::ensure_running(termination)?;
+                    Self::validate_node_in_graph(neighbor, node_count, "neighbor")?;
+                    Self::validate_edge_weight(current_node, neighbor, weight)?;
+
+                    if computation.is_visited(neighbor) {
+                        continue;
+                    }
+
+                    let transformed_weight = computation.transform_weight(weight);
+                    let current_parent = computation.parent(neighbor);
+                    let current_cost_to_parent = computation.cost_to_parent(neighbor);
+
+                    if current_parent == -1 {
+                        computation.add_to_queue(neighbor, transformed_weight, current_node);
+                    } else if transformed_weight < current_cost_to_parent {
+                        computation.update_cost(neighbor, transformed_weight, current_node);
+                    }
+                }
+            }
+        }
+
+        Self::ensure_running(termination)?;
+        Ok(computation.build_result(node_count))
     }
 
     /// Compute the spanning tree using a bound Graph (neighbor streaming via relationship cursors).
@@ -229,39 +229,43 @@ impl SpanningTreeStorageRuntime {
         graph: &dyn Graph,
         node_id: u32,
         direction: u8,
+        termination: &TerminationFlag,
     ) -> Result<Vec<(u32, f64)>, AlgorithmError> {
         let fallback: f64 = 1.0;
         let mut out = Vec::new();
 
-        let mut push_cursor = |target_id: MappedNodeId, weight: f64| -> Result<(), AlgorithmError> {
-            let target = u32::try_from(target_id.get()).map_err(|_| {
-                AlgorithmError::InvalidGraph(format!("Invalid neighbor node id: {target_id}"))
-            })?;
-            out.push((target, weight));
-            Ok(())
-        };
+        let mut push_cursor =
+            |target_id: MappedNodeId, weight: f64| -> Result<(), AlgorithmError> {
+                let target = u32::try_from(target_id.get()).map_err(|_| {
+                    AlgorithmError::InvalidGraph(format!("Invalid neighbor node id: {target_id}"))
+                })?;
+                out.push((target, weight));
+                Ok(())
+            };
         let mapped_node_id = MappedNodeId::new(u64::from(node_id));
 
         match direction {
             1 => {
-                for cursor in
-                    graph.stream_inverse_relationships_weighted(mapped_node_id, fallback)
+                for cursor in graph.stream_inverse_relationships_weighted(mapped_node_id, fallback)
                 {
+                    Self::ensure_running(termination)?;
                     push_cursor(cursor.target_id(), cursor.weight())?;
                 }
             }
             2 => {
                 for cursor in graph.stream_relationships_weighted(mapped_node_id, fallback) {
+                    Self::ensure_running(termination)?;
                     push_cursor(cursor.target_id(), cursor.weight())?;
                 }
-                for cursor in
-                    graph.stream_inverse_relationships_weighted(mapped_node_id, fallback)
+                for cursor in graph.stream_inverse_relationships_weighted(mapped_node_id, fallback)
                 {
+                    Self::ensure_running(termination)?;
                     push_cursor(cursor.target_id(), cursor.weight())?;
                 }
             }
             _ => {
                 for cursor in graph.stream_relationships_weighted(mapped_node_id, fallback) {
+                    Self::ensure_running(termination)?;
                     push_cursor(cursor.target_id(), cursor.weight())?;
                 }
             }
@@ -423,12 +427,41 @@ impl SpanningTreeStorageRuntime {
         }
         Ok(())
     }
+
+    fn ensure_running(termination: &TerminationFlag) -> Result<(), AlgorithmError> {
+        if !termination.running() {
+            return Err(AlgorithmError::Execution(
+                "Spanning tree computation terminated".to_string(),
+            ));
+        }
+        Ok(())
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::task::progress::{TaskProgressTracker, Tasks};
+    use crate::task::progress::{NoopProgressTracker, TaskProgressTracker, Tasks};
+
+    #[test]
+    fn context_computation_honors_pre_terminated_request() {
+        let runtime = SpanningTreeStorageRuntime::new(0, true, 1);
+        let mut computation = SpanningTreeComputationRuntime::new(0, true, 0, 1);
+        let mut progress_tracker = NoopProgressTracker;
+        let termination = TerminationFlag::stop_running();
+
+        let error = runtime
+            .compute_spanning_tree_with_context(
+                &mut computation,
+                None,
+                2,
+                &mut progress_tracker,
+                &termination,
+            )
+            .unwrap_err();
+
+        assert!(error.to_string().contains("terminated"));
+    }
 
     #[test]
     fn test_storage_runtime_creation() {

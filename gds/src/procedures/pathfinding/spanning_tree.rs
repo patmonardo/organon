@@ -5,9 +5,9 @@
 use crate::algo::algorithms::pathfinding::PathResult;
 use crate::algo::algorithms::Result;
 use crate::algo::spanning_tree::{
-    SpanningTreeConfig, SpanningTreeMutateResult, SpanningTreeMutationSummary, SpanningTreeResult,
-    SpanningTreeResultBuilder, SpanningTreeRow, SpanningTreeStats, SpanningTreeStorageRuntime,
-    SpanningTreeWriteSummary,
+    SpanningTreeComputationRuntime, SpanningTreeConfig, SpanningTreeMutateResult,
+    SpanningTreeMutationSummary, SpanningTreeResult, SpanningTreeResultBuilder, SpanningTreeRow,
+    SpanningTreeStats, SpanningTreeStorageRuntime, SpanningTreeWriteSummary,
 };
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
@@ -21,9 +21,10 @@ use std::time::Instant;
 
 // Import upgraded systems
 use crate::projection::eval::algorithm::AlgorithmError;
-use crate::task::progress::{
-    EmptyTaskRegistryFactory, TaskProgressTracker, TaskRegistryFactory, Tasks,
-};
+use crate::task::progress::ProgressTracker;
+use crate::task::progress::TaskProgressTracker;
+use crate::task::progress::TaskRegistryFactory;
+use crate::task::progress::Tasks;
 
 /// Spanning tree facade builder.
 ///
@@ -177,15 +178,39 @@ impl SpanningTreeFacade {
     }
 
     fn compute(self) -> Result<SpanningTreeResult> {
-        self.validate()?;
+        let relationship_count = self.graph_store.relationship_count();
+        let concurrency = self.config.concurrency;
+        let mut progress_tracker = TaskProgressTracker::with_concurrency(
+            Tasks::leaf_with_volume("spanning_tree".to_string(), relationship_count),
+            concurrency,
+        );
+        let termination = TerminationFlag::running_true();
 
-        // Set up progress tracking
-        let _task_registry_factory = self
-            .task_registry_factory
-            .unwrap_or_else(|| Box::new(EmptyTaskRegistryFactory));
-        let _user_log_registry_factory = self
-            .user_log_registry_factory
-            .unwrap_or_else(|| Box::new(EmptyTaskRegistryFactory));
+        progress_tracker.begin_subtask_with_volume(relationship_count);
+        let result = self.compute_with_context(&mut progress_tracker, &termination);
+        match result {
+            Ok(value) => {
+                progress_tracker.end_subtask();
+                Ok(value)
+            }
+            Err(error) => {
+                progress_tracker.end_subtask_with_failure();
+                Err(error)
+            }
+        }
+    }
+
+    fn compute_with_context(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination: &TerminationFlag,
+    ) -> Result<SpanningTreeResult> {
+        self.validate()?;
+        if !termination.running() {
+            return Err(AlgorithmError::Execution(
+                "Spanning tree computation terminated".to_string(),
+            ));
+        }
 
         let start_node_id = self.config.start_node_id;
 
@@ -219,21 +244,21 @@ impl SpanningTreeFacade {
             self.config.compute_minimum,
             self.config.concurrency,
         );
-
-        let mut progress_tracker = TaskProgressTracker::with_concurrency(
-            Tasks::leaf_with_volume("spanning_tree".to_string(), graph_view.relationship_count()),
+        let mut computation = SpanningTreeComputationRuntime::new(
+            start_node_id,
+            self.config.compute_minimum,
+            graph_view.node_count() as u32,
             self.config.concurrency,
         );
 
         let start = Instant::now();
-        let termination = TerminationFlag::running_true();
-
         let tree = storage
-            .compute_spanning_tree_with_graph_and_termination(
-                graph_view.as_ref(),
+            .compute_spanning_tree_with_context(
+                &mut computation,
+                Some(graph_view.as_ref()),
                 direction_byte,
-                &mut progress_tracker,
-                &termination,
+                progress_tracker,
+                termination,
             )
             .map_err(|e| {
                 AlgorithmError::Execution(format!("Spanning tree computation failed: {e}"))
@@ -250,9 +275,27 @@ impl SpanningTreeFacade {
         Ok(Box::new(rows.into_iter()))
     }
 
+    pub fn stream_with_context(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination: &TerminationFlag,
+    ) -> Result<Vec<SpanningTreeRow>> {
+        let result = self.compute_with_context(progress_tracker, termination)?;
+        Ok(SpanningTreeResultBuilder::new(result).rows())
+    }
+
     /// Stats mode: aggregated tree stats.
     pub fn stats(self) -> Result<SpanningTreeStats> {
         let result = self.compute()?;
+        Ok(SpanningTreeResultBuilder::new(result).stats())
+    }
+
+    pub fn stats_with_context(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination: &TerminationFlag,
+    ) -> Result<SpanningTreeStats> {
+        let result = self.compute_with_context(progress_tracker, termination)?;
         Ok(SpanningTreeResultBuilder::new(result).stats())
     }
 
@@ -346,6 +389,7 @@ impl SpanningTreeFacade {
 mod tests {
     use super::*;
     use crate::procedures::GraphFacade;
+    use crate::task::progress::NoopProgressTracker;
     use crate::types::random::{RandomGraphConfig, RandomRelationshipConfig};
 
     fn store() -> Arc<DefaultGraphStore> {
@@ -394,6 +438,19 @@ mod tests {
             .unwrap();
 
         assert!(stats.effective_node_count > 0);
+    }
+
+    #[test]
+    fn facade_honors_pre_terminated_request() {
+        let mut progress_tracker = NoopProgressTracker;
+        let termination = TerminationFlag::stop_running();
+
+        let error = SpanningTreeFacade::new(store())
+            .start_node(0)
+            .stream_with_context(&mut progress_tracker, &termination)
+            .unwrap_err();
+
+        assert!(error.to_string().contains("terminated"));
     }
 
     #[test]

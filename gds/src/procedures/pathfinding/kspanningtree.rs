@@ -16,7 +16,10 @@ use crate::projection::Orientation;
 use crate::projection::RelationshipType;
 use crate::task::concurrency::TerminationFlag;
 use crate::task::memory::MemoryRange;
-use crate::task::progress::{EmptyTaskRegistryFactory, TaskRegistryFactory, Tasks};
+use crate::task::progress::EmptyTaskRegistryFactory;
+use crate::task::progress::ProgressTracker;
+use crate::task::progress::TaskRegistryFactory;
+use crate::task::progress::Tasks;
 use crate::types::graph::MappedNodeId;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use std::collections::HashSet;
@@ -114,10 +117,6 @@ impl KSpanningTreeBuilder {
 
     #[allow(clippy::type_complexity)]
     fn compute(&self) -> Result<(KSpanningTreeResult, std::time::Duration)> {
-        self.config
-            .validate()
-            .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
-
         // Touch optional factories to keep facade ergonomics aligned with peers.
         let _task_registry_factory = self
             .task_registry_factory
@@ -127,6 +126,42 @@ impl KSpanningTreeBuilder {
             .user_log_registry_factory
             .as_deref()
             .unwrap_or(&EmptyTaskRegistryFactory);
+
+        let relationship_count = self.graph_store.relationship_count();
+        let mut progress_tracker = TaskProgressTracker::new(Tasks::leaf_with_volume(
+            "kspanningtree".to_string(),
+            relationship_count,
+        ));
+        let termination = TerminationFlag::running_true();
+
+        progress_tracker.begin_subtask_with_volume(relationship_count);
+        let result = self.compute_with_context(&mut progress_tracker, &termination);
+        match result {
+            Ok(value) => {
+                progress_tracker.end_subtask();
+                Ok(value)
+            }
+            Err(error) => {
+                progress_tracker.end_subtask_with_failure();
+                Err(error)
+            }
+        }
+    }
+
+    #[allow(clippy::type_complexity)]
+    fn compute_with_context(
+        &self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination: &TerminationFlag,
+    ) -> Result<(KSpanningTreeResult, std::time::Duration)> {
+        self.config
+            .validate()
+            .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
+        if !termination.running() {
+            return Err(AlgorithmError::Execution(
+                "K-spanning tree computation terminated".to_string(),
+            ));
+        }
 
         let start = Instant::now();
         let source = MappedNodeId::new(self.config.source_node);
@@ -165,25 +200,19 @@ impl KSpanningTreeBuilder {
             )));
         }
 
-        let mut progress_tracker = TaskProgressTracker::new(Tasks::leaf_with_volume(
-            "kspanningtree".to_string(),
-            node_count,
-        ));
-
         // Create storage runtime (Gross pole - controller)
         let storage =
             KSpanningTreeStorageRuntime::new(source, self.config.k, self.config.objective.clone());
 
         // Create computation runtime (Subtle pole - state management)
         let mut computation = KSpanningTreeComputationRuntime::new(node_count);
-        let termination = TerminationFlag::running_true();
 
         // Call storage.compute_kspanningtree() - Applications never call ::algo:: directly
-        let result = storage.compute_kspanningtree_with_termination(
+        let result = storage.compute_kspanningtree_with_context(
             &mut computation,
             Some(graph_view.as_ref()),
-            &mut progress_tracker,
-            &termination,
+            progress_tracker,
+            termination,
         )?;
 
         Ok((result, start.elapsed()))
@@ -196,9 +225,27 @@ impl KSpanningTreeBuilder {
         Ok(Box::new(rows.into_iter()))
     }
 
+    pub fn stream_with_context(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination: &TerminationFlag,
+    ) -> Result<Vec<KSpanningTreeRow>> {
+        let (result, elapsed) = self.compute_with_context(progress_tracker, termination)?;
+        Ok(KSpanningTreeResultBuilder::new(result, elapsed).rows())
+    }
+
     /// Stats mode: returns aggregated statistics
     pub fn stats(self) -> Result<KSpanningTreeStats> {
         let (result, elapsed) = self.compute()?;
+        Ok(KSpanningTreeResultBuilder::new(result, elapsed).stats())
+    }
+
+    pub fn stats_with_context(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination: &TerminationFlag,
+    ) -> Result<KSpanningTreeStats> {
+        let (result, elapsed) = self.compute_with_context(progress_tracker, termination)?;
         Ok(KSpanningTreeResultBuilder::new(result, elapsed).stats())
     }
 
@@ -270,6 +317,7 @@ mod tests {
     use super::*;
     use crate::config::GraphStoreConfig;
     use crate::procedures::GraphFacade;
+    use crate::task::progress::NoopProgressTracker;
 
     use crate::projection::RelationshipType;
     use crate::types::graph::OriginalNodeId;
@@ -364,6 +412,21 @@ mod tests {
 
         // Should have at most 3 nodes
         assert!(rows.len() <= 3);
+    }
+
+    #[test]
+    fn facade_honors_pre_terminated_request() {
+        let store = store_from_undirected_edges(4, &[(0, 1), (1, 2), (2, 3)]);
+        let mut progress_tracker = NoopProgressTracker;
+        let termination = TerminationFlag::stop_running();
+
+        let error = KSpanningTreeBuilder::new(Arc::new(store))
+            .source_node(0)
+            .k(3)
+            .stream_with_context(&mut progress_tracker, &termination)
+            .unwrap_err();
+
+        assert!(error.to_string().contains("terminated"));
     }
 
     #[test]

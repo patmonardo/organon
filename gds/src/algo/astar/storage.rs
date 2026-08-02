@@ -7,6 +7,7 @@
 use super::AStarComputationResult;
 use crate::algo::dijkstra::{DijkstraComputationRuntime, DijkstraStorageRuntime, SingleTarget};
 use crate::projection::eval::algorithm::AlgorithmError;
+use crate::task::concurrency::TerminationFlag;
 use crate::task::progress::ProgressTracker;
 use crate::types::graph::Graph;
 use crate::types::graph::MappedNodeId;
@@ -75,45 +76,68 @@ impl AStarStorageRuntime {
     /// Translation of: `AStar.compute()` (lines 92-94) and `HaversineHeuristic`
     pub fn compute_astar_path(
         &mut self,
-        _computation: &mut super::AStarComputationRuntime,
+        computation: &mut super::AStarComputationRuntime,
         graph: Option<&dyn Graph>,
         direction: u8,
         progress_tracker: &mut dyn ProgressTracker,
     ) -> Result<AStarComputationResult, String> {
-        if graph.is_none() {
-            progress_tracker.begin_subtask_unknown();
-            let result = (|| {
-                let mut path = Vec::new();
-                let total_cost;
-                let nodes_explored;
-                if self.source_node != self.target_node {
-                    path.push(self.source_node);
-                    path.push(self.target_node);
-                    total_cost =
-                        self.compute_haversine_distance(self.source_node, self.target_node)?;
-                    nodes_explored = 2;
-                } else {
-                    path.push(self.source_node);
-                    total_cost = 0.0;
-                    nodes_explored = 1;
-                }
-                return Ok(AStarComputationResult::new(
-                    Some(path),
-                    total_cost,
-                    nodes_explored,
-                ));
-            })();
+        let volume = graph.map(|value| value.relationship_count());
+        match volume {
+            Some(volume) => progress_tracker.begin_subtask_with_volume(volume),
+            None => progress_tracker.begin_subtask_unknown(),
+        }
+        let termination_flag = TerminationFlag::running_true();
+        let result = self.compute_astar_path_with_context(
+            computation,
+            graph,
+            direction,
+            progress_tracker,
+            &termination_flag,
+        );
 
-            return match result {
-                Ok(v) => {
-                    progress_tracker.end_subtask();
-                    Ok(v)
-                }
-                Err(e) => {
-                    progress_tracker.end_subtask_with_failure();
-                    Err(e)
-                }
-            };
+        match result {
+            Ok(value) => {
+                progress_tracker.end_subtask();
+                Ok(value)
+            }
+            Err(error) => {
+                progress_tracker.end_subtask_with_failure();
+                Err(error)
+            }
+        }
+    }
+
+    pub fn compute_astar_path_with_context(
+        &mut self,
+        _computation: &mut super::AStarComputationRuntime,
+        graph: Option<&dyn Graph>,
+        direction: u8,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<AStarComputationResult, String> {
+        if !termination_flag.running() {
+            return Err("A* computation terminated".to_string());
+        }
+
+        if graph.is_none() {
+            let mut path = Vec::new();
+            let total_cost;
+            let nodes_explored;
+            if self.source_node != self.target_node {
+                path.push(self.source_node);
+                path.push(self.target_node);
+                total_cost = self.compute_haversine_distance(self.source_node, self.target_node)?;
+                nodes_explored = 2;
+            } else {
+                path.push(self.source_node);
+                total_cost = 0.0;
+                nodes_explored = 1;
+            }
+            return Ok(AStarComputationResult::new(
+                Some(path),
+                total_cost,
+                nodes_explored,
+            ));
         }
 
         let g = graph.unwrap();
@@ -128,12 +152,13 @@ impl AStarStorageRuntime {
         let targets = Box::new(SingleTarget::new(self.target_node));
 
         let dijkstra_result = dijkstra_storage
-            .compute_dijkstra(
+            .compute_dijkstra_with_context(
                 &mut dijkstra_computation,
                 targets,
                 graph,
                 direction,
                 progress_tracker,
+                termination_flag,
             )
             .map_err(Self::algorithm_error_to_string)?;
 
@@ -338,6 +363,7 @@ impl AStarStorageRuntime {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::task::progress::NoopProgressTracker;
 
     fn node(value: u64) -> MappedNodeId {
         MappedNodeId::new(value)
@@ -356,6 +382,29 @@ mod tests {
         assert_eq!(storage.target_node(), node(1));
         assert_eq!(storage.latitude_property(), "latitude");
         assert_eq!(storage.longitude_property(), "longitude");
+    }
+
+    #[test]
+    fn context_computation_honors_pre_terminated_request() {
+        let mut storage = AStarStorageRuntime::new(
+            node(0),
+            node(1),
+            "latitude".to_string(),
+            "longitude".to_string(),
+        );
+        let mut computation = super::super::AStarComputationRuntime::new();
+        let mut progress_tracker = NoopProgressTracker;
+        let termination_flag = TerminationFlag::stop_running();
+
+        let result = storage.compute_astar_path_with_context(
+            &mut computation,
+            None,
+            0,
+            &mut progress_tracker,
+            &termination_flag,
+        );
+
+        assert!(matches!(result, Err(message) if message.contains("terminated")));
     }
 
     #[test]

@@ -9,6 +9,7 @@ use std::collections::HashSet;
 use std::fmt;
 
 pub use builtins::ALGORITHM_BUILTINS;
+pub use builtins::PIPELINE_BUILTINS;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize)]
 #[serde(transparent)]
@@ -39,6 +40,7 @@ pub enum ShellComponentCategory {
     Similarity,
     Embeddings,
     Miscellaneous,
+    Pipeline,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize)]
@@ -125,6 +127,12 @@ impl BuiltinComponentSuite {
         }
     }
 
+    pub const fn pipelines() -> Self {
+        Self {
+            entries: PIPELINE_BUILTINS,
+        }
+    }
+
     pub const fn all(self) -> &'static [ShellComponentDescriptor] {
         self.entries
     }
@@ -175,7 +183,9 @@ pub enum ShellComponentSuiteError {
 }
 
 pub fn builtin_component(name: &str) -> Option<BuiltinComponentRef> {
-    BuiltinComponentSuite::algorithms().find(name)
+    BuiltinComponentSuite::algorithms()
+        .find(name)
+        .or_else(|| BuiltinComponentSuite::pipelines().find(name))
 }
 
 #[cfg(test)]
@@ -209,5 +219,19 @@ mod tests {
 
         assert_eq!(call.component.as_str(), "gds.algorithms.pathfinding.bfs");
         assert_eq!(call.inputs.get("source"), Some(&Value::from(7_u64)));
+    }
+
+    #[test]
+    fn pipeline_suite_has_unique_valid_entries() {
+        let suite = BuiltinComponentSuite::pipelines();
+        assert_eq!(suite.all().len(), 6);
+        assert_eq!(suite.validate(), Ok(()));
+
+        let create = builtin_component("gds.pipelines.node_classification.create").unwrap();
+        assert_eq!(
+            create.descriptor().alias,
+            "create_node_classification_pipeline"
+        );
+        assert!(create.descriptor().supports(ShellComponentMode::Invoke));
     }
 }

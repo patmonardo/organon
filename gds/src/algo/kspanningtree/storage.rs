@@ -2,9 +2,9 @@
 
 use super::computation::KSpanningTreeComputationRuntime;
 use super::spec::KSpanningTreeResult;
+use crate::projection::eval::algorithm::AlgorithmError;
 use crate::task::concurrency::TerminationFlag;
 use crate::task::progress::ProgressTracker;
-use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::Graph;
 use crate::types::graph::MappedNodeId;
 
@@ -67,6 +67,36 @@ impl KSpanningTreeStorageRuntime {
         progress_tracker: &mut dyn ProgressTracker,
         termination: &TerminationFlag,
     ) -> Result<KSpanningTreeResult, AlgorithmError> {
+        let progress_volume = graph.map(|graph| graph.relationship_count()).unwrap_or(0);
+        progress_tracker.begin_subtask_with_volume(progress_volume);
+        let result = self.compute_kspanningtree_with_context(
+            computation,
+            graph,
+            progress_tracker,
+            termination,
+        );
+
+        match result {
+            Ok(value) => {
+                progress_tracker.end_subtask();
+                Ok(value)
+            }
+            Err(error) => {
+                progress_tracker.end_subtask_with_failure();
+                Err(error)
+            }
+        }
+    }
+
+    /// Compute k-spanning tree within a caller-owned progress lifecycle.
+    pub fn compute_kspanningtree_with_context(
+        &self,
+        computation: &mut KSpanningTreeComputationRuntime,
+        graph: Option<&dyn Graph>,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination: &TerminationFlag,
+    ) -> Result<KSpanningTreeResult, AlgorithmError> {
+        Self::ensure_running(termination)?;
         let graph = graph.ok_or_else(|| {
             AlgorithmError::Execution("Graph interface required for k-spanning tree".to_string())
         })?;
@@ -74,10 +104,6 @@ impl KSpanningTreeStorageRuntime {
         let node_count = graph.node_count();
 
         // Step 1: Compute MST using Prim's algorithm via spanning tree storage
-        // NOTE: We avoid starting our own progress subtask here because callers often pass a
-        // `TaskProgressTracker` with a leaf base task; nested `begin_subtask*` calls would
-        // attempt to restart the same leaf task and panic. The spanning tree implementation
-        // manages its own begin/end calls.
         let is_min = self.objective == "min";
         let mst_result =
             self.compute_mst_using_prim(graph, is_min, progress_tracker, termination)?;
@@ -112,9 +138,12 @@ impl KSpanningTreeStorageRuntime {
         }
 
         // Step 4: Apply k-limiting logic
-        computation.apply_k_limiting(self.k as usize, is_min, |node_id| {
-            self.get_neighbors_from_graph(graph, node_id)
-        });
+        computation.apply_k_limiting(
+            self.k as usize,
+            is_min,
+            |node_id| self.get_neighbors_from_graph(graph, node_id),
+            termination,
+        )?;
 
         Ok(KSpanningTreeResult {
             parent: computation.get_parent().iter().map(|&x| x as i64).collect(),
@@ -157,13 +186,22 @@ impl KSpanningTreeStorageRuntime {
         );
 
         // Compute MST
-        spanning_tree_storage.compute_spanning_tree_with_termination(
+        spanning_tree_storage.compute_spanning_tree_with_context(
             &mut spanning_tree_computation,
             Some(graph),
             2, // undirected
             progress_tracker,
             termination,
         )
+    }
+
+    fn ensure_running(termination: &TerminationFlag) -> Result<(), AlgorithmError> {
+        if !termination.running() {
+            return Err(AlgorithmError::Execution(
+                "K-spanning tree computation terminated".to_string(),
+            ));
+        }
+        Ok(())
     }
 
     /// Get neighbors from graph interface
@@ -181,5 +219,30 @@ impl KSpanningTreeStorageRuntime {
                     .map(|target| (target, cursor.weight()))
             })
             .collect()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::task::progress::NoopProgressTracker;
+
+    #[test]
+    fn context_computation_honors_pre_terminated_request() {
+        let storage = KSpanningTreeStorageRuntime::new(MappedNodeId::new(0), 1, "min".to_string());
+        let mut computation = KSpanningTreeComputationRuntime::new(0);
+        let mut progress_tracker = NoopProgressTracker;
+        let termination = TerminationFlag::stop_running();
+
+        let error = storage
+            .compute_kspanningtree_with_context(
+                &mut computation,
+                None,
+                &mut progress_tracker,
+                &termination,
+            )
+            .unwrap_err();
+
+        assert!(error.to_string().contains("terminated"));
     }
 }

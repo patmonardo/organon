@@ -10,6 +10,7 @@ use super::spec::{DijkstraPathResult, DijkstraResult};
 use super::targets::Targets;
 use super::DijkstraComputationRuntime;
 use crate::projection::eval::algorithm::AlgorithmError;
+use crate::task::concurrency::TerminationFlag;
 use crate::task::progress::{ProgressTracker, UNKNOWN_VOLUME};
 use crate::types::graph::Graph;
 use crate::types::graph::MappedNodeId;
@@ -101,7 +102,7 @@ impl DijkstraStorageRuntime {
     pub fn compute_dijkstra(
         &mut self,
         computation: &mut DijkstraComputationRuntime,
-        mut targets: Box<dyn Targets>,
+        targets: Box<dyn Targets>,
         graph: Option<&dyn Graph>,
         direction: u8,
         progress_tracker: &mut dyn ProgressTracker,
@@ -115,9 +116,42 @@ impl DijkstraStorageRuntime {
             progress_tracker.begin_subtask_with_volume(volume);
         }
 
+        let termination_flag = TerminationFlag::running_true();
+        let result = self.compute_dijkstra_with_context(
+            computation,
+            targets,
+            graph,
+            direction,
+            progress_tracker,
+            &termination_flag,
+        );
+
+        match result {
+            Ok(value) => {
+                progress_tracker.end_subtask();
+                Ok(value)
+            }
+            Err(error) => {
+                progress_tracker.end_subtask_with_failure();
+                Err(error)
+            }
+        }
+    }
+
+    pub fn compute_dijkstra_with_context(
+        &mut self,
+        computation: &mut DijkstraComputationRuntime,
+        mut targets: Box<dyn Targets>,
+        graph: Option<&dyn Graph>,
+        direction: u8,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<DijkstraResult, AlgorithmError> {
+        Self::ensure_running(termination_flag)?;
+
         let start_time = Instant::now();
 
-        let result = (|| {
+        (|| {
             // Initialize computation runtime
             // Bind to actual node count from a Graph view when available
             let node_count = graph.map(|g| g.node_count()).unwrap_or(100);
@@ -140,6 +174,7 @@ impl DijkstraStorageRuntime {
 
             // Main Dijkstra loop
             while !computation.is_queue_empty() {
+                Self::ensure_running(termination_flag)?;
                 // Get node with minimum cost
                 let (current_node, current_cost) = computation.pop_from_queue();
 
@@ -190,17 +225,16 @@ impl DijkstraStorageRuntime {
                 edges_considered,
                 max_queue_size,
             })
-        })();
+        })()
+    }
 
-        match result {
-            Ok(v) => {
-                progress_tracker.end_subtask();
-                Ok(v)
-            }
-            Err(e) => {
-                progress_tracker.end_subtask_with_failure();
-                Err(e)
-            }
+    fn ensure_running(termination_flag: &TerminationFlag) -> Result<(), AlgorithmError> {
+        if termination_flag.running() {
+            Ok(())
+        } else {
+            Err(AlgorithmError::Execution(
+                "Dijkstra computation terminated".to_string(),
+            ))
         }
     }
 
@@ -468,6 +502,28 @@ mod tests {
         assert!(storage.track_relationships);
         assert_eq!(storage.concurrency, 4);
         assert!(!storage.use_heuristic);
+    }
+
+    #[test]
+    fn context_computation_honors_pre_terminated_request() {
+        let mut storage = DijkstraStorageRuntime::new(node(0), false, 1, false);
+        let mut computation = DijkstraComputationRuntime::new(node(0), false, 1, false);
+        let targets = Box::new(AllTargets::new());
+        let mut progress_tracker = TaskProgressTracker::new(Tasks::leaf("dijkstra".to_string()));
+        let termination_flag = TerminationFlag::stop_running();
+
+        let result = storage.compute_dijkstra_with_context(
+            &mut computation,
+            targets,
+            None,
+            0,
+            &mut progress_tracker,
+            &termination_flag,
+        );
+
+        assert!(
+            matches!(result, Err(AlgorithmError::Execution(message)) if message.contains("terminated"))
+        );
     }
 
     #[test]

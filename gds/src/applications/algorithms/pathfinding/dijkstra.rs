@@ -10,10 +10,10 @@ use crate::applications::algorithms::machinery::{
 use crate::applications::algorithms::pathfinding::{
     err, get_bool, get_str, get_u64, timings_json, CommonRequest, Mode,
 };
-use crate::task::concurrency::TerminationFlag;
 use crate::core::loading::{CatalogLoader, GraphResources};
-use crate::task::progress::{JobId, ProgressTracker, TaskRegistryFactories, Tasks};
 use crate::projection::eval::algorithm::AlgorithmError;
+use crate::task::concurrency::TerminationFlag;
+use crate::task::progress::{JobId, ProgressTracker, TaskRegistryFactories, Tasks};
 use crate::types::catalog::GraphCatalog;
 use serde_json::{json, Value};
 use std::sync::Arc;
@@ -81,8 +81,8 @@ pub fn handle_dijkstra(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value
 
             let targets = targets.clone();
             let compute = move |gr: &GraphResources,
-                                _tracker: &mut dyn ProgressTracker,
-                                _termination: &TerminationFlag|
+                                tracker: &mut dyn ProgressTracker,
+                                termination: &TerminationFlag|
                   -> Result<Option<Vec<Value>>, String> {
                 let mut builder = gr
                     .facade()
@@ -98,9 +98,10 @@ pub fn handle_dijkstra(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value
                 }
 
                 let iter = builder
-                    .stream()
+                    .stream_with_context(tracker, termination)
                     .map_err(|e: AlgorithmError| e.to_string())?;
                 let rows = iter
+                    .into_iter()
                     .map(|row| serde_json::to_value(row).map_err(|e| e.to_string()))
                     .collect::<Result<Vec<_>, _>>()?;
                 Ok(Some(rows))
@@ -144,8 +145,8 @@ pub fn handle_dijkstra(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value
 
             let targets = targets.clone();
             let compute = move |gr: &GraphResources,
-                                _tracker: &mut dyn ProgressTracker,
-                                _termination: &TerminationFlag|
+                                tracker: &mut dyn ProgressTracker,
+                                termination: &TerminationFlag|
                   -> Result<Option<Value>, String> {
                 let mut builder = gr
                     .facade()
@@ -160,7 +161,9 @@ pub fn handle_dijkstra(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value
                     builder = builder.targets(targets.clone());
                 }
 
-                let stats = builder.stats().map_err(|e| e.to_string())?;
+                let stats = builder
+                    .stats_with_context(tracker, termination)
+                    .map_err(|e| e.to_string())?;
                 Ok(Some(
                     serde_json::to_value(stats).map_err(|e| e.to_string())?,
                 ))

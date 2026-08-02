@@ -71,39 +71,13 @@ impl TopologicalSortStorageRuntime {
         let node_count = graph.node_count();
         progress_tracker.begin_subtask_with_volume(node_count);
 
-        let result = (|| {
-            // Pre-collect all edges from the graph
-            let fallback = graph.default_property_value();
-            let mut edge_list: Vec<Vec<(MappedNodeId, f64)>> = vec![Vec::new(); node_count];
-
-            for node_index in 0..node_count {
-                let node_id = MappedNodeId::try_from(node_index)
-                    .expect("graph node count must fit mapped ID space");
-                let neighbors: Vec<(MappedNodeId, f64)> = graph
-                    .stream_relationships(node_id, fallback)
-                    .map(|cursor| (cursor.target_id(), cursor.property()))
-                    .collect();
-
-                edge_list[node_index] = neighbors;
-            }
-
-            let edge_list = std::sync::Arc::new(edge_list);
-            let get_neighbors = move |node_idx: MappedNodeId| -> Vec<(MappedNodeId, f64)> {
-                let node_index = node_idx
-                    .to_usize()
-                    .expect("mapped graph node must fit physical index space");
-                edge_list[node_index].clone()
-            };
-
-            let result = computation.compute_with_concurrency(
-                node_count,
-                concurrency,
-                termination,
-                get_neighbors,
-            )?;
-            progress_tracker.log_progress(node_count);
-            Ok(result)
-        })();
+        let result = self.compute_topological_sort_with_context(
+            computation,
+            graph,
+            progress_tracker,
+            concurrency,
+            termination,
+        );
 
         match result {
             Ok(result) => {
@@ -116,11 +90,96 @@ impl TopologicalSortStorageRuntime {
             }
         }
     }
+
+    pub fn compute_topological_sort_with_context(
+        &self,
+        computation: &mut TopologicalSortComputationRuntime,
+        graph: &dyn Graph,
+        progress_tracker: &mut dyn ProgressTracker,
+        concurrency: usize,
+        termination: &TerminationFlag,
+    ) -> Result<TopologicalSortResult, AlgorithmError> {
+        Self::ensure_running(termination)?;
+        let node_count = graph.node_count();
+        let fallback = graph.default_property_value();
+        let mut edge_list: Vec<Vec<(MappedNodeId, f64)>> = vec![Vec::new(); node_count];
+
+        for node_index in 0..node_count {
+            Self::ensure_running(termination)?;
+            let node_id = MappedNodeId::try_from(node_index)
+                .expect("graph node count must fit mapped ID space");
+            for cursor in graph.stream_relationships(node_id, fallback) {
+                Self::ensure_running(termination)?;
+                edge_list[node_index].push((cursor.target_id(), cursor.property()));
+            }
+        }
+
+        let edge_list = std::sync::Arc::new(edge_list);
+        let get_neighbors = move |node_idx: MappedNodeId| -> Vec<(MappedNodeId, f64)> {
+            let node_index = node_idx
+                .to_usize()
+                .expect("mapped graph node must fit physical index space");
+            edge_list[node_index].clone()
+        };
+
+        let result = computation.compute_with_concurrency(
+            node_count,
+            concurrency,
+            termination,
+            get_neighbors,
+        )?;
+        progress_tracker.log_progress(node_count);
+        Ok(result)
+    }
+
+    fn ensure_running(termination: &TerminationFlag) -> Result<(), AlgorithmError> {
+        if !termination.running() {
+            return Err(AlgorithmError::Execution(
+                "Topological sort computation terminated".to_string(),
+            ));
+        }
+        Ok(())
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::projection::Orientation;
+    use crate::task::progress::NoopProgressTracker;
+    use crate::types::graph_store::{DefaultGraphStore, GraphStore};
+    use crate::types::random::{RandomGraphConfig, RandomRelationshipConfig};
+    use std::collections::HashSet;
+
+    #[test]
+    fn context_computation_honors_pre_terminated_request() {
+        let config = RandomGraphConfig {
+            seed: Some(31),
+            node_count: 4,
+            relationships: vec![RandomRelationshipConfig::new("REL", 0.5)],
+            ..RandomGraphConfig::default()
+        };
+        let store = DefaultGraphStore::random(&config).unwrap();
+        let graph = store
+            .get_graph_with_types_and_orientation(&HashSet::new(), Orientation::Natural)
+            .unwrap();
+        let storage = TopologicalSortStorageRuntime::new(graph.node_count(), false);
+        let mut computation = TopologicalSortComputationRuntime::new(graph.node_count(), false);
+        let mut progress_tracker = NoopProgressTracker;
+        let termination = TerminationFlag::stop_running();
+
+        let result = storage.compute_topological_sort_with_context(
+            &mut computation,
+            graph.as_ref(),
+            &mut progress_tracker,
+            2,
+            &termination,
+        );
+
+        assert!(
+            matches!(result, Err(AlgorithmError::Execution(message)) if message.contains("terminated"))
+        );
+    }
 
     #[test]
     fn initializes_result_state_without_distance_storage() {

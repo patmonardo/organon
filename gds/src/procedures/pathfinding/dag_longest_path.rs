@@ -22,7 +22,7 @@ use std::time::Instant;
 // Import upgraded systems
 use crate::algo::algorithms::pathfinding::PathResult;
 use crate::task::concurrency::TerminationFlag;
-use crate::task::progress::{TaskProgressTracker, TaskRegistryFactory, Tasks};
+use crate::task::progress::{ProgressTracker, TaskProgressTracker, TaskRegistryFactory, Tasks};
 
 /// DAG Longest Path algorithm builder
 pub struct DagLongestPathBuilder {
@@ -79,7 +79,39 @@ impl DagLongestPathBuilder {
     }
 
     fn compute(self) -> Result<(DagLongestPathResult, std::time::Duration)> {
+        let node_count = self.graph_store.node_count();
+        let concurrency = self.concurrency;
+        let mut progress_tracker = TaskProgressTracker::with_concurrency(
+            Tasks::leaf_with_volume("dag_longest_path".to_string(), node_count),
+            concurrency,
+        );
+        let termination = TerminationFlag::running_true();
+
+        progress_tracker.begin_subtask_with_volume(node_count);
+        let result = self.compute_with_context(&mut progress_tracker, &termination);
+        match result {
+            Ok(value) => {
+                progress_tracker.end_subtask();
+                Ok(value)
+            }
+            Err(error) => {
+                progress_tracker.end_subtask_with_failure();
+                Err(error)
+            }
+        }
+    }
+
+    fn compute_with_context(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination: &TerminationFlag,
+    ) -> Result<(DagLongestPathResult, std::time::Duration)> {
         self.validate()?;
+        if !termination.running() {
+            return Err(AlgorithmError::Execution(
+                "DAG longest path computation terminated".to_string(),
+            ));
+        }
 
         let start = Instant::now();
 
@@ -95,20 +127,15 @@ impl DagLongestPathBuilder {
             return Ok((DagLongestPathResult { paths: Vec::new() }, start.elapsed()));
         }
 
-        let mut progress_tracker = TaskProgressTracker::with_concurrency(
-            Tasks::leaf_with_volume("dag_longest_path".to_string(), node_count),
-            self.concurrency,
-        );
-        let termination = TerminationFlag::running_true();
         let storage = DagLongestPathStorageRuntime::new(node_count);
         let mut runtime = DagLongestPathComputationRuntime::new(node_count);
         let result = storage
-            .compute_dag_longest_path(
+            .compute_dag_longest_path_with_context(
                 &mut runtime,
                 graph_view.as_ref(),
-                &mut progress_tracker,
+                progress_tracker,
                 self.concurrency,
-                &termination,
+                termination,
             )
             .map_err(|e| AlgorithmError::Execution(format!("DAG longest path terminated: {e}")))?;
 
@@ -122,9 +149,27 @@ impl DagLongestPathBuilder {
         Ok(Box::new(rows.into_iter()))
     }
 
+    pub fn stream_with_context(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination: &TerminationFlag,
+    ) -> Result<Vec<DagLongestPathRow>> {
+        let (result, elapsed) = self.compute_with_context(progress_tracker, termination)?;
+        Ok(DagLongestPathResultBuilder::new(result, elapsed).rows())
+    }
+
     /// Stats mode: returns aggregated statistics
     pub fn stats(self) -> Result<DagLongestPathStats> {
         let (result, elapsed) = self.compute()?;
+        Ok(DagLongestPathResultBuilder::new(result, elapsed).stats())
+    }
+
+    pub fn stats_with_context(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination: &TerminationFlag,
+    ) -> Result<DagLongestPathStats> {
+        let (result, elapsed) = self.compute_with_context(progress_tracker, termination)?;
         Ok(DagLongestPathResultBuilder::new(result, elapsed).stats())
     }
 
@@ -179,6 +224,7 @@ impl DagLongestPathBuilder {
 mod tests {
     use super::*;
     use crate::config::GraphStoreConfig;
+    use crate::task::progress::NoopProgressTracker;
 
     use crate::projection::RelationshipType;
     use crate::types::graph::MappedNodeId;
@@ -234,6 +280,20 @@ mod tests {
             id_map,
             relationship_topologies,
         )
+    }
+
+    #[test]
+    fn context_execution_honors_pre_terminated_request() {
+        let store = Arc::new(store_from_directed_edges(3, &[(0, 1), (1, 2)]));
+        let mut progress_tracker = NoopProgressTracker;
+        let termination = TerminationFlag::stop_running();
+
+        let result = DagLongestPathBuilder::new(store)
+            .stream_with_context(&mut progress_tracker, &termination);
+
+        assert!(
+            matches!(result, Err(AlgorithmError::Execution(message)) if message.contains("terminated"))
+        );
     }
 
     #[test]

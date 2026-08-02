@@ -14,7 +14,7 @@ use crate::algo::dijkstra::{DijkstraComputationRuntime, DijkstraStorageRuntime};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::task::concurrency::virtual_threads::Executor;
 use crate::task::concurrency::{Concurrency, TerminationFlag};
-use crate::task::progress::{ProgressTracker, TaskProgressTracker, Tasks, UNKNOWN_VOLUME};
+use crate::task::progress::{NoopProgressTracker, ProgressTracker};
 use crate::types::graph::Graph;
 use crate::types::graph::MappedNodeId;
 use crate::types::graph::RelationshipIndex;
@@ -65,12 +65,12 @@ impl YensStorageRuntime {
         graph: Option<&dyn Graph>,
         direction: u8,
         progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
     ) -> Result<YensResult, AlgorithmError> {
         let start_time = std::time::Instant::now();
 
-        progress_tracker.begin_subtask_with_volume(self.k);
-
-        let result = (|| {
+        (|| {
+            Self::ensure_running(termination_flag)?;
             let node_count = graph.map(|g| g.node_count()).unwrap_or(100);
             self.validate(node_count)?;
 
@@ -83,7 +83,8 @@ impl YensStorageRuntime {
             );
 
             // Find first shortest path using Dijkstra
-            let first_path = self.find_first_path(graph, direction)?;
+            Self::ensure_running(termination_flag)?;
+            let first_path = self.find_first_path(graph, direction, termination_flag)?;
             if first_path.is_none() {
                 return Ok(YensResult {
                     paths: Vec::new(),
@@ -102,6 +103,7 @@ impl YensStorageRuntime {
 
             // Main Yen's algorithm loop
             for solution_index in 1..self.k {
+                Self::ensure_running(termination_flag)?;
                 if let Some(prev_path) = k_shortest_paths.get(solution_index - 1) {
                     // Generate candidate paths from previous path
                     let candidates = self.generate_candidates(
@@ -110,6 +112,7 @@ impl YensStorageRuntime {
                         &k_shortest_paths,
                         graph,
                         direction,
+                        termination_flag,
                     )?;
 
                     for candidate in candidates {
@@ -157,18 +160,7 @@ impl YensStorageRuntime {
                 spur_searches: computation.spur_search_count() as u64,
                 candidates_generated: computation.candidates_generated_count() as u64,
             })
-        })();
-
-        match result {
-            Ok(value) => {
-                progress_tracker.end_subtask();
-                Ok(value)
-            }
-            Err(e) => {
-                progress_tracker.end_subtask_with_failure();
-                Err(e)
-            }
-        }
+        })()
     }
 
     fn validate(&self, node_count: usize) -> Result<(), AlgorithmError> {
@@ -192,6 +184,16 @@ impl YensStorageRuntime {
         Ok(())
     }
 
+    fn ensure_running(termination_flag: &TerminationFlag) -> Result<(), AlgorithmError> {
+        if termination_flag.running() {
+            Ok(())
+        } else {
+            Err(AlgorithmError::Execution(
+                "Yen's computation terminated".to_string(),
+            ))
+        }
+    }
+
     fn validate_node_in_graph(
         node_id: MappedNodeId,
         node_count: usize,
@@ -213,8 +215,16 @@ impl YensStorageRuntime {
         &self,
         graph: Option<&dyn Graph>,
         direction: u8,
+        termination_flag: &TerminationFlag,
     ) -> Result<Option<MutablePathResult>, AlgorithmError> {
-        self.shortest_path(self.source_node, self.target_node, graph, direction, None)
+        self.shortest_path(
+            self.source_node,
+            self.target_node,
+            graph,
+            direction,
+            None,
+            termination_flag,
+        )
     }
 
     #[allow(clippy::type_complexity)]
@@ -227,6 +237,7 @@ impl YensStorageRuntime {
         extra_filter: Option<
             Box<dyn Fn(MappedNodeId, MappedNodeId, RelationshipIndex) -> bool + Send + Sync>,
         >,
+        termination_flag: &TerminationFlag,
     ) -> Result<Option<MutablePathResult>, AlgorithmError> {
         let targets = create_targets(vec![target]);
 
@@ -244,20 +255,15 @@ impl YensStorageRuntime {
             false,
         );
 
-        let volume = graph
-            .map(|g| g.relationship_count())
-            .unwrap_or(UNKNOWN_VOLUME);
-        let mut progress_tracker = TaskProgressTracker::with_concurrency(
-            Tasks::leaf_with_volume("dijkstra".to_string(), volume),
-            self.concurrency,
-        );
+        let mut progress_tracker = NoopProgressTracker;
 
-        let result = storage.compute_dijkstra(
+        let result = storage.compute_dijkstra_with_context(
             &mut computation,
             targets,
             graph,
             direction,
             &mut progress_tracker,
+            termination_flag,
         )?;
         let first = result.path_finding_result.paths().next().cloned();
 
@@ -289,6 +295,7 @@ impl YensStorageRuntime {
         k_shortest_paths: &[MutablePathResult],
         graph: Option<&dyn Graph>,
         direction: u8,
+        termination_flag: &TerminationFlag,
     ) -> Result<Vec<MutablePathResult>, AlgorithmError> {
         let mut candidates = Vec::new();
 
@@ -309,10 +316,12 @@ impl YensStorageRuntime {
                 direction,
                 start_spur_index,
                 end_spur_index,
+                termination_flag,
             );
         }
 
         for spur_index in start_spur_index..end_spur_index {
+            Self::ensure_running(termination_flag)?;
             computation.record_spur_search();
             if let Some(candidate) = self.generate_candidate_at_spur(
                 computation,
@@ -321,6 +330,7 @@ impl YensStorageRuntime {
                 graph,
                 direction,
                 spur_index,
+                termination_flag,
             )? {
                 computation.record_candidate_generated();
                 candidates.push(candidate);
@@ -339,14 +349,14 @@ impl YensStorageRuntime {
         direction: u8,
         start_spur_index: usize,
         end_spur_index: usize,
+        termination_flag: &TerminationFlag,
     ) -> Result<Vec<MutablePathResult>, AlgorithmError> {
         let executor = Executor::new(Concurrency::of(self.concurrency));
-        let termination = TerminationFlag::running_true();
         let results = executor
             .parallel_map(
                 start_spur_index,
                 end_spur_index,
-                &termination,
+                termination_flag,
                 |spur_index| {
                     let mut local_computation = YensComputationRuntime::new(
                         self.source_node,
@@ -363,6 +373,7 @@ impl YensStorageRuntime {
                         graph,
                         direction,
                         spur_index,
+                        termination_flag,
                     )
                 },
             )
@@ -390,6 +401,7 @@ impl YensStorageRuntime {
         graph: Option<&dyn Graph>,
         direction: u8,
         spur_index: usize,
+        termination_flag: &TerminationFlag,
     ) -> Result<Option<MutablePathResult>, AlgorithmError> {
         let spur_node = prev_path.node_ids[spur_index];
 
@@ -420,15 +432,17 @@ impl YensStorageRuntime {
                 return false;
             }
 
-            relationship_filterer.valid_relationship(
-                source,
-                target,
-                    relationship_id,
-            )
+            relationship_filterer.valid_relationship(source, target, relationship_id)
         });
 
-        let spur_path =
-            self.shortest_path(spur_node, self.target_node, graph, direction, Some(filter))?;
+        let spur_path = self.shortest_path(
+            spur_node,
+            self.target_node,
+            graph,
+            direction,
+            Some(filter),
+            termination_flag,
+        )?;
         let Some(spur_path) = spur_path else {
             return Ok(None);
         };
@@ -452,7 +466,7 @@ impl YensStorageRuntime {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::task::progress::TaskProgressTracker;
+    use crate::task::progress::{TaskProgressTracker, Tasks};
     use crate::types::prelude::DefaultGraphStore;
     use crate::types::random::{RandomGraphConfig, RandomRelationshipConfig};
     use std::sync::Arc;
@@ -494,6 +508,7 @@ mod tests {
             Tasks::leaf_with_volume("yens".to_string(), 3),
             1,
         );
+        let termination_flag = TerminationFlag::running_true();
 
         let result = storage
             .compute_yens(
@@ -501,6 +516,7 @@ mod tests {
                 Some(graph.as_ref()),
                 0,
                 &mut progress_tracker,
+                &termination_flag,
             )
             .unwrap();
 
@@ -521,9 +537,16 @@ mod tests {
             Tasks::leaf_with_volume("yens".to_string(), 3),
             1,
         );
+        let termination_flag = TerminationFlag::running_true();
 
         let result = storage
-            .compute_yens(&mut computation, None, 0, &mut progress_tracker)
+            .compute_yens(
+                &mut computation,
+                None,
+                0,
+                &mut progress_tracker,
+                &termination_flag,
+            )
             .unwrap();
 
         assert_eq!(result.path_count, 3);
@@ -565,6 +588,31 @@ mod tests {
     }
 
     #[test]
+    fn rejects_pre_terminated_computation_before_work() {
+        let storage = YensStorageRuntime::new(node(0), node(3), 3, false, 1);
+        let mut computation = YensComputationRuntime::new(node(0), node(3), 3, false, 1);
+        let mut progress_tracker = TaskProgressTracker::with_concurrency(
+            Tasks::leaf_with_volume("yens".to_string(), 3),
+            1,
+        );
+        let termination_flag = TerminationFlag::stop_running();
+
+        let result = storage.compute_yens(
+            &mut computation,
+            None,
+            0,
+            &mut progress_tracker,
+            &termination_flag,
+        );
+
+        assert!(
+            matches!(result, Err(AlgorithmError::Execution(message)) if message.contains("terminated"))
+        );
+        assert_eq!(computation.paths_found_count(), 0);
+        assert_eq!(computation.spur_search_count(), 0);
+    }
+
+    #[test]
     fn lawler_spur_index_skips_earlier_candidates() {
         let storage = YensStorageRuntime::new(node(0), node(3), 3, false, 1);
         let mut computation = YensComputationRuntime::new(node(0), node(3), 3, false, 1);
@@ -577,8 +625,16 @@ mod tests {
             vec![0.0, 1.0, 3.0, 4.0],
         );
 
+        let termination_flag = TerminationFlag::running_true();
         let candidates = storage
-            .generate_candidates(&mut computation, &previous, &[previous.clone()], None, 0)
+            .generate_candidates(
+                &mut computation,
+                &previous,
+                &[previous.clone()],
+                None,
+                0,
+                &termination_flag,
+            )
             .unwrap();
 
         let candidate_nodes: std::collections::HashSet<Vec<MappedNodeId>> =
@@ -645,8 +701,16 @@ mod tests {
             vec![0.0, 1.0, 3.0, 4.0],
         );
 
+        let termination_flag = TerminationFlag::running_true();
         let candidates = storage
-            .generate_candidates(&mut computation, &previous, &[previous.clone()], None, 0)
+            .generate_candidates(
+                &mut computation,
+                &previous,
+                &[previous.clone()],
+                None,
+                0,
+                &termination_flag,
+            )
             .unwrap();
         let candidate_nodes: std::collections::HashSet<Vec<MappedNodeId>> =
             candidates.into_iter().map(|path| path.node_ids).collect();
@@ -667,9 +731,16 @@ mod tests {
             Tasks::leaf_with_volume("yens".to_string(), 3),
             concurrency,
         );
+        let termination_flag = TerminationFlag::running_true();
 
         storage
-            .compute_yens(&mut computation, None, 0, &mut progress_tracker)
+            .compute_yens(
+                &mut computation,
+                None,
+                0,
+                &mut progress_tracker,
+                &termination_flag,
+            )
             .unwrap()
     }
 }

@@ -22,8 +22,10 @@ use std::time::Instant;
 
 // Import upgraded systems
 use crate::projection::eval::algorithm::AlgorithmError;
+use crate::task::progress::ProgressTracker;
 use crate::task::progress::TaskProgressTracker;
-use crate::task::progress::{EmptyTaskRegistryFactory, TaskRegistryFactory, Tasks};
+use crate::task::progress::TaskRegistryFactory;
+use crate::task::progress::Tasks;
 
 /// Random Walk algorithm facade
 pub struct RandomWalkFacade {
@@ -135,17 +137,41 @@ impl RandomWalkFacade {
     }
 
     fn compute(self) -> Result<(RandomWalkResult, std::time::Duration)> {
+        let node_count = self.graph_store.node_count();
+        let concurrency = self.config.concurrency;
+        let mut progress_tracker = TaskProgressTracker::with_concurrency(
+            Tasks::leaf_with_volume("random_walk".to_string(), node_count),
+            concurrency,
+        );
+        let termination = TerminationFlag::running_true();
+
+        progress_tracker.begin_subtask_with_volume(node_count);
+        let result = self.compute_with_context(&mut progress_tracker, &termination);
+        match result {
+            Ok(value) => {
+                progress_tracker.end_subtask();
+                Ok(value)
+            }
+            Err(error) => {
+                progress_tracker.end_subtask_with_failure();
+                Err(error)
+            }
+        }
+    }
+
+    fn compute_with_context(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination: &TerminationFlag,
+    ) -> Result<(RandomWalkResult, std::time::Duration)> {
         self.config
             .validate()
             .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
-
-        // Set up progress tracking
-        let _task_registry_factory = self
-            .task_registry_factory
-            .unwrap_or_else(|| Box::new(EmptyTaskRegistryFactory));
-        let _user_log_registry_factory = self
-            .user_log_registry_factory
-            .unwrap_or_else(|| Box::new(EmptyTaskRegistryFactory));
+        if !termination.running() {
+            return Err(AlgorithmError::Execution(
+                "Random walk computation terminated".to_string(),
+            ));
+        }
 
         let start = Instant::now();
 
@@ -161,10 +187,6 @@ impl RandomWalkFacade {
             return Ok((RandomWalkResult { walks: Vec::new() }, start.elapsed()));
         }
 
-        let mut progress_tracker = TaskProgressTracker::with_concurrency(
-            Tasks::leaf_with_volume("random_walk".to_string(), node_count),
-            self.config.concurrency,
-        );
         // Convert source nodes to internal IDs
         let source_nodes_internal: Vec<usize> = self
             .config
@@ -188,7 +210,6 @@ impl RandomWalkFacade {
                 .as_secs()
         });
 
-        let termination = TerminationFlag::running_true();
         let storage = RandomWalkStorageRuntime::new();
         let runtime = RandomWalkComputationRuntime::new(
             self.config.walks_per_node,
@@ -200,12 +221,12 @@ impl RandomWalkFacade {
         );
 
         let result = storage
-            .compute_random_walk_with_concurrency(
+            .compute_random_walk_with_context(
                 &runtime,
                 graph_view.as_ref(),
-                &mut progress_tracker,
+                progress_tracker,
                 self.config.concurrency,
-                &termination,
+                termination,
             )
             .map_err(|e| AlgorithmError::Execution(format!("Random walk terminated: {e}")))?;
 
@@ -220,9 +241,27 @@ impl RandomWalkFacade {
         Ok(Box::new(rows.into_iter()))
     }
 
+    pub fn stream_with_context(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination: &TerminationFlag,
+    ) -> Result<Vec<RandomWalkRow>> {
+        let (result, elapsed) = self.compute_with_context(progress_tracker, termination)?;
+        Ok(RandomWalkResultBuilder::new(result, elapsed).rows())
+    }
+
     /// Stats mode: returns aggregated statistics
     pub fn stats(self) -> Result<RandomWalkStats> {
         let (result, elapsed) = self.compute()?;
+        Ok(RandomWalkResultBuilder::new(result, elapsed).stats())
+    }
+
+    pub fn stats_with_context(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination: &TerminationFlag,
+    ) -> Result<RandomWalkStats> {
+        let (result, elapsed) = self.compute_with_context(progress_tracker, termination)?;
         Ok(RandomWalkResultBuilder::new(result, elapsed).stats())
     }
 
@@ -342,6 +381,7 @@ mod tests {
     use super::*;
     use crate::config::GraphStoreConfig;
     use crate::procedures::GraphFacade;
+    use crate::task::progress::NoopProgressTracker;
 
     use crate::projection::RelationshipType;
     use crate::types::graph::OriginalNodeId;
@@ -448,6 +488,22 @@ mod tests {
 
         // 3 nodes * 2 walks per node = 6 walks
         assert_eq!(stats.walk_count, 6);
+    }
+
+    #[test]
+    fn facade_honors_pre_terminated_request() {
+        let store = store_from_directed_edges(3, &[(0, 1), (1, 2)]);
+        let mut progress_tracker = NoopProgressTracker;
+        let termination = TerminationFlag::stop_running();
+
+        let error = RandomWalkFacade::new(Arc::new(store))
+            .walks_per_node(1)
+            .walk_length(3)
+            .source_nodes(vec![0])
+            .stream_with_context(&mut progress_tracker, &termination)
+            .unwrap_err();
+
+        assert!(error.to_string().contains("terminated"));
     }
 
     #[test]

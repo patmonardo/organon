@@ -9,10 +9,10 @@ use crate::algo::steiner_tree::{
     SteinerTreeComputationRuntime, SteinerTreeConfig, SteinerTreeMutateResult, SteinerTreeResult,
     SteinerTreeResultBuilder, SteinerTreeRow, SteinerTreeStats, SteinerTreeStorageRuntime,
 };
-use crate::task::concurrency::TerminationFlag;
-use crate::task::memory::MemoryRange;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
+use crate::task::concurrency::TerminationFlag;
+use crate::task::memory::MemoryRange;
 use crate::types::graph::id_map::MappedNodeId;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use std::collections::HashMap;
@@ -21,9 +21,10 @@ use std::sync::Arc;
 
 // Import upgraded systems
 use crate::algo::algorithms::pathfinding::PathResult;
+use crate::projection::eval::algorithm::AlgorithmError;
+use crate::task::progress::ProgressTracker;
 use crate::task::progress::TaskProgressTracker;
 use crate::task::progress::{TaskRegistryFactory, Tasks};
-use crate::projection::eval::algorithm::AlgorithmError;
 
 /// Steiner Tree algorithm builder
 pub struct SteinerTreeBuilder {
@@ -128,7 +129,39 @@ impl SteinerTreeBuilder {
     }
 
     fn compute(self) -> Result<(SteinerTreeResult, std::time::Duration)> {
+        let relationship_count = self.graph_store.relationship_count();
+        let concurrency = self.concurrency;
+        let mut progress_tracker = TaskProgressTracker::with_concurrency(
+            Tasks::leaf_with_volume("steiner_tree".to_string(), relationship_count),
+            concurrency,
+        );
+        let termination = TerminationFlag::running_true();
+
+        progress_tracker.begin_subtask_with_volume(relationship_count);
+        let result = self.compute_with_context(&mut progress_tracker, &termination);
+        match result {
+            Ok(value) => {
+                progress_tracker.end_subtask();
+                Ok(value)
+            }
+            Err(error) => {
+                progress_tracker.end_subtask_with_failure();
+                Err(error)
+            }
+        }
+    }
+
+    fn compute_with_context(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination: &TerminationFlag,
+    ) -> Result<(SteinerTreeResult, std::time::Duration)> {
         self.validate()?;
+        if !termination.running() {
+            return Err(AlgorithmError::Execution(
+                "Steiner tree computation terminated".to_string(),
+            ));
+        }
         let start = std::time::Instant::now();
 
         // Steiner tree works on undirected graphs.
@@ -167,11 +200,6 @@ impl SteinerTreeBuilder {
             ));
         }
 
-        let mut progress_tracker = TaskProgressTracker::with_concurrency(
-            Tasks::leaf_with_volume("steiner_tree".to_string(), node_count),
-            self.concurrency,
-        );
-
         let source_node: MappedNodeId = MappedNodeId::try_from(self.source_node).map_err(|_| {
             AlgorithmError::Execution(format!(
                 "source_node must fit into i64 (got {})",
@@ -198,12 +226,11 @@ impl SteinerTreeBuilder {
 
         let storage = SteinerTreeStorageRuntime::new(config, self.concurrency);
         let mut computation = SteinerTreeComputationRuntime::new(self.delta, node_count);
-        let termination = TerminationFlag::running_true();
-        let result = storage.compute_steiner_tree_with_termination(
+        let result = storage.compute_steiner_tree_with_context(
             &mut computation,
             Some(graph_view.as_ref()),
-            &mut progress_tracker,
-            &termination,
+            progress_tracker,
+            termination,
         )?;
         Ok((result, start.elapsed()))
     }
@@ -215,9 +242,27 @@ impl SteinerTreeBuilder {
         Ok(Box::new(rows.into_iter()))
     }
 
+    pub fn stream_with_context(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination: &TerminationFlag,
+    ) -> Result<Vec<SteinerTreeRow>> {
+        let (result, elapsed) = self.compute_with_context(progress_tracker, termination)?;
+        Ok(SteinerTreeResultBuilder::new(result, elapsed).rows())
+    }
+
     /// Stats mode: aggregated tree stats
     pub fn stats(self) -> Result<SteinerTreeStats> {
         let (result, elapsed) = self.compute()?;
+        Ok(SteinerTreeResultBuilder::new(result, elapsed).stats())
+    }
+
+    pub fn stats_with_context(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination: &TerminationFlag,
+    ) -> Result<SteinerTreeStats> {
+        let (result, elapsed) = self.compute_with_context(progress_tracker, termination)?;
         Ok(SteinerTreeResultBuilder::new(result, elapsed).stats())
     }
 
@@ -275,6 +320,7 @@ impl SteinerTreeBuilder {
 mod tests {
     use super::*;
     use crate::procedures::GraphFacade;
+    use crate::task::progress::NoopProgressTracker;
     use crate::types::random::{RandomGraphConfig, RandomRelationshipConfig};
 
     fn store() -> Arc<DefaultGraphStore> {
@@ -322,6 +368,20 @@ mod tests {
             .unwrap();
 
         assert!(stats.effective_target_nodes_count > 0);
+    }
+
+    #[test]
+    fn facade_honors_pre_terminated_request() {
+        let mut progress_tracker = NoopProgressTracker;
+        let termination = TerminationFlag::stop_running();
+
+        let error = SteinerTreeBuilder::new(store())
+            .source_node(0)
+            .target_nodes(vec![5, 7])
+            .stream_with_context(&mut progress_tracker, &termination)
+            .unwrap_err();
+
+        assert!(error.to_string().contains("terminated"));
     }
 
     #[test]

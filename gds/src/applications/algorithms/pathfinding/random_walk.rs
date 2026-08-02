@@ -8,8 +8,8 @@ use crate::applications::algorithms::machinery::{
 use crate::applications::algorithms::pathfinding::{
     err, get_u64, get_usize, timings_json, CommonRequest, Mode,
 };
-use crate::task::concurrency::TerminationFlag;
 use crate::core::loading::{CatalogLoader, GraphResources};
+use crate::task::concurrency::TerminationFlag;
 use crate::task::progress::{JobId, ProgressTracker, TaskRegistryFactories, Tasks};
 use crate::types::catalog::GraphCatalog;
 use serde_json::{json, Value};
@@ -74,8 +74,8 @@ pub fn handle_random_walk(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Va
 
             let source_nodes = source_nodes.clone();
             let compute = move |gr: &GraphResources,
-                                _tracker: &mut dyn ProgressTracker,
-                                _termination: &TerminationFlag|
+                                tracker: &mut dyn ProgressTracker,
+                                termination: &TerminationFlag|
                   -> Result<Option<Vec<Value>>, String> {
                 let builder = gr
                     .facade()
@@ -92,8 +92,10 @@ pub fn handle_random_walk(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Va
                     None => builder,
                 };
 
-                let iter = builder.stream().map_err(|e| e.to_string())?;
-                let rows = iter
+                let rows = builder
+                    .stream_with_context(tracker, termination)
+                    .map_err(|e| e.to_string())?
+                    .into_iter()
                     .map(|row| serde_json::to_value(row).map_err(|e| e.to_string()))
                     .collect::<Result<Vec<_>, _>>()?;
                 Ok(Some(rows))
@@ -137,8 +139,8 @@ pub fn handle_random_walk(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Va
 
             let source_nodes = source_nodes.clone();
             let compute = move |gr: &GraphResources,
-                                _tracker: &mut dyn ProgressTracker,
-                                _termination: &TerminationFlag|
+                                tracker: &mut dyn ProgressTracker,
+                                termination: &TerminationFlag|
                   -> Result<Option<RandomWalkStats>, String> {
                 let builder = gr
                     .facade()
@@ -155,7 +157,9 @@ pub fn handle_random_walk(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Va
                     None => builder,
                 };
 
-                let stats = builder.stats().map_err(|e| e.to_string())?;
+                let stats = builder
+                    .stats_with_context(tracker, termination)
+                    .map_err(|e| e.to_string())?;
                 Ok(Some(stats))
             };
 

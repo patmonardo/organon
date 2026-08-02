@@ -11,12 +11,13 @@ use crate::algo::algorithms::pathfinding::{
 };
 use crate::algo::algorithms::{ExecutionMetadata, ResultBuilder};
 use crate::config::validation::ConfigError;
-use crate::task::progress::TaskProgressTracker;
-use crate::task::progress::Tasks;
 use crate::define_algorithm_spec;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::relationship_type::RelationshipType;
 use crate::projection::Orientation;
+use crate::task::concurrency::TerminationFlag;
+use crate::task::progress::TaskProgressTracker;
+use crate::task::progress::Tasks;
 use crate::types::graph::MappedNodeId;
 use crate::types::graph::RelationshipIndex;
 use serde::{Deserialize, Serialize};
@@ -208,12 +209,7 @@ fn checked_u64(value: MappedNodeId) -> u64 {
 fn spec_path_to_core(path: &YensPathResult) -> PathResult {
     let source = checked_u64(path.source_node);
     let target = checked_u64(path.target_node);
-    let path_ids = path
-        .node_ids
-        .iter()
-        .copied()
-        .map(checked_u64)
-        .collect();
+    let path_ids = path.node_ids.iter().copied().map(checked_u64).collect();
 
     PathResult {
         source,
@@ -351,12 +347,14 @@ define_algorithm_spec! {
             Tasks::leaf_with_volume("yens".to_string(), parsed_config.k),
             parsed_config.concurrency,
         );
+        let termination_flag = TerminationFlag::running_true();
 
         let result = storage.compute_yens(
             &mut computation,
             Some(graph.as_ref()),
             direction_byte,
             &mut progress_tracker,
+            &termination_flag,
         )?;
 
         Ok(result)

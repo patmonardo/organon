@@ -9,7 +9,7 @@
 use super::spec::{DeltaSteppingPathResult, DeltaSteppingResult};
 use super::DeltaSteppingComputationRuntime;
 use crate::projection::eval::algorithm::AlgorithmError;
-use crate::task::concurrency::{install_with_concurrency, Concurrency};
+use crate::task::concurrency::{install_with_concurrency, Concurrency, TerminationFlag};
 use crate::task::progress::{ProgressTracker, UNKNOWN_VOLUME};
 use crate::types::graph::Graph;
 use crate::types::graph::MappedNodeId;
@@ -81,6 +81,7 @@ impl DeltaSteppingStorageRuntime {
         direction: u8,
         progress_tracker: &mut dyn ProgressTracker,
     ) -> Result<DeltaSteppingResult, AlgorithmError> {
+        let termination_flag = TerminationFlag::running_true();
         let volume = graph
             .map(|g| g.relationship_count())
             .unwrap_or(UNKNOWN_VOLUME);
@@ -90,11 +91,39 @@ impl DeltaSteppingStorageRuntime {
             progress_tracker.begin_subtask_with_volume(volume);
         }
 
-        let mut scanned_relationships: usize = 0;
+        let result = self.compute_delta_stepping_with_context(
+            computation,
+            graph,
+            direction,
+            progress_tracker,
+            &termination_flag,
+        );
 
+        match result {
+            Ok(result) => {
+                progress_tracker.end_subtask();
+                Ok(result)
+            }
+            Err(e) => {
+                progress_tracker.end_subtask_with_failure();
+                Err(e)
+            }
+        }
+    }
+
+    pub fn compute_delta_stepping_with_context(
+        &mut self,
+        computation: &mut DeltaSteppingComputationRuntime,
+        graph: Option<&dyn Graph>,
+        direction: u8,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<DeltaSteppingResult, AlgorithmError> {
+        let mut scanned_relationships: usize = 0;
         let start_time = Instant::now();
 
-        let result = (|| {
+        (|| {
+            Self::ensure_running(termination_flag)?;
             // Initialize computation runtime
             let node_count = graph.map(|g| g.node_count()).unwrap_or(100);
             Self::validate_node_in_graph(self.source_node, node_count, "source")?;
@@ -118,6 +147,7 @@ impl DeltaSteppingStorageRuntime {
                     direction,
                     node_count,
                     progress_tracker,
+                    termination_flag,
                 )?;
             } else {
                 scanned_relationships = self.compute_sequential_bins(
@@ -126,6 +156,7 @@ impl DeltaSteppingStorageRuntime {
                     direction,
                     node_count,
                     progress_tracker,
+                    termination_flag,
                 )?;
             }
 
@@ -146,18 +177,7 @@ impl DeltaSteppingStorageRuntime {
                 shortest_paths,
                 computation_time_ms,
             })
-        })();
-
-        match result {
-            Ok(result) => {
-                progress_tracker.end_subtask();
-                Ok(result)
-            }
-            Err(e) => {
-                progress_tracker.end_subtask_with_failure();
-                Err(e)
-            }
-        }
+        })()
     }
 
     /// Generate shortest paths from the distance tracker
@@ -192,6 +212,7 @@ impl DeltaSteppingStorageRuntime {
         direction: u8,
         node_count: usize,
         progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
     ) -> Result<usize, AlgorithmError> {
         let mut scanned_relationships = 0usize;
         const LOG_BATCH: usize = 256;
@@ -200,10 +221,13 @@ impl DeltaSteppingStorageRuntime {
         let mut frontier = vec![self.source_node];
 
         loop {
+            Self::ensure_running(termination_flag)?;
             loop {
+                Self::ensure_running(termination_flag)?;
                 let mut next_local_frontier = Vec::new();
 
                 for node_id in frontier.drain(..) {
+                    Self::ensure_running(termination_flag)?;
                     if self.bin_index(computation.distance(node_id)) != current_bin {
                         continue;
                     }
@@ -260,6 +284,7 @@ impl DeltaSteppingStorageRuntime {
         direction: u8,
         node_count: usize,
         progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
     ) -> Result<usize, AlgorithmError> {
         let concurrency = Concurrency::from_usize(self.concurrency.max(1));
         let mut scanned_relationships = 0usize;
@@ -267,7 +292,9 @@ impl DeltaSteppingStorageRuntime {
         let mut frontier = vec![self.source_node];
 
         loop {
+            Self::ensure_running(termination_flag)?;
             loop {
+                Self::ensure_running(termination_flag)?;
                 let expansions = self.expand_frontier_parallel(
                     graph,
                     computation,
@@ -276,6 +303,7 @@ impl DeltaSteppingStorageRuntime {
                     direction,
                     node_count,
                     concurrency,
+                    termination_flag,
                 )?;
 
                 let mut candidates_by_target: HashMap<MappedNodeId, RelaxationCandidate> =
@@ -350,12 +378,14 @@ impl DeltaSteppingStorageRuntime {
         direction: u8,
         node_count: usize,
         concurrency: Concurrency,
+        termination_flag: &TerminationFlag,
     ) -> Result<Vec<BinExpansion>, AlgorithmError> {
         let chunk_count = frontier.len().div_ceil(FRONTIER_BATCH_SIZE);
         install_with_concurrency(concurrency, || {
             (0..chunk_count)
                 .into_par_iter()
                 .map(|chunk_idx| {
+                    Self::ensure_running(termination_flag)?;
                     let start = chunk_idx * FRONTIER_BATCH_SIZE;
                     let end = (start + FRONTIER_BATCH_SIZE).min(frontier.len());
                     self.expand_frontier_chunk(
@@ -365,6 +395,7 @@ impl DeltaSteppingStorageRuntime {
                         current_bin,
                         direction,
                         node_count,
+                        termination_flag,
                     )
                 })
                 .collect::<Result<Vec<_>, _>>()
@@ -379,6 +410,7 @@ impl DeltaSteppingStorageRuntime {
         current_bin: usize,
         direction: u8,
         node_count: usize,
+        termination_flag: &TerminationFlag,
     ) -> Result<BinExpansion, AlgorithmError> {
         let worker_graph = Graph::concurrent_view(graph);
         let fallback = worker_graph.default_property_value();
@@ -386,6 +418,7 @@ impl DeltaSteppingStorageRuntime {
         let mut scanned_relationships = 0usize;
 
         for node_id in frontier {
+            Self::ensure_running(termination_flag)?;
             if self.bin_index(computation.distance(*node_id)) != current_bin {
                 continue;
             }
@@ -397,6 +430,7 @@ impl DeltaSteppingStorageRuntime {
             };
 
             for cursor in stream {
+                Self::ensure_running(termination_flag)?;
                 scanned_relationships += 1;
                 let neighbor = cursor.target_id();
                 let weight = cursor.property();
@@ -420,6 +454,16 @@ impl DeltaSteppingStorageRuntime {
             candidates,
             scanned_relationships,
         })
+    }
+
+    fn ensure_running(termination_flag: &TerminationFlag) -> Result<(), AlgorithmError> {
+        if termination_flag.running() {
+            Ok(())
+        } else {
+            Err(AlgorithmError::Execution(
+                "Delta-Stepping computation terminated".to_string(),
+            ))
+        }
     }
 
     /// Reconstruct a path from source to target
@@ -553,13 +597,34 @@ impl DeltaSteppingStorageRuntime {
 mod tests {
     use super::*;
     use crate::projection::Orientation;
-    use crate::task::progress::{TaskProgressTracker, Tasks};
+    use crate::task::progress::{NoopProgressTracker, TaskProgressTracker, Tasks};
     use crate::types::graph_store::{DefaultGraphStore, GraphStore};
     use crate::types::random::{RandomGraphConfig, RandomRelationshipConfig};
     use std::collections::HashSet;
 
     fn mapped_node_id(value: u64) -> MappedNodeId {
         MappedNodeId::new(value)
+    }
+
+    #[test]
+    fn context_computation_honors_pre_terminated_request() {
+        let source = MappedNodeId::ZERO;
+        let mut storage = DeltaSteppingStorageRuntime::new(source, 1.0, 4, true);
+        let mut computation = DeltaSteppingComputationRuntime::new(source, 1.0, 4, true);
+        let mut progress_tracker = NoopProgressTracker;
+        let termination_flag = TerminationFlag::stop_running();
+
+        let result = storage.compute_delta_stepping_with_context(
+            &mut computation,
+            None,
+            0,
+            &mut progress_tracker,
+            &termination_flag,
+        );
+
+        assert!(
+            matches!(result, Err(AlgorithmError::Execution(message)) if message.contains("terminated"))
+        );
     }
 
     #[test]

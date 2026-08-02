@@ -12,6 +12,7 @@ use crate::algo::traversal::{
     SequentialDfsConfig, TargetExitPredicate,
 };
 use crate::projection::eval::algorithm::AlgorithmError;
+use crate::task::concurrency::TerminationFlag;
 use crate::task::progress::{ProgressTracker, UNKNOWN_VOLUME};
 use crate::types::graph::Graph;
 use crate::types::graph::MappedNodeId;
@@ -61,25 +62,73 @@ impl DfsStorageRuntime {
         graph: Option<&dyn Graph>,
         progress_tracker: &mut dyn ProgressTracker,
     ) -> Result<DfsResult, AlgorithmError> {
+        let termination_flag = TerminationFlag::running_true();
+        self.compute_dfs_with_local_lifecycle(
+            computation,
+            graph,
+            progress_tracker,
+            &termination_flag,
+        )
+    }
+
+    pub fn compute_dfs_with_context(
+        &self,
+        computation: &mut DfsComputationRuntime,
+        graph: Option<&dyn Graph>,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<DfsResult, AlgorithmError> {
         let aggregator = OneHopAggregator;
         if self.target_nodes.is_empty() {
             let exit_predicate = FollowExitPredicate;
-            self.compute_dfs_with_traversal(
+            self.compute_dfs_with_traversal_context(
                 computation,
                 graph,
                 progress_tracker,
                 &aggregator,
                 &exit_predicate,
+                termination_flag,
             )
         } else {
             let exit_predicate = TargetExitPredicate::new(self.target_nodes.clone());
-            self.compute_dfs_with_traversal(
+            self.compute_dfs_with_traversal_context(
                 computation,
                 graph,
                 progress_tracker,
                 &aggregator,
                 &exit_predicate,
+                termination_flag,
             )
+        }
+    }
+
+    fn compute_dfs_with_local_lifecycle(
+        &self,
+        computation: &mut DfsComputationRuntime,
+        graph: Option<&dyn Graph>,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<DfsResult, AlgorithmError> {
+        let volume = graph
+            .map(|g| g.relationship_count())
+            .unwrap_or(UNKNOWN_VOLUME);
+        if volume == UNKNOWN_VOLUME {
+            progress_tracker.begin_subtask_unknown();
+        } else {
+            progress_tracker.begin_subtask_with_volume(volume);
+        }
+
+        let result =
+            self.compute_dfs_with_context(computation, graph, progress_tracker, termination_flag);
+        match result {
+            Ok(value) => {
+                progress_tracker.end_subtask();
+                Ok(value)
+            }
+            Err(error) => {
+                progress_tracker.end_subtask_with_failure();
+                Err(error)
+            }
         }
     }
 
@@ -92,8 +141,7 @@ impl DfsStorageRuntime {
         aggregator: &dyn Aggregator,
         exit_predicate: &dyn ExitPredicate,
     ) -> Result<DfsResult, AlgorithmError> {
-        let start_time = std::time::Instant::now();
-
+        let termination_flag = TerminationFlag::running_true();
         let volume = graph
             .map(|g| g.relationship_count())
             .unwrap_or(UNKNOWN_VOLUME);
@@ -103,7 +151,39 @@ impl DfsStorageRuntime {
             progress_tracker.begin_subtask_with_volume(volume);
         }
 
-        let result = (|| {
+        let result = self.compute_dfs_with_traversal_context(
+            computation,
+            graph,
+            progress_tracker,
+            aggregator,
+            exit_predicate,
+            &termination_flag,
+        );
+        match result {
+            Ok(value) => {
+                progress_tracker.end_subtask();
+                Ok(value)
+            }
+            Err(error) => {
+                progress_tracker.end_subtask_with_failure();
+                Err(error)
+            }
+        }
+    }
+
+    pub fn compute_dfs_with_traversal_context(
+        &self,
+        computation: &mut DfsComputationRuntime,
+        graph: Option<&dyn Graph>,
+        progress_tracker: &mut dyn ProgressTracker,
+        aggregator: &dyn Aggregator,
+        exit_predicate: &dyn ExitPredicate,
+        termination_flag: &TerminationFlag,
+    ) -> Result<DfsResult, AlgorithmError> {
+        let start_time = std::time::Instant::now();
+
+        (|| {
+            Self::ensure_running(termination_flag)?;
             let node_count = match graph {
                 Some(graph) => usize::try_from(graph.node_count()).map_err(|_| {
                     AlgorithmError::InvalidGraph(format!(
@@ -127,6 +207,7 @@ impl DfsStorageRuntime {
                 },
                 aggregator,
                 exit_predicate,
+                termination_flag,
                 |node| self.get_neighbors(graph, node),
             )?;
 
@@ -139,10 +220,17 @@ impl DfsStorageRuntime {
                 visited_depths: result.visited_depths,
                 computation_time_ms: computation_time,
             })
-        })();
+        })()
+    }
 
-        progress_tracker.end_subtask();
-        result
+    fn ensure_running(termination_flag: &TerminationFlag) -> Result<(), AlgorithmError> {
+        if termination_flag.running() {
+            Ok(())
+        } else {
+            Err(AlgorithmError::Execution(
+                "DFS computation terminated".to_string(),
+            ))
+        }
     }
 
     /// Get neighbors of a node (graph-backed when available; mock fallback)
@@ -187,10 +275,29 @@ impl DfsStorageRuntime {
 mod tests {
     use super::*;
     use crate::algo::traversal::{ExitPredicateResult, FollowExitPredicate};
-    use crate::task::progress::{TaskProgressTracker, Tasks};
+    use crate::task::progress::{NoopProgressTracker, TaskProgressTracker, Tasks};
 
     fn mapped(node_id: u64) -> MappedNodeId {
         MappedNodeId::new(node_id)
+    }
+
+    #[test]
+    fn context_computation_honors_pre_terminated_request() {
+        let storage = DfsStorageRuntime::new(mapped(0), Vec::new(), None, false, 1);
+        let mut computation = DfsComputationRuntime::new(mapped(0), false, 1, 4);
+        let mut progress_tracker = NoopProgressTracker;
+        let termination_flag = TerminationFlag::stop_running();
+
+        let result = storage.compute_dfs_with_context(
+            &mut computation,
+            None,
+            &mut progress_tracker,
+            &termination_flag,
+        );
+
+        assert!(
+            matches!(result, Err(AlgorithmError::Execution(message)) if message.contains("terminated"))
+        );
     }
 
     struct ContinueOnTwo;

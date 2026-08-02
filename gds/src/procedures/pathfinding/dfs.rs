@@ -36,18 +36,19 @@ use crate::algo::dfs::{
     DfsComputationRuntime, DfsConfig, DfsMutateResult, DfsMutationSummary, DfsResultBuilder,
     DfsStats, DfsStorageRuntime, DfsWriteSummary,
 };
-use crate::task::progress::{EmptyTaskRegistryFactory, TaskRegistryFactory, Tasks};
-use crate::task::memory::MemoryRange;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
+use crate::task::concurrency::TerminationFlag;
+use crate::task::memory::MemoryRange;
+use crate::task::progress::{ProgressTracker, Tasks};
 use crate::types::graph::id_map::MappedNodeId;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use std::collections::HashSet;
 use std::sync::Arc;
 
 // Additional imports for error handling and progress tracking
-use crate::task::progress::TaskProgressTracker;
 use crate::projection::eval::algorithm::AlgorithmError;
+use crate::task::progress::TaskProgressTracker;
 
 // ============================================================================
 // Facade Type
@@ -79,7 +80,6 @@ use crate::projection::eval::algorithm::AlgorithmError;
 pub struct DfsFacade {
     graph_store: Arc<DefaultGraphStore>,
     config: DfsConfig,
-    task_registry_factory: Box<dyn TaskRegistryFactory>,
 }
 
 /// Backwards-compatible alias (builder-style naming).
@@ -98,7 +98,6 @@ impl DfsFacade {
         Self {
             graph_store,
             config: DfsConfig::default(),
-            task_registry_factory: Box::new(EmptyTaskRegistryFactory),
         }
     }
 
@@ -114,7 +113,6 @@ impl DfsFacade {
         Ok(Self {
             graph_store,
             config,
-            task_registry_factory: Box::new(EmptyTaskRegistryFactory),
         })
     }
 
@@ -164,10 +162,7 @@ impl DfsFacade {
     ///
     /// Algorithm computes traversal until all targets are found or max depth reached.
     pub fn targets(mut self, targets: Vec<u64>) -> Self {
-        self.config.target_nodes = targets
-            .into_iter()
-            .map(MappedNodeId::new)
-            .collect();
+        self.config.target_nodes = targets.into_iter().map(MappedNodeId::new).collect();
         self
     }
 
@@ -200,18 +195,42 @@ impl DfsFacade {
     }
 
     fn compute(self) -> Result<PathFindingResult> {
+        let relationship_count = self.graph_store.relationship_count();
+        let concurrency = self.config.concurrency;
+        let mut progress_tracker = TaskProgressTracker::with_concurrency(
+            Tasks::leaf_with_volume("dfs".to_string(), relationship_count),
+            concurrency,
+        );
+        let termination_flag = TerminationFlag::running_true();
+
+        progress_tracker.begin_subtask_with_volume(relationship_count);
+        let result = self.compute_with_context(&mut progress_tracker, &termination_flag);
+        match result {
+            Ok(value) => {
+                progress_tracker.end_subtask();
+                Ok(value)
+            }
+            Err(error) => {
+                progress_tracker.end_subtask_with_failure();
+                Err(error)
+            }
+        }
+    }
+
+    fn compute_with_context(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<PathFindingResult> {
         self.config
             .validate()
             .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
 
-        // Set up progress tracking
-        let _task_registry_factory = self.task_registry_factory;
-
-        // Create progress tracker for DFS execution.
-        // We track progress in terms of relationships examined.
-        let task = Tasks::leaf("DFS".to_string());
-        let mut progress_tracker =
-            TaskProgressTracker::with_concurrency(task, self.config.concurrency);
+        if !termination_flag.running() {
+            return Err(AlgorithmError::Execution(
+                "DFS computation terminated".to_string(),
+            ));
+        }
 
         let source_node = self.config.source_node;
         let target_nodes = self.config.target_nodes.clone();
@@ -240,10 +259,11 @@ impl DfsFacade {
         );
 
         let start = std::time::Instant::now();
-        let result = storage.compute_dfs(
+        let result = storage.compute_dfs_with_context(
             &mut computation,
             Some(graph_view.as_ref()),
-            &mut progress_tracker,
+            progress_tracker,
+            termination_flag,
         )?;
         DfsResultBuilder::result(result, start.elapsed(), source_node, target_nodes)
     }
@@ -267,6 +287,16 @@ impl DfsFacade {
         Ok(Box::new(result.paths.into_iter()))
     }
 
+    pub fn stream_with_context(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<Vec<PathResult>> {
+        Ok(self
+            .compute_with_context(progress_tracker, termination_flag)?
+            .paths)
+    }
+
     /// Stats mode: Get aggregated statistics
     ///
     /// Returns traversal statistics without individual nodes.
@@ -283,6 +313,20 @@ impl DfsFacade {
     pub fn stats(self) -> Result<DfsStats> {
         let target_nodes = self.config.target_nodes.clone();
         let result = self.compute()?;
+        Ok(Self::stats_from_result(target_nodes, result))
+    }
+
+    pub fn stats_with_context(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<DfsStats> {
+        let target_nodes = self.config.target_nodes.clone();
+        let result = self.compute_with_context(progress_tracker, termination_flag)?;
+        Ok(Self::stats_from_result(target_nodes, result))
+    }
+
+    fn stats_from_result(target_nodes: Vec<MappedNodeId>, result: PathFindingResult) -> DfsStats {
         let nodes_visited = result.paths.len() as u64;
         let max_depth_reached = result
             .metadata
@@ -302,7 +346,7 @@ impl DfsFacade {
         let targets = target_nodes.len() as u64;
         let all_targets_reached = targets > 0 && targets_found == targets;
 
-        Ok(DfsStats {
+        DfsStats {
             nodes_visited,
             max_depth_reached,
             execution_time_ms: result.metadata.execution_time.as_millis() as u64,
@@ -310,7 +354,7 @@ impl DfsFacade {
             all_targets_reached,
             backtrack_operations: 0, // Not available in current implementation
             avg_branch_depth: 0.0,   // Not available in current implementation
-        })
+        }
     }
 
     /// Mutate mode: Compute and store as node property
@@ -416,6 +460,7 @@ impl DfsFacade {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::task::progress::NoopProgressTracker;
     use crate::types::random::{RandomGraphConfig, RandomRelationshipConfig};
     use std::sync::Arc;
 
@@ -431,6 +476,20 @@ mod tests {
 
     fn mapped(node_id: u64) -> MappedNodeId {
         MappedNodeId::new(node_id)
+    }
+
+    #[test]
+    fn context_execution_honors_pre_terminated_request() {
+        let mut progress_tracker = NoopProgressTracker;
+        let termination_flag = TerminationFlag::stop_running();
+
+        let result = DfsBuilder::new(store())
+            .source(0)
+            .stream_with_context(&mut progress_tracker, &termination_flag);
+
+        assert!(
+            matches!(result, Err(AlgorithmError::Execution(message)) if message.contains("terminated"))
+        );
     }
 
     #[test]

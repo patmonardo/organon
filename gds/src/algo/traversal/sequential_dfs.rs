@@ -1,5 +1,6 @@
 use super::{Aggregator, ExitPredicate, ExitPredicateResult};
 use crate::projection::eval::algorithm::AlgorithmError;
+use crate::task::concurrency::TerminationFlag;
 use crate::types::graph::MappedNodeId;
 
 #[derive(Debug, Clone, Copy)]
@@ -20,11 +21,13 @@ pub fn run_sequential_dfs<F>(
     config: SequentialDfsConfig,
     aggregator: &dyn Aggregator,
     exit_predicate: &dyn ExitPredicate,
+    termination_flag: &TerminationFlag,
     get_neighbors: F,
 ) -> Result<SequentialDfsResult, AlgorithmError>
 where
     F: Fn(MappedNodeId) -> Vec<MappedNodeId>,
 {
+    ensure_running(termination_flag)?;
     validate_node_in_graph(config.source_node, config.node_count, "source")?;
 
     let mut visited = vec![false; config.node_count];
@@ -37,6 +40,7 @@ where
     let mut relationships_examined = 0usize;
 
     while let Some((source_node, current_node, weight)) = stack.pop() {
+        ensure_running(termination_flag)?;
         match exit_predicate.test(source_node, current_node, weight) {
             ExitPredicateResult::Continue => continue,
             ExitPredicateResult::Break => {
@@ -74,6 +78,16 @@ where
         visited_depths: result_depths,
         relationships_examined,
     })
+}
+
+fn ensure_running(termination_flag: &TerminationFlag) -> Result<(), AlgorithmError> {
+    if termination_flag.running() {
+        Ok(())
+    } else {
+        Err(AlgorithmError::Execution(
+            "DFS computation terminated".to_string(),
+        ))
+    }
 }
 
 fn check_max_depth(max_depth: Option<u32>, current_depth: f64) -> bool {
@@ -141,6 +155,7 @@ mod tests {
     #[test]
     fn traverses_with_depth_first_order() {
         let exit_predicate = RecordingExitPredicate::default();
+        let termination_flag = TerminationFlag::running_true();
         let result = run_sequential_dfs(
             SequentialDfsConfig {
                 source_node: mapped(0),
@@ -149,6 +164,7 @@ mod tests {
             },
             &OneHopAggregator,
             &exit_predicate,
+            &termination_flag,
             neighbors,
         )
         .unwrap();
@@ -172,6 +188,7 @@ mod tests {
 
     #[test]
     fn target_exit_stops_before_remaining_stack_entries() {
+        let termination_flag = TerminationFlag::running_true();
         let result = run_sequential_dfs(
             SequentialDfsConfig {
                 source_node: mapped(0),
@@ -180,6 +197,7 @@ mod tests {
             },
             &OneHopAggregator,
             &TargetExitPredicate::new(vec![mapped(2)]),
+            &termination_flag,
             neighbors,
         )
         .unwrap();
@@ -191,6 +209,7 @@ mod tests {
 
     #[test]
     fn rejects_out_of_range_source() {
+        let termination_flag = TerminationFlag::running_true();
         let err = run_sequential_dfs(
             SequentialDfsConfig {
                 source_node: mapped(4),
@@ -199,10 +218,31 @@ mod tests {
             },
             &OneHopAggregator,
             &FollowExitPredicate,
+            &termination_flag,
             |_| Vec::new(),
         )
         .unwrap_err();
 
         assert!(matches!(err, AlgorithmError::InvalidGraph(_)));
+    }
+
+    #[test]
+    fn rejects_pre_terminated_traversal() {
+        let termination_flag = TerminationFlag::stop_running();
+        let result = run_sequential_dfs(
+            SequentialDfsConfig {
+                source_node: mapped(0),
+                node_count: 4,
+                max_depth: None,
+            },
+            &OneHopAggregator,
+            &FollowExitPredicate,
+            &termination_flag,
+            neighbors,
+        );
+
+        assert!(
+            matches!(result, Err(AlgorithmError::Execution(message)) if message.contains("terminated"))
+        );
     }
 }

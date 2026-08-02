@@ -8,6 +8,7 @@ use super::mutable_path_result::MutablePathResult;
 use super::relationship_filterer::RelationshipFilterer;
 use super::spec::YensResult;
 use super::YensStorageRuntime;
+use crate::task::concurrency::TerminationFlag;
 use crate::task::progress::TaskProgressTracker;
 use crate::task::progress::Tasks;
 use crate::types::graph::Graph;
@@ -182,10 +183,17 @@ impl YensComputationRuntime {
             Tasks::leaf("yens".to_string()),
             self.concurrency,
         );
+        let termination_flag = TerminationFlag::running_true();
 
         // Run the algorithm
         storage
-            .compute_yens(self, Some(graph), direction_byte, &mut progress_tracker)
+            .compute_yens(
+                self,
+                Some(graph),
+                direction_byte,
+                &mut progress_tracker,
+                &termination_flag,
+            )
             .unwrap_or_else(|_e| {
                 // For now, return empty result on error
                 // In production, this should be handled properly

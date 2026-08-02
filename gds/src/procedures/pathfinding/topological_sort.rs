@@ -22,8 +22,7 @@ use std::time::Instant;
 
 // Import upgraded systems
 use crate::projection::eval::algorithm::AlgorithmError;
-use crate::task::progress::TaskProgressTracker;
-use crate::task::progress::{EmptyTaskRegistryFactory, TaskRegistryFactory, Tasks};
+use crate::task::progress::{ProgressTracker, TaskProgressTracker, TaskRegistryFactory, Tasks};
 
 /// Topological Sort algorithm facade
 pub struct TopologicalSortFacade {
@@ -110,17 +109,41 @@ impl TopologicalSortFacade {
     }
 
     fn compute(self) -> Result<(TopologicalSortResult, std::time::Duration)> {
+        let node_count = self.graph_store.node_count();
+        let concurrency = self.config.concurrency;
+        let mut progress_tracker = TaskProgressTracker::with_concurrency(
+            Tasks::leaf_with_volume("topological_sort".to_string(), node_count),
+            concurrency,
+        );
+        let termination = TerminationFlag::running_true();
+
+        progress_tracker.begin_subtask_with_volume(node_count);
+        let result = self.compute_with_context(&mut progress_tracker, &termination);
+        match result {
+            Ok(value) => {
+                progress_tracker.end_subtask();
+                Ok(value)
+            }
+            Err(error) => {
+                progress_tracker.end_subtask_with_failure();
+                Err(error)
+            }
+        }
+    }
+
+    fn compute_with_context(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination: &TerminationFlag,
+    ) -> Result<(TopologicalSortResult, std::time::Duration)> {
         self.config
             .validate()
             .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
-
-        // Set up progress tracking
-        let _task_registry_factory = self
-            .task_registry_factory
-            .unwrap_or_else(|| Box::new(EmptyTaskRegistryFactory));
-        let _user_log_registry_factory = self
-            .user_log_registry_factory
-            .unwrap_or_else(|| Box::new(EmptyTaskRegistryFactory));
+        if !termination.running() {
+            return Err(AlgorithmError::Execution(
+                "Topological sort computation terminated".to_string(),
+            ));
+        }
 
         let start = Instant::now();
 
@@ -142,10 +165,6 @@ impl TopologicalSortFacade {
             ));
         }
 
-        let mut progress_tracker = TaskProgressTracker::with_concurrency(
-            Tasks::leaf_with_volume("topological_sort".to_string(), node_count),
-            self.config.concurrency,
-        );
         let storage = TopologicalSortStorageRuntime::new(
             node_count,
             self.config.compute_max_distance_from_source,
@@ -154,13 +173,12 @@ impl TopologicalSortFacade {
             node_count,
             self.config.compute_max_distance_from_source,
         );
-        let termination = TerminationFlag::running_true();
-        let result = storage.compute_topological_sort_with_concurrency(
+        let result = storage.compute_topological_sort_with_context(
             &mut runtime,
             graph_view.as_ref(),
-            &mut progress_tracker,
+            progress_tracker,
             self.config.concurrency,
-            &termination,
+            termination,
         )?;
 
         Ok((result, start.elapsed()))
@@ -174,9 +192,27 @@ impl TopologicalSortFacade {
         Ok(Box::new(rows.into_iter()))
     }
 
+    pub fn stream_with_context(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination: &TerminationFlag,
+    ) -> Result<Vec<TopologicalSortRow>> {
+        let (result, elapsed) = self.compute_with_context(progress_tracker, termination)?;
+        Ok(TopologicalSortResultBuilder::new(result, elapsed).rows())
+    }
+
     /// Stats mode: returns aggregated statistics
     pub fn stats(self) -> Result<TopologicalSortStats> {
         let (result, elapsed) = self.compute()?;
+        Ok(TopologicalSortResultBuilder::new(result, elapsed).stats())
+    }
+
+    pub fn stats_with_context(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination: &TerminationFlag,
+    ) -> Result<TopologicalSortStats> {
+        let (result, elapsed) = self.compute_with_context(progress_tracker, termination)?;
         Ok(TopologicalSortResultBuilder::new(result, elapsed).stats())
     }
 
@@ -300,6 +336,7 @@ mod tests {
     use super::*;
     use crate::config::GraphStoreConfig;
     use crate::procedures::GraphFacade;
+    use crate::task::progress::NoopProgressTracker;
 
     use crate::projection::RelationshipType;
     use crate::types::graph::MappedNodeId;
@@ -353,6 +390,20 @@ mod tests {
             id_map,
             relationship_topologies,
         )
+    }
+
+    #[test]
+    fn context_execution_honors_pre_terminated_request() {
+        let store = Arc::new(store_from_directed_edges(3, &[(0, 1), (1, 2)]));
+        let mut progress_tracker = NoopProgressTracker;
+        let termination = TerminationFlag::stop_running();
+
+        let result = TopologicalSortBuilder::new(store)
+            .stream_with_context(&mut progress_tracker, &termination);
+
+        assert!(
+            matches!(result, Err(AlgorithmError::Execution(message)) if message.contains("terminated"))
+        );
     }
 
     #[test]

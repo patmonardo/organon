@@ -372,32 +372,15 @@ impl<'a> AllShortestPathsStorageRuntime<'a> {
         progress_tracker: &mut dyn ProgressTracker,
     ) -> Result<mpsc::Receiver<ShortestPathResult>, AlgorithmError> {
         let node_count = self.graph.node_count();
+        let termination_flag = TerminationFlag::running_true();
         progress_tracker.begin_subtask_with_volume(node_count);
 
-        let result = (|| {
-            let (sender, receiver) = mpsc::channel::<ShortestPathResult>();
-
-            match self.algorithm_type {
-                AlgorithmType::Unweighted => {
-                    self.compute_unweighted_all_shortest_paths_streaming(
-                        computation,
-                        direction,
-                        progress_tracker,
-                        sender,
-                    )?;
-                }
-                AlgorithmType::Weighted => {
-                    self.compute_weighted_all_shortest_paths_streaming(
-                        computation,
-                        direction,
-                        progress_tracker,
-                        sender,
-                    )?;
-                }
-            }
-
-            Ok(receiver)
-        })();
+        let result = self.compute_all_shortest_paths_streaming_with_context(
+            computation,
+            direction,
+            progress_tracker,
+            &termination_flag,
+        );
 
         match result {
             Ok(receiver) => {
@@ -411,18 +394,50 @@ impl<'a> AllShortestPathsStorageRuntime<'a> {
         }
     }
 
+    pub fn compute_all_shortest_paths_streaming_with_context(
+        &self,
+        computation: &mut AllShortestPathsComputationRuntime,
+        direction: u8,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<mpsc::Receiver<ShortestPathResult>, AlgorithmError> {
+        Self::ensure_running(termination_flag)?;
+        let (sender, receiver) = mpsc::channel::<ShortestPathResult>();
+
+        match self.algorithm_type {
+            AlgorithmType::Unweighted => self.compute_unweighted_all_shortest_paths_streaming(
+                computation,
+                direction,
+                progress_tracker,
+                sender,
+                termination_flag,
+            )?,
+            AlgorithmType::Weighted => self.compute_weighted_all_shortest_paths_streaming(
+                computation,
+                direction,
+                progress_tracker,
+                sender,
+                termination_flag,
+            )?,
+        }
+
+        Ok(receiver)
+    }
+
     fn compute_unweighted_all_shortest_paths_streaming(
         &self,
         computation: &mut AllShortestPathsComputationRuntime,
         direction: u8,
         progress_tracker: &mut dyn ProgressTracker,
         sender: mpsc::Sender<ShortestPathResult>,
+        termination_flag: &TerminationFlag,
     ) -> Result<(), AlgorithmError> {
         let node_count = self.graph.node_count();
         let mut msbfs = AggregatedNeighborProcessingMsBfs::new(node_count);
         let mut receiver_dropped = false;
 
         for source_offset in (0..node_count).step_by(OMEGA) {
+            Self::ensure_running(termination_flag)?;
             if receiver_dropped {
                 break;
             }
@@ -433,6 +448,9 @@ impl<'a> AllShortestPathsStorageRuntime<'a> {
                 source_len,
                 false,
                 |node| {
+                    if !termination_flag.running() {
+                        return Vec::new();
+                    }
                     let node = MappedNodeId::try_from(node)
                         .expect("graph node count must fit mapped ID space");
                     self.get_neighbors(node, direction)
@@ -441,7 +459,7 @@ impl<'a> AllShortestPathsStorageRuntime<'a> {
                         .collect()
                 },
                 |target, distance, source_mask| {
-                    if receiver_dropped {
+                    if receiver_dropped || !termination_flag.running() {
                         return;
                     }
 
@@ -467,7 +485,10 @@ impl<'a> AllShortestPathsStorageRuntime<'a> {
                 },
             );
 
+            Self::ensure_running(termination_flag)?;
+
             for source in source_offset..(source_offset + source_len) {
+                Self::ensure_running(termination_flag)?;
                 let reached = (0..node_count)
                     .filter(|target| *target != source)
                     .filter(|target| {
@@ -494,6 +515,7 @@ impl<'a> AllShortestPathsStorageRuntime<'a> {
         direction: u8,
         progress_tracker: &mut dyn ProgressTracker,
         sender: mpsc::Sender<ShortestPathResult>,
+        termination_flag: &TerminationFlag,
     ) -> Result<(), AlgorithmError> {
         if !self.graph.has_relationship_property() {
             return Err(AlgorithmError::Execution(
@@ -508,7 +530,6 @@ impl<'a> AllShortestPathsStorageRuntime<'a> {
         // AtomicUsize counter: mirrors Java's AtomicInteger in WeightedAllShortestPaths.
         // Each worker increments to claim the next source node.
         let counter = Arc::new(std::sync::atomic::AtomicUsize::new(0));
-        let termination = TerminationFlag::running_true();
 
         // Shared sender so all workers push into the same channel.
         // Mutex is cheap here — contention is only on send, not on Dijkstra itself.
@@ -541,9 +562,7 @@ impl<'a> AllShortestPathsStorageRuntime<'a> {
                         let mut local_computation = AllShortestPathsComputationRuntime::new();
 
                         loop {
-                            if !termination.running() {
-                                break;
-                            }
+                            Self::ensure_running(termination_flag)?;
 
                             // Claim the next source node atomically.
                             let source_idx =
@@ -598,6 +617,7 @@ impl<'a> AllShortestPathsStorageRuntime<'a> {
 
                                 let fallback = 1.0f64;
                                 while let Some(State { cost, node }) = heap.pop() {
+                                    Self::ensure_running(termination_flag)?;
                                     let Some(node_idx) = node.to_usize() else {
                                         continue;
                                     };
@@ -634,6 +654,7 @@ impl<'a> AllShortestPathsStorageRuntime<'a> {
                                     };
 
                                     for (neighbor, weight) in neighbors {
+                                        Self::ensure_running(termination_flag)?;
                                         let Some(neighbor_idx) = neighbor.to_usize() else {
                                             continue;
                                         };
@@ -661,6 +682,7 @@ impl<'a> AllShortestPathsStorageRuntime<'a> {
                             // Emit results — filter Infinity (Java parity: stream filters POSITIVE_INFINITY).
                             let sender_guard = shared_sender.lock();
                             for (target_idx, &dist) in distances.iter().enumerate() {
+                                Self::ensure_running(termination_flag)?;
                                 if dist == f64::INFINITY {
                                     continue;
                                 }
@@ -711,6 +733,15 @@ impl<'a> AllShortestPathsStorageRuntime<'a> {
         Ok(())
     }
 
+    fn ensure_running(termination_flag: &TerminationFlag) -> Result<(), AlgorithmError> {
+        if !termination_flag.running() {
+            return Err(AlgorithmError::Execution(
+                "All Shortest Paths computation terminated".to_string(),
+            ));
+        }
+        Ok(())
+    }
+
     /// Get total number of nodes
     pub fn node_count(&self) -> usize {
         self.graph.node_count()
@@ -743,7 +774,7 @@ mod tests {
     use super::*;
     use crate::config::GraphStoreConfig;
     use crate::projection::RelationshipType;
-    use crate::task::progress::{TaskProgressTracker, Tasks};
+    use crate::task::progress::{NoopProgressTracker, TaskProgressTracker, Tasks};
     use crate::types::graph::{
         DefaultGraph, GraphCharacteristicsBuilder, OriginalNodeId, RelationshipTopology,
         SimpleIdMap,
@@ -785,6 +816,27 @@ mod tests {
             HashMap::new(),
             HashMap::new(),
         )
+    }
+
+    #[test]
+    fn context_computation_honors_pre_terminated_request() {
+        let graph = graph_from_outgoing(vec![vec![MappedNodeId::new(1)], vec![]]);
+        let storage =
+            AllShortestPathsStorageRuntime::with_settings(&graph, AlgorithmType::Unweighted, 1);
+        let mut computation = AllShortestPathsComputationRuntime::new();
+        let mut progress_tracker = NoopProgressTracker;
+        let termination_flag = TerminationFlag::stop_running();
+
+        let result = storage.compute_all_shortest_paths_streaming_with_context(
+            &mut computation,
+            0,
+            &mut progress_tracker,
+            &termination_flag,
+        );
+
+        assert!(
+            matches!(result, Err(AlgorithmError::Execution(message)) if message.contains("terminated"))
+        );
     }
 
     #[test]

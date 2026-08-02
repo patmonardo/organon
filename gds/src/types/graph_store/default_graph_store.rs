@@ -1631,7 +1631,10 @@ impl GraphStore for DefaultGraphStore {
 
     fn add_node_label(&mut self, node_label: NodeLabel) -> GraphStoreResult<()> {
         let schema_label = Self::to_schema_label(&node_label);
-        Arc::make_mut(&mut self.id_map).add_node_label(schema_label);
+        Arc::make_mut(&mut self.id_map).add_node_label(schema_label.clone());
+        let mut schema = MutableGraphSchema::from_schema(&self.schema);
+        schema.node_schema_mut().add_label(schema_label);
+        self.schema = Arc::new(schema.build());
         self.set_modified();
         Ok(())
     }
@@ -2118,6 +2121,11 @@ impl GraphStore for DefaultGraphStore {
         if let Some(topology) = self.relationship_topologies.remove(relationship_type) {
             let removed_count = topology.relationship_count();
             self.relationship_property_stores.remove(relationship_type);
+            let mut schema = MutableGraphSchema::from_schema(&self.schema);
+            schema
+                .relationship_schema_mut()
+                .remove_type(relationship_type);
+            self.schema = Arc::new(schema.build());
             self.rebuild_relationship_metadata();
             self.refresh_relationship_property_state();
             self.set_modified();
@@ -2749,6 +2757,35 @@ mod tests {
         // Verify property exists
         assert!(store.graph_properties.contains_key("density"));
         assert_eq!(store.graph_properties.len(), 1);
+        validate_graph_store_schema(&store).unwrap();
+    }
+
+    #[test]
+    fn add_node_label_keeps_schema_and_id_map_synchronized() {
+        let mut store = sample_store();
+        let label = NodeLabel::of("Person");
+
+        store.add_node_label(label.clone()).unwrap();
+
+        assert!(store.has_node_label(&label));
+        assert!(store.schema().node_schema().get(&label).is_some());
+        validate_graph_store_schema(&store).unwrap();
+    }
+
+    #[test]
+    fn delete_relationships_removes_materialization_and_schema() {
+        let mut store = sample_store();
+        let relationship_type = RelationshipType::of("KNOWS");
+
+        let result = store.delete_relationships(&relationship_type).unwrap();
+
+        assert_eq!(result.deleted_relationship_count(), Some(3));
+        assert!(!store.has_relationship_type(&relationship_type));
+        assert!(store
+            .schema()
+            .relationship_schema()
+            .get(&relationship_type)
+            .is_none());
         validate_graph_store_schema(&store).unwrap();
     }
 

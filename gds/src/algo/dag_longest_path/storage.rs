@@ -30,9 +30,7 @@ impl DagLongestPathStorageRuntime {
             distances: (0..node_count)
                 .map(|_| AtomicI64::new(neg_infinity_bits))
                 .collect(),
-            predecessors: (0..node_count)
-                .map(|_| Mutex::new(None))
-                .collect(),
+            predecessors: (0..node_count).map(|_| Mutex::new(None)).collect(),
         }
     }
 
@@ -110,34 +108,13 @@ impl DagLongestPathStorageRuntime {
         let node_count = graph.node_count();
         progress_tracker.begin_subtask_with_volume(node_count);
 
-        let result = (|| {
-            let fallback = graph.default_property_value();
-            let mut adjacency: Vec<Vec<(MappedNodeId, f64)>> = Vec::with_capacity(node_count);
-
-            for node_index in 0..node_count {
-                let node_id = mapped_node_id(node_index);
-                let neighbors = graph
-                    .stream_relationships(node_id, fallback)
-                    .map(|cursor| (cursor.target_id(), cursor.property()))
-                    .collect();
-                adjacency.push(neighbors);
-            }
-
-            let result = computation.compute_with_concurrency(
-                node_count,
-                concurrency,
-                termination,
-                move |node_id| {
-                    node_id
-                        .to_usize()
-                        .and_then(|idx| adjacency.get(idx).cloned())
-                        .unwrap_or_default()
-                },
-            )?;
-
-            progress_tracker.log_progress(node_count);
-            Ok(result)
-        })();
+        let result = self.compute_dag_longest_path_with_context(
+            computation,
+            graph,
+            progress_tracker,
+            concurrency,
+            termination,
+        );
 
         match result {
             Ok(result) => {
@@ -150,6 +127,55 @@ impl DagLongestPathStorageRuntime {
             }
         }
     }
+
+    pub fn compute_dag_longest_path_with_context(
+        &self,
+        computation: &mut DagLongestPathComputationRuntime,
+        graph: &dyn Graph,
+        progress_tracker: &mut dyn ProgressTracker,
+        concurrency: usize,
+        termination: &crate::task::concurrency::TerminationFlag,
+    ) -> Result<DagLongestPathResult, TerminatedException> {
+        ensure_running(termination)?;
+        let node_count = graph.node_count();
+        let fallback = graph.default_property_value();
+        let mut adjacency: Vec<Vec<(MappedNodeId, f64)>> = Vec::with_capacity(node_count);
+
+        for node_index in 0..node_count {
+            ensure_running(termination)?;
+            let node_id = mapped_node_id(node_index);
+            let mut neighbors = Vec::new();
+            for cursor in graph.stream_relationships(node_id, fallback) {
+                ensure_running(termination)?;
+                neighbors.push((cursor.target_id(), cursor.property()));
+            }
+            adjacency.push(neighbors);
+        }
+
+        let result = computation.compute_with_concurrency(
+            node_count,
+            concurrency,
+            termination,
+            move |node_id| {
+                node_id
+                    .to_usize()
+                    .and_then(|idx| adjacency.get(idx).cloned())
+                    .unwrap_or_default()
+            },
+        )?;
+
+        progress_tracker.log_progress(node_count);
+        Ok(result)
+    }
+}
+
+fn ensure_running(
+    termination: &crate::task::concurrency::TerminationFlag,
+) -> Result<(), TerminatedException> {
+    if !termination.running() {
+        return Err(TerminatedException);
+    }
+    Ok(())
 }
 
 fn mapped_node_id(index: usize) -> MappedNodeId {
@@ -160,4 +186,43 @@ fn physical_node_index(node_id: MappedNodeId) -> usize {
     node_id
         .to_usize()
         .expect("mapped graph node must fit DAG longest-path storage")
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::projection::Orientation;
+    use crate::task::concurrency::TerminationFlag;
+    use crate::task::progress::NoopProgressTracker;
+    use crate::types::graph_store::{DefaultGraphStore, GraphStore};
+    use crate::types::random::{RandomGraphConfig, RandomRelationshipConfig};
+    use std::collections::HashSet;
+
+    #[test]
+    fn context_computation_honors_pre_terminated_request() {
+        let config = RandomGraphConfig {
+            seed: Some(37),
+            node_count: 4,
+            relationships: vec![RandomRelationshipConfig::new("REL", 0.5)],
+            ..RandomGraphConfig::default()
+        };
+        let store = DefaultGraphStore::random(&config).unwrap();
+        let graph = store
+            .get_graph_with_types_and_orientation(&HashSet::new(), Orientation::Natural)
+            .unwrap();
+        let storage = DagLongestPathStorageRuntime::new(graph.node_count());
+        let mut computation = DagLongestPathComputationRuntime::new(graph.node_count());
+        let mut progress_tracker = NoopProgressTracker;
+        let termination = TerminationFlag::stop_running();
+
+        let result = storage.compute_dag_longest_path_with_context(
+            &mut computation,
+            graph.as_ref(),
+            &mut progress_tracker,
+            2,
+            &termination,
+        );
+
+        assert!(result.is_err());
+    }
 }

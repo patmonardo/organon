@@ -31,6 +31,9 @@ macro_rules! category_name {
     (Miscellaneous) => {
         "miscellaneous"
     };
+    (Pipeline) => {
+        "pipeline"
+    };
 }
 
 macro_rules! component {
@@ -100,4 +103,43 @@ pub static ALGORITHM_BUILTINS: &[ShellComponentDescriptor] = &[
     component!(invoke Miscellaneous, "scale_properties"),
     component!(invoke Miscellaneous, "index_inverse"),
     component!(invoke Miscellaneous, "collapse_path"),
+];
+
+pub static PIPELINE_BUILTINS: &[ShellComponentDescriptor] = &[
+    ShellComponentDescriptor::new(
+        "gds.pipelines.link_prediction.create",
+        "create_link_prediction_pipeline",
+        ShellComponentCategory::Pipeline,
+        INVOKE_MODE,
+    ),
+    ShellComponentDescriptor::new(
+        "gds.pipelines.node_classification.create",
+        "create_node_classification_pipeline",
+        ShellComponentCategory::Pipeline,
+        INVOKE_MODE,
+    ),
+    ShellComponentDescriptor::new(
+        "gds.pipelines.node_regression.create",
+        "create_node_regression_pipeline",
+        ShellComponentCategory::Pipeline,
+        INVOKE_MODE,
+    ),
+    ShellComponentDescriptor::new(
+        "gds.pipelines.list",
+        "list_pipelines",
+        ShellComponentCategory::Pipeline,
+        INVOKE_MODE,
+    ),
+    ShellComponentDescriptor::new(
+        "gds.pipelines.exists",
+        "pipeline_exists",
+        ShellComponentCategory::Pipeline,
+        INVOKE_MODE,
+    ),
+    ShellComponentDescriptor::new(
+        "gds.pipelines.drop",
+        "drop_pipeline",
+        ShellComponentCategory::Pipeline,
+        INVOKE_MODE,
+    ),
 ];

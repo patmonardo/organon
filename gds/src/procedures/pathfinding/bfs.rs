@@ -37,10 +37,9 @@ use crate::algo::bfs::{
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
+use crate::task::concurrency::TerminationFlag;
 use crate::task::memory::MemoryRange;
-use crate::task::progress::{
-    EmptyTaskRegistryFactory, TaskProgressTracker, TaskRegistryFactory, Tasks,
-};
+use crate::task::progress::{ProgressTracker, TaskProgressTracker, TaskRegistryFactory, Tasks};
 use crate::types::graph::id_map::MappedNodeId;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use std::collections::HashSet;
@@ -218,23 +217,42 @@ impl BfsFacade {
     }
 
     fn compute(self) -> Result<(BfsResult, std::time::Duration)> {
+        let relationship_count = self.graph_store.relationship_count();
+        let concurrency = self.config.concurrency;
+        let mut progress_tracker = TaskProgressTracker::with_concurrency(
+            Tasks::leaf_with_volume("bfs".to_string(), relationship_count),
+            concurrency,
+        );
+        let termination_flag = TerminationFlag::running_true();
+
+        progress_tracker.begin_subtask_with_volume(relationship_count);
+        let result = self.compute_with_context(&mut progress_tracker, &termination_flag);
+        match result {
+            Ok(value) => {
+                progress_tracker.end_subtask();
+                Ok(value)
+            }
+            Err(error) => {
+                progress_tracker.end_subtask_with_failure();
+                Err(error)
+            }
+        }
+    }
+
+    fn compute_with_context(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<(BfsResult, std::time::Duration)> {
         self.config
             .validate()
             .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
 
-        // Set up progress tracking placeholders for API consistency with other facades.
-        let _task_registry_factory = self
-            .task_registry_factory
-            .unwrap_or_else(|| Box::new(EmptyTaskRegistryFactory));
-        let _user_log_registry_factory = self
-            .user_log_registry_factory
-            .unwrap_or_else(|| Box::new(EmptyTaskRegistryFactory));
-
-        // Create progress tracker for BFS execution.
-        // We track progress in terms of relationships examined.
-        let task = Tasks::leaf("BFS".to_string());
-        let mut progress_tracker =
-            TaskProgressTracker::with_concurrency(task, self.config.concurrency);
+        if !termination_flag.running() {
+            return Err(AlgorithmError::Execution(
+                "BFS computation terminated".to_string(),
+            ));
+        }
 
         let source_node = self.config.source_node;
         let target_nodes = self.config.target_nodes.clone();
@@ -262,10 +280,11 @@ impl BfsFacade {
         );
 
         let start = std::time::Instant::now();
-        let result: BfsResult = storage.compute_bfs(
+        let result: BfsResult = storage.compute_bfs_with_context(
             &mut computation,
             Some(graph_view.as_ref()),
-            &mut progress_tracker,
+            progress_tracker,
+            termination_flag,
         )?;
         Ok((result, start.elapsed()))
     }
@@ -292,6 +311,17 @@ impl BfsFacade {
         Ok(Box::new(paths.into_iter()))
     }
 
+    pub fn stream_with_context(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<Vec<PathResult>> {
+        let source_node = self.config.source_node;
+        let target_nodes = self.config.target_nodes.clone();
+        let (result, elapsed) = self.compute_with_context(progress_tracker, termination_flag)?;
+        Ok(BfsResultBuilder::new(result, elapsed, source_node, target_nodes).paths())
+    }
+
     /// Stats mode: Get aggregated statistics
     ///
     /// Returns traversal statistics without individual nodes.
@@ -309,6 +339,17 @@ impl BfsFacade {
         let source_node = self.config.source_node;
         let target_nodes = self.config.target_nodes.clone();
         let (result, elapsed) = self.compute()?;
+        Ok(BfsResultBuilder::new(result, elapsed, source_node, target_nodes).stats())
+    }
+
+    pub fn stats_with_context(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<BfsStats> {
+        let source_node = self.config.source_node;
+        let target_nodes = self.config.target_nodes.clone();
+        let (result, elapsed) = self.compute_with_context(progress_tracker, termination_flag)?;
         Ok(BfsResultBuilder::new(result, elapsed, source_node, target_nodes).stats())
     }
 
@@ -406,10 +447,32 @@ impl BfsFacade {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::task::progress::NoopProgressTracker;
     use crate::types::random::{RandomGraphConfig, RandomRelationshipConfig};
 
     fn mapped(node_id: u64) -> MappedNodeId {
         MappedNodeId::new(node_id)
+    }
+
+    #[test]
+    fn context_execution_honors_pre_terminated_request() {
+        let config = RandomGraphConfig {
+            seed: Some(1),
+            node_count: 8,
+            relationships: vec![RandomRelationshipConfig::new("REL", 1.0)],
+            ..RandomGraphConfig::default()
+        };
+        let store = Arc::new(DefaultGraphStore::random(&config).unwrap());
+        let mut progress_tracker = NoopProgressTracker;
+        let termination_flag = TerminationFlag::stop_running();
+
+        let result = BfsBuilder::new(store)
+            .source(0)
+            .stream_with_context(&mut progress_tracker, &termination_flag);
+
+        assert!(
+            matches!(result, Err(AlgorithmError::Execution(message)) if message.contains("terminated"))
+        );
     }
 
     #[test]

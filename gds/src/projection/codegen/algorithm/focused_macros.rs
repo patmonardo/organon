@@ -6,6 +6,34 @@
 //! - Computation Runtime boilerplate
 //! - Config structs (already exists)
 
+#[doc(hidden)]
+#[macro_export]
+macro_rules! parse_focused_algorithm_config {
+    ($input:expr) => {
+        Ok($input.clone())
+    };
+    ($input:expr, $config_type:ty) => {{
+        let config: $config_type = serde_json::from_value($input.clone()).map_err(|error| {
+            $crate::projection::eval::algorithm::ConfigError::InvalidValue {
+                param: "config".to_string(),
+                message: format!("JSON parsing failed: {error}"),
+            }
+        })?;
+        config.validate().map_err(|error| {
+            $crate::projection::eval::algorithm::ConfigError::InvalidValue {
+                param: "config".to_string(),
+                message: format!("Validation failed: {error}"),
+            }
+        })?;
+        serde_json::to_value(config).map_err(|error| {
+            $crate::projection::eval::algorithm::ConfigError::InvalidValue {
+                param: "config".to_string(),
+                message: format!("JSON serialization failed: {error}"),
+            }
+        })
+    }};
+}
+
 /// Generate AlgorithmSpec boilerplate
 ///
 /// This macro generates the standard AlgorithmSpec implementation
@@ -17,6 +45,7 @@
 /// define_algorithm_spec! {
 ///     name: "my_algorithm",
 ///     output_type: MyResult,
+///     config_type: MyConfig,
 ///     projection_hint: Dense,
 ///     modes: [Stream, Stats],
 ///
@@ -31,6 +60,7 @@ macro_rules! define_algorithm_spec {
     (
         name: $name:literal,
         output_type: $output_type:ty,
+        $(config_type: $config_type:ty,)?
         projection_hint: $hint:ident,
         modes: [$($mode:ident),*],
 
@@ -69,9 +99,7 @@ macro_rules! define_algorithm_spec {
                 }
 
                 fn parse_config(&self, input: &serde_json::Value) -> Result<serde_json::Value, $crate::projection::eval::algorithm::ConfigError> {
-                    // For now, just pass through the input
-                    // Individual algorithms can handle their own config parsing
-                    Ok(input.clone())
+                    $crate::parse_focused_algorithm_config!(input $(, $config_type)?)
                 }
 
                 fn validation_config(&self, _context: &$crate::projection::eval::algorithm::ExecutionContext) -> $crate::projection::eval::algorithm::ValidationConfiguration {
@@ -114,6 +142,7 @@ macro_rules! define_algorithm_spec {
     (
         name: $name:literal,
         output_type: $output_type:ty,
+        $(config_type: $config_type:ty,)?
         projection_hint: $hint:ident,
         modes: [$($mode:ident),*],
 
@@ -154,9 +183,7 @@ macro_rules! define_algorithm_spec {
                 }
 
                 fn parse_config(&self, input: &serde_json::Value) -> Result<serde_json::Value, $crate::projection::eval::algorithm::ConfigError> {
-                    // For now, just pass through the input
-                    // Individual algorithms can handle their own config parsing
-                    Ok(input.clone())
+                    $crate::parse_focused_algorithm_config!(input $(, $config_type)?)
                 }
 
                 fn validation_config(&self, _context: &$crate::projection::eval::algorithm::ExecutionContext) -> $crate::projection::eval::algorithm::ValidationConfiguration {

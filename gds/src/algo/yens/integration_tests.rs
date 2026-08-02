@@ -10,6 +10,7 @@ use super::YensStorageRuntime;
 use crate::algo::yens::YENSAlgorithmSpec;
 use crate::projection::eval::algorithm::AlgorithmSpec;
 use crate::projection::eval::algorithm::{ExecutionContext, ExecutionMode, ProcedureExecutor};
+use crate::task::concurrency::TerminationFlag;
 use crate::task::progress::{TaskProgressTracker, Tasks};
 use crate::types::graph::MappedNodeId;
 use crate::types::prelude::DefaultGraphStore;
@@ -99,6 +100,7 @@ mod tests {
             Tasks::leaf_with_volume("yens".to_string(), 3),
             1,
         );
+        let termination_flag = TerminationFlag::running_true();
 
         let result = storage
             .compute_yens(
@@ -106,6 +108,7 @@ mod tests {
                 Some(graph.as_ref()),
                 0,
                 &mut progress_tracker,
+                &termination_flag,
             )
             .unwrap();
 

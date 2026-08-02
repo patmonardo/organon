@@ -61,7 +61,14 @@ impl RandomWalkComputationRuntime {
             let mut rng = StdRng::seed_from_u64(self.random_seed.wrapping_add(start_seed));
 
             for _ in 0..self.walks_per_node {
-                let walk = self.perform_walk(start_node, &get_neighbors, &mut rng);
+                let walk = self
+                    .perform_walk_with_context(
+                        start_node,
+                        &get_neighbors,
+                        &mut rng,
+                        &TerminationFlag::running_true(),
+                    )
+                    .expect("default random walk should not terminate");
                 self.storage.add_walk(walk);
             }
         }
@@ -108,7 +115,17 @@ impl RandomWalkComputationRuntime {
                 let mut rng = StdRng::seed_from_u64(self.random_seed.wrapping_add(start_seed));
 
                 for _ in 0..self.walks_per_node {
-                    let walk = self.perform_walk(start_node, &get_neighbors, &mut rng);
+                    if !termination.running() {
+                        return;
+                    }
+                    let Ok(walk) = self.perform_walk_with_context(
+                        start_node,
+                        &get_neighbors,
+                        &mut rng,
+                        termination,
+                    ) else {
+                        return;
+                    };
                     self.storage.add_walk(walk);
                 }
             });
@@ -119,12 +136,14 @@ impl RandomWalkComputationRuntime {
         })
     }
 
-    fn perform_walk(
+    fn perform_walk_with_context(
         &self,
         start_node: usize,
         get_neighbors: &Arc<impl Fn(usize) -> Vec<usize>>,
         rng: &mut StdRng,
-    ) -> Vec<u64> {
+        termination: &TerminationFlag,
+    ) -> Result<Vec<u64>, TerminatedException> {
+        Self::ensure_running(termination)?;
         let mut walk = Vec::with_capacity(self.walk_length);
         walk.push(
             u64::try_from(start_node).expect("random-walk source index must fit result storage"),
@@ -134,20 +153,21 @@ impl RandomWalkComputationRuntime {
         let mut previous: Option<usize> = None;
 
         for _ in 1..self.walk_length {
+            Self::ensure_running(termination)?;
             let neighbors = get_neighbors(current);
 
             if neighbors.is_empty() {
                 break;
             }
 
-            let next = self.sample_next_node(previous, &neighbors, rng);
+            let next = self.sample_next_node(previous, &neighbors, rng, termination)?;
 
             walk.push(u64::try_from(next).expect("random-walk node index must fit result storage"));
             previous = Some(current);
             current = next;
         }
 
-        walk
+        Ok(walk)
     }
 
     fn sample_next_node(
@@ -155,36 +175,45 @@ impl RandomWalkComputationRuntime {
         previous: Option<usize>,
         neighbors: &[usize],
         rng: &mut StdRng,
-    ) -> usize {
+        termination: &TerminationFlag,
+    ) -> Result<usize, TerminatedException> {
+        Self::ensure_running(termination)?;
         if neighbors.len() == 1 {
-            return neighbors[0];
+            return Ok(neighbors[0]);
         }
 
-        let weights: Vec<f64> = neighbors
-            .iter()
-            .map(|&neighbor| {
-                if let Some(prev) = previous {
-                    if neighbor == prev {
-                        1.0 / self.return_factor
-                    } else {
-                        1.0 / self.in_out_factor
-                    }
+        let mut weights = Vec::with_capacity(neighbors.len());
+        for &neighbor in neighbors {
+            Self::ensure_running(termination)?;
+            weights.push(if let Some(prev) = previous {
+                if neighbor == prev {
+                    1.0 / self.return_factor
                 } else {
-                    1.0
+                    1.0 / self.in_out_factor
                 }
-            })
-            .collect();
+            } else {
+                1.0
+            });
+        }
 
         let total_weight: f64 = weights.iter().sum();
         let mut threshold = rng.gen::<f64>() * total_weight;
 
         for (i, &weight) in weights.iter().enumerate() {
+            Self::ensure_running(termination)?;
             threshold -= weight;
             if threshold <= 0.0 {
-                return neighbors[i];
+                return Ok(neighbors[i]);
             }
         }
 
-        neighbors[neighbors.len() - 1]
+        Ok(neighbors[neighbors.len() - 1])
+    }
+
+    fn ensure_running(termination: &TerminationFlag) -> Result<(), TerminatedException> {
+        if !termination.running() {
+            return Err(TerminatedException);
+        }
+        Ok(())
     }
 }

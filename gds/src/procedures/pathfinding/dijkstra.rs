@@ -33,9 +33,9 @@ use crate::algo::dijkstra::{
     DijkstraMutationSummary, DijkstraResult, DijkstraResultBuilder, DijkstraStats,
     DijkstraStorageRuntime, DijkstraWriteSummary,
 };
-use crate::task::memory::MemoryRange;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
+use crate::task::memory::MemoryRange;
 use crate::types::graph::id_map::MappedNodeId;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use std::collections::HashMap;
@@ -44,9 +44,11 @@ use std::sync::Arc;
 
 // Import upgraded systems
 use crate::algo::algorithms::pathfinding::{PathFindingResult, PathResult};
-use crate::task::progress::TaskProgressTracker;
-use crate::task::progress::{EmptyTaskRegistryFactory, TaskRegistryFactory, Tasks};
 use crate::projection::eval::algorithm::AlgorithmError;
+use crate::task::concurrency::TerminationFlag;
+use crate::task::progress::ProgressTracker;
+use crate::task::progress::TaskProgressTracker;
+use crate::task::progress::{TaskRegistryFactory, Tasks};
 
 // ============================================================================
 // Facade Type
@@ -176,10 +178,7 @@ impl DijkstraFacade {
     ///
     /// Algorithm computes shortest paths to all specified targets.
     pub fn targets(mut self, targets: Vec<u64>) -> Self {
-        self.config.target_nodes = targets
-            .into_iter()
-            .map(MappedNodeId::new)
-            .collect();
+        self.config.target_nodes = targets.into_iter().map(MappedNodeId::new).collect();
         self
     }
 
@@ -245,6 +244,30 @@ impl DijkstraFacade {
     }
 
     fn compute(self) -> Result<PathFindingResult> {
+        let concurrency = self.config.concurrency;
+        let mut progress_tracker =
+            TaskProgressTracker::with_concurrency(Tasks::leaf("dijkstra".to_string()), concurrency);
+        let termination_flag = TerminationFlag::running_true();
+
+        progress_tracker.begin_subtask_unknown();
+        let result = self.compute_with_context(&mut progress_tracker, &termination_flag);
+        match result {
+            Ok(value) => {
+                progress_tracker.end_subtask();
+                Ok(value)
+            }
+            Err(error) => {
+                progress_tracker.end_subtask_with_failure();
+                Err(error)
+            }
+        }
+    }
+
+    fn compute_with_context(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<PathFindingResult> {
         self.config
             .validate()
             .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
@@ -255,15 +278,11 @@ impl DijkstraFacade {
             ));
         }
 
-        // Set up progress tracking
-        let _task_registry_factory = self
-            .task_registry_factory
-            .unwrap_or_else(|| Box::new(EmptyTaskRegistryFactory));
-        let _user_log_registry_factory = self
-            .user_log_registry_factory
-            .unwrap_or_else(|| Box::new(EmptyTaskRegistryFactory));
-
-        // Progress tracker is best-effort; the driver loop in storage owns begin/log/end.
+        if !termination_flag.running() {
+            return Err(AlgorithmError::Execution(
+                "Dijkstra computation terminated".to_string(),
+            ));
+        }
 
         let source_node = self.config.source_node;
         let targets = create_targets(self.config.target_nodes.clone());
@@ -306,18 +325,14 @@ impl DijkstraFacade {
             .get_graph_with_types_selectors_and_orientation(&rel_types, &selectors, orientation)
             .map_err(|e| AlgorithmError::Graph(e.to_string()))?;
 
-        let mut progress_tracker = TaskProgressTracker::with_concurrency(
-            Tasks::leaf_with_volume("dijkstra".to_string(), graph_view.relationship_count()),
-            self.config.concurrency,
-        );
-
         let start = std::time::Instant::now();
-        let result: DijkstraResult = storage.compute_dijkstra(
+        let result: DijkstraResult = storage.compute_dijkstra_with_context(
             &mut computation,
             targets,
             Some(graph_view.as_ref()),
             direction_byte,
-            &mut progress_tracker,
+            progress_tracker,
+            termination_flag,
         )?;
         DijkstraResultBuilder::result(result, start.elapsed())
     }
@@ -341,6 +356,16 @@ impl DijkstraFacade {
         Ok(Box::new(result.paths.into_iter()))
     }
 
+    pub fn stream_with_context(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<Vec<PathResult>> {
+        Ok(self
+            .compute_with_context(progress_tracker, termination_flag)?
+            .paths)
+    }
+
     /// Stats mode: Get aggregated statistics
     ///
     /// Returns computation statistics without individual paths.
@@ -357,6 +382,20 @@ impl DijkstraFacade {
     pub fn stats(self) -> Result<DijkstraStats> {
         let has_targets = !self.config.target_nodes.is_empty();
         let result = self.compute()?;
+        Ok(Self::stats_from_result(result, has_targets))
+    }
+
+    pub fn stats_with_context(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<DijkstraStats> {
+        let has_targets = !self.config.target_nodes.is_empty();
+        let result = self.compute_with_context(progress_tracker, termination_flag)?;
+        Ok(Self::stats_from_result(result, has_targets))
+    }
+
+    fn stats_from_result(result: PathFindingResult, has_targets: bool) -> DijkstraStats {
         let nodes_expanded = result
             .metadata
             .additional
@@ -375,14 +414,14 @@ impl DijkstraFacade {
             .get("max_queue_size")
             .and_then(|value| value.parse::<u64>().ok())
             .unwrap_or(0);
-        Ok(DijkstraStats {
+        DijkstraStats {
             paths_found: result.paths.len() as u64,
             execution_time_ms: result.metadata.execution_time.as_millis() as u64,
             nodes_expanded,
             edges_considered,
             max_queue_size,
             target_reached: !result.paths.is_empty() && has_targets,
-        })
+        }
     }
 
     /// Mutate mode: Compute and store as node property
@@ -495,6 +534,7 @@ impl DijkstraFacade {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::task::progress::NoopProgressTracker;
     use crate::types::random::{RandomGraphConfig, RandomRelationshipConfig};
     use std::sync::Arc;
 
@@ -583,6 +623,20 @@ mod tests {
             .source_node(mapped(0))
             .concurrency(0);
         assert!(builder.stream().is_err());
+    }
+
+    #[test]
+    fn context_execution_honors_pre_terminated_request() {
+        let mut progress_tracker = NoopProgressTracker;
+        let termination_flag = TerminationFlag::stop_running();
+
+        let result = DijkstraBuilder::new(store())
+            .source(0)
+            .stream_with_context(&mut progress_tracker, &termination_flag);
+
+        assert!(
+            matches!(result, Err(AlgorithmError::Execution(message)) if message.contains("terminated"))
+        );
     }
 
     #[test]

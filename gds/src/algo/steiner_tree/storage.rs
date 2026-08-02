@@ -1,14 +1,11 @@
-use crate::algo::steiner_tree::spec::{
-    SteinerTreeConfig, SteinerTreeParent, SteinerTreeResult,
-};
+use crate::algo::steiner_tree::spec::{SteinerTreeConfig, SteinerTreeParent, SteinerTreeResult};
 use crate::algo::steiner_tree::SteinerTreeComputationRuntime;
+use crate::projection::eval::algorithm::AlgorithmError;
 use crate::task::concurrency::TerminationFlag;
 use crate::task::progress::{ProgressTracker, UNKNOWN_VOLUME};
-use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::Graph;
 use crate::types::graph::MappedNodeId;
 use std::collections::HashSet;
-use std::time::Instant;
 
 /// Steiner Tree Storage Runtime (controller).
 ///
@@ -18,6 +15,38 @@ use std::time::Instant;
 pub struct SteinerTreeStorageRuntime {
     pub config: SteinerTreeConfig,
     pub concurrency: usize,
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::task::progress::NoopProgressTracker;
+
+    #[test]
+    fn context_computation_honors_pre_terminated_request() {
+        let config = SteinerTreeConfig {
+            source_node: MappedNodeId::new(0),
+            target_nodes: vec![MappedNodeId::new(1)],
+            relationship_weight_property: None,
+            delta: 1.0,
+            apply_rerouting: true,
+        };
+        let storage = SteinerTreeStorageRuntime::new(config, 1);
+        let mut computation = SteinerTreeComputationRuntime::new(1.0, 0);
+        let mut progress_tracker = NoopProgressTracker;
+        let termination = TerminationFlag::stop_running();
+
+        let error = storage
+            .compute_steiner_tree_with_context(
+                &mut computation,
+                None,
+                &mut progress_tracker,
+                &termination,
+            )
+            .unwrap_err();
+
+        assert!(error.to_string().contains("terminated"));
+    }
 }
 
 impl SteinerTreeStorageRuntime {
@@ -58,23 +87,15 @@ impl SteinerTreeStorageRuntime {
             progress_tracker.begin_subtask_with_volume(volume);
         }
 
-        let start = Instant::now();
-
-        let node_count = graph.map(|g| g.node_count()).unwrap_or(0);
-        let neighbor_fn =
-            |node: MappedNodeId| -> Vec<(MappedNodeId, f64)> { self.get_neighbors_with_weights(graph, node) };
-
-        let result = self.compute_core(
+        let result = self.compute_steiner_tree_with_context(
             computation,
-            node_count,
-            &neighbor_fn,
+            graph,
             progress_tracker,
             termination,
         );
 
         match result {
             Ok(ok) => {
-                let _elapsed = start.elapsed();
                 progress_tracker.end_subtask();
                 Ok(ok)
             }
@@ -83,6 +104,27 @@ impl SteinerTreeStorageRuntime {
                 Err(e)
             }
         }
+    }
+
+    pub fn compute_steiner_tree_with_context(
+        &self,
+        computation: &mut SteinerTreeComputationRuntime,
+        graph: Option<&dyn Graph>,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination: &TerminationFlag,
+    ) -> Result<SteinerTreeResult, AlgorithmError> {
+        Self::ensure_running(termination)?;
+        let node_count = graph.map(|graph| graph.node_count()).unwrap_or(0);
+        let neighbor_fn =
+            |node: MappedNodeId| self.get_neighbors_with_weights(graph, node, termination);
+
+        self.compute_core(
+            computation,
+            node_count,
+            &neighbor_fn,
+            progress_tracker,
+            termination,
+        )
     }
 
     /// Test/utility entrypoint: run with an explicit neighbor provider.
@@ -98,18 +140,17 @@ impl SteinerTreeStorageRuntime {
         F: Fn(MappedNodeId) -> Vec<(MappedNodeId, f64)>,
     {
         progress_tracker.begin_subtask_unknown();
-        let start = Instant::now();
         let termination = TerminationFlag::running_true();
+        let neighbor_fn = |node| Ok(get_neighbors(node));
         let out = self.compute_core(
             computation,
             node_count,
-            get_neighbors,
+            &neighbor_fn,
             progress_tracker,
             &termination,
         );
         match out {
             Ok(v) => {
-                let _elapsed = start.elapsed();
                 progress_tracker.end_subtask();
                 Ok(v)
             }
@@ -129,8 +170,9 @@ impl SteinerTreeStorageRuntime {
         termination: &TerminationFlag,
     ) -> Result<SteinerTreeResult, AlgorithmError>
     where
-        F: Fn(MappedNodeId) -> Vec<(MappedNodeId, f64)>,
+        F: Fn(MappedNodeId) -> Result<Vec<(MappedNodeId, f64)>, AlgorithmError>,
     {
+        Self::ensure_running(termination)?;
         if node_count == 0 {
             return Ok(SteinerTreeResult {
                 parent_array: vec![],
@@ -165,10 +207,9 @@ impl SteinerTreeStorageRuntime {
         let mut terminals: Vec<MappedNodeId> = Vec::new();
         let mut seen = HashSet::new();
         for &t in &self.config.target_nodes {
+            Self::ensure_running(termination)?;
             let target_index = t.to_usize().ok_or_else(|| {
-                AlgorithmError::InvalidGraph(
-                    "target node exceeds physical index space".to_string(),
-                )
+                AlgorithmError::InvalidGraph("target node exceeds physical index space".to_string())
             })?;
             if target_index >= node_count {
                 return Err(AlgorithmError::InvalidGraph(
@@ -182,6 +223,7 @@ impl SteinerTreeStorageRuntime {
 
         let mut is_terminal = vec![false; node_count];
         for &t in &terminals {
+            Self::ensure_running(termination)?;
             is_terminal[physical_node_index(t)] = true;
         }
 
@@ -190,14 +232,11 @@ impl SteinerTreeStorageRuntime {
         let mut merged_to_source = vec![false; node_count];
         merged_to_source[source_index] = true;
 
-        let mut remaining: Vec<MappedNodeId> = terminals.into_iter().filter(|&t| t != source).collect();
+        let mut remaining: Vec<MappedNodeId> =
+            terminals.into_iter().filter(|&t| t != source).collect();
 
         while !remaining.is_empty() {
-            if !termination.running() {
-                return Err(AlgorithmError::Execution(
-                    "Steiner tree computation terminated".to_string(),
-                ));
-            }
+            Self::ensure_running(termination)?;
 
             self.run_multi_source_delta_stepping(
                 computation,
@@ -211,6 +250,7 @@ impl SteinerTreeStorageRuntime {
             let mut best_idx: Option<usize> = None;
             let mut best_dist = f64::INFINITY;
             for (idx, &t) in remaining.iter().enumerate() {
+                Self::ensure_running(termination)?;
                 let d = computation.distance(t);
                 if d < best_dist {
                     best_dist = d;
@@ -226,11 +266,15 @@ impl SteinerTreeStorageRuntime {
             }
 
             let chosen = remaining.swap_remove(chosen_idx);
-            let _ = computation.merge_path_into_tree(chosen, &mut merged_to_source);
+            let _ = computation.merge_path_into_tree_with_context(
+                chosen,
+                &mut merged_to_source,
+                termination,
+            )?;
         }
 
         // Always prune non-terminal leaves; rerouting is optional and separate.
-        computation.prune_non_terminal_leaves(&is_terminal, source);
+        computation.prune_non_terminal_leaves_with_context(&is_terminal, source, termination)?;
 
         // Optional rerouting/post-optimization stage (not implemented yet).
         let _apply_rerouting = self.config.apply_rerouting;
@@ -240,6 +284,7 @@ impl SteinerTreeStorageRuntime {
         let mut effective_node_count = 0u64;
         let mut effective_target_nodes_count = 0u64;
         for node_id in 0..node_count {
+            Self::ensure_running(termination)?;
             let parent = computation.parent_array()[node_id];
             if parent == SteinerTreeParent::Pruned {
                 continue;
@@ -271,30 +316,27 @@ impl SteinerTreeStorageRuntime {
         termination: &TerminationFlag,
     ) -> Result<(), AlgorithmError>
     where
-        F: Fn(MappedNodeId) -> Vec<(MappedNodeId, f64)>,
+        F: Fn(MappedNodeId) -> Result<Vec<(MappedNodeId, f64)>, AlgorithmError>,
     {
         let mut scanned_relationships: usize = 0;
         const LOG_BATCH: usize = 256;
 
-        let mut frontier = computation.reset_search(merged_to_source);
+        let mut frontier = computation.reset_search_with_context(merged_to_source, termination)?;
         let mut current_bin: usize = 0;
 
         let max_iterations = merged_to_source.len().saturating_mul(2).max(1);
         let mut iteration = 0usize;
 
         while !frontier.is_empty() && iteration < max_iterations {
-            if !termination.running() {
-                return Err(AlgorithmError::Execution(
-                    "Steiner tree computation terminated".to_string(),
-                ));
-            }
+            Self::ensure_running(termination)?;
 
             let mut next_frontier = std::collections::VecDeque::new();
 
             while let Some(node) = frontier.pop_front() {
+                Self::ensure_running(termination)?;
                 let node_distance = computation.distance(node);
                 if node_distance >= self.config.delta * current_bin as f64 {
-                    let neighbors = get_neighbors(node);
+                    let neighbors = get_neighbors(node)?;
                     scanned_relationships = scanned_relationships.saturating_add(neighbors.len());
                     if scanned_relationships >= LOG_BATCH {
                         progress_tracker.log_progress(scanned_relationships);
@@ -302,6 +344,7 @@ impl SteinerTreeStorageRuntime {
                     }
 
                     for (nbr, weight) in neighbors {
+                        Self::ensure_running(termination)?;
                         if weight.is_nan() || weight.is_infinite() || weight < 0.0 {
                             continue;
                         }
@@ -324,6 +367,7 @@ impl SteinerTreeStorageRuntime {
             };
             current_bin = next_bin;
             for node in computation.drain_bin(current_bin) {
+                Self::ensure_running(termination)?;
                 frontier.push_back(node);
             }
 
@@ -341,21 +385,34 @@ impl SteinerTreeStorageRuntime {
         &self,
         graph: Option<&dyn Graph>,
         node_id: MappedNodeId,
-    ) -> Vec<(MappedNodeId, f64)> {
+        termination: &TerminationFlag,
+    ) -> Result<Vec<(MappedNodeId, f64)>, AlgorithmError> {
         if let Some(g) = graph {
             let fallback: f64 = 1.0;
-            g.stream_relationships(node_id, fallback)
-                .map(|cursor| (cursor.target_id(), cursor.property()))
-                .collect()
+            let mut neighbors = Vec::new();
+            for cursor in g.stream_relationships(node_id, fallback) {
+                Self::ensure_running(termination)?;
+                neighbors.push((cursor.target_id(), cursor.property()));
+            }
+            Ok(neighbors)
         } else {
             // Minimal mock for storage/computation integration tests.
-            match node_id.get() {
+            Ok(match node_id.get() {
                 0 => vec![(MappedNodeId::new(1), 1.0), (MappedNodeId::new(2), 1.0)],
                 1 => vec![(MappedNodeId::new(3), 1.0)],
                 2 => vec![(MappedNodeId::new(4), 1.0)],
                 _ => vec![],
-            }
+            })
         }
+    }
+
+    fn ensure_running(termination: &TerminationFlag) -> Result<(), AlgorithmError> {
+        if !termination.running() {
+            return Err(AlgorithmError::Execution(
+                "Steiner tree computation terminated".to_string(),
+            ));
+        }
+        Ok(())
     }
 }
 

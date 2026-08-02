@@ -11,6 +11,7 @@ pub mod model_catalog;
 pub mod operations;
 pub mod pathfinding;
 pub mod pipelines;
+pub mod shell;
 pub mod similarity;
 
 pub use algorithms::*;
@@ -19,3 +20,4 @@ pub use graph_catalog::*;
 pub use memory::*;
 pub use model_catalog::*;
 pub use operations::*;
+pub use shell::*;

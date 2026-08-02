@@ -2,8 +2,9 @@
 
 ## Status
 
-In progress. This document reviews the existing GraphStore Types surface before
-Collections integration or a `CoreGraphStore` implementation begins.
+Active platform-upgrade plan. This document reviews and upgrades the existing
+GraphStore Types surface before Collections integration or a `CoreGraphStore`
+implementation begins.
 
 - **Layer:** Kernel
 - **Target:** conceptual validity, constrained by empirical adequacy
@@ -49,18 +50,18 @@ not merely an internal Dataset adapter.
 
 ## Verified Baseline
 
-Verified on 2026-07-31:
+Verified on 2026-08-01 with the installed stable toolchain selected explicitly:
 
 | Check                                        | Result    |
 | -------------------------------------------- | --------- |
 | `cargo check -p gds --lib`                   | Pass      |
-| `cargo test -p gds --lib types::graph_store` | 38 passed |
-| `cargo test -p gds --lib types::graph`       | 48 passed |
-| `cargo test -p gds --lib types::properties`  | 51 passed |
+| `cargo test -p gds --lib types::graph_store` | 60 passed |
+| `cargo test -p gds --lib types::graph`       | 80 passed |
+| `cargo test -p gds --lib types::properties`  | 59 passed |
 
-The initial unqualified `cargo test -p gds types::graph_store` run exposed a stale
-`gds::concurrency::Concurrency` import in `gds/tests/config_validations.rs`. The
-test now uses the canonical `gds::task::concurrency::Concurrency` path.
+The repository has no pinned or default rustup toolchain in the current
+environment, so the executable commands used `cargo +stable`. No global rustup
+configuration was changed.
 
 ## Current Architectural Shape
 
@@ -73,26 +74,27 @@ The current system has two distinct but partially collapsed levels:
    an object-safe `Arc<dyn Graph>` surface.
 
 `DefaultGraphStore` is both the principal implementation of `GraphStore` and a
-large operation host. It directly owns graph and node property maps, but owns
-relationship properties through `DefaultRelationshipPropertyStore`. Separate
-`DefaultGraphPropertyStore` and `DefaultNodePropertyStore` implementations exist
-and are tested, yet they are not the components used by `DefaultGraphStore`.
+large operation host. It now composes `DefaultGraphPropertyStore` and
+`DefaultNodePropertyStore`, while relationship properties remain grouped by
+relationship type in `DefaultRelationshipPropertyStore` instances. `DefaultGraph`
+still materializes graph-view property maps directly, so store composition and
+runtime-view representation remain intentionally distinct Bootstrap concerns.
 
 ## Contract Matrix
 
-| Surface                           | Present role                                             | Implementation dependency                                               | Initial classification                                      |
-| --------------------------------- | -------------------------------------------------------- | ----------------------------------------------------------------------- | ----------------------------------------------------------- |
-| `GraphStore`                      | Store metadata, lookup, mutation, and graph-view factory | Implemented principally by `DefaultGraphStore`; generic consumers exist | Intended stable API, currently implementation-shaped        |
-| `GraphStoreAdapter<G>`            | Read delegation and adapter helpers                      | Mutation always returns `InvalidOperation`                              | Bootstrap adapter, not a transparent `GraphStore` adapter   |
-| `Graph`                           | Runtime graph view for algorithms                        | Returned as `Arc<dyn Graph>`                                            | Strongest current implementation boundary                   |
-| `IdMap`                           | Original/mapped ID mediation and labels                  | `DefaultGraph` and `DefaultGraphStore` use `SimpleIdMap` internally     | Stable concept; concrete return/storage choices need review |
-| `RelationshipTopology`            | Outgoing and optional incoming adjacency                 | `Vec<Vec<MappedNodeId>>` representation                                 | Bootstrap representation behind a valid concept             |
-| `GraphSchema`                     | Immutable structural description                         | Stored beside runtime maps and topology                                 | Stable concept; synchronization invariant is implicit       |
-| `MutableGraphSchema`              | Schema derivation/building                               | Used inside Bootstrap mutation and derivation                           | Construction mechanism, not runtime store API               |
-| `PropertyValues` families         | Typed value access                                       | Often backed by Collections implementations                             | Necessary boundary between graph semantics and storage      |
-| `PropertyStore`                   | Common keyed property map behavior                       | Exposes concrete `HashMap` by reference                                 | Translation-shaped contract with backend leakage            |
-| Three specialized property stores | Graph/node/relationship property grouping                | Only relationship store is composed into the graph/store runtime        | Intended symmetry not realized by effective architecture    |
-| Default property stores           | Tested in-memory implementations and builders            | Graph/node defaults are not used by `DefaultGraphStore`                 | Mixed: live utilities and parallel scaffolding              |
+| Surface                           | Present role                                             | Implementation dependency                                                 | Initial classification                                       |
+| --------------------------------- | -------------------------------------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| `GraphStore`                      | Store metadata, lookup, mutation, and graph-view factory | Implemented principally by `DefaultGraphStore`; generic consumers exist   | Intended stable API, currently implementation-shaped         |
+| `GraphStoreAdapter<G>`            | Read delegation and adapter helpers                      | Mutation always returns `InvalidOperation`                                | Bootstrap adapter, not a transparent `GraphStore` adapter    |
+| `Graph`                           | Runtime graph view for algorithms                        | Returned as `Arc<dyn Graph>`                                              | Strongest current implementation boundary                    |
+| `IdMap`                           | Original/mapped ID mediation and labels                  | `DefaultGraph` and `DefaultGraphStore` use `SimpleIdMap` internally       | Stable concept; concrete return/storage choices need review  |
+| `RelationshipTopology`            | Outgoing and optional incoming adjacency                 | `Vec<Vec<MappedNodeId>>` representation                                   | Bootstrap representation behind a valid concept              |
+| `GraphSchema`                     | Immutable structural description                         | Stored beside runtime maps and topology                                   | Stable concept; synchronization invariant is implicit        |
+| `MutableGraphSchema`              | Schema derivation/building                               | Used inside Bootstrap mutation and derivation                             | Construction mechanism, not runtime store API                |
+| `PropertyValues` families         | Typed value access                                       | Often backed by Collections implementations                               | Necessary boundary between graph semantics and storage       |
+| `PropertyStore`                   | Common keyed property map behavior                       | Exposes concrete `HashMap` by reference                                   | Translation-shaped contract with backend leakage             |
+| Three specialized property stores | Graph/node/relationship property grouping                | All are composed by `DefaultGraphStore`; relationship stores are per type | Live Bootstrap composition; Core authority still unspecified |
+| Default property stores           | In-memory typed-column ownership and mutation            | Used by `DefaultGraphStore`; views receive selected value maps            | Live Bootstrap components, not Core storage constraints      |
 
 ## Findings
 
@@ -120,27 +122,21 @@ capability traits or associated operation services.
 
 ### F2. High: the declared three-PropertyStore architecture is not the effective architecture
 
-The three specialized store traits and defaults are structurally parallel, but
-`DefaultGraphStore` stores:
+**Partial resolution:** `DefaultGraphStore` now composes all three specialized
+property-store families. Graph and node mutations pass through typed column
+objects and update schema alongside the live stores. `DefaultGraph` still receives
+selected property-value maps when a runtime view is constructed, which is a view
+materialization choice rather than store ownership.
 
-- graph properties as `HashMap<String, Arc<dyn GraphPropertyValues>>`;
-- node properties as `HashMap<String, Arc<dyn NodePropertyValues>>` plus a second
-  label-to-key index;
-- relationship properties as
-  `HashMap<RelationshipType, DefaultRelationshipPropertyStore>`.
+**Remaining consequence:** the common `PropertyStore` trait still exposes a
+concrete `HashMap` representation, and no implementation-neutral contract states
+whether schema or materialized columns authorize existence and type. Collections-
+backed property storage therefore has composition points but not yet a valid Core
+boundary.
 
-`DefaultGraph` repeats the same asymmetry. Therefore the dedicated graph and node
-property stores do not currently define the semantics of the main GraphStore
-implementation, while the relationship store does.
-
-**Consequence:** Collections-backed property storage has no single composition
-point, and tests of `DefaultGraphPropertyStore` or `DefaultNodePropertyStore` do
-not prove `DefaultGraphStore` behavior.
-
-**Review direction:** determine whether all three stores become explicit
-GraphStore components, or whether the specialized store traits are removed in
-favor of a different typed-column boundary. Do not preserve nominal symmetry
-unless it corresponds to live ownership and invariants.
+**Remaining direction:** specify authority and validation rules for each property
+family, then narrow or replace representation-leaking `PropertyStore` methods.
+Do not require Core storage to reproduce the Bootstrap maps used by runtime views.
 
 ### F3. High: schema and runtime state have an implicit dual-source-of-truth contract
 
@@ -157,6 +153,43 @@ Future persistent storage would magnify this ambiguity.
 **Review direction:** specify which component is authoritative for existence,
 type, and availability, and define validation rules for materialized values versus
 declared schema.
+
+#### Authority audit (2026-08-01)
+
+`DefaultGraphStore` is a Bootstrap coordinator over several authorities; it is
+not itself the authority model that Core storage must reproduce.
+
+| Dimension                | Existence and availability                                  | Declared type or shape                             | Coordinated mutation                                                       |
+| ------------------------ | ----------------------------------------------------------- | -------------------------------------------------- | -------------------------------------------------------------------------- |
+| Node identity and labels | `SimpleIdMap`                                               | Node entries in `GraphSchema`                      | `DefaultGraphStore`; label addition now updates both representations       |
+| Relationship types       | Materialized topology map                                   | Relationship entries in `GraphSchema`              | `DefaultGraphStore`; deletion now removes topology, properties, and schema |
+| Graph properties         | `DefaultGraphPropertyStore` columns                         | Column-embedded schema mirrored into `GraphSchema` | `DefaultGraphStore`                                                        |
+| Node properties          | `DefaultNodePropertyStore`; separate per-label key index    | Column-embedded schema and node schema entries     | `DefaultGraphStore`                                                        |
+| Relationship properties  | Per-type `DefaultRelationshipPropertyStore` columns         | Column-embedded relationship schema                | `DefaultGraphStore`                                                        |
+| Inverse availability     | Incoming adjacency on each topology                         | Not declared by schema                             | Topology construction and metadata rebuild                                 |
+| Counts                   | ID map and topology; aggregate relationship count is cached | Not applicable                                     | Structural operations and metadata rebuild                                 |
+
+Two direct contradictions were repaired during the audit:
+
+- `add_node_label` now updates `SimpleIdMap` and `GraphSchema` together and is
+  covered by `validate_graph_store_schema`.
+- `delete_relationships` now removes the complete relationship dimension from
+  topology, property storage, and schema.
+
+Remaining authority risks are:
+
+- `node_properties_by_label` is a second mutable index whose replacement path
+  can retain old label associations;
+- `relationship_property_type` omits relationship type and can select among
+  per-type stores in hash iteration order;
+- topology rebuild helpers can retain relationship columns without revalidating
+  their cardinality;
+- aggregate relationship count and inverse-index type sets remain caches that
+  every structural mutation must rebuild.
+
+The Core contract should make materialized topology and typed columns
+authoritative for availability, use schema as the validated declaration of shape,
+and require construction or mutation boundaries to reconcile both atomically.
 
 ### F4. High: graph-view constructors do not implement one coherent contract
 
@@ -259,15 +292,25 @@ The final target specification will be accepted only if it demonstrates:
 9. A compile-time conformance fixture using a second minimal implementation, so
    the contract is not validated solely by `DefaultGraphStore`.
 
-## Next Review Slice
+## Platform Upgrade Gate
 
-The next implementation step is a symbol-level audit of:
+CoreGraphStore implementation must not begin until these phases complete in
+order:
 
-1. schema/runtime authority in every `GraphStore` query and mutation;
-2. the three property-store families and their actual call sites;
-3. `DefaultGraphStore::graph` and `get_graph*` construction of `DefaultGraph`;
-4. one representative generic algorithm consumer and one concrete catalog,
-   factory, result, and Collections consumer.
+1. **Refresh the executable baseline (complete 2026-08-01).** The library-scoped
+   GraphStore, Graph, and property checks pass after the Types and algorithm
+   upgrades.
+2. **Specify authority (in progress).** The initial authority matrix and two
+   direct synchronization repairs are complete. Finish the remaining property
+   index, topology rebuild, and aggregate-cache decisions.
+3. **Split capabilities.** Derive the smallest read/view contract from that
+   authority model; separate mutation, successor-store derivation, and Bootstrap
+   operations where their semantics differ.
+4. **Prove substitution.** Compile a second minimal implementation and pass it
+   through one representative catalog, factory, graph-view, and algorithm path.
+5. **Reconcile decisions.** Amend draft ADRs 0001-0003 so they target the proven
+   contract rather than requiring the pre-upgrade `GraphStore` surface unchanged.
 
-That evidence will refine these initial findings into the target trait split and
-a sequenced, compatibility-preserving refactor backlog.
+The immediate implementation slice is phase 1 followed by the schema/runtime
+authority audit in phase 2. Resolved graph-view behavior remains a regression
+gate; it is no longer an open audit item.

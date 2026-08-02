@@ -12,9 +12,9 @@ use crate::algo::delta_stepping::{
     DeltaSteppingMutationSummary, DeltaSteppingResultBuilder, DeltaSteppingStats,
     DeltaSteppingStorageRuntime, DeltaSteppingWriteSummary,
 };
-use crate::task::memory::MemoryRange;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
+use crate::task::memory::MemoryRange;
 use crate::types::graph::MappedNodeId;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use std::collections::{HashMap, HashSet};
@@ -22,9 +22,9 @@ use std::sync::Arc;
 
 // Import upgraded systems
 use crate::algo::algorithms::pathfinding::PathFindingResult;
-use crate::task::progress::TaskProgressTracker;
-use crate::task::progress::{EmptyTaskRegistryFactory, TaskRegistryFactory, Tasks};
 use crate::projection::eval::algorithm::AlgorithmError;
+use crate::task::concurrency::TerminationFlag;
+use crate::task::progress::{ProgressTracker, TaskProgressTracker, TaskRegistryFactory, Tasks};
 
 /// Delta Stepping algorithm builder - fluent configuration
 pub struct DeltaSteppingFacade {
@@ -161,22 +161,40 @@ impl DeltaSteppingFacade {
     }
 
     fn compute(self) -> Result<PathFindingResult> {
+        let relationship_count = self.graph_store.relationship_count();
+        let concurrency = self.config.concurrency;
+        let mut progress_tracker = TaskProgressTracker::with_concurrency(
+            Tasks::leaf_with_volume("delta_stepping".to_string(), relationship_count),
+            concurrency,
+        );
+        let termination_flag = TerminationFlag::running_true();
+
+        progress_tracker.begin_subtask_with_volume(relationship_count);
+        let result = self.compute_with_context(&mut progress_tracker, &termination_flag);
+        match result {
+            Ok(value) => {
+                progress_tracker.end_subtask();
+                Ok(value)
+            }
+            Err(error) => {
+                progress_tracker.end_subtask_with_failure();
+                Err(error)
+            }
+        }
+    }
+
+    fn compute_with_context(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<PathFindingResult> {
         self.validate()?;
 
-        // Set up progress tracking
-        let _task_registry_factory = self
-            .task_registry_factory
-            .unwrap_or_else(|| Box::new(EmptyTaskRegistryFactory));
-        let _user_log_registry_factory = self
-            .user_log_registry_factory
-            .unwrap_or_else(|| Box::new(EmptyTaskRegistryFactory));
-
-        // Create progress tracker for Delta Stepping execution
-        let node_count = self.graph_store.node_count();
-        let _progress_tracker = TaskProgressTracker::new(Tasks::leaf_with_volume(
-            "DeltaStepping".to_string(),
-            node_count,
-        ));
+        if !termination_flag.running() {
+            return Err(AlgorithmError::Execution(
+                "Delta-Stepping computation terminated".to_string(),
+            ));
+        }
 
         let source_node = self.config.source_node;
 
@@ -218,20 +236,13 @@ impl DeltaSteppingFacade {
             self.config.store_predecessors,
         );
 
-        let mut progress_tracker = TaskProgressTracker::with_concurrency(
-            Tasks::leaf_with_volume(
-                "delta_stepping".to_string(),
-                graph_view.relationship_count(),
-            ),
-            self.config.concurrency,
-        );
-
         let start = std::time::Instant::now();
-        let result = storage.compute_delta_stepping(
+        let result = storage.compute_delta_stepping_with_context(
             &mut computation,
             Some(graph_view.as_ref()),
             direction_byte,
-            &mut progress_tracker,
+            progress_tracker,
+            termination_flag,
         )?;
         let execution_time = start.elapsed();
         DeltaSteppingResultBuilder::result(result, execution_time)
@@ -242,8 +253,31 @@ impl DeltaSteppingFacade {
         Ok(Box::new(result.paths.into_iter()))
     }
 
+    pub fn stream_with_context(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<Vec<PathResult>> {
+        Ok(self
+            .compute_with_context(progress_tracker, termination_flag)?
+            .paths)
+    }
+
     pub fn stats(self) -> Result<DeltaSteppingStats> {
         let result = self.compute()?;
+        Ok(Self::stats_from_result(result))
+    }
+
+    pub fn stats_with_context(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<DeltaSteppingStats> {
+        let result = self.compute_with_context(progress_tracker, termination_flag)?;
+        Ok(Self::stats_from_result(result))
+    }
+
+    fn stats_from_result(result: PathFindingResult) -> DeltaSteppingStats {
         let computation_time_ms = result
             .metadata
             .additional
@@ -251,11 +285,11 @@ impl DeltaSteppingFacade {
             .and_then(|s| s.parse().ok())
             .unwrap_or(0);
 
-        Ok(DeltaSteppingStats {
+        DeltaSteppingStats {
             paths_found: result.paths.len() as u64,
             computation_time_ms,
             execution_time_ms: result.metadata.execution_time.as_millis() as u64,
-        })
+        }
     }
 
     pub fn mutate(self, property_name: &str) -> Result<DeltaSteppingMutateResult> {
@@ -335,6 +369,7 @@ impl DeltaSteppingFacade {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::task::progress::NoopProgressTracker;
     use crate::types::random::{RandomGraphConfig, RandomRelationshipConfig};
 
     fn store() -> Arc<DefaultGraphStore> {
@@ -346,6 +381,20 @@ mod tests {
         };
 
         Arc::new(DefaultGraphStore::random(&config).unwrap())
+    }
+
+    #[test]
+    fn context_execution_honors_pre_terminated_request() {
+        let mut progress_tracker = NoopProgressTracker;
+        let termination_flag = TerminationFlag::stop_running();
+
+        let result = DeltaSteppingBuilder::new(store())
+            .source(0)
+            .stream_with_context(&mut progress_tracker, &termination_flag);
+
+        assert!(
+            matches!(result, Err(AlgorithmError::Execution(message)) if message.contains("terminated"))
+        );
     }
 
     #[test]

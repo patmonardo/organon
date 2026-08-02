@@ -45,7 +45,9 @@ use crate::algo::astar::{
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::relationship_type::RelationshipType;
 use crate::projection::Orientation;
+use crate::task::concurrency::TerminationFlag;
 use crate::task::memory::MemoryRange;
+use crate::task::progress::ProgressTracker;
 use crate::task::progress::TaskProgressTracker;
 use crate::types::graph::id_map::MappedNodeId;
 use crate::types::graph_store::GraphStore;
@@ -55,7 +57,7 @@ use std::sync::Arc;
 
 // Import upgraded systems
 use crate::algo::algorithms::pathfinding::{PathFindingResult, PathResult};
-use crate::task::progress::{EmptyTaskRegistryFactory, TaskRegistryFactory, Tasks};
+use crate::task::progress::{TaskRegistryFactory, Tasks};
 
 // ============================================================================
 // Heuristic Types
@@ -310,6 +312,33 @@ impl AStarFacade {
     }
 
     fn compute(self) -> Result<PathFindingResult> {
+        let relationship_count = self.graph_store.relationship_count();
+        let concurrency = self.config.concurrency;
+        let mut progress_tracker = TaskProgressTracker::with_concurrency(
+            Tasks::leaf_with_volume("astar".to_string(), relationship_count),
+            concurrency,
+        );
+        let termination_flag = TerminationFlag::running_true();
+
+        progress_tracker.begin_subtask_with_volume(relationship_count);
+        let result = self.compute_with_context(&mut progress_tracker, &termination_flag);
+        match result {
+            Ok(value) => {
+                progress_tracker.end_subtask();
+                Ok(value)
+            }
+            Err(error) => {
+                progress_tracker.end_subtask_with_failure();
+                Err(error)
+            }
+        }
+    }
+
+    fn compute_with_context(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<PathFindingResult> {
         self.config
             .validate()
             .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
@@ -320,16 +349,11 @@ impl AStarFacade {
             ));
         }
 
-        // Set up progress tracking
-        let _task_registry_factory = self
-            .task_registry_factory
-            .unwrap_or_else(|| Box::new(EmptyTaskRegistryFactory));
-        let _user_log_registry_factory = self
-            .user_log_registry_factory
-            .unwrap_or_else(|| Box::new(EmptyTaskRegistryFactory));
-
-        // Best-effort volume: relationship count (work units are edge scans).
-        let relationship_count = self.graph_store.relationship_count();
+        if !termination_flag.running() {
+            return Err(AlgorithmError::Execution(
+                "A* computation terminated".to_string(),
+            ));
+        }
 
         let source_node = self.config.source_node;
         let target_node = self.config.target_node;
@@ -363,12 +387,6 @@ impl AStarFacade {
 
         let start_time = std::time::Instant::now();
 
-        // Create a fresh progress tracker per run.
-        let mut progress_tracker = TaskProgressTracker::with_concurrency(
-            Tasks::leaf_with_volume("astar".to_string(), relationship_count),
-            self.config.concurrency,
-        );
-
         let mut storage = match (&lat_values, &lon_values) {
             (Some(lat), Some(lon)) => AStarStorageRuntime::new_with_values(
                 source_node,
@@ -388,11 +406,12 @@ impl AStarFacade {
 
         let mut computation = AStarComputationRuntime::new();
         let result = storage
-            .compute_astar_path(
+            .compute_astar_path_with_context(
                 &mut computation,
                 Some(graph_view.as_ref()),
                 direction_byte,
-                &mut progress_tracker,
+                progress_tracker,
+                termination_flag,
             )
             .map_err(AlgorithmError::Execution)?;
 
@@ -455,6 +474,16 @@ impl AStarFacade {
         Ok(Box::new(result.paths.into_iter()))
     }
 
+    pub fn stream_with_context(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<Vec<PathResult>> {
+        Ok(self
+            .compute_with_context(progress_tracker, termination_flag)?
+            .paths)
+    }
+
     /// Stats mode: Get aggregated statistics
     ///
     /// Returns search statistics without individual paths.
@@ -469,6 +498,19 @@ impl AStarFacade {
     /// ```
     pub fn stats(self) -> Result<AStarStats> {
         let result = self.compute()?;
+        Ok(Self::stats_from_result(result))
+    }
+
+    pub fn stats_with_context(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<AStarStats> {
+        let result = self.compute_with_context(progress_tracker, termination_flag)?;
+        Ok(Self::stats_from_result(result))
+    }
+
+    fn stats_from_result(result: PathFindingResult) -> AStarStats {
         let nodes_visited = result
             .metadata
             .additional
@@ -506,7 +548,7 @@ impl AStarFacade {
             .and_then(|s| s.parse::<u64>().ok())
             .unwrap_or(0);
 
-        Ok(AStarStats {
+        AStarStats {
             nodes_visited,
             final_queue_size: 0,
             max_queue_size,
@@ -515,7 +557,7 @@ impl AStarFacade {
             all_targets_reached,
             heuristic_accuracy,
             heuristic_evaluations,
-        })
+        }
     }
 
     /// Mutate mode: Compute and store as node property
@@ -645,6 +687,7 @@ impl AStarFacade {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::task::progress::NoopProgressTracker;
     use crate::types::random::{RandomGraphConfig, RandomRelationshipConfig};
     use std::sync::Arc;
 
@@ -784,6 +827,21 @@ mod tests {
             .target(1)
             .concurrency(0);
         assert!(builder.config.validate().is_err());
+    }
+
+    #[test]
+    fn context_execution_honors_pre_terminated_request() {
+        let mut progress_tracker = NoopProgressTracker;
+        let termination_flag = TerminationFlag::stop_running();
+
+        let result = AStarBuilder::new(store())
+            .source(0)
+            .target(1)
+            .stream_with_context(&mut progress_tracker, &termination_flag);
+
+        assert!(
+            matches!(result, Err(AlgorithmError::Execution(message)) if message.contains("terminated"))
+        );
     }
 
     #[test]

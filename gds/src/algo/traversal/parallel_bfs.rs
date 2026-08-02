@@ -1,6 +1,6 @@
 use super::{Aggregator, ExitPredicate, ExitPredicateResult};
 use crate::projection::eval::algorithm::AlgorithmError;
-use crate::task::concurrency::{install_with_concurrency, Concurrency};
+use crate::task::concurrency::{install_with_concurrency, Concurrency, TerminationFlag};
 use crate::types::graph::{Graph, MappedNodeId};
 use rayon::prelude::*;
 use std::sync::atomic::{AtomicBool, Ordering};
@@ -31,7 +31,9 @@ pub fn run_parallel_bfs(
     config: ParallelBfsConfig,
     aggregator: &dyn Aggregator,
     exit_predicate: &dyn ExitPredicate,
+    termination_flag: &TerminationFlag,
 ) -> Result<ParallelBfsResult, AlgorithmError> {
+    ensure_running(termination_flag)?;
     validate_node_in_graph(config.source_node, config.node_count, "source")?;
 
     let fallback = graph.default_property_value();
@@ -48,6 +50,7 @@ pub fn run_parallel_bfs(
     let mut relationships_examined = 0usize;
 
     while !frontier.is_empty() {
+        ensure_running(termination_flag)?;
         let mut expandable = Vec::new();
 
         for (source_node, current_node, weight) in frontier.into_iter() {
@@ -84,6 +87,7 @@ pub fn run_parallel_bfs(
             (0..chunk_count)
                 .into_par_iter()
                 .map(|chunk_idx| -> Result<ChunkExpansion, AlgorithmError> {
+                    ensure_running(termination_flag)?;
                     let start = chunk_idx * chunk_size;
                     let end = (start + chunk_size).min(expandable.len());
                     let mut examined_relationships = 0usize;
@@ -91,8 +95,10 @@ pub fn run_parallel_bfs(
                     let worker_graph = Graph::concurrent_view(graph);
 
                     for (_source_node, current_node, weight) in &expandable[start..end] {
+                        ensure_running(termination_flag)?;
                         let stream = worker_graph.stream_relationships(*current_node, fallback);
                         for cursor in stream {
+                            ensure_running(termination_flag)?;
                             examined_relationships += 1;
                             let neighbor = cursor.target_id();
                             validate_node_in_graph(neighbor, config.node_count, "neighbor")?;
@@ -130,6 +136,16 @@ pub fn run_parallel_bfs(
     })
 }
 
+fn ensure_running(termination_flag: &TerminationFlag) -> Result<(), AlgorithmError> {
+    if termination_flag.running() {
+        Ok(())
+    } else {
+        Err(AlgorithmError::Execution(
+            "BFS computation terminated".to_string(),
+        ))
+    }
+}
+
 fn check_max_depth(max_depth: Option<u32>, current_depth: f64) -> bool {
     match max_depth {
         Some(max_depth) => current_depth < max_depth as f64,
@@ -163,6 +179,17 @@ mod tests {
 
     fn mapped(node_id: u64) -> MappedNodeId {
         MappedNodeId::new(node_id)
+    }
+
+    #[test]
+    fn rejects_pre_terminated_parallel_traversal() {
+        let termination_flag = TerminationFlag::stop_running();
+
+        let result = ensure_running(&termination_flag);
+
+        assert!(
+            matches!(result, Err(AlgorithmError::Execution(message)) if message.contains("terminated"))
+        );
     }
 
     #[test]

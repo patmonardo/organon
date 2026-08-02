@@ -12,6 +12,7 @@ use crate::algo::traversal::{
     OneHopAggregator, ParallelBfsConfig, TargetExitPredicate,
 };
 use crate::projection::eval::algorithm::AlgorithmError;
+use crate::task::concurrency::TerminationFlag;
 use crate::task::progress::{ProgressTracker, UNKNOWN_VOLUME};
 use crate::types::graph::Graph;
 use crate::types::graph::MappedNodeId;
@@ -68,25 +69,73 @@ impl BfsStorageRuntime {
         graph: Option<&dyn Graph>,
         progress_tracker: &mut dyn ProgressTracker,
     ) -> Result<BfsResult, AlgorithmError> {
+        let termination_flag = TerminationFlag::running_true();
+        self.compute_bfs_with_local_lifecycle(
+            computation,
+            graph,
+            progress_tracker,
+            &termination_flag,
+        )
+    }
+
+    pub fn compute_bfs_with_context(
+        &self,
+        computation: &mut BfsComputationRuntime,
+        graph: Option<&dyn Graph>,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<BfsResult, AlgorithmError> {
         let aggregator = OneHopAggregator;
         if self.target_nodes.is_empty() {
             let exit_predicate = FollowExitPredicate;
-            self.compute_bfs_with_traversal(
+            self.compute_bfs_with_traversal_context(
                 computation,
                 graph,
                 progress_tracker,
                 &aggregator,
                 &exit_predicate,
+                termination_flag,
             )
         } else {
             let exit_predicate = TargetExitPredicate::new(self.target_nodes.clone());
-            self.compute_bfs_with_traversal(
+            self.compute_bfs_with_traversal_context(
                 computation,
                 graph,
                 progress_tracker,
                 &aggregator,
                 &exit_predicate,
+                termination_flag,
             )
+        }
+    }
+
+    fn compute_bfs_with_local_lifecycle(
+        &self,
+        computation: &mut BfsComputationRuntime,
+        graph: Option<&dyn Graph>,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<BfsResult, AlgorithmError> {
+        let volume = graph
+            .map(|g| g.relationship_count())
+            .unwrap_or(UNKNOWN_VOLUME);
+        if volume == UNKNOWN_VOLUME {
+            progress_tracker.begin_subtask_unknown();
+        } else {
+            progress_tracker.begin_subtask_with_volume(volume);
+        }
+
+        let result =
+            self.compute_bfs_with_context(computation, graph, progress_tracker, termination_flag);
+        match result {
+            Ok(value) => {
+                progress_tracker.end_subtask();
+                Ok(value)
+            }
+            Err(error) => {
+                progress_tracker.end_subtask_with_failure();
+                Err(error)
+            }
         }
     }
 
@@ -99,8 +148,7 @@ impl BfsStorageRuntime {
         aggregator: &dyn Aggregator,
         exit_predicate: &dyn ExitPredicate,
     ) -> Result<BfsResult, AlgorithmError> {
-        let start_time = std::time::Instant::now();
-
+        let termination_flag = TerminationFlag::running_true();
         let volume = graph
             .map(|g| g.relationship_count())
             .unwrap_or(UNKNOWN_VOLUME);
@@ -110,7 +158,39 @@ impl BfsStorageRuntime {
             progress_tracker.begin_subtask_with_volume(volume);
         }
 
-        let result = (|| {
+        let result = self.compute_bfs_with_traversal_context(
+            computation,
+            graph,
+            progress_tracker,
+            aggregator,
+            exit_predicate,
+            &termination_flag,
+        );
+        match result {
+            Ok(value) => {
+                progress_tracker.end_subtask();
+                Ok(value)
+            }
+            Err(error) => {
+                progress_tracker.end_subtask_with_failure();
+                Err(error)
+            }
+        }
+    }
+
+    pub fn compute_bfs_with_traversal_context(
+        &self,
+        computation: &mut BfsComputationRuntime,
+        graph: Option<&dyn Graph>,
+        progress_tracker: &mut dyn ProgressTracker,
+        aggregator: &dyn Aggregator,
+        exit_predicate: &dyn ExitPredicate,
+        termination_flag: &TerminationFlag,
+    ) -> Result<BfsResult, AlgorithmError> {
+        let start_time = std::time::Instant::now();
+
+        (|| {
+            Self::ensure_running(termination_flag)?;
             let node_count = match graph {
                 Some(graph) => usize::try_from(graph.node_count()).map_err(|_| {
                     AlgorithmError::InvalidGraph(format!(
@@ -134,6 +214,7 @@ impl BfsStorageRuntime {
                         progress_tracker,
                         aggregator,
                         exit_predicate,
+                        termination_flag,
                         start_time,
                     );
                 }
@@ -151,6 +232,7 @@ impl BfsStorageRuntime {
             let mut result_depths = Vec::new();
 
             while let Some((source_node, current_node, weight)) = queue.pop_front() {
+                Self::ensure_running(termination_flag)?;
                 match exit_predicate.test(source_node, current_node, weight) {
                     ExitPredicateResult::Continue => continue,
                     ExitPredicateResult::Break => {
@@ -188,10 +270,7 @@ impl BfsStorageRuntime {
                 visited_depths: result_depths,
                 computation_time_ms: computation_time,
             })
-        })();
-
-        progress_tracker.end_subtask();
-        result
+        })()
     }
 
     fn compute_bfs_parallel(
@@ -202,6 +281,7 @@ impl BfsStorageRuntime {
         progress_tracker: &mut dyn ProgressTracker,
         aggregator: &dyn Aggregator,
         exit_predicate: &dyn ExitPredicate,
+        termination_flag: &TerminationFlag,
         start_time: std::time::Instant,
     ) -> Result<BfsResult, AlgorithmError> {
         computation.initialize(self.source_node, self.max_depth, node_count);
@@ -216,6 +296,7 @@ impl BfsStorageRuntime {
             },
             aggregator,
             exit_predicate,
+            termination_flag,
         )?;
 
         progress_tracker.log_progress(result.relationships_examined);
@@ -225,6 +306,16 @@ impl BfsStorageRuntime {
             visited_depths: result.visited_depths,
             computation_time_ms: start_time.elapsed().as_millis() as u64,
         })
+    }
+
+    fn ensure_running(termination_flag: &TerminationFlag) -> Result<(), AlgorithmError> {
+        if termination_flag.running() {
+            Ok(())
+        } else {
+            Err(AlgorithmError::Execution(
+                "BFS computation terminated".to_string(),
+            ))
+        }
     }
 
     /// Get neighbors of a node (graph-backed when available; mock fallback)
@@ -276,10 +367,29 @@ impl BfsStorageRuntime {
 mod tests {
     use super::*;
     use crate::algo::traversal::{ExitPredicateResult, FollowExitPredicate};
-    use crate::task::progress::{TaskProgressTracker, Tasks};
+    use crate::task::progress::{NoopProgressTracker, TaskProgressTracker, Tasks};
 
     fn mapped(node_id: u64) -> MappedNodeId {
         MappedNodeId::new(node_id)
+    }
+
+    #[test]
+    fn context_computation_honors_pre_terminated_request() {
+        let storage = BfsStorageRuntime::new(mapped(0), Vec::new(), None, false);
+        let mut computation = BfsComputationRuntime::new(mapped(0), false, 2, 4);
+        let mut progress_tracker = NoopProgressTracker;
+        let termination_flag = TerminationFlag::stop_running();
+
+        let result = storage.compute_bfs_with_context(
+            &mut computation,
+            None,
+            &mut progress_tracker,
+            &termination_flag,
+        );
+
+        assert!(
+            matches!(result, Err(AlgorithmError::Execution(message)) if message.contains("terminated"))
+        );
     }
 
     struct ContinueOnOne;

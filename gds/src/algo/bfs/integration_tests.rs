@@ -48,6 +48,27 @@ fn test_bfs_config_validation() {
 }
 
 #[test]
+fn test_bfs_algorithm_spec_parses_and_validates_config() {
+    let spec = BFSAlgorithmSpec::new("test_graph".to_string());
+
+    let parsed = spec
+        .parse_config(&json!({
+            "sourceNode": 2,
+            "targetNodes": [3],
+            "trackPaths": true
+        }))
+        .unwrap();
+    let config: BfsConfig = serde_json::from_value(parsed).unwrap();
+    assert_eq!(config.source_node, mapped(2));
+    assert_eq!(config.target_nodes, vec![mapped(3)]);
+    assert!(config.track_paths);
+    assert_eq!(config.concurrency, BfsConfig::default().concurrency);
+
+    let error = spec.parse_config(&json!({ "concurrency": 0 })).unwrap_err();
+    assert!(error.to_string().contains("concurrency"));
+}
+
+#[test]
 fn test_bfs_storage_runtime() {
     let storage = BfsStorageRuntime::new(mapped(0), vec![mapped(3)], Some(5), true);
     assert_eq!(storage.source_node, mapped(0));

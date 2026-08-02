@@ -10,12 +10,11 @@ use crate::algo::yens::{
     YensComputationRuntime, YensConfig, YensMutateResult, YensMutationSummary, YensResult,
     YensResultBuilder, YensStats, YensStorageRuntime, YensWriteSummary,
 };
-use crate::task::progress::{
-    EmptyTaskRegistryFactory, TaskProgressTracker, TaskRegistryFactory, Tasks,
-};
-use crate::task::memory::MemoryRange;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
+use crate::task::concurrency::TerminationFlag;
+use crate::task::memory::MemoryRange;
+use crate::task::progress::{ProgressTracker, TaskProgressTracker, TaskRegistryFactory, Tasks};
 use crate::types::graph::id_map::MappedNodeId;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use std::collections::{HashMap, HashSet};
@@ -159,17 +158,42 @@ impl YensFacade {
     }
 
     fn compute(self) -> Result<PathFindingResult> {
+        let k = self.config.k;
+        let concurrency = self.config.concurrency;
+        let mut progress_tracker = TaskProgressTracker::with_concurrency(
+            Tasks::leaf_with_volume("yens".to_string(), k),
+            concurrency,
+        );
+        let termination_flag = TerminationFlag::running_true();
+
+        progress_tracker.begin_subtask_with_volume(k);
+        let result = self.compute_with_context(&mut progress_tracker, &termination_flag);
+        match result {
+            Ok(value) => {
+                progress_tracker.end_subtask();
+                Ok(value)
+            }
+            Err(error) => {
+                progress_tracker.end_subtask_with_failure();
+                Err(error)
+            }
+        }
+    }
+
+    fn compute_with_context(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<PathFindingResult> {
         self.config
             .validate()
             .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
 
-        // Set up progress tracking placeholders for API consistency with other facades.
-        let _task_registry_factory = self
-            .task_registry_factory
-            .unwrap_or_else(|| Box::new(EmptyTaskRegistryFactory));
-        let _user_log_registry_factory = self
-            .user_log_registry_factory
-            .unwrap_or_else(|| Box::new(EmptyTaskRegistryFactory));
+        if !termination_flag.running() {
+            return Err(AlgorithmError::Execution(
+                "Yen's computation terminated".to_string(),
+            ));
+        }
 
         let source_node = self.config.source_node;
         let target_node = self.config.target_node;
@@ -214,17 +238,13 @@ impl YensFacade {
             self.config.concurrency,
         );
 
-        let mut progress_tracker = TaskProgressTracker::with_concurrency(
-            Tasks::leaf_with_volume("yens".to_string(), self.config.k),
-            self.config.concurrency,
-        );
-
         let start = std::time::Instant::now();
         let result: YensResult = storage.compute_yens(
             &mut computation,
             Some(graph_view.as_ref()),
             direction_byte,
-            &mut progress_tracker,
+            progress_tracker,
+            termination_flag,
         )?;
         YensResultBuilder::result(
             result,
@@ -239,8 +259,31 @@ impl YensFacade {
         Ok(Box::new(result.paths.into_iter()))
     }
 
+    pub fn stream_with_context(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<Vec<PathResult>> {
+        Ok(self
+            .compute_with_context(progress_tracker, termination_flag)?
+            .paths)
+    }
+
     pub fn stats(self) -> Result<YensStats> {
         let result = self.compute()?;
+        Ok(Self::stats_from_result(result))
+    }
+
+    pub fn stats_with_context(
+        self,
+        progress_tracker: &mut dyn ProgressTracker,
+        termination_flag: &TerminationFlag,
+    ) -> Result<YensStats> {
+        let result = self.compute_with_context(progress_tracker, termination_flag)?;
+        Ok(Self::stats_from_result(result))
+    }
+
+    fn stats_from_result(result: PathFindingResult) -> YensStats {
         let computation_time_ms = result
             .metadata
             .additional
@@ -260,13 +303,13 @@ impl YensFacade {
             .and_then(|s| s.parse::<u64>().ok())
             .unwrap_or(0);
 
-        Ok(YensStats {
+        YensStats {
             paths_found: result.paths.len() as u64,
             computation_time_ms,
             execution_time_ms: result.metadata.execution_time.as_millis() as u64,
             spur_searches,
             candidates_generated,
-        })
+        }
     }
 
     pub fn mutate(self, property_name: &str) -> Result<YensMutateResult> {
@@ -371,6 +414,7 @@ impl YensFacade {
 mod tests {
     use super::*;
     use crate::procedures::GraphFacade;
+    use crate::task::progress::NoopProgressTracker;
     use crate::types::random::{RandomGraphConfig, RandomRelationshipConfig};
     use serde_json::json;
 
@@ -406,6 +450,22 @@ mod tests {
             .config
             .validate()
             .is_err());
+    }
+
+    #[test]
+    fn context_execution_honors_pre_terminated_request() {
+        let store = random_store(101);
+        let mut progress_tracker = NoopProgressTracker;
+        let termination_flag = TerminationFlag::stop_running();
+
+        let result = YensFacade::new(store)
+            .source(0)
+            .target(3)
+            .stream_with_context(&mut progress_tracker, &termination_flag);
+
+        assert!(
+            matches!(result, Err(AlgorithmError::Execution(message)) if message.contains("terminated"))
+        );
     }
 
     #[test]

@@ -1,4 +1,6 @@
 use crate::algo::steiner_tree::spec::SteinerTreeParent;
+use crate::projection::eval::algorithm::AlgorithmError;
+use crate::task::concurrency::TerminationFlag;
 use crate::types::graph::MappedNodeId;
 use std::collections::VecDeque;
 
@@ -56,6 +58,15 @@ impl SteinerTreeComputationRuntime {
     }
 
     pub fn reset_search(&mut self, merged_to_source: &[bool]) -> VecDeque<MappedNodeId> {
+        self.reset_search_with_context(merged_to_source, &TerminationFlag::running_true())
+            .expect("default Steiner search reset should not terminate")
+    }
+
+    pub fn reset_search_with_context(
+        &mut self,
+        merged_to_source: &[bool],
+        termination: &TerminationFlag,
+    ) -> Result<VecDeque<MappedNodeId>, AlgorithmError> {
         self.distances.fill(f64::INFINITY);
         self.predecessor.fill(None);
         self.predecessor_edge_weight.fill(0.0);
@@ -63,6 +74,7 @@ impl SteinerTreeComputationRuntime {
 
         let mut frontier = VecDeque::new();
         for (idx, merged) in merged_to_source.iter().enumerate() {
+            Self::ensure_running(termination)?;
             if *merged {
                 self.distances[idx] = 0.0;
                 frontier.push_back(
@@ -70,7 +82,7 @@ impl SteinerTreeComputationRuntime {
                 );
             }
         }
-        frontier
+        Ok(frontier)
     }
 
     pub fn distance(&self, node: MappedNodeId) -> f64 {
@@ -142,12 +154,27 @@ impl SteinerTreeComputationRuntime {
         terminal: MappedNodeId,
         merged_to_source: &mut [bool],
     ) -> bool {
+        self.merge_path_into_tree_with_context(
+            terminal,
+            merged_to_source,
+            &TerminationFlag::running_true(),
+        )
+        .expect("default Steiner path merge should not terminate")
+    }
+
+    pub fn merge_path_into_tree_with_context(
+        &mut self,
+        terminal: MappedNodeId,
+        merged_to_source: &mut [bool],
+        termination: &TerminationFlag,
+    ) -> Result<bool, AlgorithmError> {
         let mut current = terminal;
         let mut merged_any = false;
 
         while physical_node_index(current) < self.node_count
             && !merged_to_source[physical_node_index(current)]
         {
+            Self::ensure_running(termination)?;
             let pred = match self.predecessor(current) {
                 Some(p) => p,
                 None => break,
@@ -166,14 +193,29 @@ impl SteinerTreeComputationRuntime {
             current = pred;
         }
 
-        merged_any
+        Ok(merged_any)
     }
 
     pub fn prune_non_terminal_leaves(&mut self, is_terminal: &[bool], source: MappedNodeId) {
+        self.prune_non_terminal_leaves_with_context(
+            is_terminal,
+            source,
+            &TerminationFlag::running_true(),
+        )
+        .expect("default Steiner pruning should not terminate");
+    }
+
+    pub fn prune_non_terminal_leaves_with_context(
+        &mut self,
+        is_terminal: &[bool],
+        source: MappedNodeId,
+        termination: &TerminationFlag,
+    ) -> Result<(), AlgorithmError> {
         let node_count = self.node_count;
         let mut child_count = vec![0u32; node_count];
 
         for node_id in 0..node_count {
+            Self::ensure_running(termination)?;
             if let SteinerTreeParent::Parent(parent) = self.parent[node_id] {
                 child_count[physical_node_index(parent)] += 1;
             }
@@ -181,6 +223,7 @@ impl SteinerTreeComputationRuntime {
 
         let mut queue = VecDeque::new();
         for node_id in 0..node_count {
+            Self::ensure_running(termination)?;
             if !matches!(self.parent[node_id], SteinerTreeParent::Parent(_)) {
                 continue;
             }
@@ -195,6 +238,7 @@ impl SteinerTreeComputationRuntime {
         }
 
         while let Some(node) = queue.pop_front() {
+            Self::ensure_running(termination)?;
             let node_idx = physical_node_index(node);
             let SteinerTreeParent::Parent(parent) = self.parent[node_idx] else {
                 continue;
@@ -218,6 +262,16 @@ impl SteinerTreeComputationRuntime {
                 );
             }
         }
+        Ok(())
+    }
+
+    fn ensure_running(termination: &TerminationFlag) -> Result<(), AlgorithmError> {
+        if !termination.running() {
+            return Err(AlgorithmError::Execution(
+                "Steiner tree computation terminated".to_string(),
+            ));
+        }
+        Ok(())
     }
 
     #[allow(dead_code)]

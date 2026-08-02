@@ -313,6 +313,7 @@ impl BfsResultBuilder {
 define_algorithm_spec! {
     name: "bfs",
     output_type: BfsResult,
+    config_type: BfsConfig,
     projection_hint: Dense,
     modes: [Stream, WriteNodeProperty],
     execute: |_self, graph_store, config_input, _context| {
