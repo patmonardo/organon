@@ -75,13 +75,13 @@ pub struct Node2VecRow {
 
 /// Node2Vec builder.
 #[derive(Clone)]
-pub struct Node2VecBuilder {
-    graph_store: Arc<DefaultGraphStore>,
+pub struct Node2VecBuilder<Store: GraphStore = DefaultGraphStore> {
+    graph_store: Arc<Store>,
     config: Node2VecConfig,
 }
 
-impl Node2VecBuilder {
-    pub fn new(graph_store: Arc<DefaultGraphStore>) -> Self {
+impl<Store: GraphStore> Node2VecBuilder<Store> {
+    pub fn new(graph_store: Arc<Store>) -> Self {
         Self {
             graph_store,
             config: Node2VecConfig::default(),

@@ -50,7 +50,7 @@ use crate::task::memory::MemoryRange;
 use crate::task::progress::ProgressTracker;
 use crate::task::progress::TaskProgressTracker;
 use crate::types::graph::id_map::MappedNodeId;
-use crate::types::graph_store::GraphStore;
+use crate::types::graph_store::GraphStoreRead;
 use crate::types::prelude::DefaultGraphStore;
 use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
@@ -127,8 +127,8 @@ impl Heuristic {
 ///     .heuristic(Heuristic::Euclidean)
 ///     .concurrency(8);
 /// ```
-pub struct AStarFacade {
-    graph_store: Arc<DefaultGraphStore>,
+pub struct AStarFacade<Store: GraphStoreRead + ?Sized = DefaultGraphStore> {
+    graph_store: Arc<Store>,
     config: AStarConfig,
     /// Property name for edge weights
     weight_property: String,
@@ -140,9 +140,9 @@ pub struct AStarFacade {
 }
 
 /// Backwards-compatible alias (builder-style naming).
-pub type AStarBuilder = AStarFacade;
+pub type AStarBuilder<Store = DefaultGraphStore> = AStarFacade<Store>;
 
-impl AStarFacade {
+impl<Store: GraphStoreRead + ?Sized> AStarFacade<Store> {
     /// Create a new A* builder bound to a live graph store.
     ///
     /// Defaults:
@@ -151,7 +151,7 @@ impl AStarFacade {
     /// - weight_property: "weight"
     /// - heuristic: Manhattan (simple and fast)
     /// - concurrency: 4
-    pub fn new(graph_store: Arc<DefaultGraphStore>) -> Self {
+    pub fn new(graph_store: Arc<Store>) -> Self {
         Self {
             graph_store,
             config: AStarConfig::default(),
@@ -163,10 +163,7 @@ impl AStarFacade {
     }
 
     /// Create a facade using the spec.rs config model.
-    pub fn from_spec_config(
-        graph_store: Arc<DefaultGraphStore>,
-        config: AStarConfig,
-    ) -> Result<Self> {
+    pub fn from_spec_config(graph_store: Arc<Store>, config: AStarConfig) -> Result<Self> {
         config
             .validate()
             .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
@@ -182,10 +179,7 @@ impl AStarFacade {
     }
 
     /// Parse JSON into spec.rs config and return a configured facade.
-    pub fn from_spec_json(
-        graph_store: Arc<DefaultGraphStore>,
-        raw_config: &serde_json::Value,
-    ) -> Result<Self> {
+    pub fn from_spec_json(graph_store: Arc<Store>, raw_config: &serde_json::Value) -> Result<Self> {
         let parsed: AStarConfig = serde_json::from_value(raw_config.clone())
             .map_err(|e| AlgorithmError::Execution(format!("Config parsing failed: {e}")))?;
         Self::from_spec_config(graph_store, parsed)
@@ -572,59 +566,6 @@ impl AStarFacade {
     /// let result = builder.mutate("astar_distance")?;
     /// println!("Updated {} nodes", result.nodes_updated);
     /// ```
-    pub fn mutate(self, property_name: &str) -> Result<AStarMutateResult> {
-        if property_name.is_empty() {
-            return Err(AlgorithmError::Execution(
-                "property_name cannot be empty".to_string(),
-            ));
-        }
-        let graph_store = Arc::clone(&self.graph_store);
-        let result = self.compute()?;
-        let paths = result.paths;
-
-        let updated_store = crate::algo::algorithms::pathfinding::build_path_relationship_store(
-            graph_store.as_ref(),
-            property_name,
-            &paths,
-        )?;
-
-        let summary = AStarMutationSummary {
-            nodes_updated: paths.len() as u64,
-            property_name: property_name.to_string(),
-            execution_time_ms: result.metadata.execution_time.as_millis() as u64,
-        };
-
-        Ok(AStarMutateResult {
-            summary,
-            updated_store,
-        })
-    }
-
-    /// Write mode: Compute and persist to storage
-    ///
-    /// Persists A* search results and optimal paths to storage backend.
-    ///
-    /// ```rust,no_run
-    /// # use gds::Graph;
-    /// # let graph: Graph = unimplemented!();
-    /// let builder = graph.astar().source(0).target(1);
-    /// let result = builder.write("astar_paths")?;
-    /// println!("Wrote {} nodes", result.nodes_written);
-    /// ```
-    pub fn write(self, property_name: &str) -> Result<AStarWriteSummary> {
-        if property_name.is_empty() {
-            return Err(AlgorithmError::Execution(
-                "property_name cannot be empty".to_string(),
-            ));
-        }
-        let res = self.mutate(property_name)?;
-        Ok(AStarWriteSummary {
-            nodes_written: res.summary.nodes_updated,
-            property_name: property_name.to_string(),
-            execution_time_ms: res.summary.execution_time_ms,
-        })
-    }
-
     /// Estimate memory requirements for A* execution
     ///
     /// Returns a memory range estimate based on:
@@ -677,6 +618,52 @@ impl AStarFacade {
         let total_with_overhead = total_memory + overhead;
 
         MemoryRange::of_range(total_memory, total_with_overhead)
+    }
+}
+
+impl AStarFacade<DefaultGraphStore> {
+    /// Mutate mode: Compute and store as node property.
+    pub fn mutate(self, property_name: &str) -> Result<AStarMutateResult> {
+        if property_name.is_empty() {
+            return Err(AlgorithmError::Execution(
+                "property_name cannot be empty".to_string(),
+            ));
+        }
+        let graph_store = Arc::clone(&self.graph_store);
+        let result = self.compute()?;
+        let paths = result.paths;
+
+        let updated_store = crate::algo::algorithms::pathfinding::build_path_relationship_store(
+            graph_store.as_ref(),
+            property_name,
+            &paths,
+        )?;
+
+        let summary = AStarMutationSummary {
+            nodes_updated: paths.len() as u64,
+            property_name: property_name.to_string(),
+            execution_time_ms: result.metadata.execution_time.as_millis() as u64,
+        };
+
+        Ok(AStarMutateResult {
+            summary,
+            updated_store,
+        })
+    }
+
+    /// Write mode: Compute and persist to storage.
+    pub fn write(self, property_name: &str) -> Result<AStarWriteSummary> {
+        if property_name.is_empty() {
+            return Err(AlgorithmError::Execution(
+                "property_name cannot be empty".to_string(),
+            ));
+        }
+        let res = self.mutate(property_name)?;
+        Ok(AStarWriteSummary {
+            nodes_written: res.summary.nodes_updated,
+            property_name: property_name.to_string(),
+            execution_time_ms: res.summary.execution_time_ms,
+        })
     }
 }
 

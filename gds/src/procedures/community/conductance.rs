@@ -11,10 +11,10 @@ use crate::algo::conductance::{
     ConductanceResultBuilder, ConductanceStats, ConductanceStorageRuntime,
 };
 use crate::collections::backends::vec::VecDouble;
-use crate::task::concurrency::TerminationFlag;
-use crate::task::progress::TaskRegistry;
-use crate::task::memory::{Estimate, MemoryRange};
 use crate::projection::eval::algorithm::AlgorithmError;
+use crate::task::concurrency::TerminationFlag;
+use crate::task::memory::{Estimate, MemoryRange};
+use crate::task::progress::TaskRegistry;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use crate::types::properties::node::DefaultDoubleNodePropertyValues;
 use crate::types::properties::node::NodePropertyValues;
@@ -34,14 +34,14 @@ pub struct ConductanceRow {
 
 /// Conductance algorithm facade
 #[derive(Clone)]
-pub struct ConductanceFacade {
-    graph_store: Arc<DefaultGraphStore>,
+pub struct ConductanceFacade<Store: GraphStore = DefaultGraphStore> {
+    graph_store: Arc<Store>,
     config: ConductanceConfig,
     task_registry: Option<TaskRegistry>,
 }
 
-impl ConductanceFacade {
-    pub fn new(graph_store: Arc<DefaultGraphStore>, community_property: String) -> Self {
+impl<Store: GraphStore> ConductanceFacade<Store> {
+    pub fn new(graph_store: Arc<Store>, community_property: String) -> Self {
         Self {
             graph_store,
             config: ConductanceConfig {
@@ -53,10 +53,7 @@ impl ConductanceFacade {
     }
 
     /// Create a facade using the spec.rs config model.
-    pub fn from_spec_config(
-        graph_store: Arc<DefaultGraphStore>,
-        config: ConductanceConfig,
-    ) -> Result<Self> {
+    pub fn from_spec_config(graph_store: Arc<Store>, config: ConductanceConfig) -> Result<Self> {
         config
             .validate()
             .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
@@ -69,10 +66,7 @@ impl ConductanceFacade {
     }
 
     /// Parse JSON into spec.rs config and return a configured facade.
-    pub fn from_spec_json(
-        graph_store: Arc<DefaultGraphStore>,
-        raw_config: &serde_json::Value,
-    ) -> Result<Self> {
+    pub fn from_spec_json(graph_store: Arc<Store>, raw_config: &serde_json::Value) -> Result<Self> {
         let parsed: ConductanceConfig = serde_json::from_value(raw_config.clone())
             .map_err(|e| AlgorithmError::Execution(format!("Config parsing failed: {e}")))?;
         Self::from_spec_config(graph_store, parsed)
@@ -181,6 +175,30 @@ impl ConductanceFacade {
         Ok(ConductanceResultBuilder::new(result).stats())
     }
 
+    /// Estimate memory usage.
+    pub fn estimate_memory(&self) -> Result<MemoryRange> {
+        let node_count = self.graph_store.node_count();
+        let concurrency = self.config.concurrency.max(1);
+
+        let local_counts = Estimate::size_of_long_double_hash_map(node_count)
+            .saturating_mul(2)
+            .saturating_mul(concurrency);
+        let accumulated_counts =
+            Estimate::size_of_long_double_hash_map(node_count).saturating_mul(2);
+        let conductances = Estimate::size_of_long_double_hash_map(node_count);
+        let result_map = Estimate::size_of_long_double_hash_map(node_count);
+
+        let total = Estimate::BYTES_OBJECT_HEADER
+            .saturating_add(local_counts)
+            .saturating_add(accumulated_counts)
+            .saturating_add(conductances)
+            .saturating_add(result_map);
+
+        Ok(MemoryRange::of(total))
+    }
+}
+
+impl ConductanceFacade<DefaultGraphStore> {
     /// Mutate mode: writes conductance scores back to the graph store.
     pub fn mutate(self, property_name: &str) -> Result<ConductanceMutateResult> {
         self.validate()?;
@@ -252,28 +270,6 @@ impl ConductanceFacade {
             property_name.to_string(),
             std::time::Duration::from_millis(res.summary.execution_time_ms),
         ))
-    }
-
-    /// Estimate memory usage.
-    pub fn estimate_memory(&self) -> Result<MemoryRange> {
-        let node_count = self.graph_store.node_count();
-        let concurrency = self.config.concurrency.max(1);
-
-        let local_counts = Estimate::size_of_long_double_hash_map(node_count)
-            .saturating_mul(2)
-            .saturating_mul(concurrency);
-        let accumulated_counts =
-            Estimate::size_of_long_double_hash_map(node_count).saturating_mul(2);
-        let conductances = Estimate::size_of_long_double_hash_map(node_count);
-        let result_map = Estimate::size_of_long_double_hash_map(node_count);
-
-        let total = Estimate::BYTES_OBJECT_HEADER
-            .saturating_add(local_counts)
-            .saturating_add(accumulated_counts)
-            .saturating_add(conductances)
-            .saturating_add(result_map);
-
-        Ok(MemoryRange::of(total))
     }
 }
 

@@ -22,10 +22,10 @@ use crate::algo::kmeans::{
     KMeansMutationSummary, KMeansResult, KMeansResultBuilder, KMeansStats, KMeansStorageRuntime,
 };
 use crate::collections::backends::vec::VecLong;
-use crate::task::concurrency::TerminationFlag;
-use crate::task::progress::TaskRegistry;
-use crate::task::memory::{Estimate, MemoryRange};
 use crate::projection::eval::algorithm::AlgorithmError;
+use crate::task::concurrency::TerminationFlag;
+use crate::task::memory::{Estimate, MemoryRange};
+use crate::task::progress::TaskRegistry;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use crate::types::properties::node::DefaultLongNodePropertyValues;
 use crate::types::properties::node::NodePropertyValues;
@@ -42,14 +42,14 @@ pub struct KMeansRow {
 }
 
 #[derive(Clone)]
-pub struct KMeansFacade {
-    graph_store: Arc<DefaultGraphStore>,
+pub struct KMeansFacade<Store: GraphStore = DefaultGraphStore> {
+    graph_store: Arc<Store>,
     config: KMeansConfig,
     task_registry: Option<TaskRegistry>,
 }
 
-impl KMeansFacade {
-    pub fn new(graph_store: Arc<DefaultGraphStore>) -> Self {
+impl<Store: GraphStore> KMeansFacade<Store> {
+    pub fn new(graph_store: Arc<Store>) -> Self {
         Self {
             graph_store,
             config: KMeansConfig {
@@ -61,10 +61,7 @@ impl KMeansFacade {
     }
 
     /// Create a facade using the spec.rs config model.
-    pub fn from_spec_config(
-        graph_store: Arc<DefaultGraphStore>,
-        config: KMeansConfig,
-    ) -> Result<Self> {
+    pub fn from_spec_config(graph_store: Arc<Store>, config: KMeansConfig) -> Result<Self> {
         config
             .validate()
             .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
@@ -77,10 +74,7 @@ impl KMeansFacade {
     }
 
     /// Parse JSON into spec.rs config and return a configured facade.
-    pub fn from_spec_json(
-        graph_store: Arc<DefaultGraphStore>,
-        raw_config: &serde_json::Value,
-    ) -> Result<Self> {
+    pub fn from_spec_json(graph_store: Arc<Store>, raw_config: &serde_json::Value) -> Result<Self> {
         let parsed: KMeansConfig = serde_json::from_value(raw_config.clone())
             .map_err(|e| AlgorithmError::Execution(format!("Config parsing failed: {e}")))?;
         Self::from_spec_config(graph_store, parsed)
@@ -214,51 +208,6 @@ impl KMeansFacade {
         Ok(KMeansResultBuilder::new(result).stats())
     }
 
-    /// Mutate mode: writes community assignments back to the graph store.
-    pub fn mutate(self, property_name: &str) -> Result<KMeansMutateResult> {
-        self.validate()?;
-        ConfigValidator::non_empty_string(property_name, "property_name")?;
-
-        let result = self.compute()?;
-
-        let node_count = self.graph_store.node_count();
-        let nodes_updated = node_count as u64;
-
-        let longs: Vec<i64> = result.communities.into_iter().map(|c| c as i64).collect();
-        let backend = VecLong::from(longs);
-        let values = DefaultLongNodePropertyValues::from_collection(backend, node_count);
-        let values: Arc<dyn NodePropertyValues> = Arc::new(values);
-
-        let mut new_store = self.graph_store.as_ref().clone();
-        let labels_set: HashSet<NodeLabel> = new_store.node_labels();
-        new_store
-            .add_node_property(labels_set, property_name.to_string(), values)
-            .map_err(|e| {
-                AlgorithmError::Execution(format!("KMeans mutate failed to add property: {e}"))
-            })?;
-
-        let summary = KMeansMutationSummary {
-            nodes_updated,
-            property_name: property_name.to_string(),
-            execution_time_ms: result.execution_time.as_millis() as u64,
-        };
-
-        Ok(KMeansMutateResult {
-            summary,
-            updated_store: Arc::new(new_store),
-        })
-    }
-
-    /// Write mode: writes community assignments to a new graph.
-    pub fn write(self, property_name: &str) -> Result<WriteResult> {
-        let res = self.mutate(property_name)?;
-        Ok(WriteResult::new(
-            res.summary.nodes_updated,
-            property_name.to_string(),
-            std::time::Duration::from_millis(res.summary.execution_time_ms),
-        ))
-    }
-
     /// Estimate memory usage.
     pub fn estimate_memory(&self) -> Result<MemoryRange> {
         self.validate()?;
@@ -315,6 +264,53 @@ impl KMeansFacade {
     pub fn run(&self) -> Result<KMeansResult> {
         let result = self.compute()?;
         Ok(result)
+    }
+}
+
+impl KMeansFacade<DefaultGraphStore> {
+    /// Mutate mode: writes community assignments back to the graph store.
+    pub fn mutate(self, property_name: &str) -> Result<KMeansMutateResult> {
+        self.validate()?;
+        ConfigValidator::non_empty_string(property_name, "property_name")?;
+
+        let result = self.compute()?;
+
+        let node_count = self.graph_store.node_count();
+        let nodes_updated = node_count as u64;
+
+        let longs: Vec<i64> = result.communities.into_iter().map(|c| c as i64).collect();
+        let backend = VecLong::from(longs);
+        let values = DefaultLongNodePropertyValues::from_collection(backend, node_count);
+        let values: Arc<dyn NodePropertyValues> = Arc::new(values);
+
+        let mut new_store = self.graph_store.as_ref().clone();
+        let labels_set: HashSet<NodeLabel> = new_store.node_labels();
+        new_store
+            .add_node_property(labels_set, property_name.to_string(), values)
+            .map_err(|e| {
+                AlgorithmError::Execution(format!("KMeans mutate failed to add property: {e}"))
+            })?;
+
+        let summary = KMeansMutationSummary {
+            nodes_updated,
+            property_name: property_name.to_string(),
+            execution_time_ms: result.execution_time.as_millis() as u64,
+        };
+
+        Ok(KMeansMutateResult {
+            summary,
+            updated_store: Arc::new(new_store),
+        })
+    }
+
+    /// Write mode: writes community assignments to a new graph.
+    pub fn write(self, property_name: &str) -> Result<WriteResult> {
+        let res = self.mutate(property_name)?;
+        Ok(WriteResult::new(
+            res.summary.nodes_updated,
+            property_name.to_string(),
+            std::time::Duration::from_millis(res.summary.execution_time_ms),
+        ))
     }
 }
 

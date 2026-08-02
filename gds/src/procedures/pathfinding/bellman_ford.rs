@@ -10,7 +10,8 @@ use crate::projection::RelationshipType;
 use crate::task::concurrency::TerminationFlag;
 use crate::task::memory::MemoryRange;
 use crate::types::graph::id_map::MappedNodeId;
-use crate::types::prelude::{DefaultGraphStore, GraphStore};
+use crate::types::graph_store::GraphStoreRead;
+use crate::types::prelude::DefaultGraphStore;
 use serde_json::Value as JsonValue;
 use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
@@ -20,8 +21,8 @@ use crate::algo::algorithms::pathfinding::PathResult;
 use crate::task::progress::{ProgressTracker, TaskProgressTracker, TaskRegistryFactory, Tasks};
 
 /// Bellman-Ford algorithm facade - config-oriented builder
-pub struct BellmanFordFacade {
-    graph_store: Arc<DefaultGraphStore>,
+pub struct BellmanFordFacade<Store: GraphStoreRead + ?Sized = DefaultGraphStore> {
+    graph_store: Arc<Store>,
     config: BellmanFordConfig,
     weight_property: String,
     /// Progress tracking components
@@ -30,9 +31,9 @@ pub struct BellmanFordFacade {
 }
 
 /// Backwards-compatible alias (builder-style naming).
-pub type BellmanFordBuilder = BellmanFordFacade;
+pub type BellmanFordBuilder<Store = DefaultGraphStore> = BellmanFordFacade<Store>;
 
-impl BellmanFordFacade {
+impl<Store: GraphStoreRead + ?Sized> BellmanFordFacade<Store> {
     /// Create a new Bellman-Ford facade bound to a live graph store.
     ///
     /// Defaults:
@@ -43,7 +44,7 @@ impl BellmanFordFacade {
     /// - track_negative_cycles: true
     /// - track_paths: true
     /// - concurrency: 4
-    pub fn new(graph_store: Arc<DefaultGraphStore>) -> Self {
+    pub fn new(graph_store: Arc<Store>) -> Self {
         Self {
             graph_store,
             config: BellmanFordConfig::default(),
@@ -54,10 +55,7 @@ impl BellmanFordFacade {
     }
 
     /// Create a facade using the spec.rs config model.
-    pub fn from_spec_config(
-        graph_store: Arc<DefaultGraphStore>,
-        config: BellmanFordConfig,
-    ) -> Result<Self> {
+    pub fn from_spec_config(graph_store: Arc<Store>, config: BellmanFordConfig) -> Result<Self> {
         config
             .validate()
             .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
@@ -72,10 +70,7 @@ impl BellmanFordFacade {
     }
 
     /// Parse JSON into spec.rs config and return a configured facade.
-    pub fn from_spec_json(
-        graph_store: Arc<DefaultGraphStore>,
-        raw_config: &JsonValue,
-    ) -> Result<Self> {
+    pub fn from_spec_json(graph_store: Arc<Store>, raw_config: &JsonValue) -> Result<Self> {
         let parsed: BellmanFordConfig = serde_json::from_value(raw_config.clone())
             .map_err(|e| AlgorithmError::Execution(format!("Config parsing failed: {e}")))?;
         Self::from_spec_config(graph_store, parsed)
@@ -260,37 +255,6 @@ impl BellmanFordFacade {
         Ok(BellmanFordResultBuilder::new(result, elapsed).stats())
     }
 
-    pub fn mutate(self, property_name: &str) -> Result<BellmanFordMutateResult> {
-        ConfigValidator::non_empty_string(property_name, "property_name")?;
-        let graph_store = Arc::clone(&self.graph_store);
-        let (result, elapsed) = self.compute()?;
-        let builder = BellmanFordResultBuilder::new(result, elapsed);
-        let paths = builder.paths();
-
-        let updated_store = crate::algo::algorithms::pathfinding::build_path_relationship_store(
-            graph_store.as_ref(),
-            property_name,
-            &paths,
-        )?;
-
-        let summary = builder.mutation_summary(property_name, paths.len() as u64);
-
-        Ok(BellmanFordMutateResult {
-            summary,
-            updated_store,
-        })
-    }
-
-    pub fn write(self, property_name: &str) -> Result<BellmanFordWriteSummary> {
-        ConfigValidator::non_empty_string(property_name, "property_name")?;
-        let res = self.mutate(property_name)?;
-        Ok(BellmanFordWriteSummary {
-            nodes_written: res.summary.nodes_updated,
-            property_name: property_name.to_string(),
-            execution_time_ms: res.summary.execution_time_ms,
-        })
-    }
-
     /// Estimate memory requirements for Bellman-Ford execution
     ///
     /// Returns a memory range estimate based on distance arrays, predecessor tracking, and negative cycle detection.
@@ -323,6 +287,39 @@ impl BellmanFordFacade {
             distance_memory + predecessor_memory + cycle_tracking_memory + graph_overhead;
         let overhead = total_memory / 5;
         MemoryRange::of_range(total_memory, total_memory + overhead)
+    }
+}
+
+impl BellmanFordFacade<DefaultGraphStore> {
+    pub fn mutate(self, property_name: &str) -> Result<BellmanFordMutateResult> {
+        ConfigValidator::non_empty_string(property_name, "property_name")?;
+        let graph_store = Arc::clone(&self.graph_store);
+        let (result, elapsed) = self.compute()?;
+        let builder = BellmanFordResultBuilder::new(result, elapsed);
+        let paths = builder.paths();
+
+        let updated_store = crate::algo::algorithms::pathfinding::build_path_relationship_store(
+            graph_store.as_ref(),
+            property_name,
+            &paths,
+        )?;
+
+        let summary = builder.mutation_summary(property_name, paths.len() as u64);
+
+        Ok(BellmanFordMutateResult {
+            summary,
+            updated_store,
+        })
+    }
+
+    pub fn write(self, property_name: &str) -> Result<BellmanFordWriteSummary> {
+        ConfigValidator::non_empty_string(property_name, "property_name")?;
+        let res = self.mutate(property_name)?;
+        Ok(BellmanFordWriteSummary {
+            nodes_written: res.summary.nodes_updated,
+            property_name: property_name.to_string(),
+            execution_time_ms: res.summary.execution_time_ms,
+        })
     }
 }
 

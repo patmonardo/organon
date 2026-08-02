@@ -23,8 +23,8 @@ use std::sync::Arc;
 use crate::task::progress::TaskProgressTracker;
 use crate::types::graph::id_map::MappedNodeId;
 
-pub struct FilteredNodeSimilarityFacade {
-    graph_store: Arc<DefaultGraphStore>,
+pub struct FilteredNodeSimilarityFacade<Store: GraphStore = DefaultGraphStore> {
+    graph_store: Arc<Store>,
     metric: NodeSimilarityMetric,
     similarity_cutoff: f64,
     top_k: usize,
@@ -35,8 +35,8 @@ pub struct FilteredNodeSimilarityFacade {
     target_node_labels: Vec<NodeLabel>,
 }
 
-impl FilteredNodeSimilarityFacade {
-    pub fn new(graph_store: Arc<DefaultGraphStore>) -> Self {
+impl<Store: GraphStore> FilteredNodeSimilarityFacade<Store> {
+    pub fn new(graph_store: Arc<Store>) -> Self {
         Self {
             graph_store,
             metric: NodeSimilarityMetric::Jaccard,
@@ -284,6 +284,30 @@ impl FilteredNodeSimilarityFacade {
             .stats_with_nodes_compared(compared_nodes))
     }
 
+    pub fn estimate_memory(&self) -> MemoryRange {
+        let node_count = self.graph_store.node_count();
+
+        // Worst-case is still bounded by top_k per node.
+        let pair_count = node_count.saturating_mul(self.top_k);
+
+        let results_memory = pair_count * 32;
+        let per_node_scratch = node_count * 32;
+        let weight_memory = if self.weight_property.is_some() {
+            node_count * 8
+        } else {
+            0
+        };
+
+        // Label filtering can require temporary ID sets.
+        let label_filter_memory = node_count * 8;
+
+        let total = results_memory + per_node_scratch + weight_memory + label_filter_memory;
+        let overhead = total / 5;
+        MemoryRange::of_range(total, total + overhead)
+    }
+}
+
+impl FilteredNodeSimilarityFacade<DefaultGraphStore> {
     pub fn mutate(self, property: &str) -> Result<FilteredNodeSimilarityMutateResult> {
         self.validate()?;
         ConfigValidator::non_empty_string(property, "property_name")?;
@@ -322,28 +346,6 @@ impl FilteredNodeSimilarityFacade {
             res.summary.property_name,
             std::time::Duration::from_millis(res.summary.execution_time_ms),
         ))
-    }
-
-    pub fn estimate_memory(&self) -> MemoryRange {
-        let node_count = self.graph_store.node_count();
-
-        // Worst-case is still bounded by top_k per node.
-        let pair_count = node_count.saturating_mul(self.top_k);
-
-        let results_memory = pair_count * 32;
-        let per_node_scratch = node_count * 32;
-        let weight_memory = if self.weight_property.is_some() {
-            node_count * 8
-        } else {
-            0
-        };
-
-        // Label filtering can require temporary ID sets.
-        let label_filter_memory = node_count * 8;
-
-        let total = results_memory + per_node_scratch + weight_memory + label_filter_memory;
-        let overhead = total / 5;
-        MemoryRange::of_range(total, total + overhead)
     }
 }
 

@@ -42,7 +42,8 @@ use crate::task::concurrency::TerminationFlag;
 use crate::task::memory::MemoryRange;
 use crate::task::progress::{ProgressTracker, Tasks};
 use crate::types::graph::id_map::MappedNodeId;
-use crate::types::prelude::{DefaultGraphStore, GraphStore};
+use crate::types::graph_store::GraphStoreRead;
+use crate::types::prelude::DefaultGraphStore;
 use std::collections::HashSet;
 use std::sync::Arc;
 
@@ -77,15 +78,15 @@ use crate::task::progress::TaskProgressTracker;
 ///     .track_paths(true)
 ///     .targets(vec![99, 100]);
 /// ```
-pub struct DfsFacade {
-    graph_store: Arc<DefaultGraphStore>,
+pub struct DfsFacade<Store: GraphStoreRead + ?Sized = DefaultGraphStore> {
+    graph_store: Arc<Store>,
     config: DfsConfig,
 }
 
 /// Backwards-compatible alias (builder-style naming).
-pub type DfsBuilder = DfsFacade;
+pub type DfsBuilder<Store = DefaultGraphStore> = DfsFacade<Store>;
 
-impl DfsFacade {
+impl<Store: GraphStoreRead + ?Sized> DfsFacade<Store> {
     /// Create a new DFS builder bound to a live graph store.
     ///
     /// Defaults:
@@ -94,7 +95,7 @@ impl DfsFacade {
     /// - max_depth: None (unlimited traversal)
     /// - track_paths: false (only discovery order, not full paths)
     /// - concurrency: 1 (DFS is typically single-threaded)
-    pub fn new(graph_store: Arc<DefaultGraphStore>) -> Self {
+    pub fn new(graph_store: Arc<Store>) -> Self {
         Self {
             graph_store,
             config: DfsConfig::default(),
@@ -102,10 +103,7 @@ impl DfsFacade {
     }
 
     /// Create a facade using the spec.rs config model.
-    pub fn from_spec_config(
-        graph_store: Arc<DefaultGraphStore>,
-        config: DfsConfig,
-    ) -> Result<Self> {
+    pub fn from_spec_config(graph_store: Arc<Store>, config: DfsConfig) -> Result<Self> {
         config
             .validate()
             .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
@@ -117,10 +115,7 @@ impl DfsFacade {
     }
 
     /// Parse JSON into spec.rs config and return a configured facade.
-    pub fn from_spec_json(
-        graph_store: Arc<DefaultGraphStore>,
-        raw_config: &serde_json::Value,
-    ) -> Result<Self> {
+    pub fn from_spec_json(graph_store: Arc<Store>, raw_config: &serde_json::Value) -> Result<Self> {
         let parsed: DfsConfig = serde_json::from_value(raw_config.clone())
             .map_err(|e| AlgorithmError::Execution(format!("Config parsing failed: {e}")))?;
         Self::from_spec_config(graph_store, parsed)
@@ -370,6 +365,37 @@ impl DfsFacade {
     /// let result = builder.mutate("dfs_order")?;
     /// println!("Updated {} nodes", result.nodes_updated);
     /// ```
+    /// Estimate memory requirements for DFS execution
+    ///
+    /// Returns a memory range estimate based on stack storage, visited tracking, and path storage.
+    pub fn estimate_memory(&self) -> MemoryRange {
+        let node_count = self.graph_store.node_count();
+        let relationship_count = self.graph_store.relationship_count();
+
+        // Stack storage (for DFS recursion/iteration)
+        let stack_memory = node_count * 8; // node_id per entry
+
+        // Visited tracking
+        let visited_memory = node_count;
+
+        // Path tracking (if enabled)
+        let path_memory = if self.config.track_paths {
+            node_count * 8
+        } else {
+            0
+        };
+
+        // Graph structure overhead
+        let graph_overhead = relationship_count * 16;
+
+        let total_memory = stack_memory + visited_memory + path_memory + graph_overhead;
+        let overhead = total_memory / 5;
+        MemoryRange::of_range(total_memory, total_memory + overhead)
+    }
+}
+
+impl DfsFacade<DefaultGraphStore> {
+    /// Mutate mode: Compute and store as node property.
     pub fn mutate(self, property_name: &str) -> Result<DfsMutateResult> {
         if property_name.is_empty() {
             return Err(AlgorithmError::Execution(
@@ -398,18 +424,7 @@ impl DfsFacade {
         })
     }
 
-    /// Write mode: Compute and persist to storage
-    ///
-    /// Persists DFS traversal results and discovery order to storage backend.
-    ///
-    /// ```rust,no_run
-    /// # use gds::Graph;
-    /// # let graph: Graph = unimplemented!();
-    /// # use gds::procedures::pathfinding::DfsBuilder;
-    /// let builder = graph.dfs().source(0);
-    /// let result = builder.write("dfs_results")?;
-    /// println!("Wrote {} nodes", result.nodes_written);
-    /// ```
+    /// Write mode: Compute and persist to storage.
     pub fn write(self, property_name: &str) -> Result<DfsWriteSummary> {
         if property_name.is_empty() {
             return Err(AlgorithmError::Execution(
@@ -422,34 +437,6 @@ impl DfsFacade {
             property_name: property_name.to_string(),
             execution_time_ms: res.summary.execution_time_ms,
         })
-    }
-
-    /// Estimate memory requirements for DFS execution
-    ///
-    /// Returns a memory range estimate based on stack storage, visited tracking, and path storage.
-    pub fn estimate_memory(&self) -> MemoryRange {
-        let node_count = self.graph_store.node_count();
-        let relationship_count = self.graph_store.relationship_count();
-
-        // Stack storage (for DFS recursion/iteration)
-        let stack_memory = node_count * 8; // node_id per entry
-
-        // Visited tracking
-        let visited_memory = node_count;
-
-        // Path tracking (if enabled)
-        let path_memory = if self.config.track_paths {
-            node_count * 8
-        } else {
-            0
-        };
-
-        // Graph structure overhead
-        let graph_overhead = relationship_count * 16;
-
-        let total_memory = stack_memory + visited_memory + path_memory + graph_overhead;
-        let overhead = total_memory / 5;
-        MemoryRange::of_range(total_memory, total_memory + overhead)
     }
 }
 

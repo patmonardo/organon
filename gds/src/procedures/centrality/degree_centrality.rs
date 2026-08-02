@@ -35,13 +35,13 @@ use crate::algo::degree_centrality::{
     DegreeCentralityStorageRuntime,
 };
 use crate::collections::backends::vec::VecDouble;
+use crate::projection::eval::algorithm::AlgorithmError;
+use crate::projection::NodeLabel;
 use crate::task::concurrency::{Concurrency, TerminationFlag};
+use crate::task::memory::MemoryRange;
 use crate::task::progress::{
     EmptyTaskRegistryFactory, JobId, ProgressTracker, TaskProgressTracker, TaskRegistryFactory,
 };
-use crate::task::memory::MemoryRange;
-use crate::projection::eval::algorithm::AlgorithmError;
-use crate::projection::NodeLabel;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use crate::types::properties::node::DefaultDoubleNodePropertyValues;
 use crate::types::properties::node::NodePropertyValues;
@@ -55,15 +55,15 @@ use std::time::Instant;
 
 /// DegreeCentrality algorithm facade/builder bound to a live graph store.
 #[derive(Clone)]
-pub struct DegreeCentralityFacade {
-    graph_store: Arc<DefaultGraphStore>,
+pub struct DegreeCentralityFacade<Store: GraphStore = DefaultGraphStore> {
+    graph_store: Arc<Store>,
     config: DegreeCentralityConfig,
     task_registry: Arc<dyn TaskRegistryFactory>,
 }
 
-impl DegreeCentralityFacade {
+impl<Store: GraphStore> DegreeCentralityFacade<Store> {
     /// Create a new DegreeCentrality facade bound to a graph store.
-    pub fn new(graph_store: Arc<DefaultGraphStore>) -> Self {
+    pub fn new(graph_store: Arc<Store>) -> Self {
         Self {
             graph_store,
             config: DegreeCentralityConfig::default(),
@@ -73,7 +73,7 @@ impl DegreeCentralityFacade {
 
     /// Create a facade using the spec.rs config model.
     pub fn from_spec_config(
-        graph_store: Arc<DefaultGraphStore>,
+        graph_store: Arc<Store>,
         config: DegreeCentralityConfig,
     ) -> Result<Self> {
         config
@@ -88,10 +88,7 @@ impl DegreeCentralityFacade {
     }
 
     /// Parse JSON into spec.rs config and return a configured facade.
-    pub fn from_spec_json(
-        graph_store: Arc<DefaultGraphStore>,
-        raw_config: &serde_json::Value,
-    ) -> Result<Self> {
+    pub fn from_spec_json(graph_store: Arc<Store>, raw_config: &serde_json::Value) -> Result<Self> {
         let parsed: DegreeCentralityConfig = serde_json::from_value(raw_config.clone())
             .map_err(|e| AlgorithmError::Execution(format!("Config parsing failed: {e}")))?;
         Self::from_spec_config(graph_store, parsed)
@@ -296,98 +293,6 @@ impl DegreeCentralityFacade {
         Ok(DegreeCentralityResultBuilder::new(result).stats())
     }
 
-    /// Mutate mode: Compute and store degree as a node property
-    ///
-    /// Stores the degree of each node as a property in the graph.
-    /// This allows other algorithms to use the degree as input.
-    ///
-    /// ## Example
-    /// ```rust,no_run
-    /// # use gds::Graph;
-    /// # use std::sync::Arc;
-    /// # use gds::types::prelude::DefaultGraphStore;
-    /// # let graph = Arc::new(DefaultGraphStore::empty());
-    /// # use gds::procedures::centrality::DegreeCentralityFacade;
-    /// let facade = DegreeCentralityFacade::new(graph);
-    /// let result = facade.mutate("degree")?;
-    /// println!("Updated {} nodes", result.nodes_updated);
-    /// ```
-    pub fn mutate(self, property_name: &str) -> Result<DegreeCentralityMutateResult> {
-        self.validate()?;
-        ConfigValidator::non_empty_string(property_name, "property_name")?;
-        let result = self.compute()?;
-        let scores = result.centralities.clone();
-        let nodes_updated = scores.len() as u64;
-        let builder = DegreeCentralityResultBuilder::new(result);
-
-        // Build property values
-        let node_count = scores.len();
-        let backend = VecDouble::from(scores);
-        let values = DefaultDoubleNodePropertyValues::from_collection(backend, node_count);
-        let values: Arc<dyn NodePropertyValues> = Arc::new(values);
-
-        // Clone store, add property, and return updated store
-        let mut new_store = self.graph_store.as_ref().clone();
-        let labels: HashSet<NodeLabel> = new_store.node_labels();
-        new_store
-            .add_node_property(labels, property_name.to_string(), values)
-            .map_err(|e| {
-                AlgorithmError::Execution(format!(
-                    "Degree centrality mutate failed to add property: {e}"
-                ))
-            })?;
-
-        let summary = DegreeCentralityMutationSummary {
-            nodes_updated,
-            property_name: property_name.to_string(),
-            execution_time_ms: builder.execution_time_ms(),
-        };
-
-        Ok(DegreeCentralityMutateResult {
-            summary,
-            updated_store: Arc::new(new_store),
-        })
-    }
-
-    /// Write mode: Compute and write results to external storage
-    ///
-    /// Writes the degree centrality scores to an external data store.
-    /// This is useful for persisting results for later analysis.
-    ///
-    /// # Arguments
-    /// * `property_name` - Name of the property to store the centrality scores
-    ///
-    /// # Returns
-    /// Result containing write statistics
-    ///
-    /// # Example
-    /// ```ignore
-    /// # let graph = Graph::default();
-    /// # use std::sync::Arc;
-    /// # use gds::types::prelude::DefaultGraphStore;
-    /// # let graph = Arc::new(DefaultGraphStore::empty());
-    /// # use gds::procedures::centrality::DegreeCentralityFacade;
-    /// let facade = DegreeCentralityFacade::new(graph);
-    /// let result = facade.write("degree_centrality")?;
-    /// println!("Wrote {} records", result.records_written);
-    /// ```
-    pub fn write(self, property_name: &str) -> Result<WriteResult> {
-        self.validate()?;
-        ConfigValidator::non_empty_string(property_name, "property_name")?;
-        let result = self.compute()?;
-
-        // For now, use placeholder write - just count the nodes that would be written
-        // TODO: Implement actual persistence to external storage
-        let nodes_written = result.centralities.len() as u64;
-
-        let execution_time = result.execution_time;
-        Ok(WriteResult::new(
-            nodes_written,
-            property_name.to_string(),
-            execution_time,
-        ))
-    }
-
     /// Estimate memory usage for this algorithm execution
     ///
     /// Provides an estimate of the memory required to run this algorithm
@@ -425,6 +330,59 @@ impl DegreeCentralityFacade {
         let total_with_overhead = total_memory + (total_memory / 5);
 
         MemoryRange::of_range(total_memory, total_with_overhead)
+    }
+}
+
+impl DegreeCentralityFacade<DefaultGraphStore> {
+    /// Mutate mode: Compute and store degree as a node property.
+    pub fn mutate(self, property_name: &str) -> Result<DegreeCentralityMutateResult> {
+        self.validate()?;
+        ConfigValidator::non_empty_string(property_name, "property_name")?;
+        let result = self.compute()?;
+        let scores = result.centralities.clone();
+        let nodes_updated = scores.len() as u64;
+        let builder = DegreeCentralityResultBuilder::new(result);
+
+        let node_count = scores.len();
+        let backend = VecDouble::from(scores);
+        let values = DefaultDoubleNodePropertyValues::from_collection(backend, node_count);
+        let values: Arc<dyn NodePropertyValues> = Arc::new(values);
+
+        let mut new_store = self.graph_store.as_ref().clone();
+        let labels: HashSet<NodeLabel> = new_store.node_labels();
+        new_store
+            .add_node_property(labels, property_name.to_string(), values)
+            .map_err(|e| {
+                AlgorithmError::Execution(format!(
+                    "Degree centrality mutate failed to add property: {e}"
+                ))
+            })?;
+
+        let summary = DegreeCentralityMutationSummary {
+            nodes_updated,
+            property_name: property_name.to_string(),
+            execution_time_ms: builder.execution_time_ms(),
+        };
+
+        Ok(DegreeCentralityMutateResult {
+            summary,
+            updated_store: Arc::new(new_store),
+        })
+    }
+
+    /// Write mode: Compute and write results to external storage.
+    pub fn write(self, property_name: &str) -> Result<WriteResult> {
+        self.validate()?;
+        ConfigValidator::non_empty_string(property_name, "property_name")?;
+        let result = self.compute()?;
+
+        let nodes_written = result.centralities.len() as u64;
+        let execution_time = result.execution_time;
+        Ok(WriteResult::new(
+            nodes_written,
+            property_name.to_string(),
+            execution_time,
+        ))
     }
 }
 

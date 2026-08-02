@@ -13,10 +13,10 @@ use crate::algo::triangle::{
     TriangleResult, TriangleResultBuilder, TriangleStats, TriangleStorageRuntime,
 };
 use crate::collections::backends::vec::VecLong;
-use crate::task::concurrency::TerminationFlag;
-use crate::task::progress::{ProgressTracker, TaskRegistry, Tasks};
-use crate::task::memory::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
+use crate::task::concurrency::TerminationFlag;
+use crate::task::memory::MemoryRange;
+use crate::task::progress::{ProgressTracker, TaskRegistry, Tasks};
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use crate::types::properties::node::DefaultLongNodePropertyValues;
 use crate::types::properties::node::NodePropertyValues;
@@ -34,15 +34,15 @@ pub struct TriangleRow {
 
 /// Triangle algorithm facade.
 #[derive(Clone)]
-pub struct TriangleFacade {
-    graph_store: Arc<DefaultGraphStore>,
+pub struct TriangleFacade<Store: GraphStore = DefaultGraphStore> {
+    graph_store: Arc<Store>,
     config: TriangleConfig,
     task_registry: Option<TaskRegistry>,
 }
 
-impl TriangleFacade {
+impl<Store: GraphStore> TriangleFacade<Store> {
     /// Create a new facade bound to a live graph store.
-    pub fn new(graph_store: Arc<DefaultGraphStore>) -> Self {
+    pub fn new(graph_store: Arc<Store>) -> Self {
         Self {
             graph_store,
             config: TriangleConfig::default(),
@@ -51,10 +51,7 @@ impl TriangleFacade {
     }
 
     /// Create a facade using the spec.rs config model.
-    pub fn from_spec_config(
-        graph_store: Arc<DefaultGraphStore>,
-        config: TriangleConfig,
-    ) -> Result<Self> {
+    pub fn from_spec_config(graph_store: Arc<Store>, config: TriangleConfig) -> Result<Self> {
         config
             .validate()
             .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
@@ -67,10 +64,7 @@ impl TriangleFacade {
     }
 
     /// Parse JSON into spec.rs config and return a configured facade.
-    pub fn from_spec_json(
-        graph_store: Arc<DefaultGraphStore>,
-        raw_config: &serde_json::Value,
-    ) -> Result<Self> {
+    pub fn from_spec_json(graph_store: Arc<Store>, raw_config: &serde_json::Value) -> Result<Self> {
         let parsed: TriangleConfig = serde_json::from_value(raw_config.clone())
             .map_err(|e| AlgorithmError::Execution(format!("Config parsing failed: {e}")))?;
         Self::from_spec_config(graph_store, parsed)
@@ -171,6 +165,32 @@ impl TriangleFacade {
         Ok(TriangleResultBuilder::new(result).stats())
     }
 
+    /// Full result: returns both local and global counts.
+    pub fn run(&self) -> Result<TriangleResult> {
+        let result = self.compute()?;
+        Ok(result)
+    }
+
+    /// Estimate memory usage.
+    pub fn estimate_memory(&self) -> Result<MemoryRange> {
+        let node_count = self.graph_store.node_count();
+        let relationship_count = self.graph_store.relationship_count();
+
+        let local_counts = node_count.saturating_mul(8);
+        let adjacency_vec_headers = node_count.saturating_mul(24);
+        let adjacency_entries = relationship_count.saturating_mul(std::mem::size_of::<usize>());
+
+        let base: usize = 64 * 1024;
+        let total = base
+            .saturating_add(local_counts)
+            .saturating_add(adjacency_vec_headers)
+            .saturating_add(adjacency_entries);
+
+        Ok(MemoryRange::of_range(total, total.saturating_mul(2)))
+    }
+}
+
+impl TriangleFacade<DefaultGraphStore> {
     /// Mutate mode: writes triangle counts back to the graph store.
     pub fn mutate(self, property_name: &str) -> Result<TriangleMutateResult> {
         self.validate()?;
@@ -214,29 +234,5 @@ impl TriangleFacade {
             property_name.to_string(),
             std::time::Duration::from_millis(res.summary.execution_time_ms),
         ))
-    }
-
-    /// Full result: returns both local and global counts.
-    pub fn run(&self) -> Result<TriangleResult> {
-        let result = self.compute()?;
-        Ok(result)
-    }
-
-    /// Estimate memory usage.
-    pub fn estimate_memory(&self) -> Result<MemoryRange> {
-        let node_count = self.graph_store.node_count();
-        let relationship_count = self.graph_store.relationship_count();
-
-        let local_counts = node_count.saturating_mul(8);
-        let adjacency_vec_headers = node_count.saturating_mul(24);
-        let adjacency_entries = relationship_count.saturating_mul(std::mem::size_of::<usize>());
-
-        let base: usize = 64 * 1024;
-        let total = base
-            .saturating_add(local_counts)
-            .saturating_add(adjacency_vec_headers)
-            .saturating_add(adjacency_entries);
-
-        Ok(MemoryRange::of_range(total, total.saturating_mul(2)))
     }
 }

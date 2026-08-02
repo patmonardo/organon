@@ -18,14 +18,14 @@ use crate::algo::closeness::{
     ClosenessCentralityResult, ClosenessCentralityResultBuilder, ClosenessCentralityStats,
 };
 use crate::collections::backends::vec::VecDouble;
+use crate::projection::eval::algorithm::AlgorithmError;
+use crate::projection::NodeLabel;
 use crate::task::concurrency::{Concurrency, TerminationFlag};
+use crate::task::memory::MemoryRange;
 use crate::task::progress::ProgressTracker;
 use crate::task::progress::{
     EmptyTaskRegistryFactory, JobId, TaskProgressTracker, TaskRegistryFactory,
 };
-use crate::task::memory::MemoryRange;
-use crate::projection::eval::algorithm::AlgorithmError;
-use crate::projection::NodeLabel;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use crate::types::properties::node::DefaultDoubleNodePropertyValues;
 use crate::types::properties::node::NodePropertyValues;
@@ -35,14 +35,14 @@ use std::time::Instant;
 
 /// Closeness centrality facade/builder bound to a live graph store.
 #[derive(Clone)]
-pub struct ClosenessCentralityFacade {
-    graph_store: Arc<DefaultGraphStore>,
+pub struct ClosenessCentralityFacade<Store: GraphStore = DefaultGraphStore> {
+    graph_store: Arc<Store>,
     config: ClosenessCentralityConfig,
     task_registry: Arc<dyn TaskRegistryFactory>,
 }
 
-impl ClosenessCentralityFacade {
-    pub fn new(graph_store: Arc<DefaultGraphStore>) -> Self {
+impl<Store: GraphStore> ClosenessCentralityFacade<Store> {
+    pub fn new(graph_store: Arc<Store>) -> Self {
         Self {
             graph_store,
             config: ClosenessCentralityConfig::default(),
@@ -52,7 +52,7 @@ impl ClosenessCentralityFacade {
 
     /// Create a facade using the spec.rs config model.
     pub fn from_spec_config(
-        graph_store: Arc<DefaultGraphStore>,
+        graph_store: Arc<Store>,
         config: ClosenessCentralityConfig,
     ) -> Result<Self> {
         config
@@ -67,10 +67,7 @@ impl ClosenessCentralityFacade {
     }
 
     /// Parse JSON into spec.rs config and return a configured facade.
-    pub fn from_spec_json(
-        graph_store: Arc<DefaultGraphStore>,
-        raw_config: &serde_json::Value,
-    ) -> Result<Self> {
+    pub fn from_spec_json(graph_store: Arc<Store>, raw_config: &serde_json::Value) -> Result<Self> {
         let parsed: ClosenessCentralityConfig = serde_json::from_value(raw_config.clone())
             .map_err(|e| AlgorithmError::Execution(format!("Config parsing failed: {e}")))?;
         Self::from_spec_config(graph_store, parsed)
@@ -229,56 +226,6 @@ impl ClosenessCentralityFacade {
         Ok(ClosenessCentralityResultBuilder::new(result).stats())
     }
 
-    /// Mutate mode: compute scores, write them to a new graph store, and return it.
-    pub fn mutate(self, property_name: &str) -> Result<ClosenessCentralityMutateResult> {
-        self.validate()?;
-        ConfigValidator::non_empty_string(property_name, "property_name")?;
-        let result = self.compute()?;
-        let scores = result.centralities.clone();
-        let nodes_updated = scores.len() as u64;
-        let builder = ClosenessCentralityResultBuilder::new(result);
-
-        // Build property values
-        let node_count = scores.len();
-        let backend = VecDouble::from(scores);
-        let values = DefaultDoubleNodePropertyValues::from_collection(backend, node_count);
-        let values: Arc<dyn NodePropertyValues> = Arc::new(values);
-
-        // Clone store, add property, and return updated store
-        let mut new_store = self.graph_store.as_ref().clone();
-        let labels: HashSet<NodeLabel> = new_store.node_labels();
-        new_store
-            .add_node_property(labels, property_name.to_string(), values)
-            .map_err(|e| {
-                AlgorithmError::Execution(format!("Closeness mutate failed to add property: {e}"))
-            })?;
-
-        let summary = ClosenessCentralityMutationSummary {
-            nodes_updated,
-            property_name: property_name.to_string(),
-            execution_time_ms: builder.execution_time_ms(),
-        };
-
-        Ok(ClosenessCentralityMutateResult {
-            summary,
-            updated_store: Arc::new(new_store),
-        })
-    }
-
-    /// Write mode is not implemented yet for closeness.
-    pub fn write(self, property_name: &str) -> Result<WriteResult> {
-        self.validate()?;
-        ConfigValidator::non_empty_string(property_name, "property_name")?;
-        let result = self.compute()?;
-        let nodes_written = result.centralities.len() as u64;
-        let execution_time = result.execution_time;
-        Ok(WriteResult::new(
-            nodes_written,
-            property_name.to_string(),
-            execution_time,
-        ))
-    }
-
     /// Estimate memory requirements for closeness centrality computation.
     ///
     /// # Returns
@@ -315,6 +262,56 @@ impl ClosenessCentralityFacade {
         let total_with_overhead = total + (total / 5);
 
         MemoryRange::of_range(total, total_with_overhead)
+    }
+}
+
+impl ClosenessCentralityFacade<DefaultGraphStore> {
+    /// Mutate mode: compute scores, write them to a new graph store, and return it.
+    pub fn mutate(self, property_name: &str) -> Result<ClosenessCentralityMutateResult> {
+        self.validate()?;
+        ConfigValidator::non_empty_string(property_name, "property_name")?;
+        let result = self.compute()?;
+        let scores = result.centralities.clone();
+        let nodes_updated = scores.len() as u64;
+        let builder = ClosenessCentralityResultBuilder::new(result);
+
+        let node_count = scores.len();
+        let backend = VecDouble::from(scores);
+        let values = DefaultDoubleNodePropertyValues::from_collection(backend, node_count);
+        let values: Arc<dyn NodePropertyValues> = Arc::new(values);
+
+        let mut new_store = self.graph_store.as_ref().clone();
+        let labels: HashSet<NodeLabel> = new_store.node_labels();
+        new_store
+            .add_node_property(labels, property_name.to_string(), values)
+            .map_err(|e| {
+                AlgorithmError::Execution(format!("Closeness mutate failed to add property: {e}"))
+            })?;
+
+        let summary = ClosenessCentralityMutationSummary {
+            nodes_updated,
+            property_name: property_name.to_string(),
+            execution_time_ms: builder.execution_time_ms(),
+        };
+
+        Ok(ClosenessCentralityMutateResult {
+            summary,
+            updated_store: Arc::new(new_store),
+        })
+    }
+
+    /// Write mode is not implemented yet for closeness.
+    pub fn write(self, property_name: &str) -> Result<WriteResult> {
+        self.validate()?;
+        ConfigValidator::non_empty_string(property_name, "property_name")?;
+        let result = self.compute()?;
+        let nodes_written = result.centralities.len() as u64;
+        let execution_time = result.execution_time;
+        Ok(WriteResult::new(
+            nodes_written,
+            property_name.to_string(),
+            execution_time,
+        ))
     }
 }
 

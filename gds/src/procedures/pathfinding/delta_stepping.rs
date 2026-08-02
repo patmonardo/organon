@@ -16,7 +16,8 @@ use crate::projection::Orientation;
 use crate::projection::RelationshipType;
 use crate::task::memory::MemoryRange;
 use crate::types::graph::MappedNodeId;
-use crate::types::prelude::{DefaultGraphStore, GraphStore};
+use crate::types::graph_store::GraphStoreRead;
+use crate::types::prelude::DefaultGraphStore;
 use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
 
@@ -27,8 +28,8 @@ use crate::task::concurrency::TerminationFlag;
 use crate::task::progress::{ProgressTracker, TaskProgressTracker, TaskRegistryFactory, Tasks};
 
 /// Delta Stepping algorithm builder - fluent configuration
-pub struct DeltaSteppingFacade {
-    graph_store: Arc<DefaultGraphStore>,
+pub struct DeltaSteppingFacade<Store: GraphStoreRead + ?Sized = DefaultGraphStore> {
+    graph_store: Arc<Store>,
     config: DeltaSteppingConfig,
     weight_property: String,
     /// Progress tracking components
@@ -37,9 +38,9 @@ pub struct DeltaSteppingFacade {
 }
 
 /// Backwards-compatible alias (builder-style naming).
-pub type DeltaSteppingBuilder = DeltaSteppingFacade;
+pub type DeltaSteppingBuilder<Store = DefaultGraphStore> = DeltaSteppingFacade<Store>;
 
-impl DeltaSteppingFacade {
+impl<Store: GraphStoreRead + ?Sized> DeltaSteppingFacade<Store> {
     /// Create a new Delta Stepping builder bound to a live graph store.
     ///
     /// Defaults:
@@ -50,7 +51,7 @@ impl DeltaSteppingFacade {
     /// - direction: "outgoing"
     /// - store_predecessors: true
     /// - concurrency: 4
-    pub fn new(graph_store: Arc<DefaultGraphStore>) -> Self {
+    pub fn new(graph_store: Arc<Store>) -> Self {
         Self {
             graph_store,
             config: DeltaSteppingConfig::default(),
@@ -61,10 +62,7 @@ impl DeltaSteppingFacade {
     }
 
     /// Create a facade using the spec.rs config model.
-    pub fn from_spec_config(
-        graph_store: Arc<DefaultGraphStore>,
-        config: DeltaSteppingConfig,
-    ) -> Result<Self> {
+    pub fn from_spec_config(graph_store: Arc<Store>, config: DeltaSteppingConfig) -> Result<Self> {
         config
             .validate()
             .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
@@ -79,10 +77,7 @@ impl DeltaSteppingFacade {
     }
 
     /// Parse JSON into spec.rs config and return a configured facade.
-    pub fn from_spec_json(
-        graph_store: Arc<DefaultGraphStore>,
-        raw_config: &serde_json::Value,
-    ) -> Result<Self> {
+    pub fn from_spec_json(graph_store: Arc<Store>, raw_config: &serde_json::Value) -> Result<Self> {
         let parsed: DeltaSteppingConfig = serde_json::from_value(raw_config.clone())
             .map_err(|e| AlgorithmError::Execution(format!("Config parsing failed: {e}")))?;
         Self::from_spec_config(graph_store, parsed)
@@ -292,6 +287,37 @@ impl DeltaSteppingFacade {
         }
     }
 
+    /// Estimate memory requirements for Delta Stepping execution
+    ///
+    /// Returns a memory range estimate based on bucket storage, distance arrays, and graph overhead.
+    pub fn estimate_memory(&self) -> MemoryRange {
+        let node_count = self.graph_store.node_count();
+
+        // Bucket storage (delta stepping uses bins/buckets)
+        let bucket_memory = node_count * 16; // bucket index + node_id
+
+        // Distance array
+        let distance_memory = node_count * 8;
+
+        // Predecessor tracking (if enabled)
+        let predecessor_memory = if self.config.store_predecessors {
+            node_count * 8
+        } else {
+            0
+        };
+
+        // Graph structure overhead
+        let avg_degree = 10.0;
+        let relationship_count = (node_count as f64 * avg_degree) as usize;
+        let graph_overhead = relationship_count * 16;
+
+        let total_memory = bucket_memory + distance_memory + predecessor_memory + graph_overhead;
+        let overhead = total_memory / 5;
+        MemoryRange::of_range(total_memory, total_memory + overhead)
+    }
+}
+
+impl DeltaSteppingFacade<DefaultGraphStore> {
     pub fn mutate(self, property_name: &str) -> Result<DeltaSteppingMutateResult> {
         self.validate()?;
         if property_name.is_empty() {
@@ -334,35 +360,6 @@ impl DeltaSteppingFacade {
             property_name: property_name.to_string(),
             execution_time_ms: res.summary.execution_time_ms,
         })
-    }
-
-    /// Estimate memory requirements for Delta Stepping execution
-    ///
-    /// Returns a memory range estimate based on bucket storage, distance arrays, and graph overhead.
-    pub fn estimate_memory(&self) -> MemoryRange {
-        let node_count = self.graph_store.node_count();
-
-        // Bucket storage (delta stepping uses bins/buckets)
-        let bucket_memory = node_count * 16; // bucket index + node_id
-
-        // Distance array
-        let distance_memory = node_count * 8;
-
-        // Predecessor tracking (if enabled)
-        let predecessor_memory = if self.config.store_predecessors {
-            node_count * 8
-        } else {
-            0
-        };
-
-        // Graph structure overhead
-        let avg_degree = 10.0;
-        let relationship_count = (node_count as f64 * avg_degree) as usize;
-        let graph_overhead = relationship_count * 16;
-
-        let total_memory = bucket_memory + distance_memory + predecessor_memory + graph_overhead;
-        let overhead = total_memory / 5;
-        MemoryRange::of_range(total_memory, total_memory + overhead)
     }
 }
 

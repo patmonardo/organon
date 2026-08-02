@@ -8,16 +8,16 @@ use crate::algo::indirect_exposure::{
     IndirectExposureConfig, IndirectExposureResult, IndirectExposureStorageRuntime,
 };
 use crate::projection::eval::algorithm::AlgorithmError;
-use crate::types::prelude::DefaultGraphStore;
+use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use std::sync::Arc;
 
-pub struct IndirectExposureFacade {
-    graph_store: Arc<DefaultGraphStore>,
+pub struct IndirectExposureFacade<Store: GraphStore = DefaultGraphStore> {
+    graph_store: Arc<Store>,
     config: IndirectExposureConfig,
 }
 
-impl IndirectExposureFacade {
-    pub fn new(graph_store: Arc<DefaultGraphStore>) -> Self {
+impl<Store: GraphStore> IndirectExposureFacade<Store> {
+    pub fn new(graph_store: Arc<Store>) -> Self {
         Self {
             graph_store,
             config: IndirectExposureConfig::default(),

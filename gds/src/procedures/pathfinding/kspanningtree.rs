@@ -21,7 +21,8 @@ use crate::task::progress::ProgressTracker;
 use crate::task::progress::TaskRegistryFactory;
 use crate::task::progress::Tasks;
 use crate::types::graph::MappedNodeId;
-use crate::types::prelude::{DefaultGraphStore, GraphStore};
+use crate::types::graph_store::GraphStoreRead;
+use crate::types::prelude::DefaultGraphStore;
 use std::collections::HashSet;
 use std::sync::Arc;
 use std::time::Instant;
@@ -30,15 +31,15 @@ use crate::projection::eval::algorithm::AlgorithmError;
 use crate::task::progress::TaskProgressTracker;
 
 /// K-Spanning Tree algorithm builder
-pub struct KSpanningTreeBuilder {
-    graph_store: Arc<DefaultGraphStore>,
+pub struct KSpanningTreeBuilder<Store: GraphStoreRead + ?Sized = DefaultGraphStore> {
+    graph_store: Arc<Store>,
     config: KSpanningTreeConfig,
     task_registry_factory: Option<Box<dyn TaskRegistryFactory>>,
     user_log_registry_factory: Option<Box<dyn TaskRegistryFactory>>, // Placeholder for now
 }
 
-impl KSpanningTreeBuilder {
-    pub fn new(graph_store: Arc<DefaultGraphStore>) -> Self {
+impl<Store: GraphStoreRead + ?Sized> KSpanningTreeBuilder<Store> {
+    pub fn new(graph_store: Arc<Store>) -> Self {
         Self {
             graph_store,
             config: KSpanningTreeConfig::default(),
@@ -48,10 +49,7 @@ impl KSpanningTreeBuilder {
     }
 
     /// Create a builder using the spec.rs config model.
-    pub fn from_spec_config(
-        graph_store: Arc<DefaultGraphStore>,
-        config: KSpanningTreeConfig,
-    ) -> Result<Self> {
+    pub fn from_spec_config(graph_store: Arc<Store>, config: KSpanningTreeConfig) -> Result<Self> {
         config
             .validate()
             .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
@@ -65,10 +63,7 @@ impl KSpanningTreeBuilder {
     }
 
     /// Parse JSON into spec.rs config and return a configured builder.
-    pub fn from_spec_json(
-        graph_store: Arc<DefaultGraphStore>,
-        raw_config: &serde_json::Value,
-    ) -> Result<Self> {
+    pub fn from_spec_json(graph_store: Arc<Store>, raw_config: &serde_json::Value) -> Result<Self> {
         let parsed: KSpanningTreeConfig = serde_json::from_value(raw_config.clone())
             .map_err(|e| AlgorithmError::Execution(format!("Config parsing failed: {e}")))?;
         Self::from_spec_config(graph_store, parsed)
@@ -249,44 +244,6 @@ impl KSpanningTreeBuilder {
         Ok(KSpanningTreeResultBuilder::new(result, elapsed).stats())
     }
 
-    /// Mutate mode: writes results back to the graph store
-    pub fn mutate(self, property_name: &str) -> Result<KSpanningTreeMutateResult> {
-        self.config
-            .validate()
-            .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
-        ConfigValidator::non_empty_string(property_name, "property_name")?;
-        let (result, elapsed) = self.compute()?;
-        let builder = KSpanningTreeResultBuilder::new(result, elapsed);
-        let paths: Vec<PathResult> = builder.paths();
-
-        let updated_store = crate::algo::algorithms::pathfinding::build_path_relationship_store(
-            self.graph_store.as_ref(),
-            property_name,
-            &paths,
-        )?;
-
-        let summary = builder.mutation_summary(property_name, paths.len() as u64);
-
-        Ok(KSpanningTreeMutateResult {
-            summary,
-            updated_store,
-        })
-    }
-
-    /// Write mode: writes results to external storage
-    pub fn write(self, property_name: &str) -> Result<WriteResult> {
-        self.config
-            .validate()
-            .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
-        ConfigValidator::non_empty_string(property_name, "property_name")?;
-        let res = self.mutate(property_name)?;
-        Ok(WriteResult::new(
-            res.summary.nodes_updated,
-            property_name.to_string(),
-            std::time::Duration::from_millis(res.summary.execution_time_ms),
-        ))
-    }
-
     /// Estimate memory requirements for k-spanning tree execution.
     ///
     /// Conservative estimate based on:
@@ -309,6 +266,47 @@ impl KSpanningTreeBuilder {
         let total = arrays + working + graph_overhead;
         let overhead = total / 5; // +20%
         MemoryRange::of_range(total, total + overhead)
+    }
+}
+
+impl KSpanningTreeBuilder<DefaultGraphStore> {
+    /// Mutate mode: writes results back to the graph store.
+    pub fn mutate(self, property_name: &str) -> Result<KSpanningTreeMutateResult> {
+        self.config
+            .validate()
+            .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
+        ConfigValidator::non_empty_string(property_name, "property_name")?;
+        let graph_store = Arc::clone(&self.graph_store);
+        let (result, elapsed) = self.compute()?;
+        let builder = KSpanningTreeResultBuilder::new(result, elapsed);
+        let paths: Vec<PathResult> = builder.paths();
+
+        let updated_store = crate::algo::algorithms::pathfinding::build_path_relationship_store(
+            graph_store.as_ref(),
+            property_name,
+            &paths,
+        )?;
+
+        let summary = builder.mutation_summary(property_name, paths.len() as u64);
+
+        Ok(KSpanningTreeMutateResult {
+            summary,
+            updated_store,
+        })
+    }
+
+    /// Write mode: writes results to external storage.
+    pub fn write(self, property_name: &str) -> Result<WriteResult> {
+        self.config
+            .validate()
+            .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
+        ConfigValidator::non_empty_string(property_name, "property_name")?;
+        let res = self.mutate(property_name)?;
+        Ok(WriteResult::new(
+            res.summary.nodes_updated,
+            property_name.to_string(),
+            std::time::Duration::from_millis(res.summary.execution_time_ms),
+        ))
     }
 }
 

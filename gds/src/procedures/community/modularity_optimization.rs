@@ -31,14 +31,14 @@ pub struct ModularityOptimizationRow {
 }
 
 #[derive(Clone)]
-pub struct ModularityOptimizationFacade {
-    graph_store: Arc<DefaultGraphStore>,
+pub struct ModularityOptimizationFacade<Store: GraphStore = DefaultGraphStore> {
+    graph_store: Arc<Store>,
     config: ModularityOptimizationConfig,
     task_registry: Option<TaskRegistry>,
 }
 
-impl ModularityOptimizationFacade {
-    pub fn new(graph_store: Arc<DefaultGraphStore>) -> Self {
+impl<Store: GraphStore> ModularityOptimizationFacade<Store> {
+    pub fn new(graph_store: Arc<Store>) -> Self {
         Self {
             graph_store,
             config: ModularityOptimizationConfig::default(),
@@ -47,7 +47,7 @@ impl ModularityOptimizationFacade {
     }
 
     pub fn from_spec_config(
-        graph_store: Arc<DefaultGraphStore>,
+        graph_store: Arc<Store>,
         config: ModularityOptimizationConfig,
     ) -> Result<Self> {
         config
@@ -61,10 +61,7 @@ impl ModularityOptimizationFacade {
         })
     }
 
-    pub fn from_spec_json(
-        graph_store: Arc<DefaultGraphStore>,
-        raw_config: &serde_json::Value,
-    ) -> Result<Self> {
+    pub fn from_spec_json(graph_store: Arc<Store>, raw_config: &serde_json::Value) -> Result<Self> {
         let parsed: ModularityOptimizationConfig = serde_json::from_value(raw_config.clone())
             .map_err(|e| AlgorithmError::Execution(format!("Config parsing failed: {e}")))?;
         Self::from_spec_config(graph_store, parsed)
@@ -175,6 +172,43 @@ impl ModularityOptimizationFacade {
         self.compute()
     }
 
+    pub fn estimate_memory(&self) -> Result<MemoryRange> {
+        let node_count = self.graph_store.node_count();
+        let relationship_count = self.graph_store.relationship_count();
+        let concurrency = self.config.concurrency.max(1);
+
+        let current_communities = Estimate::size_of_long_array(node_count);
+        let next_communities = Estimate::size_of_long_array(node_count);
+        let cumulative_node_weights = Estimate::size_of_double_array(node_count);
+        let community_weights = Estimate::size_of_double_array(node_count);
+        let colors_used = Estimate::size_of_bitset(node_count);
+        let colors = Estimate::size_of_long_array(node_count);
+        let community_weight_updates = Estimate::size_of_double_array(node_count);
+        let adjacency = relationship_count
+            .saturating_mul(std::mem::size_of::<(usize, f64)>())
+            .saturating_add(node_count.saturating_mul(Estimate::BYTES_OBJECT_HEADER));
+        let min_influences = Estimate::size_of_long_double_hash_map(50).saturating_mul(concurrency);
+        let max_influences =
+            Estimate::size_of_long_double_hash_map(node_count.max(50)).saturating_mul(concurrency);
+
+        let fixed = Estimate::BYTES_OBJECT_HEADER
+            .saturating_add(current_communities)
+            .saturating_add(next_communities)
+            .saturating_add(cumulative_node_weights)
+            .saturating_add(community_weights)
+            .saturating_add(colors_used)
+            .saturating_add(colors)
+            .saturating_add(community_weight_updates)
+            .saturating_add(adjacency);
+
+        Ok(MemoryRange::of_range(
+            fixed.saturating_add(min_influences),
+            fixed.saturating_add(max_influences),
+        ))
+    }
+}
+
+impl ModularityOptimizationFacade<DefaultGraphStore> {
     pub fn mutate(self, property_name: &str) -> Result<ModularityOptimizationMutateResult> {
         self.validate()?;
         ConfigValidator::non_empty_string(property_name, "property_name")?;
@@ -216,41 +250,6 @@ impl ModularityOptimizationFacade {
             res.summary.nodes_updated,
             property_name.to_string(),
             std::time::Duration::from_millis(res.summary.execution_time_ms),
-        ))
-    }
-
-    pub fn estimate_memory(&self) -> Result<MemoryRange> {
-        let node_count = self.graph_store.node_count();
-        let relationship_count = self.graph_store.relationship_count();
-        let concurrency = self.config.concurrency.max(1);
-
-        let current_communities = Estimate::size_of_long_array(node_count);
-        let next_communities = Estimate::size_of_long_array(node_count);
-        let cumulative_node_weights = Estimate::size_of_double_array(node_count);
-        let community_weights = Estimate::size_of_double_array(node_count);
-        let colors_used = Estimate::size_of_bitset(node_count);
-        let colors = Estimate::size_of_long_array(node_count);
-        let community_weight_updates = Estimate::size_of_double_array(node_count);
-        let adjacency = relationship_count
-            .saturating_mul(std::mem::size_of::<(usize, f64)>())
-            .saturating_add(node_count.saturating_mul(Estimate::BYTES_OBJECT_HEADER));
-        let min_influences = Estimate::size_of_long_double_hash_map(50).saturating_mul(concurrency);
-        let max_influences =
-            Estimate::size_of_long_double_hash_map(node_count.max(50)).saturating_mul(concurrency);
-
-        let fixed = Estimate::BYTES_OBJECT_HEADER
-            .saturating_add(current_communities)
-            .saturating_add(next_communities)
-            .saturating_add(cumulative_node_weights)
-            .saturating_add(community_weights)
-            .saturating_add(colors_used)
-            .saturating_add(colors)
-            .saturating_add(community_weight_updates)
-            .saturating_add(adjacency);
-
-        Ok(MemoryRange::of_range(
-            fixed.saturating_add(min_influences),
-            fixed.saturating_add(max_influences),
         ))
     }
 }

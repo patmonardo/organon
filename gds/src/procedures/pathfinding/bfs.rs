@@ -41,7 +41,8 @@ use crate::task::concurrency::TerminationFlag;
 use crate::task::memory::MemoryRange;
 use crate::task::progress::{ProgressTracker, TaskProgressTracker, TaskRegistryFactory, Tasks};
 use crate::types::graph::id_map::MappedNodeId;
-use crate::types::prelude::{DefaultGraphStore, GraphStore};
+use crate::types::graph_store::GraphStoreRead;
+use crate::types::prelude::DefaultGraphStore;
 use std::collections::HashSet;
 use std::sync::Arc;
 
@@ -72,17 +73,17 @@ use std::sync::Arc;
 ///     .track_paths(true)
 ///     .targets(vec![99, 100]);
 /// ```
-pub struct BfsFacade {
-    graph_store: Arc<DefaultGraphStore>,
+pub struct BfsFacade<Store: GraphStoreRead + ?Sized = DefaultGraphStore> {
+    graph_store: Arc<Store>,
     config: BfsConfig,
     task_registry_factory: Option<Box<dyn TaskRegistryFactory>>,
     user_log_registry_factory: Option<Box<dyn TaskRegistryFactory>>, // Placeholder for now
 }
 
 /// Backwards-compatible alias (builder-style naming).
-pub type BfsBuilder = BfsFacade;
+pub type BfsBuilder<Store = DefaultGraphStore> = BfsFacade<Store>;
 
-impl BfsFacade {
+impl<Store: GraphStoreRead + ?Sized> BfsFacade<Store> {
     /// Create a new BFS builder bound to a live graph store.
     ///
     /// Defaults:
@@ -92,7 +93,7 @@ impl BfsFacade {
     /// - track_paths: false (only distances, not full paths)
     /// - concurrency: 1 (BFS is typically single-threaded)
     /// - delta: 64 (chunking parameter)
-    pub fn new(graph_store: Arc<DefaultGraphStore>) -> Self {
+    pub fn new(graph_store: Arc<Store>) -> Self {
         Self {
             graph_store,
             config: BfsConfig::default(),
@@ -102,10 +103,7 @@ impl BfsFacade {
     }
 
     /// Create a facade using the spec.rs config model.
-    pub fn from_spec_config(
-        graph_store: Arc<DefaultGraphStore>,
-        config: BfsConfig,
-    ) -> Result<Self> {
+    pub fn from_spec_config(graph_store: Arc<Store>, config: BfsConfig) -> Result<Self> {
         config
             .validate()
             .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
@@ -119,10 +117,7 @@ impl BfsFacade {
     }
 
     /// Parse JSON into spec.rs config and return a configured facade.
-    pub fn from_spec_json(
-        graph_store: Arc<DefaultGraphStore>,
-        raw_config: &serde_json::Value,
-    ) -> Result<Self> {
+    pub fn from_spec_json(graph_store: Arc<Store>, raw_config: &serde_json::Value) -> Result<Self> {
         let parsed: BfsConfig = serde_json::from_value(raw_config.clone())
             .map_err(|e| AlgorithmError::Execution(format!("Config parsing failed: {e}")))?;
         Self::from_spec_config(graph_store, parsed)
@@ -366,51 +361,6 @@ impl BfsFacade {
     /// let result = builder.mutate("distance")?;
     /// println!("Updated {} nodes", result.nodes_updated);
     /// ```
-    pub fn mutate(self, property_name: &str) -> Result<BfsMutateResult> {
-        ConfigValidator::non_empty_string(property_name, "property_name")?;
-        let graph_store = Arc::clone(&self.graph_store);
-        let source_node = self.config.source_node;
-        let target_nodes = self.config.target_nodes.clone();
-        let (result, elapsed) = self.compute()?;
-        let builder = BfsResultBuilder::new(result, elapsed, source_node, target_nodes);
-        let paths = builder.paths();
-
-        let updated_store = crate::algo::algorithms::pathfinding::build_path_relationship_store(
-            graph_store.as_ref(),
-            property_name,
-            &paths,
-        )?;
-
-        let summary = builder.mutation_summary(property_name, paths.len() as u64);
-
-        Ok(BfsMutateResult {
-            summary,
-            updated_store,
-        })
-    }
-
-    /// Write mode: Compute and persist to storage
-    ///
-    /// Persists BFS traversal results and distances to storage backend.
-    ///
-    /// ```rust,no_run
-    /// # use gds::Graph;
-    /// # let graph: Graph = unimplemented!();
-    /// # use gds::procedures::pathfinding::BfsBuilder;
-    /// let builder = graph.bfs().source(0);
-    /// let result = builder.write("bfs_results")?;
-    /// println!("Wrote {} nodes", result.nodes_written);
-    /// ```
-    pub fn write(self, property_name: &str) -> Result<BfsWriteSummary> {
-        ConfigValidator::non_empty_string(property_name, "property_name")?;
-        let res = self.mutate(property_name)?;
-        Ok(BfsWriteSummary {
-            nodes_written: res.summary.nodes_updated,
-            property_name: property_name.to_string(),
-            execution_time_ms: res.summary.execution_time_ms,
-        })
-    }
-
     /// Estimate memory requirements for BFS execution
     ///
     /// Returns a memory range estimate based on queue storage, visited tracking, and path storage.
@@ -437,6 +387,43 @@ impl BfsFacade {
         let total_memory = queue_memory + visited_memory + path_memory + graph_overhead;
         let overhead = total_memory / 5;
         MemoryRange::of_range(total_memory, total_memory + overhead)
+    }
+}
+
+impl BfsFacade<DefaultGraphStore> {
+    /// Mutate mode: Compute and store as node property.
+    pub fn mutate(self, property_name: &str) -> Result<BfsMutateResult> {
+        ConfigValidator::non_empty_string(property_name, "property_name")?;
+        let graph_store = Arc::clone(&self.graph_store);
+        let source_node = self.config.source_node;
+        let target_nodes = self.config.target_nodes.clone();
+        let (result, elapsed) = self.compute()?;
+        let builder = BfsResultBuilder::new(result, elapsed, source_node, target_nodes);
+        let paths = builder.paths();
+
+        let updated_store = crate::algo::algorithms::pathfinding::build_path_relationship_store(
+            graph_store.as_ref(),
+            property_name,
+            &paths,
+        )?;
+
+        let summary = builder.mutation_summary(property_name, paths.len() as u64);
+
+        Ok(BfsMutateResult {
+            summary,
+            updated_store,
+        })
+    }
+
+    /// Write mode: Compute and persist to storage.
+    pub fn write(self, property_name: &str) -> Result<BfsWriteSummary> {
+        ConfigValidator::non_empty_string(property_name, "property_name")?;
+        let res = self.mutate(property_name)?;
+        Ok(BfsWriteSummary {
+            nodes_written: res.summary.nodes_updated,
+            property_name: property_name.to_string(),
+            execution_time_ms: res.summary.execution_time_ms,
+        })
     }
 }
 

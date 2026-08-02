@@ -30,6 +30,9 @@ pub mod string_formatting;
 pub mod two_arrays_sort;
 pub mod warnings;
 
+#[path = "misc/feature_toggles.rs"]
+pub mod feature_toggles;
+
 // Re-exports for convenience
 pub use array_layout::{ArrayLayout, LayoutAndSecondary};
 pub use ascending_long_comparator::AscendingLongComparator;

@@ -35,13 +35,13 @@ pub struct HashGNNStats {
 
 /// HashGNN builder.
 #[derive(Clone)]
-pub struct HashGNNBuilder {
-    graph_store: Arc<DefaultGraphStore>,
+pub struct HashGNNBuilder<Store: GraphStore = DefaultGraphStore> {
+    graph_store: Arc<Store>,
     config: HashGNNConfig,
 }
 
-impl HashGNNBuilder {
-    pub fn new(graph_store: Arc<DefaultGraphStore>) -> Self {
+impl<Store: GraphStore> HashGNNBuilder<Store> {
+    pub fn new(graph_store: Arc<Store>) -> Self {
         Self {
             graph_store,
             config: HashGNNConfig::default(),

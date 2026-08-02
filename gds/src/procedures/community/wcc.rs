@@ -15,10 +15,10 @@ use crate::algo::wcc::{
     WccResultBuilder, WccStats, WccStorageRuntime,
 };
 use crate::collections::backends::vec::VecLong;
-use crate::task::concurrency::TerminationFlag;
-use crate::task::progress::{TaskRegistry, Tasks};
-use crate::task::memory::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
+use crate::task::concurrency::TerminationFlag;
+use crate::task::memory::MemoryRange;
+use crate::task::progress::{TaskRegistry, Tasks};
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use crate::types::properties::node::DefaultLongNodePropertyValues;
 use crate::types::properties::node::NodePropertyValues;
@@ -36,14 +36,14 @@ pub struct WccRow {
 
 /// WCC algorithm facade.
 #[derive(Clone)]
-pub struct WccFacade {
-    graph_store: Arc<DefaultGraphStore>,
+pub struct WccFacade<Store: GraphStore = DefaultGraphStore> {
+    graph_store: Arc<Store>,
     config: WccConfig,
     task_registry: Option<TaskRegistry>,
 }
 
-impl WccFacade {
-    pub fn new(graph_store: Arc<DefaultGraphStore>) -> Self {
+impl<Store: GraphStore> WccFacade<Store> {
+    pub fn new(graph_store: Arc<Store>) -> Self {
         Self {
             graph_store,
             config: WccConfig::default(),
@@ -52,10 +52,7 @@ impl WccFacade {
     }
 
     /// Create a facade using the spec.rs config model.
-    pub fn from_spec_config(
-        graph_store: Arc<DefaultGraphStore>,
-        config: WccConfig,
-    ) -> Result<Self> {
+    pub fn from_spec_config(graph_store: Arc<Store>, config: WccConfig) -> Result<Self> {
         config
             .validate()
             .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
@@ -68,10 +65,7 @@ impl WccFacade {
     }
 
     /// Parse JSON into spec.rs config and return a configured facade.
-    pub fn from_spec_json(
-        graph_store: Arc<DefaultGraphStore>,
-        raw_config: &serde_json::Value,
-    ) -> Result<Self> {
+    pub fn from_spec_json(graph_store: Arc<Store>, raw_config: &serde_json::Value) -> Result<Self> {
         let parsed: WccConfig = serde_json::from_value(raw_config.clone())
             .map_err(|e| AlgorithmError::Execution(format!("Config parsing failed: {e}")))?;
         Self::from_spec_config(graph_store, parsed)
@@ -127,56 +121,6 @@ impl WccFacade {
     pub fn stats(&self) -> Result<WccStats> {
         let result = self.compute()?;
         Ok(WccResultBuilder::new(result).stats())
-    }
-
-    /// Mutate mode: compute components and add as a node property, returning updated store.
-    pub fn mutate(self, property_name: &str) -> Result<WccMutateResult> {
-        self.validate()?;
-        ConfigValidator::non_empty_string(property_name, "property_name")?;
-
-        let result = self.compute()?;
-
-        let node_count = self.graph_store.node_count();
-        let nodes_updated = node_count as u64;
-
-        let longs: Vec<i64> = result.components.into_iter().map(|c| c as i64).collect();
-        let backend = VecLong::from(longs);
-        let values = DefaultLongNodePropertyValues::from_collection(backend, node_count);
-        let values: Arc<dyn NodePropertyValues> = Arc::new(values);
-
-        let mut new_store = self.graph_store.as_ref().clone();
-        let labels: HashSet<NodeLabel> = new_store.node_labels();
-        new_store
-            .add_node_property(labels, property_name.to_string(), values)
-            .map_err(|e| {
-                AlgorithmError::Execution(format!("WCC mutate failed to add property: {e}"))
-            })?;
-
-        let summary = WccMutationSummary {
-            nodes_updated,
-            property_name: property_name.to_string(),
-            execution_time_ms: result.execution_time.as_millis() as u64,
-        };
-
-        Ok(WccMutateResult {
-            summary,
-            updated_store: Arc::new(new_store),
-        })
-    }
-
-    /// Compatibility alias for older application code.
-    pub fn mutate_with_store(self, property_name: &str) -> Result<WccMutateResult> {
-        self.mutate(property_name)
-    }
-
-    /// Write mode: writes component assignments to a new graph/store surface.
-    pub fn write(self, property_name: &str) -> Result<WriteResult> {
-        let res = self.mutate(property_name)?;
-        Ok(WriteResult::new(
-            res.summary.nodes_updated,
-            property_name.to_string(),
-            std::time::Duration::from_millis(res.summary.execution_time_ms),
-        ))
     }
 
     pub fn estimate_memory(&self) -> MemoryRange {
@@ -251,5 +195,57 @@ impl WccFacade {
     pub fn run(&self) -> Result<WccResult> {
         let result = self.compute()?;
         Ok(result)
+    }
+}
+
+impl WccFacade<DefaultGraphStore> {
+    /// Mutate mode: compute components and add as a node property, returning updated store.
+    pub fn mutate(self, property_name: &str) -> Result<WccMutateResult> {
+        self.validate()?;
+        ConfigValidator::non_empty_string(property_name, "property_name")?;
+
+        let result = self.compute()?;
+
+        let node_count = self.graph_store.node_count();
+        let nodes_updated = node_count as u64;
+
+        let longs: Vec<i64> = result.components.into_iter().map(|c| c as i64).collect();
+        let backend = VecLong::from(longs);
+        let values = DefaultLongNodePropertyValues::from_collection(backend, node_count);
+        let values: Arc<dyn NodePropertyValues> = Arc::new(values);
+
+        let mut new_store = self.graph_store.as_ref().clone();
+        let labels: HashSet<NodeLabel> = new_store.node_labels();
+        new_store
+            .add_node_property(labels, property_name.to_string(), values)
+            .map_err(|e| {
+                AlgorithmError::Execution(format!("WCC mutate failed to add property: {e}"))
+            })?;
+
+        let summary = WccMutationSummary {
+            nodes_updated,
+            property_name: property_name.to_string(),
+            execution_time_ms: result.execution_time.as_millis() as u64,
+        };
+
+        Ok(WccMutateResult {
+            summary,
+            updated_store: Arc::new(new_store),
+        })
+    }
+
+    /// Compatibility alias for older application code.
+    pub fn mutate_with_store(self, property_name: &str) -> Result<WccMutateResult> {
+        self.mutate(property_name)
+    }
+
+    /// Write mode: writes component assignments to a new graph/store surface.
+    pub fn write(self, property_name: &str) -> Result<WriteResult> {
+        let res = self.mutate(property_name)?;
+        Ok(WriteResult::new(
+            res.summary.nodes_updated,
+            property_name.to_string(),
+            std::time::Duration::from_millis(res.summary.execution_time_ms),
+        ))
     }
 }

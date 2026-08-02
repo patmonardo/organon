@@ -11,11 +11,11 @@ use crate::algo::scale_properties::{
     ScalePropertiesStorageRuntime, ScalePropertiesStreamRow, ScalePropertiesWriteSummary,
 };
 use crate::collections::backends::vec::VecDoubleArray;
-use crate::task::concurrency::TerminationFlag;
-use crate::task::progress::{TaskProgressTracker, Tasks};
-use crate::task::memory::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::NodeLabel;
+use crate::task::concurrency::TerminationFlag;
+use crate::task::memory::MemoryRange;
+use crate::task::progress::{TaskProgressTracker, Tasks};
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use crate::types::properties::node::DefaultDoubleArrayNodePropertyValues;
 use crate::types::properties::node::NodePropertyValues;
@@ -28,15 +28,15 @@ pub struct ScalePropertiesMutateResult {
 }
 
 /// ScaleProperties procedure facade (multi-property, configurable scaler).
-pub struct ScalePropertiesFacade {
-    graph_store: Arc<DefaultGraphStore>,
+pub struct ScalePropertiesFacade<Store: GraphStore = DefaultGraphStore> {
+    graph_store: Arc<Store>,
     node_properties: Vec<String>,
     scaler: ScalePropertiesScaler,
     concurrency: usize,
 }
 
-impl ScalePropertiesFacade {
-    pub fn new(graph_store: Arc<DefaultGraphStore>) -> Self {
+impl<Store: GraphStore> ScalePropertiesFacade<Store> {
+    pub fn new(graph_store: Arc<Store>) -> Self {
         Self {
             graph_store,
             node_properties: Vec::new(),
@@ -136,7 +136,9 @@ impl ScalePropertiesFacade {
         let total = scaled + stats_overhead + concurrency_overhead;
         MemoryRange::of_range(total, total + total / 4)
     }
+}
 
+impl ScalePropertiesFacade<DefaultGraphStore> {
     pub fn mutate(&self, property_name: &str) -> Result<ScalePropertiesMutateResult> {
         self.validate()?;
         ConfigValidator::non_empty_string(property_name, "property_name")?;

@@ -12,8 +12,8 @@ use crate::algo::algorithms::machine_learning::kge::{
     compute_kge_predict, KgePredictParameters, KgePredictResult,
 };
 use crate::algo::algorithms::Result;
-use crate::task::concurrency::TerminationFlag;
 use crate::projection::eval::algorithm::AlgorithmError;
+use crate::task::concurrency::TerminationFlag;
 use crate::types::graph::id_map::IdMap;
 use crate::types::graph::MappedNodeId;
 use crate::types::graph::OriginalNodeId;
@@ -100,11 +100,12 @@ impl KgePredictFacade {
                     ids.iter()
                         .map(|&node_id| {
                             let original = OriginalNodeId::new(node_id);
-                            let mapped = graph.safe_to_mapped_node_id(original).ok_or_else(|| {
-                                AlgorithmError::Execution(format!(
-                                    "KGE {role} node {original} is not present in the graph"
-                                ))
-                            })?;
+                            let mapped =
+                                graph.safe_to_mapped_node_id(original).ok_or_else(|| {
+                                    AlgorithmError::Execution(format!(
+                                        "KGE {role} node {original} is not present in the graph"
+                                    ))
+                                })?;
                             i64::try_from(u64::from(mapped)).map_err(|_| {
                                 AlgorithmError::Execution(format!(
                                     "KGE {role} node {original} exceeds the kernel ID domain"

@@ -12,10 +12,10 @@ use crate::algo::kcore::{
     KCoreMutationSummary, KCoreResult, KCoreResultBuilder, KCoreStats, KCoreStorageRuntime,
 };
 use crate::collections::backends::vec::VecLong;
-use crate::task::concurrency::TerminationFlag;
-use crate::task::progress::{TaskRegistry, Tasks};
-use crate::task::memory::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
+use crate::task::concurrency::TerminationFlag;
+use crate::task::memory::MemoryRange;
+use crate::task::progress::{TaskRegistry, Tasks};
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use crate::types::properties::node::DefaultLongNodePropertyValues;
 use crate::types::properties::node::NodePropertyValues;
@@ -33,14 +33,14 @@ pub struct KCoreRow {
 
 /// K-Core Decomposition algorithm facade.
 #[derive(Clone)]
-pub struct KCoreFacade {
-    graph_store: Arc<DefaultGraphStore>,
+pub struct KCoreFacade<Store: GraphStore = DefaultGraphStore> {
+    graph_store: Arc<Store>,
     config: KCoreConfig,
     task_registry: Option<TaskRegistry>,
 }
 
-impl KCoreFacade {
-    pub fn new(graph_store: Arc<DefaultGraphStore>) -> Self {
+impl<Store: GraphStore> KCoreFacade<Store> {
+    pub fn new(graph_store: Arc<Store>) -> Self {
         Self {
             graph_store,
             config: KCoreConfig::default(),
@@ -49,10 +49,7 @@ impl KCoreFacade {
     }
 
     /// Create a facade using the spec.rs config model.
-    pub fn from_spec_config(
-        graph_store: Arc<DefaultGraphStore>,
-        config: KCoreConfig,
-    ) -> Result<Self> {
+    pub fn from_spec_config(graph_store: Arc<Store>, config: KCoreConfig) -> Result<Self> {
         config
             .validate()
             .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
@@ -65,10 +62,7 @@ impl KCoreFacade {
     }
 
     /// Parse JSON into spec.rs config and return a configured facade.
-    pub fn from_spec_json(
-        graph_store: Arc<DefaultGraphStore>,
-        raw_config: &serde_json::Value,
-    ) -> Result<Self> {
+    pub fn from_spec_json(graph_store: Arc<Store>, raw_config: &serde_json::Value) -> Result<Self> {
         let parsed: KCoreConfig = serde_json::from_value(raw_config.clone())
             .map_err(|e| AlgorithmError::Execution(format!("Config parsing failed: {e}")))?;
         Self::from_spec_config(graph_store, parsed)
@@ -161,6 +155,41 @@ impl KCoreFacade {
         Ok(KCoreResultBuilder::new(result).stats())
     }
 
+    /// Estimate memory usage.
+    pub fn estimate_memory(&self) -> Result<MemoryRange> {
+        let node_count = GraphStore::node_count(self.graph_store.as_ref());
+        let concurrency = self.config.concurrency.max(1);
+
+        let current_degrees_bytes = node_count.saturating_mul(8);
+        let core_bytes = node_count.saturating_mul(8);
+        let per_thread_examination_stack = node_count.saturating_mul(8).saturating_mul(concurrency);
+        let rebuild_nodes =
+            ((node_count as f64 * crate::algo::kcore::REBUILD_CONSTANT).ceil() as usize).max(1);
+        let rebuild_array = rebuild_nodes.saturating_mul(8);
+        let rebuild_queues = rebuild_nodes.saturating_mul(8).saturating_mul(concurrency);
+
+        let base: usize = 32 * 1024;
+        let total = base
+            .saturating_add(current_degrees_bytes)
+            .saturating_add(core_bytes)
+            .saturating_add(per_thread_examination_stack)
+            .saturating_add(rebuild_array)
+            .saturating_add(rebuild_queues);
+
+        Ok(MemoryRange::of(total))
+    }
+
+    /// Full result: returns the procedure-level k-core result.
+    pub fn run(&self) -> Result<KCoreComputationResult> {
+        let result = self.compute()?;
+        Ok(KCoreComputationResult {
+            core_values: result.core_values,
+            degeneracy: result.degeneracy,
+        })
+    }
+}
+
+impl KCoreFacade<DefaultGraphStore> {
     /// Mutate mode: writes core values back to the graph store.
     pub fn mutate(self, property_name: &str) -> Result<KCoreMutateResult> {
         self.validate()?;
@@ -209,38 +238,5 @@ impl KCoreFacade {
             property_name.to_string(),
             std::time::Duration::from_millis(res.summary.execution_time_ms),
         ))
-    }
-
-    /// Estimate memory usage.
-    pub fn estimate_memory(&self) -> Result<MemoryRange> {
-        let node_count = GraphStore::node_count(self.graph_store.as_ref());
-        let concurrency = self.config.concurrency.max(1);
-
-        let current_degrees_bytes = node_count.saturating_mul(8);
-        let core_bytes = node_count.saturating_mul(8);
-        let per_thread_examination_stack = node_count.saturating_mul(8).saturating_mul(concurrency);
-        let rebuild_nodes =
-            ((node_count as f64 * crate::algo::kcore::REBUILD_CONSTANT).ceil() as usize).max(1);
-        let rebuild_array = rebuild_nodes.saturating_mul(8);
-        let rebuild_queues = rebuild_nodes.saturating_mul(8).saturating_mul(concurrency);
-
-        let base: usize = 32 * 1024;
-        let total = base
-            .saturating_add(current_degrees_bytes)
-            .saturating_add(core_bytes)
-            .saturating_add(per_thread_examination_stack)
-            .saturating_add(rebuild_array)
-            .saturating_add(rebuild_queues);
-
-        Ok(MemoryRange::of(total))
-    }
-
-    /// Full result: returns the procedure-level k-core result.
-    pub fn run(&self) -> Result<KCoreComputationResult> {
-        let result = self.compute()?;
-        Ok(KCoreComputationResult {
-            core_values: result.core_values,
-            degeneracy: result.degeneracy,
-        })
     }
 }

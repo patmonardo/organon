@@ -16,7 +16,8 @@ use crate::task::concurrency::TerminationFlag;
 use crate::task::memory::MemoryRange;
 use crate::task::progress::{ProgressTracker, TaskProgressTracker, TaskRegistryFactory, Tasks};
 use crate::types::graph::id_map::MappedNodeId;
-use crate::types::prelude::{DefaultGraphStore, GraphStore};
+use crate::types::graph_store::GraphStoreRead;
+use crate::types::prelude::DefaultGraphStore;
 use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
 
@@ -24,8 +25,8 @@ use std::sync::Arc;
 use crate::projection::eval::algorithm::AlgorithmError;
 
 /// Yen's algorithm facade - fluent configuration
-pub struct YensFacade {
-    graph_store: Arc<DefaultGraphStore>,
+pub struct YensFacade<Store: GraphStoreRead + ?Sized = DefaultGraphStore> {
+    graph_store: Arc<Store>,
     config: YensConfig,
     concurrency: usize,
     task_registry_factory: Option<Box<dyn TaskRegistryFactory>>,
@@ -33,9 +34,9 @@ pub struct YensFacade {
 }
 
 /// Backwards-compatible alias (builder-style naming).
-pub type YensBuilder = YensFacade;
+pub type YensBuilder<Store = DefaultGraphStore> = YensFacade<Store>;
 
-impl YensFacade {
+impl<Store: GraphStoreRead + ?Sized> YensFacade<Store> {
     /// Create a new Yen's builder bound to a live graph store.
     ///
     /// Defaults:
@@ -46,7 +47,7 @@ impl YensFacade {
     /// - direction: "outgoing"
     /// - track_relationships: false
     /// - concurrency: 1
-    pub fn new(graph_store: Arc<DefaultGraphStore>) -> Self {
+    pub fn new(graph_store: Arc<Store>) -> Self {
         Self {
             graph_store,
             config: YensConfig::default(),
@@ -57,10 +58,7 @@ impl YensFacade {
     }
 
     /// Create a facade using the spec.rs config model.
-    pub fn from_spec_config(
-        graph_store: Arc<DefaultGraphStore>,
-        config: YensConfig,
-    ) -> Result<Self> {
+    pub fn from_spec_config(graph_store: Arc<Store>, config: YensConfig) -> Result<Self> {
         config
             .validate()
             .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
@@ -75,10 +73,7 @@ impl YensFacade {
     }
 
     /// Parse JSON into spec.rs config and return a configured facade.
-    pub fn from_spec_json(
-        graph_store: Arc<DefaultGraphStore>,
-        raw_config: &serde_json::Value,
-    ) -> Result<Self> {
+    pub fn from_spec_json(graph_store: Arc<Store>, raw_config: &serde_json::Value) -> Result<Self> {
         let parsed: YensConfig = serde_json::from_value(raw_config.clone())
             .map_err(|e| AlgorithmError::Execution(format!("Config parsing failed: {e}")))?;
         Self::from_spec_config(graph_store, parsed)
@@ -312,48 +307,6 @@ impl YensFacade {
         }
     }
 
-    pub fn mutate(self, property_name: &str) -> Result<YensMutateResult> {
-        if property_name.is_empty() {
-            return Err(AlgorithmError::Execution(
-                "property_name cannot be empty".to_string(),
-            ));
-        }
-        let graph_store = Arc::clone(&self.graph_store);
-        let result = self.compute()?;
-        let paths = result.paths;
-
-        let updated_store = crate::algo::algorithms::pathfinding::build_path_relationship_store(
-            graph_store.as_ref(),
-            property_name,
-            &paths,
-        )?;
-
-        let summary = YensMutationSummary {
-            nodes_updated: paths.len() as u64,
-            property_name: property_name.to_string(),
-            execution_time_ms: result.metadata.execution_time.as_millis() as u64,
-        };
-
-        Ok(YensMutateResult {
-            summary,
-            updated_store,
-        })
-    }
-
-    pub fn write(self, property_name: &str) -> Result<YensWriteSummary> {
-        if property_name.is_empty() {
-            return Err(AlgorithmError::Execution(
-                "property_name cannot be empty".to_string(),
-            ));
-        }
-        let res = self.mutate(property_name)?;
-        Ok(YensWriteSummary {
-            nodes_written: res.summary.nodes_updated,
-            property_name: property_name.to_string(),
-            execution_time_ms: res.summary.execution_time_ms,
-        })
-    }
-
     /// Estimate memory requirements for Yen's K-shortest paths execution
     ///
     /// Returns a memory range estimate based on path storage, priority queues, and graph overhead.
@@ -407,6 +360,50 @@ impl YensFacade {
             .saturating_add(graph_cursor_memory);
 
         MemoryRange::of_range(min_memory, max_memory.max(min_memory))
+    }
+}
+
+impl YensFacade<DefaultGraphStore> {
+    pub fn mutate(self, property_name: &str) -> Result<YensMutateResult> {
+        if property_name.is_empty() {
+            return Err(AlgorithmError::Execution(
+                "property_name cannot be empty".to_string(),
+            ));
+        }
+        let graph_store = Arc::clone(&self.graph_store);
+        let result = self.compute()?;
+        let paths = result.paths;
+
+        let updated_store = crate::algo::algorithms::pathfinding::build_path_relationship_store(
+            graph_store.as_ref(),
+            property_name,
+            &paths,
+        )?;
+
+        let summary = YensMutationSummary {
+            nodes_updated: paths.len() as u64,
+            property_name: property_name.to_string(),
+            execution_time_ms: result.metadata.execution_time.as_millis() as u64,
+        };
+
+        Ok(YensMutateResult {
+            summary,
+            updated_store,
+        })
+    }
+
+    pub fn write(self, property_name: &str) -> Result<YensWriteSummary> {
+        if property_name.is_empty() {
+            return Err(AlgorithmError::Execution(
+                "property_name cannot be empty".to_string(),
+            ));
+        }
+        let res = self.mutate(property_name)?;
+        Ok(YensWriteSummary {
+            nodes_written: res.summary.nodes_updated,
+            property_name: property_name.to_string(),
+            execution_time_ms: res.summary.execution_time_ms,
+        })
     }
 }
 

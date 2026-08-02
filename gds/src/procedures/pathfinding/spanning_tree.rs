@@ -14,7 +14,8 @@ use crate::projection::RelationshipType;
 use crate::task::concurrency::TerminationFlag;
 use crate::task::memory::MemoryRange;
 use crate::types::graph::MappedNodeId;
-use crate::types::prelude::{DefaultGraphStore, GraphStore};
+use crate::types::graph_store::GraphStoreRead;
+use crate::types::prelude::DefaultGraphStore;
 use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
 use std::time::Instant;
@@ -35,8 +36,8 @@ use crate::task::progress::Tasks;
 /// - direction: "undirected" (MST semantics)
 /// - weight_property: "weight"
 /// - concurrency: 4
-pub struct SpanningTreeFacade {
-    graph_store: Arc<DefaultGraphStore>,
+pub struct SpanningTreeFacade<Store: GraphStoreRead + ?Sized = DefaultGraphStore> {
+    graph_store: Arc<Store>,
     config: SpanningTreeConfig,
     /// Progress tracking components
     task_registry_factory: Option<Box<dyn TaskRegistryFactory>>,
@@ -44,10 +45,10 @@ pub struct SpanningTreeFacade {
 }
 
 /// Backwards-compatible alias (builder-style naming).
-pub type SpanningTreeBuilder = SpanningTreeFacade;
+pub type SpanningTreeBuilder<Store = DefaultGraphStore> = SpanningTreeFacade<Store>;
 
-impl SpanningTreeFacade {
-    pub fn new(graph_store: Arc<DefaultGraphStore>) -> Self {
+impl<Store: GraphStoreRead + ?Sized> SpanningTreeFacade<Store> {
+    pub fn new(graph_store: Arc<Store>) -> Self {
         Self {
             graph_store,
             config: SpanningTreeConfig::default(),
@@ -57,10 +58,7 @@ impl SpanningTreeFacade {
     }
 
     /// Create a facade using the spec.rs config model.
-    pub fn from_spec_config(
-        graph_store: Arc<DefaultGraphStore>,
-        config: SpanningTreeConfig,
-    ) -> Result<Self> {
+    pub fn from_spec_config(graph_store: Arc<Store>, config: SpanningTreeConfig) -> Result<Self> {
         config
             .validate()
             .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
@@ -74,10 +72,7 @@ impl SpanningTreeFacade {
     }
 
     /// Parse JSON into spec.rs config and return a configured facade.
-    pub fn from_spec_json(
-        graph_store: Arc<DefaultGraphStore>,
-        raw_config: &serde_json::Value,
-    ) -> Result<Self> {
+    pub fn from_spec_json(graph_store: Arc<Store>, raw_config: &serde_json::Value) -> Result<Self> {
         let parsed: SpanningTreeConfig = serde_json::from_value(raw_config.clone())
             .map_err(|e| AlgorithmError::Execution(format!("Config parsing failed: {e}")))?;
         Self::from_spec_config(graph_store, parsed)
@@ -299,6 +294,49 @@ impl SpanningTreeFacade {
         Ok(SpanningTreeResultBuilder::new(result).stats())
     }
 
+    /// Estimate memory requirements for spanning tree execution
+    ///
+    /// Returns a memory range estimate based on:
+    /// - Priority queue storage (for Prim's algorithm)
+    /// - Tree structure storage (parent and cost arrays)
+    /// - Graph structure overhead
+    ///
+    /// ```rust,no_run
+    /// # use gds::Graph;
+    /// # let graph: Graph = unimplemented!();
+    /// let builder = graph.spanning_tree().start_node(0);
+    /// let memory = builder.estimate_memory();
+    /// println!("Estimated memory: {} bytes", memory.max());
+    /// ```
+    pub fn estimate_memory(&self) -> MemoryRange {
+        let node_count = self.graph_store.node_count();
+        let relationship_count = self.graph_store.relationship_count();
+
+        // Priority queue (open set) - worst case: all nodes in queue
+        // Each entry: node_id (8 bytes) + cost (8 bytes) + heap overhead (16 bytes) = 32 bytes
+        let priority_queue_memory = node_count * 32;
+
+        // Tree storage: parent array (8 bytes per node) + cost array (8 bytes per node)
+        let tree_storage_memory = node_count * 8 * 2;
+
+        // Java memory model includes a visited bitset; round up to whole bytes.
+        let visited_memory = node_count.div_ceil(8);
+
+        // Graph adjacency/selector overhead is proportional to actual projected relationships.
+        let graph_overhead = relationship_count * 16; // ~16 bytes per relationship
+
+        let total_memory =
+            priority_queue_memory + tree_storage_memory + visited_memory + graph_overhead;
+
+        // Add 20% overhead for algorithm-specific structures
+        let overhead = total_memory / 5;
+        let total_with_overhead = total_memory + overhead;
+
+        MemoryRange::of_range(total_memory, total_with_overhead)
+    }
+}
+
+impl SpanningTreeFacade<DefaultGraphStore> {
     pub fn mutate(self, property_name: &str) -> Result<SpanningTreeMutateResult> {
         self.validate()?;
         if property_name.is_empty() {
@@ -341,47 +379,6 @@ impl SpanningTreeFacade {
             property_name: property_name.to_string(),
             execution_time_ms: res.summary.execution_time_ms,
         })
-    }
-
-    /// Estimate memory requirements for spanning tree execution
-    ///
-    /// Returns a memory range estimate based on:
-    /// - Priority queue storage (for Prim's algorithm)
-    /// - Tree structure storage (parent and cost arrays)
-    /// - Graph structure overhead
-    ///
-    /// ```rust,no_run
-    /// # use gds::Graph;
-    /// # let graph: Graph = unimplemented!();
-    /// let builder = graph.spanning_tree().start_node(0);
-    /// let memory = builder.estimate_memory();
-    /// println!("Estimated memory: {} bytes", memory.max());
-    /// ```
-    pub fn estimate_memory(&self) -> MemoryRange {
-        let node_count = self.graph_store.node_count();
-        let relationship_count = self.graph_store.relationship_count();
-
-        // Priority queue (open set) - worst case: all nodes in queue
-        // Each entry: node_id (8 bytes) + cost (8 bytes) + heap overhead (16 bytes) = 32 bytes
-        let priority_queue_memory = node_count * 32;
-
-        // Tree storage: parent array (8 bytes per node) + cost array (8 bytes per node)
-        let tree_storage_memory = node_count * 8 * 2;
-
-        // Java memory model includes a visited bitset; round up to whole bytes.
-        let visited_memory = node_count.div_ceil(8);
-
-        // Graph adjacency/selector overhead is proportional to actual projected relationships.
-        let graph_overhead = relationship_count * 16; // ~16 bytes per relationship
-
-        let total_memory =
-            priority_queue_memory + tree_storage_memory + visited_memory + graph_overhead;
-
-        // Add 20% overhead for algorithm-specific structures
-        let overhead = total_memory / 5;
-        let total_with_overhead = total_memory + overhead;
-
-        MemoryRange::of_range(total_memory, total_with_overhead)
     }
 }
 

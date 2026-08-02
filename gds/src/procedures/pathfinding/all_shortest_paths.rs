@@ -17,7 +17,8 @@ use crate::task::concurrency::TerminationFlag;
 use crate::task::memory::MemoryRange;
 use crate::task::progress::{ProgressTracker, TaskProgressTracker, TaskRegistryFactory, Tasks};
 use crate::types::graph::id_map::MappedNodeId;
-use crate::types::prelude::{DefaultGraphStore, GraphStore};
+use crate::types::graph_store::GraphStoreRead;
+use crate::types::prelude::DefaultGraphStore;
 use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
 
@@ -38,8 +39,8 @@ pub struct AllShortestPathsRow {
 /// - weight_property: "weight"
 /// - concurrency: 4
 /// - max_results: None
-pub struct AllShortestPathsBuilder {
-    graph_store: Arc<DefaultGraphStore>,
+pub struct AllShortestPathsBuilder<Store: GraphStoreRead + ?Sized = DefaultGraphStore> {
+    graph_store: Arc<Store>,
     weighted: bool,
     relationship_types: Vec<String>,
     direction: String,
@@ -57,8 +58,8 @@ fn checked_u64(value: MappedNodeId, context: &str) -> Result<u64> {
     Ok(u64::from(value))
 }
 
-impl AllShortestPathsBuilder {
-    pub fn new(graph_store: Arc<DefaultGraphStore>) -> Self {
+impl<Store: GraphStoreRead + ?Sized> AllShortestPathsBuilder<Store> {
+    pub fn new(graph_store: Arc<Store>) -> Self {
         Self {
             graph_store,
             weighted: false,
@@ -316,66 +317,6 @@ impl AllShortestPathsBuilder {
     /// let result = builder.mutate("distance")?;
     /// println!("Updated {} nodes", result.nodes_updated);
     /// ```
-    pub fn mutate(
-        self,
-        property_name: &str,
-    ) -> Result<crate::algo::all_shortest_paths::AllShortestPathsMutateResult> {
-        self.validate()?;
-        ConfigValidator::non_empty_string(property_name, "property_name")?;
-        let graph_store = Arc::clone(&self.graph_store);
-        let (rows, stats) = self.compute()?;
-        let paths: Vec<ProcedurePathResult> = rows
-            .iter()
-            .map(|row| ProcedurePathResult {
-                source: row.source,
-                target: row.target,
-                path: vec![row.source, row.target],
-                cost: row.distance,
-            })
-            .collect();
-
-        let updated_store = crate::algo::algorithms::pathfinding::build_path_relationship_store(
-            graph_store.as_ref(),
-            property_name,
-            &paths,
-        )?;
-
-        let summary = AllShortestPathsMutationSummary {
-            nodes_updated: paths.len() as u64,
-            property_name: property_name.to_string(),
-            execution_time_ms: stats.execution_time_ms,
-        };
-
-        Ok(
-            crate::algo::all_shortest_paths::AllShortestPathsMutateResult {
-                summary,
-                updated_store,
-            },
-        )
-    }
-
-    /// Write mode: Compute and persist to storage
-    ///
-    /// Persists all-pairs shortest path results to storage backend.
-    ///
-    /// ```rust,no_run
-    /// # use gds::Graph;
-    /// # let graph: Graph = unimplemented!();
-    /// let builder = graph.all_shortest_paths();
-    /// let result = builder.write("distances")?;
-    /// println!("Wrote {} nodes", result.nodes_written);
-    /// ```
-    pub fn write(self, property_name: &str) -> Result<WriteResult> {
-        self.validate()?;
-        ConfigValidator::non_empty_string(property_name, "property_name")?;
-        let res = self.mutate(property_name)?;
-        Ok(WriteResult::new(
-            res.summary.nodes_updated,
-            property_name.to_string(),
-            std::time::Duration::from_millis(res.summary.execution_time_ms),
-        ))
-    }
-
     /// Estimate memory requirements for all-shortest-paths execution
     ///
     /// Returns a memory range estimate based on:
@@ -415,6 +356,59 @@ impl AllShortestPathsBuilder {
         let total_with_overhead = total_memory + overhead;
 
         MemoryRange::of_range(total_memory, total_with_overhead)
+    }
+}
+
+impl AllShortestPathsBuilder<DefaultGraphStore> {
+    /// Mutate mode: Compute and update in-memory graph projection.
+    pub fn mutate(
+        self,
+        property_name: &str,
+    ) -> Result<crate::algo::all_shortest_paths::AllShortestPathsMutateResult> {
+        self.validate()?;
+        ConfigValidator::non_empty_string(property_name, "property_name")?;
+        let graph_store = Arc::clone(&self.graph_store);
+        let (rows, stats) = self.compute()?;
+        let paths: Vec<ProcedurePathResult> = rows
+            .iter()
+            .map(|row| ProcedurePathResult {
+                source: row.source,
+                target: row.target,
+                path: vec![row.source, row.target],
+                cost: row.distance,
+            })
+            .collect();
+
+        let updated_store = crate::algo::algorithms::pathfinding::build_path_relationship_store(
+            graph_store.as_ref(),
+            property_name,
+            &paths,
+        )?;
+
+        let summary = AllShortestPathsMutationSummary {
+            nodes_updated: paths.len() as u64,
+            property_name: property_name.to_string(),
+            execution_time_ms: stats.execution_time_ms,
+        };
+
+        Ok(
+            crate::algo::all_shortest_paths::AllShortestPathsMutateResult {
+                summary,
+                updated_store,
+            },
+        )
+    }
+
+    /// Write mode: Compute and persist to storage.
+    pub fn write(self, property_name: &str) -> Result<WriteResult> {
+        self.validate()?;
+        ConfigValidator::non_empty_string(property_name, "property_name")?;
+        let res = self.mutate(property_name)?;
+        Ok(WriteResult::new(
+            res.summary.nodes_updated,
+            property_name.to_string(),
+            std::time::Duration::from_millis(res.summary.execution_time_ms),
+        ))
     }
 }
 

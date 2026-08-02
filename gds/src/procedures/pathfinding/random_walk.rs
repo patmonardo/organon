@@ -15,7 +15,8 @@ use crate::projection::RelationshipType;
 use crate::task::concurrency::TerminationFlag;
 use crate::task::memory::MemoryRange;
 use crate::types::graph::MappedNodeId;
-use crate::types::prelude::{DefaultGraphStore, GraphStore};
+use crate::types::graph_store::GraphStoreRead;
+use crate::types::prelude::DefaultGraphStore;
 use std::collections::HashSet;
 use std::sync::Arc;
 use std::time::Instant;
@@ -28,8 +29,8 @@ use crate::task::progress::TaskRegistryFactory;
 use crate::task::progress::Tasks;
 
 /// Random Walk algorithm facade
-pub struct RandomWalkFacade {
-    graph_store: Arc<DefaultGraphStore>,
+pub struct RandomWalkFacade<Store: GraphStoreRead + ?Sized = DefaultGraphStore> {
+    graph_store: Arc<Store>,
     config: RandomWalkConfig,
     /// Progress tracking components
     task_registry_factory: Option<Box<dyn TaskRegistryFactory>>,
@@ -37,10 +38,10 @@ pub struct RandomWalkFacade {
 }
 
 /// Backwards-compatible alias (builder-style naming).
-pub type RandomWalkBuilder = RandomWalkFacade;
+pub type RandomWalkBuilder<Store = DefaultGraphStore> = RandomWalkFacade<Store>;
 
-impl RandomWalkFacade {
-    pub fn new(graph_store: Arc<DefaultGraphStore>) -> Self {
+impl<Store: GraphStoreRead + ?Sized> RandomWalkFacade<Store> {
+    pub fn new(graph_store: Arc<Store>) -> Self {
         Self {
             graph_store,
             config: RandomWalkConfig::default(),
@@ -50,10 +51,7 @@ impl RandomWalkFacade {
     }
 
     /// Create a facade using the spec.rs config model.
-    pub fn from_spec_config(
-        graph_store: Arc<DefaultGraphStore>,
-        config: RandomWalkConfig,
-    ) -> Result<Self> {
+    pub fn from_spec_config(graph_store: Arc<Store>, config: RandomWalkConfig) -> Result<Self> {
         config
             .validate()
             .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
@@ -67,10 +65,7 @@ impl RandomWalkFacade {
     }
 
     /// Parse JSON into spec.rs config and return a configured facade.
-    pub fn from_spec_json(
-        graph_store: Arc<DefaultGraphStore>,
-        raw_config: &serde_json::Value,
-    ) -> Result<Self> {
+    pub fn from_spec_json(graph_store: Arc<Store>, raw_config: &serde_json::Value) -> Result<Self> {
         let parsed: RandomWalkConfig = serde_json::from_value(raw_config.clone())
             .map_err(|e| AlgorithmError::Execution(format!("Config parsing failed: {e}")))?;
         Self::from_spec_config(graph_store, parsed)
@@ -276,6 +271,48 @@ impl RandomWalkFacade {
     /// let result = builder.mutate("walks")?;
     /// println!("Updated {} nodes", result.nodes_updated);
     /// ```
+    /// Estimate memory requirements for random walk execution
+    ///
+    /// Returns a memory range estimate based on:
+    /// - Walk storage (walks_per_node * walk_length * node_count)
+    /// - Graph structure overhead from the actual projection relationship count
+    ///
+    /// ```rust,no_run
+    /// # use gds::Graph;
+    /// # let graph: Graph = unimplemented!();
+    /// let builder = graph.random_walk();
+    /// let memory = builder.estimate_memory();
+    /// println!("Estimated memory: {} bytes", memory.max());
+    /// ```
+    pub fn estimate_memory(&self) -> MemoryRange {
+        let node_count = self.graph_store.node_count();
+        let relationship_count = self.graph_store.relationship_count();
+
+        // Walk storage: each walk is walk_length * 8 bytes (u64 per node)
+        // Total walks: walks_per_node * source_nodes.len() or node_count if empty
+        let source_count = if self.config.source_nodes.is_empty() {
+            node_count
+        } else {
+            self.config.source_nodes.len()
+        };
+        let total_walks = self.config.walks_per_node * source_count;
+        let walk_storage = total_walks * self.config.walk_length * 8;
+
+        // Graph structure overhead
+        let graph_overhead = relationship_count * 16;
+
+        let total_memory = walk_storage + graph_overhead;
+
+        // Add 20% overhead for algorithm-specific structures
+        let overhead = total_memory / 5;
+        let total_with_overhead = total_memory + overhead;
+
+        MemoryRange::of_range(total_memory, total_with_overhead)
+    }
+}
+
+impl RandomWalkFacade<DefaultGraphStore> {
+    /// Mutate mode: Compute and update in-memory graph projection.
     pub fn mutate(self, property_name: &str) -> Result<RandomWalkMutateResult> {
         self.config
             .validate()
@@ -308,17 +345,7 @@ impl RandomWalkFacade {
         })
     }
 
-    /// Write mode: Compute and persist to storage
-    ///
-    /// Persists random walks to storage backend.
-    ///
-    /// ```rust,no_run
-    /// # use gds::Graph;
-    /// # let graph: Graph = unimplemented!();
-    /// let builder = graph.random_walk();
-    /// let result = builder.write("walks")?;
-    /// println!("Wrote {} nodes", result.nodes_written);
-    /// ```
+    /// Write mode: Compute and persist to storage.
     pub fn write(self, property_name: &str) -> Result<RandomWalkWriteSummary> {
         self.config
             .validate()
@@ -334,45 +361,6 @@ impl RandomWalkFacade {
             property_name: property_name.to_string(),
             execution_time_ms: res.summary.execution_time_ms,
         })
-    }
-
-    /// Estimate memory requirements for random walk execution
-    ///
-    /// Returns a memory range estimate based on:
-    /// - Walk storage (walks_per_node * walk_length * node_count)
-    /// - Graph structure overhead from the actual projection relationship count
-    ///
-    /// ```rust,no_run
-    /// # use gds::Graph;
-    /// # let graph: Graph = unimplemented!();
-    /// let builder = graph.random_walk();
-    /// let memory = builder.estimate_memory();
-    /// println!("Estimated memory: {} bytes", memory.max());
-    /// ```
-    pub fn estimate_memory(&self) -> MemoryRange {
-        let node_count = self.graph_store.node_count();
-        let relationship_count = self.graph_store.relationship_count();
-
-        // Walk storage: each walk is walk_length * 8 bytes (u64 per node)
-        // Total walks: walks_per_node * source_nodes.len() or node_count if empty
-        let source_count = if self.config.source_nodes.is_empty() {
-            node_count
-        } else {
-            self.config.source_nodes.len()
-        };
-        let total_walks = self.config.walks_per_node * source_count;
-        let walk_storage = total_walks * self.config.walk_length * 8;
-
-        // Graph structure overhead (adjacency lists, etc.)
-        let graph_overhead = relationship_count * 16; // ~16 bytes per relationship
-
-        let total_memory = walk_storage + graph_overhead;
-
-        // Add 20% overhead for algorithm-specific structures
-        let overhead = total_memory / 5;
-        let total_with_overhead = total_memory + overhead;
-
-        MemoryRange::of_range(total_memory, total_with_overhead)
     }
 }
 

@@ -28,8 +28,8 @@ pub struct GraphSageStats {
 
 /// GraphSAGE builder for inference/embeddings generation.
 #[derive(Clone)]
-pub struct GraphSageBuilder {
-    graph_store: Arc<DefaultGraphStore>,
+pub struct GraphSageBuilder<Store: GraphStore = DefaultGraphStore> {
+    graph_store: Arc<Store>,
     model_user: String,
     model_name: String,
     batch_size: usize,
@@ -37,8 +37,8 @@ pub struct GraphSageBuilder {
     model_catalog: Arc<ModelCatalogFacade>,
 }
 
-impl GraphSageBuilder {
-    pub fn new(graph_store: Arc<DefaultGraphStore>) -> Self {
+impl<Store: GraphStore> GraphSageBuilder<Store> {
+    pub fn new(graph_store: Arc<Store>) -> Self {
         Self {
             graph_store,
             model_user: "anonymous".to_string(),

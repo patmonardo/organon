@@ -13,10 +13,10 @@ use crate::algo::approx_max_kcut::spec::{
 use crate::algo::approx_max_kcut::storage::ApproxMaxKCutStorageRuntime;
 use crate::algo::approx_max_kcut::ApproxMaxKCutComputationRuntime;
 use crate::collections::backends::vec::VecLong;
-use crate::task::concurrency::TerminationFlag;
-use crate::task::progress::TaskRegistry;
-use crate::task::memory::{Estimate, MemoryRange};
 use crate::projection::eval::algorithm::AlgorithmError;
+use crate::task::concurrency::TerminationFlag;
+use crate::task::memory::{Estimate, MemoryRange};
+use crate::task::progress::TaskRegistry;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use crate::types::properties::node::DefaultLongNodePropertyValues;
 use crate::types::properties::node::NodePropertyValues;
@@ -36,14 +36,14 @@ pub struct ApproxMaxKCutRow {
 
 /// ApproxMaxKCut algorithm facade
 #[derive(Clone)]
-pub struct ApproxMaxKCutFacade {
-    graph_store: Arc<DefaultGraphStore>,
+pub struct ApproxMaxKCutFacade<Store: GraphStore = DefaultGraphStore> {
+    graph_store: Arc<Store>,
     config: ApproxMaxKCutConfig,
     task_registry: Option<TaskRegistry>,
 }
 
-impl ApproxMaxKCutFacade {
-    pub fn new(graph_store: Arc<DefaultGraphStore>) -> Self {
+impl<Store: GraphStore> ApproxMaxKCutFacade<Store> {
+    pub fn new(graph_store: Arc<Store>) -> Self {
         Self {
             graph_store,
             config: ApproxMaxKCutConfig::default(),
@@ -52,10 +52,7 @@ impl ApproxMaxKCutFacade {
     }
 
     /// Create a facade using the spec.rs config model.
-    pub fn from_spec_config(
-        graph_store: Arc<DefaultGraphStore>,
-        config: ApproxMaxKCutConfig,
-    ) -> Result<Self> {
+    pub fn from_spec_config(graph_store: Arc<Store>, config: ApproxMaxKCutConfig) -> Result<Self> {
         config
             .validate()
             .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
@@ -68,10 +65,7 @@ impl ApproxMaxKCutFacade {
     }
 
     /// Parse JSON into spec.rs config and return a configured facade.
-    pub fn from_spec_json(
-        graph_store: Arc<DefaultGraphStore>,
-        raw_config: &serde_json::Value,
-    ) -> Result<Self> {
+    pub fn from_spec_json(graph_store: Arc<Store>, raw_config: &serde_json::Value) -> Result<Self> {
         let parsed: ApproxMaxKCutConfig = serde_json::from_value(raw_config.clone())
             .map_err(|e| AlgorithmError::Execution(format!("Config parsing failed: {e}")))?;
         Self::from_spec_config(graph_store, parsed)
@@ -220,6 +214,46 @@ impl ApproxMaxKCutFacade {
         self.compute()
     }
 
+    /// Estimate memory usage.
+    pub fn estimate_memory(&self) -> Result<MemoryRange> {
+        let node_count = self.graph_store.node_count();
+        let relationship_count = self.graph_store.relationship_count();
+        self.config
+            .validate_for_node_count(node_count)
+            .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
+
+        let k = self.config.k as usize;
+        let candidate_bytes = Estimate::size_of_byte_array(node_count);
+        let solution_workspace = Estimate::size_of_byte_array(node_count);
+        let improvement_costs = Estimate::size_of_double_array(node_count.saturating_mul(k));
+        let swap_status = Estimate::size_of_byte_array(node_count);
+        let vns_candidate = if self.config.vns_max_neighborhood_order > 0 {
+            Estimate::size_of_byte_array(node_count)
+        } else {
+            0
+        };
+        let cardinalities = Estimate::size_of_long_array(k);
+        let adjacency_vec_headers = Estimate::size_of_object_array(node_count).saturating_mul(2);
+        let adjacency_pairs =
+            relationship_count.saturating_mul(std::mem::size_of::<(usize, f64)>());
+        let adjacency = adjacency_vec_headers.saturating_add(adjacency_pairs.saturating_mul(2));
+
+        let java_shaped = candidate_bytes
+            .saturating_add(solution_workspace)
+            .saturating_add(improvement_costs)
+            .saturating_add(swap_status)
+            .saturating_add(vns_candidate)
+            .saturating_add(cardinalities);
+        let total = java_shaped.saturating_add(adjacency);
+
+        Ok(MemoryRange::of_range(
+            total,
+            total.saturating_add(adjacency),
+        ))
+    }
+}
+
+impl ApproxMaxKCutFacade<DefaultGraphStore> {
     /// Mutate mode: writes labels back to the graph store.
     pub fn mutate(self, property_name: &str) -> Result<ApproxMaxKCutMutateResult> {
         self.validate()?;
@@ -265,44 +299,6 @@ impl ApproxMaxKCutFacade {
             res.summary.nodes_updated,
             property_name.to_string(),
             std::time::Duration::from_millis(res.summary.execution_time_ms),
-        ))
-    }
-
-    /// Estimate memory usage.
-    pub fn estimate_memory(&self) -> Result<MemoryRange> {
-        let node_count = self.graph_store.node_count();
-        let relationship_count = self.graph_store.relationship_count();
-        self.config
-            .validate_for_node_count(node_count)
-            .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
-
-        let k = self.config.k as usize;
-        let candidate_bytes = Estimate::size_of_byte_array(node_count);
-        let solution_workspace = Estimate::size_of_byte_array(node_count);
-        let improvement_costs = Estimate::size_of_double_array(node_count.saturating_mul(k));
-        let swap_status = Estimate::size_of_byte_array(node_count);
-        let vns_candidate = if self.config.vns_max_neighborhood_order > 0 {
-            Estimate::size_of_byte_array(node_count)
-        } else {
-            0
-        };
-        let cardinalities = Estimate::size_of_long_array(k);
-        let adjacency_vec_headers = Estimate::size_of_object_array(node_count).saturating_mul(2);
-        let adjacency_pairs =
-            relationship_count.saturating_mul(std::mem::size_of::<(usize, f64)>());
-        let adjacency = adjacency_vec_headers.saturating_add(adjacency_pairs.saturating_mul(2));
-
-        let java_shaped = candidate_bytes
-            .saturating_add(solution_workspace)
-            .saturating_add(improvement_costs)
-            .saturating_add(swap_status)
-            .saturating_add(vns_candidate)
-            .saturating_add(cardinalities);
-        let total = java_shaped.saturating_add(adjacency);
-
-        Ok(MemoryRange::of_range(
-            total,
-            total.saturating_add(adjacency),
         ))
     }
 }

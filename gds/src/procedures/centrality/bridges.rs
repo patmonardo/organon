@@ -27,14 +27,14 @@ use std::time::Instant;
 
 /// Bridges facade bound to a live graph store
 #[derive(Clone)]
-pub struct BridgesFacade {
-    graph_store: Arc<DefaultGraphStore>,
+pub struct BridgesFacade<Store: GraphStore = DefaultGraphStore> {
+    graph_store: Arc<Store>,
     config: BridgesConfig,
     task_registry: Arc<dyn TaskRegistryFactory>,
 }
 
-impl BridgesFacade {
-    pub fn new(graph_store: Arc<DefaultGraphStore>) -> Self {
+impl<Store: GraphStore> BridgesFacade<Store> {
+    pub fn new(graph_store: Arc<Store>) -> Self {
         Self {
             graph_store,
             config: BridgesConfig::default(),
@@ -43,10 +43,7 @@ impl BridgesFacade {
     }
 
     /// Create a facade using the spec.rs config model.
-    pub fn from_spec_config(
-        graph_store: Arc<DefaultGraphStore>,
-        config: BridgesConfig,
-    ) -> Result<Self> {
+    pub fn from_spec_config(graph_store: Arc<Store>, config: BridgesConfig) -> Result<Self> {
         config
             .validate()
             .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
@@ -59,10 +56,7 @@ impl BridgesFacade {
     }
 
     /// Parse JSON into spec.rs config and return a configured facade.
-    pub fn from_spec_json(
-        graph_store: Arc<DefaultGraphStore>,
-        raw_config: &serde_json::Value,
-    ) -> Result<Self> {
+    pub fn from_spec_json(graph_store: Arc<Store>, raw_config: &serde_json::Value) -> Result<Self> {
         let parsed: BridgesConfig = serde_json::from_value(raw_config.clone())
             .map_err(|e| AlgorithmError::Execution(format!("Config parsing failed: {e}")))?;
         Self::from_spec_config(graph_store, parsed)
@@ -158,19 +152,99 @@ impl BridgesFacade {
         Ok(BridgesResultBuilder::new(result).stats())
     }
 
-    /// Mutate mode: Compute and store as node property
+    /// Estimate memory requirements for bridges computation.
     ///
-    /// Stores bridge status as edge properties (1.0 for bridges, 0.0 otherwise).
+    /// # Returns
+    /// Memory range estimate (min/max bytes)
     ///
-    /// ## Example
-    /// ```rust,no_run
+    /// # Example
+    /// ```ignore
     /// # use std::sync::Arc;
     /// # use gds::types::prelude::DefaultGraphStore;
     /// # let graph = Arc::new(DefaultGraphStore::empty());
     /// # use gds::procedures::centrality::BridgesFacade;
-    /// let result = BridgesFacade::new(graph).mutate("is_bridge")?;
-    /// println!("Computed and stored for {} edges", result.summary.edges_updated);
+    /// let facade = BridgesFacade::new(graph);
+    /// let memory = facade.estimate_memory();
+    /// println!("Will use between {} and {} bytes", memory.min(), memory.max());
     /// ```
+    pub fn estimate_memory(&self) -> MemoryRange {
+        let node_count = self.graph_store.node_count();
+        let relationship_count = self.graph_store.relationship_count();
+
+        let bitset_bytes = (node_count + 7) / 8;
+        let tin_bytes = node_count.saturating_mul(8);
+        let low_bytes = node_count.saturating_mul(8);
+        let visited_bytes = bitset_bytes;
+        let bridge_bytes = node_count.saturating_mul(std::mem::size_of::<Bridge>());
+        let stack_bytes = relationship_count.saturating_mul(STACK_EVENT_SIZE_BYTES);
+
+        let total_memory = tin_bytes
+            .saturating_add(low_bytes)
+            .saturating_add(visited_bytes)
+            .saturating_add(bridge_bytes)
+            .saturating_add(stack_bytes);
+
+        let total_with_overhead = total_memory.saturating_add(total_memory / 5);
+
+        MemoryRange::of_range(total_memory, total_with_overhead)
+    }
+
+    fn compute_bridges(&self) -> Result<(Vec<Bridge>, std::time::Duration)> {
+        self.validate()?;
+
+        let start = Instant::now();
+
+        // Create both runtimes (factory pattern)
+        let storage = BridgesStorageRuntime::new(&*self.graph_store)?;
+        let mut computation = BridgesComputationRuntime::new_with_stack_capacity(
+            storage.node_count(),
+            storage.relationship_count(),
+        );
+
+        let node_count = storage.node_count();
+        if node_count == 0 {
+            return Ok((Vec::new(), start.elapsed()));
+        }
+
+        let concurrency = Concurrency::of(self.config.concurrency.max(1));
+
+        let mut progress_tracker = TaskProgressTracker::with_registry(
+            bridges_progress_task(node_count).base().clone(),
+            concurrency,
+            JobId::new(),
+            self.task_registry.as_ref(),
+        );
+        progress_tracker.begin_subtask_with_volume(node_count);
+
+        let termination = TerminationFlag::running_true();
+        let progress_handle = progress_tracker.clone();
+        let on_progress = Arc::new(move || {
+            let mut tracker = progress_handle.clone();
+            tracker.log_progress(1);
+        });
+
+        // Call storage.compute_bridges() - Applications talk only to procedures
+        let result = storage
+            .compute_bridges(&mut computation, &termination, on_progress)
+            .map_err(|e| AlgorithmError::Execution(format!("Bridges terminated: {e}")))?;
+
+        progress_tracker.end_subtask();
+
+        Ok((result.bridges, start.elapsed()))
+    }
+
+    fn compute(&self) -> Result<BridgesResult> {
+        let (bridges, elapsed) = self.compute_bridges()?;
+        Ok(BridgesResult {
+            bridges,
+            node_count: self.graph_store.node_count(),
+            execution_time: elapsed,
+        })
+    }
+}
+
+impl BridgesFacade<DefaultGraphStore> {
+    /// Mutate mode: Compute and store as node property.
     pub fn mutate(self, property_name: &str) -> Result<BridgesMutateResult> {
         self.validate()?;
         ConfigValidator::non_empty_string(property_name, "property_name")?;
@@ -264,99 +338,9 @@ impl BridgesFacade {
             execution_time,
         ))
     }
-
-    /// Estimate memory requirements for bridges computation.
-    ///
-    /// # Returns
-    /// Memory range estimate (min/max bytes)
-    ///
-    /// # Example
-    /// ```ignore
-    /// # use std::sync::Arc;
-    /// # use gds::types::prelude::DefaultGraphStore;
-    /// # let graph = Arc::new(DefaultGraphStore::empty());
-    /// # use gds::procedures::centrality::BridgesFacade;
-    /// let facade = BridgesFacade::new(graph);
-    /// let memory = facade.estimate_memory();
-    /// println!("Will use between {} and {} bytes", memory.min(), memory.max());
-    /// ```
-    pub fn estimate_memory(&self) -> MemoryRange {
-        let node_count = self.graph_store.node_count();
-        let relationship_count = self.graph_store.relationship_count();
-
-        let bitset_bytes = (node_count + 7) / 8;
-        let tin_bytes = node_count.saturating_mul(8);
-        let low_bytes = node_count.saturating_mul(8);
-        let visited_bytes = bitset_bytes;
-        let bridge_bytes = node_count.saturating_mul(std::mem::size_of::<Bridge>());
-        let stack_bytes = relationship_count.saturating_mul(STACK_EVENT_SIZE_BYTES);
-
-        let total_memory = tin_bytes
-            .saturating_add(low_bytes)
-            .saturating_add(visited_bytes)
-            .saturating_add(bridge_bytes)
-            .saturating_add(stack_bytes);
-
-        let total_with_overhead = total_memory.saturating_add(total_memory / 5);
-
-        MemoryRange::of_range(total_memory, total_with_overhead)
-    }
-
-    fn compute_bridges(&self) -> Result<(Vec<Bridge>, std::time::Duration)> {
-        self.validate()?;
-
-        let start = Instant::now();
-
-        // Create both runtimes (factory pattern)
-        let storage = BridgesStorageRuntime::new(&*self.graph_store)?;
-        let mut computation = BridgesComputationRuntime::new_with_stack_capacity(
-            storage.node_count(),
-            storage.relationship_count(),
-        );
-
-        let node_count = storage.node_count();
-        if node_count == 0 {
-            return Ok((Vec::new(), start.elapsed()));
-        }
-
-        let concurrency = Concurrency::of(self.config.concurrency.max(1));
-
-        let mut progress_tracker = TaskProgressTracker::with_registry(
-            bridges_progress_task(node_count).base().clone(),
-            concurrency,
-            JobId::new(),
-            self.task_registry.as_ref(),
-        );
-        progress_tracker.begin_subtask_with_volume(node_count);
-
-        let termination = TerminationFlag::running_true();
-        let progress_handle = progress_tracker.clone();
-        let on_progress = Arc::new(move || {
-            let mut tracker = progress_handle.clone();
-            tracker.log_progress(1);
-        });
-
-        // Call storage.compute_bridges() - Applications talk only to procedures
-        let result = storage
-            .compute_bridges(&mut computation, &termination, on_progress)
-            .map_err(|e| AlgorithmError::Execution(format!("Bridges terminated: {e}")))?;
-
-        progress_tracker.end_subtask();
-
-        Ok((result.bridges, start.elapsed()))
-    }
-
-    fn compute(&self) -> Result<BridgesResult> {
-        let (bridges, elapsed) = self.compute_bridges()?;
-        Ok(BridgesResult {
-            bridges,
-            node_count: self.graph_store.node_count(),
-            execution_time: elapsed,
-        })
-    }
 }
 
-impl AlgorithmRunner for BridgesFacade {
+impl<Store: GraphStore> AlgorithmRunner for BridgesFacade<Store> {
     fn algorithm_name(&self) -> &'static str {
         "bridges"
     }

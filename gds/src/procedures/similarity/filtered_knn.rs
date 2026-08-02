@@ -11,19 +11,19 @@ use crate::algo::similarity::filtered_knn::{
 use crate::algo::similarity::knn::metrics::{KnnNodePropertySpec, SimilarityMetric};
 use crate::algo::similarity::knn::storage::KnnSamplerType;
 use crate::algo::similarity::knn::KnnNnDescentStats;
-use crate::task::concurrency::TerminationFlag;
-use crate::task::progress::{ProgressTracker, Tasks};
-use crate::task::memory::MemoryRange;
 use crate::projection::NodeLabel;
-use crate::types::prelude::{DefaultGraphStore, GraphStore};
+use crate::task::concurrency::TerminationFlag;
+use crate::task::memory::MemoryRange;
+use crate::task::progress::{ProgressTracker, Tasks};
 use crate::types::graph::MappedNodeId;
+use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use std::sync::Arc;
 
 // Additional imports for progress tracking
 use crate::task::progress::TaskProgressTracker;
 
-pub struct FilteredKnnFacade {
-    graph_store: Arc<DefaultGraphStore>,
+pub struct FilteredKnnFacade<Store: GraphStore = DefaultGraphStore> {
+    graph_store: Arc<Store>,
     node_property: String,
     node_properties: Vec<KnnNodePropertySpec>,
     k: usize,
@@ -41,8 +41,8 @@ pub struct FilteredKnnFacade {
     target_node_labels: Vec<NodeLabel>,
 }
 
-impl FilteredKnnFacade {
-    pub fn new(graph_store: Arc<DefaultGraphStore>, node_property: impl Into<String>) -> Self {
+impl<Store: GraphStore> FilteredKnnFacade<Store> {
+    pub fn new(graph_store: Arc<Store>, node_property: impl Into<String>) -> Self {
         Self {
             graph_store,
             node_property: node_property.into(),
@@ -285,46 +285,6 @@ impl FilteredKnnFacade {
             .stats_with_nodes_compared(nodes_compared))
     }
 
-    pub fn mutate(self, property_name: &str) -> Result<FilteredKnnMutateResult> {
-        ConfigValidator::non_empty_string(property_name, "property_name")?;
-
-        let graph_store = Arc::clone(&self.graph_store);
-        let nodes_compared = self.source_node_count() as u64;
-        let start = std::time::Instant::now();
-        let (rows, nn_stats) = self.compute_rows_and_nn_stats()?;
-        let builder = FilteredKnnResultBuilder::new(&rows, &nn_stats);
-        let stats = builder.stats_with_nodes_compared(nodes_compared);
-
-        let pairs: Vec<(u64, u64, f64)> = rows
-            .iter()
-            .map(|r| (r.source, r.target, r.similarity))
-            .collect();
-
-        let updated_store =
-            build_similarity_relationship_store(graph_store.as_ref(), property_name, &pairs)?;
-
-        let relationships_updated = pairs.len() as u64;
-        let summary =
-            builder.mutation_summary(property_name, relationships_updated, start.elapsed());
-
-        Ok(FilteredKnnMutateResult {
-            summary,
-            stats,
-            updated_store,
-        })
-    }
-
-    pub fn write(self, property_name: &str) -> Result<WriteResult> {
-        ConfigValidator::non_empty_string(property_name, "property_name")?;
-
-        let res = self.mutate(property_name)?;
-        Ok(WriteResult::new(
-            res.summary.nodes_updated,
-            res.summary.property_name,
-            std::time::Duration::from_millis(res.summary.execution_time_ms),
-        ))
-    }
-
     pub fn estimate_memory(&self) -> MemoryRange {
         let node_count = self.graph_store.node_count();
 
@@ -370,6 +330,48 @@ impl FilteredKnnFacade {
                     .any(|label| id_map.has_label(mapped_node_id, label))
             })
             .count()
+    }
+}
+
+impl FilteredKnnFacade<DefaultGraphStore> {
+    pub fn mutate(self, property_name: &str) -> Result<FilteredKnnMutateResult> {
+        ConfigValidator::non_empty_string(property_name, "property_name")?;
+
+        let graph_store = Arc::clone(&self.graph_store);
+        let nodes_compared = self.source_node_count() as u64;
+        let start = std::time::Instant::now();
+        let (rows, nn_stats) = self.compute_rows_and_nn_stats()?;
+        let builder = FilteredKnnResultBuilder::new(&rows, &nn_stats);
+        let stats = builder.stats_with_nodes_compared(nodes_compared);
+
+        let pairs: Vec<(u64, u64, f64)> = rows
+            .iter()
+            .map(|r| (r.source, r.target, r.similarity))
+            .collect();
+
+        let updated_store =
+            build_similarity_relationship_store(graph_store.as_ref(), property_name, &pairs)?;
+
+        let relationships_updated = pairs.len() as u64;
+        let summary =
+            builder.mutation_summary(property_name, relationships_updated, start.elapsed());
+
+        Ok(FilteredKnnMutateResult {
+            summary,
+            stats,
+            updated_store,
+        })
+    }
+
+    pub fn write(self, property_name: &str) -> Result<WriteResult> {
+        ConfigValidator::non_empty_string(property_name, "property_name")?;
+
+        let res = self.mutate(property_name)?;
+        Ok(WriteResult::new(
+            res.summary.nodes_updated,
+            res.summary.property_name,
+            std::time::Duration::from_millis(res.summary.execution_time_ms),
+        ))
     }
 }
 

@@ -6,12 +6,12 @@ use crate::algo::similarity::node_similarity::{
     NodeSimilarityMutateResult, NodeSimilarityResult, NodeSimilarityResultBuilder,
     NodeSimilarityStats, NodeSimilarityStorageRuntime,
 };
-use crate::task::concurrency::TerminationFlag;
-use crate::task::progress::{ProgressTracker, Tasks};
-use crate::task::memory::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
+use crate::task::concurrency::TerminationFlag;
+use crate::task::memory::MemoryRange;
+use crate::task::progress::{ProgressTracker, Tasks};
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
@@ -19,8 +19,8 @@ use std::sync::Arc;
 // Additional imports for progress tracking and similarity stats
 use crate::task::progress::TaskProgressTracker;
 
-pub struct NodeSimilarityFacade {
-    graph_store: Arc<DefaultGraphStore>,
+pub struct NodeSimilarityFacade<Store: GraphStore = DefaultGraphStore> {
+    graph_store: Arc<Store>,
     metric: NodeSimilarityMetric,
     similarity_cutoff: f64,
     top_k: usize,
@@ -29,8 +29,8 @@ pub struct NodeSimilarityFacade {
     weight_property: Option<String>,
 }
 
-impl NodeSimilarityFacade {
-    pub fn new(graph_store: Arc<DefaultGraphStore>) -> Self {
+impl<Store: GraphStore> NodeSimilarityFacade<Store> {
+    pub fn new(graph_store: Arc<Store>) -> Self {
         Self {
             graph_store,
             metric: NodeSimilarityMetric::Jaccard, // Default
@@ -212,6 +212,30 @@ impl NodeSimilarityFacade {
         Ok(NodeSimilarityResultBuilder::new(&results).stats_with_nodes_compared(compared_nodes))
     }
 
+    pub fn estimate_memory(&self) -> MemoryRange {
+        let node_count = self.graph_store.node_count();
+
+        // Worst-case output is bounded by top_k per node.
+        let pair_count = node_count.saturating_mul(self.top_k);
+
+        // Results + scratch arrays for weights/accumulators.
+        let results_memory = pair_count * 32;
+        let per_node_scratch = node_count * 32;
+
+        // Weight property access can add additional per-node scratch.
+        let weight_memory = if self.weight_property.is_some() {
+            node_count * 8
+        } else {
+            0
+        };
+
+        let total = results_memory + per_node_scratch + weight_memory;
+        let overhead = total / 5;
+        MemoryRange::of_range(total, total + overhead)
+    }
+}
+
+impl NodeSimilarityFacade<DefaultGraphStore> {
     pub fn mutate(self, property: &str) -> Result<NodeSimilarityMutateResult> {
         self.validate()?;
         ConfigValidator::non_empty_string(property, "property_name")?;
@@ -250,28 +274,6 @@ impl NodeSimilarityFacade {
             res.summary.property_name,
             std::time::Duration::from_millis(res.summary.execution_time_ms),
         ))
-    }
-
-    pub fn estimate_memory(&self) -> MemoryRange {
-        let node_count = self.graph_store.node_count();
-
-        // Worst-case output is bounded by top_k per node.
-        let pair_count = node_count.saturating_mul(self.top_k);
-
-        // Results + scratch arrays for weights/accumulators.
-        let results_memory = pair_count * 32;
-        let per_node_scratch = node_count * 32;
-
-        // Weight property access can add additional per-node scratch.
-        let weight_memory = if self.weight_property.is_some() {
-            node_count * 8
-        } else {
-            0
-        };
-
-        let total = results_memory + per_node_scratch + weight_memory;
-        let overhead = total / 5;
-        MemoryRange::of_range(total, total + overhead)
     }
 }
 

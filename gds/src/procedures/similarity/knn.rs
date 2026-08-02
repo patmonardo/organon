@@ -8,16 +8,16 @@ use crate::algo::similarity::knn::{
 };
 use crate::algo::similarity::knn::{KnnNodePropertySpec, SimilarityMetric};
 use crate::task::concurrency::TerminationFlag;
-use crate::task::progress::{ProgressTracker, Tasks};
 use crate::task::memory::MemoryRange;
+use crate::task::progress::{ProgressTracker, Tasks};
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use std::sync::Arc;
 
 // Additional imports for progress tracking
 use crate::task::progress::TaskProgressTracker;
 
-pub struct KnnFacade {
-    graph_store: Arc<DefaultGraphStore>,
+pub struct KnnFacade<Store: GraphStore = DefaultGraphStore> {
+    graph_store: Arc<Store>,
     node_property: String,
     node_properties: Vec<KnnNodePropertySpec>,
     k: usize,
@@ -33,8 +33,8 @@ pub struct KnnFacade {
     update_threshold: u64,
 }
 
-impl KnnFacade {
-    pub fn new(graph_store: Arc<DefaultGraphStore>, node_property: impl Into<String>) -> Self {
+impl<Store: GraphStore> KnnFacade<Store> {
+    pub fn new(graph_store: Arc<Store>, node_property: impl Into<String>) -> Self {
         Self {
             graph_store,
             node_property: node_property.into(),
@@ -255,6 +255,33 @@ impl KnnFacade {
         Ok(KnnResultBuilder::new(&rows, &nn_stats).stats_with_nodes_compared(node_count))
     }
 
+    pub fn estimate_memory(&self) -> MemoryRange {
+        let node_count = self.graph_store.node_count();
+
+        let property_count = if self.node_properties.is_empty() {
+            1
+        } else {
+            // multi-property mode includes primary property
+            self.node_properties.len() + 1
+        };
+
+        let pair_count = node_count.saturating_mul(self.k);
+
+        // Rough accounting:
+        // - results: (source, target, similarity) + Vec overhead
+        // - per-node scratch (indices, counters)
+        // - per-property scratch
+        let results_memory = pair_count * 32;
+        let per_node_scratch = node_count * 24;
+        let per_property_scratch = property_count * node_count * 8;
+
+        let total = results_memory + per_node_scratch + per_property_scratch;
+        let overhead = total / 5;
+        MemoryRange::of_range(total, total + overhead)
+    }
+}
+
+impl KnnFacade<DefaultGraphStore> {
     pub fn mutate(self, property_name: &str) -> Result<KnnMutateResult> {
         ConfigValidator::non_empty_string(property_name, "property_name")?;
 
@@ -293,31 +320,6 @@ impl KnnFacade {
             res.summary.property_name,
             std::time::Duration::from_millis(res.summary.execution_time_ms),
         ))
-    }
-
-    pub fn estimate_memory(&self) -> MemoryRange {
-        let node_count = self.graph_store.node_count();
-
-        let property_count = if self.node_properties.is_empty() {
-            1
-        } else {
-            // multi-property mode includes primary property
-            self.node_properties.len() + 1
-        };
-
-        let pair_count = node_count.saturating_mul(self.k);
-
-        // Rough accounting:
-        // - results: (source, target, similarity) + Vec overhead
-        // - per-node scratch (indices, counters)
-        // - per-property scratch
-        let results_memory = pair_count * 32;
-        let per_node_scratch = node_count * 24;
-        let per_property_scratch = property_count * node_count * 8;
-
-        let total = results_memory + per_node_scratch + per_property_scratch;
-        let overhead = total / 5;
-        MemoryRange::of_range(total, total + overhead)
     }
 }
 

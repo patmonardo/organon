@@ -14,7 +14,8 @@ use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
 use crate::task::memory::MemoryRange;
-use crate::types::prelude::{DefaultGraphStore, GraphStore};
+use crate::types::graph_store::GraphStoreRead;
+use crate::types::prelude::DefaultGraphStore;
 use std::collections::HashSet;
 use std::sync::Arc;
 use std::time::Instant;
@@ -25,16 +26,16 @@ use crate::task::concurrency::TerminationFlag;
 use crate::task::progress::{ProgressTracker, TaskProgressTracker, TaskRegistryFactory, Tasks};
 
 /// DAG Longest Path algorithm builder
-pub struct DagLongestPathBuilder {
-    graph_store: Arc<DefaultGraphStore>,
+pub struct DagLongestPathBuilder<Store: GraphStoreRead + ?Sized = DefaultGraphStore> {
+    graph_store: Arc<Store>,
     concurrency: usize,
     /// Progress tracking components
     task_registry_factory: Option<Box<dyn TaskRegistryFactory>>,
     user_log_registry_factory: Option<Box<dyn TaskRegistryFactory>>, // Placeholder for now
 }
 
-impl DagLongestPathBuilder {
-    pub fn new(graph_store: Arc<DefaultGraphStore>) -> Self {
+impl<Store: GraphStoreRead + ?Sized> DagLongestPathBuilder<Store> {
+    pub fn new(graph_store: Arc<Store>) -> Self {
         Self {
             graph_store,
             concurrency: 4,
@@ -173,7 +174,20 @@ impl DagLongestPathBuilder {
         Ok(DagLongestPathResultBuilder::new(result, elapsed).stats())
     }
 
-    /// Mutate mode: writes results back to the graph store
+    /// Estimate memory usage for the computation
+    pub fn estimate_memory(&self) -> MemoryRange {
+        let node_count = self.graph_store.node_count();
+        let relationship_count = self.graph_store.relationship_count();
+        let per_node = node_count * (std::mem::size_of::<f64>() + std::mem::size_of::<i64>() * 2);
+        let graph_overhead = relationship_count * 16;
+        let worker_state = node_count * std::mem::size_of::<usize>() * self.concurrency.max(1);
+        let total = per_node + graph_overhead + worker_state;
+        MemoryRange::of_range(total, total + total / 5)
+    }
+}
+
+impl DagLongestPathBuilder<DefaultGraphStore> {
+    /// Mutate mode: writes results back to the graph store.
     pub fn mutate(self, property_name: &str) -> Result<DagLongestPathMutateResult> {
         self.validate()?;
         ConfigValidator::non_empty_string(property_name, "property_name")?;
@@ -196,7 +210,7 @@ impl DagLongestPathBuilder {
         })
     }
 
-    /// Write mode: writes results to external storage
+    /// Write mode: writes results to external storage.
     pub fn write(self, property_name: &str) -> Result<WriteResult> {
         self.validate()?;
         ConfigValidator::non_empty_string(property_name, "property_name")?;
@@ -206,17 +220,6 @@ impl DagLongestPathBuilder {
             property_name.to_string(),
             std::time::Duration::from_millis(res.summary.execution_time_ms),
         ))
-    }
-
-    /// Estimate memory usage for the computation
-    pub fn estimate_memory(&self) -> MemoryRange {
-        let node_count = self.graph_store.node_count();
-        let relationship_count = self.graph_store.relationship_count();
-        let per_node = node_count * (std::mem::size_of::<f64>() + std::mem::size_of::<i64>() * 2);
-        let graph_overhead = relationship_count * 16;
-        let worker_state = node_count * std::mem::size_of::<usize>() * self.concurrency.max(1);
-        let total = per_node + graph_overhead + worker_state;
-        MemoryRange::of_range(total, total + total / 5)
     }
 }
 

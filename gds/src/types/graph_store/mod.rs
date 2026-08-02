@@ -11,6 +11,7 @@ mod default_graph_store;
 mod deletion_result;
 mod graph_name;
 mod graph_store;
+mod graph_store_read;
 #[cfg(test)]
 mod miscellaneous_tests;
 mod schema_validation;
@@ -22,4 +23,5 @@ pub use default_graph_store::*;
 pub use deletion_result::*;
 pub use graph_name::*;
 pub use graph_store::*;
+pub use graph_store_read::*;
 pub use schema_validation::*;

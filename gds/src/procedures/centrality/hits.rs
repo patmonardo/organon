@@ -8,12 +8,12 @@ use crate::algo::hits::{
     HitsStorageRuntime,
 };
 use crate::collections::backends::vec::VecDouble;
+use crate::projection::eval::algorithm::AlgorithmError;
 use crate::task::concurrency::Concurrency;
+use crate::task::memory::MemoryRange;
 use crate::task::progress::{
     EmptyTaskRegistryFactory, JobId, TaskProgressTracker, TaskRegistryFactory,
 };
-use crate::task::memory::MemoryRange;
-use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph_store::{DefaultGraphStore, GraphStore};
 use crate::types::properties::node::DefaultDoubleNodePropertyValues;
 use crate::types::properties::node::NodePropertyValues;
@@ -24,14 +24,14 @@ use std::time::Instant;
 
 /// HITS centrality facade/builder bound to a live graph store.
 #[derive(Clone)]
-pub struct HitsCentralityFacade {
-    graph_store: Arc<DefaultGraphStore>,
+pub struct HitsCentralityFacade<Store: GraphStore = DefaultGraphStore> {
+    graph_store: Arc<Store>,
     config: HitsConfig,
     task_registry: Arc<dyn TaskRegistryFactory>,
 }
 
-impl HitsCentralityFacade {
-    pub fn new(graph_store: Arc<DefaultGraphStore>) -> Self {
+impl<Store: GraphStore> HitsCentralityFacade<Store> {
+    pub fn new(graph_store: Arc<Store>) -> Self {
         Self {
             graph_store,
             config: HitsConfig::default(),
@@ -40,10 +40,7 @@ impl HitsCentralityFacade {
     }
 
     /// Create a facade using the spec.rs config model.
-    pub fn from_spec_config(
-        graph_store: Arc<DefaultGraphStore>,
-        config: HitsConfig,
-    ) -> Result<Self> {
+    pub fn from_spec_config(graph_store: Arc<Store>, config: HitsConfig) -> Result<Self> {
         config
             .validate()
             .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
@@ -56,10 +53,7 @@ impl HitsCentralityFacade {
     }
 
     /// Parse JSON into spec.rs config and return a configured facade.
-    pub fn from_spec_json(
-        graph_store: Arc<DefaultGraphStore>,
-        raw_config: &serde_json::Value,
-    ) -> Result<Self> {
+    pub fn from_spec_json(graph_store: Arc<Store>, raw_config: &serde_json::Value) -> Result<Self> {
         let parsed: HitsConfig = serde_json::from_value(raw_config.clone())
             .map_err(|e| AlgorithmError::Execution(format!("Config parsing failed: {e}")))?;
         Self::from_spec_config(graph_store, parsed)
@@ -225,20 +219,50 @@ impl HitsCentralityFacade {
         Ok((result.hub_scores, result.authority_scores))
     }
 
-    /// Mutate mode: Compute and store as node property
+    /// Estimate memory requirements for HITS computation.
     ///
-    /// Stores hub scores as a node property.
-    /// Use run() to get both hub and authority scores.
+    /// # Returns
+    /// Memory range estimate (min/max bytes)
     ///
-    /// ## Example
-    /// ```rust,no_run
+    /// # Example
+    /// ```ignore
     /// # use std::sync::Arc;
     /// # use gds::types::graph_store::DefaultGraphStore;
     /// # let graph = Arc::new(DefaultGraphStore::empty());
     /// # use gds::procedures::centrality::HitsCentralityFacade;
-    /// let result = HitsCentralityFacade::new(graph).mutate("hits_hub")?;
-    /// println!("Computed and stored for {} nodes", result.summary.nodes_updated);
+    /// let facade = HitsCentralityFacade::new(graph);
+    /// let memory = facade.estimate_memory();
+    /// println!("Will use between {} and {} bytes", memory.min(), memory.max());
     /// ```
+    pub fn estimate_memory(&self) -> MemoryRange {
+        let node_count = self.graph_store.node_count();
+        let concurrency = self.config.concurrency.max(1);
+
+        let public_scores_memory = node_count
+            .saturating_mul(std::mem::size_of::<f64>())
+            .saturating_mul(2);
+        let rust_pregel_state_memory = node_count
+            .saturating_mul(std::mem::size_of::<f64>())
+            .saturating_mul(7);
+        let vote_bits_memory = node_count.saturating_add(7) / 8;
+        let sync_queue_memory = node_count
+            .saturating_mul(std::mem::size_of::<f64>())
+            .saturating_mul(concurrency);
+        let executor_overhead = concurrency.saturating_mul(64 * 1024);
+
+        let total_memory = public_scores_memory
+            .saturating_add(rust_pregel_state_memory)
+            .saturating_add(vote_bits_memory)
+            .saturating_add(sync_queue_memory)
+            .saturating_add(executor_overhead);
+        let total_with_overhead = total_memory.saturating_add(total_memory / 5);
+
+        MemoryRange::of_range(total_memory, total_with_overhead)
+    }
+}
+
+impl HitsCentralityFacade<DefaultGraphStore> {
+    /// Mutate mode: Compute and store as node property.
     pub fn mutate(self, property_name: &str) -> Result<HitsCentralityMutateResult> {
         self.validate()?;
         ConfigValidator::non_empty_string(property_name, "property_name")?;
@@ -283,47 +307,6 @@ impl HitsCentralityFacade {
             property_name.to_string(),
             result.execution_time,
         ))
-    }
-
-    /// Estimate memory requirements for HITS computation.
-    ///
-    /// # Returns
-    /// Memory range estimate (min/max bytes)
-    ///
-    /// # Example
-    /// ```ignore
-    /// # use std::sync::Arc;
-    /// # use gds::types::graph_store::DefaultGraphStore;
-    /// # let graph = Arc::new(DefaultGraphStore::empty());
-    /// # use gds::procedures::centrality::HitsCentralityFacade;
-    /// let facade = HitsCentralityFacade::new(graph);
-    /// let memory = facade.estimate_memory();
-    /// println!("Will use between {} and {} bytes", memory.min(), memory.max());
-    /// ```
-    pub fn estimate_memory(&self) -> MemoryRange {
-        let node_count = self.graph_store.node_count();
-        let concurrency = self.config.concurrency.max(1);
-
-        let public_scores_memory = node_count
-            .saturating_mul(std::mem::size_of::<f64>())
-            .saturating_mul(2);
-        let rust_pregel_state_memory = node_count
-            .saturating_mul(std::mem::size_of::<f64>())
-            .saturating_mul(7);
-        let vote_bits_memory = node_count.saturating_add(7) / 8;
-        let sync_queue_memory = node_count
-            .saturating_mul(std::mem::size_of::<f64>())
-            .saturating_mul(concurrency);
-        let executor_overhead = concurrency.saturating_mul(64 * 1024);
-
-        let total_memory = public_scores_memory
-            .saturating_add(rust_pregel_state_memory)
-            .saturating_add(vote_bits_memory)
-            .saturating_add(sync_queue_memory)
-            .saturating_add(executor_overhead);
-        let total_with_overhead = total_memory.saturating_add(total_memory / 5);
-
-        MemoryRange::of_range(total_memory, total_with_overhead)
     }
 }
 

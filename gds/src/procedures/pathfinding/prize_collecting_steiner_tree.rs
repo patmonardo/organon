@@ -4,24 +4,25 @@ use crate::algo::prize_collecting_steiner_tree::{
     PCSTreeComputationRuntime, PCSTreeConfig, PCSTreeMutateResult, PCSTreeResult,
     PCSTreeResultBuilder, PCSTreeRow, PCSTreeStats, PCSTreeStorageRuntime,
 };
-use crate::task::concurrency::TerminationFlag;
-use crate::task::memory::MemoryRange;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
-use crate::types::prelude::{DefaultGraphStore, GraphStore};
+use crate::task::concurrency::TerminationFlag;
+use crate::task::memory::MemoryRange;
+use crate::types::graph_store::GraphStoreRead;
+use crate::types::prelude::DefaultGraphStore;
 use std::collections::HashMap;
 use std::collections::HashSet;
 use std::sync::Arc;
 
 // Import upgraded systems
 use crate::algo::algorithms::pathfinding::PathResult;
+use crate::projection::eval::algorithm::AlgorithmError;
 use crate::task::progress::TaskProgressTracker;
 use crate::task::progress::{TaskRegistryFactory, Tasks};
-use crate::projection::eval::algorithm::AlgorithmError;
 
 /// Prize-Collecting Steiner Tree algorithm builder
-pub struct PCSTreeBuilder {
-    graph_store: Arc<DefaultGraphStore>,
+pub struct PCSTreeBuilder<Store: GraphStoreRead + ?Sized = DefaultGraphStore> {
+    graph_store: Arc<Store>,
     prizes: Vec<f64>,
     relationship_weight_property: Option<String>,
     concurrency: usize,
@@ -30,8 +31,8 @@ pub struct PCSTreeBuilder {
     user_log_registry_factory: Option<Box<dyn TaskRegistryFactory>>, // Placeholder for now
 }
 
-impl PCSTreeBuilder {
-    pub fn new(graph_store: Arc<DefaultGraphStore>) -> Self {
+impl<Store: GraphStoreRead + ?Sized> PCSTreeBuilder<Store> {
+    pub fn new(graph_store: Arc<Store>) -> Self {
         Self {
             graph_store,
             prizes: Vec::new(),
@@ -185,7 +186,23 @@ impl PCSTreeBuilder {
         Ok(PCSTreeResultBuilder::new(result, elapsed).stats())
     }
 
-    /// Mutate mode: writes results back to the graph store
+    /// Estimate memory usage for the computation
+    pub fn estimate_memory(&self) -> MemoryRange {
+        let node_count = self.graph_store.node_count();
+        let relationship_count = self.graph_store.relationship_count();
+        let per_node = node_count
+            * (std::mem::size_of::<f64>() * 4
+                + std::mem::size_of::<i64>() * 2
+                + std::mem::size_of::<bool>());
+        let frontier =
+            relationship_count * (std::mem::size_of::<i64>() * 2 + std::mem::size_of::<f64>() * 2);
+        let total = per_node + frontier;
+        MemoryRange::of_range(total, total + total / 5)
+    }
+}
+
+impl PCSTreeBuilder<DefaultGraphStore> {
+    /// Mutate mode: writes results back to the graph store.
     pub fn mutate(self, property_name: &str) -> Result<PCSTreeMutateResult> {
         self.validate()?;
         ConfigValidator::non_empty_string(property_name, "property_name")?;
@@ -208,7 +225,7 @@ impl PCSTreeBuilder {
         })
     }
 
-    /// Write mode: writes results to external storage
+    /// Write mode: writes results to external storage.
     pub fn write(self, property_name: &str) -> Result<WriteResult> {
         self.validate()?;
         ConfigValidator::non_empty_string(property_name, "property_name")?;
@@ -218,20 +235,6 @@ impl PCSTreeBuilder {
             property_name.to_string(),
             std::time::Duration::from_millis(res.summary.execution_time_ms),
         ))
-    }
-
-    /// Estimate memory usage for the computation
-    pub fn estimate_memory(&self) -> MemoryRange {
-        let node_count = self.graph_store.node_count();
-        let relationship_count = self.graph_store.relationship_count();
-        let per_node = node_count
-            * (std::mem::size_of::<f64>() * 4
-                + std::mem::size_of::<i64>() * 2
-                + std::mem::size_of::<bool>());
-        let frontier =
-            relationship_count * (std::mem::size_of::<i64>() * 2 + std::mem::size_of::<f64>() * 2);
-        let total = per_node + frontier;
-        MemoryRange::of_range(total, total + total / 5)
     }
 }
 

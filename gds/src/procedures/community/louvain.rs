@@ -12,10 +12,10 @@ use crate::algo::louvain::{
     LouvainResult, LouvainResultBuilder, LouvainStats, LouvainStorageRuntime,
 };
 use crate::collections::backends::vec::VecLong;
-use crate::task::concurrency::TerminationFlag;
-use crate::task::progress::{ProgressTracker, TaskRegistry, Tasks};
-use crate::task::memory::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
+use crate::task::concurrency::TerminationFlag;
+use crate::task::memory::MemoryRange;
+use crate::task::progress::{ProgressTracker, TaskRegistry, Tasks};
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use crate::types::properties::node::DefaultLongNodePropertyValues;
 use crate::types::properties::node::NodePropertyValues;
@@ -33,14 +33,14 @@ pub struct LouvainRow {
 
 /// Louvain algorithm facade.
 #[derive(Clone)]
-pub struct LouvainFacade {
-    graph_store: Arc<DefaultGraphStore>,
+pub struct LouvainFacade<Store: GraphStore = DefaultGraphStore> {
+    graph_store: Arc<Store>,
     config: LouvainConfig,
     task_registry: Option<TaskRegistry>,
 }
 
-impl LouvainFacade {
-    pub fn new(graph_store: Arc<DefaultGraphStore>) -> Self {
+impl<Store: GraphStore> LouvainFacade<Store> {
+    pub fn new(graph_store: Arc<Store>) -> Self {
         Self {
             graph_store,
             config: LouvainConfig {
@@ -52,10 +52,7 @@ impl LouvainFacade {
     }
 
     /// Create a facade using the spec.rs config model.
-    pub fn from_spec_config(
-        graph_store: Arc<DefaultGraphStore>,
-        config: LouvainConfig,
-    ) -> Result<Self> {
+    pub fn from_spec_config(graph_store: Arc<Store>, config: LouvainConfig) -> Result<Self> {
         config
             .validate()
             .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
@@ -68,10 +65,7 @@ impl LouvainFacade {
     }
 
     /// Parse JSON into spec.rs config and return a configured facade.
-    pub fn from_spec_json(
-        graph_store: Arc<DefaultGraphStore>,
-        raw_config: &serde_json::Value,
-    ) -> Result<Self> {
+    pub fn from_spec_json(graph_store: Arc<Store>, raw_config: &serde_json::Value) -> Result<Self> {
         let parsed: LouvainConfig = serde_json::from_value(raw_config.clone())
             .map_err(|e| AlgorithmError::Execution(format!("Config parsing failed: {e}")))?;
         Self::from_spec_config(graph_store, parsed)
@@ -178,51 +172,6 @@ impl LouvainFacade {
         Ok(LouvainResultBuilder::new(result).stats())
     }
 
-    pub fn mutate(self, property_name: &str) -> Result<LouvainMutateResult> {
-        self.validate()?;
-        ConfigValidator::non_empty_string(property_name, "property_name")?;
-
-        let result = self.compute()?;
-
-        let node_count = self.graph_store.node_count();
-        let nodes_updated = node_count as u64;
-
-        // Convert community ids (u64) into i64 backend for VecLong
-        let longs: Vec<i64> = result.data.into_iter().map(|c| c as i64).collect();
-        let backend = VecLong::from(longs);
-        let values = DefaultLongNodePropertyValues::from_collection(backend, node_count);
-        let values: Arc<dyn NodePropertyValues> = Arc::new(values);
-
-        let mut new_store = self.graph_store.as_ref().clone();
-        let labels: HashSet<NodeLabel> = new_store.node_labels();
-        new_store
-            .add_node_property(labels, property_name.to_string(), values)
-            .map_err(|e| {
-                AlgorithmError::Execution(format!("Louvain mutate failed to add property: {e}"))
-            })?;
-
-        let summary = LouvainMutationSummary {
-            nodes_updated,
-            property_name: property_name.to_string(),
-            execution_time_ms: result.execution_time.as_millis() as u64,
-        };
-
-        Ok(LouvainMutateResult {
-            summary,
-            updated_store: Arc::new(new_store),
-        })
-    }
-
-    pub fn write(self, property_name: &str) -> Result<WriteResult> {
-        // For Louvain, write is the same as mutate since it's node properties
-        let res = self.mutate(property_name)?;
-        Ok(WriteResult::new(
-            res.summary.nodes_updated,
-            property_name.to_string(),
-            std::time::Duration::from_millis(res.summary.execution_time_ms),
-        ))
-    }
-
     pub fn estimate_memory(&self) -> MemoryRange {
         // Estimate memory for Louvain computation
         // - Community assignments: node_count * 8 bytes
@@ -313,5 +262,50 @@ impl LouvainFacade {
         termination_flag: &TerminationFlag,
     ) -> Result<LouvainResult> {
         self.compute_with_context(progress_tracker, termination_flag)
+    }
+}
+
+impl LouvainFacade<DefaultGraphStore> {
+    pub fn mutate(self, property_name: &str) -> Result<LouvainMutateResult> {
+        self.validate()?;
+        ConfigValidator::non_empty_string(property_name, "property_name")?;
+
+        let result = self.compute()?;
+
+        let node_count = self.graph_store.node_count();
+        let nodes_updated = node_count as u64;
+
+        let longs: Vec<i64> = result.data.into_iter().map(|c| c as i64).collect();
+        let backend = VecLong::from(longs);
+        let values = DefaultLongNodePropertyValues::from_collection(backend, node_count);
+        let values: Arc<dyn NodePropertyValues> = Arc::new(values);
+
+        let mut new_store = self.graph_store.as_ref().clone();
+        let labels: HashSet<NodeLabel> = new_store.node_labels();
+        new_store
+            .add_node_property(labels, property_name.to_string(), values)
+            .map_err(|e| {
+                AlgorithmError::Execution(format!("Louvain mutate failed to add property: {e}"))
+            })?;
+
+        let summary = LouvainMutationSummary {
+            nodes_updated,
+            property_name: property_name.to_string(),
+            execution_time_ms: result.execution_time.as_millis() as u64,
+        };
+
+        Ok(LouvainMutateResult {
+            summary,
+            updated_store: Arc::new(new_store),
+        })
+    }
+
+    pub fn write(self, property_name: &str) -> Result<WriteResult> {
+        let res = self.mutate(property_name)?;
+        Ok(WriteResult::new(
+            res.summary.nodes_updated,
+            property_name.to_string(),
+            std::time::Duration::from_millis(res.summary.execution_time_ms),
+        ))
     }
 }

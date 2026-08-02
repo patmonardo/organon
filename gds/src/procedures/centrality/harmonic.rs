@@ -19,15 +19,15 @@ use crate::algo::harmonic::{
     HarmonicResultBuilder, HarmonicStorageRuntime,
 };
 use crate::collections::backends::vec::VecDouble;
+use crate::projection::eval::algorithm::AlgorithmError;
+use crate::projection::NodeLabel;
+use crate::projection::Orientation;
 use crate::task::concurrency::{Concurrency, TerminationFlag};
+use crate::task::memory::MemoryRange;
 use crate::task::progress::ProgressTracker;
 use crate::task::progress::{
     EmptyTaskRegistryFactory, JobId, TaskProgressTracker, TaskRegistryFactory,
 };
-use crate::task::memory::MemoryRange;
-use crate::projection::eval::algorithm::AlgorithmError;
-use crate::projection::NodeLabel;
-use crate::projection::Orientation;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use crate::types::properties::node::DefaultDoubleNodePropertyValues;
 use crate::types::properties::node::NodePropertyValues;
@@ -37,14 +37,14 @@ use std::time::Instant;
 
 /// Harmonic centrality facade/builder bound to a live graph store.
 #[derive(Clone)]
-pub struct HarmonicCentralityFacade {
-    graph_store: Arc<DefaultGraphStore>,
+pub struct HarmonicCentralityFacade<Store: GraphStore = DefaultGraphStore> {
+    graph_store: Arc<Store>,
     config: HarmonicConfig,
     task_registry: Arc<dyn TaskRegistryFactory>,
 }
 
-impl HarmonicCentralityFacade {
-    pub fn new(graph_store: Arc<DefaultGraphStore>) -> Self {
+impl<Store: GraphStore> HarmonicCentralityFacade<Store> {
+    pub fn new(graph_store: Arc<Store>) -> Self {
         Self {
             graph_store,
             config: HarmonicConfig::default(),
@@ -53,10 +53,7 @@ impl HarmonicCentralityFacade {
     }
 
     /// Create a facade using the spec.rs config model.
-    pub fn from_spec_config(
-        graph_store: Arc<DefaultGraphStore>,
-        config: HarmonicConfig,
-    ) -> Result<Self> {
+    pub fn from_spec_config(graph_store: Arc<Store>, config: HarmonicConfig) -> Result<Self> {
         config
             .validate()
             .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
@@ -69,10 +66,7 @@ impl HarmonicCentralityFacade {
     }
 
     /// Parse JSON into spec.rs config and return a configured facade.
-    pub fn from_spec_json(
-        graph_store: Arc<DefaultGraphStore>,
-        raw_config: &serde_json::Value,
-    ) -> Result<Self> {
+    pub fn from_spec_json(graph_store: Arc<Store>, raw_config: &serde_json::Value) -> Result<Self> {
         let parsed: HarmonicConfig = serde_json::from_value(raw_config.clone())
             .map_err(|e| AlgorithmError::Execution(format!("Config parsing failed: {e}")))?;
         Self::from_spec_config(graph_store, parsed)
@@ -216,57 +210,6 @@ impl HarmonicCentralityFacade {
         Ok(HarmonicResultBuilder::new(result).stats())
     }
 
-    /// Mutate mode: compute scores, write them to a new graph store, and return it.
-    pub fn mutate(self, property_name: &str) -> Result<HarmonicCentralityMutateResult> {
-        self.validate()?;
-        ConfigValidator::non_empty_string(property_name, "property_name")?;
-        let result = self.compute()?;
-        let scores = result.centralities.clone();
-        let nodes_updated = scores.len() as u64;
-        let builder = HarmonicResultBuilder::new(result);
-
-        // Build property values
-        let node_count = scores.len();
-        let backend = VecDouble::from(scores);
-        let values = DefaultDoubleNodePropertyValues::from_collection(backend, node_count);
-        let values: Arc<dyn NodePropertyValues> = Arc::new(values);
-
-        // Clone store, add property, and return updated store
-        let mut new_store = self.graph_store.as_ref().clone();
-        let labels: HashSet<NodeLabel> = new_store.node_labels();
-        new_store
-            .add_node_property(labels, property_name.to_string(), values)
-            .map_err(|e| {
-                AlgorithmError::Execution(format!("Harmonic mutate failed to add property: {e}"))
-            })?;
-
-        let summary = HarmonicCentralityMutationSummary {
-            nodes_updated,
-            property_name: property_name.to_string(),
-            execution_time_ms: builder.execution_time_ms(),
-        };
-
-        Ok(HarmonicCentralityMutateResult {
-            summary,
-            updated_store: Arc::new(new_store),
-        })
-    }
-
-    /// Write mode is not implemented yet for harmonic.
-    pub fn write(self, property_name: &str) -> Result<WriteResult> {
-        self.validate()?;
-        ConfigValidator::non_empty_string(property_name, "property_name")?;
-        let result = self.compute()?;
-        let nodes_written = result.centralities.len() as u64;
-        let execution_time = result.execution_time;
-
-        Ok(WriteResult::new(
-            nodes_written,
-            property_name.to_string(),
-            execution_time,
-        ))
-    }
-
     /// Estimate memory requirements for harmonic centrality computation.
     ///
     /// # Returns
@@ -300,6 +243,57 @@ impl HarmonicCentralityFacade {
         let total_with_overhead = total_memory.saturating_add(total_memory / 5);
 
         MemoryRange::of_range(total_memory, total_with_overhead)
+    }
+}
+
+impl HarmonicCentralityFacade<DefaultGraphStore> {
+    /// Mutate mode: compute scores, write them to a new graph store, and return it.
+    pub fn mutate(self, property_name: &str) -> Result<HarmonicCentralityMutateResult> {
+        self.validate()?;
+        ConfigValidator::non_empty_string(property_name, "property_name")?;
+        let result = self.compute()?;
+        let scores = result.centralities.clone();
+        let nodes_updated = scores.len() as u64;
+        let builder = HarmonicResultBuilder::new(result);
+
+        let node_count = scores.len();
+        let backend = VecDouble::from(scores);
+        let values = DefaultDoubleNodePropertyValues::from_collection(backend, node_count);
+        let values: Arc<dyn NodePropertyValues> = Arc::new(values);
+
+        let mut new_store = self.graph_store.as_ref().clone();
+        let labels: HashSet<NodeLabel> = new_store.node_labels();
+        new_store
+            .add_node_property(labels, property_name.to_string(), values)
+            .map_err(|e| {
+                AlgorithmError::Execution(format!("Harmonic mutate failed to add property: {e}"))
+            })?;
+
+        let summary = HarmonicCentralityMutationSummary {
+            nodes_updated,
+            property_name: property_name.to_string(),
+            execution_time_ms: builder.execution_time_ms(),
+        };
+
+        Ok(HarmonicCentralityMutateResult {
+            summary,
+            updated_store: Arc::new(new_store),
+        })
+    }
+
+    /// Write mode is not implemented yet for harmonic.
+    pub fn write(self, property_name: &str) -> Result<WriteResult> {
+        self.validate()?;
+        ConfigValidator::non_empty_string(property_name, "property_name")?;
+        let result = self.compute()?;
+        let nodes_written = result.centralities.len() as u64;
+        let execution_time = result.execution_time;
+
+        Ok(WriteResult::new(
+            nodes_written,
+            property_name.to_string(),
+            execution_time,
+        ))
     }
 }
 

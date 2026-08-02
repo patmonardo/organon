@@ -10,12 +10,12 @@ use crate::algo::celf::{
     CELFResult, CELFResultBuilder, CELFRow, CELFStats,
 };
 use crate::collections::backends::vec::VecDouble;
+use crate::projection::eval::algorithm::AlgorithmError;
 use crate::task::concurrency::{Concurrency, TerminationFlag};
+use crate::task::memory::MemoryRange;
 use crate::task::progress::{
     EmptyTaskRegistryFactory, JobId, ProgressTracker, TaskProgressTracker, TaskRegistryFactory,
 };
-use crate::task::memory::MemoryRange;
-use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph_store::GraphStore;
 use crate::types::prelude::DefaultGraphStore;
 use crate::types::properties::node::DefaultDoubleNodePropertyValues;
@@ -27,14 +27,14 @@ use std::time::Instant;
 
 /// CELF facade bound to a live graph store
 #[derive(Clone)]
-pub struct CELFFacade {
-    graph_store: Arc<DefaultGraphStore>,
+pub struct CELFFacade<Store: GraphStore = DefaultGraphStore> {
+    graph_store: Arc<Store>,
     config: CELFConfig,
     task_registry: Arc<dyn TaskRegistryFactory>,
 }
 
-impl CELFFacade {
-    pub fn new(graph_store: Arc<DefaultGraphStore>) -> Self {
+impl<Store: GraphStore> CELFFacade<Store> {
+    pub fn new(graph_store: Arc<Store>) -> Self {
         Self {
             graph_store,
             config: CELFConfig::default(),
@@ -43,10 +43,7 @@ impl CELFFacade {
     }
 
     /// Create a facade using the spec.rs config model.
-    pub fn from_spec_config(
-        graph_store: Arc<DefaultGraphStore>,
-        config: CELFConfig,
-    ) -> Result<Self> {
+    pub fn from_spec_config(graph_store: Arc<Store>, config: CELFConfig) -> Result<Self> {
         config
             .validate()
             .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
@@ -59,10 +56,7 @@ impl CELFFacade {
     }
 
     /// Parse JSON into spec.rs config and return a configured facade.
-    pub fn from_spec_json(
-        graph_store: Arc<DefaultGraphStore>,
-        raw_config: &serde_json::Value,
-    ) -> Result<Self> {
+    pub fn from_spec_json(graph_store: Arc<Store>, raw_config: &serde_json::Value) -> Result<Self> {
         let parsed: CELFConfig = serde_json::from_value(raw_config.clone())
             .map_err(|e| AlgorithmError::Execution(format!("Config parsing failed: {e}")))?;
         Self::from_spec_config(graph_store, parsed)
@@ -205,6 +199,46 @@ impl CELFFacade {
         Ok(CELFResultBuilder::new(result, elapsed).stats())
     }
 
+    pub fn estimate_memory(&self) -> MemoryRange {
+        let node_count = self.graph_store.node_count();
+        let seed_set_size = self.config.seed_set_size.min(node_count).max(1);
+        let batch_size = self.config.batch_size.max(1);
+        let concurrency = self.config.concurrency.max(1);
+        let bitset_bytes = (node_count + 7) / 8;
+        let stack_bytes = node_count.saturating_mul(std::mem::size_of::<usize>());
+
+        let seed_set = seed_set_size.saturating_mul(16);
+        let first_k = batch_size.saturating_mul(std::mem::size_of::<usize>());
+        let spread_priority_queue = node_count.saturating_mul(
+            std::mem::size_of::<usize>()
+                + std::mem::size_of::<usize>()
+                + std::mem::size_of::<f64>(),
+        );
+        let single_spread_array = node_count.saturating_mul(std::mem::size_of::<f64>());
+
+        let ic_init_per_thread = bitset_bytes.saturating_add(stack_bytes);
+        let lazy_spread = batch_size.saturating_mul(std::mem::size_of::<f64>());
+        let lazy_forward = bitset_bytes
+            .saturating_mul(2)
+            .saturating_add(batch_size.saturating_mul(std::mem::size_of::<f64>()))
+            .saturating_add(batch_size.saturating_mul(std::mem::size_of::<usize>()))
+            .saturating_add(seed_set_size.saturating_mul(std::mem::size_of::<usize>()))
+            .saturating_add(stack_bytes);
+
+        let total = seed_set
+            .saturating_add(first_k)
+            .saturating_add(spread_priority_queue)
+            .saturating_add(single_spread_array)
+            .saturating_add(concurrency.saturating_mul(ic_init_per_thread))
+            .saturating_add(lazy_spread)
+            .saturating_add(lazy_forward)
+            .saturating_add(1024 * 1024);
+
+        MemoryRange::of_range(total, total.saturating_add(total / 5))
+    }
+}
+
+impl CELFFacade<DefaultGraphStore> {
     pub fn mutate(self, property_name: &str) -> Result<CELFMutateResult> {
         self.validate()?;
         ConfigValidator::non_empty_string(property_name, "property_name")?;
@@ -258,47 +292,9 @@ impl CELFFacade {
             execution_time,
         ))
     }
-
-    pub fn estimate_memory(&self) -> MemoryRange {
-        let node_count = self.graph_store.node_count();
-        let seed_set_size = self.config.seed_set_size.min(node_count).max(1);
-        let batch_size = self.config.batch_size.max(1);
-        let concurrency = self.config.concurrency.max(1);
-        let bitset_bytes = (node_count + 7) / 8;
-        let stack_bytes = node_count.saturating_mul(std::mem::size_of::<usize>());
-
-        let seed_set = seed_set_size.saturating_mul(16);
-        let first_k = batch_size.saturating_mul(std::mem::size_of::<usize>());
-        let spread_priority_queue = node_count.saturating_mul(
-            std::mem::size_of::<usize>()
-                + std::mem::size_of::<usize>()
-                + std::mem::size_of::<f64>(),
-        );
-        let single_spread_array = node_count.saturating_mul(std::mem::size_of::<f64>());
-
-        let ic_init_per_thread = bitset_bytes.saturating_add(stack_bytes);
-        let lazy_spread = batch_size.saturating_mul(std::mem::size_of::<f64>());
-        let lazy_forward = bitset_bytes
-            .saturating_mul(2)
-            .saturating_add(batch_size.saturating_mul(std::mem::size_of::<f64>()))
-            .saturating_add(batch_size.saturating_mul(std::mem::size_of::<usize>()))
-            .saturating_add(seed_set_size.saturating_mul(std::mem::size_of::<usize>()))
-            .saturating_add(stack_bytes);
-
-        let total = seed_set
-            .saturating_add(first_k)
-            .saturating_add(spread_priority_queue)
-            .saturating_add(single_spread_array)
-            .saturating_add(concurrency.saturating_mul(ic_init_per_thread))
-            .saturating_add(lazy_spread)
-            .saturating_add(lazy_forward)
-            .saturating_add(1024 * 1024);
-
-        MemoryRange::of_range(total, total.saturating_add(total / 5))
-    }
 }
 
-impl AlgorithmRunner for CELFFacade {
+impl<Store: GraphStore> AlgorithmRunner for CELFFacade<Store> {
     fn algorithm_name(&self) -> &'static str {
         "celf"
     }

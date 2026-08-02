@@ -1,4 +1,3 @@
-pub mod algorithms;
 pub mod centrality;
 pub mod community;
 pub mod embeddings;
@@ -14,7 +13,6 @@ pub mod pipelines;
 pub mod shell;
 pub mod similarity;
 
-pub use algorithms::*;
 pub use graph::*;
 pub use graph_catalog::*;
 pub use memory::*;

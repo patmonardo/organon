@@ -35,13 +35,13 @@ pub struct FastRPRow {
 
 /// FastRP builder.
 #[derive(Clone)]
-pub struct FastRPBuilder {
-    graph_store: Arc<DefaultGraphStore>,
+pub struct FastRPBuilder<Store: GraphStore = DefaultGraphStore> {
+    graph_store: Arc<Store>,
     config: FastRPConfig,
 }
 
-impl FastRPBuilder {
-    pub fn new(graph_store: Arc<DefaultGraphStore>) -> Self {
+impl<Store: GraphStore> FastRPBuilder<Store> {
+    pub fn new(graph_store: Arc<Store>) -> Self {
         Self {
             graph_store,
             config: FastRPConfig::default(),

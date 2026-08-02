@@ -20,7 +20,6 @@ use crate::ml::models::{
 use crate::ml::node_regression::NodeSplitter;
 use crate::ml::splitting::TrainingExamplesSplit;
 use crate::ml::training::{CrossValidation, TrainingStatistics};
-use crate::procedures::AlgorithmsProcedureFacade;
 use crate::projection::eval::pipeline::NodeFeatureProducer;
 use crate::projection::eval::pipeline::NodePropertyPipelineBaseTrainConfig;
 use crate::projection::eval::pipeline::NodePropertyTrainingPipeline;
@@ -31,8 +30,8 @@ use crate::projection::eval::pipeline::TrainingPipeline;
 use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::task::memory::{Estimate, MemoryEstimation, MemoryEstimations, MemoryRange};
 use crate::task::progress::{NoopProgressTracker, ProgressTracker, Task, Tasks};
-use crate::types::graph::Graph;
 use crate::types::graph::id_map::{MappedNodeId, OriginalNodeId};
+use crate::types::graph::Graph;
 use crate::types::graph_store::DefaultGraphStore;
 use crate::types::prelude::GraphStore;
 use parking_lot::RwLock;
@@ -120,7 +119,6 @@ impl NodeClassificationTrain {
         pipeline: &NodeClassificationTrainingPipeline,
         configuration: &NodeClassificationPipelineTrainConfig,
         _model_catalog: &impl ModelCatalog,
-        _algorithms_procedure_facade: &AlgorithmsProcedureFacade,
     ) -> Box<dyn MemoryEstimation> {
         Self::estimate_pipeline(pipeline, configuration)
     }
@@ -955,18 +953,8 @@ mod tests {
         let pipeline = NodeClassificationTrainingPipeline::new();
         let config = NodeClassificationPipelineTrainConfig::default();
         let model_catalog = EmptyModelCatalog;
-        let graph_store = Arc::new(
-            DefaultGraphStore::random(&RandomGraphConfig::default())
-                .expect("random graph generation"),
-        );
-        let algorithms_facade = AlgorithmsProcedureFacade::from_store(graph_store);
 
-        let estimation = NodeClassificationTrain::estimate(
-            &pipeline,
-            &config,
-            &model_catalog,
-            &algorithms_facade,
-        );
+        let estimation = NodeClassificationTrain::estimate(&pipeline, &config, &model_catalog);
         let tree = estimation.estimate(&ConcreteGraphDimensions::of(100, 0), 4);
 
         assert_eq!(tree.description(), "Node Classification Train Pipeline");

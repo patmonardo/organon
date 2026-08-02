@@ -14,10 +14,10 @@ use crate::algo::scc::{
     SccResultBuilder, SccStats, SccStorageRuntime,
 };
 use crate::collections::backends::vec::VecLong;
-use crate::task::concurrency::TerminationFlag;
-use crate::task::progress::{TaskRegistry, Tasks};
-use crate::task::memory::MemoryRange;
 use crate::projection::eval::algorithm::AlgorithmError;
+use crate::task::concurrency::TerminationFlag;
+use crate::task::memory::MemoryRange;
+use crate::task::progress::{TaskRegistry, Tasks};
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use crate::types::properties::node::DefaultLongNodePropertyValues;
 use crate::types::properties::node::NodePropertyValues;
@@ -34,14 +34,14 @@ pub struct SccRow {
 
 /// SCC algorithm facade.
 #[derive(Clone)]
-pub struct SccFacade {
-    graph_store: Arc<DefaultGraphStore>,
+pub struct SccFacade<Store: GraphStore = DefaultGraphStore> {
+    graph_store: Arc<Store>,
     config: SccConfig,
     task_registry: Option<TaskRegistry>,
 }
 
-impl SccFacade {
-    pub fn new(graph_store: Arc<DefaultGraphStore>) -> Self {
+impl<Store: GraphStore> SccFacade<Store> {
+    pub fn new(graph_store: Arc<Store>) -> Self {
         Self {
             graph_store,
             config: SccConfig::default(),
@@ -50,10 +50,7 @@ impl SccFacade {
     }
 
     /// Create a facade using the spec.rs config model.
-    pub fn from_spec_config(
-        graph_store: Arc<DefaultGraphStore>,
-        config: SccConfig,
-    ) -> Result<Self> {
+    pub fn from_spec_config(graph_store: Arc<Store>, config: SccConfig) -> Result<Self> {
         config
             .validate()
             .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
@@ -66,10 +63,7 @@ impl SccFacade {
     }
 
     /// Parse JSON into spec.rs config and return a configured facade.
-    pub fn from_spec_json(
-        graph_store: Arc<DefaultGraphStore>,
-        raw_config: &serde_json::Value,
-    ) -> Result<Self> {
+    pub fn from_spec_json(graph_store: Arc<Store>, raw_config: &serde_json::Value) -> Result<Self> {
         let parsed: SccConfig = serde_json::from_value(raw_config.clone())
             .map_err(|e| AlgorithmError::Execution(format!("Config parsing failed: {e}")))?;
         Self::from_spec_config(graph_store, parsed)
@@ -153,6 +147,40 @@ impl SccFacade {
         Ok(SccResultBuilder::new(result).stats())
     }
 
+    /// Estimate memory usage.
+    pub fn estimate_memory(&self) -> Result<MemoryRange> {
+        let node_count = self.graph_store.node_count();
+        let relationship_count = self.graph_store.relationship_count();
+
+        let base: usize = 64 * 1024;
+        let index_bytes = node_count.saturating_mul(8);
+        let component_bytes = node_count.saturating_mul(8);
+        let visited_bytes = node_count.saturating_add(7) / 8;
+        let boundaries_bytes = node_count.saturating_mul(8);
+        let stack_bytes = node_count.saturating_mul(8);
+        let todo_min_bytes = node_count.saturating_mul(8);
+        let todo_max_bytes = node_count.max(relationship_count).saturating_mul(8);
+
+        let fixed = base
+            .saturating_add(index_bytes)
+            .saturating_add(component_bytes)
+            .saturating_add(visited_bytes)
+            .saturating_add(boundaries_bytes)
+            .saturating_add(stack_bytes);
+
+        Ok(MemoryRange::of_range(
+            fixed.saturating_add(todo_min_bytes),
+            fixed.saturating_add(todo_max_bytes),
+        ))
+    }
+
+    /// Full result: returns the procedure-level SCC result.
+    pub fn run(&self) -> Result<SccResult> {
+        self.compute()
+    }
+}
+
+impl SccFacade<DefaultGraphStore> {
     /// Mutate mode: writes component assignments back to the graph store.
     pub fn mutate(self, property_name: &str) -> Result<SccMutateResult> {
         self.validate()?;
@@ -196,37 +224,5 @@ impl SccFacade {
             property_name.to_string(),
             std::time::Duration::from_millis(res.summary.execution_time_ms),
         ))
-    }
-
-    /// Estimate memory usage.
-    pub fn estimate_memory(&self) -> Result<MemoryRange> {
-        let node_count = self.graph_store.node_count();
-        let relationship_count = self.graph_store.relationship_count();
-
-        let base: usize = 64 * 1024;
-        let index_bytes = node_count.saturating_mul(8);
-        let component_bytes = node_count.saturating_mul(8);
-        let visited_bytes = node_count.saturating_add(7) / 8;
-        let boundaries_bytes = node_count.saturating_mul(8);
-        let stack_bytes = node_count.saturating_mul(8);
-        let todo_min_bytes = node_count.saturating_mul(8);
-        let todo_max_bytes = node_count.max(relationship_count).saturating_mul(8);
-
-        let fixed = base
-            .saturating_add(index_bytes)
-            .saturating_add(component_bytes)
-            .saturating_add(visited_bytes)
-            .saturating_add(boundaries_bytes)
-            .saturating_add(stack_bytes);
-
-        Ok(MemoryRange::of_range(
-            fixed.saturating_add(todo_min_bytes),
-            fixed.saturating_add(todo_max_bytes),
-        ))
-    }
-
-    /// Full result: returns the procedure-level SCC result.
-    pub fn run(&self) -> Result<SccResult> {
-        self.compute()
     }
 }

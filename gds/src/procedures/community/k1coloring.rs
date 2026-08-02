@@ -15,10 +15,10 @@ use crate::algo::k1coloring::{
     K1ColoringStats, K1ColoringStorageRuntime, INITIAL_FORBIDDEN_COLORS,
 };
 use crate::collections::backends::vec::VecLong;
-use crate::task::concurrency::TerminationFlag;
-use crate::task::progress::TaskRegistry;
-use crate::task::memory::{Estimate, MemoryRange};
 use crate::projection::eval::algorithm::AlgorithmError;
+use crate::task::concurrency::TerminationFlag;
+use crate::task::memory::{Estimate, MemoryRange};
+use crate::task::progress::TaskRegistry;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use crate::types::properties::node::DefaultLongNodePropertyValues;
 use crate::types::properties::node::NodePropertyValues;
@@ -36,14 +36,14 @@ pub struct K1ColoringRow {
 
 /// K1-Coloring algorithm facade.
 #[derive(Clone)]
-pub struct K1ColoringFacade {
-    graph_store: Arc<DefaultGraphStore>,
+pub struct K1ColoringFacade<Store: GraphStore = DefaultGraphStore> {
+    graph_store: Arc<Store>,
     config: K1ColoringConfig,
     task_registry: Option<TaskRegistry>,
 }
 
-impl K1ColoringFacade {
-    pub fn new(graph_store: Arc<DefaultGraphStore>) -> Self {
+impl<Store: GraphStore> K1ColoringFacade<Store> {
+    pub fn new(graph_store: Arc<Store>) -> Self {
         Self {
             graph_store,
             config: K1ColoringConfig::default(),
@@ -52,10 +52,7 @@ impl K1ColoringFacade {
     }
 
     /// Create a facade using the spec.rs config model.
-    pub fn from_spec_config(
-        graph_store: Arc<DefaultGraphStore>,
-        config: K1ColoringConfig,
-    ) -> Result<Self> {
+    pub fn from_spec_config(graph_store: Arc<Store>, config: K1ColoringConfig) -> Result<Self> {
         config
             .validate()
             .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
@@ -68,10 +65,7 @@ impl K1ColoringFacade {
     }
 
     /// Parse JSON into spec.rs config and return a configured facade.
-    pub fn from_spec_json(
-        graph_store: Arc<DefaultGraphStore>,
-        raw_config: &serde_json::Value,
-    ) -> Result<Self> {
+    pub fn from_spec_json(graph_store: Arc<Store>, raw_config: &serde_json::Value) -> Result<Self> {
         let parsed: K1ColoringConfig = serde_json::from_value(raw_config.clone())
             .map_err(|e| AlgorithmError::Execution(format!("Config parsing failed: {e}")))?;
         Self::from_spec_config(graph_store, parsed)
@@ -172,6 +166,32 @@ impl K1ColoringFacade {
         Ok(K1ColoringResultBuilder::new(result).stats())
     }
 
+    /// Estimate memory usage.
+    pub fn estimate_memory(&self) -> Result<MemoryRange> {
+        let node_count = GraphStore::node_count(self.graph_store.as_ref());
+        let concurrency = self.config.concurrency.max(1);
+
+        let colors = Estimate::size_of_long_array(node_count);
+        let nodes_to_color = Estimate::size_of_bitset(node_count).saturating_mul(2);
+        let forbidden_colors =
+            Estimate::size_of_bitset(INITIAL_FORBIDDEN_COLORS).saturating_mul(concurrency);
+
+        let total = Estimate::BYTES_OBJECT_HEADER
+            .saturating_add(colors)
+            .saturating_add(nodes_to_color)
+            .saturating_add(forbidden_colors);
+
+        Ok(MemoryRange::of(total))
+    }
+
+    /// Full result: returns the procedure-level K1Coloring result.
+    pub fn run(&self) -> Result<K1ColoringResult> {
+        let result = self.compute()?;
+        Ok(result)
+    }
+}
+
+impl K1ColoringFacade<DefaultGraphStore> {
     /// Mutate mode: writes color assignments back to the graph store.
     pub fn mutate(self, property_name: &str) -> Result<K1ColoringMutateResult> {
         self.validate()?;
@@ -215,29 +235,5 @@ impl K1ColoringFacade {
             property_name.to_string(),
             std::time::Duration::from_millis(res.summary.execution_time_ms),
         ))
-    }
-
-    /// Estimate memory usage.
-    pub fn estimate_memory(&self) -> Result<MemoryRange> {
-        let node_count = GraphStore::node_count(self.graph_store.as_ref());
-        let concurrency = self.config.concurrency.max(1);
-
-        let colors = Estimate::size_of_long_array(node_count);
-        let nodes_to_color = Estimate::size_of_bitset(node_count).saturating_mul(2);
-        let forbidden_colors =
-            Estimate::size_of_bitset(INITIAL_FORBIDDEN_COLORS).saturating_mul(concurrency);
-
-        let total = Estimate::BYTES_OBJECT_HEADER
-            .saturating_add(colors)
-            .saturating_add(nodes_to_color)
-            .saturating_add(forbidden_colors);
-
-        Ok(MemoryRange::of(total))
-    }
-
-    /// Full result: returns the procedure-level K1Coloring result.
-    pub fn run(&self) -> Result<K1ColoringResult> {
-        let result = self.compute()?;
-        Ok(result)
     }
 }

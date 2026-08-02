@@ -13,7 +13,6 @@ use crate::ml::models::{Features, RegressionTrainerFactory, Regressor};
 use crate::ml::node_regression::NodeSplitter;
 use crate::ml::splitting::TrainingExamplesSplit;
 use crate::ml::training::{CrossValidation, TrainingStatistics};
-use crate::procedures::AlgorithmsProcedureFacade;
 use crate::projection::eval::pipeline::NodeFeatureProducer;
 use crate::projection::eval::pipeline::NodePropertyPipelineBaseTrainConfig;
 use crate::projection::eval::pipeline::NodePropertyTrainingPipeline;
@@ -24,8 +23,8 @@ use crate::projection::eval::pipeline::TrainingPipeline;
 use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::task::memory::{Estimate, MemoryEstimation, MemoryEstimations, MemoryRange};
 use crate::task::progress::{LeafTask, ProgressTracker, Task, TaskProgressTracker, Tasks};
-use crate::types::graph::Graph;
 use crate::types::graph::id_map::{MappedNodeId, OriginalNodeId};
+use crate::types::graph::Graph;
 use crate::types::graph_store::DefaultGraphStore;
 use crate::types::prelude::GraphStore;
 use parking_lot::RwLock;
@@ -96,7 +95,6 @@ impl NodeRegressionTrain {
         pipeline: &NodeRegressionTrainingPipeline,
         configuration: &NodeRegressionPipelineTrainConfig,
         _model_catalog: &impl ModelCatalog,
-        _algorithms_procedure_facade: &AlgorithmsProcedureFacade,
     ) -> Box<dyn MemoryEstimation> {
         Self::estimate_pipeline(pipeline, configuration)
     }
@@ -723,8 +721,8 @@ fn evaluate_metrics(
     let mut actuals: Vec<f64> = Vec::with_capacity(eval_ids.len());
 
     for node_id in eval_ids.iter() {
-        let idx = usize::try_from(*node_id)
-            .expect("evaluation example id must fit the model row domain");
+        let idx =
+            usize::try_from(*node_id).expect("evaluation example id must fit the model row domain");
         let prediction = regressor.predict(features.get(idx));
         predictions.push(prediction);
         actuals.push(targets.get(idx));
@@ -813,14 +811,8 @@ mod tests {
         let pipeline = NodeRegressionTrainingPipeline::new();
         let config = NodeRegressionPipelineTrainConfig::default();
         let model_catalog = EmptyModelCatalog;
-        let graph_store = Arc::new(
-            DefaultGraphStore::random(&RandomGraphConfig::default())
-                .expect("random graph generation"),
-        );
-        let algorithms_facade = AlgorithmsProcedureFacade::from_store(graph_store);
 
-        let _est =
-            NodeRegressionTrain::estimate(&pipeline, &config, &model_catalog, &algorithms_facade);
+        let _est = NodeRegressionTrain::estimate(&pipeline, &config, &model_catalog);
     }
 
     #[test]

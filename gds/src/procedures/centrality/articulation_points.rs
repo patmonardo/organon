@@ -33,14 +33,14 @@ use std::time::Instant;
 
 /// Articulation points facade bound to a live graph store.
 #[derive(Clone)]
-pub struct ArticulationPointsFacade {
-    graph_store: Arc<DefaultGraphStore>,
+pub struct ArticulationPointsFacade<Store: GraphStore = DefaultGraphStore> {
+    graph_store: Arc<Store>,
     config: ArticulationPointsConfig,
     task_registry: Arc<dyn TaskRegistryFactory>,
 }
 
-impl ArticulationPointsFacade {
-    pub fn new(graph_store: Arc<DefaultGraphStore>) -> Self {
+impl<Store: GraphStore> ArticulationPointsFacade<Store> {
+    pub fn new(graph_store: Arc<Store>) -> Self {
         Self {
             graph_store,
             config: ArticulationPointsConfig::default(),
@@ -50,7 +50,7 @@ impl ArticulationPointsFacade {
 
     /// Create a facade using the spec.rs config model.
     pub fn from_spec_config(
-        graph_store: Arc<DefaultGraphStore>,
+        graph_store: Arc<Store>,
         config: ArticulationPointsConfig,
     ) -> Result<Self> {
         config
@@ -65,10 +65,7 @@ impl ArticulationPointsFacade {
     }
 
     /// Parse JSON into spec.rs config and return a configured facade.
-    pub fn from_spec_json(
-        graph_store: Arc<DefaultGraphStore>,
-        raw_config: &serde_json::Value,
-    ) -> Result<Self> {
+    pub fn from_spec_json(graph_store: Arc<Store>, raw_config: &serde_json::Value) -> Result<Self> {
         let parsed: ArticulationPointsConfig = serde_json::from_value(raw_config.clone())
             .map_err(|e| AlgorithmError::Execution(format!("Config parsing failed: {e}")))?;
         Self::from_spec_config(graph_store, parsed)
@@ -249,35 +246,28 @@ impl ArticulationPointsFacade {
         let result = self.compute()?;
         Ok(ArticulationPointsResultBuilder::new(result).stats())
     }
+}
 
-    /// Mutate mode: Compute and store as node property
-    ///
-    /// Stores articulation point status as a node property (1.0 for articulation points, 0.0 otherwise).
-    ///
-    /// ## Example
-    /// ```rust,no_run
-    /// # use std::sync::Arc;
-    /// # use gds::types::prelude::DefaultGraphStore;
-    /// # let graph = Arc::new(DefaultGraphStore::empty());
-    /// # use gds::procedures::centrality::ArticulationPointsFacade;
-    /// let result = ArticulationPointsFacade::new(graph).mutate("is_articulation_point")?;
-    /// println!("Computed and stored for {} nodes", result.summary.nodes_updated);
-    /// ```
+impl ArticulationPointsFacade<DefaultGraphStore> {
+    /// Mutate mode: Compute and store as node property.
     pub fn mutate(self, property_name: &str) -> Result<ArticulationPointsMutateResult> {
         self.validate()?;
         ConfigValidator::non_empty_string(property_name, "property_name")?;
 
-        let start_time = Instant::now();
-        let (bitset, _elapsed) = self.compute_bitset()?;
+        let result = self.compute()?;
+        let articulation_points = result.articulation_points.clone();
+        let builder = ArticulationPointsResultBuilder::new(result);
 
         let node_count = self.graph_store.node_count();
-        let nodes_updated = node_count as u64;
-        let mut scores: Vec<f64> = Vec::with_capacity(node_count);
-        for node_id in 0..node_count {
-            let is_articulation = bitset.get(node_id);
-            scores.push(if is_articulation { 1.0 } else { 0.0 });
+        let mut scores = vec![0.0; node_count];
+        for node_id in articulation_points {
+            let idx = node_id as usize;
+            if idx < node_count {
+                scores[idx] = 1.0;
+            }
         }
 
+        let nodes_updated = node_count as u64;
         let backend = VecDouble::from(scores);
         let values = DefaultDoubleNodePropertyValues::from_collection(backend, node_count);
         let values: Arc<dyn NodePropertyValues> = Arc::new(values);
@@ -288,15 +278,14 @@ impl ArticulationPointsFacade {
             .add_node_property(labels, property_name.to_string(), values)
             .map_err(|e| {
                 AlgorithmError::Execution(format!(
-                    "Articulation Points mutate failed to add property: {e}"
+                    "ArticulationPoints mutate failed to add property: {e}"
                 ))
             })?;
 
-        let execution_time = start_time.elapsed();
         let summary = ArticulationPointsMutationSummary {
             nodes_updated,
             property_name: property_name.to_string(),
-            execution_time_ms: execution_time.as_millis() as u64,
+            execution_time_ms: builder.execution_time_ms(),
         };
 
         Ok(ArticulationPointsMutateResult {
@@ -311,7 +300,7 @@ impl ArticulationPointsFacade {
         ConfigValidator::non_empty_string(property_name, "property_name")?;
 
         let result = self.compute()?;
-        let nodes_written = result.node_count as u64;
+        let nodes_written = result.articulation_points.len() as u64;
         let execution_time = result.execution_time;
 
         Ok(WriteResult::new(
@@ -321,8 +310,7 @@ impl ArticulationPointsFacade {
         ))
     }
 }
-
-impl AlgorithmRunner for ArticulationPointsFacade {
+impl<Store: GraphStore> AlgorithmRunner for ArticulationPointsFacade<Store> {
     fn algorithm_name(&self) -> &'static str {
         "articulationPoints"
     }

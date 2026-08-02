@@ -15,7 +15,8 @@ use crate::projection::Orientation;
 use crate::projection::RelationshipType;
 use crate::task::concurrency::TerminationFlag;
 use crate::task::memory::MemoryRange;
-use crate::types::prelude::{DefaultGraphStore, GraphStore};
+use crate::types::graph_store::GraphStoreRead;
+use crate::types::prelude::DefaultGraphStore;
 use std::collections::HashSet;
 use std::sync::Arc;
 use std::time::Instant;
@@ -25,8 +26,8 @@ use crate::projection::eval::algorithm::AlgorithmError;
 use crate::task::progress::{ProgressTracker, TaskProgressTracker, TaskRegistryFactory, Tasks};
 
 /// Topological Sort algorithm facade
-pub struct TopologicalSortFacade {
-    graph_store: Arc<DefaultGraphStore>,
+pub struct TopologicalSortFacade<Store: GraphStoreRead + ?Sized = DefaultGraphStore> {
+    graph_store: Arc<Store>,
     config: TopologicalSortConfig,
     /// Progress tracking components
     task_registry_factory: Option<Box<dyn TaskRegistryFactory>>,
@@ -34,10 +35,10 @@ pub struct TopologicalSortFacade {
 }
 
 /// Backwards-compatible alias (builder-style naming).
-pub type TopologicalSortBuilder = TopologicalSortFacade;
+pub type TopologicalSortBuilder<Store = DefaultGraphStore> = TopologicalSortFacade<Store>;
 
-impl TopologicalSortFacade {
-    pub fn new(graph_store: Arc<DefaultGraphStore>) -> Self {
+impl<Store: GraphStoreRead + ?Sized> TopologicalSortFacade<Store> {
+    pub fn new(graph_store: Arc<Store>) -> Self {
         Self {
             graph_store,
             config: TopologicalSortConfig::default(),
@@ -48,7 +49,7 @@ impl TopologicalSortFacade {
 
     /// Create a facade using the spec.rs config model.
     pub fn from_spec_config(
-        graph_store: Arc<DefaultGraphStore>,
+        graph_store: Arc<Store>,
         config: TopologicalSortConfig,
     ) -> Result<Self> {
         config
@@ -64,10 +65,7 @@ impl TopologicalSortFacade {
     }
 
     /// Parse JSON into spec.rs config and return a configured facade.
-    pub fn from_spec_json(
-        graph_store: Arc<DefaultGraphStore>,
-        raw_config: &serde_json::Value,
-    ) -> Result<Self> {
+    pub fn from_spec_json(graph_store: Arc<Store>, raw_config: &serde_json::Value) -> Result<Self> {
         let parsed: TopologicalSortConfig = serde_json::from_value(raw_config.clone())
             .map_err(|e| AlgorithmError::Execution(format!("Config parsing failed: {e}")))?;
         Self::from_spec_config(graph_store, parsed)
@@ -216,77 +214,6 @@ impl TopologicalSortFacade {
         Ok(TopologicalSortResultBuilder::new(result, elapsed).stats())
     }
 
-    /// Mutate mode: Compute and update in-memory graph projection
-    ///
-    /// Stores topological order and distances as node properties.
-    ///
-    /// ```rust,no_run
-    /// # use gds::Graph;
-    /// # let graph: Graph = unimplemented!();
-    /// let builder = graph.topological_sort().compute_max_distance(true);
-    /// let result = builder.mutate("topological_order")?;
-    /// println!("Updated {} nodes", result.nodes_updated);
-    /// ```
-    pub fn mutate(self, property_name: &str) -> Result<TopologicalSortMutateResult> {
-        self.config
-            .validate()
-            .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
-        if property_name.is_empty() {
-            return Err(AlgorithmError::Execution(
-                "property_name cannot be empty".to_string(),
-            ));
-        }
-        let graph_store = Arc::clone(&self.graph_store);
-        let (result, elapsed) = self.compute()?;
-        let execution_time_ms = elapsed.as_millis() as u64;
-        let paths: Vec<PathResult> = TopologicalSortResultBuilder::new(result, elapsed).paths();
-
-        let updated_store = crate::algo::algorithms::pathfinding::build_path_relationship_store(
-            graph_store.as_ref(),
-            property_name,
-            &paths,
-        )?;
-
-        let summary = TopologicalSortMutationSummary {
-            nodes_updated: paths.len() as u64,
-            property_name: property_name.to_string(),
-            execution_time_ms,
-        };
-
-        Ok(TopologicalSortMutateResult {
-            summary,
-            updated_store,
-        })
-    }
-
-    /// Write mode: Compute and persist to storage
-    ///
-    /// Persists topological sort results to storage backend.
-    ///
-    /// ```rust,no_run
-    /// # use gds::Graph;
-    /// # let graph: Graph = unimplemented!();
-    /// let builder = graph.topological_sort().compute_max_distance(true);
-    /// let result = builder.write("topological_sort")?;
-    /// println!("Wrote {} nodes", result.nodes_written);
-    /// ```
-    pub fn write(self, property_name: &str) -> Result<TopologicalSortWriteSummary> {
-        self.config
-            .validate()
-            .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
-        if property_name.is_empty() {
-            return Err(AlgorithmError::Execution(
-                "property_name cannot be empty".to_string(),
-            ));
-        }
-        let res = self.mutate(property_name)?;
-        Ok(TopologicalSortWriteSummary {
-            nodes_written: res.summary.nodes_updated,
-            property_name: property_name.to_string(),
-            execution_time_ms: res.summary.execution_time_ms,
-        })
-    }
-
     /// Estimate memory requirements for topological sort execution
     ///
     /// Returns a memory range estimate based on:
@@ -328,6 +255,59 @@ impl TopologicalSortFacade {
         let total_with_overhead = total_memory + overhead;
 
         MemoryRange::of_range(total_memory, total_with_overhead)
+    }
+}
+
+impl TopologicalSortFacade<DefaultGraphStore> {
+    /// Mutate mode: Compute and update in-memory graph projection.
+    pub fn mutate(self, property_name: &str) -> Result<TopologicalSortMutateResult> {
+        self.config
+            .validate()
+            .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
+        if property_name.is_empty() {
+            return Err(AlgorithmError::Execution(
+                "property_name cannot be empty".to_string(),
+            ));
+        }
+        let graph_store = Arc::clone(&self.graph_store);
+        let (result, elapsed) = self.compute()?;
+        let execution_time_ms = elapsed.as_millis() as u64;
+        let paths: Vec<PathResult> = TopologicalSortResultBuilder::new(result, elapsed).paths();
+
+        let updated_store = crate::algo::algorithms::pathfinding::build_path_relationship_store(
+            graph_store.as_ref(),
+            property_name,
+            &paths,
+        )?;
+
+        let summary = TopologicalSortMutationSummary {
+            nodes_updated: paths.len() as u64,
+            property_name: property_name.to_string(),
+            execution_time_ms,
+        };
+
+        Ok(TopologicalSortMutateResult {
+            summary,
+            updated_store,
+        })
+    }
+
+    /// Write mode: Compute and persist to storage.
+    pub fn write(self, property_name: &str) -> Result<TopologicalSortWriteSummary> {
+        self.config
+            .validate()
+            .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
+        if property_name.is_empty() {
+            return Err(AlgorithmError::Execution(
+                "property_name cannot be empty".to_string(),
+            ));
+        }
+        let res = self.mutate(property_name)?;
+        Ok(TopologicalSortWriteSummary {
+            nodes_written: res.summary.nodes_updated,
+            property_name: property_name.to_string(),
+            execution_time_ms: res.summary.execution_time_ms,
+        })
     }
 }
 

@@ -5,15 +5,15 @@
 
 use crate::algo::algorithms::ConfigValidator;
 use crate::algo::algorithms::Result;
-use crate::task::concurrency::Concurrency;
 use crate::core::graph_dimensions::ConcreteGraphDimensions;
-use crate::task::memory::{MemoryEstimation, MemoryRange};
 use crate::ml::splitting::{
     InMemoryRelationshipsBuilderFactory, SplitRelationships, SplitRelationshipsConfig,
     SplitRelationshipsEstimateDefinition, SplitRelationshipsParameters,
 };
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::RelationshipType;
+use crate::task::concurrency::Concurrency;
+use crate::task::memory::{MemoryEstimation, MemoryRange};
 use crate::types::graph_store::{DefaultGraphStore, GraphStore};
 use std::collections::HashSet;
 use std::sync::Arc;
@@ -25,14 +25,14 @@ pub struct SplitRelationshipsStats {
 }
 
 /// SplitRelationships procedure facade.
-pub struct SplitRelationshipsFacade {
-    graph_store: Arc<DefaultGraphStore>,
+pub struct SplitRelationshipsFacade<Store: GraphStore = DefaultGraphStore> {
+    graph_store: Arc<Store>,
     config: SplitRelationshipsConfig,
     concurrency: Concurrency,
 }
 
-impl SplitRelationshipsFacade {
-    pub fn new(graph_store: Arc<DefaultGraphStore>) -> Self {
+impl<Store: GraphStore> SplitRelationshipsFacade<Store> {
+    pub fn new(graph_store: Arc<Store>) -> Self {
         Self {
             graph_store,
             config: SplitRelationshipsConfig::default(),

@@ -14,7 +14,8 @@ use crate::projection::RelationshipType;
 use crate::task::concurrency::TerminationFlag;
 use crate::task::memory::MemoryRange;
 use crate::types::graph::id_map::MappedNodeId;
-use crate::types::prelude::{DefaultGraphStore, GraphStore};
+use crate::types::graph_store::GraphStoreRead;
+use crate::types::prelude::DefaultGraphStore;
 use std::collections::HashMap;
 use std::collections::HashSet;
 use std::sync::Arc;
@@ -27,8 +28,8 @@ use crate::task::progress::TaskProgressTracker;
 use crate::task::progress::{TaskRegistryFactory, Tasks};
 
 /// Steiner Tree algorithm builder
-pub struct SteinerTreeBuilder {
-    graph_store: Arc<DefaultGraphStore>,
+pub struct SteinerTreeBuilder<Store: GraphStoreRead + ?Sized = DefaultGraphStore> {
+    graph_store: Arc<Store>,
     source_node: u64,
     target_nodes: Vec<u64>,
     relationship_weight_property: Option<String>,
@@ -40,8 +41,8 @@ pub struct SteinerTreeBuilder {
     user_log_registry_factory: Option<Box<dyn TaskRegistryFactory>>, // Placeholder for now
 }
 
-impl SteinerTreeBuilder {
-    pub fn new(graph_store: Arc<DefaultGraphStore>) -> Self {
+impl<Store: GraphStoreRead + ?Sized> SteinerTreeBuilder<Store> {
+    pub fn new(graph_store: Arc<Store>) -> Self {
         Self {
             graph_store,
             source_node: 0,
@@ -266,7 +267,23 @@ impl SteinerTreeBuilder {
         Ok(SteinerTreeResultBuilder::new(result, elapsed).stats())
     }
 
-    /// Mutate mode: writes results back to the graph store
+    /// Estimate memory usage for the computation
+    pub fn estimate_memory(&self) -> MemoryRange {
+        let node_count = self.graph_store.node_count();
+        let relationship_count = self.graph_store.relationship_count();
+        let per_node = node_count
+            * (std::mem::size_of::<f64>() * 3
+                + std::mem::size_of::<i64>() * 2
+                + std::mem::size_of::<bool>());
+        let frontier = node_count * std::mem::size_of::<usize>() * self.concurrency.max(1);
+        let graph_overhead = relationship_count * 16;
+        let total = per_node + frontier + graph_overhead;
+        MemoryRange::of_range(total, total + total / 5)
+    }
+}
+
+impl SteinerTreeBuilder<DefaultGraphStore> {
+    /// Mutate mode: writes results back to the graph store.
     pub fn mutate(self, property_name: &str) -> Result<SteinerTreeMutateResult> {
         self.validate()?;
         ConfigValidator::non_empty_string(property_name, "property_name")?;
@@ -289,7 +306,7 @@ impl SteinerTreeBuilder {
         })
     }
 
-    /// Write mode: writes results to external storage
+    /// Write mode: writes results to external storage.
     pub fn write(self, property_name: &str) -> Result<WriteResult> {
         self.validate()?;
         ConfigValidator::non_empty_string(property_name, "property_name")?;
@@ -299,20 +316,6 @@ impl SteinerTreeBuilder {
             property_name.to_string(),
             std::time::Duration::from_millis(res.summary.execution_time_ms),
         ))
-    }
-
-    /// Estimate memory usage for the computation
-    pub fn estimate_memory(&self) -> MemoryRange {
-        let node_count = self.graph_store.node_count();
-        let relationship_count = self.graph_store.relationship_count();
-        let per_node = node_count
-            * (std::mem::size_of::<f64>() * 3
-                + std::mem::size_of::<i64>() * 2
-                + std::mem::size_of::<bool>());
-        let frontier = node_count * std::mem::size_of::<usize>() * self.concurrency.max(1);
-        let graph_overhead = relationship_count * 16;
-        let total = per_node + frontier + graph_overhead;
-        MemoryRange::of_range(total, total + total / 5)
     }
 }
 

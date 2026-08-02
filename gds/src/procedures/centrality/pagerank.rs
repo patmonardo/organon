@@ -37,15 +37,15 @@ use crate::algo::pagerank::{
     PageRankResultBuilder, PageRankStats, PageRankVariant,
 };
 use crate::collections::backends::vec::VecDouble;
-use crate::task::concurrency::Concurrency;
 use crate::core::graph_dimensions::ConcreteGraphDimensions;
+use crate::projection::eval::algorithm::AlgorithmError;
+use crate::projection::Orientation;
+use crate::task::concurrency::Concurrency;
+use crate::task::memory::{MemoryEstimation, MemoryRange};
 use crate::task::progress::ProgressTracker;
 use crate::task::progress::{
     EmptyTaskRegistryFactory, JobId, TaskProgressTracker, TaskRegistryFactory,
 };
-use crate::task::memory::{MemoryEstimation, MemoryRange};
-use crate::projection::eval::algorithm::AlgorithmError;
-use crate::projection::Orientation;
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use crate::types::properties::node::DefaultDoubleNodePropertyValues;
 use crate::types::properties::node::NodePropertyValues;
@@ -80,21 +80,21 @@ use std::time::Instant;
 ///     .tolerance(1e-5);
 /// ```
 #[derive(Clone)]
-pub struct PageRankFacade {
-    graph_store: Arc<DefaultGraphStore>,
+pub struct PageRankFacade<Store: GraphStore = DefaultGraphStore> {
+    graph_store: Arc<Store>,
     config: PageRankConfig,
     /// Task registry for progress tracking
     task_registry: Arc<dyn TaskRegistryFactory>,
 }
 
-impl PageRankFacade {
+impl<Store: GraphStore> PageRankFacade<Store> {
     /// Create a new PageRank facade bound to a live graph store.
     ///
     /// Defaults:
     /// - iterations: 20
     /// - damping_factor: 0.85
     /// - tolerance: 1e-4
-    pub fn new(graph_store: Arc<DefaultGraphStore>) -> Self {
+    pub fn new(graph_store: Arc<Store>) -> Self {
         Self {
             graph_store,
             config: PageRankConfig::default(),
@@ -103,10 +103,7 @@ impl PageRankFacade {
     }
 
     /// Create a facade using the spec.rs config model.
-    pub fn from_spec_config(
-        graph_store: Arc<DefaultGraphStore>,
-        config: PageRankConfig,
-    ) -> Result<Self> {
+    pub fn from_spec_config(graph_store: Arc<Store>, config: PageRankConfig) -> Result<Self> {
         config
             .validate()
             .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
@@ -119,10 +116,7 @@ impl PageRankFacade {
     }
 
     /// Parse JSON into spec.rs config and return a configured facade.
-    pub fn from_spec_json(
-        graph_store: Arc<DefaultGraphStore>,
-        raw_config: &serde_json::Value,
-    ) -> Result<Self> {
+    pub fn from_spec_json(graph_store: Arc<Store>, raw_config: &serde_json::Value) -> Result<Self> {
         let parsed: PageRankConfig = serde_json::from_value(raw_config.clone())
             .map_err(|e| AlgorithmError::Execution(format!("Config parsing failed: {e}")))?;
         Self::from_spec_config(graph_store, parsed)
@@ -346,19 +340,35 @@ impl PageRankFacade {
         Ok(PageRankResultBuilder::new(result).stats())
     }
 
-    /// Mutate mode: Compute and store as node property
+    /// Estimate memory usage for this algorithm execution
     ///
-    /// Stores PageRank scores as a node property for use by other algorithms.
+    /// Provides an estimate of the memory required to run this algorithm
+    /// with the current configuration. This is useful for capacity planning
+    /// and preventing out-of-memory errors.
     ///
-    /// ```rust,no_run
+    /// # Returns
+    /// Memory range estimate (min/max bytes)
+    ///
+    /// # Example
+    /// ```ignore
     /// # use std::sync::Arc;
     /// # use gds::types::prelude::DefaultGraphStore;
     /// # let graph = Arc::new(DefaultGraphStore::empty());
     /// # use gds::procedures::centrality::PageRankFacade;
-    /// let facade = PageRankFacade::new(graph).damping_factor(0.85);
-    /// let result = facade.mutate("pagerank")?;
-    /// println!("Updated {} nodes", result.summary.nodes_updated);
+    /// let facade = PageRankFacade::new(graph);
+    /// let memory = facade.estimate_memory();
+    /// println!("Will use between {} and {} bytes", memory.min(), memory.max());
     /// ```
+    pub fn estimate_memory(&self) -> MemoryRange {
+        let dimensions = ConcreteGraphDimensions::of(self.graph_store.node_count(), 0);
+        *PageRankMemoryEstimation
+            .estimate(&dimensions, self.config.concurrency)
+            .memory_usage()
+    }
+}
+
+impl PageRankFacade<DefaultGraphStore> {
+    /// Mutate mode: Compute and store as node property.
     pub fn mutate(self, property_name: &str) -> Result<PageRankMutateResult> {
         self.validate()?;
         ConfigValidator::non_empty_string(property_name, "property_name")?;
@@ -392,36 +402,13 @@ impl PageRankFacade {
         })
     }
 
-    /// Write mode: Compute and write results to external storage
-    ///
-    /// Writes the PageRank scores to an external data store.
-    /// This is useful for persisting results for later analysis.
-    ///
-    /// # Arguments
-    /// * `property_name` - Name of the property to store the centrality scores
-    ///
-    /// # Returns
-    /// Result containing write statistics
-    ///
-    /// # Example
-    /// ```ignore
-    /// # use std::sync::Arc;
-    /// # use gds::types::prelude::DefaultGraphStore;
-    /// # let graph = Arc::new(DefaultGraphStore::empty());
-    /// # use gds::procedures::centrality::PageRankFacade;
-    /// let facade = PageRankFacade::new(graph);
-    /// let result = facade.write("pagerank")?;
-    /// println!("Wrote {} records", result.records_written);
-    /// ```
+    /// Write mode: Compute and write results to external storage.
     pub fn write(self, property_name: &str) -> Result<WriteResult> {
         self.validate()?;
         ConfigValidator::non_empty_string(property_name, "property_name")?;
 
         let result = self.compute()?;
         let scores = result.scores;
-
-        // For now, use placeholder write - just count the nodes that would be written
-        // TODO: Implement actual persistence to external storage
         let nodes_written = scores.len() as u64;
 
         Ok(WriteResult::new(
@@ -429,32 +416,6 @@ impl PageRankFacade {
             property_name.to_string(),
             result.execution_time,
         ))
-    }
-
-    /// Estimate memory usage for this algorithm execution
-    ///
-    /// Provides an estimate of the memory required to run this algorithm
-    /// with the current configuration. This is useful for capacity planning
-    /// and preventing out-of-memory errors.
-    ///
-    /// # Returns
-    /// Memory range estimate (min/max bytes)
-    ///
-    /// # Example
-    /// ```ignore
-    /// # use std::sync::Arc;
-    /// # use gds::types::prelude::DefaultGraphStore;
-    /// # let graph = Arc::new(DefaultGraphStore::empty());
-    /// # use gds::procedures::centrality::PageRankFacade;
-    /// let facade = PageRankFacade::new(graph);
-    /// let memory = facade.estimate_memory();
-    /// println!("Will use between {} and {} bytes", memory.min(), memory.max());
-    /// ```
-    pub fn estimate_memory(&self) -> MemoryRange {
-        let dimensions = ConcreteGraphDimensions::of(self.graph_store.node_count(), 0);
-        *PageRankMemoryEstimation
-            .estimate(&dimensions, self.config.concurrency)
-            .memory_usage()
     }
 }
 

@@ -11,10 +11,10 @@ use crate::algo::modularity::{
     ModularityStorageRuntime,
 };
 use crate::collections::backends::vec::VecDouble;
-use crate::task::concurrency::TerminationFlag;
-use crate::task::progress::{TaskRegistry, Tasks};
-use crate::task::memory::{Estimate, MemoryRange};
 use crate::projection::eval::algorithm::AlgorithmError;
+use crate::task::concurrency::TerminationFlag;
+use crate::task::memory::{Estimate, MemoryRange};
+use crate::task::progress::{TaskRegistry, Tasks};
 use crate::types::prelude::{DefaultGraphStore, GraphStore};
 use crate::types::properties::node::DefaultDoubleNodePropertyValues;
 use crate::types::properties::node::NodePropertyValues;
@@ -35,14 +35,14 @@ pub struct ModularityRow {
 
 /// Modularity algorithm facade
 #[derive(Clone)]
-pub struct ModularityFacade {
-    graph_store: Arc<DefaultGraphStore>,
+pub struct ModularityFacade<Store: GraphStore = DefaultGraphStore> {
+    graph_store: Arc<Store>,
     config: ModularityConfig,
     task_registry: Option<TaskRegistry>,
 }
 
-impl ModularityFacade {
-    pub fn new(graph_store: Arc<DefaultGraphStore>, community_property: String) -> Self {
+impl<Store: GraphStore> ModularityFacade<Store> {
+    pub fn new(graph_store: Arc<Store>, community_property: String) -> Self {
         Self {
             graph_store,
             config: ModularityConfig {
@@ -54,10 +54,7 @@ impl ModularityFacade {
     }
 
     /// Create a facade using the spec.rs config model.
-    pub fn from_spec_config(
-        graph_store: Arc<DefaultGraphStore>,
-        config: ModularityConfig,
-    ) -> Result<Self> {
+    pub fn from_spec_config(graph_store: Arc<Store>, config: ModularityConfig) -> Result<Self> {
         config
             .validate()
             .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
@@ -70,10 +67,7 @@ impl ModularityFacade {
     }
 
     /// Parse JSON into spec.rs config and return a configured facade.
-    pub fn from_spec_json(
-        graph_store: Arc<DefaultGraphStore>,
-        raw_config: &serde_json::Value,
-    ) -> Result<Self> {
+    pub fn from_spec_json(graph_store: Arc<Store>, raw_config: &serde_json::Value) -> Result<Self> {
         let parsed: ModularityConfig = serde_json::from_value(raw_config.clone())
             .map_err(|e| AlgorithmError::Execution(format!("Config parsing failed: {e}")))?;
         Self::from_spec_config(graph_store, parsed)
@@ -156,6 +150,41 @@ impl ModularityFacade {
         Ok(ModularityResultBuilder::new(result).stats())
     }
 
+    /// Full result: returns per-community modularity scores and the total score.
+    pub fn run(&self) -> Result<ModularityResult> {
+        self.compute()
+    }
+
+    /// Estimate memory usage.
+    pub fn estimate_memory(&self) -> Result<MemoryRange> {
+        let node_count = self.graph_store.node_count();
+        let concurrency = self.config.concurrency.max(1);
+
+        let community_mapper = Estimate::size_of_long_hash_set(node_count)
+            .saturating_add(Estimate::size_of_long_array(node_count));
+        let inside_relationships = Estimate::size_of_double_array(node_count);
+        let total_community_relationships = Estimate::size_of_double_array(node_count);
+        let community_modularities = Estimate::size_of_object_array(node_count).saturating_add(
+            node_count.saturating_mul(
+                Estimate::BYTES_OBJECT_HEADER
+                    .saturating_add(std::mem::size_of::<u64>())
+                    .saturating_add(std::mem::size_of::<f64>()),
+            ),
+        );
+        let relationship_collectors = Estimate::BYTES_OBJECT_HEADER.saturating_mul(concurrency);
+
+        let total = Estimate::BYTES_OBJECT_HEADER
+            .saturating_add(community_mapper)
+            .saturating_add(inside_relationships)
+            .saturating_add(total_community_relationships)
+            .saturating_add(community_modularities)
+            .saturating_add(relationship_collectors);
+
+        Ok(MemoryRange::of(total))
+    }
+}
+
+impl ModularityFacade<DefaultGraphStore> {
     /// Mutate mode: writes modularity scores back to the graph store.
     pub fn mutate(self, property_name: &str) -> Result<ModularityMutateResult> {
         self.validate()?;
@@ -232,39 +261,6 @@ impl ModularityFacade {
             property_name.to_string(),
             std::time::Duration::from_millis(res.summary.execution_time_ms),
         ))
-    }
-
-    /// Full result: returns per-community modularity scores and the total score.
-    pub fn run(&self) -> Result<ModularityResult> {
-        self.compute()
-    }
-
-    /// Estimate memory usage.
-    pub fn estimate_memory(&self) -> Result<MemoryRange> {
-        let node_count = self.graph_store.node_count();
-        let concurrency = self.config.concurrency.max(1);
-
-        let community_mapper = Estimate::size_of_long_hash_set(node_count)
-            .saturating_add(Estimate::size_of_long_array(node_count));
-        let inside_relationships = Estimate::size_of_double_array(node_count);
-        let total_community_relationships = Estimate::size_of_double_array(node_count);
-        let community_modularities = Estimate::size_of_object_array(node_count).saturating_add(
-            node_count.saturating_mul(
-                Estimate::BYTES_OBJECT_HEADER
-                    .saturating_add(std::mem::size_of::<u64>())
-                    .saturating_add(std::mem::size_of::<f64>()),
-            ),
-        );
-        let relationship_collectors = Estimate::BYTES_OBJECT_HEADER.saturating_mul(concurrency);
-
-        let total = Estimate::BYTES_OBJECT_HEADER
-            .saturating_add(community_mapper)
-            .saturating_add(inside_relationships)
-            .saturating_add(total_community_relationships)
-            .saturating_add(community_modularities)
-            .saturating_add(relationship_collectors);
-
-        Ok(MemoryRange::of(total))
     }
 }
 

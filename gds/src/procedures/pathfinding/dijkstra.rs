@@ -37,7 +37,8 @@ use crate::projection::Orientation;
 use crate::projection::RelationshipType;
 use crate::task::memory::MemoryRange;
 use crate::types::graph::id_map::MappedNodeId;
-use crate::types::prelude::{DefaultGraphStore, GraphStore};
+use crate::types::graph_store::GraphStoreRead;
+use crate::types::prelude::DefaultGraphStore;
 use std::collections::HashMap;
 use std::collections::HashSet;
 use std::sync::Arc;
@@ -78,8 +79,8 @@ use crate::task::progress::{TaskRegistryFactory, Tasks};
 ///     .weight_property("cost")
 ///     .direction("outgoing");
 /// ```
-pub struct DijkstraFacade {
-    graph_store: Arc<DefaultGraphStore>,
+pub struct DijkstraFacade<Store: GraphStoreRead + ?Sized = DefaultGraphStore> {
+    graph_store: Arc<Store>,
     config: DijkstraConfig,
     /// Property name for edge weights
     weight_property: String,
@@ -89,9 +90,9 @@ pub struct DijkstraFacade {
 }
 
 /// Backwards-compatible alias (builder-style naming).
-pub type DijkstraBuilder = DijkstraFacade;
+pub type DijkstraBuilder<Store = DefaultGraphStore> = DijkstraFacade<Store>;
 
-impl DijkstraFacade {
+impl<Store: GraphStoreRead + ?Sized> DijkstraFacade<Store> {
     /// Create a new Dijkstra builder bound to a live graph store.
     ///
     /// Defaults:
@@ -102,7 +103,7 @@ impl DijkstraFacade {
     /// - track_relationships: false
     /// - concurrency: 4
     /// - progress tracking: None (uses defaults)
-    pub fn new(graph_store: Arc<DefaultGraphStore>) -> Self {
+    pub fn new(graph_store: Arc<Store>) -> Self {
         Self {
             graph_store,
             config: DijkstraConfig::default(),
@@ -113,10 +114,7 @@ impl DijkstraFacade {
     }
 
     /// Create a facade using the spec.rs config model.
-    pub fn from_spec_config(
-        graph_store: Arc<DefaultGraphStore>,
-        config: DijkstraConfig,
-    ) -> Result<Self> {
+    pub fn from_spec_config(graph_store: Arc<Store>, config: DijkstraConfig) -> Result<Self> {
         config
             .validate()
             .map_err(|e| AlgorithmError::Execution(format!("Invalid config: {e}")))?;
@@ -131,10 +129,7 @@ impl DijkstraFacade {
     }
 
     /// Parse JSON into spec.rs config and return a configured facade.
-    pub fn from_spec_json(
-        graph_store: Arc<DefaultGraphStore>,
-        raw_config: &serde_json::Value,
-    ) -> Result<Self> {
+    pub fn from_spec_json(graph_store: Arc<Store>, raw_config: &serde_json::Value) -> Result<Self> {
         let parsed: DijkstraConfig = serde_json::from_value(raw_config.clone())
             .map_err(|e| AlgorithmError::Execution(format!("Config parsing failed: {e}")))?;
         Self::from_spec_config(graph_store, parsed)
@@ -423,7 +418,9 @@ impl DijkstraFacade {
             target_reached: !result.paths.is_empty() && has_targets,
         }
     }
+}
 
+impl DijkstraFacade<DefaultGraphStore> {
     /// Mutate mode: Compute and store as node property
     ///
     /// Stores shortest path distances as a node property.
@@ -490,7 +487,9 @@ impl DijkstraFacade {
             execution_time_ms: res.summary.execution_time_ms,
         })
     }
+}
 
+impl<Store: GraphStoreRead + ?Sized> DijkstraFacade<Store> {
     /// Estimate memory requirements for Dijkstra execution
     ///
     /// Returns a memory range estimate based on:
