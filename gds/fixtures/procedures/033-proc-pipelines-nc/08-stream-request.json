@@ -1,12 +1,12 @@
 {
-  "graphName": "demo-graph",
   "relationshipTypes": [
     "KNOWS"
   ],
-  "modelName": "nc_demo_model",
+  "modelUser": "alice",
   "includePredictedProbabilities": true,
   "targetNodeLabels": [
     "Person"
   ],
-  "modelUser": "alice"
+  "modelName": "nc_demo_model",
+  "graphName": "demo-graph"
 }

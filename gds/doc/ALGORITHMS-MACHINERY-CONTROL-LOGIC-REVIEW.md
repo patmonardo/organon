@@ -82,13 +82,14 @@ This is the main seam to keep clean: there are **two “facade layers”** invol
 
 ### 1) Who sets tracker "estimated resource footprint"?
 
-- There are *two* memory-related mechanisms:
+- There are _two_ memory-related mechanisms:
   - **Guard**: `MemoryGuard` reserves memory (or skips on NotImplemented).
   - **Progress UI hint**: `ProgressTracker::set_estimated_resource_footprint(MemoryRange)`.
 
 But the template path doesn’t obviously standardize whether/when the estimate is written into the tracker.
 
 Recommendation (small and low-risk):
+
 - If an estimate exists, **Machinery should always call** `tracker.set_estimated_resource_footprint(...)` before compute, because it owns tracker creation and tasks.
 - The **estimate itself should come from Procedures** (or a procedure-owned estimator helper).
 
@@ -100,6 +101,7 @@ Recommendation (small and low-risk):
 That’s fine internally, but for clarity we should pick a single “standard path” for algorithm applications.
 
 Recommendation:
+
 - Prefer the **template path** as the canonical “application mode runner” because it also owns rendering and side-effects.
 - Keep `ComputationService` as an internal building block (or phase it out later).
 
@@ -110,8 +112,9 @@ Recommendation:
 - `AlgorithmMachinery` does not currently `catch_unwind`; it assumes the compute closure returns `Result`.
 
 Recommendation:
+
 - Decide the contract:
-  - **Option A**: Termination is allowed to panic and the *outer transport* converts it (needs a consistent catch boundary).
+  - **Option A**: Termination is allowed to panic and the _outer transport_ converts it (needs a consistent catch boundary).
   - **Option B**: Termination becomes a typed error and no panics cross Applications.
 
 ---
@@ -123,16 +126,22 @@ This is the “clean story” for how Applications/Machinery and Procedures shou
 1. **Application handler parses request and chooses mode** (stream/stats/mutate/write/estimate).
 2. **Application handler routes strictly to Procedures** (Applications never call into `algo`).
 3. **Machinery builds the run envelope**: task tree, request-scoped dependencies, timings, termination wiring.
-  - Reference: [gds/src/applications/algorithms/machinery/algorithm_processing_template.rs](../src/applications/algorithms/machinery/algorithm_processing_template.rs)
-  - Tracker creation: [gds/src/applications/algorithms/machinery/progress_tracker_creator.rs](../src/applications/algorithms/machinery/progress_tracker_creator.rs)
-  - Lifecycle wrapper: [gds/src/applications/algorithms/machinery/algorithm_machinery.rs](../src/applications/algorithms/machinery/algorithm_machinery.rs)
+
+- Reference: [gds/src/applications/algorithms/machinery/algorithm_processing_template.rs](../src/applications/algorithms/machinery/algorithm_processing_template.rs)
+- Tracker creation: [gds/src/applications/algorithms/machinery/progress_tracker_creator.rs](../src/applications/algorithms/machinery/progress_tracker_creator.rs)
+- Lifecycle wrapper: [gds/src/applications/algorithms/machinery/algorithm_machinery.rs](../src/applications/algorithms/machinery/algorithm_machinery.rs)
+
 4. **Machinery obtains an algorithm-specific memory estimate from Procedures** (single source of truth).
-  - Example estimate surfaces today:
-    - BFS estimate mode: [gds/src/applications/algorithms/pathfinding/bfs/modes/estimate.rs](../src/applications/algorithms/pathfinding/bfs/modes/estimate.rs)
-    - NodeSimilarity estimate mode: [gds/src/applications/algorithms/similarity/node_similarity/modes/estimate.rs](../src/applications/algorithms/similarity/node_similarity/modes/estimate.rs)
+
+- Example estimate surfaces today:
+  - BFS estimate mode: [gds/src/applications/algorithms/pathfinding/bfs/modes/estimate.rs](../src/applications/algorithms/pathfinding/bfs/modes/estimate.rs)
+  - NodeSimilarity estimate mode: [gds/src/applications/algorithms/similarity/node_similarity/modes/estimate.rs](../src/applications/algorithms/similarity/node_similarity/modes/estimate.rs)
+
 5. **Machinery writes the estimate into the progress tracker** (UI/telemetry hint) and enforces the guard.
-  - Guard mechanism: [gds/src/applications/algorithms/machinery/memory_guard.rs](../src/applications/algorithms/machinery/memory_guard.rs)
-  - Template hook is present but not yet widely used: `AlgorithmProcessingTemplate::process_with_memory_guard(...)`.
+
+- Guard mechanism: [gds/src/applications/algorithms/machinery/memory_guard.rs](../src/applications/algorithms/machinery/memory_guard.rs)
+- Template hook is present but not yet widely used: `AlgorithmProcessingTemplate::process_with_memory_guard(...)`.
+
 6. **Procedure validates inputs and constructs runtimes** (controller pattern: procedure → storage runtime → computation runtime).
 7. **Storage runtime drives the loop and reports domain progress** through the tracker that was injected from Machinery.
 8. **Machinery renders results + applies side effects** and closes the tracker envelope (success/failure/release).
@@ -142,11 +151,22 @@ This matches the intent you described: both layers participate, but **hierarchic
 - Machinery owns the request-scoped envelope (identity, lifecycle, policies).
 - Procedures own algorithm semantics (and the estimate numbers), and they report domain progress.
 
+## Shell Control Protocol (Backend Example)
+
+The Shell compute example is the concrete backend counterpart to the narrative above.
+
+- [gds/examples/shell_compute_protocol.rs](../examples/shell_compute_protocol.rs) uses `GdsShell.component_plan()` to author a component plan.
+- The plan is bound through `ShellProcedureControl`, not treated as a front-end-only DSL artifact.
+- The runtime invocation reaches an actual graph traversal result surface (`ShellProcedureResult::BfsStream`).
+- The doctrinal point is that Shell is a control entrypoint for Procedures, while Procedures remain the semantic boundary that speaks to graph algorithms.
+
+This example therefore upgrades the earlier shell story from declarative shape to executable control protocol: the DSL does not merely describe intent, it delegates into the procedure runtime and returns a real algorithmic result.
+
 ---
 
 ## Observed Reality (Today)
 
-Today we’re partway there: Machinery is used for a consistent *response envelope* in many modes, but progress/memory enforcement is often not yet unified.
+Today we’re partway there: Machinery is used for a consistent _response envelope_ in many modes, but progress/memory enforcement is often not yet unified.
 
 ### Example: BFS (manual applications path)
 
@@ -178,17 +198,28 @@ Today we’re partway there: Machinery is used for a consistent *response envelo
 These are small, incremental moves that preserve current structure but make the story coherent.
 
 1. **Pick and document the canonical “execution path”**
-  - Either: all algorithm application modes use Machinery, or explicit exceptions are documented (like BFS today).
+
+- Either: all algorithm application modes use Machinery, or explicit exceptions are documented (like BFS today).
+
 2. **Make “estimate → tracker footprint → guard → compute” the standard sequence**
-  - Even if some estimates are `NotImplemented`, the sequence should be visible and consistent.
+
+- Even if some estimates are `NotImplemented`, the sequence should be visible and consistent.
+
 3. **Avoid split-brain progress tracking**
-  - If an application mode uses Machinery, it should not ignore the provided tracker (thread it down or don’t use Machinery for that mode).
+
+- If an application mode uses Machinery, it should not ignore the provided tracker (thread it down or don’t use Machinery for that mode).
+
 4. **Keep procedure-level progress domain-meaningful**
-  - Procedures/storage decide what volume means (nodes vs relationships vs iterations) and how to increment.
+
+- Procedures/storage decide what volume means (nodes vs relationships vs iterations) and how to increment.
+
 5. **Surface the current placeholder status of progress registries**
-  - Many Machinery call sites use `TaskRegistryFactories::empty()`; that’s fine, but we should treat it as “no durable progress sink yet”.
+
+- Many Machinery call sites use `TaskRegistryFactories::empty()`; that’s fine, but we should treat it as “no durable progress sink yet”.
+
 6. **Keep memory estimates owned by Procedures, but policies owned by Machinery**
-  - Procedures provide the numbers; Machinery decides min/max policy, reservation, and how to surface it.
+
+- Procedures provide the numbers; Machinery decides min/max policy, reservation, and how to surface it.
 
 ---
 
@@ -245,7 +276,7 @@ If you decide to do this after lunch, the lowest-risk approach is:
 2. **Move result-shape types out of `algo`** (if needed)
    - Some of these look like pure DTOs (rows, metrics). Those can live in a shared `types`/`facade` module so both procedures and applications can depend on them without crossing the `algo` boundary.
 
-3. **Keep “steps/*” files purely about orchestration**
+3. **Keep “steps/\*” files purely about orchestration**
    - The pathfinding “steps” should consume `procedures::traits::PathResult` (or a facade equivalent), not `algo::common::result_builders::PathResult`.
 
 ---
@@ -254,4 +285,3 @@ If you decide to do this after lunch, the lowest-risk approach is:
 
 - This scan did **not** find `panic!/todo!/unimplemented!` within `gds/src/applications/algorithms/**` via the basic search used here.
 - There are known Application stubs elsewhere (notably Machinery convenience methods), but that’s tracked in [gds/doc/APPLICATIONS_CONTROL_LOGIC_INVENTORY.md](APPLICATIONS_CONTROL_LOGIC_INVENTORY.md).
-

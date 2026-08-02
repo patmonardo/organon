@@ -12,7 +12,7 @@ pub struct ShellWorkbenchTrack {
     pub status: &'static str,
 }
 
-const SHELL_TRACKS: [ShellWorkbenchTrack; 6] = [
+const SHELL_TRACKS: [ShellWorkbenchTrack; 7] = [
     ShellWorkbenchTrack {
         id: "shell-model-first",
         title: "Shell Model First",
@@ -54,6 +54,13 @@ const SHELL_TRACKS: [ShellWorkbenchTrack; 6] = [
         focus: "typed Dataset Plan execution with Shell knowledge return",
         exemplar: "examples/shell_knowledge_script.rs",
         status: "experimental",
+    },
+    ShellWorkbenchTrack {
+        id: "shell-compute-protocol",
+        title: "Shell Control Protocol",
+        focus: "Shell internal DSL upgrades into a backend control protocol for procedure-bound graph algorithms",
+        exemplar: "examples/shell_compute_protocol.rs",
+        status: "covered",
     },
 ];
 

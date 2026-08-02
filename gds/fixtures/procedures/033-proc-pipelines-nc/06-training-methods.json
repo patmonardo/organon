@@ -6,9 +6,9 @@
         {
           "name": "gds.debug.writeConstantDouble.mutate",
           "config": {
+            "contextRelationshipTypes": [],
             "mutateProperty": "pagerank",
             "value": 1.0,
-            "contextRelationshipTypes": [],
             "contextNodeLabels": []
           }
         }
@@ -25,7 +25,17 @@
         "maxTrials": 12
       },
       "parameterSpace": {
-        "LogisticRegression": []
+        "LogisticRegression": [
+          {
+            "penalty": 0.0,
+            "focus_weight": 0.0,
+            "methodName": "LogisticRegression",
+            "tolerance": 0.0001,
+            "max_epochs": 100,
+            "batch_size": 100,
+            "learning_rate": 0.001
+          }
+        ]
       }
     }
   ],
@@ -35,9 +45,9 @@
       "nodePropertySteps": [
         {
           "config": {
+            "contextRelationshipTypes": [],
             "mutateProperty": "pagerank",
             "value": 1.0,
-            "contextRelationshipTypes": [],
             "contextNodeLabels": []
           },
           "name": "gds.debug.writeConstantDouble.mutate"
@@ -55,8 +65,28 @@
         "maxTrials": 12
       },
       "parameterSpace": {
-        "RandomForestClassification": [],
-        "LogisticRegression": []
+        "RandomForestClassification": [
+          {
+            "methodName": "RandomForestClassification",
+            "maxDepth": 0,
+            "minSamplesLeaf": 1,
+            "minSamplesSplit": 2,
+            "numberOfSamplesRatio": 1.0,
+            "numberOfDecisionTrees": 100,
+            "criterion": "GINI"
+          }
+        ],
+        "LogisticRegression": [
+          {
+            "penalty": 0.0,
+            "batch_size": 100,
+            "focus_weight": 0.0,
+            "methodName": "LogisticRegression",
+            "learning_rate": 0.001,
+            "max_epochs": 100,
+            "tolerance": 0.0001
+          }
+        ]
       }
     }
   ],
@@ -67,9 +97,9 @@
         {
           "name": "gds.debug.writeConstantDouble.mutate",
           "config": {
+            "contextRelationshipTypes": [],
             "mutateProperty": "pagerank",
             "value": 1.0,
-            "contextRelationshipTypes": [],
             "contextNodeLabels": []
           }
         }
@@ -86,9 +116,44 @@
         "maxTrials": 12
       },
       "parameterSpace": {
-        "LogisticRegression": [],
-        "RandomForestClassification": [],
-        "MLPClassification": []
+        "RandomForestClassification": [
+          {
+            "numberOfDecisionTrees": 100,
+            "maxDepth": 0,
+            "criterion": "GINI",
+            "minSamplesSplit": 2,
+            "methodName": "RandomForestClassification",
+            "numberOfSamplesRatio": 1.0,
+            "minSamplesLeaf": 1
+          }
+        ],
+        "MLPClassification": [
+          {
+            "max_epochs": 100,
+            "methodName": "MLPClassification",
+            "patience": 1,
+            "batch_size": 100,
+            "learning_rate": 0.001,
+            "tolerance": 0.001,
+            "min_epochs": 1,
+            "hidden_layer_sizes": [
+              100
+            ],
+            "focus_weight": 0.0,
+            "penalty": 0.0
+          }
+        ],
+        "LogisticRegression": [
+          {
+            "focus_weight": 0.0,
+            "methodName": "LogisticRegression",
+            "learning_rate": 0.001,
+            "max_epochs": 100,
+            "batch_size": 100,
+            "penalty": 0.0,
+            "tolerance": 0.0001
+          }
+        ]
       }
     }
   ]

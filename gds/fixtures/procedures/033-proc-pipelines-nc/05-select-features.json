@@ -3,13 +3,13 @@
     "name": "nc_demo",
     "nodePropertySteps": [
       {
-        "name": "gds.debug.writeConstantDouble.mutate",
         "config": {
+          "contextRelationshipTypes": [],
           "mutateProperty": "pagerank",
           "value": 1.0,
-          "contextRelationshipTypes": [],
           "contextNodeLabels": []
-        }
+        },
+        "name": "gds.debug.writeConstantDouble.mutate"
       }
     ],
     "featureProperties": [

@@ -1,7 +1,17 @@
-address: ShellAddress { register: Unified, pipeline: ModelFeaturePlan, algebra: ProgramFeature }
-register: Unified
+Shell Return Register
+
+root-taskframe: taskframe::root.shell_compute_protocol
+doctrinal-role: Agent return surface that composes shell/proc/eval mediation.
+address: shell.return.unified
 pipeline: ModelFeaturePlan
+algebra: ProgramFeature
 trace_valid: true
 semdataset_ready: true
 pureform_return_ready: true
-readiness_score: 100
+bindings: 1
+invocations: 1
+
+mediation-registry:
+- shell_: command form and orchestration surface
+- proc_: algorithm runtime and semantic control surface
+- eval_: intelligibility surface for downstream doctrinal reading

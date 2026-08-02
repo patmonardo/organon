@@ -1,0 +1,4 @@
+track: taskframe-shell-model-feature-plan
+description: shell::pipeline::ModelFeaturePlan
+steps: ["dataframe.seed", "dataset.model", "dataset.feature", "dataset.plan", "shell.concept-return"]
+volume: 512

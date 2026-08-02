@@ -1,0 +1,17 @@
+Shell Procedure Result
+
+root-taskframe: taskframe::root.shell_compute_protocol
+binding_count: 1
+result_count: 1
+component: gds.algorithms.pathfinding.bfs
+mode: Stream
+row_count: 5
+
+topic-map-role: Kernel empirical adequacy witness for shell::compute.
+
+rows:
+  source=0 target=0 path=[0] cost=0
+  source=0 target=1 path=[1] cost=1
+  source=0 target=2 path=[2] cost=1
+  source=0 target=3 path=[3] cost=2
+  source=0 target=4 path=[4] cost=2

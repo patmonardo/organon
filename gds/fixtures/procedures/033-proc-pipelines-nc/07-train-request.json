@@ -1,15 +1,15 @@
 {
-  "randomSeed": 42,
   "targetNodeLabels": [
     "Person"
   ],
-  "concurrency": 4,
   "pipeline": "nc_demo",
-  "targetProperty": "label",
   "metrics": [
     "F1(class=*)"
   ],
+  "randomSeed": 42,
+  "concurrency": 4,
   "relationshipTypes": [
     "KNOWS"
-  ]
+  ],
+  "targetProperty": "label"
 }

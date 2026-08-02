@@ -1,0 +1,4 @@
+origin: ShellAddress { register: ImmediateDataFrame, pipeline: Frame, algebra: Schema }
+component: gds.algorithms.pathfinding.bfs
+mode: Stream
+inputs: {"source": Number(0), "trackPaths": Bool(true)}

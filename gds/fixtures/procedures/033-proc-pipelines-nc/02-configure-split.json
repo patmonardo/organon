@@ -4,8 +4,8 @@
     "nodePropertySteps": [],
     "featureProperties": [],
     "splitConfig": {
-      "testFraction": "0.2",
-      "validationFolds": "5"
+      "validationFolds": "5",
+      "testFraction": "0.2"
     },
     "autoTuningConfig": {
       "maxTrials": 10

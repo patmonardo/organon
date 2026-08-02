@@ -11,6 +11,7 @@ of the platform.
 
 1. [FOUNDING-CHARTER.md](FOUNDING-CHARTER.md) — Why the Doctrine exists and what it replaces
 2. [PRINCIPLE-FOUNDATION.md](PRINCIPLE-FOUNDATION.md) — The high principle in one page
+3. [WORKBENCH.md](WORKBENCH.md) — Runnable researcher path (notebook-like, fixture-backed)
 
 Then study the exemplars in order (see section below).
 
@@ -46,6 +47,7 @@ Forward-looking law: every RootAgent world projection must anchor to a root Data
 through a SemDataset Principle (World Projection is valid only as rooted semantic projection).
 
 **The Arc** (the only arc):
+
 ```
 Source → Observation → Reflection (7 moments) → Principle → Concept → Judgment → Syllogism → Procedure
 ```
@@ -106,114 +108,114 @@ that shows what a stage of the arc teaches.
    Teaches: JSON lowered into observed semantic tree form.
 
 10. **[010-xml-html-semantic-form.md](EXEMPLARS/dataset/010-xml-html-semantic-form.md)**
-   File: `gds/examples/dataset_io_xml_html.rs`
+    File: `gds/examples/dataset_io_xml_html.rs`
     Teaches: Markup lowered into observed document tree form.
 
 ### Reflection, Principle, and Concept Emergence
 
 11. **[011-dataframe-macros-reflection.md](EXEMPLARS/dataframe/011-dataframe-macros-reflection.md)**
-   File: `gds/examples/dataframe_macros_reflection.rs`
-   Teaches: DataFrame macros as the Reflection engine.
+    File: `gds/examples/dataframe_macros_reflection.rs`
+    Teaches: DataFrame macros as the Reflection engine.
 
 12. **[012-select-filter-principle.md](EXEMPLARS/dataframe/012-select-filter-principle.md)**
-   File: `gds/examples/dataframe_select_filter.rs`
-   Teaches: Select/filter operations as Principle evaluation.
+    File: `gds/examples/dataframe_select_filter.rs`
+    Teaches: Select/filter operations as Principle evaluation.
 
 13. **[013-series-concept-surface.md](EXEMPLARS/dataframe/013-series-concept-surface.md)**
-   File: `gds/examples/dataframe_series_concept.rs`
-   Teaches: Series as Concept surface.
+    File: `gds/examples/dataframe_series_concept.rs`
+    Teaches: Series as Concept surface.
 
 ### Judgment, Syllogism, Inference, and Procedure
 
 14. **[014-expr-pipeline-judgment.md](EXEMPLARS/dataframe/014-expr-pipeline-judgment.md)**
-   File: `gds/examples/dataframe_expr_pipeline.rs`
-   Teaches: Expr pipelines as Judgment.
+    File: `gds/examples/dataframe_expr_pipeline.rs`
+    Teaches: Expr pipelines as Judgment.
 
 15. **[015-order-group-syllogism.md](EXEMPLARS/dataframe/015-order-group-syllogism.md)**
-   File: `gds/examples/dataframe_order_group.rs`
-   Teaches: Order/group operations as Syllogism.
+    File: `gds/examples/dataframe_order_group.rs`
+    Teaches: Order/group operations as Syllogism.
 
 16. **[016-join-operations-inference.md](EXEMPLARS/dataframe/016-join-operations-inference.md)**
-   File: `gds/examples/dataframe_join_operations.rs`
-   Teaches: Joins as cross-population Inference.
+    File: `gds/examples/dataframe_join_operations.rs`
+    Teaches: Joins as cross-population Inference.
 
 17. **[017-streaming-dataset-procedure.md](EXEMPLARS/dataset/017-streaming-dataset-procedure.md)**
-   File: `gds/examples/dataset_streaming_procedure.rs`
-   Teaches: Streaming Dataset as Procedure and Process emission.
+    File: `gds/examples/dataset_streaming_procedure.rs`
+    Teaches: Streaming Dataset as Procedure and Process emission.
 
 18. **[018-streaming-lazy-deferred.md](EXEMPLARS/dataset/018-streaming-lazy-deferred.md)**
-   File: `gds/examples/dataset_streaming_lazy.rs`
-   Teaches: Lazy streaming as deferred Procedure collection.
+    File: `gds/examples/dataset_streaming_lazy.rs`
+    Teaches: Lazy streaming as deferred Procedure collection.
 
 19. **[019-expr-basic-judgment-grammar.md](EXEMPLARS/dataframe/019-expr-basic-judgment-grammar.md)**
-   File: `gds/examples/dataframe_expr_basic.rs`
-   Teaches: Expr as reusable Judgment grammar.
+    File: `gds/examples/dataframe_expr_basic.rs`
+    Teaches: Expr as reusable Judgment grammar.
 
 20. **[020-framing-chunking-pureform.md](EXEMPLARS/form/020-framing-chunking-pureform.md)**
-   File: `gds/examples/form_framing_chunking.rs`
-   Teaches: Framing and chunking as PureForm shape.
+    File: `gds/examples/form_framing_chunking.rs`
+    Teaches: Framing and chunking as PureForm shape.
 
 ### Namespaces and Artifact Persistence
 
 21. **[021-array-namespace-observation.md](EXEMPLARS/dataset/021-array-namespace-observation.md)**
-   File: `gds/examples/dataset_namespace_array.rs`
-   Teaches: Array namespace as fixed-arity Observation.
+    File: `gds/examples/dataset_namespace_array.rs`
+    Teaches: Array namespace as fixed-arity Observation.
 
 22. **[022-list-namespace-observation.md](EXEMPLARS/dataset/022-list-namespace-observation.md)**
-   File: `gds/examples/dataset_namespace_list.rs`
-   Teaches: List namespace as variable-arity Observation.
+    File: `gds/examples/dataset_namespace_list.rs`
+    Teaches: List namespace as variable-arity Observation.
 
 23. **[023-string-namespace-observation.md](EXEMPLARS/dataset/023-string-namespace-observation.md)**
-   File: `gds/examples/dataset_namespace_string.rs`
-   Teaches: String namespace as text-form Observation.
+    File: `gds/examples/dataset_namespace_string.rs`
+    Teaches: String namespace as text-form Observation.
 
 24. **[024-catalog-extension-persistence.md](EXEMPLARS/dataset/024-catalog-extension-persistence.md)**
-   File: `gds/examples/dataset_io_catalog_extensible.rs`
-   Teaches: Catalog extension as artifact persistence.
+    File: `gds/examples/dataset_io_catalog_extensible.rs`
+    Teaches: Catalog extension as artifact persistence.
 
 25. **[025-graphframe-catalog-write.md](EXEMPLARS/dataset/025-graphframe-catalog-write.md)**
-   File: `gds/examples/dataset_io_catalog_graphframe.rs`
-   Teaches: GraphFrame catalog writes as graph artifacts.
+    File: `gds/examples/dataset_io_catalog_graphframe.rs`
+    Teaches: GraphFrame catalog writes as graph artifacts.
 
 ### Semantic Meta Pipeline
 
 26. **[026-semantic-meta-pipeline.md](EXEMPLARS/dataset/026-semantic-meta-pipeline.md)**
-   File: `gds/examples/dataset_sem_meta_pipeline.rs`
-   Teaches: SemDataset as the Corpus:LM end-view where Form Program Features become logical forms.
+    File: `gds/examples/dataset_sem_meta_pipeline.rs`
+    Teaches: SemDataset as the Corpus:LM end-view where Form Program Features become logical forms.
 
 27. **[027-model-feature-plan-middle.md](EXEMPLARS/dataset/027-model-feature-plan-middle.md)**
-   File: `gds/examples/dataset_model_feature_plan.rs`
-   Teaches: Model:Feature::Plan as the hard Middle where DataFrame body becomes Dataset form.
+    File: `gds/examples/dataset_model_feature_plan.rs`
+    Teaches: Model:Feature::Plan as the hard Middle where DataFrame body becomes Dataset form.
 
 28. **[028-dataframe-intuition.md](EXEMPLARS/dataframe/028-dataframe-intuition.md)**
-   File: `gds/examples/dataframe_intuition.rs`
-   Teaches: DataFrame as Intuition, the first formed body reflected by Model:Feature::Plan.
+    File: `gds/examples/dataframe_intuition.rs`
+    Teaches: DataFrame as Intuition, the first formed body reflected by Model:Feature::Plan.
 
 ### Shell and the Ideal Register Language
 
 29. **[029-shell-compute-protocol.md](EXEMPLARS/shell/029-shell-compute-protocol.md)**
-   File: `gds/examples/shell_compute_protocol.rs`
-   Teaches: GDS Shell as the unified compute protocol — how DataFrame and Dataset are two registers at one address, and how the shell projects both to PureFormPrinciple.
+    File: `gds/examples/shell_compute_protocol.rs`
+    Teaches: GDS Shell as the unified compute protocol — how DataFrame and Dataset are two registers at one address, and how the shell projects both to PureFormPrinciple.
 
 30. **[030-ideal-dataframe-dsl.md](EXEMPLARS/shell/030-ideal-dataframe-dsl.md)**
-   File: *(design fiction — no source file)*
-   Teaches: What the ideal DataFrame DSL would look like if designed from the Shell's perspective downward — the negative space the Shell leaves and the register contract it implies.
+    File: _(design fiction — no source file)_
+    Teaches: What the ideal DataFrame DSL would look like if designed from the Shell's perspective downward — the negative space the Shell leaves and the register contract it implies.
 
 31. **[031-shell-model-first.md](EXEMPLARS/shell/031-shell-model-first.md)**
-   File: `gds/examples/shell_model_first.rs`
-   Teaches: Shell-first entry into the Model moment before descending into `dataset_model_feature_plan.rs`.
+    File: `gds/examples/shell_model_first.rs`
+    Teaches: Shell-first entry into the Model moment before descending into `dataset_model_feature_plan.rs`.
 
 ### Procedure Doctrine
 
 32. **[032-pathfinding-procedure-facade.md](EXEMPLARS/procedures/032-pathfinding-procedure-facade.md)**
-   File: `gds/examples/proc_pathfinding_procedure.rs`
-   Teaches: Pathfinding Procedure as the public routing form: application -> facade -> storage -> computation.
+    File: `gds/examples/proc_pathfinding_procedure.rs`
+    Teaches: Pathfinding Procedure as the public routing form: application -> facade -> storage -> computation.
 
 ### Algorithm Workbooks
 
 33. **[033-bfs-dfs-traversal-workbook.md](EXEMPLARS/algorithms/033-bfs-dfs-traversal-workbook.md)**
-   File: `gds/examples/proc_pathfinding_procedure.rs`
-   Teaches: BFS and DFS as the first Pathfinding workbook pair: frontier-level traversal and branch-first traversal.
+    File: `gds/examples/proc_pathfinding_procedure.rs`
+    Teaches: BFS and DFS as the first Pathfinding workbook pair: frontier-level traversal and branch-first traversal.
 
 ---
 
@@ -290,24 +292,24 @@ References are organized by topic, not by project.
 
 ### The Three Worlds
 
-| World | Language | Role |
-|-------|----------|------|
-| Kernel | Rust | Executes the world forward (PureForm, graph algorithms) |
-| Agent | TypeScript | Evaluates conditions and makes decisions (Relative Form Processor) |
-| Dataset | Rust/TS interface | Semantic model builder (names, marks, artifacts) |
+| World   | Language          | Role                                                               |
+| ------- | ----------------- | ------------------------------------------------------------------ |
+| Kernel  | Rust              | Executes the world forward (PureForm, graph algorithms)            |
+| Agent   | TypeScript        | Evaluates conditions and makes decisions (Relative Form Processor) |
+| Dataset | Rust/TS interface | Semantic model builder (names, marks, artifacts)                   |
 
 ### The Arc (8 Stages)
 
-| Stage | Name | Question | Output |
-|-------|------|----------|--------|
-| 1 | Source | What is the origin? | Source artifact |
-| 2 | Observation | What is observed? | Observation artifact (structure, marks) |
-| 3-4 | Reflection | What is the essence? | Reflection table (7 moments) |
-| 5 | Principle | Does it satisfy the law? | Principle evaluation record |
-| 6 | Concept | What is it named? | Concept record (post-Principle) |
-| 7 | Judgment | How is it determined? | Judgment table |
-| 8 | Syllogism | What is concluded? | Inference table |
-| 9 | Procedure | What is emitted? | Process records (all artifacts) |
+| Stage | Name        | Question                 | Output                                  |
+| ----- | ----------- | ------------------------ | --------------------------------------- |
+| 1     | Source      | What is the origin?      | Source artifact                         |
+| 2     | Observation | What is observed?        | Observation artifact (structure, marks) |
+| 3-4   | Reflection  | What is the essence?     | Reflection table (7 moments)            |
+| 5     | Principle   | Does it satisfy the law? | Principle evaluation record             |
+| 6     | Concept     | What is it named?        | Concept record (post-Principle)         |
+| 7     | Judgment    | How is it determined?    | Judgment table                          |
+| 8     | Syllogism   | What is concluded?       | Inference table                         |
+| 9     | Procedure   | What is emitted?         | Process records (all artifacts)         |
 
 ### The ZeroCopy Boundary
 
@@ -350,6 +352,7 @@ The previous `/gds/doc` directory contained ~100 scattered working notes, propos
 project-specific reviews. These have been archived in `doc_archive/` with an index.
 
 If you are looking for old documentation:
+
 - See `doc_archive/INDEX.md` for a mapping of old doc names to new Doctrine locations
 - Most old docs have been distilled into exemplars or reference docs
 - Some old docs are project-specific and have been kept as-is in the archive

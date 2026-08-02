@@ -1,3 +1,20 @@
-program: rustscript.shell.compute_protocol
-selected_forms: ["ShellComputeProtocol"]
-feature_count: 8
+Shell Program Features
+
+root-taskframe: taskframe::root.shell_compute_protocol
+doctrinal-claim: this artifact bundle is a topic map for platform design, not only a demo trace.
+relation: Shell mediates DataFrame -> TaskFrame through procedure-bound execution.
+
+architectural-layers:
+- Kernel: graph store, topology, runtime traversal evidence
+- Agent: shell plan orchestration and procedure control binding
+- Logic: pureform and eval-readable rationale for why outcomes count as knowledge
+
+mediation-path:
+1. shell_ (plan authoring and orchestration)
+2. proc_ (algorithm semantic mediation)
+3. eval_ (result intelligibility and doctrine-facing reflection)
+
+invariant-checks:
+- empirical_adequacy: traversal rows are produced by runtime execution
+- reflexive_consistency: plan, runtime binding, and return are all persisted
+- dialectical_mediation: shell command form is realized as procedure result form

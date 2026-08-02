@@ -1,4 +1,6 @@
-term_id,term,moment
-1,being,immediate
-2,essence,mediated
-3,concept,return
+source,target,relationship
+0,1,REL
+0,2,REL
+1,3,REL
+2,4,REL
+3,4,REL

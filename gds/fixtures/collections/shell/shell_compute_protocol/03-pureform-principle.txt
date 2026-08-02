@@ -1,4 +1,26 @@
-required_fields: ["moment", "term", "term_id"]
-runtime_strategy: gds-shell.compute-graph
-execution_order: ["dataframe.seed", "dataset.mediate", "shell.schema", "shell.program", "pureform.principle"]
-patterns: ["shell.compute_graph"]
+Pureform Principle: Shell Control Protocol
+
+root-taskframe: taskframe::root.shell_compute_protocol
+
+Thesis
+Shell is not an external UI veneer. It is a mediation layer that carries
+DataFrame-seeded structure into TaskFrame-governed execution form.
+
+Antithesis
+If shell scripts remain merely declarative, then algorithmic truth is
+displaced into undocumented runtime interiors and loses explanatory force.
+
+Mediation
+The shell_ plan binds to proc_ runtime control, and eval_ artifacts render
+the resulting movement as inspectable knowledge.
+
+Consequence
+This fixture is a top-level path exemplar:
+DataFrame seed -> Shell plan -> Procedure execution -> Eval-readable return,
+all tethered to one root TaskFrame authority surface.
+
+Topic Map Reading
+Read this folder as if it were the software design map itself:
+00-frame/00-graph establish the Kernel scene,
+01-shell-plan/01-program-features establish Agent movement,
+02-shell-result/02-shell-return/03-pureform-principle establish Logic closure.

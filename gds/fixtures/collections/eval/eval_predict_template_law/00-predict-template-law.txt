@@ -5,12 +5,9 @@ exemplar: examples/eval_predict_template_law.rs
 status: core
 
 predict-sequence:
-- generate dataset split graph filters
-- validate pipeline before execution
-- validate node property step context
-- split datasets
-- execute node property steps
-- validate feature properties
-- execute prediction algorithm
-- cleanup intermediate properties
-cleanup-law: cleanup runs even when predict execution fails.
+- load trained model
+- validate prediction parameter space
+- resolve target graph and node set
+- run prediction pipeline
+- emit stream/mutate/write outputs
+- clear transient prediction state

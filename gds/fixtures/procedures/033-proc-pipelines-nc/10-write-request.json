@@ -1,8 +1,8 @@
 {
-  "writeProperty": "predictedClass",
-  "modelUser": "alice",
   "predictedProbabilityProperty": "predictedProbability",
-  "writeConcurrency": 4,
+  "writeProperty": "predictedClass",
+  "graphName": "demo-graph",
   "modelName": "nc_demo_model",
-  "graphName": "demo-graph"
+  "writeConcurrency": 4,
+  "modelUser": "alice"
 }

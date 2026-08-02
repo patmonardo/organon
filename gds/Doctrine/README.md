@@ -74,6 +74,7 @@ the immediate body. Dataset supplies the mediated semantic controller.
 ## What Makes This Different from Old /gds/doc
 
 **Old structure** (100+ scattered docs):
+
 - Working notes, proposals, project reviews scattered by task
 - No canonical sequence
 - Easy to contradict yourself
@@ -81,6 +82,7 @@ the immediate body. Dataset supplies the mediated semantic controller.
 - No clear entry point
 
 **New Doctrine** (Index -> Exemplars -> References -> executable fixtures):
+
 - Exemplars are the texts; runnable examples and fixtures prove them
 - One canonical sequence (the arc)
 - Consistent voice
@@ -116,6 +118,7 @@ Do not let an exemplar become a scratch note, a fixture manifest become the doct
 
 - **Navigation**: [INDEX.md](INDEX.md)
 - **High Principle**: [PRINCIPLE-FOUNDATION.md](PRINCIPLE-FOUNDATION.md)
+- **Runnable Workbench**: [WORKBENCH.md](WORKBENCH.md)
 - **Exemplar Template**: [EXEMPLARS/TEMPLATE.md](EXEMPLARS/TEMPLATE.md)
 - **First Exemplar**: [EXEMPLARS/001-frame-dsl.md](EXEMPLARS/dataset/001-frame-dsl.md)
 - **External Shell Program Artifact**: [EXEMPLARS/006-external-shell-program-artifact.md](EXEMPLARS/shell/006-external-shell-program-artifact.md)

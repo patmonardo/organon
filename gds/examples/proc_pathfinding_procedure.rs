@@ -11,7 +11,7 @@ use std::sync::Arc;
 use gds::config::GraphStoreConfig;
 use gds::procedures::GraphFacade;
 use gds::projection::RelationshipType;
-use gds::types::graph::{RelationshipTopology, SimpleIdMap};
+use gds::types::graph::{MappedNodeId, RelationshipTopology, SimpleIdMap};
 use gds::types::graph_store::{
     Capabilities, DatabaseId, DatabaseInfo, DatabaseLocation, DefaultGraphStore, GraphName,
 };
@@ -150,12 +150,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 }
 
 fn store_from_directed_edges(node_count: usize, edges: &[(usize, usize)]) -> DefaultGraphStore {
-    let mut outgoing: Vec<Vec<i64>> = vec![Vec::new(); node_count];
-    let mut incoming: Vec<Vec<i64>> = vec![Vec::new(); node_count];
+    let mut outgoing: Vec<Vec<MappedNodeId>> = vec![Vec::new(); node_count];
+    let mut incoming: Vec<Vec<MappedNodeId>> = vec![Vec::new(); node_count];
 
     for &(source, target) in edges {
-        outgoing[source].push(target as i64);
-        incoming[target].push(source as i64);
+        outgoing[source].push(MappedNodeId::new(target as u64));
+        incoming[target].push(MappedNodeId::new(source as u64));
     }
 
     let rel_type = RelationshipType::of("REL");
