@@ -176,10 +176,12 @@ use crate::procedures::similarity::KnnFacade;
 use crate::procedures::similarity::NodeSimilarityFacade;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::shell::builtin_component;
+use crate::shell::ShellAddress;
 use crate::shell::ShellComponentCall;
 use crate::shell::ShellComponentCategory;
 use crate::shell::ShellComponentId;
 use crate::shell::ShellComponentMode;
+use crate::shell::ShellComponentPlan;
 use crate::task::memory::MemoryRange;
 use std::sync::Arc;
 
@@ -1032,6 +1034,96 @@ pub enum ShellProcedureResult {
     PipelineExists(Vec<PipelineExistsResult>),
 }
 
+pub struct ShellProcedureInvocation {
+    component: ShellComponentId,
+    mode: ShellComponentMode,
+    result: ShellProcedureResult,
+}
+
+impl ShellProcedureInvocation {
+    pub fn component(&self) -> ShellComponentId {
+        self.component
+    }
+
+    pub fn mode(&self) -> ShellComponentMode {
+        self.mode
+    }
+
+    pub fn result(&self) -> &ShellProcedureResult {
+        &self.result
+    }
+
+    pub fn into_result(self) -> ShellProcedureResult {
+        self.result
+    }
+}
+
+pub struct ShellProcedurePlanResult {
+    origin: ShellAddress,
+    invocations: Vec<ShellProcedureInvocation>,
+}
+
+impl ShellProcedurePlanResult {
+    pub fn origin(&self) -> ShellAddress {
+        self.origin
+    }
+
+    pub fn invocations(&self) -> &[ShellProcedureInvocation] {
+        &self.invocations
+    }
+
+    pub fn len(&self) -> usize {
+        self.invocations.len()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.invocations.is_empty()
+    }
+}
+
+pub struct ShellProcedurePlanBinding {
+    origin: ShellAddress,
+    bindings: Vec<ShellProcedureBinding>,
+}
+
+impl ShellProcedurePlanBinding {
+    pub fn origin(&self) -> ShellAddress {
+        self.origin
+    }
+
+    pub fn bindings(&self) -> &[ShellProcedureBinding] {
+        &self.bindings
+    }
+
+    pub fn len(&self) -> usize {
+        self.bindings.len()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.bindings.is_empty()
+    }
+
+    pub fn invoke(self) -> Result<ShellProcedurePlanResult, ShellProcedureError> {
+        let mut invocations = Vec::with_capacity(self.bindings.len());
+
+        for binding in self.bindings {
+            let component = binding.component();
+            let mode = binding.mode();
+            let result = binding.invoke()?;
+            invocations.push(ShellProcedureInvocation {
+                component,
+                mode,
+                result,
+            });
+        }
+
+        Ok(ShellProcedurePlanResult {
+            origin: self.origin,
+            invocations,
+        })
+    }
+}
+
 pub struct ShellProcedureRuntime {
     graph: GraphFacade,
     pipelines: Arc<LocalPipelinesProcedureFacade>,
@@ -1073,6 +1165,31 @@ impl ShellProcedureRuntime {
         call: &ShellComponentCall,
     ) -> Result<ShellProcedureResult, ShellProcedureError> {
         self.bind(call)?.invoke()
+    }
+
+    /// Bind every call before any component is invoked.
+    pub fn bind_plan(
+        &self,
+        plan: &ShellComponentPlan,
+    ) -> Result<ShellProcedurePlanBinding, ShellProcedureError> {
+        let bindings = plan
+            .calls()
+            .iter()
+            .map(|call| self.bind(call))
+            .collect::<Result<Vec<_>, _>>()?;
+
+        Ok(ShellProcedurePlanBinding {
+            origin: plan.origin(),
+            bindings,
+        })
+    }
+
+    /// Bind the complete plan, then invoke it in order without rollback.
+    pub fn invoke_plan(
+        &self,
+        plan: &ShellComponentPlan,
+    ) -> Result<ShellProcedurePlanResult, ShellProcedureError> {
+        self.bind_plan(plan)?.invoke()
     }
 }
 
@@ -1126,6 +1243,7 @@ mod tests {
     use crate::procedures::pipelines::RequestScopedDependencies;
     use crate::projection::eval::pipeline::PipelineCatalog;
     use crate::shell::builtin_component;
+    use crate::shell::GdsShell;
     use crate::types::catalog::InMemoryGraphCatalog;
     use crate::types::prelude::DefaultGraphStore;
     use crate::types::random::RandomGraphConfig;
@@ -1951,6 +2069,107 @@ mod tests {
         assert!(matches!(
             runtime().invoke(&call).unwrap(),
             ShellProcedureResult::BfsEstimate(memory) if !memory.is_empty()
+        ));
+    }
+
+    #[test]
+    fn runtime_invokes_ordered_shell_plan_with_provenance() {
+        let shell = GdsShell::new();
+        let origin = shell.address();
+        let plan = shell
+            .component_plan()
+            .bfs(0)
+            .track_paths(true)
+            .estimate()
+            .dijkstra(0)
+            .track_relationships(true)
+            .estimate();
+
+        let result = runtime().invoke_plan(&plan).unwrap();
+
+        assert_eq!(result.origin(), origin);
+        assert_eq!(result.len(), 2);
+        assert_eq!(
+            result.invocations()[0].component().as_str(),
+            "gds.algorithms.pathfinding.bfs"
+        );
+        assert_eq!(result.invocations()[0].mode(), ShellComponentMode::Estimate);
+        assert!(matches!(
+            result.invocations()[0].result(),
+            ShellProcedureResult::BfsEstimate(memory) if !memory.is_empty()
+        ));
+        assert_eq!(
+            result.invocations()[1].component().as_str(),
+            "gds.algorithms.pathfinding.dijkstra"
+        );
+        assert!(matches!(
+            result.invocations()[1].result(),
+            ShellProcedureResult::DijkstraEstimate(memory) if !memory.is_empty()
+        ));
+    }
+
+    #[test]
+    fn runtime_binds_the_complete_shell_plan_before_invocation() {
+        let shell = GdsShell::new();
+        let plan = shell
+            .component_plan()
+            .bfs(0)
+            .estimate()
+            .dijkstra(0)
+            .estimate();
+
+        let binding = runtime().bind_plan(&plan).unwrap();
+
+        assert_eq!(binding.origin(), shell.address());
+        assert_eq!(binding.len(), 2);
+        assert_eq!(
+            binding.bindings()[0].component().as_str(),
+            "gds.algorithms.pathfinding.bfs"
+        );
+        assert_eq!(
+            binding.bindings()[1].component().as_str(),
+            "gds.algorithms.pathfinding.dijkstra"
+        );
+    }
+
+    #[test]
+    fn runtime_rejects_an_invalid_plan_during_complete_binding() {
+        let invalid_call = builtin_component("bfs")
+            .unwrap()
+            .call(ShellComponentMode::Invoke)
+            .with_input("source", 0_u64);
+        let plan = GdsShell::new()
+            .component_plan()
+            .bfs(0)
+            .estimate()
+            .push(invalid_call);
+
+        assert!(matches!(
+            runtime().bind_plan(&plan),
+            Err(ShellProcedureError::UnsupportedMode { .. })
+        ));
+    }
+
+    #[test]
+    fn runtime_invokes_a_generic_registered_component_plan() {
+        let plan = GdsShell::new()
+            .component_plan()
+            .component("pagerank", ShellComponentMode::Estimate)
+            .unwrap()
+            .with_input("maxIterations", 20_u64)
+            .with_input("dampingFactor", 0.85)
+            .finish();
+
+        let result = runtime().invoke_plan(&plan).unwrap();
+
+        assert_eq!(result.len(), 1);
+        assert_eq!(
+            result.invocations()[0].component().as_str(),
+            "gds.algorithms.centrality.pagerank"
+        );
+        assert!(matches!(
+            result.invocations()[0].result(),
+            ShellProcedureResult::PageRankEstimate(memory) if !memory.is_empty()
         ));
     }
 

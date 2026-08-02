@@ -1,6 +1,8 @@
 //! Stable identities and invocation forms for Shell Components.
 
 mod builtins;
+mod pathfinding;
+mod plan;
 
 use serde::Serialize;
 use serde_json::Value;
@@ -10,6 +12,11 @@ use std::fmt;
 
 pub use builtins::ALGORITHM_BUILTINS;
 pub use builtins::PIPELINE_BUILTINS;
+pub use pathfinding::ShellBfsCallBuilder;
+pub use pathfinding::ShellDijkstraCallBuilder;
+pub use plan::ShellComponentCallBuilder;
+pub use plan::ShellComponentPlan;
+pub use plan::ShellComponentPlanError;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize)]
 #[serde(transparent)]
@@ -191,6 +198,10 @@ pub fn builtin_component(name: &str) -> Option<BuiltinComponentRef> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::shell::ShellAddress;
+    use crate::shell::ShellAlgebra;
+    use crate::shell::ShellPipeline;
+    use crate::shell::ShellRegister;
 
     #[test]
     fn builtin_suite_has_unique_valid_entries() {
@@ -219,6 +230,81 @@ mod tests {
 
         assert_eq!(call.component.as_str(), "gds.algorithms.pathfinding.bfs");
         assert_eq!(call.inputs.get("source"), Some(&Value::from(7_u64)));
+    }
+
+    #[test]
+    fn typed_pathfinding_calls_preserve_origin_and_order() {
+        let origin = ShellAddress::new(
+            ShellRegister::Unified,
+            ShellPipeline::ModelFeaturePlan,
+            ShellAlgebra::ProgramFeature,
+        );
+        let plan = ShellComponentPlan::new(origin)
+            .bfs(7)
+            .max_depth(3)
+            .track_paths(true)
+            .estimate()
+            .dijkstra(7)
+            .target(8)
+            .weight_property("cost")
+            .stream();
+
+        assert_eq!(plan.origin(), origin);
+        assert_eq!(plan.len(), 2);
+        assert_eq!(
+            plan.calls()[0].component.as_str(),
+            "gds.algorithms.pathfinding.bfs"
+        );
+        assert_eq!(plan.calls()[0].mode, ShellComponentMode::Estimate);
+        assert_eq!(
+            plan.calls()[0].inputs.get("maxDepth"),
+            Some(&Value::from(3))
+        );
+        assert_eq!(
+            plan.calls()[1].component.as_str(),
+            "gds.algorithms.pathfinding.dijkstra"
+        );
+        assert_eq!(plan.calls()[1].mode, ShellComponentMode::Stream);
+        assert_eq!(
+            plan.calls()[1].inputs.get("weightProperty"),
+            Some(&Value::from("cost"))
+        );
+    }
+
+    #[test]
+    fn generic_component_builder_resolves_and_validates_builtin_calls() {
+        let origin = ShellAddress::new(
+            ShellRegister::Unified,
+            ShellPipeline::ModelFeaturePlan,
+            ShellAlgebra::ProgramFeature,
+        );
+        let plan = ShellComponentPlan::new(origin)
+            .component("pagerank", ShellComponentMode::Estimate)
+            .unwrap()
+            .with_input("maxIterations", 20_u64)
+            .with_input("dampingFactor", 0.85)
+            .finish();
+
+        assert_eq!(plan.len(), 1);
+        assert_eq!(
+            plan.calls()[0].component.as_str(),
+            "gds.algorithms.centrality.pagerank"
+        );
+        assert_eq!(plan.calls()[0].mode, ShellComponentMode::Estimate);
+        assert_eq!(
+            plan.calls()[0].inputs.get("dampingFactor"),
+            Some(&Value::from(0.85))
+        );
+
+        assert!(matches!(
+            ShellComponentPlan::new(origin)
+                .component("missing", ShellComponentMode::Estimate),
+            Err(ShellComponentPlanError::UnknownComponent(name)) if name == "missing"
+        ));
+        assert!(matches!(
+            ShellComponentPlan::new(origin).component("bfs", ShellComponentMode::Invoke),
+            Err(ShellComponentPlanError::UnsupportedMode { .. })
+        ));
     }
 
     #[test]

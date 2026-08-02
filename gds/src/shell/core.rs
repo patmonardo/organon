@@ -1403,6 +1403,11 @@ impl GdsShell {
         Self::default()
     }
 
+    /// Begin an inspectable graph-algorithm plan from this Shell address.
+    pub fn component_plan(&self) -> super::ShellComponentPlan {
+        super::ShellComponentPlan::new(self.address())
+    }
+
     pub fn from_dataframe(dataframe: GDSDataFrame) -> Self {
         let seed = ShellSeed::from_dataframe(&dataframe);
         Self {

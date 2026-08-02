@@ -19,9 +19,11 @@ pub mod workbench;
 pub use crate::dsl::*;
 
 pub use components::{
-    builtin_component, BuiltinComponentRef, BuiltinComponentSuite, ShellComponentCall,
-    ShellComponentCategory, ShellComponentDescriptor, ShellComponentId, ShellComponentMode,
-    ShellComponentSuiteError, ALGORITHM_BUILTINS, PIPELINE_BUILTINS,
+    builtin_component, BuiltinComponentRef, BuiltinComponentSuite, ShellBfsCallBuilder,
+    ShellComponentCall, ShellComponentCallBuilder, ShellComponentCategory,
+    ShellComponentDescriptor, ShellComponentId, ShellComponentMode, ShellComponentPlan,
+    ShellComponentPlanError, ShellComponentSuiteError, ShellDijkstraCallBuilder,
+    ALGORITHM_BUILTINS, PIPELINE_BUILTINS,
 };
 pub use core::{
     GdsShell, ShellCapabilityBand, ShellCapabilityMap, ShellCapabilityState, ShellCorpusError,
