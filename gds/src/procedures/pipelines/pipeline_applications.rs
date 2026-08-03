@@ -31,7 +31,7 @@ use crate::projection::eval::pipeline::{
 use crate::projection::eval::pipeline::{NodePropertyStep, PipelineCatalogEntry};
 use crate::task::concurrency::Concurrency;
 use crate::task::memory::{MemoryEstimationResult, MemoryRange, MemoryTree};
-use crate::task::runtime::TaskFrame;
+use crate::task::runtime::TaskStage;
 use crate::task::runtime::TaskFrameKind;
 use crate::task::runtime::TaskFrameStorageBackend;
 use crate::types::catalog::{GraphCatalog, InMemoryGraphCatalog};
@@ -691,7 +691,7 @@ impl PipelineApplications {
         &self,
         graph_name: &str,
         configuration: &AnyMap,
-    ) -> Vec<TaskFrame> {
+    ) -> Vec<TaskStage> {
         let resource_contract = self.node_pipeline_plan_resource_contract(
             graph_name,
             configuration,
@@ -980,7 +980,7 @@ impl PipelineApplications {
         &self,
         graph_name: &str,
         configuration: &AnyMap,
-    ) -> Vec<TaskFrame> {
+    ) -> Vec<TaskStage> {
         let resource_contract = self.node_pipeline_plan_resource_contract(
             graph_name,
             configuration,
@@ -1282,7 +1282,7 @@ impl PipelineApplications {
         compute_steps: &[String],
         persist_steps: &[String],
         resource_contract: PlannedResourceContract,
-    ) -> Vec<TaskFrame> {
+    ) -> Vec<TaskStage> {
         let seed_memory = scale_memory_range(resource_contract.memory_range, 1, 5);
         let compute_memory = scale_memory_range(resource_contract.memory_range, 7, 10);
         let persist_memory = scale_memory_range(resource_contract.memory_range, 1, 10);
@@ -1292,7 +1292,7 @@ impl PipelineApplications {
         let final_output = format!("{procedure_name}::{graph_name}::Result");
         let concurrency = Concurrency::of(resource_contract.concurrency);
 
-        let seed = TaskFrame::new(
+        let seed = TaskStage::new(
             "procedure".to_string(),
             format!("{procedure_name}::Seed"),
             seed_steps.to_vec(),
@@ -1306,7 +1306,7 @@ impl PipelineApplications {
         .with_outputs(vec![seed_output.clone()])
         .with_memory_range(seed_memory);
 
-        let compute = TaskFrame::new(
+        let compute = TaskStage::new(
             "procedure".to_string(),
             format!("{procedure_name}::ComputeGraph"),
             compute_steps.to_vec(),
@@ -1320,7 +1320,7 @@ impl PipelineApplications {
         .with_outputs(vec![compute_output.clone()])
         .with_memory_range(compute_memory);
 
-        let persist = TaskFrame::new(
+        let persist = TaskStage::new(
             "procedure".to_string(),
             format!("{procedure_name}::Persist"),
             persist_steps.to_vec(),

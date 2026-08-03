@@ -1,0 +1,272 @@
+//! Agent-facing TaskFrame controller.
+
+use crate::collections::graphframe::GraphExecutionIntent;
+use crate::task::concurrency::Concurrency;
+use crate::task::job::TaskJob;
+use crate::task::runtime::TaskFrameKind;
+use crate::task::runtime::TaskFrameStorageBackend;
+use crate::task::runtime::TaskStage;
+use crate::task::spec::TaskSpec;
+use crate::task::spec::TaskSpecError;
+use crate::task::spec::TaskWorkflow;
+
+pub use crate::task::spec::TaskObjectiveRef;
+pub use crate::task::spec::TaskReturnContract;
+pub use crate::task::spec::TaskReturnPolicy;
+
+/// Agent policy used when constituting an objective intent as a TaskFrame.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct TaskFramePolicy {
+    concurrency: Concurrency,
+}
+
+impl TaskFramePolicy {
+    pub fn new(concurrency: usize) -> Self {
+        Self {
+            concurrency: Concurrency::of(concurrency.max(1)),
+        }
+    }
+
+    pub fn concurrency(&self) -> Concurrency {
+        self.concurrency
+    }
+}
+
+/// Agent-facing controller that constitutes objective intent as a Task workflow.
+#[derive(Debug, Clone)]
+pub struct TaskFrame<Program> {
+    namespace: String,
+    objective: TaskObjectiveRef,
+    workflow: TaskWorkflow,
+    program: Program,
+    return_contract: TaskReturnContract,
+}
+
+impl<Program> TaskFrame<Program> {
+    pub fn new(
+        namespace: impl Into<String>,
+        objective: TaskObjectiveRef,
+        workflow: TaskWorkflow,
+        program: Program,
+        return_contract: TaskReturnContract,
+    ) -> Self {
+        Self {
+            namespace: namespace.into(),
+            objective,
+            workflow,
+            program,
+            return_contract,
+        }
+    }
+
+    pub fn namespace(&self) -> &str {
+        &self.namespace
+    }
+
+    pub fn objective(&self) -> &TaskObjectiveRef {
+        &self.objective
+    }
+
+    pub fn workflow(&self) -> &TaskWorkflow {
+        &self.workflow
+    }
+
+    pub fn program(&self) -> &Program {
+        &self.program
+    }
+
+    pub fn return_contract(&self) -> &TaskReturnContract {
+        &self.return_contract
+    }
+
+    pub fn validate(&self) -> Result<(), TaskSpecError> {
+        TaskSpec::with_control_contract(
+            self.namespace.clone(),
+            self.workflow.clone(),
+            self.objective.clone(),
+            self.return_contract.clone(),
+        )
+        .map(|_| ())
+    }
+
+    pub fn into_spec(self) -> Result<TaskSpec, TaskSpecError> {
+        TaskSpec::with_control_contract(
+            self.namespace,
+            self.workflow,
+            self.objective,
+            self.return_contract,
+        )
+    }
+
+    pub fn into_job(self, owner: impl Into<String>) -> Result<TaskJob<Program>, TaskSpecError> {
+        let Self {
+            namespace,
+            objective,
+            workflow,
+            program,
+            return_contract,
+        } = self;
+        let spec =
+            TaskSpec::with_control_contract(namespace, workflow, objective, return_contract)?;
+        Ok(TaskJob::new(owner, spec, program))
+    }
+}
+
+impl TaskFrame<GraphExecutionIntent> {
+    pub fn from_graph_intent(
+        intent: GraphExecutionIntent,
+        policy: TaskFramePolicy,
+    ) -> Result<Self, TaskSpecError> {
+        let concurrency = policy.concurrency();
+        let objective = intent.objective().clone();
+        let return_contract = intent.return_contract().clone();
+        let seed = TaskStage::new(
+            "graphframe".to_string(),
+            "pipeline::GraphFrameSeed".to_string(),
+            vec!["graphframe.view.compile".to_string()],
+            1,
+            concurrency,
+        )
+        .with_image_kind(TaskFrameKind::ShellProgram)
+        .with_storage_backend(TaskFrameStorageBackend::GraphStore)
+        .with_inputs(vec!["graphstore.view_spec".to_string()])
+        .with_outputs(vec![
+            "graphframe.seed".to_string(),
+            format!(
+                "graphframe.relationship_types.{}",
+                intent.view_spec().relationship_types().len()
+            ),
+        ]);
+        let compute = TaskStage::new(
+            "graphframe".to_string(),
+            "pipeline::GraphFrameCompute".to_string(),
+            intent.compute_steps().to_vec(),
+            intent.estimated_volume(),
+            concurrency,
+        )
+        .with_image_kind(TaskFrameKind::GraphAlgorithm)
+        .with_storage_backend(TaskFrameStorageBackend::GraphStore)
+        .with_inputs(vec!["graphframe.seed".to_string()])
+        .with_outputs(vec!["graphframe.compute.result".to_string()]);
+
+        let mut stages = vec![seed, compute];
+        if return_contract.requires_persistence() {
+            stages.push(
+                TaskStage::new(
+                    "graphframe".to_string(),
+                    "pipeline::GraphFramePersist".to_string(),
+                    vec!["graphframe.persist.dataset".to_string()],
+                    1,
+                    concurrency,
+                )
+                .with_image_kind(TaskFrameKind::ProcedurePipeline)
+                .with_storage_backend(TaskFrameStorageBackend::PolarsPropertyStore)
+                .with_inputs(vec!["graphframe.compute.result".to_string()])
+                .with_outputs(return_contract.outputs().to_vec())
+                .with_side_effects(vec!["dataset.catalog.write".to_string()]),
+            );
+        }
+
+        Ok(Self::new(
+            "graphframe",
+            objective,
+            TaskWorkflow::new(stages)?,
+            intent,
+            return_contract,
+        ))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::task::concurrency::Concurrency;
+    use crate::task::runtime::TaskStage;
+    use crate::task::spec::TaskSpecError;
+    use crate::task::spec::TaskWorkflow;
+
+    use super::TaskFrame;
+    use super::TaskObjectiveRef;
+    use super::TaskReturnContract;
+
+    fn workflow(namespace: &str) -> TaskWorkflow {
+        TaskWorkflow::new(vec![
+            TaskStage::new(
+                namespace.to_string(),
+                "seed".to_string(),
+                vec!["graphframe.view.compile".to_string()],
+                1,
+                Concurrency::of(1),
+            )
+            .with_inputs(vec!["graphstore".to_string()])
+            .with_outputs(vec!["graphframe.seed".to_string()]),
+            TaskStage::new(
+                namespace.to_string(),
+                "compute".to_string(),
+                vec!["graphframe.procedure.pagerank".to_string()],
+                1,
+                Concurrency::of(1),
+            )
+            .with_inputs(vec!["graphframe.seed".to_string()])
+            .with_outputs(vec!["pagerank.rows".to_string()]),
+        ])
+        .expect("workflow should be continuous")
+    }
+
+    #[test]
+    fn controller_preserves_objective_workflow_program_and_return_contract() {
+        let frame = TaskFrame::new(
+            "graphframe",
+            TaskObjectiveRef::new("graphstore", "social::selected-view"),
+            workflow("graphframe"),
+            "pagerank-program",
+            TaskReturnContract::ephemeral(vec!["pagerank.rows".to_string()]),
+        );
+
+        assert_eq!(frame.namespace(), "graphframe");
+        assert_eq!(frame.objective().source(), "graphstore");
+        assert_eq!(frame.objective().identity(), "social::selected-view");
+        assert_eq!(frame.workflow().len(), 2);
+        assert_eq!(frame.program(), &"pagerank-program");
+        assert_eq!(frame.return_contract().outputs(), &["pagerank.rows"]);
+        assert!(!frame.return_contract().requires_persistence());
+        assert!(frame.validate().is_ok());
+    }
+
+    #[test]
+    fn controller_into_job_preserves_validated_spec_and_program() {
+        let frame = TaskFrame::new(
+            "graphframe",
+            TaskObjectiveRef::new("graphstore", "social::selected-view"),
+            workflow("graphframe"),
+            "pagerank-program",
+            TaskReturnContract::ephemeral(vec!["pagerank.rows".to_string()]),
+        );
+
+        let job = frame
+            .into_job("organon")
+            .expect("controller should validate");
+
+        assert_eq!(job.owner(), "organon");
+        assert_eq!(job.spec().namespace(), "graphframe");
+        assert_eq!(job.spec().workflow().len(), 2);
+        assert_eq!(job.spec().objective().identity(), "social::selected-view");
+        assert_eq!(job.spec().return_contract().outputs(), &["pagerank.rows"]);
+        assert_eq!(job.program(), &"pagerank-program");
+    }
+
+    #[test]
+    fn controller_rejects_a_workflow_from_another_namespace() {
+        let frame = TaskFrame::new(
+            "graphframe",
+            TaskObjectiveRef::new("graphstore", "social::selected-view"),
+            workflow("shell"),
+            "pagerank-program",
+            TaskReturnContract::ephemeral(vec!["pagerank.rows".to_string()]),
+        );
+
+        assert!(matches!(
+            frame.validate(),
+            Err(TaskSpecError::NamespaceMismatch { .. })
+        ));
+    }
+}

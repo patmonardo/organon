@@ -8,13 +8,13 @@ use std::path::Path;
 use std::path::PathBuf;
 
 use gds::task::concurrency::Concurrency;
-use gds::task::runtime::{TaskFrame, TaskRuntime};
+use gds::task::runtime::{TaskStage, TaskRuntime};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let root = fixture_root();
     fs::create_dir_all(&root)?;
 
-    let frame = TaskFrame::new(
+    let frame = TaskStage::new(
         "task".to_string(),
         "runtime::Lifecycle".to_string(),
         vec!["runtime.begin".to_string(), "runtime.end".to_string()],

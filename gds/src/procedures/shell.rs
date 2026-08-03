@@ -110,6 +110,7 @@ use crate::algo::wcc::WccStats;
 use crate::algo::yens::YensMutateResult;
 use crate::algo::yens::YensStats;
 use crate::algo::yens::YensWriteSummary;
+use crate::collections::graphframe::GraphExecutionIntent;
 use crate::procedures::centrality::ArticulationPointsFacade;
 use crate::procedures::centrality::BetweennessCentralityFacade;
 use crate::procedures::centrality::BridgesFacade;
@@ -178,6 +179,7 @@ use crate::procedures::similarity::FilteredNodeSimilarityFacade;
 use crate::procedures::similarity::KnnFacade;
 use crate::procedures::similarity::NodeSimilarityFacade;
 use crate::projection::eval::algorithm::AlgorithmError;
+use crate::projection::Orientation;
 use crate::shell::builtin_component;
 use crate::shell::ShellAddress;
 use crate::shell::ShellComponentCall;
@@ -185,7 +187,10 @@ use crate::shell::ShellComponentCategory;
 use crate::shell::ShellComponentId;
 use crate::shell::ShellComponentMode;
 use crate::shell::ShellComponentPlan;
+use crate::task::evaluator::TaskEvaluator;
+use crate::task::evaluator::TaskExecutionContext;
 use crate::task::memory::MemoryRange;
+use crate::types::graph_store::GraphStoreRead;
 use std::sync::Arc;
 
 use super::GraphFacade;
@@ -1127,12 +1132,15 @@ impl ShellProcedurePlanBinding {
     }
 }
 
-pub struct ShellProcedureRuntime {
+pub struct ShellProcedureEvaluator {
     graph: GraphFacade,
     pipelines: Arc<LocalPipelinesProcedureFacade>,
 }
 
-impl ShellProcedureRuntime {
+/// Compatibility name for callers not yet migrated to the evaluator boundary.
+pub type ShellProcedureRuntime = ShellProcedureEvaluator;
+
+impl ShellProcedureEvaluator {
     pub fn new(graph: GraphFacade, pipelines: LocalPipelinesProcedureFacade) -> Self {
         Self {
             graph,
@@ -1196,8 +1204,74 @@ impl ShellProcedureRuntime {
     }
 }
 
+impl TaskEvaluator<ShellComponentPlan> for ShellProcedureEvaluator {
+    type Output = ShellProcedurePlanResult;
+    type Error = ShellProcedureError;
+
+    fn evaluate(
+        &self,
+        program: &ShellComponentPlan,
+        context: &TaskExecutionContext<'_>,
+    ) -> Result<Self::Output, Self::Error> {
+        if !context.is_running() {
+            return Err(ShellProcedureError::Canceled);
+        }
+
+        let result = self.invoke_plan(program)?;
+        if !context.is_running() {
+            return Err(ShellProcedureError::Canceled);
+        }
+
+        Ok(result)
+    }
+}
+
+impl TaskEvaluator<GraphExecutionIntent> for ShellProcedureEvaluator {
+    type Output = ShellProcedurePlanResult;
+    type Error = ShellProcedureError;
+
+    fn evaluate(
+        &self,
+        intent: &GraphExecutionIntent,
+        context: &TaskExecutionContext<'_>,
+    ) -> Result<Self::Output, Self::Error> {
+        if !context.is_running() {
+            return Err(ShellProcedureError::Canceled);
+        }
+
+        let evaluator_store: Arc<dyn GraphStoreRead> = self.graph.store().clone();
+        if !Arc::ptr_eq(&evaluator_store, intent.store()) {
+            return Err(ShellProcedureError::ObjectiveStoreMismatch);
+        }
+
+        let view_spec = intent.view_spec();
+        if !view_spec.relationship_types().is_empty()
+            || !view_spec.relationship_property_selectors().is_empty()
+            || view_spec.orientation() != Orientation::Natural
+        {
+            return Err(ShellProcedureError::SelectedGraphViewUnsupported);
+        }
+
+        let result = self.invoke_plan(intent.program())?;
+        if !context.is_running() {
+            return Err(ShellProcedureError::Canceled);
+        }
+
+        Ok(result)
+    }
+}
+
 #[derive(Debug, thiserror::Error)]
 pub enum ShellProcedureError {
+    #[error("Shell procedure evaluation was canceled")]
+    Canceled,
+
+    #[error("GraphExecutionIntent targets a different GraphStore")]
+    ObjectiveStoreMismatch,
+
+    #[error("selected GraphFrame views require a GraphStore view adapter")]
+    SelectedGraphViewUnsupported,
+
     #[error("unknown Shell Component `{0}`")]
     UnknownComponent(ShellComponentId),
 
@@ -1263,7 +1337,7 @@ mod tests {
         GraphFacade::new(Arc::new(DefaultGraphStore::random(&config).unwrap()))
     }
 
-    fn runtime() -> ShellProcedureRuntime {
+    fn runtime() -> ShellProcedureEvaluator {
         let graph_catalog = Arc::new(InMemoryGraphCatalog::new());
         let dependencies = RequestScopedDependencies::with_runtime_dependencies(
             crate::types::user::User::from("shell-test"),
@@ -1272,7 +1346,7 @@ mod tests {
         );
         let pipelines =
             LocalPipelinesProcedureFacade::new(dependencies, Arc::new(PipelineCatalog::new()));
-        ShellProcedureRuntime::new(graph(), pipelines)
+        ShellProcedureEvaluator::new(graph(), pipelines)
     }
 
     #[test]
@@ -2109,6 +2183,137 @@ mod tests {
             result.invocations()[1].result(),
             ShellProcedureResult::DijkstraEstimate(memory) if !memory.is_empty()
         ));
+    }
+
+    #[test]
+    fn task_daemon_invokes_shell_as_a_procedure_evaluator() {
+        use crate::task::concurrency::Concurrency;
+        use crate::task::concurrency::TerminationFlag;
+        use crate::task::daemon::TaskDaemon;
+        use crate::task::job::TaskJobState;
+        use crate::task::runtime::TaskStage;
+        use crate::task::spec::TaskSpec;
+        use crate::task::spec::TaskWorkflow;
+
+        let plan = GdsShell::new().component_plan().bfs(0).estimate();
+        let frame = TaskStage::new(
+            "shell".to_string(),
+            "pipeline::ProcedureEvaluation".to_string(),
+            vec!["shell.procedure.evaluate".to_string()],
+            1,
+            Concurrency::of(1),
+        );
+        let spec = TaskSpec::new("shell", TaskWorkflow::new(vec![frame]).unwrap()).unwrap();
+        let daemon = TaskDaemon::new();
+        let job = daemon.submit("shell-test", spec, plan);
+
+        let receipt = daemon.run(job, &runtime(), TerminationFlag::running_true());
+
+        assert_eq!(receipt.state(), TaskJobState::Succeeded);
+        let result = receipt.output().expect("Shell result should be present");
+        assert_eq!(result.len(), 1);
+        assert!(matches!(
+            result.invocations()[0].result(),
+            ShellProcedureResult::BfsEstimate(memory) if !memory.is_empty()
+        ));
+    }
+
+    #[test]
+    fn task_daemon_invokes_whole_store_graph_execution_intent() {
+        use crate::collections::graphframe::GraphFrame;
+        use crate::collections::graphframe::GraphProcedureExpr;
+        use crate::task::concurrency::TerminationFlag;
+        use crate::task::daemon::TaskDaemon;
+        use crate::task::job::TaskJobState;
+
+        let store = Arc::new(
+            DefaultGraphStore::random(&RandomGraphConfig {
+                seed: Some(11),
+                node_count: 8,
+                relationships: vec![RandomRelationshipConfig::new("REL", 1.0)],
+                ..RandomGraphConfig::default()
+            })
+            .expect("graph store should build"),
+        );
+        let graph_catalog = Arc::new(InMemoryGraphCatalog::new());
+        let dependencies = RequestScopedDependencies::with_runtime_dependencies(
+            crate::types::user::User::from("shell-test"),
+            graph_catalog,
+            Arc::new(PipelineModelStore::new()),
+        );
+        let pipelines =
+            LocalPipelinesProcedureFacade::new(dependencies, Arc::new(PipelineCatalog::new()));
+        let evaluator =
+            ShellProcedureEvaluator::new(GraphFacade::new(Arc::clone(&store)), pipelines);
+        let job = GraphFrame::from_store(store)
+            .expect("graph frame should build")
+            .procedure(
+                GraphProcedureExpr::new("bfs", ShellComponentMode::Estimate)
+                    .with_input("source", 0_u64),
+            )
+            .compile_job("organon", 1)
+            .expect("graph intent job should compile");
+
+        let receipt = TaskDaemon::new().run(job, &evaluator, TerminationFlag::running_true());
+
+        assert_eq!(receipt.state(), TaskJobState::Succeeded);
+        assert_eq!(receipt.output().expect("result should exist").len(), 1);
+        assert_eq!(
+            receipt.spec().objective().identity(),
+            "graphframe.view::types=[];properties=[];orientation=NATURAL"
+        );
+    }
+
+    #[test]
+    fn task_daemon_never_falls_back_from_selected_view_to_whole_store() {
+        use crate::collections::graphframe::GraphFrame;
+        use crate::collections::graphframe::GraphProcedureExpr;
+        use crate::projection::RelationshipType;
+        use crate::task::concurrency::TerminationFlag;
+        use crate::task::daemon::TaskDaemon;
+        use crate::task::job::TaskJobState;
+
+        let store = Arc::new(
+            DefaultGraphStore::random(&RandomGraphConfig {
+                seed: Some(12),
+                node_count: 8,
+                relationships: vec![RandomRelationshipConfig::new("REL", 1.0)],
+                ..RandomGraphConfig::default()
+            })
+            .expect("graph store should build"),
+        );
+        let graph_catalog = Arc::new(InMemoryGraphCatalog::new());
+        let dependencies = RequestScopedDependencies::with_runtime_dependencies(
+            crate::types::user::User::from("shell-test"),
+            graph_catalog,
+            Arc::new(PipelineModelStore::new()),
+        );
+        let pipelines =
+            LocalPipelinesProcedureFacade::new(dependencies, Arc::new(PipelineCatalog::new()));
+        let evaluator =
+            ShellProcedureEvaluator::new(GraphFacade::new(Arc::clone(&store)), pipelines);
+        let job = GraphFrame::from_store(store)
+            .expect("graph frame should build")
+            .select_relationship_type(RelationshipType::of("REL"))
+            .procedure(
+                GraphProcedureExpr::new("bfs", ShellComponentMode::Estimate)
+                    .with_input("source", 0_u64),
+            )
+            .compile_job("organon", 1)
+            .expect("selected graph intent job should compile");
+
+        let receipt = TaskDaemon::new().run(job, &evaluator, TerminationFlag::running_true());
+
+        assert_eq!(receipt.state(), TaskJobState::Failed);
+        assert_eq!(
+            receipt.error(),
+            Some("selected GraphFrame views require a GraphStore view adapter")
+        );
+        assert!(receipt
+            .spec()
+            .objective()
+            .identity()
+            .contains("types=[REL]"));
     }
 
     #[test]

@@ -141,6 +141,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
          executed_op={executed_op}\n\
          bus_service={bus_service}\n\
          bus_runtime={bus_runtime}\n\
+            shell_role=job_dispatcher\n\
+            shell_view=job_manager\n\
+            shell_surface=resident_empirical_mediation\n\
+            form_role=applications_manager\n\
+            feature_fixture_relation=feature_truth_deposited_as_fixture_artifacts\n\
          note=program ingress is Form-first; adapter remains transport-only\n"
     );
 
@@ -211,18 +216,22 @@ fn manifest(
     format!(
         "PureForm Shell Dispatch Fixture\n\n\
          Namespace: form::shell_dispatch\n\n\
+         Architectural Reading\n\
+         Shell is the job-dispatch mediation surface for Form-directed execution.\n\
+         Form is the applications manager that selects capability-bearing forms and\n\
+         deposits feature truth into fixture artifacts.\n\n\
          00 Graph Put Response\n\
          artifact: {}\n\
          meaning: adapter-level graph materialization through graph_store.put.\n\n\
          01 Form Request\n\
          artifact: {}\n\
-         meaning: PureForm Program requesting algo.pagerank through form_eval.\n\n\
+         meaning: PureForm Program declaring an application-managed feature request through form_eval.\n\n\
          02 Form Response\n\
          artifact: {}\n\
          meaning: proof payload including programForm, formCapabilities, and serviceManifest activation.\n\n\
          03 Dispatch Summary\n\
          artifact: {}\n\
-         meaning: concise witness of Form capability knowledge and dispatch into shell algorithm runtime.\n",
+         meaning: concise witness that Form-managed features are dispatched by Shell and retained as fixture evidence.\n",
         fixture_path(put_path),
         fixture_path(request_path),
         fixture_path(response_path),

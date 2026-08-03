@@ -19,7 +19,7 @@ use crate::procedures::model_catalog::ModelCatalogFacade;
 use crate::procedures::operations::ApplicationsFacade;
 use crate::procedures::operations::LocalOperationsProcedureFacade;
 
-use super::ShellProcedureRuntime;
+use super::ShellProcedureEvaluator;
 
 /// Shell-owned control dependencies spanning procedure control networks.
 ///
@@ -120,9 +120,9 @@ impl ShellProcedureControl {
         &self,
         graph_name: &str,
         pipelines: crate::procedures::pipelines::LocalPipelinesProcedureFacade,
-    ) -> Result<ShellProcedureRuntime, CatalogError> {
+    ) -> Result<ShellProcedureEvaluator, CatalogError> {
         let graph = self.graph(graph_name)?;
-        Ok(ShellProcedureRuntime::new(graph, pipelines))
+        Ok(ShellProcedureEvaluator::new(graph, pipelines))
     }
 
     pub fn model_count(&self) -> usize {

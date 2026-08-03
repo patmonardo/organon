@@ -7,7 +7,7 @@ use crate::projection::eval::pipeline::NodePropertyPredictionSplitConfig;
 use crate::projection::eval::pipeline::PipelineCatalog;
 use crate::projection::eval::pipeline::TrainingMethod;
 use crate::task::memory::MemoryEstimationResult;
-use crate::task::runtime::TaskFrame;
+use crate::task::runtime::TaskStage;
 use crate::types::catalog::GraphCatalog;
 use crate::types::catalog::InMemoryGraphCatalog;
 use crate::types::user::User;
@@ -123,7 +123,7 @@ pub trait NodeClassificationFacade {
 
     fn mutate(&self, graph_name: &str, configuration: RawConfig) -> Vec<PredictMutateResult>;
 
-    fn mutate_task_frame_plan(&self, graph_name: &str, configuration: RawConfig) -> Vec<TaskFrame>;
+    fn mutate_task_frame_plan(&self, graph_name: &str, configuration: RawConfig) -> Vec<TaskStage>;
 
     fn mutate_estimate(
         &self,
@@ -206,7 +206,7 @@ pub trait NodeRegressionFacade {
 
     fn mutate(&self, graph_name: &str, configuration: RawConfig) -> Vec<PredictMutateResult>;
 
-    fn mutate_task_frame_plan(&self, graph_name: &str, configuration: RawConfig) -> Vec<TaskFrame>;
+    fn mutate_task_frame_plan(&self, graph_name: &str, configuration: RawConfig) -> Vec<TaskStage>;
 
     fn mutate_estimate(
         &self,
@@ -726,7 +726,7 @@ impl NodeClassificationFacade for LocalNodeClassificationFacade {
             .node_classification_predict_mutate(graph_name, configuration)
     }
 
-    fn mutate_task_frame_plan(&self, graph_name: &str, configuration: RawConfig) -> Vec<TaskFrame> {
+    fn mutate_task_frame_plan(&self, graph_name: &str, configuration: RawConfig) -> Vec<TaskStage> {
         self.pipeline_applications
             .node_classification_predict_mutate_task_frame_plan(graph_name, &configuration)
     }
@@ -946,7 +946,7 @@ impl NodeRegressionFacade for LocalNodeRegressionFacade {
             .node_regression_predict_mutate(graph_name, configuration)
     }
 
-    fn mutate_task_frame_plan(&self, graph_name: &str, configuration: RawConfig) -> Vec<TaskFrame> {
+    fn mutate_task_frame_plan(&self, graph_name: &str, configuration: RawConfig) -> Vec<TaskStage> {
         self.pipeline_applications
             .node_regression_predict_mutate_task_frame_plan(graph_name, &configuration)
     }

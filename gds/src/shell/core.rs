@@ -19,7 +19,7 @@ use crate::task::progress::JobId;
 use crate::task::progress::TaskProgressTracker;
 use crate::task::progress::TaskRegistryFactory;
 use crate::task::progress::Tasks;
-use crate::task::runtime::TaskFrame;
+use crate::task::runtime::TaskStage;
 use crate::task::runtime::TaskFrameKind;
 use crate::task::runtime::TaskFrameStorageBackend;
 use crate::task::runtime::TaskRuntime;
@@ -1688,7 +1688,7 @@ impl GdsShell {
     ///
     /// This keeps the shell->task boundary explicit: seed preparation,
     /// compute-graph execution, and persistence are distinct runtime images.
-    pub fn task_frame_plan(&self, concurrency: usize) -> Vec<TaskFrame> {
+    pub fn task_frame_plan(&self, concurrency: usize) -> Vec<TaskStage> {
         let concurrency = concurrency.max(1);
         let estimate = self.estimate_pipeline_memory(concurrency);
         let memory = *estimate.memory_range();
@@ -1719,7 +1719,7 @@ impl GdsShell {
         let compute_memory = scale_memory_range(memory, 7, 10);
         let persist_memory = scale_memory_range(memory, 1, 10);
 
-        let seed_frame = TaskFrame::new(
+        let seed_frame = TaskStage::new(
             "shell".to_string(),
             format!("pipeline::{pipeline}::Seed"),
             seed_steps,
@@ -1733,7 +1733,7 @@ impl GdsShell {
         .with_outputs(vec![seed_output.clone()])
         .with_memory_range(seed_memory);
 
-        let compute_frame = TaskFrame::new(
+        let compute_frame = TaskStage::new(
             "shell".to_string(),
             format!("pipeline::{pipeline}::ComputeGraph"),
             compute_steps,
@@ -1747,7 +1747,7 @@ impl GdsShell {
         .with_outputs(vec![compute_output.clone()])
         .with_memory_range(compute_memory);
 
-        let persist_frame = TaskFrame::new(
+        let persist_frame = TaskStage::new(
             "shell".to_string(),
             format!("pipeline::{pipeline}::Persist"),
             persist_steps,
@@ -1770,7 +1770,7 @@ impl GdsShell {
     /// register/pipeline/algebra state into a runtime frame contract.
     ///
     /// This resolves to the compute-image stage of the shell task plan.
-    pub fn task_frame(&self, concurrency: usize) -> TaskFrame {
+    pub fn task_frame(&self, concurrency: usize) -> TaskStage {
         self.task_frame_plan(concurrency)
             .into_iter()
             .nth(1)

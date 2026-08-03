@@ -150,9 +150,9 @@ sha2 = "0.10"
 napi-build = "2"
 
 [features]
-default = ["dataset"]
+default = ["dataset", "graphframe"]
 node = ["dep:napi", "dep:napi-derive"]
-full = ["node", "dataset"]
+full = ["node", "dataset", "graphframe"]
 
 # Foundational dataset surface: enabled by default and kept as an explicit
 # feature so downstream bundles can refer to it declaratively.
@@ -162,9 +162,8 @@ dataset = []
 # but examples use this feature cfg to switch between smoke text and full demos.
 ml = []
 
-# Experimental feature: enable GraphFrame (Polars-backed graph tables).
-# Keep this opt-in so the stable Collections/DataFrame/Dataset path does not
-# pull graph-specific APIs into ordinary builds.
+# GraphFrame surface (GraphStore-directed internal DSL + runtime frame).
+# Enabled by default; retained as an explicit feature for downstream feature sets.
 graphframe = []
 
 # Optional: enable the WIP PGQL submodule under `collections::graphframe::pgql`.

@@ -1,35 +1,72 @@
-//! GraphFrame expression facade.
-//!
-//! GraphFrame is a Polars-backed graph table surface. This module provides
-//! graphframe-flavored `polars::Expr` namespaces.
+//! Graph-native expressions for the GraphFrame internal DSL.
 
-use polars::prelude::{col, Expr};
+use std::collections::BTreeMap;
+use std::collections::HashSet;
 
-#[derive(Debug, Clone)]
-pub struct GraphFrameExprNameSpace {
-    expr: Expr,
+use serde_json::Value;
+
+use crate::projection::Orientation;
+use crate::projection::RelationshipType;
+use crate::shell::ShellComponentMode;
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum GraphFrameExpr {
+    View(GraphViewExpr),
+    Procedure(GraphProcedureExpr),
 }
 
-impl GraphFrameExprNameSpace {
-    pub fn new(expr: Expr) -> Self {
-        Self { expr }
+#[derive(Debug, Clone, PartialEq)]
+pub enum GraphViewExpr {
+    RelationshipTypes(HashSet<RelationshipType>),
+    RelationshipProperty {
+        relationship_type: RelationshipType,
+        property_key: String,
+    },
+    Orientation(Orientation),
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct GraphProcedureExpr {
+    component: String,
+    mode: ShellComponentMode,
+    inputs: BTreeMap<String, Value>,
+}
+
+impl GraphProcedureExpr {
+    pub fn new(component: impl Into<String>, mode: ShellComponentMode) -> Self {
+        Self {
+            component: component.into(),
+            mode,
+            inputs: BTreeMap::new(),
+        }
     }
 
-    pub fn col(name: &str) -> Self {
-        Self::new(col(name))
+    pub fn with_input(mut self, key: impl Into<String>, value: impl Into<Value>) -> Self {
+        self.inputs.insert(key.into(), value.into());
+        self
     }
 
-    pub fn expr(&self) -> Expr {
-        self.expr.clone()
+    pub fn component(&self) -> &str {
+        &self.component
+    }
+
+    pub fn mode(&self) -> ShellComponentMode {
+        self.mode
+    }
+
+    pub fn inputs(&self) -> &BTreeMap<String, Value> {
+        &self.inputs
     }
 }
 
-pub trait ExprGraphFrameExt {
-    fn gf(self) -> GraphFrameExprNameSpace;
+impl From<GraphViewExpr> for GraphFrameExpr {
+    fn from(expr: GraphViewExpr) -> Self {
+        Self::View(expr)
+    }
 }
 
-impl ExprGraphFrameExt for Expr {
-    fn gf(self) -> GraphFrameExprNameSpace {
-        GraphFrameExprNameSpace::new(self)
+impl From<GraphProcedureExpr> for GraphFrameExpr {
+    fn from(expr: GraphProcedureExpr) -> Self {
+        Self::Procedure(expr)
     }
 }

@@ -34,10 +34,7 @@ pub mod dataset;
 // DataFrame integration
 pub mod dataframe;
 
-// GraphFrame integration (Polars-backed graph tables)
-// Experimental: keep module available but gate compilation via a Cargo feature.
-// Control public surface inside the module itself to avoid polluting top-level API.
-#[cfg(feature = "graphframe")]
+// GraphFrame integration (GraphStore-directed internal DSL + runtime surface)
 pub mod graphframe;
 
 // StatFrame integration (statistical ML surfaces)
@@ -63,9 +60,8 @@ pub use dataframe::*;
 // Access dataset APIs via `crate::collections::dataset::...` or add selective,
 // stable re-exports here as specific symbols land in the public API.
 
-// GraphFrame is experimental/inactive: do NOT glob re-export to avoid top-level pollution.
-// It is kept behind a feature gate ("graphframe") and its API surface should be
-// controlled inside `crate::collections::graphframe`.
+// GraphFrame is intentionally not glob re-exported to avoid top-level pollution.
+// Access through `crate::collections::graphframe` or `crate::graphframe`.
 
 pub use io::*;
 pub use schema::*;

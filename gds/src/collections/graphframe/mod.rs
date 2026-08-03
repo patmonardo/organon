@@ -18,7 +18,7 @@ pub mod pgql;
 pub mod prelude;
 pub mod series;
 
-pub use expr::{ExprGraphFrameExt, GraphFrameExprNameSpace};
-pub use frame::{DataFrameGraphFrameExt, GraphFrameDataFrameNameSpace};
-pub use lazy::{GraphFrameLazyFrameNameSpace, LazyFrameGraphFrameExt};
+pub use expr::{GraphFrameExpr, GraphProcedureExpr, GraphViewExpr};
+pub use frame::{GraphFrame, GraphFrameError, SharedGraphStore};
+pub use lazy::{GraphExecutionIntent, GraphFramePlan, GraphFramePureFormReciprocity};
 pub use series::{GraphFrameSeriesNameSpace, SeriesGraphFrameExt};

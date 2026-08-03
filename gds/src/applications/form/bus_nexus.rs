@@ -9,7 +9,7 @@ use serde_json::Value;
 use crate::procedures::pipelines::LocalPipelinesProcedureFacade;
 use crate::procedures::GraphFacade;
 use crate::procedures::ShellProcedureResult;
-use crate::procedures::ShellProcedureRuntime;
+use crate::procedures::ShellProcedureEvaluator;
 use crate::projection::eval::algorithm::ExecutionMode;
 use crate::shell::ShellAddress;
 use crate::shell::ShellAlgebra;
@@ -56,7 +56,7 @@ impl FormBusNexus {
         let graph_store = catalog
             .get(&submission.graph_name)
             .ok_or_else(|| FormBusNexusError::GraphNotFound(submission.graph_name.clone()))?;
-        let runtime = ShellProcedureRuntime::new(
+        let runtime = ShellProcedureEvaluator::new(
             GraphFacade::new(graph_store),
             LocalPipelinesProcedureFacade::default(),
         );

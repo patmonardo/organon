@@ -9,13 +9,13 @@ use std::path::PathBuf;
 
 use gds::task::concurrency::Concurrency;
 use gds::task::memory::MemoryRange;
-use gds::task::runtime::{TaskFrame, TaskRuntime};
+use gds::task::runtime::{TaskStage, TaskRuntime};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let root = fixture_root();
     fs::create_dir_all(&root)?;
 
-    let frame = TaskFrame::new(
+    let frame = TaskStage::new(
         "shell".to_string(),
         "pipeline::Frame".to_string(),
         vec!["dataframe.seed".to_string()],
