@@ -1,4 +1,9 @@
 //! Agent-facing TaskFrame controller.
+//!
+//! TaskFrame is the shell-facing half of the PureForm operating system. It does
+//! not define graph semantics itself; instead it receives a graph-form intent
+//! from GraphFrame and turns it into a staged workflow that can be executed by
+//! the command shell and its procedure runtime.
 
 use crate::collections::graphframe::GraphExecutionIntent;
 use crate::task::concurrency::Concurrency;

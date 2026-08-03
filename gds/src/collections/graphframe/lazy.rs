@@ -1,7 +1,10 @@
 //! GraphFrame immutable planning surface.
 //!
 //! This module encodes Form-as-Plan for GraphFrame by carrying a validated
-//! GraphStore handle plus graph-view selection state.
+//! GraphStore handle plus graph-view selection state. The resulting
+//! GraphExecutionIntent is the handoff boundary between the graph-form layer and
+//! the shell-execution layer: GraphFrame provides the form and view semantics,
+//! while TaskFrame turns that intent into a workflow executable by the shell.
 
 use std::collections::HashMap;
 use std::collections::HashSet;

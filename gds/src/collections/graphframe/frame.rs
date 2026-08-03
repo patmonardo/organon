@@ -1,6 +1,10 @@
 //! GraphFrame core surface.
 //!
-//! GraphFrame is an executable, immutable view over a GraphStore.
+//! GraphFrame is the graph-form half of a PureForm. It binds a GraphStore-backed
+//! view to an executable plan surface so a graph can be selected, filtered, and
+//! composed before control passes onward into shell execution. In this design,
+//! GraphFrame posits the graph-side division of control while TaskFrame carries
+//! that intent into the command-execution layer.
 
 use std::collections::HashSet;
 use std::sync::Arc;
@@ -11,6 +15,8 @@ use crate::projection::Orientation;
 use crate::projection::RelationshipType;
 use crate::shell::ShellComponentPlanError;
 use crate::types::graph::Graph;
+use crate::types::graph_store::GraphStoreOperationalEvent;
+use crate::types::graph_store::GraphStoreOperationalHooks;
 use crate::types::graph_store::GraphStoreRead;
 use crate::types::graph_store::GraphViewError;
 use crate::types::graph_store::GraphViewSpec;
@@ -33,6 +39,7 @@ pub enum GraphFrameError {
 pub struct GraphFrame {
     store: SharedGraphStore,
     view_spec: GraphViewSpec,
+    instrumentation: Option<Arc<dyn GraphStoreOperationalHooks>>,
 }
 
 impl GraphFrame {
@@ -65,7 +72,11 @@ impl GraphFrame {
         // Validate once at construction time so the frame is always a coherent
         // executable graph view.
         store.get_graph_view(&view_spec)?;
-        Ok(Self { store, view_spec })
+        Ok(Self {
+            store,
+            view_spec,
+            instrumentation: None,
+        })
     }
 
     pub fn store(&self) -> &SharedGraphStore {
@@ -76,8 +87,55 @@ impl GraphFrame {
         &self.view_spec
     }
 
+    pub fn with_instrumentation(
+        mut self,
+        instrumentation: Arc<dyn GraphStoreOperationalHooks>,
+    ) -> Self {
+        self.instrumentation = Some(instrumentation);
+        self
+    }
+
+    fn emit(&self, stage: &str, detail: impl Into<String>) {
+        if let Some(handler) = &self.instrumentation {
+            let event = GraphStoreOperationalEvent {
+                stage: match stage {
+                    "view_requested" => {
+                        crate::types::graph_store::GraphStoreOperationalStage::ViewRequested
+                    }
+                    "view_materialized" => {
+                        crate::types::graph_store::GraphStoreOperationalStage::ViewMaterialized
+                    }
+                    "procedure_dispatched" => {
+                        crate::types::graph_store::GraphStoreOperationalStage::ProcedureDispatched
+                    }
+                    "procedure_completed" => {
+                        crate::types::graph_store::GraphStoreOperationalStage::ProcedureCompleted
+                    }
+                    "mutation_applied" => {
+                        crate::types::graph_store::GraphStoreOperationalStage::MutationApplied
+                    }
+                    _ => crate::types::graph_store::GraphStoreOperationalStage::ViewRequested,
+                },
+                detail: detail.into(),
+            };
+            if handler.before(&event) {
+                handler.after(&event);
+            }
+        }
+    }
+
     pub fn graph(&self) -> Result<Arc<dyn Graph>, GraphFrameError> {
-        Ok(self.store.get_graph_view(&self.view_spec)?)
+        self.emit("view_requested", format!("graph view {:?}", self.view_spec));
+        let graph = self.store.get_graph_view(&self.view_spec)?;
+        self.emit(
+            "view_materialized",
+            format!(
+                "graph nodes={} relationships={}",
+                graph.node_count(),
+                graph.relationship_count()
+            ),
+        );
+        Ok(graph)
     }
 
     pub fn node_count(&self) -> Result<usize, GraphFrameError> {
