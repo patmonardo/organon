@@ -6,8 +6,8 @@ use crate::collections::dataset::core::DatasetPluginError;
 use crate::collections::dataset::core::DatasetPluginErrorClass;
 use crate::collections::dataset::core::DatasetPluginValidationReport;
 use crate::collections::dataset::core::DatasetPluginValidationRequest;
-use crate::collections::dataset::language::validate_graph_feature_grammar;
-use crate::collections::dataset::language::GraphFeatureGrammarForm;
+use crate::collections::graphframe::feature_grammar::validate_graph_feature_grammar;
+use crate::collections::graphframe::feature_grammar::GraphFeatureGrammarForm;
 
 pub const GRAPH_FEATURE_GRAMMAR_PLUGIN_ID: &str = "graphframe.graph_feature_grammar";
 pub const GRAPH_FEATURE_GRAMMAR_LANGUAGE_ID: &str = "graph_feature_grammar";
@@ -87,14 +87,14 @@ mod tests {
     use crate::collections::dataset::core::DatasetLanguagePlugin;
     use crate::collections::dataset::core::DatasetPluginPayload;
     use crate::collections::dataset::core::DatasetPluginValidationRequest;
-    use crate::collections::dataset::language::GraphFeatureAddress;
-    use crate::collections::dataset::language::GraphFeatureCardinality;
-    use crate::collections::dataset::language::GraphFeatureDerivationKind;
-    use crate::collections::dataset::language::GraphFeatureDerivationRule;
-    use crate::collections::dataset::language::GraphFeatureGrammarForm;
-    use crate::collections::dataset::language::GraphFeatureRule;
-    use crate::collections::dataset::language::GraphFeatureStratum;
-    use crate::collections::dataset::language::GraphFeatureValueType;
+    use crate::collections::graphframe::feature_grammar::GraphFeatureAddress;
+    use crate::collections::graphframe::feature_grammar::GraphFeatureCardinality;
+    use crate::collections::graphframe::feature_grammar::GraphFeatureDerivationKind;
+    use crate::collections::graphframe::feature_grammar::GraphFeatureDerivationRule;
+    use crate::collections::graphframe::feature_grammar::GraphFeatureGrammarForm;
+    use crate::collections::graphframe::feature_grammar::GraphFeatureRule;
+    use crate::collections::graphframe::feature_grammar::GraphFeatureStratum;
+    use crate::collections::graphframe::feature_grammar::GraphFeatureValueType;
 
     fn valid_form() -> GraphFeatureGrammarForm {
         GraphFeatureGrammarForm::new("citation_graph", "v1")

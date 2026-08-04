@@ -1,6 +1,5 @@
 mod frames;
 pub mod grammar;
-pub mod graph_feature_grammar;
 pub mod lm;
 mod manifest;
 pub mod parse;
@@ -17,7 +16,6 @@ pub mod tree;
 
 pub use frames::*;
 pub use grammar::*;
-pub use graph_feature_grammar::*;
 pub use lm::*;
 pub use manifest::*;
 pub use parse::*;

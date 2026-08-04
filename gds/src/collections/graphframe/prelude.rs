@@ -1,11 +1,23 @@
 //! GraphFrame prelude: curated exports for the graphframe DSL surface.
 
-pub use crate::collections::graphframe::expr::GraphFrameExpr;
 pub use crate::collections::graphframe::expr::GraphFeatureGrammarExpr;
+pub use crate::collections::graphframe::expr::GraphFrameExpr;
 pub use crate::collections::graphframe::expr::GraphModelExpr;
 pub use crate::collections::graphframe::expr::GraphPlanExpr;
 pub use crate::collections::graphframe::expr::GraphProcedureExpr;
 pub use crate::collections::graphframe::expr::GraphViewExpr;
+pub use crate::collections::graphframe::feature_grammar::validate_graph_feature_grammar;
+pub use crate::collections::graphframe::feature_grammar::GraphFeatureAddress;
+pub use crate::collections::graphframe::feature_grammar::GraphFeatureCardinality;
+pub use crate::collections::graphframe::feature_grammar::GraphFeatureDerivationKind;
+pub use crate::collections::graphframe::feature_grammar::GraphFeatureDerivationRule;
+pub use crate::collections::graphframe::feature_grammar::GraphFeatureGrammarChecked;
+pub use crate::collections::graphframe::feature_grammar::GraphFeatureGrammarError;
+pub use crate::collections::graphframe::feature_grammar::GraphFeatureGrammarErrorClass;
+pub use crate::collections::graphframe::feature_grammar::GraphFeatureGrammarForm;
+pub use crate::collections::graphframe::feature_grammar::GraphFeatureRule;
+pub use crate::collections::graphframe::feature_grammar::GraphFeatureStratum;
+pub use crate::collections::graphframe::feature_grammar::GraphFeatureValueType;
 pub use crate::collections::graphframe::frame::GraphFrame;
 pub use crate::collections::graphframe::frame::GraphFrameError;
 pub use crate::collections::graphframe::frame::SharedGraphStore;

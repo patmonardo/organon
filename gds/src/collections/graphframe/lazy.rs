@@ -13,9 +13,13 @@ use std::sync::Arc;
 use crate::collections::graphframe::expr::GraphFrameExpr;
 use crate::collections::graphframe::expr::GraphProcedureExpr;
 use crate::collections::graphframe::expr::GraphViewExpr;
+use crate::collections::graphframe::feature_grammar::GraphFeatureGrammarChecked;
 use crate::collections::graphframe::frame::GraphFrame;
 use crate::collections::graphframe::frame::GraphFrameError;
 use crate::collections::graphframe::frame::SharedGraphStore;
+use crate::collections::graphframe::rational_language::lower_graph_semantics;
+use crate::collections::graphframe::rational_language::GraphRationalLanguageError;
+use crate::collections::graphframe::rational_language::GraphSemanticLowering;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
 use crate::shell::ShellAddress;
@@ -204,6 +208,13 @@ impl GraphFramePlan {
         }
 
         spec
+    }
+
+    pub fn compile_rational_semantics(
+        &self,
+        grammar: &GraphFeatureGrammarChecked,
+    ) -> Result<GraphSemanticLowering, GraphRationalLanguageError> {
+        lower_graph_semantics(&self.expressions, grammar)
     }
 
     pub fn compile_pure_shell_plan(&self) -> Result<ShellComponentPlan, GraphFrameError> {

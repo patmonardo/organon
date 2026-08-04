@@ -1,10 +1,7 @@
 //! Graph feature grammar checker.
 //!
-//! This module provides a minimal, deterministic checker for the
-//! doctrine-level Graph Feature Grammar formalization. The checker is
-//! intentionally small: it validates strata declarations, derivation
-//! typing constraints, cross-strata trace requirements, and a few
-//! scope-collapse guards that map to the v1 conformance matrix.
+//! Graph feature language ownership lives in GraphFrame. Dataset may host
+//! plugin contracts, but Graph semantics are defined here.
 
 use std::collections::BTreeMap;
 use std::collections::BTreeSet;
@@ -216,7 +213,6 @@ impl GraphFeatureGrammarChecked {
     }
 
     pub fn rule_graph_digest(&self) -> u64 {
-        // Canonicalize ordering so digest is deterministic.
         let mut feature_lines: Vec<String> = self
             .form
             .feature_rules
@@ -471,7 +467,6 @@ mod tests {
             ))
     }
 
-    // T1: duplicate feature rejection
     #[test]
     fn reject_duplicate_feature_in_same_stratum() {
         let form = base_form().with_feature_rule(GraphFeatureRule::new(
@@ -486,7 +481,6 @@ mod tests {
         assert_eq!(err.class, GraphFeatureGrammarErrorClass::TypeCollapse);
     }
 
-    // T2: cross-strata trace enforcement
     #[test]
     fn reject_cross_strata_derivation_without_trace() {
         let form = base_form().with_derivation(GraphFeatureDerivationRule::new(
@@ -500,7 +494,6 @@ mod tests {
         assert_eq!(err.class, GraphFeatureGrammarErrorClass::ProvenanceBreak);
     }
 
-    // T3: graph irreducibility via aggregate-target scope enforcement
     #[test]
     fn reject_aggregate_target_outside_graph_stratum() {
         let form = base_form().with_derivation(GraphFeatureDerivationRule::new(
@@ -515,7 +508,6 @@ mod tests {
         assert_eq!(err.class, GraphFeatureGrammarErrorClass::ScopeCollapse);
     }
 
-    // T4: deterministic replay digest
     #[test]
     fn digest_is_deterministic_for_same_grammar() {
         let form = base_form().with_derivation(GraphFeatureDerivationRule::new(
@@ -530,7 +522,6 @@ mod tests {
         assert_eq!(checked_a.rule_graph_digest(), checked_b.rule_graph_digest());
     }
 
-    // T5: valid baseline acceptance
     #[test]
     fn accepts_well_typed_baseline() {
         let form = base_form().with_derivation(GraphFeatureDerivationRule::new(
