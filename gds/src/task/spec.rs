@@ -155,6 +155,7 @@ impl TaskWorkflow {
 #[derive(Debug, Clone)]
 pub struct TaskSpec {
     namespace: String,
+    task_name: String,
     workflow: TaskWorkflow,
     objective: TaskObjectiveRef,
     return_contract: TaskReturnContract,
@@ -166,6 +167,15 @@ impl TaskSpec {
         workflow: TaskWorkflow,
     ) -> Result<Self, TaskSpecError> {
         let namespace = namespace.into();
+        let _task_name = format!(
+            "{}::{}",
+            namespace,
+            workflow
+                .frames()
+                .first()
+                .map(|frame| frame.pipeline().to_string())
+                .unwrap_or_default()
+        );
         let outputs = workflow
             .frames()
             .last()
@@ -197,8 +207,19 @@ impl TaskSpec {
             }
         }
 
+        let task_name = format!(
+            "{}::{}",
+            namespace,
+            workflow
+                .frames()
+                .first()
+                .map(|frame| frame.pipeline().to_string())
+                .unwrap_or_default()
+        );
+
         Ok(Self {
             namespace,
+            task_name,
             workflow,
             objective,
             return_contract,
@@ -207,6 +228,10 @@ impl TaskSpec {
 
     pub fn namespace(&self) -> &str {
         &self.namespace
+    }
+
+    pub fn task_name(&self) -> &str {
+        &self.task_name
     }
 
     pub fn workflow(&self) -> &TaskWorkflow {

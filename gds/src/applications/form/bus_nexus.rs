@@ -8,14 +8,14 @@ use serde_json::Value;
 
 use crate::procedures::pipelines::LocalPipelinesProcedureFacade;
 use crate::procedures::GraphFacade;
-use crate::procedures::ShellProcedureResult;
-use crate::procedures::ShellProcedureEvaluator;
 use crate::projection::eval::algorithm::ExecutionMode;
 use crate::shell::ShellAddress;
 use crate::shell::ShellAlgebra;
 use crate::shell::ShellComponentMode;
 use crate::shell::ShellComponentPlan;
 use crate::shell::ShellPipeline;
+use crate::shell::ShellProcedureEvaluator;
+use crate::shell::ShellProcedureResult;
 use crate::shell::ShellRegister;
 use crate::types::catalog::GraphCatalog;
 

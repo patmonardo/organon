@@ -2,6 +2,7 @@ use super::builtin_component;
 use super::ShellComponentCall;
 use super::ShellComponentMode;
 use super::ShellComponentPlan;
+use crate::shell::components::plan::ShellPlanStepRole;
 
 #[derive(Debug, Clone)]
 pub struct ShellBfsCallBuilder {
@@ -80,7 +81,8 @@ impl ShellBfsCallBuilder {
 
     fn finish(mut self, mode: ShellComponentMode) -> ShellComponentPlan {
         self.call.mode = mode;
-        self.plan.push(self.call)
+        self.plan
+            .push_with_role(self.call, ShellPlanStepRole::Other)
     }
 }
 
@@ -165,7 +167,8 @@ impl ShellDijkstraCallBuilder {
 
     fn finish(mut self, mode: ShellComponentMode) -> ShellComponentPlan {
         self.call.mode = mode;
-        self.plan.push(self.call)
+        self.plan
+            .push_with_role(self.call, ShellPlanStepRole::Other)
     }
 }
 

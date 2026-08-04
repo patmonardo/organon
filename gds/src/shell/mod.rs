@@ -10,7 +10,8 @@ pub mod components;
 mod core;
 mod help;
 mod moments;
-mod pipeline;
+pub mod pipeline;
+pub mod procedure;
 mod program;
 mod schema;
 mod script;
@@ -21,9 +22,9 @@ pub use crate::dsl::*;
 pub use components::{
     builtin_component, BuiltinComponentRef, BuiltinComponentSuite, ShellBfsCallBuilder,
     ShellComponentCall, ShellComponentCallBuilder, ShellComponentCategory,
-    ShellComponentDescriptor, ShellComponentId, ShellComponentMode, ShellComponentPlan,
-    ShellComponentPlanError, ShellComponentSuiteError, ShellDijkstraCallBuilder,
-    ALGORITHM_BUILTINS, PIPELINE_BUILTINS,
+    ShellComponentDescriptor, ShellComponentExecutionKind, ShellComponentId, ShellComponentMode,
+    ShellComponentPlan, ShellComponentPlanError, ShellComponentSuiteError,
+    ShellDijkstraCallBuilder, ALGORITHM_BUILTINS, PIPELINE_BUILTINS,
 };
 pub use core::{
     GdsShell, ShellCapabilityBand, ShellCapabilityMap, ShellCapabilityState, ShellCorpusError,
@@ -37,6 +38,11 @@ pub use help::{ShellFold, ShellHelp, ShellHelpEntry, ShellMomentKind, ShellVocab
 pub use moments::{ShellAddress, ShellAlgebra, ShellMoment, ShellPipeline, ShellRegister};
 pub use pipeline::{
     ShellPipelineDescriptor, ShellPipelineFacade, ShellPipelineKind, ShellPureFormReturn,
+};
+pub use procedure::{
+    ShellPipelineProcedure, ShellProcedureBinding, ShellProcedureError, ShellProcedureEvaluator,
+    ShellProcedureInvocation, ShellProcedurePlanBinding, ShellProcedurePlanResult,
+    ShellProcedureResult, ShellProcedureRuntime,
 };
 pub use program::ShellProgram;
 pub use schema::ShellSchema;

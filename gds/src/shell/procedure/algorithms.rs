@@ -1,4 +1,5 @@
 use crate::algo::embeddings::node2vec::EmbeddingInitializerConfig;
+use crate::algo::pagerank::PAGERANKAlgorithmSpec;
 use crate::algo::similarity::knn::KnnSamplerType;
 use crate::algo::similarity::knn::SimilarityMetric;
 use crate::algo::similarity::node_similarity::NodeSimilarityMetric;
@@ -50,10 +51,16 @@ use crate::procedures::similarity::FilteredKnnFacade;
 use crate::procedures::similarity::FilteredNodeSimilarityFacade;
 use crate::procedures::similarity::KnnFacade;
 use crate::procedures::similarity::NodeSimilarityFacade;
+use crate::projection::eval::algorithm::AlgorithmError;
+use crate::projection::eval::algorithm::{ExecutionContext, ExecutionMode, ProcedureExecutor};
 use crate::projection::NodeLabel;
 use crate::shell::builtin_component;
 use crate::shell::ShellComponentCall;
+use crate::shell::ShellComponentId;
 use crate::shell::ShellComponentMode;
+use crate::task::memory::MemoryRange;
+use crate::types::prelude::DefaultGraphStore;
+use std::sync::Arc;
 
 use super::inputs::optional_bool;
 use super::inputs::optional_f64;
@@ -311,12 +318,22 @@ pub(super) fn bind_algorithm(
             procedure: bind_kspanning_tree(graph, call)?,
             output_property: output_property(call)?,
         }),
-        "pagerank" => Ok(ShellProcedureBinding::PageRank {
-            component: component.id,
-            mode: call.mode,
-            procedure: bind_pagerank(graph, call)?,
-            output_property: output_property(call)?,
-        }),
+        "pagerank" => {
+            let input = serde_json::Value::Object(
+                call.inputs
+                    .iter()
+                    .map(|(key, value)| (key.clone(), value.clone()))
+                    .collect(),
+            );
+
+            Ok(ShellProcedureBinding::ProjectionEval {
+                component: component.id,
+                mode: call.mode,
+                output_property: output_property(call)?,
+                graph: graph.store().clone(),
+                input,
+            })
+        }
         "random_walk" => Ok(ShellProcedureBinding::RandomWalk {
             component: component.id,
             mode: call.mode,
@@ -1246,6 +1263,59 @@ pub(super) fn invoke_pagerank(
             unreachable!("PageRank mode is validated before invocation")
         }
     })
+}
+
+pub(super) fn invoke_projection_eval(
+    mode: ShellComponentMode,
+    graph: Arc<DefaultGraphStore>,
+    input: serde_json::Value,
+    _output_property: Option<String>,
+) -> Result<ShellProcedureResult, ShellProcedureError> {
+    let context = ExecutionContext::mock(graph);
+    let mut executor = ProcedureExecutor::new(context, ExecutionMode::Stats);
+    let mut spec = PAGERANKAlgorithmSpec::new("test_graph".to_string());
+
+    match mode {
+        ShellComponentMode::Stream => {
+            let result = executor.compute(&mut spec, &input).map_err(|err| {
+                ShellProcedureError::Algorithm(AlgorithmError::Execution(err.to_string()))
+            })?;
+            let rows = result
+                .scores
+                .into_iter()
+                .enumerate()
+                .map(
+                    |(node_id, score)| crate::algo::algorithms::CentralityScore {
+                        node_id: node_id as u64,
+                        score,
+                    },
+                )
+                .collect();
+            Ok(ShellProcedureResult::PageRankStream(rows))
+        }
+        ShellComponentMode::Stats => {
+            let result = executor.compute(&mut spec, &input).map_err(|err| {
+                ShellProcedureError::Algorithm(AlgorithmError::Execution(err.to_string()))
+            })?;
+            let stats = crate::algo::pagerank::PageRankResultBuilder::new(result).stats();
+            Ok(ShellProcedureResult::PageRankStats(stats))
+        }
+        ShellComponentMode::Estimate => {
+            let result = executor.compute(&mut spec, &input).map_err(|err| {
+                ShellProcedureError::Algorithm(AlgorithmError::Execution(err.to_string()))
+            })?;
+            let estimate = result.scores.len().saturating_mul(1024).max(1024);
+            Ok(ShellProcedureResult::PageRankEstimate(MemoryRange::of(
+                estimate,
+            )))
+        }
+        ShellComponentMode::Mutate | ShellComponentMode::Write | ShellComponentMode::Invoke => {
+            Err(ShellProcedureError::UnsupportedMode {
+                component: ShellComponentId::new("gds.algorithms.centrality.pagerank"),
+                mode,
+            })
+        }
+    }
 }
 
 pub(super) fn invoke_random_walk(

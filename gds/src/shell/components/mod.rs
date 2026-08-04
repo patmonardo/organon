@@ -52,6 +52,13 @@ pub enum ShellComponentCategory {
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize)]
 #[serde(rename_all = "snake_case")]
+pub enum ShellComponentExecutionKind {
+    Algorithm,
+    Pipeline,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize)]
+#[serde(rename_all = "snake_case")]
 pub enum ShellComponentMode {
     Invoke,
     Stream,
@@ -68,6 +75,7 @@ pub struct ShellComponentDescriptor {
     pub alias: &'static str,
     pub category: ShellComponentCategory,
     pub modes: &'static [ShellComponentMode],
+    pub execution_kind: ShellComponentExecutionKind,
 }
 
 impl ShellComponentDescriptor {
@@ -82,7 +90,16 @@ impl ShellComponentDescriptor {
             alias,
             category,
             modes,
+            execution_kind: ShellComponentExecutionKind::Algorithm,
         }
+    }
+
+    pub const fn with_execution_kind(
+        mut self,
+        execution_kind: ShellComponentExecutionKind,
+    ) -> Self {
+        self.execution_kind = execution_kind;
+        self
     }
 
     pub fn supports(self, mode: ShellComponentMode) -> bool {
@@ -119,6 +136,15 @@ impl ShellComponentCall {
     pub fn with_input(mut self, key: impl Into<String>, value: impl Into<Value>) -> Self {
         self.inputs.insert(key.into(), value.into());
         self
+    }
+
+    pub fn descriptor(&self) -> Option<&'static ShellComponentDescriptor> {
+        builtin_component(self.component.as_str()).map(|component| component.descriptor())
+    }
+
+    pub fn execution_kind(&self) -> Option<ShellComponentExecutionKind> {
+        self.descriptor()
+            .map(|descriptor| descriptor.execution_kind)
     }
 }
 
@@ -233,6 +259,47 @@ mod tests {
     }
 
     #[test]
+    fn descriptors_expose_execution_kind_for_plan_dispatch() {
+        let bfs = builtin_component("bfs").unwrap().descriptor();
+        let pipeline = builtin_component("create_node_classification_pipeline")
+            .unwrap()
+            .descriptor();
+
+        assert_eq!(bfs.execution_kind, ShellComponentExecutionKind::Algorithm);
+        assert_eq!(
+            pipeline.execution_kind,
+            ShellComponentExecutionKind::Pipeline
+        );
+    }
+
+    #[test]
+    fn component_calls_expose_registry_descriptor_and_execution_kind() {
+        let algorithm_call = builtin_component("bfs")
+            .unwrap()
+            .call(ShellComponentMode::Estimate);
+        let pipeline_call = builtin_component("create_node_classification_pipeline")
+            .unwrap()
+            .call(ShellComponentMode::Invoke);
+
+        let algorithm_descriptor = algorithm_call.descriptor().unwrap();
+        let pipeline_descriptor = pipeline_call.descriptor().unwrap();
+
+        assert_eq!(algorithm_descriptor.alias, "bfs");
+        assert_eq!(
+            algorithm_call.execution_kind(),
+            Some(ShellComponentExecutionKind::Algorithm)
+        );
+        assert_eq!(
+            pipeline_descriptor.alias,
+            "create_node_classification_pipeline"
+        );
+        assert_eq!(
+            pipeline_call.execution_kind(),
+            Some(ShellComponentExecutionKind::Pipeline)
+        );
+    }
+
+    #[test]
     fn typed_pathfinding_calls_preserve_origin_and_order() {
         let origin = ShellAddress::new(
             ShellRegister::Unified,
@@ -305,6 +372,60 @@ mod tests {
             ShellComponentPlan::new(origin).component("bfs", ShellComponentMode::Invoke),
             Err(ShellComponentPlanError::UnsupportedMode { .. })
         ));
+    }
+
+    #[test]
+    fn plans_expose_execution_kinds_for_dispatch() {
+        let origin = ShellAddress::new(
+            ShellRegister::Unified,
+            ShellPipeline::ModelFeaturePlan,
+            ShellAlgebra::ProgramFeature,
+        );
+        let plan = ShellComponentPlan::new(origin)
+            .component("pagerank", ShellComponentMode::Estimate)
+            .unwrap()
+            .finish()
+            .component(
+                "create_node_classification_pipeline",
+                ShellComponentMode::Invoke,
+            )
+            .unwrap()
+            .finish();
+
+        assert!(plan.has_algorithm_components());
+        assert!(plan.has_pipeline_components());
+        assert_eq!(
+            plan.execution_kinds(),
+            vec![
+                ShellComponentExecutionKind::Algorithm,
+                ShellComponentExecutionKind::Pipeline,
+            ]
+        );
+    }
+
+    #[test]
+    fn plans_can_group_steps_by_meta_facade_role() {
+        let origin = ShellAddress::new(
+            ShellRegister::Unified,
+            ShellPipeline::ModelFeaturePlan,
+            ShellAlgebra::ProgramFeature,
+        );
+        let plan = ShellComponentPlan::new(origin)
+            .node_component("pagerank", ShellComponentMode::Estimate)
+            .unwrap()
+            .finish()
+            .feature_component("fast_rp", ShellComponentMode::Stats)
+            .unwrap()
+            .finish()
+            .training_component("node2vec", ShellComponentMode::Stats)
+            .unwrap()
+            .finish();
+
+        assert_eq!(plan.node_steps().len(), 1);
+        assert_eq!(plan.feature_steps().len(), 1);
+        assert_eq!(plan.training_steps().len(), 1);
+        assert_eq!(plan.step_roles(), vec!["node", "feature", "training"]);
+        assert_eq!(plan.len(), 3);
     }
 
     #[test]

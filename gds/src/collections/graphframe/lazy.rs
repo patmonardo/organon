@@ -20,6 +20,7 @@ use crate::projection::Orientation;
 use crate::projection::RelationshipType;
 use crate::shell::ShellAddress;
 use crate::shell::ShellAlgebra;
+use crate::shell::ShellComponentExecutionKind;
 use crate::shell::ShellComponentMode;
 use crate::shell::ShellComponentPlan;
 use crate::shell::ShellPipeline;
@@ -85,6 +86,18 @@ impl GraphExecutionIntent {
 
     pub fn estimated_volume(&self) -> usize {
         self.estimated_volume
+    }
+
+    pub fn execution_kinds(&self) -> Vec<ShellComponentExecutionKind> {
+        self.reciprocity.shell_plan().execution_kinds()
+    }
+
+    pub fn has_algorithm_components(&self) -> bool {
+        self.reciprocity.shell_plan().has_algorithm_components()
+    }
+
+    pub fn has_pipeline_components(&self) -> bool {
+        self.reciprocity.shell_plan().has_pipeline_components()
     }
 }
 

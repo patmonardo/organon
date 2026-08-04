@@ -180,10 +180,9 @@ use crate::procedures::similarity::KnnFacade;
 use crate::procedures::similarity::NodeSimilarityFacade;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::Orientation;
-use crate::shell::builtin_component;
 use crate::shell::ShellAddress;
 use crate::shell::ShellComponentCall;
-use crate::shell::ShellComponentCategory;
+use crate::shell::ShellComponentExecutionKind;
 use crate::shell::ShellComponentId;
 use crate::shell::ShellComponentMode;
 use crate::shell::ShellComponentPlan;
@@ -191,9 +190,10 @@ use crate::task::evaluator::TaskEvaluator;
 use crate::task::evaluator::TaskExecutionContext;
 use crate::task::memory::MemoryRange;
 use crate::types::graph_store::GraphStoreRead;
+use crate::types::prelude::DefaultGraphStore;
 use std::sync::Arc;
 
-use super::GraphFacade;
+use crate::procedures::GraphFacade;
 
 pub enum ShellProcedureBinding {
     ApproxMaxKCut {
@@ -414,6 +414,13 @@ pub enum ShellProcedureBinding {
         procedure: KSpanningTreeBuilder,
         output_property: Option<String>,
     },
+    ProjectionEval {
+        component: ShellComponentId,
+        mode: ShellComponentMode,
+        output_property: Option<String>,
+        graph: Arc<DefaultGraphStore>,
+        input: serde_json::Value,
+    },
     PageRank {
         component: ShellComponentId,
         mode: ShellComponentMode,
@@ -498,6 +505,7 @@ impl ShellProcedureBinding {
             | Self::GraphSage { component, .. }
             | Self::HashGNN { component, .. }
             | Self::KSpanningTree { component, .. }
+            | Self::ProjectionEval { component, .. }
             | Self::PageRank { component, .. }
             | Self::RandomWalk { component, .. }
             | Self::SpanningTree { component, .. }
@@ -547,6 +555,7 @@ impl ShellProcedureBinding {
             | Self::GraphSage { mode, .. }
             | Self::HashGNN { mode, .. }
             | Self::KSpanningTree { mode, .. }
+            | Self::ProjectionEval { mode, .. }
             | Self::PageRank { mode, .. }
             | Self::RandomWalk { mode, .. }
             | Self::SpanningTree { mode, .. }
@@ -769,6 +778,13 @@ impl ShellProcedureBinding {
                 output_property,
                 ..
             } => algorithms::invoke_kspanning_tree(mode, procedure, output_property),
+            Self::ProjectionEval {
+                mode,
+                output_property,
+                graph,
+                input,
+                ..
+            } => algorithms::invoke_projection_eval(mode, graph, input, output_property),
             Self::PageRank {
                 mode,
                 procedure,
@@ -1160,11 +1176,11 @@ impl ShellProcedureEvaluator {
         &self,
         call: &ShellComponentCall,
     ) -> Result<ShellProcedureBinding, ShellProcedureError> {
-        let component = builtin_component(call.component.as_str())
-            .ok_or(ShellProcedureError::UnknownComponent(call.component))?
-            .descriptor();
+        let descriptor = call
+            .descriptor()
+            .ok_or(ShellProcedureError::UnknownComponent(call.component))?;
 
-        if component.category == ShellComponentCategory::Pipeline {
+        if descriptor.execution_kind == ShellComponentExecutionKind::Pipeline {
             pipelines::bind_pipeline(Arc::clone(&self.pipelines), call)
         } else {
             self.graph.bind_shell_component(call)
@@ -1217,11 +1233,14 @@ impl TaskEvaluator<ShellComponentPlan> for ShellProcedureEvaluator {
             return Err(ShellProcedureError::Canceled);
         }
 
+        context.push_trace("shell.procedure.evaluate.begin");
         let result = self.invoke_plan(program)?;
         if !context.is_running() {
+            context.push_trace("shell.procedure.evaluate.end");
             return Err(ShellProcedureError::Canceled);
         }
 
+        context.push_trace("shell.procedure.evaluate.end");
         Ok(result)
     }
 }
@@ -1252,11 +1271,14 @@ impl TaskEvaluator<GraphExecutionIntent> for ShellProcedureEvaluator {
             return Err(ShellProcedureError::SelectedGraphViewUnsupported);
         }
 
+        context.push_trace("shell.procedure.evaluate.begin");
         let result = self.invoke_plan(intent.program())?;
         if !context.is_running() {
+            context.push_trace("shell.procedure.evaluate.end");
             return Err(ShellProcedureError::Canceled);
         }
 
+        context.push_trace("shell.procedure.evaluate.end");
         Ok(result)
     }
 }
@@ -2137,6 +2159,40 @@ mod tests {
     }
 
     #[test]
+    fn runtime_prefers_projection_eval_binding_for_pagerank() {
+        let call = builtin_component("pagerank")
+            .unwrap()
+            .call(ShellComponentMode::Estimate)
+            .with_input("maxIterations", 5_u64)
+            .with_input("dampingFactor", 0.85_f64)
+            .with_input("tolerance", 0.00001_f64);
+
+        let binding = runtime().bind(&call).unwrap();
+
+        assert!(matches!(
+            binding,
+            ShellProcedureBinding::ProjectionEval { .. }
+        ));
+    }
+
+    #[test]
+    fn runtime_projection_eval_uses_shell_inputs_for_pagerank() {
+        let call = builtin_component("pagerank")
+            .unwrap()
+            .call(ShellComponentMode::Stats)
+            .with_input("maxIterations", 5_u64)
+            .with_input("dampingFactor", 0.85_f64)
+            .with_input("tolerance", 0.00001_f64);
+
+        let result = runtime().invoke(&call).unwrap();
+
+        assert!(matches!(
+            result,
+            ShellProcedureResult::PageRankStats(stats) if stats.iterations_ran == 5
+        ));
+    }
+
+    #[test]
     fn runtime_invokes_algorithm_procedures() {
         let call = builtin_component("bfs")
             .unwrap()
@@ -2350,7 +2406,7 @@ mod tests {
             .component_plan()
             .bfs(0)
             .estimate()
-            .push(invalid_call);
+            .with_call(invalid_call);
 
         assert!(matches!(
             runtime().bind_plan(&plan),

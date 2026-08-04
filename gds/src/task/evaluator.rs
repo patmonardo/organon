@@ -1,5 +1,7 @@
 //! Execution-instrument inversion for Task-owned lifecycle control.
 
+use std::cell::RefCell;
+
 use crate::task::concurrency::TerminationFlag;
 use crate::task::progress::JobId;
 use crate::task::spec::TaskSpec;
@@ -9,6 +11,7 @@ pub struct TaskExecutionContext<'a> {
     owner: &'a str,
     spec: &'a TaskSpec,
     termination: TerminationFlag,
+    trace: RefCell<Vec<String>>,
 }
 
 impl<'a> TaskExecutionContext<'a> {
@@ -23,6 +26,7 @@ impl<'a> TaskExecutionContext<'a> {
             owner,
             spec,
             termination,
+            trace: RefCell::new(Vec::new()),
         }
     }
 
@@ -44,6 +48,14 @@ impl<'a> TaskExecutionContext<'a> {
 
     pub fn termination_flag(&self) -> &TerminationFlag {
         &self.termination
+    }
+
+    pub fn push_trace(&self, entry: impl Into<String>) {
+        self.trace.borrow_mut().push(entry.into());
+    }
+
+    pub fn trace(&self) -> Vec<String> {
+        self.trace.borrow().clone()
     }
 }
 

@@ -35,33 +35,48 @@ impl TaskDaemon {
     {
         let receipt_spec = job.spec().clone();
         let context = TaskExecutionContext::new(job.job_id(), job.owner(), job.spec(), termination);
+        context.push_trace("task.eval.begin");
 
         if !context.is_running() {
+            context.push_trace("task.eval.end");
             return TaskJobReceipt::canceled(
                 job.job_id().clone(),
                 job.owner().to_string(),
                 receipt_spec,
+                context.trace(),
             );
         }
 
         match evaluator.evaluate(job.program(), &context) {
-            Ok(output) if context.is_running() => TaskJobReceipt::succeeded(
-                job.job_id().clone(),
-                job.owner().to_string(),
-                receipt_spec,
-                output,
-            ),
-            Ok(_) => TaskJobReceipt::canceled(
-                job.job_id().clone(),
-                job.owner().to_string(),
-                receipt_spec,
-            ),
-            Err(error) => TaskJobReceipt::failed(
-                job.job_id().clone(),
-                job.owner().to_string(),
-                receipt_spec,
-                error.to_string(),
-            ),
+            Ok(output) if context.is_running() => {
+                context.push_trace("task.eval.end");
+                TaskJobReceipt::succeeded(
+                    job.job_id().clone(),
+                    job.owner().to_string(),
+                    receipt_spec,
+                    output,
+                    context.trace(),
+                )
+            }
+            Ok(_) => {
+                context.push_trace("task.eval.end");
+                TaskJobReceipt::canceled(
+                    job.job_id().clone(),
+                    job.owner().to_string(),
+                    receipt_spec,
+                    context.trace(),
+                )
+            }
+            Err(error) => {
+                context.push_trace("task.eval.end");
+                TaskJobReceipt::failed(
+                    job.job_id().clone(),
+                    job.owner().to_string(),
+                    receipt_spec,
+                    error.to_string(),
+                    context.trace(),
+                )
+            }
         }
     }
 }
@@ -106,6 +121,28 @@ mod tests {
             Concurrency::of(1),
         );
         TaskSpec::new("task", TaskWorkflow::new(vec![frame]).unwrap()).unwrap()
+    }
+
+    #[test]
+    fn task_daemon_records_evaluator_trace_in_receipt() {
+        let daemon = TaskDaemon::new();
+        let job = daemon.submit("organon", spec(), "program".to_string());
+
+        let receipt = daemon.run(job, &TestEvaluator { fail: false }, TerminationFlag::running_true());
+
+        assert_eq!(receipt.state(), TaskJobState::Succeeded);
+        assert!(receipt.trace().iter().any(|entry| entry.contains("task.eval.begin")));
+        assert!(receipt.trace().iter().any(|entry| entry.contains("task.eval.end")));
+    }
+
+    #[test]
+    fn task_daemon_receipt_exposes_task_name() {
+        let daemon = TaskDaemon::new();
+        let job = daemon.submit("organon", spec(), "program".to_string());
+
+        let receipt = daemon.run(job, &TestEvaluator { fail: false }, TerminationFlag::running_true());
+
+        assert_eq!(receipt.task_name(), "task::pipeline::Test");
     }
 
     #[test]

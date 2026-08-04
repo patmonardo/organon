@@ -42,6 +42,10 @@ impl<Program> TaskJob<Program> {
         &self.spec
     }
 
+    pub fn task_name(&self) -> &str {
+        self.spec().task_name()
+    }
+
     pub fn program(&self) -> &Program {
         &self.program
     }
@@ -70,10 +74,17 @@ pub struct TaskJobReceipt<Output> {
     state: TaskJobState,
     output: Option<Output>,
     error: Option<String>,
+    trace: Vec<String>,
 }
 
 impl<Output> TaskJobReceipt<Output> {
-    pub(crate) fn succeeded(job_id: JobId, owner: String, spec: TaskSpec, output: Output) -> Self {
+    pub(crate) fn succeeded(
+        job_id: JobId,
+        owner: String,
+        spec: TaskSpec,
+        output: Output,
+        trace: Vec<String>,
+    ) -> Self {
         Self {
             job_id,
             owner,
@@ -81,10 +92,17 @@ impl<Output> TaskJobReceipt<Output> {
             state: TaskJobState::Succeeded,
             output: Some(output),
             error: None,
+            trace,
         }
     }
 
-    pub(crate) fn failed(job_id: JobId, owner: String, spec: TaskSpec, error: String) -> Self {
+    pub(crate) fn failed(
+        job_id: JobId,
+        owner: String,
+        spec: TaskSpec,
+        error: String,
+        trace: Vec<String>,
+    ) -> Self {
         Self {
             job_id,
             owner,
@@ -92,10 +110,16 @@ impl<Output> TaskJobReceipt<Output> {
             state: TaskJobState::Failed,
             output: None,
             error: Some(error),
+            trace,
         }
     }
 
-    pub(crate) fn canceled(job_id: JobId, owner: String, spec: TaskSpec) -> Self {
+    pub(crate) fn canceled(
+        job_id: JobId,
+        owner: String,
+        spec: TaskSpec,
+        trace: Vec<String>,
+    ) -> Self {
         Self {
             job_id,
             owner,
@@ -103,6 +127,7 @@ impl<Output> TaskJobReceipt<Output> {
             state: TaskJobState::Canceled,
             output: None,
             error: None,
+            trace,
         }
     }
 
@@ -118,6 +143,10 @@ impl<Output> TaskJobReceipt<Output> {
         &self.spec
     }
 
+    pub fn task_name(&self) -> &str {
+        self.spec().task_name()
+    }
+
     pub fn state(&self) -> TaskJobState {
         self.state
     }
@@ -128,5 +157,9 @@ impl<Output> TaskJobReceipt<Output> {
 
     pub fn error(&self) -> Option<&str> {
         self.error.as_deref()
+    }
+
+    pub fn trace(&self) -> &[String] {
+        &self.trace
     }
 }

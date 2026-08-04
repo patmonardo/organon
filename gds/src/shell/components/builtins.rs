@@ -132,35 +132,41 @@ pub static PIPELINE_BUILTINS: &[ShellComponentDescriptor] = &[
         "create_link_prediction_pipeline",
         ShellComponentCategory::Pipeline,
         INVOKE_MODE,
-    ),
+    )
+    .with_execution_kind(crate::shell::ShellComponentExecutionKind::Pipeline),
     ShellComponentDescriptor::new(
         "gds.pipelines.node_classification.create",
         "create_node_classification_pipeline",
         ShellComponentCategory::Pipeline,
         INVOKE_MODE,
-    ),
+    )
+    .with_execution_kind(crate::shell::ShellComponentExecutionKind::Pipeline),
     ShellComponentDescriptor::new(
         "gds.pipelines.node_regression.create",
         "create_node_regression_pipeline",
         ShellComponentCategory::Pipeline,
         INVOKE_MODE,
-    ),
+    )
+    .with_execution_kind(crate::shell::ShellComponentExecutionKind::Pipeline),
     ShellComponentDescriptor::new(
         "gds.pipelines.list",
         "list_pipelines",
         ShellComponentCategory::Pipeline,
         INVOKE_MODE,
-    ),
+    )
+    .with_execution_kind(crate::shell::ShellComponentExecutionKind::Pipeline),
     ShellComponentDescriptor::new(
         "gds.pipelines.exists",
         "pipeline_exists",
         ShellComponentCategory::Pipeline,
         INVOKE_MODE,
-    ),
+    )
+    .with_execution_kind(crate::shell::ShellComponentExecutionKind::Pipeline),
     ShellComponentDescriptor::new(
         "gds.pipelines.drop",
         "drop_pipeline",
         ShellComponentCategory::Pipeline,
         INVOKE_MODE,
-    ),
+    )
+    .with_execution_kind(crate::shell::ShellComponentExecutionKind::Pipeline),
 ];
