@@ -373,6 +373,7 @@ mod tests {
             .expect("task job should compile");
 
         assert_eq!(job.owner(), "organon");
+        assert_eq!(job.task_name(), "graphframe::shell::pagerank::stats");
         assert_eq!(job.spec().namespace(), "graphframe");
         assert_eq!(job.spec().workflow().len(), 2);
         assert_eq!(job.spec().objective().source(), "graphstore");

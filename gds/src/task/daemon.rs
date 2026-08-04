@@ -68,6 +68,11 @@ impl TaskDaemon {
                 )
             }
             Err(error) => {
+                context.push_trace(format!(
+                    "task.eval.error class={} message={}",
+                    evaluator.error_classification(&error),
+                    error
+                ));
                 context.push_trace("task.eval.end");
                 TaskJobReceipt::failed(
                     job.job_id().clone(),
@@ -88,6 +93,7 @@ mod tests {
     use crate::task::evaluator::TaskExecutionContext;
     use crate::task::job::TaskJobState;
     use crate::task::runtime::TaskStage;
+    use crate::task::spec::TaskMonitoringLevel;
     use crate::task::spec::TaskWorkflow;
 
     struct TestEvaluator {
@@ -128,11 +134,25 @@ mod tests {
         let daemon = TaskDaemon::new();
         let job = daemon.submit("organon", spec(), "program".to_string());
 
-        let receipt = daemon.run(job, &TestEvaluator { fail: false }, TerminationFlag::running_true());
+        let receipt = daemon.run(
+            job,
+            &TestEvaluator { fail: false },
+            TerminationFlag::running_true(),
+        );
 
         assert_eq!(receipt.state(), TaskJobState::Succeeded);
-        assert!(receipt.trace().iter().any(|entry| entry.contains("task.eval.begin")));
-        assert!(receipt.trace().iter().any(|entry| entry.contains("task.eval.end")));
+        assert!(receipt
+            .trace()
+            .iter()
+            .any(|entry| entry.contains("task=task::pipeline::Test")));
+        assert!(receipt
+            .trace()
+            .iter()
+            .any(|entry| entry.contains("event=task.eval.begin")));
+        assert!(receipt
+            .trace()
+            .iter()
+            .any(|entry| entry.contains("task.eval.end")));
     }
 
     #[test]
@@ -140,7 +160,11 @@ mod tests {
         let daemon = TaskDaemon::new();
         let job = daemon.submit("organon", spec(), "program".to_string());
 
-        let receipt = daemon.run(job, &TestEvaluator { fail: false }, TerminationFlag::running_true());
+        let receipt = daemon.run(
+            job,
+            &TestEvaluator { fail: false },
+            TerminationFlag::running_true(),
+        );
 
         assert_eq!(receipt.task_name(), "task::pipeline::Test");
     }
@@ -178,6 +202,8 @@ mod tests {
 
         assert_eq!(receipt.state(), TaskJobState::Failed);
         assert_eq!(receipt.error(), Some("evaluation failed"));
+        assert!(receipt.trace().iter().any(|entry| entry
+            .contains("event=task.eval.error class=evaluation message=evaluation failed")));
         assert_eq!(
             receipt.spec().workflow().frames()[0].pipeline(),
             "pipeline::Test"
@@ -198,5 +224,24 @@ mod tests {
         assert_eq!(receipt.state(), TaskJobState::Canceled);
         assert!(receipt.output().is_none());
         assert!(receipt.spec().return_contract().outputs().is_empty());
+    }
+
+    #[test]
+    fn task_daemon_can_disable_trace_collection() {
+        let daemon = TaskDaemon::new();
+        let job = daemon.submit(
+            "organon",
+            spec().with_monitoring_level(TaskMonitoringLevel::Off),
+            "program".to_string(),
+        );
+
+        let receipt = daemon.run(
+            job,
+            &TestEvaluator { fail: false },
+            TerminationFlag::running_true(),
+        );
+
+        assert_eq!(receipt.state(), TaskJobState::Succeeded);
+        assert!(receipt.trace().is_empty());
     }
 }

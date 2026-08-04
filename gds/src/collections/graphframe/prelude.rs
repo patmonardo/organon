@@ -1,6 +1,9 @@
 //! GraphFrame prelude: curated exports for the graphframe DSL surface.
 
 pub use crate::collections::graphframe::expr::GraphFrameExpr;
+pub use crate::collections::graphframe::expr::GraphFeatureGrammarExpr;
+pub use crate::collections::graphframe::expr::GraphModelExpr;
+pub use crate::collections::graphframe::expr::GraphPlanExpr;
 pub use crate::collections::graphframe::expr::GraphProcedureExpr;
 pub use crate::collections::graphframe::expr::GraphViewExpr;
 pub use crate::collections::graphframe::frame::GraphFrame;
@@ -9,4 +12,11 @@ pub use crate::collections::graphframe::frame::SharedGraphStore;
 pub use crate::collections::graphframe::lazy::GraphExecutionIntent;
 pub use crate::collections::graphframe::lazy::GraphFramePlan;
 pub use crate::collections::graphframe::lazy::GraphFramePureFormReciprocity;
+pub use crate::collections::graphframe::model::GraphFrameModelExt;
+pub use crate::collections::graphframe::model::GraphModelNameSpace;
+pub use crate::collections::graphframe::plan::GraphFramePlanExt;
+pub use crate::collections::graphframe::plan::GraphPlanNameSpace;
+pub use crate::collections::graphframe::plugins::GraphFeatureGrammarPlugin;
+pub use crate::collections::graphframe::plugins::GRAPH_FEATURE_GRAMMAR_LANGUAGE_ID;
+pub use crate::collections::graphframe::plugins::GRAPH_FEATURE_GRAMMAR_PLUGIN_ID;
 pub use crate::collections::graphframe::series::SeriesGraphFrameExt;

@@ -19,8 +19,11 @@ use super::PageRankStorageRuntime;
 #[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub enum PageRankVariant {
+    #[serde(alias = "pagerank", alias = "page_rank")]
     PageRank,
+    #[serde(alias = "articlerank", alias = "article_rank")]
     ArticleRank,
+    #[serde(alias = "eigenvector")]
     Eigenvector,
 }
 

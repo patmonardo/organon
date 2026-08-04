@@ -35,6 +35,14 @@ pub enum TaskReturnPolicy {
     Persisted,
 }
 
+/// Monitoring detail attached to a task execution contract.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum TaskMonitoringLevel {
+    Off,
+    Basic,
+    Detailed,
+}
+
 /// Expected outputs and persistence semantics of a task workflow.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct TaskReturnContract {
@@ -156,18 +164,15 @@ impl TaskWorkflow {
 pub struct TaskSpec {
     namespace: String,
     task_name: String,
+    monitoring_level: TaskMonitoringLevel,
     workflow: TaskWorkflow,
     objective: TaskObjectiveRef,
     return_contract: TaskReturnContract,
 }
 
 impl TaskSpec {
-    pub fn new(
-        namespace: impl Into<String>,
-        workflow: TaskWorkflow,
-    ) -> Result<Self, TaskSpecError> {
-        let namespace = namespace.into();
-        let _task_name = format!(
+    fn default_task_name(namespace: &str, workflow: &TaskWorkflow) -> String {
+        format!(
             "{}::{}",
             namespace,
             workflow
@@ -175,7 +180,14 @@ impl TaskSpec {
                 .first()
                 .map(|frame| frame.pipeline().to_string())
                 .unwrap_or_default()
-        );
+        )
+    }
+
+    pub fn new(
+        namespace: impl Into<String>,
+        workflow: TaskWorkflow,
+    ) -> Result<Self, TaskSpecError> {
+        let namespace = namespace.into();
         let outputs = workflow
             .frames()
             .last()
@@ -186,13 +198,15 @@ impl TaskSpec {
         Self::with_control_contract(namespace, workflow, objective, return_contract)
     }
 
-    pub fn with_control_contract(
+    pub fn with_named_control_contract(
         namespace: impl Into<String>,
+        task_name: impl Into<String>,
         workflow: TaskWorkflow,
         objective: TaskObjectiveRef,
         return_contract: TaskReturnContract,
     ) -> Result<Self, TaskSpecError> {
         let namespace = namespace.into();
+        let task_name = task_name.into();
         if namespace.trim().is_empty() {
             return Err(TaskSpecError::EmptyNamespace);
         }
@@ -207,23 +221,32 @@ impl TaskSpec {
             }
         }
 
-        let task_name = format!(
-            "{}::{}",
-            namespace,
-            workflow
-                .frames()
-                .first()
-                .map(|frame| frame.pipeline().to_string())
-                .unwrap_or_default()
-        );
-
         Ok(Self {
+            namespace,
+            task_name,
+            monitoring_level: TaskMonitoringLevel::Basic,
+            workflow,
+            objective,
+            return_contract,
+        })
+    }
+
+    pub fn with_control_contract(
+        namespace: impl Into<String>,
+        workflow: TaskWorkflow,
+        objective: TaskObjectiveRef,
+        return_contract: TaskReturnContract,
+    ) -> Result<Self, TaskSpecError> {
+        let namespace = namespace.into();
+        let task_name = Self::default_task_name(&namespace, &workflow);
+
+        Self::with_named_control_contract(
             namespace,
             task_name,
             workflow,
             objective,
             return_contract,
-        })
+        )
     }
 
     pub fn namespace(&self) -> &str {
@@ -232,6 +255,15 @@ impl TaskSpec {
 
     pub fn task_name(&self) -> &str {
         &self.task_name
+    }
+
+    pub fn monitoring_level(&self) -> TaskMonitoringLevel {
+        self.monitoring_level
+    }
+
+    pub fn with_monitoring_level(mut self, monitoring_level: TaskMonitoringLevel) -> Self {
+        self.monitoring_level = monitoring_level;
+        self
     }
 
     pub fn workflow(&self) -> &TaskWorkflow {

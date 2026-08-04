@@ -268,6 +268,11 @@ References are organized by topic, not by project.
 - [model-feature-plan.md](REFERENCES/dataset/model-feature-plan.md) — Model:Feature::Plan as the Essence Middle
 - [artifact-materialization.md](REFERENCES/dataset/artifact-materialization.md) — Records, relations, properties, provenance
 - [attention-reports.md](REFERENCES/dataset/attention-reports.md) — Feature evaluation inspection records
+- [graphframe-intelligence.md](REFERENCES/dataset/graphframe-intelligence.md) — Speculative doctrine: Dataset as SDSL builder, GraphFrame as application intelligence species
+- [graphform-taxonomy.md](REFERENCES/dataset/graphform-taxonomy.md) — First GraphForm taxonomy grounded in Dataset formal components
+- [graphfeaturegrammarform-v1.md](REFERENCES/dataset/graphfeaturegrammarform-v1.md) — Concrete v1 spec under the current GraphFeatureGrammarForm name
+- [graphfeaturegrammar-formal.md](REFERENCES/dataset/graphfeaturegrammar-formal.md) — Full formal layer: syntax, typing, derivation, normalization, and conformance obligations
+- [intelligent-wrappings.md](REFERENCES/dataset/intelligent-wrappings.md) — Unified wrapping lattice across DataFrame, Dataset, GraphStore, algorithms, and ML pipelines
 
 ### GDS Kernel
 

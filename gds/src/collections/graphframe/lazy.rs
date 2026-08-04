@@ -351,6 +351,9 @@ impl GraphFramePlan {
                 GraphFrameExpr::Procedure(procedure) => {
                     format!("graphframe.procedure.{}", procedure.component())
                 }
+                GraphFrameExpr::FeatureGrammar(_) => "graphframe.grammar.bind".to_string(),
+                GraphFrameExpr::Model(_) => "graphframe.model.bind".to_string(),
+                GraphFrameExpr::Plan(_) => "graphframe.plan.bind".to_string(),
             })
             .collect()
     }

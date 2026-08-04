@@ -4,6 +4,7 @@ use std::cell::RefCell;
 
 use crate::task::concurrency::TerminationFlag;
 use crate::task::progress::JobId;
+use crate::task::spec::TaskMonitoringLevel;
 use crate::task::spec::TaskSpec;
 
 pub struct TaskExecutionContext<'a> {
@@ -51,17 +52,67 @@ impl<'a> TaskExecutionContext<'a> {
     }
 
     pub fn push_trace(&self, entry: impl Into<String>) {
-        self.trace.borrow_mut().push(entry.into());
+        self.push_trace_at(TaskMonitoringLevel::Basic, entry);
+    }
+
+    pub fn push_trace_at(&self, level: TaskMonitoringLevel, entry: impl Into<String>) {
+        if self.spec.monitoring_level() < level {
+            return;
+        }
+
+        self.trace
+            .borrow_mut()
+            .push(self.format_trace_entry(entry.into()));
+    }
+
+    pub fn push_stage_trace_at(
+        &self,
+        level: TaskMonitoringLevel,
+        stage: &str,
+        entry: impl Into<String>,
+    ) {
+        if self.spec.monitoring_level() < level {
+            return;
+        }
+
+        self.trace
+            .borrow_mut()
+            .push(self.format_stage_trace_entry(stage, entry.into()));
     }
 
     pub fn trace(&self) -> Vec<String> {
         self.trace.borrow().clone()
+    }
+
+    fn format_trace_entry(&self, event: String) -> String {
+        format!(
+            "task={} owner={} job={} event={}",
+            self.spec.task_name(),
+            self.owner,
+            self.job_id,
+            event
+        )
+    }
+
+    fn format_stage_trace_entry(&self, stage: &str, event: String) -> String {
+        format!(
+            "task={} owner={} job={} stage={} event={}",
+            self.spec.task_name(),
+            self.owner,
+            self.job_id,
+            stage,
+            event
+        )
     }
 }
 
 pub trait TaskEvaluator<Program> {
     type Output;
     type Error: std::fmt::Display;
+
+    fn error_classification(&self, _error: &Self::Error) -> &'static str {
+        "evaluation"
+    }
 
     fn evaluate(
         &self,

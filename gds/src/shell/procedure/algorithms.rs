@@ -2828,59 +2828,6 @@ fn bind_kspanning_tree(
     Ok(procedure)
 }
 
-fn bind_pagerank(
-    graph: &GraphFacade,
-    call: &ShellComponentCall,
-) -> Result<PageRankFacade, ShellProcedureError> {
-    let mut procedure = graph.pagerank();
-
-    if let Some(direction) = optional_str(call, "direction", &["traversalDirection"])? {
-        procedure = procedure.direction(direction);
-    }
-    if let Some(source_nodes) = optional_u64_array(call, "sourceNodes", &["source_nodes"])? {
-        procedure = procedure.source_nodes(source_nodes);
-    }
-    if let Some(variant) = optional_str(call, "variant", &["pageRankVariant"])? {
-        procedure = match variant {
-            "pagerank" | "page_rank" => procedure.page_rank(),
-            "articlerank" | "article_rank" => procedure.article_rank(),
-            "eigenvector" => procedure.eigenvector(),
-            _ => {
-                return Err(ShellProcedureError::InvalidInput {
-                    input: "variant",
-                    expected: "`pagerank`, `article_rank`, or `eigenvector`",
-                })
-            }
-        };
-    }
-    if let Some(weight_property) = optional_str(
-        call,
-        "weightProperty",
-        &["weight_property", "relationshipWeightProperty"],
-    )? {
-        procedure = procedure.relationship_weight_property(weight_property);
-    }
-    if let Some(max_iterations) = optional_u64(call, "maxIterations", &["max_iterations"])? {
-        let max_iterations =
-            u32::try_from(max_iterations).map_err(|_| ShellProcedureError::InvalidInput {
-                input: "maxIterations",
-                expected: "a 32-bit unsigned integer",
-            })?;
-        procedure = procedure.iterations(max_iterations);
-    }
-    if let Some(damping_factor) = optional_f64(call, "dampingFactor", &["damping_factor"])? {
-        procedure = procedure.damping_factor(damping_factor);
-    }
-    if let Some(tolerance) = optional_f64(call, "tolerance", &[])? {
-        procedure = procedure.tolerance(tolerance);
-    }
-    if let Some(concurrency) = optional_usize(call, "concurrency", &[])? {
-        procedure = procedure.concurrency(concurrency);
-    }
-
-    Ok(procedure)
-}
-
 fn bind_random_walk(
     graph: &GraphFacade,
     call: &ShellComponentCall,

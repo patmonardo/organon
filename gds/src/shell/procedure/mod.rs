@@ -189,9 +189,16 @@ use crate::shell::ShellComponentPlan;
 use crate::task::evaluator::TaskEvaluator;
 use crate::task::evaluator::TaskExecutionContext;
 use crate::task::memory::MemoryRange;
+use crate::task::runtime::TaskFrameKind;
+use crate::task::spec::TaskMonitoringLevel;
 use crate::types::graph_store::GraphStoreRead;
 use crate::types::prelude::DefaultGraphStore;
+use serde_json::Value;
+use std::collections::hash_map::DefaultHasher;
+use std::hash::Hash;
+use std::hash::Hasher;
 use std::sync::Arc;
+use std::time::Instant;
 
 use crate::procedures::GraphFacade;
 
@@ -1058,6 +1065,136 @@ pub enum ShellProcedureResult {
     PipelineExists(Vec<PipelineExistsResult>),
 }
 
+impl ShellProcedureResult {
+    fn monitoring_detail(&self) -> Option<String> {
+        macro_rules! stream_len {
+            ($value:expr; $($variant:ident),+ $(,)?) => {
+                match $value {
+                    $(Self::$variant(rows) => Some(rows.len()),)+
+                    _ => None,
+                }
+            };
+        }
+
+        if let Some(result_items) = stream_len!(
+            self;
+            ApproxMaxKCutStream,
+            ArticulationPointsStream,
+            AllShortestPathsStream,
+            AStarStream,
+            BellmanFordStream,
+            BetweennessStream,
+            BfsStream,
+            BridgesStream,
+            CelfStream,
+            ClosenessStream,
+            ConductanceStream,
+            DegreeCentralityStream,
+            DfsStream,
+            DeltaSteppingStream,
+            DagLongestPathStream,
+            DijkstraStream,
+            HarmonicStream,
+            HitsStream,
+            K1ColoringStream,
+            KCoreStream,
+            KMeansStream,
+            LabelPropagationStream,
+            LeidenStream,
+            LouvainStream,
+            ModularityStream,
+            SccStream,
+            TriangleStream,
+            WccStream,
+            KnnStream,
+            FilteredKnnStream,
+            NodeSimilarityStream,
+            FilteredNodeSimilarityStream,
+            FastRPStream,
+            Node2VecStream,
+            KSpanningTreeStream,
+            PageRankStream,
+            RandomWalkStream,
+            SpanningTreeStream,
+            SteinerTreeStream,
+            TopologicalSortStream,
+            YensStream,
+            LinkPredictionPipeline,
+            NodePipeline,
+            PipelineCatalog,
+            PipelineExists
+        ) {
+            return Some(format!("result_items={}", result_items));
+        }
+
+        match self {
+            Self::BfsStats(stats) => {
+                return Some(format!(
+                    "nodes_visited={} max_depth_reached={} execution_time_ms={}",
+                    stats.nodes_visited, stats.max_depth_reached, stats.execution_time_ms
+                ));
+            }
+            Self::PageRankStats(stats) => {
+                return Some(format!(
+                    "node_count={} iterations_ran={} converged={} execution_time_ms={}",
+                    stats.node_count,
+                    stats.iterations_ran,
+                    stats.converged,
+                    stats.execution_time_ms
+                ));
+            }
+            _ => {}
+        }
+
+        match self {
+            Self::ApproxMaxKCutEstimate(memory)
+            | Self::ArticulationPointsEstimate(memory)
+            | Self::AllShortestPathsEstimate(memory)
+            | Self::AStarEstimate(memory)
+            | Self::BellmanFordEstimate(memory)
+            | Self::BetweennessEstimate(memory)
+            | Self::BfsEstimate(memory)
+            | Self::BridgesEstimate(memory)
+            | Self::CelfEstimate(memory)
+            | Self::ClosenessEstimate(memory)
+            | Self::ConductanceEstimate(memory)
+            | Self::DegreeCentralityEstimate(memory)
+            | Self::DfsEstimate(memory)
+            | Self::DeltaSteppingEstimate(memory)
+            | Self::DagLongestPathEstimate(memory)
+            | Self::DijkstraEstimate(memory)
+            | Self::HarmonicEstimate(memory)
+            | Self::HitsEstimate(memory)
+            | Self::K1ColoringEstimate(memory)
+            | Self::KCoreEstimate(memory)
+            | Self::KMeansEstimate(memory)
+            | Self::LabelPropagationEstimate(memory)
+            | Self::LeidenEstimate(memory)
+            | Self::LouvainEstimate(memory)
+            | Self::ModularityEstimate(memory)
+            | Self::SccEstimate(memory)
+            | Self::TriangleEstimate(memory)
+            | Self::WccEstimate(memory)
+            | Self::KnnEstimate(memory)
+            | Self::FilteredKnnEstimate(memory)
+            | Self::NodeSimilarityEstimate(memory)
+            | Self::FilteredNodeSimilarityEstimate(memory)
+            | Self::KSpanningTreeEstimate(memory)
+            | Self::PageRankEstimate(memory)
+            | Self::RandomWalkEstimate(memory)
+            | Self::SpanningTreeEstimate(memory)
+            | Self::SteinerTreeEstimate(memory)
+            | Self::TopologicalSortEstimate(memory)
+            | Self::YensEstimate(memory) => Some(format!(
+                "estimate_bytes_min={} estimate_bytes_max={}",
+                memory.min(),
+                memory.max()
+            )),
+            _ => None,
+        }
+    }
+}
+
 pub struct ShellProcedureInvocation {
     component: ShellComponentId,
     mode: ShellComponentMode,
@@ -1157,6 +1294,95 @@ pub struct ShellProcedureEvaluator {
 pub type ShellProcedureRuntime = ShellProcedureEvaluator;
 
 impl ShellProcedureEvaluator {
+    fn call_config_fingerprint(call: &ShellComponentCall) -> String {
+        let mut hasher = DefaultHasher::new();
+        call.component.as_str().hash(&mut hasher);
+        format!("{:?}", call.mode).hash(&mut hasher);
+
+        for (key, value) in &call.inputs {
+            key.hash(&mut hasher);
+            Self::canonical_value_string(value).hash(&mut hasher);
+        }
+
+        format!("fingerprint={:016x}", hasher.finish())
+    }
+
+    fn call_execution_shape(call: &ShellComponentCall) -> String {
+        if call.inputs.is_empty() {
+            return "shape=none".to_string();
+        }
+
+        let entries = call
+            .inputs
+            .iter()
+            .map(|(key, value)| format!("{}:{}", key, Self::value_shape(value)))
+            .collect::<Vec<_>>()
+            .join("|");
+
+        format!("shape={}", entries)
+    }
+
+    fn value_shape(value: &Value) -> String {
+        match value {
+            Value::Null => "null".to_string(),
+            Value::Bool(_) => "bool".to_string(),
+            Value::String(_) => "string".to_string(),
+            Value::Number(number) if number.is_u64() => "u64".to_string(),
+            Value::Number(number) if number.is_i64() => "i64".to_string(),
+            Value::Number(_) => "f64".to_string(),
+            Value::Array(values) => format!("array[len={}]", values.len()),
+            Value::Object(entries) => format!("object[len={}]", entries.len()),
+        }
+    }
+
+    fn canonical_value_string(value: &Value) -> String {
+        match value {
+            Value::Null => "null".to_string(),
+            Value::Bool(boolean) => boolean.to_string(),
+            Value::String(text) => format!("\"{}\"", text),
+            Value::Number(number) => number.to_string(),
+            Value::Array(values) => format!(
+                "[{}]",
+                values
+                    .iter()
+                    .map(Self::canonical_value_string)
+                    .collect::<Vec<_>>()
+                    .join(",")
+            ),
+            Value::Object(entries) => {
+                let mut pairs = entries
+                    .iter()
+                    .map(|(key, value)| (key.as_str(), Self::canonical_value_string(value)))
+                    .collect::<Vec<_>>();
+                pairs.sort_by(|left, right| left.0.cmp(right.0));
+
+                format!(
+                    "{{{}}}",
+                    pairs
+                        .into_iter()
+                        .map(|(key, value)| format!("\"{}\":{}", key, value))
+                        .collect::<Vec<_>>()
+                        .join(",")
+                )
+            }
+        }
+    }
+
+    fn monitoring_result_kind(mode: ShellComponentMode) -> &'static str {
+        match mode {
+            ShellComponentMode::Invoke => "invoke",
+            ShellComponentMode::Stream => "stream",
+            ShellComponentMode::Stats => "stats",
+            ShellComponentMode::Estimate => "estimate",
+            ShellComponentMode::Mutate => "mutate",
+            ShellComponentMode::Write => "write",
+        }
+    }
+
+    fn shell_error_classification(error: &ShellProcedureError) -> &'static str {
+        error.monitoring_classification()
+    }
+
     pub fn new(graph: GraphFacade, pipelines: LocalPipelinesProcedureFacade) -> Self {
         Self {
             graph,
@@ -1218,11 +1444,148 @@ impl ShellProcedureEvaluator {
     ) -> Result<ShellProcedurePlanResult, ShellProcedureError> {
         self.bind_plan(plan)?.invoke()
     }
+
+    fn invoke_plan_with_monitoring(
+        &self,
+        plan: &ShellComponentPlan,
+        context: &TaskExecutionContext<'_>,
+        stage: &str,
+    ) -> Result<ShellProcedurePlanResult, ShellProcedureError> {
+        context.push_stage_trace_at(
+            TaskMonitoringLevel::Detailed,
+            stage,
+            format!("shell.plan.bind.begin calls={}", plan.calls().len()),
+        );
+
+        let mut bindings = Vec::with_capacity(plan.calls().len());
+        for (index, call) in plan.calls().iter().enumerate() {
+            let execution_shape = Self::call_execution_shape(call);
+            let config_fingerprint = Self::call_config_fingerprint(call);
+            context.push_stage_trace_at(
+                TaskMonitoringLevel::Detailed,
+                stage,
+                format!(
+                    "shell.component.bind.begin index={} component={} mode={:?} {} {}",
+                    index,
+                    call.component.as_str(),
+                    call.mode,
+                    execution_shape,
+                    config_fingerprint
+                ),
+            );
+            let bind_started = Instant::now();
+            let binding = self.bind(call)?;
+            context.push_stage_trace_at(
+                TaskMonitoringLevel::Detailed,
+                stage,
+                format!(
+                    "shell.component.bind.end index={} component={} mode={:?} bind_duration_ms={} {} {}",
+                    index,
+                    call.component.as_str(),
+                    call.mode,
+                    bind_started.elapsed().as_millis(),
+                    execution_shape,
+                    config_fingerprint
+                ),
+            );
+            bindings.push((binding, execution_shape, config_fingerprint));
+        }
+
+        context.push_stage_trace_at(
+            TaskMonitoringLevel::Detailed,
+            stage,
+            format!("shell.plan.bind.end calls={}", bindings.len()),
+        );
+
+        let mut invocations = Vec::with_capacity(bindings.len());
+        for (index, (binding, execution_shape, config_fingerprint)) in
+            bindings.into_iter().enumerate()
+        {
+            let component = binding.component();
+            let mode = binding.mode();
+            context.push_stage_trace_at(
+                TaskMonitoringLevel::Detailed,
+                stage,
+                format!(
+                    "shell.component.invoke.begin index={} component={} mode={:?} {} {}",
+                    index,
+                    component.as_str(),
+                    mode,
+                    execution_shape,
+                    config_fingerprint
+                ),
+            );
+            let invoke_started = Instant::now();
+            let result = binding.invoke()?;
+            let result_detail = result.monitoring_detail();
+            context.push_stage_trace_at(
+                TaskMonitoringLevel::Detailed,
+                stage,
+                format!(
+                    "shell.component.invoke.end index={} component={} mode={:?} invoke_duration_ms={} result_kind={} {} {}{}",
+                    index,
+                    component.as_str(),
+                    mode,
+                    invoke_started.elapsed().as_millis(),
+                    Self::monitoring_result_kind(mode),
+                    execution_shape,
+                    config_fingerprint,
+                    result_detail
+                        .as_deref()
+                        .map(|detail| format!(" {}", detail))
+                        .unwrap_or_default()
+                ),
+            );
+            invocations.push(ShellProcedureInvocation {
+                component,
+                mode,
+                result,
+            });
+        }
+
+        Ok(ShellProcedurePlanResult {
+            origin: plan.origin(),
+            invocations,
+        })
+    }
+
+    fn shell_plan_stage<'a>(&self, context: &'a TaskExecutionContext<'_>) -> &'a str {
+        context
+            .spec()
+            .workflow()
+            .frames()
+            .first()
+            .map(|frame| frame.pipeline())
+            .unwrap_or("shell.procedure")
+    }
+
+    fn graph_intent_stage<'a>(&self, context: &'a TaskExecutionContext<'_>) -> &'a str {
+        context
+            .spec()
+            .workflow()
+            .frames()
+            .iter()
+            .find(|frame| frame.image_spec().kind() == TaskFrameKind::GraphAlgorithm)
+            .map(|frame| frame.pipeline())
+            .or_else(|| {
+                context
+                    .spec()
+                    .workflow()
+                    .frames()
+                    .first()
+                    .map(|frame| frame.pipeline())
+            })
+            .unwrap_or("graphframe.compute")
+    }
 }
 
 impl TaskEvaluator<ShellComponentPlan> for ShellProcedureEvaluator {
     type Output = ShellProcedurePlanResult;
     type Error = ShellProcedureError;
+
+    fn error_classification(&self, error: &Self::Error) -> &'static str {
+        Self::shell_error_classification(error)
+    }
 
     fn evaluate(
         &self,
@@ -1233,14 +1596,31 @@ impl TaskEvaluator<ShellComponentPlan> for ShellProcedureEvaluator {
             return Err(ShellProcedureError::Canceled);
         }
 
-        context.push_trace("shell.procedure.evaluate.begin");
-        let result = self.invoke_plan(program)?;
+        let stage = self.shell_plan_stage(context);
+        context.push_stage_trace_at(
+            TaskMonitoringLevel::Basic,
+            stage,
+            "shell.procedure.evaluate.begin",
+        );
+        let result = if context.spec().monitoring_level() >= TaskMonitoringLevel::Detailed {
+            self.invoke_plan_with_monitoring(program, context, stage)?
+        } else {
+            self.invoke_plan(program)?
+        };
         if !context.is_running() {
-            context.push_trace("shell.procedure.evaluate.end");
+            context.push_stage_trace_at(
+                TaskMonitoringLevel::Basic,
+                stage,
+                "shell.procedure.evaluate.end",
+            );
             return Err(ShellProcedureError::Canceled);
         }
 
-        context.push_trace("shell.procedure.evaluate.end");
+        context.push_stage_trace_at(
+            TaskMonitoringLevel::Basic,
+            stage,
+            "shell.procedure.evaluate.end",
+        );
         Ok(result)
     }
 }
@@ -1248,6 +1628,10 @@ impl TaskEvaluator<ShellComponentPlan> for ShellProcedureEvaluator {
 impl TaskEvaluator<GraphExecutionIntent> for ShellProcedureEvaluator {
     type Output = ShellProcedurePlanResult;
     type Error = ShellProcedureError;
+
+    fn error_classification(&self, error: &Self::Error) -> &'static str {
+        Self::shell_error_classification(error)
+    }
 
     fn evaluate(
         &self,
@@ -1271,14 +1655,31 @@ impl TaskEvaluator<GraphExecutionIntent> for ShellProcedureEvaluator {
             return Err(ShellProcedureError::SelectedGraphViewUnsupported);
         }
 
-        context.push_trace("shell.procedure.evaluate.begin");
-        let result = self.invoke_plan(intent.program())?;
+        let stage = self.graph_intent_stage(context);
+        context.push_stage_trace_at(
+            TaskMonitoringLevel::Basic,
+            stage,
+            "shell.procedure.evaluate.begin",
+        );
+        let result = if context.spec().monitoring_level() >= TaskMonitoringLevel::Detailed {
+            self.invoke_plan_with_monitoring(intent.program(), context, stage)?
+        } else {
+            self.invoke_plan(intent.program())?
+        };
         if !context.is_running() {
-            context.push_trace("shell.procedure.evaluate.end");
+            context.push_stage_trace_at(
+                TaskMonitoringLevel::Basic,
+                stage,
+                "shell.procedure.evaluate.end",
+            );
             return Err(ShellProcedureError::Canceled);
         }
 
-        context.push_trace("shell.procedure.evaluate.end");
+        context.push_stage_trace_at(
+            TaskMonitoringLevel::Basic,
+            stage,
+            "shell.procedure.evaluate.end",
+        );
         Ok(result)
     }
 }
@@ -1317,6 +1718,20 @@ pub enum ShellProcedureError {
 
     #[error(transparent)]
     Algorithm(#[from] AlgorithmError),
+}
+
+impl ShellProcedureError {
+    fn monitoring_classification(&self) -> &'static str {
+        match self {
+            Self::Canceled => "cancellation",
+            Self::ObjectiveStoreMismatch | Self::SelectedGraphViewUnsupported => "objective",
+            Self::UnknownComponent(_) | Self::UnboundComponent(_) => "binding",
+            Self::UnsupportedMode { .. } | Self::MissingInput(_) | Self::InvalidInput { .. } => {
+                "configuration"
+            }
+            Self::Algorithm(_) => "execution",
+        }
+    }
 }
 
 impl GraphFacade {
@@ -2248,6 +2663,7 @@ mod tests {
         use crate::task::daemon::TaskDaemon;
         use crate::task::job::TaskJobState;
         use crate::task::runtime::TaskStage;
+        use crate::task::spec::TaskMonitoringLevel;
         use crate::task::spec::TaskSpec;
         use crate::task::spec::TaskWorkflow;
 
@@ -2259,19 +2675,130 @@ mod tests {
             1,
             Concurrency::of(1),
         );
-        let spec = TaskSpec::new("shell", TaskWorkflow::new(vec![frame]).unwrap()).unwrap();
+        let spec = TaskSpec::new("shell", TaskWorkflow::new(vec![frame]).unwrap())
+            .unwrap()
+            .with_monitoring_level(TaskMonitoringLevel::Detailed);
         let daemon = TaskDaemon::new();
         let job = daemon.submit("shell-test", spec, plan);
 
         let receipt = daemon.run(job, &runtime(), TerminationFlag::running_true());
 
         assert_eq!(receipt.state(), TaskJobState::Succeeded);
+        assert!(receipt
+            .trace()
+            .iter()
+            .any(|entry| entry.contains("task=shell::pipeline::ProcedureEvaluation")));
+        assert!(receipt.trace().iter().any(|entry| entry
+            .contains("stage=pipeline::ProcedureEvaluation event=shell.procedure.evaluate.begin")));
+        assert!(receipt.trace().iter().any(|entry| entry.contains(
+            "stage=pipeline::ProcedureEvaluation event=shell.component.invoke.begin index=0 component=gds.algorithms.pathfinding.bfs mode=Estimate shape=source:u64 fingerprint="
+        )));
+        assert!(receipt.trace().iter().any(|entry| entry.contains(
+            "stage=pipeline::ProcedureEvaluation event=shell.component.bind.end index=0 component=gds.algorithms.pathfinding.bfs mode=Estimate bind_duration_ms="
+        )));
+        assert!(receipt.trace().iter().any(|entry| entry.contains(
+            "stage=pipeline::ProcedureEvaluation event=shell.component.invoke.end index=0 component=gds.algorithms.pathfinding.bfs mode=Estimate invoke_duration_ms="
+        )));
+        assert!(receipt
+            .trace()
+            .iter()
+            .any(|entry| entry.contains("result_kind=estimate shape=source:u64 fingerprint=")));
         let result = receipt.output().expect("Shell result should be present");
         assert_eq!(result.len(), 1);
         assert!(matches!(
             result.invocations()[0].result(),
             ShellProcedureResult::BfsEstimate(memory) if !memory.is_empty()
         ));
+    }
+
+    #[test]
+    fn task_daemon_stream_monitoring_reports_result_cardinality() {
+        use crate::task::concurrency::Concurrency;
+        use crate::task::concurrency::TerminationFlag;
+        use crate::task::daemon::TaskDaemon;
+        use crate::task::job::TaskJobState;
+        use crate::task::runtime::TaskStage;
+        use crate::task::spec::TaskMonitoringLevel;
+        use crate::task::spec::TaskSpec;
+        use crate::task::spec::TaskWorkflow;
+
+        let plan = GdsShell::new().component_plan().bfs(0).stream();
+        let frame = TaskStage::new(
+            "shell".to_string(),
+            "pipeline::ProcedureEvaluation".to_string(),
+            vec!["shell.procedure.evaluate".to_string()],
+            1,
+            Concurrency::of(1),
+        );
+        let spec = TaskSpec::new("shell", TaskWorkflow::new(vec![frame]).unwrap())
+            .unwrap()
+            .with_monitoring_level(TaskMonitoringLevel::Detailed);
+        let daemon = TaskDaemon::new();
+        let job = daemon.submit("shell-test", spec, plan);
+
+        let receipt = daemon.run(job, &runtime(), TerminationFlag::running_true());
+
+        assert_eq!(receipt.state(), TaskJobState::Succeeded);
+        assert!(receipt.trace().iter().any(|entry| entry.contains(
+            "stage=pipeline::ProcedureEvaluation event=shell.component.invoke.end index=0 component=gds.algorithms.pathfinding.bfs mode=Stream invoke_duration_ms="
+        )));
+        assert!(receipt
+            .trace()
+            .iter()
+            .any(|entry| entry.contains("result_kind=stream shape=source:u64 fingerprint=")));
+        assert!(matches!(
+            receipt.output().expect("shell result should exist").invocations()[0].result(),
+            ShellProcedureResult::BfsStream(rows) if !rows.is_empty()
+        ));
+    }
+
+    #[test]
+    fn task_daemon_stats_monitoring_reports_headline_summary() {
+        use crate::task::concurrency::Concurrency;
+        use crate::task::concurrency::TerminationFlag;
+        use crate::task::daemon::TaskDaemon;
+        use crate::task::job::TaskJobState;
+        use crate::task::runtime::TaskStage;
+        use crate::task::spec::TaskMonitoringLevel;
+        use crate::task::spec::TaskSpec;
+        use crate::task::spec::TaskWorkflow;
+
+        let plan = GdsShell::new()
+            .component_plan()
+            .component("pagerank", ShellComponentMode::Stats)
+            .unwrap()
+            .with_input("maxIterations", 5_u64)
+            .with_input("dampingFactor", 0.85_f64)
+            .with_input("tolerance", 0.00001_f64)
+            .finish();
+        let frame = TaskStage::new(
+            "shell".to_string(),
+            "pipeline::ProcedureEvaluation".to_string(),
+            vec!["shell.procedure.evaluate".to_string()],
+            1,
+            Concurrency::of(1),
+        );
+        let spec = TaskSpec::new("shell", TaskWorkflow::new(vec![frame]).unwrap())
+            .unwrap()
+            .with_monitoring_level(TaskMonitoringLevel::Detailed);
+        let daemon = TaskDaemon::new();
+        let job = daemon.submit("shell-test", spec, plan);
+
+        let receipt = daemon.run(job, &runtime(), TerminationFlag::running_true());
+
+        assert_eq!(receipt.state(), TaskJobState::Succeeded);
+        assert!(receipt.trace().iter().any(|entry| entry.contains(
+            "stage=pipeline::ProcedureEvaluation event=shell.component.invoke.end index=0 component=gds.algorithms.centrality.pagerank mode=Stats invoke_duration_ms="
+        )));
+        assert!(receipt.trace().iter().any(|entry| {
+            entry.contains(
+            "result_kind=stats shape=dampingFactor:f64|maxIterations:u64|tolerance:f64 fingerprint="
+        )
+        }));
+        assert!(receipt
+            .trace()
+            .iter()
+            .any(|entry| entry.contains("iterations_ran=5 converged=")));
     }
 
     #[test]
@@ -2313,6 +2840,20 @@ mod tests {
         let receipt = TaskDaemon::new().run(job, &evaluator, TerminationFlag::running_true());
 
         assert_eq!(receipt.state(), TaskJobState::Succeeded);
+        assert_eq!(receipt.task_name(), "graphframe::shell::bfs::estimate");
+        assert!(receipt
+            .trace()
+            .iter()
+            .any(|entry| entry.contains("task=graphframe::shell::bfs::estimate")));
+        assert!(receipt.trace().iter().any(|entry| entry
+            .contains("stage=pipeline::GraphFrameCompute event=shell.procedure.evaluate.end")));
+        assert!(receipt.trace().iter().any(|entry| entry.contains(
+            "stage=pipeline::GraphFrameCompute event=shell.component.invoke.end index=0 component=gds.algorithms.pathfinding.bfs mode=Estimate invoke_duration_ms="
+        )));
+        assert!(receipt
+            .trace()
+            .iter()
+            .any(|entry| entry.contains("result_kind=estimate shape=source:u64 fingerprint=")));
         assert_eq!(receipt.output().expect("result should exist").len(), 1);
         assert_eq!(
             receipt.spec().objective().identity(),
@@ -2361,6 +2902,10 @@ mod tests {
         let receipt = TaskDaemon::new().run(job, &evaluator, TerminationFlag::running_true());
 
         assert_eq!(receipt.state(), TaskJobState::Failed);
+        assert!(receipt
+            .trace()
+            .iter()
+            .any(|entry| entry.contains("event=task.eval.error class=objective")));
         assert_eq!(
             receipt.error(),
             Some("selected GraphFrame views require a GraphStore view adapter")
