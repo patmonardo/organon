@@ -294,6 +294,7 @@ impl RequestScopedDependencies {
 
 pub struct LocalPipelinesProcedureFacade {
     pipeline_applications: PipelineApplications,
+    graph_catalog: Arc<dyn GraphCatalog>,
     link_prediction: LocalLinkPredictionFacade,
     node_classification: LocalNodeClassificationFacade,
     node_regression: LocalNodeRegressionFacade,
@@ -337,10 +338,15 @@ impl LocalPipelinesProcedureFacade {
         );
         Self {
             pipeline_applications: pipeline_applications.clone(),
+            graph_catalog: Arc::clone(&request_scoped_dependencies.graph_catalog),
             link_prediction: LocalLinkPredictionFacade::new(pipeline_applications.clone()),
             node_classification: LocalNodeClassificationFacade::new(pipeline_applications.clone()),
             node_regression: LocalNodeRegressionFacade::new(pipeline_applications),
         }
+    }
+
+    pub fn graph_catalog(&self) -> Arc<dyn GraphCatalog> {
+        Arc::clone(&self.graph_catalog)
     }
 }
 

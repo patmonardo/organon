@@ -12,6 +12,7 @@ use std::fmt;
 
 pub use builtins::ALGORITHM_BUILTINS;
 pub use builtins::PIPELINE_BUILTINS;
+pub use builtins::STORE_API_BUILTINS;
 pub use pathfinding::ShellBfsCallBuilder;
 pub use pathfinding::ShellDijkstraCallBuilder;
 pub use plan::ShellComponentCallBuilder;
@@ -48,6 +49,7 @@ pub enum ShellComponentCategory {
     Embeddings,
     Miscellaneous,
     Pipeline,
+    StoreApi,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize)]
@@ -55,6 +57,7 @@ pub enum ShellComponentCategory {
 pub enum ShellComponentExecutionKind {
     Algorithm,
     Pipeline,
+    StoreApi,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize)]
@@ -166,6 +169,12 @@ impl BuiltinComponentSuite {
         }
     }
 
+    pub const fn store_api() -> Self {
+        Self {
+            entries: STORE_API_BUILTINS,
+        }
+    }
+
     pub const fn all(self) -> &'static [ShellComponentDescriptor] {
         self.entries
     }
@@ -219,6 +228,7 @@ pub fn builtin_component(name: &str) -> Option<BuiltinComponentRef> {
     BuiltinComponentSuite::algorithms()
         .find(name)
         .or_else(|| BuiltinComponentSuite::pipelines().find(name))
+        .or_else(|| BuiltinComponentSuite::store_api().find(name))
 }
 
 #[cfg(test)]
@@ -456,5 +466,21 @@ mod tests {
             "create_node_classification_pipeline"
         );
         assert!(create.descriptor().supports(ShellComponentMode::Invoke));
+    }
+
+    #[test]
+    fn store_api_suite_has_unique_valid_entries() {
+        let suite = BuiltinComponentSuite::store_api();
+        assert_eq!(suite.all().len(), 23);
+        assert_eq!(suite.validate(), Ok(()));
+
+        let put = builtin_component("put_graph_store").unwrap();
+        assert_eq!(put.descriptor().id.as_str(), "gds.store.graph.put");
+        assert_eq!(put.descriptor().category, ShellComponentCategory::StoreApi);
+        assert_eq!(
+            put.descriptor().execution_kind,
+            ShellComponentExecutionKind::StoreApi
+        );
+        assert!(put.descriptor().supports(ShellComponentMode::Write));
     }
 }

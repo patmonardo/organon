@@ -24,7 +24,7 @@ pub use components::{
     ShellComponentCall, ShellComponentCallBuilder, ShellComponentCategory,
     ShellComponentDescriptor, ShellComponentExecutionKind, ShellComponentId, ShellComponentMode,
     ShellComponentPlan, ShellComponentPlanError, ShellComponentSuiteError,
-    ShellDijkstraCallBuilder, ALGORITHM_BUILTINS, PIPELINE_BUILTINS,
+    ShellDijkstraCallBuilder, ALGORITHM_BUILTINS, PIPELINE_BUILTINS, STORE_API_BUILTINS,
 };
 pub use core::{
     GdsShell, ShellCapabilityBand, ShellCapabilityMap, ShellCapabilityState, ShellCorpusError,

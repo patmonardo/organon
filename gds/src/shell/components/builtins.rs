@@ -16,6 +16,11 @@ const STREAM_STATS_MODES: &[ShellComponentMode] =
     &[ShellComponentMode::Stream, ShellComponentMode::Stats];
 
 const STATS_MODE: &[ShellComponentMode] = &[ShellComponentMode::Stats];
+const STORE_INVOKE_MODE: &[ShellComponentMode] = &[ShellComponentMode::Invoke];
+const STORE_STREAM_MODE: &[ShellComponentMode] = &[ShellComponentMode::Stream];
+const STORE_ESTIMATE_MODE: &[ShellComponentMode] = &[ShellComponentMode::Estimate];
+const STORE_MUTATE_MODE: &[ShellComponentMode] = &[ShellComponentMode::Mutate];
+const STORE_WRITE_MODE: &[ShellComponentMode] = &[ShellComponentMode::Write];
 
 macro_rules! category_name {
     (Pathfinding) => {
@@ -169,4 +174,168 @@ pub static PIPELINE_BUILTINS: &[ShellComponentDescriptor] = &[
         INVOKE_MODE,
     )
     .with_execution_kind(crate::shell::ShellComponentExecutionKind::Pipeline),
+];
+
+pub static STORE_API_BUILTINS: &[ShellComponentDescriptor] = &[
+    ShellComponentDescriptor::new(
+        "gds.store.graph.put",
+        "put_graph_store",
+        ShellComponentCategory::StoreApi,
+        STORE_WRITE_MODE,
+    )
+    .with_execution_kind(crate::shell::ShellComponentExecutionKind::StoreApi),
+    ShellComponentDescriptor::new(
+        "gds.store.catalog.exists",
+        "graph_exists",
+        ShellComponentCategory::StoreApi,
+        STORE_INVOKE_MODE,
+    )
+    .with_execution_kind(crate::shell::ShellComponentExecutionKind::StoreApi),
+    ShellComponentDescriptor::new(
+        "gds.store.catalog.list",
+        "list_graphs",
+        ShellComponentCategory::StoreApi,
+        STORE_STREAM_MODE,
+    )
+    .with_execution_kind(crate::shell::ShellComponentExecutionKind::StoreApi),
+    ShellComponentDescriptor::new(
+        "gds.store.catalog.memory_usage",
+        "graph_memory_usage",
+        ShellComponentCategory::StoreApi,
+        STORE_ESTIMATE_MODE,
+    )
+    .with_execution_kind(crate::shell::ShellComponentExecutionKind::StoreApi),
+    ShellComponentDescriptor::new(
+        "gds.store.catalog.drop",
+        "drop_graph",
+        ShellComponentCategory::StoreApi,
+        STORE_MUTATE_MODE,
+    )
+    .with_execution_kind(crate::shell::ShellComponentExecutionKind::StoreApi),
+    ShellComponentDescriptor::new(
+        "gds.store.catalog.drop_many",
+        "drop_graphs",
+        ShellComponentCategory::StoreApi,
+        STORE_MUTATE_MODE,
+    )
+    .with_execution_kind(crate::shell::ShellComponentExecutionKind::StoreApi),
+    ShellComponentDescriptor::new(
+        "gds.store.node_properties.drop",
+        "drop_node_properties",
+        ShellComponentCategory::StoreApi,
+        STORE_MUTATE_MODE,
+    )
+    .with_execution_kind(crate::shell::ShellComponentExecutionKind::StoreApi),
+    ShellComponentDescriptor::new(
+        "gds.store.relationships.drop",
+        "drop_relationships",
+        ShellComponentCategory::StoreApi,
+        STORE_MUTATE_MODE,
+    )
+    .with_execution_kind(crate::shell::ShellComponentExecutionKind::StoreApi),
+    ShellComponentDescriptor::new(
+        "gds.store.graph_property.drop",
+        "drop_graph_property",
+        ShellComponentCategory::StoreApi,
+        STORE_MUTATE_MODE,
+    )
+    .with_execution_kind(crate::shell::ShellComponentExecutionKind::StoreApi),
+    ShellComponentDescriptor::new(
+        "gds.store.node_properties.write",
+        "write_node_properties",
+        ShellComponentCategory::StoreApi,
+        STORE_WRITE_MODE,
+    )
+    .with_execution_kind(crate::shell::ShellComponentExecutionKind::StoreApi),
+    ShellComponentDescriptor::new(
+        "gds.store.relationship_properties.write",
+        "write_relationship_properties",
+        ShellComponentCategory::StoreApi,
+        STORE_WRITE_MODE,
+    )
+    .with_execution_kind(crate::shell::ShellComponentExecutionKind::StoreApi),
+    ShellComponentDescriptor::new(
+        "gds.store.relationships.write",
+        "write_relationships",
+        ShellComponentCategory::StoreApi,
+        STORE_WRITE_MODE,
+    )
+    .with_execution_kind(crate::shell::ShellComponentExecutionKind::StoreApi),
+    ShellComponentDescriptor::new(
+        "gds.store.node_label.write",
+        "write_node_label",
+        ShellComponentCategory::StoreApi,
+        STORE_WRITE_MODE,
+    )
+    .with_execution_kind(crate::shell::ShellComponentExecutionKind::StoreApi),
+    ShellComponentDescriptor::new(
+        "gds.store.node_label.mutate",
+        "mutate_label",
+        ShellComponentCategory::StoreApi,
+        STORE_MUTATE_MODE,
+    )
+    .with_execution_kind(crate::shell::ShellComponentExecutionKind::StoreApi),
+    ShellComponentDescriptor::new(
+        "gds.store.graph_property.stream",
+        "stream_graph_property",
+        ShellComponentCategory::StoreApi,
+        STORE_STREAM_MODE,
+    )
+    .with_execution_kind(crate::shell::ShellComponentExecutionKind::StoreApi),
+    ShellComponentDescriptor::new(
+        "gds.store.node_properties.stream",
+        "stream_node_properties",
+        ShellComponentCategory::StoreApi,
+        STORE_STREAM_MODE,
+    )
+    .with_execution_kind(crate::shell::ShellComponentExecutionKind::StoreApi),
+    ShellComponentDescriptor::new(
+        "gds.store.relationship_properties.stream",
+        "stream_relationship_properties",
+        ShellComponentCategory::StoreApi,
+        STORE_STREAM_MODE,
+    )
+    .with_execution_kind(crate::shell::ShellComponentExecutionKind::StoreApi),
+    ShellComponentDescriptor::new(
+        "gds.store.relationships.stream",
+        "stream_relationships",
+        ShellComponentCategory::StoreApi,
+        STORE_STREAM_MODE,
+    )
+    .with_execution_kind(crate::shell::ShellComponentExecutionKind::StoreApi),
+    ShellComponentDescriptor::new(
+        "gds.store.graph.generate",
+        "generate_graph",
+        ShellComponentCategory::StoreApi,
+        STORE_MUTATE_MODE,
+    )
+    .with_execution_kind(crate::shell::ShellComponentExecutionKind::StoreApi),
+    ShellComponentDescriptor::new(
+        "gds.store.graph.sample",
+        "sample_graph",
+        ShellComponentCategory::StoreApi,
+        STORE_MUTATE_MODE,
+    )
+    .with_execution_kind(crate::shell::ShellComponentExecutionKind::StoreApi),
+    ShellComponentDescriptor::new(
+        "gds.store.subgraph.project",
+        "subgraph_project",
+        ShellComponentCategory::StoreApi,
+        STORE_MUTATE_MODE,
+    )
+    .with_execution_kind(crate::shell::ShellComponentExecutionKind::StoreApi),
+    ShellComponentDescriptor::new(
+        "gds.store.native_project.estimate",
+        "estimate_native_project",
+        ShellComponentCategory::StoreApi,
+        STORE_ESTIMATE_MODE,
+    )
+    .with_execution_kind(crate::shell::ShellComponentExecutionKind::StoreApi),
+    ShellComponentDescriptor::new(
+        "gds.store.common_neighbour_aware_random_walk.estimate",
+        "estimate_common_neighbour_aware_random_walk",
+        ShellComponentCategory::StoreApi,
+        STORE_ESTIMATE_MODE,
+    )
+    .with_execution_kind(crate::shell::ShellComponentExecutionKind::StoreApi),
 ];

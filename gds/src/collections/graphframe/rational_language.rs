@@ -37,6 +37,11 @@ pub enum GraphRationalLanguageError {
     #[error("graph semantic lowering requires exactly one Graph feature rule, found {0}")]
     InvalidGraphFeatureCount(usize),
 
+    #[error(
+        "graph semantic lowering requires either one shared plan or one plan per model (models={models}, plans={plans})"
+    )]
+    InvalidModelPlanArity { models: usize, plans: usize },
+
     #[error("graph feature requires a stable feature id")]
     MissingFeatureId,
 
@@ -83,10 +88,70 @@ impl GraphSemanticLowering {
     }
 }
 
-pub fn lower_graph_semantics(
+#[derive(Debug, Clone)]
+pub struct GraphSharedPlanTemplate {
+    plan_id: String,
+    feature_id: String,
+    triad: ConceptTriad,
+}
+
+impl GraphSharedPlanTemplate {
+    pub fn plan_id(&self) -> &str {
+        &self.plan_id
+    }
+
+    pub fn feature_id(&self) -> &str {
+        &self.feature_id
+    }
+
+    pub fn triad(&self) -> ConceptTriad {
+        self.triad
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct GraphSemanticProgram {
+    grammar: GraphFeatureGrammarChecked,
+    shared_plan_templates: Vec<GraphSharedPlanTemplate>,
+    lowerings: Vec<GraphSemanticLowering>,
+}
+
+impl GraphSemanticProgram {
+    pub fn grammar(&self) -> &GraphFeatureGrammarChecked {
+        &self.grammar
+    }
+
+    pub fn shared_plan_templates(&self) -> &[GraphSharedPlanTemplate] {
+        &self.shared_plan_templates
+    }
+
+    pub fn lowerings(&self) -> &[GraphSemanticLowering] {
+        &self.lowerings
+    }
+}
+
+fn extract_unique_graph_feature_id(
+    grammar: &GraphFeatureGrammarChecked,
+) -> Result<String, GraphRationalLanguageError> {
+    let graph_rules = grammar
+        .form()
+        .feature_rules
+        .iter()
+        .filter(|rule| rule.address.stratum == GraphFeatureStratum::Graph)
+        .collect::<Vec<_>>();
+    if graph_rules.len() != 1 {
+        return Err(GraphRationalLanguageError::InvalidGraphFeatureCount(
+            graph_rules.len(),
+        ));
+    }
+
+    Ok(format!("Graph.{}", graph_rules[0].address.feature_name))
+}
+
+pub fn lower_graph_semantic_program(
     expressions: &[GraphFrameExpr],
     grammar: &GraphFeatureGrammarChecked,
-) -> Result<GraphSemanticLowering, GraphRationalLanguageError> {
+) -> Result<GraphSemanticProgram, GraphRationalLanguageError> {
     let models = expressions
         .iter()
         .filter_map(|expression| match expression {
@@ -94,7 +159,7 @@ pub fn lower_graph_semantics(
             _ => None,
         })
         .collect::<Vec<_>>();
-    if models.len() != 1 {
+    if models.is_empty() {
         return Err(GraphRationalLanguageError::InvalidModelDeclaration);
     }
 
@@ -116,8 +181,15 @@ pub fn lower_graph_semantics(
             _ => None,
         })
         .collect::<Vec<_>>();
-    if plans.len() != 1 {
+    if plans.is_empty() {
         return Err(GraphRationalLanguageError::InvalidPlanDeclaration);
+    }
+
+    if !(plans.len() == 1 || plans.len() == models.len()) {
+        return Err(GraphRationalLanguageError::InvalidModelPlanArity {
+            models: models.len(),
+            plans: plans.len(),
+        });
     }
 
     let grammar_declaration = grammars[0];
@@ -136,42 +208,68 @@ pub fn lower_graph_semantics(
         }
     }
 
-    let graph_rules = grammar
-        .form()
-        .feature_rules
-        .iter()
-        .filter(|rule| rule.address.stratum == GraphFeatureStratum::Graph)
-        .collect::<Vec<_>>();
-    if graph_rules.len() != 1 {
-        return Err(GraphRationalLanguageError::InvalidGraphFeatureCount(
-            graph_rules.len(),
-        ));
+    let feature_id = extract_unique_graph_feature_id(grammar)?;
+    let mut shared_plan_templates = Vec::new();
+    let mut lowerings = Vec::new();
+
+    for (index, model_expr) in models.iter().enumerate() {
+        let plan_expr = if plans.len() == 1 {
+            plans[0]
+        } else {
+            plans[index]
+        };
+        let plan_id = plan_expr.plan_id();
+
+        let model_id = model_expr.model_id();
+        let model = ModelSpec {
+            id: ModelId(model_id.to_string()),
+            kind: ModelKind::FeatureModel,
+            input: ModelView::Graph,
+            output: ModelView::Features,
+            description: Some(format!("Graph Theory feature model for {feature_id}")),
+        };
+        let feature = Feature::new(
+            Plan::from_var("graph-store")
+                .named(plan_id)
+                .with_model_anchor(model_id)
+                .with_feature_anchor(&feature_id)
+                .with_principle_triad(ConceptTriad::ModelFeaturePlan),
+        )
+        .with_id(feature_id.clone());
+
+        shared_plan_templates.push(GraphSharedPlanTemplate {
+            plan_id: plan_id.to_string(),
+            feature_id: feature_id.clone(),
+            triad: ConceptTriad::ModelFeaturePlan,
+        });
+        lowerings.push(GraphSemanticLowering {
+            model,
+            grammar: grammar.clone(),
+            feature,
+        });
     }
 
-    let model_id = models[0].model_id();
-    let plan_id = plans[0].plan_id();
-    let feature_id = format!("Graph.{}", graph_rules[0].address.feature_name);
-    let model = ModelSpec {
-        id: ModelId(model_id.to_string()),
-        kind: ModelKind::FeatureModel,
-        input: ModelView::Graph,
-        output: ModelView::Features,
-        description: Some(format!("Graph Theory feature model for {feature_id}")),
-    };
-    let feature = Feature::new(
-        Plan::from_var("graph-store")
-            .named(plan_id)
-            .with_model_anchor(model_id)
-            .with_feature_anchor(&feature_id)
-            .with_principle_triad(ConceptTriad::ModelFeaturePlan),
-    )
-    .with_id(feature_id);
-
-    Ok(GraphSemanticLowering {
-        model,
+    Ok(GraphSemanticProgram {
         grammar: grammar.clone(),
-        feature,
+        shared_plan_templates,
+        lowerings,
     })
+}
+
+pub fn lower_graph_semantics(
+    expressions: &[GraphFrameExpr],
+    grammar: &GraphFeatureGrammarChecked,
+) -> Result<GraphSemanticLowering, GraphRationalLanguageError> {
+    let program = lower_graph_semantic_program(expressions, grammar)?;
+    if program.lowerings.len() != 1 {
+        return Err(GraphRationalLanguageError::InvalidModelDeclaration);
+    }
+
+    Ok(program
+        .lowerings
+        .into_iter()
+        .next()
+        .expect("single-lowering contract should hold"))
 }
 
 pub fn validate_graph_density_plan(
@@ -290,6 +388,7 @@ mod tests {
     use crate::types::graph_store::DefaultGraphStore;
     use crate::types::random::RandomGraphConfig;
 
+    use super::lower_graph_semantic_program;
     use super::lower_graph_semantics;
     use super::observe_graph_density;
     use super::validate_graph_density_plan;
@@ -449,5 +548,63 @@ mod tests {
             error,
             GraphRationalLanguageError::GrammarNameMismatch { .. }
         ));
+    }
+
+    #[test]
+    fn semantic_program_supports_multiple_models_with_a_shared_plan_template() {
+        let graph_plan = deterministic_frame()
+            .gm()
+            .model("graph-theory.density-model.v1")
+            .model("graph-theory.density-model.v2")
+            .grammar_with_version("graph_theory", "v1")
+            .into_plan()
+            .gp()
+            .id("graph-theory.observe-density.shared")
+            .into_plan();
+        let program = lower_graph_semantic_program(graph_plan.expressions(), &density_grammar())
+            .expect("multi-model declarations should lower as a semantic program");
+
+        assert_eq!(program.lowerings().len(), 2);
+        assert_eq!(program.shared_plan_templates().len(), 2);
+        assert_eq!(
+            program.shared_plan_templates()[0].plan_id(),
+            "graph-theory.observe-density.shared"
+        );
+        assert_eq!(
+            program.shared_plan_templates()[1].plan_id(),
+            "graph-theory.observe-density.shared"
+        );
+        assert_eq!(
+            program.lowerings()[0]
+                .feature()
+                .id()
+                .expect("feature id")
+                .as_str(),
+            FEATURE_ID
+        );
+        assert_eq!(
+            program.lowerings()[1]
+                .feature()
+                .id()
+                .expect("feature id")
+                .as_str(),
+            FEATURE_ID
+        );
+        assert_eq!(
+            program.lowerings()[0]
+                .feature()
+                .plan()
+                .synthesis()
+                .model_anchor,
+            Some("graph-theory.density-model.v1".to_string())
+        );
+        assert_eq!(
+            program.lowerings()[1]
+                .feature()
+                .plan()
+                .synthesis()
+                .model_anchor,
+            Some("graph-theory.density-model.v2".to_string())
+        );
     }
 }

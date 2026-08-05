@@ -4,6 +4,7 @@ mod algorithms;
 mod control;
 mod inputs;
 mod pipelines;
+mod store_api;
 
 pub use control::*;
 
@@ -470,6 +471,13 @@ pub enum ShellProcedureBinding {
         facade: Arc<LocalPipelinesProcedureFacade>,
         procedure: ShellPipelineProcedure,
     },
+    StoreApi {
+        component: ShellComponentId,
+        mode: ShellComponentMode,
+        graph_catalog: Arc<dyn crate::types::catalog::GraphCatalog>,
+        store: Arc<DefaultGraphStore>,
+        input: serde_json::Value,
+    },
 }
 
 impl ShellProcedureBinding {
@@ -519,7 +527,8 @@ impl ShellProcedureBinding {
             | Self::SteinerTree { component, .. }
             | Self::TopologicalSort { component, .. }
             | Self::Yens { component, .. }
-            | Self::Pipeline { component, .. } => *component,
+            | Self::Pipeline { component, .. }
+            | Self::StoreApi { component, .. } => *component,
         }
     }
 
@@ -569,7 +578,8 @@ impl ShellProcedureBinding {
             | Self::SteinerTree { mode, .. }
             | Self::TopologicalSort { mode, .. }
             | Self::Yens { mode, .. }
-            | Self::Pipeline { mode, .. } => *mode,
+            | Self::Pipeline { mode, .. }
+            | Self::StoreApi { mode, .. } => *mode,
         }
     }
 
@@ -831,6 +841,19 @@ impl ShellProcedureBinding {
             Self::Pipeline {
                 facade, procedure, ..
             } => pipelines::invoke_pipeline(facade.as_ref(), procedure),
+            Self::StoreApi {
+                component,
+                mode,
+                graph_catalog,
+                store,
+                input,
+            } => store_api::invoke_store_api(
+                component,
+                mode,
+                graph_catalog.as_ref(),
+                store.as_ref(),
+                input,
+            ),
         }
     }
 }
@@ -1063,6 +1086,7 @@ pub enum ShellProcedureResult {
     NodePipeline(Vec<NodePipelineInfoResult>),
     PipelineCatalog(Vec<PipelineCatalogResult>),
     PipelineExists(Vec<PipelineExistsResult>),
+    StoreApi(serde_json::Value),
 }
 
 impl ShellProcedureResult {
@@ -1125,6 +1149,13 @@ impl ShellProcedureResult {
             PipelineExists
         ) {
             return Some(format!("result_items={}", result_items));
+        }
+
+        if let Self::StoreApi(payload) = self {
+            if let Some(status) = payload.get("status").and_then(|value| value.as_str()) {
+                return Some(format!("status={}", status));
+            }
+            return Some("status=ok".to_string());
         }
 
         match self {
@@ -1406,10 +1437,14 @@ impl ShellProcedureEvaluator {
             .descriptor()
             .ok_or(ShellProcedureError::UnknownComponent(call.component))?;
 
-        if descriptor.execution_kind == ShellComponentExecutionKind::Pipeline {
-            pipelines::bind_pipeline(Arc::clone(&self.pipelines), call)
-        } else {
-            self.graph.bind_shell_component(call)
+        match descriptor.execution_kind {
+            ShellComponentExecutionKind::Pipeline => {
+                pipelines::bind_pipeline(Arc::clone(&self.pipelines), call)
+            }
+            ShellComponentExecutionKind::Algorithm => self.graph.bind_shell_component(call),
+            ShellComponentExecutionKind::StoreApi => {
+                store_api::bind_store_api(&self.graph, self.pipelines.graph_catalog(), call)
+            }
         }
     }
 
@@ -3002,6 +3037,93 @@ mod tests {
         assert!(matches!(
             runtime.invoke(&exists).unwrap(),
             ShellProcedureResult::PipelineExists(results) if results.len() == 1
+        ));
+    }
+
+    #[test]
+    fn runtime_binds_store_api_components() {
+        let call = builtin_component("drop_graph")
+            .unwrap()
+            .call(ShellComponentMode::Mutate)
+            .with_input("graphName", "example");
+
+        let binding = runtime().bind(&call).expect("store api call should bind");
+        assert_eq!(binding.component(), call.component);
+        assert_eq!(binding.mode(), ShellComponentMode::Mutate);
+        assert!(matches!(
+            binding.invoke().unwrap(),
+            ShellProcedureResult::StoreApi(payload)
+                if payload.get("applied").and_then(|value| value.as_bool()) == Some(true)
+        ));
+    }
+
+    #[test]
+    fn runtime_executes_store_catalog_put_list_exists_and_drop_cycle() {
+        let runtime = runtime();
+
+        let put = builtin_component("put_graph_store")
+            .unwrap()
+            .call(ShellComponentMode::Write)
+            .with_input("graphName", "example");
+        assert!(matches!(
+            runtime.invoke(&put).unwrap(),
+            ShellProcedureResult::StoreApi(payload)
+                if payload.get("applied").and_then(|value| value.as_bool()) == Some(true)
+        ));
+
+        let exists = builtin_component("graph_exists")
+            .unwrap()
+            .call(ShellComponentMode::Invoke)
+            .with_input("graphName", "example");
+        assert!(matches!(
+            runtime.invoke(&exists).unwrap(),
+            ShellProcedureResult::StoreApi(payload)
+                if payload.get("exists").and_then(|value| value.as_bool()) == Some(true)
+        ));
+
+        let list = builtin_component("list_graphs")
+            .unwrap()
+            .call(ShellComponentMode::Stream)
+            .with_input("graphName", "example");
+        assert!(matches!(
+            runtime.invoke(&list).unwrap(),
+            ShellProcedureResult::StoreApi(payload)
+                if payload
+                    .get("graphs")
+                    .and_then(|value| value.as_array())
+                    .is_some_and(|graphs| !graphs.is_empty())
+        ));
+
+        let drop = builtin_component("drop_graph")
+            .unwrap()
+            .call(ShellComponentMode::Mutate)
+            .with_input("graphName", "example");
+        assert!(matches!(
+            runtime.invoke(&drop).unwrap(),
+            ShellProcedureResult::StoreApi(payload)
+                if payload.get("applied").and_then(|value| value.as_bool()) == Some(true)
+        ));
+    }
+
+    #[test]
+    fn runtime_invokes_store_api_stream_components() {
+        let plan = GdsShell::new()
+            .component_plan()
+            .component("stream_relationships", ShellComponentMode::Stream)
+            .expect("stream component should build")
+            .finish();
+
+        let result = runtime().invoke_plan(&plan).expect("plan should invoke");
+
+        assert_eq!(result.len(), 1);
+        assert_eq!(
+            result.invocations()[0].component().as_str(),
+            "gds.store.relationships.stream"
+        );
+        assert!(matches!(
+            result.invocations()[0].result(),
+            ShellProcedureResult::StoreApi(payload)
+                if payload.get("relationshipCount").and_then(|value| value.as_u64()).is_some()
         ));
     }
 }

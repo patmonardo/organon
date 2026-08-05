@@ -108,6 +108,12 @@ impl ShellComponentPlan {
             .any(|kind| *kind == ShellComponentExecutionKind::Pipeline)
     }
 
+    pub fn has_store_api_components(&self) -> bool {
+        self.execution_kinds()
+            .iter()
+            .any(|kind| *kind == ShellComponentExecutionKind::StoreApi)
+    }
+
     pub fn len(&self) -> usize {
         self.calls.len()
     }
